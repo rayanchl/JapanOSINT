@@ -15,9 +15,3 @@ VJSON_KEYED(dportal_iati_sn, "dportal-iati-sn", "d-portal IATI activities - Sene
   "Aid activities in Senegal: IATI activity id, reporting org and ref, funder ref, title, full description, commitment/spend in USD and EUR, status and dates. Detail hop lists the activity's transactions.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.",
   "aid");
 
-VJSON(undp_projects_sn, "undp-projects-sn", "UNDP Open Data projects - Senegal", "UNDP Open Data projects - Senegal",
-  "sn_aid", "aid",
-  "https://api.open.undp.org/api/units/SEN.json",
-  "projects",
-  "fr", "[\"sn\",\"aid\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "UNDP Senegal projects with award id, title, nested outputs (sector, description, SDG, markers), subnational geolocations and purchase orders.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");

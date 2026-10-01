@@ -17,7 +17,7 @@ static const hp_source T[] = {
     .collector = "eu_legal", .category = "legal",
     .description = "Every sanction imposed by an EU national competent authority under MiFID/MAR/UCITS/AIFMD etc.: sn_entityName (with an embedded href to the entity's upreg detail page), sn_entityEsmaID, sn_sanctionLegalFrameworkName, sn_date, sn_ncaCodeFullName + sn_sanctioningNCACode (e.g. CZ_CNB Czech National Bank), sn_countryName, sn_nature/sn_natureFullName (ADSM administrative sanction and measure). The enforcement-actions layer sitting on top of the ESMA entity register.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"eu\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://registers.esma.europa.eu/solr/esma_registers_sanctions/select?q=*:*&wt=json&rows=100",
+    .url = "https://registers.esma.europa.eu/solr/esma_registers_sanctions/select?q=*:*&wt=json&rows=500",
     .array_path = "response.docs",
     .detail_url = "https://registers.esma.europa.eu/publication/details?core=esma_registers_upreg&docId=ae{v}", .detail_key = "sn_entityEsmaID",
     .interval = 43200, .free_tier = 1 },

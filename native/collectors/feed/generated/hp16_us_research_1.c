@@ -56,9 +56,9 @@ static const hp_source T[] = {
     .name = "OpenAlex work by DOI (id pivot)",
     .collector = "us_research", .category = "research",
     .description = "Same full work record but keyed by DOI instead of OpenAlex id - lets you enter the OpenAlex graph from any Crossref/DataCite DOI you already hold and come back out with authors, institutions, funders and the referenced_works edge list.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "research-record", .tags = "\"us\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "research-record", .tags = "\"us\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = ".en",
     .url = "https://api.openalex.org/works/doi:10.1038/nature12373",
-    .array_path = "mesh",
+    .array_path = ".",
     .detail_url = "https://api.openalex.org/works/doi:{v}", .detail_key = "doi",
     .interval = 86400, .free_tier = 1 },
 

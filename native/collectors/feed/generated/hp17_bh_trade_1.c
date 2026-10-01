@@ -17,8 +17,7 @@ static const hp_source T[] = {
     .collector = "bh_trade", .category = "trade",
     .description = "19,901 customs line items: year, month, 8-digit HS commodity code, commodity description (EN and AR), UN country code and destination country name (EN and AR), export value in BHD and USD, weight in kg, quantity and unit of measure. Filterable by partner country, which makes it a working trade-partner pivot for UAE, Saudi and Qatar.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "trade-record", .tags = "\"bh\",\"trade\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://data.gov.bh/api/explore/v2.1/catalog/datasets/national-export-1-2025/records?limit=100",
-    .array_path = "results",
+    .url = "https://data.gov.bh/api/explore/v2.1/catalog/datasets/national-export-1-2025/exports/json",
     .detail_url = "https://data.gov.bh/api/explore/v2.1/catalog/datasets/national-export-1-2025/records?limit=100&where=country_name%3D%22{v}%22", .detail_key = "country_name",
     .interval = 86400, .free_tier = 1 },
 

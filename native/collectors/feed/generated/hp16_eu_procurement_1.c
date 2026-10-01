@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://www.eib.org/page-provider/projects/list?or=&pageNumber=0&itemPerPage=5&pageable=true&language=EN&sortColumn=projectStatusDate",
     .array_path = "data",
     .detail_url = "https://www.eib.org/en/projects/all/{v}", .detail_key = "id",
+    .page_param = "pageNumber", .page_start = 0,   /* declared by the row's own URL */
     .interval = 21600, .free_tier = 1 },
 
 };

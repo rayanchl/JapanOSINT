@@ -1,4 +1,4 @@
-/* Deep-record dz_aid sources (2), part 1 of 1.
+/* Deep-record dz_aid sources (1), part 1 of 1.
  *
  * Batch 17 verified each of these endpoints live AND separately probed the
  * per-record detail endpoint below it with a real id. The list half shipped as
@@ -12,16 +12,6 @@
 #include "lib/hpengine.h"
 
 static const hp_source T[] = {
-  { .id = "dportal-iati-dz",
-    .name = "d-portal IATI activities - Algeria",
-    .collector = "dz_aid", .category = "aid",
-    .description = "Aid activities in Algeria: donor, implementing/reporting organisation, title, description, budget and disbursement amounts, dates and status. Detail hop returns transaction-level records.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "aid-record", .tags = "\"dz\",\"aid\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://d-portal.org/q?country_code=DZ&limit=50&form=json",
-    .array_path = "rows",
-    .detail_url = "https://d-portal.org/q?from=act%2Ctrans&aid={v}&form=json&limit=100", .detail_key = "aid",
-    .interval = 86400, .free_tier = 1 },
-
   { .id = "undp-projects-dz",
     .name = "UNDP Open Data projects - Algeria",
     .collector = "dz_aid", .category = "aid",

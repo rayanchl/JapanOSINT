@@ -1,4 +1,4 @@
-/* Deep-record de_research sources (9), part 1 of 1.
+/* Deep-record de_research sources (8), part 1 of 1.
  *
  * Batch 16 verified each of these endpoints live AND separately probed the
  * per-record detail endpoint below it with a real id. The list half shipped as
@@ -67,8 +67,8 @@ static const hp_source T[] = {
     .collector = "de_research", .category = "research",
     .description = "Every DataCite DOI prefix with creation date and relationships to its clients and providers - attribution of an arbitrary DOI prefix to the organisation behind it.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "research-record", .tags = "\"de\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.datacite.org/prefixes?page[size]=5",
-    .array_path = "meta.years",
+    .url = "https://api.datacite.org/prefixes?page[size]=1000",
+    .array_path = "data",
     .detail_url = "https://api.datacite.org/prefixes/{v}", .detail_key = "id",
     .interval = 86400, .free_tier = 1 },
 
@@ -77,8 +77,8 @@ static const hp_source T[] = {
     .collector = "de_research", .category = "research",
     .description = "Global directory of data repositories with symbol, re3data/OpenDOAR ids, client type, languages, certificates, domains, ISSNs, url and repository software. Registry of who is holding research data worldwide.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "research-record", .tags = "\"de\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.datacite.org/repositories?page[size]=5",
-    .array_path = "meta.years",
+    .url = "https://api.datacite.org/repositories?page[size]=1000",
+    .array_path = "data",
     .detail_url = "https://api.datacite.org/clients/{v}", .detail_key = "id",
     .interval = 86400, .free_tier = 1 },
 
@@ -90,16 +90,6 @@ static const hp_source T[] = {
     .url = "https://www.wikidata.org/w/api.php?action=query&list=backlinks&bltitle=Q336264&format=json&bllimit=10",
     .array_path = "query.backlinks",
     .detail_url = "https://www.wikidata.org/wiki/Special:EntityData/{v}.json", .detail_key = "title",
-    .interval = 86400, .free_tier = 1 },
-
-  { .id = "wikidata-wbgetclaims",
-    .name = "Wikidata claims only (statement-level)",
-    .collector = "de_research", .category = "research",
-    .description = "Just the statements for an entity keyed by property (P17 country, P373 commons category, P571 inception, P1454 legal form, identifiers to ROR/GRID/ISNI/VIAF), each with snak hash, datatype, rank and statement GUID. The identifier-crosswalk workhorse.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "research-record", .tags = "\"de\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.wikidata.org/w/api.php?action=wbgetclaims&entity=Q336264&format=json",
-    .array_path = "claims.p1352",
-    .detail_url = "https://www.wikidata.org/w/api.php?action=wbgetclaims&entity={v}&format=json", .detail_key = "id",
     .interval = 86400, .free_tier = 1 },
 
 };

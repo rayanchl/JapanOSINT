@@ -1,4 +1,4 @@
-/* Deep-record us_legal sources (28), part 1 of 1.
+/* Deep-record us_legal sources (23), part 1 of 1.
  *
  * Batch 16 verified each of these endpoints live AND separately probed the
  * per-record detail endpoint below it with a real id. The list half shipped as
@@ -100,16 +100,6 @@ static const hp_source T[] = {
     .detail_url = "https://www.courtlistener.com/api/rest/v4/people/{v}/", .detail_key = "id",
     .interval = 43200, .free_tier = 1 },
 
-  { .id = "us-courtlistener-search-recap-dockets",
-    .name = "CourtListener RECAP — federal docket search (anonymous-accessible)",
-    .collector = "us_legal", .category = "legal",
-    .description = "Federal PACER/RECAP dockets. count 98124 dockets / document_count 520436 for one query. Each row carries docketNumber, caseName, court, assignedTo judge name + assigned_to_id, referredTo, dateFiled, dateTerminated, cause, natureOfSuit, juryDemand, and a nested recap_documents[] array with entry_number, description, is_available, filepath_local and page_count. This is the deep RECAP hop that works WITHOUT a token (the REST /dockets/ endpoint is 401 anonymously).  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.courtlistener.com/api/rest/v4/search/?q=Google&type=r",
-    .array_path = "results",
-    .detail_url = "https://www.courtlistener.com/api/rest/v4/people/{v}/", .detail_key = "assigned_to_id",
-    .interval = 43200, .free_tier = 1 },
-
   { .id = "us-ecfr-titles",
     .name = "eCFR — CFR title index and currency",
     .collector = "us_legal", .category = "legal",
@@ -120,32 +110,12 @@ static const hp_source T[] = {
     .detail_url = "https://www.ecfr.gov/api/versioner/v1/structure/2026-01-01/title-{v}.json", .detail_key = "number",
     .interval = 43200, .free_tier = 1 },
 
-  { .id = "us-federalregister-by-cfr",
-    .name = "Federal Register — documents affecting a CFR part",
-    .collector = "us_legal", .category = "legal",
-    .description = "Every FR document that amends a given CFR title/part (count 1,532 for 40 CFR 63). Gives the rulemaking history of a specific regulation, with next_page_url cursor. Joins directly to the eCFR endpoints above.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.federalregister.gov/api/v1/documents.json?conditions%5Bcfr%5D%5Btitle%5D=40&conditions%5Bcfr%5D%5Bpart%5D=63&per_page=5",
-    .array_path = "results",
-    .detail_url = "https://www.federalregister.gov/api/v1/documents/{v}.json", .detail_key = "document_number",
-    .interval = 43200, .free_tier = 1 },
-
   { .id = "us-federalregister-by-docket",
     .name = "Federal Register — documents filtered by agency docket id",
     .collector = "us_legal", .category = "legal",
     .description = "Pulls every FR notice/rule filed under a specific agency docket number, optionally narrowed by document type. Returns title, type, publication_date, document_number, html_url, abstract. The bridge between a Regulations.gov docket and its Federal Register publications.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://www.federalregister.gov/api/v1/documents.json?conditions%5Btype%5D%5B%5D=PRORULE&conditions%5Bdocket_id%5D=FAA-2022-0674&per_page=5",
-    .array_path = "results",
-    .detail_url = "https://www.federalregister.gov/api/v1/documents/{v}.json", .detail_key = "document_number",
-    .interval = 43200, .free_tier = 1 },
-
-  { .id = "us-federalregister-executive-orders",
-    .name = "Federal Register — presidential documents / executive orders",
-    .collector = "us_legal", .category = "legal",
-    .description = "Executive orders, proclamations, memoranda and notices (count 1,556 EOs). Each row: title, executive_order_number, signing_date, publication_date, president, document_number, html_url, pdf_url, disposition_notes. Swap presidential_document_type for proclamation/memorandum/notice/determination.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.federalregister.gov/api/v1/documents.json?conditions%5Bpresidential_document_type%5D%5B%5D=executive_order&per_page=5&order=newest",
     .array_path = "results",
     .detail_url = "https://www.federalregister.gov/api/v1/documents/{v}.json", .detail_key = "document_number",
     .interval = 43200, .free_tier = 1 },
@@ -167,24 +137,6 @@ static const hp_source T[] = {
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://webapi.legistar.com/v1/seattle/events/1326/eventitems",
     .detail_url = "https://webapi.legistar.com/v1/seattle/matters/{v}", .detail_key = "EventItemMatterId",
-    .interval = 43200, .free_tier = 1 },
-
-  { .id = "us-legistar-seattle-events",
-    .name = "Legistar — council/committee meetings",
-    .collector = "us_legal", .category = "legal",
-    .description = "Meetings: EventId, EventGuid, EventBodyId, EventBodyName (e.g. 'Parks, Seattle Center, Libraries, and Gender Pay Equity Committee'), EventDate, EventTime, EventLocation, EventAgendaFile, EventMinutesFile, EventVideoPath, EventInSiteURL, EventLastModifiedUtc. EventId opens the agenda-item hop.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://webapi.legistar.com/v1/seattle/events?$top=1",
-    .detail_url = "https://webapi.legistar.com/v1/seattle/events/{v}/eventitems", .detail_key = "EventId",
-    .interval = 43200, .free_tier = 1 },
-
-  { .id = "us-legistar-seattle-matters",
-    .name = "Legistar — Seattle City Council legislation (matters)",
-    .collector = "us_legal", .category = "legal",
-    .description = "Granicus Legistar municipal-legislature API, keyless, OData-queryable ($top/$skip/$filter/$orderby). Each matter: MatterId, MatterGuid, MatterFile (e.g. 'CB 121253'), MatterName, MatterTitle (the full ordinance text summary), MatterTypeName, MatterStatusName, MatterBodyId/Name, MatterIntroDate, MatterAgendaDate, MatterPassedDate, MatterEnactmentDate, MatterEnactmentNumber, MatterRequester, MatterNotes, MatterVersion, MatterLastModifiedUtc. MatterId opens four verified sub-resources (sponsors, histories, attachments, versions).  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://webapi.legistar.com/v1/seattle/matters?$top=2&$orderby=MatterLastModifiedUtc%20desc",
-    .detail_url = "https://webapi.legistar.com/v1/seattle/matters/{v}", .detail_key = "MatterId",
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-ma-ocpf-barred-filers",

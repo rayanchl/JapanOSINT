@@ -20,7 +20,7 @@ static const hp_source T[] = {
     .url = "https://taginfo.openstreetmap.org/api/4/key/values?key=operator&page=1&rp=10&sortname=count_all&sortorder=desc",
     .array_path = "data",
     .detail_url = "https://taginfo.openstreetmap.org/api/4/tag/stats?key=operator&value={v}", .detail_key = "value",
-    .page_param = "page",   /* the URL pins this cursor at its first value */
+    .page_param = "page", .page_start = 1,   /* declared by the row's own URL */
     .interval = 86400, .free_tier = 1 },
 
 };

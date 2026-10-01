@@ -18,9 +18,3 @@ VJSON_KEYED(dportal_iati_bf, "dportal-iati-bf", "d-portal IATI activities - Burk
   "Aid activities in Burkina Faso with reporting org, funder, title, description, financial commitment and spend and activity dates; transaction detail available.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.",
   "aid");
 
-VJSON(undp_projects_bf, "undp-projects-bf", "UNDP Open Data projects - Burkina Faso", "UNDP Open Data projects - Burkina Faso",
-  "bf_aid", "aid",
-  "https://api.open.undp.org/api/units/BFA.json",
-  "projects",
-  "en", "[\"bf\",\"aid\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "UNDP Burkina Faso projects with award id, title, outputs (sector, description, SDG), subnational locations and purchase orders.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");

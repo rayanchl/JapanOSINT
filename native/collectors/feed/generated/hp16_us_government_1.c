@@ -1,4 +1,4 @@
-/* Deep-record us_government sources (12), part 1 of 1.
+/* Deep-record us_government sources (11), part 1 of 1.
  *
  * Batch 16 verified each of these endpoints live AND separately probed the
  * per-record detail endpoint below it with a real id. The list half shipped as
@@ -58,16 +58,6 @@ static const hp_source T[] = {
     .url = "https://api.ocpf.us/reports/reportList/15021?baseReportTypeId=2",
     .array_path = "items",
     .detail_url = "https://api.ocpf.us/reports/reportList/{v}?baseReportTypeId=2", .detail_key = "cpfId",
-    .interval = 86400, .free_tier = 1 },
-
-  { .id = "us-miamidade-arcgis-services",
-    .name = "Miami-Dade County FL ArcGIS service directory",
-    .collector = "us_government", .category = "government",
-    .description = "21 folders including 311, LandManagement (zoning/platting records), EnerGov (permits), MDFRInspections (fire inspections), MDPD, RER (regulatory & economic resources), CAD911, BusinessTracker. Verified drill-down into /LandManagement.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "government-record", .tags = "\"us\",\"government\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://gisweb.miamidade.gov/arcgis/rest/services?f=json",
-    .array_path = "services",
-    .detail_url = "https://gisweb.miamidade.gov/arcgis/rest/services/{v}?f=json", .detail_key = "folders",
     .interval = 86400, .free_tier = 1 },
 
   { .id = "us-phl-carto-311",

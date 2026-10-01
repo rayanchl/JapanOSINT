@@ -22,9 +22,3 @@ VJSON_IDKEYS(af_dportal_act_gh, "af-dportal-act-gh", "d-portal (IATI) — aid ac
   "IATI aid activities with Ghana as recipient, carrying funder reference, reporting organisation, description, status and committed/spent amounts. Detail by aid returns the activity.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.",
   "aid");
 
-VJSON(af_dportal_trans_gh, "af-dportal-trans-gh", "d-portal (IATI) — aid transactions in Ghana", "d-portal (IATI) — aid transactions in Ghana",
-  "gh_aid", "aid",
-  "https://d-portal.org/q?from=act,trans&trans_country_code=GH&limit=5000&form=json",
-  "rows",
-  "en", "[\"gh\",\"aid\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Ghana activity-plus-transaction rows carrying trans_ref and trans_description; detail hop by aid returns every transaction with amounts, currency and sector codes.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");

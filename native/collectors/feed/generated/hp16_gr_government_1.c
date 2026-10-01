@@ -1,4 +1,4 @@
-/* Deep-record gr_government sources (2), part 1 of 1.
+/* Deep-record gr_government sources (1), part 1 of 1.
  *
  * Batch 16 verified each of these endpoints live AND separately probed the
  * per-record detail endpoint below it with a real id. The list half shipped as
@@ -12,16 +12,6 @@
 #include "lib/hpengine.h"
 
 static const hp_source T[] = {
-  { .id = "gr-diavgeia-decision-search",
-    .name = "Diavgeia (Greece) — government decision search",
-    .collector = "gr_government", .category = "government",
-    .description = "Every published act of every Greek public body, including expenditure approvals, procurement awards and payment orders. Each row gives the ADA (unique decision id), protocol number, full Greek subject line, decision type, issuing organisation and unit, signer, and thematic categories. Queryable by organizationUid, decision type, date and free text — this is the single deepest 'who was paid by whom' feed in Greece.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "government-record", .tags = "\"gr\",\"government\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "el",
-    .url = "https://diavgeia.gov.gr/opendata/search.json?q=organizationUid:%2215168%22&size=5",
-    .array_path = "decisions",
-    .detail_url = "https://diavgeia.gov.gr/opendata/decisions/{v}.json", .detail_key = "ada",
-    .interval = 86400, .free_tier = 1 },
-
   { .id = "gr-diavgeia-dictionaries",
     .name = "Diavgeia — controlled-vocabulary index",
     .collector = "gr_government", .category = "government",

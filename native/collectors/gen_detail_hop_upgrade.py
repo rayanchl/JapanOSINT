@@ -70,38 +70,85 @@ LIST_ONLY_NOTE = ("  A per-record detail endpoint was verified for this source; 
                   "see the batch's detail-hops side-car. This collector fetches "
                   "the list endpoint only.")
 
-MACRO_CALL = re.compile(r"^(V[A-Z]+)\(", re.M)
+# `[A-Z0-9_]` matters. This was `^(V[A-Z]+)\(`, which cannot match an
+# underscore — so VJSON_IDKEYS, VJSON_KEYED, VJSON_PREP, VCSV_STRIP_BOGUS_ID,
+# VOM_HOURLY and friends (400+ live rows) were INVISIBLE to this script. That
+# was not merely a missed conversion: the "this file has no registrations left,
+# delete it" step below could not see them either, so a file whose VJSON rows
+# were all moved was deleted with its VJSON_IDKEYS rows still inside. It cost
+# 20 real sources, caught only by diffing the registered-id set against the
+# base branch. Hence also the assertion at the end of main().
+MACRO_CALL = re.compile(r"^(V[A-Z][A-Z0-9_]*)\(", re.M)
 
-# Cursor parameters the URL itself names but lib/pager.c's table cannot infer,
-# because the row's page-SIZE parameter is house-specific (`rp`, `num`) rather
-# than one of the seven conventional spellings. Each of these was found by
-# `make audit-sources`, which flags them "paged endpoint fetched once — every
-# later page is discarded"; the URL shipped with the cursor pinned at its first
-# value, which is the discard. Declaring page_param makes the row walk.
+# Paging for a converted row is DERIVED FROM ITS OWN URL, with the same
+# vocabulary and the same rule lib/pagewalk.c applies to the generated
+# collectors these rows are moving off:
 #
-# This is evidence from the URL, not a guess about the platform: an endpoint
-# verified answering at `page=1` has a `page` cursor by construction.
-PAGE_PARAM = {
-    "global-taginfo-key-values":   "page",  # &page=1&rp=10
-    "us-nhtsa-vpic-manufacturers": "page",  # &page=1
-    "cordis-search-projects-query": "p",    # &p=1&num=10
-    "cordis-search-results-query":  "p",    # &p=1&num=5
-    "eu-cordis-projects-search":    "p",    # &p=1&num=5
-}
+#   * a cursor parameter that is ALREADY PRESENT in the author's URL may be
+#     advanced — advancing a number somebody wrote is not guessing;
+#   * an OFFSET cursor additionally needs a declared page size, because that
+#     size is the stride. A PAGE NUMBER does not: it advances by one.
+#   * nothing is ever ADDED to a URL that did not have it. A row whose URL
+#     declares only a size and no cursor gets no paging here — which is exactly
+#     what pagewalk does with it today, so the move costs it nothing.
+#
+# This matters because the rows are moving from VJSON (walked by pagewalk) onto
+# hpengine, which pages only when the row declares how. Without this, each row
+# would have bought its detail hop with every page after the first.
+PW_OFF_PARAMS = ("offset", "$offset", "$skip", "skip", "resultOffset",
+                 "startIndex", "start")
+PW_PAGE_PARAMS = ("page", "pageNumber", "p")
+PW_SIZE_PARAMS = ("limit", "rows", "$limit", "resultRecordCount", "page_size",
+                  "per_page", "pageSize", "$top", "size", "maxRecords",
+                  "count", "retmax", "itemsPerPage", "length")
+# A record offset is a small number; anything larger is a timestamp that happens
+# to be numeric (`start=1754697600`). Same bound pagewalk uses.
+PW_OFFSET_MAX = 10000000
 
-# One row asks the upstream for a single record (`rows=1`) — the probe's own
-# page size, shipped as the collector's. Fetching 1 of N sanctions and calling
-# it a collection is the plainest possible rule-2 violation, so the page size is
-# raised to a real one. `rows`/`start` is Solr's own paging contract and is
-# already in lib/pager.c's cursor table, so the walk follows automatically.
-#
-# NOT RE-PROBED: this session has no egress (see docs/verified-sources-batch18…
-# for the whole story), so `rows=100` is asserted from Solr's contract and not
-# from a request anybody watched. If ESMA refuses it, the row reports a fetch
-# failure — an honest error, which is the correct degradation.
-URL_FIXUP = {
-    "esma-solr-sanctions": ("&rows=1", "&rows=100"),
-}
+
+def _num_param(url, name):
+    """Value of `name=<int>` in the query, or None. Compares from a parameter
+    boundary so `$offset` never matches a bare `offset`."""
+    q = url.split("?", 1)
+    if len(q) < 2:
+        return None
+    for part in q[1].split("&"):
+        k, _, v = part.partition("=")
+        if k == name:
+            try:
+                return int(v)
+            except ValueError:
+                return None
+    return None
+
+
+def paging_for(url):
+    """-> (page_param, page_size, page_start) for a URL, or (None, 0, None)."""
+    size = None
+    for nm in PW_SIZE_PARAMS:
+        size = _num_param(url, nm)
+        if size is not None and size > 0:
+            break
+        size = None
+    for nm in PW_PAGE_PARAMS:                 # page numbers need no stride
+        v = _num_param(url, nm)
+        if v is not None:
+            return nm, 0, v
+    for nm in PW_OFF_PARAMS:
+        v = _num_param(url, nm)
+        if v is None or v > PW_OFFSET_MAX:
+            continue
+        if size is None:
+            continue                          # an offset with no stride: skip
+        return nm, size, v
+    return None, 0, None
+
+# No URL rewrites are needed any more. This used to raise ESMA's `rows=1` to a
+# real page size; main fixed that row upstream (it now asks for rows=500), and
+# the generator reported the pattern as missing rather than silently doing
+# nothing — which is how the obsolete entry was noticed. Keep this empty rather
+# than deleting it: the next probe-page-size-shipped-as-a-collector goes here.
+URL_FIXUP = {}
 
 
 def split_c_args(text):
@@ -112,18 +159,55 @@ def split_c_args(text):
     tags argument — which is how a lint pass once truncated 2,000 URLs at their
     first comma. Track quoting and nesting instead."""
     args, depth, quote, esc, cur = [], 0, False, False, []
-    for ch in text:
+    # Comment state. This tree comments INSIDE argument lists — a path argument
+    # followed by /* …36 emitted, 22 stored, 2026-09-14… */ — and those commas
+    # and parens are prose, not syntax. Without skipping them a 12-argument
+    # VJSON call parses as 15 and the row is passed over (it failed safe, but it
+    # failed: three rows with proven detail hops went unconverted).
+    block, line_c = False, False
+    i, n = 0, len(text)
+    while i < n:
+        ch = text[i]
+        nxt = text[i + 1] if i + 1 < n else ""
+        if line_c:
+            cur.append(ch)
+            if ch == "\n":
+                line_c = False
+            i += 1
+            continue
+        if block:
+            cur.append(ch)
+            if ch == "*" and nxt == "/":
+                cur.append(nxt)
+                block = False
+                i += 2
+                continue
+            i += 1
+            continue
         if esc:
             cur.append(ch)
             esc = False
+            i += 1
             continue
         if ch == "\\":
             cur.append(ch)
             esc = True
+            i += 1
             continue
         if ch == '"':
             quote = not quote
             cur.append(ch)
+            i += 1
+            continue
+        if not quote and ch == "/" and nxt == "*":
+            cur.append(ch); cur.append(nxt)
+            block = True
+            i += 2
+            continue
+        if not quote and ch == "/" and nxt == "/":
+            cur.append(ch); cur.append(nxt)
+            line_c = True
+            i += 2
             continue
         if not quote:
             if ch in "([{":
@@ -133,8 +217,10 @@ def split_c_args(text):
             elif ch == "," and depth == 0:
                 args.append("".join(cur).strip())
                 cur = []
+                i += 1
                 continue
         cur.append(ch)
+        i += 1
     if cur:
         args.append("".join(cur).strip())
     return args
@@ -157,14 +243,32 @@ def parse_macro_calls(src):
         macro = m.group(1)
         open_paren = m.end() - 1
         depth, quote, esc, i = 0, False, False, open_paren
+        block = line_c = False
         while i < len(src):
             ch = src[i]
-            if esc:
+            nxt = src[i + 1] if i + 1 < len(src) else ""
+            if line_c:
+                if ch == "\n":
+                    line_c = False
+            elif block:
+                if ch == "*" and nxt == "/":
+                    block = False
+                    i += 2
+                    continue
+            elif esc:
                 esc = False
             elif ch == "\\":
                 esc = True
             elif ch == '"':
                 quote = not quote
+            elif not quote and ch == "/" and nxt == "*":
+                block = True
+                i += 2
+                continue
+            elif not quote and ch == "/" and nxt == "/":
+                line_c = True
+                i += 2
+                continue
             elif not quote:
                 if ch == "(":
                     depth += 1
@@ -269,8 +373,12 @@ def render_table(rows, collector, batch, part, total_parts):
         out.append("    .detail_url = \"%s\", .detail_key = \"%s\",\n"
                    % (r["detail_url"], r["detail_key"]))
         if r["page_param"]:
-            out.append("    .page_param = \"%s\",   /* the URL pins this cursor "
-                       "at its first value */\n" % r["page_param"])
+            out.append("    .page_param = \"%s\",%s%s   /* declared by the row's "
+                       "own URL */\n"
+                       % (r["page_param"],
+                          (" .page_size = %d," % r["page_size"]) if r["page_size"] else "",
+                          (" .page_start = %d," % r["page_start"])
+                          if r["page_start"] is not None else ""))
         out.append("    .interval = %s, .free_tier = 1 },\n\n" % r["interval"])
     out.append("};\nHP_REGISTER_TABLE(T)\n")
     return "".join(out)
@@ -288,6 +396,14 @@ def main():
 
     hops = load_detail_hops(args.detail_hops)
     print("detail hops loaded: %d" % len(hops))
+
+    ids_before = set()       # every id registered in the generated dir, before
+    for fname in os.listdir(args.generated):
+        if fname.endswith(".c"):
+            ids_before |= set(re.findall(
+                r'^V[A-Z][A-Z0-9_]*\(\s*\w+\s*,\s*"([^"]+)"',
+                open(os.path.join(args.generated, fname),
+                     encoding="utf-8").read(), re.M))
 
     converted = []           # rows that become hp_source entries
     skipped_shape = []       # has a hop, but the macro has no hpengine mode
@@ -318,6 +434,7 @@ def main():
             path_arg = c_str_value(a["path"]) if "path" in a else ""
             batch = "17" if fname.startswith("vsrc17_") else "16"
             list_url = c_str_value(a["url"])
+            _pg = paging_for(list_url or "")
             if sid in URL_FIXUP:
                 old, new = URL_FIXUP[sid]
                 if old not in list_url:
@@ -344,7 +461,9 @@ def main():
                 "detail_url": detail_url,
                 "detail_key": detail_key,
                 "mode": CONVERTIBLE[macro],
-                "page_param": PAGE_PARAM.get(sid, ""),
+                "page_param": _pg[0] or "",
+                "page_size": _pg[1],
+                "page_start": _pg[2],
                 "batch": batch,
                 "src_file": fname,
             })
@@ -393,6 +512,29 @@ def main():
             open(path, "w", encoding="utf-8").write(text)
 
     print("\nwrote %d hp tables; rewrote %d vsrc files" % (written, len(edits)))
+
+    # NOTHING MAY VANISH. Every id this script saw in a vsrc file before it ran
+    # must still be registered somewhere afterwards — moved into an hp table, or
+    # left where it was. The alternative is what actually happened once: a
+    # macro variant this parser could not see was deleted along with its file,
+    # and the only thing that noticed was a manual id-set diff against the base
+    # branch. A move that loses a source is not a move.
+    moved = {r["id"] for r in converted}
+    after = set()
+    for fname in os.listdir(outdir):
+        if not fname.endswith(".c"):
+            continue
+        txt = open(os.path.join(outdir, fname), encoding="utf-8").read()
+        after |= set(re.findall(r'"([a-z0-9][a-z0-9._-]*)"', txt))
+    lost = sorted(i for i in ids_before if i not in after and i not in moved)
+    if lost:
+        print("\nLOST %d id(s) — refusing to call this a success:" % len(lost),
+              file=sys.stderr)
+        for i in lost:
+            print("   " + i, file=sys.stderr)
+        return 2
+    print("id check: %d ids seen before, 0 lost (%d moved to hp tables)"
+          % (len(ids_before), len(moved)))
     return 0
 
 

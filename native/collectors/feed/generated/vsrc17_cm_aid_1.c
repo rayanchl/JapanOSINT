@@ -17,9 +17,3 @@ VJSON_KEYED(dportal_iati_cm, "dportal-iati-cm", "d-portal IATI activities - Came
   "Aid activities in Cameroon with reporting organisation, funder ref, title, description, committed and spent amounts and activity period; transaction detail per activity.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.",
   "aid");
 
-VJSON(undp_projects_cm, "undp-projects-cm", "UNDP Open Data projects - Cameroon", "UNDP Open Data projects - Cameroon",
-  "cm_aid", "aid",
-  "https://api.open.undp.org/api/units/CMR.json",
-  "projects",
-  "fr", "[\"cm\",\"aid\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "UNDP Cameroon projects with award id, title, per-project outputs, subnational locations and purchase orders.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");

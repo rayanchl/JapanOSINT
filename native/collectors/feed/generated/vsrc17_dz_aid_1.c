@@ -18,9 +18,3 @@ VJSON_KEYED(dportal_iati_dz, "dportal-iati-dz", "d-portal IATI activities - Alge
   "Aid activities in Algeria: donor, implementing/reporting organisation, title, description, budget and disbursement amounts, dates and status. Detail hop returns transaction-level records.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.",
   "aid");
 
-VJSON(undp_projects_dz, "undp-projects-dz", "UNDP Open Data projects - Algeria", "UNDP Open Data projects - Algeria",
-  "dz_aid", "aid",
-  "https://api.open.undp.org/api/units/DZA.json",
-  "projects",
-  "fr", "[\"dz\",\"aid\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "UNDP Algeria projects with award id, French titles, per-project outputs (sector, description, SDG targets), subnational locations and purchase orders. One of the very few open machine-readable Algerian project datasets.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");

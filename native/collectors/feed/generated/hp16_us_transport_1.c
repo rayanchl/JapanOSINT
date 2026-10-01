@@ -47,7 +47,7 @@ static const hp_source T[] = {
     .collector = "us_transport", .category = "transport",
     .description = "Keyless substitute for the 403-blocked QCMobile/SAFER APIs. Per carrier: dot_number, status_code, add_date, mcs150_date, mcs150_mileage and year, dun_bradstreet_no, carrier_operation (interstate/intrastate), business_org_id, phy_omc_region, safety_inv_terr, legal and DBA name, physical and mailing address, phone, power units, driver count, hazmat flags, cargo-carried flags, and the safety rating with its rating date. Verified server-side filter ?dot_number=162845.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "transport-record", .tags = "\"us\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://data.transportation.gov/resource/az4n-8mr2.json?$limit=2",
+    .url = "https://data.transportation.gov/resource/az4n-8mr2.json?$limit=2&$order=:id",
     .detail_url = "https://data.transportation.gov/resource/az4n-8mr2.json?$limit=50&dot_number={v}", .detail_key = "dot_number",
     .interval = 3600, .free_tier = 1 },
 
@@ -56,7 +56,7 @@ static const hp_source T[] = {
     .collector = "us_transport", .category = "transport",
     .description = "CARRIER → ITS CRASHES, the exact detail hop required. Per crash: crash_id, dot_number, report_state, report_number, report_date and time, report_seq_no, ci_status_code, final_status_date, location, state, county, fatalities, injuries, tow_away flag, vehicle configuration, hazmat released flag, weather and light conditions, road access control, trafficway description, and citation issued. Verified filter ?dot_number=728630.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "transport-record", .tags = "\"us\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://data.transportation.gov/resource/aayw-vxb3.json?$limit=2",
+    .url = "https://data.transportation.gov/resource/aayw-vxb3.json?$limit=2&$order=:id",
     .detail_url = "https://data.transportation.gov/resource/aayw-vxb3.json?$limit=500&dot_number={v}", .detail_key = "dot_number",
     .interval = 3600, .free_tier = 1 },
 
@@ -65,7 +65,7 @@ static const hp_source T[] = {
     .collector = "us_transport", .category = "transport",
     .description = "CARRIER → ITS ROADSIDE INSPECTIONS. Per inspection: inspection_id, dot_number, report_state, report_number, insp_date, insp_start_time/insp_end_time, region, ci_status_code, location_desc, inspection level, driver and vehicle out-of-service counts and OOS totals, hazmat inspection flag, unsafe-driving and fatigued-driving violation counts, and the vehicle/licence-plate identifiers. Verified filter ?dot_number=728630.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "transport-record", .tags = "\"us\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://data.transportation.gov/resource/fx4q-ay7w.json?$limit=2",
+    .url = "https://data.transportation.gov/resource/fx4q-ay7w.json?$limit=2&$order=:id",
     .detail_url = "https://data.transportation.gov/resource/fx4q-ay7w.json?$limit=500&dot_number={v}", .detail_key = "dot_number",
     .interval = 3600, .free_tier = 1 },
 
@@ -77,7 +77,7 @@ static const hp_source T[] = {
     .url = "https://vpic.nhtsa.dot.gov/api/vehicles/GetAllManufacturers?format=json&page=1",
     .array_path = "results",
     .detail_url = "https://vpic.nhtsa.dot.gov/api/vehicles/GetManufacturerDetails/{v}?format=json", .detail_key = "Mfr_Name",
-    .page_param = "page",   /* the URL pins this cursor at its first value */
+    .page_param = "page", .page_start = 1,   /* declared by the row's own URL */
     .interval = 3600, .free_tier = 1 },
 
 };

@@ -20,9 +20,3 @@ VJSON_IDKEYS(dportal_iati_ml, "dportal-iati-ml", "d-portal IATI activities - Mal
   "Aid activities in Mali: reporting organisation, funder ref, title (some redaction notices from USAID are themselves informative), description, commitment/spend and dates. Transactions behind the detail hop.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.",
   "aid");
 
-VJSON(undp_projects_ml, "undp-projects-ml", "UNDP Open Data projects - Mali", "UNDP Open Data projects - Mali",
-  "ml_aid", "aid",
-  "https://api.open.undp.org/api/units/MLI.json",
-  "projects",
-  "fr", "[\"ml\",\"aid\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "UNDP Mali projects: id, title, per-project outputs with sector and SDG, geolocated sites and purchase orders.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");

@@ -18,9 +18,3 @@ VJSON_KEYED(dportal_iati_cd, "dportal-iati-cd", "d-portal IATI activities - DR C
   "Aid activities in the Democratic Republic of the Congo with donor, reporting ref, title, description, committed and disbursed amounts, status and period; per-activity transactions.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.",
   "aid");
 
-VJSON(undp_projects_cd, "undp-projects-cd", "UNDP Open Data projects - DR Congo", "UNDP Open Data projects - DR Congo",
-  "cd_aid", "aid",
-  "https://api.open.undp.org/api/units/COD.json",
-  "projects",
-  "fr", "[\"cd\",\"aid\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Largest of the set: 308 UNDP DR Congo projects with award id, title, outputs (sector, description, SDG, policy markers), geolocated subnational sites, purchase orders and documents.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");

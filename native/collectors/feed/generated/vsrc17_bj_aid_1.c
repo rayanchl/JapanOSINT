@@ -19,9 +19,3 @@ VJSON_KEYED(dportal_iati_bj, "dportal-iati-bj", "d-portal IATI activities - Beni
   "Aid activities in Benin: donor and reporting refs, project title, description, commitment/spend, status codes and dates. Detail hop returns transactions.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.",
   "aid");
 
-VJSON(undp_projects_bj, "undp-projects-bj", "UNDP Open Data projects - Benin", "UNDP Open Data projects - Benin",
-  "bj_aid", "aid",
-  "https://api.open.undp.org/api/units/BEN.json",
-  "projects",
-  "en", "[\"bj\",\"aid\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "UNDP Benin projects: project id, title, outputs with sector and SDG mapping, geolocated activity sites, purchase orders and documents.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");

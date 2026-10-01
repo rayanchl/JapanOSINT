@@ -18,9 +18,3 @@ VJSON_KEYED(dportal_iati_ma, "dportal-iati-ma", "d-portal IATI activities - Moro
   "Donor-reported aid activities located in Morocco: aid (IATI activity id), reporting organisation and its IATI ref, funder ref, title, description, status_code, start/end day, commitment and spend in USD and EUR, sector and slug. Detail hop returns the activity's individual transactions.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.",
   "aid");
 
-VJSON(undp_projects_ma, "undp-projects-ma", "UNDP Open Data projects - Morocco", "UNDP Open Data projects - Morocco",
-  "ma_aid", "aid",
-  "https://api.open.undp.org/api/units/MAR.json",
-  "projects",
-  "fr", "[\"ma\",\"aid\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Every UNDP project in the Morocco country office: project id (award id), title, nested outputs (output_id, sector, description, SDG, signature solution, policy markers), subnational locations with lat/lon, purchase_orders and documents. Detail hop gives project description, fiscal years, region and operating unit.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");

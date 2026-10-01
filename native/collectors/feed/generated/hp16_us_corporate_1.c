@@ -40,6 +40,7 @@ static const hp_source T[] = {
     .url = "https://as-dcc-pub-cann-w-p-002.azurewebsites.net/licenses/filteredSearch?searchQuery=green&pageSize=50&pageNumber=1",
     .array_path = "data",
     .detail_url = "https://as-dcc-pub-cann-w-p-002.azurewebsites.net/licenses/{v}", .detail_key = "id",
+    .page_param = "pageNumber", .page_start = 1,   /* declared by the row's own URL */
     .interval = 86400, .free_tier = 1 },
 
 };

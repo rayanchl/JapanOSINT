@@ -1,4 +1,4 @@
-/* Deep-record ci_aid sources (2), part 1 of 1.
+/* Deep-record ci_aid sources (1), part 1 of 1.
  *
  * Batch 17 verified each of these endpoints live AND separately probed the
  * per-record detail endpoint below it with a real id. The list half shipped as
@@ -12,16 +12,6 @@
 #include "lib/hpengine.h"
 
 static const hp_source T[] = {
-  { .id = "dportal-iati-ci",
-    .name = "d-portal IATI activities - Cote d'Ivoire",
-    .collector = "ci_aid", .category = "aid",
-    .description = "Aid activities in Cote d'Ivoire, many reported in French, with donor, title, description, financial commitment and spend, status and dates; per-activity transactions behind the detail hop.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "aid-record", .tags = "\"ci\",\"aid\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "fr",
-    .url = "https://d-portal.org/q?country_code=CI&limit=50&form=json",
-    .array_path = "rows",
-    .detail_url = "https://d-portal.org/q?from=act%2Ctrans&aid={v}&form=json&limit=100", .detail_key = "aid",
-    .interval = 86400, .free_tier = 1 },
-
   { .id = "undp-projects-ci",
     .name = "UNDP Open Data projects - Cote d'Ivoire",
     .collector = "ci_aid", .category = "aid",

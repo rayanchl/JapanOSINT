@@ -17,9 +17,3 @@ VJSON_KEYED(dportal_iati_eg, "dportal-iati-eg", "d-portal IATI activities - Egyp
   "Aid activities in Egypt with reporting organisation, funder, title, description, commitment and spend, and activity dates; transactions available per activity.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.",
   "aid");
 
-VJSON(undp_projects_eg, "undp-projects-eg", "UNDP Open Data projects - Egypt", "UNDP Open Data projects - Egypt",
-  "eg_aid", "aid",
-  "https://api.open.undp.org/api/units/EGY.json",
-  "projects",
-  "en", "[\"eg\",\"aid\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "UNDP Egypt project portfolio: project id, title, outputs with sector and SDG mapping, geolocated activity sites, purchase orders and documents.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");

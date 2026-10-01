@@ -1,4 +1,4 @@
-/* Deep-record us_civilian sources (11), part 1 of 1.
+/* Deep-record us_civilian sources (10), part 1 of 1.
  *
  * Batch 16 verified each of these endpoints live AND separately probed the
  * per-record detail endpoint below it with a real id. The list half shipped as
@@ -95,15 +95,6 @@ static const hp_source T[] = {
     .description = "Full record for one case id including the complete free-text description, resolution status_notes, media_url and coordinates.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://mobile311.sfgov.org/open311/v2/requests/101004634285.json",
-    .detail_url = "https://mobile311.sfgov.org/open311/v2/requests/{v}.json", .detail_key = "service_request_id",
-    .interval = 21600, .free_tier = 1 },
-
-  { .id = "us-sf-311-open311-requests",
-    .name = "San Francisco 311 - Open311 GeoReport v2 requests",
-    .collector = "us_civilian", .category = "civilian",
-    .description = "Live 311 case feed: service_request_id, status, status_notes, service_name, service_code, description (free text, frequently contains licence plates, vehicle descriptions and named complaints), requested_datetime, updated_datetime, address, lat/long, media_url. Supports &service_code=, &start_date=, &end_date=, &status= filters. One of the only surviving Open311 GeoReport servers in the US.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://mobile311.sfgov.org/open311/v2/requests.json?page_size=5",
     .detail_url = "https://mobile311.sfgov.org/open311/v2/requests/{v}.json", .detail_key = "service_request_id",
     .interval = 21600, .free_tier = 1 },
 

@@ -17,7 +17,6 @@ static const hp_source T[] = {
     .collector = "it_research", .category = "research",
     .description = "All works Meta attributes to one ORCID, each with co-authors (with their own ORCIDs and omids), venue, date and type. A third independent answer to 'what did this person publish', good for cross-checking ORCID and OpenAlex.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "research-record", .tags = "\"it\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .mode = HP_CSV,
     .url = "https://api.opencitations.net/meta/v1/author/orcid:0000-0001-6187-6610",
     .detail_url = "https://api.opencitations.net/meta/v1/author/orcid:{v}", .detail_key = "orcid",
     .interval = 86400, .free_tier = 1 },

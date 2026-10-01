@@ -17,10 +17,10 @@ static const hp_source T[] = {
     .collector = "eu_research", .category = "research",
     .description = "1,488 EU-funded projects matching a term. Each result: reference/grant number, id, acronym, the programme array with code/id/rcn/title (H2020 pillar and topic), dates and teaser. The reference number is the key into cordis.europa.eu/project/id/{ref}.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "research-record", .tags = "\"eu\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://cordis.europa.eu/api/search/results?q=contenttype%3D%27project%27%20AND%20%27hydrogen%27&format=json&p=1&num=10",
+    .url = "https://cordis.europa.eu/api/search/results?q=contenttype%3D%27project%27%20AND%20%27hydrogen%27&format=json&p=1&num=10&srt=id:increasing",
     .array_path = "payload.results",
     .detail_url = "https://cordis.europa.eu/project/id/{v}", .detail_key = "reference",
-    .page_param = "p",   /* the URL pins this cursor at its first value */
+    .page_param = "p", .page_start = 1,   /* declared by the row's own URL */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "cordis-search-results-query",
@@ -31,7 +31,7 @@ static const hp_source T[] = {
     .url = "https://cordis.europa.eu/api/search/results?q=contenttype%3D%27result%27%20AND%20%27hydrogen%27&format=json&p=1&num=5",
     .array_path = "payload.results",
     .detail_url = "https://cordis.europa.eu/project/id/{v}", .detail_key = "relatedProjectReference",
-    .page_param = "p",   /* the URL pins this cursor at its first value */
+    .page_param = "p", .page_start = 1,   /* declared by the row's own URL */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "eu-cordis-projects-search",
@@ -42,7 +42,7 @@ static const hp_source T[] = {
     .url = "https://cordis.europa.eu/api/search/results?q=contenttype%3D%27project%27&p=1&num=5&format=json",
     .array_path = "payload.results",
     .detail_url = "https://cordis.europa.eu/project/id/{v}?format=json", .detail_key = "id",
-    .page_param = "p",   /* the URL pins this cursor at its first value */
+    .page_param = "p", .page_start = 1,   /* declared by the row's own URL */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "openaire-datasources-search",

@@ -17,9 +17,3 @@ VJSON_KEYED(af_dportal_act_ke, "af-dportal-act-ke", "d-portal (IATI) — aid act
   "IATI aid activities with Kenya as recipient: aid, reporting org and reporting_ref, funder_ref, title, description, status, start/end days, commitment and spend in four currencies. Detail hop by aid returns the activity record.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.",
   "aid");
 
-VJSON(af_dportal_trans_ke, "af-dportal-trans-ke", "d-portal (IATI) — aid transactions in Kenya", "d-portal (IATI) — aid transactions in Kenya",
-  "ke_aid", "aid",
-  "https://d-portal.org/q?from=act,trans&trans_country_code=KE&limit=5000&form=json",
-  "rows",
-  "en", "[\"ke\",\"aid\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Kenya activity-plus-transaction rows with trans_ref and trans_description; detail by aid returns the per-activity transaction ledger with values, currencies, flow and finance codes.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");

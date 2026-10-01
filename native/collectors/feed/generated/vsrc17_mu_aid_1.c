@@ -19,9 +19,3 @@ VJSON_KEYED(dportal_iati_mu, "dportal-iati-mu", "d-portal IATI activities - Maur
   "Aid activities in Mauritius with donor and reporting refs, project title, description, financial commitment and spend, and activity dates; transactions behind the detail hop.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.",
   "aid");
 
-VJSON(undp_projects_mu, "undp-projects-mu", "UNDP Open Data projects - Mauritius", "UNDP Open Data projects - Mauritius",
-  "mu_aid", "aid",
-  "https://api.open.undp.org/api/units/MUS.json",
-  "projects",
-  "en", "[\"mu\",\"aid\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "UNDP Mauritius projects: id, title, outputs with sector/SDG, subnational locations and purchase orders.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
