@@ -6,6 +6,15 @@ import CoreLocation
 struct IntelDetail: View {
     let uid: String
     let fallbackTitle: String
+    /// The row this detail was pushed from, when there was one.
+    ///
+    /// `GET /api/intel/items/:uid` has no `collapse` / `lang_view` post-pass —
+    /// those two run only over the LIST envelope (core/httpd.c) — so the
+    /// cluster and the translation exist on the list copy of the item and
+    /// nowhere else. Carrying it through is what makes `ClusterBadge` and
+    /// `TranslationToggle` reachable at all; when it is nil this view behaves
+    /// exactly as it did before.
+    var listItem: IntelItem? = nil
 
     @EnvironmentObject var apiClient: APIClient
     @EnvironmentObject var nav: MapNavigation
@@ -15,9 +24,18 @@ struct IntelDetail: View {
     @State private var loading = true
     @State private var error: String?
     @State private var entities: [ItemEntity] = []
+    /// Roadmap 27 — media assets (EXIF/OCR/pHash) for this item, fetched in
+    /// `load()`; the Media section stays hidden when empty.
+    @State private var media: [MediaAsset] = []
     @State private var revealed: RevealResult?
     @State private var revealing = false
     @State private var revealError: String?
+    /// "Add to case" — `POST /api/cases/:id/items` via `CasePickerSheet`.
+    @State private var showCasePicker = false
+    @State private var showShareLink = false
+    @State private var pinnedNotice: String?
+    /// A near-duplicate opened from the cluster badge.
+    @State private var openDuplicateUID: String?
 
     /// Breach records carry a "breach:" uid and (when a secret exists) an
     /// operator-revealable credential. Detected off the uid + properties so we
@@ -40,7 +58,53 @@ struct IntelDetail: View {
                     Text(error).font(.caption).foregroundStyle(theme.warning)
                 } else if let item {
                     metaRow(item)
-                    if let body = item.body, !body.isEmpty {
+                    // Camera records reach the Intel tab as ordinary intel
+                    // items, carrying the same feed properties the map popup
+                    // reads. Without this the whole point of the record — the
+                    // live picture — was only ever a `url` string in the
+                    // properties table below.
+                    if let fields = cameraFields(for: item) {
+                        Text("Camera feed").font(.headline).foregroundStyle(theme.text)
+                        CameraFeedView(
+                            directSnapshotURLString: fields.directSnapshotURL,
+                            pageURLString: fields.pageURL,
+                            youtubeID: fields.youtubeID,
+                            hlsURLString: fields.hlsURL,
+                            discoveryChannel: fields.discoveryChannel,
+                            cameraUID: fields.cameraUID,
+                            originalPageURLString: fields.originalPageURL,
+                            style: .full,
+                            showsHeader: true
+                        )
+                        if let raw = fields.pageURL, let url = URL(string: raw) {
+                            Link(destination: url) {
+                                Label("Open camera page", systemImage: "safari")
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.borderedProminent)
+                        }
+                    }
+                    // Roadmap 25 — corroboration. Only rendered when the list
+                    // this was opened from asked for `?collapse=1`.
+                    if let cluster = listItem?.cluster {
+                        ClusterBadge(cluster: cluster,
+                                     onOpenDuplicate: { dup in
+                                         if let u = dup.uid { openDuplicateUID = u }
+                                     })
+                    }
+                    // Roadmap 29 — original / translated / both. Replaces the
+                    // plain body block when a translation came back with the
+                    // list, so the machine-output banner always travels with
+                    // the translated words.
+                    if let t = listItem?.translation {
+                        TranslationToggle(
+                            originalTitle: nil,
+                            originalSummary: item.summary,
+                            originalBody: item.body,
+                            translation: t,
+                            originalLanguage: item.language,
+                            showsUnavailableNote: false)
+                    } else if let body = item.body, !body.isEmpty {
                         JapaneseAware(
                             text: body,
                             font: .body,
@@ -53,7 +117,11 @@ struct IntelDetail: View {
                             foregroundStyle: AnyShapeStyle(theme.text)
                         )
                     }
-                    if let urlStr = item.link, let url = URL(string: urlStr) {
+                    // Suppressed when the camera section above already renders
+                    // this exact URL as "Open camera page" — collectors put the
+                    // camera page in both `link` and `properties.url`.
+                    if let urlStr = item.link, let url = URL(string: urlStr),
+                       urlStr != cameraFields(for: item)?.pageURL {
                         Link(destination: url) {
                             Label("Open source", systemImage: "safari")
                         }
@@ -65,7 +133,7 @@ struct IntelDetail: View {
                         Text("Provenance").font(.headline).foregroundStyle(theme.text)
                         provenanceCard(prov)
                     }
-                    if let props = item.properties, !props.isEmpty {
+                    if let props = displayProperties(for: item), !props.isEmpty {
                         Text("Properties").font(.headline).foregroundStyle(theme.text)
                         propertiesGrid(props)
                     }
@@ -76,10 +144,24 @@ struct IntelDetail: View {
                         Button {
                             nav.showOnMap(coord, feature: mapFeature(from: item, at: coord))
                         } label: {
+                            // The label — not the button — carries the width so
+                            // the bordered chrome spans the column and the
+                            // icon+text sit centred inside it. Widening the
+                            // Button instead leaves a hit-target-sized pill
+                            // pinned to the leading edge of the VStack.
                             Label("Show on map", systemImage: "map")
+                                .frame(maxWidth: .infinity)
                         }
                         .buttonStyle(.bordered)
                     }
+
+                    // Analyst enrichment surfaces (roadmap 15 / 17 / 27). Each
+                    // fetches its own data and renders nothing until it has some.
+                    if !media.isEmpty {
+                        MediaSection(assets: media)
+                    }
+                    EvidenceSection(itemUid: uid)
+                    AnnotationsSection(refType: "intel_item", refId: uid)
                 }
             }
             .padding()
@@ -87,7 +169,60 @@ struct IntelDetail: View {
         .themedScreenBackground(theme)
         .navigationTitle(item?.title ?? fallbackTitle)
         .compatInlineTitle()
+        .toolbar {
+            ToolbarItem(placement: .compatPrimary) {
+                Menu {
+                    Button { showCasePicker = true } label: {
+                        Label("Add to case…", systemImage: "folder.badge.plus")
+                    }
+                    Button { showShareLink = true } label: {
+                        Label("Share a link to this…", systemImage: "link")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                }
+                .accessibilityLabel("Item actions")
+            }
+        }
+        .sheet(isPresented: $showCasePicker) {
+            // `intel_item` is the ref_type the server's REF_TYPES vocabulary
+            // uses for these rows (breach records included — they are
+            // intel_items with a "breach:" uid).
+            CasePickerSheet(refType: "intel_item",
+                            refId: uid,
+                            label: item?.title ?? fallbackTitle,
+                            onPinned: { summary in
+                                pinnedNotice = "Pinned to “\(summary.name)”."
+                            })
+        }
+        .sheet(isPresented: $showShareLink) {
+            PermalinkShareSheet(
+                state: permalinkState,
+                contextLabel: "Intel item · \(item?.title ?? fallbackTitle)")
+        }
+        .navigationDestination(item: $openDuplicateUID) { dupUID in
+            IntelDetail(uid: dupUID, fallbackTitle: dupUID)
+        }
+        .alert("Added to case",
+               isPresented: Binding(get: { pinnedNotice != nil },
+                                    set: { if !$0 { pinnedNotice = nil } })) {
+            Button("OK", role: .cancel) { pinnedNotice = nil }
+        } message: {
+            Text(pinnedNotice ?? "")
+        }
         .task { await load() }
+    }
+
+    /// The permalink vocabulary the server accepts is `kind`, `params`, `map`,
+    /// `layers`, `time`, `entity_id`, `case_id` — anything else is dropped
+    /// rather than carried, so only those keys are sent.
+    private var permalinkState: [String: Any] {
+        var state: [String: Any] = ["kind": "intel",
+                                    "params": ["uid": uid]]
+        if let c = item.flatMap({ coordinate(from: $0) }) {
+            state["map"] = ["lat": c.latitude, "lon": c.longitude, "zoom": 13]
+        }
+        return state
     }
 
     private var header: some View {
@@ -166,6 +301,27 @@ struct IntelDetail: View {
         let id = p.source_id ?? "?"
         if let name = p.source_name, name != id { return "\(name)  ·  \(id)" }
         return id
+    }
+
+    // MARK: - Cameras
+
+    /// Feed inputs when this item is a camera record, else nil. Camera
+    /// collectors write to `intel_items` like every other source, so the only
+    /// signal is the property bag — see `CameraFeedFields.describesCamera`.
+    private func cameraFields(for item: IntelItem) -> CameraFeedFields? {
+        guard let props = item.properties, CameraFeedFields.describesCamera(props) else {
+            return nil
+        }
+        return CameraFeedFields(properties: props)
+    }
+
+    /// Properties minus the keys the camera section already renders, so the
+    /// table doesn't repeat the feed URLs underneath the live picture.
+    private func displayProperties(for item: IntelItem) -> [String: AnyCodable]? {
+        guard let props = item.properties, !props.isEmpty else { return nil }
+        guard cameraFields(for: item) != nil else { return props }
+        let consumed = CameraFeedFields.consumedKeys.union(["name", "name_ja", "title"])
+        return props.filter { !consumed.contains($0.key) }
     }
 
     private func propertiesGrid(_ properties: [String: AnyCodable]) -> some View {
@@ -256,6 +412,9 @@ struct IntelDetail: View {
             item = try await apiClient.api.intelItem(uid: uid)
             // Non-fatal: an item with no extracted entities simply shows no chips.
             entities = (try? await apiClient.api.itemEntities(uid: uid)) ?? []
+            // Roadmap 27 — EXIF/OCR/pHash media for this item, if any. Best
+            // effort: no media just means the section stays hidden.
+            media = (try? await apiClient.api.mediaAssets(forItem: uid)) ?? []
             error = nil
         } catch let err {
             error = err.localizedDescription

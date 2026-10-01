@@ -7,9 +7,9 @@
  * Keyless LIVE. Non-numeric (or non-14-digit) entity → honest empty (there is
  * no free razao-social name search here). Fetch failure / not found → nothing.
  * Nothing is synthesized: every emitted field comes from the parsed response. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -92,6 +92,7 @@ struct SavedCard: View {
             .font(.title2.weight(.semibold))
             .foregroundStyle(.white.opacity(0.9))
             .shadow(color: .black.opacity(0.25), radius: 1, y: 1)
+            .accessibilityHidden(true)   // the card's title/layer name follow
     }
 }
 

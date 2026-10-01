@@ -14,14 +14,15 @@
  *   9 sentinel1_multi      first-wins: CDSE OData → Planetary Computer
  *                          → Earth Search
  * generateSeed() fallback dropped (rule 7). _meta dropped. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 /* JAPAN_BBOX = [122,24,154,46] (W,S,E,N) */
 #define BB_W 122
@@ -32,21 +33,15 @@
 
 static const char *JSON_HDRS[] = { "Content-Type: application/json", NULL };
 
-/* now ISO + today YYYY-MM-DD (UTC) */
-static void now_iso(char *o, size_t n) {
-  time_t t = time(NULL); struct tm g; gmtime_r(&t, &g);
-  strftime(o, n, "%Y-%m-%dT%H:%M:%S.000Z", &g);
-}
-static void today_ymd(char *o, size_t n) {
-  time_t t = time(NULL); struct tm g; gmtime_r(&t, &g);
-  strftime(o, n, "%Y-%m-%d", &g);
-}
-/* ISO window: from = now-Ndays, to = now */
-static void iso_window(int days, char *from, size_t fn, char *to, size_t tn) {
-  time_t t = time(NULL); struct tm g;
-  gmtime_r(&t, &g); strftime(to, tn, "%Y-%m-%dT%H:%M:%S.000Z", &g);
-  time_t f = t - (time_t)days * 86400; gmtime_r(&f, &g);
-  strftime(from, fn, "%Y-%m-%dT%H:%M:%S.000Z", &g);
+/* ISO window: from = now-Ndays, to = now. Returns 0 when either end cannot be
+ * rendered — both ends go into a STAC `datetime` range, and a half-built range
+ * is not a narrower query but a malformed one, so the caller skips the
+ * provider instead of asking for a window it did not mean. */
+static int iso_window(int days, char *from, size_t fn, char *to, size_t tn) {
+  time_t t = time(NULL);
+  if (!jo_time_fmt(t, "%Y-%m-%dT%H:%M:%S.000Z", to, tn)) return 0;
+  return jo_time_fmt(t - (time_t)days * 86400,
+                     "%Y-%m-%dT%H:%M:%S.000Z", from, fn) != NULL;
 }
 
 static const char *sv(const cJSON *o, const char *k) {
@@ -56,15 +51,7 @@ static const char *sv(const cJSON *o, const char *k) {
 }
 
 static cJSON *mk_feat(double lon, double lat) {
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
   return f;
 }
 
@@ -123,7 +110,10 @@ static void prov_himawari(http_client *http, cJSON *out) {
     snprintf(iso,sizeof iso,"%s-%s-%sT%s:%s:%s.000Z",y,mo,d,h,mi,se);
     (void)tmp;
   } else {
-    now_iso(iso, sizeof iso);
+    /* Unreachable: the early return above already required a >=16-char date.
+     * Kept faithful to the JS, and honest — an unrenderable clock leaves iso
+     * empty rather than filled from the stack. */
+    if (!jo_now_iso_ms(iso, sizeof iso)) { cJSON_Delete(latest); return; }
   }
   /* scene_id = date || iso ; id digits of (date||iso) */
   char scenebuf[40];
@@ -169,7 +159,10 @@ static void prov_himawari(http_client *http, cJSON *out) {
 /* ── 4. Landsat via Planetary Computer STAC ── */
 static void prov_landsat(http_client *http, cJSON *out) {
   char from[40], to[40];
-  iso_window(14, from, sizeof from, to, sizeof to);
+  if (!iso_window(14, from, sizeof from, to, sizeof to)) {
+    fprintf(stderr, "[satellite-imagery] cannot render the query window as a date\n");
+    return;
+  }
   char body[512];
   snprintf(body, sizeof body,
     "{\"bbox\":[%d,%d,%d,%d],\"datetime\":\"%s/%s\","
@@ -181,7 +174,6 @@ static void prov_landsat(http_client *http, cJSON *out) {
     body, JSON_HDRS, 10000);
   cJSON *feats = data ? cJSON_GetObjectItem(data, "features") : NULL;
   if (cJSON_IsArray(feats)) {
-    int i = 0;
     cJSON *fe;
     cJSON_ArrayForEach(fe, feats) {
       cJSON *geom = cJSON_GetObjectItem(fe, "geometry");
@@ -211,12 +203,24 @@ static void prov_landsat(http_client *http, cJSON *out) {
       }
       const char *fid = sv(fe, "id");
       char idbuf[96];
+      /* The STAC item id IS the scene's identity and is used whenever present.
+       * The positional fallback was the one path where `id` — a NATIVE_ID_KEY,
+       * so the row's uid — described the scene's slot in this search response
+       * instead of the scene: the STAC search is date-sorted over a rolling
+       * window, so the slots shift with every run and each poll re-pointed
+       * those uids at different scenes. A STAC item without an id has no
+       * upstream identity; say so instead of inventing one. */
       if (fid) snprintf(idbuf, sizeof idbuf, "IMG_LANDSAT_%s", fid);
-      else snprintf(idbuf, sizeof idbuf, "IMG_LANDSAT_%d", i);
+      else idbuf[0] = 0;
 
       cJSON *f = mk_feat(cx, cy);
       cJSON *p = cJSON_CreateObject();
-      cJSON_AddStringToObject(p, "id", idbuf);
+      if (idbuf[0])
+        cJSON_AddStringToObject(p, "id", idbuf);
+      else
+        cJSON_AddStringToObject(p, "id_basis",
+          "none: this STAC item carried no id, so the row is uid'd by content "
+          "hash rather than a positional id");
       const char *plat = sv(props, "platform");
       cJSON_AddStringToObject(p, "platform", plat ? plat : "Landsat-9");
       cJSON_AddStringToObject(p, "sensor", "OLI");
@@ -234,7 +238,6 @@ static void prov_landsat(http_client *http, cJSON *out) {
       cJSON_AddStringToObject(p, "country", "JP");
       cJSON_AddItemToObject(f, "properties", p);
       cJSON_AddItemToArray(out, f);
-      i++;
     }
   }
   if (data) cJSON_Delete(data);
@@ -295,7 +298,10 @@ static int s2_stac_search(http_client *http, const char *url,
 /* ── 8. Sentinel-2 first-wins (SentinelHub creds path skipped: no creds) ── */
 static void prov_s2(http_client *http, cJSON *out) {
   char from[40], to[40];
-  iso_window(10, from, sizeof from, to, sizeof to);
+  if (!iso_window(10, from, sizeof from, to, sizeof to)) {
+    fprintf(stderr, "[satellite-imagery] cannot render the query window as a date\n");
+    return;
+  }
   char body[512];
   cJSON *tmp = cJSON_CreateArray();
 
@@ -315,7 +321,12 @@ static void prov_s2(http_client *http, cJSON *out) {
 
   /* CDSE OData */
   {
-    char filt[1024], url[1400];
+    /* url is 2176, not 1400: `enc` below holds up to 2002 bytes of percent-
+     * encoded filter and the fixed part of this URL is 68, so the request can
+     * want 2071. A cut OData $filter is not a shorter query — it is a MALFORMED
+     * one, which Copernicus answers with a 400 that this loop reads as "no
+     * scenes today". Sized so no filter `enc` can hold is ever cut. */
+    char filt[1024], url[2176];
     snprintf(filt, sizeof filt,
       "Collection/Name eq 'SENTINEL-2' and "
       "OData.CSC.Intersects(area=geography'SRID=4326;"
@@ -421,12 +432,20 @@ static const char *s1_platform(const char *name) {
 /* ── 9. Sentinel-1 first-wins: CDSE OData → Planetary Computer → Earth Search */
 static void prov_s1(http_client *http, cJSON *out) {
   char from[40], to[40];
-  iso_window(14, from, sizeof from, to, sizeof to);
+  if (!iso_window(14, from, sizeof from, to, sizeof to)) {
+    fprintf(stderr, "[satellite-imagery] cannot render the query window as a date\n");
+    return;
+  }
   cJSON *tmp = cJSON_CreateArray();
 
   /* CDSE OData */
   {
-    char filt[1024], url[1400];
+    /* url is 2176, not 1400: `enc` below holds up to 2002 bytes of percent-
+     * encoded filter and the fixed part of this URL is 68, so the request can
+     * want 2071. A cut OData $filter is not a shorter query — it is a MALFORMED
+     * one, which Copernicus answers with a 400 that this loop reads as "no
+     * scenes today". Sized so no filter `enc` can hold is ever cut. */
+    char filt[1024], url[2176];
     snprintf(filt, sizeof filt,
       "Collection/Name eq 'SENTINEL-1' and "
       "OData.CSC.Intersects(area=geography'SRID=4326;"
@@ -623,9 +642,54 @@ done:;
   cJSON_Delete(tmp);
 }
 
+/* Every provider above builds properties but none set a title/link, so the
+ * geojson toolkit (pickText over title|name|name_ja|label) wrote NULL and the
+ * rows were unreadable in every UI. It also kept the true scene FOOTPRINT in
+ * properties.bbox_geom while emitting a bare Point as the feature geometry, so
+ * the polygon never reached intel_items.geometry. Both are fixed here, once,
+ * from fields the providers genuinely fetched — nothing is invented. */
+static void decorate(cJSON *features) {
+  cJSON *fe;
+  cJSON_ArrayForEach(fe, features) {
+    cJSON *p = cJSON_GetObjectItem(fe, "properties");
+    if (!p) continue;
+
+    if (!cJSON_GetObjectItem(p, "title")) {
+      const char *plat  = sv(p, "platform");
+      const char *scene = sv(p, "scene_id");
+      const char *when  = sv(p, "datetime");
+      cJSON *cc = cJSON_GetObjectItem(p, "cloud_cover");
+      char t[256];
+      if (plat && when && cc && cJSON_IsNumber(cc))
+        snprintf(t, sizeof t, "%s %.19s — %s (%.0f%% cloud)",
+                 plat, when, scene ? scene : "scene", cc->valuedouble);
+      else if (plat && when)
+        snprintf(t, sizeof t, "%s %.19s — %s",
+                 plat, when, scene ? scene : "scene");
+      else if (plat)
+        snprintf(t, sizeof t, "%s — %s", plat, scene ? scene : "scene");
+      else continue;
+      cJSON_AddStringToObject(p, "title", t);
+    }
+
+    /* provenance: the preview PNG is the only per-scene URL upstream gives */
+    if (!cJSON_GetObjectItem(p, "link")) {
+      const char *pv = sv(p, "preview_url");
+      if (pv) cJSON_AddStringToObject(p, "link", pv);
+    }
+
+    /* promote the fetched footprint polygon to the feature geometry */
+    cJSON *bb = cJSON_GetObjectItem(p, "bbox_geom");
+    if (bb && cJSON_IsObject(bb) && cJSON_GetObjectItem(bb, "coordinates")) {
+      cJSON_DeleteItemFromObject(fe, "geometry");
+      cJSON_AddItemToObject(fe, "geometry", cJSON_Duplicate(bb, 1));
+    }
+  }
+}
+
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *features = cJSON_CreateArray();
-  char day[16]; today_ymd(day, sizeof day);
+  char day[16]; jo_now_fmt("%Y-%m-%d", day, sizeof day);
 
   prov_himawari(ctx->http, features);                              /* 1 */
   /* 2 nasa_gibs_modis / 3 nasa_gibs_viirs / 5 rammb_slider_goes18:
@@ -640,6 +704,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   prov_s1(ctx->http, features);                                    /* 9 */
   (void)day;
 
+  decorate(features);
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[satellite-imagery] emitted %d\n", n);

@@ -7,9 +7,9 @@
  *   GITHUB_REPO_SEARCH   api.github.com/search/repositories?q=<e>   (JSON)
  *   GITLAB_PROJECT_SEARCH gitlab.com/api/v4/projects?search=<e>     (JSON)
  *   GITHUB_GISTS         api.github.com/users/<e>/gists             (JSON) */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -7,9 +7,9 @@
  *   HACKERNEWS_SEARCH  hn.algolia.com/api/v1/search?query=<e>         (JSON)
  *   REDDIT_PULLPUSH    api.pullpush.io/reddit/search/submission?q=<e> (JSON)
  *   CORE_SEARCH        api.core.ac.uk/v3/search/works (CORE_API_KEY)  (JSON) */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

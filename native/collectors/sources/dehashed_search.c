@@ -3,35 +3,24 @@
  * (dehashed_search → handle_dehashed_search). Canonical SERVICE id in
  * osint_dispatcher.c: {SERVICE_DEHASHED_SEARCH, handle_dehashed_search,
  * "DEHASHED_SEARCH", true}. Entity = email/username/ip/phone/hash/domain/
- * name (auto-detected by detect_query_type, mirrored verbatim). Keys
- * DEHASHED_EMAIL + DEHASHED_API_KEY are read but the upstream Dehashed call
- * is itself only a structured placeholder (it never sends Basic auth), and
- * LeakCheck is keyless — so this is NOT a hard gate; upstream always returns
- * a success=true row. We reproduce its exact `root`:
- *  {query,timestamp,detected_type,results:[<dehashed-stub|err>,<leakcheck>],
- *   total_breaches_found,compromised,recommendation|note,disclaimer}
- * success=true, confidence 90 if total_found>0 else 70. Emits one
- * osint_service_result row (body = {success,confidence,data}). */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+ * name (auto-detected by detect_query_type, mirrored verbatim). Two real
+ * fetches: DeHashed via HTTP Basic auth (DEHASHED_EMAIL + DEHASHED_API_KEY —
+ * skipped silently, no fabricated row, when either is absent), and the keyless
+ * LeakCheck public endpoint. Neither is a hard gate; with no keys and no
+ * breach the source is honestly empty. PER-RECORD EMIT: one osint_service_result
+ * row per real breach source returned (body = {success,confidence,data}); no
+ * breaches → emit nothing. The earlier port carried a Dehashed stub that never
+ * authenticated — that placeholder is gone; the call below sends real Basic
+ * auth and returns NULL on any failure. */
+#include "lib/jocore.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
-static void uri_encode(const char *in, char *out, size_t cap) {
-  static const char *keep = "-_.!~*'()";
-  size_t w = 0;
-  for (const unsigned char *p = (const unsigned char *)in; *p && w + 4 < cap; p++) {
-    unsigned char c = *p;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || strchr(keep, c)) out[w++] = (char)c;
-    else { snprintf(out + w, cap - w, "%%%02X", c); w += 3; }
-  }
-  out[w] = 0;
-}
 
 typedef enum { D_EMAIL, D_USERNAME, D_IP, D_PHONE, D_PASSWORD,
                D_HASH, D_NAME, D_DOMAIN } dtype_t;
@@ -112,7 +101,7 @@ static cJSON *query_dehashed(http_client *http, const char *q, dtype_t t) {
   if (!email || !key || !*email || !*key) return NULL;   /* skip silently */
 
   char enc[512];
-  uri_encode(q, enc, sizeof enc);
+  jo_uri_encode_buf(q, enc, sizeof enc);
   char url[1024];
   snprintf(url, sizeof url, "https://api.dehashed.com/search?query=%s:%s",
            field_name(t), enc);
@@ -143,7 +132,7 @@ static cJSON *query_dehashed(http_client *http, const char *q, dtype_t t) {
  * positive hit (caller owns the duplicate), else NULL (failure / no breach). */
 static cJSON *query_leakcheck(http_client *http, const char *q) {
   char enc[512];
-  uri_encode(q, enc, sizeof enc);
+  jo_uri_encode_buf(q, enc, sizeof enc);
   char url[640];
   snprintf(url, sizeof url, "https://leakcheck.io/api/public?check=%s", enc);
   http_response hr = {0};
@@ -184,7 +173,7 @@ static int emit_breach(intel_sink *sink, const char *q, const char *prov,
 
   cJSON *env = cJSON_CreateObject();
   cJSON_AddBoolToObject(env, "success", 1);
-  cJSON_AddNumberToObject(env, "confidence", 90);
+  cJSON_AddItemToObject(env, "confidence", cJSON_CreateNull());
   cJSON_AddItemToObject(env, "data", cJSON_Duplicate(data, 1));
   char *bj = cJSON_PrintUnformatted(env);
 
@@ -193,8 +182,9 @@ static int emit_breach(intel_sink *sink, const char *q, const char *prov,
   cJSON_AddStringToObject(props, "entity", q);
   cJSON_AddStringToObject(props, "breach_source", src_name);
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 90);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
 
   char rk[640]; snprintf(rk, sizeof rk, "breach:%s:%s", src_name, q);
   char title[420]; snprintf(title, sizeof title, "Breach: %s — %s", src_name, q);

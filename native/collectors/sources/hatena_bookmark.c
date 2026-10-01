@@ -3,9 +3,9 @@
  * feed; bespoke item scan for title/link/dc:date/hatena:bookmarkcount/
  * dc:subject. uid = hatena-bookmark|<link> (== intelUid(SOURCE_ID,link,...)).
  * summary "<n> bookmarks · <subject>" reproduced for parity. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -88,10 +88,26 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       if (subj && *subj) cJSON_AddStringToObject(pj, "subject", subj);
       else cJSON_AddNullToObject(pj, "subject");
       char *pjs = cJSON_PrintUnformatted(pj);
-      char tags[160];
-      if (subj && *subj)
-        snprintf(tags, sizeof tags, "[\"hatena\",\"trending\",\"cat:%s\"]", subj);
-      else snprintf(tags, sizeof tags, "[\"hatena\",\"trending\"]");
+
+      /* `subj` is the feed's dc:subject — fetched text, already entity-decoded
+       * above, so it can hold a '"' or '\\'. printf'ing it into a JSON array
+       * literal (as this did) emitted malformed tags_json, which is stored
+       * verbatim; the API filters tags with SQLite's
+       * json_each(intel_items.tags), which then errors on that row and fails
+       * the WHOLE tag-filtered listing, not just this item. A long Japanese
+       * category also overran the 160-byte buffer and truncated mid-string,
+       * breaking the JSON the same way. Build it with cJSON, like `properties`
+       * seven lines up. */
+      cJSON *tj = cJSON_CreateArray();
+      cJSON_AddItemToArray(tj, cJSON_CreateString("hatena"));
+      cJSON_AddItemToArray(tj, cJSON_CreateString("trending"));
+      if (subj && *subj) {
+        char cat[512];
+        snprintf(cat, sizeof cat, "cat:%s", subj);
+        cJSON_AddItemToArray(tj, cJSON_CreateString(cat));
+      }
+      char *tags = cJSON_PrintUnformatted(tj);
+
       intel_item item = {0};
       item.remote_key = link;            /* uid = hatena-bookmark|<link> */
       item.title = title;
@@ -101,8 +117,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       item.published_at = date;
       item.record_type = "hatena-bookmark";
       item.properties_json = pjs;
-      item.tags_json = tags;
+      item.tags_json = tags ? tags : "[\"hatena\",\"trending\"]";
       if (sink->emit(sink, &item) >= 0) n++;
+      free(tags); cJSON_Delete(tj);
       free(pjs); cJSON_Delete(pj);
     }
     free(title); free(link); free(date); free(bmc); free(subj);
@@ -110,7 +127,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   free(xml);
   fprintf(stderr, "[hatena-bookmark] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def hatena_bookmark_def = {

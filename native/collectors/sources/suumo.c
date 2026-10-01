@@ -5,13 +5,14 @@
  * with no parseable count is OMITTED (honest, possibly empty). Never
  * fabricated counts. Non-spatial: emit intel_item (has_geo=0).
  * uid = suumo|<slug> (mirrors intelUid). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 struct pe { const char *ja, *slug; };
 
@@ -62,15 +63,16 @@ static int parse_count(const char *html, long *out) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  char now[32];
-  { time_t t = time(NULL); struct tm tm; gmtime_r(&t, &tm);
-    strftime(now, sizeof now, "%Y-%m-%dT%H:%M:%S.000Z", &tm); }
+  /* The row's own observation time. If the clock cannot be rendered the
+   * listing counts still stand and published_at is left NULL. */
+  char now[32]; jo_now_iso_ms(now, sizeof now);
 
-  int n = 0;
+  int n = 0, fetched = 0;
   for (int i = 0; i < NPREF; i++) {
     char url[128];
     snprintf(url, sizeof url, "https://suumo.jp/chintai/%s/", PREFS[i].slug);
     char *html = feed_get_text(ctx->http, url, 15000);
+    if (html) fetched++;
     long count = 0; int have = 0;
     if (html) { have = parse_count(html, &count); free(html); }
     if (!have) continue;                 /* omit pref — honest empty */
@@ -103,7 +105,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     it.body         = body;
     it.link         = url;
     it.lang         = "ja";
-    it.published_at = now;
+    it.published_at = now[0] ? now : NULL;
     it.record_type  = "suumo";
     it.tags_json    = tj;
     it.properties_json = pj;
@@ -113,8 +115,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_Delete(p); cJSON_Delete(tags);
   }
 
-  fprintf(stderr, "[suumo] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  fprintf(stderr, "[suumo] emitted %d (%d/%d prefecture pages fetched)\n",
+          n, fetched, NPREF);
+  /* STATUS code, not a row count: a page that loads without a listing count is
+   * an honest empty. Only a total fetch failure is a real error. */
+  return fetched > 0 ? 0 : -1;
 }
 
 static const source_def suumo_def = {

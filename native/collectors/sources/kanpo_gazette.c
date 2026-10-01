@@ -10,8 +10,8 @@
  * Flow: top page → latest issue dates (YYYYMMDD.fullcontents.html) → for each
  * recent date, parse the contents page's <a href="...f.html"><span class="text">
  * TITLE</span></a> entries. uid = kanpo|sha1(date|href|title). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -140,7 +140,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int total = 0;
   for (int i = 0; i < nd; i++) total += scrape_date(ctx, sink, dates[i]);
   fprintf(stderr, "[kanpo] emitted %d (dates=%d)\n", total, nd);
-  return total > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def kanpo_gazette_def = {

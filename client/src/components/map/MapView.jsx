@@ -7,8 +7,10 @@ import { TextLayer } from '@deck.gl/layers';
 import { Tiles3DLoader } from '@loaders.gl/3d-tiles';
 import { Matrix4 } from '@math.gl/core';
 import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers';
+import { renderByModality, GEO_SUFFIXES } from './renderers/modalityRenderers.js';
 import useLiveVehicles from '../../hooks/useLiveVehicles';
 import { getLayerIcon } from '../../utils/layerIcons';
+import apiUrl from '../../utils/apiUrl.js';
 import { rasterizeIcon } from '../../utils/iconRaster';
 import { createRailwayLineTags } from '../../utils/railwayLineTags';
 import { useSatelliteTracks } from '../../hooks/useSatelliteTracks.js';
@@ -39,9 +41,10 @@ function layerIconImageId(layerId) {
   return `icon-${layerId}`;
 }
 
-async function registerLayerIcons(map) {
+async function registerLayerIcons(map, catalog) {
+  const entries = Object.entries(catalog && Object.keys(catalog).length ? catalog : LAYER_DEFINITIONS);
   await Promise.all(
-    Object.entries(LAYER_DEFINITIONS).map(async ([layerId, def]) => {
+    entries.map(async ([layerId, def]) => {
       const imgId = layerIconImageId(layerId);
       if (!map.hasImage(imgId)) {
         const Icon = getLayerIcon(layerId);
@@ -403,7 +406,7 @@ const MAP_STYLES = {
 let _plateauTilesetsPromise = null;
 function loadPlateauTilesets() {
   if (!_plateauTilesetsPromise) {
-    _plateauTilesetsPromise = fetch('/api/plateau/tilesets')
+    _plateauTilesetsPromise = fetch(apiUrl('/api/plateau/tilesets'))
       .then((r) => {
         if (!r.ok) throw new Error(`tilesets HTTP ${r.status}`);
         return r.json();
@@ -499,7 +502,14 @@ function getBasemapSymbolLayerIds(map) {
   let style;
   try { style = map.getStyle(); } catch { return []; }
   if (!style?.layers) return [];
-  return style.layers.filter((l) => l.type === 'symbol').map((l) => l.id);
+  // Only the BASEMAP's symbol layers: those come from vector tiles and carry
+  // a `source-layer`. Our own data layers (icon sprites over GeoJSON sources)
+  // have none — and hiding them here is exactly what blanked every
+  // icon-rendered layer the moment the map moved (earthquakes: 821 features
+  // in the source, both symbol layers `visibility: none`).
+  return style.layers
+    .filter((l) => l.type === 'symbol' && l['source-layer'])
+    .map((l) => l.id);
 }
 
 function setBasemapSymbolsHidden(map, hide) {
@@ -534,9 +544,10 @@ function pickAnchor(geom) {
   if (geom.type === 'Point') return geom.coordinates;
   if (geom.type === 'LineString' || geom.type === 'MultiPoint') return geom.coordinates[0];
   if (geom.type === 'Polygon') return geom.coordinates[0]?.[0];
-  if (geom.type === 'MultiLineString' || geom.type === 'MultiPolygon') {
-    return geom.coordinates[0]?.[0]?.[0] ?? geom.coordinates[0]?.[0];
-  }
+  // Split: MultiLineString nests one level less than MultiPolygon, so a
+  // shared `[0][0][0]` would yield a bare longitude number for the former.
+  if (geom.type === 'MultiLineString') return geom.coordinates[0]?.[0];
+  if (geom.type === 'MultiPolygon') return geom.coordinates[0]?.[0]?.[0];
   return null;
 }
 
@@ -591,20 +602,43 @@ export function applyUnifiedStationsModeFilter(map, enabledModes) {
   if (map.getLayer(footprintId)) map.setFilter(footprintId, footprintFilter);
 }
 
-function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
+// Sub-layer suffixes every renderer may create under `layer-<id>`. Kept as an
+// explicit list (not a prefix sweep) because server ids can be prefixes of
+// one another (`hazard` / `hazard-map-portal`).
+const LAYER_SUFFIXES = [
+  '', '-heat', '-extrude', '-line', '-dropline', '-label',
+  '-fallback', '-ring1', '-ring2', '-ring3', '-ring4',
+  ...GEO_SUFFIXES,
+];
+
+// Raster/image sub-sources are numbered (`-raster-0`, `-image-3`, …); sweep
+// them by prefix — the numeric tail keeps the prefix unambiguous.
+function removeRasterSublayers(map, layerId) {
+  const mainLayerId = `layer-${layerId}`;
+  const sourceId = `source-${layerId}`;
+  if (!map.getStyle) return;
+  const style = map.getStyle();
+  for (const l of style?.layers || []) {
+    if (l.id.startsWith(`${mainLayerId}-raster-`) || l.id.startsWith(`${mainLayerId}-image-`)) map.removeLayer(l.id);
+  }
+  for (const sid of Object.keys(style?.sources || {})) {
+    if (sid.startsWith(`${sourceId}-raster-`) || sid.startsWith(`${sourceId}-image-`)) {
+      if (map.getSource(sid)) map.removeSource(sid);
+    }
+  }
+}
+
+function addLayerToMap(map, layerId, geojson, layerDef, opacity, onNotice) {
   const sourceId = `source-${layerId}`;
   const mainLayerId = `layer-${layerId}`;
 
   // Remove main layer and any sub-layers we created (heat, extrude, line,
-  // dropline, label, ring1..4, fallback).
-  const SUFFIXES = [
-    '', '-heat', '-extrude', '-line', '-dropline', '-label',
-    '-fallback', '-ring1', '-ring2', '-ring3', '-ring4',
-  ];
-  for (const s of SUFFIXES) {
+  // dropline, label, ring1..4, fallback, geometry fallbacks, raster).
+  for (const s of LAYER_SUFFIXES) {
     const id = `${mainLayerId}${s}`;
     if (map.getLayer(id)) map.removeLayer(id);
   }
+  removeRasterSublayers(map, layerId);
   // Aircraft: altitude-bucket icon sub-layers created in the flightAdsb case.
   if (layerId === 'flightAdsb' && map.getStyle) {
     const allLayers = (map.getStyle().layers || []).map((l) => l.id);
@@ -683,15 +717,57 @@ function addLayerToMap(map, layerId, geojson, layerDef, opacity) {
     };
   }
 
+  // The server-declared modality decides the renderer; the per-id paint
+  // table below is an override that only point-shaped / undeclared layers
+  // consult (see renderers/modalityRenderers.js).
+  let result;
   try {
-    addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayerId);
+    result = renderByModality(map, {
+      layerId,
+      entry: layerDef,
+      geojson,
+      opacity,
+      sourceId,
+      mainLayerId,
+      applyOverride: (m) => addLayerToMapInner(m, layerId, layerDef, opacity, sourceId, mainLayerId),
+    });
   } finally {
     if (hasIcon) {
       map.addLayer = originalAddLayer;
     }
   }
+  if (typeof onNotice === 'function') onNotice(layerId, result?.notices || []);
 }
 
+// A `coalesce` default inside a paint ramp is a fabricated measurement: a
+// monitoring post with no dose drew safe-green, a dam with no reading drew the
+// blue of 70% capacity, a JMA point with no intensity drew as shindo 5, an
+// event with no magnitude drew as a magnitude-3 orange dot. The sentinel below
+// is out of band for every one of those quantities, so it can never collide
+// with a real reading, and it is painted grey (and small, on the size ramps)
+// so unmeasured is visibly distinct from measured rather than plausible.
+const UNMEASURED = -1;
+const UNMEASURED_COLOR = '#6b7280';
+
+function unmeasuredAwareColor(valueExpr, ramp) {
+  return [
+    'case',
+    ['==', valueExpr, UNMEASURED], UNMEASURED_COLOR,
+    ['interpolate', ['linear'], valueExpr, ...ramp],
+  ];
+}
+
+function unmeasuredAwareRadius(valueExpr, ramp, unmeasuredPx = 3) {
+  return [
+    'case',
+    ['==', valueExpr, UNMEASURED], unmeasuredPx,
+    ['interpolate', ['linear'], valueExpr, ...ramp],
+  ];
+}
+
+// Per-layer PAINT OVERRIDES, keyed on client layer id. Returns true when it
+// drew the layer, false when it has no entry for this id — in which case the
+// modality renderer draws it. This table is decoration, not the registry.
 function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayerId) {
   switch (layerId) {
     case 'earthquakes':
@@ -700,24 +776,14 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
         type: 'circle',
         source: sourceId,
         paint: {
-          'circle-radius': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'magnitude'], ['get', 'mag'], 3],
-            1, 4,
-            3, 8,
-            5, 16,
-            7, 28,
-            9, 40,
-          ],
-          'circle-color': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'magnitude'], ['get', 'mag'], 3],
-            1, '#ffeb3b',
-            3, '#ff9800',
-            5, '#ff5722',
-            7, '#f44336',
-            9, '#b71c1c',
-          ],
+          'circle-radius': unmeasuredAwareRadius(
+            ['coalesce', ['get', 'magnitude'], ['get', 'mag'], UNMEASURED],
+            [1, 4, 3, 8, 5, 16, 7, 28, 9, 40],
+          ),
+          'circle-color': unmeasuredAwareColor(
+            ['coalesce', ['get', 'magnitude'], ['get', 'mag'], UNMEASURED],
+            [1, '#ffeb3b', 3, '#ff9800', 5, '#ff5722', 7, '#f44336', 9, '#b71c1c'],
+          ),
           'circle-opacity': opacity * 0.8,
           'circle-stroke-width': 1,
           'circle-stroke-color': '#ff4444',
@@ -949,15 +1015,10 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
         source: sourceId,
         paint: {
           'circle-radius': 10,
-          'circle-color': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'aqi'], ['get', 'value'], 50],
-            0, '#00ff88',
-            50, '#ffeb3b',
-            100, '#ff9800',
-            150, '#ff4444',
-            300, '#8b0000',
-          ],
+          'circle-color': unmeasuredAwareColor(
+            ['coalesce', ['get', 'aqi'], ['get', 'value'], UNMEASURED],
+            [0, '#00ff88', 50, '#ffeb3b', 100, '#ff9800', 150, '#ff4444', 300, '#8b0000'],
+          ),
           'circle-opacity': opacity * 0.75,
           'circle-stroke-width': 2,
           'circle-stroke-color': '#000000',
@@ -973,14 +1034,10 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
         source: sourceId,
         paint: {
           'circle-radius': 8,
-          'circle-color': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'value'], ['get', 'nGy'], 30],
-            0, '#00ff88',
-            50, '#ffd600',
-            100, '#ff8c00',
-            200, '#ff4444',
-          ],
+          'circle-color': unmeasuredAwareColor(
+            ['coalesce', ['get', 'value'], ['get', 'nGy'], UNMEASURED],
+            [0, '#00ff88', 50, '#ffd600', 100, '#ff8c00', 200, '#ff4444'],
+          ),
           'circle-opacity': opacity * 0.8,
           'circle-stroke-width': 1.5,
           'circle-stroke-color': '#ffd600',
@@ -1048,30 +1105,6 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
       });
       break;
 
-    case 'landPrice':
-      map.addLayer({
-        id: mainLayerId,
-        type: 'circle',
-        source: sourceId,
-        paint: {
-          'circle-radius': 6,
-          'circle-color': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'price'], ['get', 'value'], 100000],
-            10000, '#2196f3',
-            50000, '#4caf50',
-            100000, '#ffeb3b',
-            500000, '#ff9800',
-            1000000, '#f44336',
-          ],
-          'circle-opacity': opacity * 0.75,
-          'circle-stroke-width': 1,
-          'circle-stroke-color': '#000',
-          'circle-stroke-opacity': opacity * 0.3,
-        },
-      });
-      break;
-
     case 'river':
       map.addLayer({
         id: mainLayerId,
@@ -1084,29 +1117,6 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
           'circle-stroke-width': 2,
           'circle-stroke-color': '#1565c0',
           'circle-stroke-opacity': opacity * 0.6,
-        },
-      });
-      break;
-
-    case 'crime':
-      map.addLayer({
-        id: `${mainLayerId}-heat`,
-        type: 'heatmap',
-        source: sourceId,
-        paint: {
-          'heatmap-weight': ['coalesce', ['get', 'count'], ['get', 'incidents'], 1],
-          'heatmap-intensity': 1.5,
-          'heatmap-color': [
-            'interpolate', ['linear'], ['heatmap-density'],
-            0, 'rgba(0,0,0,0)',
-            0.2, '#311b92',
-            0.4, '#d32f2f',
-            0.6, '#ff5722',
-            0.8, '#ff9800',
-            1, '#ffeb3b',
-          ],
-          'heatmap-radius': 25,
-          'heatmap-opacity': opacity * 0.7,
         },
       });
       break;
@@ -2135,23 +2145,14 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
         type: 'circle',
         source: sourceId,
         paint: {
-          'circle-radius': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'intensity_numeric'], ['get', 'magnitude'], 5],
-            0, 5,
-            4, 9,
-            6, 16,
-            7, 24,
-          ],
-          'circle-color': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'intensity_numeric'], ['get', 'magnitude'], 5],
-            0, '#ffeb3b',
-            3, '#ff9800',
-            5, '#ff5722',
-            6, '#d84315',
-            7, '#b71c1c',
-          ],
+          'circle-radius': unmeasuredAwareRadius(
+            ['coalesce', ['get', 'intensity_numeric'], ['get', 'magnitude'], UNMEASURED],
+            [0, 5, 4, 9, 6, 16, 7, 24],
+          ),
+          'circle-color': unmeasuredAwareColor(
+            ['coalesce', ['get', 'intensity_numeric'], ['get', 'magnitude'], UNMEASURED],
+            [0, '#ffeb3b', 3, '#ff9800', 5, '#ff5722', 6, '#d84315', 7, '#b71c1c'],
+          ),
           'circle-opacity': opacity * 0.85,
           'circle-stroke-width': 1.5,
           'circle-stroke-color': '#ffffff',
@@ -2358,14 +2359,10 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
             300000000, 16,
             660000000, 24,
           ],
-          'circle-color': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'current_pct'], 70],
-            0, '#b71c1c',
-            40, '#fb8c00',
-            70, '#42a5f5',
-            90, '#0277bd',
-          ],
+          'circle-color': unmeasuredAwareColor(
+            ['coalesce', ['get', 'current_pct'], UNMEASURED],
+            [0, '#b71c1c', 40, '#fb8c00', 70, '#42a5f5', 90, '#0277bd'],
+          ),
           'circle-opacity': opacity * 0.85,
           'circle-stroke-width': 1.5,
           'circle-stroke-color': '#ffffff',
@@ -4091,17 +4088,9 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
       break;
 
     default:
-      map.addLayer({
-        id: mainLayerId,
-        type: 'circle',
-        source: sourceId,
-        paint: {
-          'circle-radius': 6,
-          'circle-color': layerDef.color,
-          'circle-opacity': opacity * 0.8,
-        },
-      });
+      return false;
   }
+  return true;
 }
 
 // Enumerate every MapLibre layer ID on the map that belongs to an
@@ -4128,7 +4117,11 @@ function collectInteractiveLayerIds(map) {
     const id = l.id;
     if (!id) continue;
     if (id.startsWith('layer-')) out.push(id);
-    else if (id.startsWith('live-vehicles-') && id.endsWith('-layer')) out.push(id);
+    // `-layer` and `-layer-synthetic` both: the estimated vehicles must be
+    // clickable too, so the popup can say what they are rather than leaving a
+    // marker on the map that answers nothing when you interrogate it.
+    else if (id.startsWith('live-vehicles-') &&
+             (id.endsWith('-layer') || id.endsWith('-layer-synthetic'))) out.push(id);
   }
   return out;
 }
@@ -4136,23 +4129,12 @@ function collectInteractiveLayerIds(map) {
 function removeLayerFromMap(map, layerId) {
   const mainLayerId = `layer-${layerId}`;
   const sourceId = `source-${layerId}`;
-  const variants = [
-    mainLayerId,
-    `${mainLayerId}-heat`,
-    `${mainLayerId}-extrude`,
-    `${mainLayerId}-line`,
-    `${mainLayerId}-label`,
-    `${mainLayerId}-fallback`,
-    `${mainLayerId}-ring1`,
-    `${mainLayerId}-ring2`,
-    `${mainLayerId}-ring3`,
-    `${mainLayerId}-ring4`,
-    `${mainLayerId}-dropline`,
-  ];
 
-  for (const lid of variants) {
+  for (const s of LAYER_SUFFIXES) {
+    const lid = `${mainLayerId}${s}`;
     if (map.getLayer(lid)) map.removeLayer(lid);
   }
+  removeRasterSublayers(map, layerId);
   // Aircraft: altitude-bucket icon sub-layers.
   if (layerId === 'flightAdsb' && map.getStyle) {
     const allLayers = (map.getStyle().layers || []).map((l) => l.id);
@@ -4170,7 +4152,7 @@ function removeLayerFromMap(map, layerId) {
   clearLayerAddons(layerId);
 }
 
-export default function MapView({ layers, layerData, onFeatureClick, onMapReady }) {
+export default function MapView({ layers, layerData, catalog, onFeatureClick, onMapReady, onRenderNotice }) {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const [mapReady, setMapReady] = useState(false);
@@ -4179,6 +4161,12 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
   const [currentStyle, setCurrentStyle] = useState('carto_dark_matter');
   const [viewport, setViewport] = useState(null);
   const prevLayersRef = useRef({});
+  // Bumped after the catalogue's icons are registered so layers drawn as
+  // bare circles before their sprite existed are repainted with it.
+  const [iconEpoch, setIconEpoch] = useState(0);
+  const catalogRef = useRef(catalog);
+  catalogRef.current = catalog;
+  const layerDefFor = useCallback((id) => catalogRef.current?.[id] || LAYER_DEFINITIONS[id], []);
   const bakedSceneIdsRef = useRef(new Set());
   const satelliteImageryVisibleRef = useRef(false);
   // Single deck.gl MapboxOverlay shared by all client-rendered overlays
@@ -4256,7 +4244,7 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
     };
 
     map.on('load', () => {
-      registerLayerIcons(map);
+      registerLayerIcons(map, catalogRef.current).then(() => setIconEpoch((n) => n + 1));
       setMapReady(true);
       publishViewport();
     });
@@ -4314,6 +4302,9 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
     });
 
     mapRef.current = map;
+    // Dev-only handle so a headless browser (tests, screenshot audits) can
+    // inspect the live style/sources; stripped from production builds.
+    if (import.meta.env?.DEV && typeof window !== 'undefined') window.__joMap = map;
     if (onMapReady) onMapReady(map);
 
     // Allow other panels (e.g. CameraDiscoveryThread) to recenter the map by
@@ -4334,13 +4325,24 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
     };
   }, []);
 
+  // Server-only layers arrive after /api/layers answers: register their
+  // icon sprites too (idempotent — hasImage is checked per id).
+  useEffect(() => {
+    if (!mapReady || !mapRef.current || !catalog) return;
+    let cancelled = false;
+    registerLayerIcons(mapRef.current, catalog).then(() => {
+      if (!cancelled) setIconEpoch((n) => n + 1);
+    });
+    return () => { cancelled = true; };
+  }, [catalog, mapReady]);
+
   // Sync layers
   useEffect(() => {
     if (!mapReady || !mapRef.current) return;
     const map = mapRef.current;
 
     for (const [layerId, layerState] of Object.entries(layers)) {
-      const def = LAYER_DEFINITIONS[layerId];
+      const def = layerDefFor(layerId);
       if (!def) continue;
 
       const data = layerId === 'satelliteTracking'
@@ -4348,12 +4350,19 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
         : layerData[layerId];
       const prev = prevLayersRef.current[layerId];
       const wasVisible = prev?.visible;
-      const wasData = prev?.dataLength;
-      const currentDataLength = data?.features?.length ?? 0;
+      // Keying the repaint on feature *count* meant the opacity slider moved
+      // its own readout and nothing else, on every layer, and that any
+      // background refresh returning the same number of features — the normal
+      // case for aircraft, AIS, weather, river and dam — was discarded,
+      // leaving the previous positions on screen. Compare what actually
+      // changes: the collection's identity and the opacity being painted.
+      const wasDataRef = prev?.dataRef;
+      const wasOpacity = prev?.opacity;
+      const wasIconEpoch = prev?.iconEpoch;
 
       if (layerState.visible && data) {
-        if (!wasVisible || wasData !== currentDataLength) {
-          addLayerToMap(map, layerId, data, def, layerState.opacity);
+        if (!wasVisible || wasDataRef !== data || wasOpacity !== layerState.opacity || wasIconEpoch !== iconEpoch) {
+          addLayerToMap(map, layerId, data, def, layerState.opacity, onRenderNotice);
         }
       } else if (!layerState.visible && wasVisible) {
         removeLayerFromMap(map, layerId);
@@ -4361,7 +4370,9 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
 
       prevLayersRef.current[layerId] = {
         visible: layerState.visible,
-        dataLength: currentDataLength,
+        dataRef: data,
+        opacity: layerState.opacity,
+        iconEpoch,
       };
     }
 
@@ -4375,7 +4386,7 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
     if (layers?.unifiedSubways?.visible) enabledModes.add('subway');
     if (layers?.unifiedBuses?.visible) enabledModes.add('bus');
     applyUnifiedStationsModeFilter(map, enabledModes);
-  }, [layers, layerData, mapReady, coloredSatelliteTrackingFc]);
+  }, [layers, layerData, mapReady, coloredSatelliteTrackingFc, iconEpoch, layerDefFor, onRenderNotice]);
 
   // Live-transit vehicle layers — dedicated sources/layers managed outside
   // the standard fetch-and-paint path because data is client-generated.
@@ -4409,21 +4420,31 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
 
     for (const s of specs) {
       if (!s.visible) {
+        /* -synthetic first: removeSource throws while a layer still references
+         * it, so dropping this one would strand both and leave stale vehicles
+         * on the map after the toggle is switched off. */
+        if (map.getLayer(`${s.layerId}-synthetic`)) map.removeLayer(`${s.layerId}-synthetic`);
         if (map.getLayer(s.layerId)) map.removeLayer(s.layerId);
         if (map.getSource(s.sourceId)) map.removeSource(s.sourceId);
         continue;
       }
       if (!map.getSource(s.sourceId)) {
         map.addSource(s.sourceId, { type: 'geojson', data: s.data, tolerance: 0 });
-        // Rounded-rectangle SDF icon, tinted with the line color (darkened),
-        // rotated so the long axis aligns with the track, ground-aligned
-        // so it lies flat against the basemap — same treatment as the
-        // ground-cross pin marker.
+        // TWO layers, because these are two different kinds of claim and the
+        // map must not blur them. A schedule-backed position came from GTFS
+        // via /api/transit/active-trips; a synthetic one was computed in the
+        // browser at a constant speed and nothing observed it. Both used to
+        // render through this single solid-icon layer, so an estimate was
+        // pixel-identical to an observation — and a screenshot of the map read
+        // as evidence of where a train actually was.
+        //
+        // Solid rounded-rectangle = observed. Hollow dashed-ish ring = estimate.
         map.addLayer({
           id: s.layerId,
           type: 'symbol',
           source: s.sourceId,
           minzoom: 10,
+          filter: ['!=', ['get', 'synthetic'], true],
           layout: {
             'icon-image': 'live-train-rect',
             'icon-size': 0.6,
@@ -4438,6 +4459,22 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
           paint: {
             'icon-color': ['coalesce', ['get', 'line_color'], s.defaultColor],
             'icon-opacity': 0.9,
+          },
+        });
+        map.addLayer({
+          id: `${s.layerId}-synthetic`,
+          type: 'circle',
+          source: s.sourceId,
+          minzoom: 10,
+          filter: ['==', ['get', 'synthetic'], true],
+          paint: {
+            // Hollow: no fill at all, so it cannot be mistaken for the solid
+            // observed marker even at a glance or in a screenshot.
+            'circle-radius': 4,
+            'circle-opacity': 0,
+            'circle-stroke-width': 1.5,
+            'circle-stroke-color': ['coalesce', ['get', 'line_color'], s.defaultColor],
+            'circle-stroke-opacity': 0.55,
           },
         });
       } else {
@@ -4465,6 +4502,9 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
       if (!m) return;
       for (const id of ['live-vehicles-train', 'live-vehicles-subway', 'live-vehicles-bus']) {
         const layerId = `${id}-layer`;
+        /* -synthetic first: a source cannot be removed while any layer still
+         * references it, so missing this one would leave both behind. */
+        if (m.getLayer(`${layerId}-synthetic`)) m.removeLayer(`${layerId}-synthetic`);
         if (m.getLayer(layerId)) m.removeLayer(layerId);
         if (m.getSource(id)) m.removeSource(id);
       }
@@ -4499,7 +4539,7 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
     (async () => {
       try {
         const bbox = `${viewport.minLng},${viewport.minLat},${viewport.maxLng},${viewport.maxLat}`;
-        const res = await fetch(`/api/transit/station-boundaries?bbox=${encodeURIComponent(bbox)}`);
+        const res = await fetch(apiUrl(`/api/transit/station-boundaries?bbox=${encodeURIComponent(bbox)}`));
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const fc = await res.json();
         if (cancelled) return;
@@ -4567,8 +4607,14 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
         source: SRC,
         paint: {
           'line-color': ['get', 'color'],
-          'line-width': 3,
-          'line-opacity': 0.85,
+          // These tracks are propagated from the TLE 90 minutes into the
+          // FUTURE in the browser; they are a prediction, not an observation.
+          // Drawn solid at 0.85 and colour-matched to the observed marker they
+          // carried the same visual weight as a measured position. Dashed and
+          // dimmed so the difference is on the screen, not just in the code.
+          'line-width': 1.5,
+          'line-opacity': 0.35,
+          'line-dasharray': [2, 3],
         },
       });
     } else {
@@ -4818,19 +4864,31 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
 
     // Re-add layers after style change (icons must be re-registered
     // because map.setStyle() drops all previously added images)
-    mapRef.current.once('style.load', () => {
-      registerLayerIcons(mapRef.current);
+    mapRef.current.once('style.load', async () => {
+      // registerLayerIcons is async and was not awaited, so every hasImage()
+      // check inside addLayerToMap ran before the images existed and the
+      // layers came back as bare circles after a style switch.
+      await registerLayerIcons(mapRef.current, catalogRef.current);
       for (const [layerId, layerState] of Object.entries(layers)) {
-        if (layerState.visible && layerData[layerId]) {
+        const def = layerDefFor(layerId);
+        if (layerState.visible && layerData[layerId] && def) {
           addLayerToMap(
             mapRef.current,
             layerId,
             layerData[layerId],
-            LAYER_DEFINITIONS[layerId],
-            layerState.opacity
+            def,
+            layerState.opacity,
+            onRenderNotice,
           );
         }
       }
+      // setStyle drops the mode filter with everything else, so station pins
+      // for modes the user had turned off reappeared on the new basemap.
+      const enabledModes = new Set();
+      if (layers?.unifiedTrains?.visible) enabledModes.add('train');
+      if (layers?.unifiedSubways?.visible) enabledModes.add('subway');
+      if (layers?.unifiedBuses?.visible) enabledModes.add('bus');
+      applyUnifiedStationsModeFilter(mapRef.current, enabledModes);
       // PLATEAU's overlay survives setStyle, but setLayoutProperty does
       // not — re-hide the new basemap's flat building layer if PLATEAU
       // is currently on. The PLATEAU effect will also re-fire because
@@ -4847,7 +4905,7 @@ export default function MapView({ layers, layerData, onFeatureClick, onMapReady 
       <div ref={mapContainerRef} className="map-wrapper" />
 
       {/* Style switcher */}
-      <div className="absolute top-3 right-14 z-20 flex gap-1">
+      <div className="absolute top-16 md:top-3 right-14 z-20 flex flex-wrap justify-end gap-1 max-w-[70vw] md:max-w-none">
         {Object.entries(MAP_STYLES).map(([key, style]) => (
           <button
             key={key}

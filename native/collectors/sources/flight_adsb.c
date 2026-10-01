@@ -5,9 +5,10 @@
  * Merge by ICAO24 (adsb.lol wins, property bags unioned), then dedupe
  * AeroDataBox into the live set by normalized callsign. Curated SEED /
  * _meta envelope intentionally dropped (live rows only). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "_timefmt.inc"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -231,31 +232,44 @@ static cJSON *try_opensky(const source_ctx *ctx) {
   if (!states || !cJSON_IsArray(states)) { cJSON_Delete(data); return NULL; }
 
   cJSON *out = cJSON_CreateArray();
-  int i = 0;
   cJSON *s;
   cJSON_ArrayForEach(s, states) {
     /* (cap removed: every record of the fetched array is emitted —
      * docs/SOURCE_EXHAUSTIVENESS.md) */
     cJSON *s5 = cJSON_GetArrayItem(s, 5);
     cJSON *s6 = cJSON_GetArrayItem(s, 6);
-    double lon = is_num(s5) ? s5->valuedouble : 139.7;
-    double lat = is_num(s6) ? s6->valuedouble : 35.6;
+    /* OpenSky sends null lon/lat for a state vector with no position fix.
+     * The JS port substituted Tokyo (139.7, 35.6), which puts an INVENTED
+     * pin on the map for an aircraft whose position is unknown. Drop the
+     * state instead — a missing position is not a Tokyo position. */
+    if (!is_num(s5) || !is_num(s6)) continue;
+    double lon = s5->valuedouble;
+    double lat = s6->valuedouble;
 
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", g);
+    cJSON *f = gj_point_feature(lon, lat);
 
     cJSON *p = cJSON_CreateObject();                  /* EXACT JS key order */
-    char idbuf[32];
-    snprintf(idbuf, sizeof idbuf, "ADSB_LIVE_%d", i);
-    cJSON_AddStringToObject(p, "id", idbuf);
-    cJSON_AddItemToObject(p, "icao24", dup_or_null(cJSON_GetArrayItem(s, 0)));  /* exhaustive-ok: fixed state-vector tuple */
+    /* `id` is a NATIVE_ID_KEY (lib/geojson.c), so it IS this row's uid — and
+     * it used to be the aircraft's position in the OpenSky states array, which
+     * is not an aircraft property: the array reorders on every 10-second poll,
+     * and this loop's counter additionally skips the state vectors dropped for
+     * having no position fix. Every poll therefore re-pointed every uid at a
+     * different aeroplane. icao24 — the ICAO 24-bit transponder address, the
+     * globally unique identifier of the airframe — is s[0], read one line
+     * below into `icao24`. Use it. */
+    cJSON *icao = cJSON_GetArrayItem(s, 0);  /* exhaustive-ok: fixed state-vector tuple */
+    char idbuf[64];
+    if (icao && cJSON_IsString(icao) && icao->valuestring[0]) {
+      snprintf(idbuf, sizeof idbuf, "ADSB_LIVE_%.40s", icao->valuestring);
+      cJSON_AddStringToObject(p, "id", idbuf);
+    } else {
+      /* A state vector with no icao24 has no identity OpenSky can give us. Say
+       * that instead of minting a positional one. */
+      cJSON_AddStringToObject(p, "id_basis",
+        "none: this OpenSky state vector carried no icao24, so the row is "
+        "uid'd by content hash rather than a positional id");
+    }
+    cJSON_AddItemToObject(p, "icao24", dup_or_null(icao));
     cJSON *s1 = cJSON_GetArrayItem(s, 1);
     char *cs = trim_or_null((s1 && cJSON_IsString(s1)) ? s1->valuestring : "");
     /* JS: (s[1]||'').trim() — empty string, not null */
@@ -311,7 +325,6 @@ static cJSON *try_opensky(const source_ctx *ctx) {
     cJSON_AddStringToObject(p, "source", "opensky_api");
     cJSON_AddItemToObject(f, "properties", p);
     cJSON_AddItemToArray(out, f);
-    i++;
   }
   cJSON_Delete(data);
   return out;
@@ -398,15 +411,7 @@ static cJSON *try_adsblol(const source_ctx *ctx) {
     int onGround = abv && cJSON_IsString(abv) &&
                    strcmp(abv->valuestring, "ground") == 0;
 
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lonv->valuedouble));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(latv->valuedouble));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", g);
+    cJSON *f = gj_point_feature(lonv->valuedouble, latv->valuedouble);
 
     cJSON *p = cJSON_CreateObject();                  /* EXACT JS key order */
     char idbuf[64];
@@ -503,13 +508,14 @@ static void try_aerodatabox_airport(const source_ctx *ctx,
   if (!key || !*key) return;                          /* RULE 9: 0 rows     */
 
   time_t now = time(NULL);
-  struct tm tmv;
-  gmtime_r(&now, &tmv);
   char start[32], end[32];
-  strftime(start, sizeof start, "%Y-%m-%dT%H:%M", &tmv);
-  time_t later = now + 11 * 3600;
-  gmtime_r(&later, &tmv);
-  strftime(end, sizeof end, "%Y-%m-%dT%H:%M", &tmv);
+  /* The window is part of the request PATH, so an unrenderable one means no
+   * request at all - 0 rows, exactly like the key-gated return above. */
+  if (!jo_time_fmt(now, "%Y-%m-%dT%H:%M", start, sizeof start) ||
+      !jo_time_fmt(now + 11 * 3600, "%Y-%m-%dT%H:%M", end, sizeof end)) {
+    fprintf(stderr, "[flight-adsb] cannot render the query window as a date\n");
+    return;
+  }
 
   char url[512];
   snprintf(url, sizeof url,
@@ -557,15 +563,7 @@ static void try_aerodatabox_airport(const source_ctx *ctx,
       const char *aircraftModel = aircraftO ? str_or_null(aircraftO, "model") : NULL;
       const char *status = str_or_null(fl, "status");
 
-      cJSON *f = cJSON_CreateObject();
-      cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(ap->lon));
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(ap->lat));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(f, "geometry", g);
+      cJSON *f = gj_point_feature(ap->lon, ap->lat);
 
       cJSON *p = cJSON_CreateObject();                /* EXACT JS key order */
       char idbuf[32];
@@ -790,6 +788,31 @@ static cJSON *dedupe_features(cJSON *live, cJSON *aero) {
   return result;
 }
 
+/* ---- display title ------------------------------------------------------ */
+
+/* lib/geojson.c takes intel_item.title from props title/name/name_ja/label.
+ * The JS port set none of them, so every flight row reached the UI titleless.
+ * Build one from what the feed actually carries — callsign, registration and
+ * type — and fall back to the ICAO24 hex, which is always present. */
+static void apply_title(cJSON *props) {
+  if (cJSON_GetObjectItem(props, "title")) return;
+  const char *cs = str_or_null(props, "callsign");
+  if (!cs) cs = str_or_null(props, "flight_number");
+  const char *reg = str_or_null(props, "registration");
+  const char *ty = str_or_null(props, "aircraft_type");
+  const char *hex = str_or_null(props, "icao24");
+  char t[160];
+  if (cs && reg && ty)      snprintf(t, sizeof t, "%s (%s, %s)", cs, reg, ty);
+  else if (cs && reg)       snprintf(t, sizeof t, "%s (%s)", cs, reg);
+  else if (cs && ty)        snprintf(t, sizeof t, "%s (%s)", cs, ty);
+  else if (cs)              snprintf(t, sizeof t, "%s", cs);
+  else if (reg && ty)       snprintf(t, sizeof t, "%s (%s)", reg, ty);
+  else if (reg)             snprintf(t, sizeof t, "%s", reg);
+  else if (hex)             snprintf(t, sizeof t, "ICAO24 %s", hex);
+  else                      return;
+  cJSON_AddStringToObject(props, "title", t);
+}
+
 /* ---- entrypoint --------------------------------------------------------- */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -806,7 +829,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *f;
   cJSON_ArrayForEach(f, features) {
     cJSON *props = cJSON_GetObjectItem(f, "properties");
-    if (props) apply_military(props);
+    if (props) { apply_military(props); apply_title(props); }
   }
 
   int n = geojson_emit_features(sink, "flight-adsb", features);

@@ -10,17 +10,15 @@
  * No NATIVE_ID prop → uid = sha1(JSON.stringify{g,p})[:16]; geometry is the
  * fixed TOKYO point so deterministic. live=html.length>0 → source string.
  * SEED/_meta NOT ported (HARD RULE 8); when down html="" → 0 rows. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define TOKYO_LON 139.6917
-#define TOKYO_LAT 35.6895
 
 static int hexv(int c) {
   if (c >= '0' && c <= '9') return c - '0';
@@ -176,13 +174,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
     cJSON *f = cJSON_CreateObject();
     cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(TOKYO_LON));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(TOKYO_LAT));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", g);
+    /* NO GEOMETRY. Every row here used to be emitted at Tokyo Station
+     * (35.6895, 139.6917). What this source reports has no location,
+     * and stacking every row on one pin is the fabrication the
+     * 2026-07-31 audit deleted from cisa-kev-jp, poc-in-github and
+     * peeringdb-jp. Confirmed live by tests/contract/source_contract.py.
+     * lib/geojson.c handles an absent geometry correctly — do NOT
+     * reintroduce a fallback coordinate. */
 
     cJSON *pr = cJSON_CreateObject();   /* EXACT JS key order */
     cJSON_AddItemToObject(pr, "idx", cJSON_CreateNumber((double)idx));

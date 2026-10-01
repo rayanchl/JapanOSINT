@@ -10,10 +10,10 @@
  * {success,confidence,data} envelope). remote_key = "ip:<ip>". has_geo/lat/lon
  * are set from the response. On HTTP failure / status!=success → emit NOTHING
  * and return 0 (honest empty). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -98,6 +98,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (city[0]) cJSON_AddStringToObject(props, "city", city);
   if (cc[0])   cJSON_AddStringToObject(props, "country", cc);
   char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
 
   char rk[300];
   snprintf(rk, sizeof rk, "ip:%s", ip);

@@ -5,15 +5,16 @@
  * fetches each raw markdown and regex-extracts up to 6 PoC github repo URLs.
  * Features at TOKYO; sha1 hash-fallback uid; props in exact JS key order.
  * The seed/_meta envelope is dropped (live rows only). */
-#include "../../source.h"
-#include "../../lib/seenset.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../core/intel.h"
+#include "source.h"
+#include "lib/seenset.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "core/intel.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 #define REPO_API "https://api.github.com/repos/trickest/cve/contents"
 #define RAW_BASE "https://raw.githubusercontent.com/trickest/cve/main"
@@ -47,7 +48,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   /* year = new Date().getUTCFullYear(); try [year, year-1] */
   time_t now = time(NULL);
-  struct tm gt; gmtime_r(&now, &gt);
+  struct tm gt;
+  /* The year IS the repo directory this collector lists; with no year there
+   * is no path to fetch, so fail rather than guess one. */
+  if (!jo_tm_utc(now, &gt)) {
+    fprintf(stderr, "[trickest-cve] cannot render the query window as a date\n");
+    return -1;
+  }
   int year = gt.tm_year + 1900;
 
   const char *token = getenv("GITHUB_TOKEN");
@@ -149,22 +156,38 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       if (!seen_add(&seen, url)) { free(url); continue; }  /* per-CVE dedupe */
       const char *label = url + strlen("https://github.com/");
 
+      /* audit-09: this used to pin every row at TOKYO (139.6917, 35.6895).
+       * A CVE proof-of-concept repository has no location; that coordinate
+       * was invented and put 16 fake pins on the map every six hours. No
+       * geometry now — the row is a document, not a place. */
       cJSON *feat = cJSON_CreateObject();
       cJSON_AddStringToObject(feat, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *co = cJSON_CreateArray();
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(139.6917)); /* TOKYO */
-      cJSON_AddItemToArray(co, cJSON_CreateNumber(35.6895));
-      cJSON_AddItemToObject(g, "coordinates", co);
-      cJSON_AddItemToObject(feat, "geometry", g);
+      /* no "geometry" key at all — a null one would serialise the string
+       * "null" into intel_items.geometry */
 
-      cJSON *pr = cJSON_CreateObject(); /* EXACT JS key order */
+      char title[256];
+      snprintf(title, sizeof title, "%s — PoC: %s", cveId, label);
+      cJSON *pr = cJSON_CreateObject();
+      /* uid: stable per (cve, repo) so re-runs update instead of duplicating */
+      char uid[320];
+      snprintf(uid, sizeof uid, "%s|%s", cveId, label);
+      cJSON_AddStringToObject(pr, "uid", uid);
+      cJSON_AddStringToObject(pr, "title", title);   /* was missing entirely */
+      cJSON_AddStringToObject(pr, "record_type", "cve-poc");
       cJSON_AddNumberToObject(pr, "idx", cJSON_GetArraySize(features));
       cJSON_AddStringToObject(pr, "cve_id", cveId);
       cJSON_AddStringToObject(pr, "repo_label", label);
       cJSON_AddStringToObject(pr, "repo_url", url);
+      cJSON_AddStringToObject(pr, "link", url);
+      char cvelink[128];
+      snprintf(cvelink, sizeof cvelink, "https://nvd.nist.gov/vuln/detail/%s",
+               cveId);
+      cJSON_AddStringToObject(pr, "cve_url", cvelink);
       cJSON_AddStringToObject(pr, "source", "trickest_cve");
+      cJSON *tg = cJSON_CreateArray();
+      cJSON_AddItemToArray(tg, cJSON_CreateString("cve"));
+      cJSON_AddItemToArray(tg, cJSON_CreateString("exploit-poc"));
+      cJSON_AddItemToObject(pr, "tags", tg);
       cJSON_AddItemToObject(feat, "properties", pr);
       cJSON_AddItemToArray(features, feat);
       free(url);            /* the seen-set kept its own copy */
@@ -180,7 +203,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[trickest-cve] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* audit-09: was `n > 0 ? 0 : -1` — an upstream day with no new PoC files is
+   * an honest empty, not a run error, and -1 quarantines the source. */
+  return 0;
 }
 
 static const source_def trickest_cve_def = {

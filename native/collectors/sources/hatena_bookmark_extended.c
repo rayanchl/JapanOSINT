@@ -4,13 +4,14 @@
  * <item> blocks (custom RDF parse mirroring the JS regex parser), dedup by
  * link across feeds, emits non-spatial intel. honest empty on failure.
  * uid = hatena-bookmark-extended|<link>. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 #define SOURCE_ID "hatena-bookmark-extended"
 
@@ -152,8 +153,10 @@ static int safe_iso(const char *s, char *out, size_t cap) {
     int off = (oh * 3600 + om * 60) * (sign == '-' ? -1 : 1);
     t -= off;
   }
-  struct tm g; gmtime_r(&t, &g);
-  strftime(out, cap, "%Y-%m-%dT%H:%M:%S.000Z", &g);
+  /* A dc:date the upstream chose can land on a time_t no calendar can render;
+   * saying so (0) makes the caller emit published_at = NULL, exactly as it
+   * already does for a dc:date it could not parse at all. */
+  if (!jo_time_fmt(t, "%Y-%m-%dT%H:%M:%S.000Z", out, cap)) return 0;
   return 1;
 }
 
@@ -163,11 +166,12 @@ static int seen_has(char **a, int n, const char *s) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  char **seen = NULL; int sn = 0, scap = 0, n = 0;
+  char **seen = NULL; int sn = 0, scap = 0, n = 0, fetched = 0;
 
   for (int fi = 0; fi < NF; fi++) {
     char *xml = feed_get_text(ctx->http, FEEDS[fi].url, 15000);
     if (!xml) continue;
+    fetched++;
     const char *category = FEEDS[fi].cat;
 
     const char *p = xml;
@@ -249,8 +253,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   for (int i = 0; i < sn; i++) free(seen[i]);
   free(seen);
-  fprintf(stderr, "[hatena-bookmark-extended] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  fprintf(stderr, "[hatena-bookmark-extended] emitted %d (%d/%d feeds fetched)\n",
+          n, fetched, NF);
+  /* STATUS code, not a row count: a feed that loads but has nothing new is an
+   * honest empty. Only a total fetch failure is a real error. */
+  return fetched > 0 ? 0 : -1;
 }
 
 static const source_def hatena_bookmark_extended_def = {

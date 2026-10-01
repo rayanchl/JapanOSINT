@@ -6,10 +6,10 @@
  * non-empty of (id,name); sink prefixes "<source_id>|". SEED/_meta n/a (none).
  * pickTag = first <tag ...>INNER</tag>, .trim() (no tag-strip / entity decode
  * in JS), so we only trim ASCII whitespace. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -67,13 +67,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char *xml = feed_get_text(ctx->http, API_URL, 10000);
   if (!xml) return -1;
 
-  int n = 0, taken = 0;
+  int n = 0;
   const char *cur = xml;
   const char *inner; int ilen;
   while ((cur = html_block(cur, "LawNameListInfo", &inner, &ilen)) != NULL) {
     char *b = strndup(inner, (size_t)ilen);
     if (!b) continue;
-    taken++;
 
     char id[512] = {0}, name[1024] = {0}, no[512] = {0}, date[128] = {0};
     if (!pick_tag(b, "LawId", id, sizeof id))
@@ -130,7 +129,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   free(xml);
   fprintf(stderr, "[egov-laws] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def egov_laws_def = {

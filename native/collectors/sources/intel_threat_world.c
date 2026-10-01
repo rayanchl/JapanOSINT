@@ -6,22 +6,14 @@
  *
  * These complement the existing JP-centric cyber collectors (jpcert-alerts,
  * ipa-alerts, sans-isc) with worldwide vendor + government threat intel. */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 
 #define COLL     "cyber"
 #define INTERVAL 3600
 
 /* SYM, id, name, name_ja, category, url, lang, tags_json, description */
-#define RSS(SYM, ID, NAME, NAMEJA, CAT, URL, LANG, TAGS, DESC)               \
-  static int run_##SYM(const source_ctx *c, intel_sink *s) {                 \
-    int n = rss_collect(c, s, URL, LANG, TAGS); return n < 0 ? -1 : 0; }     \
-  static const source_def SYM = {                                           \
-    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,            \
-    .update_interval_sec = INTERVAL, .run = run_##SYM,                       \
-    .category = CAT, .type = "web_request", .url = URL,                      \
-    .description = DESC, .layer = NULL, .free_tier = 1 };                    \
-  REGISTER_SOURCE(SYM)
+#include "_source_macros.inc"
 
 RSS(ti_cisa_adv, "cisa-advisories", "CISA Cybersecurity Advisories",
   "CISA サイバーセキュリティ勧告", "cyber",
@@ -95,11 +87,17 @@ RSS(ti_unit42, "unit42", "Palo Alto Unit 42",
   "[\"cyber\",\"threat-research\",\"apt\"]",
   "Palo Alto Networks Unit 42 threat research and adversary tracking");
 
-RSS(ti_msrc, "msrc-blog", "Microsoft Security Response Center",
+/* msrc.microsoft.com/blog/feed/ 301s to an SPA that serves HTML, and
+ * msrc-blog.microsoft.com is gone — the blog no longer publishes a feed. The
+ * MSRC Security Update Guide RSS is the surviving machine-readable channel
+ * and is the actual vulnerability-disclosure stream this source promises.
+ * NOTE: it carries the full CVE backlog (~5k items), so the first run is
+ * large; a maxitems cap in rss_collect would be worth adding. */
+RSS(ti_msrc, "msrc-blog", "Microsoft Security Update Guide",
   "Microsoft MSRC", "cyber",
-  "https://msrc.microsoft.com/blog/feed/", "en",
+  "https://api.msrc.microsoft.com/update-guide/rss", "en",
   "[\"cyber\",\"microsoft\",\"advisory\"]",
-  "Microsoft Security Response Center — vulnerability and incident disclosures");
+  "Microsoft Security Response Center — CVE and security-update disclosures");
 
 RSS(ti_p0, "project-zero", "Google Project Zero",
   "Project Zero", "cyber",
@@ -149,9 +147,12 @@ RSS(ti_rapid7, "rapid7-blog", "Rapid7 Blog",
   "[\"cyber\",\"vuln\",\"research\"]",
   "Rapid7 — vulnerability research, emergent threats and detection engineering");
 
+/* news.sophos.com/en-us/feed/ now 404s (Next.js app, no feed route); the
+ * site redirects to www.sophos.com/en-us/blog/, whose feed lives at
+ * /en-us/blog/feed (no trailing slash — that 308s). Verified live 2026-09-04. */
 RSS(ti_sophos, "sophos-news", "Sophos News",
   "Sophos News", "cyber",
-  "https://news.sophos.com/en-us/feed/", "en",
+  "https://www.sophos.com/en-us/blog/feed", "en",
   "[\"cyber\",\"malware\",\"threats\"]",
   "Sophos X-Ops threat research and security news");
 

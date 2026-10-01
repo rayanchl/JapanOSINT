@@ -108,12 +108,18 @@ static int geom_to_point(cJSON *geom, ksj_geo mode, double *lon, double *lat) {
     int n = ring ? cJSON_GetArraySize(ring) : 0;
     if (n <= 0) return 0;
     double sx = 0, sy = 0;
+    int used = 0;
     for (int i = 0; i < n; i++) {
       cJSON *p = cJSON_GetArrayItem(ring, i);
-      sx += cJSON_GetArrayItem(p, 0)->valuedouble;
-      sy += cJSON_GetArrayItem(p, 1)->valuedouble;
+      /* Guard like the Point and MIDPOINT branches above: a malformed vertex
+       * (null, [], or a single scalar) makes cJSON_GetArrayItem return NULL,
+       * and this used to dereference it straight away. */
+      cJSON *px = cJSON_GetArrayItem(p, 0), *py = cJSON_GetArrayItem(p, 1);
+      if (!cJSON_IsNumber(px) || !cJSON_IsNumber(py)) continue;
+      sx += px->valuedouble; sy += py->valuedouble; used++;
     }
-    *lon = sx / n; *lat = sy / n; return 1;
+    if (!used) return 0;
+    *lon = sx / used; *lat = sy / used; return 1;
   }
   return 0;
 }

@@ -14,9 +14,10 @@
  *   - file hash / unknown / file-not-found / non-image URL: emit nothing
  *     (the previous fabricated VirusTotal lookup-URL note has been removed —
  *      there is no fetch, so no record). */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <strings.h>
 #include <ctype.h>
@@ -24,18 +25,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <sys/stat.h>
-
-static void uri_encode(const char *in, char *out, size_t cap) {
-  static const char *keep = "-_.!~*'()";
-  size_t w = 0;
-  for (const unsigned char *p = (const unsigned char *)in; *p && w + 4 < cap; p++) {
-    unsigned char c = *p;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || strchr(keep, c)) out[w++] = (char)c;
-    else { snprintf(out + w, cap - w, "%%%02X", c); w += 3; }
-  }
-  out[w] = 0;
-}
 
 static const char *PDF_KEYS[] = {
   "/Title","/Author","/Subject","/Keywords","/Creator",
@@ -74,10 +63,18 @@ static cJSON *parse_pdf_metadata(const char *path) {
   size_t br = fread(buf, 1, 65535, fp);
   buf[br] = 0;
   fclose(fp);
-  if (strncmp(buf, "%PDF-", 5) == 0) {
-    char ver[8] = {0};
-    memcpy(ver, buf + 5, 3);
-    cJSON_AddStringToObject(m, "pdf_version", ver);
+  if (br >= 5 && strncmp(buf, "%PDF-", 5) == 0) {
+    /* The header check proves only 5 bytes exist. memcpy(ver, buf+5, 3) then
+     * read up to three bytes PAST what fread() actually delivered — for a
+     * 5-byte file that is uninitialised malloc'd memory, published as
+     * `pdf_version`. Copy only what was read. */
+    size_t avail = br - 5;
+    if (avail > 3) avail = 3;
+    if (avail > 0) {
+      char ver[8] = {0};
+      memcpy(ver, buf + 5, avail);
+      cJSON_AddStringToObject(m, "pdf_version", ver);
+    }
   }
   cJSON *props = cJSON_CreateObject();
   for (int i = 0; PDF_KEYS[i]; i++) {
@@ -154,7 +151,7 @@ static cJSON *perform_ocr(http_client *h, const char *image_url) {
   } else {
     cJSON_AddStringToObject(r, "api_tier", "authenticated");
   }
-  char enc[1024]; uri_encode(image_url, enc, sizeof enc);
+  char enc[1024]; jo_uri_encode_buf(image_url, enc, sizeof enc);
   char post[2048];
   snprintf(post, sizeof post,
     "apikey=%s&url=%s&language=eng&isOverlayRequired=false", key, enc);
@@ -200,7 +197,7 @@ static cJSON *perform_ocr(http_client *h, const char *image_url) {
 static cJSON *read_qr(http_client *h, const char *image_url) {
   cJSON *r = cJSON_CreateObject();
   cJSON_AddStringToObject(r, "service", "goQR.me");
-  char enc[1024]; uri_encode(image_url, enc, sizeof enc);
+  char enc[1024]; jo_uri_encode_buf(image_url, enc, sizeof enc);
   char url[1200];
   snprintf(url, sizeof url,
     "https://api.qrserver.com/v1/read-qr-code/?fileurl=%s", enc);
@@ -328,7 +325,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   free(bj); free(pj);
   cJSON_Delete(root); cJSON_Delete(props);
-  return rc >= 0 ? 0 : 0;
+  /* Both arms used to be 0, so a sink/DB write failure — the one case where we
+   * extracted real data and then LOST it — was reported as a clean run. */
+  return rc >= 0 ? 0 : -1;
 }
 
 static const source_def document_analyzer_def = {

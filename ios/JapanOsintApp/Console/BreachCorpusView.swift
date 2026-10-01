@@ -127,7 +127,7 @@ struct BreachCorpusView: View {
             } label: {
                 HStack(spacing: 6) {
                     if runningCollector { ProgressView().controlSize(.small) }
-                    else { Image(systemName: "play.fill") }
+                    else { Image(systemName: "play.fill").accessibilityHidden(true) }
                     Text(runningCollector ? "Running…" : "Run collector")
                 }
             }
@@ -153,7 +153,7 @@ struct BreachCorpusView: View {
             } label: {
                 HStack(spacing: 6) {
                     if previewing { ProgressView().controlSize(.small) }
-                    else { Image(systemName: "doc.text.magnifyingglass") }
+                    else { Image(systemName: "doc.text.magnifyingglass").accessibilityHidden(true) }
                     Text(previewing ? "Parsing…" : "Preview parse")
                 }
             }
@@ -237,7 +237,7 @@ struct BreachCorpusView: View {
             } label: {
                 HStack(spacing: 6) {
                     if saving { ProgressView().controlSize(.small) }
-                    else { Image(systemName: "square.and.arrow.down") }
+                    else { Image(systemName: "square.and.arrow.down").accessibilityHidden(true) }
                     Text(saving ? "Loading…" : "Load into catalog")
                 }
             }
@@ -290,7 +290,7 @@ struct BreachCorpusView: View {
             } label: {
                 HStack(spacing: 6) {
                     if fetching { ProgressView().controlSize(.small) }
-                    else { Image(systemName: "arrow.down.circle") }
+                    else { Image(systemName: "arrow.down.circle").accessibilityHidden(true) }
                     Text(fetching ? "Staging…" : "Stage dataset")
                 }
             }
@@ -328,7 +328,7 @@ struct BreachCorpusView: View {
             } label: {
                 HStack(spacing: 6) {
                     if ingesting { ProgressView().controlSize(.small) }
-                    else { Image(systemName: "tray.and.arrow.down.fill") }
+                    else { Image(systemName: "tray.and.arrow.down.fill").accessibilityHidden(true) }
                     Text(ingesting ? "Starting…" : "Start ingest")
                 }
             }
@@ -367,6 +367,7 @@ struct BreachCorpusView: View {
                 Image(systemName: "list.bullet")
             }
             .disabled(breachSuggestions.isEmpty)
+            .accessibilityLabel("Pick a breach source")
         }
     }
 
@@ -611,6 +612,7 @@ struct BreachCorpusView: View {
         let color: Color = tone == .danger ? theme.danger : theme.success
         return HStack(alignment: .top, spacing: Space.sm) {
             Image(systemName: icon).font(.caption).foregroundStyle(color)
+                .accessibilityHidden(true)   // the banner text follows
             Text(text).font(.caption).foregroundStyle(theme.text)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .textSelection(.enabled)

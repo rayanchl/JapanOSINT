@@ -3,9 +3,9 @@
  * Live ODPT v4 odpt:FlightInformationArrival + ...Departure when an ODPT
  * token is set; honest empty without one. Each flight is placed at its
  * airport's hard-coded coordinate (HND/NRT/KIX/CTS only; others skipped). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -77,15 +77,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       const struct ap *ap = find_ap(apId);
       if (!ap) continue;
 
-      cJSON *f = cJSON_CreateObject();
-      cJSON_AddStringToObject(f, "type", "Feature");
-      cJSON *g = cJSON_CreateObject();
-      cJSON_AddStringToObject(g, "type", "Point");
-      cJSON *c = cJSON_CreateArray();
-      cJSON_AddItemToArray(c, cJSON_CreateNumber(ap->lon));
-      cJSON_AddItemToArray(c, cJSON_CreateNumber(ap->lat));
-      cJSON_AddItemToObject(g, "coordinates", c);
-      cJSON_AddItemToObject(f, "geometry", g);
+      cJSON *f = gj_point_feature(ap->lon, ap->lat);
 
       cJSON *p = cJSON_CreateObject();           /* EXACT JS key order */
       cJSON *same = cJSON_GetObjectItem(r, "owl:sameAs");

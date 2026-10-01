@@ -4,9 +4,10 @@
  * Gated on FOFA_API_KEY (JS: no key → empty → 0 rows); FOFA_EMAIL optional.
  * uid = fofa-jp|<ip>_<port>_<i>. published_at = r.lastupdatetime passthrough
  * (JS new Date(x).toISOString() is tz-coupled, not in uid/props). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
+#include "_credential_notice.inc"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -62,8 +63,14 @@ static void cell_or_null(const cJSON *row, int i, char *buf, size_t bn) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("FOFA_API_KEY");
   if (!key || !*key) {
-    fprintf(stderr, "[fofa-jp] gated (no FOFA_API_KEY)\n");
-    return 0;
+    /* FOFA_EMAIL is listed too: the query string carries both, and an
+     * operator who sets only the key gets a 401 that looks like a fetch
+     * failure. Naming both here is the difference between "needs a key" and
+     * "needs THESE two variables". */
+    static const char *const envs[] = { "FOFA_API_KEY", "FOFA_EMAIL", NULL };
+    return jo_needs_credential(sink, "fofa-jp", "FOFA (Japan asset search)",
+        envs, "https://fofa.info/api/v1/search/all",
+        "free account at fofa.info; the API key and the account email are both sent");
   }
   const char *email = getenv("FOFA_EMAIL");
   if (!email) email = "";
@@ -147,15 +154,30 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       /* link = r.host ? fofa.info/result?qbase64=base64(`host="${host}"`) : null */
       char *link = NULL;
       if (host) {
-        size_t qn = strlen(host) + 8;
+        /* `host` is upstream text going into FOFA's own query syntax. A host
+         * carrying a `"` or a `\` used to close the literal early and produce a
+         * link that resolves to a different (or invalid) query — escape both,
+         * the way reg_ua_prozorro.c does for its POST body. */
+        size_t qn = strlen(host) * 2 + 10;
         char *q = malloc(qn);
-        snprintf(q, qn, "host=\"%s\"", host);
-        char *qb = b64(q);
-        size_t ln = strlen(qb) + 48;
-        link = malloc(ln);
-        snprintf(link, ln,
-          "https://fofa.info/result?qbase64=%s", qb);
-        free(q); free(qb);
+        if (q) {
+          size_t qi = 0;
+          memcpy(q, "host=\"", 6); qi = 6;
+          for (const char *p = host; *p; p++) {
+            if (*p == '"' || *p == '\\') q[qi++] = '\\';
+            q[qi++] = *p;
+          }
+          q[qi++] = '"'; q[qi] = 0;
+          char *qb = b64(q);
+          if (qb) {
+            size_t ln = strlen(qb) + 48;
+            link = malloc(ln);
+            if (link) snprintf(link, ln,
+              "https://fofa.info/result?qbase64=%s", qb);
+            free(qb);
+          }
+          free(q);
+        }
       }
 
       /* tags = ['fofa', proto?'proto:'+proto:null, asn?'asn:'+asn:null] */
@@ -204,7 +226,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   cJSON_Delete(data);
   fprintf(stderr, "[fofa-jp] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def fofa_jp_def = {

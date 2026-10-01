@@ -4,9 +4,9 @@
  * countries' portals. Real fetch or honest-empty. No API keys.
  *
  *   DE_GOVDATA / CA_OPENDATA / AU_OPENDATA / NL_OPENDATA / IT_OPENDATA / IE_OPENDATA */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

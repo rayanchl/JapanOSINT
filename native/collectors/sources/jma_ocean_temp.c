@@ -3,9 +3,9 @@
  * daily SST HQ JSON but never maps it (returns null even on HTTP 200); the
  * only data is the curated SEED, which rule 8 drops. Faithful behaviour: GET
  * the endpoint, emit 0 live rows. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 
 #define JMA_SST_URL "https://www.data.jma.go.jp/gmd/kaiyou/data/db/kaikyo/daily/sst_HQ.json"

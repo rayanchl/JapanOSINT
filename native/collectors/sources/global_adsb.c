@@ -7,9 +7,9 @@
  * intel_item per live aircraft in the "ac" array — real hex, flight, position,
  * altitude and type; has_geo set when lat/lon are present. No live aircraft →
  * emit nothing (honest empty). Keyless LIVE. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

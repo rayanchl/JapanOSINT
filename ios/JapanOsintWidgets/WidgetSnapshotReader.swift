@@ -32,11 +32,16 @@ struct SnapshotProvider: TimelineProvider {
 
     func getSnapshot(in context: Context,
                      completion: @escaping (SnapshotEntry) -> Void) {
-        // The gallery preview must never look broken, so fall back to the
-        // placeholder when nothing has been written yet.
-        let s = SharedSnapshot.read()
+        // The gallery preview must never look broken, so it gets the sample
+        // placeholder. Everywhere else it is real snapshot or nothing: the
+        // old `s.connected ? s : placeholder` put invented alerts ("Tsunami
+        // advisory issued", "M4.2 Off Ibaraki") on a real widget whenever the
+        // App Group snapshot was missing or unreadable. Downstream views
+        // already render WidgetDisconnected for a disconnected snapshot.
         completion(SnapshotEntry(date: Date(),
-                                 snapshot: s.connected ? s : placeholder(in: context).snapshot))
+                                 snapshot: context.isPreview
+                                     ? placeholder(in: context).snapshot
+                                     : SharedSnapshot.read()))
     }
 
     func getTimeline(in context: Context,

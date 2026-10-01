@@ -11,9 +11,9 @@
  * Each row's body carries the real fetched fields (name, jurisdiction, number,
  * status, type, incorporation date, address). No companies / fetch failure →
  * emits nothing (honest empty — no fabricated registry-name stubs). */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,6 +54,7 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   if (st && cJSON_IsString(st)) cJSON_AddStringToObject(props, "status", st->valuestring);
   cJSON_AddBoolToObject(props, "success", 1);
   char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
 
   /* Stable per-company key = jurisdiction:company_number. */
   char rk[320];
@@ -90,7 +91,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   http_response hr = {0};
   int hc = http_request(ctx->http, "GET", url, NULL, NULL, 0, 20000, 1, &hr);
-  if (hc != 0 || hr.status != 200 || !hr.body) { http_response_free(&hr); return 0; }
+  if (hc != 0 || hr.status != 200 || !hr.body) {
+    /* 2026-07: OpenCorporates closed the keyless v0.4 tier — the search
+     * endpoint answers 401 {"error":{"message":"Invalid Api Token…"}}. Say so
+     * instead of returning a silent empty that looks like "no such company". */
+    fprintf(stderr, "[company-lookup] OpenCorporates http status=%d "
+                    "(v0.4 now requires an api_token) — 0 rows\n", (int)hr.status);
+    http_response_free(&hr); return 0;
+  }
   cJSON *root = cJSON_Parse(hr.body);
   http_response_free(&hr);
   if (!root) return 0;

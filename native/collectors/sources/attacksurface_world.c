@@ -9,9 +9,9 @@
  *   BINARYEDGE_IP    api.binaryedge.io/v2/query/ip/<ip>     BINARYEDGE_API_KEY (X-Key)
  *   FULLHUNT_DOMAIN  fullhunt.io/api/v1/domain/<d>/details  FULLHUNT_API_KEY (X-API-KEY)
  *   CRIMINALIP_IP    api.criminalip.io/v1/asset/ip/report   CRIMINALIP_API_KEY (x-api-key) */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

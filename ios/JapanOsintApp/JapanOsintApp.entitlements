@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!--
+	  App Group shared with the Widget and Share extensions (roadmap 35/36).
+	  The app writes widget-snapshot.json and drains share-queue/ here; the
+	  extensions read/write the same container.
+
+	  This file is NOT yet referenced by the app target's build settings — wire
+	  it in Xcode (Signing & Capabilities → App Groups → tick the group, which
+	  sets CODE_SIGN_ENTITLEMENTS). Doing so before the group is registered on
+	  the Apple Developer portal would fail signing, so it is left as a manual
+	  step. Keep the identifier identical to AppGroup.identifier in
+	  Widgets/SharedSnapshot.swift.
+	-->
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.com.rayanchl.japanosint</string>
+	</array>
+</dict>
+</plist>

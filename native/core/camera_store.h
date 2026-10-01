@@ -11,8 +11,8 @@
  * seen_count++, first_seen_at preservation) are computed here against the
  * prior intel_items row's properties JSON, then handed to the sink.
  *
- * Reads (camera_fc_json / camera_stats_json) are direct sqlite3 SELECTs
- * over intel_items mirroring selectGeoFeatures({sourceId}) + cameraStats().
+ * Reads (camera_fc_json) are direct sqlite3 SELECTs
+ * over intel_items mirroring selectGeoFeatures({sourceId}).
  * Returned JSON strings are heap-allocated; the caller frees() them. */
 #ifndef JO_CAMERA_STORE_H
 #define JO_CAMERA_STORE_H
@@ -31,10 +31,6 @@ int camera_upsert(db_handle *db, intel_sink *sink, cJSON *feature,
 /* getAllCameras(): selectGeoFeatures({sourceId:'camera-discovery'}) wrapped
  * with the JS `_meta` block → FeatureCollection JSON. Caller frees. */
 char *camera_fc_json(db_handle *db);
-
-/* cameraStats(): {total,new24h,byType:[{camera_type,c}...]} JSON. Caller
- * frees. */
-char *camera_stats_json(db_handle *db);
 
 /* getDiscoveryFeed({limit,cursor,channel}) — faithful port of
  * cameraStore.js: keyset-paged historical camera-discovery events,

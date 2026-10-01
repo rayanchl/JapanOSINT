@@ -13,10 +13,12 @@
  *     with real common_name/issuer/serial/validity.
  * If the TLS handshake fails, emits NOTHING. TRUSTED_CAS[] stays a match list
  * and is never emitted as data. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
+#include "core/hostgate.h"
 #include <ctype.h>
 #include <string.h>
 #include <strings.h>
@@ -44,25 +46,6 @@ static int is_trusted_ca(const char *issuer) {
   for (int i = 0; TRUSTED_CAS[i]; i++)
     if (strcasestr(issuer, TRUSTED_CAS[i])) return 1;
   return 0;
-}
-
-static char *url_encode_dup(const char *in) {
-  size_t n = strlen(in);
-  char *out = malloc(n * 3 + 1);
-  if (!out) return NULL;
-  size_t w = 0;
-  for (const unsigned char *p = (const unsigned char *)in; *p; p++) {
-    unsigned char c = *p;
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-        (c >= '0' && c <= '9') || c == '-' || c == '_' || c == '.' || c == '~') {
-      out[w++] = (char)c;
-    } else {
-      sprintf(out + w, "%%%02X", c);
-      w += 3;
-    }
-  }
-  out[w] = 0;
-  return out;
 }
 
 static char *x509_name_to_string(X509_NAME *name) {
@@ -114,6 +97,18 @@ static cJSON *analyze_ssl_direct(const char *hostname, int port) {
   const SSL_METHOD *method = TLS_client_method();
   SSL_CTX *ctx = SSL_CTX_new(method);
   if (!ctx) return NULL;
+
+  /* Raw socket + OpenSSL, so nothing in core/httpclient.c applies here.
+   * `hostname` comes from ctx->entity and the port is caller-influenced, which
+   * together make this a general-purpose connect primitive; gate it at strict
+   * strength before the socket is even opened. */
+  int hg = hostgate_host_check(hostname, 1);
+  if (hg != HG_URL_OK) {
+    fprintf(stderr, "[SSL_ANALYZER] refusing %s: %s\n",
+            hostname, hostgate_url_reason(hg));
+    SSL_CTX_free(ctx);
+    return NULL;
+  }
 
   int sock = socket(AF_INET, SOCK_STREAM, 0);
   if (sock < 0) { SSL_CTX_free(ctx); return NULL; }
@@ -357,7 +352,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_Delete(leaf);
 
   /* crt.sh historical certs → one item each. */
-  char *enc = url_encode_dup(hostname);
+  char *enc = jo_urlencode(hostname);
   if (enc) {
     char url[512];
     snprintf(url, sizeof url, "https://crt.sh/?q=%s&output=json", enc);

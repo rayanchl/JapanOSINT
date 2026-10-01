@@ -4,21 +4,14 @@
  * down) is intentionally not ported (rule 7). No registry row for
  * "port-infra" (only unified-port-infra exists, category "transport");
  * category derived as "transport". */
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   (void)ud;
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();
   cJSON *id = cJSON_GetObjectItem(el, "id");
@@ -40,9 +33,11 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   if (nja) cJSON_AddStringToObject(p, "name_ja", nja);
   else cJSON_AddItemToObject(p, "name_ja", cJSON_CreateNull());
   const char *hb = ov_tag(el, "harbour");
-  cJSON_AddStringToObject(p, "port_class", hb ? hb : "unknown");
+  if (hb) cJSON_AddStringToObject(p, "port_class", hb);
+  else cJSON_AddItemToObject(p, "port_class", cJSON_CreateNull());
   const char *op = ov_tag(el, "operator");
-  cJSON_AddStringToObject(p, "operator", op ? op : "unknown");
+  if (op) cJSON_AddStringToObject(p, "operator", op);
+  else cJSON_AddItemToObject(p, "operator", cJSON_CreateNull());
   const char *pv = ov_tag(el, "addr:province");
   if (!pv) pv = ov_tag(el, "addr:state");
   if (pv) cJSON_AddStringToObject(p, "prefecture", pv);

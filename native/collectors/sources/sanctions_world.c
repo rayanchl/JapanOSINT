@@ -20,9 +20,9 @@
  * require a subscription/token are gated (log + return 0) instead of faked.
  *
  * One run() dispatches on ctx->source_id. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,18 +31,71 @@
 
 /* ---- small utils -------------------------------------------------------- */
 
-/* case-insensitive substring (haystack may be huge; needle short). */
-static const char *sw_stristr(const char *h, const char *n) {
-  if (!h || !n || !*n) return NULL;
-  size_t nl = strlen(n);
-  for (; *h; h++) {
-    if (tolower((unsigned char)*h) == tolower((unsigned char)*n)) {
-      size_t k = 1;
-      while (k < nl && h[k] && tolower((unsigned char)h[k]) == tolower((unsigned char)n[k])) k++;
-      if (k == nl) return h;
-    }
+/* ---- name matching ------------------------------------------------------ *
+ * A raw case-insensitive SUBSTRING test was doing the screening, and it is
+ * wrong in both directions:
+ *
+ *   FALSE NEGATIVE — the official lists store people surname-first
+ *     ("PUTIN, Vladimir Vladimirovich"), so the query "Vladimir Putin" never
+ *     matched and OFAC_SDN reported CLEAR for a listed person.
+ *   FALSE POSITIVE — "PUTIN" is a substring of "comPUTINg", so the query
+ *     "PUTIN" emitted "RANA INTELLIGENCE COMPUTING COMPANY" as a sanctions
+ *     hit. Reporting an unlisted entity as sanctioned is the worse half.
+ *
+ * Replacement: every whitespace-separated token of the query must appear in
+ * the candidate text as a WHOLE WORD (delimited by non-alphanumerics), order
+ * independent. Nothing is invented — this only decides which real records are
+ * echoed back. */
+static int sw_word_at(const char *h, const char *tok, size_t tl) {
+  for (const char *p = h; *p; p++) {
+    if (tolower((unsigned char)*p) != tolower((unsigned char)*tok)) continue;
+    size_t k = 1;
+    while (k < tl && p[k] &&
+           tolower((unsigned char)p[k]) == tolower((unsigned char)tok[k])) k++;
+    if (k != tl) continue;
+    int lok = (p == h) || !isalnum((unsigned char)p[-1]);
+    int rok = !p[tl] || !isalnum((unsigned char)p[tl]);
+    if (lok && rok) return 1;
   }
-  return NULL;
+  return 0;
+}
+
+/* 1 if every token of `q` occurs as a whole word in `hay`. */
+static int sw_name_match(const char *hay, const char *q) {
+  if (!hay || !q || !*q) return 0;
+  const char *p = q;
+  int tokens = 0;
+  while (*p) {
+    while (*p && isspace((unsigned char)*p)) p++;
+    const char *s = p;
+    while (*p && !isspace((unsigned char)*p)) p++;
+    size_t tl = (size_t)(p - s);
+    if (!tl) break;
+    /* punctuation-only fragments ("," in "PUTIN,") carry no signal */
+    int alnum = 0;
+    for (size_t i = 0; i < tl; i++) if (isalnum((unsigned char)s[i])) alnum = 1;
+    if (!alnum) continue;
+    tokens++;
+    if (!sw_word_at(hay, s, tl)) return 0;
+  }
+  return tokens > 0;
+}
+
+/* decode the handful of XML/HTML entities the official lists actually use */
+static void sw_unescape(char *s) {
+  char *w = s;
+  for (char *r = s; *r; ) {
+    if (*r == '&') {
+      if      (!strncmp(r, "&amp;",  5)) { *w++ = '&';  r += 5; continue; }
+      else if (!strncmp(r, "&lt;",   4)) { *w++ = '<';  r += 4; continue; }
+      else if (!strncmp(r, "&gt;",   4)) { *w++ = '>';  r += 4; continue; }
+      else if (!strncmp(r, "&quot;", 6)) { *w++ = '"';  r += 6; continue; }
+      else if (!strncmp(r, "&apos;", 6)) { *w++ = '\''; r += 6; continue; }
+      else if (!strncmp(r, "&#39;",  5)) { *w++ = '\''; r += 5; continue; }
+    }
+    *w++ = *r++;
+  }
+  *w = 0;
 }
 
 /* trim leading/trailing quotes+spaces in place, collapse into a bounded copy */
@@ -115,7 +168,10 @@ static int sw_ofac_csv(const source_ctx *ctx, intel_sink *sink,
   while (line && *line && emitted < max) {
     const char *nl = strchr(line, '\n');
     size_t llen = nl ? (size_t)(nl - line) : strlen(line);
-    if (llen && sw_stristr(line, q) && (size_t)(sw_stristr(line, q) - line) < llen) {
+    /* No line-level substring prefilter: it could not see past OFAC's
+     * "SURNAME, Given" ordering for multi-token queries. Parse the record,
+     * then decide on the NAME field alone (see sw_name_match). */
+    if (llen) {
       char buf[2048];
       size_t cp = llen < sizeof buf - 1 ? llen : sizeof buf - 1;
       memcpy(buf, line, cp); buf[cp] = 0;
@@ -148,7 +204,7 @@ static int sw_ofac_csv(const source_ctx *ctx, intel_sink *sink,
       if (prog) { snprintf(pg, sizeof pg, "%s", prog); sw_clean(pg); }
       if (type) { snprintf(dt, sizeof dt, "%s", type); sw_clean(dt); }
       /* skip the "-0- " placeholder OFAC uses for empty fields, and header */
-      if (nm[0] && strcmp(nm, "-0-") != 0 && sw_stristr(nm, q)) {
+      if (nm[0] && strcmp(nm, "-0-") != 0 && sw_name_match(nm, q)) {
         emitted += sw_emit(sink, service, rectype, q, nm,
                            dt[0] && strcmp(dt,"-0-") ? dt : NULL,
                            pg[0] && strcmp(pg,"-0-") ? pg : NULL,
@@ -163,30 +219,93 @@ static int sw_ofac_csv(const source_ctx *ctx, intel_sink *sink,
   return emitted;
 }
 
-/* ---- Generic line/record scan for CSV & XML lists ----------------------- *
+/* ---- Generic line/record scan for CSV lists ----------------------------- *
  * For lists whose exact column semantics we don't want to hard-code, we still
  * behave honestly: we only emit records that literally contain the query, and
  * we surface the REAL matched line as the "detail". The record name is the
  * matched fragment's owning line, trimmed. This never fabricates data — it
- * echoes the genuine matched entry from the official file. */
+ * echoes the genuine matched entry from the official file.
+ *
+ * WHERE the name lives is described by a DELIMITER and a 1-based inclusive
+ * COLUMN RANGE. It used to be a single count meaning "how many LEADING
+ * COMMA-separated columns are the name", and that could not describe the EU
+ * consolidated export at all: verified against the live file on 2026-08-24,
+ * it is SEMICOLON-delimited and its name fields (NameAlias_LastName,
+ * _FirstName, _MiddleName, _WholeName) are columns 17-20. The only value that
+ * field could hold for the EU row was 0 = "screen the whole row", which is the
+ * behaviour that made the query "Putin" return 708 UK OFSI records — Abramovich,
+ * Abakarov, … — because their free-text Statement of Reasons mentions Putin.
+ * Only 10 OFSI records carry Putin/Putina as a NAME. In a sanctions screen a
+ * false positive is a person wrongly flagged, so "over-match and let a human
+ * sort it out" is not a resting place.
+ *
+ * A row whose declared name columns are ALL EMPTY is not screened at all. That
+ * is a deliberate change from the previous fall-back-to-the-whole-row: when we
+ * know which columns hold names, a row with nothing in them holds no name, and
+ * screening its narrative columns instead can only produce the false positive
+ * this function exists to remove. It cannot cause a miss for either list that
+ * declares a range, because both are denormalised one-row-per-name-alias — the
+ * EU file repeats the whole entity block for every alias, so every alias is
+ * itself a row with populated name columns.
+ *
+ * `delim` of 0 means comma. `col_lo` of 0 means the layout is unknown, and
+ * then the whole row is screened exactly as before — over-matching, never
+ * missing, and honest about not knowing. */
 static int sw_scan_lines(intel_sink *sink, const char *body, const char *q,
                          const char *service, const char *rectype,
-                         const char *listing_url, int max) {
+                         const char *listing_url, char delim,
+                         int col_lo, int col_hi, int max) {
+  if (!delim) delim = ',';
+  if (col_hi < col_lo) col_hi = col_lo;
   int emitted = 0, idx = 0;
   const char *line = body;
   while (line && *line && emitted < max) {
     const char *nl = strchr(line, '\n');
     size_t llen = nl ? (size_t)(nl - line) : strlen(line);
-    const char *hit = sw_stristr(line, q);
-    if (hit && (size_t)(hit - line) < llen && llen > 1) {
-      char buf[2048];
+    if (llen > 1) {
+      /* 2048 truncated 64 of the UK OFSI records (their lines run to 4.4 kB),
+       * silently dropping the tail of the record from both the match and the
+       * emitted detail. */
+      char buf[8192];
       size_t cp = llen < sizeof buf - 1 ? llen : sizeof buf - 1;
       memcpy(buf, line, cp); buf[cp] = 0;
       sw_clean(buf);
-      if (buf[0]) {
-        /* title = up to 200 chars of the matched line */
-        char nm[256];
-        snprintf(nm, sizeof nm, "%.200s", buf);
+
+      /* Concatenate the declared name columns, in order, skipping the empty
+       * ones — OFSI's six name parts are usually mostly blank
+       * ("MITHOO,Mian,,,,,"), and so are the EU's four. */
+      char nm[256]; nm[0] = 0;
+      if (col_lo > 0) {
+        size_t o = 0;
+        int col = 1, inq = 0;              /* 1-based, like a header row */
+        const char *fs = buf;
+        for (const char *r2 = buf; ; r2++) {
+          if (*r2 == '"') { inq = !inq; continue; }
+          if (inq && *r2) continue;
+          if (*r2 != delim && *r2 != 0) continue;
+          if (col >= col_lo && col <= col_hi) {
+            const char *f = fs; size_t fl = (size_t)(r2 - fs);
+            while (fl && (*f == ' ' || *f == '"')) { f++; fl--; }
+            while (fl && (f[fl-1] == ' ' || f[fl-1] == '"')) fl--;
+            if (fl && o + fl + 2 < sizeof nm) {
+              if (o) nm[o++] = ' ';
+              memcpy(nm + o, f, fl); o += fl; nm[o] = 0;
+            }
+          }
+          if (!*r2 || col >= col_hi) break;
+          col++;
+          fs = r2 + 1;
+        }
+        sw_unescape(nm);
+      }
+
+      /* Screen the NAME columns when the layout is declared, the whole row
+       * when it is not. `nm[0] == 0` under a declared range means this row
+       * carries no name — see the note above on why it is skipped rather than
+       * widened back out to the row. */
+      const char *hay = col_lo > 0 ? nm : buf;
+      if (hay[0] && sw_name_match(hay, q)) {
+        if (!nm[0]) snprintf(nm, sizeof nm, "%.200s", buf);
         emitted += sw_emit(sink, service, rectype, q, nm, buf, NULL,
                            NULL, listing_url, idx);
       }
@@ -196,6 +315,146 @@ static int sw_scan_lines(intel_sink *sink, const char *body, const char *q,
     line = nl + 1;
   }
   fprintf(stderr, "[%s] emitted %d\n", service, emitted);
+  return emitted;
+}
+
+/* ---- Record-aware XML scan (UN, Canada SEMA) ---------------------------- *
+ * The XML lists are pretty-printed ONE FIELD PER LINE:
+ *
+ *   <INDIVIDUAL>
+ *     <FIRST_NAME>ERIC</FIRST_NAME>
+ *     <SECOND_NAME>BADEGE</SECOND_NAME>
+ *
+ * so a per-LINE matcher can never see a full name: "Eric Badege" — a genuinely
+ * UN-listed person — has its two tokens on two different lines and the source
+ * reported CLEAR. Same for Canada (<LastName>/<GivenName>). That is a false
+ * negative in a sanctions screen, so the scan is done per RECORD element: the
+ * name + alias fields of one record are concatenated, matched as a unit, and
+ * the emitted title is the real name instead of a raw XML fragment. */
+
+/* append every <tag>…</tag> value inside [rec,rec+len) to out (bounded).
+ * Returns the number of occurrences appended. */
+static int sw_xml_collect(const char *rec, size_t len, const char *tag,
+                          char *out, size_t outsz, const char *sep) {
+  char open[64], close[64];
+  snprintf(open, sizeof open, "<%s>", tag);
+  snprintf(close, sizeof close, "</%s>", tag);
+  size_t ol = strlen(open), cl = strlen(close);
+  size_t o = strlen(out);
+  int hits = 0;
+  for (size_t i = 0; i + ol < len; i++) {
+    if (rec[i] != '<' || strncmp(rec + i, open, ol) != 0) continue;
+    size_t vs = i + ol, ve = vs;
+    while (ve + cl <= len && strncmp(rec + ve, close, cl) != 0) ve++;
+    if (ve + cl > len) break;
+    size_t vl = ve - vs;
+    /* trim whitespace around the value */
+    while (vl && isspace((unsigned char)rec[vs])) { vs++; vl--; }
+    while (vl && isspace((unsigned char)rec[vs + vl - 1])) vl--;
+    if (vl) {
+      if (o && sep && o + strlen(sep) < outsz - 1) {
+        memcpy(out + o, sep, strlen(sep)); o += strlen(sep);
+      }
+      if (o + vl < outsz - 1) { memcpy(out + o, rec + vs, vl); o += vl; }
+      out[o] = 0;
+      hits++;
+    }
+    i = ve + cl - 1;
+  }
+  /* some values wrap their content in a further element (UN NATIONALITY holds
+   * <VALUE>…</VALUE>); drop nested markup before it reaches the row. */
+  {
+    char *w = out; int in = 0;
+    for (char *r2 = out; *r2; r2++) {
+      if (*r2 == '<') { in = 1; continue; }
+      if (*r2 == '>') { in = 0; continue; }
+      if (!in) *w++ = *r2;
+    }
+    *w = 0;
+  }
+  sw_unescape(out);
+  return hits;
+}
+
+static int sw_scan_xml(intel_sink *sink, const char *body, const char *q,
+                       const char *service, const char *rectype,
+                       const char *listing_url, const char *rec_tags,
+                       const char *name_tags, const char *alias_tags,
+                       const char *prog_tag, const char *detail_tags, int max) {
+  int emitted = 0, idx = 0;
+  char tags[256];
+  snprintf(tags, sizeof tags, "%s", rec_tags ? rec_tags : "");
+  char *save = NULL;
+  for (char *rt = strtok_r(tags, ",", &save); rt && emitted < max;
+       rt = strtok_r(NULL, ",", &save)) {
+    /* Match the opening tag WITHOUT its '>' so an element carrying attributes
+     * is still a record. The UN and Canadian schemas write a bare
+     * <INDIVIDUAL>, but Switzerland writes <target ssid="5142"> — matching
+     * "<target>" found zero records in a 42 MB file that holds 17,292 of them,
+     * and the source reported a clean screen. */
+    char open[64], close[64];
+    int openl = snprintf(open, sizeof open, "<%s", rt);
+    snprintf(close, sizeof close, "</%s>", rt);
+    const char *p = body;
+    for (;;) {
+      const char *s = strstr(p, open);
+      /* reject a longer tag that merely shares the prefix (<targetGroup>) */
+      while (s && s[openl] != '>' && s[openl] != ' ' && s[openl] != '\t' &&
+             s[openl] != '\n' && s[openl] != '/')
+        s = strstr(s + 1, open);
+      if (s) {
+        const char *gt = strchr(s, '>');
+        if (!gt) s = NULL;
+      }
+      if (!s) break;
+      const char *e = strstr(s, close);
+      if (!e) break;
+      size_t len = (size_t)(e + strlen(close) - s);
+      idx++;
+      p = e + strlen(close);
+
+      /* the text we screen against: names + aliases only. Matching the whole
+       * record (comments, addresses) would resurrect the false positives. */
+      char hay[4096]; hay[0] = 0;
+      char nm[512];   nm[0] = 0;
+      char lst[128];  lst[0] = 0;
+      char det[512];  det[0] = 0;
+      char fields[256];
+
+      snprintf(fields, sizeof fields, "%s", name_tags ? name_tags : "");
+      char *s2 = NULL;
+      for (char *t = strtok_r(fields, ",", &s2); t; t = strtok_r(NULL, ",", &s2))
+        sw_xml_collect(s, len, t, nm, sizeof nm, " ");
+      snprintf(hay, sizeof hay, "%s", nm);
+      if (alias_tags) {
+        snprintf(fields, sizeof fields, "%s", alias_tags);
+        s2 = NULL;
+        for (char *t = strtok_r(fields, ",", &s2); t; t = strtok_r(NULL, ",", &s2))
+          sw_xml_collect(s, len, t, hay, sizeof hay, " | ");
+      }
+      if (!hay[0] || !sw_name_match(hay, q)) { if (emitted >= max) break; continue; }
+      if (!nm[0]) snprintf(nm, sizeof nm, "%.200s", hay);
+
+      if (prog_tag) sw_xml_collect(s, len, prog_tag, lst, sizeof lst, ", ");
+      if (detail_tags) {
+        snprintf(fields, sizeof fields, "%s", detail_tags);
+        s2 = NULL;
+        for (char *t = strtok_r(fields, ",", &s2); t; t = strtok_r(NULL, ",", &s2)) {
+          char one[192]; one[0] = 0;
+          if (sw_xml_collect(s, len, t, one, sizeof one, ", ") && one[0]) {
+            size_t o = strlen(det);
+            snprintf(det + o, sizeof det - o, "%s%s: %s",
+                     o ? " | " : "", t, one);
+          }
+        }
+      }
+      emitted += sw_emit(sink, service, rectype, q, nm,
+                         det[0] ? det : NULL, lst[0] ? lst : NULL,
+                         NULL, listing_url, idx);
+      if (emitted >= max) break;
+    }
+  }
+  fprintf(stderr, "[%s] emitted %d (records scanned %d)\n", service, emitted, idx);
   return emitted;
 }
 
@@ -223,7 +482,9 @@ static int sw_worldbank(const source_ctx *ctx, intel_sink *sink, const char *bod
       const char *name = jo_sv(r, "SUPP_NAME");
       if (!name) name = jo_sv(r, "name");
       if (!name) { idx++; continue; }
-      if (!sw_stristr(name, q)) { idx++; continue; }
+      /* same whole-word screening rule as the other lists — a raw substring
+       * test here would match "PT INDO..." for the query "Indo" etc. */
+      if (!sw_name_match(name, q)) { idx++; continue; }
       const char *ctry = jo_sv(r, "SUPP_ADDR_COUNTRY_NAME");
       const char *grnd = jo_sv(r, "GRND");
       const char *from = jo_sv(r, "DEBAR_FROM_DATE");
@@ -247,54 +508,162 @@ static int sw_worldbank(const source_ctx *ctx, intel_sink *sink, const char *bod
 }
 
 /* ---- dispatch table ----------------------------------------------------- */
-typedef enum { M_OFAC_CSV, M_WB_JSON, M_SCAN } sw_mode;
+typedef enum { M_OFAC_CSV, M_WB_JSON, M_SCAN, M_XML } sw_mode;
 typedef struct {
   const char *id, *service, *rectype, *url, *listing, *token_env;
   sw_mode mode;
+  /* M_XML only: which element is one record, which tags carry the name, the
+   * aliases, the programme and the extra detail (all comma-separated). */
+  const char *xml_rec, *xml_name, *xml_alias, *xml_prog, *xml_detail;
+  /* M_SCAN only: where the NAME lives in the CSV.
+   *   csv_delim   0 = comma, else the byte that separates the columns.
+   *   name_col_lo 1-based first name column; 0 = layout unknown, in which
+   *               case the WHOLE ROW is screened (over-matches on narrative
+   *               columns, never misses, and says so).
+   *   name_col_hi 1-based last name column, inclusive. */
+  char csv_delim;
+  int  name_col_lo, name_col_hi;
 } sw_row;
 
 static const sw_row ROWS[] = {
   /* OFAC SDN — keyless CSV bulk export */
   { "OFAC_SDN", "OFAC_SDN", "sanctions-sdn",
     "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.CSV",
-    "https://sanctionssearch.ofac.treas.gov/", NULL, M_OFAC_CSV },
-  /* EU consolidated — the machine-readable export needs a (free) token/crl
-   * user id; gate rather than fake. */
+    "https://sanctionssearch.ofac.treas.gov/", NULL, M_OFAC_CSV,
+    /* sw_ofac_csv() parses the SDN export's own fixed column layout, so
+     * neither the xml_* record description nor the name-column range is
+     * consulted in this mode. Spelled out so the zeros read as a decision
+     * rather than as a row somebody forgot to finish. */
+    .xml_rec = NULL, .name_col_lo = 0 },
+  /* EU consolidated — keyless. This was gated behind EU_SANCTIONS_TOKEN, which
+   * nobody sets, so the URL was fetched as "...content?token=" and answered 403
+   * on every run: a registered sanctions source that has never returned a row.
+   * The token is not a credential — `dG9rZW4tMjAxNw` is base64 "token-2017",
+   * the fixed value the Commission publishes on its own download page for
+   * anonymous access. With it the endpoint returns ~25 MB of CSV, keyless.
+   * Verified 2026-08-17: without it 403; with it 25,166,172 bytes. */
   { "EU_SANCTIONS", "EU_SANCTIONS", "sanctions-eu",
-    "https://webgate.ec.europa.eu/fsd/fsf/public/files/csvFullSanctionsList_1_1/content?token=",
+    "https://webgate.ec.europa.eu/fsd/fsf/public/files/csvFullSanctionsList_1_1/content?token=dG9rZW4tMjAxNw",
     "https://data.europa.eu/data/datasets/consolidated-list-of-persons-groups-and-entities-subject-to-eu-financial-sanctions",
-    "EU_SANCTIONS_TOKEN", M_SCAN },
-  /* UN Security Council consolidated — keyless XML */
+    NULL, M_SCAN,
+    /* SEMICOLON-delimited, names at columns 17-20. Read off the live export
+     * rather than assumed — header fetched 2026-08-24, 25,166,172 bytes:
+     *
+     *   1  fileGenerationDate        …  16 Entity_Regulation_PublicationUrl
+     *   17 NameAlias_LastName        18  NameAlias_FirstName
+     *   19 NameAlias_MiddleName      20  NameAlias_WholeName
+     *   21 NameAlias_NameLanguage    …  113 Citizenship_Regulation_…Url
+     *
+     * This is the layout the old `csv_name_cols` ("how many LEADING
+     * COMMA-separated columns are the name") could not express at ANY value:
+     * comma-splitting a semicolon file makes column 1 the whole line, and the
+     * name columns are not leading. So the row was pinned at 0 = screen the
+     * whole 113-column line, narrative columns (Entity_Remark,
+     * Entity_DesignationDetails) included — the same over-match that made the
+     * query "Putin" return 708 UK OFSI records. Now that sw_scan_lines takes a
+     * delimiter and a range, the layout can simply be stated.
+     *
+     * Restricting the screen to 17-20 cannot miss an alias: this export is
+     * denormalised, one row per NameAlias, repeating the entity block each
+     * time — so "Saddam Hussein Al-Tikriti" and "Abu Ali" are two rows of the
+     * same entity, each with its own populated name columns. Titles, functions
+     * and document names are deliberately NOT in the range: they are not the
+     * designated person's name. */
+    .xml_rec = NULL, .csv_delim = ';', .name_col_lo = 17, .name_col_hi = 20 },
+  /* UN Security Council consolidated — keyless XML, one record per
+   * <INDIVIDUAL>/<ENTITY> element */
   { "UN_SANCTIONS", "UN_SANCTIONS", "sanctions-un",
     "https://scsanctions.un.org/resources/xml/en/consolidated.xml",
     "https://www.un.org/securitycouncil/content/un-sc-consolidated-list",
-    NULL, M_SCAN },
-  /* UK OFSI consolidated — keyless CSV */
+    NULL, M_XML,
+    "INDIVIDUAL,ENTITY",
+    "FIRST_NAME,SECOND_NAME,THIRD_NAME,FOURTH_NAME",
+    "ALIAS_NAME",
+    "UN_LIST_TYPE",
+    "REFERENCE_NUMBER,LISTED_ON,NATIONALITY,DATE_OF_BIRTH,COMMENTS1",
+    .name_col_lo = 0 },        /* M_XML: not a CSV, sw_scan_lines never runs */
+  /* UK OFSI consolidated — keyless COMMA-separated CSV. Columns 1-6 are
+   * "Name 6" (family name) followed by "Name 1".."Name 5"; everything after
+   * that is biographical/narrative and must not be screened as a name.
+   * Re-read off the live export on 2026-08-24. This is the row that already
+   * carried a column count (as `csv_name_cols = 6`, i.e. the leading six);
+   * expressed as a range it is columns 1-6, and the screen it produces is
+   * byte-for-byte the same set of columns as before. */
   { "UK_OFSI", "UK_OFSI", "sanctions-uk",
     "https://ofsistorage.blob.core.windows.net/publishlive/2022format/ConList.csv",
     "https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets",
-    NULL, M_SCAN },
-  /* World Bank debarred firms — keyless JSON */
+    NULL, M_SCAN, .csv_delim = ',', .name_col_lo = 1, .name_col_hi = 6 },
+  /* World Bank debarred firms — NOT keyless any more. The gateway now answers
+   * 401 "Access denied due to missing subscription key" on this path and on
+   * its SANCTIONED_FIRM sibling, so the row was fetching nothing and reporting
+   * CLEAR. Declaring the credential makes the failure honest: with no key set
+   * the source reports "needs credential" instead of an empty screen, which is
+   * the difference between "not debarred" and "not checked".
+   * Verified 2026-08-17: 401 on both paths. */
   { "WORLDBANK_DEBARRED", "WORLDBANK_DEBARRED", "sanctions-debarment",
     "https://apigwext.worldbank.org/dvsvc/v1.0/json/APPLICATION/ADOBE_EXPRT_WS/OFFICIAL/DEBARRED_FIRMS",
     "https://www.worldbank.org/en/projects-operations/procurement/debarred-firms",
-    NULL, M_WB_JSON },
-  /* Canada SEMA consolidated autonomous sanctions — keyless XML */
+    "WORLDBANK_API_KEY", M_WB_JSON,
+    /* sw_worldbank() reads named JSON keys (SUPP_NAME, GRND, …), so no XML
+     * record description and no CSV column range apply in this mode. */
+    .xml_rec = NULL, .name_col_lo = 0 },
+  /* Canada SEMA consolidated autonomous sanctions — keyless XML, one record
+   * per <record> element (person: LastName+GivenName, else EntityOrShip) */
   { "CA_SANCTIONS", "CA_SANCTIONS", "sanctions-ca",
     "https://www.international.gc.ca/world-monde/assets/office_docs/international_relations-relations_internationales/sanctions/sema-lmes.xml",
     "https://www.international.gc.ca/world-monde/international_relations-relations_internationales/sanctions/consolidated-consolide.aspx",
-    NULL, M_SCAN },
+    NULL, M_XML,
+    "record",
+    "LastName,GivenName,EntityOrShip",
+    "Aliases",
+    "Country",
+    "Schedule,Item,DateOfListing,DateOfBirthOrShipBuildDate,ShipIMONumber,TitleOrShip",
+    .name_col_lo = 0 },        /* M_XML: not a CSV, sw_scan_lines never runs */
   /* Australia DFAT consolidated list — the authoritative export is XLSX; the
    * open-data CSV mirror is used here. */
   { "AU_DFAT", "AU_DFAT", "sanctions-au",
     "https://www.dfat.gov.au/sites/default/files/regulation8_consolidated.csv",
     "https://www.dfat.gov.au/international-relations/security/sanctions/consolidated-list",
-    NULL, M_SCAN },
-  /* Switzerland SECO sanctions — keyless XML export */
+    NULL, M_SCAN,
+    /* name_col_lo stays 0 = "layout unknown, screen the whole row", and it
+     * stays there UNVERIFIED. dfat.gov.au refused every connection from the
+     * build host on 2026-08-24 (curl exit 92 on HTTP/2, exit 28 timeout on
+     * HTTP/1.1 and on forced IPv4; the sanctions landing page is unreachable
+     * too), and again on the retry that accompanied the EU fix below — so the
+     * real header still could not be read. A column range written from memory
+     * would be a guess baked into a sanctions screen, which is worse than
+     * admitting the layout is unknown, so it keeps the conservative value: it
+     * over-matches on narrative columns but never misses a listed name.
+     *
+     * The EXCUSE for leaving it is gone, though — sw_scan_lines now takes a
+     * delimiter and an arbitrary column range, so whatever the header turns
+     * out to say can be expressed here. All that is missing is one successful
+     * fetch of the file by someone whose network this host is not on. */
+    .xml_rec = NULL, .name_col_lo = 0 },
+  /* Switzerland SECO sanctions — keyless XML export.
+   *
+   * The registered action was `downloadXmlGesamtlisteEn`, which is not the
+   * export: it answers HTTP 200 with a 3,290-byte XHTML landing page. The
+   * fetch succeeded, the scan found no names, and the source reported CLEAR on
+   * every run — so the Swiss list has never actually been screened. The export
+   * is `downloadXmlGesamtlisteAction`, which returns ~42 MB containing 17,292
+   * <target> records. Verified 2026-08-17: 3,290 bytes vs 42,194,880.
+   *
+   * Also promoted from M_SCAN to M_XML. A text scan of 42 MB cannot see a name
+   * whose parts are split across <name-part> elements — the same per-line
+   * failure documented above for the UN and Canadian lists, which is why those
+   * two are record-aware. Swiss names live in <value> under <name-part>, with
+   * transliterations in <spelling-variant>, so both are collected. */
   { "CH_SECO", "CH_SECO", "sanctions-ch",
-    "https://www.sesam.search.admin.ch/sesam-search-web/pages/downloadXmlGesamtliste.xhtml?lang=en&action=downloadXmlGesamtlisteEn",
+    "https://www.sesam.search.admin.ch/sesam-search-web/pages/downloadXmlGesamtliste.xhtml?lang=en&action=downloadXmlGesamtlisteAction",
     "https://www.seco.admin.ch/seco/en/home/Aussenwirtschaftspolitik_Wirtschaftliche_Zusammenarbeit/Wirtschaftsbeziehungen/exportkontrollen-und-sanktionen/sanktionen-embargos/sanktionsmassnahmen/suche_sanktionsadressaten.html",
-    NULL, M_SCAN },
+    NULL, M_XML,
+    "target",
+    "value",
+    "spelling-variant",
+    "sanctions-set-id",
+    "other-information",
+    .name_col_lo = 0 },        /* M_XML: not a CSV, sw_scan_lines never runs */
 };
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -326,7 +695,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       "Accept: application/json, text/csv, application/xml;q=0.9, */*;q=0.8",
       "User-Agent: JapanOSINT/1.0 (sanctions-screening)",
       NULL };
-    char *body = jo_get(ctx, url, hdrs, r->id);
+    /* These are whole consolidated registers, not pages: the Swiss list is
+     * 42 MB, the EU CSV 25 MB, the UK OFSI list 54 MB. jo_get's 20-second
+     * default cannot finish any of them, and a timeout here returns NULL, which
+     * this function treats as an honest empty — i.e. the screen reports the
+     * name as CLEAR because the download did not complete. For a sanctions
+     * check that failure mode is the dangerous one, so these fetches are given
+     * the time a bulk register actually needs. */
+    char *body = jo_get_t(ctx, url, hdrs, r->id, 120000);
     if (!body) return 0;                   /* fetch failed → honest empty */
 
     int emitted = 0;
@@ -337,9 +713,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       case M_WB_JSON:
         emitted = sw_worldbank(ctx, sink, body, q, r->listing, 50);
         break;
+      case M_XML:
+        emitted = sw_scan_xml(sink, body, q, r->service, r->rectype, r->listing,
+                              r->xml_rec, r->xml_name, r->xml_alias,
+                              r->xml_prog, r->xml_detail, 50);
+        break;
       case M_SCAN:
       default:
-        emitted = sw_scan_lines(sink, body, q, r->service, r->rectype, r->listing, 50);
+        emitted = sw_scan_lines(sink, body, q, r->service, r->rectype,
+                                r->listing, r->csv_delim,
+                                r->name_col_lo, r->name_col_hi, 50);
         break;
     }
     (void)emitted;

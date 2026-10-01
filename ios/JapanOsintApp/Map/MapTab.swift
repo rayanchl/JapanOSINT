@@ -39,6 +39,11 @@ struct MapTab: View {
     @State private var spotlightFeature: GeoFeature?
 
     @State private var showLayers = false
+    /// Roadmap 32 — GTFS travel-time reachability. A sheet on both platforms
+    /// (not the macOS inspector the other panels use): it owns its own `Map`
+    /// and tap gesture, so it needs the full canvas, exactly like
+    /// `AOIDrawOverlay`.
+    @State private var showIsochrone = false
     @State private var lookAroundScene: MKLookAroundScene?
     @State private var lookAroundUnavailable = false
     @State private var mapMode: MapMode = .explore
@@ -212,6 +217,11 @@ struct MapTab: View {
                         .inspectorColumnWidth(min: 320, ideal: 380, max: 520)
                 }
                 #endif
+                .sheet(isPresented: $showIsochrone) {
+                    IsochroneOverlay(initialRegion: visibleRect.map {
+                        MKCoordinateRegion($0)
+                    })
+                }
                 .alert("Street view not available here",
                        isPresented: $lookAroundUnavailable) {
                     Button("OK", role: .cancel) {}
@@ -262,13 +272,22 @@ struct MapTab: View {
             ForEach(visibleFeatures, id: \.id) { feat in
                 content(for: feat)
             }
+            // Heatmap-modality layers (server-declared, core/layers.def)
+            // render as density cells, never as one pin per record. Each
+            // cell is the count of REAL records binned into it; nothing is
+            // smoothed in from outside the data.
+            ForEach(heatmapCells) { cell in
+                MapCircle(center: cell.center, radius: cell.radius)
+                    .foregroundStyle(cell.color.opacity(cell.opacity))
+                    .mapOverlayLevel(level: .aboveRoads)
+            }
             if settings.liveTrainsEnabled
                 || settings.liveSubwaysEnabled
                 || settings.liveBusesEnabled {
                 LiveVehiclesContent(store: liveVehicles, theme: theme, settings: settings)
             }
             if let coord = probedCoordinate {
-                Annotation("Map center", coordinate: coord, anchor: .bottom) {
+                MapKit.Annotation("Map center", coordinate: coord, anchor: .bottom) {
                     pin(symbol: "mappin", color: theme.accent, opacity: 1)
                 }
             }
@@ -276,7 +295,7 @@ struct MapTab: View {
                 // Declared after `visibleFeatures`, so MapContent ordering
                 // already places this on top of the regular pins. Drawn at
                 // 1.5× so the flown-to pin clearly stands out.
-                Annotation(spot.displayName, coordinate: c, anchor: .bottom) {
+                MapKit.Annotation(spot.displayName, coordinate: c, anchor: .bottom) {
                     pin(
                         symbol: registry.symbol(for: spot.layerId),
                         color: registry.color(for: spot.layerId),
@@ -398,7 +417,7 @@ struct MapTab: View {
                 let heading = (feat.properties["heading"]?.value as? Double)
                     ?? (feat.properties["heading"]?.value as? Int).map(Double.init)
                     ?? 0
-                Annotation(feat.displayName, coordinate: c, anchor: .center) {
+                MapKit.Annotation(feat.displayName, coordinate: c, anchor: .center) {
                     pin(symbol: symbol, color: color, opacity: opacity)
                         .rotationEffect(.degrees(heading - 90))
                         .animation(.linear(duration: 1), value: heading)
@@ -406,7 +425,7 @@ struct MapTab: View {
                 }
                 .tag(feat.id)
             } else {
-                Annotation(feat.displayName, coordinate: c, anchor: .bottom) {
+                MapKit.Annotation(feat.displayName, coordinate: c, anchor: .bottom) {
                     pin(symbol: symbol, color: color, opacity: opacity)
                         .onTapGesture { selectFeature(feat) }
                 }
@@ -415,7 +434,7 @@ struct MapTab: View {
 
         case .multiPoint(let coords):
             ForEach(Array(coords.enumerated()), id: \.offset) { idx, c in
-                Annotation("\(feat.displayName) #\(idx + 1)", coordinate: c, anchor: .bottom) {
+                MapKit.Annotation("\(feat.displayName) #\(idx + 1)", coordinate: c, anchor: .bottom) {
                     pin(symbol: symbol, color: color, opacity: opacity)
                         .onTapGesture { selectFeature(feat) }
                 }
@@ -522,6 +541,7 @@ struct MapTab: View {
                             .font(.caption.weight(.semibold))
                             .foregroundStyle(registry.color(for: id))
                             .frame(width: 18)
+                            .accessibilityHidden(true)   // the layer name follows
                         Text(LayerRegistry.displayName(forId: id))
                             .font(.caption)
                             .foregroundStyle(theme.text)
@@ -622,8 +642,9 @@ struct MapTab: View {
                 .font(.body.weight(.semibold))
                 .foregroundStyle(.tint)
                 .frame(width: 36, height: 36)
-                .background(.thinMaterial, in: Circle())
+                .mapBarSurface(in: Circle())
                 .frame(minWidth: 44, minHeight: 44)
+                .accessibilityLabel("Probe the map centre")
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -670,6 +691,7 @@ struct MapTab: View {
         Button { selectedFeature = nil; lookAroundScene = nil; showLayers = true } label: {
             HStack(spacing: 4) {
                 Image(systemName: "square.3.stack.3d")
+                    .accessibilityHidden(true)   // named by the button below
                 Text("\(settings.activeLayerIds.count)")
                     .font(.subheadline.weight(.semibold))
                     .monospacedDigit()
@@ -677,7 +699,7 @@ struct MapTab: View {
             .foregroundStyle(.tint)
             .frame(height: 36)
             .padding(.horizontal, 12)
-            .background(.thinMaterial, in: Capsule())
+            .mapBarSurface(in: Capsule())
             .frame(minHeight: 44)
             .contentShape(Rectangle())
         }
@@ -697,12 +719,21 @@ struct MapTab: View {
             Button(action: openLookAround) {
                 Label("Street view", systemImage: "binoculars.fill")
             }
+            // Roadmap 32. Opens on the region currently in view, so "how far
+            // can I get from here" means from what the analyst is looking at.
+            Button {
+                selectedFeature = nil
+                lookAroundScene = nil
+                showIsochrone = true
+            } label: {
+                Label("Travel time from…", systemImage: "figure.walk.circle")
+            }
         } label: {
             Image(systemName: "ellipsis")
                 .font(.body.weight(.semibold))
                 .foregroundStyle(.tint)
                 .frame(width: 36, height: 36)
-                .background(.thinMaterial, in: Circle())
+                .mapBarSurface(in: Circle())
                 .frame(minWidth: 44, minHeight: 44)
                 .contentShape(Rectangle())
         }
@@ -713,15 +744,23 @@ struct MapTab: View {
     /// Uses Apple's secondary text styling so it reads as supporting info.
     private var statusRow: some View {
         HStack(spacing: 10) {
+            // This reports the realtime PUSH channel only. It is not an
+            // app-connectivity indicator: every layer on this map is fetched
+            // over REST and keeps working with the socket down, so the
+            // non-live state is muted, not red, and never says "OFFLINE".
             HStack(spacing: 4) {
                 Circle()
-                    .fill(ws.isConnected ? theme.success : theme.danger)
+                    .fill(ws.isConnected ? theme.success : theme.textMuted)
                     .frame(width: 6, height: 6)
-                Text(ws.isConnected ? "LIVE" : "OFFLINE")
+                Text(ws.isConnected ? "LIVE" : "SNAPSHOT")
                     .font(.caption2.weight(.semibold))
                     .tracking(0.6)
-                    .foregroundStyle(ws.isConnected ? theme.success : theme.danger)
+                    .foregroundStyle(ws.isConnected ? theme.success : theme.textMuted)
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(ws.isConnected
+                                ? "Live realtime feed"
+                                : "No realtime feed; showing fetched data")
 
             Text("·").font(.caption2).foregroundStyle(.tertiary)
 
@@ -736,7 +775,10 @@ struct MapTab: View {
 
             Spacer()
 
-            Text("\(visibleFeatures.count) features")
+            let heat = heatmapRecordCount
+            Text(heat > 0
+                 ? "\(visibleFeatures.count) features · \(heat.formatted()) in heatmap"
+                 : "\(visibleFeatures.count) features")
                 .font(.caption2)
                 .foregroundStyle(.secondary)
                 .monospacedDigit()
@@ -754,7 +796,7 @@ struct MapTab: View {
             .buttonStyle(.plain)
         }
         .padding(8)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .mapBarSurface(in: RoundedRectangle(cornerRadius: 10, style: .continuous))
     }
 
     private func jstFormatted(_ date: Date) -> String {
@@ -800,6 +842,19 @@ struct MapTab: View {
         var out: [GeoFeature] = []
         for id in settings.activeLayerIds {
             guard let feats = featuresByLayer[id] else { continue }
+            // Heatmap layers render through `heatmapCells`; their points
+            // must not ALSO appear as pins (a crime-density layer and a
+            // crime-points layer are distinct by design — see layers.def).
+            if registry.layer(for: id)?.renderModality == .heatmap {
+                let shapesOnly = feats.filter {
+                    switch $0.geometry {
+                    case .point, .multiPoint: return false
+                    default:                  return true
+                    }
+                }
+                out.append(contentsOf: decimate(cull(shapesOnly), to: shapeCap))
+                continue
+            }
 
             // Split by geometry family so each gets its own cap.
             var points: [GeoFeature] = []
@@ -817,6 +872,84 @@ struct MapTab: View {
             out.append(contentsOf: decimate(cull(shapes), to: shapeCap))
         }
         return out
+    }
+
+    // MARK: - Heatmap modality
+
+    /// One density cell of a heatmap-modality layer: the count of real point
+    /// records that fell into a grid square of the current viewport.
+    struct HeatCell: Identifiable {
+        let id: String
+        let center: CLLocationCoordinate2D
+        let radius: CLLocationDistance
+        let color: Color
+        let opacity: Double
+        let count: Int
+    }
+
+    /// Grid the viewport (~36 cells across) and bin every point/multiPoint
+    /// record of each active heatmap layer into it. Cell opacity scales with
+    /// count relative to the densest cell of that layer, so the picture is
+    /// the data's own distribution and not a fixed palette. No cell is
+    /// emitted for a square with zero records.
+    private var heatmapCells: [HeatCell] {
+        let rect = visibleRect ?? MKMapRect.world
+        let cellsAcross = 36.0
+        let cellSize = max(rect.size.width / cellsAcross, 1)
+        // Radius in metres from the cell's map-point width at the viewport's
+        // mid-latitude; 0.62 keeps neighbouring circles just overlapping.
+        let mpm = MKMapPointsPerMeterAtLatitude(rect.midCoordinate.latitude)
+        let radius = max(cellSize / max(mpm, 1e-9) * 0.62, 5)
+        let padded = rect.insetBy(dx: -cellSize, dy: -cellSize)
+
+        var out: [HeatCell] = []
+        for id in settings.activeLayerIds {
+            guard let layer = registry.layer(for: id),
+                  layer.renderModality == .heatmap,
+                  let feats = featuresByLayer[id] else { continue }
+            let color = registry.color(for: id)
+            let layerOpacity = settings.opacity(for: id)
+
+            var bins: [Int: (x: Int, y: Int, n: Int)] = [:]
+            func bin(_ c: CLLocationCoordinate2D) {
+                let p = MKMapPoint(c)
+                guard padded.contains(p) else { return }
+                let gx = Int(((p.x - rect.origin.x) / cellSize).rounded(.down))
+                let gy = Int(((p.y - rect.origin.y) / cellSize).rounded(.down))
+                let key = gx &* 100_003 &+ gy
+                bins[key, default: (gx, gy, 0)].n += 1
+            }
+            for f in feats {
+                switch f.geometry {
+                case .point(let c):        bin(c)
+                case .multiPoint(let cs):  cs.forEach(bin)
+                default:                   continue
+                }
+            }
+            guard let peak = bins.values.map(\.n).max(), peak > 0 else { continue }
+            for (_, b) in bins {
+                let cx = rect.origin.x + (Double(b.x) + 0.5) * cellSize
+                let cy = rect.origin.y + (Double(b.y) + 0.5) * cellSize
+                // sqrt compresses the range so a single hot cell doesn't
+                // wash every other cell out to invisibility.
+                let rel = (Double(b.n) / Double(peak)).squareRoot()
+                out.append(HeatCell(
+                    id: "\(id)#\(b.x),\(b.y)",
+                    center: MKMapPoint(x: cx, y: cy).coordinate,
+                    radius: radius,
+                    color: color,
+                    opacity: layerOpacity * (0.18 + 0.62 * rel),
+                    count: b.n
+                ))
+            }
+        }
+        return out
+    }
+
+    /// Records currently aggregated into heatmap cells (in-band, so the
+    /// footer can state how many rows the density picture stands for).
+    private var heatmapRecordCount: Int {
+        heatmapCells.reduce(0) { $0 + $1.count }
     }
 
     /// Fetch a set of layers concurrently. Used both at cold-start (every
@@ -1032,9 +1165,16 @@ func mapPinView(symbol: String, color: Color, opacity: Double = 1, scale: CGFloa
         Circle()
             .fill(color.opacity(opacity))
             .frame(width: size, height: size)
+        // Fixed size on purpose, and not routed through `Typography`: the glyph
+        // is geometrically locked to the `22 * scale` disc above it and to the
+        // pin's map anchor. Growing it with Dynamic Type would spill it out of
+        // the circle and make dense layers unreadable. It is already at the
+        // 11 pt floor at the default `scale` of 1, and it carries no text —
+        // the annotation's own title is what VoiceOver reads.
         Image(systemName: symbol)
             .font(.system(size: 11 * scale, weight: .bold))
             .foregroundStyle(.white)
+            .accessibilityHidden(true)
     }
     .overlay(
         Circle().stroke(.white.opacity(0.85), lineWidth: 1)

@@ -23,10 +23,10 @@
  * All ports/vulns/hostnames/tags are real values fetched from InternetDB/the
  * Shodan API; nothing is fabricated. If the host is not found / errors / yields
  * no ports, vulns or host metadata, NOTHING is emitted and run() returns 0. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -109,7 +109,7 @@ static int emit_port(intel_sink *sink, const char *ip, int port,
   cJSON_AddNumberToObject(props, "port", port);
   cJSON_AddStringToObject(props, "record", "open_port");
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 85);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   char rk[160], title[160];
@@ -148,7 +148,7 @@ static int emit_vuln(intel_sink *sink, const char *ip, const char *cve,
   cJSON_AddStringToObject(props, "cve", cve);
   cJSON_AddStringToObject(props, "record", "vulnerability");
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 85);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   char rk[200], title[200];
@@ -207,7 +207,7 @@ static int emit_host(intel_sink *sink, const char *ip,
   cJSON_AddStringToObject(props, "ip", ip);
   cJSON_AddStringToObject(props, "record", "host");
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 85);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   char rk[160], title[160];

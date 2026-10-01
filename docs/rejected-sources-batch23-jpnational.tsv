@@ -1,0 +1,59 @@
+id_or_url	stage	reason	detail
+JPN_NDL_OAIPMH_ONLINE_PUB_B00007	probe	EMPTY_RESULTSET	ListRecords set=B00007 (国立国会図書館) from=2025-01-01 answers noRecordsMatch; probe verdict UNPARSEABLE on the error document
+JPN_METI_RELEASES_ATOM	probe	HTTP_ERR	https://www.meti.go.jp/ml_index_release_atom.xml answers 403 to the engine User-Agent (JapanOSINT/1.0) and to curl's default; 200 only to a browser User-Agent. Not shipped behind a spoofed header
+JPN_NAOJ_ATOM	batch_exclusions	DUP-ENDPOINT	https://www.nao.ac.jp/atom.xml already registered in collectors/feed/generated/vsrc2_space_1.c
+JPN_JAXA_PRESS_RSS	batch_exclusions	DUP-ENDPOINT	https://www.jaxa.jp/rss/press_j.rdf already registered in collectors/feed/generated/vsrc2_space_1.c
+JPN_IPA_NEWS_ONLY_RSS	batch_exclusions (re-run after the XML fix)	DUP-ENDPOINT	https://www.ipa.go.jp/about/newsonly-rss.rdf was taken by the jpcyber beat (collectors/pivot/table/hp3b23_jpcyber.c) while this row was rejected for CDATA titles; yielded
+JPN_KOKUSEN_NEWS_RELEASES	batch_exclusions (re-run after the XML fix)	DUP-ENDPOINT	https://www.kokusen.go.jp/news/news.html was taken by the jppolice beat (collectors/pivot/table/hp3b28_jppolice.c) in the meantime; yielded (it had passed every gate here, EUC-JP transcoded)
+https://laws.e-gov.go.jp/api/1/lawlists/2	pre-screen	ALREADY_REGISTERED	2,104 LawNameListInfo records (constitution and acts) but lawlists/1 (all laws, the superset) is registered in collectors/sources/egov_laws.c; a category view would duplicate every record
+https://laws.e-gov.go.jp/api/1/lawlists/3	pre-screen	ALREADY_REGISTERED	2,377 records (cabinet orders); subset of the registered lawlists/1
+https://laws.e-gov.go.jp/api/1/lawlists/4	pre-screen	ALREADY_REGISTERED	4,513 records (ministerial ordinances and rules); subset of the registered lawlists/1
+https://www.ndl.go.jp/rss/ndls/bureau-rss-all.xml	pre-screen	NOT_AUTHORED	superset of the four bureau series feeds, which are shipped individually
+https://current.ndl.go.jp/feed	pre-screen	EMPTY_RESULTSET	RSS with 0 items; https://current.ndl.go.jp/rss.xml also 0 items
+https://www.ndl.go.jp/jp/news/index.rss	pre-screen	HTTP_404	Japanese news feed guess; the English feed on this host is registered
+https://id.ndl.go.jp/auth/ndla?q=...&format=rss	pre-screen	NO_API	Web NDL Authorities answers HTML to every OpenSearch-style guess tried; no opensearch link on the page
+https://ndlsearch.ndl.go.jp/api/oaipmh?...&set=iss-ndl-opac-national	pre-screen	BAD_ARGUMENT	set name does not exist (badArgument); the real sets were read from ListSets (B000xx per state organ) and shipped
+https://crd.ndl.go.jp/api/refsearch?type=collab	pre-screen	EMPTY_RESULTSET	no hit_num in the response for the probe entity
+https://crd.ndl.go.jp/api/refsearch?type=profile	pre-screen	NOT_AUTHORED	library profiles, 2 hits for 図書館; not a record type worth a pivot
+https://dashboard.e-stat.go.jp/api/1.0/Json/getData?IndicatorCode=...	pre-screen	SIZE	unbounded getData (every region) exceeds 3 MB per indicator; shipped with RegionCode=00000 (national series) instead
+https://www.e-stat.go.jp/rss/pressrelease.xml	pre-screen	HTTP_404	guess; also /rss/new-stat.xml 404
+https://www.stat.go.jp/rss/press.rdf	pre-screen	HTTP_404	guess; /whatsnew/news.rdf on this host is registered
+https://registry-catalog.registries.digital.go.jp/	pre-screen	DNS	Digital Agency base-registry catalogue host does not resolve (catalog.registries.digital.go.jp likewise, per batch-23 jplocal)
+https://www.data.go.jp/data/api/3/action/organization_list?all_fields=true	pre-screen	NOT_RECORDS	all_fields is ignored: the result is a bare list of 23 organisation names (strings), not records; likewise group_list (17 strings) and tag_list (5,745 strings)
+https://data.e-gov.go.jp/data/api/3/action/organization_show?id=org_XXXX&include_datasets=true	pre-screen	CAPPED	include_datasets returns at most 10 packages with no paging; the per-ministry package_search?fq=organization: walk was shipped instead (organization_show was used only to read each ministry's package_count)
+https://www.jma.go.jp/bosai/volcano/data/list.json	pre-screen	HTTP_404	guess; the volcano constant table volcano_list.json was shipped
+https://www.jma.go.jp/bosai/eew/data/list.json	pre-screen	HTTP_404	guess; also uv/data/list.json, kaikei/data/list.json, common/const/class20s.json 404
+https://www.jma.go.jp/bosai/amedas/data/latest_time.txt	pre-screen	NOT_RECORDS	one timestamp scalar
+https://www.jma.go.jp/bosai/forecast/const/forecast_area.json	pre-screen	NOT_RECORDS	a dict keyed by office code, values are code arrays; no titled records
+https://www.jma.go.jp/jma/press/rss.xml	pre-screen	HTTP_404	guess; also /jma/rss/press.xml 404 and /jma/menu/rss_info.html 404; the JMA press index hodo.html carries no release anchors
+https://www.data.jma.go.jp/stats/data/mdrr/snc_rct/alltable/snc00_rct.csv	pre-screen	HTTP_404	snow-depth table not published at this path in August; five other mdrr tables shipped
+https://nlftp.mlit.go.jp/ksj/gml/data/P17/P17-12/P17-12.geojson	pre-screen	HTTP_404	national land numerical information: no GeoJSON conversion published for P17, P18, P19, P20, P04, P13, P14, P29, W01, N06, P28, P32 at the KSJ data path (12 guesses, all 404); the six datasets that do have GeoJSON are registered
+https://www.mlit.go.jp/jidosha/carinf/rcl/data.html	pre-screen	NO_DATA_ANCHORS	recall site navigation page; the recall search is a JS application (recall-search.html 404 direct; carinf.mlit.go.jp does not resolve)
+https://www.mlit.go.jp/page/rss/kisha.rdf	pre-screen	HTTP_404	guess; also /report/press/rss.xml, /kisha.rdf, /kankocho/news/rss.xml 404; important.rdf on this host is registered
+https://www.courts.go.jp/app/hanrei_jp/list1	pre-screen	HTTP_404	judgment search: GET with filter[text] 404, POST with the form fields 404; search1 is a form shell; no machine-readable judgment index found
+https://www.wbgt.env.go.jp/est15WG/dl/wbgt_all_202608.csv	pre-screen	STALE_URL	observed-WBGT monthly file: the URL carries the month and would go stale; the fixed-name forecast file yohou_all.csv was shipped instead (other path guesses 404)
+https://www.pmda.go.jp/rss_007.xml	pre-screen	EMPTY_RESULTSET	0 items; likewise rss_010, rss_014, rss_023, rss_026
+https://www.boj.or.jp/rss/release.xml	pre-screen	HTTP_404	guess; also mopo, research, paym, finsys, announcements, about, en/rss/release.xml and /rss/ index all 404; en/rss/statistics.xml shipped
+https://www.fsa.go.jp/fsaNewsList_rss2.xml	pre-screen	HTTP_404	guess; fsaNewsListAll_rss2.xml on this host is registered
+https://www.fsa.go.jp/sescOtherList_rss2.xml	pre-screen	EMPTY_RESULTSET	0 items at authoring time (listed on the SESC RSS page)
+https://www.jaxa.jp/rss/topics_j.rdf	pre-screen	HTTP_404	guess; press_e.rdf 404; /rss/ 403
+https://www.shugiin.go.jp/internet/itdb_gian.nsf/html/gian/menu.htm	pre-screen	NO_TITLE_IN_ANCHOR	bill list of the 221st Diet: the bill title is table text, the anchors read 本文 / 経過; HTML mode titles a record by its anchor text, so every record would be titled 本文
+https://www.shugiin.go.jp/internet/itdb_shitsumon.nsf/html/shitsumon/menu_m.htm	pre-screen	NO_TITLE_IN_ANCHOR	written-question list: anchors read 質問(HTML) / 答弁(HTML)
+https://www.sangiin.go.jp/japanese/joho1/kousei/gian/222/gian.htm	pre-screen	HTTP_404	session 222 pages do not exist yet; session 221 pages on this host are registered
+https://www.mod.go.jp/js/press/index.html	pre-screen	HTTP_403	Joint Staff press index 403 (also /atla/rss/news.xml 403 and the site root 403 to urllib); /j/press/news/index.html answers 200 and was shipped
+https://www.recall.caa.go.jp/rss/recall_rss.xml	pre-screen	HTTP_404	no RSS on the recall site (rss/ 404); the three result listings were shipped as HTML rows
+https://www.kokusen.go.jp/rss/news.xml	pre-screen	HTTP_404	guess; ncac_index.rss 404; the news index page was shipped as an HTML row
+https://www.gsi.go.jp/	pre-screen	TLS	GSI's server requires legacy TLS renegotiation; urllib fails with UNSAFE_LEGACY_RENEGOTIATION_DISABLED and curl exits 000 from the WSL host, so nothing on www.gsi.go.jp could be proved
+https://www.mofa.go.jp/mofaj/	pre-screen	HTTP_403	MOFA blocks the pre-screen client; no feed could be discovered
+https://www.env.go.jp/press/press.rss	pre-screen	HTTP_404	guess; /press/rss.xml, /rss/press.rdf, /press/index.rss 404; the ministry homepage advertises no feed; press/index.html on this host is registered
+https://www.mof.go.jp/rss/press.xml	pre-screen	HTTP_404	guess; /public_relations/rss/index.xml 404; press_release/index.html 404
+https://www.nra.go.jp/news_only/rss.xml	pre-screen	HTTP_404	guess; /rss/news.xml 404; news_only/index.html 404
+https://www.jetro.go.jp/rss/	pre-screen	HTTP_404	feed directory guesses on jetro, customs, jica and mext all 404; the feeds that exist were taken from page autodiscovery instead
+https://wwwtb.mlit.go.jp/tohoku/press/	pre-screen	HTTP_404	regional transport bureau press pages: tohoku, hokushin, chugoku, shikoku, kyushu 404; chubu answers 200 but its anchors are month-index links, not releases
+https://www.maff.go.jp/tohoku/	pre-screen	NO_FEED	regional agricultural administration offices (8 hosts/paths) advertise no feed; likewise the seven regional environment offices, the five regional METI bureaus without a registered feed, and the five regional MLIT development bureaus (thr, hrr, cbr, kkr, skr)
+https://www.chubu.meti.go.jp/rss/news-list-all.html	pre-screen	NOT_A_FEED	HTML pages titled as RSS lists; no XML link on them
+https://www.mhlw.go.jp/rss/index.html	pre-screen	NOT_A_FEED	RSS index page; the four MHLW feeds it lists that are not in the tree were shipped, news.rdf is registered
+https://www.jpx.co.jp/rss/alerts.xml	pre-screen	EMPTY_RESULTSET	0 items at authoring time; derivatives-suspended.xml likewise 0
+https://www.nasva.go.jp/rss/topics.xml	pre-screen	ALREADY_REGISTERED	registered in the tree (fence)
+https://www.nict.go.jp/rss/press.rdf	pre-screen	ALREADY_REGISTERED	registered; latestnews.rdf and topics.rdf were shipped
+https://speechpanel.readspeaker.com/	pre-screen	JUNK_AUTODISCOVERY	ReadSpeaker / feedback-form links picked up by feed autodiscovery on shugiin.go.jp and digital.go.jp; not sources

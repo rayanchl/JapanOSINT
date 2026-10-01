@@ -13,28 +13,14 @@
  *   N2YO           N2YO tracking API (gated N2YO_KEY)
  *
  * One run() dispatches on ctx->source_id. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
-
-/* case-insensitive substring */
-static const char *sp_stristr(const char *h, const char *n) {
-  if (!h || !n || !*n) return NULL;
-  size_t nl = strlen(n);
-  for (; *h; h++) {
-    if (tolower((unsigned char)*h) == tolower((unsigned char)*n)) {
-      size_t k = 1;
-      while (k < nl && h[k] && tolower((unsigned char)h[k]) == tolower((unsigned char)n[k])) k++;
-      if (k == nl) return h;
-    }
-  }
-  return NULL;
-}
 
 /* number field → malloc'd string, or NULL. caller frees. */
 static char *sp_num(const cJSON *o, const char *k) {
@@ -53,7 +39,7 @@ static int sp_match(const cJSON *r, const char *q, const char *const *keys) {
   if (!q || !*q) return 1;
   for (int i = 0; keys[i]; i++) {
     const char *v = jo_sv(r, keys[i]);
-    if (v && sp_stristr(v, q)) return 1;
+    if (v && jo_stristr(v, q)) return 1;
   }
   return 0;
 }
@@ -154,7 +140,7 @@ static int sp_satnogs(const source_ctx *ctx, intel_sink *sink, const char *q, in
     char *norad = sp_num(r, "norad_cat_id");
     const char *name  = jo_sv(r, "name");
     if (!sp_match(r, q, mkeys) &&
-        !(q && *q && norad && sp_stristr(norad, q))) { free(norad); continue; }
+        !(q && *q && norad && jo_stristr(norad, q))) { free(norad); continue; }
     const char *satid  = jo_sv(r, "sat_id");
     const char *status = jo_sv(r, "status");
     const char *launched = jo_sv(r, "launched");

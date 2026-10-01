@@ -13,9 +13,9 @@
  *     locally filtered to rows whose corp_name contains the entity bytes.
  * Every emitted item is REAL data parsed from DART's JSON — nothing synthesized;
  * no key / non-200 / no rows → emits nothing. free_tier=1 (the key is free). */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -13,9 +13,9 @@
  * map_url and resources. Invalid BSSID → success=false, confidence 0 (matches
  * the C early-return). confidence 85 if a location was found else 50. Emits ONE
  * osint_service_result row like dns_records.c. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <strings.h>
 #include <stdio.h>
@@ -282,7 +282,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   cJSON *env = cJSON_CreateObject();
   cJSON_AddBoolToObject(env, "success", 1);
-  cJSON_AddNumberToObject(env, "confidence", 85);
+  cJSON_AddItemToObject(env, "confidence", cJSON_CreateNull());
   cJSON_AddItemToObject(env, "data", cJSON_Duplicate(data, 1));
   char *bj = cJSON_PrintUnformatted(env);
 
@@ -290,8 +290,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddStringToObject(props, "service", "WIFI_LOOKUP");
   cJSON_AddStringToObject(props, "entity", bssid);
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 85);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
 
   /* remote_key = wifi:<normalized-bssid>. */
   char rk[64]; snprintf(rk, sizeof rk, "wifi:%s", norm);

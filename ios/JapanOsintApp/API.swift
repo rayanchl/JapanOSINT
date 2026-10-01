@@ -73,6 +73,34 @@ struct API: Sendable {
         }
     }
 
+    /// Whether an outgoing request may carry the Supabase bearer and tenant id.
+    ///
+    /// https always may. Plain http may only when the destination is somewhere
+    /// the user is already trusting at the network layer: loopback, an RFC1918
+    /// / CGNAT / link-local address, or a `.local` mDNS name — which is what
+    /// the LAN development setup uses. Anything else public over http does not.
+    ///
+    /// This deliberately still permits the `.local` default: an mDNS name has
+    /// no authentication and can be answered by any device on the same Wi-Fi,
+    /// but forbidding it here would break the working development loop while
+    /// only half-addressing that; the real fix is to stop shipping a baked-in
+    /// LAN default at all.
+    static func mayCarryCredentials(_ url: URL) -> Bool {
+        let scheme = (url.scheme ?? "").lowercased()
+        if scheme == "https" { return true }
+        guard scheme == "http", let host = url.host?.lowercased() else { return false }
+        if host == "localhost" || host == "127.0.0.1" || host == "::1" { return true }
+        if host.hasSuffix(".local") { return true }
+        let p = host.split(separator: ".").compactMap { Int($0) }
+        guard p.count == 4, p.allSatisfy({ $0 >= 0 && $0 <= 255 }) else { return false }
+        if p[0] == 10 { return true }                             // 10/8
+        if p[0] == 192 && p[1] == 168 { return true }             // 192.168/16
+        if p[0] == 172 && (16...31).contains(p[1]) { return true } // 172.16/12
+        if p[0] == 169 && p[1] == 254 { return true }             // link-local
+        if p[0] == 100 && (64...127).contains(p[1]) { return true } // CGNAT
+        return false
+    }
+
     private func send(_ url: URL, method: String,
                       body: Data?, timeout: TimeInterval?) async throws -> Data {
         var req = URLRequest(url: url)
@@ -91,11 +119,23 @@ struct API: Sendable {
         if body != nil { req.setValue("application/json", forHTTPHeaderField: "Content-Type") }
         // Stamp Supabase bearer + active tenant when present. Absent in
         // legacy single-tenant mode — the server ignores both there.
-        if let token = AuthTokenBox.shared.accessToken, !token.isEmpty {
-            req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        }
-        if let tid = AuthTokenBox.shared.tenantId, !tid.isEmpty {
-            req.setValue(tid, forHTTPHeaderField: "X-Tenant-Id")
+        //
+        // Not unconditionally, though: the backend base URL is user-editable
+        // (Connect field, onboarding) and was accepted as any string at all, so
+        // a typo or a hostile value could send a live Supabase access token and
+        // the tenant id to an arbitrary host in cleartext. Over https, or on a
+        // local network the user chose, that is their call. Over plain http to
+        // a PUBLIC host it is a credential leak with no upside, so the headers
+        // are withheld and the request goes out unauthenticated — the server
+        // then answers 401 and the failure is visible, rather than the token
+        // being spent silently.
+        if API.mayCarryCredentials(url) {
+            if let token = AuthTokenBox.shared.accessToken, !token.isEmpty {
+                req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            }
+            if let tid = AuthTokenBox.shared.tenantId, !tid.isEmpty {
+                req.setValue(tid, forHTTPHeaderField: "X-Tenant-Id")
+            }
         }
         req.httpBody = body
         let (data, resp) = try await API.session.data(for: req)
@@ -186,8 +226,12 @@ struct API: Sendable {
 
     /// Persist whether the scheduler is allowed to auto-probe a keyed
     /// source. `allow:false` puts the row back into the gated bucket.
+    ///
+    /// The wire key is `consent`, not `allow` — core/httpd.c rejects anything
+    /// else with a 400 before touching state, so this route was inert until the
+    /// two sides were reconciled.
     func setProbeConsent(_ id: String, allow: Bool) async throws -> StatusRow {
-        let body = try JSONSerialization.data(withJSONObject: ["allow": allow])
+        let body = try JSONSerialization.data(withJSONObject: ["consent": allow])
         return try await post("/api/status/\(id)/consent", body: body)
     }
 
@@ -244,13 +288,36 @@ struct API: Sendable {
     func intelSources() async throws -> IntelSourcesEnvelope {
         try await get("/api/intel/sources")
     }
+    /// Server-side ordering of /api/intel/items. `.relevance` and `.trust`
+    /// require `q` (the server answers 400 otherwise), so callers pass them
+    /// only alongside a non-empty query.
+    enum IntelSort: String {
+        case date, relevance, trust
+    }
+
+    /// `collapse` and `langView` are the two post-passes `core/httpd.c` runs
+    /// over the envelope intelapi already built:
+    ///
+    ///  · `collapse: true` → `?collapse=1`, roadmap 25. Near-identical reports
+    ///    fold into one row and the survivor carries `cluster_*` +
+    ///    `duplicates`. This is CORROBORATION data, not tidying — the caller
+    ///    must render it (`ClusterBadge`), never silently drop the folded rows.
+    ///  · `langView` → `?lang_view=<code>`, roadmap 29. Attaches a
+    ///    `translation` object whose `machine` flag has to be shown as such.
+    ///
+    /// Both are off by default, so an uncollapsed/untranslated list behaves
+    /// exactly as before.
     func intelItems(source: String? = nil,
                     q: String? = nil,
                     qAlt: String? = nil,
                     lang: String? = nil,
                     since: String? = nil,
                     limit: Int = 50,
-                    cursor: String? = nil) async throws -> IntelItemsEnvelope {
+                    cursor: String? = nil,
+                    sort: IntelSort? = nil,
+                    wantTotal: Bool = false,
+                    collapse: Bool = false,
+                    langView: String? = nil) async throws -> IntelItemsEnvelope {
         var qs: [URLQueryItem] = [URLQueryItem(name: "limit", value: String(limit))]
         if let source { qs.append(URLQueryItem(name: "source", value: source)) }
         if let q, !q.isEmpty { qs.append(URLQueryItem(name: "q", value: q)) }
@@ -258,6 +325,18 @@ struct API: Sendable {
         if let lang { qs.append(URLQueryItem(name: "lang", value: lang)) }
         if let since { qs.append(URLQueryItem(name: "since", value: since)) }
         if let cursor { qs.append(URLQueryItem(name: "cursor", value: cursor)) }
+        // Only send sort when it changes the default AND there is a query to
+        // rank — a ranked sort without q is a 400, not a feed.
+        if let sort, sort != .date, let q, !q.isEmpty {
+            qs.append(URLQueryItem(name: "sort", value: sort.rawValue))
+        }
+        // The count is a second scan server-side; ask for it only when the
+        // view will actually render "N of M".
+        if wantTotal { qs.append(URLQueryItem(name: "total", value: "1")) }
+        if collapse { qs.append(URLQueryItem(name: "collapse", value: "1")) }
+        if let langView, !langView.isEmpty {
+            qs.append(URLQueryItem(name: "lang_view", value: langView))
+        }
         return try await get("/api/intel/items", query: qs)
     }
     func intelItem(uid: String) async throws -> IntelItem {
@@ -479,8 +558,14 @@ struct API: Sendable {
         return env.jobs
     }
 
-    func breachJob(_ id: String) async throws -> BreachJob {
-        try await get("/api/admin/breach/jobs/\(id)")
+    /// `GET /api/admin/breach/jobs/:id` returns the SAME envelope as the list
+    /// route — core/breach_jobs.c always wraps in `{"jobs":[…]}` and uses the id
+    /// only as a filter. Decoding a bare `BreachJob` threw `keyNotFound` on
+    /// every call (`BreachJob.jobId` is non-optional). Returns nil when the id
+    /// matches nothing rather than inventing a 404.
+    func breachJob(_ id: String) async throws -> BreachJob? {
+        let env: BreachJobsEnvelope = try await get("/api/admin/breach/jobs/\(id)")
+        return env.jobs.first
     }
 
     /// Operator-surface errors worth naming. A 409 is the server's one-job-at-a-
@@ -510,8 +595,29 @@ struct API: Sendable {
         let env: AlertRuleEnvelope = try await post("/api/alerts", body: body, timeout: API.userDefaultTimeout)
         return env.data
     }
-    func alertUpdate(_ rule: AlertRule) async throws -> AlertRule {
-        let body = try JSONEncoder().encode(rule)
+    /// PATCH /api/alerts/:id.
+    ///
+    /// The server merges at the TOP LEVEL only (`core/alertsapi.c`, the
+    /// `is_patch` branch): every key present in the body replaces the stored
+    /// value wholesale, and every key absent keeps it. It then re-runs
+    /// `validate_rule` on the merged object, which demands a real ≥16-character
+    /// `secret` on every webhook channel in whatever array it ends up with —
+    /// there is NO per-channel secret merge. Reads mask stored secrets as
+    /// "••••" (12 bytes), so echoing the rule straight back is an unconditional
+    /// 400 for any rule with a webhook channel.
+    ///
+    /// `omittingChannels` drops the `channels` key entirely, which is the only
+    /// way to keep a stored webhook secret. Pass it whenever the caller did not
+    /// intend to change the channel list (enable/disable toggle, renaming a
+    /// rule whose channels were left untouched).
+    func alertUpdate(_ rule: AlertRule,
+                     omittingChannels: Bool = false) async throws -> AlertRule {
+        var body = try JSONEncoder().encode(rule)
+        if omittingChannels,
+           var obj = try JSONSerialization.jsonObject(with: body) as? [String: Any] {
+            obj.removeValue(forKey: "channels")
+            body = try JSONSerialization.data(withJSONObject: obj)
+        }
         let env: AlertRuleEnvelope = try await patch("/api/alerts/\(rule.id)", body: body)
         return env.data
     }
@@ -607,9 +713,16 @@ struct API: Sendable {
     /// SSE URL + auth headers for the progress stream (consumed by SearchSSE
     /// via URLSession.bytes — which, unlike a browser EventSource, CAN send
     /// the bearer header; the route is also pre-auth so either works).
-    func searchStreamRequest(_ requestId: String) -> URLRequest {
+    ///
+    /// Returns nil when `baseURL` — which the user types into Settings — is not
+    /// a parseable URL. This used to force-unwrap, so a typo'd backend URL
+    /// crashed the app the moment a search was started.
+    func searchStreamRequest(_ requestId: String) -> URLRequest? {
         let base = baseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
-        var req = URLRequest(url: URL(string: base + "/api/search/stream/\(requestId)")!)
+        guard let url = URL(string: base + "/api/search/stream/\(requestId)") else {
+            return nil
+        }
+        var req = URLRequest(url: url)
         req.timeoutInterval = 600
         req.setValue("text/event-stream", forHTTPHeaderField: "Accept")
         if let token = AuthTokenBox.shared.accessToken, !token.isEmpty {

@@ -7,9 +7,9 @@
  * (KAKEN, CINII, RESEARCHMAP, MANSION_COMMUNITY, TDB_TSR) now live in
  * people_finder.c, which is the person+company superset. Only the place/
  * business-review source remains here. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,9 +26,15 @@ static int run_places(const source_ctx *ctx, intel_sink *sink) {
     "https://maps.googleapis.com/maps/api/place/textsearch/json?query=%s&language=ja&key=%s", q, key);
   free(q);
   char *body = jo_get(ctx, url, NULL, "gplaces");
-  if (!body) return 0;
+  if (!body) { fprintf(stderr, "[gplaces] fetch failed (HTTP error/timeout)\n"); return -1; }
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) { fprintf(stderr, "[gplaces] malformed JSON response\n"); return -1; }
+  const char *status = jo_sv(root, "status");
+  if (status && strcmp(status, "OK") != 0 && strcmp(status, "ZERO_RESULTS") != 0) {
+    fprintf(stderr, "[gplaces] API error status=%s\n", status);
+    cJSON_Delete(root);
+    return -1;
+  }
   int emitted = 0;
   cJSON *results = cJSON_GetObjectItem(root, "results");
   cJSON *r = NULL;
@@ -55,11 +61,7 @@ static int run_places(const source_ctx *ctx, intel_sink *sink) {
   return 0;
 }
 
-#define DEFR(SYM, ID, NAME, NAMEJA, RUN, CAT, TYPE, URL, DESC, FREE) \
-  static const source_def SYM = { .id = ID, .collector = "osint", .name = NAME, \
-    .name_ja = NAMEJA, .update_interval_sec = 0, .run = RUN, .category = CAT, \
-    .type = TYPE, .url = URL, .description = DESC, .layer = NULL, .free_tier = FREE }; \
-  REGISTER_SOURCE(SYM)
+#include "_source_macros.inc"
 
 DEFR(gplaces_def, "GOOGLE_PLACES", "Google Places", "Google マップ クチコミ", run_places,
      "commercial", "api", "https://maps.googleapis.com/", "Business reviews, hours, geo & ratings (needs GOOGLE_PLACES_API_KEY)", 0);

@@ -53,14 +53,16 @@ int sgp4_twoline(const char *l1, const char *l2, sgp4_rec *r) {
 
   /* bstar: mantissa cols 54-59 with implied leading '.', exp col 60-61 */
   char mant[8]; int mi = 0;
-  for (int i = 53; i < 59; i++) mant[mi++] = l1[i]; mant[mi] = 0;
+  for (int i = 53; i < 59; i++) mant[mi++] = l1[i];
+  mant[mi] = 0;
   int bexp = atoi(l1 + 59);
   double bstar = atof(mant) * 1e-5 * pow(10.0, bexp);
 
   double inclo = tlefield(l2, 9, 16) * DEG2RAD;
   double nodeo = tlefield(l2, 18, 25) * DEG2RAD;
   char ecc[12]; ecc[0] = '.';
-  for (int i = 0; i < 7; i++) ecc[1 + i] = l2[26 + i]; ecc[8] = 0;
+  for (int i = 0; i < 7; i++) ecc[1 + i] = l2[26 + i];
+  ecc[8] = 0;
   double ecco = atof(ecc);
   double argpo = tlefield(l2, 35, 42) * DEG2RAD;
   double mo    = tlefield(l2, 44, 51) * DEG2RAD;

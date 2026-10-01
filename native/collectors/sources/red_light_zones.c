@@ -2,20 +2,13 @@
  * server/src/collectors/redLightZones.js. fetchOverpass (single area.jp
  * query, tryLive). SEED_ZONES offline fallback intentionally not ported (JS
  * does `if (!live) features = []`). */
-#include "../../source.h"
-#include "../../lib/overpass.h"
+#include "lib/geojson.h"
+#include "source.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 
 static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();                   /* EXACT JS key order */
   cJSON *id = cJSON_GetObjectItem(el, "id");
@@ -25,9 +18,14 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   cJSON_AddStringToObject(p, "zone_id", zid);
   const char *name = ov_tag(el, "name");
   if (!name) name = ov_tag(el, "name:en");
-  char nbuf[64];
-  if (!name) { snprintf(nbuf, sizeof nbuf, "Venue %d", i + 1); name = nbuf; }
-  cJSON_AddStringToObject(p, "name", name);
+  /* no-fabrication (house rule 1): OSM carried no name tag for this element.
+   * The old code wrote "Venue %d" + the loop index, which is both an invented
+   * label and an UNSTABLE one — it feeds geojson's content-hash uid, so the
+   * same object was re-keyed whenever Overpass changed element order. An
+   * absent name is serialized as null; pick_text() skips nulls, so the row
+   * persists with a NULL title rather than a made-up one. */
+  if (name) cJSON_AddStringToObject(p, "name", name);
+  else cJSON_AddItemToObject(p, "name", cJSON_CreateNull());
   const char *category = ov_tag(el, "amenity");
   if (category) cJSON_AddStringToObject(p, "category", category);
   else cJSON_AddItemToObject(p, "category", cJSON_CreateNull());
@@ -42,7 +40,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     "node[\"amenity\"=\"stripclub\"](area.jp);"
     "node[\"amenity\"=\"brothel\"](area.jp);"
     "node[\"amenity\"=\"nightclub\"][\"name\"](area.jp);",
-    180, 60000, map, NULL);
+    180, 200000, map, NULL);
   return n >= 0 ? 0 : -1;
 }
 

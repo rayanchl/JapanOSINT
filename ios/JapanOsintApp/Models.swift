@@ -37,12 +37,38 @@ nonisolated struct LayerDef: Codable, Identifiable, Hashable, Sendable {
     let category: String?
     let sources: [LayerSourceRef]?
 
+    /// v2 taxonomy (server core/layers.def): what kind of data every member
+    /// carries, e.g. "crime-report", "satellite-image". nil on layers nobody
+    /// has classified yet — the server sends JSON null rather than a guess.
+    let dataType: String?
+
+    /// v2 taxonomy: how the layer renders — "point" | "heatmap" | "line" |
+    /// "polygon" | "raster". DECLARED server-side, never inferred; a
+    /// crime-report point layer and a crime-density heatmap layer are
+    /// distinct layers that never share sources. nil = mixed/undeclared.
+    let modality: String?
+
+    /// v2: "curated" (layers.def row) | "declared" (source .layer field) |
+    /// "generated" (per-record_type catch-all keeping every geocoded row
+    /// reachable). nil from a pre-v2 server.
+    let kind: String?
+
+    /// v2: measured count of geocoded rows this layer serves; nil when the
+    /// server could not take the count (never a fabricated 0).
+    let recordsGeocoded: Int?
+
     /// Time-slider disposition emitted by /api/layers:
     ///   `temporal` present → time-coded (slider applies)
     ///   `liveOnly == true` → no historical archive, hidden in replay
     ///   neither present     → static (always rendered, even in replay)
     let temporal: LayerTemporal?
     let liveOnly: Bool?
+
+    enum CodingKeys: String, CodingKey {
+        case id, name, category, sources, temporal, liveOnly, modality, kind
+        case dataType = "data_type"
+        case recordsGeocoded = "records_geocoded"
+    }
 
     /// Backend convention: layer id maps to /api/data/<id> for live collector output.
     var dataEndpoint: String { "/api/data/\(id)" }
@@ -57,6 +83,56 @@ nonisolated struct LayerDef: Codable, Identifiable, Hashable, Sendable {
     /// True for static reference data (boundaries, infra dumps) — rendered
     /// unchanged at every slider position.
     var isStatic: Bool { temporal == nil && liveOnly != true }
+
+    /// The server-declared modality, typed. `.undeclared` when the server
+    /// sent null (mixed / not yet classified) or a value this build does
+    /// not know — both render by each feature's own geometry, which is the
+    /// only honest thing to do without a declaration.
+    var renderModality: LayerModality {
+        LayerModality(rawValue: modality ?? "") ?? .undeclared
+    }
+}
+
+/// How a layer renders on the map. Mirrors `core/layers.def`'s modality
+/// column one-for-one; it is DECLARED server-side and never inferred here.
+nonisolated enum LayerModality: String, Sendable {
+    case point, heatmap, line, polygon, raster
+    case undeclared = ""
+
+    /// Short user-facing label for the Layers tab badge; nil = no badge.
+    var label: String? {
+        switch self {
+        case .point:      return "Points"
+        case .heatmap:    return "Heatmap"
+        case .line:       return "Lines"
+        case .polygon:    return "Areas"
+        case .raster:     return "Raster"
+        case .undeclared: return nil
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .point:      return "mappin"
+        case .heatmap:    return "square.grid.3x3.fill"
+        case .line:       return "line.diagonal"
+        case .polygon:    return "pentagon"
+        case .raster:     return "square.stack.3d.up"
+        case .undeclared: return "questionmark.circle"
+        }
+    }
+}
+
+extension LayerDef {
+    /// Pre-v2 construction shape, kept so local placeholder layers
+    /// (SourceDashboardTab, MapTab) don't have to spell out the taxonomy
+    /// fields they cannot know — nil there means exactly "undeclared".
+    init(id: String, name: String, category: String?, sources: [LayerSourceRef]?,
+         temporal: LayerTemporal?, liveOnly: Bool?) {
+        self.init(id: id, name: name, category: category, sources: sources,
+                  dataType: nil, modality: nil, kind: nil, recordsGeocoded: nil,
+                  temporal: temporal, liveOnly: liveOnly)
+    }
 }
 
 // ── GeoJSON ────────────────────────────────────────────────────────────────
@@ -360,6 +436,13 @@ struct StatusRow: Decodable, Identifiable, Hashable {
     let missingVars: [String]?
     let probeConsent: Bool?
     let gated: Bool?
+    /// Reliability scoring (roadmap 30). `/api/status` emits this object on
+    /// EVERY row (core/statusapi.c:229-254), including the synthesized breach
+    /// catalog rows. `rated == false` means "no fetch history in the 30-day
+    /// window", which is a different claim from a bad score — `TrustBadge`
+    /// renders it as "unrated", never as zero. Optional so cached JSON
+    /// predating the field still decodes.
+    let trust: SourceTrust?
 
     /// Gated rows take precedence over the underlying probe status — they
     /// haven't been probed and shouldn't be coloured as online/offline.
@@ -487,11 +570,17 @@ struct IntelSource: Codable, Identifiable, Hashable {
     let last_fetched: String?
     let last_published: String?
     let ttl_ms: Int?
-    /// Reliability scoring (roadmap 30), served by /api/status and
-    /// /api/intel/sources. `rated == false` means "no fetch history in the
-    /// window" — the UI must render that as unrated, never as a zero score.
-    /// Optional so cached JSON predating the field still decodes.
-    let trust: SourceTrust?
+    /// Set only on the camera discovery channels (`cam-*`, `shodan-cameras-jp`,
+    /// …), whose counts the API rolls up into the `camera-discovery` row. They
+    /// are real collectors with their own schedules and Run buttons, so they
+    /// stay in `data`; they are just not siblings of their own parent.
+    /// Optional so a cached payload written before this key existed still
+    /// decodes (it comes back nil = top-level, which is what it was).
+    let parent_id: String?
+    // No `trust` here on purpose: only `/api/status` emits a reliability
+    // object (core/statusapi.c). `/api/intel/sources` never has, so the field
+    // decoded to nil on every row and the doc comment claiming otherwise was
+    // actively misleading. Reliability is rendered from `StatusRow.trust`.
 }
 
 struct IntelRunResult: Decodable {
@@ -542,16 +631,74 @@ struct IntelItem: Codable, Identifiable, Hashable {
     /// "translated" badge on rows where this is true.
     let via_translation: Bool?
 
+    /// FTS5 snippet around the matched terms (`<b>`…`</b>` marks, `…` ellipsis),
+    /// present only when the request carried `q`. Show it instead of `summary`
+    /// on a search row so the user sees WHY the row matched.
+    let snippet: String?
+    /// Positive relevance score (negated bm25), present only for
+    /// `sort=relevance` / `sort=trust`. Higher is better; comparable within one
+    /// query only.
+    let rank: Double?
     /// Near-duplicate corroboration, present only when the request asked for
-    /// `?collapse=1` (roadmap 25). Optional so every existing call site and
-    /// all cached JSON keep decoding unchanged.
-    let cluster: ClusterInfo?
+    /// `?collapse=1` (roadmap 25).
+    ///
+    /// The server emits these FLAT on the item (core/simhash.c writes
+    /// `cluster_id`, `cluster_size`, `cluster_source_count`, `duplicates` and
+    /// `duplicates_truncated` as siblings of `uid`) — there has never been a
+    /// nested `cluster` object on the wire. Declaring one meant the field was
+    /// permanently nil and every value the server computed and shipped was
+    /// dropped at the decode seam, leaving `ClusterBadge` a view with no call
+    /// sites. These stay stored-and-flat to match the wire; `cluster` below
+    /// reassembles them so existing call sites read unchanged.
+    ///
+    /// `cluster_id` is the uid of the cluster's earliest member (simhash.c),
+    /// absent for a row that has never been clustered; `collapse=1` folds the
+    /// rows sharing one onto the best-ranked of them.
+    let cluster_id: String?
+    let cluster_size: Int?
+    let cluster_source_count: Int?
+    let duplicates: [ClusterDuplicate]?
+    let duplicates_truncated: Bool?
+
+    /// The five fields above as one value, or nil when the response did not
+    /// carry clustering at all (no `?collapse=1`).
+    var cluster: ClusterInfo? {
+        guard cluster_id != nil || cluster_size != nil || duplicates != nil
+        else { return nil }
+        return ClusterInfo(cluster_id: cluster_id,
+                           cluster_size: cluster_size,
+                           cluster_source_count: cluster_source_count,
+                           duplicates: duplicates,
+                           duplicates_truncated: duplicates_truncated)
+    }
     /// Machine translation, present only when the request asked for
     /// `?lang_view=` (roadmap 29). `machine == true` must be labelled as such
     /// in the UI — it is never the source's own words.
     let translation: TranslationInfo?
+    /// Served top-level by intelapi.c from `intel_items.record_type`. Optional
+    /// so older cached JSON still decodes.
+    ///
+    /// This field exists on the model for one reason: collectors now emit rows
+    /// that are NOT findings. `collector-truncation-notice` says a bounded walk
+    /// stopped short and by how much; `collector-status-notice` says a source
+    /// is unconfigured (needs a credential) and fetched nothing. Both are the
+    /// engine being honest about its own gaps, and both carry no observation
+    /// about the world. Rendering them as ordinary intel rows — or worse,
+    /// pinning a "needs credential" row on the map — turns an honest
+    /// disclosure into something that reads as fabricated content.
+    let record_type: String?
 
     var id: String { uid }
+
+    /// True for the engine's self-disclosure rows. Every list that shows intel
+    /// must either style these as notices or filter them — never present them
+    /// as findings.
+    var isCollectorNotice: Bool {
+        guard let rt = record_type else { return false }
+        return rt == "collector-truncation-notice" || rt == "collector-status-notice"
+    }
+    var isTruncationNotice: Bool { record_type == "collector-truncation-notice" }
+    var isStatusNotice: Bool { record_type == "collector-status-notice" }
 
     static func == (lhs: IntelItem, rhs: IntelItem) -> Bool { lhs.uid == rhs.uid }
     func hash(into hasher: inout Hasher) { hasher.combine(uid) }
@@ -711,7 +858,19 @@ struct IntelItemsEnvelope: Decodable {
 struct IntelPage: Decodable {
     let next_cursor: String?
     let limit: Int?
+    /// Exact match count, present only when the request asked `total=1` and
+    /// the count came in under the server's cap (intelapi.c JO_TOTAL_CAP).
     let total: Int?
+    /// Set instead of `total` when the count hit the cap: "at least this many".
+    let total_gte: Int?
+
+    /// Human "of M" for a results header: "31", "10,000+", or nil when the
+    /// server was not asked to count.
+    var totalLabel: String? {
+        if let t = total { return t.formatted() }
+        if let g = total_gte { return "\(g.formatted())+" }
+        return nil
+    }
 }
 
 struct IntelItemEnvelope: Decodable {
@@ -749,6 +908,12 @@ struct AlertPredicate: Codable, Hashable {
     /// Entity watchlist terms (roadmap 21).
     var entity_ids: [String]?
     var entity_types: [String]?
+    /// **Not enforced by the server.** `grep record_types native/` returns
+    /// nothing: the C matcher never reads this key, so a rule carrying it
+    /// matches exactly as if it were absent. It is kept only so a predicate
+    /// authored elsewhere round-trips through an edit unchanged — do NOT
+    /// surface it as a filter control until the engine honours it, because a
+    /// filter that silently does nothing is worse than a missing one.
     var record_types: [String]?
     /// Query authoring mode. `nil`/"fts" ⇒ the FTS predicate `q` matches new
     /// items; "llm" ⇒ `nl_query` drives the agentic search pipeline (which
@@ -918,6 +1083,30 @@ struct DBPage: Decodable {
     let total: Int
     let limit: Int
     let offset: Int
+
+    /// Completeness of the scan behind this page.
+    ///
+    /// `total` is always a number, even when the server could not determine it —
+    /// making it optional here would fail the whole decode including `error`,
+    /// which is precisely the field you need when something went wrong. So the
+    /// truth rides alongside: `totalKnown == false` means `total` is a
+    /// placeholder, and `complete == false` means the row scan ended early
+    /// (a read error, or a WHERE clause the server could not build). Without
+    /// these, a truncated read is indistinguishable from an empty table.
+    ///
+    /// Optional with a safe default so a response from an older server — which
+    /// sends neither — still decodes and simply reads as complete.
+    let complete: Bool?
+    let totalKnown: Bool?
+    let error: String?
+
+    var isComplete: Bool { complete ?? true }
+    var isTotalKnown: Bool { totalKnown ?? true }
+
+    private enum CodingKeys: String, CodingKey {
+        case name, columns, rows, total, limit, offset, complete, error
+        case totalKnown = "total_known"
+    }
 }
 
 struct SchedulerJob: Decodable, Identifiable, Hashable {

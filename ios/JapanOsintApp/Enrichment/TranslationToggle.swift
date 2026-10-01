@@ -174,7 +174,7 @@ struct TranslationToggle: View {
             }
             if t.machine {
                 Text("Machine output. Verify against the original before quoting it in a report.")
-                    .font(.system(size: 10))
+                    .font(.caption2)
                     .foregroundStyle(theme.textMuted)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -205,7 +205,7 @@ struct TranslationToggle: View {
                      icon: "text.badge.checkmark", maxWidth: 220)
             }
             Text(engineLine(t))
-                .font(.system(size: 10).monospacedDigit())
+                .font(.caption2.monospacedDigit())
                 .foregroundStyle(theme.textMuted)
                 .lineLimit(2)
                 .fixedSize(horizontal: false, vertical: true)
@@ -235,7 +235,7 @@ struct TranslationToggle: View {
     private func sectionLabel(_ text: String, icon: String, tone: Color) -> some View {
         HStack(spacing: Space.xs) {
             Image(systemName: icon)
-                .font(.system(size: 9))
+                .font(.caption2)
             Text(text)
                 .font(.caption2.weight(.semibold))
         }

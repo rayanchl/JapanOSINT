@@ -2,9 +2,9 @@
  * FEED source — port of server/src/collectors/windyJapan.js.
  * Gated on WINDY_API_KEY: POST api.windy.com point-forecast over a sparse
  * Japan city grid -> FeatureCollection. No key / no data -> honest empty. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -39,12 +39,26 @@ static int arr0_num(cJSON *d, const char *key, double *out) {
 
 /* new Date(ms).toISOString() */
 static void ms_to_iso(double ms, char *out, size_t n) {
+  if (n) out[0] = 0;
   time_t t = (time_t)(ms / 1000.0);
-  struct tm g; gmtime_r(&t, &g);
-  int frac = (int)(fmod(ms, 1000.0));
+  /* `ts` is whatever number Windy put in the JSON, so both of these can fail on
+   * a wild value and BOTH used to be ignored: gmtime_r returns NULL when the
+   * year will not fit an int, and strftime returns 0 on overflow leaving `base`
+   * INDETERMINATE — which was then formatted into a forecast_time. A timestamp
+   * assembled from stack contents is invented data, so an unrenderable time now
+   * yields an empty string the caller can test. */
+  struct tm g;
+  if (!gmtime_r(&t, &g)) return;
   char base[32];
-  strftime(base, sizeof base, "%Y-%m-%dT%H:%M:%S", &g);
-  snprintf(out, n, "%s.%03dZ", base, frac < 0 ? 0 : frac);
+  if (!strftime(base, sizeof base, "%Y-%m-%dT%H:%M:%S", &g)) return;
+  /* fmod can hand back anything in (-1000,1000); milliseconds are 0..999 by
+   * definition, and "%03d" of an out-of-range value is not three characters —
+   * that is what -Wformat-truncation was reporting. The old `frac < 0 ? 0`
+   * covered only half the range. */
+  int frac = (int)fmod(ms, 1000.0);
+  if (frac < 0) frac = 0;
+  if (frac > 999) frac = 999;
+  snprintf(out, n, "%s.%03dZ", base, frac);
 }
 
 static cJSON *fetch_point(http_client *http, const char *key,
@@ -84,20 +98,15 @@ static cJSON *fetch_point(http_client *http, const char *key,
   int hasV = arr0_num(data, "wind_v-surface", &v);
   int hasP = arr0_num(data, "pressure-surface", &press);
 
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *co = cJSON_CreateArray();
-  cJSON_AddItemToArray(co, cJSON_CreateNumber(p->lon));
-  cJSON_AddItemToArray(co, cJSON_CreateNumber(p->lat));
-  cJSON_AddItemToObject(g, "coordinates", co);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(p->lon, p->lat);
 
   cJSON *pr = cJSON_CreateObject();              /* EXACT JS key order */
   cJSON_AddStringToObject(pr, "city", p->name);
   char iso[40]; ms_to_iso(tsms, iso, sizeof iso);
-  cJSON_AddStringToObject(pr, "forecast_time", iso);
+  /* empty = the value could not be rendered as a date; a null forecast_time is
+   * honest, a half-formed one is not */
+  if (iso[0]) cJSON_AddStringToObject(pr, "forecast_time", iso);
+  else cJSON_AddNullToObject(pr, "forecast_time");
   if (hasT) cJSON_AddNumberToObject(pr, "temp_c",
               round((tK - 273.15) * 10) / 10);
   else cJSON_AddNullToObject(pr, "temp_c");
@@ -129,7 +138,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[windy-japan] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  return 0;              /* audit-09: an empty result set is not a run error */
 }
 
 static const source_def windy_japan_def = {

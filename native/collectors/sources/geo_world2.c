@@ -4,9 +4,9 @@
  *
  *   SUN_TIMES         api.sunrise-sunset.org/json?lat=&lng=   (shadow analysis)
  *   ELEVATION_LOOKUP  api.open-elevation.com/api/v1/lookup    (terrain elevation) */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

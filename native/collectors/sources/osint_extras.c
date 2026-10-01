@@ -8,9 +8,9 @@
  *   MUSICBRAINZ            musicbrainz.org/ws/2/artist?query=<e>       (artists)
  *   PHOTON_GEOCODE         photon.komoot.io/api?q=<e>                  (OSM geocode)
  *   CHRONICLING_AMERICA    chroniclingamerica.loc.gov/search/pages/... (old news) */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,7 +34,8 @@ static int oe_emit(intel_sink *sink, const char *service, const char *rtype,
   it.record_type = rtype; it.properties_json = pj; it.tags_json = tags;
   int rc = sink->emit(sink, &it);
   free(bj); free(pj);
-  if (body) cJSON_Delete(body); if (props) cJSON_Delete(props);
+  if (body) cJSON_Delete(body);
+  if (props) cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }
 

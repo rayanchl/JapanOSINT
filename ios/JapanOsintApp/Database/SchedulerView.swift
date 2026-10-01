@@ -64,12 +64,12 @@ struct SchedulerView: View {
             }
             HStack(spacing: 12) {
                 if let last = job.last_run {
-                    Label(prettyDate(last), systemImage: "clock.arrow.circlepath")
+                    Label(relativeTime(last), systemImage: "clock.arrow.circlepath")
                         .font(.caption2)
                         .foregroundStyle(theme.textMuted)
                 }
                 if let next = job.next_run {
-                    Label(prettyDate(next), systemImage: "alarm")
+                    Label(relativeTime(next), systemImage: "alarm")
                         .font(.caption2)
                         .foregroundStyle(theme.success)
                 }
@@ -78,16 +78,6 @@ struct SchedulerView: View {
         .padding(10)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(theme.surfaceElevated, in: RoundedRectangle(cornerRadius: 10))
-    }
-
-    private func prettyDate(_ iso: String) -> String {
-        let f = ISO8601DateFormatter()
-        f.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        let d = f.date(from: iso) ?? ISO8601DateFormatter().date(from: iso)
-        guard let d else { return iso }
-        let rel = RelativeDateTimeFormatter()
-        rel.unitsStyle = .abbreviated
-        return rel.localizedString(for: d, relativeTo: Date())
     }
 
     private func load() async {

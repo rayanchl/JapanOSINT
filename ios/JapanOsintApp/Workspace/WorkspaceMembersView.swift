@@ -98,6 +98,7 @@ struct WorkspaceMembersView: View {
                                 Task { await revoke(inv) }
                             } label: { Image(systemName: "xmark.circle") }
                             .buttonStyle(.borderless)
+                            .accessibilityLabel("Revoke invitation")
                         }
                     }
                 } header: {

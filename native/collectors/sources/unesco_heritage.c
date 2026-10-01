@@ -4,10 +4,10 @@
  * SEED_WHS offline fallback NOT ported (JS does `if(!live) features=[]`).
  * uid = whs_id hash: feed_hash_key(name, lat-str, lon-str) — deterministic
  * (raw XML coord text; not Node-String()-identical, fine post-parity). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/htmlparse.h"
-#include "../../lib/geojson.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/htmlparse.h"
+#include "lib/geojson.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -59,15 +59,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (!kind[0]) snprintf(kind, sizeof kind, "cultural");
     long yr = date[0] ? strtol(date, NULL, 10) : 0;
 
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lon));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(lat));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", g);
+    cJSON *f = gj_point_feature(lon, lat);
     cJSON *p = cJSON_CreateObject();              /* EXACT JS key order */
     cJSON_AddStringToObject(p, "whs_id", whs);
     cJSON_AddStringToObject(p, "name", name);

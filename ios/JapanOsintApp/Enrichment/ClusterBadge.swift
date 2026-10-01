@@ -91,17 +91,20 @@ struct ClusterBadge: View {
             withAnimation(.easeInOut(duration: 0.15)) { expanded.toggle() }
         } label: {
             HStack(spacing: Space.sm) {
+                // Corroborated-vs-uncorroborated is a finding, and this glyph
+                // plus its tint are the only things carrying it.
                 Image(systemName: isCorroborated
                       ? "person.2.badge.key"
                       : "person.crop.circle.badge.questionmark")
                     .font(.caption)
                     .foregroundStyle(isCorroborated ? theme.success : theme.textMuted)
+                    .accessibilityLabel(isCorroborated ? "Corroborated" : "Not corroborated")
                 VStack(alignment: .leading, spacing: Space.xs) {
                     Text(summaryText)
                         .font(.caption.weight(.semibold).monospacedDigit())
                         .foregroundStyle(isCorroborated ? theme.text : theme.textMuted)
                     Text(subtitleText)
-                        .font(.system(size: 10).monospacedDigit())
+                        .font(.caption2.monospacedDigit())
                         .foregroundStyle(theme.textMuted)
                         .lineLimit(2)
                         .multilineTextAlignment(.leading)
@@ -111,6 +114,7 @@ struct ClusterBadge: View {
                     Image(systemName: expanded ? "chevron.up" : "chevron.down")
                         .font(.caption2)
                         .foregroundStyle(theme.textMuted)
+                        .accessibilityHidden(true)   // state is the button's value
                 }
             }
             .padding(Space.sm)
@@ -149,7 +153,7 @@ struct ClusterBadge: View {
         VStack(alignment: .leading, spacing: Space.xs) {
             if cluster.duplicates_truncated == true {
                 Text("Showing \(duplicates.count) of \(otherReports) other reports — the enumeration is capped, the count above is not.")
-                    .font(.system(size: 10).monospacedDigit())
+                    .font(.caption2.monospacedDigit())
                     .foregroundStyle(theme.warning)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -158,7 +162,7 @@ struct ClusterBadge: View {
             }
             if let id = cluster.cluster_id, !id.isEmpty {
                 Text("cluster \(id)")
-                    .font(.system(size: 9).monospaced())
+                    .font(.caption2.monospaced())
                     .foregroundStyle(theme.textMuted)
                     .lineLimit(1)
                     .truncationMode(.middle)
@@ -172,22 +176,24 @@ struct ClusterBadge: View {
     private func duplicateRow(_ d: ClusterDuplicate) -> some View {
         let content = HStack(spacing: Space.sm) {
             Image(systemName: "doc.on.doc")
-                .font(.system(size: 9))
+                .font(.caption2)
                 .foregroundStyle(theme.textMuted)
-            Text(d.source_id)
+                .accessibilityHidden(true)   // decorative duplicate mark
+            Text(d.source_id ?? "unknown source")
                 .font(.caption2.monospaced())
                 .foregroundStyle(theme.text)
                 .lineLimit(1)
-            Text(d.uid)
-                .font(.system(size: 9).monospaced())
+            Text(d.uid ?? "")
+                .font(.caption2.monospaced())
                 .foregroundStyle(theme.textMuted)
                 .lineLimit(1)
                 .truncationMode(.middle)
             Spacer(minLength: 0)
             if onOpenDuplicate != nil {
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 9))
+                    .font(.caption2)
                     .foregroundStyle(theme.textMuted)
+                    .accessibilityHidden(true)   // navigation affordance
             }
         }
         .padding(.vertical, Space.xs)

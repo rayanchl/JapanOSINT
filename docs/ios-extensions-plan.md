@@ -1,5 +1,33 @@
 # iOS extension targets — setup plan (roadmap items 35 & 36)
 
+> **STATUS (2026-07-28).** The app-side code that needs **no** new target is now
+> written and wired into the app target:
+> - `Intents/` — `IntentRouter`, `SearchIntent`, `ExposureIntent`,
+>   `JapanOsintShortcuts`, `SpotlightIndexer` (created this pass; the earlier
+>   claim that these were committed was inaccurate — they did not exist).
+>   `AddToCaseIntent` is intentionally **deferred**: a correct version needs a
+>   case-context surface (a picker-on-drain path) the app doesn't have yet, and
+>   a placeholder Siri action with no item context would be worse than none.
+> - `Background/BackgroundRefresh.swift` — `BGTaskScheduler` register/schedule,
+>   registered from `JapanOsintApp.init`.
+> - `Widgets/WidgetSnapshotBuilder.swift` — the missing app-side writer that
+>   makes the widgets non-empty; called on gate-ready, scene-activation, and the
+>   BGTask. (`SharedSnapshot.write` previously had **zero callers**.)
+> - `JapanOsintApp.swift` wiring: `onOpenURL` (share-queue drain + permalink
+>   token → Search), `onContinueUserActivity(CSSearchableItemActionType)`
+>   (Spotlight deep-link), `onReceive(IntentRouter.$pending)`, scene-phase drain.
+> - `Info.plist`: `NSSupportsLiveActivities`, `BGTaskSchedulerPermittedIdentifiers`,
+>   `UIBackgroundModes`.
+> - Entitlements files created for all three targets (App Group), but **not**
+>   wired into build settings — see Step 1.
+>
+> **What still requires Xcode** (unchanged from below): create the two extension
+> targets, tick App Group / Background Modes capabilities, set
+> `CODE_SIGN_ENTITLEMENTS`, register the App Group on the developer portal. The
+> entitlements files are left unreferenced on purpose: pointing a target at an
+> App Group that isn't provisioned fails code-signing, so that wiring must
+> happen in the same Xcode pass that registers the group.
+
 Everything here is written and committed. What is **not** done is the part
 that requires Xcode: creating two extension targets and ticking membership
 boxes. This document is the exact sequence.

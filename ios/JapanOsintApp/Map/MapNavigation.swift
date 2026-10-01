@@ -42,6 +42,17 @@ final class MapNavigation: ObservableObject {
     /// When non-nil, the API Keys tab observes this and opens the matching
     /// ApiKeyDetailView sheet. Cleared by the consumer after presentation.
     @Published var pendingApiKeyName: String?
+    /// When non-nil, the Search tab consumes this on arrival and starts a run.
+    /// Set by App Intents / Siri / Shortcuts / the share-queue drain via
+    /// `IntentRouter`. Cleared by `SearchTab` once the search is kicked off.
+    @Published var pendingSearchQuery: String?
+
+    /// Switch to the Search tab and hand it a query to run. Order matters: set
+    /// the tab first so `SearchTab` is mounted before it consumes the query.
+    func showSearch(_ query: String) {
+        selectedTab = AppTab.search.rawValue
+        pendingSearchQuery = query
+    }
 
     func showOnMap(_ coord: CLLocationCoordinate2D, feature: GeoFeature? = nil) {
         pendingPresent = feature

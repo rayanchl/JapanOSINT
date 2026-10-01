@@ -6,9 +6,9 @@
  *   CH_POSTAL   openplzapi.org/ch/Localities?postalCode=<code>
  *   CH_ADDRESS  api3.geo.admin.ch/rest/services/api/SearchServer?searchText=
  *   NO_ADDRESS  ws.geonorge.no/adresser/v1/sok?sok= */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

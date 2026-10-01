@@ -9,9 +9,9 @@
  * address) — NOT a {success,confidence,data,results[]} envelope. title =
  * "<vendor>", remote_key = "mac:<oui>". On HTTP failure / vendor not found →
  * emit NOTHING and return 0 (honest empty). */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,6 +65,7 @@ static int run_mac(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddStringToObject(props, "entity", mac);
   cJSON_AddStringToObject(props, "vendor", vendor);
   char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
 
   char rk[64];
   snprintf(rk, sizeof rk, "mac:%s", oui);

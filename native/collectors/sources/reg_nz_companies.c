@@ -10,9 +10,9 @@
  * server-side search results page and emit only real anchors that link to a
  * company detail page. If neither yields anything → honest empty (return 0).
  * Nothing is synthesized. type="scraped". */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

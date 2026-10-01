@@ -9,9 +9,9 @@
  *   HN_USER                hn.algolia.com/api/v1/users/<user>
  *   OPENVERSE              api.openverse.org/v1/images/?q=
  *   STACKEXCHANGE_SEARCH   api.stackexchange.com/2.3/search/advanced?q= */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -37,7 +37,8 @@ static int oe2_emit(intel_sink *sink, const char *service, const char *rtype,
   it.record_type = rtype; it.properties_json = pj; it.tags_json = tags;
   int rc = sink->emit(sink, &it);
   free(bj); free(pj);
-  if (body) cJSON_Delete(body); if (props) cJSON_Delete(props);
+  if (body) cJSON_Delete(body);
+  if (props) cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }
 

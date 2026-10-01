@@ -89,7 +89,21 @@ typedef struct {
     const unsigned char *json;
     size_t position;
 } error;
-static error global_error = { NULL, 0 };
+/* LOCAL PATCH (JapanOSINT) — do not drop when re-vendoring cJSON.
+ * Upstream keeps the last parse error in a single process-global, written on
+ * entry to EVERY cJSON_Parse. This codebase parses JSON on many threads at
+ * once (the scheduler worker pool in core/scheduler.c and the OSINT dispatch
+ * fan-out in core/pipeline.c), which made those writes a data race — four of
+ * them, reported by ThreadSanitizer via tests/unit/run.sh.
+ * It is benign in effect today only because cJSON_GetErrorPtr() is never
+ * called anywhere in the tree, so nothing reads what the racing writes
+ * produce. It is still undefined behaviour, and more practically it is noise
+ * that would mask a REAL race in any future sanitizer run — which is the
+ * whole point of having one.
+ * _Thread_local is also the more correct semantic: "the error from the parse
+ * I just did" is inherently per-thread; with a shared global, one thread's
+ * parse clobbers the error another thread was about to read. */
+static _Thread_local error global_error = { NULL, 0 };
 
 CJSON_PUBLIC(const char *) cJSON_GetErrorPtr(void)
 {

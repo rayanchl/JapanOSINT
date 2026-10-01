@@ -26,6 +26,40 @@ int  db_attach(db_handle *db, const char *db_path);
 
 void db_close(db_handle *db);
 
+/* Secondary connection to the SAME database: identical path resolution and
+ * pragmas as db_open(), but no schema apply and no boot migrations — those
+ * already ran on the primary handle.
+ *
+ * Use this for a background pod that owns its writes. A SQLite transaction
+ * belongs to a CONNECTION, not to a thread, so a worker that shares the event
+ * loop's handle can interleave its BEGIN/COMMIT with request handling on the
+ * same connection. Returns 0 on success. */
+int  db_attach(db_handle *db, const char *db_path);
+
+/* db_attach() with the boilerplate every off-loop caller was getting wrong.
+ *
+ * THE RULE. Any thread that is not the mongoose event loop and that runs a
+ * transaction — every emit() is BEGIN/COMMIT, so that is every thread which
+ * writes intel_items — must own its connection. A transaction belongs to a
+ * CONNECTION, not a thread: a detached worker sharing the loop's handle can
+ * have its rows discarded by a concurrent handler's ROLLBACK, or have its
+ * half-written state published by that handler's COMMIT. SQLITE_THREADSAFE=1
+ * serializes individual API CALLS; it does not scope transactions, and a
+ * comment claiming otherwise is how this bug survived in three files.
+ *
+ * Usage — the whole pattern is three lines:
+ *     db_handle own;
+ *     db_handle *db = db_worker_open(&own, shared);
+ *     ...                                  // use db, never `shared`
+ *     db_worker_close(&own);
+ *
+ * Returns the private handle, or `fallback` (with a warning logged) if the
+ * second connection could not be opened — degrading to the old shared-handle
+ * behaviour beats dropping the work on the floor. db_worker_close() is a
+ * no-op in that case, so it is always safe to call. */
+db_handle *db_worker_open(db_handle *own, db_handle *fallback);
+void       db_worker_close(db_handle *own);
+
 /* PRAGMA integrity_check — returns 1 if "ok", else 0 (msg via out). */
 int  db_integrity_ok(db_handle *db, char *out, int out_sz);
 

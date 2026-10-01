@@ -6,17 +6,18 @@
  * decoded text > 100000 bytes wins. Emits one feature per grid bucket + one
  * intel item (uid intelUid(SOURCE_ID,'index')). namedCache TTL layer dropped
  * (correctness-neutral). _meta/SEED n/a. Feature uid/title via geojson sink. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/csv.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/csv.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <math.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 /* Math.round (round half toward +Inf); inputs here are positive. */
 static double js_round(double x) { return floor(x + 0.5); }
@@ -67,7 +68,7 @@ static int parse_int_js(const char *s, long *out) {
 }
 
 typedef struct {
-  char key[48];
+  char key[72];        /* must match the local `key` in run(); see there */
   double lat, lon; char ym[16];
   long count, fatalities, severity_max;
 } bucket_t;
@@ -111,16 +112,30 @@ static int discover_csv(http_client *http, int year, char *out, size_t n) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
+  /* this_year drives the 3-year honhyo discovery below, so a clock that will
+   * not break down leaves no CSV to look for. */
   char iso[32];
   time_t now = time(NULL);
-  struct tm tmv; gmtime_r(&now, &tmv);
-  strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%S.000Z", &tmv);
+  struct tm tmv;
+  if (!jo_tm_utc(now, &tmv) ||
+      !jo_time_fmt(now, "%Y-%m-%dT%H:%M:%S.000Z", iso, sizeof iso)) {
+    fprintf(stderr, "[npa-traffic-accidents] cannot render today as a date\n");
+    return -1;
+  }
   int this_year = tmv.tm_year + 1900;
 
-  char csv_url[1024] = {0}; char *text = NULL; int year = 0;
+  /* 1152, not 1024, here and for `u` below. discover_csv() resolves an href
+   * that it itself sizes at 1024 against an absolute prefix of up to 83 bytes
+   * ("https://www.npa.go.jp/publications/statistics/koutsuu/opendata/<year>/"),
+   * so the absolute URL reaches 1106 and an equal-sized destination could only
+   * cut it. That cut is not cosmetic: `u` is the URL the honhyo CSV is fetched
+   * FROM, so a long href would have failed the download and taken the entire
+   * year of accident data with it, while `csv_url` is published as the row's
+   * link and provenance. 83 + 1023 + NUL = 1107. */
+  char csv_url[1152] = {0}; char *text = NULL; int year = 0;
   for (int k = 1; k <= 3 && !text; k++) {
     int y = this_year - k;
-    char u[1024];
+    char u[1152];
     if (!discover_csv(ctx->http, y, u, sizeof u)) continue;
     char *raw = feed_get_text(ctx->http, u, 60000);
     if (!raw) continue;
@@ -209,7 +224,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         double lon2 = js_round(lon * 100.0) / 100.0;
         char la[24], lo[24];
         numstr(lat2, la, sizeof la); numstr(lon2, lo, sizeof lo);
-        char key[48];
+        /* 72, not 48: la and lo are 24 each and ym is 16, so the three can
+         * want 23 + 1 + 23 + 1 + 15 + 1 = 64. This string is the BUCKET KEY
+         * that groups accidents by (lat, lon, month) — a truncated key does
+         * not shorten a label, it merges two genuinely different cells into
+         * one and reports their combined count as a single location. */
+        char key[72];
         snprintf(key, sizeof key, "%s,%s,%s", la, lo, ym);
         bucket_t *b = NULL;
         for (int i = 0; i < nb; i++)
@@ -245,15 +265,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *features = cJSON_CreateArray();
   for (int i = 0; i < nb; i++) {
     bucket_t *b = &bk[i];
-    cJSON *f = cJSON_CreateObject();
-    cJSON_AddStringToObject(f, "type", "Feature");
-    cJSON *g = cJSON_CreateObject();
-    cJSON_AddStringToObject(g, "type", "Point");
-    cJSON *co = cJSON_CreateArray();
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(b->lon));
-    cJSON_AddItemToArray(co, cJSON_CreateNumber(b->lat));
-    cJSON_AddItemToObject(g, "coordinates", co);
-    cJSON_AddItemToObject(f, "geometry", g);
+    cJSON *f = gj_point_feature(b->lon, b->lat);
     cJSON *p = cJSON_CreateObject();             /* EXACT JS key order */
     char la[24], lo[24];
     numstr(b->lat, la, sizeof la); numstr(b->lon, lo, sizeof lo);
@@ -265,6 +277,34 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddNumberToObject(p, "fatalities", (double)b->fatalities);
     cJSON_AddNumberToObject(p, "severity_max", (double)b->severity_max);
     cJSON_AddStringToObject(p, "source", ctx->source_id);
+    /* The geojson toolkit derives the row title from title|name|name_ja|label.
+     * None of the keys above is one of those, so ALL ~38k accident-grid rows
+     * persisted with a NULL title and were unreadable in every UI. Compose it
+     * from the aggregates we actually computed. */
+    {
+      char t[192];
+      if (b->fatalities > 0)
+        snprintf(t, sizeof t,
+                 "\xe4\xba\xa4\xe9\x80\x9a\xe4\xba\x8b\xe6\x95\x85 %ld\xe4\xbb\xb6"
+                 "\xef\xbc\x88\xe6\xad\xbb\xe8\x80\x85%ld\xef\xbc\x89 %s / %s,%s",
+                 (long)b->count, (long)b->fatalities, b->ym, la, lo);
+      else
+        snprintf(t, sizeof t,
+                 "\xe4\xba\xa4\xe9\x80\x9a\xe4\xba\x8b\xe6\x95\x85 %ld\xe4\xbb\xb6 %s / %s,%s",
+                 (long)b->count, b->ym, la, lo);
+      cJSON_AddStringToObject(p, "title", t);
+    }
+    /* provenance: the exact NPA open-data CSV these counts were aggregated
+     * from (rows carried no link at all before). */
+    if (csv_url[0]) cJSON_AddStringToObject(p, "link", csv_url);
+    /* timeline placement: the bucket IS a calendar month of the source year,
+     * and geojson's T_PUB looks for published_at (not "year_month"), so every
+     * row landed with an empty timestamp. */
+    {
+      char pub[32];
+      snprintf(pub, sizeof pub, "%s-01T00:00:00Z", b->ym);
+      cJSON_AddStringToObject(p, "published_at", pub);
+    }
     cJSON_AddItemToObject(f, "properties", p);
     cJSON_AddItemToArray(features, f);
   }

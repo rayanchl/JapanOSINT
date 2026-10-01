@@ -22,23 +22,14 @@
  * dataset, so we probe a small set of common company-master keys and fall back
  * to serialising the whole record. Verify field mapping against a live response
  * once a resource id is configured. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
-
-/* first present non-empty string among a NULL-terminated list of candidate keys */
-static const char *first_sv(const cJSON *o, const char *const *keys) {
-  for (int i = 0; keys[i]; i++) {
-    const char *v = jo_sv(o, keys[i]);
-    if (v) return v;
-  }
-  return NULL;
-}
 
 /* one company record → one intel_item. Returns 1 if emitted. */
 static int emit_company(intel_sink *sink, const cJSON *c) {
@@ -59,15 +50,15 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   static const char *date_keys[] = {
     "date_of_registration", "registration_date", "dateofregistration", NULL };
 
-  const char *name   = first_sv(c, name_keys);
-  const char *cin    = first_sv(c, cin_keys);
+  const char *name   = jo_first_sv(c, name_keys);
+  const char *cin    = jo_first_sv(c, cin_keys);
   if (!name && !cin) return 0;
 
-  const char *status = first_sv(c, status_keys);
-  const char *state  = first_sv(c, state_keys);
-  const char *cls    = first_sv(c, class_keys);
-  const char *roc    = first_sv(c, roc_keys);
-  const char *rdate  = first_sv(c, date_keys);
+  const char *status = jo_first_sv(c, status_keys);
+  const char *state  = jo_first_sv(c, state_keys);
+  const char *cls    = jo_first_sv(c, class_keys);
+  const char *roc    = jo_first_sv(c, roc_keys);
+  const char *rdate  = jo_first_sv(c, date_keys);
 
   cJSON *data = cJSON_CreateObject();
   if (name)   cJSON_AddStringToObject(data, "name", name);

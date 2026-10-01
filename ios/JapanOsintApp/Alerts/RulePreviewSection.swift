@@ -65,6 +65,7 @@ struct RulePreviewSection: View {
                 HStack(alignment: .top, spacing: Space.sm) {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .foregroundStyle(theme.danger)
+                        .accessibilityHidden(true)   // "Preview failed" follows
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Preview failed")
                             .font(.caption.weight(.semibold))
@@ -153,6 +154,7 @@ struct RulePreviewSection: View {
         HStack(alignment: .top, spacing: Space.sm) {
             Image(systemName: "sparkles")
                 .foregroundStyle(theme.warning)
+                .accessibilityHidden(true)   // the notice text follows
             VStack(alignment: .leading, spacing: 3) {
                 if skipped == "llm_mode_unsupported" {
                     Text("LLM-mode rules can't be previewed — and they don't fire.")

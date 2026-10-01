@@ -144,7 +144,11 @@
  *
  * ══ THE FTS COLLISION WITH translate.c — READ THIS ════════════════════════
  *
- * intel_items_fts is fts5(uid UNINDEXED, title, body, summary, keywords).
+ * intel_items_fts is fts5(uid UNINDEXED, title, body, summary, keywords,
+ * link, author, tags, props) — core/fts_schema.h owns that column set and the
+ * rebuild that widened it. NONE of that changes what is written below: the
+ * new columns are all ingest-derived, `keywords` is still the only column not
+ * written by intel.c's fts_write(), and it is still shared with translate.c.
  * FTS5 has no ALTER TABLE ADD COLUMN, and roadmap 29 (core/translate.c)
  * already established the only workable answer: additional searchable text is
  * appended into the existing, otherwise-unused `keywords` column, because it
@@ -337,7 +341,9 @@
  *    inherits the scheduler's skip-if-running serialisation, so two ticks can
  *    never overlap.
  *
- * 3. core/httpd.c — two OPTIONAL read routes, no new auth machinery:
+ * 3. core/httpd.c — two read routes. BOTH ARE REGISTERED (they were listed
+ *    here as optional; the capabilities one then went unregistered long enough
+ *    for ffmpeg.h to call it "existing" while it was not):
  *
  *      GET /api/intel/items/:uid/media          (plain auth, tenant-agnostic,
  *                                                same shape as the existing
@@ -346,9 +352,10 @@
  *        if (!body) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
  *        reply_json(c, 200, body); free(body); return;
  *
- *      GET /api/media/capabilities              (operator/admin — it reports
- *                                                which external tools this
- *                                                host has)
+ *      GET /api/media/capabilities              (platform-operator gated — it
+ *                                                reports which external tools
+ *                                                this host has, i.e. host
+ *                                                inventory, not tenant data)
  *        char *body = media_capabilities();
  *        reply_json(c, 200, body); free(body); return;
  *
@@ -390,7 +397,15 @@
  *                              real per-word confidence.
  *   MEDIA_OCR_LANG             tesseract -l value                  (jpn+eng)
  *   MEDIA_OCR_MAX_BYTES        OCR text stored per image             (65536)
+ *   MEDIA_TOOL_TIMEOUT_MS      hard deadline on one pHash/OCR tool run,
+ *                              SIGKILL at the deadline               (20000)
  *   MEDIA_NO_TOOLS             set → never shell out; EXIF only
+ *   JO_NO_FFMPEG               core/ffmpeg.h's process-wide "spawn nothing"
+ *                              switch. The tool seam runs through
+ *                              ffmpeg_run() for its deadline and its reaping,
+ *                              so this also silences pHash and OCR — they
+ *                              degrade exactly as they do with no tool
+ *                              installed (NULL columns, EXIF only)
  *
  * ══ WHAT IS AND IS NOT EXERCISED IN THIS ENVIRONMENT ══════════════════════
  *

@@ -2,9 +2,10 @@
  * Port of server/src/collectors/ripestatJp.js (intelEnvelope, single item).
  * RIPEstat country-resource-list?resource=JP → 1 intel row, ASN/IPv4/IPv6
  * prefix counts. uid = ripestat-jp|jp-country-resources (fixed). No geometry. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,17 +13,6 @@
 #include <time.h>
 
 #define API_URL "https://stat.ripe.net/data/country-resource-list/data.json?resource=JP"
-
-/* new Date().toISOString() → YYYY-MM-DDTHH:MM:SS.mmmZ (UTC) */
-static void iso_now(char *o, size_t n) {
-  struct timeval tv;
-  gettimeofday(&tv, NULL);
-  struct tm tm;
-  gmtime_r(&tv.tv_sec, &tm);
-  char base[32];
-  strftime(base, sizeof base, "%Y-%m-%dT%H:%M:%S", &tm);
-  snprintf(o, n, "%s.%03dZ", base, (int)(tv.tv_usec / 1000));
-}
 
 /* Number.prototype.toLocaleString() default (en-US): group integer by 3
  * with commas. n is a non-negative integer count. */
@@ -49,12 +39,37 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *hdrs[] = { "accept: application/json", NULL };
   cJSON *country = feed_get_json_h(ctx->http, API_URL, hdrs, 15000);
 
+  /* NO FABRICATION. On a NULL fetch this used to emit the row anyway with
+   * asn_count/ipv4_count/ipv6_count = 0 and err="fetch_failed" alongside. The
+   * three zeros are what alen() returns for "no array to count", not anything
+   * RIPEstat said, and downstream nothing reads `err` before reading the
+   * counts: "Japan announces 0 ASNs" is a false measurement, and a false
+   * measurement that also carries a summary string "0 ASNs · 0 IPv4 prefixes"
+   * is worse than no row at all. RIPEstat unreachable → emit nothing and say
+   * so with a non-zero status; the previous run's row stays as the last thing
+   * actually measured. */
+  if (!country) {
+    fprintf(stderr, "[ripestat-jp] fetch failed — emitting nothing rather than "
+                    "a row of zeroed counts\n");
+    return -1;
+  }
+
   cJSON *data = country ? cJSON_GetObjectItem(country, "data") : NULL;
   cJSON *res = data ? cJSON_GetObjectItem(data, "resources") : NULL;
+  /* Same rule one level down: alen() cannot tell "the array was empty" from
+   * "there was no array", so a 200 whose shape we failed to parse would emit
+   * the identical three zeros. Require the resources object to actually carry
+   * the arrays before treating their lengths as counts. */
+  if (!res || !cJSON_IsArray(cJSON_GetObjectItem(res, "asn"))) {
+    fprintf(stderr, "[ripestat-jp] 200 but no data.resources.asn array — "
+                    "emitting nothing rather than a row of zeroed counts\n");
+    cJSON_Delete(country);
+    return -1;
+  }
   int asn = alen(res, "asn");
   int ip4 = alen(res, "ipv4");
   int ip6 = alen(res, "ipv6");
-  int live = (country != NULL) && (asn > 0);
+  int live = 1;                 /* reached only on a parsed RIPEstat response */
 
   char la[32], l4[32], l6[32];
   loc(asn, la, sizeof la);
@@ -76,12 +91,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddNumberToObject(props, "asn_count", asn);
   cJSON_AddNumberToObject(props, "ipv4_count", ip4);
   cJSON_AddNumberToObject(props, "ipv6_count", ip6);
-  /* err = country?.err || null. On a successful fetch it's null; on failure
-   * the JS message is itself nondeterministic — emit generic. */
-  if (!country)
-    cJSON_AddStringToObject(props, "err", "fetch_failed");
-  else
-    cJSON_AddItemToObject(props, "err", cJSON_CreateNull());
+  /* err = country?.err || null. This row is now only reached on a fetched and
+   * parsed response, so err is always null — the "fetch_failed" variant used
+   * to ride alongside three fabricated zeros and no longer exists. */
+  cJSON_AddItemToObject(props, "err", cJSON_CreateNull());
   cJSON_AddStringToObject(props, "source", "ripestat_country_resource_list");
   char *pj = cJSON_PrintUnformatted(props);
 
@@ -91,7 +104,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     live ? "reachable" : "unreachable");
 
   char pub[40];
-  iso_now(pub, sizeof pub);
+  jo_iso_now(pub, sizeof pub);
 
   intel_item it = {0};
   it.remote_key     = "jp-country-resources";

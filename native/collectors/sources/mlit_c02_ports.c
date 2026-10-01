@@ -2,8 +2,8 @@
  * Port of server/src/collectors/mlitC02Ports.js (createMlitKsjCollector).
  * Primary live path only (env → mirrors); OSM fallback + _meta dropped
  * per HARD RULE 8 / the documented fallback-drop decision. */
-#include "../../source.h"
-#include "../../lib/mlit_ksj.h"
+#include "source.h"
+#include "lib/mlit_ksj.h"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   static const char *const mirrors[] = {

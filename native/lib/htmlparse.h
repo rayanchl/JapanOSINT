@@ -25,8 +25,10 @@ int html_tag(const char *s, const char *tag, char *out, size_t n);
 const char *html_block(const char *from, const char *tag,
                        const char **inner, int *inner_len);
 
-/* First `attr="..."` (or `attr='...'`) value within the first tag of `s`
- * (or anywhere in s). Copies value into out. Returns 1/0. */
+/* First `attr="..."` (or `attr='...'`, or unquoted `attr=…`) value within the
+ * first tag of `s` (or anywhere in s). The name must sit on a boundary (buffer
+ * start, whitespace or right after '<'), so `data-src=` does NOT answer a
+ * lookup for "src". Copies value into out. Returns 1/0. */
 int html_attr(const char *s, const char *attr, char *out, size_t n);
 
 /* ── anchors ───────────────────────────────────────────────────────────────

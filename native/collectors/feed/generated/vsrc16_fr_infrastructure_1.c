@@ -1,0 +1,14 @@
+/* Verified-live fr_infrastructure sources (1), part 1.
+ * Every endpoint in this file returned 2xx and parsed to at
+ * least one record at generation time; see
+ * docs/verified-sources-manifest.tsv for the recorded proof.
+ * Scaffolded once by collectors/gen_verified_sources.py; HAND-MAINTAINED
+ * since — this file, not the manifest, is the current copy. The
+ * generator refuses to overwrite it without --force. */
+#include "_verified_macros.inc"
+
+VGEO(eu_emodnet_ha_shomcables, "eu-emodnet-ha-shomcables", "EMODnet French (SHOM) subsea cables", "EMODnet French (SHOM) subsea cables",
+  "fr_infrastructure", "infrastructure",
+  "https://ows.emodnet-humanactivities.eu/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=emodnet:shomcables&outputFormat=application/json&count=2",
+  "en", "[\"fr\",\"infrastructure\",\"batch16\",\"high-penetrancy\"]", 86400,
+  "French hydrographic service cable routes as MultiLineString with catcbl category code, status and the INSPIRE feature id.");

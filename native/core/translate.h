@@ -18,8 +18,17 @@
  *
  * ── FTS DECISION: English is appended into the existing `keywords` column ──
  *
- * intel_items_fts is fts5(uid UNINDEXED, title, body, summary, keywords,
+ * intel_items_fts WAS fts5(uid UNINDEXED, title, body, summary, keywords,
  * tokenize='unicode61 remove_diacritics 1'). Two options were on the table.
+ *
+ * [UPDATE: option (a) was later taken for a DIFFERENT payload — link, author,
+ * tags and flattened properties are now real FTS columns, and core/fts_schema.c
+ * is the rebuild engine whose absence is lamented below. It answers the
+ * resumability objection with atomicity instead (one transaction, rolls back
+ * to the intact index, retries next boot) and it CARRIES `keywords` OVER, so
+ * everything this file says about English living in `keywords` is still true
+ * and still the right call: that text is not derivable from intel_items, so a
+ * column of its own would have to be repopulated by re-running the LLM.]
  *
  * (a) Add title_en/body_en/summary_en columns to the FTS table. REJECTED.
  *     FTS5 has no ALTER TABLE ADD COLUMN — changing the column set means

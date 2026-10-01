@@ -3,24 +3,19 @@
  * NTA Houjin Bangou /4/diff (JSON type=12), rolling 7-day UTC window.
  * Gated on HOUJIN_BANGOU_KEY (JS: no key → empty → 0 rows).
  * uid = houjin-bangou|<cn || changeDate||updateDate>. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
+#include "lib/jocore.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
-/* JS truthy string. */
-static const char *sv(const cJSON *o, const char *k) {
-  const cJSON *v = cJSON_GetObjectItem(o, k);
-  return (v && cJSON_IsString(v) && v->valuestring && v->valuestring[0])
-           ? v->valuestring : NULL;
-}
 /* a || b (string-truthy). */
 static const char *sor(const cJSON *o, const char *a, const char *b) {
-  const char *x = sv(o, a);
-  return x ? x : sv(o, b);
+  const char *x = jo_sv(o, a);
+  return x ? x : jo_sv(o, b);
 }
 
 /* corporateNumber may arrive as number or string → string-truthy form. */
@@ -59,16 +54,23 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   /* to = now; from = now - 7d; ymd = toISOString().slice(0,10) (UTC). */
+  /* strftime rather than snprintf("%04d-%02d-%02d", tm_year + 1900, …): tm_year
+   * is an int the compiler cannot bound, so that form can emit up to 33 bytes
+   * into these 11-byte buffers and -Wformat-truncation says so. strftime is
+   * bounded by construction — it writes nothing and returns 0 rather than
+   * cutting a date in half. The rendering is identical for every year this can
+   * see. gmtime_r's NULL return is checked too; it was not before, and reading
+   * an unset `struct tm` would have put a garbage window on the diff query. */
   time_t now = time(NULL);
   time_t from = now - 7 * 86400;
   struct tm gt, gf;
-  gmtime_r(&now, &gt);
-  gmtime_r(&from, &gf);
   char to_s[11], from_s[11];
-  snprintf(to_s, sizeof to_s, "%04d-%02d-%02d",
-           gt.tm_year + 1900, gt.tm_mon + 1, gt.tm_mday);
-  snprintf(from_s, sizeof from_s, "%04d-%02d-%02d",
-           gf.tm_year + 1900, gf.tm_mon + 1, gf.tm_mday);
+  if (!gmtime_r(&now, &gt) || !gmtime_r(&from, &gf) ||
+      !strftime(to_s,   sizeof to_s,   "%Y-%m-%d", &gt) ||
+      !strftime(from_s, sizeof from_s, "%Y-%m-%d", &gf)) {
+    fprintf(stderr, "[houjin-bangou] cannot render the query window as a date\n");
+    return -1;
+  }
 
   char url[512];
   snprintf(url, sizeof url,
@@ -86,23 +88,22 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     else corps = cJSON_GetObjectItem(json, "data");
   }
 
-  int n = 0, i = 0;
+  int n = 0;
   if (cJSON_IsArray(corps)) {
     cJSON *c;
     cJSON_ArrayForEach(c, corps) {
       /* (cap removed: every record of the fetched array is emitted —
        * docs/SOURCE_EXHAUSTIVENESS.md) */
-      i++;
       char cnbuf[40];
       const char *cn   = cn_of(c, cnbuf, sizeof cnbuf);
-      const char *proc = sv(c, "process");    /* c.process || null */
+      const char *proc = jo_sv(c, "process");    /* c.process || null */
       const char *plab = proc_label(proc);
-      const char *cdate= sv(c, "changeDate");
-      const char *udate= sv(c, "updateDate");
+      const char *cdate= jo_sv(c, "changeDate");
+      const char *udate= jo_sv(c, "updateDate");
 
       const char *pref = sor(c, "prefectureName", "prefecture_name");
       const char *city = sor(c, "cityName", "city_name");
-      const char *name = sv(c, "name");
+      const char *name = jo_sv(c, "name");
 
       /* uid: intelUid(SOURCE_ID, cn, c.changeDate||c.updateDate) */
       const char *rk = cn ? cn : (cdate ? cdate : udate);
@@ -133,10 +134,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       const char *summ = wrote ? summary : NULL;
 
       /* published_at = updateDate||update_date||changeDate||change_date||null */
-      const char *pub = sv(c, "updateDate");
-      if (!pub) pub = sv(c, "update_date");
+      const char *pub = jo_sv(c, "updateDate");
+      if (!pub) pub = jo_sv(c, "update_date");
       if (!pub) pub = cdate;
-      if (!pub) pub = sv(c, "change_date");
+      if (!pub) pub = jo_sv(c, "change_date");
 
       /* tags = ['corporate-registry',
        *         proc ? `process:${PROC[proc]||proc}` : null].filter */
@@ -155,13 +156,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         cn ? cJSON_CreateString(cn) : cJSON_CreateNull());
       cJSON_AddItemToObject(p, "process",
         proc ? cJSON_CreateString(proc) : cJSON_CreateNull());
-      const char *nkana = sv(c, "furigana");
+      const char *nkana = jo_sv(c, "furigana");
       cJSON_AddItemToObject(p, "name_kana",
         nkana ? cJSON_CreateString(nkana) : cJSON_CreateNull());
       const char *nen = sor(c, "nameEn", "name_en");
       cJSON_AddItemToObject(p, "name_en",
         nen ? cJSON_CreateString(nen) : cJSON_CreateNull());
-      const char *knd = sv(c, "kind");
+      const char *knd = jo_sv(c, "kind");
       cJSON_AddItemToObject(p, "kind",
         knd ? cJSON_CreateString(knd) : cJSON_CreateNull());
       cJSON_AddItemToObject(p, "prefecture_name",
@@ -203,7 +204,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   cJSON_Delete(json);
   fprintf(stderr, "[houjin-bangou] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def houjin_bangou_def = {

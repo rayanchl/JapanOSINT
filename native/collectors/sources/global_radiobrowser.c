@@ -9,9 +9,9 @@
  * same station-array shape, so parsing is shared. Real fetch → parse → emit;
  * fetch failure or no matches → honest empty (return 0). Nothing synthesized.
  * Header "User-Agent: JapanOSINT/1.0" is required by the API's usage policy. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

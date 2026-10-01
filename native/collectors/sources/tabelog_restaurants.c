@@ -3,10 +3,10 @@
  * Primary: HotPepper Gourmet API (gated on HOTPEPPER_API_KEY) →
  * fallback: OSM Overpass restaurants/fast_food. SEED_RESTAURANTS not
  * ported (rule 7). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/geojson.h"
-#include "../../lib/overpass.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/geojson.h"
+#include "lib/overpass.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -37,15 +37,7 @@ static const char *nested_name(cJSON *o, const char *k) {
 
 static cJSON *osm_map(cJSON *el, int i, double lon, double lat, void *ud) {
   (void)ud;
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *c = cJSON_CreateArray();
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lon));
-  cJSON_AddItemToArray(c, cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(g, "coordinates", c);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(lon, lat);
 
   cJSON *p = cJSON_CreateObject();              /* EXACT JS key order */
   cJSON *id = cJSON_GetObjectItem(el, "id");
@@ -66,9 +58,11 @@ static cJSON *osm_map(cJSON *el, int i, double lon, double lat, void *ud) {
   cJSON_AddItemToObject(p, "name_en",
                         ne ? cJSON_CreateString(ne) : cJSON_CreateNull());
   const char *cuisine = ov_tag(el, "cuisine");
-  cJSON_AddStringToObject(p, "genre", cuisine ? cuisine : "unknown");
+  if (cuisine) cJSON_AddStringToObject(p, "genre", cuisine);
+  else cJSON_AddItemToObject(p, "genre", cJSON_CreateNull());
   const char *amenity = ov_tag(el, "amenity");
-  cJSON_AddStringToObject(p, "amenity", amenity ? amenity : "");
+  if (amenity) cJSON_AddStringToObject(p, "amenity", amenity);
+  else cJSON_AddItemToObject(p, "amenity", cJSON_CreateNull());
   const char *addr = ov_tag(el, "addr:full");
   if (!addr) addr = ov_tag(el, "addr:city");
   cJSON_AddItemToObject(p, "address",
@@ -102,15 +96,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         char latb[32], lngb[32];
         const char *lats = jstr(s, "lat", latb, sizeof latb);
         const char *lngs = jstr(s, "lng", lngb, sizeof lngb);
-        cJSON *f = cJSON_CreateObject();
-        cJSON_AddStringToObject(f, "type", "Feature");
-        cJSON *g = cJSON_CreateObject();
-        cJSON_AddStringToObject(g, "type", "Point");
-        cJSON *co = cJSON_CreateArray();
-        cJSON_AddItemToArray(co, cJSON_CreateNumber(lngs[0] ? strtod(lngs, NULL) : 0));
-        cJSON_AddItemToArray(co, cJSON_CreateNumber(lats[0] ? strtod(lats, NULL) : 0));
-        cJSON_AddItemToObject(g, "coordinates", co);
-        cJSON_AddItemToObject(f, "geometry", g);
+        cJSON *f = gj_point_feature(lngs[0] ? strtod(lngs, NULL) : 0, lats[0] ? strtod(lats, NULL) : 0);
 
         cJSON *p = cJSON_CreateObject();
         cJSON *idv = cJSON_GetObjectItem(s, "id");

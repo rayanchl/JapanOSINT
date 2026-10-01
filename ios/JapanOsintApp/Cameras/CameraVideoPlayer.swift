@@ -20,6 +20,18 @@ struct CameraVideoPlayer {
         player.play()
         return player
     }
+
+    /// Fully stop a player we are about to drop.
+    ///
+    /// `pause()` alone is not enough: the `AVPlayerItem` keeps its asset loader
+    /// and buffering pipeline alive, so a grid that scrolls through a few dozen
+    /// HLS cards accumulates live decoders and network readers. Clearing the
+    /// current item is what actually releases them.
+    fileprivate static func teardown(_ player: AVPlayer?) {
+        guard let player else { return }
+        player.pause()
+        player.replaceCurrentItem(with: nil)
+    }
 }
 
 #if canImport(UIKit)
@@ -36,9 +48,18 @@ extension CameraVideoPlayer: UIViewControllerRepresentable {
 
     func updateUIViewController(_ vc: AVPlayerViewController, context: Context) {
         let current = (vc.player?.currentItem?.asset as? AVURLAsset)?.url
-        if current != url {
-            vc.player = makePlayer()
-        }
+        guard current != url else { return }
+        // Stop the outgoing player BEFORE swapping — assigning over it left the
+        // old one playing and buffering with nothing on screen.
+        CameraVideoPlayer.teardown(vc.player)
+        vc.player = makePlayer()
+    }
+
+    /// SwiftUI calls this when the representable leaves the hierarchy. Without
+    /// it the AVPlayer outlived the view and kept pulling the stream.
+    static func dismantleUIViewController(_ vc: AVPlayerViewController, coordinator: ()) {
+        CameraVideoPlayer.teardown(vc.player)
+        vc.player = nil
     }
 }
 #elseif canImport(AppKit)
@@ -54,9 +75,14 @@ extension CameraVideoPlayer: NSViewRepresentable {
 
     func updateNSView(_ view: AVPlayerView, context: Context) {
         let current = (view.player?.currentItem?.asset as? AVURLAsset)?.url
-        if current != url {
-            view.player = makePlayer()
-        }
+        guard current != url else { return }
+        CameraVideoPlayer.teardown(view.player)
+        view.player = makePlayer()
+    }
+
+    static func dismantleNSView(_ view: AVPlayerView, coordinator: ()) {
+        CameraVideoPlayer.teardown(view.player)
+        view.player = nil
     }
 }
 #endif

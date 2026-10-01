@@ -1,0 +1,14 @@
+/* Verified-live ma_statistics sources (1), part 1.
+ * Every endpoint in this file returned 2xx and parsed to at
+ * least one record at generation time; see
+ * docs/verified-sources-manifest.tsv for the recorded proof.
+ * Scaffolded once by collectors/gen_verified_sources.py; HAND-MAINTAINED
+ * since — this file, not the manifest, is the current copy. The
+ * generator refuses to overwrite it without --force. */
+#include "_verified_macros.inc"
+
+VRSS(hcp_maroc_atom, "hcp-maroc-atom", "HCP Morocco - Haut-Commissariat au Plan releases", "HCP Morocco - Haut-Commissariat au Plan releases",
+  "ma_statistics", "statistics",
+  "https://www.hcp.ma/xml/atom.xml",
+  "fr", "[\"ma\",\"statistics\",\"batch17\",\"high-penetrancy\"]", 86400,
+  "Morocco's national statistics office release feed - the only machine-readable HCP endpoint I could find. Entries are the actual headline statistical publications ('Situation du marche du travail au Maroc au deuxieme trimestre', 'Principaux indicateurs trimestriels retropoles provisoires du marche du travail') with title, link, updated date and summary.");

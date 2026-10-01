@@ -1,0 +1,125 @@
+/* Verified-live fr_corporate sources (16), part 1.
+ * Every endpoint in this file returned 2xx and parsed to at
+ * least one record at generation time; see
+ * docs/verified-sources-manifest.tsv for the recorded proof.
+ * Scaffolded once by collectors/gen_verified_sources.py; HAND-MAINTAINED
+ * since — this file, not the manifest, is the current copy. The
+ * generator refuses to overwrite it without --force. */
+#include "_verified_macros.inc"
+
+/* The six accented-query rows below carry their query PERCENT-ENCODED. Sent
+ * raw, the non-ASCII bytes in the request line make the API answer
+ * `400 Bad request — Your browser sent an invalid request` (measured
+ * 2026-09-06 for every one of them; the same rows encoded answer 200 with
+ * 27-59 results). Same trap as the CKAN `?q=防災` case in CLAUDE.md. */
+VJSON(fr_entreprises_aeronautique, "fr-entreprises-aeronautique", "France Company Register — Aeronautics", "フランス企業登記 aeronautics",
+  "fr_corporate", "corporate",
+  "https://recherche-entreprises.api.gouv.fr/search?q=a%C3%A9ronautique&per_page=25",
+  "results",
+  "fr", "[\"france\",\"corporate\",\"sirene\",\"registry\",\"aeronautique\"]", 86400,
+  "French legal units matching 'aéronautique' (aeronautics) from the state SIRENE-backed company search: SIREN, SIRET, NAF activity code, legal form, headcount band, officers and establishment addresses.");
+
+VJSON(fr_entreprises_armement, "fr-entreprises-armement", "France Company Register — Armaments", "フランス企業登記 armaments",
+  "fr_corporate", "corporate",
+  "https://recherche-entreprises.api.gouv.fr/search?q=armement&per_page=25",
+  "results",
+  "fr", "[\"france\",\"corporate\",\"sirene\",\"registry\",\"armement\"]", 86400,
+  "French legal units matching 'armement' (armaments) from the state SIRENE-backed company search: SIREN, SIRET, NAF activity code, legal form, headcount band, officers and establishment addresses.");
+
+VJSON(fr_entreprises_biotechnologie, "fr-entreprises-biotechnologie", "France Company Register — Biotechnology", "フランス企業登記 biotechnology",
+  "fr_corporate", "corporate",
+  "https://recherche-entreprises.api.gouv.fr/search?q=biotechnologie&per_page=25",
+  "results",
+  "fr", "[\"france\",\"corporate\",\"sirene\",\"registry\",\"biotechnologie\"]", 86400,
+  "French legal units matching 'biotechnologie' (biotechnology) from the state SIRENE-backed company search: SIREN, SIRET, NAF activity code, legal form, headcount band, officers and establishment addresses.");
+
+VJSON(fr_entreprises_chimie, "fr-entreprises-chimie", "France Company Register — Chemicals", "フランス企業登記 chemicals",
+  "fr_corporate", "corporate",
+  "https://recherche-entreprises.api.gouv.fr/search?q=chimie&per_page=25",
+  "results",
+  "fr", "[\"france\",\"corporate\",\"sirene\",\"registry\",\"chimie\"]", 86400,
+  "French legal units matching 'chimie' (chemicals) from the state SIRENE-backed company search: SIREN, SIRET, NAF activity code, legal form, headcount band, officers and establishment addresses.");
+
+VJSON(fr_entreprises_cybersecurite, "fr-entreprises-cybersecurite", "France Company Register — Cyber Security", "フランス企業登記 cyber security",
+  "fr_corporate", "corporate",
+  "https://recherche-entreprises.api.gouv.fr/search?q=cybers%C3%A9curit%C3%A9&per_page=25",
+  "results",
+  "fr", "[\"france\",\"corporate\",\"sirene\",\"registry\",\"cybersecurite\"]", 86400,
+  "French legal units matching 'cybersécurité' (cyber security) from the state SIRENE-backed company search: SIREN, SIRET, NAF activity code, legal form, headcount band, officers and establishment addresses.");
+
+VJSON(fr_entreprises_datacenter, "fr-entreprises-datacenter", "France Company Register — Data Centres", "フランス企業登記 data centres",
+  "fr_corporate", "corporate",
+  "https://recherche-entreprises.api.gouv.fr/search?q=datacenter&per_page=25",
+  "results",
+  "fr", "[\"france\",\"corporate\",\"sirene\",\"registry\",\"datacenter\"]", 86400,
+  "French legal units matching 'datacenter' (data centres) from the state SIRENE-backed company search: SIREN, SIRET, NAF activity code, legal form, headcount band, officers and establishment addresses.");
+
+VJSON(fr_entreprises_defense, "fr-entreprises-defense", "France Company Register — Defence Contractors", "フランス企業登記 defence contractors",
+  "fr_corporate", "corporate",
+  "https://recherche-entreprises.api.gouv.fr/search?q=d%C3%A9fense&per_page=25",
+  "results",
+  "fr", "[\"france\",\"corporate\",\"sirene\",\"registry\",\"defense\"]", 86400,
+  "French legal units matching 'défense' (defence contractors) from the state SIRENE-backed company search: SIREN, SIRET, NAF activity code, legal form, headcount band, officers and establishment addresses.");
+
+VJSON(fr_entreprises_energie, "fr-entreprises-energie", "France Company Register — Energy", "フランス企業登記 energy",
+  "fr_corporate", "corporate",
+  "https://recherche-entreprises.api.gouv.fr/search?q=%C3%A9nergie&per_page=25",
+  "results",
+  "fr", "[\"france\",\"corporate\",\"sirene\",\"registry\",\"energie\"]", 86400,
+  "French legal units matching 'énergie' (energy) from the state SIRENE-backed company search: SIREN, SIRET, NAF activity code, legal form, headcount band, officers and establishment addresses.");
+
+VJSON(fr_entreprises_informatique, "fr-entreprises-informatique", "France Company Register — It Services", "フランス企業登記 IT services",
+  "fr_corporate", "corporate",
+  "https://recherche-entreprises.api.gouv.fr/search?q=informatique&per_page=25",
+  "results",
+  "fr", "[\"france\",\"corporate\",\"sirene\",\"registry\",\"informatique\"]", 86400,
+  "French legal units matching 'informatique' (IT services) from the state SIRENE-backed company search: SIREN, SIRET, NAF activity code, legal form, headcount band, officers and establishment addresses.");
+
+VJSON(fr_entreprises_laboratoire, "fr-entreprises-laboratoire", "France Company Register — Laboratories", "フランス企業登記 laboratories",
+  "fr_corporate", "corporate",
+  "https://recherche-entreprises.api.gouv.fr/search?q=laboratoire&per_page=25",
+  "results",
+  "fr", "[\"france\",\"corporate\",\"sirene\",\"registry\",\"laboratoire\"]", 86400,
+  "French legal units matching 'laboratoire' (laboratories) from the state SIRENE-backed company search: SIREN, SIRET, NAF activity code, legal form, headcount band, officers and establishment addresses.");
+
+VJSON(fr_entreprises_logiciel, "fr-entreprises-logiciel", "France Company Register — Software", "フランス企業登記 software",
+  "fr_corporate", "corporate",
+  "https://recherche-entreprises.api.gouv.fr/search?q=logiciel&per_page=25",
+  "results",
+  "fr", "[\"france\",\"corporate\",\"sirene\",\"registry\",\"logiciel\"]", 86400,
+  "French legal units matching 'logiciel' (software) from the state SIRENE-backed company search: SIREN, SIRET, NAF activity code, legal form, headcount band, officers and establishment addresses.");
+
+VJSON(fr_entreprises_nucleaire, "fr-entreprises-nucleaire", "France Company Register — Nuclear Industry", "フランス企業登記 nuclear industry",
+  "fr_corporate", "corporate",
+  "https://recherche-entreprises.api.gouv.fr/search?q=nucl%C3%A9aire&per_page=25",
+  "results",
+  "fr", "[\"france\",\"corporate\",\"sirene\",\"registry\",\"nucleaire\"]", 86400,
+  "French legal units matching 'nucléaire' (nuclear industry) from the state SIRENE-backed company search: SIREN, SIRET, NAF activity code, legal form, headcount band, officers and establishment addresses.");
+
+VJSON(fr_entreprises_pharmaceutique, "fr-entreprises-pharmaceutique", "France Company Register — Pharmaceuticals", "フランス企業登記 pharmaceuticals",
+  "fr_corporate", "corporate",
+  "https://recherche-entreprises.api.gouv.fr/search?q=pharmaceutique&per_page=25",
+  "results",
+  "fr", "[\"france\",\"corporate\",\"sirene\",\"registry\",\"pharmaceutique\"]", 86400,
+  "French legal units matching 'pharmaceutique' (pharmaceuticals) from the state SIRENE-backed company search: SIREN, SIRET, NAF activity code, legal form, headcount band, officers and establishment addresses.");
+
+VJSON(fr_entreprises_semiconducteur, "fr-entreprises-semiconducteur", "France Company Register — Semiconductors", "フランス企業登記 semiconductors",
+  "fr_corporate", "corporate",
+  "https://recherche-entreprises.api.gouv.fr/search?q=semiconducteur&per_page=25",
+  "results",
+  "fr", "[\"france\",\"corporate\",\"sirene\",\"registry\",\"semiconducteur\"]", 86400,
+  "French legal units matching 'semiconducteur' (semiconductors) from the state SIRENE-backed company search: SIREN, SIRET, NAF activity code, legal form, headcount band, officers and establishment addresses.");
+
+VJSON(fr_entreprises_spatial, "fr-entreprises-spatial", "France Company Register — Space Industry", "フランス企業登記 space industry",
+  "fr_corporate", "corporate",
+  "https://recherche-entreprises.api.gouv.fr/search?q=spatial&per_page=25",
+  "results",
+  "fr", "[\"france\",\"corporate\",\"sirene\",\"registry\",\"spatial\"]", 86400,
+  "French legal units matching 'spatial' (space industry) from the state SIRENE-backed company search: SIREN, SIRET, NAF activity code, legal form, headcount band, officers and establishment addresses.");
+
+VJSON(fr_entreprises_telecom, "fr-entreprises-telecom", "France Company Register — Telecommunications", "フランス企業登記 telecommunications",
+  "fr_corporate", "corporate",
+  "https://recherche-entreprises.api.gouv.fr/search?q=t%C3%A9l%C3%A9communications&per_page=25",
+  "results",
+  "fr", "[\"france\",\"corporate\",\"sirene\",\"registry\",\"telecom\"]", 86400,
+  "French legal units matching 'télécommunications' (telecommunications) from the state SIRENE-backed company search: SIREN, SIRET, NAF activity code, legal form, headcount band, officers and establishment addresses.");

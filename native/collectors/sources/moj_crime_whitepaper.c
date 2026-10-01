@@ -7,15 +7,16 @@
  *  probe(u) = fetchHead(u) OR (fetchText(u) && len>200)
  *  feature uid/title derived by geojson sink; intel uids =
  *  intelUid(SOURCE_ID,'ja_<ed>') / 'en_<ed>'. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../lib/probe.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "lib/probe.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 #define MOJ_HQ_LON 139.7531
 #define MOJ_HQ_LAT 35.6735
@@ -38,10 +39,16 @@ static int first_reachable(http_client *http, const char *const *cand,
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
+  /* this_year is not decoration: it picks the 5-edition probe window below, so
+   * a clock we cannot break down leaves nothing to probe. */
   char iso[32];
   time_t now = time(NULL);
-  struct tm tmv; gmtime_r(&now, &tmv);
-  strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%S.000Z", &tmv);
+  struct tm tmv;
+  if (!jo_tm_utc(now, &tmv) ||
+      !jo_time_fmt(now, "%Y-%m-%dT%H:%M:%S.000Z", iso, sizeof iso)) {
+    fprintf(stderr, "[moj-crime-whitepaper] cannot render today as a date\n");
+    return -1;
+  }
   int this_year = tmv.tm_year + 1900;
 
   int found = 0, edition = 0, year = 0, en_ok = 0;
@@ -76,15 +83,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   /* ---- feature pin (geojson sink derives uid/title) ---- */
   cJSON *features = cJSON_CreateArray();
-  cJSON *f = cJSON_CreateObject();
-  cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *co = cJSON_CreateArray();
-  cJSON_AddItemToArray(co, cJSON_CreateNumber(MOJ_HQ_LON));
-  cJSON_AddItemToArray(co, cJSON_CreateNumber(MOJ_HQ_LAT));
-  cJSON_AddItemToObject(g, "coordinates", co);
-  cJSON_AddItemToObject(f, "geometry", g);
+  cJSON *f = gj_point_feature(MOJ_HQ_LON, MOJ_HQ_LAT);
   cJSON *p = cJSON_CreateObject();              /* EXACT JS key order */
   char idbuf[32], namebuf[64], ym[16];
   snprintf(idbuf, sizeof idbuf, "MOJ_WP_%d", year);

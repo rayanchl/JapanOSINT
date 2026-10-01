@@ -20,9 +20,11 @@
  */
 
 #include "station_clusterer.h"
+#include "intel.h"            /* intel_fts_remirror: properties is indexed */
+#include "../lib/utf8.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
-#include <openssl/sha.h>
+#include <openssl/evp.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -61,37 +63,14 @@
 
 /* Decode one UTF-8 codepoint at s[*i]; advance *i past it. Returns the
  * codepoint, or the raw byte on a malformed sequence (best-effort, never
- * loops). */
+ * loops). The decode itself is lib/utf8.h's: the version open-coded here read
+ * s[*i+1..3] before proving those bytes existed, so a string ending in a
+ * truncated sequence was read past its allocation. */
 static unsigned cp_next(const char *s, size_t *i) {
-    unsigned char c = (unsigned char)s[*i];
-    if (c < 0x80) { (*i)++; return c; }
-    if ((c & 0xE0) == 0xC0) {
-        unsigned char c1 = (unsigned char)s[*i + 1];
-        if ((c1 & 0xC0) == 0x80) {
-            *i += 2;
-            return ((c & 0x1F) << 6) | (c1 & 0x3F);
-        }
-        (*i)++; return c;
-    }
-    if ((c & 0xF0) == 0xE0) {
-        unsigned char c1 = (unsigned char)s[*i + 1], c2 = (unsigned char)s[*i + 2];
-        if ((c1 & 0xC0) == 0x80 && (c2 & 0xC0) == 0x80) {
-            *i += 3;
-            return ((c & 0x0F) << 12) | ((c1 & 0x3F) << 6) | (c2 & 0x3F);
-        }
-        (*i)++; return c;
-    }
-    if ((c & 0xF8) == 0xF0) {
-        unsigned char c1 = (unsigned char)s[*i + 1], c2 = (unsigned char)s[*i + 2],
-                      c3 = (unsigned char)s[*i + 3];
-        if ((c1 & 0xC0) == 0x80 && (c2 & 0xC0) == 0x80 && (c3 & 0xC0) == 0x80) {
-            *i += 4;
-            return ((c & 0x07) << 18) | ((c1 & 0x3F) << 12)
-                 | ((c2 & 0x3F) << 6) | (c3 & 0x3F);
-        }
-        (*i)++; return c;
-    }
-    (*i)++; return c;
+    int adv;
+    unsigned cp = utf8_decode((const unsigned char *)s + *i, &adv);
+    *i += (size_t)adv;
+    return cp;
 }
 
 /* Append codepoint cp to out (UTF-8). Caller guarantees >=4 bytes free. */
@@ -643,14 +622,30 @@ static int cmp_cstr(const void *a, const void *b) {
                               member_uids/operator/mode are ASCII → matches */
 }
 
-/* sha1(member_uids.join('|')) hex into out[41]. */
+/* sha1(member_uids.join('|')) hex into out[41].
+ *
+ * EVP rather than the deprecated (OpenSSL 3.0) SHA1_* calls. The digest is
+ * byte-identical — same algorithm, same bytes, same order — which is required:
+ * this is the cluster_uid every already-stored cluster row is keyed on, and a
+ * changed digest would orphan all of them and re-create the set.
+ *
+ * EVP allocates, so unlike SHA1_Init it can fail. On failure out41 is left
+ * EMPTY rather than zeroed: an empty cluster_uid is honestly missing, whereas
+ * an all-zero one is a plausible-looking digest that would silently merge
+ * every failed cluster into a single row. */
 static void sha1_join_pipe(char **uids, int n, char *out41) {
-    SHA_CTX c; SHA1_Init(&c);
+    out41[0] = 0;
+    EVP_MD_CTX *c = EVP_MD_CTX_new();
+    if (!c) return;
+    if (EVP_DigestInit_ex(c, EVP_sha1(), NULL) != 1) { EVP_MD_CTX_free(c); return; }
     for (int i = 0; i < n; i++) {
-        if (i) SHA1_Update(&c, "|", 1);
-        SHA1_Update(&c, uids[i], strlen(uids[i]));
+        if (i) EVP_DigestUpdate(c, "|", 1);
+        EVP_DigestUpdate(c, uids[i], strlen(uids[i]));
     }
-    unsigned char d[20]; SHA1_Final(d, &c);
+    unsigned char d[EVP_MAX_MD_SIZE]; unsigned int dl = 0;
+    int ok = EVP_DigestFinal_ex(c, d, &dl) == 1;
+    EVP_MD_CTX_free(c);
+    if (!ok) return;
     for (int i = 0; i < 20; i++) sprintf(out41 + i * 2, "%02x", d[i]);
     out41[40] = 0;
 }
@@ -729,7 +724,12 @@ static int materialise(station_t *S, const int *grp, int gn, cluster_row_t *out)
     /* line union: iterate members in group order, each member's
      * line_colors[] in order; dedupe by color; per-color introducing mode;
      * name/ref only if the color is that member's primary line_color. */
-    int cap_c = 0;
+    /* Each of the four parallel arrays needs its OWN capacity and count.
+     * Deriving them from line_colors' cap_c/n_colors made arr_push believe the
+     * sibling arrays were already allocated (n=0 != cap=4), so it skipped the
+     * realloc and wrote through a NULL pointer on the very first line. */
+    int cap_c = 0, cap_m = 0, cap_n = 0, cap_r = 0;
+    int n_m = 0, n_n = 0, n_r = 0;      /* kept in lockstep with out->n_colors */
     char **seen = NULL; int seen_n = 0, seen_cap = 0;   /* dedupe set */
     for (int i = 0; i < gn; i++) {
         station_t *m = &S[grp[i]];
@@ -743,13 +743,11 @@ static int materialise(station_t *S, const int *grp, int gn, cluster_row_t *out)
             if (arr_push(&seen, &seen_n, &seen_cap, col) != 0) goto oom;
 
             if (arr_push(&out->line_colors, &out->n_colors, &cap_c, col) != 0) goto oom;
-            int tmp1 = out->n_colors - 1, c1 = cap_c, c2 = cap_c, c3 = cap_c;
-            int n2 = tmp1, n3 = tmp1, n4 = tmp1;
             int is_primary = (m->line_color && strcmp(m->line_color, col) == 0);
-            if (arr_push(&out->line_modes, &n4, &c3, m->mode ? m->mode : "") != 0) goto oom;
-            if (arr_push(&out->line_names, &n2, &c1,
+            if (arr_push(&out->line_modes, &n_m, &cap_m, m->mode ? m->mode : "") != 0) goto oom;
+            if (arr_push(&out->line_names, &n_n, &cap_n,
                          is_primary ? (m->line_name ? m->line_name : "") : "") != 0) goto oom;
-            if (arr_push(&out->line_refs, &n3, &c2,
+            if (arr_push(&out->line_refs, &n_r, &cap_r,
                          is_primary ? (m->line_ref ? m->line_ref : "") : "") != 0) goto oom;
         }
     }
@@ -799,9 +797,17 @@ typedef struct {
     char  *way_uid;   /* borrowed; may be NULL */
 } seg_t;
 
+/* Cells hold POOL INDICES, not seg_t pointers.
+ *
+ * They used to hold `seg_t *` taken as &ix->pool[ix->pn++] — interior pointers
+ * into a realloc-grown array. At segment #1024 the pool doubles and moves, and
+ * every pointer already stamped into a cell dangles; the snap passes then read
+ * ax/ay/color out of freed memory and strcmp() a freed char*. Any rail network
+ * with more than 1024 coordinate pairs hits this, which is all of them. An
+ * index survives the realloc by construction. */
 typedef struct seg_cell_s {
     long cx, cy;
-    seg_t **segs; int n, cap;
+    int *segs; int n, cap;
     struct seg_cell_s *next;
 } seg_cell_t;
 
@@ -826,7 +832,7 @@ static char *seg_intern(seg_index_t *ix, const char *s) {
     return d;
 }
 
-static int seg_cell_push(seg_index_t *ix, long cx, long cy, seg_t *sg) {
+static int seg_cell_push(seg_index_t *ix, long cx, long cy, int si) {
     unsigned h = cell_hash(cx, cy);
     seg_cell_t *c;
     for (c = ix->b[h]; c; c = c->next)
@@ -838,11 +844,11 @@ static int seg_cell_push(seg_index_t *ix, long cx, long cy, seg_t *sg) {
     }
     if (c->n == c->cap) {
         int nc = c->cap ? c->cap * 2 : 8;
-        seg_t **ns = realloc(c->segs, (size_t)nc * sizeof(seg_t *));
+        int *ns = realloc(c->segs, (size_t)nc * sizeof(int));
         if (!ns) return -1;
         c->segs = ns; c->cap = nc;
     }
-    c->segs[c->n++] = sg;
+    c->segs[c->n++] = si;
     return 0;
 }
 
@@ -895,7 +901,8 @@ static int build_segment_index(seg_index_t *ix, cJSON *lines) {
                 if (!np) return -1;
                 ix->pool = np; ix->pcap = nc;
             }
-            seg_t *sg = &ix->pool[ix->pn++];
+            int si = ix->pn++;
+            seg_t *sg = &ix->pool[si];
             sg->ax = ax; sg->ay = ay; sg->bx = bx; sg->by = by;
             sg->color = color; sg->way_uid = wuid;
 
@@ -903,9 +910,9 @@ static int build_segment_index(seg_index_t *ix, cJSON *lines) {
             long kAy = cell_of(ay, SNAP_CELL_SIZE_DEG);
             long kBx = cell_of(bx, SNAP_CELL_SIZE_DEG);
             long kBy = cell_of(by, SNAP_CELL_SIZE_DEG);
-            if (seg_cell_push(ix, kAx, kAy, sg) != 0) return -1;
+            if (seg_cell_push(ix, kAx, kAy, si) != 0) return -1;
             if (!(kBx == kAx && kBy == kAy))
-                if (seg_cell_push(ix, kBx, kBy, sg) != 0) return -1;
+                if (seg_cell_push(ix, kBx, kBy, si) != 0) return -1;
         }
     }
     return 0;
@@ -981,7 +988,7 @@ static int snap_all_ways_at(seg_index_t *ix, double lon, double lat,
             if (c->cx == qx && c->cy == qy) break;
         if (!c) continue;
         for (int s = 0; s < c->n; s++) {
-            seg_t *sg = c->segs[s];
+            seg_t *sg = &ix->pool[c->segs[s]];
             double sl, sa;
             double dsq = closest_point_on_segment(lon, lat, sg->ax, sg->ay,
                                                   sg->bx, sg->by, &sl, &sa);
@@ -1139,8 +1146,19 @@ static int json_str_array(char **a, int n, char *buf, size_t bufsz) {
     char *s = cJSON_PrintUnformatted(arr);
     cJSON_Delete(arr);
     if (!s) return -1;
-    snprintf(buf, bufsz, "%s", s);
+    /* The truncation has to be an error, not a shrug. member_uids for a large
+     * cluster runs past a 16 KiB buffer, and a cut-off array is bound into the
+     * row as if it were valid JSON — the reader then parses NULL and reports
+     * member_count 0 with no error anywhere. */
+    int need = snprintf(buf, bufsz, "%s", s);
+    int over = (need < 0 || (size_t)need >= bufsz);
     free(s);
+    if (over) {
+        if (bufsz) buf[0] = 0;
+        fprintf(stderr, "[cluster] array of %d entries needs %d bytes, buffer "
+                        "is %zu — row not written\n", n, need, bufsz);
+        return -1;
+    }
     return 0;
 }
 
@@ -1275,7 +1293,11 @@ static int compute_line_dots(db_handle *db, cluster_row_t *rows, int nrows,
                 if (dn == dcap) {
                     int nc = dcap ? dcap * 2 : 64;
                     dot_t *nd = realloc(dots, (size_t)nc * sizeof(dot_t));
-                    if (!nd) { free(snaps); rc = -1; break; }
+                    /* No free(snaps) here: this `break` only leaves the inner
+                     * per-snap loop and drops straight onto the unconditional
+                     * free(snaps) below, so freeing it here made the OOM path
+                     * a double free. */
+                    if (!nd) { rc = -1; break; }
                     dots = nd; dcap = nc;
                 }
                 char wbuf[256];
@@ -1347,8 +1369,15 @@ int station_clusterer_run(db_handle *db) {
                 int  *gs2 = realloc(gsz,    (size_t)nc * sizeof(int));
                 int  *gc2 = realloc(gcap,   (size_t)nc * sizeof(int));
                 if (!ng2 || !gs2 || !gc2) {
-                    free(ng2 ? ng2 : groups);
-                    /* gs2/gc2 freed via originals below */
+                    /* Whichever realloc SUCCEEDED has already freed its old
+                     * block, so the survivors must be adopted before bailing.
+                     * The previous shape freed the new `groups` and left the
+                     * variable holding the stale pointer, which the cleanup
+                     * below then walked and freed a second time — and it leaked
+                     * gs2/gc2 whenever only one of the three failed. */
+                    if (ng2) groups = ng2;
+                    if (gs2) gsz   = gs2;
+                    if (gc2) gcap  = gc2;
                     fail = 1; break;
                 }
                 groups = ng2; gsz = gs2; gcap = gc2; gscap = nc;
@@ -1571,8 +1600,15 @@ static int update_one_station_color(db_handle *db, const char *station_uid,
               -1, &u, NULL) == SQLITE_OK) {
             sqlite3_bind_text(u, 1, np, -1, SQLITE_TRANSIENT);
             sqlite3_bind_text(u, 2, uid, -1, SQLITE_TRANSIENT);
-            if (sqlite3_step(u) == SQLITE_DONE && sqlite3_changes(db->h) > 0)
+            if (sqlite3_step(u) == SQLITE_DONE && sqlite3_changes(db->h) > 0) {
                 changed = 1;
+                /* properties is an INDEXED column (intel_items_fts.props), and
+                 * this UPDATE bypasses intel.c's emit(). Without the re-mirror
+                 * the line colour written here is visible in the detail pane
+                 * and invisible to search until the next collector run
+                 * happens to re-emit the row. */
+                intel_fts_remirror(db, uid);
+            }
             sqlite3_finalize(u);
         }
         free(np);
@@ -1622,7 +1658,7 @@ int station_snap_stations(db_handle *db, const char *mode) {
                 if (c->cx == qx && c->cy == qy) break;
             if (!c) continue;
             for (int t = 0; t < c->n; t++) {
-                seg_t *sg = c->segs[t];
+                seg_t *sg = &ix.pool[c->segs[t]];
                 double dsq = segment_dist_sq_m(lon, lat, sg->ax, sg->ay,
                                                sg->bx, sg->by);
                 if (dsq < bestDsq) { bestDsq = dsq; bestColor = sg->color; }
@@ -1663,6 +1699,13 @@ int station_snap_stations(db_handle *db, const char *mode) {
             U[un].uid = dup_or_null(sta[s].uid);
             U[un].color = dup_or_null(bestColor);
             U[un].colors = malloc((size_t)(keep > 0 ? keep : 1) * sizeof(char *));
+            /* Unchecked, this was a NULL deref one line down: the loop writes
+             * into U[un].colors[i] unconditionally, and un has not been
+             * incremented yet, so this slot's uid/color would never reach the
+             * station_oom cleanup loop (which only walks i < un) — free them
+             * here before bailing. */
+            if (!U[un].colors) { free(U[un].uid); free(U[un].color);
+                                  free(CB); goto station_oom; }
             U[un].ncolors = keep;
             for (int i = 0; i < keep; i++) U[un].colors[i] = dup_or_null(CB[i].c);
             un++;

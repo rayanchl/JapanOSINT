@@ -1,0 +1,168 @@
+{
+ "gnews-us-business": [
+  "gnews-hr-business",
+  "gnews-ir-business",
+  "gnews-is-business",
+  "gnews-kh-business",
+  "gnews-lk-business",
+  "gnews-mm-business",
+  "gnews-np-business"
+ ],
+ "gnews-eg-world": [
+  "gnews-dz-world",
+  "gnews-iq-world",
+  "gnews-jo-world",
+  "gnews-kw-world",
+  "gnews-ma-world",
+  "gnews-qa-world",
+  "gnews-tn-world"
+ ],
+ "gnews-eg-business": [
+  "gnews-dz-business",
+  "gnews-iq-business",
+  "gnews-jo-business",
+  "gnews-kw-business",
+  "gnews-ma-business",
+  "gnews-qa-business",
+  "gnews-tn-business"
+ ],
+ "gnews-hr-world": [
+  "gnews-ir-world",
+  "gnews-is-world",
+  "gnews-kh-world",
+  "gnews-lk-world",
+  "gnews-mm-world",
+  "gnews-np-world"
+ ],
+ "gnews-no-world": [
+  "gnews-dk-world"
+ ],
+ "gnews-bo-world": [
+  "gnews-cr-world",
+  "gnews-do-world",
+  "gnews-ec-world",
+  "gnews-gt-world",
+  "gnews-pa-world",
+  "gnews-py-world",
+  "gnews-uy-world"
+ ],
+ "gnews-bo-business": [
+  "gnews-cr-business",
+  "gnews-do-business",
+  "gnews-ec-business",
+  "gnews-gt-business",
+  "gnews-pa-business",
+  "gnews-py-business",
+  "gnews-uy-business"
+ ],
+ "gnews-am-world": [
+  "gnews-az-world",
+  "gnews-kz-world",
+  "gnews-uz-world"
+ ],
+ "gnews-am-business": [
+  "gnews-az-business",
+  "gnews-kz-business",
+  "gnews-uz-business"
+ ],
+ "gnews-us-technology": [
+  "gnews-hr-technology",
+  "gnews-ir-technology",
+  "gnews-is-technology",
+  "gnews-kh-technology",
+  "gnews-lk-technology",
+  "gnews-mm-technology",
+  "gnews-np-technology"
+ ],
+ "gnews-us-science": [
+  "gnews-hr-science",
+  "gnews-ir-science",
+  "gnews-is-science",
+  "gnews-kh-science",
+  "gnews-lk-science",
+  "gnews-mm-science",
+  "gnews-np-science"
+ ],
+ "gnews-ru-health": [
+  "gnews-am-health",
+  "gnews-az-health",
+  "gnews-kz-health",
+  "gnews-uz-health"
+ ],
+ "gnews-eg-technology": [
+  "gnews-dz-technology",
+  "gnews-iq-technology",
+  "gnews-jo-technology",
+  "gnews-kw-technology",
+  "gnews-ma-technology",
+  "gnews-qa-technology",
+  "gnews-tn-technology"
+ ],
+ "gnews-eg-science": [
+  "gnews-dz-science",
+  "gnews-iq-science",
+  "gnews-jo-science",
+  "gnews-kw-science",
+  "gnews-ma-science",
+  "gnews-qa-science",
+  "gnews-tn-science"
+ ],
+ "gnews-eg-health": [
+  "gnews-dz-health",
+  "gnews-iq-health",
+  "gnews-jo-health",
+  "gnews-kw-health",
+  "gnews-ma-health",
+  "gnews-qa-health",
+  "gnews-tn-health"
+ ],
+ "gnews-hr-health": [
+  "gnews-ir-health",
+  "gnews-is-health",
+  "gnews-kh-health",
+  "gnews-lk-health",
+  "gnews-mm-health",
+  "gnews-np-health"
+ ],
+ "gnews-no-science": [
+  "gnews-dk-science"
+ ],
+ "gnews-no-health": [
+  "gnews-dk-health"
+ ],
+ "gnews-bo-technology": [
+  "gnews-cr-technology",
+  "gnews-do-technology",
+  "gnews-ec-technology",
+  "gnews-gt-technology",
+  "gnews-pa-technology",
+  "gnews-py-technology",
+  "gnews-uy-technology"
+ ],
+ "gnews-cr-science": [
+  "gnews-do-science",
+  "gnews-ec-science",
+  "gnews-gt-science",
+  "gnews-pa-science",
+  "gnews-py-science",
+  "gnews-uy-science"
+ ],
+ "gnews-bo-health": [
+  "gnews-cr-health",
+  "gnews-do-health",
+  "gnews-ec-health",
+  "gnews-gt-health",
+  "gnews-pa-health",
+  "gnews-py-health",
+  "gnews-uy-health"
+ ],
+ "gnews-am-technology": [
+  "gnews-az-technology",
+  "gnews-kz-technology",
+  "gnews-uz-technology"
+ ],
+ "gnews-am-science": [
+  "gnews-az-science",
+  "gnews-uz-science"
+ ]
+}

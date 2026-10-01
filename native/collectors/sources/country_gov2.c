@@ -2,9 +2,9 @@
  * OSINT service — UK Parliament members search (keyless), pivot on ctx->entity
  * (a name). Honest-empty on failure.
  *   UK_PARLIAMENT  members-api.parliament.uk/api/Members/Search?Name= */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

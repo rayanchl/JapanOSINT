@@ -19,13 +19,13 @@ struct CameraPopup: View {
                 header
                 PopupSectionHeader("Camera feed", icon: "video.fill")
                 CameraFeedView(
-                    directSnapshotURLString: directSnapshotURLString,
-                    pageURLString: pageURLString,
-                    youtubeID: youtubeID,
-                    hlsURLString: hlsURLString,
-                    discoveryChannel: discoveryChannel,
-                    cameraUID: cameraUID,
-                    originalPageURLString: originalPageURLString,
+                    directSnapshotURLString: fields.directSnapshotURL,
+                    pageURLString: fields.pageURL,
+                    youtubeID: fields.youtubeID,
+                    hlsURLString: fields.hlsURL,
+                    discoveryChannel: fields.discoveryChannel,
+                    cameraUID: fields.cameraUID,
+                    originalPageURLString: fields.originalPageURL,
                     style: .full,
                     showsHeader: true
                 )
@@ -111,82 +111,20 @@ struct CameraPopup: View {
 
     // MARK: - URL resolution
 
-    private var directSnapshotURLString: String? {
-        for key in ["thumbnail_url", "snapshot_url", "image", "thumbnail", "photo"] {
-            if let raw = feature.properties[key]?.value as? String, !raw.isEmpty {
-                return raw
-            }
-        }
-        return nil
+    /// Shared with `IntelDetail` — see `CameraFeedFields`.
+    private var fields: CameraFeedFields {
+        CameraFeedFields(properties: feature.properties)
     }
 
     private var pageURL: URL? {
-        pageURLString.flatMap { URL(string: $0) }
-    }
-
-    private var pageURLString: String? {
-        for key in ["url", "source_url", "page_url", "embed_url", "link"] {
-            if let raw = feature.properties[key]?.value as? String, !raw.isEmpty {
-                return raw
-            }
-        }
-        return nil
-    }
-
-    private var youtubeID: String? {
-        (feature.properties["youtube_id"]?.value as? String).flatMap {
-            $0.isEmpty ? nil : $0
-        }
-    }
-
-    private var hlsURLString: String? {
-        (feature.properties["hls_url"]?.value as? String).flatMap {
-            $0.isEmpty ? nil : $0
-        }
-    }
-
-    private var cameraUID: String? {
-        (feature.properties["camera_uid"]?.value as? String).flatMap {
-            $0.isEmpty ? nil : $0
-        }
-    }
-
-    /// Original aggregator page URL — set by the server when the camera URL
-    /// was upgraded (e.g. scs.com.ua → YouTube channel-live). Surfaced so
-    /// `CameraFeedView` can fall back to a snapshot of this page when the
-    /// upgraded iframe target fails to render.
-    private var originalPageURLString: String? {
-        (feature.properties["original_page_url"]?.value as? String).flatMap {
-            $0.isEmpty ? nil : $0
-        }
-    }
-
-    /// `discovery_channels` is JSON-encoded as either a `[String]` or a single
-    /// string by the cameras GeoJSON serializer. Take the first entry.
-    private var discoveryChannel: String? {
-        if let arr = feature.properties["discovery_channels"]?.value as? [Any],
-           let first = arr.first as? String, !first.isEmpty {
-            return first
-        }
-        if let s = feature.properties["discovery_channels"]?.value as? String, !s.isEmpty {
-            return s
-        }
-        if let s = feature.properties["discovery_channel"]?.value as? String, !s.isEmpty {
-            return s
-        }
-        return nil
+        fields.pageURL.flatMap { URL(string: $0) }
     }
 
     private var metadataKeys: [String] {
         // Keys already surfaced elsewhere (header, feed image, snapshot URL)
         // or that are internal identifiers users don't care about.
-        let consumed: Set<String> = [
-            "url", "source_url", "page_url", "embed_url", "link",
-            "original_page_url",
-            "snapshot_url", "thumbnail_url", "image", "thumbnail", "photo",
-            "icon", "name", "name_ja", "title", "camera_uid",
-            "youtube_id", "hls_url", "discovery_channels", "discovery_channel",
-        ]
+        let consumed = CameraFeedFields.consumedKeys
+            .union(["icon", "name", "name_ja", "title"])
         return feature.properties.keys.filter { !consumed.contains($0) }.sorted()
     }
 

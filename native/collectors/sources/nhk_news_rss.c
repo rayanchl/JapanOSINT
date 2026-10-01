@@ -1,6 +1,6 @@
 /* port of server/src/collectors/nhkNewsRss.js */
-#include "../../source.h"
-#include "../../lib/rss_atom.h"
+#include "source.h"
+#include "lib/rss_atom.h"
 static int run(const source_ctx *c, intel_sink *s) {
   return rss_collect(c, s, "https://www3.nhk.or.jp/rss/news/cat0.xml",
                      "ja", "[\"news\",\"nhk\"]") >= 0 ? 0 : -1; }

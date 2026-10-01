@@ -5,9 +5,9 @@
  * json.data[] → Point features (geometry null if lat/lon not finite).
  * Key-gated: no QUAKE_API_KEY → 0 rows (mirrors JS quake_no_key).
  */
-#include "../../source.h"
-#include "../../lib/geojson.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/geojson.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

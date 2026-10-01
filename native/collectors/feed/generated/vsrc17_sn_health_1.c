@@ -1,0 +1,15 @@
+/* Verified-live sn_health sources (1), part 1.
+ * Every endpoint in this file returned 2xx and parsed to at
+ * least one record at generation time; see
+ * docs/verified-sources-manifest.tsv for the recorded proof.
+ * Scaffolded once by collectors/gen_verified_sources.py; HAND-MAINTAINED
+ * since — this file, not the manifest, is the current copy. The
+ * generator refuses to overwrite it without --force. */
+#include "_verified_macros.inc"
+
+VJSON(dhs_data_sn, "dhs-data-sn", "DHS Program indicator data - Senegal", "DHS Program indicator data - Senegal",
+  "sn_health", "health",
+  "https://api.dhsprogram.com/rest/dhs/data?countryIds=SN&f=json&perpage=100",
+  "data",
+  "en", "[\"sn\",\"health\",\"batch17\",\"high-penetrancy\"]", 43200,
+  "DHS observations for Senegal: indicator label, value, survey id and year, characteristic category. Senegal has a long continuous-DHS series.");

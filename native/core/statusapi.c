@@ -1,8 +1,11 @@
 #include "statusapi.h"
+#include "intelapi.h"           /* intelapi_is_intel_id — INTEL_SOURCE_IDS */
 #include "source_registry.h"
 #include "source_trust.h"
 #include "breach_meta.h"
 #include "credtab.h"
+#include "httpclient.h"       /* the probe fetch — hostgated, protocol-pinned */
+#include "../source.h"        /* registry_get — the probe URL comes from the registry */
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
 #include <stdio.h>
@@ -26,9 +29,16 @@ static void add_num_or_null(cJSON *o, const char *k, sqlite3_stmt *s, int i) {
 static void iso_now(char *buf, size_t n) {
   struct timeval tv; gettimeofday(&tv, NULL);
   struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  snprintf(buf, n, "%04d-%02d-%02dT%02d:%02d:%02d.%03dZ",
-           tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
-           tm.tm_hour, tm.tm_min, tm.tm_sec, (int)(tv.tv_usec / 1000));
+  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
+   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
+   * fixed 24-char stamp "may be truncated". The modulos are identity for
+   * every value gmtime_r can return and make the 24 provable, not merely
+   * true. */
+  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
+           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
+           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
+           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
+           (unsigned)(tv.tv_usec / 1000) % 1000u);
 }
 /* The Node entrypoint runs applyOverlayToEnv() (apiKeysStore.js) BEFORE the
  * routes load: every non-empty string in data/api-keys.json (the iOS
@@ -36,7 +46,7 @@ static void iso_now(char *buf, size_t n) {
  * getCredentialStatus then reads process.env. To match byte-for-byte we
  * resolve the same way: overlay non-empty string wins, else getenv. */
 #ifndef JO_REPO_ROOT
-#define JO_REPO_ROOT "/Users/rayan/JapanOSINT"
+#define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
 #endif
 static cJSON *g_overlay;     /* loaded once; NULL if absent/unparseable */
 static int g_overlay_done;
@@ -50,6 +60,7 @@ static void overlay_load(void) {
   fseek(f, 0, SEEK_END); long n = ftell(f); fseek(f, 0, SEEK_SET);
   if (n > 0 && n < (1 << 20)) {
     char *buf = malloc(n + 1);
+    if (!buf) { fclose(f); return; }
     if (fread(buf, 1, n, f) == (size_t)n) {
       buf[n] = 0;
       cJSON *j = cJSON_Parse(buf);
@@ -81,8 +92,23 @@ static int env_set(const char *name) {
 static int add_cred_status(cJSON *o, const char *id) {
   const cred_def *e = cred_get(id);
   if (!e) {
-    cJSON_AddBoolToObject(o, "requiresKey", 0);
-    cJSON_AddBoolToObject(o, "configured", 1);
+    /* NO RECORD IS NOT THE SAME AS NO REQUIREMENT.
+     *
+     * This used to answer requiresKey:0, configured:1 — asserting as fact that
+     * the source needs no credential and is ready to run. credtab.c covers a
+     * fraction of the 9,681 registered sources, so that assertion was made for
+     * thousands of sources nobody had ever classified, including 88 collectors
+     * that DO gate on a credential and 32 of those that are scheduled and
+     * therefore no-op on every tick. It also made the dashboard's "needs key"
+     * filter structurally unable to surface any of them.
+     *
+     * null is the honest answer: we do not know. House rule 1 — a failure to
+     * determine something degrades to an explicit unknown, never to invented
+     * content. `credentialStatus` names the reason in-band so a client can
+     * distinguish "no key needed" from "never classified". */
+    cJSON_AddNullToObject(o, "requiresKey");
+    cJSON_AddNullToObject(o, "configured");
+    cJSON_AddStringToObject(o, "credentialStatus", "unknown");
     cJSON_AddItemToObject(o, "envVars", cJSON_CreateArray());
     cJSON_AddItemToObject(o, "missingVars", cJSON_CreateArray());
     return 0;
@@ -133,7 +159,33 @@ static int add_cred_status(cJSON *o, const char *id) {
   return requiresKey;
 }
 
-/* ── layers.js STRIP_LAYER_IDS (static list + intelCatalog INTEL_SOURCE_IDS) */
+/* ── layers.js STRIP_LAYER_IDS.
+ *
+ * Node's set was STRIP_LAYER_IDS ∪ intelCatalog's INTEL_SOURCE_IDS, and the
+ * port inlined a verbatim copy of the second half here — 34 ids duplicated
+ * byte-for-byte with intelapi.c's INTEL_IDS. Two copies, two places to update,
+ * and both had drifted identically: boj-stats / jcg-navarea / nict-atlas name
+ * collectors deleted in the 66-source removal sweep. The copy is gone;
+ * statusapi_strip_has() below unions this list with intelapi_is_intel_id(), so
+ * the membership test is unchanged and there is now one definition of each
+ * half. */
+/* 2026-08: THE THEMATIC BLOCK IS RETIRED. This list used to also hide the
+ * multi-source thematic layer ids — transport, cyber, social, satellite,
+ * infrastructure, radar, river, telecom, energy, crime, economy, health,
+ * population, hazard, basemap, elevation, geocode, landuse, poi,
+ * admin-boundaries, news-feed, ocean, emergency, warnings, classifieds —
+ * which meant every source declaring one of them was invisible in
+ * /api/status AND its layer invisible in /api/layers: fetched, stored,
+ * unreachable. Those ids are now REAL layers, owned by the curated taxonomy
+ * in core/layers.def (data_type + modality declared per layer) or surfaced
+ * as declared layers; hiding them again would contradict the whole point of
+ * that table. What remains stripped is only the provider/plumbing tier:
+ * sources folded into unified-* parents (a member listed both inside its
+ * parent and as its own layer would double-serve its rows) and the sweep
+ * sub-layers sweepapi serves under the unified ids. core/layertab.c consults
+ * this same set when honouring a source's declared `.layer`, so nothing can
+ * resolve INTO a stripped id — a source whose declared layer is stripped
+ * falls to the generated catch-all instead of vanishing. */
 static const char *STRIP[] = {
   "osm-transport-trains","osm-transport-subways","osm-transport-buses",
   "osm-transport-ports","mlit-n02-stations","mlit-n07-bus-routes",
@@ -141,29 +193,14 @@ static const char *STRIP[] = {
   "maritime","maritime-ais","marine-traffic","vessel-finder",
   "aviation","narita-flights","haneda-flights","flight-adsb",
   "camera-discovery",
-  "transport","cyber","social","satellite","infrastructure",
-  "radar","river","telecom","energy","crime","economy",
-  "health","population","hazard","basemap","elevation","geocode",
-  "landuse","poi","admin-boundaries","news-feed","ocean",
-  "emergency","warnings","classifieds",
   "unified-station-footprints","unified-stations","bus-routes",
   "highway-traffic","jartic-traffic",
-  /* ...INTEL_SOURCE_IDS */
-  "certstream-jp","bird-makeup-jp","chan-5ch","fofa-jp",
-  "github-leaks-jp","grayhat-buckets","greynoise-jp","hatena-bookmark",
-  "houjin-bangou","mercari-trending","misskey-timeline","note-com-trending",
-  "urlscan-jp","wayback-jp",
-  "edinet-filings","boj-stats","data-go-jp-ckan","egov-laws",
-  "geospatial-jp-ckan","kyodo-rss","nhk-world-rss","jcg-navarea","nict-atlas",
-  "ripestat-jp","wifi-hotspots-jcfw","wifi-hotspots-freespot",
-  "jp-news-rss","nhk-news-rss","yahoo-news-jp-rss","ipa-alerts",
-  "jpcert-alerts","phishing-feeds-jp","sans-isc-feeds","my-jvn",
 };
 int statusapi_strip_has(const char *id) {
   if (!id) return 0;
   for (size_t i = 0; i < sizeof STRIP / sizeof *STRIP; i++)
     if (strcmp(STRIP[i], id) == 0) return 1;
-  return 0;
+  return intelapi_is_intel_id(id);   /* ...∪ INTEL_SOURCE_IDS (intelapi.c) */
 }
 
 /* listSources() aggregates keyed by source_id (status uses item_count,
@@ -172,10 +209,83 @@ typedef struct {
   char src[256]; long ic, gc, uc, ag; char lf[64]; int has_lf;
 } agg_t;
 
+/* ── health-driven scheduling state (core/scheduler.c) ───────────────────
+ * Loaded once per build, like load_aggs(): one SELECT, not one per row. */
+typedef struct {
+  char src[256]; int failures, empties, quarantined; long effective; long long backoff_until;
+} sched_t;
+
+static sched_t *load_sched(db_handle *db, int *out_n) {
+  *out_n = 0;
+  sqlite3_stmt *s;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT source_id,consecutive_failures,consecutive_empties,quarantined,"
+        "effective_interval,backoff_until FROM source_sched_state",
+        -1, &s, NULL) != SQLITE_OK) return NULL;
+  int cap = 64, n = 0;
+  sched_t *S = malloc((size_t)cap * sizeof *S);
+  if (!S) { sqlite3_finalize(s); return NULL; }
+  while (sqlite3_step(s) == SQLITE_ROW) {
+    if (n == cap) {
+      sched_t *NS = realloc(S, (size_t)cap * 2 * sizeof *S);
+      if (!NS) break;
+      S = NS; cap *= 2;
+    }
+    sched_t *r = &S[n++];
+    snprintf(r->src, sizeof r->src, "%s", (const char *)sqlite3_column_text(s,0));
+    r->failures    = sqlite3_column_int(s,1);
+    r->empties     = sqlite3_column_int(s,2);
+    r->quarantined = sqlite3_column_int(s,3);
+    r->effective   = (long)sqlite3_column_int64(s,4);
+    r->backoff_until = sqlite3_column_type(s,5) == SQLITE_NULL
+                         ? 0 : sqlite3_column_int64(s,5);
+  }
+  sqlite3_finalize(s);
+  *out_n = n;
+  return S;
+}
+
+static void iso_epoch(long long t, char *buf, size_t n) {
+  time_t tt = (time_t)t; struct tm tm; gmtime_r(&tt, &tm);
+  strftime(buf, n, "%Y-%m-%dT%H:%M:%SZ", &tm);
+}
+
+/* The `sched` object on a status row. Two quarantines are reported side by
+ * side because they are two different claims: `quarantined` is the scheduler's
+ * own health verdict (N consecutive failed fetches; clears itself on the first
+ * good probe), `repairQuarantined` is the repair pod's breaker on the collector
+ * code (sources.quarantined_until; cleared by an operator or by time). A row
+ * with no state yet (never run since the table existed) says so with
+ * `tracked:false` and a null effectiveInterval rather than inventing zeros. */
+static cJSON *sched_obj(const sched_t *S, int ns, const char *id,
+                        const src_meta *m, int repair_q, time_t now) {
+  const sched_t *r = NULL;
+  for (int k = 0; k < ns; k++) if (strcmp(S[k].src, id) == 0) { r = &S[k]; break; }
+  cJSON *o = cJSON_CreateObject();
+  cJSON_AddBoolToObject(o, "tracked", r != NULL);
+  cJSON_AddItemToObject(o, "declaredInterval",
+    (m && m->update_interval > 0) ? cJSON_CreateNumber((double)m->update_interval)
+                                  : cJSON_CreateNull());
+  cJSON_AddItemToObject(o, "effectiveInterval",
+    r ? cJSON_CreateNumber((double)r->effective) : cJSON_CreateNull());
+  cJSON_AddNumberToObject(o, "consecutiveFailures", r ? r->failures : 0);
+  cJSON_AddNumberToObject(o, "consecutiveEmpties",  r ? r->empties  : 0);
+  int backed = r && r->backoff_until > (long long)now;
+  cJSON_AddBoolToObject(o, "backedOff", backed);
+  if (backed) {
+    char ts[32]; iso_epoch(r->backoff_until, ts, sizeof ts);
+    cJSON_AddStringToObject(o, "backoffUntil", ts);
+  } else cJSON_AddNullToObject(o, "backoffUntil");
+  cJSON_AddBoolToObject(o, "quarantined", r && r->quarantined);
+  cJSON_AddBoolToObject(o, "repairQuarantined", repair_q);
+  return o;
+}
+
 /* serializeRow(row,reg,creds,intelAgg) — `s` must be stepped to a row of the
  * 19-col sources query below; `A`/`na` the intel-aggregate table. */
 static cJSON *status_row(sqlite3_stmt *s, agg_t *A, int na,
-                         const source_trust *TT, int nt) {
+                         const source_trust *TT, int nt,
+                         const sched_t *S, int ns, time_t now) {
   const char *id = ctext(s,0);
   const src_meta *m = src_meta_get(id);
   const char *status = ctext(s,5);
@@ -251,6 +361,20 @@ static cJSON *status_row(sqlite3_stmt *s, agg_t *A, int na,
       cJSON_AddItemToObject(tr,"grade", cJSON_CreateNull());
     }
     cJSON_AddItemToObject(o,"trust", tr);
+    /* repair-pod quarantine is what trust already reads off sources.quarantined_until;
+     * an unrated source has no trust row, so fall back to the column itself. */
+    int repair_q = t ? t->quarantined : 0;
+    if (!t) {
+      sqlite3_stmt *qs;
+      if (sqlite3_prepare_v2(sqlite3_db_handle(s),
+            "SELECT 1 FROM sources WHERE id=?1 AND quarantined_until IS NOT NULL"
+            " AND quarantined_until>datetime('now') LIMIT 1", -1, &qs, NULL) == SQLITE_OK) {
+        sqlite3_bind_text(qs, 1, id, -1, SQLITE_TRANSIENT);
+        repair_q = sqlite3_step(qs) == SQLITE_ROW;
+        sqlite3_finalize(qs);
+      }
+    }
+    cJSON_AddItemToObject(o,"sched", sched_obj(S, ns, id, m, repair_q, now));
   }
 
   add_str_or_null(o,"probeRequestUrl", ctext(s,11));
@@ -273,14 +397,10 @@ static cJSON *status_row(sqlite3_stmt *s, agg_t *A, int na,
  * "not applicable". recordsCount falls back to the catalog's account count so
  * the row is informative before any ingest has run. */
 static cJSON *breach_status_row(const breach_src_row *br) {
-  long long count = br->item_count > 0 ? br->item_count : br->pwn_count;
-  const char *fresh = br->last_seen[0]  ? br->last_seen
-                    : br->added_date[0] ? br->added_date : NULL;
-
+  long long count = 0;
+  const char *fresh = NULL;
   char desc[192];
-  snprintf(desc, sizeof desc, "%lld accounts%s%s", br->pwn_count,
-           br->breach_date[0] ? " \xc2\xb7 breached " : "",
-           br->breach_date[0] ? br->breach_date : "");
+  breach_meta_display(br, &count, &fresh, desc, sizeof desc);
 
   cJSON *o = cJSON_CreateObject();
   add_str_or_null(o, "id", br->breach_id);
@@ -320,6 +440,8 @@ static cJSON *breach_status_row(const breach_src_row *br) {
   cJSON_AddNullToObject(tr, "reliability");
   cJSON_AddNullToObject(tr, "grade");
   cJSON_AddItemToObject(o, "trust", tr);
+  /* not a scheduled collector: tracked:false, everything null/0 */
+  cJSON_AddItemToObject(o, "sched", sched_obj(NULL, 0, br->breach_id, NULL, 0, 0));
 
   cJSON_AddNullToObject(o, "probeRequestUrl");
   cJSON_AddNullToObject(o, "probeRequestMethod");
@@ -351,8 +473,14 @@ static agg_t *load_aggs(db_handle *db, int *out_n) {
   if (sqlite3_prepare_v2(db->h, AQ, -1, &s, NULL) != SQLITE_OK) return NULL;
   int cap = 64, n = 0;
   agg_t *A = malloc(cap * sizeof *A);
+  if (!A) { sqlite3_finalize(s); return NULL; }
   while (sqlite3_step(s) == SQLITE_ROW) {
-    if (n == cap) { cap *= 2; A = realloc(A, cap * sizeof *A); }
+    /* unchecked realloc leaked the old block and then wrote through NULL */
+    if (n == cap) {
+      agg_t *NA = realloc(A, (size_t)cap * 2 * sizeof *A);
+      if (!NA) break;
+      A = NA; cap *= 2;
+    }
     agg_t *r = &A[n++];
     snprintf(r->src, sizeof r->src, "%s", (const char *)sqlite3_column_text(s,0));
     r->ic = sqlite3_column_int64(s,1); r->gc = sqlite3_column_int64(s,2);
@@ -368,37 +496,65 @@ static agg_t *load_aggs(db_handle *db, int *out_n) {
 
 /* GET /api/status/:id — single serializeRow, or NULL if no such source. */
 char *statusapi_one(db_handle *db, const char *id) {
-  int na = 0, nt = 0;
+  int na = 0, nt = 0, ns = 0;
   agg_t *A = load_aggs(db, &na);
   source_trust *TT = source_trust_load(db, &nt);
+  sched_t *S = load_sched(db, &ns);
+  time_t now = time(NULL);
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h, STATUS_SRC_COLS " WHERE id=?1", -1, &s, NULL)
-      != SQLITE_OK) { free(A); free(TT); return NULL; }
+      != SQLITE_OK) { free(A); free(TT); free(S); return NULL; }
   sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
   char *js = NULL;
   if (sqlite3_step(s) == SQLITE_ROW) {
-    cJSON *o = status_row(s, A, na, TT, nt);
+    cJSON *o = status_row(s, A, na, TT, nt, S, ns, now);
     js = cJSON_PrintUnformatted(o);
     cJSON_Delete(o);
   }
   sqlite3_finalize(s);
   free(A);
   free(TT);
+  free(S);
   return js;
 }
 
 char *statusapi_build(db_handle *db, int include_breach) {
-  int na = 0, nt = 0;
+  return statusapi_build_view(db, include_breach, 0, 0, 0);
+}
+
+/* The bounded form. `limit <= 0` means "every row", which is what
+ * statusapi_build() asks for and what both clients still get by default.
+ *
+ * The rows outside the window are still BUILT — the summary tallies are read
+ * back off each row object, so skipping construction would change the numbers —
+ * and then freed instead of printed. That is the half worth skipping: measured
+ * 2026-09-11, this payload is 20.5 MB and ~8 s, and serialising it is most of
+ * both. A caller that wants the counters and not the catalogue (`summary_only`)
+ * pays neither.
+ *
+ * Whatever is left out is stated in `view`, never silently dropped: total,
+ * shown, offset, limit, truncated. House rule 2 — a bounded view that does not
+ * announce its bound is the violation. */
+char *statusapi_build_view(db_handle *db, int include_breach,
+                           int limit, int offset, int summary_only) {
+  int na = 0, nt = 0, ns = 0;
+  if (offset < 0) offset = 0;
+  if (summary_only) limit = 0;            /* nothing kept; `view` says so */
+  int row_idx = 0, kept = 0;
+  const int windowed = (summary_only || limit > 0);
   agg_t *A = load_aggs(db, &na);
   source_trust *TT = source_trust_load(db, &nt);
+  sched_t *S = load_sched(db, &ns);
+  time_t now = time(NULL);
   sqlite3_stmt *s;
   /* getAllSources(): SELECT * FROM sources ORDER BY category, name */
   if (sqlite3_prepare_v2(db->h, STATUS_SRC_COLS " ORDER BY category, name",
-                         -1, &s, NULL) != SQLITE_OK) { free(A); free(TT); return NULL; }
+                         -1, &s, NULL) != SQLITE_OK) { free(A); free(TT); free(S); return NULL; }
 
   cJSON *apis = cJSON_CreateArray();
   int c_total=0,c_online=0,c_degraded=0,c_offline=0,c_pending=0,c_gated=0,
-      c_reqkey=0,c_configured=0,c_missing=0,c_working=0;
+      c_reqkey=0,c_configured=0,c_missing=0,c_working=0,
+      c_backed=0,c_hquar=0,c_rquar=0;
 
   while (sqlite3_step(s) == SQLITE_ROW) {
     const char *id = ctext(s,0);
@@ -406,8 +562,17 @@ char *statusapi_build(db_handle *db, int include_breach) {
     if (statusapi_strip_has(id)) continue;
     if (m && statusapi_strip_has(m->layer)) continue;
 
-    cJSON *o = status_row(s, A, na, TT, nt);
-    cJSON_AddItemToArray(apis, o);
+    cJSON *o = status_row(s, A, na, TT, nt, S, ns, now);
+    int in_window = !windowed ||
+                    (!summary_only && row_idx >= offset && kept < limit);
+    row_idx++;
+    if (in_window) { cJSON_AddItemToArray(apis, o); kept++; }
+    {
+      cJSON *sc = cJSON_GetObjectItem(o,"sched");
+      if (cJSON_IsTrue(cJSON_GetObjectItem(sc,"quarantined")))      c_hquar++;
+      else if (cJSON_IsTrue(cJSON_GetObjectItem(sc,"backedOff")))   c_backed++;
+      if (cJSON_IsTrue(cJSON_GetObjectItem(sc,"repairQuarantined"))) c_rquar++;
+    }
 
     /* summary tallies (mirrors status.js filters) — read back from `o` */
     const char *status = ctext(s,5);
@@ -428,10 +593,14 @@ char *statusapi_build(db_handle *db, int include_breach) {
     if (requiresKey && configured) c_configured++;
     if (requiresKey && !configured) c_missing++;
     if (!gated && isOnline && (!requiresKey || configured)) c_working++;
+    /* Outside the window the row has done its job (the tallies above read it)
+     * and is dropped here rather than serialised. */
+    if (!in_window) cJSON_Delete(o);
   }
   sqlite3_finalize(s);
   free(A);
   free(TT);
+  free(S);
 
   /* Breach catalog rows, appended for operators only. They tally into the
    * ordinary status counters like any other row, plus their own two totals. */
@@ -444,7 +613,12 @@ char *statusapi_build(db_handle *db, int include_breach) {
        * the same guard intelapi_intel_sources() applies. */
       if (src_meta_get(B[k].breach_id)) continue;
 
-      cJSON_AddItemToArray(apis, breach_status_row(&B[k]));
+      {
+        int in_window = !windowed ||
+                        (!summary_only && row_idx >= offset && kept < limit);
+        row_idx++;
+        if (in_window) { cJSON_AddItemToArray(apis, breach_status_row(&B[k])); kept++; }
+      }
       c_total++;
       c_breach++;
       if (B[k].item_count > 0) { c_online++; c_working++; c_breach_mat++; }
@@ -468,13 +642,192 @@ char *statusapi_build(db_handle *db, int include_breach) {
    * them without treating absence as a distinct case. */
   cJSON_AddNumberToObject(summary,"breachTotal", c_breach);
   cJSON_AddNumberToObject(summary,"breachMaterialized", c_breach_mat);
+  /* Health-driven scheduling totals (core/scheduler.c). `schedQuarantined` is
+   * the scheduler's own quarantine, `repairQuarantined` the repair pod's; a
+   * source can be in both, so they are not summed. */
+  cJSON_AddNumberToObject(summary,"schedBackedOff", c_backed);
+  cJSON_AddNumberToObject(summary,"schedQuarantined", c_hquar);
+  cJSON_AddNumberToObject(summary,"repairQuarantined", c_rquar);
 
   char ts[40]; iso_now(ts, sizeof ts);
   cJSON *env = cJSON_CreateObject();
   cJSON_AddItemToObject(env,"summary", summary);
   cJSON_AddItemToObject(env,"apis", apis);
+  /* What this response is showing, out of what exists. Always present — a
+   * client must not have to infer from an array length whether it received the
+   * whole catalogue, and `summary.total` counts rows the window may have
+   * excluded, so the two numbers genuinely differ. */
+  {
+    cJSON *view = cJSON_CreateObject();
+    cJSON_AddNumberToObject(view, "total", row_idx);
+    cJSON_AddNumberToObject(view, "shown", windowed ? kept : row_idx);
+    cJSON_AddNumberToObject(view, "offset", offset);
+    cJSON_AddNumberToObject(view, "limit", limit);
+    cJSON_AddBoolToObject(view, "truncated", windowed && kept < row_idx);
+    cJSON_AddStringToObject(view, "note",
+      summary_only ? "summary only: counters describe every source; apis[] was "
+                     "not built (?summary=1). Drop the parameter for the rows."
+      : windowed   ? "a page of the source catalogue; summary counters still "
+                     "describe every source. Use ?offset= to walk the rest."
+                   : "every registered source (no ?limit given)");
+    cJSON_AddItemToObject(env, "view", view);
+  }
   cJSON_AddStringToObject(env,"timestamp", ts);
   char *js = cJSON_PrintUnformatted(env);
   cJSON_Delete(env);
   return js;
+}
+
+/* ── probe ─────────────────────────────────────────────────────────────────
+ *
+ * The `probe_*` columns and `probe_consent` have been in the schema — and read
+ * by status_row() above — since the Node port, but NOTHING in the tree ever
+ * wrote them. They were read-only scaffolding: every value was permanently
+ * NULL, `probeConsent` permanently 0, and the iOS client's two probe controls
+ * called routes that did not exist. This is the writer.
+ *
+ * WHAT A PROBE IS. One GET of the source's OWN registered endpoint
+ * (source_def.url — a compile-time constant, never anything the caller
+ * supplies), recording what went out and what came back. It answers "is this
+ * source's endpoint reachable, and what does it actually say" without running
+ * the collector or writing a single intel row.
+ *
+ * WHY IT IS NOT AN SSRF PRIMITIVE. The URL is not attacker-influenced: it is
+ * looked up from the registry by id, and the fetch goes through
+ * http_request(), which applies hostgate's URL check, the protocol pins and
+ * the per-hop peer re-check. A caller can choose WHICH registered source to
+ * probe, never WHERE the request goes.
+ *
+ * WHAT IS STORED, AND WHY IT IS SAFE TO SERVE. status_row() exposes
+ * probeRequestHeaders and probeResponseBody to any authenticated reader, so a
+ * probe must never capture a credential. It does not: the probe deliberately
+ * sends NO collector auth headers — only a User-Agent — and that is exactly
+ * what gets recorded, so the stored request headers are a constant. The body
+ * is a bounded, control-character-scrubbed snippet of a public endpoint's
+ * reply.
+ *
+ * probe_response_headers stays NULL: http_response does not carry them, and a
+ * plausible-looking reconstruction would be invented content (house rule 1).
+ */
+#define PROBE_BODY_MAX   2000
+#define PROBE_TIMEOUT_MS 10000
+#define PROBE_UA "User-Agent: JapanOSINT/1.0 (source probe; +https://github.com/)"
+
+static char *probe_err(int *st, int code, const char *msg) {
+  *st = code;
+  cJSON *o = cJSON_CreateObject();
+  cJSON_AddStringToObject(o, "error", msg);
+  char *j = cJSON_PrintUnformatted(o); cJSON_Delete(o); return j;
+}
+
+/* A bounded, printable snippet. Truncation is disclosed by the caller via
+ * `body_truncated`, never silently. */
+static char *probe_snip(const char *body, size_t len, int *truncated) {
+  size_t n = len < PROBE_BODY_MAX ? len : PROBE_BODY_MAX;
+  *truncated = (len > n);
+  char *out = malloc(n + 1);
+  if (!out) return NULL;
+  size_t o = 0;
+  for (size_t i = 0; i < n; i++) {
+    unsigned char ch = (unsigned char)body[i];
+    if (ch == '\n' || ch == '\t') out[o++] = ' ';
+    else if (ch < 0x20 || ch == 0x7F) out[o++] = '.';
+    else out[o++] = (char)ch;
+  }
+  out[o] = 0;
+  return out;
+}
+
+char *statusapi_set_consent(db_handle *db, const char *id, int consent, int *st) {
+  if (!db || !db->h || !id || !*id) return probe_err(st, 400, "source id required");
+  sqlite3_stmt *s = NULL;
+  if (sqlite3_prepare_v2(db->h,
+        "UPDATE sources SET probe_consent=?1 WHERE id=?2", -1, &s, NULL) != SQLITE_OK)
+    return probe_err(st, 500, "prepare_failed");
+  sqlite3_bind_int(s, 1, consent ? 1 : 0);
+  sqlite3_bind_text(s, 2, id, -1, SQLITE_TRANSIENT);
+  int rc = sqlite3_step(s);
+  sqlite3_finalize(s);
+  if (rc != SQLITE_DONE) return probe_err(st, 500, "consent_update_failed");
+  /* changes()==0 means no such source — report that rather than a cheerful ok
+   * for a row that does not exist. */
+  if (sqlite3_changes(db->h) == 0) return probe_err(st, 404, "not_found");
+
+  *st = 200;
+  cJSON *o = cJSON_CreateObject();
+  cJSON_AddBoolToObject(o, "ok", 1);
+  cJSON_AddStringToObject(o, "id", id);
+  cJSON_AddBoolToObject(o, "probeConsent", consent ? 1 : 0);
+  char *j = cJSON_PrintUnformatted(o); cJSON_Delete(o); return j;
+}
+
+char *statusapi_probe(db_handle *db, const char *id, int *st) {
+  if (!db || !db->h || !id || !*id) return probe_err(st, 400, "source id required");
+
+  const source_def *d = registry_get(id);
+  if (!d) return probe_err(st, 404, "no_collector_registered");
+  const char *url = d->url;
+  if (!url || !*url) return probe_err(st, 400, "source declares no endpoint to probe");
+  /* Datasets and internal pods carry an `internal://` url — there is nothing
+   * on the network to reach, and pretending otherwise would manufacture a
+   * result. */
+  if (strncmp(url, "http://", 7) != 0 && strncmp(url, "https://", 8) != 0)
+    return probe_err(st, 400, "source endpoint is not an http(s) url");
+
+  const char *hdrs[] = { PROBE_UA, NULL };
+  http_client *hc = http_client_new();
+  if (!hc) return probe_err(st, 500, "http_client_alloc_failed");
+  http_response r = {0};
+  int hard = http_request(hc, "GET", url, hdrs, NULL, 0,
+                          PROBE_TIMEOUT_MS, 0, &r);
+  long code = r.status;
+  int truncated = 0;
+  char *snip = (r.body && r.body_len) ? probe_snip(r.body, r.body_len, &truncated) : NULL;
+  http_response_free(&r);
+  http_client_free(hc);
+
+  char now[40]; iso_now(now, sizeof now);
+
+  sqlite3_stmt *s = NULL;
+  if (sqlite3_prepare_v2(db->h,
+        "UPDATE sources SET probe_request_url=?1, probe_request_method='GET',"
+        " probe_request_headers=?2, probe_response_status=?3,"
+        " probe_response_headers=NULL, probe_response_body=?4, probe_kind='http'"
+        " WHERE id=?5", -1, &s, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(s, 1, url, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(s, 2, PROBE_UA, -1, SQLITE_STATIC);
+    if (code > 0) sqlite3_bind_int(s, 3, (int)code); else sqlite3_bind_null(s, 3);
+    if (snip) sqlite3_bind_text(s, 4, snip, -1, SQLITE_TRANSIENT);
+    else      sqlite3_bind_null(s, 4);
+    sqlite3_bind_text(s, 5, id, -1, SQLITE_TRANSIENT);
+    /* The step result decides what we claim below: a probe that could not be
+     * recorded is still a probe that HAPPENED, but the row the client will
+     * read next has not moved, and saying "stored" would be a lie. */
+    if (sqlite3_step(s) != SQLITE_DONE) {
+      fprintf(stderr, "[status] probe of %s ran but could not be stored: %s\n",
+              id, sqlite3_errmsg(db->h));
+    }
+  }
+  sqlite3_finalize(s);
+
+  *st = 200;
+  cJSON *o = cJSON_CreateObject();
+  cJSON_AddStringToObject(o, "id", id);
+  cJSON_AddStringToObject(o, "probedAt", now);
+  cJSON_AddStringToObject(o, "probeRequestUrl", url);
+  cJSON_AddStringToObject(o, "probeRequestMethod", "GET");
+  cJSON_AddStringToObject(o, "probeRequestHeaders", PROBE_UA);
+  cJSON_AddStringToObject(o, "probeKind", "http");
+  if (code > 0) cJSON_AddNumberToObject(o, "probeResponseStatus", (double)code);
+  else          cJSON_AddNullToObject(o, "probeResponseStatus");
+  /* http_response carries no headers, so this is null rather than invented. */
+  cJSON_AddNullToObject(o, "probeResponseHeaders");
+  if (snip) cJSON_AddStringToObject(o, "probeResponseBody", snip);
+  else      cJSON_AddNullToObject(o, "probeResponseBody");
+  cJSON_AddBoolToObject(o, "bodyTruncated", truncated);
+  cJSON_AddBoolToObject(o, "reachable", (!hard && code > 0));
+  if (hard || code == 0)
+    cJSON_AddStringToObject(o, "error", "transport_error");
+  free(snip);
+  char *j = cJSON_PrintUnformatted(o); cJSON_Delete(o); return j;
 }

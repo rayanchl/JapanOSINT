@@ -8,10 +8,16 @@
  * slot table so it never enters properties (equivalent, cleaner). _meta
  * dropped per RULE 8; emitted via the geojson sink (uid keys off
  * properties.id). */
-#include "../../source.h"
-#include "../../lib/unified.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+/* strptime() and timegm() are POSIX/GNU extensions; glibc only declares them
+ * under _GNU_SOURCE. Without it strptime is implicitly declared, its char*
+ * return is truncated to int, and the pointer we test is garbage. */
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
+#include "source.h"
+#include "lib/unified.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

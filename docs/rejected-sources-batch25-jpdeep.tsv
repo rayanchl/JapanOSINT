@@ -1,0 +1,283 @@
+url	reason
+https://www.antiphishing.jp/atom.xml	DUPLICATE_HOST (batch23 jpdeep has rss.xml of the same feed); live, 15 entries
+https://www.antiphishing.jp/news/alert/	DUPLICATE_URL (batch23 jpdeep JPDEEP_ANTIPHISHING_JP_ALERT_ARCHIVE)
+https://www.antiphishing.jp/rss/	DEAD 404
+https://www.antiphishing.jp/news/alert/rss.xml	DEAD 404
+https://www.antiphishing.jp/report/	NOT_RECORDS (static report index, 5 links)
+https://www.antiphishing.jp/news/event/	OFF_BEAT (event notices)
+https://jprs.jp/rss/whatsnew.rdf	DEAD 404 (real feed is /whatsnew/rss/jprs.rdf, kept)
+https://jprs.jp/about/dom-search/jprs-stats/	DEAD 404
+https://jprs.jp/tech/security/	DEAD 404 (advisories reached via /tech/ index, kept)
+https://jprs.jp/tech/notice/	DEAD 404 (reached via /tech/ index, kept)
+https://jprs.jp/advisory/whatsnew/	DEAD 404
+https://jprs.jp/related-info/event/	OFF_BEAT (events)
+https://whois.jprs.jp/	SINGLE_RECORD (whois gateway returns one record per query)
+https://www.nic.ad.jp/rss/topics.rdf	DEAD 404 (real feed is /ja/index.xml, kept)
+https://www.nic.ad.jp/ja/ip/as-numbers.txt	FIXED_WIDTH (live AS list, 1052 lines, but whitespace-aligned columns that csv_delim cannot express)
+https://www.nic.ad.jp/ja/ip/as-numbers.html	DEAD 404
+https://whois.nic.ad.jp/cgi-bin/whois_gw?key=203.178.128.0	SINGLE_RECORD Shift_JIS whois page
+https://blog.nic.ad.jp/feed/	BOT_WALL 403
+https://www.nic.ad.jp/ja/ip/member/	NOT_RECORDS (policy pages, no member list)
+https://www.nic.ad.jp/ja/ip/statistics/	DEAD 404
+https://www.nic.ad.jp/ja/dom/	NOT_RECORDS (navigation only)
+https://www.nic.ad.jp/ja/event/	OFF_BEAT (events)
+https://www.nic.ad.jp/ja/newsletter/	NOT_RECORDS (navigation only)
+https://ftp.nic.ad.jp/jpnic/	NOT_RECORDS (directory index)
+https://ftp.nic.ad.jp/jpnic/statistics/	NOT_RECORDS (directory index)
+https://ftp.nic.ad.jp/jpnic/statistics/ip-list-j.txt	STALE (ISO-2022-JP notice from 1999 saying the list is no longer public)
+https://ftp.nic.ad.jp/jpnic/statistics/HostCount	STALE ISO-2022-JP text, no records
+https://ftp.nic.ad.jp/jpnic/statistics/num_of_members	STALE ISO-2022-JP text table
+https://ftp.nic.ad.jp/jpnic/statistics/Unconnected_Domains	STALE ISO-2022-JP text
+https://www.ppc.go.jp/rss/news.xml	DEAD 404
+https://www.ppc.go.jp/news/	NOT_RECORDS (category hub, per-list pages kept instead)
+https://www.ppc.go.jp/legal/rouei/	NOT_RECORDS (procedural page)
+https://www.ppc.go.jp/aboutus/report/	NOT_RECORDS (PDF annual reports only)
+https://www.ppc.go.jp/alart_for_medical_organizations/	NOT_RECORDS (procedural page)
+https://www.ppc.go.jp/personalinfo/legal/leakAction/	NOT_RECORDS (procedural page with PDFs)
+https://www.ppc.go.jp/sitemap/	NOT_RECORDS (sitemap, used for discovery)
+https://www.jpix.ad.jp/service/traffic.html	DEAD 404
+https://www.jpix.ad.jp/service/ix.html	DEAD 404
+https://www.jpix.ad.jp/ix/technical/traffic.php	NOT_RECORDS (traffic graphs are images)
+https://www.jpix.ad.jp/ix/technical/traffic.php?ix=tokyo	NOT_RECORDS (images)
+https://www.jpnap.net/traffic/	DEAD 404
+https://www.jpnap.net/service/traffic.html	DEAD 404
+https://www.bbix.net/service/ix/	NOT_RECORDS (service page)
+https://www.dix-ie.jp/	DEAD (connection failed)
+https://mimizun.com/search/?q=...	DEAD (site closed, Shift_JIS farewell page)
+https://find.5ch.net/search?q=...	BOT_WALL (Cloudflare 403 on find.5ch.io)
+https://ikioi5ch.net/	BOT_WALL (JS redirect page only)
+https://kakolog.info/	NOT_RECORDS (landing page, no search endpoint)
+https://kakolog.jp/	DEAD 522
+https://www.logsoku.com/	DEAD (114-byte stub)
+https://www.kyodemo.net/sdemo/	NOT_RECORDS Shift_JIS front page
+https://www.kyodemo.net/sdemo/e/e_matome/	BOT_WALL 403
+https://www.kyodemo.net/sdemo/r/e_e_liveedge/	BOT_WALL 403
+https://jbbs.shitaraba.net/	BOT_WALL 403
+https://www.2ch.sc/	NOT_RECORDS (Shift_JIS front page)
+https://www.2ch.sc/bbsmenu.html	NOT_RECORDS (menu only)
+https://ai.2ch.sc/newsplus/	RELATIVE_LINKS (49 threads but hrefs are ../test/read.cgi/, engine base only resolves root-relative) Shift_JIS
+https://ai.2ch.sc/newsplus/subject.txt	NOT_EXPRESSIBLE (<> delimited Shift_JIS, no csv_delim for it)
+https://open2ch.net/bbsmenu.html	NOT_RECORDS (menu, used for discovery)
+http://anago.open2ch.net/software/	EMPTY_RESULTSET (1 KB page, no threads)
+https://bakusai.com/	NOT_RECORDS
+https://bakusai.com/thr_tl/acode=1/ctgid=103/bid=2/	NOT_RECORDS (thread list rendered client-side, no thread anchors in HTML)
+https://blog.trendmicro.co.jp/feed	DEAD (connection failed)
+http://feeds.feedburner.com/tm-security-blog	DUPLICATE_HOST (feeds.feedburner.com is in the tree); live, 100 items of the Trend Micro JP research feed
+https://www.trendmicro.com/ja_jp/research/security-news.html	DEAD 404
+https://www.trendmicro.com/ja_jp/business/products/security-updates.html	DEAD 404
+https://www.trendmicro.com/ja_jp/about/press-release.html	NOT_RECORDS (no release anchors)
+https://www.lac.co.jp/lacwatch/rss.xml	DEAD 404
+https://www.lac.co.jp/rss/lacwatch.xml	DEAD 404
+https://www.lac.co.jp/lacwatch/feed.xml	DUPLICATE_DATASET (batch23 jpdeep already lists lacwatch alert and report pages); live, 20 items
+https://www.lac.co.jp/lacwatch/people/feed.xml	DEAD 404
+https://www.lac.co.jp/lacwatch/alert/feed.xml	DEAD 404
+https://www.lac.co.jp/lacwatch/report/feed.xml	DEAD 404
+https://www.lac.co.jp/news/rss.xml	DEAD 404
+https://security.macnica.co.jp/blog/feed/	DEAD 404 (atom.xml kept instead)
+https://blog.macnica.net/atom.xml	DEAD (connection failed)
+https://www.macnica.co.jp/business/security/	NOT_RECORDS (product pages)
+https://www.macnica.co.jp/business/security/rss.xml	DEAD 404
+https://piyolog.hatenadiary.jp/rss	DUPLICATE_URL (batch23 jpdeep)
+https://www.security-next.com/feed	DUPLICATE_URL (batch23 jpdeep)
+https://www.security-next.com/category/cat191	NOT_RECORDS (feed form kept instead)
+https://www.security-next.com/category/cat25/feed	UNLABELLED_CATEGORY (live, 20 items, category name not identifiable from feed)
+https://www.security-next.com/category/cat1/feed	EMPTY_RESULTSET
+https://www.security-next.com/category/cat3/feed	UNLABELLED_CATEGORY (live, 20 items)
+https://scan.netsecurity.ne.jp/rss/index.rdf	DUPLICATE_DATASET (batch23 jpdeep has rss20/index.rdf)
+https://scan.netsecurity.ne.jp/rss/incident.rdf	DUPLICATE_DATASET (batch23 jpdeep has rss20/incident.rdf)
+https://scan.netsecurity.ne.jp/rss/	DEAD 404
+https://scan.netsecurity.ne.jp/rss/index20.rdf	DEAD 404
+https://www.jc3.or.jp/topics/	REDIRECT to /threats/ (kept as topics and examples rows)
+https://www.jc3.or.jp/threats/	DUPLICATE_DATASET (hub of the two kept lists)
+https://www.jc3.or.jp/threats/2026/	DUPLICATE_DATASET (year view of kept lists)
+https://www.jc3.or.jp/feed/	DEAD 404
+https://www.nisc.go.jp/rss/news.xml	REDIRECT to cyber.go.jp front page, NOT_RECORDS
+https://www.cyber.go.jp/	NOT_RECORDS
+https://www.cyber.go.jp/news.html	DEAD 404
+https://www.cyber.go.jp/sitemap.xml	DEAD 404
+https://www.cyber.go.jp/news/index.html	NOT_RECORDS (3 anchors, list rendered client-side)
+https://sect.iij.ad.jp/feed/	DUPLICATE_DATASET (batch23 jpdeep has sect.iij.ad.jp/blog/feed/)
+https://sect.iij.ad.jp/category/security/feed/	EMPTY_RESULTSET
+https://sect.iij.ad.jp/feed/?cat=security	DUPLICATE_DATASET (same as main feed)
+https://ransomwatch.telemetry.ltd/posts.json	DEAD 404
+https://ransomwatch.telemetry.ltd/data/posts.json	DEAD 404
+https://ransomwatch.telemetry.ltd/	NOT_RECORDS (landing page)
+https://api.ransomwatch.io/	DEAD
+https://www.ransom-db.com/real-time-updates	BOT_WALL 403
+https://darkfeed.io/ransomwatch/	NOT_RECORDS (JS app)
+https://ecrime.ch/	NOT_RECORDS (JS app, API is paid)
+https://www.ecrime.ch/api/docs	NOT_RECORDS (API documentation, key required)
+https://ransomwareattacks.halcyon.ai/	NOT_RECORDS (JS app)
+https://www.hackmanac.com/	BOT_WALL 403
+https://haveibeenpwned.com/api/v3/breaches	DUPLICATE_HOST (haveibeenpwned.com in tree, vsrc_threat_intel_1.c); live 1032 records
+https://haveibeenpwned.com/api/v3/breaches?domain={q}	DUPLICATE_HOST; live, filter honoured (adobe.com=1, zzqxv9.invalid=0)
+https://haveibeenpwned.com/api/v3/latestbreach	DUPLICATE_HOST, single record
+https://phishstats.info:2096/api/phishing?...	DEAD 522
+https://phishstats.info/phish_score.csv	DEAD 404
+https://phishstats.info/api/phishing?...	DEAD 404
+https://phishstats.info/	NOT_RECORDS (JS app)
+https://xtech.nikkei.com/rss/xtech-it.rdf	DUPLICATE_URL (batch23 jpdeep)
+https://xtech.nikkei.com/rss/index.rdf	DUPLICATE_URL (batch23 jpdeep)
+https://xtech.nikkei.com/rss/xtech-security.rdf	DEAD 404
+https://xtech.nikkei.com/rss/xtech-security-sv.rdf	DEAD 404
+https://www.nikkei.com/rss/xtech-security.rdf	DEAD 404
+https://japan.zdnet.com/rss/index.rdf	DEAD 404 (feeds.japan.zdnet.com/rss/zdnet/all.rdf kept)
+https://feeds.japan.zdnet.com/rss/zdnet/security.rdf	DEAD 404
+https://news.mynavi.jp/rss/techplus/security	DEAD 404
+https://news.mynavi.jp/techplus/security/	DEAD 404
+https://www.nri-secure.co.jp/blog/rss.xml	DUPLICATE_URL (batch23 jpdeep)
+https://www.nri-secure.co.jp/blog/tag/incident/rss.xml	DEAD 404
+https://www.mbsd.jp/	NOT_RECORDS (research index kept)
+https://www.mbsd.jp/news/	NOT_RECORDS (no dated news anchors)
+https://www.mbsd.jp/feed/	DEAD 404
+https://eset-info.canon-its.jp/malware_info/feed/	DEAD 404 (RSS.rdf kept)
+https://eset-info.canon-its.jp/files/blog/rss/RSS_BLOG_ALL.rdf	DEAD 404
+https://blogs.mcafee.jp/feed	DEAD (connection failed)
+https://www.nca.gr.jp/	NOT_RECORDS (member list redirects to nca.jp, kept there)
+https://www.nca.gr.jp/member/	REDIRECT (kept as nca.jp corporate_list)
+https://www.nca.gr.jp/feed/	DEAD 404
+https://bgp.potaroo.net/cidr/cc-report.html	DEAD 404
+https://bgp.potaroo.net/cgi-bin/as-report?as=AS4199999999&view=2.0	FILTER_CHECK_PASSED (1 anchor vs 303 for a real AS) supports kept pivot
+https://bgp.he.net/AS4199999999	FILTER_CHECK_PASSED (self-link only) supports kept pivot
+https://cinsscore.com/list/ci-badguys.txt	DUPLICATE_HOST (cyi_cins_army_badguys.c)
+https://rules.emergingthreats.net/blockrules/compromised-ips.txt	DUPLICATE_HOST (cyi_et_compromised_ips.c)
+https://phishing.army/download/phishing_army_blocklist.txt	DUPLICATE_HOST (cyi_phishing_army_blocklist.c)
+https://phishunt.io/feed.txt	DUPLICATE_HOST (cyi_phishunt_feed.c)
+https://threatview.io/Downloads/IP-High-Confidence-Feed.txt	DUPLICATE_HOST (cyi_threatview_ip_feed.c)
+https://threatview.io/Downloads/DOMAIN-High-Confidence-Feed.txt	DUPLICATE_HOST (threatview.io in tree); live 511791 lines
+https://threatview.io/Downloads/URL-High-Confidence-Feed.txt	DUPLICATE_HOST; live 3748 lines
+https://www.binarydefense.com/banlist.txt	DUPLICATE_HOST (hp3_threat.c)
+https://iplists.firehol.org/files/firehol_level1.netset	DUPLICATE_HOST (iplists.firehol.org in tree)
+https://api.ixpdb.net/v1/provider/list	DUPLICATE_HOST (hp3b19_telecom.c)
+https://www.pch.net/api/ixp/directory/active	DUPLICATE_HOST (www.pch.net in tree); live 1329 records
+https://www.keishicho.metro.tokyo.lg.jp/kurashi/cyber/	DUPLICATE_HOST (host in tree); live 52 anchors
+https://www.botvrij.eu/data/ioclist.ip-dst	EMPTY_RESULTSET (10 lines, all comments)
+https://osint.digitalside.it/Threat-Intel/lists/latestdomains.txt	DEAD (connection failed)
+https://osint.digitalside.it/Threat-Intel/lists/latestips.txt	DEAD
+https://mirai.security.gives/data/ip_list.txt	DEAD (domain now redirects to an unrelated site)
+https://www.talosintelligence.com/documents/ip-blacklist	BOT_WALL 403
+https://vxvault.net/URL_List.php	DEAD
+https://benkow.cc/export.php	DEAD 404
+https://iocfeed.mrlooquer.com/feed.csv	DEAD 404
+https://openphish.com/feed.txt	DUPLICATE_HOST (redirects to raw.githubusercontent.com, also in tree)
+https://www.usom.gov.tr/url-list.txt	REDIRECT to API landing page, NOT_RECORDS
+https://www.threatminer.org/	DEAD 522
+https://feodotracker.abuse.ch/	DUPLICATE_HOST and 503
+https://tracker.viz.greynoise.io/	DEAD
+https://api.stopforumspam.org/api?ip=1.1.1.1&json	SINGLE_RECORD (one object per query)
+https://cybercrime-tracker.net/index.php	NOT_RECORDS (front page, all.php and ccam.php kept)
+https://www.courts.go.jp/app/hanrei_jp/search1?...	RELATIVE_LINKS (results are ./../../assets/hanrei PDF links, engine base cannot resolve them)
+https://www.courts.go.jp/app/hanrei_jp/list1?...	DEAD 404
+https://www.dekyo.or.jp/soudan/	NOT_RECORDS
+https://isms.jp/lst/ind/	NOT_RECORDS (3 anchors)
+https://www.jssec.org/feed/	EMPTY_RESULTSET (also already in batch23 jpdeep)
+https://www.jssec.org/	NOT_RECORDS
+https://www.telecom-isac.jp/	NOT_RECORDS
+https://www.telecom-isac.jp/news/	BOT_WALL 403
+https://www.ict-isac.jp/news/	STALE_RELATIVE_LINKS (2017 news, relative hrefs)
+https://www.saj.or.jp/	OFF_BEAT (software association notices)
+https://www.jipdec.or.jp/	NOT_RECORDS
+https://www.isog-j.org/	DEAD
+https://www.iajapan.org/	NOT_RECORDS
+https://www.internethotline.jp/	NOT_RECORDS (2 information anchors)
+https://www.saferinternet.or.jp/feed/	EMPTY_RESULTSET
+https://www.saferinternet.or.jp/	NOT_RECORDS
+https://www.jaipa.or.jp/	NOT_RECORDS
+https://www.jpaawg.org/	NOT_RECORDS
+https://www.jpaawg.org/news/	DEAD 404
+https://www.jpaawg.org/feed/	DEAD 404
+https://www.jsac.jpcert.or.jp/	DEAD and excluded host family
+https://www.jpcert.or.jp/rss/jpcert.rdf	DUPLICATE_HOST (jpcert.or.jp excluded)
+https://www.jpcert.or.jp/at/2026.html	DUPLICATE_HOST
+https://blogs.jpcert.or.jp/ja/atom.xml	DUPLICATE_HOST
+https://hackmd.io/@jpcert	DEAD 404
+https://www.cyberpolice.go.jp/	DEAD
+https://www.kddi.com/corporate/kddi/public/security/	NOT_RECORDS (policy page)
+https://www.kddi.com/corporate/public/security/psirt/	DEAD 404
+https://newsroom.kddi.com/rss.xml	DEAD 404
+https://csirt.nifty.com/	DEAD
+https://www.nifty.com/info/	DEAD 404
+https://www.docomo.ne.jp/info/notice/	NOT_RECORDS (redirects to /info/ hub, no notice anchors)
+https://www.docomo.ne.jp/info/rss/index.xml	DEAD 404
+https://support.biglobe.ne.jp/security/	DEAD 404
+https://www.so-net.ne.jp/info/security/	DEAD 404
+https://cert.rakuten.co.jp/	DEAD
+https://www.ntt-cert.org/	DEAD
+https://www.ntt.com/about-us/press-releases.html	BOT_WALL 403
+https://www.ocn.ne.jp/info/	BOT_WALL 403
+https://about.yahoo.co.jp/info/security/	DEAD
+https://www.gmo.jp/security/	BOT_WALL 403
+https://www.iij.ad.jp/news/announcement/	DEAD 404
+https://www.iij.ad.jp/news/	NOT_RECORDS (hub)
+https://support.sakura.ad.jp/mainte/feed/	DEAD 404
+https://www.conoha.jp/news/feed/	DEAD 404
+https://www.xserver.ne.jp/news_rss.xml	DEAD 404
+https://cs.cybozu.co.jp/	NOT_RECORDS (hub, /security/ kept)
+https://www.hitachi.co.jp/hirt/security/index.html	NOT_RECORDS (redirects to hitachi.com corporate page, no advisory anchors)
+https://www.hitachi.co.jp/hirt/rss/hirt.rdf	DEAD 404
+https://jpn.nec.com/security-info/index.html	BOT_WALL 403
+https://www.nec.co.jp/security-info/	BOT_WALL 403
+https://www2.nec.co.jp/security-info/rss.xml	DEAD 404
+https://www.fujitsu.com/jp/products/software/resources/condition/security/	BOT_WALL 429
+https://www.buffalo.jp/news/	DEAD 404
+https://www.rtpro.yamaha.co.jp/RT/FAQ/Security/index.html	RELATIVE_LINKS (9 advisories with bare relative hrefs)
+https://holdings.panasonic/jp/corporate/product-security/psirt/info.html	BOT_WALL 403
+https://www.global.toshiba/jp/products-solutions/security/psirt.html	DEAD 404
+https://www.ricoh.com/ja/security/	NOT_RECORDS (redirects to governance page)
+https://www.elecom.co.jp/news/security/	BOT_WALL 403
+https://www.iodata.jp/support/be/security/index.htm	DEAD 404
+https://www.aterm.jp/product/atermstation/info/index.html	NOT_RECORDS (6 anchors)
+https://www.sony.jp/support/info/psirt/	DEAD 404
+https://www.mitsubishielectric.co.jp/psirt/vulnerability/index.html	NOT_RECORDS (3 anchors, list not in HTML)
+https://www.omron.com/jp/ja/psirt/	BOT_WALL 403
+https://www.fujifilm.com/jp/ja/support/psirt	DEAD 404
+https://www.brother.co.jp/support/security/index.aspx	DEAD 404
+https://www.epson.jp/support/misc_t/security_vuln.htm	DEAD 404
+https://www.kyocera.co.jp/security/	DEAD 404
+https://www.seiko-sol.co.jp/support/security/	DEAD 404
+https://www.contec.com/jp/support/security/	DEAD 404
+https://www.mrl.co.jp/psirt/	DEAD 404
+https://www.ec-cube.net/info/weakness/	RELATIVE_LINKS (20 advisories as ./weakness.php?... hrefs)
+https://blog.kaspersky.co.jp/feed/	DUPLICATE_URL (batch23 jpdeep)
+https://securelist.com/ja/feed/	EMPTY_RESULTSET (673 bytes)
+https://www.cybertrust.co.jp/blog/feed/	DEAD 404
+https://www.cybertrust.co.jp/rss/news.xml	DEAD 404
+https://www.cyberdefense.jp/blog/	DEAD 404
+https://www.cyberdefense.jp/feed/	DEAD 404
+https://io.cyberdefense.jp/feed/	DEAD 404
+https://blog.cybersecuritycloud.co.jp/feed	DEAD
+https://www.cscloud.co.jp/	NOT_RECORDS
+https://www.sompocybersecurity.com/column/rss	DEAD 404
+https://insight.scsk.jp/rss.xml	DEAD
+https://jp.norton.com/blog/feed	DEAD 404
+https://hennge.com/jp/blog/feed/	DEAD (redirects to error page)
+https://www.ierae.co.jp/blog/feed/	DEAD
+https://www.dos-osaka.co.jp/ss1/ss1lab/feed/	DEAD 404
+https://www.sqat.jp/kawaraban/	NOT_RECORDS (article anchors not distinguishable)
+https://www.sqat.jp/feed/	NOT_FEED (returns HTML)
+https://jp.security.ntt/insights_resources/category/security_alert/	NOT_RECORDS (client-rendered, 0 post anchors)
+https://jp.security.ntt/insights_resources/category/threat_intelligence/	NOT_RECORDS (client-rendered)
+https://ja.wordpress.org/news/feed/	OFF_BEAT (product release news)
+https://baserproject.org/news/feed	DEAD
+https://gigazine.net/news/rss_2.0/	OFF_BEAT (general news)
+https://gihyo.jp/feed/rss2	OFF_BEAT (general developer news)
+https://ascii.jp/rss.xml	OFF_BEAT (general IT news)
+https://cloud.watch.impress.co.jp/data/rss/1.0/clw/feed.rdf	OFF_BEAT (enterprise cloud news)
+https://www.securityinsight.jp/	DEAD
+https://www.sbbit.jp/	BOT_WALL 403
+https://connpass.com/explore/?q=...	OFF_BEAT (events)
+https://www.gate02.ne.jp/feed/feed.xml	DUPLICATE_DATASET (JSON Feed of the same items kept)
+https://www.lanscope.jp/blogs/	NOT_RECORDS (feed kept instead)
+https://cybersecurity-info.com/	NOT_RECORDS (feed kept instead)
+https://digitaldata-forensics.com/column/	NOT_RECORDS (feed kept instead)
+https://jprs.jp/tech/	DUPLICATE_ENDPOINT within batch 25 — same URL kept as JP25_JPDEEP_JPRS_TECH_SECURITY_HTML
+https://www.jc3.or.jp/threats/topics/	DUPLICATE_ENDPOINT within batch 25 — same URL kept as JP25_JPPOLICE_JC3_TOPICS
+https://www.nca.jp/M10/corporate_list	NOT_ANCHORS (member list is <li onclick=window.location.href=...corporate_detail...>, no <a>; hp html mode sees 0 anchors - the probe counted the strings, not anchors) [JP25_JPDEEP_NCA_CSIRT_MEMBERS_HTML]
+https://kohada.open2ch.net/sec/	BOT_WALL (HTTP 403 with a 90 KB challenge body to every UA tried incl. browser UA + Accept/Accept-Language; engine gets 403 every run) [JP25_JPDEEP_OPEN2CH_SEC_HTML]
+https://toro.open2ch.net/hack/	BOT_WALL (HTTP 403 with a 90 KB challenge body to every UA tried incl. browser UA + Accept/Accept-Language; engine gets 403 every run) [JP25_JPDEEP_OPEN2CH_HACK_HTML]
+https://engawa.open2ch.net/network/	BOT_WALL (HTTP 403 with a 90 KB challenge body to every UA tried incl. browser UA + Accept/Accept-Language; engine gets 403 every run) [JP25_JPDEEP_OPEN2CH_NETWORK_HTML]
+https://engawa.open2ch.net/poverty/	BOT_WALL (HTTP 403 with a 90 KB challenge body to every UA tried incl. browser UA + Accept/Accept-Language; engine gets 403 every run) [JP25_JPDEEP_OPEN2CH_POVERTY_HTML]
+https://hayabusa3.open2ch.net/news/	BOT_WALL (HTTP 403 with a 90 KB challenge body to every UA tried incl. browser UA + Accept/Accept-Language; engine gets 403 every run) [JP25_JPDEEP_OPEN2CH_NEWS_HTML]
+https://kohada.open2ch.net/prog/	BOT_WALL (HTTP 403 with a 90 KB challenge body to every UA tried incl. browser UA + Accept/Accept-Language; engine gets 403 every run) [JP25_JPDEEP_OPEN2CH_PROG_HTML]
+https://engawa.open2ch.net/linux/	BOT_WALL (HTTP 403 with a 90 KB challenge body to every UA tried incl. browser UA + Accept/Accept-Language; engine gets 403 every run) [JP25_JPDEEP_OPEN2CH_LINUX_HTML]
+https://cybercrime-tracker.net/ccam.php	IMG_ONLY_ANCHORS (444 virustotal anchors wrap an <img> and carry no text; hp_run_html drops text_len<3; the hash lives only in the href - needs an engine option to title an anchor from its href) [JP25_JPDEEP_CYBERCRIME_TRACKER_CCAM_HTML]

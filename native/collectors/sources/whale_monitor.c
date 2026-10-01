@@ -21,15 +21,17 @@
  * classifier input on the address item. All values are real values fetched
  * from the live endpoints; nothing is fabricated. Nothing fetched → NOTHING
  * emitted and run() returns 0. */
-#include "../../source.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "lib/jocore.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <string.h>
 #include <strings.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 typedef struct { const char *addr, *label, *chain; } known_t;
 static const known_t KNOWN[] = {
@@ -90,8 +92,9 @@ static int emit_eth_tx(intel_sink *sink, const char *addr, cJSON *tx) {
   if (to && cJSON_IsString(to)) cJSON_AddStringToObject(data, "to", to->valuestring);
   if (ts && cJSON_IsString(ts)) {
     time_t t = (time_t)atol(ts->valuestring);
-    strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%SZ", gmtime(&t));
-    cJSON_AddStringToObject(data, "time", iso);
+    /* iso stays empty on failure: "time" omitted, published_at NULL. */
+    if (jo_time_fmt(t, "%Y-%m-%dT%H:%M:%SZ", iso, sizeof iso))
+      cJSON_AddStringToObject(data, "time", iso);
   }
   char *bj = cJSON_PrintUnformatted(data);
 
@@ -99,7 +102,7 @@ static int emit_eth_tx(intel_sink *sink, const char *addr, cJSON *tx) {
   cJSON_AddStringToObject(props, "service", "WHALE_ALERT");
   cJSON_AddStringToObject(props, "record", "transaction");
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 80);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   char rk[160], title[200];
@@ -141,8 +144,8 @@ static int emit_wa_tx(intel_sink *sink, cJSON *tx) {
   if (au && cJSON_IsNumber(au)) cJSON_AddNumberToObject(data, "amount_usd", au->valuedouble);
   if (tm && cJSON_IsNumber(tm)) {
     time_t t = (time_t)tm->valuedouble;
-    strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%SZ", gmtime(&t));
-    cJSON_AddStringToObject(data, "time", iso);
+    if (jo_time_fmt(t, "%Y-%m-%dT%H:%M:%SZ", iso, sizeof iso))
+      cJSON_AddStringToObject(data, "time", iso);
   }
   for (int k = 0; k < 2; k++) {
     const char *side = k ? "to" : "from";
@@ -165,7 +168,7 @@ static int emit_wa_tx(intel_sink *sink, cJSON *tx) {
   cJSON_AddStringToObject(props, "record", "transaction");
   cJSON_AddStringToObject(props, "feed", "whale_alert");
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 80);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   char rk[160], title[200];
@@ -219,7 +222,7 @@ static int emit_defi(intel_sink *sink, cJSON *pr) {
   cJSON_AddStringToObject(props, "service", "WHALE_ALERT");
   cJSON_AddStringToObject(props, "record", "defi_protocol");
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 80);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   char slug[96], rk[128], title[200];
@@ -279,7 +282,7 @@ static int emit_addr_balance(intel_sink *sink, http_client *http, const char *ad
   cJSON_AddStringToObject(props, "record", "address");
   cJSON_AddStringToObject(props, "entity", addr);
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 80);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   char rk[160], title[256];
@@ -306,11 +309,21 @@ static int emit_addr_balance(intel_sink *sink, http_client *http, const char *ad
  *
  * This used to request offset=5 and then re-cap the loop at 5 — a whale wallet
  * with thousands of transfers reported five of them. Full pages are requested
- * and walked until the upstream runs short (docs/SOURCE_EXHAUSTIVENESS.md). */
+ * and walked until the upstream runs short (docs/SOURCE_EXHAUSTIVENESS.md).
+ *
+ * The page <= 20 walk is itself a page-walk runaway guard (2,000 tx), not an
+ * editorial bound — a wallet with more history than that (exactly the
+ * exchange-hot-wallet / big-collector case this source targets) hits it
+ * without the "short page" signal ever firing, so that case is now disclosed
+ * as a collector-truncation-notice rather than silently dropped
+ * (2026-09-03 audit). */
+#define WHALE_ETH_MAX_PAGES 20   /* exhaustive-ok: page-walk runaway guard; an early stop emits a collector-truncation-notice */
+
 static int emit_eth_txs(intel_sink *sink, http_client *http, const char *addr) {
   const char *ek = getenv("ETHERSCAN_API_KEY");
-  int emitted = 0;
-  for (int page = 1; page <= 20; page++) {
+  int emitted = 0, capped = 0;
+  int page;
+  for (page = 1; page <= WHALE_ETH_MAX_PAGES; page++) {
     char url[600];
     if (ek && *ek)
       snprintf(url, sizeof url,
@@ -330,6 +343,16 @@ static int emit_eth_txs(intel_sink *sink, http_client *http, const char *addr) {
       emitted += emit_eth_tx(sink, addr, cJSON_GetArrayItem(txs, i));
     cJSON_Delete(j);
     if (n < 100) break;               /* short page = upstream exhausted */
+    if (page == WHALE_ETH_MAX_PAGES) capped = 1;
+  }
+  if (capped) {
+    char scope[96];
+    snprintf(scope, sizeof scope, "eth-txlist:%s", addr);
+    jo_trunc_notice_scoped(sink, "WHALE_ALERT", scope,
+                     "api.etherscan.io/api?module=account&action=txlist", emitted, -1,
+                     "Etherscan txlist page-walk hit its runaway guard "
+                     "(WHALE_ETH_MAX_PAGES) before a short page signalled the end",
+                     "raise WHALE_ETH_MAX_PAGES in whale_monitor.c");
   }
   return emitted;
 }
@@ -358,7 +381,7 @@ static int emit_btc_stats(intel_sink *sink, http_client *http) {
   cJSON_AddStringToObject(props, "service", "WHALE_ALERT");
   cJSON_AddStringToObject(props, "record", "btc_network");
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 80);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   intel_item it = {0};
@@ -377,6 +400,8 @@ static int emit_btc_stats(intel_sink *sink, http_client *http) {
 }
 
 /* Emit Whale Alert feed txs (key required). Returns count emitted. */
+#define WHALE_WA_FEED_MAX 50   /* exhaustive-ok: display bound on a single feed call; a full page emits a collector-truncation-notice */
+
 static int emit_whale_alert_feed(intel_sink *sink, http_client *http,
                                  long minv, time_t since) {
   const char *key = getenv("WHALE_ALERT_API_KEY");
@@ -391,20 +416,55 @@ static int emit_whale_alert_feed(intel_sink *sink, http_client *http,
   const cJSON *txs = cJSON_GetObjectItem(j, "transactions");
   if (txs && cJSON_IsArray(txs)) {
     int n = cJSON_GetArraySize(txs);
-    for (int i = 0; i < n && i < 50; i++)
+    int cap = n < WHALE_WA_FEED_MAX ? n : WHALE_WA_FEED_MAX;
+    for (int i = 0; i < cap; i++)
       emitted += emit_wa_tx(sink, cJSON_GetArrayItem(txs, i));
+    /* A day with >50 whale-scale (>=min_value) transactions is plausible on
+     * an active day; the excess used to be dropped with no trace. */
+    if (n > WHALE_WA_FEED_MAX)
+      jo_trunc_notice(sink, "WHALE_ALERT",
+                       "api.whale-alert.io/v1/transactions", emitted, n,
+                       "the 24h whale-alert feed returned more transactions "
+                       "than the per-call display bound",
+                       "raise WHALE_WA_FEED_MAX in whale_monitor.c");
   }
   cJSON_Delete(j);
   return emitted;
 }
 
-/* Emit top-20 DeFiLlama protocols. Returns count emitted. */
+/* Emit DeFiLlama protocols, sorted by TVL descending so "top" is actually
+ * true — the feed's own field order is not documented as TVL-sorted, and
+ * taking index order unsorted would silently mislabel an arbitrary 20 as
+ * "top" (2026-09-03 audit). Returns count emitted. */
+#define WHALE_DEFI_TOP_N 20   /* exhaustive-ok: display bound ("top N"); a longer list emits a collector-truncation-notice */
+
+static int defi_tvl_desc(const void *a, const void *b) {
+  cJSON *const *pa = (cJSON *const *)a, *const *pb = (cJSON *const *)b;
+  const cJSON *ta = cJSON_GetObjectItem(*pa, "tvl");
+  const cJSON *tb = cJSON_GetObjectItem(*pb, "tvl");
+  double va = (ta && cJSON_IsNumber(ta)) ? ta->valuedouble : -1;
+  double vb = (tb && cJSON_IsNumber(tb)) ? tb->valuedouble : -1;
+  return (va < vb) - (va > vb);
+}
+
 static int emit_defi_protocols(intel_sink *sink, http_client *http) {
   cJSON *p = get_json(http, "https://api.llama.fi/protocols");
   if (!p || !cJSON_IsArray(p)) { if (p) cJSON_Delete(p); return 0; }
-  int emitted = 0, n = cJSON_GetArraySize(p);
-  for (int i = 0; i < n && i < 20; i++)
-    emitted += emit_defi(sink, cJSON_GetArrayItem(p, i));
+  int n = cJSON_GetArraySize(p);
+  cJSON **items = malloc((n > 0 ? (size_t)n : 1) * sizeof *items);
+  int i = 0;
+  cJSON *it;
+  cJSON_ArrayForEach(it, p) items[i++] = it;
+  qsort(items, (size_t)n, sizeof *items, defi_tvl_desc);
+
+  int emitted = 0, cap = n < WHALE_DEFI_TOP_N ? n : WHALE_DEFI_TOP_N;
+  for (i = 0; i < cap; i++) emitted += emit_defi(sink, items[i]);
+  free(items);
+  if (n > WHALE_DEFI_TOP_N)
+    jo_trunc_notice(sink, "WHALE_ALERT", "api.llama.fi/protocols", emitted, n,
+                     "DeFiLlama's protocol list is longer than the \"top N\" "
+                     "display bound (now sorted by tvl before truncating)",
+                     "raise WHALE_DEFI_TOP_N in whale_monitor.c");
   cJSON_Delete(p);
   return emitted;
 }

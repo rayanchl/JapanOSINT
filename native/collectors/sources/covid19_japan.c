@@ -7,8 +7,8 @@
  * empty (return -1), NEVER fabricate counts. uid key mirrors JS
  * intelUid(SOURCE_ID, date) (date is always a non-empty field → JS index
  * fallback is dead). */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
+#include "source.h"
+#include "lib/feedlib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -146,7 +146,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   free(lines);
   free(text);
   fprintf(stderr, "[covid19-japan] emitted %d\n", n);
-  return n > 0 ? 0 : -1;
+  /* run() is a STATUS code, not a row count: fetch/parse failures already
+   * returned -1 above, so reaching here with zero rows is an honest empty.
+   * Returning -1 here had scheduler.c quarantine the source for working. */
+  return 0;
 }
 
 static const source_def covid19_japan_def = {

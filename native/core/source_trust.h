@@ -49,4 +49,12 @@ source_trust *source_trust_load(db_handle *db, int *out_n);
 const source_trust *source_trust_find(const source_trust *tbl, int n,
                                       const char *source_id);
 
+/* Cheap scalar for the scheduler's priority queue: reliability in 0..1, or
+ * -1.0 when unrated (no fetch history in the window). Backed by a process-wide
+ * cache of source_trust_load() refreshed at most every JO_TRUST_CACHE_SEC
+ * (default 300) — the dispatcher asks once per due source per second and the
+ * two GROUP BY queries behind the table are not free at that rate.
+ * Thread-safe. */
+double source_trust_score(db_handle *db, const char *source_id);
+
 #endif

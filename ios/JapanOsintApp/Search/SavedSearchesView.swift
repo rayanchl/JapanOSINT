@@ -356,6 +356,7 @@ struct SavedSearchesView: View {
             Image(systemName: "ellipsis.circle")
                 .foregroundStyle(theme.textMuted)
         }
+        .accessibilityLabel("Saved search actions")
     }
 
     private var emptyState: some View {
@@ -364,6 +365,7 @@ struct SavedSearchesView: View {
                 Text("No saved searches").foregroundStyle(theme.text)
             } icon: {
                 Image(systemName: "bookmark").foregroundStyle(theme.textMuted)
+                    .accessibilityHidden(true)   // "No saved searches" is the label
             }
         } description: {
             Text(currentSearch == nil

@@ -6,11 +6,18 @@
  * latter to the intel store, same as Node mirrorCollectorOutput). _meta
  * dropped per RULE 8. GDELT_SLICES env (1..96, default 1) walks back N
  * consecutive 15-min slices, exactly as JS. */
-#include "../../source.h"
-#include "../../core/httpclient.h"
-#include "../../lib/zipread.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+/* strptime() and timegm() are POSIX/GNU extensions; glibc only declares them
+ * under _GNU_SOURCE. Without it strptime is implicitly declared, its char*
+ * return is truncated to int, and the pointer we test is garbage. */
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
+#include "source.h"
+#include "core/httpclient.h"
+#include "lib/zipread.h"
+#include "lib/geojson.h"
+#include "_timefmt.inc"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -42,7 +49,9 @@ static cJSON *date_added(const char *s) {
 
 /* rowsToFeatures: tab-split, need >=61 cols, col53=="JA". */
 static void rows_to_features(char *csv, cJSON *features) {
-  for (char *line = strtok(csv, "\n"); line; line = strtok(NULL, "\n")) {
+  char *save = NULL;              /* strtok_r: concurrent workers, see jsonlist.c */
+  for (char *line = strtok_r(csv, "\n", &save); line;
+       line = strtok_r(NULL, "\n", &save)) {
     if (!*line) continue;
     char *col[61]; int n = 0;
     for (char *p = line; n < 61; ) {
@@ -126,7 +135,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_Delete(e); return z >= 0 ? 0 : -1;
   }
   char latest[512] = {0};
-  for (char *ln = strtok(ir.body, "\n"); ln; ln = strtok(NULL, "\n")) {
+  char *lsave = NULL;             /* strtok_r: concurrent workers, see jsonlist.c */
+  for (char *ln = strtok_r(ir.body, "\n", &lsave); ln;
+       ln = strtok_r(NULL, "\n", &lsave)) {
     if (!*ln) continue;
     char *parts[4]; int pn = 0;
     for (char *p = ln; pn < 3 && p; ) {
@@ -158,8 +169,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (i == 0) snprintf(url, sizeof url, "%s", latest);
     else if (have_t0) {
       time_t t = t0 - (time_t)i * 15 * 60;
-      struct tm g; gmtime_r(&t, &g);
-      char st[16]; strftime(st, sizeof st, "%Y%m%d%H%M%S", &g);
+      char st[16];
+      /* No stamp, no slice URL: skip this 15-minute slice rather than fetch a
+       * path assembled from stack contents. The other slices still run. */
+      if (!jo_time_fmt(t, "%Y%m%d%H%M%S", st, sizeof st)) continue;
       snprintf(url, sizeof url, "%s/%s.export.CSV.zip", BUCKET, st);
     } else break;
     size_t zl = 0;

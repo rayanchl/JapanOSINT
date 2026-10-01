@@ -4,10 +4,10 @@
  * default 8000) or until BLUESKY_JETSTREAM_MAX (default 200) JP posts, then
  * closes — fits the run-once scheduler (lib/ws). _meta dropped per RULE 8;
  * features emitted via the geojson sink. */
-#include "../../source.h"
-#include "../../lib/ws.h"
-#include "../../lib/geojson.h"
-#include "../../third_party/cJSON.h"
+#include "source.h"
+#include "lib/ws.h"
+#include "lib/geojson.h"
+#include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -61,13 +61,14 @@ static int on_msg(const char *data, size_t len, void *udp) {
 
   cJSON *f = cJSON_CreateObject();
   cJSON_AddStringToObject(f, "type", "Feature");
-  cJSON *g = cJSON_CreateObject();
-  cJSON_AddStringToObject(g, "type", "Point");
-  cJSON *co = cJSON_CreateArray();
-  cJSON_AddItemToArray(co, cJSON_CreateNumber(139.6917));   /* TOKYO */
-  cJSON_AddItemToArray(co, cJSON_CreateNumber(35.6895));
-  cJSON_AddItemToObject(g, "coordinates", co);
-  cJSON_AddItemToObject(f, "geometry", g);
+  /* NO GEOMETRY. Every post used to be emitted at Tokyo Station
+   * (35.6895, 139.6917). A Bluesky post is not a place — it carries no
+   * location unless the author geotagged it, and this firehose does not.
+   * Stacking every row on one pin is the fabrication the 2026-07-31 audit
+   * deleted from cisa-kev-jp, poc-in-github and peeringdb-jp; this source
+   * escaped that sweep only because it emits nothing without a live
+   * connection. lib/geojson.c handles an absent geometry correctly — do NOT
+   * reintroduce a fallback coordinate. */
   cJSON *p = cJSON_CreateObject();                          /* EXACT order */
   cJSON_AddItemToObject(p, "did",
     cJSON_IsString(did) ? cJSON_CreateString(did->valuestring) : cJSON_CreateNull());

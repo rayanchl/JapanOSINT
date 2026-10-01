@@ -28,10 +28,10 @@
  * summary:{total_sources,found_count,detection_breakdown}, _meta }.
  * success=true, confidence 90 if any found else 60. No API key. Emits one
  * osint_service_result row. */
-#include "../../source.h"
-#include "../../lib/feedlib.h"
-#include "../../third_party/cJSON.h"
-#include "../../core/httpclient.h"
+#include "source.h"
+#include "lib/feedlib.h"
+#include "third_party/cJSON.h"
+#include "core/httpclient.h"
 #include <regex.h>
 #include <string.h>
 #include <stdio.h>

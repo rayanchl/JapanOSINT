@@ -1,0 +1,15 @@
+/* Verified-live lk_disaster sources (1), part 1.
+ * Every endpoint in this file returned 2xx and parsed to at
+ * least one record at generation time; see
+ * docs/verified-sources-manifest.tsv for the recorded proof.
+ * Scaffolded once by collectors/gen_verified_sources.py; HAND-MAINTAINED
+ * since — this file, not the manifest, is the current copy. The
+ * generator refuses to overwrite it without --force. */
+#include "_verified_macros.inc"
+
+VJSON(lk_riskinfo_documents, "lk-riskinfo-documents", "Sri Lanka RiskInfo - hazard documents and flood maps", "Sri Lanka RiskInfo - hazard documents and flood maps",
+  "lk_disaster", "disaster",
+  "https://riskinfo.lk/api/v2/documents?page_size=50",
+  "documents",
+  "en", "[\"lk\",\"disaster\",\"batch17\",\"high-penetrancy\"]", 86400,
+  "41 DMC documents: title, name (e.g. 'Flood Inundation map Kalu River Basin Western Province, 14 October 2024.pdf'), uuid, extension, mime_type, href download link, subtype and the owner record. Operational flood-inundation mapping for named Sri Lankan river basins.");
