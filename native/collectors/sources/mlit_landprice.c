@@ -161,24 +161,45 @@ static int parse_float(const char *s, double *out) {
 
 /* recentQuarters(6): walk back from current UTC quarter, then reverse, so
  * out[0] = oldest, out[5] = current. We only need from=out[0], to=out[5]. */
+/* Both buffers are emptied on failure; the caller must not query with them. */
 static void recent_quarters(char *fromQ, char *toQ) {
+  fromQ[0] = 0; toQ[0] = 0;
   time_t now = time(NULL);
-  struct tm tmv; gmtime_r(&now, &tmv);
+  struct tm tmv;
+  /* gmtime_r's NULL return was ignored, and an unset `struct tm` here would
+   * have been formatted into the from=/to= of every one of the 47 prefecture
+   * requests below — a whole run against a garbage window. */
+  if (!gmtime_r(&now, &tmv)) return;
   int y = tmv.tm_year + 1900;
-  int q = tmv.tm_mon / 3 + 1;
+  int mon = tmv.tm_mon;
+  /* Range-check before formatting. tm_year and tm_mon are plain ints, so "%d%d"
+   * into an 8-byte buffer is a truncation as far as the compiler is concerned
+   * — and a HALF-WRITTEN QUARTER CODE is the dangerous outcome here, because
+   * "20" is a perfectly well-formed value the MLIT API will answer with an
+   * empty result set rather than an error. A year outside four digits has no
+   * MLIT quarter to ask for at all, so refusing is the honest answer. */
+  if (y < 1000 || y > 9999 || mon < 0 || mon > 11) return;
+  int q = mon / 3 + 1;                        /* 1..4 */
   /* current quarter is the last (newest) element */
   snprintf(toQ, 8, "%d%d", y, q);
-  /* walk back 5 more to reach the oldest (first) element */
-  for (int i = 0; i < 5; i++) {
-    q -= 1;
-    if (q < 1) { q = 4; y -= 1; }
-  }
-  snprintf(fromQ, 8, "%d%d", y, q);
+  /* Walk back 5 quarters by arithmetic on an absolute quarter index rather
+   * than by a decrementing loop. Same result — and the range stays visible,
+   * which the loop form did not: after `y -= 1` inside a loop the compiler can
+   * no longer prove the year is four digits, and -Wformat-truncation went back
+   * to reporting up to 10 bytes into the 8-byte buffer. */
+  int fidx = y * 4 + (q - 1) - 5;             /* y >= 1000 → fidx >= 3995 */
+  int fy = fidx / 4;                          /* 998..9998 */
+  int fq = fidx % 4 + 1;                      /* 1..4     */
+  snprintf(fromQ, 8, "%d%d", fy, fq);
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   char fromQ[8], toQ[8];
   recent_quarters(fromQ, toQ);
+  if (!fromQ[0] || !toQ[0]) {
+    fprintf(stderr, "[mlit-landprice] cannot determine the quarter window\n");
+    return -1;
+  }
 
   cJSON *features = cJSON_CreateArray();
 

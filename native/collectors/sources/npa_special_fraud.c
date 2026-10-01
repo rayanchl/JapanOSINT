@@ -212,7 +212,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       }
 
   cJSON *features = cJSON_CreateArray();
-  int fi = 0;
   for (size_t k = 0; k < mn; k++) {
     if (!months[k].has[0]) continue;           /* m.recognised != null */
     cJSON *f = gj_point_feature(NPA_LON, NPA_LAT);
@@ -257,7 +256,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddStringToObject(p, "source", "npa-special-fraud");
     cJSON_AddItemToObject(f, "properties", p);
     cJSON_AddItemToArray(features, f);
-    fi++;
   }
   cJSON_Delete(rows);
 

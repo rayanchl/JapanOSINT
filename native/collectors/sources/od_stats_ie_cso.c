@@ -3,11 +3,11 @@
  *           PxStat.Data.Cube_API.ReadDataset/CPM01/JSON-stat/2.0/en
  * JSON-stat 2.0 at the root (class=dataset); the dimension order is in the
  * "id" array and each observation is decoded against it by the reader in
- * od_shared.c. value[] is SPARSE: nulls are common and are skipped rather
+ * od_shared.inc. value[] is SPARSE: nulls are common and are skipped rather
  * than emitted as 0. The matrix code (CPM01 = Consumer Price Index) is
  * swappable across the whole CSO catalogue. Keyless.
  * Licence: CSO data is CC-BY 4.0. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "stats-ie-cso-cube"
 static const char *URL =

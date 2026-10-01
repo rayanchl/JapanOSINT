@@ -228,7 +228,7 @@ static int emit_domain(intel_sink *sink, const char *domain, const char *source,
   if (registered) cJSON_AddStringToObject(props, "registered", registered);
   if (registrar)  cJSON_AddStringToObject(props, "registrar", registrar);
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 80);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   char rk[320];

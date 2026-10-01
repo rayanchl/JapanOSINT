@@ -6,6 +6,7 @@
  * SEED/_meta/extraMeta NOT ported (live-only; 0 rows when 5ch geo-blocks). */
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/jocore.h"    /* jo_get_t() — the header-carrying GET; see run() */
 #include "lib/csv.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
@@ -97,7 +98,23 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     char url[256];
     snprintf(url, sizeof url, "https://%s/%s/subject.txt", host, board);
 
-    char *raw = feed_get_text(ctx->http, url, TIMEOUT_MS);
+    /* The Monazilla headers declared at the top of run() were being dropped on
+     * the floor: feed_get_text() takes no header argument, so every board was
+     * fetched with the shared JO_USER_AGENT and `hdrs` sat unused — which is
+     * exactly how -Wunused-variable found this. subject.txt is the 2ch/5ch
+     * *client protocol* endpoint and Monazilla/1.00 is the UA its clients are
+     * expected to announce; presenting as a generic crawler is the wrong-UA
+     * probe failure the house notes call out. libcurl applies CURLOPT_HTTPHEADER
+     * after CURLOPT_USERAGENT, so a "User-Agent:" entry in `hdrs` is what
+     * actually reaches the wire.
+     *
+     * jo_get_t() is the tree's own header-carrying GET (lib/jocore.h, static
+     * inline — no new .c dependency) and it logs the upstream status instead of
+     * `continue`-ing in silence, which matters here because 5ch answers a
+     * Cloudflare 403 from most hosts and the old path recorded nothing at all.
+     * A 5ch host is under .net, not .jp, so jo_get_t's Shift_JIS leg does not
+     * fire and the explicit csv_decode_sjis() below is still the sole decoder. */
+    char *raw = jo_get_t(ctx, url, hdrs, "chan-5ch", TIMEOUT_MS);
     if (!raw) continue;
     /* feed_get_text returns the raw body bytes; subject.txt is Shift_JIS. */
     char *text = csv_decode_sjis(raw, strlen(raw));

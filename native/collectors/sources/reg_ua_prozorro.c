@@ -129,14 +129,22 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   http_response hr = {0};
   int hc = http_request(ctx->http, "POST", PROZORRO_URL, hdrs,
                         body, (size_t)bn, 20000, 1, &hr);
+  /* "Prozorro did not answer" and "Prozorro answered with no matches" used to
+   * take the same `return 0`, so an outage was logged as a clean run against a
+   * supplier who simply has no tenders. Transport/parse failure is -1;
+   * scheduler.c's run_status() still downgrades it to "ok" when every host
+   * contacted did answer, so an honest empty is never punished. */
   if (hc != 0 || hr.status != 200 || !hr.body) {
     fprintf(stderr, "[ua_prozorro] http status=%ld\n", hr.status);
     http_response_free(&hr);
-    return 0;
+    return -1;
   }
   cJSON *root = cJSON_Parse(hr.body);
   http_response_free(&hr);
-  if (!root) return 0;
+  if (!root) {
+    fprintf(stderr, "[ua_prozorro] 200 but body did not parse as JSON\n");
+    return -1;
+  }
 
   cJSON *arr = cJSON_GetObjectItem(root, "data");
   int emitted = 0;
@@ -145,7 +153,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   cJSON_Delete(root);
   fprintf(stderr, "[ua_prozorro] emitted %d\n", emitted);
-  return 0;   /* honest empty is not an error */
+  return 0;   /* fetched and parsed; honest empty is not an error */
 }
 
 static const source_def ua_prozorro_def = {

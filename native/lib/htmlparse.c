@@ -97,11 +97,41 @@ const char *html_block(const char *from, const char *tag,
   return gt ? gt + 1 : end;
 }
 
-int html_attr(const char *s, const char *attr, char *out, size_t n) {
-  out[0] = 0;
-  if (!s) return 0;
+/* An attribute name only ever STARTS at the beginning of the buffer, after
+ * whitespace, or immediately after a tag's '<'. Without this left boundary the
+ * scan matched the name as a bare substring, so `src` was satisfied by the
+ * "src" inside `data-src=` and `id` by the one inside `data-id=`. On the
+ * lazy-loading markup the camera scrapers meet — `<img data-src="spinner.gif"
+ * src="snapshot.jpg">` — that stored the placeholder and the real snapshot URL
+ * was never seen. (The RIGHT boundary is already implied: after the name we
+ * require optional spaces then '=', so `srcset=` cannot satisfy `src`.) */
+static int attr_start(const char *s, const char *p) {
+  if (p == s) return 1;
+  char c = p[-1];
+  return c == '<' || c == ' ' || c == '\t' || c == '\n' || c == '\r' ||
+         c == '\f' || c == '\v';
+}
+
+/* One scan of the buffer. `allow_unquoted` = 0 considers only quoted values.
+ *
+ * html_attr runs this twice, quoted-first, because an unquoted match can be a
+ * fragment of ANOTHER attribute's quoted text and this scanner is deliberately
+ * not quote-aware (it is handed text-bearing XML blocks, where an apostrophe in
+ * prose would desync any quote tracking). Given
+ *   <Weakness Description="compare Name=Other here" Name="Real Name">
+ * a single pass returned `Other` — the bad-character filter below does not
+ * catch it, because the filter only fires when the closing quote is GLUED to
+ * the value (`href=/x"`); put a space before it and the fragment reads as a
+ * clean unquoted value. Preferring any quoted match resolves it without
+ * needing to know where the quotes are. */
+static int html_attr_scan(const char *s, const char *attr, char *out, size_t n,
+                          int allow_unquoted) {
   size_t al = strlen(attr);
-  for (const char *p = s; (p = strchr(p, *attr ? attr[0] : '=')) != NULL; p++) {
+  /* The compare below is case-insensitive; the SCAN has to be too. It used
+   * strchr(p, attr[0]) — a lowercase 'h' — so `<BASE HREF="…">` (upper-case
+   * markup is common on older Japanese government pages) was never found. */
+  for (const char *p = s; *p; p++) {
+    if (!attr_start(s, p)) continue;
     if (strncasecmp(p, attr, al) != 0) continue;
     const char *e = p + al;
     while (*e == ' ' || *e == '\t') e++;
@@ -109,10 +139,33 @@ int html_attr(const char *s, const char *attr, char *out, size_t n) {
     e++;
     while (*e == ' ' || *e == '\t') e++;
     char q = *e;
-    if (q != '"' && q != '\'') continue;
-    const char *v = e + 1;
-    const char *ve = strchr(v, q);
-    if (!ve) return 0;
+    const char *v, *ve;
+    if (q == '"' || q == '\'') {
+      v = e + 1;
+      ve = strchr(v, q);
+      if (!ve) return 0;                     /* unterminated quote → give up */
+    } else if (!allow_unquoted) {
+      continue;
+    } else {
+      /* Unquoted value (`src=snapshot.jpg`), which HTML allows and municipal
+       * pages do emit: runs to whitespace or the tag's '>'. A spec-legal
+       * unquoted value contains none of ` " ' = < > ` — enforcing that is what
+       * keeps a stray `href=/x` sitting INSIDE another attribute's quoted
+       * value (`title="see href=/x"`) from beating the tag's real href, since
+       * this scanner is deliberately not quote-aware (it is also handed
+       * text-bearing XML blocks, where an apostrophe in prose would desync
+       * any quote tracking). */
+      v = e;
+      ve = v;
+      while (*ve && *ve != '>' && *ve != ' ' && *ve != '\t' && *ve != '\n' &&
+             *ve != '\r' && *ve != '\f' && *ve != '\v') ve++;
+      if (ve == v) continue;                        /* `attr=` with no value */
+      int bad = 0;
+      for (const char *c = v; c < ve; c++)
+        if (*c == '"' || *c == '\'' || *c == '=' || *c == '<' || *c == '`')
+          bad = 1;
+      if (bad) continue;
+    }
     size_t len = (size_t)(ve - v);
     if (len >= n) len = n - 1;
     memcpy(out, v, len);
@@ -122,23 +175,84 @@ int html_attr(const char *s, const char *attr, char *out, size_t n) {
   return 0;
 }
 
+int html_attr(const char *s, const char *attr, char *out, size_t n) {
+  if (!out || n == 0) return 0;
+  out[0] = 0;
+  if (!s || !attr || !*attr) return 0;
+  if (html_attr_scan(s, attr, out, n, 0)) return 1;   /* quoted wins outright */
+  out[0] = 0;
+  return html_attr_scan(s, attr, out, n, 1);
+}
+
 /* ── anchors: the single implementation both anchor consumers share ─────── */
 
 const char *html_anchor_next(const char *from, html_anchor *out) {
   if (!from || !out) return NULL;
   const char *p = from;
-  while ((p = strstr(p, "<a ")) != NULL) {
-    const char *h = strstr(p, "href=\"");
+  while ((p = strchr(p, '<')) != NULL) {
+    /* `<a` plus a delimiter. The old test was the literal "<a ", so an anchor
+     * written `<a\nhref=…>` or `<a\thref=…>` — ordinary output from a
+     * pretty-printing CMS — was never seen at all, and every record behind it
+     * was discarded with no error and no notice. */
+    if ((p[1] != 'a' && p[1] != 'A') ||
+        (p[2] != ' ' && p[2] != '\t' && p[2] != '\n' && p[2] != '\r')) {
+      p++; continue;
+    }
     const char *tagend = strchr(p, '>');
-    p += 3;
-    if (!h || !tagend || h > tagend) continue;      /* not this tag's href */
-    h += 6;
-    const char *he = strchr(h, '"');
-    if (!he) continue;
-    size_t hlen = (size_t)(he - h);
+    const char *scan = p + 2;
+    p += 2;
+    if (!tagend) continue;
+    /* href=, case-insensitive, either quote style, or unquoted. Matching only
+     * the literal lowercase `href="` dropped `href='…'` and `HREF=…` outright;
+     * both are legal and both appear in the government listing pages this
+     * scanner exists for. Requiring whitespace before the name is what keeps
+     * `data-href=` from being mistaken for the real attribute. */
+    const char *h = NULL;
+    char q = 0;
+    for (const char *c = scan; c + 6 <= tagend; c++) {
+      if (*c != ' ' && *c != '\t' && *c != '\n' && *c != '\r') continue;
+      if (strncasecmp(c + 1, "href", 4) != 0) continue;
+      const char *e = c + 5;
+      while (*e == ' ' || *e == '\t') e++;
+      if (*e != '=') continue;
+      e++;
+      while (*e == ' ' || *e == '\t') e++;
+      h = e; q = *e; break;
+    }
+    if (!h) continue;                               /* not this tag's href */
+    size_t hlen;
+    const char *after;                              /* first byte past value */
+    if (q == '"' || q == '\'') {
+      h++;
+      const char *he = strchr(h, q);
+      if (!he) continue;
+      hlen = (size_t)(he - h);
+      after = he + 1;
+    } else {
+      const char *he = h;
+      while (he < tagend && *he != ' ' && *he != '\t' && *he != '\n' &&
+             *he != '\r') he++;
+      hlen = (size_t)(he - h);
+      after = he;
+    }
+    /* Whitespace inside the quotes is not part of the URL. Hamada city's
+     * camera index writes `href=" ./viewer.php?cid=1"`; stored verbatim, the
+     * resolved link became `r_view/ ./viewer.php` — a record whose url does
+     * not open. Browsers strip it; so does this. */
+    while (hlen && (*h == ' ' || *h == '\t' || *h == '\n' || *h == '\r')) { h++; hlen--; }
+    while (hlen && (h[hlen - 1] == ' ' || h[hlen - 1] == '\t' ||
+                    h[hlen - 1] == '\n' || h[hlen - 1] == '\r')) hlen--;
     if (!hlen || hlen > 800) continue;
-    const char *atext = strchr(he, '>');
-    const char *aclose = atext ? strstr(atext, "</a>") : NULL;
+    const char *atext = strchr(after, '>');
+    /* Case-insensitive: everything else in this scanner (the opening `<a`
+     * test above, href's name match) is explicitly case-tolerant because
+     * upper-case markup is ordinary on older Japanese municipal/government
+     * pages (see the `<BASE HREF=` note on html_attr_scan). A literal
+     * strstr() here only ever matched a lowercase `</a>`, so any page whose
+     * anchors close `</A>` produced zero anchors — a silent, total discard
+     * for that whole class of source, not a partial one, since every anchor
+     * on such a page fails the same way. */
+    const char *aclose = atext ? strcasestr(atext, "</a>") : NULL;
     if (!atext || !aclose) continue;
     atext++;
 

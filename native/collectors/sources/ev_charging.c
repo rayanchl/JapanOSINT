@@ -27,14 +27,21 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   cJSON_AddStringToObject(p, "charger_id", cid);
   const char *name = ov_tag(el, "name");
   if (!name) name = ov_tag(el, "name:en");
-  char nbuf[64];
-  if (!name) { snprintf(nbuf, sizeof nbuf, "Charging station %d", i + 1); name = nbuf; }
-  cJSON_AddStringToObject(p, "name", name);
+  /* no-fabrication (house rule 1): OSM carried no name tag for this element.
+   * The old code wrote "Charging station %d" + the loop index, which is both an invented
+   * label and an UNSTABLE one — it feeds geojson's content-hash uid, so the
+   * same object was re-keyed whenever Overpass changed element order. An
+   * absent name is serialized as null; pick_text() skips nulls, so the row
+   * persists with a NULL title rather than a made-up one. */
+  if (name) cJSON_AddStringToObject(p, "name", name);
+  else cJSON_AddItemToObject(p, "name", cJSON_CreateNull());
   const char *op = ov_tag(el, "operator");
-  cJSON_AddStringToObject(p, "operator", op ? op : "unknown");
+  if (op) cJSON_AddStringToObject(p, "operator", op);
+  else cJSON_AddItemToObject(p, "operator", cJSON_CreateNull());
   const char *addr = ov_tag(el, "addr:full");
   if (!addr) addr = ov_tag(el, "addr:street");
-  cJSON_AddStringToObject(p, "address", addr ? addr : "");
+  if (addr) cJSON_AddStringToObject(p, "address", addr);
+  else cJSON_AddItemToObject(p, "address", cJSON_CreateNull());
 
   cJSON *ct = cJSON_CreateArray();
   if (tag_yes(el, "socket:chademo"))
@@ -60,8 +67,17 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   cJSON_AddBoolToObject(p, "is_free", fee && strcmp(fee, "no") == 0);
   const char *net = ov_tag(el, "network");
   if (!net) net = ov_tag(el, "operator");
-  cJSON_AddStringToObject(p, "network", net ? net : "unknown");
-  cJSON_AddStringToObject(p, "status", "operational");
+  if (net) cJSON_AddStringToObject(p, "network", net);
+  else cJSON_AddItemToObject(p, "network", cJSON_CreateNull());
+  /* no-fabrication (house rule 1): this read `status = "operational"` for
+   * EVERY station, unconditionally. Overpass was never asked whether the
+   * charger works, so the field asserted an operational state that had not
+   * been observed — the map-of-healthy-fleet failure. OSM's own lifecycle tag
+   * is reported when it is present, and null when it is not. */
+  const char *opstatus = ov_tag(el, "operational_status");
+  if (!opstatus) opstatus = ov_tag(el, "disused");
+  if (opstatus) cJSON_AddStringToObject(p, "status", opstatus);
+  else cJSON_AddItemToObject(p, "status", cJSON_CreateNull());
   cJSON_AddStringToObject(p, "country", "JP");
   cJSON_AddStringToObject(p, "source", "osm_overpass");
   cJSON_AddItemToObject(f, "properties", p);

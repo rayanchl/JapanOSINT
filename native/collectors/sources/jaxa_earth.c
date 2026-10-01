@@ -57,11 +57,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     return -1;                       /* fetch really failed: an error */
   }
 
-  int n = 0, i = 0, seen = 0;
+  int n = 0, seen = 0;
   cJSON *l;
   cJSON_ArrayForEach(l, links) {
     /* (cap removed: every STAC child collection is walked —
-     * docs/SOURCE_EXHAUSTIVENESS.md; i still bounds the per-run fetch log) */
+     * docs/SOURCE_EXHAUSTIVENESS.md) */
     const char *rel = jo_sv(l, "rel");
     const char *href = jo_sv(l, "href");
     if (!rel || strcmp(rel, "child") != 0 || !href) continue;
@@ -75,7 +75,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
      * dropped all of it. */
     cJSON *d = feed_get_json(ctx->http, href, 15000);
     if (!d) { fprintf(stderr, "[jaxa-earth] %s unreachable\n", id); continue; }
-    i++;
 
     const char *tt = jo_sv(d, "title");
     if (!tt) tt = id;

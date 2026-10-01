@@ -47,10 +47,36 @@ typedef struct {
    * spell it the same way over the same table. */
   const char *tenant;
   int         limit;
+  /* ?sort= — NULL/"date" is the default and unchanged: newest first, keyset on
+   * (published_at??fetched_at, uid). "relevance" orders by FTS5 bm25() with
+   * title/summary/keywords/tags boosted and keys the cursor on (rank, uid);
+   * "trust" takes the top JO_RERANK_WINDOW hits by bm25 and reranks them in C
+   * by bm25 x f(source reliability) x recency decay, paging by offset over
+   * that bounded window and stating the bound in meta.rerank. Both text sorts
+   * REQUIRE q; without it the call answers a 400 envelope (status via
+   * intelapi_list_items_st). Unknown values are a 400 too, never silently
+   * "date" — a client that asked for ranking must not get a feed in reply. */
+  const char *sort;
+  /* ?total=1 — run the capped COUNT(*) and fill page.total (exact when below
+   * JO_TOTAL_CAP, else page.total_gte). Off by default: the count is a second
+   * full scan of the filter and the web feed does not render it. */
+  int         want_total;
+  /* ?collapse=1 — fold rows sharing a non-null cluster_id (simhash.c) onto the
+   * best-ranked one within the page; meta.collapsed says how many were hidden.
+   * The cursor still belongs to the underlying scan, so paging stays lossless. */
+  int         collapse;
 } intel_items_query;
 
 /* GET /api/intel/items — malloc'd envelope {data,page,meta}. A query with
- * only limit set (all filters NULL) is byte-identical to the old behaviour. */
+ * only limit set (all filters NULL) is byte-identical to the old behaviour.
+ *
+ * intelapi_list_items_st() also reports the HTTP status the body deserves:
+ * 200, or 400 with an {"error":…,"detail":…} body for a request that cannot
+ * be honoured as asked (sort=relevance without q, an unknown sort). The
+ * status-less form returns the same body for the 400 case — the error is
+ * in-band either way, only the status line is lost. NULL = server error. */
+char *intelapi_list_items_st(db_handle *db, const intel_items_query *q,
+                             int *status);
 char *intelapi_list_items(db_handle *db, const intel_items_query *q);
 
 /* GET /api/sources — malloc'd JSON array of all `sources` rows. */
@@ -65,6 +91,18 @@ char *api_sources_list(db_handle *db);
  * intelapi.c — without it the parent reports 0 items next to a dozen sibling
  * rows that are in fact its own channels. */
 char *intelapi_intel_sources(db_handle *db);
+
+/* The same payload, bounded. `limit <= 0` with `summary_only == 0` is exactly
+ * intelapi_intel_sources() — the full list, which is still the default.
+ *
+ *   limit > 0        one page of data[], from `offset`, after the usual sort
+ *   summary_only     `meta` only; data[] empty and meta.note says why
+ *
+ * `meta` always carries total / shown / offset / limit / truncated / note, so
+ * a page can never be mistaken for the whole list. `total` counts every
+ * source regardless of the window. */
+char *intelapi_intel_sources_view(db_handle *db, int limit, int offset,
+                                  int summary_only);
 
 /* intelCatalog.js INTEL_SOURCE_SET membership — the source ids that emit
  * kind:'intel'. 0 for NULL.

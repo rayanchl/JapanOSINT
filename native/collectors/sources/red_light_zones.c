@@ -18,9 +18,14 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   cJSON_AddStringToObject(p, "zone_id", zid);
   const char *name = ov_tag(el, "name");
   if (!name) name = ov_tag(el, "name:en");
-  char nbuf[64];
-  if (!name) { snprintf(nbuf, sizeof nbuf, "Venue %d", i + 1); name = nbuf; }
-  cJSON_AddStringToObject(p, "name", name);
+  /* no-fabrication (house rule 1): OSM carried no name tag for this element.
+   * The old code wrote "Venue %d" + the loop index, which is both an invented
+   * label and an UNSTABLE one — it feeds geojson's content-hash uid, so the
+   * same object was re-keyed whenever Overpass changed element order. An
+   * absent name is serialized as null; pick_text() skips nulls, so the row
+   * persists with a NULL title rather than a made-up one. */
+  if (name) cJSON_AddStringToObject(p, "name", name);
+  else cJSON_AddItemToObject(p, "name", cJSON_CreateNull());
   const char *category = ov_tag(el, "amenity");
   if (category) cJSON_AddStringToObject(p, "category", category);
   else cJSON_AddItemToObject(p, "category", cJSON_CreateNull());

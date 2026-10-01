@@ -96,7 +96,7 @@ static const hp_source HP_PROCUREMENT[] = {
     .name_ja = "USAID — 対外援助支出", .category = "government",
     .portal = "https://foreignassistance.gov", .record_type = "aid-transaction",
     .tags = "\"us\",\"aid\"", .free_tier = 1,
-    .url = "https://data.usaid.gov/resource/azij-hu6e.json?$q={q}&$limit=40",
+    .url = "https://data.usaid.gov/resource/azij-hu6e.json?$q={q}&$limit=40&$order=:id",
     .title_keys = "activity_name,implementing_partner_name",
     .id_keys = "activity_id", .date_keys = "fiscal_year",
     .description = "US foreign-assistance transactions — implementing partner, "
@@ -119,7 +119,7 @@ static const hp_source HP_PROCUREMENT[] = {
     .name_ja = "カナダ 政府データ 契約検索", .category = "government",
     .portal = "https://open.canada.ca", .record_type = "ca-dataset",
     .tags = "\"ca\",\"procurement\",\"opendata\"", .free_tier = 1,
-    .url = "https://open.canada.ca/data/api/3/action/package_search?q={q}&rows=25",
+    .url = "https://open.canada.ca/data/api/3/action/package_search?q={q}&rows=25&sort=id%20asc",
     .array_path = "result.results", .title_keys = "title", .id_keys = "name",
     .date_keys = "metadata_modified",
     .description = "Canadian federal datasets matching an entity or programme — "

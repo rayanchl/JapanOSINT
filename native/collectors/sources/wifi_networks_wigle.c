@@ -6,6 +6,7 @@
 #include "source.h"
 #include "lib/feedlib.h"
 #include "lib/geojson.h"
+#include "_credential_notice.inc"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -17,10 +18,15 @@ static void passthru(cJSON *p, const char *outk, cJSON *r, const char *ink) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("WIGLE_API_KEY");
   /* Gated, not failed: -1 would log fetch_log status='error' and open a
-   * collector_anomaly on every tick for a source that simply has no key. */
+   * collector_anomaly on every tick for a source that simply has no key. So
+   * this still returns 0 — but it now says so in the data instead of only in
+   * stderr, where "ran, found nothing" and "never ran" looked identical. */
   if (!key || !*key) {
-    fprintf(stderr, "[wifi-networks-wigle] gated (no WIGLE_API_KEY)\n");
-    return 0;
+    static const char *const envs[] = { "WIGLE_API_KEY", NULL };
+    return jo_needs_credential(sink, "wifi-networks-wigle",
+        "WiGLE wireless network search (JP bbox)",
+        envs, "https://api.wigle.net/api/v2/network/search",
+        "free account at wigle.net; WIGLE_API_KEY is the base64 API name:token pair");
   }
 
   char auth[256];
@@ -36,7 +42,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!cJSON_IsArray(results)) { cJSON_Delete(data); return -1; }
 
   cJSON *features = cJSON_CreateArray();
-  int i = 0;
   cJSON *net;
   cJSON_ArrayForEach(net, results) {
     cJSON *f = cJSON_CreateObject();
@@ -52,9 +57,25 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddItemToObject(f, "geometry", g);
 
     cJSON *p = cJSON_CreateObject();                 /* EXACT JS key order */
-    char id[32];
-    snprintf(id, sizeof id, "WIGLE_%d", i);
-    cJSON_AddStringToObject(p, "id", id);
+    /* `id` is a NATIVE_ID_KEY (lib/geojson.c), so it becomes the row's uid.
+     * "WIGLE_<position on this page>" tied that uid to WiGLE's result ordering
+     * rather than to the access point: WiGLE pages by last-update time, so an
+     * AP being re-observed shifts everything below it and every row's identity
+     * moves with it. The BSSID (`netid`) IS the access point's identifier and
+     * is the field WiGLE itself keys on. */
+    char id[96];
+    cJSON *bssid = cJSON_GetObjectItem(net, "netid");
+    if (bssid && cJSON_IsString(bssid) && bssid->valuestring[0]) {
+      snprintf(id, sizeof id, "WIGLE_%.64s", bssid->valuestring);
+      cJSON_AddStringToObject(p, "id", id);
+    } else {
+      /* No netid on this result — WiGLE gave us no identity for it. Say that
+       * rather than mint a positional one; lib/geojson.c then uid's the row by
+       * content hash, which does not claim to be an identifier. */
+      cJSON_AddStringToObject(p, "id_basis",
+        "none: this WiGLE result carried no netid (BSSID), so the row is uid'd "
+        "by content hash rather than a positional id");
+    }
     passthru(p, "ssid", net, "ssid");
     passthru(p, "bssid", net, "netid");
     passthru(p, "encryption", net, "encryption");
@@ -63,7 +84,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddStringToObject(p, "source", "wigle_api");
     cJSON_AddItemToObject(f, "properties", p);
     cJSON_AddItemToArray(features, f);
-    i++;
   }
   cJSON_Delete(data);
 

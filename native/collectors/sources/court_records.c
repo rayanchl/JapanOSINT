@@ -92,10 +92,10 @@ static cJSON *cl_opinions(http_client *h, const char *q) {
     if (sn && cJSON_IsString(sn)) {
       char clean[512]; char *src = sn->valuestring, *dst = clean;
       int tag = 0;
-      for (int j = 0; src[j] && dst - clean < 500; j++) {
-        if (src[j] == '<') tag = 1;
-        else if (src[j] == '>') tag = 0;
-        else if (!tag) *dst++ = src[j];
+      for (int cj = 0; src[cj] && dst - clean < 500; cj++) {
+        if (src[cj] == '<') tag = 1;
+        else if (src[cj] == '>') tag = 0;
+        else if (!tag) *dst++ = src[cj];
       }
       *dst = 0;
       cJSON_AddStringToObject(ce, "excerpt", clean);
@@ -287,7 +287,10 @@ static int emit_record(intel_sink *sink, cJSON *rec, const char *prefix,
 
   free(bj); free(pj);
   cJSON_Delete(props);
-  return rc >= 0 ? 1 : 0;
+  /* -1, not 0, on a sink error: the caller distinguishes "this record did not
+   * exist" from "this record existed and we failed to store it". Returning 0
+   * for both made a DB write failure indistinguishable from a quiet docket. */
+  return rc >= 0 ? 1 : -1;
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -301,15 +304,17 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *dk  = cl_dockets(ctx->http, q);
   cJSON *rc_ = cl_recap(ctx->http, q);
 
-  int emitted = 0, idx = 0;
+  int emitted = 0, idx = 0, sink_err = 0;
 
   if (op) {
     cJSON *cases = cJSON_GetObjectItem(op, "cases");
     if (cases && cJSON_IsArray(cases)) {
       int n = cJSON_GetArraySize(cases);
-      for (int i = 0; i < n; i++)
-        emitted += emit_record(sink, cJSON_GetArrayItem(cases, i),
-                               "case", q, NULL, idx++);
+      for (int i = 0; i < n; i++) {
+        int r = emit_record(sink, cJSON_GetArrayItem(cases, i),
+                            "case", q, NULL, idx++);
+        if (r < 0) sink_err = 1; else emitted += r;
+      }
     }
   }
   if (dk) {
@@ -319,17 +324,28 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       for (int i = 0; i < n; i++) {
         cJSON *d = cJSON_GetArrayItem(dks, i);
         const char *ty = case_type(str_of(d, "nature_of_suit"), str_of(d, "cause"));
-        emitted += emit_record(sink, d, "docket", q, ty, idx++);
+        int r = emit_record(sink, d, "docket", q, ty, idx++);
+        if (r < 0) sink_err = 1; else emitted += r;
       }
     }
   }
+
+  /* No endpoint answered at all. That is not "this entity has no court record"
+   * — it is "we do not know", and the two must not share a status code. */
+  int fetch_failed = (!op && !dk && !rc_);
 
   cJSON_Delete(op);
   cJSON_Delete(dk);
   cJSON_Delete(rc_);
 
-  /* Honest empty: zero results → emit nothing, return 0 (not an error). */
-  return emitted >= 0 ? 0 : 0;
+  fprintf(stderr, "[COURT_RECORDS] emitted %d%s%s\n", emitted,
+          fetch_failed ? " (no endpoint answered)" : "",
+          sink_err ? " (SINK ERROR)" : "");
+  /* `emitted` is a count and can never be negative, so the old
+   * `emitted >= 0 ? 0 : 0` had two identical arms: a CourtListener outage and
+   * a DB write failure both scored as a clean run. Honest empty is still 0. */
+  if (fetch_failed || sink_err) return -1;
+  return 0;
 }
 
 static const source_def court_records_def = {

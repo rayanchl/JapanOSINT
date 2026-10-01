@@ -145,7 +145,8 @@ static cJSON *gitlab(http_client *h, const char *q) {
   long code = 0; cJSON *j = NULL;
   int hc = http_get(h, url, &code, &j);
   if (hc != 0 || code != 200 || !j || !cJSON_IsArray(j)) {
-    if (j) cJSON_Delete(j); return NULL;
+    if (j) cJSON_Delete(j);
+    return NULL;
   }
   cJSON *r = cJSON_CreateObject();
   cJSON_AddStringToObject(r, "source", "GitLab");

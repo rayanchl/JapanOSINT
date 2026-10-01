@@ -80,6 +80,7 @@ struct EvidenceSection: View {
             Image(systemName: "checkmark.shield")
                 .font(.subheadline)
                 .foregroundStyle(theme.accentAlt)
+                .accessibilityHidden(true)   // the section title follows
             Text(title)
                 .font(.headline)
                 .foregroundStyle(theme.text)
@@ -253,6 +254,7 @@ struct EvidenceSection: View {
                 Text("No captures").foregroundStyle(theme.text)
             } icon: {
                 Image(systemName: "shield.slash").foregroundStyle(theme.textMuted)
+                    .accessibilityHidden(true)   // "No captures" is the label
             }
         } description: {
             Text("This item has no evidence capture. Only sources with capture enabled record the raw response and enter the hash chain.")
@@ -266,6 +268,7 @@ struct EvidenceSection: View {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .font(.caption)
                     .foregroundStyle(theme.danger)
+                    .accessibilityHidden(true)   // the message follows
                 Text(message)
                     .font(.caption)
                     .foregroundStyle(theme.text)
@@ -372,6 +375,7 @@ private struct EvidenceDownloadSheet: View {
                 HStack(alignment: .top, spacing: Space.sm) {
                     Image(systemName: "exclamationmark.shield.fill")
                         .foregroundStyle(theme.warning)
+                        .accessibilityHidden(true)   // the warning text follows
                     Text("This is raw third-party content captured from the network. It is untrusted: open it only in a tool you would trust with a hostile file.")
                         .font(.callout)
                         .foregroundStyle(theme.text)

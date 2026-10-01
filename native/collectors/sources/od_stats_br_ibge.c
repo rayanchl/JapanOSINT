@@ -10,7 +10,7 @@
  * and the numeric value. Keyless. The same URL shape serves any of the ~1,000
  * IBGE aggregates at national/state/municipal level.
  * Licence: IBGE open data, free reuse with attribution. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "stats-br-ibge-ipca"
 static const char *URL =

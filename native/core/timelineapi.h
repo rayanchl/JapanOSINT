@@ -87,16 +87,20 @@
  *                        Ignoring the filter and returning the tenant's whole
  *                        timeline would silently answer a different question.
  *
- * ── DDL for the orchestrator (all optional; the endpoint is correct without
- *    them, just slower — no new tables or columns are required) ──────────────
+ * ── DDL (all optional; the endpoint is correct without them, just slower — no
+ *    new tables or columns are required). ALL THREE ARE NOW IN schema.sql,
+ *    which db_open() re-applies on every boot, so nothing has to be run by
+ *    hand — they are listed here because they are this module's, and because
+ *    the third one's expression must not drift from the SQL below ────────────
  *   CREATE INDEX IF NOT EXISTS idx_alert_events_tenant_ts
- *     ON alert_events(tenant_id, matched_at DESC);
+ *     ON alert_events(tenant_id, matched_at DESC);            [schema.sql]
  *   CREATE INDEX IF NOT EXISTS idx_em_created
- *     ON entity_mentions(created_at DESC);
+ *     ON entity_mentions(created_at DESC);                    [schema.sql]
  *   CREATE INDEX IF NOT EXISTS idx_intel_items_tenant_tsnorm
  *     ON intel_items(tenant_id,
  *                    strftime('%Y-%m-%dT%H:%M:%SZ',
  *                             COALESCE(published_at, fetched_at)) DESC, uid);
+ *                                                             [schema.sql]
  * The first two are plain indexes; alert_events currently only has
  * (rule_id, matched_at) and idx_em_entity is (entity_id, created_at), neither
  * of which serves a tenant-wide time scan. The third is an expression index

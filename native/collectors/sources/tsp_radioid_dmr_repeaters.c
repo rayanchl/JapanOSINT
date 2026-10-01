@@ -17,8 +17,9 @@
  *  - "frequency and offset are strings in MHz."
  *  - "'id'/'locator' are the DMR repeater id (6-7 digits, first 3 = MCC country
  *    code)": the MCC prefix is recorded as a derived field.
- * STATED BOUND: only repeaters whose status is ACTIVE are emitted, capped at
- *   MAX_ROWS; both facts are recorded in properties.
+ * STATED BOUND: only repeaters whose status is ACTIVE are emitted, and that
+ *   filter is recorded in properties. There is no row cap — the 15,000-row one
+ *   this collector used to carry sliced an array already fully in memory.
  * Licence: RadioID.net publishes the static JSON exports for community use with
  *   no key. Data is operator-supplied.
  */
@@ -27,13 +28,11 @@
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
 #include "lib/feedlib.h"
-#include "lib/truncnotice.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define RADIOID_URL "https://radioid.net/static/rptrs.json"
-#define MAX_ROWS 15000  /* exhaustive-ok: disclosed as a record below */
 
 static void add_strlist(cJSON *dst, const char *key, const cJSON *src) {
   if (!cJSON_IsArray(src)) return;
@@ -62,7 +61,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *r;
   cJSON_ArrayForEach(r, arr) {
     seen++;
-    if (n >= MAX_ROWS) break;  /* exhaustive-ok: the cap is disclosed as a collector-truncation-notice below */
     double id = 0;
     int has_id = jo_num(r, "id", &id);
     if (!has_id) has_id = jo_num(r, "locator", &id);
@@ -106,7 +104,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       "RadioID publishes no coordinates for repeaters; the DMR id joins to "
       "brandmeister-devices where a position is available");
     cJSON_AddStringToObject(pr, "emitted_filter", "status=ACTIVE only");
-    cJSON_AddNumberToObject(pr, "row_cap", MAX_ROWS);
     cJSON_AddStringToObject(pr, "source", "RadioID.net rptrs.json");
     char *pj = cJSON_PrintUnformatted(pr);
     cJSON_Delete(pr);
@@ -136,13 +133,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   cJSON_Delete(doc);
-  /* The cap kept one run bounded; what it did not do is say so. A shortfall
-   * reported only to stderr is not a disclosure (docs/SOURCE_EXHAUSTIVENESS.md
-   * rule 7) — downstream cannot tell a complete run from a clipped one. */
-  if (n >= MAX_ROWS)
-    trunc_notice(sink, "radioid-dmr-repeaters", RADIOID_URL, NULL, n, seen,
-                 "MAX_ROWS bounded this run; the upstream offered more registered repeaters",
-                 "raise MAX_ROWS in this collector");
   fprintf(stderr, "[radioid-dmr-repeaters] emitted %d ACTIVE of %d registered\n",
           n, seen);
   return 0;

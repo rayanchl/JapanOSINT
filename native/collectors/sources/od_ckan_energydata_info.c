@@ -6,11 +6,11 @@
  * count, and the catalogue total. Keyless (canonical CKAN action API).
  * Licence: World Bank open data; per-dataset licences are exposed in
  * license_title / license_url (mostly CC-BY-4.0) and emitted verbatim. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ckan-energydata-info"
 static const char *URL =
-  "https://energydata.info/api/3/action/package_search?rows=20";
+  "https://energydata.info/api/3/action/package_search?rows=20&sort=id%20asc";
 static const char *const EXTRA[] = { "country_code", "notes", "tags", NULL };
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -24,7 +24,7 @@ static const source_def od_ckan_energydata_info_def = {
   .name = "energydata.info (World Bank/ESMAP) CKAN",
   .update_interval_sec = 86400, .run = run,
   .category = "government", .type = "dataset",
-  .url = "https://energydata.info/api/3/action/package_search?rows=20",
+  .url = "https://energydata.info/api/3/action/package_search?rows=20&sort=id%20asc",
   .description = "World Bank/ESMAP energy open-data catalogue: dataset title, organisation, licence and ISO3 country tags for 1,191 energy-sector datasets",
   .license = "World Bank open data; per-dataset licences in license_title/license_url (mostly CC-BY-4.0)",
   .free_tier = 1,

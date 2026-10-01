@@ -147,11 +147,18 @@ int tenant_resolve(db_handle *db, const auth_user *u,
       }
       sqlite3_finalize(st);
     }
-    if (nv > 0) {
+    /* Scoped to the tenants actually granted above, not to the email.
+     * The read caps at 16 rows; the old DELETE was keyed on email alone, so a
+     * user invited to 17+ workspaces was added to 16 of them and ALL 17 invite
+     * rows were destroyed — the remainder unrecoverable, with the inviting
+     * admin's invite gone from /api/members too. Per-tenant deletes leave the
+     * surplus invites in place, and the next sign-in claims the next batch. */
+    for (int i = 0; i < nv; i++) {
       if (sqlite3_prepare_v2(h,
-            "DELETE FROM tenant_invites WHERE lower(email)=lower(?1)",
-            -1, &st, NULL) == SQLITE_OK) {
+            "DELETE FROM tenant_invites WHERE lower(email)=lower(?1)"
+            " AND tenant_id=?2", -1, &st, NULL) == SQLITE_OK) {
         sqlite3_bind_text(st, 1, out->email, -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(st, 2, itids[i], -1, SQLITE_TRANSIENT);
         sqlite3_step(st);
       }
       sqlite3_finalize(st);
@@ -366,7 +373,27 @@ char *tenantapi_audit_verify(db_handle *db, const char *tenant_id) {
                    long seq; } row_t;
   row_t *R = NULL; int n = 0, cap = 0;
   while (sqlite3_step(s) == SQLITE_ROW) {
-    if (n == cap) { cap = cap ? cap*2 : 64; R = realloc(R, cap*sizeof *R); }
+    if (n == cap) {
+      int ncap = cap ? cap*2 : 64;
+      row_t *nr = realloc(R, ncap*sizeof *nr);
+      /* Unchecked, a failed realloc here NULLs R (leaking the old block) and
+       * the next line writes through &R[n] anyway — a crash on the tamper-
+       * evidence audit-chain verifier is a worse failure than most, since it
+       * is the one path an operator reaches for specifically when something
+       * looks wrong. Stop short and report what was actually read, the same
+       * way the prepare-failure path above answers NULL rather than guessing. */
+      if (!nr) {
+        sqlite3_finalize(s);
+        for (int i = 0; i < n; i++) {
+          free(R[i].id); free(R[i].tid); free(R[i].uid); free(R[i].act);
+          free(R[i].tgt); free(R[i].pj); free(R[i].ts); free(R[i].ip);
+          free(R[i].ua); free(R[i].ph); free(R[i].rh);
+        }
+        free(R);
+        return NULL;
+      }
+      R = nr; cap = ncap;
+    }
     row_t *r = &R[n++];
     #define DUP(idx) (ctext(s,idx) ? strdup((const char*)sqlite3_column_text(s,idx)) : NULL)
     r->id=DUP(0); r->tid=DUP(1); r->uid=DUP(2); r->act=DUP(3); r->tgt=DUP(4);
@@ -441,6 +468,19 @@ static int member_can_manage(const tenant_ctx *t) {
 static int valid_role(const char *r) {
   return r && (!strcmp(r,"owner") || !strcmp(r,"admin") ||
                !strcmp(r,"analyst") || !strcmp(r,"viewer"));
+}
+/* Only an owner may create another owner.
+ *
+ * member_can_manage() lets admins run every membership route, and valid_role()
+ * accepts "owner" — so without this an admin could PATCH their OWN membership
+ * to owner (or invite a second account as owner) and then demote the original
+ * owner, because the last-owner guard only fires when the TARGET is currently
+ * an owner. That is a full workspace takeover from the lower of the two
+ * privileged roles, and owner is a real boundary: keysapi.c reserves the
+ * credential write-policy to it. Granting a role you do not hold is the one
+ * thing role management must refuse. */
+static int may_grant_role(const tenant_ctx *t, const char *role) {
+  return strcmp(role, "owner") != 0 || strcmp(t->role, "owner") == 0;
 }
 static char *merr(int *status, int code, const char *msg) {
   *status = code;
@@ -565,6 +605,8 @@ char *tenantapi_members(db_handle *db, const tenant_ctx *t,
       return merr(status, 400, "valid email required"); }
     if (!valid_role(role)) { if (jb) cJSON_Delete(jb);
       return merr(status, 400, "invalid role"); }
+    if (!may_grant_role(t, role)) { if (jb) cJSON_Delete(jb);
+      return merr(status, 403, "only a workspace owner can grant the owner role"); }
     char mail[256]; int mi = 0;
     for (const char *p = em; *p && mi < 255; p++) mail[mi++] = (char)tolower((unsigned char)*p);
     mail[mi] = 0;
@@ -654,6 +696,8 @@ char *tenantapi_members(db_handle *db, const tenant_ctx *t,
     const char *role = (jr && cJSON_IsString(jr)) ? jr->valuestring : NULL;
     if (!valid_role(role)) { if (jb) cJSON_Delete(jb);
       return merr(status, 400, "invalid role"); }
+    if (!may_grant_role(t, role)) { if (jb) cJSON_Delete(jb);
+      return merr(status, 403, "only a workspace owner can grant the owner role"); }
     char cur[32];
     if (!member_role(h, t->tenant_id, seg, cur)) { if (jb) cJSON_Delete(jb);
       return merr(status, 404, "member not found"); }
@@ -662,16 +706,23 @@ char *tenantapi_members(db_handle *db, const tenant_ctx *t,
       if (jb) cJSON_Delete(jb);
       return merr(status, 400, "cannot demote the last owner");
     }
-    sqlite3_stmt *s;
+    /* The step result decides whether the audit row is written. Discarding it
+     * and auditing unconditionally is how you get a hash-chained
+     * `member.role` entry for a change that never landed — the same fabricated
+     * record alertsapi.c:387-392 was rewritten to prevent. */
+    sqlite3_stmt *s = NULL;
+    int changed = 0;
     if (sqlite3_prepare_v2(h,
           "UPDATE memberships SET role=?1 WHERE tenant_id=?2 AND user_id=?3",
           -1, &s, NULL) == SQLITE_OK) {
       sqlite3_bind_text(s, 1, role, -1, SQLITE_TRANSIENT);
       sqlite3_bind_text(s, 2, t->tenant_id, -1, SQLITE_TRANSIENT);
       sqlite3_bind_text(s, 3, seg, -1, SQLITE_TRANSIENT);
-      sqlite3_step(s);
+      if (sqlite3_step(s) == SQLITE_DONE) changed = sqlite3_changes(h);
     }
     sqlite3_finalize(s);
+    if (!changed) { if (jb) cJSON_Delete(jb);
+      return merr(status, 500, "role update failed"); }
     member_audit(h, t, "member.role", seg, NULL);
     cJSON *o = cJSON_CreateObject();
     cJSON_AddBoolToObject(o, "ok", 1);

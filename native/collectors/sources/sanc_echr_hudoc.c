@@ -3,7 +3,7 @@
  * Endpoint : https://hudoc.echr.coe.int/app/query/results
  *              ?query=contentsitename=ECHR AND (documentcollectionid2="JUDGMENTS")
  *              &select=itemid,docname,appno,article,conclusion,kpdate
- *              &sort=kpdate Descending&start=<offset>&length=50   (%-encoded as verified)
+ *              &sort=kpdate Descending&start=0&length=50      (%-encoded as verified)
  * Format   : JSON, {"resultcount", "results":[{"columns":{…}}]}.
  * Verified : HTTP 200, resultcount 89,604 judgments; newest
  *            001-251251 "CASE OF KOLESNYK AND SMELNYTSKYY v. UKRAINE", appno 24465/23;25217/23,
@@ -23,35 +23,43 @@
  *      releases (itemid prefix 003-) with null appno/article/conclusion. The clause is part of
  *      the verified URL and must not be trimmed.
  * Judgments are published in EN and FR as SEPARATE items sharing an appno, so rows are deduped
- * on appno+kpdate — across the whole walk, not per page, since the pair can straddle a page
- * boundary once more than one page is read.
+ * on appno+kpdate — across the whole walk, using the tree's growable seen_set rather than a
+ * fixed ring (a ring that fills stops deduping and starts losing rows, silently).
+ *
+ * PAGED. This read `start=0&length=50` once, against a `resultcount` of 89,944: fifty newest
+ * judgments, roughly 25 after the EN/FR dedupe, and page two of 1,798 was never asked for.
+ * Both dials are the upstream's own and both were verified 2026-08-24: `length=500` and
+ * `length=1000` answer in full, and `start=50` returns the next window with no overlap.
+ * The walk now takes 500 at a time and advances `start`. The page ceiling below is a
+ * deliberate, DISCLOSED bound — pulling all 89,944 judgments twice a day is load the Council
+ * of Europe never agreed to — so a run that stops early emits a collector-truncation-notice
+ * carrying the upstream's own resultcount, and $JO_HUDOC_PAGE_MAX lifts it for a backfill.
  */
 #include "sanc_common.inc"
-#include "lib/truncnotice.h"
 #include "lib/seenset.h"
 
-/* start= is the offset, length= the page size, and the walk below moves the
- * first by the second. It used to be pinned at start=0: 50 judgments of the
- * 89,604 the same response reports, twice a day, with the other 89,554 neither
- * read nor mentioned. Sorted newest-first, so page 1 is the useful one — but
- * "the useful one" is not the same claim as "all of them", and a court's
- * case-law corpus is exactly the kind of thing an investigator walks backwards
- * through. */
-#define HUDOC_URL_FMT \
-  "https://hudoc.echr.coe.int/app/query/results?query=contentsitename%%3DECHR%%20AND%%20" \
-  "(documentcollectionid2%%3D%%22JUDGMENTS%%22)&select=itemid,docname,appno,article," \
-  "conclusion,kpdate&sort=kpdate%%20Descending&start=%d&length=%d"
+#define HUDOC_QUERY \
+  "https://hudoc.echr.coe.int/app/query/results?query=contentsitename%3DECHR%20AND%20" \
+  "(documentcollectionid2%3D%22JUDGMENTS%22)&select=itemid,docname,appno,article," \
+  "conclusion,kpdate&sort=kpdate%20Descending"
+/* The walk's FIRST page, and the endpoint quoted in a truncation notice. run()
+ * builds each page's own URL from HUDOC_QUERY and advances `start`. */
+#define HUDOC_URL HUDOC_QUERY "&start=0&length=500"   /* exhaustive-ok: first page of a walk; run() advances start to the ceiling and discloses an early stop */
 
-#define HUDOC_PAGE   50
-#define HUDOC_PAGES  10   /* per run; override with HUDOC_PAGE_MAX */
+#define HUDOC_PAGE_SIZE 500
+#define HUDOC_PAGE_MAX  20   /* exhaustive-ok: disclosed page ceiling; an early stop emits a collector-truncation-notice against resultcount, and $JO_HUDOC_PAGE_MAX raises it */
 
-/* The EN/FR pair of one judgment must be deduped, and this set used to be a
- * fixed char *seen[128]. At one page of 50 it could not overflow; at ten pages
- * it silently would, and an overflowing dedupe set does not merely miss
- * duplicates — entries past the end are mis-deduped or dropped. lib/seenset.h
- * exists for exactly this and grows, so dedupe never costs records. */
-static int emit_page(intel_sink *sink, const cJSON *results, const cJSON *rc,
-                     seen_set *seen) {
+static int hudoc_page_max(void) {
+  const char *e = getenv("JO_HUDOC_PAGE_MAX");
+  if (e && *e) { int v = atoi(e); if (v > 0) return v; }
+  return HUDOC_PAGE_MAX;
+}
+
+/* Emit every judgment on one page. `seen` spans the whole walk so the EN/FR
+ * pair of a judgment is collapsed even when the two land on different pages. */
+static int hudoc_emit_page(intel_sink *sink, const cJSON *doc, seen_set *seen) {
+  const cJSON *results = cJSON_GetObjectItem(doc, "results");
+  const cJSON *rc = cJSON_GetObjectItem(doc, "resultcount");
   int n = 0;
   const cJSON *r;
   cJSON_ArrayForEach(r, results) {
@@ -75,7 +83,7 @@ static int emit_page(intel_sink *sink, const cJSON *results, const cJSON *rc,
     /* dedupe the EN/FR pair of the same judgment */
     char key[128];
     snprintf(key, sizeof key, "%s|%s", appno ? appno : itemid, date);
-    if (!seen_add(seen, key)) continue;
+    if (!seen_add(seen, key)) continue;      /* growable — never stops deduping */
 
     /* respondent state is the tail of the Court's own case name */
     const char *state = NULL;
@@ -135,47 +143,50 @@ static int emit_page(intel_sink *sink, const cJSON *results, const cJSON *rc,
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int pages_max = HUDOC_PAGES;
-  const char *pm = jo_env("HUDOC_PAGE_MAX");
-  if (pm && atoi(pm) > 0) pages_max = atoi(pm);
-
+  const int page_max = hudoc_page_max();
   seen_set seen = {0};
-  int n = 0, pages_read = 0, truncated = 0;
+  int n = 0, pages = 0, truncated = 0;
   long available = -1;
-  char url[640];
 
-  for (int page = 0; page < pages_max; page++) {
-    snprintf(url, sizeof url, HUDOC_URL_FMT, page * HUDOC_PAGE, HUDOC_PAGE);
+  for (; pages < page_max; pages++) {
+    char url[640];
+    snprintf(url, sizeof url, "%s&start=%d&length=%d",
+             HUDOC_QUERY, pages * HUDOC_PAGE_SIZE, HUDOC_PAGE_SIZE);
+
     cJSON *doc = sanc_http_json(ctx, url, NULL, 45000, "echr-hudoc");
     if (!doc) {
-      if (page == 0) { seen_free(&seen); return -1; }    /* dead endpoint */
-      truncated = 1;                                     /* died mid-walk */
+      /* A dead FIRST page is a dead endpoint and stays an error (R3); a
+       * failure mid-walk keeps the records already held and is disclosed. */
+      if (pages == 0) { seen_free(&seen); return -1; }
+      truncated = 1;
       break;
     }
-    const cJSON *results = cJSON_GetObjectItem(doc, "results");
     const cJSON *rc = cJSON_GetObjectItem(doc, "resultcount");
-    if (available < 0 && cJSON_IsNumber(rc)) available = (long)rc->valuedouble;
+    if (available < 0 && cJSON_IsNumber(rc)) available = (long) rc->valuedouble;
 
+    const cJSON *results = cJSON_GetObjectItem(doc, "results");
     int got = cJSON_IsArray(results) ? cJSON_GetArraySize(results) : 0;
-    n += emit_page(sink, results, rc, &seen);
+    n += hudoc_emit_page(sink, doc, &seen);
     cJSON_Delete(doc);
-    pages_read++;
 
-    /* A short page is the upstream saying it is finished. */
-    if (got < HUDOC_PAGE) break;
-    if (page + 1 >= pages_max) truncated = 1;
+    /* A short page is HUDOC saying it has run out; asking for another would be
+     * us inventing a page it never offered. */
+    if (got < HUDOC_PAGE_SIZE) { pages++; break; }
+    if (pages + 1 >= page_max) truncated = 1;
   }
-
-  fprintf(stderr, "[echr-hudoc] emitted %d across %d page(s)%s\n",
-          n, pages_read, truncated ? " (TRUNCATED)" : "");
+  seen_free(&seen);
 
   if (truncated)
-    trunc_notice(sink, "echr-hudoc-judgments", url, NULL, n, available,
-                 "the per-run page budget stopped the walk through a corpus of "
-                 "tens of thousands of judgments",
-                 "raise HUDOC_PAGE_MAX — the walk is newest-first, so each run "
-                 "already carries the most recent judgments");
-  seen_free(&seen);
+    jo_trunc_notice(sink, "echr-hudoc-judgments", HUDOC_URL,
+                    (long) pages * HUDOC_PAGE_SIZE, available,
+                    "page ceiling reached: HUDOC holds far more judgments than "
+                    "one scheduled run pulls (records_used counts result rows "
+                    "read; emitted rows are fewer because the EN/FR pair of a "
+                    "judgment collapses to one)",
+                    "raise $JO_HUDOC_PAGE_MAX to backfill the archive");
+
+  fprintf(stderr, "[echr-hudoc] emitted %d judgments across %d page(s)%s\n",
+          n, pages, truncated ? " (TRUNCATED — notice emitted)" : "");
   return 0;
 }
 

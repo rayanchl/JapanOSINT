@@ -5,7 +5,7 @@
  * created_at/last_modified, resource count and the upstream page URL.
  * Keyless. Licence: open portal, no auth; per-dataset licences (mostly CC-BY)
  * are emitted verbatim when present. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ckan-pt-dadosgov"
 static const char *URL = "https://dados.gov.pt/api/1/datasets/?page_size=20";

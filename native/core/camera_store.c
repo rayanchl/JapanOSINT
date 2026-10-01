@@ -45,9 +45,16 @@
 static void iso_now(char *b, size_t n) {
   struct timeval tv; gettimeofday(&tv, NULL);
   struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  snprintf(b, n, "%04d-%02d-%02dT%02d:%02d:%02d.%03dZ",
-           tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
-           tm.tm_hour, tm.tm_min, tm.tm_sec, (int)(tv.tv_usec / 1000));
+  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
+   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
+   * fixed 24-char stamp "may be truncated". The modulos are identity for
+   * every value gmtime_r can return and make the 24 provable, not merely
+   * true. */
+  snprintf(b, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
+           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
+           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
+           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
+           (unsigned)(tv.tv_usec / 1000) % 1000u);
 }
 
 /* prevProps.<k> as a non-empty STRING, else NULL (=== JS `||` truthiness for
@@ -195,10 +202,34 @@ int camera_upsert(db_handle *db, intel_sink *sink, cJSON *feature,
   if (psc && cJSON_IsNumber(psc)) seen = psc->valuedouble;
   seen += 1;
 
+  /* geo_precision is DERIVED, not ACCUMULATED — and that distinction is the
+   * whole reason it needs naming here.
+   *
+   * The spread below is `{ ...p, ...prevProps }`, so the STORED value wins for
+   * every key not named in the overrides. That is right for anything the row
+   * accumulates (first_seen_at, seen_count, discovery_channels — all named
+   * below). It is wrong for a value the collector RECOMPUTES from its own
+   * tables on every run, because then a correction can never reach a camera
+   * that is already in the database.
+   *
+   * That is not hypothetical: unifying the ten `cam_*` centroid tables found
+   * that cam_camscape conflated the "_city" substring strip with the precision
+   * label and reported eleven city-level anchors as "prefecture". The collector
+   * was fixed — and the fix would have been inert for every camera already
+   * stored, forever, while the GEOMETRY beside it was being rebuilt from fresh
+   * coordinates on the same run. Two halves of one record merged by opposite
+   * rules is worse than either rule on its own.
+   *
+   * Fresh wins, stored is the fallback for a collector that does not compute
+   * one. */
+  const char *m_prec = str_or_null(p, "geo_precision");
+  if (!m_prec) m_prec = str_or_null(pp, "geo_precision");
+
   /* mergedProps = { ...p, ...prevProps, <named overrides> } */
   cJSON *m = cJSON_CreateObject();
   spread_into(m, p);
   spread_into(m, pp);
+  set_str_or_null(m, "geo_precision", m_prec);
   set_str_or_null(m, "camera_uid", camera_uid);
   set_str_or_null(m, "name", m_name);
   set_str_or_null(m, "camera_type", m_type);

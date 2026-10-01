@@ -109,8 +109,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     else
       snprintf(title, sizeof title, "Taipower %s: %.1f MW", name, gen);
 
+    /* IDENTITY (rule 4b, measured): the unit NAME alone recurs across fuel
+     * sections of the live table (subtotals, co-gen units listed under two
+     * types) — sweep 2026-08-24: emitted 212, stored 191. The upstream's own
+     * (type, name) pair is the unit's identity. */
+    char rk[192];
+    snprintf(rk, sizeof rk, "%s|%s", type ? type : "?", name);
     intel_item row = {0};
-    row.remote_key      = name;
+    row.remote_key      = rk;
     row.title           = title;
     row.summary         = title;
     row.lang            = "zh";

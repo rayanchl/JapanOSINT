@@ -179,6 +179,7 @@ struct AdminPanel: View {
         } label: {
             HStack(spacing: Space.sm) {
                 Image(systemName: "arrow.clockwise.circle.fill")
+                    .accessibilityHidden(true)   // the button title follows
                 Text(restarting ? "Restarting…" : "Restart server")
                 #if os(iOS)
                 Spacer()
@@ -238,6 +239,7 @@ struct AdminPanel: View {
                     .font(.body)
                     .foregroundStyle(theme.accent)
                     .frame(width: 28, height: 28)
+                    .accessibilityHidden(true)   // title + subtitle follow
                     .background(
                         theme.accent.opacity(0.12),
                         in: RoundedRectangle(cornerRadius: Radius.sm)
@@ -255,6 +257,7 @@ struct AdminPanel: View {
                 Image(systemName: "chevron.right")
                     .font(.caption2)
                     .foregroundStyle(theme.textMuted)
+                    .accessibilityHidden(true)   // navigation affordance
                 #endif
             }
             .padding(.vertical, 2)

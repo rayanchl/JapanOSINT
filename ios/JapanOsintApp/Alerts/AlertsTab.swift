@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreLocation
 
 /// Console destination for alert rules. Mounted inside Console's
 /// NavigationStack (RootView/ConsoleHub) so it doesn't own its own.
@@ -37,6 +38,7 @@ struct AlertsTab: View {
             ToolbarItem(placement: .compatPrimary) {
                 Button { Task { await reload() } } label: { Image(systemName: "arrow.clockwise") }
                     .disabled(loading)
+                    .accessibilityLabel("Reload alert rules")
             }
         }
         .task { if rules.isEmpty { await reload() } }
@@ -101,6 +103,7 @@ struct AlertsTab: View {
             Image(systemName: "bell.badge")
                 .font(.largeTitle)
                 .foregroundStyle(theme.textMuted)
+                .accessibilityHidden(true)   // decorative empty-state mark
             Text("No alert rules yet")
                 .font(.headline)
                 .foregroundStyle(theme.text)
@@ -241,11 +244,14 @@ struct AlertRuleRow: View {
     var body: some View {
         Button(action: onTap) {
             HStack(alignment: .top, spacing: Space.md) {
+                // Muted / enabled / disabled lives only in this glyph.
                 Image(systemName: isMuted ? "bell.slash.fill" : (rule.enabled ? "bell.fill" : "bell.slash"))
                     .font(.body)
                     .foregroundStyle(iconColor)
                     .frame(width: 26, height: 26)
                     .background(iconColor.opacity(0.14), in: RoundedRectangle(cornerRadius: Radius.sm))
+                    .accessibilityLabel(isMuted ? "Muted"
+                                                : (rule.enabled ? "Enabled" : "Disabled"))
                 VStack(alignment: .leading, spacing: 3) {
                     Text(rule.name)
                         .font(.subheadline.weight(.semibold))
@@ -317,8 +323,31 @@ struct AlertRuleRow: View {
         if let q = rule.predicate.q, !q.isEmpty { parts.append("q=\"\(q)\"") }
         if let s = rule.predicate.source_ids, !s.isEmpty { parts.append("src:\(s.prefix(2).joined(separator: ","))") }
         if let t = rule.predicate.tags_any, !t.isEmpty { parts.append("tag:\(t.prefix(2).joined(separator: ","))") }
-        if rule.predicate.bbox?.count == 4 { parts.append("bbox") }
+        if let t = rule.predicate.tags_all, !t.isEmpty { parts.append("all:\(t.prefix(2).joined(separator: ","))") }
+        // A rule may carry exactly ONE spatial term (the server rejects two), so
+        // naming only `bbox` meant a polygon / circle / saved-area rule rendered
+        // with no geofence at all — the row read as if it matched everywhere.
+        if let s = spatialSummary { parts.append(s) }
+        if let e = rule.predicate.entity_ids, !e.isEmpty {
+            parts.append("entities:\(e.count)")
+        }
+        if let t = rule.predicate.entity_types, !t.isEmpty {
+            parts.append("etype:\(t.prefix(2).joined(separator: ","))")
+        }
         return parts.joined(separator: " · ")
+    }
+
+    /// The one spatial term this rule geofences on, named specifically enough
+    /// that "which shape?" is answerable from the row.
+    private var spatialSummary: String? {
+        let p = rule.predicate
+        if let box = p.bbox, box.count == 4 { return "bbox" }
+        if let ring = p.polygon, !ring.isEmpty { return "polygon(\(ring.count))" }
+        if let c = p.circle {
+            return "circle r\(DrawnAOI.formatRadius(c.radius_m))"
+        }
+        if let id = p.aoi_id, !id.isEmpty { return "area:\(id.prefix(8))" }
+        return nil
     }
 }
 
@@ -334,5 +363,33 @@ extension AlertRule {
             muted_until: nil,
             created_at: nil, updated_at: nil
         )
+    }
+
+    /// Blank rule already carrying the shape the analyst just drew. `AlertEditor`
+    /// exposes no spatial controls, but it now preserves every predicate term it
+    /// does not own — so the geofence survives all the way to POST /api/alerts.
+    static func blank(geofencedBy drawn: DrawnAOI) -> AlertRule {
+        var rule = AlertRule.blank
+        switch drawn.kind {
+        case .polygon:
+            // GeoJSON order — [lon, lat] — is what the C validator reads.
+            rule.predicate.polygon = drawn.ring.map { [$0.longitude, $0.latitude] }
+        case .circle:
+            if let c = drawn.center, let r = drawn.radiusMeters {
+                rule.predicate.circle = AlertCircle(lat: c.latitude,
+                                                    lon: c.longitude,
+                                                    radius_m: r)
+            }
+        }
+        return rule
+    }
+
+    /// Blank rule geofenced by a SAVED area, so one shape can back several
+    /// rules and editing the area re-points all of them at once.
+    static func blank(geofencedByAOI aoi: AreaOfInterest) -> AlertRule {
+        var rule = AlertRule.blank
+        rule.predicate.aoi_id = aoi.id
+        rule.name = aoi.name
+        return rule
     }
 }

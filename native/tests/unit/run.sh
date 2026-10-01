@@ -26,15 +26,56 @@ fi
 [ -d "$OBJDIR" ] || { echo "no $OBJDIR/ — run make first"; exit 2; }
 
 CFLAGS="-O1 -g -Wall -Wextra -Wno-unused-parameter -pthread -Ithird_party"
+# The same two quote-include paths the main Makefile passes. A test that
+# #includes a COLLECTOR reaches `#include "source.h"` and `#include
+# "_jp_osint.inc"`, and "" search starts in the directory of the including
+# file — collectors/sources/ — not in native/. Without these the collector
+# under test does not compile at all, which reads as a broken test rather than
+# as a missing -I. Additive: nothing that built before builds differently.
+CFLAGS="$CFLAGS -iquote . -iquote collectors/sources"
 CFLAGS="$CFLAGS -DJO_REPO_ROOT=\"$(cd .. && pwd)\""
-# iconv is folded into glibc on Linux but is a standalone lib on macOS/BSD, where
-# csv.c's SJIS decode needs it linked explicitly (mirrors the main Makefile).
-ICONV_LIB=""; [ "$(uname -s)" != "Linux" ] && ICONV_LIB="-liconv"
-LDLIBS="$(pkg-config --libs libcurl openssl 2>/dev/null) $(mecab-config --libs 2>/dev/null) -lpthread -lm -ldl -lz $ICONV_LIB"
+# Ask the Makefile for the link line rather than re-deriving it. The previous
+# `pkg-config --libs libcurl openssl 2>/dev/null` had none of the fallbacks the
+# Makefile spends fifteen lines explaining are necessary on macOS: openssl@3 is
+# keg-only so pkg-config often resolves nothing, and Apple's libcurl is built
+# without the WebSocket support lib/ws.c needs. Worse, the 2>/dev/null turned a
+# total failure to resolve into an EMPTY STRING, so the failure surfaced as
+# undefined EVP_* symbols at link instead of a clear message. Duplicating the
+# resolution is why the two drifted; there is now one copy.
+LDLIBS="$(make -s -C "$(dirname "$0")/../.." print-ldlibs)"
+if [ -z "$LDLIBS" ]; then
+  echo "FAILED: could not resolve link libraries via 'make print-ldlibs'." >&2
+  echo "Check that libcurl, openssl and mecab are installed and discoverable." >&2
+  exit 1
+fi
+CFLAGS="$CFLAGS $(make -s -C "$(dirname "$0")/../.." print-cflags)"
 
 SCRATCH="${TMPDIR:-/tmp}/jo-unit-$$"
 mkdir -p "$SCRATCH"
 trap 'rm -rf "$SCRATCH"' EXIT
+
+# ORPHAN OBJECTS ARE NOT PART OF THIS TREE.
+#
+# This used to link `find $OBJDIR -name '*.o'` — EVERY object, including ones
+# whose .c was renamed or moved months ago and which `make` itself never links
+# (it derives its object list from the current sources). A moved collector then
+# registers its ids TWICE and the binary reports `[registry] DUPLICATE id …`,
+# a phantom that does not exist in the repo: `grep` finds exactly one
+# definition and the real build is clean. Measured 2026-09-13 on a TSan tree:
+# `collectors/sources/anomaly_triage.o` beside `collectors/pod/anomaly_triage.o`
+# and twelve more like it, which made the service-index test see 1,846 pivots
+# where the source tree has 1,838 — read as a product regression, and it was a
+# stale directory. So: keep an object only if its source still exists.
+prune_orphans() {                       # stdin: object paths, stdout: the live ones
+  local o rel
+  while read -r o; do
+    rel=${o#"$OBJDIR"/}
+    rel=${rel%.o}.c
+    if [ -f "$rel" ]; then printf '%s\n' "$o"; else
+      printf 'stale object ignored (no %s): %s\n' "$rel" "$o" >&2
+    fi
+  done
+}
 
 fail=0
 for src in tests/unit/test_*.c; do
@@ -43,7 +84,7 @@ for src in tests/unit/test_*.c; do
   under=$(grep -oE '#include "\.\./\.\./[a-z_/]+\.c"' "$src" |
           head -1 | sed 's|#include "../../||; s|"$||; s|\.c$|.o|')
   objs=$(find "$OBJDIR" -name '*.o' ! -name 'main.o' \
-         ${under:+! -path "$OBJDIR/$under"})
+         ${under:+! -path "$OBJDIR/$under"} | prune_orphans | sort -u)
 
   echo "--- $name ($OBJDIR, excludes ${under:-<none>}) ---"
   # shellcheck disable=SC2086

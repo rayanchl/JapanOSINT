@@ -1,6 +1,8 @@
 /* core/fts.h — Japanese segmentation for FTS5 (MeCab replacement for the
  * JS Kuromoji path in jpTokenizer.js). Exact contract parity:
- *   - no Japanese char  -> return input unchanged (Latin passthrough)
+ *   - every input is jpnorm_fold()ed first (lib/jpnorm.h): width, kana
+ *     script, Latin case, whitespace — so write and query agree byte-for-byte
+ *   - no Japanese char  -> return the folded input (Latin passthrough)
  *   - else              -> morpheme SURFACE forms, space-joined, no trailing
  *                          space (== kuromoji tokenize().map(surface).join(' '))
  * MeCab-IPADIC and kuromoji (also IPADIC) produce identical JP boundaries;
@@ -15,6 +17,19 @@ int fts_has_japanese(const char *s);
 /* Returns a malloc'd segmented string (caller frees), or a strdup of the
  * input on passthrough / any MeCab failure (fail-open, like the JS path). */
 char *fts_segment(const char *text);
+
+/* Katakana reading of `text`, one space-separated chunk per morpheme, from
+ * MeCab-IPADIC's feature CSV (読み). Morphemes IPADIC does not know (Latin,
+ * digits, rare kanji) contribute their SURFACE so nothing is dropped; a
+ * caller can tell because that chunk is not kana. Input is compat-folded
+ * (jpnorm_compat) but NOT kana-folded before tagging, so dictionary hits on
+ * katakana entries survive. Text with no Japanese comes back folded and
+ * otherwise unchanged. malloc'd; caller frees. Fail-open like fts_segment.
+ *
+ * Known limit: IPADIC readings for given names are often wrong (安倍晋三 →
+ * アベ ススム サン). The reading stored is what MeCab said, never a guess,
+ * and the canonical spelling is still indexed alongside it. */
+char *fts_reading(const char *text);
 
 /* Turn raw end-user input into a safe FTS5 MATCH expression.
  *

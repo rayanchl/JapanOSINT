@@ -10,8 +10,18 @@
  * Keyless  : effectively yes. GPO asks for an api.data.gov key; DEMO_KEY is documented as
  *            usable and is what the endpoint was verified with. Per R6 we read GOVINFO_API_KEY
  *            with getenv and fall back to DEMO_KEY rather than hard-failing — DEMO_KEY is
- *            throttled to roughly 30 requests/hour/IP, which is why the interval is 12 h and
- *            each run makes exactly one request.
+ *            throttled to roughly 30 requests/hour/IP, which is why the interval is 12 h.
+ *
+ * PAGED    : "each run makes exactly one request" used to mean one page of 100 out of a
+ *            `count` the API states on that very page. Measured 2026-08-24 against the live
+ *            3-day window: count 6,988, packages 100 — 1.4% of the window stored, and the
+ *            remaining 6,888 opinions dropped with nothing in the output to show it. The
+ *            response also hands over its own `nextPage`, so there was never any guessing to
+ *            do. The walk now asks for pageSize=1000 (verified: 1,000 packages in one
+ *            response) and follows nextPage, which is SEVEN requests for that window — still
+ *            far inside the DEMO_KEY budget. nextPage omits the api_key, so it is re-appended.
+ *            The ceiling is disclosed as a collector-truncation-notice against the API's own
+ *            `count`; $JO_GOVINFO_PAGE_MAX raises it.
  * Emits    : case caption, GovInfo packageId, the court code and docket number decoded from
  *            that id, date issued, last modified and the package summary link.
  * Geometry : NONE (R2).
@@ -22,46 +32,35 @@
  *            (now - 3 days) in the SAME format the verified URL used; every query parameter is
  *            unchanged. Official, authenticated opinions from district, bankruptcy and
  *            appellate courts without scraping PACER.
- *
- * Paging   : the response carries `count` and `nextPage`, and this collector used to read one
- *            page of 100 and stop — 100 of the 45,105 its own header documents, with nothing
- *            said about the rest. The window is three days, so the real page count is small,
- *            but "small" is not "one".
- *
- *            It now follows `nextPage` — the server's own link, not a guessed cursor — under a
- *            request budget, because the throttle here is real: DEMO_KEY allows roughly 30
- *            requests/hour/IP, so an unbounded walk on the shared key would spend the whole
- *            allowance and fail the next collector to ask. The budget is therefore keyed to
- *            what the caller actually has: GOVINFO_PAGE_MAX pages with a real key, a
- *            deliberately small number without one. When the budget stops the walk that is
- *            disclosed as a collector-truncation-notice carrying `count` — a bounded read that
- *            says how much it bounded (docs/SOURCE_EXHAUSTIVENESS.md), not a silent slice.
  */
 #include "sanc_common.inc"
-#include "lib/truncnotice.h"
 
-/* Pages per run. Small on DEMO_KEY (shared, ~30 req/hour/IP), generous with a
- * real key; either can be overridden by GOVINFO_PAGE_MAX. */
-#define GOVINFO_PAGES_DEMO   4
-#define GOVINFO_PAGES_KEYED 40
+#define GOVINFO_PAGE_SIZE 1000
+#define GOVINFO_PAGE_MAX  25   /* exhaustive-ok: disclosed page ceiling; an early stop emits a collector-truncation-notice against the API's own count, and $JO_GOVINFO_PAGE_MAX raises it */
 
-/* The server's own next-page link, made usable: govinfo does not always carry
- * the api_key through, and a next link without it answers 403. NULL when this
- * was the last page. Caller frees. */
-static char *next_page_url(const cJSON *doc, const char *key) {
-  const char *np = jo_sv(doc, "nextPage");
-  if (!np || !*np || strncmp(np, "http", 4) != 0) return NULL;
-  size_t n = strlen(np) + strlen(key) + 16;
-  char *out = malloc(n);
+static int govinfo_page_max(void) {
+  const char *e = getenv("JO_GOVINFO_PAGE_MAX");
+  if (e && *e) { int v = atoi(e); if (v > 0) return v; }
+  return GOVINFO_PAGE_MAX;
+}
+
+/* `nextPage` is an absolute URL built by GPO but stripped of the api_key, so
+ * following it verbatim gets a 403. Re-attach the key we authenticated with —
+ * that is the only edit made to a link the server supplied. */
+static char *govinfo_keyed(const char *next, const char *key) {
+  if (!next || !*next) return NULL;
+  size_t need = strlen(next) + strlen(key) + 16;
+  char *out = (char *) malloc(need);
   if (!out) return NULL;
-  if (strstr(np, "api_key="))
-    snprintf(out, n, "%s", np);
-  else
-    snprintf(out, n, "%s%capi_key=%s", np, strchr(np, '?') ? '&' : '?', key);
+  snprintf(out, need, "%s%sapi_key=%s", next, strchr(next, '?') ? "&" : "?", key);
   return out;
 }
 
-static int emit_packages(intel_sink *sink, const cJSON *pkgs, const char *since) {
+/* Emit every package on one page. Returns rows emitted. */
+static int govinfo_emit_page(intel_sink *sink, const cJSON *doc, const char *since) {
+  const cJSON *pkgs = cJSON_GetObjectItem(doc, "packages");
+  if (!cJSON_IsArray(pkgs)) pkgs = cJSON_GetObjectItem(doc, "results");
+
   int n = 0;
   const cJSON *p;
   cJSON_ArrayForEach(p, pkgs) {
@@ -138,66 +137,70 @@ static int emit_packages(intel_sink *sink, const cJSON *pkgs, const char *since)
 static int run(const source_ctx *ctx, intel_sink *sink) {
   /* R6: a real key raises the ceiling; its absence is not an error. */
   const char *key = jo_env("GOVINFO_API_KEY");
-  int keyed = key != NULL;
-  if (!keyed) {
+  if (!key) {
     key = "DEMO_KEY";
     fprintf(stderr, "[govinfo-uscourts] GOVINFO_API_KEY unset — using the documented "
                     "shared DEMO_KEY (throttled ~30 req/hour/IP)\n");
   }
-  int budget = keyed ? GOVINFO_PAGES_KEYED : GOVINFO_PAGES_DEMO;
-  const char *pm = jo_env("GOVINFO_PAGE_MAX");
-  if (pm && atoi(pm) > 0) budget = atoi(pm);
-
   char since[32];
   sanc_utc_days_ago(3, since, sizeof since);
 
-  char url[512];
-  snprintf(url, sizeof url,
-           "https://api.govinfo.gov/collections/USCOURTS/%s?offset=0&pageSize=100&api_key=%s",
-           since, key);
+  char first[512];
+  snprintf(first, sizeof first,
+           "https://api.govinfo.gov/collections/USCOURTS/%s?offset=0&pageSize=%d&api_key=%s",  /* exhaustive-ok: first page of a walk; the loop below follows nextPage and discloses a ceiling stop */
+           since, GOVINFO_PAGE_SIZE, key);
 
-  char *page_url = strdup(url);
-  if (!page_url) return -1;
+  const int page_max = govinfo_page_max();
+  char *page = strdup(first);
+  if (!page) return -1;
 
   int n = 0, pages = 0, truncated = 0;
   long available = -1;
-  while (page_url && pages < budget) {
-    cJSON *doc = sanc_http_json(ctx, page_url, NULL, 45000, "govinfo-uscourts");
+
+  for (; page && pages < page_max; pages++) {
+    cJSON *doc = sanc_http_json(ctx, page, NULL, 45000, "govinfo-uscourts");
     if (!doc) {
-      /* A dead FIRST page is a dead endpoint and belongs to the caller as an
-       * error. A failure mid-walk keeps the real records already emitted and
-       * discloses the shortfall below. */
-      if (pages == 0) { free(page_url); return -1; }
+      if (pages == 0) { free(page); return -1; }
       truncated = 1;
       break;
     }
-    if (available < 0) {
-      const cJSON *c = cJSON_GetObjectItem(doc, "count");
-      if (cJSON_IsNumber(c)) available = (long)c->valuedouble;
-    }
+    const cJSON *cnt = cJSON_GetObjectItem(doc, "count");
+    if (available < 0 && cJSON_IsNumber(cnt)) available = (long) cnt->valuedouble;
 
     const cJSON *pkgs = cJSON_GetObjectItem(doc, "packages");
     if (!cJSON_IsArray(pkgs)) pkgs = cJSON_GetObjectItem(doc, "results");
-    n += emit_packages(sink, pkgs, since);
+    int got = cJSON_IsArray(pkgs) ? cJSON_GetArraySize(pkgs) : 0;
 
-    char *next = next_page_url(doc, key);
+    n += govinfo_emit_page(sink, doc, since);
+
+    /* The server names its own next page; a short page means it has none left,
+     * whatever the link says. */
+    char *next = NULL;
+    if (got >= GOVINFO_PAGE_SIZE)
+      next = govinfo_keyed(jo_sv(doc, "nextPage"), key);
     cJSON_Delete(doc);
-    free(page_url);
-    page_url = next;
-    pages++;
-    if (page_url && pages >= budget) truncated = 1;   /* budget stop */
+    free(page);
+    page = next;
+    if (page && pages + 1 >= page_max) truncated = 1;
   }
-  free(page_url);
+  free(page);
+
+  /* The notice is STORED, so it must not carry the operator's api_key. Name
+   * the endpoint without it — DEMO_KEY is public, a real GOVINFO_API_KEY is
+   * not, and a disclosure record is not the place to find that out. */
+  char safe[512];
+  snprintf(safe, sizeof safe,
+           "https://api.govinfo.gov/collections/USCOURTS/%s?offset=0&pageSize=%d",  /* exhaustive-ok: the endpoint NAMED in a truncation notice, key stripped; the walk above fetched every page it could */
+           since, GOVINFO_PAGE_SIZE);
+  if (truncated)
+    jo_trunc_notice(sink, "govinfo-uscourts-opinions", safe, n, available,
+                    "page ceiling reached, or a mid-walk fetch failed, before "
+                    "GovInfo ran out of packages for this window",
+                    "raise $JO_GOVINFO_PAGE_MAX, or set GOVINFO_API_KEY to lift "
+                    "the DEMO_KEY rate limit");
 
   fprintf(stderr, "[govinfo-uscourts] emitted %d across %d page(s) (since %s)%s\n",
-          n, pages, since, truncated ? " (TRUNCATED)" : "");
-
-  if (truncated)
-    trunc_notice(sink, "govinfo-uscourts-opinions", url, NULL, n, available,
-                 keyed ? "the per-run page budget stopped the walk"
-                       : "the per-run page budget stopped the walk — the shared "
-                         "DEMO_KEY allows roughly 30 requests/hour/IP",
-                 "set GOVINFO_API_KEY for a real key, or raise GOVINFO_PAGE_MAX");
+          n, pages, since, truncated ? " (TRUNCATED — notice emitted)" : "");
   return 0;
 }
 

@@ -167,14 +167,31 @@ void fts_schema_migrate(db_handle *db) {
 
   sqlite3 *h = db->h;
   if (!table_exists(h, "intel_items_fts")) return;   /* schema.sql owns create */
-  if (has_col(h, "intel_items_fts", FTS_SCHEMA_SENTINEL_COL)) return;  /* v2 */
+  /* Two reasons to rebuild: the column set is old (v1: sentinel missing), or
+   * the columns are right but the CONTENT was produced by an older
+   * segmentation (v3 folds before MeCab; see fts_schema.h). The second is
+   * read from _fts_meta.version; a v2-shaped index with no _fts_meta row
+   * (a database created fresh from schema.sql before this module wrote
+   * meta) counts as unknown and is rebuilt once, which then records it. */
+  int shape_ok = has_col(h, "intel_items_fts", FTS_SCHEMA_SENTINEL_COL);
+  long long live_ver = table_exists(h, "_fts_meta")
+    ? scalar_i64(h, "SELECT version FROM _fts_meta WHERE name='intel_items_fts'")
+    : 0;
+  if (shape_ok && live_ver >= FTS_SCHEMA_VERSION) return;
 
   const char *flag = getenv("JO_FTS_REBUILD");
   if (flag && (strcmp(flag, "0") == 0 || strcmp(flag, "false") == 0)) {
-    fprintf(stderr, "[fts] intel_items_fts is v1 and JO_FTS_REBUILD=0 — skipping "
-                    "rebuild; link/author/tags/properties stay UNSEARCHABLE "
-                    "(ingest writes the five v1 columns and does NOT drain the "
-                    "index; re-run without the flag to widen it)\n");
+    if (!shape_ok)
+      fprintf(stderr, "[fts] intel_items_fts is v1 and JO_FTS_REBUILD=0 — skipping "
+                      "rebuild; link/author/tags/properties stay UNSEARCHABLE "
+                      "(ingest writes the five v1 columns and does NOT drain the "
+                      "index; re-run without the flag to widen it)\n");
+    else
+      fprintf(stderr, "[fts] intel_items_fts content is v%lld (< v%d) and "
+                      "JO_FTS_REBUILD=0 — skipping rebuild; rows indexed before "
+                      "the fold will NOT match width/kana-variant queries until "
+                      "the process boots without the flag\n",
+              live_ver, FTS_SCHEMA_VERSION);
     return;
   }
 
@@ -239,7 +256,8 @@ void fts_schema_migrate(db_handle *db) {
   }
 
   long long done = 0;
-  while (sqlite3_step(sel) == SQLITE_ROW) {
+  int scan_rc;
+  while ((scan_rc = sqlite3_step(sel)) == SQLITE_ROW) {
     const char *uid = (const char *)sqlite3_column_text(sel, 0);
     if (!uid || !*uid) continue;
 
@@ -291,6 +309,19 @@ void fts_schema_migrate(db_handle *db) {
     if (++done % 25000 == 0)
       fprintf(stderr, "[fts]   %lld/%lld items reindexed (%.0fs)\n",
               done, nrows, (now_ms() - t0) / 1000.0);
+  }
+  /* `while (step() == ROW)` cannot tell DONE from IOERR/CORRUPT/BUSY/INTERRUPT,
+   * and this loop is repopulating a table that was DROPped a few lines above.
+   * Committing a partial scan here would leave every row past the failure
+   * point permanently unsearchable AND stamp _fts_meta with the new version,
+   * so fts_index_is_v2() would answer yes and the migration would never run
+   * again. On a corpus this size that is silent, total and unrecoverable
+   * without a manual rebuild — so a short scan must roll back, not commit. */
+  if (scan_rc != SQLITE_DONE) {
+    fprintf(stderr, "[fts] REBUILD ABORTED after %lld/%lld items: %s — "
+                    "rolling back; the old index is left in place\n",
+            done, nrows, sqlite3_errmsg(h));
+    goto fail;
   }
   sqlite3_finalize(sel); sel = NULL;
   sqlite3_finalize(ins); ins = NULL;

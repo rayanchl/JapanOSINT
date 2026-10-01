@@ -91,11 +91,14 @@ struct ClusterBadge: View {
             withAnimation(.easeInOut(duration: 0.15)) { expanded.toggle() }
         } label: {
             HStack(spacing: Space.sm) {
+                // Corroborated-vs-uncorroborated is a finding, and this glyph
+                // plus its tint are the only things carrying it.
                 Image(systemName: isCorroborated
                       ? "person.2.badge.key"
                       : "person.crop.circle.badge.questionmark")
                     .font(.caption)
                     .foregroundStyle(isCorroborated ? theme.success : theme.textMuted)
+                    .accessibilityLabel(isCorroborated ? "Corroborated" : "Not corroborated")
                 VStack(alignment: .leading, spacing: Space.xs) {
                     Text(summaryText)
                         .font(.caption.weight(.semibold).monospacedDigit())
@@ -111,6 +114,7 @@ struct ClusterBadge: View {
                     Image(systemName: expanded ? "chevron.up" : "chevron.down")
                         .font(.caption2)
                         .foregroundStyle(theme.textMuted)
+                        .accessibilityHidden(true)   // state is the button's value
                 }
             }
             .padding(Space.sm)
@@ -174,6 +178,7 @@ struct ClusterBadge: View {
             Image(systemName: "doc.on.doc")
                 .font(.caption2)
                 .foregroundStyle(theme.textMuted)
+                .accessibilityHidden(true)   // decorative duplicate mark
             Text(d.source_id ?? "unknown source")
                 .font(.caption2.monospaced())
                 .foregroundStyle(theme.text)
@@ -188,6 +193,7 @@ struct ClusterBadge: View {
                 Image(systemName: "chevron.right")
                     .font(.caption2)
                     .foregroundStyle(theme.textMuted)
+                    .accessibilityHidden(true)   // navigation affordance
             }
         }
         .padding(.vertical, Space.xs)

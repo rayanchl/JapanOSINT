@@ -42,21 +42,37 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!arr || !cJSON_IsArray(arr)) { if (arr) cJSON_Delete(arr); return -1; }
 
   cJSON *features = cJSON_CreateArray();
-  int i = 0;
   cJSON *v;
   cJSON_ArrayForEach(v, arr) {
     cJSON *f = gj_point_feature(pf(v, "LONGITUDE"), pf(v, "LATITUDE"));
 
     cJSON *p = cJSON_CreateObject();                 /* EXACT JS key order */
+    /* MMSI first — it is the vessel's own identifier and `id` is a
+     * NATIVE_ID_KEY, so this is the row's uid. The remaining `VF_<index>`
+     * fallback was the one path where the uid described the vessel's position
+     * in this poll's array instead of the vessel: an AIS list reorders on
+     * every poll, so those rows changed identity each run and orphaned their
+     * predecessors. IMO is the other real identifier; with neither, there is
+     * nothing to key on and we say so. */
     cJSON *mmsi = cJSON_GetObjectItem(v, "MMSI");
+    cJSON *imo  = cJSON_GetObjectItem(v, "IMO");
     char id[64];
+    id[0] = 0;
     if (mmsi && cJSON_IsNumber(mmsi))
       snprintf(id, sizeof id, "VF_%lld", (long long)mmsi->valuedouble);
     else if (mmsi && cJSON_IsString(mmsi) && *mmsi->valuestring)
       snprintf(id, sizeof id, "VF_%s", mmsi->valuestring);
-    else
-      snprintf(id, sizeof id, "VF_%d", i);
-    cJSON_AddStringToObject(p, "id", id);
+    else if (imo && cJSON_IsNumber(imo))
+      snprintf(id, sizeof id, "VF_IMO_%lld", (long long)imo->valuedouble);
+    else if (imo && cJSON_IsString(imo) && *imo->valuestring)
+      snprintf(id, sizeof id, "VF_IMO_%s", imo->valuestring);
+    if (id[0]) {
+      cJSON_AddStringToObject(p, "id", id);
+    } else {
+      cJSON_AddStringToObject(p, "id_basis",
+        "none: this VesselFinder record carried neither MMSI nor IMO, so the "
+        "row is uid'd by content hash rather than a positional id");
+    }
 
     passthru(p, "mmsi", v, "MMSI");
     passthru(p, "imo", v, "IMO");
@@ -87,7 +103,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddStringToObject(p, "source", "vesselfinder_api");
     cJSON_AddItemToObject(f, "properties", p);
     cJSON_AddItemToArray(features, f);
-    i++;
   }
   cJSON_Delete(arr);
 

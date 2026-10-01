@@ -36,7 +36,8 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
 
   const char *fuel = ov_tag(el, "plant:source");
   if (!fuel) fuel = ov_tag(el, "generator:source");
-  cJSON_AddStringToObject(p, "fuel", fuel ? fuel : "unknown");
+  if (fuel) cJSON_AddStringToObject(p, "fuel", fuel);
+  else cJSON_AddItemToObject(p, "fuel", cJSON_CreateNull());
 
   const char *cap = ov_tag(el, "plant:output:electricity");
   double capv = cap ? strtod(cap, 0) : 0.0;
@@ -45,7 +46,8 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
                                     : cJSON_CreateNull());
 
   const char *op = ov_tag(el, "operator");
-  cJSON_AddStringToObject(p, "operator", op ? op : "unknown");
+  if (op) cJSON_AddStringToObject(p, "operator", op);
+  else cJSON_AddItemToObject(p, "operator", cJSON_CreateNull());
 
   const char *volt = ov_tag(el, "voltage");
   cJSON_AddItemToObject(p, "voltage",

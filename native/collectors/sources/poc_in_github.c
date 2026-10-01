@@ -85,7 +85,13 @@ static cJSON *gh_listing(const source_ctx *ctx, int year) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   time_t now = time(NULL);
   struct tm tmv;
-  gmtime_r(&now, &tmv);
+  /* gmtime_r returns NULL when the year will not fit an int, and the old code
+   * ignored that and read an unset `struct tm` — which would have gone on to
+   * request a garbage year's directory from GitHub. */
+  if (!gmtime_r(&now, &tmv)) {
+    fprintf(stderr, "[poc-in-github] cannot determine the current year\n");
+    return -1;
+  }
   int year = tmv.tm_year + 1900;
 
   cJSON *listing = gh_listing(ctx, year);
@@ -121,7 +127,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   for (int fi = 0; fi < nn; fi++) {
     const char *name = names[fi];
     /* RAW path: name.startsWith('CVE-') ? name.slice(4,8) : year */
-    char yr[8];
+    /* 16, not 8: `year` is a plain int and "%d" of one is up to 11 characters.
+     * It is 4 digits in practice, but this string is a PATH SEGMENT in the raw
+     * URL below — a cut year fetches a directory that does not exist and the
+     * whole CVE's PoC list is lost with the run still looking healthy. */
+    char yr[16];
     if (!strncmp(name, "CVE-", 4)) { memcpy(yr, name + 4, 4); yr[4] = 0; }
     else snprintf(yr, sizeof yr, "%d", year);
     char rawurl[256];

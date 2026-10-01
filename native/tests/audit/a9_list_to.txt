@@ -1,8 +1,0 @@
-gas-stations
-gtfs-jp
-mlit-bridge
-osm-transport-trains
-radar-sites
-unified-highway
-utility-poles
-wineries-craftbeer

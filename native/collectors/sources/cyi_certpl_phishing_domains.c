@@ -17,7 +17,6 @@
 #include "source.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
-#include "lib/truncnotice.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,7 +24,6 @@
 
 #define CYI_URL "https://hole.cert.pl/domains/v2/domains.csv"
 #define WINDOW_DAYS 7
-#define MAX_ROWS 5000  /* exhaustive-ok: breadth-layer bound, disclosed as a record below */
 
 static char *next_line(char **p) {
   char *s = *p;
@@ -82,7 +80,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (removed) continue;                      /* delisted -> not active */
     active++;
     if (strncmp(added, cutoff, 10) < 0) continue;   /* older than the window */
-    if (n >= MAX_ROWS) continue;
 
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "domain", domain);
@@ -111,17 +108,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(body);
-  /* The cap is deliberate — the whole file is parsed and counted, and only
-   * MAX_ROWS entries are materialised so this stays the breadth layer behind
-   * the smaller high-precision feeds. What was missing is the other half of
-   * rule 6: the shortfall was a log line, and a log line nobody reads is not a
-   * disclosure. It is a record now. */
-  if (n >= MAX_ROWS)
-    trunc_notice(sink, "certpl-phishing-domains", CYI_URL, NULL, n, active,
-                 "a deliberate breadth-layer cap: the feed was parsed and "
-                 "counted in full, and MAX_ROWS of its active entries were materialised "
-                 "as rows",
-                 "raise MAX_ROWS in this collector to materialise more");
   fprintf(stderr, "[certpl-phishing-domains] emitted %d new of %d active entries (>= %s)\n",
           n, active, cutoff);
   return 0;                        /* a week with no new listings is fine */

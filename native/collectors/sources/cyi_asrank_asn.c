@@ -21,15 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
-
-static char *http_get(const source_ctx *ctx, const char *url, long *status) {
-  http_response hr = {0};
-  int rc = http_request(ctx->http, "GET", url, NULL, NULL, 0, 20000, 1, &hr);
-  *status = hr.status;
-  if (rc != 0 || hr.status != 200 || !hr.body) { http_response_free(&hr); return NULL; }
-  char *b = hr.body; hr.body = NULL; http_response_free(&hr);
-  return b;
-}
+#include "cyi_common.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   unsigned long asn = jo_parse_asn(ctx->entity);
@@ -40,7 +32,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
            "https://api.asrank.caida.org/v2/restful/asns/%lu", asn);
 
   long status = 0;
-  char *body = http_get(ctx, url, &status);
+  char *body = cyi_get_plain(ctx, url, &status);
   if (!body) {
     fprintf(stderr, "[ASRANK_ASN] http status=%ld\n", status);
     if (status >= 400 && status < 500) return 0;

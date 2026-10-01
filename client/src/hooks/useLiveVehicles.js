@@ -88,6 +88,7 @@ export default function useLiveVehicles(mode, enabled, viewport = null) {
     (async () => {
       try {
         const res = await fetch(apiUrl(`/api/transit/routes?mode=${encodeURIComponent(mode)}`));
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         if (cancelled) return;
         const spawned = [];

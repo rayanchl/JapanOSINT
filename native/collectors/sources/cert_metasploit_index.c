@@ -8,7 +8,7 @@
  *           description, references[] and targets[].
  *
  * SCOPE: the file holds ~7,100 modules. This collector emits the modules that
- * carry at least one CVE reference (capped at MSF_MAX_ROWS), because that is
+ * carry at least one CVE reference, because that is
  * the subset that answers "does this CVE have an exploit module" — the reason
  * the source is here. Modules with no CVE reference are skipped rather than
  * padded with an invented identifier.
@@ -26,7 +26,6 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
-#include "lib/truncnotice.h"
 #include "third_party/cJSON.h"
 #include <ctype.h>
 #include <stdio.h>
@@ -35,7 +34,6 @@
 
 #define MSF_URL "https://raw.githubusercontent.com/rapid7/metasploit-framework/" \
                 "master/db/modules_metadata_base.json"
-#define MSF_MAX_ROWS 6000  /* exhaustive-ok: disclosed as a record below */
 
 /* Metasploit's own reliability scale, as documented in the framework. Decoding
  * a fetched numeric field, not inventing one. */
@@ -61,7 +59,6 @@ static int run(const source_ctx *c, intel_sink *s) {
   cJSON *m;
   /* cJSON_ArrayForEach walks an object's children too; m->string is the key. */
   cJSON_ArrayForEach(m, doc) {
-    if (n >= MSF_MAX_ROWS) break;  /* exhaustive-ok: the cap is disclosed as a collector-truncation-notice below */
     if (!cJSON_IsObject(m)) continue;
     seen++;
     const char *full = jo_sv(m, "fullname");
@@ -141,13 +138,6 @@ static int run(const source_ctx *c, intel_sink *s) {
     free(pj);
   }
   cJSON_Delete(doc);
-  /* Bounded run, now SAID so. A cap reported only to stderr leaves a clipped
-   * result indistinguishable from a complete one downstream (rule 7). */
-  if (n >= MSF_MAX_ROWS)
-    trunc_notice(s, "metasploit-module-index", MSF_URL, NULL, n, seen,
-                 "a per-run record cap bounded this collector; the upstream "
-                 "offered more modules",
-                 "raise the cap in this collector");
   fprintf(stderr, "[metasploit-module-index] emitted %d of %d modules "
                   "(CVE-referencing subset)\n", n, seen);
   return 0;                                     /* fetched fine (R3) */

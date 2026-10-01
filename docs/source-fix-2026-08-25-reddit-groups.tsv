@@ -1,0 +1,18 @@
+id	verdict	shell_rc	sched_rc	emitted	stored	db_rows	available	secs	note
+reddit-group-worldnews	OK	0	0	100	100	100	-1	2.2	
+reddit-group-conflict	OK	0	0	100	100	100	-1	62.3	
+reddit-group-defense	OK	0	0	100	100	100	-1	62.2	
+reddit-group-intel	OK	0	0	100	100	100	-1	32.4	
+reddit-group-cyber	OK	0	0	100	100	100	-1	62.7	
+reddit-group-europe-west	OK	0	0	100	100	100	-1	64.8	
+reddit-group-europe-north	OK	0	0	100	100	100	-1	62.9	
+reddit-group-europe-central	OK	0	0	100	100	100	-1	63.4	
+reddit-group-eurasia	OK	0	0	100	100	100	-1	64.6	
+reddit-group-southasia	OK	0	0	100	100	100	-1	62.7	
+reddit-group-eastasia	OK	0	0	100	100	100	-1	63.2	
+reddit-group-seasia-oceania	OK	0	0	100	100	100	-1	62.4	
+reddit-group-americas	OK	0	0	100	100	100	-1	62.6	
+reddit-group-africa	OK	0	0	100	100	100	-1	32.7	
+reddit-group-mideast	OK	0	0	100	100	100	-1	2.9	
+reddit-group-cities-west	OK	0	0	100	100	100	-1	62.4	
+reddit-group-cities-asia	OK	0	0	100	100	100	-1	2.6	

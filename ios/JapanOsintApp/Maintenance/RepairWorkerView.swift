@@ -213,6 +213,7 @@ struct RepairWorkerView: View {
                             Spacer()
                             Image(systemName: "chevron.right")
                                 .font(.caption2).foregroundStyle(theme.textMuted)
+                                .accessibilityHidden(true)   // navigation affordance
                         }
                         .padding(.vertical, Space.sm)
                     }
@@ -489,7 +490,11 @@ enum RepairUI {
 
     /// SQLite `datetime('now')` is "YYYY-MM-DD HH:MM:SS" (UTC). Show the
     /// MM-DD HH:MM tail; ISO strings get the same trim.
-    static func shortTime(_ s: String) -> String {
+    ///
+    /// `nonisolated`: a pure string transform touching no main-actor state, so
+    /// it can be passed unapplied to `Optional.map` from a view body without
+    /// crossing an isolation boundary.
+    nonisolated static func shortTime(_ s: String) -> String {
         let t = s.replacingOccurrences(of: "T", with: " ")
         let parts = t.split(separator: " ")
         guard parts.count >= 2 else { return s }

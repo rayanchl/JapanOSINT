@@ -13,9 +13,10 @@
 #include <strings.h>
 #include <ctype.h>
 #include <time.h>
+#include <pthread.h>
 
 #ifndef JO_REPO_ROOT
-#define JO_REPO_ROOT "/Users/rayan/JapanOSINT"
+#define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
 #endif
 
 /* ── helpers ──────────────────────────────────────────────────────────── */
@@ -34,11 +35,24 @@ static int is_known(const char *name, const char **role) {
     if (strcmp(N[i], name) == 0) { if (role) *role = R[i]; return 1; }
   return 0;
 }
+static int b64_rev[256];
+static void b64_rev_init(void) {
+  for (int i=0;i<256;i++) b64_rev[i]=-1;
+  const char *T="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+  for (int i=0;i<64;i++) b64_rev[(unsigned char)T[i]]=i;
+}
 static int b64_decode(const char *in, unsigned char *out, int outcap) {
-  static int rev[256]; static int init = 0;
-  if (!init) { for (int i=0;i<256;i++) rev[i]=-1;
-    const char *T="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-    for (int i=0;i<64;i++) rev[(unsigned char)T[i]]=i; init=1; }
+  /* `static int init=0; if(!init){...}` here was an unsynchronized
+   * check-then-fill on shared state: this runs inside master_key(), which
+   * every /api/tenant-keys request re-derives on its own httpd worker
+   * thread, so concurrent first calls raced on writing the same 256-int
+   * table. The writes happen to be idempotent (same table every time), so
+   * this was silent in practice, but it is the exact data race this
+   * codebase uses pthread_once to close everywhere else (see
+   * http_client_global_init, hostgate.c's cfg_once). */
+  static pthread_once_t once = PTHREAD_ONCE_INIT;
+  pthread_once(&once, b64_rev_init);
+  int *rev = b64_rev;
   int val=0,bits=-8,o=0;
   for (const char *p=in; *p; p++) {
     if (*p=='=' ) break;
@@ -60,7 +74,11 @@ static cJSON *overlay_read(void) {
   cJSON *j = NULL;
   if (n > 0 && n < (1<<20)) {
     char *b = malloc(n+1);
-    if (fread(b,1,n,f)==(size_t)n) { b[n]=0; j=cJSON_Parse(b); }
+    /* Unchecked malloc used to feed fread(NULL, ...) straight through on OOM.
+     * The overlay is re-read on every /api/keys and /api/tenant-keys request,
+     * so a transient allocation failure must fall through to the empty
+     * object below, not crash the request thread. */
+    if (b && fread(b,1,n,f)==(size_t)n) { b[n]=0; j=cJSON_Parse(b); }
     free(b);
   }
   fclose(f);
@@ -167,6 +185,10 @@ static char *secret_decrypt(const char *tid, const unsigned char *blob, int bl) 
   unsigned char key[32]; if (!derive_key(tid, key)) return NULL;
   int ctl = bl - 28;
   char *pt = malloc(ctl + 1);
+  /* Unchecked malloc used to hand EVP_DecryptUpdate a NULL output buffer on
+   * OOM. This path decrypts a tenant's stored API key on every reveal/use, so
+   * a failed allocation must fail the decrypt, not crash the request thread. */
+  if (!pt) { OPENSSL_cleanse(key, sizeof key); return NULL; }
   EVP_CIPHER_CTX *x = EVP_CIPHER_CTX_new();
   int len, ok = 0;
   if (EVP_DecryptInit_ex(x, EVP_aes_256_gcm(), NULL, key, blob) == 1) {
@@ -180,6 +202,10 @@ static char *secret_decrypt(const char *tid, const unsigned char *blob, int bl) 
     }
   }
   EVP_CIPHER_CTX_free(x);
+  /* secret_encrypt() cleanses its derived key before every return; this
+   * function returned without doing so on any path, leaving the tenant's
+   * derived AES key sitting in this frame's stack slot after return. */
+  OPENSSL_cleanse(key, sizeof key);
   if (!ok) { free(pt); return NULL; }
   return pt;
 }
@@ -338,7 +364,8 @@ char *keysapi_tenant(db_handle *db, const tenant_ctx *t, const char *method,
       cJSON *jp=jb?cJSON_GetObjectItem(jb,"policy"):NULL;
       const char *pol=(jp&&cJSON_IsString(jp))?jp->valuestring:"";
       if (strcmp(pol,"owner_only")&&strcmp(pol,"selected_member")&&strcmp(pol,"all_members")){
-        if(jb)cJSON_Delete(jb); return jerr(st,400,"Invalid policy");
+        if(jb)cJSON_Delete(jb);
+        return jerr(st,400,"Invalid policy");
       }
       char mid[64]={0};
       if (strcmp(pol,"selected_member")==0){
@@ -471,7 +498,8 @@ char *keysapi_tenant(db_handle *db, const tenant_ctx *t, const char *method,
     cJSON_AddBoolToObject(o,"set",byok||platform);
     cJSON_AddItemToObject(o,"source",
       byok?cJSON_CreateString("tenant"):platform?cJSON_CreateString("platform"):cJSON_CreateNull());
-    if(jb)cJSON_Delete(jb); cJSON_Delete(ov);
+    if(jb)cJSON_Delete(jb);
+    cJSON_Delete(ov);
     return jstr(o,st,200);
   }
   cJSON_Delete(ov); return jerr(st,404,"not_found");
@@ -508,7 +536,8 @@ static char *b64url(const unsigned char *in,int len){
   for (int i=0;i<len;i+=3){
     unsigned a=in[i],b=i+1<len?in[i+1]:0,c=i+2<len?in[i+2]:0,v=(a<<16)|(b<<8)|c;
     o[p++]=T[(v>>18)&63]; o[p++]=T[(v>>12)&63];
-    if(i+1<len)o[p++]=T[(v>>6)&63]; if(i+2<len)o[p++]=T[v&63];
+    if(i+1<len)o[p++]=T[(v>>6)&63];
+    if(i+2<len)o[p++]=T[v&63];
   }
   o[p]=0; return o;
 }
@@ -536,10 +565,24 @@ char *keysapi_breakglass(db_handle *db, const char *body,
 
   unsigned char key[128];
   int klen=base32_decode(totp,key,sizeof key);
+  /* base32_decode returns -1 on the first character outside the alphabet, and
+   * HMAC()'s key_len is an int that OpenSSL widens to size_t — so an
+   * ADMIN_TOTP_SECRET containing 0/1/8/9/-/_ (a hex or URL-safe secret, or a
+   * transcription slip) turned every unauthenticated break-glass POST into a
+   * read of SIZE_MAX bytes from a 128-byte stack buffer. A secret we cannot
+   * decode is a configuration failure, not a failed code. */
+  if (klen<=0){ if(jb)cJSON_Delete(jb);
+    return jerr(st,503,"Break-glass not configured"); }
   long now=(long)time(NULL), step=now/30;
   int valid=0;
+  /* CRYPTO_memcmp, not strcmp: this compares an unauthenticated caller's code
+   * against the real TOTP value for an admin-bypass login, and strcmp's
+   * early-exit-on-first-mismatch is exactly the timing side channel
+   * CRYPTO_memcmp exists to close (see auth.c's verify_hs256 for the same
+   * reasoning against the JWT HMAC). Both sides are fixed 6-digit strings
+   * validated above, so comparing 6 bytes is safe. */
   for (int d=-1; d<=1 && !valid; d++){ char e[7]; totp_at(key,klen,step+d,e);
-    if (strcmp(e,code)==0) valid=1; }
+    if (CRYPTO_memcmp(e,code,6)==0) valid=1; }
 
   /* audit (raw platform-scope insert; matches breakGlass.insertAudit) */
   char uid[37]; { unsigned char b[16]; RAND_bytes(b,16);
@@ -588,4 +631,34 @@ char *keysapi_breakglass(db_handle *db, const char *body,
   cJSON_AddStringToObject(o,"token",tok);
   cJSON_AddNumberToObject(o,"expires_in",3600);
   return jstr(o,st,200);
+}
+
+/* Push every overlay key into the process environment at boot.
+ *
+ * THIS IS THE LINE THAT MADE THE FEATURE WORK. `PUT /api/keys/:name` writes
+ * data/api-keys.json, and resolved_env() below reads it back — so /api/keys and
+ * /api/status happily reported `set: true` for a key the collectors could never
+ * see. Collectors resolve through jo_env(), which is a plain getenv (see
+ * lib/jocore.h), and main.c only ever loaded .env. A user could type a Shodan
+ * key into the app, watch the dashboard confirm it, and watch the collector log
+ * "gated (no SHODAN_API_KEY)" on the next tick, with nothing anywhere
+ * reconciling the two.
+ *
+ * PRECEDENCE. overwrite=0, and main.c calls this BEFORE load_dotenv(), so:
+ *     real shell export  >  api-keys.json  >  .env
+ * The middle term matches resolved_env()'s "overlay wins, else env". The first
+ * term is a deliberate divergence: an operator who exports a value explicitly
+ * is making a stronger statement than a file, and silently overriding that
+ * would be its own trap. lib/threatintel.h recorded this overlay as a known
+ * deferral; it is no longer deferred. */
+void keysapi_apply_overlay_env(void) {
+  cJSON *ov = overlay_read();
+  int n = 0;
+  for (cJSON *m = ov->child; m; m = m->next)
+    if (m->string && cJSON_IsString(m) && m->valuestring[0]) {
+      setenv(m->string, m->valuestring, 0);
+      n++;
+    }
+  cJSON_Delete(ov);
+  if (n) fprintf(stderr, "[keys] applied %d key(s) from data/api-keys.json\n", n);
 }

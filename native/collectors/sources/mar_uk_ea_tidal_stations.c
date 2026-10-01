@@ -55,8 +55,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *s;
   cJSON_ArrayForEach(s, arr) {
     if (!cJSON_IsObject(s)) continue;
-    const char *ref = ld_str(s, "stationReference");
-    if (!ref) ref = ld_str(s, "notation");
+    /* notation, not stationReference, is the true unique key: 3 of 251 live
+     * stations (e.g. E73439-anglian / E73439-north_west, two agency areas'
+     * gauges at the same physical point, distinct @id/coordinates) share one
+     * stationReference and collapsed onto a single uid. notation is unique
+     * across every live record. */
+    const char *ref = ld_str(s, "notation");
+    if (!ref) ref = ld_str(s, "stationReference");
     if (!ref) continue;
     const char *label = ld_str(s, "label");
 
@@ -67,8 +72,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     double lon = geo ? lonj->valuedouble : 0;
 
     cJSON *p = cJSON_CreateObject();
-    cJSON_AddStringToObject(p, "stationReference", ref);
+    cJSON_AddStringToObject(p, "notation", ref);
     const char *v;
+    if ((v = ld_str(s, "stationReference"))) cJSON_AddStringToObject(p, "stationReference", v);
     if (label)                          cJSON_AddStringToObject(p, "label", label);
     if ((v = ld_str(s, "catchmentName"))) cJSON_AddStringToObject(p, "catchmentName", v);
     if ((v = ld_str(s, "riverName")))     cJSON_AddStringToObject(p, "riverName", v);

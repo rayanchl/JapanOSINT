@@ -3,6 +3,12 @@
 #include "httpclient.h"
 #include "llm.h"
 #include "prompts.h"
+#include "intel.h"          /* intel_sink_rebind — per-service row attribution */
+#include "scheduler.h"      /* sched_is_quarantined — the breaker applies here too */
+#include "evidence.h"       /* evidence_scope_begin/end */
+#include "content_change.h" /* content_change_scope_begin/end */
+#include "maint_detect.h"   /* anomaly_detect */
+#include <time.h>
 #include "../third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,12 +17,19 @@
 
 void osint_result_free(osint_result *r) {
   if (!r) return;
-  free(r->data); free(r->error); free(r->sources_json);
-  r->data = r->error = r->sources_json = NULL;
+  free(r->data); free(r->error); free(r->sources_json); free(r->resolved_from);
+  r->data = r->error = r->sources_json = r->resolved_from = NULL;
 }
 
 int osint_canon(const char *name, char *out, size_t n) {
-  if (!name) { if (n) out[0] = 0; return 0; }
+  /* n==0 must be a safe no-op, not a write into a zero-capacity buffer: `size_t
+   * w < n - 1` below underflows n-1 to SIZE_MAX when n==0, and the loop would
+   * write past `out` for as long as `name` has bytes. Every current caller
+   * passes sizeof(a fixed local buffer), so this has never fired in practice,
+   * but the function is public API (osint_dispatch.h) and must not assume it
+   * always will. */
+  if (n == 0) return 0;
+  if (!name) { out[0] = 0; return 0; }
   while (*name == ' ' || *name == '\t' || *name == '\n' || *name == '\r') name++;
   size_t w = 0;
   for (; name[w] && w < n - 1; w++) out[w] = (char)toupper((unsigned char)name[w]);
@@ -29,6 +42,103 @@ int osint_canon(const char *name, char *out, size_t n) {
  * collector and an OSINTsaas service are indistinguishable here). */
 static const source_def *osint_lookup(const char *canon) {
   return registry_get(canon);
+}
+
+/* ---- resolving a name the registry does not have -------------------------
+ *
+ * The model picks service names from an enum built out of the live registry,
+ * so a miss should be impossible — and yet a miss was the one outcome this
+ * function had no answer for: `not_implemented`, end of story, for
+ * `DOMAIN_WHOIS_LOOKUP` as much as for `ASK_THE_ORACLE`. The static-schema
+ * fallback path (pipeline.c, when both dynamic schemas fail) can genuinely put
+ * a retired name in front of the model, and a client calling POST /api/search
+ * by hand can misspell anything.
+ *
+ * The rule this implements: resolve ONLY when there is exactly one obvious
+ * candidate, and always say that a substitution happened.
+ *
+ *   1. Structural normalisation — '-' and ' ' become '_', a trailing _LOOKUP,
+ *      _SEARCH, _CHECK, _API or _PIVOT is dropped, doubled underscores
+ *      collapse. `domain-whois` and `DOMAIN_WHOIS_LOOKUP` both land on
+ *      DOMAIN_WHOIS. This is spelling, not guessing.
+ *   2. Edit distance ≤ 2 over registered ids of similar length, accepted only
+ *      when the best candidate is strictly better than the second best. Two
+ *      equally-near names mean we do not know which was meant, and answering
+ *      would be a coin flip presented as a result.
+ *
+ * There is deliberately no fuzzy substring rule ("contains WHOIS"): it matches
+ * a dozen services and picks by registry order, which is precisely the bias
+ * service_vec.c exists to remove. An embedding-ranked variant belongs in the
+ * ROUTER (service_vec_catalogue), where the query is a question and ranking is
+ * the job; here the input is a name that was meant to be exact. */
+static void resolve_normalise(const char *in, char *out, size_t n) {
+  size_t w = 0;
+  for (size_t i = 0; in[i] && w + 1 < n; i++) {
+    char c = in[i];
+    if (c == '-' || c == ' ' || c == '.') c = '_';
+    if (c == '_' && (w == 0 || out[w-1] == '_')) continue;   /* collapse */
+    out[w++] = (char)toupper((unsigned char)c);
+  }
+  while (w && out[w-1] == '_') w--;
+  out[w] = 0;
+  static const char *const SUFFIX[] = { "_LOOKUP", "_SEARCH", "_CHECK",
+                                        "_API", "_PIVOT", "_QUERY", NULL };
+  for (int i = 0; SUFFIX[i]; i++) {
+    size_t sl = strlen(SUFFIX[i]);
+    if (w > sl + 2 && !strcmp(out + w - sl, SUFFIX[i])) { out[w - sl] = 0; break; }
+  }
+}
+
+/* Levenshtein, bounded: returns `max + 1` as soon as the whole row exceeds the
+ * bound, so a 16,000-id scan stays cheap. */
+static int resolve_edit(const char *a, const char *b, int max) {
+  int la = (int)strlen(a), lb = (int)strlen(b);
+  if (la - lb > max || lb - la > max) return max + 1;
+  if (lb > 96) return max + 1;
+  int prev[97], cur[97];
+  for (int j = 0; j <= lb; j++) prev[j] = j;
+  for (int i = 1; i <= la; i++) {
+    cur[0] = i;
+    int best = cur[0];
+    for (int j = 1; j <= lb; j++) {
+      int cost = (a[i-1] == b[j-1]) ? 0 : 1;
+      int v = prev[j] + 1;
+      if (cur[j-1] + 1 < v) v = cur[j-1] + 1;
+      if (prev[j-1] + cost < v) v = prev[j-1] + cost;
+      cur[j] = v;
+      if (v < best) best = v;
+    }
+    if (best > max) return max + 1;
+    for (int j = 0; j <= lb; j++) prev[j] = cur[j];
+  }
+  return prev[lb];
+}
+
+int osint_resolve_near(const char *canon, char *out, size_t n) {
+  if (!canon || !*canon || !out || n == 0) return 0;
+  char norm[128];
+  resolve_normalise(canon, norm, sizeof norm);
+  if (!*norm) return 0;
+
+  const source_def *hit = registry_get(norm);
+  if (hit && strcmp(hit->id, canon)) {              /* (1) spelling only */
+    snprintf(out, n, "%s", hit->id);
+    return 1;
+  }
+
+  const source_def **all = registry_all();          /* (2) one clear winner */
+  int cnt = registry_count(), best = 3, bestn = 0;
+  const char *bestid = NULL;
+  for (int i = 0; i < cnt; i++) {
+    if (!all[i] || !all[i]->id) continue;
+    int d = resolve_edit(norm, all[i]->id, 2);
+    if (d > 2) continue;
+    if (d < best) { best = d; bestid = all[i]->id; bestn = 1; }
+    else if (d == best) bestn++;
+  }
+  if (!bestid || bestn != 1) return 0;   /* nothing near, or a tie: say so */
+  snprintf(out, n, "%s", bestid);
+  return 1;
 }
 
 int osint_is_implemented(const char *name) {
@@ -55,43 +165,223 @@ static void sl_append(char **buf, size_t *len, size_t *cap, const char *s) {
   *len += sl;
 }
 
-/* Catalogue handed to the analysis LLM. One service per line as
- *   ID — description (free|paid)
- * so the model can route on what a service actually does and whether it is
- * credential-gated, instead of guessing from the bare ID. No entity-type tag:
- * any service can be dispatched for any entity, so routing is purely semantic.
- * Only entity-pivot OSINT services are listed (collector == "osint"); scheduled
- * map-layer collectors are not entity-dispatchable and would only be noise. */
-char *osint_services_list(void) {
+/* WHICH SOURCES ARE ACTUALLY ROUTABLE BY THE ANALYSIS LLM.
+ *
+ * The filter used to be `collector == "osint"` alone, and the comment above it
+ * claimed that already excluded "scheduled map-layer collectors [that] are not
+ * entity-dispatchable and would only be noise". It did not. 2,642 of the 4,177
+ * sources tagged collector="osint" declare update_interval_sec > 0 — they are
+ * SCHEDULED bulk feeds (gnews-mon-*, DELPHI_EPIDATA_*, ES_AEMPS_CIMA_*) that
+ * fetch the same body whatever entity you hand them. Recommending one as the
+ * answer to "who owns example.com" routes an entity at a feed that cannot
+ * pivot on it.
+ *
+ * House rule 3 states the distinction this restores: a row is an entity pivot
+ * because it takes an entity token, and a row is scheduled because it declares
+ * an interval. update_interval_sec == 0 is the registry's own word for
+ * "on-demand pivot", which is exactly the set this catalogue is for. */
+static int is_entity_pivot(const source_def *d) {
+  return d->collector && strcmp(d->collector, "osint") == 0
+         && d->update_interval_sec == 0;
+}
+
+/* THE PROMPT IS A CONSUMER THAT PHYSICALLY CANNOT TAKE EVERYTHING.
+ *
+ * This catalogue was emitted in full — every entity-pivot service, each with
+ * its whole description — straight into the phase-1 analysis prompt. Measured
+ * on this registry that is a 207,353-token request, and llama-server answers
+ * it with
+ *
+ *   request (207353 tokens) exceeds the available context size (16384 tokens)
+ *
+ * on EVERY search, with every model, at every realistic context size. The
+ * analysis call therefore never once succeeded; llm_chat returned NULL,
+ * core/pipeline.c read that as "no entities", and the whole investigation
+ * collapsed to one keyword corpus lookup while reporting a clean completed
+ * run. That is the actual reason the search tab's LLM "was not firing", and it
+ * was invisible because nothing looked at WHY the call failed.
+ *
+ * docs/SOURCE_EXHAUSTIVENESS.md's carve-out applies exactly here: an LLM
+ * prompt may bound its own view, but the bound must be the consumer's, it must
+ * be explicit, and it must be stated in-band. So the catalogue degrades in
+ * announced steps rather than being cut off mid-list:
+ *
+ *   1. every service WITH its description, when that fits the budget;
+ *   2. else every service as a BARE ID, with a line saying the descriptions
+ *      were dropped — losing prose about 1,535 services is a far smaller loss
+ *      than losing 90% of the services, and every one stays recommendable;
+ *   3. else as many ids as fit, with a line saying K of N.
+ *
+ * The caller gets `note` back so the run can report which step it took instead
+ * of the model quietly routing from a partial menu.
+ *
+ * WHAT STEP 3 COSTS, SO NOBODY REACHES FOR THIS KNOB BLIND. Truncation takes
+ * the FIRST K in registry order, and registry order is link order: the
+ * batch-generated regional registries register first and the hand-written
+ * entity services register LAST. Measured over 1,535 pivots, DNS_RECORDS was
+ * #1201, IP_GEOLOCATION #1288, JP_CORPUS_LOOKUP #1293, SOCIAL_EMAIL #1484 and
+ * DOMAIN_WHOIS #1529 — the exact indices drift with every batch, the position
+ * at the tail does not. So lowering the budget past step 2 drops precisely the
+ * services a person typically wants. Step 2 exists so that shrinking the
+ * prompt does not have to mean shrinking the menu; prefer dropping
+ * descriptions, and treat step 3 as the last resort it is. */
+/* The most the catalogue may spend and still leave a request the server can
+ * accept — measured from its real context (see osint_set_catalogue_budget).
+ * 0 = nobody measured. */
+static int g_budget_ceiling;
+
+void osint_set_catalogue_budget(int chars) {
+  g_budget_ceiling = chars > 0 ? chars : 0;
+}
+
+static int catalogue_budget_chars(void) {
+  const char *e = getenv("JO_PROMPT_SERVICE_CATALOGUE_CHARS");
+  int v = (e && *e) ? atoi(e) : 0;
+  if (v > 0) {
+    /* AN OPERATOR'S NUMBER IS RESPECTED UP TO WHAT THE SERVER CAN ACTUALLY
+     * ACCEPT, AND THE CLAMP IS ANNOUNCED.
+     *
+     * "Explicit config always wins" sounds like respect and is not: this repo's
+     * own .env carries JO_PROMPT_SERVICE_CATALOGUE_CHARS=32768, written when
+     * 32 KB was the default and the preamble was ~9 KB. The preamble is now
+     * ~32 KB, so honouring that line builds a 64,674-byte prompt against a
+     * 16,384-token context and llama-server answers 400 — EVERY search
+     * degrades. Obeying the number defeats the intent behind it, which was
+     * "show the model a big menu", not "fail".
+     *
+     * So the value is honoured until it would make the request impossible,
+     * then clamped — loudly, once, naming the line to edit. */
+    if (g_budget_ceiling > 0 && v > g_budget_ceiling) {
+      static int told;
+      if (!told) {
+        told = 1;
+        fprintf(stderr,
+          "[dispatch] JO_PROMPT_SERVICE_CATALOGUE_CHARS=%d exceeds what this "
+          "LLM server can accept (%d bytes once the prompt around the "
+          "catalogue is counted); using %d. The request would otherwise be "
+          "refused with HTTP 400 and the analysis stage would degrade. Lower "
+          "or remove that line in .env to silence this.\n",
+          v, g_budget_ceiling, g_budget_ceiling);
+      }
+      return g_budget_ceiling;
+    }
+    return v;
+  }
+  if (g_budget_ceiling > 0) return g_budget_ceiling;
+  /* THE DEFAULT IS A FLOOR, NOT AN ESTIMATE.
+   *
+   * This used to be 32768, justified as "≈ 8k tokens; with the ~9 KB few-shot
+   * preamble the request lands near 11k tokens, inside the 16384 default
+   * context". That was true when written and silently stopped being true as
+   * the preamble grew to ~32 KB: measured 2026-09-13 the finished prompt was
+   * 64,674 bytes against n_ctx 16,384 and llama-server answered HTTP 400,
+   * killing the analysis stage for EVERY query (the prompt size is dominated
+   * by the catalogue and the examples, not by what the user typed).
+   *
+   * So the number that matters is now computed per call from the server's own
+   * n_ctx minus the MEASURED preamble (core/pipeline.c), and this constant is
+   * only what remains when there is no server to ask. It is deliberately small
+   * enough to fit a 16k context alongside a 32 KB preamble rather than large
+   * enough to look generous. */
+  return 12288;
+}
+
+char *osint_services_list_bounded(osint_catalogue_note *note) {
   const source_def **all = registry_all();
   int n = registry_count();
+  int budget = catalogue_budget_chars();
+
+  int total = 0;
+  size_t full_len = 0;
+  for (int i = 0; i < n; i++) {
+    if (!is_entity_pivot(all[i])) continue;
+    total++;
+    const char *desc = (all[i]->description && *all[i]->description)
+                         ? all[i]->description : "(no description)";
+    full_len += strlen(all[i]->id) + strlen(desc) + 16;
+  }
+  int with_desc = (full_len <= (size_t)budget);
+
   size_t cap = 4096, len = 0;
   char *buf = malloc(cap);
   if (!buf) return NULL;
   buf[0] = 0;
+  int shown = 0;
   for (int i = 0; i < n; i++) {
     const source_def *d = all[i];
-    if (!d->collector || strcmp(d->collector, "osint") != 0) continue;
-    const char *desc = (d->description && *d->description)
-                         ? d->description : "(no description)";
+    if (!is_entity_pivot(d)) continue;
+    /* Stop on the budget rather than half-writing a line: a truncated service
+     * id is a name that does not exist, and the model would route to it. */
+    size_t need = strlen(d->id) + 2;
+    const char *desc = NULL;
+    if (with_desc) {
+      desc = (d->description && *d->description) ? d->description
+                                                 : "(no description)";
+      need += strlen(desc) + 12;
+    }
+    if (len + need > (size_t)budget) break;
     sl_append(&buf, &len, &cap, d->id);
-    sl_append(&buf, &len, &cap, " \xE2\x80\x94 ");   /* " — " (em dash, UTF-8) */
-    sl_append(&buf, &len, &cap, desc);
-    sl_append(&buf, &len, &cap, d->free_tier ? " (free)\n" : " (paid)\n");
+    if (with_desc) {
+      sl_append(&buf, &len, &cap, " \xE2\x80\x94 "); /* " — " (em dash, UTF-8) */
+      sl_append(&buf, &len, &cap, desc);
+      sl_append(&buf, &len, &cap, d->free_tier ? " (free)\n" : " (paid)\n");
+    } else {
+      sl_append(&buf, &len, &cap, "\n");
+    }
     if (!buf) return NULL;   /* OOM mid-build */
+    shown++;
+  }
+
+  /* Say it IN the prompt. The model is told what it is not being shown, so it
+   * routes knowing the menu is partial instead of assuming it saw everything —
+   * the same in-band labelling results_view_for_prompt() applies to records. */
+  char banner[384];
+  if (shown < total)
+    snprintf(banner, sizeof banner,
+      "\n[CATALOGUE BOUNDED: showing the first %d of %d registered "
+      "entity-pivot services in registry order%s. Services not listed here "
+      "still exist and can be reached; recommend from what is listed.]\n",
+      shown, total, with_desc ? "" : ", as bare ids with descriptions omitted "
+                                     "so that every service stays listed");
+  else if (!with_desc)
+    snprintf(banner, sizeof banner,
+      "\n[CATALOGUE BOUNDED: all %d registered entity-pivot services are "
+      "listed, as bare ids — their descriptions did not fit the prompt "
+      "budget and were omitted, not the services.]\n", total);
+  else
+    banner[0] = '\0';
+  if (banner[0]) sl_append(&buf, &len, &cap, banner);
+
+  if (note) {
+    note->total        = total;
+    note->shown        = shown;
+    note->descriptions = with_desc;
+    note->truncated    = (shown < total);
   }
   return buf;
 }
 
-/* cJSON array of every registered entity-pivot service id (collector=="osint"),
- * i.e. exactly the catalogue osint_services_list() advertises. */
-static cJSON *osint_service_id_array(void) {
+char *osint_services_list(void) { return osint_services_list_bounded(NULL); }
+
+/* cJSON array of the entity-pivot service ids the schema enum may contain.
+ *
+ * `limit` > 0 takes the FIRST `limit` of them, which is exactly the set
+ * osint_services_list_bounded() printed — both walk registry_all() in order
+ * with the same predicate, so "the first N" is the same N in both places.
+ * That equality is the point: the enum is what the model is ALLOWED to say and
+ * the catalogue is what it was TOLD about, and letting those two disagree
+ * means either offering names it was never shown the meaning of, or rejecting
+ * names it was explicitly offered. 0 means no limit. */
+static cJSON *osint_service_id_array(int limit) {
   cJSON *a = cJSON_CreateArray();
   const source_def **all = registry_all();
-  int n = registry_count();
-  for (int i = 0; i < n; i++)
-    if (all[i]->collector && strcmp(all[i]->collector, "osint") == 0)
-      cJSON_AddItemToArray(a, cJSON_CreateString(all[i]->id));
+  int n = registry_count(), taken = 0;
+  for (int i = 0; i < n; i++) {
+    if (!is_entity_pivot(all[i])) continue;
+    if (limit > 0 && taken >= limit) break;
+    cJSON_AddItemToArray(a, cJSON_CreateString(all[i]->id));
+    taken++;
+  }
   return a;
 }
 
@@ -101,12 +391,20 @@ static cJSON *osint_service_id_array(void) {
  * recommendable — with zero manual enum maintenance when the registry changes.
  * malloc'd; caller frees. NULL → caller falls back to the static schema file. */
 char *osint_analysis_schema_dynamic(void) {
+  return osint_analysis_schema_dynamic_limited(0);
+}
+
+/* The enum builder both public entry points share. `ids` is the permitted
+ * vocabulary and is consumed here. Split out so the semantic router can pass
+ * the exact ids IT listed: the schema is what the model is ALLOWED to answer
+ * and the catalogue is what it was SHOWN, and those two sets diverging is a
+ * silent failure — the model would read about a service it cannot name. */
+static char *osint_schema_with_ids(cJSON *ids) {
   const char *base = schema_load("osint_analysis");
-  if (!base || !*base) return NULL;
+  if (!base || !*base) { cJSON_Delete(ids); return NULL; }
   cJSON *s = cJSON_Parse(base);
-  if (!s) return NULL;
+  if (!s) { cJSON_Delete(ids); return NULL; }
   cJSON *props = cJSON_GetObjectItem(s, "properties");
-  cJSON *ids = osint_service_id_array();
 
   /* properties.recommended_services.items.enum */
   cJSON *rs = props ? cJSON_GetObjectItem(props, "recommended_services") : NULL;
@@ -132,6 +430,25 @@ char *osint_analysis_schema_dynamic(void) {
   return out;
 }
 
+char *osint_analysis_schema_dynamic_limited(int limit) {
+  return osint_schema_with_ids(osint_service_id_array(limit));
+}
+
+/* The semantic router's counterpart: the vocabulary is exactly the `n` ids it
+ * put in the catalogue, in the order it ranked them. An id that is not a
+ * registered entity pivot is skipped rather than trusted — the enum must never
+ * be able to name something the dispatcher cannot run. */
+char *osint_analysis_schema_dynamic_ids(const char *const *ids, int n) {
+  cJSON *a = cJSON_CreateArray();
+  for (int i = 0; i < n; i++) {
+    if (!ids[i]) continue;
+    const source_def *d = registry_get(ids[i]);
+    if (d && is_entity_pivot(d)) cJSON_AddItemToArray(a, cJSON_CreateString(ids[i]));
+  }
+  if (cJSON_GetArraySize(a) == 0) { cJSON_Delete(a); return NULL; }
+  return osint_schema_with_ids(a);
+}
+
 /* dual sink: persist through the real intel_sink (live intel_items) AND
  * capture the emitted result JSON for the pipeline's Phase-2 chaining. */
 typedef struct { char *name; int records; } src_acc;
@@ -143,7 +460,8 @@ typedef struct {
    * the last one (what this did before) silently discarded N-1 of N fetched
    * records at the dispatcher seam; see docs/SOURCE_EXHAUSTIVENESS.md. */
   cJSON      *caps;          /* JSON array, created lazily */
-  int         n_emit;
+  int         n_emit;      /* rows the sink ACCEPTED */
+  int         n_refused;   /* rows the sink refused (emit() < 0) */
   int         any_new;
   /* per-emit source attribution, deduped by name (empty name = "the service
    * itself", resolved to the canonical id at finalize). */
@@ -185,10 +503,38 @@ static int dual_emit(struct intel_sink *s, const intel_item *it) {
    * sub_source_id, else "" — finalize fills "" from the real HTTP host(s) the
    * collector contacted (automatic for every HTTP collector), or the service
    * name for purely local ones. */
-  acc_add(d, (it->sub_source_id && *it->sub_source_id) ? it->sub_source_id : "");
-  d->n_emit++;
+  /* Count only what the real sink ACCEPTED. These counters become
+   * `record_count` and the per-source `records` figures in the API response,
+   * and intel.c's emit() returns <0 when the row was not written — so
+   * incrementing unconditionally made the response state a number of stored
+   * records the store had rejected. The capture above is deliberately NOT
+   * gated: we really did fetch that payload, and dropping it silently would
+   * trade one wrong number for a discarded record. A refusal is carried
+   * instead, so the shortfall is visible rather than absorbed. */
+  if (rc >= 0) {
+    acc_add(d, (it->sub_source_id && *it->sub_source_id) ? it->sub_source_id : "");
+    d->n_emit++;
+  } else {
+    d->n_refused++;
+  }
   if (rc > 0) d->any_new = 1;
   return rc;
+}
+
+/* Byte-for-byte the same verdict core/scheduler.c:run_status() reaches, so a
+ * source's fetch_log rows mean the same thing whichever path produced them. It
+ * is duplicated rather than shared because the scheduler's copy is static and
+ * lives behind a worker-pool header this file does not otherwise include; if a
+ * third caller ever needs it, that is the moment to lift it into db.h. */
+static const char *dispatch_run_status(int rc, long records, int hosts,
+                                       int hosts_ok, const char **why) {
+  *why = NULL;
+  if (rc >= 0) return "ok";
+  if (records > 0) return "ok";
+  if (hosts > 0 && hosts_ok == hosts) return "ok";
+  *why = (hosts > 0) ? "run returned non-zero; no host answered"
+                     : "run returned non-zero";
+  return "error";
 }
 
 int osint_dispatch(db_handle *db, llm_client *llm, const char *service,
@@ -203,15 +549,46 @@ int osint_dispatch(db_handle *db, llm_client *llm, const char *service,
   snprintf(out->service, sizeof out->service, "%s", canon);
 
   const source_def *def = osint_lookup(canon);
+  if (!def && entity && *entity) {
+    /* One clear candidate, or nothing: see osint_resolve_near(). The name the
+     * caller used is kept so the answer can say what it actually ran. */
+    char near[128];
+    if (osint_resolve_near(canon, near, sizeof near)) {
+      const source_def *nd = osint_lookup(near);
+      if (nd) {
+        out->resolved_from = strdup(canon);
+        snprintf(out->service, sizeof out->service, "%s", nd->id);
+        fprintf(stderr, "[dispatch] \"%s\" is not registered; ran \"%s\" "
+                        "(reported as resolved_from)\n", canon, nd->id);
+        def = nd;
+      }
+    }
+  }
   if (!def || !entity || !*entity) {
     out->error = strdup("not_implemented");   /* graceful, == JS */
     return 0;
   }
 
+  /* The circuit breaker applies here too. It used to be enforced only in
+   * scheduler_loop(), so a source benched for repeated failure or abuse stayed
+   * fully reachable through POST /api/search — and because this path also
+   * skipped anomaly_detect (fixed below), pivot traffic could never bench it
+   * either. Honouring it here closes both halves of that loop. */
+  if (db && sched_is_quarantined(db, def->id)) {
+    out->error = strdup("quarantined");
+    return 0;
+  }
+
+  /* Store this service's rows under ITS OWN id, not under the pipeline's
+   * run-wide "osint-search" sink. See intel_sink_rebind() for why. Falls back
+   * to the caller's sink when it is not an intel sink (main.c --dispatch and
+   * the offline tests both pass one that is, but this must not assume it). */
+  intel_sink own; int own_ok = intel_sink_rebind(persist, def->id, &own);
+
   dual_sink ds = {0};
   ds.base.ctx = &ds;
   ds.base.emit = dual_emit;
-  ds.real = persist;
+  ds.real = own_ok ? &own : persist;
 
   http_client *http = http_client_new();
   volatile int cancel = 0;
@@ -224,7 +601,31 @@ int osint_dispatch(db_handle *db, llm_client *llm, const char *service,
   ctx.llm         = llm;
   ctx.cancel      = &cancel;
 
+  /* The four observability systems the scheduled path has always had and this
+   * one never did. evidence and content-change are thread-local scopes that
+   * core/httpclient.c's hooks read (they have no db_handle or source_id of
+   * their own and fail closed when nothing is bound) — so without these, a
+   * pivot fetch produced no chain-of-custody blob and no diff, silently.
+   * Mirrors core/scheduler.c:scheduler_run_source(). */
+  struct timespec t0, t1;
+  clock_gettime(CLOCK_MONOTONIC, &t0);
+  evidence_scope_begin(db, def->id, entity);
+  content_change_scope_begin(db, def->id);
+
   int rc = def->run(&ctx, &ds.base);
+
+  content_change_scope_end();
+  evidence_scope_end();
+  clock_gettime(CLOCK_MONOTONIC, &t1);
+  long duration_ms = (t1.tv_sec - t0.tv_sec) * 1000L +
+                     (t1.tv_nsec - t0.tv_nsec) / 1000000L;
+
+  /* Transport evidence must be read BEFORE the client is freed. */
+  int hosts = http_client_host_count(http), hosts_ok = 0;
+  for (int i = 0; i < hosts; i++) {
+    int ok = 0;
+    if (http_client_host_at(http, i, NULL, &ok) && ok) hosts_ok++;
+  }
 
   out->success    = (rc >= 0 && ds.n_emit > 0) ? 1 : 0;
   out->confidence = out->success ? 70 : 0;     /* JS default */
@@ -273,7 +674,27 @@ int osint_dispatch(db_handle *db, llm_client *llm, const char *service,
       cJSON_AddStringToObject(o, "name", h);
       cJSON_AddStringToObject(o, "status",
                               (out->success && ok) ? "ok" : (ok ? "empty" : "error"));
-      cJSON_AddNumberToObject(o, "records", out->success ? ds.n_emit : 0);
+      /* `records` is NULL here, and that is the honest value.
+       *
+       * This branch fires when the collector labelled none of its emits with a
+       * sub_source_id, so all we know is the set of HOSTS it contacted — the
+       * host log records requests, not which record came from where. It used
+       * to write `ds.n_emit` into every host row, i.e. the service's TOTAL
+       * repeated once per host: SOCIAL_EMAIL contacted 60 hosts and emitted
+       * 187 records, and the attribution said 187 records for instagram.com,
+       * 187 for github.com, 187 for each of the other 58 — 11,220 records
+       * claimed out of 187 real ones, including for the hosts whose status was
+       * "error" and which returned nothing at all. A per-host figure we do not
+       * have is not something to fill in with the total; house rule 1 says a
+       * missing measurement degrades to an explicit unknown.
+       *
+       * `requests` IS measured per host, so it is reported, and the service's
+       * real total stays where it is actually true — record_count on the
+       * service result. A collector that wants per-source counts already has
+       * the way to get them: label its emits with sub_source_id and it lands
+       * in the labelled branch above. */
+      cJSON_AddItemToObject(o, "records", cJSON_CreateNull());
+      cJSON_AddNumberToObject(o, "requests", reqs);
       cJSON_AddItemToArray(arr, o);
     }
   } else {
@@ -292,8 +713,24 @@ int osint_dispatch(db_handle *db, llm_client *llm, const char *service,
   cJSON_Delete(ds.caps);        /* NULL unless the wrap above never ran */
 
   http_client_free(http);   /* after reading its host log */
+  if (own_ok) intel_sink_free(&own);
+
+  /* Stage 0+1, exactly as scheduler_run_source() does it: log the run and let
+   * the breaker see it. Without this a pivot source could fail every time and
+   * never be benched, because the only code path that writes fetch_log was the
+   * scheduler's. Same '_' guard — internal pods emit nothing and would trip
+   * duration_outlier on their own LLM calls. */
+  if (db && def->collector && def->collector[0] != '_') {
+    const char *why = NULL;
+    const char *status = dispatch_run_status(rc, ds.n_emit, hosts, hosts_ok, &why);
+    long flid = fetch_log_write(db, def->id, status, ds.n_emit, duration_ms, why);
+    anomaly_detect(db, def->id, flid, status, ds.n_emit, duration_ms);
+  }
 
   fprintf(stderr, "[osint] %s(%s) success=%d emit=%d sources=%d hosts=%d\n",
           canon, entity, out->success, ds.n_emit, n_labeled, nh);
+  if (ds.n_refused)
+    fprintf(stderr, "[osint] %s: %d record(s) refused by the store\n",
+            canon, ds.n_refused);
   return 0;
 }

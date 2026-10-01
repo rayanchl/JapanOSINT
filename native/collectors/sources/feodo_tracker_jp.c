@@ -33,7 +33,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!arr || !cJSON_IsArray(arr)) { if (arr) cJSON_Delete(arr); return -1; }
 
   cJSON *features = cJSON_CreateArray();
-  int i = 0;
   cJSON *r;
   cJSON_ArrayForEach(r, arr) {
     cJSON *cc = cJSON_GetObjectItem(r, "country");
@@ -80,7 +79,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddStringToObject(p, "source", "feodo_tracker");
     cJSON_AddItemToObject(feat, "properties", p);
     cJSON_AddItemToArray(features, feat);
-    i++;
   }
   cJSON_Delete(arr);
 

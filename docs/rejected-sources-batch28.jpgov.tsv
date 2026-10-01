@@ -1,0 +1,101 @@
+https://www.pmda.go.jp/safety/info-services/drugs/adr-info/suspected-adr/0004.html	Description/terms page only; actual CSV download (CsvDownload.jsp) is gated behind an image CAPTCHA, no non-interactive path found
+https://www.pmda.go.jp/safety/info-services/drugs/adr-info/suspected-adr/0005.html	Entry-point page only; the linked dataset-download page (0003.html) is also CAPTCHA-gated, and the line-list search is a separate interactive jsp
+https://www.pmda.go.jp/safety/info-services/drugs/adr-info/suspected-adr/0002.html	Archive page with no downloadable files; only links to an interactive search jsp (menu_fukusayou_base.jsp)
+https://www.pmda.go.jp/PmdaSearch/iyakuSearch/	Pure HTML search form, no JSON/XML API or GET-queryable endpoint found; results are server-rendered from a POST form
+https://www.pmda.go.jp/PmdaSearch/kikiSearch/	Pure HTML search form, no JSON/XML API or GET-queryable endpoint found
+https://www.pmda.go.jp/PmdaSearch/saiseiSearch/	Pure HTML search form, no JSON/XML API or GET-queryable endpoint found
+https://www.pmda.go.jp/PmdaSearch/ivdSearch/	Pure HTML search form, no JSON/XML API or GET-queryable endpoint found
+https://www.pmda.go.jp/PmdaSearch/otcSearch/	Pure HTML search form, no JSON/XML API or GET-queryable endpoint found
+https://www.pmda.go.jp/safety/info-services/devices/0090.html	Leads through a terms-of-service click-through (0126.html -> 0095.html) into an interactive search jsp (menu_fuguai_base.jsp); no bulk CSV/line-list download link found
+https://www.pmda.go.jp/english/review-services/reviews/approved-information/drugs/0002.html	Single consolidated PDF (April 2004-present, one file) rather than a per-item link list; html mode requires a genuine list-of-links page, no CSV/API alternative found
+https://www.pmda.go.jp/english/review-services/reviews/approved-information/devices/0001.html	Single consolidated PDF, same as the new-drug-approvals row; no CSV/API alternative found
+https://www.tele.soumu.go.jp/j/sys/equ/tech/webapi/	Site is bot-gated for automated fetching: WebFetch got HTTP 403 and repeated curl attempts (with browser UA and a warmed session cookie) returned the site's generic error page instead of the API documentation; no real endpoint/params could be confirmed
+https://www.soumu.go.jp/johotsusintokei/field/tsuushin04_01.html	Only XLS files available (data/gt010403.xls, data/gt010404.xls); no CSV/JSON alternative found
+https://www.soumu.go.jp/iken/jokyo_chousa_shiryo.html	Descriptive index page with no direct downloadable files of its own; the real data lives on e-Stat and the settlement-cards/financial-material pages captured elsewhere in this batch
+https://www.e-stat.go.jp/stat-search/files?toukei=00200251&tstat=000001077755	e-Stat search/filter results page; no direct file <a href> links present in the raw HTML (files are reached via further click-through or a bulk-download JS interaction), and full API access requires a user-registered application ID (credential)
+https://www.e-stat.go.jp/stat-search/files?toukei=00200356	e-Stat page requires further click-through navigation into per-survey-year sublinks; no direct file <a href> links present in the raw HTML
+https://dataset.address-br.digital.go.jp/	WebFetch returned only the page heading with no anchors/links twice in a row — page renders its dataset list client-side (JS), no static download links observable
+https://www.digital.go.jp/resources/japandashboard/	Pure link-directory page pointing only to further JS-rendered Power BI dashboards; no data or files of its own to extract
+https://www.digital.go.jp/resources/govdashboard/	Same pattern as japandashboard — static index linking only to JS Power BI dashboards, no embedded data
+https://www.digital.go.jp/resources/govdashboard/gbiz-id	Only a ZIP archive is offered (データテーブル ZIP); the engine has no unzip/decompression capability so the underlying CSV/Excel inside is unreachable
+https://www.digital.go.jp/en/policies/base_registry_address	Policy gateway page that only re-links to dataset.address-br.digital.go.jp (already rejected) and to GitHub geocoder tool pages; carries no data itself
+https://resas-portal.go.jp/	RESAS API service was terminated 2025-03-24 per its own terms-of-service page ("RESAS APIのすべてのサービスの提供を終了させていただきます"); new accounts stopped 2024-10-31, so the API is dead
+https://www.p-portal.go.jp/pps-web-biz/UAB02/OAB0201	Bulk downloads are ZIP-compressed CSV (successful_bid_record_info_all_<year>.zip); engine has no unzip capability so individual bid records cannot be extracted, only the zip filenames
+https://survey.gov-online.go.jp/jikeiretsu/j-index.html	WebFetch returned HTTP 403 Forbidden on repeated attempts — bot-blocked, cannot verify real download links
+https://www.meti.go.jp/information/publicoffer/saitaku.html	WebFetch returned HTTP 403 Forbidden on repeated attempts — bot-blocked, cannot verify real content
+https://www.chusho.meti.go.jp/koukai/hojyokin/saitaku.html	WebFetch returned HTTP 403 Forbidden — bot-blocked, cannot verify real content
+https://www.chusho.meti.go.jp/koukai/hojyokin/index.html	WebFetch returned HTTP 403 Forbidden on repeated attempts — bot-blocked, cannot verify real content
+https://portal.monodukuri-hojo.jp/dataportal.html	Statistics are presented only as embedded chart images (application trends, industry breakdown etc.), not as downloadable data or a real link list — no extractable hrefs found
+https://jigyou-saikouchiku.go.jp/pdf/result/tokubetsu_all12.pdf	Direct PDF (application/pdf, 20pp) — no per-item anchor list or non-PDF alternative found; cannot be represented in json/csv/xml/html modes without fabricating structure.
+https://www.meti.go.jp/policy/safety_security/industrial_safety/sangyo/hipregas/jikoboushi/database.html	WebFetch returned HTTP 403 Forbidden (bot-blocked); could not inspect actual content.
+https://www.enecho.meti.go.jp/statistics/total_energy/	HTTP 403 Forbidden — enecho.meti.go.jp bot-block observed across all meti.go.jp/enecho pages checked in this batch.
+https://www.enecho.meti.go.jp/statistics/total_energy/results.html	HTTP 403 Forbidden — enecho.meti.go.jp bot-block.
+https://www.meti.go.jp/statistics/toppage/jikeiretsu/index.html	HTTP 403 Forbidden — meti.go.jp bot-block.
+https://www.meti.go.jp/statistics/tyo/kougyo/library/library_5.html	HTTP 403 Forbidden — meti.go.jp bot-block.
+https://www.jftc.go.jp/houdou/pressrelease/dksochi/index.html	Pure year-navigation index (links only to per-year pages like .../2024/index.html) — carries no records itself; the per-year page is covered separately (JO28_063, FY2024).
+https://www.jftc.go.jp/houdou/pressrelease/2025/may/250501_kanki.html	Single narrative annual-statistics press release with figures embedded in prose, not a per-item record list; the three linked PDFs are print copies of the same one document, not a link-list page.
+https://www.houjin-bangou.nta.go.jp/download/	Bulk CSV/XML download buttons are JS-rendered placeholders (href="#"); the documented Web-API alternative requires a registered application ID (2-4 week approval turnaround) — a credential we can't verify without registering, rejected per no-fabrication/no-credential rule.
+https://www.nta.go.jp/information/other/data/r06/kobai/r06_10.htm	Single dated procedural announcement (auction schedule/deadlines in prose); no per-item property list or downloadable file with multiple records.
+https://www.maff.go.jp/j/tokei/dashboard/index.html	Tableau Public embed with no accompanying static CSV/XLS download links found on the page or its 7 referenced category sub-dashboards.
+https://www.machimura.maff.go.jp/machi/	JS-rendered map (/map/map1.html) and PHP search/ranking tools (/search/index.php, /ranking/index.php) — no static per-municipality links to fetch.
+https://www.maff.go.jp/j/tokei/census/shuraku_data/index.html	Multi-tab hub page; the only confirmed real file is a column-definition reference (format.xlsx), not data itself — actual per-settlement census files sit behind unconfirmed sub-pages.
+https://www.maff.go.jp/j/tokei/kouhyou/kaimen_gyosei/index.html	"First report" is a single PDF (not a list); "final report" and "long-term" links point to e-Stat stat-search/files pages, which — consistent with e-Stat search pages rejected elsewhere in this batch — expose no direct file links in raw HTML and require JS/search interaction.
+https://www.maff.go.jp/j/tokei/kouhyou/sakumotu/index.html	Navigation hub linking to 5 further sub-survey index pages (area, rice/wheat/soy, fruit, vegetable, flower) — no terminal downloadable file confirmed within this row's own URL.
+http://www.acis.famic.go.jp/index.htm	Pesticide download requires a consent/agreement click-through step before file links appear; not directly fetchable without simulating a POST-based agreement flow.
+https://www.nedo.go.jp/activities/tsc_data_catalog.html	Only 2 static links, both compiled PDF metadata catalogs (not per-dataset files); actual datasets require directly contacting a named data steward per NEDO's own page text.
+https://www.nedo.go.jp/library/database_index.html	Page returns essentially empty static HTML across repeated WebFetch attempts (title only, no links) — results appear to be JS-rendered client-side with no static links or API endpoint visible.
+https://www.jetro.go.jp/en/database.html	Pure navigation hub linking to other JETRO search tools (e-Venue, Japan Street, procurement database); carries no data records itself.
+https://www.jetro.go.jp/en/database/procurement/national/	Interactive JS/POST search form (tabbed national/local government filters, dropdowns); no static result list or visible API endpoint in page source.
+https://www2.jica.go.jp/ja/evaluation/index.php	JS/POST-driven search form with region/sector/date-range filters; no static evaluation-report links or API endpoint visible in the page.
+https://www2.jica.go.jp/ja/oda/index.php	JS/POST-driven search form (region/sector/year filters); no static project links or API endpoint visible.
+https://www.chem-info.nite.go.jp/chem/chrip/chrip_search/systemTop	Search results are retrieved via obfuscated JavaScript calls (request('_e_srh_input')); no visible backend endpoint to call directly, no static result list in the raw HTML.
+https://www.nite.go.jp/nbrc/	Landing page links to NBRCDispSearchServlet, but a sample query against it returned only the empty search-form shell — no result rows render without JS.
+https://www.nite.go.jp/jiko/jikojohou/safe-pro.html	SAFE-Pro requires an approved-user application and login; no public data file or API access exists on this page.
+https://jaxa.repo.nii.ac.jp/	WEKO3 repository search page is a client-side JS template ([[key_option.contents]] placeholders); no populated item links or confirmed JSON/OAI endpoint in the static HTML.
+https://metadb.riken.jp/	Only a bare SPARQL endpoint (/metadb/sparql) is exposed; querying it requires constructing a SPARQL query string, which none of the manifest's fetch modes support and which would require guessing a query shape — not attempted.
+https://web.brc.riken.jp/en	Navigation hub to five separately-run division catalogs (mouse/plant/cell/DNA/microbe), each its own search system with unconfirmed scriptability; no data on this page itself.
+https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/shokuhin/syokuchu/index.html	Mostly narrative/educational content; the one real data link duplicates the incident-list page captured separately as JO28_097 (the 04.html page).
+https://www.mhlw.go.jp/toukei/list/112-1.html	WebFetch returned garbled/mis-encoded content; the only extractable link is a legacy e-Stat GL08020101.do URL format that could not be confirmed live without fabricating its current target.
+https://jsite.mhlw.go.jp/tokyo-roudoukyoku/jirei_toukei/souken_jirei.html	page is a single link to one consolidated PDF of violation cases, not a multi-item link-list; no structured per-case data reachable
+https://jsite.mhlw.go.jp/osaka-roudoukyoku/content/contents/002346739.pdf	direct PDF file (confirmed %PDF-1.7 binary); no CSV/JSON/HTML-list alternative found
+https://www.kaigokensaku.mhlw.go.jp/	page explicitly states "本システムにはCSVデータダウンロード機能はございません" (no CSV download function); requires prefecture-by-prefecture JS-driven search with no bulk export
+https://www.iryou.teikyouseido.mhlw.go.jp/znk-web/juminkanja/S2300/initialize	JS-driven search form only (javascript:void(0) handlers throughout); no API/CSV/JSON endpoint or download link
+https://www.iryou.teikyouseido.mhlw.go.jp/znk-web/juminkanja/S2300/initializeYakk	same Navi-i JS-driven search infrastructure as the medical-facility search; no API/CSV/JSON endpoint or download link
+https://www.mhlw.go.jp/toukei/list/list54-57.html	pure e-Stat gateway page; only internal narrative sub-pages, no direct CSV/Excel/PDF result-table downloads
+https://www.mhlw.go.jp/toukei/itiran/gaiyo/k-eisei.html	pure e-Stat gateway page; only an RSS/XML feed link and narrative content, no direct data files
+https://www.mhlw.go.jp/toukei/list/62-17.html	pure e-Stat gateway page; no direct CSV/Excel/PDF downloads found
+https://www.mhlw.go.jp/toukei/list/chinginkouzou.html	direct downloads observed are correction notices, an explanatory PDF, and one report XLS of ambiguous content — page itself frames them as narrative documentation, not confirmed result tables; actual tables live behind the e-Stat gateway
+https://www.mhlw.go.jp/toukei/list/30-1.html	direct downloads observed are explanatory/correction/announcement PDFs only (maikin-kaisetsu, maikin-teisei); actual monthly result tables live behind the e-Stat gateway
+https://www.mhlw.go.jp/toukei/list/44-23.html	direct downloads observed are usage-example/terminology/correction/Q&A PDFs only, not result data; actual tables live behind the e-Stat gateway
+https://www.mhlw.go.jp/toukei/list/129-1.html	navigation-menu-only page; no direct downloadable files of any kind found
+https://www.mhlw.go.jp/toukei/list/10-20.html	direct downloads observed are Q&A/administrative-notice/methodology PDFs only, not result data; actual tables live behind the e-Stat gateway
+https://www.mhlw.go.jp/toukei/list/79-1.html	direct downloads observed are terminology-glossary and FAQ PDFs only, not result data; actual tables live behind the e-Stat gateway
+https://www.mhlw.go.jp/toukei/list/37-21.html	pure e-Stat gateway page; no direct CSV/Excel/PDF result-table downloads found
+https://www.mhlw.go.jp/toukei/list/74-16.html	pure e-Stat gateway page; only an XML metadata link, no direct data files
+https://www.mhlw.go.jp/toukei/list/84-1.html	only direct download observed is an earthquake-impact methodology PDF; actual result tables live behind the e-Stat gateway
+https://www.mhlw.go.jp/toukei/list/23-22.html	only direct downloads observed are Q&A and glossary PDFs; actual result tables live behind the e-Stat gateway
+https://www.mhlw.go.jp/toukei/list/124-1.html	pure e-Stat gateway page; only an external FAQ PDF link, no result-table downloads
+https://www.mhlw.go.jp/toukei/list/9-23-1.html	direct downloads observed are correction and compilation-methodology PDFs only; actual result tables live behind the e-Stat gateway
+https://prod-internet.jcip.mlit.go.jp/Client/	interactive attribute/purpose-selection search-form portal only; no bulk API/CSV export, no direct download links
+https://jtsb.mlit.go.jp/jtsb/ship/index.php	Marine accident search is a POST/JS-driven form with no static results-list URL found; no direct anchor links to case records observed even when submitting the default "show all" search
+https://water-pub.env.go.jp/water-pub/mizu-site/index.asp	Pure navigation gateway page (ASP) with no direct data or record links; only routes to further JS-driven sub-portals (kousui/kouiki/suiyoku)
+https://www.prtr.env.go.jp/prtrmap/	JavaScript-dependent map application; page states JS is required and no static data or API endpoint is exposed in the raw HTML
+http://www.biodic.go.jp/J-IBIS.html	Pure navigation hub with no records of its own; every sub-resource it links to (Monitoring Sites 1000, Giant Tree DB, Seabird DB, Waterfowl survey, Ikimono-Log) is already assessed as its own row elsewhere in this batch
+https://www.biodic.go.jp/moni1000/index.html	Real survey data exists but is gated behind a mandatory questionnaire (question/question.html) before any download link is exposed; no direct file link found at or reachable from this page
+http://kyoju.biodic.go.jp	Landing/portal page only; actual giant-tree search runs through JS action-command routes (?_action=gtmenu&_command=menusearch), no static record list or table present
+https://ikilog.biodic.go.jp/	Homepage shows only a small rotating "latest observations" teaser out of 5.4M total records; the full LifeSearch/ThemeSearch is a JS-driven form with no server-rendered result list or documented API found
+https://ikilog.biodic.go.jp/rl_rdb/list/	JavaScript search form for the Red List database; no server-rendered species list or pagination parameters found
+https://www.jftc.go.jp/dk/ichiran/dkhaijo_R6.html	PROBE_FAIL: HTTP 403 even with a real browser User-Agent — jftc.go.jp bot-walled
+https://www.jftc.go.jp/dk/ichiran/dkhaijo_R5.html	PROBE_FAIL: HTTP 403 even with a real browser User-Agent — jftc.go.jp bot-walled
+https://www.jftc.go.jp/dk/ichiran/dkhaijo_R4.html	PROBE_FAIL: HTTP 403 even with a real browser User-Agent — jftc.go.jp bot-walled
+https://www.jftc.go.jp/dk/ichiran/dkhaijo_R3.html	PROBE_FAIL: HTTP 403 even with a real browser User-Agent — jftc.go.jp bot-walled
+https://www.jftc.go.jp/houdou/pressrelease/dksochi/2024/index.html	PROBE_FAIL: HTTP 403 even with a real browser User-Agent — jftc.go.jp bot-walled
+https://www.jftc.go.jp/regional_office/chubu/meirei_list.html	PROBE_FAIL: HTTP 403 even with a real browser User-Agent — jftc.go.jp bot-walled
+https://www.info.pmda.go.jp/kaisyuu/rcidx26-1m.html	PROBE_FAIL: page for this fiscal-year/class only offers a single zip-bundle download (rcidx26-1m_all.zip), no per-item MainServlet links to extract; html-anchor mode has nothing to key records on
+https://www.info.pmda.go.jp/kaisyuu/rcidx26-1k.html	PROBE_FAIL: same zip-only shape as rcidx26-1m — no per-item anchors
+https://www.info.pmda.go.jp/kaisyuu/rcidx25-2k.html	PROBE_FAIL: same zip-only shape — no per-item anchors
+https://it-shien.smrj.go.jp/download/grantdecision_list/	DUP_WITH_BATCH25: same endpoint already registered by concurrent batch25 session (osintsaas-ef)
+https://jtsb.mlit.go.jp/jtsb/aircraft/air-incident-kensaku-list.php?init=1	DUP_WITH_BATCH25
+https://jtsb.mlit.go.jp/jtsb/aircraft/air-kensaku-list.php	DUP_WITH_BATCH25
+https://www.ppc.go.jp/news/press/	DUP_WITH_BATCH25
+https://api.jgrants-portal.go.jp/exp/v1/public/subsidies	DUP_EXISTING_TREE: already registered as collectors/sources/gov_money.c

@@ -26,18 +26,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 #include "_jp_osint.inc"
 
 #define VESSELS_URL "https://meri.digitraffic.fi/api/ais/v1/vessels"
-
-static inline const char *iso_ms(double ms, char *buf, size_t n) {
-  if (!(ms > 0)) return NULL;
-  time_t t = (time_t)(ms / 1000.0);
-  struct tm g;
-  if (!gmtime_r(&t, &g)) return NULL;
-  if (strftime(buf, n, "%Y-%m-%dT%H:%M:%SZ", &g) == 0) return NULL;
-  return buf;
-}
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *doc = feed_get_json(ctx->http, VESSELS_URL, 30000);
@@ -59,7 +51,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     char stamp[40];
     const char *ts = NULL;
     const cJSON *tv = cJSON_GetObjectItem(v, "timestamp");
-    if (cJSON_IsNumber(tv)) ts = iso_ms(tv->valuedouble, stamp, sizeof stamp);
+    if (cJSON_IsNumber(tv)) ts = jo_ms_iso(tv->valuedouble, stamp, sizeof stamp);
 
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "mmsi", mmsi);

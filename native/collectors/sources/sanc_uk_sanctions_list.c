@@ -32,6 +32,21 @@
 
 #define UK_SANC_URL "https://sanctionslist.fcdo.gov.uk/docs/UK-Sanctions-List.xml"
 
+/* Per-record sub-array bounds. These exist only to keep one pathological
+ * <Designation> block (a hand-editing error upstream, say) from allocating
+ * without limit; they are NOT meant to bite in practice. The 2026-09-03 audit
+ * found the previous values (24/12/8) implausibly low for entries like
+ * multi-alias front companies or vessels with many past names/flags — raised
+ * well above anything observed on the live 6,315-designation list. There is
+ * no per-record collector-truncation-notice if one of these DOES bind (that
+ * would need per-record disclosure plumbing this file doesn't have); a bound
+ * this generous binding at all would itself be a signal worth re-auditing. */
+#define UK_SANC_ALIAS_MAX  200
+#define UK_SANC_MEASURE_MAX 64
+#define UK_SANC_TEXT_MAX    64
+#define UK_SANC_ID_MAX      32
+#define UK_SANC_ADDR_MAX    32
+
 /* Join Name1..Name6 in order, as the FCDO splits a single name across them. */
 static void uk_join_name(const char *b, const char *e, char *out, size_t n) {
   size_t j = 0;
@@ -106,7 +121,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
           int is_primary = ntype && strstr(ntype, "Primary") != NULL;
           if (is_primary && !primary[0]) {
             snprintf(primary, sizeof primary, "%s", joined);
-          } else if (cJSON_GetArraySize(aliases) < 24) {
+          } else if (cJSON_GetArraySize(aliases) < UK_SANC_ALIAS_MAX) {
             char *strength = sanc_xml_text(nm.body, nm.body_end, "AliasStrength");
             char line[600];
             snprintf(line, sizeof line, "%s%s%s%s", joined,
@@ -120,8 +135,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       }
     }
     if (!primary[0]) {
-      /* no Primary Name marked — fall back to the first name we did parse */
-      const cJSON *a0 = cJSON_GetArrayItem(aliases, 0);  /* exhaustive-ok: fallback display name when no Primary Name is marked; every alias is kept in the aliases array */
+      /* No Primary Name marked — fall back to the first name we did parse.
+       * This picks a TITLE, it does not choose which names survive: every
+       * parsed name is already in `aliases` and `aliases` is stored whole. */
+      const cJSON *a0 = cJSON_GetArrayItem(aliases, 0);  /* exhaustive-ok: title fallback; picks a TITLE only, does not choose which names survive — every parsed name up to UK_SANC_ALIAS_MAX is already in `aliases`, which is stored whole below */
       if (cJSON_IsString(a0)) snprintf(primary, sizeof primary, "%s", a0->valuestring);
     }
     if (!primary[0]) { cJSON_Delete(aliases); continue; }   /* no name -> no row */
@@ -170,19 +187,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
                                                    (size_t)(ind.body_end - val));
           if (!close) break;
           if ((size_t)(close - val) == 4 && strncmp(val, "true", 4) == 0 &&
-              cJSON_GetArraySize(measures) < 24)
+              cJSON_GetArraySize(measures) < UK_SANC_MEASURE_MAX)
             cJSON_AddItemToArray(measures, cJSON_CreateString(tagname));
           p = close;      /* the close tag is skipped on the next iteration */
         }
       }
     }
 
-    cJSON *dobs = uk_texts(b, e, "DOBs", "DOB", 12);
-    cJSON *nats = uk_texts(b, e, "Nationalities", "Nationality", 12);
-    cJSON *positions = uk_texts(b, e, "Positions", "Position", 12);
-    cJSON *passports = uk_texts(b, e, "PassportDetails", "PassportNumber", 8);
+    cJSON *dobs = uk_texts(b, e, "DOBs", "DOB", UK_SANC_TEXT_MAX);
+    cJSON *nats = uk_texts(b, e, "Nationalities", "Nationality", UK_SANC_TEXT_MAX);
+    cJSON *positions = uk_texts(b, e, "Positions", "Position", UK_SANC_TEXT_MAX);
+    cJSON *passports = uk_texts(b, e, "PassportDetails", "PassportNumber", UK_SANC_ID_MAX);
     cJSON *natids = uk_texts(b, e, "NationalIdentifierDetails",
-                             "NationalIdentifierNumber", 8);
+                             "NationalIdentifierNumber", UK_SANC_ID_MAX);
 
     /* addresses as published (R2: text only) */
     cJSON *addresses = cJSON_CreateArray();
@@ -192,7 +209,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       if (sanc_xml_next(&ac, e, "Addresses", &al)) {
         const char *c2 = al.body;
         sanc_el ad;
-        while (cJSON_GetArraySize(addresses) < 8 &&
+        while (cJSON_GetArraySize(addresses) < UK_SANC_ADDR_MAX &&
                sanc_xml_next(&c2, al.body_end, "Address", &ad)) {
           char line[600];
           size_t j = 0;
@@ -292,9 +309,33 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(uid); free(ofsi); free(unref); free(regime); free(kind); free(dsource);
     free(imposed); free(reasons); free(other); free(designated); free(updated);
   }
+  /* JO_SANC_MAX_ROWS (default 5,000) is a shared bound across the sanctions
+   * collectors, and on this list it BITES: the FCDO consolidated list is past
+   * 5,000 designations, so a run emitted exactly 5,000 and stopped — the round
+   * number in the log being the only hint that anything was missing, which is
+   * the "a log nobody reads is not a disclosure" case house rule 2 names.
+   *
+   * The bound stays (it is the shared guard against a half-parsed 40 MB XML),
+   * but the shortfall is now counted from the document itself and reported as
+   * data. `available` is the number of <Designation> elements the FCDO
+   * actually published — scanned, not estimated. */
+  long available = n;
+  if (n >= max_rows) {
+    sanc_el extra;
+    while (sanc_xml_next(&cur, end, "Designation", &extra)) available++;
+    if (available > n)
+      jo_trunc_notice(sink, "uk-sanctions-list", UK_SANC_URL, n, available,
+                      "the shared JO_SANC_MAX_ROWS row bound stopped the parse "
+                      "before the end of the FCDO designation list",
+                      "raise $JO_SANC_MAX_ROWS above the list's designation "
+                      "count");
+  }
+
   free(xml);
-  fprintf(stderr, "[uk-sanctions-list] emitted %d (generated %s)\n", n,
-          geniso[0] ? geniso : "?");
+  fprintf(stderr, "[uk-sanctions-list] emitted %d of %ld designation(s) "
+                  "(generated %s)%s\n", n, available,
+          geniso[0] ? geniso : "?",
+          (available > n) ? " (TRUNCATED — notice emitted)" : "");
   return 0;
 }
 

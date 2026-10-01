@@ -38,6 +38,29 @@ int jsonlist_emit(intel_sink *sink, const char *source_id, cJSON *doc,
                   const char *path, const char *record_type,
                   const char *lang, const char *tags_json);
 
+/* As jsonlist_emit, but also reports how many records the page CONTAINED.
+ *
+ * Why the distinction matters, twice over. A record this emitter cannot label
+ * is not emitted (emit_record returns 0 when no title can be derived), so the
+ * emitted count is silently smaller than the page. That gap used to be
+ * invisible, and it broke two things:
+ *
+ *   1. house rule 2 — records were dropped with no counter and no notice, so a
+ *      source that fetched 10,000 rows and labelled none of them was
+ *      indistinguishable from an upstream that is honestly empty;
+ *   2. lib/pagewalk.c — which used the EMITTED count as its "did this page come
+ *      back full" test. A full page of 20 holding 2 unlabelled records reported
+ *      18, so the walk stopped AND suppressed its own truncation notice: a
+ *      silent stop plus a silent claim of completeness.
+ *
+ * `seen` may be NULL. When it is, this function discloses any shortfall itself
+ * as a collector-truncation-notice. When it is non-NULL the caller is taking
+ * responsibility for the disclosure (pagewalk discloses once per walk rather
+ * than once per page), and nothing is emitted here. */
+int jsonlist_emit_ex(intel_sink *sink, const char *source_id, cJSON *doc,
+                     const char *path, const char *record_type,
+                     const char *lang, const char *tags_json, int *seen);
+
 /* Fetch `url` and emit every record — ACROSS PAGES.
  *
  * jsonlist_emit() above takes a document that is already in hand, so it can
@@ -48,21 +71,15 @@ int jsonlist_emit(intel_sink *sink, const char *source_id, cJSON *doc,
  * `api.dane.gov.pl/1.4/datasets?page=1&per_page=100` answers with
  * `meta.count: 26536` and a `links.next`, and the collector kept 100 of them.
  *
- * The walk continues while the upstream keeps saying there is more, and stops
- * on the first of: no next-page signal, a page that produced no records, or
- * the page ceiling ($JO_JSONLIST_PAGE_MAX, default 20). Two signals are
- * honoured, in this order:
+ * This is the JSON-list-shaped ENTRY POINT to lib/pagewalk.c, not a second
+ * implementation of it. There is one walk loop in this tree and this is a
+ * ~20-line adapter onto it: the continuation rules, the repeat-page guards,
+ * the seen-vs-emitted accounting and the truncation disclosure all live in
+ * pw_walk(), so a caller that says `jsonlist_emit_paged` and a caller that
+ * says `pw_walk` cannot drift apart. Two engines answering the same question
+ * differently is how a disclosure becomes a lie.
  *
- *   1. a server-supplied next link (links.next, next, next_url, meta.next,
- *      paging.next, @odata.nextLink) — authoritative, no guessing;
- *   2. otherwise, offset/page arithmetic, but ONLY when the URL declares a
- *      page size AND the page came back exactly full. A short page is the
- *      upstream saying it is done, so a partial page never triggers another
- *      request.
- *
- * When the ceiling stops a walk that had more to give, that shortfall is
- * emitted as a `collector-truncation-notice` record — the same disclosure
- * hpengine makes — because a log line nobody reads is not a disclosure.
+ * Pass the whole document's timeout in `timeout_ms`; every page uses it.
  *
  * Returns total records emitted (>= 0), or -1 if the FIRST fetch failed (so
  * the caller can still distinguish a dead endpoint from an honest empty, R3). */
@@ -70,5 +87,27 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
                         http_client *http, const char *url, int timeout_ms,
                         const char *path, const char *record_type,
                         const char *lang, const char *tags_json);
+
+/* As jsonlist_emit_paged, but keys each record's uid on the value of
+ * `id_field` (a single top-level field name on the record) instead of the
+ * fixed id/uid/guid/... precedence list. For a source whose real unique
+ * field the precedence list doesn't know — see the definition in
+ * jsonlist.c for why gr-diavgeia-positions needed this. Requires the
+ * source_ctx pw_walk() needs for its own fetch, so callers use this from a
+ * hand-written run() (or the VJSON_KEYED macro), not the plain VJSON one. */
+int jsonlist_emit_paged_keyed(const source_ctx *c, intel_sink *s,
+                              const char *source_id, const char *url,
+                              const char *path, const char *record_type,
+                              const char *lang, const char *tags_json,
+                              const char *id_field);
+
+/* Query-string cursor arithmetic, shared so that the GeoJSON walk in
+ * lib/geojson.c advances a page the same way this one does rather than growing
+ * a second, subtly different copy.
+ *
+ * jsonlist_query_int  — value of `name=` as a long, or -1 if absent/not a number.
+ * jsonlist_query_set  — url with `name=value` replaced, or appended. Caller frees. */
+long  jsonlist_query_int(const char *url, const char *name);
+char *jsonlist_query_set(const char *url, const char *name, long value);
 
 #endif

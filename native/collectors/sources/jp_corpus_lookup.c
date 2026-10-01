@@ -32,6 +32,7 @@
  * and returns 0 (honest empty). */
 #include "core/dbutil.h"
 #include "source.h"
+#include "lib/jocore.h"          /* jo_trunc_notice: the in-band "shown N of M" */
 #include "core/fts.h"
 #include "third_party/cJSON.h"
 #include "third_party/sqlite3.h"
@@ -39,7 +40,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define CORPUS_LIMIT  15
+/* The slice this service emits per entity. Bounded on purpose (it feeds an
+ * LLM prompt), so the shortfall is REPORTED IN THE DATA: the run also counts
+ * the whole match set (capped at CORPUS_COUNT_CAP) and emits a
+ * collector-truncation-notice "used 15 of N" whenever N > 15. House rule 2. */
+#define CORPUS_LIMIT      15
+#define CORPUS_COUNT_CAP  100000
+
+/* TENANCY. intel_items.tenant_id is NOT NULL DEFAULT 'legacy' (schema.sql), so
+ * the corpus IS tenant-scoped and this read must be too: an OSINT pivot run
+ * for tenant A must not surface tenant B's rows. Applied as
+ * `tenant_id IN (?,'legacy')` — the same spelling as intelapi.c/exportapi.c —
+ * whenever the dispatcher sets ctx->tenant_id; an unscoped run (NULL) reads
+ * everything, which is today's single-tenant behaviour. */
 
 static void add_str_or_null(cJSON *o, const char *k, const char *v) {
   if (v) cJSON_AddStringToObject(o, k, v);
@@ -47,24 +60,53 @@ static void add_str_or_null(cJSON *o, const char *k, const char *v) {
 }
 
 /* ── 1. corpus FTS search (ftsMirror.js search() SQL, verbatim) ───────────── */
-static cJSON *corpus_items(sqlite3 *db, const char *segq) {
+static cJSON *corpus_items(sqlite3 *db, const char *segq, const char *tenant,
+                           long *total_out) {
   cJSON *items = cJSON_CreateArray();
-  static const char *Q =
-    "SELECT intel_items.uid, intel_items.source_id, intel_items.title, "
-    "intel_items.summary, intel_items.link, intel_items.published_at, "
-    "intel_items.record_type, "
-    "snippet(intel_items_fts,-1,'<mark>','</mark>','\xE2\x80\xA6',12) AS _excerpt "
-    "FROM intel_items_fts "
-    "JOIN intel_items ON intel_items.uid = intel_items_fts.uid "
+  const int tf = tenant && *tenant;
+  /* bm25-ordered, title-weighted like /api/intel/items?sort=relevance: the 15
+   * we hand the prompt are the 15 BEST hits, not the 15 SQLite happened to
+   * visit first. */
+#define CORPUS_SEL \
+    "SELECT intel_items.uid, intel_items.source_id, intel_items.title, " \
+    "intel_items.summary, intel_items.link, intel_items.published_at, " \
+    "intel_items.record_type, " \
+    "snippet(intel_items_fts,-1,'<mark>','</mark>','\xE2\x80\xA6',12) AS _excerpt " \
+    "FROM intel_items_fts " \
+    "JOIN intel_items ON intel_items.uid = intel_items_fts.uid " \
     "WHERE intel_items_fts MATCH ?1 "
-    "LIMIT ?2";
+#define CORPUS_ORD \
+    "ORDER BY bm25(intel_items_fts,0,10,1,3,2,1,1,2,1), intel_items.uid LIMIT ?2"
+#define CORPUS_CNT \
+    "SELECT COUNT(*) FROM (SELECT 1 FROM intel_items_fts " \
+    "JOIN intel_items ON intel_items.uid = intel_items_fts.uid " \
+    "WHERE intel_items_fts MATCH ?1 "
+#define CORPUS_TEN "AND intel_items.tenant_id IN (?3,'legacy') "
+  static const char *Q_ANY    = CORPUS_SEL CORPUS_ORD;
+  static const char *Q_TENANT = CORPUS_SEL CORPUS_TEN CORPUS_ORD;
+  static const char *C_ANY    = CORPUS_CNT "LIMIT ?2)";
+  static const char *C_TENANT = CORPUS_CNT CORPUS_TEN "LIMIT ?2)";
+
+  /* Total first (capped): -1 = "we never found out", which the notice prints
+   * as such rather than guessing. */
+  *total_out = -1;
+  sqlite3_stmt *c = NULL;
+  if (sqlite3_prepare_v2(db, tf ? C_TENANT : C_ANY, -1, &c, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(c, 1, segq, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int (c, 2, CORPUS_COUNT_CAP + 1);
+    if (tf) sqlite3_bind_text(c, 3, tenant, -1, SQLITE_TRANSIENT);
+    if (sqlite3_step(c) == SQLITE_ROW) *total_out = (long)sqlite3_column_int64(c, 0);
+    sqlite3_finalize(c);
+  }
+
   sqlite3_stmt *s = NULL;
-  if (sqlite3_prepare_v2(db, Q, -1, &s, NULL) != SQLITE_OK) {
+  if (sqlite3_prepare_v2(db, tf ? Q_TENANT : Q_ANY, -1, &s, NULL) != SQLITE_OK) {
     cJSON_Delete(items);
     return NULL;                                  /* → JS catch path */
   }
   sqlite3_bind_text(s, 1, segq, -1, SQLITE_TRANSIENT);
   sqlite3_bind_int (s, 2, CORPUS_LIMIT);
+  if (tf) sqlite3_bind_text(s, 3, tenant, -1, SQLITE_TRANSIENT);
   int rc;
   while ((rc = sqlite3_step(s)) == SQLITE_ROW) {
     cJSON *r = cJSON_CreateObject();
@@ -149,11 +191,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   sqlite3 *db = ctx->db->h;
 
-  /* segmentForFts(q.trim()) — fts_segment is the P2-verified C equivalent. */
-  char *segq = fts_segment(entity);                 /* malloc'd; passthrough-safe */
+  /* fts_query_expr(), NOT fts_segment(): the entity is an IP, an email, a URL
+   * or a domain far more often than a word, and fts_segment is a tokenizer
+   * whose output went to the FTS5 expression parser verbatim — `10.0.0.1`,
+   * `a@b.com`, `https://x/y?z` and `foo-bar` are all FTS5 syntax errors
+   * ("no such column", unterminated string, NOT), so every such pivot failed
+   * the prepare and was reported as an honest-looking empty. fts_query_expr
+   * quotes every token (entityapi.c:155 has the same fix and the same
+   * reasoning). NULL = no usable token = nothing to search for. */
+  char *segq = fts_query_expr(entity);              /* malloc'd, or NULL */
   if (!segq) return 0;
 
-  cJSON *items = corpus_items(db, segq);            /* 1. corpus FTS hits */
+  long total = -1;
+  cJSON *items = corpus_items(db, segq, ctx->tenant_id, &total); /* 1. corpus FTS hits */
   free(segq);
   if (!items) return 0;                             /* query failed → honest empty */
 
@@ -162,7 +212,28 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     emitted += emit_hit(sink, cJSON_GetArrayItem(items, i));
   cJSON_Delete(items);
 
-  (void)emitted;
+  /* Shown 15 of N, in-band. The notice is keyed per entity so pivots on
+   * different entities do not overwrite each other's disclosure. */
+  if (total > CORPUS_LIMIT || (total < 0 && n == CORPUS_LIMIT)) {
+    char scope[120];                    /* fits jo_trunc_notice's key buffer */
+    snprintf(scope, sizeof scope, "%.100s", entity);
+    char reason[200];
+    if (total > CORPUS_COUNT_CAP)
+      snprintf(reason, sizeof reason,
+               "corpus lookup shows the %d best-ranked hits of more than %d",
+               CORPUS_LIMIT, CORPUS_COUNT_CAP);
+    else if (total >= 0)
+      snprintf(reason, sizeof reason,
+               "corpus lookup shows the %d best-ranked hits of %ld", CORPUS_LIMIT, total);
+    else
+      snprintf(reason, sizeof reason,
+               "corpus lookup shows its first %d hits; the total could not be counted",
+               CORPUS_LIMIT);
+    jo_trunc_notice_scoped(sink, ctx->source_id, scope,
+                           "internal://osint/jp-corpus-lookup", emitted,
+                           total > CORPUS_COUNT_CAP ? -1 : total, reason,
+                           "GET /api/intel/items?q=<entity>&sort=relevance pages the full set");
+  }
   return 0;                  /* no hits → honest empty, not an error */
 }
 

@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 #define SOURCE_ID "hatena-bookmark-extended"
 
@@ -152,8 +153,10 @@ static int safe_iso(const char *s, char *out, size_t cap) {
     int off = (oh * 3600 + om * 60) * (sign == '-' ? -1 : 1);
     t -= off;
   }
-  struct tm g; gmtime_r(&t, &g);
-  strftime(out, cap, "%Y-%m-%dT%H:%M:%S.000Z", &g);
+  /* A dc:date the upstream chose can land on a time_t no calendar can render;
+   * saying so (0) makes the caller emit published_at = NULL, exactly as it
+   * already does for a dc:date it could not parse at all. */
+  if (!jo_time_fmt(t, "%Y-%m-%dT%H:%M:%S.000Z", out, cap)) return 0;
   return 1;
 }
 

@@ -21,7 +21,8 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   cJSON_AddStringToObject(p, "name", name ? name : "Embassy");
   const char *country = ov_tag(el, "country");
   if (!country) country = ov_tag(el, "target:country");
-  cJSON_AddStringToObject(p, "country", country ? country : "unknown");
+  if (country) cJSON_AddStringToObject(p, "country", country);
+  else cJSON_AddItemToObject(p, "country", cJSON_CreateNull());
   cJSON_AddStringToObject(p, "source", "osm_overpass");
   cJSON_AddItemToObject(f, "properties", p);
   return f;

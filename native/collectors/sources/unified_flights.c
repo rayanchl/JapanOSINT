@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 static const char *pstr(cJSON *p, const char *k) {
   cJSON *v = cJSON_GetObjectItem(p, k);
@@ -65,10 +66,11 @@ static void label_feature(cJSON *f) {
   if (!lc || !cJSON_IsNumber(lc)) lc = cJSON_GetObjectItem(p, "time_position");
   if (cJSON_GetObjectItem(p, "published_at")) lc = NULL;
   if (lc && cJSON_IsNumber(lc) && lc->valuedouble > 0) {
-    time_t t = (time_t)lc->valuedouble;
-    struct tm tm; gmtime_r(&t, &tm);
-    char iso[32]; strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%SZ", &tm);
-    cJSON_AddStringToObject(p, "published_at", iso);
+    /* Unrenderable contact time → no published_at key, exactly as for a
+     * feature that carried neither last_contact nor time_position. */
+    char iso[32];
+    if (jo_epoch_iso(lc->valuedouble, iso, sizeof iso))
+      cJSON_AddStringToObject(p, "published_at", iso);
   }
   if (icao && !cJSON_GetObjectItem(p, "link")) {
     char link[128];

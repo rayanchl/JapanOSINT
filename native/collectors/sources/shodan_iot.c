@@ -45,7 +45,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   cJSON *features = cJSON_CreateArray();
   if (cJSON_IsArray(matches)) {
-    int i = 0;
     cJSON *m;
     cJSON_ArrayForEach(m, matches) {
       cJSON *loc = cJSON_GetObjectItem(m, "location");
@@ -58,9 +57,34 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON *f = gj_point_feature(lon, lat);
 
       cJSON *p = cJSON_CreateObject();             /* EXACT JS key order */
-      char idb[32];
-      snprintf(idb, sizeof idb, "SHODAN_LIVE_%d", i);
-      cJSON_AddStringToObject(p, "id", idb);
+      /* `id` is a NATIVE_ID_KEY (lib/geojson.c), so it IS this row's uid.
+       * "SHODAN_LIVE_<position in this response>" made the uid a property of
+       * the response ordering rather than of the device: Shodan does not
+       * guarantee stable ordering, and this loop's counter also skips the
+       * matches filtered out for having no position, so one host gaining or
+       * losing a GeoIP fix re-numbered every host after it and orphaned the
+       * previous run's rows. Key off host + port, which is what Shodan is
+       * actually reporting on. */
+      char idb[96];
+      cJSON *ipv = cJSON_GetObjectItem(m, "ip_str");
+      cJSON *ptv = cJSON_GetObjectItem(m, "port");
+      const char *ips = (ipv && cJSON_IsString(ipv)) ? ipv->valuestring : NULL;
+      if (ips && cJSON_IsNumber(ptv))
+        snprintf(idb, sizeof idb, "SHODAN_LIVE_%.64s:%d", ips, (int)ptv->valuedouble);
+      else if (ips)
+        snprintf(idb, sizeof idb, "SHODAN_LIVE_%.64s", ips);
+      else
+        idb[0] = 0;
+      if (idb[0]) {
+        cJSON_AddStringToObject(p, "id", idb);
+      } else {
+        /* Shodan gave no ip_str — there is no upstream identity to key on. Say
+         * so; lib/geojson.c then uid's the row by content hash, which does not
+         * pretend to be an identifier the way a loop counter does. */
+        cJSON_AddStringToObject(p, "id_basis",
+          "none: this Shodan match carried no ip_str, so the row is uid'd by "
+          "content hash rather than a positional id");
+      }
       passthru(p, "ip", m, "ip_str");
       passthru(p, "port", m, "port");
       s_or(p, "product", m, "product", "unknown");
@@ -81,7 +105,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON_AddStringToObject(p, "source", "shodan_api");
       cJSON_AddItemToObject(f, "properties", p);
       cJSON_AddItemToArray(features, f);
-      i++;
     }
   }
   if (data) cJSON_Delete(data);

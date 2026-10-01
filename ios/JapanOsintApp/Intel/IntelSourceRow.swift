@@ -21,6 +21,9 @@ struct IntelSourceRow: View {
             Image(systemName: source.category == "breach"
                   ? "lock.trianglebadge.exclamationmark"
                   : registry.symbol(for: source.id))
+                // "Breach" is a finding; a hashed registry glyph is decoration.
+                .accessibilityLabel(source.category == "breach" ? "Breach source" : "")
+                .accessibilityHidden(source.category != "breach")
                 .font(.title3)
                 .foregroundStyle(source.category == "breach"
                                  ? theme.danger
@@ -69,6 +72,7 @@ struct IntelSourceRow: View {
                         .foregroundStyle(theme.accent)
                         .frame(width: 32, height: 32)
                         .background(theme.accent.opacity(0.12), in: Circle())
+                        .accessibilityLabel("Run this collector")
                 }
             }
             .frame(minWidth: 44, minHeight: 44)

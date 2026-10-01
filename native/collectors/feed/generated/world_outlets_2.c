@@ -29,8 +29,12 @@ RSSX(out_vnexpress, "vnexpress", "VnExpress (Vietnam)", "VnExpress (Vietnam)", "
   "https://vnexpress.net/rss/tin-moi-nhat.rss", "vi", "[\"news\",\"vietnam\",\"national-outlet\"]", 3600,
   "VnExpress (Vietnam) — national/regional press feed (vietnam)");
 
+/* Re-pointed 2026-09-15: tuoitrenews.vn now redirects to news.tuoitre.vn, where
+ * /rss/homepage.rss answers 404; the English edition's own home page
+ * advertises /home.rss (200, 50 English items, channel "Tuoi tre news"). No
+ * other registered source reads that feed. */
 RSSX(out_tuoitre, "tuoitre", "Tuoi Tre News (Vietnam)", "Tuoi Tre News (Vietnam)", "osint", "news",
-  "https://tuoitrenews.vn/rss/homepage.rss", "en", "[\"news\",\"vietnam\",\"national-outlet\"]", 3600,
+  "https://news.tuoitre.vn/home.rss", "en", "[\"news\",\"vietnam\",\"national-outlet\"]", 3600,
   "Tuoi Tre News (Vietnam) — national/regional press feed (vietnam)");
 
 RSSX(out_nzherald, "nzherald", "NZ Herald", "NZ Herald", "osint", "news",

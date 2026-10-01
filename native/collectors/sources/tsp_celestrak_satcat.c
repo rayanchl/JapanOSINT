@@ -16,8 +16,8 @@
  *
  * STATED BOUND (not a silent truncation): the catalogue is ~64k objects and is
  * almost entirely static, so this collector emits the part that moves —
- * objects LAUNCHED or DECAYED within the last WINDOW_DAYS — capped at
- * MAX_ROWS. Both numbers are recorded in every row's properties.
+ * objects LAUNCHED or DECAYED within the last WINDOW_DAYS. The window is
+ * recorded in every row's properties; every object inside it is emitted.
  *
  * Licence: CelesTrak usage policy (celestrak.org/usage-policy.php) — free
  * reuse, no more than one retrieval per data-update cycle, attribution to
@@ -27,7 +27,6 @@
 #include "source.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
-#include "lib/truncnotice.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,7 +34,6 @@
 
 #define SATCAT_URL  "https://celestrak.org/pub/satcat.csv"
 #define WINDOW_DAYS 365
-#define MAX_ROWS    6000  /* exhaustive-ok: disclosed as a record below */
 #define MAXCOL      32
 
 /* RFC4180 field splitter, in place. Cells are NUL-terminated inside `line`. */
@@ -137,7 +135,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     int recent = (launch && strcmp(launch, cutoff) >= 0) ||
                  (decay  && strcmp(decay,  cutoff) >= 0);
     if (!recent) continue;
-    if (n >= MAX_ROWS) break;  /* exhaustive-ok: the cap is disclosed as a collector-truncation-notice below */
 
     const char *owner = tsp_cell(f, nf, i_own);
     const char *otype = tsp_cell(f, nf, i_type);
@@ -164,7 +161,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     jo_add_str(pr, "orbit_center", tsp_cell(f, nf, i_ctr));
     jo_add_str(pr, "orbit_type", tsp_cell(f, nf, i_otype));
     cJSON_AddStringToObject(pr, "window", "launched or decayed in the last 365 days");
-    cJSON_AddNumberToObject(pr, "row_cap", MAX_ROWS);
     cJSON_AddStringToObject(pr, "source", "CelesTrak SATCAT");
     char *pj = cJSON_PrintUnformatted(pr);
     cJSON_Delete(pr);
@@ -200,13 +196,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(body);
-  /* The cap kept one run bounded; what it did not do is say so. A shortfall
-   * reported only to stderr is not a disclosure (docs/SOURCE_EXHAUSTIVENESS.md
-   * rule 7) — downstream cannot tell a complete run from a clipped one. */
-  if (n >= MAX_ROWS)
-    trunc_notice(sink, "celestrak-satcat", SATCAT_URL, NULL, n, seen,
-                 "MAX_ROWS bounded this run; the upstream offered more catalogued objects",
-                 "raise MAX_ROWS in this collector");
   fprintf(stderr, "[celestrak-satcat] emitted %d of %d catalogued objects "
                   "(launched/decayed since %s)\n", n, seen, cutoff);
   return 0;                        /* a quiet year would not be an error (R3) */

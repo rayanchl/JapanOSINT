@@ -20,13 +20,19 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
            id && cJSON_IsNumber(id) ? (long long)id->valuedouble : 0);
   cJSON_AddStringToObject(p, "id", mid);
   const char *name = ov_tag(el, "name");
-  char nbuf[64];
-  if (!name) { snprintf(nbuf, sizeof nbuf, "Harbour %d", i + 1); name = nbuf; }
-  cJSON_AddStringToObject(p, "vessel_name", name);
+  /* no-fabrication (house rule 1): OSM carried no name tag for this element.
+   * The old code wrote "Harbour %d" + the loop index, which is both an invented
+   * label and an UNSTABLE one — it feeds geojson's content-hash uid, so the
+   * same object was re-keyed whenever Overpass changed element order. An
+   * absent name is serialized as null; pick_text() skips nulls, so the row
+   * persists with a NULL title rather than a made-up one. */
+  if (name) cJSON_AddStringToObject(p, "vessel_name", name);
+  else cJSON_AddItemToObject(p, "vessel_name", cJSON_CreateNull());
   /* geojson pickText wants title|name|name_ja|label; "vessel_name" is none of
    * them, so all 577 harbour rows persisted with a NULL title. Mirror the
    * OSM-derived name into "name" — same value, readable row. */
-  cJSON_AddStringToObject(p, "name", name);
+  if (name) cJSON_AddStringToObject(p, "name", name);
+  else cJSON_AddItemToObject(p, "name", cJSON_CreateNull());
   cJSON_AddStringToObject(p, "vessel_type", "harbour");
   if (id && cJSON_IsNumber(id)) {
     char lk[96];

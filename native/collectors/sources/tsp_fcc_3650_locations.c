@@ -29,6 +29,7 @@
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
 #include "lib/feedlib.h"
+#include "_timefmt.inc"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -56,17 +57,20 @@ static void add_num_str(cJSON *o, const char *k, const char *v) {
   if (v && num_str(v, &d)) cJSON_AddNumberToObject(o, k, d);
   else if (v && *v) cJSON_AddStringToObject(o, k, v);
 }
-static void today_iso(char *out, size_t n) {
-  time_t t = time(NULL);
-  struct tm tmv;
-  int ok;
-#if defined(_WIN32)
-  ok = (gmtime_s(&tmv, &t) == 0);
-#else
-  ok = (gmtime_r(&t, &tmv) != NULL);
-#endif
-  if (!ok) { snprintf(out, n, "9999-12-31"); return; }
-  strftime(out, n, "%Y-%m-%d", &tmv);
+/* Today's date, or 0 with out[0]=0 when the clock cannot be rendered.
+ *
+ * This used to fall back to "9999-12-31", which is worse than no answer: the
+ * only consumer is the `expired` boolean below, and that sentinel silently
+ * asserts that EVERY registration has expired. Asserting a wrong fact is the
+ * fabrication rule; omitting a fact we cannot establish is not. So the caller
+ * now passes NULL and the `expired` property is simply absent — `expired_date`
+ * itself is still emitted verbatim, so nothing the upstream said is lost and a
+ * consumer can compute the comparison for itself.
+ *
+ * (strftime's 0 return was also unchecked and left `out` unspecified; both are
+ * handled inside jo_now_fmt, which also carries the _WIN32 split.) */
+static int today_iso(char *out, size_t n) {
+  return jo_now_fmt("%Y-%m-%d", out, n) != NULL;
 }
 
 static int emit_page(cJSON *arr, intel_sink *sink, const char *today) {
@@ -112,7 +116,7 @@ static int emit_page(cJSON *arr, intel_sink *sink, const char *today) {
     jo_add_str(pr, "equipment_fcc_id", jo_sv(r, "u_fcc_id"));
     jo_add_str(pr, "application_status", astat);
     jo_add_str(pr, "expired_date", exp);
-    if (exp && strlen(exp) >= 10)
+    if (exp && strlen(exp) >= 10 && today)
       cJSON_AddBoolToObject(pr, "expired", strncmp(exp, today, 10) < 0 ? 1 : 0);
     if (has_geo) {
       cJSON_AddNumberToObject(pr, "site_latitude", lat);
@@ -122,12 +126,57 @@ static int emit_page(cJSON *arr, intel_sink *sink, const char *today) {
       cJSON_AddStringToObject(pr, "geo_note",
         "no usable transmitter coordinate in this registration");
     }
+    /* Rule 2 (docs/SOURCE_EXHAUSTIVENESS.md): the block above is the curated
+     * DISPLAY set, and it was also the only thing kept — u_location_id,
+     * u_location_number, u_license_id, u_status_date, sys_updated_on,
+     * u_upper_frequency, u_fcc_equipment_designation_type, the u_yn_*
+     * certification flags, the certifier name and the receipt/certification
+     * dates were all fetched and then dropped at the collector seam. Forward
+     * every scalar the row carried under its own upstream name, which is what
+     * the sibling collector in this family (tsp_ised_spectrum_sites.c) already
+     * does; the friendly keys above stay as the display aliases. */
+    const cJSON *a;
+    cJSON_ArrayForEach(a, r) {
+      if (!a->string || cJSON_GetObjectItem(pr, a->string)) continue;
+      if (cJSON_IsString(a) && a->valuestring && a->valuestring[0])
+        cJSON_AddStringToObject(pr, a->string, a->valuestring);
+      else if (cJSON_IsNumber(a))
+        cJSON_AddNumberToObject(pr, a->string, a->valuedouble);
+      else if (cJSON_IsBool(a))
+        cJSON_AddBoolToObject(pr, a->string, cJSON_IsTrue(a));
+    }
     cJSON_AddStringToObject(pr, "source", "FCC open data euz5-46g2 (3650 MHz ULS registrations)");
     char *pj = cJSON_PrintUnformatted(pr);
     cJSON_Delete(pr);
 
-    char title[256], summary[288], key[128];
-    snprintf(key, sizeof key, "%s|%.4f|%.4f", call, lat, lon);
+    /* IDENTITY — house rule 4b, measured. The key used to be
+     * `call_sign|lat|lon`, which is a DIMENSION, not this record's identity:
+     * one call sign registers several sectors at one mast, all sharing the
+     * transmitter coordinate and differing only in azimuth/antenna. Measured
+     * against the live dataset on 2026-08-24:
+     *
+     *   total rows                        7,829
+     *   distinct u_location_id            7,829      <- one per registration
+     *   emitted / stored under the old key 7,829 / 3,993
+     *
+     * i.e. 3,836 real registrations collapsed onto a uid another row had
+     * already written, every single pass, with rc=0 and a healthy-looking
+     * records=7829. WQVF475 is the shape of it: four rows, one lat/lon,
+     * azimuths 45/135/225/315, location_ids 16193934-7 — four sectors of one
+     * base station, stored as one.
+     *
+     * `u_location_id` is the upstream's own per-registration key and is unique
+     * across the whole table. Falling back to the old composite (plus the
+     * location number, which also disambiguates the sectors) keeps a row that
+     * arrives without one rather than dropping it. */
+    const char *locid = jo_sv(r, "u_location_id");
+    const char *locno = jo_sv(r, "u_location_number");
+    char title[256], summary[288], key[160];
+    if (locid)
+      snprintf(key, sizeof key, "%s", locid);
+    else
+      snprintf(key, sizeof key, "%s|%.4f|%.4f|%s", call, lat, lon,
+               locno ? locno : "");
     snprintf(title, sizeof title, "%s%s%s%s%s%s%s", call,
              lic ? " — " : "", lic ? lic : "",
              city ? " · " : "", city ? city : "",
@@ -155,8 +204,8 @@ static int emit_page(cJSON *arr, intel_sink *sink, const char *today) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  char today[16];
-  today_iso(today, sizeof today);
+  char todaybuf[16];
+  const char *today = today_iso(todaybuf, sizeof todaybuf) ? todaybuf : NULL;
   int total = 0, pages = 0;
   for (int i = 0; i < PAGES; i++) {
     char url[256];

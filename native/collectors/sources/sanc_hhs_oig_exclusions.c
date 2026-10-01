@@ -61,10 +61,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!rows) return -1;
 
   int max_rows = sanc_env_int("JO_SANC_MAX_ROWS", 5000);
-  int n = 0;
+  int n = 0, rest = 0;
   const cJSON *r;
   cJSON_ArrayForEach(r, rows) {
-    if (n >= max_rows) break;
+    /* House rule 2: the CSV window is already parsed into `rows`, so once the
+     * cap bites, count the rows we are skipping instead of breaking out — the
+     * notice below then carries a real total, not "unknown". */
+    if (n >= max_rows) { rest++; continue; }
     const char *bus = oig_cell(r, "BUSNAME");
     const char *last = oig_cell(r, "LASTNAME");
     const char *first = oig_cell(r, "FIRSTNAME");
@@ -160,9 +163,17 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     char *pj = cJSON_PrintUnformatted(props);
     cJSON_Delete(props);
 
+    /* IDENTITY (rule 4b, measured): name|authority|date alone keyed distinct
+     * excluded people onto each other — the LEIE holds same-named individuals
+     * excluded under the same authority on the same day (sweep 2026-08-24:
+     * emitted 5,000, stored 4,975). NPI/UPIN/DOB/ZIP are the columns the LEIE
+     * itself distinguishes them by, and they are stable across monthly
+     * updates, so they join the key instead of a content hash. */
     char key[512];
-    snprintf(key, sizeof key, "%s|%s|%s", display, excltype ? excltype : "",
-             excl_iso[0] ? excl_iso : "");
+    snprintf(key, sizeof key, "%s|%s|%s|%s|%s|%s|%s", display,
+             excltype ? excltype : "", excl_iso[0] ? excl_iso : "",
+             npi ? npi : "", upin ? upin : "",
+             dob_iso[0] ? dob_iso : "", zip ? zip : "");
 
     intel_item it = {0};
     it.remote_key = key;
@@ -178,6 +189,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(bj);
     free(pj);
   }
+  if (rest > 0)
+    jo_truncation_notice(sink, "hhs-oig-exclusions", OIG_URL, n, (long)n + rest,
+                         "JO_SANC_MAX_ROWS (default 5000) stopped the row "
+                         "loop; the remaining parsed CSV rows were counted but "
+                         "not emitted. records_available counts the downloaded "
+                         "window only — JO_SANC_OIG_MB (default 4) caps the "
+                         "GET at the first megabytes of a LEIE file holding "
+                         "roughly 80,000 exclusions, and the rest of the file "
+                         "was never fetched",
+                         "raise JO_SANC_MAX_ROWS, and raise JO_SANC_OIG_MB "
+                         "(or drop the Range header) to fetch the whole "
+                         "UPDATED.csv");
   cJSON_Delete(rows);
   fprintf(stderr, "[hhs-oig-exclusions] emitted %d (http %ld, %d MB window)\n",
           n, status, mb);

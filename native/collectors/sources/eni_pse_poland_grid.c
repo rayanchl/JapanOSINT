@@ -16,6 +16,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "_timefmt.inc"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,9 +37,11 @@ static const struct { const char *key, *out; } MW[] = {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   time_t now = time(NULL) - 24 * 3600;    /* yesterday: the day is complete */
-  struct tm tmv; gmtime_r(&now, &tmv);
   char day[16];
-  strftime(day, sizeof day, "%Y-%m-%d", &tmv);
+  if (!jo_time_fmt(now, "%Y-%m-%d", day, sizeof day)) {
+    fprintf(stderr, "[" SRC "] cannot render the query window as a date\n");
+    return -1;
+  }
 
   /* %24filter, %20 and %27 must stay percent-encoded (see header note) */
   char url[288];

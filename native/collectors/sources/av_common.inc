@@ -201,19 +201,25 @@ static inline cJSON *av_feature(cJSON *geom, cJSON *props) {
  * can add a real title/uid built from fields the server actually returned. */
 typedef void (*av_arc_decor)(cJSON *props);
 
-/* Returns #emitted, or -1 if the FIRST page could not be fetched/parsed. */
-static inline int av_arcgis_run(const source_ctx *ctx, intel_sink *sink,
-                                const char *service, int cap,
-                                av_arc_decor decor, const char *tag) {
+/* Returns #emitted, or -1 if the FIRST page could not be fetched/parsed.
+ * `page` and `timeout_ms` are per layer: Class_Airspace's polygons are so
+ * vertex-dense that a 1000-feature page takes 41-45 s to its first byte and
+ * passes 16 MB, so jo_get's 20 s (plus one retry) failed every run at 40 s with
+ * status=0; 250 features answer in ~4 s to first byte, 10.8 s / 10.5 MB in all
+ * (measured 2026-09-15). */
+static inline int av_arcgis_run_ex(const source_ctx *ctx, intel_sink *sink,
+                                   const char *service, int cap,
+                                   av_arc_decor decor, const char *tag,
+                                   int page, int timeout_ms) {
   int total = 0, offset = 0, page_no = 0, capped = 0;
   for (;;) {
     char url[768];
     snprintf(url, sizeof url,
              AV_ARC_BASE "%s/FeatureServer/0/query?where=1%%3D1&outFields=*"
              "&f=geojson&outSR=4326&resultOffset=%d&resultRecordCount=%d",
-             service, offset, AV_ARC_PAGE);
+             service, offset, page);
     const char *hdrs[] = { "Accept: application/json", AV_UA_HDR, NULL };
-    char *body = jo_get(ctx, url, hdrs, tag);
+    char *body = jo_get_t(ctx, url, hdrs, tag, timeout_ms);
     if (!body) return page_no == 0 ? -1 : total;   /* R3: only a real fetch
                                                     * failure is an error */
     cJSON *doc = cJSON_Parse(body);
@@ -248,6 +254,14 @@ static inline int av_arcgis_run(const source_ctx *ctx, intel_sink *sink,
   else
     fprintf(stderr, "[%s] emitted %d (complete sweep)\n", tag, total);
   return total;
+}
+
+/* Every other layer: the shared page size and jo_get's default budget. */
+static inline int av_arcgis_run(const source_ctx *ctx, intel_sink *sink,
+                                const char *service, int cap,
+                                av_arc_decor decor, const char *tag) {
+  return av_arcgis_run_ex(ctx, sink, service, cap, decor, tag, AV_ARC_PAGE,
+                          20000);
 }
 
 /* ------------------------------------------------------------ bbox sweep --

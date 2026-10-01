@@ -81,8 +81,20 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     snprintf(summary, sizeof summary, "%s%s%s",
              stat ? stat : "", (stat && ocean) ? " · " : "", ocean ? ocean : "");
 
+    /* msgID is the ADVISORY, not the message: one advisory is broadcast in
+     * several warning series (HYDROPAC 2655, NAVAREA IV 888, NAVAREA XII 628),
+     * each its own message with its own sequence number, type and text.
+     * Measured 2026-09-15: 417 messages, 404 distinct msgID, 417 distinct
+     * msgID+msgSqncNumber. Keyed on the pair; a message without a sequence
+     * number keeps the bare msgID. */
+    char rkey[160];
+    if (cJSON_IsNumber(seq))
+      snprintf(rkey, sizeof rkey, "%s|%.0f", msgid, seq->valuedouble);
+    else
+      snprintf(rkey, sizeof rkey, "%s", msgid);
+
     intel_item it = {0};
-    it.remote_key      = msgid;
+    it.remote_key      = rkey;
     it.title           = title;
     it.summary         = summary[0] ? summary : NULL;
     it.body            = text;

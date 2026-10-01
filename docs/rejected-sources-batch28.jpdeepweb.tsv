@@ -1,0 +1,26 @@
+url	reason
+https://www.jpcert.or.jp/at/	Navigation/hub page (Japanese), no listing of individual alerts in the raw HTML; its own /rss/ link is the Japanese jpcert.rdf/jpcert-all.rdf feed already registered in the tree, not a new source
+https://www.jpcert.or.jp/english/at/	Navigation page confirmed to link only to the same feed already registered as JO28_JPCERT_EN_RSS (jpcert-en.rdf); no distinct list-of-links or content of its own
+https://www.jpcert.or.jp/wwinfo/	Redirect/navigation page ("移動中です" -> /cista/), no advisory records or structured content, no distinct feed
+https://www.jpcert.or.jp/english/cs/controlsystemsecurity.html	Static program-description page for the ICS security initiative; its "What's new" items are already covered by the general jpcert-en.rdf feed (JO28_JPCERT_EN_RSS), no distinct link-list structure confirmed
+https://jvn.jp/en/	HTML listing of individual JVN entries, but its content is already covered live by the jvn.rdf RSS feed registered as JO28_JVN_EN_RSS (same entries, e.g. JVN#42348352 GROWI)
+https://jvn.jp/en/rss/	Pure feed-index page, not itself ingestible content; the real feeds it links to (jvn.rdf, jvnVU.rdf, jvndb_new.rdf) were found and registered individually
+https://jvndb.jvn.jp/	Portal/search page; its live content is captured via the jvndb_new.rdf RSS feed registered as JO28_JVNDB_NEW_RSS
+https://www.ipa.go.jp/en/security/vulnerabilities/jvn/about.html	Static narrative description page about the JVN program; mentions RSS support but gives no feed URL on the page, and is redundant with the real JVN RSS feeds already registered
+https://www.ipa.go.jp/security/todokede/index.html	Static navigation/form page describing the notification scheme; the dated report links it surfaces (安心相談窓口/サイバーセキュリティ相談窓口) belong to separate programs registered elsewhere (IPA Anshin), no RSS feed found
+https://www.cyber.go.jp/index.html	Homepage's news section renders "Loading..." client-side (JS); no static news items or feed link visible in the raw fetched HTML
+https://www.cyber.go.jp/news/list/index.html	News list page shows only category filters and a "past news" link in raw HTML; no individual items or feed are present without JS execution
+https://www.ppc.go.jp/personalinfo/legal/leakAction/	Static guidance/form-hosting page defining breach-report requirements and thresholds; not a database of individual breach records, no RSS feed
+https://whois.jprs.jp/	Could not determine a live GET query URL that returns real WHOIS text: a direct query attempt (?type=DOM&key=example.jp) returned only the blank interface template (a placeholder EXAMPLE.JP record), and the usage guide page gave no form action/parameter names. Not verified live; refused to guess at the mechanism per house rule
+https://jprs.jp/registrar/info/rdap/rdap-guide.html	RDAP endpoint (rdap.gtld.jprs.jp/rdap/domain/{q}) confirmed live with real JSON (tested against jprs.tokyo, got a full RFC-9083 domain record), but rejected for two reasons: (1) it duplicates the existing hand-written RDAP_LOOKUP collector (native/collectors/sources/global_rdap.c), which already resolves the same domains via the rdap.org bootstrap redirect; (2) single top-level-object RDAP JSON responses are documented in docs/batch16-fetched-but-unparsed.tsv as producing no intel row through the generic hpengine array_path parser, and this task is manifest-only (no C parser can be written to fix that)
+https://www.f-isac.jp/	Dated news items are shown on the page but without individual href links to article pages, so there is nothing for html-mode link extraction to anchor on; no RSS feed found
+https://www.trendmicro.com/ja_jp/jp-security.html	HTTP 403 Forbidden on fetch (bot-blocked), content not accessible
+https://www.mbsd.jp/news/	News section shows only category-filter chrome in raw HTML; actual entries are loaded client-side via JS and were not present in the fetched content, no RSS feed found
+https://security.macnica.co.jp/blog/macnicareport/	Content (the two "Macnica Report" ransomware-trend articles) is a subset of the same domain's main blog listing, already captured by JO28_MACNICA_BLOG_LIST; the site's dedicated feed at blog.macnica.net/atom.xml failed to fetch with "certificate has expired" (TLS cert on that subdomain is invalid)
+https://www.lac.co.jp/lacwatch/alert/	Confirmed the page's alert articles (e.g. /lacwatch/alert/20260825_004963.html) are already included in the unified /lacwatch/feed.xml RSS feed, registered once as JO28_LAC_WATCH_FEED to avoid a duplicate endpoint
+https://jp.security.ntt/insights_resources/category/tech_blog/	DUP_WITH_BATCH25
+https://www.mbsd.jp/research/	DUP_WITH_BATCH25
+https://www.jpcert.or.jp/english/rss/jpcert-en.rdf	DUP_EXISTING_TREE: already registered as collectors/feed/generated/world_cert_advisories.c
+https://blogs.jpcert.or.jp/en/atom.xml	DUP_EXISTING_TREE: already registered as collectors/feed/generated/vsrc_threat_intel_1.c
+https://jvn.jp/en/rss/jvn.rdf	DUP_EXISTING_TREE: already registered as collectors/feed/generated/vsrc_security_2.c
+https://www.digital.go.jp/rss/news.xml	DUP_EXISTING_TREE: already registered as collectors/feed/generated/vsrc2_government_2.c

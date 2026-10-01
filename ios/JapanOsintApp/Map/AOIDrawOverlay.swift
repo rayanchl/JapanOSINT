@@ -106,7 +106,14 @@ struct AOIDrawOverlay: View {
     /// Called with the finished shape when the user picks "Alert me here". The
     /// caller is expected to open a prefilled `AlertEditor`; this view dismisses
     /// itself immediately afterwards.
-    let onAlertHere: (DrawnAOI) -> Void
+    ///
+    /// OPTIONAL, and the reason is structural: the other exit — "Save as area"
+    /// → POST /api/aoi — is entirely self-contained, so a host that only wants
+    /// drawing-and-saving must not be forced to invent an alerts handler it has
+    /// no use for. Requiring it made every mount site that had no alerts UI hide
+    /// the drawing entry point instead, which left AOI creation unreachable.
+    /// When nil, only the "Alert me here" button is withheld.
+    var onAlertHere: ((DrawnAOI) -> Void)? = nil
     /// Called after a successful POST /api/aoi, so a list elsewhere can insert
     /// the new area without a round trip.
     var onSaved: ((AreaOfInterest) -> Void)? = nil
@@ -152,7 +159,7 @@ struct AOIDrawOverlay: View {
     private static let maxRadius: Double = 200_000
 
     init(initialRegion: MKCoordinateRegion? = nil,
-         onAlertHere: @escaping (DrawnAOI) -> Void,
+         onAlertHere: ((DrawnAOI) -> Void)? = nil,
          onSaved: ((AreaOfInterest) -> Void)? = nil) {
         self.onAlertHere = onAlertHere
         self.onSaved = onSaved
@@ -286,10 +293,16 @@ struct AOIDrawOverlay: View {
             Circle()
                 .strokeBorder(theme.accent, lineWidth: 2)
                 .frame(width: 18, height: 18)
+            // Was 9 pt — under the 11 pt floor.
             Text("\(index + 1)")
-                .font(.system(size: 9, weight: .bold, design: .monospaced))
+                .font(Typography.display(11, weight: .bold))
                 .foregroundStyle(theme.accent)
         }
+        // A drag handle pinned to a map coordinate: the 18 pt disc is the touch
+        // affordance, so the digit inside it cannot grow without bursting it.
+        // Clamped rather than left at a fixed size, so it still tracks Dynamic
+        // Type over the range the disc can absorb.
+        .dynamicTypeSize(...DynamicTypeSize.large)
         .accessibilityLabel("Vertex \(index + 1)")
     }
 
@@ -424,30 +437,48 @@ struct AOIDrawOverlay: View {
         }
     }
 
+    @ViewBuilder
     private func finishRow(_ drawn: DrawnAOI) -> some View {
         HStack(spacing: Space.sm) {
-            Button {
-                areaName = ""
-                showNamePrompt = true
-            } label: {
-                Label("Save as area", systemImage: "square.and.arrow.down")
-                    .font(.caption.weight(.semibold))
-                    .frame(maxWidth: .infinity)
+            // Two spellings of one button: with no "Alert me here" beside it,
+            // saving IS the primary action and has to look like it.
+            if onAlertHere == nil {
+                Button {
+                    areaName = ""
+                    showNamePrompt = true
+                } label: {
+                    Label("Save as area", systemImage: "square.and.arrow.down")
+                        .font(.caption.weight(.semibold))
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(saving)
+            } else {
+                Button {
+                    areaName = ""
+                    showNamePrompt = true
+                } label: {
+                    Label("Save as area", systemImage: "square.and.arrow.down")
+                        .font(.caption.weight(.semibold))
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+                .disabled(saving)
             }
-            .buttonStyle(.bordered)
-            .disabled(saving)
 
-            Button {
-                Haptics.success()
-                onAlertHere(drawn)
-                dismiss()
-            } label: {
-                Label("Alert me here", systemImage: "bell.badge")
-                    .font(.caption.weight(.semibold))
-                    .frame(maxWidth: .infinity)
+            if let alertHere = onAlertHere {
+                Button {
+                    Haptics.success()
+                    alertHere(drawn)
+                    dismiss()
+                } label: {
+                    Label("Alert me here", systemImage: "bell.badge")
+                        .font(.caption.weight(.semibold))
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(saving)
             }
-            .buttonStyle(.borderedProminent)
-            .disabled(saving)
         }
     }
 

@@ -117,7 +117,12 @@ static const gazette GAZ[] = {
 };
 static const int NGAZ = (int)(sizeof(GAZ) / sizeof(GAZ[0]));
 
-#define GW_TOTAL_CAP   500  /* exhaustive-ok: runaway guard, logged */
+/* NOT a page cap: it sits in the loop condition over GAZETTES, so hitting it
+ * ends the sweep and the gazettes after it go unqueried — reported as data by
+ * jo_registry_sweep_notice(). (GW_PER_CAP below is a real per-page cap and
+ * jo_emit_anchors already discloses whatever it trims.) */
+#define GW_TOTAL_CAP   500  /* exhaustive-ok: whole-run emit cap; the sweep it
+                             * cuts short is reported as a truncation notice */
 #define GW_PER_CAP      4   /* at most ~4 hits per gazette                  */
 
 /* UK The Gazette JSON API → one intel_item per notice. Returns count emitted.
@@ -204,9 +209,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char *q = jo_urlencode(e);   /* UTF-8 safe %-encode of the query */
   if (!q) return 0;
 
-  int total = 0;
-  for (int i = 0; i < NGAZ && total < GW_TOTAL_CAP; i++) {
-    if (ctx->cancel && *ctx->cancel) break;
+  int total = 0, i = 0, cancelled = 0;
+  for (; i < NGAZ && total < GW_TOTAL_CAP; i++) {
+    if (ctx->cancel && *ctx->cancel) { cancelled = 1; break; }
     const gazette *g = &GAZ[i];
 
     char url[1600];
@@ -230,8 +235,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     total += got;
   }
   free(q);
-  fprintf(stderr, "[gazette_world] total emitted %d across %d gazettes\n",
-          total, NGAZ);
+  jo_registry_sweep_notice(sink, "GAZETTE_WORLD", e, total, i, NGAZ,
+                           "GW_TOTAL_CAP", GW_TOTAL_CAP, cancelled);
+  fprintf(stderr, "[gazette_world] total emitted %d across %d of %d gazettes\n",
+          total, i, NGAZ);
   return 0;   /* honest empty is not an error */
 }
 

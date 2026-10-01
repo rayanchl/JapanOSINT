@@ -153,7 +153,10 @@
  *       HTML page or reflected through a JSON string. That is why this one
  *       function breaks the house rule and returns bytes, not JSON.
  *
- *     Optional operator route: POST /api/evidence/gc → evidence_gc(g_db).
+ *     Operator route, REGISTERED: POST /api/evidence/gc → evidence_gc(g_db),
+ *     behind opgate_check and audited ("evidence.gc.run") — it deletes custody
+ *     bytes. It was listed here as optional and never wired, so the reaper
+ *     could only ever run on the background pod's own timer.
  *
  * ──────────────────────────────────────────────────────────────────────────
  * STORAGE GOVERNANCE — defaults

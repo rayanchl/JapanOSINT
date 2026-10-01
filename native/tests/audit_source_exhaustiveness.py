@@ -60,20 +60,26 @@ CHECKS = [
                 r'page_size|resultPerPage)=1\b'),
      "request the full page size and paginate"),
 
-    # Found the hard way: sanc_ofac_consolidated.c bounded a SANCTIONS entry's
-    # alias list with `while (cJSON_GetArraySize(akas) < 24 && …)`. On a
+    # Found by hand in sanc_ofac_consolidated.c, which bounded a SANCTIONS
+    # entry's alias list with `while (cJSON_GetArraySize(akas) < 24 && …)`. On a
     # sanctions list an alias is the thing screening matches on, so a dropped
     # one is a silent false negative on a designated person — and neither
     # `record-cap` (which wants a #define) nor `loop-break` (which wants a
-    # `break`) could see it, because the bound was in the loop CONDITION.
+    # `break`) could see it, because the bound sat in the loop CONDITION.
     #
     # Only counter-ish names are flagged: `chars < 280` bounding a UTF-8 buffer
     # is a byte guard, not a record cap.
     ("loop-cap",
      "record loop bounded in its own condition — records past it never happen",
-     re.compile(r'\b(?:while|for)\s*\([^;{]*\b'
-                r'(?:count|counted|considered|emitted|n|nf|nrec|nrows|nitems|'
-                r'nseen|rows|items|recs|records|found|hits|GetArraySize\s*\([^)]*\))'
+     # The \b before the counter list used to sit outside the alternation, which
+     # silently excluded the very line this check was written for:
+     # `cJSON_GetArraySize` has no word boundary before "GetArraySize" (the
+     # underscore is a word character), so the OFAC alias cap never matched and
+     # had to be found by hand. The prefix is now explicit.
+     re.compile(r'\b(?:while|for)\s*\([^;{]*?'
+                r'(?:\b(?:count|counted|considered|emitted|n|nf|nrec|nrows|'
+                r'nitems|nseen|rows|items|recs|records|found|hits)\b'
+                r'|\w*GetArraySize\s*\([^)]*\))'
                 r'\s*<=?\s*\d{2,}\s*&&'),
      "drop the bound, or bound it and emit a collector-truncation-notice"),
 
@@ -108,53 +114,36 @@ SKIP_LINE = re.compile(r'^\s*(\*|//|/\*)')
 WAIVER = re.compile(r'exhaustive-ok:')
 
 
-_URL_IN_LINE = re.compile(r'https?://[^\s"\')\\]+')
-# re.M matters: this is searched against a joined block of preceding lines, and
-# without it the anchor only ever matches the block's first line.
-_PAGED_MACRO = re.compile(r'^\s*(?:VJSON|VJSONBIG)\s*\(', re.M)
+# Macros whose body walks pages, so a page-1 URL passed to one is not a
+# single-page read. Kept as a name list rather than inferred, because being
+# wrong in this direction hides a real discard — add a macro here only after
+# reading its body in collectors/sources/_verified_macros.inc.
+# VJSON_KEYED added 2026-09-11: its body is jsonlist_emit_paged_keyed
+# (_verified_macros.inc:175), the same walk VJSON uses with one named id field
+# instead of the precedence list — so a page-1 URL inside it is walked.
+# VJSON_IDKEYS / VGEO_IDKEYS / VJSON_PREP added 2026-09-15
+# (collectors/sources/_vjson_idkeys.inc): their bodies call jsonlist_emit_paged,
+# geojson_emit_paged and pw_walk respectively — the same walks as VJSON / VGEO,
+# behind a sink that only re-keys uids (and, for PREP, a page-shaping hook).
+PAGED_MACROS = ('VJSON', 'VJSONBIG', 'VGEO', 'VJSON_KEYED',
+                'VJSON_IDKEYS', 'VGEO_IDKEYS', 'VJSON_PREP')
+MACRO_OPEN = re.compile(r'^\s*([A-Z][A-Z0-9_]*)\s*\(')
 
 
-def engine_walks(lines, n, line):
-    """Is this pinned-cursor URL walked by lib/pager.c rather than discarded?
+def _paged_macro_at(lines, n):
+    """Is line `n` inside a call to a macro that pages?
 
-    Two engines page on the upstream's own evidence — jsonlist_emit_paged() for
-    the VJSON/VJSONBIG collectors and hp_run() for the hp_source tables — so a
-    URL that merely CONTAINS `page=1` is not by itself a discard. It is one only
-    when the pager cannot advance it, which needs both halves:
-
-      * the row runs on one of those two engines (a bespoke collector calling
-        feed_get_json() itself, or a VGEO/VCSV row, still gets no walk), and
-      * the URL carries a page-size candidate — a name lib/pager.c's table
-        knows, or any other integer parameter, which the pager proves against
-        the record count at runtime.
-
-    A URL with a pinned cursor and NOTHING that could be a page size (e.g.
-    `?page=1&order_by=name`) stays a finding: neither path can move it, and that
-    really is every page after the first thrown away."""
-    ctx_before = '\n'.join(lines[max(0, n - 14):n])
-    on_paged_engine = bool(_PAGED_MACRO.search(ctx_before) or
-                           _PAGED_MACRO.search(line) or
-                           ('.url' in line and
-                            re.search(r'hp_source\s+\w+\s*\[', ctx_before)))
-    if not on_paged_engine:
-        return False
-    m = _URL_IN_LINE.search(line)
-    if not m:
-        return False
-    q = m.group(0).split('?', 1)
-    if len(q) < 2:
-        return False
-    cursors = {'page', 'pagina', 'p', 'offset', 'start', 'start_index', 'skip',
-               '$skip'}
-    for part in q[1].split('&'):
-        k, _, v = part.partition('=')
-        if k in cursors or not v:
-            continue
-        try:
-            if int(v) > 1:
-                return True        # a page-size candidate exists
-        except ValueError:
-            continue
+    Walks back to the nearest macro invocation at the start of a line; a vsrc
+    row is one such call spanning a handful of lines. Stops at a blank line so
+    the previous row's macro is never credited to this one.
+    """
+    for i in range(n - 1, max(0, n - 25), -1):
+        line = lines[i - 1] if i - 1 < len(lines) else ''
+        if not line.strip():
+            break
+        m = MACRO_OPEN.match(line)
+        if m:
+            return m.group(1) in PAGED_MACROS
     return False
 
 
@@ -187,7 +176,16 @@ def audit(path, verbose=False):
                 if re.search(r'page_param|next_path|page\+\+|\+\+page|'
                              r'for\s*\(\s*int\s+page|while\s*\([^)]*page', ctx):
                     continue
-                if engine_walks(lines, n, line):
+                # The walk may not be anywhere near the URL. A vsrc row is one
+                # macro call, and the paging lives inside the macro:
+                # VJSON -> jsonlist_emit_paged, VGEO -> geojson_emit_paged,
+                # VJSONBIG -> jsonstream_emit. Reading only the surrounding
+                # lines, this check reported every one of them as a discard —
+                # including `api.dane.gov.pl/1.4/datasets?page=1&per_page=100`,
+                # which is the exact URL jsonlist.h cites as the case the paged
+                # walk was written to fix. 44 findings that were all already
+                # fixed is not a backlog, it is noise that hides the real ones.
+                if _paged_macro_at(lines, n):
                     continue
             findings.append((cid, n, line.strip()[:120], desc, hint))
     return findings
@@ -197,10 +195,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--file', action='append', default=[],
                     help='audit these files instead of the default glob set')
-    # Repeatable. It was a single glob, and the gated set has since grown to
-    # two directories (the pivot tables and the generated deep-record tables) —
-    # passing --strict twice silently kept only the last one, which is the
-    # failure mode where a gate reports "0 findings" for a set it never scanned.
+    # Repeatable. It took a single glob, and the gated set is now two
+    # directories (the pivot tables and the generated deep-record tables).
+    # Passing --strict twice kept only the LAST one, so the gate printed
+    # "0 findings" for a set it had never opened — the exact failure mode a
+    # gate exists to prevent.
     ap.add_argument('--strict', action='append', default=[],
                     help='glob whose findings make the exit code non-zero; '
                          'repeatable')

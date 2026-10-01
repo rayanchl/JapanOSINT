@@ -17,6 +17,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "_timefmt.inc"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -71,7 +72,11 @@ static int collect(const source_ctx *ctx, intel_sink *sink, const char *area,
     cJSON_Delete(p);
 
     char key[192], title[288];
-    snprintf(key, sizeof key, "%s|%s|%s", area, reg ? reg : region, when);
+    /* interconnection carries 2-3 distinct FieldName series (e.g. INTER_EWIC,
+     * INTER_GRNLK, INTER_NET_ROI) at the same EffectiveTime — omitting it from
+     * the key collapsed those distinct interconnector readings onto one uid. */
+    snprintf(key, sizeof key, "%s|%s|%s|%s", area, reg ? reg : region,
+             field ? field : "unknown", when);
     snprintf(title, sizeof title, "%s %s %s = %.1f %s",
              reg ? reg : region, label, when, val->valuedouble, unit);
 
@@ -93,10 +98,12 @@ static int collect(const source_ctx *ctx, intel_sink *sink, const char *area,
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   time_t now = time(NULL);
-  struct tm tmv; gmtime_r(&now, &tmv);
   char day[16];
   /* exactly dd-MMM-yyyy; the C locale gives the English %b the service wants */
-  strftime(day, sizeof day, "%d-%b-%Y", &tmv);
+  if (!jo_time_fmt(now, "%d-%b-%Y", day, sizeof day)) {
+    fprintf(stderr, "[" SRC "] cannot render the query window as a date\n");
+    return -1;
+  }
   char from[40], to[40];
   snprintf(from, sizeof from, "%s+00%%3A00", day);
   snprintf(to,   sizeof to,   "%s+23%%3A59", day);

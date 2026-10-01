@@ -36,6 +36,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 /* Node's JP_BBOX from cameraGeocode.js — a hit outside it is a wrong match on a
  * same-named place abroad, which is the common failure for short venue names. */
@@ -274,14 +275,17 @@ static int pod_run(const source_ctx *ctx, intel_sink *sink) {
   }
   sqlite3_finalize(s);
 
+  /* Every outcome below is stamped with this time, and the candidate query
+   * selects rows whose stamp IS NULL. An unrenderable clock would spend the
+   * geocode budget on work we could not record, so skip the pass instead —
+   * the same rows are still candidates on the next tick. */
   char now[40];
-  {
-    time_t tt = time(NULL); struct tm g; gmtime_r(&tt, &g);
-    strftime(now, sizeof now, "%Y-%m-%dT%H:%M:%SZ", &g);
-  }
+  int stamped = jo_now_iso(now, sizeof now) != NULL;
+  if (!stamped)
+    fprintf(stderr, "[cam-geocode] cannot render the run timestamp — pass skipped\n");
 
   int hit = 0, miss = 0;
-  for (int i = 0; i < n; i++) {
+  for (int i = 0; stamped && i < n; i++) {
     char q[512];
     clean_name(names[i], q, sizeof q);
     if (strlen(q) < 3) {                 /* nothing to look up */

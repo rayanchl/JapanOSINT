@@ -1,7 +1,10 @@
 #include "rss_atom.h"
 #include "../core/httpclient.h"
+#include "feedlib.h"   /* feed_url_host_is_jp: the one .jp host gate */
+#include "csv.h"       /* csv_decode_sjis */
+#include "hpengine.h"  /* hp_xml_decode: the one XML text decoder */
 #include "../third_party/cJSON.h"
-#include <openssl/sha.h>
+#include <openssl/evp.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -60,27 +63,16 @@ static char *tag_text(const char *from, const char *end, const char *tag,
            * the wrapper at offset 0 missed every one of those, persisting the
            * literal "<![CDATA[ ... ]]>" as the title (and leaving links
            * unparseable). */
+          /* One decoder for the whole tree (lib/hpengine.c hp_xml_decode): every
+           * CDATA section unwrapped wherever it sits, the five entities and
+           * &#NNN; / &#xHHH; references decoded to UTF-8. This block used to
+           * strip only a CDATA wrapper at offset 0 and know five entities, so an
+           * NDL title arrived as literal `&#x6b74;...` on 14 live feeds. */
           char *s = raw;
-          while (*s == ' ' || *s == '\n' || *s == '\r' || *s == '\t') s++;
-          if (!strncmp(s, "<![CDATA[", 9)) {
-            char *e2 = strstr(s, "]]>");
-            if (e2) { *e2 = 0; memmove(s, s + 9, strlen(s + 9) + 1); }
-          }
-          /* trim ws again — the CDATA payload has its own padding */
+          hp_xml_decode(s);
           while (*s == ' ' || *s == '\n' || *s == '\r' || *s == '\t') s++;
           size_t L = strlen(s);
           while (L && (s[L-1]==' '||s[L-1]=='\n'||s[L-1]=='\r'||s[L-1]=='\t')) s[--L]=0;
-          /* decode minimal entities */
-          char *o = s;
-          for (char *r = s; *r; ) {
-            if (!strncmp(r,"&amp;",5)){*o++='&';r+=5;}
-            else if(!strncmp(r,"&lt;",4)){*o++='<';r+=4;}
-            else if(!strncmp(r,"&gt;",4)){*o++='>';r+=4;}
-            else if(!strncmp(r,"&quot;",6)){*o++='"';r+=6;}
-            else if(!strncmp(r,"&#39;",5)||!strncmp(r,"&apos;",6)){*o++='\'';r+=(r[2]=='3')?5:6;}
-            else *o++=*r++;
-          }
-          *o=0;
           char *res = strdup(s); free(raw); return res;
         }
       }
@@ -91,20 +83,53 @@ static char *tag_text(const char *from, const char *end, const char *tag,
   return NULL;
 }
 
-/* Atom <link href="..."/> */
-static char *atom_link(const char *from, const char *end) {
-  for (const char *p = from; p < end; p++) {
-    if (strncasecmp(p, "<link", 5) != 0) continue;
-    const char *gt = memchr(p, '>', (size_t)(end - p)); if (!gt) return NULL;
-    const char *h = NULL;
-    for (const char *c = p; c < gt - 4; c++)
-      if (strncasecmp(c, "href=", 5) == 0) { h = c + 5; break; }
-    if (!h) return NULL;
-    char quote = *h; if (quote != '"' && quote != '\'') return NULL;
-    const char *e2 = memchr(h + 1, quote, (size_t)(gt - h));
-    return e2 ? dup_n(h + 1, (size_t)(e2 - h - 1)) : NULL;
+/* An attribute value inside the tag [p,gt): whitespace-anchored so `hreflang=`
+ * or a `rel=` sitting inside somebody's query string is not mistaken for the
+ * attribute itself. Returns a pointer to the value's first byte, or NULL. */
+static const char *tag_attr_val(const char *p, const char *gt, const char *name,
+                                size_t nlen) {
+  for (const char *c = p; c + nlen + 1 <= gt; c++) {
+    if (*c != ' ' && *c != '\t' && *c != '\n' && *c != '\r') continue;
+    if (strncasecmp(c + 1, name, nlen) != 0) continue;
+    const char *e = c + 1 + nlen;
+    while (*e == ' ' || *e == '\t') e++;
+    if (*e != '=') continue;
+    e++;
+    while (*e == ' ' || *e == '\t') e++;
+    return e;
   }
   return NULL;
+}
+
+/* Atom <link href="..."/>.
+ *
+ * An entry carries SEVERAL <link>s and only the one with rel="alternate" (or
+ * no rel at all) is the entry itself. Taking the first one blindly is wrong on
+ * every Blogger/Atom entry, which lists rel="replies" — the item's comment
+ * feed — ahead of the alternate, so `link` pointed at the comment stream for
+ * the whole of that fleet. A <link> with no usable href no longer aborts the
+ * hunt either; it just is not the one. */
+static char *atom_link(const char *from, const char *end) {
+  char *first = NULL;
+  for (const char *p = from; p < end; p++) {
+    if (strncasecmp(p, "<link", 5) != 0) continue;
+    const char *gt = memchr(p, '>', (size_t)(end - p));
+    if (!gt) break;
+    const char *h = tag_attr_val(p, gt, "href", 4);
+    if (!h) { p = gt; continue; }
+    char quote = *h;
+    if (quote != '"' && quote != '\'') { p = gt; continue; }
+    const char *e2 = memchr(h + 1, quote, (size_t)(gt - h));
+    if (!e2) { p = gt; continue; }
+    char *val = dup_n(h + 1, (size_t)(e2 - h - 1));
+    if (!val) { p = gt; continue; }
+    const char *rel = tag_attr_val(p, gt, "rel", 3);
+    if (rel && (*rel == '"' || *rel == '\'')) rel++;
+    if (!rel || strncasecmp(rel, "alternate", 9) == 0) return val;
+    if (!first) first = val; else free(val);
+    p = gt;
+  }
+  return first;      /* no alternate: the first href seen is the best we have */
 }
 
 /* Atom's <author> is a container: <author><name>X</name><uri>…</uri></author>.
@@ -255,12 +280,22 @@ static char *latin1_to_utf8(const char *s, size_t n, size_t *out_len) {
   return o;
 }
 
+/* EVP rather than the deprecated (OpenSSL 3.0) SHA1_* calls. Byte-identical
+ * digest: this is the item uid for feeds that carry no guid and no link, so a
+ * changed digest would re-emit every such item as new. NULL on failure, which
+ * the caller already treats as "no uid" (`if (rk)`). */
 static char *sha1_20(const char *a, const char *b) {
-  unsigned char d[20]; SHA_CTX c; SHA1_Init(&c);
-  if (a) { SHA1_Update(&c, a, strlen(a)); SHA1_Update(&c, "|", 1); }
-  if (b) { SHA1_Update(&c, b, strlen(b)); SHA1_Update(&c, "|", 1); }
-  SHA1_Final(d, &c);
+  EVP_MD_CTX *c = EVP_MD_CTX_new();
+  if (!c) return NULL;
+  unsigned char d[EVP_MAX_MD_SIZE]; unsigned int dl = 0;
+  int ok = EVP_DigestInit_ex(c, EVP_sha1(), NULL) == 1;
+  if (ok && a) { EVP_DigestUpdate(c, a, strlen(a)); EVP_DigestUpdate(c, "|", 1); }
+  if (ok && b) { EVP_DigestUpdate(c, b, strlen(b)); EVP_DigestUpdate(c, "|", 1); }
+  ok = ok && EVP_DigestFinal_ex(c, d, &dl) == 1;
+  EVP_MD_CTX_free(c);
+  if (!ok) return NULL;
   char *h = malloc(41);
+  if (!h) return NULL;
   for (int i = 0; i < 20; i++) sprintf(h + i*2, "%02x", d[i]);
   h[40] = 0; h[20] = 0;            /* intelHashKey slices to 20 hex chars */
   return h;
@@ -296,11 +331,44 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
    * unocha.org, data.humdata.org — are unreachable as a result and are
    * recorded as such rather than quietly worked around. Asking those
    * publishers for an allowlist entry is the real fix. */
+  /* One exception to the paragraph above: core/httpclient.c keeps a per-host
+   * table for the handful of publishers whose filter objects to ONE token in
+   * an otherwise honest agent, each entry carrying the bisection that proved
+   * it. That table never applied here, because a "User-Agent:" request header
+   * outranks CURLOPT_USERAGENT and this function always set one — so the RSS
+   * fleet, which has the most bot-wall trouble of any path in the tree, was
+   * the one path the remedy could not reach. It asks now, and substitutes only
+   * when an entry exists, so every feed verified under the agent below keeps
+   * exactly that agent. */
+  const char *ovr = http_ua_override(url);
+  char uahdr[320];
+  if (ovr) snprintf(uahdr, sizeof uahdr, "User-Agent: %s", ovr);
   const char *hdrs[] = { "Accept: application/rss+xml,*/*",
+                         ovr ? uahdr :
                          "User-Agent: JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
                          "feed collector; contact via repo issues)", NULL };
   int rc = http_request(ctx->http, "GET", url, hdrs, NULL, 0, 8000, 2, &r);
   if (rc != 0 || r.status < 200 || r.status >= 300 || !r.body) {
+    /* Say WHY. This path used to return -1 in silence, so a feed behind a bot
+     * wall, a moved feed and a dead host all surfaced as the same bare
+     * "rc=-1 records=0" — and a triage pass had to re-fetch every one by hand
+     * to tell them apart. */
+    fprintf(stderr, "[rss] %s: fetch failed (transport rc=%d, HTTP %ld%s)\n",
+            ctx->source_id ? ctx->source_id : url, rc, r.status,
+            (rc == 0 && !r.body) ? ", no body" : "");
+    http_response_free(&r); return -1;
+  }
+  /* A 2xx with NO BODY is not an empty feed, it is a non-answer, and counting
+   * it as success is the silent-nothing this repository keeps finding in other
+   * guises: europarl-news answers `202` with zero bytes on every path and
+   * every retry (a WAF holding pattern), and the run reported rc=0 records=0 —
+   * indistinguishable from a feed that genuinely published nothing today. No
+   * RSS or Atom document is zero bytes long, so this is an error, and the
+   * scheduler's backoff and quarantine logic can see it. */
+  if (r.body_len == 0) {
+    fprintf(stderr, "[rss] %s: HTTP %ld with a zero-byte body — treating as a "
+                    "failed fetch, not an empty feed\n",
+            ctx->source_id ? ctx->source_id : url, r.status);
     http_response_free(&r); return -1;
   }
   /* Normalise the body to UTF-8 before a single field is extracted, so no
@@ -309,11 +377,29 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
   size_t body_len = r.body_len;
   if (r.body && body_len && !is_utf8(r.body, body_len)) {
     size_t cl = 0;
-    conv = latin1_to_utf8(r.body, body_len, &cl);
-    if (conv) {
-      fprintf(stderr, "[rss] %s body was not UTF-8; transcoded from Latin-1 "
-                      "(%zu -> %zu bytes)\n", ctx->source_id, body_len, cl);
-      body_len = cl;
+    /* WHICH legacy encoding is not a guess we get to make blind. A .jp
+     * publisher serving no charset is serving Shift_JIS (customs.go.jp,
+     * soumu.go.jp), and running those bytes through the Latin-1 path produced
+     * valid-but-wrong UTF-8 — mojibake that no read path can detect, which is
+     * worse than the undecodable bytes this transcode exists to prevent. Gate
+     * on the same host test feed_get_text() uses (feedlib.h), so the two
+     * answers cannot drift; csv_decode_sjis fails closed to a verbatim copy,
+     * so a .jp host serving something else is not made worse. */
+    if (feed_url_host_is_jp(url)) {
+      conv = csv_decode_sjis(r.body, body_len);
+      if (conv) {
+        cl = strlen(conv);
+        fprintf(stderr, "[rss] %s body was not UTF-8; transcoded from Shift_JIS "
+                        "(%zu -> %zu bytes)\n", ctx->source_id, body_len, cl);
+        body_len = cl;
+      }
+    } else {
+      conv = latin1_to_utf8(r.body, body_len, &cl);
+      if (conv) {
+        fprintf(stderr, "[rss] %s body was not UTF-8; transcoded from Latin-1 "
+                        "(%zu -> %zu bytes)\n", ctx->source_id, body_len, cl);
+        body_len = cl;
+      }
     }
   }
   const char *xml = conv ? conv : r.body;
@@ -327,11 +413,108 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
   const char *cap_env = getenv("JO_RSS_MAX_ITEMS");
   int max_items = cap_env ? atoi(cap_env) : 500;
   if (max_items <= 0) max_items = 500;
-  for (;;) {
-    if (n >= max_items) {
-      fprintf(stderr, "[rss] %s capped at %d items\n", ctx->source_id, max_items);
-      break;
+  /* When the cap bites we keep WALKING the feed — only the per-item field
+   * extraction is skipped — so `scanned` is the real count of items the feed
+   * offered and the disclosure below can say "N of M" instead of "N of ?".
+   * Walking costs one more pass over a body we already have in memory. */
+  int scanned = 0, capped = 0;
+
+  /* ── uid collision guard ────────────────────────────────────────────────
+   *
+   * THE FOURTH COPY of the defect CLAUDE.md §4b documents. jsonlist.c,
+   * hpengine.c and geojson.c each grew this guard; the RSS/Atom path never
+   * did, and it has exactly the same failure: `emit()` is called per item, the
+   * sink upserts on uid, so items sharing a uid collapse and the run still
+   * reports a healthy `records=N`.
+   *
+   * It is not hypothetical. PACER's rss_outside.pl feeds key every entry on
+   * the DOCKET, so one docket's filings all carry one guid. Measured live
+   * 2026-09-08 on ecf.txsb: 1,860 items, 1,576 distinct guids, and the worst
+   * guid carries 13 items whose descriptions are different filings on the
+   * same docket ([Schedule A/B], [Schedule C], [Declaration], ...). 284
+   * genuinely different records per fetch, silently folded into one row each.
+   * The same shape appears on nynd, nysb, ksb, deb, and on advisory feeds
+   * that reuse a guid across revisions.
+   *
+   * Same contract as the other three: a pre-pass computes every item's uid,
+   * flags ONLY the ones that collide within this fetch, and disambiguates
+   * those by a hash of the item's own bytes. Byte-identical repeats therefore
+   * still collapse — that is real dedupe and is wanted — while items that
+   * merely share a guid are all kept. Nothing is invented and nothing that
+   * differs is merged. */
+  unsigned char *dupmap = NULL;
+  int dupmap_n = 0;
+  {
+    typedef struct { unsigned long long h; int idx; } rss_key;
+    rss_key *keys = NULL;
+    int kn = 0, kcap = 0, idx = 0;
+    const char *scan = xml;
+    for (;;) {
+      const char *open = NULL; int atom = 0;
+      for (const char *p = scan; (p = strchr(p, '<')) && p < xend; p++) {
+        int isi = (strncasecmp(p, "<item", 5) == 0);
+        int ise = (strncasecmp(p, "<entry", 6) == 0);
+        if (!isi && !ise) continue;
+        char d = p[isi ? 5 : 6];
+        if (d == ' ' || d == '>' || d == '\t' || d == '\n' ||
+            d == '\r' || d == '/') { open = p; atom = ise; break; }
+      }
+      if (!open || open >= xend) break;
+      const char *closeTag = atom ? "</entry>" : "</item>";
+      const char *cl = strcasestr(open, closeTag);
+      if (!cl) break;
+      size_t itlen = (size_t)(cl - open);
+      if (idx < max_items) {
+        /* The SAME precedence the emit loop uses below. If that changes, this
+         * must change with it: a guard that derives its key differently from
+         * the code it guards is not a guard. */
+        const char *a;
+        char *g = tag_text(open, open + itlen, "guid", &a);
+        if (!g) g = tag_text(open, open + itlen, "id", &a);
+        char *l = atom ? atom_link(open, open + itlen)
+                       : tag_text(open, open + itlen, "link", &a);
+        char *t = tag_text(open, open + itlen, "title", &a);
+        char *pb = tag_text(open, open + itlen, "pubDate", &a);
+        if (!pb) pb = tag_text(open, open + itlen, "date", &a);
+        if (!pb) pb = tag_text(open, open + itlen, "published", &a);
+        if (!pb) pb = tag_text(open, open + itlen, "updated", &a);
+        const char *k1 = (g && *g) ? g : ((l && *l) ? l : (t ? t : ""));
+        const char *k2 = (g && *g) ? "" : ((l && *l) ? "" : (pb ? pb : ""));
+        unsigned long long h = 1469598103934665603ULL;
+        for (const char *s = k1; s && *s; s++) { h ^= (unsigned char)*s; h *= 1099511628211ULL; }
+        h ^= 0x2c; h *= 1099511628211ULL;
+        for (const char *s = k2; s && *s; s++) { h ^= (unsigned char)*s; h *= 1099511628211ULL; }
+        if (kn == kcap) {
+          int nc = kcap ? kcap * 2 : 256;
+          rss_key *nk = realloc(keys, (size_t)nc * sizeof *nk);
+          if (!nk) { free(g); free(l); free(t); free(pb); break; }
+          keys = nk; kcap = nc;
+        }
+        keys[kn].h = h; keys[kn].idx = idx; kn++;
+        free(g); free(l); free(t); free(pb);
+      }
+      idx++;
+      scan = cl + strlen(closeTag);
     }
+    if (kn > 1) {
+      dupmap_n = idx;
+      dupmap = calloc((size_t)idx, 1);
+      if (dupmap) {
+        /* Mark every key that appears more than once. O(n^2) is avoided by
+         * sorting a copy; feeds reach a few thousand items. */
+        for (int i = 0; i < kn; i++)
+          for (int j = i + 1; j < kn; j++)
+            if (keys[i].h == keys[j].h) {
+              dupmap[keys[i].idx] = 1;
+              dupmap[keys[j].idx] = 1;
+            }
+      }
+    }
+    free(keys);
+  }
+  int item_idx = -1;
+
+  for (;;) {
     /* next <item ...>/<entry ...> block. Require a delimiter after the name
      * so the RDF <items> table-of-contents (Seq) is NOT matched. */
     const char *open = NULL; int atom = 0;
@@ -349,6 +532,13 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
     const char *cl = strcasestr(open, closeTag);
     if (!cl) break;
     it = open; blkend = cl; itlen = (size_t)(blkend - it);
+    scanned++;
+    item_idx++;
+    if (n >= max_items) {          /* cap bit: keep counting, stop extracting */
+      capped = 1;
+      cur = blkend + strlen(closeTag);
+      continue;
+    }
     const char *a;
     char *title = tag_text(it, it + itlen, "title", &a);
     char *desc  = tag_text(it, it + itlen, atom ? "summary" : "description", &a);
@@ -369,6 +559,16 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
     if (guid && *guid) rk = strdup(guid);
     else if (link && *link) rk = strdup(link);
     else if (title && *title) rk = sha1_20(title, pub);
+    /* Collides with a sibling in THIS fetch: extend the key with a hash of the
+     * item's own bytes (see the guard above). Byte-identical items hash the
+     * same and still collapse; items that merely share a guid are all kept. */
+    if (rk && dupmap && item_idx >= 0 && item_idx < dupmap_n && dupmap[item_idx]) {
+      unsigned long long ch = 1469598103934665603ULL;
+      for (size_t z = 0; z < itlen; z++) { ch ^= (unsigned char)it[z]; ch *= 1099511628211ULL; }
+      size_t rn = strlen(rk) + 20;
+      char *ext = malloc(rn);
+      if (ext) { snprintf(ext, rn, "%s#%016llx", rk, ch); free(rk); rk = ext; }
+    }
     if (rk) {
       /* Heap, not char[512]: Google News guids reach ~1.9 KB, and snprintf
        * truncation produced syntactically invalid JSON (cut mid-base64, no
@@ -413,8 +613,44 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
     free(title); free(desc); free(link); free(pub); free(guid); free(author);
     cur = blkend + strlen(closeTag);
   }
+  /* The cap left real items on the table. Per docs/SOURCE_EXHAUSTIVENESS.md a
+   * shortfall is reported as DATA — the stderr line this used to be is not a
+   * disclosure, and a consumer reading the rows had no way to tell 500 items
+   * from a feed of 500 apart from 500 items out of msrc-blog's 4,995. Same
+   * record_type and shape as lib/hpengine.c and lib/jsonlist.c emit, so one
+   * check finds a partial result from any of the three engines. */
+  if (capped) {
+    cJSON *p = cJSON_CreateObject();
+    cJSON_AddStringToObject(p, "source_id", ctx->source_id);
+    cJSON_AddStringToObject(p, "endpoint", url);
+    cJSON_AddNumberToObject(p, "records_used", n);
+    cJSON_AddNumberToObject(p, "records_available", scanned);
+    cJSON_AddNumberToObject(p, "declared_max_items", max_items);
+    cJSON_AddBoolToObject(p, "more_pages_pending", 0);
+    cJSON_AddStringToObject(p, "reason",
+      "the per-run item cap stopped the walk while the feed had more items");
+    cJSON_AddStringToObject(p, "remedy",
+      "raise $JO_RSS_MAX_ITEMS — see docs/SOURCE_EXHAUSTIVENESS.md");
+    char *pj = cJSON_PrintUnformatted(p);
+    cJSON_Delete(p);
+    char title[256];
+    snprintf(title, sizeof title, "%s used %d of %d available items",
+             ctx->source_id, n, scanned);
+    intel_item note = {0};
+    note.remote_key      = "truncation";
+    note.title           = title;
+    note.lang            = "en";
+    note.record_type     = "collector-truncation-notice";
+    note.properties_json = pj ? pj : "{}";
+    note.tags_json       = "[\"truncation-notice\"]";
+    sink->emit(sink, &note);
+    free(pj);
+    fprintf(stderr, "[rss] %s capped at %d of %d items (disclosed)\n",
+            ctx->source_id, max_items, scanned);
+  }
   http_response_free(&r);
   free(conv);
+  free(dupmap);
   fprintf(stderr, "[rss] %s emitted %d\n", ctx->source_id, n);
   return n;
 }

@@ -269,6 +269,7 @@ struct PermalinkShareSheet: View {
                     .font(.subheadline)
                     .foregroundStyle(theme.warning)
                     .frame(width: 24)
+                    .accessibilityHidden(true)   // the warning text follows
                 VStack(alignment: .leading, spacing: 2) {
                     Text("This link is not access")
                         .font(.subheadline.weight(.semibold))

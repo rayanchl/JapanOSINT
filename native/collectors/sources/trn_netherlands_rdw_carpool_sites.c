@@ -13,7 +13,7 @@
 #include "lib/jocore.h"
 #include "trn_common.inc"
 
-#define RDW_CARPOOL "https://opendata.rdw.nl/resource/9c54-cmfx.json?$limit=1000"
+#define RDW_CARPOOL "https://opendata.rdw.nl/resource/9c54-cmfx.json?$limit=1000&$order=:id"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *doc = feed_get_json(ctx->http, RDW_CARPOOL, 30000);
@@ -29,6 +29,30 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     const char *aid = jo_sv(s, "areaid");
     const char *desc = jo_sv(s, "areadesc");
     if (!aid && !desc) continue;
+
+    /* "areaid" is the upstream's site identifier but is not quite unique:
+     * live 2026-09-06, 127 rows carried 126 distinct areaids — 1931_CPKRI
+     * appears twice with the same description and DIFFERENT coordinates
+     * (two entrances of one carpool site). Keying on areaid alone stored
+     * 126 of 127. Only a row whose areaid recurs in this document gets its
+     * coordinates appended to the key, so every uniquely-identified site
+     * keeps the uid it already has. */
+    int recurs = 0;
+    if (aid) {
+      cJSON *o;
+      cJSON_ArrayForEach(o, doc) {
+        const char *oid = jo_sv(o, "areaid");
+        if (o != s && oid && strcmp(oid, aid) == 0) { recurs = 1; break; }
+      }
+    }
+    char key[160];
+    const cJSON *kloc = cJSON_GetObjectItem(s, "location");
+    const char *klat = kloc ? jo_sv(kloc, "latitude") : NULL;
+    const char *klon = kloc ? jo_sv(kloc, "longitude") : NULL;
+    if (recurs && klat && klon)
+      snprintf(key, sizeof key, "%s|%s,%s", aid, klat, klon);
+    else
+      snprintf(key, sizeof key, "%s", aid ? aid : desc);
 
     cJSON *pr = cJSON_CreateObject();
     cJSON_AddStringToObject(pr, "operator", "RDW (Netherlands)");
@@ -46,7 +70,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       snprintf(summary, sizeof summary, "%.0f spaces", spaces);
 
     intel_item it = {0};
-    it.remote_key      = aid ? aid : desc;
+    it.remote_key      = key;
     it.title           = desc ? desc : aid;
     it.summary         = summary[0] ? summary : NULL;
     it.lang            = "nl";

@@ -7,7 +7,7 @@
  * Emits, per dataset: title, owning organisation, notes, maintainer and
  * maintainer_email, licence, metadata timestamps - all upstream fields.
  * Keyless. Licence: UK Open Government Licence v3 for most datasets. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ckan-london-datastore"
 static const char *URL =

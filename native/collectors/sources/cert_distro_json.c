@@ -15,11 +15,14 @@
  *       filter below — the whole history is not re-emitted every run.
  *   rockylinux-errata-api     https://apollo.build.resf.org/api/v3/advisories/
  *       doc.advisories[]; page is 1-BASED (page=0 returns HTTP 422 — the trap
- *       recorded in the probe notes, so the request pins page=1).
+ *       recorded in the probe notes) and `size` is capped at 100 (101 also
+ *       answers 422). The response declares `total`, and the walk below runs
+ *       to it: 9,608 advisories, of which this collector used to keep 100.
  *   redhat-csaf-advisories    https://access.redhat.com/hydra/rest/securitydata/csaf.json
  *       Bare array of RHSA index rows: severity, released_on, the CVE set and
  *       the released package NEVRAs, plus the resource_url Red Hat itself
- *       publishes for the full CSAF document.
+ *       publishes for the full CSAF document. Paged via per_page/page with no
+ *       declared total, so the walk below ends on the first short page.
  *
  * Every emitted value is read out of the response body. Where a row carries a
  * link it is a URL the upstream document contained (Red Hat's resource_url),
@@ -34,8 +37,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
-#include "lib/pager.h"
-#include "lib/truncnotice.h"
+#include "_timefmt.inc"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -45,25 +47,39 @@
 #define ARCH_URL   "https://security.archlinux.org/json"
 #define ALPINE_URL "https://secdb.alpinelinux.org/v3.21/main.json"
 #define ALMA_URL   "https://errata.almalinux.org/9/errata.full.json"
-/* page is 1-BASED here (page=0 answers 422 — the trap in the probe notes), and
- * this used to be pinned at page=1: one page of 100 advisories per run, with the
- * rest of the Apollo errata index neither read nor mentioned. `size` is not one
- * of lib/pager.c's conventional page-size names and this collector does its own
- * fetch anyway, so the walk is explicit below. */
-#define ROCKY_URL_FMT "https://apollo.build.resf.org/api/v3/advisories/?page=%d&size=%d"
+/* Endpoint roots only. These two are the paged sources, and their page/size
+ * parameters belong to the walk in rocky_run()/redhat_run(), not to a pinned
+ * first-page URL — a constant that hardcoded `page=1` is exactly how the
+ * single-page read got frozen in here in the first place. */
 #define ROCKY_URL  "https://apollo.build.resf.org/api/v3/advisories/"
-#define ROCKY_PAGE_SIZE 100
-#define ROCKY_PAGES     10   /* per run; override with ROCKY_PAGE_MAX */
-#define RH_URL     "https://access.redhat.com/hydra/rest/securitydata/csaf.json?per_page=100"
+#define RH_URL     "https://access.redhat.com/hydra/rest/securitydata/csaf.json"
 
-/* The recent window is a deliberate bounded VIEW of a ~25 MB document that is
- * re-fetched daily, and it is disclosed below as a record rather than applied
- * quietly. What was NOT defensible was the row cap that sat beside it:
- * ALMA_MAX_ROWS 800 stopped emission part-way through the window, on a document
- * already fetched, already parsed and already in memory — the records were
- * counted and then thrown away, which is the cheapest possible discard to avoid.
- * It is gone; every in-window erratum is emitted. */
 #define ALMA_WINDOW_SEC (365L * 24 * 3600)   /* recent window, see header */
+
+/* ---- pagination ----------------------------------------------------------
+ * Rocky's Apollo API and Red Hat's securitydata index are both paged and both
+ * used to be read exactly once. Apollo declares total=9,608 advisories and we
+ * kept the first 100 of them; Red Hat's index runs to twenty thousand RHSAs
+ * and we kept the first 100. That is the "page 1 only, of 12 pages" violation
+ * from docs/SOURCE_EXHAUSTIVENESS.md, at roughly one percent of each set.
+ *
+ * Both walks now run to the end of the set. They keep a runaway ceiling — a
+ * server that never stops handing back full pages must not spin a collector
+ * forever — but a ceiling that actually bites is reported in the data as a
+ * collector-truncation-notice, not as a silent stop.
+ *
+ * Apollo's `size` is capped at 100 upstream (101+ answers HTTP 422) and its
+ * `page` is 1-BASED (page=0 answers 422). Red Hat accepts per_page=1000 and
+ * pages 1-based; a short page is the end of the set. */
+#define ROCKY_PAGE_SIZE 100
+#define RH_PAGE_SIZE    1000
+#define DISTRO_PAGE_MAX 200   /* exhaustive-ok: page-walk runaway guard; an early stop emits a collector-truncation-notice */
+
+static int distro_page_max(void) {
+  const char *e = getenv("JO_DISTRO_PAGE_MAX");
+  if (e && *e) { int v = atoi(e); if (v > 0) return v; }
+  return DISTRO_PAGE_MAX;
+}
 
 /* Join an array of strings into "a, b, c" (bounded). */
 static void join_strings(cJSON *arr, char *out, size_t n) {
@@ -97,15 +113,6 @@ static long epoch_of(cJSON *v) {
     if (nl) return epoch_of(nl);
   }
   return 0;
-}
-
-static void iso_of(long epoch, char *out, size_t n) {
-  out[0] = 0;
-  if (epoch <= 0) return;
-  time_t t = (time_t)epoch;
-  struct tm tm;
-  gmtime_r(&t, &tm);
-  strftime(out, n, "%Y-%m-%dT%H:%M:%SZ", &tm);
 }
 
 /* ---- archlinux-security-json ---------------------------------------------- */
@@ -280,7 +287,7 @@ static int alma_run(const source_ctx *c, intel_sink *s) {
       jo_utf8_trunc(title, 320);
 
       char pub[40];
-      iso_of(issued, pub, sizeof pub);
+      jo_epoch_iso((double)issued, pub, sizeof pub);
 
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "erratum_id", id);
@@ -288,7 +295,7 @@ static int alma_run(const source_ctx *c, intel_sink *s) {
       if (typ) cJSON_AddStringToObject(p, "type", typ);
       if (pub[0]) cJSON_AddStringToObject(p, "issued_at", pub);
       long upd = epoch_of(cJSON_GetObjectItem(e, "updated_date"));
-      if (upd) { char u[40]; iso_of(upd, u, sizeof u);
+      if (upd) { char u[40]; jo_epoch_iso((double)upd, u, sizeof u);
                  if (u[0]) cJSON_AddStringToObject(p, "updated_at", u); }
       cJSON *refs = cJSON_GetObjectItem(e, "references");
       if (cJSON_IsArray(refs)) cJSON_AddItemToObject(p, "references", cJSON_Duplicate(refs, 1));
@@ -314,29 +321,17 @@ static int alma_run(const source_ctx *c, intel_sink *s) {
     }
   }
   cJSON_Delete(doc);
-  int in_doc = cJSON_IsArray(arr) ? cJSON_GetArraySize(arr) : 0;
-  fprintf(stderr, "[almalinux-errata-full] emitted %d of %d in the document "
-                  "(window %ld d)\n", n, in_doc, (long)(ALMA_WINDOW_SEC / 86400));
-  /* The window is a bounded view of data we DID fetch, so it says how much it is
-   * showing out of how much exists rather than leaving the difference silent. */
-  if (in_doc > n)
-    trunc_notice(s, "almalinux-errata-full", ALMA_URL, NULL, n, in_doc,
-                 "errata older than the recent window were parsed but not "
-                 "emitted; the window keeps a daily 25 MB re-fetch from "
-                 "re-emitting the whole history",
-                 "widen ALMA_WINDOW_SEC to emit further back");
+  fprintf(stderr, "[almalinux-errata-full] emitted %d (window %ld d)\n",
+          n, (long)(ALMA_WINDOW_SEC / 86400));
   return 0;
 }
 
 /* ---- rockylinux-errata-api ------------------------------------------------ */
 
-static int rocky_emit(intel_sink *s, cJSON *arr) {
-  int n = 0;
-  if (cJSON_IsArray(arr)) {
-    cJSON *e;
-    cJSON_ArrayForEach(e, arr) {
+/* One advisory row. Returns 1 when the sink took it. */
+static int rocky_emit(intel_sink *s, cJSON *e) {
       const char *name = jo_sv(e, "name");
-      if (!name) continue;                   /* no RLSA id -> no row (R1) */
+      if (!name) return 0;                   /* no RLSA id -> no row (R1) */
       const char *syn  = jo_sv(e, "synopsis");
       const char *desc = jo_sv(e, "description");
       const char *sev  = jo_sv(e, "severity");
@@ -374,70 +369,74 @@ static int rocky_emit(intel_sink *s, cJSON *arr) {
       it.record_type     = "distro-advisory";
       it.properties_json = pj ? pj : "{}";
       it.tags_json       = "[\"advisory\",\"cyber\",\"rocky-linux\",\"linux-distro\"]";
-      if (s->emit(s, &it) >= 0) n++;
+      int rc = s->emit(s, &it);
       free(pj);
-    }
-  }
-  return n;
+      return rc >= 0 ? 1 : 0;
 }
 
 static int rocky_run(const source_ctx *c, intel_sink *s) {
   const char *hdrs[] = { "accept: application/json", NULL };
-  int pages_max = ROCKY_PAGES;
-  const char *pm = getenv("ROCKY_PAGE_MAX");
-  if (pm && atoi(pm) > 0) pages_max = atoi(pm);
-
-  int n = 0, pages_read = 0, truncated = 0;
-  long available = -1;
+  const int pmax = distro_page_max();
+  int n = 0, pages = 0, page = 1;
+  double total = -1;            /* Apollo's own count, when it declares one */
+  int hit_ceiling = 0;
   char url[192];
 
-  for (int page = 1; page <= pages_max; page++) {
-    snprintf(url, sizeof url, ROCKY_URL_FMT, page, ROCKY_PAGE_SIZE);
+  for (; page <= pmax; page++) {
+    snprintf(url, sizeof url,
+             "https://apollo.build.resf.org/api/v3/advisories/?page=%d&size=%d",
+             page, ROCKY_PAGE_SIZE);
     cJSON *doc = feed_get_json_h(c->http, url, hdrs, 30000);
     if (!doc) {
       if (page == 1) {
         fprintf(stderr, "[rockylinux-errata-api] fetch/parse failed\n");
-        return -1;
+        return -1;                                   /* the fetch failed (R3) */
       }
-      truncated = 1;               /* died mid-walk; keep what is already real */
-      break;
+      /* A page that failed mid-walk is a real shortfall, and the operator
+       * cannot see it in a log line — say it in the data. */
+      fprintf(stderr, "[rockylinux-errata-api] page %d failed after %d rows\n",
+              page, n);
+      jo_trunc_notice(s, "rockylinux-errata-api", url, n,
+                      total > 0 ? (long)total : -1,
+                      "the advisory page walk stopped when a page failed to "
+                      "fetch or parse; later advisories were not read",
+                      "re-run the collector; the walk restarts from page 1");
+      return 0;
     }
+    pages++;
+    cJSON *tot = cJSON_GetObjectItem(doc, "total");
+    if (cJSON_IsNumber(tot)) total = tot->valuedouble;
     cJSON *arr = cJSON_GetObjectItem(doc, "advisories");
     if (!cJSON_IsArray(arr) && cJSON_IsArray(doc)) arr = doc;
-    int got = cJSON_IsArray(arr) ? cJSON_GetArraySize(arr) : 0;
-    if (available < 0) available = pager_declared_total(doc);
-    n += rocky_emit(s, arr);
+    int here = 0;
+    if (cJSON_IsArray(arr)) {
+      cJSON *e;
+      cJSON_ArrayForEach(e, arr) { here++; n += rocky_emit(s, e); }
+    }
     cJSON_Delete(doc);
-    pages_read++;
-
-    if (got < ROCKY_PAGE_SIZE) break;      /* short page = end of the index */
-    if (page == pages_max) truncated = 1;
+    if (here == 0) break;                       /* ran off the end of the set */
+    if (here < ROCKY_PAGE_SIZE) break;          /* short page = last page     */
+    if (total > 0 && (double)page * ROCKY_PAGE_SIZE >= total) break;
+    if (page == pmax) hit_ceiling = 1;
   }
 
-  fprintf(stderr, "[rockylinux-errata-api] emitted %d across %d page(s)%s\n",
-          n, pages_read, truncated ? " (TRUNCATED)" : "");
-  if (truncated)
-    trunc_notice(s, "rockylinux-errata-api", ROCKY_URL, NULL, n, available,
-                 "the per-run page budget stopped the walk through the Apollo "
-                 "errata index",
-                 "raise ROCKY_PAGE_MAX");
+  fprintf(stderr, "[rockylinux-errata-api] emitted %d over %d page(s)\n",
+          n, pages);
+  if (hit_ceiling)
+    jo_trunc_notice(s, "rockylinux-errata-api", url, n,
+                    total > 0 ? (long)total : -1,
+                    "the page-walk ceiling stopped the run before the advisory "
+                    "set was exhausted", "raise $JO_DISTRO_PAGE_MAX");
   return 0;
 }
 
 /* ---- redhat-csaf-advisories ----------------------------------------------- */
 
-static int redhat_run(const source_ctx *c, intel_sink *s) {
-  const char *hdrs[] = { "accept: application/json", NULL };
-  cJSON *doc = feed_get_json_h(c->http, RH_URL, hdrs, 30000);
-  if (!doc) { fprintf(stderr, "[redhat-csaf-advisories] fetch/parse failed\n"); return -1; }
-  cJSON *arr = cJSON_IsArray(doc) ? doc : cJSON_GetObjectItem(doc, "data");
-  int n = 0;
-  if (cJSON_IsArray(arr)) {
-    cJSON *e;
-    cJSON_ArrayForEach(e, arr) {
+/* One RHSA index row. Returns 1 when the sink took it. */
+static int redhat_emit(intel_sink *s, cJSON *e) {
       const char *rhsa = jo_sv(e, "RHSA");
       if (!rhsa) rhsa = jo_sv(e, "rhsa");
-      if (!rhsa) continue;                   /* no RHSA id -> no row (R1) */
+      if (!rhsa) return 0;                   /* no RHSA id -> no row (R1) */
       const char *sev  = jo_sv(e, "severity");
       const char *rel  = jo_sv(e, "released_on");
       /* resource_url is published BY Red Hat in this index, not built here. */
@@ -481,12 +480,54 @@ static int redhat_run(const source_ctx *c, intel_sink *s) {
       it.record_type     = "distro-advisory";
       it.properties_json = pj ? pj : "{}";
       it.tags_json       = "[\"advisory\",\"cyber\",\"red-hat\",\"linux-distro\"]";
-      if (s->emit(s, &it) >= 0) n++;
+      int rc = s->emit(s, &it);
       free(pj);
+      return rc >= 0 ? 1 : 0;
+}
+
+static int redhat_run(const source_ctx *c, intel_sink *s) {
+  const char *hdrs[] = { "accept: application/json", NULL };
+  const int pmax = distro_page_max();
+  int n = 0, pages = 0, hit_ceiling = 0;
+  char url[192];
+
+  /* The index declares no total, so the end of the set is a short page. */
+  for (int page = 1; page <= pmax; page++) {
+    snprintf(url, sizeof url,
+             "https://access.redhat.com/hydra/rest/securitydata/csaf.json"
+             "?per_page=%d&page=%d", RH_PAGE_SIZE, page);
+    cJSON *doc = feed_get_json_h(c->http, url, hdrs, 45000);
+    if (!doc) {
+      if (page == 1) {
+        fprintf(stderr, "[redhat-csaf-advisories] fetch/parse failed\n");
+        return -1;
+      }
+      fprintf(stderr, "[redhat-csaf-advisories] page %d failed after %d rows\n",
+              page, n);
+      jo_trunc_notice(s, "redhat-csaf-advisories", url, n, -1,
+                      "the RHSA index page walk stopped when a page failed to "
+                      "fetch or parse; older advisories were not read",
+                      "re-run the collector; the walk restarts from page 1");
+      return 0;
     }
+    pages++;
+    cJSON *arr = cJSON_IsArray(doc) ? doc : cJSON_GetObjectItem(doc, "data");
+    int here = 0;
+    if (cJSON_IsArray(arr)) {
+      cJSON *e;
+      cJSON_ArrayForEach(e, arr) { here++; n += redhat_emit(s, e); }
+    }
+    cJSON_Delete(doc);
+    if (here < RH_PAGE_SIZE) break;      /* short page = end of the index */
+    if (page == pmax) hit_ceiling = 1;
   }
-  cJSON_Delete(doc);
-  fprintf(stderr, "[redhat-csaf-advisories] emitted %d\n", n);
+
+  fprintf(stderr, "[redhat-csaf-advisories] emitted %d over %d page(s)\n",
+          n, pages);
+  if (hit_ceiling)
+    jo_trunc_notice(s, "redhat-csaf-advisories", url, n, -1,
+                    "the page-walk ceiling stopped the run before the RHSA "
+                    "index was exhausted", "raise $JO_DISTRO_PAGE_MAX");
   return 0;
 }
 

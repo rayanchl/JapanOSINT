@@ -135,5 +135,6 @@ and for the one failure mode it still has.
 
 `core/httpd.c` (mongoose) serves the REST API on `PORT` (default 4000). The
 live client is the SwiftUI iOS app in `ios/`. There is no static-file handler:
-every non-`/api` path 404s, so the React app in `client/` is not served by this
-binary — see [`../client/README.md`](../client/README.md).
+every non-`/api` path 404s. The React app that used to live in `client/` was
+never served by this binary and has since been removed from the tree — see the
+repo `README.md`.

@@ -198,7 +198,7 @@ static const hp_source HP2_EU_DACH[] = {
     .name_ja = "オーストリア オープンデータ", .category = "government",
     .portal = "https://www.data.gv.at", .record_type = "at-dataset",
     .tags = "\"at\",\"opendata\"", .free_tier = 1,
-    .url = "https://www.data.gv.at/katalog/api/3/action/package_search?q={q}&rows=100",
+    .url = "https://www.data.gv.at/katalog/api/3/action/package_search?q={q}&rows=100&sort=id%20asc",
     .array_path = "result.results", .title_keys = "title,name",
     .id_keys = "id", .date_keys = "metadata_modified",
     .link_keys = "name", .link_tmpl = "https://www.data.gv.at/katalog/dataset/{v}",

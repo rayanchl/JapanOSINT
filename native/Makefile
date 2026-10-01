@@ -90,15 +90,24 @@ SRC_SRC  := $(shell find collectors -name '*.c' | sort)
 SRCS     := main.c registry.c $(CORE_SRC) $(LIB_SRC) $(SRC_SRC)
 OBJS     := $(patsubst %.c,$(OBJ)/%.o,$(SRCS)) \
             $(OBJ)/third_party/cJSON.o $(OBJ)/third_party/sqlite3.o \
-            $(OBJ)/third_party/mongoose.o
+            $(OBJ)/third_party/mongoose.o $(OBJ)/third_party/sqlite-vec.o
 
-.PHONY: all clean selftest unit tsan tsan-test tsan-sched asan asan-test \
+.PHONY: all clean selftest unit authtest pagewalktest htmlparsetest tsan tsan-test tsan-sched asan asan-test \
         lint-sources lint-baseline source-count
 all: $(BIN)
 
 $(OBJ)/third_party/sqlite3.o: third_party/sqlite3.c
 	@mkdir -p $(dir $@)
 	$(CC) -O2 -g $(DEPFLAGS) $(SQLITE_DEFS) -c $< -o $@
+
+# sqlite-vec amalgamation (v0.1.9, MIT/Apache-2.0 — third_party/sqlite-vec.LICENSE-*).
+# -DSQLITE_CORE: statically linked next to sqlite3.o, so it calls the real
+# API instead of going through the sqlite3_api_routines loadable-extension
+# shim (and needs no sqlite3ext.h). Built with the same flags as sqlite3.o —
+# it is vendored code, not ours, so it is not held to -Wall -Wextra.
+$(OBJ)/third_party/sqlite-vec.o: third_party/sqlite-vec.c
+	@mkdir -p $(dir $@)
+	$(CC) -O2 -g $(DEPFLAGS) -DSQLITE_CORE -Ithird_party -c $< -o $@
 
 $(OBJ)/third_party/cJSON.o: third_party/cJSON.c
 	@mkdir -p $(dir $@)
@@ -123,6 +132,18 @@ selftest: $(BIN)
 # Exhaustive-use audit (docs/SOURCE_EXHAUSTIVENESS.md): scan every collector for
 # the patterns that mean fetched data was discarded. A report, not a gate — but
 # the hp_* engine rows are held strictly clean.
+# ── one source of truth for dependency resolution ───────────────────────────
+# tests/unit/run.sh used to re-derive its own link line with a bare
+# `pkg-config --libs libcurl openssl 2>/dev/null` — no Homebrew fallback, and
+# the 2>/dev/null turned a total failure to resolve into an EMPTY STRING, so on
+# macOS the build passed and `make unit` failed at link with undefined EVP_*
+# symbols. These targets hand it the values computed above instead.
+.PHONY: print-cflags print-ldlibs
+print-cflags:
+	@echo '$(PKG_CFLAGS) $(MECAB_CFLAGS)'
+print-ldlibs:
+	@echo '$(LDLIBS)'
+
 .PHONY: audit-sources
 audit-sources:
 	@python3 tests/audit_source_exhaustiveness.py \
@@ -166,10 +187,45 @@ regen-candidates:
 hptest:
 	@mkdir -p bin
 	$(CC) $(CFLAGS) -o bin/hpengine_test tests/hpengine_test.c lib/hpengine.c \
-	  lib/csv.c lib/htmlparse.c lib/seenset.c lib/pager.c \
+	  lib/csv.c lib/htmlparse.c lib/seenset.c lib/xlsx.c lib/zipread.c \
 	  collectors/pivot/table/hp_uk_deep.c \
-	  third_party/cJSON.c $(ICONV_LIB)
+	  third_party/cJSON.c $(ICONV_LIB) -lz
 	./bin/hpengine_test
+
+# Offline unit test for the HTML attribute scanner (lib/htmlparse.c). Pure
+# string work, no network: it pins the boundary rule that keeps `data-src=`
+# from answering a lookup for `src` — see tests/htmlparse_test.c.
+.PHONY: htmlparsetest
+htmlparsetest:
+	@mkdir -p bin
+	$(CC) $(CFLAGS) -o bin/htmlparse_test tests/htmlparse_test.c lib/htmlparse.c \
+	  lib/seenset.c
+	./bin/htmlparse_test
+
+# Offline test for the paging + disclosure engine (lib/pagewalk.c) with a
+# scripted upstream. It decides, for ~2,700 generated sources, whether we may
+# keep asking an endpoint for more and what we must say when we stop — the
+# first half is fabricated requests if it is wrong, the second half is the
+# silent discard the module exists to end, and neither is visible from a
+# compile. No network.
+.PHONY: pagewalktest
+pagewalktest:
+	@mkdir -p bin
+	$(CC) $(CFLAGS) -o bin/pagewalk_test tests/pagewalk_test.c lib/pagewalk.c \
+	  third_party/cJSON.c
+	./bin/pagewalk_test
+
+# Offline round-trip for the JWT public-key path (core/auth.c). Generates real
+# RSA-2048 and P-256 keys, publishes them as JWKs, signs real JWTs and runs the
+# real jwk_to_pkey/verify_asym — because the failure mode of a wrong public key
+# is not a crash, it is "every legitimate token stops verifying", which no
+# compile and no smoke test can see. No network, no key material on disk.
+.PHONY: authtest
+authtest:
+	@mkdir -p bin
+	$(CC) $(CFLAGS) -o bin/auth_jwk_test tests/auth_jwk_test.c \
+	  third_party/cJSON.c $(LDLIBS)
+	./bin/auth_jwk_test
 
 # Unit/contract tests. Each test #includes the .c it exercises so it can reach
 # static functions, so run.sh links every object but main.o and that file's.
@@ -195,7 +251,7 @@ TSAN_OBJ  ?= obj-tsan
 TSAN_BIN  ?= bin/japanosint-tsan
 TSAN_SECS ?= 90
 tsan:
-	$(MAKE) CC="$(CC) -fsanitize=thread" OBJ=$(TSAN_OBJ) BIN=$(TSAN_BIN)
+	$(MAKE) -j$(JOBS) CC="$(CC) -fsanitize=thread" OBJ=$(TSAN_OBJ) BIN=$(TSAN_BIN)
 
 tsan-test: tsan
 	OBJDIR=$(TSAN_OBJ) CC="$(CC) -fsanitize=thread" tests/unit/run.sh
@@ -255,8 +311,14 @@ tsan-sched: tsan
 #   make asan            # build bin/japanosint-asan
 #   make asan-test       # build it and run the unit tests under it
 ASAN_FLAGS := -fsanitize=address -fno-omit-frame-pointer
+# Parallelism for the sanitizer sub-makes. Detected, not hardcoded, so this
+# works on a 3-core macOS runner and a 4-core ubuntu one alike.
+JOBS ?= $(shell getconf _NPROCESSORS_ONLN 2>/dev/null || echo 4)
+# -j: 1,289 translation units at ASan's 2-3x compile cost is a ~60 minute
+# serial build, which is the entire CI budget for this job. The recursive make
+# carries no jobserver of its own, so the flag has to be here.
 asan:
-	$(MAKE) CC="$(CC) $(ASAN_FLAGS)" OBJ=obj-asan BIN=bin/japanosint-asan
+	$(MAKE) -j$(JOBS) CC="$(CC) $(ASAN_FLAGS)" OBJ=obj-asan BIN=bin/japanosint-asan
 
 asan-test: asan
 	OBJDIR=obj-asan CC="$(CC) $(ASAN_FLAGS)" tests/unit/run.sh
@@ -286,6 +348,42 @@ source-count:
 #   ...move files...
 #   make source-floor               # after — fails if any source vanished
 #
+# registry-floor asks the BINARY, which is the only thing that knows. The
+# source-floor above counts REGISTER_SOURCE occurrences in the tree, so it is
+# structurally blind to HP_REGISTER_TABLE — and that blindness cost us: the hp
+# spec table was a fixed 1,024-entry array, and 1,481 rows were being dropped at
+# boot with source-floor passing the whole time. Nothing failed, /api/status
+# showed nothing, and most of two batches was registered into nothing.
+#
+# It also asserts that registration was CLEAN. A DUPLICATE id means the second
+# definition is unreachable; an OVERFLOW means a row was discarded outright.
+# Neither should ever be non-zero, so neither is merely reported.
+.PHONY: registry-floor registry-floor-record
+registry-floor-record: $(BIN)
+	@rm -rf data/japanmap.db*
+	@./$(BIN) --list-sources 2>/dev/null | wc -l > tools/registry-floor.txt
+	@echo "recorded registry floor: $$(cat tools/registry-floor.txt)"
+
+registry-floor: $(BIN)
+	@test -f tools/registry-floor.txt || { echo "no floor recorded; run make registry-floor-record"; exit 1; }
+	@rm -rf data/japanmap.db*
+	@./$(BIN) --list-sources 2>tools/.reg.log | wc -l > tools/.reg.count
+	@now=$$(cat tools/.reg.count); floor=$$(cat tools/registry-floor.txt); \
+	 dup=$$(grep -c DUPLICATE tools/.reg.log || true); \
+	 ovf=$$(grep -c OVERFLOW tools/.reg.log || true); \
+	 rm -f tools/.reg.log tools/.reg.count; \
+	 if [ "$$now" -lt "$$floor" ]; then \
+	   echo "REGISTRY REGRESSED: $$now < $$floor (floor in tools/registry-floor.txt)"; \
+	   exit 1; \
+	 fi; \
+	 if [ "$$dup" -ne 0 ]; then \
+	   echo "$$dup DUPLICATE id(s) — the second definition of each never runs"; exit 1; \
+	 fi; \
+	 if [ "$$ovf" -ne 0 ]; then \
+	   echo "$$ovf row(s) DROPPED at registration — a table cap is eating sources"; exit 1; \
+	 fi; \
+	 echo "registry ok: $$now >= $$floor, 0 duplicates, 0 dropped"
+
 # The floor is committed (tools/source-floor.txt) so CI and a reviewer see the
 # same number the author did.
 .PHONY: source-floor source-floor-record

@@ -24,10 +24,11 @@
  * Licence: FCC Media Bureau public query tool — US Government public domain.
  */
 #include "lib/jocore.h"
+#include "lib/feedlib.h"
+#include "lib/seenset.h"
 #include "source.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
-#include "lib/truncnotice.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,7 +36,6 @@
 
 #define AMQ_URL_FMT "https://transition.fcc.gov/fcc-bin/amq?state=%s&list=4&size=9"
 #define MAXF 64
-#define MAX_ROWS 40000  /* exhaustive-ok: disclosed as a record below */
 #define BUDGET_SEC 240
 
 static const char *const STATES[] = {
@@ -113,9 +113,17 @@ static int emit_state(const source_ctx *ctx, intel_sink *sink,
   http_response_free(&hr);
 
   int n = 0;
+  seen_set keyseen = {0};
   char *p = body, *line;
   while ((line = jo_next_line_cr(&p)) != NULL) {
     if (!*line || !strchr(line, '|')) continue;
+    /* rule 4b: distinct rows sharing facility_id|file_number|channel collapsed
+       on upsert (sweep 2026-08-24). Hash the raw line before psv_split mutates
+       it so every distinct row keeps a distinct uid; byte-identical upstream
+       duplicates still collapse. */
+    char linehash[21];
+    const char *lh_parts[1] = { line };
+    feed_hash_key(linehash, lh_parts, 1);
     char *f[MAXF];
     int nf = psv_split(line, f, MAXF);
     for (int i = 0; i < nf; i++) f[i] = trim(f[i]);
@@ -172,6 +180,10 @@ static int emit_state(const source_ctx *ctx, intel_sink *sink,
     char title[256], summary[288], key[128];
     snprintf(key, sizeof key, "%s|%s|%s", facid ? facid : (call ? call : ""),
              dncode ? dncode : "", fileno ? fileno : "");
+    if (!seen_add(&keyseen, key)) {          /* rule 4b: colliders only */
+      size_t kl = strlen(key);
+      snprintf(key + kl, sizeof key - kl, "|%s", linehash);
+    }
     snprintf(title, sizeof title, "%s %s%s%s%s%s", call ? call : "NEW",
              freq ? freq : "", comm ? " — " : "", comm ? comm : "",
              st ? ", " : "", st ? st : "");
@@ -196,15 +208,15 @@ static int emit_state(const source_ctx *ctx, intel_sink *sink,
     if (sink->emit(sink, &it) >= 0) n++;
     free(pj);
   }
+  seen_free(&keyseen);
   free(body);
   return n;
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   time_t t0 = time(NULL);
-  int total = 0, ok_states = 0, nodms = 0;
-  for (int i = 0; i < NSTATES; i++) {
-    if (total >= MAX_ROWS) break;
+  int total = 0, ok_states = 0, nodms = 0, i = 0;
+  for (; i < NSTATES; i++) {
     if (time(NULL) - t0 > BUDGET_SEC) {
       fprintf(stderr, "[fcc-am-query] wall-clock budget reached after %d state(s)\n",
               ok_states);
@@ -217,20 +229,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     fprintf(stderr, "[fcc-am-query] no state query succeeded\n");
     return -1;
   }
-  /* Two bounds can stop this early — MAX_ROWS and the wall-clock budget — and
-   * either leaves whole STATES unqueried. The unit that matters here is states,
-   * not rows: "40,000 records" hides that Wyoming was never asked. Also carried:
-   * the records FCC returned that were dropped for having no site coordinates,
-   * which is a discard of fetched data and belongs in the open. */
-  if (ok_states < NSTATES)
-    trunc_notice(sink, "fcc-am-query", "https://transition.fcc.gov/fcc-bin/amq", NULL,
-                 total, -1,
-                 total >= MAX_ROWS
-                   ? "the MAX_ROWS cap stopped the state walk; the remaining "
-                     "states were never queried"
-                   : "the wall-clock budget stopped the state walk; the "
-                     "remaining states were never queried",
-                 "raise MAX_ROWS or BUDGET_SEC in this collector");
+  if (i < NSTATES) {
+    char left[512];
+    int w = snprintf(left, sizeof left,
+      "the wall-clock budget (%d s) stopped the state walk; these states were "
+      "never queried:", BUDGET_SEC);
+    for (int k = i; k < NSTATES && w > 0 && (size_t)w < sizeof left - 4; k++)
+      w += snprintf(left + w, sizeof left - (size_t)w, " %s", STATES[k]);
+    jo_trunc_notice(sink, "fcc-am-query",
+      "https://transition.fcc.gov/fcc-bin/amq", total, -1, left,
+      "raise BUDGET_SEC in collectors/sources/tsp_fcc_am_query.c, or run the "
+      "collector more often so each run resumes further along");
+  }
   fprintf(stderr, "[fcc-am-query] emitted %d over %d/%d states "
                   "(%d records skipped: no site DMS)\n",
           total, ok_states, NSTATES, nodms);

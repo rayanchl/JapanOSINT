@@ -1,10 +1,18 @@
 #include "db.h"
+#include "entitystore.h"
+/* sqlite3_vec_init is declared here rather than via third_party/sqlite-vec.h:
+ * that header pulls in sqlite3ext.h unless SQLITE_CORE is defined, and this
+ * TU is not the extension (the vendored object is built with -DSQLITE_CORE,
+ * see the Makefile). The signature is the standard loadable-extension entry. */
+int sqlite3_vec_init(sqlite3 *db, char **pzErrMsg, const sqlite3_api_routines *pApi);
+#include <pthread.h>
 #include "translate.h"         /* translate_migrate (owns its own index) */
 #include "simhash.h"           /* simhash_ensure_schema (owns its own index) */
 #include "content_change.h"    /* content_change_ensure_schema (same reason) */
 #include "media.h"             /* media_migrate (same reason) */
 #include "camera_stills.h"     /* camera_stills_migrate (same reason) */
 #include "fts_schema.h"        /* fts_schema_migrate (widens intel_items_fts) */
+#include "entitystore.h"       /* es_norm_migrate */
 #include "source_registry.h"   /* src_meta_get (merged metadata)        */
 #include "../source.h"         /* registry_all / registry_count (sources) */
 #include "../third_party/cJSON.h" /* live-id array for the stale-source prune */
@@ -17,7 +25,7 @@
 /* JO_REPO_ROOT is -D'd by the Makefile to the JapanOSINT repo root so the
  * binary finds the DB + schema without args; JO_DB / JO_SCHEMA env override. */
 #ifndef JO_REPO_ROOT
-#define JO_REPO_ROOT "/Users/rayan/JapanOSINT"
+#define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
 #endif
 
 static char *slurp(const char *path) {
@@ -233,6 +241,17 @@ static void db_seed_sources(db_handle *db) {
  *                        copying every page via pread. Advisory: SQLite
  *                        silently ignores it where mmap is unavailable.
  * Both are ceilings, not reservations. */
+/* sqlite-vec (third_party/sqlite-vec.c, v0.1.9) provides the vec0 virtual
+ * table behind /api/intel/semantic. sqlite3_auto_extension() registers it
+ * process-wide so EVERY connection — db_open's primary, db_attach's worker
+ * connections, the unit-test fixtures — sees vec0 and the vec_* functions.
+ * It must run before the first sqlite3_open_v2, hence pthread_once from both
+ * openers rather than a call site in main(). */
+static pthread_once_t vec_once = PTHREAD_ONCE_INIT;
+static void vec_register(void) {
+  sqlite3_auto_extension((void (*)(void))sqlite3_vec_init);
+}
+
 static void db_apply_pragmas(sqlite3 *h) {
   sqlite3_exec(h, "PRAGMA journal_mode=WAL;",  NULL, NULL, NULL);
   sqlite3_exec(h, "PRAGMA foreign_keys=ON;",   NULL, NULL, NULL);
@@ -240,6 +259,27 @@ static void db_apply_pragmas(sqlite3 *h) {
   sqlite3_exec(h, "PRAGMA synchronous=NORMAL;", NULL, NULL, NULL);
   sqlite3_exec(h, "PRAGMA cache_size=-65536;", NULL, NULL, NULL);
   sqlite3_exec(h, "PRAGMA mmap_size=268435456;", NULL, NULL, NULL);
+  /* CAP THE WAL, OR IT BECOMES THE BIGGEST FILE ON THE DISK.
+   *
+   * WAL mode was set above and nothing bounded the journal. SQLite's automatic
+   * checkpoint fires at 1000 pages, but a checkpoint cannot reset a WAL while
+   * ANY connection still holds an older snapshot — and this process runs 8
+   * scheduler workers plus dispatch workers plus the event loop, each on its
+   * own connection, reading continuously. There is almost never a quiet moment,
+   * so the WAL only grows. Measured 2026-09-15, twenty minutes after a restart:
+   * a 32 GB database with a 9.75 GB -wal beside it.
+   *
+   * That is not just disk. The database and its WAL live on the same volume,
+   * and a volume that fills while SQLite is writing is exactly what corrupted
+   * intel_items_fts — a repair that cost a full rebuild of 4.3M rows.
+   *
+   * journal_size_limit makes a checkpoint TRUNCATE the file back to this size
+   * instead of leaving it at its high-water mark. It changes no durability
+   * guarantee: the limit applies after the checkpoint has already committed
+   * those frames into the database. 256 MB is generous for the biggest single
+   * transaction this tree runs (the FTS rebuild's per-batch commits) while
+   * keeping the steady-state footprint bounded. */
+  sqlite3_exec(h, "PRAGMA journal_size_limit=268435456;", NULL, NULL, NULL);
 }
 
 /* Secondary connection — see db_attach() in db.h. Deliberately does NOT apply
@@ -250,6 +290,7 @@ int db_attach(db_handle *db, const char *db_path) {
   if (!db) return 1;
   const char *dbp = db_path ? db_path
     : (getenv("JO_DB") ? getenv("JO_DB") : JO_REPO_ROOT "/data/japanmap.db");
+  pthread_once(&vec_once, vec_register);
   int rc = sqlite3_open_v2(dbp, &db->h, SQLITE_OPEN_READWRITE, NULL);
   if (rc != SQLITE_OK) {
     fprintf(stderr, "[db] attach failed: %s\n", sqlite3_errmsg(db->h));
@@ -330,6 +371,7 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
 
   ensure_parent_dir(dbp);
 
+  pthread_once(&vec_once, vec_register);
   int rc = sqlite3_open_v2(dbp, &db->h,
                            SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
   if (rc != SQLITE_OK) {
@@ -384,6 +426,21 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
    * block, so it would reference a column that does not exist yet. */
   ensure_column(db, "breach_items", "value_domain", "TEXT");
 
+  /* House rule 4b, "emitting is not storing either". fetch_log.records_fetched
+   * counts emit() CALLS; this counts the DISTINCT rows those calls left
+   * behind. They differ whenever a source's records key onto each other in the
+   * sink's uid — ECDC_RESPIRATORY emitted 12,648 and stored 31 — and until
+   * this column existed there was nowhere to see that except by eye, in one
+   * run, on stderr.
+   *
+   * NO DEFAULT, deliberately. Every fetch_log row written before this
+   * migration is NULL here, and NULL is the truth about them: the number was
+   * not measured. A `DEFAULT 0` would backfill the entire history with a
+   * measurement nobody took and make every archived run look like total loss.
+   * A NEGATIVE value is a floor, not a count — see fetch_log_set_stored() in
+   * core/scheduler.c. */
+  ensure_column(db, "fetch_log", "stored", "INTEGER");
+
   /* Evidence capture (roadmap 17) is per-source OPT-IN and defaults OFF. 415
    * sources on schedules down to 60s would fill a disk in days otherwise, and
    * the hot-path check fails closed if this column is missing. */
@@ -395,6 +452,18 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
    * schema.sql (which executes above this block) would fail with "no such
    * column", abandon the rest of the script, and brick first boot. */
   translate_migrate(db);
+
+  /* Breach-derived entity/mention quarantine. Breach ingest used to write the
+   * cleartext identifier into the SHARED entity graph (tenant_id NULL) and
+   * into entities_fts, where /api/entities/... — which has no role check — served
+   * it to any authenticated viewer, bypassing the platform-operator gate that
+   * every other door onto the corpus carries. Those rows now carry a reserved
+   * tenant sentinel so they fall out of the ordinary shared-graph predicate by
+   * construction. This runs the one-time backfill for rows earlier ingests
+   * already wrote; entitystore.c self-heals if it is ever missed, but doing it
+   * at boot means the first entity request after a deploy is not the one that
+   * pays for a corpus-sized UPDATE. */
+  es_breach_scope_migrate(db);
 
   /* Near-duplicate clustering (roadmap 25) likewise owns its own migration:
    * idx_intel_items_cluster and its partial backfill index both reference
@@ -428,6 +497,9 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
    * take minutes on a large corpus — everything cheap has already run, so a
    * JO_FTS_REBUILD=0 boot skips only this. */
   fts_schema_migrate(db);
+  /* Entity norm_key/readings re-key (ENTITY_NORM_VERSION); after the FTS
+   * migration so entities_fts is already at the shape it re-indexes into. */
+  es_norm_migrate(db);
 
   /* Every registered source gets a sources-table row (idempotent). */
   db_seed_sources(db);

@@ -32,17 +32,21 @@
 #include <string.h>
 #include <time.h>
 #include "_jp_osint.inc"
+#include "_timefmt.inc"
 
 #define NZ_URL "https://www.odata.charities.govt.nz/Organisations?$top=100&$format=json"
 
-/* "/Date(1371427200000)/" -> ISO date. Returns 1 when it converted. */
+/* "/Date(1371427200000)/" -> ISO date. Returns 1 when it converted.
+ * The milliseconds come from atoll() over an upstream string, so they are
+ * whatever the register (or a mangled response) put there. Claiming success
+ * for a date that did not render would publish stack contents as a charity's
+ * registration date; returning 0 makes the caller fall back to the raw
+ * "/Date(…)/" text, which is at least what was actually received. */
 static int nz_odata_date(const char *v, char *out, size_t n) {
   if (!v || strncmp(v, "/Date(", 6) != 0) return 0;
   long long ms = atoll(v + 6);
   time_t secs = (time_t)(ms / 1000);
-  struct tm g;
-  gmtime_r(&secs, &g);
-  strftime(out, n, "%Y-%m-%d", &g);
+  if (!jo_time_fmt(secs, "%Y-%m-%d", out, n)) return 0;
   return 1;
 }
 

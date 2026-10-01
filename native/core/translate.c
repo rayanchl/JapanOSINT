@@ -766,8 +766,9 @@ char *translate_backfill_status(db_handle *db) {
     translate_migrate(db);
     cJSON_AddNumberToObject(d, "pending", (double)pending_count(db->h));
   }
-  osint_request *rp = rid[0] ? progress_get(rid) : NULL;
-  char *snap = rp ? progress_to_json(rp) : NULL;
+  /* Lock-held lookup+serialise; see progress.h. A progress_get() pointer used
+   * after the unlock can have been freed by the >200 eviction. */
+  char *snap = rid[0] ? progress_snapshot_by_id(rid, NULL) : NULL;
   cJSON *pj = snap ? cJSON_Parse(snap) : NULL;
   free(snap);
   if (pj) cJSON_AddItemToObject(d, "progress", pj);

@@ -27,7 +27,10 @@ enum WidgetSnapshotBuilder {
         do {
             async let unreadReq = api.alertUnreadCount()
             async let eventsReq = api.alertInbox(unreadOnly: false, limit: 5)
-            let (unread, events) = try await (unreadReq, eventsReq)
+            let (unread, page) = try await (unreadReq, eventsReq)
+            // The widget shows five rows and the badge carries the real count,
+            // so the page's `total` is not needed here — `unread` is the truth.
+            let events = page.events
 
             let latest = events.prefix(5).map { e in
                 WidgetAlert(

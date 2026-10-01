@@ -91,14 +91,24 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       }
       jo_put_or_null(p, "city", r, "city_name");
       jo_put_or_null(p, "as_name", r, "as_name");
-      /* Math.round((r.observed_bandwidth || 0) / 1000) */
+      /* The JS port's `r.observed_bandwidth || 0` and implicit false-when-
+       * absent for `running` both convert "onionoo didn't report this field"
+       * into a plausible-looking real measurement (0 kb/s; not running) —
+       * indistinguishable from a relay actually measured at 0 bandwidth or
+       * actually confirmed stopped. Emit null when the field is genuinely
+       * absent, matching how `latitude`/`longitude` are already handled
+       * above (2026-09-03 audit). */
       cJSON *obw = cJSON_GetObjectItem(r, "observed_bandwidth");
-      double bw = (obw && cJSON_IsNumber(obw)) ? obw->valuedouble : 0;
-      cJSON_AddItemToObject(p, "bandwidth_kbs",
-        cJSON_CreateNumber(floor(bw / 1000.0 + 0.5)));
+      if (obw && cJSON_IsNumber(obw))
+        cJSON_AddItemToObject(p, "bandwidth_kbs",
+          cJSON_CreateNumber(floor(obw->valuedouble / 1000.0 + 0.5)));
+      else
+        cJSON_AddItemToObject(p, "bandwidth_kbs", cJSON_CreateNull());
       cJSON *run = cJSON_GetObjectItem(r, "running");
-      cJSON_AddItemToObject(p, "running",
-        cJSON_CreateBool(cJSON_IsTrue(run)));
+      if (run && cJSON_IsBool(run))
+        cJSON_AddItemToObject(p, "running", cJSON_CreateBool(cJSON_IsTrue(run)));
+      else
+        cJSON_AddItemToObject(p, "running", cJSON_CreateNull());
       /* (r.flags || []).join(',') */
       cJSON *fl = cJSON_GetObjectItem(r, "flags");
       char flags[512];

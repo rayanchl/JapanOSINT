@@ -252,8 +252,21 @@ static const hp_source HP2_US_REG[] = {
     .name_ja = "米国IRS — 免税団体資格", .category = "economy",
     .portal = "https://www.irs.gov", .record_type = "us-exempt-org",
     .tags = "\"us\",\"nonprofit\",\"tax\"", .free_tier = 1,
-    .url = "https://apps.irs.gov/pub/epostcard/dl/FullData/data-download-pub78.txt",
+    /* REPOINTED 2026-09-19. The old path
+     * (apps.irs.gov/pub/epostcard/dl/FullData/data-download-pub78.txt) now
+     * answers 404 to an honest client, and so do the .txt and .csv variants of
+     * the new one — the IRS publishes Publication 78 only as a ZIP today
+     * (verified: 200, Content-Type application/zip, body begins PK\x03\x04).
+     * This row is the 5,000 -> 278,014 recovery CLAUDE.md cites, so a dead URL
+     * here is that whole recovery silently gone.
+     *
+     * Two opts follow from the new file: the engine inflates a ZIP body before
+     * parsing (see the page loop in lib/hpengine.c), and Pub 78 is PIPE
+     * delimited ASCII, not comma — without csv_delim every record would be one
+     * unqueryable cell, the defect this session found in 17 other rows. */
+    .url = "https://apps.irs.gov/pub/epostcard/data-download-pub78.zip",
     .mode = HP_CSV, .csv_no_header = 1, .filter_query = 1,
+    .csv_delim = "pipe",
     .title_keys = "col1", .id_keys = "col0",
     .description = "The IRS Publication 78 list of organisations eligible for "
       "deductible contributions, read directly — whether a US charity's exempt "

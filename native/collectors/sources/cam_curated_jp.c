@@ -294,7 +294,11 @@ static long cam_url_alive(http_client *http, const char *url) {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = 0, checked = 0, dead = 0, unchecked = 0;
-  char statbuf[N_CAMS][16];   /* long, not 3 digits: -Wformat-truncation */
+  /* 24 bytes, i.e. wide enough for any `long` "%ld" can print (20 digits, a
+   * sign and a NUL). `st` is an HTTP status in practice, but it is typed long
+   * and the compiler cannot see the range, so 16 still left a truncation the
+   * warning kept reporting. Nothing is gained by keeping it tight. */
+  char statbuf[N_CAMS][24];
   for (int i = 0; i < N_CAMS; i++) {
     const curated_cam *c = &CAMS[i];
     /* Ask before asserting. */

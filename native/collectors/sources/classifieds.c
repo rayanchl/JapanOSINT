@@ -167,7 +167,6 @@ static const char *SLUGS[] = {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *features = cJSON_CreateArray();
-  int idx = 0;
 
   for (int s = 0; s < NSLUG; s++) {
     const char *slug = SLUGS[s];
@@ -216,8 +215,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
              * only published location is a prefecture/municipality name, and
              * it moves on every run. Pin the honest area centroid instead and
              * declare the precision in properties. */
-            idx++;
-
             cJSON *f = gj_point_feature(area->lon, area->lat);
 
             cJSON *p = cJSON_CreateObject();   /* EXACT JS key order */
@@ -231,10 +228,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
               const char *e = art;
               while (e[k] && e[k] != '?' && e[k] != '"' && e[k] != '&' && k < 40) k++;
               snprintf(id, sizeof id, "JMTY_%.*s", (int)k, art);
+              cJSON_AddStringToObject(p, "id", id);
             } else {
-              snprintf(id, sizeof id, "JMTY_%d", idx);
+              /* The remaining positional fallback had the same defect the
+               * article-slug path was added to fix, just on the ads jmty
+               * renders without one: a jmty listing page reorders on every
+               * poll, so "JMTY_<index>" pointed at a different ad each run.
+               * With no slug there is no upstream identity — say so and let
+               * lib/geojson.c uid the row by content hash, which does not
+               * claim to be an identifier. */
+              cJSON_AddStringToObject(p, "id_basis",
+                "none: this jmty item carried no article- slug, so the row is "
+                "uid'd by content hash rather than a positional id");
             }
-            cJSON_AddStringToObject(p, "id", id);
             cJSON_AddStringToObject(p, "platform", "jmty");
             cJSON_AddStringToObject(p, "title", title);
             if (price && price[0])

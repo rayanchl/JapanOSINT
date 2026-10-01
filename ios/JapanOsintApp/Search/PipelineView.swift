@@ -34,6 +34,20 @@ enum PipelineStage: Int, CaseIterable, Identifiable {
         }
     }
 
+    /// The name progress.c uses for this stage in `stage_errors`. The phase
+    /// names above are the *timeline* vocabulary ("gpt_analyzing"); the error
+    /// records use the *work* vocabulary ("analysis"). They are the same step
+    /// under two names, and a follow-up round reports as "round_N", which is
+    /// matched by prefix in `stageStates`.
+    var failureAlias: String {
+        switch self {
+        case .gptAnalyzing:      return "analysis"
+        case .followupAnalyzing: return "round_"
+        case .aggregating:       return "synthesis"
+        default:                 return phaseKey
+        }
+    }
+
     var title: String {
         switch self {
         case .queued:             return "Queued"
@@ -90,7 +104,19 @@ func pipelineStages(for snap: SearchSnapshot?)
         return all.map { ($0, $0 == .queued ? .current : .pending) }
     }
     if snap.done == true || snap.phase == "completed" {
-        return all.map { ($0, .done) }
+        // A completed run is not the same as a successful one. When the
+        // backend marks a stage as having produced nothing, that stage is
+        // painted as an error even though the run walked past it on a
+        // fallback — an all-green diagram over a degraded run is exactly the
+        // silent success this screen must not show.
+        let failed = snap.stageFailures.map(\.stage)
+        return all.map { s in
+            let hit = failed.contains { f in
+                f == s.phaseKey || f == s.failureAlias
+                    || (s == .followupAnalyzing && f.hasPrefix(s.failureAlias))
+            }
+            return (s, hit ? .error : .done)
+        }
     }
     if snap.phase == "error" {
         // `error` carries no fixed %, so derive where it died from the bar.
@@ -217,6 +243,10 @@ private struct StageRow: View {
                         ProgressView().controlSize(.small).tint(theme.accentAlt)
                             .transition(.opacity)
                     } else {
+                        // Fixed size: the glyph shares the 22×22 gutter below
+                        // with a `ProgressView` (whose `.small` control size is
+                        // itself fixed), so the two must crossfade at the same
+                        // dimensions. The stage title beside it scales.
                         Image(systemName: glyph)
                             .font(.system(size: 16))
                             .foregroundStyle(tint)
@@ -225,6 +255,7 @@ private struct StageRow: View {
                     }
                 }
                 .frame(width: 22, height: 22)
+                .accessibilityHidden(true)   // spoken as the row's value instead
                 .animation(.easeInOut(duration: 0.32), value: state)
                 if !isLast {
                     Rectangle()
@@ -237,6 +268,19 @@ private struct StageRow: View {
                 .foregroundStyle(state == .pending ? theme.textMuted : theme.text)
                 .padding(.top, 2)
             Spacer(minLength: 0)
+        }
+        // One VoiceOver element per stage: "Fetching sources, done" rather than
+        // "checkmark.circle.fill" followed by the title.
+        .accessibilityElement(children: .combine)
+        .accessibilityValue(stateDescription)
+    }
+
+    private var stateDescription: String {
+        switch state {
+        case .done:    return "Done"
+        case .current: return "In progress"
+        case .pending: return "Pending"
+        case .error:   return "Failed"
         }
     }
 
@@ -599,6 +643,7 @@ private struct ServiceQueueSection: View {
                     HStack(spacing: Space.sm) {
                         Image(systemName: src.ok ? "checkmark.circle.fill" : "xmark.circle.fill")
                             .font(.caption2).foregroundStyle(src.ok ? theme.success : theme.danger)
+                            .accessibilityLabel(src.ok ? "OK" : "Failed")
                         Text(src.name).font(Typography.body(11)).foregroundStyle(theme.text).lineLimit(1)
                         if let d = src.detail, !d.isEmpty {
                             Text(d).font(Typography.body(10)).foregroundStyle(theme.danger).lineLimit(1)
@@ -618,6 +663,7 @@ private struct ServiceQueueSection: View {
                             Image(systemName: (c.success ?? false) ? "checkmark.circle.fill" : "xmark.circle.fill")
                                 .font(.caption2)
                                 .foregroundStyle((c.success ?? false) ? theme.success : theme.danger)
+                                .accessibilityLabel((c.success ?? false) ? "Succeeded" : "Failed")
                             Text(c.entity ?? "—").font(Typography.body(11)).foregroundStyle(theme.text)
                             if let e = c.error, !e.isEmpty {
                                 Text(e).font(Typography.body(10)).foregroundStyle(theme.danger).lineLimit(1)
@@ -649,6 +695,7 @@ private struct ServiceQueueSection: View {
                     ForEach(found) { e in
                         HStack(spacing: 3) {
                             Image(systemName: entityIcon(for: e.type)).font(.caption2)
+                                .accessibilityHidden(true)   // the value follows
                             Text(e.value).font(.caption2).lineLimit(1)
                         }
                         .padding(.horizontal, Space.sm - 2).padding(.vertical, 2)
@@ -772,6 +819,7 @@ private struct EntityCrossLinkRow: View {
                     // Discovered entities use the alt tone; query entities the accent.
                     HStack(spacing: 3) {
                         Image(systemName: entityIcon(for: entity.type)).font(.caption2)
+                            .accessibilityHidden(true)   // the type follows
                         Text(entity.type.uppercased()).font(.caption2.bold())
                     }
                     .padding(.horizontal, Space.sm - 2).padding(.vertical, 2)
@@ -875,9 +923,12 @@ private struct ThinkingSection: View {
                     Spacer()
                     Image(systemName: expanded ? "chevron.up" : "chevron.down")
                         .font(.caption2).foregroundStyle(theme.textMuted)
+                        .accessibilityHidden(true)   // state is the button's value
                 }
             }
             .buttonStyle(.plain)
+            .accessibilityLabel("LLM reasoning")
+            .accessibilityValue(expanded ? "Expanded" : "Collapsed")
             if expanded {
                 Text(text)
                     .font(Typography.body(12))
@@ -891,12 +942,79 @@ private struct ThinkingSection: View {
     }
 }
 
+/// The stage-failure banner. Shown whenever the backend marks a run degraded.
+///
+/// This is the client's half of a rule-1 fix. Before the backend reported
+/// `stage_errors`, a search whose analysis model never answered walked every
+/// phase to `completed` at 100% and rendered a synthesis — "Investigated …
+/// 0 returned data" — as though that were a conclusion drawn from the data.
+/// The backend now names every stage that produced nothing; this shows it
+/// ABOVE the synthesis so the reader meets the caveat before the text it
+/// qualifies, never after.
+private struct DegradedSection: View {
+    let failures: [StageError]
+    @Environment(\.theme) private var theme
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Space.sm) {
+            HStack(spacing: Space.xs) {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .foregroundStyle(theme.danger)
+                Text("DEGRADED RUN").font(Typography.h3).foregroundStyle(theme.danger)
+            }
+            Text("One or more pipeline stages produced nothing and the run "
+                 + "continued on a fallback. What follows is a count of what "
+                 + "ran, not an analysis of the data.")
+                .font(Typography.body(13))
+                .foregroundStyle(theme.text)
+                .fixedSize(horizontal: false, vertical: true)
+            VStack(alignment: .leading, spacing: Space.xs) {
+                ForEach(failures) { f in
+                    VStack(alignment: .leading, spacing: 2) {
+                        HStack(spacing: Space.xs) {
+                            Text(f.stageLabel)
+                                .font(Typography.body(12).weight(.semibold))
+                                .foregroundStyle(theme.text)
+                            Text("·").foregroundStyle(theme.textMuted)
+                            Text(f.headline)
+                                .font(Typography.body(12))
+                                .foregroundStyle(theme.text)
+                        }
+                        if let d = f.detail, !d.isEmpty {
+                            Text(d)
+                                .font(Typography.body(11))
+                                .foregroundStyle(theme.textMuted)
+                                .textSelection(.enabled)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(Space.md)
+        .background(
+            RoundedRectangle(cornerRadius: Radius.md)
+                .fill(theme.danger.opacity(0.10))
+                .overlay(RoundedRectangle(cornerRadius: Radius.md)
+                            .stroke(theme.danger.opacity(0.45), lineWidth: 1))
+        )
+    }
+}
+
 private struct SynthesisSection: View {
     let text: String
+    /// When the synthesis stage itself failed the backend still returns a
+    /// generated summary, prefixed in-band with a `[DEGRADED: …]` marker. Label
+    /// the section for what it is rather than calling generated boilerplate a
+    /// final analysis.
+    var degraded: Bool = false
     @Environment(\.theme) private var theme
     var body: some View {
         VStack(alignment: .leading, spacing: Space.sm) {
-            Text("FINAL ANALYSIS").font(Typography.h3).foregroundStyle(theme.textMuted)
+            Text(degraded ? "GENERATED SUMMARY (NO ANALYSIS)" : "FINAL ANALYSIS")
+                .font(Typography.h3)
+                .foregroundStyle(degraded ? theme.danger : theme.textMuted)
             Text(text)
                 .font(Typography.body(16))
                 .foregroundStyle(theme.text)
@@ -943,10 +1061,18 @@ struct SearchRunDetailView: View {
                 header(snap)
                 stageSection(snap)
 
+                // A degraded run says so BEFORE the synthesis, so the reader
+                // meets the caveat before the text it qualifies.
+                if let snap, snap.isDegraded {
+                    DegradedSection(failures: snap.stageFailures)
+                }
+
                 // Final analysis is the payoff — surface it first, right under
                 // the pipeline steps, as soon as it has been computed.
                 if let syn = snap?.results?.synthesis, !syn.isEmpty {
-                    SynthesisSection(text: syn)
+                    SynthesisSection(text: syn,
+                                     degraded: snap?.stageFailures
+                                        .contains { $0.stage == "synthesis" } ?? false)
                 }
 
                 if let svcs = snap?.services, !svcs.isEmpty {
@@ -1023,10 +1149,13 @@ struct SearchRunDetailView: View {
                     Spacer(minLength: Space.sm)
                     Image(systemName: stagesCollapsed ? "chevron.down" : "chevron.up")
                         .font(.caption2).foregroundStyle(theme.textMuted)
+                        .accessibilityHidden(true)   // state is the button's value
                 }
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .accessibilityLabel("Pipeline")
+            .accessibilityValue(stagesCollapsed ? "Collapsed" : "Expanded")
 
             if stagesCollapsed {
                 collapsedStageRow(snap)

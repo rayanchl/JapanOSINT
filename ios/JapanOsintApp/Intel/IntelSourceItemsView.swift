@@ -18,6 +18,16 @@ struct IntelSourceItemsView: View {
     @State private var showFilters = false
     @State private var selectedLanguages: Set<String> = []
     @State private var linkPresence: LinkPresence = .all
+    /// `?collapse=1` (roadmap 25). Folded rows are NOT discarded — the survivor
+    /// carries the whole cluster and `ClusterBadge` renders it, so turning this
+    /// on trades a list of near-identical rows for an explicit corroboration
+    /// count you can expand.
+    @State private var collapseDuplicates = false
+    /// `?lang_view=<code>` (roadmap 29). Empty = off.
+    @State private var langView = ""
+    @State private var showExport = false
+    /// A duplicate tapped inside a `ClusterBadge`, pushed as its own detail.
+    @State private var openDuplicateUID: String?
 
     enum LinkPresence: String, FilterChoice {
         case all, hasLink, noLink
@@ -61,8 +71,25 @@ struct IntelSourceItemsView: View {
                     showFilters = true
                 }
             }
+            ToolbarItem(placement: .compatPrimary) {
+                Button { showExport = true } label: {
+                    Image(systemName: "square.and.arrow.up")
+                }
+                .accessibilityLabel("Export these items")
+            }
         }
         .sheet(isPresented: $showFilters) { filtersSheet }
+        // The export runs the SAME filters this screen is showing, so what you
+        // get is what you were looking at.
+        .sheet(isPresented: $showExport) {
+            ExportSheet(
+                kind: exportKind,
+                filters: serverFilters,
+                contextLabel: "\(source.name) · \(source.id)"
+                    + (hasLocalOnlyFilters
+                       ? " — note: the language / link filters on this screen are applied on-device and are NOT part of the export."
+                       : ""))
+        }
         // Hide the tab bar while a source is open — the top nav back button
         // is the only "go back" we want; the tab bar at the bottom doubles
         // as another navigation affordance and competes visually.
@@ -78,6 +105,10 @@ struct IntelSourceItemsView: View {
                 await reload()
             }
         }
+        // Both are server-side post-passes, so flipping either has to refetch —
+        // otherwise the toggle reads as "on" over a list that never asked for it.
+        .onChange(of: collapseDuplicates) { _, _ in Task { await reload() } }
+        .onChange(of: langView) { _, _ in Task { await reload() } }
         .refreshable { await reload() }
         .task {
             if items.isEmpty {
@@ -132,8 +163,18 @@ struct IntelSourceItemsView: View {
                     .foregroundStyle(theme.textMuted)
             }
             ForEach(filteredItems) { item in
-                NavigationLink(value: item) {
-                    IntelItemRow(item: item)
+                VStack(alignment: .leading, spacing: Space.sm) {
+                    NavigationLink(value: item) {
+                        IntelItemRow(item: item)
+                    }
+                    // Roadmap 25. Only present when the row actually carries a
+                    // cluster, so an uncollapsed list is unchanged.
+                    if let cluster = item.cluster {
+                        ClusterBadge(cluster: cluster,
+                                     onOpenDuplicate: { dup in
+                                         if let uid = dup.uid { openDuplicateUID = uid }
+                                     })
+                    }
                 }
             }
             if nextCursor != nil {
@@ -150,7 +191,16 @@ struct IntelSourceItemsView: View {
         }
         .compatInsetGroupedListStyle()
         .navigationDestination(for: IntelItem.self) { item in
-            IntelDetail(uid: item.uid, fallbackTitle: item.title ?? item.uid)
+            // The list row is handed through: the detail endpoint has no
+            // `collapse` / `lang_view` post-pass, so the cluster and the
+            // translation only exist on THIS copy of the item. Dropping it
+            // here is exactly how those two features stayed invisible.
+            IntelDetail(uid: item.uid,
+                        fallbackTitle: item.title ?? item.uid,
+                        listItem: item)
+        }
+        .navigationDestination(item: $openDuplicateUID) { uid in
+            IntelDetail(uid: uid, fallbackTitle: uid)
         }
     }
 
@@ -177,6 +227,28 @@ struct IntelSourceItemsView: View {
 
     private var filtersAreActive: Bool {
         !selectedLanguages.isEmpty || linkPresence != .all
+            || collapseDuplicates || !langView.isEmpty
+    }
+
+    /// True when the screen is narrowed by something the SERVER never sees, so
+    /// the export can say plainly that those narrowings are not in the file.
+    private var hasLocalOnlyFilters: Bool {
+        !selectedLanguages.isEmpty || linkPresence != .all
+    }
+
+    /// Breach records list through the ordinary intel endpoint but export
+    /// under their own kind (and the exporter requires the source id, which
+    /// this screen always has).
+    private var exportKind: String {
+        source.category == "breach" ? "breach" : "intel"
+    }
+
+    /// The filters the server itself applied to this list, forwarded verbatim.
+    private var serverFilters: [URLQueryItem] {
+        var q = [URLQueryItem(name: "source", value: source.id)]
+        let t = searchText.trimmingCharacters(in: .whitespaces)
+        if !t.isEmpty { q.append(URLQueryItem(name: "q", value: t)) }
+        return q
     }
 
     /// Client-side narrowing of the loaded page. Free-text search stays
@@ -214,9 +286,22 @@ struct IntelSourceItemsView: View {
             onReset: {
                 selectedLanguages.removeAll()
                 linkPresence = .all
+                collapseDuplicates = false
+                langView = ""
             },
             onDone: { showFilters = false }
         ) {
+            Section {
+                Toggle("Group near-duplicates", isOn: $collapseDuplicates)
+                Toggle("Translate to English",
+                       isOn: Binding(get: { langView == "en" },
+                                     set: { langView = $0 ? "en" : "" }))
+            } header: {
+                Text("Server view")
+            } footer: {
+                Text("Grouping folds near-identical reports into one row that says how many sources filed it — nothing is dropped, the folded reports are listed under the badge. Translation is machine output and is always labelled as such.")
+                    .font(.caption2)
+            }
             FilterSegmentedSection(title: "Link", selection: $linkPresence)
             FilterMultiSelectSection(
                 title: "Language",
@@ -237,13 +322,18 @@ struct IntelSourceItemsView: View {
         defer { loading = false }
         do {
             let env = try await apiClient.api
-                .intelItems(source: source.id, q: searchText.isEmpty ? nil : searchText, limit: 50, cursor: nil)
+                .intelItems(source: source.id, q: searchText.isEmpty ? nil : searchText,
+                            limit: 50, cursor: nil,
+                            collapse: collapseDuplicates,
+                            langView: langView.isEmpty ? nil : langView)
             items = env.data
             nextCursor = env.page?.next_cursor
             // Only mirror the unfiltered first page into the cache —
             // search-filtered results would poison the cache for non-search
-            // re-opens.
-            if searchText.isEmpty {
+            // re-opens. A collapsed or translated page is a VIEW of the corpus,
+            // not the corpus, so it is not cached either: replaying it as the
+            // plain list would silently hide the folded reports.
+            if searchText.isEmpty && !collapseDuplicates && langView.isEmpty {
                 intelCache.cacheItems(env.data, for: source.id)
             }
             error = nil
@@ -272,7 +362,10 @@ struct IntelSourceItemsView: View {
         defer { loading = false }
         do {
             let env = try await apiClient.api
-                .intelItems(source: source.id, q: searchText.isEmpty ? nil : searchText, limit: 50, cursor: cursor)
+                .intelItems(source: source.id, q: searchText.isEmpty ? nil : searchText,
+                            limit: 50, cursor: cursor,
+                            collapse: collapseDuplicates,
+                            langView: langView.isEmpty ? nil : langView)
             items.append(contentsOf: env.data)
             nextCursor = env.page?.next_cursor
             error = nil

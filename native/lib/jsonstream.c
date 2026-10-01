@@ -38,7 +38,7 @@ typedef struct {
   size_t scan_pos;
   int    in_elem;
 
-  long   emitted, scanned, oversize;
+  long   emitted, scanned, oversize, malformed;
   long   max_records;    /* 0 = unlimited                                   */
   int    hit_ceiling;
   int    done;           /* array closed                                    */
@@ -112,12 +112,16 @@ static void js_emit_elem(js_ctx *c, const char *s, size_t n) {
   c->scanned++;
   if (n == 0 || n > JS_MAX_ELEM) { c->oversize++; return; }
   char *z = malloc(n + 1);
-  if (!z) return;
+  if (!z) { c->malformed++; return; }
   memcpy(z, s, n);
   z[n] = 0;
   cJSON *el = cJSON_Parse(z);
   free(z);
-  if (!el) return;                      /* malformed element: skip, counted  */
+  /* "counted" used to mean only `scanned`, which nothing reads: an element the
+   * boundary scan handed over but cJSON could not parse was dropped with no
+   * trace in the data at all. Count it separately so the disclosure below
+   * fires — a record we saw and could not use is a shortfall, not an absence. */
+  if (!el) { c->malformed++; return; }
   c->emitted += jsonlist_emit(c->sink, c->source_id, el, ".",
                               c->record_type, c->lang, c->tags_json);
   cJSON_Delete(el);
@@ -258,7 +262,8 @@ int jsonstream_emit(intel_sink *sink, const char *source_id, const char *url,
   /* Anything left on the table is disclosed as data. `done` false means the
    * array never closed — we were cut off mid-file and the true total is
    * unknown, which is exactly the case a log line would hide. */
-  int short_read = (!c.done && rc != CURLE_OK) || c.hit_ceiling || c.oversize > 0;
+  int short_read = (!c.done && rc != CURLE_OK) || c.hit_ceiling ||
+                   c.oversize > 0 || c.malformed > 0;
   if (short_read) {
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "source_id", source_id);
@@ -268,20 +273,28 @@ int jsonstream_emit(intel_sink *sink, const char *source_id, const char *url,
     cJSON_AddNumberToObject(p, "bytes_downloaded", (double)got);
     if (c.oversize)
       cJSON_AddNumberToObject(p, "elements_too_large_skipped", (double)c.oversize);
+    if (c.malformed)
+      cJSON_AddNumberToObject(p, "elements_unparseable_skipped", (double)c.malformed);
     cJSON_AddStringToObject(p, "records_available",
       c.done ? "all of them" : "unknown — the array never closed");
     cJSON_AddStringToObject(p, "reason",
       c.hit_ceiling ? "JO_JSONSTREAM_MAX_RECORDS ceiling stopped the walk"
                     : (c.oversize && c.done)
                       ? "some elements exceeded the per-element size limit and were skipped"
-                      : "the transfer ended before the array closed");
+                      : (c.malformed && c.done)
+                        ? "some elements could not be parsed and were skipped"
+                        : "the transfer ended before the array closed");
     cJSON_AddStringToObject(p, "remedy",
       "raise $JO_JSONSTREAM_MAX_RECORDS, or re-run — see docs/SOURCE_EXHAUSTIVENESS.md");
     char *pj = cJSON_PrintUnformatted(p);
     cJSON_Delete(p);
     char title[224];
-    snprintf(title, sizeof title, "%s streamed %ld records and stopped early",
-             source_id, c.emitted);
+    if (c.done)      /* array closed, but some elements were skipped */
+      snprintf(title, sizeof title, "%s streamed %ld of %ld elements",
+               source_id, c.emitted, c.scanned);
+    else
+      snprintf(title, sizeof title, "%s streamed %ld records and stopped early",
+               source_id, c.emitted);
     intel_item note = {0};
     note.remote_key      = "truncation";
     note.title           = title;

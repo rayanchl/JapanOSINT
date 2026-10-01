@@ -11,14 +11,26 @@ enum FeedMode: Equatable {
     case iframe(URL)
     /// AsyncImage with cache-bust. Used for thumbnails and direct snapshot URLs.
     case directImage(URL)
-    /// AsyncImage routed through the backend's `/api/data/cameras/snapshot` endpoint
-    /// (Puppeteer page screenshot). Only for channels in `snapshotChannels`.
-    case snapshotEndpoint(pageURL: String)
     /// AsyncImage routed through the backend's `/api/data/cameras/proxy?camera_uid=…`
     /// — used for Shodan/manual IP cams (plain HTTP, ATS-blocked direct).
     case proxiedImage(cameraUID: String)
-    /// No usable feed; CameraPopup shows the "Open camera page" link separately.
-    case linkOnly
+    /// There is **no** in-app feed for this camera. The view says exactly that
+    /// and offers `pageURL` (when we have one) as the way to see it.
+    ///
+    /// This is a permanent property of the camera, not a failed load — keeping
+    /// the two distinguishable is the whole point of the case. See the note on
+    /// `embedBlockedChannels` for the channels that land here deliberately.
+    case linkOnly(pageURL: String?, reason: LinkOnlyReason)
+
+    /// Why there is no in-app feed. Only affects the wording on the card; both
+    /// values mean "we are not going to render a picture here".
+    enum LinkOnlyReason: Equatable {
+        /// The upstream page refuses embedding and we have no snapshot service
+        /// to screenshot it with. Watching it means opening the source page.
+        case embedBlocked
+        /// The camera record simply carried no renderable feed URL.
+        case noFeedURL
+    }
 }
 
 struct CameraFeedResolver {
@@ -26,13 +38,26 @@ struct CameraFeedResolver {
     /// `IFRAMEABLE_HOSTS` set in `MapPopup.jsx`.
     static let iframeableHosts: Set<String> = ["river.go.jp", "www.windy.com", "livecam.asia"]
 
-    /// Discovery channels whose source pages are embed-blocked but where
-    /// Puppeteer can capture a usable screenshot. Mirrors `SNAPSHOT_CHANNELS`.
-    /// `scs_com_ua` is here as the *fallback* path for the YouTube channel-live
-    /// flow: when the underlying channel isn't currently broadcasting, the
-    /// channel-live iframe fails to render anything useful, and `CameraFeedView`
-    /// switches to a snapshot of `original_page_url` instead.
-    static let snapshotChannels: Set<String> = [
+    /// Discovery channels whose source pages are embed-blocked and for which
+    /// **no in-app feed exists**.
+    ///
+    /// These used to resolve to a `.snapshotEndpoint` case that built
+    /// `\(base)/api/data/cameras/snapshot?url=…`. That route does not exist and
+    /// will not: the original was a Puppeteer page-screenshot service that was
+    /// never ported to the C backend, and the C server's `seg()` router rejects
+    /// multi-segment `/api/data` tails outright, so `cameras/snapshot` cannot be
+    /// served even if something were written behind it.
+    ///
+    /// Pointing an `AsyncImage` at that URL produced a `.failure` phase forever,
+    /// which the card rendered as "Couldn't load" — i.e. it told the user a
+    /// permanent absence was a transient network problem. House rule 1: a thing
+    /// we do not have is reported as not had. They resolve to `.linkOnly` now,
+    /// which says so and hands over the source link.
+    ///
+    /// `scs_com_ua` is here for the YouTube channel-live flow: when the channel
+    /// isn't broadcasting, the iframe renders nothing useful and `CameraFeedView`
+    /// falls back to this same honest state for `original_page_url`.
+    static let embedBlockedChannels: Set<String> = [
         "skylinewebcams", "earthcam", "webcamtaxi", "geocam",
         "worldcams", "webcamera24", "camstreamer",
         "scs_com_ua",
@@ -82,7 +107,8 @@ struct CameraFeedResolver {
     ///   - youtubeID: Pre-extracted YouTube video ID, if the collector tagged one.
     ///   - hlsHint: A `.m3u8` URL if the collector emitted one explicitly.
     ///   - discoveryChannel: First entry from `discovery_channels`. Used only as
-    ///     a tie-breaker (gates `.snapshotEndpoint` and `.proxiedImage`).
+    ///     a tie-breaker (gates `.proxiedImage` and the embed-blocked
+    ///     `.linkOnly` branch).
     ///   - cameraUID: Required for `.proxiedImage`.
     static func resolve(directHint: String?,
                         pageHint: String?,
@@ -149,14 +175,15 @@ struct CameraFeedResolver {
             return .proxiedImage(cameraUID: uid)
         }
 
-        // 7. Channel uses the headless-browser page-screenshot endpoint.
-        if snapshotChannels.contains(chanLower),
-           let raw = pageHint, !raw.isEmpty {
-            return .snapshotEndpoint(pageURL: raw)
+        // 7. Embed-blocked channel: the source exists and is watchable, just not
+        //    inside the app (see `embedBlockedChannels`).
+        if embedBlockedChannels.contains(chanLower) {
+            return .linkOnly(pageURL: pageHint, reason: .embedBlocked)
         }
 
-        // 8. Nothing usable — CameraPopup will show the "Open camera page" link.
-        return .linkOnly
+        // 8. Nothing usable at all — the record carried no feed URL we can
+        //    render. Still carry the page hint so the card can offer it.
+        return .linkOnly(pageURL: pageHint, reason: .noFeedURL)
     }
 
     // MARK: - Helpers

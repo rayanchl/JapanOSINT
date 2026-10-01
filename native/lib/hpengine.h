@@ -32,6 +32,28 @@ typedef enum {
   HP_JSON = 0,   /* JSON document → record array (or the root object)      */
   HP_HTML = 1,   /* server-rendered listing → real <a> hits                */
   HP_CSV  = 2,   /* CSV/TSV with a header row → one record per row         */
+  /* XML document → one record per repeated element. Added because the most
+   * authoritative sanctions lists in existence — the UK OFSI consolidated
+   * list, the EU financial sanctions file and the Swiss SECO whole list — are
+   * published as XML and only as XML, and every one of them was unreachable:
+   * hp_run's switch fell through to hp_run_json, cJSON refused the body, and
+   * the row emitted nothing forever while still registering as a source.
+   * `array_path` names the record element; leave it empty to auto-detect the
+   * most repeated one. */
+  HP_XML  = 3,
+  HP_XLSX = 4,   /* one worksheet -> CSV via lib/xlsx.c, then the csv path */
+  /* "Record-jar": `Key: Value` lines, records separated by a line of `%%`,
+   * continuation lines indented. This is the format of the IANA registries —
+   * the language-subtag registry (RFC 5646 §3.1.2) above all — and it is not
+   * CSV, JSON or XML, so before this mode existed the only way to declare such
+   * a row was to lie about its shape. IANA_LANGUAGE_SUBTAGS was declared
+   * HP_CSV, which made every LINE a "record": 49,312 emitted, 19,461 stored,
+   * 29,851 lost per pass, and the rows it did store were fragments like
+   * `Description: Afar` rather than subtag records. The real file holds ~9,600
+   * subtags. A repeated key inside one record (IANA gives a subtag several
+   * `Description:` lines) is JOINED with "; " rather than overwritten, because
+   * dropping the later ones would discard real content. */
+  HP_RECJAR = 5,
 } hp_mode;
 
 /* Shape gate: a row that only makes sense for a domain must not burn a request
@@ -94,16 +116,58 @@ typedef struct hp_source {
    * fewer resolved fields, never to invented ones. */
   const char *array_path;     /* dotted path ("a.b.c"), "" / NULL = auto    */
   const char *title_keys;     /* comma-separated candidates, first wins     */
+  /* Record identity — the uid the sink upserts on. FIRST-MATCH per record:
+   * the engine takes the first listed key that resolves to a non-empty value
+   * and never looks at the rest, so the ORDER is the declaration. A feed
+   * that points several items at one section page (IPA's newsonly-rss.rdf,
+   * three items → one /about/ link) collides on `link`, and the sink keeps
+   * one of them; declare `guid` or `title` FIRST in that case, and `link`
+   * after as the fallback for items that carry neither. The collision guard
+   * disambiguates records that merely share a key within one page, but a
+   * key that is not the identity is still the wrong key.
+   *
+   * `+` COMPOSES, `,` CHOOSES. `"a+b+c"` joins all three parts with '|' into
+   * one key; `"a,b,c"` picks whichever of the three appears first. They nest:
+   * `"a+b,c"` means "a+b, or else c". Use `+` whenever a record's identity is
+   * a TUPLE OF DIMENSIONS — one row per country x week x age group, per firm
+   * x period x tier — which is most statistical and regulatory tables.
+   *
+   * This distinction is the single easiest thing to get wrong here, and it
+   * fails silently: 26 rows written in the 2026-09 fix pass declared
+   * `"year,quarter,item"` MEANING a composite, and got "key on `year`". They
+   * looked correct because the in-page collision guard content-hashes rows
+   * that collide within ONE page — the same key recurring on a LATER page
+   * still collapsed at the sink. FINRA_OTC_BLOCKS emitted 2,000 and stored
+   * 476 (= its distinct first-token values) until it became `+`, then 2,000.
+   * A missing part joins as empty rather than failing the whole key (a
+   * dimension may legitimately be null); at least one part must be present;
+   * an over-long composite becomes its FNV hex rather than being truncated,
+   * because truncation would manufacture collisions in the very field meant
+   * to prevent them. */
   const char *id_keys;
   const char *link_keys;
   const char *link_tmpl;      /* {v} = link_keys value; else the raw value  */
   const char *date_keys;
   const char *body_keys;
   const char *lat_key, *lon_key;
+  /* One field holding both coordinates as "a,b" (or "a b"): `latlon_key`
+   * reads it as lat,lon; `lonlat_key` as lon,lat. CALIL's library directory
+   * ships `geocode: "139.69,35.68"` — 7,606 geocoded branches that
+   * lat_key/lon_key, which each name a whole field, could not place. */
+  const char *latlon_key, *lonlat_key;
 
   /* HTML mode */
   const char *href_must;      /* anchor href must contain this (NULL = any) */
-  const char *base;           /* prepended to root-relative hrefs           */
+  /* Base URL for resolving a relative href. Every href that is not absolute
+   * is resolved per RFC 3986 against, in order: this field when set, the
+   * page's own `<base href>` when it has one, else the URL the page was
+   * fetched from. Before this the engine only ever PREFIXED a root-relative
+   * href with `base`, so a listing that links `../profile/x.htm` or
+   * `meisai/y.htm` — Sangiin, courts.go.jp, Yamaha's advisories, EC-CUBE —
+   * stored an unreachable link, or the row was rejected. Set it only to
+   * override the page's own context (a listing served from one host that
+   * links into another). */
+  const char *base;
 
   /* Second hop — the actual penetrancy. detail_max 0 (the default) deepens
    * EVERY list record, bounded operationally by $JO_HP_DETAIL_MAX (default 25)
@@ -121,31 +185,154 @@ typedef struct hp_source {
    * engine keeps fetching until the upstream stops producing records.
    *   next_path   — dotted path to an absolute "next page" URL in the response
    *   page_param  — query parameter to append/increment ("page", "offset", …)
+   *   {page}      — a token IN THE URL, substituted with the page number, for
+   *                 an upstream that pages by path segment (kanpou.ai's
+   *                 /tosan/p/N). Same page_start / page_zero_based / page_max
+   *                 semantics as page_param, and the same stop rules (an
+   *                 empty or repeated page ends the walk). Mutually exclusive
+   *                 with page_param: gen_hp_batch.py rejects a row with both.
    * page_size is what one page returns (needed for offset-style paging), and
    * page_max bounds the walk (default 10 pages) so a runaway feed cannot spin
    * forever — when that bound bites it is stamped on every record, never
    * silent. */
   const char *next_path;
+  /* Template for building the next-page URL from the value `next_path`
+   * resolved to, with `{v}` standing for that value (URL-encoded).
+   *
+   * `next_path` alone assumes the upstream hands back an absolute URL. OAI-PMH
+   * hands back an opaque `resumptionToken` instead, and the continuation
+   * request is `?verb=ListRecords&resumptionToken=<token>` — with
+   * metadataPrefix deliberately NOT repeated, which the protocol forbids. A
+   * bare token used as a URL simply fails, so before this existed every
+   * OAI-PMH row read its first page and stopped: 100 records of a repository
+   * holding 69,738, silently, which is precisely what house rule 2 forbids.
+   *
+   *   next_path=resumptionToken
+   *   next_tmpl=https://x.repo.nii.ac.jp/oai?verb=ListRecords&resumptionToken={v}
+   */
+  const char *next_tmpl;
   const char *page_param;
   int         page_start;     /* first value of page_param (default 1, or 0
                                * when the param name contains "offset")      */
+  /* `page_start` cannot express "this API's first page is 0", because 0 is
+   * also its unset value and the engine coerces that to 1 for a non-offset
+   * param. A 0-based API (CKAN's `start`, opendata.ch's `page`) therefore had
+   * its first extra page computed as 2 and page 1 was never fetched — silent
+   * data loss on every paged read. Set this instead of hunting for a negative
+   * `page_start` that happens to cancel out. */
+  int         page_zero_based;/* 1 = the first page is numbered 0, not 1      */
   int         page_size;      /* records per page, for offset-style paging    */
   int         page_max;       /* max pages to walk (default 10)              */
 
   int csv_no_header;          /* CSV mode: file has no header row → col0..colN */
+  /* CSV mode: field delimiter, if not a comma. DataPlane.org's feeds are
+   * `ASN | AS name | ip | lastseen | category`; parsed on commas the whole line
+   * became one cell, so five real fields were stored as one blob nothing could
+   * query. Named forms, because the manifest is itself pipe-delimited:
+   *   "tab" / "\t"  U+0009        "pipe"  '|'        "semi"  ';'
+   *   "ws"          a run of blanks — fixed-width text tables such as JPNIC's
+   *                 as-numbers.txt (ruler lines of `-----` are skipped)
+   *   "lit:<>"      any literal token of any length — 2ch's subject.txt
+   * Anything else: its first character. */
+  const char *csv_delim;
+  /* CSV mode: lines starting with this prefix are comments, not records. Both
+   * DataPlane and URLhaus ship a `#` banner (URLhaus puts its column names
+   * there), and emitting those as findings would file documentation as
+   * intelligence. */
+  const char *csv_comment;
+  /* Declared body charset, for an endpoint that serves a legacy Japanese
+   * encoding. "sjis" / "shift_jis" / "cp932" / "euc-jp" all transcode to UTF-8
+   * before the body is parsed.
+   *
+   * Why this is not inferred from the host. hpengine transcodes a non-UTF-8
+   * body automatically when the host ends in `.jp`, which is the gate
+   * lib/feedlib.c uses and the one that keeps a Latin-1 European feed from
+   * being read as Shift_JIS ("Z\xfcrich" is valid Shift_JIS). But the
+   * 2ch-family boards are Japanese sites on foreign TLDs — machi.to is Tonga,
+   * open2ch.net is .net — so the host gate correctly refuses them and their
+   * titles stored as mojibake. The encoding is a property of the endpoint, not
+   * of its TLD, so the row states it. */
+  const char *charset;
   int filter_query;           /* 1 = keep only records mentioning the query */
   /* Cap on emitted records. 0 (the default) means EVERY record the upstream
    * returned — the engine does not invent a limit the caller did not ask for.
    * A non-zero value is the row author's explicit choice and is reported in
    * each record's `_records_truncated` marker when it bites. */
   int max_items;
+  /* Per-row HTTP timeout in milliseconds; 0 uses the engine default (20 s).
+   *
+   * Raising the default globally is not the fix: 20 s is right for the great
+   * majority of the registry, and multiplying it would make every genuinely
+   * dead host hang proportionally longer on every scheduled sweep. But some
+   * endpoints are legitimately slow — a WEKO/JAIRO Cloud OAI-PMH repository
+   * renders a 100-record ListRecords page in 20-120 s, so all 95 Japanese
+   * institutional repositories failed with `transport failure` at the default
+   * despite being live and returning records when asked patiently. Slowness is
+   * a property of the endpoint, so the row states it. */
+  int timeout_ms;
   int free_tier;              /* 1 = usable without payment                 */
   int interval;               /* 0 = on-demand pivot (the norm here)        */
+
+  /* Map layer id (core/layers.def taxonomy), passed straight through to
+   * source_def.layer. OPTIONAL AND APPENDED LAST ON PURPOSE: thousands of
+   * existing rows initialize this struct with designated initializers and
+   * must keep compiling unchanged, so the field defaults to NULL — which
+   * means what it always meant: not a map layer (right for an entity-pivot
+   * service). Declare it only on a row whose records belong on the map AND
+   * whose layer's modality is known; core/layertab.c can also assign a
+   * source by id/category match without any change here. */
+  const char *layer;
+  /* ── the data URL is published on an index PAGE, not fixed ────────────────
+   *
+   * Some publishers never serve a stable link: Kawasaki city puts its licence
+   * registers at `…/01riyoujo202608.csv` and rolls the stamp monthly (the
+   * pharmacy pages use a Japanese era stamp, `yakkyokuR8.8.csv`), and the page
+   * says so — "updated monthly", no undated path. A row with the stamp baked
+   * into `.url` therefore works until the next refresh and then 404s. Nine
+   * rows were repointed by hand on 2026-09-19; all nine had been dead, and one
+   * had not merely re-dated but been RENAMED (`03kuri-ninngu` → `03cleaning`),
+   * which no date arithmetic would have caught.
+   *
+   * With `index_url` set, the engine fetches that page FIRST, scans its
+   * anchors (lib/htmlparse.c — the one scanner), takes the first href
+   * containing `index_href_must`, resolves it against the index URL, and uses
+   * the result as the data URL. Everything after that — mode, delimiter,
+   * charset, paging, keys — is unchanged, so this is one extra request, not a
+   * new code path.
+   *
+   * `index_href_must` is required alongside it: without a discriminator the
+   * first link on a page of nine CSVs is not the one the row wants. If the
+   * index cannot be fetched, or no href matches, the row fails honestly (and
+   * says which pattern found nothing) rather than falling back to a URL that
+   * may be a year stale. Appended last, like `layer` above, so every existing
+   * initializer keeps compiling. */
+  const char *index_url;
+  const char *index_href_must;
+  /* CSV mode: physical lines to drop before the header is read. The MEXT
+   * school-code files, Kawasaki's pharmacy licences and Saitama's operator
+   * lists all put a title line ABOVE the header; the only way to read them
+   * used to be csv_no_header=1, which named every column col0..colN and
+   * emitted the title and the header as two junk records per file.
+   * Appended after  so no existing initializer moves. */
+  int csv_skip_lines;
+  /* HP_XLSX: which worksheet. `xlsx_sheet` is an exact tab name; when NULL the
+   * 0-based tab index is used (default 0 = first sheet). Appended so no
+   * existing initializer moves. */
+  const char *xlsx_sheet;
+  int         xlsx_sheet_index;
 } hp_source;
 
 /* Register `n` rows. `defs` must be static storage of at least n entries owned
  * by the caller (source_def pointers live for the process lifetime). */
 void hp_register(const hp_source *specs, int n, source_def *defs);
+
+/* XML text → the characters it denotes, in place: unwraps every CDATA section
+ * (payload verbatim), decodes the five predefined entities and numeric
+ * character references to UTF-8, leaves anything undecodable literal, never
+ * writes a NUL and never grows the string. Shared here so lib/rss_atom.c's
+ * hand-written feed parser can call the same decoder the XML record path
+ * uses. Text with no '&' and no '<' is untouched. */
+void hp_xml_decode(char *s);
 
 /* Declare + register a table in one line at the bottom of a collector file. */
 #define HP_REGISTER_TABLE(TBL)                                                \

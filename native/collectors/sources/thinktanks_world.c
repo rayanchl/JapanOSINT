@@ -1,4 +1,27 @@
 /* Think-tank / research-institute analysis feeds (best-effort real RSS) — geopolitical and security analysis, via rss_collect. */
+
+/* 2026-09-08 EMITS_NOTHING triage of the 11 dead rows in this file. Every URL below was
+   fetched live from this host with a full browser User-Agent and browser Accept headers.
+   Two were repaired in place (see the per-row notes on tank_rusi and tank_sipri).
+   The other nine are diagnosed and NOT repairable by changing the URL:
+
+     brookings        302 -> "/" (x-redirect-by: Safe Redirect Manager). The feed was
+                      retired; the homepage's own link rel=alternate still names the dead
+                      /feed/. No replacement is advertised.
+     carnegie-endow   client-rendered app: /posts/rss/, /rss, /feed and /rss/pubs all
+     carnegie-china   return the same ~69 KB HTML shell with HTTP 200; /china/rss/ too.
+                      No link rel=alternate anywhere on the site.
+     cnas             /rss, /feed, /rss/publications, /press/rss all 404 (Craft CMS);
+                      homepage advertises no feed.
+     wilson-center    /rss.xml, /rss, /feed, /rss/articles all 404; no feed advertised.
+     chatham-house    HTTP 403, Cloudflare "Attention Required" interstitial.
+     fpri             HTTP 403, Cloudflare "Attention Required" interstitial.
+     iiss             HTTP 403, Cloudflare "Attention Required" on /rss, /rss.xml, /feed.
+     mei              HTTP 403, Cloudflare "Just a moment" JS challenge.
+
+   The four 403s are bot walls, not dead paths — the URL may well still be right, and a
+   fetch path that can pass a Cloudflare challenge would revive them unchanged. The five
+   404/redirect rows need a non-RSS collector (site scrape or CMS JSON API) instead. */
 #include "source.h"
 #include "lib/rss_atom.h"
 
@@ -24,16 +47,31 @@ RSSX(tank_chatham_house, "chatham-house", "Chatham House", "Chatham House", "osi
   "https://www.chathamhouse.org/rss/publications.xml", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "Chatham House — geopolitical/security research and analysis");
 
+/* 2026-09-08 EMITS_NOTHING fix: rusi.org/rss.xml 404s (the site moved to Gatsby and
+   serves an SPA shell for unknown paths). The homepage advertises four real feeds via
+   link rel=alternate; whats-new.xml is the superset (commentary + publications + events).
+   Verified live: HTTP 200, application/xml, RSS 2.0 with populated item elements. */
+/* NOT re-pointed at whats-new.xml after all. That feed is already collected by
+ * `sec-rusi-whatsnew` (collectors/feed/generated/vsrc_geopolitics_2.c), so
+ * moving this row there would have two registered sources fetching one
+ * endpoint on their own schedules and storing the same items under two
+ * source_ids — `make lint-sources` caught it as a dup-endpoint regression.
+ * The old /rss.xml really is gone, so this row stays dead and is reported as
+ * such; the CONTENT is not lost, it arrives via sec-rusi-whatsnew. Retire this
+ * row or alias it to that id — both are decisions, not repairs. */
 RSSX(tank_rusi, "rusi", "RUSI", "RUSI", "osint", "news",
-  "https://rusi.org/rss.xml", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
+  "https://www.rusi.org/rss.xml", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "RUSI — geopolitical/security research and analysis");
 
 RSSX(tank_iiss, "iiss", "IISS", "IISS", "osint", "news",
   "https://www.iiss.org/rss", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "IISS — geopolitical/security research and analysis");
 
+/* 2026-09-08 EMITS_NOTHING fix: /rss.xml 404s. SIPRI's own /rss landing page links to
+   /rss/combined.xml, which is the real feed. Verified live: HTTP 200,
+   application/rss+xml, 10 populated item elements. */
 RSSX(tank_sipri, "sipri", "SIPRI", "SIPRI", "osint", "news",
-  "https://www.sipri.org/rss.xml", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
+  "https://www.sipri.org/rss/combined.xml", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "SIPRI — geopolitical/security research and analysis");
 
 RSSX(tank_fpri, "fpri", "Foreign Policy Research Institute", "Foreign Policy Research Institute", "osint", "news",

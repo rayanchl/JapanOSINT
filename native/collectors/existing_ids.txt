@@ -2492,7 +2492,6 @@ eur-sejm-eli-du
 eur-sejm-eli-mp
 eur-sejm-term10-committees-sits
 eur-sejm-term9-mp
-eur-sejm-votings
 eur-soc-cat-3gwy-ph5m
 eur-soc-cat-63re-p88u
 eur-soc-cat-66ws-y4xs

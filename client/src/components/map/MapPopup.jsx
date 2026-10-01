@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { MdClose } from 'react-icons/md';
+import SaveStarButton from '../saved/SaveStarButton.jsx';
+import PinToCaseButton from '../cases/CasePickerSheet.jsx';
 import { getLayerIcon } from '../../utils/layerIcons';
 import apiUrl from '../../utils/apiUrl.js';
 import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers';
@@ -448,7 +450,12 @@ function CameraDetail({ properties }) {
       {properties.location && (
         <p className="text-xs text-gray-400">{properties.location}</p>
       )}
-      {streamUrl && (
+      {/* streamUrl comes from scraped camera-discovery data (dorks, webcam
+        * directories, insecam) — not a value we generated. Handing it to
+        * href unchecked would let a malicious `javascript:` URI in a scraped
+        * record execute on click. Same http(s)-only gate as PropertyTable's
+        * isUrl() below. */}
+      {streamUrl && isUrl(streamUrl) && (
         <a
           href={streamUrl}
           target="_blank"
@@ -523,18 +530,26 @@ function WeatherDetail({ properties }) {
 
 function AirQualityDetail({ properties }) {
   const aqi = properties.aqi ?? properties.value;
-  let color = '#00ff88';
-  let label = 'Good';
-  if (aqi > 150) { color = '#ff4444'; label = 'Unhealthy'; }
-  else if (aqi > 100) { color = '#ff8c00'; label = 'Moderate-High'; }
-  else if (aqi > 50) { color = '#ffb74d'; label = 'Moderate'; }
+  // With `aqi` undefined every `aqi > N` test is false, so this fell through
+  // to a green "Good" beside a `?` — a station that reported nothing shown as
+  // clean air. Presence is tested first.
+  const measured = Number.isFinite(Number(aqi)) && aqi !== '' && aqi != null;
+  let color = '#9ca3af';
+  let label = 'No reading';
+  if (measured) {
+    color = '#00ff88';
+    label = 'Good';
+    if (aqi > 150) { color = '#ff4444'; label = 'Unhealthy'; }
+    else if (aqi > 100) { color = '#ff8c00'; label = 'Moderate-High'; }
+    else if (aqi > 50) { color = '#ffb74d'; label = 'Moderate'; }
+  }
 
   const highlighted = ['aqi', 'value', 'station', 'name'];
   return (
     <div className="space-y-1">
       <p className="text-sm font-medium">{properties.station || properties.name || 'Station'}</p>
       <div className="flex items-center gap-2">
-        <span className="text-2xl font-mono font-bold" style={{ color }}>{aqi ?? '?'}</span>
+        <span className="text-2xl font-mono font-bold" style={{ color }}>{measured ? aqi : '—'}</span>
         <span className="text-xs px-2 py-0.5 rounded" style={{ background: color + '22', color }}>{label}</span>
       </div>
       <PropertyTable properties={properties} exclude={highlighted} />
@@ -544,16 +559,24 @@ function AirQualityDetail({ properties }) {
 
 function RadiationDetail({ properties }) {
   const value = properties.value ?? properties.nGy;
-  let color = '#00ff88';
-  if (value > 100) color = '#ff4444';
-  else if (value > 50) color = '#ffd600';
+  // Same fall-through as AirQualityDetail, in safe-green: no dose reported
+  // rendered as a reassuringly low dose.
+  const measured = Number.isFinite(Number(value)) && value !== '' && value != null;
+  let color = '#9ca3af';
+  if (measured) {
+    color = '#00ff88';
+    if (value > 100) color = '#ff4444';
+    else if (value > 50) color = '#ffd600';
+  }
   const highlighted = ['value', 'nGy', 'station', 'name'];
 
   return (
     <div className="space-y-1">
       <p className="text-sm font-medium">{properties.station || properties.name || 'Station'}</p>
       <p className="font-mono text-xl font-bold" style={{ color }}>
-        {value ?? '?'} <span className="text-xs text-gray-400">nGy/h</span>
+        {measured
+          ? <>{value} <span className="text-xs text-gray-400">nGy/h</span></>
+          : <span className="text-base">No reading</span>}
       </p>
       <PropertyTable properties={properties} exclude={highlighted} />
     </div>
@@ -831,7 +854,10 @@ function TwitterGeoDetail({ properties }) {
         </p>
       )}
 
-      {url ? (
+      {/* url is the scraped post's own link (twitter/mastodon scraping) — same
+        * http(s)-only gate as streamUrl above; an ingested record is not a
+        * trusted href source. */}
+      {url && isUrl(url) ? (
         <a
           href={url}
           target="_blank"
@@ -998,8 +1024,13 @@ function SatelliteTrackingDetail({ properties }) {
   );
 }
 
+// The board asked for ?limit=5 and rendered the answer as the whole schedule.
+// 20 is the server's own hard cap (native/core/transitapi.c: qint(...,1,20)),
+// so this asks for everything it will give and then states the bound.
+const DEPARTURES_LIMIT = 20;
+
 function BusStopDetail({ properties }) {
-  const [state, setState] = useState({ loading: true, departures: [], error: null });
+  const [state, setState] = useState({ loading: true, departures: [], total: null, error: null });
   const stopId = properties?.stop_id;
   // GTFS-JP stop_ids are emitted by the gtfsJp collector as
   // `GTFSJP_<orgId>_<rawStopId>`. Non-GTFS bus stops (OSM, MLIT P11) won't
@@ -1010,7 +1041,7 @@ function BusStopDetail({ properties }) {
 
   useEffect(() => {
     if (!orgId || !stopId) {
-      setState({ loading: false, departures: [], error: 'No schedule data for this stop.' });
+      setState({ loading: false, departures: [], total: null, error: 'No schedule data for this stop.' });
       return;
     }
     let cancelled = false;
@@ -1019,15 +1050,20 @@ function BusStopDetail({ properties }) {
         // POST is idempotent on the server; cached after first success.
         await fetch(apiUrl(`/api/transit/gtfs/hydrate/${encodeURIComponent(orgId)}`), { method: 'POST' });
         const res = await fetch(
-          apiUrl(`/api/transit/gtfs/stop/${encodeURIComponent(stopId)}/departures?limit=5`),
+          apiUrl(`/api/transit/gtfs/stop/${encodeURIComponent(stopId)}/departures?limit=${DEPARTURES_LIMIT}`),
         );
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         if (cancelled) return;
-        setState({ loading: false, departures: data.departures || [], error: null });
+        setState({
+          loading: false,
+          departures: data.departures || [],
+          total: Number.isFinite(data.total) ? data.total : null,
+          error: null,
+        });
       } catch (err) {
         if (cancelled) return;
-        setState({ loading: false, departures: [], error: err?.message || 'fetch failed' });
+        setState({ loading: false, departures: [], total: null, error: err?.message || 'fetch failed' });
       }
     })();
     return () => { cancelled = true; };
@@ -1053,6 +1089,17 @@ function BusStopDetail({ properties }) {
       )}
       {!state.loading && state.departures.length > 0 && (
         <div className="space-y-1">
+          {/* State the bound in-band: this is a slice of the board, not the
+            * board. The endpoint returns no total, so when the response comes
+            * back full we can only say that more may exist. */}
+          <div className="text-[10px] text-gray-500 font-mono">
+            Next departures — showing {state.departures.length}
+            {state.total != null
+              ? ` of ${state.total}`
+              : (state.departures.length >= DEPARTURES_LIMIT
+                  ? ` of more (the server caps this board at ${DEPARTURES_LIMIT})`
+                  : '')}
+          </div>
           {state.departures.map((d) => {
             const color = d.route_color || '#888';
             return (
@@ -1111,14 +1158,26 @@ const DETAIL_RENDERERS = {
   liveVehicle: VehiclePopup,
 };
 
-export default function MapPopup({ feature, layerType, onClose, position }) {
+export default function MapPopup({ feature, layerType, layerDef: catalogDef, onClose, position }) {
   if (!feature) return null;
 
   const properties = feature.properties || feature;
   const Renderer = DETAIL_RENDERERS[layerType] || GenericDetail;
-  const layerDef = layerType ? LAYER_DEFINITIONS[layerType] : null;
+  // The catalogue entry (server name/colour merged with the client table)
+  // wins; the static table is the fallback for callers that pass none.
+  const layerDef = catalogDef || (layerType ? LAYER_DEFINITIONS[layerType] : null);
   const LayerIcon = layerType ? getLayerIcon(layerType) : null;
   const iconColor = layerDef?.color || '#22d3ee';
+  // Identity for Save / Pin-to-case: the record's own id when it has one,
+  // else its layer + coordinates (stable for a static feature, honest for a
+  // moving one — a vehicle's ref is the position it was pinned at).
+  const fid = properties.id ?? properties.camera_uid ?? properties.camera_id ?? properties.uid ?? properties.scene_id ?? properties.norad_id ?? properties.gs_id ?? feature.id;
+  const coords = Array.isArray(feature.geometry?.coordinates) && typeof feature.geometry.coordinates[0] === 'number' ? feature.geometry.coordinates : null;
+  const refLon = coords ? coords[0] : (Number.isFinite(Number(properties.lon ?? properties.lng)) ? Number(properties.lon ?? properties.lng) : undefined);
+  const refLat = coords ? coords[1] : (Number.isFinite(Number(properties.lat)) ? Number(properties.lat) : undefined);
+  const refId = `${layerType || 'feature'}:${fid ?? (coords ? `${refLat.toFixed(5)},${refLon.toFixed(5)}` : 'unknown')}`;
+  const refKind = /camera/i.test(String(layerType || '')) ? 'camera' : 'feature';
+  const refTitle = String(properties.name || properties.title || properties.station_name || properties.place || properties.callsign || properties.mmsi || fid || layerType || 'feature');
   const layerLabel = layerDef?.name
     || (layerType
       ? layerType.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase())
@@ -1140,13 +1199,21 @@ export default function MapPopup({ feature, layerType, onClose, position }) {
           )}
           {layerLabel}
         </span>
-        <button
-          onClick={onClose}
-          className="text-gray-500 hover:text-gray-200 ml-2 p-0.5 rounded hover:bg-osint-border/40"
-          aria-label="Close popup"
-        >
-          <MdClose size={14} aria-hidden="true" />
-        </button>
+        <span className="flex items-center gap-1 ml-2">
+          {/* Save / pin — the same actions the iOS popup carries. ref_type is
+            * 'camera' for camera features and 'feature' for everything else;
+            * the server keeps feature/camera refs without a canonical row
+            * (casesapi.c build_snapshot), so the label is what a case shows. */}
+          <SaveStarButton size="sm" item={{ kind: refKind, refId, layerId: layerType, displayName: refTitle, lat: refLat, lon: refLon, properties }} />
+          <PinToCaseButton refType={refKind} refId={refId} label={refTitle}>Pin</PinToCaseButton>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-200 p-0.5 rounded hover:bg-osint-border/40"
+            aria-label="Close popup"
+          >
+            <MdClose size={14} aria-hidden="true" />
+          </button>
+        </span>
       </div>
       <Renderer
         key={properties.id || properties.scene_id || properties.norad_id || properties.gs_id}

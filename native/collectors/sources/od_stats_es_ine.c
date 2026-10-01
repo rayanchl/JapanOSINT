@@ -8,7 +8,7 @@
  * value and the Secreto (statistical-secrecy) flag. Keyless.
  * Licence: INE data free for reuse with attribution (Ley 37/2007 / INE reuse
  * terms). */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "stats-es-ine-series"
 static const char *URL =

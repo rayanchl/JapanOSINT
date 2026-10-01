@@ -38,18 +38,21 @@
 #include <string.h>
 #include <time.h>
 #include "_jp_osint.inc"
+#include "_timefmt.inc"
 
 /* ------------------------------------------------ USAspending award search */
 
 static int usa_run(const source_ctx *ctx, intel_sink *sink) {
   time_t now = time(NULL);
   time_t from = now - 30 * 24 * 3600;
-  struct tm gt, gf;
-  gmtime_r(&now, &gt);
-  gmtime_r(&from, &gf);
+  /* time_period IS the search; a window we cannot render is not one we may
+   * substitute for. */
   char end_date[16], start_date[16];
-  strftime(end_date, sizeof end_date, "%Y-%m-%d", &gt);
-  strftime(start_date, sizeof start_date, "%Y-%m-%d", &gf);
+  if (!jo_time_fmt(now,  "%Y-%m-%d", end_date,   sizeof end_date) ||
+      !jo_time_fmt(from, "%Y-%m-%d", start_date, sizeof start_date)) {
+    fprintf(stderr, "[us-federal-award-search] cannot render the query window as a date\n");
+    return -1;
+  }
   /* API floor: time_period must start on/after 2007-10-01. */
   if (strcmp(start_date, "2007-10-01") < 0)
     snprintf(start_date, sizeof start_date, "%s", "2007-10-01");

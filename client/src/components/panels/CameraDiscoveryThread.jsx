@@ -12,6 +12,7 @@ import {
   MdClose,
 } from 'react-icons/md';
 import useCameraDiscoveryStream from '../../hooks/useCameraDiscoveryStream';
+import { isSafeUrl } from '../../utils/safeUrl.js';
 
 const FAV_STORAGE_KEY = 'japanosint.cameraFavorites';
 
@@ -413,7 +414,11 @@ function EventRow({ ev, isFavorite, onToggleFavorite, onCardClick }) {
         >
           <MdMyLocation size={14} />
         </IconButton>
-        {sourceUrl ? (
+        {/* sourceUrl is p.url / p.stream_url off a scraped camera record —
+          * externally-sourced, not something this client generated. Gate to
+          * http(s) so a malicious `javascript:` URI in a scraped page can't
+          * execute when this is clicked. */}
+        {sourceUrl && isSafeUrl(sourceUrl) ? (
           <IconButton title="Open source" href={sourceUrl}>
             <MdOpenInNew size={14} />
           </IconButton>
@@ -702,7 +707,10 @@ function DiscoveryFilterBar({
 
 // ── Main ───────────────────────────────────────────────────────────────────
 export default function CameraDiscoveryThread() {
-  const { events, activeRun, lastRun, connected, clearEvents, loadMore, hasMore, loadingMore } = useCameraDiscoveryStream();
+  const {
+    events, activeRun, lastRun, connected, clearEvents, loadMore, hasMore, loadingMore,
+    seedError, loadMoreError,
+  } = useCameraDiscoveryStream();
   const { favs, toggle: toggleFavorite } = useCameraFavorites();
 
   // Filter state
@@ -876,12 +884,22 @@ export default function CameraDiscoveryThread() {
       </div>
 
       <div className="flex-1 overflow-y-auto px-3 py-2 space-y-1.5 min-h-0">
+        {seedError && events.length > 0 && (
+          <div className="text-status-offline text-[10px] px-2 py-1.5 leading-snug">
+            Backfill failed ({seedError}) — the rows below are live events only,
+            not the stored corpus.
+          </div>
+        )}
         {filteredEvents.length === 0 && (
           <div className="text-gray-500 text-xs px-2 py-6 text-center italic">
             {events.length === 0
               ? (activeRun
                   ? 'Scanning channels… features will stream in as they arrive.'
-                  : 'No discoveries yet. The next run is scheduled hourly, or triggers on server boot.')
+                  /* A failed backfill is not an empty corpus, and it certainly
+                   * is not a promise about the next run. Say what happened. */
+                  : seedError
+                    ? `Could not load the discovery backfill (${seedError}). Nothing is known about what is stored — only live events from now on will appear here.`
+                    : 'No discoveries yet. The next run is scheduled hourly, or triggers on server boot.')
               : 'No cameras match the current filters.'}
           </div>
         )}
@@ -907,6 +925,11 @@ export default function CameraDiscoveryThread() {
             >
               {loadingMore ? 'Loading…' : 'Load older'}
             </button>
+          </div>
+        )}
+        {loadMoreError && (
+          <div className="text-status-offline text-[10px] px-2 pb-2 text-center">
+            Could not load older discoveries ({loadMoreError}). Nothing was added.
           </div>
         )}
       </div>

@@ -27,7 +27,12 @@
 #include "_jp_osint.inc"
 
 #define SEA2_PER_REG   3
-#define SEA2_TOTAL_MAX 500  /* exhaustive-ok: runaway guard, logged */
+/* NOT a page cap: it sits in the loop condition over REGISTRIES, so hitting it
+ * ends the sweep and the portals after it go unqueried — reported as data by
+ * jo_registry_sweep_notice(). (SEA2_PER_REG above is a real per-page cap and
+ * jo_emit_anchors already discloses whatever it trims.) */
+#define SEA2_TOTAL_MAX 500  /* exhaustive-ok: whole-run emit cap; the sweep it
+                             * cuts short is reported as a truncation notice */
 
 /* One registry search portal. `url_tmpl` has exactly one %s for the encoded
  * query. `href_must` is a substring an emittable result href must contain (to
@@ -100,9 +105,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char *enc = jo_urlencode(q);   /* UTF-8 safe %-encoding */
   if (!enc) return -1;
 
-  int total = 0;
-  for (int i = 0; i < NREGS && total < SEA2_TOTAL_MAX; i++) {
-    if (ctx->cancel && *ctx->cancel) break;
+  int total = 0, i = 0, cancelled = 0;
+  for (; i < NREGS && total < SEA2_TOTAL_MAX; i++) {
+    if (ctx->cancel && *ctx->cancel) { cancelled = 1; break; }
     const sea2_reg *r = &REGS[i];
 
     char url[1200];
@@ -120,7 +125,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(enc);
-  fprintf(stderr, "[sea2_registry] emitted %d across %d portals\n", total, NREGS);
+  jo_registry_sweep_notice(sink, "SEA2_REGISTRY", q, total, i, NREGS,
+                           "SEA2_TOTAL_MAX", SEA2_TOTAL_MAX, cancelled);
+  fprintf(stderr, "[sea2_registry] emitted %d across %d of %d portals\n",
+          total, i, NREGS);
   return 0;   /* honest empty is not an error */
 }
 

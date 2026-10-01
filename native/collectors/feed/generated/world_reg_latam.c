@@ -103,7 +103,11 @@ static const latam_reg REGS[] = {
 };
 static const int NREGS = (int)(sizeof(REGS) / sizeof(REGS[0]));
 
-#define LATAM_TOTAL_CAP    500   /* exhaustive-ok: runaway guard, logged */
+/* NOT a page cap: it sits in the loop condition over REGISTRIES, so hitting it
+ * ends the sweep and the registries after it go unqueried — reported as data
+ * by jo_registry_sweep_notice(). */
+#define LATAM_TOTAL_CAP    500   /* exhaustive-ok: whole-run emit cap; the sweep
+                                  * it cuts short is reported as a notice */
 #define LATAM_PER_REG_CAP   0     /* exhaustive-ok: 0 = no cap, every hit is emitted */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -113,15 +117,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char *enc = jo_urlencode(q);
   if (!enc) return -1;
 
-  int total = 0;
-  for (int i = 0; i < NREGS && total < LATAM_TOTAL_CAP; i++) {
+  int total = 0, i = 0;
+  for (; i < NREGS && total < LATAM_TOTAL_CAP; i++) {
     const latam_reg *r = &REGS[i];
     char url[1400];
     snprintf(url, sizeof url, r->url_tmpl, enc);
 
-    int remaining = LATAM_TOTAL_CAP - total;
-    int cap = remaining < LATAM_PER_REG_CAP ? remaining : LATAM_PER_REG_CAP;
-
+    /* The old `remaining`/`cap` min() was dead: LATAM_PER_REG_CAP is 0 and
+     * `remaining` is always > 0 inside this loop, so min(remaining, 0) was
+     * always 0 — and jo_emit_anchors reads <= 0 as "no cap". Removed rather
+     * than given teeth, which would change what this collector emits. */
     char tag[96];
     snprintf(tag, sizeof tag, "latam_reg:%s", r->name);
     char rec[64];
@@ -130,12 +135,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     /* Real fetch + real anchor extraction. JS-only / anti-bot registries emit
      * 0 for their row — honest empty, expected, never faked. */
     int n = jo_emit_anchors(ctx, sink, url, r->href_must, r->name, rec,
-                            r->base, q, cap, tag);
+                            r->base, q, LATAM_PER_REG_CAP, tag);
     total += n;
   }
   free(enc);
-  fprintf(stderr, "[latam_registry] emitted %d across %d registries\n",
-          total, NREGS);
+  jo_registry_sweep_notice(sink, "LATAM_REGISTRY", q, total, i, NREGS,
+                           "LATAM_TOTAL_CAP", LATAM_TOTAL_CAP, 0);
+  fprintf(stderr, "[latam_registry] emitted %d across %d of %d registries\n",
+          total, i, NREGS);
   return 0;   /* honest empty is not an error */
 }
 

@@ -8,21 +8,17 @@
 #include "source.h"
 #include "lib/feedlib.h"
 #include "third_party/cJSON.h"
+#include "_credential_notice.inc"
+#include "_timefmt.inc"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
-static void iso_now(char *out, size_t n) {
-  time_t t = time(NULL);
-  struct tm g; gmtime_r(&t, &g);
-  strftime(out, n, "%Y-%m-%dT%H:%M:%SZ", &g);
-}
-static void iso_ago(char *out, size_t n, int days) {
-  time_t t = time(NULL) - (time_t)days * 86400;
-  struct tm g; gmtime_r(&t, &g);
-  strftime(out, n, "%Y-%m-%dT%H:%M:%SZ", &g);
-}
+/* Both of these used to ignore gmtime_r()'s NULL and strftime()'s 0 and hand
+ * the resulting indeterminate buffer to the STAC datetime range — see
+ * _timefmt.inc for why that is fabricated data. jo_now_iso / jo_ago_fmt
+ * render identically for every renderable time and return NULL otherwise. */
 
 /* centroid of first ring of Polygon / MultiPolygon */
 static int centroid(cJSON *geom, double *cx, double *cy) {
@@ -52,8 +48,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *cid = getenv("SENTINELHUB_CLIENT_ID");
   const char *csec = getenv("SENTINELHUB_CLIENT_SECRET");
   if (!cid || !*cid || !csec || !*csec) {
-    fprintf(stderr, "[sentinel-japan] gated (no SENTINELHUB_CLIENT_ID/SECRET)\n");
-    return 0;
+    static const char *const envs[] = { "SENTINELHUB_CLIENT_ID",
+                                        "SENTINELHUB_CLIENT_SECRET", NULL };
+    return jo_needs_credential(sink, "sentinel-japan",
+        "Sentinel Hub Catalog (Sentinel-2 L2A over Japan)",
+        envs, "https://services.sentinel-hub.com/api/v1/catalog/1.0.0/search",
+        "OAuth2 client credentials from a Sentinel Hub account; both halves are required");
   }
 
   char form[1024];
@@ -74,8 +74,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_Delete(tokresp);
 
   char from[32], to[32];
-  iso_ago(from, sizeof from, 21);
-  iso_now(to, sizeof to);
+  if (!jo_ago_fmt(21L * 86400, "%Y-%m-%dT%H:%M:%SZ", from, sizeof from) ||
+      !jo_now_iso(to, sizeof to)) {
+    fprintf(stderr, "[sentinel-japan] cannot render the query window as a date\n");
+    return -1;
+  }
   char body[512];
   snprintf(body, sizeof body,
     "{\"bbox\":[122,24,146,46],\"datetime\":\"%s/%s\","

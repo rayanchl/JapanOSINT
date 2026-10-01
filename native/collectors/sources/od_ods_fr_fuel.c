@@ -7,7 +7,7 @@
  * string - copied verbatim, not re-interpreted), and the per-fuel price and
  * maj (update-time) columns.
  * Keyless. Licence: Licence Ouverte (Etalab) - reuse with attribution. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ods-fr-fuel-prices"
 static const char *URL =

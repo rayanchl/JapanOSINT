@@ -162,7 +162,11 @@ static const us_reg REGS[] = {
 };
 static const int NREG = (int)(sizeof(REGS) / sizeof(REGS[0]));
 
-#define US_TOTAL_CAP   500  /* exhaustive-ok: runaway guard, logged */
+/* NOT a page cap: it sits in the loop condition over STATE PORTALS, so hitting
+ * it ends the sweep and the states after it go unqueried — reported as data by
+ * jo_registry_sweep_notice(). */
+#define US_TOTAL_CAP   500  /* exhaustive-ok: whole-run emit cap; the sweep it
+                             * cuts short is reported as a truncation notice */
 #define US_PER_REG_CAP  0    /* exhaustive-ok: 0 = every hit on the page */
 
 /* NY Socrata dataset returns a JSON array of objects; emit real fields. */
@@ -235,9 +239,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char *q = jo_urlencode(e);   /* UTF-8 safe %-encode of the query */
   if (!q) return 0;
 
-  int total = 0;
-  for (int i = 0; i < NREG && total < US_TOTAL_CAP; i++) {
-    if (ctx->cancel && *ctx->cancel) break;
+  int total = 0, i = 0, cancelled = 0;
+  for (; i < NREG && total < US_TOTAL_CAP; i++) {
+    if (ctx->cancel && *ctx->cancel) { cancelled = 1; break; }
     const us_reg *r = &REGS[i];
 
     char url[1400];
@@ -248,19 +252,24 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (i == 0) {
       got = emit_ny_socrata(ctx, sink, url);
     } else {
-      int room = US_TOTAL_CAP - total;
-      int cap  = room < US_PER_REG_CAP ? room : US_PER_REG_CAP;
+      /* The old `room`/`cap` min() was dead: US_PER_REG_CAP is 0 and `room` is
+       * always > 0 inside this loop, so min(room, 0) was always 0 — and
+       * jo_emit_anchors reads <= 0 as "no cap". Removed rather than given
+       * teeth, which would change what this collector emits. */
+
       /* Real fetch + real anchor extraction, filtered on the query bytes so we
        * only keep anchors whose text/href actually mentions the entity. JS-only
        * / POST-only / anti-bot rows return 0 (honest empty). */
       got = jo_emit_anchors(ctx, sink, url, r->href, r->name, r->rtype,
-                            r->base, e, cap, r->name);
+                            r->base, e, US_PER_REG_CAP, r->name);
     }
     total += got;
   }
   free(q);
-  fprintf(stderr, "[us_states_sos] total emitted %d across %d state portals\n",
-          total, NREG);
+  jo_registry_sweep_notice(sink, "US_STATES_SOS", e, total, i, NREG,
+                           "US_TOTAL_CAP", US_TOTAL_CAP, cancelled);
+  fprintf(stderr, "[us_states_sos] total emitted %d across %d of %d state portals\n",
+          total, i, NREG);
   return 0;   /* honest empty is not an error */
 }
 

@@ -20,6 +20,14 @@
 
 #include <stddef.h>
 
+/* The per-host User-Agent this URL needs, or NULL when JO_USER_AGENT is fine.
+ * Only for callers that set their own "User-Agent:" request header — such a
+ * header outranks CURLOPT_USERAGENT, so those callers bypass the table in
+ * httpclient.c unless they ask. See the table's comment for what an entry is
+ * and is not allowed to be (it routes around a filter that objects to one
+ * token; it never stops identifying us and never impersonates a browser). */
+const char *http_ua_override(const char *url);
+
 typedef struct {
   long  status;       /* HTTP status, 0 on transport failure */
   char *body;         /* malloc'd, NUL-terminated; caller frees */

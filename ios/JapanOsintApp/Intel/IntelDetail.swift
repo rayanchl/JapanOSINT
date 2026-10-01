@@ -6,6 +6,15 @@ import CoreLocation
 struct IntelDetail: View {
     let uid: String
     let fallbackTitle: String
+    /// The row this detail was pushed from, when there was one.
+    ///
+    /// `GET /api/intel/items/:uid` has no `collapse` / `lang_view` post-pass —
+    /// those two run only over the LIST envelope (core/httpd.c) — so the
+    /// cluster and the translation exist on the list copy of the item and
+    /// nowhere else. Carrying it through is what makes `ClusterBadge` and
+    /// `TranslationToggle` reachable at all; when it is nil this view behaves
+    /// exactly as it did before.
+    var listItem: IntelItem? = nil
 
     @EnvironmentObject var apiClient: APIClient
     @EnvironmentObject var nav: MapNavigation
@@ -21,6 +30,12 @@ struct IntelDetail: View {
     @State private var revealed: RevealResult?
     @State private var revealing = false
     @State private var revealError: String?
+    /// "Add to case" — `POST /api/cases/:id/items` via `CasePickerSheet`.
+    @State private var showCasePicker = false
+    @State private var showShareLink = false
+    @State private var pinnedNotice: String?
+    /// A near-duplicate opened from the cluster badge.
+    @State private var openDuplicateUID: String?
 
     /// Breach records carry a "breach:" uid and (when a secret exists) an
     /// operator-revealable credential. Detected off the uid + properties so we
@@ -69,7 +84,27 @@ struct IntelDetail: View {
                             .buttonStyle(.borderedProminent)
                         }
                     }
-                    if let body = item.body, !body.isEmpty {
+                    // Roadmap 25 — corroboration. Only rendered when the list
+                    // this was opened from asked for `?collapse=1`.
+                    if let cluster = listItem?.cluster {
+                        ClusterBadge(cluster: cluster,
+                                     onOpenDuplicate: { dup in
+                                         if let u = dup.uid { openDuplicateUID = u }
+                                     })
+                    }
+                    // Roadmap 29 — original / translated / both. Replaces the
+                    // plain body block when a translation came back with the
+                    // list, so the machine-output banner always travels with
+                    // the translated words.
+                    if let t = listItem?.translation {
+                        TranslationToggle(
+                            originalTitle: nil,
+                            originalSummary: item.summary,
+                            originalBody: item.body,
+                            translation: t,
+                            originalLanguage: item.language,
+                            showsUnavailableNote: false)
+                    } else if let body = item.body, !body.isEmpty {
                         JapaneseAware(
                             text: body,
                             font: .body,
@@ -134,7 +169,60 @@ struct IntelDetail: View {
         .themedScreenBackground(theme)
         .navigationTitle(item?.title ?? fallbackTitle)
         .compatInlineTitle()
+        .toolbar {
+            ToolbarItem(placement: .compatPrimary) {
+                Menu {
+                    Button { showCasePicker = true } label: {
+                        Label("Add to case…", systemImage: "folder.badge.plus")
+                    }
+                    Button { showShareLink = true } label: {
+                        Label("Share a link to this…", systemImage: "link")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                }
+                .accessibilityLabel("Item actions")
+            }
+        }
+        .sheet(isPresented: $showCasePicker) {
+            // `intel_item` is the ref_type the server's REF_TYPES vocabulary
+            // uses for these rows (breach records included — they are
+            // intel_items with a "breach:" uid).
+            CasePickerSheet(refType: "intel_item",
+                            refId: uid,
+                            label: item?.title ?? fallbackTitle,
+                            onPinned: { summary in
+                                pinnedNotice = "Pinned to “\(summary.name)”."
+                            })
+        }
+        .sheet(isPresented: $showShareLink) {
+            PermalinkShareSheet(
+                state: permalinkState,
+                contextLabel: "Intel item · \(item?.title ?? fallbackTitle)")
+        }
+        .navigationDestination(item: $openDuplicateUID) { dupUID in
+            IntelDetail(uid: dupUID, fallbackTitle: dupUID)
+        }
+        .alert("Added to case",
+               isPresented: Binding(get: { pinnedNotice != nil },
+                                    set: { if !$0 { pinnedNotice = nil } })) {
+            Button("OK", role: .cancel) { pinnedNotice = nil }
+        } message: {
+            Text(pinnedNotice ?? "")
+        }
         .task { await load() }
+    }
+
+    /// The permalink vocabulary the server accepts is `kind`, `params`, `map`,
+    /// `layers`, `time`, `entity_id`, `case_id` — anything else is dropped
+    /// rather than carried, so only those keys are sent.
+    private var permalinkState: [String: Any] {
+        var state: [String: Any] = ["kind": "intel",
+                                    "params": ["uid": uid]]
+        if let c = item.flatMap({ coordinate(from: $0) }) {
+            state["map"] = ["lat": c.latitude, "lon": c.longitude, "zoom": 13]
+        }
+        return state
     }
 
     private var header: some View {

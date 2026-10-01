@@ -192,7 +192,7 @@ static const hp_source HP2_WORLD_CRITICAL[] = {
     .name_ja = "世界資源研究所 データカタログ", .category = "research",
     .portal = "https://datasets.wri.org", .record_type = "wri-dataset",
     .tags = "\"environment\",\"infrastructure\",\"opendata\"", .free_tier = 1,
-    .url = "https://datasets.wri.org/api/3/action/package_search?q={q}&rows=100",
+    .url = "https://datasets.wri.org/api/3/action/package_search?q={q}&rows=100&sort=id%20asc",
     .array_path = "result.results", .title_keys = "title,name",
     .id_keys = "id", .date_keys = "metadata_modified",
     .link_keys = "name", .link_tmpl = "https://datasets.wri.org/dataset/{v}",

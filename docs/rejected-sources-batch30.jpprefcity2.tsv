@@ -1,0 +1,56 @@
+JO30_GOV_OKINAWA_PRESS	https://www.pref.okinawa.lg.jp/press_news.rss	fetched: RSS 2.0 with 0 <item> elements (EMPTY_RESULTSET)
+JO30_GOV_OKINAWA_KINKYU	https://www.pref.okinawa.lg.jp/kinkyu_news.rss	fetched: 0 items
+JO30_GOV_OSAKA_KINKYU	https://www.pref.osaka.lg.jp/kinkyu/kinkyu.xml	fetched: 1 undated placeholder item; emergency feed empty in normal times
+JO30_GOV_CHIBA_KINKYU	https://www.pref.chiba.lg.jp/homepage/kinkyu/kinkyu.xml	fetched: 0 items
+JO30_GOV_KANAGAWA_EMERGENCY	https://www.pref.kanagawa.jp/emergency/emergency.xml	fetched: 1 undated placeholder item
+JO30_GOV_YAMANASHI_KINKYU	https://www.pref.yamanashi.jp/kinkyu.xml	fetched: 1 undated placeholder item
+JO30_GOV_TOYAMA_EMERGENCY	https://www.pref.toyama.jp/emergency.xml	fetched: 1 undated placeholder item
+JO30_GOV_TOSHIMA_KINKYU	https://www.city.toshima.lg.jp/kinkyu/kinkyu.xml	fetched: 2 items, transient typhoon notices only; emergency feed
+JO30_GOV_MEGURO_KINKYU	https://www.city.meguro.tokyo.jp/kinkyu/rss_news.xml	fetched: 2 items, weather-warning relays only; emergency feed
+JO30_GOV_ARAKAWA_EMERGENCY	https://www.city.arakawa.tokyo.jp/kinkyuji/emergency.xml	fetched: 1 item with no title or date
+JO30_GOV_YAMANASHI_SAIYO	https://www.pref.yamanashi.jp/top_saiyo.xml	fetched: 11 items but newest dated 2023-08-03; stale
+JO30_GOV_AICHI_LIST6	https://www.pref.aichi.jp/rss/10/list6.xml	fetched: 9 items, newest 2025-04-28; stale
+JO30_GOV_AICHI_LIST7	https://www.pref.aichi.jp/rss/10/list7.xml	fetched: 101 items identical in head to list1.xml (same newest item); duplicate content
+JO30_GOV_FUKUSHIMA_LIST13	https://www.pref.fukushima.lg.jp/rss/10/list13.xml	fetched: 3 items, newest 2022-03-15; stale
+JO30_GOV_IBARAKI_IMPORTANT	https://www.pref.ibaraki.jp/important_rss.xml	fetched: 1 undated item
+JO30_GOV_SAGA_NEWLIST	https://www.pref.saga.lg.jp/new_list.xml	fetched OK (44 items) but already registered in the tree
+JO30_GOV_UNYU_TOHOKU_PRESS	https://wwwtb.mlit.go.jp/tohoku/press/	HTTP 404 (S3/CloudFront) - the Kanto/Hokkaido/Kinki pattern does not exist for this bureau
+JO30_GOV_UNYU_HOKUSHIN_PRESS	https://wwwtb.mlit.go.jp/hokushin/press/	HTTP 404
+JO30_GOV_UNYU_CHUGOKU_PRESS	https://wwwtb.mlit.go.jp/chugoku/press/	HTTP 404
+JO30_GOV_UNYU_SHIKOKU_PRESS	https://wwwtb.mlit.go.jp/shikoku/press/	HTTP 404
+JO30_GOV_UNYU_KYUSHU_PRESS	https://wwwtb.mlit.go.jp/kyushu/press/	HTTP 404
+JO30_GOV_UNYU_CHUBU_PRESS	https://wwwtb.mlit.go.jp/chubu/press/	fetched 11 KB but no per-release anchors (only index self-links); nothing to emit
+JO30_GOV_METI_REGIONAL_RSS	https://www.tohoku.meti.go.jp/ (also chubu, kinki, chugoku, shikoku, kyushu)	homepages fetched (919 B redirect shells / 6.8 KB); no RSS/Atom link on any of them
+JO30_GOV_NOUSEI_RSS	https://www.maff.go.jp/tohoku/ (also kanto, tokai, kinki, chugoku, kyusyu)	homepages fetched (21-43 KB); no RSS/Atom link
+JO30_GOV_RINYA_RSS	https://www.rinya.maff.go.jp/hokkaido/ (also tohoku, kanto, chubu, kinki, shikoku, kyusyu)	homepages fetched (26-56 KB); no RSS/Atom link
+JO30_GOV_CUSTOMS_BRANCH_RSS	https://www.customs.go.jp/tokyo/ (also yokohama, kobe, osaka, nagoya, moji, nagasaki, hakodate, okinawa)	homepages fetched (24-30 KB); no branch RSS - only the HQ news.rss, already registered
+JO30_GOV_ENV_REGIONAL_RSS	https://kanto.env.go.jp/ (also hokkaido, tohoku, chubu, kinki, chushikoku, kyushu)	homepages fetched (29-33 KB); no RSS/Atom link
+JO30_GOV_OGB_RSS	https://www.ogb.go.jp/	homepage fetched (27 KB); no RSS/Atom link
+JO30_GOV_YAMAGATA_REIKI	https://en3-jg.d1-law.com/yamagata-ken/d1w_reiki/reiki.html	ordinance database is a d1-law application; no feed or list endpoint found on the entry page
+JO30_GOV_TOKYO_REIKI	https://www.reiki.metro.tokyo.lg.jp/	entry page fetched; no RSS/new-item link
+JO30_GOV_WAKAYAMA_REIKI	https://www.pref.wakayama.lg.jp/prefg/010100/reiki/reiki_menu.html	Reiki-Base frameset; only JS/CSS and two tree pages linked, no feed
+JO30_GOV_KITAKYUSHU_HUB_DCAT	https://gmottygyosei-kitakyushu.opendata.arcgis.com/api/feed/dcat-us/1.1.json	GWM_0003 permission error - hub not public
+JO30_GOV_NAGANO_IDP_DCAT	https://nagano-infrastructure-data-platform-1-nagano-idp.hub.arcgis.com/api/feed/dcat-us/1.1.json	fetched: 1 dataset only, no FeatureServer distribution
+JO30_GOV_HAYAKAWA_DCAT	https://hayakawa-gis-hykw.hub.arcgis.com/api/feed/dcat-us/1.1.json	fetched: 1 dataset only
+JO30_GOV_SAITAMA_HUB_SEARCH	https://portal-pref-saitama.hub.arcgis.com/api/search/v1/collections/dataset/items?limit=2	404 'Collection with id dataset not found'; the DCAT feed was used instead
+JO30_GOV_SAITAMA_SHELTER_MASTER	https://services9.arcgis.com/n65w8AXGaYPTqFYI/arcgis/rest/services/避難所マスタ/FeatureServer/0	fetched: 7 records, first one a Gunma address labelled 熊谷市 - test data; the 4,068-row 避難所情報 layer was taken instead
+JO30_GOV_SAITAMA_MICHINOEKI	https://services9.arcgis.com/n65w8AXGaYPTqFYI/arcgis/rest/services/道の駅等（View）/FeatureServer/19	fetched: 21 records; below the value threshold for a standing weekly row
+JO30_GOV_SAITAMA_DAM	https://services9.arcgis.com/n65w8AXGaYPTqFYI/arcgis/rest/services/ダム（View）/FeatureServer/47	fetched: 3 records
+JO30_GOV_SAITAMA_DENSHOHI	https://services9.arcgis.com/n65w8AXGaYPTqFYI/arcgis/rest/services/denshohi/FeatureServer/0	fetched: 2,469 records but it is the national GSI 自然災害伝承碑 dataset mirrored (first record is in Hakodate), not prefectural data
+JO30_GOV_SAITAMA_BUSSTOP	https://services9.arcgis.com/n65w8AXGaYPTqFYI/arcgis/rest/services/バス停留所データ/FeatureServer/0	fetched: 9,988 records but it is the national 国土数値情報 P11 bus-stop dataset (P11_* fields), not prefectural data
+JO30_GOV_NAGOYA_DOSHA	https://services8.arcgis.com/0YBSVU4IGX12iZcu/arcgis/rest/services/土砂災害（特別）警戒区域/FeatureServer/0	fetched: 559 polygons but field names and values are mojibake (gsd撬_, \x04); unusable
+JO30_GOV_NAGOYA_KAOKU	https://services8.arcgis.com/0YBSVU4IGX12iZcu/arcgis/rest/services/家屋倒壊等氾濫想定区域/FeatureServer/0	fetched: 15 polygons with a single attribute 'a'; no record content
+JO30_GOV_SADO_TSUNAMIBLDG	https://services6.arcgis.com/CkpxhGWnBSk5Y9fW/arcgis/rest/services/津波避難ビル/FeatureServer/0	fetched: 3 records
+JO30_GOV_SADO_WATERLEVEL	https://services6.arcgis.com/CkpxhGWnBSk5Y9fW/arcgis/rest/services/水位観測所/FeatureServer/0	fetched: 9 records; too small for a standing row (listed in the DCAT catalogue row)
+JO30_GOV_SADO_KINKYU	https://services6.arcgis.com/CkpxhGWnBSk5Y9fW/arcgis/rest/services/指定緊急避難場所（ダウンロード用）/FeatureServer/0	fetched: 21 records, 2021 vintage; superseded by the 65 + 444 shelter layers
+JO30_GOV_AIZU_CREMATORIUM	https://services9.arcgis.com/Sg9gBvx912jkVYU6/arcgis/rest/services/火葬場/FeatureServer/0	fetched: 1 polygon
+JO30_GOV_OKAYA_ELEM	https://services1.arcgis.com/4GMefrLcjv8z16wh/arcgis/rest/services/okaya_shogakkou_2/FeatureServer/0	fetched: 7 records, 2018 vintage
+JO30_GOV_OKAYA_JHS	https://services1.arcgis.com/4GMefrLcjv8z16wh/arcgis/rest/services/okaya_chugakkou_2/FeatureServer/0	fetched: 4 records, 2018 vintage
+JO30_GOV_URAYASU_BOSAI_SYMBOLS	https://services2.arcgis.com/tgYSvsRXvVD2Ic84/arcgis/rest/services/bosai/FeatureServer/0 (also layers 1,6,7,10,14,15)	fetched: records carry only SASYMBOLNO / SAUID / Shape fields, no name or address
+JO30_GOV_ARAGE_LIVECAM	https://services-ap1.arcgis.com/PZQkxlojiiLRSa6b/arcgis/rest/services/ライブカメラ/FeatureServer/0	fetched: 11 records whose attributes are geocoder output (Loc_name, Score, Match_addr) with no camera name or URL
+JO30_GOV_SETAGAYA_POLICE	https://services7.arcgis.com/HEXYbKoojU2pCBN0/arcgis/rest/services/10_policeStation/FeatureServer/0	fetched: 4 records
+JO30_GOV_SETAGAYA_FIRE	https://services7.arcgis.com/HEXYbKoojU2pCBN0/arcgis/rest/services/15_fireStation/FeatureServer/0	fetched: 3 records
+JO30_GOV_SETAGAYA_WATER	https://services7.arcgis.com/HEXYbKoojU2pCBN0/arcgis/rest/services/35_waterSupplyBase/FeatureServer/0	fetched: 10 records; too small for a standing row (in the DCAT catalogue row)
+JO30_GOV_BODIK_ORGLIST	https://data.bodik.jp/api/3/action/organization_list?all_fields=true&limit=1000	fetched: only 25 organisations returned despite limit=1000 (server cap); the package_search facet was used to size the per-publisher rows instead
+JO30_GOV_AIZU_HUB_DCAT	https://open-data-aizuwakamatsu.hub.arcgis.com/api/feed/dcat-us/1.1.json	fetched OK (34 datasets) but the exact endpoint is already registered in the tree
+JO30_GOV_AICHI_NEWS	https://www.pref.aichi.jp/rss/10/list1.xml	Imperva Incapsula bot wall: 302 to itself with an incap_ses cookie for every UA at probe time (101 items were served once earlier in the session); not bypassed per the brief

@@ -3,9 +3,19 @@
  * the GBNF grammar loader from server/src/utils/grammars.js.
  *
  * The prompt STRINGS are byte-faithful copies of the tuned JS builders — they
- * are grammar-aligned and must not drift. The `query` (and resultsJson) are
- * interpolated raw exactly as the JS template literals do (JS `${query}` is a
- * plain string substitution — NOT JSON-escaped — so neither are these).
+ * are grammar-aligned and must not drift.
+ *
+ * VALUES ARE NO LONGER SPLICED RAW. The JS interpolated `${query}` and
+ * `${resultsJson}` with no delimiter, and so did this file; that let a query
+ * (or a third-party service's response) carry a newline plus a forged
+ * {"entities":[…],"recommended_services":[…]} and pick which OSINT services
+ * the pipeline calls next, and with what value — a control-plane injection,
+ * since those services then make outbound requests carrying it. Every value
+ * that did not come from the operator is now wrapped in a BEGIN/END fence with
+ * a per-call random id, under a standing "this block is data" rule. The bytes
+ * of the value are unchanged (nothing is escaped, stripped or truncated); only
+ * the framing around them is new. See the long note at the top of prompts.c.
+ * `services_list` is not fenced — it is built from our own source registry.
  *
  * Grammar loading mirrors loadGrammar(name): reads
  * <repo>/server/grammars/<name>.gbnf once, caches it forever, returns "" on
@@ -21,7 +31,8 @@
 char *prompt_analysis(const char *query, const char *services_list);
 
 /* Phase 2 service-chaining prompt over Phase 1 results JSON. `results_json`
- * is interpolated raw (as JS does); NULL services_list ->
+ * is fenced as untrusted (it is what third-party services returned, and this
+ * prompt decides the NEXT outbound calls); NULL services_list ->
  * "(service list unavailable)". Returns a heap string the CALLER must
  * free(). NULL only on allocation failure. */
 char *prompt_phase2(const char *query, const char *results_json,
@@ -36,13 +47,15 @@ char *prompt_suggestions(const char *query);
  * answers the query from the data actually returned (no fabrication). Plain
  * prose out (use llm_chat with json_schema=NULL). Not a JS port — this step
  * did not exist in pipeline.js, which emitted a counts template. `results_json`
- * is interpolated raw. Returns a heap string the CALLER must free(); NULL only
- * on allocation failure. */
+ * is fenced as untrusted. Returns a heap string the CALLER must free(); NULL
+ * only on allocation failure. */
 char *prompt_synthesis(const char *query, const char *results_json);
 
 /* Corpus-NER entity-extraction prompt (port of llmPrompts.js
  * buildEntityExtractionPrompt; reuses ENTITY_TYPES_PROMPT; body clipped to
- * 4000). Used with grammar_load("entity_extraction"). Caller frees. */
+ * 4000, and the prompt SAYS how many bytes of how many it is showing when the
+ * clip bites). The content is fenced as untrusted — it is fetched page text.
+ * Used with grammar_load("entity_extraction"). Caller frees. */
 char *prompt_entity_extraction(const char *title, const char *body,
                                const char *summary, const char *language,
                                const char *source_id);

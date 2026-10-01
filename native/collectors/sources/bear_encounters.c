@@ -11,6 +11,7 @@
 #include "lib/feedlib.h"
 #include "lib/geojson.h"
 #include "third_party/cJSON.h"
+#include "_credential_notice.inc"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -49,11 +50,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     /* Unconfigured is not a failure. Returning -1 makes scheduler_run_source
      * write fetch_log status='error' AND open a collector_anomaly every single
      * tick, so a source nobody configured shows up as permanently broken and
-     * buries real breakages in the anomaly table. "Needs a key" is already
-     * modelled separately (credtab.c -> requiresKey/gated). Ran fine, zero
-     * rows — the same convention the other 138 gated collectors use. */
-    fprintf(stderr, "[bear-encounters] gated (no BEAR_ENCOUNTERS_GEOJSON_URL)\n");
-    return 0;
+     * buries real breakages in the anomaly table — so this still returns 0.
+     *
+     * What changed: it used to return 0 having emitted NOTHING, which in
+     * fetch_log, /api/status and anomaly triage is indistinguishable from a
+     * configured source that ran and found no bear sightings. The state is now
+     * reported as one upserting status record (_credential_notice.inc), which
+     * is the honest-empty the house rule asks for rather than a log line
+     * nobody reads. */
+    static const char *const envs[] = { "BEAR_ENCOUNTERS_GEOJSON_URL", NULL };
+    return jo_needs_credential(sink, "bear-encounters",
+        "\xe3\x82\xaf\xe3\x83\x9e\xe5\x87\xba\xe6\xb2\xa1\xe6\x83\x85\xe5\xa0\xb1 (prefectural bear sightings)",
+        envs, NULL,
+        "there is no national feed; point this at a prefecture's GeoJSON export");
   }
   cJSON *data = feed_get_json(ctx->http, url, 20000);
   cJSON *src = data ? cJSON_GetObjectItem(data, "features") : NULL;

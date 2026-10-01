@@ -135,7 +135,13 @@ static int run_overpass(const source_ctx *ctx, intel_sink *sink) {
   }
   esc[ej] = 0;
 
-  char ql[1600];
+  /* `esc` holds up to 511 bytes and is substituted FIVE times, so the query can
+   * reach 138 bytes of fixed QL + 5 x 511 = 2693. At 1600 a long entity name
+   * did not merely lose characters: Overpass QL is a syntax, so a query cut
+   * mid-literal is a MALFORMED query — the server rejects it and the source
+   * reports an honest-looking empty screen for a name it never actually asked
+   * about. Sized so no input `esc` can accept is ever cut. */
+  char ql[2816];
   snprintf(ql, sizeof ql,
     "[out:json][timeout:25];"
     "("
@@ -150,7 +156,12 @@ static int run_overpass(const source_ctx *ctx, intel_sink *sink) {
 
   char *enc = jo_urlencode(ql);
   if (!enc) return 0;
-  char url[3200];
+  /* Percent-encoding expands by at most 3x, so a full 2815-byte `ql` becomes
+   * 8445 bytes; plus the 48-byte prefix and a NUL that is 8494. The old 3200
+   * silently cut the encoded query — the same malformed-QL failure as above,
+   * one buffer further down. Unflagged by -Wformat-truncation only because
+   * `enc` is a pointer the compiler cannot bound. */
+  char url[8704];
   snprintf(url, sizeof url,
     "https://overpass-api.de/api/interpreter?data=%s", enc);
   free(enc);

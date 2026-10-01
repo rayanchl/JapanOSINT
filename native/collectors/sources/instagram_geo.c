@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 #define SOURCE_ID "instagram-geo"
 
@@ -103,12 +104,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
           char takenIso[32]; const char *taken = NULL;
           cJSON *ta = cJSON_GetObjectItem(media, "taken_at");
-          if (ta && cJSON_IsNumber(ta)) {
-            time_t t = (time_t)ta->valuedouble;
-            struct tm g; gmtime_r(&t, &g);
-            strftime(takenIso, sizeof takenIso, "%Y-%m-%dT%H:%M:%S.000Z", &g);
-            taken = takenIso;
-          }
+          /* `taken_at` is an epoch chosen by Instagram's response, not by us;
+           * one that will not render leaves taken == NULL and the property
+           * below is emitted as null, exactly as for a media with no
+           * taken_at at all. */
+          if (ta && cJSON_IsNumber(ta))
+            taken = jo_time_fmt((time_t)ta->valuedouble,
+                                "%Y-%m-%dT%H:%M:%S.000Z",
+                                takenIso, sizeof takenIso);
 
           cJSON *props = cJSON_CreateObject();
           cJSON_AddStringToObject(props, "shortcode", code);

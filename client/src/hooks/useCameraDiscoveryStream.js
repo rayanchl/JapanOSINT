@@ -34,6 +34,12 @@ export default function useCameraDiscoveryStream() {
   const [lastRun, setLastRun] = useState(null);
   const [cursor, setCursor] = useState(null);
   const [loadingMore, setLoadingMore] = useState(false);
+  // FollowPanel already learned this lesson: a backfill that could not be
+  // fetched must not be presented as an empty corpus. Without it the thread
+  // stated "No discoveries yet. The next run is scheduled hourly" — a claim
+  // about the server's schedule built out of a failed request.
+  const [seedError, setSeedError] = useState(null);
+  const [loadMoreError, setLoadMoreError] = useState(null);
   const seededRef = useRef(false);
 
   // Seed from the backfill endpoint on mount — runs once even under React
@@ -47,7 +53,7 @@ export default function useCameraDiscoveryStream() {
     (async () => {
       try {
         const res = await fetch(apiUrl(`/api/data/cameras/discovery-feed?limit=${SEED_LIMIT}`));
-        if (!res.ok) return;
+        if (!res.ok) { setSeedError(`HTTP ${res.status}`); return; }
         const data = await res.json();
         const seed = (data.events || []).map((ev) => ({ ...ev, isLive: false }));
         setEvents((prev) => {
@@ -65,7 +71,11 @@ export default function useCameraDiscoveryStream() {
           return merged.slice(0, MAX_EVENTS);
         });
         setCursor(data.cursor || null);
-      } catch { /* network error: leave the thread WS-only */ }
+        setSeedError(null);
+      } catch (e) {
+        // Network error: the thread is WS-only from here, and says so.
+        setSeedError(e?.message || 'request failed');
+      }
     })();
   }, []);
 
@@ -143,9 +153,10 @@ export default function useCameraDiscoveryStream() {
   const loadMore = useCallback(async () => {
     if (!cursor || loadingMore) return;
     setLoadingMore(true);
+    setLoadMoreError(null);
     try {
       const res = await fetch(apiUrl(`/api/data/cameras/discovery-feed?limit=${SEED_LIMIT}&cursor=${encodeURIComponent(cursor)}`));
-      if (!res.ok) return;
+      if (!res.ok) { setLoadMoreError(`HTTP ${res.status}`); return; }
       const data = await res.json();
       const older = (data.events || []).map((ev) => ({ ...ev, isLive: false }));
       setEvents((prev) => {
@@ -167,11 +178,18 @@ export default function useCameraDiscoveryStream() {
           : merged;
       });
       setCursor(data.cursor || null);
+    } catch (e) {
+      // Without this the rejection escaped the onClick handler entirely and
+      // the button just did nothing, twice, forever.
+      setLoadMoreError(e?.message || 'request failed');
     } finally {
       setLoadingMore(false);
     }
   }, [cursor, loadingMore]);
 
   const clearEvents = () => setEvents([]);
-  return { events, activeRun, lastRun, connected, clearEvents, loadMore, hasMore: !!cursor, loadingMore };
+  return {
+    events, activeRun, lastRun, connected, clearEvents, loadMore,
+    hasMore: !!cursor, loadingMore, seedError, loadMoreError,
+  };
 }

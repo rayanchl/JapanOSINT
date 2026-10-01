@@ -6,7 +6,7 @@
  * Nulls are omitted rather than emitted as 0. The table id is swappable
  * across ~5,000 CBS tables. Keyless.
  * Licence: CBS open data, CC-BY 4.0. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "stats-nl-cbs-cpi"
 static const char *URL =

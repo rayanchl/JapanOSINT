@@ -70,8 +70,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   long content_length = 0;
   char info_url[2048] = {0}, info_domain[256] = {0};
   char *server = NULL, *title = NULL;
-  strncpy(info_url, url, sizeof info_url - 1);
-  strncpy(info_domain, domain, sizeof info_domain - 1);
+  snprintf(info_url, sizeof info_url, "%s", url);
+  snprintf(info_domain, sizeof info_domain, "%s", domain);
 
   /* --- get_urlscan_result --- */
   if (uuid[0]) {

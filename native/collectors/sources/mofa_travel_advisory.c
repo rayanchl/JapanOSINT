@@ -1,11 +1,11 @@
 /* collectors/government/sources/mofa_travel_advisory.c — port of
  * server/src/collectors/mofaTravelAdvisory.js. MOFA 海外安全ホームページ
- * travel advisories: three RSS feeds (spotinfo, dangerinfo, info), each entry
- * → intel with language 'ja' and tags ['advisory','mofa','travel',<danger|
- * spot>] where the 4th tag is 'danger' iff the feed url ends 'dangerinfo.xml'
- * else 'spot' (mirrors JS). JS also sets properties.feed_url and slices to 200
- * combined; those refinements are not portable through the shared rss_collect
- * helper. The _meta/seed envelope is dropped. */
+ * travel advisories. The three original feeds (spotinfo.xml, dangerinfo.xml,
+ * info.xml) now 404 to a maintenance placeholder page (confirmed live) — MOFA
+ * consolidated them into one feed, rss/news.xml (confirmed live, real
+ * <item>s, e.g. category "スポット情報"). That feed carries no machine-stable
+ * spot/danger split rss_collect can key off, so the old 4th tag is dropped
+ * rather than guessed; each entry still gets 'advisory','mofa','travel'. */
 #include "source.h"
 #include "lib/rss_atom.h"
 #include <stdio.h>
@@ -14,12 +14,8 @@ struct feed { const char *url; const char *tags; };
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   static const struct feed FEEDS[] = {
-    { "https://www.anzen.mofa.go.jp/rss/spotinfo.xml",
-      "[\"advisory\",\"mofa\",\"travel\",\"spot\"]" },
-    { "https://www.anzen.mofa.go.jp/rss/dangerinfo.xml",
-      "[\"advisory\",\"mofa\",\"travel\",\"danger\"]" },
-    { "https://www.anzen.mofa.go.jp/rss/info.xml",
-      "[\"advisory\",\"mofa\",\"travel\",\"spot\"]" },
+    { "https://www.anzen.mofa.go.jp/rss/news.xml",
+      "[\"advisory\",\"mofa\",\"travel\"]" },
   };
   int total = 0, ok = 0;
   for (unsigned i = 0; i < sizeof(FEEDS) / sizeof(FEEDS[0]); i++) {

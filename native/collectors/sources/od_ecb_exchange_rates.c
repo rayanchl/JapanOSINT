@@ -4,7 +4,7 @@
  * PARSE TRAP: the observation keys are POSITIONAL indices into
  * structure.dimensions.observation[0].values[], and the series key
  * ("0:0:0:0:0") is positional into structure.dimensions.series[] - both are
- * joined by the reader in od_shared.c so the emitted period is the real date
+ * joined by the reader in od_shared.inc so the emitted period is the real date
  * rather than an array offset. A null observation is skipped, not zeroed.
  * Emits, per observation: the decoded series dimensions (currency, currency
  * denominator, exchange-rate type, series variation), the period and the
@@ -12,7 +12,7 @@
  * press/blog RSS. Keyless. Any ECB dataflow (EXR, ICP, MIR, BSI) uses the
  * same URL shape.
  * Licence: the ECB permits reuse of its statistics with attribution. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ecb-exchange-rates"
 static const char *URL =

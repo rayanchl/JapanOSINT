@@ -92,7 +92,8 @@ static eslot *eget(emap *m, const char *k, int create){
 static void einc(eslot *e,int idx){ if(e->ninc==e->cinc){ e->cinc=e->cinc?e->cinc*2:4;
   e->inc=realloc(e->inc,sizeof(int)*e->cinc);} e->inc[e->ninc++]=idx; }
 static int other_inc(eslot *e,int excl){ if(!e) return -1;
-  for(int i=0;i<e->ninc;i++) if(e->inc[i]!=excl) return e->inc[i]; return -1; }
+  for(int i=0;i<e->ninc;i++) if(e->inc[i]!=excl) return e->inc[i];
+  return -1; }
 
 static cJSON *mkfeat(const double *xy, int n, cJSON *props){
   cJSON *f=cJSON_CreateObject();

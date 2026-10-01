@@ -45,17 +45,26 @@ static void cp_slice(const char *in, size_t max, char *out, size_t outn) {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   /* todayYmd(): UTC YYYYMMDD */
+  /* strftime rather than snprintf("%04d%02d%02d", tm_year + 1900, …): tm_year
+   * and the clock fields are ints the compiler cannot bound, so those forms can
+   * overrun `ymd` and `iso` and -Wformat-truncation says so. strftime is
+   * bounded by construction — it writes nothing and returns 0 rather than
+   * cutting a date in half, which matters doubly for `ymd` because it is
+   * substituted straight into the index URL: a half date would fetch the wrong
+   * day's disclosures and look like a normal empty day. The rendering is
+   * identical for every year this can see, ".000Z" included (TDnet has no
+   * sub-second precision; the literal is what the JS original emitted).
+   * gmtime_r's NULL return is checked too; it was not before. */
   time_t now = time(NULL);
   struct tm g;
-  gmtime_r(&now, &g);
   char ymd[16];
-  snprintf(ymd, sizeof ymd, "%04d%02d%02d",
-           g.tm_year + 1900, g.tm_mon + 1, g.tm_mday);
-  /* new Date().toISOString(): YYYY-MM-DDTHH:MM:SS.000Z */
   char iso[40];
-  snprintf(iso, sizeof iso, "%04d-%02d-%02dT%02d:%02d:%02d.000Z",
-           g.tm_year + 1900, g.tm_mon + 1, g.tm_mday,
-           g.tm_hour, g.tm_min, g.tm_sec);
+  if (!gmtime_r(&now, &g) ||
+      !strftime(ymd, sizeof ymd, "%Y%m%d", &g) ||
+      !strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%S.000Z", &g)) {
+    fprintf(stderr, "[tdnet-disclosure] cannot render today as a date\n");
+    return -1;
+  }
 
   char index_url[128];
   snprintf(index_url, sizeof index_url,

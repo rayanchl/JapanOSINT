@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 #define INDEX_URL "https://www.npa.go.jp/publications/statistics/safetylife/yukue.html"
 #define NPA_LAT 35.6749
@@ -85,7 +86,12 @@ enum { K_MALE, K_FEMALE, K_TOTAL, K_JUV, K_TEENS, K_TWENTIES, K_DEMENTIA, K_N };
 static int run(const source_ctx *ctx, intel_sink *sink) {
   /* reiwaYear = currentYear - 2018; try r..r-2 */
   time_t tnow = time(NULL);
-  struct tm tmv; gmtime_r(&tnow, &tmv);
+  struct tm tmv;
+  /* The Reiwa year IS the filename this collector fetches; no year, no URL. */
+  if (!jo_tm_utc(tnow, &tmv)) {
+    fprintf(stderr, "[npa-missing-persons] cannot render today as a date\n");
+    return -1;
+  }
   int reiwa = (tmv.tm_year + 1900) - 2018;
 
   char wonUrl[256] = {0};

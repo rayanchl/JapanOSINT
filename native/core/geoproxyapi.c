@@ -9,15 +9,30 @@
 #include <ctype.h>
 #include <time.h>
 #include <math.h>
+#include <pthread.h>
 #define UA "JapanOSINT/1.0 (github.com/rayanchl/JapanOSINT)"
 
 typedef struct { char key[256]; char *val; time_t exp; } cent;
 static cent CACHE[256]; static int ncache;
-static const char *cache_get(const char *k){
+/* This table is touched from at least three threads: the mongoose handler
+ * (httpd.c's /api/geocode routes) and any number of scheduler workers, since
+ * collectors/pod/camera_geocode_pod.c calls geoproxy_geocode_forward(). It was
+ * unsynchronised, which made it two bugs at once — cache_get handed out a
+ * BORROWED pointer that cache_put could free() underneath the reader mid
+ * cJSON_Parse, and `if (ncache<256) slot=ncache++` is a read-modify-write two
+ * inserts can both win, double-freeing the loser's val. The lock closes the
+ * race; returning an owned copy closes the use-after-free even for a reader
+ * that outlives the critical section. CALLER FREES. */
+static pthread_mutex_t g_cache_mu = PTHREAD_MUTEX_INITIALIZER;
+static char *cache_get(const char *k){
   time_t now=time(NULL);
+  char *out=NULL;
+  pthread_mutex_lock(&g_cache_mu);
   for (int i=0;i<ncache;i++) if (!strcmp(CACHE[i].key,k)){
-    if (CACHE[i].exp<now) return NULL; return CACHE[i].val; }
-  return NULL;
+    if (CACHE[i].exp>=now && CACHE[i].val) out=strdup(CACHE[i].val);
+    break; }
+  pthread_mutex_unlock(&g_cache_mu);
+  return out;
 }
 /* Reuses expired slots and, once full, evicts the entry expiring soonest.
  * Previously the table simply stopped accepting writes at 256 entries and never
@@ -25,6 +40,9 @@ static const char *cache_get(const char *k){
  * upstream — straight into Nominatim's 1 req/s policy, on the event loop. */
 static void cache_put(const char *k,const char *v,int ttl_s){
   time_t now=time(NULL);
+  char *nv=strdup(v);
+  if (!nv) return;                                    /* keep the old entry */
+  pthread_mutex_lock(&g_cache_mu);
   int slot=-1;
   for (int i=0;i<ncache;i++){
     if (!strcmp(CACHE[i].key,k)){ slot=i; break; }
@@ -37,11 +55,10 @@ static void cache_put(const char *k,const char *v,int ttl_s){
       for (int i=1;i<ncache;i++) if (CACHE[i].exp<CACHE[slot].exp) slot=i;
     }
   }
-  char *nv=strdup(v);
-  if (!nv) return;                                    /* keep the old entry */
   free(CACHE[slot].val);
   snprintf(CACHE[slot].key,sizeof CACHE[slot].key,"%s",k);
   CACHE[slot].val=nv; CACHE[slot].exp=now+ttl_s;
+  pthread_mutex_unlock(&g_cache_mu);
 }
 static void urlenc(const char *s,char *o,size_t n){
   size_t j=0; for (;*s&&j+4<n;s++){
@@ -62,7 +79,8 @@ static cJSON *http_json(const char *method,const char *url,const char *body){
 }
 static double jnum(cJSON *o,const char *k){ cJSON *v=cJSON_GetObjectItem(o,k);
   if (cJSON_IsNumber(v)) return v->valuedouble;
-  if (cJSON_IsString(v)) return atof(v->valuestring); return NAN; }
+  if (cJSON_IsString(v)) return atof(v->valuestring);
+  return NAN; }
 
 /* ── geocode ─────────────────────────────────────────────────────────── */
 static cJSON *fwd_nominatim(const char *q){
@@ -149,8 +167,8 @@ static cJSON *fwd_gsi(const char *q){
 static cJSON *fwd_one(const char *q,char *prov,size_t pcap){
   if (pcap) prov[0]=0;
   char ck[300]; snprintf(ck,sizeof ck,"fwd:%s",q);
-  const char *c=cache_get(ck);
-  if (c){ cJSON *h=cJSON_Parse(c);
+  char *c=cache_get(ck);
+  if (c){ cJSON *h=cJSON_Parse(c); free(c);
     if (!h) h=cJSON_CreateArray();
     cJSON *f=cJSON_GetArrayItem(h,0); cJSON *sp=f?cJSON_GetObjectItem(f,"source"):NULL;
     if (sp&&cJSON_IsString(sp)&&sp->valuestring) snprintf(prov,pcap,"%s",sp->valuestring);
@@ -187,14 +205,16 @@ char *geoproxy_geocode_forward(const char *q,const char *qAlt){
     cJSON_ArrayForEach(it,h1){
       char k[32]; if(!hit_key(it,k,sizeof k)) continue;
       int dup=0; for(int i=0;i<ns;i++) if(!strcmp(seen[i],k))dup=1;
-      if(dup)continue; if(ns<64)snprintf(seen[ns++],32,"%s",k);
+      if(dup)continue;
+      if(ns<64)snprintf(seen[ns++],32,"%s",k);
       cJSON *d=cJSON_Duplicate(it,1); cJSON_AddBoolToObject(d,"via_translation",0);
       cJSON_AddItemToArray(merged,d);
     }
     cJSON_ArrayForEach(it,h2){
       char k[32]; if(!hit_key(it,k,sizeof k)) continue;
       int dup=0; for(int i=0;i<ns;i++) if(!strcmp(seen[i],k))dup=1;
-      if(dup)continue; if(ns<64)snprintf(seen[ns++],32,"%s",k);
+      if(dup)continue;
+      if(ns<64)snprintf(seen[ns++],32,"%s",k);
       cJSON *d=cJSON_Duplicate(it,1); cJSON_AddBoolToObject(d,"via_translation",1);
       cJSON_AddStringToObject(d,"matched_alt",qAlt);
       cJSON_AddItemToArray(merged,d);
@@ -209,9 +229,10 @@ char *geoproxy_geocode_forward(const char *q,const char *qAlt){
 }
 char *geoproxy_geocode_reverse(double lat,double lon){
   char ck[64]; snprintf(ck,sizeof ck,"rev2:%.5f,%.5f",lat,lon);
-  const char *c=cache_get(ck);
-  if (c){ cJSON *h=cJSON_Parse(c); cJSON_AddBoolToObject(h,"fromCache",1);
-    char *j=cJSON_PrintUnformatted(h); cJSON_Delete(h); return j; }
+  char *c=cache_get(ck);
+  if (c){ cJSON *h=cJSON_Parse(c); free(c);
+    if (h){ cJSON_AddBoolToObject(h,"fromCache",1);
+      char *j=cJSON_PrintUnformatted(h); cJSON_Delete(h); return j; } }
   char u[256];
   /* Nominatim (ja then en) */
   snprintf(u,sizeof u,"https://nominatim.openstreetmap.org/reverse?format=json&addressdetails=1&zoom=18&lat=%.6f&lon=%.6f&accept-language=ja",lat,lon);
@@ -296,9 +317,9 @@ static char *plat_pick(cJSON *items,int lod){
 }
 char *geoproxy_plateau_tilesets(int lod,int *status){
   char ck[16]="plateau:ds";
-  const char *cached=cache_get(ck);
+  char *cached=cache_get(ck);
   cJSON *datasets=NULL;
-  if (cached) datasets=cJSON_Parse(cached);
+  if (cached) { datasets=cJSON_Parse(cached); free(cached); }
   if (!datasets){
     const char *Q="{\"query\":\"query NationwideBuildingTilesets { datasets(input: { includeTypes: [\\\"bldg\\\"] }) { __typename ... on PlateauDataset { id name year prefectureCode cityCode prefecture { name } city { name } items { id format url lod texture } } } }\"}";
     cJSON *resp=http_json("POST","https://api.plateau.reearth.io/datacatalog/graphql",Q);

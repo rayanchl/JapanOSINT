@@ -85,6 +85,7 @@ struct FilterMultiSelectSection<Item: Hashable>: View {
                                 Image(systemName: s.name)
                                     .foregroundStyle(s.color)
                                     .frame(width: 22)
+                                    .accessibilityHidden(true)   // the label follows
                             }
                             Text(label(item))
                                 .foregroundStyle(theme.text)
@@ -97,9 +98,11 @@ struct FilterMultiSelectSection<Item: Hashable>: View {
                             if isSelected(item) {
                                 Image(systemName: "checkmark")
                                     .foregroundStyle(theme.accent)
+                                    .accessibilityHidden(true)   // spoken as the row's trait
                             }
                         }
                     }
+                    .accessibilityAddTraits(isSelected(item) ? .isSelected : [])
                 }
             }
         }

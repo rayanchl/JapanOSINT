@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 typedef enum { C_UNKNOWN, C_BTC, C_ETH, C_LTC, C_DOGE, C_DASH,
                C_BCH, C_MONERO } ctype_t;
@@ -89,7 +90,7 @@ static int emit_chain(intel_sink *sink, const char *chain, const char *addr,
   cJSON_AddStringToObject(props, "chain", chain);
   cJSON_AddStringToObject(props, "record", "balance");
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 85);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   char rk[320], title[360];
@@ -132,8 +133,10 @@ static int emit_tx(intel_sink *sink, const char *chain, const char *addr,
     cJSON_AddNumberToObject(data, "fee_btc", fee->valuedouble / 1e8);
   if (ntime && cJSON_IsNumber(ntime)) {
     time_t t = (time_t)ntime->valuedouble;
-    strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%SZ", gmtime(&t));
-    cJSON_AddStringToObject(data, "time", iso);
+    /* Unrenderable upstream epoch: iso stays empty, so the "time" field is
+     * omitted and published_at below degrades to NULL. */
+    if (jo_time_fmt(t, "%Y-%m-%dT%H:%M:%SZ", iso, sizeof iso))
+      cJSON_AddStringToObject(data, "time", iso);
   }
   char *bj = cJSON_PrintUnformatted(data);
 
@@ -143,7 +146,7 @@ static int emit_tx(intel_sink *sink, const char *chain, const char *addr,
   cJSON_AddStringToObject(props, "chain", chain);
   cJSON_AddStringToObject(props, "record", "transaction");
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 85);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   char rk[160], title[200];

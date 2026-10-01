@@ -146,7 +146,12 @@ static int iw_shodan(const source_ctx *ctx, intel_sink *sink, const char *ip) {
   if (ports[0]) cJSON_AddStringToObject(props, "ports", ports);
   if (vulns[0]) cJSON_AddStringToObject(props, "vulns", vulns);
 
-  char summary[640];
+  /* ports is 512 and vulns is 1024, so with both populated this line wants
+   * 7 + 511 + 10 + 1023 + 1 = 1552 bytes. At 640 the summary of a host with a
+   * long CVE list was cut mid-vuln — and the vulns list is the whole point of
+   * a Shodan InternetDB row, so the cut fell on exactly the field an operator
+   * reads first. Sized to what the two source buffers can actually hold. */
+  char summary[1600];
   snprintf(summary, sizeof summary, "%s%s%s%s",
            ports[0] ? "ports: " : "no open ports", ports[0] ? ports : "",
            vulns[0] ? " | vulns: " : "", vulns[0] ? vulns : "");

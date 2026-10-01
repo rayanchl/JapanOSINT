@@ -45,6 +45,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 static const char *const SOC_UA[] = {
   "User-Agent: JapanOSINT-native/1.0 (OSINT research collector; +https://github.com/)",
@@ -246,11 +247,8 @@ static int run_dailymotion(const source_ctx *ctx, intel_sink *sink) {
     const cJSON *dur = cJSON_GetObjectItem(v, "duration");
     const cJSON *vt = cJSON_GetObjectItem(v, "views_total");
     char iso[40]; iso[0] = 0;
-    if (cJSON_IsNumber(ct)) {
-      time_t t = (time_t)ct->valuedouble;
-      struct tm g; gmtime_r(&t, &g);
-      strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%SZ", &g);
-    }
+    if (cJSON_IsNumber(ct))
+      jo_time_fmt((time_t)ct->valuedouble, "%Y-%m-%dT%H:%M:%SZ", iso, sizeof iso);
     cJSON *p = cJSON_CreateObject();
     if (!p) continue;
     cJSON_AddStringToObject(p, "service", "DAILYMOTION_SEARCH");

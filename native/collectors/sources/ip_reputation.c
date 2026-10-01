@@ -18,9 +18,20 @@
 #include <stdint.h>
 #include <arpa/inet.h>
 
+/* An eight-entry EDITORIAL list, typed into this file. It is not a feed, it is
+ * not AbuseIPDB's opinion, and it is not derived from anything about the IP
+ * being looked up — it is a geopolitical judgement made once by whoever wrote
+ * this line. Kept, because a country-of-registration watchlist is a legitimate
+ * classifier input, but the boolean it drives sits in `result` next to
+ * abuse_confidence, total_reports and last_reported, which ARE fetched
+ * measurements, with nothing to tell a consumer which is which. Every emission
+ * of it now carries HIGH_RISK_COUNTRY_BASIS. */
 static const char *HIGH_RISK_COUNTRIES[] = {
   "CN","RU","KP","IR","SY","VE","BY","MM", NULL
 };
+#define HIGH_RISK_COUNTRY_BASIS \
+  "in-tree editorial list of 8 country codes (ip_reputation.c " \
+  "HIGH_RISK_COUNTRIES); NOT an AbuseIPDB signal and not derived from this IP"
 
 static int is_high_risk_country(const char *cc) {
   if (!cc) return 0;
@@ -85,6 +96,8 @@ static cJSON *query_abuseipdb(http_client *http, const char *ip) {
     cJSON_AddStringToObject(result, "country", cc->valuestring);
     cJSON_AddBoolToObject(result, "high_risk_country",
       is_high_risk_country(cc->valuestring));
+    cJSON_AddStringToObject(result, "high_risk_country_basis",
+                            HIGH_RISK_COUNTRY_BASIS);
   }
   if ((v = cJSON_GetObjectItem(data, "isp")) && cJSON_IsString(v))
     cJSON_AddStringToObject(result, "isp", v->valuestring);

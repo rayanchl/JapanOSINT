@@ -39,6 +39,7 @@
 #include <string.h>
 #include <time.h>
 #include "_jp_osint.inc"
+#include "_timefmt.inc"
 
 #define UY_MAX 15
 
@@ -46,12 +47,14 @@
 
 static int za_run(const source_ctx *ctx, intel_sink *sink) {
   time_t now = time(NULL), from = now - 14 * 24 * 3600;
-  struct tm gt, gf;
-  gmtime_r(&now, &gt);
-  gmtime_r(&from, &gf);
+  /* dateFrom/dateTo ARE the query window; guessing one would be asking a
+   * different question than the one this source is defined to ask. */
   char d_to[16], d_from[16];
-  strftime(d_to, sizeof d_to, "%Y-%m-%d", &gt);
-  strftime(d_from, sizeof d_from, "%Y-%m-%d", &gf);
+  if (!jo_time_fmt(now,  "%Y-%m-%d", d_to,   sizeof d_to) ||
+      !jo_time_fmt(from, "%Y-%m-%d", d_from, sizeof d_from)) {
+    fprintf(stderr, "[za-etenders-ocds] cannot render the query window as a date\n");
+    return -1;
+  }
 
   char url[320];
   snprintf(url, sizeof url,
@@ -258,7 +261,11 @@ static int uy_emit_package(const cJSON *pkg, const char *guid,
 static int uy_run(const source_ctx *ctx, intel_sink *sink) {
   time_t now = time(NULL);
   struct tm g;
-  gmtime_r(&now, &g);
+  /* The year/month ARE the RSS index path — no month, no index to fetch. */
+  if (!jo_tm_utc(now, &g)) {
+    fprintf(stderr, "[uy-comprasestatales-ocds] cannot render today as a date\n");
+    return -1;
+  }
   char idx[128];
   snprintf(idx, sizeof idx,
            "https://www.comprasestatales.gub.uy/ocds/rss/%04d/%02d",

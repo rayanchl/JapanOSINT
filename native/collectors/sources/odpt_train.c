@@ -9,6 +9,7 @@
 #include "source.h"
 #include "lib/feedlib.h"
 #include "lib/geojson.h"
+#include "_credential_notice.inc"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -43,8 +44,15 @@ static cJSON *odpt_get(http_client *http, const char *rdf, const char *tok) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *tok = odpt_tok();
   if (!tok) {
-    fprintf(stderr, "[odpt-train] gated (no ODPT token)\n");
-    return 0;                       /* honest empty FeatureCollection */
+    /* All three names, in the order odpt_tok() tries them — an operator who
+     * set the challenge token but not ODPT_TOKEN needs to see that it was
+     * looked for. */
+    static const char *const envs[] = { "ODPT_TOKEN", "ODPT_CONSUMER_KEY",
+                                        "ODPT_CHALLENGE_TOKEN", NULL };
+    return jo_needs_credential(sink, "odpt-train",
+        "ODPT v4 odpt:Train (realtime train positions)",
+        envs, "https://api.odpt.org/api/v4/odpt:Train",
+        "free consumer key at developer.odpt.org (or the challenge token)");
   }
   cJSON *rows = odpt_get(ctx->http, "odpt:Train", tok);
 

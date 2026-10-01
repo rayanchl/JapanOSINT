@@ -108,21 +108,37 @@ static int newest_season_url(const char *html, char *url, size_t cap) {
 }
 
 /* "令和8年4月22日" → "2026-04-22". Reiwa 1 == 2019. 0 if not present. */
+/* One 1-or-2-digit run. A Reiwa year, month or day is never wider than that,
+ * and the previous uncapped `v = v * 10 + …` was signed-overflow UB on a long
+ * digit run — the m>12 / d>31 sanity checks came AFTER the loop that would
+ * already have overflowed. The cap is also what lets the compiler see that
+ * "%04d-%02d-%02d" fits its 16-byte destination: with an unbounded year,
+ * -Wformat-truncation was reporting up to 11 bytes for the day field alone.
+ * Advances *pp past the run; returns 0 if there is no digit or too many. */
+static int reiwa_num(const char **pp, int *out) {
+  const char *p = *pp;
+  int v = 0, n = 0;
+  while (*p >= '0' && *p <= '9') {
+    if (++n > 2) return 0;
+    v = v * 10 + (*p++ - '0');
+  }
+  if (!n) return 0;
+  *pp = p; *out = v;
+  return 1;
+}
+
 static int reiwa_date(const char *s, const char *end, char *out, size_t cap) {
   const char *p = strstr(s, "令和");
   if (!p || p >= end) return 0;
   p += strlen("令和");
   int y = 0, m = 0, d = 0;
-  while (*p >= '0' && *p <= '9') y = y * 10 + (*p++ - '0');
-  if (!y || strncmp(p, "年", strlen("年"))) return 0;
+  if (!reiwa_num(&p, &y) || !y || strncmp(p, "年", strlen("年"))) return 0;
   p += strlen("年");
-  while (*p >= '0' && *p <= '9') m = m * 10 + (*p++ - '0');
-  if (!m || strncmp(p, "月", strlen("月"))) return 0;
+  if (!reiwa_num(&p, &m) || !m || strncmp(p, "月", strlen("月"))) return 0;
   p += strlen("月");
-  while (*p >= '0' && *p <= '9') d = d * 10 + (*p++ - '0');
-  if (!d || strncmp(p, "日", strlen("日"))) return 0;
+  if (!reiwa_num(&p, &d) || !d || strncmp(p, "日", strlen("日"))) return 0;
   if (m > 12 || d > 31) return 0;
-  snprintf(out, cap, "%04d-%02d-%02d", y + 2018, m, d);
+  snprintf(out, cap, "%04d-%02d-%02d", y + 2018, m, d);   /* y<=99 → 4 digits */
   return 1;
 }
 

@@ -26,6 +26,7 @@
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
 #include "lib/feedlib.h"
+#include "lib/seenset.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -93,6 +94,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *arr = cJSON_GetObjectItem(doc, "ngalol");
   if (!cJSON_IsArray(arr) && cJSON_IsArray(doc)) arr = doc;
   int n = 0;
+  seen_set key_seen = {0};
   cJSON *a;
   cJSON_ArrayForEach(a, arr) {
     if (!cJSON_IsObject(a)) continue;
@@ -103,11 +105,37 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     double lat = 0, lon = 0;
     int geo = lol_position(jo_sv(a, "position"), &lat, &lon);
 
-    char key[192];
-    snprintf(key, sizeof key, "%s|%s",
+    /* IDENTITY (rule 4b, measured): volume|featureNumber keyed multi-light
+     * structures onto each other — the List of Lights re-uses one feature
+     * number for each light on a structure and for range-light pairs.
+     * Sweep 2026-08-24: emitted 4,917, stored 4,692. The name and the charted
+     * position are what distinguish co-numbered lights, and both are stable
+     * across the weekly notice updates — so the key gains those rather than a
+     * content hash, which would mint a new uid every time NGA edits a
+     * characteristic and break the upsert. */
+    char key[288];
+    snprintf(key, sizeof key, "%s|%s|%.80s|%.40s",
              jo_sv(a, "volumeNumber") ? jo_sv(a, "volumeNumber") : "PUB",
-             feat ? feat : (name ? name : "?"));
+             feat ? feat : "?", name ? name : "?",
+             jo_sv(a, "position") ? jo_sv(a, "position") : "");
     flatten(key);
+    /* Still not unique on its own: one structure can chart several lights
+     * under the same feature number, name and position that differ only in
+     * charNo / characteristic / height / range / remarks (live 2026-09-15:
+     * 4,917 entries, 4,916 byte-distinct, 4,906 distinct keys), and each such
+     * sibling upserted over the first. Only a key already seen in this run
+     * gains a hash of the entry's own bytes, so first occurrences keep the
+     * stable uid the note above protects, siblings stay rows of their own, and
+     * a byte-identical repeat still collapses. */
+    if (!seen_add(&key_seen, key)) {
+      char *raw = cJSON_PrintUnformatted(a);
+      const char *parts[1] = { raw ? raw : "" };
+      char h[21];
+      feed_hash_key(h, parts, 1);
+      size_t kl = strlen(key);
+      snprintf(key + kl, sizeof key - kl, "|%s", h);
+      free(raw);
+    }
 
     cJSON *p = cJSON_CreateObject();
     jo_copy_str(p, a, "volumeNumber");
@@ -163,6 +191,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (sink->emit(sink, &it) >= 0) n++;
     free(pj);
   }
+  seen_free(&key_seen);
   cJSON_Delete(doc);
   fprintf(stderr, "[nga-list-of-lights] emitted %d\n", n);
   return 0;

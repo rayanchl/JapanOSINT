@@ -28,7 +28,8 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   cJSON_AddStringToObject(p, "name", name);
   const char *company = ov_tag(el, "operator");
   if (!company) company = ov_tag(el, "brand");
-  cJSON_AddStringToObject(p, "company", company ? company : "unknown");
+  if (company) cJSON_AddStringToObject(p, "company", company);
+  else cJSON_AddItemToObject(p, "company", cJSON_CreateNull());
   const char *tech = ov_tag(el, "industrial");
   cJSON_AddStringToObject(p, "tech", tech ? tech : "semiconductor");
   cJSON_AddStringToObject(p, "country", "JP");

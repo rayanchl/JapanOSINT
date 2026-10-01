@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 typedef struct {
   const char *name;
@@ -152,8 +153,10 @@ static cJSON *query_reddit(http_client *http, const char *username) {
     cJSON_AddNumberToObject(profile, "created_timestamp", created->valuedouble);
     time_t ct = (time_t)created->valuedouble;
     char ds[32];
-    strftime(ds, sizeof ds, "%Y-%m-%d", gmtime(&ct));
-    cJSON_AddStringToObject(profile, "account_created", ds);
+    /* created_timestamp above keeps the raw upstream number either way; only
+     * the rendered date is dropped when it cannot be rendered. */
+    if (jo_time_fmt(ct, "%Y-%m-%d", ds, sizeof ds))
+      cJSON_AddStringToObject(profile, "account_created", ds);
   }
   cJSON *stats = cJSON_CreateObject();
   if (link_karma && cJSON_IsNumber(link_karma)) cJSON_AddNumberToObject(stats, "link_karma", link_karma->valueint);

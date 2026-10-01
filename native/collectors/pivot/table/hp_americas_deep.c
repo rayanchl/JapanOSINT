@@ -169,7 +169,7 @@ static const hp_source HP_AMERICAS[] = {
     .name_ja = "米ニューヨーク州 法人登記", .category = "government",
     .portal = "https://data.ny.gov", .record_type = "us-state-company",
     .tags = "\"us\",\"registry\",\"new-york\"", .free_tier = 1,
-    .url = "https://data.ny.gov/resource/n9v6-gdp6.json?$q={q}&$limit=40",
+    .url = "https://data.ny.gov/resource/n9v6-gdp6.json?$q={q}&$limit=40&$order=:id",
     .title_keys = "current_entity_name,initial_dos_filing_date",
     .id_keys = "dos_id", .date_keys = "initial_dos_filing_date",
     .description = "New York State corporate register — entity name, DOS id, "
@@ -244,7 +244,7 @@ static const hp_source HP_AMERICAS[] = {
     .name_ja = "コロンビア 公共契約(SECOP)", .category = "government",
     .portal = "https://www.datos.gov.co", .record_type = "co-contract",
     .tags = "\"co\",\"procurement\"", .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/jbjy-vk9h.json?$q={q}&$limit=40",
+    .url = "https://www.datos.gov.co/resource/jbjy-vk9h.json?$q={q}&$limit=40&$order=:id",
     .title_keys = "descripcion_del_proceso,proveedor_adjudicado",
     .id_keys = "id_contrato", .date_keys = "fecha_de_firma",
     .description = "Colombian public contracts naming an entity — contracting "

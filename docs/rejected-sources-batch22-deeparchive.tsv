@@ -1,0 +1,224 @@
+id	url	stage	verdict	note
+MEMENTO_TIMEMAP_JSON	https://timetravel.mementoweb.org/timemap/json/http://example.com	prescreen	DNS_FAIL	timetravel.mementoweb.org no longer resolves (Memento aggregator gone)
+MEMENTO_TIMEGATE_API	https://timetravel.mementoweb.org/api/json/2020/http://example.com	prescreen	DNS_FAIL	same host
+WAYBACK_TIMEMAP_JSON	https://web.archive.org/web/timemap/json?url={q}	dedup	SAME_DATASET	the timemap is served by the same CDX server as WAYBACK_CDX_DOMAIN (hp_netintel_deep.c) - same capture index, different serialisation
+WAYBACK_CDX_HOST_DIGEST	https://web.archive.org/cdx/search/cdx?url={q}&matchType=host&collapse=digest	dedup	SAME_DATASET	WAYBACK_CDX_DOMAIN already reads the CDX index for a domain; this is the same index with a different collapse
+ARQUIVO_PT_CDX	https://arquivo.pt/wayback/cdx?url={q}&output=json	prescreen	NDJSON	output=json is newline-delimited JSON objects, not a JSON document; neither the prober nor lib/hpengine.c parses NDJSON
+UKWA_CDX	https://www.webarchive.org.uk/wayback/archive/cdx?url=example.com&output=json	prescreen	TLS_FAIL	certificate chain does not verify (missing intermediate)
+UKGWA_CDX	https://webarchive.nationalarchives.gov.uk/ukgwa/cdx?url=gov.uk&output=json	prescreen	HTTP_405	answers a Human Verification challenge page to any non-browser client
+UKGWA_TIMEMAP	https://webarchive.nationalarchives.gov.uk/ukgwa/timemap/json?url=gov.uk	prescreen	HTTP_405	same challenge page
+ARCHIVEIT_ALL_CDX	https://wayback.archive-it.org/all/timemap/cdx?url=example.com	prescreen	HTTP_403	Request forbidden by administrative rules (the link-format timemap is already in the tree)
+AU_WEBARCHIVE_CDX	https://web.archive.org/awa/cdx?url=example.com&output=json	prescreen	BOT_WALL	answers a bot-check page
+IS_VEFSAFN_CDX	https://wayback.vefsafn.is/wayback/cdx?url=example.com	prescreen	TLS_FAIL	certificate hostname mismatch
+LOC_WEBARCHIVE_CDX	https://webarchive.loc.gov/all/cdx?url=example.com&output=json	prescreen	HTTP_403	Cloudflare challenge page
+LOC_WEBARCHIVE_TIMEMAP	https://webarchive.loc.gov/all/timemap/json?url=example.com	prescreen	HTTP_403	Cloudflare challenge page
+STANFORD_SWAP_CDX	https://swap.stanford.edu/cdx?url=example.com	prescreen	HTTP_403	Forbidden
+BIBALEX_CDX	http://archive.bibalex.org/web/cdx?url=example.com	prescreen	CONN_REFUSED	connection refused
+NSK_HAW_CDX	https://haw.nsk.hr/wayback/cdx?url=example.com	prescreen	TIMEOUT	no answer in 40 s
+CZ_WEBARCHIV_CDX	https://wayback.webarchiv.cz/wayback/cdx?url=example.com	prescreen	HTTP_404	no CDX endpoint at that path
+PERMA_PUBLIC_ARCHIVES	https://api.perma.cc/v1/public/archives/?url={q}	prescreen	HTTP_403	Cloudflare challenge page for the public API
+PERMA_PUBLIC_ARCHIVES_ALL	https://api.perma.cc/v1/public/archives/?limit=100	prescreen	HTTP_429	Cloudflare error 1015 rate limit on the first request
+ARCHIVE_TODAY_TIMEMAP	https://archive.ph/timemap/http://example.com	prescreen	HTTP_429	archive.today rate-limits and bot-walls any non-browser client - not stable enough to register
+COMMONCRAWL_CDX_2025_30	https://index.commoncrawl.org/CC-MAIN-2025-30-index?url={qh}&matchType=domain&output=json	probe	UNPARSEABLE	the CC index server answers output=json as NDJSON (one object per line); the prober cannot parse it and the engine has no NDJSON path. Also 503/504 under any parallel load
+COMMONCRAWL_CDX_2023_50	https://index.commoncrawl.org/CC-MAIN-2023-50-index?url={qh}&matchType=domain&output=json	probe	UNPARSEABLE	same
+COMMONCRAWL_CDX_2019_47	https://index.commoncrawl.org/CC-MAIN-2019-47-index?url={qh}&matchType=domain&output=json	probe	UNPARSEABLE	same
+COMMONCRAWL_CDX_2018_51	https://index.commoncrawl.org/CC-MAIN-2018-51-index?url={qh}&matchType=domain&output=json	probe	UNPARSEABLE	same (502 Bad Gateway on the parallel pass)
+COMMONCRAWL_CDX_2017_51	https://index.commoncrawl.org/CC-MAIN-2017-51-index?url={qh}&matchType=domain&output=json	probe	UNPARSEABLE	same (400 on the parallel pass)
+COMMONCRAWL_CDX_2013_TO_2025_OTHERS	https://index.commoncrawl.org/CC-MAIN-*-index	prescreen	HTTP_503	52 other crawl indexes probed: every one answered 503, connection refused or timed out under jobs=8, and the NDJSON shape rules them out anyway
+IA_ADV_ARCHIVEBOT	https://archive.org/advancedsearch.php?q=collection:ArchiveBot	prescreen	EMPTY_RESULTSET	collection identifier has no items (0 docs)
+IA_ADV_GOVDOCS	https://archive.org/advancedsearch.php?q=collection:governmentdocuments	prescreen	EMPTY_RESULTSET	0 docs
+IA_ADV_USGOVDOCS	https://archive.org/advancedsearch.php?q=collection:usgovernmentdocuments	prescreen	EMPTY_RESULTSET	0 docs
+IA_ADV_OSS	https://archive.org/advancedsearch.php?q=collection:opensource_software	prescreen	EMPTY_RESULTSET	0 docs
+IA_ADV_CIA_FOIA	https://archive.org/advancedsearch.php?q=collection:cia-foia	prescreen	EMPTY_RESULTSET	0 docs
+IA_ADV_FBI_VAULT	https://archive.org/advancedsearch.php?q=collection:fbi-vault	prescreen	EMPTY_RESULTSET	0 docs
+IA_ADV_ARCHIVE_TEAM_FIRE	https://archive.org/advancedsearch.php?q=collection:archiveteam_fire	prescreen	EMPTY_RESULTSET	0 docs
+IA_SCRAPE_QUERY	https://archive.org/services/search/v1/scrape?q={q}	dedup	SAME_DATASET	the scrape API answers the same query the existing advancedsearch.php?q={q} row asks
+IA_ITEMS_BY_CREATOR_PIVOT	https://archive.org/advancedsearch.php?q=creator:({q})	dedup	SAME_ENDPOINT	same advancedsearch endpoint and token position as the existing advancedsearch.php?q={q} row, differing only by a field prefix
+IA_ITEMS_BY_SUBJECT_PIVOT	https://archive.org/advancedsearch.php?q=subject:({q})	dedup	SAME_ENDPOINT	same
+IA_ITEMS_BY_COLLECTION_PIVOT	https://archive.org/advancedsearch.php?q=collection:({q})	dedup	SAME_ENDPOINT	same
+IA_METADATA_ITEM	https://archive.org/metadata/{q}	prescreen	NO_RECORD_SET	the item metadata document is an envelope of scalars and nested server info; the files sub-resource (shipped as IA_ITEM_FILES_PIVOT) is the record set
+SWH_ORIGIN_METADATA_SEARCH	https://archive.softwareheritage.org/api/1/origin/metadata-search/?fulltext={q}	prescreen	HTTP_500	search_phase_execution_exception from the upstream on every query
+SWH_ORIGIN_SEARCH_VISIT	https://archive.softwareheritage.org/api/1/origin/search/{q}/?with_visit=true	dedup	SAME_ENDPOINT	origin search is already in the tree (swh origin search with limit=20)
+SWH_ORIGIN_GET	https://archive.softwareheritage.org/api/1/origin/{q}/get/	prescreen	NO_RECORD_SET	a single origin document whose only list is a list of strings (visit_types)
+SWH_SNAPSHOT	https://archive.softwareheritage.org/api/1/snapshot/{q}/	prescreen	NO_RECORD_SET	branches is a keyed object, not a record array
+SWH_RELEASE	https://archive.softwareheritage.org/api/1/release/{q}/	prescreen	NO_RECORD_SET	a single release document
+ZENODO_FUNDERS	https://zenodo.org/api/funders?q={q}	prescreen	EMPTY_RESULTSET	0 hits for any query tried
+FIGSHARE_SEARCH	https://api.figshare.com/v2/articles?search_for={q}	prescreen	FILTER_IGNORED	GET /articles ignores search_for: example, dark web, osint all returned the identical 113,011-byte page. The honouring form is POST /articles/search, which the prober cannot exercise
+FIGSHARE_DARKWEB	https://api.figshare.com/v2/articles?search_for=%22dark%20web%22	prescreen	FILTER_IGNORED	same
+FIGSHARE_OSINT	https://api.figshare.com/v2/articles?search_for=osint	prescreen	FILTER_IGNORED	same
+FIGSHARE_MALWARE	https://api.figshare.com/v2/articles?search_for=malware	prescreen	FILTER_IGNORED	same
+FIGSHARE_INSTITUTIONS	https://api.figshare.com/v2/institutions	prescreen	HTTP_404	no such endpoint
+DRYAD_SEARCH_TENANT	https://datadryad.org/api/v2/search?tenant={q}	dedup	SAME_ENDPOINT	the tenant filter is the institution filter under another name; the ROR-affiliation pivot is shipped instead
+DV_UNC	https://dataverse.unc.edu/api/search	prescreen	HTTP_401	Only authenticated users can perform the requested operation
+DV_CSUC	https://dataverse.csuc.cat/api/search	prescreen	CONN_CLOSED	remote end closed connection without response
+DV_TDL	https://dataverse.tdl.org/api/search	prescreen	HTTP_403	Forbidden
+DV_ICRISAT	https://dataverse.icrisat.org/api/search	prescreen	HTTP_401	requires an X-Dataverse-key
+DV_SCIENCESPO	https://data.sciencespo.fr/api/search	prescreen	BOT_WALL	bot-check page
+DV_UMANITOBA	https://dataverse.lib.umanitoba.ca/api/search	prescreen	DNS_FAIL	host does not resolve
+DV_JHU	https://archive.data.jhu.edu/api/search	prescreen	HTTP_403	Forbidden
+DV_PERU_CONCYTEC	https://dataverse.concytec.gob.pe/api/search	prescreen	DNS_FAIL	host does not resolve
+DV_ISRAEL_ISDC	https://dataverse.openscholar.org/api/search	prescreen	TLS_FAIL	tlsv1 unrecognized name
+DV_CIMMYT	https://data.cimmyt.org/api/search	prescreen	HTTP_401	authenticated users only
+DV_CIRAD	https://dataverse.cirad.fr/api/search	prescreen	HTTP_401	authenticated users only
+DV_INRAE	https://data.inrae.fr/api/search	dedup	SAME_DATASET	byte-identical response to entrepot.recherche.data.gouv.fr (INRAE's deposits live in Recherche Data Gouv, which is shipped)
+DV_NTU	https://researchdata.ntu.edu.sg/api/search	prescreen	NET_UNREACHABLE	network unreachable on both attempts
+DV_HK_RDM	https://datahub.hku.hk/api/search	prescreen	HTTP_202_EMPTY	202 with an empty body
+DV_IFPRI_CONTENTS	https://dataverse.harvard.edu/api/dataverses/IFPRI/contents	dedup	SAME_DATASET	a sub-collection of the Harvard Dataverse the latest-datasets row already walks
+NADA_ILO	https://www.ilo.org/surveyLib/index.php/api/catalog/search	prescreen	EMPTY_BODY	200 with an empty body
+NADA_UGANDA	https://www.ubos.org/nada/index.php/api/catalog/search	prescreen	TLS_FAIL	missing intermediate certificate
+NADA_INDIA	https://microdata.gov.in/nada43/index.php/api/catalog/search	prescreen	CONN_REFUSED	connection refused
+NADA_PHILIPPINES	https://psada.psa.gov.ph/index.php/api/catalog/search	prescreen	HTTP_403	Cloudflare challenge page
+NADA_GHANA	https://www2.statsghana.gov.gh/nada/index.php/api/catalog/search	prescreen	TLS_FAIL	certificate expired
+NADA_SENEGAL	https://anads.ansd.sn/index.php/api/catalog/search	prescreen	TLS_FAIL	missing intermediate certificate (the http:// form is already in the tree)
+NADA_IDB	https://mydata.iadb.org/api/catalog/search	prescreen	NET_UNREACHABLE	network unreachable
+NADA_INDONESIA	https://microdata.bps.go.id/index.php/api/catalog/search	prescreen	DNS_FAIL	no address for hostname
+NADA_MEXICO	https://en.www.inegi.org.mx/app/api/catalog/search	prescreen	HTML_404	Pagina no encontrada
+NADA_PARAGUAY	https://www.ine.gov.py/microdatos/index.php/api/catalog/search	prescreen	HTML_PAGE	answers the website, not the API
+NADA_ARGENTINA	https://www.indec.gob.ar/nada/index.php/api/catalog/search	prescreen	HTML_PAGE	answers the website, not the API
+NADA_JORDAN	https://dos.gov.jo/microdata/index.php/api/catalog/search	prescreen	CONN_REFUSED	connection refused
+NADA_MALI	https://anado.instat-mali.org/index.php/api/catalog/search	prescreen	TLS_FAIL	certificate hostname mismatch
+NADA_NIGER	https://anado.stat-niger.org/index.php/api/catalog/search	prescreen	TLS_FAIL	certificate hostname mismatch
+NADA_ZIMBABWE	https://nada.zimstat.co.zw/index.php/api/catalog/search	prescreen	HTML_ERROR	PHP error page
+NADA_SIERRALEONE	https://www.statistics.sl/nada/index.php/api/catalog/search	prescreen	HTTP_403	Forbidden (the microdata.statistics.sl host is already in the tree)
+NADA_LIBERIA	https://www.lisgis.gov.lr/nada/index.php/api/catalog/search	prescreen	TLS_FAIL	certificate hostname mismatch
+NADA_SUDAN	https://microdata.cbs.gov.sd/index.php/api/catalog/search	prescreen	DNS_FAIL	temporary failure in name resolution
+NADA_CABOVERDE	https://ine.cv/nada/index.php/api/catalog/search	prescreen	HTML_PAGE	answers the website, not the API
+NADA_ANGOLA	https://andine.ine.gov.ao/index.php/api/catalog/search	prescreen	HTML_PAGE	answers the website, not the API
+NADA_GABON	https://nada.stat-gabon.ga/index.php/api/catalog/search	prescreen	DNS_FAIL	temporary failure in name resolution
+NADA_GUINEA	https://nada.stat-guinee.org/index.php/api/catalog/search	prescreen	TLS_FAIL	certificate hostname mismatch
+NADA_TIMOR	https://microdata.statistics.gov.tl/index.php/api/catalog/search	prescreen	DNS_FAIL	temporary failure in name resolution
+NADA_TAJIKISTAN	https://nada.stat.tj/index.php/api/catalog/search	prescreen	TLS_FAIL	certificate hostname mismatch
+NADA_SYRIA	https://nada.cbssyr.sy/index.php/api/catalog/search	prescreen	TLS_FAIL	unexpected EOF during handshake
+NADA_NICARAGUA	https://nada.inide.gob.ni/index.php/api/catalog/search	prescreen	DNS_FAIL	no address for hostname
+NADA_GUATEMALA	https://www.ine.gob.gt/nada/index.php/api/catalog/search	prescreen	BOT_WALL	Radware captcha page
+NADA_BRAZIL	https://nada.ibge.gov.br/index.php/api/catalog/search	prescreen	DNS_FAIL	no address for hostname
+NADA_VENEZUELA	https://nada.ine.gov.ve/index.php/api/catalog/search	prescreen	DNS_FAIL	temporary failure in name resolution
+NADA_GUYANA	https://nada.statisticsguyana.gov.gy/index.php/api/catalog/search	prescreen	DNS_FAIL	no address for hostname
+NADA_TRINIDAD	https://nada.cso.gov.tt/index.php/api/catalog/search	prescreen	HTTP_403	Forbidden
+NADA_SOUTH_AFRICA_STATSSA	https://nesstar.statssa.gov.za/api/catalog/search	prescreen	TLS_FAIL	tlsv1 unrecognized name
+NADA_60_OTHER_GUESSED_HOSTS	(various national statistics offices)	prescreen	DNS_FAIL_OR_404	sixty further NADA hostnames were guessed from the naming convention and did not resolve or returned 404; not listed individually because they never existed as endpoints
+NADA_ALREADY_IN_TREE	worldbank, ihsn, kenya, botswana, bolivia, colombia, pacificdata, tanzania, sierra leone, burkina, nigeria, senegal	dedup	ALREADY_REGISTERED	catalogues already read by earlier batches (30 files reference api/catalog/search) - not re-added
+TNA_DISCOVERY_REPOS	https://discovery.nationalarchives.gov.uk/API/search/repositories?sps.searchQuery={q}	prescreen	HTTP_500	server error on every query
+GALLICA_SRU	https://gallica.bnf.fr/SRU?operation=searchRetrieve&query=...	prescreen	HTTP_403	Access Denied: 403 Access Interdit to any non-browser client
+FINNA_SEARCH	https://api.finna.fi/v1/search?lookfor={q}	prescreen	HTTP_403	403 to the self-identifying UA (browser-spoofing is forbidden by httpclient.h, so left out)
+LOC_SEARCH	https://www.loc.gov/search/?q={q}&fo=json	prescreen	TIMEOUT	over 40 s on three attempts, past the engine's 30 s HTTP timeout
+LOC_MANUSCRIPTS	https://www.loc.gov/manuscripts/?fo=json	prescreen	TIMEOUT	over 40 s on two serial attempts
+LOC_NEWSPAPERS	https://www.loc.gov/newspapers/?fo=json	prescreen	TIMEOUT	same
+LOC_PHOTOS	https://www.loc.gov/photos/?fo=json	prescreen	TIMEOUT	same
+LOC_AUDIO	https://www.loc.gov/audio/?fo=json	prescreen	TIMEOUT	same
+LOC_LEGISLATION	https://www.loc.gov/legislation/?fo=json	prescreen	HTTP_404	no such format page
+LOC_PERIODICALS	https://www.loc.gov/periodicals/?fo=json	prescreen	HTTP_404	no such format page
+CHRONAM_SEARCH	https://chroniclingamerica.loc.gov/search/pages/results/?andtext={q}&format=json	prescreen	HTTP_404	the page search API was retired when Chronicling America moved into loc.gov
+CHRONAM_BATCHES	https://chroniclingamerica.loc.gov/batches.json	prescreen	HTTP_404	retired
+CHRONAM_NEWSPAPER_TITLES	https://chroniclingamerica.loc.gov/newspapers.json	probe	PATH_UNRESOLVED	the declared array_path content.results is not in the response the prober received (the endpoint now redirects into loc.gov with a different shape)
+HATHI_ISBN	https://catalog.hathitrust.org/api/volumes/brief/isbn/{q}.json	prescreen	EMPTY_RESULTSET	items[] empty for every ISBN tried; the OCLC form is shipped
+DIGITALNZ_20_ONLY	https://api.digitalnz.org/records.json?text={q}	fixed	-	unauthenticated default is 20 per page; per_page=100 is honoured and is what shipped
+NDL_WARP_SEARCH	https://warp.da.ndl.go.jp/search/WarpSearch?q={q}	prescreen	HTTP_404	WARP has no JSON search endpoint at that path
+JACAR_SEARCH	https://www.jacar.archives.go.jp/aj/meta/listPhoto	prescreen	HTTP_404	no API at that path
+SCHOLAR_ARCHIVE_ORG	https://scholar.archive.org/search?q={q}&format=json	prescreen	HTML_ONLY	format=json is ignored; an HTML page is returned
+FATCAT_RELEASE_SEARCH	https://api.fatcat.wiki/v0/release/search?q={q}	prescreen	TIMEOUT	api.fatcat.wiki times out on every attempt (fatcat is being wound down)
+FATCAT_CONTAINER_SEARCH	https://api.fatcat.wiki/v0/container/search?q={q}	prescreen	TIMEOUT	same
+FATCAT_RELEASE_DOI	https://api.fatcat.wiki/v0/release/lookup?doi={q}	prescreen	TIMEOUT	same
+NARA_CATALOG_V2	https://catalog.archives.gov/api/v2/records/search?q={q}	prescreen	KEY_REQUIRED	v2 answers a JS shell without an x-api-key; credential-gated, out of scope
+APE_SEARCH	https://www.archivesportaleurope.net/Portal/rest/search?query={q}	prescreen	HTTP_404	the REST search path is gone; the current API is key-gated
+ARCHIVESHUB	https://archiveshub.jisc.ac.uk/api/search?query={q}	prescreen	HTTP_403	Forbidden
+CALM_OXFORD	https://archives.bodleian.ox.ac.uk/search?q={q}&format=json	prescreen	BOT_WALL	bot-check page
+ARCHIVESPACE_PUBLIC_YALE	https://archives.yale.edu/search?q[]={q}&format=json	prescreen	HTML_ONLY	format=json ignored
+WILSON_DIGITAL_ARCHIVE	https://digitalarchive.wilsoncenter.org/api/search	prescreen	DNS_FAIL	host does not resolve
+CIA_READINGROOM	https://www.cia.gov/readingroom/search/site/{q}	prescreen	HTML_ONLY	302 to an HTML search page; no machine interface
+NSA_DECLASS	https://www.nsa.gov/api/search?q={q}	prescreen	HTTP_403	Access Denied
+BLACKVAULT	https://documents.theblackvault.com/api/search	prescreen	HTTP_404	no API
+SEC_VPRR	https://www.sec.gov/Archives/edgar/vprr/index.json	prescreen	TIMEOUT	timed out on two attempts (the vprr tree is very large)
+RIPE_FTP_RIS	https://ftp.ripe.net/ripe/ris/	prescreen	HTTP_404	no such directory
+RIPE_ALLOCLIST	https://ftp.ripe.net/ripe/stats/membership/alloclist.txt	prescreen	UNPARSEABLE	4.6 MB whitespace-structured text with a two-level layout (member line then indented allocations) that no engine mode parses as records
+RADB_FTP_DBASE	https://ftp.radb.net/radb/dbase/	prescreen	TIMEOUT	timed out on two attempts
+IRR_REGISTRY_LIST	https://www.irr.net/docs/list.html	probe	UNPARSEABLE	the page is a client-rendered React shell with no anchors in the served HTML
+RADB_QUERY	https://www.radb.net/query?keywords={q}	prescreen	HTML_ONLY	a rendered HTML page whose whois text is not in anchors or a table the html mode can key on
+NRO_DELEGATED_STATS	https://ftp.ripe.net/pub/stats/ripencc/nro-stats/latest/nro-delegated-stats	dedup	SAME_DATASET	the combined file is the union of the five delegated-<rir>-extended-latest files already in the tree
+IANA_RDAP_BOOTSTRAPS	https://data.iana.org/rdap/{dns,ipv4,ipv6,asn,object-tags}.json	dedup	ALREADY_REGISTERED	all five are in the tree
+IANA_TLDS	https://data.iana.org/TLD/tlds-alpha-by-domain.txt	dedup	ALREADY_REGISTERED	in the tree
+ICANN_GTLD_LIST	https://www.icann.org/resources/registries/gtlds/v2/gtlds.json	dedup	ALREADY_REGISTERED	in the tree
+ICANN_TLD_STATS	https://stats.research.icann.org/dns/tld_report/	prescreen	HTTP_404	gone
+ICANN_CZDS_STATS	https://czds.icann.org/api/tlds	prescreen	HTML_ONLY	the SPA shell; CZDS itself is credential-gated and out of scope
+ICANN_REGISTRAR_IDS_XML	https://www.iana.org/assignments/registrar-ids/registrar-ids.xml	dedup	SAME_DATASET	the CSV form of the same register is shipped
+ICANN_MONTHLY_REG_REPORTS	https://www.icann.org/resources/pages/registry-reports	prescreen	HTML_ONLY	navigation page, no register
+IANA_ROOT_ZONE_FILES	https://www.iana.org/domains/root/files	prescreen	LOW_VALUE	a short static page of four file links; the root database page is shipped instead
+NTLDSTATS	https://ntldstats.com/tld	prescreen	HTML_ONLY	1 MB rendered page without keyable rows
+DOMAINTOOLS_TLD	https://research.domaintools.com/statistics/tld-counts/	prescreen	HTML_ONLY	rendered statistics page
+DNIB_ZONE_STATS	https://www.dnib.com/wp-json/wp/v2/posts	prescreen	HTTP_403	Forbidden
+RIPE_DB_BY_ORG	https://rest.db.ripe.net/search.json?query-string={q}&inverse-attribute=org	prescreen	HTTP_404	the RIPE REST search returns 404 when the inverse lookup has no objects; the probe entity had none
+RIPE_DB_DOMAIN_OBJ	https://rest.db.ripe.net/search.json?query-string={q}&type-filter=domain	prescreen	HTTP_404	no domain object for the probe prefix
+RIPE_DB_AS_SET_MEMBERS	https://rest.db.ripe.net/search.json?query-string={q}&inverse-attribute=members&type-filter=as-set	prescreen	HTTP_404	no as-set lists the probe AS
+RIPE_DB_ROUTE_SET	https://rest.db.ripe.net/search.json?query-string={q}&inverse-attribute=members&type-filter=route-set	prescreen	HTTP_404	no route-set lists the probe AS
+RIPE_DB_VERSIONS	https://rest.db.ripe.net/ripe/aut-num/{q}/versions.json	prescreen	HTTP_404	the versions resource is not exposed for the probe object
+RIPE_DB_BY_MNT_INETNUM	https://rest.db.ripe.net/search.json?query-string={q}&inverse-attribute=mnt-by&type-filter=inetnum	prescreen	TOO_LARGE	200,000+ lines (6 MB read limit hit) for a hosting-maintainer; the aut-num form is shipped instead
+RIPE_DB_GRS_RADB_AUTNUM	https://rest.db.ripe.net/search.json?query-string=AS{qd}&source=RADB-GRS	prescreen	HTTP_404	RADB-GRS holds no aut-num for the probe AS (routes by origin from RADB-GRS are shipped)
+RIPE_DB_TEMPLATES	https://rest.db.ripe.net/metadata/templates/inetnum.json	prescreen	LOW_VALUE	one object template, documentation not records
+RIPE_DB_SOURCES	https://rest.db.ripe.net/metadata/sources.json	prescreen	LOW_VALUE	eight source ids with no other field
+RIPESTAT_ALLOC_HISTORY	https://stat.ripe.net/data/allocation-history/data.json?resource={q}	prescreen	NO_RECORD_SET	data.results is keyed by registry (IANA, RIPE NCC) rather than a single array the engine can address
+RIPESTAT_GEOLOC_HISTORY	https://stat.ripe.net/data/geoloc-history/data.json?resource={q}	prescreen	EMPTY_RESULTSET	no data for the probe prefix
+RIPESTAT_PREFIX_SIZE_DIST	https://stat.ripe.net/data/prefix-size-distribution/data.json?resource=AS{qd}	prescreen	LOW_VALUE	ten (size,count) integer pairs - a histogram, not records
+RIPESTAT_RIS_PEERS	https://stat.ripe.net/data/ris-peers/data.json	prescreen	NO_RECORD_SET	data.peers is keyed per collector (rrc00..rrc26), not one array
+RIPESTAT_RIS_ASNS	https://stat.ripe.net/data/ris-asns/data.json?list_asns=true	prescreen	LIST_OF_INTS	87,843 bare integers, no fields
+RIPESTAT_RIS_FULL_TABLE	https://stat.ripe.net/data/ris-full-table-statistics/data.json	prescreen	HTTP_404	data call does not exist
+RIPESTAT_DNS_CHECK	https://stat.ripe.net/data/dns-check/data.json	prescreen	HTTP_404	data call does not exist
+RIPESTAT_ASN_HISTORY	https://stat.ripe.net/data/asn-history/data.json	prescreen	HTTP_404	data call does not exist
+RIPESTAT_BLOCKLIST	https://stat.ripe.net/data/blocklist/data.json	prescreen	HTTP_404	data call does not exist
+RIPESTAT_MLAB_ACTIVITY	https://stat.ripe.net/data/mlab-activity-count/data.json	prescreen	HTTP_404	data call does not exist
+RIPESTAT_SPEEDCHECKER	https://stat.ripe.net/data/speedchecker-bandwidth-measurements/data.json	prescreen	HTTP_404	data call does not exist
+RIPESTAT_SEARCHCOMPLETE	https://stat.ripe.net/data/searchcomplete/data.json?resource={q}	prescreen	NO_RECORD_SET	suggestions nested under categories
+RIPESTAT_RIR_STATS_COUNTRY_PFX	https://stat.ripe.net/data/rir-stats-country/data.json?resource={q}	dedup	SAME_ENDPOINT	the AS{qd} form of the same call is in the tree
+RIPESTAT_ROUTING_HISTORY_PFX	https://stat.ripe.net/data/routing-history/data.json?resource={q}	dedup	SAME_ENDPOINT	the as{qd} form is in the tree
+RIPESTAT_ABUSE_CONTACT_ASN	https://stat.ripe.net/data/abuse-contact-finder/data.json?resource=AS{qd}	dedup	SAME_ENDPOINT	the {q} form is in the tree
+RIPESTAT_RPKI_ROAS_ASN	https://stat.ripe.net/data/rpki-roas/data.json?resource=AS{qd}	dedup	SAME_ENDPOINT	the call is in the tree (static AS2497 form)
+PDB_AS_SET	https://www.peeringdb.com/api/as_set/{qd}	prescreen	NO_RECORD_SET	data[0] is an object keyed by the ASN itself, not a record
+PDB_IXLAN_IX	https://www.peeringdb.com/api/ixlan?ix_id={qd}	dedup	SAME_ENDPOINT	ixlan?ix_id is in the tree
+CORE_JOURNALS	https://api.core.ac.uk/v3/search/journals?q={q}	prescreen	TIMEOUT	timed out on two serial attempts
+CORE_WORKS_DOI	https://api.core.ac.uk/v3/discover?doi={q}	prescreen	HTTP_405	POST only
+CROSSREF_EVENTDATA_ALL	https://api.eventdata.crossref.org/v1/events?...	prescreen	TIMEOUT	twelve event-data queries (by DOI and by each source) all timed out on two passes; the service is unreachable
+OPENCIT_V2_CITATION_COUNT	https://api.opencitations.net/index/v2/citation-count/doi:{q}	prescreen	LOW_VALUE	a single integer count
+OPENALEX_WORKS_BY_DOMAIN	https://api.openalex.org/works?filter=primary_location.landing_page_url.search:{q}	prescreen	HTTP_400	not a valid filter field
+OPENALEX_WORKS_GRANTS	https://api.openalex.org/works?filter=grants.funder:{q}	prescreen	HTTP_400	not a valid filter field
+OPENALEX_WORKS_BY_ROR	https://api.openalex.org/works?filter=authorships.institutions.ror:{q}	dedup	ALREADY_REGISTERED	in the tree
+UNPAYWALL_SEARCH	https://api.unpaywall.org/v2/search?query={q}	prescreen	HTTP_500	Internal Server Error on every query
+S2_SNIPPET_SEARCH	https://api.semanticscholar.org/graph/v1/snippet/search?query={q}	prescreen	HTTP_429	429 on the first request, twice, serially - keyless quota is zero
+S2_PAPER_BULK	https://api.semanticscholar.org/graph/v1/paper/search/bulk?query={q}	prescreen	TOKEN_PAGING	1,000 per page with a continuation token in the body that no engine paging mode can follow; the citation and reference pivots are shipped instead
+S2_PAPER_MATCH	https://api.semanticscholar.org/graph/v1/paper/search/match?query={q}	prescreen	HTTP_404	title match not found is the normal answer for a term
+S2_RELEASES	https://api.semanticscholar.org/datasets/v1/release/	prescreen	LIST_OF_STRINGS	193 release ids with no fields; the latest-release manifest is shipped
+DATACITE_ACTIVITIES	https://api.datacite.org/activities?page[size]=100	prescreen	NO_TITLE_FIELD	audit rows whose attributes are a change diff with no stable titling field
+DATACITE_EVENTS	https://api.datacite.org/events?page[size]=100	prescreen	TIMEOUT	the unfiltered event stream times out; the by-DOI form is shipped
+DATACITE_DOI_PIVOT	https://api.datacite.org/dois/{q}	prescreen	HTTP_404	the probe DOI is a Crossref DOI, and DataCite answers 404 for any DOI it did not mint - fine for a DataCite DOI, but the tree already has dois?query={q}
+CROSSREF_PREFIX_INFO	https://api.crossref.org/prefixes/{q}	prescreen	HTTP_429	rate-limited; a single object anyway
+CROSSREF_WORKS_ABSTRACT	https://api.crossref.org/works?query.bibliographic={q}	dedup	SAME_ENDPOINT	works?query={q} is in the tree
+CROSSREF_WORKS_ORCID_REPORTS	https://api.crossref.org/works?filter=has-orcid:true,type:report	dedup	SAME_DATASET	works?filter=type:report is in the tree
+ROR_ORG_QUERY	https://api.ror.org/v2/organizations?query={q}	dedup	ALREADY_REGISTERED	in the tree
+DOAJ_JOURNALS	https://doaj.org/api/search/journals/{q}	dedup	ALREADY_REGISTERED	in the tree
+DOAJ_ARTICLES	https://doaj.org/api/search/articles/{q}	dedup	ALREADY_REGISTERED	in the tree
+OPENAIRE_ALL	https://api.openaire.eu/...	dedup	ALREADY_REGISTERED	the legacy search and graph v1 endpoints are in the tree in pivot and static forms
+DBLP_VENUE	https://dblp.org/search/venue/api?q={q}	dedup	ALREADY_REGISTERED	in the tree
+DBLP_PUBL	https://dblp.org/search/publ/api?q={q}	dedup	ALREADY_REGISTERED	in the tree
+BIORXIV_DETAILS	https://api.biorxiv.org/details/biorxiv/<date>/<date>	prescreen	DATE_IN_PATH	the interval is a literal date range in the path; the engine has no date token to keep it current
+MEDRXIV_DETAILS	https://api.biorxiv.org/details/medrxiv/<date>/<date>	prescreen	DATE_IN_PATH	same
+CHEMRXIV	https://chemrxiv.org/engage/chemrxiv/public-api/v1/items	prescreen	HTTP_403	bot wall
+RESEARCHSQUARE	https://www.researchsquare.com/api/search?q={q}	prescreen	FILTER_IGNORED	an impossible term returns the same 10 records as a real one
+PREPRINTS_ORG	https://www.preprints.org/api/search	prescreen	HTTP_403	Access Denied
+SSRN_SEARCH	https://api.ssrn.com/content/v1/bindings/204/papers	prescreen	HTTP_403	bot wall
+PHILPAPERS	https://philpapers.org/s/{q}?format=json	prescreen	HTTP_403	bot wall
+CITESEERX	https://citeseerx.ist.psu.edu/api/search	prescreen	TLS_FAIL	missing intermediate certificate
+PAPERITY	https://paperity.org/api/search	prescreen	HTTP_403	bot wall
+LENS_NOKEY	https://api.lens.org/scholarly/search	prescreen	HTTP_401	token required, out of scope
+IRDB_SEARCH	https://irdb.nii.ac.jp/api/v2/records?q={q}	prescreen	HTTP_404	no such API path
+JSTAGE_TEXT	https://api.jstage.jst.go.jp/searchapi/do?service=3&text={q}	dedup	ALREADY_REGISTERED	in the tree
+KAKEN_SEARCH	https://kaken.nii.ac.jp/opensearch/?kw={q}&format=json	prescreen	HTTP_403	Exceeds allowed rate on the very first request, twice; a keyless quota of zero
+NDL_SEARCH_OPENSEARCH	https://ndlsearch.ndl.go.jp/api/opensearch?any={q}	dedup	ALREADY_REGISTERED	in the tree
+OATD_SEARCH	https://oatd.org/oatd/search?q={q}&format=json	prescreen	HTTP_403	bot wall
+NDLTD_SEARCH	https://ndltd.org/api/search	prescreen	HTTP_404	no API
+WORLDCAT_OPENSEARCH	https://www.worldcat.org/webservices/catalog/search/opensearch	prescreen	HTTP_520	Cloudflare 520; the catalog API is key-gated
+OPENLIBRARY_AUTHORS_SEARCH	https://openlibrary.org/search/authors.json?q={q}	scope	PER_PERSON_LOOKUP	a name search for people - excluded by the beat's scope rule
+OPENLIBRARY_WORK	https://openlibrary.org/works/{q}.json	prescreen	NO_RECORD_SET	a single work document whose lists are strings
+OPENLIBRARY_ISBN	https://openlibrary.org/isbn/{q}.json	prescreen	CONN_RESET	connection reset by peer, then network unreachable; a single object anyway
+EUROPEPMC_GRIST	-	kept	-	(shipped as EUROPEPMC_GRANTS_SEARCH_PIVOT)
+EUROPEPMC_GRANTS_SEARCH_PIVOT	https://www.ebi.ac.uk/europepmc/GristAPI/rest/get/query={q}&format=json	rule-4b	PAGING_UNREACHABLE	the Grist API takes its parameters in the PATH (rest/get/query=...); the engine appends page_param after a ? which the service ignores, so ten pages returned the same 25 records: 251 emitted, 27 stored. The ?query= form is not JSON. Removed rather than shipped as a silent first-page slice
+OAPEN_LIBRARY_SEARCH_PIVOT	https://library.oapen.org/rest/search?query={q}&limit=50	emit	TRANSPORT_FAIL	probed PASS but the engine hit its 30 s HTTP timeout on three separate runs (40 s transport failure, rc=-1); the same DSpace search on DOAB answers in time and is shipped
+DOAB_SEARCH_PIVOT (expand=metadata form)	https://directory.doabooks.org/rest/search?query={q}&expand=metadata&limit=50	rule-4b	WRONG_RECORD_SET	with expand=metadata the auto-detected densest array was each item's metadata key/value list, so 907 emitted and 597 stored, titled after DC field names. Fixed by dropping expand=metadata (501 of 501 stored); the fixed row ships
+LOC_MAPS_LATEST	https://www.loc.gov/maps/?fo=json&c=100	emit	SLOW_UPSTREAM	emitted 200 on the first engine run, then rc=1 (past the 30 s HTTP timeout on a 1 MB page) on two of three further runs. The other loc.gov format feeds answered in time on every run

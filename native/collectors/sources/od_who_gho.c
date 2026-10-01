@@ -11,7 +11,7 @@
  * LICENCE FLAG: WHO GHO data is published under CC BY-NC-SA 3.0 IGO -
  * NON-COMMERCIAL, share-alike. That is stricter than the other sources in
  * this batch and should be checked against the intended platform use. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "who-gho-indicator"
 static const char *URL = "https://ghoapi.azureedge.net/api/WHOSIS_000001?$top=100";

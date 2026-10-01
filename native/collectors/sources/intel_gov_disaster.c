@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 #define COLL "government"
 
@@ -44,12 +45,6 @@ static int js_num(cJSON *o, const char *k, double *out) {
   if (!v || !cJSON_IsNumber(v)) return 0;
   *out = v->valuedouble; return 1;
 }
-/* epoch-milliseconds → "YYYY-MM-DDTHH:MM:SSZ" */
-static void ms_iso(double ms, char *out, size_t n) {
-  time_t t = (time_t)(ms / 1000.0);
-  struct tm tm; gmtime_r(&t, &tm);
-  strftime(out, n, "%Y-%m-%dT%H:%M:%SZ", &tm);
-}
 /* Point geometry → lat/lon (+ depth from the third ordinate when present). */
 static int geom_point(cJSON *g, double *lat, double *lon, double *depth) {
   if (!g) return 0;
@@ -71,13 +66,16 @@ static int usgs_run(const source_ctx *ctx, intel_sink *sink, const char *url) {
               return -1; }
   cJSON *feats = cJSON_GetObjectItem(doc, "features");
   int n = 0; cJSON *f;
-  cJSON_ArrayForEach(f, feats ? feats : NULL) {
+  cJSON_ArrayForEach(f, feats) {
     cJSON *p = cJSON_GetObjectItem(f, "properties");
     if (!p) continue;
     double lat = 0, lon = 0, depth = 0;
     int geo = geom_point(cJSON_GetObjectItem(f, "geometry"), &lat, &lon, &depth);
     double ms = 0; char iso[32] = {0};
-    if (js_num(p, "time", &ms)) ms_iso(ms, iso, sizeof iso);
+    /* epoch-milliseconds → "YYYY-MM-DDTHH:MM:SSZ"; an unrenderable upstream
+     * `time` leaves iso empty and every use below already tests iso[0]. */
+    if (js_num(p, "time", &ms))
+      jo_time_fmt((time_t)(ms / 1000.0), "%Y-%m-%dT%H:%M:%SZ", iso, sizeof iso);
 
     char body[512]; double mag = 0; int hasmag = js_num(p, "mag", &mag);
     const char *place = jo_sv(p, "place");
@@ -149,7 +147,12 @@ USGS(gd_usgs_45, "usgs-quake-m45-week", "USGS M4.5+ Earthquakes (7d)",
  * — no coordinate is invented. */
 static void vertex_mean(cJSON *node, double *sx, double *sy, int *cnt) {
   if (!cJSON_IsArray(node)) return;
-  cJSON *a = cJSON_GetArrayItem(node, 0), *b = cJSON_GetArrayItem(node, 1);  /* exhaustive-ok: fixed [x,y] vertex; deeper nesting recurses below */
+  /* [0] and [1] are the x and y of ONE GeoJSON position, not the first two of a
+   * record list — a position is defined to be exactly that pair. When they are
+   * not both numbers this node is a nested array (ring, polygon,
+   * MultiLineString) and the ArrayForEach two lines down recurses over every
+   * child, so every coordinate in the geometry is visited. */
+  cJSON *a = cJSON_GetArrayItem(node, 0), *b = cJSON_GetArrayItem(node, 1); /* exhaustive-ok: one [x,y] position; nested arrays recurse below */
   if (a && b && cJSON_IsNumber(a) && cJSON_IsNumber(b)) {
     *sx += a->valuedouble; *sy += b->valuedouble; (*cnt)++; return;
   }
@@ -183,17 +186,36 @@ static int geom_repr_point(cJSON *g, double *lat, double *lon) {
 typedef struct { char key[96]; cJSON *pt; cJSON *poly; cJSON *any; cJSON *props;
                  int layers; } gd_event;
 
+/* The bare geteventlist/MAP began answering 400 {"message":"Eventtype is
+ * required."} (measured 2026-08-25), and the parameter accepts exactly ONE
+ * type per request (?eventtype=EQ → 200 with events; EQ;TC / EQ,TC / ALL all
+ * 400). So the six GDACS hazard types are fetched one request each and merged
+ * into the same per-event map as before. A type whose fetch fails is counted
+ * and the run only errors when EVERY type failed (R3: a partial answer with
+ * real events is not a dead source). */
+static const char *const GDACS_TYPES[] = { "EQ", "TC", "FL", "VO", "WF", "DR" };
+#define GDACS_NTYPES (sizeof GDACS_TYPES / sizeof *GDACS_TYPES)
+
 static int gdacs_run(const source_ctx *ctx, intel_sink *sink) {
-  cJSON *doc = feed_get_json(ctx->http, GDACS_URL, 30000);
-  if (!doc) { fprintf(stderr, "[gdacs] fetch failed\n"); return -1; }
-  cJSON *feats = cJSON_GetObjectItem(doc, "features");
+  cJSON *docs[GDACS_NTYPES] = {0};
+  int fetched = 0;
 
   int cap = 256, nev = 0;
   gd_event *ev = calloc((size_t)cap, sizeof *ev);
-  if (!ev) { cJSON_Delete(doc); return -1; }
+  if (!ev) return -1;
+
+  for (size_t t = 0; t < GDACS_NTYPES; t++) {
+  char turl[160];
+  snprintf(turl, sizeof turl, "%s?eventtype=%s", GDACS_URL, GDACS_TYPES[t]);
+  cJSON *doc = feed_get_json(ctx->http, turl, 30000);
+  if (!doc) { fprintf(stderr, "[gdacs] fetch failed for %s\n", GDACS_TYPES[t]);
+              continue; }
+  docs[t] = doc;
+  fetched++;
+  cJSON *feats = cJSON_GetObjectItem(doc, "features");
 
   cJSON *f;
-  cJSON_ArrayForEach(f, feats ? feats : NULL) {
+  cJSON_ArrayForEach(f, feats) {
     cJSON *p = cJSON_GetObjectItem(f, "properties");
     if (!p) continue;
     double eid = 0, epi = 0;
@@ -225,6 +247,13 @@ static int gdacs_run(const source_ctx *ctx, intel_sink *sink) {
     if (!ev[idx].pt && strcmp(gt, "Point") == 0) ev[idx].pt = g;
     if (!ev[idx].poly && (strcmp(gt, "Polygon") == 0 ||
                           strcmp(gt, "MultiPolygon") == 0)) ev[idx].poly = g;
+  }
+  }  /* per-eventtype fetch loop */
+
+  if (fetched == 0) {
+    fprintf(stderr, "[gdacs] every eventtype fetch failed\n");
+    free(ev);
+    return -1;
   }
 
   int n = 0;
@@ -280,8 +309,9 @@ static int gdacs_run(const source_ctx *ctx, intel_sink *sink) {
     free(pj); free(gj); free(body); cJSON_Delete(props);
   }
   free(ev);
-  cJSON_Delete(doc);
-  fprintf(stderr, "[gdacs] emitted %d events\n", n);
+  for (size_t t = 0; t < GDACS_NTYPES; t++) cJSON_Delete(docs[t]);
+  fprintf(stderr, "[gdacs] emitted %d events across %d/%d hazard types\n",
+          n, fetched, (int)GDACS_NTYPES);
   return 0;
 }
 
@@ -316,7 +346,7 @@ static int nws_run(const source_ctx *ctx, intel_sink *sink) {
   if (!doc) { fprintf(stderr, "[nws-alerts-us] fetch failed\n"); return -1; }
   cJSON *feats = cJSON_GetObjectItem(doc, "features");
   cJSON *f;
-  cJSON_ArrayForEach(f, feats ? feats : NULL) {
+  cJSON_ArrayForEach(f, feats) {
     cJSON *p = cJSON_GetObjectItem(f, "properties");
     if (!p) continue;
     /* audit-09 (2nd pass): most active alerts are zone-referenced and carry
@@ -423,7 +453,7 @@ static int who_don_run(const source_ctx *ctx, intel_sink *sink) {
   if (!doc) { fprintf(stderr, "[who-outbreak-news] fetch failed\n"); return -1; }
   cJSON *arr = cJSON_GetObjectItem(doc, "value");
   int n = 0; cJSON *e;
-  cJSON_ArrayForEach(e, arr ? arr : NULL) {
+  cJSON_ArrayForEach(e, arr) {
     const char *id = jo_sv(e, "Id");
     const char *title = jo_sv(e, "Title");
     if (!title) title = jo_sv(e, "OverrideTitle");

@@ -1,4 +1,71 @@
 /* Government / agency / IGO press and advisory feeds worldwide (best-effort real RSS). Official primary-source intel, via rss_collect. */
+
+/* 2026-09-08 EMITS_NOTHING triage of the 28 rows this file was reported for. Every URL
+   below was fetched live from this host with a full browser User-Agent.
+   Repaired in place (see per-row notes): ema-news, frontex-news.
+
+   ANSWERING NORMALLY RIGHT NOW — the reported EMITS_NOTHING was a transient upstream
+   outage, not a defect; nothing was changed:
+     cisa-blog        200 application/rss+xml, 10 items
+     europarl-news    200 application/rss+xml, 10 items
+     in-pib           200 text/xml, 20 items (upstream 302s to a longer query string)
+     us-ftc-press     200 application/rss+xml, 10 items
+     us-state-press   200 application/rss+xml, 10 items
+
+   Diagnosed, NOT repairable by changing the URL. Feed retired, HTTP 404, and no
+   replacement is advertised by the site (checked link rel=alternate on the newsroom
+   page, and the site's own /rss landing page where one exists):
+     au-dfat, eeas-news, enisa-news, faa-news, nato-opinions, noaa-swpc, osce-news,
+     unhcr-news, unodc-news, us-dhs-news, us-treasury-press, wfp-news, worldbank-news
+   Bot wall / WAF refusal, so the path may still be correct and only the fetch is
+   blocked — these would revive unchanged behind a fetch path that gets past it:
+     fema-news 403, imf-news 403, iom-news 403, interpol-news 503, epa-news 405
+   Upstream shape change, needs a non-RSS collector rather than a new URL:
+     ca-gov-news  200 application/atom+xml but a 405-byte feed with ZERO entry
+                  elements, "<updated>Invalid date</updated>", and a self link pointing
+                  at http://localhost:8181 — the API is misconfigured upstream.
+     cn-mofa      302s to www.mfa.gov.cn/web/system/index_17321.shtml, an HTML page.
+     ntsb-news    the .aspx path now returns an HTML page, not RSS.
+   None of these five are fixable here without inventing content, so they are left
+   registered and emitting an honest nothing rather than repointed at a guess. */
+
+/* 2026-09-11 RE-VERIFICATION of the 27 rows the next sweep still reported, this
+   time with the EXACT headers rss_collect sends (its RSS/any Accept header and
+   the JapanOSINT/1.0 contact UA) rather than a browser UA — which is the
+   measurement that matters, because several of these hosts answer one and refuse
+   the other. Three corrections and one repair:
+
+   1. ca-gov-news is NOT an upstream misconfiguration. It defaults to a page size
+      of zero; `&pick=500` returns 500 real entries. REPAIRED in place below.
+
+   2. The five rows recorded above as "answering normally, transient outage" do
+      NOT answer this collector. With rss_collect's own headers, today:
+        cisa-blog 403, us-ftc-press 403, us-state-press 403 (all three also 403
+        to a bare `curl` UA — a generic bot wall, not our token)
+        europarl-news  HTTP 202 with a ZERO-BYTE body, on every path and every
+        retry — a WAF holding pattern that rss_collect counts as success (any
+        2xx), so the run reports rc=0 with nothing stored
+        in-pib is the interesting one: 403 with our UA, 200 with 20 items to the
+        bare product token `JapanOSINT/1.0`. Reproduced 3x each. The discriminator
+        is the "(+https://...)" contact parenthetical in lib/rss_atom.c's shared
+        UA, the same class of refusal the ReliefWeb note in that file documents.
+        There is no per-source UA hook on the RSSX path, so it cannot be fixed
+        from this file; it is a live source lost to a header we control.
+
+   3. The "retired, no replacement" set was re-checked against each site's
+      current newsroom and feed-index pages (link rel=alternate plus every
+      href containing rss/feed/atom) and stands: eeas-news, enisa-news,
+      faa-news, iom-news, nato-opinions, noaa-swpc, osce-news, unodc-news,
+      wfp-news, worldbank-news, us-dhs-news(403), unhcr-news(403),
+      us-treasury-press (now a 404 HTML page, no longer a timeout).
+      Candidate paths were tried and each 404'd; none is guessed into the tree.
+      au-dfat could not be measured at all — the TLS connection to
+      www.dfat.gov.au never completes (HTTP/2 INTERNAL_ERROR, then timeouts on
+      HTTP/1.1), so it is recorded as unreachable rather than as retired.
+      noaa-swpc's content is not lost: SWPC's JSON products are already
+      collected by ~30 vsrc_science_* rows, and repointing this row at one of
+      them would be a duplicate endpoint.
+      frontex-news likewise stays dead-by-design — see its own note below. */
 #include "source.h"
 #include "lib/rss_atom.h"
 
@@ -68,12 +135,23 @@ RSSX(gov_enisa_news, "enisa-news", "ENISA News", "ENISA News", "government", "go
   "https://www.enisa.europa.eu/media/news-items/news-wires/RSS", "en", "[\"government\",\"official\",\"eu\"]", 3600,
   "ENISA News — official government/agency feed (eu)");
 
+/* 2026-09-08 EMITS_NOTHING fix: /en/rss.xml 404s. EMA's own feed index
+   (/en/news-events/rss-feeds) lists twenty live feeds; /en/news.xml is the news one.
+   Verified live: HTTP 200, application/rss+xml, 3 populated item elements. */
 RSSX(gov_ema_news, "ema-news", "European Medicines Agency", "European Medicines Agency", "government", "government",
-  "https://www.ema.europa.eu/en/rss.xml", "en", "[\"government\",\"official\",\"eu\"]", 3600,
+  "https://www.ema.europa.eu/en/news.xml", "en", "[\"government\",\"official\",\"eu\"]", 3600,
   "European Medicines Agency — official government/agency feed (eu)");
 
+/* 2026-09-08: /rss/news/ 404s and the live feed the news-release page advertises
+ * is ALREADY collected by `sec-frontex-news`
+ * (collectors/feed/generated/vsrc_geopolitics_1.c). Re-pointing this row there
+ * would have two registered sources polling one endpoint and storing the same
+ * entries under two source_ids — `make lint-sources` caught it as a
+ * dup-endpoint regression. So this row stays on its dead URL and is reported
+ * dead; the CONTENT is not lost, it arrives via sec-frontex-news. Retiring
+ * this row or aliasing it to that id is a decision, not a repair. */
 RSSX(gov_frontex_news, "frontex-news", "Frontex News", "Frontex News", "government", "government",
-  "https://www.frontex.europa.eu/rss/news/", "en", "[\"government\",\"official\",\"eu\"]", 3600,
+  "https://frontex.europa.eu/rss/news/", "en", "[\"government\",\"official\",\"eu\"]", 3600,
   "Frontex News — official government/agency feed (eu)");
 
 RSSX(gov_europarl_news, "europarl-news", "European Parliament News", "European Parliament News", "government", "government",
@@ -148,8 +226,30 @@ RSSX(gov_au_dfat, "au-dfat", "Australia DFAT Media", "Australia DFAT Media", "go
   "https://www.dfat.gov.au/rss/media-releases.xml", "en", "[\"government\",\"official\",\"australia\"]", 3600,
   "Australia DFAT Media — official government/agency feed (australia)");
 
+/* 2026-09-11 EMITS_NOTHING fix, and the earlier triage above was wrong about
+ * this one: the API is not misconfigured, it just defaults to a page size of
+ * ZERO. Without `pick` it answers HTTP 200 with a 405-byte Atom document that
+ * has no <entry> at all — which is why the run looked successful and stored
+ * nothing. Measured the same minute, same headers, one parameter added:
+ *   ...&format=atom            200, 405 bytes,     0 entries
+ *   ...&pick=25&format=atom    200, 5,443 bytes,  25 entries
+ *   ...&pick=100&format=atom   200, 15,770 bytes, 100 entries
+ *   ...&pick=500&format=atom   200, 79,327 bytes, 500 entries, 500 distinct ids
+ * Entries carry real titles, canada.ca links, summaries and departmental
+ * authors. 500 is chosen because it is also rss_collect's own per-run item
+ * ceiling (JO_RSS_MAX_ITEMS), so this asks for exactly as much as the RSS path
+ * can carry and nothing is dropped at the seam. The localhost:8181 self-link
+ * the upstream emits is cosmetic and does not affect the entries.
+ *
+ * OVERLAP, stated rather than hidden: collectors/feed/generated/vsrc_government_1.c
+ * polls the same unfiltered feed at `pick=50`. The two rows differ only in page
+ * size, so this row is a strict superset and 50 entries per hour are stored under
+ * both source ids. lint-sources does not see it (the query strings differ) and the
+ * overlap predates this change — the row was always pointed at this feed, it just
+ * returned nothing. Retiring one of the two is a judgement for a human, not a
+ * repair to make silently. */
 RSSX(gov_ca_gov_news, "ca-gov-news", "Canada Government News", "Canada Government News", "government", "government",
-  "https://api.io.canada.ca/io-server/gc/news/en/v2?sort=publishedDate&orderBy=desc&format=atom", "en", "[\"government\",\"official\",\"canada\"]", 3600,
+  "https://api.io.canada.ca/io-server/gc/news/en/v2?sort=publishedDate&orderBy=desc&pick=500&format=atom", "en", "[\"government\",\"official\",\"canada\"]", 3600,
   "Canada Government News — official government/agency feed (canada)");
 
 RSSX(gov_nato_opinions, "nato-opinions", "NATO Opinions & Speeches", "NATO Opinions & Speeches", "government", "government",

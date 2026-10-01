@@ -201,17 +201,25 @@ char *camera_proxy_fetch(db_handle *db, const char *camera_uid,
   /* The uid → URL indirection narrows WHO chooses the URL, not WHAT it may
    * point at: the caller supplies an id, but the value behind that id was
    * written into intel_items.properties by shodan_api / insecam_scrape, which
-   * report whatever their upstream said. So the destination still has to clear
-   * the floor — a scheme test alone let `http://169.254.169.254/latest/meta-
-   * data/` through as a "camera", and this route hands the response body back
-   * to the caller. Floor strength, not _strict: LAN cameras on RFC1918 are a
-   * shipped feature (hostgate.h says so), and JO_HTTP_BLOCK_PRIVATE=1 raises
-   * this call and proxy_prereq() together. */
+   * report whatever their upstream said, and it is then followed through up to
+   * five redirects. A scheme test alone let `http://169.254.169.254/latest/
+   * meta-data/` through as a "camera", and this route hands the response body
+   * back to the caller — so this path gets the same three defences
+   * http_request() has, rather than a scheme check on its own:
+   *   1. hostgate_url_check() before dialling,
+   *   2. the protocol set pinned on the initial request AND the redirect chain,
+   *   3. proxy_prereq() re-checking the peer address on every hop.
+   * Floor strength, not _strict: LAN cameras on RFC1918 are a shipped feature
+   * (hostgate.h says so), and JO_HTTP_BLOCK_PRIVATE=1 raises this call and
+   * proxy_prereq() together. */
   { int gk = hostgate_url_check(url);
     if (gk != HG_URL_OK) {
       fprintf(stderr, "[camera-proxy] refused %s: %s\n", url,
               hostgate_url_reason(gk));
       free(url);
+      /* 502, not 400: the caller's request was well-formed — it is the
+       * upstream this row points at that we refuse to dial. */
+      if (status) *status = 502;
       return errj(hostgate_url_reason(gk));
     } }
 

@@ -195,17 +195,23 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char *enc = jo_urlencode(q);
   if (!enc) return -1;
 
-  int total = 0;
-  const int GLOBAL_CAP = 500;  /* exhaustive-ok: runaway guard, logged */
+  int total = 0, i = 0, cancelled = 0;
+  /* GLOBAL_CAP is NOT a page cap: it sits in the loop condition over COURT
+   * PORTALS, so hitting it ends the sweep and the portals after it are never
+   * fetched. jo_registry_sweep_notice() below says how far the sweep got.
+   * (There is no dead `room` min() in this file — PER_CAP is passed straight
+   * through, and jo_emit_anchors reads its 0 as "no cap".) */
+  const int GLOBAL_CAP = 500;  /* exhaustive-ok: whole-run emit cap; the sweep it
+                                * cuts short is reported as a truncation notice */
   const int PER_CAP    = 0;    /* exhaustive-ok: 0 = every hit on the page */
 
   /* 1) Netherlands free Atom API first (structured real records). */
   total += emit_rechtspraak(ctx, sink, enc, q);
 
   /* 2) Anchor-scrape the rest. */
-  for (int i = 0; i < NPORTALS && total < GLOBAL_CAP; i++) {
+  for (; i < NPORTALS && total < GLOBAL_CAP; i++) {
     const court_portal *p = &PORTALS[i];
-    if (ctx->cancel && *ctx->cancel) break;
+    if (ctx->cancel && *ctx->cancel) { cancelled = 1; break; }
     char url[1200];
     snprintf(url, sizeof url, p->url, enc);
     char tag[64];
@@ -216,8 +222,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(enc);
-  fprintf(stderr, "[court_world] total emitted %d across %d portals\n",
-          total, NPORTALS + 1);
+  jo_registry_sweep_notice(sink, "COURT_WORLD", q, total, i, NPORTALS,
+                           "GLOBAL_CAP", GLOBAL_CAP, cancelled);
+  fprintf(stderr, "[court_world] total emitted %d across %d of %d scraped portals"
+                  " (+ the Rechtspraak API)\n", total, i, NPORTALS);
   return 0;   /* honest empty is not an error */
 }
 

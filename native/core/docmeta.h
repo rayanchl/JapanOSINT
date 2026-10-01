@@ -160,11 +160,16 @@
  *
  * ══ WIRING THE ORCHESTRATOR MUST DO ═══════════════════════════════════════
  *
- * NONE IS REQUIRED. The Makefile globs the core .c files so this links in, and
- * nothing calls it until someone wants it. Two suggested call sites:
+ * DONE — both call sites below now exist. (This module linked in with ZERO
+ * callers for a while: 1,246 lines of attribution that no route and no ingest
+ * path ever ran.) The Makefile globs the core .c files so linking is
+ * automatic.
  *
- *  1. core/httpd.c — analyse an uploaded document. hm->body is already a
- *     length-delimited buffer, which is exactly this module's input shape:
+ *  1. core/httpd.c — analyse a posted document. hm->body is already a
+ *     length-delimited buffer, which is exactly this module's input shape.
+ *     REGISTERED; the body is passed as buf/len, never a NUL-terminated copy,
+ *     and its size is bounded by mongoose's MG_MAX_RECV_SIZE (3 MiB), which
+ *     refuses the request rather than delivering a prefix:
  *
  *       POST /api/docmeta                 (plain auth; no tenant data touched)
  *         char *m = docmeta_extract(hm->body.buf, hm->body.len, NULL,
@@ -178,12 +183,21 @@
  *     opinion about whether it is being wrapped in {"data":…}, stored in a
  *     column, or embedded in an intel item's properties.
  *
- *  2. core/evidence.c or any collector holding a fetched body: gate on the
+ *  2. core/uploadapi.c — REGISTERED. POST /api/uploads/:id/commit runs
+ *     docmeta_extract() over the assembled document and stores the result in
+ *     uploads.docmeta_json, returned as `docmeta` by commit and by
+ *     GET /api/uploads/:id. Commit is the only moment the whole file is in
+ *     memory (the bytes go to the content-addressed evidence store and are
+ *     freed immediately, and the evidence reaper may later remove the blob),
+ *     so extracting later would mean re-reading bytes that may be gone.
+ *
+ *  3. core/evidence.c or any collector holding a fetched body: gate on the
  *     REAL type before doing anything expensive —
  *
  *       if (strcmp(docmeta_sniff(body, n), "pdf") == 0) { … }
  *
  *     rather than on a Content-Type header, which is a claim, not a fact.
+ *     NOT done — no collector calls this yet.
  *
  * ══ OUTPUT SHAPE ══════════════════════════════════════════════════════════
  *

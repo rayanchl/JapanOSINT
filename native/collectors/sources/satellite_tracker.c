@@ -44,6 +44,13 @@ static int emit_satellite(intel_sink *sink, cJSON *s,
   cJSON *props = cJSON_CreateObject();
   cJSON_AddStringToObject(props, "service", "SATELLITE_TRACKER");
   cJSON_AddNumberToObject(props, "norad_id", norad);
+  /* This is a statement about the FETCH, not a score: emit_satellite() is only
+   * reached with an N2YO record that carried a satid, so `success` is true by
+   * construction and never varies. Deliberately NOT paired with a confidence
+   * number — flight_tracker.c and dark_web_monitor.c both carried a constant
+   * `confidence` here that nothing measured, and both have dropped it. The
+   * satellite's position below is N2YO's own propagation output; we have no
+   * independent measure of its accuracy and do not claim one. */
   cJSON_AddBoolToObject(props, "success", 1);
   char *pj = cJSON_PrintUnformatted(props);
 

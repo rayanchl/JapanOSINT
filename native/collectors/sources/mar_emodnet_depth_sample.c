@@ -39,19 +39,36 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   http_response hr = {0};
   int rc = http_request(ctx->http, "GET", url, NULL, NULL, 0, 25000, 1, &hr);
-  if (rc != 0) { http_response_free(&hr); return 0; }
-  if (hr.status == 204 || !hr.body || hr.body_len == 0) {
+  if (rc != 0) {
+    /* a real transport failure (DNS/connect/timeout) is not the same claim as
+     * "outside coverage" — surface it as an error, not a clean empty (R1). */
+    fprintf(stderr, "[EMODNET_DEPTH_SAMPLE] request failed rc=%d\n", rc);
+    http_response_free(&hr);
+    return -1;
+  }
+  if (hr.status == 204 || (hr.status == 200 && (!hr.body || hr.body_len == 0))) {
     /* outside EMODnet coverage — honest empty, never an error (R3) */
     http_response_free(&hr);
     return 0;
   }
-  if (hr.status != 200) { http_response_free(&hr); return 0; }
+  if (hr.status != 200) {
+    fprintf(stderr, "[EMODNET_DEPTH_SAMPLE] HTTP %ld\n", hr.status);
+    http_response_free(&hr);
+    return -1;
+  }
   cJSON *doc = cJSON_Parse(hr.body);
   http_response_free(&hr);
-  if (!doc) return 0;
+  if (!doc) {
+    fprintf(stderr, "[EMODNET_DEPTH_SAMPLE] malformed JSON response\n");
+    return -1;
+  }
 
   const cJSON *avg = cJSON_GetObjectItem(doc, "avg");
-  if (!cJSON_IsNumber(avg)) { cJSON_Delete(doc); return 0; }
+  if (!cJSON_IsNumber(avg)) {
+    fprintf(stderr, "[EMODNET_DEPTH_SAMPLE] response missing numeric 'avg'\n");
+    cJSON_Delete(doc);
+    return -1;
+  }
 
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "service", "EMODNET_DEPTH_SAMPLE");

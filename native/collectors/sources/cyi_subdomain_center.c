@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "cyi_common.inc"
 
 static int looks_like_domain(const char *s) {
   if (!s || !*s) return 0;
@@ -53,16 +54,6 @@ static int under_domain(const char *name, const char *domain) {
   return ci_eq(name + nl - dl, domain);
 }
 
-static char *http_get(const source_ctx *ctx, const char *url, long *status) {
-  http_response hr = {0};
-  const char *hdrs[] = { "Accept: application/json", NULL };
-  int rc = http_request(ctx->http, "GET", url, hdrs, NULL, 0, 30000, 1, &hr);
-  *status = hr.status;
-  if (rc != 0 || hr.status != 200 || !hr.body) { http_response_free(&hr); return NULL; }
-  char *b = hr.body; hr.body = NULL; http_response_free(&hr);
-  return b;
-}
-
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
   if (!looks_like_domain(q)) return 0;             /* wrong shape -> no-op */
@@ -74,7 +65,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   free(enc);
 
   long status = 0;
-  char *body = http_get(ctx, url, &status);
+  char *body = cyi_get_json(ctx, url, 30000, &status);
   if (!body) {
     fprintf(stderr, "[SUBDOMAIN_CENTER] http status=%ld\n", status);
     if (status >= 400 && status < 500) return 0;

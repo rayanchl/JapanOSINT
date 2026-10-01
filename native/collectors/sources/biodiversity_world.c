@@ -106,9 +106,13 @@ static int bio_gbif(const source_ctx *ctx, intel_sink *sink, const char *enc,
       if (!loc) loc = jo_sv(r, "verbatimLocality");
       const char *ds  = jo_sv(r, "datasetName");
       const char *dt  = jo_sv(r, "eventDate");
-      double lat, lon;
-      int geo = jo_num(r, "decimalLatitude", &lat) &&
-                jo_num(r, "decimalLongitude", &lon);
+      /* Both coordinates must really parse. `&&` short-circuits, so lon was
+       * left indeterminate whenever lat was absent, and an indeterminate
+       * double was then passed by value as the record position. */
+      double lat = 0, lon = 0;
+      int have_lat = jo_num(r, "decimalLatitude", &lat);
+      int have_lon = jo_num(r, "decimalLongitude", &lon);
+      int geo = have_lat && have_lon;   /* no geo -> has_geo = 0, honest */
       const cJSON *kv = cJSON_GetObjectItem(r, "key");
       char key[128], link[160];
       key[0] = 0; link[0] = 0;
@@ -210,9 +214,13 @@ static int bio_obis(const source_ctx *ctx, intel_sink *sink, const char *enc,
       if (!loc) loc = jo_sv(r, "waterBody");
       const char *ds  = jo_sv(r, "datasetName");
       const char *dt  = jo_sv(r, "eventDate");
-      double lat, lon;
-      int geo = jo_num(r, "decimalLatitude", &lat) &&
-                jo_num(r, "decimalLongitude", &lon);
+      /* Both coordinates must really parse. `&&` short-circuits, so lon was
+       * left indeterminate whenever lat was absent, and an indeterminate
+       * double was then passed by value as the record position. */
+      double lat = 0, lon = 0;
+      int have_lat = jo_num(r, "decimalLatitude", &lat);
+      int have_lon = jo_num(r, "decimalLongitude", &lon);
+      int geo = have_lat && have_lon;   /* no geo -> has_geo = 0, honest */
       const char *id  = jo_sv(r, "id");
       char key[160];
       key[0] = 0;

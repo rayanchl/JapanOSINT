@@ -25,11 +25,30 @@
  *    fail the run.
  */
 #include "source.h"
+#include "lib/jocore.h"     /* jo_trunc_notice_scoped — the tail disclosure */
 #include "lib/feedlib.h"
 #include "lib/csv.h"
 #include "geoeo_common.inc"
 
-#define NSIDC_TAIL 45
+/* 0 = the whole series, which is the default.
+ *
+ * This used to be a hardcoded 45. The file is the complete daily sea-ice record
+ * since 1978 — 15,816 rows per hemisphere, measured 2026-08-24 — and it was
+ * fetched IN FULL (1.8 MB) on every run, parsed in full, and then all but the
+ * last 45 rows were dropped. Rule 2: a source that is called is used
+ * exhaustively; paying for 15,816 rows and keeping 45 is the violation in its
+ * plainest form, and `audit-sources` does not match this cap shape so nothing
+ * flagged it.
+ *
+ * Emitting the whole series is safe to repeat because the remote_key is
+ * `<hemisphere>|<YYYY-MM-DD>` — stable and unique per record — so the first run
+ * inserts the history and every later run updates in place without growing the
+ * table. Only the first run pays.
+ *
+ * $JO_NSIDC_TAIL still bounds it for an operator who wants a quick pass; when
+ * it bites, the shortfall is disclosed as a record rather than dropped in
+ * silence. */
+#define NSIDC_TAIL 0
 
 static int hemisphere(const source_ctx *ctx, intel_sink *sink, const char *dir,
                       const char *prefix, const char *label, int *emitted) {
@@ -48,8 +67,10 @@ static int hemisphere(const source_ctx *ctx, intel_sink *sink, const char *dir,
   }
 
   int total = cJSON_GetArraySize(rows);
-  int first = total - NSIDC_TAIL;
-  if (first < 1) first = 1;            /* index 0 is the UNITS line, not data */
+  const char *te = getenv("JO_NSIDC_TAIL");
+  int tail = (te && *te) ? atoi(te) : NSIDC_TAIL;
+  int first = 1;                       /* index 0 is the UNITS line, not data */
+  if (tail > 0 && total - tail > first) first = total - tail;
 
   for (int i = first; i < total; i++) {
     cJSON *r = cJSON_GetArrayItem(rows, i);
@@ -101,6 +122,17 @@ static int hemisphere(const source_ctx *ctx, intel_sink *sink, const char *dir,
     if (sink->emit(sink, &it) >= 0) (*emitted)++;
     free(pj);
   }
+  /* The tail bound only ever bites when an operator sets $JO_NSIDC_TAIL. When
+   * it does, say so in-band with the real numbers — a bounded view is legal,
+   * a silent one is not. Scoped per hemisphere so the two notices upsert
+   * separately instead of overwriting each other. */
+  if (first > 1)
+    jo_trunc_notice_scoped(sink, "nsidc-sea-ice-extent", prefix, url,
+                           total - first, total - 1,
+                           "$JO_NSIDC_TAIL bounded this run to the most recent "
+                           "rows; the file carries the full daily series",
+                           "unset $JO_NSIDC_TAIL to store the whole record — "
+                           "the keys are stable, so it costs one run, once");
   cJSON_Delete(rows);
   return total;
 }

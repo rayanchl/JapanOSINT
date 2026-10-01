@@ -3,6 +3,10 @@ import LineChip from './LineChip.jsx';
 import DeparturesBoard from './DeparturesBoard.jsx';
 import apiUrl from '../../../utils/apiUrl.js';
 
+// The popup is too small for an unbounded alert list; it shows this many and
+// states the bound.
+const ALERTS_SHOWN = 3;
+
 export default function StationPopup({ properties }) {
   const stationUid = properties?.station_uid || properties?.stationUid;
   const [data, setData] = useState(null);
@@ -58,9 +62,16 @@ export default function StationPopup({ properties }) {
       )}
       {data.alerts.length > 0 && (
         <div className="text-xs text-amber-300 bg-amber-900/30 rounded px-1.5 py-1 space-y-0.5">
-          {data.alerts.slice(0, 3).map((a, i) => (
+          {data.alerts.slice(0, ALERTS_SHOWN).map((a, i) => (
             <div key={i}>{a.header_text || a.description_text}</div>
           ))}
+          {/* Three fitted in the popup; the fourth disruption did not, and the
+            * reader had no way to know it existed. */}
+          {data.alerts.length > ALERTS_SHOWN && (
+            <div className="text-amber-200/70">
+              Showing {ALERTS_SHOWN} of {data.alerts.length} active alerts.
+            </div>
+          )}
         </div>
       )}
       <DeparturesBoard

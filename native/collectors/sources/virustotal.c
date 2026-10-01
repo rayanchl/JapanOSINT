@@ -90,10 +90,12 @@ static cJSON *analyze_url(http_client *http, const char *url) {
   cJSON *j = vt_get(http, api, &st);
   if (st == 404) { cJSON_AddStringToObject(r, "status", "not_found");
                    cJSON_AddStringToObject(r, "message", "URL not previously scanned");
-                   if (j) cJSON_Delete(j); return r; }
+                   if (j) cJSON_Delete(j);
+                   return r; }
   if (st != 200) { cJSON_AddStringToObject(r, "error", "API error");
                    cJSON_AddNumberToObject(r, "http_code", (double)st);
-                   if (j) cJSON_Delete(j); return r; }
+                   if (j) cJSON_Delete(j);
+                   return r; }
   if (!j) return r;
   const cJSON *d = cJSON_GetObjectItem(j, "data");
   const cJSON *a = d ? cJSON_GetObjectItem(d, "attributes") : NULL;
@@ -194,7 +196,8 @@ static cJSON *analyze_hash(http_client *http, const char *hash) {
   long st = 0;
   cJSON *j = vt_get(http, api, &st);
   if (st != 200 || !j) { cJSON_AddStringToObject(r, "status", st == 404 ? "not_found" : "error");
-                          if (j) cJSON_Delete(j); return r; }
+                          if (j) cJSON_Delete(j);
+                          return r; }
   const cJSON *d = cJSON_GetObjectItem(j, "data");
   const cJSON *a = d ? cJSON_GetObjectItem(d, "attributes") : NULL;
   if (a) {

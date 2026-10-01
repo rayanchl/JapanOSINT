@@ -49,8 +49,35 @@
 #define JO_PI         3.14159265358979323846
 #define JO_EARTH_R_M  6371008.8              /* IUGG mean Earth radius */
 
+/* RAND_bytes CAN fail (a provider that failed to load, an exhausted entropy
+ * source), and its return was discarded: `b` is then UNINITIALISED STACK. The
+ * value becomes alert_events.id, a PRIMARY KEY, and this is the hot path —
+ * every matched item, on the sweep thread — so the same stack layout recurs
+ * constantly and would produce the same "uuid" repeatedly. Each collision
+ * costs an ALERT: the insert fails and nothing is delivered for that match.
+ * The uninitialised bytes are also whatever the previous frame held, rendered
+ * as hex into a column the inbox API returns.
+ *
+ * An event id is a uniqueness key, not a capability (the inbox is filtered by
+ * tenant, never by guessing an id), so dropping the alert is the worse of the
+ * two failures. Fall back to something INITIALISED and still unique: a
+ * process-lifetime counter, the clock and the pid. */
+static void uuid4_fallback(unsigned char b[16]) {
+  static unsigned long long seq;
+  unsigned long long n = __atomic_add_fetch(&seq, 1, __ATOMIC_RELAXED);
+  unsigned long long parts[2] = { (unsigned long long)time(NULL),
+                                  (unsigned long long)getpid() };
+  unsigned long long h = 1469598103934665603ULL;      /* FNV-1a */
+  for (int i = 0; i < 2; i++)
+    for (int k = 0; k < 8; k++) { h ^= (parts[i] >> (k * 8)) & 0xFF;
+                                  h *= 1099511628211ULL; }
+  for (int i = 0; i < 8; i++) b[i]     = (unsigned char)(n >> (i * 8));
+  for (int i = 0; i < 8; i++) b[8 + i] = (unsigned char)(h >> (i * 8));
+}
+
 static void uuid4(char out[37]) {
-  unsigned char b[16]; RAND_bytes(b, 16);
+  unsigned char b[16];
+  if (RAND_bytes(b, 16) != 1) uuid4_fallback(b);
   b[6] = (b[6] & 0x0F) | 0x40; b[8] = (b[8] & 0x3F) | 0x80;
   snprintf(out, 37,
     "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x",
@@ -660,7 +687,8 @@ static rule_set *ruleset_load(db_handle *db) {
         "SELECT id,tenant_id,predicate_json FROM alert_rules WHERE enabled=1",
         -1, &s, NULL) != SQLITE_OK) return rs;      /* empty set, not a crash */
   int cap = 0;
-  while (sqlite3_step(s) == SQLITE_ROW) {
+  int load_rc;
+  while ((load_rc = sqlite3_step(s)) == SQLITE_ROW) {
     const char *id = ctext(s, 0), *tid = ctext(s, 1);
     if (!id || !tid) continue;
     if (rs->n == cap) {
@@ -683,6 +711,18 @@ static rule_set *ruleset_load(db_handle *db) {
     rs->n++;
   }
   sqlite3_finalize(s);
+  /* Publish a snapshot only if the scan actually reached the end. A short read
+   * still produced a non-NULL, PARTIAL rule_set — and the caller installs it
+   * AND stamps the generation string it read beforehand, so the truncated
+   * snapshot becomes "current" and is not reloaded until someone edits a rule.
+   * Enabled alert rules then stop firing indefinitely, with nothing logged.
+   * Returning NULL makes the caller keep the previous good snapshot. */
+  if (load_rc != SQLITE_DONE) {
+    fprintf(stderr, "[alert] rule snapshot load interrupted (%d rule(s) read); "
+                    "keeping the previous ruleset\n", rs->n);
+    ruleset_free(rs);
+    return NULL;
+  }
   return rs;
 }
 
@@ -975,7 +1015,8 @@ int alert_eval_sweep_entities(db_handle *db) {
     strlist uids; memset(&uids, 0, sizeof uids);
     int rows = 0;
     char last_ts[32] = {0}; long long last_rid = cur_rid;
-    while (sqlite3_step(q) == SQLITE_ROW) {
+    int scan_rc;
+    while ((scan_rc = sqlite3_step(q)) == SQLITE_ROW) {
       const char *u = ctext(q, 0), *ts = ctext(q, 1);
       if (!u || !ts) continue;
       rows++;
@@ -994,6 +1035,17 @@ int alert_eval_sweep_entities(db_handle *db) {
     strlist_free(&uids);
 
     if (rows) { snprintf(cur_ts, sizeof cur_ts, "%s", last_ts); cur_rid = last_rid; }
+    /* A short batch means "drained" ONLY if the scan really reached the end.
+     * `while (step() == ROW)` also exits on BUSY/IOERR, and treating that as
+     * drained pushed the watermark to the TOP of the window — so every mention
+     * between the failure and `hi` was never evaluated again, and entity
+     * watchlists silently stopped matching those items forever. On an error,
+     * keep the real position and resume there next tick. */
+    if (scan_rc != SQLITE_DONE) {
+      fprintf(stderr, "[alert] mention sweep interrupted after %d row(s); "
+                      "resuming from the last confirmed position\n", rows);
+      break;
+    }
     if (rows < SWEEP_BATCH) { drained = 1; break; }
   }
   ruleset_release(rs);

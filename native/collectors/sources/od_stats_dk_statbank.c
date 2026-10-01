@@ -3,14 +3,14 @@
  *           ?Tid=*&valuePresentation=Value
  * Keyless GET returning JSON-stat 1.x under a "dataset" root: value[] is a
  * flat observation array aligned against dimension.Tid.category.index, which
- * is what the reader in od_shared.c joins to recover period -> value.
+ * is what the reader in od_shared.inc joins to recover period -> value.
  * Emits one row per NON-NULL observation: the decoded period (and any other
  * dimension label the table carries) plus the numeric value. Nulls are gaps
  * and are skipped, never emitted as 0. Labels come back in Danish.
  * The table id is swappable (FOLK1A population, PRIS111 CPI, AULK01
  * unemployment). Keyless.
  * Licence: Statistics Denmark data is free to use with source attribution. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "stats-dk-statbank"
 static const char *URL =

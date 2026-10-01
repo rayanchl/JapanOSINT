@@ -96,6 +96,25 @@ struct IsochroneMeta: Decodable, Hashable {
     /// header note — never suppress this.
     let note: String?
 
+    /// The server's own account of what it could NOT reach (core/isochrone.c
+    /// emits all five). Leaving them off the model meant the client silently
+    /// discarded a truncation report the server had gone to the trouble of
+    /// computing — the reporting half of house rule 2 satisfied on the wire and
+    /// then thrown away one layer later. `truncated` alone says THAT something
+    /// was cut; these say what and how much.
+    /// `var`, not `let`, and that distinction is load-bearing: a `let` with an
+    /// initial value is treated as already-initialized, so Swift EXCLUDES it
+    /// from the synthesized `init(from:)` and it would decode as nil forever —
+    /// reintroducing exactly the drop these fields exist to fix. As `var` with
+    /// a default they are still decoded, and the default keeps the synthesized
+    /// memberwise init source-compatible with the call site below, which spells
+    /// out every parameter.
+    var stops_complete: Bool? = nil
+    var truncated_reasons: [String]? = nil
+    var stop_cap: Int? = nil
+    var stop_read_error: String? = nil
+    var stops_note: String? = nil
+
     /// True when transit contributed nothing and the shape is walking reach.
     /// Derived from the count rather than from `note`'s wording, so a reworded
     /// server string cannot silently disable the warning.

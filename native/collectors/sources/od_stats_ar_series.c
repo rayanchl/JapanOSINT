@@ -9,7 +9,7 @@
  * Emits one row per point: date, value, series id, frequency, units and the
  * dataset title. Keyless.
  * Licence: datos.gob.ar open data, free reuse. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "stats-ar-datos-series"
 static const char *URL =

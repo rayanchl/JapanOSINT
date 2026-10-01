@@ -24,7 +24,12 @@
 #include "_jp_osint.inc"
 
 #define PER_REG   3
-#define TOTAL_MAX 500   /* exhaustive-ok: runaway guard, logged */
+/* NOT a page cap: it sits in the loop condition over REGISTRIES, so hitting it
+ * ends the sweep and the registries after it go unqueried — reported as data
+ * by jo_registry_sweep_notice(). (PER_REG above is a real per-page cap and
+ * jo_emit_anchors already discloses whatever it trims.) */
+#define TOTAL_MAX 500   /* exhaustive-ok: whole-run emit cap; the sweep it cuts
+                         * short is reported as a truncation notice */
 
 /* One registry row. `url_tmpl` has a single %s where the %-encoded query goes.
  * `base` is prepended to root-relative hrefs found on the results page. */
@@ -140,8 +145,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char *q = jo_urlencode(ctx->entity);
   if (!q) return 0;
 
-  int total = 0;
-  for (int i = 0; i < NREGS && total < TOTAL_MAX; i++) {
+  int total = 0, i = 0;
+  for (; i < NREGS && total < TOTAL_MAX; i++) {
     char url[1024];
     snprintf(url, sizeof url, REGS[i].url_tmpl, q);
     int room = TOTAL_MAX - total;
@@ -151,9 +156,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
                              "mena-registry-result", REGS[i].base,
                              NULL, cap, "mena-registry");
   }
+  jo_registry_sweep_notice(sink, "MENA_REGISTRY", ctx->entity, total, i, NREGS,
+                           "TOTAL_MAX", TOTAL_MAX, 0);
   free(q);
-  fprintf(stderr, "[mena-registry] total emitted %d across %d registries\n",
-          total, NREGS);
+  fprintf(stderr, "[mena-registry] total emitted %d across %d of %d registries\n",
+          total, i, NREGS);
   return 0;   /* honest empty is not an error */
 }
 

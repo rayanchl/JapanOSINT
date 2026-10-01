@@ -7,22 +7,21 @@
  * the literal CIDR plus the prefix length so a containment matcher downstream
  * has what it needs; a sibling datacenter/ipv4.txt list exists in the same repo
  * for hosting ranges (not wired here).
- * The list is counted in full and the true total carried on every row; at most
- * MAX_ROWS entries are materialised so one run stays bounded.
+ * The list is counted in full, the true total carried on every row, and every
+ * prefix emitted — the old 5,000-row cap discarded most of a file already in
+ * memory, silently.
  * No coordinates -> has_geo 0 (R2).
  * Licence: X4BNet/lists_vpn, MIT-licensed repo.
  */
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
-#include "lib/truncnotice.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define CYI_URL "https://raw.githubusercontent.com/X4BNet/lists_vpn/main/output/vpn/ipv4.txt"
-#define MAX_ROWS 5000  /* exhaustive-ok: breadth-layer bound, disclosed as a record below */
 
 /* dotted quad with an optional /len; returns the prefix length or -1 */
 static int v4_cidr_len(const char *s) {
@@ -54,7 +53,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   int n = 0;
   char *cur = body, *line;
-  while ((line = jo_next_line(&cur)) != NULL && n < MAX_ROWS) {
+  while ((line = jo_next_line(&cur)) != NULL) {
     if (!line[0] || line[0] == '#') continue;
     int len = v4_cidr_len(line);
     if (len < 0) continue;
@@ -82,17 +81,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   free(body);
-  /* The cap is deliberate — the whole file is parsed and counted, and only
-   * MAX_ROWS entries are materialised so this stays the breadth layer behind
-   * the smaller high-precision feeds. What was missing is the other half of
-   * rule 6: the shortfall was a log line, and a log line nobody reads is not a
-   * disclosure. It is a record now. */
-  if (n >= MAX_ROWS)
-    trunc_notice(sink, "vpn-ip-ranges-x4bnet", CYI_URL, NULL, n, total,
-                 "a deliberate breadth-layer cap: the feed was parsed and "
-                 "counted in full, and MAX_ROWS of its CIDRs were materialised "
-                 "as rows",
-                 "raise MAX_ROWS in this collector to materialise more");
   fprintf(stderr, "[vpn-ip-ranges-x4bnet] emitted %d of ~%d CIDRs\n", n, total);
   return 0;
 }

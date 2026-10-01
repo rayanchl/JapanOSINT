@@ -85,22 +85,27 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
      * time, the English place name and the detail-file name; none of them were
      * being carried into the intel row. A seismic-intensity pin without the
      * magnitude is exactly the "labels, not data" shape. */
-    const char *nm = anm && cJSON_IsString(anm) ? anm->valuestring : "Unknown";
+    /* no-fabrication (house rule 1): the epicentre name used to default to
+     * the literal "Unknown", and intensity/time to "". A client cannot tell
+     * those apart from a real value, so an absent field is now null and the
+     * title simply omits the part JMA did not send. */
+    const char *nm = anm && cJSON_IsString(anm) ? anm->valuestring : NULL;
     const char *mg = mag && cJSON_IsString(mag) ? mag->valuestring : NULL;
     const char *mi = maxi && cJSON_IsString(maxi) ? maxi->valuestring : NULL;
     char title[256];
-    snprintf(title, sizeof title, "%s%s%s%s%s%s", nm,
+    snprintf(title, sizeof title, "%s%s%s%s%s", nm ? nm : "地震",
              mg ? " M" : "", mg ? mg : "",
-             mi ? " 震度" : "", mi ? mi : "",
-             "");
+             mi ? " 震度" : "", mi ? mi : "");
     cJSON_AddStringToObject(p, "title", title);
-    cJSON_AddStringToObject(p, "name", nm);
+    if (nm) cJSON_AddStringToObject(p, "name", nm);
+    else cJSON_AddItemToObject(p, "name", cJSON_CreateNull());
     cJSON_AddStringToObject(p, "record_type", "earthquake");
     if (mg) cJSON_AddNumberToObject(p, "magnitude", strtod(mg, NULL));
-    cJSON_AddStringToObject(p, "intensity", mi ? mi : "");
+    if (mi) cJSON_AddStringToObject(p, "intensity", mi);
+    else cJSON_AddItemToObject(p, "intensity", cJSON_CreateNull());
     cJSON_AddNumberToObject(p, "depth_km", -dep_m / 1000.0);
-    cJSON_AddStringToObject(p, "time",
-        at && cJSON_IsString(at) ? at->valuestring : "");
+    if (at && cJSON_IsString(at)) cJSON_AddStringToObject(p, "time", at->valuestring);
+    else cJSON_AddItemToObject(p, "time", cJSON_CreateNull());
     if (rdt && cJSON_IsString(rdt))
       cJSON_AddStringToObject(p, "reported_at", rdt->valuestring);
     if (eid_j && cJSON_IsString(eid_j))

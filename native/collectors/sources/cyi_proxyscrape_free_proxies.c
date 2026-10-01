@@ -78,6 +78,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     char title[96];
     if (hp) snprintf(title, sizeof title, "%s:%.0f", ip, port);
     else    snprintf(title, sizeof title, "%s", ip);
+    /* The feed lists one row per ip:port PER PROTOCOL — 103.179.189.64:9191
+     * appears as socks4 and again as socks5, two distinct proxies. Measured
+     * 2026-09-06 on the live 500-row page: 461 distinct ip:port, 500 distinct
+     * ip:port:protocol; keying on ip:port alone stored 455 of 500 (the
+     * registry sweep's COLLISION). The protocol completes the identity. */
+    char key[128];
+    snprintf(key, sizeof key, "%s|%s", title, proto ? proto : "");
     char summary[320];
     snprintf(summary, sizeof summary, "%s%s%s%s%s%s%s",
              proto ? proto : "proxy",
@@ -85,7 +92,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
              city ? " · " : "", city ? city : "",
              country ? ", " : "", country ? country : "");
 
-    it.remote_key      = title;
+    it.remote_key      = key;
     it.title           = title;
     it.summary         = summary;
     it.link            = "https://proxyscrape.com/free-proxy-list";

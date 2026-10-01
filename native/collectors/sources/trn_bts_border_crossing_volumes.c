@@ -14,18 +14,25 @@
  * forms are handled and neither is ever substituted by a state centroid.
  */
 #include "lib/jocore.h"
+#include "lib/pagewalk.h"
 #include "trn_common.inc"
 
+/* `$offset=0` seeds lib/pagewalk.c's offset walk — pw_walk only ever advances a
+ * parameter the author already wrote, and never invents one. `,:id` makes the
+ * sort TOTAL: this table is one row per (port, month, measure), so a bare
+ * `date DESC` ties thousands of rows together and an offset window taken across
+ * that tie has no defined content. Measured 2026-09-19: 275,901 rows upstream,
+ * of which the single-fetch collector kept 1,000. */
 #define BTS_URL "https://data.transportation.gov/resource/keg4-3bc2.json" \
-                "?$limit=1000&$order=date%20DESC"
+                "?$limit=1000&$offset=0&$order=date%20DESC,:id"
 
-static int run(const source_ctx *ctx, intel_sink *sink) {
-  cJSON *doc = feed_get_json(ctx->http, BTS_URL, 30000);
-  if (!doc || !cJSON_IsArray(doc)) {
-    fprintf(stderr, "[bts-border-crossing-volumes] fetch/parse failed\n");
-    cJSON_Delete(doc);
-    return -1;
-  }
+/* pw_emit_fn: one page, reporting what it CONTAINED in `seen`. */
+static int bts_emit_page(const source_ctx *ctx, intel_sink *sink,
+                         const char *id, cJSON *doc, void *ud, int *seen) {
+  (void)ctx; (void)id; (void)ud;
+  *seen = 0;
+  if (!cJSON_IsArray(doc)) return 0;
+  *seen = cJSON_GetArraySize(doc);
 
   int n = 0;
   cJSON *r;
@@ -82,8 +89,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
     cJSON_Delete(pr);
   }
-  cJSON_Delete(doc);
-  fprintf(stderr, "[bts-border-crossing-volumes] emitted %d\n", n);
+  return n;
+}
+
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  int n = pw_walk(ctx, sink, "bts-border-crossing-volumes", BTS_URL,
+                  pw_fetch_json, bts_emit_page, NULL);
+  if (n < 0) {
+    fprintf(stderr, "[bts-border-crossing-volumes] fetch/parse failed\n");
+    return -1;
+  }
   return 0;
 }
 

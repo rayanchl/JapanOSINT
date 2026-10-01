@@ -8,7 +8,7 @@
  * - no centroid or fallback point is ever substituted. Keyless.
  * Licence: GeoNames source data CC-BY 4.0; the ODS public hosting requires no
  * auth. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ods-public-geonames"
 static const char *URL =

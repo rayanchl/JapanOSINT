@@ -32,6 +32,12 @@
  * Tunables (env, read once):
  *   JO_HOST_MAX_CONC    in-flight requests per host   (default 2, 0 = off)
  *   JO_HOST_MIN_GAP_MS  min ms between request starts (default 150)
+ *   JO_HOST_MIN_GAP_OVERRIDES  "host=ms,host=ms" per-host gaps that beat the
+ *                       global one (built in: reddit.com=30000 — measured
+ *                       per-IP floor). Matches the host and its subdomains.
+ *                       An override host waits for its gap (up to 5 min)
+ *                       instead of failing open: walking into a known 429
+ *                       wall is not availability.
  */
 #ifndef JO_HOSTGATE_H
 #define JO_HOSTGATE_H
@@ -107,6 +113,19 @@ int hostgate_addr_check(const char *ip_text, int strict);
  * this is the only place a hostname that resolves into a private range is
  * seen, and hardcoding the strength there silently disabled the env switch. */
 int hostgate_addr_check_floor(const char *ip_text);
+
+/* Resolve a BARE HOSTNAME (no URL, no scheme) and judge every address it
+ * answers with, plus the metadata hostnames. Returns HG_URL_OK or an HG_URL_*
+ * code, same as the url_check family.
+ *
+ * This exists for the collectors that open RAW SOCKETS rather than going
+ * through core/httpclient.c — port_scanner, ssl_analyzer and email_validator
+ * call socket()/connect() directly, so none of the protection inside
+ * http_request() reaches them. They take ctx->entity, which on the
+ * /api/search pivot path is caller-supplied text, so `strict` is the right
+ * strength there: a tenant has no legitimate reason to aim our socket layer at
+ * our own network. Call it AFTER resolution is needed and BEFORE connect(). */
+int hostgate_host_check(const char *host, int strict);
 
 /* Textual (lowercased, port/userinfo/brackets stripped) host of `url` into
  * out[], including loopback — url_host()'s politeness exemption is NOT applied.

@@ -31,16 +31,16 @@
  *   copy, or distribute" them. Attribution to Eibi Klingenfuss / eibispace.de.
  */
 #include "lib/jocore.h"
+#include "lib/feedlib.h"
+#include "lib/seenset.h"
 #include "source.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
-#include "lib/truncnotice.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
-#define MAX_ROWS 12000  /* exhaustive-ok: disclosed as a record below */
 #define MAXCOL 24
 
 static int semi_split(char *line, char **out, int max) {
@@ -199,11 +199,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   int n = 0, seen = 0;
+  seen_set keyseen = {0};
   char *line;
   while ((line = jo_next_line_cr(&p)) != NULL) {
     if (!*line) continue;
     seen++;
-    if (n >= MAX_ROWS) break;  /* exhaustive-ok: the cap is disclosed as a collector-truncation-notice below */
+    /* One (khz, time, station) triple recurs across rows that differ only in
+     * Days / language / target — distinct schedule entries. Keying on the
+     * triple upserted them onto each other: measured 9,391 emitted, 8,964
+     * stored. Hash the raw line (before semi_split mutates it) so distinct
+     * rows keep distinct uids; byte-identical duplicates still collapse. */
+    char linehash[21];
+    const char *lh_parts[1] = { line };
+    feed_hash_key(linehash, lh_parts, 1);
     char *f[MAXCOL];
     int nf = semi_split(line, f, MAXCOL);
     for (int i = 0; i < nf; i++) f[i] = trim(f[i]);
@@ -244,6 +252,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
     char title[288], summary[288], key[192];
     snprintf(key, sizeof key, "%s|%s|%s|%s", season, khz, tm ? tm : "", stn);
+    /* only a colliding key gains the line hash — unique entries keep their
+       stored uids across runs (same trade as lib/jsonlist.c collision guard) */
+    if (!seen_add(&keyseen, key)) {
+      size_t kl = strlen(key);
+      snprintf(key + kl, sizeof key - kl, "|%s", linehash);
+    }
     snprintf(title, sizeof title, "%s kHz %.120s%s%s", khz, stn,
              tm ? " " : "", tm ? tm : "");
     snprintf(summary, sizeof summary, "%s%s%s%s%s",
@@ -265,14 +279,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
 
+  seen_free(&keyseen);
   free(body);
-  /* Bounded run, now SAID so. A cap reported only to stderr leaves a clipped
-   * result indistinguishable from a complete one downstream (rule 7). */
-  if (n >= MAX_ROWS)
-    trunc_notice(sink, "eibi-shortwave-schedule", url, NULL, n, seen,
-                 "a per-run record cap bounded this collector; the upstream "
-                 "offered more schedule rows",
-                 "raise the cap in this collector");
   fprintf(stderr, "[eibi-shortwave-schedule] emitted %d of %d rows (season %s)\n",
           n, seen, season);
   return 0;

@@ -9,6 +9,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "_credential_notice.inc"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,7 +18,12 @@
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("RESAS_API_KEY");
-  if (!key || !*key) { fprintf(stderr, "[resas-population] gated (RESAS_API_KEY)\n"); return 0; }
+  if (!key || !*key) {
+    static const char *const envs[] = { "RESAS_API_KEY", NULL };
+    return jo_needs_credential(sink, "resas-population",
+        "RESAS population composition (47 prefectures)",
+        envs, RESAS_URL, "free X-API-KEY at opendata.resas-portal.go.jp");
+  }
 
   char authhdr[256];
   snprintf(authhdr, sizeof authhdr, "X-API-KEY: %s", key);

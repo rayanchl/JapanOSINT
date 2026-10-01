@@ -50,6 +50,7 @@
 #include <string.h>
 #include <time.h>
 #include "_jp_osint.inc"
+#include "_timefmt.inc"
 
 typedef struct {
   const char *service, *url;
@@ -247,11 +248,9 @@ static int gr_run(const source_ctx *ctx, intel_sink *sink) {
     const char *pub = NULL;
     const cJSON *idt = cJSON_GetObjectItem(d, "issueDate");
     if (cJSON_IsNumber(idt) && idt->valuedouble > 0) {
-      time_t secs = (time_t)(idt->valuedouble / 1000.0);
-      struct tm g;
-      gmtime_r(&secs, &g);
-      strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%SZ", &g);
-      pub = iso;
+      /* An issueDate the upstream chose that no calendar can render leaves
+       * pub NULL, so issue_date is simply absent rather than invented. */
+      pub = jo_ms_iso(idt->valuedouble, iso, sizeof iso);
     } else if (jo_sv(d, "issueDate")) {
       snprintf(iso, sizeof iso, "%s", jo_sv(d, "issueDate"));
       pub = iso;

@@ -171,6 +171,10 @@ private struct ConnectStep: View {
                 .frame(maxWidth: .infinity)
                 .background(theme.surfaceElevated)
                 .clipShape(RoundedRectangle(cornerRadius: 18))
+                // Purely decorative animation. Without this VoiceOver reads out
+                // every SF Symbol name inside it ("airplane", "tram.fill", …);
+                // the caption below is the real description of the panel.
+                .accessibilityHidden(true)
             VStack(spacing: 4) {
                 Text(panels[index].title).font(.headline)
                 Text(panels[index].subtitle)
@@ -256,6 +260,11 @@ private struct AuthStep: View {
                     HStack(spacing: 10) {
                         Group {
                             if provider.usesSFSymbol {
+                                // Fixed size on purpose: this glyph shares the
+                                // 20×20 box below with the raster-logo branch,
+                                // so it must stay optically identical to a
+                                // bitmap that cannot scale. The button's *text*
+                                // carries the Dynamic Type.
                                 Image(systemName: provider.logoName)
                                     .font(.system(size: 18, weight: .bold))
                                     .foregroundStyle(provider.brandForeground)
@@ -266,8 +275,9 @@ private struct AuthStep: View {
                             }
                         }
                         .frame(width: 20, height: 20)
+                        .accessibilityHidden(true)   // brand mark; label follows
                         Text("Continue with \(provider.label)")
-                            .font(.system(size: 16, weight: .semibold))
+                            .font(Typography.body(16, weight: .semibold))
                             .foregroundStyle(provider.brandForeground)
                     }
                     .frame(maxWidth: .infinity)
@@ -294,9 +304,11 @@ private struct AuthStep: View {
             } label: {
                 HStack(spacing: 4) {
                     Image(systemName: "server.rack").font(.caption2)
+                        .accessibilityHidden(true)
                     Text("Server settings")
                     Image(systemName: showServer ? "chevron.up" : "chevron.down")
                         .font(.caption2)
+                        .accessibilityHidden(true)
                 }
                 .font(.footnote)
                 .foregroundStyle(theme.textMuted)
@@ -304,6 +316,7 @@ private struct AuthStep: View {
                 .padding(.top, 6)
             }
             .buttonStyle(.plain)
+            .accessibilityLabel(showServer ? "Hide server settings" : "Show server settings")
 
             if showServer {
                 VStack(alignment: .leading, spacing: 6) {
@@ -367,6 +380,7 @@ private struct IntroPowerStep: View {
                 .frame(maxWidth: .infinity)
                 .background(theme.surfaceElevated)
                 .clipShape(RoundedRectangle(cornerRadius: 18))
+                .accessibilityHidden(true)   // decorative animation
 
             VStack(alignment: .leading, spacing: 14) {
                 powerRow("dot.radiowaves.up.forward", "Live feeds",
@@ -391,6 +405,7 @@ private struct IntroPowerStep: View {
                 .font(.title3)
                 .foregroundStyle(theme.accent)
                 .frame(width: 28)
+                .accessibilityHidden(true)   // decorative; title/subtitle follow
             VStack(alignment: .leading, spacing: 2) {
                 Text(title).font(.headline)
                 Text(subtitle).font(.footnote).foregroundStyle(theme.textMuted)
@@ -459,6 +474,11 @@ private struct AnimatedMapMock: View {
                                 .stroke(theme.accent.opacity((1 - phase) * 0.55),
                                         lineWidth: 1.5)
                                 .frame(width: ring, height: ring)
+                            // Fixed size: this pin is drawn at an absolute
+                            // point inside a fixed-height GeometryReader
+                            // canvas, so growing it with Dynamic Type would
+                            // overlap the neighbouring pins. The whole mock is
+                            // `.accessibilityHidden` at its call sites.
                             Image(systemName: item.1)
                                 .font(.system(size: 12, weight: .bold))
                                 .foregroundStyle(theme.accent)
@@ -624,6 +644,9 @@ private struct IntroLayersStep: View {
                     let on = i == highlight
                     let tint = registry.color(for: id)
                     VStack(spacing: 6) {
+                        // Fixed size: the glyph is centred in a 48×48 tile of
+                        // a 4-column grid. The caption beneath it is the
+                        // Dynamic-Type-bearing text.
                         Image(systemName: registry.symbol(for: id))
                             .font(.system(size: 20, weight: .semibold))
                             .foregroundStyle(on ? Color.black : tint)
@@ -632,6 +655,7 @@ private struct IntroLayersStep: View {
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                             .scaleEffect(on ? 1.14 : 1)
                             .shadow(color: on ? tint.opacity(0.6) : .clear, radius: 8)
+                            .accessibilityHidden(true)   // caption names it
                         Text(LayerRegistry.displayName(forId: id))
                             .font(.caption2)
                             .foregroundStyle(theme.textMuted)
@@ -670,12 +694,16 @@ private struct WorkspaceStep: View {
                 .frame(maxWidth: .infinity)
                 .background(theme.surfaceElevated)
                 .clipShape(RoundedRectangle(cornerRadius: 18))
+                // Restates the paragraph above it as an animation; VoiceOver
+                // gets the paragraph, not three SF Symbol names.
+                .accessibilityHidden(true)
 
             if let t = auth.me?.tenant {
                 VStack(alignment: .leading, spacing: 8) {
                     Image(systemName: "square.stack.3d.up.fill")
                         .font(.title2)
                         .foregroundStyle(theme.accent)
+                        .accessibilityHidden(true)   // decorative card mark
                     if let email = auth.accountEmail {
                         Text(email).font(.callout)
                     }
@@ -706,10 +734,14 @@ private struct WorkspaceStep: View {
                             if m.id == auth.me?.tenant?.id {
                                 Image(systemName: "checkmark.circle.fill")
                                     .foregroundStyle(theme.accent)
+                                    .accessibilityHidden(true)   // state is in the trait below
                             }
                         }
                     }
                     .buttonStyle(.bordered)
+                    .accessibilityLabel(m.name)
+                    .accessibilityValue(m.id == auth.me?.tenant?.id ? "Active workspace" : "")
+                    .accessibilityAddTraits(m.id == auth.me?.tenant?.id ? .isSelected : [])
                 }
             }
 
@@ -770,6 +802,9 @@ private struct RolesAccessDiagram: View {
                     ForEach(0..<roles.count, id: \.self) { i in
                         let on = i == active
                         VStack(spacing: 4) {
+                            // Fixed size: absolute-positioned node in a
+                            // fixed-height diagram canvas (see the parent's
+                            // `.accessibilityHidden`).
                             Image(systemName: roles[i].1)
                                 .font(.system(size: 15, weight: .bold))
                                 .foregroundStyle(on ? Color.black : theme.accent)
@@ -786,6 +821,7 @@ private struct RolesAccessDiagram: View {
                     }
 
                     VStack(spacing: 3) {
+                        // Fixed size: absolute-positioned diagram node.
                         Image(systemName: "square.stack.3d.up.fill")
                             .font(.system(size: 22, weight: .bold))
                             .foregroundStyle(theme.accent)
@@ -825,6 +861,8 @@ private struct KeysNudgeStep: View {
                 .frame(maxWidth: .infinity)
                 .background(theme.surfaceElevated)
                 .clipShape(RoundedRectangle(cornerRadius: 18))
+                // Decorative restatement of the paragraph above.
+                .accessibilityHidden(true)
 
             Label("Manage anytime under Console → API keys",
                   systemImage: "key.fill")
@@ -909,6 +947,8 @@ private struct BYOKFlowDiagram: View {
                     // Stage circles — centred exactly on the line.
                     ForEach(0..<n, id: \.self) { i in
                         let lit = i <= st.reached
+                        // Fixed size: stage circles are positioned on an
+                        // absolute line inside a 150 pt canvas.
                         Image(systemName: stages[i].1)
                             .font(.system(size: 17, weight: .bold))
                             .foregroundStyle(lit ? Color.black : theme.accent)
@@ -972,6 +1012,7 @@ private struct FirstRunStep: View {
 
             HStack(spacing: 8) {
                 Image(systemName: "magnifyingglass").foregroundStyle(theme.textMuted)
+                    .accessibilityHidden(true)   // the field is already labelled
                 TextField("Search layers", text: $query)
                     .compatNoAutocap()
                     .autocorrectionDisabled()
@@ -980,6 +1021,7 @@ private struct FirstRunStep: View {
                         Image(systemName: "xmark.circle.fill")
                             .foregroundStyle(theme.textMuted)
                     }
+                    .accessibilityLabel("Clear search")
                 }
             }
             .padding(10)
@@ -1033,12 +1075,15 @@ private struct FirstRunStep: View {
             settings.toggleLayer(id)
         } label: {
             VStack(spacing: 6) {
+                // Fixed size: glyph is centred in a 40×40 chip tile of a
+                // 3-column grid; the caption below carries Dynamic Type.
                 Image(systemName: registry.symbol(for: id))
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundStyle(on ? Color.black : tint)
                     .frame(width: 40, height: 40)
                     .background(on ? tint : theme.surfaceElevated)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .accessibilityHidden(true)
                 Text(LayerRegistry.displayName(forId: id))
                     .font(.caption2)
                     .foregroundStyle(on ? theme.text : theme.textMuted)
@@ -1052,6 +1097,10 @@ private struct FirstRunStep: View {
             )
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(LayerRegistry.displayName(forId: id))
+        .accessibilityValue(on ? "Active" : "Inactive")
+        .accessibilityAddTraits(on ? .isSelected : [])
+        .accessibilityHint("Double tap to toggle this layer")
     }
 
     private func run() async {
@@ -1075,9 +1124,13 @@ private struct FinishStep: View {
         VStack(spacing: 16) {
             Spacer(minLength: 0)
 
+            // Fixed size: hero glyph whose only job is to be big. It carries no
+            // information (the headline below does), so it is hidden from
+            // VoiceOver and does not need to track Dynamic Type.
             Image(systemName: "checkmark.seal.fill")
                 .font(.system(size: 64))
                 .foregroundStyle(theme.success)
+                .accessibilityHidden(true)
                 .phaseAnimator([0.0, -10.0, 8.0, -4.0, 0.0],
                                trigger: wiggle) { view, angle in
                     view.rotationEffect(.degrees(angle))

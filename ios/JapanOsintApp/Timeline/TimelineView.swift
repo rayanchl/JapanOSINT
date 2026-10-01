@@ -198,6 +198,7 @@ struct TimelineScreen: View {
         } label: {
             HStack(spacing: 3) {
                 Image(systemName: "chart.bar.fill").font(.caption2)
+                    .accessibilityHidden(true)   // the bucket label follows
                 Text(model.bucket.label).font(.caption.weight(.semibold))
             }
             .padding(.horizontal, Space.sm)
@@ -295,6 +296,7 @@ struct TimelineScreen: View {
         if let focused = model.focused {
             HStack(spacing: Space.sm) {
                 Image(systemName: "scope").font(.caption2).foregroundStyle(theme.accent)
+                    .accessibilityHidden(true)   // the sentence beside it says it
                 Text("Showing \(TimelineFormat.bucketLabel(focused.t, size: model.bucket)) only · "
                      + "\(focused.total) events in that bucket")
                     .font(.caption2.monospacedDigit())
@@ -315,6 +317,7 @@ struct TimelineScreen: View {
     private func banner(_ text: String, tone: Color, icon: String) -> some View {
         HStack(alignment: .top, spacing: Space.sm) {
             Image(systemName: icon).font(.caption).foregroundStyle(tone)
+                .accessibilityHidden(true)   // the banner text follows
             Text(text)
                 .font(.caption2)
                 .foregroundStyle(theme.text)
@@ -393,12 +396,14 @@ struct TimelineScreen: View {
 
     private func rowContent(_ event: TimelineEvent) -> some View {
         HStack(alignment: .top, spacing: Space.md) {
+            // The event kind is otherwise only encoded as a glyph + tint.
             Image(systemName: glyph(for: event.kind))
                 .font(.caption)
                 .foregroundStyle(color(for: event.kind))
                 .frame(width: 24, height: 24)
                 .background(color(for: event.kind).opacity(0.14),
                             in: RoundedRectangle(cornerRadius: Radius.sm))
+                .accessibilityLabel(event.kind.isEmpty ? "Event" : event.kind)
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(event.title ?? event.uid ?? "(untitled)")
@@ -441,6 +446,7 @@ struct TimelineScreen: View {
                         .frame(width: 30, height: 30)
                         .background(theme.accentAlt.opacity(0.14), in: Circle())
                 }
+                .accessibilityLabel("Show on map")
                 .frame(minWidth: 44, minHeight: 44)
                 .contentShape(Rectangle())
                 .buttonStyle(.plain)
@@ -536,8 +542,10 @@ struct TimelineScreen: View {
                         Spacer()
                         if model.sourceFilter == nil {
                             Image(systemName: "checkmark").foregroundStyle(theme.accent)
+                                .accessibilityHidden(true)   // spoken as the trait
                         }
                     }
+                    .accessibilityAddTraits(model.sourceFilter == nil ? .isSelected : [])
                 }
                 ForEach(model.selectableSources) { entry in
                     Button {
@@ -555,9 +563,11 @@ struct TimelineScreen: View {
                             Spacer()
                             if model.sourceFilter == entry.id {
                                 Image(systemName: "checkmark").foregroundStyle(theme.accent)
+                                    .accessibilityHidden(true)   // spoken as the trait
                             }
                         }
                     }
+                    .accessibilityAddTraits(model.sourceFilter == entry.id ? .isSelected : [])
                 }
             }
             Section {
@@ -631,7 +641,9 @@ private struct TimelineHistogram: View {
     @Environment(\.theme) private var theme
 
     private let stripHeight: CGFloat = 110
-    private let axisHeight: CGFloat = 14
+    /// Tall enough for an 11 pt (`.caption2`) axis label plus leading. It was
+    /// 14 when the labels were drawn at a hardcoded 8 pt.
+    private let axisHeight: CGFloat = 18
     private let minSlot: CGFloat = 6
     private let gap: CGFloat = 1
 
@@ -667,8 +679,13 @@ private struct TimelineHistogram: View {
 
                         if index % labelStride == 0 {
                             ctx.draw(
+                                // Was 8 pt — under the 11 pt floor. `.caption2`
+                                // monospaced via `Typography`, so the axis
+                                // labels track Dynamic Type like everything
+                                // else. `labelStride` already thins them out
+                                // when they would collide.
                                 Text(TimelineFormat.bucketLabel(bucket.t, size: size))
-                                    .font(.system(size: 8, design: .monospaced))
+                                    .font(Typography.display(11, weight: .regular))
                                     .foregroundColor(theme.textMuted),
                                 at: CGPoint(x: x + slot / 2, y: baseline + axisHeight / 2)
                             )

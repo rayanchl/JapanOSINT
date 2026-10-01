@@ -37,9 +37,54 @@ final class SearchStore: ObservableObject {
             active.insert(Run(id: id, query: q, snapshot: nil, finished: false), at: 0)
             displayedPhase[id] = "queued"   // the placeholder stage shown first
             phaseShownAt[id] = Date()
-            tasks[id] = Task { await self.stream(id: id, api: api) }
+            openStream(id: id, api: api)
         } catch {
             lastError = "\(error)"
+        }
+    }
+
+    /// Open (or re-open) the progress stream for one run. Cancels whatever was
+    /// in the slot first: nothing in this type ever cancelled a task, so a
+    /// reassignment used to leave the previous `URLSession.bytes` loop running
+    /// forever — that loop only ends when the server closes, which a half-open
+    /// connection never does. `[weak self]` breaks the
+    /// `self → tasks → Task → self` cycle that kept the whole store alive with
+    /// it.
+    private func openStream(id: String, api: API) {
+        tasks[id]?.cancel()
+        tasks[id] = Task { [weak self] in await self?.stream(id: id, api: api) }
+    }
+
+    /// Re-open streams for runs that are still active but no longer streaming —
+    /// ones `cancelAll()` tore down while the view was off screen. Without this
+    /// a `cancelAll()` on disappear would pin a live run on whatever phase it
+    /// had reached. A re-opened stream that has nothing left to say still ends
+    /// in `stream`'s reconciling poll, so the run finishes either way.
+    func resumeActive(api: API) {
+        for run in active where tasks[run.id] == nil {
+            openStream(id: run.id, api: api)
+        }
+    }
+
+    /// Drop every live stream — call this when the view owning the store goes
+    /// away for good. Each run otherwise holds one Task and one open
+    /// URLSession stream for the life of the process.
+    func cancelAll() {
+        for task in tasks.values { task.cancel() }
+        tasks.removeAll()
+    }
+
+    /// Drop only the streams whose run already reached a terminal snapshot.
+    /// That is the leak's usual shape: `handle` finishes the run the moment the
+    /// backend reports `done`, but the `bytes.lines` loop keeps waiting for the
+    /// server to close the connection — which a half-open one never does.
+    /// Unlike `cancelAll()` this is safe to call from an `onDisappear` that
+    /// also fires on a push or a tab switch, because a run still in flight
+    /// keeps streaming.
+    func cancelFinishedStreams() {
+        let live = Set(active.map(\.id))
+        for id in tasks.keys.filter({ !live.contains($0) }) {
+            tasks.removeValue(forKey: id)?.cancel()
         }
     }
 
@@ -81,6 +126,10 @@ final class SearchStore: ObservableObject {
         } catch {
             // fall through to the reconciling poll below.
         }
+        // Cancelled rather than ended: whoever cancelled owns this id's slot
+        // now (`cancelAll` cleared it, or `openStream` handed it to a fresh
+        // task), so don't poll and don't clear an entry that isn't ours.
+        if Task.isCancelled { return }
         // Stream ended (terminal event, server close, or a dropped
         // connection). If the run never reached a terminal snapshot, reconcile
         // once via the results poll so it can't wedge on the "Queued"

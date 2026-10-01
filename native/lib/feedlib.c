@@ -1,18 +1,34 @@
 #include "feedlib.h"
 #include "csv.h"           /* csv_is_utf8 / csv_decode_sjis */
-#include <openssl/sha.h>
+#include <openssl/evp.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+/* EVP rather than SHA1_Init/Update/Final: those are deprecated in OpenSSL 3.0.
+ * The digest is byte-identical — same algorithm, same bytes, same order — and
+ * that identity is the whole constraint here: this value is the dedupe/uid key
+ * under which every feed record was stored, so a digest that shifted by one
+ * bit would make the entire existing corpus look new and re-emit it.
+ *
+ * EVP can fail where SHA1_Init could not (it allocates a context), so the
+ * failure path leaves an EMPTY key rather than a zeroed one. An empty uid is
+ * honestly empty and visibly wrong downstream; a fabricated all-zero digest
+ * would silently collide every record that hit the same failure into one. */
 void feed_hash_key(char *out21, const char *const *parts, int n) {
-  SHA_CTX c; SHA1_Init(&c);
+  out21[0] = 0;
+  EVP_MD_CTX *c = EVP_MD_CTX_new();
+  if (!c) return;
+  if (EVP_DigestInit_ex(c, EVP_sha1(), NULL) != 1) { EVP_MD_CTX_free(c); return; }
   for (int i = 0; i < n; i++) {
     if (!parts[i]) continue;
-    SHA1_Update(&c, parts[i], strlen(parts[i]));
-    SHA1_Update(&c, "|", 1);
+    EVP_DigestUpdate(c, parts[i], strlen(parts[i]));
+    EVP_DigestUpdate(c, "|", 1);
   }
-  unsigned char d[20]; SHA1_Final(d, &c);
+  unsigned char d[EVP_MAX_MD_SIZE]; unsigned int dl = 0;
+  int ok = EVP_DigestFinal_ex(c, d, &dl) == 1;
+  EVP_MD_CTX_free(c);
+  if (!ok) return;
   for (int i = 0; i < 10; i++) sprintf(out21 + i*2, "%02x", d[i]);
   out21[20] = 0;
 }
@@ -83,8 +99,24 @@ cJSON *feed_get_json_h(http_client *http, const char *url,
   int rc = http_request(http, "GET", url, headers, NULL, 0,
                         timeout_ms > 0 ? timeout_ms : 20000, 2, &r);
   cJSON *j = NULL;
-  if (rc == 0 && r.status >= 200 && r.status < 300 && r.body)
-    j = cJSON_Parse(r.body);
+  if (rc == 0 && r.status >= 200 && r.status < 300 && r.body) {
+    /* Same gate feed_get_text() and jo_get() apply, missing here until now: a
+     * .jp host answering with a body that is not valid UTF-8 is read as
+     * Shift_JIS BEFORE the parse. Without it, a JSON document served as raw
+     * SJIS either fails to parse outright (an SJIS lead byte can land on
+     * 0x5C, which cJSON then reads as an escape) or parses with mojibake
+     * strings baked into it — this function is called from ~390 collector
+     * files plus lib/pagewalk.c, lib/jsonlist.c and lib/geojson.c's page
+     * walkers, so it is the one JSON entry point that had never carried the
+     * guard every other body reader in the tree does. csv_decode_sjis fails
+     * closed to a verbatim copy, so a .jp host serving something else, or an
+     * already-valid-UTF-8 body, is untouched. */
+    char *conv = NULL;
+    if (r.body_len && feed_url_host_is_jp(url) && !csv_is_utf8(r.body, r.body_len))
+      conv = csv_decode_sjis(r.body, r.body_len);
+    j = cJSON_Parse(conv ? conv : r.body);
+    free(conv);
+  }
   http_response_free(&r);
   if (own) http_client_free(http);
   return j;
@@ -103,8 +135,14 @@ cJSON *feed_post_json(http_client *http, const char *url, const char *body,
                         body, body ? strlen(body) : 0,
                         timeout_ms > 0 ? timeout_ms : 20000, 2, &r);
   cJSON *j = NULL;
-  if (rc == 0 && r.status >= 200 && r.status < 300 && r.body)
-    j = cJSON_Parse(r.body);
+  if (rc == 0 && r.status >= 200 && r.status < 300 && r.body) {
+    /* Same .jp/Shift_JIS gate as feed_get_json_h() above — see there. */
+    char *conv = NULL;
+    if (r.body_len && feed_url_host_is_jp(url) && !csv_is_utf8(r.body, r.body_len))
+      conv = csv_decode_sjis(r.body, r.body_len);
+    j = cJSON_Parse(conv ? conv : r.body);
+    free(conv);
+  }
   http_response_free(&r);
   if (own) http_client_free(http);
   return j;

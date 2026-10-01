@@ -36,6 +36,7 @@
 #include "source.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
+#include "lib/feedlib.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -121,8 +122,20 @@ static int run_isigmet(const source_ctx *ctx, intel_sink *sink) {
     const char *ser  = jo_sv(b, "seriesId");
     if (!haz && !fir && !icao) continue;
     double vf = 0; av_dbl(b, "validTimeFrom", &vf);
-    char uid[160];
-    snprintf(uid, sizeof uid, "%s|%s|%.0f", icao ? icao : "?", ser ? ser : "?", vf);
+    /* IDENTITY (rule 4b, measured): icao|seriesId|validFrom keyed distinct
+     * advisories onto each other — one FIR re-uses a series id for several
+     * polygons/qualifiers in the same validity window. Sweep 2026-08-24:
+     * emitted 143, stored 140. Fold a hash of the record itself into the uid
+     * so distinct advisories keep distinct uids while a byte-identical
+     * re-serve still collapses onto the same row. */
+    char rh[21];
+    char *rjs = cJSON_PrintUnformatted(b);
+    const char *rhp[1] = { rjs ? rjs : "" };
+    feed_hash_key(rh, rhp, 1);
+    free(rjs);
+    char uid[192];
+    snprintf(uid, sizeof uid, "%s|%s|%.0f|%s", icao ? icao : "?",
+             ser ? ser : "?", vf, rh);
     char title[288];
     snprintf(title, sizeof title, "SIGMET %s%s%s — %s",
              qual ? qual : "", qual ? " " : "", haz ? haz : "HAZARD",
@@ -195,9 +208,19 @@ static int run_gairmet(const source_ctx *ctx, intel_sink *sink) {
     if (!haz) continue;
     double fh = 0; av_dbl(b, "forecastHour", &fh);
     double issue = 0; av_dbl(b, "issueTime", &issue);
-    char uid[192];
-    snprintf(uid, sizeof uid, "%s|%s|%s|%.0f|%.0f", prod ? prod : "?",
-             tag ? tag : "?", haz, fh, issue);
+    /* IDENTITY (rule 4b, measured): product|tag|hazard|F-hour|issue keyed the
+     * several polygons a G-AIRMET issues for one hazard/forecast-hour onto one
+     * uid — sweep 2026-08-24: emitted 14, stored 7, exactly half. Fold a hash
+     * of the record itself in so each polygon keeps its own uid while a
+     * byte-identical re-serve still collapses. */
+    char rh[21];
+    char *rjs = cJSON_PrintUnformatted(b);
+    const char *rhp[1] = { rjs ? rjs : "" };
+    feed_hash_key(rh, rhp, 1);
+    free(rjs);
+    char uid[224];
+    snprintf(uid, sizeof uid, "%s|%s|%s|%.0f|%.0f|%s", prod ? prod : "?",
+             tag ? tag : "?", haz, fh, issue, rh);
     char title[288];
     snprintf(title, sizeof title, "G-AIRMET %s %s F+%.0fh%s%s", haz,
              tag ? tag : "", fh, prod ? " · " : "", prod ? prod : "");

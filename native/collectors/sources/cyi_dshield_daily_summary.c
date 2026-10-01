@@ -16,6 +16,7 @@
 #include "source.h"
 #include "lib/feedlib.h"
 #include "third_party/cJSON.h"
+#include "_timefmt.inc"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -72,15 +73,15 @@ static int emit_row(intel_sink *sink, const cJSON *r) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  time_t t = time(NULL) - 2 * 24 * 3600;
-  struct tm tmv;
+  /* The gmtime_r NULL was already checked here; strftime's 0 was not, and on
+   * that path `day` is left UNSPECIFIED — strftime does not even write a NUL —
+   * so the URL would have carried stack bytes. _timefmt.inc checks both and
+   * also carries the _WIN32 split this file used to spell out. */
   char day[16];
-#if defined(_WIN32)
-  if (gmtime_s(&tmv, &t) != 0) return -1;
-#else
-  if (!gmtime_r(&t, &tmv)) return -1;
-#endif
-  strftime(day, sizeof day, "%Y-%m-%d", &tmv);
+  if (!jo_ago_fmt(2L * 24 * 3600, "%Y-%m-%d", day, sizeof day)) {
+    fprintf(stderr, "[dshield-daily-summary] cannot render the query date\n");
+    return -1;
+  }
 
   char url[128];
   snprintf(url, sizeof url, "https://isc.sans.edu/api/dailysummary/%s?json", day);

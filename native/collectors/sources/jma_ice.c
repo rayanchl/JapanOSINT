@@ -11,6 +11,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 #define PAGE "https://www.data.jma.go.jp/kaiyou/shindan/a_1/series_okhotsk/series_okhotsk.html"
 #define DATA "https://www.data.jma.go.jp/kaiyou/data/shindan/a_1/series_okhotsk/longterm_okhotsk_latest.txt"
@@ -31,11 +32,6 @@ static void trim(char *s) {
   while (l && isspace((unsigned char)s[l-1])) s[--l] = 0;
   size_t i = 0; while (s[i] && isspace((unsigned char)s[i])) i++;
   if (i) memmove(s, s + i, strlen(s + i) + 1);
-}
-
-static void iso_now(char *out, size_t n) {
-  time_t t = time(NULL); struct tm g; gmtime_r(&t, &g);
-  strftime(out, n, "%Y-%m-%dT%H:%M:%S.000Z", &g);
 }
 
 /* trim trailing zeros like JS Number->string (e.g. 12.30 -> "12.3"). */
@@ -83,7 +79,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   struct row *latest = &rows[rn - 1];
   int rstart = rn > 10 ? rn - 10 : 0;
-  char now[40]; iso_now(now, sizeof now);
+  char now[40] = {0}; jo_now_iso_ms(now, sizeof now);
   char latv[32]; numstr(latest->val, latv, sizeof latv);
 
   /* body recent list "season:val, ..." */
@@ -137,16 +133,17 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   it.link = PAGE;
   it.author = "\xE6\xB0\x97\xE8\xB1\xA1\xE5\xBA\x81 Japan Meteorological Agency";
   it.lang = "ja";
-  it.published_at = now;
+  it.published_at = now[0] ? now : NULL;
   it.record_type = "article";
   it.properties_json = pj;
   it.tags_json = tj;
   int rc = sink->emit(sink, &it);
 
-  free(pj); free(tj); free(rows);
+  free(pj); free(tj);
   cJSON_Delete(p); cJSON_Delete(tags);
   fprintf(stderr, "[jma-ice] emitted %d (latest=%s)\n",
           rc >= 0 ? 1 : 0, latest->season);
+  free(rows);                      /* `latest` points into rows — free last */
   return rc >= 0 ? 0 : -1;
 }
 

@@ -36,21 +36,30 @@ struct LiveVehiclesContent: MapContent {
                     ZStack {
                         Circle()
                             .fill(color(for: v.kind))
-                            .frame(width: 14, height: 14)
+                            .frame(width: 18, height: 18)
+                        // Was a hardcoded 8 pt, below the 11 pt legibility
+                        // floor. `Typography` snaps it to `.caption2` (11 pt)
+                        // and makes it Dynamic-Type-aware; the disc grew
+                        // 14 → 18 pt to keep the same glyph-to-disc ratio.
                         Image(systemName: symbol(for: v.kind))
-                            .font(.system(size: 8, weight: .bold))
+                            .font(Typography.display(11, weight: .bold))
                             .foregroundStyle(.white)
                     }
                     .rotationEffect(.degrees(v.heading ?? 0))
                     if let d = v.delay_s, d > 0 {
                         Text("+\(d / 60)m")
-                            .font(.system(size: 9, weight: .bold))
+                            .font(Typography.display(11, weight: .bold))
                             .padding(.horizontal, 4).padding(.vertical, 1)
                             .background(d > 300 ? theme.danger : theme.warning, in: Capsule())
                             .foregroundStyle(.white)
                             .offset(x: 6, y: -6)
                     }
                 }
+                // A map pin is anchored to a coordinate and sits among hundreds
+                // of others; at the accessibility sizes the discs would cover
+                // the map they annotate. So the pin tracks Dynamic Type up to
+                // xxLarge and stops — the popup you get by tapping it does not.
+                .dynamicTypeSize(...DynamicTypeSize.xxLarge)
                 .animation(.linear(duration: 1), value: v.lat)
                 .animation(.linear(duration: 1), value: v.lon)
             }

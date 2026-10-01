@@ -7,7 +7,7 @@
  * R2: coordinates come only from the upstream position_geographique{lon,lat}.
  * Keyless. Licence: Licence Ouverte / ODbL depending on the dataset; SNCF
  * open-data terms permit reuse with attribution. */
-#include "od_shared.c"
+#include "od_shared.inc"
 
 #define SID "ods-sncf-stations"
 static const char *URL =

@@ -155,7 +155,12 @@ static const eu_reg REGS[] = {
 };
 static const int NREG = (int)(sizeof(REGS) / sizeof(REGS[0]));
 
-#define EU_TOTAL_CAP     500   /* exhaustive-ok: runaway guard, logged */
+/* NOT a page cap: this sits in the loop condition over REGISTRIES, so hitting
+ * it ends the sweep and every registry after it goes unqueried. That is
+ * disclosed as data by jo_registry_sweep_notice() below, which names how many
+ * of the table were reached. */
+#define EU_TOTAL_CAP     500   /* exhaustive-ok: whole-run emit cap; the sweep it
+                                * cuts short is reported as a truncation notice */
 #define EU_PER_REG_CAP    0     /* exhaustive-ok: 0 = no cap, every hit is emitted */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -165,28 +170,34 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char *q = jo_urlencode(e);   /* UTF-8 safe %-encode of the query */
   if (!q) return 0;
 
-  int total = 0;
-  for (int i = 0; i < NREG && total < EU_TOTAL_CAP; i++) {
-    if (ctx->cancel && *ctx->cancel) break;
+  int total = 0, i = 0, cancelled = 0;
+  for (; i < NREG && total < EU_TOTAL_CAP; i++) {
+    if (ctx->cancel && *ctx->cancel) { cancelled = 1; break; }
     const eu_reg *r = &REGS[i];
 
     char url[1400];
     /* single %s slot; the ES/BOE row has literal %% for a real [ ] param */
     snprintf(url, sizeof url, r->url, q);
 
-    int room = EU_TOTAL_CAP - total;
-    int cap  = room < EU_PER_REG_CAP ? room : EU_PER_REG_CAP;
+    /* The old `int room = EU_TOTAL_CAP - total; int cap = room < EU_PER_REG_CAP
+     * ? room : EU_PER_REG_CAP;` was dead: EU_PER_REG_CAP is 0, `room` is always
+     * > 0 inside this loop, so min(room, 0) was always 0 — and jo_emit_anchors
+     * reads <= 0 as "no cap". `room` therefore never limited anything. Removed
+     * rather than given teeth: giving it teeth would change what this collector
+     * emits, which is not what fixing a false disclosure means. */
 
     /* Real fetch + real anchor extraction. Filter on the query bytes so we
      * only keep anchors whose visible text or href actually mentions the
      * entity — avoids emitting site chrome. JS-only/anti-bot rows return 0. */
     int got = jo_emit_anchors(ctx, sink, url, r->href, r->name, r->rtype,
-                              r->base, e, cap, r->name);
+                              r->base, e, EU_PER_REG_CAP, r->name);
     total += got;
   }
   free(q);
-  fprintf(stderr, "[europe_registry] total emitted %d across %d registries\n",
-          total, NREG);
+  jo_registry_sweep_notice(sink, "EUROPE_REGISTRY", e, total, i, NREG,
+                           "EU_TOTAL_CAP", EU_TOTAL_CAP, cancelled);
+  fprintf(stderr, "[europe_registry] total emitted %d across %d of %d registries\n",
+          total, i, NREG);
   return 0;   /* honest empty is not an error */
 }
 

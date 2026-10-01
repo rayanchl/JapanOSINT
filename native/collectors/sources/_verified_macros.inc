@@ -12,11 +12,16 @@
 #include "lib/csv.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>   /* strcmp — vgeo_cat_emit; strstr/strncmp — vsrc_url_dates */
+#include <time.h>     /* gmtime_r/strftime — vsrc_url_dates */
 
 /* RSS/Atom. rss_collect returns #emitted or -1; an honest empty is 0 (R3). */
 #define VRSS(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, LANG, TAGS, IVAL, DESC)   \
   static int run_##SYM(const source_ctx *c, intel_sink *s) {                  \
-    int n = rss_collect(c, s, URL, LANG, TAGS); return n < 0 ? -1 : 0; }      \
+    char *du = vsrc_url_dates(URL);                                           \
+    int n = rss_collect(c, s, du ? du : URL, LANG, TAGS);                     \
+    free(du);                                                                 \
+    return n < 0 ? -1 : 0; }                                                  \
   static const source_def SYM = {                                            \
     .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,             \
     .update_interval_sec = IVAL, .run = run_##SYM,                            \
@@ -24,15 +29,100 @@
     .description = DESC, .layer = NULL, .free_tier = 1 };                     \
   REGISTER_SOURCE(SYM)
 
+/* VGEO record_type repair (2026-08, map-layer taxonomy work).
+ *
+ * lib/geojson.c stamps record_type from the feature's own properties
+ * (`record_type`, then `kind`) and otherwise FALLS BACK TO THE SOURCE ID —
+ * so most of the 770 VGEO rows filled the record_type column with 770
+ * different source ids, one per source, which is a name, not a data type,
+ * and useless for grouping anything. The macro's CAT argument has been a
+ * real geo vocabulary all along (seismic, airspace, earthobs, wildfire,
+ * flood, radiation, shipping, volcano, crime, cameras, …); it just never
+ * reached the emitted records.
+ *
+ * This shim sink forwards every item unchanged EXCEPT that a record_type the
+ * engine could only fill with the source id (or not at all) is replaced by
+ * CAT. An upstream-declared record_type/kind still wins, and the engine's
+ * own markers (collector-truncation-notice) pass through untouched — nothing
+ * fetched is altered, only our own fallback label is improved.
+ *
+ * `static inline` (not plain static): every vsrc file includes this header
+ * whether or not it uses VGEO, and an unused plain-static function would
+ * fail the -Wall -Wextra zero-warning build ~5,000 times over. */
+/* Run-time date tokens: {{today}} and {{today-N}} (N in days) expand to a
+ * UTC YYYY-MM-DD when the collector RUNS, not when the manifest was written.
+ *
+ * WHY. Manifest URLs that pin a literal date window rot silently: the NVE
+ * flood row shipped `/Warning/All/1/2026-08-01/2026-08-09` and Digitraffic's
+ * maintenance row `endFrom=2026-08-16T10:00:00Z` — both verified live on
+ * their generation day, both guaranteed to age into an empty (or, for
+ * Digitraffic, an HTTP 400) with the run still reporting success. A rolling
+ * window has to roll at fetch time; C string literals cannot, so the macros
+ * below pass every URL through this expander first.
+ *
+ * A URL with no token costs one strstr and is used verbatim (NULL return),
+ * so the existing fleet is untouched byte-for-byte. Tokens compose with
+ * literal suffixes: `from={{today-7}}T00:00Z` works. Manifest rows using
+ * tokens keep them in the TSV so a regeneration is idempotent
+ * (gen_verified_sources.py passes URLs through unchanged). */
+static inline char *vsrc_url_dates(const char *url) {
+  const char *tok = strstr(url, "{{today");
+  if (!tok) return NULL;              /* the common case: nothing to expand */
+  char out[1024];
+  size_t o = 0;
+  const char *p = url;
+  while (*p && o + 32 < sizeof out) {
+    if (strncmp(p, "{{today", 7) == 0) {
+      long minus = 0;
+      const char *q = p + 7;
+      if (*q == '-') minus = strtol(q + 1, (char **)&q, 10);
+      if (minus >= 0 && q[0] == '}' && q[1] == '}') {
+        time_t t = time(NULL) - minus * 86400;
+        struct tm tmv;
+        if (gmtime_r(&t, &tmv)) {
+          o += strftime(out + o, sizeof out - o, "%Y-%m-%d", &tmv);
+          p = q + 2;
+          continue;
+        }
+      }
+    }
+    out[o++] = *p++;
+  }
+  out[o] = '\0';
+  return strdup(out);
+}
+
+typedef struct { intel_sink *inner; const char *cat; const char *sid; } vgeo_cat_ctx;
+static inline int vgeo_cat_emit(struct intel_sink *s, const intel_item *it) {
+  vgeo_cat_ctx *c = (vgeo_cat_ctx *)s->ctx;
+  intel_item copy = *it;
+  if (!copy.record_type || strcmp(copy.record_type, c->sid) == 0)
+    copy.record_type = c->cat;
+  return c->inner->emit(c->inner, &copy);
+}
+
 /* GeoJSON FeatureCollection. Geometry comes from the upstream and nowhere
- * else — geojson_emit_doc never invents a position (R2). */
+ * else — geojson_emit_doc never invents a position (R2).
+ *
+ * PAGED since 2026-08. This was one GET of one URL, and 643 of the 770 URLs
+ * built on it ask the upstream for a SLICE — almost all of them ArcGIS
+ * `query?...&resultRecordCount=500&f=geojson`. Those layers were read 500
+ * features at a time, once, and the rest was discarded with nothing in the
+ * output to show for it, even though ArcGIS says so itself by setting
+ * `exceededTransferLimit`. geojson_emit_paged() walks while the upstream
+ * signals more and discloses a ceiling stop as a collector-truncation-notice;
+ * it returns -1 only when the FIRST fetch fails, so a dead endpoint stays an
+ * error and an honest empty stays 0 (R3). See lib/geojson.h.
+ *
+ * Keep long commentary OUT of the macro body — see the note on VJSON. */
 #define VGEO(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, LANG, TAGS, IVAL, DESC)   \
   static int run_##SYM(const source_ctx *c, intel_sink *s) {                  \
-    cJSON *d = feed_get_json(c->http, URL, 25000);                            \
-    if (!d) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }        \
-    int n = geojson_emit_doc(s, ID, d);                                       \
-    cJSON_Delete(d);                                                          \
-    fprintf(stderr, "[%s] emitted %d\n", ID, n);                              \
+    vgeo_cat_ctx vc = { s, CAT, ID };                                         \
+    intel_sink vs = { &vc, vgeo_cat_emit };                                   \
+    char *du = vsrc_url_dates(URL);                                           \
+    int n = geojson_emit_paged(&vs, ID, c->http, du ? du : URL, 25000);       \
+    free(du);                                                                 \
+    if (n < 0) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }     \
     return 0; }                                                               \
   static const source_def SYM = {                                            \
     .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,             \
@@ -60,8 +150,31 @@
  * misinforms everyone downstream. */
 #define VJSON(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, PATH, LANG, TAGS, IVAL, DESC) \
   static int run_##SYM(const source_ctx *c, intel_sink *s) {                  \
-    int n = jsonlist_emit_paged(s, ID, c->http, URL, 25000,                   \
+    char *du = vsrc_url_dates(URL);                                           \
+    int n = jsonlist_emit_paged(s, ID, c->http, du ? du : URL, 25000,         \
                                 PATH, CAT, LANG, TAGS);                       \
+    free(du);                                                                 \
+    if (n < 0) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }     \
+    return 0; }                                                               \
+  static const source_def SYM = {                                            \
+    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,             \
+    .update_interval_sec = IVAL, .run = run_##SYM,                            \
+    .category = CAT, .type = "api", .url = URL,                               \
+    .description = DESC, .layer = NULL, .free_tier = 1 };                     \
+  REGISTER_SOURCE(SYM)
+
+/* As VJSON, but keys each record's uid on IDFIELD (a single top-level field
+ * name on each record) instead of the fixed id/uid/guid/... precedence list
+ * jsonlist_emit_paged uses. Use this only when a live response shows the
+ * plain VJSON row losing records to uid collisions AND the record's real
+ * unique field is confirmed present in that response under IDFIELD — never
+ * guess a field name that hasn't been seen in an actual fetch. */
+#define VJSON_KEYED(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, PATH, LANG, TAGS, IVAL, DESC, IDFIELD) \
+  static int run_##SYM(const source_ctx *c, intel_sink *s) {                  \
+    char *du = vsrc_url_dates(URL);                                           \
+    int n = jsonlist_emit_paged_keyed(c, s, ID, du ? du : URL, PATH, CAT,     \
+                                      LANG, TAGS, IDFIELD);                   \
+    free(du);                                                                 \
     if (n < 0) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }     \
     return 0; }                                                               \
   static const source_def SYM = {                                            \
@@ -86,7 +199,10 @@
  * indistinguishable from a buffered one. See lib/jsonstream.h. */
 #define VJSONBIG(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, PATH, LANG, TAGS, IVAL, DESC) \
   static int run_##SYM(const source_ctx *c, intel_sink *s) {                  \
-    int n = jsonstream_emit(s, ID, URL, 900000, PATH, CAT, LANG, TAGS);       \
+    char *du = vsrc_url_dates(URL);                                           \
+    int n = jsonstream_emit(s, ID, du ? du : URL, 900000, PATH, CAT, LANG,    \
+                            TAGS);                                            \
+    free(du);                                                                 \
     if (n < 0) { fprintf(stderr, "[%s] stream failed\n", ID); return -1; }    \
     return 0; }                                                               \
   static const source_def SYM = {                                            \
@@ -96,15 +212,29 @@
     .description = DESC, .layer = NULL, .free_tier = 1 };                     \
   REGISTER_SOURCE(SYM)
 
-/* CSV. csv_parse(text, 1) yields an array of header-keyed objects, which is
- * exactly jsonlist_emit's input shape, so the same field-name precedence and
- * the same no-invented-geometry rule apply. A CSV with no title-ish column
- * emits nothing rather than rows labelled by their first cell. */
+/* CSV. csv_parse_dc(text, 1, ',', "#") yields an array of header-keyed
+ * objects, which is exactly jsonlist_emit's input shape, so the same field-name
+ * precedence and the same no-invented-geometry rule apply.
+ *
+ * The `#` argument is the fix for a whole-source silent zero, and it is
+ * unconditional here rather than per-row on purpose. lib/hpengine.c has carried
+ * a `csv_comment` option since batch 18 (CLAUDE.md rule 4); this path never got
+ * one, so every scientific CSV that opens with a licence banner had that banner
+ * read as its column names. NOAA GML's sf6_mm_gl.csv is 45 lines of `#` notice
+ * followed by `year,month,decimal,average,…` and 347 monthly observations, and
+ * it emitted 0 records on every run since it was registered. csv_parse_dc only
+ * strips a LEADING run of comment lines — data never precedes the header — and
+ * recovers the header from that run when the publisher put it there, so no CSV
+ * that was parsing correctly changes shape. See lib/csv.h.
+ *
+ * Keep long commentary OUT of the macro body — see the note on VJSON. */
 #define VCSV(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, LANG, TAGS, IVAL, DESC)   \
   static int run_##SYM(const source_ctx *c, intel_sink *s) {                  \
-    char *t = feed_get_text(c->http, URL, 25000);                             \
+    char *du = vsrc_url_dates(URL);                                           \
+    char *t = feed_get_text(c->http, du ? du : URL, 25000);                   \
+    free(du);                                                                 \
     if (!t) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }        \
-    cJSON *d = csv_parse(t, 1);                                               \
+    cJSON *d = csv_parse_dc(t, 1, ',', "#");                                  \
     free(t);                                                                  \
     int n = jsonlist_emit(s, ID, d, "", CAT, LANG, TAGS);                     \
     cJSON_Delete(d);                                                          \

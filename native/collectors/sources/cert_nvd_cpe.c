@@ -29,6 +29,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "_timefmt.inc"
 #include "third_party/cJSON.h"
 #include <ctype.h>
 #include <stdio.h>
@@ -171,12 +172,13 @@ static int run(const source_ctx *c, intel_sink *s) {
   } else {
     time_t now = time(NULL);
     time_t from = now - 7 * 24 * 3600;
-    struct tm tf, tn;
-    gmtime_r(&from, &tf);
-    gmtime_r(&now, &tn);
     char a[40], b[40];
-    strftime(a, sizeof a, "%Y-%m-%dT%H:%M:%S.000Z", &tf);
-    strftime(b, sizeof b, "%Y-%m-%dT%H:%M:%S.000Z", &tn);
+    if (!jo_time_fmt(from, "%Y-%m-%dT%H:%M:%S.000Z", a, sizeof a) ||
+        !jo_time_fmt(now,  "%Y-%m-%dT%H:%M:%S.000Z", b, sizeof b)) {
+      fprintf(stderr, "[nvd-cpe-dictionary] cannot render the query window "
+                      "as a date\n");
+      return -1;
+    }
     snprintf(url, sizeof url,
              "https://services.nvd.nist.gov/rest/json/cpes/2.0"
              "?lastModStartDate=%s&lastModEndDate=%s&resultsPerPage=200", a, b);

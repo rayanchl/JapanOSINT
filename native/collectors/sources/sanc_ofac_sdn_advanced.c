@@ -294,6 +294,29 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
     free(bj); free(pj); free(fixedref); free(subid);
   }
+  /* House rule 2: when the row cap bites, keep scanning the tail window we
+   * already downloaded WITHOUT emitting, so the notice carries a real count of
+   * the <DistinctParty> blocks left unread. The count is of the tail window
+   * only — the byte-range window is a second, separate bound and the reason
+   * says so rather than implying the file total is known. */
+  if (n >= max_rows) {
+    int rest = 0;
+    sanc_el skip;
+    while (sanc_xml_next(&cur, tend, "DistinctParty", &skip)) rest++;
+    if (rest > 0)
+      jo_truncation_notice(sink, "ofac-sdn-advanced", SDN_ADV_URL, n,
+                           (long)n + rest,
+                           "JO_SANC_MAX_ROWS (default 5000) stopped the row "
+                           "loop; the remaining <DistinctParty> blocks in the "
+                           "downloaded tail window were counted but never "
+                           "parsed or emitted. records_available counts that "
+                           "window only — the JO_SANC_SDN_TAIL_MB byte range "
+                           "is a further bound on the 125 MB export and the "
+                           "parties before it were never fetched at all",
+                           "raise JO_SANC_MAX_ROWS, and raise "
+                           "JO_SANC_SDN_TAIL_MB (or drop the Range header) to "
+                           "reach the rest of the export");
+  }
   free(tail);
   free(ftypes); free(subtypes); free(ptypes);
 

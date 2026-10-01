@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 /* NOTE 2026-07: the trailing-slash form 404s — https://www.nicter.jp/atlas/
  * returns "404 Not Found" so feed_get_text yielded NULL and the source
@@ -111,11 +112,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   /* observed_at = new Date().toISOString() */
-  char iso[32];
-  time_t now = time(NULL);
-  struct tm tmv;
-  gmtime_r(&now, &tmv);
-  strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%S.000Z", &tmv);
+  char iso[32] = {0};
+  jo_now_iso_ms(iso, sizeof iso);
 
   cJSON *features = cJSON_CreateArray();
   cJSON *f = gj_point_feature(NICT_HQ_LON, NICT_HQ_LAT);
@@ -128,7 +126,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     hasTotal ? cJSON_CreateNumber((double)total) : cJSON_CreateNull());
   cJSON_AddItemToObject(p, "sensors_online",
     hasSensors ? cJSON_CreateNumber((double)sensors) : cJSON_CreateNull());
-  cJSON_AddStringToObject(p, "observed_at", iso);
+  cJSON_AddItemToObject(p, "observed_at",
+    iso[0] ? cJSON_CreateString(iso) : cJSON_CreateNull());
   cJSON_AddNumberToObject(p, "html_length", (double)html_len);
   cJSON_AddStringToObject(p, "source", "nicter_atlas_scrape");
   /* The Point is NICT's Koganei headquarters, not where the packets were seen —

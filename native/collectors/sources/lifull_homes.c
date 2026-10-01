@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 struct pe { const char *ja, *slug; };
 
@@ -51,9 +52,8 @@ static int parse_count(const char *html, long *out) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  char now[32];
-  { time_t t = time(NULL); struct tm tm; gmtime_r(&t, &tm);
-    strftime(now, sizeof now, "%Y-%m-%dT%H:%M:%S.000Z", &tm); }
+  char now[32] = {0};
+  jo_now_iso_ms(now, sizeof now);      /* empty ⇒ published_at stays NULL */
 
   int n = 0, fetched = 0;
   for (int i = 0; i < NPREF; i++) {
@@ -100,7 +100,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     it.body         = body;
     it.link         = url;
     it.lang         = "ja";
-    it.published_at = now;
+    it.published_at = now[0] ? now : NULL;
     it.record_type  = "lifull-homes";
     it.tags_json    = tj;
     it.properties_json = pj;

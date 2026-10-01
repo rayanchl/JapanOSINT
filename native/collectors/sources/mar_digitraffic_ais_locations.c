@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_timefmt.inc"
 #include "_jp_osint.inc"
 
 #define AIS_URL "https://meri.digitraffic.fi/api/ais/v1/locations" \
@@ -40,14 +41,6 @@
 static inline void add_bool(cJSON *dst, const cJSON *src, const char *k) {
   const cJSON *v = cJSON_GetObjectItem(src, k);
   if (cJSON_IsBool(v)) cJSON_AddBoolToObject(dst, k, cJSON_IsTrue(v));
-}
-static inline const char *iso_ms(double ms, char *buf, size_t n) {
-  if (!(ms > 0)) return NULL;
-  time_t t = (time_t)(ms / 1000.0);
-  struct tm g;
-  if (!gmtime_r(&t, &g)) return NULL;
-  if (strftime(buf, n, "%Y-%m-%dT%H:%M:%SZ", &g) == 0) return NULL;
-  return buf;
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -78,7 +71,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     const char *pt = NULL;
     if (props) {
       const cJSON *te = cJSON_GetObjectItem(props, "timestampExternal");
-      if (cJSON_IsNumber(te)) pt = iso_ms(te->valuedouble, ptime, sizeof ptime);
+      if (cJSON_IsNumber(te)) pt = jo_ms_iso(te->valuedouble, ptime, sizeof ptime);
     }
 
     cJSON *p = cJSON_CreateObject();

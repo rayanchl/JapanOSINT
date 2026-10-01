@@ -47,10 +47,20 @@
 #include "lib/feedlib.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
+#include "lib/pagewalk.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+/* pw_fetch_fn preserving the explicit Accept header and the 45 s timeout these
+ * two runs already used, rather than silently adopting pw_fetch_json's own
+ * defaults as a side effect of adopting its page walk. */
+static cJSON *bl_fetch(const source_ctx *c, const char *url, void *ud) {
+  (void)ud;
+  const char *hdrs[] = { "Accept: application/json", NULL };
+  return feed_get_json_h(c->http, url, hdrs, 45000);
+}
 
 /* Emit one row. `data` is TAKEN OVER (printed, then deleted). `lat`/`lon` are
  * used only when `has_geo` is non-zero — the caller decides, from what the
@@ -107,13 +117,21 @@ static int bl_date(const char *raw, char *out, size_t cap) {
 
 /* --------------------------------------------------------------- Chicago */
 
-static int run_chicago(const source_ctx *ctx, intel_sink *sink) {
-  const char *url =
-    "https://data.cityofchicago.org/resource/r5kz-chrr.json"
-    "?$limit=500&$order=date_issued%20DESC";
-  const char *hdrs[] = { "Accept: application/json", NULL };
-  cJSON *doc = feed_get_json_h(ctx->http, url, hdrs, 45000);
-  if (!doc) { fprintf(stderr, "[chicago-licences] fetch failed\n"); return -1; }
+/* `$offset=0` seeds lib/pagewalk.c's offset walk — pw_walk only ever advances a
+ * parameter the author already wrote. `,:id` makes the sort total across ties
+ * in date_issued. Measured 2026-09-19: 1,207,156 licences upstream, of which
+ * the single-fetch collector kept 500. */
+#define CHI_LIC_URL \
+  "https://data.cityofchicago.org/resource/r5kz-chrr.json" \
+  "?$limit=500&$offset=0&$order=date_issued%20DESC,:id"
+
+/* pw_emit_fn: one page, reporting what it CONTAINED in `seen`. */
+static int chi_emit_page(const source_ctx *ctx, intel_sink *sink,
+                         const char *id, cJSON *doc, void *ud, int *seen) {
+  (void)ctx; (void)id; (void)ud;
+  *seen = 0;
+  if (!cJSON_IsArray(doc)) return 0;
+  *seen = cJSON_GetArraySize(doc);
 
   int n = 0;
   cJSON *r;
@@ -154,20 +172,33 @@ static int run_chicago(const source_ctx *ctx, intel_sink *sink) {
                  "[\"commercial\",\"business-licence\",\"chicago\"]",
                  geo, lat, lon);
   }
-  cJSON_Delete(doc);
-  fprintf(stderr, "[chicago-licences] emitted %d\n", n);
+  return n;
+}
+
+static int run_chicago(const source_ctx *ctx, intel_sink *sink) {
+  int n = pw_walk(ctx, sink, "socrata-chicago-business-licences", CHI_LIC_URL,
+                  bl_fetch, chi_emit_page, NULL);
+  if (n < 0) { fprintf(stderr, "[chicago-licences] fetch failed\n"); return -1; }
   return 0;
 }
 
 /* --------------------------------------------------------- San Francisco */
 
-static int run_sf(const source_ctx *ctx, intel_sink *sink) {
-  const char *url =
-    "https://data.sfgov.org/resource/g8m3-pdis.json"
-    "?$limit=500&$order=dba_start_date%20DESC";
-  const char *hdrs[] = { "Accept: application/json", NULL };
-  cJSON *doc = feed_get_json_h(ctx->http, url, hdrs, 45000);
-  if (!doc) { fprintf(stderr, "[sf-registrations] fetch failed\n"); return -1; }
+/* Seeded the same way as CHI_LIC_URL above. The upstream row count could not be
+ * read: data.sfgov.org answered a `$select=count(1)` probe with an nginx 403 on
+ * 2026-09-19, so the total is honestly unknown and pw_walk publishes
+ * records_available as null rather than guessing one. */
+#define SF_BIZ_URL \
+  "https://data.sfgov.org/resource/g8m3-pdis.json" \
+  "?$limit=500&$offset=0&$order=dba_start_date%20DESC,:id"
+
+/* pw_emit_fn: one page, reporting what it CONTAINED in `seen`. */
+static int sf_emit_page(const source_ctx *ctx, intel_sink *sink,
+                        const char *id, cJSON *doc, void *ud, int *seen) {
+  (void)ctx; (void)id; (void)ud;
+  *seen = 0;
+  if (!cJSON_IsArray(doc)) return 0;
+  *seen = cJSON_GetArraySize(doc);
 
   int n = 0;
   cJSON *r;
@@ -216,8 +247,13 @@ static int run_sf(const source_ctx *ctx, intel_sink *sink) {
                  "[\"commercial\",\"business-licence\",\"san-francisco\"]",
                  geo, lat, lon);
   }
-  cJSON_Delete(doc);
-  fprintf(stderr, "[sf-registrations] emitted %d\n", n);
+  return n;
+}
+
+static int run_sf(const source_ctx *ctx, intel_sink *sink) {
+  int n = pw_walk(ctx, sink, "socrata-sf-business-registrations", SF_BIZ_URL,
+                  bl_fetch, sf_emit_page, NULL);
+  if (n < 0) { fprintf(stderr, "[sf-registrations] fetch failed\n"); return -1; }
   return 0;
 }
 

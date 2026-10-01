@@ -93,7 +93,7 @@
 #include <unistd.h>
 
 #ifndef JO_REPO_ROOT
-#define JO_REPO_ROOT "/Users/rayan/JapanOSINT"
+#define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
 #endif
 
 #define CAM_SOURCE_ID  "camera-discovery"   /* where camera rows live         */
@@ -599,6 +599,11 @@ static int stream_grab(const char *url, int timeout_ms, size_t maxb,
                        int want_jpeg, unsigned char **out, size_t *outlen,
                        char *ct_out, size_t ct_cap, long *status_out) {
   if (!url || !out || !outlen) return 0;
+  { int gk = hostgate_url_check(url);
+    if (gk != HG_URL_OK) {
+      fprintf(stderr, "[stills] refused %s: %s\n", url, hostgate_url_reason(gk));
+      return 0;
+    } }
   http_client_global_init();
   CURL *e = curl_easy_init();
   if (!e) return 0;

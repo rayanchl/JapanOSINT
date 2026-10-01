@@ -18,6 +18,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+#include "_timefmt.inc"
 
 #define URL_PAGE "https://www.npa.go.jp/bureau/cyber/koho/observation.html"
 #define NPA_HQ_LON 139.7531
@@ -107,10 +108,8 @@ static void extract_graphs(const char *html, cJSON *arr) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  char iso[32];
-  time_t now = time(NULL);
-  struct tm tmv; gmtime_r(&now, &tmv);
-  strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%S.000Z", &tmv);
+  char iso[32] = {0};
+  jo_now_iso_ms(iso, sizeof iso);      /* empty ⇒ published_at stays NULL */
 
   char *html = feed_get_text(ctx->http, URL_PAGE, 8000);
   if (!html) return -1;             /* JS: 0 features + 0 intel */
@@ -154,7 +153,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     : "Live darknet / honeypot scan traffic into Japan, refreshed hourly.";
   it.link = URL_PAGE;
   it.lang = "ja";
-  it.published_at = iso;
+  it.published_at = iso[0] ? iso : NULL;
   it.tags_json = "[\"cyber\",\"observation\",\"npa\",\"live\"]";
   it.properties_json = ipj;
   if (sink->emit(sink, &it) >= 0 && n >= 0) n++;

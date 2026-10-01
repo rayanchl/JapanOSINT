@@ -6,6 +6,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "_credential_notice.inc"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,7 +16,12 @@
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *appId = getenv("ESTAT_APP_ID");
-  if (!appId || !*appId) { fprintf(stderr, "[estat-employment] gated (ESTAT_APP_ID)\n"); return 0; }
+  if (!appId || !*appId) {
+    static const char *const envs[] = { "ESTAT_APP_ID", NULL };
+    return jo_needs_credential(sink, "estat-employment",
+        "e-Stat \xe5\x8a\xb4\xe5\x83\x8d\xe5\x8a\x9b\xe8\xaa\xbf\xe6\x9f\xbb (Labour Force Survey)",
+        envs, API_BASE, "free appId at e-stat.go.jp/api");
+  }
   const char *sdi = getenv("ESTAT_EMPLOYMENT_STATS_DATA_ID");
   if (!sdi || !*sdi) sdi = DEFAULT_STATS_DATA_ID;
 

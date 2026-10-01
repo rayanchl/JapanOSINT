@@ -22,7 +22,16 @@ static cJSON *nn(cJSON *p, const char *k) {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *features = cJSON_CreateArray();
-  char url[768];
+  /* 1024, and there is no longer a separate `nexturl` staging buffer. The
+   * pagination cursor arrived from RIPE as `next`, was copied into a
+   * 1024-byte nexturl and then into this 768-byte url — a second, narrower
+   * copy whose only effect was to be able to cut a next-page URL in half.
+   * A truncated cursor is the worst shape of failure for a paged source: the
+   * request still goes out, still returns 200-or-404, and every remaining page
+   * is lost with the run reporting success (CLAUDE.md documents exactly this
+   * for next_path). One buffer, one size, and the loop below refuses to fetch
+   * a cursor that does not fit instead of fetching a mangled one. */
+  char url[1024];
   /* AUDIT 2026-07-31: the v2 probe schema has no `latitude`/`longitude` or
    * `status_name` any more — coordinates live in `geometry` (GeoJSON Point,
    * [lon,lat]) and the status is an object. The old field list asked for
@@ -34,7 +43,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     "&page_size=100&fields=id,address_v4,asn_v4,asn_v6,prefix_v4,geometry,"
     "status,is_anchor,first_connected,description,country_code");
   int pages = 0, gotAny = 0;
-  char nexturl[1024];
 
   while (url[0] && pages < MAX_PAGES) {
     cJSON *data = feed_get_json(ctx->http, url, 15000);
@@ -102,15 +110,27 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON_AddBoolToObject(p, "is_anchor",
         anch ? cJSON_IsTrue(anch) : 0);
       cJSON *fc = cJSON_GetObjectItem(pr, "first_connected");
+      /* `first_connected` is an epoch integer chosen by the upstream API, so
+       * nothing here bounds it: gmtime_r() RETURNS NULL when the value cannot
+       * be represented (its year would overflow int), and the old code ignored
+       * that and formatted an uninitialised `struct tm`. That is where
+       * -Wformat-truncation's "25 to 77 bytes into a region of size 32" came
+       * from — with a wild tm_year, "%04d" is not four digits. Check the return
+       * and emit an honest null for a timestamp we cannot render, rather than a
+       * date assembled from stack garbage. The buffer is sized for the widest
+       * legitimate rendering so a real far-future probe still round-trips. */
       if (fc && cJSON_IsNumber(fc)) {
         time_t t = (time_t)fc->valuedouble;
         struct tm gt;
-        gmtime_r(&t, &gt);
-        char iso[32];
-        snprintf(iso, sizeof iso, "%04d-%02d-%02dT%02d:%02d:%02d.000Z",
-                 gt.tm_year + 1900, gt.tm_mon + 1, gt.tm_mday,
-                 gt.tm_hour, gt.tm_min, gt.tm_sec);
-        cJSON_AddStringToObject(p, "first_connected", iso);
+        char iso[80];
+        if (gmtime_r(&t, &gt)) {
+          snprintf(iso, sizeof iso, "%04d-%02d-%02dT%02d:%02d:%02d.000Z",
+                   gt.tm_year + 1900, gt.tm_mon + 1, gt.tm_mday,
+                   gt.tm_hour, gt.tm_min, gt.tm_sec);
+          cJSON_AddStringToObject(p, "first_connected", iso);
+        } else {
+          cJSON_AddNullToObject(p, "first_connected");
+        }
       } else {
         cJSON_AddNullToObject(p, "first_connected");
       }
@@ -156,8 +176,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
     cJSON *next = cJSON_GetObjectItem(data, "next");
     if (next && cJSON_IsString(next) && next->valuestring[0]) {
-      snprintf(nexturl, sizeof nexturl, "%s", next->valuestring);
-      snprintf(url, sizeof url, "%s", nexturl);
+      size_t nl = strlen(next->valuestring);
+      if (nl >= sizeof url) {
+        /* Stop, loudly. Fetching a half URL would either 404 or silently
+         * re-serve page 1 until MAX_PAGES, and either way the pages we never
+         * saw would be indistinguishable from "there were no more". */
+        fprintf(stderr, "[atlas-jp] next-page cursor is %zu bytes, longer than "
+                        "the %zu-byte URL buffer — stopping after %d page(s) "
+                        "rather than fetching a truncated URL\n",
+                nl, sizeof url, pages + 1);
+        url[0] = '\0';
+      } else {
+        snprintf(url, sizeof url, "%s", next->valuestring);
+      }
     } else {
       url[0] = '\0';
     }

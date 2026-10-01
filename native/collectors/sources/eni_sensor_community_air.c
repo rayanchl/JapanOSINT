@@ -13,12 +13,18 @@
  * deliberately rounded the coordinates to ~1 km; those rows carry
  * "geo_precision": "rounded-1km".
  * STRING TRAP: sensordatavalues[].value is a STRING.
- * Row cap: JO_SENSORCOMMUNITY_MAX (default 3000) bounds a multi-MB payload.
+ *
+ * ROW CAP: none by default. There used to be one — `int cap = 3000` — and the
+ * feed carries 18,030 sensors, so 15,030 readings were dropped on every run,
+ * every five minutes, with nothing in the output saying so. The upstream, not
+ * this collector, decides how many sensors reported (house rule 2). The cap
+ * survives as an OPERATOR bound, $JO_SENSORCOMMUNITY_MAX, for a deployment
+ * that genuinely cannot take the whole feed — and when that bound bites it is
+ * disclosed as a collector-truncation-notice carrying used vs available.
  * Licence: ODbL 1.0 (attribution + share-alike). */
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
-#include "lib/truncnotice.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,9 +44,11 @@ static int numish(const cJSON *o, const char *k, double *out) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int cap = 3000;  /* exhaustive-ok: disclosed as a record below */
+  /* 0 = no bound: every sensor the feed carried. Only an operator setting
+   * $JO_SENSORCOMMUNITY_MAX makes this non-zero, and that case is disclosed. */
+  int operator_bound = 0;
   const char *capenv = getenv("JO_SENSORCOMMUNITY_MAX");
-  if (capenv && *capenv) { int c = atoi(capenv); if (c > 0) cap = c; }
+  if (capenv && *capenv) { int c = atoi(capenv); if (c > 0) operator_bound = c; }
 
   cJSON *doc = feed_get_json(ctx->http,
                              "https://data.sensor.community/static/v2/data.json",
@@ -48,10 +56,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!doc) { fprintf(stderr, "[" SRC "] fetch failed\n"); return -1; }
   if (!cJSON_IsArray(doc)) { cJSON_Delete(doc); fprintf(stderr, "[" SRC "] unexpected shape\n"); return -1; }
 
-  int n = 0;
+  const int available = cJSON_GetArraySize(doc);
+  int n = 0, capped = 0;
   cJSON *r;
   cJSON_ArrayForEach(r, doc) {
-    if (n >= cap) break;
+    if (operator_bound > 0 && n >= operator_bound) { capped = 1; break; }
     cJSON *loc = cJSON_GetObjectItem(r, "location");
     cJSON *sen = cJSON_GetObjectItem(r, "sensor");
     cJSON *vals = cJSON_GetObjectItem(r, "sensordatavalues");
@@ -65,6 +74,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON *p = cJSON_CreateObject();
     int have = 0, suspect = 0;
     double pm10 = 0; int have_pm10 = 0;
+    /* Signature of the measurement types THIS record carried, in the order
+     * they were read. It is part of the uid below — see the note there. */
+    char sig[64]; size_t siglen = 0; sig[0] = 0;
     cJSON *v;
     cJSON_ArrayForEach(v, vals) {
       const char *vt = jo_sv(v, "value_type");
@@ -81,6 +93,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       else if (strcmp(vt, "pressure") == 0)    { field = "pressure";    unit = "Pa"; }
       else continue;
       cJSON_AddNumberToObject(p, field, d);
+      {
+        size_t fl = strlen(field);
+        if (siglen + fl + 2 < sizeof sig) {
+          if (siglen) sig[siglen++] = '-';
+          memcpy(sig + siglen, field, fl);
+          siglen += fl;
+          sig[siglen] = 0;
+        }
+      }
       if (!have) cJSON_AddStringToObject(p, "pm_unit", "ug/m3");
       (void)unit;
       if (strcmp(vt, "P1") == 0) { pm10 = d; have_pm10 = 1; }
@@ -109,8 +130,20 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     long long sid = 0;
     cJSON *sidj = sen ? cJSON_GetObjectItem(sen, "id") : NULL;
     if (cJSON_IsNumber(sidj)) sid = (long long)sidj->valuedouble;
-    char key[64], title[224];
-    snprintf(key, sizeof key, "sensor:%lld", sid);
+    /* One sensor id posts SEVERAL records in the same pull, one per group of
+     * measurement types it carries — verified live 2026-09-07 against
+     * data.sensor.community: 18,045 records for 17,897 distinct sensor ids,
+     * and sensor 72130 alone appears as {counts, counts_per_minute}, then
+     * {humidity}, then {hv_pulses}, all at the same timestamp. Keyed on the
+     * sensor alone those records overwrote one another, so whichever group
+     * happened to come last was the only one stored: measured 17,564 emitted
+     * / 17,433 stored. The uid therefore names the measurement STREAM — the
+     * sensor plus the field set that record carried — which is stable from
+     * run to run (a sensor keeps reporting the same fields) and keeps the
+     * PM row and the temperature/humidity row of one node apart instead of
+     * having them fight over one uid. */
+    char key[128], title[224];
+    snprintf(key, sizeof key, "sensor:%lld:%s", sid, sig);
     if (have_pm10)
       snprintf(title, sizeof title, "Sensor.Community %lld: PM10 %.1f ug/m3%s",
                sid, pm10, suspect ? " (suspect)" : "");
@@ -133,14 +166,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
   cJSON_Delete(doc);
-  /* A bounded run says so as a record, not only to stderr (rule 7). */
-  if (n >= cap)
-    trunc_notice(sink, SRC, "https://data.sensor.community/static/v2/data.json",
-                 NULL, n, -1,
-                 "the row cap bounded a multi-MB payload; sensor.community "
-                 "returned more measurements",
-                 "raise $JO_SENSORCOMMUNITY_MAX");
-  fprintf(stderr, "[" SRC "] emitted %d\n", n);
+  fprintf(stderr, "[" SRC "] emitted %d of %d sensor record(s)\n", n, available);
+  /* An operator-set bound is legal; an undisclosed one is not. */
+  if (capped)
+    jo_trunc_notice(sink, SRC,
+                    "https://data.sensor.community/static/v2/data.json",
+                    n, available,
+                    "$JO_SENSORCOMMUNITY_MAX bounded this run below the number "
+                    "of sensor records the feed carried",
+                    "raise or unset $JO_SENSORCOMMUNITY_MAX to emit every "
+                    "reporting sensor");
   return 0;
 }
 

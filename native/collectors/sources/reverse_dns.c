@@ -31,6 +31,7 @@ static int emit_ptr(intel_sink *sink, const char *ip, const char *hostname) {
   cJSON_AddStringToObject(props, "entity", ip);
   cJSON_AddStringToObject(props, "hostname", hostname);
   char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
 
   char rk[400];
   snprintf(rk, sizeof rk, "ptr:%s:%s", ip, hostname);

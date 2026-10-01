@@ -21,9 +21,14 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   cJSON_AddStringToObject(p, "structure_id", sid);
   const char *name = ov_tag(el, "name");
   if (!name) name = ov_tag(el, "name:en");
-  char nbuf[64];
-  if (!name) { snprintf(nbuf, sizeof nbuf, "Structure %d", i + 1); name = nbuf; }
-  cJSON_AddStringToObject(p, "name", name);
+  /* no-fabrication (house rule 1): OSM carried no name tag for this element.
+   * The old code wrote "Structure %d" + the loop index, which is both an invented
+   * label and an UNSTABLE one — it feeds geojson's content-hash uid, so the
+   * same object was re-keyed whenever Overpass changed element order. An
+   * absent name is serialized as null; pick_text() skips nulls, so the row
+   * persists with a NULL title rather than a made-up one. */
+  if (name) cJSON_AddStringToObject(p, "name", name);
+  else cJSON_AddItemToObject(p, "name", cJSON_CreateNull());
   const char *nja = ov_tag(el, "name");
   if (nja) cJSON_AddStringToObject(p, "name_ja", nja);
   else cJSON_AddItemToObject(p, "name_ja", cJSON_CreateNull());
@@ -32,8 +37,9 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   const char *tunnel = ov_tag(el, "tunnel");
   cJSON_AddStringToObject(p, "facility_type",
     ((mm && strcmp(mm, "bridge") == 0) || bridge) ? "bridge" : "tunnel");
-  cJSON_AddStringToObject(p, "structure_type",
-    bridge ? bridge : tunnel ? tunnel : "unknown");
+  const char *stype = bridge ? bridge : tunnel;
+  if (stype) cJSON_AddStringToObject(p, "structure_type", stype);
+  else cJSON_AddItemToObject(p, "structure_type", cJSON_CreateNull());
   const char *len = ov_tag(el, "length");
   double lv = len ? strtod(len, NULL) : 0;
   if (lv) cJSON_AddNumberToObject(p, "length_m", lv);
@@ -51,7 +57,8 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   if (yo) cJSON_AddStringToObject(p, "year_opened", yo);
   else cJSON_AddItemToObject(p, "year_opened", cJSON_CreateNull());
   const char *op = ov_tag(el, "operator");
-  cJSON_AddStringToObject(p, "operator", op ? op : "unknown");
+  if (op) cJSON_AddStringToObject(p, "operator", op);
+  else cJSON_AddItemToObject(p, "operator", cJSON_CreateNull());
   cJSON_AddItemToObject(p, "inspection_grade", cJSON_CreateNull());
   cJSON_AddItemToObject(p, "prefecture", cJSON_CreateNull());
   cJSON_AddStringToObject(p, "country", "JP");

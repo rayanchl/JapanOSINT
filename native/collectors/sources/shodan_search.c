@@ -109,7 +109,7 @@ static int emit_port(intel_sink *sink, const char *ip, int port,
   cJSON_AddNumberToObject(props, "port", port);
   cJSON_AddStringToObject(props, "record", "open_port");
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 85);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   char rk[160], title[160];
@@ -148,7 +148,7 @@ static int emit_vuln(intel_sink *sink, const char *ip, const char *cve,
   cJSON_AddStringToObject(props, "cve", cve);
   cJSON_AddStringToObject(props, "record", "vulnerability");
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 85);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   char rk[200], title[200];
@@ -207,7 +207,7 @@ static int emit_host(intel_sink *sink, const char *ip,
   cJSON_AddStringToObject(props, "ip", ip);
   cJSON_AddStringToObject(props, "record", "host");
   cJSON_AddBoolToObject(props, "success", 1);
-  cJSON_AddNumberToObject(props, "confidence", 85);
+  cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   char *pj = cJSON_PrintUnformatted(props);
 
   char rk[160], title[160];

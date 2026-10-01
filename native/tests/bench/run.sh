@@ -4,12 +4,23 @@
 #
 # Reuses the contract harness's parity profile: both backends under HS256
 # with a known secret, JWKS disabled (SUPABASE_URL=""), ambient API-key env
-# neutralized, same server/data/japanmap.db. Node on :4071, C on :4072.
+# neutralized. Node on :4071, C on :4072.
+#
+# THE DATABASE.  This harness is destructive by design: it provisions a bench
+# tenant, rewrites its plan, and deletes the lot again from a `trap cleanup
+# EXIT` that also fires on Ctrl-C. For as long as its ROOT derivation was
+# broken it never reached any of that; fixing the path made every one of those
+# statements reachable — against $ROOT/data/japanmap.db, 7+ GB of collected
+# intel, on a box where the operator's own server is very likely running off
+# the same file. So: it runs against a SCRATCH database, and it refuses to
+# start against the real one.
 #
 # Usage:
-#   run.sh                  # default light route set
+#   run.sh                  # default light route set, scratch DB
 #   run.sh --with-sweeps    # also benchmark the heavy /api/data sweep layers
 #   N=10 run.sh             # runs per route (default 6; first is warmup)
+#   JO_BENCH_DB=/path/copy.db run.sh     # bench a COPY of a populated DB
+#   JO_BENCH_ALLOW_REAL_DB=1 run.sh      # explicit, deliberate, destructive
 set -euo pipefail
 # Derive the repo root from this script's own location. It was hardcoded to
 # /Users/rayan/JapanOSINT — the absolute path of the machine the harness was
@@ -28,6 +39,54 @@ NODE_OK=0
 N="${N:-6}"                       # samples/route (run 1 discarded as warmup)
 WITH_SWEEPS=0
 [ "${1:-}" = "--with-sweeps" ] && WITH_SWEEPS=1
+
+# ---- database safety -----------------------------------------------------
+# Default target: a scratch file the C server creates from core/schema.sql on
+# first open (core/db.c: JO_DB, SQLITE_OPEN_CREATE). Empty, so the numbers are
+# schema-only latency; point JO_BENCH_DB at a *copy* of a populated database
+# when you want representative ones. Never at the live database itself.
+REAL_DB="$ROOT/data/japanmap.db"
+OWN_SCRATCH_DB=0
+if [ -n "${JO_BENCH_DB:-}" ]; then
+  BENCH_DB="$JO_BENCH_DB"
+elif [ "${JO_BENCH_ALLOW_REAL_DB:-0}" = "1" ]; then
+  BENCH_DB="$REAL_DB"           # asked for by name; the guard below lets it by
+else
+  BENCH_DB="${TMPDIR:-/tmp}/jo_bench_$$.db"
+  OWN_SCRATCH_DB=1
+fi
+
+abspath() {  # normalise without requiring GNU realpath (macOS host)
+  local d b
+  d=$(dirname -- "$1"); b=$(basename -- "$1")
+  d=$(cd "$d" 2>/dev/null && pwd) || { printf '%s' "$1"; return; }
+  printf '%s/%s' "$d" "$b"
+}
+
+BENCH_DB_ABS=$(abspath "$BENCH_DB")
+REAL_DB_ABS=$(abspath "$REAL_DB")
+DATA_DIR_ABS=$(abspath "$ROOT/data")
+
+if [ "${JO_BENCH_ALLOW_REAL_DB:-0}" != "1" ] \
+   && { [ "$BENCH_DB_ABS" = "$REAL_DB_ABS" ] \
+        || case "$BENCH_DB_ABS" in "$DATA_DIR_ABS"/*) true ;; *) false ;; esac; }
+then
+  cat >&2 <<EOF
+bench/run.sh: refusing to run against $BENCH_DB_ABS
+
+This harness DELETEs from memberships/tenants/users and UPDATEs tenants.plan,
+and it does so from an EXIT trap that fires on Ctrl-C too. $DATA_DIR_ABS holds
+the collected intel store ($REAL_DB_ABS), not fixtures.
+
+  - default (no env)              -> scratch DB under \${TMPDIR:-/tmp}
+  - JO_BENCH_DB=/path/copy.db     -> bench a copy you made yourself
+  - JO_BENCH_ALLOW_REAL_DB=1      -> yes, really, do it to the live database
+EOF
+  exit 2
+fi
+# Every child below reads this; it also overrides any ambient JO_DB (and any
+# JO_DB inside .env, which the Node subshell sources).
+export JO_DB="$BENCH_DB_ABS"
 
 CRED_UNSET="-u AERODATABOX_KEY -u EDINET_API_KEY -u ESTAT_API_KEY -u ESTAT_APP_ID -u FACEBOOK_ACCESS_TOKEN -u FOFA_API_KEY -u GITHUB_TOKEN -u GOOGLE_MYMAPS_IDS -u GRAYHAT_API_KEY -u GREYNOISE_API_KEY -u HOTPEPPER_API_KEY -u MARINETRAFFIC_API_KEY -u MISSKEY_TOKEN -u MLIT_N02_GEOJSON_URL -u MLS_API_KEY -u ODPT_CHALLENGE_TOKEN -u ODPT_CONSUMER_KEY -u ODPT_TOKEN -u OPENCELLID_KEY -u OPENCHARGEMAP_KEY -u OPENSKY_CLIENT_ID -u OPENSKY_CLIENT_SECRET -u QUAKE_API_KEY -u RESAS_API_KEY -u SENTINELHUB_CLIENT_ID -u SENTINELHUB_CLIENT_SECRET -u SHODAN_API_KEY -u TWITTER_BEARER_TOKEN -u UMISHIRU_API_KEY -u USGS_M2M_TOKEN -u VESSELFINDER_API_KEY -u WIGLE_API_KEY -u WINDY_API_KEY"
 
@@ -71,13 +130,15 @@ mk_token() {
   printf '%s.%s.%s' "$h" "$p" "$sig"
 }
 
+# Only the two bench ports. The blanket `pkill -9 -f .../bin/japanosint` that
+# used to live here matched EVERY instance of the binary on the box, including
+# the operator's own long-running --serve on :3000 — a benchmark has no
+# business SIGKILLing a server it did not start.
 free_ports() {
   for port in 4071 4072; do
     pids=$(lsof -ti "tcp:$port" 2>/dev/null || true)
     [ -n "$pids" ] && kill -9 $pids 2>/dev/null || true
   done
-  pkill -f "$ROOT/server/src/index.js" 2>/dev/null || true
-  pkill -9 -f "$ROOT/native/bin/japanosint" 2>/dev/null || true
   sleep 1
 }
 
@@ -87,17 +148,27 @@ cleanup() {
   [ -n "$NPID" ] && kill -9 "$NPID" 2>/dev/null || true
   free_ports
   # Drop the auto-provisioned bench tenant/user (first /api/me call creates it).
-  sqlite3 "$ROOT/data/japanmap.db" \
+  # $JO_DB, never $ROOT/data/japanmap.db — see "database safety" above.
+  sqlite3 "$JO_DB" \
     "DELETE FROM memberships WHERE user_id IN (SELECT id FROM users WHERE supabase_user_id='bench');
      DELETE FROM tenants WHERE id IN (SELECT tenant_id FROM memberships WHERE user_id IN (SELECT id FROM users WHERE supabase_user_id='bench'));
      DELETE FROM tenants WHERE name LIKE 'bench@local%';
      DELETE FROM users WHERE supabase_user_id='bench';" 2>/dev/null || true
+  # A scratch DB this script created for itself goes away with it. One the
+  # operator named (JO_BENCH_DB) is theirs and is left alone.
+  if [ "$OWN_SCRATCH_DB" = 1 ]; then
+    rm -f "$JO_DB" "$JO_DB-wal" "$JO_DB-shm"
+  fi
 }
 trap cleanup EXIT
 
 free_ports
+echo "db: $JO_DB${JO_BENCH_DB:+ (JO_BENCH_DB)}"
 if [ "$NODE_OK" = 1 ]; then
+  # JO_DB restated after the .env source: .env may carry its own JO_DB and
+  # `set -a; . .env` would otherwise win inside this subshell.
   ( set -a; . "$ROOT/.env"; set +a; SUPABASE_URL="" SUPABASE_JWT_SECRET="$SECRET" \
+    JO_DB="$JO_DB" DB_PATH="$JO_DB" \
     PLATFORM_OPERATOR_EMAILS="$OP_EMAIL" env $CRED_UNSET PORT=4071 \
     node "$ROOT/server/src/index.js" ) >/tmp/jo_bench_node.log 2>&1 &
   NPID=$!
@@ -106,7 +177,7 @@ else
   echo "      — running C-only; the NODE column will read '-'."
 fi
 SUPABASE_URL="" SUPABASE_JWT_SECRET="$SECRET" PLATFORM_OPERATOR_EMAILS="$OP_EMAIL" \
-  env $CRED_UNSET PORT=4072 "$ROOT/native/bin/japanosint" --serve \
+  JO_DB="$JO_DB" env $CRED_UNSET PORT=4072 "$ROOT/native/bin/japanosint" --serve \
   >/tmp/jo_bench_c.log 2>&1 &
 CPID=$!
 
@@ -130,7 +201,7 @@ if [ "$NODE_OK" = 1 ]; then
   curl -s -o /dev/null -H "Authorization: Bearer $TOK" http://127.0.0.1:4071/api/me || true
 fi
 curl -s -o /dev/null -H "Authorization: Bearer $TOK" http://127.0.0.1:4072/api/me || true
-sqlite3 "$ROOT/data/japanmap.db" \
+sqlite3 "$JO_DB" \
   "UPDATE tenants SET plan='enterprise' WHERE id IN
      (SELECT m.tenant_id FROM memberships m
         JOIN users u ON u.id=m.user_id WHERE u.supabase_user_id='bench');" 2>/dev/null || true
@@ -167,8 +238,14 @@ for r in "${ROUTES[@]}"; do
 done
 echo
 if [ "$NODE_OK" = 1 ]; then
-  echo "N=$N samples/route (1 warmup dropped). Node :4071  C :4072  same japanmap.db."
+  echo "N=$N samples/route (1 warmup dropped). Node :4071  C :4072  db=$JO_DB."
 else
   echo "N=$N samples/route (1 warmup dropped). C :4072 only — no Node backend exists."
+  echo "db=$JO_DB"
+fi
+if [ "$OWN_SCRATCH_DB" = 1 ]; then
+  echo "NOTE: that DB was an empty scratch file — these are schema-only"
+  echo "      latencies, not row-count latencies. For representative numbers,"
+  echo "      copy a populated database and pass JO_BENCH_DB=/path/to/copy.db."
 fi
 echo "Sizes node|c; differing sizes => shape divergence to investigate (not just speed)."

@@ -38,20 +38,23 @@ static cJSON *map(cJSON *el, int i, double lon, double lat, void *ud) {
   snprintf(idbuf, sizeof idbuf, "OSM_%s_%lld", ets, eidv);
   cJSON_AddStringToObject(p, "tower_id", idbuf);
 
+  /* no-fabrication (house rule 1): an untagged tower used to be labelled
+   * "Comm tower <loop index>" — an invented name, and one that changed with
+   * Overpass's element order. Absent stays null. */
   const char *name = ov_tag(el, "name");
   if (name) cJSON_AddStringToObject(p, "name", name);
-  else {
-    char nb[32]; snprintf(nb, sizeof nb, "Comm tower %d", i + 1);
-    cJSON_AddStringToObject(p, "name", nb);
-  }
+  else cJSON_AddItemToObject(p, "name", cJSON_CreateNull());
   const char *oper = ov_tag(el, "operator");
-  cJSON_AddStringToObject(p, "operator", oper ? oper : "unknown");
+  if (oper) cJSON_AddStringToObject(p, "operator", oper);
+  else cJSON_AddItemToObject(p, "operator", cJSON_CreateNull());
   const char *opshort = ov_tag(el, "operator:short");
-  const char *carrier = oper ? oper : (opshort ? opshort : "unknown");
-  cJSON_AddStringToObject(p, "carrier", carrier);
+  const char *carrier = oper ? oper : opshort;
+  if (carrier) cJSON_AddStringToObject(p, "carrier", carrier);
+  else cJSON_AddItemToObject(p, "carrier", cJSON_CreateNull());
   const char *tt = ov_tag(el, "tower:type");
   if (!tt) tt = ov_tag(el, "man_made");
-  cJSON_AddStringToObject(p, "tower_type", tt ? tt : "communication");
+  if (tt) cJSON_AddStringToObject(p, "tower_type", tt);
+  else cJSON_AddItemToObject(p, "tower_type", cJSON_CreateNull());
   const char *h = ov_tag(el, "height");           /* parseFloat||null */
   cJSON_AddItemToObject(p, "height_m",
                         h ? cJSON_CreateNumber(atof(h)) : cJSON_CreateNull());

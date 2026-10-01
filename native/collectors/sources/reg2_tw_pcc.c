@@ -34,6 +34,7 @@
 #include <string.h>
 #include <time.h>
 #include "_jp_osint.inc"
+#include "_timefmt.inc"
 
 /* record's `date`, which arrives as 20260731 (number or string). */
 static int tw_date(const cJSON *rec, char *iso, size_t n) {
@@ -143,10 +144,10 @@ static int tw_daily_run(const source_ctx *ctx, intel_sink *sink) {
   int fetched = 0;
   for (int back = 0; back <= 1 && n == 0; back++) {
     time_t t = now - (time_t)back * 24 * 3600;
-    struct tm g;
-    gmtime_r(&t, &g);
     char ymd[16];
-    strftime(ymd, sizeof ymd, "%Y%m%d", &g);
+    /* `date=` IS the query; skip a day we cannot render rather than ask for
+     * a different one. */
+    if (!jo_time_fmt(t, "%Y%m%d", ymd, sizeof ymd)) continue;
 
     char url[160];
     snprintf(url, sizeof url,

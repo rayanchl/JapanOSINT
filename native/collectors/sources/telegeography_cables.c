@@ -5,6 +5,7 @@
  * (== intelUid(SOURCE_ID, "landing|"+...)). */
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/seenset.h"
 #include "core/intel.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,12 +22,23 @@ static const char *pstr(cJSON *p, const char *k) {
   return (v && cJSON_IsString(v) && v->valuestring[0]) ? v->valuestring : NULL;
 }
 
-static int emit_one(intel_sink *s, const char *prefix, cJSON *props,
+static int emit_one(intel_sink *s, seen_set *seen, const char *prefix, cJSON *props,
                     double lat, double lon, int have_ll, cJSON *geom) {
   const char *id = pstr(props, "id");
   const char *nm = pstr(props, "name");
   if (!id && !nm) return 0;
   char rk[400]; snprintf(rk, sizeof rk, "%s|%s", prefix, id ? id : nm);
+  /* cable-geo.json can carry one cable as several features — separate
+   * geometries with their own feature_id (live 2026-09-15: 728 features, 707
+   * cable ids; rising-8 twice, differing in feature_id and coordinates) — and
+   * the second upserted over the first. A key already seen this run is
+   * qualified by the feature's own feature_id; a first occurrence keeps its
+   * plain key and stored uid. */
+  if (!seen_add(seen, rk)) {
+    const char *fid = pstr(props, "feature_id");
+    size_t kl = strlen(rk);
+    snprintf(rk + kl, sizeof rk - kl, "|%s", fid ? fid : "feature");
+  }
   char title[300], summ[360];
   if (nm) snprintf(title, sizeof title, "%s", nm);
   else snprintf(title, sizeof title, "%s %s",
@@ -90,6 +102,7 @@ static int emit_one(intel_sink *s, const char *prefix, cJSON *props,
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = 0, fetched = 0;
+  seen_set seen = {0};
   cJSON *L = feed_get_json(ctx->http, LANDING_URL, 12000);
   if (L) {
     fetched++;
@@ -101,7 +114,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON *y = c ? cJSON_GetArrayItem(c, 1) : NULL;
       if (!x || !y || !cJSON_IsNumber(x) || !cJSON_IsNumber(y)) continue;
       if (!in_jp(x->valuedouble, y->valuedouble)) continue;
-      n += emit_one(sink, "landing", cJSON_GetObjectItem(f, "properties"),
+      n += emit_one(sink, &seen, "landing", cJSON_GetObjectItem(f, "properties"),
                     y->valuedouble, x->valuedouble, 1, NULL);
     }
     cJSON_Delete(L);
@@ -130,11 +143,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       else { SCAN(co); }
       #undef SCAN
       if (!touches) continue;
-      n += emit_one(sink, "cable", cJSON_GetObjectItem(f, "properties"),
+      n += emit_one(sink, &seen, "cable", cJSON_GetObjectItem(f, "properties"),
                     f0lat, f0lon, got0, g);
     }
     cJSON_Delete(C);
   }
+  seen_free(&seen);
   fprintf(stderr, "[telegeography-cables] emitted %d (endpoints ok %d/2)\n",
           n, fetched);
   /* Only a total fetch failure is an error; "both files fetched, nothing

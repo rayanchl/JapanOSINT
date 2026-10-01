@@ -74,6 +74,7 @@ struct SourcePipelineView: View {
                 if rerunning || clearing { ProgressView().controlSize(.small) }
                 else { Image(systemName: "ellipsis.circle") }
             }
+            .accessibilityLabel("Pipeline actions")
         }
     }
 
@@ -284,6 +285,7 @@ struct AnomalyCard: View {
                 Divider().overlay(theme.textMuted.opacity(0.15))
                 HStack(spacing: Space.sm) {
                     Image(systemName: "brain").font(.caption2).foregroundStyle(theme.accentAlt)
+                        .accessibilityLabel("Triaged")
                     if let cls = anomaly.triageClass {
                         Text(cls).font(.caption.weight(.semibold)).foregroundStyle(theme.accentAlt)
                     }

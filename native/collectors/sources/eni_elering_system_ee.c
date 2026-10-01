@@ -17,6 +17,7 @@
  * Licence: Elering live dashboard API, public, no key. */
 #include "source.h"
 #include "lib/feedlib.h"
+#include "_timefmt.inc"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,11 +40,12 @@ static const struct { const char *key, *out, *unit; } MW_FIELDS[] = {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   time_t now = time(NULL);
   time_t then = now - 3 * 3600;
-  struct tm a, b;
-  gmtime_r(&then, &a); gmtime_r(&now, &b);
   char t0[40], t1[40];
-  strftime(t0, sizeof t0, "%Y-%m-%dT%H:%M:%S.000Z", &a);
-  strftime(t1, sizeof t1, "%Y-%m-%dT%H:%M:%S.000Z", &b);
+  if (!jo_time_fmt(then, "%Y-%m-%dT%H:%M:%S.000Z", t0, sizeof t0) ||
+      !jo_time_fmt(now,  "%Y-%m-%dT%H:%M:%S.000Z", t1, sizeof t1)) {
+    fprintf(stderr, "[" SRC "] cannot render the query window as a date\n");
+    return -1;
+  }
 
   char url[320];
   snprintf(url, sizeof url,

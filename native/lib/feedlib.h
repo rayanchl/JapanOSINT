@@ -27,6 +27,12 @@ cJSON *feed_post_json(http_client *http, const char *url, const char *body,
  * → first 20 hex chars into out (>=21 bytes). NULL parts skipped. */
 void feed_hash_key(char *out21, const char *const *parts, int n);
 
+/* The other joined-SHA-1 shape: separator only BETWEEN parts, full 40 hex
+ * chars into out (>=41 bytes). station_clusterer's cluster_uid hashes
+ * member_uids.join('|'), which is a different input string from
+ * feed_hash_key's trailing-pipe form — the two are not interchangeable. */
+void feed_hash_join(char *out41, const char *const *parts, int n);
+
 /* Is `url`'s host under .jp? The one gate on "read a non-UTF-8 body as
  * Shift_JIS". Exported (rather than static in feedlib.c) because jocore.h's
  * jo_get() has the identical decision to make for 133 collectors, and two

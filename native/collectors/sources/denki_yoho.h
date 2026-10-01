@@ -38,6 +38,7 @@
 #include "lib/feedlib.h"
 #include "lib/geojson.h"
 #include "lib/probe.h"
+#include "_timefmt.inc"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -197,8 +198,10 @@ static int denki_run(const source_ctx *ctx, intel_sink *sink,
   for (int back = 0; back < (dated ? 2 : 1) && !obs.ok; back++) {
     if (dated) {
       time_t t = now + 9 * 3600 - (time_t)back * 86400;
-      struct tm tm; gmtime_r(&t, &tm);
-      char ymd[16]; strftime(ymd, sizeof ymd, "%Y%m%d", &tm);
+      char ymd[16];
+      /* No date, no file name: try the day before rather than fetching a
+       * URL built out of whatever was on the stack. */
+      if (!jo_time_fmt(t, "%Y%m%d", ymd, sizeof ymd)) continue;
       snprintf(url, sizeof url, cfg->url_fmt, ymd);
     } else {
       snprintf(url, sizeof url, "%s", cfg->url_fmt);
