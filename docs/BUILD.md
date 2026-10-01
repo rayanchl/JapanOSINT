@@ -13,11 +13,19 @@ about producing and trusting it.
 | OpenSSL 3 | `libssl-dev` | `brew install openssl@3` |
 | MeCab + a dictionary | `libmecab-dev mecab mecab-ipadic-utf8` | `brew install mecab mecab-ipadic` |
 | zlib | `zlib1g-dev` | system |
+| `sqlite3` CLI — not for the build, for CLAUDE.md §4b's `select count(*) from intel_items` check and `tools/bench_concurrency_setup.sh` | `sqlite3` | system |
+| `setarch` — only for `make tsan-test` / `make tsan-sched`, which need ASLR off | `util-linux` | n/a (TSan targets are Linux) |
 
 SQLite, cJSON and mongoose are vendored in `native/third_party/` — do not
-install them. MeCab is only needed for Japanese FTS segmentation; without a
+install them (the `sqlite3` row above is the command-line shell, not the
+library). MeCab is only needed for Japanese FTS segmentation; without a
 dictionary `core/fts.c` sets `g_init_failed` and Latin text still indexes, so
 the build and the selftest pass but the Japanese search path is untested.
+
+In Claude Code on the web, `.claude/hooks/session-start.sh` installs all of the
+above at session start, so a web session builds without this step. The hook and
+`.github/workflows/ci.yml` must keep the same list; the hook's header says which
+two packages it adds beyond CI's and why.
 
 **No single machine runs everything in this repo.** The Makefile knows about
 macOS/Homebrew, `launch.sh` sets `DYLD_LIBRARY_PATH` (macOS) while
