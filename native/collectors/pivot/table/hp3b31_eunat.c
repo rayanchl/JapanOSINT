@@ -198,7 +198,7 @@ static const hp_source HP3B31_EUNAT[] = {
     .url = "https://data.riksdagen.se/dokumentlista/?sok={q}&utformat=json&sz=200",
     .array_path = "dokumentlista.dokument", .title_keys = "titel,organ",
     .id_keys = "id", .date_keys = "datum", .link_keys = "dokument_url_html",
-    .page_param = "p", .page_size = 200, .page_max = 30,
+    .page_param = "p", .page_max = 30,
     .description = "The Riksdag's full document API — bills, motions, "
       "committee reports, written questions and the government's answers, plus "
       "the members' declared assets and side-income filings" },

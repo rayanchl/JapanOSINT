@@ -189,7 +189,7 @@ static const hp_source HP3B31_UKIE[] = {
     .array_path = "establishments", .title_keys = "BusinessName,AddressLine1",
     .id_keys = "FHRSID", .date_keys = "RatingDate",
     .lat_key = "geocode.latitude", .lon_key = "geocode.longitude",
-    .page_param = "pageNumber", .page_size = 100, .page_max = 30,
+    .page_param = "pageNumber", .page_max = 30,
     .description = "Every food business inspected in the UK — the rating, the "
       "component scores for hygiene, structure and confidence in management, "
       "the local authority and the exact premises address" },
@@ -203,7 +203,7 @@ static const hp_source HP3B31_UKIE[] = {
     .headers = { "Ocp-Apim-Subscription-Key: {key}", NULL },
     .array_path = "providers", .filter_query = 1,
     .title_keys = "providerName", .id_keys = "providerId",
-    .page_param = "page", .page_size = 1000, .page_max = 30,
+    .page_param = "page", .page_max = 30,
     .detail_url = "https://api.service.cqc.org.uk/public/v1/providers/{v}",
     .detail_key = "providerId",
     .interval = 86400,

@@ -90,7 +90,9 @@ static const hp_source HP3B31_INTLBODY[] = {
     .url = "https://comtradeapi.un.org/data/v1/get/C/A/HS?reporterCode={qd}"
       "&subscription-key={key}",
     .array_path = "data", .title_keys = "cmdDesc,partnerDesc",
-    .id_keys = "period", .date_keys = "period",
+    .id_keys = "period+reporterCode+partnerCode+cmdCode+flowCode", .date_keys = "period",
+    /* id_keys composite (+ composes, , chooses): identity is the reporter x partner x commodity x flow x period tuple; `period`
+     * alone collapsed a whole year of trade onto one uid. */
     .description = "Reported imports and exports by commodity and partner. "
       "Mirror-statistics gaps — where A reports exporting far more to B than B "
       "reports importing — are the standard method for locating "
@@ -128,7 +130,7 @@ static const hp_source HP3B31_INTLBODY[] = {
       "impagency,sector,theme,status,projectfinancialtype,url",
     .array_path = "projects", .title_keys = "project_name,countryname",
     .id_keys = "id", .date_keys = "boardapprovaldate",
-    .page_param = "os", .page_size = 100, .page_start = 0, .page_max = 40,
+    .page_param = "os", .page_zero_based = 1, .page_size = 100, .page_start = 0, .page_max = 40,
     .description = "World Bank lending operations — the implementing agency, "
       "the amount, the sectors and the status, requested with an explicit field "
       "list so the full project record is returned rather than the four-field "

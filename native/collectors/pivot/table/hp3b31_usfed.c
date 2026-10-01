@@ -111,7 +111,7 @@ static const hp_source HP3B31_USFED[] = {
     .key_env = "FEC_API_KEY", .free_tier = 1,
     .url = "https://api.open.fec.gov/v1/candidates/search/?api_key={key}&q={q}&per_page=100",
     .array_path = "results", .title_keys = "name", .id_keys = "candidate_id",
-    .page_param = "page", .page_size = 100, .page_max = 30,
+    .page_param = "page", .page_max = 30,
     .detail_url = "https://api.open.fec.gov/v1/candidate/{v}/totals/?api_key={key}",
     .detail_key = "candidate_id", .detail_path = "results",
     .description = "Federal candidates by name, then the second hop into their "
@@ -124,7 +124,7 @@ static const hp_source HP3B31_USFED[] = {
     .tags = "\"us\",\"campaign-finance\"", .key_env = "FEC_API_KEY", .free_tier = 1,
     .url = "https://api.open.fec.gov/v1/committees/?api_key={key}&q={q}&per_page=100",
     .array_path = "results", .title_keys = "name", .id_keys = "committee_id",
-    .page_param = "page", .page_size = 100, .page_max = 30,
+    .page_param = "page", .page_max = 30,
     .detail_url = "https://api.open.fec.gov/v1/committee/{v}/totals/?api_key={key}",
     .detail_key = "committee_id", .detail_path = "results",
     .description = "PACs, super PACs, party and corporate-connected committees "
@@ -140,7 +140,7 @@ static const hp_source HP3B31_USFED[] = {
       "&payee_name={q}&per_page=100",
     .array_path = "results", .title_keys = "payee_name,candidate_name",
     .id_keys = "transaction_id", .date_keys = "expenditure_date",
-    .page_param = "page", .page_size = 100, .page_max = 30,
+    .page_param = "page", .page_max = 30,
     .description = "Spending for or against a federal candidate by committees "
       "that do not coordinate with them — the vendor paid, the amount, the "
       "candidate supported or opposed, and the date it was disseminated" },
@@ -154,7 +154,7 @@ static const hp_source HP3B31_USFED[] = {
       "&candidate_name={q}&per_page=100",
     .array_path = "results", .title_keys = "candidate_name,communication_date",
     .id_keys = "sub_id", .date_keys = "communication_date",
-    .page_param = "page", .page_size = 100, .page_max = 30,
+    .page_param = "page", .page_max = 30,
     .description = "Broadcast advertising that names a federal candidate close "
       "to an election without expressly advocating — the payer, the audience "
       "reached and the disbursement, which is where issue-ad money surfaces" },
@@ -169,7 +169,7 @@ static const hp_source HP3B31_USFED[] = {
       "&page[size]=250&api_key={key}",
     .array_path = "data", .title_keys = "attributes.title",
     .id_keys = "id", .date_keys = "attributes.postedDate",
-    .page_param = "page[number]", .page_size = 250, .page_max = 20,
+    .page_param = "page[number]", .page_max = 20,
     .detail_url = "https://api.regulations.gov/v4/documents/{v}?api_key={key}",
     .detail_key = "id",
     .description = "Proposed and final rules, notices and supporting studies, "
@@ -185,7 +185,7 @@ static const hp_source HP3B31_USFED[] = {
       "&page[size]=250&api_key={key}",
     .array_path = "data", .title_keys = "attributes.title",
     .id_keys = "id", .date_keys = "attributes.postedDate",
-    .page_param = "page[number]", .page_size = 250, .page_max = 20,
+    .page_param = "page[number]", .page_max = 20,
     .detail_url = "https://api.regulations.gov/v4/comments/{v}?api_key={key}",
     .detail_key = "id",
     .description = "Who wrote to a federal agency about a rule, and what they "
@@ -212,7 +212,7 @@ static const hp_source HP3B31_USFED[] = {
     .url = "https://www.ecfr.gov/api/search/v1/results?query={q}&per_page=100",
     .array_path = "results", .title_keys = "hierarchy_headings.section,full_text_excerpt",
     .id_keys = "structure_index", .date_keys = "starts_on",
-    .page_param = "page", .page_size = 100, .page_max = 20,
+    .page_param = "page", .page_max = 20,
     .description = "The operative text of US federal regulation, section by "
       "section, with the title/part/section hierarchy and the effective date — "
       "what a firm is actually bound by, as opposed to what was proposed" },
@@ -240,7 +240,7 @@ static const hp_source HP3B31_USFED[] = {
     .url = "https://www.osti.gov/api/v1/records?q={q}&rows=100",
     .title_keys = "title,research_org", .id_keys = "osti_id",
     .date_keys = "publication_date", .link_keys = "links.0.href",
-    .page_param = "page", .page_size = 100, .page_max = 40,
+    .page_param = "page", .page_max = 40,
     .description = "Department of Energy research output — the performing "
       "national laboratory or contractor, the sponsoring DOE office, the "
       "contract number funding the work and the authors. The contract number "
@@ -292,7 +292,7 @@ static const hp_source HP3B31_USFED[] = {
       "&exclusionName={q}",
     .array_path = "excludedEntity", .title_keys = "exclusionName,exclusionProgram",
     .id_keys = "exclusionIdentifier", .date_keys = "exclusionActions.activationDate",
-    .page_param = "page", .page_size = 100, .page_start = 0, .page_max = 20,
+    .page_param = "page", .page_zero_based = 1, .page_start = 0, .page_max = 20,
     .description = "Suspensions and debarments across the whole federal "
       "government — the excluding agency, the cause, the exclusion type and "
       "whether it reaches affiliates. The single hardest disqualifier in US "
@@ -321,7 +321,7 @@ static const hp_source HP3B31_USFED[] = {
       "&school.name={q}&per_page=100",
     .array_path = "results", .title_keys = "school.name,school.city",
     .id_keys = "id", .lat_key = "location.lat", .lon_key = "location.lon",
-    .page_param = "page", .page_size = 100, .page_start = 0, .page_max = 20,
+    .page_param = "page", .page_zero_based = 1, .page_start = 0, .page_max = 20,
     .description = "Every degree-granting institution the federal government "
       "recognises — ownership (public, private non-profit, for-profit), "
       "accreditor, enrolment, federal aid volume and outcome metrics. The "

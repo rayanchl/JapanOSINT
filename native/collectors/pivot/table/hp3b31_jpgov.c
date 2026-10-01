@@ -84,7 +84,7 @@ static const hp_source HP3B31_JPGOV[] = {
     .headers = { "X-hojinInfo-api-token: {key}", NULL },
     .array_path = "hojin-infos", .title_keys = "name,location",
     .id_keys = "corporate_number", .date_keys = "update_date",
-    .page_param = "page", .page_size = 5000, .page_max = 20,
+    .page_param = "page", .page_max = 20,
     .description = "The Japanese government's consolidated view of a company — "
       "corporate number, registered location, capital, employee count, business "
       "items and the date each field was last confirmed by a ministry" },
@@ -97,7 +97,7 @@ static const hp_source HP3B31_JPGOV[] = {
     .url = "https://info.gbiz.go.jp/hojin/v1/hojin?name={q}&limit=5000",
     .headers = { "X-hojinInfo-api-token: {key}", NULL },
     .array_path = "hojin-infos", .title_keys = "name", .id_keys = "corporate_number",
-    .page_param = "page", .page_size = 5000, .page_max = 20,
+    .page_param = "page", .page_max = 20,
     .detail_url = "https://info.gbiz.go.jp/hojin/v1/hojin/{v}/subsidy",
     .detail_key = "corporate_number", .detail_path = "hojin-infos",
     .description = "Every government subsidy a named company has received — the "
@@ -112,7 +112,7 @@ static const hp_source HP3B31_JPGOV[] = {
     .url = "https://info.gbiz.go.jp/hojin/v1/hojin?name={q}&limit=5000",
     .headers = { "X-hojinInfo-api-token: {key}", NULL },
     .array_path = "hojin-infos", .title_keys = "name", .id_keys = "corporate_number",
-    .page_param = "page", .page_size = 5000, .page_max = 20,
+    .page_param = "page", .page_max = 20,
     .detail_url = "https://info.gbiz.go.jp/hojin/v1/hojin/{v}/procurement",
     .detail_key = "corporate_number", .detail_path = "hojin-infos",
     .description = "Central government contracts awarded to a company — the "
@@ -127,7 +127,7 @@ static const hp_source HP3B31_JPGOV[] = {
     .url = "https://info.gbiz.go.jp/hojin/v1/hojin?name={q}&limit=5000",
     .headers = { "X-hojinInfo-api-token: {key}", NULL },
     .array_path = "hojin-infos", .title_keys = "name", .id_keys = "corporate_number",
-    .page_param = "page", .page_size = 5000, .page_max = 20,
+    .page_param = "page", .page_max = 20,
     .detail_url = "https://info.gbiz.go.jp/hojin/v1/hojin/{v}/certification",
     .detail_key = "corporate_number", .detail_path = "hojin-infos",
     .description = "Ministry certifications and commendations held by a company "
@@ -143,7 +143,7 @@ static const hp_source HP3B31_JPGOV[] = {
     .url = "https://info.gbiz.go.jp/hojin/v1/hojin?name={q}&limit=5000",
     .headers = { "X-hojinInfo-api-token: {key}", NULL },
     .array_path = "hojin-infos", .title_keys = "name", .id_keys = "corporate_number",
-    .page_param = "page", .page_size = 5000, .page_max = 20,
+    .page_param = "page", .page_max = 20,
     .detail_url = "https://info.gbiz.go.jp/hojin/v1/hojin/{v}/patent",
     .detail_key = "corporate_number", .detail_path = "hojin-infos",
     .description = "Patents and applications attributed to the corporate "
@@ -157,7 +157,7 @@ static const hp_source HP3B31_JPGOV[] = {
     .url = "https://info.gbiz.go.jp/hojin/v1/hojin?name={q}&limit=5000",
     .headers = { "X-hojinInfo-api-token: {key}", NULL },
     .array_path = "hojin-infos", .title_keys = "name", .id_keys = "corporate_number",
-    .page_param = "page", .page_size = 5000, .page_max = 20,
+    .page_param = "page", .page_max = 20,
     .detail_url = "https://info.gbiz.go.jp/hojin/v1/hojin/{v}/finance",
     .detail_key = "corporate_number", .detail_path = "hojin-infos",
     .description = "Net sales, operating profit, ordinary profit and net assets "
@@ -252,7 +252,9 @@ static const hp_source HP3B31_JPGOV[] = {
     .tags = "\"jp\",\"property\",\"prices\"", .free_tier = 1,
     .url = "https://www.land.mlit.go.jp/webland/api/TradeListSearch?from=20051&to=20244&area={qd}",
     .array_path = "data", .title_keys = "Municipality,DistrictName",
-    .id_keys = "Municipality", .date_keys = "Period",
+    .id_keys = "Period+MunicipalityCode+DistrictName+TradePrice+Area+BuildingYear", .date_keys = "Period",
+    /* id_keys composite (+ composes, , chooses): MLIT publishes no transaction id, so identity is the discriminating tuple;
+     * `Municipality` alone kept one sale per city. */
     .description = "Surveyed actual transaction prices for land and buildings — "
       "price, area, structure, building year, city planning zone and frontage "
       "road, by municipality and quarter. Requests the full history rather than "

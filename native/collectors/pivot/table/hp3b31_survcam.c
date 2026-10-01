@@ -80,13 +80,16 @@ static const hp_source HP3B31_SURVCAM[] = {
     .portal = "https://publicapi.ohgo.com", .record_type = "road-camera",
     .tags = "\"us\",\"camera\",\"traffic\",\"surveillance\"",
     .key_env = "OHGO_API_KEY", .free_tier = 1,
-    .url = "https://publicapi.ohgo.com/api/v1/cameras?page-size=500",
+    .url = "https://publicapi.ohgo.com/api/v1/cameras?page-all=true",
     .headers = { "Authorization: APIKEY {key}", NULL },
     .array_path = "results", .filter_query = 1,
     .title_keys = "description,location", .id_keys = "id",
     .lat_key = "latitude", .lon_key = "longitude",
-    .page_param = "page-all", .page_size = 500, .page_max = 20,
     .interval = 900,
+    /* OHGO's `page-all` is a return-everything FLAG, not a page cursor: bound
+     * to true the one response carries the whole inventory, so there is no walk
+     * to declare. It was briefly declared as `page_param`, which made the
+     * engine send page-all=501, page-all=1001 — meaningless to the upstream. */
     .description = "Ohio's traffic camera inventory with the direction, route "
       "and coordinates of each device, alongside the incident, construction and "
       "digital-sign feeds from the same API" },

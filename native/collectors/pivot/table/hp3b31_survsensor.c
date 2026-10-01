@@ -57,7 +57,7 @@ static const hp_source HP3B31_SURVSENSOR[] = {
     .array_path = "results", .filter_query = 1,
     .title_keys = "name,country.name", .id_keys = "id",
     .lat_key = "coordinates.latitude", .lon_key = "coordinates.longitude",
-    .page_param = "page", .page_size = 1000, .page_max = 30,
+    .page_param = "page", .page_max = 30,
     .interval = 86400,
     .description = "Reference-grade government monitoring stations aggregated "
       "across more than a hundred countries — the operating authority, the "
@@ -102,7 +102,7 @@ static const hp_source HP3B31_SURVSENSOR[] = {
     .filter_query = 1, .title_keys = "location_name,device_id",
     .id_keys = "id", .date_keys = "captured_at",
     .lat_key = "latitude", .lon_key = "longitude",
-    .page_param = "page", .page_size = 1000, .page_max = 30,
+    .page_param = "page", .page_max = 30,
     .interval = 3600,
     .description = "The open radiation dataset founded after Fukushima — every "
       "uploaded measurement with coordinates, device, unit and capture time. "

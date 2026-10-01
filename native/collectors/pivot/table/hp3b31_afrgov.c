@@ -51,7 +51,7 @@ static const hp_source HP3B31_AFRGOV[] = {
     .url = "https://ocds-api.etenders.gov.za/api/OCDSReleases?PageSize=100",
     .array_path = "releases", .filter_query = 1,
     .title_keys = "tender.title,buyer.name", .id_keys = "ocid", .date_keys = "date",
-    .page_param = "PageNumber", .page_size = 100, .page_max = 40,
+    .page_param = "PageNumber", .page_max = 40,
     .interval = 21600,
     .description = "South African national and provincial tenders in Open "
       "Contracting format — the buying department, the tender description, the "

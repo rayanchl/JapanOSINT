@@ -54,7 +54,7 @@ static const hp_source HP3B31_SURVNET[] = {
     .headers = { "Authorization: apikey {key}", NULL },
     .array_path = "results", .title_keys = "app.http.title,protocol",
     .id_keys = "ip", .date_keys = "@timestamp",
-    .page_param = "page", .page_size = 10, .page_max = 40,
+    .page_param = "page", .page_max = 40,
     .description = "ONYPHE's combined view of an address — scanned services, "
       "passive DNS, threat sightings, leaked credentials seen on it, "
       "geolocation and the organisation and ASN, drawn from its own scan and "
@@ -202,7 +202,9 @@ static const hp_source HP3B31_SURVNET[] = {
     .url = "https://api.ooni.io/api/v1/aggregation?domain={qh}&axis_x=measurement_start_day"
       "&axis_y=probe_cc",
     .array_path = "result", .title_keys = "probe_cc,test_name",
-    .id_keys = "probe_cc", .date_keys = "measurement_start_day",
+    .id_keys = "measurement_start_day+probe_cc+test_name", .date_keys = "measurement_start_day",
+    /* id_keys composite (+ composes, , chooses): the aggregation is per day x country x test; `probe_cc` alone kept one row
+     * per country and discarded the timeline that is the point of the row. */
     .description = "The same corpus aggregated over time and geography — how "
       "many measurements of a domain were anomalous, failed or confirmed "
       "blocked, per country and per day. Turns individual measurements into a "
@@ -214,9 +216,11 @@ static const hp_source HP3B31_SURVNET[] = {
     .tags = "\"network\",\"outage\",\"measurement\"", .free_tier = 1,
     .url = "https://api.ioda.inetintel.cc.gatech.edu/v2/outages/alerts?limit=1000",
     .array_path = "data", .filter_query = 1,
-    .title_keys = "entity.name,datasource", .id_keys = "entity.code",
+    .title_keys = "entity.name,datasource", .id_keys = "entity.code+datasource+time",
     .date_keys = "time",
     .interval = 900,
+    /* id_keys composite (+ composes, , chooses): an entity has many alerts over time and per datasource; keying on the
+     * entity kept one. */
     .description = "Detected internet outages by country, region and ASN, "
       "corroborated across BGP withdrawals, active probing and darknet traffic. "
       "Deliberate national shutdowns and infrastructure damage both show here "

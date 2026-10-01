@@ -275,8 +275,10 @@ static const hp_source HP3B31_USSTATE[] = {
     .portal = "https://data.cityofnewyork.us", .record_type = "us-public-payroll",
     .tags = "\"us\",\"nyc\",\"payroll\",\"transparency\"", .free_tier = 1,
     .url = "https://data.cityofnewyork.us/resource/k397-673e.json?$q={q}&$limit=1000",
-    .title_keys = "last_name,agency_name", .id_keys = "payroll_number",
+    .title_keys = "last_name,agency_name", .id_keys = "fiscal_year+agency_name+last_name+first_name+mid_init+title_description",
     .page_param = "$offset", .page_size = 1000, .page_start = 0, .page_max = 25,
+    /* id_keys composite (+ composes, , chooses): `payroll_number` is the AGENCY's number, not the employee's — every employee
+     * of an agency shared it. */
     .description = "Named municipal employees with agency, title, base salary "
       "and overtime paid. Public payroll is the cleanest way to place a named "
       "person inside a specific government unit at a specific time" },
@@ -299,8 +301,9 @@ static const hp_source HP3B31_USSTATE[] = {
     .portal = "https://data.cityofchicago.org", .record_type = "us-public-payroll",
     .tags = "\"us\",\"chicago\",\"payroll\",\"transparency\"", .free_tier = 1,
     .url = "https://data.cityofchicago.org/resource/xzkq-xp2w.json?$q={q}&$limit=1000",
-    .title_keys = "name,job_titles", .id_keys = "name",
+    .title_keys = "name,job_titles", .id_keys = "name+job_titles+department",
     .page_param = "$offset", .page_size = 1000, .page_start = 0, .page_max = 25,
+    /* id_keys composite (+ composes, , chooses): employee names repeat across departments. */
     .description = "Every named City of Chicago employee — department, job "
       "title, salaried or hourly, and the annual salary or hourly rate" },
 
@@ -346,8 +349,9 @@ static const hp_source HP3B31_USSTATE[] = {
     .portal = "https://data.seattle.gov", .record_type = "us-city-licence",
     .tags = "\"us\",\"seattle\",\"licence\"", .free_tier = 1,
     .url = "https://data.seattle.gov/resource/wnbq-64tb.json?$q={q}&$limit=1000",
-    .title_keys = "trade_name,ownership_type", .id_keys = "customer_number",
+    .title_keys = "trade_name,ownership_type", .id_keys = "customer_number+trade_name+ownership_type",
     .page_param = "$offset", .page_size = 1000, .page_start = 0, .page_max = 25,
+    /* id_keys composite (+ composes, , chooses): one customer number covers several licensed locations. */
     .description = "Seattle business licence tax certificates — the legal owner, "
       "the trade name, the NAICS description and the street address of each "
       "licensed location" },

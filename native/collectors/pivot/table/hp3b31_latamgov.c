@@ -51,7 +51,7 @@ static const hp_source HP3B31_LATAMGOV[] = {
     .tags = "\"br\",\"parliament\",\"politics\"", .free_tier = 1,
     .url = "https://dadosabertos.camara.leg.br/api/v2/deputados?nome={q}&itens=100",
     .array_path = "dados", .title_keys = "nome,siglaPartido", .id_keys = "id",
-    .page_param = "pagina", .page_size = 100, .page_max = 30,
+    .page_param = "pagina", .page_max = 30,
     .detail_url = "https://dadosabertos.camara.leg.br/api/v2/deputados/{v}/despesas?itens=100",
     .detail_key = "id", .detail_path = "dados",
     .description = "Brazilian federal deputies with the second hop into their "

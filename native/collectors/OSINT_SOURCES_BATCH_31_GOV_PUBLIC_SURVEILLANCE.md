@@ -81,6 +81,73 @@ inventories. `filter_query` is gated on the entity being present, so these rows
 emit the whole collection on a scheduled run and filter client-side on a pivot.
 After the duplicate drops, 36 of the 46 remain in the batch.
 
+## Two silent-discard classes found by re-reading the house rules
+
+Both were shipped in the first version of this batch and are fixed here. Both
+fail with every record-counting gate green, which is why they are worth naming.
+
+### `page_size` on a page-NUMBER parameter turns pages into offsets
+
+`hpengine.c` decides the paging arithmetic as
+`offset_style = (page_size > 0) || offset_named`, and then computes
+`page_start + (page + 1) * step`. So declaring `page_size` on a parameter that
+is a page *number* makes the engine multiply the page number by the page size:
+`US_FEC_CANDIDATE_SEARCH` walked `page=1`, then `page=101`, `page=201`;
+`JP_GBIZINFO_*` walked `page=1`, then `page=5001`. Pages 2-100 were never
+requested, the run was green, and `records=` looked healthy.
+
+27 rows were in that state. `page_size` is documented as "records per page, for
+offset-style paging" and has no other use in the engine, so it is now set only
+on offset-style rows:
+
+* **23 page-number rows** — `page_size` removed, so the walk is
+  `page_start + page + 1` (2, 3, 4 …).
+* **`US_SAM_EXCLUSIONS`, `US_COLLEGE_SCORECARD`** — `page_size` removed *and*
+  `page_zero_based = 1`, because both data.gov-family APIs number the first page
+  0. Without it the engine coerces the start to 1, so the walk would be "server
+  default (page 0), then 2, 3" and page 1 would be skipped. Declaring
+  zero-based is also the safe direction if a guess is wrong: the worst case is
+  one duplicate page, which the sink dedupes, never a hole.
+* **`WORLDBANK_PROJECTS_API`** — `os` really is an offset, but the engine's
+  `offset_named` test looks for "offset"/"start"/"skip", so `os` was coerced to
+  1 and walked offsets 101, 201 — one record lost at every page boundary, the
+  exact ArcGIS defect `hpengine.c` documents at line 2993. `page_zero_based = 1`
+  keeps the start at 0, so it walks 0, 100, 200.
+* **`CAM_OHGO_OHIO`** — `page-all` is OHGO's *return-everything flag*, not a
+  cursor. Declared as `page_param` it made the engine send `page-all=501`,
+  `page-all=1001`. It is now bound as `page-all=true` in the URL with no walk
+  declared, so one response carries the whole inventory.
+
+One row, `NETLAS_HOST_RESPONSES`, is still reported by
+`tools/audit_page_param.py` because its URL binds its own `start=0`. That shape
+is handled: `start` is offset-named so the start is read from the URL, and
+`hp_url_set_param` replaces rather than appends. 408 rows tree-wide share it.
+
+### `id_keys` naming a dimension instead of a record
+
+No row in this batch used a comma where it meant a composite — all 133
+`id_keys` were single-field — but six named a *group* rather than a record,
+which collapses the set at the sink just as silently:
+
+| row | was | now |
+|---|---|---|
+| `UN_COMTRADE_TRADE_FLOWS` | `period` | `period+reporterCode+partnerCode+cmdCode+flowCode` |
+| `JP_MLIT_LAND_TRADE_PRICES` | `Municipality` | `Period+MunicipalityCode+DistrictName+TradePrice+Area+BuildingYear` |
+| `OONI_COUNTRY_AGGREGATION` | `probe_cc` | `measurement_start_day+probe_cc+test_name` |
+| `IODA_OUTAGE_ALERTS` | `entity.code` | `entity.code+datasource+time` |
+| `US_NYC_PAYROLL` | `payroll_number` | `fiscal_year+agency_name+last_name+first_name+mid_init+title_description` |
+| `US_CHICAGO_SALARIES` | `name` | `name+job_titles+department` |
+| `US_SEATTLE_BUSINESS_LICENSES` | `customer_number` | `customer_number+trade_name+ownership_type` |
+
+`payroll_number` is the agency's number, not the employee's, so every employee
+of an agency shared one uid. Composing is safe even where a named field turns
+out not to exist: the engine joins a missing part as `""` and requires only one
+part present, so a composite can add distinctness but never remove it.
+
+These repairs are reasoned from the engine's arithmetic and each upstream's
+documented parameter semantics, **not** measured — see the unverified section
+below. The registry sweep is what would confirm them.
+
 ## Where the penetrancy is
 
 * **gBizINFO, five second hops off one corporate number** — subsidies,

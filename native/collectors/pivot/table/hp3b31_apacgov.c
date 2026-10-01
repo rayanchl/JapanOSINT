@@ -210,7 +210,7 @@ static const hp_source HP3B31_APACGOV[] = {
     .url = "https://data.gov.tw/api/front/dataset/search?qs={q}&size=100",
     .array_path = "result.result", .title_keys = "title,organization",
     .id_keys = "id", .date_keys = "modified",
-    .page_param = "page", .page_size = 100, .page_max = 30,
+    .page_param = "page", .page_max = 30,
     .description = "Taiwan's national open data platform — the food-safety "
       "inspection, company registration extract, air-quality and public-works "
       "datasets published by each ministry, with the API endpoint for each" },
