@@ -19,8 +19,9 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 17,829** (2026-09-27): `make lint-sources` prints
-it, counting hp_source table rows as well as `REGISTER_SOURCE`, and
+**The registered count is 18,169** (2026-10-02, after batch 32's 340 Japanese
+rows — `docs/verified-sources-batch32.md`): `make lint-sources` prints it,
+counting hp_source table rows as well as `REGISTER_SOURCE`, and
 `./bin/japanosint --list-sources` agrees.
 
 **One exception to "every source is proof-of-life verified":** the batch-400

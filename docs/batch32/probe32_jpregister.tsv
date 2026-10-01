@@ -1,0 +1,65 @@
+id	url	verdict	kind	items	http	bytes	note
+JO32_REG_FSA_PROFUND_NOTIFIERS	https://www.fsa.go.jp/menkyo/menkyoj/tokurei/011.xlsx	PASS	xlsx:011	4590	200	903026	"header=届出者の商号、名称又は氏名|法人番号|管轄
+財務局等|代表者
+(Representative)|16|15|30|他に行っている事業の種類"
+JO32_REG_FSA_PROFUND_ABOLITION_ORDERS	https://www.fsa.go.jp/menkyo/menkyoj/tokurei/021.xlsx	PASS	xlsx:021	611	200	75851	"header=財務局等""|代表者
+(Representative)|6|7|8|他に行っている事業の種類|資本金の額又は出資の総額
+（円）|金融商品
+取引業者"
+JO32_REG_OTIT_SUPERVISING_ORGS_GENERAL	https://www.otit.go.jp/upload/docs/260929_2.xlsx	PASS	xlsx:一般 (M)	2268	200	408667	"header=項番|監理団体名|住所|電話番号|許可日|許可期限|受入れ国
+＊国別コード（別シート参照）|2号移行対象職種
+＊職種コード(別シート参照)"
+JO32_REG_OTIT_SUPERVISING_ORGS_SPECIFIC	https://www.otit.go.jp/upload/docs/260929_4.xlsx	PASS	xlsx:特定 (M)	1449	200	238920	"header=項番|監理団体名|住所|電話番号|許可日|許可期限|受入れ国
+＊国別コード（別シート参照）|2号移行対象職種
+＊職種コード(別シート参照)"
+JO32_REG_MOF_ASSET_FREEZE_CSV	https://www.mof.go.jp/policy/international_policy/gaitame_kawase/gaitame/economic_sanctions/shisantouketsu20260929.csv	PASS	csv	2850	200	3279206	
+JO32_REG_TOKYO_TOKUSHOHO_DISPOSITIONS	https://www.shouhiseikatu.metro.tokyo.lg.jp/torihiki/shobun/documents/shobun_tokushou.csv	PASS	csv	91	200	9290	
+JO32_REG_OSAKA_CONSTRUCTION_OSAKA_CITY	https://www.pref.osaka.lg.jp/documents/8324/r8_3_itiran_1.xlsx	PASS	xlsx:建設業許可業者名簿（大阪市）	14210	200	9619146	header=許可番号|商号名称|2|3|電話番号|郵便番号|名市区町村名|所　在　地
+JO32_REG_OSAKA_CONSTRUCTION_HOKUSETSU	https://www.pref.osaka.lg.jp/documents/8324/r8_3_itiran_1.xlsx#hokusetsu	PASS	xlsx:建設業許可業者名簿（北摂・北河内）	11247	200	9619146	header=許可番号|商号名称|2|3|電話番号|郵便番号|名市区町村名|所　在　地
+JO32_REG_OSAKA_CONSTRUCTION_SENSHU	https://www.pref.osaka.lg.jp/documents/8324/r8_3_itiran_1.xlsx#senshu	PASS	xlsx:建設業許可業者名簿（堺・中河内・南河内・泉州）	14814	200	9619146	header=許可番号|商号名称|2|3|電話番号|郵便番号|名市区町村名|所　在　地
+JO32_REG_GIFU_INDUSTRIAL_WASTE_TRANSPORT	https://www.pref.gifu.lg.jp/uploaded/attachment/506980.xlsx	PASS	xlsx:産業廃棄物収集運搬業	5651	200	1141014	header=優良認定の有無|許可番号|業者氏名|代表者|住所|電話番号|現在許可年月日|許可期限
+JO32_REG_ISHIKAWA_INDUSTRIAL_WASTE_TRANSPORT	https://www.pref.ishikawa.lg.jp/haitai/gyoshameibo/documents/r0804shuuun_r1.xlsx	PASS	xlsx:Sheet1	2350	200	809158	header=通番|優良|許可番号|2|許可の年月日|許可の有効年月日|氏名|代表者の氏名
+JO32_REG_AICHI_REAL_ESTATE_BROKERS	https://www.pref.aichi.jp/uploaded/attachment/626356.xlsx	PASS	xlsx:Sheet1	6889	200	622814	header=免許証番号|回次|商号又は名称|代表者登録名|免許年月日|期間満了年月日|主たる事務所の所在地|電話番号
+JO32_REG_JTA_TRAVEL_AGENCY_DISPOSITIONS	https://www.mlit.go.jp/kankocho/content/001913487.xlsx	PASS	xlsx:R8.7	56	200	22337	header=処分日|行政庁|種別|登録番号|事業者名|営業所名|営業所住所|処分内容
+JO32_REG_CAA_FOSHU_APPROVALS	https://www.caa.go.jp/policies/policy/food_labeling/health_promotion/assets/food_labeling_cms206_260901_02.xlsx	PASS	xlsx:許可一覧表（～R8.9.1) 	1024	200	228576	header=通し番号|商品名|申請者|法人番号|食品の種類|関与する成分|許可を受けた表示内容|摂取をする上での注意事項
+JO32_REG_TOKUSHIMA_CONSTRUCTION	https://www.pref.tokushima.lg.jp/file/attachment/1049278.xlsx	PASS	xlsx:徳島県内建設業許可業者一覧（令和８年３月末現在）	3014	200	576954	header=許可番号|商号名称|代表者氏名|郵便番号|所在地|電話番号|許可年月日|（土）
+JO32_REG_KAGAWA_CONSTRUCTION	https://www.pref.kagawa.lg.jp/documents/13029/r80331_kyokalist_kagawakentiji.xlsx	PASS	xlsx:香川県知事許可業者名簿（R8.3.31現在）	3955	200	1033313	header=許可満了日|土木事務所|2|所在地|許可番号|商号名称（漢字）|商号名称（カナ）|代表者氏名
+JO32_REG_MIYAGI_CONSTRUCTION_SENDAI	https://www.pref.miyagi.jp/documents/11867/2senndai.xlsx	PASS	xlsx:仙台	5319	200	1016191	header=商号・名称|代表者氏名|市区町村名|所在地|許可番号|許可権者|電話番号|10
+JO32_REG_OSAKA_CITY_TOKKU_MINPAKU	https://www.city.osaka.lg.jp/kenko/cmsfiles/contents/0000382/382418/20260531tokku.csv	PASS	csv	8887	200	1015197	
+JO32_REG_OSAKA_CITY_MINPAKU_NOTIFIED	https://www.city.osaka.lg.jp/kenko/cmsfiles/contents/0000382/382418/20260531_shinpou.csv	PASS	csv	2213	200	161052	
+JO32_REG_OSAKA_CITY_RYOKAN_PERMITS	https://www.city.osaka.lg.jp/kenko/cmsfiles/contents/0000382/382418/20260531ryokan.csv	PASS	csv	1861	200	202277	
+JO32_REG_FSA_UNREGISTERED_WARNED_DOMESTIC	https://www.fsa.go.jp/ordinary/chuui/mutouroku/01.xlsx	PASS	xlsx:無登録業者(国内)	719	200	122501	"header=商号、名称又は氏名等
+(Trade Name or Name, etc.)|所在地又は住所
+(Location of Office or Address)|金融商品取引業の内容等
+(Conten"
+JO32_REG_FSA_UNREGISTERED_WARNED_OVERSEAS	https://www.fsa.go.jp/ordinary/chuui/mutouroku/03.xlsx	PASS	xlsx:無登録業者（海外）	436	200	76037	"header=商号、名称又は氏名等
+(Trade Name or Name, etc.)|所在地又は住所
+(Location of Office or Address)|金融商品取引業の内容等
+(Conten"
+JO32_REG_FSA_WARNED_PROFUND_NOTIFIERS	https://www.fsa.go.jp/ordinary/chuui/mutouroku/02.xlsx	PASS	xlsx:届出業者	65	200	32657	header=商号、名称又は氏名等|所在地又は住所|金融商品取引業の内容等|備考|掲載時期
+JO32_REG_HOKKAIDO_CLINICS_NO_BEDS	https://www.pref.hokkaido.lg.jp/fs/1/3/2/0/2/0/2/6/_/03%E7%84%A1%E5%BA%8A%E8%A8%BA%E7%99%82%E6%89%80%E5%90%8D%E7%B0%BF(R8.4.1).xlsx	PASS	xlsx:無床診療所	3184	200	476447	"header=所管
+保健所|診療所名称|郵便番号|所在地|開設者コード|開　設　者|管　理　者|標ぼう診療科目"
+JO32_REG_HOKKAIDO_DENTAL_CLINICS	https://www.pref.hokkaido.lg.jp/fs/1/3/2/0/2/0/2/7/_/04%E6%AD%AF%E7%A7%91%E8%A8%BA%E7%99%82%E6%89%80%E5%90%8D%E7%B0%BF(R8.4.1).xlsx	PASS	xlsx:歯科診療所	2688	200	361238	"header=所管
+保健所|診療所名称|郵便番号|所在地|開設者コード|開　設　者|管　理　者|標ぼう診療科目"
+JO32_REG_AICHI_MEDICAL_CLINICS	https://www.pref.aichi.jp/uploaded/attachment/598864.xlsx	PASS	xlsx:医科診療所(県保健所のみ)	2464	200	510563	header=2464|保健所名|所在地|番号|名称|郵便番号|住所|電話番号
+JO32_REG_OSAKA_TRAVEL_AGENCIES	https://www.pref.osaka.lg.jp/documents/11129/20260630.xlsx	PASS	xlsx:HP公開登録業者	1326	200	89352	header=2|協会|種別|登録番号|商号|法人又は個人
+JO32_REG_TOKYO_NPO_CORPORATIONS	https://www.seikatubunka1.metro.tokyo.lg.jp/houjin/npo_houjin/data/files/0000001250/ninsyou.xlsx	PASS	xlsx:認証法人（認証日順）	8529	200	4048792	"header=通番|法人名|法人名（カナ）|代表者|郵便
+番号|主たる事務所|従たる事務所|電話番号"
+JO32_REG_SAITAMA_PHARMACIES	https://www.pref.saitama.lg.jp/documents/127645/20260831yakkyoku.xlsx	PASS	xlsx:0831薬局	2046	200	178226	header=許可番号|有効開始年月日|有効終了年月日|店舗または営業所名称|店舗または営業所所在地|開設者名称
+JO32_REG_SAITAMA_MEDICAL_DEVICE_SELLERS	https://www.pref.saitama.lg.jp/documents/127645/20260831koudokannrikiki.xlsx	PASS	xlsx:0831高度管理機器	2320	200	206502	header=許可番号|有効開始年月日|有効終了年月日|店舗または営業所名称|店舗または営業所所在地|開設者名称
+JO32_REG_SAITAMA_DRUGSTORES	https://www.pref.saitama.lg.jp/documents/127645/20260831tennpo.xlsx	PASS	xlsx:0831店舗	1026	200	92270	header=許可番号|有効開始年月日|有効終了年月日|店舗または営業所名称|店舗または営業所所在地|開設者名称
+JO32_REG_AICHI_INDUSTRIAL_WASTE_TRANSPORT	https://www.pref.aichi.jp/uploaded/attachment/628853.xlsx	PASS	xlsx:産業廃棄物収集運搬業	10732	200	4957442	header=許可番号|業者氏名|フリガナ|代表者|郵便番号|住所|電話番号|当初許可年月日
+JO32_REG_AICHI_INDUSTRIAL_WASTE_DISPOSAL	https://www.pref.aichi.jp/uploaded/attachment/628853.xlsx#disposal	PASS	xlsx:産業廃棄物処分業	1477	200	4957442	header=許可番号|業者氏名|フリガナ|代表者|郵便番号|住所|電話番号|当初許可年月日
+JO32_REG_HOKKAIDO_INDUSTRIAL_WASTE_TRANSPORT	https://www.pref.hokkaido.lg.jp/fs/1/3/2/0/5/8/1/9/_/01(2026.3.31%E7%8F%BE%E5%9C%A8)%E7%94%A3%E5%BB%83%E5%8F%8E%E9%81%8B%E6%A5%AD_%E5%85%AC%E9%96%8B%E7%89%88.xlsx	PASS	xlsx:収集運搬業（20260331現在）	5567	200	1169779	header=No.|振興局|読み|処理業者|郵便番号|本社住所|本社電話|営業所等電話
+JO32_REG_CHIBA_INDUSTRIAL_WASTE_TRANSPORT	https://www.pref.chiba.lg.jp/haishi/shorigyou/documents/2syuuunn2026.xlsx	PASS	xlsx:普通・収運	12588	200	2880234	header=業者名|ﾌﾘｶﾞﾅ|代表者|（本社）住所|電話番号|許可番号|許可年月日|許可期限
+JO32_REG_TOYAMA_PHARMA_MANUFACTURERS	https://toyama-pref.box.com/shared/static/0o25ebzhyu31lmh9ugup2j5wpoiyxwju.xlsx	PASS	xlsx:名簿	471	200	61211	header=事務所等名称|事務所等所在地|業種|区分|許可登録番号|許可登録年月日|氏名|修理区分特管
+JO32_REG_KANAGAWA_FLUOROCARBON_RECOVERY	https://www.pref.kanagawa.jp/documents/5391/meibo_1.xlsx	PASS	xlsx:R7	3882	200	609085	header=登録番号|1|登録日|登録有効期限|事業所名|事業所所在地|6|回収
+JO32_REG_NAGANO_FLUOROCARBON_RECOVERY	https://www.pref.nagano.lg.jp/haikibut/kurashi/recycling/furon/furon/documents/080703_furonjuten.xlsx	PASS	xlsx:第一種フロン類充填回収業	1240	200	217463	header=登録番号|事業者名|法人の代表者|事業者（本社）住所|事業所名称|事業所住所|事業所電話番号|登録年月日
+JO32_REG_HOKKAIDO_INTRACTABLE_DISEASE_PROVIDERS	https://www.harp.lg.jp/opendata/dataset/746/resource/9183/(%20HP%E5%85%AC%E8%A1%A8%20)R8.9%E6%8C%87%E5%AE%9A%E5%8C%BB%E7%99%82%E6%A9%9F%E9%96%A2.xlsx	PASS	xlsx:HP公表用	3233	200	346822	header=連番|HCコード|区分|機関等名称|区分（難）|区分（小）|〒|住所
+JO32_REG_MLIT_VEHICLE_RECALL_NOTIFICATIONS	https://www.mlit.go.jp/jidosha/recall.html	PASS	html-anchors	171	200	63083	
+JO32_REG_OSAKA_INDUSTRIAL_WASTE_TRANSPORT	https://www.pref.osaka.lg.jp/documents/602/hutuu_tyokusou_r080331.xlsx	PASS	xlsx:普通収運	12153	200	2444014	header=番号|許可番号|業者名|屋号|代表者|郵便番号|所在地|電話番号
+JO32_REG_AICHI_DENTAL_CLINICS	https://www.pref.aichi.jp/uploaded/attachment/597762.xlsx	PASS	xlsx:（４）歯科診療所(県保健所のみ)	1590	200	264475	header=1590|保健所名|所在地|番号|名称|郵便番号|住所|電話番号
+JO32_REG_NIIGATA_CONSTRUCTION	https://www.pref.niigata.lg.jp/uploaded/attachment/508974.xlsx	PASS	xlsx:許可業者リスト	9051	200	1951501	header=許可番号|商号名称|代表者氏名|市区町村名|所在地|資本金額（千円）|法人・個人区分|兼業の有無
+JO32_REG_KANAGAWA_CONSTRUCTION	https://www.pref.kanagawa.jp/documents/83685/r0808_bango.xlsx	PASS	xlsx:R0808	29206	200	6973791	header=《許可番号》|《商号名称（漢字）》|《代表者氏名》|《郵便番号》|《所在地》|《電話番号》|《商号名称（カナ）》|土
+JO32_REG_HOKKAIDO_INDUSTRIAL_WASTE_DISPOSAL	https://www.pref.hokkaido.lg.jp/fs/1/3/1/8/3/6/1/4/_/02(2026.3.31%E7%8F%BE%E5%9C%A8)%E7%94%A3%E5%BB%83%E5%87%A6%E5%88%86%E6%A5%AD_%E5%85%AC%E9%96%8B%E7%89%88.xlsx	PASS	xlsx:処分業（2026.3.31現在）	692	200	169935	header=No|振興局|読み|処理業者|郵便番号|本社住所|本社電話|営業所等電話
+JO32_REG_OSAKA_SPECIAL_WASTE_TRANSPORT	https://www.pref.osaka.lg.jp/documents/602/tokkan_tyokusou_r080331.xlsx	PASS	xlsx:特管収運	848	200	171318	header=番号|許可番号|業者名|屋号|代表者|郵便番号|所在地|電話番号
