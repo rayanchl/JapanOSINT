@@ -378,5 +378,6 @@ static const source_def cam_webcamendirect_list_def = {
   .name = "Camera discovery — Webcam-en-direct list",
   .name_ja = "カメラ探索 — Webcam-en-direct list",
    .layer = "cameras",
-   .update_interval_sec = 3600, .run = run };
+   .update_interval_sec = 3600, .run = run,
+  .category = "cyber" };
 REGISTER_SOURCE(cam_webcamendirect_list_def)

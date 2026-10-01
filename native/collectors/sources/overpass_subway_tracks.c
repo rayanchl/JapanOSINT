@@ -66,5 +66,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 static const source_def overpass_subway_tracks_def = {
   .id = "overpass-subway-tracks", .collector = "transport",
   .name = "OSM Subway Tracks", .name_ja = "OSM 地下鉄線路",
-   .update_interval_sec = 86400, .run = run };
+   .update_interval_sec = 86400, .run = run,
+  .category = "transport" };
 REGISTER_SOURCE(overpass_subway_tracks_def)

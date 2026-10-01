@@ -745,5 +745,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 static const source_def collector_repair_def = {
   .id = "collector-repair", .collector = "_maint",
   .name = "Collector Repair", .name_ja = "コレクター修復",
-  .update_interval_sec = 120, .run = run };
+  .update_interval_sec = 120, .run = run,
+  .category = "maintenance" };
 REGISTER_SOURCE(collector_repair_def)

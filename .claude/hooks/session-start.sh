@@ -6,9 +6,19 @@
 # `mecab.h` once curl was fixed. SQLite, cJSON and mongoose are vendored in
 # native/third_party/, so only the system libraries below are missing.
 #
-# The package list is deliberately the SAME one .github/workflows/ci.yml
+# The library list is deliberately the SAME one .github/workflows/ci.yml
 # installs — if the two drift, CI and the web session stop agreeing about what
 # "builds" means. Keep them in sync (docs/BUILD.md §1 is the prose copy).
+#
+# Two packages here are NOT in CI's build job, on purpose:
+#   sqlite3     the CLI. CLAUDE.md §4b tells you to verify a collector with
+#               `sqlite3 $JO_DB "select count(*) …"`, and
+#               tools/bench_concurrency_setup.sh shells out to it. CI never runs
+#               either, so CI does not install it — but a session that cannot
+#               run the documented check cannot finish the documented workflow.
+#   util-linux  setarch, which the Makefile's tsan targets need to turn ASLR
+#               off. CI installs it in its own thread-sanitizer job; a session
+#               has one container for both.
 set -euo pipefail
 
 # Local runs already have a working toolchain; this is a web-container fixup.
@@ -21,7 +31,7 @@ SUDO=""
 
 # Idempotent: the container state is cached after the hook completes, so on a
 # resumed/cleared session the headers are already there and we skip apt.
-if [ ! -e /usr/include/mecab.h ] || \
+if [ ! -e /usr/include/mecab.h ] || ! command -v sqlite3 >/dev/null 2>&1 || \
    ! find /usr/include -name curl.h -path '*curl*' -print -quit | grep -q .; then
   export DEBIAN_FRONTEND=noninteractive
 
@@ -33,7 +43,7 @@ if [ ! -e /usr/include/mecab.h ] || \
 
   $SUDO apt-get install -y --no-install-recommends \
     libcurl4-openssl-dev libssl-dev libmecab-dev mecab zlib1g-dev \
-    mecab-ipadic-utf8
+    mecab-ipadic-utf8 sqlite3 util-linux
   # mecab-ipadic-utf8 is the dictionary MeCab needs at runtime. core/fts.c
   # degrades gracefully without it (g_init_failed, Latin passthrough), but then
   # the Japanese FTS path — the half most likely to break — is never exercised.

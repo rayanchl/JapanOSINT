@@ -652,5 +652,6 @@ static const source_def embed_def = {
   .description = "Embeds intel_items title+summary into the sqlite-vec index "
                  "behind /api/intel/semantic. Inert unless JO_EMBED_URL is set.",
   .url = "internal://embedding-backfill",
-  .update_interval_sec = 120, .run = run };
+  .update_interval_sec = 120, .run = run,
+  .category = "maintenance" };
 REGISTER_SOURCE(embed_def)

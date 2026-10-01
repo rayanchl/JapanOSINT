@@ -321,5 +321,6 @@ static const source_def camera_geocode_def = {
   .id = "camera-geocode", .collector = "_maint",
   .name = "Camera geocoding (centroid upgrade)",
   .name_ja = "\xe3\x82\xab\xe3\x83\xa1\xe3\x83\xa9\xe4\xbd\x8d\xe7\xbd\xae\xe8\xa3\x9c\xe6\xad\xa3",
-  .update_interval_sec = 300, .run = pod_run };
+  .update_interval_sec = 300, .run = pod_run,
+  .category = "maintenance" };
 REGISTER_SOURCE(camera_geocode_def)

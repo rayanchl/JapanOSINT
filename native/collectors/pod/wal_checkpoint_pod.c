@@ -75,5 +75,6 @@ static const source_def wal_checkpoint_def = {
   .id = "wal-checkpoint", .collector = "_maint",
   .name = "WAL Checkpoint (forced TRUNCATE)",
   .name_ja = "WAL チェックポイント（強制切り詰め）",
-  .update_interval_sec = 300, .run = run };
+  .update_interval_sec = 300, .run = run,
+  .category = "maintenance" };
 REGISTER_SOURCE(wal_checkpoint_def)

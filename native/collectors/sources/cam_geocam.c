@@ -254,5 +254,6 @@ static const source_def cam_geocam_def = {
   .name = "Camera Discovery: Geocam",
   .name_ja = "カメラ探索: Geocam",
    .layer = "cameras",
-   .update_interval_sec = 3600, .run = run };
+   .update_interval_sec = 3600, .run = run,
+  .category = "cyber" };
 REGISTER_SOURCE(cam_geocam_def)
