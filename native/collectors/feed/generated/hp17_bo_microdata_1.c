@@ -16,7 +16,7 @@ static const hp_source T[] = {
     .name = "INE Bolivia - ANDA Archivo Nacional de Datos (NADA API)",
     .collector = "bo_microdata", .category = "microdata",
     .description = "Bolivian national statistics microdata catalogue, same NADA schema: id, idno, title, nation, authoring entity, form model, year range, repository, REDATAM data-access link, timestamps, views and downloads. DETAIL VERIFIED: /api/catalog/BOL-INE-CA-2013 (Censo Agropecuario 2013) returned a 38KB study record with producers, contacts, topics, collection dates and keywords. Bolivia is otherwise almost absent from the tree.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "microdata", .tags = "\"bo\",\"microdata\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "es",
+    .record_type = "microdata-record", .tags = "\"bo\",\"microdata\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "es",
     .url = "https://anda.ine.gob.bo/index.php/api/catalog/search?format=json&ps=50",
     .array_path = "result.rows",
     .detail_url = "https://anda.ine.gob.bo/index.php/api/catalog/{v}", .detail_key = "idno",

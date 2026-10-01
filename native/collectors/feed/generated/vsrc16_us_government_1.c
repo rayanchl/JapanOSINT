@@ -125,13 +125,6 @@ VJSON(us_ma_ocpf_districts, "us-ma-ocpf-districts", "Massachusetts OCPF - legisl
   "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\"]", 86400,
   "office (House/Senate/Governor's Council/Statewide), code, description, incumbentName, officeTypeGroupId - the district lookup that joins filers to seats.");
 
-VJSON(us_ma_ocpf_municipalities, "us-ma-ocpf-municipalities", "Massachusetts OCPF - all 351 municipalities with their elected filers", "Massachusetts OCPF - all 351 municipalities with their elected filers",
-  "us_government", "government",
-  "https://api.ocpf.us/municipalities",
-  "",
-  "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Per town: code, city, county, pop2020, localReportsUrl, and electedFilers[] with cpfId, filerName, candidateFullAddress (home address), districtNameHeld, officeNameHeld, partyAffiliation. A complete officeholder roster for the state keyed to campaign-finance ids.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 #include "lib/arcgis_dir.h"
 
 /* us-miamidade-arcgis-services: the description promised the 311, EnerGov,
@@ -209,3 +202,10 @@ VJSON(us_usaspending_federal_obligations, "us-usaspending-federal-obligations", 
   "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\"]", 86400,
   "176 account rows per agency-year with account_title, account_number and obligated_amount, plus page_metadata carrying explicit next/current/previous URLs for exhaustive pagination.");
 
+
+VJSON(us_ma_ocpf_municipalities, "us-ma-ocpf-municipalities", "Massachusetts OCPF - all 351 municipalities with their elected filers", "Massachusetts OCPF - all 351 municipalities with their elected filers",
+  "us_government", "government",
+  "https://api.ocpf.us/municipalities",
+  "",
+  "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
+  "Per town: code, city, county, pop2020, localReportsUrl, and electedFilers[] with cpfId, filerName, candidateFullAddress (home address), districtNameHeld, officeNameHeld, partyAffiliation. A complete officeholder roster for the state keyed to campaign-finance ids.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");

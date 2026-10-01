@@ -7,13 +7,6 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
-VJSON(us_ma_ocpf_nonfilers, "us-ma-ocpf-nonfilers", "Massachusetts OCPF - candidates referred for non-filing", "Massachusetts OCPF - candidates referred for non-filing",
-  "us_legal", "legal",
-  "https://api.ocpf.us/legal/nonfilers",
-  "",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "cpfId, candidateName, full street address/city/state/zip, treasurerName, referralDate and the expectedReports[] the candidate failed to file. Home addresses of referred candidates are in-band.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(us_oyez_cases_all, "us-oyez-cases-all", "Oyez — full case index (paginated)", "Oyez — full case index (paginated)",
   "us_legal", "legal",
   "https://api.oyez.org/cases?per_page=3&page=0",
@@ -226,3 +219,10 @@ VRSS(us_uscourts_news_rss, "us-uscourts-news-rss", "US Courts (AO) — judiciary
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Administrative Office of the US Courts news feed: title, link, description, dc:date. Low volume; carries judicial-vacancy, caseload-statistics and policy announcements for the federal judiciary.");
 
+
+VJSON(us_ma_ocpf_nonfilers, "us-ma-ocpf-nonfilers", "Massachusetts OCPF - candidates referred for non-filing", "Massachusetts OCPF - candidates referred for non-filing",
+  "us_legal", "legal",
+  "https://api.ocpf.us/legal/nonfilers",
+  "",
+  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
+  "cpfId, candidateName, full street address/city/state/zip, treasurerName, referralDate and the expectedReports[] the candidate failed to file. Home addresses of referred candidates are in-band.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");

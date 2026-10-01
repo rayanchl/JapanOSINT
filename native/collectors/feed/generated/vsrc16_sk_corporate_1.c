@@ -21,13 +21,6 @@ VJSON(sk_registeruz_vyrocna_sprava, "sk-registeruz-vyrocna-sprava", "Slovakia Re
   "sk", "[\"sk\",\"corporate\",\"batch16\",\"high-penetrancy\"]", 86400,
   "Annual report record: idUJ back-link, obdobieOd/obdobieDo, datumZostaveniaK, datumPodania, typ (Individuálna/Konsolidovaná výročná správa), pristupnostDat, and prilohy[] with the real PDF filenames, byte sizes, language and SHA-256 digests.");
 
-VJSON(sk_rpo_by_ico, "sk-rpo-by-ico", "Slovakia RPO — lookup by IČO", "Slovakia RPO — lookup by IČO",
-  "sk_corporate", "corporate",
-  "https://api.statistics.sk/rpo/v1/search?identifier=35697270",
-  "results",
-  "sk", "[\"sk\",\"corporate\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Same RPO record set but pivoted on the 8-digit IČO instead of a name, so a company number from any other Slovak source resolves straight to the full name history (e.g. SLOVTEL GSM → GLOBTEL GSM → Globtel → Orange Slovensko), address history, legal form and statutory bodies. The direct entity-number entry point into the Slovak register.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(sk_rpvs_odata_service_doc, "sk-rpvs-odata-service-doc", "Slovakia RPVS - OData service document", "Slovakia RPVS - OData service document",
   "sk_corporate", "corporate",
   "https://rpvs.gov.sk/opendatav2/",

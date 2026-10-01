@@ -16,7 +16,7 @@ static const hp_source T[] = {
     .name = "GLEIF — legal entities registered in Uganda",
     .collector = "ug_company-registry", .category = "company-registry",
     .description = "91 Ugandan LEI holders with legal name, registered and headquarters addresses, legal form, local registration number, status and renewal dates; relationship links to parents. Detail by LEI.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "company-registry", .tags = "\"ug\",\"company-registry\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "company-registry-record", .tags = "\"ug\",\"company-registry\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://api.gleif.org/api/v1/lei-records?filter%5Bentity.legalAddress.country%5D=UG&page%5Bsize%5D=100",
     .array_path = "data",
     .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}", .detail_key = "id",

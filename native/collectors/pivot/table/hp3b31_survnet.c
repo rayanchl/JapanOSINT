@@ -1,4 +1,4 @@
-/* collectors/sources/hp3_surv_netscan.c — internet-wide sensing and telemetry.
+/* collectors/pivot/table/hp3b31_survnet.c — batch 31: survnet — internet-wide sensing and telemetry.
  *
  * The internet is continuously scanned, measured and mapped by parties who
  * publish the result. Shodan's InternetDB answers what services an address
@@ -11,10 +11,39 @@
  * and OpenCellID publish the wireless landscape as coordinates.
  *
  * Nothing here scans anything itself — every row reads a public measurement
- * someone else already published, and a missing credential is an honest empty. */
-#include "../../lib/hpengine.h"
+ * someone else already published, and a missing credential is an honest empty.
+ *
+ * PROVENANCE AND VERIFICATION STATUS — read before trusting a row here.
+ *
+ * Unlike batches 18-30, this table was hand-authored, not scaffolded by
+ * tools/gen_hp_batch.py, so there is NO docs/candidate-sources-batch31.*.txt
+ * manifest behind it. Do not look for one, and do not regenerate over this
+ * file. The consequence is that the manifest-driven auditors
+ * (audit_batch_reachable.py, audit_batch_pagination.py, audit_batch_emit.py)
+ * cannot be pointed at batch 31; use audit_registry_emit.py --match hp3b31,
+ * which reads --list-sources and needs no manifest.
+ *
+ * These rows are NOT proof-of-life verified. The environment they were written
+ * in had no outbound HTTPS, so no row here was fetched over the wire, and none
+ * of rules 4, 4b and 4d (fetching is not emitting; emitting is not storing;
+ * answering is not answering THE QUESTION) has been measured for this batch.
+ * What HAS been checked is offline and structural: the tree builds clean, the
+ * strict audit-sources gate is at zero findings, lint-sources reports no
+ * duplicate id or endpoint, and every row is reachable under house rule 3.
+ *
+ * So treat each row as a documented CANDIDATE until it is measured. The first
+ * person with network should run:
+ *     python3 tools/audit_registry_emit.py --bin ./bin/japanosint \
+ *             --match hp3b31 --jobs 6 --timeout 220 --out b31.tsv
+ *     python3 tools/probe_hp_batch.py --check-filter   # FILTER_IGNORED is fatal
+ * and retire whatever comes back EMITS_NOTHING, COLLISION or FILTER_IGNORED.
+ * The engine cannot fabricate — an endpoint that moved or changed shape yields
+ * an honest empty, never an invented record — so an unmeasured row is a gap in
+ * coverage, not a source of false data.
+ */
+#include "lib/hpengine.h"
 
-static const hp_source HP3_SURV_NETSCAN[] = {
+static const hp_source HP3B31_SURVNET[] = {
   /* ── Host exposure ────────────────────────────────────────────────────── */
   { .id = "ONYPHE_HOST_SUMMARY", .name = "ONYPHE — host intelligence summary",
     .name_ja = "ONYPHE ホスト情報", .category = "surveillance",
@@ -25,7 +54,7 @@ static const hp_source HP3_SURV_NETSCAN[] = {
     .headers = { "Authorization: apikey {key}", NULL },
     .array_path = "results", .title_keys = "app.http.title,protocol",
     .id_keys = "ip", .date_keys = "@timestamp",
-    .page_param = "page", .page_size = 10, .page_max = 40,
+    .page_param = "page", .page_max = 40,
     .description = "ONYPHE's combined view of an address — scanned services, "
       "passive DNS, threat sightings, leaked credentials seen on it, "
       "geolocation and the organisation and ASN, drawn from its own scan and "
@@ -161,7 +190,9 @@ static const hp_source HP3_SURV_NETSCAN[] = {
     .url = "https://api.ooni.io/api/v1/aggregation?domain={qh}&axis_x=measurement_start_day"
       "&axis_y=probe_cc",
     .array_path = "result", .title_keys = "probe_cc,test_name",
-    .id_keys = "probe_cc", .date_keys = "measurement_start_day",
+    .id_keys = "measurement_start_day+probe_cc+test_name", .date_keys = "measurement_start_day",
+    /* id_keys composite (+ composes, , chooses): the aggregation is per day x country x test; `probe_cc` alone kept one row
+     * per country and discarded the timeline that is the point of the row. */
     .description = "The same corpus aggregated over time and geography — how "
       "many measurements of a domain were anomalous, failed or confirmed "
       "blocked, per country and per day. Turns individual measurements into a "
@@ -175,7 +206,7 @@ static const hp_source HP3_SURV_NETSCAN[] = {
     .array_path = "data", .filter_query = 1,
     .title_keys = "event_type,summary.ases", .id_keys = "id",
     .date_keys = "view_ts",
-    .interval = 3600,
+    .interval = 900,
     .description = "Detected prefix hijacks, origin changes, route leaks and "
       "sub-moas events — the victim and attacker ASNs, the prefixes involved "
       "and the inference scores. Routing hijacks precede both traffic "
@@ -224,11 +255,11 @@ static const hp_source HP3_SURV_NETSCAN[] = {
     .headers = { "Authorization: Bearer {key}", NULL },
     .array_path = "result.top_0", .filter_query = 1,
     .title_keys = "domain,rank", .id_keys = "domain",
-    .interval = 86400,
+    .interval = 3600,
     .description = "Cloudflare's public measurement layer — domain popularity "
       "ranking, traffic anomalies by country, attack layer distribution, BGP "
       "and routing observations and the outage annotations Cloudflare "
       "publishes when a network disappears" },
 };
 
-HP_REGISTER_TABLE(HP3_SURV_NETSCAN)
+HP_REGISTER_TABLE(HP3B31_SURVNET)

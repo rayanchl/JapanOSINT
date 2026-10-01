@@ -16,7 +16,7 @@ static const hp_source T[] = {
     .name = "IHSN survey catalog - Burkina Faso",
     .collector = "bf_microdata", .category = "microdata",
     .description = "Burkinabe studies with idno, title, authoring entity and year; detail hop yields producers, sampling and file lists.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "microdata", .tags = "\"bf\",\"microdata\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "microdata-record", .tags = "\"bf\",\"microdata\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "http://catalog.ihsn.org/index.php/api/catalog/search?format=json&country=Burkina%20Faso&ps=50",
     .array_path = "result.rows",
     .detail_url = "http://catalog.ihsn.org/index.php/api/catalog/{v}", .detail_key = "idno",

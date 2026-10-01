@@ -1,4 +1,4 @@
-/* collectors/sources/hp3_gov_europe_national.c — European national public sector.
+/* collectors/pivot/table/hp3b31_eunat.c — batch 31: eunat — European national public sector.
  *
  * Europe's company registers are already wired elsewhere in this tree. What was
  * missing is the layer that explains *why* a company appears in a register at
@@ -10,10 +10,39 @@
  * Folketing, the Swedish Riksdag, the Norwegian Storting, the Polish Sejm, the
  * Swiss Parliament and the German Bundestag all publish OData or JSON services
  * covering members, documents, votes and committee work — and almost nothing
- * queries them. */
-#include "../../lib/hpengine.h"
+ * queries them.
+ *
+ * PROVENANCE AND VERIFICATION STATUS — read before trusting a row here.
+ *
+ * Unlike batches 18-30, this table was hand-authored, not scaffolded by
+ * tools/gen_hp_batch.py, so there is NO docs/candidate-sources-batch31.*.txt
+ * manifest behind it. Do not look for one, and do not regenerate over this
+ * file. The consequence is that the manifest-driven auditors
+ * (audit_batch_reachable.py, audit_batch_pagination.py, audit_batch_emit.py)
+ * cannot be pointed at batch 31; use audit_registry_emit.py --match hp3b31,
+ * which reads --list-sources and needs no manifest.
+ *
+ * These rows are NOT proof-of-life verified. The environment they were written
+ * in had no outbound HTTPS, so no row here was fetched over the wire, and none
+ * of rules 4, 4b and 4d (fetching is not emitting; emitting is not storing;
+ * answering is not answering THE QUESTION) has been measured for this batch.
+ * What HAS been checked is offline and structural: the tree builds clean, the
+ * strict audit-sources gate is at zero findings, lint-sources reports no
+ * duplicate id or endpoint, and every row is reachable under house rule 3.
+ *
+ * So treat each row as a documented CANDIDATE until it is measured. The first
+ * person with network should run:
+ *     python3 tools/audit_registry_emit.py --bin ./bin/japanosint \
+ *             --match hp3b31 --jobs 6 --timeout 220 --out b31.tsv
+ *     python3 tools/probe_hp_batch.py --check-filter   # FILTER_IGNORED is fatal
+ * and retire whatever comes back EMITS_NOTHING, COLLISION or FILTER_IGNORED.
+ * The engine cannot fabricate — an endpoint that moved or changed shape yields
+ * an honest empty, never an invented record — so an unmeasured row is a gap in
+ * coverage, not a source of false data.
+ */
+#include "lib/hpengine.h"
 
-static const hp_source HP3_GOV_EU_NATIONAL[] = {
+static const hp_source HP3B31_EUNAT[] = {
   /* ── Germany, Austria, Switzerland ────────────────────────────────────── */
   { .id = "DE_BUNDESTAG_DIP", .name = "Germany Bundestag DIP — parliamentary process API",
     .name_ja = "ドイツ連邦議会 議事情報API", .category = "government",
@@ -169,7 +198,7 @@ static const hp_source HP3_GOV_EU_NATIONAL[] = {
     .url = "https://data.riksdagen.se/dokumentlista/?sok={q}&utformat=json&sz=200",
     .array_path = "dokumentlista.dokument", .title_keys = "titel,organ",
     .id_keys = "id", .date_keys = "datum", .link_keys = "dokument_url_html",
-    .page_param = "p", .page_size = 200, .page_max = 30,
+    .page_param = "p", .page_max = 30,
     .description = "The Riksdag's full document API — bills, motions, "
       "committee reports, written questions and the government's answers, plus "
       "the members' declared assets and side-income filings" },
@@ -298,7 +327,7 @@ static const hp_source HP3_GOV_EU_NATIONAL[] = {
     .filter_query = 1, .title_keys = "title,from",
     .id_keys = "num", .date_keys = "receiptDate",
     .page_param = "offset", .page_size = 500, .page_start = 0, .page_max = 30,
-    .interval = 86400,
+    .interval = 21600,
     .description = "The Sejm's open API — interpellations and the ministries' "
       "written answers, MP records, votes and committee sittings. Polish "
       "ministries answer interpellations with contract and inspection detail "
@@ -317,4 +346,4 @@ static const hp_source HP3_GOV_EU_NATIONAL[] = {
       "or the contract is void" },
 };
 
-HP_REGISTER_TABLE(HP3_GOV_EU_NATIONAL)
+HP_REGISTER_TABLE(HP3B31_EUNAT)

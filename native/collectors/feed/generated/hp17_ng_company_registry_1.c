@@ -16,7 +16,7 @@ static const hp_source T[] = {
     .name = "GLEIF — legal entities registered in Nigeria",
     .collector = "ng_company-registry", .category = "company-registry",
     .description = "978 Nigerian legal entities with an LEI. Each record: id = the 20-char LEI, plus attributes.entity (legalName, otherNames, legalAddress and headquartersAddress with street lines, city, region, postal code, country), legalForm, status, registeredAs (local company number), and attributes.registration (status, initial/last update, next renewal, managing LOU, validation source). Relationships expose parent/child ultimate-owner links. Detail by LEI returns the single full record.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "company-registry", .tags = "\"ng\",\"company-registry\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "company-registry-record", .tags = "\"ng\",\"company-registry\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://api.gleif.org/api/v1/lei-records?filter%5Bentity.legalAddress.country%5D=NG&page%5Bsize%5D=100",
     .array_path = "data",
     .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}", .detail_key = "id",

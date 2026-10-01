@@ -85,26 +85,12 @@ VJSON(us_courtlistener_search_oral_argument, "us-courtlistener-search-oral-argum
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Oral-argument recordings, count 1624 for one term. Rows give absolute_url to /audio/{id}/, caseName, court, dateArgued, docketNumber, duration and the mp3 local path.");
 
-VJSON(us_courtlistener_search_people, "us-courtlistener-search-people", "CourtListener — judge search (type=p)", "CourtListener — judge search (type=p)",
-  "us_legal", "legal",
-  "https://www.courtlistener.com/api/rest/v4/search/?q=Roberts&type=p",
-  "results",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Federal and state judges, count 664 for one surname. Rows carry id, name_full, absolute_url, court list, appointer, selection_method, aba_rating array, political_affiliation, school, date_start/date_termination. The id feeds every judge detail hop below.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 /* Keyed on docket_id. Type=r rows carry no `id`, so the fallback label keyed
  * them on caseName and folded different dockets together ("Google Inc." is a
  * party in dozens): 400 emitted, 345 stored. Measured 2026-09-15 over 12 cursor
  * pages: 240 rows, 231 docket_ids, 208 caseNames; the 9 repeated docket_ids are
  * the same docket re-served on the next cursor page, differing only in
  * meta.score.bm25 (148.71298 vs 148.7121). */
-VJSON_IDKEYS(us_courtlistener_search_recap_dockets, "us-courtlistener-search-recap-dockets", "CourtListener RECAP — federal docket search (anonymous-accessible)", "CourtListener RECAP — federal docket search (anonymous-accessible)",
-  "us_legal", "legal",
-  "https://www.courtlistener.com/api/rest/v4/search/?q=Google&type=r",
-  "results",
-  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Federal PACER/RECAP dockets. count 98124 dockets / document_count 520436 for one query. Each row carries docketNumber, caseName, court, assignedTo judge name + assigned_to_id, referredTo, dateFiled, dateTerminated, cause, natureOfSuit, juryDemand, and a nested recap_documents[] array with entry_number, description, is_available, filepath_local and page_count. This is the deep RECAP hop that works WITHOUT a token (the REST /dockets/ endpoint is 401 anonymously).  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.",
-  "docket_id");
 
 VJSON(us_courtlistener_search_recap_documents, "us-courtlistener-search-recap-documents", "CourtListener RECAP — docket-entry/document search", "CourtListener RECAP — docket-entry/document search",
   "us_legal", "legal",
@@ -348,3 +334,10 @@ VJSON_KEYED(us_legistar_stpaul_matters, "us-legistar-stpaul-matters", "Legistar 
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Saint Paul City Council ordinances and resolutions (MatterFile 'Ord 26-35') with full Legistar matter metadata and the MatterId detail hops.",
   "MatterId");
+
+VJSON(us_courtlistener_search_people, "us-courtlistener-search-people", "CourtListener — judge search (type=p)", "CourtListener — judge search (type=p)",
+  "us_legal", "legal",
+  "https://www.courtlistener.com/api/rest/v4/search/?q=Roberts&type=p",
+  "results",
+  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
+  "Federal and state judges, count 664 for one surname. Rows carry id, name_full, absolute_url, court list, appointer, selection_method, aba_rating array, political_affiliation, school, date_start/date_termination. The id feeds every judge detail hop below.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");

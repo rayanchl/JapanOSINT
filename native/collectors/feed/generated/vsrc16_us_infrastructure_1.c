@@ -28,38 +28,10 @@ VJSON(global_peeringdb_ix_detail, "global-peeringdb-ix-detail", "PeeringDB inter
   "en", "[\"us\",\"infrastructure\",\"batch16\",\"high-penetrancy\"]", 86400,
   "One IX (AMS-IX): operating org inlined, media type, protocols, policy/tech/sales contacts, net_count, and inlined ixlan_set / fac_set.");
 
-VJSON(global_peeringdb_ixfac_by_ix, "global-peeringdb-ixfac-by-ix", "PeeringDB IX-to-facility links", "PeeringDB IX-to-facility links",
-  "us_infrastructure", "infrastructure",
-  "https://www.peeringdb.com/api/ixfac?ix_id=26&limit=5",
-  "data",
-  "en", "[\"us\",\"infrastructure\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Which datacentres an exchange has switches in: ix_id, fac_id, facility name, city, country. IX -> physical building hop.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(global_peeringdb_ixlan_by_ix, "global-peeringdb-ixlan-by-ix", "PeeringDB IX LAN", "PeeringDB IX LAN",
-  "us_infrastructure", "infrastructure",
-  "https://www.peeringdb.com/api/ixlan?ix_id=26",
-  "data",
-  "en", "[\"us\",\"infrastructure\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "The LAN under an exchange: mtu, dot1q_support, route-server ASN, arp_sponge, and the ixf_ixp_member_list_url (the exchange's own machine-readable member list, a further hop off-site).  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(global_peeringdb_ixpfx_by_ixlan, "global-peeringdb-ixpfx-by-ixlan", "PeeringDB IX peering prefixes", "PeeringDB IX peering prefixes",
   "us_infrastructure", "infrastructure",
   "https://www.peeringdb.com/api/ixpfx?ixlan_id=26",
   "data",
   "en", "[\"us\",\"infrastructure\",\"batch16\",\"high-penetrancy\"]", 86400,
   "The IPv4/IPv6 prefixes assigned to an exchange LAN, with in_dfz flag and created/updated dates. Turns an observed peering IP into a named exchange.");
-
-VJSON(global_peeringdb_netfac_by_fac, "global-peeringdb-netfac-by-fac", "PeeringDB facility presence (netfac)", "PeeringDB facility presence (netfac)",
-  "us_infrastructure", "infrastructure",
-  "https://www.peeringdb.com/api/netfac?fac_id=1&limit=5",
-  "data",
-  "en", "[\"us\",\"infrastructure\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Which ASNs are physically present in a given datacentre: net_id, fac_id, local_asn, facility name/city/country. Facility -> tenant network hop.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
-VJSON(global_peeringdb_netixlan_by_ix, "global-peeringdb-netixlan-by-ix", "PeeringDB IX port memberships (netixlan)", "PeeringDB IX port memberships (netixlan)",
-  "us_infrastructure", "infrastructure",
-  "https://www.peeringdb.com/api/netixlan?ix_id=26&limit=5",
-  "data",
-  "en", "[\"us\",\"infrastructure\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Per-port membership rows joining a network to an exchange LAN: net_id, ix_id, ixlan_id, asn, ipaddr4, ipaddr6, port speed (Mbit), is_rs_peer, bfd_support, operational flag. The IX -> member-ASN -> peering IP hop.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
 

@@ -1,4 +1,4 @@
-/* collectors/sources/hp3_gov_us_states.c — US state and municipal public record.
+/* collectors/pivot/table/hp3b31_usstate.c — batch 31: usstate — US state and municipal public record.
  *
  * Company law in the United States is state law, so the authoritative record of
  * an American entity is never federal: it is a Secretary of State register in
@@ -10,10 +10,39 @@
  *
  * The Socrata rows all declare `$offset` paging: those portals hard-cap a
  * single response at 1000 rows, so a row that did not page would silently stop
- * at the cap on any common query. */
-#include "../../lib/hpengine.h"
+ * at the cap on any common query.
+ *
+ * PROVENANCE AND VERIFICATION STATUS — read before trusting a row here.
+ *
+ * Unlike batches 18-30, this table was hand-authored, not scaffolded by
+ * tools/gen_hp_batch.py, so there is NO docs/candidate-sources-batch31.*.txt
+ * manifest behind it. Do not look for one, and do not regenerate over this
+ * file. The consequence is that the manifest-driven auditors
+ * (audit_batch_reachable.py, audit_batch_pagination.py, audit_batch_emit.py)
+ * cannot be pointed at batch 31; use audit_registry_emit.py --match hp3b31,
+ * which reads --list-sources and needs no manifest.
+ *
+ * These rows are NOT proof-of-life verified. The environment they were written
+ * in had no outbound HTTPS, so no row here was fetched over the wire, and none
+ * of rules 4, 4b and 4d (fetching is not emitting; emitting is not storing;
+ * answering is not answering THE QUESTION) has been measured for this batch.
+ * What HAS been checked is offline and structural: the tree builds clean, the
+ * strict audit-sources gate is at zero findings, lint-sources reports no
+ * duplicate id or endpoint, and every row is reachable under house rule 3.
+ *
+ * So treat each row as a documented CANDIDATE until it is measured. The first
+ * person with network should run:
+ *     python3 tools/audit_registry_emit.py --bin ./bin/japanosint \
+ *             --match hp3b31 --jobs 6 --timeout 220 --out b31.tsv
+ *     python3 tools/probe_hp_batch.py --check-filter   # FILTER_IGNORED is fatal
+ * and retire whatever comes back EMITS_NOTHING, COLLISION or FILTER_IGNORED.
+ * The engine cannot fabricate — an endpoint that moved or changed shape yields
+ * an honest empty, never an invented record — so an unmeasured row is a gap in
+ * coverage, not a source of false data.
+ */
+#include "lib/hpengine.h"
 
-static const hp_source HP3_GOV_US_STATES[] = {
+static const hp_source HP3B31_USSTATE[] = {
   /* ── Secretary of State registers, continued ──────────────────────────── */
   { .id = "US_PA_BUSINESS_SEARCH", .name = "Pennsylvania — business entity search",
     .name_ja = "米ペンシルベニア州 法人登記", .category = "government",
@@ -246,8 +275,10 @@ static const hp_source HP3_GOV_US_STATES[] = {
     .portal = "https://data.cityofnewyork.us", .record_type = "us-public-payroll",
     .tags = "\"us\",\"nyc\",\"payroll\",\"transparency\"", .free_tier = 1,
     .url = "https://data.cityofnewyork.us/resource/k397-673e.json?$q={q}&$limit=1000",
-    .title_keys = "last_name,agency_name", .id_keys = "payroll_number",
+    .title_keys = "last_name,agency_name", .id_keys = "fiscal_year+agency_name+last_name+first_name+mid_init+title_description",
     .page_param = "$offset", .page_size = 1000, .page_start = 0, .page_max = 25,
+    /* id_keys composite (+ composes, , chooses): `payroll_number` is the AGENCY's number, not the employee's — every employee
+     * of an agency shared it. */
     .description = "Named municipal employees with agency, title, base salary "
       "and overtime paid. Public payroll is the cleanest way to place a named "
       "person inside a specific government unit at a specific time" },
@@ -270,8 +301,9 @@ static const hp_source HP3_GOV_US_STATES[] = {
     .portal = "https://data.cityofchicago.org", .record_type = "us-public-payroll",
     .tags = "\"us\",\"chicago\",\"payroll\",\"transparency\"", .free_tier = 1,
     .url = "https://data.cityofchicago.org/resource/xzkq-xp2w.json?$q={q}&$limit=1000",
-    .title_keys = "name,job_titles", .id_keys = "name",
+    .title_keys = "name,job_titles", .id_keys = "name+job_titles+department",
     .page_param = "$offset", .page_size = 1000, .page_start = 0, .page_max = 25,
+    /* id_keys composite (+ composes, , chooses): employee names repeat across departments. */
     .description = "Every named City of Chicago employee — department, job "
       "title, salaried or hourly, and the annual salary or hourly rate" },
 
@@ -317,11 +349,12 @@ static const hp_source HP3_GOV_US_STATES[] = {
     .portal = "https://data.seattle.gov", .record_type = "us-city-licence",
     .tags = "\"us\",\"seattle\",\"licence\"", .free_tier = 1,
     .url = "https://data.seattle.gov/resource/wnbq-64tb.json?$q={q}&$limit=1000",
-    .title_keys = "trade_name,ownership_type", .id_keys = "customer_number",
+    .title_keys = "trade_name,ownership_type", .id_keys = "customer_number+trade_name+ownership_type",
     .page_param = "$offset", .page_size = 1000, .page_start = 0, .page_max = 25,
+    /* id_keys composite (+ composes, , chooses): one customer number covers several licensed locations. */
     .description = "Seattle business licence tax certificates — the legal owner, "
       "the trade name, the NAICS description and the street address of each "
       "licensed location" },
 };
 
-HP_REGISTER_TABLE(HP3_GOV_US_STATES)
+HP_REGISTER_TABLE(HP3B31_USSTATE)

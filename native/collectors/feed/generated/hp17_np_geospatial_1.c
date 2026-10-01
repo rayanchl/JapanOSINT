@@ -16,7 +16,7 @@ static const hp_source T[] = {
     .name = "Nepal BIPAD - municipality gazetteer with geometry",
     .collector = "np_geospatial", .category = "geospatial",
     .description = "Authoritative local-unit gazetteer: title, title_en, title_ne, type (Rural Municipality / Municipality / Sub-Metropolitan), official code, district id, bbox and centroid point. Resolves a Nepali place name to its official code and extent. Detail endpoint verified with id 1005.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "geospatial", .tags = "\"np\",\"geospatial\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "geospatial-record", .tags = "\"np\",\"geospatial\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://bipadportal.gov.np/api/v1/municipality/?format=json&limit=50",
     .array_path = "results",
     .detail_url = "https://bipadportal.gov.np/api/v1/municipality/{v}/?format=json", .detail_key = "id",

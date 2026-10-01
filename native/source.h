@@ -98,12 +98,12 @@ typedef struct source_def {
    * a guess. */
   /* Category. NULL still degrades to "investigation" when synthesized, but
    * that fallback is a safety net for new code, not a resting state: every
-   * source carries an explicit category (the curated overlay's where it has
-   * one, this field otherwise), because an unset one silently mislabels the
-   * source as an investigation service in /api/sources, the dashboards and
-   * the iOS category filter. Internal pipeline pods use "maintenance"
-   * (collector "_maint"), "enrichment" ("_enrich") and "test" ("_test") so
-   * they stop masquerading as data sources. */
+   * source in the tree carries an explicit category, because an unset one
+   * silently mislabels the source as an investigation service in
+   * /api/intel/sources, /api/layers, the web dashboard and the iOS category
+   * filter. Internal pipeline pods use "maintenance" (collector "_maint"),
+   * "enrichment" ("_enrich") and "test" ("_test") so they stop masquerading
+   * as data sources. */
   const char *category;
   const char *type;           /* api|dataset|scraped|web_request; NULL→"api" */
   const char *url;            /* canonical/base or internal:// sentinel      */

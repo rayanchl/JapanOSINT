@@ -297,5 +297,5 @@ static const source_def cam_skylinewebcams_def = {
   .name_ja = "カメラ探索: SkylineWebcams",
    .layer = "cameras",
    .update_interval_sec = 3600, .run = run,
-   .category = "infrastructure" };
+  .category = "cyber" };
 REGISTER_SOURCE(cam_skylinewebcams_def)

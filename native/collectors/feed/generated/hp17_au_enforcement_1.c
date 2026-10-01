@@ -1,4 +1,4 @@
-/* Deep-record au_enforcement sources (2), part 1 of 1.
+/* Deep-record au_enforcement sources (4), part 1 of 1.
  *
  * Batch 17 verified each of these endpoints live AND separately probed the
  * per-record detail endpoint below it with a real id. The list half shipped as
@@ -16,7 +16,7 @@ static const hp_source T[] = {
     .name = "ASIC — banned and disqualified organisations",
     .collector = "au_enforcement", .category = "enforcement",
     .description = "Corporate entities banned by ASIC: BD_ORG_ACN, BD_ORG_NAME, BD_ORG_TYPE, ban start and end dates, an ASIC reference URL and comments. Small register but it names companies, and the ACN pivots straight into the 4.4M-row company register.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "enforcement", .tags = "\"au\",\"enforcement\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "enforcement-record", .tags = "\"au\",\"enforcement\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=ced03961-e6f7-4263-895a-0fd1d7996043&limit=100",
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=ced03961-e6f7-4263-895a-0fd1d7996043&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
@@ -27,7 +27,7 @@ static const hp_source T[] = {
     .name = "ASIC — banned and disqualified persons",
     .collector = "au_enforcement", .category = "enforcement",
     .description = "Named individuals banned by ASIC: BD_PER_NAME, BD_PER_TYPE (Banned Securities / AFS banning / Credit banning / director disqualification), BD_PER_DOC_NUM, start and end dates of the ban, suburb, state, postcode, country and ASIC's comments.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "enforcement", .tags = "\"au\",\"enforcement\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "enforcement-record", .tags = "\"au\",\"enforcement\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=741da9e3-7e0c-458e-830c-c518698e1788&limit=100",
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=741da9e3-7e0c-458e-830c-c518698e1788&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",

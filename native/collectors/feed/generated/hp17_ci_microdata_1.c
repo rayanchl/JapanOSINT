@@ -16,7 +16,7 @@ static const hp_source T[] = {
     .name = "IHSN survey catalog - Cote d'Ivoire",
     .collector = "ci_microdata", .category = "microdata",
     .description = "Ivorian survey/census study records with idno, title, type and year; full metadata behind the idno detail hop.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "microdata", .tags = "\"ci\",\"microdata\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "fr",
+    .record_type = "microdata-record", .tags = "\"ci\",\"microdata\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "fr",
     .url = "http://catalog.ihsn.org/index.php/api/catalog/search?format=json&country=Cote%20d%27Ivoire&ps=50",
     .array_path = "result.rows",
     .detail_url = "http://catalog.ihsn.org/index.php/api/catalog/{v}", .detail_key = "idno",

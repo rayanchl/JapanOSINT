@@ -1,4 +1,4 @@
-/* collectors/sources/hp3_gov_eu_transparency.c — EU institutional transparency.
+/* collectors/pivot/table/hp3b31_eutrans.c — batch 31: eutrans — EU institutional transparency.
  *
  * `hp2_eu_institutions.c` covers the EU as a *regulator* — the registers,
  * sanctions and enforcement decisions that bind a firm. This file covers the EU
@@ -10,10 +10,39 @@
  * meetings, expert-group membership, comitology committees and feedback on
  * initiatives, and each of those names a specific organisation against a
  * specific file. That is a lobbying record the Transparency Register alone does
- * not give you. */
-#include "../../lib/hpengine.h"
+ * not give you.
+ *
+ * PROVENANCE AND VERIFICATION STATUS — read before trusting a row here.
+ *
+ * Unlike batches 18-30, this table was hand-authored, not scaffolded by
+ * tools/gen_hp_batch.py, so there is NO docs/candidate-sources-batch31.*.txt
+ * manifest behind it. Do not look for one, and do not regenerate over this
+ * file. The consequence is that the manifest-driven auditors
+ * (audit_batch_reachable.py, audit_batch_pagination.py, audit_batch_emit.py)
+ * cannot be pointed at batch 31; use audit_registry_emit.py --match hp3b31,
+ * which reads --list-sources and needs no manifest.
+ *
+ * These rows are NOT proof-of-life verified. The environment they were written
+ * in had no outbound HTTPS, so no row here was fetched over the wire, and none
+ * of rules 4, 4b and 4d (fetching is not emitting; emitting is not storing;
+ * answering is not answering THE QUESTION) has been measured for this batch.
+ * What HAS been checked is offline and structural: the tree builds clean, the
+ * strict audit-sources gate is at zero findings, lint-sources reports no
+ * duplicate id or endpoint, and every row is reachable under house rule 3.
+ *
+ * So treat each row as a documented CANDIDATE until it is measured. The first
+ * person with network should run:
+ *     python3 tools/audit_registry_emit.py --bin ./bin/japanosint \
+ *             --match hp3b31 --jobs 6 --timeout 220 --out b31.tsv
+ *     python3 tools/probe_hp_batch.py --check-filter   # FILTER_IGNORED is fatal
+ * and retire whatever comes back EMITS_NOTHING, COLLISION or FILTER_IGNORED.
+ * The engine cannot fabricate — an endpoint that moved or changed shape yields
+ * an honest empty, never an invented record — so an unmeasured row is a gap in
+ * coverage, not a source of false data.
+ */
+#include "lib/hpengine.h"
 
-static const hp_source HP3_GOV_EU_TRANSPARENCY[] = {
+static const hp_source HP3B31_EUTRANS[] = {
   /* ── The influence layer ──────────────────────────────────────────────── */
   { .id = "EU_EXPERT_GROUPS_REGISTER", .name = "EU — Commission expert groups register",
     .name_ja = "EU 専門家グループ登録", .category = "government",
@@ -111,7 +140,7 @@ static const hp_source HP3_GOV_EU_TRANSPARENCY[] = {
     .title_keys = "title,work_type", .id_keys = "identifier",
     .date_keys = "activity_date",
     .page_param = "offset", .page_size = 100, .page_start = 0, .page_max = 30,
-    .interval = 86400,
+    .interval = 21600,
     .description = "Parliament's own linked-data API — reports, resolutions, "
       "amendments and questions with their document identifiers, so a file can "
       "be followed from committee draft to plenary text" },
@@ -125,7 +154,7 @@ static const hp_source HP3_GOV_EU_TRANSPARENCY[] = {
     .array_path = "data", .filter_query = 1,
     .title_keys = "label,classification", .id_keys = "identifier",
     .page_param = "offset", .page_size = 200, .page_start = 0, .page_max = 20,
-    .interval = 86400,
+    .interval = 21600,
     .description = "Every Parliament committee, subcommittee, political group "
       "and interparliamentary delegation, with the identifiers that join a body "
       "to its members and its documents" },
@@ -140,7 +169,7 @@ static const hp_source HP3_GOV_EU_TRANSPARENCY[] = {
     .title_keys = "activity_label,had_activity_type", .id_keys = "identifier",
     .date_keys = "activity_date",
     .page_param = "offset", .page_size = 100, .page_start = 0, .page_max = 30,
-    .interval = 86400,
+    .interval = 21600,
     .description = "Plenary and committee sittings with their agendas and the "
       "activities scheduled — the calendar layer that says when a file will "
       "actually be voted" },
@@ -324,4 +353,4 @@ static const hp_source HP3_GOV_EU_TRANSPARENCY[] = {
       "but are absent from every Commission database" },
 };
 
-HP_REGISTER_TABLE(HP3_GOV_EU_TRANSPARENCY)
+HP_REGISTER_TABLE(HP3B31_EUTRANS)

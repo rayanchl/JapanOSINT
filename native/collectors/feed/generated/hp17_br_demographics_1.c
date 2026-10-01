@@ -16,7 +16,7 @@ static const hp_source T[] = {
     .name = "IBGE Censo - frequencia de um nome/sobrenome",
     .collector = "br_demographics", .category = "demographics",
     .description = "Census frequency of any given name or surname, broken down by birth decade (res[] with periodo and frequencia) and optionally by sex and locality. Useful for scoring how distinctive a Brazilian name is in identity work. Auto-labels on 'nome'.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "demographics", .tags = "\"br\",\"demographics\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "pt",
+    .record_type = "demographics-record", .tags = "\"br\",\"demographics\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "pt",
     .url = "https://servicodados.ibge.gov.br/api/v2/censos/nomes/silva",
     .detail_url = "https://servicodados.ibge.gov.br/api/v2/censos/nomes/{v}", .detail_key = "nome",
     .page_walk = 1,

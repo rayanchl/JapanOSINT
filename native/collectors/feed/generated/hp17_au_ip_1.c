@@ -16,7 +16,7 @@ static const hp_source T[] = {
     .name = "IP Australia IPGOD — IP right records",
     .collector = "au_ip", .category = "ip",
     .description = "Australian intellectual-property rights: ip_right_type and sub_type (pbr, patent, trade mark), application_number, status, earliest filed date, priority date, date registration and enforceable status were gained, enforceable-from and deemed-retired dates.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "ip", .tags = "\"au\",\"ip\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "ip-record", .tags = "\"au\",\"ip\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=952d7cf9-8412-4205-80de-405a725a2017&limit=100",
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=952d7cf9-8412-4205-80de-405a725a2017&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",

@@ -16,7 +16,7 @@ static const hp_source T[] = {
     .name = "Statistics Sierra Leone — microdata catalogue",
     .collector = "sl_statistics", .category = "statistics",
     .description = "13 Statistics Sierra Leone surveys. Row: id, type, idno (SL-SSL-…), title, subtitle, nation, authoring_entity, year_start/end, varcount, views, downloads, url. Detail by idno returns full DDI study description.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "statistics", .tags = "\"sl\",\"statistics\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "statistics-record", .tags = "\"sl\",\"statistics\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://microdata.statistics.sl/index.php/api/catalog/search?ps=100",
     .array_path = "result.rows",
     .detail_url = "https://microdata.statistics.sl/index.php/api/catalog/{v}", .detail_key = "idno",

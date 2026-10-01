@@ -16,7 +16,7 @@ static const hp_source T[] = {
     .name = "Nepal BIPAD - earthquake catalogue",
     .collector = "np_disaster", .category = "disaster",
     .description = "National Seismological Centre earthquake catalogue: description (source), magnitude, GeoJSON epicentre point, address (district), eventOn timestamp and the ward/municipality/district/province codes. Detail endpoint verified with id 698.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "disaster", .tags = "\"np\",\"disaster\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "disaster-record", .tags = "\"np\",\"disaster\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://bipadportal.gov.np/api/v1/earthquake/?format=json&limit=50",
     .array_path = "results",
     .detail_url = "https://bipadportal.gov.np/api/v1/earthquake/{v}/?format=json", .detail_key = "id",

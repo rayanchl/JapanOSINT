@@ -16,11 +16,11 @@ static const hp_source T[] = {
     .name = "IHSN survey catalog - Congo (DRC region)",
     .collector = "cd_microdata", .category = "microdata",
     .description = "Congo/DRC study records including the 15th General Population and Housing Census, with idno, title, type and year; full metadata behind the idno detail hop. NOTE: the 'Congo' filter also matches Republic of the Congo studies.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "microdata", .tags = "\"cd\",\"microdata\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "microdata-record", .tags = "\"cd\",\"microdata\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://catalog.ihsn.org/index.php/api/catalog/search?format=json&country_iso3=COD&ps=100&page=1",
     .array_path = "result.rows",
     .detail_url = "http://catalog.ihsn.org/index.php/api/catalog/{v}", .detail_key = "idno",
-    .page_walk = 1,
+    .page_param = "page", .page_start = 1,   /* declared by the row's own URL */
     .interval = 86400, .free_tier = 1 },
 
 };

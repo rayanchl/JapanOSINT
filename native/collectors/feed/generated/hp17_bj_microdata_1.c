@@ -16,7 +16,7 @@ static const hp_source T[] = {
     .name = "IHSN survey catalog - Benin",
     .collector = "bj_microdata", .category = "microdata",
     .description = "Beninese survey and census study records with idno, title, type and year; per-study metadata behind the idno detail hop.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "microdata", .tags = "\"bj\",\"microdata\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "microdata-record", .tags = "\"bj\",\"microdata\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "http://catalog.ihsn.org/index.php/api/catalog/search?format=json&country=Benin&ps=50",
     .array_path = "result.rows",
     .detail_url = "http://catalog.ihsn.org/index.php/api/catalog/{v}", .detail_key = "idno",

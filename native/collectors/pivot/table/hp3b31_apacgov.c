@@ -1,4 +1,4 @@
-/* collectors/sources/hp3_gov_asiapac_public.c — Asia-Pacific public record.
+/* collectors/pivot/table/hp3b31_apacgov.c — batch 31: apacgov — Asia-Pacific public record.
  *
  * `hp2_asia_*.c` covers Asian jurisdictions through their corporate and
  * regulatory registers. This file covers the same jurisdictions through the
@@ -8,10 +8,39 @@
  *
  * Australia and New Zealand publish this exceptionally well and Indonesia's
  * Supreme Court publishes every judgment in full text, which makes the region
- * far more penetrable than its reputation suggests. */
-#include "../../lib/hpengine.h"
+ * far more penetrable than its reputation suggests.
+ *
+ * PROVENANCE AND VERIFICATION STATUS — read before trusting a row here.
+ *
+ * Unlike batches 18-30, this table was hand-authored, not scaffolded by
+ * tools/gen_hp_batch.py, so there is NO docs/candidate-sources-batch31.*.txt
+ * manifest behind it. Do not look for one, and do not regenerate over this
+ * file. The consequence is that the manifest-driven auditors
+ * (audit_batch_reachable.py, audit_batch_pagination.py, audit_batch_emit.py)
+ * cannot be pointed at batch 31; use audit_registry_emit.py --match hp3b31,
+ * which reads --list-sources and needs no manifest.
+ *
+ * These rows are NOT proof-of-life verified. The environment they were written
+ * in had no outbound HTTPS, so no row here was fetched over the wire, and none
+ * of rules 4, 4b and 4d (fetching is not emitting; emitting is not storing;
+ * answering is not answering THE QUESTION) has been measured for this batch.
+ * What HAS been checked is offline and structural: the tree builds clean, the
+ * strict audit-sources gate is at zero findings, lint-sources reports no
+ * duplicate id or endpoint, and every row is reachable under house rule 3.
+ *
+ * So treat each row as a documented CANDIDATE until it is measured. The first
+ * person with network should run:
+ *     python3 tools/audit_registry_emit.py --bin ./bin/japanosint \
+ *             --match hp3b31 --jobs 6 --timeout 220 --out b31.tsv
+ *     python3 tools/probe_hp_batch.py --check-filter   # FILTER_IGNORED is fatal
+ * and retire whatever comes back EMITS_NOTHING, COLLISION or FILTER_IGNORED.
+ * The engine cannot fabricate — an endpoint that moved or changed shape yields
+ * an honest empty, never an invented record — so an unmeasured row is a gap in
+ * coverage, not a source of false data.
+ */
+#include "lib/hpengine.h"
 
-static const hp_source HP3_GOV_APAC[] = {
+static const hp_source HP3B31_APACGOV[] = {
   /* ── Australia ────────────────────────────────────────────────────────── */
   { .id = "AU_AUSTENDER_CONTRACTS", .name = "AusTender — Australian government contract notices",
     .name_ja = "豪州 政府調達契約", .category = "government",
@@ -181,7 +210,7 @@ static const hp_source HP3_GOV_APAC[] = {
     .url = "https://data.gov.tw/api/front/dataset/search?qs={q}&size=100",
     .array_path = "result.result", .title_keys = "title,organization",
     .id_keys = "id", .date_keys = "modified",
-    .page_param = "page", .page_size = 100, .page_max = 30,
+    .page_param = "page", .page_max = 30,
     .description = "Taiwan's national open data platform — the food-safety "
       "inspection, company registration extract, air-quality and public-works "
       "datasets published by each ministry, with the API endpoint for each" },
@@ -312,4 +341,4 @@ static const hp_source HP3_GOV_APAC[] = {
       "licences that have no other searchable presence" },
 };
 
-HP_REGISTER_TABLE(HP3_GOV_APAC)
+HP_REGISTER_TABLE(HP3B31_APACGOV)

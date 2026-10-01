@@ -16,7 +16,7 @@ static const hp_source T[] = {
     .name = "DANE Colombia - Catalogo de Microdatos (NADA API)",
     .collector = "co_microdata", .category = "microdata",
     .description = "National statistics office microdata catalogue. Each row: internal id, idno, study title, nation, authoring entity, form model, year range, repository id, data-access link, created/changed timestamps, view and download counts and study URL. DETAIL VERIFIED: /api/catalog/MINTIC-OAPES-INTERNET-2010-A-2014 returned a 29KB study object with full DDI metadata - producers, funding agencies, sampling, coverage, contacts (name/affiliation/email) and variable count. The named producers and contacts behind each dataset are the penetrancy here.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "microdata", .tags = "\"co\",\"microdata\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "es",
+    .record_type = "microdata-record", .tags = "\"co\",\"microdata\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "es",
     .url = "https://microdatos.dane.gov.co/index.php/api/catalog/search?format=json&ps=50",
     .array_path = "result.rows",
     .detail_url = "https://microdatos.dane.gov.co/index.php/api/catalog/{v}", .detail_key = "idno",

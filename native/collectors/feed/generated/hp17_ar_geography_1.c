@@ -16,7 +16,7 @@ static const hp_source T[] = {
     .name = "Georef Argentina - departamentos",
     .collector = "ar_geography", .category = "geography",
     .description = "529 departments with id, nombre, centroid and parent province (id + nombre). The ?id= detail hop was probed with a real id (06014) and returned the single matching record. Auto-labels on 'nombre'.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "geography", .tags = "\"ar\",\"geography\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "es",
+    .record_type = "geography-record", .tags = "\"ar\",\"geography\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "es",
     .url = "https://apis.datos.gob.ar/georef/api/departamentos?max=3",
     .array_path = "departamentos",
     .detail_url = "https://apis.datos.gob.ar/georef/api/departamentos?id={v}", .detail_key = "id",

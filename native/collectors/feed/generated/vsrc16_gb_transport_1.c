@@ -28,10 +28,3 @@ VJSON(uk_tfl_stoppoint_arrivals, "uk-tfl-stoppoint-arrivals", "TfL live arrivals
   "en", "[\"gb\",\"transport\",\"batch16\",\"high-penetrancy\"]", 3600,
   "Live vehicle predictions: prediction id, vehicleId, lineId/lineName, platformName, direction, bearing, currentLocation free text, towards, timeToStation seconds, expectedArrival, and timing provenance. The deepest live hop off a stop id.");
 
-VJSON(uk_tfl_stoppoint_detail, "uk-tfl-stoppoint-detail", "TfL stop point detail", "TfL stop point detail",
-  "gb_transport", "transport",
-  "https://api.tfl.gov.uk/StopPoint/940GZZLUVIC",
-  ".", /* the stop point IS the record. Path additionalproperties emitted 36 zone/facility rows keyed on their category-local `key` (36 emitted, 22 stored, 2026-09-14) and discarded everything else the response carries: modes, lines, lineGroup, children. "." keeps the whole document on one row */
-  "en", "[\"gb\",\"transport\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 3600,
-  "One station/interchange: naptanId, hubNaptanCode, stopType, all modes, every line calling there, lineGroup and lineModeGroups, children stops (platforms, entrances, bus stands) and additionalProperties (zone, WiFi, toilets, accessibility).  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-

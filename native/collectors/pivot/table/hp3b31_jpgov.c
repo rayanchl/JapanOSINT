@@ -1,4 +1,4 @@
-/* collectors/sources/hp3_gov_japan_public.c — Japanese government record depth.
+/* collectors/pivot/table/hp3b31_jpgov.c — batch 31: jpgov — Japanese government record depth.
  *
  * Japan's public record is unusually good and unusually under-used, because the
  * good parts are APIs with Japanese-only documentation sitting behind an
@@ -13,10 +13,39 @@
  * gBizINFO rows below are five separate second hops off the same corporate
  * number, so a single pivot on a Japanese company name returns its subsidy
  * history, its government contracts, its certifications and its patents rather
- * than just confirming that the company exists. */
-#include "../../lib/hpengine.h"
+ * than just confirming that the company exists.
+ *
+ * PROVENANCE AND VERIFICATION STATUS — read before trusting a row here.
+ *
+ * Unlike batches 18-30, this table was hand-authored, not scaffolded by
+ * tools/gen_hp_batch.py, so there is NO docs/candidate-sources-batch31.*.txt
+ * manifest behind it. Do not look for one, and do not regenerate over this
+ * file. The consequence is that the manifest-driven auditors
+ * (audit_batch_reachable.py, audit_batch_pagination.py, audit_batch_emit.py)
+ * cannot be pointed at batch 31; use audit_registry_emit.py --match hp3b31,
+ * which reads --list-sources and needs no manifest.
+ *
+ * These rows are NOT proof-of-life verified. The environment they were written
+ * in had no outbound HTTPS, so no row here was fetched over the wire, and none
+ * of rules 4, 4b and 4d (fetching is not emitting; emitting is not storing;
+ * answering is not answering THE QUESTION) has been measured for this batch.
+ * What HAS been checked is offline and structural: the tree builds clean, the
+ * strict audit-sources gate is at zero findings, lint-sources reports no
+ * duplicate id or endpoint, and every row is reachable under house rule 3.
+ *
+ * So treat each row as a documented CANDIDATE until it is measured. The first
+ * person with network should run:
+ *     python3 tools/audit_registry_emit.py --bin ./bin/japanosint \
+ *             --match hp3b31 --jobs 6 --timeout 220 --out b31.tsv
+ *     python3 tools/probe_hp_batch.py --check-filter   # FILTER_IGNORED is fatal
+ * and retire whatever comes back EMITS_NOTHING, COLLISION or FILTER_IGNORED.
+ * The engine cannot fabricate — an endpoint that moved or changed shape yields
+ * an honest empty, never an invented record — so an unmeasured row is a gap in
+ * coverage, not a source of false data.
+ */
+#include "lib/hpengine.h"
 
-static const hp_source HP3_GOV_JP[] = {
+static const hp_source HP3B31_JPGOV[] = {
   /* ── The corporate number spine ───────────────────────────────────────── */
   { .id = "JP_NTA_HOUJIN_WEBAPI", .name = "NTA — corporate number (法人番号) Web-API",
     .name_ja = "国税庁 法人番号システムWeb-API", .category = "government",
@@ -55,7 +84,7 @@ static const hp_source HP3_GOV_JP[] = {
     .headers = { "X-hojinInfo-api-token: {key}", NULL },
     .array_path = "hojin-infos", .title_keys = "name,location",
     .id_keys = "corporate_number", .date_keys = "update_date",
-    .page_param = "page", .page_size = 5000, .page_max = 20,
+    .page_param = "page", .page_max = 20,
     .description = "The Japanese government's consolidated view of a company — "
       "corporate number, registered location, capital, employee count, business "
       "items and the date each field was last confirmed by a ministry" },
@@ -68,7 +97,7 @@ static const hp_source HP3_GOV_JP[] = {
     .url = "https://info.gbiz.go.jp/hojin/v1/hojin?name={q}&limit=5000",
     .headers = { "X-hojinInfo-api-token: {key}", NULL },
     .array_path = "hojin-infos", .title_keys = "name", .id_keys = "corporate_number",
-    .page_param = "page", .page_size = 5000, .page_max = 20,
+    .page_param = "page", .page_max = 20,
     .detail_url = "https://info.gbiz.go.jp/hojin/v1/hojin/{v}/subsidy",
     .detail_key = "corporate_number", .detail_path = "hojin-infos",
     .description = "Every government subsidy a named company has received — the "
@@ -83,7 +112,7 @@ static const hp_source HP3_GOV_JP[] = {
     .url = "https://info.gbiz.go.jp/hojin/v1/hojin?name={q}&limit=5000",
     .headers = { "X-hojinInfo-api-token: {key}", NULL },
     .array_path = "hojin-infos", .title_keys = "name", .id_keys = "corporate_number",
-    .page_param = "page", .page_size = 5000, .page_max = 20,
+    .page_param = "page", .page_max = 20,
     .detail_url = "https://info.gbiz.go.jp/hojin/v1/hojin/{v}/procurement",
     .detail_key = "corporate_number", .detail_path = "hojin-infos",
     .description = "Central government contracts awarded to a company — the "
@@ -98,7 +127,7 @@ static const hp_source HP3_GOV_JP[] = {
     .url = "https://info.gbiz.go.jp/hojin/v1/hojin?name={q}&limit=5000",
     .headers = { "X-hojinInfo-api-token: {key}", NULL },
     .array_path = "hojin-infos", .title_keys = "name", .id_keys = "corporate_number",
-    .page_param = "page", .page_size = 5000, .page_max = 20,
+    .page_param = "page", .page_max = 20,
     .detail_url = "https://info.gbiz.go.jp/hojin/v1/hojin/{v}/certification",
     .detail_key = "corporate_number", .detail_path = "hojin-infos",
     .description = "Ministry certifications and commendations held by a company "
@@ -114,7 +143,7 @@ static const hp_source HP3_GOV_JP[] = {
     .url = "https://info.gbiz.go.jp/hojin/v1/hojin?name={q}&limit=5000",
     .headers = { "X-hojinInfo-api-token: {key}", NULL },
     .array_path = "hojin-infos", .title_keys = "name", .id_keys = "corporate_number",
-    .page_param = "page", .page_size = 5000, .page_max = 20,
+    .page_param = "page", .page_max = 20,
     .detail_url = "https://info.gbiz.go.jp/hojin/v1/hojin/{v}/patent",
     .detail_key = "corporate_number", .detail_path = "hojin-infos",
     .description = "Patents and applications attributed to the corporate "
@@ -128,7 +157,7 @@ static const hp_source HP3_GOV_JP[] = {
     .url = "https://info.gbiz.go.jp/hojin/v1/hojin?name={q}&limit=5000",
     .headers = { "X-hojinInfo-api-token: {key}", NULL },
     .array_path = "hojin-infos", .title_keys = "name", .id_keys = "corporate_number",
-    .page_param = "page", .page_size = 5000, .page_max = 20,
+    .page_param = "page", .page_max = 20,
     .detail_url = "https://info.gbiz.go.jp/hojin/v1/hojin/{v}/finance",
     .detail_key = "corporate_number", .detail_path = "hojin-infos",
     .description = "Net sales, operating profit, ordinary profit and net assets "
@@ -223,7 +252,9 @@ static const hp_source HP3_GOV_JP[] = {
     .tags = "\"jp\",\"property\",\"prices\"", .free_tier = 1,
     .url = "https://www.land.mlit.go.jp/webland/api/TradeListSearch?from=20051&to=20244&area={qd}",
     .array_path = "data", .title_keys = "Municipality,DistrictName",
-    .id_keys = "Municipality", .date_keys = "Period",
+    .id_keys = "Period+MunicipalityCode+DistrictName+TradePrice+Area+BuildingYear", .date_keys = "Period",
+    /* id_keys composite (+ composes, , chooses): MLIT publishes no transaction id, so identity is the discriminating tuple;
+     * `Municipality` alone kept one sale per city. */
     .description = "Surveyed actual transaction prices for land and buildings — "
       "price, area, structure, building year, city planning zone and frontage "
       "road, by municipality and quarter. Requests the full history rather than "
@@ -352,4 +383,4 @@ static const hp_source HP3_GOV_JP[] = {
       "cadence; the directory step before pulling the raw ministry data" },
 };
 
-HP_REGISTER_TABLE(HP3_GOV_JP)
+HP_REGISTER_TABLE(HP3B31_JPGOV)

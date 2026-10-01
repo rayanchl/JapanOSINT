@@ -127,8 +127,8 @@ single-page fetches of paged APIs, and fixed dedupe rings.
 
 **`make audit-sources` gates the `hp*_*.c` engine rows and the generated
 deep-record tables (`collectors/feed/generated/hp1[0-9]_*.c`) strictly, and the
-whole tree is at zero findings** — 0 across all 1,642 scanned files, 256 of
-them in the strict set (measured 2026-09-27). A number in a document is a
+whole tree is at zero findings** — 0 across all 1,650 scanned files, 282 of
+them in the strict set (measured 2026-10-02, after merging origin/main). A number in a document is a
 claim with a date on it: `make audit-sources` prints the current figures in
 seconds, and a new finding is a regression to read, not a number to baseline.
 
@@ -144,7 +144,19 @@ Two things the scan could not see, and one it now can:
   `#define` nor a `break` — was invisible. That one dropped a sanctioned
   person's aliases past the 24th; TDnet (100 a day), EDINET-x (25) and eight
   camera scrapers (60–200 per page, in front of arrays that grow anyway) were
-  the same shape. All are fixed, and the check now finds the next one.
+  the same shape, and so were four more caps in the OFAC collectors found
+  AFTER the tree had been declared clean: aliases and programs at 24,
+  addresses at 12, SDN features (DOB, place of birth, nationality, passport
+  and national-ID numbers) at 40 — the fields sanctions screening matches on.
+  All are fixed, and the check now finds the next one. Its own first regex
+  could not match `cJSON_GetArraySize` (a `\b` before the counter name
+  cannot cross an underscore), so it reported zero on a tree holding real
+  caps: a check reporting zero is evidence about the check as much as about
+  the tree.
+* **A gate given two globs must take two.** `--strict` accepted one, so the
+  second silently replaced the first and the gate reported zero findings for
+  a set it never scanned. It is repeatable now, and it prints the file count
+  so "0 findings" can be checked against "0 files".
 
 An `exhaustive-ok` marker is read **per line** and must sit on the flagged line
 itself; one on the line above does nothing.

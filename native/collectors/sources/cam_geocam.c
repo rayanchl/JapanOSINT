@@ -197,7 +197,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *cur = html;
   char href[512];
   char *inner;
-  while ((cur = next_anchor(cur, href, sizeof href, &inner)) != NULL) {
+  while (         (cur = next_anchor(cur, href, sizeof href, &inner)) != NULL) {
     if (!inner) continue;
     if (!href_path_ok(href)) { free(inner); continue; }
 
@@ -255,5 +255,5 @@ static const source_def cam_geocam_def = {
   .name_ja = "カメラ探索: Geocam",
    .layer = "cameras",
    .update_interval_sec = 3600, .run = run,
-   .category = "infrastructure" };
+  .category = "cyber" };
 REGISTER_SOURCE(cam_geocam_def)

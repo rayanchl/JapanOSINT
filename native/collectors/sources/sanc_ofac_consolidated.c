@@ -109,8 +109,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       if (sanc_xml_next(&pc, e, "programList", &pl)) {
         const char *c2 = pl.body;
         sanc_el pe;
-        while (cJSON_GetArraySize(programs) < 24 &&
-               sanc_xml_next(&c2, pl.body_end, "program", &pe)) {
+        /* Was capped at 24. The sanctions PROGRAMS a party is designated
+         * under are the legal basis of the designation — dropping the 25th
+         * loses the authority somebody is listed under. The XML is already
+         * parsed and in memory. */
+        while (sanc_xml_next(&c2, pl.body_end, "program", &pe)) {
           char *v = sanc_decode(pe.body, (size_t)(pe.body_end - pe.body));
           if (v && v[0]) cJSON_AddItemToArray(programs, cJSON_CreateString(v));
           free(v);
@@ -126,15 +129,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       if (sanc_xml_next(&ac, e, "akaList", &al)) {
         const char *c2 = al.body;
         sanc_el ae;
-        /* The cap here was 24, and OFAC publishes designations with more akas
-         * than that. On a SANCTIONS list an alias is not a nice-to-have field —
-         * it is the thing screening matches on — so a dropped alias is a false
-         * negative on a designated person, produced silently. The upstream
-         * decides how many names it published; we keep them all.
-         *
-         * Neither audit check caught this one: it is a bound in a while
-         * CONDITION rather than a `#define …MAX` or a `break`, which is worth
-         * remembering when reading a finding count as a clean bill of health. */
+        /* Was capped at 24. On a sanctions list an alias is THE thing
+         * screening matches on, so a dropped alias is a false negative on a
+         * designated person, produced silently. OFAC publishes designations
+         * with more than 24. */
         while (sanc_xml_next(&c2, al.body_end, "aka", &ae)) {
           char *af = sanc_xml_text(ae.body, ae.body_end, "firstName");
           char *alast = sanc_xml_text(ae.body, ae.body_end, "lastName");
@@ -159,8 +157,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       if (sanc_xml_next(&ac, e, "addressList", &al)) {
         const char *c2 = al.body;
         sanc_el ae;
-        while (cJSON_GetArraySize(addresses) < 12 &&
-               sanc_xml_next(&c2, al.body_end, "address", &ae)) {
+        /* Was capped at 12 — addresses are how a designated entity is located
+         * and how front companies are tied together. */
+        while (sanc_xml_next(&c2, al.body_end, "address", &ae)) {
           const char *fields[5] = { "address1", "city", "stateOrProvince",
                                     "postalCode", "country" };
           char line[512];

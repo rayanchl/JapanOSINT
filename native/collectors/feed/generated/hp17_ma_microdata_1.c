@@ -16,7 +16,7 @@ static const hp_source T[] = {
     .name = "IHSN survey catalog - Morocco",
     .collector = "ma_microdata", .category = "microdata",
     .description = "155 Moroccan survey and census datasets (e.g. 2014 General Census of Population and Housing) with idno, title, type, authoring entity, year and repository. Detail hop by idno returns the full study record: producers, sampling, coverage, data access terms and file list.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "microdata", .tags = "\"ma\",\"microdata\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "microdata-record", .tags = "\"ma\",\"microdata\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "http://catalog.ihsn.org/index.php/api/catalog/search?format=json&country=Morocco&ps=50",
     .array_path = "result.rows",
     .detail_url = "http://catalog.ihsn.org/index.php/api/catalog/{v}", .detail_key = "idno",

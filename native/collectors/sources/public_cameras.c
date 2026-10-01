@@ -76,5 +76,5 @@ static const source_def public_cameras_def = {
   .name = "Public Cameras", .name_ja = "公開カメラ",
    .layer = "cameras",
    .update_interval_sec = 3600, .run = run,
-   .category = "infrastructure" };
+  .category = "cyber" };
 REGISTER_SOURCE(public_cameras_def)

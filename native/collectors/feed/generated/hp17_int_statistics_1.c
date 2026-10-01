@@ -16,7 +16,7 @@ static const hp_source T[] = {
     .name = "Pacific Data Hub Microdata Library — survey and census catalogue",
     .collector = "int_statistics", .category = "statistics",
     .description = "693 microdata collections across the Pacific Islands from SPC's NADA catalogue: id, idno (e.g. SPC_ASM_2025_PHC_v01_M), title, nation (American Samoa, Fiji, PNG, Samoa, Vanuatu, Solomon Islands, Tonga...), authoring_entity (the national statistics office that ran it), year_start/year_end, type (survey/census), repositoryid and repo_title. The detail hop returns full study metadata including variable count. Fills the Pacific-island gap where no company registry API exists.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "statistics", .tags = "\"int\",\"statistics\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "statistics-record", .tags = "\"int\",\"statistics\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://microdata.pacificdata.org/index.php/api/catalog/search?format=json&ps=100",
     .array_path = "result.rows",
     .detail_url = "https://microdata.pacificdata.org/index.php/api/catalog/{v}", .detail_key = "idno",

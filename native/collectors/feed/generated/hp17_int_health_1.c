@@ -16,7 +16,7 @@ static const hp_source T[] = {
     .name = "WHO — collaborating centres directory",
     .collector = "int_health", .category = "health",
     .description = "Designated WHO Collaborating Centres worldwide: reference code (e.g. KOR-106), TitleOfTheCentre (the actual institution), host website, date of designation, last redesignation, expiry date, WHOCC portal URL. Institution-level records tying named research bodies to WHO. Detail hop verified with a real GUID.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "health", .tags = "\"int\",\"health\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "health-record", .tags = "\"int\",\"health\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://www.who.int/api/news/collaboratingcentres?%24top=50&%24format=json",
     .array_path = "value",
     .detail_url = "https://www.who.int/api/news/collaboratingcentres({v})?%24format=json", .detail_key = "Id",

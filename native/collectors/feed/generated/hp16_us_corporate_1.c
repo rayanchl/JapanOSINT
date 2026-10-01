@@ -1,4 +1,4 @@
-/* Deep-record us_corporate sources (2), part 1 of 1.
+/* Deep-record us_corporate sources (3), part 1 of 1.
  *
  * Batch 16 verified each of these endpoints live AND separately probed the
  * per-record detail endpoint below it with a real id. The list half shipped as
@@ -15,23 +15,34 @@ static const hp_source T[] = {
   { .id = "global-peeringdb-org-list",
     .name = "PeeringDB organisations (list)",
     .collector = "us_corporate", .category = "corporate",
-    .description = "Every network/facility/IX owning organisation: id, legal name, aka, website, social_media handles, street address + city/state/zip/country, lat/lon, created/updated timestamps. This is the root of the PeeringDB ownership tree.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "corporate", .tags = "\"us\",\"corporate\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Every network/facility/IX owning organisation: id, legal name, aka, website, social_media handles, street address + city/state/zip/country, lat/lon, created/updated timestamps. This is the root of the PeeringDB ownership tree.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
+    .record_type = "corporate-record", .tags = "\"us\",\"corporate\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://www.peeringdb.com/api/org?limit=3",
     .array_path = "data",
     .detail_url = "https://www.peeringdb.com/api/org/{v}?depth=2", .detail_key = "id",
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
+  { .id = "us-ca-dcc-cannabis-detail",
+    .name = "California DCC - single cannabis licence record",
+    .collector = "us_corporate", .category = "corporate",
+    .description = "Full licence record including businessOwnerName (named natural persons, e.g. 'Collin Hammans, JoAnn Hammans'), businessLegalName, businessDbaName, businessStructure, licensingAuthority, issue/expiration dates, premiseStreetAddress and status history fields.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
+    .record_type = "corporate-record", .tags = "\"us\",\"corporate\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .url = "https://as-dcc-pub-cann-w-p-002.azurewebsites.net/licenses/16186",
+    .array_path = ".",
+    .detail_url = "https://as-dcc-pub-cann-w-p-002.azurewebsites.net/licenses/{v}", .detail_key = "id",
+    .page_walk = 1,
+    .interval = 86400, .free_tier = 1 },
+
   { .id = "us-ca-dcc-cannabis-search",
     .name = "California Dept of Cannabis Control - licence search API",
     .collector = "us_corporate", .category = "corporate",
-    .description = "Undocumented public backend of search.cannabis.ca.gov (base URL published in /config.js). Paged results with metadata{currentPage,totalPages,totalCount} and data[] of id, licenseNumber, licenseStatus, licenseTerm, licenseType, licenseDesignation, issueDate, expirationDate, licensingAuthority, businessLegalName, businessDbaName, businessOwnerName, businessStructure, premise address. Also /licensetypes, /licensestatuses, /licenseterms, /licensedesignations, /licensingauthorities, /licensebusinesstypes.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "corporate", .tags = "\"us\",\"corporate\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Undocumented public backend of search.cannabis.ca.gov (base URL published in /config.js). Paged results with metadata{currentPage,totalPages,totalCount} and data[] of id, licenseNumber, licenseStatus, licenseTerm, licenseType, licenseDesignation, issueDate, expirationDate, licensingAuthority, businessLegalName, businessDbaName, businessOwnerName, businessStructure, premise address. Also /licensetypes, /licensestatuses, /licenseterms, /licensedesignations, /licensingauthorities, /licensebusinesstypes.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
+    .record_type = "corporate-record", .tags = "\"us\",\"corporate\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://as-dcc-pub-cann-w-p-002.azurewebsites.net/licenses/filteredSearch?searchQuery=green&pageSize=50&pageNumber=1",
     .array_path = "data",
     .detail_url = "https://as-dcc-pub-cann-w-p-002.azurewebsites.net/licenses/{v}", .detail_key = "id",
-    .page_walk = 1,
+    .page_param = "pageNumber", .page_start = 1,   /* declared by the row's own URL */
     .interval = 86400, .free_tier = 1 },
 
 };

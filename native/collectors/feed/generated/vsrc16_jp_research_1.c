@@ -7,13 +7,6 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
-VJSON(global_ooni_measurements_jp, "global-ooni-measurements-jp", "OONI measurements list (country filtered)", "OONI measurements list (country filtered)",
-  "jp_research", "research",
-  "https://api.ooni.io/api/v1/measurements?limit=3&probe_cc=JP",
-  "results",
-  "en", "[\"jp\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Measurement rows with anomaly/confirmed/failure flags, input URL, probe_asn, probe_cc, report_id, blocking scores (general/global/country/isp/local) and, critically, measurement_url — the raw_measurement link used as the detail hop.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(jp_ihr_hegemony_countries, "jp-ihr-hegemony-countries", "IIJ IHR country-level AS hegemony", "IIJ IHR country-level AS hegemony",
   "jp_research", "research",
   "https://ihr.iijlab.net/ihr/api/hegemony/countries/?country=JP&af=4",
@@ -45,3 +38,10 @@ VRSS(jstage_volumes_by_journal, "jstage-volumes-by-journal", "J-STAGE volumes an
   "ja", "[\"jp\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
   "377KB: every volume and issue of a Japanese journal with dates and issue-level urls - the journal->issue->article drilldown. Requires cdjournal or issn (ERR_011 otherwise).  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
 
+
+VJSON(global_ooni_measurements_jp, "global-ooni-measurements-jp", "OONI measurements list (country filtered)", "OONI measurements list (country filtered)",
+  "jp_research", "research",
+  "https://api.ooni.io/api/v1/measurements?limit=3&probe_cc=JP",
+  "results",
+  "en", "[\"jp\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
+  "Measurement rows with anomaly/confirmed/failure flags, input URL, probe_asn, probe_cc, report_id, blocking scores (general/global/country/isp/local) and, critically, measurement_url — the raw_measurement link used as the detail hop.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");

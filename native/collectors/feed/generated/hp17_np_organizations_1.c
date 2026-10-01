@@ -16,7 +16,7 @@ static const hp_source T[] = {
     .name = "Nepal BIPAD - registered disaster-response organizations",
     .collector = "np_organizations", .category = "organizations",
     .description = "Organization register: title (e.g. DAO Sindhupalchok), shortName, longName, description, level, startingDateAd, point geometry, and the province/district/municipality/ward it is bound to plus responsibleFor scope. Detail endpoint verified with id 2.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "organizations", .tags = "\"np\",\"organizations\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "organizations-record", .tags = "\"np\",\"organizations\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://bipadportal.gov.np/api/v1/organization/?format=json&limit=50",
     .array_path = "results",
     .detail_url = "https://bipadportal.gov.np/api/v1/organization/{v}/?format=json", .detail_key = "id",

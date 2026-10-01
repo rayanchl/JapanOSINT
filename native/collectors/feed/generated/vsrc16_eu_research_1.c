@@ -65,13 +65,6 @@ static const source_def eu_cordis_programmes_search = {
   .layer = NULL, .free_tier = 1 };
 REGISTER_SOURCE(eu_cordis_programmes_search);
 
-VJSON(cordis_search_results_query, "cordis-search-results-query", "CORDIS project RESULTS (outcomes) search", "CORDIS project RESULTS (outcomes) search",
-  "eu_research", "research",
-  "https://cordis.europa.eu/api/search/results?q=contenttype%3D%27result%27%20AND%20%27hydrogen%27&format=json&p=1&num=5",
-  "payload.results",
-  "en", "[\"eu\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "7,691 reported project outcomes, each carrying relatedProjectAcronym, relatedProjectReference and relatedProjectRcn plus the outcome teaser - the deliverables-behind-a-grant hop, and it links back to the parent project id.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(eu_cordis_results_search, "eu-cordis-results-search", "CORDIS (EU) — research result/deliverable search", "CORDIS (EU) — research result/deliverable search",
   "eu_research", "research",
   "https://cordis.europa.eu/api/search/results?q=contenttype%3D%27result%27&p=1&num=3&format=json",
@@ -86,3 +79,10 @@ VJSON(global_ooni_test_names, "global-ooni-test-names", "OONI test-name registry
   "en", "[\"eu\",\"research\",\"batch16\",\"high-penetrancy\"]", 86400,
   "Canonical id/name pairs for every OONI test (bridge_reachability, dnscheck, psiphon, riseupvpn, whatsapp, ...). Needed to enumerate the measurements API exhaustively per test.");
 
+
+VJSON(cordis_search_results_query, "cordis-search-results-query", "CORDIS project RESULTS (outcomes) search", "CORDIS project RESULTS (outcomes) search",
+  "eu_research", "research",
+  "https://cordis.europa.eu/api/search/results?q=contenttype%3D%27result%27%20AND%20%27hydrogen%27&format=json&p=1&num=5",
+  "payload.results",
+  "en", "[\"eu\",\"research\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
+  "7,691 reported project outcomes, each carrying relatedProjectAcronym, relatedProjectReference and relatedProjectRcn plus the outcome teaser - the deliverables-behind-a-grant hop, and it links back to the parent project id.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");

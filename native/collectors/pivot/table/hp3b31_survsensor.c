@@ -1,4 +1,4 @@
-/* collectors/sources/hp3_surv_sensors.c — public sensing and monitoring networks.
+/* collectors/pivot/table/hp3b31_survsensor.c — batch 31: survsensor — public sensing and monitoring networks.
  *
  * The other half of state and civic surveillance is not cameras: it is the
  * standing instrument networks. Seismometers, radiation monitors, air-quality
@@ -13,10 +13,39 @@
  * company at a precise coordinate, independent of any register.
  *
  * Everything here emits geolocated records where the upstream provides
- * coordinates, and every row that needs a credential declares it. */
-#include "../../lib/hpengine.h"
+ * coordinates, and every row that needs a credential declares it.
+ *
+ * PROVENANCE AND VERIFICATION STATUS — read before trusting a row here.
+ *
+ * Unlike batches 18-30, this table was hand-authored, not scaffolded by
+ * tools/gen_hp_batch.py, so there is NO docs/candidate-sources-batch31.*.txt
+ * manifest behind it. Do not look for one, and do not regenerate over this
+ * file. The consequence is that the manifest-driven auditors
+ * (audit_batch_reachable.py, audit_batch_pagination.py, audit_batch_emit.py)
+ * cannot be pointed at batch 31; use audit_registry_emit.py --match hp3b31,
+ * which reads --list-sources and needs no manifest.
+ *
+ * These rows are NOT proof-of-life verified. The environment they were written
+ * in had no outbound HTTPS, so no row here was fetched over the wire, and none
+ * of rules 4, 4b and 4d (fetching is not emitting; emitting is not storing;
+ * answering is not answering THE QUESTION) has been measured for this batch.
+ * What HAS been checked is offline and structural: the tree builds clean, the
+ * strict audit-sources gate is at zero findings, lint-sources reports no
+ * duplicate id or endpoint, and every row is reachable under house rule 3.
+ *
+ * So treat each row as a documented CANDIDATE until it is measured. The first
+ * person with network should run:
+ *     python3 tools/audit_registry_emit.py --bin ./bin/japanosint \
+ *             --match hp3b31 --jobs 6 --timeout 220 --out b31.tsv
+ *     python3 tools/probe_hp_batch.py --check-filter   # FILTER_IGNORED is fatal
+ * and retire whatever comes back EMITS_NOTHING, COLLISION or FILTER_IGNORED.
+ * The engine cannot fabricate — an endpoint that moved or changed shape yields
+ * an honest empty, never an invented record — so an unmeasured row is a gap in
+ * coverage, not a source of false data.
+ */
+#include "lib/hpengine.h"
 
-static const hp_source HP3_SURV_SENSORS[] = {
+static const hp_source HP3B31_SURVSENSOR[] = {
   /* ── Air quality ──────────────────────────────────────────────────────── */
   { .id = "OPENAQ_LOCATIONS", .name = "OpenAQ — global air quality station inventory",
     .name_ja = "OpenAQ 大気観測局", .category = "surveillance",
@@ -28,8 +57,8 @@ static const hp_source HP3_SURV_SENSORS[] = {
     .array_path = "results", .filter_query = 1,
     .title_keys = "name,country.name", .id_keys = "id",
     .lat_key = "coordinates.latitude", .lon_key = "coordinates.longitude",
-    .page_param = "page", .page_size = 1000, .page_max = 30,
-    .interval = 3600,
+    .page_param = "page", .page_max = 30,
+    .interval = 86400,
     .description = "Reference-grade government monitoring stations aggregated "
       "across more than a hundred countries — the operating authority, the "
       "instrument, the parameters measured and the first and last observation "
@@ -46,7 +75,7 @@ static const hp_source HP3_SURV_SENSORS[] = {
     .headers = { "X-API-Key: {key}", NULL },
     .array_path = "data", .filter_query = 1,
     .title_keys = "name", .id_keys = "sensor_index",
-    .interval = 3600,
+    .interval = 86400,
     .description = "PurpleAir's sensor index with an explicit field list so the "
       "full record is returned — device name (often a household or business "
       "name), indoor or outdoor placement, hardware revision, last-seen time "
@@ -73,7 +102,7 @@ static const hp_source HP3_SURV_SENSORS[] = {
     .filter_query = 1, .title_keys = "location_name,device_id",
     .id_keys = "id", .date_keys = "captured_at",
     .lat_key = "latitude", .lon_key = "longitude",
-    .page_param = "page", .page_size = 1000, .page_max = 30,
+    .page_param = "page", .page_max = 30,
     .interval = 3600,
     .description = "The open radiation dataset founded after Fukushima — every "
       "uploaded measurement with coordinates, device, unit and capture time. "
@@ -131,6 +160,21 @@ static const hp_source HP3_SURV_SENSORS[] = {
       "activity reports and the observatory responsible for monitoring it" },
 
   /* ── Water, ocean and hydrology ───────────────────────────────────────── */
+  { .id = "USGS_NWIS_SITE_INVENTORY", .name = "USGS NWIS — water monitoring site inventory",
+    .name_ja = "米国地質調査所 水文観測点", .category = "surveillance",
+    .portal = "https://waterservices.usgs.gov", .record_type = "water-station",
+    .tags = "\"us\",\"sensor\",\"water\",\"hydrology\"", .free_tier = 1,
+    .type = "dataset", .mode = HP_CSV,
+    .url = "https://waterservices.usgs.gov/nwis/site/?format=rdb&stateCd=ca"
+      "&siteOutput=expanded&siteStatus=all",
+    .filter_query = 1, .title_keys = "station_nm,site_no", .id_keys = "site_no",
+    .lat_key = "dec_lat_va", .lon_key = "dec_long_va",
+    .interval = 86400,
+    .description = "The USGS site file requested in expanded form — station "
+      "name and number, coordinates, drainage area, aquifer, well depth, the "
+      "agency operating it and the data types collected. The expanded output is "
+      "requested explicitly rather than accepting the seven-column default" },
+
   { .id = "GLOBAL_WATER_QUALITY_PORTAL", .name = "Water Quality Portal — US monitoring stations",
     .name_ja = "米国 水質観測点", .category = "surveillance",
     .portal = "https://www.waterqualitydata.us", .record_type = "water-station",
@@ -159,7 +203,6 @@ static const hp_source HP3_SURV_SENSORS[] = {
       "national service, the programmes it reports to, the instruments "
       "installed and the coordinates" },
 
-  /* ── Space, fire and earth observation ────────────────────────────────── */
   { .id = "NASA_FIRMS_FIRE_DETECTIONS", .name = "NASA FIRMS — satellite active fire detections",
     .name_ja = "NASA 衛星火災検知", .category = "surveillance",
     .portal = "https://firms.modaps.eosdis.nasa.gov", .record_type = "fire-detection",
@@ -170,7 +213,7 @@ static const hp_source HP3_SURV_SENSORS[] = {
     .filter_query = 1, .title_keys = "satellite,confidence",
     .id_keys = "acq_time", .date_keys = "acq_date",
     .lat_key = "latitude", .lon_key = "longitude",
-    .interval = 3600,
+    .interval = 1800,
     .description = "Near-real-time thermal anomaly detections from VIIRS — "
       "coordinates, brightness temperature, fire radiative power and "
       "confidence. Used far beyond wildfire: gas flaring, industrial thermal "
@@ -208,11 +251,11 @@ static const hp_source HP3_SURV_SENSORS[] = {
     .array_path = "features", .filter_query = 1,
     .title_keys = "properties.name,properties.eventtype",
     .id_keys = "properties.eventid", .date_keys = "properties.fromdate",
-    .interval = 3600,
+    .interval = 1800,
     .description = "The joint UN and European Commission disaster alert system "
       "— earthquakes, cyclones, floods, volcanoes and drought with the "
       "estimated population affected, the alert level and the coordination "
       "reporting from responding agencies" },
 };
 
-HP_REGISTER_TABLE(HP3_SURV_SENSORS)
+HP_REGISTER_TABLE(HP3B31_SURVSENSOR)

@@ -19,18 +19,23 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 18,169** (2026-10-02, after batch 32's 340 Japanese
-rows — `docs/verified-sources-batch32.md`): `make lint-sources` prints it,
-counting hp_source table rows as well as `REGISTER_SOURCE`, and
+**The registered count is 18,170** (2026-10-02, after merging origin/main's
+PR #21-#23 integration with the local branch and batch 32's 340 Japanese rows —
+`docs/verified-sources-batch32.md`): `make lint-sources` prints it, counting
+hp_source table rows as well as `REGISTER_SOURCE`, and
 `./bin/japanosint --list-sources` agrees.
 
-**One exception to "every source is proof-of-life verified":** the batch-400
-tables (`collectors/sources/hp3_{gov,pub,surv}_*.c`, merged 2026-09-27) hold
-360 rows, and 334 of them are entity pivots that have not been run against a
-real entity, nor `--check-filter`ed (rules 4 and 4d). The 26 scheduled rows
-were run: 7 dead endpoints were dropped, 14 need an API key and say so, and
-the rest store real records. See
-`native/collectors/OSINT_SOURCES_BATCH_400_GOV_PUBLIC_SURVEILLANCE.md`. Treat
+**One exception to "every source is proof-of-life verified":** batch 31 — the
+government, public-record and surveillance tables from PR #23
+(`collectors/pivot/table/hp3b31_*.c`) — holds 361 rows, and 334 of them are
+entity pivots that have not been run against a real entity, nor
+`--check-filter`ed (rules 4 and 4d). The 27 scheduled rows were run on
+2026-10-02: 13 store real records (FDSN 151,303; Safecast 30,000; Sejm 15,000;
+USGS NWIS 53,789 before the audit timeout …) and 14 need an API key and store a
+"gated" notice saying so. Ten rows were removed when the branches merged: seven
+dead endpoints (400/401/404 on every run) and three that re-fetch what an
+existing collector already reads. See
+`native/collectors/OSINT_SOURCES_BATCH_31_GOV_PUBLIC_SURVEILLANCE.md`. Treat
 those pivots as registered, not proven, until they are verified.
 
 Three verifier/engine traps that pass exposed — check for them before trusting
@@ -107,6 +112,65 @@ the scanner matches per line, so a marker in the comment block above the line it
 explains is silently ignored and the finding stays. That is easy to get wrong,
 because the explanation naturally wants to be a paragraph: put the paragraph
 above and a one-line `/* exhaustive-ok: … */` on the line.
+
+Two amendments from the deep-record batch:
+
+* **The gated set is now two globs**, `collectors/pivot/table/hp*_*.c` plus the
+  generated deep-record tables `collectors/feed/generated/hp1[0-9]_*.c` — 262
+  files, 0 findings. `--strict` had to be made repeatable to say that honestly:
+  it took a single glob, so passing two kept only the LAST one and the gate
+  printed "0 findings" for a set it had never opened.
+* **`loop-cap` is a sixth check, and it was not redundant.** A bound written in
+  a loop's own CONDITION is neither a `#define …MAX` (`record-cap`) nor a
+  `break` (`loop-break`), so nothing could see it. Added after the tree reached
+  zero, it immediately found four live caps — all in the OFAC sanctions
+  collectors: aliases and sanctions programs capped at 24, addresses at 12, and
+  SDN "features" (date and place of birth, nationality, passport and
+  national-ID numbers, crypto addresses) at 40. On a sanctions list those are
+  the fields screening matches on, so each dropped entry is a false negative on
+  a designated person, produced in silence. All four are gone.
+
+  Its own first regex missed the very line it was written for: `\b` before the
+  counter list cannot match `cJSON_GetArraySize`, because the underscore is a
+  word character. Zero findings from a new check deserves one suspicious look.
+
+**Detail hops: 359 rows, and what a generator that rewrites this tree must not
+do.** `collectors/gen_detail_hop_upgrade.py` moves a row that has a PROVEN
+per-record detail endpoint off VJSON onto hpengine, so the record behind each
+list hit is fetched. It reads the `.c` files, never the manifest, for the reason
+the batch-tooling section gives: the C is the maintained copy.
+
+It cost 73 sources to learn three things, all the same mistake wearing different
+hats — the script could not see something, and deleted it anyway:
+
+* `^(V[A-Z]+)\(` cannot match an underscore, so `VJSON_KEYED`, `VJSON_IDKEYS`,
+  `VJSON_PREP` and friends were invisible — and the "no registrations left,
+  delete the file" step could not see them either, so files were removed with
+  those rows still inside. 20 sources.
+* It writes one table per (batch, collector) group of the CURRENT run, so
+  running it twice with different row sets rewrote a group's file with only the
+  second run's rows. 53 sources. **Regenerate from a clean checkout of the
+  directory in ONE run**, never incrementally.
+* Its argument splitter did not skip comments, and this tree comments INSIDE
+  argument lists; 86 rows parsed as 15 arguments instead of 12 and were passed
+  over. That one failed safe, but it failed.
+
+So it now asserts that no id registered in the directory before the run — from
+the vsrc macros AND from any hp table already there — is missing after it, and
+exits non-zero naming them. The only reason any of this was caught is an id-set
+diff against the base branch; `--list-ids | sort | comm` costs seconds and is
+the check that actually works.
+
+`VJSON_KEYED`'s IDFIELD and `VJSON_IDKEYS`'s IDKEYS carry over verbatim into
+`.id_keys` — `_vjson_idkeys.inc` promises the same `+` composes semantics, and
+`hptest` now pins it, because rule 4b's failure is silent. The 45 rows that
+moved on that promise are listed in `docs/detail-hops-need-emit-check.tsv`:
+their identity is a faithful translation, but emitted-vs-stored has not been
+measured on them, and that needs egress this session did not have.
+
+`VJSON_PREP` is deliberately NOT converted: its extra argument is a C function
+that reshapes each page before emit, and a declarative row cannot hold code.
+VRSS and VGEO stay out too — hpengine has no RSS or FeatureCollection mode.
 
 ```sh
 cd native

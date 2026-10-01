@@ -16,7 +16,7 @@ static const hp_source T[] = {
     .name = "Australian Government Organisations Register",
     .collector = "au_government", .category = "government",
     .description = "Every Commonwealth body: Id (O-xxxxxx), Title, Portfolio, Classification (primary body / subsidiary), Type of Body (non-corporate Commonwealth entity, company, statutory authority), GFS sector classification, materiality and a prose description. Maps the federal entity graph.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "government", .tags = "\"au\",\"government\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "government-record", .tags = "\"au\",\"government\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=90b13a5b-fd2e-440c-b253-9cbf314d3da3&limit=100",
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=90b13a5b-fd2e-440c-b253-9cbf314d3da3&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",

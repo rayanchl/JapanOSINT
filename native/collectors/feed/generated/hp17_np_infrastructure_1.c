@@ -16,7 +16,7 @@ static const hp_source T[] = {
     .name = "Nepal BIPAD - critical facility register (health, education, security)",
     .collector = "np_infrastructure", .category = "infrastructure",
     .description = "Named facility register with geometry: title, resourceType (health / education / financial institution / security), GeoJSON point, ward id, dataSource and lastModifiedDate. The detail record adds staffing (noOfEmployee split by sex and disability), phoneNumber, emailAddress, website, localAddress, opening hours and accessibility flags.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "infrastructure", .tags = "\"np\",\"infrastructure\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "infrastructure-record", .tags = "\"np\",\"infrastructure\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://bipadportal.gov.np/api/v1/resource/?format=json&limit=50",
     .array_path = "results",
     .detail_url = "https://bipadportal.gov.np/api/v1/resource/{v}/?format=json", .detail_key = "id",

@@ -1,4 +1,4 @@
-/* collectors/sources/hp3_pub_intl_bodies.c — multilateral & treaty-body record.
+/* collectors/pivot/table/hp3b31_intlbody.c — batch 31: intlbody — multilateral & treaty-body record.
  *
  * International organisations are the most under-queried public record there
  * is. They publish at record level — a World Bank project has a document set,
@@ -11,10 +11,39 @@
  * These bodies also carry the debarment lists that bind across institutions:
  * a World Bank sanction is enforced by the AfDB, ADB, EBRD and IDB under the
  * cross-debarment agreement, so one lookup here disqualifies a counterparty
- * from five development banks at once. */
-#include "../../lib/hpengine.h"
+ * from five development banks at once.
+ *
+ * PROVENANCE AND VERIFICATION STATUS — read before trusting a row here.
+ *
+ * Unlike batches 18-30, this table was hand-authored, not scaffolded by
+ * tools/gen_hp_batch.py, so there is NO docs/candidate-sources-batch31.*.txt
+ * manifest behind it. Do not look for one, and do not regenerate over this
+ * file. The consequence is that the manifest-driven auditors
+ * (audit_batch_reachable.py, audit_batch_pagination.py, audit_batch_emit.py)
+ * cannot be pointed at batch 31; use audit_registry_emit.py --match hp3b31,
+ * which reads --list-sources and needs no manifest.
+ *
+ * These rows are NOT proof-of-life verified. The environment they were written
+ * in had no outbound HTTPS, so no row here was fetched over the wire, and none
+ * of rules 4, 4b and 4d (fetching is not emitting; emitting is not storing;
+ * answering is not answering THE QUESTION) has been measured for this batch.
+ * What HAS been checked is offline and structural: the tree builds clean, the
+ * strict audit-sources gate is at zero findings, lint-sources reports no
+ * duplicate id or endpoint, and every row is reachable under house rule 3.
+ *
+ * So treat each row as a documented CANDIDATE until it is measured. The first
+ * person with network should run:
+ *     python3 tools/audit_registry_emit.py --bin ./bin/japanosint \
+ *             --match hp3b31 --jobs 6 --timeout 220 --out b31.tsv
+ *     python3 tools/probe_hp_batch.py --check-filter   # FILTER_IGNORED is fatal
+ * and retire whatever comes back EMITS_NOTHING, COLLISION or FILTER_IGNORED.
+ * The engine cannot fabricate — an endpoint that moved or changed shape yields
+ * an honest empty, never an invented record — so an unmeasured row is a gap in
+ * coverage, not a source of false data.
+ */
+#include "lib/hpengine.h"
 
-static const hp_source HP3_PUB_INTL[] = {
+static const hp_source HP3B31_INTLBODY[] = {
   /* ── United Nations ───────────────────────────────────────────────────── */
   { .id = "UN_DIGITAL_LIBRARY", .name = "UN Digital Library — documents & resolutions",
     .name_ja = "国連デジタルライブラリ", .category = "government",
@@ -61,7 +90,9 @@ static const hp_source HP3_PUB_INTL[] = {
     .url = "https://comtradeapi.un.org/data/v1/get/C/A/HS?reporterCode={qd}"
       "&subscription-key={key}",
     .array_path = "data", .title_keys = "cmdDesc,partnerDesc",
-    .id_keys = "period", .date_keys = "period",
+    .id_keys = "period+reporterCode+partnerCode+cmdCode+flowCode", .date_keys = "period",
+    /* id_keys composite (+ composes, , chooses): identity is the reporter x partner x commodity x flow x period tuple; `period`
+     * alone collapsed a whole year of trade onto one uid. */
     .description = "Reported imports and exports by commodity and partner. "
       "Mirror-statistics gaps — where A reports exporting far more to B than B "
       "reports importing — are the standard method for locating "
@@ -99,7 +130,7 @@ static const hp_source HP3_PUB_INTL[] = {
       "impagency,sector,theme,status,projectfinancialtype,url",
     .array_path = "projects", .title_keys = "project_name,countryname",
     .id_keys = "id", .date_keys = "boardapprovaldate",
-    .page_param = "os", .page_size = 100, .page_start = 0, .page_max = 40,
+    .page_param = "os", .page_zero_based = 1, .page_size = 100, .page_start = 0, .page_max = 40,
     .description = "World Bank lending operations — the implementing agency, "
       "the amount, the sectors and the status, requested with an explicit field "
       "list so the full project record is returned rather than the four-field "
@@ -285,4 +316,4 @@ static const hp_source HP3_PUB_INTL[] = {
       "entities" },
 };
 
-HP_REGISTER_TABLE(HP3_PUB_INTL)
+HP_REGISTER_TABLE(HP3B31_INTLBODY)

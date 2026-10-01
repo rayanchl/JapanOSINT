@@ -11,6 +11,16 @@
 > repairs survive in them. Both forms of every row were then run through
 > the binary: 322 rows moved, and 33 that stored fewer records on hpengine
 > stayed on VJSON (`docs/detail-hops-kept-on-vjson.tsv`).
+>
+> **Second merge note (2026-10-02).** origin/main had wired its own version of
+> this pass (359 hops). It moved those 33 rows as well and dropped `page_walk`,
+> so 313 of the moved rows made one request where the VJSON row had walked
+> every page. The merged tree keeps origin's tables and puts `page_walk = 1`
+> back on the 349 JSON rows that declare no paging of their own. On a random
+> 30 of those rows, origin's binary stored 8,362 records and the merged one
+> 83,314. The 37 rows the branches disagreed on were re-measured: 23 still
+> stored less on hpengine and are back on VJSON, and 14 stayed. 336 rows are
+> on hpengine now.
 
 ## What was asked, and what this session could actually verify
 

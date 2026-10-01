@@ -319,6 +319,16 @@ static const hp_source T[] = {
     .title_keys = "name", .id_keys = "id", .max_items = 2,
     .record_type = "t-total", .free_tier = 1, .description = "d" },
 
+  /* Composite record identity. 45 rows converted from VJSON_KEYED /
+   * VJSON_IDKEYS carry their macro's id field over verbatim into .id_keys, and
+   * _vjson_idkeys.inc promises that field means the same thing here ("`+`
+   * composes, as in hpengine id_keys"). Nothing tested that promise. Getting it
+   * wrong is silent — the records collapse onto one uid at the sink and the run
+   * still reports success — which is why it is pinned here rather than trusted. */
+  { .id = "T_IDKEYS", .name = "composite id_keys", .url = "https://x.test/ik",
+    .array_path = "rows", .title_keys = "name", .id_keys = "code+date",
+    .interval = 3600, .record_type = "t-idk", .free_tier = 1, .description = "d" },
+
   { .id = "T_ERR", .name = "upstream error", .url = "https://x.test/err?q={q}",
     .record_type = "t-err", .free_tier = 1, .description = "d" },
 
@@ -1822,6 +1832,19 @@ int main(void) {
   rc = run_source("T_GEO_PAIR2", "x");
   ok(rc == 0 && g_ncap == 1 && g_cap[0].has_geo && fabs(g_cap[0].lat - 35.0) < 1e-6 &&
      fabs(g_cap[0].lon - 139.0) < 1e-6, "26d: latlon_key reads lat then lon");
+
+  /* composite id_keys: two records sharing `code` must NOT collapse — the
+   * tuple (code, date) is the identity, which is what most registers are. */
+  fx_reset();
+  fx_add("/ik", 200,
+    "{\"rows\":[{\"name\":\"a\",\"code\":\"X1\",\"date\":\"2026-01\"},"
+    "{\"name\":\"b\",\"code\":\"X1\",\"date\":\"2026-02\"}]}");
+  rc = run_source("T_IDKEYS", "");
+  ok(rc == 0 && g_ncap == 2, "composite id_keys emits both records");
+  ok(strcmp(g_cap[0].key, g_cap[1].key) != 0,
+     "`code+date` composes a distinct uid per record (a shared `code` must not collapse them)");
+  ok(strstr(g_cap[0].key, "X1") != NULL && strstr(g_cap[0].key, "2026-01") != NULL,
+     "both parts of the composite reach the uid");
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

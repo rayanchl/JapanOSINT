@@ -3,7 +3,8 @@
 Authored 2026-09-30, verified and selected 2026-10-02. **340 rows** across eight
 beats, every one fetched live, probed, compiled into the real binary and run
 against a fresh database to prove it **emits and stores**. Together they expose
-**about 6.49 M records per full pass**. Registry 17,829 → **18,169**.
+**about 6.49 M records per full pass**. Registry 17,829 → **18,169** on the
+branch, and **18,170** after merging origin/main (2026-10-02).
 
 Per-row numbers: `docs/verified-sources-batch32.tsv`. Manifests:
 `docs/candidate-sources-batch32.<beat>.txt` (shipped rows only). Tables:

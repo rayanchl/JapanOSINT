@@ -14,13 +14,6 @@ VJSON(global_peeringdb_carrier_detail, "global-peeringdb-carrier-detail", "Peeri
   "en", "[\"us\",\"corporate\",\"batch16\",\"high-penetrancy\"]", 86400,
   "One carrier with its owning org object inlined (legal address, lat/lon, all *_set id lists) and its facility footprint.");
 
-VJSON(us_ca_dcc_cannabis_detail, "us-ca-dcc-cannabis-detail", "California DCC - single cannabis licence record", "California DCC - single cannabis licence record",
-  "us_corporate", "corporate",
-  "https://as-dcc-pub-cann-w-p-002.azurewebsites.net/licenses/16186",
-  ".",
-  "en", "[\"us\",\"corporate\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Full licence record including businessOwnerName (named natural persons, e.g. 'Collin Hammans, JoAnn Hammans'), businessLegalName, businessDbaName, businessStructure, licensingAuthority, issue/expiration dates, premiseStreetAddress and status history fields.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");
-
 VJSON(us_ca_dcc_cannabis_licensetypes, "us-ca-dcc-cannabis-licensetypes", "California DCC - licence type vocabulary", "California DCC - licence type vocabulary",
   "us_corporate", "corporate",
   "https://as-dcc-pub-cann-w-p-002.azurewebsites.net/licensetypes",

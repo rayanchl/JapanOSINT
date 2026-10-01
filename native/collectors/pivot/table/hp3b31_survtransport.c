@@ -1,4 +1,4 @@
-/* collectors/sources/hp3_surv_transport.c — movement telemetry.
+/* collectors/pivot/table/hp3b31_survtransport.c — batch 31: survtransport — movement telemetry.
  *
  * Transport telemetry is the most literal form of open surveillance: vehicles,
  * trains, ships and aircraft continuously broadcasting identity and position,
@@ -11,10 +11,39 @@
  * The registries matter as much as the live positions. Transitland and the
  * Japanese GTFS repository answer "which organisation operates transport in
  * this place, and what feed do they publish" — an operator directory keyed to
- * geography, which is the entry point to everything downstream. */
-#include "../../lib/hpengine.h"
+ * geography, which is the entry point to everything downstream.
+ *
+ * PROVENANCE AND VERIFICATION STATUS — read before trusting a row here.
+ *
+ * Unlike batches 18-30, this table was hand-authored, not scaffolded by
+ * tools/gen_hp_batch.py, so there is NO docs/candidate-sources-batch31.*.txt
+ * manifest behind it. Do not look for one, and do not regenerate over this
+ * file. The consequence is that the manifest-driven auditors
+ * (audit_batch_reachable.py, audit_batch_pagination.py, audit_batch_emit.py)
+ * cannot be pointed at batch 31; use audit_registry_emit.py --match hp3b31,
+ * which reads --list-sources and needs no manifest.
+ *
+ * These rows are NOT proof-of-life verified. The environment they were written
+ * in had no outbound HTTPS, so no row here was fetched over the wire, and none
+ * of rules 4, 4b and 4d (fetching is not emitting; emitting is not storing;
+ * answering is not answering THE QUESTION) has been measured for this batch.
+ * What HAS been checked is offline and structural: the tree builds clean, the
+ * strict audit-sources gate is at zero findings, lint-sources reports no
+ * duplicate id or endpoint, and every row is reachable under house rule 3.
+ *
+ * So treat each row as a documented CANDIDATE until it is measured. The first
+ * person with network should run:
+ *     python3 tools/audit_registry_emit.py --bin ./bin/japanosint \
+ *             --match hp3b31 --jobs 6 --timeout 220 --out b31.tsv
+ *     python3 tools/probe_hp_batch.py --check-filter   # FILTER_IGNORED is fatal
+ * and retire whatever comes back EMITS_NOTHING, COLLISION or FILTER_IGNORED.
+ * The engine cannot fabricate — an endpoint that moved or changed shape yields
+ * an honest empty, never an invented record — so an unmeasured row is a gap in
+ * coverage, not a source of false data.
+ */
+#include "lib/hpengine.h"
 
-static const hp_source HP3_SURV_TRANSPORT[] = {
+static const hp_source HP3B31_SURVTRANSPORT[] = {
   /* ── Operator and feed registries ─────────────────────────────────────── */
   { .id = "TRANSITLAND_OPERATORS", .name = "Transitland — global transit operator registry",
     .name_ja = "Transitland 交通事業者登録", .category = "transport",
@@ -52,7 +81,7 @@ static const hp_source HP3_SURV_TRANSPORT[] = {
     .url = "https://api.odpt.org/api/v4/odpt:Railway?acl:consumerKey={key}",
     .filter_query = 1, .title_keys = "dc:title,odpt:operator",
     .id_keys = "owl:sameAs", .date_keys = "dc:date",
-    .interval = 86400,
+    .interval = 21600,
     .description = "The Public Transportation Open Data Center — railway "
       "lines, stations, operators, timetables and, for participating "
       "operators, live train location and delay information across the Tokyo "
@@ -94,7 +123,7 @@ static const hp_source HP3_SURV_TRANSPORT[] = {
     .array_path = "results", .title_keys = "name,operatorName",
     .id_keys = "id", .date_keys = "modified",
     .next_path = "next", .page_max = 40,
-    .interval = 86400,
+    .interval = 21600,
     .description = "Every bus operator in England is legally required to "
       "publish timetable, fares and live location data here. The dataset list "
       "is therefore also an operator register — the licensed name, the "
@@ -134,7 +163,7 @@ static const hp_source HP3_SURV_TRANSPORT[] = {
     .filter_query = 1, .title_keys = "name,shipType", .id_keys = "mmsi",
     .date_keys = "msgtime",
     .lat_key = "latitude", .lon_key = "longitude",
-    .interval = 3600,
+    .interval = 600,
     .description = "Norwegian coastal AIS with the fisheries activity layer — "
       "vessel positions along the Norwegian coast and in the Barents Sea, "
       "including the catch and landing reports joined to the vessel" },
@@ -235,4 +264,4 @@ static const hp_source HP3_SURV_TRANSPORT[] = {
       "physical rail network as a queryable dataset" },
 };
 
-HP_REGISTER_TABLE(HP3_SURV_TRANSPORT)
+HP_REGISTER_TABLE(HP3B31_SURVTRANSPORT)

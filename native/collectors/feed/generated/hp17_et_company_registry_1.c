@@ -16,7 +16,7 @@ static const hp_source T[] = {
     .name = "GLEIF — legal entities registered in Ethiopia",
     .collector = "et_company-registry", .category = "company-registry",
     .description = "16 Ethiopian LEI holders with legal name, addresses, legal form, local registration number, status and renewal dates. Small but it is the only machine-readable Ethiopian entity register reachable without credentials. Detail by LEI.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "company-registry", .tags = "\"et\",\"company-registry\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "company-registry-record", .tags = "\"et\",\"company-registry\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://api.gleif.org/api/v1/lei-records?filter%5Bentity.legalAddress.country%5D=ET&page%5Bsize%5D=100",
     .array_path = "data",
     .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}", .detail_key = "id",

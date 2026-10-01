@@ -15,12 +15,12 @@ static const hp_source T[] = {
   { .id = "eu-eib-projects-list",
     .name = "European Investment Bank — financed project list",
     .collector = "eu_procurement", .category = "procurement",
-    .description = "Every EIB loan/financing operation back to 1959. Rows give project id, description of the works financed, status and signature date plus signed and disbursed amounts in additionalInformation, and primaryTags carrying the country (label + ISO code) and sector (label + code). The url field is the numeric project id used for the detail page.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "procurement", .tags = "\"eu\",\"procurement\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Every EIB loan/financing operation back to 1959. Rows give project id, description of the works financed, status and signature date plus signed and disbursed amounts in additionalInformation, and primaryTags carrying the country (label + ISO code) and sector (label + code). The url field is the numeric project id used for the detail page.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
+    .record_type = "procurement-record", .tags = "\"eu\",\"procurement\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://www.eib.org/page-provider/projects/list?or=&pageNumber=0&itemPerPage=5&pageable=true&language=EN&sortColumn=projectStatusDate",
     .array_path = "data",
     .detail_url = "https://www.eib.org/en/projects/all/{v}", .detail_key = "id",
-    .page_walk = 1,
+    .page_param = "pageNumber", .page_start = 0,   /* declared by the row's own URL */
     .interval = 21600, .free_tier = 1 },
 
 };

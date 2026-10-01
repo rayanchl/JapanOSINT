@@ -1,4 +1,4 @@
-/* collectors/sources/hp3_gov_latam_public.c — Latin American public record.
+/* collectors/pivot/table/hp3b31_latamgov.c — batch 31: latamgov — Latin American public record.
  *
  * Latin America has some of the strongest transparency law in the world and
  * some of the weakest indexing of what that law produces. Chile's lobbying act
@@ -11,10 +11,39 @@
  *
  * `hp2_southam_*.c` and `hp2_northam_ca_mx.c` wired the sanction and registry
  * layer. This file wires the legislative, gazette, lobbying and Central
- * American procurement layer sitting alongside it. */
-#include "../../lib/hpengine.h"
+ * American procurement layer sitting alongside it.
+ *
+ * PROVENANCE AND VERIFICATION STATUS — read before trusting a row here.
+ *
+ * Unlike batches 18-30, this table was hand-authored, not scaffolded by
+ * tools/gen_hp_batch.py, so there is NO docs/candidate-sources-batch31.*.txt
+ * manifest behind it. Do not look for one, and do not regenerate over this
+ * file. The consequence is that the manifest-driven auditors
+ * (audit_batch_reachable.py, audit_batch_pagination.py, audit_batch_emit.py)
+ * cannot be pointed at batch 31; use audit_registry_emit.py --match hp3b31,
+ * which reads --list-sources and needs no manifest.
+ *
+ * These rows are NOT proof-of-life verified. The environment they were written
+ * in had no outbound HTTPS, so no row here was fetched over the wire, and none
+ * of rules 4, 4b and 4d (fetching is not emitting; emitting is not storing;
+ * answering is not answering THE QUESTION) has been measured for this batch.
+ * What HAS been checked is offline and structural: the tree builds clean, the
+ * strict audit-sources gate is at zero findings, lint-sources reports no
+ * duplicate id or endpoint, and every row is reachable under house rule 3.
+ *
+ * So treat each row as a documented CANDIDATE until it is measured. The first
+ * person with network should run:
+ *     python3 tools/audit_registry_emit.py --bin ./bin/japanosint \
+ *             --match hp3b31 --jobs 6 --timeout 220 --out b31.tsv
+ *     python3 tools/probe_hp_batch.py --check-filter   # FILTER_IGNORED is fatal
+ * and retire whatever comes back EMITS_NOTHING, COLLISION or FILTER_IGNORED.
+ * The engine cannot fabricate — an endpoint that moved or changed shape yields
+ * an honest empty, never an invented record — so an unmeasured row is a gap in
+ * coverage, not a source of false data.
+ */
+#include "lib/hpengine.h"
 
-static const hp_source HP3_GOV_LATAM[] = {
+static const hp_source HP3B31_LATAMGOV[] = {
   /* ── Brazil: the legislature and the gazettes ─────────────────────────── */
   { .id = "BR_CAMARA_DEPUTADOS", .name = "Brazil — Chamber of Deputies open data API",
     .name_ja = "ブラジル下院 オープンデータ", .category = "government",
@@ -22,7 +51,7 @@ static const hp_source HP3_GOV_LATAM[] = {
     .tags = "\"br\",\"parliament\",\"politics\"", .free_tier = 1,
     .url = "https://dadosabertos.camara.leg.br/api/v2/deputados?nome={q}&itens=100",
     .array_path = "dados", .title_keys = "nome,siglaPartido", .id_keys = "id",
-    .page_param = "pagina", .page_size = 100, .page_max = 30,
+    .page_param = "pagina", .page_max = 30,
     .detail_url = "https://dadosabertos.camara.leg.br/api/v2/deputados/{v}/despesas?itens=100",
     .detail_key = "id", .detail_path = "dados",
     .description = "Brazilian federal deputies with the second hop into their "
@@ -313,4 +342,4 @@ static const hp_source HP3_GOV_LATAM[] = {
       "supervision reports that record implementation failures by name" },
 };
 
-HP_REGISTER_TABLE(HP3_GOV_LATAM)
+HP_REGISTER_TABLE(HP3B31_LATAMGOV)

@@ -1,4 +1,4 @@
-/* collectors/sources/hp3_gov_uk_ie_public.c — UK & Ireland public-sector depth.
+/* collectors/pivot/table/hp3b31_ukie.c — batch 31: ukie — UK & Ireland public-sector depth.
  *
  * `hp_uk_deep.c` goes down the corporate chain — Companies House officers,
  * PSCs, charges, insolvency. This file goes down the *state* chain instead:
@@ -7,10 +7,39 @@
  * jurisdictions publish these as proper APIs — the UK Parliament's member,
  * bill and question APIs, the Contracts Finder OCDS feed, the FSA hygiene
  * ratings API and, in Ireland, the Oireachtas API — so almost none of this
- * needs scraping. */
-#include "../../lib/hpengine.h"
+ * needs scraping.
+ *
+ * PROVENANCE AND VERIFICATION STATUS — read before trusting a row here.
+ *
+ * Unlike batches 18-30, this table was hand-authored, not scaffolded by
+ * tools/gen_hp_batch.py, so there is NO docs/candidate-sources-batch31.*.txt
+ * manifest behind it. Do not look for one, and do not regenerate over this
+ * file. The consequence is that the manifest-driven auditors
+ * (audit_batch_reachable.py, audit_batch_pagination.py, audit_batch_emit.py)
+ * cannot be pointed at batch 31; use audit_registry_emit.py --match hp3b31,
+ * which reads --list-sources and needs no manifest.
+ *
+ * These rows are NOT proof-of-life verified. The environment they were written
+ * in had no outbound HTTPS, so no row here was fetched over the wire, and none
+ * of rules 4, 4b and 4d (fetching is not emitting; emitting is not storing;
+ * answering is not answering THE QUESTION) has been measured for this batch.
+ * What HAS been checked is offline and structural: the tree builds clean, the
+ * strict audit-sources gate is at zero findings, lint-sources reports no
+ * duplicate id or endpoint, and every row is reachable under house rule 3.
+ *
+ * So treat each row as a documented CANDIDATE until it is measured. The first
+ * person with network should run:
+ *     python3 tools/audit_registry_emit.py --bin ./bin/japanosint \
+ *             --match hp3b31 --jobs 6 --timeout 220 --out b31.tsv
+ *     python3 tools/probe_hp_batch.py --check-filter   # FILTER_IGNORED is fatal
+ * and retire whatever comes back EMITS_NOTHING, COLLISION or FILTER_IGNORED.
+ * The engine cannot fabricate — an endpoint that moved or changed shape yields
+ * an honest empty, never an invented record — so an unmeasured row is a gap in
+ * coverage, not a source of false data.
+ */
+#include "lib/hpengine.h"
 
-static const hp_source HP3_GOV_UK_IE[] = {
+static const hp_source HP3B31_UKIE[] = {
   /* ── Public money ─────────────────────────────────────────────────────── */
   { .id = "UK_PUBLIC_CONTRACTS_SCOTLAND", .name = "Public Contracts Scotland — devolved procurement",
     .name_ja = "スコットランド 公共調達", .category = "government",
@@ -131,7 +160,7 @@ static const hp_source HP3_GOV_UK_IE[] = {
     .title_keys = "value.summary,value.member.nameDisplayAs",
     .id_keys = "value.id", .date_keys = "value.registrationDate",
     .page_param = "Skip", .page_size = 100, .page_start = 0, .page_max = 40,
-    .interval = 86400,
+    .interval = 21600,
     .description = "The machine-readable register of members' financial "
       "interests — outside employment, shareholdings, gifts, overseas visits "
       "and who paid for them. The formal record of who is paying a legislator" },
@@ -160,7 +189,7 @@ static const hp_source HP3_GOV_UK_IE[] = {
     .array_path = "establishments", .title_keys = "BusinessName,AddressLine1",
     .id_keys = "FHRSID", .date_keys = "RatingDate",
     .lat_key = "geocode.latitude", .lon_key = "geocode.longitude",
-    .page_param = "pageNumber", .page_size = 100, .page_max = 30,
+    .page_param = "pageNumber", .page_max = 30,
     .description = "Every food business inspected in the UK — the rating, the "
       "component scores for hygiene, structure and confidence in management, "
       "the local authority and the exact premises address" },
@@ -174,7 +203,7 @@ static const hp_source HP3_GOV_UK_IE[] = {
     .headers = { "Ocp-Apim-Subscription-Key: {key}", NULL },
     .array_path = "providers", .filter_query = 1,
     .title_keys = "providerName", .id_keys = "providerId",
-    .page_param = "page", .page_size = 1000, .page_max = 30,
+    .page_param = "page", .page_max = 30,
     .detail_url = "https://api.service.cqc.org.uk/public/v1/providers/{v}",
     .detail_key = "providerId",
     .interval = 86400,
@@ -288,7 +317,7 @@ static const hp_source HP3_GOV_UK_IE[] = {
     .title_keys = "member.fullName,member.party.showAs",
     .id_keys = "member.pId", .date_keys = "member.dateOfDeath",
     .page_param = "skip", .page_size = 500, .page_start = 0, .page_max = 20,
-    .interval = 86400,
+    .interval = 21600,
     .description = "TDs, senators and MEPs with every parliamentary house they "
       "have sat in, party membership over time, constituency and offices held" },
 
@@ -301,7 +330,7 @@ static const hp_source HP3_GOV_UK_IE[] = {
     .title_keys = "bill.shortTitleEn,bill.sponsors",
     .id_keys = "bill.uri", .date_keys = "bill.lastUpdated",
     .page_param = "skip", .page_size = 500, .page_start = 0, .page_max = 20,
-    .interval = 86400,
+    .interval = 21600,
     .description = "Irish bills with sponsors, current stage, amendments and "
       "the debates attached to each stage — the whole legislative record as "
       "structured data rather than PDFs" },
@@ -343,4 +372,4 @@ static const hp_source HP3_GOV_UK_IE[] = {
       "linked from any department page" },
 };
 
-HP_REGISTER_TABLE(HP3_GOV_UK_IE)
+HP_REGISTER_TABLE(HP3B31_UKIE)

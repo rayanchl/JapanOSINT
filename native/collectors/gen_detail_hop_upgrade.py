@@ -40,8 +40,8 @@ Usage:
       [--dry-run]
 
 Before trusting a run, sweep the converted ids in BOTH forms with
-tools/audit_registry_emit.py and compare stored counts: the first pass of this
-tool on main moved 355 rows and 33 of them stored fewer records afterwards.
+tools/audit_registry_emit.py and compare stored counts. Rows whose hpengine form
+stores less go in docs/detail-hops-kept-on-vjson.tsv and stay on VJSON.
 """
 import argparse
 import csv
@@ -53,16 +53,23 @@ from collections import defaultdict
 # The list-only macros this script can move onto hpengine, and the mode each
 # becomes. VRSS/VGEO have no hpengine equivalent and are skipped by omission.
 CONVERTIBLE = {
-    "VJSON":        "HP_JSON",
-    "VJSON_KEYED":  "HP_JSON",   # IDFIELD becomes .id_keys
-    "VJSON_IDKEYS": "HP_JSON",   # IDKEYS becomes .id_keys (`+` composes in both)
-    "VCSV":         "HP_CSV",
+    "VJSON":    "HP_JSON",
+    "VJSONBIG": "HP_JSON",
+    "VCSV":     "HP_CSV",
+    # Both of these are a VJSON row plus a declared record identity, and that
+    # identity translates exactly: _vjson_idkeys.inc says of its IDKEYS field
+    # "`+` composes, as in hpengine id_keys", and VJSON_KEYED's IDFIELD is one
+    # top-level field, which is the same string with no separator. So the extra
+    # argument becomes .id_keys and nothing is invented.
+    #
+    # NOT here, and deliberately: VJSON_PREP, whose 14th argument is a C
+    # function that reshapes each page before emit. A row cannot express
+    # arbitrary code, so converting one would quietly drop the hook that makes
+    # its records labellable. VRSS and VGEO stay out for the older reason —
+    # hpengine has no RSS or FeatureCollection mode.
+    "VJSON_KEYED":  "HP_JSON",
+    "VJSON_IDKEYS": "HP_JSON",
 }
-# Deliberately NOT convertible, and reported rather than half-moved:
-#   VJSONBIG    streams a body too large to buffer (lib/jsonstream.c); HP_JSON
-#               would parse it whole, which is the failure VJSONBIG exists for.
-#   VJSON_PREP  runs a per-page shaping hook hpengine has no equivalent of.
-#   VRSS / VGEO no RSS or FeatureCollection mode in hpengine.
 # Argument order of each macro, so a parsed call becomes a named dict. Mirrors
 # collectors/sources/_verified_macros.inc — if that file's signatures change,
 # this table has to change with it.
@@ -71,10 +78,12 @@ SIGNATURES = {
                  "url", "path", "lang", "tags", "interval", "description"],
     "VJSON_KEYED":  ["sym", "id", "name", "name_ja", "collector", "category",
                      "url", "path", "lang", "tags", "interval", "description",
-                     "idkeys"],
+                     "id_keys"],
     "VJSON_IDKEYS": ["sym", "id", "name", "name_ja", "collector", "category",
                      "url", "path", "lang", "tags", "interval", "description",
-                     "idkeys"],
+                     "id_keys"],
+    "VJSONBIG": ["sym", "id", "name", "name_ja", "collector", "category",
+                 "url", "path", "lang", "tags", "interval", "description"],
     "VCSV":     ["sym", "id", "name", "name_ja", "collector", "category",
                  "url", "lang", "tags", "interval", "description"],
 }
@@ -85,71 +94,85 @@ LIST_ONLY_NOTE = ("  A per-record detail endpoint was verified for this source; 
                   "see the batch's detail-hops side-car. This collector fetches "
                   "the list endpoint only.")
 
-MACRO_CALL = re.compile(r"^(V[A-Z_]+)\(", re.M)
+# `[A-Z0-9_]` matters. This was `^(V[A-Z]+)\(`, which cannot match an
+# underscore — so VJSON_IDKEYS, VJSON_KEYED, VJSON_PREP, VCSV_STRIP_BOGUS_ID,
+# VOM_HOURLY and friends (400+ live rows) were INVISIBLE to this script. That
+# was not merely a missed conversion: the "this file has no registrations left,
+# delete it" step below could not see them either, so a file whose VJSON rows
+# were all moved was deleted with its VJSON_IDKEYS rows still inside. It cost
+# 20 real sources, caught only by diffing the registered-id set against the
+# base branch. Hence also the assertion at the end of main().
+MACRO_CALL = re.compile(r"^(V[A-Z][A-Z0-9_]*)\(", re.M)
 
-# Cursor parameters the URL itself names but lib/pagewalk.c's table cannot infer,
-# because the row's page-SIZE parameter is house-specific (`rp`, `num`) rather
-# than one of the seven conventional spellings. Each of these was found by
-# `make audit-sources`, which flags them "paged endpoint fetched once — every
-# later page is discarded"; the URL shipped with the cursor pinned at its first
-# value, which is the discard. Declaring page_param makes the row walk.
+# Paging for a converted row is DERIVED FROM ITS OWN URL, with the same
+# vocabulary and the same rule lib/pagewalk.c applies to the generated
+# collectors these rows are moving off:
 #
-# This is evidence from the URL, not a guess about the platform: an endpoint
-# verified answering at `page=1` has a `page` cursor by construction.
-PAGE_PARAM = {
-    "global-taginfo-key-values":   "page",  # &page=1&rp=10
-    "us-nhtsa-vpic-manufacturers": "page",  # &page=1
-    "cordis-search-projects-query": "p",    # &p=1&num=10
-    "cordis-search-results-query":  "p",    # &p=1&num=5
-    "eu-cordis-projects-search":    "p",    # &p=1&num=5
-}
-
-# One row asks the upstream for a single record (`rows=1`) — the probe's own
-# page size, shipped as the collector's. Fetching 1 of N sanctions and calling
-# it a collection is the plainest possible rule-2 violation, so the page size is
-# raised to a real one. `rows`/`start` is Solr's own paging contract and is
-# already in lib/pagewalk.c's cursor table, so the walk follows automatically.
+#   * a cursor parameter that is ALREADY PRESENT in the author's URL may be
+#     advanced — advancing a number somebody wrote is not guessing;
+#   * an OFFSET cursor additionally needs a declared page size, because that
+#     size is the stride. A PAGE NUMBER does not: it advances by one.
+#   * nothing is ever ADDED to a URL that did not have it. A row whose URL
+#     declares only a size and no cursor gets no paging here — which is exactly
+#     what pagewalk does with it today, so the move costs it nothing.
 #
-# NOT RE-PROBED: this session has no egress (see docs/verified-sources-batch18…
-# for the whole story), so `rows=100` is asserted from Solr's contract and not
-# from a request anybody watched. If ESMA refuses it, the row reports a fetch
-# failure — an honest error, which is the correct degradation.
-URL_FIXUP = {
-    "esma-solr-sanctions": ("&rows=1", "&rows=100"),
-}
+# This matters because the rows are moving from VJSON (walked by pagewalk) onto
+# hpengine, which pages only when the row declares how. Without this, each row
+# would have bought its detail hop with every page after the first.
+PW_OFF_PARAMS = ("offset", "$offset", "$skip", "skip", "resultOffset",
+                 "startIndex", "start")
+PW_PAGE_PARAMS = ("page", "pageNumber", "p")
+PW_SIZE_PARAMS = ("limit", "rows", "$limit", "resultRecordCount", "page_size",
+                  "per_page", "pageSize", "$top", "size", "maxRecords",
+                  "count", "retmax", "itemsPerPage", "length")
+# A record offset is a small number; anything larger is a timestamp that happens
+# to be numeric (`start=1754697600`). Same bound pagewalk uses.
+PW_OFFSET_MAX = 10000000
 
 
-def strip_c_comments(text):
-    """Drop /* ... */ and // comments that sit OUTSIDE string literals.
+def _num_param(url, name):
+    """Value of `name=<int>` in the query, or None. Compares from a parameter
+    boundary so `$offset` never matches a bare `offset`."""
+    q = url.split("?", 1)
+    if len(q) < 2:
+        return None
+    for part in q[1].split("&"):
+        k, _, v = part.partition("=")
+        if k == name:
+            try:
+                return int(v)
+            except ValueError:
+                return None
+    return None
 
-    Repairs on these rows are documented inline, between the arguments they
-    explain (`".", /* the stop point IS the record ... */`), and a comment
-    carries commas. Splitting on them read those rows as having 14-18
-    arguments and left exactly the repaired rows behind."""
-    out, i, n, quote = [], 0, len(text), False
-    while i < n:
-        ch = text[i]
-        if quote:
-            out.append(ch)
-            if ch == "\\" and i + 1 < n:
-                out.append(text[i + 1]); i += 2; continue
-            if ch == '"':
-                quote = False
-            i += 1
+
+def paging_for(url):
+    """-> (page_param, page_size, page_start) for a URL, or (None, 0, None)."""
+    size = None
+    for nm in PW_SIZE_PARAMS:
+        size = _num_param(url, nm)
+        if size is not None and size > 0:
+            break
+        size = None
+    for nm in PW_PAGE_PARAMS:                 # page numbers need no stride
+        v = _num_param(url, nm)
+        if v is not None:
+            return nm, 0, v
+    for nm in PW_OFF_PARAMS:
+        v = _num_param(url, nm)
+        if v is None or v > PW_OFFSET_MAX:
             continue
-        if ch == '"':
-            quote = True; out.append(ch); i += 1; continue
-        if text.startswith("/*", i):
-            j = text.find("*/", i + 2)
-            i = n if j < 0 else j + 2
-            out.append(" ")
-            continue
-        if text.startswith("//", i):
-            j = text.find("\n", i)
-            i = n if j < 0 else j
-            continue
-        out.append(ch); i += 1
-    return "".join(out)
+        if size is None:
+            continue                          # an offset with no stride: skip
+        return nm, size, v
+    return None, 0, None
+
+# No URL rewrites are needed any more. This used to raise ESMA's `rows=1` to a
+# real page size; main fixed that row upstream (it now asks for rows=500), and
+# the generator reported the pattern as missing rather than silently doing
+# nothing — which is how the obsolete entry was noticed. Keep this empty rather
+# than deleting it: the next probe-page-size-shipped-as-a-collector goes here.
+URL_FIXUP = {}
 
 
 def split_c_args(text):
@@ -159,20 +182,56 @@ def split_c_args(text):
     brackets ("[\"ke\",\"statistics\"]"), so a naive split on "," corrupts the
     tags argument — which is how a lint pass once truncated 2,000 URLs at their
     first comma. Track quoting and nesting instead."""
-    text = strip_c_comments(text)
     args, depth, quote, esc, cur = [], 0, False, False, []
-    for ch in text:
+    # Comment state. This tree comments INSIDE argument lists — a path argument
+    # followed by /* …36 emitted, 22 stored, 2026-09-14… */ — and those commas
+    # and parens are prose, not syntax. Without skipping them a 12-argument
+    # VJSON call parses as 15 and the row is passed over (it failed safe, but it
+    # failed: three rows with proven detail hops went unconverted).
+    block, line_c = False, False
+    i, n = 0, len(text)
+    while i < n:
+        ch = text[i]
+        nxt = text[i + 1] if i + 1 < n else ""
+        if line_c:
+            cur.append(ch)
+            if ch == "\n":
+                line_c = False
+            i += 1
+            continue
+        if block:
+            cur.append(ch)
+            if ch == "*" and nxt == "/":
+                cur.append(nxt)
+                block = False
+                i += 2
+                continue
+            i += 1
+            continue
         if esc:
             cur.append(ch)
             esc = False
+            i += 1
             continue
         if ch == "\\":
             cur.append(ch)
             esc = True
+            i += 1
             continue
         if ch == '"':
             quote = not quote
             cur.append(ch)
+            i += 1
+            continue
+        if not quote and ch == "/" and nxt == "*":
+            cur.append(ch); cur.append(nxt)
+            block = True
+            i += 2
+            continue
+        if not quote and ch == "/" and nxt == "/":
+            cur.append(ch); cur.append(nxt)
+            line_c = True
+            i += 2
             continue
         if not quote:
             if ch in "([{":
@@ -182,8 +241,10 @@ def split_c_args(text):
             elif ch == "," and depth == 0:
                 args.append("".join(cur).strip())
                 cur = []
+                i += 1
                 continue
         cur.append(ch)
+        i += 1
     if cur:
         args.append("".join(cur).strip())
     return args
@@ -206,14 +267,32 @@ def parse_macro_calls(src):
         macro = m.group(1)
         open_paren = m.end() - 1
         depth, quote, esc, i = 0, False, False, open_paren
+        block = line_c = False
         while i < len(src):
             ch = src[i]
-            if esc:
+            nxt = src[i + 1] if i + 1 < len(src) else ""
+            if line_c:
+                if ch == "\n":
+                    line_c = False
+            elif block:
+                if ch == "*" and nxt == "/":
+                    block = False
+                    i += 2
+                    continue
+            elif esc:
                 esc = False
             elif ch == "\\":
                 esc = True
             elif ch == '"':
                 quote = not quote
+            elif not quote and ch == "/" and nxt == "*":
+                block = True
+                i += 2
+                continue
+            elif not quote and ch == "/" and nxt == "/":
+                line_c = True
+                i += 2
+                continue
             elif not quote:
                 if ch == "(":
                     depth += 1
@@ -271,11 +350,6 @@ def describe(desc, detail_url):
     d = desc
     if LIST_ONLY_NOTE in d:
         d = d.replace(LIST_ONLY_NOTE, "")
-    # The same sentence as it reads after the side-car reference was re-pointed
-    # at docs/verified-sources-batch1{6,7}.md. Left in, it would state the
-    # opposite of what the converted row does.
-    d = re.sub(r"\s*A per-record detail endpoint was verified for this source; "
-               r"see .*?This collector fetches the list endpoint only\.", "", d)
     return (d.rstrip() +
             "  Second hop: the record behind each list hit is fetched from the "
             "row's detail endpoint and merged in under detail.*, so the row "
@@ -320,15 +394,27 @@ def render_table(rows, collector, batch, part, total_parts):
         out.append("    .url = \"%s\",\n" % r["url"])
         if r["array_path"]:
             out.append("    .array_path = \"%s\",\n" % r["array_path"])
-        if r["id_keys"]:
+        if r.get("id_keys"):
+            # Carried verbatim from the row's own macro argument. Getting this
+            # wrong fails SILENTLY — the records collapse onto one uid at the
+            # sink and the run still reports success — so it is copied, never
+            # re-derived.
             out.append("    .id_keys = \"%s\",\n" % r["id_keys"])
         out.append("    .detail_url = \"%s\", .detail_key = \"%s\",\n"
                    % (r["detail_url"], r["detail_key"]))
         if r["page_param"]:
-            out.append("    .page_param = \"%s\",   /* the URL pins this cursor "
-                       "at its first value */\n" % r["page_param"])
+            out.append("    .page_param = \"%s\",%s%s   /* declared by the row's "
+                       "own URL */\n"
+                       % (r["page_param"],
+                          (" .page_size = %d," % r["page_size"]) if r["page_size"] else "",
+                          (" .page_start = %d," % r["page_start"])
+                          if r["page_start"] is not None else ""))
         elif r["mode"] == "HP_JSON":
-            # Pages exactly as the VJSON row did (jsonlist_next_page).
+            # No cursor in the URL is not the same as no paging: the VJSON row
+            # this replaces was walked by jsonlist_next_page(), which also
+            # follows a next link the SERVER publishes (GLEIF's links.next, a
+            # page-size/cursor pair the response proves). page_walk keeps that
+            # decision, so the move does not trade later pages for the hop.
             out.append("    .page_walk = 1,\n")
         out.append("    .interval = %s, .free_tier = 1 },\n\n" % r["interval"])
     out.append("};\nHP_REGISTER_TABLE(T)\n")
@@ -362,6 +448,25 @@ def main():
                 keep.add(line.split("\t", 1)[0].strip())
     print("kept on VJSON by measurement: %d" % len(keep))
 
+    # Every id registered in the generated dir before this run — from the vsrc
+    # MACROS *and* from any hp table already there.
+    #
+    # The hp half is not decoration. This script writes one table per
+    # (batch, collector) group of the CURRENT run, so running it twice with
+    # different row sets rewrites a group's file with only the second run's
+    # rows and drops the first run's. That cost 53 sources, and the earlier
+    # version of this check could not see it: it read ids_before from vsrc
+    # macros only, and rows converted by the first run are no longer in a vsrc
+    # file, so they were outside the set being protected.
+    ids_before = set()
+    for fname in os.listdir(args.generated):
+        if not fname.endswith(".c"):
+            continue
+        txt = open(os.path.join(args.generated, fname), encoding="utf-8").read()
+        ids_before |= set(re.findall(
+            r'^V[A-Z][A-Z0-9_]*\(\s*\w+\s*,\s*"([^"]+)"', txt, re.M))
+        ids_before |= set(re.findall(r'^\s*\{ \.id = "([^"]+)"', txt, re.M))
+
     converted = []           # rows that become hp_source entries
     skipped_shape = []       # has a hop, but the macro has no hpengine mode
     edits = {}               # path -> new source text
@@ -389,21 +494,9 @@ def main():
             a = dict(zip(sig, raw))
             detail_url, detail_key, _ = hops[sid]
             path_arg = c_str_value(a["path"]) if "path" in a else ""
-            if path_arg == ".":
-                # "." tells jsonlist the whole document is ONE record. hpengine
-                # has no such declaration: with no array_path it hunts for the
-                # densest array, which is the very mis-read these rows were
-                # repaired away from. Left on VJSON.
-                skipped_shape.append((sid, macro + "+root", fname))
-                continue
             batch = "17" if fname.startswith("vsrc17_") else "16"
             list_url = c_str_value(a["url"])
-            if "{" in list_url:
-                # {{today}} and friends are expanded by vsrc_url_dates(), which
-                # hpengine does not call; a converted row would request the
-                # literal token. Left on VJSON rather than moved half-working.
-                skipped_shape.append((sid, macro + "+tmpl", fname))
-                continue
+            _pg = paging_for(list_url or "")
             if sid in URL_FIXUP:
                 old, new = URL_FIXUP[sid]
                 if old not in list_url:
@@ -426,20 +519,14 @@ def main():
                 "interval": a["interval"].strip(),
                 "description": describe(c_str_value(a["description"]) or "",
                                         detail_url),
-                # The record_type these rows publish TODAY: VJSON passes its
-                # category as the record_type (jsonlist_emit's argument).
-                # Renaming it would silently change what every row publishes.
-                "record_type": c_str_value(a["category"]),
-                "id_keys": c_str_value(a["idkeys"]) if "idkeys" in a else "",
+                "record_type": "%s-record" % c_str_value(a["category"]),
                 "detail_url": detail_url,
                 "detail_key": detail_key,
                 "mode": CONVERTIBLE[macro],
-                # Not PAGE_PARAM: those cursors are ones jsonlist_next_page()
-                # already advances (`p` beside CORDIS's `num`, `page` beside
-                # taginfo's `rp`), and a declared page_param would put the row
-                # on hpengine's own walk with its 10-page default instead of
-                # the 20 pages the VJSON row read. page_walk keeps it identical.
-                "page_param": "",
+                "id_keys": c_str_value(a["id_keys"]) if "id_keys" in a else "",
+                "page_param": _pg[0] or "",
+                "page_size": _pg[1],
+                "page_start": _pg[2],
                 "batch": batch,
                 "src_file": fname,
             })
@@ -488,6 +575,29 @@ def main():
             open(path, "w", encoding="utf-8").write(text)
 
     print("\nwrote %d hp tables; rewrote %d vsrc files" % (written, len(edits)))
+
+    # NOTHING MAY VANISH. Every id this script saw in a vsrc file before it ran
+    # must still be registered somewhere afterwards — moved into an hp table, or
+    # left where it was. The alternative is what actually happened once: a
+    # macro variant this parser could not see was deleted along with its file,
+    # and the only thing that noticed was a manual id-set diff against the base
+    # branch. A move that loses a source is not a move.
+    moved = {r["id"] for r in converted}
+    after = set()
+    for fname in os.listdir(outdir):
+        if not fname.endswith(".c"):
+            continue
+        txt = open(os.path.join(outdir, fname), encoding="utf-8").read()
+        after |= set(re.findall(r'"([a-z0-9][a-z0-9._-]*)"', txt))
+    lost = sorted(i for i in ids_before if i not in after and i not in moved)
+    if lost:
+        print("\nLOST %d id(s) — refusing to call this a success:" % len(lost),
+              file=sys.stderr)
+        for i in lost:
+            print("   " + i, file=sys.stderr)
+        return 2
+    print("id check: %d ids seen before, 0 lost (%d moved to hp tables)"
+          % (len(ids_before), len(moved)))
     return 0
 
 

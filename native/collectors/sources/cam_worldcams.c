@@ -262,5 +262,5 @@ static const source_def cam_worldcams_def = {
   .name_ja = "カメラ探索: Worldcams",
    .layer = "cameras",
    .update_interval_sec = 3600, .run = run,
-   .category = "infrastructure" };
+  .category = "cyber" };
 REGISTER_SOURCE(cam_worldcams_def)

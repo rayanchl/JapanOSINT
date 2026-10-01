@@ -1,4 +1,4 @@
-/* collectors/sources/hp3_surv_cameras.c — state-operated camera networks.
+/* collectors/pivot/table/hp3b31_survcam.c — batch 31: survcam — state-operated camera networks.
  *
  * Every developed country runs a large, publicly documented camera estate on
  * its road network, and most publish the camera inventory as an API: the site
@@ -14,10 +14,39 @@
  * empty rather than a fabricated camera list.
  *
  * The lat/lon keys are set wherever the upstream provides them, so each camera
- * lands as a geolocated record rather than a row of text. */
-#include "../../lib/hpengine.h"
+ * lands as a geolocated record rather than a row of text.
+ *
+ * PROVENANCE AND VERIFICATION STATUS — read before trusting a row here.
+ *
+ * Unlike batches 18-30, this table was hand-authored, not scaffolded by
+ * tools/gen_hp_batch.py, so there is NO docs/candidate-sources-batch31.*.txt
+ * manifest behind it. Do not look for one, and do not regenerate over this
+ * file. The consequence is that the manifest-driven auditors
+ * (audit_batch_reachable.py, audit_batch_pagination.py, audit_batch_emit.py)
+ * cannot be pointed at batch 31; use audit_registry_emit.py --match hp3b31,
+ * which reads --list-sources and needs no manifest.
+ *
+ * These rows are NOT proof-of-life verified. The environment they were written
+ * in had no outbound HTTPS, so no row here was fetched over the wire, and none
+ * of rules 4, 4b and 4d (fetching is not emitting; emitting is not storing;
+ * answering is not answering THE QUESTION) has been measured for this batch.
+ * What HAS been checked is offline and structural: the tree builds clean, the
+ * strict audit-sources gate is at zero findings, lint-sources reports no
+ * duplicate id or endpoint, and every row is reachable under house rule 3.
+ *
+ * So treat each row as a documented CANDIDATE until it is measured. The first
+ * person with network should run:
+ *     python3 tools/audit_registry_emit.py --bin ./bin/japanosint \
+ *             --match hp3b31 --jobs 6 --timeout 220 --out b31.tsv
+ *     python3 tools/probe_hp_batch.py --check-filter   # FILTER_IGNORED is fatal
+ * and retire whatever comes back EMITS_NOTHING, COLLISION or FILTER_IGNORED.
+ * The engine cannot fabricate — an endpoint that moved or changed shape yields
+ * an honest empty, never an invented record — so an unmeasured row is a gap in
+ * coverage, not a source of false data.
+ */
+#include "lib/hpengine.h"
 
-static const hp_source HP3_SURV_CAMERAS[] = {
+static const hp_source HP3B31_SURVCAM[] = {
   /* ── North America ────────────────────────────────────────────────────── */
   { .id = "CAM_WSDOT_HIGHWAY", .name = "WSDOT — Washington State highway cameras",
     .name_ja = "ワシントン州道路カメラ", .category = "surveillance",
@@ -28,7 +57,7 @@ static const hp_source HP3_SURV_CAMERAS[] = {
       "HighwayCamerasREST.svc/GetCamerasAsJson?AccessCode={key}",
     .title_keys = "Title,Description", .id_keys = "CameraID",
     .lat_key = "CameraLocation.Latitude", .lon_key = "CameraLocation.Longitude",
-    .interval = 3600,
+    .interval = 900,
     .description = "Washington State DOT's camera inventory — camera ID, "
       "owner, road name, milepost, direction, coordinates and the image URL, "
       "for the full state network in one call" },
@@ -41,7 +70,7 @@ static const hp_source HP3_SURV_CAMERAS[] = {
     .url = "https://511ny.org/api/getcameras?key={key}&format=json",
     .title_keys = "Name,RoadwayName", .id_keys = "ID",
     .lat_key = "Latitude", .lon_key = "Longitude",
-    .interval = 3600,
+    .interval = 900,
     .description = "New York State's 511 camera inventory covering the "
       "Thruway, state highways and the New York City metropolitan network — "
       "name, roadway, direction, coordinates, disabled flag and image URL" },
@@ -51,13 +80,16 @@ static const hp_source HP3_SURV_CAMERAS[] = {
     .portal = "https://publicapi.ohgo.com", .record_type = "road-camera",
     .tags = "\"us\",\"camera\",\"traffic\",\"surveillance\"",
     .key_env = "OHGO_API_KEY", .free_tier = 1,
-    .url = "https://publicapi.ohgo.com/api/v1/cameras?page-size=500",
+    .url = "https://publicapi.ohgo.com/api/v1/cameras?page-all=true",
     .headers = { "Authorization: APIKEY {key}", NULL },
     .array_path = "results", .filter_query = 1,
     .title_keys = "description,location", .id_keys = "id",
     .lat_key = "latitude", .lon_key = "longitude",
-    .page_param = "page-all", .page_size = 500, .page_max = 20,
-    .interval = 3600,
+    .interval = 900,
+    /* OHGO's `page-all` is a return-everything FLAG, not a page cursor: bound
+     * to true the one response carries the whole inventory, so there is no walk
+     * to declare. It was briefly declared as `page_param`, which made the
+     * engine send page-all=501, page-all=1001 — meaningless to the upstream. */
     .description = "Ohio's traffic camera inventory with the direction, route "
       "and coordinates of each device, alongside the incident, construction and "
       "digital-sign feeds from the same API" },
@@ -71,7 +103,7 @@ static const hp_source HP3_SURV_CAMERAS[] = {
     .array_path = "features", .filter_query = 1,
     .title_keys = "properties.name,properties.direction",
     .id_keys = "properties.id",
-    .interval = 3600,
+    .interval = 900,
     .description = "Colorado DOT's GeoJSON camera feed — every mountain-pass "
       "and interstate camera with its coordinates, direction and current view "
       "URL, in a state where the camera network doubles as the avalanche and "
@@ -200,7 +232,7 @@ static const hp_source HP3_SURV_CAMERAS[] = {
     .array_path = "response.data", .filter_query = 1,
     .title_keys = "cctvname,roadsectionid", .id_keys = "cctvurl",
     .lat_key = "coordy", .lon_key = "coordx",
-    .interval = 3600,
+    .interval = 900,
     .description = "Korea's national transport information centre CCTV "
       "service, requested across the full national bounding box so the whole "
       "camera estate is returned rather than one region — name, coordinates, "
@@ -227,10 +259,10 @@ static const hp_source HP3_SURV_CAMERAS[] = {
     .array_path = "features", .filter_query = 1,
     .title_keys = "properties.title,properties.region",
     .id_keys = "properties.id",
-    .interval = 3600,
+    .interval = 900,
     .description = "Transport for NSW's live camera inventory as GeoJSON — "
       "title, region, view direction, coordinates and image URL for the Sydney "
       "motorway network and the regional highways" },
 };
 
-HP_REGISTER_TABLE(HP3_SURV_CAMERAS)
+HP_REGISTER_TABLE(HP3B31_SURVCAM)

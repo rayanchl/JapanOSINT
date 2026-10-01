@@ -1,4 +1,4 @@
-/* collectors/sources/hp3_pub_asset_registers.c — public registers of things.
+/* collectors/pivot/table/hp3b31_assetreg.c — batch 31: assetreg — public registers of things.
  *
  * Companies are registered, but so are the assets they hold, and the asset
  * register is frequently the more honest record: a company can be dissolved and
@@ -10,10 +10,39 @@
  * fishing fleet register, the US Coast Guard vessel database, the Australian
  * radiocommunications licence register, the Spanish and Czech cadastres, and
  * the two contract archives that publish the actual signed text of mining,
- * oil and land deals. */
-#include "../../lib/hpengine.h"
+ * oil and land deals.
+ *
+ * PROVENANCE AND VERIFICATION STATUS — read before trusting a row here.
+ *
+ * Unlike batches 18-30, this table was hand-authored, not scaffolded by
+ * tools/gen_hp_batch.py, so there is NO docs/candidate-sources-batch31.*.txt
+ * manifest behind it. Do not look for one, and do not regenerate over this
+ * file. The consequence is that the manifest-driven auditors
+ * (audit_batch_reachable.py, audit_batch_pagination.py, audit_batch_emit.py)
+ * cannot be pointed at batch 31; use audit_registry_emit.py --match hp3b31,
+ * which reads --list-sources and needs no manifest.
+ *
+ * These rows are NOT proof-of-life verified. The environment they were written
+ * in had no outbound HTTPS, so no row here was fetched over the wire, and none
+ * of rules 4, 4b and 4d (fetching is not emitting; emitting is not storing;
+ * answering is not answering THE QUESTION) has been measured for this batch.
+ * What HAS been checked is offline and structural: the tree builds clean, the
+ * strict audit-sources gate is at zero findings, lint-sources reports no
+ * duplicate id or endpoint, and every row is reachable under house rule 3.
+ *
+ * So treat each row as a documented CANDIDATE until it is measured. The first
+ * person with network should run:
+ *     python3 tools/audit_registry_emit.py --bin ./bin/japanosint \
+ *             --match hp3b31 --jobs 6 --timeout 220 --out b31.tsv
+ *     python3 tools/probe_hp_batch.py --check-filter   # FILTER_IGNORED is fatal
+ * and retire whatever comes back EMITS_NOTHING, COLLISION or FILTER_IGNORED.
+ * The engine cannot fabricate — an endpoint that moved or changed shape yields
+ * an honest empty, never an invented record — so an unmeasured row is a gap in
+ * coverage, not a source of false data.
+ */
+#include "lib/hpengine.h"
 
-static const hp_source HP3_PUB_ASSETS[] = {
+static const hp_source HP3B31_ASSETREG[] = {
   /* ── Land and cadastre ────────────────────────────────────────────────── */
   { .id = "ES_CATASTRO_PARCELS", .name = "Spain Catastro — cadastral parcel search",
     .name_ja = "スペイン 地籍検索", .category = "government",
@@ -300,4 +329,4 @@ static const hp_source HP3_PUB_ASSETS[] = {
       "non-compliance record held by the national regulator" },
 };
 
-HP_REGISTER_TABLE(HP3_PUB_ASSETS)
+HP_REGISTER_TABLE(HP3B31_ASSETREG)

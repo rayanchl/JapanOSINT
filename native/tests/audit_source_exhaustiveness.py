@@ -60,20 +60,26 @@ CHECKS = [
                 r'page_size|resultPerPage)=1\b'),
      "request the full page size and paginate"),
 
-    # Found the hard way: sanc_ofac_consolidated.c bounded a SANCTIONS entry's
-    # alias list with `while (cJSON_GetArraySize(akas) < 24 && …)`. On a
+    # Found by hand in sanc_ofac_consolidated.c, which bounded a SANCTIONS
+    # entry's alias list with `while (cJSON_GetArraySize(akas) < 24 && …)`. On a
     # sanctions list an alias is the thing screening matches on, so a dropped
     # one is a silent false negative on a designated person — and neither
     # `record-cap` (which wants a #define) nor `loop-break` (which wants a
-    # `break`) could see it, because the bound was in the loop CONDITION.
+    # `break`) could see it, because the bound sat in the loop CONDITION.
     #
     # Only counter-ish names are flagged: `chars < 280` bounding a UTF-8 buffer
     # is a byte guard, not a record cap.
     ("loop-cap",
      "record loop bounded in its own condition — records past it never happen",
-     re.compile(r'\b(?:while|for)\s*\([^;{]*\b'
-                r'(?:count|counted|considered|emitted|n|nf|nrec|nrows|nitems|'
-                r'nseen|rows|items|recs|records|found|hits|GetArraySize\s*\([^)]*\))'
+     # The \b before the counter list used to sit outside the alternation, which
+     # silently excluded the very line this check was written for:
+     # `cJSON_GetArraySize` has no word boundary before "GetArraySize" (the
+     # underscore is a word character), so the OFAC alias cap never matched and
+     # had to be found by hand. The prefix is now explicit.
+     re.compile(r'\b(?:while|for)\s*\([^;{]*?'
+                r'(?:\b(?:count|counted|considered|emitted|n|nf|nrec|nrows|'
+                r'nitems|nseen|rows|items|recs|records|found|hits)\b'
+                r'|\w*GetArraySize\s*\([^)]*\))'
                 r'\s*<=?\s*\d{2,}\s*&&'),
      "drop the bound, or bound it and emit a collector-truncation-notice"),
 
@@ -214,10 +220,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--file', action='append', default=[],
                     help='audit these files instead of the default glob set')
-    # Repeatable. It was a single glob, and the gated set has since grown to
-    # two directories (the pivot tables and the generated deep-record tables) —
-    # passing --strict twice silently kept only the last one, which is the
-    # failure mode where a gate reports "0 findings" for a set it never scanned.
+    # Repeatable. It took a single glob, and the gated set is now two
+    # directories (the pivot tables and the generated deep-record tables).
+    # Passing --strict twice kept only the LAST one, so the gate printed
+    # "0 findings" for a set it had never opened — the exact failure mode a
+    # gate exists to prevent.
     ap.add_argument('--strict', action='append', default=[],
                     help='glob whose findings make the exit code non-zero; '
                          'repeatable')
