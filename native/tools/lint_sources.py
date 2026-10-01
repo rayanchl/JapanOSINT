@@ -1131,6 +1131,19 @@ def check_dup_endpoint():
                     continue
                 if not s.netloc:
                     continue
+                # A `{v}` template is a PER-RECORD detail route, not an
+                # endpoint: it expands to one URL per id drawn from its own
+                # row's list, so 24 country rows sharing
+                # ".../catalog/{v}" fetch 24 DISJOINT record sets — the
+                # opposite of the duplicated work this check looks for.
+                # Counting them collapsed every shared platform hop (IHSN,
+                # GLEIF, d-portal, UNDP) into a false duplicate.
+                #
+                # `{v}` specifically, and not the other expansion tokens: two
+                # rows sharing a `{q}` SEARCH url really would answer the same
+                # query twice, and that is still worth reporting.
+                if "{v}" in u:
+                    continue
                 key = (s.netloc.lower(), s.path.rstrip("/"), s.query)
                 by_url.setdefault(key, set()).add(os.path.relpath(p, REPO))
     out = []

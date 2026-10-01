@@ -146,7 +146,9 @@ print-ldlibs:
 
 .PHONY: audit-sources
 audit-sources:
-	@python3 tests/audit_source_exhaustiveness.py --strict 'collectors/pivot/table/hp*_*.c'
+	@python3 tests/audit_source_exhaustiveness.py \
+	  --strict 'collectors/pivot/table/hp*_*.c' \
+	  --strict 'collectors/feed/generated/hp1[0-9]_*.c'
 
 # Batch 14 candidate lifecycle (docs/candidate-sources-batch14.tsv). These rows
 # were authored without egress, so they are registered as UNVERIFIED csrc14_*

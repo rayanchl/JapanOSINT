@@ -60,6 +60,29 @@ CHECKS = [
                 r'page_size|resultPerPage)=1\b'),
      "request the full page size and paginate"),
 
+    # Found by hand in sanc_ofac_consolidated.c, which bounded a SANCTIONS
+    # entry's alias list with `while (cJSON_GetArraySize(akas) < 24 && …)`. On a
+    # sanctions list an alias is the thing screening matches on, so a dropped
+    # one is a silent false negative on a designated person — and neither
+    # `record-cap` (which wants a #define) nor `loop-break` (which wants a
+    # `break`) could see it, because the bound sat in the loop CONDITION.
+    #
+    # Only counter-ish names are flagged: `chars < 280` bounding a UTF-8 buffer
+    # is a byte guard, not a record cap.
+    ("loop-cap",
+     "record loop bounded in its own condition — records past it never happen",
+     # The \b before the counter list used to sit outside the alternation, which
+     # silently excluded the very line this check was written for:
+     # `cJSON_GetArraySize` has no word boundary before "GetArraySize" (the
+     # underscore is a word character), so the OFAC alias cap never matched and
+     # had to be found by hand. The prefix is now explicit.
+     re.compile(r'\b(?:while|for)\s*\([^;{]*?'
+                r'(?:\b(?:count|counted|considered|emitted|n|nf|nrec|nrows|'
+                r'nitems|nseen|rows|items|recs|records|found|hits)\b'
+                r'|\w*GetArraySize\s*\([^)]*\))'
+                r'\s*<=?\s*\d{2,}\s*&&'),
+     "drop the bound, or bound it and emit a collector-truncation-notice"),
+
     ("dedupe-ring",
      "fixed-size seen[] ring — entries past it are mis-deduped or dropped",
      re.compile(r'\*\s*seen\s*\[\s*\d+\s*\]|char\s+\*\s*seen\s*\[\s*\d+\s*\]'),
@@ -172,8 +195,14 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--file', action='append', default=[],
                     help='audit these files instead of the default glob set')
-    ap.add_argument('--strict', default=None,
-                    help='glob whose findings make the exit code non-zero')
+    # Repeatable. It took a single glob, and the gated set is now two
+    # directories (the pivot tables and the generated deep-record tables).
+    # Passing --strict twice kept only the LAST one, so the gate printed
+    # "0 findings" for a set it had never opened — the exact failure mode a
+    # gate exists to prevent.
+    ap.add_argument('--strict', action='append', default=[],
+                    help='glob whose findings make the exit code non-zero; '
+                         'repeatable')
     ap.add_argument('-v', '--verbose', action='store_true',
                     help='print every finding, not just per-file counts')
     args = ap.parse_args()
@@ -186,7 +215,9 @@ def main():
     paths = args.file or sorted(
         glob.glob('collectors/**/*.c', recursive=True) + glob.glob('lib/*.c') +
         glob.glob('core/pipeline.c') + glob.glob('core/osint_dispatch.c'))
-    strict_paths = set(glob.glob(args.strict)) if args.strict else set()
+    strict_paths = set()
+    for g in args.strict:
+        strict_paths |= set(glob.glob(g))
 
     total = 0
     per_check = {}
@@ -226,7 +257,8 @@ def main():
     print('used exhaustively. Findings are heuristics; each needs a human read.')
 
     if strict_paths:
-        print(f'\nstrict set ({args.strict}): {strict_hits} finding(s)')
+        print(f'\nstrict set ({", ".join(args.strict)}): '
+              f'{len(strict_paths)} files, {strict_hits} finding(s)')
         return 1 if strict_hits else 0
     return 0
 

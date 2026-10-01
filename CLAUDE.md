@@ -19,6 +19,12 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
+**The registered count is 11,170**, and `tools/lint_sources.py` is the only
+thing that counts it. It used to say 10,564, because hp rows register through
+`hp_register()` rather than `REGISTER_SOURCE` and it could not see a single one
+of them — 30 shipped tables' worth. `make source-floor`, whose entire job is to
+fail when a source stops registering, was therefore blind to every hp row.
+
 Three verifier/engine traps that pass exposed — check for them before trusting
 any "verified" number:
 
@@ -50,6 +56,14 @@ If anything was left unused, it is reported as data (a
 Rule, examples of violations, and what the shared machinery guarantees:
 `docs/SOURCE_EXHAUSTIVENESS.md`.
 
+Both engines page on the upstream's own evidence, and they share one
+implementation of it: `lib/pager.c`. A next link the server published, or a
+cursor whose page size the URL declares or the response proves, or — when the
+URL gives no page size at all — the upstream's own declared total saying records
+remain. Never a page that was never offered. hpengine used to do none of this
+(one request unless a row spelled out `page_param`), which meant moving a row
+onto it to wire a detail hop paid for that hop with every later page.
+
 Where the tree actually stands, as `make audit-sources` reports it:
 
 * **strict set (`collectors/pivot/table/hp*_*.c`) — 0 findings.** This is the
@@ -76,6 +90,65 @@ the scanner matches per line, so a marker in the comment block above the line it
 explains is silently ignored and the finding stays. That is easy to get wrong,
 because the explanation naturally wants to be a paragraph: put the paragraph
 above and a one-line `/* exhaustive-ok: … */` on the line.
+
+Two amendments from the deep-record batch:
+
+* **The gated set is now two globs**, `collectors/pivot/table/hp*_*.c` plus the
+  generated deep-record tables `collectors/feed/generated/hp1[0-9]_*.c` — 262
+  files, 0 findings. `--strict` had to be made repeatable to say that honestly:
+  it took a single glob, so passing two kept only the LAST one and the gate
+  printed "0 findings" for a set it had never opened.
+* **`loop-cap` is a sixth check, and it was not redundant.** A bound written in
+  a loop's own CONDITION is neither a `#define …MAX` (`record-cap`) nor a
+  `break` (`loop-break`), so nothing could see it. Added after the tree reached
+  zero, it immediately found four live caps — all in the OFAC sanctions
+  collectors: aliases and sanctions programs capped at 24, addresses at 12, and
+  SDN "features" (date and place of birth, nationality, passport and
+  national-ID numbers, crypto addresses) at 40. On a sanctions list those are
+  the fields screening matches on, so each dropped entry is a false negative on
+  a designated person, produced in silence. All four are gone.
+
+  Its own first regex missed the very line it was written for: `\b` before the
+  counter list cannot match `cJSON_GetArraySize`, because the underscore is a
+  word character. Zero findings from a new check deserves one suspicious look.
+
+**Detail hops: 359 rows, and what a generator that rewrites this tree must not
+do.** `collectors/gen_detail_hop_upgrade.py` moves a row that has a PROVEN
+per-record detail endpoint off VJSON onto hpengine, so the record behind each
+list hit is fetched. It reads the `.c` files, never the manifest, for the reason
+the batch-tooling section gives: the C is the maintained copy.
+
+It cost 73 sources to learn three things, all the same mistake wearing different
+hats — the script could not see something, and deleted it anyway:
+
+* `^(V[A-Z]+)\(` cannot match an underscore, so `VJSON_KEYED`, `VJSON_IDKEYS`,
+  `VJSON_PREP` and friends were invisible — and the "no registrations left,
+  delete the file" step could not see them either, so files were removed with
+  those rows still inside. 20 sources.
+* It writes one table per (batch, collector) group of the CURRENT run, so
+  running it twice with different row sets rewrote a group's file with only the
+  second run's rows. 53 sources. **Regenerate from a clean checkout of the
+  directory in ONE run**, never incrementally.
+* Its argument splitter did not skip comments, and this tree comments INSIDE
+  argument lists; 86 rows parsed as 15 arguments instead of 12 and were passed
+  over. That one failed safe, but it failed.
+
+So it now asserts that no id registered in the directory before the run — from
+the vsrc macros AND from any hp table already there — is missing after it, and
+exits non-zero naming them. The only reason any of this was caught is an id-set
+diff against the base branch; `--list-ids | sort | comm` costs seconds and is
+the check that actually works.
+
+`VJSON_KEYED`'s IDFIELD and `VJSON_IDKEYS`'s IDKEYS carry over verbatim into
+`.id_keys` — `_vjson_idkeys.inc` promises the same `+` composes semantics, and
+`hptest` now pins it, because rule 4b's failure is silent. The 45 rows that
+moved on that promise are listed in `docs/detail-hops-need-emit-check.tsv`:
+their identity is a faithful translation, but emitted-vs-stored has not been
+measured on them, and that needs egress this session did not have.
+
+`VJSON_PREP` is deliberately NOT converted: its extra argument is a C function
+that reshapes each page before emit, and a declarative row cannot hold code.
+VRSS and VGEO stay out too — hpengine has no RSS or FeatureCollection mode.
 
 ```sh
 cd native

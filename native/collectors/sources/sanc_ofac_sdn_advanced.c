@@ -216,8 +216,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     {
       const char *fc = b;
       sanc_el feat;
-      while (cJSON_GetArraySize(features) < 40 &&
-             sanc_xml_next(&fc, e, "Feature", &feat)) {
+      /* Was capped at 40. SDN "features" carry date of birth, place of birth,
+       * nationality, passport and national-ID numbers and crypto addresses —
+       * the identifiers that distinguish a designated person from a namesake.
+       * Dropping the 41st is both a false negative and a false positive risk. */
+      while (sanc_xml_next(&fc, e, "Feature", &feat)) {
         char *ftid = sanc_xml_attr(&feat, "FeatureTypeID");
         const char *fname = sdn_code_lookup(ftypes, nft, ftid);
         char *val = sanc_xml_text(feat.body, feat.body_end, "VersionDetail");

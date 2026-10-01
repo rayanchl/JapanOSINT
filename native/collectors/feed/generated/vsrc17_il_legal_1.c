@@ -48,13 +48,6 @@ VJSON(il_inheritance_registrar, "il-inheritance-registrar", "Israel Registrar of
  * $top with no $skip — measured, it read page 1 (100 records) and stopped.
  * VJSON_IDKEYS keeps VJSON's own walk, which steps $skip itself. */
 #include "_vjson_idkeys.inc"
-VJSON_IDKEYS(il_knesset_israel_law, "il-knesset-israel-law", "Knesset — Israeli laws (KNS_IsraelLaw)", "Knesset — Israeli laws (KNS_IsraelLaw)",
-  "il_legal", "legal",
-  "https://knesset.gov.il/Odata/ParliamentInfo.svc/KNS_IsraelLaw?$top=100&$format=json",
-  "value",
-  "he", "[\"il\",\"legal\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Consolidated statute register: law name, IsBasicLaw, IsBudgetLaw, first and latest publication dates, validity status and validity start/finish dates with notes.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.",
-  "IsraelLawID");
 
 VJSON_IDKEYS(il_knesset_israel_law_name, "il-knesset-israel-law-name", "Knesset — statute name history (KNS_IsraelLawName)", "Knesset — statute name history (KNS_IsraelLawName)",
   "il_legal", "legal",
@@ -64,10 +57,3 @@ VJSON_IDKEYS(il_knesset_israel_law_name, "il-knesset-israel-law-name", "Knesset 
   "Historical names of each consolidated statute, joined to both IsraelLawID and the specific LawID amendment that introduced the name.",
   "IsraelLawNameID");
 
-VJSON_IDKEYS(il_knesset_law, "il-knesset-law", "Knesset — enacted laws and amendments (KNS_Law)", "Knesset — enacted laws and amendments (KNS_Law)",
-  "il_legal", "legal",
-  "https://knesset.gov.il/Odata/ParliamentInfo.svc/KNS_Law?$top=100&$format=json",
-  "value",
-  "he", "[\"il\",\"legal\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 43200,
-  "Each enactment/amendment as published: name, type and subtype (incl. Mandate-era British statutes), Knesset number, publication date, publication series, gazette number and page number.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.",
-  "LawID");
