@@ -24,5 +24,6 @@ static const source_def wifi_networks_def = {
   .id = "wifi-networks", .collector = "cyber",
   .name = "WiFi Networks (merged)",
   .name_ja = "WiFi \xe3\x83\x8d\xe3\x83\x83\xe3\x83\x88\xe3\x83\xaf\xe3\x83\xbc\xe3\x82\xaf (\xe7\xb5\xb1\xe5\x90\x88)",
-   .update_interval_sec = 86400, .run = run };
+   .update_interval_sec = 86400, .run = run,
+  .category = "cyber" };
 REGISTER_SOURCE(wifi_networks_def)

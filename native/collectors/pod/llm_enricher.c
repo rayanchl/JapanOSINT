@@ -25,5 +25,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 static const source_def llm_enricher_def = {
   .id = "llm-enricher", .collector = "_enrich",
   .name = "LLM Entity Enricher", .name_ja = "エンティティ抽出",
-  .update_interval_sec = 300, .run = run };
+  .update_interval_sec = 300, .run = run,
+  .category = "enrichment" };
 REGISTER_SOURCE(llm_enricher_def)

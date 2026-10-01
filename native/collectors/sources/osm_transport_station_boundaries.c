@@ -80,5 +80,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 static const source_def osm_transport_station_boundaries_def = {
   .id = "osm-transport-station-boundaries", .collector = "transport",
   .name = "OSM Station Boundaries", .name_ja = "OSM 駅構内ポリゴン",
-   .update_interval_sec = 86400, .run = run };
+   .update_interval_sec = 86400, .run = run,
+  .category = "transport" };
 REGISTER_SOURCE(osm_transport_station_boundaries_def)

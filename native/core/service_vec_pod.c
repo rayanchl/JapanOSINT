@@ -61,5 +61,6 @@ static const source_def svec_pod_def = {
                  "routing, off the search request path. Inert unless "
                  "JO_EMBED_URL is set.",
   .url = "internal://service-index",
-  .update_interval_sec = 900, .run = run };
+  .update_interval_sec = 900, .run = run,
+  .category = "maintenance" };
 REGISTER_SOURCE(svec_pod_def)

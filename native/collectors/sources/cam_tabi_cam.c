@@ -272,5 +272,6 @@ static const source_def cam_tabi_cam_def = {
   .name = "Camera discovery — Tabi-cam",
   .name_ja = "カメラ探索 — Tabi-cam",
    .layer = "cameras",
-   .update_interval_sec = 3600, .run = run };
+   .update_interval_sec = 3600, .run = run,
+  .category = "cyber" };
 REGISTER_SOURCE(cam_tabi_cam_def)

@@ -356,5 +356,6 @@ static const source_def cam_camstreamer_def = {
   .name = "Camera Discovery: Camstreamer",
   .name_ja = "カメラ探索: Camstreamer",
    .layer = "cameras",
-   .update_interval_sec = 3600, .run = run };
+   .update_interval_sec = 3600, .run = run,
+  .category = "cyber" };
 REGISTER_SOURCE(cam_camstreamer_def)
