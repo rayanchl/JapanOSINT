@@ -184,6 +184,32 @@ static void test_bom_is_not_a_column_name(void) {
   cJSON_Delete(rows);
 }
 
+static void test_wellformed_long_cell_is_not_repaired(void) {
+  printf("-- a long cell in well-formed (xlsx-written) text stays one cell\n");
+  /* lib/xlsx.c quotes every cell holding a line break, and Excel users write
+   * long ones: the FSA notifier register carries a fund's articles of
+   * incorporation, one purpose per line. The repair bound would split this
+   * cell at its first line; text that is well-formed by construction must not
+   * go through the repair at all. */
+  const char *t =
+    "id,purpose\n"
+    "1,\"1. a\n2. b\n3. c\n4. d\n5. e\n6. f\"\n"
+    "2,plain\n";
+  cJSON *rows = csv_parse_wellformed(t, 1, NULL, 0, NULL);
+  eqi(cJSON_GetArraySize(rows), 2, "two records, not eight");
+  eqi(csv_quote_repairs(), 0, "and nothing was repaired");
+  cJSON *r0 = cJSON_GetArrayItem(rows, 0);
+  cJSON *pv = r0 ? cJSON_GetObjectItem(r0, "purpose") : NULL;
+  ok(pv && cJSON_IsString(pv) && strstr(pv->valuestring, "6. f"),
+     "the whole cell is kept, its last line included");
+  cJSON_Delete(rows);
+  /* The same text through the repairing parser is what the xlsx path used to
+   * do — pinned so the difference stays visible. */
+  rows = csv_parse_x(t, 1, NULL, 0, NULL);
+  ok(csv_quote_repairs() >= 1, "csv_parse_x still repairs it (non-xlsx feeds)");
+  cJSON_Delete(rows);
+}
+
 int main(void) {
   test_bom_is_not_a_column_name();
   test_midfield_quote_is_literal();
@@ -195,6 +221,7 @@ int main(void) {
   test_banner_and_header_promotion();
   test_no_repairs_on_clean_input();
   test_runaway_quote_is_closed_and_counted();
+  test_wellformed_long_cell_is_not_repaired();
   printf(g_fail ? "\n%d FAILED\n" : "\nall ok\n", g_fail);
   return g_fail ? 1 : 0;
 }

@@ -385,8 +385,8 @@ static char *csv_repair_unterminated(const char *text, const char *delim,
   return out;
 }
 
-cJSON *csv_parse_x(const char *text, int headers, const char *delim,
-                   int skip_lines, const char *comment) {
+static cJSON *csv_parse_impl(const char *text, int headers, const char *delim,
+                             int skip_lines, const char *comment, int repair) {
   if (!text) text = "";
   /* A UTF-8 BOM belongs to the FILE, not to its first column name. Kawasaki's
    * licence registers open with EF BB BF, so the header parsed as
@@ -421,13 +421,41 @@ cJSON *csv_parse_x(const char *text, int headers, const char *delim,
     stripped = csv_strip_banner(text, dc, comment, headers);
   }
   g_csv_repairs = 0;
-  char *repaired = csv_repair_unterminated(stripped ? stripped : text,
-                                           lit, ws, &g_csv_repairs);
+  char *repaired = repair
+    ? csv_repair_unterminated(stripped ? stripped : text, lit, ws, &g_csv_repairs)
+    : NULL;
   cJSON *rows = csv_rows(repaired ? repaired : (stripped ? stripped : text),
                          lit, ws);
   free(repaired);
   free(stripped);
   return headers ? csv_name_rows(rows) : rows;
+}
+
+cJSON *csv_parse_x(const char *text, int headers, const char *delim,
+                   int skip_lines, const char *comment) {
+  return csv_parse_impl(text, headers, delim, skip_lines, comment, 1);
+}
+
+/* Text whose quoting is well-formed BY CONSTRUCTION skips the repair pre-pass.
+ *
+ * The repair exists for upstream files that open a quote and never close it.
+ * Its test — a quoted field spanning more than CSV_QUOTE_MAX_LINES physical
+ * lines — cannot tell that apart from a genuine long cell, and the CSV that
+ * lib/xlsx.c writes is full of genuine long cells: Excel users put line breaks
+ * inside cells freely, and csv_put_cell quotes every one of them per RFC 4180.
+ * Run through the repair, each such cell was closed at its first line and the
+ * rest of its lines were parsed as records of their own.
+ *
+ * Measured 2026-10-02 on the FSA register of pro-investor fund notifiers
+ * (menkyoj/tokurei/011.xlsx): 4,590 data rows, 1,690 cells of 5 to 44 lines (a
+ * fund's articles of incorporation, one purpose per line). The run read
+ * "emitted 19052 of 19052 available [36846 empty]" and stored 12,323 — every
+ * count larger than the truth and the collision guard the only thing that
+ * noticed. Through this entry point the same text parses to 4,590 rows.
+ * csv_quote_repairs() reads 0 afterwards: nothing was repaired. */
+cJSON *csv_parse_wellformed(const char *text, int headers, const char *delim,
+                            int skip_lines, const char *comment) {
+  return csv_parse_impl(text, headers, delim, skip_lines, comment, 0);
 }
 
 int csv_is_utf8(const char *s, size_t n) {

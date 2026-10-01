@@ -68,6 +68,13 @@ cJSON *csv_parse_dc(const char *text, int headers, char delim,
 cJSON *csv_parse_x(const char *text, int headers, const char *delim,
                    int skip_lines, const char *comment);
 
+/* csv_parse_x without the unterminated-quote repair, for text whose quoting
+ * is well-formed by construction — the CSV lib/xlsx.c writes. A genuine cell
+ * longer than the repair's line bound is otherwise split into junk records.
+ * See lib/csv.c. */
+cJSON *csv_parse_wellformed(const char *text, int headers, const char *delim,
+                            int skip_lines, const char *comment);
+
 /* How many unterminated quoted fields the LAST csv_parse_x() on this thread had
  * to close at their own line end (0 in the ordinary case). A field that spans
  * more than a few physical lines is a malformed row, not a multi-line cell: left

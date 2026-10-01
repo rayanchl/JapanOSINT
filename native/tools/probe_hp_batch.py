@@ -112,8 +112,24 @@ def row_headers(r):
     return hdrs
 
 
-def fetch(url, extra):
-    """Same shape as verify_feeds.fetch, plus this row's declared headers."""
+def row_timeout(r):
+    """Seconds this row's collector will wait: its declared timeout_ms, never
+    below the probe's own floor. A row that declares timeout_ms=150000 for a
+    host that takes 50 s a page was being probed with 25 s and reported
+    TIMEOUT -- a live source read as dead because the probe waited under
+    different conditions than the collector does, the same false-negative
+    class as the header mismatch row_headers() exists to prevent."""
+    o, _dups, _junk = parse_opts(r["opts"])
+    try:
+        ms = int(o.get("timeout_ms") or 0)
+    except ValueError:
+        ms = 0
+    return max(VF.TIMEOUT, ms / 1000.0)
+
+
+def fetch(url, extra, timeout=None):
+    """Same shape as verify_feeds.fetch, plus this row's declared headers and
+    timeout."""
     headers = {
         "User-Agent": DEFAULT_UA,
         "Accept": "*/*",
@@ -121,7 +137,7 @@ def fetch(url, extra):
     }
     headers.update(extra)
     req = urllib.request.Request(VF.encode_url(url), headers=headers)
-    with urllib.request.urlopen(req, timeout=VF.TIMEOUT) as resp:
+    with urllib.request.urlopen(req, timeout=timeout or VF.TIMEOUT) as resp:
         raw = resp.read(MAXBYTES + 1)
         if resp.headers.get("Content-Encoding") == "gzip":
             import gzip
@@ -331,7 +347,7 @@ def filter_is_honoured(r, real_items):
     if not url or real_items < 2:
         return True, ""          # nothing to compare against
     try:
-        status, ctype, raw = fetch(url, row_headers(r))
+        status, ctype, raw = fetch(url, row_headers(r), row_timeout(r))
     except Exception:
         return True, ""          # a refusal here is not evidence either way
     if status < 200 or status >= 300:
@@ -501,7 +517,7 @@ def verify(r):
     """Verdict for one manifest row. Mirrors verify_feeds.verify exactly."""
     sid, url = r["id"], r["probe"]
     try:
-        status, ctype, raw = fetch(url, row_headers(r))
+        status, ctype, raw = fetch(url, row_headers(r), row_timeout(r))
     except urllib.error.HTTPError as e:
         return (sid, url, "HTTP_ERR", "", 0, e.code, 0, str(e.reason)[:60])
     except urllib.error.URLError as e:

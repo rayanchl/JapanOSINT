@@ -1725,7 +1725,13 @@ static int hp_run_csv(hp_run_state *st, const char *body) {
       body = stripped;
     }
   }
-  cJSON *rows = csv_parse_x(body, s->csv_no_header ? 0 : 1, delim, 0, NULL);
+  /* An xlsx body arrives here as CSV that lib/xlsx.c wrote itself, so its
+   * quoting is right by construction and the unterminated-quote repair must
+   * not second-guess it: that repair splits every cell longer than its line
+   * bound into junk records (lib/csv.c, csv_parse_wellformed). */
+  cJSON *rows = s->mode == HP_XLSX
+    ? csv_parse_wellformed(body, s->csv_no_header ? 0 : 1, delim, 0, NULL)
+    : csv_parse_x(body, s->csv_no_header ? 0 : 1, delim, 0, NULL);
   /* Malformed rows the parser had to close at their own line end. Counted here
    * and disclosed once per run by hp_shape_notices: without it a file whose
    * quoting is broken parses to a different set of records than the upstream
