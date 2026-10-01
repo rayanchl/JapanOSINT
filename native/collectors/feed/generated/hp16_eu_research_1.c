@@ -12,6 +12,19 @@
 #include "lib/hpengine.h"
 
 static const hp_source T[] = {
+  { .id = "cordis-search-results-query",
+    .name = "CORDIS project RESULTS (outcomes) search",
+    .collector = "eu_research", .category = "research",
+    .description = "7,848 reported project outcomes for 'hydrogen' (2026-10-02), each carrying relatedProjectAcronym, relatedProjectReference and relatedProjectRcn plus the outcome teaser - the deliverables-behind-a-grant hop, and it links back to the parent project id.  Walked to the end on the API's own searchAfter cursor, 50 per page in a fixed rcn order: the VJSON form paged by p= under relevance order, read 100 of 7,691 in its 20-page window, and stored 90 because records carry none of the fields VJSON keys on; rcn is unique per record.  Second hop: the parent project behind each result is fetched as JSON (project/id/{ref}?format=json) and merged in under detail.*. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
+    .record_type = "research", .tags = "\"eu\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .url = "https://cordis.europa.eu/api/search/results?q=contenttype%3D%27result%27%20AND%20%27hydrogen%27&format=json&num=50&srt=/result/rcn:decreasing",
+    .array_path = "payload.results",
+    .id_keys = "rcn", .title_keys = "title",
+    .detail_url = "https://cordis.europa.eu/project/id/{v}?format=json", .detail_key = "relatedProjectReference",
+    .next_path = "payload.searchAfter", .next_tmpl = "https://cordis.europa.eu/api/search/results?q=contenttype%3D%27result%27%20AND%20%27hydrogen%27&format=json&num=50&srt=/result/rcn:decreasing&searchAfter={v}",
+    .page_max = 200,   /* 7,848 / 50 = 157 pages, with headroom for growth */
+    .interval = 86400, .free_tier = 1 },
+
   { .id = "cordis-search-projects-query",
     .name = "CORDIS project search with keyword clause",
     .collector = "eu_research", .category = "research",
@@ -19,7 +32,7 @@ static const hp_source T[] = {
     .record_type = "research-record", .tags = "\"eu\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://cordis.europa.eu/api/search/results?q=contenttype%3D%27project%27%20AND%20%27hydrogen%27&format=json&p=1&num=10&srt=id:increasing",
     .array_path = "payload.results",
-    .detail_url = "https://cordis.europa.eu/project/id/{v}", .detail_key = "reference",
+    .detail_url = "https://cordis.europa.eu/project/id/{v}?format=json", .detail_key = "reference",   /* without format=json the page is 189 KB of HTML */
     .page_param = "p", .page_start = 1,   /* declared by the row's own URL */
     .interval = 86400, .free_tier = 1 },
 

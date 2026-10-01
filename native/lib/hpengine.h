@@ -104,7 +104,10 @@ typedef struct hp_source {
   hp_mode mode;
   hp_want want;
 
-  const char *url;            /* endpoint template (required)              */
+  /* endpoint template (required). Besides the entity tokens ({q} …) it takes
+   * {date:FORMAT} / {date:FORMAT:±N}: today's UTC date shifted N days, through
+   * strftime — for an upstream that answers one day at a time. */
+  const char *url;
   const char *post_body;      /* non-NULL → POST with this body template   */
   const char *content_type;   /* NULL → "application/json" when posting    */
   const char *headers[5];     /* extra header templates, NULL-terminated   */
@@ -114,7 +117,9 @@ typedef struct hp_source {
    * densest array of objects itself, and with no *_keys it falls back to a
    * conventional key list — a row whose upstream changed shape degrades to
    * fewer resolved fields, never to invented ones. */
-  const char *array_path;     /* dotted path ("a.b.c"), "" / NULL = auto    */
+  /* dotted path ("a.b.c"), "" / NULL = auto. HP_JSON only: "a+b+c" reads
+   * several sibling arrays of one response and emits all of them. */
+  const char *array_path;
   const char *title_keys;     /* comma-separated candidates, first wins     */
   /* Record identity — the uid the sink upserts on. FIRST-MATCH per record:
    * the engine takes the first listed key that resolves to a non-empty value

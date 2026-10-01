@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
+#include <time.h>
 
 /* Bounds exist only to keep one pathological response from exhausting memory —
  * they are NOT an editorial filter. Per the exhaustive-use rule
@@ -244,6 +245,47 @@ static int hp_url_num_param(const char *url, const char *key, long *out) {
   return 0;
 }
 
+/* {date:FORMAT} and {date:FORMAT:+N} / {date:FORMAT:-N} — today's UTC date
+ * shifted by N days and rendered with strftime(FORMAT). It exists for the
+ * upstreams that publish one answer per DAY (a gazette's notes for a date, a
+ * daily register file): without it such a row had to pin the date it was
+ * authored on, and then fetched that one day forever while reporting success.
+ * The offset lets a row ask for a day that is already complete where the
+ * upstream lives — "-2" is a finished day in every timezone at any hour.
+ *
+ * The offset is the text after the LAST ':' only when that text is a signed
+ * integer, so a format that itself contains ':' (%H:%M) still parses.
+ * Returns 1 and fills out/consumed on success; 0 leaves the token verbatim,
+ * exactly as any other unknown token is left. */
+static int hp_date_token(const char *p, char *out, size_t outn, size_t *consumed) {
+  if (strncmp(p, "{date:", 6) != 0) return 0;
+  const char *body = p + 6, *close = strchr(body, '}');
+  if (!close || close == body || close - body > 64) return 0;
+  char spec[65];
+  memcpy(spec, body, (size_t)(close - body));
+  spec[close - body] = 0;
+  long off = 0;
+  char *colon = strrchr(spec, ':');
+  if (colon) {
+    const char *d = colon + 1;
+    if (*d == '+' || *d == '-') d++;
+    int digits = 0;
+    while (isdigit((unsigned char)d[digits])) digits++;
+    if (digits > 0 && digits <= 5 && d[digits] == 0) {
+      off = strtol(colon + 1, NULL, 10);
+      *colon = 0;
+    }
+  }
+  if (!*spec) return 0;
+  time_t t = time(NULL) + (time_t)off * 86400;
+  struct tm g;
+  if (!gmtime_r(&t, &g)) return 0;
+  size_t n = strftime(out, outn, spec, &g);
+  if (n == 0) return 0;
+  *consumed = (size_t)(close - p) + 1;
+  return 1;
+}
+
 /* {token} expansion. An unknown token is left verbatim so a typo shows up in
  * the logged URL instead of silently vanishing. `extra_name`/`extra_val`
  * inject the second-hop {v}. Returns malloc'd. */
@@ -256,7 +298,10 @@ static char *hp_expand(const char *tmpl, const hp_vars *v,
   for (const char *p = tmpl; *p; ) {
     const char *sub = NULL;
     size_t skip = 0;
-    if (*p == '{') {
+    char dbuf[128];
+    if (*p == '{' && hp_date_token(p, dbuf, sizeof dbuf, &skip)) {
+      sub = dbuf;
+    } else if (*p == '{') {
       const char *close = strchr(p, '}');
       if (close && close - p < 12) {
         size_t tn = (size_t)(close - p - 1);
@@ -1519,7 +1564,40 @@ static int hp_run_json(hp_run_state *st, const char *body) {
    * borrowed from `doc`. It must be deleted on EVERY exit below — deleting it
    * frees the wrapper only, never the records it points at. */
   cJSON *arr_owned = NULL;
-  if (s->array_path && *s->array_path) {
+  if (s->array_path && strchr(s->array_path, '+')) {
+    /* `a+b+c`: the records live in SEVERAL sibling arrays of one response —
+     * SIDOF answers one date with NotasMatutinas, NotasVespertinas and
+     * NotasExtraordinarias, and a row that names one of them discards the
+     * other editions. Every alternative that resolves contributes its records,
+     * in the order written; one that is absent (no extraordinary edition that
+     * day) is not an error. If NONE resolves, the declared path is missing and
+     * the row says so below, exactly as for a single path. `+` and not `|`
+     * because the batch manifests are pipe-delimited, and because `+` already
+     * means "this AND that" in id_keys. */
+    cJSON *u = cJSON_CreateArray();
+    char *dup = u ? strdup(s->array_path) : NULL;
+    char *save = NULL;
+    for (char *alt = dup ? strtok_r(dup, "+", &save) : NULL; alt;
+         alt = strtok_r(NULL, "+", &save)) {
+      while (*alt == ' ') alt++;
+      if (!*alt) continue;
+      cJSON *n = hp_path(doc, alt);
+      if (n && cJSON_IsArray(n)) {
+        cJSON *e = NULL;
+        cJSON_ArrayForEach(e, n) cJSON_AddItemReferenceToArray(u, e);
+      } else if (n && cJSON_IsObject(n)) {
+        cJSON_AddItemReferenceToArray(u, n);
+      } else if (!n) {
+        cJSON *multi = hp_path_multi(doc, alt);
+        while (multi && cJSON_GetArraySize(multi) > 0)
+          cJSON_AddItemToArray(u, cJSON_DetachItemFromArray(multi, 0));
+        cJSON_Delete(multi);
+      }
+    }
+    free(dup);
+    if (u && cJSON_GetArraySize(u) > 0) arr = arr_owned = u;
+    else cJSON_Delete(u);
+  } else if (s->array_path && *s->array_path) {
     cJSON *n = hp_path(doc, s->array_path);
     if (!n) {
       /* hp_path cannot cross an array. Retry with the descending walk, which

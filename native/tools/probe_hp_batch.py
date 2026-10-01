@@ -127,9 +127,30 @@ def row_timeout(r):
     return max(VF.TIMEOUT, ms / 1000.0)
 
 
+_DATE_TOKEN = re.compile(r"\{date:([^{}]{1,64})\}")
+
+
+def expand_date(url):
+    """{date:FORMAT} / {date:FORMAT:+N|-N} -> today's UTC date shifted N days,
+    rendered with strftime, exactly as lib/hpengine.c's hp_date_token does: the
+    offset is the text after the LAST ':' only when it is a signed integer."""
+    def one(m):
+        spec, off = m.group(1), 0
+        head, sep, tail = spec.rpartition(":")
+        if sep and re.fullmatch(r"[+-]?\d{1,5}", tail):
+            spec, off = head, int(tail)
+        if not spec:
+            return m.group(0)
+        import datetime
+        d = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=off)
+        return d.strftime(spec)
+    return _DATE_TOKEN.sub(one, url) if url and "{date:" in url else url
+
+
 def fetch(url, extra, timeout=None):
     """Same shape as verify_feeds.fetch, plus this row's declared headers and
-    timeout."""
+    timeout. A {date:…} token is rendered first, as the engine renders it."""
+    url = expand_date(url)
     headers = {
         "User-Agent": DEFAULT_UA,
         "Accept": "*/*",
@@ -566,23 +587,39 @@ def verify(r):
         except Exception:
             return (sid, url, "UNPARSEABLE", "", 0, status, nbytes,
                     "declared array_path but body is not JSON")
-        node = doc
-        for seg in ap_decl.split("."):
-            if isinstance(node, dict) and seg in node:
-                node = node[seg]
-            else:
-                node = None
-                break
-        if node is None:
+        def at(path):
+            # cJSON_GetObjectItem, which the engine walks with, matches keys
+            # case-INsensitively; judging the path more strictly than the
+            # engine reads it fails rows the engine would serve.
+            node = doc
+            for seg in path.split("."):
+                if not isinstance(node, dict):
+                    return None
+                if seg in node:
+                    node = node[seg]
+                    continue
+                low = [k for k in node if k.lower() == seg.lower()]
+                if not low:
+                    return None
+                node = node[low[0]]
+            return node
+        # `a+b+c` reads several sibling arrays and emits them all; one that is
+        # absent is not an error, none at all is PATH_UNRESOLVED.
+        alts = [a.strip() for a in ap_decl.split("+") if a.strip()]
+        nodes = [(a, at(a)) for a in alts]
+        found = [(a, n) for a, n in nodes if n is not None]
+        if not found:
             return (sid, url, "PATH_UNRESOLVED", "", 0, status, nbytes,
                     "array_path %r not present in the response" % ap_decl)
-        if not isinstance(node, list):
+        bad = [(a, n) for a, n in found if not isinstance(n, list)]
+        if bad and len(alts) == 1:
             return (sid, url, "PATH_NOT_ARRAY", "", 0, status, nbytes,
-                    "array_path %r is %s, not an array" % (ap_decl, type(node).__name__))
-        if not node:
+                    "array_path %r is %s, not an array" % (ap_decl, type(bad[0][1]).__name__))
+        total = sum(len(n) if isinstance(n, list) else 1 for _, n in found)
+        if not total:
             return (sid, url, "EMPTY_RESULTSET", "json:" + ap_decl, 0, status,
                     nbytes, "declared array_path resolved to an empty array")
-        kind, items = "json:" + ap_decl, len(node)
+        kind, items = "json:" + ap_decl, total
 
     if not kind:
         kind, items = VF.count_feed(text)

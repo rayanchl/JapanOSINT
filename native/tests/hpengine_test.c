@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <math.h>
 
 /* ── stub registry (the real one lives in registry.c) ────────────────────── */
@@ -325,6 +326,14 @@ static const hp_source T[] = {
    * composes, as in hpengine id_keys"). Nothing tested that promise. Getting it
    * wrong is silent — the records collapse onto one uid at the sink and the run
    * still reports success — which is why it is pinned here rather than trusted. */
+  /* One day at a time: the date is in the URL, and the records live in three
+   * sibling arrays of one response (SIDOF's morning / evening / extraordinary
+   * editions). */
+  { .id = "T_DATE_UNION", .name = "date token + array union",
+    .url = "https://x.test/du/{date:%Y-%m-%d:-2}", .array_path = "Morning+Evening+Extra",
+    .title_keys = "name", .id_keys = "id", .interval = 86400,
+    .record_type = "t-date", .free_tier = 1, .description = "d" },
+
   { .id = "T_IDKEYS", .name = "composite id_keys", .url = "https://x.test/ik",
     .array_path = "rows", .title_keys = "name", .id_keys = "code+date",
     .interval = 3600, .record_type = "t-idk", .free_tier = 1, .description = "d" },
@@ -1845,6 +1854,25 @@ int main(void) {
      "`code+date` composes a distinct uid per record (a shared `code` must not collapse them)");
   ok(strstr(g_cap[0].key, "X1") != NULL && strstr(g_cap[0].key, "2026-01") != NULL,
      "both parts of the composite reach the uid");
+
+  /* {date:FMT:-2} renders two days before today (UTC), and `a+b+c` emits the
+   * records of every sibling array that is present — the absent one is not an
+   * error. */
+  {
+    char want[32];
+    time_t t2 = time(NULL) - 2 * 86400;
+    struct tm g2;
+    gmtime_r(&t2, &g2);
+    strftime(want, sizeof want, "/du/%Y-%m-%d", &g2);
+    fx_reset();
+    fx_add("/du/", 200,
+      "{\"Morning\":[{\"id\":\"m1\",\"name\":\"a\"},{\"id\":\"m2\",\"name\":\"b\"}],"
+      "\"Evening\":[{\"id\":\"e1\",\"name\":\"c\"}]}");
+    rc = run_source("T_DATE_UNION", "");
+    ok(strstr(g_last_url, want) != NULL, "{date:%Y-%m-%d:-2} renders the date two days back");
+    ok(strstr(g_last_url, "{date") == NULL, "no date token left in the requested url");
+    ok(rc == 0 && g_ncap == 3, "array_path a+b+c emits every present array (2 + 1), the absent one is no error");
+  }
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;
