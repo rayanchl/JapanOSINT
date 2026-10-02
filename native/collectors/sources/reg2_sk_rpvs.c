@@ -234,7 +234,7 @@ static int rpvs_partners_run(const source_ctx *ctx, intel_sink *sink) {
   free(page);
 
   if (truncated)
-    jo_trunc_notice(sink, "SK_RPVS_PARTNERS", url, n, available,
+    jo_trunc_notice_scoped(sink, "SK_RPVS_PARTNERS", q, url, n, available,
                     "the RPVS OData walk stopped before the upstream ran out "
                     "of pages (page ceiling, or a mid-walk fetch failure)",
                     "raise $JO_RPVS_PAGE_MAX, or narrow the ObchodneMeno filter");
@@ -370,7 +370,7 @@ static int rpvs_ubo_run(const source_ctx *ctx, intel_sink *sink) {
   free(page);
 
   if (truncated)
-    jo_trunc_notice(sink, "SK_RPVS_UBO", url, n, available,
+    jo_trunc_notice_scoped(sink, "SK_RPVS_UBO", q, url, n, available,
                     "the RPVS OData walk stopped before the upstream ran out "
                     "of pages (page ceiling, or a mid-walk fetch failure)",
                     "raise $JO_RPVS_PAGE_MAX, or query a rarer surname");
