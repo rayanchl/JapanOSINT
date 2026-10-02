@@ -46,6 +46,9 @@ osint_request *progress_create(const char *request_id, const char *query,
 
 /* getRequest(requestId) -> the request, or NULL if unknown. */
 osint_request *progress_get(const char *request_id);
+/* Copy the owner tenant of `request_id` into out (empty when ownerless or
+ * unknown). Locked copy: the record may be evicted after the call returns. */
+void progress_owner_tenant(const char *request_id, char *out, size_t n);
 
 /* setPhase(phase, percent): unknown phase -> "unknown"; pass percent<0 to
  * skip the percent update (JS `Number.isFinite(percent)` guard). Appends a

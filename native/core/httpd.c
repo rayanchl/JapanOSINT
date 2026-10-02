@@ -1481,8 +1481,20 @@ static int qvar(struct mg_http_message *hm, const char *k, char *out,
   return n > 0;
 }
 
-static char *intel_items_run(struct mg_http_message *hm, int *too_long,
-                             int *st) {
+/* Resolve the caller's tenant for an intel read, or reply and return -1. */
+static int intel_tenant_or_reply(struct mg_connection *c, struct mg_http_message *hm,
+                                 const auth_user *usr, tenant_ctx *tc) {
+  struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+  char xtid[128] = {0};
+  if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len] = 0; }
+  int tr = tenant_resolve(g_db, usr, xt ? xtid : NULL, tc);
+  if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return -1; }
+  if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return -1; }
+  return 0;
+}
+
+static char *intel_items_run(struct mg_http_message *hm, const char *tenant,
+                             int *too_long, int *st) {
   char src[160]={0}, q[256]={0}, qalt[256]={0}, lang[16]={0}, since[40]={0},
        until[40]={0}, rt[48]={0}, ssid[120]={0}, hg[8]={0}, tag[120]={0},
        cur[768]={0}, lim[16]={0}, sortv[16]={0}, tot[4]={0}, col[4]={0};
@@ -1509,6 +1521,7 @@ static char *intel_items_run(struct mg_http_message *hm, int *too_long,
   if (qvar(hm, "collapse",      col,  sizeof col,  &tl)) Q.collapse = col[0] == '1';
   if (too_long) *too_long = tl;
   if (tl) return NULL;
+  Q.tenant = tenant;   /* rows of this tenant plus the shared 'legacy' corpus */
   return intelapi_list_items_st(g_db, &Q, st);
 }
 
@@ -1915,7 +1928,9 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           reply_json(c, nst, nb); free(nb); return;
         } }
       int qtl = 0, ist = 200;
-      char *body = intel_items_run(hm, &qtl, &ist);
+      tenant_ctx itc;
+      if (intel_tenant_or_reply(c, hm, &usr, &itc) != 0) return;
+      char *body = intel_items_run(hm, itc.tenant_id, &qtl, &ist);
       if (qtl) { reply_json(c, 414,
         "{\"error\":\"filter_too_long\",\"detail\":\"a query parameter exceeded "
         "its maximum length; half a filter set cannot be honoured\"}"); return; }
@@ -1992,7 +2007,9 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       /* "breach:<keyid>" reroutes into breach_adapter_item_by_uid() — same
        * corpus as /api/breach/search, so the same gate. */
       if (strncmp(uid, "breach:", 7) == 0 && breach_gate(c, &usr)) return;
-      char *body = intelapi_item_by_uid(g_db, uid);
+      tenant_ctx itc;
+      if (intel_tenant_or_reply(c, hm, &usr, &itc) != 0) return;
+      char *body = intelapi_item_by_uid_tenant(g_db, uid, itc.tenant_id);
       if (!body) { reply_json(c, 404, "{\"error\":\"not_found\"}"); return; }
       reply_json(c, 200, body);
       free(body);
@@ -2172,7 +2189,9 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     if (eq(u, "/api/intel/search")) {
       if (intel_query_is_breach(hm) && breach_gate(c, &usr)) return;
       int qtl = 0, ist = 200;
-      char *body = intel_items_run(hm, &qtl, &ist);
+      tenant_ctx itc;
+      if (intel_tenant_or_reply(c, hm, &usr, &itc) != 0) return;
+      char *body = intel_items_run(hm, itc.tenant_id, &qtl, &ist);
       if (qtl) { reply_json(c, 414,
         "{\"error\":\"filter_too_long\",\"detail\":\"a query parameter exceeded "
         "its maximum length; half a filter set cannot be honoured\"}"); return; }

@@ -120,6 +120,16 @@ osint_request *progress_create(const char *request_id, const char *query,
   return progress_create_owned(request_id, query, max_rounds, NULL, NULL);
 }
 
+void progress_owner_tenant(const char *request_id, char *out, size_t n) {
+  if (!out || !n) return;
+  out[0] = 0;
+  if (!request_id) return;
+  pthread_mutex_lock(&g_lock);
+  osint_request *r = find_locked(request_id);
+  if (r && r->tenant_id) snprintf(out, n, "%s", r->tenant_id);
+  pthread_mutex_unlock(&g_lock);
+}
+
 osint_request *progress_create_owned(const char *request_id, const char *query,
                                      int max_rounds, const char *tenant_id,
                                      const char *stream_key) {

@@ -856,6 +856,16 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
   char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  /* The run row IS the investigation — the query, the entities it was about
+   * and the synthesis — so it is written under the tenant that started it, not
+   * the shared corpus tenant. Under 'legacy' every workspace could list it
+   * through /api/intel/items. Its uid is unique per run, so scoping it cannot
+   * make two tenants' rows collide at the upsert (which never rewrites
+   * tenant_id). Pivot records stay in the shared corpus: their uid is
+   * source|key and is shared between tenants by construction. */
+  char owner[64];
+  progress_owner_tenant(request_id, owner, sizeof owner);
+  intel_sink run_sink = intel_sink_make(db, "osint-search", owner[0] ? owner : "legacy");
   intel_item it = {0};
   it.uid = uid;
   it.title = title;
@@ -865,7 +875,8 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
   it.published_at = nowiso;
   it.properties_json = pj;
   it.tags_json = "[\"osint-search\"]";
-  sink.emit(&sink, &it);
+  run_sink.emit(&run_sink, &it);
+  intel_sink_free(&run_sink);
   free(pj);
   /* Only now. `synth` aliases synth_llm, and it is still the summary/body of
    * the run-summary row emitted just above. Freeing it at the cJSON copy —
