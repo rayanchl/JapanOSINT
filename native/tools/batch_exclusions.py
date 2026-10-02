@@ -91,6 +91,9 @@ sys.path.insert(0, HERE)
 from manifest import iter_lines                             # noqa: E402
 
 URL_FIELD = re.compile(r'\.(?:url|detail_url)\s*=\s*"([^"]+)"')
+# The same field, with every adjacent literal of its value (after macro
+# expansion) — see the IS_TABLE branch of scan().
+URL_FIELD_JOINED = re.compile(r'\.(?:url|detail_url)\s*=\s*((?:"(?:[^"\\]|\\.)*"\s*)+)')
 ANY_URL = re.compile(r'https?://[^"\s\\]+')
 # `-` and `.` belong here: `faa-class-airspace`, `511-ontario-cameras` and
 # `us-openfda-device-pma-detail` are all real registry ids. Their absence is
@@ -237,13 +240,21 @@ def scan(skip_prefix=None):
             continue
         ids.update(ID_FIELD.findall(t))
         ids.update(REG_SOURCE.findall(t))
+        ex = expand_macros(t)
         if IS_TABLE.search(t):
-            urls = URL_FIELD.findall(t)
-            for u in urls:
+            # An hp table's URL is still C: `.url = CH_BASE "/company/{qn}/
+            # officers?…"` and TW GCIS's two adjacent literals are one string
+            # each. This branch used to take the FIRST literal of the field
+            # straight from the raw text, before expand_macros() and literal
+            # joining ran, so 188 of 8,712 table url/detail_url fields were
+            # indexed truncated or not at all, and a manifest row duplicating
+            # one of them passed as new. Only the url/detail_url fields are
+            # read here — `.portal` is documentation, not an endpoint.
+            for run in URL_FIELD_JOINED.finditer(ex):
+                u = "".join(unesc(x) for x in STRLIT.findall(run.group(1)))
                 if u.startswith("http") and keep_ep(norm(u)):
                     eps[norm(u)].add(rel)
             continue
-        ex = expand_macros(t)
         lits = joined_literals(ex)
         for lit in lits:
             if not lit.startswith("http"):

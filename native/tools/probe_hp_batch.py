@@ -361,33 +361,55 @@ def decode_body(raw, r=None, url=""):
     return text[1:] if text.startswith("﻿") else text
 
 
+def _entity_in_path(r):
+    """True when the row's first entity token sits in the URL PATH rather than
+    the query string (`/company/{qn}/officers`). For such a row a 404 for an
+    impossible entity IS the filter working: the resource does not exist."""
+    tmpl = r.get("url") or ""
+    m = TOKEN_RE.search(tmpl)
+    if not m:
+        return False
+    q = tmpl.find("?")
+    return q < 0 or m.start() < q
+
+
 def filter_is_honoured(r, real_items):
-    """(ok, note). ok=False means the endpoint returned substantially the same
-    result set for an impossible entity as for the real one."""
+    """(verdict, note): "ok", "ignored" or "unchecked".
+
+    The impossible-entity answer is counted by _judge(), the SAME code that
+    counted the real one — declared array_path, XML, CSV, HTML anchors, xlsx
+    and text lists included. This used to call VF.count_feed/count_json only,
+    and to return "honoured" whenever that could not count the body or the
+    request failed: every XML, CSV and HTML pivot (43 manifest rows) and every
+    pivot whose impossible-entity request errored came back PASS without the
+    comparison ever having been made. A check that could not be performed is
+    now FILTER_UNCHECKED, never a pass."""
     url = impossible_probe_url(r)
-    if not url or real_items < 2:
-        return True, ""          # nothing to compare against
-    try:
-        status, ctype, raw = fetch(url, row_headers(r), row_timeout(r))
-    except Exception:
-        return True, ""          # a refusal here is not evidence either way
-    if status < 200 or status >= 300:
-        return True, ""
-    text = decode_body(raw, r, url)
-    kind, items = VF.count_feed(text)
-    if not kind:
-        kind, items = VF.count_json(text)
-    if not kind:
-        return True, ""
+    if not url:
+        return "ok", ""          # no entity token: a bulk file has no filter
+    res = _judge(r, url)
+    verdict, items, status = res[2], res[4], res[5]
+    if verdict in ("EMPTY_RESULTSET", "EMPTY"):
+        return "ok", ""          # empty for a nonsense entity == filter works
+    if verdict == "HTTP_ERR" and status in (404, 410) and _entity_in_path(r):
+        return "ok", ""          # /thing/<nonsense> does not exist == works
+    if verdict != "PASS":
+        return "unchecked", ("impossible-entity request came back %s (%s %s); "
+                             "the comparison was not made"
+                             % (verdict, status, str(res[7])[:60]))
     if not isinstance(items, int) or items < 1:
-        return True, ""          # empty for a nonsense entity == filter works
+        return "ok", ""
+    if real_items < 2:
+        return "unchecked", ("real entity returned %d record(s) and an "
+                             "impossible one %d — too small to tell a filter "
+                             "from a coincidence" % (real_items, items))
     # Same-sized answer for a nonsense entity: the filter is not being applied.
     # 90% rather than equality because a few APIs pad a collection differently
     # between calls, and a genuine filter never lands within 10% of the whole.
     if items >= real_items * 0.9:
-        return False, ("filter ignored: an impossible entity returned %d records "
-                       "vs %d for the real one" % (items, real_items))
-    return True, ""
+        return "ignored", ("filter ignored: an impossible entity returned %d "
+                           "records vs %d for the real one" % (items, real_items))
+    return "ok", ""
 
 
 def _xlsx_rows(raw, sheet_name, sheet_index):
@@ -536,7 +558,24 @@ def verify_xlsx(r, sid, url, raw, status, nbytes):
 
 def verify(r):
     """Verdict for one manifest row. Mirrors verify_feeds.verify exactly."""
-    sid, url = r["id"], r["probe"]
+    res = _judge(r, r["probe"])
+    if res[2] != "PASS" or not CHECK_FILTER:
+        return res
+    # Answering is not answering THE QUESTION — see filter_is_honoured().
+    sid, url, _, kind, items, status, nbytes, _ = res
+    state, why = filter_is_honoured(r, items)
+    if state == "ignored":
+        return (sid, url, "FILTER_IGNORED", kind, items, status, nbytes, why)
+    if state == "unchecked":
+        return (sid, url, "FILTER_UNCHECKED", kind, items, status, nbytes, why)
+    return res
+
+
+def _judge(r, url):
+    """Fetch `url` with row `r`'s headers and judge the body in the row's own
+    mode. Used for the probe URL AND the impossible-entity URL, so both answers
+    are counted by the same rules."""
+    sid = r["id"]
     try:
         status, ctype, raw = fetch(url, row_headers(r), row_timeout(r))
     except urllib.error.HTTPError as e:
@@ -678,13 +717,6 @@ def verify(r):
         return (sid, url, "UNPARSEABLE", "", 0, status, nbytes, text[:80].replace("\n", " "))
     if items < 1:
         return (sid, url, "EMPTY", kind, 0, status, nbytes, "parsed but zero items")
-
-    # Answering is not answering THE QUESTION — see filter_is_honoured().
-    if CHECK_FILTER:
-        ok, why = filter_is_honoured(r, items)
-        if not ok:
-            return (sid, url, "FILTER_IGNORED", kind, items, status, nbytes, why)
-
     return (sid, url, "PASS", kind, items, status, nbytes, "")
 
 
@@ -702,7 +734,9 @@ def main():
                          "accepts a filter, ignores it, and returns the whole "
                          "collection with HTTP 200 — which every other gate "
                          "passes. Doubles the request count for pivot rows, so "
-                         "it is opt-in; run it at least once per batch.")
+                         "it is opt-in; run it at least once per batch. A row "
+                         "whose impossible-entity request could not be judged "
+                         "is FILTER_UNCHECKED, not PASS.")
     a = ap.parse_args()
     global CHECK_FILTER
     CHECK_FILTER = a.check_filter

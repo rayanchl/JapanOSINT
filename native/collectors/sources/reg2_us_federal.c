@@ -196,7 +196,7 @@ static int fpds_run(const source_ctx *ctx, intel_sink *sink) {
 
   int n = 0;
   const char *cur = xml;
-  while (n < 50) {
+  for (;;) {                     /* every <entry> of the feed */
     const char *hit = jo_next_entry(&cur);
     if (!hit) break;
     const char *close = strstr(hit, "</entry>");

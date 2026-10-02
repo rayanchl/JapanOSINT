@@ -194,7 +194,12 @@ static const hp_source HP2_US_REG[] = {
     .portal = "https://www.sec.gov", .record_type = "us-sec-enforcement",
     .tags = "\"us\",\"finance\",\"enforcement\"", .type = "scraped", .mode = HP_HTML,
     .free_tier = 1,
-    .url = "https://www.sec.gov/cgi-srv/srqsb?text={q}&first=1&last=100",
+    /* DEAD ENDPOINT. /cgi-srv/srqsb answers HTTP 404 ("Oops! Page Not Found")
+     * for every query (measured 2026-10-02), so this row fetches nothing and
+     * there is no later page to lose. Its replacement on sec.gov is a Drupal
+     * listing whose free-text filter could not be confirmed to filter; the row
+     * needs re-pointing or dropping, which is a separate decision from paging. */
+    .url = "https://www.sec.gov/cgi-srv/srqsb?text={q}&first=1&last=100",  /* exhaustive-ok: endpoint returns 404 for every query (measured 2026-10-02) — dead, not paged */
     .base = "https://www.sec.gov", .filter_query = 1,
     .description = "SEC administrative proceedings, litigation releases and "
       "trading suspensions naming a firm or individual — the enforcement layer "

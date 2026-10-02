@@ -48,7 +48,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (st && cJSON_IsArray(st)) {
     cJSON *arr = cJSON_CreateArray();
     int n = cJSON_GetArraySize(st);
-    for (int i = 0; i < n && i < 10; i++) {
+    for (int i = 0; i < n; i++) {
       const cJSON *item = cJSON_GetArrayItem(st, i);
       if (item && cJSON_IsString(item))
         cJSON_AddItemToArray(arr, cJSON_CreateString(item->valuestring));
@@ -60,7 +60,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (ns && cJSON_IsArray(ns)) {
     cJSON *arr = cJSON_CreateArray();
     int n = cJSON_GetArraySize(ns);
-    for (int i = 0; i < n && i < 10; i++) {
+    for (int i = 0; i < n; i++) {
       const cJSON *e = cJSON_GetArrayItem(ns, i);
       const cJSON *ldh = e ? cJSON_GetObjectItem(e, "ldhName") : NULL;
       if (ldh && cJSON_IsString(ldh))

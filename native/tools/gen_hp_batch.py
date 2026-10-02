@@ -111,10 +111,15 @@ STR_OPTS = {"array_path", "title_keys", "id_keys", "link_keys", "link_tmpl",
             "base", "detail_url", "detail_key", "detail_path", "next_path",
             "page_param", "post_body", "content_type", "key_env", "type",
             "collector"}
+# page_walk: CLAUDE.md tells authors to use it ("page_walk=1 (HP_JSON only)
+# walks it the way a VJSON collector is walked"), and this set used to reject
+# it as an unknown opt, so the documented way to page a row could not be
+# written in a manifest at all.
 INT_OPTS = {"detail_max", "page_start", "page_size", "page_max", "max_items",
             "timeout_ms",
             "page_zero_based", "csv_skip_lines", "xlsx_sheet_index",
-            "filter_query", "csv_no_header", "free_tier", "interval"}
+            "filter_query", "csv_no_header", "free_tier", "interval",
+            "page_walk"}
 # hp_source.headers is `const char *headers[5]`, so it cannot be set by the
 # generic scalar path above. A row declares them as header1/header2/header3 and
 # they are emitted as an initialiser list. tools/probe_hp_batch.py sends the
@@ -200,6 +205,20 @@ def validate_opts(r):
         raise SystemExit("%s: %s: declares page_param AND a {page} token in the "
                          "URL -- they are mutually exclusive; keep the one the "
                          "upstream honours" % (r["_src"], r["id"]))
+    # page_walk is honoured by lib/hpengine.c ONLY on an HP_JSON row
+    # (`s->page_walk && s->mode == HP_JSON`). On any other mode it generates,
+    # compiles, and does nothing — a row that reads as walked and makes one
+    # request. Refuse it where it cannot work instead.
+    pw = parsed.get("page_walk")
+    if pw is not None:
+        if pw not in ("0", "1"):
+            raise SystemExit("%s: %s: page_walk=%r -- it is a flag, 0 or 1"
+                             % (r["_src"], r["id"], pw))
+        if pw == "1" and r["mode"] != "json":
+            raise SystemExit("%s: %s: page_walk=1 on a %s row -- the engine "
+                             "walks only HP_JSON rows, so this would make ONE "
+                             "request; declare page_param / next_path / {page}"
+                             % (r["_src"], r["id"], r["mode"]))
     for k, v in parsed.items():
         m = SWALLOWED.search(v) if k != "post_body" else None
         if m:

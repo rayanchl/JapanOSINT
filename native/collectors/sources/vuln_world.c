@@ -254,10 +254,93 @@ static int kev_run(const source_ctx *ctx, intel_sink *sink, const char *q) {
 }
 
 /* ---- Exploit-DB files_exploits.csv -------------------------------------- *
- * Header: id,file,description,date_published,author,type,platform,port,...
- * We match the query against the whole line, then parse the first fields
- * (quote-aware) to surface id/description/type/platform, and build the real
- * exploit-db.com detail URL from the id. */
+ * Header (17 columns today): id,file,description,date_published,author,type,
+ * platform,port,date_added,date_updated,verified,codes,tags,aliases,
+ * screenshot_url,application_url,source_url. Every column is carried, under
+ * the header's own name, so a column the file gains later is not dropped.
+ *
+ * The file is denormalised on `tags`: an exploit with two tags is two
+ * ADJACENT rows identical but for that column (461 ids, measured
+ * 2026-10-02). Rows sharing an id fold into ONE record whose `tags` is the
+ * list of every row's tag; keying each row on the id stored the first row and
+ * collapsed the later tags onto it (stored < emitted on the run line).
+ *
+ * The query is matched against the description or the id — not just an
+ * author hash etc. — which keeps hits meaningful and honest. */
+#define EDB_MAXCOL 64
+
+/* Quote-aware CSV split of one line, in place. Returns the field count. */
+static int edb_split(char *buf, char **fields) {
+  int nf = 0, inq = 0;
+  char *w = buf, *fs = buf;
+  for (char *r = buf; ; r++) {
+    char c = *r;
+    if (inq) {
+      if (c == '"') { if (r[1] == '"') { *w++ = '"'; r++; } else inq = 0; }
+      else if (c == 0) { *w = 0; if (nf < EDB_MAXCOL) fields[nf++] = fs; break; }  /* exhaustive-ok: memory guard on fields[EDB_MAXCOL]; the file has 17 columns */
+      else *w++ = c;
+    } else if (c == '"') {
+      inq = 1;
+    } else if (c == ',' || c == 0 || c == '\r') {
+      int last = (c != ',');
+      *w++ = 0;
+      if (nf < EDB_MAXCOL) fields[nf++] = fs;    /* exhaustive-ok: memory guard, as above */
+      fs = w;
+      if (last) break;
+    } else {
+      *w++ = c;
+    }
+  }
+  return nf;
+}
+
+typedef struct {
+  cJSON *data;          /* every column of the exploit, `tags` as a list */
+  char id[64];
+} edb_pending;
+
+static int edb_flush(intel_sink *sink, edb_pending *pd) {
+  if (!pd->data) return 0;
+  const char *id   = pd->id;
+  const char *desc = jo_sv(pd->data, "description");
+  const char *date = jo_sv(pd->data, "date_published");
+  const char *auth = jo_sv(pd->data, "author");
+  const char *type = jo_sv(pd->data, "type");
+  const char *plat = jo_sv(pd->data, "platform");
+  cJSON_AddStringToObject(pd->data, "source", "Exploit-DB");
+  char *bj = cJSON_PrintUnformatted(pd->data);
+
+  cJSON *props = cJSON_CreateObject();
+  cJSON_AddStringToObject(props, "service", "EXPLOITDB");
+  cJSON_AddStringToObject(props, "edb_id", id);
+  if (type) cJSON_AddStringToObject(props, "type", type);
+  if (plat) cJSON_AddStringToObject(props, "platform", plat);
+  cJSON_AddBoolToObject(props, "success", 1);
+  char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
+
+  char link[96];
+  snprintf(link, sizeof link, "https://www.exploit-db.com/exploits/%s", id);
+
+  intel_item it = {0};
+  it.remote_key      = id;
+  it.title           = (desc && *desc) ? desc : id;
+  it.summary         = plat;
+  it.body            = bj;
+  it.lang            = "en";
+  it.published_at    = date;
+  it.author          = auth;
+  it.link            = link;
+  it.record_type     = "exploitdb-entry";
+  it.properties_json = pj;
+  it.tags_json       = "[\"osint-search\",\"exploit\",\"vulnerability\"]";
+  int ok = sink->emit(sink, &it) >= 0;
+  free(bj); free(pj);
+  cJSON_Delete(pd->data);
+  pd->data = NULL; pd->id[0] = 0;
+  return ok;
+}
+
 static int edb_run(const source_ctx *ctx, intel_sink *sink, const char *q) {
   const char *hdrs[] = { "Accept: text/csv, text/plain, */*",
                          "User-Agent: JapanOSINT/1.0 (vuln-intel)", NULL };
@@ -266,93 +349,68 @@ static int edb_run(const source_ctx *ctx, intel_sink *sink, const char *q) {
     hdrs, "EXPLOITDB");
   if (!body) return 0;
 
-  int emitted = 0, first = 1;
+  char *cols[EDB_MAXCOL] = {0};
+  int ncols = 0;
+  char *hdrline = NULL;
+  edb_pending pd = { NULL, "" };
+  int emitted = 0;
   const char *line = body;
-  while (line && *line && emitted < 50) {
+  while (line && *line) {        /* every matching row of the CSV */
     const char *nl = strchr(line, '\n');
     size_t llen = nl ? (size_t)(nl - line) : strlen(line);
-    if (first) { first = 0; goto next; }  /* skip CSV header */
     if (llen > 1) {
-      char buf[4096];
-      size_t cp = llen < sizeof buf - 1 ? llen : sizeof buf - 1;
-      memcpy(buf, line, cp); buf[cp] = 0;
-      if (jo_stristr(buf, q)) {
-        /* quote-aware split of the first 7 fields */
-        char *fields[7] = {0}; int nf = 0;
-        char *w = buf, *fs = buf; int inq = 0;
-        for (char *r = buf; ; r++) {
-          char c = *r;
-          if (inq) {
-            if (c == '"') { if (r[1] == '"') { *w++ = '"'; r++; } else inq = 0; }
-            else if (c == 0) { *w = 0; if (nf < 7) fields[nf++] = fs; break; }
-            else *w++ = c;
-          } else {
-            if (c == '"') inq = 1;
-            else if (c == ',' || c == 0) {
-              int last = (c == 0);
-              *w++ = 0;
-              if (nf < 7) fields[nf++] = fs;
-              fs = w;
-              if (last || nf >= 7) break;
-            } else *w++ = c;
-          }
+      char *buf = (char *)malloc(llen + 1);
+      if (!buf) break;
+      memcpy(buf, line, llen); buf[llen] = 0;
+      if (!hdrline) {                         /* the header names the columns */
+        hdrline = buf;
+        ncols = edb_split(hdrline, cols);
+        for (int c = 0; c < ncols; c++) vw_clean(cols[c]);
+        if (ncols > 0) cols[0] = "edb_id";
+        goto next;
+      }
+      if (!jo_stristr(buf, q)) { free(buf); goto next; }
+      char *fields[EDB_MAXCOL] = {0};
+      int nf = edb_split(buf, fields);
+      char idc[64] = {0}, dsc[1024] = {0};
+      if (nf > 0) { snprintf(idc, sizeof idc, "%s", fields[0]); vw_clean(idc); }
+      if (nf > 2) { snprintf(dsc, sizeof dsc, "%s", fields[2]); vw_clean(dsc); }
+      if (idc[0] && (jo_stristr(dsc, q) || jo_stristr(idc, q))) {
+        if (pd.data && strcmp(pd.id, idc) != 0) emitted += edb_flush(sink, &pd);
+        int fresh = !pd.data;
+        if (fresh) {
+          pd.data = cJSON_CreateObject();
+          snprintf(pd.id, sizeof pd.id, "%s", idc);
+          cJSON_AddItemToObject(pd.data, "tags", cJSON_CreateArray());
         }
-        const char *id   = nf > 0 ? fields[0] : NULL;
-        const char *desc = nf > 2 ? fields[2] : NULL;
-        const char *date = nf > 3 ? fields[3] : NULL;
-        const char *auth = nf > 4 ? fields[4] : NULL;
-        const char *type = nf > 5 ? fields[5] : NULL;
-        const char *plat = nf > 6 ? fields[6] : NULL;
-        char idc[64] = {0}, dsc[1024] = {0};
-        if (id)   { snprintf(idc, sizeof idc, "%s", id);   vw_clean(idc); }
-        if (desc) { snprintf(dsc, sizeof dsc, "%s", desc); vw_clean(dsc); }
-        /* require the query to match description or id, not just an author
-         * hash etc.; keeps hits meaningful and honest */
-        if (idc[0] && (jo_stristr(dsc, q) || jo_stristr(idc, q))) {
-          cJSON *data = cJSON_CreateObject();
-          cJSON_AddStringToObject(data, "edb_id", idc);
-          if (dsc[0]) cJSON_AddStringToObject(data, "description", dsc);
-          if (type) cJSON_AddStringToObject(data, "type", type);
-          if (plat) cJSON_AddStringToObject(data, "platform", plat);
-          if (date) cJSON_AddStringToObject(data, "date_published", date);
-          if (auth) cJSON_AddStringToObject(data, "author", auth);
-          cJSON_AddStringToObject(data, "source", "Exploit-DB");
-          char *bj = cJSON_PrintUnformatted(data);
-          cJSON_Delete(data);
-
-          cJSON *props = cJSON_CreateObject();
-          cJSON_AddStringToObject(props, "service", "EXPLOITDB");
-          cJSON_AddStringToObject(props, "edb_id", idc);
-          if (type) cJSON_AddStringToObject(props, "type", type);
-          if (plat) cJSON_AddStringToObject(props, "platform", plat);
-          cJSON_AddBoolToObject(props, "success", 1);
-          char *pj = cJSON_PrintUnformatted(props);
-          cJSON_Delete(props);
-
-          char link[96];
-          snprintf(link, sizeof link, "https://www.exploit-db.com/exploits/%s", idc);
-
-          intel_item it = {0};
-          it.remote_key      = idc;
-          it.title           = dsc[0] ? dsc : idc;
-          it.summary         = plat;
-          it.body            = bj;
-          it.lang            = "en";
-          it.published_at    = date;
-          it.author          = auth;
-          it.link            = link;
-          it.record_type     = "exploitdb-entry";
-          it.properties_json = pj;
-          it.tags_json       = "[\"osint-search\",\"exploit\",\"vulnerability\"]";
-          if (sink->emit(sink, &it) >= 0) emitted++;
-          free(bj); free(pj);
+        for (int c = 0; c < nf; c++) {
+          const char *name = c < ncols ? cols[c] : NULL;
+          char extra[24];
+          if (!name) { snprintf(extra, sizeof extra, "col_%d", c); name = extra; }
+          const char *v = fields[c];
+          if (strcmp(name, "tags") == 0) {    /* fold the denormalised column */
+            cJSON *tags = cJSON_GetObjectItem(pd.data, "tags");
+            int dup = !v || !*v;
+            cJSON *t;
+            if (!dup) cJSON_ArrayForEach(t, tags)
+              if (cJSON_IsString(t) && strcmp(t->valuestring, v) == 0) { dup = 1; break; }
+            if (!dup) cJSON_AddItemToArray(tags, cJSON_CreateString(v));
+            continue;
+          }
+          if (!fresh) continue;               /* the other columns repeat */
+          if (c == 0) v = idc;
+          else if (c == 2) v = dsc;
+          if (v && *v) cJSON_AddStringToObject(pd.data, name, v);
         }
       }
+      free(buf);
     }
   next:
     if (!nl) break;
     line = nl + 1;
   }
+  emitted += edb_flush(sink, &pd);
+  free(hdrline);
   free(body);
   fprintf(stderr, "[EXPLOITDB] emitted %d\n", emitted);
   return emitted;
