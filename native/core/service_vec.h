@@ -22,7 +22,9 @@
  * WHAT IT DOES NOT DO. It never invents a service, never widens the set beyond
  * what is registered, and never silently substitutes itself: when the
  * embedding server is not configured, the index has not been built, the
- * embedding call fails, or the dimension does not match, it returns NULL and
+ * embedding call fails, the server's model (JO_EMBED_MODEL, else GET
+ * /v1/models) is not the one the index was built with, or the dimension does
+ * not match, it returns NULL and
  * the caller falls back to osint_services_list_bounded() exactly as before.
  * That is the same inert-unless-configured contract core/embed_pod.c has.
  *
@@ -74,6 +76,15 @@ int service_vec_build(db_handle *db);
 char *service_vec_catalogue(db_handle *db, const char *query, int k,
                             osint_catalogue_note *note,
                             char ***out_ids, int *out_n);
+
+/* service_vec_catalogue() under a prompt byte budget: listing stops before
+ * the text (disclosure line included) would exceed `max_bytes`, and the
+ * disclosure says the list was cut to fit. 0 = no budget. NULL when not even
+ * one service fits — the caller falls back as for any other NULL. */
+char *service_vec_catalogue_bounded(db_handle *db, const char *query, int k,
+                                    size_t max_bytes,
+                                    osint_catalogue_note *note,
+                                    char ***out_ids, int *out_n);
 
 /* Free what service_vec_catalogue() returned through out_ids/out_n. */
 void service_vec_free_ids(char **ids, int n);
