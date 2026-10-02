@@ -241,8 +241,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         deepcam *cams = NULL;
         int ncams = 0, ccap = 0;
         find_cams_deep(data, &cams, &ncams, &ccap);
-        /* cams.slice(0,120) */
-        int lim = ncams < 120 ? ncams : 120;
+        /* Every camera found. The JS original took cams.slice(0,120) and the
+         * port kept that bound silently; the payload is already parsed. */
+        int lim = ncams;
         /* dedupe-against-already-added on url; first always added */
         char **addedurl = NULL;
         int nadd = 0, addcap = 0;

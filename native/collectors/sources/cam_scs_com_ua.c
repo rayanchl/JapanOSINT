@@ -6,7 +6,8 @@
  * JS behaviour reproduced faithfully:
  *   baseRoot = NEW_AGGREGATOR_INDEX.scsComUa
  *            = 'https://webcam.scs.com.ua/en/asia/japan/'
- *   MAX = 1000.  for page 1..5 (break if features.length >= MAX):
+ *   (the JS capped this at MAX = 1000 features over pages 1..5; the port now
+ *   walks every page — see SCS_GUARD_PAGES — and keeps every feature):
  *     url = page===1 ? baseRoot : `${baseRoot}page-<page>/`
  *     html = GET (BROWSER_UA, 20 s); continue if empty.
  *     regex:
@@ -50,7 +51,23 @@
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " \
   "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 #define SCS_ROOT "https://webcam.scs.com.ua/en/asia/japan/"
-#define SCS_MAX 1000
+/* The listing has no declared page count: the pager links a window of pages,
+ * and a page past the end is a 200 carrying the empty template (live,
+ * 2026-10-03: pages 1-3 hold ~340 cameras, page 4 onward is empty). The walk
+ * reads every page the pager links and keeps going while pages still yield
+ * cameras it has not seen; this ceiling only stops a site that never ends. */
+#define SCS_GUARD_PAGES 200   /* exhaustive-ok: runaway guard on an open-ended page walk; hitting it emits a scoped collector-truncation-notice */
+
+/* Highest `page-N/` the pager on this page links to. */
+static int scs_max_linked(const char *html) {
+  int best = 0;
+  for (const char *p = strstr(html, "/en/asia/japan/page-"); p;
+       p = strstr(p + 1, "/en/asia/japan/page-")) {
+    int v = atoi(p + 20);
+    if (v > best) best = v;
+  }
+  return best;
+}
 
 typedef struct { const char *k; const char *sv; int is_num; double nv;
                  int is_null; int is_bool; int bv; } kv;
@@ -250,19 +267,30 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int nseen = 0, capseen = 0;
   int any_transport_ok = 0, any_body = 0;
 
-  for (int page = 1; page <= 5 && nf < SCS_MAX; page++) {
+  /* This was `page <= 5 && nf < SCS_MAX(1000)`, both silent. */
+  int max_linked = 1, failed_pages = 0, capped = 0, pages = 0;
+  for (int page = 1; ; page++) {
+    if (page > SCS_GUARD_PAGES) { capped = 1; break; }
     char url[160];
     if (page == 1) snprintf(url, sizeof url, "%s", SCS_ROOT);
     else snprintf(url, sizeof url, "%spage-%d/", SCS_ROOT, page);
     int tok = 0;
     char *html = get_ua(http, url, 20000, &tok);
+    pages++;
     if (tok) any_transport_ok = 1;
-    if (!html) continue;
+    if (!html) {
+      failed_pages++;
+      if (page < max_linked) continue;   /* the pager says there is more */
+      break;
+    }
     any_body = 1;
+    int lk = scs_max_linked(html);
+    if (lk > max_linked) max_linked = lk;
+    int seen_before = nseen;
 
     const char *p = html;
     const char *a;
-    while (nf < SCS_MAX && (a = strstr(p, "<a")) != NULL) {
+    while ((a = strstr(p, "<a")) != NULL) {
       const char *gt = strchr(a, '>');
       const char *href = strstr(a, "href=\"/en/asia/japan/");
       if (!href || (gt && href > gt)) { p = a + 2; continue; }
@@ -353,11 +381,26 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       return -1;
     }
     free(html);
+    /* past every page the pager linked, a page with no camera we have not
+     * already seen is the empty template: the end of the listing */
+    if (page >= max_linked && nseen == seen_before) break;
   }
   for (int j = 0; j < nseen; j++) free(seen[j]);
   free(seen);
 
   if (!any_transport_ok && !any_body && nf == 0) { free(feats); return -1; }
+  if (failed_pages || capped) {
+    char reason[200];
+    snprintf(reason, sizeof reason,
+             capped ? "the listing walk hit SCS_GUARD_PAGES (%d pages) while pages "
+                      "still carried new cameras"
+                    : "%d listing page(s) failed to fetch (Cloudflare WAF or "
+                      "transport); the cameras on them were not read",
+             capped ? SCS_GUARD_PAGES : failed_pages);
+    jo_trunc_notice_scoped(sink, "cam-scs_com_ua", "listing", SCS_ROOT, nf, -1,
+                           reason, capped ? "raise SCS_GUARD_PAGES"
+                                          : "re-run; the WAF is intermittent");
+  }
 
   upgrade_youtube(http, feats, nf);   /* sequential port */
 
@@ -368,8 +411,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_Delete(feats[i]);
   }
   free(feats);
-  fprintf(stderr, "[cam-scs_com_ua] %d cams upserted (WAF may yield 0)\n",
-          count);
+  fprintf(stderr, "[cam-scs_com_ua] %d cams upserted over %d page(s) (WAF may "
+          "yield 0)\n", count, pages);
   return 0;
 }
 

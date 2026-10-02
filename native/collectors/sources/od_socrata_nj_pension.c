@@ -52,11 +52,24 @@ static int emit_page(const source_ctx *ctx, intel_sink *sink, const char *id,
      * dataset has no id column; name + enrollment date + location code is the
      * upstream's own distinguishing tuple and is stable across snapshots.
      * as_of_date alone would collapse the whole quarterly file onto one uid. */
-    char rk[320];
-    snprintf(rk, sizeof rk, "%s|%s|%s|%s",
+    /* Plus middle initial, pension fund and employer. Name + enrollment date +
+     * location alone collided on homonyms: 63 groups (126 rows) of the
+     * 400,716 shared it on 2026-10-03, so 63 members were stored over other
+     * members. With member_mi and pension_fund_id 17 groups remained, and
+     * those were mostly ONE person holding two employer rows (a fire district
+     * and its township, each with its own salary) — two records, so the
+     * employer is part of the identity too. 2 groups remain: different people
+     * (different service and salary) with identical name, initial, enrollment
+     * date, location, fund and employer; the dataset publishes nothing else
+     * stable to tell them apart. */
+    char rk[640];
+    snprintf(rk, sizeof rk, "%s|%s|%s|%s|%s|%s|%s",
              last ? last : "-", first ? first : "-",
              od_s(r, "enrollment_date") ? od_s(r, "enrollment_date") : "-",
-             od_s(r, "location_code") ? od_s(r, "location_code") : "-");
+             od_s(r, "location_code") ? od_s(r, "location_code") : "-",
+             od_s(r, "member_mi") ? od_s(r, "member_mi") : "-",
+             od_s(r, "pension_fund_id") ? od_s(r, "pension_fund_id") : "-",
+             emp ? emp : "-");
 
     intel_item it = {0};
     it.remote_key = rk;

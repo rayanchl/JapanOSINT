@@ -1,13 +1,17 @@
 /* collectors/government/sources/tdnet_disclosure.c
  * Port of server/src/collectors/tdnetDisclosure.js (fetchText + regex rows).
  * TDnet (TSE Timely Disclosure) — today's filings index:
- *   https://www.release.tdnet.info/inbs/I_list_001_<YYYYMMDD>.html
+ *   https://www.release.tdnet.info/inbs/I_list_<NNN>_<YYYYMMDD>.html
+ * 100 rows per page; every page of the day is walked (see run()).
  * Per <tr>: first <a href="...pdf">title</a> + all <td> stripped cells.
  * uid = tdnet-disclosure|<pdfUrl>  (== intelUid(SOURCE_ID, r.pdfUrl, …);
  * pdfUrl is always non-empty so it wins over the `${ymd}-${i}` fallback). */
 #include "source.h"
+#include "lib/jocore.h"
 #include "lib/feedlib.h"
+#include "core/httpclient.h"
 #include "lib/htmlparse.h"
+#include "lib/seenset.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,43 +47,44 @@ static void cp_slice(const char *in, size_t max, char *out, size_t outn) {
   out[w] = 0;
 }
 
-static int run(const source_ctx *ctx, intel_sink *sink) {
-  /* todayYmd(): UTC YYYYMMDD */
-  /* strftime rather than snprintf("%04d%02d%02d", tm_year + 1900, …): tm_year
-   * and the clock fields are ints the compiler cannot bound, so those forms can
-   * overrun `ymd` and `iso` and -Wformat-truncation says so. strftime is
-   * bounded by construction — it writes nothing and returns 0 rather than
-   * cutting a date in half, which matters doubly for `ymd` because it is
-   * substituted straight into the index URL: a half date would fetch the wrong
-   * day's disclosures and look like a normal empty day. The rendering is
-   * identical for every year this can see, ".000Z" included (TDnet has no
-   * sub-second precision; the literal is what the JS original emitted).
-   * gmtime_r's NULL return is checked too; it was not before. */
-  time_t now = time(NULL);
-  struct tm g;
-  char ymd[16];
-  char iso[40];
-  if (!gmtime_r(&now, &g) ||
-      !strftime(ymd, sizeof ymd, "%Y%m%d", &g) ||
-      !strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%S.000Z", &g)) {
-    fprintf(stderr, "[tdnet-disclosure] cannot render today as a date\n");
-    return -1;
+/* pdf urls already emitted this run (lib/seenset.h). TDnet lists newest
+ * first, so a filing that arrives while the walk is in progress pushes every
+ * row one place down: the last row of page k reappears as the first row of
+ * page k+1. Without the set it would be emitted twice and fold onto one uid at
+ * the sink, which the run line reports as a UID-COLLISION that is not one. */
+
+/* The day's declared total: `<div class="kaijiSum">1～100件&nbsp;/&nbsp;全405件`.
+ * Returns -1 when the page carries none (a day with no disclosures). */
+static long page_total(const char *html) {
+  const char *k = strstr(html, "kaijiSum");
+  if (!k) return -1;
+  const char *z = strstr(k, "\xE5\x85\xA8");          /* 全 */
+  if (!z || z - k > 200) return -1;
+  z += 3;
+  if (*z < '0' || *z > '9') return -1;
+  return strtol(z, NULL, 10);
+}
+
+/* The highest I_list_NNN_<ymd>.html page the pager links to (0 if none). Read
+ * from every page, so a page that appears mid-walk is still reached. */
+static int page_max_linked(const char *html, const char *ymd) {
+  char pat[48];
+  snprintf(pat, sizeof pat, "_%s.html", ymd);
+  int best = 0;
+  for (const char *p = strstr(html, "I_list_"); p; p = strstr(p + 7, "I_list_")) {
+    const char *d = p + 7;
+    if (d[0] < '0' || d[0] > '9' || d[1] < '0' || d[1] > '9' ||
+        d[2] < '0' || d[2] > '9' || strncmp(d + 3, pat, strlen(pat)) != 0)
+      continue;
+    int v = (d[0] - '0') * 100 + (d[1] - '0') * 10 + (d[2] - '0');
+    if (v > best) best = v;
   }
+  return best;
+}
 
-  char index_url[128];
-  snprintf(index_url, sizeof index_url,
-           "%s/inbs/I_list_001_%s.html", HOST, ymd);
-
-  char *html = feed_get_text(ctx->http, index_url, 12000);
-  /* JS: try fetch; on throw keep html=''. extractRows('') → []. */
-  const char *src = html ? html : "";
-
-  /* The bound was `emitted < 100`, in the loop condition where neither audit
-   * check could see it. TDnet is the Tokyo exchange's timely-disclosure feed —
-   * earnings revisions, share buybacks, M&A notices — and on a busy day a
-   * single day's index runs past 100 rows, so the 101st disclosure onwards was
-   * dropped for exactly the days that matter most. The page is already
-   * fetched and parsed; every row on it is emitted. */
+/* Emit every disclosure row on one index page. Returns rows emitted. */
+static int emit_page(const char *src, const char *ymd, const char *iso,
+                     seen_set *seen, intel_sink *sink) {
   int n = 0;
   const char *cur = src;
   const char *tr_inner; int tr_len;
@@ -121,6 +126,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       acur = a_after;
     }
     if (!pdf_url) { free(title); free(row); continue; }  /* if (!linkM) continue */
+    if (!seen_add(seen, pdf_url)) {                       /* already emitted this run */
+      free(pdf_url); free(title); free(row); continue;
+    }
 
     /* cells: every <td> in block, html_strip'd */
     cJSON *cells = cJSON_CreateArray();
@@ -141,15 +149,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       if (i + 1 < cn) jl += 4;  /* " \xC2\xB7 " */
     }
     char *joined = malloc(jl);
-    joined[0] = 0;
-    for (int i = 0; i < cn; i++) {
-      cJSON *c = cJSON_GetArrayItem(cells, i);
-      strcat(joined, cJSON_IsString(c) ? c->valuestring : "");
-      if (i + 1 < cn) strcat(joined, " \xC2\xB7 ");
-    }
     char summary[1024];
-    cp_slice(joined, 240, summary, sizeof summary);
-    free(joined);
+    summary[0] = 0;
+    if (joined) {
+      joined[0] = 0;
+      for (int i = 0; i < cn; i++) {
+        cJSON *c = cJSON_GetArrayItem(cells, i);
+        strcat(joined, cJSON_IsString(c) ? c->valuestring : "");
+        if (i + 1 < cn) strcat(joined, " \xC2\xB7 ");
+      }
+      cp_slice(joined, 240, summary, sizeof summary);
+      free(joined);
+    }
 
     cJSON *pj = cJSON_CreateObject();          /* {date: ymd, cells: [...]} */
     cJSON_AddStringToObject(pj, "date", ymd);
@@ -170,9 +181,108 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pjs); cJSON_Delete(pj);      /* frees cells too */
     free(pdf_url); free(title); free(row);
   }
-  free(html);
-  fprintf(stderr, "[tdnet-disclosure] emitted %d\n", n);
-  return n >= 0 ? 0 : -1;
+  return n;
+}
+
+/* GET one index page. Returns the body, or NULL with *status set (0 = the
+ * exchange never completed). A 404 past the last page is the end of the day's
+ * list; anything else is a failure the run has to disclose. */
+static char *get_page(const source_ctx *ctx, const char *url, long *status) {
+  http_response hr = {0};
+  int rc = http_request(ctx->http, "GET", url, NULL, NULL, 0, 12000, 2, &hr);
+  *status = rc == 0 ? hr.status : 0;
+  char *body = NULL;
+  if (rc == 0 && hr.status >= 200 && hr.status < 300 && hr.body) {
+    body = hr.body;
+    hr.body = NULL;
+  }
+  http_response_free(&hr);
+  return body;
+}
+
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  /* todayYmd(): UTC YYYYMMDD */
+  /* strftime rather than snprintf("%04d%02d%02d", tm_year + 1900, …): tm_year
+   * and the clock fields are ints the compiler cannot bound, so those forms can
+   * overrun `ymd` and `iso` and -Wformat-truncation says so. strftime is
+   * bounded by construction — it writes nothing and returns 0 rather than
+   * cutting a date in half, which matters doubly for `ymd` because it is
+   * substituted straight into the index URL: a half date would fetch the wrong
+   * day's disclosures and look like a normal empty day. The rendering is
+   * identical for every year this can see, ".000Z" included (TDnet has no
+   * sub-second precision; the literal is what the JS original emitted).
+   * gmtime_r's NULL return is checked too; it was not before. */
+  time_t now = time(NULL);
+  struct tm g;
+  char ymd[16];
+  char iso[40];
+  if (!gmtime_r(&now, &g) ||
+      !strftime(ymd, sizeof ymd, "%Y%m%d", &g) ||
+      !strftime(iso, sizeof iso, "%Y-%m-%dT%H:%M:%S.000Z", &g)) {
+    fprintf(stderr, "[tdnet-disclosure] cannot render today as a date\n");
+    return -1;
+  }
+
+  /* TDnet serves a day's index 100 rows per page — I_list_001_<ymd>.html,
+   * I_list_002_…, … — and page 001 states the day's total ("全405件") and
+   * links every other page. This used to fetch 001 only, so on 2026-09-30 it
+   * stored 100 of 405 disclosures and said nothing: the 101st onwards were
+   * lost on exactly the busy days (earnings, buybacks, M&A) that matter most.
+   * Every page is walked now. The page count is read from the server — its
+   * pager links and its declared total — and re-read on every page, so a page
+   * that appears mid-walk is still fetched; the three-digit page number in
+   * the URL is the only ceiling. */
+  seen_set seen = {0};
+  int n = 0, failed = 0, last_page = 1;
+  long total = -1, fail_status = 0;
+  for (int pg = 1; pg <= last_page && pg <= 999; pg++) {
+    char url[128];
+    snprintf(url, sizeof url, "%s/inbs/I_list_%03d_%s.html", HOST, pg, ymd);
+    long status = 0;
+    char *html = get_page(ctx, url, &status);
+    if (!html) {
+      if (pg == 1) {
+        /* No index at all is a failed run, not an empty day — an empty day is
+         * a 200 that says "に開示された情報はありません". */
+        fprintf(stderr, "[tdnet-disclosure] %s: status=%ld\n", url, status);
+        seen_free(&seen);
+        return -1;
+      }
+      fprintf(stderr, "[tdnet-disclosure] page %d failed: status=%ld\n", pg, status);
+      failed++;
+      fail_status = status;
+      continue;                       /* later pages are still worth having */
+    }
+    long t = page_total(html);
+    if (t > total) total = t;
+    int linked = page_max_linked(html, ymd);
+    if (linked > last_page) last_page = linked;
+    if (total > 0 && (total + 99) / 100 > last_page) last_page = (int)((total + 99) / 100);
+    n += emit_page(html, ymd, iso, &seen, sink);
+    free(html);
+  }
+  seen_free(&seen);
+
+  if (failed || (total >= 0 && n < total)) {
+    char scope[48], ep[96], reason[320];
+    snprintf(scope, sizeof scope, "I_list_%s", ymd);
+    snprintf(ep, sizeof ep, "%s/inbs/I_list_NNN_%s.html", HOST, ymd);
+    if (failed)
+      snprintf(reason, sizeof reason,
+               "%d of %d index pages for %s could not be fetched (last status %ld); "
+               "the rows on them are missing from this run",
+               failed, last_page, ymd, fail_status);
+    else
+      snprintf(reason, sizeof reason,
+               "TDnet declared %ld disclosures for %s but only %d rows carried "
+               "a PDF link to key on", total, ymd, n);
+    jo_trunc_notice_scoped(sink, "tdnet-disclosure", scope, ep, n, total, reason,
+                           "re-run; a page that failed is fetched again on the "
+                           "next 30-minute pass");
+  }
+  fprintf(stderr, "[tdnet-disclosure] emitted %d of %ld over %d page(s)%s\n",
+          n, total, last_page, failed ? " (some pages failed)" : "");
+  return 0;
 }
 
 static const source_def tdnet_disclosure_def = {

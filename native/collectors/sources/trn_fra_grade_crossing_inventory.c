@@ -119,19 +119,23 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (got < FRA_PAGE) break;                       /* short page: exhausted */
     if (page == FRA_MAX_PAGES - 1) capped = 1;        /* full last page: guard hit */
   }
+  /* records_used is what was EMITTED (n), not rows served (`seen`): a row
+   * with no crossingid is served and skipped, and counting it as used
+   * overstated the run in the very record that exists to state it. */
   if (capped)
     jo_trunc_notice(sink, "fra-grade-crossing-inventory",
-                     "data.transportation.gov/resource/m2f8-22s6.json", seen, -1,
+                     "data.transportation.gov/resource/m2f8-22s6.json", n, -1,
                      "page-walk hit its runaway guard (FRA_MAX_PAGES) before a "
                      "short page signalled the end of the Socrata table",
                      "raise FRA_MAX_PAGES in trn_fra_grade_crossing_inventory.c");
   if (mid_fail)
     jo_trunc_notice(sink, "fra-grade-crossing-inventory",
-                     "data.transportation.gov/resource/m2f8-22s6.json", seen, -1,
+                     "data.transportation.gov/resource/m2f8-22s6.json", n, -1,
                      "a page fetch failed mid-walk before the Socrata table was "
                      "exhausted; the true total is unknown",
                      "re-run; a transient upstream failure should clear on retry");
-  fprintf(stderr, "[fra-grade-crossing-inventory] emitted %d\n", n);
+  fprintf(stderr, "[fra-grade-crossing-inventory] emitted %d of %ld served\n",
+          n, seen);
   return 0;
 }
 
