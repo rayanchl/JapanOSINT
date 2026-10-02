@@ -1,7 +1,7 @@
 /* collectors/statistics/sources/jstat_map.c — port of
  * server/src/collectors/jstatMap.js. jSTAT MAP has no key-free bulk grid
  * endpoint; its data is the e-Stat getStatsData API (regional mesh
- * population table), gated on ESTAT_APP_ID, limit=3000. Honest empty
+ * population table), gated on ESTAT_APP_ID, every NEXT_KEY slice. Honest empty
  * without key / on failure / empty VALUE — no seed. uid key mirrors JS
  * `${mesh}-${cat}-${time}` (always non-empty → JS `|| i` is dead). */
 #include "lib/jocore.h"
@@ -26,73 +26,100 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *sdi = getenv("JSTAT_MAP_STATS_DATA_ID");
   if (!sdi || !*sdi) sdi = DEFAULT_STATS_DATA_ID;
 
-  char url[512];
-  snprintf(url, sizeof url, "%s?appId=%s&statsDataId=%s&limit=3000",
-           API_BASE, appId, sdi);
-  cJSON *root = feed_get_json(ctx->http, url, 20000);
-  if (!root) { fprintf(stderr, "[jstat-map] fetch failed\n"); return -1; }
+  /* e-Stat serves a table in slices: while rows remain, RESULT_INF.NEXT_KEY
+   * names the startPosition of the next one. This used to read ONE slice of
+   * 3000 rows (limit=3000, and a loop cap of the same size) and stop, so every
+   * row past it was discarded. It now walks NEXT_KEY to the end of the table,
+   * at the API's maximum slice size. */
+  int n = 0;
+  long start = 1;
+  for (;;) {
+    char url[512];
+    snprintf(url, sizeof url,
+             "%s?appId=%s&statsDataId=%s&limit=100000&startPosition=%ld",
+             API_BASE, appId, sdi, start);
+    cJSON *root = feed_get_json(ctx->http, url, 60000);
+    if (!root) {
+      fprintf(stderr, "[jstat-map] fetch failed at startPosition=%ld\n", start);
+      if (start == 1) return -1;
+      /* A later slice failed: what was emitted stands, the rest is stated. */
+      jo_trunc_notice(sink, "jstat-map", API_BASE, n, -1,
+                      "an e-Stat slice past the first failed to fetch; the rows "
+                      "from that startPosition on were not read this run",
+                      "re-run; the walk restarts from startPosition=1");
+      break;
+    }
 
-  cJSON *values = cJSON_GetObjectItem(root, "GET_STATS_DATA");
-  values = values ? cJSON_GetObjectItem(values, "STATISTICAL_DATA") : NULL;
-  values = values ? cJSON_GetObjectItem(values, "DATA_INF") : NULL;
-  values = values ? cJSON_GetObjectItem(values, "VALUE") : NULL;
-  if (!values || !cJSON_IsArray(values) || cJSON_GetArraySize(values) == 0) {
+    cJSON *values = cJSON_GetObjectItem(root, "GET_STATS_DATA");
+    values = values ? cJSON_GetObjectItem(values, "STATISTICAL_DATA") : NULL;
+    values = values ? cJSON_GetObjectItem(values, "DATA_INF") : NULL;
+    values = values ? cJSON_GetObjectItem(values, "VALUE") : NULL;
+    if (!values || !cJSON_IsArray(values) || cJSON_GetArraySize(values) == 0) {
+      cJSON_Delete(root);
+      if (start > 1) break;             /* past the last slice */
+      fprintf(stderr, "[jstat-map] unavailable (no VALUE)\n");
+      return -1;
+    }
+
+    cJSON *v;
+    cJSON_ArrayForEach(v, values) {
+      const char *mesh = jo_vstr(cJSON_GetObjectItem(v, "@area"));
+      const char *cat  = jo_vstr(cJSON_GetObjectItem(v, "@cat01"));
+      const char *time = jo_vstr(cJSON_GetObjectItem(v, "@time"));
+      const char *val  = jo_vstr(cJSON_GetObjectItem(v, "$"));
+
+      char rk[160], title[160], summary[160], body[320];
+      snprintf(rk, sizeof rk, "%s-%s-%s",
+               mesh ? mesh : "null", cat ? cat : "null", time ? time : "null");
+      snprintf(title, sizeof title, "jSTAT mesh %s (%s)",
+               mesh ? mesh : "?", time ? time : "?");
+      snprintf(summary, sizeof summary, "value=%s cat=%s",
+               val ? val : "null", cat ? cat : "-");
+      snprintf(body, sizeof body,
+               "jSTAT MAP / e-Stat mesh table %s: mesh=%s, category=%s, time=%s, value=%s",
+               sdi, mesh ? mesh : "null", cat ? cat : "null",
+               time ? time : "null", val ? val : "null");
+
+      cJSON *p = cJSON_CreateObject();
+      if (mesh) cJSON_AddStringToObject(p, "mesh_code", mesh); else cJSON_AddNullToObject(p, "mesh_code");
+      if (cat)  cJSON_AddStringToObject(p, "cat01", cat); else cJSON_AddNullToObject(p, "cat01");
+      if (time) cJSON_AddStringToObject(p, "time", time); else cJSON_AddNullToObject(p, "time");
+      if (val)  cJSON_AddStringToObject(p, "value", val); else cJSON_AddNullToObject(p, "value");
+      cJSON_AddStringToObject(p, "statsDataId", sdi);
+      char *pj = cJSON_PrintUnformatted(p);
+
+      cJSON *tags = cJSON_CreateArray();
+      cJSON_AddItemToArray(tags, cJSON_CreateString("statistics"));
+      cJSON_AddItemToArray(tags, cJSON_CreateString("population"));
+      cJSON_AddItemToArray(tags, cJSON_CreateString("mesh"));
+      char *tj = cJSON_PrintUnformatted(tags);
+
+      intel_item it = {0};
+      it.remote_key      = rk;
+      it.title           = title;
+      it.summary         = summary;
+      it.body            = body;
+      it.link            = "https://jstatmap.e-stat.go.jp/";
+      it.lang            = "ja";
+      it.record_type     = "jstat-map";
+      it.properties_json = pj;
+      it.tags_json       = tj;
+      if (sink->emit(sink, &it) >= 0) n++;
+
+      free(pj); free(tj);
+      cJSON_Delete(p); cJSON_Delete(tags);
+    }
+    long next = 0;
+    cJSON *ri = cJSON_GetObjectItem(root, "GET_STATS_DATA");
+    ri = ri ? cJSON_GetObjectItem(ri, "STATISTICAL_DATA") : NULL;
+    ri = ri ? cJSON_GetObjectItem(ri, "RESULT_INF") : NULL;
+    cJSON *nk = ri ? cJSON_GetObjectItem(ri, "NEXT_KEY") : NULL;
+    if (cJSON_IsNumber(nk)) next = (long)nk->valuedouble;
+    else if (cJSON_IsString(nk) && nk->valuestring) next = atol(nk->valuestring);
     cJSON_Delete(root);
-    fprintf(stderr, "[jstat-map] unavailable (no VALUE)\n");
-    return -1;
+    if (next <= start) break;         /* no NEXT_KEY: the table is exhausted */
+    start = next;
   }
-
-  int n = 0, i = 0;
-  cJSON *v;
-  cJSON_ArrayForEach(v, values) {
-    if (i++ >= 3000) break;
-    const char *mesh = jo_vstr(cJSON_GetObjectItem(v, "@area"));
-    const char *cat  = jo_vstr(cJSON_GetObjectItem(v, "@cat01"));
-    const char *time = jo_vstr(cJSON_GetObjectItem(v, "@time"));
-    const char *val  = jo_vstr(cJSON_GetObjectItem(v, "$"));
-
-    char rk[160], title[160], summary[160], body[320];
-    snprintf(rk, sizeof rk, "%s-%s-%s",
-             mesh ? mesh : "null", cat ? cat : "null", time ? time : "null");
-    snprintf(title, sizeof title, "jSTAT mesh %s (%s)",
-             mesh ? mesh : "?", time ? time : "?");
-    snprintf(summary, sizeof summary, "value=%s cat=%s",
-             val ? val : "null", cat ? cat : "-");
-    snprintf(body, sizeof body,
-             "jSTAT MAP / e-Stat mesh table %s: mesh=%s, category=%s, time=%s, value=%s",
-             sdi, mesh ? mesh : "null", cat ? cat : "null",
-             time ? time : "null", val ? val : "null");
-
-    cJSON *p = cJSON_CreateObject();
-    if (mesh) cJSON_AddStringToObject(p, "mesh_code", mesh); else cJSON_AddNullToObject(p, "mesh_code");
-    if (cat)  cJSON_AddStringToObject(p, "cat01", cat); else cJSON_AddNullToObject(p, "cat01");
-    if (time) cJSON_AddStringToObject(p, "time", time); else cJSON_AddNullToObject(p, "time");
-    if (val)  cJSON_AddStringToObject(p, "value", val); else cJSON_AddNullToObject(p, "value");
-    cJSON_AddStringToObject(p, "statsDataId", sdi);
-    char *pj = cJSON_PrintUnformatted(p);
-
-    cJSON *tags = cJSON_CreateArray();
-    cJSON_AddItemToArray(tags, cJSON_CreateString("statistics"));
-    cJSON_AddItemToArray(tags, cJSON_CreateString("population"));
-    cJSON_AddItemToArray(tags, cJSON_CreateString("mesh"));
-    char *tj = cJSON_PrintUnformatted(tags);
-
-    intel_item it = {0};
-    it.remote_key      = rk;
-    it.title           = title;
-    it.summary         = summary;
-    it.body            = body;
-    it.link            = "https://jstatmap.e-stat.go.jp/";
-    it.lang            = "ja";
-    it.record_type     = "jstat-map";
-    it.properties_json = pj;
-    it.tags_json       = tj;
-    if (sink->emit(sink, &it) >= 0) n++;
-
-    free(pj); free(tj);
-    cJSON_Delete(p); cJSON_Delete(tags);
-  }
-  cJSON_Delete(root);
   fprintf(stderr, "[jstat-map] emitted %d\n", n);
   /* run() is a STATUS code, not a row count: fetch/parse failures already
    * returned -1 above, so reaching here with zero rows is an honest empty.

@@ -1,9 +1,10 @@
 /* GIOS Poland air quality measurements (PJP API v1).
  * Endpoints (keyless; the legacy /pjp-api/rest/... paths are gone, HTTP 410 —
  * only the /v1/ paths work). THREE-STEP:
- *   1 https://api.gios.gov.pl/pjp-api/v1/rest/station/findAll?size=50&page=0
+ *   1 https://api.gios.gov.pl/pjp-api/v1/rest/station/findAll?size=500&page=<0..>
  *       -> "Lista stacji pomiarowych"[] with "Identyfikator stacji",
- *          "Nazwa stacji", "WGS84 φ N" / "WGS84 λ E" (STRINGS)
+ *          "Nazwa stacji", "WGS84 φ N" / "WGS84 λ E" (STRINGS), and
+ *          `totalPages` — walked to the end (page is 0-based)
  *   2 .../v1/rest/station/sensors/{stationId}
  *       -> "Lista stanowisk pomiarowych dla podanej stacji"[] with
  *          "Identyfikator stanowiska" and "Wskaźnik - kod"
@@ -20,6 +21,14 @@
  * JSON KEYS ARE POLISH with diacritics, and the document carries TWO "@context"
  * keys — key uniqueness is never assumed, only the Polish keys are read.
  * Station budget: JO_GIOS_STATIONS (default 15) bounds the request fan-out.
+ * It is a bound on how many STATIONS get their sensors read, so when it bites
+ * the shortfall is emitted as a collector-truncation-notice (scope
+ * "stations") against the full station list, never silent.
+ *
+ * The station list itself used to be ONE page (size=100&page=0) of a list the
+ * upstream pages: measured 2026-10-02 it holds 288 stations, totalPages=3 at
+ * size=100, so 188 stations could never be reached whatever the budget said.
+ * It is now read at size=500 and walked page by page to `totalPages`.
  * Licence: GIOS public API, keyless. */
 #include "lib/jocore.h"
 #include "source.h"
@@ -59,18 +68,56 @@ static int wanted(const char *code) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   int budget = 15;
   const char *env = getenv("JO_GIOS_STATIONS");
-  if (env && *env) { int b = atoi(env); if (b > 0 && b <= 200) budget = b; }
+  if (env && *env) { int b = atoi(env); if (b > 0) budget = b; }
 
-  cJSON *sdoc = feed_get_json(ctx->http,
-    "https://api.gios.gov.pl/pjp-api/v1/rest/station/findAll?size=100&page=0",
-    30000);
-  if (!sdoc) { fprintf(stderr, "[" SRC "] station fetch failed\n"); return -1; }
-  cJSON *stations = cJSON_GetObjectItem(sdoc, K_STATIONS);
-  if (!cJSON_IsArray(stations)) {
+  /* The whole station list, every page of it, gathered into one array. */
+  cJSON *sdoc = cJSON_CreateArray();
+  if (!sdoc) return -1;
+  int total_pages = 1;
+  for (int page = 0; page < total_pages; page++) {
+    char surl[160];
+    snprintf(surl, sizeof surl, "https://api.gios.gov.pl/pjp-api/v1/rest/"
+             "station/findAll?size=500&page=%d", page);
+    cJSON *pdoc = feed_get_json(ctx->http, surl, 30000);
+    if (!pdoc) {
+      if (page == 0) {
+        cJSON_Delete(sdoc);
+        fprintf(stderr, "[" SRC "] station fetch failed\n");
+        return -1;
+      }
+      jo_trunc_notice_scoped(sink, SRC, "station-list", surl,
+        cJSON_GetArraySize(sdoc), -1, "a later page of the station list failed",
+        "re-run; the station list is walked from page 0 every run");
+      break;
+    }
+    const cJSON *tp = cJSON_GetObjectItem(pdoc, "totalPages");
+    if (cJSON_IsNumber(tp) && tp->valuedouble > total_pages)
+      total_pages = (int)tp->valuedouble;
+    cJSON *list = cJSON_GetObjectItem(pdoc, K_STATIONS);
+    int got = 0;
+    if (cJSON_IsArray(list)) {
+      cJSON *it;
+      while ((it = cJSON_DetachItemFromArray(list, 0)) != NULL) {
+        cJSON_AddItemToArray(sdoc, it);
+        got++;
+      }
+    }
+    cJSON_Delete(pdoc);
+    if (!got) break;                       /* past the last page */
+  }
+  cJSON *stations = sdoc;
+  if (cJSON_GetArraySize(stations) == 0) {
     cJSON_Delete(sdoc);
     fprintf(stderr, "[" SRC "] no station list\n");
     return -1;
   }
+  const int nstations = cJSON_GetArraySize(stations);
+  if (nstations > budget)
+    jo_trunc_notice_scoped(sink, SRC, "stations",
+      "https://api.gios.gov.pl/pjp-api/v1/rest/station/findAll", budget,
+      nstations, "JO_GIOS_STATIONS bounds how many stations have their "
+      "sensors read per run (request fan-out)",
+      "raise JO_GIOS_STATIONS (each station costs ~4 requests)");
 
   int n = 0, used = 0;
   cJSON *st;

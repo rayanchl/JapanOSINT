@@ -5,8 +5,11 @@
  * None of them publish coordinates (France's lieuexecution_code is a
  * department code, not a point), so no row ever claims geo — R2.
  *
+ * The three EU_SOURCE feeds are walked page by page (eu_run -> pw_walk).
+ *
  *  nl-tenderned-notices
- *    GET https://www.tenderned.nl/papi/tenderned-rs-tns/v2/publicaties?page=0&size=50
+ *    GET https://www.tenderned.nl/papi/tenderned-rs-tns/v2/publicaties?page=0&size=100
+ *    (page is 0-based; size above 100 is refused with HTTP 400)
  *    Envelope {"content":[...],"totalElements":N}. Emits publicatieId,
  *    publicatieDatum, aanbestedingNaam, opdrachtgeverNaam (buying authority),
  *    typeOpdracht, opdrachtBeschrijving, europees and typePublicatie.omschrijving
@@ -16,7 +19,7 @@
  *
  *  fr-decp-marches
  *    GET https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/
- *        decp-v3-marches-valides/records?limit=50&order_by=datenotification%20desc
+ *        decp-v3-marches-valides/records?limit=100&offset=0&order_by=datenotification%20desc
  *    Envelope {"total_count":N,"results":[...]}. Emits objet, montant,
  *    acheteur_nom / acheteur_id, titulaire_id_* (supplier SIRETs — pivots into
  *    SIRENE), datenotification, codecpv, lieuexecution_nom.
@@ -24,8 +27,10 @@
  *
  *  pl-bzp-notices
  *    GET https://ezamowienia.gov.pl/mo-board/api/v1/Board/Search?
- *        SortingColumnName=PublicationDate&SortingDirection=DESC&PageNumber=1&PageSize=50
- *    Bare JSON array (no envelope). Emits noticeNumber, bzpNumber, noticeType
+ *        SortingColumnName=PublicationDate&SortingDirection=DESC&PageNumber=1&PageSize=10
+ *    (the server answers 10 rows whatever PageSize asks for — measured at 10,
+ *    20, 25, 50 and 100 — so 10 is declared, which is what lets the page walk
+ *    judge a page full) Bare JSON array (no envelope). Emits noticeNumber, bzpNumber, noticeType
  *    (ContractNotice / ContractAwardNotice / ContractPerformingNotice),
  *    publicationDate, orderObject, cpvCode, organizationName, organizationCity,
  *    orderType, isTenderAmountBelowEU.
@@ -44,6 +49,7 @@
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
 #include "lib/feedlib.h"
+#include "lib/pagewalk.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -59,6 +65,36 @@ typedef struct {
   const char *title_f, *title_alt_f, *key_f, *date_f;
   const char *sum1, *sum2, *sum3;
 } eu_src;
+
+static const char *eu_field(const cJSON *row, const char *k,
+                            char *buf, size_t n);
+
+/* The record key. `key_f` may COMPOSE several fields with `+` (the house
+ * id_keys convention): every named field is read and the values joined with
+ * '|', a missing one as the empty string. NULL when none of them is present. */
+static const char *eu_key(const cJSON *row, const char *spec,
+                          char *out, size_t n) {
+  if (!spec) return NULL;
+  if (!strchr(spec, '+')) return eu_field(row, spec, out, n);
+  size_t used = 0;
+  int any = 0;
+  out[0] = 0;
+  const char *p = spec;
+  while (*p) {
+    const char *e = strchr(p, '+');
+    size_t kl = e ? (size_t)(e - p) : strlen(p);
+    char k[64], vb[64];
+    snprintf(k, sizeof k, "%.*s", (int)kl, p);
+    const char *v = eu_field(row, k, vb, sizeof vb);
+    if (v) any = 1;
+    int w = snprintf(out + used, n - used, "%s%s", used ? "|" : "", v ? v : "");
+    if (w < 0 || (size_t)w >= n - used) break;
+    used += (size_t)w;
+    if (!e) break;
+    p = e + 1;
+  }
+  return any ? out : NULL;
+}
 
 static const char *eu_field(const cJSON *row, const char *k,
                             char *buf, size_t n) {
@@ -88,16 +124,24 @@ static void eu_copy(cJSON *props, const cJSON *row, const char *prefix) {
   }
 }
 
-static int eu_run(const eu_src *s, const source_ctx *ctx, intel_sink *sink) {
-  cJSON *doc = feed_get_json(ctx->http, s->url, 30000);
-  if (!doc) { fprintf(stderr, "[%s] fetch/parse failed\n", s->service); return -1; }
+/* One walk's state: the feed, and whether its FIRST page had the expected
+ * array (a first page without one is a shape change, reported as -1 — R3). */
+typedef struct { const eu_src *s; int pages; int first_bad; } eu_walk;
 
+/* pw_emit_fn: emit every row of one page; `seen` is what the page HELD. */
+static int eu_emit_page(const source_ctx *ctx, intel_sink *sink, const char *id,
+                        cJSON *doc, void *ud, int *seen) {
+  (void)ctx; (void)id;
+  eu_walk *w = (eu_walk *)ud;
+  const eu_src *s = w->s;
   const cJSON *arr = s->envelope ? cJSON_GetObjectItem(doc, s->envelope) : doc;
+  *seen = cJSON_IsArray(arr) ? cJSON_GetArraySize(arr) : 0;
   if (!cJSON_IsArray(arr)) {
-    fprintf(stderr, "[%s] unexpected payload shape\n", s->service);
-    cJSON_Delete(doc);
-    return -1;
+    if (w->pages == 0) w->first_bad = 1;
+    w->pages++;
+    return 0;
   }
+  w->pages++;
 
   int n = 0;
   const cJSON *row;
@@ -110,8 +154,8 @@ static int eu_run(const eu_src *s, const source_ctx *ctx, intel_sink *sink) {
     char title[500];
     snprintf(title, sizeof title, "%s", raw);
 
-    char kb[64];
-    const char *key = eu_field(row, s->key_f, kb, sizeof kb);
+    char kb[320];
+    const char *key = eu_key(row, s->key_f, kb, sizeof kb);
     char hashed[21];
     if (!key) {
       const char *parts[2] = { s->service, title };
@@ -157,9 +201,23 @@ static int eu_run(const eu_src *s, const source_ctx *ctx, intel_sink *sink) {
     if (sink->emit(sink, &it) >= 0) n++;
     free(pj);
   }
+  return n;
+}
 
-  cJSON_Delete(doc);
-  fprintf(stderr, "[%s] emitted %d\n", s->service, n);
+/* Every feed here pages, and each one used to be read ONE page deep: TenderNed
+ * page=0 of 2,925 (146,213 notices, measured 2026-10-02), BZP PageNumber=1,
+ * DECP the first 50 records. pw_walk advances the page/offset parameter each
+ * URL already carries while pages come back full, and publishes a truncation
+ * notice when its ceiling (JO_PAGE_MAX) stops it short. */
+static int eu_run(const eu_src *s, const source_ctx *ctx, intel_sink *sink) {
+  eu_walk w = { s, 0, 0 };
+  int n = pw_walk(ctx, sink, s->service, s->url, pw_fetch_json, eu_emit_page, &w);
+  if (n < 0) { fprintf(stderr, "[%s] fetch/parse failed\n", s->service); return -1; }
+  if (w.first_bad) {
+    fprintf(stderr, "[%s] unexpected payload shape\n", s->service);
+    return -1;
+  }
+  fprintf(stderr, "[%s] emitted %d across %d page(s)\n", s->service, n, w.pages);
   return 0;
 }
 
@@ -178,7 +236,7 @@ static int eu_run(const eu_src *s, const source_ctx *ctx, intel_sink *sink) {
 
 EU_SOURCE(nl_tn, "nl-tenderned-notices",
   "TenderNed Netherlands procurement notices",
-  "https://www.tenderned.nl/papi/tenderned-rs-tns/v2/publicaties?page=0&size=50",
+  "https://www.tenderned.nl/papi/tenderned-rs-tns/v2/publicaties?page=0&size=100",
   "government", "government",
   "Public procurement notices published by PIANOo/TenderNed; no stated "
   "restriction on the public API.",
@@ -192,7 +250,7 @@ EU_SOURCE(nl_tn, "nl-tenderned-notices",
 
 EU_SOURCE(fr_decp, "fr-decp-marches",
   "France DECP — declared public contracts",
-  "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/decp-v3-marches-valides/records?limit=50&order_by=datenotification%20desc",
+  "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/decp-v3-marches-valides/records?limit=100&offset=0&order_by=datenotification%20desc,id",
   "government", "government",
   "Licence Ouverte / Open Licence (data.economie.gouv.fr, Ministere de l'Economie).",
   "Validated French public contracts with buyer SIRET, supplier SIRET, amount, "
@@ -201,12 +259,16 @@ EU_SOURCE(fr_decp, "fr-decp-marches",
   86400,
   .envelope = "results", .rtype = "procurement-contract", .lang = "fr",
   .title_f = "objet", .title_alt_f = "acheteur_nom",
-  .key_f = "id", .date_f = "datenotification",
+  /* `id` is the BUYER's contract number, not a record key: across 2,000
+   * records (2026-10-02) it took 1,895 values — reused by other buyers, and
+   * repeated per supplier and lot of one contract. buyer+id+supplier+amount
+   * took 2,000. */
+  .key_f = "acheteur_id+id+titulaire_id_1+montant", .date_f = "datenotification",
   .sum1 = "acheteur_nom", .sum2 = "montant", .sum3 = "lieuexecution_nom")
 
 EU_SOURCE(pl_bzp, "pl-bzp-notices",
   "Poland Biuletyn Zamowien Publicznych notices",
-  "https://ezamowienia.gov.pl/mo-board/api/v1/Board/Search?SortingColumnName=PublicationDate&SortingDirection=DESC&PageNumber=1&PageSize=50",
+  "https://ezamowienia.gov.pl/mo-board/api/v1/Board/Search?SortingColumnName=PublicationDate&SortingDirection=DESC&PageNumber=1&PageSize=10",
   "government", "government",
   "Official UZP e-Zamowienia platform; notices are statutorily public.",
   "Poland's official public-procurement bulletin — every below- and "

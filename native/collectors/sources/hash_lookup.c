@@ -102,7 +102,7 @@ static cJSON *query_virustotal(http_client *http, const char *hash) {
     if (names && cJSON_IsArray(names)) {
       cJSON *no = cJSON_CreateArray();
       int c = cJSON_GetArraySize(names);
-      for (int i = 0; i < c && i < 10; i++) {
+      for (int i = 0; i < c; i++) {
         cJSON *nm = cJSON_GetArrayItem(names, i);
         if (nm && cJSON_IsString(nm)) cJSON_AddItemToArray(no, cJSON_CreateString(nm->valuestring));
       }
@@ -247,7 +247,7 @@ static cJSON *query_malwarebazaar(http_client *http, const char *hash) {
       if (yara && cJSON_IsArray(yara)) {
         cJSON *yr = cJSON_CreateArray();
         int c = cJSON_GetArraySize(yara);
-        for (int i = 0; i < c && i < 10; i++) {
+        for (int i = 0; i < c; i++) {
           cJSON *rule = cJSON_GetArrayItem(yara, i);
           cJSON *rn = cJSON_GetObjectItem(rule, "rule_name");
           if (rn && cJSON_IsString(rn)) cJSON_AddItemToArray(yr, cJSON_CreateString(rn->valuestring));

@@ -68,7 +68,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     snprintf(work, sizeof work, "%s", line);
     char *fld[16]; int nf = 0;
     char *p = work;
-    while (nf < 16) {
+    while (nf < 16) {   /* exhaustive-ok: memory guard on fld[16]; only fields 0-8 are read, a longer line keeps its tail in fld[15] */
       fld[nf++] = p;
       char *c = strchr(p, ',');
       if (!c) break;

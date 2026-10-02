@@ -65,8 +65,15 @@ static const hp_source HP_AMERICAS[] = {
     .name_ja = "SAM.gov — 連邦調達登録", .category = "government",
     .portal = "https://sam.gov", .record_type = "us-sam-entity",
     .tags = "\"us\",\"procurement\"", .key_env = "SAM_API_KEY", .free_tier = 1,
+    /* The Entity API pages: `page` is 0-based and `size` is at most 10. This
+     * row read page=0 only — the first 10 registrations of a name. It now
+     * walks page= until a page comes back empty (page_max pages, stamped when
+     * it bites). nextLink is not followed: it carries a placeholder in place
+     * of the api_key. Not measured live — needs SAM_API_KEY. */
     .url = "https://api.sam.gov/entity-information/v3/entities?api_key={key}"
-           "&legalBusinessName={q}&includeSections=entityRegistration,coreData&page=0",
+           "&legalBusinessName={q}&includeSections=entityRegistration,coreData"
+           "&size=10&page=0",
+    .page_param = "page", .page_zero_based = 1,
     .array_path = "entityData", .title_keys = "entityRegistration.legalBusinessName",
     .id_keys = "entityRegistration.ueiSAM",
     .description = "SAM.gov registration behind a federal contractor — UEI, CAGE "

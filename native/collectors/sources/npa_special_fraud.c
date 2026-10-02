@@ -145,7 +145,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (has1 && has12) {
       memset(monthCols, 0, sizeof monthCols);
       hasMonth = 1;
-      for (int c = 0; c < ncol && c < 256; c++) {
+      for (int c = 0; c < ncol && c < 256; c++) {   /* exhaustive-ok: memory guard on monthCols[256]; the 12 month columns sit far left of it */
         char t[32]; trimcpy(t, sizeof t, rcell(row, c));
         for (int m = 0; m < 12; m++)
           if (strcmp(t, MONTH_LABELS[m]) == 0) { monthCols[c] = m + 1; break; }
@@ -169,7 +169,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     else if (strcmp(label, "検挙人員") == 0) metric = "arrested_persons";
     if (!metric) continue;
 
-    for (int c = 0; c < ncol && c < 256; c++) {
+    for (int c = 0; c < ncol && c < 256; c++) {   /* exhaustive-ok: memory guard on monthCols[256] (see the header scan above) */
       if (!monthCols[c]) continue;
       int ok;
       long v = to_int(rcell(row, c), &ok);

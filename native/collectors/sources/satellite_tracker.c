@@ -122,7 +122,7 @@ static int run_satellite(const source_ctx *ctx, intel_sink *sink) {
   cJSON *ab = cJSON_GetObjectItem(json, "above");
   if (ab && cJSON_IsArray(ab)) {
     int c = cJSON_GetArraySize(ab);
-    for (int i = 0; i < c && i < 50; i++) {
+    for (int i = 0; i < c; i++) {
       cJSON *s = cJSON_GetArrayItem(ab, i);
       if (s) emit_satellite(sink, s, lat, lon);
     }

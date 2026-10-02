@@ -2994,7 +2994,11 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "regulated-facility",
     .tags = "\"chile\",\"environment\",\"sma\",\"enforcement\",\"facility\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://snifa.sma.gob.cl/UnidadFiscalizable/Resultado?Pagina=1",
+    /* `Pagina` is not honoured: Pagina=1 and Pagina=2 each return the same
+     * 40,062,605-byte page carrying the same 22,418 /Ficha/ links, and the
+     * page links to no other page (measured 2026-10-02). One request is the
+     * whole catastro, so there is no later page to lose. */
+    .url = "https://snifa.sma.gob.cl/UnidadFiscalizable/Resultado?Pagina=1",  /* exhaustive-ok: Pagina ignored, one response = all 22,418 units (measured 2026-10-02) */
     /* The whole catastro is rendered into one page: 39.9 MB of HTML, 62.6 s to
      * the last byte when measured 2026-09-11 (HTTP 200). The engine default
      * aborted it as a `transport failure`, so the row stored nothing. */

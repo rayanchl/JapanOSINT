@@ -179,21 +179,13 @@ make -C native lint-baseline     # python3 tools/lint_sources.py --write-baselin
 
 ## 6. Candidate sources (batch 14)
 
-The 1,001 `collectors/sources/csrc14_*.c` rows were authored without egress, so
-they are registered but carry no 2xx/parse proof (`docs/candidate-sources-batch14.md`).
-Two targets manage their lifecycle:
-
-```sh
-make -C native verify-candidates   # NEEDS NETWORK: probes every candidate, writes
-                                   # docs/verified-sources-batch14.tsv + rejected-…tsv
-make -C native regen-candidates    # rebuild the manifest and its collectors from the
-                                   # generator; reserved ids are taken live from the
-                                   # tree minus this batch, so it is idempotent
-```
-
-`verify-candidates` is the promotion step: run it, regenerate from the verified
-manifest, then drop the `csrc14_*` files. It is the only target here that hits
-the network, which is why CI does not run either of them.
+Batch 14's 1,001 unverified `csrc14_*` candidates were probed and promoted long
+ago (594 PASS became `vsrc14_*`; rejects are kept in
+`docs/rejected-sources-batch14.tsv`). No `csrc14_*` file remains, and the
+`verify-candidates` / `regen-candidates` targets that managed them have been
+removed: `regen-candidates` ended in `gen_verified_sources.py --prefix csrc14
+--unverified`, so running it would have registered ~1,000 never-probed sources
+again. New sources go through the manifest gates in CLAUDE.md ("Batch tooling").
 
 ---
 
@@ -203,7 +195,7 @@ the network, which is why CI does not run either of them.
 
 | Job | Runner | Steps |
 |---|---|---|
-| `build-and-test` | ubuntu-latest | install the deps above, `make -j`, `selftest`, `unit`, `hptest`, `authtest`, `pagewalktest`, `htmlparsetest`, `lint-sources`, `audit-sources` |
+| `build-and-test` | ubuntu-latest | install the deps above, `make -j`, `selftest`, `unit`, `hptest`, `authtest`, `pagewalktest`, `htmlparsetest`, `lint-sources`, `source-floor`, `registry-floor`, `audit-sources` (fails on any strict-set finding), `tools/ci_concurrency_gate.sh` |
 | `asan` | ubuntu-latest | `make asan-test` — its own object tree, because every TU must carry `-fsanitize=address` |
 | `macos` | macos-latest | Homebrew deps, `make -j`, `selftest`, `unit`, `hptest`, `authtest`, `pagewalktest`, `htmlparsetest` |
 
