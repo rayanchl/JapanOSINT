@@ -265,8 +265,9 @@ int main(int argc, char **argv) {
       intel_sink sink = intel_sink_make(&db, argv[i + 1], "legacy");
       osint_result r;
       osint_dispatch(&db, &lc, argv[i + 1], argv[i + 2], NULL, &sink, &r);
-      printf("service=%s success=%d records=%d\n%s\n", r.service, r.success,
-             r.records, r.data ? r.data : "(no data)");
+      printf("service=%s success=%d records=%d notices=%d\n%s\n", r.service,
+             r.success, r.records, r.notices, r.data ? r.data : "(no data)");
+      if (r.resolved_from) printf("resolved_from=%s\n", r.resolved_from);
       if (r.error) printf("error=%s\n", r.error);
       osint_result_free(&r);
       http_client_free(hc);

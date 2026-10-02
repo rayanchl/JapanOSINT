@@ -114,6 +114,15 @@ static int resolve_edit(const char *a, const char *b, int max) {
   return prev[lb];
 }
 
+/* Defined with the routing catalogue below; the resolver needs the same rule. */
+static int is_entity_pivot(const source_def *d);
+
+/* ONLY ENTITY PIVOTS ARE CANDIDATES. The loop below used to consider every
+ * registered id — ~8k of them, most of them SCHEDULED bulk rows that fetch the
+ * same collection whatever entity they are handed. A name one edit away from
+ * such a row would then answer "what do we have on X" with a whole bulk feed
+ * attributed to X: house rule 4d's confident wrong answer, reached by a typo.
+ * A name that is meant to be pivoted on an entity can only mean a pivot. */
 int osint_resolve_near(const char *canon, char *out, size_t n) {
   if (!canon || !*canon || !out || n == 0) return 0;
   char norm[128];
@@ -121,7 +130,7 @@ int osint_resolve_near(const char *canon, char *out, size_t n) {
   if (!*norm) return 0;
 
   const source_def *hit = registry_get(norm);
-  if (hit && strcmp(hit->id, canon)) {              /* (1) spelling only */
+  if (hit && strcmp(hit->id, canon) && is_entity_pivot(hit)) {  /* (1) spelling */
     snprintf(out, n, "%s", hit->id);
     return 1;
   }
@@ -130,7 +139,7 @@ int osint_resolve_near(const char *canon, char *out, size_t n) {
   int cnt = registry_count(), best = 3, bestn = 0;
   const char *bestid = NULL;
   for (int i = 0; i < cnt; i++) {
-    if (!all[i] || !all[i]->id) continue;
+    if (!all[i] || !all[i]->id || !is_entity_pivot(all[i])) continue;
     int d = resolve_edit(norm, all[i]->id, 2);
     if (d > 2) continue;
     if (d < best) { best = d; bestid = all[i]->id; bestn = 1; }
@@ -460,8 +469,16 @@ typedef struct {
    * the last one (what this did before) silently discarded N-1 of N fetched
    * records at the dispatcher seam; see docs/SOURCE_EXHAUSTIVENESS.md. */
   cJSON      *caps;          /* JSON array, created lazily */
-  int         n_emit;      /* rows the sink ACCEPTED */
+  /* `collector-*-notice` payloads (intel_item_is_notice): kept — nothing the
+   * service emitted is discarded — but APART from the records, because a
+   * notice is data about the run and not a finding. A keyless pivot whose only
+   * emit was its needs-credential notice used to come back success=1,
+   * records=1, confidence 70, fetch_log ok. */
+  cJSON      *notes;         /* JSON array, created lazily */
+  int         n_emit;      /* RECORDS the sink accepted (notices excluded) */
+  int         n_notices;   /* notices the sink accepted */
   int         n_refused;   /* rows the sink refused (emit() < 0) */
+  char        notice_status[48];  /* first collector-status-notice's status */
   int         any_new;
   /* per-emit source attribution, deduped by name (empty name = "the service
    * itself", resolved to the canonical id at finalize). */
@@ -487,16 +504,26 @@ static void acc_add(dual_sink *d, const char *name) {
 static int dual_emit(struct intel_sink *s, const intel_item *it) {
   dual_sink *d = (dual_sink *)s->ctx;
   int rc = d->real ? d->real->emit(d->real, it) : 1;
+  int notice = intel_item_is_notice(it);
   /* capture the service's payload: body preferred, else properties. Every
    * record is appended — parsed when it is JSON so downstream keeps the
-   * structure, otherwise kept verbatim as a string. */
+   * structure, otherwise kept verbatim as a string. Notices go to their own
+   * array (see `notes`). */
   const char *payload = (it->body && *it->body) ? it->body
                        : (it->properties_json ? it->properties_json : NULL);
   if (payload) {
-    if (!d->caps) d->caps = cJSON_CreateArray();
-    if (d->caps) {
+    cJSON **dst = notice ? &d->notes : &d->caps;
+    if (!*dst) *dst = cJSON_CreateArray();
+    if (*dst) {
       cJSON *p = cJSON_Parse(payload);
-      cJSON_AddItemToArray(d->caps, p ? p : cJSON_CreateString(payload));
+      if (notice && p && !d->notice_status[0] && it->record_type &&
+          !strcmp(it->record_type, "collector-status-notice")) {
+        const cJSON *st = cJSON_GetObjectItem(p, "status");
+        if (cJSON_IsString(st) && st->valuestring[0])
+          snprintf(d->notice_status, sizeof d->notice_status, "%s",
+                   st->valuestring);
+      }
+      cJSON_AddItemToArray(*dst, p ? p : cJSON_CreateString(payload));
     }
   }
   /* attribute this row to an underlying source: the collector's explicit
@@ -511,13 +538,15 @@ static int dual_emit(struct intel_sink *s, const intel_item *it) {
    * gated: we really did fetch that payload, and dropping it silently would
    * trade one wrong number for a discarded record. A refusal is carried
    * instead, so the shortfall is visible rather than absorbed. */
-  if (rc >= 0) {
+  if (rc < 0) {
+    d->n_refused++;
+  } else if (notice) {
+    d->n_notices++;            /* not a record: no attribution, no success */
+  } else {
     acc_add(d, (it->sub_source_id && *it->sub_source_id) ? it->sub_source_id : "");
     d->n_emit++;
-  } else {
-    d->n_refused++;
+    if (rc > 0) d->any_new = 1;
   }
-  if (rc > 0) d->any_new = 1;
   return rc;
 }
 
@@ -593,7 +622,13 @@ int osint_dispatch(db_handle *db, llm_client *llm, const char *service,
   http_client *http = http_client_new();
   volatile int cancel = 0;
   source_ctx ctx = {0};
-  ctx.source_id   = canon;
+  /* def->id, never `canon`. After osint_resolve_near() matched a misspelled
+   * name onto a registered source, `canon` is the misspelling — and hp_run()
+   * finds its table row by an exact lookup of ctx->source_id, so the resolved
+   * source failed every time (rc=-1), wrote fetch_log status=error against
+   * the HEALTHY source it resolved to and opened an anomaly on it: a model
+   * that kept misspelling a name could get a working source quarantined. */
+  ctx.source_id   = def->id;
   ctx.entity      = entity;
   ctx.entity_type = entity_type;
   ctx.db          = db;
@@ -630,18 +665,29 @@ int osint_dispatch(db_handle *db, llm_client *llm, const char *service,
   out->success    = (rc >= 0 && ds.n_emit > 0) ? 1 : 0;
   out->confidence = out->success ? 70 : 0;     /* JS default */
   /* Hand over EVERY captured record, with its own count so a consumer can
-   * bound its view without guessing how much it is not seeing. */
+   * bound its view without guessing how much it is not seeing. Notices ride
+   * alongside under their own key and count — kept, never counted as data. */
   out->records = ds.caps ? cJSON_GetArraySize(ds.caps) : 0;
-  if (ds.caps) {
+  out->notices = ds.n_notices;
+  if (ds.caps || ds.notes) {
     cJSON *wrap = cJSON_CreateObject();
     cJSON_AddNumberToObject(wrap, "record_count", out->records);
-    cJSON_AddItemToObject(wrap, "records", ds.caps);   /* wrap takes ownership */
+    cJSON_AddItemToObject(wrap, "records",              /* wrap takes ownership */
+                          ds.caps ? ds.caps : cJSON_CreateArray());
     ds.caps = NULL;
+    if (ds.notes) {
+      cJSON_AddNumberToObject(wrap, "notice_count", cJSON_GetArraySize(ds.notes));
+      cJSON_AddItemToObject(wrap, "notices", ds.notes);
+      ds.notes = NULL;
+    }
     out->data = cJSON_PrintUnformatted(wrap);
     cJSON_Delete(wrap);
   }
+  /* A notice-only run says what the notice said (needs_credential), not a
+   * generic no_data: that is the actionable fact. */
   if (!out->success && !out->error)
-    out->error = strdup(rc < 0 ? "service_error" : "no_data");
+    out->error = strdup(rc < 0 ? "service_error"
+                        : ds.notice_status[0] ? ds.notice_status : "no_data");
 
   /* Build the source attribution array, in precedence order:
    *  1. explicit sub_source_id labels from the emits (corpus per-source,
@@ -699,7 +745,7 @@ int osint_dispatch(db_handle *db, llm_client *llm, const char *service,
     }
   } else {
     cJSON *o = cJSON_CreateObject();
-    cJSON_AddStringToObject(o, "name", canon);
+    cJSON_AddStringToObject(o, "name", def->id);
     cJSON_AddStringToObject(o, "status",
                             out->success ? "ok" : (rc < 0 ? "error" : "empty"));
     cJSON_AddNumberToObject(o, "records", out->success ? ds.n_emit : 0);
@@ -711,6 +757,7 @@ int osint_dispatch(db_handle *db, llm_client *llm, const char *service,
   for (int i = 0; i < ds.n_srcs; i++) free(ds.srcs[i].name);
   free(ds.srcs);
   cJSON_Delete(ds.caps);        /* NULL unless the wrap above never ran */
+  cJSON_Delete(ds.notes);
 
   http_client_free(http);   /* after reading its host log */
   if (own_ok) intel_sink_free(&own);
@@ -727,10 +774,10 @@ int osint_dispatch(db_handle *db, llm_client *llm, const char *service,
     anomaly_detect(db, def->id, flid, status, ds.n_emit, duration_ms);
   }
 
-  fprintf(stderr, "[osint] %s(%s) success=%d emit=%d sources=%d hosts=%d\n",
-          canon, entity, out->success, ds.n_emit, n_labeled, nh);
+  fprintf(stderr, "[osint] %s(%s) success=%d emit=%d notices=%d sources=%d hosts=%d\n",
+          def->id, entity, out->success, ds.n_emit, ds.n_notices, n_labeled, nh);
   if (ds.n_refused)
     fprintf(stderr, "[osint] %s: %d record(s) refused by the store\n",
-            canon, ds.n_refused);
+            def->id, ds.n_refused);
   return 0;
 }

@@ -11,20 +11,27 @@
 #include <math.h>
 #define UA "JapanOSINT/1.0 (github.com/rayanchl/JapanOSINT)"
 
+/* `patch`, `gate` and `model` are what the reviewer is approving. The admin
+ * page's RepairCard renders the URL swap from row.patch and offers "Approve"
+ * on a verified url_swap — and this query did not select patch (nor gate or
+ * model), so the card showed an Approve button over an EMPTY diff: a live URL
+ * override applied on the strength of a change nobody was shown. Same columns
+ * as the per-source pipeline view (maintenance_source_pipeline). */
 static cJSON *recent_repairs(sqlite3 *h, const char *status, int hours) {
   cJSON *a=cJSON_CreateArray(); sqlite3_stmt *s;
   if (sqlite3_prepare_v2(h,
-    "SELECT id,anomaly_id,source_id,status,action,triage_class,pr_url,created_at "
+    "SELECT id,anomaly_id,source_id,status,action,triage_class,pr_url,created_at,"
+    "patch,gate,model "
     "FROM collector_repair WHERE status=?1 AND created_at>=datetime('now',?2) "
     "ORDER BY created_at DESC LIMIT 50",-1,&s,NULL)==SQLITE_OK){
     char win[32]; snprintf(win,sizeof win,"-%d hours",hours);
     sqlite3_bind_text(s,1,status,-1,SQLITE_TRANSIENT);
     sqlite3_bind_text(s,2,win,-1,SQLITE_TRANSIENT);
     static const char *K[]={"id","anomaly_id","source_id","status","action",
-      "triage_class","pr_url","created_at"};
+      "triage_class","pr_url","created_at","patch","gate","model"};
     while (sqlite3_step(s)==SQLITE_ROW){
       cJSON *r=cJSON_CreateObject();
-      for (int i=0;i<8;i++){
+      for (int i=0;i<11;i++){
         if (sqlite3_column_type(s,i)==SQLITE_NULL) cJSON_AddNullToObject(r,K[i]);
         else if (i==0||i==1) cJSON_AddNumberToObject(r,K[i],(double)sqlite3_column_int64(s,i));
         else cJSON_AddStringToObject(r,K[i],(const char*)sqlite3_column_text(s,i));
