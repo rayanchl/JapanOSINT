@@ -8,6 +8,16 @@
 #include <ctype.h>
 #include <time.h>
 #include <math.h>
+
+/* Case-insensitive substring test. strcasestr() is a GNU extension glibc only
+ * declares under _GNU_SOURCE, which this tree never defines — on Linux CI it
+ * was implicitly declared (pointer truncated to int). */
+static int ci_has(const char *hay, const char *needle) {
+  size_t nl = strlen(needle);
+  for (; *hay; hay++)
+    if (strncasecmp(hay, needle, nl) == 0) return 1;
+  return 0;
+}
 #define UA "JapanOSINT/1.0 (github.com/rayanchl/JapanOSINT)"
 
 static const char *ALLOWED[] = { "intel_items","sources","fetch_log",
@@ -89,7 +99,7 @@ char *dbexplorer_table(db_handle *db, const char *name, int limit, int offset,
     int first=1; size_t wl=0;
     cJSON_ArrayForEach(cc,cols) {
       const char *ty=cJSON_GetObjectItem(cc,"type")->valuestring;
-      if (ty && (strcasestr(ty,"TEXT")||strcasestr(ty,"CHAR")||strcasestr(ty,"CLOB"))) {
+      if (ty && (ci_has(ty,"TEXT")||ci_has(ty,"CHAR")||ci_has(ty,"CLOB"))) {
         int n = snprintf(where+wl,wcap-wl,"%s\"%s\" LIKE ?",
           first?"WHERE ":" OR ",cJSON_GetObjectItem(cc,"name")->valuestring);
         /* wcap is computed from the real column set above, so this cannot bite
