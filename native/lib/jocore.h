@@ -33,6 +33,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>        /* strncasecmp — POSIX puts it here, not string.h */
 #include <time.h>
 #include <sys/time.h>
 
@@ -226,6 +227,40 @@ static inline void jo_utf8_trunc(char *s, size_t max_bytes) {
   if (strlen(s) <= max_bytes) return;
   while (max_bytes > 0 && ((unsigned char)s[max_bytes] & 0xC0) == 0x80) max_bytes--;
   s[max_bytes] = 0;
+}
+
+/* Case-insensitive (ASCII) strstr. strcasestr() itself is a GNU/BSD
+ * extension: glibc declares it only under _GNU_SOURCE, which this tree does
+ * not define, so on the Linux CI it was implicitly declared — an int return
+ * truncating a 64-bit pointer, and a hard error from GCC 14 on. macOS hid that
+ * by declaring it unconditionally. Same contract as strcasestr: an empty
+ * needle matches at `hay`, NULL when absent. */
+static inline char *jo_strcasestr(const char *hay, const char *needle) {
+  if (!hay || !needle) return NULL;
+  size_t nl = strlen(needle);
+  if (!nl) return (char *)hay;
+  int c0 = tolower((unsigned char)needle[0]);
+  for (const char *p = hay; *p; p++)
+    if (tolower((unsigned char)*p) == c0 && strncasecmp(p, needle, nl) == 0)
+      return (char *)p;
+  return NULL;
+}
+
+/* memmem(), portably — the same story as jo_strcasestr: glibc declares it
+ * only under _GNU_SOURCE. Byte search of `needle` (nl bytes) in `hay` (hl
+ * bytes); an empty needle matches at `hay`. */
+static inline void *jo_memmem(const void *hay, size_t hl, const void *needle, size_t nl) {
+  if (!hay || !needle) return NULL;
+  if (!nl) return (void *)hay;
+  if (nl > hl) return NULL;
+  const unsigned char *h = (const unsigned char *)hay, *n = (const unsigned char *)needle;
+  for (size_t i = 0; i + nl <= hl; i++) {
+    const unsigned char *p = memchr(h + i, n[0], hl - nl + 1 - i);
+    if (!p) return NULL;
+    i = (size_t)(p - h);
+    if (!memcmp(p, n, nl)) return (void *)p;
+  }
+  return NULL;
 }
 
 /* ASCII-lowercase `in` into `out` (always NUL-terminated). Byte-wise and

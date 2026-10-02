@@ -119,16 +119,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       http_status = (int)hr.status;
       content_length = (long)hr.body_len;
       if (hr.body) {
-        char *ts = strcasestr(hr.body, "<title>");
-        char *te = strcasestr(hr.body, "</title>");
+        char *ts = jo_strcasestr(hr.body, "<title>");
+        char *te = jo_strcasestr(hr.body, "</title>");
         if (ts && te && te > ts) {
           ts += 7;
           long l = te - ts;
           if (l > 0 && l < 512) { title = malloc(l + 1); memcpy(title, ts, l); title[l] = 0; }
         }
-        if (strcasestr(hr.body, "verify your account") ||
-            strcasestr(hr.body, "confirm your identity") ||
-            strcasestr(hr.body, "urgent action required"))
+        if (jo_strcasestr(hr.body, "verify your account") ||
+            jo_strcasestr(hr.body, "confirm your identity") ||
+            jo_strcasestr(hr.body, "urgent action required"))
           is_susp = 1;
       }
     }

@@ -203,10 +203,85 @@ static void test_wellformed_long_cell_is_not_repaired(void) {
   ok(pv && cJSON_IsString(pv) && strstr(pv->valuestring, "6. f"),
      "the whole cell is kept, its last line included");
   cJSON_Delete(rows);
-  /* The same text through the repairing parser is what the xlsx path used to
-   * do — pinned so the difference stays visible. */
+  /* The same text through the REPAIRING parser. This used to be pinned as
+   * "csv_parse_x still repairs it" — i.e. the defect: the cell closes
+   * properly (its quote is followed by a line end), so it is not malformed and
+   * the repair must leave it alone in every feed, xlsx or not. */
   rows = csv_parse_x(t, 1, NULL, 0, NULL);
-  ok(csv_quote_repairs() >= 1, "csv_parse_x still repairs it (non-xlsx feeds)");
+  eqi(cJSON_GetArraySize(rows), 2, "csv_parse_x reads the same two records");
+  eqi(csv_quote_repairs(), 0, "and repairs nothing: the long cell is well-formed");
+  cJSON_Delete(rows);
+}
+
+/* ── 2026-10-02: the repair must only touch a REAL malformation ──────────── */
+
+static void test_long_wellformed_cell_in_a_feed(void) {
+  printf("-- a well-formed six-line cell in an ordinary CSV feed is one cell\n");
+  /* The repair bound (4 lines) used to split this into 7 rows: the real
+   * record truncated to "l1", five junk records l2..l6, and a
+   * csv-quote-repaired notice blaming the upstream for a correct file. */
+  const char *t = "id,desc,flag\n1,\"l1\nl2\nl3\nl4\nl5\nl6\",Y\n2,ok,N\n";
+  cJSON *rows = csv_parse_x(t, 1, ",", 0, NULL);
+  eqi(cJSON_GetArraySize(rows), 2, "two records, not seven");
+  eqi(csv_quote_repairs(), 0, "no repair is claimed");
+  cJSON *r0 = cJSON_GetArrayItem(rows, 0);
+  cJSON *dv = r0 ? cJSON_GetObjectItem(r0, "desc") : NULL;
+  eq(dv ? dv->valuestring : NULL, "l1\nl2\nl3\nl4\nl5\nl6", "the whole cell is kept");
+  cJSON *fv = r0 ? cJSON_GetObjectItem(r0, "flag") : NULL;
+  eq(fv ? fv->valuestring : NULL, "Y", "and the field after it is its own");
+  cJSON_Delete(rows);
+  /* The same shape with a non-comma delimiter and with CRLF line ends. */
+  rows = csv_parse_x("a|b\r\n1|\"x\r\ny\r\nz\r\nw\r\nv\r\nu\"\r\n2|ok\r\n", 1, "|", 0, NULL);
+  eqi(cJSON_GetArraySize(rows), 2, "pipe + CRLF: two records");
+  eqi(csv_quote_repairs(), 0, "pipe + CRLF: no repair");
+  cJSON_Delete(rows);
+}
+
+static void test_runaway_before_a_later_quoted_field(void) {
+  printf("-- a runaway quote whose next quote OPENS a later field is still repaired\n");
+  /* The next quote after the runaway is the opening quote of row 6's field,
+   * followed by `q` — not a close. Read by the letter it would swallow rows
+   * 2-5 into row 1; it must be closed at its own line end instead. */
+  const char *t = "1,\"runaway\n2,b\n3,c\n4,d\n5,e\n6,\"q\",f\n";
+  cJSON *rows = csv_parse_x(t, 0, NULL, 0, NULL);
+  eqi(csv_quote_repairs(), 1, "one repair");
+  eqi(cJSON_GetArraySize(rows), 6, "six records");
+  eq(cell(rows, 0, 1), "runaway", "the runaway keeps its own line");
+  eq(cell(rows, 5, 1), "q", "and the later quoted field still unquotes");
+  cJSON_Delete(rows);
+}
+
+static void test_repair_leaves_no_carriage_return(void) {
+  printf("-- a repaired field in a CRLF file does not end in \\r\n");
+  const char *t = "a,b\r\n1,\"x\r\n2,y\r\n3,z\r\n4,w\r\n5,v\r\n6,u\r\n";
+  cJSON *rows = csv_parse_x(t, 1, NULL, 0, NULL);
+  eqi(csv_quote_repairs(), 1, "one repair");
+  eqi(cJSON_GetArraySize(rows), 6, "six records");
+  cJSON *r0 = cJSON_GetArrayItem(rows, 0);
+  cJSON *bv = r0 ? cJSON_GetObjectItem(r0, "b") : NULL;
+  eq(bv ? bv->valuestring : NULL, "x", "the repaired value is \"x\", not \"x\\r\"");
+  cJSON_Delete(rows);
+}
+
+static void test_blank_before_quote_in_comma_mode(void) {
+  printf("-- comma mode: a blank before a quote still opens the quoted field\n");
+  /* Regression of the start-only rule: the blank counted as content, so the
+   * quote after it was literal and "Tokyo, Japan" was split in two. */
+  const char *t = "\"x\", \"Tokyo, Japan\", \"2\"\n";
+  cJSON *rows = csv_parse_x(t, 0, NULL, 0, NULL);
+  eqi(cJSON_GetArraySize(cJSON_GetArrayItem(rows, 0)), 3, "three cells, not four");
+  eq(cell(rows, 0, 1), "Tokyo, Japan", "the quoted cell keeps its comma");
+  eq(cell(rows, 0, 2), "2", "and the last cell unquotes too");
+  cJSON_Delete(rows);
+  /* An UNQUOTED blank-led cell in comma mode is still byte-exact. */
+  rows = csv_parse("a, b\n", 0);
+  eq(cell(rows, 0, 1), " b", "a blank-led unquoted cell keeps its blank");
+  cJSON_Delete(rows);
+  /* And the repair pre-pass reads the same quote as opening: a blank-led
+   * runaway is repaired, not left for csv_rows to swallow the file with. */
+  rows = csv_parse_x("1, \"runaway\n2,b\n3,c\n4,d\n5,e\n6,f\n", 0, NULL, 0, NULL);
+  eqi(csv_quote_repairs(), 1, "the blank-led runaway is repaired");
+  eqi(cJSON_GetArraySize(rows), 6, "and the lines after it are their own records");
   cJSON_Delete(rows);
 }
 
@@ -222,6 +297,10 @@ int main(void) {
   test_no_repairs_on_clean_input();
   test_runaway_quote_is_closed_and_counted();
   test_wellformed_long_cell_is_not_repaired();
+  test_long_wellformed_cell_in_a_feed();
+  test_runaway_before_a_later_quoted_field();
+  test_repair_leaves_no_carriage_return();
+  test_blank_before_quote_in_comma_mode();
   printf(g_fail ? "\n%d FAILED\n" : "\nall ok\n", g_fail);
   return g_fail ? 1 : 0;
 }

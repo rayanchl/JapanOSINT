@@ -44,7 +44,7 @@ static const char *TRUSTED_CAS[] = {
 static int is_trusted_ca(const char *issuer) {
   if (!issuer) return 0;
   for (int i = 0; TRUSTED_CAS[i]; i++)
-    if (strcasestr(issuer, TRUSTED_CAS[i])) return 1;
+    if (jo_strcasestr(issuer, TRUSTED_CAS[i])) return 1;
   return 0;
 }
 

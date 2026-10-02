@@ -16,6 +16,7 @@
  * so every hotspot carries real coordinates and can pin. We follow the picker
  * (never a hardcoded prefecture list) and emit one geo intel item per <item>. */
 #include "source.h"
+#include "lib/jocore.h"   /* jo_strcasestr: portable case-insensitive search */
 #include "lib/feedlib.h"
 #include "lib/htmlparse.h"
 #include "third_party/cJSON.h"
@@ -78,7 +79,7 @@ static int do_pref(const source_ctx *ctx, intel_sink *sink, const char *xmlname)
   int n = 0;
   const char *cur = xml;
   for (;;) {
-    const char *open = strcasestr(cur, "<item");
+    const char *open = jo_strcasestr(cur, "<item");
     if (!open) break;
     char d = open[5];
     if (d != ' ' && d != '\t' && d != '\n' && d != '\r') { cur = open + 5; continue; }
