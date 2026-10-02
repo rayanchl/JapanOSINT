@@ -249,7 +249,13 @@ static void test_failed_build_is_not_queryable(db_handle *db) {
   stub_stop();                                /* nothing answers now */
   use_stub(g_port);
   svec_meta_set(db, "registry_sig", "0");     /* force a rebuild */
+  /* The model is STATED, so identity does not need the dead server and the
+   * build really starts — and then dies on its first embedding request.
+   * (Without a stated model, an unanswerable /v1/models stops the build
+   * before it touches anything: test_unreachable_leaves_index.) */
+  setenv("JO_EMBED_MODEL", "stub-a", 1);
   int rc = service_vec_build(db);
+  unsetenv("JO_EMBED_MODEL");
   assert(rc < 0);                             /* honest failure */
 
   char *state = svec_meta_get(db, "state");
@@ -267,6 +273,85 @@ static void test_failed_build_is_not_queryable(db_handle *db) {
   free(err);
 }
 
+/* 8: a server that cannot answer right now must not cost a good index. The
+ * old build fell through from a failed probe into the rebuild: state=building
+ * and DROP TABLE on one 503. */
+static void test_unreachable_leaves_index(db_handle *db) {
+  use_stub(g_port);
+  assert(service_vec_build(db) > 0);
+  char *cnt_before = svec_meta_get(db, "count");
+  stub_stop();                                /* down: /v1/models fails */
+  assert(service_vec_build(db) < 0);
+  setenv("JO_EMBED_MODEL", "stub-a", 1);      /* identity known, probe fails */
+  assert(service_vec_build(db) < 0);
+  unsetenv("JO_EMBED_MODEL");
+  char *state = svec_meta_get(db, "state");
+  assert(state && !strcmp(state, "ready"));  /* never demoted */
+  free(state);
+  sqlite3_stmt *s = NULL;
+  int rows = -1;
+  if (sqlite3_prepare_v2(db->h, "SELECT count(*) FROM " SVEC_TABLE, -1, &s, NULL) == SQLITE_OK) {
+    if (sqlite3_step(s) == SQLITE_ROW) rows = sqlite3_column_int(s, 0);
+    sqlite3_finalize(s);
+  }
+  assert(cnt_before && rows == atoi(cnt_before));   /* never dropped */
+  /* back up, same model: current again, no rebuild needed */
+  assert(stub_start(18099, 64, "stub-a") == 0);
+  use_stub(g_port);
+  assert(service_vec_build(db) > 0);
+  char *cnt_after = svec_meta_get(db, "count");
+  assert(cnt_after && !strcmp(cnt_after, cnt_before));
+  printf("  unreachable server leaves a ready index ready (%s rows kept): ok\n",
+         cnt_before);
+  free(cnt_before); free(cnt_after);
+}
+
+/* 6 (routing side): a model swapped for another of the SAME width used to be
+ * invisible here unless JO_EMBED_MODEL was set. Identity now comes from
+ * /v1/models: the query side refuses at once, and the build rebuilds. */
+static void test_same_dim_swap(db_handle *db) {
+  use_stub(g_port);
+  assert(service_vec_build(db) > 0);
+  char *m0 = svec_meta_get(db, "model");
+  assert(m0 && !strcmp(m0, "stub-a"));
+  free(m0);
+  assert(stub_start(g_port + 1, 64, "stub-c") == 0);   /* 64-d, other model */
+  use_stub(g_port);
+  char **ids = NULL; int cnt = 0;
+  char *cat = service_vec_catalogue(db, "domain whois", 5, NULL, &ids, &cnt);
+  assert(cat == NULL && cnt == 0);            /* no ranking across spaces */
+  assert(service_vec_build(db) > 0);          /* rebuilt in the new space */
+  char *m1 = svec_meta_get(db, "model");
+  assert(m1 && !strcmp(m1, "stub-c"));
+  free(m1);
+  cat = service_vec_catalogue(db, "domain whois", 5, NULL, &ids, &cnt);
+  assert(cat && cnt > 0);
+  service_vec_free_ids(ids, cnt);
+  free(cat);
+  printf("  same-dimension model swap: catalogue refused, index rebuilt: ok\n");
+}
+
+/* 9: the semantic menu obeys a prompt byte budget and says it was cut. */
+static void test_byte_budget(db_handle *db) {
+  use_stub(g_port);
+  osint_catalogue_note full = {0}, cut = {0};
+  char **a = NULL, **b = NULL; int an = 0, bn = 0;
+  char *ca = service_vec_catalogue_bounded(db, "domain whois registrar", 40, 0,
+                                           &full, &a, &an);
+  char *cb = service_vec_catalogue_bounded(db, "domain whois registrar", 40, 2500,
+                                           &cut, &b, &bn);
+  assert(ca && cb && an > 0 && bn > 0 && bn < an);
+  assert(strlen(cb) <= 2500);
+  assert(strstr(cb, "cut to fit the model's context"));
+  assert(!strstr(ca, "cut to fit"));
+  assert(cut.shown == bn && cut.truncated);
+  for (int i = 0; i < bn; i++) assert(strstr(cb, b[i]));   /* ids == listing */
+  printf("  byte budget: %d of %d cards in %zu bytes (budget 2500), cut "
+         "disclosed: ok\n", bn, an, strlen(cb));
+  service_vec_free_ids(a, an); service_vec_free_ids(b, bn);
+  free(ca); free(cb);
+}
+
 int main(void) {
   const char *dbp = getenv("JO_DB");
   assert(dbp && "run.sh sets JO_DB to a scratch database");
@@ -275,6 +360,10 @@ int main(void) {
     fprintf(stderr, "test_service_vec: cannot open db\n");
     return 2;
   }
+  /* The query path caches the server's model name for a few seconds; these
+   * cases swap stubs faster than that. */
+  setenv("JO_EMBED_MODEL_CHECK_TTL_MS", "0", 1);
+  unsetenv("JO_EMBED_MODEL");
 
   test_inert(&db);
 
@@ -296,6 +385,12 @@ int main(void) {
   assert(stub_start(18099, 64, "stub-a") == 0);
   use_stub(g_port);
   svec_meta_set(&db, "registry_sig", "0");
+  assert(service_vec_build(&db) > 0);
+  test_unreachable_leaves_index(&db);
+  test_byte_budget(&db);
+  test_same_dim_swap(&db);
+  assert(stub_start(18099, 64, "stub-a") == 0);
+  use_stub(g_port);
   assert(service_vec_build(&db) > 0);
   test_model_change_rebuilds(&db);
 

@@ -1216,6 +1216,33 @@ static void *iso_thread(void *vp) {
   return NULL;
 }
 
+/* GET /api/intel/semantic — off the event loop, like suggest. It makes two
+ * network calls (GET /v1/models, POST /v1/embeddings) and the embedding
+ * server's worker is shared with the backfill pod, whose batches run for up
+ * to 120 s; inline, a query queued behind one held the whole HTTP server
+ * (measured: /api/health took 7 s during an 8 s embed). Its own connection,
+ * for the same reason as iso_thread's. */
+typedef struct {
+  struct mg_mgr *mgr; unsigned long cid;
+  char tenant[128], q[1024], mode[16];
+  int limit, k, op;
+} sem_arg;
+
+static void *sem_thread(void *vp) {
+  sem_arg *a = vp;
+  db_handle own;
+  db_handle *db = db_worker_open(&own, g_db);
+  int st = 500;
+  char *body = semsearchapi_query(db, a->tenant[0] ? a->tenant : NULL, a->q,
+                                  a->mode, a->limit, a->k, a->op, &st);
+  db_worker_close(&own);
+  if (body) wakeup_reply_big(a->mgr, a->cid, st, body);   /* consumes body */
+  else      wakeup_reply(a->mgr, a->cid, 500, "{\"error\":\"server_error\"}");
+  free(a);
+  worker_release();
+  return NULL;
+}
+
 typedef struct { struct mg_mgr *mgr; unsigned long cid; char *q; } suggest_arg;
 static void *suggest_thread(void *vp) {
   suggest_arg *a = vp;
@@ -1988,11 +2015,26 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
       if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
-      int sst = 500;
-      char *sb = semsearchapi_query(g_db, tc.tenant_id, sq, smode,
-                                    atoi(slim), atoi(sk), &sst);
-      if (!sb) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
-      reply_json(c, sst, sb); free(sb); return;
+      if (!worker_admit()) { reply_busy(c); return; }
+      sem_arg *sa = calloc(1, sizeof *sa);
+      if (sa) {
+        sa->mgr = c->mgr; sa->cid = c->id;
+        snprintf(sa->tenant, sizeof sa->tenant, "%s", tc.tenant_id);
+        snprintf(sa->q, sizeof sa->q, "%s", sq);
+        snprintf(sa->mode, sizeof sa->mode, "%s", smode);
+        sa->limit = atoi(slim); sa->k = atoi(sk);
+        sa->op = (opgate_check(&usr) == 0);
+        pthread_t th;
+        if (pthread_create(&th, NULL, sem_thread, sa) == 0) {
+          pthread_detach(th);
+          return;        /* reply deferred to MG_EV_WAKEUP — loop stays free */
+        }
+        free(sa);
+      }
+      worker_release();
+      /* No thread (allocation failure): refuse rather than run a network
+       * call on the event loop, which is the stall this route moved off. */
+      reply_busy(c); return;
     }
 
     /* GET /api/intel/search — alias of /api/intel/items */
