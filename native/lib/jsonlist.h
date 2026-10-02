@@ -87,10 +87,21 @@ int jsonlist_emit_ex(intel_sink *sink, const char *source_id, cJSON *doc,
  * exported so hpengine's `page_walk` rows (VJSON rows moved onto hpengine for
  * their detail hop) page exactly as they did. Returns the next URL (caller
  * frees) or NULL; `*full_unadvanced` (may be NULL) is set when the walk stops
- * at a page that looked full. `total` counts records emitted so far, this page
- * included; `available` is the upstream's declared total or -1. */
+ * at a page that looked full. `total` counts records read so far, this page
+ * included; `available` is the upstream's declared total or -1. A page NUMBER
+ * the URL does not state (or states as 0) is followed by page 1: see
+ * jsonlist_page_one_retry() for how a 1-based API is then recognised. */
 char *jsonlist_next_page(cJSON *doc, const char *page_url, int got,
                          long available, int total, int *full_unadvanced);
+/* After a page repeats the one before it: when that repeat is the page-1
+ * probe jsonlist_next_page() makes after a first page with no page number (or
+ * page=0) — i.e. the API is 1-based — the URL to continue at (page 2, caller
+ * frees); otherwise NULL, and the repeat ends the walk. */
+char *jsonlist_page_one_retry(const char *prev_url, const char *page_url);
+/* Fingerprint of a page's record array (its first records, serialised), the
+ * walk's "did the upstream move?" test. Exported so hpengine's paged JSON rows
+ * stop on the same evidence a VJSON walk stops on. */
+unsigned long long jsonlist_page_fp(cJSON *arr);
 /* The upstream's own count of the whole match set, as that walk reads it; -1
  * when it did not say. */
 long jsonlist_declared_total(cJSON *doc);

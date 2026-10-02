@@ -6,6 +6,20 @@
 #include <strings.h>
 #include <ctype.h>
 
+/* Case-insensitive (ASCII) strstr, local so this file stays free-standing
+ * (tests/htmlparse_test.c links it alone). strcasestr() is a GNU extension:
+ * without _GNU_SOURCE glibc does not declare it, so on Linux it was implicitly
+ * declared — a truncated pointer, or a hard error under GCC 14. */
+static const char *html_ci_strstr(const char *hay, const char *needle) {
+  size_t nl = strlen(needle);
+  if (!nl) return hay;
+  int c0 = tolower((unsigned char)needle[0]);
+  for (const char *p = hay; *p; p++)
+    if (tolower((unsigned char)*p) == c0 && strncasecmp(p, needle, nl) == 0)
+      return p;
+  return NULL;
+}
+
 char *html_strip(const char *in) {
   if (!in) { char *e = malloc(1); if (e) e[0] = 0; return e; }
   size_t L = strlen(in);
@@ -252,7 +266,7 @@ const char *html_anchor_next(const char *from, html_anchor *out) {
      * anchors close `</A>` produced zero anchors — a silent, total discard
      * for that whole class of source, not a partial one, since every anchor
      * on such a page fails the same way. */
-    const char *aclose = atext ? strcasestr(atext, "</a>") : NULL;
+    const char *aclose = atext ? html_ci_strstr(atext, "</a>") : NULL;
     if (!atext || !aclose) continue;
     atext++;
 

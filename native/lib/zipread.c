@@ -81,21 +81,33 @@ static const char *zbase(const char *p) {
   return s ? s + 1 : p;
 }
 
+/* Locate the End Of Central Directory record: scan back from the tail for
+ * its signature. The trailing comment is <=64K, so bound the scan. Returns 1
+ * and sets *eocd, or 0. */
+static int zip_find_eocd(const unsigned char *b, size_t len, size_t *eocd) {
+  if (len < 22) return 0;
+  size_t maxback = len < 66000 ? len : 66000;
+  for (size_t back = 22; back <= maxback; back++) {
+    size_t p = len - back;
+    if (rd32(b + p) == 0x06054b50UL) { *eocd = p; return 1; }
+  }
+  return 0;
+}
+
+int zip_entry_count(const char *buf, size_t len) {
+  size_t eocd = 0;
+  if (!buf || !zip_find_eocd((const unsigned char *)buf, len, &eocd)) return -1;
+  return (int)rd16((const unsigned char *)buf + eocd + 10);
+}
+
 char *zip_find_entry(const char *buf, size_t len, const char *name,
                      size_t *out_len) {
   if (out_len) *out_len = 0;
   if (!buf || !name || len < 22) return NULL;
   const unsigned char *b = (const unsigned char *)buf;
 
-  /* Locate the End Of Central Directory record: scan back from the tail for
-   * its signature. The trailing comment is <=64K, so bound the scan. */
-  size_t maxback = len < 66000 ? len : 66000;
-  size_t eocd = 0; int found = 0;
-  for (size_t back = 22; back <= maxback; back++) {
-    size_t p = len - back;
-    if (rd32(b + p) == 0x06054b50UL) { eocd = p; found = 1; break; }
-  }
-  if (!found) return NULL;
+  size_t eocd = 0;
+  if (!zip_find_eocd(b, len, &eocd)) return NULL;
 
   unsigned nent = rd16(b + eocd + 10);
   unsigned long cdoff = rd32(b + eocd + 16);
