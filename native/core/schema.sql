@@ -793,6 +793,14 @@ CREATE TABLE IF NOT EXISTS search_history (
 CREATE INDEX IF NOT EXISTS idx_search_history_owner
   ON search_history(tenant_id, user_id, ts DESC);
 
+-- Which tenant started each /api/search run (core/searchapi.c). The run's own
+-- row is written by the pipeline under the shared 'legacy' tenant, so without
+-- this a run reloaded after a restart has no owner to check against, and
+-- GET /api/search/results/:id answered any tenant holding the request_id.
+CREATE TABLE IF NOT EXISTS search_run_owners (
+  request_id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL, user_id TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')));
+
 -- Item 16 — optional per-tenant report branding (the paid-tier seam).
 -- reportapi.c probes for this table and each column independently, so its
 -- absence just yields an unbranded document.

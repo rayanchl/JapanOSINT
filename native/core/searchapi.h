@@ -2,9 +2,12 @@
  *   POST /api/search/analyze {query,max_rounds?} -> {request_id,...}
  *   GET  /api/search/suggest?q=                  -> {suggestions:[..≤9]}
  *   GET  /api/search/results/:id                 -> snapshot | from-store
- *   GET  /api/search/stream/:id                  -> SSE (pre-auth; UUID =
- *                                                   capability) — handled in
- *                                                   httpd.c via progress.h.
+ *   GET  /api/search/stream/:id?key=<stream_key> -> SSE (pre-auth) — handled
+ *                                                   in httpd.c via progress.h.
+ * A run belongs to the tenant that started it: results answer only that
+ * tenant, and the stream needs the run's stream_key (handed out by analyze
+ * and by results) or an Authorization header resolving to the owner tenant.
+ * The request_id alone — which share links carry — opens neither.
  * analyze runs the pipeline on a detached worker thread (own http+llm, shared
  * serialized-SQLite db), returns immediately. */
 #ifndef JO_SEARCHAPI_H
@@ -30,15 +33,19 @@
  *   400  query was NULL/empty/whitespace, or the run could not be started
  *   429  the concurrent-run cap is already reached (JO_MAX_CONCURRENT_SEARCHES,
  *        default 4) — a retryable condition, unlike 400
- * On success `*out_status` is 200. `out_status` may be NULL. */
-char *searchapi_analyze(db_handle *db, const char *query, int max_rounds,
+ *   500  no owner tenant, or the owner row could not be written
+ * On success `*out_status` is 200 and the body also carries `stream_key`.
+ * `out_status` may be NULL. */
+char *searchapi_analyze(db_handle *db, const char *tenant_id,
+                        const char *user_id, const char *query, int max_rounds,
                         int *out_status);
 
 /* {"suggestions":[...]} (never NULL; "[]" on failure). Caller frees. */
 char *searchapi_suggest(const char *q);
 
-/* progress snapshot for :id, or the reconstructed-from-store row, or NULL
- * (caller: 404 not_found). Caller frees. */
-char *searchapi_results(db_handle *db, const char *id);
+/* progress snapshot for :id (plus its `stream_key`), or the
+ * reconstructed-from-store row, or NULL (caller: 404 not_found) — NULL too
+ * when `tenant_id` did not start the run. Caller frees. */
+char *searchapi_results(db_handle *db, const char *tenant_id, const char *id);
 
 #endif

@@ -20,31 +20,25 @@
 
 /* Counting sink: wraps the real intel_sink and tallies emit() calls so the
  * scheduler knows records_fetched for fetch_log/detection. Both a NEW row
- * (emit==1) and an UPDATE (emit==0) count; only errors (<0) don't. */
-typedef struct { intel_sink *inner; long n; long notices; } count_sink;
-/* A `collector-*-notice` record (collector-truncation-notice,
- * collector-shape-notice, collector-status-notice) is data about the run, not a
- * record OF the source: it is tallied apart so a source that stored nothing but
- * its own notice still reads records=0.
+ * (emit==1) and an UPDATE (emit==0) count as records.
  *
- * The `collector-` prefix is required. This used to match ANY record_type
- * ending in "-notice", and 806 table rows emit real upstream records typed
- * municipal-notice (383), organisation-notice, procurement-notice,
- * prefecture-notice, bank-notice, tender-notice, police-notice … Every one of
- * those records was tallied as a notice, so a source that stored thousands of
- * municipal announcements reported records=0 — to fetch_log, to anomaly
- * detection (and so to the repair/quarantine chain below), and to every sweep
- * tool that reads the run line as EMITS_NOTHING. Found 2026-09-15. */
-static int is_notice_record(const intel_item *it) {
-  const char *rt = it ? it->record_type : NULL;
-  size_t n = rt ? strlen(rt) : 0;
-  return n >= 17 && strncmp(rt, "collector-", 10) == 0 &&
-         strcmp(rt + n - 7, "-notice") == 0;
-}
+ * A `collector-*-notice` record (intel_item_is_notice, core/intel.h) is data
+ * about the run, not a record OF the source: it is tallied apart so a source
+ * that stored nothing but its own notice still reads records=0.
+ *
+ * REFUSALS ARE COUNTED TOO. An emit() < 0 is a record the collector fetched
+ * and the sink did not store — a ROLLBACK on "database is locked", a failed
+ * COMMIT, an item with no uid. This used to drop them on the floor: the run
+ * line said records=N for the N that landed and nothing about the ones that
+ * did not, so a lock storm that cost a feed half its rows read as a quieter
+ * feed. `failed=` on the run line and the fetch_log error column carry them. */
+typedef struct { intel_sink *inner; long n; long notices; long failed; } count_sink;
 static int count_emit(intel_sink *s, const intel_item *it) {
   count_sink *cs = (count_sink *)s->ctx;
   int r = cs->inner->emit(cs->inner, it);
-  if (r >= 0) { if (is_notice_record(it)) cs->notices++; else cs->n++; }
+  if (r < 0) cs->failed++;
+  else if (intel_item_is_notice(it)) cs->notices++;
+  else cs->n++;
   return r;
 }
 
@@ -313,7 +307,7 @@ static void sched_state_record(db_handle *db, const source_def *d,
 int scheduler_run_source(db_handle *db, const source_def *d,
                          const char *entity) {
   intel_sink inner = intel_sink_make(db, d->id, "legacy");
-  count_sink cs = { .inner = &inner, .n = 0, .notices = 0 };
+  count_sink cs = { .inner = &inner, .n = 0, .notices = 0, .failed = 0 };
   intel_sink sink = { .ctx = &cs, .emit = count_emit };
   volatile int cancel = 0;
   http_client *http = http_client_new();   /* sources expect ctx->http set */
@@ -352,6 +346,7 @@ int scheduler_run_source(db_handle *db, const source_def *d,
    * sink_state that free() is about to release. */
   int stored_exact = 1;
   long stored = intel_sink_stored(&inner, &stored_exact);
+  long stored_notices = intel_sink_stored_notices(&inner);
   intel_sink_free(&inner);        /* make() heap-allocates; nothing freed it */
 
   /* ── the run line, and why `stored=` sits at the END of it ───────────────
@@ -371,20 +366,32 @@ int scheduler_run_source(db_handle *db, const source_def *d,
    * Appending is invisible to all of them.
    *
    * `stored=?` means the sink could not tell us (not an intel sink);
-   * `stored>=N` means N is a floor because the counter hit its ceiling. */
+   * `stored>=N` means N is a floor because the counter hit its ceiling.
+   *
+   * `stored=` counts EVERY distinct uid, notices included, because that is
+   * what `SELECT COUNT(*) … WHERE source_id=…` returns and the registry sweep
+   * checks the two against each other. `records=` excludes notices, so the
+   * collision test must too: comparing records against stored-with-notices let
+   * each notice row hide one collapsed record (2,000 records + 1 notice, 2 of
+   * them colliding, read stored=2000=records and raised nothing). */
   char sbuf[64], note[192];
   if (stored < 0) snprintf(sbuf, sizeof sbuf, "stored=?");
   else snprintf(sbuf, sizeof sbuf, "stored=%s%ld", stored_exact ? "" : ">=", stored);
+  long stored_data = stored - (stored_notices > 0 ? stored_notices : 0);
   note[0] = '\0';
-  if (stored >= 0 && stored_exact && stored < cs.n)
+  if (stored >= 0 && stored_exact && stored_data < cs.n)
     snprintf(note, sizeof note,
              " UID-COLLISION: %ld of %ld emitted records collapsed onto a uid"
-             " already written this run", cs.n - stored, cs.n);
-  /* `notices=` trails `stored=` for the same parser-compatibility reason. */
-  char nbuf[32] = "";
+             " already written this run", cs.n - stored_data, cs.n);
+  /* `notices=` and `failed=` trail `stored=` for the same parser-compatibility
+   * reason. */
+  char nbuf[32] = "", fbuf[160] = "";
   if (cs.notices > 0) snprintf(nbuf, sizeof nbuf, " notices=%ld", cs.notices);
-  fprintf(stderr, "[sched] %s run rc=%d records=%ld %ldms %s%s%s\n",
-          d->id, rc, cs.n, duration_ms, sbuf, nbuf, note);
+  if (cs.failed > 0)
+    snprintf(fbuf, sizeof fbuf, " failed=%ld EMIT-FAILED: the sink refused %ld"
+             " record(s); they are not stored", cs.failed, cs.failed);
+  fprintf(stderr, "[sched] %s run rc=%d records=%ld %ldms %s%s%s%s\n",
+          d->id, rc, cs.n, duration_ms, sbuf, nbuf, fbuf, note);
 
   /* Stage 0+1: log the run and detect anomalies — but only for real data
    * collectors. The internal pods (_maint, _enrich) emit nothing and would
@@ -392,6 +399,14 @@ int scheduler_run_source(db_handle *db, const source_def *d,
   if (d->collector && d->collector[0] != '_') {
     const char *why = NULL;
     const char *status = run_status(rc, cs.n, hosts, hosts_ok, &why);
+    /* A run whose records partly failed to store is still the run it was
+     * (status unchanged), but its fetch_log row must not read as whole. */
+    char whybuf[160];
+    if (!why && cs.failed > 0) {
+      snprintf(whybuf, sizeof whybuf, "%ld emitted record(s) refused by the "
+               "sink (not stored)", cs.failed);
+      why = whybuf;
+    }
     long flid = fetch_log_write(db, d->id, status, (int)cs.n, duration_ms, why);
     anomaly_detect(db, d->id, flid, status, (int)cs.n, duration_ms);
     fetch_log_set_stored(db, flid, stored, stored_exact);

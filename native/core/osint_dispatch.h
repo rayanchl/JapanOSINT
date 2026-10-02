@@ -19,7 +19,8 @@ typedef struct {
   int   success;         /* 1 if the service emitted a usable result */
   int   confidence;      /* 0..100 (JS: success?70:0 unless service set it) */
   /* malloc'd JSON string of EVERY record the service emitted, or NULL:
-   *   {"record_count":N,"records":[<payload>, …]}
+   *   {"record_count":N,"records":[<payload>, …]
+   *    [,"notice_count":K,"notices":[<payload>, …]]}
    *
    * EXHAUSTIVE-USE RULE (docs/SOURCE_EXHAUSTIVENESS.md): this used to keep
    * only the LAST emitted payload, so a service that returned 40 records
@@ -30,6 +31,11 @@ typedef struct {
    * explicitly (see results_view_for_prompt in pipeline.c). */
   char *data;
   int   records;         /* how many records `data` carries                  */
+  /* `collector-*-notice` rows the service emitted (needs-credential,
+   * truncation, shape). Carried in `data` as {"notice_count","notices"} and
+   * NEVER counted in `records`, `success` or fetch_log.records_fetched: a
+   * notice is data about the run, not a finding. */
+  int   notices;
   char *error;           /* malloc'd; "not_implemented" when no such source */
   /* malloc'd, NULL in the ordinary case: the name the CALLER asked for, when
    * it did not resolve and was matched to a registered service by
