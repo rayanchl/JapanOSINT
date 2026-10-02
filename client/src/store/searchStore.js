@@ -167,6 +167,19 @@ export function getRun(requestId) {
     || state.completed.find((s) => s.request_id === requestId) || null;
 }
 
+/**
+ * Forget every run this tab knows about and close their streams. Called on
+ * sign-out: the store is a module singleton, so without this the next account
+ * to sign in on this tab saw the previous account's queries and results.
+ */
+export function resetSearchStore() {
+  for (const id of [...streams.keys()]) dropStream(id);
+  state.active = [];
+  state.completed = [];
+  state.lastError = null;
+  emit();
+}
+
 export function subscribe(listener) {
   listeners.add(listener);
   listener(snapshotState());

@@ -131,7 +131,14 @@ export default function SavedSearchesPage() {
               </div>
             </Card>
           ))}
-          <BoundNote shown={rows.length} total={data?.page?.count ?? rows.length} noun="saved searches" />
+          {/* page.count is the size of THIS response, not a total, and the
+            * endpoint has no cursor: a full page means there may be more that
+            * this list cannot reach. */}
+          {data?.page?.limit != null && rows.length >= data.page.limit ? (
+            <div className="text-[11px] text-accent font-mono">showing the first {rows.length} saved searches — the server returns at most {data.page.limit} per request and offers no paging, so any beyond these are not listed.</div>
+          ) : (
+            <BoundNote shown={rows.length} total={rows.length} noun="saved searches" />
+          )}
         </div>
       )}
 
@@ -223,7 +230,8 @@ function ToAlertSheet({ search, onClose, onCreated }) {
 }
 
 function HistorySection({ onRun }) {
-  const { data, error, loading, reload } = useApi('/api/search-history?limit=100');
+  // 200 is the server's per-request maximum (savedsearchapi.c clamp_limit).
+  const { data, error, loading, reload } = useApi('/api/search-history?limit=200');
   const rows = Array.isArray(data?.data) ? data.data : [];
   const [confirmClear, setConfirmClear] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -260,7 +268,15 @@ function HistorySection({ onRun }) {
           ))}
         </ul>
       )}
-      {rows.length > 0 && <div className="px-3 py-2"><BoundNote shown={rows.length} total={rows.length} noun="recent searches (server keeps the latest 100)" /></div>}
+      {rows.length > 0 && (
+        <div className="px-3 py-2">
+          {data?.page?.limit != null && rows.length >= data.page.limit ? (
+            <div className="text-[11px] text-accent font-mono">showing the latest {rows.length} searches — the server keeps up to {data?.meta?.retained_max ?? 'more than this'} per user but returns at most {data.page.limit} per request, with no paging.</div>
+          ) : (
+            <BoundNote shown={rows.length} total={rows.length} noun="recent searches" />
+          )}
+        </div>
+      )}
       <ConfirmDialog open={confirmClear} onClose={() => setConfirmClear(false)} onConfirm={clear} title="Clear search history?" confirmLabel="Clear history" message="Removes every recorded search for your account. Saved searches are kept." />
     </Section>
   );

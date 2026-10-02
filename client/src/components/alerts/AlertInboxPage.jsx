@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LuRefreshCw, LuMailOpen, LuCheckCheck, LuBellOff, LuBell, LuExternalLink } from 'react-icons/lu';
 import { api, errorMessage } from '../../api/client.js';
@@ -26,16 +26,22 @@ export default function AlertInboxPage() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(null);
+  // Only the newest request may write. Without this, switching All → Unread
+  // while the All page was still in flight let the late All answer land under
+  // the Unread filter.
+  const seq = useRef(0);
 
   const load = useCallback(async (cursor) => {
+    const my = ++seq.current;
     setLoading(true); setError(null);
     try {
       const j = await api.get('/api/alert-events', { query: { limit: PAGE, unread: filter === 'unread' ? 1 : undefined, cursor } });
+      if (my !== seq.current) return;
       const d = Array.isArray(j?.data) ? j.data : [];
       setRows((xs) => (cursor ? [...xs, ...d] : d));
       setPage(j?.page || null);
-    } catch (e) { setError(e); }
-    finally { setLoading(false); }
+    } catch (e) { if (my === seq.current) setError(e); }
+    finally { if (my === seq.current) setLoading(false); }
   }, [filter]);
 
   useEffect(() => { setRows([]); setPage(null); load(); }, [load]);

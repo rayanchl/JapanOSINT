@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { LuBellPlus, LuRefreshCw, LuPencil, LuTrash2, LuFlaskConical, LuHistory, LuBellOff, LuBell } from 'react-icons/lu';
 import { api, errorMessage } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
+import { usePaged } from '../../hooks/useCases.js';
 import { relativeTime, fmtAbs } from '../../utils/time.js';
 import {
   Page, Section, Card, Pill, Button, Input, TextArea, Field, Select, Toggle, Segmented, Sheet,
@@ -119,7 +120,7 @@ export default function AlertsPage() {
         onConfirm={del}
         title={`Delete “${confirmDel?.name || ''}”?`}
         confirmLabel="Delete"
-        message="Deletes the rule and its firing history. Inbox events already delivered are kept."
+        message="Deletes the rule, its firing history and every inbox event it raised — the server removes those events with the rule. Deliveries already sent to email or webhook are not recalled."
       />
 
       <TestResultSheet result={testResult} onClose={() => setTestResult(null)} />
@@ -209,7 +210,7 @@ function RuleEvents({ rule }) {
         </ul>
       )}
       <div className="flex items-center justify-between">
-        <BoundNote shown={rows.length} total={page?.total ?? rows.length} noun="events" />
+        <BoundNote shown={rows.length} total={page?.total ?? (page?.next_cursor ? null : rows.length)} more={Boolean(page?.next_cursor)} noun="events" />
         {page?.next_cursor && <Button size="sm" busy={loading} onClick={() => load(page.next_cursor)}>Load more</Button>}
       </div>
     </div>
@@ -224,8 +225,10 @@ function TestResultSheet({ result, onClose }) {
   return (
     <Sheet open onClose={onClose} title={`Test fire — ${rule.name}`} width="max-w-md" footer={<Button onClick={onClose}>OK</Button>}>
       <div className="space-y-2 text-xs">
-        <div className={cx('font-medium', bad.length ? 'text-neon-red' : 'text-neon-green')}>
-          {bad.length === 0 ? (results.length === 1 ? 'Channel delivered' : `All ${results.length} channels delivered`) : `${bad.length} of ${results.length} channel(s) failed`}
+        <div className={cx('font-medium', results.length === 0 ? 'text-accent' : bad.length ? 'text-neon-red' : 'text-neon-green')}>
+          {results.length === 0
+            ? 'Nothing was delivered — this rule has no delivery channels configured.'
+            : bad.length === 0 ? (results.length === 1 ? 'Channel delivered' : `All ${results.length} channels delivered`) : `${bad.length} of ${results.length} channel(s) failed`}
         </div>
         <ul className="divide-y divide-osint-border rounded-md border border-osint-border">
           {results.map((c) => (
@@ -316,8 +319,10 @@ function RuleEditorSheet({ open, rule, onClose, onSaved, preset }) {
   const [d, setD] = useState(() => draftFrom(rule));
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
-  const aois = useApi(open ? '/api/aoi?limit=200' : null, { deps: [open] });
-  const aoiRows = Array.isArray(aois.data?.data) ? aois.data.data : [];
+  // Every page of areas, not just the first: a rule could not pick an area
+  // past the first 200 and the picker did not say any existed.
+  const aois = usePaged(open ? '/api/aoi' : null, { limit: 200, enabled: open, deps: [open] });
+  const aoiRows = aois.rows;
 
   useEffect(() => {
     if (!open) return;
@@ -432,7 +437,14 @@ function RuleEditorSheet({ open, rule, onClose, onSaved, preset }) {
               <Select className="w-full" value={d.aoi_id} onChange={(e) => set({ aoi_id: e.target.value })}>
                 <option value="">— pick a saved area —</option>
                 {aoiRows.map((a) => <option key={a.id} value={a.id}>{a.name} ({a.kind})</option>)}
+                {d.aoi_id && !aoiRows.some((a) => a.id === d.aoi_id) && <option value={d.aoi_id}>{d.aoi_id} (not among the areas loaded so far)</option>}
               </Select>
+              {aois.hasMore && (
+                <div className="flex items-center justify-between gap-2">
+                  <BoundNote shown={aoiRows.length} more noun="areas" />
+                  <Button size="sm" busy={aois.loadingMore} onClick={aois.loadMore}>Load more areas</Button>
+                </div>
+              )}
               <div className="text-[11px] text-osint-muted">Manage areas under <Link className="text-accent" to="/console/aoi">Console → Areas of interest</Link>.</div>
             </div>
           )}

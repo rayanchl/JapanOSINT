@@ -158,7 +158,8 @@ function ApiRow({ api, expanded, onToggle, onApiUpdate }) {
       const res = await fetch(apiUrl(`/api/status/${encodeURIComponent(api.id)}/consent`), {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ allow: !api.probeConsent }),
+        // The server reads `consent` (httpd.c) and 400s anything else.
+        body: JSON.stringify({ consent: !api.probeConsent }),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const updated = await res.json();

@@ -13,8 +13,10 @@ import {
 } from 'react-icons/md';
 import useCameraDiscoveryStream from '../../hooks/useCameraDiscoveryStream';
 import { isSafeUrl } from '../../utils/safeUrl.js';
+import { CAMERA_FAVORITES_KEY } from '../../auth/localData.js';
 
-const FAV_STORAGE_KEY = 'japanosint.cameraFavorites';
+// Cleared on sign-out (auth/localData.js owns the key).
+const FAV_STORAGE_KEY = CAMERA_FAVORITES_KEY;
 
 // ── Favorites ──────────────────────────────────────────────────────────────
 function loadFavorites() {

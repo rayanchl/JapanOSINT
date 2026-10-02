@@ -109,18 +109,6 @@ function OperatorOnly({ children }) {
   return children;
 }
 
-function ManageOnly({ children }) {
-  const auth = useAuth();
-  if (!auth.canManageWorkspace) {
-    return (
-      <Page title="Workspace">
-        <EmptyState title="Owner or admin role required.">Your role in this workspace is {auth.role || 'unknown'}.</EmptyState>
-      </Page>
-    );
-  }
-  return children;
-}
-
 function Fallback() { return <LoadingState />; }
 
 function Shell() {
@@ -154,7 +142,10 @@ function Shell() {
           <Route path="/console/breach-monitors" element={<BreachMonitorsPage />} />
           <Route path="/console/saved-searches" element={<SavedSearchesPage />} />
           <Route path="/console/api-keys" element={<ApiKeysPage />} />
-          <Route path="/console/workspace" element={<ManageOnly><WorkspacePage /></ManageOnly>} />
+          {/* Every member may open it: the Switch tab is the only place a
+            * viewer/analyst can change workspace. WorkspacePage gates its
+            * Members and Queries tabs on the owner/admin role itself. */}
+          <Route path="/console/workspace" element={<WorkspacePage />} />
           <Route path="/console/settings" element={<SettingsPage />} />
           <Route path="/console/admin" element={<OperatorOnly><AdminPage /></OperatorOnly>} />
           <Route path="/console/database" element={<OperatorOnly><div className="h-full overflow-auto p-4 flex justify-center"><DatabasePanel /></div></OperatorOnly>} />
@@ -174,19 +165,36 @@ function Shell() {
  *  URL is on the project's allowlist; otherwise it falls back to the Site URL,
  *  so the `?code=` (or `?error=`) can arrive on ANY path. Dropping it there
  *  left the user on the sign-in screen as if the button did nothing — so a
- *  pending PKCE verifier plus a provider result is a callback wherever it is. */
-function isOAuthLanding(location) {
-  if (location.pathname === '/auth/callback') return true;
-  if (!sessionStore.pkceVerifier) return false;
+ *  provider result counts as a callback wherever it lands, BUT only when this
+ *  tab has a pending sign-in it started (sessionStore.pendingOAuthFlow: tab-
+ *  bound nonce + TTL). Without that binding any link carrying `?code=` or
+ *  `#access_token=` was routed into the callback, even for a signed-in user,
+ *  and could swap their session for someone else's. A fragment token is never
+ *  a landing: this client runs PKCE only.
+ *
+ *  `/auth/callback` with no pending flow is shown (as "no sign-in in
+ *  progress") only to a signed-out user; a signed-in user is never routed into
+ *  a callback they did not start — the shell's catch-all sends them home. */
+export function isOAuthLanding(location, { hasSession = false } = {}) {
+  const pending = Boolean(sessionStore.pendingOAuthFlow());
   const q = new URLSearchParams(location.search);
-  const h = new URLSearchParams(location.hash.replace(/^#/, ''));
-  return q.has('code') || q.has('error') || q.has('error_description') || h.has('access_token') || h.has('error');
+  const carriesResult = q.has('code') || q.has('error') || q.has('error_description');
+  if (pending) return location.pathname === '/auth/callback' || carriesResult;
+  return location.pathname === '/auth/callback' && !hasSession;
 }
 
 function Gate() {
   const auth = useAuth();
   const location = useLocation();
-  if (isOAuthLanding(location)) return <AuthCallback />;
+  // Decided once per location: completing the callback consumes the pending
+  // flow and creates a session, and re-deciding mid-flight would unmount
+  // AuthCallback before it navigates away.
+  const landing = React.useMemo(
+    () => isOAuthLanding(location, { hasSession: auth.hasSession }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [location.key],
+  );
+  if (landing) return <AuthCallback />;
   switch (auth.gate) {
     case GATE.loading: return <LoadingGate />;
     case GATE.onboarding: return <OnboardingFlow />;

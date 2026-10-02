@@ -9,12 +9,9 @@
  * colored background, colored text).
  */
 
-// maplibre-gl v6 removed the DEFAULT export — the package now ships named
-// exports only, so `import maplibregl from 'maplibre-gl'` fails the build with
-// `"default" is not exported`. The namespace import keeps the `maplibregl.X`
-// call sites below unchanged. The v6 bump itself is the fix for
-// GHSA-jrc7-96c5-q579, a critical XSS sanitiser bypass in DOM.sanitize().
-import * as maplibregl from 'maplibre-gl';
+// Through utils/maplibre.js — the one maplibre import, which also sets the v6
+// worker URL (see there).
+import maplibregl from './maplibre.js';
 
 const MIN_ZOOM = 10; // below this, labels are hidden to avoid clutter
 const MAX_TAGS_PER_LINE = 3; // sparse — 1 at each third along the line

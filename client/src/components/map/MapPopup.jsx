@@ -7,6 +7,7 @@ import apiUrl from '../../utils/apiUrl.js';
 import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers';
 import StationPopup from './popups/StationPopup.jsx';
 import VehiclePopup from './popups/VehiclePopup.jsx';
+import { isSafeUrl } from '../../utils/safeUrl.js';
 
 /**
  * Fetch a reverse-geocoded address label for a feature, using the server's
@@ -319,8 +320,12 @@ const IFRAMEABLE_CAM_HOSTS = [
   'livecam.asia',
   'www.livecam.asia',
 ];
-function iframeableCamUrl(url, channel) {
-  if (!url) return null;
+// Exported for its regression test. http(s) ONLY, checked before either
+// branch: the mlit_river branch used to return the scraped URL unchecked and
+// the host allowlist ignored the protocol, so `javascript:` (or a `data:`
+// document) from a camera record reached <iframe src>.
+export function iframeableCamUrl(url, channel) {
+  if (!url || !isSafeUrl(url)) return null;
   if (channel === 'mlit_river') return url;
   try {
     const host = new URL(url).hostname.toLowerCase();
