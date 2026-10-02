@@ -957,7 +957,7 @@ char *osint_suggest(llm_client *llm, const char *query) {
   if (arr && cJSON_IsArray(arr)) {
     int i = 0; cJSON *s;
     cJSON_ArrayForEach(s, arr) {
-      if (i++ >= 9) break;
+      if (i++ >= 9) break;  /* exhaustive-ok: LLM-generated query suggestions for the search box, not collected records */
       if (cJSON_IsString(s)) cJSON_AddItemToArray(result, cJSON_CreateString(s->valuestring));
     }
   }

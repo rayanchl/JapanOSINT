@@ -235,7 +235,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   seen_set seen = {0};
   int n = 0, failed = 0, last_page = 1;
   long total = -1, fail_status = 0;
-  for (int pg = 1; pg <= last_page && pg <= 999; pg++) {
+  for (int pg = 1; pg <= last_page && pg <= 999; pg++) {  /* exhaustive-ok: the URL page number is three digits; a shortfall against the declared total is disclosed below */
     char url[128];
     snprintf(url, sizeof url, "%s/inbs/I_list_%03d_%s.html", HOST, pg, ymd);
     long status = 0;
