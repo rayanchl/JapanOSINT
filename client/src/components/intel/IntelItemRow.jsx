@@ -23,7 +23,9 @@ export default function IntelItemRow({ item, showSource = true, view = 'original
   const when = item.published_at || item.fetched_at;
   const t = item.translation;
   const sem = item.semantic;
-  const score = item.score;
+  // The server attaches the rerank breakdown as `rerank` {bm25,trust,decay,
+  // score} (intelapi.c); there is no `item.score`, so this pill never showed.
+  const score = item.rerank;
   return (
     <div
       role="link"

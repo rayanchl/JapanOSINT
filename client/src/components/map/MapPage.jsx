@@ -124,7 +124,15 @@ export default function MapPage() {
   }, []);
 
   const popupPosition = useMapProjection(mapRef, popup?.lngLat);
-  const reversePosition = useMapProjection(mapRef, reverse ? [reverse.lon, reverse.lat] : null);
+  // Memoised on the two numbers: a fresh array per render used to re-run the
+  // projection effect every render (an unbounded render loop).
+  const reverseLon = reverse?.lon;
+  const reverseLat = reverse?.lat;
+  const reverseLngLat = useMemo(
+    () => (reverseLon === undefined || reverseLat === undefined ? null : [reverseLon, reverseLat]),
+    [reverseLon, reverseLat],
+  );
+  const reversePosition = useMapProjection(mapRef, reverseLngLat);
 
   const handleClosePopup = useCallback(() => {
     setPopup(null);
@@ -132,15 +140,22 @@ export default function MapPage() {
 
   // Reverse geocode a point (right-click on the map, or the top-bar centre
   // button). A failed lookup is shown as failed, not as an empty label.
+  // Only the newest lookup may write the card: a slow answer for an earlier
+  // right-click must not overwrite the point the user is now looking at.
+  const reverseSeq = useRef(0);
   const reverseGeocodeAt = useCallback(async (lat, lon) => {
+    const my = ++reverseSeq.current;
     setReverse({ lat, lon, busy: true });
     try {
       const j = await api.get('/api/geocode/reverse', { query: { lat, lon } });
+      if (my !== reverseSeq.current) return;
       setReverse({ lat, lon, busy: false, label: j?.display_name || null, source: j?.source || null, empty: !j?.display_name });
     } catch (e) {
+      if (my !== reverseSeq.current) return;
       setReverse({ lat, lon, busy: false, error: e });
     }
   }, []);
+  const closeReverse = useCallback(() => { reverseSeq.current += 1; setReverse(null); }, []);
 
   const reverseGeocodeCentre = useCallback(() => {
     const c = mapRef.current?.getCenter?.();
@@ -306,7 +321,7 @@ export default function MapPage() {
         <div className="absolute z-40 glass-panel map-popup-ridge p-3 min-w-[220px] max-w-[320px] shadow-lg" style={{ left: reversePosition.x, top: reversePosition.y, transform: 'translate(-50%, -110%)' }}>
           <div className="flex items-center justify-between mb-1">
             <span className="font-mono text-[10px] uppercase tracking-wider text-accent">Reverse geocode</span>
-            <button type="button" onClick={() => setReverse(null)} className="text-osint-muted hover:text-osint-text" aria-label="Close"><LuX size={13} /></button>
+            <button type="button" onClick={closeReverse} className="text-osint-muted hover:text-osint-text" aria-label="Close"><LuX size={13} /></button>
           </div>
           {reverse.busy && <div className="text-xs text-osint-muted">Looking up…</div>}
           {reverse.error && <div className="text-xs text-neon-red">Lookup failed ({reverse.error.message}) — no address was obtained.</div>}

@@ -28,17 +28,30 @@ const ROLE_TONE = { owner: 'accent', admin: 'cyan', analyst: 'neutral', viewer: 
 
 export default function WorkspacePage() {
   const auth = useAuth();
-  const [tab, setTab] = useState('members');
+  const canManage = auth.canManageWorkspace;
+  const [picked, setPicked] = useState(null);
   const [showPolicy, setShowPolicy] = useState(false);
   const isOwner = auth.role === 'owner';
+  // Members and Queries are owner/admin surfaces; Switch is for every member.
+  // The whole page used to sit behind an owner/admin gate, which left
+  // analysts and viewers with no way to change workspace at all.
+  const tabs = canManage
+    ? [{ value: 'members', label: 'Members' }, { value: 'queries', label: 'Queries' }, { value: 'switch', label: 'Switch' }]
+    : [{ value: 'switch', label: 'Switch' }];
+  const tab = tabs.some((t) => t.value === picked) ? picked : tabs[0].value;
 
   return (
     <Page
       title="Workspace"
-      subtitle="Invite users by email and manage their roles, or build FTS / LLM-pipeline queries and save them as alerts."
-      actions={<Segmented value={tab} onChange={setTab} options={[{ value: 'members', label: 'Members' }, { value: 'queries', label: 'Queries' }, { value: 'switch', label: 'Switch' }]} />}
+      subtitle={canManage
+        ? 'Invite users by email and manage their roles, or build FTS / LLM-pipeline queries and save them as alerts.'
+        : 'Switch the active workspace.'}
+      actions={tabs.length > 1 ? <Segmented value={tab} onChange={setPicked} options={tabs} /> : null}
       wide
     >
+      {!canManage && (
+        <div className="text-[11px] text-osint-muted">Members and queries need the owner or admin role; your role in this workspace is {auth.role || 'unknown'}.</div>
+      )}
       {tab === 'members' && <MembersView />}
       {tab === 'queries' && <QueryView />}
       {tab === 'switch' && <SwitchView />}
