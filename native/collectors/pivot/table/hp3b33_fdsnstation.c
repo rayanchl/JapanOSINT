@@ -42,33 +42,6 @@
 #include "lib/hpengine.h"
 
 static const hp_source HP3B33_FDSNSTATION[] = {
-  { .id = "JO33_FDSNSTA_API_FRANCESEISME_FR", .name = "BCSF-RenaSS, France — FDSN station inventory",
-    .name_ja = "フランス BCSF-RenaSS 観測点一覧（FDSN）",
-    .category = "surveillance", .portal = "https://api.franceseisme.fr",
-    .record_type = "seismic-station",
-    .tags = "\"sensor\",\"seismic\",\"infrastructure\",\"fdsn\",\"station-inventory\"",
-    .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.franceseisme.fr/fdsnws/station/1/query?level=station&format=text&nodata=404",
-    .csv_comment = "#",
-    .csv_delim = "pipe",
-    .csv_no_header = 1,
-    .id_keys = "col0+col1+col6",
-    .interval = 86400,
-    .lat_key = "col2",
-    .lon_key = "col3",
-    .timeout_ms = 120000,
-    .title_keys = "col1,col5",
-    .description = "UNPROBED. FDSN station/1 at station level: one pipe-delimited "
-      "row per seismic station with network code, station code, "
-      "latitude, longitude, elevation, the operating institution's site "
-      "name and the start and end of operation. A station inventory is "
-      "an infrastructure map with an operator attached, which places a "
-      "named institution at a precise coordinate independently of any "
-      "register. Host and /fdsnws/ base are proven live by an existing "
-      "wired row on this host; the path, the query parameters and the "
-      "pipe-delimited text schema are fixed by the FDSN web service "
-      "specification." },
-
   { .id = "JO33_FDSNSTA_AUSPASS_EDU_AU", .name = "AusPass, Australian Passive Seismic Server — FDSN station "
       "inventory",
     .name_ja = "豪州 AusPass 観測点一覧（FDSN）",
@@ -77,33 +50,6 @@ static const hp_source HP3B33_FDSNSTATION[] = {
     .tags = "\"sensor\",\"seismic\",\"infrastructure\",\"fdsn\",\"station-inventory\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://auspass.edu.au/fdsnws/station/1/query?level=station&format=text&nodata=404",
-    .csv_comment = "#",
-    .csv_delim = "pipe",
-    .csv_no_header = 1,
-    .id_keys = "col0+col1+col6",
-    .interval = 86400,
-    .lat_key = "col2",
-    .lon_key = "col3",
-    .timeout_ms = 120000,
-    .title_keys = "col1,col5",
-    .description = "UNPROBED. FDSN station/1 at station level: one pipe-delimited "
-      "row per seismic station with network code, station code, "
-      "latitude, longitude, elevation, the operating institution's site "
-      "name and the start and end of operation. A station inventory is "
-      "an infrastructure map with an operator attached, which places a "
-      "named institution at a precise coordinate independently of any "
-      "register. Host and /fdsnws/ base are proven live by an existing "
-      "wired row on this host; the path, the query parameters and the "
-      "pipe-delimited text schema are fixed by the FDSN web service "
-      "specification." },
-
-  { .id = "JO33_FDSNSTA_EARTHQUAKE_USGS_GOV", .name = "USGS Earthquake Hazards Program — FDSN station inventory",
-    .name_ja = "米国地質調査所 USGS 観測点一覧（FDSN）",
-    .category = "surveillance", .portal = "https://earthquake.usgs.gov",
-    .record_type = "seismic-station",
-    .tags = "\"sensor\",\"seismic\",\"infrastructure\",\"fdsn\",\"station-inventory\"",
-    .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
-    .url = "https://earthquake.usgs.gov/fdsnws/station/1/query?level=station&format=text&nodata=404",
     .csv_comment = "#",
     .csv_delim = "pipe",
     .csv_no_header = 1,
@@ -483,33 +429,6 @@ static const hp_source HP3B33_FDSNSTATION[] = {
     .tags = "\"sensor\",\"seismic\",\"infrastructure\",\"fdsn\",\"station-inventory\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.orfeus-eu.org/fdsnws/station/1/query?level=station&format=text&nodata=404",
-    .csv_comment = "#",
-    .csv_delim = "pipe",
-    .csv_no_header = 1,
-    .id_keys = "col0+col1+col6",
-    .interval = 86400,
-    .lat_key = "col2",
-    .lon_key = "col3",
-    .timeout_ms = 120000,
-    .title_keys = "col1,col5",
-    .description = "UNPROBED. FDSN station/1 at station level: one pipe-delimited "
-      "row per seismic station with network code, station code, "
-      "latitude, longitude, elevation, the operating institution's site "
-      "name and the start and end of operation. A station inventory is "
-      "an infrastructure map with an operator attached, which places a "
-      "named institution at a precise coordinate independently of any "
-      "register. Host and /fdsnws/ base are proven live by an existing "
-      "wired row on this host; the path, the query parameters and the "
-      "pipe-delimited text schema are fixed by the FDSN web service "
-      "specification." },
-
-  { .id = "JO33_FDSNSTA_WWW_SEISMICPORTAL_EU", .name = "EMSC European seismic portal — FDSN station inventory",
-    .name_ja = "欧州地中海地震センター 観測点一覧（FDSN）",
-    .category = "surveillance", .portal = "https://www.seismicportal.eu",
-    .record_type = "seismic-station",
-    .tags = "\"sensor\",\"seismic\",\"infrastructure\",\"fdsn\",\"station-inventory\"",
-    .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.seismicportal.eu/fdsnws/station/1/query?level=station&format=text&nodata=404",
     .csv_comment = "#",
     .csv_delim = "pipe",
     .csv_no_header = 1,
