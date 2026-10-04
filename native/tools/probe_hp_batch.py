@@ -148,6 +148,57 @@ def fetch(url, extra, timeout=None):
         return resp.status, resp.headers.get("Content-Type", ""), raw
 
 
+def _resolve_array_path(doc, path):
+    """Resolve a declared `array_path` the way lib/hpengine.c resolves it.
+
+    This used to be four lines inline -- walk dict keys, give up on anything
+    else -- and it disagreed with the engine in two ways that both read as
+    "this source is dead" about rows the engine measurably handles. That is
+    rule 4c: two tools reading one declaration differently, and the probe is
+    the one that decides whether a row ships.
+
+      * `"."`, or any path whose segments are all empty, is THE ROOT.
+        hp_path() skips empty segments (`if (!*seg) continue;`) and returns
+        `root` unchanged, so a row whose upstream answers with a bare array
+        declares `array_path = "."` -- which it should, because discovery
+        otherwise prefers the densest NESTED array (lib/hpengine.h). The three
+        hex.pm rows in batch 32 are that shape and were reported
+        PATH_UNRESOLVED while running clean against the engine.
+
+      * A path may CROSS AN ARRAY. hp_path() cannot, so hp_run() retries with
+        hp_path_multi(), which takes EVERY node at the path and concatenates
+        them. NuGet's registration index is `items[]` of catalog pages, each
+        with its own `items[]` of versions: `items.items` is 86 version
+        records through the engine and was PATH_UNRESOLVED here.
+
+    Returns the resolved node, or None when the path genuinely is not there --
+    which stays a PATH_UNRESOLVED, because guessing some other array is how a
+    row whose shape changed gets a false pass.
+    """
+    segs = [s for s in path.split(".") if s]
+    if not segs:
+        return doc                      # "." -- the document root
+    node = doc
+    for i, seg in enumerate(segs):
+        if isinstance(node, dict) and seg in node:
+            node = node[seg]
+            continue
+        if isinstance(node, list):
+            # The descending walk: every node at the REMAINING path, under
+            # every element here, concatenated. Mirrors hp_path_multi().
+            rest = ".".join(segs[i:])
+            out = []
+            for el in node:
+                sub = _resolve_array_path(el, rest)
+                if isinstance(sub, list):
+                    out.extend(sub)
+                elif sub is not None:
+                    out.append(sub)
+            return out or None
+        return None
+    return node
+
+
 def count_xml(text):
     """Count records in a plain XML document.
 
@@ -538,7 +589,8 @@ def verify(r):
         return (sid, url, "ERROR_BODY", "", 0, status, nbytes,
                 text[:80].replace("\n", " "))
 
-    # A DECLARED array_path beats every heuristic below.
+    # A DECLARED array_path beats every heuristic below — resolved the way the
+    # ENGINE resolves it, see _resolve_array_path().
     #
     # VF.count_json() hunts for the densest array in the document, which is a
     # reasonable guess when the row says nothing — and a wrong answer whenever
@@ -566,13 +618,7 @@ def verify(r):
         except Exception:
             return (sid, url, "UNPARSEABLE", "", 0, status, nbytes,
                     "declared array_path but body is not JSON")
-        node = doc
-        for seg in ap_decl.split("."):
-            if isinstance(node, dict) and seg in node:
-                node = node[seg]
-            else:
-                node = None
-                break
+        node = _resolve_array_path(doc, ap_decl)
         if node is None:
             return (sid, url, "PATH_UNRESOLVED", "", 0, status, nbytes,
                     "array_path %r not present in the response" % ap_decl)
@@ -625,10 +671,24 @@ def verify(r):
         # would shift or truncate the parsed href_must, probing a filter the
         # generated collector does not actually apply.
         must = opt(r, "href_must", "")
-        hrefs = re.findall(r'<a\b[^>]*\bhref\s*=\s*["\']([^"\'#]+)["\']',
+        # The fragment is excluded from the KEY the hits are counted by (two
+        # anchors differing only after `#` are one target), but it must not be
+        # excluded from the MATCH. The class used to be [^"'#]+, which stops at
+        # the `#` and then demands the closing quote right there -- so an href
+        # that carries a fragment matched nothing at all. Every anchor in a
+        # PEP 503 simple index ends `...tar.gz#sha256=<64 hex>`, so
+        # pypi.org/simple/<project>/ scored 0 anchors on a page holding 244 of
+        # them and was reported UNPARSEABLE. hpengine reads the whole attribute
+        # (html_attr + hp_url_resolve) and keeps those anchors, so the verdict
+        # was about this regex, not about the page.
+        # href_must is tested against the WHOLE attribute, as hpengine tests it
+        # (hp_html_walk checks the raw href and the resolved link); only the
+        # counting key drops the fragment.
+        hrefs = re.findall(r'<a\b[^>]*\bhref\s*=\s*["\']([^"\']+)["\']',
                            text, re.I)
-        hits = [h for h in hrefs if (not must or must in h)]
-        hits = [h for h in hits if not h.lower().startswith(
+        hits = [h.split("#", 1)[0] for h in hrefs
+                if not must or must in h]
+        hits = [h for h in hits if h and not h.lower().startswith(
             ("javascript:", "mailto:", "tel:"))]
         if hits:
             kind, items = "html-anchors", len(set(hits))
