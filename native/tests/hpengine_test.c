@@ -253,6 +253,15 @@ static const hp_source T[] = {
     .array_path = "rows", .title_keys = "name", .id_keys = "code+date",
     .interval = 3600, .record_type = "t-idk", .free_tier = 1, .description = "d" },
 
+  /* The d-portal transaction rows key on an 8-part composite, because `aid`
+   * alone is the ACTIVITY and would collapse every transaction under it. A
+   * real ledger row leaves some dimensions null (no sector group, no ref), so
+   * the realistic case is a long composite with holes in it. */
+  { .id = "T_IDKEYS_WIDE", .name = "wide composite with absent parts",
+    .url = "https://x.test/wide", .array_path = "rows", .title_keys = "title",
+    .id_keys = "aid+trans_id+trans_ref+trans_day+trans_value+trans_code+trans_sector+trans_country",
+    .interval = 3600, .record_type = "t-wide", .free_tier = 1, .description = "d" },
+
   { .id = "T_ERR", .name = "upstream error", .url = "https://x.test/err?q={q}",
     .record_type = "t-err", .free_tier = 1, .description = "d" },
 
@@ -1658,6 +1667,25 @@ int main(void) {
      "`code+date` composes a distinct uid per record (a shared `code` must not collapse them)");
   ok(strstr(g_cap[0].key, "X1") != NULL && strstr(g_cap[0].key, "2026-01") != NULL,
      "both parts of the composite reach the uid");
+
+  /* Two transactions of the SAME activity, differing only in later parts of the
+   * composite, and with two dimensions absent on each. They must not collapse:
+   * `aid` is shared, so anything that keys on the first present part alone
+   * stores one row and reports two. */
+  fx_reset();
+  fx_add("/wide", 200,
+    "{\"rows\":[{\"title\":\"t1\",\"aid\":\"XM-DAC-1\",\"trans_id\":\"a\","
+    "\"trans_day\":\"2026-01-04\",\"trans_value\":100,\"trans_code\":\"D\","
+    "\"trans_country\":\"GH\"},"
+    "{\"title\":\"t2\",\"aid\":\"XM-DAC-1\",\"trans_id\":\"b\","
+    "\"trans_day\":\"2026-02-09\",\"trans_value\":250,\"trans_code\":\"D\","
+    "\"trans_country\":\"GH\"}]}");
+  rc = run_source("T_IDKEYS_WIDE", "");
+  ok(rc == 0 && g_ncap == 2, "wide composite emits both transactions of one activity");
+  ok(strcmp(g_cap[0].key, g_cap[1].key) != 0,
+     "a shared `aid` does not collapse them — later composite parts separate the rows");
+  ok(strstr(g_cap[0].key, "XM-DAC-1") != NULL && strstr(g_cap[0].key, "2026-01-04") != NULL,
+     "absent parts do not truncate the key: parts after the holes still reach it");
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;
