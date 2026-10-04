@@ -19,6 +19,7 @@ static const hp_source T[] = {
     .record_type = "environment-record", .tags = "\"jp\",\"environment\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://api.safecast.org/bgeigie_imports.json?limit=3",
     .detail_url = "https://api.safecast.org/bgeigie_imports/{v}.json", .detail_key = "id",
+    .page_walk = 1,
     .interval = 10800, .free_tier = 1 },
 
   { .id = "jp-safecast-measurements",
@@ -28,6 +29,7 @@ static const hp_source T[] = {
     .record_type = "environment-record", .tags = "\"jp\",\"environment\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://api.safecast.org/measurements.json?limit=3",
     .detail_url = "https://api.safecast.org/measurements/{v}.json", .detail_key = "id",
+    .page_walk = 1,
     .interval = 10800, .free_tier = 1 },
 
 };

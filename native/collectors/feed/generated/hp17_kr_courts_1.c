@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=detc&type=JSON&query=%ED%9A%8C%EC%82%AC",
     .array_path = "detcsearch.detc",
     .detail_url = "https://www.law.go.kr/DRF/lawService.do?OC=test&target=detc&ID={v}&type=JSON", .detail_key = "헌재결정례일련번호",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "kr-supreme-court-precedents",
@@ -30,6 +31,7 @@ static const hp_source T[] = {
     .url = "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=prec&type=JSON&query=%ED%9A%8C%EC%82%AC",
     .array_path = "precsearch.prec",
     .detail_url = "https://www.law.go.kr/DRF/lawService.do?OC=test&target=prec&ID={v}&type=JSON", .detail_key = "판례일련번호",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

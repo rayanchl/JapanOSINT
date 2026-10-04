@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://api.gleif.org/api/v1/lei-records/7LTWFZYICNSX8D621K86/direct-child-relationships?page[size]=15",
     .array_path = "data",
     .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}/direct-child-relationships?page[size]=50", .detail_key = "lei",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "gleif-lei-field-modifications",
@@ -30,6 +31,7 @@ static const hp_source T[] = {
     .url = "https://api.gleif.org/api/v1/lei-records/7LTWFZYICNSX8D621K86/field-modifications?page[size]=20",
     .array_path = "data",
     .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}/field-modifications?page[size]=100", .detail_key = "lei",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "gleif-lei-filter-entity-names",
@@ -40,6 +42,7 @@ static const hp_source T[] = {
     .url = "https://api.gleif.org/api/v1/lei-records?filter[entity.names]=Toyota&page[size]=10",
     .array_path = "data",
     .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}", .detail_key = "lei",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "gleif-lei-filter-fulltext",
@@ -50,6 +53,7 @@ static const hp_source T[] = {
     .url = "https://api.gleif.org/api/v1/lei-records?filter[fulltext]=Toyota&page[size]=10",
     .array_path = "data",
     .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}", .detail_key = "lei",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "gleif-lei-filter-isin",
@@ -60,6 +64,7 @@ static const hp_source T[] = {
     .url = "https://api.gleif.org/api/v1/lei-records?filter[isin]=US0378331005",
     .array_path = "data",
     .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}/direct-children", .detail_key = "lei",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "gleif-lei-filter-lapsed",
@@ -70,6 +75,7 @@ static const hp_source T[] = {
     .url = "https://api.gleif.org/api/v1/lei-records?filter[registration.status]=LAPSED&page[size]=10",
     .array_path = "data",
     .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}", .detail_key = "lei",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "gleif-lei-filter-nonconforming",
@@ -80,6 +86,7 @@ static const hp_source T[] = {
     .url = "https://api.gleif.org/api/v1/lei-records?filter[conformityFlag]=NON_CONFORMING&page[size]=10",
     .array_path = "data",
     .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}/direct-parent-relationship", .detail_key = "lei",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "gleif-lei-filter-owns",
@@ -90,6 +97,7 @@ static const hp_source T[] = {
     .url = "https://api.gleif.org/api/v1/lei-records?filter[owns]=5493001KJTIIGC8Y1R12&page[size]=10",
     .array_path = "data",
     .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}", .detail_key = "lei",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "gleif-lei-ultimate-children",
@@ -100,6 +108,7 @@ static const hp_source T[] = {
     .url = "https://api.gleif.org/api/v1/lei-records/7LTWFZYICNSX8D621K86/ultimate-children?page[size]=15",
     .array_path = "data",
     .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}/ultimate-children?page[size]=50", .detail_key = "lei",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://www.gov.uk/api/search.json?filter_format=cma_case&count=3&fields=title,link,description,case_type,case_state,opened_date,closed_date,market_sector",
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "uk-govuk-search-employment-tribunal",
@@ -30,6 +31,7 @@ static const hp_source T[] = {
     .url = "https://www.gov.uk/api/search.json?filter_format=employment_tribunal_decision&count=3&fields=title,link,description,tribunal_decision_categories,tribunal_decision_decision_date",
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "uk-govuk-search-tax-tribunal",
@@ -40,6 +42,7 @@ static const hp_source T[] = {
     .url = "https://www.gov.uk/api/search.json?filter_format=tax_tribunal_decision&count=3&fields=title,link,description,tribunal_decision_category,tribunal_decision_decision_date",
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "uk-govuk-search-utaac-decisions",
@@ -50,6 +53,7 @@ static const hp_source T[] = {
     .url = "https://www.gov.uk/api/search.json?filter_format=utaac_decision&count=3&fields=title,link,description,tribunal_decision_categories,tribunal_decision_decision_date,tribunal_decision_judges",
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-cap-reporter-volumes",
@@ -59,6 +63,7 @@ static const hp_source T[] = {
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://static.case.law/a2d/VolumesMetadata.json",
     .detail_url = "https://static.case.law/a2d/{v}/CasesMetadata.json", .detail_key = "volume_number",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-cap-volume-cases",
@@ -68,6 +73,7 @@ static const hp_source T[] = {
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://static.case.law/a2d/100/CasesMetadata.json",
     .detail_url = "https://static.case.law/a2d/100/cases/{v}.json", .detail_key = "file_name",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-courtlistener-financial-disclosures",
@@ -78,6 +84,7 @@ static const hp_source T[] = {
     .url = "https://www.courtlistener.com/api/rest/v4/financial-disclosures/?person=1213",
     .array_path = "results",
     .detail_url = "https://www.courtlistener.com/api/rest/v4/investments/?financial_disclosure={v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-courtlistener-people-by-lastname",
@@ -88,16 +95,7 @@ static const hp_source T[] = {
     .url = "https://www.courtlistener.com/api/rest/v4/people/?name_last=Sotomayor",
     .array_path = "results",
     .detail_url = "https://www.courtlistener.com/api/rest/v4/positions/?person={v}", .detail_key = "id",
-    .interval = 43200, .free_tier = 1 },
-
-  { .id = "us-courtlistener-search-people",
-    .name = "CourtListener — judge search (type=p)",
-    .collector = "us_legal", .category = "legal",
-    .description = "Federal and state judges, count 664 for one surname. Rows carry id, name_full, absolute_url, court list, appointer, selection_method, aba_rating array, political_affiliation, school, date_start/date_termination. The id feeds every judge detail hop below.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.courtlistener.com/api/rest/v4/search/?q=Roberts&type=p",
-    .array_path = "results",
-    .detail_url = "https://www.courtlistener.com/api/rest/v4/people/{v}/", .detail_key = "id",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-courtlistener-search-recap-dockets",
@@ -109,6 +107,7 @@ static const hp_source T[] = {
     .array_path = "results",
     .id_keys = "docket_id",
     .detail_url = "https://www.courtlistener.com/api/rest/v4/people/{v}/", .detail_key = "assigned_to_id",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-ecfr-titles",
@@ -119,6 +118,7 @@ static const hp_source T[] = {
     .url = "https://www.ecfr.gov/api/versioner/v1/titles.json",
     .array_path = "titles",
     .detail_url = "https://www.ecfr.gov/api/versioner/v1/structure/2026-01-01/title-{v}.json", .detail_key = "number",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-federalregister-by-cfr",
@@ -130,6 +130,7 @@ static const hp_source T[] = {
     .array_path = "results",
     .id_keys = "document_number",
     .detail_url = "https://www.federalregister.gov/api/v1/documents/{v}.json", .detail_key = "document_number",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-federalregister-by-docket",
@@ -140,6 +141,7 @@ static const hp_source T[] = {
     .url = "https://www.federalregister.gov/api/v1/documents.json?conditions%5Btype%5D%5B%5D=PRORULE&conditions%5Bdocket_id%5D=FAA-2022-0674&per_page=5",
     .array_path = "results",
     .detail_url = "https://www.federalregister.gov/api/v1/documents/{v}.json", .detail_key = "document_number",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-federalregister-executive-orders",
@@ -151,6 +153,7 @@ static const hp_source T[] = {
     .array_path = "results",
     .id_keys = "document_number",
     .detail_url = "https://www.federalregister.gov/api/v1/documents/{v}.json", .detail_key = "document_number",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-federalregister-public-inspection-by-date",
@@ -161,6 +164,7 @@ static const hp_source T[] = {
     .url = "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2026-08-14",
     .array_path = "results",
     .detail_url = "https://www.federalregister.gov/api/v1/public-inspection-documents/{v}.json", .detail_key = "document_number",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-legistar-seattle-eventitems",
@@ -170,6 +174,7 @@ static const hp_source T[] = {
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://webapi.legistar.com/v1/seattle/events/1326/eventitems",
     .detail_url = "https://webapi.legistar.com/v1/seattle/matters/{v}", .detail_key = "EventItemMatterId",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-legistar-seattle-events",
@@ -180,6 +185,7 @@ static const hp_source T[] = {
     .url = "https://webapi.legistar.com/v1/seattle/events?$top=1",
     .id_keys = "EventId",
     .detail_url = "https://webapi.legistar.com/v1/seattle/events/{v}/eventitems", .detail_key = "EventId",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-legistar-seattle-matters",
@@ -190,6 +196,7 @@ static const hp_source T[] = {
     .url = "https://webapi.legistar.com/v1/seattle/matters?$top=2&$orderby=MatterLastModifiedUtc%20desc",
     .id_keys = "MatterId",
     .detail_url = "https://webapi.legistar.com/v1/seattle/matters/{v}", .detail_key = "MatterId",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-ma-ocpf-barred-filers",
@@ -199,6 +206,7 @@ static const hp_source T[] = {
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://api.ocpf.us/filers/barred",
     .detail_url = "https://api.ocpf.us/filer/{v}", .detail_key = "cpfId",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-ma-ocpf-legal-actions",
@@ -208,15 +216,7 @@ static const hp_source T[] = {
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://api.ocpf.us/legal/actions",
     .detail_url = "https://api.ocpf.us/filer/{v}", .detail_key = "subjectCpfId",
-    .interval = 43200, .free_tier = 1 },
-
-  { .id = "us-ma-ocpf-nonfilers",
-    .name = "Massachusetts OCPF - candidates referred for non-filing",
-    .collector = "us_legal", .category = "legal",
-    .description = "cpfId, candidateName, full street address/city/state/zip, treasurerName, referralDate and the expectedReports[] the candidate failed to file. Home addresses of referred candidates are in-band.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.ocpf.us/legal/nonfilers",
-    .detail_url = "https://api.ocpf.us/filer/{v}", .detail_key = "cpfId",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-oyez-advocates",
@@ -226,6 +226,7 @@ static const hp_source T[] = {
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://api.oyez.org/advocates?per_page=3",
     .detail_url = "https://api.oyez.org/people/{v}", .detail_key = "identifier",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-oyez-case-detail",
@@ -236,6 +237,7 @@ static const hp_source T[] = {
     .url = "https://api.oyez.org/cases/2022/20-1199",
     .array_path = "decided_by.members",
     .detail_url = "https://api.oyez.org/case_decision/case_decision/{v}", .detail_key = "ID",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-oyez-cases-by-term",
@@ -245,6 +247,7 @@ static const hp_source T[] = {
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://api.oyez.org/cases?filter=term:2022&labels=true&per_page=3",
     .detail_url = "https://api.oyez.org/cases/2022/{v}", .detail_key = "docket_number",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-oyez-natural-court",
@@ -255,6 +258,7 @@ static const hp_source T[] = {
     .url = "https://api.oyez.org/courts/roberts13",
     .array_path = "members",
     .detail_url = "https://api.oyez.org/people/{v}", .detail_key = "identifier",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-scotus-docket-json",
@@ -265,6 +269,7 @@ static const hp_source T[] = {
     .url = "https://www.supremecourt.gov/rss/cases/JSON/24-1234.json",
     .array_path = "proceedingsandorder",
     .detail_url = "https://www.supremecourt.gov/rss/cases/JSON/{v}.json", .detail_key = "RelatedCaseNumber",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-ustaxcourt-case-detail",
@@ -275,6 +280,7 @@ static const hp_source T[] = {
     .url = "https://public-api.dawson.ustaxcourt.gov/public-api/cases/12345-20",
     .array_path = "docketentries",
     .detail_url = "https://public-api.dawson.ustaxcourt.gov/public-api/12345-20/{v}/public-document-download-url", .detail_key = "docketEntryId",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-ustaxcourt-order-search",
@@ -285,6 +291,7 @@ static const hp_source T[] = {
     .url = "https://public-api.dawson.ustaxcourt.gov/public-api/order-search?dateRange=allDates&keyword=summary",
     .array_path = "results",
     .detail_url = "https://public-api.dawson.ustaxcourt.gov/public-api/cases/{v}", .detail_key = "docketNumber",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
 };

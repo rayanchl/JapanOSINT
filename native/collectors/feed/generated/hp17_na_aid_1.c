@@ -21,6 +21,7 @@ static const hp_source T[] = {
     .array_path = "rows",
     .id_keys = "aid",
     .detail_url = "https://d-portal.org/q?from=act&aid={v}&form=json", .detail_key = "aid",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "af-dportal-trans-na",
@@ -32,6 +33,7 @@ static const hp_source T[] = {
     .array_path = "rows",
     .id_keys = "aid+trans_id+trans_ref+trans_day+trans_value+trans_code+trans_sector+trans_country",
     .detail_url = "https://d-portal.org/q?from=trans&aid={v}&form=json", .detail_key = "aid",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

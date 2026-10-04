@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://microdata.statistics.sl/index.php/api/catalog/search?ps=100",
     .array_path = "result.rows",
     .detail_url = "https://microdata.statistics.sl/index.php/api/catalog/{v}", .detail_key = "idno",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

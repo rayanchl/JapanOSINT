@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://api.dhsprogram.com/rest/dhs/data?countryIds=ZM&f=json&perpage=100",
     .array_path = "data",
     .detail_url = "https://api.dhsprogram.com/rest/dhs/indicators/{v}?f=json", .detail_key = "IndicatorId",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "af-ihsn-zm",
@@ -30,6 +31,7 @@ static const hp_source T[] = {
     .url = "https://catalog.ihsn.org/index.php/api/catalog/search?ps=50&country=Zambia",
     .array_path = "result.rows",
     .detail_url = "https://catalog.ihsn.org/index.php/api/catalog/{v}", .detail_key = "idno",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "af-wbmicro-zm",
@@ -40,6 +42,7 @@ static const hp_source T[] = {
     .url = "https://microdata.worldbank.org/index.php/api/catalog/search?ps=50&country=Zambia",
     .array_path = "result.rows",
     .detail_url = "https://microdata.worldbank.org/index.php/api/catalog/{v}", .detail_key = "idno",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

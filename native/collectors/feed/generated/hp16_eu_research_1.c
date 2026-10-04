@@ -23,17 +23,6 @@ static const hp_source T[] = {
     .page_param = "p", .page_start = 1,   /* declared by the row's own URL */
     .interval = 86400, .free_tier = 1 },
 
-  { .id = "cordis-search-results-query",
-    .name = "CORDIS project RESULTS (outcomes) search",
-    .collector = "eu_research", .category = "research",
-    .description = "7,691 reported project outcomes, each carrying relatedProjectAcronym, relatedProjectReference and relatedProjectRcn plus the outcome teaser - the deliverables-behind-a-grant hop, and it links back to the parent project id.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "research-record", .tags = "\"eu\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://cordis.europa.eu/api/search/results?q=contenttype%3D%27result%27%20AND%20%27hydrogen%27&format=json&p=1&num=5",
-    .array_path = "payload.results",
-    .detail_url = "https://cordis.europa.eu/project/id/{v}", .detail_key = "relatedProjectReference",
-    .page_param = "p", .page_start = 1,   /* declared by the row's own URL */
-    .interval = 86400, .free_tier = 1 },
-
   { .id = "eu-cordis-projects-search",
     .name = "CORDIS (EU) — research project search",
     .collector = "eu_research", .category = "research",
@@ -53,6 +42,7 @@ static const hp_source T[] = {
     .url = "https://api.openaire.eu/graph/v1/dataSources?search=Zenodo&pageSize=5",
     .array_path = "results",
     .detail_url = "https://api.openaire.eu/graph/v1/dataSources?search={v}&pageSize=50", .detail_key = "officialName",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "openaire-organizations-search",
@@ -63,6 +53,7 @@ static const hp_source T[] = {
     .url = "https://api.openaire.eu/graph/v1/organizations?search=Kyoto&pageSize=5",
     .array_path = "results",
     .detail_url = "https://api.openaire.eu/graph/v1/organizations?search={v}&pageSize=50", .detail_key = "legalName",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "openaire-products-by-project",
@@ -73,6 +64,7 @@ static const hp_source T[] = {
     .url = "https://api.openaire.eu/graph/v1/researchProducts?relProjectId=corda__h2020::6c228bea4ee8a4ef22cd1d4fa079b63a&pageSize=5",
     .array_path = "results",
     .detail_url = "https://api.openaire.eu/graph/v1/researchProducts?relProjectId={v}&pageSize=100", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "openaire-project-by-id",
@@ -83,6 +75,7 @@ static const hp_source T[] = {
     .url = "https://api.openaire.eu/graph/v1/projects?id=corda__h2020::6c228bea4ee8a4ef22cd1d4fa079b63a",
     .array_path = "results",
     .detail_url = "https://api.openaire.eu/graph/v1/projects?id={v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "openaire-projects-search",
@@ -93,6 +86,7 @@ static const hp_source T[] = {
     .url = "https://api.openaire.eu/graph/v1/projects?search=hydrogen&pageSize=10",
     .array_path = "results",
     .detail_url = "https://api.openaire.eu/graph/v1/projects?id={v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "openaire-research-product-by-pid",
@@ -103,6 +97,7 @@ static const hp_source T[] = {
     .url = "https://api.openaire.eu/graph/v1/researchProducts?pid=10.7717/peerj.4375",
     .array_path = "results",
     .detail_url = "https://api.openaire.eu/graph/v1/researchProducts?pid={v}", .detail_key = "doi",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "openaire-research-products",
@@ -113,6 +108,7 @@ static const hp_source T[] = {
     .url = "https://api.openaire.eu/graph/v1/researchProducts?search=climate&pageSize=10",
     .array_path = "results",
     .detail_url = "https://api.openaire.eu/graph/v1/researchProducts?pid={v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

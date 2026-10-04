@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://servicodados.ibge.gov.br/api/v1/localidades/municipios/3550308",
     .array_path = ".",
     .detail_url = "https://servicodados.ibge.gov.br/api/v1/localidades/municipios/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

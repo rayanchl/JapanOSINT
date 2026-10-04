@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://api.opensensemap.org/boxes/5391be52a8341554157792e6/sensors",
     .array_path = "sensors",
     .detail_url = "https://api.opensensemap.org/boxes/5391be52a8341554157792e6/data/{v}?from-date=2024-10-01T00:00:00Z&to-date=2024-10-17T00:00:00Z", .detail_key = "_id",
+    .page_walk = 1,
     .interval = 10800, .free_tier = 1 },
 
 };

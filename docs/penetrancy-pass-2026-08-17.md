@@ -1,5 +1,27 @@
 # Penetrancy pass, 2026-08-17 — the hops we already owned
 
+> **Merge note (2026-09-27).** This records the pass as it was written on its
+> branch. When it merged, main had already unified paging into
+> `lib/pagewalk.c` and the notice builders into `lib/jocore.h`, so
+> `lib/pager.c` and `lib/truncnotice.{c,h}` described below were NOT merged:
+> hpengine's `page_walk` rows call `jsonlist_next_page()` (the VJSON walk's own
+> decision, extracted), and kept disclosures
+> call `jo_trunc_notice_scoped()`. The detail-hop tables were regenerated from
+> main's repaired `vsrc16`/`vsrc17` files, so main's
+> repairs survive in them. Both forms of every row were then run through
+> the binary: 322 rows moved, and 33 that stored fewer records on hpengine
+> stayed on VJSON (`docs/detail-hops-kept-on-vjson.tsv`).
+>
+> **Second merge note (2026-10-02).** origin/main had wired its own version of
+> this pass (359 hops). It moved those 33 rows as well and dropped `page_walk`,
+> so 313 of the moved rows made one request where the VJSON row had walked
+> every page. The merged tree keeps origin's tables and puts `page_walk = 1`
+> back on the 349 JSON rows that declare no paging of their own. On a random
+> 30 of those rows, origin's binary stored 8,362 records and the merged one
+> 83,314. The 37 rows the branches disagreed on were re-measured: 23 still
+> stored less on hpengine and are back on VJSON, and 14 stayed. 336 rows are
+> on hpengine now.
+
 ## What was asked, and what this session could actually verify
 
 The ask was batch 18: find high-OSINT-value sources worldwide, add them, test

@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://api.crossref.org/works/10.1038/nature12373",
     .array_path = "message.reference",
     .detail_url = "https://api.crossref.org/works/{v}", .detail_key = "DOI",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "openalex-institution-associated",
@@ -30,6 +31,7 @@ static const hp_source T[] = {
     .url = "https://api.openalex.org/institutions/I27837315?select=id,display_name,associated_institutions,roles,repositories",
     .array_path = "associated_institutions",
     .detail_url = "https://api.openalex.org/institutions/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "openalex-institution-by-ror",
@@ -40,6 +42,7 @@ static const hp_source T[] = {
     .url = "https://api.openalex.org/institutions?filter=ror:00cvxb145",
     .array_path = "results",
     .detail_url = "https://api.openalex.org/institutions/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "openalex-institution-detail",
@@ -50,6 +53,7 @@ static const hp_source T[] = {
     .url = "https://api.openalex.org/institutions/I27837315",
     .array_path = "topics",
     .detail_url = "https://api.openalex.org/institutions/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "openalex-work-by-doi",
@@ -60,6 +64,7 @@ static const hp_source T[] = {
     .url = "https://api.openalex.org/works/doi:10.1038/nature12373",
     .array_path = ".",
     .detail_url = "https://api.openalex.org/works/doi:{v}", .detail_key = "doi",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "openalex-works-by-author",
@@ -70,6 +75,7 @@ static const hp_source T[] = {
     .url = "https://api.openalex.org/works?filter=authorships.author.id:A5023888391&per_page=25",
     .array_path = "results",
     .detail_url = "https://api.openalex.org/works/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "openalex-works-by-ror",
@@ -80,6 +86,7 @@ static const hp_source T[] = {
     .url = "https://api.openalex.org/works?filter=authorships.institutions.ror:https://ror.org/00cvxb145&per_page=10",
     .array_path = "results",
     .detail_url = "https://api.openalex.org/works/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "ror-org-detail-v1",
@@ -90,6 +97,7 @@ static const hp_source T[] = {
     .url = "https://api.ror.org/organizations/https://ror.org/02kpeqv85",
     .array_path = "relationships",
     .detail_url = "https://api.ror.org/organizations/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "ror-org-detail-v2",
@@ -100,6 +108,7 @@ static const hp_source T[] = {
     .url = "https://api.ror.org/v2/organizations/02kpeqv85",
     .array_path = "relationships",
     .detail_url = "https://api.ror.org/v2/organizations/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "ror-search-v2",
@@ -110,6 +119,7 @@ static const hp_source T[] = {
     .url = "https://api.ror.org/v2/organizations?query=kyoto",
     .array_path = "items",
     .detail_url = "https://api.ror.org/v2/organizations/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "semanticscholar-paper-by-doi-graph",
@@ -120,6 +130,7 @@ static const hp_source T[] = {
     .url = "https://api.semanticscholar.org/graph/v1/paper/DOI:10.7717/peerj.4375?fields=title,authors,references.title,citations.title",
     .array_path = "citations",
     .detail_url = "https://api.semanticscholar.org/graph/v1/paper/DOI:{v}?fields=title,abstract,authors,externalIds,references.title,references.externalIds,citations.title,citations.externalIds", .detail_key = "doi",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "unpaywall-doi",
@@ -130,6 +141,7 @@ static const hp_source T[] = {
     .url = "https://api.unpaywall.org/v2/10.7717/peerj.4375?email=rayanchouialkessal@gmail.com",
     .array_path = "z_authors",
     .detail_url = "https://api.unpaywall.org/v2/{v}?email=rayanchouialkessal@gmail.com", .detail_key = "doi",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

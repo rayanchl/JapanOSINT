@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://www.ebi.ac.uk/europepmc/webservices/rest/MED/29456894/citations?format=json&pageSize=25",
     .array_path = "citationlist.citation",
     .detail_url = "https://www.ebi.ac.uk/europepmc/webservices/rest/MED/{v}/citations?format=json&pageSize=100", .detail_key = "pmid",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "europepmc-core-record",
@@ -30,6 +31,7 @@ static const hp_source T[] = {
     .url = "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:29456894&resultType=core&format=json",
     .array_path = "resultlist.result",
     .detail_url = "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:{v}&resultType=core&format=json", .detail_key = "pmid",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "europepmc-references",
@@ -40,6 +42,7 @@ static const hp_source T[] = {
     .url = "https://www.ebi.ac.uk/europepmc/webservices/rest/MED/29456894/references?format=json&pageSize=25",
     .array_path = "referencelist.reference",
     .detail_url = "https://www.ebi.ac.uk/europepmc/webservices/rest/MED/{v}/references?format=json&pageSize=100", .detail_key = "pmid",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "europepmc-search-by-grant-agency",
@@ -50,6 +53,7 @@ static const hp_source T[] = {
     .url = "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=GRANT_AGENCY:%22Wellcome%20Trust%22&format=json&pageSize=10",
     .array_path = "resultlist.result",
     .detail_url = "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:{v}&resultType=core&format=json", .detail_key = "pmid",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "europepmc-search-by-grant-id",
@@ -60,6 +64,7 @@ static const hp_source T[] = {
     .url = "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=%28GRANT_ID%3A%22MR%2FN013468%2F1%22%29&format=json",
     .array_path = "resultlist.result",
     .detail_url = "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=%28GRANT_ID%3A%22{v}%22%29&resultType=core&format=json", .detail_key = "grantId",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
 };

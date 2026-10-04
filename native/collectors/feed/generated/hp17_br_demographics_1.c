@@ -19,6 +19,7 @@ static const hp_source T[] = {
     .record_type = "demographics-record", .tags = "\"br\",\"demographics\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "pt",
     .url = "https://servicodados.ibge.gov.br/api/v2/censos/nomes/silva",
     .detail_url = "https://servicodados.ibge.gov.br/api/v2/censos/nomes/{v}", .detail_key = "nome",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://bipadportal.gov.np/api/v1/organization/?format=json&limit=50",
     .array_path = "results",
     .detail_url = "https://bipadportal.gov.np/api/v1/organization/{v}/?format=json", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

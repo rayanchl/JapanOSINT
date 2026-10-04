@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://www.peeringdb.com/api/fac?country=JP&limit=3&depth=1",
     .array_path = "data",
     .detail_url = "https://www.peeringdb.com/api/netfac?fac_id={v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

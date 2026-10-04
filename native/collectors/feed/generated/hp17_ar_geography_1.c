@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://apis.datos.gob.ar/georef/api/departamentos?max=3",
     .array_path = "departamentos",
     .detail_url = "https://apis.datos.gob.ar/georef/api/departamentos?id={v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

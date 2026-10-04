@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://registers.esma.europa.eu/solr/esma_registers_sanctions/select?q=*:*&wt=json&rows=500",
     .array_path = "response.docs",
     .detail_url = "https://registers.esma.europa.eu/publication/details?core=esma_registers_upreg&docId=ae{v}", .detail_key = "sn_entityEsmaID",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
 };

@@ -1,4 +1,4 @@
-# Batch 32 — supplychain: software supply-chain and package-registry intelligence, cross-ecosystem.
+# Batch 33 — supplychain: software supply-chain and package-registry intelligence, cross-ecosystem.
 #
 # WHY THIS BEAT. The tree already carries package registries, but almost
 # entirely as NAME SEARCH: "find me packages matching X". The three questions a

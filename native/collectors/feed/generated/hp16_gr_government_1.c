@@ -21,6 +21,7 @@ static const hp_source T[] = {
     .array_path = "decisions",
     .id_keys = "ada",
     .detail_url = "https://diavgeia.gov.gr/opendata/decisions/{v}.json", .detail_key = "ada",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "gr-diavgeia-dictionaries",
@@ -31,6 +32,7 @@ static const hp_source T[] = {
     .url = "https://diavgeia.gov.gr/opendata/dictionaries.json",
     .array_path = "dictionaries",
     .detail_url = "https://diavgeia.gov.gr/opendata/dictionaries/{v}.json", .detail_key = "uid",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

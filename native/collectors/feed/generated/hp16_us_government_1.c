@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://api.ocpf.us/filer/15021",
     .array_path = "tags",
     .detail_url = "https://api.ocpf.us/filer/{v}", .detail_key = "cpfId",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "us-ma-ocpf-iepacs",
@@ -29,15 +30,7 @@ static const hp_source T[] = {
     .record_type = "government-record", .tags = "\"us\",\"government\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://api.ocpf.us/miscreports/iepacs/reports/2026",
     .detail_url = "https://api.ocpf.us/report/{v}", .detail_key = "reportId",
-    .interval = 86400, .free_tier = 1 },
-
-  { .id = "us-ma-ocpf-municipalities",
-    .name = "Massachusetts OCPF - all 351 municipalities with their elected filers",
-    .collector = "us_government", .category = "government",
-    .description = "Per town: code, city, county, pop2020, localReportsUrl, and electedFilers[] with cpfId, filerName, candidateFullAddress (home address), districtNameHeld, officeNameHeld, partyAffiliation. A complete officeholder roster for the state keyed to campaign-finance ids.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "government-record", .tags = "\"us\",\"government\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.ocpf.us/municipalities",
-    .detail_url = "https://api.ocpf.us/filer/{v}", .detail_key = "cpfId",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "us-ma-ocpf-report-detail",
@@ -48,6 +41,7 @@ static const hp_source T[] = {
     .url = "https://api.ocpf.us/report/1038377",
     .array_path = "receipts",
     .detail_url = "https://api.ocpf.us/report/{v}", .detail_key = "reportId",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "us-ma-ocpf-report-list",
@@ -58,6 +52,7 @@ static const hp_source T[] = {
     .url = "https://api.ocpf.us/reports/reportList/15021?baseReportTypeId=2",
     .array_path = "items",
     .detail_url = "https://api.ocpf.us/reports/reportList/{v}?baseReportTypeId=2", .detail_key = "cpfId",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "us-phl-carto-311",
@@ -68,6 +63,7 @@ static const hp_source T[] = {
     .url = "https://phl.carto.com/api/v2/sql?q=SELECT%20*%20FROM%20public_cases_fc%20LIMIT%205",
     .array_path = "rows",
     .detail_url = "https://phl.carto.com/api/v2/sql?q=SELECT%20*%20FROM%20public_cases_fc%20WHERE%20service_request_id={v}", .detail_key = "service_request_id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "us-phl-carto-li-permits",
@@ -78,6 +74,7 @@ static const hp_source T[] = {
     .url = "https://phl.carto.com/api/v2/sql?q=SELECT%20*%20FROM%20li_permits%20LIMIT%205",
     .array_path = "rows",
     .detail_url = "https://phl.carto.com/api/v2/sql?q=SELECT%20*%20FROM%20violations%20WHERE%20opa_account_num=%27{v}%27%20LIMIT%20200", .detail_key = "opa_account_num",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "us-phl-carto-opa-properties",
@@ -88,6 +85,7 @@ static const hp_source T[] = {
     .url = "https://phl.carto.com/api/v2/sql?q=SELECT%20*%20FROM%20opa_properties_public%20LIMIT%205",
     .array_path = "rows",
     .detail_url = "https://phl.carto.com/api/v2/sql?q=SELECT%20*%20FROM%20assessments%20WHERE%20parcel_number=%27{v}%27", .detail_key = "parcel_number",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "us-usaspending-agency-federal-account",
@@ -98,6 +96,7 @@ static const hp_source T[] = {
     .url = "https://api.usaspending.gov/api/v2/agency/012/federal_account/?fiscal_year=2024&limit=3",
     .array_path = "results",
     .detail_url = "https://api.usaspending.gov/api/v2/federal_accounts/{v}/", .detail_key = "code",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "us-usaspending-agency-overview",
@@ -108,6 +107,7 @@ static const hp_source T[] = {
     .url = "https://api.usaspending.gov/api/v2/agency/012/",
     .array_path = "def_codes",
     .detail_url = "https://api.usaspending.gov/api/v2/agency/{v}/sub_agency/?fiscal_year=2024", .detail_key = "toptier_code",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "us-usaspending-reporting-agencies-overview",
@@ -118,6 +118,7 @@ static const hp_source T[] = {
     .url = "https://api.usaspending.gov/api/v2/reporting/agencies/overview/?fiscal_year=2024&fiscal_period=9&limit=3",
     .array_path = "results",
     .detail_url = "https://api.usaspending.gov/api/v2/reporting/agencies/{v}/differences/?fiscal_year=2024&fiscal_period=9", .detail_key = "toptier_code",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

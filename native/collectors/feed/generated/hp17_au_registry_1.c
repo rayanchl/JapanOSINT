@@ -12,16 +12,6 @@
 #include "lib/hpengine.h"
 
 static const hp_source T[] = {
-  { .id = "au-acnc-charity-register",
-    .name = "ACNC — Australian charities register",
-    .collector = "au_registry", .category = "registry",
-    .description = "Every registered Australian charity: ABN, Charity_Legal_Name, Other_Organisation_Names, full street address, Charity_Website, Registration_Date, Date_Organisation_Established, Charity_Size, Number_of_Responsible_Persons, financial year end and per-state operating flags.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "registry-record", .tags = "\"au\",\"registry\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=eb1e6be4-5b13-4feb-b28e-388bf7c26f93&limit=100",
-    .array_path = "result.records",
-    .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=eb1e6be4-5b13-4feb-b28e-388bf7c26f93&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
-    .interval = 86400, .free_tier = 1 },
-
   { .id = "au-asic-business-names",
     .name = "ASIC — Australian business names register",
     .collector = "au_registry", .category = "registry",
@@ -30,16 +20,7 @@ static const hp_source T[] = {
     .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=55ad4b1c-5eeb-44ea-8b29-d410da431be3&limit=100",
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=55ad4b1c-5eeb-44ea-8b29-d410da431be3&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
-    .interval = 86400, .free_tier = 1 },
-
-  { .id = "au-asic-company-register",
-    .name = "ASIC — Australian company register (full)",
-    .collector = "au_registry", .category = "registry",
-    .description = "Every company ever registered in Australia: Company Name, ACN, Type, Class, Sub Class, Status (REGD/DRGD), Date of Registration, Date of Deregistration, Previous State of Registration, State Registration number, ABN, Current Name and Current Name Start Date. 4.4M rows, and &q=<name> full-text searches it server-side.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "registry-record", .tags = "\"au\",\"registry\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=5c3914e6-413e-4a2c-b890-bf8efe3eabf2&limit=100",
-    .array_path = "result.records",
-    .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=5c3914e6-413e-4a2c-b890-bf8efe3eabf2&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "au-asic-liquidators",
@@ -50,6 +31,7 @@ static const hp_source T[] = {
     .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=02388d87-3f0b-48fd-bffa-c4a661962fc3&limit=100",
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=02388d87-3f0b-48fd-bffa-c4a661962fc3&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "au-asic-registered-auditors",
@@ -60,36 +42,7 @@ static const hp_source T[] = {
     .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=0f2e41ec-6f49-4d35-8e6d-ebcd4a0e3e27&limit=100",
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=0f2e41ec-6f49-4d35-8e6d-ebcd4a0e3e27&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
-    .interval = 86400, .free_tier = 1 },
-
-  { .id = "au-qld-resource-authority-name-changes",
-    .name = "Queensland — resource authority holder name changes",
-    .collector = "au_registry", .category = "registry",
-    .description = "Mining and petroleum permit holder renames: Permit Number, Permit Type, Activity ID, Authorised Holder, Completion Date, LGA, and Notes spelling out the old and new corporate names verbatim. Tiny but it is a direct corporate-rename ledger for resource tenements.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "registry-record", .tags = "\"au\",\"registry\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.data.qld.gov.au/api/3/action/datastore_search?resource_id=ad42f0d7-6cb4-45b4-995b-317fbc7a74d4&limit=100",
-    .array_path = "result.records",
-    .detail_url = "https://www.data.qld.gov.au/api/3/action/datastore_search?resource_id=ad42f0d7-6cb4-45b4-995b-317fbc7a74d4&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
-    .interval = 86400, .free_tier = 1 },
-
-  { .id = "au-qld-water-service-providers",
-    .name = "Queensland — registered water service providers",
-    .collector = "au_registry", .category = "registry",
-    .description = "Registered drinking-water and sewerage service providers: Name (literal field), SPID, and boolean flags for drinking water provider, water service and sewerage service. Small register but the label field is an exact 'Name'.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "registry-record", .tags = "\"au\",\"registry\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.data.qld.gov.au/api/3/action/datastore_search?resource_id=bf61b1eb-fe8b-4c90-9699-86b35cc43fc2&limit=100",
-    .array_path = "result.records",
-    .detail_url = "https://www.data.qld.gov.au/api/3/action/datastore_search?resource_id=bf61b1eb-fe8b-4c90-9699-86b35cc43fc2&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
-    .interval = 86400, .free_tier = 1 },
-
-  { .id = "au-vic-building-practitioner-register",
-    .name = "Victorian Building Authority — building practitioner register",
-    .collector = "au_registry", .category = "registry",
-    .description = "Registered Victorian building practitioners: Account Name, Type (Person / Company), Accreditation ID, Accreditation Status, ABN, ACN, Limitation (e.g. Commercial Builder - Limited) and commenced/expires dates. The ABN and ACN pivot into the ASIC company register.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "registry-record", .tags = "\"au\",\"registry\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://discover.data.vic.gov.au/api/3/action/datastore_search?resource_id=3599fa1f-29f3-417e-8679-1842e2e6e2df&limit=100",
-    .array_path = "result.records",
-    .detail_url = "https://discover.data.vic.gov.au/api/3/action/datastore_search?resource_id=3599fa1f-29f3-417e-8679-1842e2e6e2df&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

@@ -55,3 +55,16 @@ VJSON(il_pledges_registry, "il-pledges-registry", "Israel Registrar of Pledges (
   "result.records",
   "he", "[\"il\",\"company-registry\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Secured-interest register: pledge id, registration date, registration status, reason-for-status and status date, asset registration date and asset removal date. Collateral history on Israeli debtors.");
+
+VJSON(il_ica_company_changes, "il-ica-company-changes", "Israel Registrar of Companies — changes and charges on corporations", "Israel Registrar of Companies — changes and charges on corporations",
+  "il_company-registry", "company-registry",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=28780ab5-3ef1-44c7-8377-da82c0aa6781&limit=100",
+  "result.records",
+  "he", "[\"il\",\"company-registry\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
+  "Per-corporation change events: corporation number, corporation name, request type (e.g. registration of a charge/pledge), status update date, charge id and request type code. The charge/security-interest trail behind an Israeli company.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
+VJSON(il_moj_amutot_registered, "il-moj-amutot-registered", "Israel Registrar of Non-Profits — registered amutot", "Israel Registrar of Non-Profits — registered amutot",
+  "il_company-registry", "company-registry",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=be5b7935-3922-45d4-9638-08871b17ec95&limit=100",
+  "result.records",
+  "he", "[\"il\",\"company-registry\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
+  "Full NGO register: amuta number, registration date, Hebrew and English name, status and status-update date, activity classification and registered address. 24 columns per record.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");

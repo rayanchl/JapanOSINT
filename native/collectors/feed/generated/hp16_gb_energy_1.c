@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://data.elexon.co.uk/bmrs/api/v1/remit/list/by-event?from=2026-08-10T00:00Z&to=2026-08-16T00:00Z",
     .array_path = "data",
     .detail_url = "https://data.elexon.co.uk/bmrs/api/v1/remit/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

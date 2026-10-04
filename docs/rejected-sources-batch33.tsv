@@ -1,4 +1,4 @@
-# Batch 32 — supplychain: what was probed and did NOT ship, kept as data.
+# Batch 33 — supplychain: what was probed and did NOT ship, kept as data.
 #
 # Two kinds of row are here. The first is a candidate that PASSED the probe
 # and was dropped anyway, because the probe counts records and cannot see

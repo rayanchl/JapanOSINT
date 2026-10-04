@@ -19,6 +19,7 @@ static const hp_source T[] = {
     .record_type = "registry-record", .tags = "\"tw\",\"registry\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "zh-TW",
     .url = "https://data.gcis.nat.gov.tw/od/data/api/236EE382-4942-41A9-BD03-CA0709025E7C?%24format=json&%24filter=Business_Accounting_NO%20eq%20%2222099131%22&%24skip=0&%24top=5",
     .detail_url = "https://data.gcis.nat.gov.tw/od/data/api/5F64D864-61CB-4D0D-8AD9-492047CC1EA6?%24format=json&%24filter=Business_Accounting_NO%20eq%20%22{v}%22", .detail_key = "Business_Accounting_NO",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "tw-gcis-company-by-ubn",
@@ -28,6 +29,7 @@ static const hp_source T[] = {
     .record_type = "registry-record", .tags = "\"tw\",\"registry\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "zh-TW",
     .url = "https://data.gcis.nat.gov.tw/od/data/api/5F64D864-61CB-4D0D-8AD9-492047CC1EA6?%24format=json&%24filter=Business_Accounting_NO%20eq%20%2222099131%22&%24skip=0&%24top=5",
     .detail_url = "https://data.gcis.nat.gov.tw/od/data/api/236EE382-4942-41A9-BD03-CA0709025E7C?%24format=json&%24filter=Business_Accounting_NO%20eq%20%22{v}%22", .detail_key = "Business_Accounting_NO",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "tw-gcis-ubn-name-resolver",
@@ -37,6 +39,7 @@ static const hp_source T[] = {
     .record_type = "registry-record", .tags = "\"tw\",\"registry\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "zh-TW",
     .url = "https://data.gcis.nat.gov.tw/od/data/api/9D17AE0D-09B5-4732-A8F4-81ADED04B679?%24format=json&%24filter=Business_Accounting_NO%20eq%20%2222099131%22",
     .detail_url = "https://data.gcis.nat.gov.tw/od/data/api/5F64D864-61CB-4D0D-8AD9-492047CC1EA6?%24format=json&%24filter=Business_Accounting_NO%20eq%20%22{v}%22", .detail_key = "Business_Accounting_NO",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

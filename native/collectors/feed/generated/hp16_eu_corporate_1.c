@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://registers.esma.europa.eu/solr/esma_registers_upreg/select?q=*:*&wt=json&rows=3",
     .array_path = "response.docs",
     .detail_url = "https://registers.esma.europa.eu/publication/details?core=esma_registers_upreg&docId={v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

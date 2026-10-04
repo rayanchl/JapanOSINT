@@ -19,6 +19,7 @@ static const hp_source T[] = {
     .record_type = "transport-record", .tags = "\"de\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "de",
     .url = "https://v6.vbb.transport.rest/locations?query=Alexanderplatz&results=3",
     .detail_url = "https://v6.bvg.transport.rest/stops/{v}/departures?results=10", .detail_key = "id",
+    .page_walk = 1,
     .interval = 3600, .free_tier = 1 },
 
   { .id = "eu-transitous-map-stops",
@@ -28,6 +29,7 @@ static const hp_source T[] = {
     .record_type = "transport-record", .tags = "\"de\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://api.transitous.org/api/v1/map/stops?min=52.5,13.4&max=52.52,13.42",
     .detail_url = "https://api.transitous.org/api/v1/stoptimes?stopId={v}&n=10", .detail_key = "stopId",
+    .page_walk = 1,
     .interval = 3600, .free_tier = 1 },
 
 };

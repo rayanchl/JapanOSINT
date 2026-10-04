@@ -187,7 +187,7 @@ regen-candidates:
 hptest:
 	@mkdir -p bin
 	$(CC) $(CFLAGS) -o bin/hpengine_test tests/hpengine_test.c lib/hpengine.c \
-	  lib/csv.c lib/htmlparse.c lib/seenset.c lib/xlsx.c lib/zipread.c \
+	  lib/csv.c lib/htmlparse.c lib/seenset.c lib/xlsx.c lib/zipread.c lib/jsonlist.c lib/pagewalk.c \
 	  collectors/pivot/table/hp_uk_deep.c \
 	  third_party/cJSON.c $(ICONV_LIB) -lz
 	./bin/hpengine_test

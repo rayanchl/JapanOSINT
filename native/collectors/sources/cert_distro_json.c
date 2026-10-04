@@ -320,9 +320,18 @@ static int alma_run(const source_ctx *c, intel_sink *s) {
       free(pj);
     }
   }
+  int in_doc = cJSON_IsArray(arr) ? cJSON_GetArraySize(arr) : 0;
   cJSON_Delete(doc);
-  fprintf(stderr, "[almalinux-errata-full] emitted %d (window %ld d)\n",
-          n, (long)(ALMA_WINDOW_SEC / 86400));
+  fprintf(stderr, "[almalinux-errata-full] emitted %d of %d in the document "
+                  "(window %ld d)\n", n, in_doc, (long)(ALMA_WINDOW_SEC / 86400));
+  /* The window is a bounded view of data we DID fetch, so it says how much it is
+   * showing out of how much exists rather than leaving the difference silent. */
+  if (in_doc > n)
+    jo_trunc_notice_scoped(s, "almalinux-errata-full", NULL, ALMA_URL, n, in_doc,
+                           "errata older than the recent window were parsed but "
+                           "not emitted; the window keeps a daily 25 MB re-fetch "
+                           "from re-emitting the whole history",
+                           "widen ALMA_WINDOW_SEC to emit further back");
   return 0;
 }
 

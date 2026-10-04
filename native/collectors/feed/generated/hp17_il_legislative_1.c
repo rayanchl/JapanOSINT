@@ -21,6 +21,7 @@ static const hp_source T[] = {
     .array_path = "value",
     .id_keys = "AgendaID",
     .detail_url = "https://knesset.gov.il/Odata/ParliamentInfo.svc/KNS_Agenda({v})?$format=json", .detail_key = "AgendaID",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "il-knesset-bill-name",
@@ -32,6 +33,7 @@ static const hp_source T[] = {
     .array_path = "value",
     .id_keys = "BillNameID",
     .detail_url = "https://knesset.gov.il/Odata/ParliamentInfo.svc/KNS_Bill({v})?$format=json", .detail_key = "BillID",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "il-knesset-cmt-session-item",
@@ -43,6 +45,7 @@ static const hp_source T[] = {
     .array_path = "value",
     .id_keys = "CmtSessionItemID",
     .detail_url = "https://knesset.gov.il/Odata/ParliamentInfo.svc/KNS_CommitteeSession({v})?$format=json", .detail_key = "CommitteeSessionID",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "il-knesset-committee-session",
@@ -54,6 +57,7 @@ static const hp_source T[] = {
     .array_path = "value",
     .id_keys = "CommitteeSessionID",
     .detail_url = "https://knesset.gov.il/Odata/ParliamentInfo.svc/KNS_CmtSessionItem?$filter=CommitteeSessionID%20eq%20{v}&$format=json", .detail_key = "CommitteeSessionID",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "il-knesset-faction",
@@ -65,6 +69,7 @@ static const hp_source T[] = {
     .array_path = "value",
     .id_keys = "FactionID",
     .detail_url = "https://knesset.gov.il/Odata/ParliamentInfo.svc/KNS_Faction({v})?$format=json", .detail_key = "FactionID",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "il-knesset-query",
@@ -76,6 +81,7 @@ static const hp_source T[] = {
     .array_path = "value",
     .id_keys = "QueryID",
     .detail_url = "https://knesset.gov.il/Odata/ParliamentInfo.svc/KNS_DocumentQuery?$filter=QueryID%20eq%20{v}&$format=json", .detail_key = "QueryID",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

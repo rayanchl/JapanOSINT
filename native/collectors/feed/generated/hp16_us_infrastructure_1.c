@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://www.peeringdb.com/api/campus?limit=3",
     .array_path = "data",
     .detail_url = "https://www.peeringdb.com/api/campus/{v}?depth=2", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "global-peeringdb-carrierfac",
@@ -30,6 +31,7 @@ static const hp_source T[] = {
     .url = "https://www.peeringdb.com/api/carrierfac?carrier_id=1",
     .array_path = "data",
     .detail_url = "https://www.peeringdb.com/api/fac/{v}?depth=2", .detail_key = "fac_id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "global-peeringdb-ixfac-by-ix",
@@ -40,6 +42,7 @@ static const hp_source T[] = {
     .url = "https://www.peeringdb.com/api/ixfac?ix_id=26&limit=5",
     .array_path = "data",
     .detail_url = "https://www.peeringdb.com/api/fac/{v}?depth=2", .detail_key = "fac_id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "global-peeringdb-ixlan-by-ix",
@@ -50,6 +53,7 @@ static const hp_source T[] = {
     .url = "https://www.peeringdb.com/api/ixlan?ix_id=26",
     .array_path = "data",
     .detail_url = "https://www.peeringdb.com/api/ixpfx?ixlan_id={v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "global-peeringdb-netfac-by-fac",
@@ -60,6 +64,7 @@ static const hp_source T[] = {
     .url = "https://www.peeringdb.com/api/netfac?fac_id=1&limit=5",
     .array_path = "data",
     .detail_url = "https://www.peeringdb.com/api/net/{v}?depth=2", .detail_key = "net_id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "global-peeringdb-netixlan-by-ix",
@@ -70,6 +75,7 @@ static const hp_source T[] = {
     .url = "https://www.peeringdb.com/api/netixlan?ix_id=26&limit=5",
     .array_path = "data",
     .detail_url = "https://www.peeringdb.com/api/net/{v}?depth=2", .detail_key = "net_id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "us-arin-rdap-autnum",
@@ -80,6 +86,7 @@ static const hp_source T[] = {
     .url = "https://rdap.arin.net/registry/autnum/15169",
     .array_path = "notices",
     .detail_url = "https://rdap.arin.net/registry/entity/{v}", .detail_key = "handle",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "us-arin-rdap-entity",
@@ -90,6 +97,7 @@ static const hp_source T[] = {
     .url = "https://rdap.arin.net/registry/entity/GOGL",
     .array_path = "networks",
     .detail_url = "https://rdap.arin.net/registry/autnum/{v}", .detail_key = "endAutnum",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

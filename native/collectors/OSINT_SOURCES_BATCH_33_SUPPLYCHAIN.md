@@ -1,7 +1,7 @@
-# Batch 32 — supply-chain and package-registry intelligence, cross-ecosystem
+# Batch 33 — supply-chain and package-registry intelligence, cross-ecosystem
 
-43 rows, `collectors/pivot/table/hp3b32_supplychain.c`, manifest
-`docs/candidate-sources-batch32.supplychain.txt`.
+43 rows, `collectors/pivot/table/hp3b33_supplychain.c`, manifest
+`docs/candidate-sources-batch33.supplychain.txt`.
 
 **This batch is measured, not merely probed.** Unlike batch 31, the environment
 it was authored in reaches package-registry hosts, so every gate in CLAUDE.md
@@ -194,7 +194,7 @@ denominator, and a denominator has to be fresh to the week, not the hour.
 
 ## What this still does not cover
 
-`docs/rejected-sources-batch32.tsv` carries every candidate that did not ship
+`docs/rejected-sources-batch33.tsv` carries every candidate that did not ship
 and why. Two rows were dropped after measurement; a handful were ruled out by
 engine shape (NDJSON has no mode, a string array has no fields to key); and
 the rest are hosts this environment's network policy refuses at CONNECT. The

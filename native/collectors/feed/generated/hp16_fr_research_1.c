@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://theses.fr/api/v1/theses/recherche/?q=*&nombre=10&filtres=%5Bstatus%3DenCours%5D",
     .array_path = "theses",
     .detail_url = "https://theses.fr/api/v1/theses/these/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "theses-fr-personne-search",
@@ -30,6 +31,7 @@ static const hp_source T[] = {
     .url = "https://theses.fr/api/v1/personnes/recherche/?q=dupont&nombre=10",
     .array_path = "personnes",
     .detail_url = "https://theses.fr/api/v1/personnes/personne/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "theses-fr-search",
@@ -40,6 +42,7 @@ static const hp_source T[] = {
     .url = "https://theses.fr/api/v1/theses/recherche/?q=graphene&nombre=10",
     .array_path = "theses",
     .detail_url = "https://theses.fr/api/v1/theses/these/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

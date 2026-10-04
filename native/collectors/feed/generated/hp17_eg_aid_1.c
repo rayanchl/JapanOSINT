@@ -21,6 +21,7 @@ static const hp_source T[] = {
     .array_path = "rows",
     .id_keys = "aid",
     .detail_url = "https://d-portal.org/q?from=act%2Ctrans&aid={v}&form=json&limit=100", .detail_key = "aid",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "undp-projects-eg",
@@ -31,6 +32,7 @@ static const hp_source T[] = {
     .url = "https://api.open.undp.org/api/units/EGY.json",
     .array_path = "projects",
     .detail_url = "https://api.open.undp.org/api/projects/{v}.json", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

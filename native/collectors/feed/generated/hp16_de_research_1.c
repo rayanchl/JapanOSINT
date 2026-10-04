@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://api.datacite.org/dois?client-id=gesis.gesis&page[size]=5",
     .array_path = "data",
     .detail_url = "https://api.datacite.org/dois/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "datacite-dois-by-orcid",
@@ -30,6 +31,7 @@ static const hp_source T[] = {
     .url = "https://api.datacite.org/dois?query=creators.nameIdentifiers.nameIdentifier:*0000-0001-6187-6610*&page[size]=5",
     .array_path = "data",
     .detail_url = "https://api.datacite.org/dois/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "datacite-dois-by-provider",
@@ -40,6 +42,7 @@ static const hp_source T[] = {
     .url = "https://api.datacite.org/dois?provider-id=acjp&page[size]=5",
     .array_path = "data",
     .detail_url = "https://api.datacite.org/dois/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "datacite-dois-related-identifier",
@@ -50,6 +53,7 @@ static const hp_source T[] = {
     .url = "https://api.datacite.org/dois?query=relatedIdentifiers.relatedIdentifier:10.7717/peerj.4375&page[size]=5",
     .array_path = "data",
     .detail_url = "https://api.datacite.org/dois/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "datacite-dois-title-query",
@@ -60,6 +64,7 @@ static const hp_source T[] = {
     .url = "https://api.datacite.org/dois?query=titles.title:graphene&page[size]=5&affiliation=true&publisher=true",
     .array_path = "data",
     .detail_url = "https://api.datacite.org/dois/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "datacite-prefixes",
@@ -70,6 +75,7 @@ static const hp_source T[] = {
     .url = "https://api.datacite.org/prefixes?page[size]=1000",
     .array_path = "data",
     .detail_url = "https://api.datacite.org/prefixes/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "datacite-repositories",
@@ -80,6 +86,7 @@ static const hp_source T[] = {
     .url = "https://api.datacite.org/repositories?page[size]=1000",
     .array_path = "data",
     .detail_url = "https://api.datacite.org/clients/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "wikidata-backlinks",
@@ -90,6 +97,7 @@ static const hp_source T[] = {
     .url = "https://www.wikidata.org/w/api.php?action=query&list=backlinks&bltitle=Q336264&format=json&bllimit=10",
     .array_path = "query.backlinks",
     .detail_url = "https://www.wikidata.org/wiki/Special:EntityData/{v}.json", .detail_key = "title",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

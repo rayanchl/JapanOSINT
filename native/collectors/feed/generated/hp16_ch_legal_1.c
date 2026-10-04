@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://entscheidsuche.ch/_search.php?q=Kartell",
     .array_path = "hits.hits",
     .detail_url = "{v}", .detail_key = "attachment.content_url",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
 };

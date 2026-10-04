@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://www.who.int/api/news/collaboratingcentres?%24top=50&%24format=json",
     .array_path = "value",
     .detail_url = "https://www.who.int/api/news/collaboratingcentres({v})?%24format=json", .detail_key = "Id",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
 };

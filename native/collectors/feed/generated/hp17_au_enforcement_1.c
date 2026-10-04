@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=ced03961-e6f7-4263-895a-0fd1d7996043&limit=100",
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=ced03961-e6f7-4263-895a-0fd1d7996043&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "au-asic-banned-disqualified-persons",
@@ -30,26 +31,7 @@ static const hp_source T[] = {
     .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=741da9e3-7e0c-458e-830c-c518698e1788&limit=100",
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=741da9e3-7e0c-458e-830c-c518698e1788&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
-    .interval = 86400, .free_tier = 1 },
-
-  { .id = "au-ndis-commission-compliance-actions",
-    .name = "NDIS Quality and Safeguards Commission — compliance actions",
-    .collector = "au_enforcement", .category = "enforcement",
-    .description = "Regulatory actions against NDIS providers: Type (revocation of registration, banning order, compliance notice), Date effective from, Date no longer in force, provider Name including trading name, ABN, city/state/postcode, provider number and the registration groups affected. Names companies and the sanction against them.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "enforcement-record", .tags = "\"au\",\"enforcement\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=7e08bcc8-d3a0-403b-bac7-936ec4d48694&limit=100",
-    .array_path = "result.records",
-    .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=7e08bcc8-d3a0-403b-bac7-936ec4d48694&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
-    .interval = 86400, .free_tier = 1 },
-
-  { .id = "au-qld-environmental-enforcement-actions",
-    .name = "Queensland — environmental enforcement actions register",
-    .collector = "au_enforcement", .category = "enforcement",
-    .description = "Queensland environmental enforcement orders naming the recipient: Enforcement Reference, Enforcement Type (Environmental Enforcement Order, Transitional Environmental Program), Issued To (person or company), CC To, Issued Date, Status, Activities, Locations (lot/plan), related environmental authority, evaluator name and subsequent action.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "enforcement-record", .tags = "\"au\",\"enforcement\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.data.qld.gov.au/api/3/action/datastore_search?resource_id=7b334c2a-54dd-4ebe-a429-ad7123102cf2&limit=100",
-    .array_path = "result.records",
-    .detail_url = "https://www.data.qld.gov.au/api/3/action/datastore_search?resource_id=7b334c2a-54dd-4ebe-a429-ad7123102cf2&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

@@ -19,6 +19,7 @@ static const hp_source T[] = {
     .record_type = "trade-record", .tags = "\"bh\",\"trade\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://data.gov.bh/api/explore/v2.1/catalog/datasets/national-export-1-2025/exports/json",
     .detail_url = "https://data.gov.bh/api/explore/v2.1/catalog/datasets/national-export-1-2025/records?limit=100&where=country_name%3D%22{v}%22", .detail_key = "country_name",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

@@ -30,6 +30,7 @@ static const hp_source T[] = {
     .url = "https://www.gov.uk/api/search.json?filter_format=maib_report&count=3&fields=title,link,description,date_of_occurrence,vessel_type",
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
+    .page_walk = 1,
     .interval = 3600, .free_tier = 1 },
 
   { .id = "uk-govuk-search-raib-reports",
@@ -40,6 +41,7 @@ static const hp_source T[] = {
     .url = "https://www.gov.uk/api/search.json?filter_format=raib_report&count=3&fields=title,link,description,date_of_occurrence,railway_type",
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
+    .page_walk = 1,
     .interval = 3600, .free_tier = 1 },
 
   { .id = "us-fmcsa-carrier-census",
@@ -49,6 +51,7 @@ static const hp_source T[] = {
     .record_type = "transport-record", .tags = "\"us\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://data.transportation.gov/resource/az4n-8mr2.json?$limit=2&$order=:id",
     .detail_url = "https://data.transportation.gov/resource/az4n-8mr2.json?$limit=50&dot_number={v}", .detail_key = "dot_number",
+    .page_walk = 1,
     .interval = 3600, .free_tier = 1 },
 
   { .id = "us-fmcsa-crash-file",
@@ -58,6 +61,7 @@ static const hp_source T[] = {
     .record_type = "transport-record", .tags = "\"us\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://data.transportation.gov/resource/aayw-vxb3.json?$limit=2&$order=:id",
     .detail_url = "https://data.transportation.gov/resource/aayw-vxb3.json?$limit=500&dot_number={v}", .detail_key = "dot_number",
+    .page_walk = 1,
     .interval = 3600, .free_tier = 1 },
 
   { .id = "us-fmcsa-vehicle-inspection-file",
@@ -67,6 +71,7 @@ static const hp_source T[] = {
     .record_type = "transport-record", .tags = "\"us\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://data.transportation.gov/resource/fx4q-ay7w.json?$limit=2&$order=:id",
     .detail_url = "https://data.transportation.gov/resource/fx4q-ay7w.json?$limit=500&dot_number={v}", .detail_key = "dot_number",
+    .page_walk = 1,
     .interval = 3600, .free_tier = 1 },
 
   { .id = "us-nhtsa-vpic-manufacturers",

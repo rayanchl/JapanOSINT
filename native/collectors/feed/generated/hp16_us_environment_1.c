@@ -19,6 +19,7 @@ static const hp_source T[] = {
     .record_type = "environment-record", .tags = "\"us\",\"environment\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://data.epa.gov/efservice/br_reporting/rows/0:0/JSON",
     .detail_url = "https://data.epa.gov/efservice/br_gm_waste_code/handler_id/{v}/rows/0:1000/JSON", .detail_key = "handler_id",
+    .page_walk = 1,
     .interval = 10800, .free_tier = 1 },
 
   { .id = "us-epa-envirofacts-pcs-permit-facility",
@@ -28,6 +29,7 @@ static const hp_source T[] = {
     .record_type = "environment-record", .tags = "\"us\",\"environment\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://data.epa.gov/efservice/pcs_permit_facility/rows/0:0/JSON",
     .detail_url = "https://data.epa.gov/efservice/pcs_inspection/npdes/{v}/rows/0:1000/JSON", .detail_key = "npdes",
+    .page_walk = 1,
     .interval = 10800, .free_tier = 1 },
 
   { .id = "us-epa-envirofacts-tri-facility",
@@ -37,6 +39,7 @@ static const hp_source T[] = {
     .record_type = "environment-record", .tags = "\"us\",\"environment\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://data.epa.gov/efservice/tri_facility/state_abbr/TX/rows/0:2/JSON",
     .detail_url = "https://data.epa.gov/efservice/tri_facility/tri_facility_id/{v}/tri_reporting_form/rows/0:100/JSON", .detail_key = "tri_facility_id",
+    .page_walk = 1,
     .interval = 10800, .free_tier = 1 },
 
   { .id = "us-sdwis-water-system",
@@ -46,6 +49,7 @@ static const hp_source T[] = {
     .record_type = "environment-record", .tags = "\"us\",\"environment\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://data.epa.gov/efservice/water_system/state_code/RI/rows/0:1/JSON",
     .detail_url = "https://data.epa.gov/efservice/violation/pwsid/{v}/rows/0:1000/JSON", .detail_key = "pwsid",
+    .page_walk = 1,
     .interval = 10800, .free_tier = 1 },
 
 };

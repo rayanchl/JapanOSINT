@@ -1,0 +1,355 @@
+id	url	verdict	kind	items	http	bytes	note
+JO32_JPS_BIBNL	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=bibnl&size=500&from=0	PASS	json:list	500	200	1534012	
+JO32_JPS_S_NET	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=s_net&size=500&from=0	PASS	json:list	500	200	754045	
+JO32_JPS_DIGNL	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=dignl&size=500&from=0	PASS	json:list	500	200	2407573	
+JO32_JPS_NAJDA	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=najda&size=500&from=0	PASS	json:list	500	200	811336	
+JO32_JPS_NIJ10	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=nij10&size=500&from=0	PASS	json:list	500	200	498463	
+JO32_JPS_NIJ16	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=nij16&size=500&from=0	PASS	json:list	500	200	811712	
+JO32_JPS_NME_TRACKINFO	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=nme_trackInfo&size=500&from=0	PASS	json:list	500	200	748407	
+JO32_JPS_TOKYOMUSEUMCOLECTION	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=tokyomuseumcolection&size=500&from=0	PASS	json:list	500	200	764524	
+JO32_JPS_NME_MOCAT	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=nme_mocat&size=500&from=0	PASS	json:list	500	200	587363	
+JO32_JPS_NMJ01	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=nmj01&size=500&from=0	PASS	json:list	500	200	444881	
+JO32_JPS_NIJ01	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=nij01&size=500&from=0	PASS	json:list	500	200	481089	
+JO32_JPS_FCM_DB	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=fcm_db&size=500&from=0	PASS	json:list	500	200	916881	
+JO32_JPS_CRIA	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=cria&size=500&from=0	PASS	json:list	500	200	845612	
+JO32_JPS_ARC_NISHIKIE	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=arc_nishikie&size=500&from=0	PASS	json:list	500	200	1516656	
+JO32_JPS_FISHPIX	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=FishPix&size=500&from=0	PASS	json:list	500	200	900946	
+JO32_JPS_MADB_ANIMATION	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=madb_animation&size=500&from=0	PASS	json:list	500	200	583601	
+JO32_JPS_COBAS	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=cobas&size=500&from=0	PASS	json:list	500	200	2259703	
+JO32_JPS_SAITAMA_MUSEUM	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=saitama_museum&size=500&from=0	PASS	json:list	500	200	640507	
+JO32_JPS_NIJ11	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=nij11&size=500&from=0	PASS	json:list	500	200	5527529	
+JO32_JPS_ARC_PHOTODB	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=arc_photodb&size=500&from=0	PASS	json:list	500	200	1228764	
+JO32_JPS_ENPAKU_ENGEKIJOEN	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=enpaku_engekijoen&size=500&from=0	PASS	json:list	500	200	1746988	
+JO32_JPS_NAGOYACITY_MUSEUM	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=NagoyaCity_Museum&size=500&from=0	PASS	json:list	500	200	912027	
+JO32_JPS_ARC_BAN	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=arc_ban&size=500&from=0	PASS	json:list	500	200	1231909	
+JO32_JPS_TPADA_KENMEI	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=tpada_kenmei&size=500&from=0	PASS	json:list	500	200	631397	
+JO32_JPS_NIJ13	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=nij13&size=500&from=0	PASS	json:list	500	200	822147	
+JO32_JPS_EXHIB	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=exhib&size=500&from=0	PASS	json:list	500	200	746431	
+JO32_JPS_MIEMU02	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=miemu02&size=500&from=0	PASS	json:list	500	200	950599	
+JO32_JPS_BUNKA	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=bunka&size=500&from=0	PASS	json:list	500	200	1157672	
+JO32_JPS_NARAHAKUBIJUTSUINDB	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=NarahakuBijutsuinDB&size=500&from=0	PASS	json:list	500	200	653052	
+JO32_JPS_SYOZO	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=syozo&size=500&from=0	PASS	json:list	500	200	1138628	
+JO32_JPS_MINAMATA	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=minamata&size=500&from=0	PASS	json:list	500	200	980315	
+JO32_JPS_SHOWA_MAGAZINE	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=Showa_magazine&size=500&from=0	PASS	json:list	500	200	2950370	
+JO32_JPS_SAITAMA_MONJO_SEARCH	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=saitama_monjo_search&size=500&from=0	PASS	json:list	500	200	990655	
+JO32_JPS_HPMM_MAGAZINE	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=hpmm_magazine&size=500&from=0	PASS	json:list	500	200	598030	
+JO32_JPS_SHOWA_PHOTO	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=Showa_photo&size=500&from=0	PASS	json:list	500	200	872384	
+JO32_JPS_PHOTO	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=photo&size=500&from=0	PASS	json:list	500	200	1024523	
+JO32_JPS_MIEMUG	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=miemug&size=500&from=0	PASS	json:list	500	200	614129	
+JO32_JPS_REKIBUN	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=rekibun&size=500&from=0	PASS	json:list	500	200	880696	
+JO32_JPS_AOKENSHIDA_DOC	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=aokenshida_doc&size=500&from=0	PASS	json:list	500	200	1152731	
+JO32_JPS_U006	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=u006&size=500&from=0	PASS	json:list	500	200	870292	
+JO32_JPS_HPMM_ABOMB	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=hpmm_abomb&size=500&from=0	PASS	json:list	500	200	619347	
+JO32_JPS_NDA01	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=nda01&size=500&from=0	PASS	json:list	500	200	1124156	
+JO32_JPS_WKYM_KOUBUNSYO	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=wkym_koubunsyo&size=500&from=0	PASS	json:list	500	200	581079	
+JO32_JPS_KAIZUARCHIVE	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=kaizuArchive&size=500&from=0	PASS	json:list	500	200	868676	
+JO32_JPS_WKYM_KANKOUBUTU	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=wkym_kankoubutu&size=500&from=0	PASS	json:list	500	200	564563	
+JO32_JPS_ENPK_EIGAPROGRAM	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=enpk_eigaprogram&size=500&from=0	PASS	json:list	500	200	474751	
+JO32_JPS_RIH02	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=rih02&size=500&from=0	PASS	json:list	500	200	768694	
+JO32_JPS_TOKEI	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=tokei&size=500&from=0	PASS	json:list	500	200	575966	
+JO32_JPS_AOKENSHIDA_PIC	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=aokenshida_pic&size=500&from=0	PASS	json:list	500	200	1058064	
+JO32_JPS_NARAHAKUBIJUTSUINDB2	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=NarahakuBijutsuinDB2&size=500&from=0	PASS	json:list	500	200	983727	
+JO32_JPS_NIJ20	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=nij20&size=500&from=0	PASS	json:list	500	200	908757	
+JO32_JPS_OJIYA_DNA	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=ojiya_dna&size=500&from=0	PASS	json:list	500	200	892025	
+JO32_JPS_JOMON_ARCHIVES	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=jomon_archives&size=500&from=0	PASS	json:list	500	200	1017684	
+JO32_JPS_MUSEE_GSJ	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=musee_gsj&size=500&from=0	PASS	json:list	500	200	641389	
+JO32_JPS_SHISAN	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=shisan&size=500&from=0	PASS	json:list	500	200	715781	
+JO32_JPS_HPMM_ABOMBDRAWING	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=hpmm_abombdrawing&size=500&from=0	PASS	json:list	500	200	1087709	
+JO32_JPS_XM_OKINOSHIMA	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=xm_okinoshima&size=500&from=0	PASS	json:list	500	200	694471	
+JO32_JPS_KYOTOGYOEN_ARCHIVES	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=kyotogyoen_archives&size=500&from=0	PASS	json:list	500	200	2486975	
+JO32_JPS_ARC_MAPS	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=ARC_maps&size=500&from=0	PASS	json:list	500	200	994471	
+JO32_JPS_MICHI	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=michi&size=500&from=0	PASS	json:list	500	200	1022573	
+JO32_JPS_CB1	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=cb1&size=500&from=0	PASS	json:list	500	200	3506959	
+JO32_JPS_KOUBUN_DAS	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=Koubun_das&size=500&from=0	PASS	json:list	500	200	814958	
+JO32_JPS_SHOWA_VIDEO	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=Showa_video&size=500&from=0	PASS	json:list	500	200	2268899	
+JO32_JPS_SHOWA_MAP	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=Showa_map&size=500&from=0	PASS	json:list	500	200	745145	
+JO32_JPS_HPMM_PHOTO	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=hpmm_photo&size=500&from=0	PASS	json:list	500	200	630091	
+JO32_JPS_TNRICP_URITATE	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=tnricp_uritate&size=500&from=0	PASS	json:list	500	200	3802093	
+JO32_REPO_HIT_U_OAI	https://hit-u.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	40913	
+JO32_REPO_HIROSHIMA_OAI	https://hiroshima.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	185135	
+JO32_REPO_KEK_OAI	https://kek.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	126956	
+JO32_REPO_TWINKLE_OAI	https://twinkle.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	140400	
+JO32_REPO_REDCROSS_OAI	https://redcross.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	135515	
+JO32_REPO_TOYAMA_OAI	https://toyama.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	167842	
+JO32_REPO_OCU_OMU_OAI	https://ocu-omu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	182035	
+JO32_REPO_KONAN_WU_OAI	https://konan-wu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	162507	
+JO32_REPO_KAISEI_OAI	https://kaisei.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	130197	
+JO32_REPO_U_RYUKYU_OAI	https://u-ryukyu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	291062	
+JO32_REPO_OMU_OAI	https://omu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	154267	
+JO32_REPO_IWATEMED_OAI	https://iwatemed.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	157373	
+JO32_REPO_TOHO_OAI	https://toho.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	238692	
+JO32_REPO_YNU_OAI	https://ynu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	187300	
+JO32_REPO_AICHIU_OAI	https://aichiu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	136427	
+JO32_REPO_KAIT_OAI	https://kait.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	165946	
+JO32_REPO_TKU_OAI	https://tku.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	37321	
+JO32_REPO_TMU_OAI	https://tmu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	158263	
+JO32_REPO_U_FUKUI_OAI	https://u-fukui.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	172227	
+JO32_REPO_UUAIR_OAI	https://uuair.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	138611	
+JO32_REPO_AUE_OAI	https://aue.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	210236	
+JO32_REPO_BUNKYO_OAI	https://bunkyo.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	196861	
+JO32_REPO_STARS_OAI	https://stars.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	254921	
+JO32_REPO_SAPMED_OAI	https://sapmed.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	184904	
+JO32_REPO_RAKUNO_OAI	https://rakuno.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	125256	
+JO32_REPO_TOYO_BUNKO_OAI	https://toyo-bunko.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	99	200	115793	
+JO32_REPO_YAMAGATA_OAI	https://yamagata.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	268384	
+JO32_REPO_ASIA_U_OAI	https://asia-u.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	137023	
+JO32_REPO_MARIANNA_U_OAI	https://marianna-u.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	143382	
+JO32_REPO_BEPPU_U_OAI	https://beppu-u.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	122965	
+JO32_REPO_YCU_OAI	https://ycu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	132880	
+JO32_REPO_NANZAN_U_OAI	https://nanzan-u.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	149769	
+JO32_REPO_RKU_OAI	https://rku.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	126853	
+JO32_REPO_OUJ_OAI	https://ouj.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	110728	
+JO32_REPO_FUN_OAI	https://fun.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	170957	
+JO32_REPO_GIFU_PU_OAI	https://gifu-pu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	166334	
+JO32_REPO_KONAN_U_OAI	https://konan-u.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	144186	
+JO32_REPO_NITECH_OAI	https://nitech.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	203515	
+JO32_REPO_NARUTO_OAI	https://naruto.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	221447	
+JO32_REPO_AGU_OAI	https://agu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	128528	
+JO32_REPO_HAMA_MED_OAI	https://hama-med.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	192337	
+JO32_REPO_CUC_OAI	https://cuc.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	19994	
+JO32_REPO_MEIGAKU_OAI	https://meigaku.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	140413	
+JO32_REPO_OUS_OAI	https://ous.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	220920	
+JO32_REPO_ATOMI_OAI	https://atomi.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	116532	
+JO32_REPO_K_RAIN_OAI	https://k-rain.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	181421	
+JO32_REPO_HSUH_OAI	https://hsuh.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	147507	
+JO32_REPO_NARA_U_OAI	https://nara-u.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	148761	
+JO32_REPO_SUICA_OAI	https://suica.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	157187	
+JO32_REPO_HOKUGA_OAI	https://hokuga.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	144006	
+JO32_REPO_KOKUSHIKAN_OAI	https://kokushikan.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	203243	
+JO32_REPO_KYUSAN_U_OAI	https://kyusan-u.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	131536	
+JO32_REPO_FUKUYAMA_U_OAI	https://fukuyama-u.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	133367	
+JO32_REPO_U_HYOGO_OAI	https://u-hyogo.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	150934	
+JO32_REPO_NISHOGAKUSHA_OAI	https://nishogakusha.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	113877	
+JO32_REPO_MY_PHARM_OAI	https://my-pharm.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	74415	
+JO32_REPO_JIR_OAI	https://jir.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	173502	
+JO32_REPO_YGU_OAI	https://ygu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	137782	
+JO32_REPO_KUMAGAKU_OAI	https://kumagaku.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	140971	
+JO32_REPO_SHOWA_OAI	https://showa.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	236800	
+JO32_REPO_NAGOYA_WU_OAI	https://nagoya-wu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	251021	
+JO32_REPO_U_SHIZUOKA_KEN_OAI	https://u-shizuoka-ken.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	134727	
+JO32_REPO_ONOMICHI_U_OAI	https://onomichi-u.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	195015	
+JO32_REPO_ISCT_OAI	https://isct.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	214187	
+JO32_REPO_JUEN_OAI	https://juen.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	160002	
+JO32_REPO_KWMW_OAI	https://kwmw.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	104665	
+JO32_REPO_JAIR_OAI	https://jair.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	30693	
+JO32_REPO_OKIU1972_OAI	https://okiu1972.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	128990	
+JO32_REPO_ASKA_R_OAI	https://aska-r.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	180327	
+JO32_REPO_HOKUSHO_OAI	https://hokusho.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	132507	
+JO32_REPO_KEIAI_OAI	https://keiai.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	115577	
+JO32_REPO_KOKUBUNKEN_OAI	https://kokubunken.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	173025	
+JO32_REPO_U_KOCHI_OAI	https://u-kochi.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	157416	
+JO32_REPO_KOBE_C_OAI	https://kobe-c.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	154564	
+JO32_REPO_KWMED_OAI	https://kwmed.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc	PASS	xml:record	100	200	173017	
+JO32_FEED_LIVEDOOR_POLITICS	https://news.livedoor.com/rss/summary/1.xml	PASS	rss	200	200	231519	
+JO32_FEED_LIVEDOOR_DOMESTIC	https://news.livedoor.com/rss/summary/8.xml	PASS	rss	200	200	268877	
+JO32_FEED_LIVEDOOR_ECONOMY	https://news.livedoor.com/rss/summary/11.xml	PASS	rss	200	200	241684	
+JO32_FEED_LIVEDOOR_IT	https://news.livedoor.com/rss/summary/25.xml	PASS	rss	200	200	269963	
+JO32_FEED_LIVEDOOR_WORLD	https://news.livedoor.com/rss/summary/41.xml	PASS	rss	200	200	270995	
+JO32_FEED_YAHOO_CAT_DOMESTIC	https://news.yahoo.co.jp/rss/categories/domestic.xml	PASS	rss	50	200	45538	
+JO32_FEED_YAHOO_CAT_WORLD	https://news.yahoo.co.jp/rss/categories/world.xml	PASS	rss	50	200	44180	
+JO32_FEED_YAHOO_CAT_BUSINESS	https://news.yahoo.co.jp/rss/categories/business.xml	PASS	rss	50	200	45325	
+JO32_FEED_YAHOO_CAT_IT	https://news.yahoo.co.jp/rss/categories/it.xml	PASS	rss	50	200	43617	
+JO32_FEED_YAHOO_CAT_SCIENCE	https://news.yahoo.co.jp/rss/categories/science.xml	PASS	rss	50	200	45689	
+JO32_FEED_YAHOO_CAT_LIFE	https://news.yahoo.co.jp/rss/categories/life.xml	PASS	rss	50	200	46721	
+JO32_FEED_YAHOO_CAT_LOCAL	https://news.yahoo.co.jp/rss/categories/local.xml	PASS	rss	50	200	45857	
+JO32_FEED_YAHOO_KUMANICHI	https://news.yahoo.co.jp/rss/media/kumanichi/all.xml	PASS	rss	50	200	39447	
+JO32_FEED_YAHOO_TV_KHBV	https://news.yahoo.co.jp/rss/media/khbv/all.xml	PASS	rss	50	200	39895	
+JO32_FEED_YAHOO_TV_MMT	https://news.yahoo.co.jp/rss/media/mmt/all.xml	PASS	rss	50	200	45716	
+JO32_FEED_YAHOO_TV_CTV	https://news.yahoo.co.jp/rss/media/ctv/all.xml	PASS	rss	50	200	47230	
+JO32_FEED_YAHOO_TV_NBN	https://news.yahoo.co.jp/rss/media/nbn/all.xml	PASS	rss	50	200	48182	
+JO32_FEED_YAHOO_TV_ASAHIBC	https://news.yahoo.co.jp/rss/media/asahibc/all.xml	PASS	rss	50	200	48809	
+JO32_FEED_YAHOO_TV_JRT	https://news.yahoo.co.jp/rss/media/jrt/all.xml	PASS	rss	50	200	39302	
+JO32_FEED_YAHOO_TV_KBCV	https://news.yahoo.co.jp/rss/media/kbcv/all.xml	PASS	rss	50	200	45924	
+JO32_FEED_YAHOO_TV_FBSNEWS	https://news.yahoo.co.jp/rss/media/fbsnews/all.xml	PASS	rss	50	200	44695	
+JO32_FEED_ASAHI_NATIONAL	https://www.asahi.com/rss/asahi/national.rdf	PASS	rss	40	200	20379	
+JO32_FEED_ASAHI_POLITICS	https://www.asahi.com/rss/asahi/politics.rdf	PASS	rss	20	200	10720	
+JO32_FEED_ASAHI_BUSINESS	https://www.asahi.com/rss/asahi/business.rdf	PASS	rss	30	200	15661	
+JO32_FEED_ASAHI_INTERNATIONAL	https://www.asahi.com/rss/asahi/international.rdf	PASS	rss	24	200	12568	
+JO32_FEED_MAINICHI_ENGLISH	https://mainichi.jp/rss/etc/english_latest.rss	PASS	rss	20	200	13532	
+JO32_FEED_NHK_NEWSWEB_NEW	https://news.web.nhk/news/json16/new_001.json	PASS	json:channel.item	20	200	25819	
+JO32_FEED_HOCHI	https://hochi.news/rss/index.xml	PASS	rss	898	200	571710	
+JO32_FEED_JBPRESS	https://jbpress.ismedia.jp/list/feed/rss	PASS	rss	20	200	18320	
+JO32_FEED_DIAMOND_ONLINE	https://diamond.jp/list/feed/rss/dol	PASS	rss	25	200	31396	
+JO32_FEED_AERA_DIGITAL	https://dot.asahi.com/list/feed/rss	PASS	rss	30	200	40623	
+JO32_FEED_ITMEDIA_ALL	https://rss.itmedia.co.jp/rss/2.0/itmedia_all.xml	PASS	rss	50	200	30970	
+JO32_FEED_ITMEDIA_AIT	https://rss.itmedia.co.jp/rss/2.0/ait.xml	PASS	rss	30	200	18803	
+JO32_FEED_ITMEDIA_MONOIST	https://rss.itmedia.co.jp/rss/2.0/monoist.xml	PASS	rss	30	200	16724	
+JO32_FEED_HATENA_NEW_SOCIAL	https://b.hatena.ne.jp/entrylist/social.rss	PASS	rss	30	200	213832	
+JO32_FEED_HATENA_NEW_ECONOMICS	https://b.hatena.ne.jp/entrylist/economics.rss	PASS	rss	30	200	233555	
+JO32_ARC_MLIT_BRIDGE	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/rsdb_bridge/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	2004040	
+JO32_ARC_MLIT_TUNNEL	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/rsdb_tunnel/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	2065853	
+JO32_ARC_MLIT_PEDDECK	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/rsdb_pedestrian_deck/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	2086240	
+JO32_ARC_MLIT_SIGNGANTRY	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/rsdb_overhead_signage/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	1907083	
+JO32_ARC_MLIT_CULVERT	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/rsdb_culvert/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	2073766	
+JO32_ARC_MLIT_EARTHWORK	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/rsdb_earthwork/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	1937971	
+JO32_ARC_MLIT_BOREHOLE	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/ngi/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	2810434	
+JO32_ARC_MLIT_CALS_DESIGN	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/cals_design/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	5883554	
+JO32_ARC_MLIT_CALS_WORKS	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/cals_construction/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	6102480	
+JO32_ARC_MLIT_MEDICAL	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/P04_20/FeatureServer/8/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	341497	
+JO32_ARC_MLIT_SCHOOL	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/P29_23/FeatureServer/9/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	308199	
+JO32_ARC_MLIT_PUBHALL	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/P05_22/FeatureServer/7/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	201186	
+JO32_ARC_YAMAGATA_POLICE_ACC	https://services3.arcgis.com/svbZEzfhE1YbV1UV/arcgis/rest/services/new_traffic_accident_point/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	1024642	
+JO32_ARC_AKITA_POLICE_ACC	https://services6.arcgis.com/oiB3BKEeOOPUxQMg/arcgis/rest/services/Kokojiko_TrafficAccidents/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	961651	
+JO32_ARC_MIYAGI_POLICE_ACC	https://services6.arcgis.com/OhXN0ZmojCx1em6O/arcgis/rest/services/jikoopendata(2018_2025)/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	643447	
+JO32_ARC_HYOGO_ACC	https://services6.arcgis.com/vgk9QzEU5SI8I6pT/arcgis/rest/services/traffic_accident_lite/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	346045	
+JO32_ARC_HYOGO_CRIME	https://services6.arcgis.com/vgk9QzEU5SI8I6pT/arcgis/rest/services/%E7%8A%AF%E7%BD%AAdeta2/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	354411	
+JO32_ARC_WAKAYAMA_ACC	https://services1.arcgis.com/dyNm0e7fxHVztTut/arcgis/rest/services/%E4%BA%8B%E6%95%85%E5%AE%9F%E7%B8%BE/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=fid&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	457879	
+JO32_ARC_YAMAGUCHI_ACC2022	https://services1.arcgis.com/8aCiBGqnmcTR5Um9/arcgis/rest/services/%E4%BA%A4%E9%80%9A%E4%BA%8B%E6%95%85_%E5%B1%B1%E5%8F%A3%E7%9C%8C_gdb_rename/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	1293130	
+JO32_ARC_MIE_ACC_ELDERLY	https://services5.arcgis.com/tkvkIlp1M2KOKx34/arcgis/rest/services/poi1603_v01/FeatureServer/27/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	168532	
+JO32_ARC_MIE_ACC_SERIOUS	https://services5.arcgis.com/tkvkIlp1M2KOKx34/arcgis/rest/services/poi1604_v01/FeatureServer/28/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	166505	
+JO32_ARC_MIE_ACC_BICYCLE	https://services5.arcgis.com/tkvkIlp1M2KOKx34/arcgis/rest/services/poi1601_v01/FeatureServer/25/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	173512	
+JO32_ARC_MIE_CRIME_BIKETHEFT	https://services5.arcgis.com/tkvkIlp1M2KOKx34/arcgis/rest/services/poi1708_v01/FeatureServer/36/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	322551	
+JO32_ARC_TOKYO_HYDRANT	https://services8.arcgis.com/gRDzS37HDbd5khtU/arcgis/rest/services/%E6%B6%88%E7%81%AB%E6%A0%93%E4%BD%8D%E7%BD%AE%E6%83%85%E5%A0%B1%EF%BC%88%E4%BB%A4%E5%92%8C7%E5%B9%B44%E6%9C%881%E6%97%A5%E7%8F%BE%E5%9C%A8%EF%BC%89/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=FID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	217647	
+JO32_ARC_TOKYO_CISTERN	https://services8.arcgis.com/gRDzS37HDbd5khtU/arcgis/rest/services/%E3%83%9E%E3%83%83%E3%83%971/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	189465	
+JO32_ARC_FUKUOKA_WILDLIFE_CAPTURE	https://services1.arcgis.com/UzywP0SobSWMx2Pl/arcgis/rest/services/Hokaku_Excel_point_view/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	513862	
+JO32_ARC_TOYAMA_BEAR	https://services7.arcgis.com/pUdPpUsq83Kw8pWi/arcgis/rest/services/survey123_3f07f1f9864d43368d48b5f373d6cd68_results/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=objectid&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	428094	
+JO32_ARC_FUKUSHIMA_BEAR	https://services6.arcgis.com/M9nrgnB1gu8YnLFM/arcgis/rest/services/%E7%A6%8F%E5%B3%B6%E7%9C%8C%E3%82%AF%E3%83%9E%E7%9B%AE%E6%92%83%E3%83%9D%E3%82%A4%E3%83%B3%E3%83%88%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC_202606_view/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=objectid&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	549217	
+JO32_ARC_GUNMA_BEAR	https://services7.arcgis.com/DkC6f6v0YUQX0rke/arcgis/rest/services/survey123_a77f33a9b9f649cfada5c7983c67874b_results/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=objectid&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	509056	
+JO32_ARC_HOKKAIDO_FOREST_GATE	https://services9.arcgis.com/2y39yojBa5v84JFa/arcgis/rest/services/%E3%82%B2%E3%83%BC%E3%83%88%E3%80%81%E9%80%9A%E8%A1%8C%E6%AD%A2%E3%82%81%E6%83%85%E5%A0%B1/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=FID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	263956	
+JO32_ARC_NAGANO_RAIN10M	https://services5.arcgis.com/PZeNMNQU2CU59YeG/arcgis/rest/services/10%E5%88%86%E9%99%8D%E9%9B%A8%E9%87%8F_%E9%95%B7%E9%87%8E%E7%9C%8C%E5%85%A8%E5%9F%9F/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	111726	
+JO32_ARC_NAGANO_RAIN1H	https://services5.arcgis.com/PZeNMNQU2CU59YeG/arcgis/rest/services/%E9%99%8D%E9%9B%A8%E9%87%8F_%E9%95%B7%E9%87%8E%E7%9C%8C%E5%85%A8%E5%9F%9F/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	126625	
+JO32_ARC_FLOODSENSOR	https://services9.arcgis.com/j1INWAn10etJkt0x/arcgis/rest/services/ShinsuiWatcher_3aa0b/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	484454	
+JO32_ARC_FLOODSENSOR_EVENTS	https://services9.arcgis.com/j1INWAn10etJkt0x/arcgis/rest/services/ShinsuiWatcher_3aa0b/FeatureServer/2/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	121494	
+JO32_ARC_NIIGATA_CHISAN	https://services1.arcgis.com/cGRQILZoIvUkhwTf/arcgis/rest/services/%E6%B2%BB%E5%B1%B1%E6%96%BD%E8%A8%AD%E3%83%A9%E3%82%A4%E3%83%B3%E3%83%87%E3%83%BC%E3%82%BF/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	737755	
+JO32_ARC_SHIBUYA_FOODPERMIT	https://services3.arcgis.com/UtdeFTavkHfI94t2/arcgis/rest/services/131130_food_businesses_list/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	1552884	
+JO32_ARC_SHIBUYA_PEOPLECOUNT	https://services3.arcgis.com/UtdeFTavkHfI94t2/arcgis/rest/services/131130_people_count_main_public_facility/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	207202	
+JO32_ARC_SHIBUYA_POPULATION	https://services3.arcgis.com/UtdeFTavkHfI94t2/arcgis/rest/services/131130_population_quarterly_masked/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	323646	
+JO32_ARC_SHIBUYA_CRIME	https://services3.arcgis.com/UtdeFTavkHfI94t2/arcgis/rest/services/131130_%E6%B8%8B%E8%B0%B7%E5%8C%BA%E3%81%A7%E7%99%BA%E7%94%9F%E3%81%97%E3%81%9F%E5%88%91%E6%B3%95%E7%8A%AF%E6%95%B0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	184268	
+JO32_ARC_SHIBUYA_CLINICS	https://services3.arcgis.com/UtdeFTavkHfI94t2/arcgis/rest/services/131130_clinics_and_dental_clinics/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	1102106	
+JO32_ARC_SHIBUYA_GARBAGE	https://services3.arcgis.com/UtdeFTavkHfI94t2/arcgis/rest/services/131130_garbage_amount/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	213859	
+JO32_ARC_SHIBUYA_FOOTFALL	https://services3.arcgis.com/UtdeFTavkHfI94t2/arcgis/rest/services/131130_tsuukoujinkou_seibetu/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	170405	
+JO32_ARC_KASEN_EVACSITE	https://services1.arcgis.com/JuTIUwaukdmbwINm/arcgis/rest/services/%E3%83%9E%E3%83%83%E3%83%97/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	434042	
+JO32_ARC_INZAI_ADDRPOINT	https://services8.arcgis.com/54QMawiMC688GOIY/arcgis/rest/services/%E9%81%B8%E6%8C%99%E3%83%9E%E3%83%83%E3%83%97ver_6_WFL1/FeatureServer/3/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	225808	
+JO32_ARC_HACHIOJI_CRIMELIGHT	https://services7.arcgis.com/yoDYEe9aP5MsSkEP/arcgis/rest/services/%E9%98%B2%E7%8A%AF%E7%81%AF%E3%83%9E%E3%83%83%E3%83%97_%E8%A1%A8%E7%A4%BA/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	329119	
+JO32_ARC_HINO_STREETLIGHT	https://services5.arcgis.com/akSheMdmUZiKa4BM/arcgis/rest/services/2024%E5%B9%B4%E6%99%82%E7%82%B9%E7%85%A7%E6%98%8E%E7%81%AF%EF%BC%88%E6%8A%9C%E7%B2%8B%EF%BC%89/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	349885	
+JO32_ARC_SETOUCHI_CRIMELIGHT	https://services6.arcgis.com/hWQkUNriWdAdiE89/arcgis/rest/services/%E9%98%B2%E7%8A%AF%E7%81%AF%EF%BC%88CSV%EF%BC%89/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	144194	
+JO32_ARC_NAGAIZUMI_CRIMELIGHT	https://services7.arcgis.com/qKPveEHULwuCeMMn/arcgis/rest/services/c001_bouhantou_shinboru/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=FID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	623036	
+JO32_ARC_KITAKYUSHU_POSTERBOARD	https://services2.arcgis.com/erY1A5Xa80fBe1ys/arcgis/rest/services/election_gdb/FeatureServer/3/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	638135	
+JO32_ARC_IGA_HYDRANT	https://services7.arcgis.com/aWegpbylh57tDDge/arcgis/rest/services/%E4%B8%8A%E6%B0%B4%E9%81%93_%E4%BE%9B%E7%94%A8_%E6%B6%88%E7%81%AB%E6%A0%93_%E8%A8%98%E5%8F%B7/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=FID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	113434	
+JO32_ARC_KASHIWAZAKI_HYDRANT	https://services1.arcgis.com/XlTFoh9FvQbdpw6d/arcgis/rest/services/%E6%B6%88%E7%81%AB%E6%A0%93_view/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	294199	
+JO32_ARC_SUZAKA_FIREWATER	https://services6.arcgis.com/uCid7TL8j7OZ5iGy/arcgis/rest/services/%E6%B6%88%E7%81%AB%E6%A0%93%E3%83%BB%E9%98%B2%E7%81%AB%E6%B0%B4%E6%A7%BD%EF%BC%88%E5%85%AC%E9%96%8B%E7%94%A8%EF%BC%89/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=FID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	436874	
+JO32_ARC_HAMAMATSU_CISTERN	https://services3.arcgis.com/D8JllYrM6IjqoX8o/arcgis/rest/services/%E6%B0%B4%E5%88%A9%EF%BC%88%E9%98%B2%E7%81%AB%E6%B0%B4%E6%A7%BD%E3%83%BB%E9%98%B2%E7%81%AB%E4%BA%95%E6%88%B8%EF%BC%89/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	193148	
+JO32_MKT_MOF_JGB_YIELDS_ALL	https://www.mof.go.jp/jgbs/reference/interest_rate/data/jgbcm_all.csv	PASS	csv	13291	200	1176385	
+JO32_MKT_JSF_LOAN_BALANCE	https://www.taisyaku.jp/data/zandaka.csv	PASS	csv	4763	200	853070	
+JO32_MKT_JSF_LENDABLE_ISSUES	https://www.taisyaku.jp/data/meigara.csv	PASS	csv	4342	200	191811	
+JO32_MKT_JPX_LISTED_ISSUES	https://www.jpx.co.jp/markets/statistics-equities/misc/tvdivq0000001vg2-att/data_j.xlsx	PASS	xlsx:Sheet1	4441	200	228486	header=日付|コード|銘柄名|市場・商品区分|33業種コード|33業種区分|17業種コード|17業種区分
+JO32_MKT_BOJ_CALLRATE_DAILY	https://www.stat-search.boj.or.jp/ssi/mtshtml/csv/fm01_d_1.csv	PASS	csv	10503	200	168814	
+JO32_MKT_BOJ_USDJPY_DAILY	https://www.stat-search.boj.or.jp/ssi/mtshtml/csv/fm08_d_1.csv	PASS	csv	10503	200	227664	
+JO32_MKT_BITFLYER_EXEC_BTCJPY	https://api.bitflyer.com/v1/executions?product_code=BTC_JPY&count=500	PASS	json-array	500	200	112413	
+JO32_MKT_BITFLYER_EXEC_FXBTCJPY	https://api.bitflyer.com/v1/executions?product_code=FX_BTC_JPY&count=500	PASS	json-array	500	200	111707	
+JO32_MKT_BITFLYER_EXEC_ETHJPY	https://api.bitflyer.com/v1/executions?product_code=ETH_JPY&count=500	PASS	json-array	500	200	110756	
+JO32_MKT_BITFLYER_EXEC_XRPJPY	https://api.bitflyer.com/v1/executions?product_code=XRP_JPY&count=500	PASS	json-array	500	200	109933	
+JO32_MKT_BITFLYER_CHAT	https://api.bitflyer.com/v1/getchats	PASS	json-array	750	200	132945	
+JO32_MKT_COINCHECK_TRADES_BTCJPY	https://coincheck.com/api/trades?pair=btc_jpy&limit=100	PASS	json:data	100	200	13232	
+JO32_MKT_COINCHECK_TRADES_ETHJPY	https://coincheck.com/api/trades?pair=eth_jpy&limit=100	PASS	json:data	100	200	12946	
+JO32_MKT_ZAIF_TRADES_BTCJPY	https://api.zaif.jp/api/1/trades/btc_jpy	PASS	json-array	150	200	19101	
+JO32_MKT_BITBANK_TX_BTCJPY	https://public.bitbank.cc/btc_jpy/transactions	PASS	json:data.transactions	60	200	6529	
+JO32_MKT_OKJ_TRADES_BTCJPY	https://www.okcoin.jp/api/spot/v3/instruments/BTC-JPY/trades?limit=100	PASS	json-array	100	200	14860	
+JO32_MKT_BITTRADE_TRADES_BTCJPY	https://api-cloud.bittrade.co.jp/market/history/trade?symbol=btcjpy&size=2000	PASS	json:data	2000	200	367610	
+JO32_MKT_BITTRADE_TRADES_ETHJPY	https://api-cloud.bittrade.co.jp/market/history/trade?symbol=ethjpy&size=2000	PASS	json:data	2000	200	456967	
+JO32_MKT_BITTRADE_TRADES_XRPJPY	https://api-cloud.bittrade.co.jp/market/history/trade?symbol=xrpjpy&size=2000	PASS	json:data	2000	200	435708	
+JO32_MKT_JAPANNEXT_PTS_TURNOVER	https://www.japannext.co.jp/csv_download/dnd_by_turnover	PASS	csv	3432	200	156709	
+JO32_TEL_JARTIC_LOOP_5MIN_EAST	https://api.jartic-open-traffic.org/geoserver?service=WFS&version=2.0.0&request=GetFeature&typeNames=t_travospublic_measure_5m&srsName=EPSG:4326&outputFormat=application/json&exceptions=application/json&cql_filter=%E6%99%82%E9%96%93%E3%82%B3%E3%83%BC%E3%83%89%20%3E%3D%20dateFormat%28%27yyyyMMddHHmm%27%2C%20dateParse%28%27yyyyMMddHHmmZ%27%2C%20Concatenate%28dateFormat%28%27yyyyMMddHHmm%27%2C%20now%28%29%29%2C%20%27-0815%27%29%29%29%20AND%20BBOX%28%E3%82%B8%E3%82%AA%E3%83%A1%E3%83%88%E3%83%AA%2C137.5%2C20%2C154%2C46%2C%27EPSG%3A4326%27%29	PASS	json:features	3659	200	3370018	
+JO32_TEL_JARTIC_LOOP_5MIN_WEST	https://api.jartic-open-traffic.org/geoserver?service=WFS&version=2.0.0&request=GetFeature&typeNames=t_travospublic_measure_5m&srsName=EPSG:4326&outputFormat=application/json&exceptions=application/json&cql_filter=%E6%99%82%E9%96%93%E3%82%B3%E3%83%BC%E3%83%89%20%3E%3D%20dateFormat%28%27yyyyMMddHHmm%27%2C%20dateParse%28%27yyyyMMddHHmmZ%27%2C%20Concatenate%28dateFormat%28%27yyyyMMddHHmm%27%2C%20now%28%29%29%2C%20%27-0815%27%29%29%29%20AND%20BBOX%28%E3%82%B8%E3%82%AA%E3%83%A1%E3%83%88%E3%83%AA%2C122%2C20%2C137.5%2C46%2C%27EPSG%3A4326%27%29	PASS	json:features	2250	200	2071765	
+JO32_TEL_JARTIC_CCTV_5MIN_EAST	https://api.jartic-open-traffic.org/geoserver?service=WFS&version=2.0.0&request=GetFeature&typeNames=t_travospublic_measure_5m_img&srsName=EPSG:4326&outputFormat=application/json&exceptions=application/json&cql_filter=%E6%99%82%E9%96%93%E3%82%B3%E3%83%BC%E3%83%89%20%3E%3D%20dateFormat%28%27yyyyMMddHHmm%27%2C%20dateParse%28%27yyyyMMddHHmmZ%27%2C%20Concatenate%28dateFormat%28%27yyyyMMddHHmm%27%2C%20now%28%29%29%2C%20%27-0815%27%29%29%29%20AND%20BBOX%28%E3%82%B8%E3%82%AA%E3%83%A1%E3%83%88%E3%83%AA%2C137.5%2C20%2C154%2C46%2C%27EPSG%3A4326%27%29	PASS	json:features	1755	200	2271099	
+JO32_TEL_JARTIC_CCTV_5MIN_WEST	https://api.jartic-open-traffic.org/geoserver?service=WFS&version=2.0.0&request=GetFeature&typeNames=t_travospublic_measure_5m_img&srsName=EPSG:4326&outputFormat=application/json&exceptions=application/json&cql_filter=%E6%99%82%E9%96%93%E3%82%B3%E3%83%BC%E3%83%89%20%3E%3D%20dateFormat%28%27yyyyMMddHHmm%27%2C%20dateParse%28%27yyyyMMddHHmmZ%27%2C%20Concatenate%28dateFormat%28%27yyyyMMddHHmm%27%2C%20now%28%29%29%2C%20%27-0815%27%29%29%29%20AND%20BBOX%28%E3%82%B8%E3%82%AA%E3%83%A1%E3%83%88%E3%83%AA%2C122%2C20%2C137.5%2C46%2C%27EPSG%3A4326%27%29	PASS	json:features	2965	200	3841683	
+JO32_TEL_JARTIC_LOOP_1H	https://api.jartic-open-traffic.org/geoserver?service=WFS&version=2.0.0&request=GetFeature&typeNames=t_travospublic_measure_1h&srsName=EPSG:4326&outputFormat=application/json&exceptions=application/json&cql_filter=%E6%99%82%E9%96%93%E3%82%B3%E3%83%BC%E3%83%89%20%3E%3D%20dateFormat%28%27yyyyMMddHHmm%27%2C%20dateParse%28%27yyyyMMddHHmmZ%27%2C%20Concatenate%28dateFormat%28%27yyyyMMddHHmm%27%2C%20now%28%29%29%2C%20%27-0500%27%29%29%29	PASS	json:features	3215	200	2923450	
+JO32_TEL_JARTIC_CCTV_1H	https://api.jartic-open-traffic.org/geoserver?service=WFS&version=2.0.0&request=GetFeature&typeNames=t_travospublic_measure_1h_img&srsName=EPSG:4326&outputFormat=application/json&exceptions=application/json&cql_filter=%E6%99%82%E9%96%93%E3%82%B3%E3%83%BC%E3%83%89%20%3E%3D%20dateFormat%28%27yyyyMMddHHmm%27%2C%20dateParse%28%27yyyyMMddHHmmZ%27%2C%20Concatenate%28dateFormat%28%27yyyyMMddHHmm%27%2C%20now%28%29%29%2C%20%27-0500%27%29%29%29	PASS	json:features	2952	200	2530277	
+JO32_TEL_DOCOMO_BIKESHARE_STATUS	https://api-public.odpt.org/api/v4/gbfs/docomo-cycle/station_status.json	PASS	json:data.stations	6190	200	961241	
+JO32_TEL_TOEI_BUS_POSITIONS	https://api-public.odpt.org/api/v4/odpt:Bus?odpt:operator=odpt.Operator:Toei	EMPTY	json-array	0	200	2	parsed but zero items
+JO32_TEL_TOEI_TRAIN_POSITIONS	https://api-public.odpt.org/api/v4/odpt:Train?odpt:operator=odpt.Operator:Toei	EMPTY	json-array	0	200	2	parsed but zero items
+JO32_TEL_TEPCO_DEMAND_5MIN	https://www.tepco.co.jp/forecast/html/images/juyo-d1-j.csv	PASS	text-lines	333	200	7711	
+JO32_TEL_CHUBU_GRID_ACTUAL_30MIN	https://powergrid.chuden.co.jp/denki_yoho_content_data/keito_jisseki_cepco003.csv	PASS	csv	50	200	1631	
+JO32_TEL_SHIKOKU_GRID_ACTUAL_30MIN	https://www.yonden.co.jp/nw/denkiyoho/supply_demand/csv/jisseki_today.csv	PASS	text-lines	51	200	1534	
+JO32_TEL_CHUBU_AREA_DEMAND_2016_2019	https://powergrid.chuden.co.jp/denki_yoho_content_data/areajuyo_current.csv	PASS	csv	26280	200	604149	
+JO32_TEL_JARTIC_ROAD_NOTICES	https://www.jartic.or.jp/d/telop/normal.json	PASS	json:records	33	200	18802	
+JO32_TEL_JARTIC_ROADWORK_TOPICS	https://www.jartic.or.jp/d/telop/topics.json	PASS	json:records	26	200	10642	
+JO32_TEL_NEXCO_EAST_TRAFFIC_RSS	https://www.driveplaza.com/cms/news/traffic.xml	PASS	rss	100	200	55998	
+JO32_TEL_HANSHIN_EXPWY_CLOSURES	https://www.hanshin-exp.co.jp/drivers/douro/include/driver_entry_list.json	PASS	json-array	50	200	28692	
+JO32_TEL_YAMANASHI_ROAD_REGULATIONS	https://www.pref.yamanashi.jp/dourokisei/kisei.xml	PASS	rss	22	200	38826	
+JO32_TEL_FUKUSHIMA_ROAD_WORKS_CLOSURES	http://www.pref.fukushima.jp/douro/kisei/json/listKOUJI.json	PASS	json-array	30	200	16168	
+JO32_TEL_FUKUSHIMA_ROAD_DISASTER_CLOSURES	http://www.pref.fukushima.jp/douro/kisei/json/listSAIGAI.json	PASS	json-array	15	200	7127	
+JO32_TEL_GIFU_ROAD_REGULATIONS	https://douro.pref.gifu.lg.jp/api/getRegulation	PASS	json:vals	628	200	529631	
+JO32_TEL_GIFU_ROAD_RAIN	https://douro.pref.gifu.lg.jp/api/getRain	PASS	json:vals	74	200	14631	
+JO32_TEL_GIFU_ROAD_FREEZE	https://douro.pref.gifu.lg.jp/api/getFreeze	PASS	json:vals	130	200	20290	
+JO32_TEL_GIFU_ROAD_SNOW	https://douro.pref.gifu.lg.jp/api/getSnow	PASS	json:vals	86	200	13598	
+JO32_TEL_GIFU_UNDERPASS_FLOOD	https://douro.pref.gifu.lg.jp/api/getUnderpath	PASS	json:vals	19	200	6148	
+JO32_REG_FSA_PROFUND_NOTIFIERS	https://www.fsa.go.jp/menkyo/menkyoj/tokurei/011.xlsx	PASS	xlsx:011	4590	200	903026	"header=届出者の商号、名称又は氏名|法人番号|管轄
+財務局等|代表者
+(Representative)|16|15|30|他に行っている事業の種類"
+JO32_REG_FSA_PROFUND_ABOLITION_ORDERS	https://www.fsa.go.jp/menkyo/menkyoj/tokurei/021.xlsx	PASS	xlsx:021	611	200	75851	"header=財務局等""|代表者
+(Representative)|6|7|8|他に行っている事業の種類|資本金の額又は出資の総額
+（円）|金融商品
+取引業者"
+JO32_REG_TOKYO_TOKUSHOHO_DISPOSITIONS	https://www.shouhiseikatu.metro.tokyo.lg.jp/torihiki/shobun/documents/shobun_tokushou.csv	PASS	csv	91	200	9290	
+JO32_REG_OSAKA_CONSTRUCTION_OSAKA_CITY	https://www.pref.osaka.lg.jp/documents/8324/r8_3_itiran_1.xlsx	PASS	xlsx:建設業許可業者名簿（大阪市）	14210	200	9619146	header=許可番号|商号名称|2|3|電話番号|郵便番号|名市区町村名|所　在　地
+JO32_REG_OSAKA_CONSTRUCTION_HOKUSETSU	https://www.pref.osaka.lg.jp/documents/8324/r8_3_itiran_1.xlsx#hokusetsu	PASS	xlsx:建設業許可業者名簿（北摂・北河内）	11247	200	9619146	header=許可番号|商号名称|2|3|電話番号|郵便番号|名市区町村名|所　在　地
+JO32_REG_OSAKA_CONSTRUCTION_SENSHU	https://www.pref.osaka.lg.jp/documents/8324/r8_3_itiran_1.xlsx#senshu	PASS	xlsx:建設業許可業者名簿（堺・中河内・南河内・泉州）	14814	200	9619146	header=許可番号|商号名称|2|3|電話番号|郵便番号|名市区町村名|所　在　地
+JO32_REG_GIFU_INDUSTRIAL_WASTE_TRANSPORT	https://www.pref.gifu.lg.jp/uploaded/attachment/506980.xlsx	PASS	xlsx:産業廃棄物収集運搬業	5651	200	1141014	header=優良認定の有無|許可番号|業者氏名|代表者|住所|電話番号|現在許可年月日|許可期限
+JO32_REG_ISHIKAWA_INDUSTRIAL_WASTE_TRANSPORT	https://www.pref.ishikawa.lg.jp/haitai/gyoshameibo/documents/r0804shuuun_r1.xlsx	PASS	xlsx:Sheet1	2350	200	809158	header=通番|優良|許可番号|2|許可の年月日|許可の有効年月日|氏名|代表者の氏名
+JO32_REG_AICHI_REAL_ESTATE_BROKERS	https://www.pref.aichi.jp/uploaded/attachment/626356.xlsx	PASS	xlsx:Sheet1	6889	200	622814	header=免許証番号|回次|商号又は名称|代表者登録名|免許年月日|期間満了年月日|主たる事務所の所在地|電話番号
+JO32_REG_JTA_TRAVEL_AGENCY_DISPOSITIONS	https://www.mlit.go.jp/kankocho/content/001913487.xlsx	PASS	xlsx:R8.7	56	200	22337	header=処分日|行政庁|種別|登録番号|事業者名|営業所名|営業所住所|処分内容
+JO32_REG_TOKUSHIMA_CONSTRUCTION	https://www.pref.tokushima.lg.jp/file/attachment/1049278.xlsx	PASS	xlsx:徳島県内建設業許可業者一覧（令和８年３月末現在）	3014	200	576954	header=許可番号|商号名称|代表者氏名|郵便番号|所在地|電話番号|許可年月日|（土）
+JO32_REG_KAGAWA_CONSTRUCTION	https://www.pref.kagawa.lg.jp/documents/13029/r80331_kyokalist_kagawakentiji.xlsx	PASS	xlsx:香川県知事許可業者名簿（R8.3.31現在）	3955	200	1033313	header=許可満了日|土木事務所|2|所在地|許可番号|商号名称（漢字）|商号名称（カナ）|代表者氏名
+JO32_REG_MIYAGI_CONSTRUCTION_SENDAI	https://www.pref.miyagi.jp/documents/11867/2senndai.xlsx	PASS	xlsx:仙台	5319	200	1016191	header=商号・名称|代表者氏名|市区町村名|所在地|許可番号|許可権者|電話番号|10
+JO32_REG_OSAKA_CITY_TOKKU_MINPAKU	https://www.city.osaka.lg.jp/kenko/cmsfiles/contents/0000382/382418/20260531tokku.csv	PASS	csv	8887	200	1015197	
+JO32_REG_OSAKA_CITY_MINPAKU_NOTIFIED	https://www.city.osaka.lg.jp/kenko/cmsfiles/contents/0000382/382418/20260531_shinpou.csv	PASS	csv	2213	200	161052	
+JO32_REG_OSAKA_CITY_RYOKAN_PERMITS	https://www.city.osaka.lg.jp/kenko/cmsfiles/contents/0000382/382418/20260531ryokan.csv	PASS	csv	1861	200	202277	
+JO32_REG_FSA_UNREGISTERED_WARNED_DOMESTIC	https://www.fsa.go.jp/ordinary/chuui/mutouroku/01.xlsx	PASS	xlsx:無登録業者(国内)	719	200	122501	"header=商号、名称又は氏名等
+(Trade Name or Name, etc.)|所在地又は住所
+(Location of Office or Address)|金融商品取引業の内容等
+(Conten"
+JO32_REG_FSA_UNREGISTERED_WARNED_OVERSEAS	https://www.fsa.go.jp/ordinary/chuui/mutouroku/03.xlsx	PASS	xlsx:無登録業者（海外）	436	200	76037	"header=商号、名称又は氏名等
+(Trade Name or Name, etc.)|所在地又は住所
+(Location of Office or Address)|金融商品取引業の内容等
+(Conten"
+JO32_REG_FSA_WARNED_PROFUND_NOTIFIERS	https://www.fsa.go.jp/ordinary/chuui/mutouroku/02.xlsx	PASS	xlsx:届出業者	65	200	32657	header=商号、名称又は氏名等|所在地又は住所|金融商品取引業の内容等|備考|掲載時期
+JO32_REG_HOKKAIDO_CLINICS_NO_BEDS	https://www.pref.hokkaido.lg.jp/fs/1/3/2/0/2/0/2/6/_/03%E7%84%A1%E5%BA%8A%E8%A8%BA%E7%99%82%E6%89%80%E5%90%8D%E7%B0%BF(R8.4.1).xlsx	PASS	xlsx:無床診療所	3184	200	476447	"header=所管
+保健所|診療所名称|郵便番号|所在地|開設者コード|開　設　者|管　理　者|標ぼう診療科目"
+JO32_REG_HOKKAIDO_DENTAL_CLINICS	https://www.pref.hokkaido.lg.jp/fs/1/3/2/0/2/0/2/7/_/04%E6%AD%AF%E7%A7%91%E8%A8%BA%E7%99%82%E6%89%80%E5%90%8D%E7%B0%BF(R8.4.1).xlsx	PASS	xlsx:歯科診療所	2688	200	361238	"header=所管
+保健所|診療所名称|郵便番号|所在地|開設者コード|開　設　者|管　理　者|標ぼう診療科目"
+JO32_REG_AICHI_MEDICAL_CLINICS	https://www.pref.aichi.jp/uploaded/attachment/598864.xlsx	PASS	xlsx:医科診療所(県保健所のみ)	2464	200	510563	header=2464|保健所名|所在地|番号|名称|郵便番号|住所|電話番号
+JO32_REG_TOKYO_NPO_CORPORATIONS	https://www.seikatubunka1.metro.tokyo.lg.jp/houjin/npo_houjin/data/files/0000001250/ninsyou.xlsx	PASS	xlsx:認証法人（認証日順）	8529	200	4048792	"header=通番|法人名|法人名（カナ）|代表者|郵便
+番号|主たる事務所|従たる事務所|電話番号"
+JO32_REG_HOKKAIDO_INDUSTRIAL_WASTE_TRANSPORT	https://www.pref.hokkaido.lg.jp/fs/1/3/2/0/5/8/1/9/_/01(2026.3.31%E7%8F%BE%E5%9C%A8)%E7%94%A3%E5%BB%83%E5%8F%8E%E9%81%8B%E6%A5%AD_%E5%85%AC%E9%96%8B%E7%89%88.xlsx	PASS	xlsx:収集運搬業（20260331現在）	5567	200	1169779	header=No.|振興局|読み|処理業者|郵便番号|本社住所|本社電話|営業所等電話
+JO32_REG_CHIBA_INDUSTRIAL_WASTE_TRANSPORT	https://www.pref.chiba.lg.jp/haishi/shorigyou/documents/2syuuunn2026.xlsx	PASS	xlsx:普通・収運	12588	200	2880234	header=業者名|ﾌﾘｶﾞﾅ|代表者|（本社）住所|電話番号|許可番号|許可年月日|許可期限
+JO32_REG_KANAGAWA_FLUOROCARBON_RECOVERY	https://www.pref.kanagawa.jp/documents/5391/meibo_1.xlsx	PASS	xlsx:R7	3882	200	609085	header=登録番号|1|登録日|登録有効期限|事業所名|事業所所在地|6|回収
+JO32_REG_MLIT_VEHICLE_RECALL_NOTIFICATIONS	https://www.mlit.go.jp/jidosha/recall.html	PASS	html-anchors	173	200	64647	
+JO32_REG_OSAKA_INDUSTRIAL_WASTE_TRANSPORT	https://www.pref.osaka.lg.jp/documents/602/hutuu_tyokusou_r080331.xlsx	PASS	xlsx:普通収運	12153	200	2444014	header=番号|許可番号|業者名|屋号|代表者|郵便番号|所在地|電話番号
+JO32_REG_NIIGATA_CONSTRUCTION	https://www.pref.niigata.lg.jp/uploaded/attachment/508974.xlsx	PASS	xlsx:許可業者リスト	9051	200	1951501	header=許可番号|商号名称|代表者氏名|市区町村名|所在地|資本金額（千円）|法人・個人区分|兼業の有無
+JO32_MUNI_AKITA_KUMADAS_BEAR	https://ckan.pref.akita.lg.jp/api/3/action/datastore_search?resource_id=0678f9b3-4bf7-4212-9c0e-c0cb9b09b3cf&limit=1000&offset=0&sort=_id	PASS	json:result.records	1000	200	457880	
+JO32_MUNI_AKITA_RELIGIOUS_CORPS	https://ckan.pref.akita.lg.jp/api/3/action/datastore_search?resource_id=4fce20fe-8a53-4b6f-a694-b13b1c1c5121&limit=1000&offset=0&sort=_id	PASS	json:result.records	1000	200	243511	
+JO32_MUNI_AKITA_FUREAI_CARD_SHOPS	https://ckan.pref.akita.lg.jp/api/3/action/datastore_search?resource_id=755cd16b-b852-4028-b178-9d75250dcd2b&limit=1000&offset=0&sort=_id	PASS	json:result.records	1000	200	554631	
+JO32_MUNI_GIFU_SANPAI_HAULERS	https://gifu-opendata.pref.gifu.lg.jp/api/3/action/datastore_search?resource_id=193f1319-18f0-4904-bc9a-37c0fa5579e5&limit=1000&offset=0&sort=_id	PASS	json:result.records	1000	200	961552	
+JO32_MUNI_GIFU_DESIGNATED_SHELTERS	https://gifu-opendata.pref.gifu.lg.jp/api/3/action/datastore_search?resource_id=0eec25e8-efae-4fa9-af54-6a32719b8cd6&limit=1000&offset=0&sort=_id	PASS	json:result.records	1000	200	544697	
+JO32_MUNI_GIFU_CULTURAL_PROPERTIES_MUNI	https://gifu-opendata.pref.gifu.lg.jp/dataset/1e837d23-08fb-4ab4-9a93-3e7698508c6e/resource/3c0d569e-6c36-4f98-966f-48bb58b1751b/download/gifu_cultural_property_municipality-specify_all_r7.csv	PASS	csv	5059	200	620608	
+JO32_MUNI_TAKAYAMA_FIRE_WATER	https://gifu-opendata.pref.gifu.lg.jp/dataset/3a245b0e-d206-4c7b-9a5f-465d66eff309/resource/76a2df65-9dfc-47a8-87c2-0de3ba4dcf61/download/fire_hydrant_202602_takayama.csv	PASS	csv	4065	200	360731	
+JO32_MUNI_ISHIKAWA_CENTRAL_HYDRANTS	https://catalog-data.city.kanazawa.ishikawa.jp/dataset/bfd070dd-c981-4ce9-a994-3ce95dd8d088/resource/c2c134ae-400b-4786-8c9d-5eebab3ecc0a/download/ishikawa-central-fire-hydrant.csv	PASS	csv	15133	200	2754750	
+JO32_MUNI_KANAZAWA_CARE_SERVICES	https://catalog-data.city.kanazawa.ishikawa.jp/api/3/action/datastore_search?resource_id=84720e91-0fd9-4d39-8616-c62f193e5f82&limit=1000&offset=0&sort=_id	PASS	json:result.records	1000	200	1215458	
+JO32_MUNI_TSUBATA_RADIATION	https://catalog-data.city.kanazawa.ishikawa.jp/api/3/action/datastore_search?resource_id=9545cfa7-7581-423d-8b09-0376905c8450&limit=1000&offset=0&sort=_id	PASS	json:result.records	1000	200	614482	
+JO32_MUNI_AIZUWAKAMATSU_EVENTS	https://data.data4citizen.jp/api/3/action/datastore_search?resource_id=278639b4-8f7f-4bda-b36d-55711f19552b&limit=1000&offset=0&sort=_id	PASS	json:result.records	1000	200	932026	
+JO32_MUNI_AIZUWAKAMATSU_HYDRANTS	https://data.data4citizen.jp/api/3/action/datastore_search?resource_id=585cfa88-d58a-4fcc-9ee9-a9c568c4f32e&limit=1000&offset=0&sort=_id	PASS	json:result.records	1000	200	377937	
+JO32_MUNI_AIZUWAKAMATSU_POP_MESH	https://data.data4citizen.jp/api/3/action/datastore_search?resource_id=9043868f-a1cb-4701-86fc-5179efd6e5cb&limit=1000&offset=0&sort=_id	PASS	json:result.records	1000	200	94565	
+JO32_MUNI_TSUKUBA_PARCEL_INDEX	https://services6.arcgis.com/yogEhrEiATcZmbcU/arcgis/rest/services/chiban_search_index/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	233790	
+JO32_MUNI_SAKU_PARCEL_INDEX	https://services1.arcgis.com/c83a7mGFcWBslmdw/arcgis/rest/services/%E6%A4%9C%E7%B4%A2%E7%94%A8%E5%9C%B0%E7%95%AA/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	157783	
+JO32_MUNI_HIDA_PARCELS	https://services7.arcgis.com/JPM37uGraOFrUEDo/arcgis/rest/services/%E5%85%A8%E5%9C%B0%E7%95%AA_6c4e0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	215263	
+JO32_MUNI_HIOKI_PARCELS	https://services6.arcgis.com/ruiLLQIvxE9JPmz1/arcgis/rest/services/%E5%9C%B0%E7%95%AA/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	156268	
+JO32_MUNI_RYUGASAKI_PARCELS	https://services5.arcgis.com/ZMdUEcr9jaR9qJyU/arcgis/rest/services/chibanzu/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	427035	
+JO32_MUNI_GYODA_PARCEL_SEARCH	https://services7.arcgis.com/JKleYwaFfRw5qtLg/arcgis/rest/services/searchc/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	316781	
+JO32_MUNI_HACHIOJI_DEVELOPMENT_REGISTER	https://services7.arcgis.com/yoDYEe9aP5MsSkEP/arcgis/rest/services/%E9%96%8B%E7%99%BA%E7%99%BB%E9%8C%B2%E7%B0%BF_%E8%A1%A8%E7%A4%BA/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	665500	
+JO32_MUNI_HINO_BUILDING_CONFIRMATIONS	https://services5.arcgis.com/akSheMdmUZiKa4BM/arcgis/rest/services/%E5%BB%BA%E7%AF%89%E7%A2%BA%E8%AA%8D%E5%8F%B0%E5%B8%B3(%E7%A2%BA%E8%AA%8D%E6%B8%88%E6%9C%89)20260914/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	577592	
+JO32_MUNI_TOCHIGI_AED	https://services7.arcgis.com/oAgoy3LKmUpvdTfh/arcgis/rest/services/R8_AED%E8%A8%AD%E7%BD%AE%E5%A0%B4%E6%89%80%E4%B8%80%E8%A6%A7/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	463166	
+JO32_MUNI_OISO_CRIME_LIGHTS	https://services7.arcgis.com/vDn34letqBl2bR7W/arcgis/rest/services/bouhantou/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	415507	
+JO32_MUNI_KANAZAWA_FOOD_PERMITS	https://catalog-data.city.kanazawa.ishikawa.jp/api/3/action/datastore_search?resource_id=09a49521-cabf-40b4-978b-bd61ef02f650&limit=1000&offset=0&sort=_id	PASS	json:result.records	1000	200	770839	
+JO32_MUNI_HAKUSAN_POPULATION	https://catalog-data.city.kanazawa.ishikawa.jp/api/3/action/datastore_search?resource_id=771d25f6-1ce1-4263-ac49-ff2068f72477&limit=1000&offset=0&sort=_id	PASS	json:result.records	1000	200	1091082	
+JO32_MUNI_GIFU_CITY_FOOD_PERMITS	https://gifu-opendata.pref.gifu.lg.jp/dataset/2f9f1b1c-be25-4a27-96c6-47b597f1a0bd/resource/16ef7794-d2b6-4d7d-8353-f55193432530/download/gifushisyokuhinkyokar7.6.1.csv	PASS	csv	4453	200	920447	
+JO32_MUNI_AIZUWAKAMATSU_AZA_POPULATION	https://data.data4citizen.jp/api/3/action/datastore_search?resource_id=16366cd1-c32f-44bd-a597-a0c30764e3db&limit=1000&offset=0&sort=_id	PASS	json:result.records	1000	200	125139	
+JO32_MUNI_KURASHIKI_FOOD_PERMITS	https://kurashiki.dataeye.jp/resource_download/17772	PASS	csv	3172	200	791423	
+JO32_MUNI_KURASHIKI_FIRE_WATER	https://kurashiki.dataeye.jp/resource_download/16661	PASS	csv	8377	200	1285161	
+JO32_MUNI_KANAGAWA_PARKS	https://catalog.opendata.pref.kanagawa.jp/dataset/4da323a6-b9b2-4ca3-8e80-7e374c3fcafc/resource/2b416702-1a0e-4b89-b17f-42739ef5d580/download/140007_park_20260708_2.csv	PASS	csv	8121	200	1568667	
+JO32_MUNI_CHIKUSHINO_PARCELS	https://services3.arcgis.com/5QNOO4Xcc1YhDb22/arcgis/rest/services/%E5%9C%B0%E7%95%AA%E5%9B%B3_%E3%83%9D%E3%82%A4%E3%83%B3%E3%83%88/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	198834	
+JO32_MUNI_ANNAKA_PARCELS	https://services6.arcgis.com/9FnsyoZ817hPC4mQ/arcgis/rest/services/ChibanKensaku_view/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	137663	
+JO32_MUNI_ICHIKIKUSHIKINO_PARCELS	https://services6.arcgis.com/MDr1eDhMXwl9134M/arcgis/rest/services/%E5%9C%B0%E7%95%AA%E5%9B%B3_%E3%83%9D%E3%82%A4%E3%83%B3%E3%83%88/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	119461	
+JO32_MUNI_MURORAN_PARCELS	https://services.arcgis.com/Jv1EECU3IM4ZRUev/arcgis/rest/services/%E5%9C%B0%E7%95%AA%E5%9B%B32024/FeatureServer/5/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	156188	
+JO32_MUNI_HACHIOJI_ROUTE_PRICES	https://services7.arcgis.com/yoDYEe9aP5MsSkEP/arcgis/rest/services/%E8%B7%AF%E7%B7%9A%E4%BE%A1_%E8%A1%A8%E7%A4%BA/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	229627	
+JO32_MUNI_IBARAKI_ARCHAEOLOGICAL_SITES	https://services6.arcgis.com/yogEhrEiATcZmbcU/arcgis/rest/services/%E9%81%BA%E8%B7%A1/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0	PASS	json:features	1000	200	2708698	

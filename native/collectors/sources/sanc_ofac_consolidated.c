@@ -199,6 +199,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
              cJSON_GetArraySize(akas) ? " · aka " : "",
              cJSON_GetArraySize(akas)
                ? cJSON_GetStringValue(cJSON_GetArrayItem(akas, 0)) : "");  /* exhaustive-ok: display pick for a 512-byte summary line; the whole akas array is transferred to body.aka and properties.aka below */
+    /* The summary line shows ONE alias. Where there are more, it says how many
+     * it is not showing rather than implying the first is the only one; the full
+     * set is in properties.aka either way. */
+    int nakas = cJSON_GetArraySize(akas);
+    if (nakas > 1) {
+      size_t used = strlen(summary);
+      snprintf(summary + used, sizeof summary - used, " (+%d more aliases)",
+               nakas - 1);
+    }
 
     char link[160];
     snprintf(link, sizeof link,

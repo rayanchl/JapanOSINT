@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://open.cnpja.com/office/19131243000197",
     .array_path = "sideactivities",
     .detail_url = "https://open.cnpja.com/office/{v}", .detail_key = "taxId",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "br-cnpjws-publica",
@@ -30,6 +31,7 @@ static const hp_source T[] = {
     .url = "https://publica.cnpj.ws/cnpj/19131243000197",
     .array_path = "estabelecimento.atividades_secundarias",
     .detail_url = "https://publica.cnpj.ws/cnpj/{v}", .detail_key = "cnpj_raiz",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

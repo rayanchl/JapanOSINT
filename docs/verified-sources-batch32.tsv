@@ -1,44 +1,344 @@
-id	url	verdict	kind	items	http	bytes	note
-CRATESIO_CRATE_VERSIONS	https://crates.io/api/v1/crates/serde/versions	PASS	json:versions	316	200	437031	
-CRATESIO_CRATE_OWNERS	https://crates.io/api/v1/crates/serde/owners	PASS	json:users	2	200	383	
-CRATESIO_CRATE_OWNER_TEAMS	https://crates.io/api/v1/crates/serde/owner_team	PASS	json:teams	1	200	188	
-CRATESIO_CRATE_REVDEPS	https://crates.io/api/v1/crates/serde/reverse_dependencies?per_page=100	PASS	json:dependencies	100	200	200217	
-CRATESIO_CRATE_DOWNLOAD_SERIES	https://crates.io/api/v1/crates/serde/downloads	PASS	json:version_downloads	439	200	29278	
-CRATESIO_RECENT_UPDATES	https://crates.io/api/v1/crates?sort=recent-updates&per_page=100	PASS	json:crates	100	200	95598	
-CRATESIO_NEW_CRATES	https://crates.io/api/v1/crates?sort=new&per_page=100	PASS	json:crates	100	200	97154	
-CRATESIO_TOP_DOWNLOADS	https://crates.io/api/v1/crates?sort=downloads&per_page=100	PASS	json:crates	100	200	94509	
-CRATESIO_KEYWORDS	https://crates.io/api/v1/keywords?per_page=100	PASS	json:keywords	100	200	9305	
-CRATESIO_CATEGORIES	https://crates.io/api/v1/categories?per_page=100	PASS	json:categories	58	200	14103	
-RUBYGEMS_OWNER_GEMS	https://rubygems.org/api/v1/owners/tenderlove/gems.json	PASS	json:.	191	200	222307	
-RUBYGEMS_JUST_UPDATED	https://rubygems.org/api/v1/activity/just_updated.json	PASS	json:.	50	200	66633	
-RUBYGEMS_LATEST_GEMS	https://rubygems.org/api/v1/activity/latest.json	PASS	json:.	50	200	68708	
-HEXPM_PACKAGE_OWNERS	https://hex.pm/api/packages/phoenix/owners	PASS	json:.	5	200	1369	
-HEXPM_USER_PACKAGES	https://hex.pm/api/users/josevalim	PASS	json:packages	54	200	10845	
-HEXPM_RECENT_UPDATES	https://hex.pm/api/packages?sort=updated_at	PASS	json:.	100	200	753090	
-NPM_MAINTAINER_PACKAGES	https://registry.npmjs.org/-/v1/search?text=maintainer:sindresorhus&size=250	PASS	json:objects	250	200	244814	
-NPM_KEYWORD_PACKAGES	https://registry.npmjs.org/-/v1/search?text=keywords:cve&size=250	PASS	json:objects	250	200	269967	
-NPM_DIST_TAGS	https://registry.npmjs.org/-/package/express/dist-tags	PASS	json-object	1	200	38	
-PUBDEV_PACKAGE_VERSIONS	https://pub.dev/api/packages/http	PASS	json:versions	130	200	74692	
-PUBDEV_SEARCH	https://pub.dev/api/search?q=osint	PASS	json:packages	10	200	384	
-PUBDEV_ALL_PACKAGES	https://pub.dev/api/packages	PASS	json:packages	100	200	102650	
-PUBDEV_RECENT_ATOM	https://pub.dev/feed.atom	PASS	atom	100	200	73914	
-DOCKERHUB_NAMESPACE_REPOS	https://hub.docker.com/v2/repositories/bitnami/?page_size=100	PASS	json:results	100	200	68269	
-DOCKERHUB_OFFICIAL_IMAGES	https://hub.docker.com/v2/repositories/library/?page_size=100	PASS	json:results	100	200	75903	
-PACKAGIST_PACKAGE_ADVISORIES	https://packagist.org/api/security-advisories/?packages%5B%5D=monolog/monolog	PASS	json:advisories.monolog/monolog	1	200	646	re-probed alone: the batch run hit a transient agent-proxy reset on packagist.org (Errno 104), not an upstream failure
-PACKAGIST_RELEASES_RSS	https://packagist.org/feeds/releases.rss	PASS	rss	40	200	22012	
-PACKAGIST_PACKAGE_RSS	https://packagist.org/feeds/package.monolog/monolog.rss	PASS	rss	40	200	20546	
-PACKAGIST_POPULAR	https://packagist.org/explore/popular.json?per_page=100	PASS	json:packages	100	200	21021	
-PYPI_SIMPLE_PROJECT_FILES	https://pypi.org/simple/requests/	PASS	html-anchors	244	200	82826	
-PYPI_RECENT_UPDATES_RSS	https://pypi.org/rss/updates.xml	PASS	rss	100	200	32798	
-PYPI_PROJECT_RELEASES_RSS	https://pypi.org/rss/project/requests/releases.xml	PASS	rss	40	200	10678	
-MAVENCENTRAL_ARTIFACT_METADATA	https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/maven-metadata.xml	PASS	xml:version	27	200	1134	
-MAVENCENTRAL_PATH_LISTING	https://repo1.maven.org/maven2/org/apache/commons/	PASS	html-anchors	157	200	24076	
-HACKAGE_RECENT_RSS	https://hackage.haskell.org/packages/recent.rss	PASS	rss	20	200	8631	
-HACKAGE_ALL_PACKAGES	https://hackage.haskell.org/packages/	PASS	html-anchors	19520	200	3263923	
-GOPROXY_MODULE_LATEST	https://proxy.golang.org/github.com/gorilla/mux/@latest	PASS	json-object	1	200	187	
-NUGET_REGISTRATION_INDEX	https://api.nuget.org/v3/registration5-semver1/newtonsoft.json/index.json	PASS	json:items.items	86	200	357545	
-JSR_PACKAGE_META	https://jsr.io/@std/path/meta.json	PASS	json-object	1	200	3183	
-JSR_NPM_COMPAT_PACKUMENT	https://npm.jsr.io/@jsr/std__path	PASS	json-object	1	200	30821	
-PYPI_SIMPLE_INDEX	https://pypi.org/simple/	PASS	html-anchors	904858	200	46749426	
-HEXPM_NEW_PACKAGES	https://hex.pm/api/packages?sort=inserted_at	PASS	json:.	100	200	103982	
-PACKAGIST_VENDOR_RSS	https://packagist.org/feeds/vendor.symfony.rss	PASS	rss	40	200	23567	
+# Batch 32 — the 340 shipped rows. probe_* = probe_hp_batch.py on 2026-10-02; emit_* = audit_registry_emit.py (fresh DB per run;
+# emitted/stored from the run line, db_rows read back from the database). SLOW = hit the audit timeout while still walking; db_rows is what
+# it had stored by then. records_per_run = stored, or for SLOW rows the upstream's own total (OAI completeListSize, ArcGIS returnCountOnly).
+id	beat	mode	probe_verdict	probe_items	emit_verdict	emitted	stored	db_rows	secs	records_per_run	url
+JO32_JPS_BIBNL	jpsearch2	json	PASS	500	COLLISION	2000	1986	1986	7.5	1986	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=bibnl&size=500&from=0
+JO32_JPS_S_NET	jpsearch2	json	PASS	500	OK	2000	2001	2001	5.9	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=s_net&size=500&from=0
+JO32_JPS_DIGNL	jpsearch2	json	PASS	500	COLLISION	2000	1846	1846	6.7	1846	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=dignl&size=500&from=0
+JO32_JPS_NAJDA	jpsearch2	json	PASS	500	OK	2000	2001	2001	4.9	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=najda&size=500&from=0
+JO32_JPS_NIJ10	jpsearch2	json	PASS	500	OK	2000	2001	2001	3.0	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=nij10&size=500&from=0
+JO32_JPS_NIJ16	jpsearch2	json	PASS	500	OK	2000	2001	2001	2.8	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=nij16&size=500&from=0
+JO32_JPS_NME_TRACKINFO	jpsearch2	json	PASS	500	OK	2000	2001	2001	2.7	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=nme_trackInfo&size=500&from=0
+JO32_JPS_TOKYOMUSEUMCOLECTION	jpsearch2	json	PASS	500	OK	2000	2001	2001	2.9	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=tokyomuseumcolection&size=500&from=0
+JO32_JPS_NME_MOCAT	jpsearch2	json	PASS	500	OK	2000	2001	2001	2.7	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=nme_mocat&size=500&from=0
+JO32_JPS_NMJ01	jpsearch2	json	PASS	500	OK	2000	2001	2001	2.6	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=nmj01&size=500&from=0
+JO32_JPS_NIJ01	jpsearch2	json	PASS	500	OK	2000	2001	2001	4.2	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=nij01&size=500&from=0
+JO32_JPS_FCM_DB	jpsearch2	json	PASS	500	COLLISION	2000	1967	1967	4.2	1967	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=fcm_db&size=500&from=0
+JO32_JPS_CRIA	jpsearch2	json	PASS	500	OK	2000	2001	2001	4.6	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=cria&size=500&from=0
+JO32_JPS_ARC_NISHIKIE	jpsearch2	json	PASS	500	COLLISION	2000	1935	1935	3.8	1935	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=arc_nishikie&size=500&from=0
+JO32_JPS_FISHPIX	jpsearch2	json	PASS	500	OK	2000	2001	2001	2.7	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=FishPix&size=500&from=0
+JO32_JPS_MADB_ANIMATION	jpsearch2	json	PASS	500	OK	2000	2001	2001	3.0	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=madb_animation&size=500&from=0
+JO32_JPS_COBAS	jpsearch2	json	PASS	500	COLLISION	2000	1974	1974	4.7	1974	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=cobas&size=500&from=0
+JO32_JPS_SAITAMA_MUSEUM	jpsearch2	json	PASS	500	OK	2000	2001	2001	2.7	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=saitama_museum&size=500&from=0
+JO32_JPS_NIJ11	jpsearch2	json	PASS	500	OK	2000	2001	2001	5.2	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=nij11&size=500&from=0
+JO32_JPS_ARC_PHOTODB	jpsearch2	json	PASS	500	OK	2000	2001	2001	3.0	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=arc_photodb&size=500&from=0
+JO32_JPS_ENPAKU_ENGEKIJOEN	jpsearch2	json	PASS	500	OK	2000	2001	2001	3.6	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=enpaku_engekijoen&size=500&from=0
+JO32_JPS_NAGOYACITY_MUSEUM	jpsearch2	json	PASS	500	COLLISION	2000	1976	1976	3.1	1976	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=NagoyaCity_Museum&size=500&from=0
+JO32_JPS_ARC_BAN	jpsearch2	json	PASS	500	COLLISION	2000	1920	1920	3.3	1920	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=arc_ban&size=500&from=0
+JO32_JPS_TPADA_KENMEI	jpsearch2	json	PASS	500	OK	2000	2001	2001	2.8	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=tpada_kenmei&size=500&from=0
+JO32_JPS_NIJ13	jpsearch2	json	PASS	500	OK	2000	2001	2001	2.7	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=nij13&size=500&from=0
+JO32_JPS_EXHIB	jpsearch2	json	PASS	500	OK	2000	2001	2001	3.4	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=exhib&size=500&from=0
+JO32_JPS_MIEMU02	jpsearch2	json	PASS	500	OK	2000	2001	2001	3.9	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=miemu02&size=500&from=0
+JO32_JPS_BUNKA	jpsearch2	json	PASS	500	COLLISION	2000	1945	1945	4.4	1945	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=bunka&size=500&from=0
+JO32_JPS_NARAHAKUBIJUTSUINDB	jpsearch2	json	PASS	500	OK	2000	2001	2001	2.9	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=NarahakuBijutsuinDB&size=500&from=0
+JO32_JPS_SYOZO	jpsearch2	json	PASS	500	OK	2000	2001	2001	4.1	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=syozo&size=500&from=0
+JO32_JPS_MINAMATA	jpsearch2	json	PASS	500	OK	2000	2001	2001	3.2	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=minamata&size=500&from=0
+JO32_JPS_SHOWA_MAGAZINE	jpsearch2	json	PASS	500	OK	2000	2001	2001	3.9	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=Showa_magazine&size=500&from=0
+JO32_JPS_SAITAMA_MONJO_SEARCH	jpsearch2	json	PASS	500	OK	2000	2001	2001	2.9	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=saitama_monjo_search&size=500&from=0
+JO32_JPS_HPMM_MAGAZINE	jpsearch2	json	PASS	500	OK	2000	2001	2001	2.6	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=hpmm_magazine&size=500&from=0
+JO32_JPS_SHOWA_PHOTO	jpsearch2	json	PASS	500	OK	2000	2001	2001	3.5	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=Showa_photo&size=500&from=0
+JO32_JPS_PHOTO	jpsearch2	json	PASS	500	COLLISION	2000	1998	1998	2.9	1998	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=photo&size=500&from=0
+JO32_JPS_MIEMUG	jpsearch2	json	PASS	500	OK	2000	2001	2001	2.6	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=miemug&size=500&from=0
+JO32_JPS_REKIBUN	jpsearch2	json	PASS	500	COLLISION	2000	1858	1858	3.1	1858	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=rekibun&size=500&from=0
+JO32_JPS_AOKENSHIDA_DOC	jpsearch2	json	PASS	500	OK	2000	2001	2001	3.2	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=aokenshida_doc&size=500&from=0
+JO32_JPS_U006	jpsearch2	json	PASS	500	OK	2000	2001	2001	4.2	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=u006&size=500&from=0
+JO32_JPS_HPMM_ABOMB	jpsearch2	json	PASS	500	OK	2000	2001	2001	3.8	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=hpmm_abomb&size=500&from=0
+JO32_JPS_NDA01	jpsearch2	json	PASS	500	OK	2000	2001	2001	4.2	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=nda01&size=500&from=0
+JO32_JPS_WKYM_KOUBUNSYO	jpsearch2	json	PASS	500	OK	2000	2001	2001	2.6	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=wkym_koubunsyo&size=500&from=0
+JO32_JPS_KAIZUARCHIVE	jpsearch2	json	PASS	500	OK	2000	2001	2001	2.5	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=kaizuArchive&size=500&from=0
+JO32_JPS_WKYM_KANKOUBUTU	jpsearch2	json	PASS	500	OK	2000	2001	2001	2.7	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=wkym_kankoubutu&size=500&from=0
+JO32_JPS_ENPK_EIGAPROGRAM	jpsearch2	json	PASS	500	OK	2000	2001	2001	2.4	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=enpk_eigaprogram&size=500&from=0
+JO32_JPS_RIH02	jpsearch2	json	PASS	500	OK	2000	2001	2001	3.0	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=rih02&size=500&from=0
+JO32_JPS_TOKEI	jpsearch2	json	PASS	500	COLLISION	2000	1757	1757	2.7	1757	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=tokei&size=500&from=0
+JO32_JPS_AOKENSHIDA_PIC	jpsearch2	json	PASS	500	OK	2000	2001	2001	3.3	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=aokenshida_pic&size=500&from=0
+JO32_JPS_NARAHAKUBIJUTSUINDB2	jpsearch2	json	PASS	500	COLLISION	2000	1896	1896	2.7	1896	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=NarahakuBijutsuinDB2&size=500&from=0
+JO32_JPS_NIJ20	jpsearch2	json	PASS	500	OK	2000	2001	2001	3.5	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=nij20&size=500&from=0
+JO32_JPS_OJIYA_DNA	jpsearch2	json	PASS	500	OK	2000	2001	2001	2.7	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=ojiya_dna&size=500&from=0
+JO32_JPS_JOMON_ARCHIVES	jpsearch2	json	PASS	500	OK	2000	2001	2001	2.8	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=jomon_archives&size=500&from=0
+JO32_JPS_MUSEE_GSJ	jpsearch2	json	PASS	500	OK	2000	2001	2001	2.8	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=musee_gsj&size=500&from=0
+JO32_JPS_SHISAN	jpsearch2	json	PASS	500	OK	2000	2001	2001	3.0	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=shisan&size=500&from=0
+JO32_JPS_HPMM_ABOMBDRAWING	jpsearch2	json	PASS	500	OK	2000	2001	2001	3.3	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=hpmm_abombdrawing&size=500&from=0
+JO32_JPS_XM_OKINOSHIMA	jpsearch2	json	PASS	500	OK	2000	2001	2001	2.6	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=xm_okinoshima&size=500&from=0
+JO32_JPS_KYOTOGYOEN_ARCHIVES	jpsearch2	json	PASS	500	OK	2000	2001	2001	3.7	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=kyotogyoen_archives&size=500&from=0
+JO32_JPS_ARC_MAPS	jpsearch2	json	PASS	500	COLLISION	2000	1838	1838	2.9	1838	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=ARC_maps&size=500&from=0
+JO32_JPS_MICHI	jpsearch2	json	PASS	500	OK	2000	2001	2001	3.9	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=michi&size=500&from=0
+JO32_JPS_CB1	jpsearch2	json	PASS	500	COLLISION	2000	1834	1834	5.4	1834	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=cb1&size=500&from=0
+JO32_JPS_KOUBUN_DAS	jpsearch2	json	PASS	500	OK	2000	2001	2001	2.9	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=Koubun_das&size=500&from=0
+JO32_JPS_SHOWA_VIDEO	jpsearch2	json	PASS	500	COLLISION	2000	1932	1932	5.3	1932	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=Showa_video&size=500&from=0
+JO32_JPS_SHOWA_MAP	jpsearch2	json	PASS	500	COLLISION	2000	1952	1952	2.7	1952	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=Showa_map&size=500&from=0
+JO32_JPS_HPMM_PHOTO	jpsearch2	json	PASS	500	OK	2000	2001	2001	2.7	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=hpmm_photo&size=500&from=0
+JO32_JPS_TNRICP_URITATE	jpsearch2	json	PASS	500	OK	2000	2001	2001	3.7	2001	https://jpsearch.go.jp/api/item/search/jps-cross?keyword=&f-db=tnricp_uritate&size=500&from=0
+JO32_REPO_HIT_U_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	900	480.0	62484	https://hit-u.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_HIROSHIMA_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1100	480.0	40615	https://hiroshima.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_KEK_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1200	480.0	28217	https://kek.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_TWINKLE_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	900	480.0	25918	https://twinkle.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_REDCROSS_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1400	480.0	21874	https://redcross.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_TOYAMA_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1000	480.0	21518	https://toyama.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_OCU_OMU_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1400	480.0	21436	https://ocu-omu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_KONAN_WU_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1500	480.0	21362	https://konan-wu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_KAISEI_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1400	480.0	18080	https://kaisei.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_U_RYUKYU_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1100	480.0	17989	https://u-ryukyu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_OMU_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	700	480.0	17651	https://omu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_IWATEMED_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1200	480.0	17429	https://iwatemed.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_TOHO_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1400	480.0	15846	https://toho.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_YNU_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	800	480.0	14899	https://ynu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_AICHIU_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1400	480.0	12588	https://aichiu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_KAIT_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1000	480.0	11650	https://kait.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_TKU_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	2900	480.0	11330	https://tku.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_TMU_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1500	480.0	10788	https://tmu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_U_FUKUI_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1000	480.0	10397	https://u-fukui.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_UUAIR_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1100	480.0	10159	https://uuair.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_AUE_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1100	480.0	9811	https://aue.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_BUNKYO_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	2000	480.0	9570	https://bunkyo.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_STARS_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1400	480.0	9449	https://stars.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_SAPMED_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1100	480.0	8683	https://sapmed.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_RAKUNO_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	900	480.0	8416	https://rakuno.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_TOYO_BUNKO_OAI	jprepo2	xml	PASS	99	SLOW	-1	-1	1299	480.0	7383	https://toyo-bunko.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_YAMAGATA_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1000	480.0	6942	https://yamagata.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_ASIA_U_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1500	480.0	6340	https://asia-u.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_MARIANNA_U_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1700	480.0	6287	https://marianna-u.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_BEPPU_U_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1200	480.0	6152	https://beppu-u.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_YCU_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1300	480.0	6099	https://ycu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_NANZAN_U_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1300	480.0	5995	https://nanzan-u.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_RKU_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1500	480.0	5939	https://rku.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_OUJ_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1500	480.0	5931	https://ouj.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_FUN_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1100	480.0	5899	https://fun.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_GIFU_PU_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1400	480.0	5684	https://gifu-pu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_KONAN_U_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1400	480.0	5653	https://konan-u.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_NITECH_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1500	480.0	5411	https://nitech.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_NARUTO_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1100	480.0	5222	https://naruto.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_AGU_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1400	480.0	4847	https://agu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_HAMA_MED_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1100	480.0	4807	https://hama-med.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_CUC_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1700	480.0	4803	https://cuc.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_MEIGAKU_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	900	480.0	4671	https://meigaku.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_OUS_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1500	480.0	4637	https://ous.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_ATOMI_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1000	480.0	4607	https://atomi.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_K_RAIN_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1100	480.1	4589	https://k-rain.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_HSUH_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1300	480.0	4466	https://hsuh.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_NARA_U_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1600	480.1	4441	https://nara-u.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_SUICA_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1400	480.0	4438	https://suica.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_HOKUGA_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1300	480.0	4424	https://hokuga.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_KOKUSHIKAN_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1300	480.0	4411	https://kokushikan.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_KYUSAN_U_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1200	480.0	4317	https://kyusan-u.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_FUKUYAMA_U_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1400	480.0	4247	https://fukuyama-u.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_U_HYOGO_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1500	480.0	4119	https://u-hyogo.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_NISHOGAKUSHA_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1500	480.0	4074	https://nishogakusha.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_MY_PHARM_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1400	480.0	4026	https://my-pharm.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_JIR_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1400	480.0	4001	https://jir.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_YGU_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1500	480.0	3962	https://ygu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_KUMAGAKU_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1500	480.0	3948	https://kumagaku.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_SHOWA_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1600	480.0	3924	https://showa.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_NAGOYA_WU_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	2400	480.0	3819	https://nagoya-wu.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_U_SHIZUOKA_KEN_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1300	480.0	3759	https://u-shizuoka-ken.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_ONOMICHI_U_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1198	480.0	3702	https://onomichi-u.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_ISCT_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1500	480.0	3690	https://isct.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_JUEN_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1200	480.0	3651	https://juen.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_KWMW_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1200	480.0	3642	https://kwmw.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_JAIR_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1700	480.0	3590	https://jair.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_OKIU1972_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	900	480.0	3477	https://okiu1972.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_ASKA_R_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1200	480.0	3461	https://aska-r.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_HOKUSHO_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1400	480.0	3456	https://hokusho.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_KEIAI_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1500	480.0	3342	https://keiai.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_KOKUBUNKEN_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1400	480.0	3295	https://kokubunken.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_U_KOCHI_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1500	480.0	3274	https://u-kochi.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_KOBE_C_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1300	480.0	3258	https://kobe-c.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_REPO_KWMED_OAI	jprepo2	xml	PASS	100	SLOW	-1	-1	1500	480.0	3201	https://kwmed.repo.nii.ac.jp/oai?verb=ListRecords&metadataPrefix=oai_dc
+JO32_FEED_LIVEDOOR_POLITICS	jpfeeds	xml	PASS	200	OK	200	200	200	3.1	200	https://news.livedoor.com/rss/summary/1.xml
+JO32_FEED_LIVEDOOR_DOMESTIC	jpfeeds	xml	PASS	200	OK	200	200	200	2.4	200	https://news.livedoor.com/rss/summary/8.xml
+JO32_FEED_LIVEDOOR_ECONOMY	jpfeeds	xml	PASS	200	OK	200	200	200	3.1	200	https://news.livedoor.com/rss/summary/11.xml
+JO32_FEED_LIVEDOOR_IT	jpfeeds	xml	PASS	200	OK	200	200	200	3.1	200	https://news.livedoor.com/rss/summary/25.xml
+JO32_FEED_LIVEDOOR_WORLD	jpfeeds	xml	PASS	200	OK	200	200	200	1.6	200	https://news.livedoor.com/rss/summary/41.xml
+JO32_FEED_YAHOO_CAT_DOMESTIC	jpfeeds	xml	PASS	50	OK	50	50	50	1.5	50	https://news.yahoo.co.jp/rss/categories/domestic.xml
+JO32_FEED_YAHOO_CAT_WORLD	jpfeeds	xml	PASS	50	OK	50	50	50	1.5	50	https://news.yahoo.co.jp/rss/categories/world.xml
+JO32_FEED_YAHOO_CAT_BUSINESS	jpfeeds	xml	PASS	50	OK	50	50	50	1.5	50	https://news.yahoo.co.jp/rss/categories/business.xml
+JO32_FEED_YAHOO_CAT_IT	jpfeeds	xml	PASS	50	OK	50	50	50	1.4	50	https://news.yahoo.co.jp/rss/categories/it.xml
+JO32_FEED_YAHOO_CAT_SCIENCE	jpfeeds	xml	PASS	50	OK	50	50	50	1.4	50	https://news.yahoo.co.jp/rss/categories/science.xml
+JO32_FEED_YAHOO_CAT_LIFE	jpfeeds	xml	PASS	50	OK	50	50	50	1.7	50	https://news.yahoo.co.jp/rss/categories/life.xml
+JO32_FEED_YAHOO_CAT_LOCAL	jpfeeds	xml	PASS	50	OK	50	50	50	1.6	50	https://news.yahoo.co.jp/rss/categories/local.xml
+JO32_FEED_YAHOO_KUMANICHI	jpfeeds	xml	PASS	50	OK	50	50	50	1.4	50	https://news.yahoo.co.jp/rss/media/kumanichi/all.xml
+JO32_FEED_YAHOO_TV_KHBV	jpfeeds	xml	PASS	50	OK	50	50	50	1.6	50	https://news.yahoo.co.jp/rss/media/khbv/all.xml
+JO32_FEED_YAHOO_TV_MMT	jpfeeds	xml	PASS	50	OK	50	50	50	1.8	50	https://news.yahoo.co.jp/rss/media/mmt/all.xml
+JO32_FEED_YAHOO_TV_CTV	jpfeeds	xml	PASS	50	OK	50	50	50	1.6	50	https://news.yahoo.co.jp/rss/media/ctv/all.xml
+JO32_FEED_YAHOO_TV_NBN	jpfeeds	xml	PASS	50	OK	50	50	50	2.8	50	https://news.yahoo.co.jp/rss/media/nbn/all.xml
+JO32_FEED_YAHOO_TV_ASAHIBC	jpfeeds	xml	PASS	50	OK	50	50	50	2.8	50	https://news.yahoo.co.jp/rss/media/asahibc/all.xml
+JO32_FEED_YAHOO_TV_JRT	jpfeeds	xml	PASS	50	OK	50	50	50	1.6	50	https://news.yahoo.co.jp/rss/media/jrt/all.xml
+JO32_FEED_YAHOO_TV_KBCV	jpfeeds	xml	PASS	50	OK	50	50	50	1.9	50	https://news.yahoo.co.jp/rss/media/kbcv/all.xml
+JO32_FEED_YAHOO_TV_FBSNEWS	jpfeeds	xml	PASS	50	OK	50	50	50	1.9	50	https://news.yahoo.co.jp/rss/media/fbsnews/all.xml
+JO32_FEED_ASAHI_NATIONAL	jpfeeds	xml	PASS	40	OK	40	40	40	3.3	40	https://www.asahi.com/rss/asahi/national.rdf
+JO32_FEED_ASAHI_POLITICS	jpfeeds	xml	PASS	20	OK	20	20	20	3.0	20	https://www.asahi.com/rss/asahi/politics.rdf
+JO32_FEED_ASAHI_BUSINESS	jpfeeds	xml	PASS	30	OK	30	30	30	1.3	30	https://www.asahi.com/rss/asahi/business.rdf
+JO32_FEED_ASAHI_INTERNATIONAL	jpfeeds	xml	PASS	24	OK	20	20	20	1.4	20	https://www.asahi.com/rss/asahi/international.rdf
+JO32_FEED_MAINICHI_ENGLISH	jpfeeds	xml	PASS	20	OK	20	20	20	1.7	20	https://mainichi.jp/rss/etc/english_latest.rss
+JO32_FEED_NHK_NEWSWEB_NEW	jpfeeds	json	PASS	20	OK	20	20	20	1.5	20	https://news.web.nhk/news/json16/new_001.json
+JO32_FEED_HOCHI	jpfeeds	xml	PASS	898	OK	727	727	727	5.2	727	https://hochi.news/rss/index.xml
+JO32_FEED_JBPRESS	jpfeeds	xml	PASS	20	OK	20	20	20	1.9	20	https://jbpress.ismedia.jp/list/feed/rss
+JO32_FEED_DIAMOND_ONLINE	jpfeeds	xml	PASS	25	OK	25	25	25	1.4	25	https://diamond.jp/list/feed/rss/dol
+JO32_FEED_AERA_DIGITAL	jpfeeds	xml	PASS	30	OK	30	30	30	3.5	30	https://dot.asahi.com/list/feed/rss
+JO32_FEED_ITMEDIA_ALL	jpfeeds	xml	PASS	50	OK	50	50	50	1.7	50	https://rss.itmedia.co.jp/rss/2.0/itmedia_all.xml
+JO32_FEED_ITMEDIA_AIT	jpfeeds	xml	PASS	30	OK	30	30	30	1.3	30	https://rss.itmedia.co.jp/rss/2.0/ait.xml
+JO32_FEED_ITMEDIA_MONOIST	jpfeeds	xml	PASS	30	OK	30	30	30	1.9	30	https://rss.itmedia.co.jp/rss/2.0/monoist.xml
+JO32_FEED_HATENA_NEW_SOCIAL	jpfeeds	xml	PASS	30	OK	30	30	30	1.5	30	https://b.hatena.ne.jp/entrylist/social.rss
+JO32_FEED_HATENA_NEW_ECONOMICS	jpfeeds	xml	PASS	30	OK	30	30	30	2.3	30	https://b.hatena.ne.jp/entrylist/economics.rss
+JO32_ARC_MLIT_BRIDGE	jparcgis	json	PASS	1000	NO_RUN_LINE	-1	-1	137026	377.1	740449	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/rsdb_bridge/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0
+JO32_ARC_MLIT_TUNNEL	jparcgis	json	PASS	1000	OK	11864	11864	11864	22.9	11864	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/rsdb_tunnel/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0
+JO32_ARC_MLIT_PEDDECK	jparcgis	json	PASS	1000	OK	12243	12243	12243	24.0	12243	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/rsdb_pedestrian_deck/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0
+JO32_ARC_MLIT_SIGNGANTRY	jparcgis	json	PASS	1000	OK	18769	18769	18769	30.8	18769	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/rsdb_overhead_signage/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0
+JO32_ARC_MLIT_CULVERT	jparcgis	json	PASS	1000	OK	10073	10073	10073	19.9	10073	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/rsdb_culvert/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0
+JO32_ARC_MLIT_EARTHWORK	jparcgis	json	PASS	1000	OK	24430	24430	24430	52.2	24430	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/rsdb_earthwork/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0
+JO32_ARC_MLIT_BOREHOLE	jparcgis	json	PASS	1000	SLOW	-1	-1	102359	600.0	262284	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/ngi/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0
+JO32_ARC_MLIT_CALS_DESIGN	jparcgis	json	PASS	1000	OK	63852	63852	63852	364.5	63852	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/cals_design/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0
+JO32_ARC_MLIT_CALS_WORKS	jparcgis	json	PASS	1000	OK	54901	54901	54901	236.7	54901	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/cals_construction/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0
+JO32_ARC_MLIT_MEDICAL	jparcgis	json	PASS	1000	OK	181312	181312	181312	549.3	181312	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/P04_20/FeatureServer/8/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_MLIT_SCHOOL	jparcgis	json	PASS	1000	OK	56807	56807	56807	96.4	56807	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/P29_23/FeatureServer/9/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_MLIT_PUBHALL	jparcgis	json	PASS	1000	OK	79532	79532	79532	145.9	79532	https://services8.arcgis.com/7WU6MyYwq0ewt100/arcgis/rest/services/P05_22/FeatureServer/7/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_YAMAGATA_POLICE_ACC	jparcgis	json	PASS	1000	OK	33592	33592	33592	113.9	33592	https://services3.arcgis.com/svbZEzfhE1YbV1UV/arcgis/rest/services/new_traffic_accident_point/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_AKITA_POLICE_ACC	jparcgis	json	PASS	1000	OK	6197	6197	6197	17.9	6197	https://services6.arcgis.com/oiB3BKEeOOPUxQMg/arcgis/rest/services/Kokojiko_TrafficAccidents/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_MIYAGI_POLICE_ACC	jparcgis	json	PASS	1000	OK	36928	36928	36928	104.9	36928	https://services6.arcgis.com/OhXN0ZmojCx1em6O/arcgis/rest/services/jikoopendata(2018_2025)/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0
+JO32_ARC_HYOGO_ACC	jparcgis	json	PASS	1000	OK	171427	171427	171427	458.6	171427	https://services6.arcgis.com/vgk9QzEU5SI8I6pT/arcgis/rest/services/traffic_accident_lite/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0
+JO32_ARC_HYOGO_CRIME	jparcgis	json	PASS	1000	OK	64571	64571	64571	146.0	64571	https://services6.arcgis.com/vgk9QzEU5SI8I6pT/arcgis/rest/services/%E7%8A%AF%E7%BD%AAdeta2/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0
+JO32_ARC_WAKAYAMA_ACC	jparcgis	json	PASS	1000	OK	2020	2020	2020	7.1	2020	https://services1.arcgis.com/dyNm0e7fxHVztTut/arcgis/rest/services/%E4%BA%8B%E6%95%85%E5%AE%9F%E7%B8%BE/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=fid&resultRecordCount=1000&resultOffset=0
+JO32_ARC_YAMAGUCHI_ACC2022	jparcgis	json	PASS	1000	OK	2261	2261	2261	7.2	2261	https://services1.arcgis.com/8aCiBGqnmcTR5Um9/arcgis/rest/services/%E4%BA%A4%E9%80%9A%E4%BA%8B%E6%95%85_%E5%B1%B1%E5%8F%A3%E7%9C%8C_gdb_rename/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_MIE_ACC_ELDERLY	jparcgis	json	PASS	1000	OK	5592	5592	5592	18.7	5592	https://services5.arcgis.com/tkvkIlp1M2KOKx34/arcgis/rest/services/poi1603_v01/FeatureServer/27/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_MIE_ACC_SERIOUS	jparcgis	json	PASS	1000	OK	2658	2658	2658	8.9	2658	https://services5.arcgis.com/tkvkIlp1M2KOKx34/arcgis/rest/services/poi1604_v01/FeatureServer/28/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_MIE_ACC_BICYCLE	jparcgis	json	PASS	1000	OK	2126	2126	2126	5.1	2126	https://services5.arcgis.com/tkvkIlp1M2KOKx34/arcgis/rest/services/poi1601_v01/FeatureServer/25/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_MIE_CRIME_BIKETHEFT	jparcgis	json	PASS	1000	OK	1892	1892	1892	6.9	1892	https://services5.arcgis.com/tkvkIlp1M2KOKx34/arcgis/rest/services/poi1708_v01/FeatureServer/36/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_TOKYO_HYDRANT	jparcgis	json	PASS	1000	OK	133956	133956	133956	305.6	133956	https://services8.arcgis.com/gRDzS37HDbd5khtU/arcgis/rest/services/%E6%B6%88%E7%81%AB%E6%A0%93%E4%BD%8D%E7%BD%AE%E6%83%85%E5%A0%B1%EF%BC%88%E4%BB%A4%E5%92%8C7%E5%B9%B44%E6%9C%881%E6%97%A5%E7%8F%BE%E5%9C%A8%EF%BC%89/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=FID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_TOKYO_CISTERN	jparcgis	json	PASS	1000	OK	44302	44302	44302	84.4	44302	https://services8.arcgis.com/gRDzS37HDbd5khtU/arcgis/rest/services/%E3%83%9E%E3%83%83%E3%83%971/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_FUKUOKA_WILDLIFE_CAPTURE	jparcgis	json	PASS	1000	OK	71046	71046	71046	147.7	71046	https://services1.arcgis.com/UzywP0SobSWMx2Pl/arcgis/rest/services/Hokaku_Excel_point_view/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_TOYAMA_BEAR	jparcgis	json	PASS	1000	OK	4630	4630	4630	10.4	4630	https://services7.arcgis.com/pUdPpUsq83Kw8pWi/arcgis/rest/services/survey123_3f07f1f9864d43368d48b5f373d6cd68_results/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=objectid&resultRecordCount=1000&resultOffset=0
+JO32_ARC_FUKUSHIMA_BEAR	jparcgis	json	PASS	1000	OK	4543	4543	4543	14.7	4543	https://services6.arcgis.com/M9nrgnB1gu8YnLFM/arcgis/rest/services/%E7%A6%8F%E5%B3%B6%E7%9C%8C%E3%82%AF%E3%83%9E%E7%9B%AE%E6%92%83%E3%83%9D%E3%82%A4%E3%83%B3%E3%83%88%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC_202606_view/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=objectid&resultRecordCount=1000&resultOffset=0
+JO32_ARC_GUNMA_BEAR	jparcgis	json	PASS	1000	OK	1792	1792	1792	5.4	1792	https://services7.arcgis.com/DkC6f6v0YUQX0rke/arcgis/rest/services/survey123_a77f33a9b9f649cfada5c7983c67874b_results/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=objectid&resultRecordCount=1000&resultOffset=0
+JO32_ARC_HOKKAIDO_FOREST_GATE	jparcgis	json	PASS	1000	OK	9395	9395	9395	21.7	9395	https://services9.arcgis.com/2y39yojBa5v84JFa/arcgis/rest/services/%E3%82%B2%E3%83%BC%E3%83%88%E3%80%81%E9%80%9A%E8%A1%8C%E6%AD%A2%E3%82%81%E6%83%85%E5%A0%B1/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=FID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_NAGANO_RAIN10M	jparcgis	json	PASS	1000	OK	2698	2698	2698	5.9	2698	https://services5.arcgis.com/PZeNMNQU2CU59YeG/arcgis/rest/services/10%E5%88%86%E9%99%8D%E9%9B%A8%E9%87%8F_%E9%95%B7%E9%87%8E%E7%9C%8C%E5%85%A8%E5%9F%9F/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_NAGANO_RAIN1H	jparcgis	json	PASS	1000	OK	1824	1824	1824	5.0	1824	https://services5.arcgis.com/PZeNMNQU2CU59YeG/arcgis/rest/services/%E9%99%8D%E9%9B%A8%E9%87%8F_%E9%95%B7%E9%87%8E%E7%9C%8C%E5%85%A8%E5%9F%9F/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_FLOODSENSOR	jparcgis	json	PASS	1000	OK	1681	1681	1681	6.2	1681	https://services9.arcgis.com/j1INWAn10etJkt0x/arcgis/rest/services/ShinsuiWatcher_3aa0b/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_FLOODSENSOR_EVENTS	jparcgis	json	PASS	1000	OK	4415	4415	4415	10.1	4415	https://services9.arcgis.com/j1INWAn10etJkt0x/arcgis/rest/services/ShinsuiWatcher_3aa0b/FeatureServer/2/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_NIIGATA_CHISAN	jparcgis	json	PASS	1000	OK	27206	27206	27206	88.9	27206	https://services1.arcgis.com/cGRQILZoIvUkhwTf/arcgis/rest/services/%E6%B2%BB%E5%B1%B1%E6%96%BD%E8%A8%AD%E3%83%A9%E3%82%A4%E3%83%B3%E3%83%87%E3%83%BC%E3%82%BF/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_SHIBUYA_FOODPERMIT	jparcgis	json	PASS	1000	OK	39304	39304	39304	126.3	39304	https://services3.arcgis.com/UtdeFTavkHfI94t2/arcgis/rest/services/131130_food_businesses_list/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0
+JO32_ARC_SHIBUYA_PEOPLECOUNT	jparcgis	json	PASS	1000	SLOW	-1	-1	89885	600.0	560568	https://services3.arcgis.com/UtdeFTavkHfI94t2/arcgis/rest/services/131130_people_count_main_public_facility/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0
+JO32_ARC_SHIBUYA_POPULATION	jparcgis	json	PASS	1000	OK	154150	154150	154150	417.8	154150	https://services3.arcgis.com/UtdeFTavkHfI94t2/arcgis/rest/services/131130_population_quarterly_masked/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0
+JO32_ARC_SHIBUYA_CRIME	jparcgis	json	PASS	1000	OK	17174	17174	17174	35.6	17174	https://services3.arcgis.com/UtdeFTavkHfI94t2/arcgis/rest/services/131130_%E6%B8%8B%E8%B0%B7%E5%8C%BA%E3%81%A7%E7%99%BA%E7%94%9F%E3%81%97%E3%81%9F%E5%88%91%E6%B3%95%E7%8A%AF%E6%95%B0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0
+JO32_ARC_SHIBUYA_CLINICS	jparcgis	json	PASS	1000	OK	1994	1994	1994	6.2	1994	https://services3.arcgis.com/UtdeFTavkHfI94t2/arcgis/rest/services/131130_clinics_and_dental_clinics/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0
+JO32_ARC_SHIBUYA_GARBAGE	jparcgis	json	PASS	1000	OK	10534	10534	10534	21.5	10534	https://services3.arcgis.com/UtdeFTavkHfI94t2/arcgis/rest/services/131130_garbage_amount/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0
+JO32_ARC_SHIBUYA_FOOTFALL	jparcgis	json	PASS	1000	OK	12096	12096	12096	24.5	12096	https://services3.arcgis.com/UtdeFTavkHfI94t2/arcgis/rest/services/131130_tsuukoujinkou_seibetu/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0
+JO32_ARC_KASEN_EVACSITE	jparcgis	json	PASS	1000	OK	113173	113173	113173	334.7	113173	https://services1.arcgis.com/JuTIUwaukdmbwINm/arcgis/rest/services/%E3%83%9E%E3%83%83%E3%83%97/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_INZAI_ADDRPOINT	jparcgis	json	PASS	1000	OK	88816	88816	88816	237.9	88816	https://services8.arcgis.com/54QMawiMC688GOIY/arcgis/rest/services/%E9%81%B8%E6%8C%99%E3%83%9E%E3%83%83%E3%83%97ver_6_WFL1/FeatureServer/3/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_HACHIOJI_CRIMELIGHT	jparcgis	json	PASS	1000	OK	23239	23239	23239	54.2	23239	https://services7.arcgis.com/yoDYEe9aP5MsSkEP/arcgis/rest/services/%E9%98%B2%E7%8A%AF%E7%81%AF%E3%83%9E%E3%83%83%E3%83%97_%E8%A1%A8%E7%A4%BA/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0
+JO32_ARC_HINO_STREETLIGHT	jparcgis	json	PASS	1000	OK	12775	12775	12775	27.4	12775	https://services5.arcgis.com/akSheMdmUZiKa4BM/arcgis/rest/services/2024%E5%B9%B4%E6%99%82%E7%82%B9%E7%85%A7%E6%98%8E%E7%81%AF%EF%BC%88%E6%8A%9C%E7%B2%8B%EF%BC%89/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_SETOUCHI_CRIMELIGHT	jparcgis	json	PASS	1000	OK	6889	6889	6889	14.3	6889	https://services6.arcgis.com/hWQkUNriWdAdiE89/arcgis/rest/services/%E9%98%B2%E7%8A%AF%E7%81%AF%EF%BC%88CSV%EF%BC%89/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0
+JO32_ARC_NAGAIZUMI_CRIMELIGHT	jparcgis	json	PASS	1000	OK	4890	4890	4890	12.0	4890	https://services7.arcgis.com/qKPveEHULwuCeMMn/arcgis/rest/services/c001_bouhantou_shinboru/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=FID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_KITAKYUSHU_POSTERBOARD	jparcgis	json	PASS	1000	OK	1727	1727	1727	5.8	1727	https://services2.arcgis.com/erY1A5Xa80fBe1ys/arcgis/rest/services/election_gdb/FeatureServer/3/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_IGA_HYDRANT	jparcgis	json	PASS	1000	OK	3804	3804	3804	8.3	3804	https://services7.arcgis.com/aWegpbylh57tDDge/arcgis/rest/services/%E4%B8%8A%E6%B0%B4%E9%81%93_%E4%BE%9B%E7%94%A8_%E6%B6%88%E7%81%AB%E6%A0%93_%E8%A8%98%E5%8F%B7/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=FID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_KASHIWAZAKI_HYDRANT	jparcgis	json	PASS	1000	OK	2760	2760	2760	7.1	2760	https://services1.arcgis.com/XlTFoh9FvQbdpw6d/arcgis/rest/services/%E6%B6%88%E7%81%AB%E6%A0%93_view/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_SUZAKA_FIREWATER	jparcgis	json	PASS	1000	OK	2676	2676	2676	7.9	2676	https://services6.arcgis.com/uCid7TL8j7OZ5iGy/arcgis/rest/services/%E6%B6%88%E7%81%AB%E6%A0%93%E3%83%BB%E9%98%B2%E7%81%AB%E6%B0%B4%E6%A7%BD%EF%BC%88%E5%85%AC%E9%96%8B%E7%94%A8%EF%BC%89/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=FID&resultRecordCount=1000&resultOffset=0
+JO32_ARC_HAMAMATSU_CISTERN	jparcgis	json	PASS	1000	OK	2554	2554	2554	6.5	2554	https://services3.arcgis.com/D8JllYrM6IjqoX8o/arcgis/rest/services/%E6%B0%B4%E5%88%A9%EF%BC%88%E9%98%B2%E7%81%AB%E6%B0%B4%E6%A7%BD%E3%83%BB%E9%98%B2%E7%81%AB%E4%BA%95%E6%88%B8%EF%BC%89/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0
+JO32_MKT_MOF_JGB_YIELDS_ALL	jpmarket	csv	PASS	13291	OK	13290	13290	13290	16.4	13290	https://www.mof.go.jp/jgbs/reference/interest_rate/data/jgbcm_all.csv
+JO32_MKT_JSF_LOAN_BALANCE	jpmarket	csv	PASS	4763	OK	4760	4760	4760	7.6	4760	https://www.taisyaku.jp/data/zandaka.csv
+JO32_MKT_JSF_LENDABLE_ISSUES	jpmarket	csv	PASS	4342	OK	4339	4339	4339	6.8	4339	https://www.taisyaku.jp/data/meigara.csv
+JO32_MKT_JPX_LISTED_ISSUES	jpmarket	xlsx	PASS	4441	OK	4441	4441	4441	3.3	4441	https://www.jpx.co.jp/markets/statistics-equities/misc/tvdivq0000001vg2-att/data_j.xlsx
+JO32_MKT_BOJ_CALLRATE_DAILY	jpmarket	csv	PASS	10503	OK	10499	10499	10499	13.3	10499	https://www.stat-search.boj.or.jp/ssi/mtshtml/csv/fm01_d_1.csv
+JO32_MKT_BOJ_USDJPY_DAILY	jpmarket	csv	PASS	10503	OK	10499	10499	10499	13.4	10499	https://www.stat-search.boj.or.jp/ssi/mtshtml/csv/fm08_d_1.csv
+JO32_MKT_BITFLYER_EXEC_BTCJPY	jpmarket	json	PASS	500	OK	500	500	500	2.9	500	https://api.bitflyer.com/v1/executions?product_code=BTC_JPY&count=500
+JO32_MKT_BITFLYER_EXEC_FXBTCJPY	jpmarket	json	PASS	500	OK	500	500	500	1.5	500	https://api.bitflyer.com/v1/executions?product_code=FX_BTC_JPY&count=500
+JO32_MKT_BITFLYER_EXEC_ETHJPY	jpmarket	json	PASS	500	OK	500	500	500	1.6	500	https://api.bitflyer.com/v1/executions?product_code=ETH_JPY&count=500
+JO32_MKT_BITFLYER_EXEC_XRPJPY	jpmarket	json	PASS	500	OK	500	500	500	1.6	500	https://api.bitflyer.com/v1/executions?product_code=XRP_JPY&count=500
+JO32_MKT_BITFLYER_CHAT	jpmarket	json	PASS	750	OK	859	859	859	2.4	859	https://api.bitflyer.com/v1/getchats
+JO32_MKT_COINCHECK_TRADES_BTCJPY	jpmarket	json	PASS	100	OK	100	100	100	1.4	100	https://coincheck.com/api/trades?pair=btc_jpy&limit=100
+JO32_MKT_COINCHECK_TRADES_ETHJPY	jpmarket	json	PASS	100	OK	100	100	100	1.4	100	https://coincheck.com/api/trades?pair=eth_jpy&limit=100
+JO32_MKT_ZAIF_TRADES_BTCJPY	jpmarket	json	PASS	150	OK	150	150	150	1.6	150	https://api.zaif.jp/api/1/trades/btc_jpy
+JO32_MKT_BITBANK_TX_BTCJPY	jpmarket	json	PASS	60	OK	60	60	60	1.4	60	https://public.bitbank.cc/btc_jpy/transactions
+JO32_MKT_OKJ_TRADES_BTCJPY	jpmarket	json	PASS	100	OK	100	100	100	2.0	100	https://www.okcoin.jp/api/spot/v3/instruments/BTC-JPY/trades?limit=100
+JO32_MKT_BITTRADE_TRADES_BTCJPY	jpmarket	json	PASS	2000	OK	2000	2000	2000	3.1	2000	https://api-cloud.bittrade.co.jp/market/history/trade?symbol=btcjpy&size=2000
+JO32_MKT_BITTRADE_TRADES_ETHJPY	jpmarket	json	PASS	2000	OK	2000	2000	2000	2.9	2000	https://api-cloud.bittrade.co.jp/market/history/trade?symbol=ethjpy&size=2000
+JO32_MKT_BITTRADE_TRADES_XRPJPY	jpmarket	json	PASS	2000	OK	2000	2000	2000	4.0	2000	https://api-cloud.bittrade.co.jp/market/history/trade?symbol=xrpjpy&size=2000
+JO32_MKT_JAPANNEXT_PTS_TURNOVER	jpmarket	csv	PASS	3432	OK	3318	3318	3318	4.4	3318	https://www.japannext.co.jp/csv_download/dnd_by_turnover
+JO32_TEL_JARTIC_LOOP_5MIN_EAST	jptelemetry	json	PASS	3659	OK	3874	3874	3874	10.4	3874	https://api.jartic-open-traffic.org/geoserver?service=WFS&version=2.0.0&request=GetFeature&typeNames=t_travospublic_measure_5m&srsName=EPSG:4326&outputFormat=application/json&exceptions=application/json&cql_filter=%E6%99%82%E9%96%93%E3%82%B3%E3%83%BC%E3%83%89%20%3E%3D%20dateFormat%28%27yyyyMMddHHmm%27%2C%20dateParse%28%27yyyyMMddHHmmZ%27%2C%20Concatenate%28dateFormat%28%27yyyyMMddHHmm%27%2C%20now%28%29%29%2C%20%27-0815%27%29%29%29%20AND%20BBOX%28%E3%82%B8%E3%82%AA%E3%83%A1%E3%83%88%E3%83%AA%2C137.5%2C20%2C154%2C46%2C%27EPSG%3A4326%27%29
+JO32_TEL_JARTIC_LOOP_5MIN_WEST	jptelemetry	json	PASS	2250	OK	2250	2250	2250	6.8	2250	https://api.jartic-open-traffic.org/geoserver?service=WFS&version=2.0.0&request=GetFeature&typeNames=t_travospublic_measure_5m&srsName=EPSG:4326&outputFormat=application/json&exceptions=application/json&cql_filter=%E6%99%82%E9%96%93%E3%82%B3%E3%83%BC%E3%83%89%20%3E%3D%20dateFormat%28%27yyyyMMddHHmm%27%2C%20dateParse%28%27yyyyMMddHHmmZ%27%2C%20Concatenate%28dateFormat%28%27yyyyMMddHHmm%27%2C%20now%28%29%29%2C%20%27-0815%27%29%29%29%20AND%20BBOX%28%E3%82%B8%E3%82%AA%E3%83%A1%E3%83%88%E3%83%AA%2C122%2C20%2C137.5%2C46%2C%27EPSG%3A4326%27%29
+JO32_TEL_JARTIC_CCTV_5MIN_EAST	jptelemetry	json	PASS	1755	OK	1955	1955	1955	5.5	1955	https://api.jartic-open-traffic.org/geoserver?service=WFS&version=2.0.0&request=GetFeature&typeNames=t_travospublic_measure_5m_img&srsName=EPSG:4326&outputFormat=application/json&exceptions=application/json&cql_filter=%E6%99%82%E9%96%93%E3%82%B3%E3%83%BC%E3%83%89%20%3E%3D%20dateFormat%28%27yyyyMMddHHmm%27%2C%20dateParse%28%27yyyyMMddHHmmZ%27%2C%20Concatenate%28dateFormat%28%27yyyyMMddHHmm%27%2C%20now%28%29%29%2C%20%27-0815%27%29%29%29%20AND%20BBOX%28%E3%82%B8%E3%82%AA%E3%83%A1%E3%83%88%E3%83%AA%2C137.5%2C20%2C154%2C46%2C%27EPSG%3A4326%27%29
+JO32_TEL_JARTIC_CCTV_5MIN_WEST	jptelemetry	json	PASS	2965	OK	2965	2965	2965	7.6	2965	https://api.jartic-open-traffic.org/geoserver?service=WFS&version=2.0.0&request=GetFeature&typeNames=t_travospublic_measure_5m_img&srsName=EPSG:4326&outputFormat=application/json&exceptions=application/json&cql_filter=%E6%99%82%E9%96%93%E3%82%B3%E3%83%BC%E3%83%89%20%3E%3D%20dateFormat%28%27yyyyMMddHHmm%27%2C%20dateParse%28%27yyyyMMddHHmmZ%27%2C%20Concatenate%28dateFormat%28%27yyyyMMddHHmm%27%2C%20now%28%29%29%2C%20%27-0815%27%29%29%29%20AND%20BBOX%28%E3%82%B8%E3%82%AA%E3%83%A1%E3%83%88%E3%83%AA%2C122%2C20%2C137.5%2C46%2C%27EPSG%3A4326%27%29
+JO32_TEL_JARTIC_LOOP_1H	jptelemetry	json	PASS	3215	OK	3212	3212	3212	9.0	3212	https://api.jartic-open-traffic.org/geoserver?service=WFS&version=2.0.0&request=GetFeature&typeNames=t_travospublic_measure_1h&srsName=EPSG:4326&outputFormat=application/json&exceptions=application/json&cql_filter=%E6%99%82%E9%96%93%E3%82%B3%E3%83%BC%E3%83%89%20%3E%3D%20dateFormat%28%27yyyyMMddHHmm%27%2C%20dateParse%28%27yyyyMMddHHmmZ%27%2C%20Concatenate%28dateFormat%28%27yyyyMMddHHmm%27%2C%20now%28%29%29%2C%20%27-0500%27%29%29%29
+JO32_TEL_JARTIC_CCTV_1H	jptelemetry	json	PASS	2952	OK	2952	2952	2952	8.3	2952	https://api.jartic-open-traffic.org/geoserver?service=WFS&version=2.0.0&request=GetFeature&typeNames=t_travospublic_measure_1h_img&srsName=EPSG:4326&outputFormat=application/json&exceptions=application/json&cql_filter=%E6%99%82%E9%96%93%E3%82%B3%E3%83%BC%E3%83%89%20%3E%3D%20dateFormat%28%27yyyyMMddHHmm%27%2C%20dateParse%28%27yyyyMMddHHmmZ%27%2C%20Concatenate%28dateFormat%28%27yyyyMMddHHmm%27%2C%20now%28%29%29%2C%20%27-0500%27%29%29%29
+JO32_TEL_DOCOMO_BIKESHARE_STATUS	jptelemetry	json	PASS	6190	OK	6148	6148	6148	10.1	6148	https://api-public.odpt.org/api/v4/gbfs/docomo-cycle/station_status.json
+JO32_TEL_TOEI_BUS_POSITIONS	jptelemetry	json	EMPTY	0	OK	495	495	495	2.2	495	https://api-public.odpt.org/api/v4/odpt:Bus?odpt:operator=odpt.Operator:Toei
+JO32_TEL_TOEI_TRAIN_POSITIONS	jptelemetry	json	EMPTY	0	OK	92	92	92	2.9	92	https://api-public.odpt.org/api/v4/odpt:Train?odpt:operator=odpt.Operator:Toei
+JO32_TEL_TEPCO_DEMAND_5MIN	jptelemetry	csv	PASS	333	OK	288	288	288	3.0	288	https://www.tepco.co.jp/forecast/html/images/juyo-d1-j.csv
+JO32_TEL_CHUBU_GRID_ACTUAL_30MIN	jptelemetry	csv	PASS	50	OK	48	48	48	2.4	48	https://powergrid.chuden.co.jp/denki_yoho_content_data/keito_jisseki_cepco003.csv
+JO32_TEL_SHIKOKU_GRID_ACTUAL_30MIN	jptelemetry	csv	PASS	51	OK	48	48	48	1.4	48	https://www.yonden.co.jp/nw/denkiyoho/supply_demand/csv/jisseki_today.csv
+JO32_TEL_CHUBU_AREA_DEMAND_2016_2019	jptelemetry	csv	PASS	26280	OK	26280	26280	26280	26.8	26280	https://powergrid.chuden.co.jp/denki_yoho_content_data/areajuyo_current.csv
+JO32_TEL_JARTIC_ROAD_NOTICES	jptelemetry	json	PASS	33	OK	37	37	37	1.7	37	https://www.jartic.or.jp/d/telop/normal.json
+JO32_TEL_JARTIC_ROADWORK_TOPICS	jptelemetry	json	PASS	26	OK	25	25	25	1.3	25	https://www.jartic.or.jp/d/telop/topics.json
+JO32_TEL_NEXCO_EAST_TRAFFIC_RSS	jptelemetry	xml	PASS	100	OK	100	100	100	1.6	100	https://www.driveplaza.com/cms/news/traffic.xml
+JO32_TEL_HANSHIN_EXPWY_CLOSURES	jptelemetry	json	PASS	50	OK	50	50	50	1.5	50	https://www.hanshin-exp.co.jp/drivers/douro/include/driver_entry_list.json
+JO32_TEL_YAMANASHI_ROAD_REGULATIONS	jptelemetry	xml	PASS	22	OK	21	21	21	1.8	21	https://www.pref.yamanashi.jp/dourokisei/kisei.xml
+JO32_TEL_FUKUSHIMA_ROAD_WORKS_CLOSURES	jptelemetry	json	PASS	30	OK	25	25	25	1.8	25	http://www.pref.fukushima.jp/douro/kisei/json/listKOUJI.json
+JO32_TEL_FUKUSHIMA_ROAD_DISASTER_CLOSURES	jptelemetry	json	PASS	15	OK	14	14	14	1.7	14	http://www.pref.fukushima.jp/douro/kisei/json/listSAIGAI.json
+JO32_TEL_GIFU_ROAD_REGULATIONS	jptelemetry	json	PASS	628	OK	747	747	747	2.4	747	https://douro.pref.gifu.lg.jp/api/getRegulation
+JO32_TEL_GIFU_ROAD_RAIN	jptelemetry	json	PASS	74	OK	74	74	74	1.5	74	https://douro.pref.gifu.lg.jp/api/getRain
+JO32_TEL_GIFU_ROAD_FREEZE	jptelemetry	json	PASS	130	OK	130	130	130	2.3	130	https://douro.pref.gifu.lg.jp/api/getFreeze
+JO32_TEL_GIFU_ROAD_SNOW	jptelemetry	json	PASS	86	OK	86	86	86	1.4	86	https://douro.pref.gifu.lg.jp/api/getSnow
+JO32_TEL_GIFU_UNDERPASS_FLOOD	jptelemetry	json	PASS	19	OK	19	19	19	1.6	19	https://douro.pref.gifu.lg.jp/api/getUnderpath
+JO32_REG_FSA_PROFUND_NOTIFIERS	jpregister	xlsx	PASS	4590	OK	4590	4590	4590	5.3	4590	https://www.fsa.go.jp/menkyo/menkyoj/tokurei/011.xlsx
+JO32_REG_FSA_PROFUND_ABOLITION_ORDERS	jpregister	xlsx	PASS	611	OK	611	611	611	1.2	611	https://www.fsa.go.jp/menkyo/menkyoj/tokurei/021.xlsx
+JO32_REG_TOKYO_TOKUSHOHO_DISPOSITIONS	jpregister	csv	PASS	91	COLLISION	91	90	90	1.2	90	https://www.shouhiseikatu.metro.tokyo.lg.jp/torihiki/shobun/documents/shobun_tokushou.csv
+JO32_REG_OSAKA_CONSTRUCTION_OSAKA_CITY	jpregister	xlsx	PASS	14210	OK	14210	14210	14210	11.3	14210	https://www.pref.osaka.lg.jp/documents/8324/r8_3_itiran_1.xlsx
+JO32_REG_OSAKA_CONSTRUCTION_HOKUSETSU	jpregister	xlsx	PASS	11247	OK	11247	11247	11247	9.7	11247	https://www.pref.osaka.lg.jp/documents/8324/r8_3_itiran_1.xlsx#hokusetsu
+JO32_REG_OSAKA_CONSTRUCTION_SENSHU	jpregister	xlsx	PASS	14814	OK	14814	14814	14814	11.5	14814	https://www.pref.osaka.lg.jp/documents/8324/r8_3_itiran_1.xlsx#senshu
+JO32_REG_GIFU_INDUSTRIAL_WASTE_TRANSPORT	jpregister	xlsx	PASS	5651	OK	5651	5651	5651	5.2	5651	https://www.pref.gifu.lg.jp/uploaded/attachment/506980.xlsx
+JO32_REG_ISHIKAWA_INDUSTRIAL_WASTE_TRANSPORT	jpregister	xlsx	PASS	2350	OK	2350	2350	2350	2.8	2350	https://www.pref.ishikawa.lg.jp/haitai/gyoshameibo/documents/r0804shuuun_r1.xlsx
+JO32_REG_AICHI_REAL_ESTATE_BROKERS	jpregister	xlsx	PASS	6889	COLLISION	6889	6691	6691	4.6	6691	https://www.pref.aichi.jp/uploaded/attachment/626356.xlsx
+JO32_REG_JTA_TRAVEL_AGENCY_DISPOSITIONS	jpregister	xlsx	PASS	56	OK	56	56	56	1.0	70	https://www.mlit.go.jp/kankocho/content/001913487.xlsx
+JO32_REG_TOKUSHIMA_CONSTRUCTION	jpregister	xlsx	PASS	3014	OK	3014	3014	3014	3.2	3014	https://www.pref.tokushima.lg.jp/file/attachment/1049278.xlsx
+JO32_REG_KAGAWA_CONSTRUCTION	jpregister	xlsx	PASS	3955	OK	3955	3955	3955	3.2	3955	https://www.pref.kagawa.lg.jp/documents/13029/r80331_kyokalist_kagawakentiji.xlsx
+JO32_REG_MIYAGI_CONSTRUCTION_SENDAI	jpregister	xlsx	PASS	5319	OK	5319	5319	5319	3.3	5319	https://www.pref.miyagi.jp/documents/11867/2senndai.xlsx
+JO32_REG_OSAKA_CITY_TOKKU_MINPAKU	jpregister	csv	PASS	8887	OK	8887	8887	8887	16.0	8887	https://www.city.osaka.lg.jp/kenko/cmsfiles/contents/0000382/382418/20260531tokku.csv
+JO32_REG_OSAKA_CITY_MINPAKU_NOTIFIED	jpregister	csv	PASS	2213	OK	2212	2212	2212	5.9	2212	https://www.city.osaka.lg.jp/kenko/cmsfiles/contents/0000382/382418/20260531_shinpou.csv
+JO32_REG_OSAKA_CITY_RYOKAN_PERMITS	jpregister	csv	PASS	1861	OK	1861	1861	1861	3.9	1861	https://www.city.osaka.lg.jp/kenko/cmsfiles/contents/0000382/382418/20260531ryokan.csv
+JO32_REG_FSA_UNREGISTERED_WARNED_DOMESTIC	jpregister	xlsx	PASS	719	COLLISION	719	717	717	1.4	717	https://www.fsa.go.jp/ordinary/chuui/mutouroku/01.xlsx
+JO32_REG_FSA_UNREGISTERED_WARNED_OVERSEAS	jpregister	xlsx	PASS	436	OK	436	436	436	1.2	436	https://www.fsa.go.jp/ordinary/chuui/mutouroku/03.xlsx
+JO32_REG_FSA_WARNED_PROFUND_NOTIFIERS	jpregister	xlsx	PASS	65	OK	65	65	65	0.9	67	https://www.fsa.go.jp/ordinary/chuui/mutouroku/02.xlsx
+JO32_REG_HOKKAIDO_CLINICS_NO_BEDS	jpregister	xlsx	PASS	3184	OK	3184	3184	3184	3.0	3184	https://www.pref.hokkaido.lg.jp/fs/1/3/2/0/2/0/2/6/_/03%E7%84%A1%E5%BA%8A%E8%A8%BA%E7%99%82%E6%89%80%E5%90%8D%E7%B0%BF(R8.4.1).xlsx
+JO32_REG_HOKKAIDO_DENTAL_CLINICS	jpregister	xlsx	PASS	2688	OK	2688	2688	2688	2.5	2688	https://www.pref.hokkaido.lg.jp/fs/1/3/2/0/2/0/2/7/_/04%E6%AD%AF%E7%A7%91%E8%A8%BA%E7%99%82%E6%89%80%E5%90%8D%E7%B0%BF(R8.4.1).xlsx
+JO32_REG_AICHI_MEDICAL_CLINICS	jpregister	xlsx	PASS	2464	OK	2464	2464	2464	2.4	2464	https://www.pref.aichi.jp/uploaded/attachment/598864.xlsx
+JO32_REG_TOKYO_NPO_CORPORATIONS	jpregister	xlsx	PASS	8529	OK	8529	8529	8529	8.3	8797	https://www.seikatubunka1.metro.tokyo.lg.jp/houjin/npo_houjin/data/files/0000001250/ninsyou.xlsx
+JO32_REG_HOKKAIDO_INDUSTRIAL_WASTE_TRANSPORT	jpregister	xlsx	PASS	5567	COLLISION	5573	5572	5572	5.1	5572	https://www.pref.hokkaido.lg.jp/fs/1/3/2/0/5/8/1/9/_/01(2026.3.31%E7%8F%BE%E5%9C%A8)%E7%94%A3%E5%BB%83%E5%8F%8E%E9%81%8B%E6%A5%AD_%E5%85%AC%E9%96%8B%E7%89%88.xlsx
+JO32_REG_CHIBA_INDUSTRIAL_WASTE_TRANSPORT	jpregister	xlsx	PASS	12588	OK	12588	12588	12588	9.5	12588	https://www.pref.chiba.lg.jp/haishi/shorigyou/documents/2syuuunn2026.xlsx
+JO32_REG_KANAGAWA_FLUOROCARBON_RECOVERY	jpregister	xlsx	PASS	3882	OK	3882	3882	3882	4.3	3882	https://www.pref.kanagawa.jp/documents/5391/meibo_1.xlsx
+JO32_REG_MLIT_VEHICLE_RECALL_NOTIFICATIONS	jpregister	html	PASS	173	OK	171	171	171	2.6	171	https://www.mlit.go.jp/jidosha/recall.html
+JO32_REG_OSAKA_INDUSTRIAL_WASTE_TRANSPORT	jpregister	xlsx	PASS	12153	OK	12153	12153	12153	8.0	12153	https://www.pref.osaka.lg.jp/documents/602/hutuu_tyokusou_r080331.xlsx
+JO32_REG_NIIGATA_CONSTRUCTION	jpregister	xlsx	PASS	9051	OK	9051	9051	9051	6.2	9051	https://www.pref.niigata.lg.jp/uploaded/attachment/508974.xlsx
+JO32_MUNI_AKITA_KUMADAS_BEAR	jpmuni3	json	PASS	1000	OK	24603	24603	24603	93.9	24603	https://ckan.pref.akita.lg.jp/api/3/action/datastore_search?resource_id=0678f9b3-4bf7-4212-9c0e-c0cb9b09b3cf&limit=1000&offset=0&sort=_id
+JO32_MUNI_AKITA_RELIGIOUS_CORPS	jpmuni3	json	PASS	1000	OK	1992	1992	1992	7.1	1992	https://ckan.pref.akita.lg.jp/api/3/action/datastore_search?resource_id=4fce20fe-8a53-4b6f-a694-b13b1c1c5121&limit=1000&offset=0&sort=_id
+JO32_MUNI_AKITA_FUREAI_CARD_SHOPS	jpmuni3	json	PASS	1000	OK	1829	1829	1829	7.2	1829	https://ckan.pref.akita.lg.jp/api/3/action/datastore_search?resource_id=755cd16b-b852-4028-b178-9d75250dcd2b&limit=1000&offset=0&sort=_id
+JO32_MUNI_GIFU_SANPAI_HAULERS	jpmuni3	json	PASS	1000	OK	5439	5439	5439	12.2	5439	https://gifu-opendata.pref.gifu.lg.jp/api/3/action/datastore_search?resource_id=193f1319-18f0-4904-bc9a-37c0fa5579e5&limit=1000&offset=0&sort=_id
+JO32_MUNI_GIFU_DESIGNATED_SHELTERS	jpmuni3	json	PASS	1000	OK	1777	1777	1777	6.7	1777	https://gifu-opendata.pref.gifu.lg.jp/api/3/action/datastore_search?resource_id=0eec25e8-efae-4fa9-af54-6a32719b8cd6&limit=1000&offset=0&sort=_id
+JO32_MUNI_GIFU_CULTURAL_PROPERTIES_MUNI	jpmuni3	csv	PASS	5059	OK	5059	5059	5059	12.7	5059	https://gifu-opendata.pref.gifu.lg.jp/dataset/1e837d23-08fb-4ab4-9a93-3e7698508c6e/resource/3c0d569e-6c36-4f98-966f-48bb58b1751b/download/gifu_cultural_property_municipality-specify_all_r7.csv
+JO32_MUNI_TAKAYAMA_FIRE_WATER	jpmuni3	csv	PASS	4065	OK	4065	4065	4065	9.0	4065	https://gifu-opendata.pref.gifu.lg.jp/dataset/3a245b0e-d206-4c7b-9a5f-465d66eff309/resource/76a2df65-9dfc-47a8-87c2-0de3ba4dcf61/download/fire_hydrant_202602_takayama.csv
+JO32_MUNI_ISHIKAWA_CENTRAL_HYDRANTS	jpmuni3	csv	PASS	15133	OK	15133	15133	15133	30.7	15133	https://catalog-data.city.kanazawa.ishikawa.jp/dataset/bfd070dd-c981-4ce9-a994-3ce95dd8d088/resource/c2c134ae-400b-4786-8c9d-5eebab3ecc0a/download/ishikawa-central-fire-hydrant.csv
+JO32_MUNI_KANAZAWA_CARE_SERVICES	jpmuni3	json	PASS	1000	OK	1929	1929	1929	4.1	1929	https://catalog-data.city.kanazawa.ishikawa.jp/api/3/action/datastore_search?resource_id=84720e91-0fd9-4d39-8616-c62f193e5f82&limit=1000&offset=0&sort=_id
+JO32_MUNI_TSUBATA_RADIATION	jpmuni3	json	PASS	1000	OK	1882	1882	1882	6.2	1882	https://catalog-data.city.kanazawa.ishikawa.jp/api/3/action/datastore_search?resource_id=9545cfa7-7581-423d-8b09-0376905c8450&limit=1000&offset=0&sort=_id
+JO32_MUNI_AIZUWAKAMATSU_EVENTS	jpmuni3	json	PASS	1000	OK	6347	6347	6347	15.1	6347	https://data.data4citizen.jp/api/3/action/datastore_search?resource_id=278639b4-8f7f-4bda-b36d-55711f19552b&limit=1000&offset=0&sort=_id
+JO32_MUNI_AIZUWAKAMATSU_HYDRANTS	jpmuni3	json	PASS	1000	OK	1954	1954	1954	5.0	1954	https://data.data4citizen.jp/api/3/action/datastore_search?resource_id=585cfa88-d58a-4fcc-9ee9-a9c568c4f32e&limit=1000&offset=0&sort=_id
+JO32_MUNI_AIZUWAKAMATSU_POP_MESH	jpmuni3	json	PASS	1000	OK	11554	11554	11554	14.9	11554	https://data.data4citizen.jp/api/3/action/datastore_search?resource_id=9043868f-a1cb-4701-86fc-5179efd6e5cb&limit=1000&offset=0&sort=_id
+JO32_MUNI_TSUKUBA_PARCEL_INDEX	jpmuni3	json	PASS	1000	SLOW	-1	-1	239724	600.0	349925	https://services6.arcgis.com/yogEhrEiATcZmbcU/arcgis/rest/services/chiban_search_index/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0
+JO32_MUNI_SAKU_PARCEL_INDEX	jpmuni3	json	PASS	1000	SLOW	-1	-1	256580	600.0	295624	https://services1.arcgis.com/c83a7mGFcWBslmdw/arcgis/rest/services/%E6%A4%9C%E7%B4%A2%E7%94%A8%E5%9C%B0%E7%95%AA/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0
+JO32_MUNI_HIDA_PARCELS	jpmuni3	json	PASS	1000	OK	237542	237542	237542	465.5	237542	https://services7.arcgis.com/JPM37uGraOFrUEDo/arcgis/rest/services/%E5%85%A8%E5%9C%B0%E7%95%AA_6c4e0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0
+JO32_MUNI_HIOKI_PARCELS	jpmuni3	json	PASS	1000	SLOW	-1	-1	268000	600.0	317855	https://services6.arcgis.com/ruiLLQIvxE9JPmz1/arcgis/rest/services/%E5%9C%B0%E7%95%AA/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0
+JO32_MUNI_RYUGASAKI_PARCELS	jpmuni3	json	PASS	1000	OK	104226	104226	104226	243.8	104226	https://services5.arcgis.com/ZMdUEcr9jaR9qJyU/arcgis/rest/services/chibanzu/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0
+JO32_MUNI_GYODA_PARCEL_SEARCH	jpmuni3	json	PASS	1000	OK	152449	152449	152449	346.8	152449	https://services7.arcgis.com/JKleYwaFfRw5qtLg/arcgis/rest/services/searchc/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0
+JO32_MUNI_HACHIOJI_DEVELOPMENT_REGISTER	jpmuni3	json	PASS	1000	OK	2315	2315	2315	8.6	2315	https://services7.arcgis.com/yoDYEe9aP5MsSkEP/arcgis/rest/services/%E9%96%8B%E7%99%BA%E7%99%BB%E9%8C%B2%E7%B0%BF_%E8%A1%A8%E7%A4%BA/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0
+JO32_MUNI_HINO_BUILDING_CONFIRMATIONS	jpmuni3	json	PASS	1000	OK	70707	70707	70707	213.5	70707	https://services5.arcgis.com/akSheMdmUZiKa4BM/arcgis/rest/services/%E5%BB%BA%E7%AF%89%E7%A2%BA%E8%AA%8D%E5%8F%B0%E5%B8%B3(%E7%A2%BA%E8%AA%8D%E6%B8%88%E6%9C%89)20260914/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0
+JO32_MUNI_TOCHIGI_AED	jpmuni3	json	PASS	1000	OK	2169	2169	2169	6.2	2169	https://services7.arcgis.com/oAgoy3LKmUpvdTfh/arcgis/rest/services/R8_AED%E8%A8%AD%E7%BD%AE%E5%A0%B4%E6%89%80%E4%B8%80%E8%A6%A7/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0
+JO32_MUNI_OISO_CRIME_LIGHTS	jpmuni3	json	PASS	1000	OK	3839	3839	3839	8.6	3839	https://services7.arcgis.com/vDn34letqBl2bR7W/arcgis/rest/services/bouhantou/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0
+JO32_MUNI_KANAZAWA_FOOD_PERMITS	jpmuni3	json	PASS	1000	OK	8842	8842	8842	17.2	8842	https://catalog-data.city.kanazawa.ishikawa.jp/api/3/action/datastore_search?resource_id=09a49521-cabf-40b4-978b-bd61ef02f650&limit=1000&offset=0&sort=_id
+JO32_MUNI_HAKUSAN_POPULATION	jpmuni3	json	PASS	1000	OK	3976	3976	3976	9.1	3976	https://catalog-data.city.kanazawa.ishikawa.jp/api/3/action/datastore_search?resource_id=771d25f6-1ce1-4263-ac49-ff2068f72477&limit=1000&offset=0&sort=_id
+JO32_MUNI_GIFU_CITY_FOOD_PERMITS	jpmuni3	csv	PASS	4453	OK	4453	4453	4453	7.6	4453	https://gifu-opendata.pref.gifu.lg.jp/dataset/2f9f1b1c-be25-4a27-96c6-47b597f1a0bd/resource/16ef7794-d2b6-4d7d-8353-f55193432530/download/gifushisyokuhinkyokar7.6.1.csv
+JO32_MUNI_AIZUWAKAMATSU_AZA_POPULATION	jpmuni3	json	PASS	1000	OK	2455	2455	2455	5.8	2455	https://data.data4citizen.jp/api/3/action/datastore_search?resource_id=16366cd1-c32f-44bd-a597-a0c30764e3db&limit=1000&offset=0&sort=_id
+JO32_MUNI_KURASHIKI_FOOD_PERMITS	jpmuni3	csv	PASS	3172	OK	3172	3172	3172	7.7	3172	https://kurashiki.dataeye.jp/resource_download/17772
+JO32_MUNI_KURASHIKI_FIRE_WATER	jpmuni3	csv	PASS	8377	OK	8377	8377	8377	14.5	8377	https://kurashiki.dataeye.jp/resource_download/16661
+JO32_MUNI_KANAGAWA_PARKS	jpmuni3	csv	PASS	8121	OK	8121	8121	8121	11.9	8121	https://catalog.opendata.pref.kanagawa.jp/dataset/4da323a6-b9b2-4ca3-8e80-7e374c3fcafc/resource/2b416702-1a0e-4b89-b17f-42739ef5d580/download/140007_park_20260708_2.csv
+JO32_MUNI_CHIKUSHINO_PARCELS	jpmuni3	json	PASS	1000	OK	103405	103405	103405	225.1	103405	https://services3.arcgis.com/5QNOO4Xcc1YhDb22/arcgis/rest/services/%E5%9C%B0%E7%95%AA%E5%9B%B3_%E3%83%9D%E3%82%A4%E3%83%B3%E3%83%88/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0
+JO32_MUNI_ANNAKA_PARCELS	jpmuni3	json	PASS	1000	OK	221086	221086	221086	412.1	221086	https://services6.arcgis.com/9FnsyoZ817hPC4mQ/arcgis/rest/services/ChibanKensaku_view/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0
+JO32_MUNI_ICHIKIKUSHIKINO_PARCELS	jpmuni3	json	PASS	1000	OK	109849	109849	109849	227.8	109849	https://services6.arcgis.com/MDr1eDhMXwl9134M/arcgis/rest/services/%E5%9C%B0%E7%95%AA%E5%9B%B3_%E3%83%9D%E3%82%A4%E3%83%B3%E3%83%88/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0
+JO32_MUNI_MURORAN_PARCELS	jpmuni3	json	PASS	1000	OK	73462	73462	73462	123.4	73462	https://services.arcgis.com/Jv1EECU3IM4ZRUev/arcgis/rest/services/%E5%9C%B0%E7%95%AA%E5%9B%B32024/FeatureServer/5/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0
+JO32_MUNI_HACHIOJI_ROUTE_PRICES	jpmuni3	json	PASS	1000	OK	22051	22051	22051	24.9	22051	https://services7.arcgis.com/yoDYEe9aP5MsSkEP/arcgis/rest/services/%E8%B7%AF%E7%B7%9A%E4%BE%A1_%E8%A1%A8%E7%A4%BA/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0
+JO32_MUNI_IBARAKI_ARCHAEOLOGICAL_SITES	jpmuni3	json	PASS	1000	OK	10334	10334	10334	70.5	10334	https://services6.arcgis.com/yogEhrEiATcZmbcU/arcgis/rest/services/%E9%81%BA%E8%B7%A1/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0

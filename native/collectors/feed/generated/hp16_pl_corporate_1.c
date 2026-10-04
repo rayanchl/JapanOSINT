@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://wl-api.mf.gov.pl/api/search/bank-account/17103015080000000503131100?date=2026-08-14",
     .array_path = "result.subjects",
     .detail_url = "https://wl-api.mf.gov.pl/api/search/nip/{v}?date=2026-08-14", .detail_key = "nip",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "pl-mf-whitelist-nips-batch",
@@ -30,6 +31,7 @@ static const hp_source T[] = {
     .url = "https://wl-api.mf.gov.pl/api/search/nips/5260250995,5250008198?date=2026-08-14",
     .array_path = "result.entries",
     .detail_url = "https://wl-api.mf.gov.pl/api/search/nip/{v}?date=2026-08-14", .detail_key = "identifier",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

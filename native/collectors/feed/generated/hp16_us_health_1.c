@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://www.gov.uk/api/search.json?filter_format=drug_safety_update&count=3&fields=title,link,description,first_published_at",
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "uk-govuk-search-medical-safety-alerts",
@@ -30,6 +31,7 @@ static const hp_source T[] = {
     .url = "https://www.gov.uk/api/search.json?filter_format=medical_safety_alert&count=3&fields=title,link,description,alert_type,issued_date,medical_specialism",
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-cms-data-catalog",
@@ -40,6 +42,7 @@ static const hp_source T[] = {
     .url = "https://data.cms.gov/data.json",
     .array_path = "dataset",
     .detail_url = "https://data.cms.gov/data-api/v1/dataset/{v}/data?size=100", .detail_key = "accessURL",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-cms-open-payments-catalog",
@@ -49,6 +52,7 @@ static const hp_source T[] = {
     .record_type = "health-record", .tags = "\"us\",\"health\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://openpaymentsdata.cms.gov/api/1/metastore/schemas/dataset/items?show-reference-ids=false",
     .detail_url = "https://openpaymentsdata.cms.gov/api/1/datastore/query/{v}?limit=100", .detail_key = "distribution.identifier",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-cms-provider-data-catalog",
@@ -58,6 +62,7 @@ static const hp_source T[] = {
     .record_type = "health-record", .tags = "\"us\",\"health\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://data.cms.gov/provider-data/api/1/metastore/schemas/dataset/items?show-reference-ids=false",
     .detail_url = "https://data.cms.gov/provider-data/api/1/metastore/schemas/dataset/items/{v}?show-reference-ids=false", .detail_key = "identifier",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-cms-provider-enrollment",
@@ -67,6 +72,7 @@ static const hp_source T[] = {
     .record_type = "health-record", .tags = "\"us\",\"health\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://data.cms.gov/data-api/v1/dataset/2457ea29-fc82-48b0-86ec-3b0755de7515/data?size=2",
     .detail_url = "https://data.cms.gov/data-api/v1/dataset/2457ea29-fc82-48b0-86ec-3b0755de7515/data?size=100&filter[NPI]={v}", .detail_key = "NPI",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-cpsc-recall-by-date-range",
@@ -76,6 +82,7 @@ static const hp_source T[] = {
     .record_type = "health-record", .tags = "\"us\",\"health\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://www.saferproducts.gov/RestWebServices/Recall?format=json&RecallDateStart=2026-01-01&RecallDateEnd=2026-06-30",
     .detail_url = "https://www.saferproducts.gov/RestWebServices/Recall?format=json&RecallID={v}", .detail_key = "RecallID",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-cpsc-recall-by-product-name",
@@ -85,6 +92,7 @@ static const hp_source T[] = {
     .record_type = "health-record", .tags = "\"us\",\"health\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://www.saferproducts.gov/RestWebServices/Recall?format=json&ProductName=helmet",
     .detail_url = "https://www.saferproducts.gov/RestWebServices/Recall?format=json&RecallID={v}", .detail_key = "RecallID",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
 };

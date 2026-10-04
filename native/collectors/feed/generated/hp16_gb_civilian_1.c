@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://api.openstreetmap.org/api/0.6/changesets.json?user=1&limit=5",
     .array_path = "changesets",
     .detail_url = "https://api.openstreetmap.org/api/0.6/changeset/{v}.json?include_discussion=true", .detail_key = "id",
+    .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
 };

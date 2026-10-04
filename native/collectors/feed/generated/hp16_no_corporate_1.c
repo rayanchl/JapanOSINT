@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://data.brreg.no/enhetsregisteret/api/underenheter/973861883",
     .array_path = "historiskenavn",
     .detail_url = "https://data.brreg.no/enhetsregisteret/api/underenheter/{v}", .detail_key = "organisasjonsnummer",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

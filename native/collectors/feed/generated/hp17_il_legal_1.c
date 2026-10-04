@@ -21,6 +21,7 @@ static const hp_source T[] = {
     .array_path = "value",
     .id_keys = "IsraelLawID",
     .detail_url = "https://knesset.gov.il/Odata/ParliamentInfo.svc/KNS_IsraelLawName?$filter=IsraelLawID%20eq%20{v}&$format=json", .detail_key = "IsraelLawID",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "il-knesset-law",
@@ -32,6 +33,7 @@ static const hp_source T[] = {
     .array_path = "value",
     .id_keys = "LawID",
     .detail_url = "https://knesset.gov.il/Odata/ParliamentInfo.svc/KNS_Law({v})?$format=json", .detail_key = "LawID",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
 };

@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://public-api.prozorro.gov.ua/api/2.5/contracts?limit=5",
     .array_path = "data",
     .detail_url = "https://public-api.prozorro.gov.ua/api/2.5/contracts/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
   { .id = "ua-prozorro-tender-awards",
@@ -30,6 +31,7 @@ static const hp_source T[] = {
     .url = "https://public-api.prozorro.gov.ua/api/2.5/tenders/d9116ce196ce4cfea5d32707db82035b/awards",
     .array_path = "data",
     .detail_url = "https://public-api.prozorro.gov.ua/api/2.5/tenders/{v}/awards", .detail_key = "id",
+    .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
   { .id = "ua-prozorro-tender-bids",
@@ -40,6 +42,7 @@ static const hp_source T[] = {
     .url = "https://public-api.prozorro.gov.ua/api/2.5/tenders/d9116ce196ce4cfea5d32707db82035b/bids",
     .array_path = "data",
     .detail_url = "https://public-api.prozorro.gov.ua/api/2.5/tenders/{v}/bids", .detail_key = "id",
+    .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
   { .id = "ua-prozorro-tender-contracts",
@@ -50,6 +53,7 @@ static const hp_source T[] = {
     .url = "https://public-api.prozorro.gov.ua/api/2.5/tenders/d9116ce196ce4cfea5d32707db82035b/contracts",
     .array_path = "data",
     .detail_url = "https://public-api.prozorro.gov.ua/api/2.5/tenders/{v}/contracts", .detail_key = "id",
+    .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
   { .id = "ua-prozorro-tender-questions",
@@ -60,6 +64,7 @@ static const hp_source T[] = {
     .url = "https://public-api.prozorro.gov.ua/api/2.5/tenders/d9116ce196ce4cfea5d32707db82035b/questions",
     .array_path = "data",
     .detail_url = "https://public-api.prozorro.gov.ua/api/2.5/tenders/{v}/questions", .detail_key = "id",
+    .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
   { .id = "ua-prozorro-tenders",
@@ -70,6 +75,7 @@ static const hp_source T[] = {
     .url = "https://public-api.prozorro.gov.ua/api/2.5/tenders?limit=5",
     .array_path = "data",
     .detail_url = "https://public-api.prozorro.gov.ua/api/2.5/tenders/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
 };

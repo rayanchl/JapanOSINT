@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://api.gleif.org/api/v1/lei-records?filter%5Bentity.legalAddress.country%5D=NA&page%5Bsize%5D=100",
     .array_path = "data",
     .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

@@ -142,18 +142,6 @@ static const hp_source HP3B31_SURVNET[] = {
       "Operator contact strings and shared hosting reveal which relays belong "
       "to the same operator" },
 
-  { .id = "TOR_EXIT_NODE_LIST", .name = "Tor Project — bulk exit node address list",
-    .name_ja = "Tor 出口ノード一覧", .category = "surveillance",
-    .portal = "https://check.torproject.org", .record_type = "tor-exit",
-    .tags = "\"tor\",\"anonymity\",\"network\"", .free_tier = 1,
-    .type = "dataset", .mode = HP_CSV, .csv_no_header = 1,
-    .url = "https://check.torproject.org/torbulkexitlist",
-    .filter_query = 1, .title_keys = "col0", .id_keys = "col0",
-    .interval = 3600,
-    .description = "The authoritative list of addresses currently able to exit "
-      "Tor traffic — the reference set for deciding whether a connection in a "
-      "log was anonymised, published by the Tor Project itself" },
-
   /* ── Measurement, outages and censorship ──────────────────────────────── */
   { .id = "RIPE_ATLAS_PROBES", .name = "RIPE Atlas — measurement probe inventory",
     .name_ja = "RIPE Atlas 計測プローブ", .category = "surveillance",
@@ -210,22 +198,6 @@ static const hp_source HP3B31_SURVNET[] = {
       "blocked, per country and per day. Turns individual measurements into a "
       "blocking timeline" },
 
-  { .id = "IODA_OUTAGE_ALERTS", .name = "IODA — internet outage detection & analysis",
-    .name_ja = "IODA インターネット障害検知", .category = "surveillance",
-    .portal = "https://ioda.inetintel.cc.gatech.edu", .record_type = "network-outage",
-    .tags = "\"network\",\"outage\",\"measurement\"", .free_tier = 1,
-    .url = "https://api.ioda.inetintel.cc.gatech.edu/v2/outages/alerts?limit=1000",
-    .array_path = "data", .filter_query = 1,
-    .title_keys = "entity.name,datasource", .id_keys = "entity.code+datasource+time",
-    .date_keys = "time",
-    .interval = 900,
-    /* id_keys composite (+ composes, , chooses): an entity has many alerts over time and per datasource; keying on the
-     * entity kept one. */
-    .description = "Detected internet outages by country, region and ASN, "
-      "corroborated across BGP withdrawals, active probing and darknet traffic. "
-      "Deliberate national shutdowns and infrastructure damage both show here "
-      "before either is announced" },
-
   { .id = "GRIP_BGP_HIJACKS", .name = "GRIP — BGP hijack & routing anomaly events",
     .name_ja = "BGPハイジャック検知", .category = "surveillance",
     .portal = "https://grip.inetintel.cc.gatech.edu", .record_type = "bgp-event",
@@ -273,32 +245,6 @@ static const hp_source HP3B31_SURVNET[] = {
       "entire observed footprint is returned" },
 
   /* ── Malicious infrastructure feeds ───────────────────────────────────── */
-  { .id = "THREATFOX_IOC_SEARCH", .name = "ThreatFox — indicator of compromise search",
-    .name_ja = "ThreatFox 侵害指標検索", .category = "surveillance",
-    .portal = "https://threatfox-api.abuse.ch", .record_type = "threat-indicator",
-    .tags = "\"threat\",\"ioc\",\"infrastructure\"", .free_tier = 1,
-    .url = "https://threatfox-api.abuse.ch/api/v1/",
-    .post_body = "{\"query\":\"search_ioc\",\"search_term\":\"{Q}\"}",
-    .content_type = "application/json",
-    .array_path = "data", .title_keys = "ioc,malware_printable",
-    .id_keys = "id", .date_keys = "first_seen",
-    .description = "Indicators shared by the abuse.ch community — the "
-      "indicator, the malware family and its aliases, the confidence level, "
-      "the reporter and the tags. Free, unauthenticated and updated "
-      "continuously" },
-
-  { .id = "FEODO_C2_TRACKER", .name = "Feodo Tracker — botnet command & control servers",
-    .name_ja = "Feodo C2サーバ追跡", .category = "surveillance",
-    .portal = "https://feodotracker.abuse.ch", .record_type = "c2-server",
-    .tags = "\"threat\",\"botnet\",\"infrastructure\"", .free_tier = 1,
-    .url = "https://feodotracker.abuse.ch/downloads/ipblocklist.json",
-    .filter_query = 1, .title_keys = "malware,hostname", .id_keys = "ip_address",
-    .date_keys = "first_seen",
-    .interval = 1800,
-    .description = "Active botnet command-and-control servers — the address "
-      "and port, the malware family, the hosting AS and country, and the "
-      "first-seen and last-online dates for each" },
-
   { .id = "CLOUDFLARE_RADAR_TRAFFIC", .name = "Cloudflare Radar — internet traffic & attack telemetry",
     .name_ja = "Cloudflare Radar 通信計測", .category = "surveillance",
     .portal = "https://api.cloudflare.com", .record_type = "internet-telemetry",

@@ -334,3 +334,10 @@ VJSON_KEYED(us_legistar_stpaul_matters, "us-legistar-stpaul-matters", "Legistar 
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Saint Paul City Council ordinances and resolutions (MatterFile 'Ord 26-35') with full Legistar matter metadata and the MatterId detail hops.",
   "MatterId");
+
+VJSON(us_courtlistener_search_people, "us-courtlistener-search-people", "CourtListener — judge search (type=p)", "CourtListener — judge search (type=p)",
+  "us_legal", "legal",
+  "https://www.courtlistener.com/api/rest/v4/search/?q=Roberts&type=p",
+  "results",
+  "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
+  "Federal and state judges, count 664 for one surname. Rows carry id, name_full, absolute_url, court list, appointer, selection_method, aba_rating array, political_affiliation, school, date_start/date_termination. The id feeds every judge detail hop below.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");

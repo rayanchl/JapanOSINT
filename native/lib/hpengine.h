@@ -124,7 +124,7 @@ typedef struct hp_source {
    * (133 records) instead of the root (100) on 34 of those pages — 9,643
    * records emitted where the 60 pages hold 6,000, keyed on a field the
    * release entries do not have, 2,881 of them collapsing at the sink
-   * (measured 2026-10-04, batch 32). Declaring `array_path = "."` took the
+   * (measured 2026-10-04, batch 33). Declaring `array_path = "."` took the
    * same row to 6,000 emitted and 6,000 stored.
    *
    * It is reported, not silent — the engine stamps a shape notice naming the
@@ -241,6 +241,14 @@ typedef struct hp_source {
   int         page_zero_based;/* 1 = the first page is numbered 0, not 1      */
   int         page_size;      /* records per page, for offset-style paging    */
   int         page_max;       /* max pages to walk (default 10)              */
+  /* Walk pages the way a VJSON collector is walked, for a row that declares
+   * none of next_path / page_param / {page}: the server's own next link, else
+   * the cursor its declared page size pairs with, advanced only while pages
+   * come back full (jsonlist_next_page — one decision for both engines).
+   * Opt-in, and HP_JSON only: it exists so a verified list collector moved onto
+   * this engine to walk its detail hop does not lose every page after the
+   * first. The ceiling is page_max when set, else $JO_JSONLIST_PAGE_MAX (20). */
+  int         page_walk;
 
   int csv_no_header;          /* CSV mode: file has no header row → col0..colN */
   /* CSV mode: field delimiter, if not a comma. DataPlane.org's feeds are

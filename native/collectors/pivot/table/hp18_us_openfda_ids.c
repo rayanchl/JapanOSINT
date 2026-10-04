@@ -21,12 +21,12 @@
  *
  * The ids are unchanged, so nothing vanishes from the registry.
  *
- * NO PAGING DECLARED, deliberately. A keyed lookup returns one short page, and
- * lib/pager.c only advances a cursor when the page came back exactly full — so
- * these rows make one request and stop, rather than spending a second request
- * on a `skip=100` that openFDA would answer "no matches found". The firm-name
- * searches in hp2_northam_us_reg.c do declare skip paging, because a firm really
- * can have more than 100 recalls; an identifier cannot.
+ * Paged on openFDA's own `skip`, because an identifier CAN match more than one
+ * page: PMA P150003 is one approval with 110 supplement records, and without
+ * paging this row read 100 and stopped in silence (measured 2026-09-27; 110
+ * stored with it). A lookup that matches one record costs one request anyway —
+ * the walk stops on the first short page, and openFDA answers a `skip` past
+ * the end with 404, which the engine reads as the end of the data.
  *
  * limit=100 and the skip/limit contract are not guesses: hp2_northam_us_reg.c
  * has shipped four openFDA rows on exactly those parameters. */
@@ -39,7 +39,8 @@ static const hp_source HP18_US_OPENFDA[] = {
     .collector = "us_health", .category = "health",
     .portal = "https://open.fda.gov", .record_type = "us-device-510k",
     .tags = "\"us\",\"health\",\"batch16\"", .free_tier = 1,
-    .url = "https://api.fda.gov/device/510k.json?search=k_number:%22{q}%22&limit=100",
+    .url = "https://api.fda.gov/device/510k.json?search=k_number:%22{q}%22&limit=100&skip=0",
+    .page_param = "skip", .page_size = 100,   /* openFDA's own offset; one id can carry hundreds of PMA supplements */
     .array_path = "results", .title_keys = "device_name,applicant",
     .id_keys = "k_number", .date_keys = "decision_date",
     .description = "DETAIL HOP on a device clearance: k_number, applicant, "
@@ -57,7 +58,8 @@ static const hp_source HP18_US_OPENFDA[] = {
     .collector = "us_health", .category = "health",
     .portal = "https://open.fda.gov", .record_type = "us-device-classification",
     .tags = "\"us\",\"health\",\"batch16\"", .free_tier = 1,
-    .url = "https://api.fda.gov/device/classification.json?search=product_code:%22{q}%22&limit=100",
+    .url = "https://api.fda.gov/device/classification.json?search=product_code:%22{q}%22&limit=100&skip=0",
+    .page_param = "skip", .page_size = 100,   /* openFDA's own offset; one id can carry hundreds of PMA supplements */
     .array_path = "results", .title_keys = "device_name",
     .id_keys = "product_code",
     .description = "DETAIL HOP that resolves the product_code appearing on every "
@@ -74,7 +76,8 @@ static const hp_source HP18_US_OPENFDA[] = {
     .collector = "us_health", .category = "health",
     .portal = "https://open.fda.gov", .record_type = "us-device-enforcement",
     .tags = "\"us\",\"health\",\"batch16\"", .free_tier = 1,
-    .url = "https://api.fda.gov/device/enforcement.json?search=recall_number:%22{q}%22&limit=100",
+    .url = "https://api.fda.gov/device/enforcement.json?search=recall_number:%22{q}%22&limit=100&skip=0",
+    .page_param = "skip", .page_size = 100,   /* openFDA's own offset; one id can carry hundreds of PMA supplements */
     .array_path = "results",
     .title_keys = "product_description,reason_for_recall",
     .id_keys = "recall_number", .date_keys = "recall_initiation_date",
@@ -92,7 +95,8 @@ static const hp_source HP18_US_OPENFDA[] = {
     .collector = "us_health", .category = "health",
     .portal = "https://open.fda.gov", .record_type = "us-device-pma",
     .tags = "\"us\",\"health\",\"batch16\"", .free_tier = 1,
-    .url = "https://api.fda.gov/device/pma.json?search=pma_number:%22{q}%22&limit=100",
+    .url = "https://api.fda.gov/device/pma.json?search=pma_number:%22{q}%22&limit=100&skip=0",
+    .page_param = "skip", .page_size = 100,   /* openFDA's own offset; one id can carry hundreds of PMA supplements */
     .array_path = "results", .title_keys = "trade_name,generic_name",
     .id_keys = "pma_number", .date_keys = "decision_date",
     .description = "DETAIL HOP: pma_number, supplement_number and "
@@ -109,7 +113,8 @@ static const hp_source HP18_US_OPENFDA[] = {
     .collector = "us_health", .category = "health",
     .portal = "https://open.fda.gov", .record_type = "us-device-udi",
     .tags = "\"us\",\"health\",\"batch16\"", .free_tier = 1,
-    .url = "https://api.fda.gov/device/udi.json?search=public_device_record_key:%22{q}%22&limit=100",
+    .url = "https://api.fda.gov/device/udi.json?search=public_device_record_key:%22{q}%22&limit=100&skip=0",
+    .page_param = "skip", .page_size = 100,   /* openFDA's own offset; one id can carry hundreds of PMA supplements */
     .array_path = "results", .title_keys = "brand_name,device_description",
     .id_keys = "public_device_record_key",
     .description = "DETAIL HOP into the GUDID: public_device_record_key, "
@@ -127,7 +132,8 @@ static const hp_source HP18_US_OPENFDA[] = {
     .collector = "us_health", .category = "health",
     .portal = "https://open.fda.gov", .record_type = "us-drug-enforcement",
     .tags = "\"us\",\"health\",\"batch16\"", .free_tier = 1,
-    .url = "https://api.fda.gov/drug/enforcement.json?search=recall_number:%22{q}%22&limit=100",
+    .url = "https://api.fda.gov/drug/enforcement.json?search=recall_number:%22{q}%22&limit=100&skip=0",
+    .page_param = "skip", .page_size = 100,   /* openFDA's own offset; one id can carry hundreds of PMA supplements */
     .array_path = "results",
     .title_keys = "product_description,reason_for_recall",
     .id_keys = "recall_number", .date_keys = "recall_initiation_date",
@@ -146,7 +152,8 @@ static const hp_source HP18_US_OPENFDA[] = {
     .collector = "us_health", .category = "health",
     .portal = "https://open.fda.gov", .record_type = "us-drug-ndc",
     .tags = "\"us\",\"health\",\"batch16\"", .free_tier = 1,
-    .url = "https://api.fda.gov/drug/ndc.json?search=product_ndc:%22{q}%22&limit=100",
+    .url = "https://api.fda.gov/drug/ndc.json?search=product_ndc:%22{q}%22&limit=100&skip=0",
+    .page_param = "skip", .page_size = 100,   /* openFDA's own offset; one id can carry hundreds of PMA supplements */
     .array_path = "results", .title_keys = "brand_name,generic_name",
     .id_keys = "product_ndc", .date_keys = "marketing_start_date",
     .description = "DETAIL HOP: product_ndc, generic_name, labeler_name, "
@@ -163,7 +170,8 @@ static const hp_source HP18_US_OPENFDA[] = {
     .collector = "us_health", .category = "health",
     .portal = "https://open.fda.gov", .record_type = "us-drug-application",
     .tags = "\"us\",\"health\",\"batch16\"", .free_tier = 1,
-    .url = "https://api.fda.gov/drug/drugsfda.json?search=application_number:%22{q}%22&limit=100",
+    .url = "https://api.fda.gov/drug/drugsfda.json?search=application_number:%22{q}%22&limit=100&skip=0",
+    .page_param = "skip", .page_size = 100,   /* openFDA's own offset; one id can carry hundreds of PMA supplements */
     .array_path = "results", .title_keys = "sponsor_name,application_number",
     .id_keys = "application_number",
     .description = "DETAIL HOP: application_number, sponsor_name, products[] "
@@ -180,7 +188,8 @@ static const hp_source HP18_US_OPENFDA[] = {
     .collector = "us_health", .category = "health",
     .portal = "https://open.fda.gov", .record_type = "us-food-enforcement",
     .tags = "\"us\",\"health\",\"batch16\"", .free_tier = 1,
-    .url = "https://api.fda.gov/food/enforcement.json?search=recall_number:%22{q}%22&limit=100",
+    .url = "https://api.fda.gov/food/enforcement.json?search=recall_number:%22{q}%22&limit=100&skip=0",
+    .page_param = "skip", .page_size = 100,   /* openFDA's own offset; one id can carry hundreds of PMA supplements */
     .array_path = "results",
     .title_keys = "product_description,reason_for_recall",
     .id_keys = "recall_number", .date_keys = "recall_initiation_date",

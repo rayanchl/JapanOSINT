@@ -5,6 +5,8 @@
  * is no default record, no cached sample, no "source found" placeholder. A row
  * that cannot fetch emits zero items and logs why. */
 #include "hpengine.h"
+#include "jsonlist.h"      /* jsonlist_next_page: page_walk rows page as VJSON did */
+#include "../core/url_override.h"
 #include "csv.h"
 #include "xlsx.h"
 #include "zipread.h"     /* a body that arrives as a ZIP — see the page loop */
@@ -915,6 +917,15 @@ typedef struct {
    * honest empty) can be applied to it unchanged. */
   int   upstream_error;
   long  err_code;
+  /* page_walk rows only (see hpengine.h): the next URL jsonlist_next_page()
+   * chose for the page just read, and whether it stopped at a full page. */
+  int   pw;
+  char *pw_next;
+  int   pw_full;
+  /* What the upstream itself said exists, from its own count field; -1 when
+   * it said nothing. A page-ceiling stop can otherwise only report the
+   * records already counted, which reads as "nothing was missed". */
+  long  declared_total;
 
   /* ── schema-drift tally, disclosed by hp_shape_notices() ────────────────
    * Each of these is a run that "succeeded" while the upstream's shape had
@@ -1404,7 +1415,10 @@ static void hp_emit_record(hp_run_state *st, cJSON *flat, int deepen) {
   it.body            = body;
   it.summary         = body;
   it.link            = linkbuf[0] ? linkbuf : (s->portal ? s->portal : NULL);
-  it.lang            = "en";
+  /* The row's own language, when it declared one. NULL still means English,
+   * which is what every row used to be stamped regardless of what it fetched —
+   * a false claim about the content that translate and search both read. */
+  it.lang            = s->lang ? s->lang : "en";
   it.published_at    = date;
   it.record_type     = s->record_type ? s->record_type : "record";
   it.properties_json = props ? props : "{}";
@@ -1627,6 +1641,14 @@ static int hp_run_json(hp_run_state *st, const char *body) {
   st->dup_map = NULL;
   st->rec_idx = 0;
   free(dupmap);
+  /* The upstream's own count of what exists, read the way jsonlist reads it
+   * (first page), so a truncation notice can report the real remainder and a
+   * page_walk row stops exactly where its VJSON form stopped. */
+  if (st->declared_total < 0) st->declared_total = jsonlist_declared_total(doc);
+  if (st->pw && !st->pw_next) {
+    st->pw_next = jsonlist_next_page(doc, st->url, arr_n, st->declared_total,
+                                     st->emitted, &st->pw_full);
+  }
   /* Hand the caller the next page URL when the row declared one, so the walk
    * continues instead of stopping at page 1. */
   if (s->next_path && !st->next_url) {
@@ -1703,7 +1725,13 @@ static int hp_run_csv(hp_run_state *st, const char *body) {
       body = stripped;
     }
   }
-  cJSON *rows = csv_parse_x(body, s->csv_no_header ? 0 : 1, delim, 0, NULL);
+  /* An xlsx body arrives here as CSV that lib/xlsx.c wrote itself, so its
+   * quoting is right by construction and the unterminated-quote repair must
+   * not second-guess it: that repair splits every cell longer than its line
+   * bound into junk records (lib/csv.c, csv_parse_wellformed). */
+  cJSON *rows = s->mode == HP_XLSX
+    ? csv_parse_wellformed(body, s->csv_no_header ? 0 : 1, delim, 0, NULL)
+    : csv_parse_x(body, s->csv_no_header ? 0 : 1, delim, 0, NULL);
   /* Malformed rows the parser had to close at their own line end. Counted here
    * and disclosed once per run by hp_shape_notices: without it a file whose
    * quoting is broken parses to a different set of records than the upstream
@@ -2977,11 +3005,19 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     fprintf(stderr, "[hp:%s] both {page} and page_param declared — {page} "
             "wins; the row should declare one\n", s->id);
   int paged = (s->next_path || s->page_param || path_paged) ? 1 : 0;
-  if (!paged) page_max = 1;
+  /* page_walk: the row declared no paging of its own and asked to be walked
+   * on the upstream's evidence, exactly as its VJSON form was. A row that
+   * declares its own paging keeps it — the declaration names this upstream. */
+  int page_walk = !paged && s->page_walk && s->mode == HP_JSON;
+  if (page_walk && s->page_max <= 0) page_max = jsonlist_page_max();
+  if (!paged && !page_walk) page_max = 1;
+  int pw_stuck = 0;       /* the walk could not continue past a full page */
+  int pw_repeat = 0;      /* the server's next link pointed at this page  */
 
   hp_run_state st = { .s = s, .ctx = ctx, .sink = sink, .vars = &vars,
                       .url = url, .emitted = 0,
-                      .deep_left = hp_detail_budget(s) };
+                      .deep_left = hp_detail_budget(s),
+                      .pw = page_walk, .declared_total = -1 };
   int page_start = s->page_start;
   /* Is the page parameter a RECORD OFFSET? Matched case-insensitively: this
    * used to be strstr(…, "offset"), so ArcGIS's `resultOffset` (126 rows) and
@@ -3019,7 +3055,11 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     page_start = 1;
   }
 
-  char *page_url = strdup(url);
+  /* A page_walk row plans against the URL that is actually fetched, as
+   * jsonlist_emit_paged does: http_request applies an operator-approved
+   * override on the way out, and a cursor that exists only in the overridden
+   * URL can only be advanced from it. Applying it twice is a no-op. */
+  char *page_url = strdup(page_walk ? url_override_apply(url) : url);
   if (path_paged) {
     char nb[24];
     snprintf(nb, sizeof nb, "%d", page_start);
@@ -3175,7 +3215,7 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
       break;
     }
 
-    if (!paged || st.truncated) break;
+    if ((!paged && !page_walk) || st.truncated) break;
     /* Stop when this page produced nothing new — that is the upstream telling
      * us the collection is exhausted. */
     if (st.page_records <= 0) break;
@@ -3206,6 +3246,15 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
       long value = offset_style ? (long)(page_start + (page + 1) * step)
                                 : (long)(page_start + page + 1);
       nextp = hp_url_set_param(url, s->page_param, value);
+    } else if (page_walk) {                  /* jsonlist_next_page's decision */
+      if (st.pw_next && strcmp(st.pw_next, page_url) == 0) {
+        free(st.pw_next);                    /* a link back to this page  */
+        pw_repeat = 1;
+      } else {
+        nextp = st.pw_next;
+        if (!nextp && st.pw_full) pw_stuck = 1;
+      }
+      st.pw_next = NULL;
     }
     free(page_url);
     page_url = nextp;
@@ -3213,6 +3262,7 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   }
   free(page_url);
   free(st.next_url);
+  free(st.pw_next);
   html_seen_free(&st.hseen);
 
   /* `available` counts what the upstream handed over as records — array slots
@@ -3239,17 +3289,29 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   /* Note the condition: a page-ceiling stop leaves an UNKNOWN remainder (we
    * never fetched those pages), so `available == out` there. Disclose whenever
    * the walk stopped early, not only when we can count what was missed. */
-  if (st.truncated || failed_midwalk) {
+  /* A page_walk row discloses what pw_walk disclosed for it as a VJSON
+   * collector: a full last page it had no way to continue, a next link that
+   * pointed back at itself, and an upstream that counted more than it gave. */
+  int pw_more = page_walk && st.declared_total > (long)real_available;
+  /* The upstream's own count, when it published one, is the honest size of
+   * what was not used; the records we counted are only a floor on it. */
+  long avail = st.declared_total > (long)real_available ? st.declared_total
+                                                         : (long)real_available;
+  if (st.truncated || failed_midwalk || pw_stuck || pw_repeat || pw_more) {
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "source_id", s->id);
     cJSON_AddStringToObject(p, "query", vars.raw ? vars.raw : "");
     cJSON_AddNumberToObject(p, "records_used", out);
-    cJSON_AddNumberToObject(p, "records_available", real_available);
+    cJSON_AddNumberToObject(p, "records_available", (double)avail);
+    cJSON_AddStringToObject(p, "records_available_basis",
+      st.declared_total > (long)real_available
+        ? "upstream declared this total"
+        : "records counted so far — pages not read are not included");
     if (st.empty > 0)
       cJSON_AddNumberToObject(p, "empty_slots_skipped", st.empty);
     cJSON_AddNumberToObject(p, "pages_read", st.page);
     cJSON_AddBoolToObject(p, "more_pages_pending",
-                          failed_midwalk || real_available <= out);
+                          failed_midwalk || pw_stuck || avail <= (long)out);
     cJSON_AddNumberToObject(p, "declared_max_items", s->max_items);
     if (failed_midwalk)
       cJSON_AddNumberToObject(p, "failed_page_status", (double)failed_status);
@@ -3265,7 +3327,16 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
                  "before the upstream ran out")
       : (s->max_items > 0 && out >= s->max_items)
         ? "the row declares max_items and the upstream offered more"
-        : "the page ceiling or a cancel stopped the walk");
+      : st.truncated
+        ? "the page ceiling or a cancel stopped the walk"
+      : pw_repeat
+        ? "the upstream's next-page link pointed back at the page just "
+          "fetched, so the walk stopped rather than re-collecting it"
+      : pw_stuck
+        ? "the last page came back full and the upstream offered no next "
+          "link, nor does this row's URL carry a parameter that could be "
+          "advanced"
+        : "the upstream reports more records than it handed over");
     cJSON_AddStringToObject(p, "remedy",
       failed_midwalk
         ? "re-run; a rate-limited host needs a per-host minimum gap "
@@ -3277,8 +3348,8 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     char key[320], title[256];
     snprintf(key, sizeof key, "%.150s|truncation:%.120s", s->id,
              vars.raw ? vars.raw : "");
-    snprintf(title, sizeof title, "%s used %d of %d available records",
-             s->id, out, real_available);
+    snprintf(title, sizeof title, "%s used %d of %ld available records",
+             s->id, out, avail);
     intel_item note = {0};
     note.remote_key      = key;
     note.title           = title;

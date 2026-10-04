@@ -72,7 +72,7 @@ static struct { char host[HG_HOSTLEN]; int gap_ms; } g_over[HG_MAX_OVERRIDES] = 
    * 4-worker batch sweep was 429'd part-way (the engine stamped the
    * truncation notice naming the 429 and pointing here) and a later single
    * run of the same row was 429'd on its FIRST request while the window was
-   * still hot. The batch-32 crates.io rows walk hundreds of pages, so the
+   * still hot. The batch-33 crates.io rows walk hundreds of pages, so the
    * floor has to be at the fetch, not in a per-source interval. */
   { "crates.io", 1100 },
 };

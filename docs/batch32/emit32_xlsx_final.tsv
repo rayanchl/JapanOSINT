@@ -1,0 +1,26 @@
+id	verdict	shell_rc	sched_rc	emitted	stored	db_rows	available	secs	note
+JO32_REG_FSA_PROFUND_ABOLITION_ORDERS	OK	0	0	611	611	611	611	1.2	
+JO32_MKT_JPX_LISTED_ISSUES	OK	0	0	4441	4441	4441	4441	3.3	
+JO32_REG_FSA_PROFUND_NOTIFIERS	OK	0	0	4590	4590	4590	4590	5.3	
+JO32_REG_ISHIKAWA_INDUSTRIAL_WASTE_TRANSPORT	OK	0	0	2350	2350	2350	2350	2.8	
+JO32_REG_GIFU_INDUSTRIAL_WASTE_TRANSPORT	OK	0	0	5651	5651	5651	5651	5.2	
+JO32_REG_JTA_TRAVEL_AGENCY_DISPOSITIONS	OK	0	0	56	56	56	56	1.0	
+JO32_REG_TOKUSHIMA_CONSTRUCTION	OK	0	0	3014	3014	3014	3014	3.2	
+JO32_REG_OSAKA_CONSTRUCTION_HOKUSETSU	OK	0	0	11247	11247	11247	11247	9.7	
+JO32_REG_AICHI_REAL_ESTATE_BROKERS	COLLISION	0	0	6889	6691	6691	6889	4.6	198 of 6889 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_REG_KAGAWA_CONSTRUCTION	OK	0	0	3955	3955	3955	3955	3.2	
+JO32_REG_FSA_UNREGISTERED_WARNED_DOMESTIC	COLLISION	0	0	719	717	717	719	1.4	2 of 719 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_REG_FSA_UNREGISTERED_WARNED_OVERSEAS	OK	0	0	436	436	436	436	1.2	
+JO32_REG_FSA_WARNED_PROFUND_NOTIFIERS	OK	0	0	65	65	65	65	0.9	
+JO32_REG_OSAKA_CONSTRUCTION_OSAKA_CITY	OK	0	0	14210	14210	14210	14210	11.3	
+JO32_REG_OSAKA_CONSTRUCTION_SENSHU	OK	0	0	14814	14814	14814	14814	11.5	
+JO32_REG_MIYAGI_CONSTRUCTION_SENDAI	OK	0	0	5319	5319	5319	5319	3.3	
+JO32_REG_AICHI_MEDICAL_CLINICS	OK	0	0	2464	2464	2464	2464	2.4	
+JO32_REG_HOKKAIDO_DENTAL_CLINICS	OK	0	0	2688	2688	2688	2688	2.5	
+JO32_REG_HOKKAIDO_CLINICS_NO_BEDS	OK	0	0	3184	3184	3184	3184	3.0	
+JO32_REG_HOKKAIDO_INDUSTRIAL_WASTE_TRANSPORT	COLLISION	0	0	5573	5572	5572	5573	5.1	1 of 5573 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_REG_KANAGAWA_FLUOROCARBON_RECOVERY	OK	0	0	3882	3882	3882	3882	4.3	
+JO32_REG_TOKYO_NPO_CORPORATIONS	OK	0	0	8529	8529	8529	8529	8.3	
+JO32_REG_NIIGATA_CONSTRUCTION	OK	0	0	9051	9051	9051	9051	6.2	
+JO32_REG_OSAKA_INDUSTRIAL_WASTE_TRANSPORT	OK	0	0	12153	12153	12153	12153	8.0	
+JO32_REG_CHIBA_INDUSTRIAL_WASTE_TRANSPORT	OK	0	0	12588	12588	12588	12588	9.5	

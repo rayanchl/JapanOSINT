@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://goadmin.ifrc.org/api/v2/country/?limit=300&format=json",
     .array_path = "results",
     .detail_url = "https://goadmin.ifrc.org/api/v2/country/{v}/?format=json", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "ifrc-go-field-report",
@@ -30,6 +31,7 @@ static const hp_source T[] = {
     .url = "https://goadmin.ifrc.org/api/v2/field-report/?limit=200&format=json",
     .array_path = "results",
     .detail_url = "https://goadmin.ifrc.org/api/v2/field-report/{v}/?format=json", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "ifrc-go-project",
@@ -40,6 +42,7 @@ static const hp_source T[] = {
     .url = "https://goadmin.ifrc.org/api/v2/project/?limit=200&format=json",
     .array_path = "results",
     .detail_url = "https://goadmin.ifrc.org/api/v2/project/{v}/?format=json", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

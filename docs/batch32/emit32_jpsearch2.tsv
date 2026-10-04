@@ -1,0 +1,78 @@
+id	verdict	shell_rc	sched_rc	emitted	stored	db_rows	available	secs	note
+JO32_JPS_NAJDA	OK	0	0	2000	2001	2001	2000	4.9	
+JO32_JPS_S_NET	OK	0	0	2000	2001	2001	2000	5.9	
+JO32_JPS_DIGNL	COLLISION	0	0	2000	1846	1846	2000	6.7	154 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_JPS_BIBNL	COLLISION	0	0	2000	1986	1986	2000	7.5	14 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_JPS_NIJ10	OK	0	0	2000	2001	2001	2000	3.0	
+JO32_JPS_NIJ16	OK	0	0	2000	2001	2001	2000	2.8	
+JO32_JPS_NME_TRACKINFO	OK	0	0	2000	2001	2001	2000	2.7	
+JO32_JPS_TOKYOMUSEUMCOLECTION	OK	0	0	2000	2001	2001	2000	2.9	
+JO32_JPS_NME_MOCAT	OK	0	0	2000	2001	2001	2000	2.7	
+JO32_JPS_NMJ01	OK	0	0	2000	2001	2001	2000	2.6	
+JO32_JPS_NIJ01	OK	0	0	2000	2001	2001	2000	4.2	
+JO32_JPS_FCM_DB	COLLISION	0	0	2000	1967	1967	2000	4.2	33 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_JPS_ARC_NISHIKIE	COLLISION	0	0	2000	1935	1935	2000	3.8	65 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_JPS_CRIA	OK	0	0	2000	2001	2001	2000	4.6	
+JO32_JPS_FISHPIX	OK	0	0	2000	2001	2001	2000	2.7	
+JO32_JPS_MADB_ANIMATION	OK	0	0	2000	2001	2001	2000	3.0	
+JO32_JPS_SAITAMA_MUSEUM	OK	0	0	2000	2001	2001	2000	2.7	
+JO32_JPS_COBAS	COLLISION	0	0	2000	1974	1974	2000	4.7	26 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_JPS_ARC_PHOTODB	OK	0	0	2000	2001	2001	2000	3.0	
+JO32_JPS_NIJ11	OK	0	0	2000	2001	2001	2000	5.2	
+JO32_JPS_ENPAKU_ENGEKIJOEN	OK	0	0	2000	2001	2001	2000	3.6	
+JO32_JPS_NAGOYACITY_MUSEUM	COLLISION	0	0	2000	1976	1976	2000	3.1	24 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_JPS_ARC_BAN	COLLISION	0	0	2000	1920	1920	2000	3.3	80 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_JPS_TPADA_KENMEI	OK	0	0	2000	2001	2001	2000	2.8	
+JO32_JPS_NIJ13	OK	0	0	2000	2001	2001	2000	2.7	
+JO32_JPS_EXHIB	OK	0	0	2000	2001	2001	2000	3.4	
+JO32_JPS_NARAHAKUBIJUTSUINDB	OK	0	0	2000	2001	2001	2000	2.9	
+JO32_JPS_MIEMU02	OK	0	0	2000	2001	2001	2000	3.9	
+JO32_JPS_BUNKA	COLLISION	0	0	2000	1945	1945	2000	4.4	55 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_JPS_MINAMATA	OK	0	0	2000	2001	2001	2000	3.2	
+JO32_JPS_MADB_GAME	COLLISION	0	0	2000	1688	1688	2000	4.7	312 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_JPS_SYOZO	OK	0	0	2000	2001	2001	2000	4.1	
+JO32_JPS_SHOWA_MAGAZINE	OK	0	0	2000	2001	2001	2000	3.9	
+JO32_JPS_HPMM_MAGAZINE	OK	0	0	2000	2001	2001	2000	2.6	
+JO32_JPS_SAITAMA_MONJO_SEARCH	OK	0	0	2000	2001	2001	2000	2.9	
+JO32_JPS_SHOWA_PHOTO	OK	0	0	2000	2001	2001	2000	3.5	
+JO32_JPS_PHOTO	COLLISION	0	0	2000	1998	1998	2000	2.9	2 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_JPS_MIEMUG	OK	0	0	2000	2001	2001	2000	2.6	
+JO32_JPS_REKIBUN	COLLISION	0	0	2000	1858	1858	2000	3.1	142 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_JPS_AOKENSHIDA_DOC	OK	0	0	2000	2001	2001	2000	3.2	
+JO32_JPS_U006	OK	0	0	2000	2001	2001	2000	4.2	
+JO32_JPS_HPMM_ABOMB	OK	0	0	2000	2001	2001	2000	3.8	
+JO32_JPS_WKYM_KOUBUNSYO	OK	0	0	2000	2001	2001	2000	2.6	
+JO32_JPS_NDA01	OK	0	0	2000	2001	2001	2000	4.2	
+JO32_JPS_MADB_MEDIAART	COLLISION	0	0	2000	1033	1033	2000	2.6	967 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_JPS_KAIZUARCHIVE	OK	0	0	2000	2001	2001	2000	2.5	
+JO32_JPS_WKYM_KANKOUBUTU	OK	0	0	2000	2001	2001	2000	2.7	
+JO32_JPS_ENPK_EIGAPROGRAM	OK	0	0	2000	2001	2001	2000	2.4	
+JO32_JPS_RIH02	OK	0	0	2000	2001	2001	2000	3.0	
+JO32_JPS_NME_MOVCAT	COLLISION	0	0	2000	1506	1506	2000	2.8	494 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_JPS_TOKEI	COLLISION	0	0	2000	1757	1757	2000	2.7	243 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_JPS_NFAD	COLLISION	0	0	2000	1604	1604	2000	3.4	396 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_JPS_NARAHAKUBIJUTSUINDB2	COLLISION	0	0	2000	1896	1896	2000	2.7	104 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_JPS_AOKENSHIDA_PIC	OK	0	0	2000	2001	2001	2000	3.3	
+JO32_JPS_NIJ20	OK	0	0	2000	2001	2001	2000	3.5	
+JO32_JPS_OJIYA_DNA	OK	0	0	2000	2001	2001	2000	2.7	
+JO32_JPS_JOMON_ARCHIVES	OK	0	0	2000	2001	2001	2000	2.8	
+JO32_JPS_MUSEE_GSJ	OK	0	0	2000	2001	2001	2000	2.8	
+JO32_JPS_SHISAN	OK	0	0	2000	2001	2001	2000	3.0	
+JO32_JPS_HPMM_ABOMBDRAWING	OK	0	0	2000	2001	2001	2000	3.3	
+JO32_JPS_XM_OKINOSHIMA	OK	0	0	2000	2001	2001	2000	2.6	
+JO32_JPS_KYOTOGYOEN_ARCHIVES	OK	0	0	2000	2001	2001	2000	3.7	
+JO32_JPS_ARC_MAPS	COLLISION	0	0	2000	1838	1838	2000	2.9	162 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_JPS_MICHI	OK	0	0	2000	2001	2001	2000	3.9	
+JO32_JPS_KOUBUN_DAS	OK	0	0	2000	2001	2001	2000	2.9	
+JO32_JPS_CB1	COLLISION	0	0	2000	1834	1834	2000	5.4	166 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_JPS_SF004	OK	0	0	1650	1651	1651	1650	3.1	
+JO32_JPS_SHOWA_MAP	COLLISION	0	0	2000	1952	1952	2000	2.7	48 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_JPS_SHOWA_VIDEO	COLLISION	0	0	2000	1932	1932	2000	5.3	68 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_JPS_HPMM_PHOTO	OK	0	0	2000	2001	2001	2000	2.7	
+JO32_JPS_GYOSEI	COLLISION	0	0	1828	1689	1689	1828	3.0	139 of 1828 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_JPS_KOCHIZU_COLLECTION	COLLISION	0	0	1525	1415	1415	1525	2.3	110 of 1525 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_JPS_MIEBUNKAZAI	OK	0	0	1244	1245	1245	1244	3.2	
+JO32_JPS_BUNKAZAI_VIDEO	COLLISION	0	0	1695	1683	1683	1695	4.4	12 of 1695 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO32_JPS_HPMM_TESTIMONY	OK	0	0	680	681	681	680	1.9	
+JO32_JPS_SHOWA_CHART	OK	0	0	1247	1248	1248	1247	2.2	
+JO32_JPS_TNRICP_URITATE	OK	0	0	2000	2001	2001	2000	3.7	

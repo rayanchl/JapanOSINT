@@ -36,7 +36,12 @@ Usage:
       --generated collectors/feed/generated \
       --detail-hops ../docs/candidate-sources-batch16.detail-hops.tsv \
       --detail-hops ../docs/candidate-sources-batch17.detail-hops.tsv \
+      --keep-on-vjson ../docs/detail-hops-kept-on-vjson.tsv \
       [--dry-run]
+
+Before trusting a run, sweep the converted ids in BOTH forms with
+tools/audit_registry_emit.py and compare stored counts. Rows whose hpengine form
+stores less go in docs/detail-hops-kept-on-vjson.tsv and stay on VJSON.
 """
 import argparse
 import csv
@@ -404,6 +409,13 @@ def render_table(rows, collector, batch, part, total_parts):
                           (" .page_size = %d," % r["page_size"]) if r["page_size"] else "",
                           (" .page_start = %d," % r["page_start"])
                           if r["page_start"] is not None else ""))
+        elif r["mode"] == "HP_JSON":
+            # No cursor in the URL is not the same as no paging: the VJSON row
+            # this replaces was walked by jsonlist_next_page(), which also
+            # follows a next link the SERVER publishes (GLEIF's links.next, a
+            # page-size/cursor pair the response proves). page_walk keeps that
+            # decision, so the move does not trade later pages for the hop.
+            out.append("    .page_walk = 1,\n")
         out.append("    .interval = %s, .free_tier = 1 },\n\n" % r["interval"])
     out.append("};\nHP_REGISTER_TABLE(T)\n")
     return "".join(out)
@@ -414,6 +426,9 @@ def main():
     ap.add_argument("--generated", required=True)
     ap.add_argument("--detail-hops", action="append", required=True)
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--keep-on-vjson", action="append", default=[],
+                    help="TSV of ids measured to store FEWER records on "
+                         "hpengine than on VJSON; they are left where they are")
     ap.add_argument("--outdir", default=None,
                     help="where the hp tables go (default: --generated)")
     args = ap.parse_args()
@@ -421,6 +436,17 @@ def main():
 
     hops = load_detail_hops(args.detail_hops)
     print("detail hops loaded: %d" % len(hops))
+    # Measured, not guessed: each id here was run in BOTH forms through the
+    # real binary and the hpengine form stored less. Moving it anyway would
+    # trade records for depth, which rule 2 does not allow.
+    keep = set()
+    for p in args.keep_on_vjson:
+        with open(p, encoding="utf-8") as f:
+            for line in f:
+                if line.startswith("#") or line.startswith("id\t") or not line.strip():
+                    continue
+                keep.add(line.split("\t", 1)[0].strip())
+    print("kept on VJSON by measurement: %d" % len(keep))
 
     # Every id registered in the generated dir before this run — from the vsrc
     # MACROS *and* from any hp table already there.
@@ -455,7 +481,7 @@ def main():
             if not vals or vals[1] is None:
                 continue
             sid = vals[1]
-            if sid not in hops:
+            if sid not in hops or sid in keep:
                 continue
             if macro not in CONVERTIBLE:
                 skipped_shape.append((sid, macro, fname))

@@ -102,7 +102,7 @@ cJSON_ArrayForEach(rec, arr) {
 
 | Layer | Guarantee |
 |---|---|
-| `native/lib/hpengine.c` | Emits every record of every page; `max_items` defaults to *no cap*; flattens every scalar (bounds are memory guards at 2048 keys / 256 array members / depth 8 and stamp `_fields_dropped` / `_array_truncated` when they bite); walks `next_path` / `page_param` pagination, **and rows that declare neither are walked by `lib/pager.c` on the upstream's own evidence** (this was one request, full stop, which meant a row moved here to gain a detail hop paid for it with every later page); second hop deepens every record up to `$JO_HP_DETAIL_MAX` (default 25) and stamps `_detail_pending` / `_detail_error` otherwise; emits a `collector-truncation-notice` record if anything was left unused |
+| `native/lib/hpengine.c` | Emits every record of every page; `max_items` defaults to *no cap*; flattens every scalar (bounds are memory guards at 2048 keys / 256 array members / depth 8 and stamp `_fields_dropped` / `_array_truncated` when they bite); walks `next_path` / `page_param` pagination, **and rows declaring `page_walk=1` are walked by `jsonlist_next_page()` (`lib/jsonlist.c`) on the upstream's own evidence**, exactly as a VJSON row is; a row declaring none of these makes one request, which is why a row moved here from VJSON to gain a detail hop carries `page_walk`; second hop deepens every record up to `$JO_HP_DETAIL_MAX` (default 25) and stamps `_detail_pending` / `_detail_error` otherwise; emits a `collector-truncation-notice` record if anything was left unused |
 | `native/core/osint_dispatch.c` | Captures **every** emitted record — `data = {"record_count":N,"records":[…]}`. (It previously kept only the last payload, so a 40-record service handed 1 record to Phase-2, the synthesis prompt and the API.) |
 | `native/core/pipeline.c` | Stores and serves all records; the LLM prompt gets a labelled view via `results_view_for_prompt()` — `records_shown`, `record_count`, `prompt_truncated` and a note that the rest are persisted. Bound size: `$JO_PROMPT_RECORDS_PER_SERVICE` (default 8) |
 | `native/core/intel.c` | Upserts every emitted item; `properties` is stored verbatim |
@@ -111,8 +111,7 @@ cJSON_ArrayForEach(rec, arr) {
 | `native/lib/jsonlist.c` | The JSON-array-of-records emitter, and the jsonlist-shaped door onto the walk above. `jsonlist_emit_ex()` reports records **seen** as well as emitted, which is what the walk's "did this page come back full" test reads: driving that off the emitted count meant a full page holding two unlabelled records looked short, so the walk stopped AND suppressed its own notice. A shortfall no caller claimed is disclosed here instead |
 | `native/lib/jocore.h` | `jo_truncation_notice()` / `jo_truncation_notice_ex()` — **the** builder for `collector-truncation-notice`, used by every emitter in the tree (hand-written collectors, `lib/hpengine.c`, `lib/pagewalk.c`, `_jp_osint.inc`, `diet_records.c`), so the record has one record_type, one uid convention (`<source_id>\|truncation:<query>`), one tag set (`["truncation-notice"]`) and one shape. Base properties: `source_id`, `query`, `records_used`, `records_available`, `reason`, `remedy`. Pass `available = -1` when the upstream did not state a total — it publishes as `"records_available": null`, never 0 and never a missing key; a guessed total is a rule-1 violation. The `_ex` form takes an `extra` object whose members are merged alongside the base six, for facts only one caller can know (`url`, `pages_read`, `records_dropped`, `more_pages_pending`, `declared_max_items`, `declared_max_pages`, `next_record_position`, `window_from`/`window_until`); a member colliding with a base key is ignored, so the stable half cannot be redefined |
 | `native/lib/seenset.c` | One growable "already seen" set. Fixed-size dedupe rings were a recurring violation: `char *seen[500]` stops collecting once full, so a domain with 600 certificates silently lost 100 |
-| `native/lib/pager.c` | **The** page walk, shared by `jsonlist_emit_paged()` and `hp_run()` so a row moved between the two engines keeps it. Advances only on upstream evidence: a next link it published; a cursor whose page-size sibling is in the URL and whose page came back exactly full; a house-named page size (`rp`, `itemsPerPage`) **proven** by equalling the record count; or, when the URL declares no page size at all, its own declared total saying records remain. Never a page that was never offered — and never an offset cursor without a real stride |
-| `native/lib/truncnotice.c` | One emitter for the `collector-truncation-notice` shape, so a consumer does not have to recognise five hand-rolled variants. `records_available` is reported as *unknown* when the upstream declared no total, because an unread remainder and no remainder are different facts |
+| `native/lib/jsonlist.c` `jsonlist_next_page()` | The per-page continuation decision of the VJSON walk, exported so hpengine's `page_walk` rows use the same copy: a row moved from VJSON onto hpengine to wire a detail hop keeps its later pages, and the two engines cannot disagree about whether more exists. hpengine's truncation notice also reports the upstream's own declared total (`records_available_basis`) rather than only the records it counted |
 
 ## Checking your work
 
@@ -126,37 +125,43 @@ make hptest            # engine-level guarantees, offline
 data: hardcoded record caps, `break` in a record loop, first-element-only access,
 single-page fetches of paged APIs, and fixed dedupe rings.
 
-**`make audit-sources` gates the `hp*_*.c` engine rows strictly, and those are at
-zero findings.** The wider tree is not: the same run scans 1,211 files and
-reports 66 heuristic findings across 50 of them. They are heuristics that each
-need a human read, not proven violations — but do not read a passing
-`audit-sources` as "nothing is being discarded". Note also what the scan cannot
-see: it greps C control flow, so a discard expressed as a *string literal* — a
-URL with `limit=20` and no pagination — is invisible to it. That class was 2,727
-generated sources until `lib/pagewalk.c` (above) took it on.
+**`make audit-sources` gates the `hp*_*.c` engine rows and the generated
+deep-record tables (`collectors/feed/generated/hp1[0-9]_*.c`) strictly, and the
+whole tree is at zero findings** — 0 across all 1,650 scanned files, 282 of
+them in the strict set (measured 2026-10-02, after merging origin/main). A number in a document is a
+claim with a date on it: `make audit-sources` prints the current figures in
+seconds, and a new finding is a regression to read, not a number to baseline.
 
-The progress that has been made was by fixing, not by silencing: arbitrary per-loop emit caps were deleted,
+Two things the scan could not see, and one it now can:
 
-Two notes the deep-record batch added, both about the SCANNER rather than the
-tree:
+* **String literals.** It greps C control flow, so a discard expressed as a
+  URL — `limit=20` and no pagination — is invisible to it. That class was 2,727
+  generated sources until `lib/pagewalk.c` (above) took it on. A pinned
+  `page=1` inside a VJSON-family macro, or inside an hp row declaring
+  `.page_walk = 1`, is walked and is not reported.
+* **`loop-cap`** did not exist until 2026-08-17, so a bound written in a loop's
+  own condition — `while (cJSON_GetArraySize(akas) < 24 && …)`, neither a
+  `#define` nor a `break` — was invisible. That one dropped a sanctioned
+  person's aliases past the 24th; TDnet (100 a day), EDINET-x (25) and eight
+  camera scrapers (60–200 per page, in front of arrays that grow anyway) were
+  the same shape, and so were four more caps in the OFAC collectors found
+  AFTER the tree had been declared clean: aliases and programs at 24,
+  addresses at 12, SDN features (DOB, place of birth, nationality, passport
+  and national-ID numbers) at 40 — the fields sanctions screening matches on.
+  All are fixed, and the check now finds the next one. Its own first regex
+  could not match `cJSON_GetArraySize` (a `\b` before the counter name
+  cannot cross an underscore), so it reported zero on a tree holding real
+  caps: a check reporting zero is evidence about the check as much as about
+  the tree.
+* **A gate given two globs must take two.** `--strict` accepted one, so the
+  second silently replaced the first and the gate reported zero findings for
+  a set it never scanned. It is repeatable now, and it prints the file count
+  so "0 findings" can be checked against "0 files".
 
-* **A bound in a loop's own condition was invisible to every check.**
-  `while (cJSON_GetArraySize(akas) < 24 && …)` is not a `#define …MAX` and not a
-  `break`, so `record-cap` and `loop-break` both passed over it. The `loop-cap`
-  check closes that, and it earned its place immediately: four live caps in the
-  OFAC sanctions collectors — aliases and programs at 24, addresses at 12, SDN
-  features (DOB, place of birth, nationality, passport and national-ID numbers)
-  at 40 — found AFTER the tree had been declared clean. Those are the fields
-  sanctions screening matches on.
-* **A gate that is given two globs must take two.** `--strict` accepted one, so
-  the second silently replaced the first and the gate reported zero findings for
-  a set it never scanned. It is repeatable now, and it prints the file count so
-  "0 findings" can be checked against "0 files".
+An `exhaustive-ok` marker is read **per line** and must sit on the flagged line
+itself; one on the line above does nothing.
 
-The lesson both share: a check reporting zero is evidence about the check as
-much as about the tree. The loop-cap regex's own first version could not match
-`cJSON_GetArraySize` (the `\b` before the counter name cannot cross an
-underscore), so it reported zero on a tree holding four real caps.
+The tree got there by fixing, not by silencing: arbitrary per-loop emit caps were deleted,
 paged endpoints (OpenPLZ, Etherscan, grep.app, arXiv, NZ Companies Office, UK
 Electoral Commission) now walk their pages, fixed dedupe rings became growable
 sets, and multi-valued fields that were cut to their first element now carry the

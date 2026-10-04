@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://catalog.ihsn.org/index.php/api/catalog/search?ps=50&country=Botswana",
     .array_path = "result.rows",
     .detail_url = "https://catalog.ihsn.org/index.php/api/catalog/{v}", .detail_key = "idno",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "af-nada-bw-statsbots-microdata",
@@ -30,6 +31,7 @@ static const hp_source T[] = {
     .url = "https://microdata.statsbots.org.bw/index.php/api/catalog/search?ps=100",
     .array_path = "result.rows",
     .detail_url = "https://microdata.statsbots.org.bw/index.php/api/catalog/{v}", .detail_key = "idno",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "af-wbmicro-bw",
@@ -40,6 +42,7 @@ static const hp_source T[] = {
     .url = "https://microdata.worldbank.org/index.php/api/catalog/search?ps=50&country=Botswana",
     .array_path = "result.rows",
     .detail_url = "https://microdata.worldbank.org/index.php/api/catalog/{v}", .detail_key = "idno",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

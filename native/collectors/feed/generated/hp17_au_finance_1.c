@@ -12,16 +12,6 @@
 #include "lib/hpengine.h"
 
 static const hp_source T[] = {
-  { .id = "au-acnc-annual-information-statement-2024",
-    .name = "ACNC — 2024 Annual Information Statement",
-    .collector = "au_finance", .category = "finance",
-    .description = "The financial and activity return each Australian charity files: abn, charity name, registration status, website, size, basic-religious-charity flag, AIS due date, dates the AIS and financial report were received, whether activities were conducted, and a long block of international-activity disclosures (transferring goods or services overseas, operating overseas).  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "finance-record", .tags = "\"au\",\"finance\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=710630ea-1202-4bbb-95f7-3973a972ddf8&limit=100",
-    .array_path = "result.records",
-    .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=710630ea-1202-4bbb-95f7-3973a972ddf8&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
-    .interval = 86400, .free_tier = 1 },
-
   { .id = "au-asic-afs-authorised-representatives",
     .name = "ASIC — AFS authorised representatives",
     .collector = "au_finance", .category = "finance",
@@ -30,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=5515dfcc-5266-44df-950d-7e359a83d514&limit=100",
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=5515dfcc-5266-44df-950d-7e359a83d514&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "au-asic-afs-licensees",
@@ -40,6 +31,7 @@ static const hp_source T[] = {
     .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=d98a113d-6b50-40e6-b65f-2612efc877f4&limit=100",
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=d98a113d-6b50-40e6-b65f-2612efc877f4&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "au-asic-credit-licensees",
@@ -50,6 +42,7 @@ static const hp_source T[] = {
     .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=35953a01-a9a8-4609-8566-c9fa7de465d3&limit=100",
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=35953a01-a9a8-4609-8566-c9fa7de465d3&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "au-asic-credit-representatives",
@@ -60,6 +53,7 @@ static const hp_source T[] = {
     .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=999d9e92-df2c-4d6d-b580-321dcd205292&limit=100",
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=999d9e92-df2c-4d6d-b580-321dcd205292&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "au-asic-financial-advisers",
@@ -70,6 +64,7 @@ static const hp_source T[] = {
     .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=91d80440-5787-46fc-99de-0c1d93e6cc9f&limit=100",
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=91d80440-5787-46fc-99de-0c1d93e6cc9f&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "au-asic-smsf-auditors",
@@ -80,16 +75,7 @@ static const hp_source T[] = {
     .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=13b12e77-8fda-42ca-aa43-23715036836b&limit=100",
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=13b12e77-8fda-42ca-aa43-23715036836b&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
-    .interval = 86400, .free_tier = 1 },
-
-  { .id = "au-qld-health-grant-recipients",
-    .name = "Queensland Health — grant funding recipients",
-    .collector = "au_finance", .category = "finance",
-    .description = "Organisations funded by Queensland Health: Organisation Name, Project Title, description of the funded services, Contract End Date and the funding amount per financial year. Follows public money to named non-government providers.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "finance-record", .tags = "\"au\",\"finance\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.data.qld.gov.au/api/3/action/datastore_search?resource_id=bad2b05f-10eb-4ff0-96a4-a9651b512dac&limit=100",
-    .array_path = "result.records",
-    .detail_url = "https://www.data.qld.gov.au/api/3/action/datastore_search?resource_id=bad2b05f-10eb-4ff0-96a4-a9651b512dac&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

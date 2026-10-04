@@ -228,3 +228,48 @@ The branch was cut from a 2,803-source tree and merged forward across batches
   `realloc` instead, which is strictly better; the bump is gone.
 * `docs/SOURCE_EXHAUSTIVENESS.md` — this branch bumped a stale file count.
   Main rewrote the whole paragraph with current figures.
+
+## After the branch merge (2026-10-02): 371 → 361 rows
+
+origin/main and the local `merge/open-prs` branch each merged PR #23; reconciling
+them kept this integration and removed ten rows from it.
+
+**Seven dead endpoints**, re-run through the binary on 2026-10-02 and refused
+every time, storing nothing (house rule 1):
+
+| id | answer |
+| --- | --- |
+| `ZA_ETENDERS_OCDS` | 400 |
+| `US_FARA_FOREIGN_PRINCIPALS` | 404 |
+| `WORLDBANK_DEBARRED_FIRMS` | 401 |
+| `JP_GTFS_DATA_REPOSITORY` | 404 |
+| `CAM_511ON_ONTARIO` | 400 |
+| `CAM_511AB_ALBERTA` | 400 |
+| `IODA_OUTAGE_ALERTS` | 400 |
+
+**Three duplicates** of collectors the tree already had. Their URLs sit behind
+`#define`s, which is why the endpoint check above missed them:
+
+* `FEODO_C2_TRACKER` fetched `feodotracker.abuse.ch/downloads/ipblocklist.json`,
+  which `feodo_tracker_jp.c` and `sslbl_jp.c` already read.
+* `TOR_EXIT_NODE_LIST` fetched `check.torproject.org/torbulkexitlist`, which
+  `threatfeeds_world.c` (`TOR_EXITS_GLOBAL`) and `tor_exit_check.c` already read.
+* `THREATFOX_IOC_SEARCH` POSTed the same `search_ioc` query as `IOC_LOOKUP`
+  (`ioc_lookup.c`), but **without** the Auth-Key abuse.ch has required since
+  2026-08-01. Every search would have come back empty, and for an IOC check
+  "no hit" reads as "clean".
+
+`USGS_NWIS_SITE_INVENTORY` stays. It reads every California site, while
+`hp3_geo.c` reads active sites only.
+
+**The 27 scheduled rows, measured 2026-10-02** (`audit_registry_emit.py`, a
+fresh database per run):
+
+* 13 store real records, among them FDSN 151,303, Safecast 30,000, Sejm 15,000,
+  Oireachtas legislation 4,300 and members 1,928, and USGS NWIS 53,789 stored
+  before the 300 s timeout.
+* 14 are key-gated and store one explicit "gated (KEY)" notice.
+* `EU_EP_CORPORATE_BODIES` loses 1 of 3,717 to a uid collision; that has not
+  been read yet.
+
+The 334 entity pivots are still unmeasured. The section above stands for them.

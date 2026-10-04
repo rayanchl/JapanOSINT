@@ -80,7 +80,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
    * single day's index runs past 100 rows, so the 101st disclosure onwards was
    * dropped for exactly the days that matter most. The page is already
    * fetched and parsed; every row on it is emitted. */
-  int n = 0, emitted = 0;
+  int n = 0;
   const char *cur = src;
   const char *tr_inner; int tr_len;
   while ((cur = html_block(cur, "tr", &tr_inner, &tr_len)) != NULL) {
@@ -166,7 +166,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     it.properties_json = pjs;
     it.tags_json = "[\"disclosure\",\"tdnet\",\"tse\",\"corporate\"]";
     if (sink->emit(sink, &it) >= 0) n++;
-    emitted++;
 
     free(pjs); cJSON_Delete(pj);      /* frees cells too */
     free(pdf_url); free(title); free(row);

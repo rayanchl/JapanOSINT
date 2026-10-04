@@ -19,6 +19,7 @@ static const hp_source T[] = {
     .record_type = "procurement-record", .tags = "\"pl\",\"procurement\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "pl",
     .url = "https://ezamowienia.gov.pl/mo-board/api/v1/Board/Search?PageSize=5",
     .detail_url = "https://ezamowienia.gov.pl/mo-board/api/v1/Board/Search?ObjectId={v}", .detail_key = "objectId",
+    .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
 };

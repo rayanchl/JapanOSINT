@@ -19,6 +19,7 @@ static const hp_source T[] = {
     .record_type = "transport-record", .tags = "\"gb\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://api.tfl.gov.uk/Line/Route?serviceTypes=Regular",
     .detail_url = "https://api.tfl.gov.uk/Line/{v}/StopPoints", .detail_key = "id",
+    .page_walk = 1,
     .interval = 3600, .free_tier = 1 },
 
   { .id = "uk-tfl-line-route-sequence",
@@ -29,6 +30,7 @@ static const hp_source T[] = {
     .url = "https://api.tfl.gov.uk/Line/victoria/Route/Sequence/inbound",
     .array_path = "stations",
     .detail_url = "https://api.tfl.gov.uk/StopPoint/{v}", .detail_key = "stationId",
+    .page_walk = 1,
     .interval = 3600, .free_tier = 1 },
 
   { .id = "uk-tfl-line-stoppoints",
@@ -38,6 +40,7 @@ static const hp_source T[] = {
     .record_type = "transport-record", .tags = "\"gb\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://api.tfl.gov.uk/Line/victoria/StopPoints",
     .detail_url = "https://api.tfl.gov.uk/StopPoint/{v}", .detail_key = "naptanId",
+    .page_walk = 1,
     .interval = 3600, .free_tier = 1 },
 
   { .id = "uk-tfl-stoppoint-detail",
@@ -48,6 +51,7 @@ static const hp_source T[] = {
     .url = "https://api.tfl.gov.uk/StopPoint/940GZZLUVIC",
     .array_path = ".",
     .detail_url = "https://api.tfl.gov.uk/StopPoint/{v}/Arrivals", .detail_key = "naptanId",
+    .page_walk = 1,
     .interval = 3600, .free_tier = 1 },
 
   { .id = "uk-tfl-stoppoint-search",
@@ -58,6 +62,7 @@ static const hp_source T[] = {
     .url = "https://api.tfl.gov.uk/StopPoint/Search/Victoria",
     .array_path = "matches",
     .detail_url = "https://api.tfl.gov.uk/StopPoint/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 3600, .free_tier = 1 },
 
 };

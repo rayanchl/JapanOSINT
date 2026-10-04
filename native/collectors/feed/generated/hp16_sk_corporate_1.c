@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://api.statistics.sk/rpo/v1/search?identifier=35697270",
     .array_path = "results",
     .detail_url = "https://api.statistics.sk/rpo/v1/entity/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "sk-rpo-search",
@@ -30,6 +31,7 @@ static const hp_source T[] = {
     .url = "https://api.statistics.sk/rpo/v1/search?fullName=Slovensk&limit=5",
     .array_path = "results",
     .detail_url = "https://api.statistics.sk/rpo/v1/entity/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "sk-rpvs-pvs-expand-partner",
@@ -40,6 +42,7 @@ static const hp_source T[] = {
     .url = "https://rpvs.gov.sk/opendatav2/PartneriVerejnehoSektora?$expand=Partner",
     .array_path = "value",
     .detail_url = "https://rpvs.gov.sk/opendatav2/Partneri({v})?$expand=PartneriVerejnehoSektora,KonecniUzivateliaVyhod,OpravneneOsoby,VerejniFunkcionari", .detail_key = "Id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

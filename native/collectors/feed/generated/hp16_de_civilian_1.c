@@ -21,6 +21,7 @@ static const hp_source T[] = {
     .array_path = "elements",
     .id_keys = "version",
     .detail_url = "https://api.openstreetmap.org/api/0.6/user/{v}.json", .detail_key = "uid",
+    .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
 };

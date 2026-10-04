@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=90b13a5b-fd2e-440c-b253-9cbf314d3da3&limit=100",
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=90b13a5b-fd2e-440c-b253-9cbf314d3da3&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

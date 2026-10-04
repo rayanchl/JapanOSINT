@@ -19,6 +19,7 @@ static const hp_source T[] = {
     .record_type = "research-record", .tags = "\"it\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://api.opencitations.net/meta/v1/author/orcid:0000-0001-6187-6610",
     .detail_url = "https://api.opencitations.net/meta/v1/author/orcid:{v}", .detail_key = "orcid",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "opencitations-meta-doi",

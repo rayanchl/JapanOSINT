@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://api.pmg.org.za/briefing/",
     .array_path = "results",
     .detail_url = "https://api.pmg.org.za/briefing/{v}/", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "af-pmg-calls-for-comment",
@@ -30,16 +31,7 @@ static const hp_source T[] = {
     .url = "https://api.pmg.org.za/call-for-comment/",
     .array_path = "results",
     .detail_url = "https://api.pmg.org.za/call-for-comment/{v}/", .detail_key = "id",
-    .interval = 86400, .free_tier = 1 },
-
-  { .id = "af-pmg-committee-meetings",
-    .name = "PMG South Africa — parliamentary committee meetings",
-    .collector = "za_parliament", .category = "parliament",
-    .description = "Paginated feed of every monitored National Assembly / NCOP committee meeting. Row: id, date, title, type, body (full minutes), summary, member_id, committee_id, house_id, chairperson, public_participation, actual and scheduled start/end times, pmg_monitor, url. Detail by id returns the complete verbatim report.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "parliament-record", .tags = "\"za\",\"parliament\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.pmg.org.za/committee-meeting/",
-    .array_path = "results",
-    .detail_url = "https://api.pmg.org.za/committee-meeting/{v}/", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "af-pmg-gazettes",
@@ -50,6 +42,7 @@ static const hp_source T[] = {
     .url = "https://api.pmg.org.za/gazette/",
     .array_path = "results",
     .detail_url = "https://api.pmg.org.za/gazette/{v}/", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "af-pmg-hansard",
@@ -60,6 +53,7 @@ static const hp_source T[] = {
     .url = "https://api.pmg.org.za/hansard/",
     .array_path = "results",
     .detail_url = "https://api.pmg.org.za/hansard/{v}/", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "af-pmg-ministers",
@@ -70,6 +64,7 @@ static const hp_source T[] = {
     .url = "https://api.pmg.org.za/minister/",
     .array_path = "results",
     .detail_url = "https://api.pmg.org.za/minister/{v}/", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "af-pmg-policy-documents",
@@ -80,6 +75,7 @@ static const hp_source T[] = {
     .url = "https://api.pmg.org.za/policy-document/",
     .array_path = "results",
     .detail_url = "https://api.pmg.org.za/policy-document/{v}/", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "af-pmg-question-replies",
@@ -90,6 +86,7 @@ static const hp_source T[] = {
     .url = "https://api.pmg.org.za/question_reply/",
     .array_path = "results",
     .detail_url = "https://api.pmg.org.za/question_reply/{v}/", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "af-pmg-tabled-committee-reports",
@@ -100,6 +97,7 @@ static const hp_source T[] = {
     .url = "https://api.pmg.org.za/tabled-committee-report/",
     .array_path = "results",
     .detail_url = "https://api.pmg.org.za/tabled-committee-report/{v}/", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

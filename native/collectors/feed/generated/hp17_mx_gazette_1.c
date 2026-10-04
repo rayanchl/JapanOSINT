@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://sidofqa.segob.gob.mx/dof/sidof/notas/14-08-2026",
     .array_path = "notasmatutinas",
     .detail_url = "https://sidofqa.segob.gob.mx/dof/sidof/notas/nota/{v}", .detail_key = "codNota",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

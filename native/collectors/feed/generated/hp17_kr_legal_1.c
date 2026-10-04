@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=decc&type=JSON&query=%ED%9A%8C%EC%82%AC",
     .array_path = "decc.decc",
     .detail_url = "https://www.law.go.kr/DRF/lawService.do?OC=test&target=decc&ID={v}&type=JSON", .detail_key = "행정심판재결례일련번호",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "kr-law-english-statutes",
@@ -30,6 +31,7 @@ static const hp_source T[] = {
     .url = "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=elaw&type=JSON&query=fair",
     .array_path = "lawsearch.law",
     .detail_url = "https://www.law.go.kr/DRF/lawService.do?OC=test&target=elaw&MST={v}&type=JSON", .detail_key = "법령일련번호",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "kr-legal-interpretations",
@@ -40,6 +42,7 @@ static const hp_source T[] = {
     .url = "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=expc&type=JSON&query=%ED%9A%8C%EC%82%AC",
     .array_path = "expc.expc",
     .detail_url = "https://www.law.go.kr/DRF/lawService.do?OC=test&target=expc&ID={v}&type=JSON", .detail_key = "법령해석례일련번호",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "kr-local-ordinances",
@@ -50,6 +53,7 @@ static const hp_source T[] = {
     .url = "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=ordin&type=JSON&query=%EC%84%9C%EC%9A%B8",
     .array_path = "ordinsearch.law",
     .detail_url = "https://www.law.go.kr/DRF/lawService.do?OC=test&target=ordin&MST={v}&type=JSON", .detail_key = "자치법규일련번호",
+    .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
 };

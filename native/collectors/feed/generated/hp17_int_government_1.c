@@ -19,6 +19,7 @@ static const hp_source T[] = {
     .record_type = "government-record", .tags = "\"int\",\"government\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://unstats.un.org/sdgapi/v1/sdg/Goal/List",
     .detail_url = "https://unstats.un.org/sdgapi/v1/sdg/Goal/{v}/Target/List", .detail_key = "code",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "unsd-sdg-indicator-list",
@@ -28,6 +29,7 @@ static const hp_source T[] = {
     .record_type = "government-record", .tags = "\"int\",\"government\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://unstats.un.org/sdgapi/v1/sdg/Indicator/List",
     .detail_url = "https://unstats.un.org/sdgapi/v1/sdg/Indicator/{v}/Series/List", .detail_key = "code",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "worldbank-microdata-catalog",
@@ -38,6 +40,7 @@ static const hp_source T[] = {
     .url = "https://microdata.worldbank.org/index.php/api/catalog/search?ps=100&format=json",
     .array_path = "result.rows",
     .detail_url = "https://microdata.worldbank.org/index.php/api/catalog/{v}", .detail_key = "idno",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

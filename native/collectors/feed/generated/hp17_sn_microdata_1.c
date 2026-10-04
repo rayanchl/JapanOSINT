@@ -20,6 +20,7 @@ static const hp_source T[] = {
     .url = "http://anads.ansd.sn/index.php/api/catalog/search?format=json&ps=50",
     .array_path = "result.rows",
     .detail_url = "http://anads.ansd.sn/index.php/api/catalog/{v}", .detail_key = "idno",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "ihsn-microdata-sn",
@@ -30,6 +31,7 @@ static const hp_source T[] = {
     .url = "http://catalog.ihsn.org/index.php/api/catalog/search?format=json&country=Senegal&ps=50",
     .array_path = "result.rows",
     .detail_url = "http://catalog.ihsn.org/index.php/api/catalog/{v}", .detail_key = "idno",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

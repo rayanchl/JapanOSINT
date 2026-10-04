@@ -19,6 +19,7 @@ static const hp_source T[] = {
     .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://nominatim.openstreetmap.org/search?street=1600+Amphitheatre+Parkway&city=Mountain+View&country=USA&format=jsonv2&addressdetails=1&extratags=1&namedetails=1&limit=5",
     .detail_url = "https://nominatim.openstreetmap.org/details.php?osmtype=W&osmid={v}&format=json&addressdetails=1&hierarchy=1&linkedplaces=1&keywords=1", .detail_key = "osm_id",
+    .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
   { .id = "global-osm-way-full",
@@ -29,6 +30,7 @@ static const hp_source T[] = {
     .url = "https://api.openstreetmap.org/api/0.6/way/23733659/full.json",
     .array_path = "elements",
     .detail_url = "https://api.openstreetmap.org/api/0.6/changeset/{v}.json?include_discussion=true", .detail_key = "changeset",
+    .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
   { .id = "littlesis-entity-connections",
@@ -39,6 +41,7 @@ static const hp_source T[] = {
     .url = "https://littlesis.org/api/entities/1/connections",
     .array_path = "data",
     .detail_url = "https://littlesis.org/api/entities/{v}/connections", .detail_key = "id",
+    .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
   { .id = "littlesis-entity-extensions",
@@ -49,6 +52,7 @@ static const hp_source T[] = {
     .url = "https://littlesis.org/api/entities/1/extensions",
     .array_path = "data",
     .detail_url = "https://littlesis.org/api/entities/{v}/extensions", .detail_key = "id",
+    .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
   { .id = "littlesis-entity-lists",
@@ -59,6 +63,7 @@ static const hp_source T[] = {
     .url = "https://littlesis.org/api/entities/1/lists",
     .array_path = "data",
     .detail_url = "https://littlesis.org/api/entities/{v}/lists", .detail_key = "id",
+    .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
   { .id = "us-austin-apd-crime-arcgis",
@@ -69,6 +74,7 @@ static const hp_source T[] = {
     .url = "https://maps.austintexas.gov/arcgis/rest/services/CrimeViewer_new/APD_Reported_Crimes_new/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=2&f=json",
     .array_path = "fields",
     .detail_url = "https://maps.austintexas.gov/arcgis/rest/services/CrimeViewer_new/APD_Reported_Crimes_new/FeatureServer/0/query?objectIds={v}&outFields=*&f=json", .detail_key = "OBJECTID",
+    .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
   { .id = "us-brookline-311-open311-request-detail",
@@ -78,6 +84,7 @@ static const hp_source T[] = {
     .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://spot.brooklinema.gov/open311/v2/requests/SR-138499.json",
     .detail_url = "https://spot.brooklinema.gov/open311/v2/requests/{v}.json", .detail_key = "service_request_id",
+    .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
   { .id = "us-brookline-311-open311-requests",
@@ -87,6 +94,7 @@ static const hp_source T[] = {
     .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://spot.brooklinema.gov/open311/v2/requests.json",
     .detail_url = "https://spot.brooklinema.gov/open311/v2/requests/{v}.json", .detail_key = "service_request_id",
+    .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
   { .id = "us-sf-311-open311-request-detail",
@@ -96,6 +104,7 @@ static const hp_source T[] = {
     .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://mobile311.sfgov.org/open311/v2/requests/101004634285.json",
     .detail_url = "https://mobile311.sfgov.org/open311/v2/requests/{v}.json", .detail_key = "service_request_id",
+    .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
   { .id = "us-sf-311-open311-requests",
@@ -106,6 +115,7 @@ static const hp_source T[] = {
     .url = "https://mobile311.sfgov.org/open311/v2/requests.json?page_size=5",
     .id_keys = "service_request_id",
     .detail_url = "https://mobile311.sfgov.org/open311/v2/requests/{v}.json", .detail_key = "service_request_id",
+    .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
   { .id = "us-sf-311-open311-services",
@@ -115,6 +125,7 @@ static const hp_source T[] = {
     .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://mobile311.sfgov.org/open311/v2/services.json",
     .detail_url = "https://mobile311.sfgov.org/open311/v2/requests.json?service_code={v}", .detail_key = "service_code",
+    .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
 };

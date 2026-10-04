@@ -12,16 +12,6 @@
 #include "lib/hpengine.h"
 
 static const hp_source T[] = {
-  { .id = "global-ooni-measurements-jp",
-    .name = "OONI measurements list (country filtered)",
-    .collector = "jp_research", .category = "research",
-    .description = "Measurement rows with anomaly/confirmed/failure flags, input URL, probe_asn, probe_cc, report_id, blocking scores (general/global/country/isp/local) and, critically, measurement_url — the raw_measurement link used as the detail hop.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "research-record", .tags = "\"jp\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.ooni.io/api/v1/measurements?limit=3&probe_cc=JP",
-    .array_path = "results",
-    .detail_url = "https://api.ooni.io/api/v1/raw_measurement?measurement_uid={v}", .detail_key = "measurement_uid",
-    .interval = 86400, .free_tier = 1 },
-
   { .id = "jp-ihr-networks",
     .name = "IIJ Internet Health Report network lookup",
     .collector = "jp_research", .category = "research",
@@ -30,6 +20,7 @@ static const hp_source T[] = {
     .url = "https://ihr.iijlab.net/ihr/api/networks/?number=2497",
     .array_path = "results",
     .detail_url = "https://ihr.iijlab.net/ihr/api/hegemony/prefixes/?originasn={v}&af=4", .detail_key = "number",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "jp-ndl-authority-person",
@@ -40,6 +31,7 @@ static const hp_source T[] = {
     .url = "https://id.ndl.go.jp/auth/ndlna/00270232.json",
     .array_path = "altlabel",
     .detail_url = "https://id.ndl.go.jp/auth/ndlna/{v}.json", .detail_key = "ndlna_id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "jp-ndl-authority-subject",
@@ -50,6 +42,7 @@ static const hp_source T[] = {
     .url = "https://id.ndl.go.jp/auth/ndlsh/00560222.json",
     .array_path = "narrower",
     .detail_url = "https://id.ndl.go.jp/auth/ndlsh/{v}.json", .detail_key = "ndlsh_id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "jp-ndl-dl-iiif-manifest",
@@ -60,6 +53,7 @@ static const hp_source T[] = {
     .url = "https://dl.ndl.go.jp/api/iiif/1032509/manifest.json",
     .array_path = "structures",
     .detail_url = "https://dl.ndl.go.jp/api/iiif/{v}/manifest.json", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "jp-ndl-lab-dl-book-search",
@@ -70,6 +64,7 @@ static const hp_source T[] = {
     .url = "https://lab.ndl.go.jp/dl/api/book/search?keyword=%E9%98%B2%E7%81%BD",
     .array_path = "list",
     .detail_url = "https://lab.ndl.go.jp/dl/api/book/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "openalex-authors-by-institution",
@@ -80,6 +75,7 @@ static const hp_source T[] = {
     .url = "https://api.openalex.org/authors?filter=last_known_institutions.id:I22299242&per_page=10",
     .array_path = "results",
     .detail_url = "https://api.openalex.org/authors/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "openalex-funders-country-jp",
@@ -90,6 +86,7 @@ static const hp_source T[] = {
     .url = "https://api.openalex.org/funders?filter=country_code:jp&per_page=25",
     .array_path = "results",
     .detail_url = "https://api.openalex.org/funders/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "openalex-institutions-lineage",
@@ -100,6 +97,7 @@ static const hp_source T[] = {
     .url = "https://api.openalex.org/institutions?filter=lineage:I22299242&per_page=25",
     .array_path = "results",
     .detail_url = "https://api.openalex.org/institutions/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "ror-filter-types-country",
@@ -110,6 +108,7 @@ static const hp_source T[] = {
     .url = "https://api.ror.org/organizations?filter=types:Education,country.country_code:JP",
     .array_path = "items",
     .detail_url = "https://api.ror.org/v2/organizations/{v}", .detail_key = "id",
+    .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

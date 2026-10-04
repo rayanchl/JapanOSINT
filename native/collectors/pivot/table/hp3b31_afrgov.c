@@ -44,19 +44,6 @@
 
 static const hp_source HP3B31_AFRGOV[] = {
   /* ── South Africa ─────────────────────────────────────────────────────── */
-  { .id = "ZA_ETENDERS_OCDS", .name = "South Africa eTenders — OCDS procurement releases",
-    .name_ja = "南アフリカ 政府調達OCDS", .category = "government",
-    .portal = "https://www.etenders.gov.za", .record_type = "za-tender",
-    .tags = "\"za\",\"procurement\",\"ocds\"", .free_tier = 1,
-    .url = "https://ocds-api.etenders.gov.za/api/OCDSReleases?PageSize=100",
-    .array_path = "releases", .filter_query = 1,
-    .title_keys = "tender.title,buyer.name", .id_keys = "ocid", .date_keys = "date",
-    .page_param = "PageNumber", .page_max = 40,
-    .interval = 21600,
-    .description = "South African national and provincial tenders in Open "
-      "Contracting format — the buying department, the tender description, the "
-      "briefing session, the closing date and the award where published" },
-
   { .id = "ZA_CIPC_ENTERPRISE", .name = "South Africa CIPC — company & close corporation search",
     .name_ja = "南アフリカ 企業登記", .category = "government",
     .portal = "https://eservices.cipc.co.za", .record_type = "za-entity",

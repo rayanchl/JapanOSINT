@@ -19,11 +19,24 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 11,170**, and `tools/lint_sources.py` is the only
-thing that counts it. It used to say 10,564, because hp rows register through
-`hp_register()` rather than `REGISTER_SOURCE` and it could not see a single one
-of them — 30 shipped tables' worth. `make source-floor`, whose entire job is to
-fail when a source stops registering, was therefore blind to every hp row.
+**The registered count is 18,170** (2026-10-02, after merging origin/main's
+PR #21-#23 integration with the local branch and batch 32's 340 Japanese rows —
+`docs/verified-sources-batch32.md`): `make lint-sources` prints it, counting
+hp_source table rows as well as `REGISTER_SOURCE`, and
+`./bin/japanosint --list-sources` agrees.
+
+**One exception to "every source is proof-of-life verified":** batch 31 — the
+government, public-record and surveillance tables from PR #23
+(`collectors/pivot/table/hp3b31_*.c`) — holds 361 rows, and 334 of them are
+entity pivots that have not been run against a real entity, nor
+`--check-filter`ed (rules 4 and 4d). The 27 scheduled rows were run on
+2026-10-02: 13 store real records (FDSN 151,303; Safecast 30,000; Sejm 15,000;
+USGS NWIS 53,789 before the audit timeout …) and 14 need an API key and store a
+"gated" notice saying so. Ten rows were removed when the branches merged: seven
+dead endpoints (400/401/404 on every run) and three that re-fetch what an
+existing collector already reads. See
+`native/collectors/OSINT_SOURCES_BATCH_31_GOV_PUBLIC_SURVEILLANCE.md`. Treat
+those pivots as registered, not proven, until they are verified.
 
 Three verifier/engine traps that pass exposed — check for them before trusting
 any "verified" number:
@@ -56,23 +69,25 @@ If anything was left unused, it is reported as data (a
 Rule, examples of violations, and what the shared machinery guarantees:
 `docs/SOURCE_EXHAUSTIVENESS.md`.
 
-Both engines page on the upstream's own evidence, and they share one
-implementation of it: `lib/pager.c`. A next link the server published, or a
-cursor whose page size the URL declares or the response proves, or — when the
-URL gives no page size at all — the upstream's own declared total saying records
-remain. Never a page that was never offered. hpengine used to do none of this
-(one request unless a row spelled out `page_param`), which meant moving a row
-onto it to wire a detail hop paid for that hop with every later page.
+VJSON collectors page through `jsonlist_emit_paged()`, whose per-page decision
+— a next link the server published, else a cursor paired with a page size the
+URL declares, else a page number the URL carries when the upstream's own total
+says more remains — is `jsonlist_next_page()` in `lib/jsonlist.c`. hpengine rows
+declaring `page_walk=1` call that same function, so a row moved from VJSON onto
+hpengine pages exactly as it did. Without that (or an explicit `next_path` /
+`page_param` / `{page}`) an hp row makes ONE request.
 
 Where the tree actually stands, as `make audit-sources` reports it:
 
-* **strict set (`collectors/pivot/table/hp*_*.c`) — 0 findings.** This is the
-  part the Makefile gates on, and it is held clean. Run `make audit-sources`
+* **strict set — 0 findings across 256 files** (2026-09-27):
+  `collectors/pivot/table/hp*_*.c` plus the generated deep-record tables
+  `collectors/feed/generated/hp1[0-9]_*.c`. This is the part the Makefile
+  gates on, and it is held clean. Run `make audit-sources`
   after adding a table: batch 18 introduced two `single-page` findings here (a
   paged endpoint declared without `page_param`) and they had to be fixed before
   the gate would pass again.
-* **the rest of the tree — 0 findings** (2026-08-24; was ~127 across ~74 files,
-  then 91 across 54). Every first-only, single-page, record-cap, loop-break,
+* **the rest of the tree — 0 findings** (1,642 files scanned, 2026-09-27; it
+  first reached zero on 2026-08-24, from ~127 across ~74 files). Every first-only, single-page, record-cap, loop-break,
   limit-one and dedupe-ring finding has been read and closed one of three ways:
   the discard was real and was fixed, the line carries an `exhaustive-ok`
   marker with a reason, or it was a scanner false positive and is marked as
@@ -83,6 +98,13 @@ Where the tree actually stands, as `make audit-sources` reports it:
   So "zero audit findings" is now true of the whole tree, not just the strict
   set — which makes any NEW finding a regression rather than a number in a
   backlog. Keep it that way: `make audit-sources` is cheap and takes seconds.
+
+* **A bound in a loop's own CONDITION was invisible until `loop-cap`.**
+  `while (cJSON_GetArraySize(akas) < 24 && …)` is neither a `#define …MAX`
+  (`record-cap`) nor a `break` (`loop-break`), so the tree read "zero" while
+  the OFAC consolidated parser dropped a designated person's aliases past the
+  24th, TDnet stopped at 100 disclosures a day and EDINET-x at 25 filings. The
+  check exists now; all of those are fixed.
 
 Deliberate exceptions carry an inline `/* exhaustive-ok: <reason> */` marker
 (`grep -rn exhaustive-ok`). The marker must sit **on the flagged line itself** —
@@ -426,6 +448,13 @@ Engine subtleties worth knowing before writing a row:
 * `page_start`'s unset value is 0, which is also a legitimate first page. Set
   **`page_zero_based=1`** for a 0-based API — otherwise the engine coerces the
   start to 1 and silently never fetches page 1.
+* A row that declares no paging does ONE request. **`page_walk=1`** (HP_JSON
+  only) walks it the way a VJSON collector is walked instead — the server's own
+  next link, else the cursor its declared page size pairs with, advanced while
+  pages come back full — through `jsonlist_next_page()` in `lib/jsonlist.c`,
+  the one copy of that decision. The 322 batch-16/17 rows moved onto hpengine for
+  their detail hops (`collectors/gen_detail_hop_upgrade.py`) carry it so they
+  did not trade their later pages for the second hop.
 * `next_path` accepts a `key=value` segment: write **`links.rel=next.href`**,
   not `links.1.href`. Indexing a hypermedia link array positionally breaks when
   a server reorders it, and the failure mode is the engine refetching page 1

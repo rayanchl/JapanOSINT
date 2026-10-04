@@ -147,6 +147,31 @@ def _paged_macro_at(lines, n):
     return False
 
 
+
+def _hp_page_walk_row(lines, n):
+    """Is line `n` inside an hp_source row that declares `.page_walk = 1`?
+
+    Such a row is walked by lib/jsonlist.c's jsonlist_next_page() — the same
+    decision a VJSON row gets — so a page-1 URL in it is not a single-page read.
+    The row is the brace block from its `{ .id =` to the closing `},`."""
+    start = None
+    for i in range(n, max(0, n - 30), -1):
+        line = lines[i - 1] if i - 1 < len(lines) else ''
+        if re.match(r'\s*\{\s*\.id\s*=', line):
+            start = i
+            break
+        if re.match(r'\s*\},?\s*$', line) and i != n:
+            return False
+    if start is None:
+        return False
+    for i in range(start, min(len(lines), start + 40) + 1):
+        line = lines[i - 1]
+        if re.search(r'\.page_walk\s*=\s*1\b', line):
+            return True
+        if i > start and re.match(r'\s*\{\s*\.id\s*=', line):
+            return False
+    return False
+
 def audit(path, verbose=False):
     findings = []
     try:
@@ -185,7 +210,7 @@ def audit(path, verbose=False):
                 # which is the exact URL jsonlist.h cites as the case the paged
                 # walk was written to fix. 44 findings that were all already
                 # fixed is not a backlog, it is noise that hides the real ones.
-                if _paged_macro_at(lines, n):
+                if _paged_macro_at(lines, n) or _hp_page_walk_row(lines, n):
                     continue
             findings.append((cid, n, line.strip()[:120], desc, hint))
     return findings
