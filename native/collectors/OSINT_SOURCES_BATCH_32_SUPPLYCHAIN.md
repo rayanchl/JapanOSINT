@@ -173,14 +173,19 @@ PYPI_SIMPLE_INDEX                 see below
 ```
 
 `PYPI_SIMPLE_INDEX` is the whole PyPI namespace in one PEP 503 document:
-46.7 MB holding **904,857 project anchors**. It is the only row in the beat
-whose cost is worth stating separately, and the only one whose measurement is
-incomplete: the run reached **729,041 records and 1.82 GB** — 80% of the
-document — before this session's own background time limit stopped it.
-Nothing in the engine or the upstream stopped it, it was linear throughout and
-it stamped no truncation notice, so at 2.50 KB of database per record a full
-pass is hours of wall clock and about 2.26 GB. That last figure is a
-projection from 80% of a pass, not a reading, and the row says so. Every
+46.7 MB of project anchors, and the only row in the beat whose cost is worth
+stating separately. A complete pass was measured end to end:
+
+```
+[hp:PYPI_SIMPLE_INDEX] emitted 904059 of 904059 available across 1 page(s)
+[sched] PYPI_SIMPLE_INDEX run rc=0 records=904059 6818250ms stored=904059
+```
+
+904,059 emitted, 904,059 stored, no uid collision, **1 h 54 m** of wall clock
+and **2,269,962,240 bytes** of database — 2.51 KB per record. A separate fetch
+of the same URL four hours earlier held 904,857 anchors; the namespace moves
+continuously, and the run's own emitted-of-available is the figure that
+matters, because it says the engine used every anchor it was given. Every
 other namespace row here is an order of magnitude smaller. It is therefore scheduled **weekly**, which the manifest
 originally had as daily. The per-project hops
 (`PYPI_SIMPLE_PROJECT_FILES`, `PYPI_PROJECT_RELEASES_RSS`) are the targeted
