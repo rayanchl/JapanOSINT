@@ -19,30 +19,41 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 18,320** (2026-10-04, after batch 33's 150 rows; it
-was 18,170 on 2026-10-02 after merging origin/main's PR #21-#23 integration with
-the local branch and batch 32's 340 Japanese rows —
-`docs/verified-sources-batch32.md`): `make lint-sources` prints it, counting
-hp_source table rows as well as `REGISTER_SOURCE`, and
-`./bin/japanosint --list-sources` agrees.
+**The registered count is 18,409** (2026-10-04: 18,170 after merging origin/main's
+PR #21-#23 integration with the local branch and batch 32's 340 Japanese rows —
+`docs/verified-sources-batch32.md` — then +139 for batch 33 and +100 for batch
+34): `make lint-sources` prints it, counting hp_source table rows as well as
+`REGISTER_SOURCE`, and `./bin/japanosint --list-sources` agrees.
 
-**Batch 33 is the second unverified batch, and the reason is the same one:**
-150 rows (`collectors/pivot/table/hp3b33_*.c`, authored 2026-10-04) in a session
-whose network policy allowed only Anthropic APIs, package registries and GitHub.
-Nothing was fetched over the wire, so there is no `docs/verified-sources-batch33.tsv`
-and no rejects file. It is built to be as close to provable as an unprobed batch
-can be: **every host is proven reachable by a different row already in the tree
-using the same host and API base**, and every endpoint path, parameter set,
-paging rule and response envelope is fixed by a published specification — the
-CKAN Action API (95 `current_package_list_with_resources` rows), the FDSN web
-service spec (18 `station/1` inventories, 13 `event/1` catalogues) and the
-Socrata Discovery API (24 catalogue pivots). `batch_exclusions.py --bin` reports
-0 collisions, and the reachability and pagination audits are clean. **Unlike
-batch 31 the manifests exist** (`docs/candidate-sources-batch33.*.txt`), so the
-probe and emit tools can be pointed straight at it:
-`audit_registry_emit.py --match JO33_` and
-`probe_hp_batch.py docs/candidate-sources-batch33.*.txt --check-filter`.
-See `native/collectors/OSINT_SOURCES_BATCH_33_SPEC_FAMILIES.md`.
+**Batches 33 and 34 are unverified too, for the same reason:** authored
+2026-10-04 in a session whose network policy allowed only Anthropic APIs,
+package registries and GitHub, so nothing was fetched and there is no
+`verified-sources-batch3{3,4}.tsv`. Both are built to be as close to provable as
+an unprobed batch can be — **every host is proven live by a different row
+already in the tree**, and every path, parameter set, paging rule and envelope
+is fixed by a specification or copied from a row that passed the emit audit —
+and **both have manifests**, so the probe and emit tools point straight at them.
+
+* **Batch 33, 139 rows** (`hp3b33_*.c`): 95 CKAN
+  `current_package_list_with_resources`, 15 FDSN `station/1` inventories, 5
+  FDSN `event/1` catalogues, 24 Socrata Discovery pivots.
+  `native/collectors/OSINT_SOURCES_BATCH_33_SPEC_FAMILIES.md`.
+* **Batch 34, 100 rows** (`hp3b34_jpweko.c`): WEKO3 `/api/records/?q=` entity
+  pivots on the 100 largest JAIRO Cloud repositories that were wired for OAI
+  harvesting but could not be ASKED about an entity — endpoint and keys copied
+  from batch 25, which ran them through the emit audit and `--check-filter`.
+
+Two review findings from batch 33 that generalise:
+
+* **A Socrata domain's own `/api/catalog/v1` is NOT scoped to that domain.**
+  Without `domains=` and `search_context=`, a pivot returns matching datasets
+  from every Socrata portal and attributes them to this one — rule 4d's
+  confident wrong answer. 64 existing rows already passed `domains=`; batch
+  33's 24 did not until review.
+* **The FDSN spec defines services; a node runs only some of them.** EIDA nodes
+  serve dataselect/station/availability, not event; USGS ComCat and EMSC serve
+  event, not station; IRIS retired fdsnws-event. 11 batch-33 rows asking a host
+  for a service it does not run were dropped before any probe.
 
 **A CSV delimiter that defaults to comma silently unparsed a working row.**
 `lib/hpengine.c` sets `char delim[64] = ","` and does NOT sniff. FDSN's
