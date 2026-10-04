@@ -819,8 +819,14 @@ static const hp_source HP3B32_SUPPLYCHAIN[] = {
     /* WEEKLY, not daily, and that is a measurement rather than a guess. This
      * is the largest single document in the registry: 46.7 MB holding 904,857
      * project anchors, which the engine reads and stores completely — there is
-     * no truncation and no discard — at a cost of hours of wall clock and
-     * roughly 2.3 GB of database per pass. Every other namespace row in this
+     * no truncation and no discard — at a cost of hours of wall clock and a
+     * database measured at 2.50 KB per record: 1.82 GB at 729,041 records,
+     * which is where the run stood when the measuring session's own
+     * background time limit stopped it. Nothing in the engine or the upstream
+     * stopped it, it was linear throughout and it stamped no truncation
+     * notice, and 904,857 anchors at that rate is about 2.26 GB for the full
+     * pass — but the COMPLETED pass is a projection from 80% of one, not a
+     * reading. Every other namespace row in this
      * beat is an order of magnitude smaller (pub.dev 91,326, Hackage 19,515).
      * Daily was the manifest's original value and would have put that cost on
      * every deployment once a day for a namespace that grows by a few hundred
@@ -837,9 +843,11 @@ static const hp_source HP3B32_SUPPLYCHAIN[] = {
       "API gives the whole namespace, and the per-project rows in this "
       "beat (PYPI_SIMPLE_PROJECT_FILES, PYPI_PROJECT_RELEASES_RSS) are "
       "the hops out of it. 904,857 anchors measured in the fetched body; "
-      "the engine stores all of them, measured at 2.5 KB per record, so "
-      "hours of wall clock and about 2.3 GB per pass — which is why this "
-      "row runs weekly rather than daily." },
+      "the engine stores them without truncating — 729,041 of them "
+      "measured, at 2.50 KB of database each, before the measuring "
+      "session ran out of time — so hours of wall clock and about "
+      "2.26 GB per pass, which is why this row runs weekly rather than "
+      "daily." },
 
   { .id = "HEXPM_NEW_PACKAGES", .name = "Hex.pm — newly registered packages",
     .category = "cyber", .portal = "https://hex.pm",
