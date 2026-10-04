@@ -257,6 +257,20 @@ static const hp_source T[] = {
    * alone is the ACTIVITY and would collapse every transaction under it. A
    * real ledger row leaves some dimensions null (no sector group, no ref), so
    * the realistic case is a long composite with holes in it. */
+  /* A bare root array whose records each carry a LONGER nested array. The pair
+   * below differ only in array_path, and that is the whole point: discovery
+   * picks the densest array of objects, so the auto row mines the nested one
+   * and the "." row takes the root. hex.pm's package list is this exact shape
+   * and cost 3,643 phantom records before the root was declared. */
+  { .id = "T_ROOTARR_AUTO", .name = "bare root array, discovery",
+    .url = "https://x.test/rootarr", .title_keys = "name", .id_keys = "name",
+    .interval = 3600, .record_type = "t-root", .free_tier = 1, .description = "d" },
+
+  { .id = "T_ROOTARR_DOT", .name = "bare root array, declared",
+    .url = "https://x.test/rootarr", .array_path = ".",
+    .title_keys = "name", .id_keys = "name",
+    .interval = 3600, .record_type = "t-root", .free_tier = 1, .description = "d" },
+
   { .id = "T_IDKEYS_WIDE", .name = "wide composite with absent parts",
     .url = "https://x.test/wide", .array_path = "rows", .title_keys = "title",
     .id_keys = "aid+trans_id+trans_ref+trans_day+trans_value+trans_code+trans_sector+trans_country",
@@ -1686,6 +1700,44 @@ int main(void) {
      "a shared `aid` does not collapse them — later composite parts separate the rows");
   ok(strstr(g_cap[0].key, "XM-DAC-1") != NULL && strstr(g_cap[0].key, "2026-01-04") != NULL,
      "absent parts do not truncate the key: parts after the holes still reach it");
+
+  /* `array_path = "."` is the document root. Two packages at the root, one of
+   * them carrying three releases, so the nested array (3) outnumbers the root
+   * (2) and discovery prefers it. That is the hex.pm shape: on a 60-page walk
+   * the engine mined `[33].releases` on 34 pages and emitted 9,643 records
+   * where the pages held 6,000 (measured 2026-10-04). Both halves are pinned
+   * — the hijack, so the reason the "." exists stays legible, and the fix. */
+  fx_reset();
+  fx_add("/rootarr", 200,
+    "[{\"name\":\"alpha\",\"releases\":[{\"version\":\"1\"},{\"version\":\"2\"},"
+    "{\"version\":\"3\"}]},"
+    "{\"name\":\"beta\",\"releases\":[{\"version\":\"9\"}]}]");
+  rc = run_source("T_ROOTARR_AUTO", "");
+  int rootarr_recs = 0, rootarr_named = 0, rootarr_notice = 0;
+  for (int i = 0; i < g_ncap; i++) {
+    if (!strcmp(g_cap[i].rtype, "t-root")) {
+      rootarr_recs++;
+      if (strstr(g_cap[i].key, "alpha") || strstr(g_cap[i].key, "beta"))
+        rootarr_named++;
+    } else if (strstr(g_cap[i].key, "shape:densest-array-fallback")) {
+      rootarr_notice++;
+    }
+  }
+  ok(rc == 0 && rootarr_recs == 3 && rootarr_named == 0,
+     "without array_path, discovery mines the longer NESTED array (3 releases, not 2 packages)");
+  ok(rootarr_notice == 1,
+     "and says so: the densest-array fallback is stamped as a shape notice, not silent");
+  fx_reset();
+  fx_add("/rootarr", 200,
+    "[{\"name\":\"alpha\",\"releases\":[{\"version\":\"1\"},{\"version\":\"2\"},"
+    "{\"version\":\"3\"}]},"
+    "{\"name\":\"beta\",\"releases\":[{\"version\":\"9\"}]}]");
+  rc = run_source("T_ROOTARR_DOT", "");
+  ok(rc == 0 && g_ncap == 2,
+     "array_path=\".\" takes the ROOT array — one record per package");
+  ok(g_ncap == 2 && strstr(g_cap[0].key, "alpha") != NULL &&
+     strstr(g_cap[1].key, "beta") != NULL,
+     "and the root records key on their own fields, so id_keys resolves");
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

@@ -1,0 +1,41 @@
+# Batch 32 — supplychain: what was probed and did NOT ship, kept as data.
+#
+# Two kinds of row are here. The first is a candidate that PASSED the probe
+# and was dropped anyway, because the probe counts records and cannot see
+# whether they are the right records — read those first, they are the ones
+# that cost something to find. The second is a candidate the engine or this
+# environment's network policy ruled out before it could be measured.
+#
+# Hosts in the third block answered nothing at all: the egress policy in the
+# environment this batch was authored in permits package-registry hosts and
+# refuses everything else at CONNECT (HTTP 403 from the gateway). They are
+# recorded so a session with wider egress knows what has already been looked
+# at rather than re-deriving the list.
+#
+# candidate	stage	what happened
+RUBYGEMS_GEM_DETAIL	measured	https://rubygems.org/api/v1/gems/{q}.json — probe PASS, 2107 bytes. The gem record is the ROOT OBJECT and the document's only array is dependencies.runtime (13 entries for rails), so the engine emitted 13 dependency records and the gem's own fields — authors, licenses, sha, the whole project/source/changelog/funding URI block — reached nothing. Declaring array_path=dependencies.runtime would have made it a forward-dependency row, but then dependencies.development is dropped, and the endpoint cannot be declared twice (one GET, one declared array). Dropped: RUBYGEMS_OWNER_GEMS emits the full gem record per gem and rubygems.org/api/v1/versions/{q}.json was already registered.
+PUBDEV_PACKAGE_METRICS	measured	https://pub.dev/api/packages/{q}/metrics — probe PASS (json:score.tags, 22 items). Run through the engine it mined "scorecard.panaReport.report.sections" (5 records) out of 6 candidate arrays, runner-up "scorecard.weeklyVersionDownloads.minorRangeWeeklyDownloads" (5), and stored five analysis-report SECTION headings titled "Follow Dart file conventions", "Provide documentation", "Platform support". The document has no array that is its record set — the metrics ARE the root object — and there is no way to declare that while a denser array exists. Dropped.
+registry.npmjs.org/-/v1/search?text=scope:{q}	probed	HTTP 200 with {"objects":[],"total":0} for real scopes (tried babel). An EMPTY_RESULTSET by construction — the qualifier is not supported by the search index — which is the failure mode CLAUDE.md rule 1 names explicitly: a source verified live that emits nothing on every run, forever.
+api.nuget.org/v3-flatcontainer/{q}/index.json	probed	HTTP 200, 1462 bytes, but "versions" is an array of STRINGS ("3.5.8", "4.0.1", …), not of records. NUGET_REGISTRATION_INDEX covers the same ground as 86 real version records with the registry's own commit trail attached.
+packagist.org/packages/list.json	probed	HTTP 200, 12.2 MB — "packageNames" is an array of 470,134 bare STRINGS. The same namespace question is answered for PHP by PACKAGIST_POPULAR (ranked, with records) and the string list has no fields to key or query.
+index.crates.io/{a}/{b}/{name}	engine	The crates.io sparse index is newline-delimited JSON: one complete JSON object per line, one line per version. hpengine has no NDJSON mode and HP_JSON parses only the first object, so declaring it would discard every version but the oldest. The same data is CRATESIO_CRATE_VERSIONS, which is a real JSON array.
+index.golang.org/index?since=	engine	Same NDJSON shape — one {Path, Version, Timestamp} object per line. This is the global Go module publish firehose and is worth having; it needs an NDJSON mode in the engine, not a row.
+conda.anaconda.org/conda-forge/noarch/repodata.json	engine	HTTP 200 and live, but a single 189 MB document with no paging and no incremental form. api.anaconda.org, which the tree already registers and which serves the same data per package, is not reachable under this environment's policy.
+api.nuget.org/v3/catalog0/page0.json	engine	A fixed FIRST page of the NuGet catalog. Declaring it is a first-only read by construction (house rule 2); the catalog index itself is already registered.
+hex.pm/api/repos	probed	HTTP 200, 55 bytes, one record ("hexpm"). A single-row table with no investigative content.
+registry.npmjs.org/-/user/org.couchdb.user:{q}	probed	HTTP 401 — the npm user document requires authentication. NPM_MAINTAINER_PACKAGES answers the same question (which packages does this account publish) through the public search index.
+registry.npmjs.org/-/org/{q}/user	probed	HTTP 200 with an empty object {} for a real org (babel) — no data without authentication.
+api.jsr.io/packages	probed	HTTP 403. jsr.io and npm.jsr.io are reachable under this policy and api.jsr.io is not, so the two JSR rows that shipped use jsr.io/@{Q}/meta.json and npm.jsr.io/@jsr/{q} instead.
+api.github.com/*	credential	Reachable, but the credential this environment injects is a GitHub App token scoped to one repository: /rate_limit answers 200 while /users/{q}, /repos/{owner}/{repo}/contributors, /licenses, /gitignore/templates and /search/topics all answer 403. Nothing could be probed under the conditions a shipped collector would actually run in, so no GitHub row was written. The tree's existing GitHub rows are untouched.
+api.npmjs.org/downloads/point/*	egress	Host refused at CONNECT. Already registered in the tree from an earlier session with wider egress.
+search.maven.org/solrsearch/select	egress	Host refused at CONNECT. Already registered. repo1.maven.org IS reachable, which is why the two Maven rows that shipped read the repository directly rather than a search index.
+quay.io/api/v1/repository	egress	Host refused at CONNECT.
+api.osv.dev, api.deps.dev, libraries.io, packages.ecosyste.ms	egress	All refused at CONNECT. These are the four aggregate supply-chain APIs and would each be worth a beat of their own with egress to them.
+security-tracker.debian.org, sources.debian.org, pkgs.alpinelinux.org, access.redhat.com, ftp.suse.com	egress	All refused at CONNECT. ubuntu.com IS reachable, and its security API is already fully registered (cves.json, notices.json, releases.json and the per-CVE and per-notice detail hops), so no distro row was added.
+fastapi.metacpan.org, cpan.metacpan.org	egress	Refused at CONNECT — CPAN is absent from the tree and remains so.
+swiftpackageindex.com, trunk.cocoapods.org	egress	Refused at CONNECT — Swift and CocoaPods are absent from the tree and remain so.
+melpa.org, ctan.org, opam.ocaml.org, luarocks.org	egress	Refused at CONNECT.
+bioconductor.org, cran.r-project.org, crandb.r-pkg.org	egress	Refused at CONNECT — the R ecosystem is absent from the tree and remains so.
+api.snapcraft.io, api.launchpad.net	egress	Refused at CONNECT.
+endoflife.date/api	egress	Refused at CONNECT.
+api.gleif.org, d-portal.org, api.fda.gov, catalog.ihsn.org	egress	Refused at CONNECT. Not supply-chain candidates — recorded because they were the hosts used to re-confirm, at the start of this session, that the policy had not changed since the previous one.
