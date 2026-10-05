@@ -202,7 +202,14 @@ def scan(skip_prefix=None):
     `families` and `segments` are the composed-URL half: a family is the fixed
     part of a runtime-built URL, and the segments are the identifier-shaped
     literals in the same translation unit -- the things that can land in its
-    %s. See blind spot 3 in the module docstring."""
+    %s. See blind spot 3 in the module docstring.
+
+    `skip_prefix` is a LIST of filename prefixes, because --skip-prefix is
+    repeatable. A bare string is accepted and treated as a one-element list so
+    that older callers keep working."""
+    skips = ([skip_prefix] if isinstance(skip_prefix, str)
+             else list(skip_prefix or []))
+    skips = [sp for sp in skips if sp]
     ids = set()
     eps = collections.defaultdict(set)
     fams = collections.defaultdict(set)
@@ -217,7 +224,7 @@ def scan(skip_prefix=None):
         for f in sorted(names):
             if not f.endswith((".c", ".inc")):
                 continue
-            if skip_prefix and f.startswith(skip_prefix):
+            if skips and any(f.startswith(sp) for sp in skips):
                 continue
             p = os.path.join(root, f)
             try:
@@ -367,11 +374,19 @@ def main():
                          "check is a regex approximation and says so.")
     ap.add_argument("--strict", action="store_true",
                     help="NEAR-ENDPOINT warnings fail the run too")
-    ap.add_argument("--skip-prefix", default="",
+    # REPEATABLE, and it has to be. It was a plain string option, so passing
+    # it twice kept only the LAST value -- the identical repeated-flag trap
+    # CLAUDE.md records for the exhaustiveness scanner's --strict, where the
+    # gate printed "0 findings" for a set it had never opened. Here it meant
+    # two batches could not be checked in one call: the first prefix was
+    # silently dropped, that batch's own table WAS scanned, and every one of
+    # its rows self-collided as a DUP-ID. PR #27 hit exactly that and had to
+    # run one batch at a time against main's binary to get an answer.
+    ap.add_argument("--skip-prefix", action="append", default=[],
                     help="collector filename prefix to treat as 'not yet in "
-                         "tree'. --check only; NEVER applied to the dumps. "
-                         "Use it only for the tables generated from the "
-                         "manifests being checked.")
+                         "tree'. Repeatable. --check only; NEVER applied to "
+                         "the dumps. Use it only for the tables generated "
+                         "from the manifests being checked.")
     a = ap.parse_args()
 
     # The dumps always see the whole tree. A discovery pass reads them, and a
@@ -396,9 +411,10 @@ def main():
 
     ids, eps, fams, segs = scan(a.skip_prefix)
     if a.skip_prefix:
-        sys.stderr.write("SUPPRESSED: files named %s* were not scanned; any id "
+        sys.stderr.write("SUPPRESSED: files named %s were not scanned; any id "
                          "or endpoint only they register cannot be reported "
-                         "here\n" % a.skip_prefix)
+                         "here\n"
+                         % ", ".join(sp + "*" for sp in a.skip_prefix))
     if a.bin:
         reg = ids_from_binary(a.bin)
         sys.stderr.write("id set: %d from the binary's registry "

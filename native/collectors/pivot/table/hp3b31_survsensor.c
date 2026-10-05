@@ -140,7 +140,18 @@ static const hp_source HP3B31_SURVSENSOR[] = {
     .type = "dataset", .mode = HP_CSV,
     .url = "https://service.iris.edu/fdsnws/station/1/query?level=station"
       "&format=text&nodata=404",
-    .filter_query = 1, .title_keys = "col1,col5", .id_keys = "col1",
+    /* FDSN `format=text` is PIPE-delimited with a `#` header line. The engine's
+     * CSV delimiter defaults to "," and does not sniff (lib/hpengine.c, the
+     * `char delim[64] = ","` above the csv_delim switch), so without these
+     * three opts the whole line landed in a single cell: col1/col2/col3/col5
+     * all resolved to nothing, the title fell back to the raw line, and the
+     * row stored 151,303 records carrying no parsed field and no coordinates.
+     * The count was real, which is exactly why it looked fine. */
+    .csv_delim = "pipe", .csv_comment = "#", .csv_no_header = 1,
+    /* Station CODE is not unique across networks (CI.PAS and GR.PAS are
+     * different stations), and an epoch re-opens under the same code, so
+     * identity is network+station+start — `col1` alone collapsed them. */
+    .filter_query = 1, .title_keys = "col1,col5", .id_keys = "col0+col1+col6",
     .lat_key = "col2", .lon_key = "col3",
     .interval = 86400,
     .description = "The federated seismic network's station list — network "

@@ -396,6 +396,58 @@ static const hp_source T[] = {
     .array_path = "rows", .title_keys = "name", .id_keys = "code+date",
     .interval = 3600, .record_type = "t-idk", .free_tier = 1, .description = "d" },
 
+  /* The d-portal transaction rows key on an 8-part composite, because `aid`
+   * alone is the ACTIVITY and would collapse every transaction under it. A
+   * real ledger row leaves some dimensions null (no sector group, no ref), so
+   * the realistic case is a long composite with holes in it. */
+  /* A bare root array whose records each carry a LONGER nested array. The pair
+   * below differ only in array_path, and that is the whole point: discovery
+   * picks the densest array of objects, so the auto row mines the nested one
+   * and the "." row takes the root. hex.pm's package list is this exact shape
+   * and cost 3,643 phantom records before the root was declared. */
+  { .id = "T_ROOTARR_AUTO", .name = "bare root array, discovery",
+    .url = "https://x.test/rootarr", .title_keys = "name", .id_keys = "name",
+    .interval = 3600, .record_type = "t-root", .free_tier = 1, .description = "d" },
+
+  { .id = "T_ROOTARR_DOT", .name = "bare root array, declared",
+    .url = "https://x.test/rootarr", .array_path = ".",
+    .title_keys = "name", .id_keys = "name",
+    .interval = 3600, .record_type = "t-root", .free_tier = 1, .description = "d" },
+
+  /* NDJSON. The body is the shape index.golang.org and index.crates.io
+   * publish: one complete JSON object per line, no array, no commas. Declared
+   * HP_JSON it would die at line 2 and emit nothing forever. */
+  { .id = "T_NDJSON", .name = "ndjson feed",
+    .url = "https://x.test/ndjson", .mode = HP_NDJSON, .array_path = ".",
+    .title_keys = "Path", .id_keys = "Path+Version",
+    .interval = 3600, .record_type = "t-nd", .free_tier = 1, .description = "d" },
+
+  /* A cursor that is the LAST RECORD's own field, not an envelope's: the Go
+   * module index publishes no next link and pages by `since=<Timestamp of the
+   * last record>`. `$last` is the only way to name it, because the array's
+   * length is not known when the row is written. */
+  { .id = "T_NDJSON_LASTCURSOR", .name = "ndjson paged by last record's field",
+    .url = "https://x.test/ndpage", .mode = HP_NDJSON, .array_path = ".",
+    .title_keys = "Path", .id_keys = "Path+Version",
+    .next_path = "$last.Timestamp",
+    .next_tmpl = "https://x.test/ndpage?since={v}",
+    .page_max = 4,
+    .interval = 3600, .record_type = "t-nd", .free_tier = 1, .description = "d" },
+
+  /* {ago:N} — a `since` cursor relative to now. The fixture matches on the
+   * YEAR only, because the rest of the timestamp is whatever the clock says
+   * when the test runs; what is being pinned is that the token expands to a
+   * real RFC 3339 instant in the URL rather than being left verbatim. */
+  { .id = "T_AGO", .name = "relative since cursor",
+    .url = "https://x.test/ago?since={ago:3600}", .mode = HP_NDJSON,
+    .array_path = ".", .title_keys = "Path", .id_keys = "Path",
+    .interval = 3600, .record_type = "t-ago", .free_tier = 1, .description = "d" },
+
+  { .id = "T_IDKEYS_WIDE", .name = "wide composite with absent parts",
+    .url = "https://x.test/wide", .array_path = "rows", .title_keys = "title",
+    .id_keys = "aid+trans_id+trans_ref+trans_day+trans_value+trans_code+trans_sector+trans_country",
+    .interval = 3600, .record_type = "t-wide", .free_tier = 1, .description = "d" },
+
   { .id = "T_ERR", .name = "upstream error", .url = "https://x.test/err?q={q}",
     .record_type = "t-err", .free_tier = 1, .description = "d" },
 
@@ -2295,6 +2347,121 @@ int main(void) {
     ok(rc == 0 && g_ncap == 3 && g_ncalls == 2 && pend == 2,
        "35: detail_max=1 on an XML row makes ONE detail request; the rest are marked pending");
   }
+
+  /* Two transactions of the SAME activity, differing only in later parts of the
+   * composite, and with two dimensions absent on each. They must not collapse:
+   * `aid` is shared, so anything that keys on the first present part alone
+   * stores one row and reports two. */
+  fx_reset();
+  fx_add("/wide", 200,
+    "{\"rows\":[{\"title\":\"t1\",\"aid\":\"XM-DAC-1\",\"trans_id\":\"a\","
+    "\"trans_day\":\"2026-01-04\",\"trans_value\":100,\"trans_code\":\"D\","
+    "\"trans_country\":\"GH\"},"
+    "{\"title\":\"t2\",\"aid\":\"XM-DAC-1\",\"trans_id\":\"b\","
+    "\"trans_day\":\"2026-02-09\",\"trans_value\":250,\"trans_code\":\"D\","
+    "\"trans_country\":\"GH\"}]}");
+  rc = run_source("T_IDKEYS_WIDE", "");
+  ok(rc == 0 && g_ncap == 2, "wide composite emits both transactions of one activity");
+  ok(strcmp(g_cap[0].key, g_cap[1].key) != 0,
+     "a shared `aid` does not collapse them — later composite parts separate the rows");
+  ok(strstr(g_cap[0].key, "XM-DAC-1") != NULL && strstr(g_cap[0].key, "2026-01-04") != NULL,
+     "absent parts do not truncate the key: parts after the holes still reach it");
+
+  /* `array_path = "."` is the document root. Two packages at the root, one of
+   * them carrying three releases, so the nested array (3) outnumbers the root
+   * (2) and discovery prefers it. That is the hex.pm shape: on a 60-page walk
+   * the engine mined `[33].releases` on 34 pages and emitted 9,643 records
+   * where the pages held 6,000 (measured 2026-10-04). Both halves are pinned
+   * — the hijack, so the reason the "." exists stays legible, and the fix. */
+  fx_reset();
+  fx_add("/rootarr", 200,
+    "[{\"name\":\"alpha\",\"releases\":[{\"version\":\"1\"},{\"version\":\"2\"},"
+    "{\"version\":\"3\"}]},"
+    "{\"name\":\"beta\",\"releases\":[{\"version\":\"9\"}]}]");
+  rc = run_source("T_ROOTARR_AUTO", "");
+  int rootarr_recs = 0, rootarr_named = 0, rootarr_notice = 0;
+  for (int i = 0; i < g_ncap; i++) {
+    if (!strcmp(g_cap[i].rtype, "t-root")) {
+      rootarr_recs++;
+      if (strstr(g_cap[i].key, "alpha") || strstr(g_cap[i].key, "beta"))
+        rootarr_named++;
+    } else if (strstr(g_cap[i].key, "shape:densest-array-fallback")) {
+      rootarr_notice++;
+    }
+  }
+  ok(rc == 0 && rootarr_recs == 3 && rootarr_named == 0,
+     "without array_path, discovery mines the longer NESTED array (3 releases, not 2 packages)");
+  ok(rootarr_notice == 1,
+     "and says so: the densest-array fallback is stamped as a shape notice, not silent");
+  fx_reset();
+  fx_add("/rootarr", 200,
+    "[{\"name\":\"alpha\",\"releases\":[{\"version\":\"1\"},{\"version\":\"2\"},"
+    "{\"version\":\"3\"}]},"
+    "{\"name\":\"beta\",\"releases\":[{\"version\":\"9\"}]}]");
+  rc = run_source("T_ROOTARR_DOT", "");
+  ok(rc == 0 && g_ncap == 2,
+     "array_path=\".\" takes the ROOT array — one record per package");
+  ok(g_ncap == 2 && strstr(g_cap[0].key, "alpha") != NULL &&
+     strstr(g_cap[1].key, "beta") != NULL,
+     "and the root records key on their own fields, so id_keys resolves");
+
+  /* NDJSON: three record lines, one blank line, one line that is not JSON and
+   * one bare scalar. The three records must emit, the blank must not count at
+   * all, and the unreadable line must be DISCLOSED rather than skipped —
+   * silently dropping it is what would make a half-broken feed look whole. */
+  fx_reset();
+  fx_add("/ndjson", 200,
+    "{\"Path\":\"golang.org/x/text\",\"Version\":\"v0.3.0\"}\n"
+    "\n"
+    "{\"Path\":\"golang.org/x/text\",\"Version\":\"v0.4.0\"}\n"
+    "{\"Path\":\"github.com/a/b\",\"Version\":\"v1.0.0\"} oops not json\n"
+    "42\n"
+    "{\"Path\":\"github.com/a/b\",\"Version\":\"v1.0.0\"}\n");
+  rc = run_source("T_NDJSON", "");
+  int nd_recs = 0, nd_note = 0;
+  for (int i = 0; i < g_ncap; i++) {
+    if (!strcmp(g_cap[i].rtype, "t-nd")) nd_recs++;
+    else if (strstr(g_cap[i].key, "truncation:")) nd_note++;
+  }
+  ok(rc == 0 && nd_recs == 3,
+     "ndjson emits one record per JSON line (a blank line is not a record)");
+  ok(g_ncap >= 3 && strstr(g_cap[0].key, "golang.org/x/text") != NULL &&
+     strstr(g_cap[0].key, "v0.3.0") != NULL,
+     "and the composite id_keys resolves against the per-line objects");
+  ok(nd_recs == 3 && strcmp(g_cap[0].key, g_cap[1].key) != 0,
+     "two versions of one module do not collapse onto each other");
+  ok(nd_note == 1,
+     "an unreadable line is disclosed as a truncation notice, not skipped");
+
+  /* `$last` cursor. Page 1 ends at ts2; the engine must ask for since=ts2 and
+   * then stop when the page it gets back holds nothing new. */
+  fx_reset();
+  /* Fixtures match by strstr in insertion order, so the specific cursors must
+   * be registered BEFORE the bare path — "/ndpage" is a substring of every
+   * one of these URLs and would otherwise answer all three pages with page 1,
+   * which is what the engine's own repeated-page detector then reports. */
+  fx_add("/ndpage?since=ts3", 200, "\n");
+  fx_add("/ndpage?since=ts2", 200,
+    "{\"Path\":\"m/three\",\"Version\":\"v1\",\"Timestamp\":\"ts3\"}\n");
+  fx_add("/ndpage", 200,
+    "{\"Path\":\"m/one\",\"Version\":\"v1\",\"Timestamp\":\"ts1\"}\n"
+    "{\"Path\":\"m/two\",\"Version\":\"v1\",\"Timestamp\":\"ts2\"}\n");
+  rc = run_source("T_NDJSON_LASTCURSOR", "");
+  int ndp = 0;
+  for (int i = 0; i < g_ncap; i++) if (!strcmp(g_cap[i].rtype, "t-nd")) ndp++;
+  ok(rc == 0 && ndp == 3,
+     "$last.Timestamp walks the feed: page 1's last record supplies page 2's cursor");
+
+  /* {ago:N}. The URL must carry a real instant, not the literal token — an
+   * unknown token is left verbatim by design, so "left verbatim" is exactly
+   * the failure this pins. */
+  fx_reset();
+  fx_add("/ago?since=20", 200, "{\"Path\":\"m/ago\"}\n");
+  rc = run_source("T_AGO", "");
+  ok(rc == 0 && strstr(g_last_url, "{ago:") == NULL,
+     "{ago:N} is expanded, not passed through as a literal token");
+  ok(strstr(g_last_url, "since=20") != NULL && strstr(g_last_url, "Z") != NULL,
+     "and expands to an RFC 3339 UTC instant");
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

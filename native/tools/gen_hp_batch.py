@@ -16,7 +16,7 @@ wrote and that collectors/verify_feeds.py has already proven fetch and emit.
 Manifest columns, pipe-delimited (a description may contain commas, never a pipe):
 
    1 id            registry id, unique across the whole tree
-   2 mode          json | csv | html
+   2 mode          json | csv | html | xml | xlsx | ndjson
    3 want          shape gate: any|domain|ip|email|numeric|hash|icao24|eth|btc|asn
    4 category      source_def.category
    5 record_type   stamped on every emitted item
@@ -97,7 +97,7 @@ from manifest import (COLS, split_opts, parse_opts,          # noqa: E402
                       load as _manifest_load)
 
 MODE = {"json": "HP_JSON", "csv": "HP_CSV", "html": "HP_HTML", "xml": "HP_XML",
-        "xlsx": "HP_XLSX"}
+        "xlsx": "HP_XLSX", "ndjson": "HP_NDJSON"}
 WANT = {"any": "HP_ANY", "domain": "HP_DOMAIN", "ip": "HP_IP",
         "email": "HP_EMAIL", "numeric": "HP_NUMERIC", "hash": "HP_HASH",
         "icao24": "HP_ICAO24", "eth": "HP_ETH", "btc": "HP_BTC",

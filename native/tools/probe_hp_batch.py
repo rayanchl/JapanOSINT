@@ -169,6 +169,65 @@ def fetch(url, extra, timeout=None):
         return resp.status, resp.headers.get("Content-Type", ""), raw
 
 
+def _resolve_array_path(doc, path):
+    """Resolve a declared `array_path` the way lib/hpengine.c resolves it.
+
+    This used to be four lines inline -- walk dict keys, give up on anything
+    else -- and it disagreed with the engine in two ways that both read as
+    "this source is dead" about rows the engine measurably handles. That is
+    rule 4c: two tools reading one declaration differently, and the probe is
+    the one that decides whether a row ships.
+
+      * `"."`, or any path whose segments are all empty, is THE ROOT.
+        hp_path() skips empty segments (`if (!*seg) continue;`) and returns
+        `root` unchanged, so a row whose upstream answers with a bare array
+        declares `array_path = "."` -- which it should, because discovery
+        otherwise prefers the densest NESTED array (lib/hpengine.h). The three
+        hex.pm rows in batch 32 are that shape and were reported
+        PATH_UNRESOLVED while running clean against the engine.
+
+      * A path may CROSS AN ARRAY. hp_path() cannot, so hp_run() retries with
+        hp_path_multi(), which takes EVERY node at the path and concatenates
+        them. NuGet's registration index is `items[]` of catalog pages, each
+        with its own `items[]` of versions: `items.items` is 86 version
+        records through the engine and was PATH_UNRESOLVED here.
+
+    Returns the resolved node, or None when the path genuinely is not there --
+    which stays a PATH_UNRESOLVED, because guessing some other array is how a
+    row whose shape changed gets a false pass.
+    """
+    segs = [s for s in path.split(".") if s]
+    if not segs:
+        return doc                      # "." -- the document root
+    node = doc
+    for i, seg in enumerate(segs):
+        if isinstance(node, dict):
+            # cJSON_GetObjectItem, which hp_path walks with, matches keys
+            # case-INsensitively; judging more strictly than the engine reads
+            # fails rows the engine serves.
+            if seg in node:
+                node = node[seg]
+                continue
+            low = [k for k in node if isinstance(k, str) and k.lower() == seg.lower()]
+            if low:
+                node = node[low[0]]
+                continue
+        if isinstance(node, list):
+            # The descending walk: every node at the REMAINING path, under
+            # every element here, concatenated. Mirrors hp_path_multi().
+            rest = ".".join(segs[i:])
+            out = []
+            for el in node:
+                sub = _resolve_array_path(el, rest)
+                if isinstance(sub, list):
+                    out.extend(sub)
+                elif sub is not None:
+                    out.append(sub)
+            return out or None
+        return None
+    return node
+
+
 def count_xml(text):
     """Count records in a plain XML document.
 
@@ -598,7 +657,8 @@ def _judge(r, url):
         return (sid, url, "ERROR_BODY", "", 0, status, nbytes,
                 text[:80].replace("\n", " "))
 
-    # A DECLARED array_path beats every heuristic below.
+    # A DECLARED array_path beats every heuristic below — resolved the way the
+    # ENGINE resolves it, see _resolve_array_path().
     #
     # VF.count_json() hunts for the densest array in the document, which is a
     # reasonable guess when the row says nothing — and a wrong answer whenever
@@ -620,32 +680,47 @@ def _judge(r, url):
     # no value this can act on, so fall through to the heuristics rather than
     # pick one and judge the row against it.
     ap_decl = opt(r, "array_path")
+
+    # NDJSON / JSON Lines, judged the way lib/hpengine.c's hp_run_ndjson()
+    # judges it: one complete JSON value per line, a blank line is nothing, a
+    # line with trailing content is NOT valid JSON (the engine parses with
+    # require_null_terminated for exactly that reason, because cJSON_Parse
+    # would accept `{"a":1} oops` and then poison the array it is copied into),
+    # and a bare scalar line is not a record. Without this branch the json
+    # path below sees a multi-line body, json.loads refuses it, and a live feed
+    # is reported UNPARSEABLE — rule 4c, with the probe deciding whether a row
+    # ships.
+    if r["mode"] == "ndjson":
+        recs = bad = 0
+        for ln in text.splitlines():
+            ln = ln.strip()
+            if not ln:
+                continue
+            try:
+                v = json.loads(ln)          # strict: rejects trailing content
+            except Exception:
+                bad += 1
+                continue
+            if isinstance(v, (dict, list)):
+                recs += 1
+        if recs:
+            note = "%d unreadable line(s)" % bad if bad else ""
+            return (sid, url, "PASS", "ndjson", recs, status, nbytes, note)
+        return (sid, url, "UNPARSEABLE" if bad else "EMPTY_RESULTSET", "ndjson",
+                0, status, nbytes,
+                "%d line(s) present, none parsed as a JSON record" % bad)
+
     if r["mode"] == "json" and ap_decl:
         try:
             doc = json.loads(text)
         except Exception:
             return (sid, url, "UNPARSEABLE", "", 0, status, nbytes,
                     "declared array_path but body is not JSON")
-        def at(path):
-            # cJSON_GetObjectItem, which the engine walks with, matches keys
-            # case-INsensitively; judging the path more strictly than the
-            # engine reads it fails rows the engine would serve.
-            node = doc
-            for seg in path.split("."):
-                if not isinstance(node, dict):
-                    return None
-                if seg in node:
-                    node = node[seg]
-                    continue
-                low = [k for k in node if k.lower() == seg.lower()]
-                if not low:
-                    return None
-                node = node[low[0]]
-            return node
         # `a+b+c` reads several sibling arrays and emits them all; one that is
-        # absent is not an error, none at all is PATH_UNRESOLVED.
-        alts = [a.strip() for a in ap_decl.split("+") if a.strip()]
-        nodes = [(a, at(a)) for a in alts]
+        # absent is not an error, none at all is PATH_UNRESOLVED. Each part is
+        # resolved exactly as the engine resolves a single path.
+        alts = [a.strip() for a in ap_decl.split("+") if a.strip()] or [ap_decl]
+        nodes = [(a, _resolve_array_path(doc, a)) for a in alts]
         found = [(a, n) for a, n in nodes if n is not None]
         if not found:
             return (sid, url, "PATH_UNRESOLVED", "", 0, status, nbytes,
@@ -701,10 +776,24 @@ def _judge(r, url):
         # would shift or truncate the parsed href_must, probing a filter the
         # generated collector does not actually apply.
         must = opt(r, "href_must", "")
-        hrefs = re.findall(r'<a\b[^>]*\bhref\s*=\s*["\']([^"\'#]+)["\']',
+        # The fragment is excluded from the KEY the hits are counted by (two
+        # anchors differing only after `#` are one target), but it must not be
+        # excluded from the MATCH. The class used to be [^"'#]+, which stops at
+        # the `#` and then demands the closing quote right there -- so an href
+        # that carries a fragment matched nothing at all. Every anchor in a
+        # PEP 503 simple index ends `...tar.gz#sha256=<64 hex>`, so
+        # pypi.org/simple/<project>/ scored 0 anchors on a page holding 244 of
+        # them and was reported UNPARSEABLE. hpengine reads the whole attribute
+        # (html_attr + hp_url_resolve) and keeps those anchors, so the verdict
+        # was about this regex, not about the page.
+        # href_must is tested against the WHOLE attribute, as hpengine tests it
+        # (hp_html_walk checks the raw href and the resolved link); only the
+        # counting key drops the fragment.
+        hrefs = re.findall(r'<a\b[^>]*\bhref\s*=\s*["\']([^"\']+)["\']',
                            text, re.I)
-        hits = [h for h in hrefs if (not must or must in h)]
-        hits = [h for h in hits if not h.lower().startswith(
+        hits = [h.split("#", 1)[0] for h in hrefs
+                if not must or must in h]
+        hits = [h for h in hits if h and not h.lower().startswith(
             ("javascript:", "mailto:", "tel:"))]
         if hits:
             kind, items = "html-anchors", len(set(hits))

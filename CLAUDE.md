@@ -19,11 +19,102 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 18,170** (2026-10-02, after merging origin/main's
-PR #21-#23 integration with the local branch and batch 32's 340 Japanese rows —
-`docs/verified-sources-batch32.md`): `make lint-sources` prints it, counting
-hp_source table rows as well as `REGISTER_SOURCE`, and
+**The registered count is 18,644** (2026-10-05, after merging the audit
+branch with main): main's batches 33–36 — batch 33's 43 measured supply-chain
+rows (`docs/verified-sources-batch33.tsv`), batch 34's NDJSON row, batch 35's
+four string-array rows, the spec-families beats and batch 36's 188 — on top of
+the 18,170 that included batch 32's 340 Japanese rows. `make lint-sources`
+prints it, counting hp_source table rows as well as `REGISTER_SOURCE`, and
 `./bin/japanosint --list-sources` agrees.
+
+**Batch 33 is the one batch measured end to end against live upstreams** —
+43 supply-chain and package-registry rows
+(`collectors/pivot/table/hp3b33_supplychain.c`,
+`native/collectors/OSINT_SOURCES_BATCH_33_SUPPLYCHAIN.md`). The environment it
+was authored in reaches package-registry hosts and only those, so probe
+`--check-filter`, `audit_batch_emit`, per-pivot `--run` and the registry sweep
+all ran for real: every row has an emitted-AND-stored reading, and the counts
+in its descriptions are what the bodies held. The same is true of the two small
+beats that followed it — batch 34's `ndjson` and batch 35's `strings` — which
+is why those three carry `docs/verified-sources-batch3{3,4,5}.tsv`. Note what
+that environment constrains: `docs/rejected-sources-batch33.tsv` lists the hosts
+the policy refused, OSV, deps.dev, libraries.io and ecosyste.ms among them, and
+the 144 rows staged in `docs/candidate-sources-batch31.*.txt` are on 140 hosts
+of which **zero** are reachable from it, so they stay unprobed.
+
+**Batch numbers 34 and 35 each hold beats from TWO sessions, and the
+`verified-sources-batch3{4,5}.tsv` files describe only one of them.** Batch 34
+is `ndjson` (1 row, measured) plus `ckanbulk`/`fdsnstation`/`fdsnevent`/
+`socratacat` (139 rows, unverified); batch 35 is `strings` (4 rows, measured)
+plus `jpweko` (100 rows, unverified). Nothing collides — the beat names keep
+every file, id and table symbol distinct — but a per-batch TSV or note is no
+longer a statement about the whole number, so read the BEAT, not the batch.
+This is the same hazard the paragraph below is about, hit a second time by the
+session that had already renumbered itself out of it once.
+
+**Batch numbers are claimed by whoever merges first, so check before you
+generate.** Two sessions authored a "batch 33" on 2026-10-04; the one that
+merged first kept the number and the other was renumbered to 34 and 35 at merge
+time (ids, table symbols, file names, manifests and every textual reference).
+The collision would have made `verified-sources-batch33.tsv` describe one batch
+while another batch's headers said that file did not exist. The renumbering
+then landed on 34 and 35, which a third session had taken in the meantime — so
+the rule is not "renumber once and you are safe", it is **re-check at merge
+time**, because the number you picked when you generated may have been claimed
+while you worked. Likewise
+`docs/candidate-sources-batch31.*.txt` is a docs-only STAGING set (144 global
+candidates, `docs/batch31/STAGING_README.md`) that shares its number with the
+already-merged `hp3b31_*.c` tables but has nothing to do with them — those
+tables have no manifest. Before picking `<N>`:
+`git ls-tree -r --name-only origin/main | grep -oE '(batch|hp3b)[0-9]+' | sort -u`.
+
+**Batches 34 and 35 are unverified, for the same reason as batch 31:**
+authored 2026-10-04 in a session whose network policy allowed only Anthropic
+APIs, package registries and GitHub, so nothing was fetched and there is no
+`verified-sources-batch3{4,5}.tsv`. Both are built to be as close to provable as
+an unprobed batch can be — **every host is proven live by a different row
+already in the tree**, and every path, parameter set, paging rule and envelope
+is fixed by a specification or copied from a row that passed the emit audit —
+and **both have manifests**, so the probe and emit tools point straight at them.
+
+* **Batch 34, 139 rows** (`hp3b34_{ckanbulk,fdsnstation,fdsnevent,socratacat}.c`):
+  95 CKAN `current_package_list_with_resources`, 15 FDSN `station/1`
+  inventories, 5 FDSN `event/1` catalogues, 24 Socrata Discovery pivots.
+  `native/collectors/OSINT_SOURCES_BATCH_34_SPEC_FAMILIES.md`.
+* **Batch 35, 100 rows** (`hp3b35_jpweko.c`): WEKO3 `/api/records/?q=` entity
+  pivots on the 100 largest JAIRO Cloud repositories that were wired for OAI
+  harvesting but could not be ASKED about an entity — endpoint and keys copied
+  from batch 25, which ran them through the emit audit and `--check-filter`.
+
+```sh
+python3 native/tools/audit_registry_emit.py --bin ./bin/japanosint --match JO34_ --jobs 6 --timeout 220
+python3 native/tools/audit_registry_emit.py --bin ./bin/japanosint --match JO35_ --jobs 6 --timeout 220
+python3 native/tools/probe_hp_batch.py docs/candidate-sources-batch3{4,5}.*.txt --check-filter
+```
+
+Two review findings from batch 34 that generalise:
+
+* **A Socrata domain's own `/api/catalog/v1` is NOT scoped to that domain.**
+  Without `domains=` and `search_context=`, a pivot returns matching datasets
+  from every Socrata portal and attributes them to this one — rule 4d's
+  confident wrong answer. 64 existing rows already passed `domains=`; batch
+  34's 24 did not until review.
+* **The FDSN spec defines services; a node runs only some of them.** EIDA nodes
+  serve dataselect/station/availability, not event; USGS ComCat and EMSC serve
+  event, not station; IRIS retired fdsnws-event. 11 batch-34 rows asking a host
+  for a service it does not run were dropped before any probe.
+
+**A CSV delimiter that defaults to comma silently unparsed a working row.**
+`lib/hpengine.c` sets `char delim[64] = ","` and does NOT sniff. FDSN's
+`format=text` is PIPE-delimited, so batch 31's `FDSN_STATION_INVENTORY` — cited
+below as storing 151,303 records — was putting each whole line into ONE cell:
+`col1`, `col2`, `col3` and `col5` all resolved to nothing, the title fell back
+to the raw line, and no station got coordinates. The record COUNT was real,
+which is precisely why it read as healthy for weeks. Fixed 2026-10-04 with
+`csv_delim=pipe;csv_comment=#;csv_no_header=1`, and its `id_keys` moved from
+`col1` to `col0+col1+col6` because a station code is not unique across networks.
+**A row's record count says nothing about whether its FIELDS were parsed** —
+check one record's `properties` the first time a non-comma CSV row ships.
 
 **One exception to "every source is proof-of-life verified":** batch 31 — the
 government, public-record and surveillance tables from PR #23
@@ -79,7 +170,7 @@ hpengine pages exactly as it did. Without that (or an explicit `next_path` /
 
 Where the tree actually stands, as `make audit-sources` reports it:
 
-* **strict set — 0 findings across 282 files** (2026-10-05):
+* **strict set — 0 findings across 295 files** (2026-10-05; 256 on 2026-09-27):
   `collectors/pivot/table/hp*_*.c` plus the generated deep-record tables
   `collectors/feed/generated/hp1[0-9]_*.c`. This is the part the Makefile
   gates on, and it is held clean. Run `make audit-sources`
@@ -106,6 +197,29 @@ Where the tree actually stands, as `make audit-sources` reports it:
   24th, TDnet stopped at 100 disclosures a day and EDINET-x at 25 filings. The
   check exists now; all of those are fixed.
 
+* **A SEVENTH shape the six checks cannot see: a record limit the row asks
+  the UPSTREAM for.** Every one of the six looks for a bound written in C — a
+  `#define`, a `break`, a loop condition, a `seen[]` ring, a first-element
+  read, a single request. A limit spelled into a URL is none of them, so the
+  tree read "0 findings" while `go-module-index` asked index.golang.org for a
+  six-hour window with `&limit=200` and no paging, and stored **200 of the
+  22,248 versions that window holds** — 22,048 Go module publications dropped
+  per hourly run, at `rc=0`, `records=200`, `stored=200`. Both of rules 4 and
+  4b's "the numbers look fine" traps at once. Measured 2026-10-05; that row is
+  retired in favour of `GO_MODULE_INDEX`, which pages on
+  `next_path=$last.Timestamp`.
+
+  `tools/audit_url_limits.py` finds the shape, and is deliberately NOT in
+  `make audit-sources`: **a URL limit is not automatically a discard and the
+  script cannot tell.** A relevance-ranked search pivot asking for the top 15
+  has no complete answer to truncate — that limit IS the question. A scheduled
+  read of a collection that has an end stores `limit` of however many exist,
+  forever, and that is the violation. They are identical in C. The narrow scope
+  reports **103 sites across 78 files**, none of them measured, so running it
+  is the START of the work; wiring it into the gate would put a hundred
+  untriaged findings into a tree whose invariant is that a new finding is a
+  regression.
+
 Deliberate exceptions carry an inline `/* exhaustive-ok: <reason> */` marker
 (`grep -rn exhaustive-ok`). The marker must sit **on the flagged line itself** —
 the scanner matches per line, so a marker in the comment block above the line it
@@ -116,8 +230,8 @@ above and a one-line `/* exhaustive-ok: … */` on the line.
 Two amendments from the deep-record batch:
 
 * **The gated set is now two globs**, `collectors/pivot/table/hp*_*.c` plus the
-  generated deep-record tables `collectors/feed/generated/hp1[0-9]_*.c` — 262
-  files, 0 findings. `--strict` had to be made repeatable to say that honestly:
+  generated deep-record tables `collectors/feed/generated/hp1[0-9]_*.c` — 290
+  files as of 2026-10-05 (262 when this was written), 0 findings. `--strict` had to be made repeatable to say that honestly:
   it took a single glob, so passing two kept only the LAST one and the gate
   printed "0 findings" for a set it had never opened.
 * **`loop-cap` is a sixth check, and it was not redundant.** A bound written in
@@ -201,6 +315,17 @@ That is the native job in `.github/workflows/ci.yml`; CI also runs TSan and
 ASan builds and the client's `vitest` and `vite build`. Run gates with `JO_DB`
 pointing at a scratch file — several of them open the default DB otherwise.
 
+**And treat "CI is red" as a question, not an answer.** `ci.yml` carried
+`JO_DB: ${{ runner.temp }}/ci.db` as a JOB-LEVEL `env:` entry, where the
+`runner` context does not exist yet. That is an unrecognised named-value, which
+invalidates the whole FILE rather than the one job: GitHub created each run,
+failed it immediately and scheduled ZERO jobs. **Every one of the first 74 runs
+failed that way, from this file's first commit** — so for 74 runs "CI is red"
+was never a test result, because nothing had ever been compiled or executed.
+PR #28 moved it to a `$GITHUB_ENV` step and the runs after it are the first
+real ones. A failing run with `total_count: 0` in its jobs list is this shape,
+not a gate.
+
 If `make unit` dies with `tests/unit/run.sh: No such file or directory` (exit
 127) on a tree that came from a Windows checkout, the script has CRLF line
 endings and the kernel is reading `#!/bin/bash\r` as the interpreter. The error
@@ -216,7 +341,8 @@ git ls-files -z '*.sh' '*.py' | xargs -0 sed -i 's/\r$//'   # content-identical 
 
 `make source-count` (and the `source-floor` gate built on it) counts hp table
 rows as well as `REGISTER_SOURCE`, and agrees with the binary. Both floors were
-recorded at 18,170 on 2026-10-02; they had been left at 16,271 and 13,081, low
+recorded at 18,170 on 2026-10-02 and at 18,644 on 2026-10-05; they had been
+left at 16,271 and 13,081, low
 enough that batches 31 and 32 could both stop registering with CI green.
 Re-record them when a batch lands (`make source-floor-record
 registry-floor-record`).
@@ -291,11 +417,12 @@ says why.
 | `tools/batch_exclusions.py` | no duplicate id or endpoint against the existing tree or within the batch (normalising `{q}` and `%s` to one form; `.portal` is documentation and is excluded). Sees **runtime-composed** endpoints too — it resolves string macros, joins adjacent literals, follows `#include "*.inc"`, and matches a `%s` URL family on its layer/dataset NAME. Pass **`--bin ./bin/japanosint`**: without it the id set is a regex approximation (4,754 of 13,193) and it says so |
 | `tools/audit_batch_pagination.py` | a paged endpoint declares `page_param` or `next_path` — read from the parsed opts, not as a substring of the whole field |
 | `tools/audit_batch_reachable.py` | rule 3 above. A row whose opts are ambiguous is reported UNVERIFIABLE, never "never runs" |
+| `tools/audit_url_limits.py` | the seventh discard shape — a record limit asked of the UPSTREAM in a URL, with no paging to follow it. Read, not gated: 103 narrow candidates, unmeasured, and a limit on a ranked pivot is legitimate |
 | `tools/audit_page_param.py` | rows whose URL already binds their own `page_param`. The engine used to APPEND (`…&pagina=1&pagina=2`) and a server binding the first occurrence then served page 1 for the whole walk — N pages emitted, one stored, `rc=0`. Fixed in `hp_url_set_param` and pinned by `hptest` "9f-bis"; the lint stays because 103 of 1,431 paged rows are that shape and their paging depends on the replacement being right |
 | `tools/audit_batch_emit.py` | rule 4 below: runs each MANIFEST row through the real binary and reads back `emitted N of M`. `--timeout S` moves the kill line; a run that hits it is **`SLOW`**, carrying its partial counts — unmeasured, not failed. Each run gets a scratch DB from a warm template (it used to write the developer's live DB), and it exits non-zero on UNREGISTERED, UNPARSEABLE, NO_RUN_LINE or when nothing was measured |
 | `tools/audit_registry_emit.py` | rule 4 **and** 4b for the whole REGISTRY, manifest or not — `--list-sources` is the source list, so nothing registered can hide. Measures emitted *and* stored, per run, against a fresh copy of a warm template DB. `--scheduled`/`--match`/`--only`/`--ids-file`, `--jobs`, `--timeout`, TSV out, `--resume` |
 | `tools/diagnose_emit_keys.py` | why a row emitted nothing, and which `title_keys`/`id_keys` fix it |
-| `tools/gen_hp_batch.py` | manifest → C, one table per beat, `--prefix`/`--batch` so batches never collide. Rejects duplicate opts, non-integer int opts, and an opt whose value **swallowed the next one** through a stray `\;` |
+| `tools/gen_hp_batch.py` | manifest → C, one table per beat, `--prefix`/`--batch` so batches never collide — but the batch NUMBER is yours to keep unique: main shipped a batch 32 while a branch was open with its own, both created `docs/verified-sources-batch32.tsv`, and renumbering the branch to 33 after the fact meant touching the manifest, both TSVs, the table, its array name and two batch citations that had landed in `lib/hpengine.h` and `core/hostgate.c`. Rejects duplicate opts, non-integer int opts, and an opt whose value **swallowed the next one** through a stray `\;` |
 
 ## 4. Fetching is not emitting — prove the second one
 
@@ -459,7 +586,23 @@ duplicate at all — it reports it, and every reader refuses to guess
 hands back the lines that LOOK like rows and are not, because "skipped" and
 "checked and clean" used to be the same output.
 
-Unifying it immediately found three live defects of the same family, where a
+Two more of the same family turned up in batch 33, both in
+`tools/probe_hp_batch.py`, and both made it report a source DEAD that the
+engine measurably handles — which matters more than the reverse, because the
+probe is the tool that decides whether a row ships:
+
+* its anchor regex was `href\s*=\s*["\']([^"\'#]+)["\']`, and that class stops
+  at the `#` and then demands the closing quote right there, so an href
+  carrying a fragment matched NOTHING. Every anchor in a PEP 503 simple index
+  ends `...tar.gz#sha256=<64 hex>`, so `pypi.org/simple/requests/` scored 0
+  anchors on a page holding 244 and came back UNPARSEABLE. hpengine reads the
+  whole attribute and keeps them.
+* its declared-`array_path` resolver walked dict keys only, so it understood
+  neither `.` (the root) nor a path that crosses an array, and four live rows
+  came back `PATH_UNRESOLVED`. `_resolve_array_path()` now mirrors `hp_path`
+  and `hp_path_multi`.
+
+Unifying the parser immediately found three live defects of the same family, where a
 stray `\;` escaped the separator and the following opt was swallowed into the
 previous VALUE — shipped into committed C as
 `.date_keys = "exchangedate;pagination_ok=start/end are a DATE range…"`, a
@@ -471,6 +614,61 @@ Engine subtleties worth knowing before writing a row:
 * `page_start`'s unset value is 0, which is also a legitimate first page. Set
   **`page_zero_based=1`** for a 0-based API — otherwise the engine coerces the
   start to 1 and silently never fetches page 1.
+* **A bare root array must be DECLARED: `array_path=.`** is the document
+  itself. With no `array_path` the engine picks the densest array of OBJECTS,
+  which is not the root as soon as a root record carries a longer nested array
+  of its own. hex.pm returns 100 packages per page, each with its own
+  `releases` list, so on a 60-page walk the engine mined `[33].releases` (133)
+  over the root (100) on 34 of the 60 pages: 9,643 records emitted where the
+  pages hold 6,000, keyed on a field the release entries do not carry, 2,881
+  collapsing at the sink. It is disclosed — a `collector-shape-notice` naming
+  the array mined and the runner-up — but a notice is a row in the database,
+  not a build error, so a row nobody reads after its first run keeps doing it.
+  Six rows in batch 33 were that shape. `hptest` pins both halves, the hijack
+  and the fix.
+* **An array of bare JSON STRINGS is a record set** — `title_keys=value`,
+  `id_keys=value`. `hp_json_flat()` maps a string WITH CONTENT to
+  `{"value": "<the string>"}`; the `empty` counter is for a NULL, a number or
+  an EMPTY string (the trailing newline of a CSV), which is what the comment
+  beside it is about. Four live sources — the Microsoft Container Registry
+  catalogue, NuGet's flat version list, and the complete Packagist and pub.dev
+  name lists — were written off in `docs/rejected-sources-batch34.tsv` on that
+  comment read as a capability claim, and all four store exactly what they
+  emit (3,851 / 86 / 464,521 / 91,388). **A capability claim read off a comment
+  is not a measurement**, and the measurement is one `--run` away.
+* **`mode=ndjson`** (`HP_NDJSON`) for one complete JSON value per line, no
+  enclosing array and no commas — the shape `index.golang.org/index` and
+  `index.crates.io` publish. Declared `json` the body dies at line 2 and the
+  row emits nothing forever; declared `csv` every line is one unqueryable
+  cell, which is the mistake `IANA_LANGUAGE_SUBTAGS` made. It works by
+  rewriting the lines into ONE array and handing that to the JSON path, so
+  every key list, the collision guard, detail hops, caps, paging and the
+  disclosure notices apply unchanged. A line that is not valid JSON is a LOST
+  RECORD, counted into `malformed`, reported in the run line and disclosed as
+  a truncation notice. Note the parse is `require_null_terminated`: plain
+  `cJSON_Parse` accepts `{"a":1} oops` and copying that line's text into the
+  array then poisons the whole array, taking every good line down with the
+  one bad one.
+* **`next_path` takes a `$last` segment** — the final element of an array —
+  for an upstream whose cursor is the last record's own field rather than
+  anything in an envelope. The Go module index publishes no next link at all
+  and pages by `since=<the Timestamp of the last record it gave you>`, and no
+  numeric index can name that element because the array's length is not known
+  when the row is written.
+* **`{ago:<seconds>}`** expands to RFC 3339 UTC of (now - seconds), the one
+  token not derived from the entity. It is for an upstream whose only ordering
+  is "everything at or after this instant", with no reverse order and no
+  `latest`: the Go index is append-only from 2019-04-10, so a row without the
+  anchor walks forward from 2019 on every run, emits 40,000 records an hour
+  and never reaches today. `since={ago:7200}` makes the same row the live
+  publish tail. **Check this when a feed's URL has no entity token and its
+  interval is short** — a source that emits plenty and tells you nothing new
+  is as invisible as one that emits nothing.
+* An **INCLUSIVE cursor** repeats one record per page boundary (the Go index
+  hands back page N's last record as page N+1's first), and the sink collapses
+  it as the byte-identical duplicate it is. Do not widen `id_keys` to "fix" a
+  `stored` that is a handful short of `emitted` on a cursor-paged feed —
+  measure the upstream first.
 * A row that declares no paging does ONE request. **`page_walk=1`** (HP_JSON
   only) walks it the way a VJSON collector is walked instead — the server's own
   next link, else the cursor its declared page size pairs with, advanced while
