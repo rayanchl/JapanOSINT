@@ -113,8 +113,26 @@ typedef struct hp_source {
   /* JSON shaping. All optional: with no array_path the engine finds the
    * densest array of objects itself, and with no *_keys it falls back to a
    * conventional key list — a row whose upstream changed shape degrades to
-   * fewer resolved fields, never to invented ones. */
-  const char *array_path;     /* dotted path ("a.b.c"), "" / NULL = auto    */
+   * fewer resolved fields, never to invented ones.
+   *
+   * `array_path = "."` is THE ROOT of the document, and a row whose upstream
+   * answers with a bare JSON array should say so rather than leave the choice
+   * to discovery. Discovery picks the DENSEST array of objects, which is not
+   * the root whenever a root record carries a longer nested array of its own:
+   * hex.pm's `?sort=updated_at` returns 100 package objects, each with its own
+   * `releases` array, and on a 60-page walk the engine mined `[33].releases`
+   * (133 records) instead of the root (100) on 34 of those pages — 9,643
+   * records emitted where the 60 pages hold 6,000, keyed on a field the
+   * release entries do not have, 2,881 of them collapsing at the sink
+   * (measured 2026-10-04, batch 33). Declaring `array_path = "."` took the
+   * same row to 6,000 emitted and 6,000 stored.
+   *
+   * It is reported, not silent — the engine stamps a shape notice naming the
+   * array it mined, the runner-up, and the pages it happened on — but the
+   * notice is a record in the database, not a build error, so a row that is
+   * never read after its first run keeps doing it. */
+  const char *array_path;     /* dotted path ("a.b.c"), "." = the root,
+                               * "" / NULL = auto-detect                    */
   const char *title_keys;     /* comma-separated candidates, first wins     */
   /* Record identity — the uid the sink upserts on. FIRST-MATCH per record:
    * the engine takes the first listed key that resolves to a non-empty value

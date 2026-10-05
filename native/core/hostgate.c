@@ -67,12 +67,20 @@ static struct { char host[HG_HOSTLEN]; int gap_ms; } g_over[HG_MAX_OVERRIDES] = 
    * run one at a time and fail when a sweep runs several together (measured
    * 2026-09-15); 400 ms keeps the whole family under the limit. */
   { "eutils.ncbi.nlm.nih.gov", 400 },
+  /* crates.io's own crawler policy is one request per second per client, and
+   * it enforces it: measured 2026-10-04, a reverse_dependencies walk under a
+   * 4-worker batch sweep was 429'd part-way (the engine stamped the
+   * truncation notice naming the 429 and pointing here) and a later single
+   * run of the same row was 429'd on its FIRST request while the window was
+   * still hot. The batch-33 crates.io rows walk hundreds of pages, so the
+   * floor has to be at the fetch, not in a per-source interval. */
+  { "crates.io", 1100 },
 };
 /* The number of LIVE entries above. This was `1` while the table held two, so
  * gap_for_host() — which scans only the first g_nover entries — never saw the
  * news.google.com gap its comment describes: the 615 gnews-* rows kept firing
  * together (found 2026-09-15). Keep it equal to the initialiser count. */
-static int g_nover = 3;
+static int g_nover = 4;
 
 static void override_set(const char *host, int gap_ms) {
   for (int i = 0; i < g_nover; i++)
