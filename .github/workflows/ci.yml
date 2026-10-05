@@ -33,13 +33,30 @@ jobs:
     timeout-minutes: 60
     env:
       DEBIAN_FRONTEND: noninteractive
-      # Keep the selftest's SQLite work in the runner's temp dir instead of the
-      # checkout, so the schema-applied DB is never mistaken for tracked data.
-      JO_DB: ${{ runner.temp }}/ci.db
       JO_SCHEMA: ${{ github.workspace }}/native/core/schema.sql
 
     steps:
       - uses: actions/checkout@v4
+
+      # Keep the selftest's SQLite work in the runner's temp dir instead of the
+      # checkout, so the schema-applied DB is never mistaken for tracked data.
+      #
+      # THIS CANNOT BE A JOB-LEVEL `env:` ENTRY, and that is why this workflow
+      # had never run. Job-level env is evaluated before a runner exists, so the
+      # only contexts in scope are github, needs, strategy, matrix, vars,
+      # secrets and inputs — `runner` is not one of them. `${{ runner.temp }}`
+      # there is an unrecognised named-value, which invalidates the whole FILE
+      # rather than the one job: GitHub creates the run, fails it immediately
+      # and schedules ZERO jobs. Every one of the first 74 runs failed that way,
+      # from the very first commit of this file, so "ci is red" was never a test
+      # result — nothing had ever been compiled or executed.
+      #
+      # $RUNNER_TEMP is the same path as an ordinary environment variable, and
+      # $GITHUB_ENV publishes it to every later step in the job. `env:` values
+      # are NOT shell-expanded, so writing `$RUNNER_TEMP/ci.db` up there would
+      # hand the C a literal dollar sign instead.
+      - name: Resolve the scratch DB path
+        run: echo "JO_DB=$RUNNER_TEMP/ci.db" >> "$GITHUB_ENV"
 
       - name: Install build dependencies
         run: |
@@ -241,10 +258,13 @@ jobs:
     timeout-minutes: 60
     env:
       DEBIAN_FRONTEND: noninteractive
-      JO_DB: ${{ runner.temp }}/ci-asan.db
       JO_SCHEMA: ${{ github.workspace }}/native/core/schema.sql
     steps:
       - uses: actions/checkout@v4
+      # Step, not job-level env: `runner` is out of scope up there and takes the
+      # whole file down with it. See build-and-test above.
+      - name: Resolve the scratch DB path
+        run: echo "JO_DB=$RUNNER_TEMP/ci-asan.db" >> "$GITHUB_ENV"
       - name: Install build dependencies
         run: |
           sudo apt-get update
@@ -270,11 +290,15 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 90
     env:
-      JO_DB: ${{ runner.temp }}/ci-macos.db
       JO_SCHEMA: ${{ github.workspace }}/native/core/schema.sql
 
     steps:
       - uses: actions/checkout@v4
+
+      # Step, not job-level env: `runner` is out of scope up there and takes the
+      # whole file down with it. See build-and-test above.
+      - name: Resolve the scratch DB path
+        run: echo "JO_DB=$RUNNER_TEMP/ci-macos.db" >> "$GITHUB_ENV"
 
       - name: Install build dependencies
         run: |
