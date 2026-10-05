@@ -19,11 +19,24 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 18,170** (2026-10-02, after merging origin/main's
-PR #21-#23 integration with the local branch and batch 32's 340 Japanese rows —
-`docs/verified-sources-batch32.md`): `make lint-sources` prints it, counting
-hp_source table rows as well as `REGISTER_SOURCE`, and
-`./bin/japanosint --list-sources` agrees.
+**The registered count is 18,214** (2026-10-05, after batch 33's 43
+supply-chain rows and batch 34's one NDJSON row; 18,170 was the count on
+2026-10-02 after batch 32's 340 Japanese rows — `docs/verified-sources-batch32.md`):
+`make lint-sources` prints it, counting hp_source table rows as well as
+`REGISTER_SOURCE`, and `./bin/japanosint --list-sources` agrees.
+
+**Batch 33 is the one batch measured end to end against live upstreams** —
+43 supply-chain and package-registry rows
+(`collectors/pivot/table/hp3b33_supplychain.c`,
+`native/collectors/OSINT_SOURCES_BATCH_33_SUPPLYCHAIN.md`). The environment it
+was authored in reaches package-registry hosts and only those, so probe
+`--check-filter`, `audit_batch_emit`, per-pivot `--run` and the registry sweep
+all ran for real: every row has an emitted-AND-stored reading, and the counts
+in its descriptions are what the bodies held. Note what that constrains —
+`docs/rejected-sources-batch33.tsv` lists the hosts the policy refused, OSV,
+deps.dev, libraries.io and ecosyste.ms among them, and the 144 rows staged in
+`docs/candidate-sources-batch31.*.txt` are on 140 hosts of which **zero** are
+reachable from that environment, so they stay unprobed.
 
 **One exception to "every source is proof-of-life verified":** batch 31 — the
 government, public-record and surveillance tables from PR #23
@@ -278,7 +291,7 @@ says why.
 | `tools/audit_batch_emit.py` | rule 4 below: runs each MANIFEST row through the real binary and reads back `emitted N of M`. `--timeout S` moves the kill line; a run that hits it is **`SLOW`**, carrying its partial counts — unmeasured, not failed |
 | `tools/audit_registry_emit.py` | rule 4 **and** 4b for the whole REGISTRY, manifest or not — `--list-sources` is the source list, so nothing registered can hide. Measures emitted *and* stored, per run, against a fresh copy of a warm template DB. `--scheduled`/`--match`/`--only`/`--ids-file`, `--jobs`, `--timeout`, TSV out, `--resume` |
 | `tools/diagnose_emit_keys.py` | why a row emitted nothing, and which `title_keys`/`id_keys` fix it |
-| `tools/gen_hp_batch.py` | manifest → C, one table per beat, `--prefix`/`--batch` so batches never collide. Rejects duplicate opts, non-integer int opts, and an opt whose value **swallowed the next one** through a stray `\;` |
+| `tools/gen_hp_batch.py` | manifest → C, one table per beat, `--prefix`/`--batch` so batches never collide — but the batch NUMBER is yours to keep unique: main shipped a batch 32 while a branch was open with its own, both created `docs/verified-sources-batch32.tsv`, and renumbering the branch to 33 after the fact meant touching the manifest, both TSVs, the table, its array name and two batch citations that had landed in `lib/hpengine.h` and `core/hostgate.c`. Rejects duplicate opts, non-integer int opts, and an opt whose value **swallowed the next one** through a stray `\;` |
 
 ## 4. Fetching is not emitting — prove the second one
 
@@ -436,7 +449,23 @@ duplicate at all — it reports it, and every reader refuses to guess
 hands back the lines that LOOK like rows and are not, because "skipped" and
 "checked and clean" used to be the same output.
 
-Unifying it immediately found three live defects of the same family, where a
+Two more of the same family turned up in batch 33, both in
+`tools/probe_hp_batch.py`, and both made it report a source DEAD that the
+engine measurably handles — which matters more than the reverse, because the
+probe is the tool that decides whether a row ships:
+
+* its anchor regex was `href\s*=\s*["\']([^"\'#]+)["\']`, and that class stops
+  at the `#` and then demands the closing quote right there, so an href
+  carrying a fragment matched NOTHING. Every anchor in a PEP 503 simple index
+  ends `...tar.gz#sha256=<64 hex>`, so `pypi.org/simple/requests/` scored 0
+  anchors on a page holding 244 and came back UNPARSEABLE. hpengine reads the
+  whole attribute and keeps them.
+* its declared-`array_path` resolver walked dict keys only, so it understood
+  neither `.` (the root) nor a path that crosses an array, and four live rows
+  came back `PATH_UNRESOLVED`. `_resolve_array_path()` now mirrors `hp_path`
+  and `hp_path_multi`.
+
+Unifying the parser immediately found three live defects of the same family, where a
 stray `\;` escaped the separator and the following opt was swallowed into the
 previous VALUE — shipped into committed C as
 `.date_keys = "exchangedate;pagination_ok=start/end are a DATE range…"`, a
@@ -448,6 +477,51 @@ Engine subtleties worth knowing before writing a row:
 * `page_start`'s unset value is 0, which is also a legitimate first page. Set
   **`page_zero_based=1`** for a 0-based API — otherwise the engine coerces the
   start to 1 and silently never fetches page 1.
+* **A bare root array must be DECLARED: `array_path=.`** is the document
+  itself. With no `array_path` the engine picks the densest array of OBJECTS,
+  which is not the root as soon as a root record carries a longer nested array
+  of its own. hex.pm returns 100 packages per page, each with its own
+  `releases` list, so on a 60-page walk the engine mined `[33].releases` (133)
+  over the root (100) on 34 of the 60 pages: 9,643 records emitted where the
+  pages hold 6,000, keyed on a field the release entries do not carry, 2,881
+  collapsing at the sink. It is disclosed — a `collector-shape-notice` naming
+  the array mined and the runner-up — but a notice is a row in the database,
+  not a build error, so a row nobody reads after its first run keeps doing it.
+  Six rows in batch 33 were that shape. `hptest` pins both halves, the hijack
+  and the fix.
+* **`mode=ndjson`** (`HP_NDJSON`) for one complete JSON value per line, no
+  enclosing array and no commas — the shape `index.golang.org/index` and
+  `index.crates.io` publish. Declared `json` the body dies at line 2 and the
+  row emits nothing forever; declared `csv` every line is one unqueryable
+  cell, which is the mistake `IANA_LANGUAGE_SUBTAGS` made. It works by
+  rewriting the lines into ONE array and handing that to the JSON path, so
+  every key list, the collision guard, detail hops, caps, paging and the
+  disclosure notices apply unchanged. A line that is not valid JSON is a LOST
+  RECORD, counted into `malformed`, reported in the run line and disclosed as
+  a truncation notice. Note the parse is `require_null_terminated`: plain
+  `cJSON_Parse` accepts `{"a":1} oops` and copying that line's text into the
+  array then poisons the whole array, taking every good line down with the
+  one bad one.
+* **`next_path` takes a `$last` segment** — the final element of an array —
+  for an upstream whose cursor is the last record's own field rather than
+  anything in an envelope. The Go module index publishes no next link at all
+  and pages by `since=<the Timestamp of the last record it gave you>`, and no
+  numeric index can name that element because the array's length is not known
+  when the row is written.
+* **`{ago:<seconds>}`** expands to RFC 3339 UTC of (now - seconds), the one
+  token not derived from the entity. It is for an upstream whose only ordering
+  is "everything at or after this instant", with no reverse order and no
+  `latest`: the Go index is append-only from 2019-04-10, so a row without the
+  anchor walks forward from 2019 on every run, emits 40,000 records an hour
+  and never reaches today. `since={ago:7200}` makes the same row the live
+  publish tail. **Check this when a feed's URL has no entity token and its
+  interval is short** — a source that emits plenty and tells you nothing new
+  is as invisible as one that emits nothing.
+* An **INCLUSIVE cursor** repeats one record per page boundary (the Go index
+  hands back page N's last record as page N+1's first), and the sink collapses
+  it as the byte-identical duplicate it is. Do not widen `id_keys` to "fix" a
+  `stored` that is a handful short of `emitted` on a cursor-paged feed —
+  measure the upstream first.
 * A row that declares no paging does ONE request. **`page_walk=1`** (HP_JSON
   only) walks it the way a VJSON collector is walked instead — the server's own
   next link, else the cursor its declared page size pairs with, advanced while

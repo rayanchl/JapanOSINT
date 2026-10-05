@@ -1,0 +1,2 @@
+id	url	verdict	kind	items	http	bytes	note
+GO_MODULE_INDEX	https://index.golang.org/index?since=2026-10-05T02:00:00Z&limit=2000	PASS	ndjson	2000	200	255974	

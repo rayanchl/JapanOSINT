@@ -612,6 +612,36 @@ def verify(r):
     # no value this can act on, so fall through to the heuristics rather than
     # pick one and judge the row against it.
     ap_decl = opt(r, "array_path")
+
+    # NDJSON / JSON Lines, judged the way lib/hpengine.c's hp_run_ndjson()
+    # judges it: one complete JSON value per line, a blank line is nothing, a
+    # line with trailing content is NOT valid JSON (the engine parses with
+    # require_null_terminated for exactly that reason, because cJSON_Parse
+    # would accept `{"a":1} oops` and then poison the array it is copied into),
+    # and a bare scalar line is not a record. Without this branch the json
+    # path below sees a multi-line body, json.loads refuses it, and a live feed
+    # is reported UNPARSEABLE — rule 4c, with the probe deciding whether a row
+    # ships.
+    if r["mode"] == "ndjson":
+        recs = bad = 0
+        for ln in text.splitlines():
+            ln = ln.strip()
+            if not ln:
+                continue
+            try:
+                v = json.loads(ln)          # strict: rejects trailing content
+            except Exception:
+                bad += 1
+                continue
+            if isinstance(v, (dict, list)):
+                recs += 1
+        if recs:
+            note = "%d unreadable line(s)" % bad if bad else ""
+            return (sid, url, "PASS", "ndjson", recs, status, nbytes, note)
+        return (sid, url, "UNPARSEABLE" if bad else "EMPTY_RESULTSET", "ndjson",
+                0, status, nbytes,
+                "%d line(s) present, none parsed as a JSON record" % bad)
+
     if r["mode"] == "json" and ap_decl:
         try:
             doc = json.loads(text)

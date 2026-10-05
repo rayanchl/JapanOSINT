@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
+#include <time.h>       /* {ago:N} in hp_expand — a `since` cursor relative to now */
 
 /* Bounds exist only to keep one pathological response from exhausting memory —
  * they are NOT an editorial filter. Per the exhaustive-use rule
@@ -246,13 +247,24 @@ static int hp_url_num_param(const char *url, const char *key, long *out) {
 
 /* {token} expansion. An unknown token is left verbatim so a typo shows up in
  * the logged URL instead of silently vanishing. `extra_name`/`extra_val`
- * inject the second-hop {v}. Returns malloc'd. */
+ * inject the second-hop {v}. Returns malloc'd.
+ *
+ * {ago:<seconds>} is the only token that is not derived from the entity: it
+ * expands to RFC 3339 UTC of (now - seconds), for an upstream whose only
+ * ordering is "everything at or after this instant". The Go module index is
+ * that shape — append-only from 2019-04-10, no reverse order and no "latest"
+ * parameter — so a row without it walks forward from 2019 on every run and
+ * never reaches today, which is a source that emits 40,000 records an hour
+ * and tells you nothing new. `since={ago:7200}` makes the same row the live
+ * publish tail. Evaluated once per run when the URL is expanded, not per
+ * page, so a walk cannot slide out from under its own cursor. */
 static char *hp_expand(const char *tmpl, const hp_vars *v,
                        const char *extra_name, const char *extra_val) {
   if (!tmpl) return NULL;
   size_t cap = strlen(tmpl) + 512, len = 0;
   char *out = malloc(cap);
   if (!out) return NULL;
+  char tbuf[32];
   for (const char *p = tmpl; *p; ) {
     const char *sub = NULL;
     size_t skip = 0;
@@ -273,6 +285,15 @@ static char *hp_expand(const char *tmpl, const hp_vars *v,
         else if (!strcmp(tok, "qn"))     sub = v->nospace;
         else if (!strcmp(tok, "key"))    sub = v->key;
         else if (!strcmp(tok, "keyb64")) sub = v->keyb64;
+        else if (!strncmp(tok, "ago:", 4) && tok[4]) {
+          long secs = strtol(tok + 4, NULL, 10);
+          if (secs < 0) secs = 0;
+          time_t t = time(NULL) - (time_t)secs;
+          struct tm tmv;
+          if (gmtime_r(&t, &tmv) &&
+              strftime(tbuf, sizeof tbuf, "%Y-%m-%dT%H:%M:%SZ", &tmv))
+            sub = tbuf;
+        }
         else if (extra_name && !strcmp(tok, extra_name)) sub = extra_val;
         if (sub) skip = tn + 2;
       }
@@ -413,6 +434,20 @@ static cJSON *hp_path(cJSON *root, const char *path) {
             !strcmp(f->valuestring, want)) { hit = it; break; }
       }
       cur = hit;
+      continue;
+    }
+
+    /* `$last` is the final element of an array. A cursor is frequently the
+     * last record's own key rather than anything in an envelope —
+     * index.golang.org pages by `since=<Timestamp of the last record it gave
+     * you>` and publishes no next link at all — and the array's length is not
+     * known when the row is written, so no numeric index can name it. The `$`
+     * keeps it from colliding with a real object key spelled "last", and the
+     * array test means an object carrying a `$last` member is still read as a
+     * member. */
+    if (!strcmp(seg, "$last") && cJSON_IsArray(cur)) {
+      int n_arr = cJSON_GetArraySize(cur);
+      cur = n_arr > 0 ? cJSON_GetArrayItem(cur, n_arr - 1) : NULL;
       continue;
     }
 
@@ -887,6 +922,10 @@ typedef struct {
    * batch 19 reported exactly that phantom -1. A disclosure that cries wolf on
    * every trailing newline is one nobody will read when a real discard happens. */
   int   empty;
+  /* NDJSON lines that are not valid JSON. Distinct from `empty` on purpose: an
+   * empty slot held nothing, whereas a malformed line held a record we could
+   * not read, which is a discard and is disclosed as one. */
+  int   malformed;
   int   refused;          /* the sink declined it — a discard with a cause    */
   int   filtered;         /* filter_query excluded it — the row asked for that */
   int   duplicate;        /* the same href twice on one page — one record     */
@@ -2188,6 +2227,92 @@ static void hp_recjar_put(cJSON *rec, const char *key, const char *val) {
   cJSON_AddStringToObject(rec, key, val);
 }
 
+/* NDJSON / JSON Lines -> one JSON array, then the HP_JSON path.
+ *
+ * Delegating rather than writing a second record loop is the whole point: see
+ * HP_NDJSON in hpengine.h. Everything hp_run_json does — array_path, the key
+ * lists, the collision guard, detail hops, caps, next_path cursors — applies
+ * to an NDJSON row for free, and there is no second copy of any of it to drift.
+ *
+ * Each line is parsed once to decide whether it is a record, then its TEXT is
+ * copied into the array. Parsing twice is deliberate: the alternative is to
+ * wrap every line blind and let one malformed line take the whole array's
+ * parse down with it, which would turn a feed that half-broke upstream into a
+ * row that reports nothing at all. A line we cannot read is counted and
+ * disclosed; the lines around it are still used. */
+static int hp_run_ndjson(hp_run_state *st, const char *body) {
+  const hp_source *s = st->s;
+  size_t blen = strlen(body);
+  /* "[" + body + "]" + one comma per line, worst case. */
+  size_t cap = blen + (blen / 2) + 64;
+  char *buf = malloc(cap);
+  if (!buf) return st->emitted;
+  size_t w = 0;
+  buf[w++] = '[';
+  int kept = 0;
+
+  const char *p = body;
+  while (*p) {
+    const char *nl = strchr(p, '\n');
+    size_t llen = nl ? (size_t)(nl - p) : strlen(p);
+    /* Trim CR and trailing blanks; a trailing newline is an empty slot, not a
+     * malformed record, and is not counted at all. */
+    while (llen && (p[llen - 1] == '\r' || p[llen - 1] == ' ' ||
+                    p[llen - 1] == '\t')) llen--;
+    size_t off = 0;
+    while (off < llen && (p[off] == ' ' || p[off] == '\t')) off++;
+
+    if (off < llen) {
+      size_t n = llen - off;
+      char *line = malloc(n + 1);
+      if (!line) { free(buf); return st->emitted; }
+      memcpy(line, p + off, n);
+      line[n] = 0;
+      /* require_null_terminated, NOT cJSON_Parse. cJSON_Parse stops after the
+       * first complete value and does not object to anything following it, so
+       * `{"Path":"x"} oops` parses as an object — and copying that line's TEXT
+       * into the array then makes the WHOLE array unparseable, taking every
+       * good line down with the one bad one. A line with trailing content is
+       * not a valid JSON line, so it is counted as unreadable and disclosed. */
+      cJSON *probe = cJSON_ParseWithOpts(line, NULL, 1);
+      if (!probe) {
+        st->malformed++;
+      } else if (!cJSON_IsObject(probe) && !cJSON_IsArray(probe)) {
+        /* A bare scalar on its own line. Not a record, exactly as a bare
+         * scalar inside a JSON array is not one (see `empty`). */
+        st->empty++;
+      } else if (w + n + 2 < cap) {
+        if (kept) buf[w++] = ',';
+        memcpy(buf + w, line, n);
+        w += n;
+        kept++;
+      } else {
+        /* Cannot happen with the sizing above, but a silent drop here would be
+         * the exact failure this mode exists to prevent, so it is a discard
+         * with a cause rather than nothing. */
+        st->malformed++;
+      }
+      cJSON_Delete(probe);
+      free(line);
+    }
+    if (!nl) break;
+    p = nl + 1;
+  }
+  buf[w++] = ']';
+  buf[w] = 0;
+
+  if (st->malformed)
+    fprintf(stderr, "[hp:%s] ndjson: %d line(s) were not valid JSON and were "
+                    "not used (disclosed as a truncation notice)\n",
+            s->id, st->malformed);
+  if (!kept && !st->malformed)
+    fprintf(stderr, "[hp:%s] ndjson: no record lines in body\n", s->id);
+
+  int out = hp_run_json(st, buf);
+  free(buf);
+  return out;
+}
+
 static int hp_run_recjar(hp_run_state *st, const char *body) {
   cJSON *flats = cJSON_CreateArray();
   if (!flats) return st->emitted;
@@ -3067,6 +3192,9 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     page_url = hp_expand(url, &vars, "page", nb);
   }
   unsigned long long prev_hash = 0;   /* previous page's body, for notice (d) */
+  /* Page 1's record count, the yardstick for "was the previous page full?" in
+   * the repeated-page diagnosis below. */
+  int first_page_records = 0;
   for (int page = 0; page < page_max && page_url; page++) {
     st.page = page + 1;
     st.url  = page_url;
@@ -3106,10 +3234,34 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
      * bytes cannot hold a new record, so the walk stops here and says so. */
     unsigned long long bh = hp_body_hash(hr.body);
     if (page > 0 && bh == prev_hash) {
-      st.sh_repeat_page    = page + 1;
-      st.sh_repeat_skipped = page_max - (page + 1);
-      fprintf(stderr, "[hp:%s] page %d is byte-identical to page %d — the page "
-              "parameter is being ignored, stopping the walk\n", s->id, page + 1, page);
+      /* Identical bytes always stop the walk — they cannot hold a new record —
+       * but the DIAGNOSIS depends on how this row pages, and getting it wrong
+       * is how a notice stops being read.
+       *
+       * "The parameter is being ignored" describes a server re-serving page 1
+       * for a client-incremented page/offset, and the tell is that the page
+       * before it came back FULL: a server that ignores the parameter keeps
+       * handing over the same full first page. A row whose cursor comes out of
+       * its own records instead (next_path) and whose previous page was SHORT
+       * has simply reached the end of the feed — and for an INCLUSIVE cursor
+       * that is the normal, every-run ending, because the last record of the
+       * final page is the cursor that asks for the final page again.
+       * index.golang.org is exactly that, so the old wording filed a
+       * page-param-ignored notice on every single hourly run of a row that was
+       * working perfectly. A notice that cries wolf on every run is one nobody
+       * reads when something real happens. */
+      int client_paged = (s->page_param != NULL) || path_paged;
+      int prev_was_full = first_page_records > 0 &&
+                          st.page_records >= first_page_records;
+      if (client_paged || prev_was_full) {
+        st.sh_repeat_page    = page + 1;
+        st.sh_repeat_skipped = page_max - (page + 1);
+        fprintf(stderr, "[hp:%s] page %d is byte-identical to page %d — the page "
+                "parameter is being ignored, stopping the walk\n", s->id, page + 1, page);
+      } else {
+        fprintf(stderr, "[hp:%s] page %d repeats page %d after a short page — "
+                "end of feed, stopping the walk\n", s->id, page + 1, page);
+      }
       http_response_free(&hr);
       break;
     }
@@ -3157,6 +3309,7 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
       case HP_CSV:  out = hp_run_csv(&st, pbody);  break;
       case HP_XML:  out = hp_run_xml(&st, pbody);  break;
       case HP_RECJAR: out = hp_run_recjar(&st, pbody); break;
+      case HP_NDJSON: out = hp_run_ndjson(&st, pbody); break;
       case HP_XLSX: {
         char xerr[256]; size_t xn = 0;
         if (xlsx_to_csv(hr.body, hr.body_len, s->xlsx_sheet_index, s->xlsx_sheet,
@@ -3176,6 +3329,9 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     free(xcsv);
     free(utf8);
     http_response_free(&hr);
+    /* Page 1's size, for the repeated-page diagnosis. Captured after the parse
+     * because only the parse knows how many records the page held. */
+    if (page == 0) first_page_records = st.page_records;
 
     /* Shape notice (c): the row DECLARED where the title / identity live and
      * this page had records, none of which carried it. The records were still
@@ -3271,10 +3427,16 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   if (real_available < out) real_available = out;
   if (out > 0 || st.available > 0) {
     char emptynote[128] = "";
-    if (st.empty || st.refused || st.filtered || st.duplicate)
+    /* `malformed` is appended rather than inserted: eight parsers in
+     * tests/audit/ and tools/ read this breakdown, and the four original
+     * counters keep their order and wording. */
+    char malnote[48] = "";
+    if (st.malformed)
+      snprintf(malnote, sizeof malnote, ", %d unreadable line(s)", st.malformed);
+    if (st.empty || st.refused || st.filtered || st.duplicate || st.malformed)
       snprintf(emptynote, sizeof emptynote,
-               " [%d empty, %d duplicate, %d filtered out, %d refused by sink]",
-               st.empty, st.duplicate, st.filtered, st.refused);
+               " [%d empty, %d duplicate, %d filtered out, %d refused by sink%s]",
+               st.empty, st.duplicate, st.filtered, st.refused, malnote);
     fprintf(stderr, "[hp:%s] emitted %d of %d available across %d page(s)%s%s\n",
             s->id, out, real_available, st.page,
             st.truncated ? " (TRUNCATED)"
@@ -3297,7 +3459,12 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
    * what was not used; the records we counted are only a floor on it. */
   long avail = st.declared_total > (long)real_available ? st.declared_total
                                                          : (long)real_available;
-  if (st.truncated || failed_midwalk || pw_stuck || pw_repeat || pw_more) {
+  /* `malformed` joins the trigger list: an NDJSON line we could not parse
+   * is a record the upstream handed over and we did not use, which is
+   * exactly what this notice exists to state. Without it the shortfall
+   * would show only in the run line. */
+  if (st.truncated || failed_midwalk || pw_stuck || pw_repeat || pw_more ||
+      st.malformed) {
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "source_id", s->id);
     cJSON_AddStringToObject(p, "query", vars.raw ? vars.raw : "");
@@ -3309,6 +3476,8 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
         : "records counted so far — pages not read are not included");
     if (st.empty > 0)
       cJSON_AddNumberToObject(p, "empty_slots_skipped", st.empty);
+    if (st.malformed > 0)
+      cJSON_AddNumberToObject(p, "unreadable_lines_skipped", st.malformed);
     cJSON_AddNumberToObject(p, "pages_read", st.page);
     cJSON_AddBoolToObject(p, "more_pages_pending",
                           failed_midwalk || pw_stuck || avail <= (long)out);
@@ -3316,7 +3485,10 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     if (failed_midwalk)
       cJSON_AddNumberToObject(p, "failed_page_status", (double)failed_status);
     cJSON_AddStringToObject(p, "reason",
-      failed_midwalk
+      st.malformed && !st.truncated && !failed_midwalk
+        ? "some lines of this NDJSON feed were not valid JSON; the records "
+          "around them were used and these were not"
+      : failed_midwalk
         ? (failed_status == 429
              ? "a later page was refused with HTTP 429 (rate limited), so the "
                "walk stopped before the upstream ran out"
@@ -3338,7 +3510,10 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
           "advanced"
         : "the upstream reports more records than it handed over");
     cJSON_AddStringToObject(p, "remedy",
-      failed_midwalk
+      st.malformed && !st.truncated && !failed_midwalk
+        ? "re-run; if the same lines fail again the upstream feed itself is "
+          "malformed and the row should be re-pointed or retired"
+      : failed_midwalk
         ? "re-run; a rate-limited host needs a per-host minimum gap "
           "(core/hostgate.c) — see docs/SOURCE_EXHAUSTIVENESS.md"
         : "raise max_items/page_max on this row (lib/hpengine.h) — see "

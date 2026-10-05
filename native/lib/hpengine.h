@@ -54,6 +54,38 @@ typedef enum {
    * `Description:` lines) is JOINED with "; " rather than overwritten, because
    * dropping the later ones would discard real content. */
   HP_RECJAR = 5,
+  /* NDJSON / JSON Lines: one complete JSON value per line, no enclosing array
+   * and no commas between records. Added because two of the most useful
+   * machine-readable feeds in the software-supply-chain space publish only in
+   * this shape and were therefore undeclarable:
+   *
+   *   index.golang.org/index   the GLOBAL Go module publish stream, every
+   *                            {Path, Version, Timestamp} since 2019, paged by
+   *                            a `since` cursor taken from the last record
+   *   index.crates.io/<a>/<b>/<name>
+   *                            the crates.io sparse index — one line per
+   *                            version with its full dependency list,
+   *                            features, yanked flag, checksum and pubtime
+   *
+   * Declaring either as HP_JSON gets `cJSON_Parse` refusing the body at the
+   * second line, so the row emits nothing forever while still registering —
+   * the same invisible nothing an EMPTY_RESULTSET source is. Declaring them
+   * HP_CSV would make every line one unqueryable cell, which is the mistake
+   * IANA_LANGUAGE_SUBTAGS made above.
+   *
+   * Implemented by rewriting the lines into ONE JSON array and handing that to
+   * the HP_JSON path, deliberately rather than as a parallel record loop:
+   * array_path, title_keys, id_keys, date_keys, the content-hash collision
+   * guard, the detail second hop, record caps, paging and every disclosure
+   * notice then apply to an NDJSON row exactly as they do to a JSON one. The
+   * cost is holding the body twice while it is converted, which is why this
+   * mode is for line-oriented FEEDS and not for bulk dumps.
+   *
+   * A line that is not valid JSON is a LOST RECORD, not an empty slot: it is
+   * counted into `malformed`, reported in the run line, and disclosed as a
+   * collector-truncation-notice. Silently skipping it is what would make a
+   * feed that half-broke upstream look complete. */
+  HP_NDJSON = 6,
 } hp_mode;
 
 /* Shape gate: a row that only makes sense for a domain must not burn a request
@@ -81,6 +113,13 @@ typedef enum {
  *   {qh}     host part of a URL/email       {qu}      local part of an email
  *   {ql}/{qU} lower/upper-cased entity      {qn}      spaces stripped
  *   {key}    credential from key_env        {keyb64}  base64("<key>:")
+ *   {ago:<seconds>}  RFC 3339 UTC of (now - seconds). NOT entity-derived: it
+ *            is for an upstream whose only ordering is "everything at or
+ *            after this instant" and which offers no reverse order and no
+ *            "latest" — index.golang.org is exactly that, append-only from
+ *            2019-04-10, so `since={ago:7200}` is the difference between the
+ *            live publish tail and re-reading 2019 on every run. Expanded
+ *            once per run, not per page.
  * The detail (second-hop) URL additionally expands {v} — the value picked out
  * of the list record by `detail_key`. */
 typedef struct hp_source {
@@ -213,6 +252,12 @@ typedef struct hp_source {
    * page_max bounds the walk (default 10 pages) so a runaway feed cannot spin
    * forever — when that bound bites it is stamped on every record, never
    * silent. */
+  /* Dotted path to the next-page cursor or URL in the response. A segment of
+   * `$last` is the final element of an array, for an upstream whose cursor is
+   * the last record's own field rather than anything in an envelope: the Go
+   * module index publishes no next link and pages by `since=<the Timestamp of
+   * the last record it gave you>`, so the row declares
+   * `next_path=$last.Timestamp` with a `next_tmpl` that spends it. */
   const char *next_path;
   /* Template for building the next-page URL from the value `next_path`
    * resolved to, with `{v}` standing for that value (URL-encoded).
