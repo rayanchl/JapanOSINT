@@ -1,0 +1,24 @@
+# Batch 34 — ndjson: the newline-delimited-JSON feed the engine could not read until HP_NDJSON.
+#
+# It was probed live and REJECTED in batch 33 for one reason only: it is NDJSON
+# (one complete JSON value per line, no enclosing array, no commas), and
+# hpengine had no mode for it. docs/rejected-sources-batch33.tsv names this
+# feed as "the one rejection worth fixing in the engine rather than working
+# around". HP_NDJSON is that fix, and this is the row it exists for.
+#
+# The second NDJSON candidate, the crates.io sparse index, still cannot ship:
+# see docs/rejected-sources-batch34.tsv. Its path is SHARDED by crate name
+# (serde lives at /se/rd/serde) with four different layouts depending on the
+# name's length, and a declarative row cannot hold that branching — the same
+# reason CLAUDE.md gives for not converting VJSON_PREP.
+#
+# The Go index also needed a second thing: it publishes no next link and pages
+# by `since=<the Timestamp of the LAST record it gave you>`. No numeric index
+# can name the last element of an array whose length is unknown when the row is
+# written, so lib/hpengine.c's hp_path() grew a `$last` segment.
+#
+# Fetched live with curl -A "JapanOSINT/1.0" on 2026-10-05 (UTC); the record
+# counts and field lists below are what those bodies held.
+#
+# id|mode|want|category|record_type|tags|portal|name|name_ja|url|probe|description|opts
+GO_MODULE_INDEX|ndjson|any|cyber|go-module-version|supplychain,package-registry,go,golang,release-feed,firehose|https://index.golang.org|Go module index — the global module publish stream||https://index.golang.org/index?since={ago:7200}&limit=2000|https://index.golang.org/index?since=2026-10-05T02:00:00Z&limit=2000|Every module version ever published to the Go module ecosystem, in publication order: Path, Version and Timestamp, 2,000 per page from 2019-04-10 onward. This is the only complete, authoritative record of what has been published to Go — there is no search API that answers it — and because it is ordered by publication it is the feed a newly registered typosquat, a resurrected abandoned module path, or a burst of releases from one account appears in. Paged by a `since` cursor taken from the LAST record of each page, which is why it needs next_path=$last.Timestamp, and ANCHORED with since={ago:7200} because the index is append-only from 2019-04-10 with no reverse order and no `latest`: without the anchor the row walks forward from 2019 on every run, emits 40,000 records an hour and never reaches today. The cursor is INCLUSIVE — page N's last record is byte-identical to page N+1's first, verified live — so one record per page boundary collapses at the sink, which is correct dedupe of a genuine repeat.|array_path=.;title_keys=Path;id_keys=Path+Version;date_keys=Timestamp;interval=3600;next_path=$last.Timestamp;next_tmpl=https://index.golang.org/index?since={v}&limit=2000;page_max=20;pagination_ok=the index publishes no next link at all — it pages by since=<the Timestamp of the last record it handed you>, verified live, and that cursor is INCLUSIVE (page N's last record reappears as page N+1's first, so one record per boundary collapses at the sink as correct dedupe). A far-future since returns an empty 200, which is how the walk ends naturally. page_max=20 bounds an hourly run at 40000 versions, well above the real hourly publish rate

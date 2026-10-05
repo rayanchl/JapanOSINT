@@ -347,6 +347,35 @@ static const hp_source T[] = {
     .title_keys = "name", .id_keys = "name",
     .interval = 3600, .record_type = "t-root", .free_tier = 1, .description = "d" },
 
+  /* NDJSON. The body is the shape index.golang.org and index.crates.io
+   * publish: one complete JSON object per line, no array, no commas. Declared
+   * HP_JSON it would die at line 2 and emit nothing forever. */
+  { .id = "T_NDJSON", .name = "ndjson feed",
+    .url = "https://x.test/ndjson", .mode = HP_NDJSON, .array_path = ".",
+    .title_keys = "Path", .id_keys = "Path+Version",
+    .interval = 3600, .record_type = "t-nd", .free_tier = 1, .description = "d" },
+
+  /* A cursor that is the LAST RECORD's own field, not an envelope's: the Go
+   * module index publishes no next link and pages by `since=<Timestamp of the
+   * last record>`. `$last` is the only way to name it, because the array's
+   * length is not known when the row is written. */
+  { .id = "T_NDJSON_LASTCURSOR", .name = "ndjson paged by last record's field",
+    .url = "https://x.test/ndpage", .mode = HP_NDJSON, .array_path = ".",
+    .title_keys = "Path", .id_keys = "Path+Version",
+    .next_path = "$last.Timestamp",
+    .next_tmpl = "https://x.test/ndpage?since={v}",
+    .page_max = 4,
+    .interval = 3600, .record_type = "t-nd", .free_tier = 1, .description = "d" },
+
+  /* {ago:N} — a `since` cursor relative to now. The fixture matches on the
+   * YEAR only, because the rest of the timestamp is whatever the clock says
+   * when the test runs; what is being pinned is that the token expands to a
+   * real RFC 3339 instant in the URL rather than being left verbatim. */
+  { .id = "T_AGO", .name = "relative since cursor",
+    .url = "https://x.test/ago?since={ago:3600}", .mode = HP_NDJSON,
+    .array_path = ".", .title_keys = "Path", .id_keys = "Path",
+    .interval = 3600, .record_type = "t-ago", .free_tier = 1, .description = "d" },
+
   { .id = "T_IDKEYS_WIDE", .name = "wide composite with absent parts",
     .url = "https://x.test/wide", .array_path = "rows", .title_keys = "title",
     .id_keys = "aid+trans_id+trans_ref+trans_day+trans_value+trans_code+trans_sector+trans_country",
@@ -1925,6 +1954,64 @@ int main(void) {
   ok(g_ncap == 2 && strstr(g_cap[0].key, "alpha") != NULL &&
      strstr(g_cap[1].key, "beta") != NULL,
      "and the root records key on their own fields, so id_keys resolves");
+
+  /* NDJSON: three record lines, one blank line, one line that is not JSON and
+   * one bare scalar. The three records must emit, the blank must not count at
+   * all, and the unreadable line must be DISCLOSED rather than skipped —
+   * silently dropping it is what would make a half-broken feed look whole. */
+  fx_reset();
+  fx_add("/ndjson", 200,
+    "{\"Path\":\"golang.org/x/text\",\"Version\":\"v0.3.0\"}\n"
+    "\n"
+    "{\"Path\":\"golang.org/x/text\",\"Version\":\"v0.4.0\"}\n"
+    "{\"Path\":\"github.com/a/b\",\"Version\":\"v1.0.0\"} oops not json\n"
+    "42\n"
+    "{\"Path\":\"github.com/a/b\",\"Version\":\"v1.0.0\"}\n");
+  rc = run_source("T_NDJSON", "");
+  int nd_recs = 0, nd_note = 0;
+  for (int i = 0; i < g_ncap; i++) {
+    if (!strcmp(g_cap[i].rtype, "t-nd")) nd_recs++;
+    else if (strstr(g_cap[i].key, "truncation:")) nd_note++;
+  }
+  ok(rc == 0 && nd_recs == 3,
+     "ndjson emits one record per JSON line (a blank line is not a record)");
+  ok(g_ncap >= 3 && strstr(g_cap[0].key, "golang.org/x/text") != NULL &&
+     strstr(g_cap[0].key, "v0.3.0") != NULL,
+     "and the composite id_keys resolves against the per-line objects");
+  ok(nd_recs == 3 && strcmp(g_cap[0].key, g_cap[1].key) != 0,
+     "two versions of one module do not collapse onto each other");
+  ok(nd_note == 1,
+     "an unreadable line is disclosed as a truncation notice, not skipped");
+
+  /* `$last` cursor. Page 1 ends at ts2; the engine must ask for since=ts2 and
+   * then stop when the page it gets back holds nothing new. */
+  fx_reset();
+  /* Fixtures match by strstr in insertion order, so the specific cursors must
+   * be registered BEFORE the bare path — "/ndpage" is a substring of every
+   * one of these URLs and would otherwise answer all three pages with page 1,
+   * which is what the engine's own repeated-page detector then reports. */
+  fx_add("/ndpage?since=ts3", 200, "\n");
+  fx_add("/ndpage?since=ts2", 200,
+    "{\"Path\":\"m/three\",\"Version\":\"v1\",\"Timestamp\":\"ts3\"}\n");
+  fx_add("/ndpage", 200,
+    "{\"Path\":\"m/one\",\"Version\":\"v1\",\"Timestamp\":\"ts1\"}\n"
+    "{\"Path\":\"m/two\",\"Version\":\"v1\",\"Timestamp\":\"ts2\"}\n");
+  rc = run_source("T_NDJSON_LASTCURSOR", "");
+  int ndp = 0;
+  for (int i = 0; i < g_ncap; i++) if (!strcmp(g_cap[i].rtype, "t-nd")) ndp++;
+  ok(rc == 0 && ndp == 3,
+     "$last.Timestamp walks the feed: page 1's last record supplies page 2's cursor");
+
+  /* {ago:N}. The URL must carry a real instant, not the literal token — an
+   * unknown token is left verbatim by design, so "left verbatim" is exactly
+   * the failure this pins. */
+  fx_reset();
+  fx_add("/ago?since=20", 200, "{\"Path\":\"m/ago\"}\n");
+  rc = run_source("T_AGO", "");
+  ok(rc == 0 && strstr(g_last_url, "{ago:") == NULL,
+     "{ago:N} is expanded, not passed through as a literal token");
+  ok(strstr(g_last_url, "since=20") != NULL && strstr(g_last_url, "Z") != NULL,
+     "and expands to an RFC 3339 UTC instant");
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;
