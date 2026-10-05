@@ -129,6 +129,31 @@ triples in openFDA's own data across pages, and it is **disclosed in the run
 line** rather than silent — which is what rule 2 asks for when something cannot
 be taken whole.
 
+### The whole-batch sweep
+
+`audit_registry_emit.py` over all 188 ids, reading `stored` off the run line and
+the row count back out of a fresh database — two independent readings:
+
+**152 OK, 34 EMITS_NOTHING, 2 COLLISION.**
+
+The 34 are the entity pivots, swept with no entity. That verdict is an artefact
+of the sweep, not a property of the rows: every one of the 34 was run against a
+real entity (table above) and emits and stores. A pivot cannot be judged by a
+run that never gave it anything to pivot on.
+
+Both COLLISION rows lose exactly one record, and both were checked rather than
+waved through:
+
+* `UK_ONS_CODELISTS` — 84 emitted, 83 stored. There is **no unique field and no
+  unique composite up to three fields**: `links.self.id` is 83/84 because ONS
+  publishes the same code-list id twice. The collapse is real dedupe of a
+  genuine duplicate upstream.
+* `UK_FLOOD_STATIONS` — 1,421 emitted, 1,420 stored. The full station set
+  fetched in one request is **1,419 stations with 0 duplicate `@id`**, so the
+  emitted figure is 1,419 stations plus one paging-boundary duplicate plus one
+  notice, and the stored figure is 1,419 plus the notice. **Every station is
+  stored**; the collision is the boundary duplicate being deduped correctly.
+
 ## Ids carry no batch prefix
 
 Like batch 33 (`CRATESIO_CRATE_VERSIONS`) and unlike batches 34 and 35
