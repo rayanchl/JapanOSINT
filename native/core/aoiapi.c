@@ -968,20 +968,26 @@ static char *wl_delete(db_handle *db, const tenant_ctx *t, const char *id,
   snprintf(rule_id, sizeof rule_id, "%s", ctext(s, 0) ? ctext(s, 0) : "");
   sqlite3_finalize(s);
 
-  /* Same order alertsapi.c deletes a rule in — events first, then the rule —
-   * so no alert_events row is ever left pointing at a rule that is gone. That
-   * ordering only means anything inside a transaction that actually opened and
-   * actually committed, and a delete that half-lands is exactly the dangling
-   * rule_id the ordering exists to prevent — so all three statements are
-   * checked and a 204 is only ever returned for a committed delete. */
+  /* Same steps alertsapi.c deletes a rule with: its events are kept and
+   * stamped with the rule's name, undelivered sends are cancelled, then the
+   * rule and the watchlist go. A delete that half-lands would leave events
+   * named for nothing or sends still queued, so every statement is checked
+   * and a 204 is only ever returned for a committed delete. */
   if (wl_txn_begin(db->h) != 0) return err(st, 500, "server_error");
   int ok = 1;
   if (rule_id[0]) {
-    static const char *DEL[2] = {
-      "DELETE FROM alert_events WHERE rule_id=?1 AND tenant_id=?2",
+    /* The watchlist's rule goes; its events stay, named, with undelivered
+     * sends cancelled — the same rule as deleting an alert rule directly. */
+    static const char *DEL[3] = {
+      "UPDATE alert_events SET rule_name=(SELECT name FROM alert_rules"
+      " WHERE id=?1 AND tenant_id=?2) WHERE rule_id=?1 AND tenant_id=?2"
+      " AND rule_name IS NULL",
+      "UPDATE alert_deliveries SET status='skipped', error='rule deleted'"
+      " WHERE status='pending' AND event_id IN (SELECT id FROM alert_events"
+      " WHERE rule_id=?1 AND tenant_id=?2)",
       "DELETE FROM alert_rules  WHERE id=?1 AND tenant_id=?2"
     };
-    for (int i = 0; ok && i < 2; i++) {
+    for (int i = 0; ok && i < 3; i++) {
       if (sqlite3_prepare_v2(db->h, DEL[i], -1, &s, NULL) != SQLITE_OK) { ok = 0; break; }
       sqlite3_bind_text(s, 1, rule_id,      -1, SQLITE_TRANSIENT);
       sqlite3_bind_text(s, 2, t->tenant_id, -1, SQLITE_TRANSIENT);

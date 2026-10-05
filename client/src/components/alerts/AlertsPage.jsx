@@ -120,7 +120,7 @@ export default function AlertsPage() {
         onConfirm={del}
         title={`Delete “${confirmDel?.name || ''}”?`}
         confirmLabel="Delete"
-        message="Deletes the rule, its firing history and every inbox event it raised — the server removes those events with the rule. Deliveries already sent to email or webhook are not recalled."
+        message="Deletes the rule. The inbox events it already raised are kept, still labelled with this rule's name, and any delivery not yet sent is cancelled. Deliveries already sent to email or webhook are not recalled."
       />
 
       <TestResultSheet result={testResult} onClose={() => setTestResult(null)} />

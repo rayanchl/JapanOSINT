@@ -133,7 +133,7 @@ export default function WatchlistsPage() {
         onConfirm={del}
         title={`Delete “${confirmDel?.name || ''}”?`}
         confirmLabel="Delete"
-        message="Deleting a watchlist also deletes the alert rule behind it and that rule's firing history."
+        message="Deleting a watchlist also deletes the alert rule behind it. The inbox events that rule raised are kept, and any delivery not yet sent is cancelled."
       />
     </Page>
   );
