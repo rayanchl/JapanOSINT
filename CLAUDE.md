@@ -489,6 +489,16 @@ Engine subtleties worth knowing before writing a row:
   not a build error, so a row nobody reads after its first run keeps doing it.
   Six rows in batch 33 were that shape. `hptest` pins both halves, the hijack
   and the fix.
+* **An array of bare JSON STRINGS is a record set** — `title_keys=value`,
+  `id_keys=value`. `hp_json_flat()` maps a string WITH CONTENT to
+  `{"value": "<the string>"}`; the `empty` counter is for a NULL, a number or
+  an EMPTY string (the trailing newline of a CSV), which is what the comment
+  beside it is about. Four live sources — the Microsoft Container Registry
+  catalogue, NuGet's flat version list, and the complete Packagist and pub.dev
+  name lists — were written off in `docs/rejected-sources-batch34.tsv` on that
+  comment read as a capability claim, and all four store exactly what they
+  emit (3,851 / 86 / 464,521 / 91,388). **A capability claim read off a comment
+  is not a measurement**, and the measurement is one `--run` away.
 * **`mode=ndjson`** (`HP_NDJSON`) for one complete JSON value per line, no
   enclosing array and no commas — the shape `index.golang.org/index` and
   `index.crates.io` publish. Declared `json` the body dies at line 2 and the
