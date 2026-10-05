@@ -19,11 +19,12 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 18,214** (2026-10-05, after batch 33's 43
-supply-chain rows and batch 34's one NDJSON row; 18,170 was the count on
-2026-10-02 after batch 32's 340 Japanese rows — `docs/verified-sources-batch32.md`):
-`make lint-sources` prints it, counting hp_source table rows as well as
-`REGISTER_SOURCE`, and `./bin/japanosint --list-sources` agrees.
+**The registered count is 18,457** (2026-10-05): main's 18,218 — which includes
+batch 33's 43 measured supply-chain rows (`docs/verified-sources-batch33.tsv`),
+batch 34's one NDJSON row and batch 35's four string-array rows — plus the
+spec-families beats' 139 and 100. `make lint-sources` prints it, counting
+hp_source table rows as well as `REGISTER_SOURCE`, and
+`./bin/japanosint --list-sources` agrees.
 
 **Batch 33 is the one batch measured end to end against live upstreams** —
 43 supply-chain and package-registry rows
@@ -32,11 +33,87 @@ supply-chain rows and batch 34's one NDJSON row; 18,170 was the count on
 was authored in reaches package-registry hosts and only those, so probe
 `--check-filter`, `audit_batch_emit`, per-pivot `--run` and the registry sweep
 all ran for real: every row has an emitted-AND-stored reading, and the counts
-in its descriptions are what the bodies held. Note what that constrains —
-`docs/rejected-sources-batch33.tsv` lists the hosts the policy refused, OSV,
-deps.dev, libraries.io and ecosyste.ms among them, and the 144 rows staged in
-`docs/candidate-sources-batch31.*.txt` are on 140 hosts of which **zero** are
-reachable from that environment, so they stay unprobed.
+in its descriptions are what the bodies held. The same is true of the two small
+beats that followed it — batch 34's `ndjson` and batch 35's `strings` — which
+is why those three carry `docs/verified-sources-batch3{3,4,5}.tsv`. Note what
+that environment constrains: `docs/rejected-sources-batch33.tsv` lists the hosts
+the policy refused, OSV, deps.dev, libraries.io and ecosyste.ms among them, and
+the 144 rows staged in `docs/candidate-sources-batch31.*.txt` are on 140 hosts
+of which **zero** are reachable from it, so they stay unprobed.
+
+**Batch numbers 34 and 35 each hold beats from TWO sessions, and the
+`verified-sources-batch3{4,5}.tsv` files describe only one of them.** Batch 34
+is `ndjson` (1 row, measured) plus `ckanbulk`/`fdsnstation`/`fdsnevent`/
+`socratacat` (139 rows, unverified); batch 35 is `strings` (4 rows, measured)
+plus `jpweko` (100 rows, unverified). Nothing collides — the beat names keep
+every file, id and table symbol distinct — but a per-batch TSV or note is no
+longer a statement about the whole number, so read the BEAT, not the batch.
+This is the same hazard the paragraph below is about, hit a second time by the
+session that had already renumbered itself out of it once.
+
+**Batch numbers are claimed by whoever merges first, so check before you
+generate.** Two sessions authored a "batch 33" on 2026-10-04; the one that
+merged first kept the number and the other was renumbered to 34 and 35 at merge
+time (ids, table symbols, file names, manifests and every textual reference).
+The collision would have made `verified-sources-batch33.tsv` describe one batch
+while another batch's headers said that file did not exist. The renumbering
+then landed on 34 and 35, which a third session had taken in the meantime — so
+the rule is not "renumber once and you are safe", it is **re-check at merge
+time**, because the number you picked when you generated may have been claimed
+while you worked. Likewise
+`docs/candidate-sources-batch31.*.txt` is a docs-only STAGING set (144 global
+candidates, `docs/batch31/STAGING_README.md`) that shares its number with the
+already-merged `hp3b31_*.c` tables but has nothing to do with them — those
+tables have no manifest. Before picking `<N>`:
+`git ls-tree -r --name-only origin/main | grep -oE '(batch|hp3b)[0-9]+' | sort -u`.
+
+**Batches 34 and 35 are unverified, for the same reason as batch 31:**
+authored 2026-10-04 in a session whose network policy allowed only Anthropic
+APIs, package registries and GitHub, so nothing was fetched and there is no
+`verified-sources-batch3{4,5}.tsv`. Both are built to be as close to provable as
+an unprobed batch can be — **every host is proven live by a different row
+already in the tree**, and every path, parameter set, paging rule and envelope
+is fixed by a specification or copied from a row that passed the emit audit —
+and **both have manifests**, so the probe and emit tools point straight at them.
+
+* **Batch 34, 139 rows** (`hp3b34_{ckanbulk,fdsnstation,fdsnevent,socratacat}.c`):
+  95 CKAN `current_package_list_with_resources`, 15 FDSN `station/1`
+  inventories, 5 FDSN `event/1` catalogues, 24 Socrata Discovery pivots.
+  `native/collectors/OSINT_SOURCES_BATCH_34_SPEC_FAMILIES.md`.
+* **Batch 35, 100 rows** (`hp3b35_jpweko.c`): WEKO3 `/api/records/?q=` entity
+  pivots on the 100 largest JAIRO Cloud repositories that were wired for OAI
+  harvesting but could not be ASKED about an entity — endpoint and keys copied
+  from batch 25, which ran them through the emit audit and `--check-filter`.
+
+```sh
+python3 native/tools/audit_registry_emit.py --bin ./bin/japanosint --match JO34_ --jobs 6 --timeout 220
+python3 native/tools/audit_registry_emit.py --bin ./bin/japanosint --match JO35_ --jobs 6 --timeout 220
+python3 native/tools/probe_hp_batch.py docs/candidate-sources-batch3{4,5}.*.txt --check-filter
+```
+
+Two review findings from batch 34 that generalise:
+
+* **A Socrata domain's own `/api/catalog/v1` is NOT scoped to that domain.**
+  Without `domains=` and `search_context=`, a pivot returns matching datasets
+  from every Socrata portal and attributes them to this one — rule 4d's
+  confident wrong answer. 64 existing rows already passed `domains=`; batch
+  34's 24 did not until review.
+* **The FDSN spec defines services; a node runs only some of them.** EIDA nodes
+  serve dataselect/station/availability, not event; USGS ComCat and EMSC serve
+  event, not station; IRIS retired fdsnws-event. 11 batch-34 rows asking a host
+  for a service it does not run were dropped before any probe.
+
+**A CSV delimiter that defaults to comma silently unparsed a working row.**
+`lib/hpengine.c` sets `char delim[64] = ","` and does NOT sniff. FDSN's
+`format=text` is PIPE-delimited, so batch 31's `FDSN_STATION_INVENTORY` — cited
+below as storing 151,303 records — was putting each whole line into ONE cell:
+`col1`, `col2`, `col3` and `col5` all resolved to nothing, the title fell back
+to the raw line, and no station got coordinates. The record COUNT was real,
+which is precisely why it read as healthy for weeks. Fixed 2026-10-04 with
+`csv_delim=pipe;csv_comment=#;csv_no_header=1`, and its `id_keys` moved from
+`col1` to `col0+col1+col6` because a station code is not unique across networks.
+**A row's record count says nothing about whether its FIELDS were parsed** —
+check one record's `properties` the first time a non-comma CSV row ships.
 
 **One exception to "every source is proof-of-life verified":** batch 31 — the
 government, public-record and surveillance tables from PR #23
@@ -92,7 +169,7 @@ hpengine pages exactly as it did. Without that (or an explicit `next_path` /
 
 Where the tree actually stands, as `make audit-sources` reports it:
 
-* **strict set — 0 findings across 285 files** (2026-10-05; 256 on 2026-09-27):
+* **strict set — 0 findings across 290 files** (2026-10-05; 256 on 2026-09-27):
   `collectors/pivot/table/hp*_*.c` plus the generated deep-record tables
   `collectors/feed/generated/hp1[0-9]_*.c`. This is the part the Makefile
   gates on, and it is held clean. Run `make audit-sources`
@@ -129,7 +206,7 @@ above and a one-line `/* exhaustive-ok: … */` on the line.
 Two amendments from the deep-record batch:
 
 * **The gated set is now two globs**, `collectors/pivot/table/hp*_*.c` plus the
-  generated deep-record tables `collectors/feed/generated/hp1[0-9]_*.c` — 285
+  generated deep-record tables `collectors/feed/generated/hp1[0-9]_*.c` — 290
   files as of 2026-10-05 (262 when this was written), 0 findings. `--strict` had to be made repeatable to say that honestly:
   it took a single glob, so passing two kept only the LAST one and the gate
   printed "0 findings" for a set it had never opened.
