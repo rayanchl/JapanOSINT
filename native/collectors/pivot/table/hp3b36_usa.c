@@ -29,15 +29,18 @@ static const hp_source HP3B36_USA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.fda.gov/animalandveterinary/event.json?search={q}&limit=100",
     .array_path = "results",
-    .id_keys = "treated_for_ae",
+    .id_keys = "unique_aer_id_number",
     .page_param = "skip",
     .page_size = 100,
     .page_zero_based = 1,
-    .title_keys = "treated_for_ae",
+    .title_keys = "unique_aer_id_number",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 368435 bytes. First "
       "record's fields: "
-      "treated_for_ae,reaction,receiver,unique_aer_id_number,original_receive_date,number_of_animals_affected,primary_reporter,number_of_animals_treated,drug,health_assessment_prior_to_exposure,onset_date,foreign_or_domestic." },
+      "treated_for_ae,reaction,receiver,unique_aer_id_number,original_receive_date,number_of_animals_affected,primary_reporter,number_of_animals_treated,drug,health_assessment_prior_to_exposure,onset_date,foreign_or_domestic. "
+      "id_keys is unique_aer_id_number: MEASURED 2026-10-05, 100/100 "
+      "distinct. The first draft keyed on treated_for_ae, a clinical "
+      "field, which cost 65 of 1000." },
 
   { .id = "US_FDA_DEVICE_510K", .name = "openFDA — Fda Device 510K",
     .category = "health", .portal = "https://open.fda.gov",
@@ -131,15 +134,18 @@ static const hp_source HP3B36_USA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.fda.gov/device/pma.json?search={q}&limit=100",
     .array_path = "results",
-    .id_keys = "pma_number",
+    .id_keys = "pma_number+supplement_number",
     .page_param = "skip",
     .page_size = 100,
     .page_zero_based = 1,
-    .title_keys = "pma_number",
+    .title_keys = "trade_name",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 284368 bytes. First "
       "record's fields: "
-      "pma_number,supplement_number,applicant,street_1,street_2,city,state,zip,zip_ext,generic_name,trade_name,product_code." },
+      "pma_number,supplement_number,applicant,street_1,street_2,city,state,zip,zip_ext,generic_name,trade_name,product_code. "
+      "id_keys is the (PMA, supplement) pair: MEASURED 2026-10-05, "
+      "100/100 distinct. pma_number alone is not unique because each "
+      "approval carries many supplements, which cost 127 of 1000." },
 
   { .id = "US_FDA_DEVICE_RECALL", .name = "openFDA — Fda Device Recall",
     .category = "health", .portal = "https://open.fda.gov",
@@ -165,15 +171,24 @@ static const hp_source HP3B36_USA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.fda.gov/device/registrationlisting.json?search={q}&limit=100",
     .array_path = "results",
-    .id_keys = "k_number",
+    .id_keys = "registration.registration_number+establishment_type+proprietary_name",
     .page_param = "skip",
     .page_size = 100,
     .page_zero_based = 1,
-    .title_keys = "k_number",
+    .title_keys = "proprietary_name",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 354773 bytes. First "
       "record's fields: "
-      "proprietary_name,establishment_type,registration,pma_number,k_number,products." },
+      "proprietary_name,establishment_type,registration,pma_number,k_number,products. "
+      "id_keys is the (establishment, product) pair: MEASURED "
+      "2026-10-05 over 100 records, registration.registration_number "
+      "alone has 25 distinct values because one establishment lists "
+      "many products, and the first draft's k_number is absent from 20 "
+      "of 100 records. establishment_type is the third dimension: the "
+      "(registration, type, product) triple is 100/100 unique and a "
+      "single establishment can list the same product under more than "
+      "one establishment type. Keying on registration_number alone cost "
+      "160 of 1000; the pair alone still cost 44." },
 
   { .id = "US_FDA_DEVICE_UDI", .name = "openFDA — Fda Device Udi",
     .category = "health", .portal = "https://open.fda.gov",
@@ -310,23 +325,6 @@ static const hp_source HP3B36_USA[] = {
       "engine's own User-Agent: 100 records in 71901 bytes. First "
       "record's fields: "
       "report_number,outcomes,date_created,reactions,date_started,consumer,products." },
-
-  { .id = "US_FDA_OTHER_NSDE", .name = "openFDA — Fda Other Nsde",
-    .category = "health", .portal = "https://open.fda.gov",
-    .record_type = "fda-record",
-    .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/other/nsde.json?search={q}&limit=100",
-    .array_path = "results",
-    .id_keys = "proprietary_name",
-    .page_param = "skip",
-    .page_size = 100,
-    .page_zero_based = 1,
-    .title_keys = "proprietary_name",
-    .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
-      "engine's own User-Agent: 100 records in 39379 bytes. First "
-      "record's fields: "
-      "proprietary_name,marketing_end_date,application_number_or_citation,product_type,marketing_start_date,package_ndc,marketing_category,billing_unit,package_ndc11,dosage_form." },
 
   { .id = "US_FDA_OTHER_SUBSTANCE", .name = "openFDA — Fda Other Substance",
     .category = "health", .portal = "https://open.fda.gov",

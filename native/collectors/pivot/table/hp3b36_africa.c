@@ -28,11 +28,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/ago/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13446 bytes. First record's fields: "
@@ -40,7 +40,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_BDI", .name = "World Bank indicator — Wb Bdi",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -48,11 +53,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/bdi/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13707 bytes. First record's fields: "
@@ -60,7 +65,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_BEN", .name = "World Bank indicator — Wb Ben",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -68,11 +78,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/ben/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13613 bytes. First record's fields: "
@@ -80,7 +90,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_BFA", .name = "World Bank indicator — Wb Bfa",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -88,11 +103,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/bfa/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14081 bytes. First record's fields: "
@@ -100,7 +115,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_BWA", .name = "World Bank indicator — Wb Bwa",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -108,11 +128,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/bwa/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13817 bytes. First record's fields: "
@@ -120,7 +140,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_CAF", .name = "World Bank indicator — Wb Caf",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -128,11 +153,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/caf/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14870 bytes. First record's fields: "
@@ -140,7 +165,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_CIV", .name = "World Bank indicator — Wb Civ",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -148,11 +178,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/civ/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14141 bytes. First record's fields: "
@@ -160,7 +190,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_CMR", .name = "World Bank indicator — Wb Cmr",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -168,11 +203,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/cmr/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13806 bytes. First record's fields: "
@@ -180,7 +215,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_COD", .name = "World Bank indicator — Wb Cod",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -188,11 +228,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/cod/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14344 bytes. First record's fields: "
@@ -200,7 +240,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_COG", .name = "World Bank indicator — Wb Cog",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -208,11 +253,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/cog/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14014 bytes. First record's fields: "
@@ -220,7 +265,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_COM", .name = "World Bank indicator — Wb Com",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -228,11 +278,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/com/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13509 bytes. First record's fields: "
@@ -240,7 +290,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_CPV", .name = "World Bank indicator — Wb Cpv",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -248,11 +303,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/cpv/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13711 bytes. First record's fields: "
@@ -260,7 +315,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_DJI", .name = "World Bank indicator — Wb Dji",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -268,11 +328,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/dji/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13503 bytes. First record's fields: "
@@ -280,7 +340,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_DZA", .name = "World Bank indicator — Wb Dza",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -288,11 +353,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/dza/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13749 bytes. First record's fields: "
@@ -300,7 +365,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_EGY", .name = "World Bank indicator — Wb Egy",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -308,11 +378,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/egy/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14342 bytes. First record's fields: "
@@ -320,7 +390,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_ERI", .name = "World Bank indicator — Wb Eri",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -328,11 +403,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/eri/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13188 bytes. First record's fields: "
@@ -340,7 +415,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_ETH", .name = "World Bank indicator — Wb Eth",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -348,11 +428,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/eth/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13778 bytes. First record's fields: "
@@ -360,7 +440,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_GAB", .name = "World Bank indicator — Wb Gab",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -368,11 +453,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/gab/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13618 bytes. First record's fields: "
@@ -380,7 +465,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_GHA", .name = "World Bank indicator — Wb Gha",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -388,11 +478,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/gha/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13611 bytes. First record's fields: "
@@ -400,7 +490,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_GIN", .name = "World Bank indicator — Wb Gin",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -408,11 +503,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/gin/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13561 bytes. First record's fields: "
@@ -420,7 +515,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_GMB", .name = "World Bank indicator — Wb Gmb",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -428,11 +528,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/gmb/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13941 bytes. First record's fields: "
@@ -440,7 +540,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_GNB", .name = "World Bank indicator — Wb Gnb",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -448,11 +553,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/gnb/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14024 bytes. First record's fields: "
@@ -460,7 +565,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_GNQ", .name = "World Bank indicator — Wb Gnq",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -468,11 +578,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/gnq/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14338 bytes. First record's fields: "
@@ -480,7 +590,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_KEN", .name = "World Bank indicator — Wb Ken",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -488,11 +603,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/ken/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13616 bytes. First record's fields: "
@@ -500,7 +615,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_LBR", .name = "World Bank indicator — Wb Lbr",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -508,11 +628,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/lbr/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13313 bytes. First record's fields: "
@@ -520,7 +640,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_LBY", .name = "World Bank indicator — Wb Lby",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -528,11 +653,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/lby/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13606 bytes. First record's fields: "
@@ -540,7 +665,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_LSO", .name = "World Bank indicator — Wb Lso",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -548,11 +678,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/lso/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13748 bytes. First record's fields: "
@@ -560,7 +690,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_MAR", .name = "World Bank indicator — Wb Mar",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -568,11 +703,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/mar/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13745 bytes. First record's fields: "
@@ -580,7 +715,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_MDG", .name = "World Bank indicator — Wb Mdg",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -588,11 +728,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/mdg/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13940 bytes. First record's fields: "
@@ -600,7 +740,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_MLI", .name = "World Bank indicator — Wb Mli",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -608,11 +753,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/mli/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13469 bytes. First record's fields: "
@@ -620,7 +765,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_MOZ", .name = "World Bank indicator — Wb Moz",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -628,11 +778,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/moz/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13574 bytes. First record's fields: "
@@ -640,7 +790,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_MRT", .name = "World Bank indicator — Wb Mrt",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -648,11 +803,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/mrt/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13936 bytes. First record's fields: "
@@ -660,7 +815,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_MUS", .name = "World Bank indicator — Wb Mus",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -668,11 +828,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/mus/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13884 bytes. First record's fields: "
@@ -680,7 +840,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_MWI", .name = "World Bank indicator — Wb Mwi",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -688,11 +853,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/mwi/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13440 bytes. First record's fields: "
@@ -700,7 +865,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_NAM", .name = "World Bank indicator — Wb Nam",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -708,11 +878,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/nam/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13511 bytes. First record's fields: "
@@ -720,7 +890,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_NER", .name = "World Bank indicator — Wb Ner",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -728,11 +903,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/ner/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13619 bytes. First record's fields: "
@@ -740,7 +915,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_NGA", .name = "World Bank indicator — Wb Nga",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -748,11 +928,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/nga/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13739 bytes. First record's fields: "
@@ -760,7 +940,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_RWA", .name = "World Bank indicator — Wb Rwa",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -768,11 +953,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/rwa/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13683 bytes. First record's fields: "
@@ -780,7 +965,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_SDN", .name = "World Bank indicator — Wb Sdn",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -788,11 +978,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/sdn/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13595 bytes. First record's fields: "
@@ -800,7 +990,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_SEN", .name = "World Bank indicator — Wb Sen",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -808,11 +1003,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/sen/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13747 bytes. First record's fields: "
@@ -820,7 +1015,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_SLE", .name = "World Bank indicator — Wb Sle",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -828,11 +1028,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/sle/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14077 bytes. First record's fields: "
@@ -840,7 +1040,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_SOM", .name = "World Bank indicator — Wb Som",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -848,11 +1053,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/som/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14430 bytes. First record's fields: "
@@ -860,7 +1065,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_SSD", .name = "World Bank indicator — Wb Ssd",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -868,11 +1078,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/ssd/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13322 bytes. First record's fields: "
@@ -880,7 +1090,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_STP", .name = "World Bank indicator — Wb Stp",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -888,11 +1103,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/stp/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14552 bytes. First record's fields: "
@@ -900,7 +1115,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_SWZ", .name = "World Bank indicator — Wb Swz",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -908,11 +1128,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/swz/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13817 bytes. First record's fields: "
@@ -920,7 +1140,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_SYC", .name = "World Bank indicator — Wb Syc",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -928,11 +1153,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/syc/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13949 bytes. First record's fields: "
@@ -940,7 +1165,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_TCD", .name = "World Bank indicator — Wb Tcd",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -948,11 +1178,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/tcd/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13551 bytes. First record's fields: "
@@ -960,7 +1190,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_TGO", .name = "World Bank indicator — Wb Tgo",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -968,11 +1203,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/tgo/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13551 bytes. First record's fields: "
@@ -980,7 +1215,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_TUN", .name = "World Bank indicator — Wb Tun",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -988,11 +1228,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/tun/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13724 bytes. First record's fields: "
@@ -1000,7 +1240,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_TZA", .name = "World Bank indicator — Wb Tza",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -1008,11 +1253,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/tza/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13812 bytes. First record's fields: "
@@ -1020,7 +1265,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_UGA", .name = "World Bank indicator — Wb Uga",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -1028,11 +1278,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/uga/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13654 bytes. First record's fields: "
@@ -1040,7 +1290,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_ZAF", .name = "World Bank indicator — Wb Zaf",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -1048,11 +1303,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/zaf/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14078 bytes. First record's fields: "
@@ -1060,7 +1315,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_ZMB", .name = "World Bank indicator — Wb Zmb",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -1068,11 +1328,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/zmb/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13676 bytes. First record's fields: "
@@ -1080,7 +1340,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WB_ZWE", .name = "World Bank indicator — Wb Zwe",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -1088,11 +1353,11 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/zwe/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
-    .id_keys = "value",
+    .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
     .page_size = 200,
-    .title_keys = "value",
+    .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13667 bytes. First record's fields: "
@@ -1100,7 +1365,12 @@ static const hp_source HP3B36_AFRICA[] = {
       "The data array is the second ELEMENT of a positional root array "
       "and has no key, so no dotted array_path can name it; the "
       "engine's densest-array-of-objects choice lands on it (66 "
-      "observations against a 1-object metadata head)." },
+      "observations against a 1-object metadata head). id_keys is the "
+      "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
+      "Kenya's 66 observations, `date` is 1:1 with the records while "
+      "`value` only looks unique because that window has no null years "
+      "— a series with nulls would collapse every one of them onto a "
+      "single row." },
 
   { .id = "AF_WORLDBANK_COUNTRY", .name = "World Bank reference — Worldbank Country",
     .category = "economy", .portal = "https://data.worldbank.org",

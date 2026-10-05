@@ -45,17 +45,28 @@ static const hp_source HP3B36_UK[] = {
     .record_type = "ea-record",
     .tags = "\"uk\",\"environment\",\"water\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://environment.data.gov.uk/ecology/api/v1/sites?_limit=200",
-    .id_keys = "long",
+    .url = "https://environment.data.gov.uk/ecology/api/v1/sites",
+    .id_keys = "site_id",
     .interval = 86400,
     .page_param = "skip",
-    .page_size = 200,
+    .page_size = 250,
     .page_zero_based = 1,
     .title_keys = "label",
     .description = "Environment Agency on environment.data.gov.uk. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 250 records in "
       "93887 bytes. First record's fields: "
-      "long,local_id,northing,type,wkt,easting,label,lat,site_id." },
+      "long,local_id,northing,type,wkt,easting,label,lat,site_id. "
+      "id_keys is site_id: MEASURED 2026-10-05 over 250 sites, site_id "
+      "and label are 1:1 while `long` (the LONGITUDE the first draft "
+      "keyed on) has 249 distinct values, which cost 454 of 2,500 "
+      "records across the full walk. page_size is 250 because that is "
+      "what the server SERVES, not what it is asked for: MEASURED "
+      "2026-10-05, _limit=200, 250 and 500 all return exactly 250 "
+      "records, so the parameter is ignored. Declaring 200 made `skip` "
+      "advance 200 while each page held 250, overlapping every page by "
+      "50 — 449 of 2,500 records collapsed at the sink while the record "
+      "COUNT still read 2,500, which is the failure mode rule 4b exists "
+      "for. _limit is dropped from the URL since it does nothing." },
 
   { .id = "UK_FLOOD_AREAS", .name = "EA flood monitoring — Flood Areas",
     .category = "environment", .portal = "https://environment.data.gov.uk",
@@ -353,15 +364,18 @@ static const hp_source HP3B36_UK[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://erskinemay-api.parliament.uk/api/Search/ParagraphSearchResults/{q}?take=20",
     .array_path = "searchResults",
-    .id_keys = "sectionId",
+    .id_keys = "searchResultText",
     .page_param = "skip",
     .page_size = 20,
     .page_zero_based = 1,
-    .title_keys = "sectionId",
+    .title_keys = "searchResultText",
     .description = "UK Parliament on erskinemay-api.parliament.uk. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 20 records in "
       "11061 bytes. First record's fields: "
-      "sectionId,paragraphReference,searchResultText,sectionTitle,sectionTitleChain,chapterTitle,chapterNumber,partNumber." },
+      "sectionId,paragraphReference,searchResultText,sectionTitle,sectionTitleChain,chapterTitle,chapterNumber,partNumber. "
+      "id_keys is searchResultText: MEASURED 2026-10-05, 1:1 with the "
+      "paragraphs returned, while sectionId repeats across every "
+      "paragraph of a section and cost 4 of 61." },
 
   { .id = "UK_PARL_LORDSVOTES", .name = "UK Parliament — Parl Lordsvotes",
     .category = "government", .portal = "https://www.parliament.uk",
@@ -400,14 +414,19 @@ static const hp_source HP3B36_UK[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://questions-statements-api.parliament.uk/api/writtenquestions/questions?searchTerm={q}&take=20",
     .array_path = "results",
-    .id_keys = "value",
+    .id_keys = "value.id",
     .page_param = "skip",
     .page_size = 20,
     .page_zero_based = 1,
-    .title_keys = "value",
+    .title_keys = "value.questionText",
     .description = "UK Parliament on questions-statements-api.parliament.uk. Fetched "
       "live 2026-10-05 under the engine's own User-Agent: 20 records in "
-      "25987 bytes. First record's fields: value,links." },
+      "25987 bytes. First record's fields: value,links. Each element of "
+      "`results` is a {value, links} wrapper, so the keys are dotted "
+      "into it: MEASURED 2026-10-05, value.id and value.questionText "
+      "are both 1:1 over 20 questions. The first draft named `value` "
+      "itself, which is an OBJECT — the engine could not key on it and "
+      "the row stored nothing while the endpoint answered 200." },
 
   { .id = "UK_POLICE_FORCES", .name = "data.police.uk — Police Forces",
     .category = "crime", .portal = "https://data.police.uk",
