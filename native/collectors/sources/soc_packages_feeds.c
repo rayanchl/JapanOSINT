@@ -2,12 +2,13 @@
  * Typosquat / dependency-confusion detection surface: a package name is only
  * newly registered once, and after the fact the signal is gone.
  *
- *  go-module-index (hourly) GET https://index.golang.org/index?since=&limit=200
- *      TRAP: newline-delimited JSON, NOT an array, and the field names are
- *      Capitalised (Path/Version/Timestamp). `since` is set to now-6h each run.
- *      emits: Path, Version, Timestamp
- *      licence: official Go module index operated by Google as public proxy
- *               infrastructure; keyless, documented at index.golang.org.
+ *  go-module-index  RETIRED 2026-10-05, superseded by GO_MODULE_INDEX in
+ *      collectors/pivot/table/hp3b34_ndjson.c. It asked for a 6-hour window
+ *      with `limit=200` and did NOT page, so it stored 200 of the 22,248
+ *      versions that window actually holds -- 22,048 Go module publications
+ *      dropped per hourly run, with rc=0, records=200 and stored=200. The
+ *      replacement is HP_NDJSON with next_path=$last.Timestamp, which walks
+ *      the window to its end and discloses any ceiling that does bite.
  *  pypi-new-packages (15 min) GET https://pypi.org/rss/packages.xml
  *      Standard RSS 2.0 — collected through lib/rss_atom.h.
  *      emits: title ("<name> added to PyPI"), link, description, pubDate, guid
@@ -49,72 +50,6 @@ static const char *const SOC_UA[] = {
   "User-Agent: JapanOSINT-native/1.0 (OSINT research collector; +https://github.com/)",
   "Accept: application/json", NULL
 };
-
-/* ---- go-module-index ---------------------------------------------------- */
-
-static int run_go_index(const source_ctx *ctx, intel_sink *sink) {
-  char since[40], url[220];
-  /* `since` IS the query: without it the endpoint would answer with the whole
-   * index from the epoch, which is a different request, not a degraded one. */
-  if (!jo_ago_fmt(6 * 3600, "%Y-%m-%dT%H:%M:%SZ", since, sizeof since)) {
-    fprintf(stderr, "[go-module-index] cannot render the query window as a date\n");
-    return -1;
-  }
-  snprintf(url, sizeof url, "https://index.golang.org/index?since=%s&limit=200",
-           since);
-  char *txt = feed_get_text(ctx->http, url, 30000);
-  if (!txt) { fprintf(stderr, "[go-module-index] fetch failed\n"); return -1; }
-
-  int n = 0;
-  char *p = txt;
-  while (*p) {                       /* newline-delimited JSON, not an array */
-    char *nl = strchr(p, '\n');
-    if (nl) *nl = 0;
-    if (*p == '{') {
-      cJSON *o = cJSON_Parse(p);
-      if (o) {
-        const char *path = jo_sv(o, "Path");
-        const char *ver  = jo_sv(o, "Version");
-        const char *ts   = jo_sv(o, "Timestamp");
-        if (path && ver) {
-          cJSON *pr = cJSON_CreateObject();
-          if (pr) {
-            cJSON_AddStringToObject(pr, "source", "index.golang.org");
-            cJSON_AddStringToObject(pr, "ecosystem", "go");
-            cJSON_AddStringToObject(pr, "path", path);
-            cJSON_AddStringToObject(pr, "version", ver);
-            if (ts) cJSON_AddStringToObject(pr, "timestamp", ts);
-            char title[400], rk[420], link[420];
-            snprintf(title, sizeof title, "%s %s", path, ver);
-            snprintf(rk, sizeof rk, "%s@%s", path, ver);
-            snprintf(link, sizeof link, "https://pkg.go.dev/%s@%s", path, ver);
-            n += soc_emit(sink, pr, "package-release",
-                          "[\"packages\",\"go\",\"release\",\"supply-chain\"]",
-                          rk, title, ts, link, ts, NULL);
-          }
-        }
-        cJSON_Delete(o);
-      }
-    }
-    if (!nl) break;
-    p = nl + 1;
-  }
-  free(txt);
-  fprintf(stderr, "[go-module-index] emitted %d since %s\n", n, since);
-  return 0;
-}
-
-static const source_def soc_go_index_def = {
-  .id = "go-module-index", .collector = "social",
-  .name = "Go Module Index (new releases)",
-  .update_interval_sec = 3600, .run = run_go_index,
-  .category = "social", .type = "api",
-  .url = "https://index.golang.org/index",
-  .description = "Chronological log of every Go module version published to the public proxy, with exact publication timestamps — the shape needed for typosquat and dependency-confusion detection.",
-  .license = "Official Go module index operated by Google as public proxy infrastructure; keyless.",
-  .layer = NULL, .free_tier = 1,
-};
-REGISTER_SOURCE(soc_go_index_def)
 
 /* ---- pypi-new-packages (RSS) -------------------------------------------- */
 

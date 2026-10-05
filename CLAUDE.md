@@ -196,6 +196,29 @@ Where the tree actually stands, as `make audit-sources` reports it:
   24th, TDnet stopped at 100 disclosures a day and EDINET-x at 25 filings. The
   check exists now; all of those are fixed.
 
+* **A SEVENTH shape the six checks cannot see: a record limit the row asks
+  the UPSTREAM for.** Every one of the six looks for a bound written in C — a
+  `#define`, a `break`, a loop condition, a `seen[]` ring, a first-element
+  read, a single request. A limit spelled into a URL is none of them, so the
+  tree read "0 findings" while `go-module-index` asked index.golang.org for a
+  six-hour window with `&limit=200` and no paging, and stored **200 of the
+  22,248 versions that window holds** — 22,048 Go module publications dropped
+  per hourly run, at `rc=0`, `records=200`, `stored=200`. Both of rules 4 and
+  4b's "the numbers look fine" traps at once. Measured 2026-10-05; that row is
+  retired in favour of `GO_MODULE_INDEX`, which pages on
+  `next_path=$last.Timestamp`.
+
+  `tools/audit_url_limits.py` finds the shape, and is deliberately NOT in
+  `make audit-sources`: **a URL limit is not automatically a discard and the
+  script cannot tell.** A relevance-ranked search pivot asking for the top 15
+  has no complete answer to truncate — that limit IS the question. A scheduled
+  read of a collection that has an end stores `limit` of however many exist,
+  forever, and that is the violation. They are identical in C. The narrow scope
+  reports **103 sites across 78 files**, none of them measured, so running it
+  is the START of the work; wiring it into the gate would put a hundred
+  untriaged findings into a tree whose invariant is that a new finding is a
+  regression.
+
 Deliberate exceptions carry an inline `/* exhaustive-ok: <reason> */` marker
 (`grep -rn exhaustive-ok`). The marker must sit **on the flagged line itself** —
 the scanner matches per line, so a marker in the comment block above the line it
@@ -381,6 +404,7 @@ says why.
 | `tools/batch_exclusions.py` | no duplicate id or endpoint against the existing tree or within the batch (normalising `{q}` and `%s` to one form; `.portal` is documentation and is excluded). Sees **runtime-composed** endpoints too — it resolves string macros, joins adjacent literals, follows `#include "*.inc"`, and matches a `%s` URL family on its layer/dataset NAME. Pass **`--bin ./bin/japanosint`**: without it the id set is a regex approximation (4,754 of 13,193) and it says so |
 | `tools/audit_batch_pagination.py` | a paged endpoint declares `page_param` or `next_path` — read from the parsed opts, not as a substring of the whole field |
 | `tools/audit_batch_reachable.py` | rule 3 above. A row whose opts are ambiguous is reported UNVERIFIABLE, never "never runs" |
+| `tools/audit_url_limits.py` | the seventh discard shape — a record limit asked of the UPSTREAM in a URL, with no paging to follow it. Read, not gated: 103 narrow candidates, unmeasured, and a limit on a ranked pivot is legitimate |
 | `tools/audit_page_param.py` | rows whose URL already binds their own `page_param`. The engine used to APPEND (`…&pagina=1&pagina=2`) and a server binding the first occurrence then served page 1 for the whole walk — N pages emitted, one stored, `rc=0`. Fixed in `hp_url_set_param` and pinned by `hptest` "9f-bis"; the lint stays because 103 of 1,431 paged rows are that shape and their paging depends on the replacement being right |
 | `tools/audit_batch_emit.py` | rule 4 below: runs each MANIFEST row through the real binary and reads back `emitted N of M`. `--timeout S` moves the kill line; a run that hits it is **`SLOW`**, carrying its partial counts — unmeasured, not failed |
 | `tools/audit_registry_emit.py` | rule 4 **and** 4b for the whole REGISTRY, manifest or not — `--list-sources` is the source list, so nothing registered can hide. Measures emitted *and* stored, per run, against a fresh copy of a warm template DB. `--scheduled`/`--match`/`--only`/`--ids-file`, `--jobs`, `--timeout`, TSV out, `--resume` |
