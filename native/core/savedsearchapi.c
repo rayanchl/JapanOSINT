@@ -1,4 +1,4 @@
-/* core/savedsearchapi.c — roadmap 38: saved searches, per-user search history,
+/* core/savedsearchapi.c — roadmap 38: saved searches, workspace search history,
  * and the canonical permalink state codec.
  *
  * Shaped after core/alertsapi.c and core/annotationsapi.c (one dispatcher per
@@ -7,13 +7,13 @@
  *
  * Two invariants run through the whole file and are worth stating once:
  *
- *  1. EVERY statement carries `tenant_id=?1 AND user_id=?2`, including
- *     fetch-by-id and including DELETE. The id is a uuid and therefore
- *     unguessable, but unguessable is not access control, and the second
- *     predicate is the one that stops a tenant admin from reading a
- *     colleague's line of enquiry. There is no code path in this file that
- *     drops the user predicate for a privileged role, and adding one would
- *     be a privacy regression, not a feature.
+ *  1. Saved searches and search history are WORKSPACE-visible: every member
+ *     of the tenant can list and open every member's entries (decided
+ *     2026-10-05: everything in a workspace is visible to its members). Each
+ *     row carries its author (`user_id`) and `mine`, and `?mine=1` narrows a
+ *     list back to the caller. Every statement still carries `tenant_id`, so
+ *     nothing crosses workspaces. CHANGING an entry — PATCH, DELETE, clearing
+ *     history — stays with its author: those statements keep `user_id`.
  *
  *  2. The permalink codec never sees the database, the tenant or the user.
  *     A token is unsigned, unauthenticated input from a pasted URL; it
@@ -46,7 +46,7 @@
  * fixed index. tenant_id/user_id are absent on purpose: they are predicates,
  * never output. */
 #define SS_COLS \
-  "id,name,kind,params_json,pinned,created_at,last_run_at,run_count"
+  "id,name,kind,params_json,pinned,created_at,last_run_at,run_count,user_id"
 
 /* ── shared idioms (verbatim from alertsapi.c / annotationsapi.c) ─────────── */
 static void uuid4(char out[37]) {
@@ -196,7 +196,7 @@ static int clamp_limit(const char *v, int dflt) {
 }
 
 /* ── saved_searches: decode + validation ─────────────────────────────────── */
-static cJSON *decode_ss(sqlite3_stmt *s) {
+static cJSON *decode_ss(sqlite3_stmt *s, const char *caller) {
   cJSON *o = cJSON_CreateObject();
   cJSON_AddStringToObject(o, "id",   (const char *)sqlite3_column_text(s,0));
   add_str_or_null(o, "name", ctext(s,1));
@@ -208,6 +208,9 @@ static cJSON *decode_ss(sqlite3_stmt *s) {
   add_str_or_null(o, "last_run_at", ctext(s,6));
   cJSON_AddItemToObject(o, "run_count",
                         cJSON_CreateNumber((double)sqlite3_column_int64(s,7)));
+  const char *author = ctext(s,8);
+  add_str_or_null(o, "user_id", author);
+  cJSON_AddBoolToObject(o, "mine", author && caller && !strcmp(author, caller));
   return o;
 }
 
@@ -216,15 +219,14 @@ static char *one_ss(db_handle *db, const tenant_ctx *t, const char *id,
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h,
         "SELECT " SS_COLS " FROM saved_searches "
-        "WHERE id=?1 AND tenant_id=?2 AND user_id=?3", -1, &s, NULL) != SQLITE_OK)
+        "WHERE id=?1 AND tenant_id=?2", -1, &s, NULL) != SQLITE_OK)
     return err(st, 500, "server_error");
   sqlite3_bind_text(s,1,id,-1,SQLITE_TRANSIENT);
   sqlite3_bind_text(s,2,t->tenant_id,-1,SQLITE_TRANSIENT);
-  sqlite3_bind_text(s,3,t->user_id,-1,SQLITE_TRANSIENT);
   char *out;
   if (sqlite3_step(s) == SQLITE_ROW) {
     cJSON *w = cJSON_CreateObject();
-    cJSON_AddItemToObject(w, "data", decode_ss(s));
+    cJSON_AddItemToObject(w, "data", decode_ss(s, t->user_id));
     out = cJSON_PrintUnformatted(w); cJSON_Delete(w); *st = code;
   } else {
     out = err(st, 404, "not_found");
@@ -327,25 +329,29 @@ char *searchhistoryapi(db_handle *db, const tenant_ctx *t, const char *method,
   if (!db || !db->h || !t || !method) return err(st, 500, "server_error");
 
   if (!strcmp(method, "GET")) {
-    char v_kind[32] = {0}, v_lim[24] = {0};
+    char v_kind[32] = {0}, v_lim[24] = {0}, v_mine[8] = {0};
     qget(qs, "kind", v_kind, sizeof v_kind);
     qget(qs, "limit", v_lim, sizeof v_lim);
+    qget(qs, "mine", v_mine, sizeof v_mine);
     if (v_kind[0] && !kind_valid(v_kind)) return err(st, 400, "invalid_kind");
     int lim = clamp_limit(v_lim, 50);
+    int mine_only = truthy(v_mine);
 
-    /* Both branches carry user_id=?2. There is no variant without it. */
+    /* Workspace-wide unless ?mine=1: ?2 is NULL for the workspace view and the
+     * caller's id for their own trail. tenant_id=?1 is on both. */
     const char *sql = v_kind[0]
-      ? "SELECT id,kind,params_json,result_count,ts FROM search_history "
-        "WHERE tenant_id=?1 AND user_id=?2 AND kind=?4 "
+      ? "SELECT id,kind,params_json,result_count,ts,user_id FROM search_history "
+        "WHERE tenant_id=?1 AND (?2 IS NULL OR user_id=?2) AND kind=?4 "
         "ORDER BY ts DESC, id DESC LIMIT ?3"
-      : "SELECT id,kind,params_json,result_count,ts FROM search_history "
-        "WHERE tenant_id=?1 AND user_id=?2 "
+      : "SELECT id,kind,params_json,result_count,ts,user_id FROM search_history "
+        "WHERE tenant_id=?1 AND (?2 IS NULL OR user_id=?2) "
         "ORDER BY ts DESC, id DESC LIMIT ?3";
     sqlite3_stmt *s;
     if (sqlite3_prepare_v2(db->h, sql, -1, &s, NULL) != SQLITE_OK)
       return err(st, 500, "server_error");
     sqlite3_bind_text(s,1,t->tenant_id,-1,SQLITE_TRANSIENT);
-    sqlite3_bind_text(s,2,t->user_id,-1,SQLITE_TRANSIENT);
+    if (mine_only) sqlite3_bind_text(s,2,t->user_id,-1,SQLITE_TRANSIENT);
+    else           sqlite3_bind_null(s,2);
     sqlite3_bind_int (s,3,lim);
     if (v_kind[0]) sqlite3_bind_text(s,4,v_kind,-1,SQLITE_TRANSIENT);
 
@@ -363,6 +369,10 @@ char *searchhistoryapi(db_handle *db, const tenant_ctx *t, const char *method,
         cJSON_AddItemToObject(r,"result_count",
           cJSON_CreateNumber((double)sqlite3_column_int64(s,3)));
       cJSON_AddStringToObject(r,"ts",(const char *)sqlite3_column_text(s,4));
+      { const char *author = ctext(s,5);
+        add_str_or_null(r,"user_id",author);
+        cJSON_AddBoolToObject(r,"mine",
+          author && !strcmp(author, t->user_id)); }
       cJSON_AddItemToArray(arr, r);
       n++;
     }
@@ -375,7 +385,7 @@ char *searchhistoryapi(db_handle *db, const tenant_ctx *t, const char *method,
     cJSON_AddNumberToObject(pg,"count",(double)n);
     cJSON_AddItemToObject(w,"page",pg);
     cJSON *mt = cJSON_CreateObject();
-    cJSON_AddStringToObject(mt,"scope","user");   /* never tenant-wide */
+    cJSON_AddStringToObject(mt,"scope", mine_only ? "user" : "workspace");
     cJSON_AddNumberToObject(mt,"retained_max",(double)SS_HISTORY_KEEP);
     cJSON_AddItemToObject(w,"meta",mt);
     char *o = cJSON_PrintUnformatted(w); cJSON_Delete(w);
@@ -384,10 +394,8 @@ char *searchhistoryapi(db_handle *db, const tenant_ctx *t, const char *method,
 
   if (!strcmp(method, "DELETE")) {
     /* Clears the caller's own trail only — any role may do this, because
-     * forgetting what you searched for is not a privileged operation. Not
-     * audited: recording "user X erased their search history" in a table the
-     * tenant owner reads would reinstate exactly the visibility the per-user
-     * scoping exists to prevent. */
+     * forgetting what you searched for is not a privileged operation; another
+     * member's entries are theirs to clear. */
     sqlite3_stmt *s;
     if (sqlite3_prepare_v2(db->h,
           "DELETE FROM search_history WHERE tenant_id=?1 AND user_id=?2",
@@ -728,11 +736,10 @@ static char *to_alert(db_handle *db, const tenant_ctx *t, const char *id,
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h,
         "SELECT name,kind,params_json FROM saved_searches "
-        "WHERE id=?1 AND tenant_id=?2 AND user_id=?3", -1, &s, NULL) != SQLITE_OK)
+        "WHERE id=?1 AND tenant_id=?2", -1, &s, NULL) != SQLITE_OK)
     return err(st, 500, "server_error");
   sqlite3_bind_text(s,1,id,-1,SQLITE_TRANSIENT);
   sqlite3_bind_text(s,2,t->tenant_id,-1,SQLITE_TRANSIENT);
-  sqlite3_bind_text(s,3,t->user_id,-1,SQLITE_TRANSIENT);
   if (sqlite3_step(s) != SQLITE_ROW) {
     sqlite3_finalize(s); return err(st, 404, "not_found");
   }
@@ -842,11 +849,10 @@ static char *run_saved(db_handle *db, const tenant_ctx *t, const char *id,
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h,
         "SELECT kind,params_json FROM saved_searches "
-        "WHERE id=?1 AND tenant_id=?2 AND user_id=?3", -1, &s, NULL) != SQLITE_OK)
+        "WHERE id=?1 AND tenant_id=?2", -1, &s, NULL) != SQLITE_OK)
     return err(st, 500, "server_error");
   sqlite3_bind_text(s,1,id,-1,SQLITE_TRANSIENT);
   sqlite3_bind_text(s,2,t->tenant_id,-1,SQLITE_TRANSIENT);
-  sqlite3_bind_text(s,3,t->user_id,-1,SQLITE_TRANSIENT);
   if (sqlite3_step(s) != SQLITE_ROW) {
     sqlite3_finalize(s); return err(st, 404, "not_found");
   }
@@ -876,11 +882,10 @@ static char *run_saved(db_handle *db, const tenant_ctx *t, const char *id,
   int ok = 0;
   if (sqlite3_prepare_v2(db->h,
         "UPDATE saved_searches SET last_run_at=datetime('now'), "
-        "run_count=run_count+1 WHERE id=?1 AND tenant_id=?2 AND user_id=?3",
+        "run_count=run_count+1 WHERE id=?1 AND tenant_id=?2",
         -1, &s, NULL) == SQLITE_OK) {
     sqlite3_bind_text(s,1,id,-1,SQLITE_TRANSIENT);
     sqlite3_bind_text(s,2,t->tenant_id,-1,SQLITE_TRANSIENT);
-    sqlite3_bind_text(s,3,t->user_id,-1,SQLITE_TRANSIENT);
     ok = sqlite3_step(s) == SQLITE_DONE;
   }
   sqlite3_finalize(s);
@@ -943,10 +948,11 @@ char *savedsearchapi(db_handle *db, const tenant_ctx *t, const char *method,
   /* ── collection ───────────────────────────────────────────────────────── */
   if (!seg[0]) {
     if (is_get) {
-      char v_kind[32] = {0}, v_lim[24] = {0}, v_pin[16] = {0};
+      char v_kind[32] = {0}, v_lim[24] = {0}, v_pin[16] = {0}, v_mine[8] = {0};
       qget(qs, "kind", v_kind, sizeof v_kind);
       qget(qs, "limit", v_lim, sizeof v_lim);
       qget(qs, "pinned", v_pin, sizeof v_pin);
+      qget(qs, "mine", v_mine, sizeof v_mine);
       if (v_kind[0] && !kind_valid(v_kind)) {
         out = err(st, 400, "invalid_kind"); goto done;
       }
@@ -959,19 +965,19 @@ char *savedsearchapi(db_handle *db, const tenant_ctx *t, const char *method,
       const char *sql;
       if (v_kind[0] && only_pinned)
         sql = "SELECT " SS_COLS " FROM saved_searches WHERE tenant_id=?1 AND "
-              "user_id=?2 AND kind=?4 AND pinned=1 "
+              "(?2 IS NULL OR user_id=?2) AND kind=?4 AND pinned=1 "
               "ORDER BY pinned DESC, created_at DESC, id DESC LIMIT ?3";
       else if (v_kind[0])
         sql = "SELECT " SS_COLS " FROM saved_searches WHERE tenant_id=?1 AND "
-              "user_id=?2 AND kind=?4 "
+              "(?2 IS NULL OR user_id=?2) AND kind=?4 "
               "ORDER BY pinned DESC, created_at DESC, id DESC LIMIT ?3";
       else if (only_pinned)
         sql = "SELECT " SS_COLS " FROM saved_searches WHERE tenant_id=?1 AND "
-              "user_id=?2 AND pinned=1 "
+              "(?2 IS NULL OR user_id=?2) AND pinned=1 "
               "ORDER BY pinned DESC, created_at DESC, id DESC LIMIT ?3";
       else
         sql = "SELECT " SS_COLS " FROM saved_searches WHERE tenant_id=?1 AND "
-              "user_id=?2 ORDER BY pinned DESC, created_at DESC, id DESC "
+              "(?2 IS NULL OR user_id=?2) ORDER BY pinned DESC, created_at DESC, id DESC "
               "LIMIT ?3";
 
       sqlite3_stmt *s;
@@ -979,13 +985,14 @@ char *savedsearchapi(db_handle *db, const tenant_ctx *t, const char *method,
         out = err(st, 500, "server_error"); goto done;
       }
       sqlite3_bind_text(s,1,t->tenant_id,-1,SQLITE_TRANSIENT);
-      sqlite3_bind_text(s,2,t->user_id,-1,SQLITE_TRANSIENT);
+      if (truthy(v_mine)) sqlite3_bind_text(s,2,t->user_id,-1,SQLITE_TRANSIENT);
+      else                sqlite3_bind_null(s,2);   /* the whole workspace */
       sqlite3_bind_int (s,3,lim);
       if (v_kind[0]) sqlite3_bind_text(s,4,v_kind,-1,SQLITE_TRANSIENT);
       cJSON *arr = cJSON_CreateArray();
       int n = 0;
       while (sqlite3_step(s) == SQLITE_ROW) {
-        cJSON_AddItemToArray(arr, decode_ss(s)); n++;
+        cJSON_AddItemToArray(arr, decode_ss(s, t->user_id)); n++;
       }
       sqlite3_finalize(s);
 
@@ -996,7 +1003,7 @@ char *savedsearchapi(db_handle *db, const tenant_ctx *t, const char *method,
       cJSON_AddNumberToObject(pg, "count", (double)n);
       cJSON_AddItemToObject(w, "page", pg);
       cJSON *mt = cJSON_CreateObject();
-      cJSON_AddStringToObject(mt, "scope", "user");
+      cJSON_AddStringToObject(mt, "scope", truthy(v_mine) ? "user" : "workspace");
       cJSON_AddItemToObject(w, "meta", mt);
       out = cJSON_PrintUnformatted(w); cJSON_Delete(w);
       *st = 200; goto done;

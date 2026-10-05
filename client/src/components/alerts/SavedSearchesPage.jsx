@@ -12,7 +12,9 @@ import { ChannelsEditor, validateChannels, emptyChannel } from './alertShared.js
 
 /**
  * Saved searches + search history — port of iOS `SavedSearchesView` and
- * `SearchHistoryView`. Both are PRIVATE to the signed-in user.
+ * `SearchHistoryView`. Both are SHARED with the workspace: every member sees
+ * every member's entries (each row carries `user_id` and `mine`). Only the
+ * author can pin, rename or delete a saved search, or clear their own history.
  *   GET   /api/saved-searches?kind&pinned&limit → {data:[{id,name,kind,params,pinned,created_at,last_run_at,run_count}], page:{limit,count}}
  *   POST  /api/saved-searches {name?, kind, params, pinned?}
  *   PATCH /api/saved-searches/:id {name?, params?, pinned?}   (kind immutable)
@@ -90,7 +92,7 @@ export default function SavedSearchesPage() {
   return (
     <Page
       title="Saved searches"
-      subtitle="Re-run a search, pin the ones you use daily, or turn an intel search into an alert rule. Private to your account."
+      subtitle="Re-run a search, pin the ones you use daily, or turn an intel search into an alert rule. Shared with everyone in this workspace; only the author can pin, rename or delete."
       actions={(
         <>
           <Segmented value={kind} onChange={setKind} options={KINDS.map((k) => ({ value: k, label: k }))} />
@@ -118,15 +120,15 @@ export default function SavedSearchesPage() {
                   </div>
                   <div className="text-[11px] text-osint-muted font-mono mt-0.5 break-words">{paramsSummary(s.params) || 'no parameters'}</div>
                   <div className="text-[11px] text-osint-muted mt-0.5">
-                    saved {relativeTime(s.created_at)}{s.last_run_at && <span title={fmtAbs(s.last_run_at)}> · last run {relativeTime(s.last_run_at)}</span>}
+                    saved {s.mine === false ? 'by a teammate ' : 'by you '}{relativeTime(s.created_at)}{s.last_run_at && <span title={fmtAbs(s.last_run_at)}> · last run {relativeTime(s.last_run_at)}</span>}
                   </div>
                 </div>
                 <div className="flex items-center gap-1 flex-wrap">
                   <Button size="sm" variant="primary" busy={busy === s.id} onClick={() => run(s)} title="Run"><LuPlay size={12} /> Run</Button>
-                  <Button size="sm" onClick={() => pin(s)} title={s.pinned ? 'Unpin' : 'Pin'}>{s.pinned ? <LuPinOff size={12} /> : <LuPin size={12} />}</Button>
-                  <Button size="sm" onClick={() => setRenaming(s)} title="Rename"><LuPencil size={12} /></Button>
+                  {s.mine !== false && <Button size="sm" onClick={() => pin(s)} title={s.pinned ? 'Unpin' : 'Pin'}>{s.pinned ? <LuPinOff size={12} /> : <LuPin size={12} />}</Button>}
+                  {s.mine !== false && <Button size="sm" onClick={() => setRenaming(s)} title="Rename"><LuPencil size={12} /></Button>}
                   <Button size="sm" onClick={() => setToAlert(s)} disabled={s.kind !== 'intel'} title={s.kind === 'intel' ? 'Turn into alert' : `Only intel searches can become alerts (this one is ${s.kind})`}><LuBellRing size={12} /> Alert</Button>
-                  <Button size="sm" variant="ghost" onClick={() => setConfirmDel(s)} title="Delete"><LuTrash2 size={12} /></Button>
+                  {s.mine !== false && <Button size="sm" variant="ghost" onClick={() => setConfirmDel(s)} title="Delete"><LuTrash2 size={12} /></Button>}
                 </div>
               </div>
             </Card>
@@ -252,7 +254,7 @@ function HistorySection({ onRun }) {
       )}
       padded={false}
     >
-      <div className="px-3 pt-2 text-[11px] text-osint-muted flex items-center gap-1"><LuHistory size={11} /> Searches you run are recorded here, privately — only your account can read this list.</div>
+      <div className="px-3 pt-2 text-[11px] text-osint-muted flex items-center gap-1"><LuHistory size={11} /> Searches run in this workspace are recorded here, and every member can read this list. Clear removes only your own.</div>
       {error && <div className="p-3"><ErrorNotice error={error} title="Could not load history" onRetry={reload} /></div>}
       {loading && !data && <LoadingState label="Loading history…" />}
       {!loading && !error && rows.length === 0 && <div className="p-3 text-xs text-osint-muted">No recent searches.</div>}
@@ -262,6 +264,7 @@ function HistorySection({ onRun }) {
             <li key={h.id} className="px-3 py-2 flex items-center gap-2 text-xs">
               <Pill tone="cyan">{h.kind}</Pill>
               <span className="font-mono text-osint-text truncate flex-1">{paramsSummary(h.params) || '—'}</span>
+              <span className="text-osint-muted whitespace-nowrap">{h.mine === false ? 'teammate' : 'you'}</span>
               <span className="font-mono text-osint-muted whitespace-nowrap" title={fmtAbs(h.ts)}>{h.result_count != null ? `${h.result_count} results · ` : ''}{relativeTime(h.ts)}</span>
               <Button size="sm" onClick={() => onRun(h)} title="Run this search again"><LuPlay size={11} /></Button>
             </li>
@@ -277,7 +280,7 @@ function HistorySection({ onRun }) {
           )}
         </div>
       )}
-      <ConfirmDialog open={confirmClear} onClose={() => setConfirmClear(false)} onConfirm={clear} title="Clear search history?" confirmLabel="Clear history" message="Removes every recorded search for your account. Saved searches are kept." />
+      <ConfirmDialog open={confirmClear} onClose={() => setConfirmClear(false)} onConfirm={clear} title="Clear search history?" confirmLabel="Clear history" message="Removes every search you ran from the workspace history. Your teammates' searches and all saved searches are kept." />
     </Section>
   );
 }
