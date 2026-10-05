@@ -1,4 +1,6 @@
-# Batch 33: 139 rows on specification-fixed endpoint families
+# Batch 34: 139 rows on specification-fixed endpoint families
+
+> **Renumbered at merge, 2026-10-05.** Authored as "batch 33" (ids `JO33_*`, `hp3b33_*`); another session's 43-row supply-chain batch merged to main first under that number, so this one became batch 34 (`JO34_*`, `hp3b34_*`) and the WEKO3 batch became 35. Row content is unchanged by the renumber. Registry figures below are as of authoring; after the merge the tree is 18,452.
 
 Authored 2026-10-04 in a session with **no outbound HTTPS** (the environment's
 network policy allowed Anthropic APIs, package registries and GitHub only).
@@ -13,7 +15,7 @@ nobody could fetch, and when someone with egress finally probed the 27 scheduled
 ones, seven were dead and three duplicated an existing collector. That is a ~37%
 failure rate on the part that could be measured.
 
-So batch 33 does not guess. Every row satisfies two conditions that can be
+So batch 34 does not guess. Every row satisfies two conditions that can be
 checked **without** a network:
 
 1. **The host is already proven reachable by a different row in this tree**, on
@@ -31,10 +33,10 @@ action, or an FDSN node that serves only `dataselect`, yields an honest empty.
 
 | Beat | Rows | Specification | What each row returns |
 |---|---:|---|---|
-| `hp3b33_ckanbulk.c` | 95 | CKAN Action API | `current_package_list_with_resources` — whole package dicts **with resources inline**: every dataset plus the URL, format and size of every downloadable file under it |
-| `hp3b33_fdsnstation.c` | 15 | FDSN web services | `station/1?level=station` — one row per seismic station: network, station, lat/lon, elevation, operating institution, operating epoch |
-| `hp3b33_fdsnevent.c` | 5 | FDSN web services | `event/1` — located events with origin time, hypocentre, depth, contributing agency, magnitude and type |
-| `hp3b33_socratacat.c` | 24 | Socrata Discovery API | `/api/catalog/v1?q={q}&domains=<host>&search_context=<host>` — every dataset on that portal whose metadata mentions an entity |
+| `hp3b34_ckanbulk.c` | 95 | CKAN Action API | `current_package_list_with_resources` — whole package dicts **with resources inline**: every dataset plus the URL, format and size of every downloadable file under it |
+| `hp3b34_fdsnstation.c` | 15 | FDSN web services | `station/1?level=station` — one row per seismic station: network, station, lat/lon, elevation, operating institution, operating epoch |
+| `hp3b34_fdsnevent.c` | 5 | FDSN web services | `event/1` — located events with origin time, hypocentre, depth, contributing agency, magnitude and type |
+| `hp3b34_socratacat.c` | 24 | Socrata Discovery API | `/api/catalog/v1?q={q}&domains=<host>&search_context=<host>` — every dataset on that portal whose metadata mentions an entity |
 | **total** | **139** | | |
 
 ### Why these four, and not 150 new portals
@@ -96,7 +98,7 @@ the unset 0 the walk would re-read the first event of every page.
 | `audit_batch_reachable.py` | **0 of 150** rows can never run (rule 3) |
 | `audit_batch_pagination.py` | **0 of 150** look paged without declaring it (18 declare `pagination_ok`) |
 | `audit_page_param.py` | no batch-33 row binds its own `page_param` |
-| registry delta | +139 after review, all 139 `JO33_*` ids registered |
+| registry delta | +139 after review, all 139 `JO34_*` ids registered |
 
 ## NOT verified — rules 4, 4b and 4d
 
@@ -112,8 +114,8 @@ at this batch:
 ```sh
 cd native
 python3 tools/audit_registry_emit.py --bin ./bin/japanosint \
-        --match JO33_ --jobs 6 --timeout 220 --out b33.tsv
-python3 tools/probe_hp_batch.py ../docs/candidate-sources-batch33.*.txt \
+        --match JO34_ --jobs 6 --timeout 220 --out b33.tsv
+python3 tools/probe_hp_batch.py ../docs/candidate-sources-batch34.*.txt \
         --check-filter
 ```
 
