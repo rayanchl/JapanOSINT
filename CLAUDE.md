@@ -79,14 +79,14 @@ hpengine pages exactly as it did. Without that (or an explicit `next_path` /
 
 Where the tree actually stands, as `make audit-sources` reports it:
 
-* **strict set — 0 findings across 256 files** (2026-09-27):
+* **strict set — 0 findings across 282 files** (2026-10-05):
   `collectors/pivot/table/hp*_*.c` plus the generated deep-record tables
   `collectors/feed/generated/hp1[0-9]_*.c`. This is the part the Makefile
   gates on, and it is held clean. Run `make audit-sources`
   after adding a table: batch 18 introduced two `single-page` findings here (a
   paged endpoint declared without `page_param`) and they had to be fixed before
   the gate would pass again.
-* **the rest of the tree — 0 findings** (1,642 files scanned, 2026-09-27; it
+* **the rest of the tree — 0 findings** (1,650 files scanned, 2026-10-05; it
   first reached zero on 2026-08-24, from ~127 across ~74 files). Every first-only, single-page, record-cap, loop-break,
   limit-one and dedupe-ring finding has been read and closed one of three ways:
   the discard was real and was fixed, the line carries an `exhaustive-ok`
@@ -134,6 +134,15 @@ Two amendments from the deep-record batch:
   counter list cannot match `cJSON_GetArraySize`, because the underscore is a
   word character. Zero findings from a new check deserves one suspicious look.
 
+* **And it still missed ten (audit of 2026-10-02).** `loop-cap` required a
+  trailing `&&` and could not reach a `for` condition; `loop-break` wanted
+  `n >=` and missed `if (n++ >= N) break`; `single-page` excused a row by its
+  NEIGHBOUR's paging within ±16 lines. Ten live caps passed as "0 findings" —
+  OpenCitations stored 50 of 72,181, bike-share GBFS 1,000 of 17,273, J-STAGE
+  text search 10 of 9,309. The checks now cover those shapes, scope context to
+  the row's own `{ .id = … }` block, and the script runs its own fixtures first
+  and exits 2 if any check stops seeing its case.
+
 **Detail hops: 359 rows, and what a generator that rewrites this tree must not
 do.** `collectors/gen_detail_hop_upgrade.py` moves a row that has a PROVEN
 per-record detail endpoint off VJSON onto hpengine, so the record behind each
@@ -178,13 +187,19 @@ make                 # full build (-Wall -Wextra); the tree is at 0 warnings, ke
 make selftest        # boot self-test: DB integrity, schema objects, llm probe
 make unit            # tests/unit/run.sh against a scratch DB
 make hptest          # offline check of the engine's guarantees
-make lint-sources    # dup ids/endpoints, quarantine-empty, snprintf guards
-make audit-sources   # scan every collector for discard patterns
+make authtest        # JWT / tenant auth
 make pagewalktest    # offline check of the paging + disclosure engine
+make htmlparsetest   # the one anchor scanner
+make lint-sources    # dup ids/endpoints, quarantine-empty, snprintf guards
 make source-floor    # fails if a collector stopped registering (tools/source-floor.txt)
+make registry-floor  # the same against the binary's registry (tools/registry-floor.txt)
+make audit-sources   # scan every collector for discard patterns
+tools/ci_concurrency_gate.sh ./bin/japanosint 1.0   # the event loop stays free under load
 ```
 
-Those six are exactly what `.github/workflows/ci.yml` runs, in that order.
+That is the native job in `.github/workflows/ci.yml`; CI also runs TSan and
+ASan builds and the client's `vitest` and `vite build`. Run gates with `JO_DB`
+pointing at a scratch file — several of them open the default DB otherwise.
 
 If `make unit` dies with `tests/unit/run.sh: No such file or directory` (exit
 127) on a tree that came from a Windows checkout, the script has CRLF line
@@ -199,10 +214,12 @@ working tree stays broken. Repair the tree, don't re-clone:
 git ls-files -z '*.sh' '*.py' | xargs -0 sed -i 's/\r$//'   # content-identical to HEAD
 ```
 
-Note that `make source-count` (and the `source-floor` gate built on it) counts
-`REGISTER_SOURCE` registrations only. Rows registered through
-`HP_REGISTER_TABLE` are invisible to it, so the number it prints is a floor on
-the registry, not its size — the built binary's own seed count is the real one.
+`make source-count` (and the `source-floor` gate built on it) counts hp table
+rows as well as `REGISTER_SOURCE`, and agrees with the binary. Both floors were
+recorded at 18,170 on 2026-10-02; they had been left at 16,271 and 13,081, low
+enough that batches 31 and 32 could both stop registering with CI green.
+Re-record them when a batch lands (`make source-floor-record
+registry-floor-record`).
 
 ## Where things live
 
@@ -270,12 +287,12 @@ says why.
 | tool | what it enforces |
 | --- | --- |
 | `tools/manifest.py` | THE manifest parser — line split, field count, and `opts` resolution — imported by every tool below. It is one file because it used to be seven, and they disagreed: see rule 4c |
-| `tools/probe_hp_batch.py` | proof of life: 2xx, parses in its declared mode, ≥1 real record. Honours each row's own headers, handles JSON/CSV/XML/HTML, rejects empty result sets, HTTP-200 refusals, one-element error arrays and bot-wall challenge pages. A **declared `array_path` is resolved and judged** — it used to hunt for the densest array and once counted a response's own 252-key *schema block* as records, passing a row whose result set was empty. **`--check-filter`** additionally asks each pivot row about an IMPOSSIBLE entity and fails it `FILTER_IGNORED` when the answer is the same size — see rule 4d |
+| `tools/probe_hp_batch.py` | proof of life: 2xx, parses in its declared mode, ≥1 real record. Honours each row's own headers, handles JSON/CSV/XML/HTML, rejects empty result sets, HTTP-200 refusals, one-element error arrays and bot-wall challenge pages. A **declared `array_path` is resolved and judged** — it used to hunt for the densest array and once counted a response's own 252-key *schema block* as records, passing a row whose result set was empty. **`--check-filter`** additionally asks each pivot row about an IMPOSSIBLE entity and fails it `FILTER_IGNORED` when the answer is the same size — see rule 4d. Both answers are judged by the same counter (XML/CSV/HTML/xlsx/`array_path` aware); a comparison that could not be made is `FILTER_UNCHECKED`, never PASS. It waits each row's own `timeout_ms`, renders `{date:}` tokens and matches keys case-insensitively, as the engine does |
 | `tools/batch_exclusions.py` | no duplicate id or endpoint against the existing tree or within the batch (normalising `{q}` and `%s` to one form; `.portal` is documentation and is excluded). Sees **runtime-composed** endpoints too — it resolves string macros, joins adjacent literals, follows `#include "*.inc"`, and matches a `%s` URL family on its layer/dataset NAME. Pass **`--bin ./bin/japanosint`**: without it the id set is a regex approximation (4,754 of 13,193) and it says so |
 | `tools/audit_batch_pagination.py` | a paged endpoint declares `page_param` or `next_path` — read from the parsed opts, not as a substring of the whole field |
 | `tools/audit_batch_reachable.py` | rule 3 above. A row whose opts are ambiguous is reported UNVERIFIABLE, never "never runs" |
 | `tools/audit_page_param.py` | rows whose URL already binds their own `page_param`. The engine used to APPEND (`…&pagina=1&pagina=2`) and a server binding the first occurrence then served page 1 for the whole walk — N pages emitted, one stored, `rc=0`. Fixed in `hp_url_set_param` and pinned by `hptest` "9f-bis"; the lint stays because 103 of 1,431 paged rows are that shape and their paging depends on the replacement being right |
-| `tools/audit_batch_emit.py` | rule 4 below: runs each MANIFEST row through the real binary and reads back `emitted N of M`. `--timeout S` moves the kill line; a run that hits it is **`SLOW`**, carrying its partial counts — unmeasured, not failed |
+| `tools/audit_batch_emit.py` | rule 4 below: runs each MANIFEST row through the real binary and reads back `emitted N of M`. `--timeout S` moves the kill line; a run that hits it is **`SLOW`**, carrying its partial counts — unmeasured, not failed. Each run gets a scratch DB from a warm template (it used to write the developer's live DB), and it exits non-zero on UNREGISTERED, UNPARSEABLE, NO_RUN_LINE or when nothing was measured |
 | `tools/audit_registry_emit.py` | rule 4 **and** 4b for the whole REGISTRY, manifest or not — `--list-sources` is the source list, so nothing registered can hide. Measures emitted *and* stored, per run, against a fresh copy of a warm template DB. `--scheduled`/`--match`/`--only`/`--ids-file`, `--jobs`, `--timeout`, TSV out, `--resume` |
 | `tools/diagnose_emit_keys.py` | why a row emitted nothing, and which `title_keys`/`id_keys` fix it |
 | `tools/gen_hp_batch.py` | manifest → C, one table per beat, `--prefix`/`--batch` so batches never collide. Rejects duplicate opts, non-integer int opts, and an opt whose value **swallowed the next one** through a stray `\;` |
@@ -377,6 +394,12 @@ comparable and not just whatever run a human happened to watch.
 
 The `stored=` field is appended AFTER the duration deliberately — eight parsers
 in `tests/audit/` and `tools/` match `records=(-?\d+) (\d+)ms` as one unit.
+Two later fields follow it the same way. `notices=N` counts the
+collector-*-notice records, and UID-COLLISION is judged against stored MINUS
+notice uids (a notice used to hide one collision). `failed=N EMIT-FAILED: …`
+counts emits the sink refused (SQLITE_BUSY, a failed COMMIT): before it, a
+lock held by the WAL checkpoint pod lost records with nothing on the run line.
+`stored=` itself still equals the DB's distinct-uid count.
 
 Sweep the whole registry for both failures, not just a batch:
 
@@ -471,7 +494,59 @@ Engine subtleties worth knowing before writing a row:
   drop it, so a row without `title_keys` still emits — but it emits titled
   `<record_type> <whatever came first>`. Declare `title_keys`/`id_keys` for
   anything whose fields are not named `name`/`title`/`id`.
+* **`{date:FORMAT}` / `{date:FORMAT:±N}`** in any templated URL is today's UTC
+  date shifted N days, through strftime (`{date:%d-%m-%Y:-2}`). For an
+  upstream that answers one day at a time; without it a row pinned its authoring
+  day and fetched that one day forever while reporting success.
+* **`array_path = "a+b+c"`** (HP_JSON) emits several sibling arrays of one
+  response — SIDOF's morning, evening and extraordinary editions. An absent one
+  is not an error; none at all is the declared-path-missing case.
+* A walk whose URL carries no page number (or `page=0`) asks for page 1 next and
+  compares it with the first page: identical means 1-based, continue at 2;
+  different means 0-based and page 1 was new data. It used to jump to 2, so
+  every 0-based API lost its second page (Diavgeia, 99 of 100 records).
+  Paged JSON rows stop on repeated RECORDS, not a repeated body, so an ignored
+  cursor plus a changing envelope (a timestamp) no longer re-emits 20 pages.
+* CSV: the unterminated-quote repair fires only on a real malformation — a long
+  cell whose closing quote is followed by the delimiter or a line end is a cell
+  (`csv_parse_wellformed()` skips the repair entirely, for xlsx-written text).
+  Blanks before an opening quote are padding in every mode: abuse.ch writes
+  `"a", "b"`, and comma mode used to keep the quotes and split tags on commas.
+* Use `jo_strcasestr`/`jo_memmem` (`lib/jocore.h`), never `strcasestr`/`memmem`:
+  glibc declares them only under `_GNU_SOURCE`, which this tree never defines,
+  so on Linux CI they were implicitly declared with a truncated return.
 
 Every source self-registers with `REGISTER_SOURCE` (or `HP_REGISTER_TABLE`) and
 is both schedulable (`update_interval_sec > 0`) and dispatchable as an
-entity pivot. There is no separate "service" type.
+entity pivot. There is no separate "service" type. Dispatch resolves a
+misspelled id to the nearest ENTITY PIVOT only, and runs it under the resolved
+id; it used to run under the misspelling and log the failure against the
+healthy source.
+
+## Embedding pipeline and tenancy (audit of 2026-10-02)
+
+`embedding-backfill` (core/embed_pod.c) embeds new and changed rows into
+`intel_vec`; `/api/intel/semantic` queries it on a worker thread, never the
+event loop. What it guarantees now, each pinned by `tests/unit/test_embed_pod.c`:
+
+* Re-fetched rows whose text did not change are marked seen, and the delta walk
+  resumes from a saved keyset — it used to rescan the same first 2,000 uids
+  every tick and stop embedding new rows for good. `JO_EMBED_MAX_PER_RUN`
+  counts rows SENT; `JO_EMBED_MAX_WALK` bounds rows looked at.
+* A batch the server refuses is retried row by row; a row that fails alone goes
+  to `intel_vec_failed` and is skipped until its text changes. Coverage reports
+  `failed_count` and a sample. Text is cleaned to valid UTF-8 before sending.
+* The model is identified from `/v1/models` and stored only with the first
+  successful write; a failed detection skips the tick. A same-dimension model
+  swap is refused by the pod AND by queries (503), and `service_vec` uses the
+  same identity rule.
+* A row's date is `published_at` only when it is ISO, else `fetched_at` — epoch
+  and dd/mm/yyyy dates used to make rows ineligible and uncounted.
+* Distance is L2. llama-server returns unit vectors, so the ranking equals
+  cosine (d² = 2 − 2cos).
+
+Tenancy: OSINT records are one shared corpus (tenant `legacy`, uid
+`source|key`). A search run is not: its summary row is written under the tenant
+that started it, `/api/intel/items`, `/search` and `/items/:uid` read "this
+tenant + the shared corpus", and `/api/search/results` plus the SSE stream
+answer the owner tenant (or the run's `stream_key`) only.
