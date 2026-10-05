@@ -92,7 +92,7 @@ hpengine pages exactly as it did. Without that (or an explicit `next_path` /
 
 Where the tree actually stands, as `make audit-sources` reports it:
 
-* **strict set — 0 findings across 256 files** (2026-09-27):
+* **strict set — 0 findings across 285 files** (2026-10-05; 256 on 2026-09-27):
   `collectors/pivot/table/hp*_*.c` plus the generated deep-record tables
   `collectors/feed/generated/hp1[0-9]_*.c`. This is the part the Makefile
   gates on, and it is held clean. Run `make audit-sources`
@@ -129,8 +129,8 @@ above and a one-line `/* exhaustive-ok: … */` on the line.
 Two amendments from the deep-record batch:
 
 * **The gated set is now two globs**, `collectors/pivot/table/hp*_*.c` plus the
-  generated deep-record tables `collectors/feed/generated/hp1[0-9]_*.c` — 262
-  files, 0 findings. `--strict` had to be made repeatable to say that honestly:
+  generated deep-record tables `collectors/feed/generated/hp1[0-9]_*.c` — 285
+  files as of 2026-10-05 (262 when this was written), 0 findings. `--strict` had to be made repeatable to say that honestly:
   it took a single glob, so passing two kept only the LAST one and the gate
   printed "0 findings" for a set it had never opened.
 * **`loop-cap` is a sixth check, and it was not redundant.** A bound written in
@@ -197,7 +197,24 @@ make pagewalktest    # offline check of the paging + disclosure engine
 make source-floor    # fails if a collector stopped registering (tools/source-floor.txt)
 ```
 
-Those six are exactly what `.github/workflows/ci.yml` runs, in that order.
+Those eight are the CORE of what CI runs, not all of it, and the count in this
+sentence used to say "six" while listing eight. `.github/workflows/ci.yml` also
+runs `make authtest`, `make htmlparsetest`, `make registry-floor`,
+`tools/ci_concurrency_gate.sh`, a TSAN scheduler job, an ASAN job and the
+client's `vitest` + `vite build`. Run the three extra `make` targets locally —
+they are seconds each — and expect CI to be the first thing that exercises
+TSAN, ASAN and the client.
+
+**And treat "CI is red" as a question, not an answer.** `ci.yml` carried
+`JO_DB: ${{ runner.temp }}/ci.db` as a JOB-LEVEL `env:` entry, where the
+`runner` context does not exist yet. That is an unrecognised named-value, which
+invalidates the whole FILE rather than the one job: GitHub created each run,
+failed it immediately and scheduled ZERO jobs. **Every one of the first 74 runs
+failed that way, from this file's first commit** — so for 74 runs "CI is red"
+was never a test result, because nothing had ever been compiled or executed.
+PR #28 moved it to a `$GITHUB_ENV` step and the runs after it are the first
+real ones. A failing run with `total_count: 0` in its jobs list is this shape,
+not a gate.
 
 If `make unit` dies with `tests/unit/run.sh: No such file or directory` (exit
 127) on a tree that came from a Windows checkout, the script has CRLF line
