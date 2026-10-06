@@ -22,6 +22,7 @@
 #include "isochrone.h"
 #include "vocabapi.h"
 #include "nearapi.h"
+#include "cors.h"
 #include "semsearchapi.h"
 #include "camera_stills.h"
 #include "cameraproxy.h"
@@ -126,12 +127,27 @@ static const char *reply_reason(int code) {
   }
 }
 
+/* This request's CORS verdict lives in the connection's scratch byte
+ * c->data[JO_CONN_CORS] (cors.h), set when its headers were parsed. A reply
+ * that a worker hands back later through MG_EV_WAKEUP is still for the
+ * connection that asked, so it still knows which origin to name. Every reply
+ * path below appends cors_h(c): "" when JO_CORS_ORIGINS is unset. These
+ * replies used to carry a hard-coded `Access-Control-Allow-Origin: *`. */
+#define JO_CONN_CORS 1
+static const char *cors_h(struct mg_connection *c) {
+  return cors_headers((unsigned char) c->data[JO_CONN_CORS]);
+}
+static void cors_mark(struct mg_connection *c, struct mg_http_message *hm) {
+  struct mg_str *o = mg_http_get_header(hm, "Origin");
+  c->data[JO_CONN_CORS] = (char) cors_verdict(o ? o->buf : NULL, o ? o->len : 0);
+}
+
 static void reply_json_bytes(struct mg_connection *c, int code,
                              const char *body, size_t len) {
   mg_printf(c,
     "HTTP/1.1 %d %s\r\nContent-Type: application/json\r\n"
-    "Access-Control-Allow-Origin: *\r\nContent-Length: %lu\r\n\r\n",
-    code, reply_reason(code), (unsigned long) len);
+    "%sContent-Length: %lu\r\n\r\n",
+    code, reply_reason(code), cors_h(c), (unsigned long) len);
   mg_send(c, body, len);
   c->is_resp = 0;                     /* framing is ours, as on the SSE path */
 }
@@ -139,9 +155,9 @@ static void reply_json_bytes(struct mg_connection *c, int code,
 static void reply_json(struct mg_connection *c, int code, const char *body) {
   size_t len = body ? strlen(body) : 0;
   if (len >= REPLY_FAST_MIN) { reply_json_bytes(c, code, body, len); return; }
-  mg_http_reply(c, code,
-    "Content-Type: application/json\r\nAccess-Control-Allow-Origin: *\r\n",
-    "%s", body);
+  char hb[CORS_HDR_MAX + 96];
+  snprintf(hb, sizeof hb, "Content-Type: application/json\r\n%s", cors_h(c));
+  mg_http_reply(c, code, hb, "%s", body);
 }
 
 /* Copy the request's query string into a fixed buffer, or answer 414.
@@ -262,7 +278,7 @@ static void search_stream_open(struct mg_connection *c, const char *id,
                                const char *tenant, const char *key) {
   mg_printf(c, "HTTP/1.1 200 OK\r\nContent-Type: text/event-stream\r\n"
     "Cache-Control: no-cache, no-transform\r\nConnection: keep-alive\r\n"
-    "X-Accel-Buffering: no\r\n\r\n");
+    "X-Accel-Buffering: no\r\n%s\r\n", cors_h(c));
   c->is_resp = 0;
   /* Look-up + ownership + serialise as one locked step. progress_get() hands
    * back a pointer that progress_create() may free (it evicts the oldest
@@ -760,7 +776,7 @@ static void wakeup_reply_raw(struct mg_mgr *mgr, unsigned long cid,
   char hdr[WRAW_HDR_MAX];
   snprintf(hdr, sizeof hdr,
     "Content-Type: %s\r\nX-Content-Type-Options: nosniff\r\n"
-    "Cache-Control: public, max-age=30\r\nAccess-Control-Allow-Origin: *\r\n",
+    "Cache-Control: public, max-age=30\r\n",   /* CORS: added at delivery */
     (ct && *ct) ? ct : "image/jpeg");
   wakeup_reply_hdr(mgr, cid, buf, len, hdr);
 }
@@ -832,9 +848,10 @@ static void worker_release(void) {
  * minutes-scale, and a client that backs off for a minute on a transient burst
  * is a worse experience than one that tries again shortly. */
 static void reply_busy(struct mg_connection *c) {
-  mg_http_reply(c, 503,
-    "Content-Type: application/json\r\nRetry-After: 1\r\n"
-    "Access-Control-Allow-Origin: *\r\n",
+  char hb[CORS_HDR_MAX + 96];
+  snprintf(hb, sizeof hb,
+    "Content-Type: application/json\r\nRetry-After: 1\r\n%s", cors_h(c));
+  mg_http_reply(c, 503, hb,
     "{\"error\":\"server_busy\",\"detail\":\"too many long-running requests in "
     "flight (%d); this one was refused rather than queued behind them\","
     "\"retry_after_sec\":1}\n", worker_cap());
@@ -1014,7 +1031,7 @@ static void *export_thread(void *vp) {
     char hdr[512];
     snprintf(hdr, sizeof hdr,
       "Content-Type: %s\r\nContent-Disposition: attachment; filename=\"%s\"\r\n"
-      "Cache-Control: no-store\r\nAccess-Control-Allow-Origin: *\r\n",
+      "Cache-Control: no-store\r\n",           /* CORS: added at delivery */
       a->ctype[0] ? a->ctype : "application/json", a->fname);
     wakeup_reply_hdr(a->mgr, a->cid, (unsigned char *) b.buf, b.len, hdr);
   } else {
@@ -1233,9 +1250,9 @@ static void fleet_reply_cached(struct mg_connection *c, const char *body,
   size_t len = strlen(body);
   mg_printf(c,
     "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n"
-    "Access-Control-Allow-Origin: *\r\nAge: %ld\r\nX-Cache: hit; age=%ldms\r\n"
+    "%sAge: %ld\r\nX-Cache: hit; age=%ldms\r\n"
     "Content-Length: %lu\r\n\r\n",
-    age_ms / 1000, age_ms, (unsigned long) len);
+    cors_h(c), age_ms / 1000, age_ms, (unsigned long) len);
   mg_send(c, body, len);
   c->is_resp = 0;
 }
@@ -1628,6 +1645,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
    * an oversize request can still be answered rather than reset. */
   if (ev == MG_EV_HTTP_HDRS) {
     struct mg_http_message *h = ev_data;
+    cors_mark(c, h);                   /* a 413 below names the origin too */
     struct mg_str *cl = mg_http_get_header(h, "Content-Length");
     if (cl && cl->len > 0 && cl->len < 20) {
       char b[24] = {0};
@@ -1673,8 +1691,8 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (!img) { reply_json(c, 500, "{\"error\":\"reply_lost\"}"); return; }
       /* Content-Length is added here, not parked: only the loop knows what it
        * is about to send. */
-      mg_printf(c, "HTTP/1.1 200 OK\r\n%sContent-Length: %lu\r\n\r\n",
-                ihdr, (unsigned long) ilen);
+      mg_printf(c, "HTTP/1.1 200 OK\r\n%s%sContent-Length: %lu\r\n\r\n",
+                ihdr, cors_h(c), (unsigned long) ilen);
       mg_send(c, img, ilen);
       c->is_resp = 0;
       free(img);
@@ -1695,14 +1713,31 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       free(big);
       return;
     }
-    mg_http_reply(c, status,
-      "Content-Type: application/json\r\nAccess-Control-Allow-Origin: *\r\n",
-      "%.*s", blen, body);
+    { char hb[CORS_HDR_MAX + 96];
+      snprintf(hb, sizeof hb, "Content-Type: application/json\r\n%s", cors_h(c));
+      mg_http_reply(c, status, hb, "%.*s", blen, body); }
     return;
   }
   if (ev != MG_EV_HTTP_MSG) return;
   struct mg_http_message *hm = ev_data;
   struct mg_str u = hm->uri;
+
+  /* CORS (cors.h). The verdict is recorded for every reply this request
+   * gets, and with JO_CORS_ORIGINS set an OPTIONS preflight is answered HERE,
+   * before the auth gate: a browser never attaches Authorization to a
+   * preflight, so letting it reach the gate is a 401 that blocks every
+   * authenticated cross-origin call. Unset, OPTIONS is not special. */
+  cors_mark(c, hm);
+  if (cors_enabled() && hm->method.len == 7 &&
+      memcmp(hm->method.buf, "OPTIONS", 7) == 0) {
+    int pst = 204;
+    const char *pr = cors_preflight_response(
+      (unsigned char) c->data[JO_CONN_CORS],
+      mg_http_get_header(hm, "Origin") != NULL, &pst);
+    mg_printf(c, "%s", pr);
+    c->is_resp = 0;
+    return;
+  }
 
   /* ---- pre-auth ---- */
   if (eq(u, "/api/health")) {
@@ -2990,7 +3025,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
                              aid, act, bdy, hl > 0 ? atoi(lv) : 0,
                              cv[0] ? cv : NULL, &status);
       free(bdy);
-      if (!body && status == 204) { mg_http_reply(c, 204, "", ""); return; }
+      if (!body && status == 204) { mg_http_reply(c, 204, cors_h(c), ""); return; }
       if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
       reply_json(c, status, body); free(body); return;
     }
@@ -3069,8 +3104,8 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         "Transfer-Encoding: chunked\r\n"
         "Cache-Control: no-store\r\n"
         "X-Accel-Buffering: no\r\n"
-        "Access-Control-Allow-Origin: *\r\n\r\n",
-        plan.content_type, plan.filename);
+        "%s\r\n",
+        plan.content_type, plan.filename, cors_h(c));
       c->is_resp = 0;                 /* we own the framing (== the SSE path) */
       long rows = 0;
       export_run(g_db, &tc, kind, fmt, qs, export_mg_write, c, &rows, &status);
@@ -3162,8 +3197,8 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         "Cache-Control: no-store\r\n"
         "X-Content-Type-Options: nosniff\r\n"
         "X-Accel-Buffering: no\r\n"
-        "Access-Control-Allow-Origin: *\r\n\r\n",
-        plan.content_type, plan.filename);
+        "%s\r\n",
+        plan.content_type, plan.filename, cors_h(c));
       c->is_resp = 0;
       long rbytes = 0;
       report_run(g_db, &tc, cid, bdy, export_mg_write, c, &rbytes, &status);
@@ -3219,7 +3254,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       int status = 200;
       char *body = casesapi(g_db, &tc, meth, cid, act, bdy, &cq, &status);
       free(bdy);
-      if (!body && status == 204) { mg_http_reply(c, 204, "", ""); return; }
+      if (!body && status == 204) { mg_http_reply(c, 204, cors_h(c), ""); return; }
       if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
       reply_json(c, status, body); free(body); return;
     }
@@ -3261,7 +3296,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       int status = 200;
       char *body = annotationsapi(g_db, &tc, meth, aid, qsb, bdy, &status);
       free(bdy);
-      if (!body && status == 204) { mg_http_reply(c, 204, "", ""); return; }
+      if (!body && status == 204) { mg_http_reply(c, 204, cors_h(c), ""); return; }
       if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
       reply_json(c, status, body); free(body); return;
     }
@@ -3311,8 +3346,8 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           "X-JO-Evidence-SHA256: %s\r\n"
           "Content-Disposition: attachment; filename=\"evidence-%s.bin\"\r\n"
           "X-Content-Type-Options: nosniff\r\n"
-          "Cache-Control: no-store\r\n\r\n",
-          (unsigned long)blen, sha, eid);
+          "Cache-Control: no-store\r\n%s\r\n",
+          (unsigned long)blen, sha, eid, cors_h(c));
         mg_send(c, bytes, blen);
         c->is_resp = 0;
         free(bytes);
@@ -3375,8 +3410,8 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           "X-JO-Still-SHA256: %s\r\n"
           "Content-Disposition: attachment; filename=\"still-%s.jpg\"\r\n"
           "X-Content-Type-Options: nosniff\r\n"
-          "Cache-Control: no-store\r\n\r\n",
-          (unsigned long)blen, sha, sid2);
+          "Cache-Control: no-store\r\n%s\r\n",
+          (unsigned long)blen, sha, sid2, cors_h(c));
         mg_send(c, bytes, blen);
         c->is_resp = 0;
         free(bytes);
@@ -3419,7 +3454,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       int status = 200;
       char *body = aoiapi(g_db, &tc, meth, aid, qsb, bdy, &status);
       free(bdy);
-      if (!body && status == 204) { mg_http_reply(c, 204, "", ""); return; }
+      if (!body && status == 204) { mg_http_reply(c, 204, cors_h(c), ""); return; }
       if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
       reply_json(c, status, body); free(body); return;
     }
@@ -3459,7 +3494,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       int status = 200;
       char *body = watchlistsapi(g_db, &tc, meth, wid, qsb, bdy, &status);
       free(bdy);
-      if (!body && status == 204) { mg_http_reply(c, 204, "", ""); return; }
+      if (!body && status == 204) { mg_http_reply(c, 204, cors_h(c), ""); return; }
       if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
       reply_json(c, status, body); free(body); return;
     }
@@ -3535,7 +3570,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       int status = 200;
       char *body = uploadapi(g_db, &tc, meth, uid2, act, qsb,
                              hm->body.buf, hm->body.len, &status);
-      if (!body && status == 204) { mg_http_reply(c, 204, "", ""); return; }
+      if (!body && status == 204) { mg_http_reply(c, 204, cors_h(c), ""); return; }
       if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
       reply_json(c, status, body); free(body); return;
     }
@@ -3580,7 +3615,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
                                        cv[0] ? cv : NULL,
                                        hl > 0 ? atoi(lv) : 0, &status);
       free(bdy);
-      if (!body && status == 204) { mg_http_reply(c, 204, "", ""); return; }
+      if (!body && status == 204) { mg_http_reply(c, 204, cors_h(c), ""); return; }
       if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
       reply_json(c, status, body); free(body); return;
     }
@@ -3619,7 +3654,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       int status = 200;
       char *body = savedsearchapi(g_db, &tc, meth, sid, act, qsb, bdy, &status);
       free(bdy);
-      if (!body && status == 204) { mg_http_reply(c, 204, "", ""); return; }
+      if (!body && status == 204) { mg_http_reply(c, 204, cors_h(c), ""); return; }
       if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
       reply_json(c, status, body); free(body); return;
     }
@@ -4001,8 +4036,8 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         "Content-Type: %s\r\n"
         "Content-Length: %lu\r\n"
         "X-Content-Type-Options: nosniff\r\n"
-        "Cache-Control: public, max-age=30\r\n\r\n",
-        ictype[0] ? ictype : "image/jpeg", (unsigned long)ilen);
+        "Cache-Control: public, max-age=30\r\n%s\r\n",
+        ictype[0] ? ictype : "image/jpeg", (unsigned long)ilen, cors_h(c));
       mg_send(c, img, ilen);
       c->is_resp = 0;
       free(img);
@@ -4284,6 +4319,11 @@ int httpd_serve(db_handle *db, int port) {
   }
   mg_wakeup_init(&mgr);   /* enable off-loop replies (async suggest) */
   fprintf(stderr, "[httpd] listening on %s\n", url);
+  { int nco = cors_init();
+    if (nco) fprintf(stderr, "[httpd] CORS: %d allowed origin(s) from "
+                             "JO_CORS_ORIGINS\n", nco);
+    else     fprintf(stderr, "[httpd] CORS: off (JO_CORS_ORIGINS unset) — "
+                             "same-origin clients only\n"); }
 
   /* This loop used to be `for (;;)`, i.e. httpd_serve never returned and the
    * process could only ever die by signal — SIGTERM's default action, taken

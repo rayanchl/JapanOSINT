@@ -222,3 +222,18 @@ prints every knob. A failed build is now fatal there — it used to discard
 still executable, so a broken compile booted the previous build under a green
 "build green" line (an entire audit was once run against a 40-minute-stale
 binary that way).
+
+**Client on another origin.** When the web client is built with
+`VITE_API_HOST` (served from a CDN or any origin other than the API), start the
+server with that origin on an explicit allow-list:
+
+```sh
+JO_CORS_ORIGINS=https://app.example.com,https://staging.example.com
+```
+
+Each entry is `scheme://host[:port]`; `*` and `null` are refused. A listed
+origin is reflected in `Access-Control-Allow-Origin` with `Vary: Origin`, and
+OPTIONS preflights are answered before the auth gate. Unset (the default), the
+server sends no CORS headers — right for the same-origin deployment. No
+`Access-Control-Allow-Credentials` is ever sent: the client authenticates with a
+bearer header, not cookies. See `native/core/cors.h`.
