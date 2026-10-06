@@ -1889,6 +1889,24 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       char *body = searchapi_suggest(q);
       reply_json(c, 200, body ? body : "{\"suggestions\":[]}"); free(body); return;
     }
+    /* GET /api/search/runs — every run in the caller's workspace, with its
+     * author (searchapi.h). Workspace-visible by decision of 2026-10-05; the
+     * client used to know only the runs its own tab had started. */
+    if (eq(u, "/api/search/runs")) {
+      tenant_ctx rtc;
+      if (intel_tenant_or_reply(c, hm, &usr, &rtc) != 0) return;
+      char lv[16] = {0}, mv[8] = {0}, cv[160] = {0};
+      int tl = 0;
+      qvar(hm, "limit", lv, sizeof lv, &tl);
+      qvar(hm, "mine", mv, sizeof mv, &tl);
+      qvar(hm, "cursor", cv, sizeof cv, &tl);
+      if (tl) { reply_json(c, 414, "{\"error\":\"filter_too_long\"}"); return; }
+      int rst = 500;
+      char *body = searchapi_runs(g_db, rtc.tenant_id, rtc.user_id, atoi(lv),
+                                  mv[0] == '1' || mv[0] == 't', cv, &rst);
+      if (!body) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
+      reply_json(c, rst, body); free(body); return;
+    }
     { char rid[64];
       if (seg(u, "/api/search/results/", "", rid, sizeof rid)) {
         struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
@@ -3659,9 +3677,10 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, status, body); free(body); return;
     }
 
-    /* ---- Roadmap 38: /api/search-history (collection only). Per-USER, not
-     * per-tenant: an admin must not be able to read what a colleague is
-     * investigating. The user predicate is enforced inside the module. ---- */
+    /* ---- Roadmap 38: /api/search-history (collection only). Workspace-wide
+     * read since 2026-10-05 (every member sees every member's entries, each
+     * naming its author; ?mine=1 narrows); clearing removes only the caller's
+     * own. Both rules live inside the module. ---- */
     if (eq(u, "/api/search-history")) {
       struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
       char xtid[128] = {0};
