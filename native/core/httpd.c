@@ -1065,15 +1065,21 @@ static int export_offload(struct mg_connection *c, exp_arg *ea) {
  *
  * The probe additionally WRITES (the probe_* columns and an audit row), so it
  * takes its own connection like every other off-loop writer. */
-typedef enum { OB_GEOCODE, OB_REVERSE, OB_PLATEAU, OB_PROBE, OB_CAMPROXY } ob_kind;
+/* OB_BREACH_SEARCH / OB_BREACH_RESCAN are not network waits but corpus walks:
+ * an FTS JOIN + COUNT over breach_items, and a monitor rescan that walks all
+ * of it (plus the value_domain backfill). Same stall, same remedy. */
+typedef enum { OB_GEOCODE, OB_REVERSE, OB_PLATEAU, OB_PROBE, OB_CAMPROXY,
+               OB_BREACH_SEARCH, OB_BREACH_RESCAN } ob_kind;
 
 typedef struct {
   struct mg_mgr *mgr; unsigned long cid;
   ob_kind kind;
-  char s1[256], s2[256];     /* q / qAlt, source id, camera uid */
+  char s1[256], s2[256];     /* q / qAlt, source id, camera uid, monitor id */
   char who[128];             /* authenticated user id, for the audit row */
   double lat, lon;
-  int lod;
+  int lod;                   /* also: breach search limit */
+  long long off;             /* breach search offset */
+  tenant_ctx tc;             /* breach rescan: the resolved tenant */
 } ob_arg;
 
 static void *ob_thread(void *vp) {
@@ -1115,6 +1121,28 @@ static void *ob_thread(void *vp) {
       db_worker_close(&own);
       if (ej) wakeup_reply_big(a->mgr, a->cid, ist, ej);   /* consumes ej */
       else    wakeup_reply_raw(a->mgr, a->cid, img, ilen, ict);
+      break;
+    }
+    case OB_BREACH_SEARCH: {
+      db_handle own;
+      db_handle *db = db_worker_open(&own, g_db);
+      char *b = breach_search(db, a->s1[0] ? a->s1 : NULL,
+                              a->s2[0] ? a->s2 : NULL, a->lod, a->off);
+      db_worker_close(&own);
+      if (b) wakeup_reply_big(a->mgr, a->cid, 200, b);
+      else   wakeup_reply(a->mgr, a->cid, 400, "{\"error\":\"invalid breach query\"}");
+      break;
+    }
+    case OB_BREACH_RESCAN: {
+      db_handle own;
+      db_handle *db = db_worker_open(&own, g_db);
+      int st = 200;
+      char *b = breach_monitors_api(db, &a->tc, "POST", a->s1, "rescan",
+                                    NULL, NULL, 0, &st);
+      db_worker_close(&own);
+      if (b) wakeup_reply_big(a->mgr, a->cid, st, b);
+      else   wakeup_reply(a->mgr, a->cid, st >= 400 ? st : 500,
+                          "{\"error\":\"server_error\"}");
       break;
     }
   }
@@ -2037,13 +2065,18 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       /* GET /api/intel/items/:uid/reveal — decrypt a breach record's leaked
        * secret(s). Operator-gated like /api/breach/search; breach uids only. */
       if (seg(u, "/api/intel/items/", "/reveal", pe, sizeof pe)) {
-        int oc = opgate_check(&usr);
-        if (oc == -401)  { reply_json(c,401,"{\"error\":\"Auth required\"}"); return; }
-        if (oc == -1403) { reply_json(c,403,"{\"error\":\"Platform operator access not configured\"}"); return; }
-        if (oc != 0)     { reply_json(c,403,"{\"error\":\"Platform operator role required\"}"); return; }
-        char *body = breach_adapter_reveal_by_uid(g_db, pe);
-        if (!body) { reply_json(c, 404, "{\"error\":\"not_found\"}"); return; }
-        reply_json(c, 200, body); free(body); return;
+        if (breach_gate(c, &usr)) return;
+        /* Audited, with a required ?reason= — breach_adapter_reveal_audited
+         * writes the breach.reveal row before it decrypts anything. */
+        char rsn[640] = {0}, ip[64] = {0};
+        if (mg_http_get_var(&hm->query, "reason", rsn, sizeof rsn) == -3) {
+          reply_json(c, 400, "{\"error\":\"reason_too_long\"}"); return; }
+        mg_snprintf(ip, sizeof ip, "%M", mg_print_ip, &c->rem);
+        int st = 500;
+        char *body = breach_adapter_reveal_audited(g_db, pe, usr.id, usr.email,
+                                                   rsn, ip, &st);
+        reply_json(c, st, body ? body : "{\"error\":\"server_error\"}");
+        free(body); return;
       }
     }
 
@@ -2898,7 +2931,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, 200, body); free(body); return;
     }
 
-    /* GET /api/breach/search?q=&type=&limit= — search materialized breach
+    /* GET /api/breach/search?q=&type=&limit=&offset= — search materialized breach
      * datapoints. Breach data is sensitive, so gate it like /api/admin (platform
      * operator). Returns metadata only; leaked secrets never cross this path. */
     if (eq(u,"/api/breach/search")) {
@@ -2906,12 +2939,21 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (oc == -401)  { reply_json(c,401,"{\"error\":\"Auth required\"}"); return; }
       if (oc == -1403) { reply_json(c,403,"{\"error\":\"Platform operator access not configured\"}"); return; }
       if (oc != 0)     { reply_json(c,403,"{\"error\":\"Platform operator role required\"}"); return; }
-      char qv[256]={0}, tv[32]={0}, lv[16]={0};
+      char qv[256]={0}, tv[32]={0}, lv[16]={0}, ov[24]={0};
       int hq = mg_http_get_var(&hm->query,"q",qv,sizeof qv);
       int ht = mg_http_get_var(&hm->query,"type",tv,sizeof tv);
       int hl = mg_http_get_var(&hm->query,"limit",lv,sizeof lv);
+      int ho = mg_http_get_var(&hm->query,"offset",ov,sizeof ov);
       if (hq<=0 && ht<=0) { reply_json(c,400,"{\"error\":\"q or type required\"}"); return; }
-      char *b = breach_search(g_db, hq>0?qv:NULL, ht>0?tv:NULL, hl>0?atoi(lv):0);
+      /* Off-loop: an FTS join + a bounded COUNT over the whole corpus. */
+      ob_arg oa = {0};
+      oa.kind = OB_BREACH_SEARCH;
+      if (hq > 0) snprintf(oa.s1, sizeof oa.s1, "%s", qv);
+      if (ht > 0) snprintf(oa.s2, sizeof oa.s2, "%s", tv);
+      oa.lod = hl > 0 ? atoi(lv) : 0;
+      oa.off = ho > 0 ? strtoll(ov, NULL, 10) : 0;
+      if (ob_offload(c, &oa)) return;
+      char *b = breach_search(g_db, hq>0?qv:NULL, ht>0?tv:NULL, oa.lod, oa.off);
       if (!b) { reply_json(c,400,"{\"error\":\"invalid breach query\"}"); return; }
       reply_json(c,200,b); free(b); return;
     }
@@ -3641,6 +3683,14 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       char cv[512] = {0}, lv[16] = {0};
       mg_http_get_var(&hm->query, "cursor", cv, sizeof cv);
       int hl = mg_http_get_var(&hm->query, "limit", lv, sizeof lv);
+      /* POST .../rescan walks the whole corpus: on a worker, never the loop. */
+      if (!strcmp(meth, "POST") && !strcmp(act, "rescan") && mid[0]) {
+        ob_arg oa = {0};
+        oa.kind = OB_BREACH_RESCAN;
+        snprintf(oa.s1, sizeof oa.s1, "%s", mid);
+        oa.tc = tc;
+        if (ob_offload(c, &oa)) { free(bdy); return; }
+      }
       int status = 200;
       char *body = breach_monitors_api(g_db, &tc, meth, mid, act, bdy,
                                        cv[0] ? cv : NULL,
