@@ -145,6 +145,12 @@ int                registry_count(void);
 int                registry_duplicate_count(void);
 const source_def **registry_all(void);
 const source_def  *registry_get(const char *id);
+/* Index of `id` in registry_all(), or -1. O(1): a hash built once after the
+ * constructors (registry.c). */
+int                registry_index(const char *id);
+/* Build the id index and report DUPLICATE ids now rather than at the first
+ * lookup. Idempotent and thread-safe; main() calls it first thing. */
+void               registry_freeze(void);
 
 #define REGISTER_SOURCE(defsym) \
   __attribute__((constructor)) static void reg_##defsym(void) { \

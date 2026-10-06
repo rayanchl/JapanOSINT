@@ -96,6 +96,9 @@ static void usage(FILE *out) {
 static int is_flag(const char *a) { return a && a[0] == '-' && a[1] == '-'; }
 
 int main(int argc, char **argv) {
+  /* The registry is complete once the constructors have run; index it (and
+   * report any DUPLICATE id) before anything looks a source up. */
+  registry_freeze();
   /* Order matters: the api-keys.json overlay is applied FIRST so it wins over
    * .env, matching keysapi.c's resolved_env(). Both use overwrite=0, so a real
    * shell export still beats either. */
