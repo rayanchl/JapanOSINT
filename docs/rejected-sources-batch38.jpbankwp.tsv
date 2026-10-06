@@ -1,0 +1,2 @@
+id	url	verdict	http	bytes	note
+JO38_WP_BANK_DAIICHIKANSHIN	https://www.daiichikanshin.com/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[Errno 104] Connection reset by peer
