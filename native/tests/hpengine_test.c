@@ -699,6 +699,14 @@ static const hp_source T[] = {
     .mode = HP_XML, .array_path = "item", .title_keys = "name", .id_keys = "ref",
     .detail_url = "https://x.test/xdd/{v}", .detail_key = "ref", .detail_max = 1,
     .interval = 3600, .record_type = "t-xmldeep", .free_tier = 1, .description = "d" },
+  /* A POSTed search authenticated by header, with a detail hop: gBizINFO's
+   * shape (X-hojinInfo-api-token). The hop must carry the token. */
+  { .id = "T_DEEP_HDR", .name = "detail hop with the row's headers",
+    .url = "https://x.test/hlist", .post_body = "{\"q\":\"{Q}\"}",
+    .headers = { "X-Api-Token: tok-123", "User-Agent: jo-test/1 (ops@x.test)", NULL },
+    .array_path = "items", .title_keys = "name", .id_keys = "num",
+    .detail_url = "https://x.test/hdetail/{v}", .detail_key = "num", .detail_max = 1,
+    .record_type = "t-deephdr", .free_tier = 1, .description = "d" },
 };
 HP_REGISTER_TABLE(T)
 
@@ -784,6 +792,24 @@ int main(void) {
   ok(strstr(g_cap[0].props, "\"detail.person.name\":\"Nils\"") != NULL, "detail hop merged (1)");
   ok(strstr(g_cap[1].props, "\"detail.role\":\"ceo\"") != NULL, "detail hop merged (2)");
   ok(g_ncalls == 3, "one list call + one detail call per record");
+
+  /* 2b. the detail hop is sent with the row's own headers. It used to be sent
+   * with none, so a row that authenticates by header got 401/403 on every hop
+   * and stored _detail_error on every record. The POST body's content type is
+   * NOT carried: the hop is a body-less GET. */
+  fx_reset();
+  fx_add("/hlist", 200, "{\"items\":[{\"name\":\"A\",\"num\":\"7\"}]}");
+  fx_add("/hdetail/7", 200, "{\"role\":\"chair\"}");
+  rc = run_source("T_DEEP_HDR", "acme");
+  ok(rc == 0 && g_ncap == 1 && g_ncalls == 2 &&
+     strstr(g_cap[0].props, "\"detail.role\":\"chair\"") != NULL &&
+     !strstr(g_cap[0].props, "_detail_error"),
+     "2b: the detail hop is fetched and merged");
+  ok(strstr(g_call_hdrs[1], "X-Api-Token: tok-123") != NULL &&
+     strstr(g_call_hdrs[1], "User-Agent: jo-test/1") != NULL,
+     "2b: the detail hop carries the row's token and User-Agent");
+  ok(!strstr(g_call_hdrs[1], "Content-Type:") && strstr(g_call_hdrs[0], "Content-Type: application/json"),
+     "2b: the POST's content type rides on the list call only, not the GET hop");
 
   /* 3. array auto-discovery when no array_path is declared */
   fx_reset();

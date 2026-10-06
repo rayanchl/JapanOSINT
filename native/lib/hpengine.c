@@ -1094,6 +1094,10 @@ typedef struct {
    * the probe as a page. Once per run. */
   const char *prev_url;     /* the URL of the page read before this one      */
   int   pw_probe, pw_probed;
+  /* What a detail hop is sent with: the row's own headers (token, UA, Accept)
+   * minus conditional ones and the content type the engine adds for a POST
+   * body — the hop is a body-less GET. NULL = none. */
+  const char *const *detail_hdrs;
 } hp_run_state;
 
 /* 0 = no cap (every record). A row's non-zero max_items is its author's
@@ -1153,8 +1157,12 @@ static void hp_deepen(hp_run_state *st, cJSON *flat) {
   free(enc);
   if (!url) return;
 
+  /* With the row's headers. This used to send none, so every detail hop on a
+   * row that authenticates by header (gBizINFO's X-hojinInfo-api-token, 26
+   * rows with headers and a detail_url) or needs a UA the firewall accepts
+   * (sec.gov) got 401/403/500, and each record carried _detail_error. */
   http_response hr = {0};
-  int rc = http_request(st->ctx->http, "GET", url, NULL, NULL, 0,
+  int rc = http_request(st->ctx->http, "GET", url, st->detail_hdrs, NULL, 0,
                         s->timeout_ms > 0 ? s->timeout_ms : HP_HTTP_TIMEOUT,
                         0, &hr);
   if (rc == 0 && hr.status == 200 && hr.body) {
@@ -3739,6 +3747,17 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     }
     nocache_hdrs[nn] = NULL;
   }
+  /* Detail hops: later_hdrs without the POST body's default content type. */
+  const char *detail_hdrs[12];
+  {
+    int nd = 0;
+    for (int i = 0; later_hdrs[i]; i++) {
+      if (body && !has_ctype && !strncasecmp(later_hdrs[i], "Content-Type:", 13))
+        continue;
+      detail_hdrs[nd++] = later_hdrs[i];
+    }
+    detail_hdrs[nd] = NULL;
+  }
   int page_max = s->page_max > 0 ? s->page_max : HP_PAGE_MAX_DEF;
   /* A `{page}` token left in the URL after entity expansion is path-segment
    * paging: the upstream numbers its pages in the path (kanpou.ai's
@@ -3759,6 +3778,7 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   int pw_repeat = 0;      /* the server's next link pointed at this page  */
 
   hp_run_state st = { .s = s, .ctx = ctx, .sink = sink, .vars = &vars,
+                      .detail_hdrs = detail_hdrs,
                       .url = url, .emitted = 0,
                       .deep_left = hp_detail_budget(s),
                       .pw = page_walk, .declared_total = -1,
