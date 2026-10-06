@@ -1,6 +1,7 @@
 #include "keysapi.h"
 #include "credtab.h"
 #include "audit.h"
+#include "auth.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
 #include <openssl/evp.h>
@@ -614,28 +615,18 @@ char *keysapi_breakglass(db_handle *db, const char *body,
   for (int d=-1; d<=1 && !valid; d++){ char e[7]; totp_at(key,klen,step+d,e);
     if (CRYPTO_memcmp(e,code,6)==0) valid=1; }
 
-  /* audit (raw platform-scope insert; matches breakGlass.insertAudit) */
-  char uid[37]; { unsigned char b[16]; RAND_bytes(b,16);
-    b[6]=(b[6]&0x0F)|0x40; b[8]=(b[8]&0x3F)|0x80;
-    snprintf(uid,37,"%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x",
-      b[0],b[1],b[2],b[3],b[4],b[5],b[6],b[7],b[8],b[9],b[10],b[11],b[12],b[13],b[14],b[15]); }
-  sqlite3_stmt *s;
-  if (sqlite3_prepare_v2(db->h,
-    "INSERT INTO audit_events (id,tenant_id,user_id,action,target,payload_json,"
-    "ts,ip,ua) VALUES (?1,'platform',NULL,?2,NULL,'{}',datetime('now'),?3,?4)",
-    -1,&s,NULL)==SQLITE_OK){
-    sqlite3_bind_text(s,1,uid,-1,SQLITE_TRANSIENT);
-    sqlite3_bind_text(s,2, valid?"break_glass.login.ok":"break_glass.login.denied",
-                      -1,SQLITE_TRANSIENT);
-    if (ip) sqlite3_bind_text(s,3,ip,-1,SQLITE_TRANSIENT); else sqlite3_bind_null(s,3);
-    if (ua) sqlite3_bind_text(s,4,ua,-1,SQLITE_TRANSIENT); else sqlite3_bind_null(s,4);
-    sqlite3_step(s);
-  }
-  sqlite3_finalize(s);
+  /* Audit every attempt, through the chained writer under the 'platform'
+   * tenant. This was a raw INSERT that left the chain columns NULL — the one
+   * login that bypasses the IdP was the one event kept out of the chain. Its
+   * RAND_bytes return was also unchecked; audit_write_ex() has the fallback. */
+  audit_write_ex(db, "platform", NULL,
+                 valid ? "break_glass.login.ok" : "break_glass.login.denied",
+                 NULL, "{}", ip, ua);
 
   if (!valid){ if(jb)cJSON_Delete(jb); return jerr(st,401,"Invalid TOTP"); }
 
-  /* HS256 JWT, 1h, platform admin scope */
+  /* HS256 JWT, BREAK_GLASS_TTL_SEC, platform admin scope. auth.c verifies
+   * exactly these claims (bg_claims_ok) — change them together. */
   cJSON *hd=cJSON_CreateObject();
   cJSON_AddStringToObject(hd,"alg","HS256"); cJSON_AddStringToObject(hd,"typ","JWT");
   char *hj=cJSON_PrintUnformatted(hd); cJSON_Delete(hd);
@@ -646,7 +637,7 @@ char *keysapi_breakglass(db_handle *db, const char *body,
   cJSON_AddStringToObject(pl,"tenant_id","platform");
   cJSON_AddBoolToObject(pl,"break_glass",1);
   cJSON_AddNumberToObject(pl,"iat",(double)now);
-  cJSON_AddNumberToObject(pl,"exp",(double)(now+3600));
+  cJSON_AddNumberToObject(pl,"exp",(double)(now+BREAK_GLASS_TTL_SEC));
   char *pj=cJSON_PrintUnformatted(pl); cJSON_Delete(pl);
   char *h64=b64url((unsigned char*)hj,strlen(hj));
   char *p64=b64url((unsigned char*)pj,strlen(pj));
@@ -659,7 +650,7 @@ char *keysapi_breakglass(db_handle *db, const char *body,
   if(jb)cJSON_Delete(jb);
   cJSON *o=cJSON_CreateObject();
   cJSON_AddStringToObject(o,"token",tok);
-  cJSON_AddNumberToObject(o,"expires_in",3600);
+  cJSON_AddNumberToObject(o,"expires_in",BREAK_GLASS_TTL_SEC);
   return jstr(o,st,200);
 }
 

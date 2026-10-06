@@ -599,6 +599,12 @@ CREATE INDEX IF NOT EXISTS idx_apikeys_tenant ON tenant_api_keys(tenant_id);
 CREATE INDEX IF NOT EXISTS idx_audit_chain
       ON audit_events(tenant_id, chain_seq)
       WHERE row_hash IS NOT NULL;
+-- One row per (tenant, chain position): two audit writers that read the same
+-- chain tail cannot both append to it (core/audit.c retries the loser).
+-- Partial on chain_seq IS NOT NULL so legacy unchained rows are untouched.
+CREATE UNIQUE INDEX IF NOT EXISTS idx_audit_chain_seq_uniq
+      ON audit_events(tenant_id, chain_seq)
+      WHERE chain_seq IS NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_audit_tenant_ts
       ON audit_events(tenant_id, ts DESC);
 CREATE INDEX IF NOT EXISTS idx_collector_cache_fetched
