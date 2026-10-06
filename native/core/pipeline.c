@@ -493,10 +493,12 @@ typedef struct {
  * JO_EMBED_MAX_CHARS, and a list that long has stopped describing a topic. */
 static char *round_drive_text(const char *query, cJSON *qents,
                               cJSON *discovered, int *n_out) {
-  size_t cap = 2048;
+  size_t cap = (query ? strlen(query) : 0) + 2048;
   char *b = malloc(cap);
   if (!b) return NULL;
   int w = snprintf(b, cap, "%s\nentities known so far:", query ? query : "");
+  if (w < 0 || w >= (int)cap) { free(b); return NULL; }
+  const char *ents_at = b + w;          /* dedupe within the list, not the query */
   int n = 0;
   cJSON *lists[2] = { qents, discovered };
   for (int l = 0; l < 2; l++) {
@@ -507,11 +509,11 @@ static char *round_drive_text(const char *query, cJSON *qents,
       cJSON *t = cJSON_GetObjectItem(e, "type");
       if (!cJSON_IsString(v) || !v->valuestring[0]) continue;
       const char *ty = cJSON_IsString(t) ? t->valuestring : "unknown";
-      if (strstr(b, v->valuestring)) continue;     /* once each */
-      int need = snprintf(NULL, 0, "%s %s: %s", n ? ";" : "", ty, v->valuestring);
-      if (w + need + 1 >= (int)cap) break;          /* bounded, see above */
-      w += snprintf(b + w, cap - (size_t)w, "%s %s: %s", n ? ";" : "", ty,
-                    v->valuestring);
+      if (strstr(ents_at, v->valuestring)) continue;   /* once each */
+      int k = snprintf(b + w, cap - (size_t)w, "%s %s: %s", n ? ";" : "", ty,
+                       v->valuestring);
+      if (k < 0 || k >= (int)cap - w) { b[w] = 0; break; }   /* bounded, see above */
+      w += k;
       n++;
     }
   }
