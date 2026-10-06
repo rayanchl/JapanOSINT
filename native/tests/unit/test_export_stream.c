@@ -1,5 +1,12 @@
 /* test_export_stream.c — an off-loop export is streamed, not buffered.
  *
+ * Case 4's assertion earns its keep: it failed intermittently (2 of 30 runs
+ * without ASan, ~40% of CI's asan job) because xs_pump zeroed x->queued before
+ * the bytes it had taken were counted in x->unsent, so a worker racing the
+ * first pump saw an empty gate and queued a SECOND full high-water mark. Peak
+ * held 1.5 MB against a 1 MB mark. It read as a flaky test for weeks; it was
+ * the bound being broken, briefly, on every export. Fixed in core/httpd.c.
+ *
  * The export worker used to build the whole body in memory and the loop then
  * copied it once more into the connection's send buffer: measured 790 MB peak
  * footprint for a 347 MB export, 1.49 GB for a 695 MB one. It now hands the
