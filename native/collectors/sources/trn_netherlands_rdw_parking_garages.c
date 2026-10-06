@@ -13,7 +13,7 @@
  * but has NO coordinates at all, so it is not a substitute for this one.
  */
 #include "lib/jocore.h"
-#include "lib/seenset.h"
+#include "lib/keyqual.h"
 #include "trn_common.inc"
 
 #define RDW_GARAGES "https://opendata.rdw.nl/resource/t5pc-eb34.json?$limit=1000&$order=:id"
@@ -26,9 +26,24 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     return -1;
   }
 
-  int n = 0;
-  seen_set aid_seen = {0};
+  int n = 0, folded = 0;
+  /* IDENTITY. areaid is unique only within an area manager: live 2026-10-06
+   * the 237 garages carry 236 areaids (599_HART is published by managers 2448
+   * and 2459) but 237 areamanagerid+areaid pairs. Pass 1 counts every key;
+   * pass 2 qualifies EVERY garage of a colliding areaid by its manager id
+   * ("599_HART|2448"), falling back to a hash of the row. It used to be
+   * first-come-plain — the plain areaid went to whichever garage `$order=:id`
+   * listed first, and :id is Socrata's internal row id, which RDW's re-uploads
+   * renumber, so the two garages traded uids. See lib/keyqual.h. */
+  keyqual kq = {0};
   cJSON *g;
+  cJSON_ArrayForEach(g, doc) {
+    const char *k = jo_sv(g, "areaid");
+    if (!k) k = jo_sv(g, "areadesc");
+    if (k) keyqual_add(&kq, k, jo_sv(g, "areamanagerid"));
+  }
+  keyqual_seal(&kq);
+
   cJSON_ArrayForEach(g, doc) {
     const char *aid = jo_sv(g, "areaid");
     const char *desc = jo_sv(g, "areadesc");
@@ -45,16 +60,17 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     char *pj = cJSON_PrintUnformatted(pr);
 
     intel_item it = {0};
-    /* areaid is unique only within an area manager: live 2026-09-15 the 237
-     * garages carry 236 areaids but 237 areamanagerid+areaid pairs, so one
-     * garage upserted over another manager's. A repeat is qualified by its
-     * manager id; a first occurrence keeps its plain areaid and stored uid. */
-    char keybuf[192];
+    char keybuf[512];
     const char *rk = aid ? aid : desc;
-    const char *mgr = jo_sv(g, "areamanagerid");
-    if (aid && !seen_add(&aid_seen, aid)) {
-      snprintf(keybuf, sizeof keybuf, "%s|%s", mgr ? mgr : "?", aid);
-      rk = keybuf;
+    if (keyqual_count(&kq, rk) > 1) {
+      const char *base = rk;
+      char *raw = cJSON_PrintUnformatted(g);
+      rk = keyqual_uid(&kq, base, jo_sv(g, "areamanagerid"), raw ? raw : "",
+                       keybuf, sizeof keybuf);
+      free(raw);
+      if (!keyqual_claim(&kq, base, rk)) {
+        folded++; free(pj); cJSON_Delete(pr); continue;
+      }
     }
     it.remote_key      = rk;
     it.title           = desc ? desc : aid;
@@ -74,9 +90,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
     cJSON_Delete(pr);
   }
-  seen_free(&aid_seen);
+  keyqual_free(&kq);
   cJSON_Delete(doc);
-  fprintf(stderr, "[netherlands-rdw-parking-garages] emitted %d\n", n);
+  fprintf(stderr, "[netherlands-rdw-parking-garages] emitted %d (%d byte-identical "
+          "repeats folded)\n", n, folded);
   return 0;
 }
 
