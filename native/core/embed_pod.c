@@ -146,7 +146,8 @@ static long max_walk(void) {
 }
 
 /* JO_EMBED_RECORD_TYPES as a JSON array string for json_each(), or NULL for
- * the default (everything but the two collector notices). */
+ * the default (everything but the two collector notices and the search-run
+ * summaries — see SEL_TYPE). */
 static char *record_types_json(void) {
   const char *v = getenv("JO_EMBED_RECORD_TYPES");
   if (!v || !*v) return NULL;
@@ -426,7 +427,8 @@ cJSON *embed_coverage_json(db_handle *db) {
   char *rt = record_types_json();
   if (rt) { cJSON *a = cJSON_Parse(rt); cJSON_AddItemToObject(o, "record_types", a ? a : cJSON_CreateNull()); free(rt); }
   else cJSON_AddStringToObject(o, "record_types",
-         "all except collector-truncation-notice, collector-shape-notice");
+         "all except collector-truncation-notice, collector-shape-notice, "
+         "osint_search_run");
   cJSON_AddStringToObject(o, "date_rule",
          "published_at when it is ISO-8601 text, else fetched_at");
   cJSON_AddNumberToObject(o, "max_chars", (double)max_chars());
@@ -667,9 +669,15 @@ static char *compose_text(const char *title, const char *summary,
   " FROM intel_items " \
   "LEFT JOIN " EMBED_DONE_TABLE " d ON d.uid = intel_items.uid " \
   "LEFT JOIN " EMBED_FAIL_TABLE " f ON f.uid = intel_items.uid "
+/* osint_search_run is the pipeline's own synthesis (core/pipeline.c): an
+ * LLM's prose about collected rows, written back as an intel item. Embedded,
+ * it would come back from /api/intel/semantic ranked beside the records it
+ * paraphrases, as if it had been collected — and the next synthesis would
+ * cite it as evidence. Not a finding; not in the index. */
 #define SEL_TYPE \
   "((?2 IS NULL AND (intel_items.record_type IS NULL OR intel_items.record_type " \
-  "NOT IN ('collector-truncation-notice','collector-shape-notice'))) OR " \
+  "NOT IN ('collector-truncation-notice','collector-shape-notice'," \
+  "'osint_search_run'))) OR " \
   "(?2 IS NOT NULL AND intel_items.record_type IN " \
   "(SELECT value FROM json_each(?2))))"
 

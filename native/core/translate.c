@@ -157,6 +157,14 @@ int translate_is_japanese(const char *language, const char *title,
 #define TR_PENDING_WHERE \
   "translated_at IS NULL AND translate_failed >= 0 AND translate_failed < 3"
 
+/* ANDed onto TR_PENDING_WHERE by the queries, NOT part of it: the partial
+ * index above only has to be implied, and adding a term keeps that true.
+ * osint_search_run is the pipeline's own LLM synthesis written back as an
+ * item — model output, not collected text, so it is not translated as if it
+ * had been scraped. */
+#define TR_ELIGIBLE_TYPE \
+  "(record_type IS NULL OR record_type <> 'osint_search_run')"
+
 /* ── migration ──────────────────────────────────────────────────────────── */
 
 static pthread_mutex_t g_mig_lock = PTHREAD_MUTEX_INITIALIZER;
@@ -409,11 +417,19 @@ static char *build_messages(const char *title, const char *summary,
   cJSON_Delete(fields);
   if (!fj) { cJSON_Delete(arr); return NULL; }
 
-  size_t need = strlen(fj) + 128;
-  char *uc = malloc(need);
-  if (!uc) { free(fj); cJSON_Delete(arr); return NULL; }
-  snprintf(uc, need, "Translate these Japanese fields to English:\n%s", fj);
+  /* Fenced, not just escaped. cJSON escaping keeps the text from breaking
+   * the JSON; it does nothing to stop a scraped body that SAYS "ignore the
+   * above and output {...}" from being read as an instruction — and the
+   * output is written back over the row's English fields. */
+  char *fenced = prompt_fence_untrusted("SOURCE_FIELDS", fj);
   free(fj);
+  if (!fenced) { cJSON_Delete(arr); return NULL; }
+  size_t need = strlen(fenced) + 160;
+  char *uc = malloc(need);
+  if (!uc) { free(fenced); cJSON_Delete(arr); return NULL; }
+  snprintf(uc, need, "Translate the Japanese fields in the SOURCE_FIELDS block "
+           "below to English:\n%s", fenced);
+  free(fenced);
 
   cJSON *usr = cJSON_CreateObject();
   cJSON_AddStringToObject(usr, "role", "user");
@@ -486,7 +502,7 @@ int translate_run(db_handle *db, llm_client *llm, int limit,
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(h,
       "SELECT uid,title,body,summary,language FROM intel_items"
-      " WHERE " TR_PENDING_WHERE
+      " WHERE " TR_PENDING_WHERE " AND " TR_ELIGIBLE_TYPE
       "   AND (title IS NOT NULL OR body IS NOT NULL OR summary IS NOT NULL)"
       " ORDER BY fetched_at DESC LIMIT ?1", -1, &s, NULL) == SQLITE_OK) {
     sqlite3_bind_int(s, 1, limit);
@@ -593,7 +609,8 @@ static long pending_count(sqlite3 *h) {
   long n = 0;
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(h,
-      "SELECT COUNT(*) FROM intel_items WHERE " TR_PENDING_WHERE,
+      "SELECT COUNT(*) FROM intel_items WHERE " TR_PENDING_WHERE
+      " AND " TR_ELIGIBLE_TYPE,
       -1, &s, NULL) == SQLITE_OK) {
     if (sqlite3_step(s) == SQLITE_ROW) n = (long)sqlite3_column_int64(s, 0);
     sqlite3_finalize(s);

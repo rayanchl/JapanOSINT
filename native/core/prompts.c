@@ -156,6 +156,18 @@ static void sb_add_untrusted(sb *b, const char *tok, const char *name,
   sb_add(b, tok); sb_add(b, "-----\n");
 }
 
+/* See prompts.h. The same rule and fence the builders below use, for prompts
+ * assembled outside this file (anomaly triage, translation). */
+char *prompt_fence_untrusted(const char *name, const char *value) {
+  sb b = {0};
+  char tok[FENCE_TOK_LEN];
+  const char *const vals[] = { value };
+  fence_token(tok, vals, 1);
+  sb_add_rule(&b, tok);
+  sb_add_untrusted(&b, tok, name ? name : "DATA", value);
+  return sb_take(&b);
+}
+
 /* ── ENTITY_TYPES_PROMPT (verbatim from prompts.js) ───────────────────── */
 static const char *const ENTITY_TYPES_PROMPT =
   "Entity types to identify:\n"

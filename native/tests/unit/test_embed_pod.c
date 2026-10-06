@@ -369,6 +369,9 @@ static void test_eligibility_dates(void) {
   insert_row("e6-iso-old", "iso old",      pub_old, recent, NULL);                /* out */
   insert_row("e7-null",    "no published", NULL, recent, NULL);                   /* in  */
   insert_row("e8-epoch-old","epoch old",   "1727000000", old, NULL);              /* out */
+  /* out: the pipeline's own synthesis is model output, not a collected row */
+  insert_row("e9-run",     "OSINT search: x", pub_recent, recent, NULL);
+  sql("UPDATE intel_items SET record_type='osint_search_run' WHERE uid='e9-run'");
   sweep_to_delta(6);
   assert(done_count() == 5);
   assert(sql_long("SELECT count(*) FROM intel_vec_done WHERE uid IN "
