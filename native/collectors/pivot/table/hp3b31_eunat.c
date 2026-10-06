@@ -108,30 +108,6 @@ static const hp_source HP3B31_EUNAT[] = {
       "self-governing bodies and associations, with the declared annual "
       "lobbying expenditure and the code of conduct each has signed" },
 
-  { .id = "CH_SIMAP_PROCUREMENT", .name = "Switzerland simap — public procurement",
-    .name_ja = "スイス 公共調達", .category = "government",
-    .portal = "https://www.simap.ch", .record_type = "ch-tender",
-    .tags = "\"ch\",\"procurement\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.simap.ch/shabforms/COMMON/search/searchResult.jsf?keyword={q}",
-    .base = "https://www.simap.ch", .filter_query = 1,
-    .description = "The Swiss federal, cantonal and communal procurement "
-      "platform — the awarding authority, the object, the successful bidder and "
-      "the award price, including the direct awards that Swiss authorities must "
-      "publish with a justification" },
-
-  { .id = "CH_PARLAMENT_ODATA", .name = "Switzerland Parlament — curia vista service",
-    .name_ja = "スイス議会 議事データ", .category = "government",
-    .portal = "https://www.parlament.ch", .record_type = "ch-parliamentary-record",
-    .tags = "\"ch\",\"parliament\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.parlament.ch/en/ratsbetrieb/suche-curia-vista?"
-      "k={q}&x=0&y=0",
-    .base = "https://www.parlament.ch", .filter_query = 1,
-    .description = "Curia Vista — Swiss parliamentary business, plus the "
-      "register of members' interests, which uniquely lists every board seat, "
-      "association role and lobbyist badge each parliamentarian has issued" },
-
   /* ── France, Benelux ──────────────────────────────────────────────────── */
   { .id = "FR_BOAMP_NOTICES", .name = "France BOAMP — public contract notices",
     .name_ja = "フランス 公共調達公告", .category = "government",
@@ -180,17 +156,6 @@ static const hp_source HP3B31_EUNAT[] = {
     .description = "The Dutch lower house's open data service — documents, "
       "motions, votes per member, agenda items and the lobbyist access passes "
       "issued, all as structured records" },
-
-  { .id = "BE_KAMER_PARLIAMENT", .name = "Belgium — Chamber of Representatives record",
-    .name_ja = "ベルギー下院 議事記録", .category = "government",
-    .portal = "https://www.dekamer.be", .record_type = "be-parliamentary-record",
-    .tags = "\"be\",\"parliament\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.dekamer.be/kvvcr/showpage.cfm?section=/search&query={q}",
-    .base = "https://www.dekamer.be", .filter_query = 1,
-    .description = "Belgian federal parliamentary documents, written questions "
-      "and the mandate declarations that members and senior officials must file "
-      "with the Court of Audit" },
 
   /* ── Nordics ──────────────────────────────────────────────────────────── */
   { .id = "SE_RIKSDAGEN_DOCUMENTS", .name = "Sweden Riksdag — document API",
@@ -261,17 +226,6 @@ static const hp_source HP3B31_EUNAT[] = {
       "election-campaign funding by donor" },
 
   /* ── Iberia and Italy ─────────────────────────────────────────────────── */
-  { .id = "ES_CONTRATACION_ESTADO", .name = "Spain — public sector contracting platform",
-    .name_ja = "スペイン 公共調達プラットフォーム", .category = "government",
-    .portal = "https://contrataciondelestado.es", .record_type = "es-tender",
-    .tags = "\"es\",\"procurement\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://contrataciondelestado.es/wps/portal/plataforma?text={q}",
-    .base = "https://contrataciondelestado.es", .filter_query = 1,
-    .description = "Spain's central contracting platform — tender documents, "
-      "the bidders admitted, the award with the successful supplier's NIF, and "
-      "the contract modifications that often double the original value" },
-
   { .id = "ES_PORTAL_TRANSPARENCIA", .name = "Spain — transparency portal & subsidy database",
     .name_ja = "スペイン 透明性ポータル", .category = "government",
     .portal = "https://transparencia.gob.es", .record_type = "es-transparency",

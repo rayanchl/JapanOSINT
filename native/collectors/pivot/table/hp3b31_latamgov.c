@@ -120,19 +120,6 @@ static const hp_source HP3B31_LATAMGOV[] = {
       "deferred prosecution agreement" },
 
   /* ── Chile: the lobbying act as an API ────────────────────────────────── */
-  { .id = "CL_LEY_LOBBY_AUDIENCIAS", .name = "Chile Ley del Lobby — official meetings register",
-    .name_ja = "チリ ロビー法 面談登録", .category = "government",
-    .portal = "https://www.leylobby.gob.cl", .record_type = "cl-lobby-meeting",
-    .tags = "\"cl\",\"lobbying\",\"influence\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.leylobby.gob.cl/instituciones/busqueda?q={q}",
-    .base = "https://www.leylobby.gob.cl", .filter_query = 1,
-    .description = "Chile requires every minister, undersecretary, mayor and "
-      "regulator to publish each meeting with an outside party — who attended, "
-      "for which company, what was discussed and what was sought. Alongside it "
-      "the gifts and paid travel registers. There is no comparable dataset in "
-      "the hemisphere" },
-
   { .id = "CL_INFOPROBIDAD_DECLARATIONS", .name = "Chile — public officials' interest declarations",
     .name_ja = "チリ 公職者利益申告", .category = "government",
     .portal = "https://www.infoprobidad.cl", .record_type = "cl-asset-declaration",
@@ -179,17 +166,6 @@ static const hp_source HP3B31_LATAMGOV[] = {
     .description = "Colombia's public employment information system — the "
       "named officeholder, the post, the entity and the CV and asset "
       "declaration filed on appointment" },
-
-  { .id = "AR_HCDN_DIPUTADOS", .name = "Argentina — Chamber of Deputies open data",
-    .name_ja = "アルゼンチン下院 オープンデータ", .category = "government",
-    .portal = "https://datos.hcdn.gob.ar", .record_type = "ar-legislator",
-    .tags = "\"ar\",\"parliament\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://datos.hcdn.gob.ar/dataset?q={q}",
-    .base = "https://datos.hcdn.gob.ar", .filter_query = 1,
-    .description = "Argentine deputies, their bills, votes, committee "
-      "membership and sworn asset declarations, published as bulk datasets by "
-      "the Chamber itself" },
 
   { .id = "AR_OFICINA_ANTICORRUPCION", .name = "Argentina — anti-corruption office declarations",
     .name_ja = "アルゼンチン 反汚職局 資産申告", .category = "government",
@@ -250,18 +226,6 @@ static const hp_source HP3B31_LATAMGOV[] = {
       "the sanctions imposed and the undeclared contributions found" },
 
   /* ── Central America, Panama and the Caribbean ────────────────────────── */
-  { .id = "PA_REGISTRO_PUBLICO", .name = "Panama — public registry of companies",
-    .name_ja = "パナマ 公的登記所", .category = "government",
-    .portal = "https://www.registro-publico.gob.pa", .record_type = "pa-entity",
-    .tags = "\"pa\",\"registry\",\"offshore\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.registro-publico.gob.pa/es/consultas?busqueda={q}",
-    .base = "https://www.registro-publico.gob.pa", .filter_query = 1,
-    .description = "Panama's public registry — the corporation, its folio, "
-      "directors and dignitaries, the resident agent law firm and the "
-      "registered capital. The other end of a very large share of the world's "
-      "offshore structures, and searchable at no cost" },
-
   { .id = "PA_PANAMACOMPRA", .name = "Panama — PanamaCompra procurement portal",
     .name_ja = "パナマ 公共調達", .category = "government",
     .portal = "https://www.panamacompra.gob.pa", .record_type = "pa-procurement",
@@ -295,19 +259,6 @@ static const hp_source HP3B31_LATAMGOV[] = {
       "the awards and the sanctioned-supplier list, plus the direct-purchase "
       "records that account for most of the spend" },
 
-  { .id = "DO_COMPRAS_DOMINICANA", .name = "Dominican Republic — public procurement portal",
-    .name_ja = "ドミニカ共和国 公共調達", .category = "government",
-    .portal = "https://comunidad.comprasdominicana.gob.do",
-    .record_type = "do-procurement",
-    .tags = "\"do\",\"procurement\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://comunidad.comprasdominicana.gob.do/Public/Tendering/"
-      "ContractNoticeManagement/Index?keyword={q}",
-    .base = "https://comunidad.comprasdominicana.gob.do", .filter_query = 1,
-    .description = "Dominican tender notices and awards with the supplier RNC, "
-      "the contracting institution and the amount — the Caribbean's most "
-      "complete procurement disclosure" },
-
   { .id = "SV_COMPRASAL", .name = "El Salvador — COMPRASAL procurement",
     .name_ja = "エルサルバドル 公共調達", .category = "government",
     .portal = "https://www.comprasal.gob.sv", .record_type = "sv-procurement",
@@ -332,16 +283,6 @@ static const hp_source HP3B31_LATAMGOV[] = {
       "and Cayman where published. Small jurisdictions with outsized roles in "
       "holding structures and captive insurance" },
 
-  { .id = "LATAM_IDB_PROJECT_DOCUMENTS", .name = "IDB — project documents & procurement",
-    .name_ja = "米州開発銀行 事業文書", .category = "government",
-    .portal = "https://www.iadb.org", .record_type = "mdb-project",
-    .tags = "\"latam\",\"mdb\",\"funding\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.iadb.org/en/search?keyword={q}",
-    .base = "https://www.iadb.org", .filter_query = 1,
-    .description = "Inter-American Development Bank project documents — the "
-      "executing agency, the loan amount, the procurement plan and the "
-      "supervision reports that record implementation failures by name" },
 };
 
 HP_REGISTER_TABLE(HP3B31_LATAMGOV)

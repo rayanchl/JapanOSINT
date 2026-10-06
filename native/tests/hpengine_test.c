@@ -438,6 +438,15 @@ static const hp_source T[] = {
    * YEAR only, because the rest of the timestamp is whatever the clock says
    * when the test runs; what is being pinned is that the token expands to a
    * real RFC 3339 instant in the URL rather than being left verbatim. */
+  /* Rule 1's second half: a refused fetch must be DISCLOSED, not silent. */
+  { .id = "T_REFUSED", .name = "upstream refuses the request",
+    .url = "https://x.test/refused", .array_path = ".", .title_keys = "name",
+    .interval = 3600, .record_type = "t-ref", .free_tier = 1, .description = "d" },
+
+  { .id = "T_UNPARSED", .name = "200 whose body is not JSON",
+    .url = "https://x.test/htmlbody", .array_path = ".", .title_keys = "name",
+    .interval = 3600, .record_type = "t-ref", .free_tier = 1, .description = "d" },
+
   { .id = "T_AGO", .name = "relative since cursor",
     .url = "https://x.test/ago?since={ago:3600}", .mode = HP_NDJSON,
     .array_path = ".", .title_keys = "Path", .id_keys = "Path",
@@ -825,18 +834,42 @@ int main(void) {
   ok(rc == 0 && g_ncap == 1, "T_POST emitted");
   ok(!strcmp(g_last_body, "{\"q\":\"acme corp\"}"), "{Q} raw in POST body");
 
-  /* 9. failure semantics: 404 = honest empty (rc 0), 5xx = errored (rc -1) */
+  /* 9. failure semantics: 404 = honest empty (rc 0), 5xx = errored (rc -1).
+   *
+   * These two used to assert `g_ncap == 0` — nothing emitted at all. That was
+   * the right contract when the only thing the engine could emit was a record,
+   * and it is the wrong one now: rule 1 says a failure "degrades to an explicit
+   * error / NOT_FOUND / needs-credential note, never to invented content", and
+   * `not_found` is named in the rule. So the contract being pinned here is what
+   * it always meant — no record was INVENTED — and it is now stated as such:
+   * zero records of the row's own record_type, one collector-fetch-failure
+   * disclosure. Counting by type rather than by total is also what keeps these
+   * two from breaking every time a new notice is added. */
   fx_reset();                        /* entity has digits so {qd} resolves and
                                       * the request is really made -> real 404 */
   rc = run_source("T_JSON", "ghost 999888");
-  ok(rc == 0 && g_ncap == 0 && g_ncalls == 1, "404 is an honest empty, not an error");
+  int nf_rec = 0, nf_note = 0;
+  for (int i = 0; i < g_ncap; i++) {
+    if (!strcmp(g_cap[i].rtype, "collector-fetch-failure")) nf_note++;
+    else nf_rec++;
+  }
+  ok(rc == 0 && nf_rec == 0 && g_ncalls == 1,
+     "404 is an honest empty, not an error — and no record is invented");
+  ok(nf_note == 1,
+     "and the 404 is DISCLOSED as a not-found, not stored as silence");
   fx_reset();
   rc = run_source("T_JSON", "no digits here");
   ok(rc == 0 && g_ncalls == 0, "a template token the entity cannot fill = skip, no call");
   fx_reset();
   fx_add("/err?q=", 503, "upstream down");
   rc = run_source("T_ERR", "x");
-  ok(rc == -1 && g_ncap == 0, "5xx surfaces as an errored source");
+  int e5_rec = 0, e5_note = 0;
+  for (int i = 0; i < g_ncap; i++) {
+    if (!strcmp(g_cap[i].rtype, "collector-fetch-failure")) e5_note++;
+    else e5_rec++;
+  }
+  ok(rc == -1 && e5_rec == 0, "5xx surfaces as an errored source");
+  ok(e5_note == 1, "and the 5xx is disclosed as data as well as in rc");
   fx_reset();
   rc = run_source("T_JSON", "");
   ok(rc == 0 && g_ncalls == 0, "no entity = no work (on-demand pivot)");
@@ -2462,6 +2495,49 @@ int main(void) {
      "{ago:N} is expanded, not passed through as a literal token");
   ok(strstr(g_last_url, "since=20") != NULL && strstr(g_last_url, "Z") != NULL,
      "and expands to an RFC 3339 UTC instant");
+
+  /* A refused fetch and an unparseable body both stored NOTHING before this —
+   * identical in the database to a source that ran and found nothing. Measured
+   * on nine live rows: eight il-knesset-* 303ing to an HTML maintenance page
+   * and us-courtlistener answering 429. */
+  fx_reset();
+  fx_add("/refused", 429, "slow down");
+  rc = run_source("T_REFUSED", "");
+  int ff = 0, ff429 = 0;
+  for (int i = 0; i < g_ncap; i++)
+    if (!strcmp(g_cap[i].rtype, "collector-fetch-failure")) {
+      ff++;
+      if (strstr(g_cap[i].props, "\"http_status\":429")) ff429++;
+      if (strstr(g_cap[i].props, "hostgate")) ff429++;   /* the 429 remedy */
+    }
+  ok(rc == 0 && ff == 1,
+     "a refused fetch stores one collector-fetch-failure record, not silence");
+  ok(ff429 == 2,
+     "and it names the status and the remedy for it (per-host gap)");
+
+  fx_reset();
+  fx_add("/htmlbody", 200, "<!DOCTYPE html><html>maintenance</html>");
+  rc = run_source("T_UNPARSED", "");
+  int up = 0, up200 = 0;
+  for (int i = 0; i < g_ncap; i++)
+    if (!strcmp(g_cap[i].rtype, "collector-fetch-failure")) {
+      up++;
+      if (strstr(g_cap[i].props, "\"http_status\":200") &&
+          strstr(g_cap[i].props, "\"body_parsed\":false")) up200++;
+    }
+  ok(rc == 0 && up == 1 && up200 == 1,
+     "a 200 that does not parse is disclosed too, as 200 with body_parsed false");
+
+  /* And it must NOT fire when the run worked: a notice on every healthy run is
+   * how a notice stops being read. */
+  fx_reset();
+  fx_add("/rootarr", 200, "[{\"name\":\"alpha\"}]");
+  rc = run_source("T_ROOTARR_DOT", "");
+  int none = 0;
+  for (int i = 0; i < g_ncap; i++)
+    if (!strcmp(g_cap[i].rtype, "collector-fetch-failure")) none++;
+  ok(rc == 0 && none == 0,
+     "and a run that stored records files no fetch-failure notice");
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

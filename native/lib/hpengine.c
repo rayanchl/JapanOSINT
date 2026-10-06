@@ -991,6 +991,10 @@ typedef struct {
    * batch 19 reported exactly that phantom -1. A disclosure that cries wolf on
    * every trailing newline is one nobody will read when a real discard happens. */
   int   empty;
+  /* The declared mode refused the BODY: a 200 that is not JSON where JSON was
+   * declared. Distinct from an empty result set, and the difference is the
+   * whole of rule 1's second half — see the fetch-failure notice in hp_run. */
+  int   parse_failed;
   /* NDJSON lines that are not valid JSON. Distinct from `empty` on purpose: an
    * empty slot held nothing, whereas a malformed line held a record we could
    * not read, which is a discard and is disclosed as one. */
@@ -1650,7 +1654,11 @@ static int hp_json_error_doc(cJSON *doc, char *msg, size_t cap, long *code) {
 static int hp_run_json(hp_run_state *st, const char *body) {
   const hp_source *s = st->s;
   cJSON *doc = cJSON_Parse(body);
-  if (!doc) { fprintf(stderr, "[hp:%s] non-JSON body\n", s->id); return 0; }
+  if (!doc) {
+    fprintf(stderr, "[hp:%s] non-JSON body\n", s->id);
+    st->parse_failed = 1;
+    return 0;
+  }
 
   cJSON *arr = NULL;
   /* Set when `arr` is a hp_path_multi() reference wrapper rather than a node
@@ -3471,6 +3479,9 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     free(page_url);
     page_url = hp_expand(url, &vars, "page", nb);
   }
+  /* The first page's outcome, kept for the fetch-failure notice: 0 = never
+   * asked, 200 = served, -1 = transport failure, otherwise the status. */
+  long first_status = 0;
   unsigned long long prev_hash = 0;   /* previous page's body, for notice (d) */
   char *prev_url = NULL;              /* the page read before this one         */
   /* Page 1's record count, the yardstick for "was the previous page full?" in
@@ -3491,13 +3502,14 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
                           1, &hr);
     if (rc != 0) {
       fprintf(stderr, "[hp:%s] transport failure %s\n", s->id, page_url);
-      if (page == 0) hard_error = 1;
+      if (page == 0) { hard_error = 1; first_status = -1; }
       else { failed_midwalk = 1; failed_status = -1; }
       http_response_free(&hr);
       break;
     }
     if (hr.status != 200 || !hr.body) {
       fprintf(stderr, "[hp:%s] status=%ld %s\n", s->id, hr.status, page_url);
+      if (page == 0) first_status = hr.status;
       if (hr.status >= 500 && page == 0) hard_error = 1;
       /* A later page refused with 429 or 5xx is a walk cut short, not the end
        * of the collection. It used to break here in silence: the Democracy
@@ -3625,7 +3637,7 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     http_response_free(&hr);
     /* Page 1's size, for the repeated-page diagnosis. Captured after the parse
      * because only the parse knows how many records the page held. */
-    if (page == 0) first_page_records = st.page_records;
+    if (page == 0) { first_page_records = st.page_records; first_status = 200; }
     prev_page_records = st.page_records;
 
     /* The records guard in hp_run_json found this page repeating the last
@@ -3846,6 +3858,83 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     note.record_type     = "collector-truncation-notice";
     note.properties_json = pj ? pj : "{}";
     note.tags_json       = "[\"osint-search\",\"truncation-notice\"]";
+    sink->emit(sink, &note);
+    free(pj);
+  }
+
+  /* RULE 1's SECOND HALF. "Real fetch or honest empty" has always held here —
+   * the engine cannot invent a record — but the rule also says a failure
+   * "degrades to an explicit error / not_found / needs-credential NOTE, never
+   * to invented content", and that note did not exist. Eight shape notices
+   * covered a body whose SHAPE surprised us; a body we were REFUSED stored
+   * nothing at all. So a row whose upstream 429s, or 303s to a maintenance
+   * page, was indistinguishable in the database from a row that ran perfectly
+   * and found nothing — `records=0 stored=0 rc=0`, which is exactly the
+   * invisible nothing rule 1 names.
+   *
+   * Measured 2026-10-06 on the 45 rows of docs/detail-hops-need-emit-check.tsv:
+   * eight il-knesset-* rows whose OData service now 303s to
+   * /maintenance-page-geo and parses as HTML, and us-courtlistener-* answering
+   * 429. Nine registered sources, all storing zero and all saying nothing.
+   *
+   * Keyed on (source, entity) so a permanently refused source carries ONE row
+   * that updates, not a new row per run. Only when the walk kept nothing: a
+   * run that got records and then hit a bad page is already the truncation
+   * notice's business, and saying it twice would make both easier to ignore. */
+  if (out == 0 && (first_status != 200 || st.parse_failed)) {
+    cJSON *p = cJSON_CreateObject();
+    cJSON_AddStringToObject(p, "source_id", s->id);
+    cJSON_AddStringToObject(p, "query", vars.raw ? vars.raw : "");
+    cJSON_AddStringToObject(p, "url", url ? url : "");
+    cJSON_AddNumberToObject(p, "http_status", (double)first_status);
+    cJSON_AddBoolToObject(p, "body_parsed", !st.parse_failed);
+    cJSON_AddStringToObject(p, "outcome",
+      first_status == 0
+        ? "the request was never made — the row needed a token it could not build"
+      : first_status == -1
+        ? "the request failed at the transport level"
+      : first_status == 200
+        ? "the upstream answered 200 and the body did not parse in this row's "
+          "declared mode — a redirect to an HTML notice does this"
+        : "the upstream refused the request");
+    cJSON_AddStringToObject(p, "note",
+      "NOTHING was stored for this run. This record exists so that a refused "
+      "fetch cannot be mistaken for a source that ran and found nothing — the "
+      "two are identical in the data without it.");
+    cJSON_AddStringToObject(p, "remedy",
+      first_status == 429
+        ? "rate limited: give the host a per-host minimum gap in "
+          "core/hostgate.c, as crates.io has"
+      : first_status == 401 || first_status == 403
+        ? "the upstream refused this client: check whether the row needs a "
+          "credential (key_env) or a User-Agent it is not sending"
+      : first_status == 200
+        ? "re-read the body by hand: the endpoint may have moved, started "
+          "redirecting to an HTML page, or changed shape"
+        : "re-run; if the status persists the endpoint has moved or retired");
+    char *pj = cJSON_PrintUnformatted(p);
+    cJSON_Delete(p);
+    char key[320], title[256];
+    snprintf(key, sizeof key, "%.150s|fetch-failure:%.120s", s->id,
+             vars.raw ? vars.raw : "");
+    if (first_status == 200)
+      snprintf(title, sizeof title,
+               "%s stored nothing: the body did not parse in its declared mode",
+               s->id);
+    else if (first_status == -1)
+      snprintf(title, sizeof title,
+               "%s stored nothing: the request failed at the transport level",
+               s->id);
+    else
+      snprintf(title, sizeof title, "%s stored nothing: upstream answered %ld",
+               s->id, first_status);
+    intel_item note = {0};
+    note.remote_key      = key;
+    note.title           = title;
+    note.lang            = "en";
+    note.record_type     = "collector-fetch-failure";
+    note.properties_json = pj ? pj : "{}";
+    note.tags_json       = "[\"osint-search\",\"fetch-failure\"]";
     sink->emit(sink, &note);
     free(pj);
   }
