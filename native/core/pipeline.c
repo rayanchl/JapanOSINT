@@ -465,6 +465,133 @@ static void run_tasks(osint_request *rp, db_handle *db, llm_client *llm,
   free(p.jobs);
 }
 
+/* ── the follow-up round's menu ─────────────────────────────────────────
+ *
+ * A follow-up round used to be briefed with the PHASE-1 catalogue and sent
+ * with NO schema. Both were wrong for the same reason: phase 1's menu was
+ * chosen for the query as typed, and the whole point of a follow-up is that
+ * the investigation now knows things it did not — an email found in a breach
+ * row, a domain from a WHOIS answer. A "company" query's menu has no
+ * DOMAIN_WHOIS on it, so the model either could not chain to it or, with no
+ * schema, named it (or anything else, scheduled bulk feeds included) without
+ * having been shown what it does.
+ *
+ * So each round rebuilds the menu from the original query PLUS every entity
+ * known so far, falls back to registry order exactly as phase 1 does, sends
+ * the schema whose chain_services[].service enum is that menu's ids, and says
+ * in-band — to the model and on the run record — what drove it. */
+typedef struct {
+  char *menu;                 /* prefix line + catalogue, what the prompt gets */
+  char *schema;               /* NULL: no enum could be built (said on record) */
+  int semantic;               /* 1: ranked by the embedding index */
+  osint_catalogue_note cat;
+} round_menu;
+
+/* "query\nentities known so far: type: value; type: value…" — what the
+ * service index is asked about. Entities are listed once each, query
+ * entities first. Bounded: embed_bound_text cuts it again at
+ * JO_EMBED_MAX_CHARS, and a list that long has stopped describing a topic. */
+static char *round_drive_text(const char *query, cJSON *qents,
+                              cJSON *discovered, int *n_out) {
+  size_t cap = 2048;
+  char *b = malloc(cap);
+  if (!b) return NULL;
+  int w = snprintf(b, cap, "%s\nentities known so far:", query ? query : "");
+  int n = 0;
+  cJSON *lists[2] = { qents, discovered };
+  for (int l = 0; l < 2; l++) {
+    cJSON *e;
+    if (!lists[l] || !cJSON_IsArray(lists[l])) continue;
+    cJSON_ArrayForEach(e, lists[l]) {
+      cJSON *v = cJSON_GetObjectItem(e, "value");
+      cJSON *t = cJSON_GetObjectItem(e, "type");
+      if (!cJSON_IsString(v) || !v->valuestring[0]) continue;
+      const char *ty = cJSON_IsString(t) ? t->valuestring : "unknown";
+      if (strstr(b, v->valuestring)) continue;     /* once each */
+      int need = snprintf(NULL, 0, "%s %s: %s", n ? ";" : "", ty, v->valuestring);
+      if (w + need + 1 >= (int)cap) break;          /* bounded, see above */
+      w += snprintf(b + w, cap - (size_t)w, "%s %s: %s", n ? ";" : "", ty,
+                    v->valuestring);
+      n++;
+    }
+  }
+  *n_out = n;
+  return b;
+}
+
+static void round_menu_build(round_menu *m, db_handle *db, llm_client *llm,
+                             const char *request_id, int round,
+                             const char *query, const char *rj,
+                             cJSON *qents, cJSON *discovered) {
+  memset(m, 0, sizeof *m);
+  int nent = 0;
+  char *drive = round_drive_text(query, qents, discovered, &nent);
+
+  /* The same measured budget phase 1 uses, against THIS prompt: the results
+   * block is in the preamble now, so the menu gets what is left after it. */
+  long allow = 0;
+  size_t ctx_chars = llm_ctx_chars(llm, 2048);
+  if (ctx_chars > 0) {
+    char *probe = prompt_phase2(query, rj, "");
+    size_t preamble = probe ? strlen(probe) : 0;
+    free(probe);
+    long room = (long)ctx_chars - (long)preamble - 512;   /* 512: prefix line */
+    allow = room > 0 ? (room * 9) / 10 : 0;
+    if (allow < 2048) allow = 2048;
+  }
+
+  char **ids = NULL; int nids = 0;
+  char *svcs = drive ? service_vec_catalogue_bounded(db, drive, 0, (size_t)allow,
+                                                     &m->cat, &ids, &nids)
+                     : NULL;
+  if (svcs && nids > 0) {
+    m->semantic = 1;
+    m->schema = osint_phase2_schema_dynamic_ids((const char *const *)ids, nids);
+  } else {
+    free(svcs);
+    service_vec_free_ids(ids, nids);
+    ids = NULL; nids = 0;
+    memset(&m->cat, 0, sizeof m->cat);
+    if (allow > 0) osint_set_catalogue_budget((int)allow);
+    svcs = osint_services_list_bounded(&m->cat);
+    m->schema = osint_phase2_schema_dynamic_limited(m->cat.shown);
+  }
+  service_vec_free_ids(ids, nids);
+
+  char prefix[512];
+  if (m->semantic)
+    snprintf(prefix, sizeof prefix,
+      "[MENU FOR FOLLOW-UP ROUND %d: %d of %d entity-pivot services, chosen by "
+      "embedding similarity to the original query plus the %d entit%s found "
+      "so far. Only services listed here may be named in chain_services.]\n",
+      round, m->cat.shown, m->cat.total, nent, nent == 1 ? "y" : "ies");
+  else
+    snprintf(prefix, sizeof prefix,
+      "[MENU FOR FOLLOW-UP ROUND %d: %d of %d entity-pivot services in "
+      "registry order — the service index was unavailable, so this menu was "
+      "NOT chosen from the entities found so far. Only services listed here "
+      "may be named in chain_services.]\n",
+      round, m->cat.shown, m->cat.total);
+  size_t pl = strlen(prefix), sl = svcs ? strlen(svcs) : 0;
+  m->menu = malloc(pl + sl + 1);
+  if (m->menu) {
+    memcpy(m->menu, prefix, pl);
+    if (sl) memcpy(m->menu + pl, svcs, sl);
+    m->menu[pl + sl] = 0;
+  }
+  free(svcs);
+  free(drive);
+  fprintf(stderr, "[pipeline] %s round %d menu: %d of %d services (%s, %d "
+                  "entities), %s\n", request_id, round, m->cat.shown,
+          m->cat.total, m->semantic ? "semantic" : "registry order", nent,
+          m->schema ? "enum-constrained" : "UNCONSTRAINED (no schema)");
+}
+
+static void round_menu_free(round_menu *m) {
+  free(m->menu); free(m->schema);
+  m->menu = m->schema = NULL;
+}
+
 void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
                         const char *request_id, const char *query,
                         int max_rounds) {
@@ -698,15 +825,33 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
     progress_set_phase(rp, "followup_analyzing", pct);
 
     char *rj = results_view_for_prompt(results);   /* labelled, bounded view */
-    char *p2 = prompt_phase2(query, rj, svcs ? svcs : "");
+    round_menu rm;
+    round_menu_build(&rm, db, llm, request_id, round, query, rj, qents,
+                     discovered);
+    char *p2 = prompt_phase2(query, rj, rm.menu ? rm.menu : "");
     free(rj);
     char *m2 = prompt_to_messages(p2);
     free(p2);
+    { char stage[32], d[400];
+      snprintf(stage, sizeof stage, "followup_round_%d", round);
+      snprintf(d, sizeof d,
+        rm.semantic
+          ? "the model was shown %d of %d entity-pivot services for this round, "
+            "selected by embedding similarity to the original query plus the "
+            "entities discovered so far; it could only chain to those%s"
+          : "the model was shown %d of %d entity-pivot services for this round "
+            "in registry order (the service index was unavailable), not a menu "
+            "chosen from the entities discovered so far%s",
+        rm.cat.shown, rm.cat.total,
+        rm.schema ? "" : " — and no schema could be built, so its choice was "
+                         "not constrained to that menu");
+      progress_stage_note(rp, stage, "followup_menu", d); }
     llm_status p2st = LLM_ERR_BAD_REQUEST;
     long p2http = 0;
-    char *p2raw = m2 ? llm_chat_ex(llm, m2, NULL, 2048, 0.2, llm_timeout_ms(), &p2st,
-                                   &p2http) : NULL;
+    char *p2raw = m2 ? llm_chat_ex(llm, m2, rm.schema, 2048, 0.2, llm_timeout_ms(),
+                                   &p2st, &p2http) : NULL;
     free(m2);
+    round_menu_free(&rm);
     cJSON *ph2 = extract_json(p2raw);
     /* Per ROUND, not once for the loop. A run that pivots successfully for two
      * rounds and then loses the model has done two thirds of an investigation,
