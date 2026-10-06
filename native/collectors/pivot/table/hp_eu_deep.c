@@ -230,13 +230,25 @@ static const hp_source HP_EU[] = {
     .name_ja = "ギリシャ 行政決定公開(Diavgeia)", .category = "government",
     .portal = "https://diavgeia.gov.gr", .record_type = "gr-decision",
     .tags = "\"gr\",\"transparency\"", .free_tier = 1,
-    .url = "https://diavgeia.gov.gr/opendata/search?q={q}&size=40",
+    /* Rule 4d, measured 2026-10-06. This was `search?q={q}&size=40`, and the
+     * simple search ignores `q`: q=Siemens and q=zzqqxxnotawordqq both
+     * answered total=2,927,400 with the same first decisions — the 40 latest
+     * acts of the whole Greek state, attributed to whatever entity was asked
+     * about. Its free-text parameter is `term` (Siemens 2,787; the impossible
+     * word 0; `subject=` matches the subject line only, 552). One page of 40
+     * is also gone: page is 0-based, size is clamped to 500 server-side, and
+     * Siemens ends at page 5. The simple search spans the last six months of
+     * issueDate only; the server narrows a wider from_issue_date back to six
+     * months. */
+    .url = "https://diavgeia.gov.gr/opendata/search.json?term={q}&size=500",
     .array_path = "decisions", .title_keys = "subject", .id_keys = "ada",
     .date_keys = "issueDate",
     .link_tmpl = "https://diavgeia.gov.gr/decision/view/{v}", .link_keys = "ada",
-    .description = "Every Greek public-sector decision naming an entity — Greece "
-      "publishes each act with a unique ADA number, so awards, appointments and "
-      "payments to a company are individually addressable" },
+    .page_param = "page", .page_zero_based = 1, .page_max = 100,
+    .description = "Every Greek public-sector decision of the last six months "
+      "whose text names an entity — Greece publishes each act with a unique ADA "
+      "number, so awards, appointments and payments to a company are "
+      "individually addressable" },
 
   /* ── Ukraine ───────────────────────────────────────────────────────────── */
   { .id = "UA_NAZK_DECLARATIONS", .name = "NAZK — Ukrainian officials' asset declarations",
