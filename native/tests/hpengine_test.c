@@ -173,10 +173,16 @@ typedef struct { char title[256], key[256], props[8192], link[512], rtype[64];
                  int has_geo; double lat, lon; } cap;
 static cap g_cap[MAXCAP];
 static int g_ncap = 0;
+/* The WHOLE properties_json of each captured row — `props` above is bounded,
+ * and a record carrying thousands of fields puts its `_fields_dropped` stamp
+ * past the bound (test 36). */
+static char *g_full[MAXCAP];
 
 static int cap_emit(struct intel_sink *s, const intel_item *it) {
   (void)s;
   if (g_ncap >= MAXCAP) return -1;
+  free(g_full[g_ncap]);
+  g_full[g_ncap] = strdup(it->properties_json ? it->properties_json : "");
   cap *c = &g_cap[g_ncap++];
   snprintf(c->title, sizeof c->title, "%s", it->title ? it->title : "");
   snprintf(c->key,   sizeof c->key,   "%s", it->remote_key ? it->remote_key : "");
@@ -639,6 +645,18 @@ static const hp_source T[] = {
     .mode = HP_XML, .array_path = "channel.item", .interval = 3600,
     .title_keys = "title", .id_keys = "link",
     .record_type = "t-xmldot", .free_tier = 1, .description = "d" },
+  /* hp_xml_flatten's bounds and repeats (test 36). */
+  { .id = "T_XML_FLAT", .name = "xml flatten bounds", .url = "https://x.test/xf.xml",
+    .mode = HP_XML, .array_path = "rec", .interval = 3600,
+    .title_keys = "title", .id_keys = "id",
+    .record_type = "t-xmlflat", .free_tier = 1, .description = "d" },
+  { .id = "T_XML_ROWS", .name = "xml attribute-only records", .url = "https://x.test/rows.xml",
+    .mode = HP_XML, .array_path = "row", .interval = 3600,
+    .title_keys = "@name", .id_keys = "@id",
+    .record_type = "t-xmlrow", .free_tier = 1, .description = "d" },
+  { .id = "T_XML_STR", .name = "xml text-only records", .url = "https://x.test/str.xml",
+    .mode = HP_XML, .array_path = "string", .interval = 3600,
+    .record_type = "t-xmlstr", .free_tier = 1, .description = "d" },
 
   /* ── engine fixes of 2026-10-02 (tests 27-33) ── */
   /* A page-numbered page_walk row whose URL states a page size and NO page.
@@ -2630,6 +2648,133 @@ int main(void) {
      "{ago:N} is expanded, not passed through as a literal token");
   ok(strstr(g_last_url, "since=20") != NULL && strstr(g_last_url, "Z") != NULL,
      "and expands to an RFC 3339 UTC instant");
+
+  /* 36. hp_xml_flatten drops nothing without saying so.
+   *
+   *     It returned at depth 4 and at 400 fields with no stamp, dropped any
+   *     value of 4 KB or more, dropped every REPEATED child (its key already
+   *     existed — the second <dc:subject>, the second <author> and all its
+   *     fields), and dropped an element's own text when it also had children.
+   *     Self-closing records were skipped uncounted, and a text-only record
+   *     flattened to nothing. */
+  {
+    /* (a) depth 7 is kept whole, and the record is not stamped. */
+    fx_reset();
+    fx_add("/xf.xml", 200,
+      "<list><rec><id>D7</id><title>deep</title>"
+      "<a><b><c><d><e><f><g>leaf</g></f></e></d></c></b></a></rec></list>");
+    rc = run_source("T_XML_FLAT", "");
+    ok(rc == 0 && g_ncap == 1 && strstr(g_full[0], "\"a.b.c.d.e.f.g\":\"leaf\"") &&
+       !strstr(g_full[0], "_fields_dropped"),
+       "36a: a field seven elements deep is flattened, not dropped");
+
+    /* (b) past the recursion guard: stamped, with the count of elements kept out. */
+    {
+      char *x = malloc(4096);
+      size_t w = 0;
+      w += (size_t)snprintf(x + w, 4096 - w, "<list><rec><id>D40</id><title>deeper</title>");
+      for (int i = 0; i < 40; i++) w += (size_t)snprintf(x + w, 4096 - w, "<n%d>", i);
+      w += (size_t)snprintf(x + w, 4096 - w, "v");
+      for (int i = 39; i >= 0; i--) w += (size_t)snprintf(x + w, 4096 - w, "</n%d>", i);
+      snprintf(x + w, 4096 - w, "</rec></list>");
+      fx_reset();
+      fx_add("/xf.xml", 200, x);
+      rc = run_source("T_XML_FLAT", "");
+      /* depth 0 is n0, so n0..n32 are walked and n33..n39 (7 elements) are not */
+      ok(rc == 0 && g_ncap == 1 && strstr(g_full[0], "\"_fields_dropped\":7"),
+         "36b: past the recursion guard the record is stamped with what was kept out");
+      free(x);
+    }
+
+    /* (c) 500 fields are all kept; 2,100 keep 2,048 and stamp the other 52. */
+    for (int pass = 0; pass < 2; pass++) {
+      int nf = pass ? 2098 : 498;            /* + id + title */
+      size_t cap = (size_t)nf * 40 + 256;
+      char *x = malloc(cap);
+      size_t w = 0;
+      w += (size_t)snprintf(x + w, cap - w, "<list><rec><id>W</id><title>wide</title>");
+      for (int i = 0; i < nf; i++) w += (size_t)snprintf(x + w, cap - w, "<f%d>v%d</f%d>", i, i, i);
+      /* The old bound was tested on ENTRY to each nested element, so a flat
+       * run of leaves passed it and the first CONTAINER after field 400 —
+       * with everything in it — was what vanished. */
+      if (!pass) w += (size_t)snprintf(x + w, cap - w, "<z><y>tail</y></z>");
+      snprintf(x + w, cap - w, "</rec></list>");
+      fx_reset();
+      fx_add("/xf.xml", 200, x);
+      rc = run_source("T_XML_FLAT", "");
+      if (!pass)
+        ok(rc == 0 && g_ncap == 1 && strstr(g_full[0], "\"f497\":\"v497\"") &&
+           strstr(g_full[0], "\"z.y\":\"tail\"") && !strstr(g_full[0], "_fields_dropped"),
+           "36c: 500 fields and a container after them are all flattened (the old bound was 400, unstamped)");
+      else
+        ok(rc == 0 && g_ncap == 1 && strstr(g_full[0], "\"f2045\":\"v2045\"") &&
+           !strstr(g_full[0], "\"f2046\"") && strstr(g_full[0], "\"_fields_dropped\":52"),
+           "36c: past HP_MAX_PROPS the record keeps 2,048 fields and stamps the 52 it did not");
+      free(x);
+    }
+
+    /* (d) repeats are indexed, not dropped; the first keeps the plain key. */
+    fx_reset();
+    fx_add("/xf.xml", 200,
+      "<list><rec><id>R1</id><title>repeats</title>"
+      "<subject>alpha</subject><subject>beta</subject><subject>gamma</subject>"
+      "<author id=\"a1\"><name>Xu</name></author>"
+      "<author id=\"a2\"><name>Yamada</name><aff>Kyoto</aff></author></rec></list>");
+    rc = run_source("T_XML_FLAT", "");
+    ok(rc == 0 && g_ncap == 1 &&
+       strstr(g_full[0], "\"subject\":\"alpha\"") && strstr(g_full[0], "\"subject.1\":\"beta\"") &&
+       strstr(g_full[0], "\"subject.2\":\"gamma\"") &&
+       strstr(g_full[0], "\"author.name\":\"Xu\"") && strstr(g_full[0], "\"author.@id\":\"a1\"") &&
+       strstr(g_full[0], "\"author.1.name\":\"Yamada\"") &&
+       strstr(g_full[0], "\"author.1.aff\":\"Kyoto\"") && strstr(g_full[0], "\"author.1.@id\":\"a2\"") &&
+       !strstr(g_full[0], "_fields_dropped"),
+       "36d: a repeated child is indexed (name.1, name.2) and none of its fields is lost");
+
+    /* (e) a value of 4 KB or more is kept whole. */
+    {
+      char *x = malloc(6000);
+      size_t w = (size_t)snprintf(x, 6000, "<list><rec><id>L1</id><title>long</title><abstract>");
+      for (int i = 0; i < 5000; i++) x[w++] = (char)('a' + i % 26);
+      snprintf(x + w, 6000 - w, "</abstract></rec></list>");
+      fx_reset();
+      fx_add("/xf.xml", 200, x);
+      rc = run_source("T_XML_FLAT", "");
+      const char *ab = strstr(g_full[0] ? g_full[0] : "", "\"abstract\":\"");
+      const char *q = ab ? strchr(ab + 12, '"') : NULL;
+      ok(rc == 0 && g_ncap == 1 && ab && q && q - (ab + 12) == 5000,
+         "36e: a 5,000-byte value is flattened whole (it was dropped at 4,096)");
+      free(x);
+    }
+
+    /* (f) an element's own text beside its children is kept as <key>.#text. */
+    fx_reset();
+    fx_add("/xf.xml", 200,
+      "<list><rec><id>M1</id><title>mixed</title>"
+      "<desc>Hello <b>world</b> again</desc></rec></list>");
+    rc = run_source("T_XML_FLAT", "");
+    ok(rc == 0 && g_ncap == 1 && strstr(g_full[0], "\"desc.#text\":\"Hello again\"") &&
+       strstr(g_full[0], "\"desc.b\":\"world\""),
+       "36f: mixed content keeps the element's own text and its child's");
+
+    /* (g) a self-closing record is a record when it carries attributes, an
+     *     empty slot (counted) when it carries none. */
+    fx_reset();
+    fx_add("/rows.xml", 200,
+      "<rows><row id=\"1\" name=\"one\"/><row id=\"2\" name=\"two\"/><row/></rows>");
+    rc = run_source("T_XML_ROWS", "");
+    ok(rc == 0 && cap_count("t-xmlrow", NULL) == 2 &&
+       !strcmp(g_cap[0].title, "one") && !strcmp(g_cap[1].title, "two"),
+       "36g: attribute-only self-closing records are emitted, not skipped");
+
+    /* (h) a record element that holds only text is a record. */
+    fx_reset();
+    fx_add("/str.xml", 200,
+      "<ArrayOfString><string>alpha</string><string>beta</string></ArrayOfString>");
+    rc = run_source("T_XML_STR", "");
+    ok(rc == 0 && cap_count("t-xmlstr", NULL) == 2 &&
+       strstr(g_full[0], "\"#text\":\"alpha\"") && strstr(g_full[1], "\"#text\":\"beta\""),
+       "36h: a text-only record element is emitted with its text as #text");
+  }
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

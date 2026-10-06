@@ -2126,8 +2126,72 @@ void hp_xml_decode(char *s) {
  *
  * `p` points just past the tag NAME, `gt` at the closing '>' (or at the '/' of
  * a self-closing tag — a trailing slash carries no '=' and is skipped). */
+/* One XML record's flatten state. `nfields` mirrors the object's size so the
+ * property bound is a counter, not a walk of the object per child; `drops`
+ * counts what a memory bound kept out — every element (or attribute) not
+ * flattened — and becomes the record's `_fields_dropped` stamp, exactly as
+ * the JSON flattener's does. */
+typedef struct { cJSON *flat; int nfields; int drops; } hp_xml_ctx;
+
+/* Recursion guard for hp_xml_flatten. It was 4, which real records exceed —
+ * a MODS name part, a DataCite affiliation identifier, an EAD component —
+ * and everything below it vanished with no stamp. 32 is a stack bound, not
+ * an editorial one; hitting it is counted into `drops`. */
+#define HP_XML_MAX_DEPTH   32   /* exhaustive-ok: recursion guard, stamped  */
+
+/* Start tags in markup `p`..`end` (not closers, comments, CDATA, PIs) — the
+ * elements a bound kept out of the record, for its `_fields_dropped`. */
+static int hp_xml_count_elems(const char *p, const char *end) {
+  int n = 0;
+  while (p < end && (p = memchr(p, '<', (size_t)(end - p))) != NULL) {
+    if (p + 1 < end && p[1] == '!') { p = hp_xml_skip_bang(p, end); continue; }
+    if (p + 1 < end && p[1] != '/' && p[1] != '?') n++;
+    p++;
+  }
+  return n;
+}
+
+/* Add `val` under `key`, or under the first free `key.N` when `key` is taken.
+ * A taken key used to drop the second value in silence; two distinct XML
+ * paths can flatten to one dotted string (`<a.b>` beside `<a><b>`), and a
+ * repeated leaf that reaches here must not lose its value either. */
+static void hp_xml_put(hp_xml_ctx *x, const char *key, const char *val) {
+  if (x->nfields >= HP_MAX_PROPS) { x->drops++; return; }
+  if (!cJSON_GetObjectItem(x->flat, key)) {
+    cJSON_AddStringToObject(x->flat, key, val);
+    x->nfields++;
+    return;
+  }
+  char alt[300];
+  for (int i = 1; i < HP_MAX_PROPS; i++) {
+    snprintf(alt, sizeof alt, "%s.%d", key, i);
+    if (!cJSON_GetObjectItem(x->flat, alt)) {
+      cJSON_AddStringToObject(x->flat, alt, val);
+      x->nfields++;
+      return;
+    }
+  }
+  x->drops++;
+}
+
+/* Decode, trim and add one text value (element text or attribute value). */
+static void hp_xml_put_text(hp_xml_ctx *x, const char *key, const char *vs, size_t vl) {
+  char *val = (char *)malloc(vl + 1);
+  if (!val) { x->drops++; return; }
+  memcpy(val, vs, vl); val[vl] = 0;
+  hp_xml_decode(val);
+  /* trim AFTER decoding: `<title>\n <![CDATA[ x ]]>\n</title>` carries
+   * padding inside the wrapper as well as around it */
+  char *t = val;
+  while (*t && isspace((unsigned char)*t)) t++;
+  size_t tl = strlen(t);
+  while (tl && isspace((unsigned char)t[tl - 1])) t[--tl] = 0;
+  if (tl) hp_xml_put(x, key, t);
+  free(val);
+}
+
 static void hp_xml_attrs(const char *p, const char *gt, const char *prefix,
-                         cJSON *flat) {
+                         hp_xml_ctx *x) {
   char key[256];
   while (p < gt) {
     while (p < gt && !(isalpha((unsigned char)*p) || *p == '_' || *p == ':')) p++;
@@ -2152,95 +2216,180 @@ static void hp_xml_attrs(const char *p, const char *gt, const char *prefix,
       while (p < gt && !isspace((unsigned char)*p) && *p != '/') p++;
       vl = (size_t)(p - vs);
     }
-    if (!vl || vl >= 4096) continue;
-    if (cJSON_GetArraySize(flat) > 400) return;
+    /* No length bound: a value of 4 KB or more used to be dropped with no
+     * trace (the JSON path has never bounded a string). */
+    if (!vl) continue;
     if (prefix && *prefix) snprintf(key, sizeof key, "%s.@%.*s", prefix, (int)nl, ns);
     else                   snprintf(key, sizeof key, "@%.*s", (int)nl, ns);
-    if (cJSON_GetObjectItem(flat, key)) continue;
-    char *val = (char *)malloc(vl + 1);
-    if (!val) return;
-    memcpy(val, vs, vl); val[vl] = 0;
-    hp_xml_decode(val);
-    if (val[0]) cJSON_AddStringToObject(flat, key, val);
-    free(val);
+    if (cJSON_GetObjectItem(x->flat, key)) continue;   /* a duplicated attribute is malformed XML */
+    hp_xml_put_text(x, key, vs, vl);
   }
 }
 
 /* Flatten one record element's children into `flat` with dotted keys, so an
  * XML record reaches hp_emit_record in exactly the shape a JSON one does and
  * every downstream field selector (title_keys, id_keys, lat_key…) works
- * unchanged. Bounded in depth and in field count. */
+ * unchanged.
+ *
+ * Nothing in it is dropped any more without a count. What used to be:
+ *   - anything below depth 4, and every field past the 400th — now the
+ *     shared HP_MAX_PROPS bound and HP_XML_MAX_DEPTH, both counted into
+ *     `_fields_dropped`;
+ *   - a value of 4 KB or more (an abstract, a description) — now kept whole;
+ *   - a REPEATED child — the second <dc:subject>, the second <author> and
+ *     every field under it — because its key already existed. The first
+ *     occurrence keeps the plain key, so every title_keys/id_keys declared
+ *     against it still resolves to what it always did; the second is `name.1`,
+ *     the third `name.2` (`author.1.name`, `author.1.@id`), the 0-based index
+ *     the JSON flattener gives the same position;
+ *   - an element's OWN text when it also has children (`<p>Hello <b>x</b></p>`
+ *     kept "x" and lost "Hello") — now `<key>.#text`, the segments in order.
+ *     `#` cannot begin an XML name, so it cannot collide with a child. */
+/* Append `n` bytes to a growable text buffer. On allocation failure the text
+ * is not appended and the caller's own-text value is simply shorter — never a
+ * crash; it is the record's own prose, not a field the row keys on. */
+static void hp_buf_add(char **b, size_t *n, size_t *cap, const char *s, size_t sl) {
+  if (*n + sl + 1 > *cap) {
+    size_t nc = (*n + sl + 1) * 2;
+    char *g = realloc(*b, nc);
+    if (!g) return;
+    *b = g; *cap = nc;
+  }
+  memcpy(*b + *n, s, sl);
+  *n += sl;
+  (*b)[*n] = 0;
+}
+
 static void hp_xml_flatten(const char *p, const char *end, const char *prefix,
-                           cJSON *flat, int depth) {
-  if (depth > 4 || cJSON_GetArraySize(flat) > 400) return;
+                           hp_xml_ctx *x, int depth) {
+  if (depth > HP_XML_MAX_DEPTH) { x->drops += hp_xml_count_elems(p, end); return; }
   char name[96], key[256];
-  while (p < end && (p = memchr(p, '<', (size_t)(end - p))) != NULL) {
-    p++;
-    if (p >= end) return;
-    if (*p == '!') { p = hp_xml_skip_bang(p - 1, end); continue; } /* CDATA / comment / decl */
+  /* Child names seen at THIS level, for the repeat index. Grown on demand. */
+  struct hp_xml_seen { char name[96]; int n; } *seen = NULL;
+  int nseen = 0, cseen = 0;
+  /* This element's own text: its content with every child element replaced
+   * by one space and comments removed. CDATA stays raw for hp_xml_decode. */
+  char *own = NULL; size_t own_n = 0, own_cap = 0;
+  int own_text = 0;                           /* a non-blank byte was seen   */
+  while (p < end) {
+    const char *lt = memchr(p, '<', (size_t)(end - p));
+    const char *run_end = lt ? lt : end;
+    for (const char *q = p; q < run_end && !own_text; q++)
+      if (!isspace((unsigned char)*q)) own_text = 1;
+    hp_buf_add(&own, &own_n, &own_cap, p, (size_t)(run_end - p));
+    if (!lt) break;
+    p = lt + 1;
+    if (p >= end) break;
+    if (*p == '!') {                                       /* CDATA / comment / decl */
+      const char *after = hp_xml_skip_bang(lt, end);
+      if (end - lt >= 9 && !strncmp(lt, "<![CDATA[", 9)) {
+        own_text = 1;
+        hp_buf_add(&own, &own_n, &own_cap, lt, (size_t)(after - lt));
+      }
+      p = after;
+      continue;
+    }
     if (*p == '/' || *p == '?') {                          /* close / PI */
       const char *gt = memchr(p, '>', (size_t)(end - p));
-      if (!gt) return;
+      if (!gt) break;
       p = gt + 1;
       continue;
     }
     size_t nl = hp_xml_name(p, name, sizeof name);
-    if (!nl) return;
+    if (!nl) break;
     const char *gt = memchr(p, '>', (size_t)(end - p));
-    if (!gt) return;
+    if (!gt) break;
+    hp_buf_add(&own, &own_n, &own_cap, " ", 1);          /* the child's place */
+    /* The repeat index: 0 for the first child of this name, then 1, 2 … */
+    int occ = 0, i = 0;
+    for (; i < nseen; i++) if (!strcmp(seen[i].name, name)) { occ = ++seen[i].n; break; }
+    if (i == nseen) {
+      if (nseen == cseen) {
+        int nc = cseen ? cseen * 2 : 16;
+        struct hp_xml_seen *g = realloc(seen, (size_t)nc * sizeof *g);
+        if (g) { seen = g; cseen = nc; }
+      }
+      if (nseen < cseen) {
+        snprintf(seen[nseen].name, sizeof seen[nseen].name, "%s", name);
+        seen[nseen].n = 0;
+        nseen++;
+      }
+    }
     /* Build this child's key BEFORE the self-closing test, because a
      * self-closing element is not an empty element: `<Ref id="X" agencyID="Y"/>`
      * is pure attribute payload, and skipping the tag threw all of it away. */
-    if (prefix && *prefix) snprintf(key, sizeof key, "%s.%s", prefix, name);
-    else                   snprintf(key, sizeof key, "%s", name);
-    hp_xml_attrs(p + nl, gt, key, flat);
-    if (gt > p && gt[-1] == '/') { p = gt + 1; continue; }  /* self-closing */
+    char idx[16] = "";
+    if (occ) snprintf(idx, sizeof idx, ".%d", occ);
+    if (prefix && *prefix) snprintf(key, sizeof key, "%s.%s%s", prefix, name, idx);
+    else                   snprintf(key, sizeof key, "%s%s", name, idx);
+    if (gt > p && gt[-1] == '/') {                         /* self-closing */
+      if (x->nfields >= HP_MAX_PROPS) x->drops++;
+      else hp_xml_attrs(p + nl, gt, key, x);
+      p = gt + 1;
+      continue;
+    }
     char close[100];
     int cl = snprintf(close, sizeof close, "</%s>", name);
     const char *vs = gt + 1, *ve = vs;
     /* find this element's matching close, allowing one level of same-name nest */
     int nest = 1;
     while (ve < end) {
-      const char *lt = memchr(ve, '<', (size_t)(end - ve));
-      if (!lt) { ve = end; break; }
-      if (lt + 1 < end && lt[1] == '!') {     /* a `</x>` inside CDATA is text */
-        ve = hp_xml_skip_bang(lt, end);
+      const char *l2 = memchr(ve, '<', (size_t)(end - ve));
+      if (!l2) { ve = end; break; }
+      if (l2 + 1 < end && l2[1] == '!') {     /* a `</x>` inside CDATA is text */
+        ve = hp_xml_skip_bang(l2, end);
         continue;
       }
-      if (!strncmp(lt, close, (size_t)cl)) {
-        if (--nest == 0) { ve = lt; break; }
-        ve = lt + cl;
-      } else if (lt[1] != '/' && !strncmp(lt + 1, name, nl) &&
-                 (isspace((unsigned char)lt[1 + nl]) || lt[1 + nl] == '>')) {
-        nest++; ve = lt + 1;
+      if (!strncmp(l2, close, (size_t)cl)) {
+        if (--nest == 0) { ve = l2; break; }
+        ve = l2 + cl;
+      } else if (l2[1] != '/' && !strncmp(l2 + 1, name, nl) &&
+                 (isspace((unsigned char)l2[1 + nl]) || l2[1 + nl] == '>')) {
+        nest++; ve = l2 + 1;
       } else {
-        ve = lt + 1;
+        ve = l2 + 1;
       }
     }
-    if (hp_xml_has_markup(vs, ve)) {
-      hp_xml_flatten(vs, ve, key, flat, depth + 1);        /* nested element */
+    const char *eend = (ve < end) ? ve + cl : end;
+    if (x->nfields >= HP_MAX_PROPS) {
+      /* The property bound: this element and everything under it stay out,
+       * and are counted. */
+      x->drops += hp_xml_count_elems(lt, eend);
     } else {
-      size_t vl = (size_t)(ve - vs);
-      while (vl && isspace((unsigned char)*vs)) { vs++; vl--; }
-      while (vl && isspace((unsigned char)vs[vl - 1])) vl--;
-      if (vl && vl < 4096 && !cJSON_GetObjectItem(flat, key)) {
-        char *val = (char *)malloc(vl + 1);
-        if (val) {
-          memcpy(val, vs, vl); val[vl] = 0;
-          hp_xml_decode(val);
-          /* trim again AFTER decoding: `<title>\n <![CDATA[ x ]]>\n</title>`
-           * carries padding inside the wrapper as well as around it */
-          char *t = val;
-          while (*t && isspace((unsigned char)*t)) t++;
-          size_t tl = strlen(t);
-          while (tl && isspace((unsigned char)t[tl - 1])) t[--tl] = 0;
-          if (tl) cJSON_AddStringToObject(flat, key, t);
-          free(val);
-        }
-      }
+      hp_xml_attrs(p + nl, gt, key, x);
+      if (hp_xml_has_markup(vs, ve))
+        hp_xml_flatten(vs, ve, key, x, depth + 1);         /* nested element */
+      else if (ve > vs)
+        hp_xml_put_text(x, key, vs, (size_t)(ve - vs));
     }
-    p = (ve < end) ? ve + cl : end;
+    p = eend;
   }
+  /* Own text beside (or instead of) children. This function only runs on
+   * content that holds markup, or on a RECORD element's content — a leaf's
+   * text is stored under its key by the caller — so any non-blank text here
+   * would otherwise be lost: the prose around child elements, or the whole
+   * value of a record element that holds only text (`<string>a</string>`),
+   * which used to flatten to nothing and was never emitted. Whitespace runs
+   * are collapsed: each removed child left a space, and the result is a
+   * reconstruction of the element's prose, not a copy of its bytes. */
+  if (own_text && own) {
+    hp_xml_decode(own);
+    size_t w = 0; int sp = 0;
+    for (size_t r = 0; own[r]; r++) {
+      if (isspace((unsigned char)own[r])) { sp = w > 0; continue; }
+      if (sp) { own[w++] = ' '; sp = 0; }
+      own[w++] = own[r];
+    }
+    own[w] = 0;
+    if (w) {
+      char okey[300];
+      if (prefix && *prefix) snprintf(okey, sizeof okey, "%s.#text", prefix);
+      else                   snprintf(okey, sizeof okey, "#text");
+      hp_xml_put(x, okey, own);
+    }
+  }
+  free(own);
+  free(seen);
 }
 
 /* The element that repeats most often is the record. An explicit array_path
@@ -2320,32 +2469,54 @@ static int hp_run_xml(hp_run_state *st, const char *body) {
   int found = 0;
   cJSON *flats = cJSON_CreateArray();
   if (!flats) return 0;
+  /* Per record, what the flatten bounds kept out — the records are flattened
+   * here and emitted below, so the count travels beside them and is handed to
+   * hp_emit_record's `_fields_dropped` stamp at emit time. */
+  int *drops = NULL, ndrops = 0, cdrops = 0;
   while ((p = strstr(p, open)) != NULL) {
     const char *after = p + ol;
     if (*after != '>' && !isspace((unsigned char)*after) && *after != '/') { p = after; continue; }
     const char *gt = strchr(p, '>');
     if (!gt) break;
-    if (gt[-1] == '/') { p = gt + 1; continue; }           /* empty record */
-    const char *endrec = strstr(gt, close);
+    /* A self-closing record element is not necessarily empty: `<row id="1"
+     * name="x"/>` is a whole record carried in attributes, and it used to be
+     * skipped without being counted at all. One with no attributes is an
+     * empty slot, counted as one by hp_emit_record. */
+    int selfclose = gt[-1] == '/';
+    const char *endrec = selfclose ? gt : strstr(gt, close);
     if (!endrec) break;
     found++;
     st->available++;
     cJSON *flat = cJSON_CreateObject();
     if (flat) {
+      hp_xml_ctx x = { .flat = flat };
       /* The RECORD element's own attributes, before its children. In SDMX
        * these are the whole identity — <str:Codelist id=".." agencyID=".."> —
        * and hp_xml_flatten() starts at gt+1, so nothing on the start tag was
        * ever seen. First in the object as well as first on the tag, so
        * hp_first_scalar()'s last-resort key lands on the identifier rather
        * than on the first prose field. */
-      hp_xml_attrs(after, gt, "", flat);
-      hp_xml_flatten(gt + 1, endrec, "", flat, 0);
+      hp_xml_attrs(after, gt, "", &x);
+      if (!selfclose) hp_xml_flatten(gt + 1, endrec, "", &x, 0);
       /* Collected rather than emitted here: the collision guard needs every
        * record of the page keyed BEFORE the first one is emitted, exactly as
        * the JSON and CSV paths do it. */
-      cJSON_AddItemToArray(flats, flat);
+      if (ndrops == cdrops) {
+        int nc = cdrops ? cdrops * 2 : 64;
+        int *g = realloc(drops, (size_t)nc * sizeof *g);
+        if (g) { drops = g; cdrops = nc; }
+      }
+      if (ndrops < cdrops) {
+        drops[ndrops++] = x.drops;
+        cJSON_AddItemToArray(flats, flat);
+      } else {
+        /* Out of memory for one int: the record cannot be stamped, so it is
+         * not shipped as if complete — it is counted as refused. */
+        st->refused++;
+        cJSON_Delete(flat);
+      }
     }
-    p = endrec + cl;
+    p = selfclose ? gt + 1 : endrec + cl;
   }
   /* uid collision guard — the elements are already flat, so no flatten step. */
   int flats_n = cJSON_GetArraySize(flats);
@@ -2354,18 +2525,22 @@ static int hp_run_xml(hp_run_state *st, const char *body) {
   cJSON *flat;
   int ri = 0;
   cJSON_ArrayForEach(flat, flats) {
-    if (max && st->emitted >= max) break;   /* `found`/available already counted them */
+    /* `found`/available already counted the rest; the notice states it. */
+    if (max && st->emitted >= max) { st->truncated = 1; break; }
     st->rec_idx = ri;
-    if (cJSON_GetArraySize(flat) > 0) {
-      hp_flat_reset();
-      int before = st->emitted;
-      hp_emit_record(st, flat, st->deep_left > 0);
-      /* The detail budget is spent per record that hopped, as on the JSON
-       * path; without this an XML row deepened every record on every page. */
-      if (st->emitted > before && st->deep_left > 0) st->deep_left--;
-    }
+    hp_flat_reset();
+    g_flat_drops = ri < ndrops ? drops[ri] : 0;
+    int before = st->emitted;
+    /* An element that flattened to nothing (`<row/>`) is counted as an empty
+     * slot there, not passed over in silence. */
+    hp_emit_record(st, flat, st->deep_left > 0);
+    /* The detail budget is spent per record that hopped, as on the JSON
+     * path; without this an XML row deepened every record on every page. */
+    if (st->emitted > before && st->deep_left > 0) st->deep_left--;
     ri++;
   }
+  hp_flat_reset();
+  free(drops);
   st->dup_map = NULL;
   st->rec_idx = 0;
   free(dupmap);
