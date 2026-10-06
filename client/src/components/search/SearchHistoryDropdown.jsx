@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { LuLock, LuRotateCcw, LuTrash2 } from 'react-icons/lu';
+import { LuUsers, LuRotateCcw, LuTrash2 } from 'react-icons/lu';
 import { api } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
+import { useMemberNames, authorLabel } from '../../hooks/useMembers.js';
 import { Pill, Button, ErrorNotice, LoadingState, ConfirmDialog, BoundNote, cx, toast } from '../ui/kit.jsx';
 import { relativeTime } from '../../utils/time.js';
 
@@ -39,9 +40,11 @@ export function rerunTarget(entry) {
 
 /**
  * Inline recent-searches dropdown (Roadmap 38). `/api/search-history` is
- * per-user on read AND on clear; the server records a row when a SAVED search
- * is run (savedsearchapi.c run_saved → search_history_record) — ad-hoc runs
- * from the box are not written there, and the footer says so.
+ * WORKSPACE-wide on read (every member's entries, each with `user_id` and
+ * `mine`; decided 2026-10-05) and author-only on clear. The server records a
+ * row when a SAVED search is run (savedsearchapi.c run_saved →
+ * search_history_record) — ad-hoc runs from the box are not written there;
+ * those are listed under "Workspace runs" on the Search page instead.
  */
 export default function SearchHistoryDropdown({ open, onRun, limit = 20, onClose }) {
   const { data, error, loading, reload } = useApi(open ? `/api/search-history?limit=${limit}` : null, { deps: [open] });
@@ -50,6 +53,7 @@ export default function SearchHistoryDropdown({ open, onRun, limit = 20, onClose
   if (!open) return null;
   const rows = Array.isArray(data?.data) ? data.data : [];
   const retained = data?.meta?.retained_max;
+  const names = useMemberNames();
 
   const clear = async () => {
     setClearing(true);
@@ -65,10 +69,10 @@ export default function SearchHistoryDropdown({ open, onRun, limit = 20, onClose
   return (
     <div className="rounded-[10px] border border-osint-border bg-osint-surface shadow-xl overflow-hidden">
       <div className="flex items-start gap-2 px-3 py-2 border-b border-osint-border">
-        <LuLock size={13} className="text-accent mt-0.5 flex-shrink-0" />
+        <LuUsers size={13} className="text-accent mt-0.5 flex-shrink-0" />
         <div className="min-w-0 text-[11px]">
-          <div className="text-osint-text font-medium">Private to you</div>
-          <div className="text-osint-muted">Search history is scoped to your account. Workspace owners and admins cannot read what you have been investigating, and clearing it is not logged.</div>
+          <div className="text-osint-text font-medium">Shared with your workspace</div>
+          <div className="text-osint-muted">Every member of this workspace sees every member's searches here, each with who ran it. Clearing removes only your own.</div>
         </div>
         <div className="ml-auto flex items-center gap-1">
           <Link to="/console/saved-searches" className="text-[11px] text-osint-muted hover:text-accent whitespace-nowrap" onClick={onClose}>Manage</Link>
@@ -90,6 +94,7 @@ export default function SearchHistoryDropdown({ open, onRun, limit = 20, onClose
               <>
                 <Pill tone={k.tone}>{k.label}</Pill>
                 <span className="text-sm text-osint-text truncate flex-1">{summary || '(no query terms)'}</span>
+                <span className="text-[10px] text-osint-muted whitespace-nowrap">{authorLabel(e, names)}</span>
                 <span className="text-[10px] font-mono text-osint-muted whitespace-nowrap">
                   {relativeTime(e.ts)} · {e.result_count == null ? 'count not recorded' : `${e.result_count} result${e.result_count === 1 ? '' : 's'}`}
                 </span>
@@ -105,7 +110,7 @@ export default function SearchHistoryDropdown({ open, onRun, limit = 20, onClose
       )}
       <div className="px-3 py-1.5 border-t border-osint-border flex items-center justify-between">
         <BoundNote shown={rows.length} total={data?.page?.count ?? rows.length} noun="entries" />
-        <span className="text-[10px] text-osint-muted">{retained ? `server keeps your ${retained} most recent` : 'the server keeps only your most recent entries'}</span>
+        <span className="text-[10px] text-osint-muted">{retained ? `server keeps each member's ${retained} most recent` : "the server keeps only each member's most recent entries"}</span>
       </div>
       <ConfirmDialog
         open={confirmClear}
@@ -114,7 +119,7 @@ export default function SearchHistoryDropdown({ open, onRun, limit = 20, onClose
         busy={clearing}
         title="Clear your search history?"
         confirmLabel="Clear history"
-        message="Deletes every entry. Only your own history is affected, and nothing is recorded about the deletion. Saved searches are kept."
+        message="Deletes every search you ran from the workspace history. Your teammates' entries and all saved searches are kept."
       />
     </div>
   );

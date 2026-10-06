@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { LuRefreshCw, LuPlay, LuPencil, LuTrash2, LuBellRing, LuPin, LuPinOff, LuHistory, LuEraser } from 'react-icons/lu';
 import { api, errorMessage, ApiError } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
+import { useMemberNames, authorLabel } from '../../hooks/useMembers.js';
 import { relativeTime, fmtAbs } from '../../utils/time.js';
 import {
   Page, Section, Card, Pill, Button, Input, Field, Segmented, Sheet, ConfirmDialog, ErrorNotice, EmptyState,
@@ -15,13 +16,13 @@ import { ChannelsEditor, validateChannels, emptyChannel } from './alertShared.js
  * `SearchHistoryView`. Both are SHARED with the workspace: every member sees
  * every member's entries (each row carries `user_id` and `mine`). Only the
  * author can pin, rename or delete a saved search, or clear their own history.
- *   GET   /api/saved-searches?kind&pinned&limit → {data:[{id,name,kind,params,pinned,created_at,last_run_at,run_count}], page:{limit,count}}
+ *   GET   /api/saved-searches?kind&pinned&limit&mine → {data:[{id,name,kind,params,pinned,created_at,last_run_at,run_count,user_id,mine}], page:{limit,count}, meta:{scope}}
  *   POST  /api/saved-searches {name?, kind, params, pinned?}
  *   PATCH /api/saved-searches/:id {name?, params?, pinned?}   (kind immutable)
  *   DELETE /api/saved-searches/:id
  *   POST  /api/saved-searches/:id/run → bookkeeping only (meta.executed=false); the client re-issues the query
  *   POST  /api/saved-searches/:id/to-alert {channels, dedup_window_sec?, storm_cap_per_hour?, enabled?} — intel kind only
- *   GET   /api/search-history?limit&kind → {data:[{id,kind,params,result_count,ts}]} · DELETE clears
+ *   GET   /api/search-history?limit&kind&mine → {data:[{id,kind,params,result_count,ts,user_id,mine}], meta:{scope}} · DELETE clears the caller's own
  */
 const KINDS = ['all', 'intel', 'osint', 'entity', 'breach', 'map'];
 
@@ -59,6 +60,7 @@ export default function SavedSearchesPage() {
   const path = `/api/saved-searches?limit=200${kind !== 'all' ? `&kind=${kind}` : ''}`;
   const { data, error, loading, reload } = useApi(path, { deps: [kind] });
   const rows = Array.isArray(data?.data) ? data.data : [];
+  const names = useMemberNames();
   const [renaming, setRenaming] = useState(null);
   const [toAlert, setToAlert] = useState(null);
   const [confirmDel, setConfirmDel] = useState(null);
@@ -120,7 +122,7 @@ export default function SavedSearchesPage() {
                   </div>
                   <div className="text-[11px] text-osint-muted font-mono mt-0.5 break-words">{paramsSummary(s.params) || 'no parameters'}</div>
                   <div className="text-[11px] text-osint-muted mt-0.5">
-                    saved {s.mine === false ? 'by a teammate ' : 'by you '}{relativeTime(s.created_at)}{s.last_run_at && <span title={fmtAbs(s.last_run_at)}> · last run {relativeTime(s.last_run_at)}</span>}
+                    saved by {authorLabel(s, names)} {relativeTime(s.created_at)}{s.last_run_at && <span title={fmtAbs(s.last_run_at)}> · last run {relativeTime(s.last_run_at)}</span>}
                   </div>
                 </div>
                 <div className="flex items-center gap-1 flex-wrap">
@@ -235,6 +237,7 @@ function HistorySection({ onRun }) {
   // 200 is the server's per-request maximum (savedsearchapi.c clamp_limit).
   const { data, error, loading, reload } = useApi('/api/search-history?limit=200');
   const rows = Array.isArray(data?.data) ? data.data : [];
+  const names = useMemberNames();
   const [confirmClear, setConfirmClear] = useState(false);
   const [busy, setBusy] = useState(false);
   const clear = async () => {
@@ -245,7 +248,7 @@ function HistorySection({ onRun }) {
   };
   return (
     <Section
-      label="Recent · private to you"
+      label="Recent · whole workspace"
       right={(
         <div className="flex gap-1">
           <Button size="sm" variant="ghost" onClick={() => reload()} title="Reload"><LuRefreshCw size={11} /></Button>
@@ -264,7 +267,7 @@ function HistorySection({ onRun }) {
             <li key={h.id} className="px-3 py-2 flex items-center gap-2 text-xs">
               <Pill tone="cyan">{h.kind}</Pill>
               <span className="font-mono text-osint-text truncate flex-1">{paramsSummary(h.params) || '—'}</span>
-              <span className="text-osint-muted whitespace-nowrap">{h.mine === false ? 'teammate' : 'you'}</span>
+              <span className="text-osint-muted whitespace-nowrap" title={h.user_id || undefined}>{authorLabel(h, names)}</span>
               <span className="font-mono text-osint-muted whitespace-nowrap" title={fmtAbs(h.ts)}>{h.result_count != null ? `${h.result_count} results · ` : ''}{relativeTime(h.ts)}</span>
               <Button size="sm" onClick={() => onRun(h)} title="Run this search again"><LuPlay size={11} /></Button>
             </li>
