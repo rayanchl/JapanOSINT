@@ -391,7 +391,9 @@ static int part_dir_purge(const char *id) {
     }
     if (!ok) continue;
     char p[1400];
-    snprintf(p, sizeof p, "%s/%s", dir, n);
+    /* A truncated path names a different file; never unlink one. */
+    int pl = snprintf(p, sizeof p, "%s/%s", dir, n);
+    if (pl < 0 || (size_t) pl >= sizeof p) continue;
     if (unlink(p) == 0) removed++;
   }
   closedir(d);
