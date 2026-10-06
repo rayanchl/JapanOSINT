@@ -19,11 +19,12 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 18,644** (2026-10-05, after merging the audit
-branch with main): main's batches 33–36 — batch 33's 43 measured supply-chain
-rows (`docs/verified-sources-batch33.tsv`), batch 34's NDJSON row, batch 35's
-four string-array rows, the spec-families beats and batch 36's 188 — on top of
-the 18,170 that included batch 32's 340 Japanese rows. `make lint-sources`
+**The registered count is 18,643** (2026-10-06): main's batches 33–36 —
+batch 33's 43 measured supply-chain rows (`docs/verified-sources-batch33.tsv`),
+batch 34's NDJSON row, batch 35's four string-array rows, the spec-families
+beats and batch 36's 188 — on top of the 18,170 that included batch 32's 340
+Japanese rows, less batch 31's `EU_VIES_VAT_VALIDATION` (removed: it could not
+form a valid request). `make lint-sources`
 prints it, counting hp_source table rows as well as `REGISTER_SOURCE`, and
 `./bin/japanosint --list-sources` agrees.
 
@@ -39,8 +40,9 @@ beats that followed it — batch 34's `ndjson` and batch 35's `strings` — whic
 is why those three carry `docs/verified-sources-batch3{3,4,5}.tsv`. Note what
 that environment constrains: `docs/rejected-sources-batch33.tsv` lists the hosts
 the policy refused, OSV, deps.dev, libraries.io and ecosyste.ms among them, and
-the 144 rows staged in `docs/candidate-sources-batch31.*.txt` are on 140 hosts
-of which **zero** are reachable from it, so they stay unprobed.
+the staging set now at `docs/candidate-sources-batch37.*.txt` (144 rows on 140
+hosts when this was measured, 80 after its dedupe) has **zero** hosts reachable
+from it, so it stays unprobed.
 
 **Batch numbers 34 and 35 each hold beats from TWO sessions, and the
 `verified-sources-batch3{4,5}.tsv` files describe only one of them.** Batch 34
@@ -61,11 +63,15 @@ while another batch's headers said that file did not exist. The renumbering
 then landed on 34 and 35, which a third session had taken in the meantime — so
 the rule is not "renumber once and you are safe", it is **re-check at merge
 time**, because the number you picked when you generated may have been claimed
-while you worked. Likewise
-`docs/candidate-sources-batch31.*.txt` is a docs-only STAGING set (144 global
-candidates, `docs/batch31/STAGING_README.md`) that shares its number with the
-already-merged `hp3b31_*.c` tables but has nothing to do with them — those
-tables have no manifest. Before picking `<N>`:
+while you worked. The same collision existed in docs: a docs-only STAGING set
+of 144 global candidates had been written as `docs/candidate-sources-batch31.*.txt`
+after the unrelated `hp3b31_*.c` tables had merged under 31. Once those tables
+got manifests of their own, a `batch31.*.txt` glob would have fed both sets to
+every gate, so the staging set moved — to 36, which a live-measured batch then
+merged under first, and so to **batch 37** (`docs/batch37/STAGING_README.md`,
+80 rows kept, 64 rejected as duplicates of the tree into
+`docs/rejected-sources-batch37.<beat>.tsv`; still not generated into C, still
+unprobed). Before picking `<N>`:
 `git ls-tree -r --name-only origin/main | grep -oE '(batch|hp3b)[0-9]+' | sort -u`.
 
 **Batches 34 and 35 are unverified, for the same reason as batch 31:**
@@ -118,7 +124,7 @@ check one record's `properties` the first time a non-comma CSV row ships.
 
 **One exception to "every source is proof-of-life verified":** batch 31 — the
 government, public-record and surveillance tables from PR #23
-(`collectors/pivot/table/hp3b31_*.c`) — holds 361 rows, and 334 of them are
+(`collectors/pivot/table/hp3b31_*.c`) — holds 360 rows, and 333 of them are
 entity pivots that have not been run against a real entity, nor
 `--check-filter`ed (rules 4 and 4d). The 27 scheduled rows were run on
 2026-10-02: 13 store real records (FDSN 151,303; Safecast 30,000; Sejm 15,000;
@@ -128,6 +134,28 @@ dead endpoints (400/401/404 on every run) and three that re-fetch what an
 existing collector already reads. See
 `native/collectors/OSINT_SOURCES_BATCH_31_GOV_PUBLIC_SURVEILLANCE.md`. Treat
 those pivots as registered, not proven, until they are verified.
+
+Batch 31 was hand-written and had no manifest, so no manifest-driven gate could
+reach it — and the command its own headers gave instead,
+`audit_registry_emit.py --match hp3b31`, measured nothing: **`--match` is a
+regex on SOURCE ID, not file name**, and no batch-31 id contains `hp3b31`.
+Zero rows selected reads exactly like a clean sweep. Its 16 manifests
+(`docs/candidate-sources-batch31.<beat>.txt`) were reconstructed from the C on
+2026-10-05 and proven by round trip (360 rows regenerate with 0 field
+mismatches); the C stays the maintained copy. Reconstructing them found
+`EU_VIES_VAT_VALIDATION` unable to form a valid request for any entity (removed;
+`corp_identifiers.c` already does VIES correctly), `JP_NTA_INVOICE_ISSUER`
+stripping the `T` the API requires, three Socrata pivots without `domains=`, and
+four rows that stopped at page 1. With network:
+
+```sh
+cd native
+python3 tools/probe_hp_batch.py ../docs/candidate-sources-batch31.*.txt --check-filter
+python3 tools/audit_batch_emit.py ../docs/candidate-sources-batch31.*.txt --bin ./bin/japanosint --jobs 6
+```
+
+`key_env` rows need the key set (the probe sends `{key}` literally) and
+`post_body` rows need `audit_batch_emit.py` (the probe only GETs).
 
 Three verifier/engine traps that pass exposed — check for them before trusting
 any "verified" number:

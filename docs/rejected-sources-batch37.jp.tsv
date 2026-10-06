@@ -1,0 +1,2 @@
+# id	url	reason  (rejected 2026-10-05 before any probe, on dedupe against the 18,457-id tree)
+JP_CKAN_YOKOHAMA	https://data.city.yokohama.lg.jp/api/3/action/package_search?rows=100&start=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc13_jp_local_3.c :: https://data.city.yokohama.lg.jp/api/3/action/package_search?rows=100&sort=metadata_modified%20desc
