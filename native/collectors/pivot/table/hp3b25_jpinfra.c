@@ -840,7 +840,7 @@ static const hp_source HP3B25_JPINFRA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "page",
-    .page_size = 50,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
     .description = "WordPress REST posts of the company that operates Yokohama's "
@@ -910,7 +910,7 @@ static const hp_source HP3B25_JPINFRA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "page",
-    .page_size = 50,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
     .description = "WordPress REST posts from the long-distance ferry operator on "
@@ -931,7 +931,7 @@ static const hp_source HP3B25_JPINFRA[] = {
     .interval = 43200,
     .link_keys = "link",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
     .description = "WordPress REST posts of the government's earthquake research "
@@ -953,7 +953,7 @@ static const hp_source HP3B25_JPINFRA[] = {
     .interval = 86400,
     .link_keys = "link",
     .page_param = "page",
-    .page_size = 50,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
     .description = "Posts from Sorabatake, the Sakura Internet / Tellus space-data "

@@ -814,7 +814,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .id_keys = "nregistro",
     .interval = 0, /* round 8: entity-token row; a scheduled run has no entity (NEEDS_ENTITY every run) */
     .page_param = "pagina",
-    .page_size = 200,
+    /* no page_size: `pagina` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "nombre",
     .description = "The Spanish Agency of Medicines and Medical Devices product "
@@ -838,7 +838,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .id_keys = "cn",
     .interval = 0, /* round 8: entity-token row; a scheduled run has no entity (NEEDS_ENTITY every run) */
     .page_param = "pagina",
-    .page_size = 200,
+    /* no page_size: `pagina` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "nombre",
     .description = "Spain's official drug shortage register: national code, full "
@@ -862,7 +862,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .id_keys = "nregistro",
     .interval = 21600,
     .page_param = "pagina",
-    .page_size = 200,
+    /* no page_size: `pagina` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "nombre",
     .description = "Every change AEMPS has made to the Spanish medicines register "
@@ -884,7 +884,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .id_keys = "vmpp",
     .interval = 0, /* round 8: entity-token row; a scheduled run has no entity (NEEDS_ENTITY every run) */
     .page_param = "pagina",
-    .page_size = 200,
+    /* no page_size: `pagina` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "vmppDesc",
     .description = "The Spanish virtual medicinal product and product-pack reference "
@@ -907,10 +907,11 @@ static const hp_source HP3B19_HEALTH[] = {
     .detail_path = "data",
     .detail_url = "https://dailymed.nlm.nih.gov/dailymed/services/v2/spls/{v}/packaging.json",
     .id_keys = "setid",
-    .interval = 86400,
+    .interval = 604800,   /* weekly: a full walk is 1,594 pages; the daily 10-page run was an arbitrary 1,000 of an unordered list, not a freshness feed */
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
+    .page_max = 1599,   /* 2026-10-05: 159,390 records = 1594 pages of 100; the 10-page default ceiling kept 0.6% */
     .title_keys = "title",
     .description = "Every structured product label on file with the US FDA as served "
       "by the National Library of Medicine: set identifier, title "
@@ -930,8 +931,9 @@ static const hp_source HP3B19_HEALTH[] = {
     .array_path = "data",
     .interval = 604800,
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
+    .page_max = 1084,   /* 2026-10-05: 107,900 records = 1079 pages of 100; the 10-page default ceiling kept 0.9% */
     .title_keys = "drug_name",
     .description = "The complete list of drug names appearing on US labels, each "
       "flagged as brand or generic. Useful as a controlled vocabulary "
@@ -946,11 +948,12 @@ static const hp_source HP3B19_HEALTH[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://dailymed.nlm.nih.gov/dailymed/services/v2/rxcuis.json?pagesize=100",
     .array_path = "data",
-    .id_keys = "rxcui",
+    .id_keys = "rxcui+rxtty+rxstring",   /* rxcui alone repeats: one concept, several names (756 distinct in 1,000 records) */
     .interval = 604800,
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
+    .page_max = 792,   /* 2026-10-05: 78,631 records = 787 pages of 100; the 10-page default ceiling kept 1.3% */
     .title_keys = "rxstring",
     .description = "The mapping between every RxNorm concept unique identifier and "
       "the normalised clinical drug string and term type used on US "
@@ -966,11 +969,12 @@ static const hp_source HP3B19_HEALTH[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://dailymed.nlm.nih.gov/dailymed/services/v2/uniis.json?pagesize=100",
     .array_path = "data",
-    .id_keys = "unii_code",
+    .id_keys = "unii_code+active_moiety",   /* unii_code alone repeats (950 distinct in 1,000) */
     .interval = 604800,
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
+    .page_max = 86,   /* 2026-10-05: 8,038 records = 81 pages of 100; the 10-page default ceiling kept 12.4% */
     .title_keys = "active_moiety",
     .description = "Every FDA Unique Ingredient Identifier and the active moiety "
       "name it denotes. The UNII is the substance-level key used across "
@@ -988,8 +992,9 @@ static const hp_source HP3B19_HEALTH[] = {
     .array_path = "data",
     .interval = 604800,
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
+    .page_max = 167,   /* 2026-10-05: 16,130 records = 162 pages of 100; the 10-page default ceiling kept 6.2% */
     .title_keys = "application_number",
     .description = "Every FDA application number cited on a current US drug label "
       "together with its marketing category code, which distinguishes "
@@ -1008,8 +1013,9 @@ static const hp_source HP3B19_HEALTH[] = {
     .array_path = "data",
     .interval = 604800,
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
+    .page_max = 4130,   /* 2026-10-05: 412,421 records = 4125 pages of 100; the 10-page default ceiling kept 0.2% */
     .title_keys = "ndc",
     .description = "The full list of National Drug Codes carried on current US "
       "structured product labels. The labeller segment of an NDC "
@@ -1024,11 +1030,12 @@ static const hp_source HP3B19_HEALTH[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://dailymed.nlm.nih.gov/dailymed/services/v2/drugclasses.json?pagesize=100",
     .array_path = "data",
-    .id_keys = "code",
+    .id_keys = "code+type+codingSystem",   /* code repeats across class types AND coding systems (N0000175562 EPC under two systems): code+type kept 1,208 of 1,210 */
     .interval = 604800,
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
+    .page_max = 18,   /* 2026-10-05: 1,210 records = 13 pages of 100; the 10-page default ceiling kept 82.6% */
     .title_keys = "name",
     .description = "The FDA established pharmacologic class vocabulary: class code, "
       "coding system, class type distinguishing established "
@@ -1778,7 +1785,8 @@ static const hp_source HP3B19_HEALTH[] = {
     .array_path = "_embedded.searchResult._embedded.objects",
     .interval = 0, /* round 8: entity-token row; a scheduled run has no entity (NEEDS_ENTITY every run) */
     .page_param = "page",
-    .page_size = 100,
+    .page_zero_based = 1,   /* 2026-10-05: DSpace 7 pages are 0-based: no page == page=0, page=1 disjoint. Coerced to 1, the walk went 0 -> 2 and never fetched page 1 */
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 0,
     .description = "The World Health Organization's institutional repository as a "
       "DSpace REST API: every WHO publication, guideline, technical "

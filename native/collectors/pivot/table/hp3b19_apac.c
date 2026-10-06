@@ -950,7 +950,7 @@ static const hp_source HP3B19_APAC[] = {
     .id_keys = "agdm",
     .interval = 86400,
     .page_param = "PAGENO",
-    .page_size = 20,
+    /* no page_size: `PAGENO` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .title_keys = "agjc",
     .description = "Companies listed on the Shenzhen Stock Exchange with code, "
       "Chinese name, English name, board, listing date, total and "
@@ -1192,13 +1192,14 @@ static const hp_source HP3B19_APAC[] = {
     .record_type = "listed-security",
     .tags = "\"vietnam\",\"securities\",\"equities\",\"exchange\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api-finfo.vndirect.com.vn/v4/stocks?q=type:STOCK&size=100",
+    .url = "https://api-finfo.vndirect.com.vn/v4/stocks?q=type:STOCK&size=100&sort=code",
+    /* &sort=code: unsorted, consecutive pages repeat and skip stocks (985 distinct in 1,000; 1,000 with the sort), 2026-10-05 */
     .headers = { "User-Agent: Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML like Gecko) Chrome/124.0 Safari/537.36" },
     .array_path = "data",
     .id_keys = "code",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .title_keys = "companyName",
     .description = "Every equity listed on the Ho Chi Minh, Hanoi and UPCoM "
       "exchanges with ticker code, Vietnamese and English company name, "

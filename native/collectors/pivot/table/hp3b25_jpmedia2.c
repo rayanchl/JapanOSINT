@@ -83,7 +83,7 @@ static const hp_source HP3B25_JPMEDIA2[] = {
     .interval = 10800,
     .link_keys = "link",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
     .description = "WordPress REST API for one of Okinawa's two major dailies, "
@@ -248,7 +248,7 @@ static const hp_source HP3B25_JPMEDIA2[] = {
     .interval = 10800,
     .link_keys = "link",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
     .description = "The electric-power industry's own trade paper (utilities, "

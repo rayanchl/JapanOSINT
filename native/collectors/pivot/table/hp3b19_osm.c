@@ -381,7 +381,7 @@ static const hp_source HP3B19_OSM[] = {
     .id_keys = "key",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "key",
     .description = "Every key in use anywhere in OpenStreetMap with the number of "
@@ -410,7 +410,7 @@ static const hp_source HP3B19_OSM[] = {
     .id_keys = "key+value",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "value",
     .description = "Key equals value pairs actually in use across the planet with "
@@ -430,7 +430,7 @@ static const hp_source HP3B19_OSM[] = {
     .array_path = "data",
     .id_keys = "other_key",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "other_key",
     .description = "Which other tags are recorded on the same objects as a given "
@@ -470,7 +470,7 @@ static const hp_source HP3B19_OSM[] = {
     .array_path = "data",
     .id_keys = "project_id",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "project_name",
     .description = "Every registered downstream project that consumes a given OSM "
@@ -509,7 +509,7 @@ static const hp_source HP3B19_OSM[] = {
     .array_path = "data",
     .id_keys = "role",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "role",
     .description = "The member roles actually used inside a given relation type, "
@@ -530,7 +530,7 @@ static const hp_source HP3B19_OSM[] = {
     .array_path = "data",
     .id_keys = "other_key",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "other_key",
     .description = "Keys that are textually close to a given key, with their usage "
@@ -634,7 +634,8 @@ static const hp_source HP3B19_OSM[] = {
     .record_type = "aerial-imagery",
     .tags = "\"imagery\",\"aerial\",\"satellite\",\"osm\",\"geo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.openaerialmap.org/meta?limit=100",
+    .url = "https://api.openaerialmap.org/meta?limit=100&order_by=_id&sort=asc",
+    /* &order_by=_id&sort=asc: unsorted, consecutive pages repeat and skip images (992 distinct in 1,000; 1,000 sorted), 2026-10-05 */
     .headers = { "User-Agent: JapanOSINT-research/1.0 (+https://github.com/)" },
     .array_path = "results",
     .date_keys = "acquisition_start",
@@ -643,7 +644,7 @@ static const hp_source HP3B19_OSM[] = {
     .id_keys = "_id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title",
     .description = "Openly licensed aerial and satellite scenes with the acquisition "
@@ -668,6 +669,7 @@ static const hp_source HP3B19_OSM[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
+    /* page-offset-ok: MapRoulette's `page` is a RECORD offset despite its name: page=1 is the list shifted by one challenge, page=100 starts at the 101st (measured 2026-10-05), so page_size stays */
     .page_size = 100,
     .page_start = 0,
     .page_zero_based = 1,
@@ -686,7 +688,9 @@ static const hp_source HP3B19_OSM[] = {
     .record_type = "osm-edit-timeseries",
     .tags = "\"osm\",\"history\",\"analytics\",\"heigit\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.ohsome.org/v1/contributions/count?bboxes=29.0,44.0,35.0,48.0&filter=building%3D%2A&format=json&time=2024-01-01%2F2026-01-01%2FP1M",
+    .url = "https://api.ohsome.org/v1/contributions/count?bboxes=29.0,44.0,35.0,48.0&filter=building%3D%2A&format=json&time=2024-01-01%2F{date-1m:%Y-%m-01}%2FP1M",
+    .date_back = 6, .date_step = "m",
+    /* {date…} 2026-10-06: the series ended at 2026-01-01; now through last month, stepping back a month while the end is past the OSH data extent (404; extent ends 2026-07-27 today) */
     .headers = { "User-Agent: JapanOSINT-research/1.0 (+https://github.com/)" },
     .array_path = "result",
     .date_keys = "fromTimestamp",

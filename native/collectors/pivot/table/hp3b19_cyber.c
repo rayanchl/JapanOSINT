@@ -796,6 +796,7 @@ static const hp_source HP3B19_CYBER[] = {
     .url = "https://fastapi.metacpan.org/v1/release/_search?q={q}&size=50",
     .array_path = "hits.hits",
     .page_param = "from",
+    .page_zero_based = 1,   /* 2026-10-05: Elasticsearch `from` is 0-based (from=1 == from=0 minus its first hit); coerced to 1 it lost one release at every page boundary */
     .page_size = 50,
     .description = "Every CPAN release matching an Elasticsearch query, each with "
       "the author, version, release date, licence, dependency list, the "

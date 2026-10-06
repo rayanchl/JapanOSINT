@@ -9,14 +9,14 @@
 
 VJSON(au_austender_ocds_contracts_modified, "au-austender-ocds-contracts-modified", "AusTender — OCDS contract amendments (last modified)", "AusTender — OCDS contract amendments (last modified)",
   "au_procurement", "procurement",
-  "https://api.tenders.gov.au/ocds/findByDates/contractLastModified/2025-03-01T00:00:00Z/2025-03-02T23:59:59Z",
+  "https://api.tenders.gov.au/ocds/findByDates/contractLastModified/{date-2d:%Y-%m-%dT00:00:00Z}/{date:%Y-%m-%dT23:59:59Z}",
   "releases",
   "en", "[\"au\",\"procurement\",\"batch17\",\"high-penetrancy\"]", 21600,
   "The same OCDS release structure filtered on last-modified date, which surfaces contract AMENDMENTS — value variations and extensions that never appear in the original publication feed. Same parties[]/ABN payload. Other valid dateTypes on this endpoint are contractStart and contractEnd.");
 
 VJSON(au_austender_ocds_contracts_published, "au-austender-ocds-contracts-published", "AusTender — OCDS contract releases (published)", "AusTender — OCDS contract releases (published)",
   "au_procurement", "procurement",
-  "https://api.tenders.gov.au/ocds/findByDates/contractPublished/2025-01-01T00:00:00Z/2025-01-03T23:59:59Z",
+  "https://api.tenders.gov.au/ocds/findByDates/contractPublished/{date-2d:%Y-%m-%dT00:00:00Z}/{date:%Y-%m-%dT23:59:59Z}",
   "releases",
   "en", "[\"au\",\"procurement\",\"batch17\",\"high-penetrancy\"]", 21600,
   "Full Open Contracting releases for Commonwealth contracts published in a date window. Each release carries a parties[] array naming the supplier with its AU-ABN additionalIdentifier and address, plus the buyer, tender, award and contract blocks. Keyless, and the date range is the pagination handle.");

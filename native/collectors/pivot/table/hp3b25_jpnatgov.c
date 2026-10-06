@@ -322,7 +322,7 @@ static const hp_source HP3B25_JPNATGOV[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
     .description = "The government's earthquake research headquarters (under MEXT) "
@@ -345,7 +345,7 @@ static const hp_source HP3B25_JPNATGOV[] = {
     .interval = 86400,
     .link_keys = "link",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
     .description = "The MEXT-affiliated institute's news, research releases and "
@@ -366,7 +366,7 @@ static const hp_source HP3B25_JPNATGOV[] = {
     .interval = 86400,
     .link_keys = "link",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
     .description = "JCHO runs 57 public hospitals and publishes its notices, tenders "
@@ -1932,7 +1932,7 @@ static const hp_source HP3B25_JPNATGOV[] = {
     .link_keys = "href",
     .page_max = 120,
     .page_param = "page",
-    .page_size = 30,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "text",
     .description = "30 detail anchors per page (detail.php?id=...), each an aircraft "
@@ -1955,7 +1955,7 @@ static const hp_source HP3B25_JPNATGOV[] = {
     .link_keys = "href",
     .page_max = 120,
     .page_param = "page",
-    .page_size = 30,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "text",
     .description = "30 detail anchors per page for serious incidents (runway "
@@ -1976,7 +1976,7 @@ static const hp_source HP3B25_JPNATGOV[] = {
     .link_keys = "href",
     .page_max = 120,
     .page_param = "page",
-    .page_size = 30,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "text",
     .description = "30 detail anchors per page: every investigated railway accident "
@@ -1996,7 +1996,7 @@ static const hp_source HP3B25_JPNATGOV[] = {
     .link_keys = "href",
     .page_max = 400,
     .page_param = "page",
-    .page_size = 30,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "text",
     .description = "30 detail anchors per page: investigated marine accidents with "

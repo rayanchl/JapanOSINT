@@ -122,7 +122,7 @@ VJSON(us_ecfr_agencies, "us-ecfr-agencies", "eCFR — agency registry with CFR r
 
 VJSON(us_ecfr_ancestry, "us-ecfr-ancestry", "eCFR — ancestry of a CFR node", "eCFR — ancestry of a CFR node",
   "us_legal", "legal",
-  "https://www.ecfr.gov/api/versioner/v1/ancestry/2026-01-01/title-40.json?part=63",
+  "https://www.ecfr.gov/api/versioner/v1/ancestry/{date-7d}/title-40.json?part=63",
   "ancestors",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Given a title plus part/subpart/section, returns the full chain of ancestors (title -> chapter -> subchapter -> part) with identifier, label, label_level, label_description and size. Resolves a bare CFR citation into its regulatory context.");

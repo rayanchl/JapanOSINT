@@ -106,7 +106,7 @@ static void metno_sun_prep(cJSON *doc) { vshape_wrap(doc, ""); }
 
 VJSON_PREP(geo_metno_sunrise, "geo-metno-sunrise", "MET Norway — solar and lunar events", "ノルウェー気象庁 — 日出没・月齢",
   "science", "spaceweather",
-  "https://api.met.no/weatherapi/sunrise/3.0/sun?lat=35.68&lon=139.76&date=2026-08-09&offset=+09:00",
+  "https://api.met.no/weatherapi/sunrise/3.0/sun?lat=35.68&lon=139.76&date={date}&offset=+09:00",
   "records",
   "en", "[\"astronomy\",\"sunrise\",\"api\"]", 86400,
   "Sunrise/sunset and lunar phase for a coordinate and date.",

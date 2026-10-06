@@ -3715,7 +3715,7 @@ static const hp_source HP3B25_JPMUNI2[] = {
     .interval = 86400,
     .link_keys = "link",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .title_keys = "title.rendered",
     .description = "The news stream of Kobe's open-data portal (17 posts): dataset "
       "releases, API changes and civic-tech calls, each with full HTML "
@@ -3735,7 +3735,7 @@ static const hp_source HP3B25_JPMUNI2[] = {
     .interval = 86400,
     .link_keys = "link",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .title_keys = "title.rendered",
     .description = "The announcement stream of BODIK ODCS, the shared catalogue "
       "front-end that 233 Japanese municipalities (Fukuoka, Nagoya, "
@@ -3756,7 +3756,7 @@ static const hp_source HP3B25_JPMUNI2[] = {
     .href_must = "hiroshima-opendata.dataeye.jp/datasets/",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 20,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .description = "The dataset listing of the Hiroshima metropolitan area Dataeye "
       "open-data portal, 20 dataset links per page, walked with page=. "
       "Dataeye exposes no JSON API (api/, .json and ?format=json all "
@@ -3775,7 +3775,7 @@ static const hp_source HP3B25_JPMUNI2[] = {
     .href_must = "asakuchi.dataeye.jp/datasets/",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 20,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .description = "The dataset listing of the Asakuchi Dataeye open-data portal, 20 "
       "dataset links per page, walked with page=. Dataeye exposes no "
       "JSON API (api/, .json and ?format=json all return the HTML app), "
@@ -3794,7 +3794,7 @@ static const hp_source HP3B25_JPMUNI2[] = {
     .href_must = "tsuyama.dataeye.jp/datasets/",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 20,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .description = "The dataset listing of the Tsuyama Dataeye open-data portal, 20 "
       "dataset links per page, walked with page=. Dataeye exposes no "
       "JSON API (api/, .json and ?format=json all return the HTML app), "
@@ -3813,7 +3813,7 @@ static const hp_source HP3B25_JPMUNI2[] = {
     .href_must = "yakage.dataeye.jp/datasets/",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 20,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .description = "The dataset listing of the Yakage Dataeye open-data portal, 20 "
       "dataset links per page, walked with page=. Dataeye exposes no "
       "JSON API (api/, .json and ?format=json all return the HTML app), "
@@ -3832,7 +3832,7 @@ static const hp_source HP3B25_JPMUNI2[] = {
     .href_must = "setouchi.dataeye.jp/datasets/",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 20,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .description = "The dataset listing of the Setouchi Dataeye open-data portal, 5 "
       "dataset links per page, walked with page=. Dataeye exposes no "
       "JSON API (api/, .json and ?format=json all return the HTML app), "

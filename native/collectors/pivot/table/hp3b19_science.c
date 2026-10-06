@@ -27,7 +27,8 @@ static const hp_source HP3B19_SCIENCE[] = {
     .record_type = "seismic-waveform-quality",
     .tags = "\"seismic\",\"fdsn\",\"eida\",\"waveform\",\"station\",\"netherlands\",\"europe\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.orfeus-eu.org/eidaws/wfcatalog/1/query?station={qU}&start=2026-07-01&end=2026-07-05&format=json",
+    .url = "https://www.orfeus-eu.org/eidaws/wfcatalog/1/query?station={qU}&start={date-5d}&end={date-1d}&format=json",
+    /* {date…} 2026-10-06: every query for a station asked about July 1-5 2026 only; now its last 5 days */
     .date_keys = "start_time",
     .id_keys = "channel",
     .title_keys = "station",
@@ -46,7 +47,8 @@ static const hp_source HP3B19_SCIENCE[] = {
     .record_type = "seismic-waveform-quality",
     .tags = "\"seismic\",\"fdsn\",\"eida\",\"waveform\",\"station\",\"germany\",\"global\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://geofon.gfz.de/eidaws/wfcatalog/1/query?station={qU}&start=2026-07-01&end=2026-07-05&format=json",
+    .url = "https://geofon.gfz.de/eidaws/wfcatalog/1/query?station={qU}&start={date-5d}&end={date-1d}&format=json",
+    /* {date…} 2026-10-06: every query for a station asked about July 1-5 2026 only; now its last 5 days */
     .date_keys = "start_time",
     .id_keys = "channel",
     .title_keys = "station",
@@ -63,7 +65,8 @@ static const hp_source HP3B19_SCIENCE[] = {
     .record_type = "seismic-waveform-quality",
     .tags = "\"seismic\",\"fdsn\",\"eida\",\"waveform\",\"station\",\"italy\",\"europe\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://webservices.ingv.it/eidaws/wfcatalog/1/query?station={qU}&start=2026-07-01&end=2026-07-05&format=json",
+    .url = "https://webservices.ingv.it/eidaws/wfcatalog/1/query?station={qU}&start={date-5d}&end={date-1d}&format=json",
+    /* {date…} 2026-10-06: every query for a station asked about July 1-5 2026 only; now its last 5 days */
     .date_keys = "start_time",
     .id_keys = "channel",
     .title_keys = "station",
@@ -79,7 +82,8 @@ static const hp_source HP3B19_SCIENCE[] = {
     .record_type = "seismic-waveform-quality",
     .tags = "\"seismic\",\"fdsn\",\"eida\",\"waveform\",\"station\",\"switzerland\",\"europe\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://eida.ethz.ch/eidaws/wfcatalog/1/query?station={qU}&start=2026-07-01&end=2026-07-05&format=json",
+    .url = "https://eida.ethz.ch/eidaws/wfcatalog/1/query?station={qU}&start={date-5d}&end={date-1d}&format=json",
+    /* {date…} 2026-10-06: every query for a station asked about July 1-5 2026 only; now its last 5 days */
     .date_keys = "start_time",
     .id_keys = "channel",
     .title_keys = "station",
@@ -96,7 +100,8 @@ static const hp_source HP3B19_SCIENCE[] = {
     .record_type = "seismic-waveform-quality",
     .tags = "\"seismic\",\"fdsn\",\"eida\",\"waveform\",\"station\",\"germany\",\"europe\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://eida.bgr.de/eidaws/wfcatalog/1/query?station={qU}&start=2026-07-01&end=2026-07-05&format=json",
+    .url = "https://eida.bgr.de/eidaws/wfcatalog/1/query?station={qU}&start={date-5d}&end={date-1d}&format=json",
+    /* {date…} 2026-10-06: every query for a station asked about July 1-5 2026 only; now its last 5 days */
     .date_keys = "start_time",
     .id_keys = "channel",
     .title_keys = "station",
@@ -129,7 +134,8 @@ static const hp_source HP3B19_SCIENCE[] = {
     .record_type = "seismic-waveform-quality",
     .tags = "\"seismic\",\"fdsn\",\"eida\",\"waveform\",\"station\",\"greece\",\"europe\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://eida.gein.noa.gr/eidaws/wfcatalog/1/query?station={qU}&start=2026-07-01&end=2026-07-05&format=json",
+    .url = "https://eida.gein.noa.gr/eidaws/wfcatalog/1/query?station={qU}&start={date-5d}&end={date-1d}&format=json",
+    /* {date…} 2026-10-06: every query for a station asked about July 1-5 2026 only; now its last 5 days */
     .date_keys = "start_time",
     .id_keys = "channel",
     .title_keys = "station",
@@ -163,7 +169,8 @@ static const hp_source HP3B19_SCIENCE[] = {
     .record_type = "seismic-waveform-quality",
     .tags = "\"seismic\",\"fdsn\",\"eida\",\"waveform\",\"station\",\"norway\",\"arctic\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://eida.geo.uib.no/eidaws/wfcatalog/1/query?station={qU}&start=2026-07-01&end=2026-07-05&format=json",
+    .url = "https://eida.geo.uib.no/eidaws/wfcatalog/1/query?station={qU}&start={date-5d}&end={date-1d}&format=json",
+    /* {date…} 2026-10-06: every query for a station asked about July 1-5 2026 only; now its last 5 days */
     .date_keys = "start_time",
     .id_keys = "channel",
     .title_keys = "station",
@@ -180,7 +187,8 @@ static const hp_source HP3B19_SCIENCE[] = {
     .record_type = "seismic-waveform-quality",
     .tags = "\"seismic\",\"fdsn\",\"eida\",\"waveform\",\"station\",\"germany\",\"bavaria\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://erde.geophysik.uni-muenchen.de/eidaws/wfcatalog/1/query?station={qU}&start=2026-07-01&end=2026-07-05&format=json",
+    .url = "https://erde.geophysik.uni-muenchen.de/eidaws/wfcatalog/1/query?station={qU}&start={date-5d}&end={date-1d}&format=json",
+    /* {date…} 2026-10-06: every query for a station asked about July 1-5 2026 only; now its last 5 days */
     .date_keys = "start_time",
     .id_keys = "channel",
     .title_keys = "station",
@@ -197,7 +205,8 @@ static const hp_source HP3B19_SCIENCE[] = {
     .record_type = "seismic-waveform-quality",
     .tags = "\"seismic\",\"fdsn\",\"eida\",\"waveform\",\"station\",\"france\",\"europe\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://seisdata.epos-france.fr/eidaws/wfcatalog/1/query?station={qU}&start=2026-07-01&end=2026-07-05&format=json",
+    .url = "https://seisdata.epos-france.fr/eidaws/wfcatalog/1/query?station={qU}&start={date-5d}&end={date-1d}&format=json",
+    /* {date…} 2026-10-06: every query for a station asked about July 1-5 2026 only; now its last 5 days */
     .date_keys = "start_time",
     .id_keys = "channel",
     .title_keys = "station",
@@ -215,7 +224,8 @@ static const hp_source HP3B19_SCIENCE[] = {
     .record_type = "seismic-waveform-quality",
     .tags = "\"seismic\",\"fdsn\",\"eida\",\"waveform\",\"station\",\"uk\",\"europe\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://eida.bgs.ac.uk/eidaws/wfcatalog/1/query?station={qU}&start=2026-07-01&end=2026-07-05&format=json",
+    .url = "https://eida.bgs.ac.uk/eidaws/wfcatalog/1/query?station={qU}&start={date-5d}&end={date-1d}&format=json",
+    /* {date…} 2026-10-06: every query for a station asked about July 1-5 2026 only; now its last 5 days */
     .date_keys = "start_time",
     .id_keys = "channel",
     .title_keys = "station",
@@ -232,7 +242,8 @@ static const hp_source HP3B19_SCIENCE[] = {
     .record_type = "seismic-waveform-quality",
     .tags = "\"seismic\",\"fdsn\",\"eida\",\"waveform\",\"station\",\"spain\",\"catalonia\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ws.icgc.cat/eidaws/wfcatalog/1/query?station={qU}&start=2026-07-01&end=2026-07-05&format=json",
+    .url = "https://ws.icgc.cat/eidaws/wfcatalog/1/query?station={qU}&start={date-5d}&end={date-1d}&format=json",
+    /* {date…} 2026-10-06: every query for a station asked about July 1-5 2026 only; now its last 5 days */
     .date_keys = "start_time",
     .id_keys = "channel",
     .title_keys = "station",

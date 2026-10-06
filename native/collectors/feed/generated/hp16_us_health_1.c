@@ -80,7 +80,9 @@ static const hp_source T[] = {
     .collector = "us_health", .category = "health",
     .description = "902 KB covering H1-2026 recalls with the full nested envelope per recall (Products, Hazards, Injuries, Remedies, Manufacturers, Importers, Retailers, Distributors, ManufacturerCountries, ProductUPCs). The bounded-window form for incremental crawling; RecallDateEnd is the parameter the tree's existing open-ended call omits.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "health-record", .tags = "\"us\",\"health\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.saferproducts.gov/RestWebServices/Recall?format=json&RecallDateStart=2026-01-01&RecallDateEnd=2026-06-30",
+    .url = "https://www.saferproducts.gov/RestWebServices/Recall?format=json&RecallDateStart={date-6m}&RecallDateEnd={date}",
+    .tz_minutes = -300,
+    /* {date…} 2026-10-06: the window was frozen at authoring, so every run re-fetched the same past half-year (Jan-Jun 2026); now the last 6 months */
     .detail_url = "https://www.saferproducts.gov/RestWebServices/Recall?format=json&RecallID={v}", .detail_key = "RecallID",
     .page_walk = 1,
     .interval = 43200, .free_tier = 1 },

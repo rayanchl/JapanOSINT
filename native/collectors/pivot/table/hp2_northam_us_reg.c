@@ -243,6 +243,7 @@ static const hp_source HP2_US_REG[] = {
     .array_path = "hits.hits", .title_keys = "_source.issue,_source.company",
     .id_keys = "_source.complaint_id", .date_keys = "_source.date_received",
     .page_param = "frm", .page_size = 100, .page_start = 0,
+    .page_zero_based = 1,   /* 2026-10-05: frm is a 0-based offset (the URL binds frm=0); coerced to 1 the second request was frm=101, losing one complaint per page. Not measured live: the host answers Akamai Access Denied from here */
     .description = "Consumer complaints against a named financial company — the "
       "product, the issue, the company's response and whether it was timely. "
       "Volume and pattern here often precede regulatory action" },

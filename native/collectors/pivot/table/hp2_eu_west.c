@@ -116,7 +116,8 @@ static const hp_source HP2_EU_WEST[] = {
     .array_path = "data", .title_keys = "raisonSociale,nomEts",
     .id_keys = "codeAIOT", .date_keys = "dateMaj",
     .lat_key = "latitude", .lon_key = "longitude",
-    .page_param = "page", .page_size = 100, .page_start = 1,
+    .page_param = "page", .page_start = 1,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .description = "French installations classified for environmental "
       "protection — operator, site coordinates, regime (declaration, "
       "registration, authorisation, Seveso), activities and the inspection and "

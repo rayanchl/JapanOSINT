@@ -157,7 +157,9 @@ static const hp_source HP3B19_LATAM[] = {
      * `{page}` substitutes in place, which is the only spelling that can page a
      * URL that must already carry the parameter. Verified live: pages 1-10 give
      * 4,937 records, totalRegistros 4,937, 4,937 distinct numeroControlePNCP. */
-    .url = "https://pncp.gov.br/api/consulta/v1/contratos?dataInicial=20250102&dataFinal=20250103&pagina={page}",
+    .url = "https://pncp.gov.br/api/consulta/v1/contratos?dataInicial={date-1d:%Y%m%d}&dataFinal={date:%Y%m%d}&pagina={page}",
+    .tz_minutes = -180,
+    /* {date…} 2026-10-06: the window was frozen at authoring, so every run re-fetched the same past days of January 2025; now yesterday and today, every 6 h */
     .array_path = "data",
     .interval = 21600,
     .page_start = 1,
@@ -881,7 +883,9 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "tender-notice",
     .tags = "\"brazil\",\"procurement\",\"tender\",\"pncp\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://pncp.gov.br/api/consulta/v1/contratacoes/publicacao?dataInicial=20250102&dataFinal=20250103&codigoModalidadeContratacao=6&pagina=1",
+    .url = "https://pncp.gov.br/api/consulta/v1/contratacoes/publicacao?dataInicial={date-1d:%Y%m%d}&dataFinal={date:%Y%m%d}&codigoModalidadeContratacao=6&pagina=1",
+    .tz_minutes = -180,
+    /* {date…} 2026-10-06: the window was frozen at authoring, so every run re-fetched the same past days of January 2025; now yesterday and today, every 6 h */
     .array_path = "data",
     /* No id_keys meant the engine keyed each notice on its first scalar and a
      * later pagina's repeat upserted over a different tender (40 emitted, 37
@@ -914,7 +918,9 @@ static const hp_source HP3B19_LATAM[] = {
      * (once as an upstream 504 at 70 s), so the row stored nothing at all.
      * Live: 500 records per page, totalRegistros 321,337 over 643 pages; pages
      * 1-3 gave 1,500 records and 1,500 distinct numeroControlePNCPAta. */
-    .url = "https://pncp.gov.br/api/consulta/v1/atas?dataInicial=20250102&dataFinal=20250104&pagina={page}",
+    .url = "https://pncp.gov.br/api/consulta/v1/atas?dataInicial={date-1d:%Y%m%d}&dataFinal={date:%Y%m%d}&pagina={page}",
+    .tz_minutes = -180,
+    /* {date…} 2026-10-06: the window was frozen at authoring, so every run re-fetched the same past days of January 2025; now yesterday and today, every 6 h */
     .array_path = "data",
     .timeout_ms = 120000,
     .interval = 21600,
@@ -1061,7 +1067,9 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "market-price",
     .tags = "\"mexico\",\"electricity\",\"cenace\",\"price\",\"energy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ws01.cenace.gob.mx:8082/SWPML/SIM/SIN/MDA/01PLO-115/2026/08/10/2026/08/12/JSON",
+    .url = "https://ws01.cenace.gob.mx:8082/SWPML/SIM/SIN/MDA/01PLO-115/{date-2d:%Y/%m/%d}/{date:%Y/%m/%d}/JSON",
+    .tz_minutes = -360,
+    /* {date…} 2026-10-06: the window was frozen at authoring, so every run re-fetched the same past 3 days (Aug 10-12); now the last 3 days */
     .headers = { "User-Agent: Mozilla/5.0 (compatible;JapanOSINT-research/1.0)" },
     .array_path = "Resultados",
     .interval = 3600,
@@ -1078,7 +1086,9 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "market-price",
     .tags = "\"mexico\",\"electricity\",\"cenace\",\"price\",\"energy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ws01.cenace.gob.mx:8082/SWPEND/SIM/SIN/MDA/AGUASCALIENTES/2026/08/10/2026/08/12/JSON",
+    .url = "https://ws01.cenace.gob.mx:8082/SWPEND/SIM/SIN/MDA/AGUASCALIENTES/{date-2d:%Y/%m/%d}/{date:%Y/%m/%d}/JSON",
+    .tz_minutes = -360,
+    /* {date…} 2026-10-06: the window was frozen at authoring, so every run re-fetched the same past 3 days (Aug 10-12); now the last 3 days */
     .headers = { "User-Agent: Mozilla/5.0 (compatible;JapanOSINT-research/1.0)" },
     .array_path = "Resultados",
     .interval = 3600,
@@ -1985,7 +1995,7 @@ static const hp_source HP3B19_LATAM[] = {
     .id_keys = "siren",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 25,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "nom_complet",
     .description = "Every legal entity registered in Guadeloupe as held in the "
@@ -2365,10 +2375,15 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "market-price",
     .tags = "\"colombia\",\"electricity\",\"xm\",\"simem\",\"price\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.simem.co/backend-files/api/PublicData?datasetId=EC6945&startdate=2026-08-01&enddate=2026-08-02",
+    .url = "https://www.simem.co/backend-files/api/PublicData?datasetId=EC6945&startdate={date-7d}&enddate={date-1d}",
+    .tz_minutes = -300,
+    /* {date…} 2026-10-06: the window was frozen at Aug 1-2. XM publishes ~3 days late (2026-10-05: data through 10-02), so a 2-day window ending yesterday is EMPTY; the last 7 days hold 576 records */
+    .date_back = 7,
     .array_path = "result.records",
     .interval = 3600,
-    .title_keys = "Valor",
+    .title_keys = "CodigoVariable+FechaHora",
+    .id_keys = "CodigoVariable+FechaHora+CodigoDuracion+Version",   /* 576 of 576; Valor (the title it had) is 170 distinct */
+    .date_keys = "FechaHora",
     .description = "The hourly spot electricity price for Colombia — national, "
       "international and TIE — published by XM, the grid and market "
       "operator, with the variable code, the timestamp, the duration "
@@ -2384,10 +2399,15 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "generation-record",
     .tags = "\"colombia\",\"electricity\",\"xm\",\"simem\",\"generation\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.simem.co/backend-files/api/PublicData?datasetId=ff027b&startdate=2026-08-15&enddate=2026-08-16",
+    .url = "https://www.simem.co/backend-files/api/PublicData?datasetId=ff027b&startdate={date-10d}&enddate={date-4d}",
+    .tz_minutes = -300,
+    /* {date…} 2026-10-06: the window was frozen at Aug 15-16. Dispatch publishes 7-10 days late (2026-10-05: data through 09-27), ~12,800 rows a day; days 10..4 ago, daily, overlapping run to run */
+    .date_back = 7,
     .array_path = "result.records",
-    .interval = 3600,
-    .title_keys = "Valor",
+    .interval = 86400,   /* one 7-day window is 64,032 rows */
+    .title_keys = "CodigoElementoGeneracion+FechaHora",
+    .id_keys = "FechaHora+CodigoElementoGeneracion+CodigoDuracion",   /* 64,032 of 64,032; Valor is 1,314 distinct */
+    .date_keys = "FechaHora",
     .description = "The scheduled generation programme of the Colombian economic "
       "dispatch, hour by hour and generating unit by generating unit, "
       "with the resource code, the timestamp, the duration code and the "
@@ -2542,7 +2562,7 @@ static const hp_source HP3B19_LATAM[] = {
     .detail_url = "https://informacionpublica.paraguay.gov.py/api/solicitud/{v}/detalle",
     .id_keys = "id",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 0,
     .page_zero_based = 1,
     .title_keys = "titulo",

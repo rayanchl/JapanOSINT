@@ -328,16 +328,22 @@ static const hp_source HP3B30_JPBANK2[] = {
     .tags = "\"japan\",\"finance\",\"intermediary\",\"fsa\",\"register\"",
     .mode = HP_XLSX, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.fsa.go.jp/menkyo/menkyoj/02_1kinsa.xlsx",
-    .csv_skip_lines = 10,
+    /* 11, not 10 (2026-10-03). At 10 the engine read a banner line as the
+     * header: 35 records titled 所管 / 預金等媒介業務 / 関東財務局, and 1,770
+     * rows empty. The probe had passed it because its xlsx reader shifted
+     * cells after a self-closing <c/>, so it miscounted the multi-line banner
+     * cells; probe_hp_batch.py now places cells as lib/xlsx.c does. At 11:
+     * 32 stored = 31 intermediaries + the 業種の別 sub-header line (the header
+     * spans two rows; its second row is the one non-record). */
+    .csv_skip_lines = 11,
     .date_keys = "登録年月日",
     .id_keys = "金融サービス仲介業者名+本店等所在地",
     .interval = 604800,
     .timeout_ms = 60000,
     .title_keys = "金融サービス仲介業者名",
-    .description = "Register, 35 data rows (banner totals 29 intermediaries: 21 "
-      "預金等媒介, 2 保険媒介, 14 有価証券等仲介, 2 貸金業貸付媒介) with 所管, 登録番号, 登録年月日, "
-      "金融サービス仲介業者名, 法人番号, 郵便番号, 本店等所在地, 電話番号, 業種の別. Ten physical banner "
-      "lines (summary table with multi-line cells) precede the header." },
+    .description = "Register of 31 intermediary registrations (2026-10-03) with 所管, 登録番号, "
+      "登録年月日, 金融サービス仲介業者名, 法人番号, 郵便番号, 本店等所在地, 電話番号, 業種の別. Eleven "
+      "physical banner lines (summary table with multi-line cells) precede the header." },
 
   { .id = "JO30_BANK_FSA_KINYUSHOHIN", .name = "FSA financial instruments business operator register (securities "
       "firms, advisers, asset managers)",
@@ -1109,7 +1115,7 @@ static const hp_source HP3B30_JPBANK2[] = {
     .interval = 604800,
     .page_max = 40,
     .page_param = "page",
-    .page_size = 50,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .timeout_ms = 60000,
     .title_keys = "name",
     .description = "Paged JSON array, 50 per page, 23 pages, 1,146 institutions "
@@ -1131,7 +1137,7 @@ static const hp_source HP3B30_JPBANK2[] = {
     .interval = 604800,
     .page_max = 40,
     .page_param = "page",
-    .page_size = 50,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .timeout_ms = 60000,
     .title_keys = "name",
     .description = "Paged JSON array of branches (50 per page; page 1 and page 2 "
@@ -1150,7 +1156,7 @@ static const hp_source HP3B30_JPBANK2[] = {
     .interval = 604800,
     .page_max = 40,
     .page_param = "page",
-    .page_size = 50,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .timeout_ms = 60000,
     .title_keys = "name",
     .description = "717 branches over 15 pages of 50 (page 16 empty), fields code, "
@@ -1168,7 +1174,7 @@ static const hp_source HP3B30_JPBANK2[] = {
     .interval = 604800,
     .page_max = 40,
     .page_param = "page",
-    .page_size = 50,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .timeout_ms = 60000,
     .title_keys = "name",
     .description = "567 branches over 12 pages of 50 (page 13 empty), same fields as "
@@ -1186,7 +1192,7 @@ static const hp_source HP3B30_JPBANK2[] = {
     .interval = 604800,
     .page_max = 40,
     .page_param = "page",
-    .page_size = 50,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .timeout_ms = 60000,
     .title_keys = "name",
     .description = "319 branches over 7 pages of 50 (page 8 empty)." },
@@ -1203,7 +1209,7 @@ static const hp_source HP3B30_JPBANK2[] = {
     .interval = 604800,
     .page_max = 40,
     .page_param = "page",
-    .page_size = 50,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .timeout_ms = 60000,
     .title_keys = "name",
     .description = "114 branches over 3 pages of 50 (page 4 empty)." },
@@ -1220,7 +1226,7 @@ static const hp_source HP3B30_JPBANK2[] = {
     .interval = 604800,
     .page_max = 40,
     .page_param = "page",
-    .page_size = 50,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .timeout_ms = 60000,
     .title_keys = "name",
     .description = "94 zengin-format branch codes of ゆうちょ銀行 over 2 pages of 50 (page "
@@ -1238,7 +1244,7 @@ static const hp_source HP3B30_JPBANK2[] = {
     .interval = 604800,
     .page_max = 40,
     .page_param = "page",
-    .page_size = 50,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .timeout_ms = 60000,
     .title_keys = "name",
     .description = "62 virtual branches over 2 pages (page 3 empty)." },
@@ -1255,7 +1261,7 @@ static const hp_source HP3B30_JPBANK2[] = {
     .interval = 604800,
     .page_max = 40,
     .page_param = "page",
-    .page_size = 50,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .timeout_ms = 60000,
     .title_keys = "name",
     .description = "107 virtual branches over 3 pages (page 4 empty)." },
@@ -1272,7 +1278,7 @@ static const hp_source HP3B30_JPBANK2[] = {
     .interval = 604800,
     .page_max = 40,
     .page_param = "page",
-    .page_size = 50,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .timeout_ms = 60000,
     .title_keys = "name",
     .description = "142 branches over 3 pages of 50 (page 4 empty)." },
@@ -1289,7 +1295,7 @@ static const hp_source HP3B30_JPBANK2[] = {
     .interval = 604800,
     .page_max = 40,
     .page_param = "page",
-    .page_size = 50,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .timeout_ms = 60000,
     .title_keys = "name",
     .description = "177 branches over 4 pages of 50 (page 5 empty)." },
@@ -1306,7 +1312,7 @@ static const hp_source HP3B30_JPBANK2[] = {
     .interval = 604800,
     .page_max = 40,
     .page_param = "page",
-    .page_size = 50,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .timeout_ms = 60000,
     .title_keys = "name",
     .description = "177 branches over 4 pages of 50 (page 5 empty)." },
@@ -1323,7 +1329,7 @@ static const hp_source HP3B30_JPBANK2[] = {
     .interval = 604800,
     .page_max = 40,
     .page_param = "page",
-    .page_size = 50,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .timeout_ms = 60000,
     .title_keys = "name",
     .description = "203 branches over 5 pages of 50 (page 6 empty)." },
@@ -1340,7 +1346,7 @@ static const hp_source HP3B30_JPBANK2[] = {
     .interval = 604800,
     .page_max = 40,
     .page_param = "page",
-    .page_size = 50,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .timeout_ms = 60000,
     .title_keys = "name",
     .description = "172 branches over 4 pages of 50 (page 5 empty)." },
@@ -1357,7 +1363,7 @@ static const hp_source HP3B30_JPBANK2[] = {
     .interval = 604800,
     .page_max = 40,
     .page_param = "page",
-    .page_size = 50,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .timeout_ms = 60000,
     .title_keys = "name",
     .description = "173 branches over 4 pages of 50 (page 5 empty)." },
@@ -1374,7 +1380,7 @@ static const hp_source HP3B30_JPBANK2[] = {
     .interval = 604800,
     .page_max = 40,
     .page_param = "page",
-    .page_size = 50,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .timeout_ms = 60000,
     .title_keys = "name",
     .description = "164 branches over 4 pages of 50 (page 5 empty)." },
@@ -1391,7 +1397,7 @@ static const hp_source HP3B30_JPBANK2[] = {
     .interval = 604800,
     .page_max = 40,
     .page_param = "page",
-    .page_size = 50,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .timeout_ms = 60000,
     .title_keys = "name",
     .description = "154 branches over 4 pages of 50 (page 5 empty)." },
@@ -1408,7 +1414,7 @@ static const hp_source HP3B30_JPBANK2[] = {
     .interval = 604800,
     .page_max = 40,
     .page_param = "page",
-    .page_size = 50,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .timeout_ms = 60000,
     .title_keys = "name",
     .description = "169 branches over 4 pages of 50 (page 5 empty)." },

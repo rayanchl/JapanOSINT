@@ -117,7 +117,7 @@ static const hp_source T[] = {
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://www.ecfr.gov/api/versioner/v1/titles.json",
     .array_path = "titles",
-    .detail_url = "https://www.ecfr.gov/api/versioner/v1/structure/2026-01-01/title-{v}.json", .detail_key = "number",
+    .detail_url = "https://www.ecfr.gov/api/versioner/v1/structure/{date-7d}/title-{v}.json", .detail_key = "number",
     .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
@@ -161,7 +161,9 @@ static const hp_source T[] = {
     .collector = "us_legal", .category = "legal",
     .description = "Documents on public inspection on a given day — 24 to 72 hours BEFORE they publish (88 rows for one date). agencies[], title, type, document_number, filed_at, publication_date, pdf_url, html_url, raw_text_url, docket_numbers. The early-warning feed; the tree only has /current.json.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D=2026-08-14",
+    .url = "https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions%5Bavailable_on%5D={date}",
+    .tz_minutes = -300, .date_back = 4,
+    /* {date…} 2026-10-06: pinned to 2026-08-14; now today's public-inspection list, stepping back over weekends and holidays */
     .array_path = "results",
     .detail_url = "https://www.federalregister.gov/api/v1/public-inspection-documents/{v}.json", .detail_key = "document_number",
     .page_walk = 1,
