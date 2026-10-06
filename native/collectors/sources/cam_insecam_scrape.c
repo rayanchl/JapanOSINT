@@ -5,7 +5,7 @@
  *
  * JS flow (reproduced here):
  *  1. BASE=http://www.insecam.org/en/bycountry/JP/ ; fetchText(BASE,8s).
- *     If !firstHtml → return [] (here: 0 cameras, return 0 = "ran").
+ *     If !firstHtml → JS returned []; here that is rc=-1 (see LIMITATIONS).
  *  2. totalPages = match(/pagenavigator\("\?page=",\s*(\d+)/)[1] || 1 (the
  *     JS clamped it to 60; the port walks every declared page, see
  *     INSECAM_GUARD_PAGES). Fetch pages 2..totalPages (JS uses LIST_CONCURRENCY=6;
@@ -41,8 +41,10 @@
  *    INSECAM_COORD_CACHE) purely as a perf optimisation. Here the cache is
  *    per-run (dedupe within this sweep only). Output Features are identical;
  *    a fresh run just re-fetches detail pages it could have remembered.
- *  - insecam.org periodically rate-limits / 403s datacenter IPs; a failed
- *    list fetch → 0 cameras (faithful, like Node from a blocked server).
+ *  - insecam.org periodically rate-limits / 403s datacenter IPs. A failed
+ *    FIRST list fetch is a failed run (rc=-1, the HTTP status logged) — the
+ *    Node original returned [] and so did this port, which made a WAF block
+ *    look like a country with no cameras.
  *
  * Each Feature → camera_upsert(...,"insecam_scrape").
  */
@@ -50,6 +52,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "core/camera_store.h"
+#include "core/httpclient.h"
 #include "lib/feedlib.h"
 #include "lib/htmlparse.h"
 #include "third_party/cJSON.h"
@@ -227,12 +230,34 @@ static int find_coord(const char *html, const char *label, double *out) {
 typedef struct { char *id; char *city; char *img; int have_real;
                  double rlat, rlon; } card_t;
 
+/* GET `url`; the body on a 2xx (caller frees), else NULL. `*status` gets the
+ * HTTP status, 0 when no response arrived. */
+static char *insecam_get(const source_ctx *ctx, const char *url, int timeout_ms,
+                         long *status) {
+  http_response hr = {0};
+  int rc = http_request(ctx->http, "GET", url, NULL, NULL, 0, timeout_ms, 2, &hr);
+  *status = hr.status;
+  char *b = NULL;
+  if (rc == 0 && hr.status >= 200 && hr.status < 300 && hr.body && hr.body[0]) {
+    b = hr.body; hr.body = NULL;
+  }
+  http_response_free(&hr);
+  return b;
+}
+
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  char *first = feed_get_text(ctx->http, INSECAM_BASE, 8000);
-  if (!first || !first[0]) {
-    free(first);
-    fprintf(stderr, "[cam-insecam-scrape] 0 (no html — rate-limit/WAF)\n");
-    return 0;
+  /* The listing's first page failing is a FAILED RUN, not an empty one. It
+   * used to return 0 here, so a WAF refusal read as "insecam lists no camera
+   * in Japan": fetch_log status=ok, records=0, nothing to triage. Measured
+   * 2026-10-06: www.insecam.org answers this collector's User-Agent with
+   * HTTP 403 (153 bytes) — every run since was a silent success. */
+  long st0 = 0;
+  char *first = insecam_get(ctx, INSECAM_BASE, 8000, &st0);
+  if (!first) {
+    fprintf(stderr, "[cam-insecam-scrape] listing fetch failed: HTTP %ld%s\n",
+            st0, st0 == 403 ? " (refused — WAF/User-Agent block)"
+                 : st0 == 0 ? " (no response)" : "");
+    return -1;
   }
 
   /* totalPages = min( /pagenavigator\("\?page=",\s*(\d+)/ , 60 ) */
@@ -302,13 +327,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   /* Detail pass — resolve real coords (JS DETAIL_CONCURRENCY=10; here
    * sequential; per-run cache = the dedupe above already ensures one detail
-   * fetch per id). */
+   * fetch per id). A detail page that fails to fetch is not a camera without
+   * coordinates: it is counted and disclosed. */
+  int detailFailed = 0;
   for (int i = 0; i < ncards; i++) {
     card_t *cd = &cards[i];
     char u[256];
     snprintf(u, sizeof u, "http://www.insecam.org/en/view/%s/", cd->id);
     char *dh = feed_get_text(ctx->http, u, 6000);
-    if (!dh) continue;
+    if (!dh) { detailFailed++; continue; }    /* counted, disclosed below */
     double la, lo;
     int okla = find_coord(dh, "Latitude:", &la);
     int oklo = find_coord(dh, "Longitude:", &lo);
@@ -359,16 +386,22 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   free(cards);
 
-  if (failedPages || declaredPages > totalPages) {
-    char reason[200];
+  if (failedPages || detailFailed || declaredPages > totalPages) {
+    char reason[300];
     if (declaredPages > totalPages)
       snprintf(reason, sizeof reason,
                "insecam declared %d listing pages; INSECAM_GUARD_PAGES stopped "
                "the walk at %d", declaredPages, totalPages);
-    else
+    else if (failedPages)
       snprintf(reason, sizeof reason,
                "%d of %d listing pages failed to fetch (rate limit or WAF); "
-               "the cameras on them were not read", failedPages, totalPages);
+               "the cameras on them were not read%s", failedPages, totalPages,
+               detailFailed ? ", and some camera detail pages failed too" : "");
+    else
+      snprintf(reason, sizeof reason,
+               "%d of %d camera detail pages failed to fetch, so those cameras' "
+               "coordinates were never read and they were not emitted",
+               detailFailed, ncards);
     jo_trunc_notice_scoped(sink, "cam-insecam-scrape", "bycountry-JP",
                            INSECAM_BASE, count, -1, reason,
                            declaredPages > totalPages ? "raise INSECAM_GUARD_PAGES"
