@@ -157,7 +157,6 @@
       "msearch.gsi.go.jp/address-search/AddressSearch?q=": 1,
       "msi.nga.mil/NavWarnings": 1,
       "my.playstation.com/profile/{}": 1,
-      "ndlsearch.ndl.go.jp/api/oaipmh?verb=ListRecords&resumptionToken={v}": 1,
       "news.un.org/feed/subscribe/en/news/all/rss.xml": 1,
       "news.ycombinator.com/item?id=%s": 1,
       "news.ycombinator.com/user?id=%s": 1,
@@ -305,7 +304,6 @@
       "www.gstatic.com/ct/log_list/v3/log_list.json": 1,
       "www.hklii.hk": 1,
       "www.hklii.hk/en/search?q=%s": 1,
-      "www.instagram.com": 1,
       "www.instagram.com/api/v1/locations/web_info": 1,
       "www.instagram.com/{}": 1,
       "www.ioc-sealevelmonitoring.org/station.php?code=%s": 1,
@@ -730,6 +728,7 @@
       "native/collectors/sources/yahoo_map_api.c": 2,
       "native/collectors/sources/yahoo_realtime.c": 2
     },
+    "page-size-on-page-number": 0,
     "phantom-index": 0,
     "quarantine-empty": 0,
     "quarantine-empty-unclassified": {
@@ -751,8 +750,8 @@
   },
   "registered_sources": {
     "direct": 1173,
-    "macro_expanded": 16296,
-    "total": 17469,
+    "macro_expanded": 17152,
+    "total": 18325,
     "unresolved": 0
   }
 }

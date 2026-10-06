@@ -127,6 +127,8 @@ user-agent content-type authorization bearer token key apikey
 def norm(u):
     u = u.strip().rstrip(TRAIL)
     u = re.sub(r"^https?://", "", u)
+    # runtime tokens FIRST (a date format holds %d): {date…} and the per-page {page}/{offset…}/{size}
+    u = re.sub(r"\{date[^}]*\}|\{page\}|\{offset(?:1|_end)?\}|\{size\}", "{}", u)
     u = re.sub(r"\{q[a-zA-Z]*\}|\{Q\}|%s|%d|\{v\}|\{key\}", "{}", u)
     return u.rstrip("/").lower()
 

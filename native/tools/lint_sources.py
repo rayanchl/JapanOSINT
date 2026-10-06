@@ -1115,6 +1115,11 @@ def check_dup_endpoint():
     # tables naming the same host in `.base` while fetching different pages
     # were being reported as one duplicated request (batch 25, jc3.or.jp).
     portal_re = re.compile(r'\.(?:portal|base)\s*=\s*"[^"]*"')
+    # A `Referer:` / `Origin:` header VALUE names the site the request claims
+    # to come from; it is never fetched. Batch 39 sends `Referer:
+    # https://www.sse.com.cn/` from two tables (SSE's query API demands it),
+    # and the check reported that as one endpoint fetched by two files.
+    header_re = re.compile(r'"(?:Referer|Origin)\s*:\s*[^"]*"', re.I)
     by_url = {}
     for root, _dirs, names in os.walk(COLLECTORS):
         if os.sep + "obj" in root:
@@ -1123,7 +1128,7 @@ def check_dup_endpoint():
             if not f.endswith((".c", ".inc")):
                 continue
             p = os.path.join(root, f)
-            for m in url_re.findall(portal_re.sub("", read(p))):
+            for m in url_re.findall(header_re.sub("", portal_re.sub("", read(p)))):
                 u = m.rstrip('".,)\\')
                 try:
                     s = urlsplit(u)
@@ -1201,8 +1206,52 @@ def check_phantom_index():
     return out
 
 
+_PAGENUM_NAME = re.compile(
+    r"^(?:.*\.)?(?:page|pagina|pagenum|pagenumber|page_number|pageno|page_no|"
+    r"pageindex|page_index|pg|side|seite)$", re.I)
+
+
+def check_page_size_on_page_number():
+    """An hp row must not declare `page_size` on a page-NUMBER parameter.
+
+    hp_run treats `page_param` as an OFFSET whenever the row declares
+    page_size (lib/hpengine.c, `offset_style`), so a page-number API is asked
+    for pages 1, 1+N, 1+2N … and N-1 of every N pages are never fetched, with
+    the run reported green. 83 shipped rows were in that state until
+    2026-10-05: AP19_CN_SZSE_LISTED stored ~160 of 2,904 listings.
+
+    Some APIs really do take a record offset in a parameter called `page`
+    (MapRoulette: page=1 is the list shifted by ONE record). Such a row keeps
+    its page_size and says so with a `page-offset-ok: <measurement>` marker
+    inside the row."""
+    out = []
+    for path in source_files():            # _tree_c_files() omits collectors/**
+        text = read(path)
+        if "hp_source" not in text:
+            continue
+        for m in _HP_TBL_RE.finditer(text):
+            block = _brace_block(text, m.end() - 1)
+            if not block:
+                continue
+            for row in _hp_rows(block):
+                pm = re.search(r"\.page_param\s*=", row)
+                if not pm or not re.search(r"\.page_size\s*=\s*[1-9]", row):
+                    continue
+                param = _read_string_concat(row, pm.end()) or ""
+                if not _PAGENUM_NAME.match(param) or "page-offset-ok" in row:
+                    continue
+                idm = re.search(r"\.id\s*=", row)
+                sid = _read_string_concat(row, idm.end()) if idm else "?"
+                ln = text.count("\n", 0, text.find(row)) + 1
+                out.append("%s:%d: %s declares page_size on page-number param `%s` "
+                           "-- the engine walks it as an offset and skips pages"
+                           % (os.path.relpath(path, REPO), ln, sid, param))
+    return out
+
+
 CHECKS = [
     ("dup-id", check_dup_id),
+    ("page-size-on-page-number", check_page_size_on_page_number),
     ("dup-endpoint", check_dup_endpoint),
     ("unresolved-id", check_unresolved_id),
     ("registry-orphan", check_registry_orphan),

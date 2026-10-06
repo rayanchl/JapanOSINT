@@ -25,6 +25,7 @@ import sys
 import csv
 import argparse
 import urllib.request
+import urllib.parse
 import urllib.error
 import collections
 import json
@@ -127,16 +128,188 @@ def row_timeout(r):
     return max(VF.TIMEOUT, ms / 1000.0)
 
 
-def fetch(url, extra, timeout=None):
+# ── runtime tokens, mirroring lib/hpengine.c ─────────────────────────────
+# {date[±N(d|w|m|y)][:strftime | :@s | :@ms]} rendered in UTC+tz_minutes and
+# stepped back `shift` days by date_back; {page} {offset} {offset1}
+# {offset_end} {size} take their FIRST-page values (the probe reads page 1).
+DATE_RE = re.compile(r"\{(date(?:[+-]\d+[dwmy]?)?(?::[^}]*)?)\}")
+
+
+AGO_RE = re.compile(r"\{ago:([^}]{1,6})\}")
+
+
+def render_ago(num, now=None):
+    """{ago:N}: RFC 3339 UTC of now - N seconds (lib/datetok.c datetok_ago)."""
+    import datetime as _dt
+    try:
+        secs = max(0, int(re.match(r"\s*[+-]?\d+", num).group(0)))
+    except (AttributeError, ValueError):
+        secs = 0
+    base = now if now is not None else _dt.datetime.now(_dt.timezone.utc)
+    return (base - _dt.timedelta(seconds=secs)).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def render_date(spec, tz_min=0, shift=0, now=None, step="d"):
+    import calendar
+    import datetime as _dt
+    m = re.fullmatch(r"date(?:([+-])(\d+)([dwmy]?))?(?::(.+))?", spec)
+    if not m:
+        return None
+    sign, num, unit, fmt = m.groups()
+    amount = (int(num) * (-1 if sign == "-" else 1)) if num else 0
+    unit = unit or "d"
+    sfx_days = 0
+    if fmt is not None:
+        # {date:FORMAT:±N}: main's spelling of a day offset (lib/datetok.c)
+        head, sep, tail = fmt.rpartition(":")
+        if sep and re.fullmatch(r"[+-]?\d{1,5}", tail):
+            fmt, sfx_days = head, int(tail)
+        if not fmt:
+            return None
+    fmt = fmt or "%Y-%m-%d"
+    base = (now if now is not None else _dt.datetime.now(_dt.timezone.utc))
+    local = base.astimezone(_dt.timezone.utc).replace(tzinfo=None) + _dt.timedelta(minutes=tz_min)
+
+    def move(d, n, u):                     # hp_shift_days: months clamp
+        if u in "my":
+            mm = d.month - 1 + (n * 12 if u == "y" else n)
+            y, mo = d.year + mm // 12, mm % 12 + 1
+            return d.replace(year=y, month=mo, day=min(d.day, calendar.monthrange(y, mo)[1]))
+        return d + _dt.timedelta(days=n * (7 if u == "w" else 1))
+    local = move(local, amount, unit) + _dt.timedelta(days=sfx_days)
+    if shift:
+        local = move(local, -shift, step if step in ("d", "w", "m", "y") else "d")
+    if fmt in ("@s", "@ms"):
+        ep = calendar.timegm(local.timetuple()) - tz_min * 60
+        return str(ep * 1000 if fmt == "@ms" else ep)
+    return local.strftime(fmt)
+
+
+def expand_runtime(s, r, shift=0):
+    """`s` with date tokens and first-page tokens expanded for row `r`."""
+    if not s:
+        return s
+    o, _d, _j = parse_opts(r["opts"])
+    tz = int(o.get("tz_minutes") or 0)
+    step = (o.get("date_step") or "d")[:1]
+    s = DATE_RE.sub(lambda m: render_date(m.group(1), tz, shift, step=step) or m.group(0), s)
+    s = AGO_RE.sub(lambda m: render_ago(m.group(1)), s)
+    size = int(o.get("page_size") or 0)
+    page = int(o.get("page_start") or 0) or (0 if o.get("page_zero_based") == "1" else 1)
+    for tok, val in (("{page}", page), ("{offset}", 0), ("{offset1}", 1),
+                     ("{offset_end}", max(size, 1) - 1), ("{size}", size)):
+        s = s.replace(tok, str(val))
+    return s
+
+
+def _path_step(node, seg, out):
+    """hp_seg_step: key=value selector, positional index, map across."""
+    if isinstance(node, list):
+        if "=" in seg:
+            k, v = seg.split("=", 1)
+            for it in node:
+                if isinstance(it, dict) and it.get(k) == v:
+                    out.append(it)
+                    break
+        elif seg.isdigit():
+            i = int(seg)
+            if i < len(node):
+                out.append(node[i])
+        else:
+            for it in node:
+                _path_step(it, seg, out)
+    elif isinstance(node, dict) and node.get(seg) is not None:
+        out.append(node[seg])             # a JSON null at the path is no node
+
+
+def resolve_array_path(doc, path):
+    """lib/hpengine.c hp_run_json: hp_path first (keys, a numeric index into a
+    list, `key=value`), then hp_path_multi (map across every list on the way,
+    flattened one level) when that fails. The probe used to take dict keys
+    only, so `0.content` under a `null([...])` JSONP body never resolved."""
+    node = doc
+    for seg in [s for s in path.split(".") if s]:
+        crosses = isinstance(node, list) and not seg.isdigit() and "=" not in seg
+        nxt = []
+        if not crosses:                       # hp_path cannot map across a list
+            _path_step(node, seg, nxt)
+        if not nxt:
+            node = None
+            break
+        node = nxt[0]
+    if node is not None:
+        return node
+    cur = [doc]
+    for seg in [s for s in path.split(".") if s]:
+        nxt = []
+        for n in cur:
+            _path_step(n, seg, nxt)
+        cur = nxt
+    flat = []
+    for it in cur:
+        flat.extend(it) if isinstance(it, list) else flat.append(it)
+    flat = [x for x in flat if x is not None]
+    return flat or None
+
+
+def jsonp_inner(text):
+    """The JSON inside a JSONP / XSSI-guarded body, else None (lib/hpengine.c
+    hp_jsonp_inner, same rules: valid JSON is never unwrapped)."""
+    p = text.lstrip("\ufeff").lstrip()
+    if p.startswith(")]}'"):
+        nl = p.find("\n")
+        return p[nl + 1:] if nl >= 0 else None
+    if p.startswith("/**/"):
+        p = p[4:].lstrip()
+    m = re.match(r"[A-Za-z_$][\w$.]*", p)
+    if m:
+        p = p[m.end():]
+    p = p.lstrip()
+    if not p.startswith("("):
+        return None
+    inner = p[1:].rstrip()
+    if inner.endswith(";"):
+        inner = inner[:-1].rstrip()
+    if not inner.endswith(")"):
+        return None
+    inner = inner[:-1].strip()
+    while inner[:1] == "(" and inner[-1:] == ")":   # cb(({...})): NMC typhoons
+        inner = inner[1:-1].strip()
+    return inner if inner[:1] in ("{", "[") else None
+
+
+def row_body(r, entity=None, shift=0):
+    """(body, headers) for a row that declares `post_body`, else (None, {}).
+
+    The engine POSTs `post_body` with its entity tokens expanded and the row's
+    `content_type` (default `Content-Type: application/json`, lib/hpengine.c).
+    The probe used to GET every row, so a POST-only API could never be proven
+    -- batch 38 rejected the Palace Museum collection (1.86 M objects) and the
+    CNEMC station feed for exactly that. A pivot row's tokens take `entity`
+    (the --check-filter impossible value) or PROBE_ENTITY."""
+    o, _dups, _junk = parse_opts(r["opts"])
+    body = o.get("post_body")
+    if not body:
+        return None, {}
+    body = TOKEN_RE.sub(lambda m: entity if entity is not None else PROBE_ENTITY, body)
+    body = expand_runtime(body, r, shift)
+    ct = o.get("content_type") or "Content-Type: application/json"
+    name, _, val = ct.partition(":")
+    return body, {name.strip(): val.strip()}
+
+
+def fetch(url, extra, timeout=None, body=None):
     """Same shape as verify_feeds.fetch, plus this row's declared headers and
-    timeout."""
+    timeout, and its POST body when it declares one."""
     headers = {
         "User-Agent": DEFAULT_UA,
         "Accept": "*/*",
         "Accept-Encoding": "gzip",
     }
     headers.update(extra)
-    req = urllib.request.Request(VF.encode_url(url), headers=headers)
+    data = body.encode("utf-8") if body is not None else None
+    req = urllib.request.Request(VF.encode_url(url), headers=headers, data=data,
+                                 method="POST" if data is not None else "GET")
     with urllib.request.urlopen(req, timeout=timeout or VF.TIMEOUT) as resp:
         raw = resp.read(MAXBYTES + 1)
         if resp.headers.get("Content-Encoding") == "gzip":
@@ -266,6 +439,10 @@ IMPOSSIBLE = {
 # -- a PASS that never actually asked the question, which is exactly the
 # failure class rule 4d exists to catch.
 TOKEN_RE = re.compile(r"\{(q[cdhlnuU]?|Q)\}")
+# What a pivot row's POST body is probed with. The manifest's `probe` field
+# carries a URL with the author's entity already inlined, but a body template
+# has no such field, so it gets one fixed, common term.
+PROBE_ENTITY = "tokyo"
 
 # Set from --check-filter. Off by default because it doubles the request count
 # for every pivot row; a batch should be run through it at least once.
@@ -346,13 +523,18 @@ def filter_is_honoured(r, real_items):
     url = impossible_probe_url(r)
     if not url or real_items < 2:
         return True, ""          # nothing to compare against
+    url = expand_runtime(url, r)
+    body, bh = row_body(r, IMPOSSIBLE["q"])
     try:
-        status, ctype, raw = fetch(url, row_headers(r), row_timeout(r))
+        status, ctype, raw = fetch(url, dict(row_headers(r), **{k: v for k, v in bh.items() if k not in row_headers(r)}),
+                                   row_timeout(r), body)
     except Exception:
         return True, ""          # a refusal here is not evidence either way
     if status < 200 or status >= 300:
         return True, ""
     text = decode_body(raw, r, url)
+    if r["mode"] == "json":
+        text = jsonp_inner(text) or text     # hp_jsonp_inner, before any JSON read
     kind, items = VF.count_feed(text)
     if not kind:
         kind, items = VF.count_json(text)
@@ -416,19 +598,45 @@ def _xlsx_rows(raw, sheet_name, sheet_index):
     ss = []
     if "xl/sharedStrings.xml" in names:
         sx = z.read("xl/sharedStrings.xml").decode("utf-8", "replace")
-        for si in re.findall(r"<si>(.*?)</si>", sx, re.S):
-            si = re.sub(r"<rPh\b.*?</rPh>", "", si, flags=re.S)
-            ss.append(_xml_unescape("".join(re.findall(r"<t\b[^>]*>(.*?)</t>", si, re.S))))
+        # Element names may carry a namespace prefix (`<x:si>`, `<x:row>`): HKEX
+        # writes its ListOfSecurities.xlsx that way and lib/xlsx.c accepts it.
+        for si in re.findall(r"<(?:\w+:)?si\b[^>]*>(.*?)</(?:\w+:)?si>", sx, re.S):
+            si = re.sub(r"<(?:\w+:)?rPh\b.*?</(?:\w+:)?rPh>", "", si, flags=re.S)
+            ss.append(_xml_unescape("".join(re.findall(r"<(?:\w+:)?t\b[^>]*>(.*?)</(?:\w+:)?t>", si, re.S))))
     sx = z.read(part).decode("utf-8", "replace")
+    # Placement follows lib/xlsx.c, not document order. The old reading took
+    # `<c\b([^>]*)>(.*?)</c>`, so a self-closing empty cell `<c r="E1" s="3"/>`
+    # swallowed the NEXT cell's value and every later column shifted one slot
+    # left; it also ignored the `r` refs, so a sheet starting at row 2 (the
+    # FIT-portal registers) lost the blank line the engine writes for row 1,
+    # and the two disagreed about which physical line csv_skip_lines lands on.
+    # Batch 38's MHLW drug-price lists hid their 品名 header that way.
     rows = []
-    for row in re.findall(r"<row\b[^>]*>(.*?)</row>", sx, re.S):
+    cur_row = 0
+    for rattrs, rbody in re.findall(r"<(?:\w+:)?row\b([^>]*?)(?:/>|>(.*?)</(?:\w+:)?row>)", sx, re.S):
+        m = re.search(r'\br="(\d+)"', rattrs)
+        rnum = int(m.group(1)) if m else 0
+        if rnum <= cur_row:
+            rnum = cur_row + 1
+        while cur_row + 1 < rnum:              # a missing row is a blank line
+            rows.append([])
+            cur_row += 1
+        cur_row = rnum
         cells = []
-        for attrs, inner in re.findall(r"<c\b([^>]*)>(.*?)</c>", row, re.S):
-            v = re.search(r"<v>(.*?)</v>", inner, re.S)
+        for attrs, inner in re.findall(r"<(?:\w+:)?c\b([^>]*?)(?:/>|>(.*?)</(?:\w+:)?c>)", rbody, re.S):
+            ref = re.search(r'\br="([A-Za-z]+)\d*"', attrs)
+            col = 0
+            if ref:
+                for ch in ref.group(1).upper():
+                    col = col * 26 + (ord(ch) - 64)
+            if col <= len(cells):              # absent or out of order
+                col = len(cells) + 1
+            cells.extend([""] * (col - 1 - len(cells)))
+            v = re.search(r"<(?:\w+:)?v>(.*?)</(?:\w+:)?v>", inner, re.S)
             t = re.search(r'\bt="(\w+)"', attrs)
             if v is None:
-                inner = re.sub(r"<rPh\b.*?</rPh>", "", inner, flags=re.S)
-                cells.append(_xml_unescape("".join(re.findall(r"<t\b[^>]*>(.*?)</t>", inner, re.S))))
+                inner = re.sub(r"<(?:\w+:)?rPh\b.*?</(?:\w+:)?rPh>", "", inner, flags=re.S)
+                cells.append(_xml_unescape("".join(re.findall(r"<(?:\w+:)?t\b[^>]*>(.*?)</(?:\w+:)?t>", inner, re.S))))
             elif t and t.group(1) == "s":
                 try:
                     cells.append(ss[int(v.group(1))])
@@ -502,7 +710,8 @@ def verify_xlsx(r, sid, url, raw, status, nbytes):
         for name in re.split(r"[,+]", v):
             if name.strip():
                 wanted.append(name.strip())
-    missing = [w for w in wanted if w not in header]
+    stamped = opt(r, "date_field", "") or ""       # hp_stamp_date adds it
+    missing = [w for w in wanted if w not in header and w != stamped]
     if missing:
         return (sid, url, "KEY_MISSING", "xlsx:" + tab, len(data), status, nbytes,
                 ("keys %s not in header %s" % (missing, header[:8]))[:120])
@@ -513,11 +722,225 @@ def verify_xlsx(r, sid, url, raw, status, nbytes):
             "header=" + "|".join(header[:8])[:100])
 
 
+# ── HTML table mode, mirroring lib/htmlparse.c html_table_parse and
+#    lib/hpengine.c hp_run_table exactly: same table choice, same grid,
+#    same entity set, same header naming and row filters. ────────────────
+_HT_OPEN = lambda name: re.compile(r"<%s(?=[\s>/])" % name, re.I)
+_HT_CLOSE = lambda name: re.compile(r"</%s(?=[\s>])" % name, re.I)
+_HT_TABLE_O, _HT_TABLE_C = _HT_OPEN("table"), _HT_CLOSE("table")
+
+
+def _ht_table_end(s, p):
+    depth = 0
+    for m in re.finditer(r"<(/?)table(?=[\s>/])", s[p:], re.I):
+        if m.group(1):
+            depth -= 1
+            if depth == 0:
+                gt = s.find(">", p + m.start())
+                return gt + 1 if gt >= 0 else len(s)
+        else:
+            depth += 1
+    return len(s)
+
+
+def _ht_text(raw):
+    out, sp, i, n = [], False, 0, len(raw)
+    named = {"amp": "&", "lt": "<", "gt": ">", "quot": '"', "apos": "'", "nbsp": " "}
+    while i < n:
+        c = raw[i]
+        if c == "<":
+            gt = raw.find(">", i)
+            i = gt + 1 if gt >= 0 else n
+            sp = True
+            continue
+        if c == "&":
+            semi = raw.find(";", i, i + 12)
+            if semi > 0:
+                e = raw[i + 1:semi]
+                ch = None
+                if len(e) > 1 and e[0] == "#":
+                    try:
+                        cp = int(e[2:], 16) if e[1] in "xX" else int(e[1:], 10)
+                        ch = chr(cp) if cp > 0 else None
+                    except (ValueError, OverflowError):
+                        ch = None
+                else:
+                    ch = named.get(e)
+                if ch is not None:
+                    if ch in (" ", "\xa0"):
+                        sp = True
+                    else:
+                        if sp and out:
+                            out.append(" ")
+                        sp = False
+                        out.append(ch)
+                    i = semi + 1
+                    continue
+        if c in " \t\n\r\f":
+            sp = True
+            i += 1
+            continue
+        if sp and out:
+            out.append(" ")
+        sp = False
+        out.append(c)
+        i += 1
+    return "".join(out)
+
+
+def html_table_grid(s, must, index):
+    """-> list of rows (each a list of (text, href)) or None when no table."""
+    seen, tb, te = 0, None, None
+    for m in _HT_TABLE_O.finditer(s):
+        end = _ht_table_end(s, m.start())
+        if (not must or must in s[m.start():end]):
+            if seen == index:
+                tb, te = m.start(), end
+                break
+            seen += 1
+    if tb is None:
+        return None
+    gt = s.find(">", tb)
+    p = gt + 1 if gt >= 0 else te
+    rows, cur = [], None
+    tok = re.compile(r"<(/?)(table|tr|td|th|tbody|thead|tfoot)(?=[\s>/])", re.I)
+    while True:
+        m = tok.search(s, p, te)
+        if not m:
+            break
+        close, name = m.group(1), m.group(2).lower()
+        if not close and name == "table":
+            p = _ht_table_end(s, m.start())
+            continue
+        if cur is not None:
+            cur["e"] = m.start()
+            cur = None
+        if not close and (name == "tr" or (name in ("td", "th") and not rows)):
+            rows.append([])
+        if not close and name in ("td", "th"):
+            g = s.find(">", m.start())
+            if g < 0 or g > te:
+                break
+            tag = s[m.start():g + 1]
+            def span(a):
+                mm = re.search(r"(?:^|[\s<])%s\s*=\s*[\"']?(\d+)" % a, tag, re.I)
+                v = int(mm.group(1)) if mm else 1
+                return 1 if v < 1 else min(v, 1000)
+            cur = {"s": g + 1, "e": te, "cs": span("colspan"), "rs": span("rowspan")}
+            rows[-1].append(cur)
+            p = g + 1
+            continue
+        p = m.end()
+    grid, pend = [], {}
+    for rraw in rows:
+        row, col, cells = [], 0, list(rraw) + [None]
+        for c in cells:
+            while pend.get(col, (0,))[0] > 0:
+                left, txt, href = pend[col]
+                row.append((txt, href))
+                pend[col] = (left - 1, txt, href)
+                col += 1
+            if c is None:
+                break
+            raw = s[c["s"]:c["e"]]
+            txt = _ht_text(raw)
+            ma = re.search(r"<a\s[^>]*?\bhref\s*=\s*[\"']([^\"']*)[\"']", raw, re.I)
+            href = ma.group(1) if ma and ma.group(1) else None
+            for k in range(c["cs"]):
+                row.append((txt, href) if k == 0 else ("", None))
+                if k == 0 and c["rs"] > 1:
+                    pend[col] = (c["rs"] - 1, txt, href)
+                col += 1
+        grid.append(row)
+    width = max([len(r) for r in grid] + [0])
+    return [r + [("", None)] * (width - len(r)) for r in grid]
+
+
+def verify_html_table(r, sid, url, text, status, nbytes):
+    must = opt(r, "table_must", "") or ""
+    idx = int(opt(r, "table_index", "0") or 0)
+    skip = int(opt(r, "table_skip_rows", "0") or 0)
+    grid = html_table_grid(text, must, idx)
+    if grid is None:
+        return (sid, url, "PATH_UNRESOLVED", "html-table", 0, status, nbytes,
+                "no <table> containing %r (index %d)" % (must, idx))
+    if skip >= len(grid):
+        return (sid, url, "EMPTY_RESULTSET", "html-table", 0, status, nbytes,
+                "no header row after table_skip_rows=%d" % skip)
+    raw, names = [], []
+    for k, (h, _) in enumerate(grid[skip]):
+        nb = h[:250] if h else "col%d" % k
+        dup = 1 + raw.count(nb)              # hp_run_table: against raw texts
+        raw.append(nb)
+        names.append(nb if dup == 1 else "%s_%d" % (nb, dup))
+    header = [c[0] for c in grid[skip]]
+    data = [row for row in grid[skip + 1:]
+            if any(c[0] for c in row) and [c[0] for c in row] != header]
+    wanted = []
+    for k in ("title_keys", "id_keys", "date_keys"):
+        for name in re.split(r"[,+]", opt(r, k, "") or ""):
+            if name.strip():
+                wanted.append(name.strip())
+    stamped = opt(r, "date_field", "") or ""
+    missing = [w for w in wanted if w not in names and w not in ("link", stamped)]
+    if missing:
+        return (sid, url, "KEY_MISSING", "html-table", len(data), status, nbytes,
+                ("keys %s not in header %s" % (missing, names[:8]))[:120])
+    if not data:
+        return (sid, url, "EMPTY_RESULTSET", "html-table", 0, status, nbytes,
+                "header %s but no data rows" % names[:6])
+    return (sid, url, "PASS", "html-table", len(data), status, nbytes,
+            "header=" + "|".join(names[:8])[:100])
+
+
 def verify(r):
-    """Verdict for one manifest row. Mirrors verify_feeds.verify exactly."""
-    sid, url = r["id"], r["probe"]
+    """Verdict for one manifest row, stepping a dated row's date back the way
+    hp_run's date_back does: a 4xx, or a first page with no records."""
+    o, _dups, _junk = parse_opts(r["opts"])
+    back = int(o.get("date_back") or 0)
+    dated = bool(DATE_RE.search(r["url"] + " " + (o.get("post_body") or "")))
+    shift = 0
+    while True:
+        res = _verify_once(r, shift)
+        retry = res[2] in ("EMPTY_RESULTSET", "PATH_UNRESOLVED", "PATH_NOT_ARRAY",
+                           "UNPARSEABLE", "EMPTY") or \
+            (res[2] == "HTTP_ERR" and 400 <= (res[5] or 0) < 500)
+        if dated and retry and shift < back and not o.get("index_url"):
+            shift += 1
+            continue
+        if shift and res[2] == "PASS":
+            res = res[:7] + (("date_back %d: " % shift) + (res[7] or ""),)
+        return res
+
+
+def _verify_once(r, shift=0):
+    """One attempt. Mirrors verify_feeds.verify exactly."""
+    sid, url = r["id"], expand_runtime(r["probe"], r, shift)
+    o, _dups, _junk = parse_opts(r["opts"])
+    if o.get("index_url") and o.get("index_href_must"):
+        # hp_run resolves the data URL from a landing page before anything
+        # else (lib/hpengine.c, index_url): GET it, take the FIRST anchor whose
+        # href contains index_href_must, resolve it against the page. The
+        # probe follows the same link, so an index row is judged on the file
+        # the engine will actually read, and a pattern that matches nothing
+        # fails here the way it fails there.
+        try:
+            _st, _ct, page = fetch(o["index_url"], row_headers(r), row_timeout(r))
+        except Exception as e:
+            return (sid, o["index_url"], "INDEX_ERR", "", 0, 0, 0, ("%s: %s" % (type(e).__name__, e))[:60])
+        hrefs = re.findall(r"""<a\b[^>]*?\bhref\s*=\s*["']([^"']+)["']""",
+                           page.decode("utf-8", "replace"), re.I)
+        hit = next((h for h in hrefs if o["index_href_must"] in h), None)
+        if not hit:
+            return (sid, o["index_url"], "INDEX_NO_MATCH", "", 0, _st, len(page),
+                    "no href containing %r" % o["index_href_must"])
+        url = urllib.parse.urljoin(o["index_url"], hit)
+    body, bh = row_body(r, shift=shift)
+    hdrs = row_headers(r)
+    for k, v in bh.items():
+        hdrs.setdefault(k, v)            # a declared header wins, as in hp_run
     try:
-        status, ctype, raw = fetch(url, row_headers(r), row_timeout(r))
+        status, ctype, raw = fetch(url, hdrs, row_timeout(r), body)
     except urllib.error.HTTPError as e:
         return (sid, url, "HTTP_ERR", "", 0, e.code, 0, str(e.reason)[:60])
     except urllib.error.URLError as e:
@@ -532,7 +955,22 @@ def verify(r):
         return (sid, url, "TOO_BIG", "", 0, status, nbytes, "over probe cap")
     if r["mode"] == "xlsx":
         return verify_xlsx(r, sid, url, raw, status, nbytes)
+    if raw[:4] == b"PK\x03\x04":
+        # hp_run inflates a ZIP body's FIRST entry for every non-xlsx mode
+        # (lib/zipread.c); the probe read the archive bytes as text and called
+        # every zip-distributed CSV unparseable.
+        import zipfile, io
+        try:
+            z = zipfile.ZipFile(io.BytesIO(raw))
+            first = min(z.infolist(), key=lambda i: i.header_offset)
+            raw = z.read(first)
+            nbytes = len(raw)
+        except Exception as e:
+            return (sid, url, "UNPARSEABLE", "zip", 0, status, nbytes,
+                    ("zip: %s" % e)[:80])
     text = decode_body(raw, r, url)
+    if r["mode"] == "json":
+        text = jsonp_inner(text) or text     # hp_jsonp_inner, before any JSON read
 
     if is_enveloped_error(text):
         return (sid, url, "ERROR_BODY", "", 0, status, nbytes,
@@ -566,13 +1004,9 @@ def verify(r):
         except Exception:
             return (sid, url, "UNPARSEABLE", "", 0, status, nbytes,
                     "declared array_path but body is not JSON")
-        node = doc
-        for seg in ap_decl.split("."):
-            if isinstance(node, dict) and seg in node:
-                node = node[seg]
-            else:
-                node = None
-                break
+        node = resolve_array_path(doc, ap_decl)
+        if isinstance(node, dict):            # hp_run_json: one record
+            node = [node]
         if node is None:
             return (sid, url, "PATH_UNRESOLVED", "", 0, status, nbytes,
                     "array_path %r not present in the response" % ap_decl)
@@ -618,6 +1052,8 @@ def verify(r):
     # keep: real <a href> hits, filtered by href_must when the row declares one.
     # Navigation chrome is excluded the same way hpengine excludes it, so a page
     # that renders but lists nothing scores 0 and is rejected.
+    if r["mode"] == "html" and opt(r, "table_must", ""):
+        return verify_html_table(r, sid, url, text, status, nbytes)
     if not kind and r["mode"] == "html":
         # manifest.opt(), not a naive r["opts"].split(";") -- that ignores the
         # `\;` escape (the exact defect manifest.py exists to remove; see its

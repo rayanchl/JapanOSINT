@@ -275,3 +275,229 @@ const char *html_anchor_next(const char *from, html_anchor *out) {
   }
   return NULL;
 }
+
+
+/* ── tables ──────────────────────────────────────────────────────────────── */
+
+/* Case-insensitive "<name" at p, followed by whitespace, '>' or '/'. */
+static int ht_open_at(const char *p, const char *name) {
+  size_t n = strlen(name);
+  if (p[0] != '<' || strncasecmp(p + 1, name, n)) return 0;
+  char c = p[1 + n];
+  return c == '>' || c == '/' || c == ' ' || c == '\t' || c == '\n' || c == '\r';
+}
+static int ht_close_at(const char *p, const char *name) {
+  size_t n = strlen(name);
+  return p[0] == '<' && p[1] == '/' && !strncasecmp(p + 2, name, n) &&
+         (p[2 + n] == '>' || p[2 + n] == ' ' || p[2 + n] == '\t' || p[2 + n] == '\n' || p[2 + n] == '\r');
+}
+/* End of the <table> opened at `p` (just past its </table>), honouring nesting. */
+static const char *ht_table_end(const char *p) {
+  int depth = 0;
+  for (const char *q = p; *q; q++) {
+    if (*q != '<') continue;
+    if (ht_open_at(q, "table")) depth++;
+    else if (ht_close_at(q, "table") && --depth == 0) {
+      const char *gt = strchr(q, '>');
+      return gt ? gt + 1 : q + strlen(q);
+    }
+  }
+  return p + strlen(p);                 /* unterminated: to the end */
+}
+
+static void ht_utf8(char **o, unsigned long cp) {
+  char *w = *o;
+  if (cp < 0x80) *w++ = (char)cp;
+  else if (cp < 0x800) { *w++ = (char)(0xC0 | (cp >> 6)); *w++ = (char)(0x80 | (cp & 63)); }
+  else if (cp < 0x10000) { *w++ = (char)(0xE0 | (cp >> 12)); *w++ = (char)(0x80 | ((cp >> 6) & 63)); *w++ = (char)(0x80 | (cp & 63)); }
+  else if (cp < 0x110000) { *w++ = (char)(0xF0 | (cp >> 18)); *w++ = (char)(0x80 | ((cp >> 12) & 63));
+                            *w++ = (char)(0x80 | ((cp >> 6) & 63)); *w++ = (char)(0x80 | (cp & 63)); }
+  *o = w;
+}
+
+/* Cell HTML -> text: tags out (a <br> or a block boundary is a space),
+ * entities decoded, ASCII whitespace collapsed and trimmed. malloc'd. */
+static char *ht_text(const char *s, size_t n) {
+  char *out = malloc(n * 2 + 1);       /* an entity never grows past 2x */
+  if (!out) return NULL;
+  char *w = out;
+  int sp = 0;
+  for (size_t i = 0; i < n; ) {
+    unsigned char c = (unsigned char)s[i];
+    if (c == '<') {
+      const char *gt = memchr(s + i, '>', n - i);
+      i = gt ? (size_t)(gt - s) + 1 : n;
+      sp = 1;                           /* every tag boundary may separate words */
+      continue;
+    }
+    if (c == '&') {
+      const char *semi = memchr(s + i, ';', n - i > 12 ? 12 : n - i);
+      unsigned long cp = 0; int ok = 0;
+      if (semi) {
+        const char *e = s + i + 1; size_t el = (size_t)(semi - e);
+        if (el > 1 && e[0] == '#') {
+          char *endp = NULL;
+          cp = (e[1] == 'x' || e[1] == 'X') ? strtoul(e + 2, &endp, 16) : strtoul(e + 1, &endp, 10);
+          ok = endp == semi && cp > 0;
+        } else if (el == 3 && !strncmp(e, "amp", 3)) { cp = '&'; ok = 1; }
+        else if (el == 2 && !strncmp(e, "lt", 2))  { cp = '<'; ok = 1; }
+        else if (el == 2 && !strncmp(e, "gt", 2))  { cp = '>'; ok = 1; }
+        else if (el == 4 && !strncmp(e, "quot", 4)) { cp = '"'; ok = 1; }
+        else if (el == 4 && !strncmp(e, "apos", 4)) { cp = '\''; ok = 1; }
+        else if (el == 4 && !strncmp(e, "nbsp", 4)) { cp = ' '; ok = 1; }
+      }
+      if (ok) {
+        if (cp == ' ' || cp == 0xA0) sp = 1;
+        else { if (sp && w > out) *w++ = ' '; sp = 0; ht_utf8(&w, cp); }
+        i = (size_t)(semi - s) + 1;
+        continue;
+      }
+    }
+    if (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f') { sp = 1; i++; continue; }
+    if (sp && w > out) *w++ = ' ';
+    sp = 0;
+    *w++ = (char)c; i++;
+  }
+  *w = 0;
+  return out;
+}
+
+static char *ht_href(const char *s, size_t n) {
+  char *tmp = malloc(n + 1);
+  if (!tmp) return NULL;
+  memcpy(tmp, s, n); tmp[n] = 0;
+  char *a = strstr(tmp, "<a "); if (!a) a = strstr(tmp, "<A ");
+  char buf[2048];
+  char *r = (a && html_attr(a, "href", buf, sizeof buf) && buf[0]) ? strdup(buf) : NULL;
+  free(tmp);
+  return r;
+}
+
+static int ht_span(const char *tag_open, const char *gt, const char *attr) {
+  size_t n = (size_t)(gt - tag_open) + 1;
+  char *tmp = malloc(n + 1), buf[16];
+  if (!tmp) return 1;
+  memcpy(tmp, tag_open, n); tmp[n] = 0;
+  int v = html_attr(tmp, attr, buf, sizeof buf) ? atoi(buf) : 1;
+  free(tmp);
+  return v < 1 ? 1 : v > 1000 ? 1000 : v;
+}
+
+typedef struct { const char *s, *e; int colspan, rowspan; } ht_raw;
+
+int html_table_parse(const char *html, const char *must, int table_index,
+                     html_table *out) {
+  memset(out, 0, sizeof *out);
+  if (!html) return 0;
+  const char *tb = NULL, *te = NULL;
+  int seen = 0;
+  for (const char *p = html; (p = strchr(p, '<')); p++) {
+    if (!ht_open_at(p, "table")) continue;
+    const char *end = ht_table_end(p);
+    int hit = 1;
+    if (must && *must) {
+      size_t ml = strlen(must);
+      hit = 0;
+      for (const char *q = p; q + ml <= end; q++) if (!memcmp(q, must, ml)) { hit = 1; break; }
+    }
+    if (hit && seen++ == table_index) { tb = p; te = end; break; }
+  }
+  if (!tb) return 0;
+
+  /* Pass 1: raw rows of raw cells, nested tables folded into their cell. */
+  ht_raw *cells = NULL; int ncell = 0, capc = 0;
+  int *row_start = NULL; int nrow = 0, capr = 0;
+  const char *body = strchr(tb, '>'); body = body ? body + 1 : te;
+  ht_raw *cur = NULL;
+  for (const char *p = body; p < te; ) {
+    if (*p != '<') { p++; continue; }
+    if (ht_open_at(p, "table")) { p = ht_table_end(p); continue; }      /* nested */
+    int is_tr = ht_open_at(p, "tr");
+    int is_cell = ht_open_at(p, "td") || ht_open_at(p, "th");
+    int ends = ht_close_at(p, "tr") || ht_close_at(p, "td") || ht_close_at(p, "th") ||
+               ht_close_at(p, "table") || ht_close_at(p, "tbody") || ht_close_at(p, "thead") ||
+               ht_close_at(p, "tfoot");
+    if (is_tr || is_cell || ends) {
+      if (cur) { cur->e = p; cur = NULL; }
+      if (is_tr || (is_cell && nrow == 0)) {
+        if (nrow == capr) { capr = capr ? capr * 2 : 64; int *nr = realloc(row_start, (size_t)capr * sizeof *nr); if (!nr) break; row_start = nr; }
+        row_start[nrow++] = ncell;
+      }
+      if (is_cell) {
+        const char *gt = strchr(p, '>');
+        if (!gt || gt > te) break;
+        if (ncell == capc) { capc = capc ? capc * 2 : 256; ht_raw *nc = realloc(cells, (size_t)capc * sizeof *nc); if (!nc) break; cells = nc; }
+        cur = &cells[ncell++];
+        cur->s = gt + 1; cur->e = te;
+        cur->colspan = ht_span(p, gt, "colspan");
+        cur->rowspan = ht_span(p, gt, "rowspan");
+        p = gt + 1;
+        continue;
+      }
+    }
+    p++;
+  }
+  if (cur) cur->e = te;
+
+  /* Pass 2: the grid, with rowspans carried down. */
+  int width = 0;
+  for (int r = 0; r < nrow; r++) {
+    int a = row_start[r], b = r + 1 < nrow ? row_start[r + 1] : ncell, w = 0;
+    for (int i = a; i < b; i++) w += cells[i].colspan;
+    if (w > width) width = w;
+  }
+  typedef struct { int left; char *text; char *href; } carry;
+  carry *pend = width ? calloc((size_t)width + 1000, sizeof *pend) : NULL;
+  out->rows = nrow ? calloc((size_t)nrow, sizeof *out->rows) : NULL;
+  for (int r = 0; r < nrow && out->rows; r++) {
+    int a = row_start[r], b = r + 1 < nrow ? row_start[r + 1] : ncell;
+    html_row *row = &out->rows[out->nrows];
+    int cap = width + 1000;
+    row->cells = calloc((size_t)cap, sizeof *row->cells);
+    if (!row->cells) break;
+    int col = 0;
+    for (int i = a; i <= b; i++) {
+      while (col < cap && pend && pend[col].left > 0) {       /* rowspan from above */
+        row->cells[col].text = strdup(pend[col].text ? pend[col].text : "");
+        row->cells[col].href = pend[col].href ? strdup(pend[col].href) : NULL;
+        if (--pend[col].left == 0) { free(pend[col].text); free(pend[col].href); pend[col].text = pend[col].href = NULL; }
+        col++;
+      }
+      if (i == b) break;
+      char *txt = ht_text(cells[i].s, (size_t)(cells[i].e - cells[i].s));
+      char *href = ht_href(cells[i].s, (size_t)(cells[i].e - cells[i].s));
+      for (int k = 0; k < cells[i].colspan && col < cap; k++, col++) {
+        row->cells[col].text = k == 0 ? txt : strdup("");
+        row->cells[col].href = k == 0 ? href : NULL;
+        if (k == 0 && cells[i].rowspan > 1 && pend) {
+          free(pend[col].text); free(pend[col].href);
+          pend[col].left = cells[i].rowspan - 1;
+          pend[col].text = strdup(txt ? txt : "");
+          pend[col].href = href ? strdup(href) : NULL;
+        }
+      }
+    }
+    if (col > out->width) out->width = col;
+    row->ncells = col;
+    out->nrows++;
+  }
+  if (pend) { for (int i = 0; i < width + 1000; i++) { free(pend[i].text); free(pend[i].href); } free(pend); }
+  /* Rectangular: pad every row to the table's width. */
+  for (int r = 0; r < out->nrows; r++) {
+    html_row *row = &out->rows[r];
+    for (int k = row->ncells; k < out->width; k++) row->cells[k].text = strdup("");
+    row->ncells = out->width;
+  }
+  free(cells); free(row_start);
+  return 1;
+}
+
+void html_table_free(html_table *t) {
+  if (!t) return;
+  for (int r = 0; r < t->nrows; r++) {
+    for (int k = 0; k < t->rows[r].ncells; k++) { free(t->rows[r].cells[k].text); free(t->rows[r].cells[k].href); }
+    free(t->rows[r].cells);
+  }
+  free(t->rows);
+  memset(t, 0, sizeof *t);
+}
