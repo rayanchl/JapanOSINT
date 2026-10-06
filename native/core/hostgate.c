@@ -75,12 +75,19 @@ static struct { char host[HG_HOSTLEN]; int gap_ms; } g_over[HG_MAX_OVERRIDES] = 
    * still hot. The batch-33 crates.io rows walk hundreds of pages, so the
    * floor has to be at the fetch, not in a per-source interval. */
   { "crates.io", 1100 },
+  /* San Francisco's Open311 server is a small city endpoint and
+   * us-sf-311-open311-requests has a DETAIL HOP, so one run fires a request
+   * per list record on top of the page walk. Measured 2026-10-06: page 4 and
+   * several detail fetches came back 429, the walk stopped at
+   * "TRUNCATED: a later page failed", and 5 of 20 records collapsed — the
+   * engine's own truncation notice pointed here for the remedy. */
+  { "mobile311.sfgov.org", 1200 },
 };
 /* The number of LIVE entries above. This was `1` while the table held two, so
  * gap_for_host() — which scans only the first g_nover entries — never saw the
  * news.google.com gap its comment describes: the 615 gnews-* rows kept firing
  * together (found 2026-09-15). Keep it equal to the initialiser count. */
-static int g_nover = 4;
+static int g_nover = 5;
 
 static void override_set(const char *host, int gap_ms) {
   for (int i = 0; i < g_nover; i++)

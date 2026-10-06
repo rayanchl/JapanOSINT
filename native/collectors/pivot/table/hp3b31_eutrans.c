@@ -249,40 +249,6 @@ static const hp_source HP3B31_EUTRANS[] = {
       "type certificate or component — the defect found, the affected serial "
       "range and the compliance deadline" },
 
-  { .id = "EU_ERA_RAIL_ERADIS", .name = "ERADIS — EU rail safety certificates & licences",
-    .name_ja = "EU鉄道 安全証明データベース", .category = "transport",
-    .portal = "https://eradis.era.europa.eu", .record_type = "eu-rail-certificate",
-    .tags = "\"eu\",\"rail\",\"licence\",\"safety\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://eradis.era.europa.eu/safety_docs/scert/search.aspx?keyword={q}",
-    .base = "https://eradis.era.europa.eu", .filter_query = 1,
-    .description = "Railway undertakings' safety certificates, infrastructure "
-      "managers' authorisations, entities in charge of maintenance and the "
-      "national accident investigation reports — the EU rail sector's full "
-      "licensing record in one database" },
-
-  { .id = "EU_ECDC_SURVEILLANCE_ATLAS", .name = "ECDC — communicable disease surveillance",
-    .name_ja = "EU疾病予防管理センター 感染症監視", .category = "health",
-    .portal = "https://www.ecdc.europa.eu", .record_type = "eu-disease-surveillance",
-    .tags = "\"eu\",\"health\",\"surveillance\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.ecdc.europa.eu/en/search?s={q}",
-    .base = "https://www.ecdc.europa.eu", .filter_query = 1,
-    .description = "The European Centre for Disease Prevention and Control's "
-      "surveillance reports, rapid risk assessments and outbreak notifications "
-      "by country and pathogen" },
-
-  { .id = "EU_EMSA_MARITIME_SAFETY", .name = "EMSA — maritime safety & pollution reporting",
-    .name_ja = "EU海事安全機関 報告", .category = "maritime",
-    .portal = "https://www.emsa.europa.eu", .record_type = "eu-maritime-safety",
-    .tags = "\"eu\",\"maritime\",\"safety\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.emsa.europa.eu/search.html?searchword={q}",
-    .base = "https://www.emsa.europa.eu", .filter_query = 1,
-    .description = "European Maritime Safety Agency reporting — port state "
-      "control statistics, casualty analyses, pollution detections and the "
-      "flag-state performance data behind the Paris MoU lists" },
-
   { .id = "EU_ACER_ENERGY_REMIT", .name = "ACER — energy market transparency & REMIT",
     .name_ja = "EU エネルギー規制協力機関", .category = "energy",
     .portal = "https://www.acer.europa.eu", .record_type = "eu-energy-market",

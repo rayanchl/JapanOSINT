@@ -111,18 +111,6 @@ static const hp_source HP3B31_SURVSENSOR[] = {
       "Over a hundred million points, densest in Japan, and the only "
       "independent check on official dose-rate reporting" },
 
-  { .id = "EU_EURDEP_RADIOLOGICAL", .name = "EURDEP — European radiological data exchange",
-    .name_ja = "欧州 放射線データ交換", .category = "surveillance",
-    .portal = "https://remap.jrc.ec.europa.eu", .record_type = "radiation-station",
-    .tags = "\"eu\",\"radiation\",\"sensor\",\"nuclear\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://remap.jrc.ec.europa.eu/Simple.aspx?q={q}",
-    .base = "https://remap.jrc.ec.europa.eu", .filter_query = 1,
-    .description = "The European radiological monitoring platform — around "
-      "5,000 national dose-rate stations reporting hourly, with the operating "
-      "country, the station identifier and its coordinates. The network that "
-      "detects a release before any government announces one" },
-
   { .id = "JP_NRA_RADIATION_MONITORING", .name = "Japan NRA — environmental radiation monitoring",
     .name_ja = "原子力規制委員会 放射線モニタリング", .category = "surveillance",
     .portal = "https://radioactivity.nra.go.jp", .record_type = "radiation-station",
@@ -204,18 +192,6 @@ static const hp_source HP3B31_SURVSENSOR[] = {
       "named industrial facilities" },
 
   /* ── Weather and atmosphere ───────────────────────────────────────────── */
-  { .id = "WMO_OSCAR_STATIONS", .name = "WMO OSCAR/Surface — official observing stations",
-    .name_ja = "WMO 観測所登録", .category = "surveillance",
-    .portal = "https://oscar.wmo.int", .record_type = "weather-station",
-    .tags = "\"sensor\",\"weather\",\"multilateral\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://oscar.wmo.int/surface/#/search/station?q={q}",
-    .base = "https://oscar.wmo.int", .filter_query = 1,
-    .description = "The World Meteorological Organization's authoritative "
-      "registry of surface observing stations — WIGOS identifier, the operating "
-      "national service, the programmes it reports to, the instruments "
-      "installed and the coordinates" },
-
   { .id = "NASA_FIRMS_FIRE_DETECTIONS", .name = "NASA FIRMS — satellite active fire detections",
     .name_ja = "NASA 衛星火災検知", .category = "surveillance",
     .portal = "https://firms.modaps.eosdis.nasa.gov", .record_type = "fire-detection",
@@ -243,18 +219,6 @@ static const hp_source HP3B31_SURVSENSOR[] = {
       "service — the requesting authority, the event, the area of interest and "
       "the delivered damage-assessment and reference maps, released openly "
       "including for conflict-related activations" },
-
-  { .id = "IGS_GNSS_STATIONS", .name = "IGS — global GNSS reference station network",
-    .name_ja = "国際GNSS事業 基準局", .category = "surveillance",
-    .portal = "https://network.igs.org", .record_type = "gnss-station",
-    .tags = "\"sensor\",\"gnss\",\"geodesy\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://network.igs.org/?q={q}",
-    .base = "https://network.igs.org", .filter_query = 1,
-    .description = "The International GNSS Service station network — the "
-      "operating agency, receiver and antenna model, the satellite systems "
-      "tracked and the precise coordinates. GNSS reference stations are also "
-      "the standing detection network for interference and spoofing" },
 
   { .id = "GDACS_DISASTER_ALERTS", .name = "GDACS — global disaster alert & coordination",
     .name_ja = "GDACS 災害警報", .category = "surveillance",

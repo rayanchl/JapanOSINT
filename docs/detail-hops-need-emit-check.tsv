@@ -1,46 +1,83 @@
-id	id_keys	list_url	table	why
-global-osm-node-history	version	https://api.openstreetmap.org/api/0.6/node/240109189/history.json	hp16_de_civilian_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-gr-diavgeia-decision-search	ada	https://diavgeia.gov.gr/opendata/search.json?q=organizationUid:%2215168%22&size=100	hp16_gr_government_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-us-sf-311-open311-requests	service_request_id	https://mobile311.sfgov.org/open311/v2/requests.json?page_size=5	hp16_us_civilian_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-us-courtlistener-search-recap-dockets	docket_id	https://www.courtlistener.com/api/rest/v4/search/?q=Google&type=r	hp16_us_legal_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-us-federalregister-by-cfr	document_number	https://www.federalregister.gov/api/v1/documents.json?conditions%5Bcfr%5D%5Btitle%5D=40&conditions%5Bcfr%5D%5B	hp16_us_legal_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-us-federalregister-executive-orders	document_number	https://www.federalregister.gov/api/v1/documents.json?conditions%5Bpresidential_document_type%5D%5B%5D=executi	hp16_us_legal_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-us-legistar-seattle-events	EventId	https://webapi.legistar.com/v1/seattle/events?$top=1	hp16_us_legal_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-us-legistar-seattle-matters	MatterId	https://webapi.legistar.com/v1/seattle/matters?$top=2&$orderby=MatterLastModifiedUtc%20desc	hp16_us_legal_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-dportal-iati-bf	aid	https://d-portal.org/q?country_code=BF&limit=5000&form=json	hp17_bf_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-dportal-iati-bj	aid	https://d-portal.org/q?country_code=BJ&limit=5000&form=json	hp17_bj_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-af-dportal-act-bw	aid	https://d-portal.org/q?from=act&country_code=BW&limit=5000&form=json	hp17_bw_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-af-dportal-trans-bw	aid+trans_id+trans_ref+trans_day+trans_value+trans_code+trans_sector+trans_country	https://d-portal.org/q?from=act,trans&trans_country_code=BW&limit=5000&form=json	hp17_bw_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-dportal-iati-cd	aid	https://d-portal.org/q?country_code=CD&limit=5000&form=json	hp17_cd_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-dportal-iati-ci	aid	https://d-portal.org/q?country_code=CI&limit=5000&form=json	hp17_ci_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-dportal-iati-cm	aid	https://d-portal.org/q?country_code=CM&limit=5000&form=json	hp17_cm_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-dportal-iati-dz	aid	https://d-portal.org/q?country_code=DZ&limit=5000&form=json	hp17_dz_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-dportal-iati-eg	aid	https://d-portal.org/q?country_code=EG&limit=5000&form=json	hp17_eg_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-af-dportal-act-et	aid	https://d-portal.org/q?from=act&country_code=ET&limit=5000&form=json	hp17_et_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-af-dportal-trans-et	aid+trans_id+trans_ref+trans_day+trans_value+trans_code+trans_sector+trans_country	https://d-portal.org/q?from=act,trans&trans_country_code=ET&limit=5000&form=json	hp17_et_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-af-dportal-act-gh	aid	https://d-portal.org/q?from=act&country_code=GH&limit=5000&form=json&orderby=aid	hp17_gh_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-il-knesset-israel-law	IsraelLawID	https://knesset.gov.il/Odata/ParliamentInfo.svc/KNS_IsraelLaw?$top=100&$format=json	hp17_il_legal_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-il-knesset-law	LawID	https://knesset.gov.il/Odata/ParliamentInfo.svc/KNS_Law?$top=100&$format=json	hp17_il_legal_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-il-knesset-agenda	AgendaID	https://knesset.gov.il/Odata/ParliamentInfo.svc/KNS_Agenda?$top=100&$format=json	hp17_il_legislative_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-il-knesset-bill-name	BillNameID	https://knesset.gov.il/Odata/ParliamentInfo.svc/KNS_BillName?$top=100&$format=json	hp17_il_legislative_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-il-knesset-cmt-session-item	CmtSessionItemID	https://knesset.gov.il/Odata/ParliamentInfo.svc/KNS_CmtSessionItem?$top=100&$format=json	hp17_il_legislative_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-il-knesset-committee-session	CommitteeSessionID	https://knesset.gov.il/Odata/ParliamentInfo.svc/KNS_CommitteeSession?$top=100&$format=json	hp17_il_legislative_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-il-knesset-faction	FactionID	https://knesset.gov.il/Odata/ParliamentInfo.svc/KNS_Faction?$top=100&$format=json	hp17_il_legislative_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-il-knesset-query	QueryID	https://knesset.gov.il/Odata/ParliamentInfo.svc/KNS_Query?$top=100&$format=json	hp17_il_legislative_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-af-dportal-act-ke	aid	https://d-portal.org/q?from=act&country_code=KE&limit=5000&form=json	hp17_ke_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-dportal-iati-ma	aid	https://d-portal.org/q?country_code=MA&limit=5000&form=json	hp17_ma_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-dportal-iati-mg	aid	https://d-portal.org/q?country_code=MG&limit=5000&form=json	hp17_mg_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-dportal-iati-ml	aid	https://d-portal.org/q?country_code=ML&limit=5000&form=json&orderby=aid	hp17_ml_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-dportal-iati-mu	aid	https://d-portal.org/q?country_code=MU&limit=5000&form=json	hp17_mu_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-af-dportal-act-na	aid	https://d-portal.org/q?from=act&country_code=NA&limit=5000&form=json	hp17_na_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-af-dportal-trans-na	aid+trans_id+trans_ref+trans_day+trans_value+trans_code+trans_sector+trans_country	https://d-portal.org/q?from=act,trans&trans_country_code=NA&limit=5000&form=json	hp17_na_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-af-dportal-act-ng	aid	https://d-portal.org/q?from=act&country_code=NG&limit=5000&form=json	hp17_ng_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-af-dportal-act-rw	aid	https://d-portal.org/q?from=act&country_code=RW&limit=5000&form=json	hp17_rw_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-dportal-iati-sn	aid	https://d-portal.org/q?country_code=SN&limit=5000&form=json	hp17_sn_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-dportal-iati-tn	aid	https://d-portal.org/q?country_code=TN&limit=5000&form=json	hp17_tn_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-af-dportal-act-tz	aid	https://d-portal.org/q?from=act&country_code=TZ&limit=5000&form=json	hp17_tz_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-af-dportal-trans-tz	aid+trans_id+trans_ref+trans_day+trans_value+trans_code+trans_sector+trans_sector_group+trans_country	https://d-portal.org/q?from=act,trans&trans_country_code=TZ&limit=5000&form=json	hp17_tz_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-af-dportal-act-ug	aid	https://d-portal.org/q?from=act&country_code=UG&limit=5000&form=json	hp17_ug_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-af-dportal-act-za	aid	https://d-portal.org/q?from=act&country_code=ZA&limit=5000&form=json	hp17_za_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-af-dportal-act-zm	aid	https://d-portal.org/q?from=act&country_code=ZM&limit=5000&form=json	hp17_zm_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
-af-dportal-trans-zm	aid+trans_id+trans_ref+trans_day+trans_value+trans_code+trans_sector+trans_sector_group+trans_country	https://d-portal.org/q?from=act,trans&trans_country_code=ZM&limit=5000&form=json	hp17_zm_aid_1.c	moved from VJSON_KEYED/VJSON_IDKEYS onto hpengine; identity carried verbatim but emitted-vs-stored (CLAUDE.md rule 4b) needs one live run
+# The 45 VJSON_KEYED / VJSON_IDKEYS detail-hop rows — MEASURED 2026-10-06.
+#
+# This file used to say these rows' identity was "a faithful translation, but
+# emitted-vs-stored has not been measured on them, and that needs egress this
+# session did not have". It has now been measured, with
+# audit_registry_emit.py against a pinned binary. The question it existed to
+# answer is settled:
+#
+#   THE `+` COMPOSITION CARRIED OVER CORRECTLY. The five 8-part composites
+#   (af-dportal-trans-*, keyed aid+trans_id+trans_ref+trans_day+trans_value+
+#   trans_code+trans_sector+trans_country) store 90,785-96,154 rows EACH. Had
+#   `+` been read as `,` — keying on `aid`, the activity — each would have
+#   collapsed to the few thousand distinct activities. They did not.
+#
+#   19 COLLISION verdicts total 218,769 emitted and 218,692 stored: 0.035%,
+#   worst d-portal row 0.081%. Those are the upstream's own duplicates, not
+#   key defects.
+#
+# What the pass found that no amount of reasoning about id_keys would have:
+#
+#   9 FETCH_FAILED. Eight il-knesset-* rows whose OData service now 303s to an
+#   HTML maintenance page, and us-courtlistener-search-recap-dockets answering
+#   429. Nine registered sources storing nothing. Before this pass they stored
+#   nothing SILENTLY; lib/hpengine.c now files a collector-fetch-failure record
+#   for each, which is what made them legible here.
+#
+#   1 real defect, and it was not identity: us-sf-311-open311-requests emitted
+#   20 and stored 15 because SF's Open311 server rate-limited both the page
+#   walk and the per-record detail hop. core/hostgate.c now paces
+#   mobile311.sfgov.org at 1200 ms, which took the same row from 20 records
+#   across 5 pages to 90 across 19 before the quota bites again — still
+#   disclosed as a truncation notice.
+#
+#   5 SLOW: the trans-* rows above are large enough to outrun a 600 s kill.
+#   Unmeasured-to-completion, not failed — the row counts are what each had
+#   landed when it was stopped.
+#
+# id	verdict	emitted	stored_records	id_keys	note
+global-osm-node-history	OK	169	169	version	
+gr-diavgeia-decision-search	OK	2000	2000	ada	
+us-sf-311-open311-requests	COLLISION	20	15	service_request_id	NOT an identity defect: SF Open311 rate-limited the page walk AND the per-record detail hop (429). core/hostgate.c now paces mobile311.sfgov.org at 1200 ms, which took this row to 90 records across 19 pages (from 20 across 5) before the quota bites again, still disclosed as a truncation notice.
+us-courtlistener-search-recap-dockets	FETCH_FAILED	1	0	docket_id	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+us-federalregister-by-cfr	OK	100	100	document_number	
+us-federalregister-executive-orders	OK	1570	1570	document_number	
+us-legistar-seattle-events	OK	20	20	EventId	
+us-legistar-seattle-matters	OK	40	40	MatterId	
+dportal-iati-bf	COLLISION	9784	9782	aid	2 of 9784 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id
+dportal-iati-bj	COLLISION	5875	5874	aid	1 of 5875 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id
+af-dportal-act-bw	OK	2839	2839	aid	
+af-dportal-trans-bw	SLOW	-1	96154	aid+trans_id+trans_ref+trans_day+trans_value+trans_code+trans_sector+trans_country	no [sched] line — the process was killed before the run returned, but the database holds 96154 rows for it, so it was working: unmeasured, not failed
+dportal-iati-cd	COLLISION	16287	16284	aid	3 of 16287 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix i
+dportal-iati-ci	COLLISION	5902	5901	aid	1 of 5902 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id
+dportal-iati-cm	COLLISION	7075	7074	aid	1 of 7075 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id
+dportal-iati-dz	OK	2252	2252	aid	
+dportal-iati-eg	OK	8056	8056	aid	
+af-dportal-act-et	COLLISION	22364	22362	aid	2 of 22364 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix i
+af-dportal-trans-et	SLOW	-1	93769	aid+trans_id+trans_ref+trans_day+trans_value+trans_code+trans_sector+trans_country	no [sched] line — the process was killed before the run returned, but the database holds 93769 rows for it, so it was working: unmeasured, not failed
+af-dportal-act-gh	COLLISION	10410	10403	aid	7 of 10410 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix i
+il-knesset-israel-law	FETCH_FAILED	1	0	IsraelLawID	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+il-knesset-law	FETCH_FAILED	1	0	LawID	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+il-knesset-agenda	FETCH_FAILED	1	0	AgendaID	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+il-knesset-bill-name	FETCH_FAILED	1	0	BillNameID	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+il-knesset-cmt-session-item	FETCH_FAILED	1	0	CmtSessionItemID	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+il-knesset-committee-session	FETCH_FAILED	1	0	CommitteeSessionID	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+il-knesset-faction	FETCH_FAILED	1	0	FactionID	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+il-knesset-query	FETCH_FAILED	1	0	QueryID	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+af-dportal-act-ke	COLLISION	26374	26365	aid	9 of 26374 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix i
+dportal-iati-ma	OK	7613	7613	aid	
+dportal-iati-mg	COLLISION	5834	5831	aid	3 of 5834 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id
+dportal-iati-ml	COLLISION	10838	10837	aid	1 of 10838 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix i
+dportal-iati-mu	COLLISION	1238	1237	aid	1 of 1238 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id
+af-dportal-act-na	OK	4472	4472	aid	
+af-dportal-trans-na	SLOW	-1	94982	aid+trans_id+trans_ref+trans_day+trans_value+trans_code+trans_sector+trans_country	no [sched] line — the process was killed before the run returned, but the database holds 94982 rows for it, so it was working: unmeasured, not failed
+af-dportal-act-ng	COLLISION	17233	17226	aid	7 of 17233 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix i
+af-dportal-act-rw	COLLISION	9176	9175	aid	1 of 9176 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id
+dportal-iati-sn	OK	8695	8695	aid	
+dportal-iati-tn	COLLISION	6571	6570	aid	1 of 6571 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id
+af-dportal-act-tz	COLLISION	18250	18238	aid	12 of 18250 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix 
+af-dportal-trans-tz	SLOW	-1	90785	aid+trans_id+trans_ref+trans_day+trans_value+trans_code+trans_sector+trans_sector_group+trans_country	no [sched] line — the process was killed before the run returned, but the database holds 90785 rows for it, so it was working: unmeasured, not failed
+af-dportal-act-ug	COLLISION	20819	20810	aid	9 of 20819 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix i
+af-dportal-act-za	COLLISION	13120	13110	aid	10 of 13120 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix 
+af-dportal-act-zm	COLLISION	11599	11598	aid	1 of 11599 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix i
+af-dportal-trans-zm	SLOW	-1	94208	aid+trans_id+trans_ref+trans_day+trans_value+trans_code+trans_sector+trans_sector_group+trans_country	no [sched] line — the process was killed before the run returned, but the database holds 94208 rows for it, so it was working: unmeasured, not failed
