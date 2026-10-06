@@ -1,0 +1,5 @@
+id	url	verdict	kind	items	http	bytes	note
+JO39_CN_BSE_ANNOUNCEMENTS	https://www.bse.cn/disclosureInfoController/companyAnnouncement.do	PASS	json:0.listInfo.content	20	200	8124	
+JO39_CN_BSE_IPO_REVIEW	https://www.bse.cn/projectNewsController/infoResult.do	PASS	json:0.listInfo.content	20	200	17599	
+JO39_CN_BSE_SECURITIES	https://www.bse.cn/nqxxController/nqxxCnzq.do	PASS	json:0.content	20	200	15826	
+JO39_CN_NEEQ_SECURITIES	https://www.neeq.com.cn/nqxxController/nqxxCnzq.do	PASS	json:0.content	20	200	15265	
