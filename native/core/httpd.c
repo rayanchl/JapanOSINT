@@ -966,15 +966,12 @@ static int xs_write(void *ctx, const char *buf, size_t len) {
   int wake = 0;
   time_t stall_from = 0;
   pthread_mutex_lock(&x->mu);
+  /* No nudge while waiting: anything still queued already has a wakeup in
+   * flight (wake_pending), and a drain is seen by the loop's MG_EV_WRITE /
+   * MG_EV_POLL pump, which broadcasts. Nudging here would ping-pong the
+   * worker and the loop for as long as a slow reader keeps the socket full. */
   while (!x->cancel && x->queued + x->unsent >= XS_HIGH_WATER) {
     size_t before = x->unsent;
-    if (!x->wake_pending) { x->wake_pending = 1; wake = 1; }
-    if (wake) {                       /* make sure the loop knows we are waiting */
-      pthread_mutex_unlock(&x->mu);
-      xs_wake(x);
-      pthread_mutex_lock(&x->mu);
-      wake = 0;
-    }
     struct timespec ts; clock_gettime(CLOCK_REALTIME, &ts); ts.tv_sec += 1;
     pthread_cond_timedwait(&x->cv, &x->mu, &ts);
     if (x->unsent < before) { stall_from = 0; continue; }   /* the socket drained */
