@@ -70,7 +70,7 @@ int main(void) {
     assert(sink.emit(&sink, &it) >= 0);
   }
   intel_sink_free(&sink);
-  assert(owner_persist(&db, "rid-stored", "tenant-A", "user-1") == 0);
+  assert(owner_persist(&db, "rid-stored", "tenant-A", "user-1", "stored query") == 0);
 
   r = searchapi_results(&db, "tenant-A", "rid-stored");
   assert(r && strstr(r, "\"from_store\":true"));
