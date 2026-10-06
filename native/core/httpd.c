@@ -1525,6 +1525,23 @@ static char *intel_items_run(struct mg_http_message *hm, const char *tenant,
   return intelapi_list_items_st(g_db, &Q, st);
 }
 
+/* ?lang_view=en|both — attach each row's machine translation (roadmap 29).
+ * ONE copy for every route that answers an intel_items envelope: the feed,
+ * its /api/intel/search alias and the ?near= proximity mode. The alias and the
+ * near mode both used to return before this step, so the web client's 原文/EN
+ * toggle on full-text search, and any translation in Nearby, changed nothing.
+ * Returns the body to send: the shaped one, or `body` itself for the default
+ * (no lang_view, or "ja") so existing clients get the original bytes. */
+static char *intel_lang_view(struct mg_http_message *hm, char *body) {
+  char lv[16] = {0};
+  if (!body || mg_http_get_var(&hm->query, "lang_view", lv, sizeof lv) <= 0)
+    return body;
+  char *sh = translate_shape_items(g_db, body, translate_view_parse(lv));
+  if (!sh) return body;
+  free(body);
+  return sh;
+}
+
 /* ── breach corpus gate ────────────────────────────────────────────────────
  * /api/breach/search gates identical data behind opgate_check with the comment
  * "Breach data is sensitive, so gate it like /api/admin." — but the SAME rows
@@ -1925,6 +1942,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           int nst = 200;
           char *nb = nearapi_items(g_db, tc.tenant_id, nv, nqs, &nst);
           if (!nb) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
+          if (nst == 200) nb = intel_lang_view(hm, nb);
           reply_json(c, nst, nb); free(nb); return;
         } }
       int qtl = 0, ist = 200;
@@ -1941,12 +1959,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
        * return NULL for the default/no-op case, in which case the original
        * bytes ship unchanged — existing clients see no difference. */
       /* collapse=1 is now applied inside intelapi_list_items (rank-aware). */
-      { char lv[16] = {0};
-        if (mg_http_get_var(&hm->query, "lang_view", lv, sizeof lv) > 0) {
-          translate_view tv = translate_view_parse(lv);      /* roadmap 29 */
-          char *sh = translate_shape_items(g_db, body, tv);
-          if (sh) { free(body); body = sh; }
-        } }
+      body = intel_lang_view(hm, body);                      /* roadmap 29 */
       reply_json(c, 200, body);
       free(body);
       return;
@@ -2197,6 +2210,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         "its maximum length; half a filter set cannot be honoured\"}"); return; }
       if (!body) { reply_json(c, 500, "{\"error\":\"failed_to_list_intel_items\"}"); return; }
       if (ist != 200) { reply_json(c, ist, body); free(body); return; }
+      body = intel_lang_view(hm, body);
       reply_json(c, 200, body); free(body); return;
     }
 

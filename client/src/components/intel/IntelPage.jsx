@@ -141,7 +141,7 @@ function SearchView() {
 
   const submit = (e) => {
     e?.preventDefault();
-    if (mode === 'near') commit({ near: near.trim(), radius_m: radius });
+    if (mode === 'near') commit({ near: near.trim(), radius_m: radius, q: draft.trim() });
     else commit({ q: draft.trim() });
   };
 
@@ -152,10 +152,9 @@ function SearchView() {
           options={[{ value: 'fts', label: 'Full-text' }, { value: 'semantic', label: 'Semantic' }, { value: 'near', label: 'Nearby' }]} />
         {mode === 'fts' && <Segmented value={sort} onChange={setSort} options={[{ value: 'relevance', label: 'relevance' }, { value: 'trust', label: 'trust' }]} />}
         {mode === 'semantic' && <Segmented value={semMode} onChange={setSemMode} options={[{ value: 'hybrid', label: 'hybrid' }, { value: 'vector', label: 'vector only' }]} />}
-        {/* Not in Nearby mode: the ?near= route returns before the server's
-          * lang_view shaping, so rows carry no translation and the toggle
-          * would change nothing. */}
-        {mode === 'fts' && <Segmented value={view} onChange={setView} options={[{ value: 'original', label: '原文' }, { value: 'translated', label: 'EN' }, { value: 'both', label: 'both' }]} />}
+        {/* Full-text and Nearby: both routes apply lang_view on the server
+          * (httpd.c intel_lang_view), so rows carry their stored translation. */}
+        {mode !== 'semantic' && <Segmented value={view} onChange={setView} options={[{ value: 'original', label: '原文' }, { value: 'translated', label: 'EN' }, { value: 'both', label: 'both' }]} />}
       </div>
       <form onSubmit={submit} className="flex flex-wrap gap-2">
         {mode === 'near' && (
@@ -164,19 +163,15 @@ function SearchView() {
             <Input mono className="w-[110px]" type="number" min="50" step="50" placeholder="radius m" value={radius} onChange={(e) => setRadius(e.target.value)} />
           </>
         )}
-        {mode === 'near' ? (
-          // The server's ?near= mode ignores q (nearapi.c reads only source,
-          // record_type, since, until), so no text box is offered here: it
-          // would imply a filter that is not applied.
-          <span className="flex-1 min-w-[200px] self-center text-[11px] text-osint-muted">Filters by distance only — the server applies no text filter and no translation in this mode.</span>
-        ) : (
-          <Input className="flex-1 min-w-[200px]" placeholder={mode === 'semantic' ? 'describe what you are looking for…' : 'search every stored item (kanji or romaji)…'} value={draft} onChange={(e) => setDraft(e.target.value)} />
-        )}
+        {/* In Nearby mode q is an optional text filter over the radius: the
+          * server builds the same MATCH expression as full-text search
+          * (nearapi.c → intelapi_fts_match) and says so in meta.q_applied. */}
+        <Input className="flex-1 min-w-[200px]" placeholder={mode === 'semantic' ? 'describe what you are looking for…' : mode === 'near' ? 'optional text filter within the radius (kanji or romaji)…' : 'search every stored item (kanji or romaji)…'} value={draft} onChange={(e) => setDraft(e.target.value)} />
         <Button type="submit" variant="primary">Search</Button>
       </form>
       {mode === 'fts' && q && <FtsResults q={q} sort={sort} view={view} />}
       {mode === 'semantic' && q && <SemanticResults q={q} semMode={semMode} />}
-      {mode === 'near' && params.get('near') && <NearResults near={params.get('near')} radius={params.get('radius_m')} />}
+      {mode === 'near' && params.get('near') && <NearResults near={params.get('near')} radius={params.get('radius_m')} q={q} view={view} />}
       {!q && mode !== 'near' && <EmptyState title="Enter a query.">{mode === 'semantic' ? 'Semantic search needs the embedding pod; the server says so if it is not running.' : 'Full-text search runs over titles, summaries and bodies across every source, with Japanese normalisation.'}</EmptyState>}
     </div>
   );
@@ -209,12 +204,16 @@ function FtsResults({ q, sort, view }) {
   return <FeedList feed={feed} view={view} />;
 }
 
-function NearResults({ near, radius }) {
-  const feed = useIntelItems('/api/intel/items', { near, radius_m: radius || undefined, limit: 200 });
+export function nearParams({ near, radius, q }) {
+  return { near, radius_m: radius || undefined, q: q || undefined, limit: 200, lang_view: 'both' };
+}
+
+function NearResults({ near, radius, q, view }) {
+  const feed = useIntelItems('/api/intel/items', nearParams({ near, radius, q }));
   return (
     <div className="space-y-2">
       {feed.meta?.note && <div className="text-[11px] text-accent font-mono">{feed.meta.note}</div>}
-      <FeedList feed={feed} view="original" emptyTitle="Nothing stored within that radius." noun="items by distance" />
+      <FeedList feed={feed} view={view} emptyTitle={q ? 'Nothing within that radius matched the text filter.' : 'Nothing stored within that radius.'} noun="items by distance" />
     </div>
   );
 }
