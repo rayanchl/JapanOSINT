@@ -519,14 +519,16 @@ static const hp_source HP3B39_CN39[] = {
     .content_type = "Content-Type: application/x-www-form-urlencoded",
     .id_keys = "0+2+3+5+6+7",
     .interval = 7200,
-    .post_body = "AreaID=&RiverID=&MNName=&PageIndex=1&PageSize=2000&action=getRealDatas",
+    .post_body = "AreaID=&RiverID=&MNName=&PageIndex={page}&PageSize={size}&action=getRealDatas",
+    .page_size = 2000,
     .timeout_ms = 90000,
     .title_keys = "2",
     .description = "The national surface-water automatic monitoring publication, a "
       "form POST (action=getRealDatas) that answered 3 of 3 tries on "
       "2026-10-06 in about 3.5 s, and 11 s for the single 1,556-row "
       "page used here (a walk of 28 pages of 60 summed to the same "
-      "1,556). Records are positional arrays: province, basin, section "
+      "1,556). The body pages ({page}/{size}): today that is one short "
+      "page and the walk ends there; past 2,000 rows it reads on. Records are positional arrays: province, basin, section "
       "name, observation time (month-day hour, no year), water-quality "
       "class, then water temperature, pH, dissolved oxygen, "
       "conductivity, turbidity, permanganate index, ammonia nitrogen, "

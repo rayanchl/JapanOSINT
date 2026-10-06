@@ -21,6 +21,12 @@
  */
 #include "lib/hpengine.h"
 
+/* page_size removed (2026-10-06) from every World Bank / Socrata row here:
+ * their `page` is a page NUMBER and the page size is already in the URL
+ * (per_page= / limit=). With page_size the engine walks `page` as an
+ * offset -- pages 1, 101, 201 ... -- so US_SOCRATA_CAMBRIDGEMA stored 100
+ * datasets while pages 2 and 3 held 100 more each, and reported "emitted
+ * 100 of 100 available". lint-sources: page-size-on-page-number. */
 static const hp_source HP3B36_USA[] = {
   { .id = "US_FDA_ANIMALANDVETERINARY_EVENT", .name = "openFDA — Fda Animalandveterinary Event",
     .category = "health", .portal = "https://open.fda.gov",
@@ -384,7 +390,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.austintexas.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -401,7 +406,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.cambridgema.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -418,7 +422,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.cityofchicago.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -435,7 +438,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.cityofnewyork.us. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -452,7 +454,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.colorado.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -469,7 +470,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.ct.gov. Fetched live 2026-10-05 "
       "under the engine's own User-Agent: 100 records in 926206 bytes. "
@@ -486,7 +486,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.kcmo.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -503,7 +502,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.lacity.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -520,7 +518,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.michigan.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -537,7 +534,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.montgomerycountymd.gov. Fetched "
       "live 2026-10-05 under the engine's own User-Agent: 100 records "
@@ -554,7 +550,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.nola.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -571,7 +566,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.ny.gov. Fetched live 2026-10-05 "
       "under the engine's own User-Agent: 100 records in 476625 bytes. "
@@ -588,7 +582,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.oregon.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -605,7 +598,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.seattle.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -622,7 +614,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.sfgov.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -639,7 +630,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.bayareametro.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -656,7 +646,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.bloomington.in.gov. Fetched "
       "live 2026-10-05 under the engine's own User-Agent: 100 records "
@@ -673,7 +662,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.brla.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -690,7 +678,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.cdc.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -707,7 +694,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on chronicdata.cdc.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -739,7 +725,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.cityofgainesville.org. Fetched "
       "live 2026-10-05 under the engine's own User-Agent: 100 records "
@@ -771,7 +756,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.honolulu.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -788,7 +772,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.kingcounty.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -805,7 +788,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on opendata.maryland.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -822,7 +804,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.mesaaz.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -839,7 +820,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.mo.gov. Fetched live 2026-10-05 "
       "under the engine's own User-Agent: 100 records in 271058 bytes. "
@@ -856,7 +836,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.nj.gov. Fetched live 2026-10-05 "
       "under the engine's own User-Agent: 100 records in 334968 bytes. "
@@ -873,7 +852,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.norfolk.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -890,7 +868,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.oaklandca.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -907,7 +884,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.pa.gov. Fetched live 2026-10-05 "
       "under the engine's own User-Agent: 100 records in 439148 bytes. "
@@ -924,7 +900,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.princegeorgescountymd.gov. "
       "Fetched live 2026-10-05 under the engine's own User-Agent: 100 "
@@ -941,7 +916,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.providenceri.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -973,7 +947,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.sonomacounty.ca.gov. Fetched "
       "live 2026-10-05 under the engine's own User-Agent: 100 records "
@@ -990,7 +963,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.transportation.gov. Fetched "
       "live 2026-10-05 under the engine's own User-Agent: 100 records "
@@ -1007,7 +979,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.va.gov. Fetched live 2026-10-05 "
       "under the engine's own User-Agent: 100 records in 445408 bytes. "
@@ -1024,7 +995,6 @@ static const hp_source HP3B36_USA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.vermont.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
