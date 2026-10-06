@@ -213,8 +213,8 @@
  *   -- — entity_mentions has no tenant column, and tenant isolation is
  *   -- enforced where it belongs: eval_item() selects rules by the ITEM row's
  *   -- own tenant_id, so a swept item can only ever reach its own tenant's
- *   -- rules. A per-tenant watermark would add a scan per tenant and buy
- *   -- nothing.
+ *   -- rules (every tenant's, for a shared-corpus 'legacy' row). A
+ *   -- per-tenant watermark would add a scan per tenant and buy nothing.
  *   CREATE TABLE IF NOT EXISTS alert_eval_cursor (
  *     k          TEXT PRIMARY KEY,
  *     v          TEXT NOT NULL,
@@ -402,7 +402,11 @@ void alert_eval_init(db_handle *db);
  *
  * `tenant_id` is a hint used to skip work early; the item row's own tenant_id
  * is authoritative for rule selection, so a mislabelled call can never leak
- * one tenant's items into another tenant's alerts. */
+ * one tenant's items into another tenant's alerts. A row in the shared
+ * corpus (tenant 'legacy', every collector row) is readable by every tenant
+ * and so meets every tenant's rules, each event written under the RULE's
+ * tenant; a tenant-owned row meets only its owner's. One (rule, item) is one
+ * event: ux_alert_events_rule_item + INSERT OR IGNORE. */
 void alert_eval_on_item(db_handle *db, const char *tenant_id,
                         const char *item_uid);
 
