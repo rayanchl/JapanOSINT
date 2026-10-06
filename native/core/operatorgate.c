@@ -25,6 +25,11 @@ static int csv_has(const char *csv, const char *needle, int lower) {
 }
 int opgate_check(const auth_user *u) {
   if (!u || !u->id[0]) return -401;
+  /* A verified break-glass token (auth.c bg_claims_ok) IS the operator: the
+   * path exists for when the IdP is down, so it cannot depend on the IdP's
+   * allowlisted ids or verified emails, nor on the allowlist being configured.
+   * Every request it authenticates is audited in httpd.c. */
+  if (u->break_glass) return 0;
   const char *em = getenv("PLATFORM_OPERATOR_EMAILS");
   const char *id = getenv("PLATFORM_OPERATOR_IDS");
   int has_cfg = (em && *em) || (id && *id);

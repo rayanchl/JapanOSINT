@@ -26,9 +26,22 @@ typedef struct {
   char id[128];
   char email[256];
   char role[64];
+  /* 1 only when the token verified against BREAK_GLASS_JWT_SECRET and carried
+   * the issuer's break-glass claims (keysapi_breakglass). opgate_check() maps
+   * it to platform operator; httpd.c audits every request it authenticates.
+   * auth_check() writes it on every ALLOW, so it is never left stale. */
+  int  break_glass;
 } auth_user;
 
-void        auth_init(void);                 /* read env once */
+/* Lifetime keysapi_breakglass() mints a token with. auth_check() refuses a
+ * break-glass token whose exp - iat exceeds it: the secret signs whatever it
+ * is given, so a lifetime the issuer would never produce is a forgery or a
+ * leaked-secret replay, not an operator. One constant so the two cannot drift. */
+#define BREAK_GLASS_TTL_SEC 3600
+
+void        auth_init(void);                 /* read env once; starts the
+                                              * JWKS refresher when SUPABASE_URL
+                                              * is set (see auth.c) */
 auth_result auth_check(const char *authorization_header, auth_user *out);
 /* Map result -> (status, json body) for uniform replies. */
 int         auth_status(auth_result r);

@@ -19,12 +19,20 @@
  * loop thread, where a malloc under contention is a latency bug for every
  * other connection.
  *
- * The table never grows. When it is full the least-recently-touched slot is
- * recycled, so a spray of distinct source IPs degrades the limiter's memory
- * (an attacker may evict their own counter) instead of wedging it closed for
- * legitimate callers. That is the correct trade for a DoS guard: failing OPEN
- * under table pressure keeps the server usable, and the paths protected here
- * have their own second line of defence (TOTP secrecy, JWKS negative cache).
+ * The table never grows. When it is full a slot whose window has already
+ * expired is recycled first, then the least-recently-touched slot of a
+ * FAIL-OPEN class. Classes differ in what full-table pressure may do to them:
+ *
+ *   fail-open   (RL_ISOCHRONE, RL_COLLECTOR_RUN) — a spray of distinct keys
+ *               may evict a live counter; the server stays usable and the
+ *               worst case is one extra window of allowance.
+ *   fail-closed (RL_BREAKGLASS, RL_JWKS) — a live counter of these classes is
+ *               NEVER evicted, and a new key that finds no evictable slot is
+ *               DENIED. These guard pre-auth paths, where "evict my own
+ *               counter by spraying 512 other keys" was a reset button: the
+ *               JWKS refetch budget is one GLOBAL key (auth.c), so recycling
+ *               its slot handed an unauthenticated caller a fresh outbound
+ *               fetch, and a fresh TOTP window for break-glass.
  */
 #ifndef JO_RATELIMIT_H
 #define JO_RATELIMIT_H
@@ -39,7 +47,13 @@ typedef enum {
    * bound. Its own class so a user hammering isochrones cannot spend another
    * caller's break-glass or JWKS allowance. */
   RL_ISOCHRONE  = 2,
-  RL_CLASS_MAX  = 3
+  /* A signed-in user making the server run a collector: an explicit
+   * POST /api/intel/sources/:id/run by a non-operator, or a cache miss on
+   * GET /api/data/<layer> (which runs the layer's collector live). Keyed on
+   * the user id, not the IP, so one account cannot fan runs out over the
+   * ~18,000 registered sources from many addresses. */
+  RL_COLLECTOR_RUN = 3,
+  RL_CLASS_MAX  = 4
 } rl_class;
 
 /* Charges one request against (key, cls). `key` is the client identity —
