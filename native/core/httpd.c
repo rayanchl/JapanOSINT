@@ -914,7 +914,8 @@ typedef struct xstream {
   unsigned long cid;
   xs_chunk *head, *tail;
   size_t queued;                      /* framed bytes waiting in the queue */
-  size_t unsent;                      /* the loop's last reading of c->send.len */
+  size_t unsent;                      /* bytes the LOOP holds: in flight into
+                                       * c->send, then its last c->send.len */
   size_t body_bytes;                  /* payload bytes the worker produced */
   int wake_pending;                   /* a wakeup is in flight; the loop clears it */
   int cancel;                         /* peer gone, or stalled */
@@ -1045,6 +1046,19 @@ static void xs_pump(struct mg_connection *c, xstream *x) {
   }
   xs_chunk *list = x->head;
   x->head = x->tail = NULL;
+  /* The bytes leave `queued` and are about to enter c->send, so they move to
+   * `unsent` HERE rather than at the c->send.len reading below. Zeroing queued
+   * and only re-reading c->send.len after the mg_send loop opened a window in
+   * which the worker's gate (queued + unsent) saw neither: queued was 0 and
+   * unsent still held the PREVIOUS pump's reading. A worker racing ahead of the
+   * first pump saw 0 + 0, and so queued a second full high-water mark while the
+   * first was still in flight — a 2x overshoot of the bound this whole path
+   * exists to hold, transient but real, and the reason
+   * tests/unit/test_export_stream.c's backpressure assertion failed about 40%
+   * of the time under ASan (2 of 30 without it). c->send grows by exactly
+   * `taking`, so this is the same number the reading below would report, minus
+   * whatever the socket drains in between. */
+  x->unsent += x->queued;
   x->queued = 0;
   x->wake_pending = 0;
   int done = x->done, status = x->status, oom = x->oom;

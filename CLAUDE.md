@@ -406,6 +406,20 @@ PR #28 moved it to a `$GITHUB_ENV` step and the runs after it are the first
 real ones. A failing run with `total_count: 0` in its jobs list is this shape,
 not a gate.
 
+**And the inverse: "that job is just flaky" is also a question.** The `asan` job
+failed on `test_export_stream`'s backpressure assertion about 40% of the time
+for weeks, and runs #116 and #117 are the SAME SHA with opposite outcomes, which
+is as flaky as a signal gets. It was not noise. `xs_pump` set `x->queued = 0`
+before the bytes it had taken were counted into `x->unsent`, so between those
+two statements the worker's gate (`queued + unsent >= XS_HIGH_WATER`) saw
+neither, and a worker racing the first pump queued a SECOND full high-water mark
+while the first was in flight: 1.5 MB held against a 1 MB mark, on the one code
+path whose entire purpose is that the bound holds. An intermittent assertion
+means the invariant is intermittently false. Reproduce it (`2 of 30` runs
+locally without ASan) and instrument the quantity the assertion names — the peak
+distribution was `38 x 1024 KB, 1 x 1280, 1 x 1536` and said what the bug was —
+rather than widening the slack until the red goes away.
+
 If `make unit` dies with `tests/unit/run.sh: No such file or directory` (exit
 127) on a tree that came from a Windows checkout, the script has CRLF line
 endings and the kernel is reading `#!/bin/bash\r` as the interpreter. The error
