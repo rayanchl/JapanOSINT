@@ -914,7 +914,13 @@ static int embed_rows(db_handle *db, llm_client *llm, pick **rows, int m,
   char why[96];
   fail_reason(why, sizeof why, st, http);
   if (transient(st, http)) {
-    char msg[200];
+    /* 240, not 200: `now` is char[40] and `why` is char[96], and with the
+     * 56-byte literal that is 203 worst case — so the trailing "); retried
+     * next tick" was what got cut, turning a transient-retry message into one
+     * that reads like a permanent failure. The message is written to
+     * meta_set(db, "last_error"), i.e. it is STORED, so a truncated tail is
+     * wrong data and not merely an ugly log line. */
+    char msg[240];
     snprintf(msg, sizeof msg, "%s: /v1/embeddings failed for a batch of %d (%s); "
              "retried next tick", now, m, why);
     meta_set(db, "last_error", msg);
@@ -1181,7 +1187,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         meta_set(db, "full_done_at", sweep_start);
         meta_set(db, "wm_phase", NULL); meta_set(db, "wm_p", NULL); meta_set(db, "wm_u", NULL);
         long long ss = parse_iso_ms(sweep_start);
-        char dk[40];
+        /* 64, matching sweep_start, because the ELSE branch copies it
+         * verbatim. iso_ms() needs ~24, but a 40-byte buffer silently cut a
+         * 63-character sweep_start — and a truncated ISO timestamp is not a
+         * short timestamp, it is a DIFFERENT instant, written straight into
+         * meta as the delta watermark. The next sweep would then resume from
+         * whatever that cut string parsed as. */
+        char dk[64];
         if (ss > 0) iso_ms(dk, sizeof dk, ss - EMBED_OVERLAP_SEC * 1000LL);
         else snprintf(dk, sizeof dk, "%s", sweep_start);
         meta_set(db, "dwm_f", dk); meta_set(db, "dwm_u", "");
