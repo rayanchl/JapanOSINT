@@ -123,15 +123,30 @@ int main(void) {
   double wms = now_ms() - t0;
   printf("  writer during checkpoint: rc=%d (%s) after %.0f ms\n", wrc, sqlite3_errstr(wrc), wms);
   assert(wrc == SQLITE_OK && "a checkpoint must never make another writer fail");
-  assert(wms < 2500.0 && "the writer lock was held far longer than one short attempt");
+  /* Under the old 20 s TRUNCATE this writer FAILED at its own 5 s; anything
+   * that commits inside that window is the fix working. The bound is the
+   * writer's own timeout, not a guess at runner speed: the macOS CI runner
+   * took 1,775 ms here where a laptop takes ~300. */
+  assert(wms < 4500.0 && "the writer waited out most of its own busy timeout");
 
-  /* Keep the reader past the 5 s a writer will wait — the exact case that used
-   * to turn into "database is locked". */
+  /* The reader outlives the pod: it is released only after run() returns, so
+   * the pod must give up on its OWN bound. Releasing it on a wall clock (6 s)
+   * raced the last attempt — on a slow runner that attempt began late, the
+   * reader let go mid-attempt, the TRUNCATE succeeded at 6,233 ms and the
+   * bound assert failed on a pod behaving exactly as designed (CI, f6e589e).
+   * The reader is still held past the 5 s a writer will wait — the case that
+   * used to turn into "database is locked". */
+  pthread_join(th, NULL);
   while (now_ms() - t_start < 6000.0) usleep(50 * 1000);
   exec_ok(reader, "COMMIT");
-  pthread_join(th, NULL);
   printf("  pod run with a long reader: rc=%d in %.0f ms\n", pa.rc, pa.ms);
-  assert(pa.ms < 6000.0 && "TRUNCATE attempts are bounded");
+  assert(pa.rc == -1 && "frames the reader still needs: TRUNCATE skipped, PASSIVE only");
+  /* An attempt can overrun its busy timeout by one busy-handler sleep, so
+   * allow 2x per attempt, the gaps, and 3 s of scheduling slack. What this
+   * guards against is one 20 s TRUNCATE, far outside it. */
+  const double bound = WAL_TRUNC_TRIES * 2.0 * WAL_TRUNC_WAIT_MS
+                     + (WAL_TRUNC_TRIES - 1) * (double)WAL_TRUNC_GAP_MS + 3000.0;
+  assert(pa.ms < bound && "TRUNCATE attempts are bounded");
 
   /* The borrowed connection gets its own timeout back. */
   assert(busy_timeout_of(pa.db.h) == 30000);
