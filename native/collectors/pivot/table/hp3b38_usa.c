@@ -70,7 +70,13 @@ static const hp_source HP3B38_USA[] = {
       "both 1:1, while the auto-picker had reached for close_today_bal "
       "and securities_sold_cnt — a BALANCE and a COUNT, which is the "
       "same class of mistake as keying a station register on its "
-      "longitude." },
+      "longitude A date-PART is not a date: the auto-picked key used "
+      "record_calendar_day, the day-of-MONTH number 1-31, so two "
+      "records from different months on the same day with the same line "
+      "number collided — 8 of 1000 on the deposits-and-withdrawals "
+      "table, latent on three others. MEASURED over 2,000 records, "
+      "record_date+src_line_nbr is 1:1 on every dts, od and mspd table "
+      "tested and record_date+classification_id on every mts table." },
 
   { .id = "US_TREAS_DEPOSITS_WITHDRAWALS_OPERATING_CASH", .name = "US Treasury fiscal data — Deposits Withdrawals Operating Cash",
     .category = "economy", .portal = "https://fiscaldata.treasury.gov",
@@ -79,11 +85,11 @@ static const hp_source HP3B38_USA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/dts/deposits_withdrawals_operating_cash?page%5Bsize%5D=500",
     .array_path = "data",
-    .id_keys = "record_calendar_day+src_line_nbr",
+    .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
     .page_size = 500,
-    .title_keys = "record_calendar_day",
+    .title_keys = "transaction_catg_desc",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 271555 bytes. id_keys is a (date, line) tuple, not "
       "the table's own surrogate: MEASURED over 2,000 records, "
@@ -91,7 +97,13 @@ static const hp_source HP3B38_USA[] = {
       "both 1:1, while the auto-picker had reached for close_today_bal "
       "and securities_sold_cnt — a BALANCE and a COUNT, which is the "
       "same class of mistake as keying a station register on its "
-      "longitude." },
+      "longitude A date-PART is not a date: the auto-picked key used "
+      "record_calendar_day, the day-of-MONTH number 1-31, so two "
+      "records from different months on the same day with the same line "
+      "number collided — 8 of 1000 on the deposits-and-withdrawals "
+      "table, latent on three others. MEASURED over 2,000 records, "
+      "record_date+src_line_nbr is 1:1 on every dts, od and mspd table "
+      "tested and record_date+classification_id on every mts table." },
 
   { .id = "US_TREAS_FEDERAL_TAX_DEPOSITS", .name = "US Treasury fiscal data — Federal Tax Deposits",
     .category = "economy", .portal = "https://fiscaldata.treasury.gov",
@@ -112,7 +124,13 @@ static const hp_source HP3B38_USA[] = {
       "both 1:1, while the auto-picker had reached for close_today_bal "
       "and securities_sold_cnt — a BALANCE and a COUNT, which is the "
       "same class of mistake as keying a station register on its "
-      "longitude." },
+      "longitude A date-PART is not a date: the auto-picked key used "
+      "record_calendar_day, the day-of-MONTH number 1-31, so two "
+      "records from different months on the same day with the same line "
+      "number collided — 8 of 1000 on the deposits-and-withdrawals "
+      "table, latent on three others. MEASURED over 2,000 records, "
+      "record_date+src_line_nbr is 1:1 on every dts, od and mspd table "
+      "tested and record_date+classification_id on every mts table." },
 
   { .id = "US_TREAS_INCOME_TAX_REFUNDS_ISSUED", .name = "US Treasury fiscal data — Income Tax Refunds Issued",
     .category = "economy", .portal = "https://fiscaldata.treasury.gov",
@@ -133,7 +151,13 @@ static const hp_source HP3B38_USA[] = {
       "both 1:1, while the auto-picker had reached for close_today_bal "
       "and securities_sold_cnt — a BALANCE and a COUNT, which is the "
       "same class of mistake as keying a station register on its "
-      "longitude." },
+      "longitude A date-PART is not a date: the auto-picked key used "
+      "record_calendar_day, the day-of-MONTH number 1-31, so two "
+      "records from different months on the same day with the same line "
+      "number collided — 8 of 1000 on the deposits-and-withdrawals "
+      "table, latent on three others. MEASURED over 2,000 records, "
+      "record_date+src_line_nbr is 1:1 on every dts, od and mspd table "
+      "tested and record_date+classification_id on every mts table." },
 
   { .id = "US_TREAS_MSPD_TABLE_3", .name = "US Treasury fiscal data — Mspd Table 3",
     .category = "economy", .portal = "https://fiscaldata.treasury.gov",
@@ -142,11 +166,11 @@ static const hp_source HP3B38_USA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/debt/mspd/mspd_table_3?page%5Bsize%5D=500",
     .array_path = "data",
-    .id_keys = "record_calendar_day+src_line_nbr",
+    .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
     .page_size = 500,
-    .title_keys = "record_calendar_day",
+    .title_keys = "security_class2_desc",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 440020 bytes. id_keys is a (date, line) tuple, not "
       "the table's own surrogate: MEASURED over 2,000 records, "
@@ -154,7 +178,13 @@ static const hp_source HP3B38_USA[] = {
       "both 1:1, while the auto-picker had reached for close_today_bal "
       "and securities_sold_cnt — a BALANCE and a COUNT, which is the "
       "same class of mistake as keying a station register on its "
-      "longitude." },
+      "longitude A date-PART is not a date: the auto-picked key used "
+      "record_calendar_day, the day-of-MONTH number 1-31, so two "
+      "records from different months on the same day with the same line "
+      "number collided — 8 of 1000 on the deposits-and-withdrawals "
+      "table, latent on three others. MEASURED over 2,000 records, "
+      "record_date+src_line_nbr is 1:1 on every dts, od and mspd table "
+      "tested and record_date+classification_id on every mts table." },
 
   { .id = "US_TREAS_MSPD_TABLE_4", .name = "US Treasury fiscal data — Mspd Table 4",
     .category = "economy", .portal = "https://fiscaldata.treasury.gov",
@@ -163,11 +193,11 @@ static const hp_source HP3B38_USA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/debt/mspd/mspd_table_4?page%5Bsize%5D=500",
     .array_path = "data",
-    .id_keys = "record_date+security_class_desc",
+    .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
     .page_size = 500,
-    .title_keys = "record_date",
+    .title_keys = "security_class_desc",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 248173 bytes. id_keys is a (date, line) tuple, not "
       "the table's own surrogate: MEASURED over 2,000 records, "
@@ -175,7 +205,13 @@ static const hp_source HP3B38_USA[] = {
       "both 1:1, while the auto-picker had reached for close_today_bal "
       "and securities_sold_cnt — a BALANCE and a COUNT, which is the "
       "same class of mistake as keying a station register on its "
-      "longitude." },
+      "longitude A date-PART is not a date: the auto-picked key used "
+      "record_calendar_day, the day-of-MONTH number 1-31, so two "
+      "records from different months on the same day with the same line "
+      "number collided — 8 of 1000 on the deposits-and-withdrawals "
+      "table, latent on three others. MEASURED over 2,000 records, "
+      "record_date+src_line_nbr is 1:1 on every dts, od and mspd table "
+      "tested and record_date+classification_id on every mts table." },
 
   { .id = "US_TREAS_MSPD_TABLE_5", .name = "US Treasury fiscal data — Mspd Table 5",
     .category = "economy", .portal = "https://fiscaldata.treasury.gov",
@@ -184,11 +220,11 @@ static const hp_source HP3B38_USA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/debt/mspd/mspd_table_5?page%5Bsize%5D=500",
     .array_path = "data",
-    .id_keys = "record_calendar_month+security_class2_desc",
+    .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
     .page_size = 500,
-    .title_keys = "record_calendar_month",
+    .title_keys = "security_class2_desc",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 249843 bytes. id_keys is a (date, line) tuple, not "
       "the table's own surrogate: MEASURED over 2,000 records, "
@@ -196,7 +232,13 @@ static const hp_source HP3B38_USA[] = {
       "both 1:1, while the auto-picker had reached for close_today_bal "
       "and securities_sold_cnt — a BALANCE and a COUNT, which is the "
       "same class of mistake as keying a station register on its "
-      "longitude." },
+      "longitude A date-PART is not a date: the auto-picked key used "
+      "record_calendar_day, the day-of-MONTH number 1-31, so two "
+      "records from different months on the same day with the same line "
+      "number collided — 8 of 1000 on the deposits-and-withdrawals "
+      "table, latent on three others. MEASURED over 2,000 records, "
+      "record_date+src_line_nbr is 1:1 on every dts, od and mspd table "
+      "tested and record_date+classification_id on every mts table." },
 
   { .id = "US_TREAS_MTS_TABLE_2", .name = "US Treasury fiscal data — Mts Table 2",
     .category = "economy", .portal = "https://fiscaldata.treasury.gov",
@@ -217,7 +259,13 @@ static const hp_source HP3B38_USA[] = {
       "both 1:1, while the auto-picker had reached for close_today_bal "
       "and securities_sold_cnt — a BALANCE and a COUNT, which is the "
       "same class of mistake as keying a station register on its "
-      "longitude." },
+      "longitude A date-PART is not a date: the auto-picked key used "
+      "record_calendar_day, the day-of-MONTH number 1-31, so two "
+      "records from different months on the same day with the same line "
+      "number collided — 8 of 1000 on the deposits-and-withdrawals "
+      "table, latent on three others. MEASURED over 2,000 records, "
+      "record_date+src_line_nbr is 1:1 on every dts, od and mspd table "
+      "tested and record_date+classification_id on every mts table." },
 
   { .id = "US_TREAS_MTS_TABLE_3", .name = "US Treasury fiscal data — Mts Table 3",
     .category = "economy", .portal = "https://fiscaldata.treasury.gov",
@@ -238,7 +286,13 @@ static const hp_source HP3B38_USA[] = {
       "both 1:1, while the auto-picker had reached for close_today_bal "
       "and securities_sold_cnt — a BALANCE and a COUNT, which is the "
       "same class of mistake as keying a station register on its "
-      "longitude." },
+      "longitude A date-PART is not a date: the auto-picked key used "
+      "record_calendar_day, the day-of-MONTH number 1-31, so two "
+      "records from different months on the same day with the same line "
+      "number collided — 8 of 1000 on the deposits-and-withdrawals "
+      "table, latent on three others. MEASURED over 2,000 records, "
+      "record_date+src_line_nbr is 1:1 on every dts, od and mspd table "
+      "tested and record_date+classification_id on every mts table." },
 
   { .id = "US_TREAS_MTS_TABLE_4", .name = "US Treasury fiscal data — Mts Table 4",
     .category = "economy", .portal = "https://fiscaldata.treasury.gov",
@@ -259,7 +313,13 @@ static const hp_source HP3B38_USA[] = {
       "both 1:1, while the auto-picker had reached for close_today_bal "
       "and securities_sold_cnt — a BALANCE and a COUNT, which is the "
       "same class of mistake as keying a station register on its "
-      "longitude." },
+      "longitude A date-PART is not a date: the auto-picked key used "
+      "record_calendar_day, the day-of-MONTH number 1-31, so two "
+      "records from different months on the same day with the same line "
+      "number collided — 8 of 1000 on the deposits-and-withdrawals "
+      "table, latent on three others. MEASURED over 2,000 records, "
+      "record_date+src_line_nbr is 1:1 on every dts, od and mspd table "
+      "tested and record_date+classification_id on every mts table." },
 
   { .id = "US_TREAS_MTS_TABLE_5", .name = "US Treasury fiscal data — Mts Table 5",
     .category = "economy", .portal = "https://fiscaldata.treasury.gov",
@@ -280,7 +340,13 @@ static const hp_source HP3B38_USA[] = {
       "both 1:1, while the auto-picker had reached for close_today_bal "
       "and securities_sold_cnt — a BALANCE and a COUNT, which is the "
       "same class of mistake as keying a station register on its "
-      "longitude." },
+      "longitude A date-PART is not a date: the auto-picked key used "
+      "record_calendar_day, the day-of-MONTH number 1-31, so two "
+      "records from different months on the same day with the same line "
+      "number collided — 8 of 1000 on the deposits-and-withdrawals "
+      "table, latent on three others. MEASURED over 2,000 records, "
+      "record_date+src_line_nbr is 1:1 on every dts, od and mspd table "
+      "tested and record_date+classification_id on every mts table." },
 
   { .id = "US_TREAS_MTS_TABLE_6", .name = "US Treasury fiscal data — Mts Table 6",
     .category = "economy", .portal = "https://fiscaldata.treasury.gov",
@@ -301,7 +367,13 @@ static const hp_source HP3B38_USA[] = {
       "both 1:1, while the auto-picker had reached for close_today_bal "
       "and securities_sold_cnt — a BALANCE and a COUNT, which is the "
       "same class of mistake as keying a station register on its "
-      "longitude." },
+      "longitude A date-PART is not a date: the auto-picked key used "
+      "record_calendar_day, the day-of-MONTH number 1-31, so two "
+      "records from different months on the same day with the same line "
+      "number collided — 8 of 1000 on the deposits-and-withdrawals "
+      "table, latent on three others. MEASURED over 2,000 records, "
+      "record_date+src_line_nbr is 1:1 on every dts, od and mspd table "
+      "tested and record_date+classification_id on every mts table." },
 
   { .id = "US_TREAS_MTS_TABLE_9", .name = "US Treasury fiscal data — Mts Table 9",
     .category = "economy", .portal = "https://fiscaldata.treasury.gov",
@@ -322,7 +394,13 @@ static const hp_source HP3B38_USA[] = {
       "both 1:1, while the auto-picker had reached for close_today_bal "
       "and securities_sold_cnt — a BALANCE and a COUNT, which is the "
       "same class of mistake as keying a station register on its "
-      "longitude." },
+      "longitude A date-PART is not a date: the auto-picked key used "
+      "record_calendar_day, the day-of-MONTH number 1-31, so two "
+      "records from different months on the same day with the same line "
+      "number collided — 8 of 1000 on the deposits-and-withdrawals "
+      "table, latent on three others. MEASURED over 2,000 records, "
+      "record_date+src_line_nbr is 1:1 on every dts, od and mspd table "
+      "tested and record_date+classification_id on every mts table." },
 
   { .id = "US_TREAS_PUBLIC_DEBT_TRANSACTIONS", .name = "US Treasury fiscal data — Public Debt Transactions",
     .category = "economy", .portal = "https://fiscaldata.treasury.gov",
@@ -331,11 +409,11 @@ static const hp_source HP3B38_USA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/dts/public_debt_transactions?page%5Bsize%5D=500",
     .array_path = "data",
-    .id_keys = "record_calendar_day+src_line_nbr",
+    .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
     .page_size = 500,
-    .title_keys = "record_calendar_day",
+    .title_keys = "table_nm",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 248298 bytes. id_keys is a (date, line) tuple, not "
       "the table's own surrogate: MEASURED over 2,000 records, "
@@ -343,7 +421,13 @@ static const hp_source HP3B38_USA[] = {
       "both 1:1, while the auto-picker had reached for close_today_bal "
       "and securities_sold_cnt — a BALANCE and a COUNT, which is the "
       "same class of mistake as keying a station register on its "
-      "longitude." },
+      "longitude A date-PART is not a date: the auto-picked key used "
+      "record_calendar_day, the day-of-MONTH number 1-31, so two "
+      "records from different months on the same day with the same line "
+      "number collided — 8 of 1000 on the deposits-and-withdrawals "
+      "table, latent on three others. MEASURED over 2,000 records, "
+      "record_date+src_line_nbr is 1:1 on every dts, od and mspd table "
+      "tested and record_date+classification_id on every mts table." },
 
   { .id = "US_TREAS_SECURITIES_REDEMPTIONS", .name = "US Treasury fiscal data — Securities Redemptions",
     .category = "economy", .portal = "https://fiscaldata.treasury.gov",
@@ -356,7 +440,7 @@ static const hp_source HP3B38_USA[] = {
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
     .page_size = 500,
-    .title_keys = "record_date",
+    .title_keys = "security_class_desc",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 188344 bytes. id_keys is a (date, line) tuple, not "
       "the table's own surrogate: MEASURED over 2,000 records, "
@@ -364,7 +448,13 @@ static const hp_source HP3B38_USA[] = {
       "both 1:1, while the auto-picker had reached for close_today_bal "
       "and securities_sold_cnt — a BALANCE and a COUNT, which is the "
       "same class of mistake as keying a station register on its "
-      "longitude." },
+      "longitude A date-PART is not a date: the auto-picked key used "
+      "record_calendar_day, the day-of-MONTH number 1-31, so two "
+      "records from different months on the same day with the same line "
+      "number collided — 8 of 1000 on the deposits-and-withdrawals "
+      "table, latent on three others. MEASURED over 2,000 records, "
+      "record_date+src_line_nbr is 1:1 on every dts, od and mspd table "
+      "tested and record_date+classification_id on every mts table." },
 
   { .id = "US_TREAS_SECURITIES_SALES", .name = "US Treasury fiscal data — Securities Sales",
     .category = "economy", .portal = "https://fiscaldata.treasury.gov",
@@ -377,7 +467,7 @@ static const hp_source HP3B38_USA[] = {
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
     .page_size = 500,
-    .title_keys = "record_calendar_month",
+    .title_keys = "security_class_desc",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 216144 bytes. id_keys is a (date, line) tuple, not "
       "the table's own surrogate: MEASURED over 2,000 records, "
@@ -385,7 +475,13 @@ static const hp_source HP3B38_USA[] = {
       "both 1:1, while the auto-picker had reached for close_today_bal "
       "and securities_sold_cnt — a BALANCE and a COUNT, which is the "
       "same class of mistake as keying a station register on its "
-      "longitude." },
+      "longitude A date-PART is not a date: the auto-picked key used "
+      "record_calendar_day, the day-of-MONTH number 1-31, so two "
+      "records from different months on the same day with the same line "
+      "number collided — 8 of 1000 on the deposits-and-withdrawals "
+      "table, latent on three others. MEASURED over 2,000 records, "
+      "record_date+src_line_nbr is 1:1 on every dts, od and mspd table "
+      "tested and record_date+classification_id on every mts table." },
 
   { .id = "US_TREAS_SHORT_TERM_CASH_INVESTMENTS", .name = "US Treasury fiscal data — Short Term Cash Investments",
     .category = "economy", .portal = "https://fiscaldata.treasury.gov",
@@ -406,7 +502,13 @@ static const hp_source HP3B38_USA[] = {
       "both 1:1, while the auto-picker had reached for close_today_bal "
       "and securities_sold_cnt — a BALANCE and a COUNT, which is the "
       "same class of mistake as keying a station register on its "
-      "longitude." },
+      "longitude A date-PART is not a date: the auto-picked key used "
+      "record_calendar_day, the day-of-MONTH number 1-31, so two "
+      "records from different months on the same day with the same line "
+      "number collided — 8 of 1000 on the deposits-and-withdrawals "
+      "table, latent on three others. MEASURED over 2,000 records, "
+      "record_date+src_line_nbr is 1:1 on every dts, od and mspd table "
+      "tested and record_date+classification_id on every mts table." },
 
   { .id = "OPENALEX_INST_US", .name = "OpenAlex — research institutions in US",
     .category = "research", .portal = "https://openalex.org",

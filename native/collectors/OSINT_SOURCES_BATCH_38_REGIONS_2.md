@@ -90,6 +90,27 @@ records, `record_date+src_line_nbr` and `record_date+classification_id` are both
 too — but it is a surrogate whose uniqueness is not promised, so the date is
 kept in the key.
 
+### A fifth disguise, and the one the sweep caught: a date PART is not a date
+
+Four Treasury rows shipped with `record_calendar_day` in their key.
+**`record_calendar_day` is the day-of-MONTH number, 1 to 31** — so two records
+from different months that share a day and a line number are the same key. The
+sweep found it on one row (`deposits_withdrawals_operating_cash`: 1,000 emitted,
+992 stored) and the other three were latent, waiting for their series to span
+enough months.
+
+This one is instructive because it passed *two* checks that should have caught
+it: it is not a measurement, so the forbid-list let it through, and it was
+measurably 1:1 over the page the auto-picker read, because that page was one
+month. Only the registry sweep, which pages, could see it.
+
+Re-measured over 2,000 records per table: `record_date+src_line_nbr` is 1:1 on
+every `dts`, `od` and `mspd` table and `record_date+classification_id` on every
+`mts` table. After the fix, the four rows store 1,000/1,000 and 500/500 with
+nothing lost. Titles were corrected at the same time — `title_keys` had been
+`record_calendar_day`, which titles every row of a fiscal statement with a number
+between 1 and 31.
+
 GBIF's auto-picked title was
 `classifications.<uuid>.acceptedUsage.name` — a readable field reached through a
 **checklist UUID** in the path. Replaced by hand with `scientificName`, because
@@ -147,5 +168,24 @@ GLEIF `page[number]`, Treasury `page[number]`, FSA `pageNumber` and GBIF
 `offset` (offset=300 returned first key 5938082799 against 5937748555) all
 produce distinct bodies. Gated rows declare their published paging and say it is
 unmeasured.
+
+### The whole-batch sweep
+
+`audit_registry_emit.py` over all 150 ids, reading `stored` off the run line and
+the row count back out of a fresh database:
+
+**146 OK, 3 EMITS_NOTHING, 1 COLLISION** — and after the fixes above, **150 OK**.
+
+* **75 of 75 gated rows: OK.** Each stores exactly one row, the needs-credential
+  notice. `OPENALEX_INST_CF` emitted 0 and stored 1. That is the whole point: a
+  gated row is legible as unrun, not indistinguishable from an empty world.
+* The 1 COLLISION was the `record_calendar_day` defect above. Fixed, re-measured
+  at 1,000 emitted / 1,000 stored.
+* The 3 EMITS_NOTHING were `GBIF_OCC_GB`, `_HK` and `_US` — the 7-in-10 transport
+  path, not the rows. Re-run: **3,000 emitted and 3,001 stored each**, so they
+  page ten deep and lose nothing when the fetch lands.
+
+Across the seven rows re-measured after the fixes: 11,500 emitted, 11,503 stored,
+**0 records lost to uid collision**.
 
 Per-row evidence: `docs/verified-sources-batch38.tsv`.
