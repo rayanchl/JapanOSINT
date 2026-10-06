@@ -155,7 +155,11 @@ export default function useCollectorFollowStream() {
     }
   }, [paused, enqueue]);
 
-  const { connected } = useWebSocket('/ws', { onMessage });
+  // `available` is false unless the build turned /ws on (utils/wsUrl.js) —
+  // and the native server has neither /ws nor follow history (/api/follow/
+  // recent answers 501), so on it this panel has no live source at all and
+  // must say so rather than "reconnecting…" forever.
+  const { connected, available: liveAvailable } = useWebSocket('/ws', { onMessage });
 
   // Cleanup pending rAF when unmounting.
   useEffect(() => () => {
@@ -170,6 +174,7 @@ export default function useCollectorFollowStream() {
     runs,
     activeRuns: runs.filter((r) => !r.ended_ms),
     connected,
+    liveAvailable,
     paused,
     setPaused,
     seeded,

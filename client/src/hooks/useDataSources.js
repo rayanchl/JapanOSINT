@@ -80,7 +80,7 @@ export default function useDataSources() {
 
   // 10 reconnect attempts at base/max -> map onto useWebSocket's 30s cap.
   // Long-lived dashboard hook benefits from online/visibility wake-ups.
-  const { connected } = useWebSocket('/ws', {
+  const { connected, available } = useWebSocket('/ws', {
     onMessage,
     respondToOnline: true,
   });
@@ -91,5 +91,10 @@ export default function useDataSources() {
     return () => clearInterval(pollInterval);
   }, [fetchSources]);
 
-  return { sources, stats, isConnected: connected, lastUpdate, error };
+  // Without /ws (the default: the native server has none) the 60 s poll IS
+  // the connection, so "connected" means the last poll reached the server.
+  // Reading the never-dialled socket instead put DISCONNECTED in the nav bar
+  // permanently, against a server that was answering every request.
+  const isConnected = available ? connected : (lastUpdate != null && !error);
+  return { sources, stats, isConnected, lastUpdate, error };
 }
