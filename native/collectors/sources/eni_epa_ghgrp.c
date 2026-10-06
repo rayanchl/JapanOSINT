@@ -3,9 +3,10 @@
  *   /efservice/<table>/<col>/<value>/rows/<start>:<end>/JSON):
  *   https://data.epa.gov/efservice/pub_facts_sector_ghg_emission/year/2023/rows/0:1999/JSON
  *   https://data.epa.gov/efservice/pub_dim_facility/year/2023/rows/0:1999/JSON
- * Emits one row per (facility, gas) reported: co2e_emission (UNIT: metric
- * tonnes CO2e), reporting year, sector_id/subsector_id/gas_id, facility name,
- * NAICS code and parent company, joined on facility_id.
+ * Emits one row per (facility, sector, subsector, gas) reported: co2e_emission
+ * (UNIT: metric tonnes CO2e; JSON null where the row reports none — never 0),
+ * reporting year, sector_id/subsector_id/gas_id, facility name, NAICS code and
+ * parent company, joined on facility_id.
  *
  * Both tables are windowed by the API itself, so a single window silently
  * caps the collector well below the true size of either table (house rule
@@ -20,6 +21,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/keyqual.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -172,13 +174,23 @@ static void walk_notice(intel_sink *sink, const char *table, const walk_t *w,
  * subsectors. Even the full tuple repeats on 3 of the 26,272 rows of 2023
  * (same facility/sector/subsector/gas, different tonnage), so a key that
  * recurs within the run qualifies EVERY member of its group by the reported
- * value, not just the second one — nothing is merged that differs, and which
- * member gets the plain key no longer depends on the order the API served
- * them in. */
-typedef struct { char key[96]; const cJSON *row; int dup; } em_t;
+ * value ("…|co2e=<t>", or "…|co2e=null" for a row reporting none), not just
+ * the second one — nothing is merged that differs, and which member gets the
+ * plain key does not depend on the order the API served them in. Where the
+ * value is shared inside a group too, the member is qualified by a hash of the
+ * row (lib/keyqual.h). */
+typedef struct { char key[96]; const cJSON *row; } em_t;
 
 static int em_cmp(const void *a, const void *b) {
   return strcmp(((const em_t *)a)->key, ((const em_t *)b)->key);
+}
+
+/* The reported value as a discriminator: "co2e=<t>" or "co2e=null". */
+static const char *em_disc(const cJSON *e, char *buf, size_t cap) {
+  const cJSON *q = cJSON_GetObjectItem(e, "co2e_emission");
+  if (cJSON_IsNumber(q)) snprintf(buf, cap, "co2e=%.17g", q->valuedouble);
+  else snprintf(buf, cap, "co2e=null");
+  return buf;
 }
 
 static void em_key(const cJSON *e, char *out, size_t cap) {
@@ -244,32 +256,50 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!ems) { free_facs(facs, fn); cJSON_Delete(fac_pages); cJSON_Delete(em_pages); return -1; }
   long ne = 0;
   const cJSON *e;
+  keyqual kq = {0};
   cJSON_ArrayForEach(pg, em_pages) cJSON_ArrayForEach(e, pg) {
     em_key(e, ems[ne].key, sizeof ems[ne].key);
     ems[ne].row = e;
-    ems[ne].dup = 0;
+    char db[48];
+    keyqual_add(&kq, ems[ne].key, em_disc(e, db, sizeof db));
     ne++;
   }
   qsort(ems, (size_t)ne, sizeof *ems, em_cmp);
-  for (long i = 1; i < ne; i++)
-    if (strcmp(ems[i].key, ems[i - 1].key) == 0) ems[i].dup = ems[i - 1].dup = 1;
+  keyqual_seal(&kq);
 
-  int n = 0, unjoined = 0;
+  /* A row whose co2e_emission is null is still a reported (facility, sector,
+   * subsector, gas) row — 3,839 of 2023's were discarded here as "no
+   * measurement". It is emitted with the value stated as null (never 0) and
+   * the title saying it was not reported. */
+  int n = 0, unjoined = 0, null_co2e = 0, folded = 0;
   for (long i = 0; i < ne; i++) {
     e = ems[i].row;
     long long fid = iv(e, "facility_id", -1);
     cJSON *q = cJSON_GetObjectItem(e, "co2e_emission");
-    if (fid < 0 || !cJSON_IsNumber(q)) continue;   /* no measurement, no row */
-    const fac_t *fa = find_fac(facs, fn, fid);
+    int has_q = cJSON_IsNumber(q);
+    const fac_t *fa = fid >= 0 ? find_fac(facs, fn, fid) : NULL;
+
+    char kbuf[256], db[48];
+    const char *key = ems[i].key;
+    if (keyqual_count(&kq, key) > 1) {
+      char *raw = cJSON_PrintUnformatted(e);
+      key = keyqual_uid(&kq, ems[i].key, em_disc(e, db, sizeof db),
+                        raw ? raw : "", kbuf, sizeof kbuf);
+      free(raw);
+      if (!keyqual_claim(&kq, ems[i].key, key)) { folded++; continue; }
+    }
     if (!fa) unjoined++;
+    if (!has_q) null_co2e++;
 
     cJSON *p = cJSON_CreateObject();
-    cJSON_AddNumberToObject(p, "facility_id", (double)fid);
+    if (fid >= 0) cJSON_AddNumberToObject(p, "facility_id", (double)fid);
+    else          cJSON_AddNullToObject(p, "facility_id");
     if (fa && fa->name)   cJSON_AddStringToObject(p, "facility_name", fa->name);
     if (fa && fa->state)  cJSON_AddStringToObject(p, "state", fa->state);
     if (fa && fa->naics)  cJSON_AddStringToObject(p, "naics_code", fa->naics);
     if (fa && fa->parent) cJSON_AddStringToObject(p, "parent_company", fa->parent);
-    cJSON_AddNumberToObject(p, "co2e_emission", q->valuedouble);
+    if (has_q) cJSON_AddNumberToObject(p, "co2e_emission", q->valuedouble);
+    else       cJSON_AddNullToObject(p, "co2e_emission");   /* not reported: null, never 0 */
     cJSON_AddStringToObject(p, "unit", "tonnes CO2e");
     cJSON_AddNumberToObject(p, "reporting_year", (double)iv(e, "year", 0));
     cJSON_AddNumberToObject(p, "sector_id", (double)iv(e, "sector_id", -1));
@@ -281,14 +311,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     char *pj = cJSON_PrintUnformatted(p);
     cJSON_Delete(p);
 
-    char key[160], title[288];
-    if (ems[i].dup)
-      snprintf(key, sizeof key, "%s|co2e=%.17g", ems[i].key, q->valuedouble);
+    char title[288];
+    if (has_q)
+      snprintf(title, sizeof title, "%s (GHGRP %lld) %s: %.1f t CO2e",
+               fa && fa->name ? fa->name : "US GHGRP facility", fid, YEAR,
+               q->valuedouble);
     else
-      snprintf(key, sizeof key, "%s", ems[i].key);
-    snprintf(title, sizeof title, "%s (GHGRP %lld) %s: %.1f t CO2e",
-             fa && fa->name ? fa->name : "US GHGRP facility", fid, YEAR,
-             q->valuedouble);
+      snprintf(title, sizeof title, "%s (GHGRP %lld) %s: CO2e not reported",
+               fa && fa->name ? fa->name : "US GHGRP facility", fid, YEAR);
 
     intel_item row = {0};
     row.remote_key      = key;
@@ -308,13 +338,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   walk_notice(sink, FAC_TABLE, &fw, fn, "facility");
   walk_notice(sink, EM_TABLE, &ew, n, "emission");
 
+  keyqual_free(&kq);
   free(ems);
   free_facs(facs, fn);
   cJSON_Delete(fac_pages);
   cJSON_Delete(em_pages);
-  fprintf(stderr, "[" SRC "] emitted %d of %ld emission rows (facilities=%d of %ld, "
-          "unjoined=%d, failed pages fac=%d em=%d)\n", n, ew.rows, fn, fw.count,
-          unjoined, fw.failed_pages, ew.failed_pages);
+  fprintf(stderr, "[" SRC "] emitted %d of %ld emission rows (%d with co2e null, "
+          "%d byte-identical repeats folded; facilities=%d of %ld, unjoined=%d, "
+          "failed pages fac=%d em=%d)\n", n, ew.rows, null_co2e, folded, fn,
+          fw.count, unjoined, fw.failed_pages, ew.failed_pages);
   return 0;
 }
 
