@@ -47,6 +47,13 @@ static char *url_join(const char *base, const char *path) {
   return u;
 }
 
+static __thread long g_last_queued_ms, g_last_http_ms;
+
+void llm_last_call_timing(long *queued_ms, long *http_ms) {
+  if (queued_ms) *queued_ms = g_last_queued_ms;
+  if (http_ms)   *http_ms = g_last_http_ms;
+}
+
 const char *llm_status_code(llm_status s) {
   switch (s) {
     case LLM_OK:              return "ok";
@@ -55,6 +62,8 @@ const char *llm_status_code(llm_status s) {
     case LLM_ERR_TIMEOUT:     return "llm_timeout";
     case LLM_ERR_HTTP:        return "llm_http_error";
     case LLM_ERR_EMPTY:       return "llm_empty_response";
+    case LLM_ERR_QUEUE_TIMEOUT: return "llm_queue_timeout";
+    case LLM_ERR_QUEUE_FULL:  return "llm_queue_full";
   }
   return "llm_error";
 }
@@ -79,32 +88,50 @@ static char *post_json(llm_client *c, const char *path, cJSON *body,
    * base_url, so callers queue here instead of contending on the server (or
    * blocking the request thread). c->http is no longer used for generation. */
   int budget = timeout_ms > 0 ? timeout_ms : 30000;
-  struct timespec t0, t1;
-  clock_gettime(CLOCK_MONOTONIC, &t0);
-  /* A bounded caller gets no transport retry either: a retry after a timeout
-   * would spend a second budget the caller never granted. */
-  int rc = llm_worker_request_ex(c->base_url, "POST", url, hdrs, payload,
-                                 strlen(payload), budget,
-                                 c->bound_queue_wait ? 0 : 1, c->interactive,
-                                 c->bound_queue_wait ? budget : 0, &r);
-  clock_gettime(CLOCK_MONOTONIC, &t1);
-  long elapsed_ms = (t1.tv_sec - t0.tv_sec) * 1000L
-                  + (t1.tv_nsec - t0.tv_nsec) / 1000000L;
+  llm_worker_req q = {
+    .method = "POST", .url = url, .headers = hdrs, .body = payload,
+    .body_len = strlen(payload), .timeout_ms = budget,
+    /* One retry, and only after a failure that cost nothing (refused
+     * connection, 5xx/429) — never after a timeout, for any caller. */
+    .retry = 1,
+    .high_priority = c->interactive,
+    .max_wait_ms = c->bound_queue_wait ? budget : 0,
+  };
+  llm_worker_info wi;
+  int rc = llm_worker_call(c->base_url, &q, &r, &wi);
+  g_last_queued_ms = wi.queued_ms;
+  g_last_http_ms = wi.http_ms;
   free(url); free(payload); cJSON_Delete(body);
   if (http) *http = r.status;
+  if (wi.verdict == LLM_Q_TIMEOUT || wi.verdict == LLM_Q_FULL) {
+    if (st) *st = wi.verdict == LLM_Q_FULL ? LLM_ERR_QUEUE_FULL
+                                           : LLM_ERR_QUEUE_TIMEOUT;
+    fprintf(stderr, "[llm] %s%s: %s after %ld ms queued (never sent)\n",
+            c->base_url, path, wi.verdict == LLM_Q_FULL ? "queue full"
+                                                        : "queue deadline",
+            wi.queued_ms);
+    return NULL;
+  }
   if (rc != 0 || r.status == 0) {
-    /* SPLIT ON THE CLOCK, because "unreachable" and "too slow" send an
-     * operator to opposite ends of the system and http_request cannot tell us
-     * which it was — it reports any failed exchange as non-zero with status 0.
-     * A local llama-server on CPU spends ~100 s on prompt-eval for the 18k-token
-     * analysis request, blows the 60 s budget, and was reported as "llama-server
-     * is not running" while it was sitting there working. The wall clock is the
-     * one thing we can measure ourselves: a call that consumed essentially its
-     * whole budget timed out; one that failed immediately had nothing to talk
-     * to. 90% of budget, because the client's own timeout fires slightly early
-     * and the queue wait before it is not free either. */
-    if (st) *st = (elapsed_ms >= (long)budget * 9 / 10) ? LLM_ERR_TIMEOUT
-                                                        : LLM_ERR_UNREACHABLE;
+    /* SPLIT ON WHAT FAILED, because "unreachable" and "too slow" send an
+     * operator to opposite ends of the system. A local llama-server on CPU
+     * spends ~100 s on prompt-eval for the 18k-token analysis request, blows
+     * the 60 s budget, and was reported as "llama-server is not running" while
+     * it was sitting there working. This used to be decided by the wall clock
+     * around the whole call — which included the QUEUE wait, so a refused
+     * connection after a long queue read as a timeout. The worker now reports
+     * the transport's own verdict for the exchange alone: a connected
+     * exchange that ran out its timeout is a timeout; a connect that never
+     * completed (refused, unresolvable, black-holed) is unreachable. The
+     * clock on the HTTP time alone backs up an "other" failure. */
+    int timed_out = wi.transport == HTTP_TE_TIMEOUT ||
+                    (wi.transport == HTTP_TE_OTHER &&
+                     wi.http_ms >= (long)budget * 9 / 10);
+    if (st) *st = timed_out ? LLM_ERR_TIMEOUT : LLM_ERR_UNREACHABLE;
+    fprintf(stderr, "[llm] %s%s: %s — %ld ms queued + %ld ms HTTP over %d "
+                    "attempt(s)\n", c->base_url, path,
+            timed_out ? "timed out" : "unreachable", wi.queued_ms, wi.http_ms,
+            wi.attempts);
     http_response_free(&r);
     return NULL;
   }

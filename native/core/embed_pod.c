@@ -128,6 +128,13 @@ const char *embed_base_url(void) {
   return (u && *u) ? u : NULL;
 }
 
+const char *embed_query_url(void) {
+  const char *b = embed_base_url();
+  if (!b) return NULL;                 /* no index server, no query server */
+  const char *u = getenv("JO_EMBED_QUERY_URL");
+  return (u && *u) ? u : b;
+}
+
 static long since_days(void)  { long d = env_long("JO_EMBED_SINCE_DAYS", 180); return d > 0 ? d : 180; }
 static int  batch_size(void)  { long b = env_long("JO_EMBED_BATCH", 32); return (b > 0 && b <= 256) ? (int)b : 32; }
 static int  max_per_run(void) { long m = env_long("JO_EMBED_MAX_PER_RUN", 2000); return m > 0 ? (int)m : 2000; }
@@ -139,7 +146,8 @@ static long max_walk(void) {
 }
 
 /* JO_EMBED_RECORD_TYPES as a JSON array string for json_each(), or NULL for
- * the default (everything but the two collector notices). */
+ * the default (everything but the two collector notices and the search-run
+ * summaries — see SEL_TYPE). */
 static char *record_types_json(void) {
   const char *v = getenv("JO_EMBED_RECORD_TYPES");
   if (!v || !*v) return NULL;
@@ -363,6 +371,12 @@ cJSON *embed_coverage_json(db_handle *db) {
   cJSON *o = cJSON_CreateObject();
   const char *url = embed_base_url();
   cJSON_AddBoolToObject(o, "enabled", url != NULL);
+  /* Where a user's query is embedded, when it is not the backfill's server:
+   * an operator reading a slow query wants to know whether it had a slot of
+   * its own. Null when queries share JO_EMBED_URL's worker. */
+  { const char *q = embed_query_url();
+    if (url && q && strcmp(q, url)) cJSON_AddStringToObject(o, "query_url", q);
+    else cJSON_AddNullToObject(o, "query_url"); }
   cJSON_AddBoolToObject(o, "index_present", embed_table_exists(db));
   char buf[600];
   int have_meta = db && db->h && table_exists(db, EMBED_META_TABLE);
@@ -413,7 +427,8 @@ cJSON *embed_coverage_json(db_handle *db) {
   char *rt = record_types_json();
   if (rt) { cJSON *a = cJSON_Parse(rt); cJSON_AddItemToObject(o, "record_types", a ? a : cJSON_CreateNull()); free(rt); }
   else cJSON_AddStringToObject(o, "record_types",
-         "all except collector-truncation-notice, collector-shape-notice");
+         "all except collector-truncation-notice, collector-shape-notice, "
+         "osint_search_run");
   cJSON_AddStringToObject(o, "date_rule",
          "published_at when it is ISO-8601 text, else fetched_at");
   cJSON_AddNumberToObject(o, "max_chars", (double)max_chars());
@@ -474,10 +489,21 @@ static int ensure_index(db_handle *db, int dim) {
 
 /* ---- model identity ------------------------------------------------------ */
 
+/* What GET <base>/v1/models says, ignoring JO_EMBED_MODEL — the query-slot
+ * cross-check below compares what two SERVERS serve, and the env pin would
+ * make every comparison agree with itself. */
+static int detect_served_model(http_client *http, const char *base, char *out,
+                               size_t cap);
+
 int embed_detect_model(http_client *http, const char *base, char *out,
                        size_t cap) {
   const char *m = getenv("JO_EMBED_MODEL");
   if (m && *m) { snprintf(out, cap, "%s", m); return 0; }
+  return detect_served_model(http, base, out, cap);
+}
+
+static int detect_served_model(http_client *http, const char *base, char *out,
+                               size_t cap) {
   if (!base || !*base) { snprintf(out, cap, "no embedding server configured"); return -1; }
   http_client *own = NULL;
   if (!http) http = own = http_client_new();
@@ -543,6 +569,54 @@ int embed_live_model(char *out, size_t cap) {
   return rc;
 }
 
+/* THE QUERY SLOT MUST SERVE THE INDEX'S MODEL. JO_EMBED_QUERY_URL exists so a
+ * user's query does not wait behind a 120 s backfill batch on the one worker
+ * JO_EMBED_URL owns; it is a second instance, or a second --parallel slot of
+ * the same one. A second INSTANCE can be started with a different GGUF, and a
+ * query embedded by model B ranked against vectors from model A answers 200
+ * with rankings that mean nothing — the same-width-swap failure the refused
+ * index exists to stop. So when the two URLs differ, both servers are asked
+ * what they serve and the query side is refused unless they agree. Cached on
+ * success only, as embed_live_model() is. */
+int embed_live_query_model(char *out, size_t cap) {
+  int rc = embed_live_model(out, cap);
+  if (rc != 0) return rc;
+  const char *b = embed_base_url(), *q = embed_query_url();
+  if (!b || !q || !strcmp(b, q)) return 0;
+  static pthread_mutex_t mu = PTHREAD_MUTEX_INITIALIZER;
+  static char ok_b[512], ok_q[512];
+  static long long ok_at = 0;
+  long long now = wall_ms();
+  long ttl = env_long("JO_EMBED_MODEL_CHECK_TTL_MS", 10000);
+  pthread_mutex_lock(&mu);
+  int hit = ok_at && now - ok_at < ttl && !strcmp(ok_b, b) && !strcmp(ok_q, q);
+  pthread_mutex_unlock(&mu);
+  if (hit) return 0;
+  char mb[256], mq[256];
+  if (detect_served_model(NULL, b, mb, sizeof mb) != 0) {
+    snprintf(out, cap, "cannot verify the query slot: JO_EMBED_URL %.200s", mb);
+    return -1;
+  }
+  if (detect_served_model(NULL, q, mq, sizeof mq) != 0) {
+    snprintf(out, cap, "cannot verify the query slot: JO_EMBED_QUERY_URL %.200s",
+             mq);
+    return -1;
+  }
+  if (strcmp(mb, mq) != 0) {
+    snprintf(out, cap, "JO_EMBED_QUERY_URL serves '%.100s' but JO_EMBED_URL "
+             "serves '%.100s'; a query embedded by one model cannot be ranked "
+             "against vectors from the other, so queries are refused until "
+             "both serve the same model", mq, mb);
+    return -1;
+  }
+  pthread_mutex_lock(&mu);
+  snprintf(ok_b, sizeof ok_b, "%s", b);
+  snprintf(ok_q, sizeof ok_q, "%s", q);
+  ok_at = now;
+  pthread_mutex_unlock(&mu);
+  return 0;
+}
+
 /* ---- the sweep ----------------------------------------------------------- */
 
 static unsigned long long fnv1a(const char *s) {
@@ -595,9 +669,15 @@ static char *compose_text(const char *title, const char *summary,
   " FROM intel_items " \
   "LEFT JOIN " EMBED_DONE_TABLE " d ON d.uid = intel_items.uid " \
   "LEFT JOIN " EMBED_FAIL_TABLE " f ON f.uid = intel_items.uid "
+/* osint_search_run is the pipeline's own synthesis (core/pipeline.c): an
+ * LLM's prose about collected rows, written back as an intel item. Embedded,
+ * it would come back from /api/intel/semantic ranked beside the records it
+ * paraphrases, as if it had been collected — and the next synthesis would
+ * cite it as evidence. Not a finding; not in the index. */
 #define SEL_TYPE \
   "((?2 IS NULL AND (intel_items.record_type IS NULL OR intel_items.record_type " \
-  "NOT IN ('collector-truncation-notice','collector-shape-notice'))) OR " \
+  "NOT IN ('collector-truncation-notice','collector-shape-notice'," \
+  "'osint_search_run'))) OR " \
   "(?2 IS NOT NULL AND intel_items.record_type IN " \
   "(SELECT value FROM json_each(?2))))"
 
@@ -867,6 +947,8 @@ static int record_failure(db_handle *db, pick *p, const char *reason,
  * recorded as failed. */
 static int transient(llm_status st, long http) {
   if (st == LLM_ERR_UNREACHABLE || st == LLM_ERR_TIMEOUT) return 1;
+  /* never sent at all: the worker's queue was busy, not the input bad */
+  if (st == LLM_ERR_QUEUE_TIMEOUT || st == LLM_ERR_QUEUE_FULL) return 1;
   if (st == LLM_ERR_HTTP && (http == 0 || http == 503 || http == 429)) return 1;
   return st == LLM_ERR_BAD_REQUEST;           /* our side: OOM building JSON */
 }

@@ -505,11 +505,19 @@ static size_t on_header(char *buf, size_t sz, size_t nm, void *ud) {
   return n;
 }
 
+/* What the last do_once() on THIS thread failed on — see
+ * http_last_transport_error() in httpclient.h. Thread-local because the one
+ * caller that reads it (the LLM worker) reads it on the thread that fetched. */
+static __thread int g_last_te = HTTP_TE_NONE;
+
+int http_last_transport_error(void) { return g_last_te; }
+
 static int do_once(http_client *c, const char *method, const char *url,
                    const char *const *headers, const char *body,
                    size_t body_len, int timeout_ms, http_response *out,
                    long *retry_after_ms) {
   *retry_after_ms = -1;
+  g_last_te = HTTP_TE_OTHER;            /* every early refusal below is "other" */
   /* Defensive: a NULL client/method/url must never segfault the process.
    * On-demand runs (e.g. dataapi_layer) may invoke an HTTP-backed collector
    * without a client wired up; treat that as a hard failure (rc=1 → caller
@@ -581,6 +589,19 @@ static int do_once(http_client *c, const char *method, const char *url,
   if (gated) hostgate_release(url);
   long code = 0;
   curl_easy_getinfo(e, CURLINFO_RESPONSE_CODE, &code);
+  {
+    /* A timeout before the connection completed is a host that is not there
+     * (black-holed), not a slow answer; the LLM worker retries the first and
+     * never the second, so the two must not share a verdict. */
+    double conn = 0;
+    curl_easy_getinfo(e, CURLINFO_CONNECT_TIME, &conn);
+    g_last_te = rc == CURLE_OK ? HTTP_TE_NONE
+              : rc == CURLE_OPERATION_TIMEDOUT ? (conn > 0 ? HTTP_TE_TIMEOUT
+                                                           : HTTP_TE_CONNECT)
+              : (rc == CURLE_COULDNT_CONNECT || rc == CURLE_COULDNT_RESOLVE_HOST ||
+                 rc == CURLE_COULDNT_RESOLVE_PROXY) ? HTTP_TE_CONNECT
+              : HTTP_TE_OTHER;
+  }
   if (hl) curl_slist_free_all(hl);
   curl_easy_cleanup(e);
   *retry_after_ms = hs.retry_after_ms;

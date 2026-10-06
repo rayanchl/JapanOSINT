@@ -66,6 +66,14 @@ char *prompt_entity_extraction(const char *title, const char *body,
 char *prompt_entity_dedup(const char *type, const char *canon_a,
                           const char *canon_b);
 
+/* The standing SECURITY RULE followed by `value` inside a BEGIN/END fence
+ * named `name` and carrying a fresh random id, exactly as the builders in
+ * prompts.c fence their untrusted inputs. For prompts assembled elsewhere
+ * that embed text a third party controls — a re-fetched upstream body, a
+ * scraped page — so that text is DATA to the model rather than instructions.
+ * The value's bytes are unchanged. Caller frees; NULL on OOM. */
+char *prompt_fence_untrusted(const char *name, const char *value);
+
 /* Returns the cached GBNF text for one of
  * "osint_analysis" / "entity_extraction" / "page_analysis" / "suggestions"
  * (read once from <repo>/server/grammars/<name>.gbnf). Returns "" if the file

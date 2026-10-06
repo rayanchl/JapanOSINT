@@ -78,6 +78,87 @@ int main(void) {
            checked, resolved);
   }
 
+  /* ── 4. an EXACT id runs on an entity only if it is a pivot ──────────────
+   * osint_lookup() returned any registered source for an exact id, so a model
+   * or a hand-written POST /api/search naming a scheduled bulk feed got the
+   * whole feed attributed to the entity, and PORT_SCANNER (collector _probe)
+   * was one request away from any JWT holder. */
+  {
+    const char *dbp4 = getenv("JO_DB");
+    assert(dbp4 && *dbp4);
+    db_handle db4 = {0};
+    assert(db_open(&db4, NULL, NULL) == 0);
+    intel_sink ps = intel_sink_make(&db4, "osint-search", "legacy");
+    const source_def **all = registry_all();
+    int n = registry_count(), refused = 0;
+    for (int i = 0; i < n && refused < 5; i++) {
+      const source_def *d = all[i];
+      if (!d || !upper_id(d->id) || is_entity_pivot(d) || d->update_interval_sec <= 0)
+        continue;
+      if (strlen(d->id) >= 64) continue;          /* osint_canon's buffer */
+      osint_result r4;
+      osint_dispatch(&db4, NULL, d->id, "john smith", "person", &ps, &r4);
+      assert(r4.error && !strcmp(r4.error, "not_a_pivot"));
+      assert(r4.success == 0 && r4.records == 0 && !r4.resolved_from);
+      osint_result_free(&r4);
+      /* refused before it ran: nothing logged against the feed */
+      assert(scalar(&db4, "SELECT count(*) FROM fetch_log WHERE source_id=?1",
+                    d->id) == 0);
+      refused++;
+    }
+    assert(refused == 5);
+    if (registry_get("PORT_SCANNER")) {
+      osint_result r4;
+      osint_dispatch(&db4, NULL, "PORT_SCANNER", "127.0.0.1", "ip", &ps, &r4);
+      assert(r4.error && !strcmp(r4.error, "not_a_pivot"));
+      osint_result_free(&r4);
+      /* the operator CLI path still reaches it (host_allowed refuses
+       * loopback before any connect, so this touches no network) */
+      osint_dispatch_operator(&db4, NULL, "PORT_SCANNER", "127.0.0.1", "ip",
+                              &ps, &r4);
+      assert(!r4.error || strcmp(r4.error, "not_a_pivot"));
+      osint_result_free(&r4);
+    }
+    /* the pipeline's own fallback pivot is a pivot */
+    const source_def *jc = registry_get("JP_CORPUS_LOOKUP");
+    assert(jc && is_entity_pivot(jc));
+    intel_sink_free(&ps);
+    db_close(&db4);
+
+    /* the follow-up round's schema names exactly the menu's pivots */
+    const char *ids[3] = { "JP_CORPUS_LOOKUP", NULL, "NO_SUCH_SERVICE_X" };
+    const char *sched = NULL;
+    for (int i = 0; i < n && !sched; i++)
+      if (all[i] && all[i]->id && !is_entity_pivot(all[i])) sched = all[i]->id;
+    ids[1] = sched;
+    char *sch = osint_phase2_schema_dynamic_ids(ids, 3);
+    assert(sch);
+    cJSON *sj = cJSON_Parse(sch);
+    free(sch);
+    cJSON *en = cJSON_GetObjectItem(cJSON_GetObjectItem(cJSON_GetObjectItem(
+        cJSON_GetObjectItem(cJSON_GetObjectItem(cJSON_GetObjectItem(sj,
+        "properties"), "chain_services"), "items"), "properties"), "service"),
+        "enum");
+    assert(cJSON_GetArraySize(en) == 1 &&
+           !strcmp(cJSON_GetArrayItem(en, 0)->valuestring, "JP_CORPUS_LOOKUP"));
+    assert(cJSON_GetObjectItem(cJSON_GetObjectItem(sj, "properties"),
+                               "needs_newphase"));
+    cJSON_Delete(sj);
+    const char *none[1] = { sched };
+    assert(osint_phase2_schema_dynamic_ids(none, 1) == NULL);
+    sch = osint_phase2_schema_dynamic_limited(7);
+    sj = cJSON_Parse(sch);
+    free(sch);
+    en = cJSON_GetObjectItem(cJSON_GetObjectItem(cJSON_GetObjectItem(
+        cJSON_GetObjectItem(cJSON_GetObjectItem(cJSON_GetObjectItem(sj,
+        "properties"), "chain_services"), "items"), "properties"), "service"),
+        "enum");
+    assert(cJSON_GetArraySize(en) == 7);
+    cJSON_Delete(sj);
+    printf("  exact non-pivot ids refused (not_a_pivot, nothing run), operator "
+           "path kept, phase-2 enum = menu pivots: ok\n");
+  }
+
   /* ── 1 + 3. a resolved, credential-gated pivot ─────────────────────────── */
   const char *GATED = "UK_CH_OFFICER_SEARCH";
   const source_def *g = registry_get(GATED);

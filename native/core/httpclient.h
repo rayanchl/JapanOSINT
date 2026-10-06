@@ -65,6 +65,17 @@ int http_request(http_client *c, const char *method, const char *url,
 
 void http_response_free(http_response *r);
 
+/* Why the most recent attempt made by http_request() ON THE CALLING THREAD
+ * failed: HTTP_TE_NONE when it completed an exchange (any status),
+ * HTTP_TE_CONNECT when nothing answered (refused, unresolvable, or the connect
+ * itself timed out), HTTP_TE_TIMEOUT when a connected exchange ran out its
+ * timeout, HTTP_TE_OTHER for anything else (TLS, oversize body, a refused
+ * URL). http_request's own retry treats all of them alike; the LLM worker
+ * (core/llm_worker.c) must not, because retrying a 120 s generation that
+ * timed out spends a second 120 s the caller never granted. */
+enum { HTTP_TE_NONE = 0, HTTP_TE_CONNECT, HTTP_TE_TIMEOUT, HTTP_TE_OTHER };
+int http_last_transport_error(void);
+
 /* Per-client log of the distinct hosts contacted (every http_request goes
  * through one client). Lets the OSINT dispatcher attribute a service's output
  * to the real upstream providers it hit — automatic source attribution for

@@ -132,6 +132,16 @@ char *osint_analysis_schema_dynamic_limited(int limit);
  * entity pivots are dropped. NULL when none survive; caller falls back. */
 char *osint_analysis_schema_dynamic_ids(const char *const *ids, int n);
 
+/* The FOLLOW-UP round's schema — {needs_newphase, reason, chain_services[]} —
+ * with chain_services[].service constrained to exactly these ids (the menu
+ * that round was shown), or to the first `limit` entity pivots in registry
+ * order for the fallback menu. A follow-up round used to be sent with NO
+ * schema at all, so the model could name any service, including ones it was
+ * never shown and scheduled feeds that cannot pivot. NULL when no id
+ * survives; the caller then sends the round unconstrained and says so. */
+char *osint_phase2_schema_dynamic_ids(const char *const *ids, int n);
+char *osint_phase2_schema_dynamic_limited(int limit);
+
 /* Handler-dedup key (== JS handlerKey). Unified model: the canonical id IS
  * the key (distinct source_def per service); alias-grouping is an additive
  * refinement. Writes into out. */
@@ -141,10 +151,22 @@ int  osint_handler_key(const char *name, char *out, size_t n);
  * (shared http/llm/db like scheduler_run_source), runs the source through a
  * dual sink that BOTH persists via `persist` (the real intel_sink → live
  * intel_items) AND captures the emitted result JSON into *out. Never throws;
- * unregistered/non-OSINT id → success=0, error="not_implemented" (graceful,
- * == JS). Returns 0 always (result in *out). */
+ * unregistered id → success=0, error="not_implemented" (graceful, == JS).
+ * A registered id that is NOT an entity pivot (a scheduled bulk feed, a
+ * `_probe`/`_maint` source, a detail endpoint of another collector) →
+ * success=0, error="not_a_pivot": it fetches the same collection whatever
+ * entity it is handed, so running it would attribute that collection to the
+ * entity (house rule 4d). Returns 0 always (result in *out). */
 int  osint_dispatch(db_handle *db, llm_client *llm, const char *service,
                     const char *entity, const char *entity_type,
                     intel_sink *persist, osint_result *out);
+
+/* osint_dispatch() for a LOCAL OPERATOR (main.c --dispatch): also runs a
+ * registered source that is not an entity pivot, e.g. `--dispatch
+ * PORT_SCANNER <host>` or an exhaustiveness check on a scheduled row. Never
+ * reachable from a request path. */
+int  osint_dispatch_operator(db_handle *db, llm_client *llm, const char *service,
+                             const char *entity, const char *entity_type,
+                             intel_sink *persist, osint_result *out);
 
 #endif

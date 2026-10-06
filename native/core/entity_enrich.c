@@ -64,6 +64,11 @@ int entity_enrich_extract(db_handle *db, llm_client *llm, int batch) {
       " LEFT JOIN entity_extraction_state st ON st.item_uid=i.uid"
       " WHERE (st.item_uid IS NULL OR (st.extracted_at='' AND st.failed_count<5))"
       "   AND (i.title IS NOT NULL OR i.body IS NOT NULL OR i.summary IS NOT NULL)"
+      /* The pipeline's own synthesis row: entities the MODEL wrote, which
+       * extracted here would enter the entity graph as mentions in a
+       * collected record. The run's real entities are already linked to it
+       * by pipeline.c with their own provenance. */
+      "   AND (i.record_type IS NULL OR i.record_type <> 'osint_search_run')"
       " ORDER BY i.fetched_at DESC LIMIT ?1", -1, &s, NULL) == SQLITE_OK) {
     sqlite3_bind_int(s, 1, batch);
     while (nr < batch && sqlite3_step(s) == SQLITE_ROW) {

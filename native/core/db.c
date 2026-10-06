@@ -363,6 +363,8 @@ static void ensure_parent_dir(const char *path) {
   mkdir(buf, 0755);
 }
 
+static void alert_events_unique_migrate(db_handle *db);   /* below db_open */
+
 int db_open(db_handle *db, const char *db_path, const char *schema_path) {
   const char *dbp = db_path ? db_path
     : (getenv("JO_DB") ? getenv("JO_DB") : JO_REPO_ROOT "/data/japanmap.db");
@@ -413,6 +415,7 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
   /* The rule's name, stamped when the rule is deleted: events outlive their
    * rule (they are the inbox's history), and the inbox/export still name it. */
   ensure_column(db, "alert_events", "rule_name", "TEXT");
+  alert_events_unique_migrate(db);
 
   /* Correlation scoring (roadmap item 22): significance over co-mention
    * edges. NULL until the stats pod has run, and NULL for pairs below the
@@ -537,6 +540,70 @@ int db_integrity_ok(db_handle *db, char *out, int out_sz) {
   }
   sqlite3_finalize(st);
   return ok;
+}
+
+/* ONE EVENT PER (rule, item), ENFORCED BY THE TABLE.
+ *
+ * Dedup used to be check-then-insert in core/alert_eval.c fire(): SELECT for
+ * a recent event, then INSERT. The ingest path (intel.c, on the collector's
+ * thread) and the entity sweep (its own thread, own connection) both reach
+ * fire() for the same rule and item, and nothing stopped both SELECTs from
+ * running before either INSERT — two events, two deliveries, one match. A
+ * UNIQUE index turns the race into an INSERT OR IGNORE that one side loses.
+ *
+ * Existing duplicates must go first or the index cannot be built. Kept per
+ * pair: the deliverable row (suppressed=0) over a storm marker, then the
+ * earliest; the deliveries queued for the dropped rows go with them, since
+ * they are the double notifications this exists to stop. Runs once: after
+ * the index exists there is nothing left to dedupe. breach_monitor.c already
+ * wrote at most one row per (rule, item) through its NOT EXISTS guard, so
+ * its rows are unaffected. */
+static void alert_events_unique_migrate(db_handle *db) {
+  sqlite3_stmt *st = NULL;
+  int have = 0;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT 1 FROM sqlite_master WHERE type='index' AND"
+        " name='ux_alert_events_rule_item'", -1, &st, NULL) == SQLITE_OK) {
+    have = sqlite3_step(st) == SQLITE_ROW;
+    sqlite3_finalize(st);
+  }
+  if (have) return;
+  static const char *MARK =
+    "BEGIN IMMEDIATE;"
+    "CREATE TEMP TABLE IF NOT EXISTS _ae_dup(id TEXT PRIMARY KEY);"
+    "DELETE FROM _ae_dup;"
+    "INSERT INTO _ae_dup(id) SELECT id FROM ("
+    "  SELECT id, ROW_NUMBER() OVER (PARTITION BY rule_id, item_uid"
+    "    ORDER BY suppressed ASC, matched_at ASC, rowid ASC) AS rn"
+    "  FROM alert_events) WHERE rn > 1;";
+  static const char *APPLY =
+    "DELETE FROM alert_deliveries WHERE event_id IN (SELECT id FROM _ae_dup);"
+    "DELETE FROM alert_events WHERE id IN (SELECT id FROM _ae_dup);"
+    "CREATE UNIQUE INDEX IF NOT EXISTS ux_alert_events_rule_item"
+    "  ON alert_events(rule_id, item_uid);"
+    "DROP TABLE _ae_dup;"
+    "COMMIT;";
+  char *err = NULL;
+  long dups = 0;
+  int rc = sqlite3_exec(db->h, MARK, NULL, NULL, &err);
+  if (rc == SQLITE_OK &&
+      sqlite3_prepare_v2(db->h, "SELECT count(*) FROM _ae_dup", -1, &st,
+                         NULL) == SQLITE_OK) {
+    if (sqlite3_step(st) == SQLITE_ROW) dups = (long)sqlite3_column_int64(st, 0);
+    sqlite3_finalize(st);
+  }
+  if (rc == SQLITE_OK) rc = sqlite3_exec(db->h, APPLY, NULL, NULL, &err);
+  if (rc != SQLITE_OK) {
+    fprintf(stderr, "[db] alert_events unique-index migration failed: %s — "
+                    "duplicate fires stay possible until it succeeds\n",
+            err ? err : "?");
+    sqlite3_free(err);
+    sqlite3_exec(db->h, "ROLLBACK", NULL, NULL, NULL);
+    return;
+  }
+  if (dups)
+    fprintf(stderr, "[db] alert_events: removed %ld duplicate (rule, item) "
+                    "event(s) before adding ux_alert_events_rule_item\n", dups);
 }
 
 int db_object_count(db_handle *db) {

@@ -824,9 +824,17 @@ static void fire(db_handle *db, const char *rule_id, const char *tenant_id,
     sqlite3_finalize(s);
   }
 
+  /* OR IGNORE against ux_alert_events_rule_item (core/db.c). The window
+   * check above is a SELECT followed, a few statements later, by this
+   * INSERT; the ingest path and the entity sweep run fire() on different
+   * threads and connections, and both could pass the SELECT before either
+   * wrote — one match, two events, two deliveries. The index makes the
+   * second INSERT a no-op instead. It also means a (rule, item) pair fires
+   * at most once, whatever the window: ingest evaluates only NEW rows, so a
+   * repeat for the same pair was only ever this race or a sweep re-match. */
   char eid[37]; uuid4(eid);
   if (sqlite3_prepare_v2(h,
-        "INSERT INTO alert_events (id,tenant_id,rule_id,item_uid,matched_at,"
+        "INSERT OR IGNORE INTO alert_events (id,tenant_id,rule_id,item_uid,matched_at,"
         "delivered_channels_json,suppressed,reason)"
         " VALUES (?1,?2,?3,?4,datetime('now'),'[]',?5,?6)",
         -1, &s, NULL) != SQLITE_OK) return;
@@ -875,13 +883,29 @@ static void eval_item(db_handle *db, rule_set *rs, const char *tenant_hint,
   item_facts f;
   facts_from_row(&f, s, db->h, tid, 0, 1, 2, 3, 4);
 
+  /* THE SHARED CORPUS IS EVERY TENANT'S. Collector rows are written under
+   * 'legacy' and every tenant reads them (CLAUDE.md, "Embedding pipeline and
+   * tenancy"), but rules were matched only when the rule's tenant equalled
+   * the row's — so a rule any real tenant wrote could never fire on collected
+   * data, which is nearly all of it. A 'legacy' row is now offered to every
+   * tenant's rules, each fire recorded under the RULE's tenant; a row a
+   * tenant owns (a search-run summary, an upload) still meets only that
+   * tenant's rules. Entity facts are re-read per rule tenant, because the
+   * entities join is what keeps one tenant's private entities out of
+   * another's match. */
+  int shared = strcmp(tid, "legacy") == 0;
   for (int i = 0; i < rs->n; i++) {
     const rule_c *r = &rs->v[i];
-    if (strcmp(r->tenant_id, tid) != 0) continue;
+    if (!shared && strcmp(r->tenant_id, tid) != 0) continue;
     if (entity_only && !r->p.has_ent) continue;
+    if (strcmp(f.tenant, r->tenant_id) != 0 && r->p.has_ent) {
+      if (f.ents_ready) { strlist_free(&f.eids); strlist_free(&f.etypes); }
+      f.ents_ready = 0;
+      f.tenant = r->tenant_id;
+    }
     if (!facts_match(&r->p, &f)) continue;            /* in-memory terms first */
     if (r->p.fts_q && !fts_probe(db->h, r->p.fts_q, uid)) continue;
-    fire(db, r->id, tid, uid);
+    fire(db, r->id, r->tenant_id, uid);
   }
 
   facts_clear(&f);
@@ -896,7 +920,8 @@ void alert_eval_on_item(db_handle *db, const char *tenant_id,
   /* The overwhelmingly common case — a tenant with no enabled rules — costs
    * one mutex and a strcmp loop, and touches the database not at all. */
   if (rs->n == 0 ||
-      (tenant_id && *tenant_id && !ruleset_has_tenant(rs, tenant_id))) {
+      (tenant_id && *tenant_id && strcmp(tenant_id, "legacy") != 0 &&
+       !ruleset_has_tenant(rs, tenant_id))) {   /* legacy: every tenant's */
     ruleset_release(rs); return;
   }
   eval_item(db, rs, tenant_id, item_uid, 0);

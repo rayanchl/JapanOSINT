@@ -19,9 +19,10 @@ typedef struct {
   const char *base_url;
   int interactive;
   /* 1: the call's timeout bounds the time spent QUEUED behind other jobs on
-   * this server's worker as well as the exchange itself (see
-   * llm_worker_request_ex). 0 (the zero-initialised default) keeps the old
-   * unbounded queue wait, which background callers rely on. */
+   * this server's worker as well as the exchange itself (llm_worker_req's
+   * max_wait_ms). 0 (the zero-initialised default): the queue wait gets its
+   * own deadline, llm_worker_queue_wait_ms(timeout) — JO_LLM_QUEUE_WAIT_FACTOR
+   * times the timeout — and the exchange its full timeout. */
   int bound_queue_wait;
 } llm_client;
 
@@ -85,10 +86,24 @@ typedef enum {
   LLM_ERR_TIMEOUT,      /* the call ran out its own timeout budget            */
   LLM_ERR_HTTP,         /* server answered, status outside 2xx               */
   LLM_ERR_EMPTY,        /* 2xx, but no usable content in the response        */
+  /* The two below were never SENT, which is the point of naming them: a call
+   * that waited 200 s behind other jobs and then failed was reported as
+   * llm_timeout ("llama-server is too slow for this prompt") when the server
+   * had not been asked anything. Different fix: fewer concurrent callers, a
+   * second slot (--parallel), or a dedicated instance. */
+  LLM_ERR_QUEUE_TIMEOUT, /* waited out its queue deadline behind other jobs   */
+  LLM_ERR_QUEUE_FULL,    /* its lane already held JO_LLM_QUEUE_MAX waiting jobs */
 } llm_status;
 
+/* How the most recent llm_* call ON THIS THREAD spent its time: ms waiting in
+ * the per-server queue, and ms inside HTTP (all attempts). Either pointer may
+ * be NULL. Thread-local because the caller blocks for the whole call, so the
+ * thread that asked is the thread that reads; nothing here is shared. */
+void llm_last_call_timing(long *queued_ms, long *http_ms);
+
 /* Stable machine-readable token for a status ("ok", "llm_unreachable",
- * "llm_http_error", "llm_empty_response", "llm_bad_request"). Never NULL —
+ * "llm_http_error", "llm_empty_response", "llm_bad_request",
+ * "llm_queue_timeout", "llm_queue_full"). Never NULL —
  * these strings are surfaced to the client as degradation codes, so they are
  * part of the API and must not be reworded casually. */
 const char *llm_status_code(llm_status s);
