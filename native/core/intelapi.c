@@ -989,13 +989,17 @@ char *intelapi_intel_sources(db_handle *db) {
  * are freed rather than printed, which is where most of that goes. */
 char *intelapi_intel_sources_view(db_handle *db, int limit, int offset,
                                   int summary_only) {
-  /* 1. aggregates over intel_items (== listSources()) */
+  /* 1. aggregates over intel_items (== listSources()). last_fetched reads
+   * last_seen_at: a re-fetch of unchanged content no longer moves fetched_at
+   * (core/intel.c, UNCHANGED RE-FETCH), and a source whose feed is static is
+   * still a source that was fetched. */
   static const char *AQ =
     "SELECT source_id,COUNT(*),"
     "SUM(CASE WHEN lat IS NOT NULL THEN 1 ELSE 0 END),"
     "SUM(CASE WHEN lat IS NULL THEN 1 ELSE 0 END),"
     "SUM(CASE WHEN lat IS NULL AND geom_source IS NULL THEN 1 ELSE 0 END),"
-    "MAX(fetched_at),MAX(COALESCE(published_at,fetched_at)) "
+    "MAX(COALESCE(last_seen_at,fetched_at)),"
+    "MAX(COALESCE(published_at,fetched_at)) "
     "FROM intel_items GROUP BY source_id";
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h, AQ, -1, &s, NULL) != SQLITE_OK) return NULL;

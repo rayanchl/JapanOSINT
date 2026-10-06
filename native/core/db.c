@@ -492,6 +492,15 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
   ensure_column(db, "intel_items", "capture_stills", "INTEGER NOT NULL DEFAULT 0");
   camera_stills_migrate(db);
 
+  /* The sink's unchanged-re-fetch path (core/intel.c, UNCHANGED RE-FETCH):
+   * content_hash is the 128-bit digest of what the upsert writes, compared on
+   * the next fetch of the same uid; last_seen_at is the one column a re-fetch
+   * of unchanged content still moves. Unindexed on purpose — that is what
+   * makes the write cheap. NULL on every row written before the column existed,
+   * which just means its first re-fetch is a full write, as before. */
+  ensure_column(db, "intel_items", "content_hash", "BLOB");
+  ensure_column(db, "intel_items", "last_seen_at", "TEXT");
+
   /* Widen intel_items_fts to also index link/author/tags/properties. No-op
    * unless the live index is still the old column set. Deliberately LAST of
    * the migrations: it rewinds translate.c's FTS watermark (so translate_state
@@ -520,7 +529,10 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
 }
 
 void db_close(db_handle *db) {
-  if (db && db->h) { sqlite3_close(db->h); db->h = NULL; }
+  /* close_v2: a statement some caller forgot to finalize (an intel sink
+   * never freed) turns the connection into a zombie that closes with its last
+   * statement, instead of sqlite3_close()'s SQLITE_BUSY and a leaked handle. */
+  if (db && db->h) { sqlite3_close_v2(db->h); db->h = NULL; }
 }
 
 int db_integrity_ok(db_handle *db, char *out, int out_sz) {

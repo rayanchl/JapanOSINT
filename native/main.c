@@ -270,6 +270,7 @@ int main(int argc, char **argv) {
       if (r.resolved_from) printf("resolved_from=%s\n", r.resolved_from);
       if (r.error) printf("error=%s\n", r.error);
       osint_result_free(&r);
+      intel_sink_free(&sink);
       http_client_free(hc);
       db_close(&db);
       return 0;
