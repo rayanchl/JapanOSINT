@@ -277,8 +277,12 @@ static void db_apply_pragmas(sqlite3 *h) {
    * instead of leaving it at its high-water mark. It changes no durability
    * guarantee: the limit applies after the checkpoint has already committed
    * those frames into the database. 256 MB is generous for the biggest single
-   * transaction this tree runs (the FTS rebuild's per-batch commits) while
-   * keeping the steady-state footprint bounded. */
+   * transaction this tree runs while keeping the steady-state footprint
+   * bounded. That is the FTS rebuild's FTS_REBUILD_BATCH-row commit
+   * (core/fts_schema.c) — and has been only since 2026-10-06: before that the
+   * rebuild was ONE transaction over the whole corpus, so this comment
+   * promised per-batch commits that did not exist, and a WAL that is still
+   * being appended to cannot be truncated at all. */
   sqlite3_exec(h, "PRAGMA journal_size_limit=268435456;", NULL, NULL, NULL);
 }
 

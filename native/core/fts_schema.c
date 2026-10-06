@@ -155,8 +155,60 @@ static double now_ms(void) {
 
 /* ── the rebuild ─────────────────────────────────────────────────────── */
 
+/* BATCHED AND RESUMABLE. The rebuild used to be ONE transaction over the
+ * whole corpus — drop the index, re-segment every row, commit at the end —
+ * while db.c's journal_size_limit comment described "per-batch commits" that
+ * did not exist. On the 4.3M-row repair that comment cites, one transaction
+ * means every rewritten page of the index sits in the WAL until the final
+ * COMMIT (the -wal file grows to the size of the new index, and
+ * journal_size_limit cannot truncate a WAL that is still being written), and a
+ * crash or kill at row 4.2M throws the whole pass away and starts over.
+ *
+ * Now three phases, each its own transaction(s):
+ *   1. SETUP, one transaction: snapshot non-empty keywords into a PERSISTENT
+ *      table (it must survive a restart, so not TEMP), drop and recreate the
+ *      index, clear uid_map, and write the progress row in _fts_rebuild.
+ *   2. FILL, FTS_REBUILD_BATCH rows per commit, walking intel_items by uid
+ *      (the PRIMARY KEY's index — rowids of a table without an INTEGER PRIMARY
+ *      KEY can be renumbered by VACUUM, uids cannot). The progress row's
+ *      last_uid advances in the same transaction as the batch it describes.
+ *   3. FINISH, one transaction: drop the snapshot, recreate the uid_map rowid
+ *      index, re-point translate.c's watermark, stamp _fts_meta, delete the
+ *      progress row.
+ * A boot that finds a progress row skips straight to FILL from last_uid. A
+ * failed batch rolls back only itself. A row already in uid_map when FILL
+ * reaches it was written by ingest after SETUP — newer than anything the
+ * rebuild would write — and is left alone. Until FINISH, search sees a
+ * partial index (rows past last_uid are missing); that is logged, and it is
+ * the price of not holding the whole corpus in one transaction. */
+#ifndef FTS_REBUILD_BATCH
+#define FTS_REBUILD_BATCH 5000
+#endif
+#define FTS_STR_(x) #x
+#define FTS_STR(x) FTS_STR_(x)
+
 static pthread_mutex_t g_mu = PTHREAD_MUTEX_INITIALIZER;
 static int g_ran = 0;
+
+/* Resume point: 1 and `last_uid` filled when a rebuild TO THIS VERSION is in
+ * progress. One left by a build with a different FTS_SCHEMA_VERSION is not
+ * resumed — its half-index holds the old segmentation — so the version check
+ * below sees a stale index and SETUP starts over. */
+static int rebuild_pending(sqlite3 *h, char *last_uid, size_t n) {
+  if (!table_exists(h, "_fts_rebuild")) return 0;
+  sqlite3_stmt *s; int found = 0;
+  if (sqlite3_prepare_v2(h, "SELECT last_uid FROM _fts_rebuild WHERE id=1 AND target_version="
+                         FTS_STR(FTS_SCHEMA_VERSION),
+                         -1, &s, NULL) != SQLITE_OK)
+    return 0;
+  if (sqlite3_step(s) == SQLITE_ROW) {
+    const char *u = (const char *)sqlite3_column_text(s, 0);
+    snprintf(last_uid, n, "%s", u ? u : "");
+    found = 1;
+  }
+  sqlite3_finalize(s);
+  return found;
+}
 
 void fts_schema_migrate(db_handle *db) {
   if (!db || !db->h) return;
@@ -167,6 +219,8 @@ void fts_schema_migrate(db_handle *db) {
 
   sqlite3 *h = db->h;
   if (!table_exists(h, "intel_items_fts")) return;   /* schema.sql owns create */
+  char last_uid[1024] = "";
+  int resuming = rebuild_pending(h, last_uid, sizeof last_uid);
   /* Two reasons to rebuild: the column set is old (v1: sentinel missing), or
    * the columns are right but the CONTENT was produced by an older
    * segmentation (v3 folds before MeCab; see fts_schema.h). The second is
@@ -177,11 +231,16 @@ void fts_schema_migrate(db_handle *db) {
   long long live_ver = table_exists(h, "_fts_meta")
     ? scalar_i64(h, "SELECT version FROM _fts_meta WHERE name='intel_items_fts'")
     : 0;
-  if (shape_ok && live_ver >= FTS_SCHEMA_VERSION) return;
+  if (!resuming && shape_ok && live_ver >= FTS_SCHEMA_VERSION) return;
 
   const char *flag = getenv("JO_FTS_REBUILD");
   if (flag && (strcmp(flag, "0") == 0 || strcmp(flag, "false") == 0)) {
-    if (!shape_ok)
+    if (resuming)
+      fprintf(stderr, "[fts] an interrupted intel_items_fts rebuild is pending "
+                      "(resume after uid '%s') and JO_FTS_REBUILD=0 — skipping; "
+                      "rows past that point are NOT in the search index until a "
+                      "boot without the flag finishes it\n", last_uid);
+    else if (!shape_ok)
       fprintf(stderr, "[fts] intel_items_fts is v1 and JO_FTS_REBUILD=0 — skipping "
                       "rebuild; link/author/tags/properties stay UNSEARCHABLE "
                       "(ingest writes the five v1 columns and does NOT drain the "
@@ -197,12 +256,8 @@ void fts_schema_migrate(db_handle *db) {
 
   long long nrows = scalar_i64(h, "SELECT COUNT(*) FROM intel_items");
   double t0 = now_ms();
-  fprintf(stderr, "[fts] rebuilding intel_items_fts -> v%d over %lld items "
-                  "(one transaction; an interrupted run rolls back to the "
-                  "existing index and retries next boot)\n",
-          FTS_SCHEMA_VERSION, nrows);
-
-  sqlite3_stmt *sel = NULL, *ins = NULL, *map = NULL, *met = NULL;
+  sqlite3_stmt *sel = NULL, *ins = NULL, *map = NULL, *have = NULL,
+               *prog = NULL, *met = NULL;
   char *e = NULL;
   int in_txn = 0;
 
@@ -213,121 +268,185 @@ void fts_schema_migrate(db_handle *db) {
     }                                                                         \
   } while (0)
 
-  EXEC("BEGIN IMMEDIATE");
-  in_txn = 1;
+  if (resuming) {
+    fprintf(stderr, "[fts] resuming intel_items_fts rebuild -> v%d after uid "
+                    "'%s' (%lld items in corpus, %d per commit)\n",
+            FTS_SCHEMA_VERSION, last_uid, nrows, FTS_REBUILD_BATCH);
+  } else {
+    fprintf(stderr, "[fts] rebuilding intel_items_fts -> v%d over %lld items "
+                    "(%d per commit; an interrupted run resumes next boot)\n",
+            FTS_SCHEMA_VERSION, nrows, FTS_REBUILD_BATCH);
 
-  /* keywords is NOT derivable from intel_items: the ingest path writes '' and
-   * the real content is pushed in later by translate.c (machine English) and
-   * media.c (OCR text). Dropping the index without saving it would silently
-   * un-translate the corpus, repairable only by re-running the LLM over every
-   * row. Snapshot the non-empty ones first — on an untranslated corpus this
-   * temp table is empty and costs nothing. */
-  EXEC("CREATE TEMP TABLE _fts_kw AS "
-       "SELECT m.uid AS uid, f.keywords AS keywords "
-       "  FROM intel_items_fts_uid_map m "
-       "  JOIN intel_items_fts f ON f.rowid = m.rowid "
-       " WHERE f.keywords IS NOT NULL AND f.keywords <> ''");
-  EXEC("CREATE UNIQUE INDEX temp._fts_kw_uid ON _fts_kw(uid)");
+    /* ── 1. SETUP ── */
+    EXEC("BEGIN IMMEDIATE");
+    in_txn = 1;
 
-  /* One INSERT per corpus row into uid_map is cheaper without this index;
-   * it is recreated below, so either ordering against translate_migrate()
-   * (which also creates it) ends with the index present. */
-  EXEC("DROP INDEX IF EXISTS idx_intel_items_fts_uid_map_rowid");
+    /* keywords is NOT derivable from intel_items: the ingest path writes ''
+     * and the real content is pushed in later by translate.c (machine
+     * English) and media.c (OCR text). Dropping the index without saving it
+     * would silently un-translate the corpus, repairable only by re-running
+     * the LLM over every row. Snapshot the non-empty ones first — on an
+     * untranslated corpus this table is empty and costs nothing. */
+    EXEC("DROP TABLE IF EXISTS _fts_rebuild_kw");
+    EXEC("CREATE TABLE _fts_rebuild_kw (uid TEXT PRIMARY KEY, keywords TEXT)"
+         " WITHOUT ROWID");
+    EXEC("INSERT OR IGNORE INTO _fts_rebuild_kw(uid,keywords) "
+         "SELECT m.uid, f.keywords "
+         "  FROM intel_items_fts_uid_map m "
+         "  JOIN intel_items_fts f ON f.rowid = m.rowid "
+         " WHERE f.keywords IS NOT NULL AND f.keywords <> ''");
 
-  EXEC("DROP TABLE intel_items_fts");
-  EXEC("CREATE VIRTUAL TABLE intel_items_fts USING fts5("
-       FTS_SCHEMA_COLUMNS ", tokenize='" FTS_SCHEMA_TOKENIZER "')");
-  EXEC("DELETE FROM intel_items_fts_uid_map");
+    /* One INSERT per corpus row into uid_map is cheaper without this index;
+     * it is recreated in FINISH, so either ordering against
+     * translate_migrate() (which also creates it) ends with it present. */
+    EXEC("DROP INDEX IF EXISTS idx_intel_items_fts_uid_map_rowid");
 
+    EXEC("DROP TABLE intel_items_fts");
+    EXEC("CREATE VIRTUAL TABLE intel_items_fts USING fts5("
+         FTS_SCHEMA_COLUMNS ", tokenize='" FTS_SCHEMA_TOKENIZER "')");
+    EXEC("DELETE FROM intel_items_fts_uid_map");
+    EXEC("CREATE TABLE IF NOT EXISTS _fts_rebuild ("
+         " id INTEGER PRIMARY KEY CHECK (id = 1),"
+         " target_version INTEGER NOT NULL, last_uid TEXT NOT NULL,"
+         " started_at TEXT NOT NULL)");
+    EXEC("INSERT OR REPLACE INTO _fts_rebuild(id,target_version,last_uid,started_at)"
+         " VALUES(1," FTS_STR(FTS_SCHEMA_VERSION) ",'',"
+         " strftime('%Y-%m-%dT%H:%M:%SZ','now'))");
+    EXEC("COMMIT");
+    in_txn = 0;
+    last_uid[0] = '\0';
+    /* The index the write path binds against just changed shape. */
+    pthread_mutex_lock(&g_shape_mu); g_shape = -1; pthread_mutex_unlock(&g_shape_mu);
+  }
+
+  /* ── 2. FILL ── */
   if (sqlite3_prepare_v2(h,
         "SELECT i.uid,i.title,i.body,i.summary,i.link,i.author,i.tags,"
         "       i.properties,k.keywords"
         "  FROM intel_items i"
-        "  LEFT JOIN _fts_kw k ON k.uid = i.uid", -1, &sel, NULL) != SQLITE_OK ||
+        "  LEFT JOIN _fts_rebuild_kw k ON k.uid = i.uid"
+        " WHERE i.uid > ?1 ORDER BY i.uid LIMIT ?2", -1, &sel, NULL) != SQLITE_OK ||
       sqlite3_prepare_v2(h,
         "INSERT INTO intel_items_fts"
         "(uid,title,body,summary,keywords,link,author,tags,props)"
         " VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9)", -1, &ins, NULL) != SQLITE_OK ||
       sqlite3_prepare_v2(h,
         "INSERT INTO intel_items_fts_uid_map(uid,rowid) VALUES(?1,?2)",
-        -1, &map, NULL) != SQLITE_OK) {
+        -1, &map, NULL) != SQLITE_OK ||
+      sqlite3_prepare_v2(h,
+        "SELECT 1 FROM intel_items_fts_uid_map WHERE uid=?1",
+        -1, &have, NULL) != SQLITE_OK ||
+      sqlite3_prepare_v2(h,
+        "UPDATE _fts_rebuild SET last_uid=?1 WHERE id=1", -1, &prog, NULL)
+        != SQLITE_OK) {
     fprintf(stderr, "[fts] rebuild prepare failed: %s\n", sqlite3_errmsg(h));
     goto fail;
   }
 
-  long long done = 0;
-  int scan_rc;
-  while ((scan_rc = sqlite3_step(sel)) == SQLITE_ROW) {
-    const char *uid = (const char *)sqlite3_column_text(sel, 0);
-    if (!uid || !*uid) continue;
+  long long done = 0, batches = 0;
+  for (;;) {
+    EXEC("BEGIN IMMEDIATE");
+    in_txn = 1;
+    sqlite3_reset(sel);
+    sqlite3_bind_text(sel, 1, last_uid, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int(sel, 2, FTS_REBUILD_BATCH);
+    int n = 0, scan_rc;
+    while ((scan_rc = sqlite3_step(sel)) == SQLITE_ROW) {
+      const char *uid = (const char *)sqlite3_column_text(sel, 0);
+      if (!uid) continue;
+      n++;
+      snprintf(last_uid, sizeof last_uid, "%s", uid);
+      if (!*uid) continue;
 
-    /* Everything goes through fts_segment for MeCab parity with the write
-     * path; Latin (URLs, ids, English) passes straight through, so this is
-     * only a real cost on Japanese text. */
-    char *v_title = fts_segment((const char *)sqlite3_column_text(sel, 1));
-    char *v_body  = fts_segment((const char *)sqlite3_column_text(sel, 2));
-    char *v_summ  = fts_segment((const char *)sqlite3_column_text(sel, 3));
-    char *v_link  = fts_segment((const char *)sqlite3_column_text(sel, 4));
-    char *v_auth  = fts_segment((const char *)sqlite3_column_text(sel, 5));
-    char *f_tags  = fts_flatten_json((const char *)sqlite3_column_text(sel, 6));
-    char *f_prop  = fts_flatten_json((const char *)sqlite3_column_text(sel, 7));
-    char *v_tags  = fts_segment(f_tags);
-    char *v_prop  = fts_segment(f_prop);
-    const char *kw = (const char *)sqlite3_column_text(sel, 8);
+      sqlite3_reset(have);
+      sqlite3_bind_text(have, 1, uid, -1, SQLITE_TRANSIENT);
+      int already = sqlite3_step(have) == SQLITE_ROW;
+      sqlite3_reset(have);
+      if (already) continue;              /* ingest wrote it after SETUP */
 
-    sqlite3_reset(ins);
-    sqlite3_bind_text(ins, 1, uid,     -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(ins, 2, v_title, -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(ins, 3, v_body,  -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(ins, 4, v_summ,  -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(ins, 5, kw ? kw : "", -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(ins, 6, v_link,  -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(ins, 7, v_auth,  -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(ins, 8, v_tags,  -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(ins, 9, v_prop,  -1, SQLITE_TRANSIENT);
-    int rc = sqlite3_step(ins);
+      /* Everything goes through fts_segment for MeCab parity with the write
+       * path; Latin (URLs, ids, English) passes straight through, so this is
+       * only a real cost on Japanese text. */
+      char *v_title = fts_segment((const char *)sqlite3_column_text(sel, 1));
+      char *v_body  = fts_segment((const char *)sqlite3_column_text(sel, 2));
+      char *v_summ  = fts_segment((const char *)sqlite3_column_text(sel, 3));
+      char *v_link  = fts_segment((const char *)sqlite3_column_text(sel, 4));
+      char *v_auth  = fts_segment((const char *)sqlite3_column_text(sel, 5));
+      char *f_tags  = fts_flatten_json((const char *)sqlite3_column_text(sel, 6));
+      char *f_prop  = fts_flatten_json((const char *)sqlite3_column_text(sel, 7));
+      char *v_tags  = fts_segment(f_tags);
+      char *v_prop  = fts_segment(f_prop);
+      const char *kw = (const char *)sqlite3_column_text(sel, 8);
 
-    free(v_title); free(v_body); free(v_summ); free(v_link); free(v_auth);
-    free(f_tags); free(f_prop); free(v_tags); free(v_prop);
+      sqlite3_reset(ins);
+      sqlite3_bind_text(ins, 1, uid,     -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(ins, 2, v_title, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(ins, 3, v_body,  -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(ins, 4, v_summ,  -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(ins, 5, kw ? kw : "", -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(ins, 6, v_link,  -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(ins, 7, v_auth,  -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(ins, 8, v_tags,  -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(ins, 9, v_prop,  -1, SQLITE_TRANSIENT);
+      int rc = sqlite3_step(ins);
 
-    if (rc != SQLITE_DONE) {
-      fprintf(stderr, "[fts] rebuild insert failed at %s: %s\n",
-              uid, sqlite3_errmsg(h));
+      free(v_title); free(v_body); free(v_summ); free(v_link); free(v_auth);
+      free(f_tags); free(f_prop); free(v_tags); free(v_prop);
+
+      if (rc != SQLITE_DONE) {
+        fprintf(stderr, "[fts] rebuild insert failed at %s: %s\n",
+                uid, sqlite3_errmsg(h));
+        goto fail;
+      }
+
+      sqlite3_int64 rid = sqlite3_last_insert_rowid(h);
+      sqlite3_reset(map);
+      sqlite3_bind_text(map, 1, uid, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_int64(map, 2, rid);
+      if (sqlite3_step(map) != SQLITE_DONE) {
+        fprintf(stderr, "[fts] rebuild uid_map failed at %s: %s\n",
+                uid, sqlite3_errmsg(h));
+        goto fail;
+      }
+      done++;
+    }
+    /* `while (step() == ROW)` cannot tell DONE from IOERR/CORRUPT/BUSY/
+     * INTERRUPT. Committing a short batch as if it were complete would
+     * advance last_uid past rows that were never indexed — and the next batch
+     * would start after them, leaving them permanently unsearchable. So a
+     * short scan rolls back this batch only; the progress row still points at
+     * the last batch that did commit. */
+    if (scan_rc != SQLITE_DONE) {
+      fprintf(stderr, "[fts] REBUILD BATCH ABORTED after %lld/%lld items: %s\n",
+              done, nrows, sqlite3_errmsg(h));
       goto fail;
     }
-
-    sqlite3_int64 rid = sqlite3_last_insert_rowid(h);
-    sqlite3_reset(map);
-    sqlite3_bind_text(map, 1, uid, -1, SQLITE_TRANSIENT);
-    sqlite3_bind_int64(map, 2, rid);
-    if (sqlite3_step(map) != SQLITE_DONE) {
-      fprintf(stderr, "[fts] rebuild uid_map failed at %s: %s\n",
-              uid, sqlite3_errmsg(h));
+    sqlite3_reset(sel);
+    if (n == 0) { EXEC("COMMIT"); in_txn = 0; break; }
+    sqlite3_reset(prog);
+    sqlite3_bind_text(prog, 1, last_uid, -1, SQLITE_TRANSIENT);
+    if (sqlite3_step(prog) != SQLITE_DONE) {
+      fprintf(stderr, "[fts] rebuild progress write failed: %s\n", sqlite3_errmsg(h));
       goto fail;
     }
-
-    if (++done % 25000 == 0)
+    sqlite3_reset(prog);
+    EXEC("COMMIT");
+    in_txn = 0;
+    if (++batches % 5 == 0)
       fprintf(stderr, "[fts]   %lld/%lld items reindexed (%.0fs)\n",
               done, nrows, (now_ms() - t0) / 1000.0);
+    if (n < FTS_REBUILD_BATCH) break;
   }
-  /* `while (step() == ROW)` cannot tell DONE from IOERR/CORRUPT/BUSY/INTERRUPT,
-   * and this loop is repopulating a table that was DROPped a few lines above.
-   * Committing a partial scan here would leave every row past the failure
-   * point permanently unsearchable AND stamp _fts_meta with the new version,
-   * so fts_index_is_v2() would answer yes and the migration would never run
-   * again. On a corpus this size that is silent, total and unrecoverable
-   * without a manual rebuild — so a short scan must roll back, not commit. */
-  if (scan_rc != SQLITE_DONE) {
-    fprintf(stderr, "[fts] REBUILD ABORTED after %lld/%lld items: %s — "
-                    "rolling back; the old index is left in place\n",
-            done, nrows, sqlite3_errmsg(h));
-    goto fail;
-  }
-  sqlite3_finalize(sel); sel = NULL;
-  sqlite3_finalize(ins); ins = NULL;
-  sqlite3_finalize(map); map = NULL;
+  sqlite3_finalize(sel);  sel = NULL;
+  sqlite3_finalize(ins);  ins = NULL;
+  sqlite3_finalize(map);  map = NULL;
+  sqlite3_finalize(have); have = NULL;
+  sqlite3_finalize(prog); prog = NULL;
 
-  EXEC("DROP TABLE temp._fts_kw");
+  /* ── 3. FINISH ── */
+  EXEC("BEGIN IMMEDIATE");
+  in_txn = 1;
+  EXEC("DROP TABLE IF EXISTS _fts_rebuild_kw");
   EXEC("CREATE INDEX IF NOT EXISTS idx_intel_items_fts_uid_map_rowid"
        "  ON intel_items_fts_uid_map(rowid)");
 
@@ -360,22 +479,26 @@ void fts_schema_migrate(db_handle *db) {
     sqlite3_step(met);
     sqlite3_finalize(met); met = NULL;
   }
+  EXEC("DROP TABLE IF EXISTS _fts_rebuild");
 
   EXEC("COMMIT");
   in_txn = 0;
-  /* The index the write path binds against just changed shape underneath it. */
   pthread_mutex_lock(&g_shape_mu); g_shape = -1; pthread_mutex_unlock(&g_shape_mu);
-  fprintf(stderr, "[fts] intel_items_fts rebuilt: %lld items indexed in %.1fs\n",
-          done, (now_ms() - t0) / 1000.0);
+  fprintf(stderr, "[fts] intel_items_fts rebuilt: %lld items indexed in %.1fs "
+                  "(%lld batches)\n", done, (now_ms() - t0) / 1000.0, batches);
 #undef EXEC
   return;
 
 fail:
-  if (sel) sqlite3_finalize(sel);
-  if (ins) sqlite3_finalize(ins);
-  if (map) sqlite3_finalize(map);
-  if (met) sqlite3_finalize(met);
+  if (sel)  sqlite3_finalize(sel);
+  if (ins)  sqlite3_finalize(ins);
+  if (map)  sqlite3_finalize(map);
+  if (have) sqlite3_finalize(have);
+  if (prog) sqlite3_finalize(prog);
+  if (met)  sqlite3_finalize(met);
   if (in_txn) sqlite3_exec(h, "ROLLBACK", NULL, NULL, NULL);
-  fprintf(stderr, "[fts] rebuild rolled back — the existing index is intact "
-                  "and unchanged; will retry on next boot\n");
+  pthread_mutex_lock(&g_shape_mu); g_shape = -1; pthread_mutex_unlock(&g_shape_mu);
+  fprintf(stderr, "[fts] rebuild step rolled back — batches already committed "
+                  "are kept; the next boot resumes after the last of them, or "
+                  "retries from scratch if setup itself failed\n");
 }
