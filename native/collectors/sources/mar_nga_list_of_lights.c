@@ -5,9 +5,11 @@
  * Endpoint: https://msi.nga.mil/api/publications/ngalol/lights-buoys
  *           ?output=json&volume=110&includeRemovals=false
  * Emits (all fetched): volumeNumber, aidType, geopoliticalHeading,
- *   regionHeading, featureNumber, name, characteristic, heightFeetMeters,
- *   range, structure, remarks, noticeNumber/noticeWeek/noticeYear, and the
- *   aid position parsed from the DMS 'position' string.
+ *   regionHeading, subregionHeading, localHeading, precedingNote,
+ *   featureNumber, name, charNo, characteristic, heightFeetMeters, range,
+ *   structure, remarks, postNote, removeFromList, deleteFlag,
+ *   noticeNumber/noticeWeek/noticeYear, and the aid position parsed from the
+ *   DMS 'position' string — every field the API returns.
  * Keyless. Licence: US Government work (NGA), public domain.
  *
  * parse_notes trap — "The only coordinate is the 'position' field, a DMS
@@ -26,7 +28,7 @@
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
 #include "lib/feedlib.h"
-#include "lib/seenset.h"
+#include "lib/keyqual.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -85,6 +87,34 @@ static void flatten(char *s) {
   for (; *s; s++) if (*s == '\n' || *s == '\r' || *s == '\t') *s = ' ';
 }
 
+/* IDENTITY (rule 4b, measured): volume|featureNumber keyed multi-light
+ * structures onto each other — the List of Lights re-uses one feature number
+ * for each light on a structure and for range-light pairs. Sweep 2026-08-24:
+ * emitted 4,917, stored 4,692. The name and the charted position are what
+ * distinguish co-numbered lights, and both are stable across the weekly notice
+ * updates — so the key carries those rather than a content hash, which would
+ * mint a new uid every time NGA edits a characteristic and break the upsert.
+ * Returns 0 for an entry with neither a name nor a feature number. */
+static int lol_key(const cJSON *a, char *key, size_t cap) {
+  const char *name = jo_sv(a, "name");
+  const char *feat = jo_sv(a, "featureNumber");
+  if (!name && !feat) return 0;
+  snprintf(key, cap, "%s|%s|%.80s|%.40s",
+           jo_sv(a, "volumeNumber") ? jo_sv(a, "volumeNumber") : "PUB",
+           feat ? feat : "?", name ? name : "?",
+           jo_sv(a, "position") ? jo_sv(a, "position") : "");
+  flatten(key);
+  return 1;
+}
+
+/* charNo — the light's number within its structure — as text, or NULL. */
+static const char *lol_charno(const cJSON *a, char *buf, size_t cap) {
+  const cJSON *v = cJSON_GetObjectItem(a, "charNo");
+  if (cJSON_IsNumber(v)) { snprintf(buf, cap, "%.15g", v->valuedouble); return buf; }
+  if (cJSON_IsString(v) && v->valuestring && v->valuestring[0]) return v->valuestring;
+  return NULL;
+}
+
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *doc = feed_get_json(ctx->http, LOL_URL, 60000);
   if (!doc) {
@@ -93,48 +123,47 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   cJSON *arr = cJSON_GetObjectItem(doc, "ngalol");
   if (!cJSON_IsArray(arr) && cJSON_IsArray(doc)) arr = doc;
-  int n = 0;
-  seen_set key_seen = {0};
+  int n = 0, folded = 0;
+  /* The key above is still not unique on its own: one structure can chart
+   * several lights under the same feature number, name and position, which
+   * differ in charNo / characteristic / height / range / remarks (live
+   * 2026-10-06: 4,917 entries, 4,916 byte-distinct, 10 colliding keys holding
+   * 21 entries). Pass 1 counts every key over the whole volume; pass 2
+   * qualifies EVERY member of a colliding group by its charNo — the light's
+   * own number on the structure, as stable as the key — and, where charNo is
+   * shared too (5 groups: buoys differing only in remarks, and one
+   * byte-identical RACON), by a hash of the entry's bytes. A byte-identical
+   * repeat is folded rather than emitted twice. It used to be
+   * first-come-plain: whichever sibling NGA listed first owned the plain uid,
+   * so a re-ordered volume stored one light's characteristic under another's
+   * uid. See lib/keyqual.h. */
+  keyqual kq = {0};
   cJSON *a;
+  cJSON_ArrayForEach(a, arr) {
+    char k[288], cb[32];
+    if (cJSON_IsObject(a) && lol_key(a, k, sizeof k))
+      keyqual_add(&kq, k, lol_charno(a, cb, sizeof cb));
+  }
+  keyqual_seal(&kq);
+
   cJSON_ArrayForEach(a, arr) {
     if (!cJSON_IsObject(a)) continue;
     const char *name = jo_sv(a, "name");
     const char *feat = jo_sv(a, "featureNumber");
-    if (!name && !feat) continue;
+    char base[288];
+    if (!lol_key(a, base, sizeof base)) continue;
 
     double lat = 0, lon = 0;
     int geo = lol_position(jo_sv(a, "position"), &lat, &lon);
 
-    /* IDENTITY (rule 4b, measured): volume|featureNumber keyed multi-light
-     * structures onto each other — the List of Lights re-uses one feature
-     * number for each light on a structure and for range-light pairs.
-     * Sweep 2026-08-24: emitted 4,917, stored 4,692. The name and the charted
-     * position are what distinguish co-numbered lights, and both are stable
-     * across the weekly notice updates — so the key gains those rather than a
-     * content hash, which would mint a new uid every time NGA edits a
-     * characteristic and break the upsert. */
-    char key[288];
-    snprintf(key, sizeof key, "%s|%s|%.80s|%.40s",
-             jo_sv(a, "volumeNumber") ? jo_sv(a, "volumeNumber") : "PUB",
-             feat ? feat : "?", name ? name : "?",
-             jo_sv(a, "position") ? jo_sv(a, "position") : "");
-    flatten(key);
-    /* Still not unique on its own: one structure can chart several lights
-     * under the same feature number, name and position that differ only in
-     * charNo / characteristic / height / range / remarks (live 2026-09-15:
-     * 4,917 entries, 4,916 byte-distinct, 4,906 distinct keys), and each such
-     * sibling upserted over the first. Only a key already seen in this run
-     * gains a hash of the entry's own bytes, so first occurrences keep the
-     * stable uid the note above protects, siblings stay rows of their own, and
-     * a byte-identical repeat still collapses. */
-    if (!seen_add(&key_seen, key)) {
+    char keybuf[512], cbuf[32];
+    const char *key = base;
+    if (keyqual_count(&kq, base) > 1) {
       char *raw = cJSON_PrintUnformatted(a);
-      const char *parts[1] = { raw ? raw : "" };
-      char h[21];
-      feed_hash_key(h, parts, 1);
-      size_t kl = strlen(key);
-      snprintf(key + kl, sizeof key - kl, "|%s", h);
+      key = keyqual_uid(&kq, base, lol_charno(a, cbuf, sizeof cbuf),
+                        raw ? raw : "", keybuf, sizeof keybuf);
       free(raw);
+      if (!keyqual_claim(&kq, base, key)) { folded++; continue; }
     }
 
     cJSON *p = cJSON_CreateObject();
@@ -143,14 +172,21 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     jo_copy_str(p, a, "geopoliticalHeading");
     jo_copy_str(p, a, "regionHeading");
     jo_copy_str(p, a, "subregionHeading");
+    jo_copy_str(p, a, "localHeading");
+    jo_copy_str(p, a, "precedingNote");
     jo_copy_str(p, a, "featureNumber");
     jo_copy_str(p, a, "name");
     jo_copy_str(p, a, "position");
+    jo_copy_num(p, a, "charNo");
+    jo_copy_str(p, a, "charNo");
     jo_copy_str(p, a, "characteristic");
     jo_copy_str(p, a, "heightFeetMeters");
     jo_copy_str(p, a, "range");
     jo_copy_str(p, a, "structure");
     jo_copy_str(p, a, "remarks");
+    jo_copy_str(p, a, "postNote");
+    jo_copy_str(p, a, "removeFromList");
+    jo_copy_str(p, a, "deleteFlag");
     jo_copy_str(p, a, "noticeWeek");
     jo_copy_str(p, a, "noticeYear");
     jo_copy_num(p, a, "noticeNumber");
@@ -191,9 +227,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (sink->emit(sink, &it) >= 0) n++;
     free(pj);
   }
-  seen_free(&key_seen);
+  keyqual_free(&kq);
   cJSON_Delete(doc);
-  fprintf(stderr, "[nga-list-of-lights] emitted %d\n", n);
+  fprintf(stderr, "[nga-list-of-lights] emitted %d (%d byte-identical repeats "
+          "folded)\n", n, folded);
   return 0;
 }
 
