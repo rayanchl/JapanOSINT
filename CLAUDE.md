@@ -19,9 +19,14 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 18,170** (2026-10-02, after merging origin/main's
-PR #21-#23 integration with the local branch and batch 32's 340 Japanese rows —
-`docs/verified-sources-batch32.md`): `make lint-sources` prints it, counting
+**The registered count is 18,338** (2026-10-06: 18,170 after merging
+origin/main's PR #21-#23 integration with the local branch and batch 32's 340
+Japanese rows — `docs/verified-sources-batch32.md` — plus batch 38's 100
+Japanese and Chinese rows — `docs/verified-sources-batch38.md` — minus three
+dead rows removed in its follow-up, plus batch 39's 72 rows unlocked by date
+tokens / JSONP / body paging / HTML tables minus the frozen VCSV row one of
+them replaced —
+`docs/verified-sources-batch39.md`): `make lint-sources` prints it, counting
 hp_source table rows as well as `REGISTER_SOURCE`, and
 `./bin/japanosint --list-sources` agrees.
 
@@ -448,6 +453,47 @@ Engine subtleties worth knowing before writing a row:
 * `page_start`'s unset value is 0, which is also a legitimate first page. Set
   **`page_zero_based=1`** for a 0-based API — otherwise the engine coerces the
   start to 1 and silently never fetches page 1.
+* **`page_size` makes `page_param` an OFFSET.** Declare it only for offset
+  parameters. On a page-NUMBER API (`page`, `pageNo`, `PAGENO`) it requests
+  pages 1, 1+N, 1+2N … and drops N−1 of every N pages with the run green.
+  83 shipped rows were in that state until 2026-10-05; `AP19_CN_SZSE_LISTED`
+  stored ~160 of 2,904 listings. Put the page size in the URL instead.
+  `make lint-sources` now fails the shape (`page-size-on-page-number`); an
+  API whose `page` really is a record offset (MapRoulette) says so with a
+  `page-offset-ok: <measurement>` marker in the row. And check where a
+  page-number API STARTS: a 0-based one (Spring, DSpace) needs
+  `page_zero_based=1`, or the walk goes page 0 → page 2.
+* **A file re-published under a new name each edition** (monthly attachment
+  ids) is not a static `url`: declare **`index_url`** (the landing page) and
+  **`index_href_must`** (a substring of the right link). The engine follows it
+  every run, and the generator and probe accept both. Batch 32's Niigata
+  register 404'd three days after shipping without it.
+* **Never freeze a date into a URL.** `{date}`, `{date-7d}`, `{date-1m:%Y%m}`,
+  `{date:@ms}` (lib/datetok.c — one implementation for hp rows AND the VJSON
+  fleet's `vsrc_url_dates`) render in UTC+**`tz_minutes`** (540 Japan, 480
+  China). **`date_back=N`** steps the date back when the first page is a 4xx
+  or empty (weekends, holidays, not yet published), in units of
+  **`date_step`** (d/w/m/y — `y` for EPA's TRI reporting year). 43 rows had a
+  window frozen at authoring and re-fetched the same past week forever. A
+  dated file whose ROWS carry no date (SHFE's daily kx, SZSE margin) re-keys
+  every day onto yesterday's uids: **`date_field=<name>`** stamps each record
+  with the rendered date (after any step back) so `id_keys` can include it.
+* **JSONP is unwrapped automatically** (`cb(…)`, `null(…)`, `(…)`, `)]}'`).
+* **A page that lives in a POST body or a URL path** is `{page}` / `{offset}` /
+  `{offset1}` / `{offset_end}` / `{size}`, re-expanded every page in the url
+  AND the body (EPA Envirofacts: `rows/{offset}:{offset_end}`). A body with a
+  literal `"page":1` reads page 1 forever: four pivots did, 40 records each.
+* A failure on the page AFTER a short page (fewer than `page_size` records) is
+  the upstream's end of data, not a truncation; later pages get 3 retries.
+* **`page_delay_ms=N`** paces a walk (a pause before every page after the
+  first) for a firewall that answers a burst with 403: the Palace Museum's
+  blocked us after 31 of 9,300 pages.
+* **A register published as an HTML table** is `mode=html` +
+  **`table_must=<caption or header text>`** (`table_index`,
+  `table_skip_rows`): every row becomes a record keyed by its header cells
+  (lib/htmlparse.c `html_table_parse` + hp_run_table; colspan/rowspan,
+  entities, nested tables handled; the row's first link is `link`). Before it,
+  html mode read anchors only, and ~20 tabular registers were rejected.
 * A row that declares no paging does ONE request. **`page_walk=1`** (HP_JSON
   only) walks it the way a VJSON collector is walked instead — the server's own
   next link, else the cursor its declared page size pairs with, advanced while
