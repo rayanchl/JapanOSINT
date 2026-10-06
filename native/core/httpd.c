@@ -247,17 +247,30 @@ static void route_sources_stats(struct mg_connection *c) {
 static struct { struct mg_connection *c; char id[SSTREAM_ID_MAX]; uint64_t next; }
   g_sstream[SSTREAM_MAX];
 
-static void search_stream_open(struct mg_connection *c, const char *id) {
+/* WHO MAY OPEN A RUN'S STREAM. The route is pre-auth because EventSource
+ * cannot send headers, and the unguessable request_id used to be the whole
+ * capability. But the request_id is what share links carry, so anyone handed
+ * a link — in any workspace — could watch the run. A run now belongs to the
+ * tenant that started it, and the stream opens for:
+ *   - ?key=<stream_key>: the per-run secret analyze returns to the starter
+ *     and /results returns only to the owner tenant (the web client), or
+ *   - an Authorization header (+ X-Tenant-Id) resolving to the owner tenant
+ *     (the iOS client, whose URLSession stream sends both).
+ * Anything else gets the same `not_found` an unknown id gets.
+ * `tenant`/`key` are empty strings when absent. */
+static void search_stream_open(struct mg_connection *c, const char *id,
+                               const char *tenant, const char *key) {
   mg_printf(c, "HTTP/1.1 200 OK\r\nContent-Type: text/event-stream\r\n"
     "Cache-Control: no-cache, no-transform\r\nConnection: keep-alive\r\n"
     "X-Accel-Buffering: no\r\n\r\n");
   c->is_resp = 0;
-  /* Look-up + serialise as one locked step. progress_get() hands back a
-   * pointer that progress_create() may free (it evicts the oldest FINISHED
-   * request past 200) — and a reconnect to a completed run is exactly the
-   * eviction candidate. */
+  /* Look-up + ownership + serialise as one locked step. progress_get() hands
+   * back a pointer that progress_create() may free (it evicts the oldest
+   * FINISHED request past 200) — and a reconnect to a completed run is
+   * exactly the eviction candidate. Ownership never changes after creation,
+   * so the polls below need not re-check it. */
   int done = 0;
-  char *snap = progress_snapshot_by_id(id, &done);
+  char *snap = progress_snapshot_for(id, tenant, key, &done, NULL, 0);
   if (!snap) { mg_printf(c, "event: error\r\ndata: {\"error\":\"not_found\"}\n\n");
                c->is_draining = 1; return; }
   mg_printf(c, "event: progress\r\ndata: %s\n\n", snap); free(snap);
@@ -722,7 +735,17 @@ static void wakeup_reply_hdr(struct mg_mgr *mgr, unsigned long cid,
   unsigned tick = wraw_park(buf, len, hdr);
   char tok[32];
   int n = snprintf(tok, sizeof tok, "200 \x02%u", tick);
-  if (n <= 0 || !mg_wakeup(mgr, cid, tok, (size_t) n)) {
+  /* Through the same door as every other wakeup (wake_enter/wake_leave).
+   * This was the one path that called mg_wakeup() bare, so a camera-proxy or
+   * export worker finishing during shutdown dereferenced `mgr` after
+   * httpd_serve() had freed it and returned. A closed door drops the reply,
+   * exactly as wakeup_reply_big() does. */
+  int woke = 0;
+  if (n > 0 && wake_enter()) {
+    woke = mg_wakeup(mgr, cid, tok, (size_t) n);
+    wake_leave();
+  }
+  if (!woke) {
     size_t dl = 0; char dh[WRAW_HDR_MAX];
     unsigned char *drop = wraw_take(tick, &dl, dh, sizeof dh);
     free(drop);                        /* connection gone: do not leak it */
@@ -837,52 +860,80 @@ static void reply_busy(struct mg_connection *c) {
  * The finished body is delivered through the raw parking path with the plan's
  * own Content-Type and Content-Disposition, so a download still arrives as a
  * download. */
-#define EXPC_SLOTS 8
+/* One slot per admitted worker. This was a fixed 8 against a worker cap of 16
+ * (JO_HTTP_MAX_WORKERS can raise it further), so the 9th concurrent export got
+ * slot -1 — and an export with no slot can never see its client hang up: it
+ * walks and buffers up to the plan's row cap for nobody. Every export holds a
+ * worker slot (worker_admit), so sizing this to worker_cap() means a free
+ * entry always exists; the table is allocated on first use because the cap is
+ * read from the environment. */
 static pthread_mutex_t g_expc_mu = PTHREAD_MUTEX_INITIALIZER;
-static struct { unsigned long cid; int cancel; int used; } g_expc[EXPC_SLOTS];
+static struct expc_slot { unsigned long cid; int cancel; int used; } *g_expc;
+static int g_expc_n;
 
 static int expc_register(unsigned long cid) {
   int slot = -1;
   pthread_mutex_lock(&g_expc_mu);
-  for (int i = 0; i < EXPC_SLOTS; i++)
+  if (!g_expc) {
+    int n = worker_cap();
+    g_expc = calloc((size_t) n, sizeof *g_expc);
+    if (g_expc) g_expc_n = n;
+  }
+  for (int i = 0; i < g_expc_n; i++)
     if (!g_expc[i].used) { slot = i; g_expc[i].used = 1; g_expc[i].cid = cid;
                            g_expc[i].cancel = 0; break; }
   pthread_mutex_unlock(&g_expc_mu);
+  if (slot < 0)
+    fprintf(stderr, "[export] no abort slot free (%d): this export cannot see "
+                    "its client disconnect\n", g_expc_n);
   return slot;
 }
 static void expc_release(int slot) {
   if (slot < 0) return;
   pthread_mutex_lock(&g_expc_mu);
-  g_expc[slot].used = 0; g_expc[slot].cid = 0; g_expc[slot].cancel = 0;
+  if (slot < g_expc_n) { g_expc[slot].used = 0; g_expc[slot].cid = 0; g_expc[slot].cancel = 0; }
   pthread_mutex_unlock(&g_expc_mu);
 }
 static int expc_cancelled(int slot) {
   if (slot < 0) return 0;
   pthread_mutex_lock(&g_expc_mu);
-  int v = g_expc[slot].cancel;
+  int v = slot < g_expc_n ? g_expc[slot].cancel : 0;
   pthread_mutex_unlock(&g_expc_mu);
   return v;
 }
 /* Called from the loop on MG_EV_CLOSE. */
 static void expc_close(unsigned long cid) {
   pthread_mutex_lock(&g_expc_mu);
-  for (int i = 0; i < EXPC_SLOTS; i++)
+  for (int i = 0; i < g_expc_n; i++)
     if (g_expc[i].used && g_expc[i].cid == cid) g_expc[i].cancel = 1;
   pthread_mutex_unlock(&g_expc_mu);
 }
 
-/* A growable byte buffer behind export_write_fn. */
-typedef struct { char *buf; size_t len, cap; int slot; int aborted; } expbuf;
+/* A growable byte buffer behind export_write_fn.
+ *
+ * MEMORY. The whole body is held here and then copied once more into the
+ * connection's send buffer on delivery, so the peak is this buffer's CAPACITY
+ * plus the body. Growing by 2x made the capacity up to twice the body (~3x
+ * peak); 1.5x bounds the slack at half the body (~2.5x) for a few more
+ * reallocs, which are cheap next to the row walk they sit inside.
+ *
+ * `oom` is kept apart from `aborted`. Both stop the walk, but they are
+ * different events: a client that hung up needs nothing, while an export that
+ * ran out of memory is a server failure that must be answered 500 and audited
+ * as such — not reported as 499 client_gone, which is what it used to be. */
+typedef struct { char *buf; size_t len, cap; int slot; int aborted; int oom; } expbuf;
 
 static int export_buf_write(void *ctx, const char *buf, size_t len) {
   expbuf *b = ctx;
   if (expc_cancelled(b->slot)) { b->aborted = 1; return 1; }   /* peer gone */
   if (b->len + len + 1 > b->cap) {
-    size_t want = (b->len + len + 1) * 2;
+    size_t need = b->len + len + 1;
+    size_t want = b->cap ? b->cap + b->cap / 2 : 65536;
+    if (want < need) want = need;
     char *nb = realloc(b->buf, want);
-    if (!nb) { b->aborted = 1; return 1; }     /* OOM: stop, do not truncate
-                                                * silently into a "complete"
-                                                * download */
+    if (!nb) { b->aborted = 1; b->oom = 1; return 1; }   /* OOM: stop, do not
+                                                * truncate silently into a
+                                                * "complete" download */
     b->buf = nb; b->cap = want;
   }
   memcpy(b->buf + b->len, buf, len);
@@ -918,18 +969,47 @@ static void *export_thread(void *vp) {
   else
     export_run(db, &a->tc, a->kind, a->fmt, a->qs, export_buf_write, &b,
                &rows, &status);
+  if (b.oom) {
+    /* export_run's own audit row says aborted:true, which reads as "the
+     * client went away". Record what actually happened, distinctly. */
+    char pj[192];
+    snprintf(pj, sizeof pj, "{\"reason\":\"out_of_memory\",\"bytes_buffered\":%zu,"
+             "\"rows\":%ld}", b.len, rows);
+    audit_write(db, a->tc.tenant_id, a->tc.user_id,
+                a->is_report ? "report.oom" : "export.oom",
+                a->is_report ? a->case_id : a->kind, pj);
+  }
   db_worker_close(&own);
 
   int aborted = b.aborted || expc_cancelled(b.slot);
   expc_release(b.slot);
 
-  if (aborted) {
-    /* The client hung up (or we could not grow the buffer). Nothing to send;
-     * say so on the way out rather than pretending a download completed. */
-    fprintf(stderr, "[export] %s abandoned after %zu bytes (peer gone or OOM)\n",
+  if (b.oom) {
+    fprintf(stderr, "[export] %s FAILED: out of memory after %zu bytes\n",
+            a->is_report ? "report" : a->kind, b.len);
+    free(b.buf);
+    wakeup_reply(a->mgr, a->cid, 500,
+                 "{\"error\":\"export_out_of_memory\",\"detail\":\"the server "
+                 "could not hold this export in memory; narrow the filters\"}");
+  } else if (aborted) {
+    /* The client hung up. Nothing to send; say so on the way out rather than
+     * pretending a download completed. */
+    fprintf(stderr, "[export] %s abandoned after %zu bytes (peer gone)\n",
             a->is_report ? "report" : a->kind, b.len);
     free(b.buf);
     wakeup_reply(a->mgr, a->cid, 499, "{\"error\":\"client_gone\"}");
+  } else if (status != 200) {
+    /* A refusal is a refusal, not a download. export_run answers 400 for a
+     * sort it cannot honour and writes the reason into the body (the inline
+     * path had already sent its 200 header, so the body was the only place it
+     * could go). Off-loop nothing has been sent yet, so the status can be the
+     * real one: the worker used to ship that JSON as a 200 attachment named
+     * like a successful export. */
+    if (b.buf && b.len) wakeup_reply_big(a->mgr, a->cid, status, b.buf);
+    else {
+      free(b.buf);
+      wakeup_reply(a->mgr, a->cid, status, "{\"error\":\"export_failed\"}");
+    }
   } else if (b.buf) {
     char hdr[512];
     snprintf(hdr, sizeof hdr,
@@ -938,8 +1018,7 @@ static void *export_thread(void *vp) {
       a->ctype[0] ? a->ctype : "application/json", a->fname);
     wakeup_reply_hdr(a->mgr, a->cid, (unsigned char *) b.buf, b.len, hdr);
   } else {
-    wakeup_reply(a->mgr, a->cid, status == 200 ? 500 : status,
-                 "{\"error\":\"export_failed\"}");
+    wakeup_reply(a->mgr, a->cid, 500, "{\"error\":\"export_failed\"}");
   }
   free(a->body);
   free(a);
@@ -947,6 +1026,12 @@ static void *export_thread(void *vp) {
   return NULL;
 }
 
+/* OWNERSHIP OF ea->body. Deferred (1): the worker owns it and frees it.
+ * Refused busy (1): freed here, the request is answered. Thread could not be
+ * started (0): NOT freed — the caller still owns it and serves inline with it.
+ * This used to free it on that path too, and the report route then ran
+ * report_run(..., NULL): the request's own body (the sections and options the
+ * caller asked for) silently replaced by the defaults. */
 static int export_offload(struct mg_connection *c, exp_arg *ea) {
   if (!worker_admit()) { free(ea->body); free(ea); reply_busy(c); return 1; }
   ea->mgr = c->mgr; ea->cid = c->id;
@@ -956,7 +1041,7 @@ static int export_offload(struct mg_connection *c, exp_arg *ea) {
     return 1;                      /* reply deferred to MG_EV_WAKEUP */
   }
   worker_release();
-  free(ea->body); free(ea);
+  free(ea);                        /* ea->body stays the caller's */
   return 0;                        /* caller falls back to the inline path */
 }
 
@@ -1116,6 +1201,14 @@ static void fleet_params(struct mg_http_message *hm, fleet_arg *fa) {
   if (mg_http_get_var(&hm->query, "summary", v, sizeof v) > 0) fa->summary = (v[0] == '1');
   if (fa->limit < 0) fa->limit = 0;
   if (fa->offset < 0) fa->offset = 0;
+  /* Normalise what the builders ignore BEFORE it reaches the cache key. Both
+   * views force limit=0 under ?summary=1 and walk the whole catalogue when
+   * limit<=0, so offset (and, under summary, limit) cannot change the body —
+   * but they changed the KEY, so ?offset=1, ?offset=2 … each missed the cache
+   * and paid a full 20 MB / 8 s build: a cache-busting knob on the two most
+   * expensive routes in the server. */
+  if (fa->summary) fa->limit = 0;
+  if (fa->limit <= 0) fa->offset = 0;
   snprintf(fa->key, sizeof fa->key, "%s:%d:%d:%d:%d",
            fa->kind == FLEET_STATUS ? "status" : "intelsrc",
            fa->op, fa->limit, fa->offset, fa->summary);
@@ -1211,6 +1304,33 @@ static void *iso_thread(void *vp) {
   char *body = isochrone_run(db, a->qs, &status);
   db_worker_close(&own);
   wakeup_reply_big(a->mgr, a->cid, status, body);
+  free(a);
+  worker_release();
+  return NULL;
+}
+
+/* GET /api/intel/semantic — off the event loop, like suggest. It makes two
+ * network calls (GET /v1/models, POST /v1/embeddings) and the embedding
+ * server's worker is shared with the backfill pod, whose batches run for up
+ * to 120 s; inline, a query queued behind one held the whole HTTP server
+ * (measured: /api/health took 7 s during an 8 s embed). Its own connection,
+ * for the same reason as iso_thread's. */
+typedef struct {
+  struct mg_mgr *mgr; unsigned long cid;
+  char tenant[128], q[1024], mode[16];
+  int limit, k, op;
+} sem_arg;
+
+static void *sem_thread(void *vp) {
+  sem_arg *a = vp;
+  db_handle own;
+  db_handle *db = db_worker_open(&own, g_db);
+  int st = 500;
+  char *body = semsearchapi_query(db, a->tenant[0] ? a->tenant : NULL, a->q,
+                                  a->mode, a->limit, a->k, a->op, &st);
+  db_worker_close(&own);
+  if (body) wakeup_reply_big(a->mgr, a->cid, st, body);   /* consumes body */
+  else      wakeup_reply(a->mgr, a->cid, 500, "{\"error\":\"server_error\"}");
   free(a);
   worker_release();
   return NULL;
@@ -1361,8 +1481,20 @@ static int qvar(struct mg_http_message *hm, const char *k, char *out,
   return n > 0;
 }
 
-static char *intel_items_run(struct mg_http_message *hm, int *too_long,
-                             int *st) {
+/* Resolve the caller's tenant for an intel read, or reply and return -1. */
+static int intel_tenant_or_reply(struct mg_connection *c, struct mg_http_message *hm,
+                                 const auth_user *usr, tenant_ctx *tc) {
+  struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+  char xtid[128] = {0};
+  if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len] = 0; }
+  int tr = tenant_resolve(g_db, usr, xt ? xtid : NULL, tc);
+  if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return -1; }
+  if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return -1; }
+  return 0;
+}
+
+static char *intel_items_run(struct mg_http_message *hm, const char *tenant,
+                             int *too_long, int *st) {
   char src[160]={0}, q[256]={0}, qalt[256]={0}, lang[16]={0}, since[40]={0},
        until[40]={0}, rt[48]={0}, ssid[120]={0}, hg[8]={0}, tag[120]={0},
        cur[768]={0}, lim[16]={0}, sortv[16]={0}, tot[4]={0}, col[4]={0};
@@ -1389,6 +1521,7 @@ static char *intel_items_run(struct mg_http_message *hm, int *too_long,
   if (qvar(hm, "collapse",      col,  sizeof col,  &tl)) Q.collapse = col[0] == '1';
   if (too_long) *too_long = tl;
   if (tl) return NULL;
+  Q.tenant = tenant;   /* rows of this tenant plus the shared 'legacy' corpus */
   return intelapi_list_items_st(g_db, &Q, st);
 }
 
@@ -1566,7 +1699,23 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
    * the unguessable request_id is the capability (== routes/search.js). */
   { char sid[SSTREAM_ID_MAX];
     if (seg(u, "/api/search/stream/", "", sid, sizeof sid)) {
-      search_stream_open(c, sid); return; } }
+      char skey[64] = {0}, stid[64] = {0};
+      if (mg_http_get_var(&hm->query, "key", skey, sizeof skey) <= 0) skey[0] = 0;
+      struct mg_str *ah = mg_http_get_header(hm, "Authorization");
+      if (ah) {                         /* a client that CAN authenticate */
+        char hdr[2048] = {0};
+        if (ah->len < sizeof hdr) { memcpy(hdr, ah->buf, ah->len); hdr[ah->len] = 0; }
+        auth_user su;
+        if (auth_check(hdr, &su) == AUTH_ALLOW) {
+          struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+          char xtid[128] = {0};
+          if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len] = 0; }
+          tenant_ctx sc;
+          if (tenant_resolve(g_db, &su, xt ? xtid : NULL, &sc) == 0)
+            snprintf(stid, sizeof stid, "%s", sc.tenant_id);
+        }
+      }
+      search_stream_open(c, sid, stid, skey); return; } }
 
   /* /admin/break-glass/\* is mounted OUTSIDE the /api auth gate (it exists
    * precisely for when Supabase auth is down). Only /login is implemented. */
@@ -1641,8 +1790,21 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
                                                   rounds = SEARCH_MAX_ROUNDS_CEILING;
         else                                      rounds = (int) d;
       }
+      /* The run is owned by the caller's tenant: results and the stream are
+       * scoped to it (searchapi.h). */
+      tenant_ctx stc;
+      { struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+        char xtid[128] = {0};
+        if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len] = 0; }
+        int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &stc);
+        if (tr != 0) {
+          if (jb) cJSON_Delete(jb);
+          if (tr == -401) reply_json(c, 401, "{\"error\":\"Auth required\"}");
+          else reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}");
+          return;
+        } }
       int ast = 200;
-      char *body = searchapi_analyze(g_db,
+      char *body = searchapi_analyze(g_db, stc.tenant_id, stc.user_id,
         (qj && cJSON_IsString(qj)) ? qj->valuestring : NULL,
         rounds, &ast);
       if (jb) cJSON_Delete(jb);
@@ -1651,6 +1813,8 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           "{\"error\":\"too_many_searches\",\"detail\":\"concurrent search limit "
           "reached; retry shortly\"}"); return;
       }
+      if (!body && ast == 500) {
+        reply_json(c, 500, "{\"error\":\"search_not_started\"}"); return; }
       if (!body) { reply_json(c, 400, "{\"error\":\"query_required\"}"); return; }
       reply_json(c, 200, body); free(body); return;
     }
@@ -1675,7 +1839,14 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     }
     { char rid[64];
       if (seg(u, "/api/search/results/", "", rid, sizeof rid)) {
-        char *body = searchapi_results(g_db, rid);
+        struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+        char xtid[128] = {0};
+        if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len] = 0; }
+        tenant_ctx rtc;
+        int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &rtc);
+        if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
+        if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+        char *body = searchapi_results(g_db, rtc.tenant_id, rid);
         if (!body) { reply_json(c, 404, "{\"error\":\"not_found\"}"); return; }
         reply_json(c, 200, body); free(body); return;
       } }
@@ -1757,7 +1928,9 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           reply_json(c, nst, nb); free(nb); return;
         } }
       int qtl = 0, ist = 200;
-      char *body = intel_items_run(hm, &qtl, &ist);
+      tenant_ctx itc;
+      if (intel_tenant_or_reply(c, hm, &usr, &itc) != 0) return;
+      char *body = intel_items_run(hm, itc.tenant_id, &qtl, &ist);
       if (qtl) { reply_json(c, 414,
         "{\"error\":\"filter_too_long\",\"detail\":\"a query parameter exceeded "
         "its maximum length; half a filter set cannot be honoured\"}"); return; }
@@ -1834,7 +2007,9 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       /* "breach:<keyid>" reroutes into breach_adapter_item_by_uid() — same
        * corpus as /api/breach/search, so the same gate. */
       if (strncmp(uid, "breach:", 7) == 0 && breach_gate(c, &usr)) return;
-      char *body = intelapi_item_by_uid(g_db, uid);
+      tenant_ctx itc;
+      if (intel_tenant_or_reply(c, hm, &usr, &itc) != 0) return;
+      char *body = intelapi_item_by_uid_tenant(g_db, uid, itc.tenant_id);
       if (!body) { reply_json(c, 404, "{\"error\":\"not_found\"}"); return; }
       reply_json(c, 200, body);
       free(body);
@@ -1988,18 +2163,35 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
       if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
-      int sst = 500;
-      char *sb = semsearchapi_query(g_db, tc.tenant_id, sq, smode,
-                                    atoi(slim), atoi(sk), &sst);
-      if (!sb) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
-      reply_json(c, sst, sb); free(sb); return;
+      if (!worker_admit()) { reply_busy(c); return; }
+      sem_arg *sa = calloc(1, sizeof *sa);
+      if (sa) {
+        sa->mgr = c->mgr; sa->cid = c->id;
+        snprintf(sa->tenant, sizeof sa->tenant, "%s", tc.tenant_id);
+        snprintf(sa->q, sizeof sa->q, "%s", sq);
+        snprintf(sa->mode, sizeof sa->mode, "%s", smode);
+        sa->limit = atoi(slim); sa->k = atoi(sk);
+        sa->op = (opgate_check(&usr) == 0);
+        pthread_t th;
+        if (pthread_create(&th, NULL, sem_thread, sa) == 0) {
+          pthread_detach(th);
+          return;        /* reply deferred to MG_EV_WAKEUP — loop stays free */
+        }
+        free(sa);
+      }
+      worker_release();
+      /* No thread (allocation failure): refuse rather than run a network
+       * call on the event loop, which is the stall this route moved off. */
+      reply_busy(c); return;
     }
 
     /* GET /api/intel/search — alias of /api/intel/items */
     if (eq(u, "/api/intel/search")) {
       if (intel_query_is_breach(hm) && breach_gate(c, &usr)) return;
       int qtl = 0, ist = 200;
-      char *body = intel_items_run(hm, &qtl, &ist);
+      tenant_ctx itc;
+      if (intel_tenant_or_reply(c, hm, &usr, &itc) != 0) return;
+      char *body = intel_items_run(hm, itc.tenant_id, &qtl, &ist);
       if (qtl) { reply_json(c, 414,
         "{\"error\":\"filter_too_long\",\"detail\":\"a query parameter exceeded "
         "its maximum length; half a filter set cannot be honoured\"}"); return; }
@@ -2943,8 +3135,9 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           ea->body = bdy;                       /* freed by export_thread */
           snprintf(ea->ctype, sizeof ea->ctype, "%s", plan.content_type);
           snprintf(ea->fname, sizeof ea->fname, "%s", plan.filename);
-          if (export_offload(c, ea)) return;    /* bdy freed on the failure path */
-          bdy = NULL;                           /* ownership already released */
+          if (export_offload(c, ea)) return;
+          /* 0 = no thread: export_offload handed `bdy` back, and the inline
+           * report below must run with the body the caller sent. */
         }
       }
       mg_printf(c,

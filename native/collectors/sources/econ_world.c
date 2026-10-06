@@ -387,7 +387,7 @@ static int ew_stooq(const source_ctx *ctx, intel_sink *sink, const char *sym) {
   int emitted = 0;
   const char *line = body;
   int header = 1;
-  while (line && *line && emitted < 100) {
+  while (line && *line) {        /* one quote per data line, all of them */
     const char *nl = strchr(line, '\n');
     size_t llen = nl ? (size_t)(nl - line) : strlen(line);
     char buf[512];

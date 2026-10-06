@@ -83,12 +83,22 @@ def rows(paths):
     return out, bad
 
 
-def declares_paging(o):
+def declares_paging(o, r=None):
     """`o` is the PARSED opts. The old test was `"page_param=" in r["opts"]`,
     which is true whenever those nine characters occur anywhere in the field —
     inside a post_body, inside a header, inside a pagination_ok reason — and a
-    row that merely mentions paging was thereby excused from declaring it."""
-    return bool(o.get("page_param") or o.get("next_path"))
+    row that merely mentions paging was thereby excused from declaring it.
+
+    Also paged, exactly as lib/hpengine.c (hp_run) decides it: a `{page}` path
+    token in the URL, and `page_walk=1` — but page_walk ONLY on a json row,
+    because the engine honours it only when `s->mode == HP_JSON`; on a csv/xml/
+    html row it is accepted by the generator and does nothing."""
+    if o.get("page_param") or o.get("next_path"):
+        return True
+    if r is not None and "{page}" in (r.get("url") or ""):
+        return True
+    return bool(r is not None and r.get("mode") == "json"
+                and (o.get("page_walk") or "").strip() == "1")
 
 
 def declares_exception(o):
@@ -128,7 +138,7 @@ def main():
             print("%-38s %-26s duplicate opt %r — UNVERIFIABLE"
                   % (r["_at"], r["id"], dups[0]))
             continue
-        if declares_paging(o):
+        if declares_paging(o, r):
             continue
         if declares_exception(o):
             excepted += 1

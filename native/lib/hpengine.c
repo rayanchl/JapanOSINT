@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
-#include <time.h>       /* {ago:N} in hp_expand — a `since` cursor relative to now */
+#include <time.h>       /* {ago:N} and {date:FMT:±N} in hp_expand */
 
 /* Bounds exist only to keep one pathological response from exhausting memory —
  * they are NOT an editorial filter. Per the exhaustive-use rule
@@ -245,6 +245,47 @@ static int hp_url_num_param(const char *url, const char *key, long *out) {
   return 0;
 }
 
+/* {date:FORMAT} and {date:FORMAT:+N} / {date:FORMAT:-N} — today's UTC date
+ * shifted by N days and rendered with strftime(FORMAT). It exists for the
+ * upstreams that publish one answer per DAY (a gazette's notes for a date, a
+ * daily register file): without it such a row had to pin the date it was
+ * authored on, and then fetched that one day forever while reporting success.
+ * The offset lets a row ask for a day that is already complete where the
+ * upstream lives — "-2" is a finished day in every timezone at any hour.
+ *
+ * The offset is the text after the LAST ':' only when that text is a signed
+ * integer, so a format that itself contains ':' (%H:%M) still parses.
+ * Returns 1 and fills out/consumed on success; 0 leaves the token verbatim,
+ * exactly as any other unknown token is left. */
+static int hp_date_token(const char *p, char *out, size_t outn, size_t *consumed) {
+  if (strncmp(p, "{date:", 6) != 0) return 0;
+  const char *body = p + 6, *close = strchr(body, '}');
+  if (!close || close == body || close - body > 64) return 0;
+  char spec[65];
+  memcpy(spec, body, (size_t)(close - body));
+  spec[close - body] = 0;
+  long off = 0;
+  char *colon = strrchr(spec, ':');
+  if (colon) {
+    const char *d = colon + 1;
+    if (*d == '+' || *d == '-') d++;
+    int digits = 0;
+    while (isdigit((unsigned char)d[digits])) digits++;
+    if (digits > 0 && digits <= 5 && d[digits] == 0) {
+      off = strtol(colon + 1, NULL, 10);
+      *colon = 0;
+    }
+  }
+  if (!*spec) return 0;
+  time_t t = time(NULL) + (time_t)off * 86400;
+  struct tm g;
+  if (!gmtime_r(&t, &g)) return 0;
+  size_t n = strftime(out, outn, spec, &g);
+  if (n == 0) return 0;
+  *consumed = (size_t)(close - p) + 1;
+  return 1;
+}
+
 /* {token} expansion. An unknown token is left verbatim so a typo shows up in
  * the logged URL instead of silently vanishing. `extra_name`/`extra_val`
  * inject the second-hop {v}. Returns malloc'd.
@@ -268,7 +309,10 @@ static char *hp_expand(const char *tmpl, const hp_vars *v,
   for (const char *p = tmpl; *p; ) {
     const char *sub = NULL;
     size_t skip = 0;
-    if (*p == '{') {
+    char dbuf[128];
+    if (*p == '{' && hp_date_token(p, dbuf, sizeof dbuf, &skip)) {
+      sub = dbuf;
+    } else if (*p == '{') {
       const char *close = strchr(p, '}');
       if (close && close - p < 12) {
         size_t tn = (size_t)(close - p - 1);
@@ -750,6 +794,14 @@ static void hp_flatten(const cJSON *node, const char *prefix, cJSON *out, int de
   hp_flatten_c(node, prefix, out, depth, &g_flat_drops, &g_flat_trunc);
 }
 
+/* A record built WITHOUT hp_flatten — XML elements, record-jar stanzas, HTML
+ * anchors, headerless CSV cells — must start its accounting at zero too.
+ * Those paths never reset the counters, so hp_emit_record read whatever the
+ * last JSON record flattened on this thread had left there: an XML or IANA
+ * record was stamped `_fields_dropped` it never had and filed a false
+ * id-keys-truncated notice. Called per record, before hp_emit_record. */
+static void hp_flat_reset(void) { g_flat_drops = 0; g_flat_trunc = 0; }
+
 /* Value for `name` in a flattened map: exact dotted key first, then any key
  * whose last segment matches (so "siege.nom" answers a "nom" request).
  *
@@ -820,9 +872,19 @@ static void hp_fnv_hex(const char *s, char out[17]);   /* defined below; the
                                                           hp_pick_s hashes an
                                                           over-long key */
 
+/* `ident` says what the pick is FOR. An identity (id_keys) that outgrows its
+ * scratch is replaced by its hash — fixed width, still unique per content —
+ * because a cut identity manufactures collisions. A DISPLAY field (title,
+ * body, date, link) is cut instead, on a UTF-8 boundary: its whole value is
+ * still in the record's properties, and a 16-hex-digit hash shown as a
+ * record's TITLE is a label nobody can read (58 rows compose their title with
+ * `+`, e.g. `side+price+size`). */
+#define HP_PICK_DISPLAY 0
+#define HP_PICK_IDENT   1
+#define HP_PICK_TEXT_CAP 512    /* scratch for a display pick (title/body/date/link) */
 static const char *hp_pick_s(const cJSON *flat, const char *csv_keys,
                              const char *const *fallback,
-                             char *scratch, size_t cap) {
+                             char *scratch, size_t cap, int ident) {
   char buf[512];
   if (csv_keys && *csv_keys) {
     snprintf(buf, sizeof buf, "%s", csv_keys);
@@ -866,6 +928,13 @@ static const char *hp_pick_s(const cJSON *flat, const char *csv_keys,
         }
         if (!present) continue;
         if (jl < cap) { memcpy(scratch, joined, jl + 1); return scratch; }
+        if (!ident) {
+          size_t n = cap - 1;
+          while (n > 0 && ((unsigned char)joined[n] & 0xC0) == 0x80) n--;
+          memcpy(scratch, joined, n);
+          scratch[n] = 0;
+          return scratch;
+        }
         char hx[17]; hp_fnv_hex(joined, hx);
         snprintf(scratch, cap, "%s", hx);
         return scratch;
@@ -998,6 +1067,27 @@ typedef struct {
   int   sh_zip_extra;       /* the ZIP body held more than the one entry we read */
   int   sh_repeat_page;     /* 1-based page whose bytes equalled the previous page's */
   int   sh_repeat_skipped;  /* pages the walk would still have requested       */
+  /* sh_repeat_page was set by the RECORDS guard below rather than by the
+   * byte-identical body test, so the notice says which it was. */
+  int   sh_repeat_records;
+
+  /* Repeat guard on the RECORDS of a paged JSON walk (see hp_run_json).
+   * Hashing the whole body could not see an ignored cursor when the envelope
+   * changes per request — a `took` time, a timestamp, a request id — so the
+   * same records were re-emitted to the page ceiling and a truncation notice
+   * claimed pages were pending. `rec_fp` is jsonlist_page_fp() of the previous
+   * page's record array, the fingerprint VJSON's own walk stops on. */
+  int   rec_guard;          /* this run walks pages in HP_JSON mode              */
+  int   rec_fp_set;
+  unsigned long long rec_fp;
+  int   rec_repeat;         /* this page repeated the previous one: stop, emit nothing */
+  /* page_walk's page-1 probe (jsonlist_next_page): a page-numbered walk whose
+   * first URL carried no page (or page=0) asks for page 1 next, because a
+   * 0-based API's page 1 is new data. If it repeats the first page the API is
+   * 1-based, and `pw_probe` asks hp_run to continue at page 2 without counting
+   * the probe as a page. Once per run. */
+  const char *prev_url;     /* the URL of the page read before this one      */
+  int   pw_probe, pw_probed;
 } hp_run_state;
 
 /* 0 = no cap (every record). A row's non-zero max_items is its author's
@@ -1212,6 +1302,7 @@ static void hp_seed_declared_keys(const hp_source *s, cJSON *rec, cJSON *flat) {
 static cJSON *hp_json_flat(const hp_source *s, cJSON *rec) {
   cJSON *flat = cJSON_CreateObject();
   if (!flat) return NULL;
+  hp_flat_reset();          /* a bare-string element never reaches hp_flatten */
   if (cJSON_IsObject(rec) || cJSON_IsArray(rec)) {
     hp_flatten(rec, "", flat, 0);
     hp_seed_declared_keys(s, rec, flat);
@@ -1223,6 +1314,7 @@ static cJSON *hp_json_flat(const hp_source *s, cJSON *rec) {
 static cJSON *hp_csv_flat(const hp_source *s, cJSON *row) {
   cJSON *flat = cJSON_CreateObject();
   if (!flat) return NULL;
+  hp_flat_reset();          /* the headerless branch never reaches hp_flatten */
   if (s->csv_no_header && cJSON_IsArray(row)) {
     /* Headerless: name the columns positionally, col0..colN. */
     int i = 0;
@@ -1255,9 +1347,11 @@ static unsigned char *hp_collision_map(hp_run_state *st, cJSON *arr, int n,
   cJSON_ArrayForEach(rec, arr) {
     cJSON *flat = flat_fn ? flat_fn(s, rec) : rec;
     if (!flat) { i++; continue; }
-    char sc_t[64], sc_r[64], lastbuf[64];
-    const char *title = hp_pick_s(flat, s->title_keys, TITLE_FALLBACK, sc_t, sizeof sc_t);
-    const char *rkey  = hp_pick_s(flat, s->id_keys,    ID_FALLBACK,    sc_r, sizeof sc_r);
+    /* Buffer sizes and pick modes IDENTICAL to hp_emit_record's, so the key
+     * this guard derives is the key the emitter derives. */
+    char sc_t[HP_PICK_TEXT_CAP], sc_r[64], lastbuf[64];
+    const char *title = hp_pick_s(flat, s->title_keys, TITLE_FALLBACK, sc_t, sizeof sc_t, HP_PICK_DISPLAY);
+    const char *rkey  = hp_pick_s(flat, s->id_keys,    ID_FALLBACK,    sc_r, sizeof sc_r, HP_PICK_IDENT);
     /* THIS FALLBACK MUST MIRROR hp_emit_record() EXACTLY.
      *
      * The emitter, a few dozen lines below, does `if (!title) { if (!rkey)
@@ -1327,14 +1421,19 @@ static void hp_emit_record(hp_run_state *st, cJSON *flat, int deepen) {
   if (g_flat_trunc)  cJSON_AddNumberToObject(flat, "_array_truncated", g_flat_trunc);
 
   /* One scratch buffer per pick: the five results coexist, so they cannot
-   * share one. Only a numeric or boolean hit uses its buffer at all. */
-  char sc_t[64], sc_r[64], sc_d[64], sc_b[64], sc_l[64];
+   * share one. A plain string hit is returned in place; a buffer is used by a
+   * numeric or boolean hit, and by a `+` composite. The display buffers are
+   * HP_PICK_TEXT_CAP so a composite title is shown, not hashed; the id buffer
+   * stays 64 so every uid is exactly what it was. hp_collision_map() uses the
+   * same sizes and modes — it must derive the same key. */
+  char sc_t[HP_PICK_TEXT_CAP], sc_r[64], sc_d[HP_PICK_TEXT_CAP],
+       sc_b[HP_PICK_TEXT_CAP], sc_l[HP_PICK_TEXT_CAP];
   /* The DECLARED keys are tried on their own first, so a page on which they
    * matched nothing is visible as such (shape notice `title-keys-unmatched` /
    * `id-keys-unmatched`). The fallback lists then run exactly as before, so a
    * record resolves to the same title and key it always did. */
-  const char *title = hp_pick_s(flat, s->title_keys, NULL, sc_t, sizeof sc_t);
-  const char *rkey  = hp_pick_s(flat, s->id_keys,    NULL, sc_r, sizeof sc_r);
+  const char *title = hp_pick_s(flat, s->title_keys, NULL, sc_t, sizeof sc_t, HP_PICK_DISPLAY);
+  const char *rkey  = hp_pick_s(flat, s->id_keys,    NULL, sc_r, sizeof sc_r, HP_PICK_IDENT);
   st->pg_n++;
   if (title) st->pg_title++;
   if (rkey)  st->pg_id++;
@@ -1343,11 +1442,11 @@ static void hp_emit_record(hp_run_state *st, cJSON *flat, int deepen) {
    * rather than silently changing this record's identity. */
   if (!rkey && s->id_keys && *s->id_keys && (g_flat_drops || g_flat_trunc))
     st->sh_id_trunc++;
-  if (!title) title = hp_pick_s(flat, NULL, TITLE_FALLBACK, sc_t, sizeof sc_t);
-  if (!rkey)  rkey  = hp_pick_s(flat, NULL, ID_FALLBACK,    sc_r, sizeof sc_r);
-  const char *date  = hp_pick_s(flat, s->date_keys,  DATE_FALLBACK,  sc_d, sizeof sc_d);
-  const char *body  = hp_pick_s(flat, s->body_keys,  NULL,           sc_b, sizeof sc_b);
-  const char *lnk   = hp_pick_s(flat, s->link_keys,  LINK_FALLBACK,  sc_l, sizeof sc_l);
+  if (!title) title = hp_pick_s(flat, NULL, TITLE_FALLBACK, sc_t, sizeof sc_t, HP_PICK_DISPLAY);
+  if (!rkey)  rkey  = hp_pick_s(flat, NULL, ID_FALLBACK,    sc_r, sizeof sc_r, HP_PICK_IDENT);
+  const char *date  = hp_pick_s(flat, s->date_keys,  DATE_FALLBACK,  sc_d, sizeof sc_d, HP_PICK_DISPLAY);
+  const char *body  = hp_pick_s(flat, s->body_keys,  NULL,           sc_b, sizeof sc_b, HP_PICK_DISPLAY);
+  const char *lnk   = hp_pick_s(flat, s->link_keys,  LINK_FALLBACK,  sc_l, sizeof sc_l, HP_PICK_DISPLAY);
 
   char linkbuf[1024] = {0};
   if (s->link_tmpl && lnk) {
@@ -1558,7 +1657,40 @@ static int hp_run_json(hp_run_state *st, const char *body) {
    * borrowed from `doc`. It must be deleted on EVERY exit below — deleting it
    * frees the wrapper only, never the records it points at. */
   cJSON *arr_owned = NULL;
-  if (s->array_path && *s->array_path) {
+  if (s->array_path && strchr(s->array_path, '+')) {
+    /* `a+b+c`: the records live in SEVERAL sibling arrays of one response —
+     * SIDOF answers one date with NotasMatutinas, NotasVespertinas and
+     * NotasExtraordinarias, and a row that names one of them discards the
+     * other editions. Every alternative that resolves contributes its records,
+     * in the order written; one that is absent (no extraordinary edition that
+     * day) is not an error. If NONE resolves, the declared path is missing and
+     * the row says so below, exactly as for a single path. `+` and not `|`
+     * because the batch manifests are pipe-delimited, and because `+` already
+     * means "this AND that" in id_keys. */
+    cJSON *u = cJSON_CreateArray();
+    char *dup = u ? strdup(s->array_path) : NULL;
+    char *save = NULL;
+    for (char *alt = dup ? strtok_r(dup, "+", &save) : NULL; alt;
+         alt = strtok_r(NULL, "+", &save)) {
+      while (*alt == ' ') alt++;
+      if (!*alt) continue;
+      cJSON *n = hp_path(doc, alt);
+      if (n && cJSON_IsArray(n)) {
+        cJSON *e = NULL;
+        cJSON_ArrayForEach(e, n) cJSON_AddItemReferenceToArray(u, e);
+      } else if (n && cJSON_IsObject(n)) {
+        cJSON_AddItemReferenceToArray(u, n);
+      } else if (!n) {
+        cJSON *multi = hp_path_multi(doc, alt);
+        while (multi && cJSON_GetArraySize(multi) > 0)
+          cJSON_AddItemToArray(u, cJSON_DetachItemFromArray(multi, 0));
+        cJSON_Delete(multi);
+      }
+    }
+    free(dup);
+    if (u && cJSON_GetArraySize(u) > 0) arr = arr_owned = u;
+    else cJSON_Delete(u);
+  } else if (s->array_path && *s->array_path) {
     cJSON *n = hp_path(doc, s->array_path);
     if (!n) {
       /* hp_path cannot cross an array. Retry with the descending walk, which
@@ -1656,6 +1788,39 @@ static int hp_run_json(hp_run_state *st, const char *body) {
   }
 
   int arr_n = cJSON_GetArraySize(arr);
+  /* Did the upstream actually move? Checked on the RECORDS, before anything is
+   * counted or emitted, exactly as jsonlist_emit_paged() checks a VJSON walk.
+   * hp_run's byte-identical test cannot see a server that ignores the cursor
+   * but stamps each response with a fresh `took` / timestamp / request id: the
+   * same records came back on every page, were re-emitted onto their own uids
+   * to the page ceiling, and the ceiling then filed a truncation notice
+   * claiming pages were pending. A repeat is the end of what this URL can
+   * reach, not a page of records. */
+  if (st->rec_guard && arr_n > 0) {
+    unsigned long long fp = jsonlist_page_fp(arr);
+    if (st->page > 1 && st->rec_fp_set && fp == st->rec_fp) {
+      /* page_walk's page-1 probe: the first URL had no page number (or 0), so
+       * the walk asked for page 1 in case the API is 0-based. Getting the
+       * first page back means it is 1-based and page 1 was already read —
+       * continue at page 2. Anything else is a cursor being ignored. */
+      char *p2 = (st->pw && !st->pw_probed && st->prev_url)
+                   ? jsonlist_page_one_retry(st->prev_url, st->url) : NULL;
+      if (p2) {
+        free(st->pw_next);
+        st->pw_next = p2;
+        st->pw_probe = st->pw_probed = 1;
+        st->page_records = arr_n;            /* keep walking */
+      } else {
+        st->rec_repeat = 1;
+        st->page_records = 0;                /* stop: nothing new */
+      }
+      cJSON_Delete(arr_owned);
+      cJSON_Delete(doc);
+      return st->emitted;
+    }
+    st->rec_fp = fp;
+    st->rec_fp_set = 1;
+  }
   st->available += arr_n;
   /* Flag the records whose fallback key is shared with a sibling on this page,
    * before any of them is emitted — see hp_collision_map(). */
@@ -1684,9 +1849,14 @@ static int hp_run_json(hp_run_state *st, const char *body) {
    * (first page), so a truncation notice can report the real remainder and a
    * page_walk row stops exactly where its VJSON form stopped. */
   if (st->declared_total < 0) st->declared_total = jsonlist_declared_total(doc);
+  /* `total` is what the walk has FETCHED, not what it emitted: the decision
+   * compares it with the upstream's declared total, and a row whose
+   * filter_query drops records (or whose sink refuses one) emits fewer than
+   * the upstream handed over — which read as "the upstream holds more" and
+   * filed a truncation notice on a walk that had read everything. */
   if (st->pw && !st->pw_next) {
     st->pw_next = jsonlist_next_page(doc, st->url, arr_n, st->declared_total,
-                                     st->emitted, &st->pw_full);
+                                     st->available, &st->pw_full);
   }
   /* Hand the caller the next page URL when the row declared one, so the walk
    * continues instead of stopping at page 1. */
@@ -2176,8 +2346,14 @@ static int hp_run_xml(hp_run_state *st, const char *body) {
   cJSON_ArrayForEach(flat, flats) {
     if (max && st->emitted >= max) break;   /* `found`/available already counted them */
     st->rec_idx = ri;
-    if (cJSON_GetArraySize(flat) > 0)
+    if (cJSON_GetArraySize(flat) > 0) {
+      hp_flat_reset();
+      int before = st->emitted;
       hp_emit_record(st, flat, st->deep_left > 0);
+      /* The detail budget is spent per record that hopped, as on the JSON
+       * path; without this an XML row deepened every record on every page. */
+      if (st->emitted > before && st->deep_left > 0) st->deep_left--;
+    }
     ri++;
   }
   st->dup_map = NULL;
@@ -2387,7 +2563,10 @@ static int hp_run_recjar(hp_run_state *st, const char *body) {
     if (max && st->emitted >= max) { st->truncated = 1; break; }
     if (st->ctx->cancel && *st->ctx->cancel) { st->truncated = 1; break; }
     st->rec_idx = ri;
+    hp_flat_reset();
+    int before = st->emitted;
     hp_emit_record(st, flat, st->deep_left > 0);
+    if (st->emitted > before && st->deep_left > 0) st->deep_left--;
     ri++;
   }
   st->dup_map = NULL;
@@ -2590,10 +2769,62 @@ static size_t hp_text_collapse(const char *from, const char *to, char *out, size
   return n;
 }
 
+/* `q` opens the tag `name` (given with its `<` or `</`): case-insensitive, and
+ * the name must end there, so `<p` does not match `<pre>`, `<param>` or
+ * `<picture>`. */
+static int hp_tag_is(const char *q, const char *name) {
+  size_t n = strlen(name);
+  if (strncasecmp(q, name, n)) return 0;
+  char c = q[n];
+  return c == '>' || c == '/' || c == ' ' || c == '\t' || c == '\n' || c == '\r';
+}
+
+/* Paragraph and division boundaries. They end a run of sibling text in either
+ * direction once that run has text in it; see hp_anchor_context_label() for
+ * how a boundary met BEFORE any text is used instead. `<br>` is deliberately
+ * not one: on the live camera rows it is a line break inside a caption far
+ * more often than between captions (`<td><a><img></a><br>宇土市長浜</td>`,
+ * `<span>12.0k地点<br>桂大橋下流（右岸）</span>`). */
+static int hp_block_stop(const char *q) {
+  static const char *const tags[] = { "<p", "</p", "<div", "</div", NULL };
+  for (int i = 0; tags[i]; i++)
+    if (hp_tag_is(q, tags[i])) return 1;
+  return 0;
+}
+
+/* How many VISIBLE characters (code points, counted up to `want`) markup
+ * `from`..`to` holds. Tags, whitespace, a no-break space (`&nbsp;`, `&#160;`,
+ * `&#xa0;`, U+00A0) and the ideographic space U+3000 are not visible. Used to
+ * decide whether a run of sibling text has started — a spacer `&nbsp;` before
+ * a caption is layout, and counting it as text made the scan stop at the next
+ * boundary with a label of "&nbsp; &nbsp;". */
+static int hp_visible_chars(const char *from, const char *to, int want) {
+  int intag = 0, n = 0;
+  for (const char *q = from; q < to && *q && n < want; q++) {
+    if (*q == '<') { intag = 1; continue; }
+    if (*q == '>') { intag = 0; continue; }
+    if (intag || isspace((unsigned char)*q)) continue;
+    if (*q == '&') {
+      static const char *const ents[] = { "&nbsp;", "&#160;", "&#xa0;", NULL };
+      int hit = 0;
+      for (int i = 0; ents[i]; i++) {
+        size_t el = strlen(ents[i]);
+        if ((size_t)(to - q) >= el && !strncasecmp(q, ents[i], el)) { q += el - 1; hit = 1; break; }
+      }
+      if (hit) continue;
+    }
+    if ((unsigned char)q[0] == 0xC2 && to - q >= 2 && (unsigned char)q[1] == 0xA0) { q += 1; continue; }
+    if ((unsigned char)q[0] == 0xE3 && to - q >= 3 && (unsigned char)q[1] == 0x80 &&
+        (unsigned char)q[2] == 0x80) { q += 2; continue; }
+    if (((unsigned char)*q & 0xC0) != 0x80) n++;      /* a code point starts here */
+  }
+  return n;
+}
+
 /* Where a run of sibling text stops: the next anchor, or the end of the list
  * item / table row / definition that holds this one. `</td>` is deliberately
  * NOT a stop — an icon in one cell and the name in the next is the commonest
- * camera-table layout. */
+ * camera-table layout. (Paragraph/division boundaries: hp_block_stop.) */
 static int hp_sibling_stop(const char *q) {
   static const char *const stops[] = { "<a", "<A", "</tr", "</TR", "</li", "</LI",
     "</ul", "</ol", "</table", "</dl", "</TABLE", "</nav", NULL };
@@ -2619,6 +2850,20 @@ static int hp_sibling_stop(const char *q) {
  *      followed by a name cell);
  *   5. the text that PRECEDES `<a` back to the previous anchor or the start of
  *      the enclosing row/item (`加茂川橋 <a><img></a>`).
+ *
+ * Paragraph and division boundaries (<p>, </p>, <div>, </div>) end either run
+ * once it holds text, so a label never runs on into a neighbouring block. A
+ * boundary that CLOSES the anchor's own block before any following text — the
+ * `</p>` in `<p>Minutes 2026-01 <a><img></a></p><p>Minutes 2026-02 …` — means
+ * the text after it belongs to the next block: step 5 is then preferred when
+ * it finds text inside the anchor's own block. Without that, every item of
+ * such a list was labelled with its successor's caption. Step 4 stays first
+ * otherwise; preferring the preceding text outright was measured and rejected:
+ * in `<td><a><img></a><br>Name</td><td>&nbsp;</td><td><a>…` the text before
+ * an icon is the PREVIOUS cell's name, and nine of Kumamoto R57's twelve
+ * cameras took a neighbour's. A card whose icon and title sit in sibling
+ * divs (`<div class=img><a><img></a></div><div class=txt><h3>Title</h3>`)
+ * finds nothing before the icon, so it keeps the title that follows.
  *
  * A neighbour's text is context, not a guarantee, so a page can still label an
  * icon with the wrong caption when its layout puts unrelated text between two
@@ -2655,25 +2900,52 @@ static size_t hp_anchor_context_label(const char *tag, size_t taglen, const char
       }
     }
   }
-  /* 4: following siblings, at most 600 bytes of markup. */
+  /* 4: following siblings, at most 600 bytes of markup. A paragraph/division
+   * boundary ends the run once it has text; one met before any text is
+   * passed, and a CLOSING one is remembered (`closed_first`). */
   const char *q = after, *lim = after + 600;
-  while (*q && q < lim && !hp_sibling_stop(q)) q++;
-  if (hp_text_collapse(after, q, out, cap)) return strlen(out);
-  /* 5: preceding siblings — walk back to the previous `</a>` or a row/item
-   * open tag, bounded the same way. */
+  int closed_first = 0;
+  for (; *q && q < lim; q++) {
+    if (*q != '<') continue;
+    if (hp_sibling_stop(q)) break;
+    if (hp_block_stop(q)) {
+      if (hp_visible_chars(after, q, 1)) break;
+      if (q[1] == '/') closed_first = 1;
+    }
+  }
+  size_t fn = hp_text_collapse(after, q, out, cap);
+  if (fn && !closed_first) return fn;
+  /* 5: preceding siblings — back to the previous `</a>` or a row/item open
+   * tag, bounded the same way; a paragraph/division boundary ends the run
+   * once it has text (one directly before the anchor is passed, so a name in
+   * the div before an icon's div is still found). */
   const char *b = tag, *floor_ = tag - 600 < html ? html : tag - 600;
   while (b > floor_) {
     b--;
-    if (*b == '<' && (!strncasecmp(b, "</a", 3) || !strncasecmp(b, "<tr", 3) ||
-                      !strncasecmp(b, "<li", 3) || !strncasecmp(b, "<ul", 3) ||
-                      !strncasecmp(b, "<ol", 3) || !strncasecmp(b, "<table", 6) ||
-                      !strncasecmp(b, "<dl", 3) || !strncasecmp(b, "<nav", 4))) {
+    if (*b != '<') continue;
+    if (!strncasecmp(b, "</a", 3) || !strncasecmp(b, "<tr", 3) ||
+        !strncasecmp(b, "<li", 3) || !strncasecmp(b, "<ul", 3) ||
+        !strncasecmp(b, "<ol", 3) || !strncasecmp(b, "<table", 6) ||
+        !strncasecmp(b, "<dl", 3) || !strncasecmp(b, "<nav", 4) ||
+        (hp_block_stop(b) && hp_visible_chars(b, tag, 1))) {
       const char *gt = strchr(b, '>');
       b = gt && gt < tag ? gt + 1 : tag;
       break;
     }
   }
-  if (b < tag && hp_text_collapse(b, tag, out, cap)) return strlen(out);
+  /* Visibility decides PREFERENCE only, never whether the anchor survives: a
+   * preceding run of nothing but `&nbsp;`/U+3000 — or a lone `）` closing the
+   * sentence before the icon — does not displace following text, but when it
+   * is all there is it is still the label it always was: dropping the record
+   * over a poor label would discard data. */
+  char pre[512];
+  size_t bn = b < tag ? hp_text_collapse(b, tag, pre, sizeof pre) : 0;
+  if (bn && (!fn || hp_visible_chars(b, tag, 2) >= 2)) {
+    snprintf(out, cap, "%s", pre);
+    return strlen(out);
+  }
+  /* Otherwise the following text (still in `out`) is the label. */
+  if (fn) return fn;
   out[0] = 0;
   return 0;
 }
@@ -2757,6 +3029,7 @@ static int hp_run_html(hp_run_state *st, const char *html) {
     cJSON_AddStringToObject(flat, "title", a.text);
     cJSON_AddStringToObject(flat, "url", link);
     cJSON_AddStringToObject(flat, "id", link);
+    hp_flat_reset();
     hp_emit_record(st, flat, 0);
     cJSON_Delete(flat);
   }
@@ -2918,14 +3191,20 @@ static void hp_shape_notices(hp_run_state *st, intel_sink *sink,
     cJSON_AddNumberToObject(p, "pages_skipped", st->sh_repeat_skipped);
     cJSON_AddNumberToObject(p, "page_ceiling", page_max);
     cJSON_AddNumberToObject(p, "records_emitted", emitted);
+    cJSON_AddStringToObject(p, "repeat_detected_by",
+      st->sh_repeat_records ? "the page's records (the envelope differed)"
+                            : "the page's bytes");
     cJSON_AddStringToObject(p, "remedy",
       "the upstream ignores this page parameter: re-point page_param/next_path "
       "at one it honours (known-issue #54), or drop paging from the row");
     snprintf(title, sizeof title,
-             "%s: page %d was byte-identical to page %d — page parameter "
+             "%s: page %d %s page %d — page parameter "
              "ignored; stopped and skipped %d further page(s) of a %d-page "
              "ceiling; %d record(s) emitted",
-             s->id, st->sh_repeat_page, st->sh_repeat_page - 1,
+             s->id, st->sh_repeat_page,
+             st->sh_repeat_records ? "repeated the records of"
+                                   : "was byte-identical to",
+             st->sh_repeat_page - 1,
              st->sh_repeat_skipped, page_max, emitted);
     jo_shape_notice(sink, s->id, "page-param-ignored", title, p, TAGS);
   }
@@ -3142,7 +3421,8 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   hp_run_state st = { .s = s, .ctx = ctx, .sink = sink, .vars = &vars,
                       .url = url, .emitted = 0,
                       .deep_left = hp_detail_budget(s),
-                      .pw = page_walk, .declared_total = -1 };
+                      .pw = page_walk, .declared_total = -1,
+                      .rec_guard = (paged || page_walk) && s->mode == HP_JSON };
   int page_start = s->page_start;
   /* Is the page parameter a RECORD OFFSET? Matched case-insensitively: this
    * used to be strstr(…, "offset"), so ArcGIS's `resultOffset` (126 rows) and
@@ -3192,12 +3472,16 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     page_url = hp_expand(url, &vars, "page", nb);
   }
   unsigned long long prev_hash = 0;   /* previous page's body, for notice (d) */
+  char *prev_url = NULL;              /* the page read before this one         */
   /* Page 1's record count, the yardstick for "was the previous page full?" in
-   * the repeated-page diagnosis below. */
-  int first_page_records = 0;
+   * the repeated-page diagnosis below, and the previous page's own count —
+   * st.page_records is reset at the top of every page, so by the time the
+   * repeat test runs it no longer holds the previous page's number. */
+  int first_page_records = 0, prev_page_records = 0;
   for (int page = 0; page < page_max && page_url; page++) {
     st.page = page + 1;
     st.url  = page_url;
+    st.prev_url = prev_url;
     st.page_records = 0;
 
     http_response hr = {0};
@@ -3232,8 +3516,12 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
      * re-emitted onto its own uid, every real later page never asked for, and
      * the run looking perfectly healthy (known-issue #54: 86 rows). Identical
      * bytes cannot hold a new record, so the walk stops here and says so. */
+    /* Not for a page_walk row: its repeat test is on the RECORDS (hp_run_json),
+     * which also sees a repeat under a changing envelope, and which must be
+     * allowed to see the page-1 probe come back byte-identical to an implicit
+     * first page — that is how a 1-based API is recognised, not a stop. */
     unsigned long long bh = hp_body_hash(hr.body);
-    if (page > 0 && bh == prev_hash) {
+    if (page > 0 && bh == prev_hash && !page_walk) {
       /* Identical bytes always stop the walk — they cannot hold a new record —
        * but the DIAGNOSIS depends on how this row pages, and getting it wrong
        * is how a notice stops being read.
@@ -3252,7 +3540,7 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
        * reads when something real happens. */
       int client_paged = (s->page_param != NULL) || path_paged;
       int prev_was_full = first_page_records > 0 &&
-                          st.page_records >= first_page_records;
+                          prev_page_records >= first_page_records;
       if (client_paged || prev_was_full) {
         st.sh_repeat_page    = page + 1;
         st.sh_repeat_skipped = page_max - (page + 1);
@@ -3293,8 +3581,11 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
       unz = zip_first_entry(hr.body, hr.body_len, &unz_len);
       if (unz) {
         rawb = unz; rawlen = unz_len;
-        for (size_t z = 4; z + 4 <= hr.body_len; z++)
-          if (memcmp(hr.body + z, "PK\x03\x04", 4) == 0) { st.sh_zip_extra = 1; break; }
+        /* The archive's OWN entry count, from its end-of-central-directory
+         * record. This used to search the body for another "PK\3\4", and
+         * those four bytes occur inside deflated data as readily as anywhere
+         * else, so a one-entry archive could be disclosed as holding more. */
+        if (zip_entry_count(hr.body, hr.body_len) > 1) st.sh_zip_extra = 1;
       } else {
         fprintf(stderr, "[hp:%s] body is a ZIP but its first entry could not be "
                         "inflated (unsupported compression or malformed)\n", s->id);
@@ -3328,10 +3619,25 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     }
     free(xcsv);
     free(utf8);
+    /* The inflated ZIP entry — up to JO_ZIP_MAX_OUT (256 MB) per page, and it
+     * was never freed: 30 runs of a row serving a 2 MB entry held 60 MB. */
+    free(unz);
     http_response_free(&hr);
     /* Page 1's size, for the repeated-page diagnosis. Captured after the parse
      * because only the parse knows how many records the page held. */
     if (page == 0) first_page_records = st.page_records;
+    prev_page_records = st.page_records;
+
+    /* The records guard in hp_run_json found this page repeating the last
+     * one: disclosed exactly as a byte-identical page is (notice (d)). */
+    if (st.rec_repeat) {
+      st.rec_repeat        = 0;
+      st.sh_repeat_page    = page + 1;
+      st.sh_repeat_skipped = page_max - (page + 1);
+      st.sh_repeat_records = 1;
+      fprintf(stderr, "[hp:%s] page %d repeats the records of page %d — the "
+              "cursor is being ignored, stopping the walk\n", s->id, page + 1, page);
+    }
 
     /* Shape notice (c): the row DECLARED where the title / identity live and
      * this page had records, none of which carried it. The records were still
@@ -3412,10 +3718,16 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
       }
       st.pw_next = NULL;
     }
-    free(page_url);
+    free(prev_url);
+    prev_url = page_url;
     page_url = nextp;
+    /* The page-1 probe that came back as the first page is not a page read:
+     * re-use this page number for the next request (page 2). Once per run —
+     * hp_run_json sets pw_probe at most once. */
+    if (st.pw_probe) { st.pw_probe = 0; page--; continue; }
     if (page + 1 >= page_max && page_url) st.truncated = 1;   /* ceiling bit */
   }
+  free(prev_url);
   free(page_url);
   free(st.next_url);
   free(st.pw_next);
@@ -3454,7 +3766,9 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   /* A page_walk row discloses what pw_walk disclosed for it as a VJSON
    * collector: a full last page it had no way to continue, a next link that
    * pointed back at itself, and an upstream that counted more than it gave. */
-  int pw_more = page_walk && st.declared_total > (long)real_available;
+  /* Against what was FETCHED (`available`), not what survived filter_query or
+   * the sink: a filtered-out record is one the upstream did hand over. */
+  int pw_more = page_walk && st.declared_total > (long)st.available;
   /* The upstream's own count, when it published one, is the honest size of
    * what was not used; the records we counted are only a floor on it. */
   long avail = st.declared_total > (long)real_available ? st.declared_total

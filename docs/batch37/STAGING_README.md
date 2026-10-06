@@ -1,23 +1,27 @@
-# Batch 36 — global high-penetrancy sources (STAGING, pending live probe)
+# Batch 37 — global high-penetrancy sources (STAGING, pending live probe)
 
-> ## Revised 2026-10-05 — renumbered 31 → 36, deduped, two defect classes fixed
+> ## Revised 2026-10-05 — renumbered 31 → 37, deduped, two defect classes fixed
 >
 > **Renumbered.** This set was authored as "batch 31" on 2026-10-02, but
 > `collectors/pivot/table/hp3b31_*.c` (PR #23, 361 rows) had already merged under
 > that number. Whoever merges first keeps a number, and those tables also needed
 > `docs/candidate-sources-batch31.*.txt` for their own manifests, so this set moved
-> to the next number free on main at the time: **36**. Ids are unchanged (they
+> to the next number free on main: **37**. Ids are unchanged (they
 > carry no batch prefix); only file names, paths and references moved.
 >
-> **Deduped against the tree as it is now — 61 of 144 rejected, 83 kept.**
+> **Deduped against the tree — 64 of 144 rejected, 80 kept.**
 > The original dedupe ran against a 17,469-id registry that did not yet contain
 > hp3b31, batches 32-35 or anything since, and `batch_exclusions.py` compares
 > whole endpoints — so a row whose host and path an existing row already reads,
 > differing only by paging or sort parameters, passes it. A host+path comparison
 > that ignores paging/format/sort/`order_by`, treats a content filter (`q=`, `fq=`,
 > `where=`) as a different request, and ignores trailing-slash composition
-> prefixes found 61 such duplicates. Each is in
-> `docs/rejected-sources-batch36.<beat>.tsv` with the existing collector it
+> prefixes found 61 such duplicates on 2026-10-05, and three more on 2026-10-06
+> once batch 36 had merged (`UK_POLICE_FORCES`, `UK_POLICE_DATES`,
+> `FR_ODS_RESEAUX_ENERGIES` — the first two caught by `batch_exclusions.py`, the
+> third only by host+path, because it differs from batch 36's row by `limit`
+> and `order_by` alone). Each is in
+> `docs/rejected-sources-batch37.<beat>.tsv` with the existing collector it
 > duplicates. Eleven rows that share a host+path but are NOT duplicates were kept:
 > a scheduled full listing where the tree only has an entity pivot or a filtered
 > subset (BODIK `fq=`, data.go.jp `q=`, data.gov, data.europa.eu, four Socrata
@@ -36,7 +40,7 @@
 > it; three were duplicates, and `US_FEC_CANDIDATES` had `page_size` removed.
 >
 > Gates re-run on the revised set: `manifest.py` strict load OK, reachability
-> 0 of 83 unreachable, pagination clean, `batch_exclusions.py --bin --strict`
+> 0 of 80 unreachable, pagination clean, `batch_exclusions.py --bin --strict`
 > 0 collisions against the 18,457-id tree. **Still nothing is generated into C,
 > and still nothing has been probed** — the network policy of the revising
 > session was the same as the authoring one's.
@@ -48,8 +52,13 @@
 > these ids carry no batch prefix, so it selected zero rows and would have
 > printed a clean sweep of nothing. It now takes the probe's PASS id list.
 >
-> (The number was first chosen as 38 while PR #27 was renumbering itself to
-> 36/37; main merged that PR keeping 34/35 instead, so 36 is the next free.)
+> **It took three numbers to land, which is the point of re-checking at merge
+> time.** It was first moved to 38 while PR #27 was renumbering itself to 36/37;
+> main merged that PR keeping 34/35, so it moved to 36; then PR #35 merged a
+> live-measured batch 36 (`hp3b36_{africa,china,france,uk,usa}.c`) before this
+> branch did, so it is **37**. The beat names never overlapped, but a
+> `batch36.*.txt` glob would have fed 80 unprobed staging rows into every gate
+> run against that verified batch.
 
 **Status: UNVERIFIED candidates. Nothing here is registered or generated into C yet.**
 Authored 2026-10-02. Rule 1 (never fabricate) is respected: every `description`
@@ -65,12 +74,12 @@ same blocked proxy).
 
 | beat | file | rows | families |
 | --- | --- | --- | --- |
-| jp  | `candidate-sources-batch36.jp.txt`  | 12 (was 13; 1 rejected) | prefectural/municipal CKAN, ministry/agency RSS not already registered |
-| fr  | `candidate-sources-batch36.fr.txt`  | 14 (was 33; 19 rejected) | data.gouv.fr API, ~30 OpenDataSoft tenants, geo reference API |
-| us  | `candidate-sources-batch36.us.txt`  | 17 (was 41; 24 rejected) | ~38 Socrata catalogs (city/state/federal), data.gov CKAN, NWS, FEC |
-| cam | `candidate-sources-batch36.cam.txt` | 10 (was 10; 0 rejected) | official DOT/agency ArcGIS camera inventories |
-| eu  | `candidate-sources-batch36.eu.txt`  | 14 (was 20; 6 rejected) | EU/UK/DE/NL/Nordics/CEE national CKAN, ECB FX, UK police |
-| row | `candidate-sources-batch36.row.txt` | 16 (was 27; 11 rejected) | CA/AU/NZ/LATAM/Africa/APAC national open data, HDX, World Bank |
+| jp  | `candidate-sources-batch37.jp.txt`  | 12 (was 13; 1 rejected) | prefectural/municipal CKAN, ministry/agency RSS not already registered |
+| fr  | `candidate-sources-batch37.fr.txt`  | 13 (was 33; 20 rejected) | data.gouv.fr API, ~30 OpenDataSoft tenants, geo reference API |
+| us  | `candidate-sources-batch37.us.txt`  | 17 (was 41; 24 rejected) | ~38 Socrata catalogs (city/state/federal), data.gov CKAN, NWS, FEC |
+| cam | `candidate-sources-batch37.cam.txt` | 10 (was 10; 0 rejected) | official DOT/agency ArcGIS camera inventories |
+| eu  | `candidate-sources-batch37.eu.txt`  | 12 (was 20; 8 rejected) | EU/UK/DE/NL/Nordics/CEE national CKAN, ECB FX, UK police |
+| row | `candidate-sources-batch37.row.txt` | 16 (was 27; 11 rejected) | CA/AU/NZ/LATAM/Africa/APAC national open data, HDX, World Bank |
 
 Strategy: favour **catalogue endpoints** (CKAN `package_search`, Socrata
 `/api/catalog/v1`, OpenDataSoft `/api/explore/v2.1/catalog/datasets`) — these are
@@ -98,20 +107,20 @@ The environment network-policy change only takes effect in a fresh container, so
 ```sh
 cd native
 # 1. Proof of life + does it parse + >=1 real record (drops empty sets, bot walls)
-python3 tools/probe_hp_batch.py ../docs/candidate-sources-batch36.*.txt --jobs 6 \
-        --out /tmp/probe36.tsv --pass-ids /tmp/pass36.txt
-grep -vc PASS /tmp/probe36.tsv; grep -v PASS /tmp/probe36.tsv   # inspect/fix/drop fails
+python3 tools/probe_hp_batch.py ../docs/candidate-sources-batch37.*.txt --jobs 6 \
+        --out /tmp/probe37.tsv --pass-ids /tmp/pass37.txt
+grep -vc PASS /tmp/probe37.tsv; grep -v PASS /tmp/probe37.tsv   # inspect/fix/drop fails
 # 1b. Pivot rows only: catch filter-ignored APIs
-python3 tools/probe_hp_batch.py ../docs/candidate-sources-batch36.*.txt --check-filter
+python3 tools/probe_hp_batch.py ../docs/candidate-sources-batch37.*.txt --check-filter
 
 # 2. For PASS rows: replace the "PENDING LIVE PROBE" description with the OBSERVED
 #    count + field names (rule 1). Record every dropped candidate in
-#    docs/rejected-sources-batch36.<beat>.tsv  (id<TAB>url<TAB>reason).
+#    docs/rejected-sources-batch37.<beat>.tsv  (id<TAB>url<TAB>reason).
 
 # 3. Generate C (one table per beat), then build
 for b in jp fr us cam eu row; do
-  python3 tools/gen_hp_batch.py ../docs/candidate-sources-batch36.$b.txt \
-          --prefix hp3b36 --batch 36   # was `--prefix JO31 --batch 31_$b`, which
+  python3 tools/gen_hp_batch.py ../docs/candidate-sources-batch37.$b.txt \
+          --prefix hp3b37 --batch 37   # was `--prefix JO31 --batch 31_$b`, which
                                        # named the output hp3b31_<beat>.c — the
                                        # merged batch-31 tables' own namespace
 done
@@ -122,7 +131,7 @@ make
 #    old `--match JO31` selected zero rows and reported a clean sweep of nothing.
 #    Feed it the PASS ids from step 1 instead:
 python3 tools/audit_registry_emit.py --bin ./bin/japanosint \
-        --ids-file /tmp/pass36.txt --jobs 6 --timeout 220 --out /tmp/sweep36.tsv
+        --ids-file /tmp/pass37.txt --jobs 6 --timeout 220 --out /tmp/sweep37.tsv
 #    Keep OK; fix COLLISION (id_keys identity wrong) and EMITS_NOTHING (title_keys)
 #    with diagnose_emit_keys.py; drop rows that cannot be made to store.
 

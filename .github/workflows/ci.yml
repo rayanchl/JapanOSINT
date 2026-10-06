@@ -81,12 +81,14 @@ jobs:
         working-directory: native
         run: make unit
 
-      # The two offline test binaries. Both were in the tree, both pass, and
-      # neither was gated by anything — hptest is 38 assertions that encode
-      # both house rules directly (truncation notices, pagination, detail hops,
-      # missing-credential-is-an-honest-empty), and authtest generates real
+      # The offline engine tests. hpengine.c is the only code path with
+      # pagination, detail hops and in-band truncation notices, and
+      # tests/hpengine_test.c asserts the house rules directly against it
+      # (truncation notices, pagination, detail hops, missing-credential-is-
+      # an-honest-empty) with a stubbed http_request. authtest generates real
       # RSA/EC keys and proves a JWT still verifies after the OpenSSL 3
-      # migration. Neither needs network, a key, or a model.
+      # migration. Neither needs network, a key, or a model. (hptest used to
+      # run twice in this job, under two names; once is enough.)
       - name: Record-engine tests (house rules 1 and 2)
         working-directory: native
         run: make hptest
@@ -107,15 +109,6 @@ jobs:
         working-directory: native
         run: make lint-sources
 
-      # The engine's own guarantees, offline. hpengine.c is the only code path
-      # with pagination, detail-hops and in-band truncation notices, and
-      # tests/hpengine_test.c asserts 23 of them with a stubbed http_request —
-      # no network, no key, seconds to run. It was not wired in, so the checks
-      # that verify the house rules were the checks CI never ran.
-      - name: Engine guarantees (hptest)
-        working-directory: native
-        run: make hptest
-
       # A collector that moves out of the build glob stops registering with no
       # error: the build succeeds, the binary links, and only the source count
       # drops. That happened during the collectors/ reorganisation — four
@@ -126,19 +119,27 @@ jobs:
         working-directory: native
         run: make source-floor
 
-      # source-floor greps the tree for REGISTER_SOURCE and is therefore blind
-      # to HP_REGISTER_TABLE. It passed for months while the hp spec table's
-      # fixed 1,024-entry array silently dropped 1,481 rows at boot. This asks
-      # the binary instead, and fails on any duplicate id or dropped row.
+      # source-floor is a regex count over the source text. It counts
+      # HP_REGISTER_TABLE rows now, but it was blind to them once and passed
+      # for months while the hp spec table's fixed 1,024-entry array silently
+      # dropped 1,481 rows at boot — and no text count can see a row dropped
+      # AT REGISTRATION. This asks the binary instead (against a throwaway
+      # JO_DB), and fails on any duplicate id or dropped row. Both floors are
+      # committed and only ever ratchet up: record them when a batch lands.
       - name: Registry floor (asks the binary)
         working-directory: native
         run: make registry-floor
 
-      # Reported, not gated. audit-sources is a heuristic scan for discarded
-      # data (docs/SOURCE_EXHAUSTIVENESS.md); every finding needs a human read,
-      # so failing on the count would train people to ignore it. But it must be
-      # VISIBLE — it was reporting 146 findings that no CI run ever printed.
-      - name: Exhaustive-use audit (report)
+      # Gated on the strict set, reported everywhere else. audit-sources is a
+      # heuristic scan for discarded data (docs/SOURCE_EXHAUSTIVENESS.md). Any
+      # finding in the strict set — the hp tables (collectors/pivot/table/
+      # hp*_*.c) and the generated deep-record tables (collectors/feed/
+      # generated/hp1[0-9]_*.c) — exits 1 and fails this job. Findings in the
+      # rest of the tree are printed (they were once 146 that no CI run ever
+      # showed) but do not change the exit status; the tree is held at zero by
+      # review, and a deliberate exception carries an `exhaustive-ok:` marker
+      # on the flagged line.
+      - name: Exhaustive-use audit (strict set gated)
         working-directory: native
         run: make audit-sources
 

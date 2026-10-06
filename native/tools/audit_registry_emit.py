@@ -48,10 +48,15 @@ Usage:
   audit_registry_emit.py --bin ./bin/japanosint --match '^vsrc19' --jobs 8
   audit_registry_emit.py --bin ./bin/japanosint --ids-file ids.txt --resume
 
-Exit status: 1 if any selected source came back EMITS_NOTHING or COLLISION,
-else 0. SLOW and NO_RUN_LINE do not fail the run on their own — they are
-"unmeasured", not "broken", and saying otherwise would be reporting a verdict
-this tool did not establish.
+Exit status: 1 if any selected source came back EMITS_NOTHING, COLLISION,
+SINK_MISMATCH, NO_RUN_LINE, UNREADABLE_DB or UNREGISTERED, or if an --only id
+is not registered; else 0. SLOW does not fail the run on its own — it is
+"unmeasured", not "broken". The others used to be in that bucket too and are
+not: SINK_MISMATCH is the two independent readings DISAGREEING (the one thing
+this tool exists to refuse to paper over), NO_RUN_LINE is a process that died
+before its run returned, UNREADABLE_DB means the verdict rests on the process's
+own word, and an id the binary does not know was never run at all. A sweep made
+entirely of those used to exit 0.
 """
 import argparse
 import io
@@ -403,6 +408,7 @@ def main():
         if a.collector:
             rx = re.compile(a.collector)
             srcs = [s for s in srcs if rx.search(s[1])]
+        missing = set()
         if a.only:
             want = set(x.strip() for x in a.only.split(",") if x.strip())
             srcs = [s for s in srcs if s[0] in want]
@@ -495,7 +501,17 @@ def main():
               "(re-run these with a larger --timeout)" % len(slow))
         for r in slow[:20]:
             print("  %-38s %s" % (r[0], r[9]))
-    return 1 if (coll or dead) else 0
+    broken = [r for r in res if r[1] in ("SINK_MISMATCH", "NO_RUN_LINE",
+                                         "UNREADABLE_DB", "UNREGISTERED")]
+    if broken:
+        print("\nnot measured, and that is a failure — the run died, the two "
+              "readings disagree, or the id is unknown: %d" % len(broken))
+        for r in broken[:40]:
+            print("  %-38s %-14s %s" % (r[0], r[1], r[9]))
+    if missing:
+        print("\n%d --only id(s) are not registered and were never run: %s"
+              % (len(missing), ", ".join(sorted(missing))))
+    return 1 if (coll or dead or broken or missing) else 0
 
 
 if __name__ == "__main__":

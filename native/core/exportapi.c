@@ -632,7 +632,7 @@ static void build_alert_events_sql(const eparams *p, char *sql, size_t cap,
   if (p->since[0])   { wapp(w, sizeof w, &wl, " AND e.matched_at >= ?"); BT(p->since); }
   if (p->until[0])   { wapp(w, sizeof w, &wl, " AND e.matched_at <= ?"); BT(p->until); }
   snprintf(sql, cap,
-    "SELECT e.id, e.rule_id, COALESCE(r.name,''), e.item_uid, e.matched_at,"
+    "SELECT e.id, e.rule_id, COALESCE(r.name,e.rule_name,''), e.item_uid, e.matched_at,"
     " e.delivered_channels_json, e.suppressed, e.reason "
     "FROM alert_events e "
     "LEFT JOIN alert_rules r ON r.id = e.rule_id AND r.tenant_id = e.tenant_id "

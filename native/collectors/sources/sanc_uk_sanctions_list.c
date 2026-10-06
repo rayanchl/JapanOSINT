@@ -29,23 +29,17 @@
  * NAME MATCHING: the list is emitted, not matched. Matching is the platform's job.
  */
 #include "sanc_common.inc"
+#include <limits.h>
 
 #define UK_SANC_URL "https://sanctionslist.fcdo.gov.uk/docs/UK-Sanctions-List.xml"
 
-/* Per-record sub-array bounds. These exist only to keep one pathological
- * <Designation> block (a hand-editing error upstream, say) from allocating
- * without limit; they are NOT meant to bite in practice. The 2026-09-03 audit
- * found the previous values (24/12/8) implausibly low for entries like
- * multi-alias front companies or vessels with many past names/flags — raised
- * well above anything observed on the live 6,315-designation list. There is
- * no per-record collector-truncation-notice if one of these DOES bind (that
- * would need per-record disclosure plumbing this file doesn't have); a bound
- * this generous binding at all would itself be a signal worth re-auditing. */
-#define UK_SANC_ALIAS_MAX  200
-#define UK_SANC_MEASURE_MAX 64
-#define UK_SANC_TEXT_MAX    64
-#define UK_SANC_ID_MAX      32
-#define UK_SANC_ADDR_MAX    32
+/* No per-record sub-array bounds. There were five (aliases 200, measures 64,
+ * DOBs/nationalities/positions 64, passport/national ids 32, addresses 32),
+ * described as guards against a pathological <Designation> allocating without
+ * limit — but every array is built from a block of a document that is already
+ * in memory, so the document bounds it, and a bound that bit would have
+ * dropped names and identifiers silently (no notice existed for it). Live
+ * maxima on 2026-10-02: 144 names, 19 addresses, 14 passports. */
 
 /* Join Name1..Name6 in order, as the FCDO splits a single name across them. */
 static void uk_join_name(const char *b, const char *e, char *out, size_t n) {
@@ -68,14 +62,14 @@ static void uk_join_name(const char *b, const char *e, char *out, size_t n) {
 
 /* Every <tag> text under a container, as a JSON array. */
 static cJSON *uk_texts(const char *b, const char *e, const char *container,
-                       const char *tag, int max) {
+                       const char *tag) {
   cJSON *out = cJSON_CreateArray();
   const char *cur = b;
   sanc_el c;
   if (!sanc_xml_next(&cur, e, container, &c)) return out;
   const char *ic = c.body;
   sanc_el t;
-  while (cJSON_GetArraySize(out) < max && sanc_xml_next(&ic, c.body_end, tag, &t)) {
+  while (sanc_xml_next(&ic, c.body_end, tag, &t)) {
     char *v = sanc_decode(t.body, (size_t)(t.body_end - t.body));
     if (v && v[0]) cJSON_AddItemToArray(out, cJSON_CreateString(v));
     free(v);
@@ -96,7 +90,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (g) { sanc_ddmmyyyy(g, geniso, sizeof geniso); free(g); }
   }
 
-  int max_rows = sanc_env_int("JO_SANC_MAX_ROWS", 5000);
+  /* Unbounded unless the operator sets JO_SANC_MAX_ROWS. The shared default
+   * of 5,000 BIT on this list: 5,000 of 6,370 designations emitted on
+   * 2026-10-02, 1,370 dropped every run (disclosed, but dropped), for a parse
+   * that takes six seconds. An explicit setting still applies and is still
+   * disclosed below. */
+  int max_rows = sanc_env_int("JO_SANC_MAX_ROWS", INT_MAX);
   int n = 0;
   const char *cur = xml;
   sanc_el d;
@@ -121,7 +120,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
           int is_primary = ntype && strstr(ntype, "Primary") != NULL;
           if (is_primary && !primary[0]) {
             snprintf(primary, sizeof primary, "%s", joined);
-          } else if (cJSON_GetArraySize(aliases) < UK_SANC_ALIAS_MAX) {
+          } else {
             char *strength = sanc_xml_text(nm.body, nm.body_end, "AliasStrength");
             char line[600];
             snprintf(line, sizeof line, "%s%s%s%s", joined,
@@ -138,7 +137,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       /* No Primary Name marked — fall back to the first name we did parse.
        * This picks a TITLE, it does not choose which names survive: every
        * parsed name is already in `aliases` and `aliases` is stored whole. */
-      const cJSON *a0 = cJSON_GetArrayItem(aliases, 0);  /* exhaustive-ok: title fallback; picks a TITLE only, does not choose which names survive — every parsed name up to UK_SANC_ALIAS_MAX is already in `aliases`, which is stored whole below */
+      const cJSON *a0 = cJSON_GetArrayItem(aliases, 0);  /* exhaustive-ok: title fallback; picks a TITLE only, does not choose which names survive — every parsed name is already in `aliases`, which is stored whole below */
       if (cJSON_IsString(a0)) snprintf(primary, sizeof primary, "%s", a0->valuestring);
     }
     if (!primary[0]) { cJSON_Delete(aliases); continue; }   /* no name -> no row */
@@ -186,20 +185,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
           const char *close = (const char *)memchr(val, '<',
                                                    (size_t)(ind.body_end - val));
           if (!close) break;
-          if ((size_t)(close - val) == 4 && strncmp(val, "true", 4) == 0 &&
-              cJSON_GetArraySize(measures) < UK_SANC_MEASURE_MAX)
+          if ((size_t)(close - val) == 4 && strncmp(val, "true", 4) == 0)
             cJSON_AddItemToArray(measures, cJSON_CreateString(tagname));
           p = close;      /* the close tag is skipped on the next iteration */
         }
       }
     }
 
-    cJSON *dobs = uk_texts(b, e, "DOBs", "DOB", UK_SANC_TEXT_MAX);
-    cJSON *nats = uk_texts(b, e, "Nationalities", "Nationality", UK_SANC_TEXT_MAX);
-    cJSON *positions = uk_texts(b, e, "Positions", "Position", UK_SANC_TEXT_MAX);
-    cJSON *passports = uk_texts(b, e, "PassportDetails", "PassportNumber", UK_SANC_ID_MAX);
+    cJSON *dobs = uk_texts(b, e, "DOBs", "DOB");
+    cJSON *nats = uk_texts(b, e, "Nationalities", "Nationality");
+    cJSON *positions = uk_texts(b, e, "Positions", "Position");
+    cJSON *passports = uk_texts(b, e, "PassportDetails", "PassportNumber");
     cJSON *natids = uk_texts(b, e, "NationalIdentifierDetails",
-                             "NationalIdentifierNumber", UK_SANC_ID_MAX);
+                             "NationalIdentifierNumber");
 
     /* addresses as published (R2: text only) */
     cJSON *addresses = cJSON_CreateArray();
@@ -209,8 +207,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       if (sanc_xml_next(&ac, e, "Addresses", &al)) {
         const char *c2 = al.body;
         sanc_el ad;
-        while (cJSON_GetArraySize(addresses) < UK_SANC_ADDR_MAX &&
-               sanc_xml_next(&c2, al.body_end, "Address", &ad)) {
+        while (sanc_xml_next(&c2, al.body_end, "Address", &ad)) {
           char line[600];
           size_t j = 0;
           line[0] = 0;
@@ -309,8 +306,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(uid); free(ofsi); free(unref); free(regime); free(kind); free(dsource);
     free(imposed); free(reasons); free(other); free(designated); free(updated);
   }
-  /* JO_SANC_MAX_ROWS (default 5,000) is a shared bound across the sanctions
-   * collectors, and on this list it BITES: the FCDO consolidated list is past
+  /* JO_SANC_MAX_ROWS (shared default 5,000; unbounded here unless set) is a
+   * bound across the sanctions collectors, and on this list it BIT: the FCDO consolidated list is past
    * 5,000 designations, so a run emitted exactly 5,000 and stopped — the round
    * number in the log being the only hint that anything was missing, which is
    * the "a log nobody reads is not a disclosure" case house rule 2 names.

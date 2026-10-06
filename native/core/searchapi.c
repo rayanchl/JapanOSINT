@@ -82,10 +82,53 @@ static void *run_thread(void *vp) {
   return NULL;
 }
 
-char *searchapi_analyze(db_handle *db, const char *query, int max_rounds,
+/* Persist the run's owner so the restart path (searchapi_results reading the
+ * stored run row, which the pipeline writes under the shared 'legacy' tenant)
+ * can still answer "whose run is this". 0 on success. */
+static int owner_persist(db_handle *db, const char *id, const char *tenant_id,
+                         const char *user_id) {
+  sqlite3_stmt *s;
+  if (sqlite3_prepare_v2(db->h,
+        "INSERT OR REPLACE INTO search_run_owners(request_id,tenant_id,user_id)"
+        " VALUES (?1,?2,?3)", -1, &s, NULL) != SQLITE_OK) {
+    fprintf(stderr, "[search] cannot record the owner of run %s: %s\n", id,
+            sqlite3_errmsg(db->h));
+    return -1;
+  }
+  sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
+  sqlite3_bind_text(s, 2, tenant_id, -1, SQLITE_TRANSIENT);
+  if (user_id && *user_id) sqlite3_bind_text(s, 3, user_id, -1, SQLITE_TRANSIENT);
+  else sqlite3_bind_null(s, 3);
+  int rc = sqlite3_step(s);
+  sqlite3_finalize(s);
+  return rc == SQLITE_DONE ? 0 : -1;
+}
+
+/* 1 when `tenant_id` started the stored run `id`. A run with no owner row
+ * (started before ownership was recorded) belongs to nobody we can name, and
+ * is refused: "unknown owner" must not read as "every tenant". */
+static int owner_matches(db_handle *db, const char *id, const char *tenant_id) {
+  if (!tenant_id || !*tenant_id) return 0;
+  sqlite3_stmt *s;
+  int ok = 0;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT 1 FROM search_run_owners WHERE request_id=?1 AND tenant_id=?2",
+        -1, &s, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(s, 2, tenant_id, -1, SQLITE_TRANSIENT);
+    ok = sqlite3_step(s) == SQLITE_ROW;
+    sqlite3_finalize(s);
+  }
+  return ok;
+}
+
+char *searchapi_analyze(db_handle *db, const char *tenant_id,
+                        const char *user_id, const char *query, int max_rounds,
                         int *out_status) {
   if (out_status) *out_status = 400;
   if (!query) return NULL;
+  /* No owner, no run: an ownerless run would be readable by every tenant. */
+  if (!tenant_id || !*tenant_id) { if (out_status) *out_status = 500; return NULL; }
   while (*query == ' ' || *query == '\t' || *query == '\n' || *query == '\r') query++;
   if (!*query) return NULL;
 
@@ -110,9 +153,16 @@ char *searchapi_analyze(db_handle *db, const char *query, int max_rounds,
     return NULL;
   }
 
-  char id[40];
+  char id[40], skey[40];
   gen_id(id);
-  if (!progress_create(id, query, max_rounds > 0 ? max_rounds : 5)) {
+  gen_id(skey);                 /* the SSE capability — never the request_id */
+  if (owner_persist(db, id, tenant_id, user_id) != 0) {
+    run_slot_release();
+    if (out_status) *out_status = 500;
+    return NULL;
+  }
+  if (!progress_create_owned(id, query, max_rounds > 0 ? max_rounds : 5,
+                             tenant_id, skey)) {
     run_slot_release();
     return NULL;
   }
@@ -142,6 +192,10 @@ char *searchapi_analyze(db_handle *db, const char *query, int max_rounds,
 
   cJSON *o = cJSON_CreateObject();
   cJSON_AddStringToObject(o, "request_id", id);
+  /* Open /api/search/stream/:request_id?key=<stream_key>. The stream is
+   * pre-auth (EventSource sends no headers), so this — not the request_id,
+   * which share links carry — is what proves the reader is the owner. */
+  cJSON_AddStringToObject(o, "stream_key", skey);
   cJSON_AddStringToObject(o, "status", "processing");
   cJSON_AddStringToObject(o, "query", query);
   char *s = cJSON_PrintUnformatted(o);
@@ -169,13 +223,39 @@ char *searchapi_suggest(const char *q) {
   return s ? s : strdup("{\"suggestions\":[]}");
 }
 
-char *searchapi_results(db_handle *db, const char *id) {
+/* `{"stream_key":"<k>",` spliced in front of a snapshot object. The key is
+ * 32 hex characters, so no escaping is involved; re-parsing a multi-megabyte
+ * snapshot to add one field would be the expensive way to do the same. */
+static char *with_stream_key(char *snap, const char *key) {
+  if (!snap || !key || !*key || snap[0] != '{') return snap;
+  size_t sl = strlen(snap), kl = strlen(key);
+  char *o = malloc(sl + kl + 20);
+  if (!o) return snap;
+  int n = sprintf(o, "{\"stream_key\":\"%s\"%s", key, snap[1] == '}' ? "" : ",");
+  memcpy(o + n, snap + 1, sl);              /* includes the NUL */
+  free(snap);
+  return o;
+}
+
+char *searchapi_results(db_handle *db, const char *tenant_id, const char *id) {
   if (!id || !*id) return NULL;
-  /* Find + serialise under one lock: progress_create() frees the oldest
-   * FINISHED request past 200, and a pointer taken from progress_get() and
-   * used after the unlock can be that entry. */
-  char *live = progress_snapshot_by_id(id, NULL);
-  if (live) return live;
+  /* Find + check ownership + serialise under one lock: progress_create()
+   * frees the oldest FINISHED request past 200, and a pointer taken from
+   * progress_get() and used after the unlock can be that entry.
+   *
+   * TENANT-SCOPED. This answered any authenticated caller holding the
+   * request_id — and the request_id is exactly what a share link carries, so
+   * a link forwarded outside the workspace was a cross-tenant read, while the
+   * share sheet tells the user the server re-checks the recipient's
+   * workspace. A run belongs to the tenant that started it; anyone else gets
+   * the same 404 as an unknown id. */
+  char key[48] = {0};
+  char *live = progress_snapshot_for(id, tenant_id, NULL, NULL, key, sizeof key);
+  if (live) return with_stream_key(live, key);
+
+  /* Server restarted: reconstruct from the persisted run row (== JS else) —
+   * for its owner only. */
+  if (!owner_matches(db, id, tenant_id)) return NULL;
 
   /* Server restarted: reconstruct from the persisted run row (== JS else). */
   char uid[128];

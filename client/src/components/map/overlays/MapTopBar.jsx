@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { LuSearch, LuX, LuCrosshair, LuEllipsis, LuShare2, LuFootprints, LuMapPin, LuChartBar, LuClock, LuLayers, LuHistory } from 'react-icons/lu';
 import { api } from '../../../api/client.js';
 import { cx } from '../../ui/kit.jsx';
+import { MAP_RECENT_SEARCHES_KEY } from '../../../auth/localData.js';
 
 /**
  * Floating map chrome — the web port of the iOS `MapTab` top bar:
@@ -15,7 +16,8 @@ import { cx } from '../../ui/kit.jsx';
  * web sends `q` only and shows the server's `via_translation` flag if it
  * ever sets one.
  */
-const RECENT_KEY = 'osint:map:recent-searches';
+// Cleared on sign-out (auth/localData.js owns the key).
+const RECENT_KEY = MAP_RECENT_SEARCHES_KEY;
 const LOCAL_HIT_CAP = 8;
 const NAME_KEYS = ['name', 'title', 'station_name', 'place', 'name_ja', 'name_en', 'display_name', 'label'];
 
@@ -49,6 +51,9 @@ export default function MapTopBar({
   const [recent, setRecent] = useState(readRecent);
   const [menu, setMenu] = useState(false);
   const wrap = useRef(null);
+  // The server tries up to three providers at 8 s each, so answers can arrive
+  // long after the next query was typed. Only the newest query may write.
+  const geocodeSeq = useRef(0);
 
   useEffect(() => {
     const onDoc = (e) => { if (wrap.current && !wrap.current.contains(e.target)) { setOpen(false); setMenu(false); } };
@@ -81,18 +86,24 @@ export default function MapTopBar({
   const run = useCallback(async (q) => {
     const trimmed = (q ?? query).trim();
     if (!trimmed) return;
+    const my = ++geocodeSeq.current;
     setOpen(true); setBusy(true); setError(null);
     setLocalHits(searchLocal(trimmed));
+    setRecent((prev) => {
+      const next = [trimmed, ...prev.filter((r) => r !== trimmed)];
+      writeRecent(next);
+      return next;
+    });
     try {
       const j = await api.get('/api/geocode', { query: { q: trimmed } });
+      if (my !== geocodeSeq.current) return;
       setHits(Array.isArray(j?.results) ? j.results : []);
     } catch (e) {
+      if (my !== geocodeSeq.current) return;
       // A failed lookup must not leave a previous query's hits under this one.
       setHits([]); setError(e);
-    } finally { setBusy(false); }
-    const next = [trimmed, ...recent.filter((r) => r !== trimmed)];
-    setRecent(next); writeRecent(next);
-  }, [query, recent, searchLocal]);
+    } finally { if (my === geocodeSeq.current) setBusy(false); }
+  }, [query, searchLocal]);
 
   const fly = (lat, lon, zoom = 13) => {
     if (Number.isFinite(lat) && Number.isFinite(lon)) {
@@ -101,7 +112,7 @@ export default function MapTopBar({
     setOpen(false);
   };
 
-  const clear = () => { setQuery(''); setHits([]); setLocalHits({ rows: [], total: 0 }); setError(null); setOpen(false); };
+  const clear = () => { geocodeSeq.current += 1; setBusy(false); setQuery(''); setHits([]); setLocalHits({ rows: [], total: 0 }); setError(null); setOpen(false); };
 
   const showDropdown = open && (busy || error || hits.length || localHits.rows.length || (!query && recent.length));
   const menuItems = useMemo(() => [

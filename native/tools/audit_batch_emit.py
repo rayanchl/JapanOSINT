@@ -35,16 +35,41 @@ had printed before the kill, and `--timeout` moves the line. A SLOW row is
 UNMEASURED — it does not fail the run, because this tool did not establish
 anything about it.
 
+A RUN THAT MEASURED NOTHING DOES NOT PASS. This tool used to exit 0 unless it
+saw DROPS_EVERYTHING, so a manifest whose every row came back UNREGISTERED (the
+binary was stale, or the ids were typed wrong), UNPARSEABLE or NO_RUN_LINE
+printed a tally and passed — "no row drops everything" because no row ran. Now:
+
+  exit 1  any DROPS_EVERYTHING, UNREGISTERED, UNPARSEABLE or NO_RUN_LINE row,
+          any malformed manifest line, or a run in which NO row was measured
+  exit 0  otherwise
+
+HTTP_<code> and TRANSPORT_FAIL are the UPSTREAM's answer, not a verdict on the
+row's keys, so they are listed in a section of their own rather than mixed into
+the tally — a dead endpoint is probe_hp_batch.py's finding to make. SLOW,
+NEEDS_KEY, NEEDS_ENTITY, ENTITY_SHAPE and NO_ENTITY_RECOVERED are unmeasured,
+and say so.
+
+EVERY RUN GETS ITS OWN SCRATCH DATABASE. Runs used to inherit JO_DB, and with
+it unset the binary wrote every audited row into the developer's live
+data/japanmap.db. Each run now gets a fresh copy of one warm template DB
+(schema applied, migrations run, sources seeded) in a private temp dir that is
+removed afterwards — the same arrangement as tools/audit_registry_emit.py.
+
 Usage:
   audit_batch_emit.py MANIFEST... --bin PATH_TO_japanosint [--only ID,ID]
                                   [--jobs N] [--timeout S] [--out results.tsv]
+                                  [--workdir DIR]
 """
 import argparse
 import io
 import os
 import re
+import shutil
+import sqlite3
 import subprocess
 import sys
+import tempfile
 from concurrent.futures import ThreadPoolExecutor
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -83,6 +108,17 @@ REASONS = [
 # its job, and it means THIS TOOL failed to recover an entity, not that the row
 # is broken.
 SCHED_ZERO = re.compile(r"\[sched\] \S+ run rc=(-?\d+) records=(\d+) (\d+)ms")
+
+# Verdicts that carry a real emitted/available reading.
+MEASURED = ("OK", "PARTIAL", "DROPS_EVERYTHING", "NO_RECORDS", "EMPTY_UPSTREAM")
+# Verdicts that mean the row never ran as a record source at all.
+FATAL_UNRUN = {
+    "UNREGISTERED": "the binary does not know this id (stale binary, or the "
+                    "row was never generated)",
+    "UNPARSEABLE":  "the engine could not parse the body in the row's mode",
+    "NO_RUN_LINE":  "the process printed no run line — it died, or the row "
+                    "never reached hp_run",
+}
 
 
 def rows(paths):
@@ -134,14 +170,44 @@ def partial_of(blob):
     return (int(last.group(2)), int(last.group(3))) if last else (0, 0)
 
 
+def _unlink_db(path):
+    for suf in ("", "-wal", "-shm"):
+        try:
+            os.unlink(path + suf)
+        except OSError:
+            pass
+
+
+def warm_template(binpath, path):
+    """Boot the binary once against an empty file so every run starts from the
+    same migrated, seeded database instead of paying for that per row."""
+    _unlink_db(path)
+    env = dict(os.environ, JO_DB=path, JO_FTS_REBUILD="0")
+    p = subprocess.run([binpath, "--list-sources"], capture_output=True,
+                       text=True, env=env, timeout=900)
+    if not os.path.exists(path):
+        raise SystemExit("could not build a warm template DB at %s\n%s"
+                         % (path, (p.stderr or "")[-800:]))
+    con = sqlite3.connect(path)        # fold the WAL in before it is copied
+    con.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+    con.close()
+    return path
+
+
 def run_one(args):
-    binpath, r, timeout = args
+    binpath, r, timeout, tmpl, workdir, slot = args
     ent = entity_of(r)
     cmd = [binpath, "--run", r["id"]] + ([ent] if ent else [])
+    # The slot is the row's index, never index % jobs: the pool does not hand
+    # work out in queue order, and two runs sharing a file corrupt both.
+    db = os.path.join(workdir, "r%d.db" % slot)
+    _unlink_db(db)
+    shutil.copyfile(tmpl, db)
     try:
         # JO_SHAPE_NOTICES=0: a collector-shape-notice is itself one emitted
         # record; a row that stored only its own notice must still read as 0.
-        env = dict(os.environ, JO_SHAPE_NOTICES="0")
+        env = dict(os.environ, JO_SHAPE_NOTICES="0", JO_DB=db,
+                   JO_FTS_REBUILD="0")
         p = subprocess.run(cmd, capture_output=True, text=True, env=env,
                            timeout=timeout, stdin=subprocess.DEVNULL)
     except subprocess.TimeoutExpired as e:
@@ -152,6 +218,8 @@ def run_one(args):
             return x.decode("utf-8", "replace") if isinstance(x, bytes) else (x or "")
         em, av = partial_of(s(e.stdout) + s(e.stderr))
         return (r["id"], "SLOW", em, av, ent or "")
+    finally:
+        _unlink_db(db)
     blob = (p.stdout or "") + (p.stderr or "")
     if "unknown source" in blob:
         return (r["id"], "UNREGISTERED", 0, 0, ent or "")
@@ -196,20 +264,36 @@ def main():
                          "(180). SLOW is unmeasured, not failed — raise this "
                          "and re-run the SLOW rows to measure them.")
     ap.add_argument("--out")
+    ap.add_argument("--workdir",
+                    help="parent directory for the per-run scratch databases "
+                         "(default: the system temp dir)")
     a = ap.parse_args()
 
     rs, malformed = rows(a.manifests)
     for at, nf in malformed:
         print("%s MALFORMED %d fields, want %d — NOT CHECKED"
               % (at, nf, len(COLS)))
+    missing = set()
     if a.only:
-        want = set(x.strip() for x in a.only.split(","))
+        want = set(x.strip() for x in a.only.split(",") if x.strip())
         rs = [r for r in rs if r["id"] in want]
+        missing = want - set(r["id"] for r in rs)
+        for m in sorted(missing):
+            print("%s NOT IN ANY MANIFEST — NOT CHECKED" % m)
     sys.stderr.write("running %d rows through the engine, timeout=%ds\n"
                      % (len(rs), a.timeout))
 
-    with ThreadPoolExecutor(max_workers=a.jobs) as ex:
-        res = list(ex.map(run_one, [(a.bin, r, a.timeout) for r in rs]))
+    a.bin = os.path.abspath(a.bin)
+    if not os.access(a.bin, os.X_OK):
+        raise SystemExit("not executable: %s" % a.bin)
+    workdir = tempfile.mkdtemp(prefix="jo_batch_emit.", dir=a.workdir)
+    try:
+        tmpl = warm_template(a.bin, os.path.join(workdir, "warm.db"))
+        with ThreadPoolExecutor(max_workers=a.jobs) as ex:
+            res = list(ex.map(run_one, [(a.bin, r, a.timeout, tmpl, workdir, i)
+                                        for i, r in enumerate(rs)]))
+    finally:
+        shutil.rmtree(workdir, ignore_errors=True)
 
     if a.out:
         with io.open(a.out, "w", encoding="utf-8", newline="\n") as fh:
@@ -235,9 +319,29 @@ def main():
         for x in sorted(slow, key=lambda y: -y[2]):
             print("  %-34s %s" % (x[0], "reached emitted %d of %d" % (x[2], x[3])
                                   if x[3] else "printed no progress at all"))
+    upstream = [x for x in res if x[1].startswith("HTTP_")
+                or x[1] == "TRANSPORT_FAIL"]
+    if upstream:
+        print("\nUPSTREAM ERROR — the endpoint did not answer, so this row's "
+              "keys were NOT measured (probe_hp_batch.py's finding to make):")
+        for x in sorted(upstream, key=lambda y: (y[1], y[0])):
+            print("  %-34s %s" % (x[0], x[1]))
+    # Rows this tool could not even run. Each is a defect in the batch (or in
+    # the binary it was pointed at), never a pass.
+    broken = [x for x in res if x[1] in FATAL_UNRUN]
+    if broken:
+        print("\nNOT RUN — fails the audit:")
+        for x in sorted(broken, key=lambda y: (y[1], y[0])):
+            print("  %-34s %s  %s" % (x[0], x[1], FATAL_UNRUN[x[1]]))
+    measured = [x for x in res if x[1] in MEASURED]
     if malformed:
         print("\nNOT CHECKED: %d malformed manifest line(s)." % len(malformed))
-    return 1 if (bad or malformed) else 0
+    if not measured:
+        print("\nNOTHING WAS MEASURED: %d row(s) ran and none produced an "
+              "emitted/available reading. That is not a pass." % len(res))
+    if missing:
+        print("\nNOT CHECKED: %d --only id(s) named no manifest row." % len(missing))
+    return 1 if (bad or broken or malformed or missing or not measured) else 0
 
 
 if __name__ == "__main__":

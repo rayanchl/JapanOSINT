@@ -1,5 +1,5 @@
 /* New Jersey YourMoney active pension members (Socrata row tier).
- * Endpoint: https://data.nj.gov/resource/44xg-bswk.json?$limit=100
+ * Endpoint: https://data.nj.gov/resource/44xg-bswk.json?$limit=50000
  * Bare JSON array, refreshed quarterly (as_of_date). Emits, per member, the
  * fields the API returned: as_of_date, member_last_name, member_first_name,
  * enrollment_date, employer_name, location_code, retirement_system.
@@ -16,10 +16,12 @@
 /* `$offset=0` seeds lib/pagewalk.c's offset walk — pw_walk only ever advances a
  * parameter the URL already carries, and never invents one. `$order=:id` makes
  * the sequence total. Measured 2026-09-19: 401,000 members upstream, of which
- * the single-page collector kept 100. */
+ * the single-page collector kept 100; at $limit=100 the 20-page walk ceiling
+ * then kept 2,000. At Socrata's 50,000-row page the whole register (400,716 on
+ * 2026-10-03) is 9 pages — read in full on the weekly schedule, ~18 minutes. */
 static const char *URL =
   "https://data.nj.gov/resource/44xg-bswk.json"
-  "?$limit=100&$offset=0&$order=:id";
+  "?$limit=50000&$offset=0&$order=:id";
 
 /* pw_emit_fn: one page, reporting what it CONTAINED in `seen` — pw_walk drives
  * both continuation and disclosure off that, never off the emitted count. */
@@ -52,11 +54,24 @@ static int emit_page(const source_ctx *ctx, intel_sink *sink, const char *id,
      * dataset has no id column; name + enrollment date + location code is the
      * upstream's own distinguishing tuple and is stable across snapshots.
      * as_of_date alone would collapse the whole quarterly file onto one uid. */
-    char rk[320];
-    snprintf(rk, sizeof rk, "%s|%s|%s|%s",
+    /* Plus middle initial, pension fund and employer. Name + enrollment date +
+     * location alone collided on homonyms: 63 groups (126 rows) of the
+     * 400,716 shared it on 2026-10-03, so 63 members were stored over other
+     * members. With member_mi and pension_fund_id 17 groups remained, and
+     * those were mostly ONE person holding two employer rows (a fire district
+     * and its township, each with its own salary) — two records, so the
+     * employer is part of the identity too. 2 groups remain: different people
+     * (different service and salary) with identical name, initial, enrollment
+     * date, location, fund and employer; the dataset publishes nothing else
+     * stable to tell them apart. */
+    char rk[640];
+    snprintf(rk, sizeof rk, "%s|%s|%s|%s|%s|%s|%s",
              last ? last : "-", first ? first : "-",
              od_s(r, "enrollment_date") ? od_s(r, "enrollment_date") : "-",
-             od_s(r, "location_code") ? od_s(r, "location_code") : "-");
+             od_s(r, "location_code") ? od_s(r, "location_code") : "-",
+             od_s(r, "member_mi") ? od_s(r, "member_mi") : "-",
+             od_s(r, "pension_fund_id") ? od_s(r, "pension_fund_id") : "-",
+             emp ? emp : "-");
 
     intel_item it = {0};
     it.remote_key = rk;
@@ -81,7 +96,7 @@ static const source_def od_socrata_nj_pension_def = {
   .name = "New Jersey YourMoney active pension members (Socrata)",
   .update_interval_sec = 604800, .run = run,
   .category = "government", .type = "api",
-  .url = "https://data.nj.gov/resource/44xg-bswk.json?$limit=100&$order=:id",
+  .url = "https://data.nj.gov/resource/44xg-bswk.json?$limit=50000&$order=:id",
   .description = "NJ Treasury transparency register of active public-employee pension members: name, employer, retirement system and enrollment date",
   .license = "New Jersey YourMoney transparency portal, public record (contains named public employees)",
   .free_tier = 1,

@@ -182,7 +182,7 @@ export default function ApiKeysPage() {
         scope={scope}
         canManage={canManage}
         statusRows={statusRows}
-        onStatusUpdate={(updated) => status.setData((d) => (d ? { ...d, apis: (d.apis || []).map((s) => (s.id === updated.id ? updated : s)) } : d))}
+        onStatusUpdate={(updated) => status.setData((d) => (d ? { ...d, apis: mergeStatusRow(d.apis, updated) } : d))}
         onClose={() => setSelected(null)}
         onUpdated={onUpdated}
       />
@@ -330,6 +330,29 @@ function KeyDetailSheet({ row, scope, canManage, statusRows, onStatusUpdate, onC
 
 /** Probe / consent controls for a keyed source (iOS `ProbeActionsView`).
  *  POST /api/status/:id/probe · POST /api/status/:id/consent {consent} — both operator-gated. */
+/**
+ * Fold a probe / consent response into the /api/status row it belongs to.
+ * Those responses are PARTIAL (probe: probe* fields + reachable/error;
+ * consent: {ok,id,probeConsent}); replacing the row with one dropped
+ * requiresKey/envVars/name, and the keyed-source lists — which filter on
+ * requiresKey — then lost the row entirely.
+ */
+export function mergeStatusRow(rows, updated) {
+  if (!Array.isArray(rows) || !updated?.id) return rows;
+  const { ok: _ok, ...patch } = updated;
+  return rows.map((s) => (s.id === updated.id ? { ...s, ...patch } : s));
+}
+
+/** Toast text for a probe response: the server sends `reachable` + `error`
+ *  and an HTTP status, never a `status` field. */
+export function probeSummary(r) {
+  if (!r || typeof r !== 'object') return 'Probe: no response body';
+  const code = r.probeResponseStatus != null ? `HTTP ${r.probeResponseStatus}` : null;
+  if (r.reachable === true) return `Probe: reachable${code ? ` (${code})` : ''}`;
+  if (r.reachable === false) return `Probe: unreachable — ${r.error || code || 'no response'}`;
+  return `Probe finished${code ? ` (${code})` : ''}`;
+}
+
 export function ProbeActions({ row, onUpdate }) {
   const [busy, setBusy] = useState(null);
   const [error, setError] = useState(null);
@@ -340,7 +363,8 @@ export function ProbeActions({ row, onUpdate }) {
         ? await api.post(`/api/status/${encodeURIComponent(row.id)}/probe`)
         : await api.post(`/api/status/${encodeURIComponent(row.id)}/consent`, { consent: !row.probeConsent });
       if (r && r.id) onUpdate?.(r);
-      toast(kind === 'probe' ? `Probe: ${r?.status || 'done'}` : (row.probeConsent ? 'Auto-probe disabled' : 'Auto-probe allowed'));
+      if (kind === 'probe') toast(probeSummary(r), { tone: r?.reachable === false ? 'danger' : 'accent', ttl: 5000 });
+      else toast(r?.probeConsent ? 'Auto-probe allowed' : 'Auto-probe disabled');
     } catch (e) { setError(e); }
     finally { setBusy(null); }
   };

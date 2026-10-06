@@ -1,4 +1,5 @@
 #include "credtab.h"
+#include <stdio.h>
 #include <string.h>
 #include <stddef.h>
 
@@ -139,9 +140,16 @@ const cred_def *cred_get(const char *id) {
 }
 int cred_alen(const char *const *a) { int n = 0; while (a[n]) n++; return n; }
 
+int cred_known_capacity(void) {
+  int n = 0;
+  for (size_t i = 0; i < sizeof CREDS / sizeof *CREDS; i++)
+    n += cred_alen(CREDS[i].req) + cred_alen(CREDS[i].any) + cred_alen(CREDS[i].opt);
+  return n;
+}
+
 int cred_known_vars(const char **names, const char **roles, int max) {
   /* ROLE_RANK required=0,anyOf=1,optional=2; keep the most-restrictive. */
-  int n = 0;
+  int n = 0, overflow = 0;
   for (size_t i = 0; i < sizeof CREDS / sizeof *CREDS; i++) {
     const cred_def *e = &CREDS[i];
     const char *const *grp[3] = { e->req, e->any, e->opt };
@@ -152,7 +160,7 @@ int cred_known_vars(const char **names, const char **roles, int max) {
         int at = -1;
         for (int j = 0; j < n; j++) if (strcmp(names[j], nm) == 0) { at = j; break; }
         if (at < 0) {
-          if (n >= max) continue;
+          if (n >= max) { overflow++; continue; }
           names[n] = nm; roles[n] = rn[g]; n++;
         } else {
           int cur = strcmp(roles[at],"required")==0?0
@@ -161,6 +169,12 @@ int cred_known_vars(const char **names, const char **roles, int max) {
         }
       }
     }
+  }
+  if (overflow) {
+    fprintf(stderr, "[credtab] cred_known_vars: %d credential name(s) do not fit "
+                    "the caller's bound of %d — refusing to return a partial "
+                    "list (size it with cred_known_capacity())\n", overflow, max);
+    return -1;
   }
   /* sort by rank then name (ASCII; the var-name set has no '_'-vs-letter
    * prefix collisions where ICU localeCompare would differ from strcmp). */

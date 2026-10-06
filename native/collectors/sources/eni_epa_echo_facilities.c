@@ -2,11 +2,23 @@
  * Endpoints (keyless, TWO-STEP and chained in one run because QueryIDs are
  * server-side and short-lived):
  *   1. https://echodata.epa.gov/echo/echo_rest_services.get_facility_info
- *        ?output=JSON&p_st=<ST>&p_act=Y&responseset=3   -> Results.QueryID
+ *        ?output=JSON&p_st=<ST>&p_act=Y&responseset=1000 -> Results.QueryID,
+ *                                                           Results.QueryRows
  *   2. https://echodata.epa.gov/echo/echo_rest_services.get_qid
- *        ?output=JSON&qid=<QueryID>&pageno=1            -> Results.Facilities[]
+ *        ?output=JSON&qid=<QueryID>&pageno=<1..>        -> Results.Facilities[]
  * Emits one row per facility returned by step 2: name, compliance status,
  * inspection count, last inspection date, NAICS codes, penalties.
+ *
+ * PAGING. `responseset` is get_qid's PAGE SIZE (max 1000), not a result-set
+ * selector. This collector used to send responseset=3 and read pageno=1 only,
+ * so it stored THREE facilities per state — measured 2026-10-02 against
+ * QueryRows of 31,027 (NJ), 89,657 (TX) and 523,874 (CA). It now asks for
+ * 1,000 per page and walks pageno until the upstream's QueryRows is reached
+ * or a page comes back short. At most JO_ECHO_PAGE_MAX pages (default 100,
+ * i.e. 100,000 facilities) are read per state; when that ceiling, or a later
+ * page failing (QueryIDs are short-lived), stops a state short of QueryRows,
+ * the shortfall is emitted as a collector-truncation-notice scoped to the
+ * state — California is expected to carry one.
  *
  * CENTROID TRAP (R2), quoted from the source survey: get_facility_info returns
  * "a ClusterOutput block whose ClusterLatitude is a STATE CENTROID - never emit
@@ -33,12 +45,23 @@ static void addstr(cJSON *p, const cJSON *o, const char *k, const char *out) {
   if (s) cJSON_AddStringToObject(p, out, s);
 }
 
+#define ECHO_PAGE 1000                  /* get_qid's maximum responseset */
+
+static int echo_page_max(void) {
+  const char *e = getenv("JO_ECHO_PAGE_MAX");
+  int v = e ? atoi(e) : 0;
+  return v > 0 ? v : 100;
+}
+
+/* Emit every facility on one get_qid page; returns rows emitted. */
+static int emit_facilities(intel_sink *sink, cJSON *facs, const char *st);
+
 static int collect_state(const source_ctx *ctx, intel_sink *sink,
                          const char *st, int *fetched) {
   char url[320];
   snprintf(url, sizeof url,
     "https://echodata.epa.gov/echo/echo_rest_services.get_facility_info"
-    "?output=JSON&p_st=%s&p_act=Y&responseset=3", st);
+    "?output=JSON&p_st=%s&p_act=Y&responseset=%d", st, ECHO_PAGE);
   cJSON *step1 = feed_get_json(ctx->http, url, 45000);
   if (!step1) return 0;
   *fetched = 1;
@@ -46,7 +69,10 @@ static int collect_state(const source_ctx *ctx, intel_sink *sink,
   cJSON *r1 = cJSON_GetObjectItem(step1, "Results");
   /* copy the QueryID out before step1 is freed — the string lives inside it */
   char qid[64] = {0};
+  long rows = -1;                         /* the upstream's own QueryRows */
   if (r1) {
+    const char *qr = jo_sv(r1, "QueryRows");
+    if (qr) rows = strtol(qr, NULL, 10);
     const char *qs = jo_sv(r1, "QueryID");
     if (qs) snprintf(qid, sizeof qid, "%s", qs);
     else {
@@ -59,16 +85,38 @@ static int collect_state(const source_ctx *ctx, intel_sink *sink,
                                  * ClusterLatitude in it is a state centroid */
   if (!qid[0]) return 0;
 
-  snprintf(url, sizeof url,
-    "https://echodata.epa.gov/echo/echo_rest_services.get_qid"
-    "?output=JSON&qid=%s&pageno=1", qid);
-  cJSON *step2 = feed_get_json(ctx->http, url, 45000);
-  if (!step2) return 0;
+  int n = 0, pages = 0, stopped = 0;
+  long seen_total = 0;
+  const int page_max = echo_page_max();
+  for (int pg = 1; ; pg++) {
+    snprintf(url, sizeof url,
+      "https://echodata.epa.gov/echo/echo_rest_services.get_qid"
+      "?output=JSON&qid=%s&pageno=%d", qid, pg);
+    cJSON *step2 = feed_get_json(ctx->http, url, 120000);
+    if (!step2) { if (pages) stopped = 1; break; }
+    cJSON *r2 = cJSON_GetObjectItem(step2, "Results");
+    cJSON *facs = r2 ? cJSON_GetObjectItem(r2, "Facilities") : NULL;
+    int seen = cJSON_IsArray(facs) ? cJSON_GetArraySize(facs) : 0;
+    if (seen) n += emit_facilities(sink, facs, st);
+    cJSON_Delete(step2);
+    pages++;
+    seen_total += seen;
+    if (seen < ECHO_PAGE || (rows >= 0 && seen_total >= rows)) break;
+    if (pages >= page_max) { stopped = 1; break; }
+  }
+  if (stopped && (rows < 0 || seen_total < rows)) {
+    char why[200];
+    snprintf(why, sizeof why, "get_qid walk for %s stopped after %d page(s) "
+             "of %d (page ceiling or a failed later page)", st, pages, ECHO_PAGE);
+    jo_trunc_notice_scoped(sink, SRC, st,
+      "https://echodata.epa.gov/echo/echo_rest_services.get_qid",
+      seen_total, rows, why,
+      "raise JO_ECHO_PAGE_MAX (pages of 1,000 per state), or re-run");
+  }
+  return n;
+}
 
-  cJSON *r2 = cJSON_GetObjectItem(step2, "Results");
-  cJSON *facs = r2 ? cJSON_GetObjectItem(r2, "Facilities") : NULL;
-  if (!cJSON_IsArray(facs)) { cJSON_Delete(step2); return 0; }
-
+static int emit_facilities(intel_sink *sink, cJSON *facs, const char *st) {
   int n = 0;
   cJSON *fac;
   cJSON_ArrayForEach(fac, facs) {
@@ -123,7 +171,6 @@ static int collect_state(const source_ctx *ctx, intel_sink *sink,
     if (sink->emit(sink, &row) >= 0) n++;
     free(pj);
   }
-  cJSON_Delete(step2);
   return n;
 }
 

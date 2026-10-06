@@ -34,6 +34,7 @@
  * "not degraded" from "this server is too old to tell you". */
 #ifndef JO_PROGRESS_H
 #define JO_PROGRESS_H
+#include <stddef.h>
 
 typedef struct osint_request osint_request;
 
@@ -45,6 +46,9 @@ osint_request *progress_create(const char *request_id, const char *query,
 
 /* getRequest(requestId) -> the request, or NULL if unknown. */
 osint_request *progress_get(const char *request_id);
+/* Copy the owner tenant of `request_id` into out (empty when ownerless or
+ * unknown). Locked copy: the record may be evicted after the call returns. */
+void progress_owner_tenant(const char *request_id, char *out, size_t n);
 
 /* setPhase(phase, percent): unknown phase -> "unknown"; pass percent<0 to
  * skip the percent update (JS `Number.isFinite(percent)` guard). Appends a
@@ -156,6 +160,31 @@ char *progress_to_json(osint_request *r);
  * evicts the oldest FINISHED request past 200, so a progress_get() pointer
  * held across the unlock can be freed underneath the caller. */
 char *progress_snapshot_by_id(const char *request_id, int *out_done);
+
+/* A RUN BELONGS TO THE TENANT THAT STARTED IT.
+ *
+ * progress_create_owned() is progress_create() plus an owner: the tenant that
+ * started the run and a random `stream_key`. progress_snapshot_for() is
+ * progress_snapshot_by_id() with that ownership enforced: it returns the
+ * snapshot only when the run is ownerless (an operator job such as the
+ * translate backfill — no tenant data), or `tenant_id` is the owner, or
+ * `stream_key` matches. Otherwise NULL — exactly what an unknown id returns,
+ * so a refusal does not confirm that the run exists.
+ *
+ * Why a separate stream key: the request_id travels in share links
+ * (/api/permalink tokens carry it so a recipient can reopen the run), and the
+ * SSE stream is pre-auth because EventSource cannot send headers. With the
+ * request_id as the stream's only capability, any recipient of a link — in any
+ * workspace — could read the run, while the share sheet promises the server
+ * re-checks their workspace. The stream key is handed only to the owner
+ * (analyze, and tenant-checked /results). `key_out` receives it when the
+ * caller is allowed and the run has one. Caller frees the snapshot. */
+osint_request *progress_create_owned(const char *request_id, const char *query,
+                                     int max_rounds, const char *tenant_id,
+                                     const char *stream_key);
+char *progress_snapshot_for(const char *request_id, const char *tenant_id,
+                            const char *stream_key, int *out_done,
+                            char *key_out, size_t key_out_n);
 
 /* the `done` flag (1 finished, 0 in-flight; 0 if r==NULL). */
 int progress_is_done(osint_request *r);

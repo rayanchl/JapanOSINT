@@ -241,8 +241,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         deepcam *cams = NULL;
         int ncams = 0, ccap = 0;
         find_cams_deep(data, &cams, &ncams, &ccap);
-        /* cams.slice(0,120) */
-        int lim = ncams < 120 ? ncams : 120;
+        /* Every camera found. The JS original took cams.slice(0,120) and the
+         * port kept that bound silently; the payload is already parsed. */
+        int lim = ncams;
         /* dedupe-against-already-added on url; first always added */
         char **addedurl = NULL;
         int nadd = 0, addcap = 0;
@@ -360,5 +361,5 @@ static const source_def cam_camstreamer_def = {
   .name_ja = "カメラ探索: Camstreamer",
    .layer = "cameras",
    .update_interval_sec = 3600, .run = run,
-  .category = "cyber" };
+  .category = "infrastructure" };
 REGISTER_SOURCE(cam_camstreamer_def)

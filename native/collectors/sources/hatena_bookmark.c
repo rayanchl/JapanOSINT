@@ -4,6 +4,7 @@
  * dc:subject. uid = hatena-bookmark|<link> (== intelUid(SOURCE_ID,link,...)).
  * summary "<n> bookmarks · <subject>" reproduced for parity. */
 #include "source.h"
+#include "lib/jocore.h"   /* jo_strcasestr: portable case-insensitive search */
 #include "lib/feedlib.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
@@ -16,12 +17,12 @@ static char *tag_in(const char *b, const char *e, const char *tag) {
   char op[64]; snprintf(op, sizeof op, "<%s", tag);
   const char *p = b;
   while (p < e) {
-    const char *q = strcasestr(p, op);
+    const char *q = jo_strcasestr(p, op);
     if (!q || q >= e) return NULL;
     const char *gt = memchr(q, '>', (size_t)(e - q));
     if (!gt) return NULL;
     char cl[64]; snprintf(cl, sizeof cl, "</%s>", tag);
-    const char *c = strcasestr(gt + 1, cl);
+    const char *c = jo_strcasestr(gt + 1, cl);
     if (!c || c > e) return NULL;
     size_t n = (size_t)(c - gt - 1);
     char *s = malloc(n + 1); memcpy(s, gt + 1, n); s[n] = 0;
@@ -69,9 +70,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = 0;
   const char *cur = xml;
   for (;;) {
-    const char *it = strcasestr(cur, "<item");
+    const char *it = jo_strcasestr(cur, "<item");
     if (!it || it >= xe) break;
-    const char *end = strcasestr(it, "</item>");
+    const char *end = jo_strcasestr(it, "</item>");
     if (!end) break;
     char *title = tag_in(it, end, "title");
     char *link  = tag_in(it, end, "link");

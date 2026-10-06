@@ -29,6 +29,21 @@
  * here through tenant_resolve, which picks the tenant FROM the caller's
  * memberships — so this lookup always resolves for a legitimate caller and
  * returns "" (rank 0, deny) for anything else. */
+/* Deleting a rule KEEPS its events — they are the inbox's record of what
+ * matched, and the inbox outlives the rule. The rule's name is stamped onto
+ * them first so the inbox and export can still say which rule fired, and any
+ * delivery not yet attempted is cancelled: nothing is sent on behalf of a rule
+ * that no longer exists. */
+static const char *RULE_DELETE_SQL[3] = {
+  "UPDATE alert_events SET rule_name=(SELECT name FROM alert_rules"
+  " WHERE id=?1 AND tenant_id=?2) WHERE rule_id=?1 AND tenant_id=?2"
+  " AND rule_name IS NULL",
+  "UPDATE alert_deliveries SET status='skipped', error='rule deleted'"
+  " WHERE status='pending' AND event_id IN (SELECT id FROM alert_events"
+  " WHERE rule_id=?1 AND tenant_id=?2)",
+  "DELETE FROM alert_rules WHERE id=?1 AND tenant_id=?2"
+};
+
 static int role_rank(const char *r) {
   if (!r) return 0;
   if (!strcmp(r, "owner"))   return 4;
@@ -562,16 +577,23 @@ char *alertsapi(db_handle *db, const char *tid, const char *uid,
     if (is_get) { if(jb)cJSON_Delete(jb); return one_rule(db,tid,id,200,st); }
     if (is_del) {
       sqlite3_stmt *s;
-      sqlite3_exec(db->h,"BEGIN",0,0,0);
-      sqlite3_prepare_v2(db->h,"DELETE FROM alert_events WHERE rule_id=?1 AND tenant_id=?2",-1,&s,NULL);
-      sqlite3_bind_text(s,1,id,-1,SQLITE_TRANSIENT); sqlite3_bind_text(s,2,tid,-1,SQLITE_TRANSIENT);
-      sqlite3_step(s); sqlite3_finalize(s);
-      sqlite3_prepare_v2(db->h,"DELETE FROM alert_rules WHERE id=?1 AND tenant_id=?2",-1,&s,NULL);
-      sqlite3_bind_text(s,1,id,-1,SQLITE_TRANSIENT); sqlite3_bind_text(s,2,tid,-1,SQLITE_TRANSIENT);
-      sqlite3_step(s);
-      int gone = sqlite3_changes(db->h);   /* 0 == nothing matched this tenant */
-      sqlite3_finalize(s);
-      sqlite3_exec(db->h,"COMMIT",0,0,0);
+      if (sqlite3_exec(db->h,"BEGIN IMMEDIATE",0,0,0) != SQLITE_OK) {
+        if (jb) cJSON_Delete(jb);
+        return err(st,500,"server_error");
+      }
+      int ok = 1, gone = 0;
+      for (int i = 0; ok && i < 3; i++) {
+        if (sqlite3_prepare_v2(db->h, RULE_DELETE_SQL[i], -1, &s, NULL) != SQLITE_OK) { ok = 0; break; }
+        sqlite3_bind_text(s,1,id,-1,SQLITE_TRANSIENT); sqlite3_bind_text(s,2,tid,-1,SQLITE_TRANSIENT);
+        ok = sqlite3_step(s) == SQLITE_DONE;
+        if (i == 2) gone = sqlite3_changes(db->h);   /* 0 == nothing matched this tenant */
+        sqlite3_finalize(s);
+      }
+      if (!ok || sqlite3_exec(db->h,"COMMIT",0,0,0) != SQLITE_OK) {
+        sqlite3_exec(db->h,"ROLLBACK",0,0,0);
+        if (jb) cJSON_Delete(jb);
+        return err(st,500,"server_error");
+      }
       if (jb) cJSON_Delete(jb);
       /* Only a delete that removed a row is a delete. This wrote the audit
        * entry unconditionally, so a DELETE naming another tenant's rule id —
@@ -1006,7 +1028,7 @@ char *alerteventsapi(db_handle *db, const char *tid, const char *uid,
     /* `e.id ASC` tiebreak for the same reason as the per-rule list: matched_at
      * is not unique, and a keyset cursor over a non-total order loses rows. */
 #define AE_COLS \
-      "SELECT e.id,e.rule_id,r.name,e.item_uid,e.matched_at,e.read_at," \
+      "SELECT e.id,e.rule_id,COALESCE(r.name,e.rule_name),e.item_uid,e.matched_at,e.read_at," \
       "e.delivered_channels_json,i.title,i.source_id,i.link " \
       "FROM alert_events e " \
       "LEFT JOIN alert_rules r ON r.id=e.rule_id " \

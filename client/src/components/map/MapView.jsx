@@ -1,10 +1,9 @@
 import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
-// maplibre-gl v6 removed the DEFAULT export — the package now ships named
-// exports only, so `import maplibregl from 'maplibre-gl'` fails the build with
-// `"default" is not exported`. The namespace import keeps the `maplibregl.X`
-// call sites below unchanged. The v6 bump itself is the fix for
-// GHSA-jrc7-96c5-q579, a critical XSS sanitiser bypass in DOM.sanitize().
-import * as maplibregl from 'maplibre-gl';
+// maplibre-gl comes through utils/maplibre.js, which sets the v6 worker URL
+// (without it a production build never fires `load`) and provides the
+// `map.transform` alias deck.gl's MapboxOverlay needs on v6. The v6 bump
+// itself is the fix for GHSA-jrc7-96c5-q579 (critical XSS in DOM.sanitize()).
+import maplibregl, { installDeckTransformShim } from '../../utils/maplibre.js';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { MapboxOverlay } from '@deck.gl/mapbox';
 import { Tile3DLayer } from '@deck.gl/geo-layers';
@@ -517,11 +516,37 @@ function getBasemapSymbolLayerIds(map) {
     .map((l) => l.id);
 }
 
+// The native labels are hidden by OPACITY, not `visibility: none`. A layer
+// with visibility none is never laid out, so queryRenderedFeatures — which is
+// how harvestBasemapLabels() finds the labels to redraw — returned nothing
+// for it, and the deck.gl TextLayer meant to replace the native labels got
+// zero labels: the map showed no place names at all (measured on the CARTO
+// style at z5 over Japan: 0 harvested hidden, 11 at opacity 0). At opacity 0
+// the symbols are still placed, keep their collision boxes (so the deck copies
+// land exactly where the native ones would) and draw nothing.
+const SYMBOL_OPACITY_PROPS = ['text-opacity', 'icon-opacity'];
+// StyleLayer instance → its own opacity values, so un-hiding restores the
+// style's expression rather than a guessed default. Keyed by the instance, not
+// the id: a setStyle() mints new layers that may reuse the same ids.
+const hiddenSymbolOriginals = new WeakMap();
+
 function setBasemapSymbolsHidden(map, hide) {
   const ids = getBasemapSymbolLayerIds(map);
-  const vis = hide ? 'none' : 'visible';
   for (const id of ids) {
-    try { map.setLayoutProperty(id, 'visibility', vis); } catch { /* layer gone */ }
+    try {
+      const layer = map.getLayer(id);
+      if (!layer) continue;
+      if (hide) {
+        if (!hiddenSymbolOriginals.has(layer)) {
+          hiddenSymbolOriginals.set(layer, SYMBOL_OPACITY_PROPS.map((p) => map.getPaintProperty(id, p)));
+        }
+        for (const p of SYMBOL_OPACITY_PROPS) map.setPaintProperty(id, p, 0);
+      } else if (hiddenSymbolOriginals.has(layer)) {
+        const orig = hiddenSymbolOriginals.get(layer);
+        SYMBOL_OPACITY_PROPS.forEach((p, i) => map.setPaintProperty(id, p, orig[i] === undefined ? null : orig[i]));
+        hiddenSymbolOriginals.delete(layer);
+      }
+    } catch { /* layer gone */ }
   }
 }
 
@@ -4232,6 +4257,13 @@ export default function MapView({ layers, layerData, catalog, onFeatureClick, on
       maxBounds: [[120, 20], [155, 50]],
       attributionControl: true,
     });
+    // Before anything can attach a MapboxOverlay: deck.gl reads map.transform.
+    installDeckTransformShim(map);
+    // Test seam: a headless harness may define window.__JO_MAP_PROBE__ before
+    // boot to observe the real instance (load / idle / error). No-op otherwise.
+    if (typeof window !== 'undefined' && typeof window.__JO_MAP_PROBE__ === 'function') {
+      try { window.__JO_MAP_PROBE__(map); } catch { /* a harness bug must not break the map */ }
+    }
 
     map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'top-right');
     map.addControl(new maplibregl.ScaleControl({ maxWidth: 150 }), 'bottom-right');

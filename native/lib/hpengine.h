@@ -143,7 +143,10 @@ typedef struct hp_source {
   hp_mode mode;
   hp_want want;
 
-  const char *url;            /* endpoint template (required)              */
+  /* endpoint template (required). Besides the entity tokens ({q} …) it takes
+   * {date:FORMAT} / {date:FORMAT:±N}: today's UTC date shifted N days, through
+   * strftime — for an upstream that answers one day at a time. */
+  const char *url;
   const char *post_body;      /* non-NULL → POST with this body template   */
   const char *content_type;   /* NULL → "application/json" when posting    */
   const char *headers[5];     /* extra header templates, NULL-terminated   */
@@ -171,7 +174,9 @@ typedef struct hp_source {
    * notice is a record in the database, not a build error, so a row that is
    * never read after its first run keeps doing it. */
   const char *array_path;     /* dotted path ("a.b.c"), "." = the root,
-                               * "" / NULL = auto-detect                    */
+                               * "" / NULL = auto-detect; HP_JSON only:
+                               * "a+b+c" emits several sibling arrays of one
+                               * response (each part resolved as above)     */
   const char *title_keys;     /* comma-separated candidates, first wins     */
   /* Record identity — the uid the sink upserts on. FIRST-MATCH per record:
    * the engine takes the first listed key that resolves to a non-empty value

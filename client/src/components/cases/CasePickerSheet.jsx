@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { LuFolderPlus } from 'react-icons/lu';
 import { api } from '../../api/client.js';
-import { useApi } from '../../hooks/useApi.js';
-import { Sheet, Button, Input, ErrorNotice, LoadingState, EmptyState, cx, toast } from '../ui/kit.jsx';
+import { usePaged } from '../../hooks/useCases.js';
+import { parseServerTime } from '../../utils/time.js';
+import { Sheet, Button, Input, ErrorNotice, LoadingState, EmptyState, BoundNote, cx, toast } from '../ui/kit.jsx';
 
 /**
  * "Pin to case" — the iOS `CasePickerSheet`. Lists open cases, lets the user
@@ -12,12 +13,16 @@ import { Sheet, Button, Input, ErrorNotice, LoadingState, EmptyState, cx, toast 
  *   intel_item | entity | breach_item | feature | camera | search_run | attachment
  */
 export function CasePickerSheet({ open, onClose, refType, refId, label, onPinned }) {
-  const { data, error, loading, reload } = useApi(open ? '/api/cases?limit=100&status=open' : null, { deps: [open] });
+  // Keyset-paged (no server total). This used to read ONE page of 100 and
+  // drop the cursor, so a workspace with more open cases could not pin to the
+  // older ones and was not told they existed.
+  const { rows: cases, hasMore, error, loading, loadingMore, reload, loadMore } = usePaged(
+    open ? '/api/cases?status=open' : null, { limit: 100, enabled: open, deps: [open] },
+  );
   const [busy, setBusy] = useState(null);
   const [pinError, setPinError] = useState(null);
   const [newName, setNewName] = useState('');
   const [creating, setCreating] = useState(false);
-  const cases = Array.isArray(data?.data) ? data.data : Array.isArray(data) ? data : [];
 
   useEffect(() => { if (open) { setPinError(null); setNewName(''); } }, [open]);
 
@@ -52,7 +57,7 @@ export function CasePickerSheet({ open, onClose, refType, refId, label, onPinned
     <Sheet open={open} onClose={onClose} title="Pin to case" width="max-w-md">
       <div className="space-y-3">
         <div className="text-[11px] text-osint-muted font-mono truncate">{refType} · {String(refId)}</div>
-        {loading && <LoadingState label="Loading cases…" />}
+        {loading && cases.length === 0 && <LoadingState label="Loading cases…" />}
         {error && <ErrorNotice error={error} title="Could not list cases" onRetry={reload} />}
         {pinError && <ErrorNotice error={pinError} title="Pin failed" />}
         {!loading && !error && cases.length === 0 && (
@@ -71,7 +76,7 @@ export function CasePickerSheet({ open, onClose, refType, refId, label, onPinned
                   <span className="min-w-0">
                     <span className="block text-sm text-osint-text truncate">{c.name || c.id}</span>
                     <span className="block text-[11px] text-osint-muted font-mono">
-                      {c.status || 'open'}{c.item_count != null ? ` · ${c.item_count} items` : ''}{c.updated_at ? ` · ${new Date(c.updated_at).toLocaleDateString('en-GB')}` : ''}
+                      {c.status || 'open'}{c.item_count != null ? ` · ${c.item_count} items` : ''}{c.updated_at ? ` · ${parseServerTime(c.updated_at).toLocaleDateString('en-GB', { timeZone: 'Asia/Tokyo' })}` : ''}
                     </span>
                   </span>
                   <span className="text-xs text-accent">{busy === c.id ? '…' : 'Pin'}</span>
@@ -79,6 +84,12 @@ export function CasePickerSheet({ open, onClose, refType, refId, label, onPinned
               </li>
             ))}
           </ul>
+        )}
+        {cases.length > 0 && (
+          <div className="flex items-center justify-between gap-2">
+            <BoundNote shown={cases.length} total={hasMore ? null : cases.length} more={hasMore} noun="open cases" />
+            {hasMore && <Button size="sm" busy={loadingMore} onClick={loadMore}>Load more</Button>}
+          </div>
         )}
         <div className="flex gap-2">
           <Input placeholder="New case name…" value={newName} onChange={(e) => setNewName(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') create(); }} />

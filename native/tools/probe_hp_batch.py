@@ -127,9 +127,30 @@ def row_timeout(r):
     return max(VF.TIMEOUT, ms / 1000.0)
 
 
+_DATE_TOKEN = re.compile(r"\{date:([^{}]{1,64})\}")
+
+
+def expand_date(url):
+    """{date:FORMAT} / {date:FORMAT:+N|-N} -> today's UTC date shifted N days,
+    rendered with strftime, exactly as lib/hpengine.c's hp_date_token does: the
+    offset is the text after the LAST ':' only when it is a signed integer."""
+    def one(m):
+        spec, off = m.group(1), 0
+        head, sep, tail = spec.rpartition(":")
+        if sep and re.fullmatch(r"[+-]?\d{1,5}", tail):
+            spec, off = head, int(tail)
+        if not spec:
+            return m.group(0)
+        import datetime
+        d = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=off)
+        return d.strftime(spec)
+    return _DATE_TOKEN.sub(one, url) if url and "{date:" in url else url
+
+
 def fetch(url, extra, timeout=None):
     """Same shape as verify_feeds.fetch, plus this row's declared headers and
-    timeout."""
+    timeout. A {date:…} token is rendered first, as the engine renders it."""
+    url = expand_date(url)
     headers = {
         "User-Agent": DEFAULT_UA,
         "Accept": "*/*",
@@ -180,9 +201,17 @@ def _resolve_array_path(doc, path):
         return doc                      # "." -- the document root
     node = doc
     for i, seg in enumerate(segs):
-        if isinstance(node, dict) and seg in node:
-            node = node[seg]
-            continue
+        if isinstance(node, dict):
+            # cJSON_GetObjectItem, which hp_path walks with, matches keys
+            # case-INsensitively; judging more strictly than the engine reads
+            # fails rows the engine serves.
+            if seg in node:
+                node = node[seg]
+                continue
+            low = [k for k in node if isinstance(k, str) and k.lower() == seg.lower()]
+            if low:
+                node = node[low[0]]
+                continue
         if isinstance(node, list):
             # The descending walk: every node at the REMAINING path, under
             # every element here, concatenated. Mirrors hp_path_multi().
@@ -391,33 +420,55 @@ def decode_body(raw, r=None, url=""):
     return text[1:] if text.startswith("﻿") else text
 
 
+def _entity_in_path(r):
+    """True when the row's first entity token sits in the URL PATH rather than
+    the query string (`/company/{qn}/officers`). For such a row a 404 for an
+    impossible entity IS the filter working: the resource does not exist."""
+    tmpl = r.get("url") or ""
+    m = TOKEN_RE.search(tmpl)
+    if not m:
+        return False
+    q = tmpl.find("?")
+    return q < 0 or m.start() < q
+
+
 def filter_is_honoured(r, real_items):
-    """(ok, note). ok=False means the endpoint returned substantially the same
-    result set for an impossible entity as for the real one."""
+    """(verdict, note): "ok", "ignored" or "unchecked".
+
+    The impossible-entity answer is counted by _judge(), the SAME code that
+    counted the real one — declared array_path, XML, CSV, HTML anchors, xlsx
+    and text lists included. This used to call VF.count_feed/count_json only,
+    and to return "honoured" whenever that could not count the body or the
+    request failed: every XML, CSV and HTML pivot (43 manifest rows) and every
+    pivot whose impossible-entity request errored came back PASS without the
+    comparison ever having been made. A check that could not be performed is
+    now FILTER_UNCHECKED, never a pass."""
     url = impossible_probe_url(r)
-    if not url or real_items < 2:
-        return True, ""          # nothing to compare against
-    try:
-        status, ctype, raw = fetch(url, row_headers(r), row_timeout(r))
-    except Exception:
-        return True, ""          # a refusal here is not evidence either way
-    if status < 200 or status >= 300:
-        return True, ""
-    text = decode_body(raw, r, url)
-    kind, items = VF.count_feed(text)
-    if not kind:
-        kind, items = VF.count_json(text)
-    if not kind:
-        return True, ""
+    if not url:
+        return "ok", ""          # no entity token: a bulk file has no filter
+    res = _judge(r, url)
+    verdict, items, status = res[2], res[4], res[5]
+    if verdict in ("EMPTY_RESULTSET", "EMPTY"):
+        return "ok", ""          # empty for a nonsense entity == filter works
+    if verdict == "HTTP_ERR" and status in (404, 410) and _entity_in_path(r):
+        return "ok", ""          # /thing/<nonsense> does not exist == works
+    if verdict != "PASS":
+        return "unchecked", ("impossible-entity request came back %s (%s %s); "
+                             "the comparison was not made"
+                             % (verdict, status, str(res[7])[:60]))
     if not isinstance(items, int) or items < 1:
-        return True, ""          # empty for a nonsense entity == filter works
+        return "ok", ""
+    if real_items < 2:
+        return "unchecked", ("real entity returned %d record(s) and an "
+                             "impossible one %d — too small to tell a filter "
+                             "from a coincidence" % (real_items, items))
     # Same-sized answer for a nonsense entity: the filter is not being applied.
     # 90% rather than equality because a few APIs pad a collection differently
     # between calls, and a genuine filter never lands within 10% of the whole.
     if items >= real_items * 0.9:
-        return False, ("filter ignored: an impossible entity returned %d records "
-                       "vs %d for the real one" % (items, real_items))
-    return True, ""
+        return "ignored", ("filter ignored: an impossible entity returned %d "
+                           "records vs %d for the real one" % (items, real_items))
+    return "ok", ""
 
 
 def _xlsx_rows(raw, sheet_name, sheet_index):
@@ -566,7 +617,24 @@ def verify_xlsx(r, sid, url, raw, status, nbytes):
 
 def verify(r):
     """Verdict for one manifest row. Mirrors verify_feeds.verify exactly."""
-    sid, url = r["id"], r["probe"]
+    res = _judge(r, r["probe"])
+    if res[2] != "PASS" or not CHECK_FILTER:
+        return res
+    # Answering is not answering THE QUESTION — see filter_is_honoured().
+    sid, url, _, kind, items, status, nbytes, _ = res
+    state, why = filter_is_honoured(r, items)
+    if state == "ignored":
+        return (sid, url, "FILTER_IGNORED", kind, items, status, nbytes, why)
+    if state == "unchecked":
+        return (sid, url, "FILTER_UNCHECKED", kind, items, status, nbytes, why)
+    return res
+
+
+def _judge(r, url):
+    """Fetch `url` with row `r`'s headers and judge the body in the row's own
+    mode. Used for the probe URL AND the impossible-entity URL, so both answers
+    are counted by the same rules."""
+    sid = r["id"]
     try:
         status, ctype, raw = fetch(url, row_headers(r), row_timeout(r))
     except urllib.error.HTTPError as e:
@@ -648,17 +716,24 @@ def verify(r):
         except Exception:
             return (sid, url, "UNPARSEABLE", "", 0, status, nbytes,
                     "declared array_path but body is not JSON")
-        node = _resolve_array_path(doc, ap_decl)
-        if node is None:
+        # `a+b+c` reads several sibling arrays and emits them all; one that is
+        # absent is not an error, none at all is PATH_UNRESOLVED. Each part is
+        # resolved exactly as the engine resolves a single path.
+        alts = [a.strip() for a in ap_decl.split("+") if a.strip()] or [ap_decl]
+        nodes = [(a, _resolve_array_path(doc, a)) for a in alts]
+        found = [(a, n) for a, n in nodes if n is not None]
+        if not found:
             return (sid, url, "PATH_UNRESOLVED", "", 0, status, nbytes,
                     "array_path %r not present in the response" % ap_decl)
-        if not isinstance(node, list):
+        bad = [(a, n) for a, n in found if not isinstance(n, list)]
+        if bad and len(alts) == 1:
             return (sid, url, "PATH_NOT_ARRAY", "", 0, status, nbytes,
-                    "array_path %r is %s, not an array" % (ap_decl, type(node).__name__))
-        if not node:
+                    "array_path %r is %s, not an array" % (ap_decl, type(bad[0][1]).__name__))
+        total = sum(len(n) if isinstance(n, list) else 1 for _, n in found)
+        if not total:
             return (sid, url, "EMPTY_RESULTSET", "json:" + ap_decl, 0, status,
                     nbytes, "declared array_path resolved to an empty array")
-        kind, items = "json:" + ap_decl, len(node)
+        kind, items = "json:" + ap_decl, total
 
     if not kind:
         kind, items = VF.count_feed(text)
@@ -731,13 +806,6 @@ def verify(r):
         return (sid, url, "UNPARSEABLE", "", 0, status, nbytes, text[:80].replace("\n", " "))
     if items < 1:
         return (sid, url, "EMPTY", kind, 0, status, nbytes, "parsed but zero items")
-
-    # Answering is not answering THE QUESTION — see filter_is_honoured().
-    if CHECK_FILTER:
-        ok, why = filter_is_honoured(r, items)
-        if not ok:
-            return (sid, url, "FILTER_IGNORED", kind, items, status, nbytes, why)
-
     return (sid, url, "PASS", kind, items, status, nbytes, "")
 
 
@@ -755,7 +823,9 @@ def main():
                          "accepts a filter, ignores it, and returns the whole "
                          "collection with HTTP 200 — which every other gate "
                          "passes. Doubles the request count for pivot rows, so "
-                         "it is opt-in; run it at least once per batch.")
+                         "it is opt-in; run it at least once per batch. A row "
+                         "whose impossible-entity request could not be judged "
+                         "is FILTER_UNCHECKED, not PASS.")
     a = ap.parse_args()
     global CHECK_FILTER
     CHECK_FILTER = a.check_filter

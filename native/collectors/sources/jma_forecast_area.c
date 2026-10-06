@@ -16,13 +16,17 @@
  * upstream sub-region coordinates this collector does not have, so every
  * sub-region under an office shares that office's point. That approximation
  * is disclosed in-band via `geo_precision`/`office_code`, not silently
- * presented as a precise per-sub-region location (house rule 1). */
+ * presented as a precise per-sub-region location (house rule 1).
+ *
+ * 2026-10-03: every other series in the response is carried too — see
+ * office_features(). */
 #include "source.h"
 #include "lib/feedlib.h"
 #include "lib/geojson.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct area { const char *code, *name; double lat, lon; };
 static const struct area AREAS[] = {
@@ -53,8 +57,184 @@ static const char *obj_str(cJSON *o, const char *key) {
            ? v->valuestring : NULL;
 }
 
-static int run(const source_ctx *ctx, intel_sink *sink) {
+/* One area code's share of an office response: every series of every
+ * timeSeries block (short-term AND weekly) that names this code, plus the
+ * weekly tempAverage/precipAverage entries for it. */
+typedef struct {
+  const char *code, *name;   /* borrowed from the response */
+  cJSON *wx;                 /* short-term timeSeries[0] element, if any */
+  cJSON *series;             /* owned: array of {forecast, time_defines, …} */
+  cJSON *extra;              /* owned: {tempAverage:{…}, precipAverage:{…}} */
+} jrec;
+
+static jrec *jrec_get(jrec **v, int *n, int *cap, const char *code,
+                      const char *name) {
+  for (int i = 0; i < *n; i++)
+    if (strcmp((*v)[i].code, code) == 0) return &(*v)[i];
+  if (*n == *cap) {
+    int nc = *cap ? *cap * 2 : 16;
+    jrec *nv = realloc(*v, (size_t)nc * sizeof *nv);
+    if (!nv) return NULL;
+    *v = nv; *cap = nc;
+  }
+  jrec *r = &(*v)[(*n)++];
+  r->code = code; r->name = name; r->wx = NULL;
+  r->series = cJSON_CreateArray();
+  r->extra = cJSON_CreateObject();
+  return r;
+}
+
+/* Every area of every block of one office's response, emitted as features
+ * (returns the count emitted).
+ *
+ * This read the short-term block's timeSeries[0] only — weathers/winds — and
+ * discarded the rest of a response it had already fetched and parsed: the
+ * same areas' weatherCodes and waves, the 7-slot precipitation probabilities
+ * (timeSeries[1]), the city temperatures (timeSeries[2]), and the whole weekly
+ * block (weather codes, pops, reliabilities, min/max temperatures with their
+ * ranges, and the normals). Each area code now carries every series that
+ * names it, with that series' own timeDefines, under `series`. Areas that
+ * carry no weather sentence (temperature points such as 44132 東京, weekly-only
+ * groupings such as 130100 伊豆諸島) are emitted too instead of being skipped. */
+static int office_features(const struct area *a, cJSON *arr, intel_sink *sink,
+                           const char *source_id) {
   cJSON *features = cJSON_CreateArray();
+  jrec *recs = NULL;
+  int nr = 0, cr = 0;
+  const char *report_at = NULL;
+  int bi = 0;
+  cJSON *blk;
+  cJSON_ArrayForEach(blk, arr) {
+    const char *kind = bi == 0 ? "short-term" : bi == 1 ? "weekly" : "other";
+    const char *rd = obj_str(blk, "reportDatetime");
+    if (bi == 0) report_at = rd;
+    int ti = 0;
+    cJSON *t;
+    cJSON_ArrayForEach(t, cJSON_GetObjectItem(blk, "timeSeries")) {
+      cJSON *td = cJSON_GetObjectItem(t, "timeDefines");
+      cJSON *ae;
+      cJSON_ArrayForEach(ae, cJSON_GetObjectItem(t, "areas")) {
+        cJSON *ao = cJSON_GetObjectItem(ae, "area");
+        const char *code = obj_str(ao, "code");
+        if (!code) continue;
+        jrec *r = jrec_get(&recs, &nr, &cr, code, obj_str(ao, "name"));
+        if (!r) continue;
+        if (!r->name) r->name = obj_str(ao, "name");
+        if (bi == 0 && ti == 0) r->wx = ae;
+        cJSON *sobj = cJSON_CreateObject();
+        cJSON_AddStringToObject(sobj, "forecast", kind);
+        if (rd) cJSON_AddStringToObject(sobj, "report_at", rd);
+        if (td) cJSON_AddItemToObject(sobj, "time_defines", cJSON_Duplicate(td, 1));
+        cJSON *m;
+        cJSON_ArrayForEach(m, ae) {
+          if (!m->string || strcmp(m->string, "area") == 0) continue;
+          cJSON_AddItemToObject(sobj, m->string, cJSON_Duplicate(m, 1));
+        }
+        cJSON_AddItemToArray(r->series, sobj);
+      }
+      ti++;
+    }
+    /* tempAverage / precipAverage and any other {areas:[…]} member */
+    cJSON *mem;
+    cJSON_ArrayForEach(mem, blk) {
+      if (!mem->string || strcmp(mem->string, "timeSeries") == 0) continue;
+      cJSON *areas = cJSON_IsObject(mem) ? cJSON_GetObjectItem(mem, "areas") : NULL;
+      if (!cJSON_IsArray(areas)) continue;
+      cJSON *ae;
+      cJSON_ArrayForEach(ae, areas) {
+        cJSON *ao = cJSON_GetObjectItem(ae, "area");
+        const char *code = obj_str(ao, "code");
+        if (!code) continue;
+        jrec *r = jrec_get(&recs, &nr, &cr, code, obj_str(ao, "name"));
+        if (!r) continue;
+        cJSON *o = cJSON_CreateObject();
+        cJSON *m;
+        cJSON_ArrayForEach(m, ae) {
+          if (!m->string || strcmp(m->string, "area") == 0) continue;
+          cJSON_AddItemToObject(o, m->string, cJSON_Duplicate(m, 1));
+        }
+        cJSON_AddItemToObject(r->extra, mem->string, o);
+      }
+    }
+    bi++;
+  }
+
+  for (int i = 0; i < nr; i++) {
+    jrec *r = &recs[i];
+    const char *weather = series_str(r->wx, "weathers", 0);
+    const char *wind = series_str(r->wx, "winds", 0);
+    /* weathers[]/winds[] normally carry today AND tomorrow. */
+    const char *weather_tomorrow = series_str(r->wx, "weathers", 1);
+    const char *wind_tomorrow    = series_str(r->wx, "winds", 1);
+    const char *sub_name = r->name;
+
+    cJSON *f = gj_point_feature(a->lon, a->lat);
+    cJSON *p = cJSON_CreateObject();              /* EXACT JS key order */
+    {
+      char sid[48];
+      snprintf(sid, sizeof sid, "jma-area-%s", r->code);
+      cJSON_AddStringToObject(p, "id", sid);
+    }
+    cJSON_AddStringToObject(p, "office_code", a->code);
+    cJSON_AddStringToObject(p, "office_name", a->name);
+    cJSON_AddStringToObject(p, "area_code", r->code);
+    cJSON_AddStringToObject(p, "area_name", sub_name ? sub_name : a->name);
+    /* The pin is the OFFICE's point, not this area's own location — AREAS[]
+     * has no per-area coordinate. Disclosed, not fabricated. */
+    cJSON_AddStringToObject(p, "geo_precision", "office-level (sub-area has no own coordinate)");
+    if (weather) {
+      cJSON_AddStringToObject(p, "weather", weather);
+      cJSON_AddItemToObject(p, "wind",
+        wind ? cJSON_CreateString(wind) : cJSON_CreateNull());
+    }
+    if (weather_tomorrow)
+      cJSON_AddStringToObject(p, "weather_tomorrow", weather_tomorrow);
+    if (wind_tomorrow)
+      cJSON_AddStringToObject(p, "wind_tomorrow", wind_tomorrow);
+    cJSON_AddItemToObject(p, "report_at",
+      report_at ? cJSON_CreateString(report_at) : cJSON_CreateNull());
+    /* geojson T_PUB is published_at|observed_at|time|timestamp — "report_at"
+     * matched none, so the timeline column stayed empty. */
+    if (report_at) cJSON_AddStringToObject(p, "published_at", report_at);
+    cJSON_AddStringToObject(p, "source", "jma_forecast");
+    cJSON_AddItemToObject(p, "series", r->series);          /* transferred */
+    cJSON *m = r->extra->child;
+    while (m) {                                             /* averages */
+      cJSON *next = m->next;
+      cJSON *d = cJSON_DetachItemViaPointer(r->extra, m);
+      if (!cJSON_GetObjectItem(p, d->string)) cJSON_AddItemToObject(p, d->string, d);
+      else cJSON_Delete(d);
+      m = next;
+    }
+    cJSON_Delete(r->extra);
+    /* geojson pickText looks for title|name|name_ja|label; compose it from
+     * the fetched area name + the fetched weather string (or, for an area
+     * with no weather sentence, say which forecast it carries). */
+    {
+      char t[512];
+      snprintf(t, sizeof t, "%s \xE2\x80\x94 %s", sub_name ? sub_name : a->name,
+               weather ? weather : "\xE5\xA4\xA9\xE6\xB0\x97\xE4\xBA\x88\xE5\xA0\xB1"
+                                   "\xE7\xB3\xBB\xE5\x88\x97");   /* 天気予報系列 */
+      cJSON_AddStringToObject(p, "title", t);
+    }
+    {
+      char lk[160];
+      snprintf(lk, sizeof lk,
+        "https://www.jma.go.jp/bosai/forecast/#area_type=offices&area_code=%s",
+        a->code);
+      cJSON_AddStringToObject(p, "link", lk);
+    }
+    cJSON_AddItemToObject(f, "properties", p);
+    cJSON_AddItemToArray(features, f);
+  }
+  free(recs);
+  int n = geojson_emit_features(sink, source_id, features);
+  cJSON_Delete(features);
+  return n;
+}
+
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  int n = 0;
   for (size_t i = 0; i < sizeof(AREAS) / sizeof(AREAS[0]); i++) {
     const struct area *a = &AREAS[i];
     char url[128];
@@ -62,83 +242,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       "https://www.jma.go.jp/bosai/forecast/data/forecast/%s.json", a->code);
     cJSON *arr = feed_get_json(ctx->http, url, 8000);
     if (!arr) continue;                             /* !res.ok → null */
-    cJSON *first = (cJSON_IsArray(arr)) ? cJSON_GetArrayItem(arr, 0) : NULL;  /* exhaustive-ok: forecast office block, not a sub-area list */
-    cJSON *ts = first ? cJSON_GetObjectItem(first, "timeSeries") : NULL;
-    cJSON *ts0 = (ts && cJSON_IsArray(ts)) ? cJSON_GetArrayItem(ts, 0) : NULL;  /* exhaustive-ok: timeSeries[0] is the only block carrying weathers/winds — the other blocks hold unrelated variables (pop/temperature, week outlook) */
-    cJSON *as = ts0 ? cJSON_GetObjectItem(ts0, "areas") : NULL;
-    cJSON *rd = first ? cJSON_GetObjectItem(first, "reportDatetime") : NULL;
-    const char *report_at =
-      (rd && cJSON_IsString(rd) && rd->valuestring && rd->valuestring[0])
-        ? rd->valuestring : NULL;
-
-    cJSON *ae;
-    cJSON_ArrayForEach(ae, as) {                    /* every sub-area under this office, not just [0] */
-      const char *weather = series_str(ae, "weathers", 0);
-      if (!weather) continue;                        /* if (r?.weather) */
-      const char *wind = series_str(ae, "winds", 0);
-      /* weathers[]/winds[] normally carry today AND tomorrow. */
-      const char *weather_tomorrow = series_str(ae, "weathers", 1);
-      const char *wind_tomorrow    = series_str(ae, "winds", 1);
-
-      cJSON *aobj = cJSON_GetObjectItem(ae, "area");
-      const char *sub_code = obj_str(aobj, "code");
-      const char *sub_name = obj_str(aobj, "name");
-
-      cJSON *f = gj_point_feature(a->lon, a->lat);
-
-      cJSON *p = cJSON_CreateObject();              /* EXACT JS key order */
-      /* Stable per-sub-area identity: the JMA sub-region code, falling back
-       * to the office code for a malformed sub-area element (should not
-       * happen, but a missing id must never silently collide two different
-       * sub-areas onto one row). */
-      {
-        char sid[48];
-        snprintf(sid, sizeof sid, "jma-area-%s", sub_code ? sub_code : a->code);
-        cJSON_AddStringToObject(p, "id", sid);
-      }
-      cJSON_AddStringToObject(p, "office_code", a->code);
-      cJSON_AddStringToObject(p, "office_name", a->name);
-      cJSON_AddStringToObject(p, "area_code", sub_code ? sub_code : a->code);
-      cJSON_AddStringToObject(p, "area_name", sub_name ? sub_name : a->name);
-      /* The pin is the OFFICE's point, not this sub-area's own location —
-       * AREAS[] has no per-sub-area coordinate. Disclosed, not fabricated. */
-      cJSON_AddStringToObject(p, "geo_precision", "office-level (sub-area has no own coordinate)");
-      cJSON_AddStringToObject(p, "weather", weather);
-      cJSON_AddItemToObject(p, "wind",
-        wind ? cJSON_CreateString(wind) : cJSON_CreateNull());
-      if (weather_tomorrow)
-        cJSON_AddStringToObject(p, "weather_tomorrow", weather_tomorrow);
-      if (wind_tomorrow)
-        cJSON_AddStringToObject(p, "wind_tomorrow", wind_tomorrow);
-      cJSON_AddItemToObject(p, "report_at",
-        report_at ? cJSON_CreateString(report_at) : cJSON_CreateNull());
-      /* geojson T_PUB is published_at|observed_at|time|timestamp — "report_at"
-       * matched none, so the timeline column stayed empty. */
-      if (report_at) cJSON_AddStringToObject(p, "published_at", report_at);
-      cJSON_AddStringToObject(p, "source", "jma_forecast");
-      /* geojson pickText looks for title|name|name_ja|label; "area_name" is
-       * none of them, so every forecast row had a NULL title. Compose it from
-       * the fetched area name + the fetched weather string. */
-      {
-        char t[512];
-        snprintf(t, sizeof t, "%s \xE2\x80\x94 %s",
-                 sub_name ? sub_name : a->name, weather);
-        cJSON_AddStringToObject(p, "title", t);
-      }
-      {
-        char lk[160];
-        snprintf(lk, sizeof lk,
-          "https://www.jma.go.jp/bosai/forecast/#area_type=offices&area_code=%s",
-          a->code);
-        cJSON_AddStringToObject(p, "link", lk);
-      }
-      cJSON_AddItemToObject(f, "properties", p);
-      cJSON_AddItemToArray(features, f);
+    if (cJSON_IsArray(arr)) {
+      int k = office_features(a, arr, sink, ctx->source_id);
+      if (k > 0) n += k;
     }
     cJSON_Delete(arr);
   }
-  int n = geojson_emit_features(sink, ctx->source_id, features);
-  cJSON_Delete(features);
   fprintf(stderr, "[jma-forecast-area] emitted %d\n", n);
   return n >= 0 ? 0 : -1;
 }

@@ -84,31 +84,41 @@ static inline void vshape_unwrap(cJSON *doc, const char *path) {
   }
 }
 
-/* 4. SPARQL bindings at PATH: {v:{type,value}} → {v:"value", v_binding:{…}}. */
+/* 4. SPARQL bindings at PATH: {v:{type,value}} → {v:"value", v_binding:{…}}.
+ *
+ * The row's ORIGINAL members are collected before any is touched. This used to
+ * walk row->child while appending to the same row, so the walk reached the
+ * `v_binding` object it had just appended — which still has a "value" — and
+ * renamed it again, and again: `s_binding_binding_binding…`, 42 junk keys on
+ * every gov-ch-fedlex-sparql record until the 128-byte name buffer gave out. */
 static inline void vshape_sparql(cJSON *doc, const char *path) {
   cJSON *arr = vshape_at(doc, path);
   if (!cJSON_IsArray(arr)) return;
   cJSON *row;
   cJSON_ArrayForEach(row, arr) {
     if (!cJSON_IsObject(row)) continue;
-    cJSON *b = row->child;
-    while (b) {
-      cJSON *next = b->next;
+    int nm = 0;
+    for (cJSON *b = row->child; b; b = b->next) nm++;
+    if (!nm) continue;
+    cJSON **orig = malloc((size_t)nm * sizeof *orig);
+    if (!orig) continue;
+    int k = 0;
+    for (cJSON *b = row->child; b; b = b->next) orig[k++] = b;   /* nm counted these */
+    for (int i = 0; i < k; i++) {
+      cJSON *b = orig[i];
       const char *val = cJSON_IsObject(b)
           ? cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(b, "value")) : NULL;
-      if (val && b->string) {
-        char alt[128];
-        snprintf(alt, sizeof alt, "%s_binding", b->string);
-        if (!cJSON_GetObjectItemCaseSensitive(row, alt)) {
-          cJSON *moved = cJSON_DetachItemViaPointer(row, b);
-          char name[96];
-          snprintf(name, sizeof name, "%s", moved->string ? moved->string : "value");
-          cJSON_AddItemToObject(row, alt, moved);
-          cJSON_AddStringToObject(row, name, val);
-        }
-      }
-      b = next;
+      if (!val || !b->string) continue;
+      char alt[128];
+      snprintf(alt, sizeof alt, "%s_binding", b->string);
+      if (cJSON_GetObjectItemCaseSensitive(row, alt)) continue;
+      cJSON *moved = cJSON_DetachItemViaPointer(row, b);
+      char name[96];
+      snprintf(name, sizeof name, "%s", moved->string ? moved->string : "value");
+      cJSON_AddItemToObject(row, alt, moved);
+      cJSON_AddStringToObject(row, name, val);
     }
+    free(orig);
   }
 }
 

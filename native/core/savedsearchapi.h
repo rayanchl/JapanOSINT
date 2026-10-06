@@ -1,4 +1,4 @@
-/* core/savedsearchapi.h — roadmap 38: saved searches, per-user search history,
+/* core/savedsearchapi.h — roadmap 38: saved searches, workspace search history,
  * and the ONE canonical permalink state codec shared by web and iOS.
  *
  * Three surfaces that all answer "how do I get back to what I was looking at":
@@ -7,17 +7,17 @@
  *   search_history   an automatic, capped trail of what they actually ran
  *   permalink        a stateless, opaque encoding of view state for sharing
  *
- * ── Privacy stance (the reason this module is not tenant-wide) ──────────────
- * Search history is PER USER, never per tenant. Every statement that touches
- * search_history carries BOTH `tenant_id=?` AND `user_id=?`, and there is no
- * endpoint, parameter or role that widens it: a tenant owner cannot read an
- * analyst's history through this module, by construction. That is deliberate.
- * A query log is not activity metadata — it is the analyst's line of enquiry,
- * and in an OSINT product "who is my colleague investigating, and did they
- * search their own name" is exactly the surveillance an owner role must not
- * silently confer. Saved searches follow the same rule for the same reason
- * (owner-scoped reads/writes); sharing a search with a team is a permalink or
- * an alert rule, both of which are explicit acts.
+ * ── Visibility: the workspace (decided 2026-10-05) ──────────────────────────
+ * Saved searches and search history are visible to every member of the
+ * workspace: everything in a workspace — records, searches, queries,
+ * syntheses — is meant to be seen by its members. Reads therefore carry
+ * `tenant_id=?` only (nothing ever crosses workspaces), each row names its
+ * author (`user_id`, plus `mine` for the caller), and `?mine=1` narrows a list
+ * to the caller. Changing an entry — PATCH, DELETE, clearing history — stays
+ * with its author: those statements still carry `user_id=?`. This replaces the
+ * earlier per-user stance, under which an owner could not read an analyst's
+ * history; the trade-off (a member's line of enquiry is visible to the team)
+ * was accepted explicitly.
  *
  * ── Permalinks carry VIEW STATE ONLY, and NEVER authorization ───────────────
  * A permalink token is an opaque, UNSIGNED, UNAUTHENTICATED blob that arrives

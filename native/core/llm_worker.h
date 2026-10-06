@@ -34,4 +34,19 @@ int llm_worker_request(const char *base_url, const char *method, const char *url
                        size_t body_len, int timeout_ms, int retries,
                        int high_priority, http_response *out);
 
+/* llm_worker_request with a bound on the WHOLE wait, queue included.
+ * `max_wait_ms` > 0: if the worker has not started this job within that many
+ * ms (it is queued behind another caller's in-flight request), the job is
+ * withdrawn unsent and the call returns non-zero with out->status 0; once
+ * started, the exchange gets what is left of `max_wait_ms` (at least 1 s) as
+ * its timeout. 0 = the unbounded wait above. Request-path callers (a user's
+ * semantic query) need this: their own timeout otherwise bounds only the HTTP
+ * exchange, and the queue in front of it can hold them for a background
+ * batch's whole duration. */
+int llm_worker_request_ex(const char *base_url, const char *method,
+                          const char *url, const char *const *headers,
+                          const char *body, size_t body_len, int timeout_ms,
+                          int retries, int high_priority, int max_wait_ms,
+                          http_response *out);
+
 #endif

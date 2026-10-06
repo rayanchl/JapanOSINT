@@ -242,7 +242,8 @@ has been probed — the session that wrote them could reach no source host.
 The number 31 was also used by a docs-only staging set
 (`docs/candidate-sources-batch31.{cam,eu,fr,jp,row,us}.txt`, 144 candidates,
 unrelated to these tables). A `batch31.*.txt` glob would have mixed the two, so
-that set moved to **batch 36** (`docs/batch36/STAGING_README.md`).
+that set moved to **batch 37** (`docs/batch37/STAGING_README.md`; 36 was taken by
+a live-measured batch that merged first).
 
 ## Merge note
 

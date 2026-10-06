@@ -105,7 +105,7 @@ static int ioc_run(const source_ctx *ctx, intel_sink *sink) {
   int emitted = 0;
   if (status && strcmp(status, "ok") == 0 && data && cJSON_IsArray(data)) {
     int n = cJSON_GetArraySize(data);
-    for (int i = 0; i < n && i < 15; i++) {
+    for (int i = 0; i < n; i++) {
       cJSON *d = cJSON_GetArrayItem(data, i);
       cJSON *out = cJSON_CreateObject();
       cJSON_AddStringToObject(out, "source", "threatfox.abuse.ch");
