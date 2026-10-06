@@ -1,0 +1,2 @@
+id	url	verdict	http	bytes	note
+JO38_WP_UNIV_IP	https://www.ip.kyusan-u.ac.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: 

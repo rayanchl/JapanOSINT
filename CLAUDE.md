@@ -39,9 +39,14 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 18,645** (2026-10-06: 18,643 plus the audit
-follow-up's two SEC listings, `US_SEC_LITIGATION_RELEASES` and
-`US_SEC_TRADING_SUSPENSIONS`, which replace the dead srqsb search). 18,643 was main's batches 33–36 —
+**The registered count is 19,017** (2026-10-06), measured — `./bin/japanosint --list-sources | wc -l` and `make lint-sources` agree. Batch 38's 437 measured Japanese WordPress-REST rows (`docs/verified-sources-batch38.tsv`, `native/collectors/OSINT_SOURCES_BATCH_38_JPWP.md`) on a base of **18,580**.
+
+That base is the number the BINARY reports, and this line previously said
+18,645 — a 65-source drift in the one paragraph that claims the binary agrees
+with it. `native/tools/registry-floor.txt` on main said 18,580 at the same
+time, so the floor was right and the prose was not. Take the count from the
+binary, and when a batch lands re-record the floors instead of doing the
+arithmetic: 18,643 was main's batches 33–36 —
 batch 33's 43 measured supply-chain rows (`docs/verified-sources-batch33.tsv`),
 batch 34's NDJSON row, batch 35's four string-array rows, the spec-families
 beats and batch 36's 188 — on top of the 18,170 that included batch 32's 340

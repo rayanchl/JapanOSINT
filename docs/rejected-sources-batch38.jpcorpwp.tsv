@@ -1,0 +1,23 @@
+id	url	verdict	http	bytes	note
+JO38_WP_CORP_1419	https://www.tamahome.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[Errno 104] Connection reset by peer
+JO38_WP_CORP_1795	https://www.masaru-co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[Errno 104] Connection reset by peer
+JO38_WP_CORP_1905	https://www.tenox.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[Errno 104] Connection reset by peer
+JO38_WP_CORP_1939	https://www.yondenko.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[Errno 104] Connection reset by peer
+JO38_WP_CORP_3708	https://www.tt-paper.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[Errno 104] Connection reset by peer
+JO38_WP_CORP_3939	https://www.kanamic.net/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: 
+JO38_WP_CORP_4464	https://www.soft99.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[Errno 104] Connection reset by peer
+JO38_WP_CORP_4664	https://www.trsc.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[Errno 104] Connection reset by peer
+JO38_WP_CORP_4966	https://www.uyemura.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[Errno 104] Connection reset by peer
+JO38_WP_CORP_5542	https://www.shst.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[Errno 104] Connection reset by peer
+JO38_WP_CORP_5753	https://www.nippon-shindo.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[Errno 104] Connection reset by peer
+JO38_WP_CORP_5983	https://www.iwabuchi.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: 
+JO38_WP_CORP_6444	https://www.sanden.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: 
+JO38_WP_CORP_6696	https://www.traas.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: 
+JO38_WP_CORP_6929	https://www.nicera.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[Errno 104] Connection reset by peer
+JO38_WP_CORP_7480	https://www.suzuden.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: 
+JO38_WP_CORP_7991	https://www.mamiya-op.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: 
+JO38_WP_CORP_8078	https://www.hanwa.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[Errno 104] Connection reset by peer
+JO38_WP_CORP_9312	https://www.keihin.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	UNPARSEABLE	200	399456	declared array_path but body is not JSON
+JO38_WP_CORP_9361	https://www.fkk-toyama.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[Errno 104] Connection reset by peer
+JO38_WP_CORP_6407	(see manifest)	EMIT_COLLISION	200	2000	UPSTREAM_PAGING_OVERLAP: X-WP-Total 2329 / 24 pages, but the server serves overlapping page contents deterministically — 12 pages x 100 yielded 612 distinct with orderby=date and 549 with orderby=id, and each page is identical across repeated fetches. Measured emitted=2000 stored=791. Posts that exist are never served, so the loss is upstream and no row setting fixes it.
+JO38_WP_CORP_9900	(see manifest)	EMIT_COLLISION	200	823	COLLISION: emitted=823 stored=822 — one record repeated across a page boundary. Dropped to keep the batch free of COLLISION verdicts rather than widen id_keys away from the post id, which is the upstream identity.
