@@ -1977,10 +1977,16 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         if (!body) { reply_json(c, 500, "{\"error\":\"failed_to_list_media\"}"); return; }
         reply_json(c, 200, body); free(body); return;
       }
-      /* GET /api/intel/items/:uid/evidence — chain of custody for the item
-       * (roadmap 17). Plain-auth read; raw bytes stay operator-gated. */
+      /* GET /api/intel/items/:uid/evidence?limit=&offset= — chain of custody
+       * for the item (roadmap 17), offset-paged with a measured total. 100
+       * per page by default, as before. Plain-auth read; raw bytes stay
+       * operator-gated. */
       if (seg(u, "/api/intel/items/", "/evidence", pe, sizeof pe)) {
-        char *body = evidence_list_for_item(g_db, pe, 100);
+        char lv[16] = {0}, ov[16] = {0};
+        int hl = mg_http_get_var(&hm->query, "limit", lv, sizeof lv);
+        int ho = mg_http_get_var(&hm->query, "offset", ov, sizeof ov);
+        char *body = evidence_list_for_item(g_db, pe, hl > 0 ? atoi(lv) : 100,
+                                            ho > 0 ? atoi(ov) : 0);
         if (!body) { reply_json(c, 500, "{\"error\":\"failed_to_list_evidence\"}"); return; }
         reply_json(c, 200, body); free(body); return;
       }
@@ -2344,6 +2350,30 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         char hv[16]={0}; int hh=mg_http_get_var(&hm->query,"hours",hv,sizeof hv);
         char *b=maintenance_digest(g_db, hh>0?atoi(hv):24);
         reply_json(c,200,b); free(b); return;
+      }
+      /* The next pages of the digest's and the pipeline view's lists:
+       *   GET /api/admin/maintenance/lists/:name?hours=&limit=&offset=
+       *   GET /api/admin/maintenance/source/:id/{fetch_log,anomalies,repairs}
+       * Both answer {data, page:{limit,offset,count,total,has_more}, meta}. */
+      {
+        char lv[16]={0}, ov[16]={0}, hv[16]={0};
+        int hl=mg_http_get_var(&hm->query,"limit",lv,sizeof lv);
+        int ho=mg_http_get_var(&hm->query,"offset",ov,sizeof ov);
+        int hh=mg_http_get_var(&hm->query,"hours",hv,sizeof hv);
+        int lim = hl>0 ? atoi(lv) : 0, off = ho>0 ? atoi(ov) : 0;
+        char lname[64]={0}, sid[128]={0};
+        const char *lsub = NULL;
+        if (seg(u,"/api/admin/maintenance/lists/","",lname,sizeof lname)) lsub = "";
+        else if (seg(u,"/api/admin/maintenance/source/","/fetch_log",sid,sizeof sid)) lsub = "fetch_log";
+        else if (seg(u,"/api/admin/maintenance/source/","/anomalies",sid,sizeof sid)) lsub = "anomalies";
+        else if (seg(u,"/api/admin/maintenance/source/","/repairs",sid,sizeof sid))   lsub = "repairs";
+        if (lsub) {
+          int st=200;
+          char *b = *lsub
+            ? maintenance_list(g_db, lsub, sid, 0, lim, off, &st)
+            : maintenance_list(g_db, lname, NULL, hh>0?atoi(hv):24, lim, off, &st);
+          reply_json(c,st,b); free(b); return;
+        }
       }
       /* GET /api/admin/maintenance/source/:id — per-source pipeline detail */
       {

@@ -497,7 +497,7 @@ static const char *ev_result(int rc) {
  * stat()ing a path this module has no business knowing. evidence_list_for_item
  * already computes blob_present for exactly this reason. */
 static int blob_present_for(db_handle *db, const char *item_uid) {
-  char *js = evidence_list_for_item(db, item_uid, 1);
+  char *js = evidence_list_for_item(db, item_uid, 1, 0);
   if (!js) return 0;
   cJSON *root = cJSON_Parse(js);
   free(js);
