@@ -196,19 +196,42 @@ static const hp_source HP2_EU_INSTITUTIONS[] = {
       "their individual duty rates, plus circumvention and expiry reviews. "
       "Company-specific duty rates identify exporters by name" },
 
-  { .id = "EU_EUIPO_TRADEMARKS", .name = "EUIPO — EU trademarks & designs",
-    .name_ja = "EU知的財産庁 商標/意匠", .category = "government",
-    .portal = "https://www.tmdn.org", .record_type = "eu-trademark",
+  /* Re-pointed 2026-10-06. The row fetched the TMview single-page app at
+   * `/tmview/#/tmview/results?...basicSearch={q}`: everything after `#` is a
+   * fragment the browser never sends, so every query fetched the same
+   * 531-byte HTML shell and emitted nothing. The SPA's own data call is a
+   * keyless POST to /tmview/api/search/results, and it honours the query:
+   * "siemens" totalResults 67, "bank" 4,401, an impossible word 0
+   * (fOffices EM = EUIPO's own register, which is what this row names).
+   *
+   * One page of at most 100: pageSize 101 is HTTP 400 ("shouldn't be greater
+   * than the maximum items per page") and the page number lives in the POST
+   * BODY, which this engine expands once per run, not per page. page_walk
+   * reads the upstream's `totalResults`, so a query matching more than 100
+   * marks files a truncation notice stating the true total instead of
+   * passing 100 off as everything. The per-mark detail endpoint answers 403;
+   * each record carries tmOfficeURL, EUIPO's own page for the mark. The WAF
+   * resets a connection that does not look like a browser. */
+  { .id = "EU_EUIPO_TRADEMARKS", .name = "EUIPO — EU trademarks (TMview)",
+    .name_ja = "EU知的財産庁 商標", .category = "government",
+    .portal = "https://www.tmdn.org/tmview/", .record_type = "eu-trademark",
     .tags = "\"eu\",\"ip\",\"trademark\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.tmdn.org/tmview/#/tmview/results?page=1&pageSize=100&"
-      "criteria=C&basicSearch={q}",
-    .base = "https://www.tmdn.org", .filter_query = 1,
-    .page_param = "page", .page_start = 1,
-    .description = "EU trademark and design filings with the proprietor, "
-      "representative, Nice classes, opposition history and every recorded "
-      "transfer of ownership. Trademark transfers date corporate acquisitions "
-      "months before any register does" },
+    .mode = HP_JSON, .free_tier = 1,
+    .url = "https://www.tmdn.org/tmview/api/search/results",
+    .post_body = "{\"page\":\"1\",\"pageSize\":\"100\",\"criteria\":\"C\","
+      "\"basicSearch\":\"{Q}\",\"fOffices\":[\"EM\"]}",
+    .headers = { "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                 "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0 Safari/537.36",
+                 "Origin: https://www.tmdn.org",
+                 "Referer: https://www.tmdn.org/tmview/" },
+    .array_path = "tradeMarks", .id_keys = "ST13", .title_keys = "tmName",
+    .date_keys = "applicationDate", .link_keys = "tmOfficeURL",
+    .page_walk = 1,
+    .description = "EU trade mark filings at EUIPO matching a name: the mark, its "
+      "applicant, status, Nice classes, Vienna codes, filing, registration, "
+      "opposition-period and expiry dates, and EUIPO's own page for the mark. "
+      "A mark filed by an unfamiliar applicant often dates a product or an "
+      "acquisition months before any register does" },
 
   /* ── Aviation, energy and the open-data layer ──────────────────────────── */
   { .id = "EU_AIR_SAFETY_LIST", .name = "EU — air safety list (banned carriers)",
