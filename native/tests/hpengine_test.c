@@ -645,6 +645,10 @@ static const hp_source T[] = {
     .mode = HP_XML, .array_path = "channel.item", .interval = 3600,
     .title_keys = "title", .id_keys = "link",
     .record_type = "t-xmldot", .free_tier = 1, .description = "d" },
+  /* An HTML listing that links each item from an icon AND a headline (test 37). */
+  { .id = "T_HTML_GIFU", .name = "icon + headline anchors", .url = "https://x.test/gifu",
+    .mode = HP_HTML, .href_must = "/articles/-/", .base = "https://x.test", .interval = 3600,
+    .record_type = "t-gifu", .free_tier = 1, .description = "d" },
   /* hp_xml_flatten's bounds and repeats (test 36). */
   { .id = "T_XML_FLAT", .name = "xml flatten bounds", .url = "https://x.test/xf.xml",
     .mode = HP_XML, .array_path = "rec", .interval = 3600,
@@ -2775,6 +2779,41 @@ int main(void) {
        strstr(g_full[0], "\"#text\":\"alpha\"") && strstr(g_full[1], "\"#text\":\"beta\""),
        "36h: a text-only record element is emitted with its text as #text");
   }
+
+  /* 37. The strongest label for a link wins, not its first anchor's.
+   *     Gifu Shimbun's list (JP25_JPMEDIA_GIFU_LIST) links every article from
+   *     an icon (an <img alt="">) and then from its headline. The icon came
+   *     first, borrowed the text BEFORE it — the previous card's timestamp —
+   *     and the headline was discarded as a duplicate: `/articles/-/409812`
+   *     was titled "9月26日 10:00", not "岐阜新聞・中学3年模試". */
+  fx_reset();
+  fx_add("/gifu", 200,
+    "<div class=\"card\"><a href=\"/articles/-/774427\" class=\"icon\">"
+    "<div class=\"c-icon\"><img src=\"data:image/gif;base64,R0\" alt=\"\"></div></a>"
+    "<div class=\"body\"><a href=\"/articles/-/774427\" class=\"ttl\">大学の理系人材ニーズ高まる</a>"
+    "<div class=\"meta\"><time>9月26日 10:00</time></div></div></div>"
+    "<div class=\"card\"><a href=\"/articles/-/409812\" class=\"icon\">"
+    "<div class=\"c-icon\"><img src=\"data:image/gif;base64,R0\" alt=\"\"></div></a>"
+    "<div class=\"body\"><a href=\"/articles/-/409812\" class=\"ttl\">岐阜新聞・中学3年模試</a>"
+    "</div></div>"
+    "<div class=\"card\"><a href=\"/articles/-/1\"><img src=\"x.jpg\" alt=\"写真：一面\"></a>"
+    "<a href=\"/articles/-/1\">一面の見出し</a></div>"
+    "<div class=\"card\"><a href=\"/articles/-/2\"><img src=\"y.jpg\" alt=\"写真のみ\"></a></div>");
+  rc = run_source("T_HTML_GIFU", "");
+  ok(rc == 0 && cap_count("t-gifu", NULL) == 4,
+     "37: every linked article is one record — none lost, none doubled");
+  ok(g_ncap >= 4 && !strcmp(g_cap[0].title, "大学の理系人材ニーズ高まる") &&
+     !strcmp(g_cap[1].title, "岐阜新聞・中学3年模試"),
+     "37: the headline beats an icon's borrowed caption (was the previous card's date)");
+  ok(g_ncap >= 4 && !strcmp(g_cap[2].title, "一面の見出し") &&
+     strstr(g_cap[2].props, "\"other_labels.0\":\"写真：一面\""),
+     "37: link text beats an image's alt text, and the alt is kept as an other label");
+  ok(g_ncap >= 4 && !strstr(g_cap[1].props, "9月26日") && !strstr(g_cap[1].props, "other_labels"),
+     "37: the borrowed caption that lost is not attached to the record");
+  ok(g_ncap >= 4 && !strcmp(g_cap[3].title, "写真のみ"),
+     "37: an image-only link keeps its alt text — a weak label is still a record");
+  ok(g_ncap >= 4 && !strcmp(g_cap[1].link, "https://x.test/articles/-/409812"),
+     "37: records keep first-appearance order and their resolved link");
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

@@ -2904,8 +2904,10 @@ static int hp_html_base_href(const char *html, char *out, size_t cap) {
  *
  * and only then is the anchor dropped, as before. `inner`..`end` is the markup
  * between the start tag's `>` and `</a>`. Returns the label length. */
-static size_t hp_anchor_label(const char *inner, const char *end, char *out, size_t cap) {
+static size_t hp_anchor_label(const char *inner, const char *end, char *out, size_t cap,
+                              int *strength) {
   size_t n = 0;
+  *strength = HTML_LABEL_TEXT;
   int intag = 0, pend = 0;
   for (const char *q = inner; q < end && n + 1 < cap; q++) {
     if (*q == '<') { intag = 1; continue; }
@@ -2928,6 +2930,7 @@ static size_t hp_anchor_label(const char *inner, const char *end, char *out, siz
     if (taglen >= sizeof tag) break;
     memcpy(tag, im, taglen);
     tag[taglen] = 0;
+    *strength = HTML_LABEL_IMG;
     if (html_attr(tag, "alt", out, cap) && strlen(out) >= 3) return strlen(out);
     if (html_attr(tag, "title", out, cap) && strlen(out) >= 3) return strlen(out);
     break;
@@ -3157,7 +3160,12 @@ static int hp_run_html(hp_run_state *st, const char *html) {
   html_anchor a;
   const char *p = html;
   int page_hits = 0;
-  while ((!max || st->emitted < max) && (p = html_anchor_next(p, &a)) != NULL) {
+  /* The whole page is scanned before anything is emitted, so each link is
+   * emitted once with the STRONGEST label any of its anchors carried — see
+   * html_label_offer() in lib/htmlparse.h. It used to emit at the first
+   * anchor, and an icon's borrowed caption beat the headline after it. */
+  html_label_set labels = {0};
+  while ((p = html_anchor_next(p, &a)) != NULL) {
     char href[820];
     snprintf(href, sizeof href, "%.*s", (int)a.href_len, a.href);
     /* `href_must` is tested against the raw href AND the resolved link. It used
@@ -3172,13 +3180,14 @@ static int hp_run_html(hp_run_state *st, const char *html) {
     else hp_url_resolve(base_url, href, link, sizeof link);
     if (s->href_must && !strstr(href, s->href_must) && !strstr(link, s->href_must))
       continue;
+    int strength = HTML_LABEL_TEXT;
     if (a.text_len < 3) {
       /* `p` is the resume point, just past `</a>`; the start tag's `>` is the
        * first one after the href value (the parser located `</a>` the same
        * way). See hp_anchor_label(). */
       const char *inner = strchr(a.href + a.href_len, '>');
       if (!inner || inner >= p - 4) continue;
-      a.text_len = hp_anchor_label(inner + 1, p - 4, a.text, sizeof a.text);
+      a.text_len = hp_anchor_label(inner + 1, p - 4, a.text, sizeof a.text, &strength);
       if (a.text_len < 3) {
         /* Nothing inside the anchor names it. Its own attributes, then the
          * text beside it. See hp_anchor_context_label(). The start tag begins
@@ -3187,6 +3196,7 @@ static int hp_run_html(hp_run_state *st, const char *html) {
         while (tag > html && *tag != '<') tag--;
         a.text_len = hp_anchor_context_label(tag, (size_t)(inner + 1 - tag), p,
                                              html, a.text, sizeof a.text);
+        strength = HTML_LABEL_CONTEXT;
       }
       if (a.text_len < 3) continue;
     }
@@ -3207,17 +3217,49 @@ static int hp_run_html(hp_run_state *st, const char *html) {
      * (all 47 MHLW prefectural labour-bureau homepages do) passed a raw-href
      * dedupe and then collided at the sink — 2-19 records per bureau reported
      * as UID-COLLISION that were really one record linked in two spellings. */
-    if (!html_seen_add(&st->hseen, link)) { st->duplicate++; continue; }
+    /* A link emitted on an EARLIER page of the walk is a duplicate as before.
+     * One seen earlier on THIS page is the same record, and its label is
+     * upgraded if this anchor's is stronger. */
+    if (html_seen_has(&st->hseen, link)) { st->duplicate++; continue; }
+    int r = html_label_offer(&labels, link, a.text, strength);
+    if (r == 0) { st->duplicate++; continue; }
+    if (r < 0) {
+      /* Out of memory for the label set: the anchor is still a record, so it
+       * is emitted now with the label it has — the old first-anchor rule —
+       * rather than lost. */
+      if (!html_seen_add(&st->hseen, link)) { st->duplicate++; continue; }
+      if (max && st->emitted >= max) { st->truncated = 1; continue; }
+      page_hits++;
+      cJSON *flat = cJSON_CreateObject();
+      cJSON_AddStringToObject(flat, "title", a.text);
+      cJSON_AddStringToObject(flat, "url", link);
+      cJSON_AddStringToObject(flat, "id", link);
+      hp_flat_reset();
+      hp_emit_record(st, flat, 0);
+      cJSON_Delete(flat);
+    }
+  }
+  for (int i = 0; i < labels.n; i++) {
+    if (max && st->emitted >= max) { st->truncated = 1; break; }
+    if (!html_seen_add(&st->hseen, labels.v[i].key)) { st->duplicate++; continue; }
     page_hits++;
-
     cJSON *flat = cJSON_CreateObject();
-    cJSON_AddStringToObject(flat, "title", a.text);
-    cJSON_AddStringToObject(flat, "url", link);
-    cJSON_AddStringToObject(flat, "id", link);
+    cJSON_AddStringToObject(flat, "title", labels.v[i].label);
+    cJSON_AddStringToObject(flat, "url", labels.v[i].key);
+    cJSON_AddStringToObject(flat, "id", labels.v[i].key);
+    /* What the link's OTHER anchors called it — a logo's alt behind a "ホーム"
+     * link, an image caption beside a headline. Flattened the way hp_flatten
+     * flattens an array, so a consumer reads it like any other record. */
+    for (int j = 0; j < labels.v[i].nothers; j++) {
+      char ok_[32];
+      snprintf(ok_, sizeof ok_, "other_labels.%d", j);
+      cJSON_AddStringToObject(flat, ok_, labels.v[i].others[j]);
+    }
     hp_flat_reset();
     hp_emit_record(st, flat, 0);
     cJSON_Delete(flat);
   }
+  html_label_free(&labels);
   if (max && st->emitted >= max) st->truncated = 1;
   /* Same stop signal the JSON path publishes: without it the page walk read
    * page 1 and silently dropped every later page (EU_EUIPO_TRADEMARKS and

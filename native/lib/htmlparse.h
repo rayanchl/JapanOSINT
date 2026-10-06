@@ -57,6 +57,60 @@ const char *html_anchor_next(const char *from, html_anchor *out);
 #include "seenset.h"
 typedef seen_set html_seen;
 #define html_seen_add(s, href) seen_add((s), (href))
+#define html_seen_has(s, href) seen_has((s), (href))
 #define html_seen_free(s)      seen_free((s))
+
+/* ── the strongest label for each link on a page ──────────────────────────
+ * A listing links one item more than once — an image or icon anchor, then
+ * the headline — and the record is one record whichever anchor is read
+ * first. Its LABEL is not: emitting at the first anchor made an icon's weak
+ * label (its alt text, or a neighbour's caption borrowed for it) the title,
+ * and the real link text that followed was discarded as a duplicate. Gifu
+ * Shimbun's article list titled `/articles/-/409812` "9月26日 10:00" — the
+ * PREVIOUS card's timestamp — instead of "岐阜新聞・中学3年模試".
+ *
+ * So a page's anchors are offered here first and emitted after: one entry
+ * per key (the resolved link) in first-appearance order. Its label is the
+ * strongest one offered — the anchor's own text over its image's alt over a
+ * label borrowed from beside it — with two qualifications, both measured on
+ * a replay of the 1,127 HTML rows (2026-10-06):
+ *
+ *   - a stronger label does not replace one that already CONTAINS it
+ *     (whitespace ignored, a trailing ellipsis stripped): an image's alt of
+ *     "嬉野市嬉野町　不動山　上　国道34号(75k880)" keeps its place over the
+ *     link text "不動山　上", and a full headline in an alt over the same
+ *     headline cut to "…ウイル..." in the text. The longer label says
+ *     everything the shorter one does;
+ *   - between equal strengths the first still wins, so a link whose anchors
+ *     are all text keeps exactly the title it always had.
+ *
+ * Nothing is dropped. Every key offered is returned, and every OTHER distinct
+ * label the page itself gave the link (text or alt) is kept in `others` — a
+ * logo's "愛知労働局" behind a "ホーム" link is a fact about that link, and the
+ * caller records it beside the title rather than discarding it. A BORROWED
+ * label that lost is not kept: it was the engine's guess from neighbouring
+ * text, and the Gifu one belonged to another article. */
+enum {
+  HTML_LABEL_CONTEXT = 1,   /* borrowed: the anchor's attributes or nearby text */
+  HTML_LABEL_IMG     = 2,   /* the anchor's image's alt / title               */
+  HTML_LABEL_TEXT    = 3    /* the anchor's own text                          */
+};
+typedef struct {
+  char  *key, *label;
+  int    strength;
+  char **others;            /* the other distinct labels, in the order seen */
+  int    nothers, cothers;
+} html_label_ent;
+/* `v` in first-offer order; `h` an open-addressing index into it. {0}-init. */
+typedef struct { html_label_ent *v; int n, cap; int *h; int hcap; } html_label_set;
+
+/* 1 = a new key, recorded with this label; 0 = a key already offered (its
+ * label replaced only per the rules above, the loser kept in `others`);
+ * -1 = out of memory, nothing recorded — the caller must still use the anchor. */
+int  html_label_offer(html_label_set *s, const char *key, const char *label,
+                      int strength);
+/* Does label `a` already say everything `b` says? (The containment rule.) */
+int  html_label_covers(const char *a, const char *b);
+void html_label_free(html_label_set *s);
 
 #endif
