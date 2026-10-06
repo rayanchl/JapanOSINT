@@ -319,7 +319,7 @@ static int edb_flush(intel_sink *sink, edb_pending *pd) {
   char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char link[96];
+  char link[128];                       /* 36-char prefix + a 63-char id */
   snprintf(link, sizeof link, "https://www.exploit-db.com/exploits/%s", id);
 
   intel_item it = {0};

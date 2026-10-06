@@ -30,6 +30,7 @@ struct IntelDetail: View {
     @State private var revealed: RevealResult?
     @State private var revealing = false
     @State private var revealError: String?
+    @State private var revealReason = ""
     /// "Add to case" — `POST /api/cases/:id/items` via `CasePickerSheet`.
     @State private var showCasePicker = false
     @State private var showShareLink = false
@@ -478,6 +479,11 @@ struct IntelDetail: View {
                     .background(theme.surfaceElevated, in: RoundedRectangle(cornerRadius: 8))
                 }
             } else {
+                // The server refuses a reveal without a reason and writes it
+                // into the audit chain with the requester.
+                TextField("Reason for reveal (logged)", text: $revealReason)
+                    .textFieldStyle(.roundedBorder)
+                    .font(.caption)
                 Button {
                     Task { await doReveal() }
                 } label: {
@@ -488,7 +494,7 @@ struct IntelDetail: View {
                     }
                 }
                 .buttonStyle(.bordered)
-                .disabled(revealing)
+                .disabled(revealing || revealReason.trimmingCharacters(in: .whitespaces).isEmpty)
                 if let e = revealError {
                     Text(e).font(.caption2).foregroundStyle(theme.danger)
                 }
@@ -501,7 +507,7 @@ struct IntelDetail: View {
         revealError = nil
         defer { revealing = false }
         do {
-            revealed = try await apiClient.api.revealItem(uid: uid)
+            revealed = try await apiClient.api.revealItem(uid: uid, reason: revealReason)
         } catch {
             revealError = "Reveal failed — operator access required."
         }

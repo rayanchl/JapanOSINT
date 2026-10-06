@@ -351,8 +351,9 @@ struct API: Sendable {
     }
     /// Operator-gated: decrypt a breach record's leaked secret(s). Throws
     /// `.http(403, …)` for non-operators; the caller surfaces that inline.
-    func revealItem(uid: String) async throws -> RevealResult {
-        try await get("/api/intel/items/\(uid)/reveal")
+    func revealItem(uid: String, reason: String) async throws -> RevealResult {
+        try await get("/api/intel/items/\(uid)/reveal",
+                      query: [URLQueryItem(name: "reason", value: reason)])
     }
     /// User-initiated trigger. Server runs the named intel collector and
     /// upserts items synchronously; the response carries the result count.
