@@ -49,6 +49,30 @@ void intel_sink_free(intel_sink *k);
  * scheduler's counting wrapper, a NULL, a freed sink). */
 long intel_sink_stored(const intel_sink *k, int *exact);
 
+/* How many of the intel_sink_stored() uids belong to `collector-*-notice`
+ * records (see intel_item_is_notice). The scheduler's `records=` excludes
+ * notices, so comparing it against a `stored=` that includes them let one
+ * notice row hide one collapsed record (rule 4b): 2,000 records + 1 notice,
+ * 2 of them colliding, read stored=2000=records. Compare records against
+ * stored MINUS this. Same -1 contract as intel_sink_stored(). */
+long intel_sink_stored_notices(const intel_sink *k);
+
+/* 1 if `it` is a `collector-*-notice` record — collector-truncation-notice,
+ * collector-shape-notice, collector-status-notice (which carries
+ * needs_credential): data ABOUT a run, not a record OF the source.
+ *
+ * ONE definition, used by every path that counts records: the scheduler's run
+ * line, the entity-pivot dispatcher (osint_dispatch.c) and the sink's own
+ * distinct-uid count. The dispatcher used to have no copy at all, so a keyless
+ * pivot that emitted only its needs-credential notice reported success=1,
+ * records=1, confidence 70 and fetch_log ok.
+ *
+ * The `collector-` prefix is required. Matching any record_type ending in
+ * "-notice" tallied 806 table rows' real upstream records (municipal-notice,
+ * procurement-notice, tender-notice, police-notice …) as notices, so sources
+ * that stored thousands of announcements reported records=0. */
+int intel_item_is_notice(const intel_item *it);
+
 /* Re-mirror ONE intel_items row into intel_items_fts, reading the values back
  * out of the table. Returns 0 when the row was re-indexed, non-zero if `uid`
  * does not exist (or the read failed) — in which case the index is untouched.

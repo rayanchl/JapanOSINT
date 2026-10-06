@@ -114,7 +114,7 @@ export default function WatchlistsPage() {
             );
           })}
           <div className="flex items-center justify-between">
-            <BoundNote shown={rows.length} total={page?.next_cursor ? rows.length + 1 : rows.length} noun="watchlists" />
+            <BoundNote shown={rows.length} total={page?.next_cursor ? null : rows.length} more={Boolean(page?.next_cursor)} noun="watchlists" />
             {page?.next_cursor && <Button size="sm" busy={loading} onClick={() => load(page.next_cursor)}>Load more</Button>}
           </div>
         </div>
@@ -133,7 +133,7 @@ export default function WatchlistsPage() {
         onConfirm={del}
         title={`Delete “${confirmDel?.name || ''}”?`}
         confirmLabel="Delete"
-        message="Deleting a watchlist also deletes the alert rule behind it and that rule's firing history."
+        message="Deleting a watchlist also deletes the alert rule behind it. The inbox events that rule raised are kept, and any delivery not yet sent is cancelled."
       />
     </Page>
   );

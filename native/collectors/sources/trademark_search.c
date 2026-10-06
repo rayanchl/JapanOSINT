@@ -102,12 +102,17 @@ static int search_wipo(http_client *http, const char *mark, intel_sink *sink) {
   return emitted;
 }
 
-/* EUIPO eSearch+ — GET. Returns number of marks emitted. */
+/* EUIPO eSearch+ — GET. Returns number of marks emitted.
+ *
+ * DEAD ENDPOINT: /eSearchCLW/api/basic-search answers HTTP 404 for every query
+ * (measured 2026-10-02, with and without an Accept header), so this call emits
+ * nothing and there is no later page to lose. It reads page=0 only; when it is
+ * re-pointed at a live EUIPO API, that API's paging must be walked. */
 static int search_euipo(http_client *http, const char *mark, intel_sink *sink) {
   char enc[512], url[1100];
   jo_uri_encode_buf(mark, enc, sizeof enc);
   snprintf(url, sizeof url,
-    "https://euipo.europa.eu/eSearchCLW/api/basic-search?text=%s&page=0&size=20", enc);
+    "https://euipo.europa.eu/eSearchCLW/api/basic-search?text=%s&page=0&size=20", enc);  /* exhaustive-ok: endpoint returns 404 for every query (measured 2026-10-02) — dead, not paged */
 
   http_response hr = {0};
   int hc = http_request(http, "GET", url, NULL, NULL, 0, 20000, 1, &hr);

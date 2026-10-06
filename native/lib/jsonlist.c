@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>   /* strcasecmp: POSIX declares it here, not in string.h */
 #include <math.h>
 #include <limits.h>
 
@@ -1213,7 +1214,7 @@ static char *next_link(cJSON *doc, const char *base) {
  * one page and then file a truncation notice claiming pages were pending.
  * Stopping on no-progress makes a wrong guess cost one wasted request and
  * tell no lies. */
-static unsigned long long page_fp(cJSON *arr) {
+unsigned long long jsonlist_page_fp(cJSON *arr) {
   unsigned long long h = 1469598103934665603ULL;   /* FNV-1a 64 */
   if (!arr) return h;
   int i = 0;
@@ -1395,7 +1396,10 @@ int jsonlist_page_max(void) {
  *   page_url   the URL it was read from — the OVERRIDDEN one, see below
  *   got        records the page's array held
  *   available  the upstream's declared total, or -1
- *   total      records emitted so far across the walk, this page included
+ *   total      records FETCHED so far across the walk, this page included —
+ *              not emitted: it is compared with `available`, the upstream's
+ *              count of what it holds, and a record filtered out or dropped
+ *              as noise was still handed over
  *
  * Returns the next URL (caller frees) or NULL, and reports through
  * `full_unadvanced` whether the walk is stopping at a page that looked full —
@@ -1417,8 +1421,17 @@ char *jsonlist_next_page(cJSON *doc, const char *page_url, int got,
       if (PAGERS[i].alt_cursor && jsonlist_query_int(page_url, PAGERS[i].alt_cursor) >= 0)
         cursor = PAGERS[i].alt_cursor;
       long cur = jsonlist_query_int(page_url, cursor);
+      /* A page NUMBER the URL does not state (or states as 0) is followed by
+       * page 1, not 2. This used to be `cur > 0 ? cur + 1 : 2`, which is right
+       * for a 1-based API and silently skips page 1 of a 0-based one (Spring
+       * Data's `size`+`page`, Diavgeia): the walk read 0, 2, 3 … and
+       * gr-diavgeia-decision-search lost records 101-200 on every run. Which
+       * base the API uses is not knowable from the URL, so it is asked: page 1
+       * is requested, and a 1-based server answers it with the page already
+       * read. The walk recognises that repeat (jsonlist_page_one_retry) and
+       * continues at page 2 — one extra request, never a lost page. */
       long nextval = PAGERS[i].page_numbered
-                       ? (cur > 0 ? cur + 1 : 2)
+                       ? (cur > 0 ? cur + 1 : 1)
                        : (cur >= 0 ? cur + size : size);
       next = jsonlist_query_set(page_url, cursor, nextval);
     }
@@ -1456,6 +1469,27 @@ char *jsonlist_next_page(cJSON *doc, const char *page_url, int got,
   return next;
 }
 
+/* The page-1 probe's other half. jsonlist_next_page() follows a first page
+ * that carried no page number (or page=0) with page=1, because on a 0-based
+ * API that is the next page. On a 1-based API it is the page just read, so it
+ * comes back as a repeat. Given the URL read before (`prev_url`) and the one
+ * that repeated it (`page_url`), return the URL to continue at — page 2 — when
+ * the repeat is exactly that probe, else NULL (a real repeat: stop). Caller
+ * frees. Only the page-numbered families jsonlist_next_page() advances are
+ * recognised, and only when page_url still declares the family's page size. */
+char *jsonlist_page_one_retry(const char *prev_url, const char *page_url) {
+  if (!prev_url || !page_url) return NULL;
+  for (int i = 0; PAGERS[i].size_param; i++) {
+    if (!PAGERS[i].page_numbered) continue;
+    if (jsonlist_query_int(page_url, PAGERS[i].size_param) <= 0) continue;
+    const char *cursor = PAGERS[i].cursor_param;
+    if (jsonlist_query_int(page_url, cursor) != 1) continue;
+    if (jsonlist_query_int(prev_url, cursor) > 0) continue;   /* absent or 0 */
+    return jsonlist_query_set(page_url, cursor, 2);
+  }
+  return NULL;
+}
+
 int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
                         http_client *http, const char *url, int timeout_ms,
                         const char *path, const char *record_type,
@@ -1478,10 +1512,13 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
   g_jl_shape.paged = 1;
 
   int total = 0, pages = 0, truncated = 0;
+  int fetched = 0;           /* records the upstream handed over, emitted or not */
   int full_unadvanced = 0;   /* last page full, and nothing lets us ask for more */
   long available = -1;
   unsigned long long prev_fp = 0;
   int repeated = 0;
+  char *prev_url = NULL;      /* the page read before this one, for the probe */
+  int probed = 0;             /* the page-1 probe is tried at most once        */
 
   for (; pages < page_max && page_url; pages++) {
     cJSON *doc = feed_get_json(http, page_url, timeout_ms);
@@ -1514,27 +1551,48 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
      * us-cms-*; eur-geoapi-communes: limit=200, 400 emitted, 200 stored). A
      * page the engine itself has decided is a re-serve is not a page of
      * records and is not counted as one. */
-    unsigned long long fp = page_fp(arr);
-    if (pages > 0 && got > 0 && fp == prev_fp) repeated = 1;
+    unsigned long long fp = jsonlist_page_fp(arr);
+    if (pages > 0 && got > 0 && fp == prev_fp) {
+      /* The page-1 probe answered with the first page: a 1-based API, and
+       * page 1 is already in hand. Continue at page 2; the probe is not a
+       * page read, so it does not count toward the ceiling or `pages`. */
+      char *p2 = probed ? NULL : jsonlist_page_one_retry(prev_url, page_url);
+      if (p2) {
+        probed = 1;
+        cJSON_Delete(doc);
+        free(prev_url);
+        prev_url = page_url;
+        page_url = p2;
+        pages--;                             /* the loop's pages++ restores it */
+        continue;
+      }
+      repeated = 1;
+    }
     prev_fp = fp;
 
     int n = repeated ? 0
                      : jsonlist_emit(sink, source_id, doc, path, record_type,
                                      lang, tags_json);
     total += n;
+    if (!repeated) fetched += got;
 
+    /* Compared with the upstream's declared total on what was FETCHED: a
+     * record dropped as shape noise was still handed over, and counting only
+     * the emitted ones read as "the upstream holds more". */
     int fu = 0;
     char *next = repeated ? NULL
                           : jsonlist_next_page(doc, page_url, got, available,
-                                               total, &fu);
+                                               fetched, &fu);
     cJSON_Delete(doc);
     full_unadvanced = fu;
 
     if (got <= 0 || repeated) { free(next); break; }   /* upstream is exhausted */
-    free(page_url);
+    free(prev_url);
+    prev_url = page_url;
     page_url = next;
     if (pages + 1 >= page_max && page_url) truncated = 1;   /* ceiling bit */
   }
+  free(prev_url);
   free(page_url);
 
   if (truncated || full_unadvanced) {
@@ -1639,7 +1697,7 @@ static int jl_emit_page_keyed(const source_ctx *c, intel_sink *s,
    * seen=0 makes pw_walk treat it as a short page and stop, so a wrong cursor
    * costs one request and re-emits nothing. Fingerprinted BEFORE the relabel
    * below, on both pages, so the comparison is like with like. */
-  unsigned long long fp = page_fp(arr);
+  unsigned long long fp = jsonlist_page_fp(arr);
   if (o->pages++ > 0 && arr && cJSON_GetArraySize(arr) > 0 && fp == o->prev_fp) {
     if (seen) *seen = 0;
     return 0;
@@ -1651,14 +1709,48 @@ static int jl_emit_page_keyed(const source_ctx *c, intel_sink *s,
       if (!cJSON_IsObject(rec)) continue;
       cJSON *src = cJSON_GetObjectItemCaseSensitive(rec, o->id_field);
       if (!cJSON_IsString(src) && !cJSON_IsNumber(src)) continue;
-      char buf[128];
-      if (cJSON_IsString(src) && src->valuestring)
-        snprintf(buf, sizeof buf, "%s", src->valuestring);
-      else
-        snprintf(buf, sizeof buf, "%.17g", src->valuedouble);
+      /* The key's text, in full. It used to be copied into a 128-byte buffer,
+       * so two ids sharing their first 127 bytes (a URI, a composite code)
+       * became one uid and collapsed at the sink. An id too long to be a uid
+       * part is replaced by its hash — a function of the WHOLE value, fixed
+       * width — never cut. Ids that always fit are unchanged byte for byte. */
+      char nb[32];
+      const char *v = (cJSON_IsString(src) && src->valuestring) ? src->valuestring : NULL;
+      if (!v) { snprintf(nb, sizeof nb, "%.17g", src->valuedouble); v = nb; }
+      char hx[24];
+      if (strlen(v) >= 128) {
+        unsigned long long h = 1469598103934665603ULL;   /* FNV-1a 64 */
+        for (const unsigned char *q = (const unsigned char *)v; *q; q++)
+          h = (h ^ *q) * 1099511628211ULL;
+        snprintf(hx, sizeof hx, "h%016llx", h);
+        v = hx;
+      }
+      char *key = strdup(v);
+      if (!key) continue;
+      /* The upstream's OWN `id`, when it is a different field from the one
+       * this row keys on, is a value the upstream sent: it is kept under
+       * `id_upstream` rather than overwritten (cyb-wa-breaches-pi lost every
+       * breach number this way). Equal text, or id_field == "id", loses
+       * nothing and is simply replaced. */
+      cJSON *old = cJSON_GetObjectItemCaseSensitive(rec, "id");
+      if (old && old != src) {
+        char ob[32];
+        const char *ot = cJSON_IsString(old) ? old->valuestring
+                       : cJSON_IsNumber(old) ? (snprintf(ob, sizeof ob, "%.17g",
+                                                         old->valuedouble), ob)
+                       : NULL;
+        if (!ot || strcmp(ot, key) != 0) {
+          char kn[32] = "id_upstream";
+          for (int k = 2; cJSON_GetObjectItemCaseSensitive(rec, kn) && k < 100; k++)
+            snprintf(kn, sizeof kn, "id_upstream_%d", k);
+          cJSON_AddItemToObject(rec, kn,
+                                cJSON_DetachItemFromObjectCaseSensitive(rec, "id"));
+        }
+      }
       if (cJSON_GetObjectItemCaseSensitive(rec, "id"))
         cJSON_DeleteItemFromObjectCaseSensitive(rec, "id");
-      cJSON_AddStringToObject(rec, "id", buf);
+      cJSON_AddStringToObject(rec, "id", key);
+      free(key);
     }
   }
   return jsonlist_emit_ex(s, id, doc, o->path, o->record_type, o->lang,

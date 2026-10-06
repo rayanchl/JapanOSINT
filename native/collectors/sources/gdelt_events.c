@@ -54,7 +54,7 @@ static void rows_to_features(char *csv, cJSON *features) {
        line = strtok_r(NULL, "\n", &save)) {
     if (!*line) continue;
     char *col[61]; int n = 0;
-    for (char *p = line; n < 61; ) {
+    for (char *p = line; n < 61; ) {   /* exhaustive-ok: memory guard on col[61]; a GDELT 2.0 event row has exactly 61 columns */
       col[n++] = p;
       char *t = strchr(p, '\t');
       if (!t) break;

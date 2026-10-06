@@ -186,7 +186,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   fprintf(stderr, "[PDNS_MNEMONIC] emitted %d of %.0f known answers over %d "
                   "page(s) (%s)\n", n, total, pages, q);
   if (stopped_early)
-    jo_trunc_notice(sink, "PDNS_MNEMONIC", base, n,
+    jo_trunc_notice_scoped(sink, "PDNS_MNEMONIC", q, base, n,
                     total > 0 ? (long)total : -1,
                     "the offset walk stopped before Mnemonic's declared answer "
                     "count was reached — the anonymous tier rate-limited the "

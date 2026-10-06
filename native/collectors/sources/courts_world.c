@@ -10,11 +10,9 @@
  * extracted from the fetched page). Per-portal output is capped and the whole
  * fan-out is capped so a single query can't run away.
  *
- * One portal — the Netherlands rechtspraak.nl — exposes a genuinely FREE open
- * search API returning an Atom feed
- *   GET https://data.rechtspraak.nl/uitspraken/zoeken?searchTerm=<entity>
- * so that one is parsed as Atom (jo_next_entry / jo_tag_inner), one item per
- * <entry>, giving structured real records rather than scraped anchors.
+ * The Netherlands rechtspraak.nl Atom API used to be queried as well; it
+ * ignores the search term entirely (see the note above run()), so it no longer
+ * is.
  *
  * HONESTY: many national portals are JS-only / anti-bot / POST-form / behind a
  * CAPTCHA (e.g. CanLII, some AustLII/NZLII paths). Those rows simply yield 0
@@ -113,80 +111,16 @@ static const court_portal PORTALS[] = {
 };
 static const int NPORTALS = (int)(sizeof PORTALS / sizeof PORTALS[0]);
 
-/* Netherlands rechtspraak.nl — free open Atom search API. Parse the feed and
- * emit one intel_item per <entry> (real ECLI id + title + link). Returns the
- * number emitted (honest empty when the feed has no entries). */
-static int emit_rechtspraak(const source_ctx *ctx, intel_sink *sink,
-                            const char *enc, const char *q) {
-  char url[512];
-  snprintf(url, sizeof url,
-    "https://data.rechtspraak.nl/uitspraken/zoeken?searchTerm=%s&max=25", enc);
-  char *xml = jo_get(ctx, url, NULL, "court_world_nl");
-  if (!xml) return 0;
-
-  int emitted = 0;
-  const char *cur = xml;
-  while (emitted < 25) {
-    const char *e = jo_next_entry(&cur);
-    if (!e) break;
-    /* bound the search for this entry's fields to before the next entry */
-    char *title = jo_tag_inner(&cur, "title");   /* advances cur past </title> */
-    /* the <id> (ECLI) and <link href> live before </entry>; re-scan from e */
-    const char *idp = strstr(e, "<id>");
-    char ecli[128] = {0};
-    if (idp) {
-      idp += 4;
-      const char *ide = strstr(idp, "</id>");
-      if (ide && (size_t)(ide - idp) < sizeof ecli) {
-        size_t l = (size_t)(ide - idp);
-        memcpy(ecli, idp, l); ecli[l] = 0;
-      }
-    }
-    /* link href="..." */
-    char link[512] = {0};
-    const char *lp = strstr(e, "<link");
-    if (lp) {
-      const char *hp = strstr(lp, "href=\"");
-      if (hp) {
-        hp += 6;
-        const char *he = strchr(hp, '"');
-        if (he && (size_t)(he - hp) < sizeof link) {
-          size_t l = (size_t)(he - hp);
-          memcpy(link, hp, l); link[l] = 0;
-        }
-      }
-    }
-    if (!title && !ecli[0]) { /* nothing usable */ ; }
-    else {
-      cJSON *props = cJSON_CreateObject();
-      cJSON_AddStringToObject(props, "service", "COURT_WORLD");
-      cJSON_AddStringToObject(props, "portal", "Netherlands Rechtspraak (data.rechtspraak.nl)");
-      cJSON_AddStringToObject(props, "jurisdiction", "NL");
-      cJSON_AddStringToObject(props, "query", q);
-      if (ecli[0]) cJSON_AddStringToObject(props, "ecli", ecli);
-      if (link[0]) cJSON_AddStringToObject(props, "href", link);
-      cJSON_AddBoolToObject(props, "success", 1);
-      char *pj = cJSON_PrintUnformatted(props);
-      cJSON_Delete(props);
-
-      intel_item it = {0};
-      it.remote_key      = ecli[0] ? ecli : (link[0] ? link : title);
-      it.title           = title ? title : ecli;
-      it.summary         = ecli[0] ? ecli : NULL;
-      it.link            = link[0] ? link : (ecli[0] ? ecli : NULL);
-      it.lang            = "nl";
-      it.record_type     = "court-case";
-      it.properties_json = pj;
-      it.tags_json       = "[\"osint-search\",\"COURT_WORLD\"]";
-      if (sink->emit(sink, &it) >= 0) emitted++;
-      free(pj);
-    }
-    free(title);
-  }
-  free(xml);
-  fprintf(stderr, "[court_world_nl] emitted %d\n", emitted);
-  return emitted;
-}
+/* Netherlands rechtspraak.nl was queried here as
+ * data.rechtspraak.nl/uitspraken/zoeken?searchTerm=<q>&max=25 and its first
+ * 25 Atom entries emitted as "court-case" hits for <q>. That API has no
+ * free-text parameter: `searchTerm` (and `q`) are silently ignored, and every
+ * query — a real company or "zzqqxxnotathing" — answers with the same
+ * "Aantal gevonden ECLI's: 3770474", i.e. the oldest ECLIs of the whole
+ * register (measured 2026-10-02). Those were records about nothing, attributed
+ * to the entity (CLAUDE.md rule 4d), and walking past the old 25-entry loop
+ * cap would only have attributed more of the 3.77M. The call is removed until
+ * it can be re-pointed at a parameter the upstream honours. */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
@@ -205,10 +139,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
                                 * cuts short is reported as a truncation notice */
   const int PER_CAP    = 0;    /* exhaustive-ok: 0 = every hit on the page */
 
-  /* 1) Netherlands free Atom API first (structured real records). */
-  total += emit_rechtspraak(ctx, sink, enc, q);
-
-  /* 2) Anchor-scrape the rest. */
+  /* Anchor-scrape every portal (the Rechtspraak API is not queried — see
+   * the note above run()). */
   for (; i < NPORTALS && total < GLOBAL_CAP; i++) {
     const court_portal *p = &PORTALS[i];
     if (ctx->cancel && *ctx->cancel) { cancelled = 1; break; }
@@ -224,8 +156,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   free(enc);
   jo_registry_sweep_notice(sink, "COURT_WORLD", q, total, i, NPORTALS,
                            "GLOBAL_CAP", GLOBAL_CAP, cancelled);
-  fprintf(stderr, "[court_world] total emitted %d across %d of %d scraped portals"
-                  " (+ the Rechtspraak API)\n", total, i, NPORTALS);
+  fprintf(stderr, "[court_world] total emitted %d across %d of %d scraped portals\n",
+          total, i, NPORTALS);
   return 0;   /* honest empty is not an error */
 }
 
@@ -235,7 +167,7 @@ static const source_def court_world_def = {
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "scraped",
   .url = "internal://osint/court_world",
-  .description = "Fan-out case-law search across ~20 national court/LII portals worldwide (rechtspraak.nl Atom API + anchor-scrape; keyless, honest-empty)",
+  .description = "Fan-out case-law search across ~20 national court/LII portals worldwide (anchor-scrape; keyless, honest-empty)",
   .layer = NULL, .free_tier = 1,
 };
 REGISTER_SOURCE(court_world_def)

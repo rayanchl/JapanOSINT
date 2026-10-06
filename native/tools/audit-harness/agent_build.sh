@@ -24,7 +24,12 @@ BIN="bin/japanosint-$SLOT"
 if [ ! -d "$OBJ" ]; then
   echo "[slot $SLOT] seeding $OBJ from obj/ ..."
   cp -a obj "$OBJ"
-  find "$OBJ" -name '*.d' -exec sed -i "s#\bobj/#${OBJ}/#g" {} +
+  # Portable to BSD sed (macOS): `-i` takes an ATTACHED suffix there (a bare
+  # `-i` swallowed the script as the suffix), and `\b` is a GNU extension BSD
+  # sed treats as a literal `b`, so this rewrote nothing. Match the target at
+  # the start of a line or after whitespace instead, then drop the backups.
+  find "$OBJ" -name '*.d' -exec sed -E -i.jo-bak "s#(^|[[:space:]])obj/#\1${OBJ}/#g" {} +
+  find "$OBJ" -name '*.d.jo-bak' -exec rm -f {} +
 fi
 LOG="$OBJ/build.log"
 if ! make -j4 OBJ="$OBJ" BIN="$BIN" >"$LOG" 2>&1; then

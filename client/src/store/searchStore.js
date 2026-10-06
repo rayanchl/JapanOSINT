@@ -6,7 +6,10 @@
 //
 // Auth: `/api/search/analyze` goes through the global fetch interceptor
 // (auth/session.js) and carries the bearer. The SSE stream is pre-auth on the
-// server precisely because EventSource cannot send headers.
+// server precisely because EventSource cannot send headers, so it is opened
+// with the run's `stream_key` — returned by analyze, and by /results to the
+// owning workspace only. The request_id alone (which share links carry) does
+// not open it: a run belongs to the workspace that started it.
 
 import apiUrl from '../utils/apiUrl.js';
 import { isTerminal } from '../components/search/pipeline.js';
@@ -80,9 +83,10 @@ async function reconcile(requestId) {
   }
 }
 
-function connectStream(requestId) {
+function connectStream(requestId, streamKey) {
   if (streams.has(requestId)) return;
-  const es = new EventSource(apiUrl(`/api/search/stream/${encodeURIComponent(requestId)}`));
+  const q = streamKey ? `?key=${encodeURIComponent(streamKey)}` : '';
+  const es = new EventSource(apiUrl(`/api/search/stream/${encodeURIComponent(requestId)}${q}`));
   streams.set(requestId, es);
   let errorCount = 0;
   es.addEventListener('progress', (ev) => {
@@ -133,9 +137,9 @@ export async function startSearch(query) {
     emit();
     throw new Error(state.lastError);
   }
-  const { request_id } = await res.json();
+  const { request_id, stream_key } = await res.json();
   upsertActive(request_id, { query: q, snapshot: null, status: 'starting', startedAt: Date.now() });
-  connectStream(request_id);
+  connectStream(request_id, stream_key);
   return request_id;
 }
 
@@ -149,7 +153,7 @@ export async function attachRun(requestId) {
   if (!res.ok) throw new Error(`run ${id} not found (HTTP ${res.status})`);
   const snap = await res.json();
   if (isTerminal(snap)) finishActive(id, snap);
-  else { upsertActive(id, { query: snap.query, snapshot: snap, status: 'running' }); connectStream(id); }
+  else { upsertActive(id, { query: snap.query, snapshot: snap, status: 'running' }); connectStream(id, snap.stream_key); }
   return id;
 }
 
@@ -165,6 +169,19 @@ export async function fetchSuggestions(query) {
 export function getRun(requestId) {
   return state.active.find((s) => s.request_id === requestId)
     || state.completed.find((s) => s.request_id === requestId) || null;
+}
+
+/**
+ * Forget every run this tab knows about and close their streams. Called on
+ * sign-out: the store is a module singleton, so without this the next account
+ * to sign in on this tab saw the previous account's queries and results.
+ */
+export function resetSearchStore() {
+  for (const id of [...streams.keys()]) dropStream(id);
+  state.active = [];
+  state.completed = [];
+  state.lastError = null;
+  emit();
 }
 
 export function subscribe(listener) {

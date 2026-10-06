@@ -28,12 +28,34 @@ static char *jerr(int *st, int code, const char *msg) {
 static char *jstr(cJSON *o, int *st, int code) {
   *st = code; char *j = cJSON_PrintUnformatted(o); cJSON_Delete(o); return j;
 }
-static int is_known(const char *name, const char **role) {
-  const char *N[64], *R[64];
-  int n = cred_known_vars(N, R, 64);
-  for (int i = 0; i < n; i++)
-    if (strcmp(N[i], name) == 0) { if (role) *role = R[i]; return 1; }
+/* The known credential names, in arrays sized from the credential table
+ * itself. Every caller used a fixed `const char *N[64]` while the table names
+ * 89 variables, and cred_known_vars() quietly kept the first 64: 25 keys —
+ * NVD_API_KEY among them — were missing from both listings and answered
+ * "Unknown key" to GET/PUT. The bound now comes from the table, and a list
+ * that still does not fit is an error (cred_known_vars returns -1, loudly),
+ * never a shorter list. */
+typedef struct { const char **N, **R; int n; } known_list;
+static int known_load(known_list *k) {
+  int cap = cred_known_capacity();
+  if (cap < 1) cap = 1;
+  k->N = calloc((size_t) cap, sizeof *k->N);
+  k->R = calloc((size_t) cap, sizeof *k->R);
+  k->n = (k->N && k->R) ? cred_known_vars(k->N, k->R, cap) : -1;
+  if (k->n < 0) { free(k->N); free(k->R); k->N = k->R = NULL; return -1; }
   return 0;
+}
+static void known_free(known_list *k) { free(k->N); free(k->R); k->N = k->R = NULL; }
+
+/* 1 known, 0 unknown, -1 the list could not be built (caller: 500). */
+static int is_known(const char *name, const char **role) {
+  known_list k;
+  if (known_load(&k) != 0) return -1;
+  int hit = 0;
+  for (int i = 0; i < k.n; i++)
+    if (strcmp(k.N[i], name) == 0) { if (role) *role = k.R[i]; hit = 1; break; }
+  known_free(&k);
+  return hit;
 }
 static int b64_rev[256];
 static void b64_rev_init(void) {
@@ -247,7 +269,9 @@ char *keysapi_platform(db_handle *db, const tenant_ctx *t, const char *method,
 
   if (!name[0]) {
     if (strcmp(method,"GET")!=0) { cJSON_Delete(ov); return jerr(st,404,"not_found"); }
-    const char *N[64],*R[64]; int n=cred_known_vars(N,R,64);
+    known_list k;
+    if (known_load(&k)!=0) { cJSON_Delete(ov); return jerr(st,500,"credential_table_error"); }
+    const char **N=k.N,**R=k.R; int n=k.n;
     cJSON *arr=cJSON_CreateArray();
     for (int i=0;i<n;i++){
       cJSON *m=cJSON_CreateObject();
@@ -257,10 +281,12 @@ char *keysapi_platform(db_handle *db, const tenant_ctx *t, const char *method,
       cJSON_AddBoolToObject(m,"hasOverlay",cJSON_HasObjectItem(ov,N[i])?1:0);
       cJSON_AddItemToArray(arr,m);
     }
+    known_free(&k);
     cJSON_Delete(ov); return jstr(arr,st,200);
   }
 
   const char *role=NULL; int known=is_known(name,&role);
+  if (known < 0) { cJSON_Delete(ov); return jerr(st,500,"credential_table_error"); }
   if (strcmp(method,"GET")==0) {
     if (!known) { cJSON_Delete(ov); return jerr(st,404,"Unknown key"); }
     const char *v=resolved_env(ov,name);
@@ -307,7 +333,9 @@ char *keysapi_tenant(db_handle *db, const tenant_ctx *t, const char *method,
 
   if (!seg[0]) {                                   /* GET / */
     if (strcmp(method,"GET")!=0){cJSON_Delete(ov);return jerr(st,404,"not_found");}
-    const char *N[64],*R[64]; int n=cred_known_vars(N,R,64);
+    known_list k;
+    if (known_load(&k)!=0) { cJSON_Delete(ov); return jerr(st,500,"credential_table_error"); }
+    const char **N=k.N,**R=k.R; int n=k.n;
     cJSON *items=cJSON_CreateArray();
     for (int i=0;i<n;i++){
       int byok=tenant_has_secret(db,t->tenant_id,N[i]);
@@ -322,6 +350,7 @@ char *keysapi_tenant(db_handle *db, const tenant_ctx *t, const char *method,
       cJSON_AddItemToObject(m,"source",src?cJSON_CreateString(src):cJSON_CreateNull());
       cJSON_AddItemToArray(items,m);
     }
+    known_free(&k);
     char pol[32],mid[64]; key_policy(db,t->tenant_id,pol,mid);
     cJSON *o=cJSON_CreateObject();
     cJSON_AddItemToObject(o,"items",items);
@@ -415,6 +444,7 @@ char *keysapi_tenant(db_handle *db, const tenant_ctx *t, const char *method,
 
   /* /:name */
   const char *role=NULL; int known=is_known(seg,&role);
+  if (known < 0) { cJSON_Delete(ov); return jerr(st,500,"credential_table_error"); }
   if (strcmp(method,"GET")==0) {
     cJSON_Delete(ov);
     if (!known) return jerr(st,404,"Unknown key");

@@ -1,7 +1,8 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { api, ApiError } from '../api/client.js';
-import { sessionStore, supabaseClient, coalescedRefresh, installFetchInterceptor, onSessionLost } from './session.js';
+import { sessionStore, supabaseClient, coalescedRefresh, installFetchInterceptor, onSessionLost, REFRESH } from './session.js';
 import { makePkcePair, AuthError } from './supabase.js';
+import { claimLocalData, releaseLocalData } from './localData.js';
 
 installFetchInterceptor();
 
@@ -42,13 +43,21 @@ export function AuthProvider({ children }) {
   const booted = useRef(false);
 
   const adopt = useCallback((m) => {
+    // Bookmarks / recent queries left by a DIFFERENT account are wiped before
+    // this one can see them (see auth/localData.js).
+    if (m?.user?.id) claimLocalData(m.user.id);
     setMe(m);
     if (m?.tenant?.id) sessionStore.setTenantId(m.tenant.id);
   }, []);
 
+  // Asks an operator-gated route the cheapest question there is. This used to
+  // call /api/db/tables on every boot — six COUNT(*) scans on the server's
+  // event loop for every operator page load, just to learn a boolean.
+  // /api/media/capabilities sits behind the same opgate_check() and, once its
+  // one-time tool probe has run, answers from memory with no DB access.
   const probeOperator = useCallback(async () => {
     try {
-      await api.get('/api/db/tables');
+      await api.get('/api/media/capabilities');
       setIsPlatformAdmin(true);
     } catch (e) {
       if (e instanceof ApiError && (e.status === 403 || e.status === 401)) setIsPlatformAdmin(false);
@@ -69,14 +78,23 @@ export function AuthProvider({ children }) {
       probeOperator();
     } catch (e) {
       if (e instanceof ApiError && e.status === 401) {
-        if (await coalescedRefresh()) {
+        const outcome = await coalescedRefresh();
+        if (outcome === REFRESH.ok) {
           try {
             const m = await api.get('/api/me');
             adopt(m);
             setGate(GATE.ready);
             probeOperator();
             return;
-          } catch { /* fall through to onboarding */ }
+          } catch (e2) {
+            // Reachability is not a verdict on the session.
+            if (isUnreachable(e2)) { setConnectionStalled(true); return; }
+          }
+        } else if (outcome === REFRESH.transient) {
+          // Supabase could not be reached: keep the tokens and offer a retry
+          // instead of signing the user out over a network blip.
+          setConnectionStalled(true);
+          return;
         }
         sessionStore.clearTokens();
         setGate(GATE.onboarding);
@@ -125,24 +143,38 @@ export function AuthProvider({ children }) {
    *  finishes the PKCE exchange and calls `completeOAuthCallback`. */
   const startOAuth = useCallback(async (provider) => {
     const pkce = await makePkcePair();
-    sessionStore.setPkceVerifier(pkce.verifier);
+    sessionStore.beginOAuthFlow(pkce.verifier);
     sessionStore.setOauthReturn(window.location.pathname + window.location.search);
     const redirect = `${window.location.origin}/auth/callback`;
     window.location.assign(supabaseClient().oauthAuthorizeURL(provider, pkce.challenge, redirect));
   }, []);
 
   const completeOAuthCallback = useCallback(async (href) => {
-    const verifier = sessionStore.pkceVerifier;
-    if (!verifier) throw new AuthError(0, 'No sign-in in progress on this browser (missing PKCE verifier).');
-    const s = await supabaseClient().completeOAuth(href, verifier);
-    sessionStore.setPkceVerifier(null);
+    // Only a flow THIS tab started, within its TTL (session.js). The pending
+    // flow is consumed whatever happens next — a code is single-use, and a
+    // verifier left behind after a failed exchange is a standing invitation
+    // for someone else's callback to be completed with it.
+    const flow = sessionStore.pendingOAuthFlow();
+    let s;
+    try {
+      if (!flow) throw new AuthError(0, 'No sign-in was started in this tab (or it expired) — the callback was not used. Start the sign-in again.');
+      s = await supabaseClient().completeOAuth(href, flow.verifier);
+    } finally {
+      sessionStore.clearOAuthFlow();
+    }
     return establish(s);
   }, [establish]);
 
   const signOut = useCallback(() => {
+    // Revoke the refresh token server-side, not just locally. Fire-and-forget:
+    // signing out must not wait on (or fail because of) the network.
+    const access = sessionStore.accessToken;
+    if (access) supabaseClient().logout(access).catch(() => { /* best effort; local state is cleared regardless */ });
     sessionStore.clearTokens();
     sessionStore.setTenantId(null);
     sessionStore.setOnboardingCompleted(false);
+    sessionStore.clearOAuthFlow();
+    releaseLocalData();
     setMe(null);
     setIsPlatformAdmin(null);
     setGate(GATE.onboarding);

@@ -97,7 +97,7 @@ export default function AOIPage() {
             </Card>
           ))}
           <div className="flex items-center justify-between">
-            <BoundNote shown={rows.length} total={page?.next_cursor ? rows.length + 1 : rows.length} noun="areas" />
+            <BoundNote shown={rows.length} total={page?.next_cursor ? null : rows.length} more={Boolean(page?.next_cursor)} noun="areas" />
             {page?.next_cursor && <Button size="sm" busy={loading} onClick={() => load(page.next_cursor)}>Load more</Button>}
           </div>
         </div>

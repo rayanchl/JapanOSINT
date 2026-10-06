@@ -17,32 +17,51 @@
 
 /* ── LEI_SEARCH (GLEIF) ─────────────────────────────────────────────────── */
 #define LEI_PAGE_SIZE 200   /* GLEIF's own maximum page[size] */
-#define LEI_MAX_PAGES 25    /* exhaustive-ok: page-walk runaway guard; an early stop emits a collector-truncation-notice */
+/* Ceiling for a walk whose total GLEIF did not declare; when it did, the walk
+ * is sized from that total instead. Hitting either is disclosed. */
+#define LEI_GUARD_PAGES 500   /* exhaustive-ok: cursor-walk runaway guard, used only without a declared total; hitting it emits a scoped collector-truncation-notice */
 
+/* GLEIF name search, every page.
+ *
+ * CURSOR paging (page[cursor]=*, then the server's links.next), not page
+ * numbers: GLEIF refuses page[number] * page[size] > 10,000 with a 400, so a
+ * page-number walk of "bank" (11,370 records) could never get past record
+ * 10,000 — and the old walk read that 400, like ANY failure on page >= 2
+ * (timeout, 429, 5xx), as "end of results" and stopped without a word. The
+ * cursor walk has no such ceiling and ends where the server stops publishing a
+ * next link. A page that fails before then is disclosed in a notice scoped to
+ * the entity, so one entity's notice no longer overwrites another's (they all
+ * shared the uid LEI_SEARCH|truncation). */
 static int lei_run(const source_ctx *ctx, intel_sink *sink) {
   const char *name = ctx->entity;
   if (!name || !*name) return 0;
   char enc[256]; jo_urlencode_buf(name, enc, sizeof enc);
-  int emitted = 0, capped = 0;
-  long total_seen = 0;
-  for (int page = 1; page <= LEI_MAX_PAGES; page++) {
-    char url[576];
-    snprintf(url, sizeof url,
-      "https://api.gleif.org/api/v1/lei-records?filter[entity.legalName]=%s"
-      "&page[size]=%d&page[number]=%d", enc, LEI_PAGE_SIZE, page);
+  int emitted = 0, pages = 0, failed = 0, capped = 0;
+  long total = -1, total_seen = 0, fail_status = 0;
+  char first[576];
+  snprintf(first, sizeof first,
+    "https://api.gleif.org/api/v1/lei-records?filter[entity.legalName]=%s"
+    "&page[size]=%d&page[cursor]=*", enc, LEI_PAGE_SIZE);
+  char *url = strdup(first);
+  while (url) {
+    long guard = total >= 0 ? total / LEI_PAGE_SIZE + 2 : LEI_GUARD_PAGES;
+    if (pages >= guard) { capped = 1; break; }
     http_response hr = {0};
-    if (http_request(ctx->http, "GET", url, NULL, NULL, 0, 12000, 2, &hr) != 0 ||
-        hr.status != 200 || !hr.body) {
-      http_response_free(&hr);
-      /* a page beyond the first failing is treated as end-of-results, not a
-       * fresh error: GLEIF has been observed to 400 a page[number] past its
-       * own last page rather than returning an empty array. Page 1 failing
-       * is a real fetch error (R3). */
-      if (page == 1) return 0;
+    int rc = http_request(ctx->http, "GET", url, NULL, NULL, 0, 20000, 2, &hr);
+    pages++;
+    cJSON *j = (rc == 0 && hr.status == 200 && hr.body) ? cJSON_Parse(hr.body) : NULL;
+    long status = rc == 0 ? hr.status : 0;
+    http_response_free(&hr);
+    if (!j) {
+      fprintf(stderr, "[LEI_SEARCH] page %d status=%ld\n", pages, status);
+      if (pages == 1) { free(url); return -1; }   /* the lookup itself failed */
+      failed = 1; fail_status = status;
       break;
     }
-    cJSON *j = cJSON_Parse(hr.body); http_response_free(&hr);
-    if (!j) { if (page == 1) return 0; break; }
+    free(url); url = NULL;
+    const cJSON *pg = cJSON_GetObjectItem(cJSON_GetObjectItem(j, "meta"), "pagination");
+    const cJSON *tv = pg ? cJSON_GetObjectItem(pg, "total") : NULL;
+    if (cJSON_IsNumber(tv)) total = (long)tv->valuedouble;
     cJSON *data = cJSON_GetObjectItem(j, "data");
     int n = (data && cJSON_IsArray(data)) ? cJSON_GetArraySize(data) : 0;
     total_seen += n;
@@ -66,8 +85,8 @@ static int lei_run(const source_ctx *ctx, intel_sink *sink) {
         if (city) cJSON_AddStringToObject(out, "city", city);
       }
       cJSON *reg = attr ? cJSON_GetObjectItem(attr, "registration") : NULL;
-      const char *status = reg ? jo_str(reg, "status") : NULL;
-      if (status) cJSON_AddStringToObject(out, "registration_status", status);
+      const char *status_s = reg ? jo_str(reg, "status") : NULL;
+      if (status_s) cJSON_AddStringToObject(out, "registration_status", status_s);
       char *bj = cJSON_PrintUnformatted(out);
 
       cJSON *props = cJSON_CreateObject();
@@ -84,15 +103,30 @@ static int lei_run(const source_ctx *ctx, intel_sink *sink) {
       if (sink->emit(sink, &it) >= 0) emitted++;
       free(bj); free(pj); cJSON_Delete(out); cJSON_Delete(props);
     }
+    const char *next = jo_str(cJSON_GetObjectItem(j, "links"), "next");
+    if (n > 0 && next && *next) url = strdup(next);   /* else: the end */
     cJSON_Delete(j);
-    if (n < LEI_PAGE_SIZE) break;                 /* short page: exhausted */
-    if (page == LEI_MAX_PAGES) capped = 1;        /* full last page: guard hit */
   }
-  if (capped)
-    jo_trunc_notice(sink, "LEI_SEARCH", name, total_seen, -1,
-                     "GLEIF name-search page-walk hit its runaway guard "
-                     "(LEI_MAX_PAGES) before a short page signalled the end",
-                     "raise LEI_MAX_PAGES in corp_identifiers.c");
+  free(url);
+  if (failed || capped || (total >= 0 && total_seen < total)) {
+    char reason[256];
+    if (failed)
+      snprintf(reason, sizeof reason,
+               "GLEIF page %d of the name search failed (status %ld) before the "
+               "server stopped publishing a next link", pages, fail_status);
+    else if (capped)
+      snprintf(reason, sizeof reason,
+               "GLEIF name-search cursor walk hit its runaway guard after %d pages",
+               pages);
+    else
+      snprintf(reason, sizeof reason,
+               "GLEIF declared %ld matches but its next links ran out after %ld",
+               total, total_seen);
+    jo_trunc_notice_scoped(sink, "LEI_SEARCH", name,
+                           "api.gleif.org/api/v1/lei-records", total_seen, total,
+                           reason, failed ? "re-run the lookup"
+                                          : "raise LEI_GUARD_PAGES in corp_identifiers.c");
+  }
   /* The ABI is rc==0 on success, <0 on failure — core/scheduler.c logs any
    * non-zero rc as status="error" and hands it to anomaly_detect(), which
    * quarantines the source. Returning the emitted COUNT (as this did) meant a

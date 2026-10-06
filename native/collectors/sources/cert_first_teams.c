@@ -143,10 +143,15 @@ static int run(const source_ctx *c, intel_sink *s) {
    * directory incomplete, and unlike the ceiling case above it is unpredictable
    * — it can recur on later scheduled runs too, and the only trace of it was
    * previously an stderr line nobody reads. Disclose it the same way. */
+  /* records_available is FIRST's own `total` when an earlier page carried it
+   * (it was passed as -1 here even when it had been read). */
   if (mid_fail)
-    jo_trunc_notice(s, "first-csirt-team-directory", url, total_rows, -1,
-                    "a page fetch failed mid-walk before FIRST's team "
-                    "directory was exhausted; the true total is unknown",
+    jo_trunc_notice(s, "first-csirt-team-directory", url, total_rows,
+                    total > 0 ? (long)total : -1,
+                    total > 0 ? "a page fetch failed mid-walk before FIRST's team "
+                                "directory was exhausted"
+                              : "a page fetch failed mid-walk before FIRST's team "
+                                "directory was exhausted; the true total is unknown",
                     "re-run; a transient upstream failure should clear on retry");
   return 0;                                 /* fetched fine; 0 rows is OK (R3) */
 }

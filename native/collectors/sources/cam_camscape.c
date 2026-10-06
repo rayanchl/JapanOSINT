@@ -312,5 +312,5 @@ static const source_def cam_camscape_def = {
   .name_ja = "カメラ探索 — Camscape",
    .layer = "cameras",
    .update_interval_sec = 3600, .run = run,
-  .category = "cyber" };
+  .category = "infrastructure" };
 REGISTER_SOURCE(cam_camscape_def)

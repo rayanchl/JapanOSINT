@@ -3,7 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { LuPlay, LuRefreshCw } from 'react-icons/lu';
 import { api, errorMessage } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
-import { useIntelItems, SINCE_PRESETS, sinceIso } from '../../hooks/useIntel.js';
+import { useIntelItems, SINCE_PRESETS, useSinceIso } from '../../hooks/useIntel.js';
 import { Page, Card, Pill, Button, Input, Select, Segmented, Toggle, ErrorNotice, EmptyState, LoadingState, BoundNote, SectionLabel, cx, toast } from '../ui/kit.jsx';
 import IntelItemRow from './IntelItemRow.jsx';
 import { relativeTime } from '../../utils/time.js';
@@ -141,7 +141,7 @@ function SearchView() {
 
   const submit = (e) => {
     e?.preventDefault();
-    if (mode === 'near') commit({ near: near.trim(), radius_m: radius, q: draft.trim() });
+    if (mode === 'near') commit({ near: near.trim(), radius_m: radius });
     else commit({ q: draft.trim() });
   };
 
@@ -152,7 +152,10 @@ function SearchView() {
           options={[{ value: 'fts', label: 'Full-text' }, { value: 'semantic', label: 'Semantic' }, { value: 'near', label: 'Nearby' }]} />
         {mode === 'fts' && <Segmented value={sort} onChange={setSort} options={[{ value: 'relevance', label: 'relevance' }, { value: 'trust', label: 'trust' }]} />}
         {mode === 'semantic' && <Segmented value={semMode} onChange={setSemMode} options={[{ value: 'hybrid', label: 'hybrid' }, { value: 'vector', label: 'vector only' }]} />}
-        {mode !== 'semantic' && <Segmented value={view} onChange={setView} options={[{ value: 'original', label: '原文' }, { value: 'translated', label: 'EN' }, { value: 'both', label: 'both' }]} />}
+        {/* Not in Nearby mode: the ?near= route returns before the server's
+          * lang_view shaping, so rows carry no translation and the toggle
+          * would change nothing. */}
+        {mode === 'fts' && <Segmented value={view} onChange={setView} options={[{ value: 'original', label: '原文' }, { value: 'translated', label: 'EN' }, { value: 'both', label: 'both' }]} />}
       </div>
       <form onSubmit={submit} className="flex flex-wrap gap-2">
         {mode === 'near' && (
@@ -161,12 +164,19 @@ function SearchView() {
             <Input mono className="w-[110px]" type="number" min="50" step="50" placeholder="radius m" value={radius} onChange={(e) => setRadius(e.target.value)} />
           </>
         )}
-        <Input className="flex-1 min-w-[200px]" placeholder={mode === 'semantic' ? 'describe what you are looking for…' : mode === 'near' ? 'optional text filter' : 'search every stored item (kanji or romaji)…'} value={draft} onChange={(e) => setDraft(e.target.value)} />
+        {mode === 'near' ? (
+          // The server's ?near= mode ignores q (nearapi.c reads only source,
+          // record_type, since, until), so no text box is offered here: it
+          // would imply a filter that is not applied.
+          <span className="flex-1 min-w-[200px] self-center text-[11px] text-osint-muted">Filters by distance only — the server applies no text filter and no translation in this mode.</span>
+        ) : (
+          <Input className="flex-1 min-w-[200px]" placeholder={mode === 'semantic' ? 'describe what you are looking for…' : 'search every stored item (kanji or romaji)…'} value={draft} onChange={(e) => setDraft(e.target.value)} />
+        )}
         <Button type="submit" variant="primary">Search</Button>
       </form>
       {mode === 'fts' && q && <FtsResults q={q} sort={sort} view={view} />}
       {mode === 'semantic' && q && <SemanticResults q={q} semMode={semMode} />}
-      {mode === 'near' && params.get('near') && <NearResults near={params.get('near')} radius={params.get('radius_m')} q={q} view={view} />}
+      {mode === 'near' && params.get('near') && <NearResults near={params.get('near')} radius={params.get('radius_m')} />}
       {!q && mode !== 'near' && <EmptyState title="Enter a query.">{mode === 'semantic' ? 'Semantic search needs the embedding pod; the server says so if it is not running.' : 'Full-text search runs over titles, summaries and bodies across every source, with Japanese normalisation.'}</EmptyState>}
     </div>
   );
@@ -180,7 +190,7 @@ function FeedList({ feed, view, emptyTitle = 'No items matched.', noun = 'items'
       {error && <ErrorNotice error={error} title="Feed request failed" onRetry={reload} />}
       {!loading && !error && (
         <div className="flex flex-wrap items-center gap-3">
-          <BoundNote shown={items.length} total={total ?? (totalGte != null ? Math.max(totalGte, items.length) : (hasMore ? items.length + 1 : items.length))} noun={totalGte != null && total == null ? `${noun} (≥${totalGte})` : noun} />
+          <BoundNote shown={items.length} total={total ?? (totalGte == null && !hasMore ? items.length : null)} atLeast={totalGte} more={hasMore} noun={noun} />
           {meta?.q_applied === false && <Pill tone="danger">query NOT applied by the server</Pill>}
           {meta?.collapsed > 0 && <span className="font-mono text-[11px] text-osint-muted">{meta.collapsed} near-duplicates collapsed</span>}
           {meta?.rerank?.bounded && <span className="font-mono text-[11px] text-accent" title={meta.rerank.formula}>reranked within a window of {meta.rerank.window}</span>}
@@ -199,12 +209,12 @@ function FtsResults({ q, sort, view }) {
   return <FeedList feed={feed} view={view} />;
 }
 
-function NearResults({ near, radius, q, view }) {
-  const feed = useIntelItems('/api/intel/items', { near, radius_m: radius || undefined, q: q || undefined, limit: 200, lang_view: 'both' });
+function NearResults({ near, radius }) {
+  const feed = useIntelItems('/api/intel/items', { near, radius_m: radius || undefined, limit: 200 });
   return (
     <div className="space-y-2">
       {feed.meta?.note && <div className="text-[11px] text-accent font-mono">{feed.meta.note}</div>}
-      <FeedList feed={feed} view={view} emptyTitle="Nothing stored within that radius." noun="items by distance" />
+      <FeedList feed={feed} view="original" emptyTitle="Nothing stored within that radius." noun="items by distance" />
     </div>
   );
 }
@@ -245,8 +255,11 @@ function RecentView() {
   const [geo, setGeo] = useState(false);
   const [lang, setLang] = useState('');
   const [view, setView] = useState('original');
+  const sinceAt = useSinceIso(since);
+  // has_geom takes yes|no on the server (intelapi.c); '1' matched neither and
+  // the "geolocated only" toggle silently filtered nothing.
   const feed = useIntelItems('/api/intel/items', {
-    since: sinceIso(since), record_type: rt.trim() || undefined, has_geom: geo ? '1' : undefined,
+    since: sinceAt, record_type: rt.trim() || undefined, has_geom: geo ? 'yes' : undefined,
     lang: lang || undefined, limit: 50, total: '1', lang_view: 'both',
   });
   return (

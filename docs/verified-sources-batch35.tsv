@@ -1,0 +1,5 @@
+id	url	verdict	kind	items	http	bytes	note
+MCR_IMAGE_CATALOG	https://mcr.microsoft.com/v2/_catalog	PASS	json:repositories	3851	200	162277	
+NUGET_PACKAGE_VERSIONS_FLAT	https://api.nuget.org/v3-flatcontainer/newtonsoft.json/index.json	PASS	json:versions	86	200	1462	
+PACKAGIST_ALL_PACKAGE_NAMES	https://packagist.org/packages/list.json	PASS	json:packageNames	464521	200	12239904	
+PUBDEV_ALL_PACKAGE_NAMES	https://pub.dev/api/package-names	PASS	json:packages	91388	200	1707054	

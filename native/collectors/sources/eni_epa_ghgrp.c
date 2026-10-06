@@ -1,19 +1,17 @@
 /* US EPA Greenhouse Gas Reporting Program facility emissions (Envirofacts).
  * Endpoints (keyless REST, row window is MANDATORY in the path grammar
  *   /efservice/<table>/<col>/<value>/rows/<start>:<end>/JSON):
- *   https://data.epa.gov/efservice/pub_facts_sector_ghg_emission/year/2023/rows/0:1000/JSON
- *   https://data.epa.gov/efservice/pub_dim_facility/rows/0:2000/JSON
+ *   https://data.epa.gov/efservice/pub_facts_sector_ghg_emission/year/2023/rows/0:1999/JSON
+ *   https://data.epa.gov/efservice/pub_dim_facility/year/2023/rows/0:1999/JSON
  * Emits one row per (facility, gas) reported: co2e_emission (UNIT: metric
  * tonnes CO2e), reporting year, sector_id/subsector_id/gas_id, facility name,
  * NAICS code and parent company, joined on facility_id.
  *
  * Both tables are windowed by the API itself, so a single window silently
  * caps the collector well below the true size of either table (house rule
- * 2). Both are now paged: each side walks 0:PAGE, PAGE:2*PAGE, ... until a
- * page comes back shorter than requested (the upstream's own "no more rows"
- * signal), or a runaway-guard page ceiling is hit, in which case a
- * collector-truncation-notice is emitted per docs/SOURCE_EXHAUSTIVENESS.md
- * rule 8.
+ * 2). Both are walked whole, sized from each table's own /count (see
+ * walk_table); a window that fails is disclosed in a collector-truncation-
+ * notice scoped to its table, and everything else is still emitted.
  *
  * GEO (R2): latitude/longitude come from pub_dim_facility only, and a row with
  * fac latitude/longitude of 0 (a real defect in that table) is emitted WITHOUT
@@ -30,13 +28,23 @@
 #define SRC "epa-ghgrp-emissions"
 #define YEAR "2023"
 
-#define FAC_PAGE 2000
-#define EM_PAGE 1000
-#define FAC_MAX_PAGES 50   /* exhaustive-ok: page-walk runaway guard; an early stop emits a collector-truncation-notice */
-#define EM_MAX_PAGES 100   /* exhaustive-ok: page-walk runaway guard; an early stop emits a collector-truncation-notice */
+#define EF "https://data.epa.gov/efservice/"
+#define FAC_TABLE "pub_dim_facility/year/" YEAR
+#define EM_TABLE  "pub_facts_sector_ghg_emission/year/" YEAR
+
+/* Rows per request. Envirofacts' window `rows/<a>:<b>` is INCLUSIVE at both
+ * ends — rows/0:3 returns four rows — so a page is a:a+PAGE-1. This used to
+ * ask for 0:1000, 1000:2000, … : 1,001 rows a page, each page overlapping the
+ * last by one, every boundary row fetched twice and counted twice. */
+#define PAGE 2000
+/* Only used when the table's own /count could not be read: the walk then
+ * stops on the first short page, and this is the ceiling on a walk that never
+ * sees one. Hitting it is disclosed. */
+#define WALK_GUARD_PAGES 500   /* exhaustive-ok: runaway guard used only when /count failed; hitting it emits a scoped collector-truncation-notice */
 
 typedef struct { long long id; double lat, lon; int has_geo;
-                 char *name, *naics, *parent, *state; } fac_t;
+                 char *name, *naics, *parent, *state;
+                 const cJSON *row; } fac_t;
 
 static long long iv(const cJSON *o, const char *k, long long dflt) {
   const cJSON *v = cJSON_GetObjectItem(o, k);
@@ -50,9 +58,15 @@ static char *dupsv(const cJSON *o, const char *k) {
   return (s && s[0]) ? strdup(s) : NULL;
 }
 
+static int fac_cmp(const void *a, const void *b) {
+  long long x = ((const fac_t *)a)->id, y = ((const fac_t *)b)->id;
+  return (x > y) - (x < y);
+}
+
 static const fac_t *find_fac(const fac_t *f, int n, long long id) {
-  for (int i = 0; i < n; i++) if (f[i].id == id) return &f[i];
-  return NULL;
+  fac_t k = {0};
+  k.id = id;
+  return n ? bsearch(&k, f, (size_t)n, sizeof *f, fac_cmp) : NULL;
 }
 
 static void free_facs(fac_t *facs, int n) {
@@ -63,144 +77,244 @@ static void free_facs(fac_t *facs, int n) {
   free(facs);
 }
 
-/* Pages pub_dim_facility until a short page or the runaway guard. Returns the
- * facility count on success (>=0) and fills *out_facs, or -1 on a real fetch
- * failure. *out_capped is set if the runaway guard fired before a short page. */
-static int fetch_facilities(const source_ctx *ctx, fac_t **out_facs, int *out_capped) {
-  int cap = 0, n = 0;
-  fac_t *facs = NULL;
-  *out_capped = 0;
-  for (int page = 0; page < FAC_MAX_PAGES; page++) {
-    long long start = (long long)page * FAC_PAGE, end = start + FAC_PAGE;
-    char url[256];
-    snprintf(url, sizeof url,
-      "https://data.epa.gov/efservice/pub_dim_facility/rows/%lld:%lld/JSON", start, end);
-    cJSON *facdoc = feed_get_json(ctx->http, url, 60000);
-    if (!facdoc) {
-      fprintf(stderr, "[" SRC "] facility fetch failed at row %lld\n", start);
-      free_facs(facs, n); return -1;
-    }
-    if (!cJSON_IsArray(facdoc)) {
-      cJSON_Delete(facdoc);
-      fprintf(stderr, "[" SRC "] facility shape at row %lld\n", start);
-      free_facs(facs, n); return -1;
-    }
-    int got = cJSON_GetArraySize(facdoc);
-    cJSON *f;
-    cJSON_ArrayForEach(f, facdoc) {
-      long long id = iv(f, "facility_id", -1);
-      if (id < 0) continue;
-      if (find_fac(facs, n, id)) continue;     /* table repeats per year */
-      if (n == cap) { cap = cap ? cap * 2 : 256; facs = realloc(facs, (size_t)cap * sizeof(fac_t)); }
-      fac_t *e = &facs[n++];
-      memset(e, 0, sizeof *e);
-      e->id = id;
-      e->name   = dupsv(f, "facility_name");
-      e->naics  = dupsv(f, "naics_code");
-      e->parent = dupsv(f, "parent_company");
-      e->state  = dupsv(f, "state");
-      cJSON *la = cJSON_GetObjectItem(f, "latitude");
-      cJSON *lo = cJSON_GetObjectItem(f, "longitude");
-      if (cJSON_IsNumber(la) && cJSON_IsNumber(lo)) {
-        e->lat = la->valuedouble; e->lon = lo->valuedouble;
-        /* zero coordinates are a known defect in this table — not a location */
-        if (e->lat != 0.0 && e->lon != 0.0 &&
-            e->lat >= -90 && e->lat <= 90 && e->lon >= -180 && e->lon <= 180)
-          e->has_geo = 1;
-      }
-    }
-    cJSON_Delete(facdoc);
-    if (got < FAC_PAGE) { *out_facs = facs; return n; }        /* short page: exhausted */
-    if (page == FAC_MAX_PAGES - 1) *out_capped = 1;            /* full last page: guard hit */
-  }
-  *out_facs = facs;
+/* The table's own row count (`<table>/count/JSON` →
+ * [{"TOTALQUERYRESULTS": N}]), or -1 when it could not be read. */
+static long table_count(const source_ctx *ctx, const char *table) {
+  char url[256];
+  snprintf(url, sizeof url, EF "%s/count/JSON", table);
+  cJSON *d = feed_get_json(ctx->http, url, 60000);
+  long n = -1;
+  const cJSON *o = cJSON_IsArray(d) ? cJSON_GetArrayItem(d, 0) : d;  /* exhaustive-ok: /count answers a one-element array holding the total */
+  const cJSON *v = o ? cJSON_GetObjectItem(o, "TOTALQUERYRESULTS") : NULL;
+  if (cJSON_IsNumber(v) && v->valuedouble >= 0) n = (long)v->valuedouble;
+  cJSON_Delete(d);
   return n;
 }
 
-static int run(const source_ctx *ctx, intel_sink *sink) {
-  fac_t *facs = NULL;
-  int fac_capped = 0;  /* exhaustive-ok: scanner false positive — a boolean flag set when FAC_MAX_PAGES's page-walk guard fires (see fetch_facilities), not a record cap; the actual bound is FAC_MAX_PAGES above, already marked */
-  int fn = fetch_facilities(ctx, &facs, &fac_capped);
-  if (fn < 0) return -1;
+/* One table, walked whole. Every page that comes back is appended to `pages`
+ * (a JSON array of page arrays, kept alive so records can point into it).
+ *
+ * The walk is SIZED FROM THE TABLE'S OWN COUNT: it asks for every window up to
+ * `count`, and a page that fails is recorded and stepped over rather than
+ * ending the run — a transient failure on one 2,000-row page used to make
+ * run() return -1 before emitting anything, discarding everything already
+ * fetched (456 s of it, once). Only when /count is unreadable does it fall
+ * back to "stop on a short page", where a failure has to stop the walk because
+ * nothing says what lies beyond it.
+ *
+ * `w` reports the declared count, rows read, pages tried / failed, and
+ * whether the no-count guard fired. */
+typedef struct { long count, rows; int failed_pages, capped, pages; } walk_t;
 
-  int n = 0, em_capped = 0;
-  long long em_seen = 0;
-  for (int page = 0; page < EM_MAX_PAGES; page++) {
-    long long start = (long long)page * EM_PAGE, end = start + EM_PAGE;
+static void walk_table(const source_ctx *ctx, const char *table, cJSON *pages,
+                       walk_t *w) {
+  memset(w, 0, sizeof *w);
+  w->count = table_count(ctx, table);
+  long npages = w->count >= 0 ? (w->count + PAGE - 1) / PAGE : WALK_GUARD_PAGES;
+  for (long page = 0; ; page++) {
+    if (page >= npages) {
+      if (w->count < 0) w->capped = 1;     /* guard hit with no count to trust */
+      break;
+    }
+    long long start = (long long)page * PAGE, end = start + PAGE - 1;
     char url[320];
-    snprintf(url, sizeof url,
-      "https://data.epa.gov/efservice/pub_facts_sector_ghg_emission/year/" YEAR
-      "/rows/%lld:%lld/JSON", start, end);
-    cJSON *emdoc = feed_get_json(ctx->http, url, 60000);
-    if (!emdoc || !cJSON_IsArray(emdoc)) {
-      if (emdoc) cJSON_Delete(emdoc);
-      fprintf(stderr, "[" SRC "] emission fetch failed at row %lld\n", start);
-      free_facs(facs, fn);
-      return -1;
+    snprintf(url, sizeof url, EF "%s/rows/%lld:%lld/JSON", table, start, end);
+    cJSON *doc = feed_get_json(ctx->http, url, 60000);
+    w->pages++;
+    if (!cJSON_IsArray(doc)) {
+      cJSON_Delete(doc);
+      fprintf(stderr, "[" SRC "] %s rows %lld:%lld failed\n", table, start, end);
+      w->failed_pages++;
+      if (w->count < 0) break;             /* no count: cannot know what follows */
+      continue;
     }
-    int got = cJSON_GetArraySize(emdoc);
-    em_seen += got;
-
-    cJSON *e;
-    cJSON_ArrayForEach(e, emdoc) {
-      long long fid = iv(e, "facility_id", -1);
-      cJSON *q = cJSON_GetObjectItem(e, "co2e_emission");
-      if (fid < 0 || !cJSON_IsNumber(q)) continue;   /* no measurement, no row */
-      const fac_t *fa = find_fac(facs, fn, fid);
-
-      cJSON *p = cJSON_CreateObject();
-      cJSON_AddNumberToObject(p, "facility_id", (double)fid);
-      if (fa && fa->name)   cJSON_AddStringToObject(p, "facility_name", fa->name);
-      if (fa && fa->state)  cJSON_AddStringToObject(p, "state", fa->state);
-      if (fa && fa->naics)  cJSON_AddStringToObject(p, "naics_code", fa->naics);
-      if (fa && fa->parent) cJSON_AddStringToObject(p, "parent_company", fa->parent);
-      cJSON_AddNumberToObject(p, "co2e_emission", q->valuedouble);
-      cJSON_AddStringToObject(p, "unit", "tonnes CO2e");
-      cJSON_AddNumberToObject(p, "reporting_year", (double)iv(e, "year", 0));
-      cJSON_AddNumberToObject(p, "sector_id", (double)iv(e, "sector_id", -1));
-      cJSON_AddNumberToObject(p, "subsector_id", (double)iv(e, "subsector_id", -1));
-      cJSON_AddNumberToObject(p, "gas_id", (double)iv(e, "gas_id", -1));
-      char *pj = cJSON_PrintUnformatted(p);
-      cJSON_Delete(p);
-
-      char key[96], title[288];
-      snprintf(key, sizeof key, "%lld|%s|%lld", fid, YEAR, iv(e, "gas_id", -1));
-      snprintf(title, sizeof title, "%s (GHGRP %lld) %s: %.1f t CO2e",
-               fa && fa->name ? fa->name : "US GHGRP facility", fid, YEAR,
-               q->valuedouble);
-
-      intel_item row = {0};
-      row.remote_key      = key;
-      row.title           = title;
-      row.summary         = title;
-      row.lang            = "en";
-      row.link            = "https://www.epa.gov/ghgreporting";
-      row.record_type     = "emitting-facility";
-      row.has_geo         = fa ? fa->has_geo : 0;
-      row.lat = fa ? fa->lat : 0; row.lon = fa ? fa->lon : 0;
-      row.properties_json = pj;
-      row.tags_json       = "[\"industry\",\"emissions\",\"epa\",\"usa\"]";
-      if (sink->emit(sink, &row) >= 0) n++;
-      free(pj);
+    int got = cJSON_GetArraySize(doc);
+    w->rows += got;
+    cJSON_AddItemToArray(pages, doc);
+    if (got < PAGE) {
+      if (w->count < 0 || start + got >= w->count) break;   /* the end */
+      /* a short page before the declared end: keep walking to the count */
+    } else if (w->count >= 0 && page + 1 >= npages) {
+      npages++;                            /* the table grew mid-walk */
     }
-    cJSON_Delete(emdoc);
-    if (got < EM_PAGE) break;                                 /* short page: exhausted */
-    if (page == EM_MAX_PAGES - 1) em_capped = 1;               /* full last page: guard hit */
+  }
+}
+
+static void walk_notice(intel_sink *sink, const char *table, const walk_t *w,
+                        long used, const char *what) {
+  if (!w->failed_pages && !w->capped && (w->count < 0 || w->rows >= w->count))
+    return;
+  char reason[384], ep[160];
+  snprintf(ep, sizeof ep, EF "%s/rows/<a>:<b>/JSON", table);
+  if (w->failed_pages)
+    snprintf(reason, sizeof reason,
+             "%d of %d %s pages (%d rows each) failed to fetch; %ld of %s rows "
+             "were read and everything read was used",
+             w->failed_pages, w->pages, what, PAGE, w->rows,
+             w->count >= 0 ? "the declared" : "an unknown number of");
+  else if (w->capped)
+    snprintf(reason, sizeof reason,
+             "the %s table's /count was unreadable and the short-page walk hit "
+             "WALK_GUARD_PAGES (%d) first", what, WALK_GUARD_PAGES);
+  else
+    snprintf(reason, sizeof reason,
+             "the %s table declared %ld rows and the walk read %ld", what,
+             w->count, w->rows);
+  jo_trunc_notice_scoped(sink, SRC, table, ep, used,
+                         w->count >= 0 ? w->count : -1, reason,
+                         "re-run; failed windows are fetched again on the next "
+                         "pass");
+}
+
+/* Emission rows have no id of their own. (facility, sector, subsector, gas) is
+ * the record — `facility|year|gas` was not: one live page of 918 rows keyed
+ * onto 880 uids, because a facility reports the same gas under several
+ * subsectors. Even the full tuple repeats on 3 of the 26,272 rows of 2023
+ * (same facility/sector/subsector/gas, different tonnage), so a key that
+ * recurs within the run qualifies EVERY member of its group by the reported
+ * value, not just the second one — nothing is merged that differs, and which
+ * member gets the plain key no longer depends on the order the API served
+ * them in. */
+typedef struct { char key[96]; const cJSON *row; int dup; } em_t;
+
+static int em_cmp(const void *a, const void *b) {
+  return strcmp(((const em_t *)a)->key, ((const em_t *)b)->key);
+}
+
+static void em_key(const cJSON *e, char *out, size_t cap) {
+  snprintf(out, cap, "%lld|%s|%lld|%lld|%lld", iv(e, "facility_id", -1), YEAR,
+           iv(e, "sector_id", -1), iv(e, "subsector_id", -1), iv(e, "gas_id", -1));
+}
+
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  /* ── facility dimension: the reporting year's own rows ──────────────────
+   * pub_dim_facility holds one row per facility PER YEAR (136,005 rows across
+   * all years). Only the reporting year's are joined, which is both the right
+   * row — the name/parent/NAICS the facility reported in 2023 — and 11,281
+   * rows instead of 136,005; every facility_id in the 2023 emission table has
+   * one (checked live, 2026-10-02: 11,235 of 11,235). */
+  cJSON *fac_pages = cJSON_CreateArray();
+  walk_t fw;
+  walk_table(ctx, FAC_TABLE, fac_pages, &fw);
+  int fn = 0, fcap = 0;
+  fac_t *facs = NULL;
+  const cJSON *pg, *f;
+  cJSON_ArrayForEach(pg, fac_pages) cJSON_ArrayForEach(f, pg) {
+    long long id = iv(f, "facility_id", -1);
+    if (id < 0) continue;
+    if (fn == fcap) {
+      int nc = fcap ? fcap * 2 : 1024;
+      fac_t *nf = realloc(facs, (size_t)nc * sizeof *nf);
+      if (!nf) break;
+      facs = nf; fcap = nc;
+    }
+    fac_t *e = &facs[fn++];
+    memset(e, 0, sizeof *e);
+    e->id = id;
+    e->row = f;
+    e->name   = dupsv(f, "facility_name");
+    e->naics  = dupsv(f, "naics_code");
+    e->parent = dupsv(f, "parent_company");
+    e->state  = dupsv(f, "state");
+    cJSON *la = cJSON_GetObjectItem(f, "latitude");
+    cJSON *lo = cJSON_GetObjectItem(f, "longitude");
+    if (cJSON_IsNumber(la) && cJSON_IsNumber(lo)) {
+      e->lat = la->valuedouble; e->lon = lo->valuedouble;
+      /* zero coordinates are a known defect in this table — not a location */
+      if (e->lat != 0.0 && e->lon != 0.0 &&
+          e->lat >= -90 && e->lat <= 90 && e->lon >= -180 && e->lon <= 180)
+        e->has_geo = 1;
+    }
+  }
+  if (fn) qsort(facs, (size_t)fn, sizeof *facs, fac_cmp);
+
+  /* ── emission facts ───────────────────────────────────────────────────── */
+  cJSON *em_pages = cJSON_CreateArray();
+  walk_t ew;
+  walk_table(ctx, EM_TABLE, em_pages, &ew);
+  if (ew.rows == 0) {
+    walk_notice(sink, EM_TABLE, &ew, 0, "emission");
+    walk_notice(sink, FAC_TABLE, &fw, fn, "facility");
+    fprintf(stderr, "[" SRC "] no emission rows fetched\n");
+    free_facs(facs, fn); cJSON_Delete(fac_pages); cJSON_Delete(em_pages);
+    return -1;
   }
 
-  if (fac_capped)
-    jo_trunc_notice(sink, SRC, "pub_dim_facility", (long)fn, -1,
-                     "facility dimension table page-walk hit its runaway guard "
-                     "(FAC_MAX_PAGES) before a short page signalled the end",
-                     "raise FAC_MAX_PAGES in eni_epa_ghgrp.c");
-  if (em_capped)
-    jo_trunc_notice(sink, SRC, "pub_facts_sector_ghg_emission", (long)em_seen, -1,
-                     "emission facts table page-walk hit its runaway guard "
-                     "(EM_MAX_PAGES) before a short page signalled the end",
-                     "raise EM_MAX_PAGES in eni_epa_ghgrp.c");
+  em_t *ems = malloc((size_t)ew.rows * sizeof *ems);
+  if (!ems) { free_facs(facs, fn); cJSON_Delete(fac_pages); cJSON_Delete(em_pages); return -1; }
+  long ne = 0;
+  const cJSON *e;
+  cJSON_ArrayForEach(pg, em_pages) cJSON_ArrayForEach(e, pg) {
+    em_key(e, ems[ne].key, sizeof ems[ne].key);
+    ems[ne].row = e;
+    ems[ne].dup = 0;
+    ne++;
+  }
+  qsort(ems, (size_t)ne, sizeof *ems, em_cmp);
+  for (long i = 1; i < ne; i++)
+    if (strcmp(ems[i].key, ems[i - 1].key) == 0) ems[i].dup = ems[i - 1].dup = 1;
 
+  int n = 0, unjoined = 0;
+  for (long i = 0; i < ne; i++) {
+    e = ems[i].row;
+    long long fid = iv(e, "facility_id", -1);
+    cJSON *q = cJSON_GetObjectItem(e, "co2e_emission");
+    if (fid < 0 || !cJSON_IsNumber(q)) continue;   /* no measurement, no row */
+    const fac_t *fa = find_fac(facs, fn, fid);
+    if (!fa) unjoined++;
+
+    cJSON *p = cJSON_CreateObject();
+    cJSON_AddNumberToObject(p, "facility_id", (double)fid);
+    if (fa && fa->name)   cJSON_AddStringToObject(p, "facility_name", fa->name);
+    if (fa && fa->state)  cJSON_AddStringToObject(p, "state", fa->state);
+    if (fa && fa->naics)  cJSON_AddStringToObject(p, "naics_code", fa->naics);
+    if (fa && fa->parent) cJSON_AddStringToObject(p, "parent_company", fa->parent);
+    cJSON_AddNumberToObject(p, "co2e_emission", q->valuedouble);
+    cJSON_AddStringToObject(p, "unit", "tonnes CO2e");
+    cJSON_AddNumberToObject(p, "reporting_year", (double)iv(e, "year", 0));
+    cJSON_AddNumberToObject(p, "sector_id", (double)iv(e, "sector_id", -1));
+    cJSON_AddNumberToObject(p, "subsector_id", (double)iv(e, "subsector_id", -1));
+    cJSON_AddNumberToObject(p, "gas_id", (double)iv(e, "gas_id", -1));
+    /* the whole facility row we paid for — address, county, FRS id, reported
+     * subparts, monitoring plan … — not just the six fields picked above */
+    if (fa && fa->row) cJSON_AddItemToObject(p, "facility", cJSON_Duplicate(fa->row, 1));
+    char *pj = cJSON_PrintUnformatted(p);
+    cJSON_Delete(p);
+
+    char key[160], title[288];
+    if (ems[i].dup)
+      snprintf(key, sizeof key, "%s|co2e=%.17g", ems[i].key, q->valuedouble);
+    else
+      snprintf(key, sizeof key, "%s", ems[i].key);
+    snprintf(title, sizeof title, "%s (GHGRP %lld) %s: %.1f t CO2e",
+             fa && fa->name ? fa->name : "US GHGRP facility", fid, YEAR,
+             q->valuedouble);
+
+    intel_item row = {0};
+    row.remote_key      = key;
+    row.title           = title;
+    row.summary         = title;
+    row.lang            = "en";
+    row.link            = "https://www.epa.gov/ghgreporting";
+    row.record_type     = "emitting-facility";
+    row.has_geo         = fa ? fa->has_geo : 0;
+    row.lat = fa ? fa->lat : 0; row.lon = fa ? fa->lon : 0;
+    row.properties_json = pj;
+    row.tags_json       = "[\"industry\",\"emissions\",\"epa\",\"usa\"]";
+    if (sink->emit(sink, &row) >= 0) n++;
+    free(pj);
+  }
+
+  walk_notice(sink, FAC_TABLE, &fw, fn, "facility");
+  walk_notice(sink, EM_TABLE, &ew, n, "emission");
+
+  free(ems);
   free_facs(facs, fn);
-  fprintf(stderr, "[" SRC "] emitted %d (facilities=%d)\n", n, fn);
+  cJSON_Delete(fac_pages);
+  cJSON_Delete(em_pages);
+  fprintf(stderr, "[" SRC "] emitted %d of %ld emission rows (facilities=%d of %ld, "
+          "unjoined=%d, failed pages fac=%d em=%d)\n", n, ew.rows, fn, fw.count,
+          unjoined, fw.failed_pages, ew.failed_pages);
   return 0;
 }
 
@@ -209,7 +323,7 @@ static const source_def eni_epa_ghgrp_def = {
   .name = "US EPA GHGRP facility emissions (Envirofacts)",
   .update_interval_sec = 604800, .run = run,
   .category = "industry", .type = "api",
-  .url = "https://data.epa.gov/efservice/pub_facts_sector_ghg_emission/year/2023/rows/0:1000/JSON",
+  .url = "https://data.epa.gov/efservice/pub_facts_sector_ghg_emission/year/2023/rows/0:1999/JSON",
   .description = "Reported annual greenhouse gas emissions (tonnes CO2e) for large US industrial emitters, joined to facility name, NAICS, parent company and coordinates.",
   .license = "US EPA Envirofacts, public domain, keyless.",
   .free_tier = 1,

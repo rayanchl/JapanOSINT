@@ -472,43 +472,57 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
   /* ── Phase 1: analysis ─────────────────────────────────────────────── */
   progress_set_phase(rp, "gpt_analyzing", 15);
   osint_catalogue_note cat = {0};
+  char **sem_ids = NULL; int sem_n = 0;
+  /* BUDGET THE CATALOGUE AGAINST THE SERVER, AND MEASURE THE REST — for BOTH
+   * paths. The semantic menu used to go in unbudgeted (60 cards with their
+   * descriptions, against a 16k context), so only the fallback could not
+   * overflow it.
+   *
+   * osint_services_list_bounded()'s own budget is a byte constant whose
+   * justifying arithmetic went stale: it assumes a "~9 KB few-shot preamble"
+   * that is now ~32 KB, so the finished prompt reached 64,674 bytes against
+   * an n_ctx of 16,384 tokens and llama-server answered 400 — the failure
+   * the user sees as "Degraded investigation ... no entities extracted".
+   *
+   * Rather than replace one guess with another, this MEASURES: build the
+   * prompt once with an EMPTY catalogue to learn what the preamble actually
+   * costs today, then hand the catalogue whatever the server's real context
+   * leaves over. The measurement is done on every call, so the preamble can
+   * grow again without anyone having to remember this comment exists. */
+  long allow = 0;
+  size_t ctx_chars = llm_ctx_chars(llm, 2048);     /* 2048 reserved for the answer */
+  size_t preamble = 0;
+  if (ctx_chars > 0) {
+    char *probe = prompt_analysis(query, "");
+    preamble = probe ? strlen(probe) : 0;
+    free(probe);
+    /* 90% of what is left, so a tokenizer that does slightly worse than the
+     * pessimistic bytes-per-token estimate still fits. */
+    long room = (long)ctx_chars - (long)preamble;
+    allow = room > 0 ? (room * 9) / 10 : 0;
+    if (allow < 2048) allow = 2048;                /* a menu this short is
+                                                    * useless, but the notice
+                                                    * below says so honestly */
+  }
   /* Route by RELEVANCE when an embedding index is available, else by registry
    * order as before. The registry-order path has to truncate at the prompt
    * budget, and registry order is link order — so it drops the hand-written
    * entity services (DNS_RECORDS, DOMAIN_WHOIS, IP_GEOLOCATION) that register
    * last and are usually the ones wanted. The semantic path lists the K
-   * closest services WITH their descriptions instead. It returns NULL whenever
-   * it cannot do that honestly (no JO_EMBED_URL, no index, embed failure, dim
-   * mismatch), and this falls straight back. See core/service_vec.h. */
-  char **sem_ids = NULL; int sem_n = 0;
-  char *svcs = service_vec_catalogue(db, query, 0, &cat, &sem_ids, &sem_n);
+   * closest services WITH their descriptions instead, cut to the same budget.
+   * It returns NULL whenever it cannot do that honestly (no JO_EMBED_URL, no
+   * index, embed failure, model/dim mismatch), and this falls straight back.
+   * See core/service_vec.h. */
+  char *svcs = service_vec_catalogue_bounded(db, query, 0, (size_t)allow, &cat,
+                                             &sem_ids, &sem_n);
+  if (svcs && allow > 0)
+    fprintf(stderr, "[pipeline] %s semantic catalogue %zu bytes of a %ld-byte "
+                    "budget (server ctx ~%zu bytes, preamble %zu measured)\n",
+            request_id, strlen(svcs), allow, ctx_chars, preamble);
   if (!svcs) {
     sem_n = 0;
-    /* BUDGET THE CATALOGUE AGAINST THE SERVER, AND MEASURE THE REST.
-     *
-     * osint_services_list_bounded()'s own budget is a byte constant whose
-     * justifying arithmetic went stale: it assumes a "~9 KB few-shot preamble"
-     * that is now ~32 KB, so the finished prompt reached 64,674 bytes against
-     * an n_ctx of 16,384 tokens and llama-server answered 400 — the failure
-     * the user sees as "Degraded investigation ... no entities extracted".
-     *
-     * Rather than replace one guess with another, this MEASURES: build the
-     * prompt once with an EMPTY catalogue to learn what the preamble actually
-     * costs today, then hand the catalogue whatever the server's real context
-     * leaves over. The measurement is done on every call, so the preamble can
-     * grow again without anyone having to remember this comment exists. */
-    size_t ctx_chars = llm_ctx_chars(llm, 2048);   /* 2048 reserved for the answer */
-    if (ctx_chars > 0) {
-      char *probe = prompt_analysis(query, "");
-      size_t preamble = probe ? strlen(probe) : 0;
-      free(probe);
-      /* 90% of what is left, so a tokenizer that does slightly worse than the
-       * pessimistic bytes-per-token estimate still fits. */
-      long room = (long)ctx_chars - (long)preamble;
-      long allow = room > 0 ? (room * 9) / 10 : 0;
-      if (allow < 2048) allow = 2048;              /* a menu this short is
-                                                    * useless, but the notice
-                                                    * below says so honestly */
+    memset(&cat, 0, sizeof cat);
+    if (allow > 0) {
       osint_set_catalogue_budget((int)allow);
       fprintf(stderr, "[pipeline] %s catalogue budget %ld bytes "
                       "(server ctx ~%zu bytes, preamble %zu measured)\n",
@@ -842,6 +856,16 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
   char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  /* The run row IS the investigation — the query, the entities it was about
+   * and the synthesis — so it is written under the tenant that started it, not
+   * the shared corpus tenant. Under 'legacy' every workspace could list it
+   * through /api/intel/items. Its uid is unique per run, so scoping it cannot
+   * make two tenants' rows collide at the upsert (which never rewrites
+   * tenant_id). Pivot records stay in the shared corpus: their uid is
+   * source|key and is shared between tenants by construction. */
+  char owner[64];
+  progress_owner_tenant(request_id, owner, sizeof owner);
+  intel_sink run_sink = intel_sink_make(db, "osint-search", owner[0] ? owner : "legacy");
   intel_item it = {0};
   it.uid = uid;
   it.title = title;
@@ -851,7 +875,8 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
   it.published_at = nowiso;
   it.properties_json = pj;
   it.tags_json = "[\"osint-search\"]";
-  sink.emit(&sink, &it);
+  run_sink.emit(&run_sink, &it);
+  intel_sink_free(&run_sink);
   free(pj);
   /* Only now. `synth` aliases synth_llm, and it is still the summary/body of
    * the run-summary row emitted just above. Freeing it at the cJSON copy —
@@ -932,7 +957,7 @@ char *osint_suggest(llm_client *llm, const char *query) {
   if (arr && cJSON_IsArray(arr)) {
     int i = 0; cJSON *s;
     cJSON_ArrayForEach(s, arr) {
-      if (i++ >= 9) break;
+      if (i++ >= 9) break;  /* exhaustive-ok: LLM-generated query suggestions for the search box, not collected records */
       if (cJSON_IsString(s)) cJSON_AddItemToArray(result, cJSON_CreateString(s->valuestring));
     }
   }

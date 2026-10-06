@@ -189,10 +189,15 @@ static cJSON *csv_rows(const char *text, const char *delim, int ws) {
      * yields 1,174 (Python's csv module reads the same bytes as 1,177 rows).
      * That was 675 real C2 detections discarded with every gate green.
      *
-     * With `trim` on, blanks before the quote are padding rather than content
-     * (csv.h's note), so they are dropped and the quote still opens the field —
-     * `a, "b"` keeps reading as `b`, exactly as it did before. */
-    if (ch == '"' && fresh) { in_q = 1; fresh = 0; if (trim) fl = 0; }
+     * Blanks before the quote do not stop it opening the field, in EVERY mode:
+     * `"x", "Tokyo, Japan", "2"` is the commonest hand-written CSV there is,
+     * and in comma mode the blank used to count as content, so the quote that
+     * followed it was literal and "Tokyo, Japan" was split across two columns
+     * (a regression of the start-only rule, which toggle-anywhere had read
+     * correctly). The blanks are padding when a quote follows them and are
+     * dropped as the quote opens; a blank-led UNQUOTED cell in comma mode
+     * keeps its blanks as content, as before (csv.h's note). */
+    if (ch == '"' && fresh) { in_q = 1; fresh = 0; fl = 0; }
     else if (ws && (ch == ' ' || ch == '\t')) {
       /* A run of blanks is ONE separator; a run before the newline is none. */
       while (p[1] == ' ' || p[1] == '\t') p++;
@@ -210,7 +215,7 @@ static cJSON *csv_rows(const char *text, const char *delim, int ws) {
       have = 0;
       at_bol = 1;
     } else if (ch == '\r') { /* ignore CR */ }
-    else { PUSH_CHAR(ch); if (!(trim && (ch == ' ' || ch == '\t'))) fresh = 0; }
+    else { PUSH_CHAR(ch); if (ch != ' ' && ch != '\t') fresh = 0; }
   }
   /* JS: if (field.length>0 || cur.length>0) { cur.push(field); rows.push } */
   if (fl > 0 || cJSON_GetArraySize(cur) > 0 || have) {
@@ -294,19 +299,57 @@ cJSON *csv_parse_d(const char *text, int headers, char delim) {
  * genuinely unterminated fields — but it was never what rescued ThreatView.)
  *
  * A quoted field that spans more than `max_lines` physical lines is therefore
- * treated as the malformed row it almost certainly is: the field is closed at
- * the end of the line that opened it, and parsing continues from the next line.
- * Genuine multi-line quoted cells are short (MEXT's header is `"設置\n区分"`),
- * so the bound leaves them alone. Nothing is invented and nothing is dropped —
+ * SUSPECT, and the scan looks ahead to the quote that would close it. If that
+ * quote closes the field properly — it is followed by the delimiter, a line
+ * end or the end of the text — the field is a genuine multi-line cell and is
+ * left exactly as RFC 4180 reads it. Only a field with no closing quote at all,
+ * or whose next quote is followed by something else (the opening quote of a
+ * later row's field, a stray mid-field quote), is the malformed row it almost
+ * certainly is: it is closed at the end of the line that opened it, and parsing
+ * continues from the next line. Nothing is invented and nothing is dropped —
  * the opening line keeps the rest of its own text as that field's value, and
  * the lines that were being swallowed become the records they are. The number
  * of repairs is reported through csv_quote_repairs() so the caller can disclose
- * it rather than quietly parse a different file from the one served. */
+ * it rather than quietly parse a different file from the one served.
+ *
+ * The look-ahead is what the line bound alone could not do. A bound of 4
+ * cannot tell an unterminated field from a well-formed long one, and long ones
+ * are ordinary: a description column with six lines, `1,"l1\n…\nl6",Y`, was
+ * split into seven records — five of them junk, the real one truncated — and a
+ * `csv-quote-repaired` notice blamed the upstream for a file that was correct.
+ * csv_parse_wellformed() (the xlsx path) skips this pass entirely. */
 #define CSV_QUOTE_MAX_LINES 4
 #define CSV_QUOTE_MAX_FIXES 100000
 static _Thread_local int g_csv_repairs = 0;
 
 int csv_quote_repairs(void) { return g_csv_repairs; }
+
+/* Position of the first quote in [from, lim) that is not half of a doubled
+ * `""` — the quote that would close a quoted field still open at `from`. `lim`
+ * when there is none. `from` and `lim` are never inside a run of quotes (they
+ * are line ends or the end of the text), so the pairing is the parser's. */
+static size_t csv_scan_close(const char *t, size_t from, size_t lim) {
+  for (size_t j = from; j < lim; j++) {
+    if (t[j] != '"') continue;
+    if (j + 1 < lim && t[j + 1] == '"') { j++; continue; }
+    return j;
+  }
+  return lim;
+}
+
+/* Does the quote at `q` close its field properly — followed by the delimiter,
+ * a line end, or the end of the text? (In whitespace mode a blank is the
+ * delimiter.) `q == n` means there is no closing quote at all. */
+static int csv_close_is_proper(const char *t, size_t n, size_t q,
+                               const char *delim, size_t dlen, char dch, int ws) {
+  if (q >= n) return 0;
+  size_t a = q + 1;
+  if (a >= n) return 1;
+  char c = t[a];
+  if (c == '\n' || c == '\r') return 1;
+  if (ws) return c == ' ' || c == '\t';
+  return c == dch && (dlen == 1 || !strncmp(t + a, delim, dlen));
+}
 
 static char *csv_repair_unterminated(const char *text, const char *delim,
                                      int ws, int *repairs) {
@@ -329,25 +372,50 @@ static char *csv_repair_unterminated(const char *text, const char *delim,
    * must read it the same way — CLAUDE.md 4c, in the small. */
   const size_t dlen = (delim && *delim) ? strlen(delim) : 1;
   const char  dch  = (delim && *delim) ? delim[0] : ',';
-  const int   trim = ws || dch != ',';
   size_t n = strlen(text), *fix = NULL, nfix = 0, cap = 0, first_nl = 0;
   int in_q = 0, lines = 0, fresh = 1;   /* fresh: at the start of a field */
+  int proper = 0;   /* the open field was looked ahead and closes properly */
+  /* Look-ahead cache: no closing quote in [c_from, c_at), and c_at is the
+   * next one (or n). Repairs rewind the scan, so without it a file with many
+   * runaway fields and few quotes would rescan to EOF on every one. */
+  size_t c_from = 0, c_at = 0;
+  int c_ok = 0;
   for (size_t i = 0; i < n; i++) {
     char c = text[i];
     if (in_q) {
       if (c == '"') {
         if (i + 1 < n && text[i + 1] == '"') i++;
-        else { in_q = 0; lines = 0; }
-      } else if (c == '\n') {
+        else { in_q = 0; lines = 0; proper = 0; }
+      } else if (c == '\n' && !proper) {
         if (lines == 0) first_nl = i;
         if (++lines > CSV_QUOTE_MAX_LINES) {
+          /* Suspect. Where is the quote that would close it? */
+          size_t q;
+          if (c_ok && i >= c_from && i <= c_at) q = c_at;
+          else if (c_ok && i < c_from) {
+            size_t j = csv_scan_close(text, i, c_from);
+            q = j < c_from ? j : c_at;
+            c_from = i; c_at = q;
+          } else {
+            q = csv_scan_close(text, i, n);
+            c_from = i; c_at = q; c_ok = 1;
+          }
+          if (csv_close_is_proper(text, n, q, delim, dlen, dch, ws)) {
+            proper = 1;          /* a genuine long cell: leave it whole */
+            continue;
+          }
           if (nfix == cap) {
             size_t nc = cap ? cap * 2 : 8;
             size_t *t = realloc(fix, nc * sizeof *t);
             if (!t) { free(fix); return NULL; }
             fix = t; cap = nc;
           }
-          fix[nfix++] = first_nl;
+          /* The closing quote goes before a CR, not between CR and LF: inside
+           * the quoted field csv_rows keeps every byte, so a CRLF file's
+           * repaired value used to end in a stray "\r". */
+          size_t at = first_nl;
+          if (at > 0 && text[at - 1] == '\r') at--;
+          fix[nfix++] = at;
           if (nfix >= CSV_QUOTE_MAX_FIXES) break;
           /* Re-read from the repaired line's newline: the lines that were being
            * swallowed have their own quoting and must be parsed, not assumed. */
@@ -364,7 +432,7 @@ static char *csv_repair_unterminated(const char *text, const char *delim,
       fresh = 1; i += dlen - 1;
     }
     else if (c == '\r') { /* ignored by csv_rows; must not clear field start */ }
-    else if (!(trim && (c == ' ' || c == '\t'))) fresh = 0;
+    else if (c != ' ' && c != '\t') fresh = 0;   /* blanks keep it, as in csv_rows */
   }
   if (!nfix) { free(fix); return NULL; }
   char *out = malloc(n + nfix + 1);

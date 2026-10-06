@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { LuRefreshCw, LuShieldPlus, LuTrash2, LuShieldCheck, LuShieldAlert, LuLock } from 'react-icons/lu';
 import { api, errorMessage, ApiError } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
+import { usePaged } from '../../hooks/useCases.js';
 import { relativeTime, fmtAbs } from '../../utils/time.js';
 import {
   Page, Section, Card, Pill, Button, Input, Field, Select, Sheet, ConfirmDialog, ErrorNotice, EmptyState,
@@ -14,7 +15,8 @@ import {
  *   GET  /api/breach-monitors?limit&cursor → {data:[{id,kind,label,rule_id,value_domain,created_at,last_checked_at,hash_prefix,delivers}], page}
  *   POST /api/breach-monitors {kind: email|domain|username|phone, value, label?}
  *        403 {error:"domain_not_verified", remedy} · 409 {error:"already_monitored", id}
- *   GET  /api/breach-monitors/:id/hits → {data:[{uid,type,breach_id,has_secret,count,first_seen,breach:{…}}], meta:{count}}
+ *   GET  /api/breach-monitors/:id/hits?limit&cursor → {data:[{uid,type,breach_id,has_secret,count,first_seen,breach:{…}}], page:{next_cursor,limit}, meta:{count}}
+ *        meta.count is the size of THIS page, not a total — the server reports none.
  *   DELETE /api/breach-monitors/:id
  *   GET/POST /api/breach-monitors/domains {domain} → TXT token · POST /domains/verify {domain}
  * Only a hash of the identifier is stored; the server never returns the value.
@@ -105,7 +107,7 @@ export default function BreachMonitorsPage() {
             </Card>
           ))}
           <div className="flex items-center justify-between">
-            <BoundNote shown={rows.length} total={page?.next_cursor ? rows.length + 1 : rows.length} noun="monitors" />
+            <BoundNote shown={rows.length} total={page?.next_cursor ? null : rows.length} more={Boolean(page?.next_cursor)} noun="monitors" />
             {page?.next_cursor && <Button size="sm" busy={loading} onClick={() => load(page.next_cursor)}>Load more</Button>}
           </div>
         </div>
@@ -128,16 +130,20 @@ export default function BreachMonitorsPage() {
 }
 
 function MonitorHits({ monitor }) {
-  const { data, error, loading, reload } = useApi(`/api/breach-monitors/${encodeURIComponent(monitor.id)}/hits`);
-  const hits = Array.isArray(data?.data) ? data.data : [];
+  // Keyset-paged: meta.count is the size of one page, so it used to be shown
+  // as "N matches" for a monitor that may have many more.
+  const { rows: hits, hasMore, error, loading, loadingMore, reload, loadMore } = usePaged(`/api/breach-monitors/${encodeURIComponent(monitor.id)}/hits`, { limit: 100 });
+  const loaded = !loading || hits.length > 0;
   return (
     <div className="border-t border-osint-border p-3 space-y-2 bg-osint-bg/40">
       <div className="flex items-center justify-between">
-        <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-osint-muted">{data?.meta?.count != null ? `${data.meta.count} match${data.meta.count === 1 ? '' : 'es'}` : 'Matches'}</div>
+        <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-osint-muted">
+          {!loaded || error ? 'Matches' : hasMore ? `${hits.length} matches loaded · more on the server` : `${hits.length} match${hits.length === 1 ? '' : 'es'}`}
+        </div>
         <Button size="sm" onClick={() => reload()} busy={loading} title="Reload matches"><LuRefreshCw size={11} /> Check again</Button>
       </div>
       {error && <ErrorNotice error={error} title="Could not load matches" onRetry={reload} />}
-      {loading && !data && <LoadingState label="Loading matches…" />}
+      {loading && hits.length === 0 && <LoadingState label="Loading matches…" />}
       {!loading && !error && hits.length === 0 && <div className="text-xs text-osint-muted">No matches. The identifier has not been seen in the breach corpus this workspace has loaded.</div>}
       {hits.length > 0 && (
         <ul className="divide-y divide-osint-border">
@@ -163,6 +169,12 @@ function MonitorHits({ monitor }) {
             );
           })}
         </ul>
+      )}
+      {hasMore && (
+        <div className="flex items-center justify-between">
+          <BoundNote shown={hits.length} more noun="matches" />
+          <Button size="sm" busy={loadingMore} onClick={loadMore}>Load more</Button>
+        </div>
       )}
     </div>
   );

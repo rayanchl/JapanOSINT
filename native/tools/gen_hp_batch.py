@@ -16,7 +16,7 @@ wrote and that collectors/verify_feeds.py has already proven fetch and emit.
 Manifest columns, pipe-delimited (a description may contain commas, never a pipe):
 
    1 id            registry id, unique across the whole tree
-   2 mode          json | csv | html
+   2 mode          json | csv | html | xml | xlsx | ndjson
    3 want          shape gate: any|domain|ip|email|numeric|hash|icao24|eth|btc|asn
    4 category      source_def.category
    5 record_type   stamped on every emitted item
@@ -97,7 +97,7 @@ from manifest import (COLS, split_opts, parse_opts,          # noqa: E402
                       load as _manifest_load)
 
 MODE = {"json": "HP_JSON", "csv": "HP_CSV", "html": "HP_HTML", "xml": "HP_XML",
-        "xlsx": "HP_XLSX"}
+        "xlsx": "HP_XLSX", "ndjson": "HP_NDJSON"}
 WANT = {"any": "HP_ANY", "domain": "HP_DOMAIN", "ip": "HP_IP",
         "email": "HP_EMAIL", "numeric": "HP_NUMERIC", "hash": "HP_HASH",
         "icao24": "HP_ICAO24", "eth": "HP_ETH", "btc": "HP_BTC",
@@ -121,6 +121,10 @@ STR_OPTS = {"array_path", "title_keys", "id_keys", "link_keys", "link_tmpl",
             "date_field",
             # html table mode: the <table> whose HTML contains this text
             "table_must"}
+# page_walk (an INT opt below): CLAUDE.md tells authors to use it ("page_walk=1
+# (HP_JSON only) walks it the way a VJSON collector is walked"), and this set
+# used to reject it as an unknown opt, so the documented way to page a row could
+# not be written in a manifest at all.
 INT_OPTS = {"detail_max", "page_start", "page_size", "page_max", "max_items",
             "timeout_ms",
             "page_zero_based", "csv_skip_lines", "xlsx_sheet_index",
@@ -131,7 +135,8 @@ INT_OPTS = {"detail_max", "page_start", "page_size", "page_max", "max_items",
             # pause before every page after the first (burst-403 firewalls)
             "page_delay_ms",
             # html table mode: which matching table; banner rows above the header
-            "table_index", "table_skip_rows"}
+            "table_index", "table_skip_rows",
+            "page_walk"}
 # hp_source.headers is `const char *headers[5]`, so it cannot be set by the
 # generic scalar path above. A row declares them as header1/header2/header3 and
 # they are emitted as an initialiser list. tools/probe_hp_batch.py sends the
@@ -217,6 +222,20 @@ def validate_opts(r):
         raise SystemExit("%s: %s: declares page_param AND a {page} token in the "
                          "URL -- they are mutually exclusive; keep the one the "
                          "upstream honours" % (r["_src"], r["id"]))
+    # page_walk is honoured by lib/hpengine.c ONLY on an HP_JSON row
+    # (`s->page_walk && s->mode == HP_JSON`). On any other mode it generates,
+    # compiles, and does nothing — a row that reads as walked and makes one
+    # request. Refuse it where it cannot work instead.
+    pw = parsed.get("page_walk")
+    if pw is not None:
+        if pw not in ("0", "1"):
+            raise SystemExit("%s: %s: page_walk=%r -- it is a flag, 0 or 1"
+                             % (r["_src"], r["id"], pw))
+        if pw == "1" and r["mode"] != "json":
+            raise SystemExit("%s: %s: page_walk=1 on a %s row -- the engine "
+                             "walks only HP_JSON rows, so this would make ONE "
+                             "request; declare page_param / next_path / {page}"
+                             % (r["_src"], r["id"], r["mode"]))
     for k, v in parsed.items():
         m = SWALLOWED.search(v) if k != "post_body" else None
         # `Content-Type: application/json;charset=utf-8` is a header written

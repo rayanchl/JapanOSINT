@@ -1,4 +1,5 @@
 #include "rss_atom.h"
+#include "jocore.h"     /* jo_strcasestr: portable case-insensitive search */
 #include "../core/httpclient.h"
 #include "feedlib.h"   /* feed_url_host_is_jp: the one .jp host gate */
 #include "csv.h"       /* csv_decode_sjis */
@@ -461,7 +462,7 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
       }
       if (!open || open >= xend) break;
       const char *closeTag = atom ? "</entry>" : "</item>";
-      const char *cl = strcasestr(open, closeTag);
+      const char *cl = jo_strcasestr(open, closeTag);
       if (!cl) break;
       size_t itlen = (size_t)(cl - open);
       if (idx < max_items) {
@@ -529,7 +530,7 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
     if (!open || open >= xend) break;
     const char *it = NULL; size_t itlen = 0; const char *blkend = NULL;
     const char *closeTag = atom ? "</entry>" : "</item>";
-    const char *cl = strcasestr(open, closeTag);
+    const char *cl = jo_strcasestr(open, closeTag);
     if (!cl) break;
     it = open; blkend = cl; itlen = (size_t)(blkend - it);
     scanned++;

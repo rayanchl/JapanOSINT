@@ -76,7 +76,7 @@ static cJSON *search_company(http_client *http, const char *company_name) {
       if (hits_arr && cJSON_IsArray(hits_arr)) {
         cJSON *companies = cJSON_CreateArray();
         int count = cJSON_GetArraySize(hits_arr);
-        for (int i = 0; i < count && i < 10; i++) {
+        for (int i = 0; i < count; i++) {
           cJSON *hit = cJSON_GetArrayItem(hits_arr, i);
           cJSON *source = cJSON_GetObjectItem(hit, "_source");
           if (source) {
@@ -158,7 +158,7 @@ static cJSON *get_company_info(http_client *http, const char *cik) {
       if (forms && cJSON_IsArray(forms)) {
         cJSON *farr = cJSON_CreateArray();
         int count = cJSON_GetArraySize(forms);
-        for (int i = 0; i < count && i < 20; i++) {
+        for (int i = 0; i < count; i++) {
           cJSON *filing = cJSON_CreateObject();
           cJSON *form = cJSON_GetArrayItem(forms, i);
           if (form && cJSON_IsString(form))
@@ -209,7 +209,7 @@ static cJSON *get_insider_trades(http_client *http, const char *cik) {
     cJSON *hits_arr = cJSON_GetObjectItem(hits, "hits");
     if (hits_arr && cJSON_IsArray(hits_arr)) {
       int count = cJSON_GetArraySize(hits_arr);
-      for (int i = 0; i < count && i < 50; i++) {
+      for (int i = 0; i < count; i++) {
         cJSON *hit = cJSON_GetArrayItem(hits_arr, i);
         cJSON *source = cJSON_GetObjectItem(hit, "_source");
         if (source) {
@@ -253,7 +253,7 @@ static cJSON *search_filings(http_client *http, const char *company_name, const 
     cJSON *hits_arr = cJSON_GetObjectItem(hits, "hits");
     if (hits_arr && cJSON_IsArray(hits_arr)) {
       int count = cJSON_GetArraySize(hits_arr);
-      for (int i = 0; i < count && i < 20; i++) {
+      for (int i = 0; i < count; i++) {
         cJSON *hit = cJSON_GetArrayItem(hits_arr, i);
         cJSON *source = cJSON_GetObjectItem(hit, "_source");
         if (source) {
@@ -271,6 +271,17 @@ static cJSON *search_filings(http_client *http, const char *company_name, const 
             if (first && first->valuestring) cJSON_AddStringToObject(filing, "company", first->valuestring);
           }
           if (fn && cJSON_IsString(fn)) cJSON_AddStringToObject(filing, "file_number", fn->valuestring);
+          /* A full-text hit is one DOCUMENT of a filing: `_id` is
+           * "<accession>:<file name>" and `adsh` the accession. Without them
+           * every hit fell back to the key cik:form:date, so two 10-Qs filed
+           * the same day — or two documents of one filing — collapsed onto one
+           * row (110 of 1,202 records for Tesla, 2026-10-02). */
+          cJSON *adsh = cJSON_GetObjectItem(source, "adsh");
+          if (adsh && cJSON_IsString(adsh))
+            cJSON_AddStringToObject(filing, "accession_number", adsh->valuestring);
+          cJSON *hid = cJSON_GetObjectItem(hit, "_id");
+          const char *colon = (hid && cJSON_IsString(hid)) ? strchr(hid->valuestring, ':') : NULL;
+          if (colon && colon[1]) cJSON_AddStringToObject(filing, "document", colon + 1);
           cJSON_AddItemToArray(result, filing);
         }
       }
@@ -350,8 +361,10 @@ static int emit_filing(intel_sink *sink, const char *entity, const char *cik,
   char *bj = cJSON_PrintUnformatted(filing);
   char *pj = make_props(entity, cik, form);
 
-  char rk[160];
-  if (acc) snprintf(rk, sizeof rk, "filing:%s", acc);
+  const char *doc    = cjson_str(filing, "document");
+  char rk[320];
+  if (acc && doc) snprintf(rk, sizeof rk, "filing:%s:%s", acc, doc);
+  else if (acc) snprintf(rk, sizeof rk, "filing:%s", acc);
   else     snprintf(rk, sizeof rk, "filing:%s:%s:%s",
                     cik ? cik : (entity ? entity : "?"),
                     form ? form : "?", date ? date : "?");

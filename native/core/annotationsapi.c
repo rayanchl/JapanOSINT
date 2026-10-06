@@ -183,6 +183,21 @@ const char *const *annotations_ref_types(int *count) {
   return REF_TYPES;
 }
 
+/* A NOTE ABOUT THE CASE ITSELF. The web CaseDetailPage files case-level notes
+ * as ref_type="case", ref_id=<case id>, case_id=<case id>, and REF_TYPES had
+ * no "case", so every one of them was refused 400 invalid_ref_type — the
+ * case's Notes panel could never save or list anything.
+ *
+ * "case" is annotatable but deliberately NOT in REF_TYPES: REF_TYPES is also
+ * the PIN vocabulary (casesapi.c delegates to it), and a case is the container
+ * findings are pinned into, not a finding to pin into another case. It is also
+ * tenant-checked where the other types are not: a "case" ref_id must name a
+ * case in the caller's own tenant (case_id_ok below), so a note cannot be
+ * attached to — or listed against — another workspace's case id. */
+static int note_ref_type_valid(const char *s) {
+  return annotations_ref_type_valid(s) || (s && !strcmp(s, "case"));
+}
+
 /* ── text helpers ─────────────────────────────────────────────────────── */
 /* Trim ASCII whitespace without copying — body_md can be 64 KB, so the
  * trimmed span is bound by (ptr,len) rather than memmove'd into a buffer. */
@@ -318,7 +333,7 @@ static char *list_notes(db_handle *db, const tenant_ctx *t,
   qget(qs, "cursor", v_cur, sizeof v_cur);
   qget(qs, "include_deleted", v_inc, sizeof v_inc);
 
-  if (v_rt[0] && !annotations_ref_type_valid(v_rt))
+  if (v_rt[0] && !note_ref_type_valid(v_rt))
     return err(st, 400, "invalid_ref_type");
 
   int lim = v_lim[0] ? atoi(v_lim) : 50;
@@ -456,7 +471,7 @@ static char *create_note(db_handle *db, const tenant_ctx *t,
 
   cJSON *jrt = cJSON_GetObjectItem(jb, "ref_type");
   const char *rt = (jrt && cJSON_IsString(jrt)) ? jrt->valuestring : NULL;
-  if (!annotations_ref_type_valid(rt)) {
+  if (!note_ref_type_valid(rt)) {
     cJSON_Delete(jb); return err(st, 400, "invalid_ref_type");
   }
   cJSON *jri = cJSON_GetObjectItem(jb, "ref_id");
@@ -479,6 +494,15 @@ static char *create_note(db_handle *db, const tenant_ctx *t,
   }
   if (has_case && !case_id_ok(db, t->tenant_id, cid)) {
     cJSON_Delete(jb); return err(st, 400, "unknown_case_id");
+  }
+  /* A note ABOUT a case must be about one of this tenant's cases. */
+  if (!strcmp(rt, "case")) {
+    char rcase[ANN_CASE_ID_MAX + 8];
+    if (rid_len > ANN_CASE_ID_MAX) { cJSON_Delete(jb); return err(st, 400, "unknown_case_id"); }
+    snprintf(rcase, sizeof rcase, "%.*s", (int)rid_len, rid);
+    if (!case_id_ok(db, t->tenant_id, rcase)) {
+      cJSON_Delete(jb); return err(st, 400, "unknown_case_id");
+    }
   }
 
   const char *md = NULL; size_t md_len = 0;

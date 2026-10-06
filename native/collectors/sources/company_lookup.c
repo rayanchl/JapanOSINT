@@ -109,7 +109,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   int emitted = 0;
   int n = cJSON_GetArraySize(comps);
-  for (int i = 0; i < n && i < 20; i++) {
+  for (int i = 0; i < n; i++) {
     cJSON *cw = cJSON_GetArrayItem(comps, i);
     cJSON *c = cw ? cJSON_GetObjectItem(cw, "company") : NULL;
     if (c) emitted += emit_company(sink, c);

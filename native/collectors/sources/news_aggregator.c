@@ -48,7 +48,7 @@ static cJSON *query_gdelt(http_client *http, const char *query) {
   if (articles && cJSON_IsArray(articles)) {
     int c = cJSON_GetArraySize(articles);
     cJSON_AddNumberToObject(result, "total_results", c);
-    for (int i = 0; i < c && i < 25; i++) {
+    for (int i = 0; i < c; i++) {
       cJSON *a = cJSON_GetArrayItem(articles, i);
       if (!a) continue;
       cJSON *ao = cJSON_CreateObject();

@@ -1,7 +1,7 @@
 /* collectors/economy/sources/mlit_transaction.c
  * Port of server/src/collectors/mlitTransaction.js (tryMlit live path).
  * Single MLIT webland TradeListSearch call (Tokyo Q4 2023, area=13),
- * slice(0,200), pinned at Tokyo. SEED branch dropped (rule 8). */
+ * every transaction (was slice(0,200)), pinned at Tokyo. SEED branch dropped (rule 8). */
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
@@ -53,10 +53,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   cJSON *features = cJSON_CreateArray();
-  int i = 0;
   cJSON *tx;
   cJSON_ArrayForEach(tx, items) {
-    if (i++ >= 200) break;                       /* slice(0,200) */
     cJSON *typ = cJSON_GetObjectItem(tx, "Type");
     cJSON *mun = cJSON_GetObjectItem(tx, "Municipality");
     cJSON *dis = cJSON_GetObjectItem(tx, "DistrictName");

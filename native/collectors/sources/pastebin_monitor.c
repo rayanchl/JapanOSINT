@@ -30,7 +30,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* psbdmp.ws/api/v3/search/<q> → JSON array of paste IDs (limit 10) */
+/* psbdmp.ws/api/v3/search/<q> → JSON array of paste IDs (every one) */
 static cJSON *search_psbdmp(http_client *http, const char *query) {
   cJSON *results = cJSON_CreateArray();
   char *enc = jo_urlencode(query);
@@ -42,7 +42,7 @@ static cJSON *search_psbdmp(http_client *http, const char *query) {
   cJSON *json = feed_get_json(http, url, 30000);
   if (json && cJSON_IsArray(json)) {
     int count = cJSON_GetArraySize(json);
-    for (int i = 0; i < count && i < 10; i++) {
+    for (int i = 0; i < count; i++) {
       cJSON *item = cJSON_GetArrayItem(json, i);
       if (cJSON_IsString(item)) {
         cJSON *r = cJSON_CreateObject();

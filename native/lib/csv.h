@@ -23,7 +23,9 @@ cJSON *csv_parse(const char *text, int headers);
  * When `delim` is not ',' each UNQUOTED cell is also whitespace-trimmed. Those
  * feeds pad their columns to align them for a human reader, so the padding is
  * layout rather than content; comma CSV is left byte-exact as RFC 4180 expects,
- * which is why this is not simply applied to every parse. */
+ * which is why this is not simply applied to every parse. The one exception,
+ * in every mode: blanks immediately before a field's opening quote are padding,
+ * not content — `1, "Tokyo, Japan"` reads as `Tokyo, Japan`, one cell. */
 cJSON *csv_parse_d(const char *text, int headers, char delim);
 
 /* Same again, with a comment prefix — and it strips the banner BEFORE the
@@ -77,11 +79,13 @@ cJSON *csv_parse_wellformed(const char *text, int headers, const char *delim,
 
 /* How many unterminated quoted fields the LAST csv_parse_x() on this thread had
  * to close at their own line end (0 in the ordinary case). A field that spans
- * more than a few physical lines is a malformed row, not a multi-line cell: left
- * alone it swallows every following line until the next quote — ThreatView's C2
- * feed turned 1,178 data lines into 503 records that way. The count is exposed
- * so a caller can DISCLOSE the repair instead of silently parsing a different
- * file from the one the upstream served. */
+ * more than a few physical lines AND whose next quote does not close it
+ * properly (followed by the delimiter, a line end or the end of the text) is a
+ * malformed row: left alone it swallows every following line until the next
+ * quote. A long field that DOES close properly is a genuine multi-line cell and
+ * is neither split nor counted. The count is exposed so a caller can DISCLOSE
+ * the repair instead of silently parsing a different file from the one the
+ * upstream served. */
 int csv_quote_repairs(void);
 
 /* Shift_JIS → UTF-8, malloc'd NUL-terminated (caller frees). On iconv error

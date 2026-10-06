@@ -10,6 +10,7 @@ import LoadingSpinner from '../ui/LoadingSpinner';
 import { normalizeSources, typeLabel } from '../../utils/normalizeSource.js';
 import useLayerCatalog from '../../hooks/useLayerCatalog.js';
 import SourcesPanel from '../panels/SourcesPanel.jsx';
+import { parseServerTime } from '../../utils/time.js';
 
 // Keyed on the wire values (schema.sql constrains both columns to lowercase).
 const STATUS_COLORS = {
@@ -280,7 +281,7 @@ export default function SourceDashboard({ sources: propSources, pollError, lastU
           <StatCard
             label="Last Update"
             value={lastSuccess
-              ? new Date(lastSuccess).toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo' })
+              ? parseServerTime(lastSuccess).toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo' })
               : '—'}
             color="#3b82f6"
             subtitle={lastSuccess ? 'JST · last successful fetch' : 'never loaded'}
@@ -480,12 +481,12 @@ export default function SourceDashboard({ sources: propSources, pollError, lastU
                       </td>
                       <td className="px-3 py-2.5 font-mono text-osint-muted">
                         {src.lastCheck
-                          ? new Date(src.lastCheck).toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo' })
+                          ? parseServerTime(src.lastCheck).toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo' })
                           : '-'}
                       </td>
                       <td className="px-3 py-2.5 font-mono text-osint-muted">
                         {src.lastSuccess
-                          ? new Date(src.lastSuccess).toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo' })
+                          ? parseServerTime(src.lastSuccess).toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo' })
                           : '-'}
                       </td>
                     </tr>
@@ -505,7 +506,7 @@ export default function SourceDashboard({ sources: propSources, pollError, lastU
                               src.recentLogs.map((log, j) => (
                                 <div key={j} className="flex items-center gap-3 font-mono">
                                   <span className="text-osint-muted">
-                                    {new Date(log.timestamp).toLocaleString('en-GB', { timeZone: 'Asia/Tokyo' })}
+                                    {parseServerTime(log.timestamp).toLocaleString('en-GB', { timeZone: 'Asia/Tokyo' })}
                                   </span>
                                   <span className={log.success ? 'text-neon-green' : 'text-neon-red'}>
                                     {log.success ? 'OK' : 'FAIL'}

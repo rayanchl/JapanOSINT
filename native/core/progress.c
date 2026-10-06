@@ -91,6 +91,11 @@ struct osint_request {
 
   char *results_json;   /* serialized results object, or NULL */
   int   done;
+
+  /* Who may read this run (progress_snapshot_for). NULL tenant = ownerless,
+   * i.e. an operator job (translate backfill) that carries no tenant data. */
+  char *tenant_id;
+  char *stream_key;     /* the SSE capability; never the shareable request_id */
 };
 
 /* ---- process-global registry + single coarse lock ---- */
@@ -112,6 +117,22 @@ static osint_request *find_locked(const char *id) {
 
 osint_request *progress_create(const char *request_id, const char *query,
                                int max_rounds) {
+  return progress_create_owned(request_id, query, max_rounds, NULL, NULL);
+}
+
+void progress_owner_tenant(const char *request_id, char *out, size_t n) {
+  if (!out || !n) return;
+  out[0] = 0;
+  if (!request_id) return;
+  pthread_mutex_lock(&g_lock);
+  osint_request *r = find_locked(request_id);
+  if (r && r->tenant_id) snprintf(out, n, "%s", r->tenant_id);
+  pthread_mutex_unlock(&g_lock);
+}
+
+osint_request *progress_create_owned(const char *request_id, const char *query,
+                                     int max_rounds, const char *tenant_id,
+                                     const char *stream_key) {
   if (!request_id) return NULL;
   pthread_mutex_lock(&g_lock);
 
@@ -120,6 +141,10 @@ osint_request *progress_create(const char *request_id, const char *query,
 
   r = calloc(1, sizeof *r);
   if (!r) { pthread_mutex_unlock(&g_lock); return NULL; }
+  /* Owner first, inside the same critical section as the insert: a run must
+   * never be visible, even for an instant, as ownerless (= readable by all). */
+  r->tenant_id           = (tenant_id && *tenant_id) ? dup_s(tenant_id) : NULL;
+  r->stream_key          = (stream_key && *stream_key) ? dup_s(stream_key) : NULL;
   r->request_id          = dup_s(request_id);
   r->query               = dup_s(query);
   r->phase               = dup_s("queued");
@@ -195,6 +220,7 @@ osint_request *progress_create(const char *request_id, const char *query,
       }
       free(oldest->all_entities.p);
       free(oldest->results_json);
+      free(oldest->tenant_id); free(oldest->stream_key);
       free(oldest);
     }
   }
@@ -656,6 +682,35 @@ char *progress_to_json(osint_request *r) {
   if (!r) return NULL;
   pthread_mutex_lock(&g_lock);
   char *out = to_json_locked(r);
+  pthread_mutex_unlock(&g_lock);
+  return out;
+}
+
+/* Length-independent compare for the stream key: it is a capability, so how
+ * long a wrong guess took to reject must not say how much of it was right. */
+static int key_equal(const char *a, const char *b) {
+  size_t la = strlen(a), lb = strlen(b);
+  unsigned char d = (unsigned char)(la != lb);
+  for (size_t i = 0; i < la && i < lb; i++) d |= (unsigned char)(a[i] ^ b[i]);
+  return d == 0;
+}
+
+char *progress_snapshot_for(const char *request_id, const char *tenant_id,
+                            const char *stream_key, int *out_done,
+                            char *key_out, size_t key_out_n) {
+  if (out_done) *out_done = 0;
+  if (key_out && key_out_n) key_out[0] = 0;
+  if (!request_id) return NULL;
+  pthread_mutex_lock(&g_lock);
+  osint_request *r = find_locked(request_id);
+  int allowed = r && (!r->tenant_id ||
+                      (tenant_id && *tenant_id && !strcmp(tenant_id, r->tenant_id)) ||
+                      (stream_key && *stream_key && r->stream_key &&
+                       key_equal(stream_key, r->stream_key)));
+  char *out = allowed ? to_json_locked(r) : NULL;
+  if (out && out_done) *out_done = r->done;
+  if (out && key_out && key_out_n && r->stream_key)
+    snprintf(key_out, key_out_n, "%s", r->stream_key);
   pthread_mutex_unlock(&g_lock);
   return out;
 }

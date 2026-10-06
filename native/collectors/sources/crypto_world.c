@@ -521,17 +521,13 @@ static int c2_tronscan(const source_ctx *ctx, intel_sink *sink, const char *addr
   if (have_created) cJSON_AddNumberToObject(data, "create_time_ms", created);
   cJSON_AddNumberToObject(data, "trc20_token_count", ntok);
   cJSON_AddNumberToObject(data, "trc10_asset_count", nass);
-  /* Carry the token holdings, but cap the list: a busy contract holds hundreds
-   * of TRC-20 balances and the whole array (26 KB of base58 for USDT's
-   * contract) would go straight into the FTS index. trc20_token_count above is
-   * the true total. */
-  if (trc20 && ntok) {
-    cJSON *cap = cJSON_CreateArray();
-    for (int i = 0; i < ntok && i < 50; i++)
-      cJSON_AddItemToArray(cap, cJSON_Duplicate(cJSON_GetArrayItem(trc20, i), 1));
-    cJSON_AddItemToObject(data, "trc20", cap);
-    if (ntok > 50) cJSON_AddBoolToObject(data, "trc20_truncated", 1);
-  }
+  /* Carry EVERY token holding. This used to keep the first 50 and set
+   * `trc20_truncated`, to spare the FTS index the ~26 KB a busy contract's
+   * list costs — but the holdings are the record, and a bounded view belongs
+   * to the consumer, not to what is stored (docs/SOURCE_EXHAUSTIVENESS.md).
+   * trc20_token_count above still states the total. */
+  if (trc20 && ntok)
+    cJSON_AddItemToObject(data, "trc20", cJSON_Duplicate(trc20, 1));
   cJSON_AddStringToObject(data, "source", "TronGrid");
   char *bj = cJSON_PrintUnformatted(data);
   cJSON_Delete(data);

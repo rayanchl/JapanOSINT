@@ -129,9 +129,6 @@ $(BIN): $(OBJS)
 selftest: $(BIN)
 	./$(BIN) --selftest
 
-# Exhaustive-use audit (docs/SOURCE_EXHAUSTIVENESS.md): scan every collector for
-# the patterns that mean fetched data was discarded. A report, not a gate — but
-# the hp_* engine rows are held strictly clean.
 # ── one source of truth for dependency resolution ───────────────────────────
 # tests/unit/run.sh used to re-derive its own link line with a bare
 # `pkg-config --libs libcurl openssl 2>/dev/null` — no Homebrew fallback, and
@@ -144,41 +141,23 @@ print-cflags:
 print-ldlibs:
 	@echo '$(LDLIBS)'
 
+# Exhaustive-use audit (docs/SOURCE_EXHAUSTIVENESS.md): scan every collector for
+# the patterns that mean fetched data was discarded, and print every finding.
+# GATED on the strict set — the hp tables (collectors/pivot/table/hp*_*.c) and
+# the generated deep-record tables (collectors/feed/generated/hp1[0-9]_*.c):
+# any finding there exits 1. Findings elsewhere in the tree are printed but do
+# not change the exit status.
 .PHONY: audit-sources
 audit-sources:
 	@python3 tests/audit_source_exhaustiveness.py \
 	  --strict 'collectors/pivot/table/hp*_*.c' \
 	  --strict 'collectors/feed/generated/hp1[0-9]_*.c'
 
-# Batch 14 candidate lifecycle (docs/candidate-sources-batch14.tsv). These rows
-# were authored without egress, so they are registered as UNVERIFIED csrc14_*
-# collectors. `verify-candidates` is the promotion step and NEEDS NETWORK: it
-# probes every candidate, keeps the ones that really answer, and records the
-# rest as rejects. Run it, then regenerate from the verified manifest and drop
-# the csrc14_* files.
-.PHONY: verify-candidates
-verify-candidates:
-	@python3 tools/promote_candidates.py ../docs/candidate-sources-batch14.tsv \
-	  --verified ../docs/verified-sources-batch14.tsv \
-	  --rejects  ../docs/rejected-sources-batch14.tsv
-
-# Rebuild the candidate manifest and its collectors from the generator. The
-# reserved-id list is taken live from the tree minus this batch's own ids, so
-# regenerating is idempotent rather than self-excluding.
-.PHONY: regen-candidates
-regen-candidates:
-	@python3 tools/lint_sources.py --list-ids > /tmp/jo_all_ids.txt
-	@cut -f1 ../docs/candidate-sources-batch14.tsv | tail -n +2 > /tmp/jo_b14_ids.txt
-	@grep -Fxv -f /tmp/jo_b14_ids.txt /tmp/jo_all_ids.txt > /tmp/jo_reserved.txt || true
-	@grep -hoE 'https?://[^" ]+' \
-	  $$(find collectors \( -name '*.c' -o -name '*.inc' \) | grep -v csrc14_) \
-	  | sed 's/[",)\\]*$$//' | sort -u > /tmp/jo_urls.txt
-	@python3 collectors/gen_candidates_jp_fr_us.py \
-	  --out ../docs/candidate-sources-batch14.tsv \
-	  --exclude-urls /tmp/jo_urls.txt --exclude-ids /tmp/jo_reserved.txt
-	@python3 collectors/gen_verified_sources.py ../docs/candidate-sources-batch14.tsv \
-	  --outdir collectors/sources --reserved /tmp/jo_reserved.txt \
-	  --prefix csrc14 --unverified
+# (The batch-14 `verify-candidates` / `regen-candidates` targets are gone. Batch
+# 14 was promoted long ago — every csrc14_* file was replaced by a verified
+# vsrc14_* one — and `regen-candidates` still ended in
+# `gen_verified_sources.py --prefix csrc14 --unverified`: one stray `make`
+# would have put ~1,000 never-probed sources back into the registry.)
 
 # Offline unit test for the high-penetrancy record engine (lib/hpengine.c). Its
 # own http_request stub replaces libcurl, so it needs no network and no key —
@@ -349,25 +328,38 @@ source-count:
 #   make source-floor               # after — fails if any source vanished
 #
 # registry-floor asks the BINARY, which is the only thing that knows. The
-# source-floor above counts REGISTER_SOURCE occurrences in the tree, so it is
-# structurally blind to HP_REGISTER_TABLE — and that blindness cost us: the hp
-# spec table was a fixed 1,024-entry array, and 1,481 rows were being dropped at
-# boot with source-floor passing the whole time. Nothing failed, /api/status
-# showed nothing, and most of two batches was registered into nothing.
+# source-floor above is a regex count over the tree (tools/lint_sources.py
+# --count). It now counts HP_REGISTER_TABLE rows as well as REGISTER_SOURCE —
+# it was blind to them once, and that blindness cost us: the hp spec table was
+# a fixed 1,024-entry array, and 1,481 rows were being dropped at boot with
+# source-floor passing the whole time. Nothing failed, /api/status showed
+# nothing, and most of two batches was registered into nothing. A source text
+# count still cannot see a row dropped AT REGISTRATION, so this one boots the
+# binary.
 #
 # It also asserts that registration was CLEAN. A DUPLICATE id means the second
 # definition is unreachable; an OVERFLOW means a row was discarded outright.
 # Neither should ever be non-zero, so neither is merely reported.
+#
+# --list-sources boots the binary, which opens, migrates and seeds a database.
+# It runs against a throwaway JO_DB: the default is $(REPO_ROOT)/data/japanmap.db
+# — the developer's live database — and the `rm -rf data/japanmap.db*` this
+# used to do ran in native/, where no database lives, so a local run migrated
+# and re-seeded the live one instead of starting clean.
 .PHONY: registry-floor registry-floor-record
 registry-floor-record: $(BIN)
-	@rm -rf data/japanmap.db*
-	@./$(BIN) --list-sources 2>/dev/null | wc -l > tools/registry-floor.txt
+	@d=$$(mktemp -d "$${TMPDIR:-/tmp}/jo_regfloor.XXXXXX"); \
+	 JO_DB="$$d/r.db" JO_FTS_REBUILD=0 ./$(BIN) --list-sources 2>/dev/null \
+	   | wc -l | tr -d ' ' > tools/registry-floor.txt; \
+	 rm -rf "$$d"
 	@echo "recorded registry floor: $$(cat tools/registry-floor.txt)"
 
 registry-floor: $(BIN)
 	@test -f tools/registry-floor.txt || { echo "no floor recorded; run make registry-floor-record"; exit 1; }
-	@rm -rf data/japanmap.db*
-	@./$(BIN) --list-sources 2>tools/.reg.log | wc -l > tools/.reg.count
+	@d=$$(mktemp -d "$${TMPDIR:-/tmp}/jo_regfloor.XXXXXX"); \
+	 JO_DB="$$d/r.db" JO_FTS_REBUILD=0 ./$(BIN) --list-sources 2>tools/.reg.log \
+	   | wc -l | tr -d ' ' > tools/.reg.count; \
+	 rm -rf "$$d"
 	@now=$$(cat tools/.reg.count); floor=$$(cat tools/registry-floor.txt); \
 	 dup=$$(grep -c DUPLICATE tools/.reg.log || true); \
 	 ovf=$$(grep -c OVERFLOW tools/.reg.log || true); \

@@ -33,6 +33,7 @@
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
 #include "lib/feedlib.h"
+#include "lib/pagewalk.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -45,6 +46,24 @@
 
 /* ------------------------------------------------------ South Africa eTenders */
 
+/* One eTenders walk: the window it asks about, and whether its FIRST page had
+ * a `releases` array (a first page without one is a shape change — R3). */
+typedef struct {
+  const char *d_from, *d_to;
+  char url[320];            /* the page currently being emitted, for it.link */
+  int pages, first_bad;
+} za_walk;
+
+/* pw_fetch_fn: remember which page is being read, then fetch it. */
+static cJSON *za_fetch(const source_ctx *c, const char *url, void *ud) {
+  za_walk *w = (za_walk *)ud;
+  snprintf(w->url, sizeof w->url, "%s", url);
+  return feed_get_json(c->http, url, 30000);
+}
+
+static int za_emit_page(const source_ctx *ctx, intel_sink *sink, const char *id,
+                        cJSON *doc, void *ud, int *seen);
+
 static int za_run(const source_ctx *ctx, intel_sink *sink) {
   time_t now = time(NULL), from = now - 14 * 24 * 3600;
   /* dateFrom/dateTo ARE the query window; guessing one would be asking a
@@ -56,20 +75,39 @@ static int za_run(const source_ctx *ctx, intel_sink *sink) {
     return -1;
   }
 
+  /* The 14-day window is read to its end. This used to fetch PageNumber=1
+   * only, so a fortnight with more than 50 releases lost everything past the
+   * 50th. PageNumber/PageSize are advanced by pw_walk while pages come back
+   * full; its ceiling (JO_PAGE_MAX) is disclosed as a truncation notice. */
   char url[320];
   snprintf(url, sizeof url,
            "https://ocds-api.etenders.gov.za/api/OCDSReleases"
            "?PageNumber=1&PageSize=50&dateFrom=%s&dateTo=%s", d_from, d_to);
-
-  cJSON *doc = feed_get_json(ctx->http, url, 30000);
-  if (!doc) { fprintf(stderr, "[za-etenders-ocds] fetch/parse failed\n"); return -1; }
-
-  const cJSON *rel = cJSON_GetObjectItem(doc, "releases");
-  if (!cJSON_IsArray(rel)) {
+  za_walk w = { d_from, d_to, "", 0, 0 };
+  int n = pw_walk(ctx, sink, "za-etenders-ocds", url, za_fetch, za_emit_page, &w);
+  if (n < 0) { fprintf(stderr, "[za-etenders-ocds] fetch/parse failed\n"); return -1; }
+  if (w.first_bad) {
     fprintf(stderr, "[za-etenders-ocds] unexpected payload shape\n");
-    cJSON_Delete(doc);
     return -1;
   }
+  fprintf(stderr, "[za-etenders-ocds] emitted %d across %d page(s) (%s..%s)\n",
+          n, w.pages, d_from, d_to);
+  return 0;
+}
+
+static int za_emit_page(const source_ctx *ctx, intel_sink *sink, const char *id,
+                        cJSON *doc, void *ud, int *seen) {
+  (void)ctx; (void)id;
+  za_walk *w = (za_walk *)ud;
+  const char *d_from = w->d_from, *d_to = w->d_to, *url = w->url;
+  const cJSON *rel = cJSON_GetObjectItem(doc, "releases");
+  *seen = cJSON_IsArray(rel) ? cJSON_GetArraySize(rel) : 0;
+  if (!cJSON_IsArray(rel)) {
+    if (w->pages == 0) w->first_bad = 1;
+    w->pages++;
+    return 0;
+  }
+  w->pages++;
 
   int n = 0;
   const cJSON *r;
@@ -142,10 +180,7 @@ static int za_run(const source_ctx *ctx, intel_sink *sink) {
     if (sink->emit(sink, &it) >= 0) n++;
     free(pj);
   }
-
-  cJSON_Delete(doc);
-  fprintf(stderr, "[za-etenders-ocds] emitted %d (%s..%s)\n", n, d_from, d_to);
-  return 0;
+  return n;
 }
 
 /* --------------------------------------------------------- Uruguay — ARCE */

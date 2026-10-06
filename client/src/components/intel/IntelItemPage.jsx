@@ -108,7 +108,7 @@ export default function IntelItemPage() {
             ) : (
               <Section label="Location"><div className="text-xs text-osint-muted">No coordinates on this record{item.geom_source ? ` (geometry source: ${item.geom_source})` : ''}.</div></Section>
             )}
-            {item.score && <Section label="Score"><KV pairs={[['score', item.score.score], ['bm25', item.score.bm25], ['trust', item.score.trust], ['decay', item.score.decay]]} /></Section>}
+            {item.rerank && <Section label="Score"><KV pairs={[['score', item.rerank.score], ['bm25', item.rerank.bm25], ['trust', item.rerank.trust], ['decay', item.rerank.decay]]} /></Section>}
           </aside>
         </div>
       )}
@@ -258,7 +258,11 @@ function EvidenceSection({ uid }) {
           </li>
         ))}
       </ul>
-      {data?.page && rows.length >= data.page.limit && <BoundNote shown={rows.length} total={rows.length + 1} noun="evidence rows (server limit reached)" className="mt-1" />}
+      {/* The server returns at most page.limit rows with no cursor and no
+        * total (evidence.c), so a full page is all that can be said. */}
+      {data?.page && rows.length >= data.page.limit && (
+        <div className="mt-1 text-[11px] text-accent font-mono">{rows.length} evidence rows shown — the server returns at most {data.page.limit} and offers no paging, so older rows may exist and are not listed.</div>
+      )}
     </Section>
   );
 }

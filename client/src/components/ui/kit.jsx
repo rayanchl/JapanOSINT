@@ -267,15 +267,30 @@ export function Mono({ children, className, tone }) {
   return <span className={cx('font-mono', tone === 'accent' ? 'text-accent' : tone === 'cyan' ? 'text-neon-cyan' : '', className)}>{children}</span>;
 }
 
-/** "Showing N of M" — a bounded view must state the bound in-band. */
-export function BoundNote({ shown, total, noun = 'records', className }) {
-  if (total == null || shown == null) return null;
-  if (shown >= total) return <div className={cx('text-[11px] text-osint-muted font-mono', className)}>{total} {noun}</div>;
-  return (
-    <div className={cx('text-[11px] text-accent font-mono', className)}>
-      showing {shown} of {total} {noun}
-    </div>
-  );
+/**
+ * "Showing N of M" — a bounded view must state the bound in-band.
+ *
+ *   total    a total the SERVER measured. Never pass an invented one: the old
+ *            `rows.length + 1` stand-in printed "showing 100 of 101" for a
+ *            list that might hold thousands.
+ *   atLeast  a lower bound the server measured (`page.total_gte`).
+ *   more     the server said more rows exist (a next cursor) but sent no total.
+ *
+ * With none of the three, nothing is rendered: silence is better than a number
+ * nobody measured.
+ */
+export function BoundNote({ shown, total, atLeast, more = false, noun = 'records', className }) {
+  if (shown == null) return null;
+  const muted = cx('text-[11px] text-osint-muted font-mono', className);
+  const accent = cx('text-[11px] text-accent font-mono', className);
+  if (total != null) {
+    if (shown >= total) return <div className={muted}>{total} {noun}</div>;
+    return <div className={accent}>showing {shown} of {total} {noun}</div>;
+  }
+  if (atLeast != null && atLeast > shown) return <div className={accent}>showing {shown} of at least {atLeast} {noun}</div>;
+  if (more) return <div className={accent}>{shown} {noun} loaded · more on the server (no total reported)</div>;
+  if (atLeast != null) return <div className={muted}>{shown} {noun}</div>;
+  return null;
 }
 
 /** Modal sheet. Closes on backdrop click / Escape. */

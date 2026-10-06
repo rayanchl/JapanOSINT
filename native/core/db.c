@@ -410,6 +410,9 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
 
   /* Notification inbox (roadmap item 11): read/unread state per event. */
   ensure_column(db, "alert_events", "read_at", "TEXT");
+  /* The rule's name, stamped when the rule is deleted: events outlive their
+   * rule (they are the inbox's history), and the inbox/export still name it. */
+  ensure_column(db, "alert_events", "rule_name", "TEXT");
 
   /* Correlation scoring (roadmap item 22): significance over co-mention
    * edges. NULL until the stats pod has run, and NULL for pairs below the

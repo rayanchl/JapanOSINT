@@ -73,7 +73,7 @@ export default function EntityBreaches({ type, entityId }) {
           {moreError && <ErrorNotice error={moreError} title="Could not load more" className="mt-2" />}
           {(hasMore || count != null) && (
             <div className="flex items-center justify-between mt-2">
-              <BoundNote shown={rows.length} total={count ?? (hasMore ? rows.length + 1 : rows.length)} noun="breaches" />
+              <BoundNote shown={rows.length} total={count ?? (hasMore ? null : rows.length)} more={hasMore} noun="breaches" />
               {hasMore && <Button size="sm" busy={more} onClick={loadMore}>Load more</Button>}
             </div>
           )}

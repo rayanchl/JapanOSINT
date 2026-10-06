@@ -75,7 +75,7 @@ static cJSON *query_crt_sh(http_client *http, const char *domain) {
   return results;
 }
 
-/* certspotter issuances → array of {subdomain,source:"certspotter"} (≤50). */
+/* certspotter issuances → array of {subdomain,source:"certspotter"}, every cert. */
 static cJSON *query_certspotter(http_client *http, const char *domain) {
   cJSON *results = cJSON_CreateArray();
   char url[512];
@@ -89,7 +89,7 @@ static cJSON *query_certspotter(http_client *http, const char *domain) {
   http_response_free(&hr);
   if (j && cJSON_IsArray(j)) {
     int n = cJSON_GetArraySize(j);
-    for (int i = 0; i < n && i < 50; i++) {
+    for (int i = 0; i < n; i++) {
       cJSON *cert = cJSON_GetArrayItem(j, i);
       cJSON *dn = cJSON_GetObjectItem(cert, "dns_names");
       if (dn && cJSON_IsArray(dn)) {

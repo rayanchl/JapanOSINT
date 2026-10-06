@@ -44,7 +44,7 @@ static const char *TRUSTED_CAS[] = {
 static int is_trusted_ca(const char *issuer) {
   if (!issuer) return 0;
   for (int i = 0; TRUSTED_CAS[i]; i++)
-    if (strcasestr(issuer, TRUSTED_CAS[i])) return 1;
+    if (jo_strcasestr(issuer, TRUSTED_CAS[i])) return 1;
   return 0;
 }
 
@@ -360,7 +360,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON *json = feed_get_json(ctx->http, url, 30000);
     if (json && cJSON_IsArray(json)) {
       int total = cJSON_GetArraySize(json);
-      for (int i = 0; i < total && i < 100; i++) {
+      for (int i = 0; i < total; i++) {
         cJSON *cert = cJSON_GetArrayItem(json, i);
         if (cert) emit_ct_cert(sink, hostname, cert);
       }

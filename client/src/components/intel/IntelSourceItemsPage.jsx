@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { LuPlay } from 'react-icons/lu';
 import { api, errorMessage } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
-import { useIntelItems, SINCE_PRESETS, sinceIso } from '../../hooks/useIntel.js';
+import { useIntelItems, SINCE_PRESETS, useSinceIso } from '../../hooks/useIntel.js';
 import { Page, Card, Pill, Button, Input, Segmented, Toggle, ErrorNotice, EmptyState, LoadingState, BoundNote, KV, cx, toast } from '../ui/kit.jsx';
 import IntelItemRow from './IntelItemRow.jsx';
 import { isSafeUrl } from '../../utils/safeUrl.js';
@@ -23,9 +23,11 @@ export default function IntelSourceItemsPage() {
   const [view, setView] = useState('original');
   const [running, setRunning] = useState(false);
 
+  // Pinned per preset choice — sinceIso() per render refetched forever.
+  const sinceAt = useSinceIso(since);
   const feed = useIntelItems('/api/intel/items', {
-    source: id, q: qApplied || undefined, since: sinceIso(since), record_type: rt.trim() || undefined,
-    has_geom: geo ? '1' : undefined, sort: qApplied && sort !== 'newest' ? sort : undefined,
+    source: id, q: qApplied || undefined, since: sinceAt, record_type: rt.trim() || undefined,
+    has_geom: geo ? 'yes' : undefined, sort: qApplied && sort !== 'newest' ? sort : undefined,
     limit: 50, total: '1', lang_view: 'both',
   });
   const { items, error, loading, loadingMore, hasMore, loadMore, reload, total, totalGte, meta } = feed;
@@ -77,7 +79,7 @@ export default function IntelSourceItemsPage() {
       {error && <ErrorNotice error={error} title={error.status === 403 ? 'Access to this source is operator-gated' : 'Could not load items'} onRetry={reload} />}
       {!loading && !error && (
         <div className="flex flex-wrap items-center gap-3">
-          <BoundNote shown={items.length} total={total ?? (totalGte != null ? Math.max(totalGte, items.length) : (hasMore ? items.length + 1 : items.length))} noun={total == null && totalGte != null ? `items (≥${totalGte})` : 'items'} />
+          <BoundNote shown={items.length} total={total ?? (totalGte == null && !hasMore ? items.length : null)} atLeast={totalGte} more={hasMore} noun="items" />
           {meta?.q_applied === false && <Pill tone="danger">query NOT applied by the server</Pill>}
           {meta?.filters && <span className="font-mono text-[10px] text-osint-muted truncate max-w-full" title={JSON.stringify(meta.filters)}>filters echoed by server</span>}
         </div>

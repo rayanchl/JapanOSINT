@@ -50,18 +50,21 @@ export function SaveSearchSheet({ open, onClose, query, kind = 'osint' }) {
 
 /**
  * Share-view sheet (PermalinkShareSheet on iOS). `/api/permalink` is a
- * stateless codec: the token carries VIEW STATE ONLY and is not a grant —
- * whoever opens the link still signs in and the server re-checks tenancy.
+ * stateless codec: the token carries VIEW STATE ONLY and is not a grant.
+ *
+ * Only `q` goes into the token. It used to carry this run's request_id, and
+ * the recipient's client re-attached to that run's results — results the
+ * search endpoints do not (yet) scope to the recipient's workspace. With the
+ * query alone the recipient's client re-runs it in their own workspace, which
+ * is the only promise this sheet can honestly make.
  */
-export function SearchShareSheet({ open, onClose, query, requestId }) {
+export function SearchShareSheet({ open, onClose, query }) {
   const [state, setState] = useState({ minting: false, link: null, error: null });
   useEffect(() => {
     if (!open) return undefined;
     let alive = true;
     setState({ minting: true, link: null, error: null });
-    const params = { q: query };
-    if (requestId) params.request_id = requestId;
-    api.post('/api/permalink', { kind: 'osint', params })
+    api.post('/api/permalink', { kind: 'osint', params: { q: query } })
       .then((r) => {
         if (!alive) return;
         const token = r?.data?.token;
@@ -70,11 +73,11 @@ export function SearchShareSheet({ open, onClose, query, requestId }) {
       })
       .catch((e) => { if (alive) setState({ minting: false, link: null, error: e }); });
     return () => { alive = false; };
-  }, [open, query, requestId]);
+  }, [open, query]);
   return (
     <Sheet open={open} onClose={onClose} title="Share view" width="max-w-md" footer={<Button onClick={onClose}>Close</Button>}>
       <div className="space-y-3">
-        <div className="text-[11px] text-osint-muted">Reopens the search for <span className="font-mono text-osint-text">{query}</span>.</div>
+        <div className="text-[11px] text-osint-muted">Re-runs the search for <span className="font-mono text-osint-text">{query}</span>.</div>
         {state.minting && <LoadingState label="Minting link…" />}
         {state.error && <ErrorNotice error={state.error} title="Could not create the link" />}
         {state.link && (
@@ -89,7 +92,7 @@ export function SearchShareSheet({ open, onClose, query, requestId }) {
           </div>
         )}
         <div className="rounded-md border border-osint-border bg-osint-bg/50 p-2 text-[11px] text-osint-muted">
-          <span className="text-osint-text font-medium">Not a grant.</span> The link carries only what to show. Whoever opens it signs in with their own account, and the server re-checks their workspace and role before answering.
+          <span className="text-osint-text font-medium">Not a grant.</span> The link carries only the query text — not these results. Whoever opens it signs in with their own account, and the recipient re-runs the query in their own workspace.
         </div>
       </div>
     </Sheet>
@@ -107,7 +110,7 @@ export default function RunActions({ requestId, query, link }) {
       <Button size="sm" onClick={() => setSaveOpen(true)} title="Save this search"><LuBookmark size={12} /> Save search</Button>
       <Button size="sm" onClick={() => setShareOpen(true)} title="Share a link to this view"><LuLink size={12} /> Share</Button>
       <SaveSearchSheet open={saveOpen} onClose={() => setSaveOpen(false)} query={query} />
-      <SearchShareSheet open={shareOpen} onClose={() => setShareOpen(false)} query={query} requestId={requestId} />
+      <SearchShareSheet open={shareOpen} onClose={() => setShareOpen(false)} query={query} />
     </div>
   );
 }

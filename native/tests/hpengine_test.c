@@ -12,6 +12,8 @@
  * table, so the ABI, the registration macro and one live row's URL construction
  * are covered too. */
 #include "../lib/hpengine.h"
+#include "../lib/jsonlist.h"
+#include "../lib/csv.h"
 #include "../core/httpclient.h"
 #include "../third_party/cJSON.h"
 #include <stdio.h>
@@ -19,6 +21,43 @@
 #include <string.h>
 #include <time.h>
 #include <math.h>
+#if defined(__APPLE__)
+#include <malloc/malloc.h>
+#elif defined(__GLIBC__)
+#include <malloc.h>
+#endif
+
+/* Bytes the allocator holds for this process, or -1 where it cannot be read.
+ * Used ONLY by the leak test (30): a per-page leak of an inflated ZIP entry is
+ * megabytes per run, which no other observable in this harness shows. Under a
+ * sanitizer the figure includes its quarantine of FREED blocks, so the test
+ * reads -1 there and is skipped (the sanitizer's own leak check covers it). */
+#if defined(__has_feature)
+#if __has_feature(address_sanitizer)
+#define HPT_ASAN 1
+#endif
+#endif
+#if defined(__SANITIZE_ADDRESS__)
+#define HPT_ASAN 1
+#endif
+static long heap_in_use(void) {
+#if defined(HPT_ASAN)
+  return -1;
+#elif defined(__APPLE__)
+  malloc_statistics_t st;
+  malloc_zone_statistics(NULL, &st);
+  return (long)st.size_in_use;
+#elif defined(__GLIBC__) && defined(__GLIBC_PREREQ)
+#if __GLIBC_PREREQ(2, 33)
+  struct mallinfo2 mi = mallinfo2();
+  return (long)mi.uordblks;
+#else
+  return -1;
+#endif
+#else
+  return -1;
+#endif
+}
 
 /* ── stub registry (the real one lives in registry.c) ────────────────────── */
 static const source_def *g_defs[2048];
@@ -30,7 +69,9 @@ static const source_def *find_def(const char *id) {
 }
 
 /* ── stub HTTP: fixtures keyed by URL substring ──────────────────────────── */
-typedef struct { const char *match, *body; long status; } fixture;
+/* `len` is 0 for a text body (strlen) and the byte count for a binary one —
+ * a ZIP holds NULs, which strdup would cut at the first. */
+typedef struct { const char *match, *body; long status; size_t len; } fixture;
 static fixture g_fx[16];
 static int g_nfx = 0;
 static char g_last_url[2048];
@@ -41,7 +82,10 @@ static int  g_ncalls = 0;
 static void fx_reset(void) { g_nfx = 0; g_ncalls = 0; g_last_url[0] = 0;
                              g_last_body[0] = 0; g_last_hdrs[0] = 0; }
 static void fx_add(const char *match, long status, const char *body) {
-  if (g_nfx < 16) g_fx[g_nfx++] = (fixture){ match, body, status };
+  if (g_nfx < 16) g_fx[g_nfx++] = (fixture){ match, body, status, 0 };
+}
+static void fx_add_bin(const char *match, long status, const char *body, size_t len) {
+  if (g_nfx < 16) g_fx[g_nfx++] = (fixture){ match, body, status, len };
 }
 
 int http_request(http_client *c, const char *method, const char *url,
@@ -64,6 +108,15 @@ int http_request(http_client *c, const char *method, const char *url,
               : strstr(url, g_fx[i].match) != NULL;
     if (hit) {
       out->status = g_fx[i].status;
+      if (g_fx[i].body && g_fx[i].len) {
+        out->body = malloc(g_fx[i].len + 1);
+        if (out->body) {
+          memcpy(out->body, g_fx[i].body, g_fx[i].len);
+          out->body[g_fx[i].len] = 0;
+          out->body_len = g_fx[i].len;
+        }
+        return 0;
+      }
       out->body = g_fx[i].body ? strdup(g_fx[i].body) : NULL;
       out->body_len = out->body ? strlen(out->body) : 0;
       return 0;
@@ -74,11 +127,16 @@ int http_request(http_client *c, const char *method, const char *url,
 void http_response_free(http_response *r) { if (r) { free(r->body); r->body = NULL; } }
 /* lib/jsonlist.c is linked for jsonlist_next_page(), the paging decision the
  * page_walk rows share with every VJSON collector (and lib/pagewalk.c because
- * jsonlist.c calls into it). Their own fetchers, the operator URL override and
- * the feed key hash are not exercised here, so they are stubbed: every fetch
- * in this test goes through http_request() above. */
+ * jsonlist.c calls into it). The operator URL override and the feed key hash
+ * are not exercised here, so they are stubbed; the VJSON fetcher reads the same
+ * fixture table, so jsonlist_emit_paged() — the VJSON walk itself — is testable
+ * here too (test 31). Every fetch in this test goes through http_request(). */
 cJSON *feed_get_json(http_client *h, const char *url, int t) {
-  (void)h; (void)url; (void)t; return NULL;
+  http_response r = {0};
+  http_request(h, "GET", url, NULL, NULL, 0, t, 0, &r);
+  cJSON *doc = (r.status == 200 && r.body) ? cJSON_Parse(r.body) : NULL;
+  http_response_free(&r);
+  return doc;
 }
 const char *url_override_apply(const char *url) { return url; }
 void feed_hash_key(char *out21, const char *const *parts, int n) {
@@ -330,9 +388,69 @@ static const hp_source T[] = {
    * composes, as in hpengine id_keys"). Nothing tested that promise. Getting it
    * wrong is silent — the records collapse onto one uid at the sink and the run
    * still reports success — which is why it is pinned here rather than trusted. */
+  /* One day at a time: the date is in the URL, and the records live in three
+   * sibling arrays of one response (SIDOF's morning / evening / extraordinary
+   * editions). */
+  { .id = "T_DATE_UNION", .name = "date token + array union",
+    .url = "https://x.test/du/{date:%Y-%m-%d:-2}", .array_path = "Morning+Evening+Extra",
+    .title_keys = "name", .id_keys = "id", .interval = 86400,
+    .record_type = "t-date", .free_tier = 1, .description = "d" },
+
   { .id = "T_IDKEYS", .name = "composite id_keys", .url = "https://x.test/ik",
     .array_path = "rows", .title_keys = "name", .id_keys = "code+date",
     .interval = 3600, .record_type = "t-idk", .free_tier = 1, .description = "d" },
+
+  /* The d-portal transaction rows key on an 8-part composite, because `aid`
+   * alone is the ACTIVITY and would collapse every transaction under it. A
+   * real ledger row leaves some dimensions null (no sector group, no ref), so
+   * the realistic case is a long composite with holes in it. */
+  /* A bare root array whose records each carry a LONGER nested array. The pair
+   * below differ only in array_path, and that is the whole point: discovery
+   * picks the densest array of objects, so the auto row mines the nested one
+   * and the "." row takes the root. hex.pm's package list is this exact shape
+   * and cost 3,643 phantom records before the root was declared. */
+  { .id = "T_ROOTARR_AUTO", .name = "bare root array, discovery",
+    .url = "https://x.test/rootarr", .title_keys = "name", .id_keys = "name",
+    .interval = 3600, .record_type = "t-root", .free_tier = 1, .description = "d" },
+
+  { .id = "T_ROOTARR_DOT", .name = "bare root array, declared",
+    .url = "https://x.test/rootarr", .array_path = ".",
+    .title_keys = "name", .id_keys = "name",
+    .interval = 3600, .record_type = "t-root", .free_tier = 1, .description = "d" },
+
+  /* NDJSON. The body is the shape index.golang.org and index.crates.io
+   * publish: one complete JSON object per line, no array, no commas. Declared
+   * HP_JSON it would die at line 2 and emit nothing forever. */
+  { .id = "T_NDJSON", .name = "ndjson feed",
+    .url = "https://x.test/ndjson", .mode = HP_NDJSON, .array_path = ".",
+    .title_keys = "Path", .id_keys = "Path+Version",
+    .interval = 3600, .record_type = "t-nd", .free_tier = 1, .description = "d" },
+
+  /* A cursor that is the LAST RECORD's own field, not an envelope's: the Go
+   * module index publishes no next link and pages by `since=<Timestamp of the
+   * last record>`. `$last` is the only way to name it, because the array's
+   * length is not known when the row is written. */
+  { .id = "T_NDJSON_LASTCURSOR", .name = "ndjson paged by last record's field",
+    .url = "https://x.test/ndpage", .mode = HP_NDJSON, .array_path = ".",
+    .title_keys = "Path", .id_keys = "Path+Version",
+    .next_path = "$last.Timestamp",
+    .next_tmpl = "https://x.test/ndpage?since={v}",
+    .page_max = 4,
+    .interval = 3600, .record_type = "t-nd", .free_tier = 1, .description = "d" },
+
+  /* {ago:N} — a `since` cursor relative to now. The fixture matches on the
+   * YEAR only, because the rest of the timestamp is whatever the clock says
+   * when the test runs; what is being pinned is that the token expands to a
+   * real RFC 3339 instant in the URL rather than being left verbatim. */
+  { .id = "T_AGO", .name = "relative since cursor",
+    .url = "https://x.test/ago?since={ago:3600}", .mode = HP_NDJSON,
+    .array_path = ".", .title_keys = "Path", .id_keys = "Path",
+    .interval = 3600, .record_type = "t-ago", .free_tier = 1, .description = "d" },
+
+  { .id = "T_IDKEYS_WIDE", .name = "wide composite with absent parts",
+    .url = "https://x.test/wide", .array_path = "rows", .title_keys = "title",
+    .id_keys = "aid+trans_id+trans_ref+trans_day+trans_value+trans_code+trans_sector+trans_country",
+    .interval = 3600, .record_type = "t-wide", .free_tier = 1, .description = "d" },
 
   { .id = "T_ERR", .name = "upstream error", .url = "https://x.test/err?q={q}",
     .record_type = "t-err", .free_tier = 1, .description = "d" },
@@ -535,8 +653,86 @@ static const hp_source T[] = {
     .url = "https://x.test/efs/rows/{offset}:{offset_end}/JSON", .page_size = 2, .page_max = 6,
     .title_keys = "name", .id_keys = "id",
     .record_type = "t-offpath", .free_tier = 1, .description = "d" },
+
+  /* ── engine fixes of 2026-10-02 (tests 27-33) ── */
+  /* A page-numbered page_walk row whose URL states a page size and NO page.
+   * Spring Data (`size`+`page`) is 0-based; flexigrid-style `per_page` APIs
+   * are 1-based; the URL cannot say which. */
+  { .id = "T_PW_ZERO", .name = "page_walk, 0-based page numbers", .url = "https://x.test/wz?size=2",
+    .array_path = "items", .title_keys = "name", .id_keys = "id", .interval = 3600,
+    .page_walk = 1, .record_type = "t-pwz", .free_tier = 1, .description = "d" },
+  { .id = "T_PW_ONE", .name = "page_walk, 1-based page numbers", .url = "https://x.test/wo?per_page=2",
+    .array_path = "items", .title_keys = "name", .id_keys = "id", .interval = 3600,
+    .page_walk = 1, .record_type = "t-pwo", .free_tier = 1, .description = "d" },
+  /* An offset the server ignores, under an envelope that changes per request. */
+  { .id = "T_PW_VOLATILE", .name = "page_walk, ignored cursor, volatile envelope",
+    .url = "https://x.test/wv?limit=2", .array_path = "items",
+    .title_keys = "name", .id_keys = "id", .interval = 3600,
+    .page_walk = 1, .record_type = "t-pwv", .free_tier = 1, .description = "d" },
+  /* page_walk + filter_query: a filtered-out record was still fetched. */
+  { .id = "T_PW_FILTER", .name = "page_walk with filter_query", .url = "https://x.test/wf?q={q}",
+    .array_path = "items", .title_keys = "name", .id_keys = "id", .filter_query = 1,
+    .page_walk = 1, .record_type = "t-pwf", .free_tier = 1, .description = "d" },
+  /* A record deep enough to trip the flatten depth guard, then XML/CSV rows. */
+  { .id = "T_DEEPREC", .name = "record past the depth guard", .url = "https://x.test/dr",
+    .array_path = "items", .title_keys = "name", .id_keys = "id", .interval = 3600,
+    .record_type = "t-deeprec", .free_tier = 1, .description = "d" },
+  /* A composite title longer than 64 bytes. */
+  { .id = "T_TCOMP", .name = "long composite title", .url = "https://x.test/tc",
+    .array_path = "features", .title_keys = "attributes.title+attributes.summary",
+    .id_keys = "attributes.oid", .interval = 3600,
+    .record_type = "t-tcomp", .free_tier = 1, .description = "d" },
+  /* A ZIP-served CSV. */
+  { .id = "T_ZIPCSV", .name = "zip-served csv", .url = "https://x.test/z.zip",
+    .mode = HP_CSV, .title_keys = "name", .id_keys = "id", .interval = 3600,
+    .record_type = "t-zip", .free_tier = 1, .description = "d" },
+  /* An XML row with a detail hop and a budget of one. */
+  { .id = "T_XML_DEEP", .name = "xml with a detail hop", .url = "https://x.test/xd",
+    .mode = HP_XML, .array_path = "item", .title_keys = "name", .id_keys = "ref",
+    .detail_url = "https://x.test/xdd/{v}", .detail_key = "ref", .detail_max = 1,
+    .interval = 3600, .record_type = "t-xmldeep", .free_tier = 1, .description = "d" },
 };
 HP_REGISTER_TABLE(T)
+
+/* A ZIP of `n` STORED entries (no compression, so the test needs no zlib and
+ * the payload bytes appear in the archive verbatim), with a central directory
+ * and end record. CRCs are 0: nothing in the engine checks them. Caller frees;
+ * *len receives the size. */
+static void put16(unsigned char *p, unsigned v) { p[0] = v & 0xff; p[1] = (v >> 8) & 0xff; }
+static void put32(unsigned char *p, unsigned long v) {
+  p[0] = v & 0xff; p[1] = (v >> 8) & 0xff; p[2] = (v >> 16) & 0xff; p[3] = (v >> 24) & 0xff;
+}
+static char *mk_zip(const char *const *names, const char *const *datas,
+                    const size_t *lens, int n, size_t *len) {
+  size_t cap = 22;
+  for (int i = 0; i < n; i++) cap += 30 + 46 + 2 * strlen(names[i]) + lens[i];
+  unsigned char *z = calloc(1, cap), *w = z;
+  unsigned long offs[8];
+  for (int i = 0; i < n && i < 8; i++) {
+    size_t nl = strlen(names[i]);
+    offs[i] = (unsigned long)(w - z);
+    put32(w, 0x04034b50UL); put16(w + 4, 20); put16(w + 8, 0);
+    put32(w + 18, (unsigned long)lens[i]); put32(w + 22, (unsigned long)lens[i]);
+    put16(w + 26, (unsigned)nl); put16(w + 28, 0);
+    memcpy(w + 30, names[i], nl); memcpy(w + 30 + nl, datas[i], lens[i]);
+    w += 30 + nl + lens[i];
+  }
+  unsigned long cd = (unsigned long)(w - z);
+  for (int i = 0; i < n && i < 8; i++) {
+    size_t nl = strlen(names[i]);
+    put32(w, 0x02014b50UL); put16(w + 4, 20); put16(w + 6, 20); put16(w + 10, 0);
+    put32(w + 20, (unsigned long)lens[i]); put32(w + 24, (unsigned long)lens[i]);
+    put16(w + 28, (unsigned)nl); put32(w + 42, offs[i]);
+    memcpy(w + 46, names[i], nl);
+    w += 46 + nl;
+  }
+  unsigned long cdsz = (unsigned long)(w - z) - cd;
+  put32(w, 0x06054b50UL); put16(w + 8, (unsigned)n); put16(w + 10, (unsigned)n);
+  put32(w + 12, cdsz); put32(w + 16, cd);
+  w += 22;
+  *len = (size_t)(w - z);
+  return (char *)z;
+}
 
 /* Number of captured rows of a given record_type, and the first of them. */
 static int cap_count(const char *rtype, const cap **first) {
@@ -2101,6 +2297,425 @@ int main(void) {
       if (!strcmp(g_cap[i].rtype, "collector-truncation-notice")) notice = 1;
     ok(rc == 0 && notice, "34: a 500 after a full page is still a truncation");
   }
+  /* {date:FMT:-2} renders two days before today (UTC), and `a+b+c` emits the
+   * records of every sibling array that is present — the absent one is not an
+   * error. */
+  {
+    char want[32];
+    time_t t2 = time(NULL) - 2 * 86400;
+    struct tm g2;
+    gmtime_r(&t2, &g2);
+    strftime(want, sizeof want, "/du/%Y-%m-%d", &g2);
+    fx_reset();
+    fx_add("/du/", 200,
+      "{\"Morning\":[{\"id\":\"m1\",\"name\":\"a\"},{\"id\":\"m2\",\"name\":\"b\"}],"
+      "\"Evening\":[{\"id\":\"e1\",\"name\":\"c\"}]}");
+    rc = run_source("T_DATE_UNION", "");
+    ok(strstr(g_last_url, want) != NULL, "{date:%Y-%m-%d:-2} renders the date two days back");
+    ok(strstr(g_last_url, "{date") == NULL, "no date token left in the requested url");
+    ok(rc == 0 && g_ncap == 3, "array_path a+b+c emits every present array (2 + 1), the absent one is no error");
+  }
+
+  /* 27. page_walk on a 0-based page-numbered API whose URL states a size and
+   *     no page (Spring Data; Diavgeia). The walk used to follow the implicit
+   *     page 0 with page 2 — page 1 was never requested and its records were
+   *     lost on every run, with nothing disclosed. It now asks for page 1, which
+   *     on a 0-based API is new data. */
+  fx_reset();
+  fx_add("wz?size=2&page=1", 200, "{\"items\":[{\"name\":\"r2\",\"id\":\"2\"},{\"name\":\"r3\",\"id\":\"3\"}]}");
+  fx_add("wz?size=2&page=2", 200, "{\"items\":[{\"name\":\"r4\",\"id\":\"4\"},{\"name\":\"r5\",\"id\":\"5\"}]}");
+  fx_add("wz?size=2&page=3", 200, "{\"items\":[]}");
+  fx_add("wz?size=2", 200, "{\"items\":[{\"name\":\"r0\",\"id\":\"0\"},{\"name\":\"r1\",\"id\":\"1\"}]}");
+  rc = run_source("T_PW_ZERO", "");
+  ok(rc == 0 && cap_count("t-pwz", NULL) == 6 && g_ncap == 6,
+     "27: a 0-based page walk reads pages 0, 1, 2 — page 1 is no longer skipped");
+  ok(g_ncalls == 4 && strstr(g_last_url, "page=3") != NULL,
+     "27: four requests (implicit 0, 1, 2, then the empty 3)");
+
+  /* 28. the same walk on a 1-based API: the page-1 request returns the page
+   *     already read. That repeat is recognised as the probe it is, emits
+   *     nothing, is not counted as a page, and the walk continues at page 2. */
+  fx_reset();
+  fx_add("wo?per_page=2&page=1", 200, "{\"items\":[{\"name\":\"a1\",\"id\":\"1\"},{\"name\":\"a2\",\"id\":\"2\"}]}");
+  fx_add("wo?per_page=2&page=2", 200, "{\"items\":[{\"name\":\"a3\",\"id\":\"3\"},{\"name\":\"a4\",\"id\":\"4\"}]}");
+  fx_add("wo?per_page=2&page=3", 200, "{\"items\":[{\"name\":\"a5\",\"id\":\"5\"}]}");
+  fx_add("wo?per_page=2", 200, "{\"items\":[{\"name\":\"a1\",\"id\":\"1\"},{\"name\":\"a2\",\"id\":\"2\"}]}");
+  rc = run_source("T_PW_ONE", "");
+  ok(rc == 0 && cap_count("t-pwo", NULL) == 5 && g_ncap == 5,
+     "28: a 1-based page walk emits a1..a5 once each, and no notice");
+  ok(g_ncalls == 4 && strstr(g_last_url, "page=3") != NULL,
+     "28: the page-1 probe costs one request; the walk continues at 2 and 3");
+  {
+    const cap *c3 = NULL;
+    for (int i = 0; i < g_ncap; i++) if (!strcmp(g_cap[i].title, "a3")) c3 = &g_cap[i];
+    ok(c3 && strstr(c3->props, "\"_page\":2") != NULL,
+       "28: the probe is not counted as a page (page=2's records are page 2)");
+  }
+
+  /* 29. page_walk, the server ignores the cursor and stamps every response
+   *     with a fresh `took`. The body hash never matched, so the same two
+   *     records were re-emitted for 20 pages and a page-ceiling truncation
+   *     notice claimed pages were pending. The records repeat; the walk stops
+   *     before re-emitting them and says the cursor was ignored. */
+  fx_reset();
+  fx_add("wv?limit=2&offset=2", 200,
+    "{\"took\":2,\"items\":[{\"name\":\"v1\",\"id\":\"1\"},{\"name\":\"v2\",\"id\":\"2\"}]}");
+  fx_add("wv?limit=2", 200,
+    "{\"took\":1,\"items\":[{\"name\":\"v1\",\"id\":\"1\"},{\"name\":\"v2\",\"id\":\"2\"}]}");
+  rc = run_source("T_PW_VOLATILE", "");
+  {
+    const cap *nt = NULL;
+    ok(rc == 0 && g_ncalls == 2 && cap_count("t-pwv", NULL) == 2,
+       "29: an ignored cursor under a changing envelope stops after one repeat, nothing re-emitted");
+    ok(cap_count("collector-truncation-notice", NULL) == 0,
+       "29: and files no page-ceiling truncation notice");
+    ok(cap_count(NOTICE, &nt) == 1 && nt && strstr(nt->key, "page-param-ignored") &&
+       strstr(nt->title, "repeated the records of page 1") != NULL,
+       "29: the repeat is disclosed as page-param-ignored, by its records");
+  }
+
+  /* 29b. page_walk + filter_query: the upstream declares 3, hands over 3, and
+   *     the filter keeps 1. Comparing the declared total with what was EMITTED
+   *     filed a truncation notice on a walk that had read everything. */
+  fx_reset();
+  fx_add("/wf?q=", 200,
+    "{\"total\":3,\"items\":[{\"name\":\"acme corp\",\"id\":\"1\"},"
+    "{\"name\":\"foo\",\"id\":\"2\"},{\"name\":\"bar\",\"id\":\"3\"}]}");
+  rc = run_source("T_PW_FILTER", "acme");
+  ok(rc == 0 && cap_count("t-pwf", NULL) == 1 && g_ncalls == 1 &&
+     cap_count("collector-truncation-notice", NULL) == 0,
+     "29b: filtered-out records were fetched — no false truncation notice");
+
+  /* 30. A ZIP-served CSV. (a) one entry whose bytes contain "PK\3\4": the old
+   *     signature scan read that as a second entry; the archive's own count
+   *     says one. (b) two entries: disclosed. (c) the inflated entry is freed
+   *     — it leaked once per page, up to 256 MB each. */
+  {
+    static const char csv1[] = "id,name\n1,alpha PK\x03\x04 beta\n2,gamma\n";
+    const char *nm[2] = { "a.csv", "b.csv" };
+    const char *dt[2] = { csv1, "id,name\n9,other\n" };
+    size_t ln[2] = { sizeof csv1 - 1, strlen("id,name\n9,other\n") };
+    size_t zl = 0;
+    char *z1 = mk_zip(nm, dt, ln, 1, &zl);
+    fx_reset();
+    fx_add_bin("/z.zip", 200, z1, zl);
+    rc = run_source("T_ZIPCSV", "");
+    ok(rc == 0 && cap_count("t-zip", NULL) == 2 && cap_count(NOTICE, NULL) == 0,
+       "30a: a one-entry ZIP whose data contains PK\\3\\4 reads 2 records and files no zip-extra notice");
+    free(z1);
+    size_t zl2 = 0;
+    char *z2 = mk_zip(nm, dt, ln, 2, &zl2);
+    fx_reset();
+    fx_add_bin("/z.zip", 200, z2, zl2);
+    rc = run_source("T_ZIPCSV", "");
+    const cap *nt = NULL;
+    ok(rc == 0 && cap_count("t-zip", NULL) == 2 && cap_count(NOTICE, &nt) == 1 && nt &&
+       strstr(nt->key, "zip-extra-entries") != NULL,
+       "30b: a two-entry ZIP reads the first and discloses the second");
+    free(z2);
+
+    /* (c) 2 MB entry, ten runs. Leaking it would hold 20 MB. */
+    size_t big = 2u << 20;
+    char *bd = malloc(big + 64);
+    int hl = snprintf(bd, 64, "id,name\n1,");
+    memset(bd + hl, 'x', big - (size_t)hl - 1);
+    bd[big - 1] = '\n';
+    const char *bn[1] = { "big.csv" };
+    const char *bdt[1] = { bd };
+    size_t bl[1] = { big };
+    size_t zl3 = 0;
+    char *z3 = mk_zip(bn, bdt, bl, 1, &zl3);
+    free(bd);
+    fx_reset();
+    fx_add_bin("/z.zip", 200, z3, zl3);
+    run_source("T_ZIPCSV", "");                 /* warm-up */
+    long h0 = heap_in_use();
+    for (int i = 0; i < 10; i++) run_source("T_ZIPCSV", "");
+    long h1 = heap_in_use();
+    if (h0 >= 0 && h1 >= 0)
+      ok(h1 - h0 < (long)(4u << 20),
+         "30c: ten runs of a 2 MB ZIP entry do not grow the heap (the entry is freed)");
+    else
+      printf("  skip  30c: heap statistics unavailable on this platform\n");
+    free(z3);
+  }
+
+  /* 31. The VJSON walk itself (jsonlist_emit_paged), both bases. */
+  {
+    intel_sink vs = { .ctx = NULL, .emit = cap_emit };
+    fx_reset();
+    g_ncap = 0;
+    fx_add("vz?size=2&page=1", 200, "{\"items\":[{\"name\":\"r2\",\"id\":\"2\"},{\"name\":\"r3\",\"id\":\"3\"}]}");
+    fx_add("vz?size=2&page=2", 200, "{\"items\":[{\"name\":\"r4\",\"id\":\"4\"}]}");
+    fx_add("vz?size=2", 200, "{\"items\":[{\"name\":\"r0\",\"id\":\"0\"},{\"name\":\"r1\",\"id\":\"1\"}]}");
+    int n = jsonlist_emit_paged(&vs, "VJ_ZERO", NULL, "https://x.test/vz?size=2", 1000,
+                                "items", "t-vj", "en", "[]");
+    ok(n == 5 && g_ncalls == 3,
+       "31a: VJSON 0-based walk reads implicit 0, then 1 and 2 (5 records, 3 requests)");
+    fx_reset();
+    g_ncap = 0;
+    fx_add("vo?per_page=2&page=1", 200, "{\"items\":[{\"name\":\"a1\",\"id\":\"1\"},{\"name\":\"a2\",\"id\":\"2\"}]}");
+    fx_add("vo?per_page=2&page=2", 200, "{\"items\":[{\"name\":\"a3\",\"id\":\"3\"}]}");
+    fx_add("vo?per_page=2", 200, "{\"items\":[{\"name\":\"a1\",\"id\":\"1\"},{\"name\":\"a2\",\"id\":\"2\"}]}");
+    n = jsonlist_emit_paged(&vs, "VJ_ONE", NULL, "https://x.test/vo?per_page=2", 1000,
+                            "items", "t-vj", "en", "[]");
+    ok(n == 3 && g_ncap == 3 && g_ncalls == 3,
+       "31b: VJSON 1-based walk: the page-1 probe repeats page 1, nothing re-emitted, page 2 read");
+    char *nx = jsonlist_page_one_retry("https://x.test/a?size=2&page=1",
+                                       "https://x.test/a?size=2&page=2");
+    ok(nx == NULL, "31c: a repeat that is not the page-1 probe is not retried");
+    free(nx);
+  }
+
+  /* 32. Flatten accounting is per RECORD on every path. A JSON record past the
+   *     depth guard set the thread's counters; the XML, headerless-CSV and
+   *     HTML paths never reset them, so their next records were stamped
+   *     `_fields_dropped` they never had. */
+  {
+    static const char deep[] =
+      "{\"items\":[{\"id\":\"1\",\"name\":\"deep\",\"a\":{\"b\":{\"c\":{\"d\":{\"e\":"
+      "{\"f\":{\"g\":{\"h\":{\"i\":{\"j\":{\"k\":1}}}}}}}}}}}]}";
+    fx_reset();
+    fx_add("/dr", 200, deep);
+    rc = run_source("T_DEEPREC", "");
+    ok(rc == 0 && g_ncap >= 1 && strstr(g_cap[0].props, "_fields_dropped") != NULL,
+       "32: the deep JSON record itself is stamped");
+    fx_reset();
+    fx_add("/x?q=", 200,
+      "<list><target><ref>A1</ref><name>Alpha</name></target>"
+      "<target><ref>B2</ref><name>Beta</name></target></list>");
+    rc = run_source("T_XML", "x");
+    int stale = 0;
+    for (int i = 0; i < g_ncap; i++) if (strstr(g_cap[i].props, "_fields_dropped")) stale++;
+    ok(rc == 0 && g_ncap == 2 && !stale, "32a: the XML records after it are not stamped");
+    fx_reset(); fx_add("/dr", 200, deep); run_source("T_DEEPREC", "");
+    fx_reset();
+    fx_add("/bare.csv", 200, "10.0.0.1,telnet\n10.0.0.2,ssh\n");
+    rc = run_source("T_CSV_BARE", "");
+    stale = 0;
+    for (int i = 0; i < g_ncap; i++) if (strstr(g_cap[i].props, "_fields_dropped")) stale++;
+    ok(rc == 0 && g_ncap == 2 && !stale, "32b: nor are headerless CSV records");
+    fx_reset(); fx_add("/dr", 200, deep); run_source("T_DEEPREC", "");
+    fx_reset();
+    fx_add("/h?q=", 200, "<html><a href=\"/rec/9\">Ninth record</a></html>");
+    rc = run_source("T_HTML", "x");
+    stale = 0;
+    for (int i = 0; i < g_ncap; i++) if (strstr(g_cap[i].props, "_fields_dropped")) stale++;
+    ok(rc == 0 && g_ncap == 1 && !stale, "32c: nor are HTML anchors");
+  }
+
+  /* 33. A composite title longer than 64 bytes is SHOWN, not hashed. */
+  fx_reset();
+  fx_add("/tc", 200,
+    "{\"features\":[{\"attributes\":{\"oid\":7,"
+    "\"title\":\"\xE5\xB7\x9D\xE5\xB4\x8E\xE5\xB8\x82\xE4\xB8\xAD\xE5\x8E\x9F\xE5\x8C\xBA road occupancy permits\","
+    "\"summary\":\"FY2026 Q3 list of occupancy permits for poles and buried plant\"}}]}");
+  rc = run_source("T_TCOMP", "");
+  ok(rc == 0 && g_ncap == 1 &&
+     !strcmp(g_cap[0].title, "\xE5\xB7\x9D\xE5\xB4\x8E\xE5\xB8\x82\xE4\xB8\xAD\xE5\x8E\x9F\xE5\x8C\xBA"
+                             " road occupancy permits|FY2026 Q3 list of occupancy permits for poles and buried plant"),
+     "33: a composite title over 64 bytes is the joined text, not a hex hash");
+  ok(g_ncap == 1 && !strcmp(g_cap[0].key, "T_TCOMP|7"), "33: and the uid is still the declared id");
+
+  /* 34. An icon anchor whose caption PRECEDES it in its own paragraph. The
+   *     scan after </a> did not stop at </p>, so each PDF was labelled with
+   *     the NEXT paragraph's caption. Paragraph and division boundaries now
+   *     stop both scans; the following text, finding none, yields to the
+   *     caption before the icon. */
+  fx_reset();
+  fx_add("/h?q=", 200,
+    "<html><div class=\"list\">"
+    "<p>Minutes 2026-01 <a href=\"/rec/m1\"><img src=\"pdf.gif\"></a></p>"
+    "<p>Minutes 2026-02 <a href=\"/rec/m2\"><img src=\"pdf.gif\"></a></p>"
+    "</div><div><a href=\"/rec/m3\"><img src=\"pdf.gif\"></a> Caption After</div></html>");
+  rc = run_source("T_HTML", "x");
+  ok(rc == 0 && g_ncap == 3 && !strcmp(g_cap[0].title, "Minutes 2026-01") &&
+     !strcmp(g_cap[1].title, "Minutes 2026-02"),
+     "34: a caption before its icon in the same <p> labels it, not the next one");
+  ok(g_ncap == 3 && !strcmp(g_cap[2].title, "Caption After"),
+     "34: a caption after the icon is still read when nothing precedes it");
+  /* 34b. The two live layouts the boundary set was measured against
+   *     (2026-10-03): the name on the line UNDER the icon in a table cell
+   *     (Kumamoto R57), and one name split over two lines (Yodogawa). A <br>
+   *     boundary dropped the first and halved the second; preferring the
+   *     preceding text gave each Kumamoto camera its left neighbour's name. */
+  fx_reset();
+  fx_add("/h?q=", 200,
+    "<html><table><tr>"
+    "<td><a href=\"/rec/k1\"><img src=\"1.jpg\" /></a><br />\n Udo Nagahama</td>"
+    "<td>&nbsp;</td>"
+    "<td><a href=\"/rec/k2\"><img src=\"2.jpg\" /></a><br />\n Ichinokawa</td>"
+    "</tr></table><ul>"
+    "<li><a href=\"/rec/y1\"><img src=\"3.jpg\" alt=\"\"></a>"
+    " <span class=\"ttl\">18.2k<br>Arashiyama</span></li>"
+    "</ul></html>");
+  rc = run_source("T_HTML", "x");
+  ok(rc == 0 && g_ncap == 3 && !strncmp(g_cap[0].title, "Udo Nagahama", 12) &&
+     !strncmp(g_cap[1].title, "Ichinokawa", 10),
+     "34b: a name under the icon (<br>) labels its own camera, not the next or previous one");
+  ok(g_ncap == 3 && strstr(g_cap[2].title, "18.2k") && strstr(g_cap[2].title, "Arashiyama"),
+     "34b: a two-line caption is read whole (a <br> is not a boundary)");
+  /* 34c. Division layouts: a card whose icon and title sit in sibling divs
+   *     (niigata-cci.or.jp, mbsd.jp) keeps the title that follows; a name in
+   *     the div BEFORE the icon's div is found; and a caption-before-icon list
+   *     written with divs is not labelled one item off. */
+  fx_reset();
+  fx_add("/h?q=", 200,
+    "<html><ul>"
+    "<li><div class=\"img\"><a href=\"/rec/d1\"><img src=\"1.png\" alt=\"\"></a></div>"
+    "<div class=\"txt\"><h3>Card Title One</h3><p class=\"gaiyo\">summary text</p></div></li>"
+    "<li><div class=\"name\">Kamo Bridge</div><div class=\"icon\"><a href=\"/rec/d2\"><img src=\"2.png\"></a></div></li>"
+    "</ul>"
+    "<div>Report 2026-01 <a href=\"/rec/d3\"><img src=\"p.gif\"></a></div>"
+    "<div>Report 2026-02 <a href=\"/rec/d4\"><img src=\"p.gif\"></a></div>"
+    "</html>");
+  rc = run_source("T_HTML", "x");
+  ok(rc == 0 && g_ncap == 4 && !strcmp(g_cap[0].title, "Card Title One"),
+     "34c: a card's title in the sibling div labels its icon (and stops at the summary <p>)");
+  ok(g_ncap == 4 && !strcmp(g_cap[1].title, "Kamo Bridge"),
+     "34c: a name in the div before the icon's div labels it");
+  ok(g_ncap == 4 && !strcmp(g_cap[2].title, "Report 2026-01") &&
+     !strcmp(g_cap[3].title, "Report 2026-02"),
+     "34c: a caption-before-icon list in divs labels each item with its own caption");
+  /* 34d. A spacer `&nbsp;` between the icon and its caption is layout, not
+   *     the caption (jsite.mhlw.go.jp/tokyo-roudoukyoku): counting it as text
+   *     stopped the scan at the next <div> with a label of "&nbsp; &nbsp;". */
+  fx_reset();
+  fx_add("/h?q=", 200,
+    "<html><a href=\"/rec/n1\"><img src=\"1.jpg\"></a><br />\n &nbsp;\n"
+    "<h4>&nbsp;</h4><div><h4>Spacer Caption</h4></div></html>");
+  rc = run_source("T_HTML", "x");
+  ok(rc == 0 && g_ncap == 1 && strstr(g_cap[0].title, "Spacer Caption") != NULL,
+     "34d: a no-break-space spacer does not end the label before the caption");
+
+  /* 35. XML rows spend the detail budget per record, as JSON rows do. */
+  fx_reset();
+  fx_add("/xdd/", 200, "{\"role\":\"member\"}");
+  fx_add("/xd", 200,
+    "<r><item><ref>A1</ref><name>a</name></item><item><ref>B2</ref><name>b</name></item>"
+    "<item><ref>C3</ref><name>c</name></item></r>");
+  rc = run_source("T_XML_DEEP", "");
+  {
+    int pend = 0;
+    for (int i = 0; i < g_ncap; i++) if (strstr(g_cap[i].props, "_detail_pending")) pend++;
+    ok(rc == 0 && g_ncap == 3 && g_ncalls == 2 && pend == 2,
+       "35: detail_max=1 on an XML row makes ONE detail request; the rest are marked pending");
+  }
+
+  /* Two transactions of the SAME activity, differing only in later parts of the
+   * composite, and with two dimensions absent on each. They must not collapse:
+   * `aid` is shared, so anything that keys on the first present part alone
+   * stores one row and reports two. */
+  fx_reset();
+  fx_add("/wide", 200,
+    "{\"rows\":[{\"title\":\"t1\",\"aid\":\"XM-DAC-1\",\"trans_id\":\"a\","
+    "\"trans_day\":\"2026-01-04\",\"trans_value\":100,\"trans_code\":\"D\","
+    "\"trans_country\":\"GH\"},"
+    "{\"title\":\"t2\",\"aid\":\"XM-DAC-1\",\"trans_id\":\"b\","
+    "\"trans_day\":\"2026-02-09\",\"trans_value\":250,\"trans_code\":\"D\","
+    "\"trans_country\":\"GH\"}]}");
+  rc = run_source("T_IDKEYS_WIDE", "");
+  ok(rc == 0 && g_ncap == 2, "wide composite emits both transactions of one activity");
+  ok(strcmp(g_cap[0].key, g_cap[1].key) != 0,
+     "a shared `aid` does not collapse them — later composite parts separate the rows");
+  ok(strstr(g_cap[0].key, "XM-DAC-1") != NULL && strstr(g_cap[0].key, "2026-01-04") != NULL,
+     "absent parts do not truncate the key: parts after the holes still reach it");
+
+  /* `array_path = "."` is the document root. Two packages at the root, one of
+   * them carrying three releases, so the nested array (3) outnumbers the root
+   * (2) and discovery prefers it. That is the hex.pm shape: on a 60-page walk
+   * the engine mined `[33].releases` on 34 pages and emitted 9,643 records
+   * where the pages held 6,000 (measured 2026-10-04). Both halves are pinned
+   * — the hijack, so the reason the "." exists stays legible, and the fix. */
+  fx_reset();
+  fx_add("/rootarr", 200,
+    "[{\"name\":\"alpha\",\"releases\":[{\"version\":\"1\"},{\"version\":\"2\"},"
+    "{\"version\":\"3\"}]},"
+    "{\"name\":\"beta\",\"releases\":[{\"version\":\"9\"}]}]");
+  rc = run_source("T_ROOTARR_AUTO", "");
+  int rootarr_recs = 0, rootarr_named = 0, rootarr_notice = 0;
+  for (int i = 0; i < g_ncap; i++) {
+    if (!strcmp(g_cap[i].rtype, "t-root")) {
+      rootarr_recs++;
+      if (strstr(g_cap[i].key, "alpha") || strstr(g_cap[i].key, "beta"))
+        rootarr_named++;
+    } else if (strstr(g_cap[i].key, "shape:densest-array-fallback")) {
+      rootarr_notice++;
+    }
+  }
+  ok(rc == 0 && rootarr_recs == 3 && rootarr_named == 0,
+     "without array_path, discovery mines the longer NESTED array (3 releases, not 2 packages)");
+  ok(rootarr_notice == 1,
+     "and says so: the densest-array fallback is stamped as a shape notice, not silent");
+  fx_reset();
+  fx_add("/rootarr", 200,
+    "[{\"name\":\"alpha\",\"releases\":[{\"version\":\"1\"},{\"version\":\"2\"},"
+    "{\"version\":\"3\"}]},"
+    "{\"name\":\"beta\",\"releases\":[{\"version\":\"9\"}]}]");
+  rc = run_source("T_ROOTARR_DOT", "");
+  ok(rc == 0 && g_ncap == 2,
+     "array_path=\".\" takes the ROOT array — one record per package");
+  ok(g_ncap == 2 && strstr(g_cap[0].key, "alpha") != NULL &&
+     strstr(g_cap[1].key, "beta") != NULL,
+     "and the root records key on their own fields, so id_keys resolves");
+
+  /* NDJSON: three record lines, one blank line, one line that is not JSON and
+   * one bare scalar. The three records must emit, the blank must not count at
+   * all, and the unreadable line must be DISCLOSED rather than skipped —
+   * silently dropping it is what would make a half-broken feed look whole. */
+  fx_reset();
+  fx_add("/ndjson", 200,
+    "{\"Path\":\"golang.org/x/text\",\"Version\":\"v0.3.0\"}\n"
+    "\n"
+    "{\"Path\":\"golang.org/x/text\",\"Version\":\"v0.4.0\"}\n"
+    "{\"Path\":\"github.com/a/b\",\"Version\":\"v1.0.0\"} oops not json\n"
+    "42\n"
+    "{\"Path\":\"github.com/a/b\",\"Version\":\"v1.0.0\"}\n");
+  rc = run_source("T_NDJSON", "");
+  int nd_recs = 0, nd_note = 0;
+  for (int i = 0; i < g_ncap; i++) {
+    if (!strcmp(g_cap[i].rtype, "t-nd")) nd_recs++;
+    else if (strstr(g_cap[i].key, "truncation:")) nd_note++;
+  }
+  ok(rc == 0 && nd_recs == 3,
+     "ndjson emits one record per JSON line (a blank line is not a record)");
+  ok(g_ncap >= 3 && strstr(g_cap[0].key, "golang.org/x/text") != NULL &&
+     strstr(g_cap[0].key, "v0.3.0") != NULL,
+     "and the composite id_keys resolves against the per-line objects");
+  ok(nd_recs == 3 && strcmp(g_cap[0].key, g_cap[1].key) != 0,
+     "two versions of one module do not collapse onto each other");
+  ok(nd_note == 1,
+     "an unreadable line is disclosed as a truncation notice, not skipped");
+
+  /* `$last` cursor. Page 1 ends at ts2; the engine must ask for since=ts2 and
+   * then stop when the page it gets back holds nothing new. */
+  fx_reset();
+  /* Fixtures match by strstr in insertion order, so the specific cursors must
+   * be registered BEFORE the bare path — "/ndpage" is a substring of every
+   * one of these URLs and would otherwise answer all three pages with page 1,
+   * which is what the engine's own repeated-page detector then reports. */
+  fx_add("/ndpage?since=ts3", 200, "\n");
+  fx_add("/ndpage?since=ts2", 200,
+    "{\"Path\":\"m/three\",\"Version\":\"v1\",\"Timestamp\":\"ts3\"}\n");
+  fx_add("/ndpage", 200,
+    "{\"Path\":\"m/one\",\"Version\":\"v1\",\"Timestamp\":\"ts1\"}\n"
+    "{\"Path\":\"m/two\",\"Version\":\"v1\",\"Timestamp\":\"ts2\"}\n");
+  rc = run_source("T_NDJSON_LASTCURSOR", "");
+  int ndp = 0;
+  for (int i = 0; i < g_ncap; i++) if (!strcmp(g_cap[i].rtype, "t-nd")) ndp++;
+  ok(rc == 0 && ndp == 3,
+     "$last.Timestamp walks the feed: page 1's last record supplies page 2's cursor");
+
+  /* {ago:N}. The URL must carry a real instant, not the literal token — an
+   * unknown token is left verbatim by design, so "left verbatim" is exactly
+   * the failure this pins. */
+  fx_reset();
+  fx_add("/ago?since=20", 200, "{\"Path\":\"m/ago\"}\n");
+  rc = run_source("T_AGO", "");
+  ok(rc == 0 && strstr(g_last_url, "{ago:") == NULL,
+     "{ago:N} is expanded, not passed through as a literal token");
+  ok(strstr(g_last_url, "since=20") != NULL && strstr(g_last_url, "Z") != NULL,
+     "and expands to an RFC 3339 UTC instant");
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

@@ -184,7 +184,7 @@ static int run_sam(const source_ctx *ctx, intel_sink *sink) {
   free(enc); free(ekey);
 
   if (truncated)
-    jo_trunc_notice(sink, "SAM_GOV_OPPORTUNITIES", disclose, n, available,
+    jo_trunc_notice_scoped(sink, "SAM_GOV_OPPORTUNITIES", ctx->entity, disclose, n, available,
                     "page ceiling reached, or a mid-walk fetch failed, while "
                     "SAM.gov was still returning full pages",
                     "raise $JO_PROCURE_PAGE_MAX, or narrow the title keyword");
@@ -316,7 +316,7 @@ static int run_ted(const source_ctx *ctx, intel_sink *sink) {
   }
 
   if (truncated)
-    jo_trunc_notice(sink, "TED_EU_TENDERS",
+    jo_trunc_notice_scoped(sink, "TED_EU_TENDERS", ctx->entity,
                     "https://api.ted.europa.eu/v3/notices/search", n, available,
                     "page ceiling reached, or a mid-walk fetch failed, while "
                     "TED was still returning full pages of notices",
@@ -454,7 +454,7 @@ static int usa_walk(const source_ctx *ctx, intel_sink *sink,
   }
 
   if (truncated)
-    jo_trunc_notice(sink, service,
+    jo_trunc_notice_scoped(sink, service, ctx->entity,
                     "https://api.usaspending.gov/api/v2/search/"
                     "spending_by_award/", n, -1,
                     "page ceiling reached, or a mid-walk fetch failed, while "

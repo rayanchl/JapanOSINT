@@ -667,25 +667,44 @@ static int ac_orcid(const source_ctx *ctx, intel_sink *sink, const char *q) {
  * { "items": [ { id, established, names:[{value,types,lang}],
  *   locations:[{geonames_details:{country_name,lat,lng,name}}],
  *   links:[{type,value}] }, ... ] }  keyless JSON. */
+/* ROR answers 20 organisations a page and states number_of_results (219 for
+ * "Tokyo", 2026-10-02). This read page 1 only — and a `n++ >= 25` cap that
+ * never bit on a 20-record page hid that. Pages are walked until one comes
+ * back short or the stated total is reached, at most ROR_PAGE_MAX pages; when
+ * that ceiling or a failed later page stops the walk, the shortfall is a
+ * collector-truncation-notice scoped to the query.
+ *
+ * ROR's relevance-ranked pages OVERLAP: walking all 11 pages of "Tokyo"
+ * returns 219 items but 194 distinct organisations (v2: 203), measured
+ * 2026-10-02. The repeats are the same organisation, so the sink's
+ * UID-COLLISION count on this source is that overlap, not a key defect — and
+ * the organisations the overlap displaced are not reachable by paging. */
+#define ROR_PAGE      20
+#define ROR_PAGE_MAX  50   /* exhaustive-ok: page ceiling (1,000 orgs per query); stamped as a truncation notice */
 static int ac_ror(const source_ctx *ctx, intel_sink *sink, const char *q) {
   char *enc = jo_urlencode(q);
   if (!enc) return 0;
   char url[1024];
-  snprintf(url, sizeof url, "https://api.ror.org/organizations?query=%s", enc);
-  free(enc);
   const char *hdrs[] = { "Accept: application/json",
                          "User-Agent: JapanOSINT/1.0", NULL };
+  int emitted = 0, pages = 0, stopped = 0;
+  long total = -1;
+  for (int page = 1; ; page++) {
+  snprintf(url, sizeof url, "https://api.ror.org/organizations?query=%s&page=%d",
+           enc, page);
   char *body = jo_get(ctx, url, hdrs, "ROR_ORGS");
-  if (!body) return 0;
+  if (!body) { if (pages) stopped = 1; break; }
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) { if (pages) stopped = 1; break; }
+  pages++;
+  const cJSON *nr = cJSON_GetObjectItem(root, "number_of_results");
+  if (cJSON_IsNumber(nr)) total = (long)nr->valuedouble;
   cJSON *items = cJSON_GetObjectItem(root, "items");
-  int emitted = 0, n = 0;
+  int seen = cJSON_IsArray(items) ? cJSON_GetArraySize(items) : 0;
   if (cJSON_IsArray(items)) {
     cJSON *r;
     cJSON_ArrayForEach(r, items) {
-      if (n++ >= 25) break;
       const char *id = jo_sv(r, "id");   /* full https://ror.org/... URL */
       if (!id) continue;
 
@@ -791,7 +810,17 @@ static int ac_ror(const source_ctx *ctx, intel_sink *sink, const char *q) {
     }
   }
   cJSON_Delete(root);
-  fprintf(stderr, "[ROR_ORGS] emitted %d\n", emitted);
+  if (seen < ROR_PAGE || (total >= 0 && (long)page * ROR_PAGE >= total)) break;
+  if (pages >= ROR_PAGE_MAX) { stopped = 1; break; }
+  }
+  free(enc);
+  if (stopped)
+    jo_trunc_notice_scoped(sink, "ROR_ORGS", q, url, emitted, total,
+                           "the ROR page walk stopped (page ceiling or a failed "
+                           "later page) before number_of_results",
+                           "narrow the query, or re-run");
+  fprintf(stderr, "[ROR_ORGS] emitted %d across %d page(s), number_of_results %ld\n",
+          emitted, pages, total);
   return emitted;
 }
 
@@ -972,11 +1001,10 @@ static int ac_opencitations(const source_ctx *ctx, intel_sink *sink, const char 
   free(body);
   if (!root) { free(mtitle); free(mvenue); return 0; }
 
-  int emitted = 0, n = 0;
+  int emitted = 0;
   if (cJSON_IsArray(root)) {
     cJSON *r;
     cJSON_ArrayForEach(r, root) {
-      if (n++ >= 50) break;
       const char *citing = jo_sv(r, "citing");
       const char *oci    = jo_sv(r, "oci");
       const char *crea   = jo_sv(r, "creation");

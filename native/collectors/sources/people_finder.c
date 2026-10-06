@@ -409,7 +409,7 @@ static int feed_emit(const source_ctx *ctx, intel_sink *sink, const char *url,
   if (!body) return 0;
   int emitted = 0;
   char *p = body, *e;
-  while (emitted < 30) {
+  for (;;) {                     /* every <item>/<entry> the feed carries */
     char *it_s = strstr(p, "<item");
     char *en_s = strstr(p, "<entry");
     e = it_s; const char *closer = "</item>";

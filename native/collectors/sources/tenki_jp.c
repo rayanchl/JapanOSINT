@@ -138,7 +138,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
        * the city name, a weather telop in the icon's alt=, max/min temp and a
        * precipitation probability — a complete observation per row. */
       const char *cur = fc;
-      while (n < 60) {
+      for (;;) {                 /* every municipality on the page */
         const char *a = strstr(cur, "id=\"forecast-map-entry-");
         if (!a) break;
         /* back up to the '<a' that owns this id */

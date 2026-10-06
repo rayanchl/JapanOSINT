@@ -2,16 +2,30 @@
  * European vulnerability register. Three keyless endpoints, three source_defs,
  * one table-driven run().
  *
- *   enisa-euvd-search     https://euvdservices.enisa.europa.eu/api/search?size=100&page=0
+ *   enisa-euvd-search     https://euvdservices.enisa.europa.eu/api/search?size=100&page=0&fromDate=<today-2d>
  *   enisa-euvd-latest     https://euvdservices.enisa.europa.eu/api/lastvulnerabilities
  *   enisa-euvd-exploited  https://euvdservices.enisa.europa.eu/api/exploitedvulnerabilities
  *
- * SCOPE: the corpus is 372,036 records (doc.total on /api/search). This
- * collector deliberately does NOT page the whole corpus — it takes the recent
- * window only: one page of /api/search (100 records, page=0), plus the two
- * small newest-first digests. On an OSINT pivot (ctx->entity set) the search
- * endpoint is re-pointed at ?text=<entity> instead, which is the same window
- * narrowed to the analyst's term rather than a deeper crawl.
+ * SCOPE: the corpus is 399,497 records (doc.total on /api/search, 2026-10-02).
+ * This collector deliberately does NOT page the whole corpus. The scheduled
+ * search reads a RECENT WINDOW — the last two days (fromDate) — and reads
+ * that window to the end, every page, through lib/pagewalk.c; the two small
+ * newest-first digests are read as they come. On an OSINT pivot (ctx->entity
+ * set) the search is ?text=<entity> instead, also walked to the end.
+ *
+ * It used to read ONE page (page=0) of /api/search and call that "the recent
+ * window". It was not: /api/search without a date filter is not ordered by
+ * date (measured 2026-10-02: page 0 opened on EUVD-2026-90906, page 1 on
+ * EUVD-2017-18957), so the scheduled run kept 100 arbitrary records of 399,497,
+ * and the pivot kept 50 of e.g. 1,131 for text=fortinet. size is capped at 100
+ * by the upstream (size=500 answers 100), page is 0-based, and the envelope
+ * carries `total`, so pw_walk advances page= while pages come back full and
+ * publishes a truncation notice when its ceiling (JO_PAGE_MAX) bites.
+ *
+ * Why two days: the run is hourly, and a three-day window held 2,021 records
+ * on 2026-10-02 — past the 20-page ceiling, so every run stated a 21-record
+ * shortfall. Two days (1,410 that day) is read to the end with the window
+ * still overlapping 48 runs.
  *
  * Emits, all read out of the response body: EUVD id (remote_key), description,
  * datePublished/dateUpdated, CVSS baseScore + baseScoreVersion + baseScoreVector
@@ -33,14 +47,19 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/pagewalk.h"
+#include "_timefmt.inc"
 #include "third_party/cJSON.h"
 #include <ctype.h>
+#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define EUVD_SEARCH    "https://euvdservices.enisa.europa.eu/api/search?size=100&page=0"
-#define EUVD_SEARCH_Q  "https://euvdservices.enisa.europa.eu/api/search?size=50&page=0&text="
+/* `page=0` seeds lib/pagewalk.c's page walk; `size` is the stride it checks
+ * fullness against. Both are completed by euvd_url() and handed to pw_walk. */
+#define EUVD_SEARCH    "https://euvdservices.enisa.europa.eu/api/search?size=100&page=0&fromDate=%s"
+#define EUVD_SEARCH_Q  "https://euvdservices.enisa.europa.eu/api/search?size=100&page=0&text=%s"
 #define EUVD_LATEST    "https://euvdservices.enisa.europa.eu/api/lastvulnerabilities"
 #define EUVD_EXPLOITED "https://euvdservices.enisa.europa.eu/api/exploitedvulnerabilities"
 
@@ -152,23 +171,59 @@ static int euvd_walk(cJSON *doc, intel_sink *sink, const char *tags) {
   return n;
 }
 
+static const char *const EUVD_HDRS[] = { "accept: application/json", NULL };
+
+/* pw_fetch_fn: EUVD wants an explicit JSON accept header. */
+static cJSON *euvd_fetch(const source_ctx *c, const char *url, void *ud) {
+  (void)ud;
+  return feed_get_json_h(c->http, url, EUVD_HDRS, 25000);
+}
+
+/* pw_emit_fn: one page of /api/search; `seen` is what the page HELD, which is
+ * what pw_walk judges fullness on (lib/pagewalk.h). */
+static int euvd_page(const source_ctx *c, intel_sink *sink, const char *id,
+                     cJSON *doc, void *ud, int *seen) {
+  (void)c; (void)id;
+  cJSON *arr = cJSON_GetObjectItem(doc, "items");
+  *seen = cJSON_IsArray(arr) ? cJSON_GetArraySize(arr) : 0;
+  return euvd_walk(doc, sink, (const char *)ud);
+}
+
+/* Complete a search template with its one argument; returns `buf`. */
+static const char *euvd_url(char *buf, size_t n, const char *fmt,
+                            const char *arg) {
+  snprintf(buf, n, fmt, arg ? arg : "");
+  return buf;
+}
+
 static int run(const source_ctx *c, intel_sink *s) {
   if (!c || !c->source_id) return -1;
   const char *url = NULL, *tags = NULL;
-  char *built = NULL;
 
   if (!strcmp(c->source_id, "enisa-euvd-search")) {
     tags = "[\"vulnerability\",\"cyber\",\"euvd\",\"enisa\"]";
-    if (c->entity && *c->entity) {
-      char *q = urlenc(c->entity);
-      if (q) {
-        size_t n = strlen(EUVD_SEARCH_Q) + strlen(q) + 1;
-        built = (char *)malloc(n);
-        if (built) snprintf(built, n, "%s%s", EUVD_SEARCH_Q, q);
-        free(q);
-      }
+    int pivot = c->entity && *c->entity;
+    char *arg = NULL;
+    char day[16];
+    if (pivot) {
+      arg = urlenc(c->entity);
+      if (!arg) return -1;
+    } else if (!jo_time_fmt(time(NULL) - 2 * 24 * 3600, "%Y-%m-%d",  /* why two: header */
+                            day, sizeof day)) {
+      fprintf(stderr, "[%s] cannot render the window start\n", c->source_id);
+      return -1;
     }
-    url = built ? built : EUVD_SEARCH;
+    char buf[1024];
+    int n = pw_walk(c, s, c->source_id,
+                    euvd_url(buf, sizeof buf, pivot ? EUVD_SEARCH_Q : EUVD_SEARCH,
+                             pivot ? arg : day),
+                    euvd_fetch, euvd_page, (void *)tags);
+    free(arg);
+    if (n < 0) {
+      fprintf(stderr, "[%s] fetch/parse failed\n", c->source_id);
+      return -1;                                     /* the fetch failed (R3) */
+    }
+    return 0;                              /* fetched fine; 0 rows is OK (R3) */
   } else if (!strcmp(c->source_id, "enisa-euvd-latest")) {
     url = EUVD_LATEST;
     tags = "[\"vulnerability\",\"cyber\",\"euvd\",\"enisa\",\"latest\"]";
@@ -180,9 +235,7 @@ static int run(const source_ctx *c, intel_sink *s) {
     return -1;
   }
 
-  const char *hdrs[] = { "accept: application/json", NULL };
-  cJSON *doc = feed_get_json_h(c->http, url, hdrs, 25000);
-  free(built);
+  cJSON *doc = feed_get_json_h(c->http, url, EUVD_HDRS, 25000);
   if (!doc) {
     fprintf(stderr, "[%s] fetch/parse failed\n", c->source_id);
     return -1;                                       /* the fetch failed (R3) */
@@ -201,7 +254,8 @@ static const source_def cert_euvd_search_def = {
   .url = "https://euvdservices.enisa.europa.eu/api/search",
   .description = "ENISA's NIS2-mandated EU Vulnerability Database: EUVD ids, "
                  "CVSS v4 base scores and vectors, aliases and cross-references. "
-                 "Recent window only (one page); pivots on an entity via ?text=.",
+                 "The last two days, every page; pivots on an entity via "
+                 "?text=, every page.",
   .license = "ENISA publishes EUVD as a public service; no key required.",
   .free_tier = 1 };
 REGISTER_SOURCE(cert_euvd_search_def)

@@ -6,8 +6,9 @@
  * JS flow (reproduced here):
  *  1. BASE=http://www.insecam.org/en/bycountry/JP/ ; fetchText(BASE,8s).
  *     If !firstHtml → return [] (here: 0 cameras, return 0 = "ran").
- *  2. totalPages = min( match(/pagenavigator\("\?page=",\s*(\d+)/)[1] || 1,
- *     MAX_PAGES=60 ). Fetch pages 2..totalPages (JS uses LIST_CONCURRENCY=6;
+ *  2. totalPages = match(/pagenavigator\("\?page=",\s*(\d+)/)[1] || 1 (the
+ *     JS clamped it to 60; the port walks every declared page, see
+ *     INSECAM_GUARD_PAGES). Fetch pages 2..totalPages (JS uses LIST_CONCURRENCY=6;
  *     here sequential — faithful: same requests + same parse, serialized).
  *  3. entryRe = /<a[^>]+href="\/en\/view\/(\d+)\/"[^>]+title="Live camera
  *     in Japan,\s*([^"]+)"[^>]*>[\s\S]*?<img[^>]+src="([^"]+)"/g over every
@@ -216,7 +217,12 @@ static int find_coord(const char *html, const char *label, double *out) {
 }
 
 #define INSECAM_BASE "http://www.insecam.org/en/bycountry/JP/"
-#define MAX_PAGES 60   /* exhaustive-ok: page-walk runaway guard */
+/* The JS original clamped the page count the SERVER declares to 60, and the
+ * port kept that with a marker but no disclosure — on 2026-10-03 insecam
+ * declared 89 pages for Japan, so 29 pages of cameras were dropped every run
+ * without a word. The declared count is walked now; this ceiling only guards
+ * against a nonsense count, and biting is disclosed. */
+#define INSECAM_GUARD_PAGES 500   /* exhaustive-ok: guard on a server-declared page count; biting emits a scoped collector-truncation-notice */
 
 typedef struct { char *id; char *city; char *img; int have_real;
                  double rlat, rlon; } card_t;
@@ -240,8 +246,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       while (*p >= '0' && *p <= '9') { v = v * 10 + (*p - '0'); p++; nd++; }
       if (nd > 0 && v > 0) totalPages = v;
     }
-    if (totalPages > MAX_PAGES) totalPages = MAX_PAGES;
   }
+  int declaredPages = totalPages;
+  if (totalPages > INSECAM_GUARD_PAGES) totalPages = INSECAM_GUARD_PAGES;
+  int failedPages = 0;
 
   /* collect cards across page 1..totalPages (Set dedupe by id, first wins).
    * Sequential (JS LIST_CONCURRENCY=6 → serialized; same requests). */
@@ -258,7 +266,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       char u[256];
       snprintf(u, sizeof u, "%s?page=%d", INSECAM_BASE, page);
       html = feed_get_text(ctx->http, u, 8000);
-      if (!html) continue;             /* if(html) htmlByPage.set */
+      if (!html) { failedPages++; continue; }   /* counted, disclosed below */
     }
     const char *cur = html;
     char id[32], city[512], img[1024];
@@ -351,7 +359,23 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   free(cards);
 
-  fprintf(stderr, "[cam-insecam-scrape] emitted %d\n", count);
+  if (failedPages || declaredPages > totalPages) {
+    char reason[200];
+    if (declaredPages > totalPages)
+      snprintf(reason, sizeof reason,
+               "insecam declared %d listing pages; INSECAM_GUARD_PAGES stopped "
+               "the walk at %d", declaredPages, totalPages);
+    else
+      snprintf(reason, sizeof reason,
+               "%d of %d listing pages failed to fetch (rate limit or WAF); "
+               "the cameras on them were not read", failedPages, totalPages);
+    jo_trunc_notice_scoped(sink, "cam-insecam-scrape", "bycountry-JP",
+                           INSECAM_BASE, count, -1, reason,
+                           declaredPages > totalPages ? "raise INSECAM_GUARD_PAGES"
+                                                      : "re-run the collector");
+  }
+  fprintf(stderr, "[cam-insecam-scrape] emitted %d over %d page(s)\n", count,
+          totalPages);
   return 0;
 }
 
@@ -361,5 +385,5 @@ static const source_def cam_insecam_scrape_def = {
   .name_ja = "カメラ探索: Insecam スクレイプ",
    .layer = "cameras",
    .update_interval_sec = 3600, .run = run,
-  .category = "cyber" };
+  .category = "infrastructure" };
 REGISTER_SOURCE(cam_insecam_scrape_def)

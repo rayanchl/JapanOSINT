@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { api } from '../api/client.js';
 
 /**
@@ -76,9 +76,24 @@ export const SINCE_PRESETS = [
   { value: '7d', label: '7 d' },
   { value: '30d', label: '30 d' },
 ];
-export function sinceIso(preset) {
+export function sinceIso(preset, now = Date.now()) {
   const m = /^(\d+)([hd])$/.exec(preset || '');
   if (!m) return undefined;
   const ms = Number(m[1]) * (m[2] === 'h' ? 3600e3 : 86400e3);
-  return new Date(Date.now() - ms).toISOString();
+  // Floored to the whole minute, so two calls a few ms apart agree. This is a
+  // second line of defence for a caller that computes it during render (see
+  // useSinceIso, the first): a per-millisecond value in a request key re-keys
+  // the request on every render.
+  return new Date(Math.floor((now - ms) / 60000) * 60000).toISOString();
+}
+
+/**
+ * `sinceIso(preset)` pinned for as long as the preset is unchanged. Calling
+ * sinceIso() during render gave a new millisecond timestamp every render; it
+ * is part of useIntelItems' params key, so every render refetched and every
+ * response re-rendered — an unbounded request loop (84 COUNT queries per
+ * 500 ms against the server). The window is anchored when the user picks it.
+ */
+export function useSinceIso(preset) {
+  return useMemo(() => sinceIso(preset), [preset]);
 }

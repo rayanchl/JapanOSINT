@@ -154,7 +154,7 @@ static int query_host(intel_sink *sink, http_client *http,
     cJSON *ports = cJSON_CreateArray();
     cJSON *sa = cJSON_CreateArray();
     int sc = cJSON_GetArraySize(svcs);
-    for (int i = 0; i < sc && i < 50; i++) {
+    for (int i = 0; i < sc; i++) {
       cJSON *s = cJSON_GetArrayItem(svcs, i);
       cJSON *po = cJSON_GetObjectItem(s, "port");
       cJSON *snm = cJSON_GetObjectItem(s, "service_name");
@@ -221,7 +221,7 @@ static int search_hosts(intel_sink *sink, http_client *http,
   int emitted = 0;
   if (hits && cJSON_IsArray(hits)) {
     int n = cJSON_GetArraySize(hits);
-    for (int i = 0; i < n && i < 25; i++) {
+    for (int i = 0; i < n; i++) {
       cJSON *hit = cJSON_GetArrayItem(hits, i);
       cJSON *ip = cJSON_GetObjectItem(hit, "ip");
       if (!(ip && ip->valuestring)) continue;
@@ -293,7 +293,7 @@ static int search_certs(intel_sink *sink, http_client *http,
   int emitted = 0;
   if (hits && cJSON_IsArray(hits)) {
     int n = cJSON_GetArraySize(hits);
-    for (int i = 0; i < n && i < 10; i++) {
+    for (int i = 0; i < n; i++) {
       cJSON *hit = cJSON_GetArrayItem(hits, i);
       cJSON *fp = cJSON_GetObjectItem(hit, "fingerprint_sha256");
       if (!(fp && fp->valuestring)) continue;

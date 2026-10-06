@@ -33,7 +33,8 @@ export const CONSOLE_NAV = [
   { group: 'Discovery', to: '/console/saved-searches', label: 'Saved searches', subtitle: 'Re-run and turn into alerts', icon: LuBookmark },
 
   { group: 'Configuration', to: '/console/api-keys', label: 'API keys', subtitle: 'Credentials & overlays', icon: LuKey },
-  { group: 'Configuration', to: '/console/workspace', label: 'Workspace', subtitle: 'Members, permissions, queries', icon: LuUsers, requires: 'manage' },
+  // Every member: the Switch tab lives here. Members/queries are gated inside.
+  { group: 'Configuration', to: '/console/workspace', label: 'Workspace', subtitle: 'Switch workspace · members & queries (owner/admin)', icon: LuUsers },
   { group: 'Configuration', to: '/console/settings', label: 'Settings', subtitle: 'Appearance, limits, schedules', icon: LuSettings },
 
   { group: 'Admin', to: '/console/admin', label: 'Admin panel', subtitle: 'Maintenance, breach corpus, server', icon: LuLockKeyhole, requires: 'operator' },

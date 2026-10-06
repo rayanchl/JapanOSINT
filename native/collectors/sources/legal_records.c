@@ -39,7 +39,7 @@ static int courtlistener(const source_ctx *ctx, intel_sink *sink,
   if (!j) return 0;
   cJSON *res = cJSON_GetObjectItem(j, "results");
   int emitted = 0, n = (res && cJSON_IsArray(res)) ? cJSON_GetArraySize(res) : 0;
-  for (int i = 0; i < n && i < 15; i++) {
+  for (int i = 0; i < n; i++) {
     cJSON *r = cJSON_GetArrayItem(res, i);
     const char *cn = jo_str(r, "caseName");
     const char *court = jo_str(r, "court");

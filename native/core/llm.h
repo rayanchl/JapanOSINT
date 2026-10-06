@@ -18,6 +18,11 @@ typedef struct {
   http_client *http;
   const char *base_url;
   int interactive;
+  /* 1: the call's timeout bounds the time spent QUEUED behind other jobs on
+   * this server's worker as well as the exchange itself (see
+   * llm_worker_request_ex). 0 (the zero-initialised default) keeps the old
+   * unbounded queue wait, which background callers rely on. */
+  int bound_queue_wait;
 } llm_client;
 
 void llm_init(llm_client *c, http_client *http); /* base from LLM_BASE_URL */
@@ -128,6 +133,17 @@ int  llm_healthy(llm_client *c); /* GET /health */
  * rows, which is worse than none. */
 int llm_embed(llm_client *c, const char *const *texts, int n,
               float **out_vecs, int *out_dim, int timeout_ms, llm_status *st);
+
+/* llm_embed, plus the HTTP status of the exchange in *out_http (may be NULL;
+ * 0 when no exchange completed). The embedding pod needs it to tell a
+ * transient refusal (503 while the model loads, 429) from one input the server
+ * cannot take (400/413/500 on that text), which it must skip rather than
+ * retry forever. A response that answers the same `index` twice — leaving
+ * another input without a vector — is rejected as LLM_ERR_EMPTY, exactly like
+ * a short one: a zero vector stored as an embedding is a fabricated record. */
+int llm_embed_ex(llm_client *c, const char *const *texts, int n,
+                 float **out_vecs, int *out_dim, int timeout_ms,
+                 llm_status *st, long *out_http);
 
 
 #endif

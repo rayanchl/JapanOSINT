@@ -218,15 +218,33 @@ def _path_step(node, seg, out):
         else:
             for it in node:
                 _path_step(it, seg, out)
-    elif isinstance(node, dict) and node.get(seg) is not None:
-        out.append(node[seg])             # a JSON null at the path is no node
+    elif isinstance(node, dict):
+        # cJSON_GetObjectItem, which hp_path walks with, matches keys
+        # case-INsensitively; judging more strictly than the engine reads
+        # fails rows the engine serves.
+        if seg not in node:
+            seg = next((k for k in node if isinstance(k, str)
+                        and k.lower() == seg.lower()), seg)
+        if node.get(seg) is not None:
+            out.append(node[seg])         # a JSON null at the path is no node
 
 
 def resolve_array_path(doc, path):
-    """lib/hpengine.c hp_run_json: hp_path first (keys, a numeric index into a
-    list, `key=value`), then hp_path_multi (map across every list on the way,
-    flattened one level) when that fails. The probe used to take dict keys
-    only, so `0.content` under a `null([...])` JSONP body never resolved."""
+    """Resolve a declared `array_path` the way lib/hpengine.c hp_run_json
+    does: hp_path first (keys, a numeric index into a list, `key=value`), then
+    hp_path_multi (map across every list on the way, flattened one level) when
+    that fails. Returns the node, or None when the path genuinely is not there
+    -- which stays a PATH_UNRESOLVED, because guessing some other array is how
+    a row whose shape changed gets a false pass.
+
+    The probe used to walk dict keys only and disagreed with the engine in
+    ways that all read as "this source is dead" (rule 4c):
+      * `"."`, or any path whose segments are all empty, is THE ROOT -- hp_path
+        skips empty segments. The hex.pm rows in batch 32 are that shape.
+      * A path may CROSS AN ARRAY: NuGet's registration index is `items[]` of
+        catalog pages, each with its own `items[]`; `items.items` is 86
+        version records through the engine.
+      * `0.content` under a `null([...])` JSONP body (batch 39)."""
     node = doc
     for seg in [s for s in path.split(".") if s]:
         crosses = isinstance(node, list) and not seg.isdigit() and "=" not in seg
@@ -452,10 +470,12 @@ CHECK_FILTER = False
 def impossible_probe_url(r):
     """The row's URL template with every entity token replaced by a value that
     cannot match anything. None when the row takes no entity (a bulk file has
-    no filter to honour, so there is nothing to check)."""
+    no filter to honour, so there is nothing to check). A POST pivot carries
+    its entity in the BODY, which row_body() fills with the impossible value;
+    its URL is returned as-is, so the check still runs."""
     tmpl = r.get("url") or ""
     if not TOKEN_RE.search(tmpl):
-        return None
+        return tmpl if TOKEN_RE.search(opt(r, "post_body", "") or "") else None
     return TOKEN_RE.sub(lambda m: IMPOSSIBLE.get(m.group(1), IMPOSSIBLE["q"]), tmpl)
 
 
@@ -517,38 +537,55 @@ def decode_body(raw, r=None, url=""):
     return text[1:] if text.startswith("﻿") else text
 
 
-def filter_is_honoured(r, real_items):
-    """(ok, note). ok=False means the endpoint returned substantially the same
-    result set for an impossible entity as for the real one."""
+def _entity_in_path(r):
+    """True when the row's first entity token sits in the URL PATH rather than
+    the query string (`/company/{qn}/officers`). For such a row a 404 for an
+    impossible entity IS the filter working: the resource does not exist."""
+    tmpl = r.get("url") or ""
+    m = TOKEN_RE.search(tmpl)
+    if not m:
+        return False
+    q = tmpl.find("?")
+    return q < 0 or m.start() < q
+
+
+def filter_is_honoured(r, real_items, shift=0):
+    """(verdict, note): "ok", "ignored" or "unchecked".
+
+    The impossible-entity answer is counted by _judge(), the SAME code that
+    counted the real one — declared array_path, XML, CSV, HTML anchors, xlsx
+    and text lists included. This used to call VF.count_feed/count_json only,
+    and to return "honoured" whenever that could not count the body or the
+    request failed: every XML, CSV and HTML pivot (43 manifest rows) and every
+    pivot whose impossible-entity request errored came back PASS without the
+    comparison ever having been made. A check that could not be performed is
+    now FILTER_UNCHECKED, never a pass."""
     url = impossible_probe_url(r)
-    if not url or real_items < 2:
-        return True, ""          # nothing to compare against
-    url = expand_runtime(url, r)
-    body, bh = row_body(r, IMPOSSIBLE["q"])
-    try:
-        status, ctype, raw = fetch(url, dict(row_headers(r), **{k: v for k, v in bh.items() if k not in row_headers(r)}),
-                                   row_timeout(r), body)
-    except Exception:
-        return True, ""          # a refusal here is not evidence either way
-    if status < 200 or status >= 300:
-        return True, ""
-    text = decode_body(raw, r, url)
-    if r["mode"] == "json":
-        text = jsonp_inner(text) or text     # hp_jsonp_inner, before any JSON read
-    kind, items = VF.count_feed(text)
-    if not kind:
-        kind, items = VF.count_json(text)
-    if not kind:
-        return True, ""
+    if not url:
+        return "ok", ""          # no entity token: a bulk file has no filter
+    res = _judge(r, url, shift, entity=IMPOSSIBLE["q"])
+    verdict, items, status = res[2], res[4], res[5]
+    if verdict in ("EMPTY_RESULTSET", "EMPTY"):
+        return "ok", ""          # empty for a nonsense entity == filter works
+    if verdict == "HTTP_ERR" and status in (404, 410) and _entity_in_path(r):
+        return "ok", ""          # /thing/<nonsense> does not exist == works
+    if verdict != "PASS":
+        return "unchecked", ("impossible-entity request came back %s (%s %s); "
+                             "the comparison was not made"
+                             % (verdict, status, str(res[7])[:60]))
     if not isinstance(items, int) or items < 1:
-        return True, ""          # empty for a nonsense entity == filter works
+        return "ok", ""
+    if real_items < 2:
+        return "unchecked", ("real entity returned %d record(s) and an "
+                             "impossible one %d — too small to tell a filter "
+                             "from a coincidence" % (real_items, items))
     # Same-sized answer for a nonsense entity: the filter is not being applied.
     # 90% rather than equality because a few APIs pad a collection differently
     # between calls, and a genuine filter never lands within 10% of the whole.
     if items >= real_items * 0.9:
-        return False, ("filter ignored: an impossible entity returned %d records "
-                       "vs %d for the real one" % (items, real_items))
-    return True, ""
+        return "ignored", ("filter ignored: an impossible entity returned %d "
+                           "records vs %d for the real one" % (items, real_items))
+    return "ok", ""
 
 
 def _xlsx_rows(raw, sheet_name, sheet_index):
@@ -894,14 +931,15 @@ def verify_html_table(r, sid, url, text, status, nbytes):
 
 
 def verify(r):
-    """Verdict for one manifest row, stepping a dated row's date back the way
-    hp_run's date_back does: a 4xx, or a first page with no records."""
+    """Verdict for one manifest row. Mirrors verify_feeds.verify exactly, and
+    steps a dated row's date back the way hp_run's date_back does: a 4xx, or a
+    first page with no records."""
     o, _dups, _junk = parse_opts(r["opts"])
     back = int(o.get("date_back") or 0)
     dated = bool(DATE_RE.search(r["url"] + " " + (o.get("post_body") or "")))
     shift = 0
     while True:
-        res = _verify_once(r, shift)
+        res = _judge(r, r["probe"], shift)
         retry = res[2] in ("EMPTY_RESULTSET", "PATH_UNRESOLVED", "PATH_NOT_ARRAY",
                            "UNPARSEABLE", "EMPTY") or \
             (res[2] == "HTTP_ERR" and 400 <= (res[5] or 0) < 500)
@@ -910,12 +948,25 @@ def verify(r):
             continue
         if shift and res[2] == "PASS":
             res = res[:7] + (("date_back %d: " % shift) + (res[7] or ""),)
+        break
+    if res[2] != "PASS" or not CHECK_FILTER:
         return res
+    # Answering is not answering THE QUESTION — see filter_is_honoured().
+    sid, url, _, kind, items, status, nbytes, _ = res
+    state, why = filter_is_honoured(r, items, shift)
+    if state == "ignored":
+        return (sid, url, "FILTER_IGNORED", kind, items, status, nbytes, why)
+    if state == "unchecked":
+        return (sid, url, "FILTER_UNCHECKED", kind, items, status, nbytes, why)
+    return res
 
 
-def _verify_once(r, shift=0):
-    """One attempt. Mirrors verify_feeds.verify exactly."""
-    sid, url = r["id"], expand_runtime(r["probe"], r, shift)
+def _judge(r, url, shift=0, entity=None):
+    """Fetch `url` with row `r`'s headers -- and its POST body, date tokens
+    stepped back `shift` times -- and judge the body in the row's own mode.
+    Used for the probe URL AND the impossible-entity URL (`entity` fills the
+    body's tokens), so both answers are counted by the same rules."""
+    sid, url = r["id"], expand_runtime(url, r, shift)
     o, _dups, _junk = parse_opts(r["opts"])
     if o.get("index_url") and o.get("index_href_must"):
         # hp_run resolves the data URL from a landing page before anything
@@ -935,7 +986,7 @@ def _verify_once(r, shift=0):
             return (sid, o["index_url"], "INDEX_NO_MATCH", "", 0, _st, len(page),
                     "no href containing %r" % o["index_href_must"])
         url = urllib.parse.urljoin(o["index_url"], hit)
-    body, bh = row_body(r, shift=shift)
+    body, bh = row_body(r, entity, shift)
     hdrs = row_headers(r)
     for k, v in bh.items():
         hdrs.setdefault(k, v)            # a declared header wins, as in hp_run
@@ -976,7 +1027,8 @@ def _verify_once(r, shift=0):
         return (sid, url, "ERROR_BODY", "", 0, status, nbytes,
                 text[:80].replace("\n", " "))
 
-    # A DECLARED array_path beats every heuristic below.
+    # A DECLARED array_path beats every heuristic below — resolved the way the
+    # ENGINE resolves it, see resolve_array_path().
     #
     # VF.count_json() hunts for the densest array in the document, which is a
     # reasonable guess when the row says nothing — and a wrong answer whenever
@@ -998,25 +1050,62 @@ def _verify_once(r, shift=0):
     # no value this can act on, so fall through to the heuristics rather than
     # pick one and judge the row against it.
     ap_decl = opt(r, "array_path")
+
+    # NDJSON / JSON Lines, judged the way lib/hpengine.c's hp_run_ndjson()
+    # judges it: one complete JSON value per line, a blank line is nothing, a
+    # line with trailing content is NOT valid JSON (the engine parses with
+    # require_null_terminated for exactly that reason, because cJSON_Parse
+    # would accept `{"a":1} oops` and then poison the array it is copied into),
+    # and a bare scalar line is not a record. Without this branch the json
+    # path below sees a multi-line body, json.loads refuses it, and a live feed
+    # is reported UNPARSEABLE — rule 4c, with the probe deciding whether a row
+    # ships.
+    if r["mode"] == "ndjson":
+        recs = bad = 0
+        for ln in text.splitlines():
+            ln = ln.strip()
+            if not ln:
+                continue
+            try:
+                v = json.loads(ln)          # strict: rejects trailing content
+            except Exception:
+                bad += 1
+                continue
+            if isinstance(v, (dict, list)):
+                recs += 1
+        if recs:
+            note = "%d unreadable line(s)" % bad if bad else ""
+            return (sid, url, "PASS", "ndjson", recs, status, nbytes, note)
+        return (sid, url, "UNPARSEABLE" if bad else "EMPTY_RESULTSET", "ndjson",
+                0, status, nbytes,
+                "%d line(s) present, none parsed as a JSON record" % bad)
+
     if r["mode"] == "json" and ap_decl:
         try:
             doc = json.loads(text)
         except Exception:
             return (sid, url, "UNPARSEABLE", "", 0, status, nbytes,
                     "declared array_path but body is not JSON")
-        node = resolve_array_path(doc, ap_decl)
-        if isinstance(node, dict):            # hp_run_json: one record
-            node = [node]
-        if node is None:
+        # `a+b+c` reads several sibling arrays and emits them all; one that is
+        # absent is not an error, none at all is PATH_UNRESOLVED. Each part is
+        # resolved exactly as the engine resolves a single path, and one
+        # object there is one record (hp_run_json).
+        alts = [a.strip() for a in ap_decl.split("+") if a.strip()] or [ap_decl]
+        nodes = [(a, resolve_array_path(doc, a)) for a in alts]
+        nodes = [(a, [n] if isinstance(n, dict) else n) for a, n in nodes]
+        found = [(a, n) for a, n in nodes if n is not None]
+        if not found:
             return (sid, url, "PATH_UNRESOLVED", "", 0, status, nbytes,
                     "array_path %r not present in the response" % ap_decl)
-        if not isinstance(node, list):
+        bad = [(a, n) for a, n in found if not isinstance(n, list)]
+        if bad and len(alts) == 1:
             return (sid, url, "PATH_NOT_ARRAY", "", 0, status, nbytes,
-                    "array_path %r is %s, not an array" % (ap_decl, type(node).__name__))
-        if not node:
+                    "array_path %r is %s, not an array" % (ap_decl, type(bad[0][1]).__name__))
+        total = sum(len(n) for _, n in found if isinstance(n, list))
+        if not total:
             return (sid, url, "EMPTY_RESULTSET", "json:" + ap_decl, 0, status,
                     nbytes, "declared array_path resolved to an empty array")
-        kind, items = "json:" + ap_decl, len(node)
+        kind, items = "json:" + ap_decl, total
 
     if not kind:
         kind, items = VF.count_feed(text)
@@ -1061,10 +1150,24 @@ def _verify_once(r, shift=0):
         # would shift or truncate the parsed href_must, probing a filter the
         # generated collector does not actually apply.
         must = opt(r, "href_must", "")
-        hrefs = re.findall(r'<a\b[^>]*\bhref\s*=\s*["\']([^"\'#]+)["\']',
+        # The fragment is excluded from the KEY the hits are counted by (two
+        # anchors differing only after `#` are one target), but it must not be
+        # excluded from the MATCH. The class used to be [^"'#]+, which stops at
+        # the `#` and then demands the closing quote right there -- so an href
+        # that carries a fragment matched nothing at all. Every anchor in a
+        # PEP 503 simple index ends `...tar.gz#sha256=<64 hex>`, so
+        # pypi.org/simple/<project>/ scored 0 anchors on a page holding 244 of
+        # them and was reported UNPARSEABLE. hpengine reads the whole attribute
+        # (html_attr + hp_url_resolve) and keeps those anchors, so the verdict
+        # was about this regex, not about the page.
+        # href_must is tested against the WHOLE attribute, as hpengine tests it
+        # (hp_html_walk checks the raw href and the resolved link); only the
+        # counting key drops the fragment.
+        hrefs = re.findall(r'<a\b[^>]*\bhref\s*=\s*["\']([^"\']+)["\']',
                            text, re.I)
-        hits = [h for h in hrefs if (not must or must in h)]
-        hits = [h for h in hits if not h.lower().startswith(
+        hits = [h.split("#", 1)[0] for h in hrefs
+                if not must or must in h]
+        hits = [h for h in hits if h and not h.lower().startswith(
             ("javascript:", "mailto:", "tel:"))]
         if hits:
             kind, items = "html-anchors", len(set(hits))
@@ -1077,13 +1180,6 @@ def _verify_once(r, shift=0):
         return (sid, url, "UNPARSEABLE", "", 0, status, nbytes, text[:80].replace("\n", " "))
     if items < 1:
         return (sid, url, "EMPTY", kind, 0, status, nbytes, "parsed but zero items")
-
-    # Answering is not answering THE QUESTION — see filter_is_honoured().
-    if CHECK_FILTER:
-        ok, why = filter_is_honoured(r, items)
-        if not ok:
-            return (sid, url, "FILTER_IGNORED", kind, items, status, nbytes, why)
-
     return (sid, url, "PASS", kind, items, status, nbytes, "")
 
 
@@ -1101,7 +1197,9 @@ def main():
                          "accepts a filter, ignores it, and returns the whole "
                          "collection with HTTP 200 — which every other gate "
                          "passes. Doubles the request count for pivot rows, so "
-                         "it is opt-in; run it at least once per batch.")
+                         "it is opt-in; run it at least once per batch. A row "
+                         "whose impossible-entity request could not be judged "
+                         "is FILTER_UNCHECKED, not PASS.")
     a = ap.parse_args()
     global CHECK_FILTER
     CHECK_FILTER = a.check_filter

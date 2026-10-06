@@ -106,7 +106,8 @@ static cJSON *item_from_row(sqlite3_stmt *s) {
 typedef struct {
   char  *uid;
   int    vrank, frank;      /* 1-based, 0 = not returned by that arm */
-  double distance;          /* vector arm's cosine distance (vrank>0) */
+  double distance;          /* vector arm's L2 distance (vrank>0) — see the
+                             * METRIC note in semsearchapi.h */
   double score;             /* RRF */
 } cand;
 
@@ -162,7 +163,8 @@ static long ms_since(const struct timespec *t0) {
 }
 
 char *semsearchapi_query(db_handle *db, const char *tenant, const char *q,
-                         const char *mode, int limit, int k, int *status) {
+                         const char *mode, int limit, int k, int is_operator,
+                         int *status) {
   *status = 500;
   if (!q || !*q) return fail(status, 400, "missing_q", "q is required", NULL);
   int hybrid;
@@ -188,12 +190,39 @@ char *semsearchapi_query(db_handle *db, const char *tenant, const char *q,
                 "the embedding pod has not built an index yet",
                 embed_coverage_json(db));
 
+  /* REFUSED MEANS REFUSED HERE TOO. The pod stops writing when the server's
+   * model or dimension no longer matches the index, and records why. The
+   * query side used to check only the dimension — so after a same-width swap
+   * (bge-m3 -> multilingual-e5-large, both 1024-d) it embedded the query in
+   * the new space, ranked it against vectors from the old one, and answered
+   * 200 with rankings that mean nothing, while the coverage block in that
+   * same response said "refused". */
+  char why[600];
+  if (embed_index_refused(db, why, sizeof why))
+    return fail(status, 503, "semantic_unavailable", why, embed_coverage_json(db));
+  char live[256];
+  if (embed_live_model(live, sizeof live) != 0)
+    return fail(status, 502, "embedding_model_unverified", live,
+                embed_coverage_json(db));
+  if (model[0] && strcmp(model, live) != 0) {
+    char d[600];
+    snprintf(d, sizeof d, "the index was built with model '%.200s' but the "
+             "embedding server is now '%.200s'; vectors from two models are not "
+             "comparable, so nothing is ranked until the index is rebuilt",
+             model, live);
+    return fail(status, 503, "semantic_unavailable", d, embed_coverage_json(db));
+  }
+
   /* Embed the query under the same text bound the index was built with,
-   * on the interactive lane of the embedding server's own worker. */
+   * on the interactive lane of the embedding server's own worker. That worker
+   * is shared with the backfill pod, whose batches run up to 120 s; the
+   * interactive lane only jumps the QUEUE, never a request in flight, so the
+   * 15 s budget is made to cover the queue wait too (bound_queue_wait). */
   struct timespec t0; clock_gettime(CLOCK_MONOTONIC, &t0);
   char *qb = embed_bound_text(q);
   if (!qb) return fail(status, 500, "server_error", NULL, NULL);
-  llm_client llm = { .http = NULL, .base_url = base, .interactive = 1 };
+  llm_client llm = { .http = NULL, .base_url = base, .interactive = 1,
+                     .bound_queue_wait = 1 };
   const char *texts[1] = { qb };
   float *qv = NULL; int qdim = 0; llm_status st;
   int erc = llm_embed(&llm, texts, 1, &qv, &qdim, 15000, &st);
@@ -277,14 +306,31 @@ char *semsearchapi_query(db_handle *db, const char *tenant, const char *q,
     free(matchq); cand_free(&L);
     return fail(status, 500, "server_error", sqlite3_errmsg(db->h), NULL);
   }
+  /* Candidates that do not resolve to a visible row are one of two things:
+   * another tenant's row, or a vector whose intel_items row is gone (an
+   * orphan). The split is an extra primary-key seek per such candidate, and
+   * only an operator is told either number: how many of OTHER tenants' rows
+   * match a query is itself information about those tenants. */
+  sqlite3_stmt *exists = NULL;
+  if (is_operator &&
+      sqlite3_prepare_v2(db->h, "SELECT 1 FROM intel_items WHERE uid=?1",
+                         -1, &exists, NULL) != SQLITE_OK)
+    exists = NULL;
   cJSON *data = cJSON_CreateArray();
-  int shown = 0, visible = 0, withheld = 0;
+  int shown = 0, visible = 0, withheld = 0, orphans = 0;
   for (int i = 0; i < L.n; i++) {
     cand *c = &L.v[i];
     sqlite3_reset(get);
     sqlite3_bind_text(get, 1, c->uid, -1, SQLITE_STATIC);
     if (tenant && *tenant) sqlite3_bind_text(get, 2, tenant, -1, SQLITE_STATIC);
-    if (sqlite3_step(get) != SQLITE_ROW) { withheld++; continue; }
+    if (sqlite3_step(get) != SQLITE_ROW) {
+      if (exists) {
+        sqlite3_reset(exists);
+        sqlite3_bind_text(exists, 1, c->uid, -1, SQLITE_STATIC);
+        if (sqlite3_step(exists) == SQLITE_ROW) withheld++; else orphans++;
+      }
+      continue;
+    }
     visible++;
     if (shown >= limit) continue;
     cJSON *it = item_from_row(get);
@@ -301,6 +347,7 @@ char *semsearchapi_query(db_handle *db, const char *tenant, const char *q,
     cJSON_AddItemToArray(data, it);
   }
   sqlite3_finalize(get);
+  sqlite3_finalize(exists);
 
   cJSON *meta = cJSON_CreateObject();
   cJSON_AddStringToObject(meta, "mode", hybrid ? "hybrid" : "vector");
@@ -315,7 +362,10 @@ char *semsearchapi_query(db_handle *db, const char *tenant, const char *q,
     cJSON_AddNumberToObject(meta, "rrf_k", RRF_K);
   }
   cJSON_AddNumberToObject(meta, "fused", L.n);
-  cJSON_AddNumberToObject(meta, "tenant_withheld", withheld);
+  if (is_operator) {
+    cJSON_AddNumberToObject(meta, "tenant_withheld", withheld);
+    cJSON_AddNumberToObject(meta, "index_orphans", orphans);
+  }
   /* The bounded view states its bound in-band: shown of total. */
   cJSON_AddNumberToObject(meta, "shown", shown);
   cJSON_AddNumberToObject(meta, "total", visible);

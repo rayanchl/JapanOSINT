@@ -25,7 +25,6 @@ au-qld-resource-authority-name-changes	OK	14	COLLISION	13	records collide onto o
 au-qld-supplier-arrangements	OK	250	COLLISION	226	records collide onto one uid on hpengine
 au-qld-water-service-providers	OK	211	COLLISION	187	records collide onto one uid on hpengine
 au-vic-building-practitioner-register	OK	2001	COLLISION	1982	records collide onto one uid on hpengine
-cordis-search-results-query	COLLISION	90	COLLISION	40	hpengine reads fewer records
 dk-erst-offentliggoerelser	OK	4	OK	1	hpengine reads fewer records
 global-ooni-measurements-jp	OK	60	COLLISION	58	records collide onto one uid on hpengine
 il-ica-company-changes	OK	2001	COLLISION	1936	records collide onto one uid on hpengine

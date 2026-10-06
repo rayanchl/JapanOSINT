@@ -2,6 +2,7 @@
 #include "llm_worker.h"
 #include "httpclient.h"
 #include "../third_party/cJSON.h"
+#include <math.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -80,9 +81,12 @@ static char *post_json(llm_client *c, const char *path, cJSON *body,
   int budget = timeout_ms > 0 ? timeout_ms : 30000;
   struct timespec t0, t1;
   clock_gettime(CLOCK_MONOTONIC, &t0);
-  int rc = llm_worker_request(c->base_url, "POST", url, hdrs, payload,
-                              strlen(payload), budget, 1,
-                              c->interactive, &r);
+  /* A bounded caller gets no transport retry either: a retry after a timeout
+   * would spend a second budget the caller never granted. */
+  int rc = llm_worker_request_ex(c->base_url, "POST", url, hdrs, payload,
+                                 strlen(payload), budget,
+                                 c->bound_queue_wait ? 0 : 1, c->interactive,
+                                 c->bound_queue_wait ? budget : 0, &r);
   clock_gettime(CLOCK_MONOTONIC, &t1);
   long elapsed_ms = (t1.tv_sec - t0.tv_sec) * 1000L
                   + (t1.tv_nsec - t0.tv_nsec) / 1000000L;
@@ -281,7 +285,14 @@ int llm_healthy(llm_client *c) {
 
 int llm_embed(llm_client *c, const char *const *texts, int n,
               float **out_vecs, int *out_dim, int timeout_ms, llm_status *st) {
+  return llm_embed_ex(c, texts, n, out_vecs, out_dim, timeout_ms, st, NULL);
+}
+
+int llm_embed_ex(llm_client *c, const char *const *texts, int n,
+                 float **out_vecs, int *out_dim, int timeout_ms,
+                 llm_status *st, long *out_http) {
   if (st) *st = LLM_ERR_BAD_REQUEST;
+  if (out_http) *out_http = 0;
   if (out_vecs) *out_vecs = NULL;
   if (out_dim) *out_dim = 0;
   if (!c || !texts || n <= 0 || !out_vecs || !out_dim) return -1;
@@ -294,7 +305,7 @@ int llm_embed(llm_client *c, const char *const *texts, int n,
   cJSON_AddStringToObject(b, "model", model && *model ? model : "embedding-model");
   /* Anything the server returns is a float array we copy out, so we do not
    * ask for base64 — the default `float` encoding keeps the parse trivial. */
-  char *raw = post_json(c, "/v1/embeddings", b, timeout_ms, st, NULL);
+  char *raw = post_json(c, "/v1/embeddings", b, timeout_ms, st, out_http);
   if (!raw) return -1;
   cJSON *j = cJSON_Parse(raw);
   free(raw);
@@ -302,7 +313,11 @@ int llm_embed(llm_client *c, const char *const *texts, int n,
   cJSON *data = cJSON_GetObjectItem(j, "data");
   int rc = -1, dim = 0;
   float *vecs = NULL;
-  if (cJSON_IsArray(data) && cJSON_GetArraySize(data) == n) {
+  /* Which inputs have been answered. Count alone is not enough: n entries
+   * that name index 0 twice and never index 1 pass a size check, and the row
+   * nobody answered keeps calloc's zero vector — stored as if embedded. */
+  unsigned char *seen = calloc((size_t)n, 1);
+  if (seen && cJSON_IsArray(data) && cJSON_GetArraySize(data) == n) {
     rc = 0;
     /* OpenAI shape: data[i].index says which input it answers; llama-server
      * emits them in order but honouring `index` costs nothing and guards
@@ -312,7 +327,8 @@ int llm_embed(llm_client *c, const char *const *texts, int n,
       cJSON *emb = cJSON_GetObjectItem(e, "embedding");
       cJSON *idx = cJSON_GetObjectItem(e, "index");
       int i = cJSON_IsNumber(idx) ? (int)idx->valuedouble : -1;
-      if (!cJSON_IsArray(emb) || i < 0 || i >= n) { rc = -1; break; }
+      if (!cJSON_IsArray(emb) || i < 0 || i >= n || seen[i]) { rc = -1; break; }
+      seen[i] = 1;
       int d = cJSON_GetArraySize(emb);
       if (d <= 0 || (dim && d != dim)) { rc = -1; break; }
       if (!dim) {
@@ -323,13 +339,18 @@ int llm_embed(llm_client *c, const char *const *texts, int n,
       int k = 0;
       cJSON *v;
       cJSON_ArrayForEach(v, emb) {
-        if (!cJSON_IsNumber(v)) { rc = -1; break; }
-        vecs[(size_t)i * dim + k++] = (float)v->valuedouble;
+        /* isfinite on the STORED float: an overflowing literal (1e999, or
+         * anything past FLT_MAX) becomes inf, and one inf component turns
+         * every distance to this row into inf/NaN. */
+        float f = cJSON_IsNumber(v) ? (float)v->valuedouble : NAN;
+        if (!isfinite(f)) { rc = -1; break; }
+        vecs[(size_t)i * dim + k++] = f;
       }
       if (rc) break;
     }
   }
   cJSON_Delete(j);
+  free(seen);
   if (rc != 0 || !vecs) {
     free(vecs);
     if (st) *st = LLM_ERR_EMPTY;

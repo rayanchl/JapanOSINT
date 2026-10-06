@@ -14,6 +14,7 @@
 #include <ctype.h>
 #include <time.h>
 #include <sys/time.h>
+#include <pthread.h>
 
 static const char *ctext(sqlite3_stmt *s, int i) {
   return sqlite3_column_type(s, i) == SQLITE_NULL
@@ -48,11 +49,16 @@ static void iso_now(char *buf, size_t n) {
 #ifndef JO_REPO_ROOT
 #define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
 #endif
+/* Loaded exactly once, through pthread_once. The fleet build runs on worker
+ * threads now (httpd.c fleet_thread), and the old `if (done) return; done = 1;
+ * ...parse...; g_overlay = j;` let a second worker see done==1 while the first
+ * was still parsing, read g_overlay as NULL, answer every credential question
+ * from getenv alone — and that wrong snapshot was then cached for every client
+ * by the fleet response cache. pthread_once makes every caller wait for the
+ * one load to finish. */
 static cJSON *g_overlay;     /* loaded once; NULL if absent/unparseable */
-static int g_overlay_done;
-static void overlay_load(void) {
-  if (g_overlay_done) return;
-  g_overlay_done = 1;
+static pthread_once_t g_overlay_once = PTHREAD_ONCE_INIT;
+static void overlay_load_once(void) {
   char path[1024];
   snprintf(path, sizeof path, "%s/data/api-keys.json", JO_REPO_ROOT);
   FILE *f = fopen(path, "rb");
@@ -70,6 +76,7 @@ static void overlay_load(void) {
   }
   fclose(f);
 }
+static void overlay_load(void) { pthread_once(&g_overlay_once, overlay_load_once); }
 /* isSet(name): trim().length>0 over the overlay-then-getenv resolved value. */
 static int env_set(const char *name) {
   overlay_load();

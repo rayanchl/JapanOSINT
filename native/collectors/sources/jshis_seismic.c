@@ -1,6 +1,6 @@
 /* collectors/safety/sources/jshis_seismic.c
  * Port of server/src/collectors/jshisSeismic.js. NIED J-SHIS PSHM geojson;
- * slice(0,1000), pass geometry through, mesh_id = JSHIS_<sha1(JSON.stringify
+ * every feature (was slice(0,1000)), pass geometry through, mesh_id = JSHIS_<sha1(JSON.stringify
  * (geometry))[:20]> (== intelHashKey). SEED branch dropped (rule 8). */
 #include "source.h"
 #include "lib/feedlib.h"
@@ -21,10 +21,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   cJSON *features = cJSON_CreateArray();
-  int i = 0;
   cJSON *f;
   cJSON_ArrayForEach(f, src) {
-    if (i++ >= 1000) break;                      /* slice(0,1000) */
     cJSON *geom = cJSON_GetObjectItem(f, "geometry");
 
     /* mesh_id = `JSHIS_${intelHashKey(JSON.stringify(f.geometry))}` */

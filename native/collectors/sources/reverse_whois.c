@@ -158,7 +158,7 @@ static void query_whoisxml_reverse(http_client *http, const char *query,
     cJSON *domains_list = cJSON_GetObjectItem(json, "domainsList");
     if (domains_list && cJSON_IsArray(domains_list)) {
       int count = cJSON_GetArraySize(domains_list);
-      for (int i = 0; i < count && i < 100; i++) {
+      for (int i = 0; i < count; i++) {
         cJSON *d = cJSON_GetArrayItem(domains_list, i);
         if (d && d->valuestring) {
           cJSON *item = cJSON_CreateObject();
@@ -193,7 +193,7 @@ static void query_securitytrails_reverse(http_client *http, const char *query,
     cJSON *records = cJSON_GetObjectItem(json, "records");
     if (records && cJSON_IsArray(records)) {
       int count = cJSON_GetArraySize(records);
-      for (int i = 0; i < count && i < 100; i++) {
+      for (int i = 0; i < count; i++) {
         cJSON *rec = cJSON_GetArrayItem(records, i);
         if (rec) {
           cJSON *hostname = cJSON_GetObjectItem(rec, "hostname");

@@ -12,7 +12,7 @@
  *       → remote_key "tx:<hash>"
  *   - one item for the ADDRESS BALANCE (Etherscan balance)
  *       → remote_key "addr:<address>"  (carries known-whale label classifier)
- *   - one item per DeFiLlama TOP protocol
+ *   - one item per DeFiLlama protocol (every one, TVL-sorted)
  *       → remote_key "defi:<protocol-slug>"  body = name/tvl/chain
  *   - one item for the Bitcoin network stats (blockchain.info/stats)
  *       → remote_key "btcnet:stats"
@@ -399,45 +399,64 @@ static int emit_btc_stats(intel_sink *sink, http_client *http) {
   return rc >= 0 ? 1 : 0;
 }
 
-/* Emit Whale Alert feed txs (key required). Returns count emitted. */
-#define WHALE_WA_FEED_MAX 50   /* exhaustive-ok: display bound on a single feed call; a full page emits a collector-truncation-notice */
+/* Emit Whale Alert feed txs (key required). Returns count emitted.
+ *
+ * Every transaction of every page. This used to emit the first 50 of the one
+ * page it fetched under a "display bound" label — but a display bound belongs
+ * to a consumer (house rule 2); the collector stores what it was given. The
+ * v1 API serves at most 100 transactions a call and hands back a `cursor` for
+ * the next; the walk follows it until a short page or a cursor that does not
+ * move. A later page that fails, or the runaway guard, is disclosed. */
+#define WHALE_WA_PAGE 100       /* the v1 API's own per-call maximum */
+#define WHALE_WA_MAX_PAGES 50   /* exhaustive-ok: cursor-walk runaway guard; hitting it emits a scoped collector-truncation-notice */
 
 static int emit_whale_alert_feed(intel_sink *sink, http_client *http,
                                  long minv, time_t since) {
   const char *key = getenv("WHALE_ALERT_API_KEY");
   if (!key || !*key) return 0;     /* gated: no key → skip, no fabricated row */
-  char url[512];
-  snprintf(url, sizeof url,
-    "https://api.whale-alert.io/v1/transactions?api_key=%s&min_value=%ld&start=%ld",
-    key, minv, (long)since);
-  cJSON *j = get_json(http, url);
-  if (!j) return 0;
-  int emitted = 0;
-  const cJSON *txs = cJSON_GetObjectItem(j, "transactions");
-  if (txs && cJSON_IsArray(txs)) {
-    int n = cJSON_GetArraySize(txs);
-    int cap = n < WHALE_WA_FEED_MAX ? n : WHALE_WA_FEED_MAX;
-    for (int i = 0; i < cap; i++)
+  int emitted = 0, pages = 0, failed = 0, capped = 0;
+  char cursor[256] = "";
+  for (;;) {
+    if (pages >= WHALE_WA_MAX_PAGES) { capped = 1; break; }
+    char url[768];
+    snprintf(url, sizeof url,
+      "https://api.whale-alert.io/v1/transactions?api_key=%s&min_value=%ld&start=%ld"
+      "&limit=%d%s%s", key, minv, (long)since, WHALE_WA_PAGE,
+      cursor[0] ? "&cursor=" : "", cursor);
+    cJSON *j = get_json(http, url);
+    pages++;
+    if (!j) { failed = 1; break; }
+    const cJSON *txs = cJSON_GetObjectItem(j, "transactions");
+    int n = cJSON_IsArray(txs) ? cJSON_GetArraySize(txs) : 0;
+    for (int i = 0; i < n; i++)
       emitted += emit_wa_tx(sink, cJSON_GetArrayItem(txs, i));
-    /* A day with >50 whale-scale (>=min_value) transactions is plausible on
-     * an active day; the excess used to be dropped with no trace. */
-    if (n > WHALE_WA_FEED_MAX)
-      jo_trunc_notice(sink, "WHALE_ALERT",
-                       "api.whale-alert.io/v1/transactions", emitted, n,
-                       "the 24h whale-alert feed returned more transactions "
-                       "than the per-call display bound",
-                       "raise WHALE_WA_FEED_MAX in whale_monitor.c");
+    const char *nc = jo_sv(j, "cursor");
+    int more = n >= WHALE_WA_PAGE && nc && nc[0] && strcmp(nc, cursor) != 0 &&
+               strlen(nc) < sizeof cursor;
+    if (more) snprintf(cursor, sizeof cursor, "%s", nc);
+    cJSON_Delete(j);
+    if (!more) break;
   }
-  cJSON_Delete(j);
+  if (failed || capped)
+    jo_trunc_notice_scoped(sink, "WHALE_ALERT", "whale-alert-feed",
+                     "api.whale-alert.io/v1/transactions", emitted, -1,
+                     failed ? "a page of the 24h whale-alert feed failed "
+                              "(rate limit, key or transport); the transactions from "
+                              "it were not read"
+                            : "the 24h whale-alert cursor walk hit its runaway "
+                              "guard (WHALE_WA_MAX_PAGES)",
+                     failed ? "re-run the query" : "raise WHALE_WA_MAX_PAGES in "
+                              "whale_monitor.c");
   return emitted;
 }
 
-/* Emit DeFiLlama protocols, sorted by TVL descending so "top" is actually
- * true — the feed's own field order is not documented as TVL-sorted, and
- * taking index order unsorted would silently mislabel an arbitrary 20 as
- * "top" (2026-09-03 audit). Returns count emitted. */
-#define WHALE_DEFI_TOP_N 20   /* exhaustive-ok: display bound ("top N"); a longer list emits a collector-truncation-notice */
-
+/* Emit DeFiLlama protocols, sorted by TVL descending. Returns count emitted.
+ *
+ * Every protocol (8,452 on 2026-10-02). This emitted the "top 20" under a
+ * display-bound label and disclosed the other 8,432 — but the whole list was
+ * already fetched and parsed, and ranking is a consumer's view, not a reason
+ * for the collector to discard (house rule 2). The sort is kept so the stored
+ * order is still TVL-first. */
 static int defi_tvl_desc(const void *a, const void *b) {
   cJSON *const *pa = (cJSON *const *)a, *const *pb = (cJSON *const *)b;
   const cJSON *ta = cJSON_GetObjectItem(*pa, "tvl");
@@ -451,20 +470,20 @@ static int emit_defi_protocols(intel_sink *sink, http_client *http) {
   cJSON *p = get_json(http, "https://api.llama.fi/protocols");
   if (!p || !cJSON_IsArray(p)) { if (p) cJSON_Delete(p); return 0; }
   int n = cJSON_GetArraySize(p);
-  cJSON **items = malloc((n > 0 ? (size_t)n : 1) * sizeof *items);
-  int i = 0;
+  int emitted = 0, i = 0;
   cJSON *it;
+  cJSON **items = malloc((n > 0 ? (size_t)n : 1) * sizeof *items);
+  if (!items) {
+    /* cannot sort without the index: emit in the feed's own order rather than
+     * dropping the list (the unchecked malloc used to be dereferenced here) */
+    cJSON_ArrayForEach(it, p) emitted += emit_defi(sink, it);
+    cJSON_Delete(p);
+    return emitted;
+  }
   cJSON_ArrayForEach(it, p) items[i++] = it;
   qsort(items, (size_t)n, sizeof *items, defi_tvl_desc);
-
-  int emitted = 0, cap = n < WHALE_DEFI_TOP_N ? n : WHALE_DEFI_TOP_N;
-  for (i = 0; i < cap; i++) emitted += emit_defi(sink, items[i]);
+  for (i = 0; i < n; i++) emitted += emit_defi(sink, items[i]);
   free(items);
-  if (n > WHALE_DEFI_TOP_N)
-    jo_trunc_notice(sink, "WHALE_ALERT", "api.llama.fi/protocols", emitted, n,
-                     "DeFiLlama's protocol list is longer than the \"top N\" "
-                     "display bound (now sorted by tvl before truncating)",
-                     "raise WHALE_DEFI_TOP_N in whale_monitor.c");
   cJSON_Delete(p);
   return emitted;
 }

@@ -14,31 +14,33 @@
  *
  * PROVENANCE AND VERIFICATION STATUS — read before trusting a row here.
  *
- * Unlike batches 18-30, this table was hand-authored, not scaffolded by
- * tools/gen_hp_batch.py, so there is NO docs/candidate-sources-batch31.*.txt
- * manifest behind it. Do not look for one, and do not regenerate over this
- * file. The consequence is that the manifest-driven auditors
- * (audit_batch_reachable.py, audit_batch_pagination.py, audit_batch_emit.py)
- * cannot be pointed at batch 31; use audit_registry_emit.py --match hp3b31,
- * which reads --list-sources and needs no manifest.
+ * Hand-authored in C, not scaffolded by tools/gen_hp_batch.py. This file is
+ * the maintained copy. Since 2026-10-05 a manifest RECONSTRUCTED from it exists
+ * at docs/candidate-sources-batch31.<beat>.txt, so the manifest-driven gates can
+ * finally be pointed at batch 31. It is a record, not a source: never
+ * regenerate this file from it. Its fidelity was proven rather than assumed —
+ * gen_hp_batch.py run on the manifest reproduces every field of every row here
+ * exactly, and a grep of field assignments agrees on both sides.
  *
- * These rows are NOT proof-of-life verified. The environment they were written
- * in had no outbound HTTPS, so no row here was fetched over the wire, and none
- * of rules 4, 4b and 4d (fetching is not emitting; emitting is not storing;
- * answering is not answering THE QUESTION) has been measured for this batch.
- * What HAS been checked is offline and structural: the tree builds clean, the
- * strict audit-sources gate is at zero findings, lint-sources reports no
- * duplicate id or endpoint, and every row is reachable under house rule 3.
+ * These rows are NOT proof-of-life verified. No row was fetched over the wire,
+ * so rules 4, 4b and 4d (fetching is not emitting; emitting is not storing;
+ * answering is not answering THE QUESTION) are unmeasured. What HAS been
+ * checked is offline and structural: clean build, zero audit-sources findings,
+ * no duplicate id or endpoint, every row reachable (rule 3), and every paged
+ * endpoint declares its walk (audit_batch_pagination, first run 2026-10-05).
  *
- * So treat each row as a documented CANDIDATE until it is measured. The first
- * person with network should run:
- *     python3 tools/audit_registry_emit.py --bin ./bin/japanosint \
- *             --match hp3b31 --jobs 6 --timeout 220 --out b31.tsv
- *     python3 tools/probe_hp_batch.py --check-filter   # FILTER_IGNORED is fatal
- * and retire whatever comes back EMITS_NOTHING, COLLISION or FILTER_IGNORED.
- * The engine cannot fabricate — an endpoint that moved or changed shape yields
- * an honest empty, never an invented record — so an unmeasured row is a gap in
- * coverage, not a source of false data.
+ * With network, run the MANIFEST-driven tools:
+ *     python3 tools/probe_hp_batch.py ../docs/candidate-sources-batch31.*.txt --check-filter
+ *     python3 tools/audit_batch_emit.py ../docs/candidate-sources-batch31.*.txt \
+ *             --bin ./bin/japanosint --jobs 6
+ * NOT `audit_registry_emit.py --match hp3b31`, which this header used to
+ * suggest: --match is a regex on the source ID, these ids carry no batch
+ * prefix, so it selects zero rows and reports nothing wrong.
+ * Rows with key_env need their key in the environment, and rows with
+ * post_body are POSTs that probe_hp_batch does not send — judge those two
+ * classes with audit_batch_emit. Retire whatever comes back EMITS_NOTHING,
+ * DROPS_EVERYTHING, COLLISION or FILTER_IGNORED. The engine cannot fabricate:
+ * an endpoint that moved yields an honest empty, never an invented record.
  */
 #include "lib/hpengine.h"
 
@@ -179,7 +181,7 @@ static const hp_source HP3B31_EUTRANS[] = {
     .name_ja = "EU 結束政策データ", .category = "government",
     .portal = "https://cohesiondata.ec.europa.eu", .record_type = "eu-cohesion-dataset",
     .tags = "\"eu\",\"funding\",\"open-data\"", .free_tier = 1,
-    .url = "https://cohesiondata.ec.europa.eu/api/catalog/v1?q={q}&limit=100",
+    .url = "https://cohesiondata.ec.europa.eu/api/catalog/v1?q={q}&domains=cohesiondata.ec.europa.eu&search_context=cohesiondata.ec.europa.eu&limit=100",
     .array_path = "results", .title_keys = "resource.name,resource.description",
     .id_keys = "resource.id", .date_keys = "resource.updatedAt",
     .link_keys = "permalink",
@@ -224,19 +226,6 @@ static const hp_source HP3B31_EUTRANS[] = {
       "staff-integrity cases, with the recovery amounts recommended" },
 
   /* ── Identity and compliance checks ───────────────────────────────────── */
-  { .id = "EU_VIES_VAT_VALIDATION", .name = "EU VIES — VAT number validation",
-    .name_ja = "EU VAT番号照会", .category = "finance",
-    .portal = "https://ec.europa.eu", .record_type = "eu-vat-registration",
-    .tags = "\"eu\",\"vat\",\"identity\"", .want = HP_NUMERIC, .free_tier = 1,
-    .url = "https://ec.europa.eu/taxation_customs/vies/rest-api/check-vat-number",
-    .post_body = "{\"countryCode\":\"{Q}\",\"vatNumber\":\"{qd}\"}",
-    .content_type = "application/json",
-    .title_keys = "name,address", .id_keys = "vatNumber",
-    .description = "The authoritative check of whether an intra-EU VAT number "
-      "is valid and, where the member state permits it, the registered name "
-      "and address behind it. A VAT number is often the only identifier on an "
-      "invoice from a shell" },
-
   { .id = "EU_EUDAMED_DEVICES", .name = "EUDAMED — EU medical device database",
     .name_ja = "EU 医療機器データベース", .category = "health",
     .portal = "https://ec.europa.eu", .record_type = "eu-medical-device",

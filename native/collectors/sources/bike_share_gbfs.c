@@ -63,11 +63,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     const cJSON *stations = get(get(info, "data"), "stations");
     const cJSON *sstations = get(get(status, "data"), "stations");
 
-    int i = 0;
-    if (cJSON_IsArray(stations)) {
+    if (cJSON_IsArray(stations)) {     /* every station (was slice(0,500)) */
       const cJSON *s;
       cJSON_ArrayForEach(s, stations) {
-        if (i++ >= 500) break;                 /* slice(0,500) */
         const cJSON *sid = get(s, "station_id");
         const char *sids = (sid && cJSON_IsString(sid)) ? sid->valuestring
                           : NULL;

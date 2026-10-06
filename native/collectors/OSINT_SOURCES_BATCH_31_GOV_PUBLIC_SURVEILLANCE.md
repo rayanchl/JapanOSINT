@@ -199,24 +199,51 @@ here has been fetched over the wire.** Nothing below has been measured:
 Treat every row as a documented **candidate** until measured. With network:
 
 ```sh
-python3 tools/audit_registry_emit.py --bin ./bin/japanosint \
-        --match hp3b31 --jobs 6 --timeout 220 --out b31.tsv
-python3 tools/probe_hp_batch.py --check-filter      # FILTER_IGNORED is fatal
+cd native
+python3 tools/probe_hp_batch.py ../docs/candidate-sources-batch31.*.txt --check-filter   # FILTER_IGNORED is fatal
+python3 tools/audit_batch_emit.py ../docs/candidate-sources-batch31.*.txt \
+        --bin ./bin/japanosint --jobs 6 --timeout 220
 ```
+
+The command this section used to give, `audit_registry_emit.py --match hp3b31`,
+measured NOTHING: `--match` is a regex on the SOURCE ID, and no batch-31 id
+contains `hp3b31` (that is the file name). It selected zero rows and would have
+reported a clean sweep. The other line, `probe_hp_batch.py --check-filter`, had
+no manifest to read. Both are why the manifests below exist.
 
 Retire anything returning `EMITS_NOTHING`, `COLLISION` or `FILTER_IGNORED`. An
 unmeasured row is a gap in coverage, not a source of false data — the engine
 only forwards fields that came back over the wire, so a moved or reshaped
 endpoint yields an honest empty.
 
-## No manifest
+## Manifests (reconstructed 2026-10-05)
 
 These 16 tables were hand-authored, not scaffolded by `tools/gen_hp_batch.py`,
-so there is no `docs/candidate-sources-batch31.*.txt`. Do not regenerate over
-them. The manifest-driven auditors (`audit_batch_reachable.py`,
-`audit_batch_pagination.py`, `audit_batch_emit.py`) cannot be pointed at this
-batch; `audit_registry_emit.py --match hp3b31` reads `--list-sources` and needs
-no manifest.
+so until 2026-10-05 there was no manifest and no manifest-driven gate
+(`probe_hp_batch.py`, `audit_batch_reachable.py`, `audit_batch_pagination.py`,
+`audit_batch_emit.py`) could be pointed at this batch.
+
+`docs/candidate-sources-batch31.<beat>.txt` now exists for all 16 beats, 360
+rows, **reconstructed from the C**. It is a record of the tables, not their
+source — the C stays the maintained copy, and nothing should be regenerated
+over it. Fidelity was proven both ways: `gen_hp_batch.py` regenerated from the
+manifests yields the same 360 rows with 0 field mismatches against the
+committed tables, and an independent grep confirmed every field set in the C is
+present in the manifest. The `probe` column holds one concrete entity per row,
+picked for what the row asks for (an IP row gets `8.8.8.8`, a domain row
+`toyota.co.jp`, a Japanese-text row `トヨタ`, the NTA invoice row a real
+registration number), so `--check-filter` has a real entity to compare against.
+
+Two kinds of row the probe cannot settle on its own: **`key_env` rows** (the
+probe sends `{key}` literally, so they need `audit_batch_emit.py` with the key
+set) and **`post_body` rows** (the probe only GETs). Nothing in these manifests
+has been probed — the session that wrote them could reach no source host.
+
+The number 31 was also used by a docs-only staging set
+(`docs/candidate-sources-batch31.{cam,eu,fr,jp,row,us}.txt`, 144 candidates,
+unrelated to these tables). A `batch31.*.txt` glob would have mixed the two, so
+that set moved to **batch 37** (`docs/batch37/STAGING_README.md`; 36 was taken by
+a live-measured batch that merged first).
 
 ## Merge note
 
@@ -273,3 +300,39 @@ fresh database per run):
   been read yet.
 
 The 334 entity pivots are still unmeasured. The section above stands for them.
+
+## Review fixes (2026-10-05): 361 → 360 rows
+
+Found while reconstructing the manifests, before any probe:
+
+* **`EU_VIES_VAT_VALIDATION` removed — broken by construction, and a
+  duplicate.** Its body sent `{Q}` (the whole entity, upper-cased) as
+  `countryCode` and `{qd}` (the digits) as `vatNumber`, so `DK28866984` became
+  `countryCode="DK28866984"`, which VIES rejects, and no entity could form a
+  valid request. The same lookup is already done correctly by
+  `sources/corp_identifiers.c` and `vsrc16_eu_corporate_1.c`
+  (`/rest-api/ms/{cc}/vat/{num}`).
+* **`JP_NTA_INVOICE_ISSUER` stripped the `T`.** `{qd}` keeps digits only, and
+  the NTA API wants the registration number WITH its `T` prefix, so every
+  request was malformed. The url now puts it back (`number=T{qd}`), which works
+  whether the analyst typed the `T` or not.
+* **Three Socrata catalogue pivots were not scoped to their domain** (rule 4d):
+  `cohesiondata.ec.europa.eu`, `finances.worldbank.org`, `www.datos.gov.co`.
+  A domain's `/api/catalog/v1` searches every Socrata portal unless `domains=`
+  and `search_context=` are passed; all three now pass both.
+* **Four rows silently stopped at page 1** (rule 2): `CLIMATE_TRACE_ASSETS` and
+  `TOR_ONIONOO_RELAYS` now walk `offset` (1000 × 20); `UK_CASELAW_ARCHIVE` walks
+  `page` (20) WITHOUT `page_size`, because `page_size` on a page-NUMBER
+  parameter switches the engine to offset arithmetic and page 2 is requested as
+  `page=51`; `JP_ESTAT_STATSLIST` follows e-Stat's
+  `RESULT_INF.NEXT_KEY` cursor through `next_path`/`next_tmpl`.
+  `CLIMATE_TRACE_ASSETS` is also the row to check first when probing: it POSTs
+  to an API whose public documentation describes GET.
+* `JP_MLIT_LAND_TRADE_PRICES`, `MA_MARCHES_PUBLICS` and
+  `CLOUDFLARE_RADAR_TRAFFIC` gained comments saying why they do NOT page (one
+  response holds the range, or the endpoint has no offset).
+
+The batch is now **360 rows: 27 scheduled, 333 entity pivots**. The 27
+scheduled rows' 2026-10-02 measurements above predate these edits;
+`TOR_ONIONOO_RELAYS` and `CLIMATE_TRACE_ASSETS` are pivots, so none of the
+measured rows changed.

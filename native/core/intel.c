@@ -71,8 +71,16 @@ typedef struct {
   unsigned long long *seen;   /* open-addressed set of uid hashes, 0 = empty  */
   size_t seen_cap;            /* slots, always a power of two                 */
   size_t seen_n;              /* distinct uids stored this run                */
+  size_t seen_notice_n;       /* ...of which collector-*-notice records       */
   int    seen_exact;          /* 0 once the ceiling or an ENOMEM made it a floor */
 } sink_state;
+
+int intel_item_is_notice(const intel_item *it) {
+  const char *rt = it ? it->record_type : NULL;
+  size_t n = rt ? strlen(rt) : 0;
+  return n >= 17 && strncmp(rt, "collector-", 10) == 0 &&
+         strcmp(rt + n - 7, "-notice") == 0;
+}
 
 static unsigned long long uid_hash(const char *s) {
   unsigned long long h = 1469598103934665603ULL;      /* FNV-1a 64 offset */
@@ -91,29 +99,31 @@ static void seen_put(unsigned long long *tab, size_t cap, unsigned long long h) 
 
 /* Record `uid` in the run's distinct set. Silent about everything except the
  * one thing that matters: if it cannot grow, seen_exact drops to 0 and the
- * caller reports a floor instead of a wrong number. */
-static void seen_add(sink_state *st, const char *uid) {
+ * caller reports a floor instead of a wrong number. Returns 1 when `uid` was
+ * new to this run, 0 when it was already there (or could not be recorded). */
+static int seen_add(sink_state *st, const char *uid) {
   unsigned long long h = uid_hash(uid);
   if (st->seen && st->seen_n * 10 >= st->seen_cap * 7) {
     size_t ncap = st->seen_cap * 2;
-    if (ncap > SEEN_MAX) { st->seen_exact = 0; return; }
+    if (ncap > SEEN_MAX) { st->seen_exact = 0; return 0; }
     unsigned long long *nt = calloc(ncap, sizeof *nt);
-    if (!nt) { st->seen_exact = 0; return; }
+    if (!nt) { st->seen_exact = 0; return 0; }
     for (size_t i = 0; i < st->seen_cap; i++)
       if (st->seen[i]) seen_put(nt, ncap, st->seen[i]);
     free(st->seen); st->seen = nt; st->seen_cap = ncap;
   } else if (!st->seen) {
     st->seen = calloc(SEEN_INIT, sizeof *st->seen);
-    if (!st->seen) { st->seen_exact = 0; return; }
+    if (!st->seen) { st->seen_exact = 0; return 0; }
     st->seen_cap = SEEN_INIT;
   }
   size_t i = (size_t)(h & (st->seen_cap - 1));
   while (st->seen[i]) {
-    if (st->seen[i] == h) return;               /* already stored this run */
+    if (st->seen[i] == h) return 0;             /* already stored this run */
     i = (i + 1) & (st->seen_cap - 1);
   }
   st->seen[i] = h;
   st->seen_n++;
+  return 1;
 }
 
 static void iso_now(char *b, size_t n) {
@@ -374,14 +384,25 @@ static int emit(struct intel_sink *self, const intel_item *it) {
   if (rc != SQLITE_DONE) { sqlite3_exec(h, "ROLLBACK", NULL, NULL, NULL); return -1; }
 
   int changes = sqlite3_changes(h); /* 1 insert, or update */
-  /* Rule 4b (see the block at the top of this file). Counted here, AFTER the
-   * upsert stepped SQLITE_DONE and before anything can return early, so the
-   * set holds exactly the uids that are now rows. */
-  seen_add(st, uid);
   fts_write(h, uid, it->title, it->body, it->summary, it->link, it->author,
             it->tags_json ? it->tags_json : "[]",
             it->properties_json ? it->properties_json : "{}");
-  sqlite3_exec(h, "COMMIT", NULL, NULL, NULL);
+  /* THE COMMIT IS THE WRITE. Its return code used to be ignored, so a COMMIT
+   * that failed (SQLITE_FULL on a full volume, SQLITE_IOERR, a lock that
+   * could not be had) left emit() returning success for a row that was never
+   * written, and `stored` counting it. Roll back explicitly — some failures
+   * leave the transaction open on this connection, and the next emit's BEGIN
+   * would then fail and fold it into an unrelated row's transaction. */
+  if (sqlite3_exec(h, "COMMIT", NULL, NULL, NULL) != SQLITE_OK) {
+    fprintf(stderr, "[intel] %s: COMMIT failed for %s (%s) — row not stored\n",
+            st->source_id, uid, sqlite3_errmsg(h));
+    sqlite3_exec(h, "ROLLBACK", NULL, NULL, NULL);
+    return -1;
+  }
+  /* Rule 4b (see the block at the top of this file). Counted only once the
+   * COMMIT has succeeded, so the set holds exactly the uids that are now
+   * rows. */
+  if (seen_add(st, uid) && intel_item_is_notice(it)) st->seen_notice_n++;
 
   /* Alert matching (roadmap P0.1) — AFTER the commit, never inside it. An
    * alert write must not be able to roll back the ingest that produced it,
@@ -441,6 +462,12 @@ long intel_sink_stored(const intel_sink *k, int *exact) {
   const sink_state *st = k->ctx;
   if (exact) *exact = st->seen_exact;
   return (long)st->seen_n;
+}
+
+long intel_sink_stored_notices(const intel_sink *k) {
+  if (!k || !k->ctx || k->emit != emit) return -1;
+  const sink_state *st = k->ctx;
+  return (long)st->seen_notice_n;
 }
 
 /* sink_state owns exactly one allocation of its own — the distinct-uid table

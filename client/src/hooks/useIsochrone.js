@@ -5,7 +5,7 @@ import { api, ApiError } from '../api/client.js';
  * GET /api/isochrone — GTFS travel-time reachability (roadmap 32).
  * Params the server reads (core/isochrone.c): lat, lon, max_min (5…ceil),
  * max_walk_m (100…2000), walk_kmh (2…7), max_transfers (0…4), bands (csv of
- * minutes), depart (ISO, JST service day). Rate-limited 12/min per client:
+ * minutes), depart_at (ISO, JST service day). Rate-limited 12/min per client:
  * a 429 carries `retry_after_sec`, which becomes a countdown here exactly as
  * the iOS overlay does.
  *
@@ -46,7 +46,9 @@ export default function useIsochrone() {
           walk_kmh: walkKmh,
           max_transfers: maxTransfers,
           bands: Array.isArray(bands) && bands.length ? bands.join(',') : undefined,
-          depart: depart || undefined,
+          // The server reads `depart_at` (isochrone.c); `depart` was ignored,
+          // so every isochrone was computed for "now" whatever was picked.
+          depart_at: depart || undefined,
         },
       });
       const features = Array.isArray(j?.features) ? j.features : [];

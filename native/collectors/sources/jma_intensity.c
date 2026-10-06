@@ -48,10 +48,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!arr || !cJSON_IsArray(arr)) { if (arr) cJSON_Delete(arr); return -1; }
 
   cJSON *features = cJSON_CreateArray();
-  int i = 0;
   cJSON *q;
   cJSON_ArrayForEach(q, arr) {
-    if (i++ >= 100) break;                  /* data.slice(0,100) */
     const cJSON *anm = cJSON_GetObjectItem(q, "anm");
     const cJSON *mag = cJSON_GetObjectItem(q, "mag");
     const cJSON *maxi= cJSON_GetObjectItem(q, "maxi");

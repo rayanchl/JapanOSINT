@@ -140,5 +140,6 @@ static const source_def shodan_cameras_jp_def = {
   .name = "Shodan Cameras (JP)",
   .name_ja = "Shodan \xE3\x82\xAB\xE3\x83\xA1\xE3\x83\xA9 \xE6\x97\xA5\xE6\x9C\xAC",
    .update_interval_sec = 86400, .run = run,
+  .category = "infrastructure",
 };
 REGISTER_SOURCE(shodan_cameras_jp_def)

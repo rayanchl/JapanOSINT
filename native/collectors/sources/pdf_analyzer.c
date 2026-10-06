@@ -6,6 +6,7 @@
  * count, by scanning the raw bytes (Info-dict values are plaintext in most
  * PDFs). No external parser. Honest-empty for non-PDF / no metadata. */
 #include "source.h"
+#include "lib/jocore.h"   /* jo_memmem: memmem is GNU-only on glibc */
 #include "core/httpclient.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
@@ -20,7 +21,7 @@ static const char *PDF_KEYS[] = {
 /* Find `key` then read a following "(...)" literal string into out. */
 static int pdf_value(const char *buf, size_t len, const char *key, char *out, size_t cap) {
   const char *p = buf; size_t klen = strlen(key);
-  while ((p = memmem(p, (size_t)(buf + len - p), key, klen)) != NULL) {
+  while ((p = jo_memmem(p, (size_t)(buf + len - p), key, klen)) != NULL) {
     const char *q = p + klen;
     while (q < buf + len && (*q == ' ' || *q == '\t')) q++;
     if (q < buf + len && *q == '(') {
@@ -41,7 +42,7 @@ static int pdf_value(const char *buf, size_t len, const char *key, char *out, si
 
 static int count_occurrences(const char *buf, size_t len, const char *needle) {
   int c = 0; size_t nl = strlen(needle); const char *p = buf;
-  while ((p = memmem(p, (size_t)(buf + len - p), needle, nl)) != NULL) { c++; p += nl; }
+  while ((p = jo_memmem(p, (size_t)(buf + len - p), needle, nl)) != NULL) { c++; p += nl; }
   return c;
 }
 

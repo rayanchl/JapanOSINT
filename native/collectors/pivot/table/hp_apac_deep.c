@@ -49,8 +49,17 @@ static const hp_source HP_APAC[] = {
     .name_ja = "台湾 商工登記 — 企業登記", .category = "government",
     .portal = "https://data.gcis.nat.gov.tw", .record_type = "tw-company",
     .tags = "\"tw\",\"registry\"", .free_tier = 1,
+    /* Measured 2026-10-02: without a Company_Status clause this API answers
+     * HTTP 200 with an EMPTY body for every name, so the row stored nothing;
+     * with `and Company_Status eq 01` (核准設立, an active registration — the
+     * API's own documented example) it answers. $skip/$top page it: $top=40
+     * read the first 40 matches only; it is now $top=1000 (the API maximum)
+     * walked on $skip, so 台積 answers 14 rows on page one and the walk ends on
+     * the short page. Dissolved/revoked companies are NOT in this query. */
     .url = "https://data.gcis.nat.gov.tw/od/data/api/6BBA2268-1367-4B42-9CCA-BC17499EBE8C"
-           "?$format=json&$filter=Company_Name%20like%20{q}&$skip=0&$top=40",
+           "?$format=json&$filter=Company_Name%20like%20{q}%20and%20Company_Status%20eq%2001"
+           "&$skip=0&$top=1000",
+    .page_param = "$skip", .page_size = 1000,
     .title_keys = "Company_Name", .id_keys = "Business_Accounting_NO",
     .date_keys = "Company_Setup_Date",
     .description = "Taiwanese company registration — unified business number, "

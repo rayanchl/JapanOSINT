@@ -6,7 +6,7 @@ import { useApi } from '../../hooks/useApi.js';
 import { useAuth } from '../../auth/AuthContext.jsx';
 import { savedStore } from '../../store/savedStore.js';
 import { ServerSettings } from '../auth/OnboardingFlow.jsx';
-import { ProbeActions } from './ApiKeysPage.jsx';
+import { ProbeActions, mergeStatusRow } from './ApiKeysPage.jsx';
 import { relativeTime, fmtAbs } from '../../utils/time.js';
 import {
   Page, Section, Row, Pill, Button, Input, Segmented, ConfirmDialog,
@@ -305,7 +305,7 @@ function ProbeConsentSection() {
   const LIMIT = 40;
   const [expanded, setExpanded] = useState(false);
   const shown = expanded ? filtered : filtered.slice(0, LIMIT);
-  const onUpdate = (updated) => setData((d) => (d ? { ...d, apis: (d.apis || []).map((s) => (s.id === updated.id ? updated : s)) } : d));
+  const onUpdate = (updated) => setData((d) => (d ? { ...d, apis: mergeStatusRow(d.apis, updated) } : d));
 
   return (
     <Section label="Probe consent">

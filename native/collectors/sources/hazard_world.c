@@ -197,7 +197,7 @@ static int hz_rss(const source_ctx *ctx, intel_sink *sink, const char *url,
   if (!xml) return 0;
   int emitted = 0;
   const char *cur = xml;
-  while (emitted < 60) {
+  for (;;) {                     /* every <item>: the feed decides how many */
     const char *item = jo_next_entry(&cur);
     if (!item) break;
     /* bound the scan to this item block so tag_inner doesn't leak into next */
@@ -286,7 +286,7 @@ static int hz_firms(const source_ctx *ctx, intel_sink *sink) {
   /* skip header line */
   const char *nl = strchr(line, '\n');
   if (nl) line = nl + 1;
-  while (line && *line && emitted < 200) {
+  while (line && *line) {        /* every fire row in the global CSV */
     nl = strchr(line, '\n');
     size_t llen = nl ? (size_t)(nl - line) : strlen(line);
     if (llen > 3) {

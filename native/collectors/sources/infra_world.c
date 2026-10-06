@@ -373,11 +373,10 @@ static int iw_bgpview_search(const source_ctx *ctx, intel_sink *sink,
   if (!root) return 0;
   cJSON *d = cJSON_GetObjectItem(root, "data");
   cJSON *asns = d ? cJSON_GetObjectItem(d, "asns") : NULL;
-  int em = 0, n = 0;
+  int em = 0;
   if (cJSON_IsArray(asns)) {
     cJSON *a;
     cJSON_ArrayForEach(a, asns) {
-      if (n++ >= 25) break;
       char asbuf[24];
       const char *asnum = iw_num(a, "asn", asbuf, sizeof asbuf);
       const char *name = jo_sv(a, "name");
@@ -428,11 +427,10 @@ static int iw_peeringdb(const source_ctx *ctx, intel_sink *sink, const char *q) 
   cJSON *root = cJSON_Parse(body); free(body);
   if (!root) return 0;
   cJSON *arr = cJSON_GetObjectItem(root, "data");
-  int em = 0, n = 0;
+  int em = 0;
   if (cJSON_IsArray(arr)) {
     cJSON *r;
     cJSON_ArrayForEach(r, arr) {
-      if (n++ >= 25) break;
       const char *name = jo_sv(r, "name");
       char asbuf[24];
       const char *asn = iw_num(r, "asn", asbuf, sizeof asbuf);

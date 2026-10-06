@@ -113,7 +113,7 @@ export default function AnnotationsSection({ refType, refId, caseId, title = 'No
       </ul>
       {data?.page?.next_cursor && (
         <div className="flex items-center justify-between mt-2">
-          <BoundNote shown={rows.length} total={rows.length + 1} noun="notes (more available)" />
+          <BoundNote shown={rows.length} more noun="notes" />
           <Button size="sm" busy={more} onClick={loadMore}>Load more</Button>
         </div>
       )}

@@ -86,7 +86,7 @@ static void sfd_pad_cik(const char *cik, char *out, size_t cap) {
   while (*p == '0' && p[1]) p++;                 /* strip leading zeros */
   char digits[11];
   size_t n = 0;
-  for (; *p && isdigit((unsigned char)*p) && n < 10; p++) digits[n++] = *p;
+  for (; *p && isdigit((unsigned char)*p) && n < 10; p++) digits[n++] = *p;  /* exhaustive-ok: a CIK is at most 10 digits; bounds digits[11] */
   digits[n] = 0;
   if (cap < 11 || n == 0) { if (cap) out[0] = 0; return; }
   memset(out, '0', 10 - n);

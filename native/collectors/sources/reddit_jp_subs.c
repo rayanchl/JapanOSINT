@@ -1,6 +1,6 @@
 /* collectors/social/sources/reddit_jp_subs.c
  * Port of server/src/collectors/redditJpSubs.js (intelEnvelope).
- * 5 fixed subs, one /new.json?limit=25 GET each, slice(0,25) → intel rows.
+ * 5 fixed subs, one /new.json?limit=100 GET each (the listing max), every post → intel rows.
  * uid = reddit-jp-subs|<p.id> (intelUid first non-empty). */
 #include "lib/jocore.h"
 #include "source.h"
@@ -22,15 +22,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   for (int s = 0; s < NSUB; s++) {
     char url[160];
     snprintf(url, sizeof url,
-      "https://www.reddit.com/r/%s/new.json?limit=25", SUBS[s]);
+      "https://www.reddit.com/r/%s/new.json?limit=100", SUBS[s]);  /* listing max */
     cJSON *r = feed_get_json_h(ctx->http, url, hdrs, 10000);
     cJSON *data = r ? cJSON_GetObjectItem(r, "data") : NULL;
     cJSON *children = data ? cJSON_GetObjectItem(data, "children") : NULL;
     if (cJSON_IsArray(children)) {
-      int i = 0;
       cJSON *c;
       cJSON_ArrayForEach(c, children) {
-        if (i++ >= 25) break;                       /* slice(0,25) */
         cJSON *p = cJSON_GetObjectItem(c, "data");
         if (!p) continue;
 

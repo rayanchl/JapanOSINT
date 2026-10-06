@@ -62,7 +62,7 @@ static cJSON *github_code(http_client *h, const char *q, int have_tok) {
   if (items && cJSON_IsArray(items)) {
     cJSON *ms = cJSON_CreateArray();
     int n = cJSON_GetArraySize(items);
-    for (int i = 0; i < n && i < 20; i++) {
+    for (int i = 0; i < n; i++) {
       cJSON *it = cJSON_GetArrayItem(items, i);
       cJSON *m = cJSON_CreateObject();
       cJSON *nm = cJSON_GetObjectItem(it, "name");
@@ -105,7 +105,7 @@ static cJSON *github_repos(http_client *h, const char *q) {
   if (items && cJSON_IsArray(items)) {
     cJSON *rs = cJSON_CreateArray();
     int n = cJSON_GetArraySize(items);
-    for (int i = 0; i < n && i < 15; i++) {
+    for (int i = 0; i < n; i++) {
       cJSON *it = cJSON_GetArrayItem(items, i);
       cJSON *ro = cJSON_CreateObject();
       cJSON *fn = cJSON_GetObjectItem(it, "full_name");
@@ -153,7 +153,7 @@ static cJSON *gitlab(http_client *h, const char *q) {
   int n = cJSON_GetArraySize(j);
   cJSON_AddNumberToObject(r, "total_results", n);
   cJSON *ps = cJSON_CreateArray();
-  for (int i = 0; i < n && i < 15; i++) {
+  for (int i = 0; i < n; i++) {
     cJSON *it = cJSON_GetArrayItem(j, i);
     cJSON *p = cJSON_CreateObject();
     cJSON *nm = cJSON_GetObjectItem(it, "path_with_namespace");

@@ -65,7 +65,7 @@ static cJSON *query_opensanctions(http_client *http, const char *name) {
     int count = cJSON_GetArraySize(results);
     cJSON_AddNumberToObject(result, "total_matches", count);
     cJSON *matches = cJSON_CreateArray();
-    for (int i = 0; i < count && i < 20; i++) {
+    for (int i = 0; i < count; i++) {
       cJSON *item = cJSON_GetArrayItem(results, i);
       cJSON *match = cJSON_CreateObject();
       cJSON *id = cJSON_GetObjectItem(item, "id");
@@ -124,7 +124,7 @@ static cJSON *check_pep(http_client *http, const char *name) {
     cJSON_AddBoolToObject(result, "is_pep", count > 0);
     if (count > 0) {
       cJSON *peps = cJSON_CreateArray();
-      for (int i = 0; i < count && i < 10; i++) {
+      for (int i = 0; i < count; i++) {
         cJSON *item = cJSON_GetArrayItem(results, i);
         cJSON *pep = cJSON_CreateObject();
         cJSON *id = cJSON_GetObjectItem(item, "id");

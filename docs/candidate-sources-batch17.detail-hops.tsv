@@ -138,7 +138,7 @@ ar-georef-departamentos	https://apis.datos.gob.ar/georef/api/departamentos?max=3
 ar-bcra-monetarias	https://api.bcra.gob.ar/estadisticas/v4.0/monetarias	https://api.bcra.gob.ar/estadisticas/v4.0/monetarias/{v}	idVariable
 ar-bcra-central-deudores	https://api.bcra.gob.ar/CentralDeDeudores/v1.0/Deudas/30500010912	https://api.bcra.gob.ar/CentralDeDeudores/v1.0/Deudas/{v}	identificacion
 py-dncp-ocds-release	https://www.contrataciones.gov.py/datos/api/v3/doc/ocds/releases/id/1f00844a-1ae5-6314-a8b6-15532f4edc1d-1786885244	https://www.contrataciones.gov.py/datos/api/v3/doc/ocds/releases/id/{v}	id
-mx-dof-sidof-notas	https://sidofqa.segob.gob.mx/dof/sidof/notas/14-08-2026	https://sidofqa.segob.gob.mx/dof/sidof/notas/nota/{v}	codNota
+mx-dof-sidof-notas	https://sidof.segob.gob.mx/dof/sidof/notas/{date:%d-%m-%Y:-2}	https://sidof.segob.gob.mx/dof/sidof/notas/nota/{v}	codNota
 co-dane-microdatos-nada	https://microdatos.dane.gov.co/index.php/api/catalog/search?format=json&ps=50	https://microdatos.dane.gov.co/index.php/api/catalog/{v}	idno
 bo-ine-anda-microdatos	https://anda.ine.gob.bo/index.php/api/catalog/search?format=json&ps=50	https://anda.ine.gob.bo/index.php/api/catalog/{v}	idno
 il-knesset-agenda	https://knesset.gov.il/Odata/ParliamentInfo.svc/KNS_Agenda?$top=100&$format=json	https://knesset.gov.il/Odata/ParliamentInfo.svc/KNS_Agenda({v})?$format=json	AgendaID

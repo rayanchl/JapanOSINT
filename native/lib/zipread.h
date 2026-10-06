@@ -29,4 +29,13 @@ char *zip_first_entry(const char *buf, size_t len, size_t *out_len);
 char *zip_find_entry(const char *buf, size_t len, const char *name,
                      size_t *out_len);
 
+/* How many entries the archive holds, from its End Of Central Directory
+ * record — the archive's own count, not a scan of the bytes. Searching the
+ * body for "PK\3\4" signatures (what hpengine used to do) also matches those
+ * four bytes inside COMPRESSED data, so a one-entry archive could be reported
+ * as holding more. Returns -1 when no EOCD record is found (a truncated or
+ * non-ZIP body), in which case the count is unknown, not 1. A ZIP64 archive
+ * stores 0xFFFF here and is reported as 65535, which is still "more than one". */
+int zip_entry_count(const char *buf, size_t len);
+
 #endif

@@ -115,7 +115,7 @@ static cJSON *query_abuseipdb(http_client *http, const char *ip) {
   if (ra && cJSON_IsArray(ra)) {
     cJSON *cats = cJSON_CreateObject();
     int rc2 = cJSON_GetArraySize(ra);
-    for (int i = 0; i < rc2 && i < 100; i++) {
+    for (int i = 0; i < rc2; i++) {
       cJSON *rep = cJSON_GetArrayItem(ra, i);
       cJSON *cs = cJSON_GetObjectItem(rep, "categories");
       if (cs && cJSON_IsArray(cs)) {

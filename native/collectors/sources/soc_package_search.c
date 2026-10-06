@@ -347,7 +347,7 @@ static int run_hexpm(const source_ctx *ctx, intel_sink *sink) {
   free(enc);
 
   if (truncated)
-    jo_trunc_notice(sink, "HEXPM_PACKAGE_SEARCH", first_url, n, -1,
+    jo_trunc_notice_scoped(sink, "HEXPM_PACKAGE_SEARCH", q, first_url, n, -1,
                     "page ceiling reached, or a mid-walk fetch failed, while "
                     "hex.pm was still returning full pages (it publishes no "
                     "result total)",

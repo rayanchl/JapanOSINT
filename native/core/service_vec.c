@@ -20,8 +20,9 @@
 
 /* Rank-fusion constant, the same value and meaning as semsearchapi.c's RRF_K:
  * a rank-1 hit contributes 1/61, rank-10 1/70, so a service both arms like
- * outranks one that only one arm likes, and neither arm's score scale (cosine
- * distance vs bm25) has to be normalised against the other. */
+ * outranks one that only one arm likes, and neither arm's score scale (vec0's
+ * L2 distance — cosine-equivalent in ranking for the L2-normalised vectors
+ * llama-server returns — vs bm25) has to be normalised against the other. */
 #define SVEC_RRF_K 60.0
 
 static int svec_enabled(void) {
@@ -180,14 +181,25 @@ int service_vec_build(db_handle *db) {
 
   llm_client llm = { .http = NULL, .base_url = embed_base_url(), .interactive = 0 };
 
-  /* The model name, when the operator states it. embed_index_dim() must NOT be
-   * used here: it reads the INTEL pod's intel_vec_meta, a different index with
-   * its own lifecycle, so a service index would inherit that pod's model and
-   * never notice its own changing. (It did exactly that until
-   * test_service_vec.c's model-change case caught it.) */
-  const char *envm = getenv("JO_EMBED_MODEL");
-  char model[128] = {0};
-  if (envm && *envm) snprintf(model, sizeof model, "%s", envm);
+  /* The model's identity, by the same rule the intel pod uses
+   * (embed_detect_model): JO_EMBED_MODEL when the operator states it, else
+   * what the server calls itself in GET /v1/models. It used to be compared
+   * ONLY when JO_EMBED_MODEL was set — and launch.sh does not set it — so a
+   * same-dimension model swap kept an index built in the old space "current"
+   * for good. embed_index_dim() must NOT be used here: it reads the INTEL
+   * pod's intel_vec_meta, a different index with its own lifecycle.
+   *
+   * Unidentifiable is not "changed": a server that does not answer right now
+   * is a reason to do nothing, never a reason to drop a good index. */
+  char model[256] = {0};
+  if (embed_detect_model(NULL, embed_base_url(), model, sizeof model) != 0) {
+    fprintf(stderr, "[svec] cannot identify the embedding model (%s) — index "
+                    "left as it is\n", model);
+    char msg[320];
+    snprintf(msg, sizeof msg, "model check failed: %.250s; index untouched", model);
+    svec_meta_set(db, "last_error", msg);
+    return -1;
+  }
 
   /* Already current? The registry signature, the model name (when known) and
    * the DIMENSION must all match. The dimension is verified against the server
@@ -204,22 +216,41 @@ int service_vec_build(db_handle *db) {
   char *have_px = svec_meta_get(db, "doc_prefix");
   int px_same = (have_px ? !strcmp(have_px, svec_doc_prefix())
                          : !*svec_doc_prefix());
-  int current = 0;
+  int current = 0, probe_failed = 0;
   if (have_sig && !strcmp(have_sig, sigs) &&
-      have_state && !strcmp(have_state, "ready") && px_same &&
-      (!model[0] || !have_model || !strcmp(have_model, model))) {
-    const char *probe[1] = { "probe" };
-    float *pv = NULL; int pdim = 0; llm_status pst;
-    if (llm_embed(&llm, probe, 1, &pv, &pdim, 15000, &pst) == 0 &&
-        have_dim && pdim == atoi(have_dim))
-      current = 1;
-    else if (have_dim && pdim > 0 && pdim != atoi(have_dim))
-      fprintf(stderr, "[svec] embedding server now answers %d-d, index is %s-d "
-                      "— rebuilding rather than mixing spaces\n", pdim, have_dim);
-    free(pv);
+      have_state && !strcmp(have_state, "ready") && px_same) {
+    if (!have_model || strcmp(have_model, model) != 0) {
+      /* No recorded model (an index from before identity was recorded) is a
+       * space nobody can vouch for: rebuild once rather than guess. */
+      fprintf(stderr, "[svec] index model '%s' vs server '%s' — rebuilding "
+                      "rather than mixing spaces\n",
+              have_model ? have_model : "(not recorded)", model);
+    } else {
+      const char *probe[1] = { "probe" };
+      float *pv = NULL; int pdim = 0; llm_status pst;
+      if (llm_embed(&llm, probe, 1, &pv, &pdim, 15000, &pst) != 0) {
+        /* The probe could not be answered. That says the SERVER is unwell,
+         * not that the index is wrong — the old code fell through to the
+         * rebuild, set state=building and DROPPED a good index on one 503. */
+        probe_failed = 1;
+        fprintf(stderr, "[svec] dimension probe failed (%s) — index left as it "
+                        "is\n", llm_status_code(pst));
+      } else if (have_dim && pdim == atoi(have_dim)) {
+        current = 1;
+      } else {
+        fprintf(stderr, "[svec] embedding server now answers %d-d, index is %s-d "
+                        "— rebuilding rather than mixing spaces\n", pdim,
+                have_dim ? have_dim : "?");
+      }
+      free(pv);
+    }
   }
   free(have_sig); free(have_model); free(have_dim); free(have_state); free(have_px);
   if (current) return want;
+  if (probe_failed) {
+    svec_meta_set(db, "last_error", "dimension probe failed; index untouched");
+    return -1;
+  }
 
   /* Collect the pivots once so the batch loop and the insert agree on order. */
   const source_def **svc = calloc((size_t)want, sizeof *svc);
@@ -277,16 +308,21 @@ int service_vec_build(db_handle *db) {
     const char **texts = calloc((size_t)cnt, sizeof *texts);
     char **owned = calloc((size_t)cnt, sizeof *owned);
     if (!texts || !owned) { free((void *)texts); free(owned); failed = 1; break; }
+    /* texts[j] MUST be svc[off + j]'s card: the insert below pairs vector j
+     * with service j. Skipping a NULL used to shift every later vector onto
+     * the wrong service, so a card that cannot be built fails the build. */
     int m = 0;
     for (int j = 0; j < cnt; j++) {
-      owned[m] = svec_text(svc[off + j]);
-      if (owned[m]) { texts[m] = owned[m]; m++; }
+      owned[j] = svec_text(svc[off + j]);
+      if (!owned[j]) break;
+      texts[j] = owned[j];
+      m++;
     }
-    float *vecs = NULL; int vdim = 0; llm_status st;
-    int rc = m ? llm_embed(&llm, texts, m, &vecs, &vdim, 30000, &st) : -1;
+    float *vecs = NULL; int vdim = 0; llm_status st = LLM_ERR_BAD_REQUEST;
+    int rc = (m == cnt) ? llm_embed(&llm, texts, m, &vecs, &vdim, 30000, &st) : -1;
     if (rc != 0 || vdim <= 0) {
       fprintf(stderr, "[svec] embedding failed at %d/%d (%s) — index not built\n",
-              off, n, m ? llm_status_code(st) : "no text");
+              off, n, m == cnt ? llm_status_code(st) : "could not build a service card");
       for (int j = 0; j < m; j++) free(owned[j]);
       free((void *)texts); free(owned); free(vecs);
       failed = 1;
@@ -304,20 +340,36 @@ int service_vec_build(db_handle *db) {
       fprintf(stderr, "[svec] server answered %d-d after %d-d — refusing\n", vdim, dim);
       failed = 1;
     }
+    /* One transaction per batch: 32 rows commit together, and a failure
+     * rolls the batch back instead of leaving part of it on disk. */
+    if (!failed && sqlite3_exec(db->h, "BEGIN IMMEDIATE", NULL, NULL, NULL) != SQLITE_OK) {
+      fprintf(stderr, "[svec] BEGIN failed: %s\n", sqlite3_errmsg(db->h));
+      failed = 1;
+    }
     if (!failed) {
+      int batch_ok = 1;
       sqlite3_stmt *ins = NULL;
       if (sqlite3_prepare_v2(db->h, "INSERT INTO " SVEC_TABLE "(id,embedding) "
                              "VALUES(?1,?2)", -1, &ins, NULL) == SQLITE_OK) {
         sqlite3_stmt *fins = NULL;
-        if (fts_ok)
-          sqlite3_prepare_v2(db->h, "INSERT INTO " SVEC_FTS_TABLE "(id,text) "
-                             "VALUES(?1,?2)", -1, &fins, NULL);
-        for (int j = 0; j < m; j++) {
+        if (fts_ok &&
+            sqlite3_prepare_v2(db->h, "INSERT INTO " SVEC_FTS_TABLE "(id,text) "
+                               "VALUES(?1,?2)", -1, &fins, NULL) != SQLITE_OK)
+          batch_ok = 0;
+        for (int j = 0; batch_ok && j < m; j++) {
           sqlite3_reset(ins);
           sqlite3_bind_text(ins, 1, svc[off + j]->id, -1, SQLITE_STATIC);
           sqlite3_bind_blob(ins, 2, vecs + (size_t)j * dim,
                             (int)(dim * sizeof(float)), SQLITE_STATIC);
-          if (sqlite3_step(ins) == SQLITE_DONE) indexed++;
+          /* A row that does not go in fails the build: "ready" promises the
+           * whole registry, and an index missing a service routes as if that
+           * service did not exist. */
+          if (sqlite3_step(ins) != SQLITE_DONE) {
+            fprintf(stderr, "[svec] insert %s: %s\n", svc[off + j]->id,
+                    sqlite3_errmsg(db->h));
+            batch_ok = 0;
+            break;
+          }
           if (fins) {
             /* The same card the model is shown and the vector arm embedded —
              * id, name, description — minus the embedding prefix, which is a
@@ -327,26 +379,39 @@ int service_vec_build(db_handle *db) {
             const char *ds = d->description ? d->description : "";
             size_t tn = strlen(d->id) + strlen(nm) + strlen(ds) + 4;
             char *t = malloc(tn);
-            if (t) {
-              snprintf(t, tn, "%s %s %s", d->id, nm, ds);
-              sqlite3_reset(fins);
-              sqlite3_bind_text(fins, 1, d->id, -1, SQLITE_STATIC);
-              sqlite3_bind_text(fins, 2, t, -1, SQLITE_TRANSIENT);
-              sqlite3_step(fins);
-              free(t);
+            if (!t) { batch_ok = 0; break; }
+            snprintf(t, tn, "%s %s %s", d->id, nm, ds);
+            sqlite3_reset(fins);
+            sqlite3_bind_text(fins, 1, d->id, -1, SQLITE_STATIC);
+            sqlite3_bind_text(fins, 2, t, -1, SQLITE_TRANSIENT);
+            if (sqlite3_step(fins) != SQLITE_DONE) {
+              fprintf(stderr, "[svec] fts insert %s: %s\n", d->id,
+                      sqlite3_errmsg(db->h));
+              batch_ok = 0;
             }
+            free(t);
           }
+          if (batch_ok) indexed++;
         }
         if (fins) sqlite3_finalize(fins);
         sqlite3_finalize(ins);
-      } else failed = 1;
+      } else batch_ok = 0;
+      if (batch_ok &&
+          sqlite3_exec(db->h, "COMMIT", NULL, NULL, NULL) != SQLITE_OK) {
+        fprintf(stderr, "[svec] COMMIT failed: %s\n", sqlite3_errmsg(db->h));
+        batch_ok = 0;
+      }
+      if (!batch_ok) {
+        sqlite3_exec(db->h, "ROLLBACK", NULL, NULL, NULL);
+        failed = 1;
+      }
     }
     for (int j = 0; j < m; j++) free(owned[j]);
     free((void *)texts); free(owned); free(vecs);
   }
   free(svc);
 
-  if (failed || indexed <= 0) {
+  if (failed || indexed < n) {
     /* `state` stays "building": whatever rows landed are on disk but the query
      * path will not touch them, and the next run rebuilds. The reason is
      * recorded as data, not only on stderr. */
@@ -359,7 +424,7 @@ int service_vec_build(db_handle *db) {
   svec_meta_set(db, "registry_sig", sigs);
   snprintf(buf, sizeof buf, "%d", indexed); svec_meta_set(db, "count", buf);
   snprintf(buf, sizeof buf, "%d", dim);     svec_meta_set(db, "dim", buf);
-  if (model[0]) svec_meta_set(db, "model", model);
+  svec_meta_set(db, "model", model);
   svec_meta_set(db, "doc_prefix", svec_doc_prefix());
   svec_meta_set(db, "last_error", "");
   svec_meta_set(db, "state", "ready");   /* last: everything above landed */
@@ -493,6 +558,13 @@ static int svec_cand_cmp(const void *a, const void *b) {
 char *service_vec_catalogue(db_handle *db, const char *query, int k,
                             osint_catalogue_note *note,
                             char ***out_ids, int *out_n) {
+  return service_vec_catalogue_bounded(db, query, k, 0, note, out_ids, out_n);
+}
+
+char *service_vec_catalogue_bounded(db_handle *db, const char *query, int k,
+                                    size_t max_bytes,
+                                    osint_catalogue_note *note,
+                                    char ***out_ids, int *out_n) {
   if (out_ids) *out_ids = NULL;
   if (out_n) *out_n = 0;
   if (!db || !query || !*query || !svec_enabled()) return NULL;
@@ -537,10 +609,28 @@ char *service_vec_catalogue(db_handle *db, const char *query, int k,
     qtmp = malloc(qn);
     if (qtmp) snprintf(qtmp, qn, "%s%s", qpx, query);
   }
+  /* The index answers only for the model it was built with. The build pod
+   * checks this every 15 minutes; a swap in between would otherwise route by
+   * comparing vectors from two spaces until it noticed. */
+  {
+    char live[256];
+    char *have = svec_meta_get(db, "model");
+    int same = have && embed_live_model(live, sizeof live) == 0 &&
+               !strcmp(have, live);
+    if (!same)
+      fprintf(stderr, "[svec] index model '%s' is not the server's (%s) — "
+                      "falling back to registry order\n",
+              have ? have : "(not recorded)", have ? live : "-");
+    free(have);
+    if (!same) { free(qtmp); return NULL; }
+  }
   char *qb = embed_bound_text(qtmp ? qtmp : query);
   free(qtmp);
   if (!qb) return NULL;
-  llm_client llm = { .http = NULL, .base_url = embed_base_url(), .interactive = 1 };
+  /* bound_queue_wait: this runs inside a user's search, and the embedding
+   * worker is shared with the backfill pod's 120 s batches. */
+  llm_client llm = { .http = NULL, .base_url = embed_base_url(), .interactive = 1,
+                     .bound_queue_wait = 1 };
   const char *texts[1] = { qb };
   float *qv = NULL; int qdim = 0; llm_status st;
   int rc = llm_embed(&llm, texts, 1, &qv, &qdim, 15000, &st);
@@ -609,8 +699,11 @@ char *service_vec_catalogue(db_handle *db, const char *query, int k,
   qsort(cands, (size_t)nc, sizeof *cands, svec_cand_cmp);
 
   char **ids = calloc((size_t)k, sizeof *ids);
-  int n = 0;
+  int n = 0, trimmed = 0;
   size_t cap = 4096, len = 0;
+  /* The disclosure line appended below is at most ~400 bytes; the budget, when
+   * there is one, has to leave room for it. */
+  const size_t tail_room = 420;
   char *out = malloc(cap);
   if (!ids || !out) {
     free(ids); free(out);
@@ -626,6 +719,11 @@ char *service_vec_catalogue(db_handle *db, const char *query, int k,
     if (!d) continue;                       /* registry moved under us */
     const char *ds = d->description ? d->description : "";
     size_t need = strlen(id) + strlen(ds) + 8;
+    /* THE PROMPT BUDGET APPLIES HERE TOO. Only the registry-order fallback
+     * used to be budgeted; 60 semantic cards WITH descriptions went in
+     * unmeasured and could overflow a 16k context (400 -> analysis degraded).
+     * K is cut to what fits, and the cut is disclosed in the tail below. */
+    if (max_bytes && len + need + tail_room > max_bytes) { trimmed = 1; break; }
     if (len + need + 1 > cap) {
       size_t ncap = (len + need + 1) * 2;
       char *nb = realloc(out, ncap);
@@ -651,9 +749,10 @@ char *service_vec_catalogue(db_handle *db, const char *query, int k,
   int tl = snprintf(tail, sizeof tail,
     "\n(%d of %d registered entity-pivot services, selected as the closest "
     "matches to this query by embedding similarity%s rather than by registry "
-    "order. Services not listed exist and may be relevant; ask for a different "
-    "phrasing if none of these fit.)\n", n, total,
-    lex ? " fused with keyword match" : "");
+    "order%s. Services not listed exist and may be relevant; ask for a "
+    "different phrasing if none of these fit.)\n", n, total,
+    lex ? " fused with keyword match" : "",
+    trimmed ? ", cut to fit the model's context" : "");
   if (tl > 0 && len + (size_t)tl + 1 > cap) {
     char *nb = realloc(out, len + (size_t)tl + 1);
     if (nb) { out = nb; cap = len + (size_t)tl + 1; }

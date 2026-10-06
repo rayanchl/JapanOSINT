@@ -421,8 +421,8 @@ openaire-products-by-project	https://api.openaire.eu/graph/v1/researchProducts?r
 openaire-organizations-search	https://api.openaire.eu/graph/v1/organizations?search=Kyoto&pageSize=5	https://api.openaire.eu/graph/v1/organizations?search={v}&pageSize=50	legalName
 openaire-datasources-search	https://api.openaire.eu/graph/v1/dataSources?search=Zenodo&pageSize=5	https://api.openaire.eu/graph/v1/dataSources?search={v}&pageSize=50	officialName
 openaire-legacy-publications-by-doi	https://api.openaire.eu/search/publications?doi=10.7717/peerj.4375&format=json	https://api.openaire.eu/search/publications?doi={v}&format=json	doi
-cordis-search-projects-query	https://cordis.europa.eu/api/search/results?q=contenttype%3D%27project%27%20AND%20%27hydrogen%27&format=json&p=1&num=10	https://cordis.europa.eu/project/id/{v}	reference
-cordis-search-results-query	https://cordis.europa.eu/api/search/results?q=contenttype%3D%27result%27%20AND%20%27hydrogen%27&format=json&p=1&num=5	https://cordis.europa.eu/project/id/{v}	relatedProjectReference
+cordis-search-projects-query	https://cordis.europa.eu/api/search/results?q=contenttype%3D%27project%27%20AND%20%27hydrogen%27&format=json&p=1&num=10	https://cordis.europa.eu/project/id/{v}?format=json	reference
+cordis-search-results-query	https://cordis.europa.eu/api/search/results?q=contenttype%3D%27result%27%20AND%20%27hydrogen%27&format=json&p=1&num=5	https://cordis.europa.eu/project/id/{v}?format=json	relatedProjectReference
 gtr-project-detail	https://gtr.ukri.org/gtr/api/projects/03E282E3-DFF0-4794-ADE0-00B1A7BA0ED8	https://gtr.ukri.org/gtr/api/projects/{v}	id
 gtr-organisation-detail	https://gtr.ukri.org/gtr/api/organisations/6380BFC8-096F-4D6F-8151-869D08B3288F	https://gtr.ukri.org/gtr/api/organisations/{v}	id
 gtr-organisations-search	https://gtr.ukri.org/gtr/api/organisations?q=oxford&s=10	https://gtr.ukri.org/gtr/api/organisations/{v}	id

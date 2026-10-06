@@ -10,7 +10,8 @@
  * Emits    : per designation — display name, entity type (Individual/Entity/Vessel), every
  *            sanctions programme, all a.k.a. names with their a.k.a. type, addresses as
  *            published (city / state / country strings), dates and places of birth,
- *            nationalities, identity documents, remarks, and the OFAC uid.
+ *            nationalities, identity documents (each whole: type, number, country,
+ *            issue/expiration date), remarks, and the OFAC uid.
  * Geometry : NONE (R2). Addresses are emitted as the text OFAC published; nothing is geocoded
  *            and no designated party is pinned to a country.
  * Licence  : US Government work, public domain. OFAC asks that any match be re-checked against
@@ -30,17 +31,21 @@
 #define OFAC_CONS_URL \
   "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/CONSOLIDATED.XML"
 
-/* Collect the text of every <field> inside every <item> of one <list> block. */
+/* Collect the text of every <field> inside every <item> of one <list> block.
+ *
+ * Every item. This took a `max` and stopped at it — 8 for dates/places of
+ * birth, nationalities and citizenships, 12 for identity documents — with no
+ * notice. On the 2026-10-02 list 16 of 481 designations carried more than 12
+ * identifiers (up to 32): 85 passport/registration numbers dropped per pass. */
 static cJSON *ofac_list_texts(const char *b, const char *e, const char *list_tag,
-                              const char *item_tag, const char *field, int max) {
+                              const char *item_tag, const char *field) {
   cJSON *out = cJSON_CreateArray();
   const char *cur = b;
   sanc_el lb;
   if (!sanc_xml_next(&cur, e, list_tag, &lb)) return out;
   const char *ic = lb.body;
   sanc_el ib;
-  while (cJSON_GetArraySize(out) < max &&
-         sanc_xml_next(&ic, lb.body_end, item_tag, &ib)) {
+  while (sanc_xml_next(&ic, lb.body_end, item_tag, &ib)) {
     char *v = sanc_xml_text(ib.body, ib.body_end, field);
     if (v) {
       cJSON_AddItemToArray(out, cJSON_CreateString(v));
@@ -48,6 +53,45 @@ static cJSON *ofac_list_texts(const char *b, const char *e, const char *list_tag
     }
   }
   return out;
+}
+
+/* Every <id> of the entry's <idList>, read in ONE pass. id_numbers and
+ * id_types used to be two independent walks that each skipped an item lacking
+ * its field, so a single <id> with no <idNumber> shifted every later number
+ * onto the wrong type. Now each <id> contributes to both parallel arrays at
+ * once (null where OFAC published no value), and `ids` carries each document
+ * whole — type, number, issuing country, issue and expiration dates. */
+static void ofac_ids(const char *b, const char *e, cJSON **out_nums,
+                     cJSON **out_types, cJSON **out_ids) {
+  cJSON *nums = cJSON_CreateArray(), *types = cJSON_CreateArray();
+  cJSON *ids = cJSON_CreateArray();
+  const char *cur = b;
+  sanc_el lb;
+  if (sanc_xml_next(&cur, e, "idList", &lb)) {
+    const char *ic = lb.body;
+    sanc_el ib;
+    static const char *const F[][2] = {
+      { "idType", "type" }, { "idNumber", "number" }, { "idCountry", "country" },
+      { "issueDate", "issue_date" }, { "expirationDate", "expiration_date" },
+      { "uid", "uid" } };
+    while (sanc_xml_next(&ic, lb.body_end, "id", &ib)) {
+      cJSON *o = cJSON_CreateObject();
+      char *num = NULL, *typ = NULL;
+      for (size_t i = 0; i < sizeof F / sizeof F[0]; i++) {
+        char *v = sanc_xml_text(ib.body, ib.body_end, F[i][0]);
+        if (!v) continue;
+        cJSON_AddStringToObject(o, F[i][1], v);
+        if (i == 0) typ = v;
+        else if (i == 1) num = v;
+        else free(v);
+      }
+      cJSON_AddItemToArray(nums, num ? cJSON_CreateString(num) : cJSON_CreateNull());
+      cJSON_AddItemToArray(types, typ ? cJSON_CreateString(typ) : cJSON_CreateNull());
+      cJSON_AddItemToArray(ids, o);
+      free(num); free(typ);
+    }
+  }
+  *out_nums = nums; *out_types = types; *out_ids = ids;
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -182,13 +226,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
 
     cJSON *dobs = ofac_list_texts(b, e, "dateOfBirthList", "dateOfBirthItem",
-                                  "dateOfBirth", 8);
+                                  "dateOfBirth");
     cJSON *pobs = ofac_list_texts(b, e, "placeOfBirthList", "placeOfBirthItem",
-                                  "placeOfBirth", 8);
-    cJSON *nats = ofac_list_texts(b, e, "nationalityList", "nationality", "country", 8);
-    cJSON *cits = ofac_list_texts(b, e, "citizenshipList", "citizenship", "country", 8);
-    cJSON *idnums = ofac_list_texts(b, e, "idList", "id", "idNumber", 12);
-    cJSON *idtypes = ofac_list_texts(b, e, "idList", "id", "idType", 12);
+                                  "placeOfBirth");
+    cJSON *nats = ofac_list_texts(b, e, "nationalityList", "nationality", "country");
+    cJSON *cits = ofac_list_texts(b, e, "citizenshipList", "citizenship", "country");
+    cJSON *idnums, *idtypes, *ids;
+    ofac_ids(b, e, &idnums, &idtypes, &ids);
 
     char proglist[256];
     sanc_join(programs, ", ", 24, proglist, sizeof proglist);
@@ -227,6 +271,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddItemToObject(body, "citizenships", cJSON_Duplicate(cits, 1));
     cJSON_AddItemToObject(body, "id_numbers", cJSON_Duplicate(idnums, 1));
     cJSON_AddItemToObject(body, "id_types", cJSON_Duplicate(idtypes, 1));
+    cJSON_AddItemToObject(body, "ids", cJSON_Duplicate(ids, 1));
     sanc_add(body, "remarks", remarks);
     sanc_add(body, "list", "OFAC Consolidated (non-SDN)");
     char *bj = cJSON_PrintUnformatted(body);
@@ -245,6 +290,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddItemToObject(props, "citizenships", cits);     /* transferred */
     cJSON_AddItemToObject(props, "id_numbers", idnums);     /* transferred */
     cJSON_AddItemToObject(props, "id_types", idtypes);      /* transferred */
+    cJSON_AddItemToObject(props, "ids", ids);               /* transferred */
     sanc_add(props, "publish_date", pubiso[0] ? pubiso : NULL);
     sanc_add(props, "caveat",
              "OFAC asks that any apparent match be re-checked against the authoritative "
@@ -268,6 +314,20 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
     free(bj); free(pj);
     free(uid); free(first); free(last); free(type); free(title_f); free(remarks);
+  }
+  /* The row loop's own bound (JO_SANC_MAX_ROWS, default 5000; the list holds
+   * ~481) used to stop it silently. The rest of the document is already in
+   * memory, so the entries it did not reach are counted, and said. */
+  if (n >= max_rows) {
+    int rest = 0;
+    sanc_el skip;
+    while (sanc_xml_next(&cur, end, "sdnEntry", &skip)) rest++;
+    if (rest > 0)
+      jo_trunc_notice(sink, "ofac-consolidated-nonsdn", OFAC_CONS_URL, n,
+                      (long)n + rest,
+                      "JO_SANC_MAX_ROWS (default 5000) stopped the row loop; the "
+                      "remaining <sdnEntry> blocks were counted but not emitted",
+                      "raise JO_SANC_MAX_ROWS");
   }
   free(xml);
   fprintf(stderr, "[ofac-consolidated] emitted %d (publish %s)\n", n,

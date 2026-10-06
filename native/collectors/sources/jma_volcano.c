@@ -4,6 +4,7 @@
  * keep only volcano-related entries (火山/噴火/降灰/Volcan/Ash Fall).
  * uid = jma-volcano|<guid|link|sha1(title|pubDate)>. Honest empty on failure. */
 #include "source.h"
+#include "lib/jocore.h"   /* jo_strcasestr: portable case-insensitive search */
 #include "lib/feedlib.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
@@ -21,9 +22,9 @@ static int volcano_match(const char *s) {
   if (strstr(s, "\xE7\x81\xAB\xE5\xB1\xB1")) return 1;       /* 火山 */
   if (strstr(s, "\xE5\x99\xB4\xE7\x81\xAB")) return 1;       /* 噴火 */
   if (strstr(s, "\xE9\x99\x8D\xE7\x81\xB0")) return 1;       /* 降灰 */
-  if (strcasestr(s, "volcan")) return 1;
-  if (strcasestr(s, "ash fall")) return 1;
-  if (strcasestr(s, "ashfall")) return 1;
+  if (jo_strcasestr(s, "volcan")) return 1;
+  if (jo_strcasestr(s, "ash fall")) return 1;
+  if (jo_strcasestr(s, "ashfall")) return 1;
   return 0;
 }
 
@@ -42,13 +43,13 @@ static char *tag_text(const char *from, const char *end, const char *tag) {
   const char *p = from;
   size_t ol = strlen(open);
   while (p < end) {
-    const char *q = strcasestr(p, open);
+    const char *q = jo_strcasestr(p, open);
     if (!q || q >= end) return NULL;
     char d = q[ol];
     if (d == ' ' || d == '>' || d == '\t' || d == '\n' || d == '\r') {
       const char *gt = strchr(q, '>');
       if (!gt || gt >= end) return NULL;
-      const char *c = strcasestr(gt + 1, close);
+      const char *c = jo_strcasestr(gt + 1, close);
       if (!c || c > end) return NULL;
       return dup_n(gt + 1, (size_t)(c - (gt + 1)));
     }
@@ -58,11 +59,11 @@ static char *tag_text(const char *from, const char *end, const char *tag) {
 }
 
 static char *atom_link(const char *from, const char *end) {
-  const char *p = strcasestr(from, "<link");
+  const char *p = jo_strcasestr(from, "<link");
   if (!p || p >= end) return NULL;
   const char *gt = strchr(p, '>');
   if (!gt) return NULL;
-  const char *h = strcasestr(p, "href=");
+  const char *h = jo_strcasestr(p, "href=");
   if (!h || h > gt) return NULL;
   h += 5;
   char q = *h;
@@ -126,7 +127,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
     if (!open || open >= xend) break;
     const char *closeTag = atom ? "</entry>" : "</item>";
-    const char *cl = strcasestr(open, closeTag);
+    const char *cl = jo_strcasestr(open, closeTag);
     if (!cl) break;
     const char *it = open; size_t itlen = (size_t)(cl - it);
 
