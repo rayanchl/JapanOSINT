@@ -121,7 +121,25 @@ $(OBJ)/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BIN): $(OBJS)
+# DELETING A COLLECTOR MUST RELINK. `$(BIN): $(OBJS)` only notices a
+# prerequisite that is NEWER than the binary; one that disappeared from the
+# list is not a prerequisite any more, so `make` said "up to date" and kept
+# serving a binary that still registered the deleted sources — and
+# registry-floor, --list-sources and every audit then measured a tree that no
+# longer existed. The object list itself is now a prerequisite: rewritten on
+# every run, but only REPLACED (new mtime) when its content changed, so an
+# unchanged tree does not relink and an added or removed .c always does.
+# (printf, not $(file ...): macOS still ships GNU make 3.81, which has no
+# $(file) and would expand it to nothing.)
+OBJLIST := $(OBJ)/.objlist
+.PHONY: FORCE
+FORCE:
+$(OBJLIST): FORCE
+	@mkdir -p $(dir $@)
+	@printf '%s\n' $(OBJS) > $@.tmp
+	@if cmp -s $@.tmp $@; then rm -f $@.tmp; else mv -f $@.tmp $@; fi
+
+$(BIN): $(OBJS) $(OBJLIST)
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LDLIBS)
 	@echo "built $@"
