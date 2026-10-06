@@ -2,11 +2,20 @@
  * proximity half).
  *
  *   GET /api/intel/items?near=<lat>,<lon>&radius_m=<m>[&source&record_type
- *                        &since&until&limit]
+ *                        &since&until&q&qAlt&limit&lang_view]
  *
  * httpd.c dispatches here only when `near` is present; every other
  * /api/intel/items request goes to intelapi_list_items() exactly as before, so
  * this adds a mode rather than changing one.
+ *
+ * TEXT FILTER. `q` (+ `qAlt`) is the feed's own MATCH expression
+ * (intelapi_fts_match), applied to the bbox candidates before the scan
+ * ceiling, and disclosed the same way (meta.q_applied, meta.notes). It used to
+ * be ignored, so a text filter returned every row in the radius.
+ *
+ * TRANSLATION. `lang_view` is applied by httpd.c to this envelope with the
+ * same call the feed uses (translate_shape_items); it used to return before
+ * that step, so near rows never carried a translation.
  *
  * SHAPE. bbox prefilter on idx_intel_items_geom — a partial index over
  * (lat, lon) WHERE lat IS NOT NULL — then an exact haversine refine, ordered
@@ -31,11 +40,10 @@
  * rounded to whole metres — sub-metre precision would be fiction given the
  * geocoding provenance of most of these rows).
  *
- * TENANCY. Scoped with "(tenant_id IS NULL OR tenant_id = ?)", the predicate
- * exportapi.c and entityapi.c already use: the caller's own rows plus the
- * shared pre-tenancy corpus. Note this is STRICTER than the plain
- * /api/intel/items path, which carries no tenant predicate at all; a new route
- * should not inherit a gap.
+ * TENANCY. Scoped with "tenant_id IN (?, 'legacy')": the caller's own rows
+ * plus the shared corpus — the predicate the plain /api/intel/items path has
+ * carried since a3b26ee (intel_items.tenant_id is NOT NULL, so the
+ * "IS NULL OR" spelling used for `entities` would match nothing here).
  *
  * PAGING. Ordered by distance, so the base64url keyset cursor used by
  * /api/intel/items (which encodes published_at + uid) cannot express a page

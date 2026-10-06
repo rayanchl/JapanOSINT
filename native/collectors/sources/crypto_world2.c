@@ -124,6 +124,9 @@ static int run_defillama(const source_ctx *ctx, intel_sink *sink, const char *ra
     if (chain) cJSON_AddStringToObject(d, "chain", chain);
     if (tvl && cJSON_IsNumber(tvl)) cJSON_AddNumberToObject(d, "tvl_usd", tvl->valuedouble);
     cJSON_AddStringToObject(d, "source", "DefiLlama");
+    /* the whole protocol record as served, not five of its ~40 fields — the
+     * same record WHALE_ALERT stores whole (house rule 2) */
+    cJSON_AddItemToObject(d, "protocol", cJSON_Duplicate(pr, 1));
     cJSON *p = cJSON_CreateObject();
     if (name) cJSON_AddStringToObject(p, "protocol", name);
     emitted += cw_emit(sink, "DEFILLAMA_TVL", "defi-protocol",

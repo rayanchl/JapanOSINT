@@ -289,3 +289,162 @@ const char *html_anchor_next(const char *from, html_anchor *out) {
   }
   return NULL;
 }
+
+/* ── strongest label per link (see htmlparse.h) ─────────────────────────── */
+
+/* Hashed, like lib/seenset.c, and for the same page: PYPI_SIMPLE_INDEX offers
+ * 824,355 links on one listing, and a linear lookup per anchor is quadratic. */
+static unsigned long long hl_hash(const char *k) {
+  unsigned long long h = 1469598103934665603ULL;
+  for (const unsigned char *p = (const unsigned char *)k; *p; p++)
+    h = (h ^ *p) * 1099511628211ULL;
+  return h;
+}
+
+static int hl_find(const html_label_set *s, const char *key) {
+  if (s->h && s->hcap) {
+    unsigned long long m = (unsigned long long)(s->hcap - 1);
+    for (unsigned long long x = hl_hash(key) & m; s->h[x] >= 0; x = (x + 1) & m)
+      if (strcmp(s->v[s->h[x]].key, key) == 0) return s->h[x];
+    return -1;
+  }
+  for (int i = 0; i < s->n; i++) if (strcmp(s->v[i].key, key) == 0) return i;
+  return -1;
+}
+
+/* Index the newest entry, growing the table to stay at most half full. A
+ * failed allocation drops the index and lookups fall back to the scan. */
+static void hl_index_last(html_label_set *s) {
+  if (s->n * 2 > s->hcap) {
+    int nc = s->hcap ? s->hcap * 2 : 128;
+    while (s->n * 2 > nc) nc *= 2;
+    int *h = malloc((size_t)nc * sizeof *h);
+    free(s->h);
+    s->h = h;
+    s->hcap = h ? nc : 0;
+    if (!h) return;
+    for (int i = 0; i < nc; i++) h[i] = -1;
+    for (int i = 0; i < s->n; i++) {
+      unsigned long long x = hl_hash(s->v[i].key) & (unsigned long long)(nc - 1);
+      while (h[x] >= 0) x = (x + 1) & (unsigned long long)(nc - 1);
+      h[x] = i;
+    }
+    return;
+  }
+  if (!s->h) return;
+  unsigned long long m = (unsigned long long)(s->hcap - 1);
+  unsigned long long x = hl_hash(s->v[s->n - 1].key) & m;
+  while (s->h[x] >= 0) x = (x + 1) & m;
+  s->h[x] = s->n - 1;
+}
+
+/* `s` without whitespace (ASCII, U+3000, U+00A0, a literal "&nbsp;") and
+ * without a trailing ellipsis ("...", "…", "‥"), malloc'd. */
+static char *hl_norm(const char *s) {
+  size_t n = strlen(s);
+  char *o = malloc(n + 1);
+  if (!o) return NULL;
+  size_t w = 0;
+  for (size_t i = 0; i < n; ) {
+    unsigned char c = (unsigned char)s[i];
+    if (c == ' ' || c == '\t' || c == '\n' || c == '\r') { i++; continue; }
+    if (c == 0xE3 && i + 2 < n && (unsigned char)s[i+1] == 0x80 &&
+        (unsigned char)s[i+2] == 0x80) { i += 3; continue; }          /* U+3000 */
+    if (c == 0xC2 && i + 1 < n && (unsigned char)s[i+1] == 0xA0) { i += 2; continue; }
+    if (c == '&' && !strncasecmp(s + i, "&nbsp;", 6)) { i += 6; continue; }
+    o[w++] = s[i++];
+  }
+  o[w] = 0;
+  for (;;) {
+    if (w >= 3 && !memcmp(o + w - 3, "...", 3)) { w -= 3; o[w] = 0; continue; }
+    if (w >= 3 && (!memcmp(o + w - 3, "\xE2\x80\xA6", 3) ||       /* … */
+                   !memcmp(o + w - 3, "\xE2\x80\xA5", 3))) {      /* ‥ */
+      w -= 3; o[w] = 0; continue;
+    }
+    break;
+  }
+  return o;
+}
+
+int html_label_covers(const char *a, const char *b) {
+  if (!a || !b) return 0;
+  char *na = hl_norm(a), *nb = hl_norm(b);
+  int r = na && nb && (!*nb || strstr(na, nb) != NULL);
+  free(na); free(nb);
+  return r;
+}
+
+/* Keep `label` among the entry's other labels unless it is already there.
+ * Out of memory loses only this side-label. */
+static void hl_keep_other(html_label_ent *e, const char *label) {
+  for (int i = 0; i < e->nothers; i++) if (!strcmp(e->others[i], label)) return;
+  if (e->nothers == e->cothers) {
+    int nc = e->cothers ? e->cothers * 2 : 2;
+    char **g = realloc(e->others, (size_t)nc * sizeof *g);
+    if (!g) return;
+    e->others = g; e->cothers = nc;
+  }
+  char *d = strdup(label);
+  if (d) e->others[e->nothers++] = d;
+}
+
+int html_label_offer(html_label_set *s, const char *key, const char *label,
+                     int strength) {
+  if (!s || !key || !label) return -1;
+  int i = hl_find(s, key);
+  if (i >= 0) {
+    html_label_ent *e = &s->v[i];
+    if (strength > e->strength && !html_label_covers(e->label, label)) {
+      char *nl = strdup(label);
+      if (nl) {
+        /* The loser is kept, not dropped — if it was the PAGE's label for
+         * this link. A borrowed one (HTML_LABEL_CONTEXT) was the engine's
+         * guess from neighbouring text, often another item's (the Gifu date
+         * was the previous card's), and attaching it to this record would
+         * state an association the page never made. */
+        if (e->strength >= HTML_LABEL_IMG) hl_keep_other(e, e->label);
+        free(e->label);
+        e->label = nl;
+        e->strength = strength;
+        /* the new label may have been an "other" already */
+        for (int j = 0; j < e->nothers; j++)
+          if (!strcmp(e->others[j], nl)) {
+            free(e->others[j]);
+            memmove(e->others + j, e->others + j + 1,
+                    (size_t)(e->nothers - j - 1) * sizeof *e->others);
+            e->nothers--;
+            break;
+          }
+        return 0;
+      }
+    }
+    if (strength >= HTML_LABEL_IMG && strcmp(e->label, label) != 0)
+      hl_keep_other(e, label);
+    return 0;
+  }
+  if (s->n == s->cap) {
+    int nc = s->cap ? s->cap * 2 : 64;
+    html_label_ent *nv = realloc(s->v, (size_t)nc * sizeof *nv);
+    if (!nv) return -1;
+    s->v = nv; s->cap = nc;
+  }
+  char *k = strdup(key), *l = strdup(label);
+  if (!k || !l) { free(k); free(l); return -1; }
+  s->v[s->n] = (html_label_ent){ .key = k, .label = l, .strength = strength };
+  s->n++;
+  hl_index_last(s);
+  return 1;
+}
+
+void html_label_free(html_label_set *s) {
+  if (!s) return;
+  for (int i = 0; i < s->n; i++) {
+    free(s->v[i].key); free(s->v[i].label);
+    for (int j = 0; j < s->v[i].nothers; j++) free(s->v[i].others[j]);
+    free(s->v[i].others);
+  }
+  free(s->v);
+  free(s->h);
+  s->v = NULL; s->n = s->cap = 0;
+  s->h = NULL; s->hcap = 0;
+}

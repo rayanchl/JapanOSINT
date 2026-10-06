@@ -2,6 +2,7 @@
  *   POST /api/search/analyze {query,max_rounds?} -> {request_id,...}
  *   GET  /api/search/suggest?q=                  -> {suggestions:[..≤9]}
  *   GET  /api/search/results/:id                 -> snapshot | from-store
+ *   GET  /api/search/runs?limit&mine&cursor      -> the workspace's runs
  *   GET  /api/search/stream/:id?key=<stream_key> -> SSE (pre-auth) — handled
  *                                                   in httpd.c via progress.h.
  * A run belongs to the tenant that started it: results answer only that
@@ -47,5 +48,16 @@ char *searchapi_suggest(const char *q);
  * reconstructed-from-store row, or NULL (caller: 404 not_found) — NULL too
  * when `tenant_id` did not start the run. Caller frees. */
 char *searchapi_results(db_handle *db, const char *tenant_id, const char *id);
+
+/* GET /api/search/runs?limit=&mine=1&cursor= — every run started in the
+ * workspace `tenant_id`, newest first: request_id, query, user_id (author),
+ * mine, created_at, status (running|completed|error|unknown), phase, and a
+ * synthesis preview with its full byte length. page {limit,count,total,
+ * next_cursor}; meta.scope is "workspace", or "user" with ?mine=1. Nothing
+ * crosses workspaces. limit defaults to 50, clamps to 1..200. NULL + 500 on a
+ * database failure. Caller frees. */
+char *searchapi_runs(db_handle *db, const char *tenant_id, const char *user_id,
+                     int limit, int mine_only, const char *cursor,
+                     int *out_status);
 
 #endif

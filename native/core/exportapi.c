@@ -876,9 +876,11 @@ int export_run(db_handle *db, const tenant_ctx *t, const char *kind,
   /* A ranking the export cannot honour is refused, never quietly replaced by
    * the date order: intelapi.c answers 400 for the same inputs. */
   if (k == K_INTEL && p.sort_bad) {
-    /* httpd.c has already sent the 200/chunked header by the time we run, so
-     * the refusal has to be IN the file: an empty attachment would read as
-     * "no rows matched". */
+    /* The refusal goes into the output: httpd.c's streamed path has not
+     * committed to a status yet (it commits after a full batch or at the
+     * end), so it answers 400 with this body; on the inline fallback the 200
+     * header is already out, and an empty attachment would read as "no rows
+     * matched". */
     static const char msg[] =
       "{\"error\":\"sort_not_honoured\",\"detail\":\"sort must be date or "
       "relevance, and relevance needs q; sort=trust is a bounded rerank served "

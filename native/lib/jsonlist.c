@@ -1520,7 +1520,17 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
   char *prev_url = NULL;      /* the page read before this one, for the probe */
   int probed = 0;             /* the page-1 probe is tried at most once        */
 
+  /* A later page that failed: the walk only asks for one on the upstream's
+   * evidence that more exists (jsonlist_next_page), so a failure there is a
+   * walk cut short. Its page, status and URL go into the notice — it used to
+   * be filed as "the page ceiling stopped the walk", which sent the reader
+   * to raise a ceiling that had not been reached. */
+  int failed = 0, failed_page = 0;
+  long failed_status = FEED_ST_UNKNOWN;
+  char *failed_url = NULL;
+
   for (; pages < page_max && page_url; pages++) {
+    feed_last_json_status_reset();
     cJSON *doc = feed_get_json(http, page_url, timeout_ms);
     if (!doc) {
       /* A failed FIRST fetch is a dead endpoint and belongs to the caller as
@@ -1529,6 +1539,10 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
        * a shortfall and gets disclosed below. */
       if (pages == 0) { free(page_url); g_jl_shape.paged = 0; return -1; }
       truncated = 1;
+      failed = 1;
+      failed_page = pages + 1;
+      failed_status = feed_last_json_status();
+      failed_url = strdup(page_url);
       break;
     }
     if (available < 0) available = declared_total(doc);
@@ -1609,12 +1623,24 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
     cJSON_AddNumberToObject(p, "pages_read", pages);
     cJSON_AddNumberToObject(p, "page_ceiling", page_max);
     cJSON_AddBoolToObject(p, "more_pages_pending", 1);
-    cJSON_AddStringToObject(p, "reason", truncated
+    char fdesc[64] = "", freason[256] = "";
+    if (failed) {
+      feed_status_describe(failed_status, fdesc, sizeof fdesc);
+      cJSON_AddNumberToObject(p, "failed_page", failed_page);
+      cJSON_AddNumberToObject(p, "failed_page_status", (double)failed_status);
+      cJSON_AddStringToObject(p, "failed_page_url", failed_url ? failed_url : "");
+      snprintf(freason, sizeof freason, "page %d answered %s, so the walk stopped "
+               "before the upstream ran out", failed_page, fdesc);
+    }
+    cJSON_AddStringToObject(p, "reason", failed ? freason : truncated
       ? "the page ceiling stopped the walk while the upstream still had pages"
       : "the last page came back full (or the upstream declared more than was "
         "read) and neither the response nor this URL offers a way to ask for "
         "the next page, so records may remain unread");
-    cJSON_AddStringToObject(p, "remedy", truncated
+    cJSON_AddStringToObject(p, "remedy", failed
+      ? "re-run; a host that refuses or rate-limits later pages needs a "
+        "per-host minimum gap (core/hostgate.c) — see docs/SOURCE_EXHAUSTIVENESS.md"
+      : truncated
       ? "raise $JO_JSONLIST_PAGE_MAX — see docs/SOURCE_EXHAUSTIVENESS.md"
       : "give this source a cursor the walk can advance (for Socrata: $offset "
         "with a stable $order=:id) — see docs/SOURCE_EXHAUSTIVENESS.md");
@@ -1626,7 +1652,13 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
      * into "<id>|<id>|truncation". One notice per source, upsert-keyed, so a
      * re-run updates the disclosure rather than piling up duplicates. */
     const char *key = "truncation";
-    if (available >= 0)
+    if (failed && available >= 0)
+      snprintf(title, sizeof title, "%s used %d of %ld available records — "
+               "page %d answered %s", source_id, total, available, failed_page, fdesc);
+    else if (failed)
+      snprintf(title, sizeof title, "%s used %d records — page %d answered %s",
+               source_id, total, failed_page, fdesc);
+    else if (available >= 0)
       snprintf(title, sizeof title, "%s used %d of %ld available records",
                source_id, total, available);
     else if (truncated)
@@ -1654,8 +1686,10 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
   if (pages > 1 || truncated || full_unadvanced)
     fprintf(stderr, "[%s] emitted %d across %d page(s)%s\n",
             source_id, total, pages,
-            truncated ? " (TRUNCATED)"
+            failed ? " (TRUNCATED: a later page failed)"
+            : truncated ? " (TRUNCATED)"
                       : full_unadvanced ? " (TRUNCATED: full last page, no cursor)" : "");
+  free(failed_url);
   return total;
 }
 

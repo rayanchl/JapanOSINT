@@ -319,7 +319,11 @@ static int edb_flush(intel_sink *sink, edb_pending *pd) {
   char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char link[96];
+  /* 36 for the prefix + 63 for the widest id this struct can hold (char[64])
+   * + the terminator. At 96 the compiler was right that a full-width id would
+   * be truncated, which would have silently produced a link to the WRONG
+   * exploit rather than a short one. */
+  char link[128];
   snprintf(link, sizeof link, "https://www.exploit-db.com/exploits/%s", id);
 
   intel_item it = {0};

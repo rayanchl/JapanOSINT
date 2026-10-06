@@ -1025,6 +1025,12 @@ typedef struct {
    * honest empty) can be applied to it unchanged. */
   int   upstream_error;
   long  err_code;
+  /* The response was HTTP 200 but its body could not be read in the row's
+   * declared mode at all (a JSON row handed an HTML error or challenge page).
+   * On page 1 that is the honest empty it always was; on a LATER page it is a
+   * page that did not deliver its records, and hp_run judges it exactly as it
+   * judges a page that answered an error status. */
+  int   unreadable;
   /* page_walk rows only (see hpengine.h): the next URL jsonlist_next_page()
    * chose for the page just read, and whether it stopped at a full page. */
   int   pw;
@@ -1088,6 +1094,10 @@ typedef struct {
    * the probe as a page. Once per run. */
   const char *prev_url;     /* the URL of the page read before this one      */
   int   pw_probe, pw_probed;
+  /* What a detail hop is sent with: the row's own headers (token, UA, Accept)
+   * minus conditional ones and the content type the engine adds for a POST
+   * body — the hop is a body-less GET. NULL = none. */
+  const char *const *detail_hdrs;
 } hp_run_state;
 
 /* 0 = no cap (every record). A row's non-zero max_items is its author's
@@ -1147,8 +1157,12 @@ static void hp_deepen(hp_run_state *st, cJSON *flat) {
   free(enc);
   if (!url) return;
 
+  /* With the row's headers. This used to send none, so every detail hop on a
+   * row that authenticates by header (gBizINFO's X-hojinInfo-api-token, 26
+   * rows with headers and a detail_url) or needs a UA the firewall accepts
+   * (sec.gov) got 401/403/500, and each record carried _detail_error. */
   http_response hr = {0};
-  int rc = http_request(st->ctx->http, "GET", url, NULL, NULL, 0,
+  int rc = http_request(st->ctx->http, "GET", url, st->detail_hdrs, NULL, 0,
                         s->timeout_ms > 0 ? s->timeout_ms : HP_HTTP_TIMEOUT,
                         0, &hr);
   if (rc == 0 && hr.status == 200 && hr.body) {
@@ -1650,7 +1664,11 @@ static int hp_json_error_doc(cJSON *doc, char *msg, size_t cap, long *code) {
 static int hp_run_json(hp_run_state *st, const char *body) {
   const hp_source *s = st->s;
   cJSON *doc = cJSON_Parse(body);
-  if (!doc) { fprintf(stderr, "[hp:%s] non-JSON body\n", s->id); return 0; }
+  if (!doc) {
+    fprintf(stderr, "[hp:%s] non-JSON body\n", s->id);
+    st->unreadable = 1;
+    return st->emitted;
+  }
 
   cJSON *arr = NULL;
   /* Set when `arr` is a hp_path_multi() reference wrapper rather than a node
@@ -2116,8 +2134,72 @@ void hp_xml_decode(char *s) {
  *
  * `p` points just past the tag NAME, `gt` at the closing '>' (or at the '/' of
  * a self-closing tag — a trailing slash carries no '=' and is skipped). */
+/* One XML record's flatten state. `nfields` mirrors the object's size so the
+ * property bound is a counter, not a walk of the object per child; `drops`
+ * counts what a memory bound kept out — every element (or attribute) not
+ * flattened — and becomes the record's `_fields_dropped` stamp, exactly as
+ * the JSON flattener's does. */
+typedef struct { cJSON *flat; int nfields; int drops; } hp_xml_ctx;
+
+/* Recursion guard for hp_xml_flatten. It was 4, which real records exceed —
+ * a MODS name part, a DataCite affiliation identifier, an EAD component —
+ * and everything below it vanished with no stamp. 32 is a stack bound, not
+ * an editorial one; hitting it is counted into `drops`. */
+#define HP_XML_MAX_DEPTH   32   /* exhaustive-ok: recursion guard, stamped  */
+
+/* Start tags in markup `p`..`end` (not closers, comments, CDATA, PIs) — the
+ * elements a bound kept out of the record, for its `_fields_dropped`. */
+static int hp_xml_count_elems(const char *p, const char *end) {
+  int n = 0;
+  while (p < end && (p = memchr(p, '<', (size_t)(end - p))) != NULL) {
+    if (p + 1 < end && p[1] == '!') { p = hp_xml_skip_bang(p, end); continue; }
+    if (p + 1 < end && p[1] != '/' && p[1] != '?') n++;
+    p++;
+  }
+  return n;
+}
+
+/* Add `val` under `key`, or under the first free `key.N` when `key` is taken.
+ * A taken key used to drop the second value in silence; two distinct XML
+ * paths can flatten to one dotted string (`<a.b>` beside `<a><b>`), and a
+ * repeated leaf that reaches here must not lose its value either. */
+static void hp_xml_put(hp_xml_ctx *x, const char *key, const char *val) {
+  if (x->nfields >= HP_MAX_PROPS) { x->drops++; return; }
+  if (!cJSON_GetObjectItem(x->flat, key)) {
+    cJSON_AddStringToObject(x->flat, key, val);
+    x->nfields++;
+    return;
+  }
+  char alt[300];
+  for (int i = 1; i < HP_MAX_PROPS; i++) {
+    snprintf(alt, sizeof alt, "%s.%d", key, i);
+    if (!cJSON_GetObjectItem(x->flat, alt)) {
+      cJSON_AddStringToObject(x->flat, alt, val);
+      x->nfields++;
+      return;
+    }
+  }
+  x->drops++;
+}
+
+/* Decode, trim and add one text value (element text or attribute value). */
+static void hp_xml_put_text(hp_xml_ctx *x, const char *key, const char *vs, size_t vl) {
+  char *val = (char *)malloc(vl + 1);
+  if (!val) { x->drops++; return; }
+  memcpy(val, vs, vl); val[vl] = 0;
+  hp_xml_decode(val);
+  /* trim AFTER decoding: `<title>\n <![CDATA[ x ]]>\n</title>` carries
+   * padding inside the wrapper as well as around it */
+  char *t = val;
+  while (*t && isspace((unsigned char)*t)) t++;
+  size_t tl = strlen(t);
+  while (tl && isspace((unsigned char)t[tl - 1])) t[--tl] = 0;
+  if (tl) hp_xml_put(x, key, t);
+  free(val);
+}
+
 static void hp_xml_attrs(const char *p, const char *gt, const char *prefix,
-                         cJSON *flat) {
+                         hp_xml_ctx *x) {
   char key[256];
   while (p < gt) {
     while (p < gt && !(isalpha((unsigned char)*p) || *p == '_' || *p == ':')) p++;
@@ -2142,95 +2224,180 @@ static void hp_xml_attrs(const char *p, const char *gt, const char *prefix,
       while (p < gt && !isspace((unsigned char)*p) && *p != '/') p++;
       vl = (size_t)(p - vs);
     }
-    if (!vl || vl >= 4096) continue;
-    if (cJSON_GetArraySize(flat) > 400) return;
+    /* No length bound: a value of 4 KB or more used to be dropped with no
+     * trace (the JSON path has never bounded a string). */
+    if (!vl) continue;
     if (prefix && *prefix) snprintf(key, sizeof key, "%s.@%.*s", prefix, (int)nl, ns);
     else                   snprintf(key, sizeof key, "@%.*s", (int)nl, ns);
-    if (cJSON_GetObjectItem(flat, key)) continue;
-    char *val = (char *)malloc(vl + 1);
-    if (!val) return;
-    memcpy(val, vs, vl); val[vl] = 0;
-    hp_xml_decode(val);
-    if (val[0]) cJSON_AddStringToObject(flat, key, val);
-    free(val);
+    if (cJSON_GetObjectItem(x->flat, key)) continue;   /* a duplicated attribute is malformed XML */
+    hp_xml_put_text(x, key, vs, vl);
   }
 }
 
 /* Flatten one record element's children into `flat` with dotted keys, so an
  * XML record reaches hp_emit_record in exactly the shape a JSON one does and
  * every downstream field selector (title_keys, id_keys, lat_key…) works
- * unchanged. Bounded in depth and in field count. */
+ * unchanged.
+ *
+ * Nothing in it is dropped any more without a count. What used to be:
+ *   - anything below depth 4, and every field past the 400th — now the
+ *     shared HP_MAX_PROPS bound and HP_XML_MAX_DEPTH, both counted into
+ *     `_fields_dropped`;
+ *   - a value of 4 KB or more (an abstract, a description) — now kept whole;
+ *   - a REPEATED child — the second <dc:subject>, the second <author> and
+ *     every field under it — because its key already existed. The first
+ *     occurrence keeps the plain key, so every title_keys/id_keys declared
+ *     against it still resolves to what it always did; the second is `name.1`,
+ *     the third `name.2` (`author.1.name`, `author.1.@id`), the 0-based index
+ *     the JSON flattener gives the same position;
+ *   - an element's OWN text when it also has children (`<p>Hello <b>x</b></p>`
+ *     kept "x" and lost "Hello") — now `<key>.#text`, the segments in order.
+ *     `#` cannot begin an XML name, so it cannot collide with a child. */
+/* Append `n` bytes to a growable text buffer. On allocation failure the text
+ * is not appended and the caller's own-text value is simply shorter — never a
+ * crash; it is the record's own prose, not a field the row keys on. */
+static void hp_buf_add(char **b, size_t *n, size_t *cap, const char *s, size_t sl) {
+  if (*n + sl + 1 > *cap) {
+    size_t nc = (*n + sl + 1) * 2;
+    char *g = realloc(*b, nc);
+    if (!g) return;
+    *b = g; *cap = nc;
+  }
+  memcpy(*b + *n, s, sl);
+  *n += sl;
+  (*b)[*n] = 0;
+}
+
 static void hp_xml_flatten(const char *p, const char *end, const char *prefix,
-                           cJSON *flat, int depth) {
-  if (depth > 4 || cJSON_GetArraySize(flat) > 400) return;
+                           hp_xml_ctx *x, int depth) {
+  if (depth > HP_XML_MAX_DEPTH) { x->drops += hp_xml_count_elems(p, end); return; }
   char name[96], key[256];
-  while (p < end && (p = memchr(p, '<', (size_t)(end - p))) != NULL) {
-    p++;
-    if (p >= end) return;
-    if (*p == '!') { p = hp_xml_skip_bang(p - 1, end); continue; } /* CDATA / comment / decl */
+  /* Child names seen at THIS level, for the repeat index. Grown on demand. */
+  struct hp_xml_seen { char name[96]; int n; } *seen = NULL;
+  int nseen = 0, cseen = 0;
+  /* This element's own text: its content with every child element replaced
+   * by one space and comments removed. CDATA stays raw for hp_xml_decode. */
+  char *own = NULL; size_t own_n = 0, own_cap = 0;
+  int own_text = 0;                           /* a non-blank byte was seen   */
+  while (p < end) {
+    const char *lt = memchr(p, '<', (size_t)(end - p));
+    const char *run_end = lt ? lt : end;
+    for (const char *q = p; q < run_end && !own_text; q++)
+      if (!isspace((unsigned char)*q)) own_text = 1;
+    hp_buf_add(&own, &own_n, &own_cap, p, (size_t)(run_end - p));
+    if (!lt) break;
+    p = lt + 1;
+    if (p >= end) break;
+    if (*p == '!') {                                       /* CDATA / comment / decl */
+      const char *after = hp_xml_skip_bang(lt, end);
+      if (end - lt >= 9 && !strncmp(lt, "<![CDATA[", 9)) {
+        own_text = 1;
+        hp_buf_add(&own, &own_n, &own_cap, lt, (size_t)(after - lt));
+      }
+      p = after;
+      continue;
+    }
     if (*p == '/' || *p == '?') {                          /* close / PI */
       const char *gt = memchr(p, '>', (size_t)(end - p));
-      if (!gt) return;
+      if (!gt) break;
       p = gt + 1;
       continue;
     }
     size_t nl = hp_xml_name(p, name, sizeof name);
-    if (!nl) return;
+    if (!nl) break;
     const char *gt = memchr(p, '>', (size_t)(end - p));
-    if (!gt) return;
+    if (!gt) break;
+    hp_buf_add(&own, &own_n, &own_cap, " ", 1);          /* the child's place */
+    /* The repeat index: 0 for the first child of this name, then 1, 2 … */
+    int occ = 0, i = 0;
+    for (; i < nseen; i++) if (!strcmp(seen[i].name, name)) { occ = ++seen[i].n; break; }
+    if (i == nseen) {
+      if (nseen == cseen) {
+        int nc = cseen ? cseen * 2 : 16;
+        struct hp_xml_seen *g = realloc(seen, (size_t)nc * sizeof *g);
+        if (g) { seen = g; cseen = nc; }
+      }
+      if (nseen < cseen) {
+        snprintf(seen[nseen].name, sizeof seen[nseen].name, "%s", name);
+        seen[nseen].n = 0;
+        nseen++;
+      }
+    }
     /* Build this child's key BEFORE the self-closing test, because a
      * self-closing element is not an empty element: `<Ref id="X" agencyID="Y"/>`
      * is pure attribute payload, and skipping the tag threw all of it away. */
-    if (prefix && *prefix) snprintf(key, sizeof key, "%s.%s", prefix, name);
-    else                   snprintf(key, sizeof key, "%s", name);
-    hp_xml_attrs(p + nl, gt, key, flat);
-    if (gt > p && gt[-1] == '/') { p = gt + 1; continue; }  /* self-closing */
+    char idx[16] = "";
+    if (occ) snprintf(idx, sizeof idx, ".%d", occ);
+    if (prefix && *prefix) snprintf(key, sizeof key, "%s.%s%s", prefix, name, idx);
+    else                   snprintf(key, sizeof key, "%s%s", name, idx);
+    if (gt > p && gt[-1] == '/') {                         /* self-closing */
+      if (x->nfields >= HP_MAX_PROPS) x->drops++;
+      else hp_xml_attrs(p + nl, gt, key, x);
+      p = gt + 1;
+      continue;
+    }
     char close[100];
     int cl = snprintf(close, sizeof close, "</%s>", name);
     const char *vs = gt + 1, *ve = vs;
     /* find this element's matching close, allowing one level of same-name nest */
     int nest = 1;
     while (ve < end) {
-      const char *lt = memchr(ve, '<', (size_t)(end - ve));
-      if (!lt) { ve = end; break; }
-      if (lt + 1 < end && lt[1] == '!') {     /* a `</x>` inside CDATA is text */
-        ve = hp_xml_skip_bang(lt, end);
+      const char *l2 = memchr(ve, '<', (size_t)(end - ve));
+      if (!l2) { ve = end; break; }
+      if (l2 + 1 < end && l2[1] == '!') {     /* a `</x>` inside CDATA is text */
+        ve = hp_xml_skip_bang(l2, end);
         continue;
       }
-      if (!strncmp(lt, close, (size_t)cl)) {
-        if (--nest == 0) { ve = lt; break; }
-        ve = lt + cl;
-      } else if (lt[1] != '/' && !strncmp(lt + 1, name, nl) &&
-                 (isspace((unsigned char)lt[1 + nl]) || lt[1 + nl] == '>')) {
-        nest++; ve = lt + 1;
+      if (!strncmp(l2, close, (size_t)cl)) {
+        if (--nest == 0) { ve = l2; break; }
+        ve = l2 + cl;
+      } else if (l2[1] != '/' && !strncmp(l2 + 1, name, nl) &&
+                 (isspace((unsigned char)l2[1 + nl]) || l2[1 + nl] == '>')) {
+        nest++; ve = l2 + 1;
       } else {
-        ve = lt + 1;
+        ve = l2 + 1;
       }
     }
-    if (hp_xml_has_markup(vs, ve)) {
-      hp_xml_flatten(vs, ve, key, flat, depth + 1);        /* nested element */
+    const char *eend = (ve < end) ? ve + cl : end;
+    if (x->nfields >= HP_MAX_PROPS) {
+      /* The property bound: this element and everything under it stay out,
+       * and are counted. */
+      x->drops += hp_xml_count_elems(lt, eend);
     } else {
-      size_t vl = (size_t)(ve - vs);
-      while (vl && isspace((unsigned char)*vs)) { vs++; vl--; }
-      while (vl && isspace((unsigned char)vs[vl - 1])) vl--;
-      if (vl && vl < 4096 && !cJSON_GetObjectItem(flat, key)) {
-        char *val = (char *)malloc(vl + 1);
-        if (val) {
-          memcpy(val, vs, vl); val[vl] = 0;
-          hp_xml_decode(val);
-          /* trim again AFTER decoding: `<title>\n <![CDATA[ x ]]>\n</title>`
-           * carries padding inside the wrapper as well as around it */
-          char *t = val;
-          while (*t && isspace((unsigned char)*t)) t++;
-          size_t tl = strlen(t);
-          while (tl && isspace((unsigned char)t[tl - 1])) t[--tl] = 0;
-          if (tl) cJSON_AddStringToObject(flat, key, t);
-          free(val);
-        }
-      }
+      hp_xml_attrs(p + nl, gt, key, x);
+      if (hp_xml_has_markup(vs, ve))
+        hp_xml_flatten(vs, ve, key, x, depth + 1);         /* nested element */
+      else if (ve > vs)
+        hp_xml_put_text(x, key, vs, (size_t)(ve - vs));
     }
-    p = (ve < end) ? ve + cl : end;
+    p = eend;
   }
+  /* Own text beside (or instead of) children. This function only runs on
+   * content that holds markup, or on a RECORD element's content — a leaf's
+   * text is stored under its key by the caller — so any non-blank text here
+   * would otherwise be lost: the prose around child elements, or the whole
+   * value of a record element that holds only text (`<string>a</string>`),
+   * which used to flatten to nothing and was never emitted. Whitespace runs
+   * are collapsed: each removed child left a space, and the result is a
+   * reconstruction of the element's prose, not a copy of its bytes. */
+  if (own_text && own) {
+    hp_xml_decode(own);
+    size_t w = 0; int sp = 0;
+    for (size_t r = 0; own[r]; r++) {
+      if (isspace((unsigned char)own[r])) { sp = w > 0; continue; }
+      if (sp) { own[w++] = ' '; sp = 0; }
+      own[w++] = own[r];
+    }
+    own[w] = 0;
+    if (w) {
+      char okey[300];
+      if (prefix && *prefix) snprintf(okey, sizeof okey, "%s.#text", prefix);
+      else                   snprintf(okey, sizeof okey, "#text");
+      hp_xml_put(x, okey, own);
+    }
+  }
+  free(own);
+  free(seen);
 }
 
 /* The element that repeats most often is the record. An explicit array_path
@@ -2310,32 +2477,54 @@ static int hp_run_xml(hp_run_state *st, const char *body) {
   int found = 0;
   cJSON *flats = cJSON_CreateArray();
   if (!flats) return 0;
+  /* Per record, what the flatten bounds kept out — the records are flattened
+   * here and emitted below, so the count travels beside them and is handed to
+   * hp_emit_record's `_fields_dropped` stamp at emit time. */
+  int *drops = NULL, ndrops = 0, cdrops = 0;
   while ((p = strstr(p, open)) != NULL) {
     const char *after = p + ol;
     if (*after != '>' && !isspace((unsigned char)*after) && *after != '/') { p = after; continue; }
     const char *gt = strchr(p, '>');
     if (!gt) break;
-    if (gt[-1] == '/') { p = gt + 1; continue; }           /* empty record */
-    const char *endrec = strstr(gt, close);
+    /* A self-closing record element is not necessarily empty: `<row id="1"
+     * name="x"/>` is a whole record carried in attributes, and it used to be
+     * skipped without being counted at all. One with no attributes is an
+     * empty slot, counted as one by hp_emit_record. */
+    int selfclose = gt[-1] == '/';
+    const char *endrec = selfclose ? gt : strstr(gt, close);
     if (!endrec) break;
     found++;
     st->available++;
     cJSON *flat = cJSON_CreateObject();
     if (flat) {
+      hp_xml_ctx x = { .flat = flat };
       /* The RECORD element's own attributes, before its children. In SDMX
        * these are the whole identity — <str:Codelist id=".." agencyID=".."> —
        * and hp_xml_flatten() starts at gt+1, so nothing on the start tag was
        * ever seen. First in the object as well as first on the tag, so
        * hp_first_scalar()'s last-resort key lands on the identifier rather
        * than on the first prose field. */
-      hp_xml_attrs(after, gt, "", flat);
-      hp_xml_flatten(gt + 1, endrec, "", flat, 0);
+      hp_xml_attrs(after, gt, "", &x);
+      if (!selfclose) hp_xml_flatten(gt + 1, endrec, "", &x, 0);
       /* Collected rather than emitted here: the collision guard needs every
        * record of the page keyed BEFORE the first one is emitted, exactly as
        * the JSON and CSV paths do it. */
-      cJSON_AddItemToArray(flats, flat);
+      if (ndrops == cdrops) {
+        int nc = cdrops ? cdrops * 2 : 64;
+        int *g = realloc(drops, (size_t)nc * sizeof *g);
+        if (g) { drops = g; cdrops = nc; }
+      }
+      if (ndrops < cdrops) {
+        drops[ndrops++] = x.drops;
+        cJSON_AddItemToArray(flats, flat);
+      } else {
+        /* Out of memory for one int: the record cannot be stamped, so it is
+         * not shipped as if complete — it is counted as refused. */
+        st->refused++;
+        cJSON_Delete(flat);
+      }
     }
-    p = endrec + cl;
+    p = selfclose ? gt + 1 : endrec + cl;
   }
   /* uid collision guard — the elements are already flat, so no flatten step. */
   int flats_n = cJSON_GetArraySize(flats);
@@ -2344,18 +2533,22 @@ static int hp_run_xml(hp_run_state *st, const char *body) {
   cJSON *flat;
   int ri = 0;
   cJSON_ArrayForEach(flat, flats) {
-    if (max && st->emitted >= max) break;   /* `found`/available already counted them */
+    /* `found`/available already counted the rest; the notice states it. */
+    if (max && st->emitted >= max) { st->truncated = 1; break; }
     st->rec_idx = ri;
-    if (cJSON_GetArraySize(flat) > 0) {
-      hp_flat_reset();
-      int before = st->emitted;
-      hp_emit_record(st, flat, st->deep_left > 0);
-      /* The detail budget is spent per record that hopped, as on the JSON
-       * path; without this an XML row deepened every record on every page. */
-      if (st->emitted > before && st->deep_left > 0) st->deep_left--;
-    }
+    hp_flat_reset();
+    g_flat_drops = ri < ndrops ? drops[ri] : 0;
+    int before = st->emitted;
+    /* An element that flattened to nothing (`<row/>`) is counted as an empty
+     * slot there, not passed over in silence. */
+    hp_emit_record(st, flat, st->deep_left > 0);
+    /* The detail budget is spent per record that hopped, as on the JSON
+     * path; without this an XML row deepened every record on every page. */
+    if (st->emitted > before && st->deep_left > 0) st->deep_left--;
     ri++;
   }
+  hp_flat_reset();
+  free(drops);
   st->dup_map = NULL;
   st->rec_idx = 0;
   free(dupmap);
@@ -2719,8 +2912,10 @@ static int hp_html_base_href(const char *html, char *out, size_t cap) {
  *
  * and only then is the anchor dropped, as before. `inner`..`end` is the markup
  * between the start tag's `>` and `</a>`. Returns the label length. */
-static size_t hp_anchor_label(const char *inner, const char *end, char *out, size_t cap) {
+static size_t hp_anchor_label(const char *inner, const char *end, char *out, size_t cap,
+                              int *strength) {
   size_t n = 0;
+  *strength = HTML_LABEL_TEXT;
   int intag = 0, pend = 0;
   for (const char *q = inner; q < end && n + 1 < cap; q++) {
     if (*q == '<') { intag = 1; continue; }
@@ -2743,6 +2938,7 @@ static size_t hp_anchor_label(const char *inner, const char *end, char *out, siz
     if (taglen >= sizeof tag) break;
     memcpy(tag, im, taglen);
     tag[taglen] = 0;
+    *strength = HTML_LABEL_IMG;
     if (html_attr(tag, "alt", out, cap) && strlen(out) >= 3) return strlen(out);
     if (html_attr(tag, "title", out, cap) && strlen(out) >= 3) return strlen(out);
     break;
@@ -2972,7 +3168,12 @@ static int hp_run_html(hp_run_state *st, const char *html) {
   html_anchor a;
   const char *p = html;
   int page_hits = 0;
-  while ((!max || st->emitted < max) && (p = html_anchor_next(p, &a)) != NULL) {
+  /* The whole page is scanned before anything is emitted, so each link is
+   * emitted once with the STRONGEST label any of its anchors carried — see
+   * html_label_offer() in lib/htmlparse.h. It used to emit at the first
+   * anchor, and an icon's borrowed caption beat the headline after it. */
+  html_label_set labels = {0};
+  while ((p = html_anchor_next(p, &a)) != NULL) {
     char href[820];
     snprintf(href, sizeof href, "%.*s", (int)a.href_len, a.href);
     /* `href_must` is tested against the raw href AND the resolved link. It used
@@ -2987,13 +3188,14 @@ static int hp_run_html(hp_run_state *st, const char *html) {
     else hp_url_resolve(base_url, href, link, sizeof link);
     if (s->href_must && !strstr(href, s->href_must) && !strstr(link, s->href_must))
       continue;
+    int strength = HTML_LABEL_TEXT;
     if (a.text_len < 3) {
       /* `p` is the resume point, just past `</a>`; the start tag's `>` is the
        * first one after the href value (the parser located `</a>` the same
        * way). See hp_anchor_label(). */
       const char *inner = strchr(a.href + a.href_len, '>');
       if (!inner || inner >= p - 4) continue;
-      a.text_len = hp_anchor_label(inner + 1, p - 4, a.text, sizeof a.text);
+      a.text_len = hp_anchor_label(inner + 1, p - 4, a.text, sizeof a.text, &strength);
       if (a.text_len < 3) {
         /* Nothing inside the anchor names it. Its own attributes, then the
          * text beside it. See hp_anchor_context_label(). The start tag begins
@@ -3002,6 +3204,7 @@ static int hp_run_html(hp_run_state *st, const char *html) {
         while (tag > html && *tag != '<') tag--;
         a.text_len = hp_anchor_context_label(tag, (size_t)(inner + 1 - tag), p,
                                              html, a.text, sizeof a.text);
+        strength = HTML_LABEL_CONTEXT;
       }
       if (a.text_len < 3) continue;
     }
@@ -3022,17 +3225,49 @@ static int hp_run_html(hp_run_state *st, const char *html) {
      * (all 47 MHLW prefectural labour-bureau homepages do) passed a raw-href
      * dedupe and then collided at the sink — 2-19 records per bureau reported
      * as UID-COLLISION that were really one record linked in two spellings. */
-    if (!html_seen_add(&st->hseen, link)) { st->duplicate++; continue; }
+    /* A link emitted on an EARLIER page of the walk is a duplicate as before.
+     * One seen earlier on THIS page is the same record, and its label is
+     * upgraded if this anchor's is stronger. */
+    if (html_seen_has(&st->hseen, link)) { st->duplicate++; continue; }
+    int r = html_label_offer(&labels, link, a.text, strength);
+    if (r == 0) { st->duplicate++; continue; }
+    if (r < 0) {
+      /* Out of memory for the label set: the anchor is still a record, so it
+       * is emitted now with the label it has — the old first-anchor rule —
+       * rather than lost. */
+      if (!html_seen_add(&st->hseen, link)) { st->duplicate++; continue; }
+      if (max && st->emitted >= max) { st->truncated = 1; continue; }
+      page_hits++;
+      cJSON *flat = cJSON_CreateObject();
+      cJSON_AddStringToObject(flat, "title", a.text);
+      cJSON_AddStringToObject(flat, "url", link);
+      cJSON_AddStringToObject(flat, "id", link);
+      hp_flat_reset();
+      hp_emit_record(st, flat, 0);
+      cJSON_Delete(flat);
+    }
+  }
+  for (int i = 0; i < labels.n; i++) {
+    if (max && st->emitted >= max) { st->truncated = 1; break; }
+    if (!html_seen_add(&st->hseen, labels.v[i].key)) { st->duplicate++; continue; }
     page_hits++;
-
     cJSON *flat = cJSON_CreateObject();
-    cJSON_AddStringToObject(flat, "title", a.text);
-    cJSON_AddStringToObject(flat, "url", link);
-    cJSON_AddStringToObject(flat, "id", link);
+    cJSON_AddStringToObject(flat, "title", labels.v[i].label);
+    cJSON_AddStringToObject(flat, "url", labels.v[i].key);
+    cJSON_AddStringToObject(flat, "id", labels.v[i].key);
+    /* What the link's OTHER anchors called it — a logo's alt behind a "ホーム"
+     * link, an image caption beside a headline. Flattened the way hp_flatten
+     * flattens an array, so a consumer reads it like any other record. */
+    for (int j = 0; j < labels.v[i].nothers; j++) {
+      char ok_[32];
+      snprintf(ok_, sizeof ok_, "other_labels.%d", j);
+      cJSON_AddStringToObject(flat, ok_, labels.v[i].others[j]);
+    }
     hp_flat_reset();
     hp_emit_record(st, flat, 0);
     cJSON_Delete(flat);
   }
+  html_label_free(&labels);
   if (max && st->emitted >= max) st->truncated = 1;
   /* Same stop signal the JSON path publishes: without it the page walk read
    * page 1 and silently dropped every later page (EU_EUIPO_TRADEMARKS and
@@ -3245,6 +3480,91 @@ static void hp_shape_notices(hp_run_state *st, intel_sink *sink,
   }
 }
 
+/* A conditional request header. The engine itself sends none — there is no
+ * etag or last-modified cache anywhere in the fetch path — but a row may
+ * declare one, and if it does it belongs to the FIRST request of a run only:
+ * a later page carrying it can be answered 304, which has no body and no
+ * records, and the walk would lose every page from there on. */
+static int hp_header_is_conditional(const char *h) {
+  static const char *const names[] = { "If-None-Match:", "If-Modified-Since:",
+    "If-Match:", "If-Unmodified-Since:", "If-Range:", NULL };
+  for (int i = 0; h && names[i]; i++)
+    if (!strncasecmp(h, names[i], strlen(names[i]))) return 1;
+  return 0;
+}
+
+/* A page AFTER the first did not deliver records: it answered a status other
+ * than 200, failed in transport (`status` -1), or came back 200 with a body
+ * that could not be read (`status` 200). Does that mean the upstream ran out
+ * of data, or that the walk was cut short? The ruling, in order:
+ *
+ *   1. The previous page was SHORT: the upstream already said it had
+ *      finished, so whatever the next request met is past the end. EPA
+ *      Envirofacts answers a range past its last row with HTTP 500; plenty of
+ *      servers answer 404 or 400.
+ *   2. Statuses that never mean "no more data" — the request was not
+ *      answered, it was refused or deferred: transport failure, any 3xx
+ *      (curl follows redirects, so one that reaches us is a loop or has no
+ *      Location), 304 (we sent no condition, so a cache is answering for a
+ *      page it never fetched), 401/403/407, 408, 429, 5xx, and a 200 whose
+ *      body is unreadable. A collection does not end in Forbidden.
+ *   3. The rest of 4xx (400, 404, 410, 416, 422 …) is how many servers say
+ *      "past the last page". It is still a walk cut short when the upstream
+ *      gave evidence that more exists — its own total is larger than what
+ *      was read, it published the link to the page that failed, or the
+ *      previous page came back FULL. A full page followed by a 400 is the
+ *      signature of a deep-paging limit (Elasticsearch's 10,000-record
+ *      window, GitHub's 1,000-result search), which is a silent discard if
+ *      it is read as the end. Only a collection ending exactly on a page
+ *      boundary looks the same, and the notice says so.
+ *
+ * `prev_full`/`prev_short` are both 0 when the page size is unknown (the
+ * second request of a walk that declared none). Returns 1 for "cut short". */
+static int hp_later_page_cut(long status, int prev_short, int prev_full,
+                             int link_given, long declared_total, long fetched) {
+  if (prev_short) return 0;
+  if (status < 0 || status == 200 || (status >= 300 && status < 400) ||
+      status == 401 || status == 403 || status == 407 || status == 408 ||
+      status == 429 || status >= 500)
+    return 1;
+  if (declared_total >= 0) return declared_total > fetched;
+  return prev_full || link_given;
+}
+
+/* The reason a cut-short walk files, by what the failing page answered. */
+static void hp_cut_reason(long status, int unreadable, char *out, size_t cap) {
+  if (status < 0)
+    snprintf(out, cap, "a later page failed at the transport level, so the walk "
+             "stopped before the upstream ran out");
+  else if (unreadable)
+    snprintf(out, cap, "a later page answered HTTP 200 with a body that could "
+             "not be read in this row's declared mode (an error or challenge "
+             "page), so its records were never delivered");
+  else if (status == 304)
+    snprintf(out, cap, "a later page answered HTTP 304 Not Modified to a request "
+             "that carried no conditional header (a cache or proxy answering for "
+             "a page it never fetched); a 304 has no body, so the walk stopped "
+             "before the upstream ran out");
+  else if (status >= 300 && status < 400)
+    snprintf(out, cap, "a later page answered a redirect (HTTP %ld) that could "
+             "not be followed, so the walk stopped before the upstream ran out",
+             status);
+  else if (status == 429)
+    snprintf(out, cap, "a later page was refused with HTTP 429 (rate limited), "
+             "so the walk stopped before the upstream ran out");
+  else if (status == 401 || status == 403 || status == 407)
+    snprintf(out, cap, "a later page was refused with HTTP %ld, so the walk "
+             "stopped before the upstream ran out", status);
+  else if (status == 408 || status >= 500)
+    snprintf(out, cap, "a later page answered a server error (HTTP %ld), so the "
+             "walk stopped before the upstream ran out", status);
+  else
+    snprintf(out, cap, "a later page answered HTTP %ld although the upstream had "
+             "given evidence of more (a full previous page, its own total, or a "
+             "next link): either a deep-paging limit refused the rest, or the "
+             "collection ends exactly on a page boundary", status);
+}
+
 static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   const hp_source *s = hp_lookup(ctx->source_id);
   if (!s) return -1;
@@ -3394,11 +3714,50 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
    * producing records (or the page ceiling bites, which is stamped, not
    * silent). Rows that declare no paging do exactly one request, as before. */
   int out = 0, hard_error = 0;
-  /* A LATER page failing in a way that cannot mean "no more data": transport
-   * failure, HTTP 429, HTTP 5xx (or an in-body error carrying those codes).
-   * Plain 4xx past the last page is a common end-of-data signal and stays one. */
+  /* A LATER page that did not deliver its records, judged by
+   * hp_later_page_cut(): either the upstream's end of data (silent, as it
+   * should be) or a walk cut short, which is disclosed with the status, the
+   * page and the URL that failed. It used to be cut short only on 429/5xx; a
+   * 304, a 403, an unreadable body or a deep-paging 400 ended the walk with
+   * rc=0 and no notice, indistinguishable from a complete collection. */
   int failed_midwalk = 0;
   long failed_status = 0;           /* -1 = transport failure */
+  int failed_unreadable = 0;        /* the failing page was a 200 we could not read */
+  int failed_page = 0;              /* 1-based page that failed */
+  char *failed_url = NULL;          /* the URL it was asked at */
+  /* The headers a LATER page is sent with: the row's own, minus any
+   * conditional header (see hp_header_is_conditional). `nocache_hdrs` adds
+   * Cache-Control/Pragma for the one retry a 304 to an unconditional request
+   * earns — it asks every cache on the path to go back to the origin. */
+  const char *later_hdrs[12], *nocache_hdrs[14];
+  int first_conditional = 0;
+  {
+    int nl = 0, has_cc = 0;
+    for (int i = 0; i < nh; i++) {
+      if (hp_header_is_conditional(hdrs[i])) { first_conditional = 1; continue; }
+      if (!strncasecmp(hdrs[i], "Cache-Control:", 14)) has_cc = 1;
+      later_hdrs[nl++] = hdrs[i];
+    }
+    later_hdrs[nl] = NULL;
+    int nn = 0;
+    for (int i = 0; i < nl; i++) nocache_hdrs[nn++] = later_hdrs[i];
+    if (!has_cc) {
+      nocache_hdrs[nn++] = "Cache-Control: no-cache";
+      nocache_hdrs[nn++] = "Pragma: no-cache";
+    }
+    nocache_hdrs[nn] = NULL;
+  }
+  /* Detail hops: later_hdrs without the POST body's default content type. */
+  const char *detail_hdrs[12];
+  {
+    int nd = 0;
+    for (int i = 0; later_hdrs[i]; i++) {
+      if (body && !has_ctype && !strncasecmp(later_hdrs[i], "Content-Type:", 13))
+        continue;
+      detail_hdrs[nd++] = later_hdrs[i];
+    }
+    detail_hdrs[nd] = NULL;
+  }
   int page_max = s->page_max > 0 ? s->page_max : HP_PAGE_MAX_DEF;
   /* A `{page}` token left in the URL after entity expansion is path-segment
    * paging: the upstream numbers its pages in the path (kanpou.ai's
@@ -3419,6 +3778,7 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   int pw_repeat = 0;      /* the server's next link pointed at this page  */
 
   hp_run_state st = { .s = s, .ctx = ctx, .sink = sink, .vars = &vars,
+                      .detail_hdrs = detail_hdrs,
                       .url = url, .emitted = 0,
                       .deep_left = hp_detail_budget(s),
                       .pw = page_walk, .declared_total = -1,
@@ -3478,34 +3838,71 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
    * st.page_records is reset at the top of every page, so by the time the
    * repeat test runs it no longer holds the previous page's number. */
   int first_page_records = 0, prev_page_records = 0;
+  /* The URL about to be fetched came from the upstream's own evidence that
+   * more exists: a next link or cursor it published (next_path), or
+   * jsonlist_next_page()'s decision for a page_walk row. */
+  int next_evidence = 0;
   for (int page = 0; page < page_max && page_url; page++) {
     st.page = page + 1;
     st.url  = page_url;
     st.prev_url = prev_url;
     st.page_records = 0;
+    st.unreadable = 0;
+
+    /* Was the page before this one short or full? The yardstick is the
+     * row's declared page size, else page 1's own count — which can only
+     * judge pages after the second request; before that both stay 0
+     * ("unknown"). See hp_later_page_cut(). */
+    int prev_short = 0, prev_full = 0;
+    if (page > 0) {
+      int yard = s->page_size > 0 ? s->page_size
+               : page >= 2 ? first_page_records : 0;
+      if (yard > 0) {
+        prev_short = prev_page_records < yard;
+        prev_full  = !prev_short;
+      }
+    }
 
     http_response hr = {0};
-    int rc = http_request(ctx->http, body ? "POST" : "GET", page_url, hdrs,
+    const char *const *req_hdrs = page > 0 ? later_hdrs : hdrs;
+    int rc = http_request(ctx->http, body ? "POST" : "GET", page_url, req_hdrs,
                           body, body ? strlen(body) : 0,
                           s->timeout_ms > 0 ? s->timeout_ms : HP_HTTP_TIMEOUT,
                           1, &hr);
-    if (rc != 0) {
-      fprintf(stderr, "[hp:%s] transport failure %s\n", s->id, page_url);
-      if (page == 0) hard_error = 1;
-      else { failed_midwalk = 1; failed_status = -1; }
+    /* 304 to a request that carried no condition is not the upstream's
+     * answer: a cache on the path is answering for a page it never fetched.
+     * One retry asks every cache to go back to the origin. */
+    if (rc == 0 && hr.status == 304 && (page > 0 || !first_conditional)) {
+      fprintf(stderr, "[hp:%s] page %d answered 304 to an unconditional request "
+              "— retrying once with Cache-Control: no-cache\n", s->id, page + 1);
       http_response_free(&hr);
-      break;
+      hr = (http_response){0};
+      rc = http_request(ctx->http, body ? "POST" : "GET", page_url, nocache_hdrs,
+                        body, body ? strlen(body) : 0,
+                        s->timeout_ms > 0 ? s->timeout_ms : HP_HTTP_TIMEOUT,
+                        1, &hr);
     }
-    if (hr.status != 200 || !hr.body) {
-      fprintf(stderr, "[hp:%s] status=%ld %s\n", s->id, hr.status, page_url);
-      if (hr.status >= 500 && page == 0) hard_error = 1;
-      /* A later page refused with 429 or 5xx is a walk cut short, not the end
-       * of the collection. It used to break here in silence: the Democracy
-       * Club rows met 429 after a few pages and kept 2-14% of their records
-       * with no notice (measured by batch-29 agent B, 2026-09-15). */
-      if (page > 0 && (hr.status == 429 || hr.status >= 500)) {
-        failed_midwalk = 1;
-        failed_status = hr.status;
+    if (rc != 0 || hr.status != 200 || !hr.body) {
+      long fst = rc != 0 ? -1 : hr.status;
+      if (rc != 0) fprintf(stderr, "[hp:%s] transport failure %s\n", s->id, page_url);
+      else         fprintf(stderr, "[hp:%s] status=%ld %s\n", s->id, hr.status, page_url);
+      /* Page 1: a dead endpoint is a hard error; a 304 nobody asked for is
+       * one too (the source was not actually checked); anything else is the
+       * honest empty it always was. */
+      if (page == 0 && (fst < 0 || fst >= 500 || (fst == 304 && !first_conditional)))
+        hard_error = 1;
+      if (page > 0) {
+        if (hp_later_page_cut(fst, prev_short, prev_full, next_evidence,
+                              st.declared_total, (long)st.available)) {
+          failed_midwalk = 1;
+          failed_status = fst;
+          failed_page = page + 1;
+          failed_url = strdup(page_url);
+        } else {
+          fprintf(stderr, "[hp:%s] page %d answered %ld after %s — end of data, "
+                  "not a failed walk\n", s->id, page + 1, fst,
+                  prev_short ? "a short page" : "no evidence of more");
+        }
       }
       http_response_free(&hr);
       break;
@@ -3619,6 +4016,12 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     }
     free(xcsv);
     free(utf8);
+    /* The run's running total, whatever the mode driver returned: an early
+     * exit inside one (an unreadable page, a CSV that parsed to nothing)
+     * returned 0, and a LATER page doing that rewrote `out` — the run line
+     * and the truncation notice then said 0 records were used while the sink
+     * held every record of the earlier pages. */
+    out = st.emitted;
     /* The inflated ZIP entry — up to JO_ZIP_MAX_OUT (256 MB) per page, and it
      * was never freed: 30 runs of a row serving a 2 MB entry held 60 MB. */
     free(unz);
@@ -3668,11 +4071,27 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
      * the difference between "this source found nothing" and "this source was
      * not actually checked", and collapsing the two is what house rule 1 is
      * about. Either way nothing is STORED, which is the part that matters. */
-    if (st.upstream_error) {
+    /* A LATER page whose 200 could not be read at all is judged the same way:
+     * a page that did not deliver its records. An error document keeps the
+     * code it carried for the ruling (a `{"error":{"code":404}}` after a short
+     * page is still the end); one with no code is judged as unreadable. */
+    if (st.upstream_error || (st.unreadable && page > 0)) {
       if (page == 0 && (st.err_code < 0 || st.err_code >= 500)) hard_error = 1;
-      if (page > 0 && (st.err_code == 429 || st.err_code >= 500)) {
-        failed_midwalk = 1;
-        failed_status = st.err_code;
+      if (page > 0) {
+        int unread = !st.upstream_error || st.err_code <= 0;
+        long fst = unread ? 200 : st.err_code;
+        if (hp_later_page_cut(fst, prev_short, prev_full, next_evidence,
+                              st.declared_total, (long)st.available)) {
+          failed_midwalk = 1;
+          failed_status = fst;
+          failed_unreadable = unread;
+          failed_page = page + 1;
+          failed_url = strdup(page_url);
+        } else {
+          fprintf(stderr, "[hp:%s] page %d's body was an error report (%ld) "
+                  "after %s — end of data, not a failed walk\n", s->id,
+                  page + 1, fst, prev_short ? "a short page" : "no evidence of more");
+        }
       }
       break;
     }
@@ -3683,6 +4102,7 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     if (st.page_records <= 0) break;
 
     char *nextp = NULL;
+    next_evidence = st.next_url != NULL || page_walk;
     if (st.next_url) {                       /* server-provided next link */
       if (s->next_tmpl && *s->next_tmpl) {
         /* The upstream handed back a cursor, not a URL. Build the continuation
@@ -3749,10 +4169,14 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
       snprintf(emptynote, sizeof emptynote,
                " [%d empty, %d duplicate, %d filtered out, %d refused by sink%s]",
                st.empty, st.duplicate, st.filtered, st.refused, malnote);
+    char failnote[96] = "";
+    if (failed_midwalk)
+      snprintf(failnote, sizeof failnote,
+               " (TRUNCATED: a later page failed — page %d answered %ld%s)",
+               failed_page, failed_status, failed_unreadable ? ", unreadable" : "");
     fprintf(stderr, "[hp:%s] emitted %d of %d available across %d page(s)%s%s\n",
             s->id, out, real_available, st.page,
-            st.truncated ? " (TRUNCATED)"
-                         : failed_midwalk ? " (TRUNCATED: a later page failed)" : "",
+            st.truncated ? " (TRUNCATED)" : failnote,
             emptynote);
   }
 
@@ -3792,25 +4216,26 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
       cJSON_AddNumberToObject(p, "empty_slots_skipped", st.empty);
     if (st.malformed > 0)
       cJSON_AddNumberToObject(p, "unreadable_lines_skipped", st.malformed);
-    cJSON_AddNumberToObject(p, "pages_read", st.page);
+    /* Pages that DELIVERED records: the failing request is not one of them. */
+    cJSON_AddNumberToObject(p, "pages_read",
+                            failed_midwalk && failed_page > 0 ? failed_page - 1 : st.page);
     cJSON_AddBoolToObject(p, "more_pages_pending",
                           failed_midwalk || pw_stuck || avail <= (long)out);
     cJSON_AddNumberToObject(p, "declared_max_items", s->max_items);
-    if (failed_midwalk)
+    char cutwhy[400] = "";
+    if (failed_midwalk) {
+      cJSON_AddNumberToObject(p, "failed_page", failed_page);
       cJSON_AddNumberToObject(p, "failed_page_status", (double)failed_status);
+      if (failed_unreadable) cJSON_AddBoolToObject(p, "failed_page_unreadable", 1);
+      cJSON_AddStringToObject(p, "failed_page_url", failed_url ? failed_url : "");
+      hp_cut_reason(failed_status, failed_unreadable, cutwhy, sizeof cutwhy);
+    }
     cJSON_AddStringToObject(p, "reason",
       st.malformed && !st.truncated && !failed_midwalk
         ? "some lines of this NDJSON feed were not valid JSON; the records "
           "around them were used and these were not"
       : failed_midwalk
-        ? (failed_status == 429
-             ? "a later page was refused with HTTP 429 (rate limited), so the "
-               "walk stopped before the upstream ran out"
-             : failed_status < 0
-               ? "a later page failed at the transport level, so the walk "
-                 "stopped before the upstream ran out"
-               : "a later page answered a server error, so the walk stopped "
-                 "before the upstream ran out")
+        ? cutwhy
       : (s->max_items > 0 && out >= s->max_items)
         ? "the row declares max_items and the upstream offered more"
       : st.truncated
@@ -3827,6 +4252,16 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
       st.malformed && !st.truncated && !failed_midwalk
         ? "re-run; if the same lines fail again the upstream feed itself is "
           "malformed and the row should be re-pointed or retired"
+      : failed_midwalk && failed_status == 304
+        ? "re-run; the engine sends no conditional header on a later page and "
+          "already retried with Cache-Control: no-cache, so a 304 that survives "
+          "that is a cache or proxy in front of the upstream answering for it"
+      : failed_midwalk && failed_status >= 400 && failed_status < 500 &&
+        failed_status != 401 && failed_status != 403 && failed_status != 407 &&
+        failed_status != 408 && failed_status != 429
+        ? "check whether the upstream caps how deep it pages; if it does, "
+          "narrow each request (a date window or a filter) so every slice fits "
+          "under the cap — see docs/SOURCE_EXHAUSTIVENESS.md"
       : failed_midwalk
         ? "re-run; a rate-limited host needs a per-host minimum gap "
           "(core/hostgate.c) — see docs/SOURCE_EXHAUSTIVENESS.md"
@@ -3837,8 +4272,12 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     char key[320], title[256];
     snprintf(key, sizeof key, "%.150s|truncation:%.120s", s->id,
              vars.raw ? vars.raw : "");
-    snprintf(title, sizeof title, "%s used %d of %ld available records",
-             s->id, out, avail);
+    if (failed_midwalk)
+      snprintf(title, sizeof title, "%s used %d of %ld available records — "
+               "page %d answered %ld", s->id, out, avail, failed_page, failed_status);
+    else
+      snprintf(title, sizeof title, "%s used %d of %ld available records",
+               s->id, out, avail);
     intel_item note = {0};
     note.remote_key      = key;
     note.title           = title;
@@ -3854,6 +4293,7 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
    * ADDITION to whatever the walk found, never instead of it. */
   hp_shape_notices(&st, sink, &vars, out, page_max);
 
+  free(failed_url);
   for (int i = 0; i < nh; i++) free(hdr_store[i]);
   free(url);
   free(body);

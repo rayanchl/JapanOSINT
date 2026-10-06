@@ -13,6 +13,18 @@
  * minTtl, tlp. No coordinates -> has_geo 0 (R2).
  * Licence: Mnemonic open passive DNS tier, TLP:WHITE records only; the
  * anonymous quota is limited (results capped and rate-limited).
+ *
+ * QUOTA (HTTP 402). When the anonymous quota is spent Mnemonic answers
+ * `402 {"messages":[{"message":"Resource limit exceeded"}],
+ * "metaData":{"millisUntilResourcesAvailable":N}}` — measured 2026-10-06 on
+ * google.com: pages at offset 0-800 answer 200, the tenth request 402s. This
+ * collector used to read a 402 on the first page as "no history" and return 0
+ * with nothing emitted, which is indistinguishable from a domain Mnemonic has
+ * never seen. A 402 (or 429) is now a `collector-status-notice` saying the
+ * quota refused the request, with the upstream's own message and wait time; a
+ * 402 part-way through a walk is named as such in the truncation notice. An
+ * Argus API key in MNEMONIC_API_KEY is sent as the `Argus-API-Key` header,
+ * which is how Mnemonic authenticates callers above the anonymous tier.
  */
 #include "source.h"
 #include "third_party/cJSON.h"
@@ -123,6 +135,81 @@ static int pdns_emit(intel_sink *sink, const cJSON *d, const char *q,
     return rc >= 0 ? 1 : 0;
 }
 
+/* The upstream's refusal, read from a 402/429 body: its message and how long
+ * it says to wait. Either may be absent. */
+static void pdns_refusal(const char *body, char *msg, size_t mcap, double *wait_ms) {
+  msg[0] = 0; *wait_ms = -1;
+  cJSON *r = body ? cJSON_Parse(body) : NULL;
+  if (!r) return;
+  const cJSON *m = cJSON_GetArrayItem(cJSON_GetObjectItem(r, "messages"), 0);  /* exhaustive-ok: the refusal carries one message */
+  const char *t = jo_sv(m, "message");
+  if (t) snprintf(msg, mcap, "%s", t);
+  const cJSON *w = cJSON_GetObjectItem(cJSON_GetObjectItem(r, "metaData"),
+                                       "millisUntilResourcesAvailable");
+  if (cJSON_IsNumber(w)) *wait_ms = w->valuedouble;
+  cJSON_Delete(r);
+}
+
+/* The quota said no before anything was collected: say so as data, the way a
+ * gated source says it has no credential (_credential_notice.inc) — but this
+ * request WAS spent and refused, so the wording and status differ. Scoped by
+ * entity so one domain's refusal does not overwrite another's. */
+static void pdns_quota_notice(intel_sink *sink, const char *q, const char *url,
+                              long status, const char *msg, double wait_ms,
+                              int keyed) {
+  const char *st = status == 402 ? "payment_required" : "rate_limited";
+  cJSON *p = cJSON_CreateObject();
+  cJSON_AddStringToObject(p, "status", st);
+  cJSON_AddStringToObject(p, "source_id", "PDNS_MNEMONIC");
+  cJSON_AddStringToObject(p, "upstream", "Mnemonic passive DNS");
+  cJSON_AddStringToObject(p, "entity", q);
+  cJSON_AddNumberToObject(p, "http_status", (double)status);
+  if (msg && *msg) cJSON_AddStringToObject(p, "upstream_message", msg);
+  if (wait_ms >= 0) cJSON_AddNumberToObject(p, "millis_until_resources_available", wait_ms);
+  cJSON *envs = cJSON_CreateArray();
+  cJSON_AddItemToArray(envs, cJSON_CreateString("MNEMONIC_API_KEY"));
+  cJSON_AddItemToObject(p, "env_vars_accepted", envs);
+  cJSON_AddBoolToObject(p, "api_key_sent", keyed);
+  cJSON_AddStringToObject(p, "endpoint", url);
+  cJSON_AddBoolToObject(p, "request_spent", 1);
+  cJSON_AddNumberToObject(p, "records_used", 0);
+  cJSON_AddStringToObject(p, "records_available",
+                          "unknown — the upstream refused the first page");
+  char *pj = cJSON_PrintUnformatted(p);
+  cJSON_Delete(p);
+
+  char key[320], title[320], summary[640], waitbuf[96] = "";
+  if (wait_ms >= 0)
+    snprintf(waitbuf, sizeof waitbuf, " Mnemonic says resources free up again "
+             "in %.0f s.", wait_ms / 1000.0);
+  snprintf(key, sizeof key, "collector-%s:%s",
+           status == 402 ? "payment-required" : "rate-limited", q);
+  snprintf(title, sizeof title, "Mnemonic passive DNS — %s refused (HTTP %ld), "
+           "nothing collected for %s",
+           status == 402 ? "quota" : "rate limit", status, q);
+  snprintf(summary, sizeof summary,
+           "Mnemonic answered HTTP %ld%s%s%s to the first page, so no passive-DNS "
+           "record exists for %s from this run — this is a refusal, not an empty "
+           "history.%s Set MNEMONIC_API_KEY (sent as Argus-API-Key) to query "
+           "above the anonymous tier, or re-run after the wait.",
+           status, msg && *msg ? " \"" : "", msg && *msg ? msg : "",
+           msg && *msg ? "\"" : "", q, waitbuf);
+  fprintf(stderr, "[PDNS_MNEMONIC] %s: HTTP %ld %s (%s)\n", st, status,
+          msg && *msg ? msg : "", q);
+  intel_item note = {0};
+  note.remote_key      = key;
+  note.title           = title;
+  note.summary         = summary;
+  note.link            = url;
+  note.lang            = "en";
+  note.record_type     = "collector-status-notice";
+  note.sub_source_id   = "PDNS_MNEMONIC";
+  note.properties_json = pj ? pj : "{}";
+  note.tags_json       = "[\"collector-status\",\"payment-required\"]";
+  sink->emit(sink, &note);
+  free(pj);
+}
+
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
   if (!looks_like_domain(q)) return 0;             /* wrong shape -> no-op */
@@ -137,26 +224,57 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *penv = getenv("JO_PDNS_MAX_PAGES");
   if (penv && *penv) { int v = atoi(penv); if (v > 0) max_pages = v; }
 
+  /* Optional Argus API key: lifts the anonymous quota. Never logged. */
+  const char *key = getenv("MNEMONIC_API_KEY");
+  int keyed = key && *key;
+  char keyhdr[320];
+  const char *hdrs[3] = { "Accept: application/json", NULL, NULL };
+  if (keyed) {
+    snprintf(keyhdr, sizeof keyhdr, "Argus-API-Key: %s", key);
+    hdrs[1] = keyhdr;
+  }
+
   int n = 0, offset = 0, pages = 0, stopped_early = 0;
+  long stop_status = 0;
+  char stop_msg[160] = "";
+  double stop_wait = -1;
   double total = 0;
   char url[576];
 
   for (int page = 0; page < max_pages; page++) {
     snprintf(url, sizeof url, "%s?limit=%d&offset=%d", base,
              PDNS_PAGE_SIZE, offset);
-    long status = 0;
-    char *body = cyi_get_json(ctx, url, 20000, &status);
+    http_response hr = {0};
+    int hrc = http_request(ctx->http, "GET", url, hdrs, NULL, 0, 20000, 1, &hr);
+    long status = hr.status;
+    char *body = NULL;
+    if (hrc == 0 && status == 200 && hr.body) { body = hr.body; hr.body = NULL; }
     if (!body) {
       fprintf(stderr, "[PDNS_MNEMONIC] http status=%ld at offset %d\n",
               status, offset);
-      /* 4xx on the FIRST page is "no history / over quota", not an error. */
+      if (status == 402 || status == 429) {
+        /* The quota refused the request: a refusal, never "no history". */
+        pdns_refusal(hr.body, stop_msg, sizeof stop_msg, &stop_wait);
+        http_response_free(&hr);
+        if (page == 0) {
+          pdns_quota_notice(sink, q, base, status, stop_msg, stop_wait, keyed);
+          return 0;
+        }
+        stop_status = status;
+        stopped_early = 1;
+        break;
+      }
+      http_response_free(&hr);
+      /* Any other 4xx on the FIRST page is "no such object" (R3), not an
+       * error; a transport failure or 5xx is. */
       if (page == 0) return (status >= 400 && status < 500) ? 0 : -1;
-      /* Mid-walk it is a real shortfall — the anonymous tier rate-limits, and
-       * a run that quietly returned the first 300 of 1,000 answers would look
-       * exactly like a complete one. */
+      /* Mid-walk it is a real shortfall — a run that quietly returned the
+       * first 300 of 1,000 answers would look exactly like a complete one. */
+      stop_status = status;
       stopped_early = 1;
       break;
     }
+    http_response_free(&hr);
     cJSON *root = cJSON_Parse(body);
     free(body);
     if (!root) {
@@ -185,13 +303,30 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   fprintf(stderr, "[PDNS_MNEMONIC] emitted %d of %.0f known answers over %d "
                   "page(s) (%s)\n", n, total, pages, q);
-  if (stopped_early)
+  if (stopped_early) {
+    char reason[400];
+    if (stop_status == 402 || stop_status == 429)
+      snprintf(reason, sizeof reason,
+               "Mnemonic refused the page at offset %d with HTTP %ld%s%s%s — the "
+               "%s quota ran out before its declared answer count was reached",
+               offset, stop_status, stop_msg[0] ? " \"" : "", stop_msg,
+               stop_msg[0] ? "\"" : "", keyed ? "keyed" : "anonymous");
+    else if (stop_status)
+      snprintf(reason, sizeof reason,
+               "the page at offset %d failed (HTTP %ld) before Mnemonic's "
+               "declared answer count was reached", offset, stop_status);
+    else
+      snprintf(reason, sizeof reason,
+               "the offset walk stopped at offset %d before Mnemonic's declared "
+               "answer count was reached — an unparseable page or the "
+               "page-walk ceiling", offset);
     jo_trunc_notice_scoped(sink, "PDNS_MNEMONIC", q, base, n,
-                    total > 0 ? (long)total : -1,
-                    "the offset walk stopped before Mnemonic's declared answer "
-                    "count was reached — the anonymous tier rate-limited the "
-                    "run, or the page-walk ceiling was hit",
-                    "re-run the pivot, or raise $JO_PDNS_MAX_PAGES");
+                    total > 0 ? (long)total : -1, reason,
+                    (stop_status == 402 || stop_status == 429)
+                      ? "set MNEMONIC_API_KEY (sent as Argus-API-Key), or re-run "
+                        "the pivot after the quota window"
+                      : "re-run the pivot, or raise $JO_PDNS_MAX_PAGES");
+  }
   return 0;                       /* no passive DNS history is not an error */
 }
 

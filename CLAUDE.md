@@ -19,7 +19,9 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 18,643** (2026-10-06): main's batches 33–36 —
+**The registered count is 18,645** (2026-10-06: 18,643 plus the audit
+follow-up's two SEC listings, `US_SEC_LITIGATION_RELEASES` and
+`US_SEC_TRADING_SUSPENSIONS`, which replace the dead srqsb search). 18,643 was main's batches 33–36 —
 batch 33's 43 measured supply-chain rows (`docs/verified-sources-batch33.tsv`),
 batch 34's NDJSON row, batch 35's four string-array rows, the spec-families
 beats and batch 36's 188 — on top of the 18,170 that included batch 32's 340
@@ -369,7 +371,8 @@ git ls-files -z '*.sh' '*.py' | xargs -0 sed -i 's/\r$//'   # content-identical 
 
 `make source-count` (and the `source-floor` gate built on it) counts hp table
 rows as well as `REGISTER_SOURCE`, and agrees with the binary. Both floors were
-recorded at 18,170 on 2026-10-02 and at 18,644 on 2026-10-05; they had been
+recorded at 18,170 on 2026-10-02, at 18,644 on 2026-10-05 and at 18,645 on
+2026-10-06; they had been
 left at 16,271 and 13,081, low
 enough that batches 31 and 32 could both stop registering with CI green.
 Re-record them when a batch lands (`make source-floor-record
@@ -697,6 +700,23 @@ Engine subtleties worth knowing before writing a row:
   it as the byte-identical duplicate it is. Do not widen `id_keys` to "fix" a
   `stored` that is a handful short of `emitted` on a cursor-paged feed —
   measure the upstream first.
+* **A later page that fails is disclosed, not a quiet end** (2026-10-06,
+  `hp_later_page_cut`). After a SHORT page any failure is the end of data.
+  Otherwise transport errors, 3xx/304, 401/403/407, 408, 429, 5xx and an
+  unreadable 200 always mean the walk was cut short, and other 4xx do when the
+  upstream showed more (its total, a next link, a full previous page). A cut
+  walk files a truncation notice naming `failed_page`, `failed_page_status` and
+  `failed_page_url`; VJSON, geojson and `pw_walk` name the same three. A
+  row-declared conditional header goes on page 1 only.
+* **A detail hop carries the row's headers** (token, UA, Accept), minus the
+  POST body's content type. It used to carry none, so a header-authenticated
+  row stored `_detail_error` on every record (PY_AIP: 500 without, 200 with).
+* **XML records keep every field**: repeated children are indexed (`name`,
+  `name.1`, `author.1.name`), text beside children is `<key>.#text`, and
+  whatever the depth (32) / field (`HP_MAX_PROPS`) bounds keep out is counted
+  into `_fields_dropped`. **An HTML link takes its strongest label** (own text
+  > image alt > borrowed text, a label that contains another is kept), the
+  others the page gave it land in `other_labels.N`.
 * A row that declares no paging does ONE request. **`page_walk=1`** (HP_JSON
   only) walks it the way a VJSON collector is walked instead — the server's own
   next link, else the cursor its declared page size pairs with, advanced while
@@ -776,3 +796,20 @@ Tenancy: OSINT records are one shared corpus (tenant `legacy`, uid
 that started it, `/api/intel/items`, `/search` and `/items/:uid` read "this
 tenant + the shared corpus", and `/api/search/results` plus the SSE stream
 answer the owner tenant (or the run's `stream_key`) only.
+
+Workspace = tenant, and **everything a workspace authors is readable by all of
+its members** (decided 2026-10-05): OSINT runs and their syntheses
+(`GET /api/search/runs`), saved searches, search history, case notes. Reads
+carry `user_id` + `mine` and `meta.scope`; `?mine=1` narrows a list (and its
+`total`) to the caller. Edits, deletes and clearing history stay with the
+author. Nothing crosses workspaces — `test_search_runs_workspace.c` and
+`test_saved_search_workspace.c` pin both halves. List routes answer
+`page:{limit,offset,count,total,has_more}`, `total` measured under the same
+filters as the rows.
+
+CORS is an explicit allow-list or nothing: `JO_CORS_ORIGINS` (comma-separated
+exact `scheme://host[:port]`) is echoed with `Vary: Origin` and preflights are
+answered before auth; unset, no CORS header is sent at all. It used to be a
+hard-coded `*` on every reply — a cross-origin deployment of the web client
+(`VITE_API_HOST`) must now set the variable. Local dev goes through the Vite
+proxy and needs nothing.

@@ -1193,6 +1193,15 @@ static const hp_source HP3B19_CYBER[] = {
      * starts with `#`. */
     .csv_comment = "#",
     .csv_no_header = 1,
+    /* Headerless, so the columns are col0..col14 in the banner's order:
+     * first_seen_utc, ioc_id, ioc_value, ioc_type, … The row declared no keys,
+     * so every record keyed on its first scalar — col0, the first_seen
+     * TIMESTAMP — and was titled "ioc-record <timestamp>". Several IOCs share
+     * a second, so the in-page guard content-hashed them apart; but a content
+     * hash moves whenever last_seen or confidence changes, so the same IOC
+     * re-entered as a new row on a later 15-minute run. col1 is ThreatFox's
+     * own ioc_id, unique per indicator (8,742 of 8,742 distinct, 2026-10-06). */
+    .id_keys = "col1", .title_keys = "col2", .date_keys = "col0",
     .interval = 900,
     .description = "Recently reported indicators of compromise with the IOC value "
       "and type, the threat type, the malware family, the confidence "
@@ -1208,6 +1217,17 @@ static const hp_source HP3B19_CYBER[] = {
     .tags = "\"threat\",\"malware\",\"sample\",\"hash\",\"abusech\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://bazaar.abuse.ch/export/csv/recent/",
+    /* The export opens with a `#` banner whose LAST line carries the column
+     * names behind a `# `. Parsed with a header row, the header was the
+     * `####…` rule: every record got one column named sixty-four '#'s plus
+     * col1..col13, the eight remaining banner lines were emitted as records,
+     * and with no keys each sample keyed on its first_seen timestamp (1,079
+     * emitted for 1,070 samples, 2026-10-06). Strip the banner and read it
+     * headerless, as THREATFOX_CSV_RECENT does: col0 first_seen_utc, col1
+     * sha256_hash (the sample's identity), col5 file_name, col8 signature. */
+    .csv_comment = "#",
+    .csv_no_header = 1,
+    .id_keys = "col1", .title_keys = "col5,col1", .date_keys = "col0",
     .interval = 900,
     .description = "Recently submitted malware samples with the SHA256, MD5 and SHA1 "
       "hashes, the reporter, the file name and type, the signature "

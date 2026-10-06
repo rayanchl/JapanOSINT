@@ -8,6 +8,9 @@
  * a question a corporate registry cannot. */
 #include "lib/hpengine.h"
 
+/* sec.gov refuses the default JO_USER_AGENT with 403; see US_SEC_ALJ_ACTIONS. */
+#define SEC_LISTING_UA { "User-Agent: JapanOSINT research contact@japanosint.local", NULL }
+
 static const hp_source HP2_US_REG[] = {
   /* ── Labour & workplace ────────────────────────────────────────────────── */
   { .id = "US_OSHA_INSPECTIONS", .name = "OSHA — workplace inspections & penalties",
@@ -189,21 +192,70 @@ static const hp_source HP2_US_REG[] = {
       "settlement date" },
 
   /* ── Financial & corporate conduct ─────────────────────────────────────── */
-  { .id = "US_SEC_ALJ_ACTIONS", .name = "SEC — administrative proceedings & litigation",
-    .name_ja = "米国SEC — 行政手続/訴訟", .category = "economy",
-    .portal = "https://www.sec.gov", .record_type = "us-sec-enforcement",
+  /* Re-pointed 2026-10-06. This row searched /cgi-srv/srqsb, which answers
+   * HTTP 404 for every query (measured again today). sec.gov now publishes the
+   * three record types that search covered as separate Drupal listings, each
+   * with a free-text filter named `populate` (the exposed-form field; a
+   * `search=` parameter is silently ignored, and so is `populate` on the
+   * listings' /rss twins, which return the latest 25 whatever is asked).
+   * `populate` is honoured: administrative proceedings "Ripple" -> 2 releases,
+   * "zzqqxxnotawordqq" -> "No Results match the chosen filters." Pages are
+   * 100 rows, `page` is 0-based, and a page past the end has no rows.
+   * This row is the administrative proceedings; litigation releases and
+   * trading suspensions are the two rows below. href_must keeps the record
+   * links (the release PDF, named for the respondent) and drops page chrome,
+   * so the upstream's own match is kept whole rather than re-filtered.
+   * sec.gov answers 403 to the fleet's default JO_USER_AGENT (and did to the
+   * dead row too); it serves the declared-contact UA the SEC_* rows in
+   * hp_americas_deep.c already send (SEC_LISTING_UA, top of file). */
+  { .id = "US_SEC_ALJ_ACTIONS", .name = "SEC — administrative proceedings",
+    .name_ja = "米国SEC — 行政手続", .category = "economy",
+    .portal = "https://www.sec.gov/enforcement-litigation/administrative-proceedings",
+    .record_type = "us-sec-enforcement",
     .tags = "\"us\",\"finance\",\"enforcement\"", .type = "scraped", .mode = HP_HTML,
     .free_tier = 1,
-    /* DEAD ENDPOINT. /cgi-srv/srqsb answers HTTP 404 ("Oops! Page Not Found")
-     * for every query (measured 2026-10-02), so this row fetches nothing and
-     * there is no later page to lose. Its replacement on sec.gov is a Drupal
-     * listing whose free-text filter could not be confirmed to filter; the row
-     * needs re-pointing or dropping, which is a separate decision from paging. */
-    .url = "https://www.sec.gov/cgi-srv/srqsb?text={q}&first=1&last=100",  /* exhaustive-ok: endpoint returns 404 for every query (measured 2026-10-02) — dead, not paged */
-    .base = "https://www.sec.gov", .filter_query = 1,
-    .description = "SEC administrative proceedings, litigation releases and "
-      "trading suspensions naming a firm or individual — the enforcement layer "
-      "over the EDGAR filing record" },
+    .url = "https://www.sec.gov/enforcement-litigation/administrative-proceedings?populate={q}",
+    .headers = SEC_LISTING_UA,
+    .base = "https://www.sec.gov", .href_must = "/files/litigation/admin/",
+    .page_param = "page", .page_zero_based = 1, .page_max = 100,
+    .description = "SEC administrative proceedings naming a firm or individual — "
+      "cease-and-desist orders, bars and settled actions, one release per "
+      "respondent with its release number and administrative file number" },
+
+  { .id = "US_SEC_LITIGATION_RELEASES", .name = "SEC — litigation releases",
+    .name_ja = "米国SEC — 訴訟リリース", .category = "economy",
+    .portal = "https://www.sec.gov/enforcement-litigation/litigation-releases",
+    .record_type = "us-sec-enforcement",
+    .tags = "\"us\",\"finance\",\"enforcement\"", .type = "scraped", .mode = HP_HTML,
+    .free_tier = 1,
+    /* See US_SEC_ALJ_ACTIONS. "Terraform" -> 3 releases (LR-25692, LR-25415,
+     * LR-25262), the impossible word -> none; "Capital" fills 100-row pages
+     * 0 and 1 and page 40 is empty. href_must takes the release page and
+     * leaves out the complaint PDFs and the RSS link beside it. */
+    .url = "https://www.sec.gov/enforcement-litigation/litigation-releases?populate={q}",
+    .headers = SEC_LISTING_UA,
+    .base = "https://www.sec.gov", .href_must = "/litigation-releases/lr-",
+    .page_param = "page", .page_zero_based = 1, .page_max = 100,
+    .description = "SEC civil actions in federal court naming a firm or individual "
+      "— one release per case, with the defendants, the charges and the "
+      "judgment, the enforcement layer over the EDGAR filing record" },
+
+  { .id = "US_SEC_TRADING_SUSPENSIONS", .name = "SEC — trading suspensions",
+    .name_ja = "米国SEC — 取引停止", .category = "economy",
+    .portal = "https://www.sec.gov/enforcement-litigation/trading-suspensions",
+    .record_type = "us-sec-enforcement",
+    .tags = "\"us\",\"finance\",\"enforcement\"", .type = "scraped", .mode = HP_HTML,
+    .free_tier = 1,
+    /* See US_SEC_ALJ_ACTIONS. Each suspension row links the order (named for
+     * the issuer) and the suspension release; both are records of it. "Inc"
+     * runs to page 10 (19 links) and page 11 is empty. */
+    .url = "https://www.sec.gov/enforcement-litigation/trading-suspensions?populate={q}",
+    .headers = SEC_LISTING_UA,
+    .base = "https://www.sec.gov", .href_must = "/files/litigation/suspensions/",
+    .page_param = "page", .page_zero_based = 1, .page_max = 100,
+    .description = "SEC orders suspending trading in an issuer's securities — "
+      "typically for stale filings, unverifiable claims or suspected "
+      "manipulation; a suspended ticker is a standing red flag" },
 
   { .id = "US_FINRA_BROKERCHECK", .name = "FINRA BrokerCheck — broker & firm record",
     .name_ja = "米国FINRA — 業者/個人照会", .category = "economy",

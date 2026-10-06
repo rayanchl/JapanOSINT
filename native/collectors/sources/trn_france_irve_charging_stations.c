@@ -3,8 +3,9 @@
  *           bornes-irve/records?limit=100&offset=<n>
  * Emits: one intel row per charge point — nom_station, nom_operateur,
  * nom_amenageur, id_station_itinerance and id_pdc_itinerance, adresse_station,
- * code_insee_commune, nbre_pdc and implantation_station, pinned on the site's
- * own published coordinates. Keyless.
+ * code_insee_commune, nbre_pdc and implantation_station under readable names,
+ * plus every column of the record verbatim, pinned on the site's own
+ * published coordinates. Keyless.
  * Licence: Open Data Réseaux Énergies (ODRE), Licence Ouverte / Open Licence
  * (Etalab) v2.0.
  *
@@ -23,7 +24,7 @@
  * 231k-row dataset in one run.
  */
 #include "lib/jocore.h"
-#include "lib/seenset.h"
+#include "lib/keyqual.h"
 #include "trn_common.inc"
 
 #define IRVE_BASE "https://odre.opendatasoft.com/api/explore/v2.1/catalog/" \
@@ -57,7 +58,16 @@ static int irve_coords(const cJSON *rec, double *lat, double *lon) {
   return 1;
 }
 
-static int emit_page(intel_sink *sink, cJSON *doc, seen_set *pdc_seen) {
+/* The record's base key: the charge-point roaming id, else the station's,
+ * else the station name. NULL for a row carrying none of the three. */
+static const char *irve_base(const cJSON *r) {
+  const char *k = jo_sv(r, "id_pdc_itinerance");
+  if (!k) k = jo_sv(r, "id_station_itinerance");
+  if (!k) k = jo_sv(r, "nom_station");
+  return k;
+}
+
+static int emit_page(intel_sink *sink, cJSON *doc, keyqual *kq, int *folded) {
   int n = 0;
   cJSON *r;
   cJSON_ArrayForEach(r, cJSON_GetObjectItem(doc, "results")) {
@@ -65,7 +75,17 @@ static int emit_page(intel_sink *sink, cJSON *doc, seen_set *pdc_seen) {
     const char *sta = jo_sv(r, "id_station_itinerance");
     const char *nom = jo_sv(r, "nom_station");
     const char *res = jo_sv(r, "datagouv_resource_id");
-    if (!pdc && !sta && !nom) continue;
+    const char *base = irve_base(r);
+    if (!base) continue;
+
+    char keybuf[512];
+    const char *rk = base;
+    if (keyqual_count(kq, base) > 1) {
+      char *raw = cJSON_PrintUnformatted(r);
+      rk = keyqual_uid(kq, base, res, raw ? raw : "", keybuf, sizeof keybuf);
+      free(raw);
+      if (!keyqual_claim(kq, base, rk)) { (*folded)++; continue; }
+    }
 
     cJSON *pr = cJSON_CreateObject();
     trn_put_str(pr, "station_name", nom);
@@ -80,6 +100,16 @@ static int emit_page(intel_sink *sink, cJSON *doc, seen_set *pdc_seen) {
     trn_put_num(pr, "charge_point_count", r, "nbre_pdc");
     trn_put_num(pr, "power_kw", r, "puissance_nominale");
     trn_put_str(pr, "date_mise_en_service", jo_sv(r, "date_mise_en_service"));
+    /* ...and every column the record carried, verbatim (house rule 2). The
+     * names above are a view; the record has 55 (2026-10-06): connector types,
+     * payment and pricing, access conditions and opening hours, PMR access,
+     * grid connection and PDL number, the operator's contact and phone, the
+     * consolidated (corrected) coordinates and commune, last_modified … which
+     * were fetched and dropped. JSON nulls are skipped. */
+    for (const cJSON *f = r->child; f; f = f->next) {
+      if (!f->string || cJSON_IsNull(f) || cJSON_GetObjectItem(pr, f->string)) continue;
+      cJSON_AddItemToObject(pr, f->string, cJSON_Duplicate(f, 1));
+    }
     char *pj = cJSON_PrintUnformatted(pr);
 
     char title[320], summary[256];
@@ -92,33 +122,6 @@ static int emit_page(intel_sink *sink, cJSON *doc, seen_set *pdc_seen) {
     else summary[0] = 0;
 
     intel_item it = {0};
-    /* Identity: the upstream's own charge-point roaming id — EXCEPT when that id
-     * already appeared earlier in this run. The consolidated national file is a
-     * union of per-submitter data.gouv resources, and one id_pdc_itinerance
-     * recurs across resources as DIFFERENT rows. Measured 2026-09-15 on the
-     * 10,000 records this walk reads: 10,000 byte-distinct rows but 9,463
-     * distinct pdc ids; the worst id's three rows differ in operator, site
-     * owner, station id and station name; id_pdc_itinerance +
-     * datagouv_resource_id is unique on all 10,000. Keying on the pdc id alone
-     * (emitted 10,000, stored 9,463) kept one submitter's row and silently
-     * discarded the rest. A first occurrence keeps its plain id, so rows already
-     * stored keep their uid; a repeat is qualified by its data.gouv resource
-     * (or, lacking one, by a hash of the row's own bytes). */
-    char keybuf[256];
-    const char *rk = pdc ? pdc : (sta ? sta : nom);
-    if (pdc && !seen_add(pdc_seen, pdc)) {
-      if (res) {
-        snprintf(keybuf, sizeof keybuf, "%s|%s", pdc, res);
-      } else {
-        char *raw = cJSON_PrintUnformatted(r);
-        const char *parts[1] = { raw ? raw : "" };
-        char h[21];
-        feed_hash_key(h, parts, 1);
-        snprintf(keybuf, sizeof keybuf, "%s|%s", pdc, h);
-        free(raw);
-      }
-      rk = keybuf;
-    }
     it.remote_key      = rk;
     it.title           = title;
     it.summary         = summary[0] ? summary : NULL;
@@ -136,9 +139,11 @@ static int emit_page(intel_sink *sink, cJSON *doc, seen_set *pdc_seen) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int n = 0, ok = 0, rows = 0, last_full = 0;
+  int n = 0, ok = 0, rows = 0, last_full = 0, folded = 0;
   long available = -1;
-  seen_set pdc_seen = {0};
+  /* Every page is held until the walk ends: the key census below must cover
+   * all of them before the first uid is decided. ~10,000 rows, a few MB. */
+  cJSON *pages = cJSON_CreateArray();
   for (int off = 0; off <= IRVE_MAX_OFFSET; off += 100) { /* exhaustive-ok: ODS refuses offset+limit > 10000; the unread remainder of total_count is disclosed below */
     char url[320];
     snprintf(url, sizeof url, "%s%d", IRVE_BASE, off);
@@ -149,16 +154,40 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (cJSON_IsNumber(tc)) available = (long)tc->valuedouble;
     int got = cJSON_GetArraySize(cJSON_GetObjectItem(doc, "results"));
     rows += got;
-    n += emit_page(sink, doc, &pdc_seen);
-    cJSON_Delete(doc);
+    cJSON_AddItemToArray(pages, doc);
     last_full = (got >= 100);
     if (got < 100) break;                    /* last page */
   }
-  seen_free(&pdc_seen);
   if (!ok) {
+    cJSON_Delete(pages);
     fprintf(stderr, "[" IRVE_ID "] fetch/parse failed\n");
     return -1;
   }
+
+  /* IDENTITY. The upstream's own charge-point roaming id is the key — but the
+   * consolidated national file is a union of per-submitter data.gouv
+   * resources, and one id_pdc_itinerance recurs across resources as
+   * DIFFERENT rows (measured 2026-09-15 on the 10,000 records this walk
+   * reads: 10,000 byte-distinct rows, 9,463 distinct pdc ids; the worst id's
+   * three rows differ in operator, site owner, station id and station name;
+   * id_pdc_itinerance + datagouv_resource_id is unique on all 10,000). Pass 1
+   * counts every key over the WHOLE walk; pass 2 qualifies EVERY row of a
+   * repeated id by its data.gouv resource, falling back to a hash of the row.
+   * It used to be first-come-plain: the plain id went to whichever
+   * submitter's row this walk — which carries no order_by — met first, so a
+   * re-ordered walk stored one operator's charge point under another's uid.
+   * See lib/keyqual.h. */
+  keyqual kq = {0};
+  cJSON *pg, *r;
+  cJSON_ArrayForEach(pg, pages)
+    cJSON_ArrayForEach(r, cJSON_GetObjectItem(pg, "results")) {
+      const char *b = irve_base(r);
+      if (b) keyqual_add(&kq, b, jo_sv(r, "datagouv_resource_id"));
+    }
+  keyqual_seal(&kq);
+  cJSON_ArrayForEach(pg, pages) n += emit_page(sink, pg, &kq, &folded);
+  keyqual_free(&kq);
+  cJSON_Delete(pages);
   /* The records endpoint cannot page past offset 10,000, and the registry is
    * ~227,000 charge points (total_count, 2026-09-15). Say so in-band rather than
    * letting 10,000 read as the whole registry. */
@@ -169,8 +198,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       "the dataset's bulk export (/exports/json or /exports/csv on the same "
       "dataset) carries every row in one request", NULL);
   }
-  fprintf(stderr, "[" IRVE_ID "] emitted %d of %d rows read (%ld declared)\n",
-          n, rows, available);
+  fprintf(stderr, "[" IRVE_ID "] emitted %d of %d rows read (%ld declared; %d "
+          "byte-identical repeats folded)\n", n, rows, available, folded);
   return 0;
 }
 

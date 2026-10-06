@@ -4,7 +4,8 @@ import { LuExternalLink, LuDownload, LuShieldCheck, LuEye } from 'react-icons/lu
 import { api } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
 import { useAuth } from '../../auth/AuthContext.jsx';
-import { Page, Section, Pill, Button, ErrorNotice, LoadingState, KV, Segmented, BoundNote, CopyButton, cx, toast } from '../ui/kit.jsx';
+import { Page, Section, Pill, Button, ErrorNotice, LoadingState, KV, Segmented, BoundNote, PagedFooter, CopyButton, cx, toast } from '../ui/kit.jsx';
+import { usePagedList } from '../../hooks/usePagedList.js';
 import SaveStarButton from '../saved/SaveStarButton.jsx';
 import PinToCaseButton from '../cases/CasePickerSheet.jsx';
 import AnnotationsSection from './AnnotationsSection.jsx';
@@ -189,11 +190,19 @@ function MediaSection({ uid }) {
   );
 }
 
-function EvidenceSection({ uid }) {
+/** Blob presence over the rows loaded so far (the server's meta.present /
+ * meta.evicted describe one page only — meta.present_scope says so). */
+export function evidencePresence(rows) {
+  let present = 0;
+  for (const r of rows) if (r?.blob_present) present += 1;
+  return { present, evicted: rows.length - present };
+}
+
+export function EvidenceSection({ uid }) {
   const auth = useAuth();
-  const { data, error, loading, reload } = useApi(`/api/intel/items/${encodeURIComponent(uid)}/evidence`, { deps: [uid] });
-  const rows = Array.isArray(data?.data) ? data.data : [];
-  const m = data?.meta;
+  const list = usePagedList(`/api/intel/items/${encodeURIComponent(uid)}/evidence`, { pageSize: 100, deps: [uid] });
+  const { rows, error, loading, loaded, reload } = list;
+  const presence = evidencePresence(rows);
   const [verify, setVerify] = useState(null);
   const [verifying, setVerifying] = useState(false);
   const [dl, setDl] = useState({});
@@ -223,17 +232,17 @@ function EvidenceSection({ uid }) {
     finally { setVerifying(false); }
   };
 
-  if (!loading && !error && rows.length === 0) {
+  if (loaded && !loading && !error && rows.length === 0) {
     return <Section label="Evidence"><div className="text-xs text-osint-muted">No captured evidence for this record. Capture is enabled per source under Console → Admin.</div></Section>;
   }
   return (
     <Section label="Evidence (chain of custody)" right={(
       <span className="flex items-center gap-2">
-        {m && <span className="font-mono text-[10px] text-osint-muted">{m.present} present · {m.evicted} evicted</span>}
+        {loaded && rows.length > 0 && <span className="font-mono text-[10px] text-osint-muted">{presence.present} present · {presence.evicted} evicted{list.hasMore ? ` (of ${rows.length} loaded)` : ''}</span>}
         {auth.isPlatformAdmin && <Button size="sm" busy={verifying} onClick={runVerify}><LuShieldCheck size={12} /> Verify chain</Button>}
       </span>
     )}>
-      {loading && <LoadingState label="Loading evidence…" />}
+      {loading && !loaded && <LoadingState label="Loading evidence…" />}
       {error && <ErrorNotice error={error} title="Could not load evidence" onRetry={reload} />}
       {verify?.error && <ErrorNotice error={verify.error} title="Verification failed" />}
       {verify && !verify.error && (
@@ -258,10 +267,8 @@ function EvidenceSection({ uid }) {
           </li>
         ))}
       </ul>
-      {/* The server returns at most page.limit rows with no cursor and no
-        * total (evidence.c), so a full page is all that can be said. */}
-      {data?.page && rows.length >= data.page.limit && (
-        <div className="mt-1 text-[11px] text-accent font-mono">{rows.length} evidence rows shown — the server returns at most {data.page.limit} and offers no paging, so older rows may exist and are not listed.</div>
+      {loaded && rows.length > 0 && (
+        <PagedFooter className="mt-1" shown={rows.length} total={list.total} hasMore={list.hasMore} busy={list.loadingMore} onMore={list.loadMore} error={list.moreError} noun="custody records" />
       )}
     </Section>
   );
