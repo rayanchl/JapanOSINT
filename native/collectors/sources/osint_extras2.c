@@ -108,7 +108,28 @@ static int run_sec_fulltext(const source_ctx *ctx, intel_sink *sink, const char 
       cJSON_AddStringToObject(d, "source", "SEC EDGAR FTS");
       cJSON *p = cJSON_CreateObject();
       char title[256]; snprintf(title, sizeof title, "%s%s%s", disp ? disp : "SEC filing", form ? " · " : "", form ? form : "");
-      n += oe2_emit(sink, "SEC_FULLTEXT", "sec-filing", hid, title, fdate, "https://www.sec.gov/cgi-bin/srqsb", d, p, 0, 0, 0);
+      /* Every hit used to link to https://www.sec.gov/cgi-bin/srqsb, a
+       * search page that answers 404 (2026-10-06). The hit's own _id is
+       * "<accession>:<file>" and _source.ciks names the filer, which is the
+       * document's EDGAR archive path; without both, the EDGAR full-text
+       * search page for the same query. */
+      char link[512];
+      const char *colon = strchr(hid, ':');
+      const cJSON *ciks = src ? cJSON_GetObjectItem(src, "ciks") : NULL;
+      const cJSON *cik0 = cJSON_IsArray(ciks) ? cJSON_GetArrayItem(ciks, 0) : NULL;  /* exhaustive-ok: archive path needs one filer; the record keeps them all in filers_all */
+      if (colon && colon > hid && colon[1] && cJSON_IsString(cik0) && cik0->valuestring[0]) {
+        char adsh[64]; size_t al = 0;
+        for (const char *c = hid; c < colon && al + 1 < sizeof adsh; c++)
+          if (*c != '-') adsh[al++] = *c;
+        adsh[al] = 0;
+        const char *cik = cik0->valuestring;
+        while (*cik == '0' && cik[1]) cik++;
+        snprintf(link, sizeof link, "https://www.sec.gov/Archives/edgar/data/%s/%s/%s",
+                 cik, adsh, colon + 1);
+      } else {
+        snprintf(link, sizeof link, "https://www.sec.gov/edgar/search/#/q=%s", enc);
+      }
+      n += oe2_emit(sink, "SEC_FULLTEXT", "sec-filing", hid, title, fdate, link, d, p, 0, 0, 0);
       /* (cap removed: every record of the fetched array is emitted —
        * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
