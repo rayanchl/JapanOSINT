@@ -1025,6 +1025,12 @@ typedef struct {
    * honest empty) can be applied to it unchanged. */
   int   upstream_error;
   long  err_code;
+  /* The response was HTTP 200 but its body could not be read in the row's
+   * declared mode at all (a JSON row handed an HTML error or challenge page).
+   * On page 1 that is the honest empty it always was; on a LATER page it is a
+   * page that did not deliver its records, and hp_run judges it exactly as it
+   * judges a page that answered an error status. */
+  int   unreadable;
   /* page_walk rows only (see hpengine.h): the next URL jsonlist_next_page()
    * chose for the page just read, and whether it stopped at a full page. */
   int   pw;
@@ -1650,7 +1656,11 @@ static int hp_json_error_doc(cJSON *doc, char *msg, size_t cap, long *code) {
 static int hp_run_json(hp_run_state *st, const char *body) {
   const hp_source *s = st->s;
   cJSON *doc = cJSON_Parse(body);
-  if (!doc) { fprintf(stderr, "[hp:%s] non-JSON body\n", s->id); return 0; }
+  if (!doc) {
+    fprintf(stderr, "[hp:%s] non-JSON body\n", s->id);
+    st->unreadable = 1;
+    return st->emitted;
+  }
 
   cJSON *arr = NULL;
   /* Set when `arr` is a hp_path_multi() reference wrapper rather than a node
@@ -3245,6 +3255,91 @@ static void hp_shape_notices(hp_run_state *st, intel_sink *sink,
   }
 }
 
+/* A conditional request header. The engine itself sends none — there is no
+ * etag or last-modified cache anywhere in the fetch path — but a row may
+ * declare one, and if it does it belongs to the FIRST request of a run only:
+ * a later page carrying it can be answered 304, which has no body and no
+ * records, and the walk would lose every page from there on. */
+static int hp_header_is_conditional(const char *h) {
+  static const char *const names[] = { "If-None-Match:", "If-Modified-Since:",
+    "If-Match:", "If-Unmodified-Since:", "If-Range:", NULL };
+  for (int i = 0; h && names[i]; i++)
+    if (!strncasecmp(h, names[i], strlen(names[i]))) return 1;
+  return 0;
+}
+
+/* A page AFTER the first did not deliver records: it answered a status other
+ * than 200, failed in transport (`status` -1), or came back 200 with a body
+ * that could not be read (`status` 200). Does that mean the upstream ran out
+ * of data, or that the walk was cut short? The ruling, in order:
+ *
+ *   1. The previous page was SHORT: the upstream already said it had
+ *      finished, so whatever the next request met is past the end. EPA
+ *      Envirofacts answers a range past its last row with HTTP 500; plenty of
+ *      servers answer 404 or 400.
+ *   2. Statuses that never mean "no more data" — the request was not
+ *      answered, it was refused or deferred: transport failure, any 3xx
+ *      (curl follows redirects, so one that reaches us is a loop or has no
+ *      Location), 304 (we sent no condition, so a cache is answering for a
+ *      page it never fetched), 401/403/407, 408, 429, 5xx, and a 200 whose
+ *      body is unreadable. A collection does not end in Forbidden.
+ *   3. The rest of 4xx (400, 404, 410, 416, 422 …) is how many servers say
+ *      "past the last page". It is still a walk cut short when the upstream
+ *      gave evidence that more exists — its own total is larger than what
+ *      was read, it published the link to the page that failed, or the
+ *      previous page came back FULL. A full page followed by a 400 is the
+ *      signature of a deep-paging limit (Elasticsearch's 10,000-record
+ *      window, GitHub's 1,000-result search), which is a silent discard if
+ *      it is read as the end. Only a collection ending exactly on a page
+ *      boundary looks the same, and the notice says so.
+ *
+ * `prev_full`/`prev_short` are both 0 when the page size is unknown (the
+ * second request of a walk that declared none). Returns 1 for "cut short". */
+static int hp_later_page_cut(long status, int prev_short, int prev_full,
+                             int link_given, long declared_total, long fetched) {
+  if (prev_short) return 0;
+  if (status < 0 || status == 200 || (status >= 300 && status < 400) ||
+      status == 401 || status == 403 || status == 407 || status == 408 ||
+      status == 429 || status >= 500)
+    return 1;
+  if (declared_total >= 0) return declared_total > fetched;
+  return prev_full || link_given;
+}
+
+/* The reason a cut-short walk files, by what the failing page answered. */
+static void hp_cut_reason(long status, int unreadable, char *out, size_t cap) {
+  if (status < 0)
+    snprintf(out, cap, "a later page failed at the transport level, so the walk "
+             "stopped before the upstream ran out");
+  else if (unreadable)
+    snprintf(out, cap, "a later page answered HTTP 200 with a body that could "
+             "not be read in this row's declared mode (an error or challenge "
+             "page), so its records were never delivered");
+  else if (status == 304)
+    snprintf(out, cap, "a later page answered HTTP 304 Not Modified to a request "
+             "that carried no conditional header (a cache or proxy answering for "
+             "a page it never fetched); a 304 has no body, so the walk stopped "
+             "before the upstream ran out");
+  else if (status >= 300 && status < 400)
+    snprintf(out, cap, "a later page answered a redirect (HTTP %ld) that could "
+             "not be followed, so the walk stopped before the upstream ran out",
+             status);
+  else if (status == 429)
+    snprintf(out, cap, "a later page was refused with HTTP 429 (rate limited), "
+             "so the walk stopped before the upstream ran out");
+  else if (status == 401 || status == 403 || status == 407)
+    snprintf(out, cap, "a later page was refused with HTTP %ld, so the walk "
+             "stopped before the upstream ran out", status);
+  else if (status == 408 || status >= 500)
+    snprintf(out, cap, "a later page answered a server error (HTTP %ld), so the "
+             "walk stopped before the upstream ran out", status);
+  else
+    snprintf(out, cap, "a later page answered HTTP %ld although the upstream had "
+             "given evidence of more (a full previous page, its own total, or a "
+             "next link): either a deep-paging limit refused the rest, or the "
+             "collection ends exactly on a page boundary", status);
+}
+
 static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   const hp_source *s = hp_lookup(ctx->source_id);
   if (!s) return -1;
@@ -3394,11 +3489,39 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
    * producing records (or the page ceiling bites, which is stamped, not
    * silent). Rows that declare no paging do exactly one request, as before. */
   int out = 0, hard_error = 0;
-  /* A LATER page failing in a way that cannot mean "no more data": transport
-   * failure, HTTP 429, HTTP 5xx (or an in-body error carrying those codes).
-   * Plain 4xx past the last page is a common end-of-data signal and stays one. */
+  /* A LATER page that did not deliver its records, judged by
+   * hp_later_page_cut(): either the upstream's end of data (silent, as it
+   * should be) or a walk cut short, which is disclosed with the status, the
+   * page and the URL that failed. It used to be cut short only on 429/5xx; a
+   * 304, a 403, an unreadable body or a deep-paging 400 ended the walk with
+   * rc=0 and no notice, indistinguishable from a complete collection. */
   int failed_midwalk = 0;
   long failed_status = 0;           /* -1 = transport failure */
+  int failed_unreadable = 0;        /* the failing page was a 200 we could not read */
+  int failed_page = 0;              /* 1-based page that failed */
+  char *failed_url = NULL;          /* the URL it was asked at */
+  /* The headers a LATER page is sent with: the row's own, minus any
+   * conditional header (see hp_header_is_conditional). `nocache_hdrs` adds
+   * Cache-Control/Pragma for the one retry a 304 to an unconditional request
+   * earns — it asks every cache on the path to go back to the origin. */
+  const char *later_hdrs[12], *nocache_hdrs[14];
+  int first_conditional = 0;
+  {
+    int nl = 0, has_cc = 0;
+    for (int i = 0; i < nh; i++) {
+      if (hp_header_is_conditional(hdrs[i])) { first_conditional = 1; continue; }
+      if (!strncasecmp(hdrs[i], "Cache-Control:", 14)) has_cc = 1;
+      later_hdrs[nl++] = hdrs[i];
+    }
+    later_hdrs[nl] = NULL;
+    int nn = 0;
+    for (int i = 0; i < nl; i++) nocache_hdrs[nn++] = later_hdrs[i];
+    if (!has_cc) {
+      nocache_hdrs[nn++] = "Cache-Control: no-cache";
+      nocache_hdrs[nn++] = "Pragma: no-cache";
+    }
+    nocache_hdrs[nn] = NULL;
+  }
   int page_max = s->page_max > 0 ? s->page_max : HP_PAGE_MAX_DEF;
   /* A `{page}` token left in the URL after entity expansion is path-segment
    * paging: the upstream numbers its pages in the path (kanpou.ai's
@@ -3478,34 +3601,71 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
    * st.page_records is reset at the top of every page, so by the time the
    * repeat test runs it no longer holds the previous page's number. */
   int first_page_records = 0, prev_page_records = 0;
+  /* The URL about to be fetched came from the upstream's own evidence that
+   * more exists: a next link or cursor it published (next_path), or
+   * jsonlist_next_page()'s decision for a page_walk row. */
+  int next_evidence = 0;
   for (int page = 0; page < page_max && page_url; page++) {
     st.page = page + 1;
     st.url  = page_url;
     st.prev_url = prev_url;
     st.page_records = 0;
+    st.unreadable = 0;
+
+    /* Was the page before this one short or full? The yardstick is the
+     * row's declared page size, else page 1's own count — which can only
+     * judge pages after the second request; before that both stay 0
+     * ("unknown"). See hp_later_page_cut(). */
+    int prev_short = 0, prev_full = 0;
+    if (page > 0) {
+      int yard = s->page_size > 0 ? s->page_size
+               : page >= 2 ? first_page_records : 0;
+      if (yard > 0) {
+        prev_short = prev_page_records < yard;
+        prev_full  = !prev_short;
+      }
+    }
 
     http_response hr = {0};
-    int rc = http_request(ctx->http, body ? "POST" : "GET", page_url, hdrs,
+    const char *const *req_hdrs = page > 0 ? later_hdrs : hdrs;
+    int rc = http_request(ctx->http, body ? "POST" : "GET", page_url, req_hdrs,
                           body, body ? strlen(body) : 0,
                           s->timeout_ms > 0 ? s->timeout_ms : HP_HTTP_TIMEOUT,
                           1, &hr);
-    if (rc != 0) {
-      fprintf(stderr, "[hp:%s] transport failure %s\n", s->id, page_url);
-      if (page == 0) hard_error = 1;
-      else { failed_midwalk = 1; failed_status = -1; }
+    /* 304 to a request that carried no condition is not the upstream's
+     * answer: a cache on the path is answering for a page it never fetched.
+     * One retry asks every cache to go back to the origin. */
+    if (rc == 0 && hr.status == 304 && (page > 0 || !first_conditional)) {
+      fprintf(stderr, "[hp:%s] page %d answered 304 to an unconditional request "
+              "— retrying once with Cache-Control: no-cache\n", s->id, page + 1);
       http_response_free(&hr);
-      break;
+      hr = (http_response){0};
+      rc = http_request(ctx->http, body ? "POST" : "GET", page_url, nocache_hdrs,
+                        body, body ? strlen(body) : 0,
+                        s->timeout_ms > 0 ? s->timeout_ms : HP_HTTP_TIMEOUT,
+                        1, &hr);
     }
-    if (hr.status != 200 || !hr.body) {
-      fprintf(stderr, "[hp:%s] status=%ld %s\n", s->id, hr.status, page_url);
-      if (hr.status >= 500 && page == 0) hard_error = 1;
-      /* A later page refused with 429 or 5xx is a walk cut short, not the end
-       * of the collection. It used to break here in silence: the Democracy
-       * Club rows met 429 after a few pages and kept 2-14% of their records
-       * with no notice (measured by batch-29 agent B, 2026-09-15). */
-      if (page > 0 && (hr.status == 429 || hr.status >= 500)) {
-        failed_midwalk = 1;
-        failed_status = hr.status;
+    if (rc != 0 || hr.status != 200 || !hr.body) {
+      long fst = rc != 0 ? -1 : hr.status;
+      if (rc != 0) fprintf(stderr, "[hp:%s] transport failure %s\n", s->id, page_url);
+      else         fprintf(stderr, "[hp:%s] status=%ld %s\n", s->id, hr.status, page_url);
+      /* Page 1: a dead endpoint is a hard error; a 304 nobody asked for is
+       * one too (the source was not actually checked); anything else is the
+       * honest empty it always was. */
+      if (page == 0 && (fst < 0 || fst >= 500 || (fst == 304 && !first_conditional)))
+        hard_error = 1;
+      if (page > 0) {
+        if (hp_later_page_cut(fst, prev_short, prev_full, next_evidence,
+                              st.declared_total, (long)st.available)) {
+          failed_midwalk = 1;
+          failed_status = fst;
+          failed_page = page + 1;
+          failed_url = strdup(page_url);
+        } else {
+          fprintf(stderr, "[hp:%s] page %d answered %ld after %s — end of data, "
+                  "not a failed walk\n", s->id, page + 1, fst,
+                  prev_short ? "a short page" : "no evidence of more");
+        }
       }
       http_response_free(&hr);
       break;
@@ -3619,6 +3779,12 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     }
     free(xcsv);
     free(utf8);
+    /* The run's running total, whatever the mode driver returned: an early
+     * exit inside one (an unreadable page, a CSV that parsed to nothing)
+     * returned 0, and a LATER page doing that rewrote `out` — the run line
+     * and the truncation notice then said 0 records were used while the sink
+     * held every record of the earlier pages. */
+    out = st.emitted;
     /* The inflated ZIP entry — up to JO_ZIP_MAX_OUT (256 MB) per page, and it
      * was never freed: 30 runs of a row serving a 2 MB entry held 60 MB. */
     free(unz);
@@ -3668,11 +3834,27 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
      * the difference between "this source found nothing" and "this source was
      * not actually checked", and collapsing the two is what house rule 1 is
      * about. Either way nothing is STORED, which is the part that matters. */
-    if (st.upstream_error) {
+    /* A LATER page whose 200 could not be read at all is judged the same way:
+     * a page that did not deliver its records. An error document keeps the
+     * code it carried for the ruling (a `{"error":{"code":404}}` after a short
+     * page is still the end); one with no code is judged as unreadable. */
+    if (st.upstream_error || (st.unreadable && page > 0)) {
       if (page == 0 && (st.err_code < 0 || st.err_code >= 500)) hard_error = 1;
-      if (page > 0 && (st.err_code == 429 || st.err_code >= 500)) {
-        failed_midwalk = 1;
-        failed_status = st.err_code;
+      if (page > 0) {
+        int unread = !st.upstream_error || st.err_code <= 0;
+        long fst = unread ? 200 : st.err_code;
+        if (hp_later_page_cut(fst, prev_short, prev_full, next_evidence,
+                              st.declared_total, (long)st.available)) {
+          failed_midwalk = 1;
+          failed_status = fst;
+          failed_unreadable = unread;
+          failed_page = page + 1;
+          failed_url = strdup(page_url);
+        } else {
+          fprintf(stderr, "[hp:%s] page %d's body was an error report (%ld) "
+                  "after %s — end of data, not a failed walk\n", s->id,
+                  page + 1, fst, prev_short ? "a short page" : "no evidence of more");
+        }
       }
       break;
     }
@@ -3683,6 +3865,7 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     if (st.page_records <= 0) break;
 
     char *nextp = NULL;
+    next_evidence = st.next_url != NULL || page_walk;
     if (st.next_url) {                       /* server-provided next link */
       if (s->next_tmpl && *s->next_tmpl) {
         /* The upstream handed back a cursor, not a URL. Build the continuation
@@ -3749,10 +3932,14 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
       snprintf(emptynote, sizeof emptynote,
                " [%d empty, %d duplicate, %d filtered out, %d refused by sink%s]",
                st.empty, st.duplicate, st.filtered, st.refused, malnote);
+    char failnote[96] = "";
+    if (failed_midwalk)
+      snprintf(failnote, sizeof failnote,
+               " (TRUNCATED: a later page failed — page %d answered %ld%s)",
+               failed_page, failed_status, failed_unreadable ? ", unreadable" : "");
     fprintf(stderr, "[hp:%s] emitted %d of %d available across %d page(s)%s%s\n",
             s->id, out, real_available, st.page,
-            st.truncated ? " (TRUNCATED)"
-                         : failed_midwalk ? " (TRUNCATED: a later page failed)" : "",
+            st.truncated ? " (TRUNCATED)" : failnote,
             emptynote);
   }
 
@@ -3792,25 +3979,26 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
       cJSON_AddNumberToObject(p, "empty_slots_skipped", st.empty);
     if (st.malformed > 0)
       cJSON_AddNumberToObject(p, "unreadable_lines_skipped", st.malformed);
-    cJSON_AddNumberToObject(p, "pages_read", st.page);
+    /* Pages that DELIVERED records: the failing request is not one of them. */
+    cJSON_AddNumberToObject(p, "pages_read",
+                            failed_midwalk && failed_page > 0 ? failed_page - 1 : st.page);
     cJSON_AddBoolToObject(p, "more_pages_pending",
                           failed_midwalk || pw_stuck || avail <= (long)out);
     cJSON_AddNumberToObject(p, "declared_max_items", s->max_items);
-    if (failed_midwalk)
+    char cutwhy[400] = "";
+    if (failed_midwalk) {
+      cJSON_AddNumberToObject(p, "failed_page", failed_page);
       cJSON_AddNumberToObject(p, "failed_page_status", (double)failed_status);
+      if (failed_unreadable) cJSON_AddBoolToObject(p, "failed_page_unreadable", 1);
+      cJSON_AddStringToObject(p, "failed_page_url", failed_url ? failed_url : "");
+      hp_cut_reason(failed_status, failed_unreadable, cutwhy, sizeof cutwhy);
+    }
     cJSON_AddStringToObject(p, "reason",
       st.malformed && !st.truncated && !failed_midwalk
         ? "some lines of this NDJSON feed were not valid JSON; the records "
           "around them were used and these were not"
       : failed_midwalk
-        ? (failed_status == 429
-             ? "a later page was refused with HTTP 429 (rate limited), so the "
-               "walk stopped before the upstream ran out"
-             : failed_status < 0
-               ? "a later page failed at the transport level, so the walk "
-                 "stopped before the upstream ran out"
-               : "a later page answered a server error, so the walk stopped "
-                 "before the upstream ran out")
+        ? cutwhy
       : (s->max_items > 0 && out >= s->max_items)
         ? "the row declares max_items and the upstream offered more"
       : st.truncated
@@ -3827,6 +4015,16 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
       st.malformed && !st.truncated && !failed_midwalk
         ? "re-run; if the same lines fail again the upstream feed itself is "
           "malformed and the row should be re-pointed or retired"
+      : failed_midwalk && failed_status == 304
+        ? "re-run; the engine sends no conditional header on a later page and "
+          "already retried with Cache-Control: no-cache, so a 304 that survives "
+          "that is a cache or proxy in front of the upstream answering for it"
+      : failed_midwalk && failed_status >= 400 && failed_status < 500 &&
+        failed_status != 401 && failed_status != 403 && failed_status != 407 &&
+        failed_status != 408 && failed_status != 429
+        ? "check whether the upstream caps how deep it pages; if it does, "
+          "narrow each request (a date window or a filter) so every slice fits "
+          "under the cap — see docs/SOURCE_EXHAUSTIVENESS.md"
       : failed_midwalk
         ? "re-run; a rate-limited host needs a per-host minimum gap "
           "(core/hostgate.c) — see docs/SOURCE_EXHAUSTIVENESS.md"
@@ -3837,8 +4035,12 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     char key[320], title[256];
     snprintf(key, sizeof key, "%.150s|truncation:%.120s", s->id,
              vars.raw ? vars.raw : "");
-    snprintf(title, sizeof title, "%s used %d of %ld available records",
-             s->id, out, avail);
+    if (failed_midwalk)
+      snprintf(title, sizeof title, "%s used %d of %ld available records — "
+               "page %d answered %ld", s->id, out, avail, failed_page, failed_status);
+    else
+      snprintf(title, sizeof title, "%s used %d of %ld available records",
+               s->id, out, avail);
     intel_item note = {0};
     note.remote_key      = key;
     note.title           = title;
@@ -3854,6 +4056,7 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
    * ADDITION to whatever the walk found, never instead of it. */
   hp_shape_notices(&st, sink, &vars, out, page_max);
 
+  free(failed_url);
   for (int i = 0; i < nh; i++) free(hdr_store[i]);
   free(url);
   free(body);

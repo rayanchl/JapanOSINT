@@ -13,6 +13,7 @@
  * are covered too. */
 #include "../lib/hpengine.h"
 #include "../lib/jsonlist.h"
+#include "../lib/feedlib.h"
 #include "../lib/csv.h"
 #include "../core/httpclient.h"
 #include "../third_party/cJSON.h"
@@ -78,9 +79,18 @@ static char g_last_url[2048];
 static char g_last_body[2048];
 static char g_last_hdrs[1024];
 static int  g_ncalls = 0;
+/* The headers of EACH call, in order — a later page's request must be checked
+ * on its own, and g_last_hdrs only ever holds the final one. */
+static char g_call_hdrs[16][512];
+/* A fixture status that answers 304 Not Modified (no body) unless the request
+ * carries `Cache-Control: no-cache`, and then 200 with the fixture's body: a
+ * cache on the path answering for a page it never fetched, and the one retry
+ * that asks it to go back to the origin. */
+#define FX_304_UNLESS_NOCACHE 1304
 
 static void fx_reset(void) { g_nfx = 0; g_ncalls = 0; g_last_url[0] = 0;
-                             g_last_body[0] = 0; g_last_hdrs[0] = 0; }
+                             g_last_body[0] = 0; g_last_hdrs[0] = 0;
+                             memset(g_call_hdrs, 0, sizeof g_call_hdrs); }
 static void fx_add(const char *match, long status, const char *body) {
   if (g_nfx < 16) g_fx[g_nfx++] = (fixture){ match, body, status, 0 };
 }
@@ -100,10 +110,16 @@ int http_request(http_client *c, const char *method, const char *url,
     strncat(g_last_hdrs, headers[i], sizeof g_last_hdrs - strlen(g_last_hdrs) - 2);
     strncat(g_last_hdrs, "\n", sizeof g_last_hdrs - strlen(g_last_hdrs) - 1);
   }
+  if (g_ncalls <= 16)
+    snprintf(g_call_hdrs[g_ncalls - 1], sizeof g_call_hdrs[0], "%s", g_last_hdrs);
   out->status = 404; out->body = NULL; out->body_len = 0;
   for (int i = 0; i < g_nfx; i++) {
     if (strstr(url, g_fx[i].match)) {
       out->status = g_fx[i].status;
+      if (out->status == FX_304_UNLESS_NOCACHE) {
+        if (!strstr(g_last_hdrs, "Cache-Control: no-cache")) { out->status = 304; return 0; }
+        out->status = 200;
+      }
       if (g_fx[i].body && g_fx[i].len) {
         out->body = malloc(g_fx[i].len + 1);
         if (out->body) {
@@ -127,12 +143,24 @@ void http_response_free(http_response *r) { if (r) { free(r->body); r->body = NU
  * are not exercised here, so they are stubbed; the VJSON fetcher reads the same
  * fixture table, so jsonlist_emit_paged() — the VJSON walk itself — is testable
  * here too (test 31). Every fetch in this test goes through http_request(). */
+static long g_feed_status;
 cJSON *feed_get_json(http_client *h, const char *url, int t) {
   http_response r = {0};
   http_request(h, "GET", url, NULL, NULL, 0, t, 0, &r);
   cJSON *doc = (r.status == 200 && r.body) ? cJSON_Parse(r.body) : NULL;
+  g_feed_status = (r.status == 200 && r.body && !doc) ? FEED_ST_UNPARSED : r.status;
   http_response_free(&r);
   return doc;
+}
+/* lib/jsonlist.c and lib/pagewalk.c ask feedlib what a failed fetch met; this
+ * stub's feed_get_json above records it the same way. */
+long feed_last_json_status(void) { return g_feed_status; }
+void feed_last_json_status_reset(void) { g_feed_status = FEED_ST_UNKNOWN; }
+void feed_status_describe(long st, char *out, size_t cap) {
+  if (st == FEED_ST_TRANSPORT)      snprintf(out, cap, "a transport failure");
+  else if (st == FEED_ST_UNPARSED)  snprintf(out, cap, "an HTTP 2xx whose body was not JSON");
+  else if (st > 0)                  snprintf(out, cap, "HTTP %ld", st);
+  else                              snprintf(out, cap, "an unrecorded failure");
 }
 const char *url_override_apply(const char *url) { return url; }
 void feed_hash_key(char *out21, const char *const *parts, int n) {
@@ -246,6 +274,14 @@ static const hp_source T[] = {
     .next_path = "next", .record_type = "t-page", .free_tier = 1, .description = "d" },
 
   { .id = "T_PAGE_PARAM", .name = "offset pagination", .url = "https://x.test/po?q={q}",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .page_param = "offset", .page_size = 2,
+    .record_type = "t-page", .free_tier = 1, .description = "d" },
+  /* The same walk with a row-declared conditional header: it belongs to the
+   * first request only (test 9f-sexies). */
+  { .id = "T_PAGE_COND", .name = "offset pagination, conditional first request",
+    .url = "https://x.test/pc?q={q}",
+    .headers = { "If-None-Match: \"v1\"" },
     .array_path = "items", .title_keys = "name", .id_keys = "id",
     .page_param = "offset", .page_size = 2,
     .record_type = "t-page", .free_tier = 1, .description = "d" },
@@ -1049,6 +1085,117 @@ int main(void) {
     for (int i = 0; i < g_ncap; i++)
       if (!strcmp(g_cap[i].rtype, "collector-truncation-notice")) notice = 1;
     ok(rc == 0 && notice, "a 429 on a later page emits a truncation notice");
+  }
+
+  /* 9f-sexies. A later page that does not deliver records: end of data, or a
+   * walk cut short? (hp_later_page_cut). JO32_ARC_MLIT_SCHOOL stopped at
+   * 36,000 of 56,807 on a 304 with rc=0 and no notice — every status other
+   * than 429/5xx used to end a walk in silence. */
+  {
+#define TRUNC "collector-truncation-notice"
+    const char *full2 = "{\"items\":[{\"name\":\"q1\",\"id\":\"1\"},{\"name\":\"q2\",\"id\":\"2\"}]}";
+    const cap *tn = NULL;
+
+    /* (a) a 304 the no-cache retry cannot clear: disclosed, with the page,
+     *     the status and the URL, and pages_read counts the pages that
+     *     delivered — not the request that failed. */
+    fx_reset();
+    fx_add("offset=2", 304, NULL);
+    fx_add("/po?q=", 200, full2);
+    rc = run_source("T_PAGE_PARAM", "x");
+    ok(rc == 0 && cap_count("t-page", NULL) == 2 && cap_count(TRUNC, &tn) == 1,
+       "9f-sexies: a 304 on a later page files a truncation notice");
+    ok(tn && strstr(tn->props, "\"failed_page_status\":304") &&
+             strstr(tn->props, "\"failed_page\":2") &&
+             strstr(tn->props, "\"pages_read\":1") &&
+             strstr(tn->props, "\"records_used\":2") &&
+             strstr(tn->props, "\"failed_page_url\":\"https://x.test/po?q=x&offset=2\"") &&
+             strstr(tn->props, "304 Not Modified") &&
+             strstr(tn->title, "page 2 answered 304"),
+       "9f-sexies: the notice states the failing page, its status, its URL and the pages read");
+    ok(g_ncalls == 3 && strstr(g_call_hdrs[2], "Cache-Control: no-cache") &&
+       !strstr(g_call_hdrs[1], "Cache-Control"),
+       "9f-sexies: a 304 to an unconditional request is retried once with no-cache");
+
+    /* (b) …and when the retry reaches the origin, the walk simply continues. */
+    fx_reset();
+    fx_add("offset=4", 200, "{\"items\":[]}");
+    fx_add("offset=2", FX_304_UNLESS_NOCACHE, "{\"items\":[{\"name\":\"q3\",\"id\":\"3\"}]}");
+    fx_add("/po?q=", 200, full2);
+    rc = run_source("T_PAGE_PARAM", "x");
+    ok(rc == 0 && cap_count("t-page", NULL) == 3 && cap_count(TRUNC, NULL) == 0,
+       "9f-sexies: a 304 cleared by the no-cache retry loses nothing and files nothing");
+
+    /* (c) a row-declared conditional header goes on the FIRST request only. */
+    fx_reset();
+    fx_add("offset=4", 200, "{\"items\":[]}");
+    fx_add("offset=2", 200, "{\"items\":[{\"name\":\"c3\",\"id\":\"3\"}]}");
+    fx_add("/pc?q=", 200, full2);
+    rc = run_source("T_PAGE_COND", "x");
+    ok(rc == 0 && cap_count("t-page", NULL) == 3 && g_ncalls == 3 &&
+       strstr(g_call_hdrs[0], "If-None-Match: \"v1\"") &&
+       !strstr(g_call_hdrs[1], "If-None-Match") && !strstr(g_call_hdrs[2], "If-None-Match"),
+       "9f-sexies: a conditional header reaches page 1 and never a later page");
+
+    /* (d) a 403 after a full page: refused, not finished. */
+    fx_reset();
+    fx_add("offset=2", 403, "forbidden");
+    fx_add("/po?q=", 200, full2);
+    rc = run_source("T_PAGE_PARAM", "x");
+    ok(rc == 0 && cap_count("t-page", NULL) == 2 && cap_count(TRUNC, &tn) == 1 &&
+       tn && strstr(tn->props, "\"failed_page_status\":403"),
+       "9f-sexies: a 403 on a later page files a truncation notice");
+
+    /* (e) a 404 after a FULL page of the declared size: the deep-paging
+     *     signature, disclosed — but a 404 after a SHORT page is the end
+     *     (18d below) and stays silent. */
+    fx_reset();
+    fx_add("offset=4", 404, NULL);
+    fx_add("offset=2", 200, "{\"items\":[{\"name\":\"q3\",\"id\":\"3\"},{\"name\":\"q4\",\"id\":\"4\"}]}");
+    fx_add("/po?q=", 200, full2);
+    rc = run_source("T_PAGE_PARAM", "x");
+    ok(rc == 0 && cap_count("t-page", NULL) == 4 && cap_count(TRUNC, &tn) == 1 &&
+       tn && strstr(tn->props, "\"failed_page_status\":404") &&
+       strstr(tn->props, "\"failed_page\":3") && strstr(tn->props, "\"pages_read\":2") &&
+       strstr(tn->props, "deep-paging limit"),
+       "9f-sexies: a 404 after a full page is a walk cut short, and says why it may be");
+    fx_reset();
+    fx_add("offset=4", 404, NULL);
+    fx_add("offset=2", 200, "{\"items\":[{\"name\":\"q3\",\"id\":\"3\"}]}");
+    fx_add("/po?q=", 200, full2);
+    rc = run_source("T_PAGE_PARAM", "x");
+    ok(rc == 0 && cap_count("t-page", NULL) == 3 && cap_count(TRUNC, NULL) == 0,
+       "9f-sexies: a 404 after a short page is the end of the data, silently");
+    /* …and so is a 500 after a short page (EPA Envirofacts answers a range
+     *    past its last row that way). */
+    fx_reset();
+    fx_add("offset=4", 500, "boom");
+    fx_add("offset=2", 200, "{\"items\":[{\"name\":\"q3\",\"id\":\"3\"}]}");
+    fx_add("/po?q=", 200, full2);
+    rc = run_source("T_PAGE_PARAM", "x");
+    ok(rc == 0 && cap_count("t-page", NULL) == 3 && cap_count(TRUNC, NULL) == 0,
+       "9f-sexies: a 500 after a short page is the end of the data, silently");
+
+    /* (f) a later page that answers 200 with a body that is not JSON (a WAF
+     *     or error page): disclosed, and records_used still counts the
+     *     earlier pages — the early return used to rewrite it to 0. */
+    fx_reset();
+    fx_add("offset=2", 200, "<html><body>Access denied</body></html>");
+    fx_add("/po?q=", 200, full2);
+    rc = run_source("T_PAGE_PARAM", "x");
+    ok(rc == 0 && cap_count("t-page", NULL) == 2 && cap_count(TRUNC, &tn) == 1 &&
+       tn && strstr(tn->props, "\"failed_page_unreadable\":true") &&
+       strstr(tn->props, "\"records_used\":2"),
+       "9f-sexies: an unreadable 200 on a later page files a notice and keeps the count");
+
+    /* (g) a 304 on the FIRST request of a row that sent no condition is not
+     *     an honest empty: the source was never actually checked. */
+    fx_reset();
+    fx_add("/po?q=", 304, NULL);
+    rc = run_source("T_PAGE_PARAM", "x");
+    ok(rc == -1 && cap_count("t-page", NULL) == 0 && g_ncalls == 2,
+       "9f-sexies: an unrequested 304 on page 1 is retried, then reported as an error");
+#undef TRUNC
   }
 
   /* 9f-bis. a row whose URL already binds its page parameter.
@@ -2211,6 +2358,27 @@ int main(void) {
                                        "https://x.test/a?size=2&page=2");
     ok(nx == NULL, "31c: a repeat that is not the page-1 probe is not retried");
     free(nx);
+
+    /* 31d. A later VJSON page that fails is disclosed with its page, status
+     *      and URL. It used to be filed as "the page ceiling stopped the walk"
+     *      — a ceiling that a 2-page walk never reached. */
+    fx_reset();
+    g_ncap = 0;
+    fx_add("vf?offset=2&limit=2", 304, NULL);
+    fx_add("vf?offset=0&limit=2", 200, "{\"items\":[{\"name\":\"f1\",\"id\":\"1\"},{\"name\":\"f2\",\"id\":\"2\"}]}");
+    n = jsonlist_emit_paged(&vs, "VJ_FAIL", NULL, "https://x.test/vf?offset=0&limit=2", 1000,
+                            "items", "t-vj", "en", "[]");
+    {
+      const cap *tn = NULL;
+      int nn = cap_count("collector-truncation-notice", &tn);
+      ok(n == 2 && nn == 1 && tn &&
+         strstr(tn->props, "\"failed_page\":2") &&
+         strstr(tn->props, "\"failed_page_status\":304") &&
+         strstr(tn->props, "\"failed_page_url\":\"https://x.test/vf?offset=2&limit=2\"") &&
+         strstr(tn->props, "page 2 answered HTTP 304") &&
+         !strstr(tn->props, "page ceiling stopped"),
+         "31d: a failed later VJSON page names the page, the status and the URL");
+    }
   }
 
   /* 32. Flatten accounting is per RECORD on every path. A JSON record past the
