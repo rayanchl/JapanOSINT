@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LuUsers, LuRotateCcw, LuTrash2 } from 'react-icons/lu';
 import { api } from '../../api/client.js';
-import { useApi } from '../../hooks/useApi.js';
+import { usePagedList } from '../../hooks/usePagedList.js';
 import { useMemberNames, authorLabel } from '../../hooks/useMembers.js';
-import { Pill, Button, ErrorNotice, LoadingState, ConfirmDialog, BoundNote, cx, toast } from '../ui/kit.jsx';
+import { Pill, Button, ErrorNotice, LoadingState, ConfirmDialog, PagedFooter, cx, toast } from '../ui/kit.jsx';
 import { relativeTime } from '../../utils/time.js';
 
 /** Kinds `native/core/savedsearchapi.c` accepts, with the iOS tones. */
@@ -44,16 +44,20 @@ export function rerunTarget(entry) {
  * `mine`; decided 2026-10-05) and author-only on clear. The server records a
  * row when a SAVED search is run (savedsearchapi.c run_saved →
  * search_history_record) — ad-hoc runs from the box are not written there;
- * those are listed under "Workspace runs" on the Search page instead.
+ * those are listed under "Workspace runs" on the Search page instead. The
+ * list is paged: the footer shows the server's measured total and loads the
+ * next `limit`.
  */
 export default function SearchHistoryDropdown({ open, onRun, limit = 20, onClose }) {
-  const { data, error, loading, reload } = useApi(open ? `/api/search-history?limit=${limit}` : null, { deps: [open] });
+  const list = usePagedList(open ? '/api/search-history' : null, { pageSize: limit, enabled: Boolean(open), deps: [open] });
+  const { rows, error, loading, reload, meta } = list;
   const [confirmClear, setConfirmClear] = useState(false);
   const [clearing, setClearing] = useState(false);
-  if (!open) return null;
-  const rows = Array.isArray(data?.data) ? data.data : [];
-  const retained = data?.meta?.retained_max;
+  // Before the early return: a hook called after it runs only while open, and
+  // React throws on the render where the hook count changes (opening).
   const names = useMemberNames();
+  if (!open) return null;
+  const retained = meta?.retained_max;
 
   const clear = async () => {
     setClearing(true);
@@ -72,14 +76,14 @@ export default function SearchHistoryDropdown({ open, onRun, limit = 20, onClose
         <LuUsers size={13} className="text-accent mt-0.5 flex-shrink-0" />
         <div className="min-w-0 text-[11px]">
           <div className="text-osint-text font-medium">Shared with your workspace</div>
-          <div className="text-osint-muted">Every member of this workspace sees every member's searches here, each with who ran it. Clearing removes only your own.</div>
+          <div className="text-osint-muted">Every member of this workspace sees every member's searches here, each with who ran it. Clearing removes only your own entries, and is not logged.</div>
         </div>
         <div className="ml-auto flex items-center gap-1">
           <Link to="/console/saved-searches" className="text-[11px] text-osint-muted hover:text-accent whitespace-nowrap" onClick={onClose}>Manage</Link>
           <Button size="sm" variant="ghost" disabled={!rows.length || clearing} onClick={() => setConfirmClear(true)} title="Clear history"><LuTrash2 size={12} /></Button>
         </div>
       </div>
-      {loading && <LoadingState label="Loading history…" />}
+      {loading && !list.loaded && <LoadingState label="Loading history…" />}
       {error && <div className="p-2"><ErrorNotice error={error} title="Couldn't load history" onRetry={reload} /></div>}
       {!loading && !error && rows.length === 0 && (
         <div className="px-3 py-4 text-xs text-osint-muted text-center">No recorded searches yet. The server records a row each time a saved search is run.</div>
@@ -108,8 +112,8 @@ export default function SearchHistoryDropdown({ open, onRun, limit = 20, onClose
           })}
         </ul>
       )}
-      <div className="px-3 py-1.5 border-t border-osint-border flex items-center justify-between">
-        <BoundNote shown={rows.length} total={data?.page?.count ?? rows.length} noun="entries" />
+      <div className="px-3 py-1.5 border-t border-osint-border flex items-center justify-between gap-2">
+        <PagedFooter shown={rows.length} total={list.total} hasMore={list.hasMore} busy={list.loadingMore} onMore={list.loadMore} error={list.moreError} noun="entries" />
         <span className="text-[10px] text-osint-muted">{retained ? `server keeps each member's ${retained} most recent` : "the server keeps only each member's most recent entries"}</span>
       </div>
       <ConfirmDialog
@@ -119,7 +123,7 @@ export default function SearchHistoryDropdown({ open, onRun, limit = 20, onClose
         busy={clearing}
         title="Clear your search history?"
         confirmLabel="Clear history"
-        message="Deletes every search you ran from the workspace history. Your teammates' entries and all saved searches are kept."
+        message="Deletes every entry you ran. Your teammates' entries are kept, nothing is recorded about the deletion, and saved searches are kept."
       />
     </div>
   );

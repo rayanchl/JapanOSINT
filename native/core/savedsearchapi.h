@@ -46,9 +46,13 @@
  *     bookmark their own query buys no safety. `to-alert` is the one write
  *     that escapes the user's own row (it creates tenant-visible, outbound-
  *     mailing infrastructure) and it requires analyst+, checked here.
- *  2. Lists are limit-paged, not keyset-paged. Saved searches are personal and
- *     few; history is hard-capped at SS_HISTORY_KEEP rows per user. A cursor
- *     encoder here would be dead code on a set that cannot grow.
+ *  2. Lists are offset-paged (limit + offset), not keyset-paged, with a
+ *     measured total: page:{limit,offset,count,total,has_more}. History is
+ *     hard-capped at SS_HISTORY_KEEP rows per user, so neither set grows fast
+ *     enough between two page requests for offset drift to matter, and a
+ *     cursor encoder would buy nothing a client needs. The total is a
+ *     COUNT(*) over the same WHERE text as the page, so ?mine=1, kind= and
+ *     pinned= narrow it exactly as they narrow the rows.
  *  3. Only saved_search.create / .delete / .to_alert are audited. Reads and
  *     runs are NOT: search_history already is the record of what ran, and
  *     copying it into audit_events would place the same investigative content
@@ -109,8 +113,11 @@
 #define PL_STATE_MAX      3072    /* bytes of compact state JSON encoded     */
 
 /* ── /api/saved-searches[...] ───────────────────────────────────────────────
- *   GET    /api/saved-searches?kind=&limit=&mine=1  list the WORKSPACE's
- *                                             (pinned first); ?mine=1 → mine
+ *   GET    /api/saved-searches?kind=&pinned=&mine=&limit=&offset=
+ *                                             list the workspace's (pinned
+ *                                             first); ?mine=1 = the caller's.
+ *                                             page:{limit,offset,count,total,
+ *                                             has_more}, meta:{scope}
  *   POST   /api/saved-searches                create  {name?,kind,params|params_json,pinned?}
  *   GET    /api/saved-searches/:id            fetch any in the workspace
  *   PATCH  /api/saved-searches/:id            {name?,params?,pinned?} — `kind`
@@ -147,13 +154,18 @@ char *savedsearchapi(db_handle *db, const tenant_ctx *t, const char *method,
                      const char *body, int *status);
 
 /* ── /api/search-history ────────────────────────────────────────────────────
- *   GET    /api/search-history?kind=&limit=&mine=1  newest-first, the whole
- *                                             workspace (?mine=1 → the caller's)
+ *   GET    /api/search-history?kind=&mine=&limit=&offset=
+ *                                             newest-first, the workspace's;
+ *                                             ?mine=1 = the caller's own.
+ *                                             page:{limit,offset,count,total,
+ *                                             has_more}, meta:{scope,
+ *                                             retained_max}
  *   DELETE /api/search-history                clear MINE ONLY → {"ok":true,"deleted":n}
  *
  * Every row names its author (user_id, mine) and meta.scope says which view
  * was served. Nothing crosses workspaces. limit defaults to 50 and clamps to
- * 1..200. Sets *status; malloc'd; caller frees. */
+ * 1..200; offset < 0 reads as 0.
+ * Sets *status; malloc'd; caller frees. */
 char *searchhistoryapi(db_handle *db, const tenant_ctx *t, const char *method,
                        const char *qs, int *status);
 

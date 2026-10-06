@@ -194,6 +194,56 @@ static int clamp_limit(const char *v, int dflt) {
   if (n > 200) n = 200;
   return n;
 }
+static int clamp_offset(const char *v) {
+  long n = (v && *v) ? strtol(v, NULL, 10) : 0;
+  if (n < 0) n = 0;
+  if (n > 1000000000L) n = 1000000000L;
+  return (int)n;
+}
+
+/* ── list paging ─────────────────────────────────────────────────────────
+ * Both lists are offset-paged with a measured total. They used to answer
+ * `page:{limit,count}` — count being the size of THIS response — so a client
+ * could not tell "your 50 saved searches" from "the first 50 of 900", and the
+ * history dropdown printed the response size as the total. Now:
+ *   page:{limit, offset, count, total, has_more}
+ * `total` is a COUNT(*) over the IDENTICAL predicate (the WHERE text is one
+ * literal used by both statements, so ?mine=1, kind= and pinned= narrow the
+ * total exactly as they narrow the rows); null if the count failed, never a
+ * guess. `has_more` is measured by reading one row past the page. */
+static void bind_list_filters(sqlite3_stmt *s, const tenant_ctx *t,
+                              int mine_only, const char *kind) {
+  sqlite3_bind_text(s, 1, t->tenant_id, -1, SQLITE_TRANSIENT);
+  if (mine_only) sqlite3_bind_text(s, 2, t->user_id, -1, SQLITE_TRANSIENT);
+  else           sqlite3_bind_null(s, 2);          /* the whole workspace */
+  if (kind && *kind) sqlite3_bind_text(s, 4, kind, -1, SQLITE_TRANSIENT);
+}
+static long long count_where(db_handle *db, const char *table,
+                             const char *where, const tenant_ctx *t,
+                             int mine_only, const char *kind) {
+  char sql[512];
+  int n = snprintf(sql, sizeof sql, "SELECT COUNT(*) FROM %s WHERE %s",
+                   table, where);
+  if (n < 0 || (size_t)n >= sizeof sql) return -1;
+  sqlite3_stmt *s;
+  if (sqlite3_prepare_v2(db->h, sql, -1, &s, NULL) != SQLITE_OK) return -1;
+  bind_list_filters(s, t, mine_only, kind);
+  long long total = -1;
+  if (sqlite3_step(s) == SQLITE_ROW) total = sqlite3_column_int64(s, 0);
+  sqlite3_finalize(s);
+  return total;
+}
+static cJSON *page_block(int lim, int off, int n, long long total, int more) {
+  if (total >= 0 && (long long)off + n < total) more = 1;
+  cJSON *pg = cJSON_CreateObject();
+  cJSON_AddNumberToObject(pg, "limit", (double)lim);
+  cJSON_AddNumberToObject(pg, "offset", (double)off);
+  cJSON_AddNumberToObject(pg, "count", (double)n);
+  if (total >= 0) cJSON_AddNumberToObject(pg, "total", (double)total);
+  else            cJSON_AddNullToObject(pg, "total");
+  cJSON_AddBoolToObject(pg, "has_more", more);
+  return pg;
+}
 
 /* ── saved_searches: decode + validation ─────────────────────────────────── */
 static cJSON *decode_ss(sqlite3_stmt *s, const char *caller) {
@@ -329,35 +379,37 @@ char *searchhistoryapi(db_handle *db, const tenant_ctx *t, const char *method,
   if (!db || !db->h || !t || !method) return err(st, 500, "server_error");
 
   if (!strcmp(method, "GET")) {
-    char v_kind[32] = {0}, v_lim[24] = {0}, v_mine[8] = {0};
+    char v_kind[32] = {0}, v_lim[24] = {0}, v_off[24] = {0}, v_mine[8] = {0};
     qget(qs, "kind", v_kind, sizeof v_kind);
     qget(qs, "limit", v_lim, sizeof v_lim);
+    qget(qs, "offset", v_off, sizeof v_off);
     qget(qs, "mine", v_mine, sizeof v_mine);
     if (v_kind[0] && !kind_valid(v_kind)) return err(st, 400, "invalid_kind");
     int lim = clamp_limit(v_lim, 50);
+    int off = clamp_offset(v_off);
     int mine_only = truthy(v_mine);
 
     /* Workspace-wide unless ?mine=1: ?2 is NULL for the workspace view and the
      * caller's id for their own trail. tenant_id=?1 is on both. */
-    const char *sql = v_kind[0]
-      ? "SELECT id,kind,params_json,result_count,ts,user_id FROM search_history "
-        "WHERE tenant_id=?1 AND (?2 IS NULL OR user_id=?2) AND kind=?4 "
-        "ORDER BY ts DESC, id DESC LIMIT ?3"
-      : "SELECT id,kind,params_json,result_count,ts,user_id FROM search_history "
-        "WHERE tenant_id=?1 AND (?2 IS NULL OR user_id=?2) "
-        "ORDER BY ts DESC, id DESC LIMIT ?3";
+    const char *where = v_kind[0]
+      ? "tenant_id=?1 AND (?2 IS NULL OR user_id=?2) AND kind=?4"
+      : "tenant_id=?1 AND (?2 IS NULL OR user_id=?2)";
+    char sql[512];
+    snprintf(sql, sizeof sql,
+             "SELECT id,kind,params_json,result_count,ts,user_id FROM "
+             "search_history WHERE %s ORDER BY ts DESC, id DESC "
+             "LIMIT ?3 OFFSET ?5", where);
     sqlite3_stmt *s;
     if (sqlite3_prepare_v2(db->h, sql, -1, &s, NULL) != SQLITE_OK)
       return err(st, 500, "server_error");
-    sqlite3_bind_text(s,1,t->tenant_id,-1,SQLITE_TRANSIENT);
-    if (mine_only) sqlite3_bind_text(s,2,t->user_id,-1,SQLITE_TRANSIENT);
-    else           sqlite3_bind_null(s,2);
-    sqlite3_bind_int (s,3,lim);
-    if (v_kind[0]) sqlite3_bind_text(s,4,v_kind,-1,SQLITE_TRANSIENT);
+    bind_list_filters(s, t, mine_only, v_kind);
+    sqlite3_bind_int (s,3,lim + 1);              /* +1: proof that more exist */
+    sqlite3_bind_int (s,5,off);
 
     cJSON *arr = cJSON_CreateArray();
-    int n = 0;
+    int n = 0, more = 0;
     while (sqlite3_step(s) == SQLITE_ROW) {
+      if (n >= lim) { more = 1; break; }
       cJSON *r = cJSON_CreateObject();
       cJSON_AddItemToObject(r,"id",
         cJSON_CreateNumber((double)sqlite3_column_int64(s,0)));
@@ -377,13 +429,12 @@ char *searchhistoryapi(db_handle *db, const tenant_ctx *t, const char *method,
       n++;
     }
     sqlite3_finalize(s);
+    long long total = count_where(db, "search_history", where, t, mine_only,
+                                  v_kind);
 
     cJSON *w = cJSON_CreateObject();
     cJSON_AddItemToObject(w,"data",arr);
-    cJSON *pg = cJSON_CreateObject();
-    cJSON_AddNumberToObject(pg,"limit",(double)lim);
-    cJSON_AddNumberToObject(pg,"count",(double)n);
-    cJSON_AddItemToObject(w,"page",pg);
+    cJSON_AddItemToObject(w,"page",page_block(lim, off, n, total, more));
     cJSON *mt = cJSON_CreateObject();
     cJSON_AddStringToObject(mt,"scope", mine_only ? "user" : "workspace");
     cJSON_AddNumberToObject(mt,"retained_max",(double)SS_HISTORY_KEEP);
@@ -948,62 +999,61 @@ char *savedsearchapi(db_handle *db, const tenant_ctx *t, const char *method,
   /* ── collection ───────────────────────────────────────────────────────── */
   if (!seg[0]) {
     if (is_get) {
-      char v_kind[32] = {0}, v_lim[24] = {0}, v_pin[16] = {0}, v_mine[8] = {0};
+      char v_kind[32] = {0}, v_lim[24] = {0}, v_off[24] = {0}, v_pin[16] = {0},
+           v_mine[8] = {0};
       qget(qs, "kind", v_kind, sizeof v_kind);
       qget(qs, "limit", v_lim, sizeof v_lim);
+      qget(qs, "offset", v_off, sizeof v_off);
       qget(qs, "pinned", v_pin, sizeof v_pin);
       qget(qs, "mine", v_mine, sizeof v_mine);
       if (v_kind[0] && !kind_valid(v_kind)) {
         out = err(st, 400, "invalid_kind"); goto done;
       }
       int lim = clamp_limit(v_lim, 50);
+      int off = clamp_offset(v_off);
       int only_pinned = truthy(v_pin);
+      int mine_only = truthy(v_mine);
 
-      /* Four literal statements rather than a concatenated WHERE: the filter
+      /* Four literal WHERE clauses rather than a concatenated one: the filter
        * combinations are few and fixed, and no user text ever reaches the SQL
-       * text this way. */
-      const char *sql;
+       * text this way. The SAME literal feeds the page and the COUNT(*). */
+      const char *where;
       if (v_kind[0] && only_pinned)
-        sql = "SELECT " SS_COLS " FROM saved_searches WHERE tenant_id=?1 AND "
-              "(?2 IS NULL OR user_id=?2) AND kind=?4 AND pinned=1 "
-              "ORDER BY pinned DESC, created_at DESC, id DESC LIMIT ?3";
+        where = "tenant_id=?1 AND (?2 IS NULL OR user_id=?2) AND kind=?4 AND pinned=1";
       else if (v_kind[0])
-        sql = "SELECT " SS_COLS " FROM saved_searches WHERE tenant_id=?1 AND "
-              "(?2 IS NULL OR user_id=?2) AND kind=?4 "
-              "ORDER BY pinned DESC, created_at DESC, id DESC LIMIT ?3";
+        where = "tenant_id=?1 AND (?2 IS NULL OR user_id=?2) AND kind=?4";
       else if (only_pinned)
-        sql = "SELECT " SS_COLS " FROM saved_searches WHERE tenant_id=?1 AND "
-              "(?2 IS NULL OR user_id=?2) AND pinned=1 "
-              "ORDER BY pinned DESC, created_at DESC, id DESC LIMIT ?3";
+        where = "tenant_id=?1 AND (?2 IS NULL OR user_id=?2) AND pinned=1";
       else
-        sql = "SELECT " SS_COLS " FROM saved_searches WHERE tenant_id=?1 AND "
-              "(?2 IS NULL OR user_id=?2) ORDER BY pinned DESC, created_at DESC, id DESC "
-              "LIMIT ?3";
+        where = "tenant_id=?1 AND (?2 IS NULL OR user_id=?2)";
+      char sql[768];
+      snprintf(sql, sizeof sql,
+               "SELECT " SS_COLS " FROM saved_searches WHERE %s "
+               "ORDER BY pinned DESC, created_at DESC, id DESC "
+               "LIMIT ?3 OFFSET ?5", where);
 
       sqlite3_stmt *s;
       if (sqlite3_prepare_v2(db->h, sql, -1, &s, NULL) != SQLITE_OK) {
         out = err(st, 500, "server_error"); goto done;
       }
-      sqlite3_bind_text(s,1,t->tenant_id,-1,SQLITE_TRANSIENT);
-      if (truthy(v_mine)) sqlite3_bind_text(s,2,t->user_id,-1,SQLITE_TRANSIENT);
-      else                sqlite3_bind_null(s,2);   /* the whole workspace */
-      sqlite3_bind_int (s,3,lim);
-      if (v_kind[0]) sqlite3_bind_text(s,4,v_kind,-1,SQLITE_TRANSIENT);
+      bind_list_filters(s, t, mine_only, v_kind);
+      sqlite3_bind_int (s,3,lim + 1);            /* +1: proof that more exist */
+      sqlite3_bind_int (s,5,off);
       cJSON *arr = cJSON_CreateArray();
-      int n = 0;
+      int n = 0, more = 0;
       while (sqlite3_step(s) == SQLITE_ROW) {
+        if (n >= lim) { more = 1; break; }
         cJSON_AddItemToArray(arr, decode_ss(s, t->user_id)); n++;
       }
       sqlite3_finalize(s);
+      long long total = count_where(db, "saved_searches", where, t, mine_only,
+                                    v_kind);
 
       cJSON *w = cJSON_CreateObject();
       cJSON_AddItemToObject(w, "data", arr);
-      cJSON *pg = cJSON_CreateObject();
-      cJSON_AddNumberToObject(pg, "limit", (double)lim);
-      cJSON_AddNumberToObject(pg, "count", (double)n);
-      cJSON_AddItemToObject(w, "page", pg);
+      cJSON_AddItemToObject(w, "page", page_block(lim, off, n, total, more));
       cJSON *mt = cJSON_CreateObject();
-      cJSON_AddStringToObject(mt, "scope", truthy(v_mine) ? "user" : "workspace");
+      cJSON_AddStringToObject(mt, "scope", mine_only ? "user" : "workspace");
       cJSON_AddItemToObject(w, "meta", mt);
       out = cJSON_PrintUnformatted(w); cJSON_Delete(w);
       *st = 200; goto done;

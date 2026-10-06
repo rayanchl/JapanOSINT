@@ -293,6 +293,23 @@ export function BoundNote({ shown, total, atLeast, more = false, noun = 'records
   return null;
 }
 
+/**
+ * Footer of an offset-paged list: the measured bound ("showing 50 of 700") and
+ * a button for the next page while the server says more exist. `total` and
+ * `hasMore` come from the server's page block; a null total with more pending
+ * falls back to BoundNote's "more on the server (no total reported)".
+ */
+export function PagedFooter({ shown, total, hasMore = false, busy = false, onMore, error, noun = 'records', className }) {
+  if (shown == null) return null;
+  return (
+    <div className={cx('flex items-center gap-2 flex-wrap', className)}>
+      <BoundNote shown={shown} total={total} more={hasMore && total == null} noun={noun} />
+      {hasMore && onMore && <Button size="sm" busy={busy} onClick={onMore}>Load more</Button>}
+      {error && <span className="text-[11px] text-neon-red font-mono">next page failed: {error.message || String(error)}</span>}
+    </div>
+  );
+}
+
 /** Modal sheet. Closes on backdrop click / Escape. */
 export function Sheet({ open, onClose, title, children, footer, width = 'max-w-lg' }) {
   const ref = useRef(null);
