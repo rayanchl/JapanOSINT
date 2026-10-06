@@ -715,6 +715,23 @@ char *progress_snapshot_for(const char *request_id, const char *tenant_id,
   return out;
 }
 
+int progress_brief_for(const char *request_id, const char *tenant_id,
+                       char *phase, size_t phase_n, int *percent, int *done,
+                       int *degraded) {
+  if (!request_id || !tenant_id || !*tenant_id) return 0;
+  pthread_mutex_lock(&g_lock);
+  osint_request *r = find_locked(request_id);
+  int ok = r && r->tenant_id && !strcmp(r->tenant_id, tenant_id);
+  if (ok) {
+    if (phase && phase_n) snprintf(phase, phase_n, "%s", r->phase ? r->phase : "");
+    if (percent)  *percent  = (int) r->progress_percent;
+    if (done)     *done     = r->done;
+    if (degraded) *degraded = degraded_locked(r);
+  }
+  pthread_mutex_unlock(&g_lock);
+  return ok;
+}
+
 char *progress_snapshot_by_id(const char *request_id, int *out_done) {
   if (out_done) *out_done = 0;
   if (!request_id) return NULL;

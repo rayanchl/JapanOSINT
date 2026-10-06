@@ -498,7 +498,15 @@ int geojson_emit_paged(intel_sink *sink, const char *source_id,
   unsigned long long prev_fp = 0;
   int repeated = 0;
 
+  /* A later page that failed — see the same block in jsonlist_emit_paged():
+   * its page, status and URL are disclosed, rather than filing it as a page
+   * ceiling that was never reached. */
+  int failed = 0, failed_page = 0;
+  long failed_status = FEED_ST_UNKNOWN;
+  char *failed_url = NULL;
+
   for (; pages < page_max && page_url; pages++) {
+    feed_last_json_status_reset();
     cJSON *doc = feed_get_json(http, page_url, timeout_ms);
     if (!doc) {
       /* A failed FIRST fetch is a dead endpoint and is the caller's to report.
@@ -506,6 +514,10 @@ int geojson_emit_paged(intel_sink *sink, const char *source_id,
        * and disclose the shortfall. */
       if (pages == 0) { free(page_url); return -1; }
       truncated = 1;
+      failed = 1;
+      failed_page = pages + 1;
+      failed_status = feed_last_json_status();
+      failed_url = strdup(page_url);
       break;
     }
     if (available < 0) available = gj_declared_total(doc);
@@ -596,19 +608,37 @@ int geojson_emit_paged(intel_sink *sink, const char *source_id,
     cJSON_AddNumberToObject(p, "pages_read", pages);
     cJSON_AddNumberToObject(p, "page_ceiling", page_max);
     cJSON_AddBoolToObject(p, "more_pages_pending", 1);
-    cJSON_AddStringToObject(p, "reason", truncated
+    char fdesc[64] = "", freason[256] = "";
+    if (failed) {
+      feed_status_describe(failed_status, fdesc, sizeof fdesc);
+      cJSON_AddNumberToObject(p, "failed_page", failed_page);
+      cJSON_AddNumberToObject(p, "failed_page_status", (double)failed_status);
+      cJSON_AddStringToObject(p, "failed_page_url", failed_url ? failed_url : "");
+      snprintf(freason, sizeof freason, "page %d answered %s, so the walk stopped "
+               "before the upstream ran out", failed_page, fdesc);
+    }
+    cJSON_AddStringToObject(p, "reason", failed ? freason : truncated
       ? "the page ceiling stopped the walk while the upstream still had features"
       : "the last page came back full (or the upstream declared more than was "
         "read) and neither the response nor this URL offers a way to ask for "
         "the next page, so features may remain unread");
-    cJSON_AddStringToObject(p, "remedy", truncated
+    cJSON_AddStringToObject(p, "remedy", failed
+      ? "re-run; a host that refuses or rate-limits later pages needs a "
+        "per-host minimum gap (core/hostgate.c) — see docs/SOURCE_EXHAUSTIVENESS.md"
+      : truncated
       ? "raise $JO_GEOJSON_PAGE_MAX — see docs/SOURCE_EXHAUSTIVENESS.md"
       : "give this source a cursor the walk can advance (for Socrata: $offset "
         "with a stable $order=:id) — see docs/SOURCE_EXHAUSTIVENESS.md");
     char *pj = cJSON_PrintUnformatted(p);
     cJSON_Delete(p);
     char title[256];
-    if (available >= 0)
+    if (failed && available >= 0)
+      snprintf(title, sizeof title, "%s used %d of %ld available features — "
+               "page %d answered %s", source_id, total, available, failed_page, fdesc);
+    else if (failed)
+      snprintf(title, sizeof title, "%s used %d features — page %d answered %s",
+               source_id, total, failed_page, fdesc);
+    else if (available >= 0)
       snprintf(title, sizeof title, "%s used %d of %ld available features",
                source_id, total, available);
     else if (truncated)
@@ -631,7 +661,9 @@ int geojson_emit_paged(intel_sink *sink, const char *source_id,
   if (pages > 1 || truncated || full_unadvanced)
     fprintf(stderr, "[%s] emitted %d across %d page(s)%s\n",
             source_id, total, pages,
-            truncated ? " (TRUNCATED)"
+            failed ? " (TRUNCATED: a later page failed)"
+            : truncated ? " (TRUNCATED)"
                       : full_unadvanced ? " (TRUNCATED: full last page, no cursor)" : "");
+  free(failed_url);
   return total;
 }

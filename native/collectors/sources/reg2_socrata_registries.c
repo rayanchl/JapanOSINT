@@ -38,7 +38,7 @@
 #include "core/httpclient.h"
 #include "lib/feedlib.h"
 #include "lib/pagewalk.h"
-#include "lib/seenset.h"
+#include "lib/keyqual.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -52,9 +52,9 @@ typedef struct {
   const char *title_f;      /* primary title column                         */
   const char *title_alt_f;  /* fallback title column (may be NULL)          */
   const char *key_f;        /* natural record id column (may be NULL)       */
-  /* Column that tells apart rows sharing key_f (may be NULL). Applied only to
-   * a key_f value already seen in this run, so first occurrences keep the
-   * uid they were stored under. */
+  /* Column that tells apart rows sharing key_f (may be NULL). Applied to
+   * EVERY row of a key that recurs in the run, never to a unique one — see
+   * soc_run. */
   const char *key2_f;
   const char *date_f;       /* date column (may be NULL)                    */
   int   date_compact;       /* 1 => value is bare YYYYMMDD                  */
@@ -90,146 +90,153 @@ static int soc_num(const cJSON *o, const char *k, double *out) {
   return 0;
 }
 
-/* Paging state that must outlive ONE page.
- *
- * `key_seen` is the whole-run record of key_f values already emitted, and it is
- * what decides whether a repeat gets qualified by key2_f. A per-page copy would
- * let the first row of every page keep an unqualified key and upsert over a row
- * an earlier page had already stored — the rule 4b collision, reintroduced by
- * the paging itself. pw_walk hands ONE userdata to every page of a walk, which
- * is exactly the right lifetime, so it lives here rather than on the stack of a
- * per-page function. */
-typedef struct { const soc_src *s; seen_set key_seen; } soc_walk;
+/* The row's title, or 0 when it carries none (no real title -> no row, R1). */
+static int soc_title(const soc_src *s, const cJSON *row, char *title, size_t cap) {
+  char tbuf[64];
+  const char *raw = soc_field(row, s->title_f, tbuf, sizeof tbuf);
+  if (!raw) raw = soc_field(row, s->title_alt_f, tbuf, sizeof tbuf);
+  if (!raw) return 0;
+  snprintf(title, cap, "%s", raw);
+  return 1;
+}
 
-/* pw_emit_fn: emit one already-fetched page, reporting what it CONTAINED.
- * `seen` is the array size, not the emitted count — pw_walk drives "did this
+/* The row's base key: its key_f value, else a hash of service+title. */
+static const char *soc_base(const soc_src *s, const cJSON *row,
+                            const char *title, char *kbuf, size_t kcap,
+                            char hashed[21]) {
+  const char *key = soc_field(row, s->key_f, kbuf, kcap);
+  if (key) return key;
+  const char *parts[2] = { s->service, title };
+  feed_hash_key(hashed, parts, 2);
+  return hashed;
+}
+
+/* Paging state that must outlive ONE page: every titled row of the walk,
+ * copied out of its page. The uid of a row depends on whether its key recurs
+ * ANYWHERE in the walk, which no page can know on its own — qualifying per
+ * page (or first-come-plain across pages, as this collector did) lets the
+ * first row of a group keep the plain key, so which revision of a Chicago
+ * contract owns `us-chicago-contracts|347521` depended on where the
+ * newest-first window happened to cut. pw_walk hands ONE userdata to every
+ * page of a walk, which is exactly the right lifetime. */
+typedef struct { const soc_src *s; cJSON *rows; } soc_walk;
+
+/* pw_emit_fn: collect one already-fetched page, reporting what it CONTAINED.
+ * `seen` is the array size, not the kept count — pw_walk drives "did this
  * page come back full", and therefore both continuation and disclosure, off
- * `seen`, so reporting the emitted count here would make a full page holding a
- * few untitled rows look short and stop the walk while claiming completeness. */
-static int soc_emit_page(const source_ctx *ctx, intel_sink *sink,
-                         const char *id, cJSON *doc, void *ud, int *seen) {
-  (void)ctx;
+ * `seen`, so reporting the kept count here would make a full page holding a
+ * few untitled rows look short and stop the walk while claiming completeness.
+ * The return value is the number of rows that will be emitted after the walk
+ * (soc_run), which is what pw_walk's notice reports as used. */
+static int soc_collect_page(const source_ctx *ctx, intel_sink *sink,
+                            const char *id, cJSON *doc, void *ud, int *seen) {
+  (void)ctx; (void)sink;
   soc_walk *w = (soc_walk *)ud;
-  const soc_src *s = w->s;
-  seen_set *key_seen_p = &w->key_seen;
   *seen = 0;
   if (!cJSON_IsArray(doc)) {
     fprintf(stderr, "[%s] unexpected payload (not an array)\n", id);
     return 0;
   }
   *seen = cJSON_GetArraySize(doc);
-
-  int n = 0;
+  int kept = 0;
   const cJSON *row;
   cJSON_ArrayForEach(row, doc) {
-    if (!cJSON_IsObject(row)) continue;
-
-    char tbuf[64];
-    const char *raw = soc_field(row, s->title_f, tbuf, sizeof tbuf);
-    if (!raw) raw = soc_field(row, s->title_alt_f, tbuf, sizeof tbuf);
-    if (!raw) continue;                       /* no real title -> no row (R1) */
     char title[400];
-    snprintf(title, sizeof title, "%s", raw);
-
-    char kbuf[64];
-    const char *key = soc_field(row, s->key_f, kbuf, sizeof kbuf);
-    char hashed[21];
-    if (!key) {
-      const char *parts[3] = { s->service, title, NULL };
-      feed_hash_key(hashed, parts, 2);
-      key = hashed;
-    }
-    char k2buf[64], kqual[160];
-    if (s->key2_f && key != hashed && !seen_add(key_seen_p, key)) {
-      const char *k2 = soc_field(row, s->key2_f, k2buf, sizeof k2buf);
-      snprintf(kqual, sizeof kqual, "%s|%s", key, k2 ? k2 : "");
-      key = kqual;
-    }
-
-    /* published_at strictly from the dataset's own date column. */
-    char dbuf[64], iso[64];
-    const char *pub = NULL;
-    const char *dv = soc_field(row, s->date_f, dbuf, sizeof dbuf);
-    if (dv) {
-      if (s->date_compact && strlen(dv) == 8) {
-        snprintf(iso, sizeof iso, "%.4s-%.2s-%.2s", dv, dv + 4, dv + 6);
-      } else {
-        snprintf(iso, sizeof iso, "%s", dv);
-        char *sp = strchr(iso, ' ');
-        if (sp) *sp = 'T';
-      }
-      pub = iso;
-    }
-
-    /* geo ONLY from coordinates the row itself carried (R2) */
-    double la = 0, lo = 0;
-    int hasgeo = 0;
-    if (s->geo_kind == 1) {
-      hasgeo = soc_num(row, s->geo_a, &la) && soc_num(row, s->geo_b, &lo);
-    } else if (s->geo_kind == 2) {
-      const cJSON *o = cJSON_GetObjectItem(row, s->geo_a);
-      if (cJSON_IsObject(o))
-        hasgeo = soc_num(o, "latitude", &la) && soc_num(o, "longitude", &lo);
-    } else if (s->geo_kind == 3) {
-      const cJSON *o = cJSON_GetObjectItem(row, s->geo_a);
-      const cJSON *c = o ? cJSON_GetObjectItem(o, "coordinates") : NULL;
-      if (cJSON_IsArray(c) && cJSON_GetArraySize(c) >= 2) {
-        const cJSON *x = cJSON_GetArrayItem(c, 0), *y = cJSON_GetArrayItem(c, 1);
-        if (cJSON_IsNumber(x) && cJSON_IsNumber(y)) {
-          lo = x->valuedouble; la = y->valuedouble; hasgeo = 1;
-        }
-      }
-    }
-    if (hasgeo && (la == 0.0 || lo == 0.0)) hasgeo = 0;   /* 0/0 placeholder */
-    if (hasgeo && (la < -90.0 || la > 90.0 || lo < -180.0 || lo > 180.0))
-      hasgeo = 0;
-
-    /* properties: every scalar column this row actually carried */
-    cJSON *props = cJSON_CreateObject();
-    cJSON_AddStringToObject(props, "service", s->service);
-    cJSON_AddStringToObject(props, "dataset_url", s->url);
-    for (const cJSON *f = row->child; f; f = f->next) {
-      if (!f->string || f->string[0] == ':') continue;   /* Socrata internals */
-      if (cJSON_IsString(f) && f->valuestring && f->valuestring[0])
-        cJSON_AddStringToObject(props, f->string, f->valuestring);
-      else if (cJSON_IsNumber(f))
-        cJSON_AddNumberToObject(props, f->string, f->valuedouble);
-      else if (cJSON_IsBool(f))
-        cJSON_AddBoolToObject(props, f->string, cJSON_IsTrue(f) ? 1 : 0);
-    }
-    if (hasgeo) {
-      cJSON_AddNumberToObject(props, "lat", la);
-      cJSON_AddNumberToObject(props, "lon", lo);
-    }
-    char *pj = cJSON_PrintUnformatted(props);
-    cJSON_Delete(props);
-
-    /* summary from up to three real columns */
-    char sbuf1[96], sbuf2[96], sbuf3[96], summary[320];
-    const char *a = soc_field(row, s->sum1, sbuf1, sizeof sbuf1);
-    const char *b = soc_field(row, s->sum2, sbuf2, sizeof sbuf2);
-    const char *c = soc_field(row, s->sum3, sbuf3, sizeof sbuf3);
-    snprintf(summary, sizeof summary, "%s%s%s%s%s",
-             a ? a : "", (a && b) ? " \xc2\xb7 " : "", b ? b : "",
-             ((a || b) && c) ? " \xc2\xb7 " : "", c ? c : "");
-
-    intel_item it = {0};
-    it.remote_key      = key;
-    it.title           = title;
-    it.summary         = summary[0] ? summary : NULL;
-    it.body            = pj;
-    it.link            = s->url;
-    it.published_at    = pub;
-    it.record_type     = s->rtype;
-    it.has_geo         = hasgeo;
-    it.lat             = la;
-    it.lon             = lo;
-    it.properties_json = pj;
-    it.tags_json       = "[\"registry\",\"open-data\"]";
-    if (sink->emit(sink, &it) >= 0) n++;
-    free(pj);
+    if (!cJSON_IsObject(row) || !soc_title(w->s, row, title, sizeof title)) continue;
+    cJSON *dup = cJSON_Duplicate(row, 1);
+    if (!dup) continue;
+    cJSON_AddItemToArray(w->rows, dup);
+    kept++;
   }
-  return n;
+  return kept;
+}
+
+/* Emit one collected row under the uid soc_run decided for it. */
+static int soc_emit_row(const soc_src *s, intel_sink *sink, const cJSON *row,
+                        const char *title, const char *key) {
+  /* published_at strictly from the dataset's own date column. */
+  char dbuf[64], iso[64];
+  const char *pub = NULL;
+  const char *dv = soc_field(row, s->date_f, dbuf, sizeof dbuf);
+  if (dv) {
+    if (s->date_compact && strlen(dv) == 8) {
+      snprintf(iso, sizeof iso, "%.4s-%.2s-%.2s", dv, dv + 4, dv + 6);
+    } else {
+      snprintf(iso, sizeof iso, "%s", dv);
+      char *sp = strchr(iso, ' ');
+      if (sp) *sp = 'T';
+    }
+    pub = iso;
+  }
+
+  /* geo ONLY from coordinates the row itself carried (R2) */
+  double la = 0, lo = 0;
+  int hasgeo = 0;
+  if (s->geo_kind == 1) {
+    hasgeo = soc_num(row, s->geo_a, &la) && soc_num(row, s->geo_b, &lo);
+  } else if (s->geo_kind == 2) {
+    const cJSON *o = cJSON_GetObjectItem(row, s->geo_a);
+    if (cJSON_IsObject(o))
+      hasgeo = soc_num(o, "latitude", &la) && soc_num(o, "longitude", &lo);
+  } else if (s->geo_kind == 3) {
+    const cJSON *o = cJSON_GetObjectItem(row, s->geo_a);
+    const cJSON *c = o ? cJSON_GetObjectItem(o, "coordinates") : NULL;
+    if (cJSON_IsArray(c) && cJSON_GetArraySize(c) >= 2) {
+      const cJSON *x = cJSON_GetArrayItem(c, 0), *y = cJSON_GetArrayItem(c, 1);
+      if (cJSON_IsNumber(x) && cJSON_IsNumber(y)) {
+        lo = x->valuedouble; la = y->valuedouble; hasgeo = 1;
+      }
+    }
+  }
+  if (hasgeo && (la == 0.0 || lo == 0.0)) hasgeo = 0;   /* 0/0 placeholder */
+  if (hasgeo && (la < -90.0 || la > 90.0 || lo < -180.0 || lo > 180.0))
+    hasgeo = 0;
+
+  /* properties: every scalar column this row actually carried */
+  cJSON *props = cJSON_CreateObject();
+  cJSON_AddStringToObject(props, "service", s->service);
+  cJSON_AddStringToObject(props, "dataset_url", s->url);
+  for (const cJSON *f = row->child; f; f = f->next) {
+    if (!f->string || f->string[0] == ':') continue;   /* Socrata internals */
+    if (cJSON_IsString(f) && f->valuestring && f->valuestring[0])
+      cJSON_AddStringToObject(props, f->string, f->valuestring);
+    else if (cJSON_IsNumber(f))
+      cJSON_AddNumberToObject(props, f->string, f->valuedouble);
+    else if (cJSON_IsBool(f))
+      cJSON_AddBoolToObject(props, f->string, cJSON_IsTrue(f) ? 1 : 0);
+  }
+  if (hasgeo) {
+    cJSON_AddNumberToObject(props, "lat", la);
+    cJSON_AddNumberToObject(props, "lon", lo);
+  }
+  char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
+
+  /* summary from up to three real columns */
+  char sbuf1[96], sbuf2[96], sbuf3[96], summary[320];
+  const char *a = soc_field(row, s->sum1, sbuf1, sizeof sbuf1);
+  const char *b = soc_field(row, s->sum2, sbuf2, sizeof sbuf2);
+  const char *c = soc_field(row, s->sum3, sbuf3, sizeof sbuf3);
+  snprintf(summary, sizeof summary, "%s%s%s%s%s",
+           a ? a : "", (a && b) ? " \xc2\xb7 " : "", b ? b : "",
+           ((a || b) && c) ? " \xc2\xb7 " : "", c ? c : "");
+
+  intel_item it = {0};
+  it.remote_key      = key;
+  it.title           = title;
+  it.summary         = summary[0] ? summary : NULL;
+  it.body            = pj;
+  it.link            = s->url;
+  it.published_at    = pub;
+  it.record_type     = s->rtype;
+  it.has_geo         = hasgeo;
+  it.lat             = la;
+  it.lon             = lo;
+  it.properties_json = pj;
+  it.tags_json       = "[\"registry\",\"open-data\"]";
+  int ok = sink->emit(sink, &it) >= 0;
+  free(pj);
+  return ok;
 }
 
 /* Walk the register to exhaustion where the upstream permits.
@@ -244,14 +251,54 @@ static int soc_emit_page(const source_ctx *ctx, intel_sink *sink,
  * size, and pw_walk states what it left behind as a
  * collector-truncation-notice rather than stopping silently. */
 static int soc_run(const soc_src *s, const source_ctx *ctx, intel_sink *sink) {
-  soc_walk w = { s, {0} };
-  int n = pw_walk(ctx, sink, s->service, s->url, pw_fetch_json,
-                  soc_emit_page, &w);
-  seen_free(&w.key_seen);
-  if (n < 0) {
+  soc_walk w = { s, cJSON_CreateArray() };
+  if (!w.rows) return -1;
+  int kept = pw_walk(ctx, sink, s->service, s->url, pw_fetch_json,
+                     soc_collect_page, &w);
+  if (kept < 0) {
+    cJSON_Delete(w.rows);
     fprintf(stderr, "[%s] fetch/parse failed\n", s->service);
     return -1;
   }
+
+  /* IDENTITY, decided over the WHOLE walk. Pass 1 counts every base key (the
+   * dataset's own record id, or a hash of service+title where it has none);
+   * pass 2 qualifies EVERY row of a key that recurs: by key2_f where the
+   * dataset declares one and it tells the group apart (Chicago: a contract
+   * number recurs once per revision — live 2026-10-06, 4,000 rows walked,
+   * 322 contract numbers carried by 693 rows), else by a hash of the row's
+   * own bytes. A key that is unique in the walk keeps its plain uid. A row
+   * byte-identical to one already emitted (offset paging over a register
+   * that changes mid-walk can serve one twice) is folded. See lib/keyqual.h. */
+  keyqual kq = {0};
+  const cJSON *row;
+  cJSON_ArrayForEach(row, w.rows) {
+    char title[400], kbuf[64], k2buf[64], hashed[21];
+    if (!soc_title(s, row, title, sizeof title)) continue;
+    const char *base = soc_base(s, row, title, kbuf, sizeof kbuf, hashed);
+    keyqual_add(&kq, base, soc_field(row, s->key2_f, k2buf, sizeof k2buf));
+  }
+  keyqual_seal(&kq);
+
+  int n = 0, folded = 0;
+  cJSON_ArrayForEach(row, w.rows) {
+    char title[400], kbuf[64], k2buf[64], hashed[21], ubuf[512];
+    if (!soc_title(s, row, title, sizeof title)) continue;
+    const char *base = soc_base(s, row, title, kbuf, sizeof kbuf, hashed);
+    const char *key = base;
+    if (keyqual_count(&kq, base) > 1) {
+      char *raw = cJSON_PrintUnformatted(row);
+      key = keyqual_uid(&kq, base, soc_field(row, s->key2_f, k2buf, sizeof k2buf),
+                        raw ? raw : "", ubuf, sizeof ubuf);
+      free(raw);
+      if (!keyqual_claim(&kq, base, key)) { folded++; continue; }
+    }
+    n += soc_emit_row(s, sink, row, title, key);
+  }
+  keyqual_free(&kq);
+  cJSON_Delete(w.rows);
+  fprintf(stderr, "[%s] emitted %d of %d titled rows walked (%d byte-identical "
+          "repeats folded)\n", s->service, n, kept, folded);
   return 0;                                   /* fetched fine (R3) */
 }
 
@@ -345,7 +392,8 @@ SOC_SOURCE(chi_con, "us-chicago-contracts",
   .rtype = "procurement-contract", .title_f = "purchase_order_description",
   /* A contract number recurs once per revision, the revisions differing in
    * revision_number and award_amount (live 2026-09-15: 200 rows, 194 contract
-   * numbers, 200 number+revision) — so a repeat is qualified by its revision. */
+   * numbers, 200 number+revision) — so every revision of a recurring number
+   * is qualified by its revision. */
   .title_alt_f = "vendor_name", .key_f = "purchase_order_contract_number",
   .key2_f = "revision_number",
   .date_f = "approval_date",

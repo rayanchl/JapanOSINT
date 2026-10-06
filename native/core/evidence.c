@@ -618,10 +618,29 @@ int evidence_http_hook(const char *method, const char *url,
 
 /* ── read paths ───────────────────────────────────────────────────────────── */
 
-char *evidence_list_for_item(db_handle *db, const char *item_uid, int limit) {
+char *evidence_list_for_item(db_handle *db, const char *item_uid, int limit,
+                             int offset) {
   if (!db || !db->h || !item_uid || !*item_uid) return NULL;
   int lim = limit > 0 ? limit : 50;
   if (lim > 200) lim = 200;
+  if (offset < 0) offset = 0;
+
+  /* The route used to answer at most 100 rows with no offset and no total, so
+   * an item re-captured more often than that had custody records nobody could
+   * list — and nothing in the response said so. `total` is a COUNT(*) over the
+   * same predicate (null if the count failed — never a guessed number);
+   * `has_more` is measured by reading one row past the page. */
+  long long total = -1;
+  {
+    sqlite3_stmt *cs;
+    if (sqlite3_prepare_v2(db->h,
+          "SELECT COUNT(*) FROM evidence WHERE item_uid=?1",
+          -1, &cs, NULL) == SQLITE_OK) {
+      sqlite3_bind_text(cs, 1, item_uid, -1, SQLITE_TRANSIENT);
+      if (sqlite3_step(cs) == SQLITE_ROW) total = sqlite3_column_int64(cs, 0);
+    }
+    sqlite3_finalize(cs);
+  }
 
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h,
@@ -629,14 +648,16 @@ char *evidence_list_for_item(db_handle *db, const char *item_uid, int limit) {
         "request_headers,response_status,response_headers,content_sha256,"
         "content_bytes,content_type,blob_path,prev_hash,row_hash,chain_seq "
         "FROM evidence WHERE item_uid=?1 "
-        "ORDER BY captured_at DESC, chain_seq DESC LIMIT ?2",
+        "ORDER BY captured_at DESC, chain_seq DESC, id DESC LIMIT ?2 OFFSET ?3",
         -1, &s, NULL) != SQLITE_OK) return NULL;
   sqlite3_bind_text(s, 1, item_uid, -1, SQLITE_TRANSIENT);
-  sqlite3_bind_int (s, 2, lim);
+  sqlite3_bind_int (s, 2, lim + 1);              /* +1: proof that more exist */
+  sqlite3_bind_int (s, 3, offset);
 
   cJSON *arr = cJSON_CreateArray();
-  int count = 0, present = 0;
+  int count = 0, present = 0, more = 0;
   while (sqlite3_step(s) == SQLITE_ROW) {
+    if (count >= lim) { more = 1; break; }
     cJSON *o = cJSON_CreateObject();
     cJSON_AddStringToObject(o, "id", ctext(s, 0) ? ctext(s, 0) : "");
     cJSON_AddStringToObject(o, "captured_at", ctext(s, 1) ? ctext(s, 1) : "");
@@ -677,13 +698,22 @@ char *evidence_list_for_item(db_handle *db, const char *item_uid, int limit) {
   }
   sqlite3_finalize(s);
 
+  if (total >= 0 && (long long)offset + count < total) more = 1;
+
   cJSON *page = cJSON_CreateObject();
   cJSON_AddNumberToObject(page, "limit", lim);
+  cJSON_AddNumberToObject(page, "offset", offset);
   cJSON_AddNumberToObject(page, "count", count);
+  if (total >= 0) cJSON_AddNumberToObject(page, "total", (double)total);
+  else            cJSON_AddNullToObject(page, "total");
+  cJSON_AddBoolToObject(page, "has_more", more);
   cJSON *meta = cJSON_CreateObject();
   cJSON_AddStringToObject(meta, "item_uid", item_uid);
+  /* present/evicted need a filesystem check per blob, so they describe the
+   * rows in THIS page only, and say so. */
   cJSON_AddNumberToObject(meta, "present", present);
   cJSON_AddNumberToObject(meta, "evicted", count - present);
+  cJSON_AddStringToObject(meta, "present_scope", "page");
   cJSON *root = cJSON_CreateObject();
   cJSON_AddItemToObject(root, "data", arr);
   cJSON_AddItemToObject(root, "page", page);

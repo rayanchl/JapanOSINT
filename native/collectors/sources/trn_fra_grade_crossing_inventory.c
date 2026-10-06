@@ -2,16 +2,24 @@
  * Endpoint: https://data.transportation.gov/resource/m2f8-22s6.json?$limit=1000
  * Emits: one intel row per crossing — crossingid, operating railroad, state,
  * county and city, the crossing street, the railroad milepost, the nearest
- * timetable station, the inventory reason description and the revision date.
- * Keyless.
+ * timetable station, the inventory reason description and the revision date
+ * under readable names, PLUS every column the row carried, verbatim (126 on
+ * 2026-10-06: warning devices, track and train counts, speeds, traffic, school
+ * bus use, reporting railroad and agency, the FRA crossing-report URL, the
+ * filer-reported latitude/longitude …). Keyless.
  * Licence: US Federal Railroad Administration via data.transportation.gov
  * (Socrata) — US Government work, public domain.
  *
- * Parse notes: Socrata SoDA JSON. The current-inventory resource m2f8-22s6 does
- * NOT expose latitude/longitude in the fields it returns, so every row here is
- * emitted with has_geo = 0. Synthesising a position from countyname/cityname
- * would be exactly the invented geometry R2 forbids; the companion "Grade
- * Crossings" resource nw2s-ygjq is the geospatial one for anybody who needs it.
+ * Parse notes: Socrata SoDA JSON. The current-inventory resource m2f8-22s6
+ * DOES carry the crossing's position — `latitude`/`longitude` as decimal
+ * strings and `geocoded_lat_long` as a GeoJSON Point, on the rows that have
+ * one (full walk 2026-10-06: 362,264 of 438,854 crossings; a row without a
+ * position simply omits the columns). An earlier note here said the resource
+ * had no position, and the collector kept ten columns of 126, so every
+ * crossing was stored without the position it was served with. The row's own latitude/longitude is now its geometry (tagged
+ * geo_precision "form71-reported-crossing-position": the filer's figure, not
+ * an FRA survey); a row without a valid pair stays has_geo = 0 — a position is
+ * never synthesised from countyname/cityname (R2).
  *
  * Socrata's $limit is a page size, not a bound on the table: this resource
  * holds 438,835 rows (measured 2026-09-21 with `?$select=count(1)`, where an
@@ -89,6 +97,22 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
                   jo_sv(r, "nearesttimetablestation"));
       trn_put_str(pr, "reason_description", jo_sv(r, "reasondescription"));
       trn_put_str(pr, "revision_date", jo_sv(r, "revisiondate"));
+      /* ...and every column the row carried, verbatim (house rule 2): the
+       * readable names above are a view, not a reason to drop the other
+       * ~115 columns of Form 71 this walk already paid for. Socrata's
+       * ":"-prefixed internals and JSON nulls are skipped. */
+      for (const cJSON *f = r->child; f; f = f->next) {
+        if (!f->string || f->string[0] == ':' || cJSON_IsNull(f)) continue;
+        if (cJSON_GetObjectItem(pr, f->string)) continue;
+        cJSON_AddItemToObject(pr, f->string, cJSON_Duplicate(f, 1));
+      }
+      /* the row's own position, never a synthesised one (R2). Form 71
+       * coordinates are reported by the railroad or state agency that filed
+       * the inventory record, not surveyed by FRA. */
+      double la, lo;
+      int geo = trn_num(r, "latitude", &la) && trn_num(r, "longitude", &lo) &&
+                trn_geo_ok(la, lo);
+      if (geo) cJSON_AddStringToObject(pr, "geo_precision", "form71-reported-crossing-position");
       char *pj = cJSON_PrintUnformatted(pr);
 
       const char *street = jo_sv(r, "street");
@@ -110,7 +134,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       it.record_type     = "rail-grade-crossing";
       it.properties_json = pj ? pj : "{}";
       it.tags_json       = "[\"transport\",\"rail\",\"us\",\"infrastructure\"]";
-      /* resource carries no coordinates → no geo (R2) */
+      if (geo) { it.has_geo = 1; it.lat = la; it.lon = lo; }
+      /* FRA's own crossing-inventory page for this crossing, as served */
+      it.link = jo_sv(cJSON_GetObjectItem(r, "url"), "url");
       if (sink->emit(sink, &it) >= 0) n++;
       free(pj);
       cJSON_Delete(pr);

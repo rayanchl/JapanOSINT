@@ -91,6 +91,27 @@ char *feed_get_text(http_client *http, const char *url, int timeout_ms) {
   return body;
 }
 
+/* See feed_last_json_status() in feedlib.h. */
+static _Thread_local long g_feed_json_status = FEED_ST_UNKNOWN;
+long feed_last_json_status(void) { return g_feed_json_status; }
+void feed_last_json_status_reset(void) { g_feed_json_status = FEED_ST_UNKNOWN; }
+
+void feed_status_describe(long st, char *out, size_t cap) {
+  if (!out || !cap) return;
+  if (st == FEED_ST_TRANSPORT)      snprintf(out, cap, "a transport failure");
+  else if (st == FEED_ST_UNPARSED)  snprintf(out, cap, "an HTTP 2xx whose body was not JSON");
+  else if (st > 0)                  snprintf(out, cap, "HTTP %ld", st);
+  else                              snprintf(out, cap, "an unrecorded failure");
+}
+
+/* The outcome of one JSON exchange, for feed_last_json_status(). */
+static void feed_note_status(int rc, const http_response *r, const cJSON *parsed) {
+  if (rc != 0) g_feed_json_status = FEED_ST_TRANSPORT;
+  else if (r->status >= 200 && r->status < 300 && r->body && !parsed)
+    g_feed_json_status = FEED_ST_UNPARSED;
+  else g_feed_json_status = r->status;
+}
+
 cJSON *feed_get_json_h(http_client *http, const char *url,
                        const char *const *headers, int timeout_ms) {
   int own = 0;
@@ -117,6 +138,7 @@ cJSON *feed_get_json_h(http_client *http, const char *url,
     j = cJSON_Parse(conv ? conv : r.body);
     free(conv);
   }
+  feed_note_status(rc, &r, j);
   http_response_free(&r);
   if (own) http_client_free(http);
   return j;
@@ -143,6 +165,7 @@ cJSON *feed_post_json(http_client *http, const char *url, const char *body,
     j = cJSON_Parse(conv ? conv : r.body);
     free(conv);
   }
+  feed_note_status(rc, &r, j);
   http_response_free(&r);
   if (own) http_client_free(http);
   return j;

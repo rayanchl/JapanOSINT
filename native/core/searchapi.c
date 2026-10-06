@@ -83,14 +83,16 @@ static void *run_thread(void *vp) {
 }
 
 /* Persist the run's owner so the restart path (searchapi_results reading the
- * stored run row, which the pipeline writes under the shared 'legacy' tenant)
- * can still answer "whose run is this". 0 on success. */
+ * stored run row) can still answer "whose run is this", and so the workspace's
+ * run list (searchapi_runs) can name the query and its author for a run that
+ * never reached its summary row — in flight, failed, or lost to a restart.
+ * 0 on success. */
 static int owner_persist(db_handle *db, const char *id, const char *tenant_id,
-                         const char *user_id) {
+                         const char *user_id, const char *query) {
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h,
-        "INSERT OR REPLACE INTO search_run_owners(request_id,tenant_id,user_id)"
-        " VALUES (?1,?2,?3)", -1, &s, NULL) != SQLITE_OK) {
+        "INSERT OR REPLACE INTO search_run_owners(request_id,tenant_id,user_id,"
+        "query) VALUES (?1,?2,?3,?4)", -1, &s, NULL) != SQLITE_OK) {
     fprintf(stderr, "[search] cannot record the owner of run %s: %s\n", id,
             sqlite3_errmsg(db->h));
     return -1;
@@ -99,6 +101,7 @@ static int owner_persist(db_handle *db, const char *id, const char *tenant_id,
   sqlite3_bind_text(s, 2, tenant_id, -1, SQLITE_TRANSIENT);
   if (user_id && *user_id) sqlite3_bind_text(s, 3, user_id, -1, SQLITE_TRANSIENT);
   else sqlite3_bind_null(s, 3);
+  sqlite3_bind_text(s, 4, query ? query : "", -1, SQLITE_TRANSIENT);
   int rc = sqlite3_step(s);
   sqlite3_finalize(s);
   return rc == SQLITE_DONE ? 0 : -1;
@@ -156,7 +159,7 @@ char *searchapi_analyze(db_handle *db, const char *tenant_id,
   char id[40], skey[40];
   gen_id(id);
   gen_id(skey);                 /* the SSE capability — never the request_id */
-  if (owner_persist(db, id, tenant_id, user_id) != 0) {
+  if (owner_persist(db, id, tenant_id, user_id, query) != 0) {
     run_slot_release();
     if (out_status) *out_status = 500;
     return NULL;
@@ -314,4 +317,189 @@ char *searchapi_results(db_handle *db, const char *tenant_id, const char *id) {
   }
   sqlite3_finalize(st);
   return out;   /* NULL → caller 404 not_found */
+}
+
+/* ── GET /api/search/runs — the workspace's investigations ────────────────
+ *
+ * A run was always readable by every member of the workspace that started it
+ * (searchapi_results is tenant-scoped), but nothing LISTED runs: the web
+ * client kept the runs it started in this tab's memory, so a teammate's
+ * investigation — the query, the LLM synthesis, the entities — was visible
+ * only to someone handed its id. Decided 2026-10-05: everything in a
+ * workspace is visible to its members. This lists search_run_owners for the
+ * tenant (every member's runs; ?mine=1 narrows to the caller), newest first,
+ * with each row's author, and the live phase when the run is still in memory.
+ *
+ * The synthesis is shown as a preview with its full length beside it; the
+ * whole of it is GET /api/search/results/:id. Runs carry no edit or delete,
+ * so there is no author-only half here. */
+
+/* Byte length of the longest prefix of `s` that is at most `max` bytes and
+ * does not split a UTF-8 sequence. */
+static size_t utf8_prefix(const char *s, size_t max) {
+  size_t n = strlen(s);
+  if (n <= max) return n;
+  size_t k = max;
+  while (k > 0 && ((unsigned char) s[k] & 0xC0) == 0x80) k--;
+  return k;
+}
+
+#define RUNS_PREVIEW_BYTES 280
+
+char *searchapi_runs(db_handle *db, const char *tenant_id, const char *user_id,
+                     int limit, int mine_only, const char *cursor,
+                     int *out_status) {
+  if (out_status) *out_status = 500;
+  if (!db || !db->h || !tenant_id || !*tenant_id) return NULL;
+  if (limit <= 0) limit = 50;
+  if (limit > 200) limit = 200;
+
+  /* cursor = "<created_at>|<request_id>" of the last row of the previous
+   * page. Opaque to clients; a malformed one is ignored and disclosed. */
+  char cur_at[40] = {0}, cur_id[64] = {0};
+  int cursor_given = cursor && *cursor, cursor_used = 0;
+  if (cursor_given) {
+    const char *bar = strchr(cursor, '|');
+    if (bar && (size_t) (bar - cursor) < sizeof cur_at && strlen(bar + 1) < sizeof cur_id &&
+        bar > cursor && bar[1]) {
+      memcpy(cur_at, cursor, (size_t) (bar - cursor));
+      snprintf(cur_id, sizeof cur_id, "%s", bar + 1);
+      cursor_used = 1;
+    }
+  }
+  const char *who = (mine_only && user_id && *user_id) ? user_id : NULL;
+
+  sqlite3_stmt *s;
+  const char *sql = cursor_used
+    ? "SELECT o.request_id,o.user_id,o.created_at,o.query,i.title,i.summary,"
+      "i.properties FROM search_run_owners o "
+      "LEFT JOIN intel_items i ON i.uid='osint-search|run:'||o.request_id "
+      "WHERE o.tenant_id=?1 AND (?2 IS NULL OR o.user_id=?2) "
+      "AND (o.created_at<?4 OR (o.created_at=?4 AND o.request_id<?5)) "
+      "ORDER BY o.created_at DESC, o.request_id DESC LIMIT ?3"
+    : "SELECT o.request_id,o.user_id,o.created_at,o.query,i.title,i.summary,"
+      "i.properties FROM search_run_owners o "
+      "LEFT JOIN intel_items i ON i.uid='osint-search|run:'||o.request_id "
+      "WHERE o.tenant_id=?1 AND (?2 IS NULL OR o.user_id=?2) "
+      "ORDER BY o.created_at DESC, o.request_id DESC LIMIT ?3";
+  if (sqlite3_prepare_v2(db->h, sql, -1, &s, NULL) != SQLITE_OK) return NULL;
+  sqlite3_bind_text(s, 1, tenant_id, -1, SQLITE_TRANSIENT);
+  if (who) sqlite3_bind_text(s, 2, who, -1, SQLITE_TRANSIENT);
+  else     sqlite3_bind_null(s, 2);
+  sqlite3_bind_int(s, 3, limit);
+  if (cursor_used) {
+    sqlite3_bind_text(s, 4, cur_at, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(s, 5, cur_id, -1, SQLITE_TRANSIENT);
+  }
+
+  cJSON *arr = cJSON_CreateArray();
+  int n = 0;
+  char last_at[40] = {0}, last_id[64] = {0};
+  while (sqlite3_step(s) == SQLITE_ROW) {
+    const char *rid = (const char *) sqlite3_column_text(s, 0);
+    if (!rid) continue;
+    const char *author = (const char *) sqlite3_column_text(s, 1);
+    const char *at     = (const char *) sqlite3_column_text(s, 2);
+    const char *q      = (const char *) sqlite3_column_text(s, 3);
+    const char *title  = (const char *) sqlite3_column_text(s, 4);
+    const char *synth  = (const char *) sqlite3_column_text(s, 5);
+    const char *pjs    = (const char *) sqlite3_column_text(s, 6);
+    cJSON *props = pjs ? cJSON_Parse(pjs) : NULL;
+
+    cJSON *r = cJSON_CreateObject();
+    cJSON_AddStringToObject(r, "request_id", rid);
+    /* The query: the owner row (every run since it was recorded there), else
+     * the stored run row (older runs), else unknown — never invented. */
+    const char *qq = (q && *q) ? q : NULL;
+    if (!qq && props) {
+      cJSON *pq = cJSON_GetObjectItem(props, "query");
+      if (cJSON_IsString(pq) && pq->valuestring[0]) qq = pq->valuestring;
+    }
+    if (!qq && title && !strncmp(title, "OSINT search: ", 14)) qq = title + 14;
+    if (qq) cJSON_AddStringToObject(r, "query", qq);
+    else    cJSON_AddNullToObject(r, "query");
+    if (author) cJSON_AddStringToObject(r, "user_id", author);
+    else        cJSON_AddNullToObject(r, "user_id");
+    cJSON_AddBoolToObject(r, "mine", author && user_id && !strcmp(author, user_id));
+    if (at) cJSON_AddStringToObject(r, "created_at", at);
+    else    cJSON_AddNullToObject(r, "created_at");
+
+    char phase[48] = {0};
+    int pct = 0, done = 0, degr = 0;
+    if (progress_brief_for(rid, tenant_id, phase, sizeof phase, &pct, &done, &degr)) {
+      cJSON_AddStringToObject(r, "status", done
+        ? (!strcmp(phase, "error") ? "error" : "completed") : "running");
+      cJSON_AddStringToObject(r, "phase", phase);
+      cJSON_AddNumberToObject(r, "progress_percent", pct);
+      cJSON_AddBoolToObject(r, "degraded", degr);
+    } else if (title || synth || props) {
+      cJSON *pp = props ? cJSON_GetObjectItem(props, "phase") : NULL;
+      const char *ph = cJSON_IsString(pp) ? pp->valuestring : "completed";
+      cJSON_AddStringToObject(r, "status", !strcmp(ph, "error") ? "error" : "completed");
+      cJSON_AddStringToObject(r, "phase", ph);
+      cJSON *pd = props ? cJSON_GetObjectItem(props, "degraded") : NULL;
+      if (pd) cJSON_AddBoolToObject(r, "degraded", cJSON_IsTrue(pd));
+    } else {
+      /* Neither live nor stored: started before a restart and never
+       * finished, or failed before its summary row. Said, not guessed. */
+      cJSON_AddStringToObject(r, "status", "unknown");
+      cJSON_AddNullToObject(r, "phase");
+    }
+    if (synth && *synth) {
+      size_t full = strlen(synth), k = utf8_prefix(synth, RUNS_PREVIEW_BYTES);
+      char *pv = malloc(k + 1);
+      if (pv) { memcpy(pv, synth, k); pv[k] = 0;
+                cJSON_AddStringToObject(r, "synthesis_preview", pv); free(pv); }
+      cJSON_AddNumberToObject(r, "synthesis_bytes", (double) full);
+      cJSON_AddBoolToObject(r, "synthesis_truncated", k < full);
+    } else {
+      cJSON_AddNullToObject(r, "synthesis_preview");
+    }
+    if (props) cJSON_Delete(props);
+    cJSON_AddItemToArray(arr, r);
+    snprintf(last_at, sizeof last_at, "%s", at ? at : "");
+    snprintf(last_id, sizeof last_id, "%s", rid);
+    n++;
+  }
+  sqlite3_finalize(s);
+
+  long total = -1;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT COUNT(*) FROM search_run_owners WHERE tenant_id=?1 "
+        "AND (?2 IS NULL OR user_id=?2)", -1, &s, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(s, 1, tenant_id, -1, SQLITE_TRANSIENT);
+    if (who) sqlite3_bind_text(s, 2, who, -1, SQLITE_TRANSIENT);
+    else     sqlite3_bind_null(s, 2);
+    if (sqlite3_step(s) == SQLITE_ROW) total = (long) sqlite3_column_int64(s, 0);
+    sqlite3_finalize(s);
+  }
+
+  cJSON *w = cJSON_CreateObject();
+  cJSON_AddItemToObject(w, "data", arr);
+  cJSON *pg = cJSON_CreateObject();
+  cJSON_AddNumberToObject(pg, "limit", limit);
+  cJSON_AddNumberToObject(pg, "count", n);
+  if (total >= 0) cJSON_AddNumberToObject(pg, "total", (double) total);
+  else            cJSON_AddNullToObject(pg, "total");
+  if (n == limit && last_id[0]) {
+    char nc[128];
+    snprintf(nc, sizeof nc, "%s|%s", last_at, last_id);
+    cJSON_AddStringToObject(pg, "next_cursor", nc);
+  } else {
+    cJSON_AddNullToObject(pg, "next_cursor");
+  }
+  cJSON_AddItemToObject(w, "page", pg);
+  cJSON *mt = cJSON_CreateObject();
+  cJSON_AddStringToObject(mt, "scope", who ? "user" : "workspace");
+  cJSON_AddNumberToObject(mt, "synthesis_preview_bytes", RUNS_PREVIEW_BYTES);
+  if (cursor_given && !cursor_used) {
+    cJSON *notes = cJSON_CreateArray();
+    cJSON_AddItemToArray(notes, cJSON_CreateString("cursor_ignored"));
+    cJSON_AddItemToObject(mt, "notes", notes);
+  }
+  cJSON_AddItemToObject(w, "meta", mt);
+  char *out = cJSON_PrintUnformatted(w);
+  cJSON_Delete(w);
+  if (out && out_status) *out_status = 200;
+  return out;
 }

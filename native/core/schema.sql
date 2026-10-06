@@ -775,9 +775,10 @@ CREATE INDEX IF NOT EXISTS idx_annotations_ref
 CREATE INDEX IF NOT EXISTS idx_annotations_tenant
   ON annotations(tenant_id, created_at DESC);
 
--- Item 38 — saved searches + history. History is PER-USER, not per-tenant:
--- what an analyst is investigating is not something a tenant admin should be
--- able to read. The user predicate is enforced in savedsearchapi.c.
+-- Item 38 — saved searches + history. WORKSPACE-visible since 2026-10-05:
+-- every member reads every member's entries (each names its author); only
+-- the author renames, pins, deletes or clears. Both rules are enforced in
+-- savedsearchapi.c; user_id is the author, not a read predicate.
 CREATE TABLE IF NOT EXISTS saved_searches (
   id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL, user_id TEXT NOT NULL,
   name TEXT, kind TEXT NOT NULL CHECK(kind IN ('intel','osint','entity','breach','map')),
@@ -797,9 +798,15 @@ CREATE INDEX IF NOT EXISTS idx_search_history_owner
 -- row is written by the pipeline under the shared 'legacy' tenant, so without
 -- this a run reloaded after a restart has no owner to check against, and
 -- GET /api/search/results/:id answered any tenant holding the request_id.
+-- It is also the workspace's list of runs (GET /api/search/runs): `query` is
+-- recorded here so a run that never wrote its summary row (in flight, failed,
+-- lost to a restart) still says what was asked and by whom. Existing DBs get
+-- the column from db.c's ensure_column().
 CREATE TABLE IF NOT EXISTS search_run_owners (
   request_id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL, user_id TEXT,
-  created_at TEXT NOT NULL DEFAULT (datetime('now')));
+  created_at TEXT NOT NULL DEFAULT (datetime('now')), query TEXT);
+CREATE INDEX IF NOT EXISTS idx_search_run_owners_tenant
+  ON search_run_owners(tenant_id, created_at DESC, request_id DESC);
 
 -- Item 16 — optional per-tenant report branding (the paid-tier seam).
 -- reportapi.c probes for this table and each column independently, so its

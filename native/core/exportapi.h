@@ -19,27 +19,24 @@
  * of result-set size. A non-zero return from the writer (client gone) aborts
  * the walk cleanly — statement finalized, audit row still written.
  *
- *   >>> MONGOOSE CONSTRAINT — READ BEFORE WIRING <<<
+ *   >>> MONGOOSE CONSTRAINT — HOW httpd.c HONOURS IT <<<
  *   mg_http_write_chunk() → mg_send() → mg_iobuf_add(&c->send, ...) for TCP
- *   connections (third_party/mongoose.c:12330). It APPENDS to the connection's
- *   in-memory send buffer; that buffer is only drained by the event loop's
- *   write handler. Because MG_EV_HTTP_MSG dispatch is synchronous, an export
- *   driven entirely inside the handler accumulates the WHOLE response in
- *   c->send before a single byte reaches the socket.
- *   Consequence: this module's memory is bounded (one 64 KB batch), but the
- *   HTTP layer's is bounded by the RESPONSE size, not by the database size.
- *   With the plan row caps below that ceiling is ~a few hundred MB worst case
- *   on `team`, and genuinely unbounded on `enterprise`.
- *   The wiring in "HTTPD.C WIRING" below is correct and is what should land
- *   now; `export_mg_write` additionally short-circuits on c->is_closing /
- *   c->is_draining so a disconnected client stops the walk immediately. To get
- *   true socket-paced backpressure the orchestrator must either (a) run
- *   export_run() on a detached thread and feed batches back through
- *   mg_wakeup() (the pattern already used by suggest_thread() in httpd.c), or
- *   (b) make export_mg_write() return non-zero while c->send.len exceeds a
- *   high-water mark and resume from MG_EV_WRITE. Both are httpd.c concerns and
- *   are deliberately outside this file. This is stated plainly rather than
- *   pretended away.
+ *   connections. It APPENDS to the connection's in-memory send buffer, which
+ *   only the event loop drains — so a writer that calls it for every batch of
+ *   a walk run inside the handler buffers the WHOLE response before a byte
+ *   reaches the socket.
+ *   httpd.c therefore runs export_run() and report_run() on a worker thread
+ *   (export_thread) whose writer, xs_write(), queues each batch on an xstream;
+ *   the loop moves batches into c->send as the socket drains (xs_pump, on
+ *   MG_EV_WAKEUP / MG_EV_POLL / MG_EV_WRITE) and the worker waits while
+ *   XS_HIGH_WATER bytes are queued or unsent. Memory per export is bounded by
+ *   that mark, not by the response size: measured 99-110 MB peak footprint for
+ *   a 347 MB and a 695 MB JSON export alike, against 791 MB and 1.49 GB when
+ *   the worker buffered the body and the loop copied it into c->send.
+ *   A writer returning non-zero (client gone, stalled, out of memory) stops
+ *   the walk; the run still writes its audit row.
+ *   export_mg_write (the inline writer above) survives only as the fallback
+ *   for when no worker thread can be started, and that path still buffers.
  *
  * REQUIRED DDL
  *   NONE. This module creates no tables and adds no columns. It reads
@@ -168,7 +165,12 @@ int export_run(db_handle *db, const tenant_ctx *t, const char *kind,
                export_write_fn write, void *write_ctx,
                long *out_rows, int *status);
 
-/* ── HTTPD.C WIRING (orchestrator: add verbatim) ──────────────────────────
+/* ── HTTPD.C WIRING (the original inline wiring) ──────────────────────────
+ *
+ * Kept as the record of the contract. What httpd.c runs today is this block
+ * with export_run() moved onto a worker that streams (export_offload /
+ * export_thread / xs_write there); the inline call below is its fallback when
+ * no thread can be started. The header and terminator rules still apply.
  *
  * 1. Add near the other includes:
  *

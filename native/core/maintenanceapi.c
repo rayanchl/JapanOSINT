@@ -11,207 +11,10 @@
 #include <math.h>
 #define UA "JapanOSINT/1.0 (github.com/rayanchl/JapanOSINT)"
 
-/* `patch`, `gate` and `model` are what the reviewer is approving. The admin
- * page's RepairCard renders the URL swap from row.patch and offers "Approve"
- * on a verified url_swap — and this query did not select patch (nor gate or
- * model), so the card showed an Approve button over an EMPTY diff: a live URL
- * override applied on the strength of a change nobody was shown. Same columns
- * as the per-source pipeline view (maintenance_source_pipeline). */
-static cJSON *recent_repairs(sqlite3 *h, const char *status, int hours) {
-  cJSON *a=cJSON_CreateArray(); sqlite3_stmt *s;
-  if (sqlite3_prepare_v2(h,
-    "SELECT id,anomaly_id,source_id,status,action,triage_class,pr_url,created_at,"
-    "patch,gate,model "
-    "FROM collector_repair WHERE status=?1 AND created_at>=datetime('now',?2) "
-    "ORDER BY created_at DESC LIMIT 50",-1,&s,NULL)==SQLITE_OK){
-    char win[32]; snprintf(win,sizeof win,"-%d hours",hours);
-    sqlite3_bind_text(s,1,status,-1,SQLITE_TRANSIENT);
-    sqlite3_bind_text(s,2,win,-1,SQLITE_TRANSIENT);
-    static const char *K[]={"id","anomaly_id","source_id","status","action",
-      "triage_class","pr_url","created_at","patch","gate","model"};
-    while (sqlite3_step(s)==SQLITE_ROW){
-      cJSON *r=cJSON_CreateObject();
-      for (int i=0;i<11;i++){
-        if (sqlite3_column_type(s,i)==SQLITE_NULL) cJSON_AddNullToObject(r,K[i]);
-        else if (i==0||i==1) cJSON_AddNumberToObject(r,K[i],(double)sqlite3_column_int64(s,i));
-        else cJSON_AddStringToObject(r,K[i],(const char*)sqlite3_column_text(s,i));
-      }
-      cJSON_AddItemToArray(a,r);
-    }
-  }
-  sqlite3_finalize(s);
-  return a;
-}
 static cJSON *rate_num(long su,long fa){ long t=su+fa;
   if (t==0) return cJSON_CreateNull();
   double v=(double)su/(double)t; v=round(v*1000.0)/1000.0;
   return cJSON_CreateNumber(v); }
-char *maintenance_digest(db_handle *db, int hours) {
-  if (hours<1) hours=24;
-  if (hours>720) hours=720;
-  char win[32]; snprintf(win,sizeof win,"-%d hours",hours);
-  sqlite3 *h=db->h; sqlite3_stmt *s;
-  long verified=0,merged=0,rejected=0,needs=0,error=0;
-  if (sqlite3_prepare_v2(h,"SELECT status,COUNT(*) FROM collector_repair "
-    "WHERE created_at>=datetime('now',?1) GROUP BY status",-1,&s,NULL)==SQLITE_OK){
-    sqlite3_bind_text(s,1,win,-1,SQLITE_TRANSIENT);
-    while (sqlite3_step(s)==SQLITE_ROW){
-      const char *st=(const char*)sqlite3_column_text(s,0);
-      long n=sqlite3_column_int64(s,1);
-      if(!strcmp(st,"verified"))verified=n; else if(!strcmp(st,"merged"))merged=n;
-      else if(!strcmp(st,"rejected"))rejected=n; else if(!strcmp(st,"needs_human"))needs=n;
-      else if(!strcmp(st,"error"))error=n;
-    }
-  }
-  sqlite3_finalize(s);
-  const char *NA="(action IS NULL OR action <> 'await_recovery')";
-  cJSON *byClass=cJSON_CreateArray();
-  char q1[400];
-  snprintf(q1,sizeof q1,
-    "SELECT COALESCE(triage_class,'?'),"
-    "SUM(status IN ('verified','merged')),SUM(status IN ('rejected','error')),"
-    "SUM(status='needs_human') FROM collector_repair "
-    "WHERE created_at>=datetime('now',?1) AND %s GROUP BY 1 "
-    "ORDER BY (SUM(status IN ('verified','merged'))+SUM(status IN ('rejected','error'))) DESC",NA);
-  if (sqlite3_prepare_v2(h,q1,-1,&s,NULL)==SQLITE_OK){
-    sqlite3_bind_text(s,1,win,-1,SQLITE_TRANSIENT);
-    while (sqlite3_step(s)==SQLITE_ROW){
-      long su=sqlite3_column_int64(s,1),fa=sqlite3_column_int64(s,2),nh=sqlite3_column_int64(s,3);
-      cJSON *c=cJSON_CreateObject();
-      cJSON_AddStringToObject(c,"class",(const char*)sqlite3_column_text(s,0));
-      cJSON_AddNumberToObject(c,"success",(double)su);
-      cJSON_AddNumberToObject(c,"fail",(double)fa);
-      cJSON_AddNumberToObject(c,"needs_human",(double)nh);
-      cJSON_AddItemToObject(c,"success_rate",rate_num(su,fa));
-      cJSON_AddItemToArray(byClass,c);
-    }
-  }
-  sqlite3_finalize(s);
-  cJSON *bySrc=cJSON_CreateArray();
-  char q2[400];
-  snprintf(q2,sizeof q2,
-    "SELECT source_id,SUM(status IN ('verified','merged')),"
-    "SUM(status IN ('rejected','error')) FROM collector_repair "
-    "WHERE created_at>=datetime('now',?1) AND %s GROUP BY source_id "
-    "HAVING (SUM(status IN ('verified','merged'))+SUM(status IN ('rejected','error')))>0 "
-    "ORDER BY 3 DESC,2 DESC LIMIT 50",NA);
-  if (sqlite3_prepare_v2(h,q2,-1,&s,NULL)==SQLITE_OK){
-    sqlite3_bind_text(s,1,win,-1,SQLITE_TRANSIENT);
-    while (sqlite3_step(s)==SQLITE_ROW){
-      long su=sqlite3_column_int64(s,1),fa=sqlite3_column_int64(s,2);
-      cJSON *c=cJSON_CreateObject();
-      cJSON_AddStringToObject(c,"source_id",(const char*)sqlite3_column_text(s,0));
-      cJSON_AddNumberToObject(c,"success",(double)su);
-      cJSON_AddNumberToObject(c,"fail",(double)fa);
-      cJSON_AddItemToObject(c,"success_rate",rate_num(su,fa));
-      cJSON_AddItemToArray(bySrc,c);
-    }
-  }
-  sqlite3_finalize(s);
-  cJSON *quar=cJSON_CreateArray();
-  if (sqlite3_prepare_v2(h,
-    "SELECT id,name,category,quarantined_at,quarantined_until,quarantine_reason,"
-    "(quarantined_until>datetime('now')) FROM sources "
-    "WHERE quarantined_until IS NOT NULL ORDER BY quarantined_at DESC",-1,&s,NULL)==SQLITE_OK){
-    while (sqlite3_step(s)==SQLITE_ROW){
-      cJSON *c=cJSON_CreateObject();
-      cJSON_AddStringToObject(c,"source_id",(const char*)sqlite3_column_text(s,0));
-      cJSON_AddStringToObject(c,"name",(const char*)sqlite3_column_text(s,1));
-      cJSON_AddStringToObject(c,"category",(const char*)sqlite3_column_text(s,2));
-      cJSON_AddItemToObject(c,"since",sqlite3_column_type(s,3)==SQLITE_NULL?cJSON_CreateNull():cJSON_CreateString((const char*)sqlite3_column_text(s,3)));
-      cJSON_AddItemToObject(c,"until",sqlite3_column_type(s,4)==SQLITE_NULL?cJSON_CreateNull():cJSON_CreateString((const char*)sqlite3_column_text(s,4)));
-      cJSON_AddBoolToObject(c,"active",sqlite3_column_int(s,6)!=0);
-      cJSON_AddItemToObject(c,"reason",sqlite3_column_type(s,5)==SQLITE_NULL?cJSON_CreateNull():cJSON_CreateString((const char*)sqlite3_column_text(s,5)));
-      cJSON_AddItemToArray(quar,c);
-    }
-  }
-  sqlite3_finalize(s);
-  cJSON *verifiedRows=recent_repairs(h,"verified",hours);
-  cJSON *awaiting_pr=cJSON_CreateArray(), *awaiting_apply=cJSON_CreateArray(),
-        *auto_dismissed=cJSON_CreateArray();
-  cJSON *vr;
-  cJSON_ArrayForEach(vr,verifiedRows){
-    cJSON *act=cJSON_GetObjectItem(vr,"action");
-    const char *as=cJSON_IsString(act)?act->valuestring:NULL;
-    if (as && !strcmp(as,"url_swap")){
-      cJSON *pr=cJSON_GetObjectItem(vr,"pr_url");
-      cJSON_AddItemToArray((pr&&cJSON_IsString(pr))?awaiting_pr:awaiting_apply,
-                           cJSON_Duplicate(vr,1));
-    } else if (as && !strcmp(as,"auto_dismiss")){
-      cJSON_AddItemToArray(auto_dismissed,cJSON_Duplicate(vr,1));
-    }
-  }
-  cJSON_Delete(verifiedRows);
-
-  char ts[40]; { time_t now=time(NULL); struct tm g; gmtime_r(&now,&g);
-    struct timespec sp; clock_gettime(CLOCK_REALTIME,&sp);
-    /* %0Nd widths are minimums, not caps, so to -Wformat-truncation the
-     * fields are full ints/longs worth 11-20 characters and this fixed
-     * 24-char stamp "may be truncated". The modulos are identity for every
-     * value gmtime_r/clock_gettime can return. */
-    snprintf(ts,sizeof ts,"%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-      (unsigned)(g.tm_year+1900) % 10000u,(unsigned)(g.tm_mon+1) % 100u,
-      (unsigned)g.tm_mday % 100u,(unsigned)g.tm_hour % 100u,
-      (unsigned)g.tm_min % 100u,(unsigned)g.tm_sec % 100u,
-      (unsigned)(sp.tv_nsec/1000000) % 1000u); }
-  cJSON *o=cJSON_CreateObject();
-  cJSON_AddStringToObject(o,"generated_at",ts);
-  cJSON_AddNumberToObject(o,"window_hours",hours);
-  cJSON *tot=cJSON_CreateObject();
-  cJSON_AddNumberToObject(tot,"verified",(double)verified);
-  cJSON_AddNumberToObject(tot,"merged",(double)merged);
-  cJSON_AddNumberToObject(tot,"rejected",(double)rejected);
-  cJSON_AddNumberToObject(tot,"needs_human",(double)needs);
-  cJSON_AddNumberToObject(tot,"error",(double)error);
-  cJSON_AddItemToObject(o,"totals",tot);
-  cJSON_AddItemToObject(o,"success_by_class",byClass);
-  cJSON_AddItemToObject(o,"worst_sources",bySrc);
-  cJSON_AddItemToObject(o,"quarantined",quar);
-  /* live runtime URL-swap overrides (the C apply mechanism for merged repairs) */
-  cJSON *ovr=cJSON_CreateArray();
-  if (sqlite3_prepare_v2(h,
-    "SELECT source_id,old_url,new_url,anomaly_id,created_at FROM collector_url_overrides "
-    "ORDER BY created_at DESC LIMIT 100",-1,&s,NULL)==SQLITE_OK){
-    while (sqlite3_step(s)==SQLITE_ROW){
-      cJSON *c=cJSON_CreateObject();
-      cJSON_AddStringToObject(c,"source_id",(const char*)sqlite3_column_text(s,0));
-      cJSON_AddStringToObject(c,"old_url",(const char*)sqlite3_column_text(s,1));
-      cJSON_AddStringToObject(c,"new_url",(const char*)sqlite3_column_text(s,2));
-      if (sqlite3_column_type(s,3)==SQLITE_NULL) cJSON_AddNullToObject(c,"anomaly_id");
-      else cJSON_AddNumberToObject(c,"anomaly_id",(double)sqlite3_column_int64(s,3));
-      cJSON_AddStringToObject(c,"created_at",(const char*)sqlite3_column_text(s,4));
-      cJSON_AddItemToArray(ovr,c);
-    }
-  }
-  sqlite3_finalize(s);
-  cJSON_AddItemToObject(o,"url_overrides",ovr);
-  cJSON_AddItemToObject(o,"auto_fixed",recent_repairs(h,"merged",hours));
-  cJSON *aw=cJSON_CreateObject();
-  cJSON_AddItemToObject(aw,"awaiting_pr",awaiting_pr);
-  cJSON_AddItemToObject(aw,"awaiting_apply",awaiting_apply);
-  cJSON_AddItemToObject(o,"awaiting_review",aw);
-  cJSON_AddItemToObject(o,"auto_dismissed",auto_dismissed);
-  cJSON_AddItemToObject(o,"needs_human",recent_repairs(h,"needs_human",hours));
-  /* llmConcurrencySnapshot — C LLM runtime has no shared queue gauge; report
-   * the configured limits with zeroed live counters (honest, stable shape). */
-  cJSON *cc=cJSON_CreateObject();
-  int hl=getenv("LLM_HEAVY_CONCURRENCY")?atoi(getenv("LLM_HEAVY_CONCURRENCY")):1;
-  int ml=getenv("LLM_MID_CONCURRENCY")?atoi(getenv("LLM_MID_CONCURRENCY")):2;
-  if (hl<1)hl=1;
-  if (ml<1)ml=1;
-  cJSON *hv=cJSON_CreateObject();
-  cJSON_AddNumberToObject(hv,"limit",hl); cJSON_AddNumberToObject(hv,"inflight",0);
-  cJSON_AddNumberToObject(hv,"waiting",0); cJSON_AddItemToObject(cc,"heavy",hv);
-  cJSON *md=cJSON_CreateObject();
-  cJSON_AddNumberToObject(md,"limit",ml); cJSON_AddNumberToObject(md,"inflight",0);
-  cJSON_AddNumberToObject(md,"waiting",0); cJSON_AddItemToObject(cc,"mid",md);
-  cJSON_AddItemToObject(o,"concurrency",cc);
-  char *j=cJSON_PrintUnformatted(o); cJSON_Delete(o); return j;
-}
-
-/* ── per-source pipeline detail + operator actions ──────────────────────
- * The digest above is host-wide aggregate; these expose one source's full
- * detect→triage→repair chain and let the operator steer it. */
 
 /* Add a column to `o`: text-or-null. */
 static void col_text(cJSON *o, const char *k, sqlite3_stmt *s, int i){
@@ -247,6 +50,362 @@ static char *err_json(const char *code){
   char *j=cJSON_PrintUnformatted(o); cJSON_Delete(o); return j;
 }
 
+/* ── paged lists ───────────────────────────────────────────────────────────
+ *
+ * Every list the digest and the per-source view return used to be a bare
+ * `ORDER BY … LIMIT 50/100/30/20/30` with nothing in the response saying a
+ * LIMIT had been applied, so the admin page had to mirror those numbers in a
+ * client constant and guess "a full list means there may be more". Worse, the
+ * three "verified" buckets (awaiting_apply, awaiting_pr, auto_dismissed) were
+ * carved out of the newest 50 verified repairs: a staged fix older than the
+ * 50th verified row in the window was never offered for review at all.
+ *
+ * Now each list is one row in ML below — a COUNT(*) and a SELECT over the SAME
+ * predicate — and every response that carries a list also carries its page
+ * block, {limit, offset, count, total, has_more}, in the shape the other
+ * offset-paged routes (entityapi.c, miscapi.c) use. `total` is a measured
+ * COUNT(*) or null when the count itself failed, never a guess. The digest and
+ * the per-source view keep their arrays (and the sizes they always served, so
+ * a client that reads only the arrays — the iOS app — sees exactly what it saw
+ * before, plus each verified bucket in full up to its own limit); the next
+ * pages come from
+ *     GET /api/admin/maintenance/lists/:name?hours=&limit=&offset=
+ *     GET /api/admin/maintenance/source/:id/:list?limit=&offset=
+ * which run the very same row of ML. */
+
+enum { MLB_NONE = 0, MLB_WINDOW, MLB_SOURCE };
+
+typedef struct {
+  const char *name;
+  int bind;            /* ?1: MLB_WINDOW "-N hours", MLB_SOURCE source id   */
+  int dflt;            /* rows the digest/detail serve; 0 = every row       */
+  const char *count_sql;
+  const char *select_sql;    /* ends LIMIT ?2 OFFSET ?3                     */
+  void (*row)(cJSON *o, sqlite3_stmt *s);
+} mlist;
+
+/* `patch`, `gate` and `model` are what the reviewer is approving. The admin
+ * page's RepairCard renders the URL swap from row.patch and offers "Approve"
+ * on a verified url_swap — and the digest's query once did not select patch
+ * (nor gate or model), so the card showed an Approve button over an EMPTY
+ * diff: a live URL override applied on the strength of a change nobody was
+ * shown. Same columns as the per-source view's repairs. */
+#define ML_REPAIR_COLS \
+  "id,anomaly_id,source_id,status,action,triage_class,pr_url,created_at," \
+  "patch,gate,model"
+static void row_repair(cJSON *r, sqlite3_stmt *s){
+  col_int(r,"id",s,0); col_int(r,"anomaly_id",s,1); col_text(r,"source_id",s,2);
+  col_text(r,"status",s,3); col_text(r,"action",s,4);
+  col_text(r,"triage_class",s,5); col_text(r,"pr_url",s,6);
+  col_text(r,"created_at",s,7); col_text(r,"patch",s,8);
+  col_text(r,"gate",s,9); col_text(r,"model",s,10);
+}
+static void row_quarantined(cJSON *c, sqlite3_stmt *s){
+  col_text(c,"source_id",s,0); col_text(c,"name",s,1); col_text(c,"category",s,2);
+  col_text(c,"since",s,3); col_text(c,"until",s,4);
+  cJSON_AddBoolToObject(c,"active",sqlite3_column_int(s,6)!=0);
+  col_text(c,"reason",s,5);
+}
+static void row_override(cJSON *c, sqlite3_stmt *s){
+  col_text(c,"source_id",s,0); col_text(c,"old_url",s,1); col_text(c,"new_url",s,2);
+  col_int(c,"anomaly_id",s,3); col_text(c,"created_at",s,4);
+}
+static void row_worst(cJSON *c, sqlite3_stmt *s){
+  long su=(long)sqlite3_column_int64(s,1), fa=(long)sqlite3_column_int64(s,2);
+  col_text(c,"source_id",s,0);
+  cJSON_AddNumberToObject(c,"success",(double)su);
+  cJSON_AddNumberToObject(c,"fail",(double)fa);
+  cJSON_AddItemToObject(c,"success_rate",rate_num(su,fa));
+}
+static void row_run(cJSON *r, sqlite3_stmt *s){
+  col_int(r,"id",s,0); col_text(r,"timestamp",s,1); col_text(r,"status",s,2);
+  col_int(r,"records_fetched",s,3); col_int(r,"duration_ms",s,4);
+  col_text(r,"error",s,5);
+}
+static void row_anomaly(cJSON *r, sqlite3_stmt *s){
+  col_int(r,"id",s,0); col_int(r,"fetch_log_id",s,1); col_text(r,"verdict",s,2);
+  col_text(r,"reason",s,3); col_text(r,"evidence",s,4);
+  col_int(r,"escalation_level",s,5); col_text(r,"created_at",s,6);
+  col_text(r,"resolved_at",s,7); col_text(r,"resolution",s,8);
+  col_text(r,"triage_class",s,9); col_real(r,"triage_confidence",s,10);
+  col_text(r,"triage_evidence",s,11); col_text(r,"triage_suggested_fix",s,12);
+  col_text(r,"triaged_at",s,13); col_text(r,"triage_model",s,14);
+}
+static void row_source_repair(cJSON *r, sqlite3_stmt *s){
+  col_int(r,"id",s,0); col_int(r,"anomaly_id",s,1); col_text(r,"status",s,2);
+  col_text(r,"action",s,3); col_text(r,"patch",s,4); col_text(r,"gate",s,5);
+  col_text(r,"model",s,6); col_text(r,"pr_url",s,7);
+  col_text(r,"triage_class",s,8); col_text(r,"created_at",s,9);
+}
+
+/* A repair bucket inside the window: one predicate, used by both statements. */
+#define ML_WIN "created_at>=datetime('now',?1)"
+#define ML_REPAIRS(pred) \
+  "SELECT COUNT(*) FROM collector_repair WHERE " pred " AND " ML_WIN, \
+  "SELECT " ML_REPAIR_COLS " FROM collector_repair WHERE " pred " AND " ML_WIN \
+  " ORDER BY created_at DESC,id DESC LIMIT ?2 OFFSET ?3"
+/* worst_sources excludes the await_recovery bookkeeping rows, as it always
+ * has, and counts GROUPS: its total is the number of sources, not repairs. */
+#define ML_NA "(action IS NULL OR action <> 'await_recovery')"
+#define ML_WORST_FROM \
+  " FROM collector_repair WHERE " ML_WIN " AND " ML_NA " GROUP BY source_id " \
+  "HAVING (SUM(status IN ('verified','merged'))+SUM(status IN ('rejected','error')))>0"
+
+/* Digest lists. Order is the order they appear in the digest's `pages`. */
+static const mlist ML_DIGEST[] = {
+  { "needs_human",    MLB_WINDOW, 50, ML_REPAIRS("status='needs_human'"), row_repair },
+  { "auto_fixed",     MLB_WINDOW, 50, ML_REPAIRS("status='merged'"), row_repair },
+  /* A verified url_swap without a PR is applied from this page; with one it
+   * waits on the PR. pr_url IS NOT NULL is the old `cJSON_IsString(pr_url)`. */
+  { "awaiting_apply", MLB_WINDOW, 50,
+    ML_REPAIRS("status='verified' AND action='url_swap' AND pr_url IS NULL"), row_repair },
+  { "awaiting_pr",    MLB_WINDOW, 50,
+    ML_REPAIRS("status='verified' AND action='url_swap' AND pr_url IS NOT NULL"), row_repair },
+  { "auto_dismissed", MLB_WINDOW, 50,
+    ML_REPAIRS("status='verified' AND action='auto_dismiss'"), row_repair },
+  /* Served whole by the digest, as it always was — capping it there now would
+   * slice it silently for any client that does not read `pages`. */
+  { "quarantined",    MLB_NONE,    0,
+    "SELECT COUNT(*) FROM sources WHERE quarantined_until IS NOT NULL",
+    "SELECT id,name,category,quarantined_at,quarantined_until,quarantine_reason,"
+    "(quarantined_until>datetime('now')) FROM sources "
+    "WHERE quarantined_until IS NOT NULL ORDER BY quarantined_at DESC,id "
+    "LIMIT ?2 OFFSET ?3", row_quarantined },
+  { "url_overrides",  MLB_NONE,  100,
+    "SELECT COUNT(*) FROM collector_url_overrides",
+    "SELECT source_id,old_url,new_url,anomaly_id,created_at "
+    "FROM collector_url_overrides ORDER BY created_at DESC,source_id "
+    "LIMIT ?2 OFFSET ?3", row_override },
+  { "worst_sources",  MLB_WINDOW, 50,
+    "SELECT COUNT(*) FROM (SELECT source_id" ML_WORST_FROM ")",
+    "SELECT source_id,SUM(status IN ('verified','merged')),"
+    "SUM(status IN ('rejected','error'))" ML_WORST_FROM
+    " ORDER BY 3 DESC,2 DESC,source_id LIMIT ?2 OFFSET ?3", row_worst },
+};
+
+/* Per-source lists (GET /api/admin/maintenance/source/:id[/:list]). */
+static const mlist ML_SOURCE_LISTS[] = {
+  { "fetch_log", MLB_SOURCE, 30,
+    "SELECT COUNT(*) FROM fetch_log WHERE source_id=?1",
+    "SELECT id,timestamp,status,records_fetched,duration_ms,error "
+    "FROM fetch_log WHERE source_id=?1 ORDER BY timestamp DESC,id DESC "
+    "LIMIT ?2 OFFSET ?3", row_run },
+  { "anomalies", MLB_SOURCE, 20,
+    "SELECT COUNT(*) FROM collector_anomaly WHERE source_id=?1",
+    "SELECT id,fetch_log_id,verdict,reason,evidence,escalation_level,created_at,"
+    "resolved_at,resolution,triage_class,triage_confidence,triage_evidence,"
+    "triage_suggested_fix,triaged_at,triage_model "
+    "FROM collector_anomaly WHERE source_id=?1 "
+    "ORDER BY created_at DESC,id DESC LIMIT ?2 OFFSET ?3", row_anomaly },
+  { "repairs", MLB_SOURCE, 30,
+    "SELECT COUNT(*) FROM collector_repair WHERE source_id=?1",
+    "SELECT id,anomaly_id,status,action,patch,gate,model,pr_url,triage_class,created_at "
+    "FROM collector_repair WHERE source_id=?1 "
+    "ORDER BY created_at DESC,id DESC LIMIT ?2 OFFSET ?3", row_source_repair },
+};
+
+#define ML_N(a) ((int)(sizeof(a)/sizeof((a)[0])))
+#define ML_LIMIT_MAX 200
+
+static const mlist *ml_find(const mlist *set, int n, const char *name){
+  if (!name) return NULL;
+  for (int i=0;i<n;i++) if (!strcmp(set[i].name,name)) return &set[i];
+  return NULL;
+}
+
+/* One page of list `L`. `limit` <= 0 reads every row. Returns the row array
+ * and sets *page_out to {limit,offset,count,total,has_more}; both owned by the
+ * caller. `arg` is the ?1 value (window or source id; ignored for MLB_NONE).
+ *
+ * has_more is measured, not inferred: the SELECT asks for limit+1 rows, and a
+ * row past the limit is the proof that more exist. It is also true when the
+ * measured total exceeds what this page reached — which is what catches a
+ * scan that ended early on an error, since `while (step()==ROW)` cannot tell
+ * SQLITE_DONE from a failure. */
+static cJSON *ml_page(sqlite3 *h, const mlist *L, const char *arg,
+                      int limit, int offset, cJSON **page_out){
+  if (offset<0) offset=0;
+  long long total=-1;
+  sqlite3_stmt *s=NULL;
+  if (sqlite3_prepare_v2(h,L->count_sql,-1,&s,NULL)==SQLITE_OK){
+    if (L->bind!=MLB_NONE) sqlite3_bind_text(s,1,arg?arg:"",-1,SQLITE_TRANSIENT);
+    if (sqlite3_step(s)==SQLITE_ROW) total=sqlite3_column_int64(s,0);
+  }
+  sqlite3_finalize(s); s=NULL;
+
+  cJSON *arr=cJSON_CreateArray();
+  int count=0, more=0;
+  if (sqlite3_prepare_v2(h,L->select_sql,-1,&s,NULL)==SQLITE_OK){
+    if (L->bind!=MLB_NONE) sqlite3_bind_text(s,1,arg?arg:"",-1,SQLITE_TRANSIENT);
+    sqlite3_bind_int64(s,2,limit>0 ? (sqlite3_int64)limit+1 : -1);
+    sqlite3_bind_int64(s,3,(sqlite3_int64)offset);
+    while (sqlite3_step(s)==SQLITE_ROW){
+      if (limit>0 && count>=limit){ more=1; break; }
+      cJSON *r=cJSON_CreateObject();
+      L->row(r,s);
+      cJSON_AddItemToArray(arr,r);
+      count++;
+    }
+  }
+  sqlite3_finalize(s);
+  if (total>=0 && (long long)offset+count<total) more=1;
+
+  cJSON *pg=cJSON_CreateObject();
+  if (limit>0) cJSON_AddNumberToObject(pg,"limit",limit);
+  else         cJSON_AddNullToObject(pg,"limit");          /* every row */
+  cJSON_AddNumberToObject(pg,"offset",offset);
+  cJSON_AddNumberToObject(pg,"count",count);
+  if (total>=0) cJSON_AddNumberToObject(pg,"total",(double)total);
+  else          cJSON_AddNullToObject(pg,"total");
+  cJSON_AddBoolToObject(pg,"has_more",more);
+  *page_out=pg;
+  return arr;
+}
+
+/* Put list `L`'s first page into `o` under its own name and its page block
+ * into `pages`. */
+static void ml_embed(sqlite3 *h, const mlist *L, const char *arg,
+                     cJSON *o, cJSON *pages){
+  cJSON *pg=NULL;
+  cJSON *arr=ml_page(h,L,arg,L->dflt,0,&pg);
+  cJSON_AddItemToObject(o,L->name,arr);
+  cJSON_AddItemToObject(pages,L->name,pg);
+}
+
+static int source_exists(sqlite3 *h, const char *source_id){
+  sqlite3_stmt *s=NULL; int found=0;
+  if (sqlite3_prepare_v2(h,"SELECT 1 FROM sources WHERE id=?1",-1,&s,NULL)==SQLITE_OK){
+    sqlite3_bind_text(s,1,source_id,-1,SQLITE_TRANSIENT);
+    found = sqlite3_step(s)==SQLITE_ROW;
+  }
+  sqlite3_finalize(s);
+  return found;
+}
+
+char *maintenance_list(db_handle *db, const char *name, const char *source_id,
+                       int hours, int limit, int offset, int *status){
+  if (!db || !db->h){ *status=500; return err_json("server_error"); }
+  const mlist *L = source_id
+    ? ml_find(ML_SOURCE_LISTS,ML_N(ML_SOURCE_LISTS),name)
+    : ml_find(ML_DIGEST,ML_N(ML_DIGEST),name);
+  if (!L){ *status=404; return err_json("unknown_list"); }
+  if (source_id && !source_exists(db->h,source_id)){
+    *status=404; return err_json("source_not_found");
+  }
+  if (hours<1) hours=24;
+  if (hours>720) hours=720;
+  if (limit<=0) limit = L->dflt>0 ? L->dflt : 50;
+  if (limit>ML_LIMIT_MAX) limit=ML_LIMIT_MAX;
+  if (offset<0) offset=0;
+  char win[32]; snprintf(win,sizeof win,"-%d hours",hours);
+  const char *arg = L->bind==MLB_SOURCE ? source_id : L->bind==MLB_WINDOW ? win : NULL;
+
+  cJSON *pg=NULL;
+  cJSON *arr=ml_page(db->h,L,arg,limit,offset,&pg);
+  char ts[40]; iso_now(ts,sizeof ts);
+  cJSON *o=cJSON_CreateObject();
+  cJSON_AddItemToObject(o,"data",arr);
+  cJSON_AddItemToObject(o,"page",pg);
+  cJSON *mt=cJSON_CreateObject();
+  cJSON_AddStringToObject(mt,"list",L->name);
+  if (L->bind==MLB_WINDOW) cJSON_AddNumberToObject(mt,"window_hours",hours);
+  if (source_id) cJSON_AddStringToObject(mt,"source_id",source_id);
+  cJSON_AddStringToObject(mt,"generated_at",ts);
+  cJSON_AddItemToObject(o,"meta",mt);
+  char *j=cJSON_PrintUnformatted(o); cJSON_Delete(o);
+  *status=200;
+  return j;
+}
+
+char *maintenance_digest(db_handle *db, int hours) {
+  if (hours<1) hours=24;
+  if (hours>720) hours=720;
+  char win[32]; snprintf(win,sizeof win,"-%d hours",hours);
+  sqlite3 *h=db->h; sqlite3_stmt *s;
+  long verified=0,merged=0,rejected=0,needs=0,error=0;
+  if (sqlite3_prepare_v2(h,"SELECT status,COUNT(*) FROM collector_repair "
+    "WHERE created_at>=datetime('now',?1) GROUP BY status",-1,&s,NULL)==SQLITE_OK){
+    sqlite3_bind_text(s,1,win,-1,SQLITE_TRANSIENT);
+    while (sqlite3_step(s)==SQLITE_ROW){
+      const char *st=(const char*)sqlite3_column_text(s,0);
+      long n=sqlite3_column_int64(s,1);
+      if(!strcmp(st,"verified"))verified=n; else if(!strcmp(st,"merged"))merged=n;
+      else if(!strcmp(st,"rejected"))rejected=n; else if(!strcmp(st,"needs_human"))needs=n;
+      else if(!strcmp(st,"error"))error=n;
+    }
+  }
+  sqlite3_finalize(s);
+  cJSON *byClass=cJSON_CreateArray();
+  char q1[400];
+  snprintf(q1,sizeof q1,
+    "SELECT COALESCE(triage_class,'?'),"
+    "SUM(status IN ('verified','merged')),SUM(status IN ('rejected','error')),"
+    "SUM(status='needs_human') FROM collector_repair "
+    "WHERE created_at>=datetime('now',?1) AND %s GROUP BY 1 "
+    "ORDER BY (SUM(status IN ('verified','merged'))+SUM(status IN ('rejected','error'))) DESC",ML_NA);
+  if (sqlite3_prepare_v2(h,q1,-1,&s,NULL)==SQLITE_OK){
+    sqlite3_bind_text(s,1,win,-1,SQLITE_TRANSIENT);
+    while (sqlite3_step(s)==SQLITE_ROW){
+      long su=sqlite3_column_int64(s,1),fa=sqlite3_column_int64(s,2),nh=sqlite3_column_int64(s,3);
+      cJSON *c=cJSON_CreateObject();
+      cJSON_AddStringToObject(c,"class",(const char*)sqlite3_column_text(s,0));
+      cJSON_AddNumberToObject(c,"success",(double)su);
+      cJSON_AddNumberToObject(c,"fail",(double)fa);
+      cJSON_AddNumberToObject(c,"needs_human",(double)nh);
+      cJSON_AddItemToObject(c,"success_rate",rate_num(su,fa));
+      cJSON_AddItemToArray(byClass,c);
+    }
+  }
+  sqlite3_finalize(s);
+
+  char ts[40]; iso_now(ts,sizeof ts);
+  cJSON *o=cJSON_CreateObject();
+  cJSON_AddStringToObject(o,"generated_at",ts);
+  cJSON_AddNumberToObject(o,"window_hours",hours);
+  cJSON *tot=cJSON_CreateObject();
+  cJSON_AddNumberToObject(tot,"verified",(double)verified);
+  cJSON_AddNumberToObject(tot,"merged",(double)merged);
+  cJSON_AddNumberToObject(tot,"rejected",(double)rejected);
+  cJSON_AddNumberToObject(tot,"needs_human",(double)needs);
+  cJSON_AddNumberToObject(tot,"error",(double)error);
+  cJSON_AddItemToObject(o,"totals",tot);
+  cJSON_AddItemToObject(o,"success_by_class",byClass);
+
+  /* Every list, first page, plus `pages` saying how much of each that is.
+   * The three verified buckets are grouped under awaiting_review /
+   * auto_dismissed exactly where the digest has always put them. */
+  cJSON *pages=cJSON_CreateObject();
+  cJSON *aw=cJSON_CreateObject();
+  for (int i=0;i<ML_N(ML_DIGEST);i++){
+    const mlist *L=&ML_DIGEST[i];
+    const char *arg = L->bind==MLB_WINDOW ? win : NULL;
+    int in_review = !strcmp(L->name,"awaiting_apply") || !strcmp(L->name,"awaiting_pr");
+    ml_embed(h,L,arg,in_review?aw:o,pages);
+  }
+  cJSON_AddItemToObject(o,"awaiting_review",aw);
+  cJSON_AddItemToObject(o,"pages",pages);
+
+  /* llmConcurrencySnapshot — C LLM runtime has no shared queue gauge; report
+   * the configured limits with zeroed live counters (honest, stable shape). */
+  cJSON *cc=cJSON_CreateObject();
+  int hl=getenv("LLM_HEAVY_CONCURRENCY")?atoi(getenv("LLM_HEAVY_CONCURRENCY")):1;
+  int ml=getenv("LLM_MID_CONCURRENCY")?atoi(getenv("LLM_MID_CONCURRENCY")):2;
+  if (hl<1)hl=1;
+  if (ml<1)ml=1;
+  cJSON *hv=cJSON_CreateObject();
+  cJSON_AddNumberToObject(hv,"limit",hl); cJSON_AddNumberToObject(hv,"inflight",0);
+  cJSON_AddNumberToObject(hv,"waiting",0); cJSON_AddItemToObject(cc,"heavy",hv);
+  cJSON *md=cJSON_CreateObject();
+  cJSON_AddNumberToObject(md,"limit",ml); cJSON_AddNumberToObject(md,"inflight",0);
+  cJSON_AddNumberToObject(md,"waiting",0); cJSON_AddItemToObject(cc,"mid",md);
+  cJSON_AddItemToObject(o,"concurrency",cc);
+  char *j=cJSON_PrintUnformatted(o); cJSON_Delete(o); return j;
+}
+
+/* ── per-source pipeline detail + operator actions ──────────────────────
+ * The digest above is host-wide aggregate; these expose one source's full
+ * detect→triage→repair chain and let the operator steer it. */
+
 char *maintenance_source_detail(db_handle *db, const char *source_id){
   if (!db || !db->h || !source_id || !*source_id) return NULL;
   sqlite3 *h=db->h; sqlite3_stmt *s;
@@ -276,68 +435,14 @@ char *maintenance_source_detail(db_handle *db, const char *source_id){
   sqlite3_finalize(s);
   if (!src) return NULL;  /* unknown source → caller replies 404 */
 
-  cJSON *runs=cJSON_CreateArray();
-  if (sqlite3_prepare_v2(h,
-    "SELECT id,timestamp,status,records_fetched,duration_ms,error "
-    "FROM fetch_log WHERE source_id=?1 ORDER BY timestamp DESC,id DESC LIMIT 30",
-    -1,&s,NULL)==SQLITE_OK){
-    sqlite3_bind_text(s,1,source_id,-1,SQLITE_TRANSIENT);
-    while (sqlite3_step(s)==SQLITE_ROW){
-      cJSON *r=cJSON_CreateObject();
-      col_int(r,"id",s,0); col_text(r,"timestamp",s,1); col_text(r,"status",s,2);
-      col_int(r,"records_fetched",s,3); col_int(r,"duration_ms",s,4);
-      col_text(r,"error",s,5);
-      cJSON_AddItemToArray(runs,r);
-    }
-  }
-  sqlite3_finalize(s);
-
-  cJSON *anoms=cJSON_CreateArray();
-  if (sqlite3_prepare_v2(h,
-    "SELECT id,fetch_log_id,verdict,reason,evidence,escalation_level,created_at,"
-    "resolved_at,resolution,triage_class,triage_confidence,triage_evidence,"
-    "triage_suggested_fix,triaged_at,triage_model "
-    "FROM collector_anomaly WHERE source_id=?1 "
-    "ORDER BY created_at DESC,id DESC LIMIT 20",-1,&s,NULL)==SQLITE_OK){
-    sqlite3_bind_text(s,1,source_id,-1,SQLITE_TRANSIENT);
-    while (sqlite3_step(s)==SQLITE_ROW){
-      cJSON *r=cJSON_CreateObject();
-      col_int(r,"id",s,0); col_int(r,"fetch_log_id",s,1); col_text(r,"verdict",s,2);
-      col_text(r,"reason",s,3); col_text(r,"evidence",s,4);
-      col_int(r,"escalation_level",s,5); col_text(r,"created_at",s,6);
-      col_text(r,"resolved_at",s,7); col_text(r,"resolution",s,8);
-      col_text(r,"triage_class",s,9); col_real(r,"triage_confidence",s,10);
-      col_text(r,"triage_evidence",s,11); col_text(r,"triage_suggested_fix",s,12);
-      col_text(r,"triaged_at",s,13); col_text(r,"triage_model",s,14);
-      cJSON_AddItemToArray(anoms,r);
-    }
-  }
-  sqlite3_finalize(s);
-
-  cJSON *reps=cJSON_CreateArray();
-  if (sqlite3_prepare_v2(h,
-    "SELECT id,anomaly_id,status,action,patch,gate,model,pr_url,triage_class,created_at "
-    "FROM collector_repair WHERE source_id=?1 "
-    "ORDER BY created_at DESC,id DESC LIMIT 30",-1,&s,NULL)==SQLITE_OK){
-    sqlite3_bind_text(s,1,source_id,-1,SQLITE_TRANSIENT);
-    while (sqlite3_step(s)==SQLITE_ROW){
-      cJSON *r=cJSON_CreateObject();
-      col_int(r,"id",s,0); col_int(r,"anomaly_id",s,1); col_text(r,"status",s,2);
-      col_text(r,"action",s,3); col_text(r,"patch",s,4); col_text(r,"gate",s,5);
-      col_text(r,"model",s,6); col_text(r,"pr_url",s,7);
-      col_text(r,"triage_class",s,8); col_text(r,"created_at",s,9);
-      cJSON_AddItemToArray(reps,r);
-    }
-  }
-  sqlite3_finalize(s);
-
   char ts[40]; iso_now(ts,sizeof ts);
   cJSON *o=cJSON_CreateObject();
   cJSON_AddStringToObject(o,"generated_at",ts);
   cJSON_AddItemToObject(o,"source",src);
-  cJSON_AddItemToObject(o,"fetch_log",runs);
-  cJSON_AddItemToObject(o,"anomalies",anoms);
-  cJSON_AddItemToObject(o,"repairs",reps);
+  cJSON *pages=cJSON_CreateObject();
+  for (int i=0;i<ML_N(ML_SOURCE_LISTS);i++)
+    ml_embed(h,&ML_SOURCE_LISTS[i],source_id,o,pages);
+  cJSON_AddItemToObject(o,"pages",pages);
   char *j=cJSON_PrintUnformatted(o); cJSON_Delete(o); return j;
 }
 

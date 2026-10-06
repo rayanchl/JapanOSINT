@@ -126,7 +126,7 @@
  * (D) core/httpd.c — three routes:
  *
  *       GET /api/intel/items/:uid/evidence        (plain auth, tenant-agnostic)
- *         char *body = evidence_list_for_item(g_db, uid, limit);
+ *         char *body = evidence_list_for_item(g_db, uid, limit, offset);
  *         if (!body) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
  *         reply_json(c, 200, body); free(body); return;
  *
@@ -229,16 +229,19 @@ int evidence_http_hook(const char *method, const char *url,
                        const char *const *req_headers,
                        long status, const void *body, size_t body_len);
 
-/* Custody records for one intel item uid, newest first.
+/* Custody records for one intel item uid, newest first, offset-paged.
  *   {"data":[{id,captured_at,source_id,request_url,request_method,
  *             request_headers:[…],response_status,response_headers:[…],
  *             content_sha256,content_bytes,content_type,blob_path,
  *             chain_seq,prev_hash,row_hash,blob_present}],
- *    "page":{"limit":n,"count":n},
- *    "meta":{"item_uid":…,"present":n,"evicted":n}}
- * limit defaults to 50, clamped 1..200. NULL → caller replies 500.
+ *    "page":{"limit":n,"offset":n,"count":n,"total":n|null,"has_more":b},
+ *    "meta":{"item_uid":…,"present":n,"evicted":n,"present_scope":"page"}}
+ * `total` is a COUNT(*) over the item's evidence (null if that count failed);
+ * present/evicted count the rows of this page only. limit defaults to 50,
+ * clamped 1..200; offset < 0 reads as 0. NULL → caller replies 500.
  * Caller frees. */
-char *evidence_list_for_item(db_handle *db, const char *item_uid, int limit);
+char *evidence_list_for_item(db_handle *db, const char *item_uid, int limit,
+                             int offset);
 
 /* Re-walk the whole evidence chain and report the FIRST break. Response shape
  * mirrors tenantapi_audit_verify() exactly so one client renderer serves both:

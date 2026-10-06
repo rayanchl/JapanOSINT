@@ -189,4 +189,12 @@ char *progress_snapshot_for(const char *request_id, const char *tenant_id,
 /* the `done` flag (1 finished, 0 in-flight; 0 if r==NULL). */
 int progress_is_done(osint_request *r);
 
+/* One line of a run, for a LIST of runs (searchapi_runs): phase, percent,
+ * done and degraded, copied under the lock — without serialising the whole
+ * snapshot, which carries the run's full results. Returns 1 when the record
+ * is live in memory AND belongs to `tenant_id`, else 0 (outputs untouched). */
+int progress_brief_for(const char *request_id, const char *tenant_id,
+                       char *phase, size_t phase_n, int *percent, int *done,
+                       int *degraded);
+
 #endif

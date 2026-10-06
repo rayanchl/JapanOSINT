@@ -1,8 +1,9 @@
 /* Safecast realtime radiation device network.
  * Endpoint: https://tt.safecast.org/devices                            (keyless)
  * (NOT api.safecast.org/measurements.json, whose newest record was stale.)
- * Emits one row per device reporting a tube count: cpm (UNIT: counts per
- * minute) tagged with the tube field it came from, capture time, coordinates.
+ * Emits one row per device report carrying a tube count: cpm (UNIT: counts per
+ * minute) tagged with the tube field it came from, capture time, coordinates,
+ * and the whole report as fetched under `report`.
  *
  * UNIT TRAP: lnd_7318u / lnd_7128ec / lnd_712u / lnd_7318c are CPM (counts per
  * minute), NOT uSv/h. They are emitted as cpm and the tube name is kept; no
@@ -16,7 +17,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
-#include "lib/seenset.h"
+#include "lib/keyqual.h"
 #include "_timefmt.inc"
 #include "third_party/cJSON.h"
 #include <stdio.h>
@@ -39,6 +40,29 @@ static int captured_year(const char *s) {
   return y;
 }
 
+/* The entry is a usable reading: a urn, a valid recent capture date, a real
+ * coordinate and at least one tube count. Both passes ask the same question,
+ * so the key census in pass 1 covers exactly the rows pass 2 emits. */
+static int usable(const cJSON *d, int min_year, double *lat, double *lon,
+                  const char **tube, double *cpm) {
+  const char *urn = jo_sv(d, "device_urn");
+  int y = captured_year(jo_sv(d, "when_captured"));
+  if (!urn || y < min_year || y < 2015) return 0;      /* stale/invalid date */
+  cJSON *la = cJSON_GetObjectItem(d, "loc_lat");
+  cJSON *lo = cJSON_GetObjectItem(d, "loc_lon");
+  if (!cJSON_IsNumber(la) || !cJSON_IsNumber(lo)) return 0;   /* no geo (R2) */
+  *lat = la->valuedouble; *lon = lo->valuedouble;
+  if ((*lat == 0 && *lon == 0) || *lat < -90 || *lat > 90 || *lon < -180 || *lon > 180)
+    return 0;
+  /* first tube field that carries a count */
+  *tube = NULL; *cpm = 0;
+  for (int i = 0; TUBES[i]; i++) {
+    cJSON *v = cJSON_GetObjectItem(d, TUBES[i]);
+    if (cJSON_IsNumber(v)) { *tube = TUBES[i]; *cpm = v->valuedouble; break; }
+  }
+  return *tube != NULL;                    /* no measurement -> no row (R1) */
+}
+
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *doc = feed_get_json(ctx->http, "https://tt.safecast.org/devices", 45000);
   if (!doc) { fprintf(stderr, "[" SRC "] fetch failed\n"); return -1; }
@@ -55,29 +79,40 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   int min_year = tmv.tm_year + 1900 - 1;      /* >= current-1, per parse notes */
 
-  int n = 0;
-  seen_set urn_seen = {0};
+  int n = 0, folded = 0;
+  /* IDENTITY. /devices lists one entry per device REPORT, and a busy device
+   * appears several times with different when_captured readings (live
+   * 2026-10-06: 2,085 entries, 11 urns listed more than once, one of them 7
+   * times), in no chronological order. Pass 1 counts every urn among the
+   * usable readings; pass 2 qualifies EVERY reading of a repeated urn by its
+   * capture time ("note:dev:…|2026-10-06T03:23:59Z"), falling back to a hash
+   * of the entry. It used to be first-come-plain: the plain urn went to
+   * whichever report the list put first — a different one on most 15-minute
+   * polls — so the row under it was overwritten by another reading while the
+   * reading it held re-appeared under a qualified uid. See lib/keyqual.h. */
+  keyqual kq = {0};
   cJSON *d;
   cJSON_ArrayForEach(d, doc) {
+    double lat, lon, cpm; const char *tube;
+    if (usable(d, min_year, &lat, &lon, &tube, &cpm))
+      keyqual_add(&kq, jo_sv(d, "device_urn"), jo_sv(d, "when_captured"));
+  }
+  keyqual_seal(&kq);
+
+  cJSON_ArrayForEach(d, doc) {
+    double lat, lon, cpm; const char *tube;
+    if (!usable(d, min_year, &lat, &lon, &tube, &cpm)) continue;
     const char *urn = jo_sv(d, "device_urn");
     const char *when = jo_sv(d, "when_captured");
-    int y = captured_year(when);
-    if (!urn || y < min_year || y < 2015) continue;      /* stale/invalid date */
 
-    cJSON *la = cJSON_GetObjectItem(d, "loc_lat");
-    cJSON *lo = cJSON_GetObjectItem(d, "loc_lon");
-    if (!cJSON_IsNumber(la) || !cJSON_IsNumber(lo)) continue;   /* no geo (R2) */
-    double lat = la->valuedouble, lon = lo->valuedouble;
-    if ((lat == 0 && lon == 0) || lat < -90 || lat > 90 || lon < -180 || lon > 180)
-      continue;
-
-    /* first tube field that carries a count */
-    const char *tube = NULL; double cpm = 0;
-    for (int i = 0; TUBES[i]; i++) {
-      cJSON *v = cJSON_GetObjectItem(d, TUBES[i]);
-      if (cJSON_IsNumber(v)) { tube = TUBES[i]; cpm = v->valuedouble; break; }
+    char keybuf[512];
+    const char *rk = urn;
+    if (keyqual_count(&kq, urn) > 1) {
+      char *raw = cJSON_PrintUnformatted(d);
+      rk = keyqual_uid(&kq, urn, when, raw ? raw : "", keybuf, sizeof keybuf);
+      free(raw);
+      if (!keyqual_claim(&kq, urn, rk)) { folded++; continue; }
     }
-    if (!tube) continue;                    /* no measurement -> no row (R1) */
 
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "device_urn", urn);
@@ -91,6 +126,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (dc) cJSON_AddStringToObject(p, "device_class", dc);
     const char *up = jo_sv(d, "service_uploaded");
     if (up) cJSON_AddStringToObject(p, "service_uploaded", up);
+    /* The whole report as fetched: every tube (not just the first that
+     * carries a count), the particulate counters, temperature, humidity,
+     * pressure, battery, location name and device metadata. */
+    cJSON_AddItemToObject(p, "report", cJSON_Duplicate(d, 1));
     char *pj = cJSON_PrintUnformatted(p);
     cJSON_Delete(p);
 
@@ -98,18 +137,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     snprintf(title, sizeof title, "Safecast %s: %.0f CPM (%s)", urn, cpm, tube);
 
     intel_item row = {0};
-    /* /devices lists one entry per device REPORT, and a busy device appears
-     * several times with different when_captured readings (live 2026-09-15:
-     * 2,074 entries, 2,058 urns; one urn 7 times with different capture time,
-     * temperature, particulate counts). Keyed on the urn alone, later reports
-     * upserted over earlier ones. A urn already seen this run is qualified by
-     * its capture time; a first occurrence keeps its plain urn and stored uid. */
-    char keybuf[224];
-    const char *rk = urn;
-    if (!seen_add(&urn_seen, urn)) {
-      snprintf(keybuf, sizeof keybuf, "%s|%s", urn, when ? when : "");
-      rk = keybuf;
-    }
     row.remote_key      = rk;
     row.title           = title;
     row.summary         = title;
@@ -124,9 +151,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (sink->emit(sink, &row) >= 0) n++;
     free(pj);
   }
-  seen_free(&urn_seen);
+  keyqual_free(&kq);
   cJSON_Delete(doc);
-  fprintf(stderr, "[" SRC "] emitted %d\n", n);
+  fprintf(stderr, "[" SRC "] emitted %d (%d byte-identical repeats folded)\n",
+          n, folded);
   return 0;
 }
 

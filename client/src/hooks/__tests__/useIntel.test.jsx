@@ -82,12 +82,18 @@ describe('Intel pages', () => {
     expect(items.length).toBeLessThanOrEqual(3);
   });
 
-  it('Nearby mode offers no text filter and no translation toggle (the server applies neither)', async () => {
-    mockFetch();
-    render(<MemoryRouter initialEntries={['/intel?view=search&mode=near&near=35.68,139.76']}><IntelPage /></MemoryRouter>);
+  it('Nearby mode offers the text filter and translation toggle the server now applies', async () => {
+    // nearapi.c applies q/qAlt and httpd.c shapes lang_view on the ?near=
+    // route; this test used to pin the opposite, from when it did neither.
+    const calls = mockFetch();
+    render(<MemoryRouter initialEntries={['/intel?view=search&mode=near&near=35.68,139.76&q=fire']}><IntelPage /></MemoryRouter>);
     await sleep(50);
-    expect(screen.queryByPlaceholderText(/text filter/i)).toBeNull();
-    expect(screen.queryByText('原文')).toBeNull();
-    expect(screen.getByText(/Filters by distance only/)).toBeTruthy();
+    expect(screen.getByPlaceholderText(/text filter/i)).toBeTruthy();
+    expect(screen.getByText('原文')).toBeTruthy();
+    expect(screen.queryByText(/Filters by distance only/)).toBeNull();
+    const near = calls.find((u) => u.includes('/api/intel/items') && u.includes('near='));
+    expect(near).toBeTruthy();
+    expect(near).toContain('q=fire');
+    expect(near).toContain('lang_view=both');
   });
 });

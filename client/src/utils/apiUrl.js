@@ -8,7 +8,10 @@
  *
  * `VITE_API_HOST` overrides the host — set it when the static client is
  * served from a different origin than the API (e.g. CDN-hosted SPA pointing
- * at a separate api.example.com backend).
+ * at a separate api.example.com backend). The server must then list the
+ * client's origin in JO_CORS_ORIGINS (native/core/cors.h): every /api call
+ * carries Authorization + X-Tenant-Id, so the browser preflights it, and an
+ * unlisted origin is refused. Unset, the server sends no CORS headers.
  *
  * Parallels `wsUrl.js`. Callers pass only the path (with leading `/api/...`).
  */

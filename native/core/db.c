@@ -478,6 +478,8 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
    * created inside content_change_ensure_schema() for the same reason as
    * above — the column does not exist when schema.sql runs. */
   ensure_column(db, "sources", "watch_content", "INTEGER");
+  /* The workspace run list names each run's query (searchapi_runs). */
+  ensure_column(db, "search_run_owners", "query", "TEXT");
   content_change_ensure_schema(db);
 
   /* Media analysis (roadmap 27). media_migrate() owns the rest, including the

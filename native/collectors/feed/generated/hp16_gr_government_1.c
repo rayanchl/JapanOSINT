@@ -13,17 +13,34 @@
 #include "lib/hpengine.h"
 
 static const hp_source T[] = {
+  /* Re-pointed 2026-10-06 (rule 4d). The row asked the SIMPLE search for
+   * `q=organizationUid:"15168"`, and /opendata/search ignores `q` altogether:
+   * that query, `q=organizationUid:"ZZZZ99999"` and no query at all each
+   * returned total=2,927,400 with the identical first 20 decisions, from eight
+   * different bodies. So a row that read as "one body's decisions" fetched the
+   * national firehose — and 15168 (a municipal register office) has published
+   * no decision in the window, so the honoured form of the same URL returns
+   * nothing. The simple search's organisation filter is `org=`, which takes
+   * the body's uid or its latinName (org=6018 and org=dimos_alexandrias both
+   * 2,582, all from 6018; org=99999999 and org=Siemens 0; an EMPTY org= is the
+   * unfiltered 2.9M). That makes this an entity pivot on the issuing body, and
+   * NOT a scheduled row: with no entity the empty org= would be the firehose
+   * again, which eur-diavgeia-decisions already reads.
+   *
+   * page is 0-based; size is clamped to 500 server-side (1,000 returns 500).
+   * The simple search only spans the last six months of issueDate — a wider
+   * from_issue_date is narrowed back to six months by the server. */
   { .id = "gr-diavgeia-decision-search",
-    .name = "Diavgeia (Greece) — government decision search",
+    .name = "Diavgeia (Greece) — decisions by issuing body",
     .collector = "gr_government", .category = "government",
-    .description = "Every published act of every Greek public body, including expenditure approvals, procurement awards and payment orders. Each row gives the ADA (unique decision id), protocol number, full Greek subject line, decision type, issuing organisation and unit, signer, and thematic categories. Queryable by organizationUid, decision type, date and free text — this is the single deepest 'who was paid by whom' feed in Greece.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
+    .description = "Every act a Greek public body published to Diavgeia in the last six months, for a body named by its Diavgeia uid or latin name (e.g. 6018 or dimos_alexandrias): expenditure approvals, procurement awards and payment orders. Each row gives the ADA (unique decision id), protocol number, full Greek subject line, decision type, issuing unit, signer, and thematic categories.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "government-record", .tags = "\"gr\",\"government\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "el",
-    .url = "https://diavgeia.gov.gr/opendata/search.json?q=organizationUid:%2215168%22&size=100",
+    .url = "https://diavgeia.gov.gr/opendata/search.json?org={q}&size=500",
     .array_path = "decisions",
     .id_keys = "ada",
     .detail_url = "https://diavgeia.gov.gr/opendata/decisions/{v}.json", .detail_key = "ada",
-    .page_walk = 1,
-    .interval = 86400, .free_tier = 1 },
+    .page_param = "page", .page_zero_based = 1, .page_max = 100,
+    .free_tier = 1 },
 
   { .id = "gr-diavgeia-dictionaries",
     .name = "Diavgeia — controlled-vocabulary index",

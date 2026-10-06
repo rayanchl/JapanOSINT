@@ -79,6 +79,17 @@ char *intelapi_list_items_st(db_handle *db, const intel_items_query *q,
                              int *status);
 char *intelapi_list_items(db_handle *db, const intel_items_query *q);
 
+/* The FTS5 MATCH expression for a typed `q` and its optional translated
+ * counterpart `q_alt` (?qAlt=): each sanitised by fts_query_expr() and OR'd
+ * when both survive and differ. malloc'd, or NULL when neither yields a
+ * searchable token — NULL means "no text filter", which the caller must
+ * DISCLOSE (meta.q_applied=false), never treat as "match nothing".
+ *
+ * One copy for every surface that filters intel_items by text: the feed above
+ * and the ?near= proximity mode (nearapi.c) build the same expression, so the
+ * same words find the same rows in both. */
+char *intelapi_fts_match(const char *q, const char *q_alt);
+
 /* GET /api/sources — malloc'd JSON array of all `sources` rows. */
 char *api_sources_list(db_handle *db);
 

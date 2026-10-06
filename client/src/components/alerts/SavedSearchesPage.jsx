@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LuRefreshCw, LuPlay, LuPencil, LuTrash2, LuBellRing, LuPin, LuPinOff, LuHistory, LuEraser } from 'react-icons/lu';
 import { api, errorMessage, ApiError } from '../../api/client.js';
-import { useApi } from '../../hooks/useApi.js';
+import { usePagedList } from '../../hooks/usePagedList.js';
+import { useMemberNames, authorLabel } from '../../hooks/useMembers.js';
 import { relativeTime, fmtAbs } from '../../utils/time.js';
 import {
   Page, Section, Card, Pill, Button, Input, Field, Segmented, Sheet, ConfirmDialog, ErrorNotice, EmptyState,
-  LoadingState, BoundNote, KV, toast, cx,
+  LoadingState, PagedFooter, KV, toast, cx,
 } from '../ui/kit.jsx';
 import { ChannelsEditor, validateChannels, emptyChannel } from './alertShared.jsx';
 
@@ -15,15 +16,18 @@ import { ChannelsEditor, validateChannels, emptyChannel } from './alertShared.js
  * `SearchHistoryView`. Both are SHARED with the workspace: every member sees
  * every member's entries (each row carries `user_id` and `mine`). Only the
  * author can pin, rename or delete a saved search, or clear their own history.
- *   GET   /api/saved-searches?kind&pinned&limit → {data:[{id,name,kind,params,pinned,created_at,last_run_at,run_count}], page:{limit,count}}
+ *   GET   /api/saved-searches?kind&pinned&mine&limit&offset → {data:[{id,name,kind,params,pinned,created_at,last_run_at,run_count,user_id,mine}],
+ *           page:{limit,offset,count,total,has_more}, meta:{scope}} — total is measured under the same filters
  *   POST  /api/saved-searches {name?, kind, params, pinned?}
  *   PATCH /api/saved-searches/:id {name?, params?, pinned?}   (kind immutable)
  *   DELETE /api/saved-searches/:id
  *   POST  /api/saved-searches/:id/run → bookkeeping only (meta.executed=false); the client re-issues the query
  *   POST  /api/saved-searches/:id/to-alert {channels, dedup_window_sec?, storm_cap_per_hour?, enabled?} — intel kind only
- *   GET   /api/search-history?limit&kind → {data:[{id,kind,params,result_count,ts}]} · DELETE clears
+ *   GET   /api/search-history?kind&mine&limit&offset → {data:[{id,kind,params,result_count,ts,user_id,mine}], page:{…,total,has_more}} · DELETE clears your own
  */
 const KINDS = ['all', 'intel', 'osint', 'entity', 'breach', 'map'];
+/** ?mine=1 narrows both lists (and their totals) to the caller's own entries. */
+const WHOSE = [{ value: 'all', label: 'everyone' }, { value: 'mine', label: 'mine' }];
 
 /** Where a saved search of `kind` executes in this client. */
 export function routeFor(kind, params) {
@@ -56,9 +60,14 @@ function paramsSummary(params) {
 export default function SavedSearchesPage() {
   const navigate = useNavigate();
   const [kind, setKind] = useState('all');
-  const path = `/api/saved-searches?limit=200${kind !== 'all' ? `&kind=${kind}` : ''}`;
-  const { data, error, loading, reload } = useApi(path, { deps: [kind] });
-  const rows = Array.isArray(data?.data) ? data.data : [];
+  const [whose, setWhose] = useState('all');
+  const qs = new URLSearchParams();
+  if (kind !== 'all') qs.set('kind', kind);
+  if (whose === 'mine') qs.set('mine', '1');
+  const path = `/api/saved-searches${qs.toString() ? `?${qs}` : ''}`;
+  const list = usePagedList(path, { pageSize: 50 });
+  const { rows, error, loading, loaded, reload } = list;
+  const names = useMemberNames();
   const [renaming, setRenaming] = useState(null);
   const [toAlert, setToAlert] = useState(null);
   const [confirmDel, setConfirmDel] = useState(null);
@@ -96,12 +105,13 @@ export default function SavedSearchesPage() {
       actions={(
         <>
           <Segmented value={kind} onChange={setKind} options={KINDS.map((k) => ({ value: k, label: k }))} />
+          <Segmented value={whose} onChange={setWhose} options={WHOSE} />
           <Button onClick={() => reload()} title="Reload"><LuRefreshCw size={13} /></Button>
         </>
       )}
     >
       {error && <ErrorNotice error={error} title="Could not load saved searches" onRetry={reload} />}
-      {loading && !data && <LoadingState label="Loading saved searches…" />}
+      {loading && !loaded && <LoadingState label="Loading saved searches…" />}
       {!loading && !error && rows.length === 0 && (
         <EmptyState title="No saved searches">Save a search from the Search, Intel or Entities tabs and it appears here.</EmptyState>
       )}
@@ -120,7 +130,7 @@ export default function SavedSearchesPage() {
                   </div>
                   <div className="text-[11px] text-osint-muted font-mono mt-0.5 break-words">{paramsSummary(s.params) || 'no parameters'}</div>
                   <div className="text-[11px] text-osint-muted mt-0.5">
-                    saved {s.mine === false ? 'by a teammate ' : 'by you '}{relativeTime(s.created_at)}{s.last_run_at && <span title={fmtAbs(s.last_run_at)}> · last run {relativeTime(s.last_run_at)}</span>}
+                    saved by {authorLabel(s, names)} {relativeTime(s.created_at)}{s.last_run_at && <span title={fmtAbs(s.last_run_at)}> · last run {relativeTime(s.last_run_at)}</span>}
                   </div>
                 </div>
                 <div className="flex items-center gap-1 flex-wrap">
@@ -133,18 +143,11 @@ export default function SavedSearchesPage() {
               </div>
             </Card>
           ))}
-          {/* page.count is the size of THIS response, not a total, and the
-            * endpoint has no cursor: a full page means there may be more that
-            * this list cannot reach. */}
-          {data?.page?.limit != null && rows.length >= data.page.limit ? (
-            <div className="text-[11px] text-accent font-mono">showing the first {rows.length} saved searches — the server returns at most {data.page.limit} per request and offers no paging, so any beyond these are not listed.</div>
-          ) : (
-            <BoundNote shown={rows.length} total={rows.length} noun="saved searches" />
-          )}
+          <PagedFooter shown={rows.length} total={list.total} hasMore={list.hasMore} busy={list.loadingMore} onMore={list.loadMore} error={list.moreError} noun="saved searches" />
         </div>
       )}
 
-      <HistorySection onRun={(h) => navigate(routeFor(h.kind, h.params))} />
+      <HistorySection mine={whose === 'mine'} onRun={(h) => navigate(routeFor(h.kind, h.params))} />
 
       <RenameSheet search={renaming} onClose={() => setRenaming(null)} onSaved={() => { setRenaming(null); reload({ silent: true }); }} />
       <ToAlertSheet search={toAlert} onClose={() => setToAlert(null)} onCreated={() => { setToAlert(null); }} />
@@ -231,10 +234,10 @@ function ToAlertSheet({ search, onClose, onCreated }) {
   );
 }
 
-function HistorySection({ onRun }) {
-  // 200 is the server's per-request maximum (savedsearchapi.c clamp_limit).
-  const { data, error, loading, reload } = useApi('/api/search-history?limit=200');
-  const rows = Array.isArray(data?.data) ? data.data : [];
+function HistorySection({ onRun, mine = false }) {
+  const list = usePagedList(`/api/search-history${mine ? '?mine=1' : ''}`, { pageSize: 50 });
+  const { rows, error, loading, loaded, reload, meta } = list;
+  const names = useMemberNames();
   const [confirmClear, setConfirmClear] = useState(false);
   const [busy, setBusy] = useState(false);
   const clear = async () => {
@@ -245,7 +248,7 @@ function HistorySection({ onRun }) {
   };
   return (
     <Section
-      label="Recent · private to you"
+      label={mine ? 'Recent · yours' : 'Recent · this workspace'}
       right={(
         <div className="flex gap-1">
           <Button size="sm" variant="ghost" onClick={() => reload()} title="Reload"><LuRefreshCw size={11} /></Button>
@@ -256,7 +259,7 @@ function HistorySection({ onRun }) {
     >
       <div className="px-3 pt-2 text-[11px] text-osint-muted flex items-center gap-1"><LuHistory size={11} /> Searches run in this workspace are recorded here, and every member can read this list. Clear removes only your own.</div>
       {error && <div className="p-3"><ErrorNotice error={error} title="Could not load history" onRetry={reload} /></div>}
-      {loading && !data && <LoadingState label="Loading history…" />}
+      {loading && !loaded && <LoadingState label="Loading history…" />}
       {!loading && !error && rows.length === 0 && <div className="p-3 text-xs text-osint-muted">No recent searches.</div>}
       {rows.length > 0 && (
         <ul className="divide-y divide-osint-border">
@@ -264,7 +267,7 @@ function HistorySection({ onRun }) {
             <li key={h.id} className="px-3 py-2 flex items-center gap-2 text-xs">
               <Pill tone="cyan">{h.kind}</Pill>
               <span className="font-mono text-osint-text truncate flex-1">{paramsSummary(h.params) || '—'}</span>
-              <span className="text-osint-muted whitespace-nowrap">{h.mine === false ? 'teammate' : 'you'}</span>
+              <span className="text-osint-muted whitespace-nowrap" title={h.user_id || undefined}>{authorLabel(h, names)}</span>
               <span className="font-mono text-osint-muted whitespace-nowrap" title={fmtAbs(h.ts)}>{h.result_count != null ? `${h.result_count} results · ` : ''}{relativeTime(h.ts)}</span>
               <Button size="sm" onClick={() => onRun(h)} title="Run this search again"><LuPlay size={11} /></Button>
             </li>
@@ -272,12 +275,9 @@ function HistorySection({ onRun }) {
         </ul>
       )}
       {rows.length > 0 && (
-        <div className="px-3 py-2">
-          {data?.page?.limit != null && rows.length >= data.page.limit ? (
-            <div className="text-[11px] text-accent font-mono">showing the latest {rows.length} searches — the server keeps up to {data?.meta?.retained_max ?? 'more than this'} per user but returns at most {data.page.limit} per request, with no paging.</div>
-          ) : (
-            <BoundNote shown={rows.length} total={rows.length} noun="recent searches" />
-          )}
+        <div className="px-3 py-2 space-y-0.5">
+          <PagedFooter shown={rows.length} total={list.total} hasMore={list.hasMore} busy={list.loadingMore} onMore={list.loadMore} error={list.moreError} noun="recent searches" />
+          {meta?.retained_max != null && <div className="text-[10px] text-osint-muted">the server keeps each member's {meta.retained_max} most recent searches</div>}
         </div>
       )}
       <ConfirmDialog open={confirmClear} onClose={() => setConfirmClear(false)} onConfirm={clear} title="Clear search history?" confirmLabel="Clear history" message="Removes every search you ran from the workspace history. Your teammates' searches and all saved searches are kept." />

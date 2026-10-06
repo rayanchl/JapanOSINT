@@ -2556,15 +2556,43 @@ static const hp_source HP3B19_LATAM[] = {
     .tags = "\"paraguay\",\"transparency\",\"foi\",\"accesstoinformation\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://informacionpublica.paraguay.gov.py/api/dashboard/buscar?keyword={q}&pageSize=100",
-    .headers = { "Content-Type: application/json;charset=utf-8" },
+    /* The server answers HTTP 500 "Content type '' not supported" without a
+     * JSON Content-Type, on the list AND on /detalle. The manifest wrote it
+     * `application/json\;charset=utf-8`, which gen_hp_batch rejects as a
+     * swallowed `charset` opt; plain `application/json` is served the same
+     * (200, 100 records, totalRecords 57,748 for "salud", 2026-10-06), so
+     * both copies now say that and nothing is ambiguous.
+     *
+     * `page` is a page NUMBER: pageSize=100&page=577 is the last 48 of 57,748
+     * and page=578 is empty. The row also declared page_size=100, which makes
+     * the engine treat page_param as an OFFSET — it asked for pages 0, 100,
+     * 200 … 600, read 7 of 578 pages, and stored 571 of 57,748 (records=600,
+     * UID-COLLISION 29). page_size is gone; pageSize stays in the URL.
+     *
+     * Two upstream properties to know before trusting a count from this row:
+     * the order of a result set is NOT stable between identical requests (the
+     * same page=0 came back with different first ids three times running), and
+     * one request id can appear several times on a page (66093 x3). A walk can
+     * therefore repeat some requests and miss others: two identical walks of
+     * "puente" (totalRecords 415, five pages) returned 415 rows each, holding
+     * 200 and 215 distinct ids. The front end sends no sort parameter either,
+     * so there is none to pin. The sink keeps one row per distinct
+     * id+content. */
+    .headers = { "Content-Type: application/json" },
     .array_path = "data.lista",
     .detail_key = "id",
     .detail_url = "https://informacionpublica.paraguay.gov.py/api/solicitud/{v}/detalle",
-    .id_keys = "id",
+    /* One row per (request, reply), not per request: a request answered
+     * twice comes back as two rows sharing `id` and differing only in
+     * `comentario`. "puente": 415 rows, 214 ids, 283 distinct rows, and
+     * id+comentario is 283 too. Keyed on `id` alone, a second reply on a
+     * later page collapsed onto the first. */
+    .id_keys = "id+comentario",
     .page_param = "page",
     /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 0,
     .page_zero_based = 1,
+    .page_max = 1000,
     .title_keys = "titulo",
     .description = "Every freedom-of-information request made under Paraguay's Law "
       "5282, searchable by keyword: the request id, the date filed, the "
@@ -2584,7 +2612,7 @@ static const hp_source HP3B19_LATAM[] = {
     .tags = "\"paraguay\",\"transparency\",\"institution\",\"directory\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://informacionpublica.paraguay.gov.py/api/institucion/list",
-    .headers = { "Content-Type: application/json;charset=utf-8" },
+    .headers = { "Content-Type: application/json" },   /* see PY_AIP_SOLICITUDES */
     .array_path = "data",
     .id_keys = "id",
     .interval = 21600,

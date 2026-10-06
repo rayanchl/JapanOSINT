@@ -15,8 +15,9 @@
  *       All CVE Numbering Authorities with assignment scope, PSIRT contact,
  *       disclosure policy and advisory-feed URLs — the index that says which
  *       organisation owns a given CVE assignment and where its advisories live.
- *       Emits: shortName, cnaID, organizationName, scope, and the fetched
- *       contact / disclosurePolicy / securityAdvisories subtrees verbatim.
+ *       Emits: shortName, cnaID, organizationName, scope, country, and the
+ *       fetched contact / disclosurePolicy / securityAdvisories / CNA /
+ *       resources subtrees verbatim — every field of the entry.
  *
  * Every URL stored is one the upstream document contained; none is constructed
  * from a name (R1). No geometry: a CNA is an organisation, not a place, and the
@@ -28,7 +29,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
-#include "lib/seenset.h"
+#include "lib/keyqual.h"
 #include "third_party/cJSON.h"
 #include <ctype.h>
 #include <stdio.h>
@@ -210,10 +211,26 @@ static int cna_dir_run(const source_ctx *c, intel_sink *s) {
   }
   /* Bare JSON array at root, one object per CNA. */
   cJSON *arr = cJSON_IsArray(doc) ? doc : cJSON_GetObjectItem(doc, "data");
-  int n = 0;
-  seen_set ids_seen = {0};
+  int n = 0, folded = 0;
+  /* IDENTITY. Keyed on cnaID — except that the CNA list reuses a cnaID for two
+   * distinct organisations (live 2026-10-06: CNA-2025-0032 is carried by two
+   * entries with different shortNames and organisation names). Pass 1 counts
+   * every cnaID over the whole list; pass 2 qualifies EVERY entry of a shared
+   * cnaID by its own shortName ("CNA-2025-0032|FERMAX"), falling back to a hash
+   * of the entry. It used to be first-come-plain: the plain cnaID went to
+   * whichever organisation the list happened to put first, so re-sorting the
+   * list (it is edited by hand upstream) moved one CNA's contact and scope onto
+   * the other's uid. See lib/keyqual.h. */
+  keyqual kq = {0};
   if (cJSON_IsArray(arr)) {
     cJSON *e;
+    cJSON_ArrayForEach(e, arr) {
+      const char *k = jo_sv(e, "cnaID");
+      if (!k) k = jo_sv(e, "shortName");
+      if (k && (jo_sv(e, "shortName") || jo_sv(e, "organizationName")))
+        keyqual_add(&kq, k, jo_sv(e, "shortName"));
+    }
+    keyqual_seal(&kq);
     cJSON_ArrayForEach(e, arr) {
       const char *shortname = jo_sv(e, "shortName");
       const char *org       = jo_sv(e, "organizationName");
@@ -245,21 +262,28 @@ static int cna_dir_run(const source_ctx *c, intel_sink *s) {
       if (advis)   cJSON_AddItemToObject(p, "security_advisories", cJSON_Duplicate(advis, 1));
       if (policy)  cJSON_AddItemToObject(p, "disclosure_policy",  cJSON_Duplicate(policy, 1));
       if (contact) cJSON_AddItemToObject(p, "contact",            cJSON_Duplicate(contact, 1));
+      /* and the rest of the entry: the CNA's role/type/root hierarchy, its
+       * country and its published resources were fetched and then dropped */
+      cJSON *rest;
+      if ((rest = cJSON_GetObjectItem(e, "CNA")) != NULL)
+        cJSON_AddItemToObject(p, "cna", cJSON_Duplicate(rest, 1));
+      if ((rest = cJSON_GetObjectItem(e, "country")) != NULL)
+        cJSON_AddItemToObject(p, "country", cJSON_Duplicate(rest, 1));
+      if ((rest = cJSON_GetObjectItem(e, "resources")) != NULL)
+        cJSON_AddItemToObject(p, "resources", cJSON_Duplicate(rest, 1));
       cJSON_AddStringToObject(p, "source", "cve_program_cna_list");
       char *pj = cJSON_PrintUnformatted(p);
       cJSON_Delete(p);
 
       intel_item it = {0};
-      /* Keyed on cnaID — except that the CNA list reuses a cnaID for two
-       * distinct organisations (live 2026-09-15: 548 entries, 548 distinct
-       * shortNames and organisation names, 547 cnaIDs), so the second
-       * upserted over the first. A repeat is qualified by its own shortName;
-       * a first occurrence keeps its plain cnaID and its stored uid. */
-      char keybuf[256];
+      char keybuf[512];
       const char *rk = cna_id ? cna_id : shortname;
-      if (cna_id && shortname && !seen_add(&ids_seen, cna_id)) {
-        snprintf(keybuf, sizeof keybuf, "%s|%s", cna_id, shortname);
-        rk = keybuf;
+      if (rk && keyqual_count(&kq, rk) > 1) {
+        const char *base = rk;
+        char *raw = cJSON_PrintUnformatted(e);
+        rk = keyqual_uid(&kq, base, shortname, raw ? raw : "", keybuf, sizeof keybuf);
+        free(raw);
+        if (!keyqual_claim(&kq, base, rk)) { folded++; free(pj); continue; }
       }
       it.remote_key      = rk;
       it.title           = title;
@@ -274,9 +298,10 @@ static int cna_dir_run(const source_ctx *c, intel_sink *s) {
       free(pj);
     }
   }
-  seen_free(&ids_seen);
+  keyqual_free(&kq);
   cJSON_Delete(doc);
-  fprintf(stderr, "[cve-cna-directory] emitted %d\n", n);
+  fprintf(stderr, "[cve-cna-directory] emitted %d (%d byte-identical repeats "
+          "folded)\n", n, folded);
   return 0;                              /* fetched fine (R3) */
 }
 
