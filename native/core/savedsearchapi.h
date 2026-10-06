@@ -95,8 +95,8 @@
  *   CREATE INDEX IF NOT EXISTS idx_search_history_owner
  *     ON search_history(tenant_id, user_id, ts DESC);
  *
- * Note the owner indexes lead with (tenant_id, user_id): every read path in
- * this module filters on both, so the index and the privacy rule agree.
+ * The owner indexes lead with (tenant_id, user_id): the workspace view reads
+ * the tenant_id prefix, ?mine=1 and every author-only write use both.
  * search_history deliberately has no FK to saved_searches — history is a
  * record of what ran, and deleting the bookmark must not rewrite the trail.
  */
@@ -109,9 +109,10 @@
 #define PL_STATE_MAX      3072    /* bytes of compact state JSON encoded     */
 
 /* ── /api/saved-searches[...] ───────────────────────────────────────────────
- *   GET    /api/saved-searches?kind=&limit=   list MINE (pinned first)
+ *   GET    /api/saved-searches?kind=&limit=&mine=1  list the WORKSPACE's
+ *                                             (pinned first); ?mine=1 → mine
  *   POST   /api/saved-searches                create  {name?,kind,params|params_json,pinned?}
- *   GET    /api/saved-searches/:id            fetch mine
+ *   GET    /api/saved-searches/:id            fetch any in the workspace
  *   PATCH  /api/saved-searches/:id            {name?,params?,pinned?} — `kind`
  *                                             is immutable (see .c for why)
  *   DELETE /api/saved-searches/:id            204
@@ -128,9 +129,9 @@
  * success (DELETE); NULL + anything else means the caller emits a generic
  * error of that status. Caller frees.
  *
- * A row is only ever visible to the user who created it, in the tenant it was
- * created in. Someone else's id returns 404, not 403 — a 403 would confirm the
- * row exists, which is itself a leak about what a colleague saved.
+ * A row is visible to every member of the tenant it was created in, and to
+ * no one else: another workspace's id returns 404. PATCH and DELETE match the
+ * author too, so a teammate's attempt is the same 404 an unknown id gets.
  *
  * /run does NOT execute the query. It is bookkeeping plus a handoff: it
  * returns the saved search (including `params`) so the client re-issues the
@@ -146,12 +147,13 @@ char *savedsearchapi(db_handle *db, const tenant_ctx *t, const char *method,
                      const char *body, int *status);
 
 /* ── /api/search-history ────────────────────────────────────────────────────
- *   GET    /api/search-history?kind=&limit=   newest-first, MINE ONLY
+ *   GET    /api/search-history?kind=&limit=&mine=1  newest-first, the whole
+ *                                             workspace (?mine=1 → the caller's)
  *   DELETE /api/search-history                clear MINE ONLY → {"ok":true,"deleted":n}
  *
- * There is no ?user_id=, no ?all=1 and no admin variant, and adding one would
- * defeat the point of the table (see the privacy note at the top). limit
- * defaults to 50 and clamps to 1..200. Sets *status; malloc'd; caller frees. */
+ * Every row names its author (user_id, mine) and meta.scope says which view
+ * was served. Nothing crosses workspaces. limit defaults to 50 and clamps to
+ * 1..200. Sets *status; malloc'd; caller frees. */
 char *searchhistoryapi(db_handle *db, const tenant_ctx *t, const char *method,
                        const char *qs, int *status);
 

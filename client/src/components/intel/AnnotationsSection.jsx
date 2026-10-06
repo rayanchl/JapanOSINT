@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { api } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
 import { useAuth } from '../../auth/AuthContext.jsx';
+import { useMemberNames, authorLabel } from '../../hooks/useMembers.js';
 import { Section, Button, TextArea, ErrorNotice, LoadingState, ConfirmDialog, BoundNote, cx, toast } from '../ui/kit.jsx';
 import { relativeTime } from '../../utils/time.js';
 
@@ -12,9 +13,13 @@ import { relativeTime } from '../../utils/time.js';
  *   PATCH  /api/annotations/:id      { body_md }
  *   DELETE /api/annotations/:id      → 204 (tombstone)
  * `body_md` is stored verbatim and rendered here as text, never as HTML.
+ * Every member of the workspace reads every note; only its author may edit
+ * it, and its author or a workspace owner/admin may delete it
+ * (annotationsapi.c), so those buttons are offered on exactly those notes.
  */
 export default function AnnotationsSection({ refType, refId, caseId, title = 'Notes' }) {
   const auth = useAuth();
+  const names = useMemberNames();
   const query = new URLSearchParams({ ref_type: refType, ref_id: String(refId), limit: '50' });
   if (caseId) query.set('case_id', caseId);
   const path = `/api/annotations?${query.toString()}`;
@@ -84,15 +89,16 @@ export default function AnnotationsSection({ refType, refId, caseId, title = 'No
       {!loading && !error && rows.length === 0 && <div className="text-xs text-osint-muted py-1">No notes yet on this {refType.replace('_', ' ')}.</div>}
       <ul className="space-y-2">
         {rows.map((n) => {
-          const mine = auth.me?.user?.id && n.author_id === auth.me.user.id;
+          const mine = Boolean(auth.me?.user?.id && n.author_id === auth.me.user.id);
+          const canDelete = mine || Boolean(auth.canManageWorkspace);
           return (
             <li key={n.id} className={cx('rounded-md border border-osint-border bg-osint-bg/60 p-2', n.is_deleted && 'opacity-60')}>
               <div className="flex items-center justify-between gap-2 text-[10px] font-mono text-osint-muted">
-                <span title={n.created_at}>{mine ? 'you' : (n.author_id || 'unknown author')} · {relativeTime(n.created_at)}{n.updated_at ? ' · edited' : ''}{n.is_deleted ? ' · deleted' : ''}{n.case_id ? ` · case ${n.case_id}` : ''}</span>
-                {!n.is_deleted && (
+                <span title={n.created_at}>{authorLabel({ author_id: n.author_id, mine }, names)} · {relativeTime(n.created_at)}{n.updated_at ? ' · edited' : ''}{n.is_deleted ? ' · deleted' : ''}{n.case_id ? ` · case ${n.case_id}` : ''}</span>
+                {!n.is_deleted && (mine || canDelete) && (
                   <span className="flex gap-1">
-                    <Button size="sm" variant="ghost" onClick={() => { setEditing(n.id); setEditText(n.body_md || ''); }}>Edit</Button>
-                    <Button size="sm" variant="ghost" onClick={() => setConfirmDel(n.id)}>Delete</Button>
+                    {mine && <Button size="sm" variant="ghost" onClick={() => { setEditing(n.id); setEditText(n.body_md || ''); }}>Edit</Button>}
+                    {canDelete && <Button size="sm" variant="ghost" onClick={() => setConfirmDel(n.id)} title={mine ? 'Delete' : 'Delete as workspace admin'}>Delete</Button>}
                   </span>
                 )}
               </div>

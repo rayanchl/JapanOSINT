@@ -7,6 +7,7 @@ import { api } from '../../api/client.js';
 import SearchCard from './SearchCard.jsx';
 import SearchAura from './SearchAura.jsx';
 import SearchHistoryDropdown from './SearchHistoryDropdown.jsx';
+import WorkspaceRuns from './WorkspaceRuns.jsx';
 import { isJapanese } from './pipeline.js';
 import { Button, Input, Pill, SectionLabel, ErrorNotice, EmptyState, cx } from '../ui/kit.jsx';
 
@@ -176,8 +177,12 @@ export default function SearchPage() {
         )}
 
         {active.length === 0 && completed.length === 0 && (
-          <EmptyState title="No investigations yet.">Enter an entity above to begin, or reopen a recent search from the history button.</EmptyState>
+          <EmptyState title="No investigations open in this tab.">Enter an entity above to begin, or open any run from the workspace list below.</EmptyState>
         )}
+
+        {/* Every member's runs, not just this tab's: a run is the workspace's,
+          * and opening one attaches it above through /api/search/results. */}
+        <WorkspaceRuns onOpen={attachRun} />
       </div>
     </div>
   );

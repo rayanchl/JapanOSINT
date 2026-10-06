@@ -1,8 +1,10 @@
 /**
  * Per-account data this browser keeps outside the session: bookmarks, the
- * map's recent geocode queries, camera favourites and the in-memory OSINT
- * search runs. None of it is a workspace object, so the server cannot scope
- * it — the client has to. It used to survive sign-out, so the next account to
+ * map's recent geocode queries, camera favourites and the list of OSINT runs
+ * this tab has open. None of it is stored on the server, so the server cannot
+ * scope it — the client has to. (The runs themselves ARE workspace objects:
+ * every member lists them through /api/search/runs. What is per-tab is only
+ * which ones this tab is showing.) It used to survive sign-out, so the next account to
  * sign in on the same browser saw the previous account's bookmarks, queries
  * and search results.
  *
