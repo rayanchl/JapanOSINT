@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdatomic.h>
+#include <stdint.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
@@ -304,12 +305,21 @@ static void sched_state_record(db_handle *db, const source_def *d,
     fprintf(stderr, "[sched] %s released from health quarantine\n", d->id);
 }
 
+static volatile int *sched_cancel_slot(const char *id);
+
 int scheduler_run_source(db_handle *db, const source_def *d,
                          const char *entity) {
   intel_sink inner = intel_sink_make(db, d->id, "legacy");
   count_sink cs = { .inner = &inner, .n = 0, .notices = 0, .failed = 0 };
   intel_sink sink = { .ctx = &cs, .emit = count_emit };
-  volatile int cancel = 0;
+  /* ctx->cancel used to point at a local nobody else could reach, so every
+   * `if (*ctx->cancel)` in the tree was dead code and the watchdog could only
+   * log. A run the pool or a manual /run claimed gets that source's slot
+   * (sched_cancel_slot), which the watchdog sets at the deadline and shutdown
+   * sets for everything; an unclaimed run (--run, a test) keeps a local. */
+  volatile int local_cancel = 0;
+  volatile int *cancel = entity ? NULL : sched_cancel_slot(d->id);
+  if (!cancel) cancel = &local_cancel;
   http_client *http = http_client_new();   /* sources expect ctx->http set */
   llm_client llm; llm_init(&llm, http);
   source_ctx ctx = {0};
@@ -318,7 +328,7 @@ int scheduler_run_source(db_handle *db, const source_def *d,
   ctx.db = db;
   ctx.http = http;
   ctx.llm = &llm;
-  ctx.cancel = &cancel;
+  ctx.cancel = cancel;
 
   struct timespec t0, t1;
   clock_gettime(CLOCK_MONOTONIC, &t0);
@@ -474,6 +484,17 @@ static int is_search_only(db_handle *db, const char *id) {
  * queue; N workers run them. A slow source now occupies one of N slots
  * instead of the whole fleet.
  *
+ * TWO LANES. The internal pods (collector id starting with '_': _maint,
+ * _enrich, _breach, …) used to share those N workers and the one priority set
+ * with the collectors. So the WAL checkpoint — the pod that exists BECAUSE
+ * writes are heavy — waited behind collectors exactly when writes were
+ * heaviest, and a fleet backlog could starve anomaly triage and repair
+ * indefinitely. Pods now have their own queue and their own
+ * JO_SCHED_MAINT_WORKERS threads (default 2): a collector never occupies a
+ * maintenance worker and a pod never occupies a collector worker. What the
+ * lanes still SHARE is the per-source running[] set, so skip-if-running holds
+ * across both — and, through scheduler_claim(), against a manual /run.
+ *
  * WHY EACH WORKER OWNS ITS DB HANDLE. Unchanged from the reason the loop got
  * its own connection in the first place: a sqlite transaction belongs to a
  * connection, not a thread, and core/intel.c wraps every emit in BEGIN/COMMIT.
@@ -494,75 +515,166 @@ static int is_search_only(db_handle *db, const char *id) {
 
 #define SCHED_QCAP 2048
 
+enum { LANE_COLLECT = 0, LANE_MAINT = 1, LANE_N = 2 };
+
 /* PRIORITY, NOT FIFO. The ring used to hand sources to workers in the order
  * the dispatcher walked the registry, so a healthy 60 s feed queued behind
- * 200 dead hosts waited for every one of their connect timeouts. The queue
- * is now an unordered set with a key per entry (sched_priority): pop takes the
+ * 200 dead hosts waited for every one of their connect timeouts. Each lane is
+ * an unordered set with a key per entry (sched_priority): pop takes the
  * lowest key. A linear scan of at most SCHED_QCAP entries per pop is ~2 µs
  * against runs that take seconds; a heap would buy nothing legible. */
 typedef struct {
   int          idx[SCHED_QCAP];      /* registry indices awaiting a worker    */
   double       key[SCHED_QCAP];      /* sched_priority() at push time         */
   int          count;
-  char        *running;              /* per-source: queued or in flight       */
-  time_t      *started;              /* wall-clock start, 0 = not running     */
+  int          workers;              /* threads serving this lane             */
+  long         dropped;              /* enqueues refused because it was full  */
+  pthread_cond_t cv;
+} sched_lane;
+
+typedef struct {
+  sched_lane   lane[LANE_N];
+  char        *running;              /* per-source: queued, in flight, or claimed */
+  char        *claimed;              /* per-source: held by scheduler_claim()  */
+  time_t      *started;              /* pool run start, 0 = not running in it  */
+  time_t      *warned;               /* last deadline warning for this run     */
+  /* ctx->cancel for a claimed or pooled run. Written only under `mu`, with
+   * __atomic stores; read by collectors through a volatile pointer. */
+  volatile int *cancel;
   pthread_mutex_t mu;
-  pthread_cond_t  cv;
 } sched_queue;
 
-static sched_queue    g_q;
+static sched_queue g_q = {
+  .lane = { [LANE_COLLECT] = { .cv = PTHREAD_COND_INITIALIZER },
+            [LANE_MAINT]   = { .cv = PTHREAD_COND_INITIALIZER } },
+  .mu = PTHREAD_MUTEX_INITIALIZER,
+};
 static const source_def **g_all;
 static int            g_n;
 static int            g_deadline_sec = 0;
+/* The file the dispatcher's connection is on; every worker attaches to the
+ * same one (NULL = db_attach's default, i.e. JO_DB). */
+static char           g_db_path[1024];
 /* Per-source health state, index-aligned with g_all. Written by the worker
  * that finished the run (under g_q.mu), read by the dispatcher. */
 static sched_state   *g_state;
 static sched_policy   g_pol;
 /* Shutdown coordination — see scheduler_stop_background(). g_inflight counts
- * collector runs currently executing, not queued ones. */
+ * runs currently executing, not queued ones. g_ready says the per-source
+ * arrays above exist (release-stored after they are allocated). */
 static atomic_int     g_shutdown = 0;
 static atomic_int     g_inflight = 0;
+static atomic_int     g_ready = 0;
+static atomic_long    g_attach_failures = 0;
 
-static long g_q_dropped;      /* enqueues refused because the queue was full */
+static int lane_of(const source_def *d) {
+  return (d && d->collector && d->collector[0] == '_') ? LANE_MAINT : LANE_COLLECT;
+}
+
+/* Allocate the per-source arrays for `all[0..n)`. Separate from
+ * scheduler_loop so tests/unit/test_sched_pool.c can drive the pool without
+ * the dispatcher. */
+static int sched_pool_init(const source_def **all, int n) {
+  g_all = all;
+  g_n   = n;
+  g_q.running = calloc((size_t)n, 1);
+  g_q.claimed = calloc((size_t)n, 1);
+  g_q.started = calloc((size_t)n, sizeof(time_t));
+  g_q.warned  = calloc((size_t)n, sizeof(time_t));
+  g_q.cancel  = calloc((size_t)n, sizeof(int));
+  g_state     = calloc((size_t)n, sizeof(sched_state));
+  if (!g_q.running || !g_q.claimed || !g_q.started || !g_q.warned ||
+      !g_q.cancel || !g_state)
+    return -1;
+  atomic_store(&g_ready, 1);
+  return 0;
+}
+
+static void set_cancel(int i, int v) {           /* caller holds g_q.mu */
+  __atomic_store_n((int *)&g_q.cancel[i], v, __ATOMIC_RELEASE);
+}
+
+/* The cancel slot of a run this module knows about, or NULL. */
+static volatile int *sched_cancel_slot(const char *id) {
+  if (!atomic_load(&g_ready) || !id) return NULL;
+  int i = registry_index(id);
+  if (i < 0 || i >= g_n) return NULL;
+  volatile int *slot = NULL;
+  pthread_mutex_lock(&g_q.mu);
+  if (g_q.running[i]) slot = &g_q.cancel[i];
+  pthread_mutex_unlock(&g_q.mu);
+  return slot;
+}
+
+int scheduler_claim(const char *id) {
+  if (!atomic_load(&g_ready) || !id) return 1;   /* no pool: nothing to share */
+  int i = registry_index(id);
+  if (i < 0 || i >= g_n) return 1;
+  int ok;
+  pthread_mutex_lock(&g_q.mu);
+  if (g_q.running[i]) ok = 0;
+  else { g_q.running[i] = 1; g_q.claimed[i] = 1; set_cancel(i, 0); ok = 1; }
+  pthread_mutex_unlock(&g_q.mu);
+  return ok;
+}
+
+void scheduler_release(const char *id) {
+  if (!atomic_load(&g_ready) || !id) return;
+  int i = registry_index(id);
+  if (i < 0 || i >= g_n) return;
+  pthread_mutex_lock(&g_q.mu);
+  if (g_q.claimed[i]) { g_q.claimed[i] = 0; g_q.running[i] = 0; }
+  pthread_mutex_unlock(&g_q.mu);
+}
 
 static void q_push(int i, double key) {
+  sched_lane *L = &g_q.lane[lane_of(g_all[i])];
   pthread_mutex_lock(&g_q.mu);
   if (g_q.running[i]) {
-    /* Already queued or in flight. Serial execution gave this for free (next[i]
-     * only advanced after the run returned); with a pool it has to be explicit
-     * or a source slower than its own interval re-queues itself forever. Not a
-     * drop — the run in flight IS this cycle's refresh. */
-  } else if (g_q.count >= SCHED_QCAP) {
+    /* Already queued, in flight, or claimed by a manual run. Serial execution
+     * gave this for free (next[i] only advanced after the run returned); with
+     * a pool it has to be explicit or a source slower than its own interval
+     * re-queues itself forever. Not a drop — the run in flight IS this
+     * cycle's refresh. */
+  } else if (L->count >= SCHED_QCAP) {
     /* Backlog deeper than the queue: this source loses a cycle. Counted and
      * logged rather than swallowed — a silently truncated refresh reads as
      * "the source is stale" with no way to tell it apart from a broken
      * upstream. A standing nonzero count means the pool is undersized. */
-    g_q_dropped++;
+    L->dropped++;
     fprintf(stderr, "[sched] queue full (%d), skipping this cycle of %s "
-                    "(dropped=%ld) — raise JO_SCHED_WORKERS\n",
-            SCHED_QCAP, g_all[i]->id, g_q_dropped);
+                    "(dropped=%ld) — raise %s\n",
+            SCHED_QCAP, g_all[i]->id, L->dropped,
+            L == &g_q.lane[LANE_MAINT] ? "JO_SCHED_MAINT_WORKERS"
+                                       : "JO_SCHED_WORKERS");
   } else {
     g_q.running[i] = 1;
-    g_q.idx[g_q.count] = i;
-    g_q.key[g_q.count] = key;
-    g_q.count++;
-    pthread_cond_signal(&g_q.cv);
+    L->idx[L->count] = i;
+    L->key[L->count] = key;
+    L->count++;
+    pthread_cond_signal(&L->cv);
   }
   pthread_mutex_unlock(&g_q.mu);
 }
 
-static int q_pop(void) {
+/* Next index for lane `ln`, or -1 once shutdown has begun. */
+static int q_pop(int ln) {
+  sched_lane *L = &g_q.lane[ln];
   pthread_mutex_lock(&g_q.mu);
-  while (g_q.count == 0) pthread_cond_wait(&g_q.cv, &g_q.mu);
+  while (L->count == 0 && !atomic_load(&g_shutdown))
+    pthread_cond_wait(&L->cv, &g_q.mu);
+  if (atomic_load(&g_shutdown)) { pthread_mutex_unlock(&g_q.mu); return -1; }
   int best = 0;
-  for (int k = 1; k < g_q.count; k++)
-    if (g_q.key[k] < g_q.key[best]) best = k;
-  int i = g_q.idx[best];
+  for (int k = 1; k < L->count; k++)
+    if (L->key[k] < L->key[best]) best = k;
+  int i = L->idx[best];
   /* swap-remove: order inside the array carries no meaning, the key does */
-  g_q.count--;
-  g_q.idx[best] = g_q.idx[g_q.count];
-  g_q.key[best] = g_q.key[g_q.count];
+  L->count--;
+  L->idx[best] = L->idx[L->count];
+  L->key[best] = L->key[L->count];
   g_q.started[i] = time(NULL);
+  g_q.warned[i]  = 0;
+  set_cancel(i, 0);
   pthread_mutex_unlock(&g_q.mu);
   return i;
 }
@@ -574,20 +686,39 @@ static void q_done(int i) {
   pthread_mutex_unlock(&g_q.mu);
 }
 
-static void *worker_thread(void *arg) {
-  (void)arg;
-  db_handle own = {0};
-  if (db_attach(&own, NULL) != 0) {
-    fprintf(stderr, "[sched] worker cannot open its own DB connection; exiting\n");
-    return NULL;
-  }
-  /* N concurrent writers contend for the WAL write lock far more than one
-   * did; 5 s (db_attach's default) starts returning SQLITE_BUSY on a busy
-   * fleet, which surfaces as a spurious emit failure. */
-  sqlite3_exec(own.h, "PRAGMA busy_timeout=30000;", NULL, NULL, NULL);
+/* A worker whose connection cannot be opened used to log once and EXIT, so
+ * one transient failure at boot (a locked file, a full fd table, the volume
+ * not yet mounted) shrank the pool for the life of the process — silently,
+ * since the heartbeat reported the configured worker count, not the live
+ * one. It now retries with backoff (1 s doubling to 60 s) until it attaches
+ * or shutdown begins, and every failure is counted on the heartbeat line. */
+static int worker_attach(db_handle *own, int ln) {
+  long wait = 1;
   for (;;) {
-    int i = q_pop();
-    if (atomic_load(&g_shutdown)) { q_done(i); break; }
+    if (atomic_load(&g_shutdown)) return -1;
+    if (db_attach(own, g_db_path[0] ? g_db_path : NULL) == 0) {
+      /* N concurrent writers contend for the WAL write lock far more than one
+       * did; 5 s (db_attach's default) starts returning SQLITE_BUSY on a busy
+       * fleet, which surfaces as a spurious emit failure. */
+      sqlite3_exec(own->h, "PRAGMA busy_timeout=30000;", NULL, NULL, NULL);
+      return 0;
+    }
+    long n = atomic_fetch_add(&g_attach_failures, 1) + 1;
+    fprintf(stderr, "[sched] %s worker cannot open its DB connection "
+                    "(attach failure #%ld); retrying in %lds\n",
+            ln == LANE_MAINT ? "maint" : "collector", n, wait);
+    for (long s = 0; s < wait && !atomic_load(&g_shutdown); s++) sleep(1);
+    if (wait < 60) wait = wait * 2 > 60 ? 60 : wait * 2;
+  }
+}
+
+static void *worker_thread(void *arg) {
+  int ln = (int)(intptr_t)arg;
+  db_handle own = {0};
+  if (worker_attach(&own, ln) != 0) return NULL;
+  for (;;) {
+    int i = q_pop(ln);
+    if (i < 0) break;                      /* shutdown */
     atomic_fetch_add(&g_inflight, 1);
     scheduler_run_source(&own, g_all[i], NULL);
     atomic_fetch_sub(&g_inflight, 1);
@@ -616,14 +747,22 @@ static void *worker_thread(void *arg) {
  * shutdown could therefore exit by signal instead of 0, and a worker could be
  * torn down mid-emit().
  *
- * This does not pretend to join. It stops handing out new work and waits a
- * bounded time for in-flight fetches to land, which is the part that matters:
- * an emit() that has begun gets to finish its transaction. A worker parked in
- * a multi-second network call may still be running when the wait expires —
- * that is why main() must also skip the atexit teardown rather than rely on
- * this alone. */
+ * This does not pretend to join. It stops handing out new work, asks every
+ * run in flight to stop (ctx->cancel — cooperative, so a collector that never
+ * polls it still runs to its own end), wakes the idle workers so they leave
+ * q_pop and close their connections, and waits a bounded time for in-flight
+ * fetches to land, which is the part that matters: an emit() that has begun
+ * gets to finish its transaction. A worker parked in a multi-second network
+ * call may still be running when the wait expires — that is why main() must
+ * also skip the atexit teardown rather than rely on this alone. */
 void scheduler_stop_background(int wait_ms) {
   atomic_store(&g_shutdown, 1);
+  pthread_mutex_lock(&g_q.mu);
+  if (atomic_load(&g_ready))
+    for (int i = 0; i < g_n; i++)
+      if (g_q.started[i] || g_q.claimed[i]) set_cancel(i, 1);
+  for (int ln = 0; ln < LANE_N; ln++) pthread_cond_broadcast(&g_q.lane[ln].cv);
+  pthread_mutex_unlock(&g_q.mu);
   const int step = 25;
   for (int waited = 0; waited < wait_ms; waited += step) {
     if (atomic_load(&g_inflight) == 0) break;
@@ -637,14 +776,31 @@ void scheduler_stop_background(int wait_ms) {
             left, wait_ms);
 }
 
-/* Reports sources that have outrun the deadline. There is no safe hard kill:
- * only 25 of 585 sources poll ctx->cancel, and no lib/ helper does, so a
- * cooperative cancel cannot be claimed as a guarantee — and cancelling a
- * thread mid-transaction would corrupt exactly what the per-worker connection
- * is there to protect. The real containment is the pool itself (an overrun
- * costs one slot, not the fleet); this makes the overrun visible and feeds
- * the operator the id to quarantine. Per-request ceilings still come from
- * httpclient's CURLOPT_TIMEOUT_MS and lib/overpass.c's own budget. */
+/* Sources that have outrun the deadline are reported, and once a run has
+ * also outrun its OWN interval its cancel flag is set. Cancellation is
+ * COOPERATIVE: only the sources and pods that poll ctx->cancel stop early (the
+ * WAL pod between TRUNCATE attempts, the retention pod between batches, the
+ * hpengine walkers between pages — which disclose the cut as a truncation
+ * notice). There is no safe hard kill — cancelling a thread mid-transaction
+ * would corrupt exactly what the per-worker connection is there to protect —
+ * so a source that never polls keeps its slot until its own HTTP timeouts end
+ * it, and keeps being reported once a minute. The real containment is still
+ * the pool (an overrun costs one slot, not the fleet). Before this, the flag
+ * the collectors poll was a local nobody else could reach, so the deadline
+ * only ever logged.
+ *
+ * WHY NOT CANCEL AT THE DEADLINE ITSELF. The deadline is one number (300 s)
+ * for a fleet whose legitimate run times reach many minutes — a daily bulk
+ * page walk can take longer than 300 s every single time. Cancelling it there
+ * would cut the same walk at the same page on every run, forever: a disclosed
+ * discard, but a permanent one (house rule 2). A run that has outlasted its
+ * own interval is different — skip-if-running is already costing it whole
+ * cycles — so that is when the flag is set: max(deadline, interval). */
+static long cancel_after(int i) {
+  long iv = g_all[i]->update_interval_sec;
+  return iv > g_deadline_sec ? iv : g_deadline_sec;
+}
+
 static void watchdog_scan(void) {
   if (g_deadline_sec <= 0) return;
   time_t now = time(NULL);
@@ -652,27 +808,92 @@ static void watchdog_scan(void) {
   for (int i = 0; i < g_n; i++) {
     if (!g_q.started[i]) continue;
     long over = (long)(now - g_q.started[i]);
-    if (over > g_deadline_sec)
+    if (over <= g_deadline_sec) continue;
+    int first = 0;
+    if (over > cancel_after(i) &&
+        !__atomic_load_n((int *)&g_q.cancel[i], __ATOMIC_ACQUIRE)) {
+      set_cancel(i, 1);
+      first = 1;
+    }
+    if (first || now - g_q.warned[i] >= 60) {
+      int asked = __atomic_load_n((int *)&g_q.cancel[i], __ATOMIC_ACQUIRE);
+      g_q.warned[i] = now;
       fprintf(stderr, "[sched] WARN %s has held a worker slot for %lds "
-                      "(deadline %ds)\n", g_all[i]->id, over, g_deadline_sec);
+                      "(deadline %ds, interval %ds)%s\n", g_all[i]->id, over,
+              g_deadline_sec, g_all[i]->update_interval_sec,
+              first ? " — cancel requested"
+                    : asked ? " — still running after cancel" : "");
+    }
   }
   pthread_mutex_unlock(&g_q.mu);
 }
 
+/* ── boot ramp ────────────────────────────────────────────────────────────
+ *
+ * The first-run offset of the k-th of m sources in one lane. The old ramp was
+ * `(i / workers) * stag` over EVERY registered source — interval-0 entity
+ * pivots included, which the scheduler never runs — so with 18,643 sources,
+ * 8 workers and 3 s, the last scheduled source first ran ~1.9 h after boot,
+ * and a 60 s feed registered late in the array was stale for most of that.
+ *
+ * Now k counts only the sources this lane will actually run at boot, the
+ * gentle `stag` per worker spacing is kept when it fits, the whole ramp is
+ * compressed into `ramp` seconds when it does not, and no source waits longer
+ * than its own interval for its first run (the offset is folded modulo the
+ * interval, which keeps short-interval sources spread out rather than piled at
+ * one instant). ramp <= 0 disables the compression; stag <= 0 disables the
+ * ramp altogether. Politeness per upstream is hostgate's job, which is what
+ * makes a tighter ramp safe. */
+long sched_boot_offset(int k, int m, int workers, long stag, long ramp,
+                       long interval) {
+  if (stag <= 0 || k <= 0 || m <= 1) return 0;
+  if (workers < 1) workers = 1;
+  long off  = (long)(k / workers) * stag;
+  long span = (long)((m - 1) / workers) * stag;
+  if (ramp > 0 && span > ramp)
+    off = (long)((double)off * (double)ramp / (double)span);
+  if (interval > 0 && off >= interval) off %= interval;
+  return off;
+}
+
+/* Sources the dispatcher will skip at boot anyway (search_only, or benched by
+ * the repair pod's breaker), marked in `skip`. One query, not two per source:
+ * this runs before the first dispatch and the per-source probes are what the
+ * dispatcher does later, once each source is actually due. */
+static void boot_skip_set(db_handle *db, char *skip, int n) {
+  static const char *Q[] = {
+    "SELECT id FROM sources WHERE schedule_mode='search_only' OR "
+    "(quarantined_until IS NOT NULL AND quarantined_until>datetime('now'))",
+    "SELECT id FROM sources WHERE "
+    "quarantined_until IS NOT NULL AND quarantined_until>datetime('now')",
+  };
+  for (size_t q = 0; q < sizeof Q / sizeof Q[0]; q++) {
+    sqlite3_stmt *s;
+    if (sqlite3_prepare_v2(db->h, Q[q], -1, &s, NULL) != SQLITE_OK) continue;
+    while (sqlite3_step(s) == SQLITE_ROW) {
+      int i = registry_index((const char *)sqlite3_column_text(s, 0));
+      if (i >= 0 && i < n) skip[i] = 1;
+    }
+    sqlite3_finalize(s);
+    return;
+  }
+}
+
+static int env_int_clamp(const char *name, int dflt, int lo, int hi) {
+  const char *v = getenv(name);
+  int x = (v && *v) ? atoi(v) : dflt;
+  return x < lo ? lo : (x > hi ? hi : x);
+}
+
 void scheduler_loop(db_handle *db) {
-  g_all = registry_all();
-  g_n   = registry_count();
-  int n = g_n;
-  time_t *next = calloc(n, sizeof(time_t));
-  g_q.running = calloc(n, 1);
-  g_q.started = calloc(n, sizeof(time_t));
-  g_state     = calloc(n, sizeof(sched_state));
-  if (!next || !g_q.running || !g_q.started || !g_state) {
+  int n = registry_count();
+  time_t *next = calloc((size_t)(n > 0 ? n : 1), sizeof(time_t));
+  if (!next || sched_pool_init(registry_all(), n) != 0) {
     fprintf(stderr, "[sched] out of memory; scheduler off\n");
     return;
   }
-  pthread_mutex_init(&g_q.mu, NULL);
-  pthread_cond_init(&g_q.cv, NULL);
+  const char *dbf = (db && db->h) ? sqlite3_db_filename(db->h, "main") : NULL;
+  if (dbf && *dbf) snprintf(g_db_path, sizeof g_db_path, "%s", dbf);
   sched_policy_load(&g_pol);
   /* Health state survives restarts: a source that was on its 11th failure
    * yesterday is on its 11th failure now, not its 0th. */
@@ -694,54 +915,81 @@ void scheduler_loop(db_handle *db) {
    * 16 → 97 runs. The work is network-bound, not CPU-bound, so the ceiling is
    * upstream politeness (hostgate) and sqlite write contention, not cores. 8
    * is the conservative default for a first deploy; raise it once the
-   * heartbeat below shows a standing backlog. */
-  int workers = 8;
-  const char *w = getenv("JO_SCHED_WORKERS");
-  if (w) workers = atoi(w);
-  if (workers < 1)  workers = 1;      /* 1 = the old serial behaviour, exactly */
-  if (workers > 32) workers = 32;
+   * heartbeat below shows a standing backlog. 1 = the old serial behaviour. */
+  int workers = env_int_clamp("JO_SCHED_WORKERS", 8, 1, 32);
+  /* The pods are few, mostly short, and must never wait on the fleet. Two, so
+   * one long LLM-bound pod (repair, enrichment) cannot hold the WAL
+   * checkpoint or retention behind it. */
+  int mworkers = env_int_clamp("JO_SCHED_MAINT_WORKERS", 2, 1, 8);
+  g_q.lane[LANE_COLLECT].workers = workers;
+  g_q.lane[LANE_MAINT].workers   = mworkers;
   const char *dl = getenv("JO_SCHED_DEADLINE_SEC");
   g_deadline_sec = dl ? atoi(dl) : 300;
 
   time_t now0 = time(NULL);
   /* Stagger first runs so the fleet doesn't storm upstreams at boot (many do
-   * nationwide tiled Overpass). With `workers` running at once the old 3 s
-   * spacing would still admit `workers` sources per 3 s window, so scale the
-   * step: one source per worker per 3 s keeps boot as gentle as it was.
-   *
-   * The old flat 3 s-per-source ramp was its own freshness bug: at 1999
-   * registered sources it took ~100 minutes for the fleet to become due even
-   * ONCE after a restart, so a 60 s source was 60 s only in principle. The
-   * per-host gate (core/hostgate.h) is now what enforces politeness, which is
-   * what makes a tighter ramp safe — it throttles by upstream rather than by
-   * position in the registry. JO_SCHED_STAGGER_SEC=0 disables the ramp. */
-  int stag = 3;
-  const char *sg = getenv("JO_SCHED_STAGGER_SEC");
-  if (sg) stag = atoi(sg);
-  if (stag < 0) stag = 0;
+   * nationwide tiled Overpass): one source per worker per JO_SCHED_STAGGER_SEC
+   * (3 s), compressed into JO_SCHED_RAMP_SEC (900 s) and into each source's
+   * own interval — see sched_boot_offset(). JO_SCHED_STAGGER_SEC=0 disables
+   * the ramp. */
+  long stag = env_long("JO_SCHED_STAGGER_SEC", 3, 0);
+  long ramp = env_long("JO_SCHED_RAMP_SEC", 900, 0);
+  char *skip = calloc((size_t)(n > 0 ? n : 1), 1);
+  if (skip) boot_skip_set(db, skip, n);
+  /* Pass 1: which sources start on the ramp, per lane. A source with a
+   * restored backoff or quarantine hold starts at the hold instead, so it is
+   * not given a ramp slot — nor is anything the dispatcher will not run. */
+  time_t *hold = calloc((size_t)(n > 0 ? n : 1), sizeof(time_t));
+  int m[LANE_N] = {0};
   for (int i = 0; i < n; i++) {
-    next[i] = now0 + (time_t)(i / workers) * stag;
+    const sched_state *st = &g_state[i];
+    time_t h = 0;
     /* A restored backoff is honoured across the restart: the outage did not
      * end because the process did. A quarantined source waits out its probe
      * cadence from the last probe, not from boot. */
-    const sched_state *st = &g_state[i];
-    time_t hold = 0;
     if (st->quarantined && st->last_probe > 0)
-      hold = st->last_probe + (time_t)g_pol.quarantine_probe_sec;
+      h = st->last_probe + (time_t)g_pol.quarantine_probe_sec;
     else if (st->backoff_until > 0)
-      hold = st->backoff_until;
-    if (hold > next[i]) next[i] = hold;
+      h = st->backoff_until;
+    if (hold) hold[i] = h;
+    next[i] = h > now0 ? h : now0;
+    if (g_all[i]->update_interval_sec > 0 && !(skip && skip[i]) && h <= now0)
+      m[lane_of(g_all[i])]++;
   }
+  /* Pass 2: place them. */
+  int k[LANE_N] = {0};
+  long last[LANE_N] = {0};
+  for (int i = 0; i < n; i++) {
+    const source_def *d = g_all[i];
+    if (d->update_interval_sec <= 0 || (skip && skip[i])) continue;
+    if (hold && hold[i] > now0) continue;
+    int ln = lane_of(d);
+    long off = sched_boot_offset(k[ln]++, m[ln], g_q.lane[ln].workers, stag,
+                                 ramp, d->update_interval_sec);
+    if (off > last[ln]) last[ln] = off;
+    next[i] = now0 + (time_t)off;
+  }
+  free(skip);
+  free(hold);
+  fprintf(stderr, "[sched] boot ramp: %d scheduled source(s) start within %lds, "
+                  "%d pod(s) within %lds (stagger %lds, ramp cap %lds)\n",
+          m[LANE_COLLECT], last[LANE_COLLECT], m[LANE_MAINT], last[LANE_MAINT],
+          stag, ramp);
 
-  for (int i = 0; i < workers; i++) {
-    pthread_t t;
-    if (pthread_create(&t, NULL, worker_thread, NULL) == 0) pthread_detach(t);
-    else fprintf(stderr, "[sched] worker %d failed to start\n", i);
-  }
-  fprintf(stderr, "[sched] %d sources registered, %d workers\n", n, workers);
+  for (int ln = 0; ln < LANE_N; ln++)
+    for (int i = 0; i < g_q.lane[ln].workers; i++) {
+      pthread_t t;
+      if (pthread_create(&t, NULL, worker_thread, (void *)(intptr_t)ln) == 0)
+        pthread_detach(t);
+      else fprintf(stderr, "[sched] %s worker %d failed to start\n",
+                   ln == LANE_MAINT ? "maint" : "collector", i);
+    }
+  fprintf(stderr, "[sched] %d sources registered, %d workers + %d maintenance "
+                  "worker(s)\n", n, workers, mworkers);
 
   unsigned long tick = 0;
   for (;;) {
+    if (atomic_load(&g_shutdown)) { sleep(1); continue; }
     time_t now = time(NULL);
     for (int i = 0; i < n; i++) {
       const source_def *d = g_all[i];
@@ -779,18 +1027,22 @@ void scheduler_loop(db_handle *db) {
       long waits = 0, timeouts = 0, inflight = 0;
       hostgate_counters(&waits, &timeouts, &inflight);
       pthread_mutex_lock(&g_q.mu);
-      int queued = g_q.count, busy = 0, backed = 0, quar = 0;
+      int queued = g_q.lane[LANE_COLLECT].count, mqueued = g_q.lane[LANE_MAINT].count;
+      int busy = 0, mbusy = 0, backed = 0, quar = 0;
       for (int i = 0; i < n; i++) {
-        if (g_q.started[i]) busy++;
+        if (g_q.started[i]) { if (lane_of(g_all[i]) == LANE_MAINT) mbusy++; else busy++; }
         if (g_state[i].quarantined) quar++;
         else if (g_state[i].backoff_until > now) backed++;
       }
       pthread_mutex_unlock(&g_q.mu);
-      /* `backed_off`/`quarantined` are APPENDED so the existing parsers of this
-       * line keep matching (same reason `stored=` trails the run line). */
+      /* `backed_off`/`quarantined`, then the maintenance lane, are APPENDED so
+       * the existing parsers of this line keep matching (same reason `stored=`
+       * trails the run line). */
       fprintf(stderr, "[sched] busy=%d/%d queued=%d | hostgate inflight=%ld "
-                      "waited=%ld over_budget=%ld | backed_off=%d quarantined=%d\n",
-              busy, workers, queued, inflight, waits, timeouts, backed, quar);
+                      "waited=%ld over_budget=%ld | backed_off=%d quarantined=%d"
+                      " | maint busy=%d/%d queued=%d | attach_failures=%ld\n",
+              busy, workers, queued, inflight, waits, timeouts, backed, quar,
+              mbusy, mworkers, mqueued, atomic_load(&g_attach_failures));
     }
     sleep(1);
   }

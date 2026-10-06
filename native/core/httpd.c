@@ -346,8 +346,9 @@ static int seg(struct mg_str u, const char *pre, const char *suf,
 }
 
 /* POST /api/intel/sources/:id/run single-flight guard (== Node `inFlight`
- * Set; manual-vs-manual only, like Node — cron coordination unneeded since the
- * intel_sink upsert is idempotent ON CONFLICT). */
+ * Set), now also against the scheduler pool via scheduler_claim(): the upsert
+ * is idempotent, but two concurrent runs of one pod (a WAL checkpoint, a
+ * retention pass) are not. */
 static pthread_mutex_t g_runlock = PTHREAD_MUTEX_INITIALIZER;
 static char g_running[16][80];
 static int run_begin(const char *id) {
@@ -357,14 +358,16 @@ static int run_begin(const char *id) {
     if (!strcmp(g_running[i], id)) { slot = -2; break; }
     if (slot < 0 && !g_running[i][0]) slot = i;
   }
-  if (slot >= 0) { snprintf(g_running[slot], 80, "%s", id); ok = 1; }
+  /* ...and against the scheduler pool: a manual run of a source a worker is
+   * already running (or has queued) would run it twice at once. */
+  if (slot >= 0 && scheduler_claim(id)) { snprintf(g_running[slot], 80, "%s", id); ok = 1; }
   pthread_mutex_unlock(&g_runlock);
   return ok;                                  /* 0 = in-flight (or table full) */
 }
 static void run_end(const char *id) {
   pthread_mutex_lock(&g_runlock);
   for (int i = 0; i < 16; i++)
-    if (!strcmp(g_running[i], id)) { g_running[i][0] = 0; break; }
+    if (!strcmp(g_running[i], id)) { g_running[i][0] = 0; scheduler_release(id); break; }
   pthread_mutex_unlock(&g_runlock);
 }
 static long long si_count(db_handle *db, const char *id) {

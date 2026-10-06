@@ -72,9 +72,55 @@ static const src_meta *resolve(const source_def *d, const src_meta *cur) {
 }
 #undef PICK
 
+/* gen_meta_get() is a linear strcmp over the curated table, and src_meta_get()
+ * is called once per source by db_seed_sources() at every boot and per row by
+ * /api/status — 18,643 x 321 compares for a table that never changes. Index it
+ * once (sorted, leftmost match, so a duplicated curated id answers with the
+ * same first row the linear scan did) and bsearch. */
+#include <pthread.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct { const char *id; int at; } gen_key;
+static gen_key *g_gen_sorted;
+static int      g_gen_n;
+static pthread_once_t g_gen_once = PTHREAD_ONCE_INIT;
+
+static int gen_key_cmp(const void *a, const void *b) {
+  const gen_key *x = a, *y = b;
+  int c = strcmp(x->id, y->id);
+  return c ? c : (x->at > y->at) - (x->at < y->at);
+}
+static void build_gen_index(void) {
+  int n = gen_meta_count();
+  if (n <= 0) return;
+  g_gen_sorted = calloc((size_t)n, sizeof *g_gen_sorted);
+  if (!g_gen_sorted) return;
+  int k = 0;
+  for (int i = 0; i < n; i++) {
+    const src_meta *m = gen_meta_at(i);
+    if (m && m->id) { g_gen_sorted[k].id = m->id; g_gen_sorted[k].at = i; k++; }
+  }
+  qsort(g_gen_sorted, (size_t)k, sizeof *g_gen_sorted, gen_key_cmp);
+  g_gen_n = k;
+}
+static const src_meta *gen_lookup(const char *id) {
+  if (!id) return NULL;
+  pthread_once(&g_gen_once, build_gen_index);
+  if (!g_gen_sorted) return gen_meta_get(id);        /* OOM: the linear scan */
+  int lo = 0, hi = g_gen_n;                          /* leftmost id >= key */
+  while (lo < hi) {
+    int mid = lo + (hi - lo) / 2;
+    if (strcmp(g_gen_sorted[mid].id, id) < 0) lo = mid + 1; else hi = mid;
+  }
+  if (lo < g_gen_n && strcmp(g_gen_sorted[lo].id, id) == 0)
+    return gen_meta_at(g_gen_sorted[lo].at);
+  return NULL;
+}
+
 const src_meta *src_meta_get(const char *id) {
   const source_def *d = registry_get(id);
-  const src_meta *cur = gen_meta_get(id);
+  const src_meta *cur = gen_lookup(id);
   if (!d && !cur) return NULL;
   return resolve(d, cur);
 }
@@ -100,9 +146,6 @@ const src_meta *src_meta_get(const char *id) {
  * The extra index is built once and never mutated. registry_add() runs from
  * __attribute__((constructor)) before main(), so the registry is complete and
  * immutable by the time any request or scheduler tick can call this. */
-#include <pthread.h>
-#include <stdlib.h>
-
 static const source_def **g_extra;
 static int g_extra_n;
 static pthread_once_t g_extra_once = PTHREAD_ONCE_INIT;
@@ -115,7 +158,7 @@ static void build_extra(void) {
   if (!g_extra) return;
   int k = 0;
   for (int i = 0; i < n; i++)
-    if (all[i] && all[i]->id && !gen_meta_get(all[i]->id)) g_extra[k++] = all[i];
+    if (all[i] && all[i]->id && !gen_lookup(all[i]->id)) g_extra[k++] = all[i];
   g_extra_n = k;
 }
 

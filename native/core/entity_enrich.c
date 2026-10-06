@@ -3,6 +3,7 @@
 #include "entity_enrich.h"
 #include "entitystore.h"
 #include "prompts.h"
+#include "llm_fault.h"
 #include "../third_party/sqlite3.h"
 #include "../third_party/cJSON.h"
 #include <stdio.h>
@@ -84,15 +85,31 @@ int entity_enrich_extract(db_handle *db, llm_client *llm, int batch) {
   }
 
   const char *grammar = grammar_load("entity_extraction");
-  int processed = 0, failed = 0;
+  int processed = 0, failed = 0, deferred = 0;
 
   for (int r = 0; r < nr; r++) {
     prow *pr = &rows[r];
     char *prompt = prompt_entity_extraction(pr->title, pr->body, pr->summary,
                                             pr->lang, pr->src);
+    long t0 = llm_fault_now_ms();
     char *raw = llm_complete(llm, prompt, grammar && *grammar ? grammar : NULL,
                              1024, 0.1, TIMEOUT);
+    long elapsed = llm_fault_now_ms() - t0;
     free(prompt);
+    /* failed_count is a verdict on the ITEM, and an item at 5 is never
+     * retried. A server that is down or timing out says nothing about the
+     * item — counting it used to retire every item a llama-server restart
+     * happened to be asked about — so a transport failure leaves this item
+     * and the rest of the batch untouched for the next tick, and only an
+     * answer the model actually gave (empty, unparseable, no entities array)
+     * is held against the item. */
+    if (!raw && llm_fault_is_transport(llm, elapsed, TIMEOUT)) {
+      deferred = nr - r;
+      fprintf(stderr, "[entity-enrich] LLM unreachable or timed out; %d item(s) "
+                      "left for the next tick, not counted as failures\n",
+              deferred);
+      break;
+    }
     cJSON *out = extract_json(raw);
     free(raw);
     cJSON *list = out ? cJSON_GetObjectItem(out, "entities") : NULL;
@@ -184,8 +201,8 @@ int entity_enrich_extract(db_handle *db, llm_client *llm, int batch) {
     free(rows[r].body); free(rows[r].summary); free(rows[r].lang);
   }
   free(rows);
-  fprintf(stderr, "[entity-enrich] extract: attempted=%d processed=%d failed=%d\n",
-          nr, processed, failed);
+  fprintf(stderr, "[entity-enrich] extract: attempted=%d processed=%d failed=%d"
+                  " deferred=%d\n", nr - deferred, processed, failed, deferred);
   return processed;
 }
 

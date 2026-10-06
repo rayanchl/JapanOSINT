@@ -17,11 +17,23 @@
  * recompile. Honesty rule (kept from Node): only 'merged' when old_url is a
  * real http(s) URL the fetch layer can match; an internal:// or dynamically
  * built URL can't be matched by the override, so we record 'verified' (a human
- * suggestion) and leave the anomaly open — never a faked live fix. */
+ * suggestion) and leave the anomaly open — never a faked live fix.
+ *
+ * HEAD-OF-LINE. The batch is the oldest REPAIR_BATCH (3) triaged-open
+ * anomalies. Three kinds of row used to stay at its head for good, because
+ * attempt_repair() returned on them without resolving anything: an anomaly
+ * whose source is quarantined, one with a verified fix already staged for a
+ * human, and one whose proposal the LLM never answered. Three of those and no
+ * newer anomaly was ever looked at again. The first two are now excluded in
+ * the SELECT (they cannot progress until a human or the quarantine clock
+ * acts); the third is parked (repair_attempts, repair_next_at) when the model
+ * answered badly, and ends the tick without counting anything when the server
+ * itself is down (core/llm_fault.h). */
 #include "source.h"
 #include "core/prompts.h"
 #include "core/source_registry.h"
 #include "core/url_override.h"
+#include "core/llm_fault.h"
 #include "third_party/cJSON.h"
 #include "third_party/sqlite3.h"
 #include <stdio.h>
@@ -393,8 +405,30 @@ static int sanity_ok(llm_client *llm, const char *name, const char *category,
 
 typedef struct {
   long id; char *source_id, *triage_class, *triage_evidence, *triage_fix, *created_at;
-  int escalation;
+  int escalation, park_attempts;
 } cand_row;
+
+/* The model answered but not usefully: retry after 2 min x 2^n, capped at a
+ * day. Not a collector_repair row — those feed the breaker, and a model that
+ * cannot produce JSON says nothing about the collector. */
+static void park_repair(sqlite3 *h, const cand_row *a) {
+  int n = a->park_attempts < 0 ? 0 : a->park_attempts;
+  long delay = 120L << (n > 10 ? 10 : n);
+  if (delay > 86400) delay = 86400;
+  char mod[40];
+  snprintf(mod, sizeof mod, "+%ld seconds", delay);
+  sqlite3_stmt *u;
+  if (sqlite3_prepare_v2(h, "UPDATE collector_anomaly SET"
+        " repair_attempts=COALESCE(repair_attempts,0)+1,"
+        " repair_next_at=datetime('now',?1) WHERE id=?2", -1, &u, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(u, 1, mod, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int64(u, 2, (sqlite3_int64)a->id);
+    sqlite3_step(u);
+    sqlite3_finalize(u);
+  }
+  fprintf(stderr, "[repair] anomaly #%ld: model output unparseable (attempt %d)"
+          " — parked %lds\n", a->id, n + 1, delay);
+}
 
 /* reject path: record + re-triage + maybe quarantine. gate is consumed. */
 static void do_reject(db_handle *db, const cand_row *a, const char *new_url,
@@ -415,16 +449,20 @@ static void do_reject(db_handle *db, const cand_row *a, const char *new_url,
   maybe_quarantine(db, a->source_id);
 }
 
-static void attempt_repair(db_handle *db, llm_client *llm, http_client *http,
-                           const cand_row *a) {
+/* Returns -1 when the LLM server is unreachable (the caller stops the tick),
+ * 0 otherwise. */
+static int attempt_repair(db_handle *db, llm_client *llm, http_client *http,
+                          const cand_row *a) {
   sqlite3 *h = db->h;
   const char *cls = a->triage_class;
-  if (!cls) return;
+  if (!cls) return 0;
 
   /* Guards: quarantined source, or a verified fix already staged for this
-   * anomaly (re-running would just re-derive the same patch). */
-  if (is_quarantined(h, a->source_id)) return;
-  if (has_staged_repair(h, a->id)) return;
+   * anomaly (re-running would just re-derive the same patch). The SELECT in
+   * run() already excludes both; these stay for a row that changed state
+   * between the SELECT and here. */
+  if (is_quarantined(h, a->source_id)) return 0;
+  if (has_staged_repair(h, a->id)) return 0;
 
   /* Give-up rails. */
   int max_esc = env_int("REPAIR_MAX_ESCALATION", 3);
@@ -443,7 +481,7 @@ static void attempt_repair(db_handle *db, llm_client *llm, http_client *http,
     snprintf(res, sizeof res, "needs_human: repair exhausted (esc %d, %d attempts)",
              a->escalation, attempts);
     resolve_anomaly(h, a->id, res);
-    return;
+    return 0;
   }
 
   /* transient: resolve only if the source actually recovered. */
@@ -468,7 +506,7 @@ static void attempt_repair(db_handle *db, llm_client *llm, http_client *http,
       free(gj);
       reopen_for_retriage(h, a->id);
     }
-    return;
+    return 0;
   }
 
   /* needs-human classes: fix lives in parsing/credentials/quota, out of scope. */
@@ -484,16 +522,17 @@ static void attempt_repair(db_handle *db, llm_client *llm, http_client *http,
     free(gj);
     char res[120]; snprintf(res, sizeof res, "needs_human: %s", cls);
     resolve_anomaly(h, a->id, res);
-    return;
+    return 0;
   }
 
   /* Only url_move / site_dead are actionable; anything else → re-triage. */
   if (strcmp(cls, "url_move") && strcmp(cls, "site_dead")) {
     reopen_for_retriage(h, a->id);
-    return;
+    return 0;
   }
 
   /* ── URL-swap flow ───────────────────────────────────────────────────── */
+  int rc = 0;
   int escalate_at = env_int("REPAIR_ESCALATE_AT", 1);
   int escalated = a->escalation >= escalate_at;
   const char *fast = getenv("LLM_REPAIR_MODEL");
@@ -559,16 +598,28 @@ static void attempt_repair(db_handle *db, llm_client *llm, http_client *http,
   free(bundle);
 
   const char *grammar = grammar_load("repair_proposal");
+  long t0 = llm_fault_now_ms();
   char *raw = prompt ? llm_complete(llm, prompt,
                                     grammar && *grammar ? grammar : NULL,
                                     512, 0.2, timeout) : NULL;
+  long elapsed = llm_fault_now_ms() - t0;
+  int transport = prompt && !raw &&
+                  llm_fault_is_transport(llm, elapsed, timeout);
   free(prompt);
   cJSON *prop = extract_json(raw);
   free(raw);
 
   if (!prop) {
-    /* LLM unreachable — no row, retry next tick (same contract as Node). */
-    fprintf(stderr, "[repair] anomaly #%ld: LLM null — retry next tick\n", a->id);
+    /* No row either way (same contract as Node) — but an unreachable server
+     * ends the tick, and a model that answered badly parks this anomaly so
+     * the ones behind it get their turn. */
+    if (transport) {
+      fprintf(stderr, "[repair] anomaly #%ld: LLM unreachable or timed out — "
+              "retry next tick\n", a->id);
+      rc = -1;
+    } else {
+      park_repair(h, a);
+    }
     goto cleanup;
   }
 
@@ -699,6 +750,7 @@ cleanup_prop:
   if (prop) cJSON_Delete(prop);
 cleanup:
   free(old_url); free(name); free(type); free(cat); free(status); free(errmsg);
+  return rc;
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -709,15 +761,25 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     return 0;
   }
   int batch = env_int("REPAIR_BATCH", 3);
+  ensure_column(ctx->db, "collector_anomaly", "repair_attempts",
+                "INTEGER NOT NULL DEFAULT 0");
+  ensure_column(ctx->db, "collector_anomaly", "repair_next_at", "TEXT");
 
   cand_row *rows = calloc(batch, sizeof(cand_row));
   int nr = 0;
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(ctx->db->h,
-        "SELECT id,source_id,triage_class,triage_evidence,triage_suggested_fix,"
-        " created_at,escalation_level FROM collector_anomaly"
-        " WHERE resolved_at IS NULL AND triaged_at IS NOT NULL"
-        " ORDER BY created_at ASC LIMIT ?1", -1, &s, NULL) == SQLITE_OK) {
+        "SELECT a.id,a.source_id,a.triage_class,a.triage_evidence,"
+        " a.triage_suggested_fix,a.created_at,a.escalation_level,a.repair_attempts"
+        " FROM collector_anomaly a"
+        " WHERE a.resolved_at IS NULL AND a.triaged_at IS NOT NULL"
+        "   AND (a.repair_next_at IS NULL OR a.repair_next_at <= datetime('now'))"
+        "   AND NOT EXISTS (SELECT 1 FROM collector_repair r"
+        "                   WHERE r.anomaly_id=a.id AND r.status='verified')"
+        "   AND NOT EXISTS (SELECT 1 FROM sources q WHERE q.id=a.source_id"
+        "                   AND q.quarantined_until IS NOT NULL"
+        "                   AND q.quarantined_until>datetime('now'))"
+        " ORDER BY a.created_at ASC LIMIT ?1", -1, &s, NULL) == SQLITE_OK) {
     sqlite3_bind_int(s, 1, batch);
     while (nr < batch && sqlite3_step(s) == SQLITE_ROW) {
       rows[nr].id = (long)sqlite3_column_int64(s, 0);
@@ -727,18 +789,22 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       rows[nr].triage_fix = col_dup(s, 4);
       rows[nr].created_at = col_dup(s, 5);
       rows[nr].escalation = sqlite3_column_int(s, 6);
+      rows[nr].park_attempts = sqlite3_column_int(s, 7);
       if (rows[nr].source_id) nr++;
     }
     sqlite3_finalize(s);
   }
 
+  int down = 0;
   for (int i = 0; i < nr; i++) {
-    attempt_repair(ctx->db, ctx->llm, ctx->http, &rows[i]);
+    if (!down && attempt_repair(ctx->db, ctx->llm, ctx->http, &rows[i]) < 0)
+      down = 1;            /* the rest keep their place for the next tick */
     free(rows[i].source_id); free(rows[i].triage_class);
     free(rows[i].triage_evidence); free(rows[i].triage_fix); free(rows[i].created_at);
   }
   free(rows);
-  if (nr) fprintf(stderr, "[repair] tick: processed %d candidate(s)\n", nr);
+  if (nr) fprintf(stderr, "[repair] tick: processed %d candidate(s)%s\n", nr,
+                 down ? " (stopped: LLM unreachable)" : "");
   return 0;
 }
 

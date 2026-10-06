@@ -7,11 +7,19 @@
  * untriaged open anomalies (idx_anomaly_untriaged); for each, build a context
  * bundle (source row + recent fetch_log + a fresh re-fetch of the source URL),
  * classify it with the triage_classification grammar, and persist the verdict.
- * LLM-null/unparseable → leave the anomaly untriaged (retry next tick), the
- * same "no row on failure" contract as the Node triageOne. */
+ * LLM-null/unparseable → leave the anomaly untriaged, the same "no row on
+ * failure" contract as the Node triageOne — but no longer at the HEAD of the
+ * queue. The batch is `ORDER BY created_at ASC LIMIT 5`, so five anomalies the
+ * model could not classify used to be re-asked every minute while every newer
+ * anomaly waited behind them for good. A model failure now parks the row
+ * (triage_attempts, triage_next_at: 1 min doubling to a day) and the batch
+ * moves on; a TRANSPORT failure (llama-server down or timing out, see
+ * core/llm_fault.h) is not the anomaly's fault, counts nothing against it and
+ * ends the tick. */
 #include "source.h"
 #include "core/prompts.h"
 #include "core/source_registry.h"
+#include "core/llm_fault.h"
 #include "third_party/cJSON.h"
 #include "third_party/sqlite3.h"
 #include <stdio.h>
@@ -139,9 +147,32 @@ static const char *SYS =
 
 typedef struct {
   long id; char *source_id; char *verdict, *reason, *evidence, *created_at;
-  int escalation;
+  int escalation, attempts;
 } anomaly_row;
 
+/* Park a row the model could not classify: retry after 60 s x 2^attempts,
+ * capped at a day, so it stays visible and retried but never blocks the
+ * anomalies behind it. */
+static void park_untriaged(sqlite3 *h, const anomaly_row *an) {
+  int a = an->attempts < 0 ? 0 : an->attempts;
+  long delay = 60L << (a > 10 ? 10 : a);
+  if (delay > 86400) delay = 86400;
+  char mod[40];
+  snprintf(mod, sizeof mod, "+%ld seconds", delay);
+  sqlite3_stmt *u;
+  if (sqlite3_prepare_v2(h, "UPDATE collector_anomaly SET"
+        " triage_attempts=COALESCE(triage_attempts,0)+1,"
+        " triage_next_at=datetime('now',?1) WHERE id=?2", -1, &u, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(u, 1, mod, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int64(u, 2, (sqlite3_int64)an->id);
+    sqlite3_step(u);
+    sqlite3_finalize(u);
+  }
+  fprintf(stderr, "[triage] anomaly #%ld: model output unparseable (attempt %d)"
+          " — parked %lds\n", an->id, a + 1, delay);
+}
+
+/* 1 = triaged, 0 = model failure (row parked), -1 = transport failure. */
 static int triage_one(db_handle *db, llm_client *llm, http_client *http,
                       const anomaly_row *an) {
   sqlite3 *h = db->h;
@@ -207,9 +238,13 @@ static int triage_one(db_handle *db, llm_client *llm, http_client *http,
   free(fenced);
 
   const char *grammar = grammar_load("triage_classification");
+  long t0 = llm_fault_now_ms();
   char *raw = prompt ? llm_complete(llm, prompt,
                                     grammar && *grammar ? grammar : NULL,
                                     512, 0.2, timeout) : NULL;
+  long elapsed = llm_fault_now_ms() - t0;
+  int transport = prompt && !raw &&
+                  llm_fault_is_transport(llm, elapsed, timeout);
   free(prompt);
 
   int wrote = 0;
@@ -244,9 +279,12 @@ static int triage_one(db_handle *db, llm_client *llm, http_client *http,
               an->id, an->source_id, cls->valuestring);
     }
     free(fix_json);
+  } else if (transport) {
+    fprintf(stderr, "[triage] anomaly #%ld: LLM unreachable or timed out — "
+            "left untriaged, not counted against it\n", an->id);
+    wrote = -1;
   } else {
-    fprintf(stderr, "[triage] anomaly #%ld: LLM null/unparseable — left untriaged\n",
-            an->id);
+    park_untriaged(h, an);
   }
   if (out) cJSON_Delete(out);
   free(name); free(type); free(cat); free(status); free(last_ok); free(errmsg);
@@ -262,6 +300,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     return 0;
   }
   int batch = env_int("TRIAGE_BATCH", 5);
+  ensure_column(ctx->db, "collector_anomaly", "triage_attempts",
+                "INTEGER NOT NULL DEFAULT 0");
+  ensure_column(ctx->db, "collector_anomaly", "triage_next_at", "TEXT");
 
   /* collect the pending batch first, then process (writes happen after the
    * SELECT statement is finalized — mirrors entity_enrich's fetch-then-write). */
@@ -269,8 +310,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int nr = 0;
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(ctx->db->h,
-        "SELECT id,source_id,verdict,reason,evidence,created_at,escalation_level"
-        " FROM collector_anomaly WHERE resolved_at IS NULL AND triaged_at IS NULL"
+        "SELECT id,source_id,verdict,reason,evidence,created_at,escalation_level,"
+        " triage_attempts FROM collector_anomaly"
+        " WHERE resolved_at IS NULL AND triaged_at IS NULL"
+        "   AND (triage_next_at IS NULL OR triage_next_at <= datetime('now'))"
         " ORDER BY created_at ASC LIMIT ?1", -1, &s, NULL) == SQLITE_OK) {
     sqlite3_bind_int(s, 1, batch);
     while (nr < batch && sqlite3_step(s) == SQLITE_ROW) {
@@ -281,19 +324,27 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       rows[nr].evidence = col_dup(s, 4);
       rows[nr].created_at = col_dup(s, 5);
       rows[nr].escalation = sqlite3_column_int(s, 6);
+      rows[nr].attempts = sqlite3_column_int(s, 7);
       if (rows[nr].source_id) nr++;
     }
     sqlite3_finalize(s);
   }
 
-  int done = 0;
+  int done = 0, down = 0;
   for (int i = 0; i < nr; i++) {
-    done += triage_one(ctx->db, ctx->llm, ctx->http, &rows[i]);
+    /* Once the server is down, the rest of the batch would only wait out
+     * the same timeout; they keep their place for the next tick. */
+    if (!down) {
+      int r = triage_one(ctx->db, ctx->llm, ctx->http, &rows[i]);
+      if (r > 0) done++;
+      else if (r < 0) down = 1;
+    }
     free(rows[i].source_id); free(rows[i].verdict); free(rows[i].reason);
     free(rows[i].evidence); free(rows[i].created_at);
   }
   free(rows);
-  if (nr) fprintf(stderr, "[triage] tick: %d/%d triaged\n", done, nr);
+  if (nr) fprintf(stderr, "[triage] tick: %d/%d triaged%s\n", done, nr,
+                 down ? " (stopped: LLM unreachable)" : "");
   return 0;
 }
 
