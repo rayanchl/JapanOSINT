@@ -94,6 +94,7 @@
 #define _GNU_SOURCE
 #endif
 #include "ffmpeg.h"
+#include "hostgate.h"        /* the destination policy for network inputs     */
 #include "../third_party/cJSON.h"
 #include <ctype.h>
 #include <errno.h>
@@ -184,6 +185,7 @@ const char *ffmpeg_strerror(int rc) {
     case FFMPEG_ERR_PARSE:         return "ffmpeg_parse_failed";
     case FFMPEG_ERR_NO_DURATION:   return "ffmpeg_no_duration";
     case FFMPEG_ERR_OOM:           return "ffmpeg_oom";
+    case FFMPEG_ERR_BLOCKED:       return "ffmpeg_blocked_destination";
     default:                       return "ffmpeg_failed";
   }
 }
@@ -320,8 +322,12 @@ static const char *whitelist_for(const char *scheme) {
   if (strcmp(scheme, "http") == 0 || strcmp(scheme, "https") == 0 ||
       strcmp(scheme, "hls") == 0)
     return "http,https,tcp,tls,crypto";
+  /* No rtp/udp/crypto: every rtsp input gets -rtsp_transport tcp (see the
+   * argv builders), so media arrives interleaved on the RTSP TCP connection
+   * and nothing else is ever opened. A smaller list is a smaller set of things
+   * a hostile DESCRIBE answer can make ffmpeg open on its own. */
   if (strcmp(scheme, "rtsp") == 0 || strcmp(scheme, "rtsps") == 0)
-    return "rtsp,rtsps,rtp,udp,tcp,tls,crypto";
+    return "rtsp,rtsps,tcp,tls";
   if (strcmp(scheme, "rtmp") == 0 || strcmp(scheme, "rtmps") == 0)
     return "rtmp,rtmps,tcp,tls";
   if (strcmp(scheme, "tcp") == 0) return "tcp";
@@ -329,12 +335,36 @@ static const char *whitelist_for(const char *scheme) {
   return "file";
 }
 
-/* Convenience: validate and classify in one step. */
+/* Convenience: validate and classify in one step — and, for a NETWORK input,
+ * judge the destination before anything is spawned.
+ *
+ * ffmpeg dials its own sockets, so no connect callback of ours ever sees the
+ * address it reaches; this is the only place a URL pointing at 127.0.0.1, the
+ * LAN or the metadata service can be refused. The policy is the camera one
+ * (hostgate.h: strict unless JO_CAMERA_ALLOW_LAN=1) because every network
+ * input this module is handed today is a camera feed URL some third-party
+ * registry wrote, and the name is resolved and EVERY answer judged.
+ *
+ * WHAT THIS DOES NOT COVER, stated so nobody assumes it does: an HLS playlist
+ * (and an RTSP server's redirect) names further URLs that ffmpeg fetches by
+ * itself. Those are constrained only by -protocol_whitelist — the scheme, never
+ * the host — so a public playlist listing http://10.0.0.5/seg.ts makes ffmpeg
+ * request it. Likewise a name re-resolved by ffmpeg can answer differently
+ * than it did here. Closing that needs ffmpeg's network in a sandbox, not a
+ * check in this process. */
 static int classify(const char *input, char *sc, size_t cap, const char **wl) {
   int rc = ffmpeg_input_allowed(input);
   if (rc != FFMPEG_OK) return rc;
   sc[0] = '\0';
   if (scheme_of(input, sc, cap) != 1) sc[0] = '\0';
+  if (sc[0] && strcmp(sc, "file") != 0) {
+    int hg = hostgate_camera_url_check(input, 1);
+    if (hg != HG_URL_OK) {
+      fprintf(stderr, "[ffmpeg] refused input %s: %s\n", input,
+              hostgate_url_reason(hg));
+      return FFMPEG_ERR_BLOCKED;
+    }
+  }
   *wl = whitelist_for(sc);
   return FFMPEG_OK;
 }
@@ -1154,7 +1184,7 @@ static cJSON *probe_root(const char *input, int timeout_ms, char *err,
   rc = gate(1, err, errcap);
   if (rc != FFMPEG_OK) { *rc_out = rc; return NULL; }
 
-  const char *av[16];
+  const char *av[20];
   int n = 0;
   av[n++] = g_fp_path;
   /* NO -nostdin: ffprobe does not define that option and exits 1 on it. The
@@ -1163,6 +1193,11 @@ static cJSON *probe_root(const char *input, int timeout_ms, char *err,
   av[n++] = "-hide_banner";
   av[n++] = "-loglevel"; av[n++] = "error";
   av[n++] = "-protocol_whitelist"; av[n++] = wl;
+  /* Required, not cosmetic: the rtsp whitelist has no udp/rtp, so the
+   * default UDP-first transport would be refused (see whitelist_for). */
+  if (strcmp(sc, "rtsp") == 0 || strcmp(sc, "rtsps") == 0) {
+    av[n++] = "-rtsp_transport"; av[n++] = "tcp";
+  }
   av[n++] = "-print_format"; av[n++] = "json";
   av[n++] = "-show_format";
   av[n++] = "-show_streams";
@@ -1288,13 +1323,16 @@ int ffmpeg_gray32(const char *input, int timeout_ms, unsigned char out[1024],
   rc = gate(0, err, errcap);
   if (rc != FFMPEG_OK) return rc;
 
-  const char *av[24];
+  const char *av[28];               /* 25 used with -rtsp_transport           */
   int n = 0;
   av[n++] = g_ff_path;
   av[n++] = "-nostdin";
   av[n++] = "-hide_banner";
   av[n++] = "-loglevel"; av[n++] = "error";
   av[n++] = "-protocol_whitelist"; av[n++] = wl;
+  if (strcmp(sc, "rtsp") == 0 || strcmp(sc, "rtsps") == 0) {   /* as above */
+    av[n++] = "-rtsp_transport"; av[n++] = "tcp";
+  }
   av[n++] = "-i"; av[n++] = input;
   av[n++] = "-frames:v"; av[n++] = "1";
   av[n++] = "-sws_flags"; av[n++] = "bilinear";
