@@ -13,6 +13,7 @@
  * are covered too. */
 #include "../lib/hpengine.h"
 #include "../lib/jsonlist.h"
+#include "../lib/feedlib.h"
 #include "../lib/csv.h"
 #include "../core/httpclient.h"
 #include "../third_party/cJSON.h"
@@ -78,9 +79,18 @@ static char g_last_url[2048];
 static char g_last_body[2048];
 static char g_last_hdrs[1024];
 static int  g_ncalls = 0;
+/* The headers of EACH call, in order — a later page's request must be checked
+ * on its own, and g_last_hdrs only ever holds the final one. */
+static char g_call_hdrs[16][512];
+/* A fixture status that answers 304 Not Modified (no body) unless the request
+ * carries `Cache-Control: no-cache`, and then 200 with the fixture's body: a
+ * cache on the path answering for a page it never fetched, and the one retry
+ * that asks it to go back to the origin. */
+#define FX_304_UNLESS_NOCACHE 1304
 
 static void fx_reset(void) { g_nfx = 0; g_ncalls = 0; g_last_url[0] = 0;
-                             g_last_body[0] = 0; g_last_hdrs[0] = 0; }
+                             g_last_body[0] = 0; g_last_hdrs[0] = 0;
+                             memset(g_call_hdrs, 0, sizeof g_call_hdrs); }
 static void fx_add(const char *match, long status, const char *body) {
   if (g_nfx < 16) g_fx[g_nfx++] = (fixture){ match, body, status, 0 };
 }
@@ -100,10 +110,16 @@ int http_request(http_client *c, const char *method, const char *url,
     strncat(g_last_hdrs, headers[i], sizeof g_last_hdrs - strlen(g_last_hdrs) - 2);
     strncat(g_last_hdrs, "\n", sizeof g_last_hdrs - strlen(g_last_hdrs) - 1);
   }
+  if (g_ncalls <= 16)
+    snprintf(g_call_hdrs[g_ncalls - 1], sizeof g_call_hdrs[0], "%s", g_last_hdrs);
   out->status = 404; out->body = NULL; out->body_len = 0;
   for (int i = 0; i < g_nfx; i++) {
     if (strstr(url, g_fx[i].match)) {
       out->status = g_fx[i].status;
+      if (out->status == FX_304_UNLESS_NOCACHE) {
+        if (!strstr(g_last_hdrs, "Cache-Control: no-cache")) { out->status = 304; return 0; }
+        out->status = 200;
+      }
       if (g_fx[i].body && g_fx[i].len) {
         out->body = malloc(g_fx[i].len + 1);
         if (out->body) {
@@ -127,12 +143,24 @@ void http_response_free(http_response *r) { if (r) { free(r->body); r->body = NU
  * are not exercised here, so they are stubbed; the VJSON fetcher reads the same
  * fixture table, so jsonlist_emit_paged() — the VJSON walk itself — is testable
  * here too (test 31). Every fetch in this test goes through http_request(). */
+static long g_feed_status;
 cJSON *feed_get_json(http_client *h, const char *url, int t) {
   http_response r = {0};
   http_request(h, "GET", url, NULL, NULL, 0, t, 0, &r);
   cJSON *doc = (r.status == 200 && r.body) ? cJSON_Parse(r.body) : NULL;
+  g_feed_status = (r.status == 200 && r.body && !doc) ? FEED_ST_UNPARSED : r.status;
   http_response_free(&r);
   return doc;
+}
+/* lib/jsonlist.c and lib/pagewalk.c ask feedlib what a failed fetch met; this
+ * stub's feed_get_json above records it the same way. */
+long feed_last_json_status(void) { return g_feed_status; }
+void feed_last_json_status_reset(void) { g_feed_status = FEED_ST_UNKNOWN; }
+void feed_status_describe(long st, char *out, size_t cap) {
+  if (st == FEED_ST_TRANSPORT)      snprintf(out, cap, "a transport failure");
+  else if (st == FEED_ST_UNPARSED)  snprintf(out, cap, "an HTTP 2xx whose body was not JSON");
+  else if (st > 0)                  snprintf(out, cap, "HTTP %ld", st);
+  else                              snprintf(out, cap, "an unrecorded failure");
 }
 const char *url_override_apply(const char *url) { return url; }
 void feed_hash_key(char *out21, const char *const *parts, int n) {
@@ -145,10 +173,16 @@ typedef struct { char title[256], key[256], props[8192], link[512], rtype[64];
                  int has_geo; double lat, lon; } cap;
 static cap g_cap[MAXCAP];
 static int g_ncap = 0;
+/* The WHOLE properties_json of each captured row — `props` above is bounded,
+ * and a record carrying thousands of fields puts its `_fields_dropped` stamp
+ * past the bound (test 36). */
+static char *g_full[MAXCAP];
 
 static int cap_emit(struct intel_sink *s, const intel_item *it) {
   (void)s;
   if (g_ncap >= MAXCAP) return -1;
+  free(g_full[g_ncap]);
+  g_full[g_ncap] = strdup(it->properties_json ? it->properties_json : "");
   cap *c = &g_cap[g_ncap++];
   snprintf(c->title, sizeof c->title, "%s", it->title ? it->title : "");
   snprintf(c->key,   sizeof c->key,   "%s", it->remote_key ? it->remote_key : "");
@@ -246,6 +280,14 @@ static const hp_source T[] = {
     .next_path = "next", .record_type = "t-page", .free_tier = 1, .description = "d" },
 
   { .id = "T_PAGE_PARAM", .name = "offset pagination", .url = "https://x.test/po?q={q}",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .page_param = "offset", .page_size = 2,
+    .record_type = "t-page", .free_tier = 1, .description = "d" },
+  /* The same walk with a row-declared conditional header: it belongs to the
+   * first request only (test 9f-sexies). */
+  { .id = "T_PAGE_COND", .name = "offset pagination, conditional first request",
+    .url = "https://x.test/pc?q={q}",
+    .headers = { "If-None-Match: \"v1\"" },
     .array_path = "items", .title_keys = "name", .id_keys = "id",
     .page_param = "offset", .page_size = 2,
     .record_type = "t-page", .free_tier = 1, .description = "d" },
@@ -603,6 +645,22 @@ static const hp_source T[] = {
     .mode = HP_XML, .array_path = "channel.item", .interval = 3600,
     .title_keys = "title", .id_keys = "link",
     .record_type = "t-xmldot", .free_tier = 1, .description = "d" },
+  /* An HTML listing that links each item from an icon AND a headline (test 37). */
+  { .id = "T_HTML_GIFU", .name = "icon + headline anchors", .url = "https://x.test/gifu",
+    .mode = HP_HTML, .href_must = "/articles/-/", .base = "https://x.test", .interval = 3600,
+    .record_type = "t-gifu", .free_tier = 1, .description = "d" },
+  /* hp_xml_flatten's bounds and repeats (test 36). */
+  { .id = "T_XML_FLAT", .name = "xml flatten bounds", .url = "https://x.test/xf.xml",
+    .mode = HP_XML, .array_path = "rec", .interval = 3600,
+    .title_keys = "title", .id_keys = "id",
+    .record_type = "t-xmlflat", .free_tier = 1, .description = "d" },
+  { .id = "T_XML_ROWS", .name = "xml attribute-only records", .url = "https://x.test/rows.xml",
+    .mode = HP_XML, .array_path = "row", .interval = 3600,
+    .title_keys = "@name", .id_keys = "@id",
+    .record_type = "t-xmlrow", .free_tier = 1, .description = "d" },
+  { .id = "T_XML_STR", .name = "xml text-only records", .url = "https://x.test/str.xml",
+    .mode = HP_XML, .array_path = "string", .interval = 3600,
+    .record_type = "t-xmlstr", .free_tier = 1, .description = "d" },
 
   /* ── engine fixes of 2026-10-02 (tests 27-33) ── */
   /* A page-numbered page_walk row whose URL states a page size and NO page.
@@ -1049,6 +1107,117 @@ int main(void) {
     for (int i = 0; i < g_ncap; i++)
       if (!strcmp(g_cap[i].rtype, "collector-truncation-notice")) notice = 1;
     ok(rc == 0 && notice, "a 429 on a later page emits a truncation notice");
+  }
+
+  /* 9f-sexies. A later page that does not deliver records: end of data, or a
+   * walk cut short? (hp_later_page_cut). JO32_ARC_MLIT_SCHOOL stopped at
+   * 36,000 of 56,807 on a 304 with rc=0 and no notice — every status other
+   * than 429/5xx used to end a walk in silence. */
+  {
+#define TRUNC "collector-truncation-notice"
+    const char *full2 = "{\"items\":[{\"name\":\"q1\",\"id\":\"1\"},{\"name\":\"q2\",\"id\":\"2\"}]}";
+    const cap *tn = NULL;
+
+    /* (a) a 304 the no-cache retry cannot clear: disclosed, with the page,
+     *     the status and the URL, and pages_read counts the pages that
+     *     delivered — not the request that failed. */
+    fx_reset();
+    fx_add("offset=2", 304, NULL);
+    fx_add("/po?q=", 200, full2);
+    rc = run_source("T_PAGE_PARAM", "x");
+    ok(rc == 0 && cap_count("t-page", NULL) == 2 && cap_count(TRUNC, &tn) == 1,
+       "9f-sexies: a 304 on a later page files a truncation notice");
+    ok(tn && strstr(tn->props, "\"failed_page_status\":304") &&
+             strstr(tn->props, "\"failed_page\":2") &&
+             strstr(tn->props, "\"pages_read\":1") &&
+             strstr(tn->props, "\"records_used\":2") &&
+             strstr(tn->props, "\"failed_page_url\":\"https://x.test/po?q=x&offset=2\"") &&
+             strstr(tn->props, "304 Not Modified") &&
+             strstr(tn->title, "page 2 answered 304"),
+       "9f-sexies: the notice states the failing page, its status, its URL and the pages read");
+    ok(g_ncalls == 3 && strstr(g_call_hdrs[2], "Cache-Control: no-cache") &&
+       !strstr(g_call_hdrs[1], "Cache-Control"),
+       "9f-sexies: a 304 to an unconditional request is retried once with no-cache");
+
+    /* (b) …and when the retry reaches the origin, the walk simply continues. */
+    fx_reset();
+    fx_add("offset=4", 200, "{\"items\":[]}");
+    fx_add("offset=2", FX_304_UNLESS_NOCACHE, "{\"items\":[{\"name\":\"q3\",\"id\":\"3\"}]}");
+    fx_add("/po?q=", 200, full2);
+    rc = run_source("T_PAGE_PARAM", "x");
+    ok(rc == 0 && cap_count("t-page", NULL) == 3 && cap_count(TRUNC, NULL) == 0,
+       "9f-sexies: a 304 cleared by the no-cache retry loses nothing and files nothing");
+
+    /* (c) a row-declared conditional header goes on the FIRST request only. */
+    fx_reset();
+    fx_add("offset=4", 200, "{\"items\":[]}");
+    fx_add("offset=2", 200, "{\"items\":[{\"name\":\"c3\",\"id\":\"3\"}]}");
+    fx_add("/pc?q=", 200, full2);
+    rc = run_source("T_PAGE_COND", "x");
+    ok(rc == 0 && cap_count("t-page", NULL) == 3 && g_ncalls == 3 &&
+       strstr(g_call_hdrs[0], "If-None-Match: \"v1\"") &&
+       !strstr(g_call_hdrs[1], "If-None-Match") && !strstr(g_call_hdrs[2], "If-None-Match"),
+       "9f-sexies: a conditional header reaches page 1 and never a later page");
+
+    /* (d) a 403 after a full page: refused, not finished. */
+    fx_reset();
+    fx_add("offset=2", 403, "forbidden");
+    fx_add("/po?q=", 200, full2);
+    rc = run_source("T_PAGE_PARAM", "x");
+    ok(rc == 0 && cap_count("t-page", NULL) == 2 && cap_count(TRUNC, &tn) == 1 &&
+       tn && strstr(tn->props, "\"failed_page_status\":403"),
+       "9f-sexies: a 403 on a later page files a truncation notice");
+
+    /* (e) a 404 after a FULL page of the declared size: the deep-paging
+     *     signature, disclosed — but a 404 after a SHORT page is the end
+     *     (18d below) and stays silent. */
+    fx_reset();
+    fx_add("offset=4", 404, NULL);
+    fx_add("offset=2", 200, "{\"items\":[{\"name\":\"q3\",\"id\":\"3\"},{\"name\":\"q4\",\"id\":\"4\"}]}");
+    fx_add("/po?q=", 200, full2);
+    rc = run_source("T_PAGE_PARAM", "x");
+    ok(rc == 0 && cap_count("t-page", NULL) == 4 && cap_count(TRUNC, &tn) == 1 &&
+       tn && strstr(tn->props, "\"failed_page_status\":404") &&
+       strstr(tn->props, "\"failed_page\":3") && strstr(tn->props, "\"pages_read\":2") &&
+       strstr(tn->props, "deep-paging limit"),
+       "9f-sexies: a 404 after a full page is a walk cut short, and says why it may be");
+    fx_reset();
+    fx_add("offset=4", 404, NULL);
+    fx_add("offset=2", 200, "{\"items\":[{\"name\":\"q3\",\"id\":\"3\"}]}");
+    fx_add("/po?q=", 200, full2);
+    rc = run_source("T_PAGE_PARAM", "x");
+    ok(rc == 0 && cap_count("t-page", NULL) == 3 && cap_count(TRUNC, NULL) == 0,
+       "9f-sexies: a 404 after a short page is the end of the data, silently");
+    /* …and so is a 500 after a short page (EPA Envirofacts answers a range
+     *    past its last row that way). */
+    fx_reset();
+    fx_add("offset=4", 500, "boom");
+    fx_add("offset=2", 200, "{\"items\":[{\"name\":\"q3\",\"id\":\"3\"}]}");
+    fx_add("/po?q=", 200, full2);
+    rc = run_source("T_PAGE_PARAM", "x");
+    ok(rc == 0 && cap_count("t-page", NULL) == 3 && cap_count(TRUNC, NULL) == 0,
+       "9f-sexies: a 500 after a short page is the end of the data, silently");
+
+    /* (f) a later page that answers 200 with a body that is not JSON (a WAF
+     *     or error page): disclosed, and records_used still counts the
+     *     earlier pages — the early return used to rewrite it to 0. */
+    fx_reset();
+    fx_add("offset=2", 200, "<html><body>Access denied</body></html>");
+    fx_add("/po?q=", 200, full2);
+    rc = run_source("T_PAGE_PARAM", "x");
+    ok(rc == 0 && cap_count("t-page", NULL) == 2 && cap_count(TRUNC, &tn) == 1 &&
+       tn && strstr(tn->props, "\"failed_page_unreadable\":true") &&
+       strstr(tn->props, "\"records_used\":2"),
+       "9f-sexies: an unreadable 200 on a later page files a notice and keeps the count");
+
+    /* (g) a 304 on the FIRST request of a row that sent no condition is not
+     *     an honest empty: the source was never actually checked. */
+    fx_reset();
+    fx_add("/po?q=", 304, NULL);
+    rc = run_source("T_PAGE_PARAM", "x");
+    ok(rc == -1 && cap_count("t-page", NULL) == 0 && g_ncalls == 2,
+       "9f-sexies: an unrequested 304 on page 1 is retried, then reported as an error");
+#undef TRUNC
   }
 
   /* 9f-bis. a row whose URL already binds its page parameter.
@@ -2211,6 +2380,27 @@ int main(void) {
                                        "https://x.test/a?size=2&page=2");
     ok(nx == NULL, "31c: a repeat that is not the page-1 probe is not retried");
     free(nx);
+
+    /* 31d. A later VJSON page that fails is disclosed with its page, status
+     *      and URL. It used to be filed as "the page ceiling stopped the walk"
+     *      — a ceiling that a 2-page walk never reached. */
+    fx_reset();
+    g_ncap = 0;
+    fx_add("vf?offset=2&limit=2", 304, NULL);
+    fx_add("vf?offset=0&limit=2", 200, "{\"items\":[{\"name\":\"f1\",\"id\":\"1\"},{\"name\":\"f2\",\"id\":\"2\"}]}");
+    n = jsonlist_emit_paged(&vs, "VJ_FAIL", NULL, "https://x.test/vf?offset=0&limit=2", 1000,
+                            "items", "t-vj", "en", "[]");
+    {
+      const cap *tn = NULL;
+      int nn = cap_count("collector-truncation-notice", &tn);
+      ok(n == 2 && nn == 1 && tn &&
+         strstr(tn->props, "\"failed_page\":2") &&
+         strstr(tn->props, "\"failed_page_status\":304") &&
+         strstr(tn->props, "\"failed_page_url\":\"https://x.test/vf?offset=2&limit=2\"") &&
+         strstr(tn->props, "page 2 answered HTTP 304") &&
+         !strstr(tn->props, "page ceiling stopped"),
+         "31d: a failed later VJSON page names the page, the status and the URL");
+    }
   }
 
   /* 32. Flatten accounting is per RECORD on every path. A JSON record past the
@@ -2462,6 +2652,168 @@ int main(void) {
      "{ago:N} is expanded, not passed through as a literal token");
   ok(strstr(g_last_url, "since=20") != NULL && strstr(g_last_url, "Z") != NULL,
      "and expands to an RFC 3339 UTC instant");
+
+  /* 36. hp_xml_flatten drops nothing without saying so.
+   *
+   *     It returned at depth 4 and at 400 fields with no stamp, dropped any
+   *     value of 4 KB or more, dropped every REPEATED child (its key already
+   *     existed — the second <dc:subject>, the second <author> and all its
+   *     fields), and dropped an element's own text when it also had children.
+   *     Self-closing records were skipped uncounted, and a text-only record
+   *     flattened to nothing. */
+  {
+    /* (a) depth 7 is kept whole, and the record is not stamped. */
+    fx_reset();
+    fx_add("/xf.xml", 200,
+      "<list><rec><id>D7</id><title>deep</title>"
+      "<a><b><c><d><e><f><g>leaf</g></f></e></d></c></b></a></rec></list>");
+    rc = run_source("T_XML_FLAT", "");
+    ok(rc == 0 && g_ncap == 1 && strstr(g_full[0], "\"a.b.c.d.e.f.g\":\"leaf\"") &&
+       !strstr(g_full[0], "_fields_dropped"),
+       "36a: a field seven elements deep is flattened, not dropped");
+
+    /* (b) past the recursion guard: stamped, with the count of elements kept out. */
+    {
+      char *x = malloc(4096);
+      size_t w = 0;
+      w += (size_t)snprintf(x + w, 4096 - w, "<list><rec><id>D40</id><title>deeper</title>");
+      for (int i = 0; i < 40; i++) w += (size_t)snprintf(x + w, 4096 - w, "<n%d>", i);
+      w += (size_t)snprintf(x + w, 4096 - w, "v");
+      for (int i = 39; i >= 0; i--) w += (size_t)snprintf(x + w, 4096 - w, "</n%d>", i);
+      snprintf(x + w, 4096 - w, "</rec></list>");
+      fx_reset();
+      fx_add("/xf.xml", 200, x);
+      rc = run_source("T_XML_FLAT", "");
+      /* depth 0 is n0, so n0..n32 are walked and n33..n39 (7 elements) are not */
+      ok(rc == 0 && g_ncap == 1 && strstr(g_full[0], "\"_fields_dropped\":7"),
+         "36b: past the recursion guard the record is stamped with what was kept out");
+      free(x);
+    }
+
+    /* (c) 500 fields are all kept; 2,100 keep 2,048 and stamp the other 52. */
+    for (int pass = 0; pass < 2; pass++) {
+      int nf = pass ? 2098 : 498;            /* + id + title */
+      size_t cap = (size_t)nf * 40 + 256;
+      char *x = malloc(cap);
+      size_t w = 0;
+      w += (size_t)snprintf(x + w, cap - w, "<list><rec><id>W</id><title>wide</title>");
+      for (int i = 0; i < nf; i++) w += (size_t)snprintf(x + w, cap - w, "<f%d>v%d</f%d>", i, i, i);
+      /* The old bound was tested on ENTRY to each nested element, so a flat
+       * run of leaves passed it and the first CONTAINER after field 400 —
+       * with everything in it — was what vanished. */
+      if (!pass) w += (size_t)snprintf(x + w, cap - w, "<z><y>tail</y></z>");
+      snprintf(x + w, cap - w, "</rec></list>");
+      fx_reset();
+      fx_add("/xf.xml", 200, x);
+      rc = run_source("T_XML_FLAT", "");
+      if (!pass)
+        ok(rc == 0 && g_ncap == 1 && strstr(g_full[0], "\"f497\":\"v497\"") &&
+           strstr(g_full[0], "\"z.y\":\"tail\"") && !strstr(g_full[0], "_fields_dropped"),
+           "36c: 500 fields and a container after them are all flattened (the old bound was 400, unstamped)");
+      else
+        ok(rc == 0 && g_ncap == 1 && strstr(g_full[0], "\"f2045\":\"v2045\"") &&
+           !strstr(g_full[0], "\"f2046\"") && strstr(g_full[0], "\"_fields_dropped\":52"),
+           "36c: past HP_MAX_PROPS the record keeps 2,048 fields and stamps the 52 it did not");
+      free(x);
+    }
+
+    /* (d) repeats are indexed, not dropped; the first keeps the plain key. */
+    fx_reset();
+    fx_add("/xf.xml", 200,
+      "<list><rec><id>R1</id><title>repeats</title>"
+      "<subject>alpha</subject><subject>beta</subject><subject>gamma</subject>"
+      "<author id=\"a1\"><name>Xu</name></author>"
+      "<author id=\"a2\"><name>Yamada</name><aff>Kyoto</aff></author></rec></list>");
+    rc = run_source("T_XML_FLAT", "");
+    ok(rc == 0 && g_ncap == 1 &&
+       strstr(g_full[0], "\"subject\":\"alpha\"") && strstr(g_full[0], "\"subject.1\":\"beta\"") &&
+       strstr(g_full[0], "\"subject.2\":\"gamma\"") &&
+       strstr(g_full[0], "\"author.name\":\"Xu\"") && strstr(g_full[0], "\"author.@id\":\"a1\"") &&
+       strstr(g_full[0], "\"author.1.name\":\"Yamada\"") &&
+       strstr(g_full[0], "\"author.1.aff\":\"Kyoto\"") && strstr(g_full[0], "\"author.1.@id\":\"a2\"") &&
+       !strstr(g_full[0], "_fields_dropped"),
+       "36d: a repeated child is indexed (name.1, name.2) and none of its fields is lost");
+
+    /* (e) a value of 4 KB or more is kept whole. */
+    {
+      char *x = malloc(6000);
+      size_t w = (size_t)snprintf(x, 6000, "<list><rec><id>L1</id><title>long</title><abstract>");
+      for (int i = 0; i < 5000; i++) x[w++] = (char)('a' + i % 26);
+      snprintf(x + w, 6000 - w, "</abstract></rec></list>");
+      fx_reset();
+      fx_add("/xf.xml", 200, x);
+      rc = run_source("T_XML_FLAT", "");
+      const char *ab = strstr(g_full[0] ? g_full[0] : "", "\"abstract\":\"");
+      const char *q = ab ? strchr(ab + 12, '"') : NULL;
+      ok(rc == 0 && g_ncap == 1 && ab && q && q - (ab + 12) == 5000,
+         "36e: a 5,000-byte value is flattened whole (it was dropped at 4,096)");
+      free(x);
+    }
+
+    /* (f) an element's own text beside its children is kept as <key>.#text. */
+    fx_reset();
+    fx_add("/xf.xml", 200,
+      "<list><rec><id>M1</id><title>mixed</title>"
+      "<desc>Hello <b>world</b> again</desc></rec></list>");
+    rc = run_source("T_XML_FLAT", "");
+    ok(rc == 0 && g_ncap == 1 && strstr(g_full[0], "\"desc.#text\":\"Hello again\"") &&
+       strstr(g_full[0], "\"desc.b\":\"world\""),
+       "36f: mixed content keeps the element's own text and its child's");
+
+    /* (g) a self-closing record is a record when it carries attributes, an
+     *     empty slot (counted) when it carries none. */
+    fx_reset();
+    fx_add("/rows.xml", 200,
+      "<rows><row id=\"1\" name=\"one\"/><row id=\"2\" name=\"two\"/><row/></rows>");
+    rc = run_source("T_XML_ROWS", "");
+    ok(rc == 0 && cap_count("t-xmlrow", NULL) == 2 &&
+       !strcmp(g_cap[0].title, "one") && !strcmp(g_cap[1].title, "two"),
+       "36g: attribute-only self-closing records are emitted, not skipped");
+
+    /* (h) a record element that holds only text is a record. */
+    fx_reset();
+    fx_add("/str.xml", 200,
+      "<ArrayOfString><string>alpha</string><string>beta</string></ArrayOfString>");
+    rc = run_source("T_XML_STR", "");
+    ok(rc == 0 && cap_count("t-xmlstr", NULL) == 2 &&
+       strstr(g_full[0], "\"#text\":\"alpha\"") && strstr(g_full[1], "\"#text\":\"beta\""),
+       "36h: a text-only record element is emitted with its text as #text");
+  }
+
+  /* 37. The strongest label for a link wins, not its first anchor's.
+   *     Gifu Shimbun's list (JP25_JPMEDIA_GIFU_LIST) links every article from
+   *     an icon (an <img alt="">) and then from its headline. The icon came
+   *     first, borrowed the text BEFORE it — the previous card's timestamp —
+   *     and the headline was discarded as a duplicate: `/articles/-/409812`
+   *     was titled "9月26日 10:00", not "岐阜新聞・中学3年模試". */
+  fx_reset();
+  fx_add("/gifu", 200,
+    "<div class=\"card\"><a href=\"/articles/-/774427\" class=\"icon\">"
+    "<div class=\"c-icon\"><img src=\"data:image/gif;base64,R0\" alt=\"\"></div></a>"
+    "<div class=\"body\"><a href=\"/articles/-/774427\" class=\"ttl\">大学の理系人材ニーズ高まる</a>"
+    "<div class=\"meta\"><time>9月26日 10:00</time></div></div></div>"
+    "<div class=\"card\"><a href=\"/articles/-/409812\" class=\"icon\">"
+    "<div class=\"c-icon\"><img src=\"data:image/gif;base64,R0\" alt=\"\"></div></a>"
+    "<div class=\"body\"><a href=\"/articles/-/409812\" class=\"ttl\">岐阜新聞・中学3年模試</a>"
+    "</div></div>"
+    "<div class=\"card\"><a href=\"/articles/-/1\"><img src=\"x.jpg\" alt=\"写真：一面\"></a>"
+    "<a href=\"/articles/-/1\">一面の見出し</a></div>"
+    "<div class=\"card\"><a href=\"/articles/-/2\"><img src=\"y.jpg\" alt=\"写真のみ\"></a></div>");
+  rc = run_source("T_HTML_GIFU", "");
+  ok(rc == 0 && cap_count("t-gifu", NULL) == 4,
+     "37: every linked article is one record — none lost, none doubled");
+  ok(g_ncap >= 4 && !strcmp(g_cap[0].title, "大学の理系人材ニーズ高まる") &&
+     !strcmp(g_cap[1].title, "岐阜新聞・中学3年模試"),
+     "37: the headline beats an icon's borrowed caption (was the previous card's date)");
+  ok(g_ncap >= 4 && !strcmp(g_cap[2].title, "一面の見出し") &&
+     strstr(g_cap[2].props, "\"other_labels.0\":\"写真：一面\""),
+     "37: link text beats an image's alt text, and the alt is kept as an other label");
+  ok(g_ncap >= 4 && !strstr(g_cap[1].props, "9月26日") && !strstr(g_cap[1].props, "other_labels"),
+     "37: the borrowed caption that lost is not attached to the record");
+  ok(g_ncap >= 4 && !strcmp(g_cap[3].title, "写真のみ"),
+     "37: an image-only link keeps its alt text — a weak label is still a record");
+  ok(g_ncap >= 4 && !strcmp(g_cap[1].link, "https://x.test/articles/-/409812"),
+     "37: records keep first-appearance order and their resolved link");
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;
