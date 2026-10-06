@@ -22,6 +22,18 @@ cJSON *feed_get_json(http_client *h, const char *url, int t) {
 char *feed_get_text(http_client *h, const char *url, int t) {
   (void)h; (void)url; (void)t; return NULL;
 }
+/* feed_last_json_status(): the scripted fetch sets it for a failing call, the
+ * way feed_get_json does in production, so the notice's failed-page status is
+ * checkable. feed_status_describe() mirrors lib/feedlib.c's wording. */
+static long g_fake_status = FEED_ST_UNKNOWN;
+long feed_last_json_status(void) { return g_fake_status; }
+void feed_last_json_status_reset(void) { g_fake_status = FEED_ST_UNKNOWN; }
+void feed_status_describe(long st, char *out, size_t cap) {
+  if (st == FEED_ST_TRANSPORT)      snprintf(out, cap, "a transport failure");
+  else if (st == FEED_ST_UNPARSED)  snprintf(out, cap, "an HTTP 2xx whose body was not JSON");
+  else if (st > 0)                  snprintf(out, cap, "HTTP %ld", st);
+  else                              snprintf(out, cap, "an unrecorded failure");
+}
 
 /* url_override_apply: stubbed so the test does not need the DB + hostgate the
  * real one pulls in. `g_override` lets a case assert that pw_walk plans against
@@ -62,6 +74,7 @@ static int cap_emit(struct intel_sink *s, const intel_item *it) {
 /* ── a scripted upstream ─────────────────────────────────────────────────── */
 typedef struct {
   const char *body[8];         /* JSON per call, NULL entry = fetch failure */
+  long status[8];              /* what a failing call answered (0 = not set) */
   int  n_body;
   int  calls;
   char seen[8][512];           /* the URL of each call, so paging is checkable */
@@ -73,7 +86,10 @@ static cJSON *script_fetch(const source_ctx *c, const char *url, void *ud) {
   int i = sc->calls;
   if (i < 8) snprintf(sc->seen[i], sizeof sc->seen[i], "%s", url);
   sc->calls++;
-  if (i >= sc->n_body || !sc->body[i]) return NULL;
+  if (i >= sc->n_body || !sc->body[i]) {
+    if (i < 8 && sc->status[i]) g_fake_status = sc->status[i];
+    return NULL;
+  }
   return cJSON_Parse(sc->body[i]);
 }
 
@@ -238,6 +254,22 @@ int main(void) {
     cap_t cap; int n = run("https://x/api?limit=3&offset=0", &sc, &cap);
     ok(n == 3, "a failed LATER page keeps what was already collected");
     ok(cap.notices == 1, "and discloses that the walk was cut short");
+  }
+  {
+    /* …naming the page that failed, what it answered and where — it used to
+     * be filed as "the page ceiling (JO_PAGE_MAX) or a failed page", which
+     * sent the reader to raise a ceiling that had not been reached. */
+    script_t sc = { .body = { P3_of3, NULL }, .status = { 0, 304 }, .n_body = 2 };
+    cap_t cap; run("https://x/api?limit=3&offset=0", &sc, &cap);
+    ok(cap.notices == 1 &&
+       prop_num(cap.last_notice_props, "failed_page") == 2 &&
+       prop_num(cap.last_notice_props, "failed_page_status") == 304 &&
+       prop_str_eq(cap.last_notice_props, "failed_page_url", sc.seen[1]) &&
+       prop_num(cap.last_notice_props, "pages_read") == 1,
+       "a failed later page is disclosed with its page, status and URL");
+    ok(prop_str_eq(cap.last_notice_props, "reason", "page 2 answered HTTP 304") &&
+       !prop_str_eq(cap.last_notice_props, "reason", "ceiling"),
+       "and the reason says what happened, not that a ceiling was hit");
   }
 
   printf("an approved url override is what the walk plans against\n");

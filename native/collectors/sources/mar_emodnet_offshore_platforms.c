@@ -19,7 +19,7 @@
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
 #include "lib/feedlib.h"
-#include "lib/seenset.h"
+#include "lib/keyqual.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -37,9 +37,29 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     return -1;
   }
   cJSON *feats = cJSON_GetObjectItem(doc, "features");
-  int n = 0;
-  seen_set key_seen = {0};
+  int n = 0, folded = 0;
+
+  /* IDENTITY. platformid is absent on 19 platforms (the key falls back to a
+   * name) and three platformids are each published twice — as two features
+   * differing in current_status/remarks, or in name/coast_dist (live
+   * 2026-10-06: 1,617 features, 1,617 byte-distinct, 1,614 distinct keys).
+   * Pass 1 counts every key over the whole collection; pass 2 qualifies EVERY
+   * member of a colliding group by its WFS feature id ("platforms.1292", the
+   * table's own primary key), falling back to a hash of the properties. It used
+   * to be first-come-plain: the plain uid went to whichever twin the WFS served
+   * first, so a re-ordered response stored one platform's status under the
+   * other's uid. See lib/keyqual.h. */
+  keyqual kq = {0};
   cJSON *f;
+  cJSON_ArrayForEach(f, feats) {
+    cJSON *pr = cJSON_GetObjectItem(f, "properties");
+    if (!pr) continue;
+    const char *key = jo_sv(pr, "platformid");
+    if (!key) key = jo_sv(pr, "name");
+    if (key) keyqual_add(&kq, key, jo_sv(f, "id"));
+  }
+  keyqual_seal(&kq);
+
   cJSON_ArrayForEach(f, feats) {
     cJSON *pr = cJSON_GetObjectItem(f, "properties");
     if (!pr) continue;
@@ -47,6 +67,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     const char *name = jo_sv(pr, "name");
     if (!pid && !name) continue;
     const char *key = pid ? pid : name;
+    const char *fid = jo_sv(f, "id");
 
     int geo = 0; double lat = 0, lon = 0;
     cJSON *g = cJSON_GetObjectItem(f, "geometry");
@@ -76,6 +97,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     jo_copy_num(p, pr, "weight_sub");
     jo_copy_num(p, pr, "weight_top");
     jo_copy_num(p, pr, "coast_dist");
+    if (fid) cJSON_AddStringToObject(p, "wfs_feature_id", fid);
     if (geo) {
       cJSON_AddNumberToObject(p, "lat", lat);
       cJSON_AddNumberToObject(p, "lon", lon);
@@ -96,22 +118,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
              prod ? " · " : "", prod ? prod : "");
 
     intel_item it = {0};
-    /* platformid is absent on 19 platforms (the key falls back to a name that
-     * other platforms share) and one platformid is published twice with a
-     * different status and remarks (live 2026-09-15: 1,617 features, 1,617
-     * byte-distinct, 1,596 platformids), so 3 platforms upserted over others.
-     * A key already seen this run gains a hash of the feature's own
-     * properties; first occurrences keep their plain key and stored uid. */
-    char keybuf[256];
+    char keybuf[512];
     const char *rk = key;
-    if (!seen_add(&key_seen, key)) {
+    if (keyqual_count(&kq, key) > 1) {
       char *raw = cJSON_PrintUnformatted(pr);
-      const char *parts[1] = { raw ? raw : "" };
-      char h[21];
-      feed_hash_key(h, parts, 1);
-      snprintf(keybuf, sizeof keybuf, "%.200s|%s", key, h);
+      rk = keyqual_uid(&kq, key, fid, raw ? raw : "", keybuf, sizeof keybuf);
       free(raw);
-      rk = keybuf;
+      if (!keyqual_claim(&kq, key, rk)) { folded++; free(pj); continue; }
     }
     it.remote_key      = rk;
     it.title           = title;
@@ -126,9 +139,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (sink->emit(sink, &it) >= 0) n++;
     free(pj);
   }
-  seen_free(&key_seen);
+  keyqual_free(&kq);
   cJSON_Delete(doc);
-  fprintf(stderr, "[emodnet-offshore-platforms] emitted %d\n", n);
+  fprintf(stderr, "[emodnet-offshore-platforms] emitted %d (%d byte-identical "
+          "repeats folded)\n", n, folded);
   return 0;
 }
 

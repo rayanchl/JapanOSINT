@@ -290,7 +290,25 @@ static const hp_source HP3_NETINTEL2[] = {
     .record_type = "network-operator",
     .tags = "\"web\",\"bgp\",\"organisation\",\"topology\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.asrank.caida.org/v2/restful/organizations?first=100",
+    /* Was `organizations?first=100` with no paging: ONE request for the top
+     * 100 of 98,597 organisations (GraphQL totalCount, 2026-10-06). It did not
+     * even get those — without the trailing slash the API answers 301 to the
+     * plain-http URL, and the run died as a transport failure after 40 s
+     * (rc=-1, records=0). The RESTful list honours `offset` (offset=2 returns
+     * ranks 3-4; offset=98000 returns the last 597 with hasNextPage=false),
+     * takes `first` up to 5,000 (10,000 is HTTP 500), and is slow — 6-90 s a
+     * page regardless of size — so pages are 2,000 and the timeout is long.
+     * 50 pages cover the register; page_max leaves room for growth.
+     *
+     * The RESTful projection lists ONE member ASN per organisation (GraphQL
+     * says Level 3 Parent has 40, DoD 1,008). The full ASN -> organisation
+     * map is the ASN list cyb-caida-asrank walks, so it is not lost to the
+     * tree; this row is the organisation record (rank, cone, degree, country). */
+    .url = "https://api.asrank.caida.org/v2/restful/organizations/?first=2000&offset=0",
+    .array_path = "data.organizations.edges",
+    .id_keys = "node.orgId", .title_keys = "node.orgName",
+    .page_param = "offset", .page_size = 2000, .page_max = 60,
+    .timeout_ms = 180000,
     .interval = 86400,
     .description = "The organisations behind autonomous systems as CAIDA resolves "
       "them, with country, rank, the ASNs each controls and the "

@@ -14,6 +14,22 @@ cJSON *feed_get_json(http_client *http, const char *url, int timeout_ms);
 cJSON *feed_get_json_h(http_client *http, const char *url,
                        const char *const *headers, int timeout_ms);
 
+/* What this thread's most recent feed_get_json / feed_get_json_h /
+ * feed_post_json call met, for a caller that got NULL back and must say WHY:
+ * the HTTP status, FEED_ST_TRANSPORT when the exchange never completed, or
+ * FEED_ST_UNPARSED for a 2xx whose body was not JSON. FEED_ST_UNKNOWN after
+ * feed_last_json_status_reset() until one of those calls records something,
+ * so a page walker whose fetch callback does not go through them can tell
+ * "unknown" from a real status. Per thread: collectors run concurrently. */
+#define FEED_ST_UNKNOWN   (-1L)
+#define FEED_ST_TRANSPORT   0L
+#define FEED_ST_UNPARSED  (-2L)
+long feed_last_json_status(void);
+void feed_last_json_status_reset(void);
+/* "HTTP 304", "a transport failure", "an HTTP 200 whose body was not JSON",
+ * "an unrecorded failure" — the words a truncation notice uses for `st`. */
+void feed_status_describe(long st, char *out, size_t cap);
+
 /* GET url, return raw body (malloc'd, caller frees) or NULL. */
 char *feed_get_text(http_client *http, const char *url, int timeout_ms);
 

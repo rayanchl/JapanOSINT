@@ -87,6 +87,14 @@ static int lei_run(const source_ctx *ctx, intel_sink *sink) {
       cJSON *reg = attr ? cJSON_GetObjectItem(attr, "registration") : NULL;
       const char *status_s = reg ? jo_str(reg, "status") : NULL;
       if (status_s) cJSON_AddStringToObject(out, "registration_status", status_s);
+      /* The whole GLEIF record as served (house rule 2). The five fields above
+       * are a summary; the record also carries the legal form, jurisdiction,
+       * registration authority and number, headquarters and other addresses,
+       * other and transliterated names, entity status and category, successor
+       * entities, the managing LOU, renewal and validation dates, BIC/MIC/OCID
+       * and the direct/ultimate-parent relationship links — all fetched, and
+       * all dropped until 2026-10-06. */
+      cJSON_AddItemToObject(out, "gleif_record", cJSON_Duplicate(rec, 1));
       char *bj = cJSON_PrintUnformatted(out);
 
       cJSON *props = cJSON_CreateObject();

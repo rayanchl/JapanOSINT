@@ -196,16 +196,24 @@ VJSON(eur_cnb_rates_cz, "eur-cnb-rates-cz", "Czech National Bank — daily FX ra
   "cs", "[\"cze\",\"economy\"]", 21600,
   "Czech-language CNB koruna reference exchange rates for the current day.");
 
+/* The two rows below asked the simple search for `q=type:"ΑΝΑΘΕΣΗ"` and
+ * `q=type:"ΔΑΠΑΝΗ"`. /opendata/search ignores `q` entirely (measured
+ * 2026-10-06: q=type:"ΑΝΑΘΕΣΗ" -> total 2,927,403 across five decision types,
+ * the same as no query), so both re-fetched the national firehose that
+ * eur-diavgeia-decisions already reads and labelled it awards / expenditure.
+ * The decision-type filter is `type=<decisionTypeUid>` (types.json):
+ * Δ.1 ΑΝΑΘΕΣΗ ΕΡΓΩΝ/ΠΡΟΜΗΘΕΙΩΝ/ΥΠΗΡΕΣΙΩΝ/ΜΕΛΕΤΩΝ -> 162,893, all Δ.1;
+ * Β.2.1 ΕΓΚΡΙΣΗ ΔΑΠΑΝΗΣ -> 182,314, all Β.2.1; type=ZZ.9 -> 0. */
 VJSON(eur_diavgeia_anathesi, "eur-diavgeia-anathesi", "Diavgeia Greece — contract award decisions", "Diavgeia Greece — contract award decisions",
   "europe_gov", "gazette",
-  "https://diavgeia.gov.gr/opendata/search.json?size=100&q=type:%22%CE%91%CE%9D%CE%91%CE%98%CE%95%CE%A3%CE%97%22",
+  "https://diavgeia.gov.gr/opendata/search.json?size=100&type=%CE%94.1",
   "decisions",
   "el", "[\"grc\",\"gazette\"]", 3600,
   "Greek public-sector direct-award decisions as published to Diavgeia.");
 
 VJSON(eur_diavgeia_dapani, "eur-diavgeia-dapani", "Diavgeia Greece — expenditure decisions", "Diavgeia Greece — expenditure decisions",
   "europe_gov", "gazette",
-  "https://diavgeia.gov.gr/opendata/search.json?size=100&q=type:%22%CE%94%CE%91%CE%A0%CE%91%CE%9D%CE%97%22",
+  "https://diavgeia.gov.gr/opendata/search.json?size=100&type=%CE%92.2.1",
   "decisions",
   "el", "[\"grc\",\"gazette\"]", 3600,
   "Greek public-sector expenditure approval decisions with amounts and beneficiaries.");

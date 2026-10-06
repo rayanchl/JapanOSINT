@@ -3,10 +3,11 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { LuDatabase, LuClock, LuScrollText, LuKey, LuRefreshCw, LuPlay, LuLockOpen, LuWrench } from 'react-icons/lu';
 import { api, ApiError } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
+import { useMoreRows } from '../../hooks/usePagedList.js';
 import { useAuth } from '../../auth/AuthContext.jsx';
 import {
   Page, Section, Row, Card, Pill, Button, Input, Field, Segmented, Sheet, Toggle,
-  ConfirmDialog, ErrorNotice, EmptyState, LoadingState, BoundNote, KV, Spinner, cx, toast,
+  ConfirmDialog, ErrorNotice, EmptyState, LoadingState, BoundNote, PagedFooter, KV, Spinner, cx, toast,
 } from '../ui/kit.jsx';
 
 /**
@@ -31,16 +32,41 @@ function shortTime(s) {
   return parts.length === 3 ? `${parts[1]}-${parts[2]} ${tm.slice(0, 5)}` : `${d} ${tm.slice(0, 5)}`;
 }
 
-// maintenanceapi.c caps these lists in SQL (LIMIT 50/100/30/20/30) and the
-// response does not say so. They mirror those LIMITs so that a FULL list is
-// labelled as "the newest N", never as the total; where the digest carries a
-// measured total (`totals`) that is shown instead.
-const MAINT_CAP = { repairs: 50, overrides: 100, runs: 30, anomalies: 20, sourceRepairs: 30 };
+// Every maintenance list arrives as its first page plus `pages.<name>` —
+// {limit, offset, count, total, has_more}, total a COUNT(*) the server
+// measured (maintenanceapi.c). Later pages come from
+//   /api/admin/maintenance/lists/:name?hours=     (digest lists)
+//   /api/admin/maintenance/source/:id/:list       (pipeline lists)
+// This used to mirror the server's SQL LIMITs in a client constant and guess
+// "a full list means older ones exist"; the server now says so itself.
+const MAINT_PAGE = 50;
+export const digestListUrl = (name, hours) => (offset) =>
+  `/api/admin/maintenance/lists/${encodeURIComponent(name)}?hours=${hours}&limit=${MAINT_PAGE}&offset=${offset}`;
+export const sourceListUrl = (sourceId, name) => (offset) =>
+  `/api/admin/maintenance/source/${encodeURIComponent(sourceId)}/${name}?limit=${MAINT_PAGE}&offset=${offset}`;
 
-function capLabel(n, cap, total) {
-  if (total != null && total > n) return `${n} of ${total}`;
-  if (cap != null && n >= cap) return `newest ${n} · server cap, older ones not listed`;
-  return String(n);
+/** "12", "50 of 212", or "50+" when the server sent no total. */
+export function boundLabel(shown, total, hasMore = false) {
+  if (total != null) return shown < total ? `${shown} of ${total}` : String(total);
+  return hasMore ? `${shown}+` : String(shown);
+}
+
+/** Two paged buckets shown as one list (awaiting_apply + awaiting_pr). */
+export function mergeBuckets(a, b) {
+  const total = a.total != null && b.total != null ? a.total + b.total : null;
+  return {
+    rows: [...a.rows, ...b.rows],
+    total,
+    hasMore: a.hasMore || b.hasMore,
+    loadingMore: a.loadingMore || b.loadingMore,
+    moreError: a.moreError || b.moreError,
+    loadMore: a.hasMore ? a.loadMore : b.loadMore,
+  };
+}
+
+function ListFooter({ list, noun }) {
+  if (!list.hasMore && !list.moreError) return null;
+  return <PagedFooter className="px-3 pb-2" shown={list.rows.length} total={list.total} hasMore={list.hasMore} busy={list.loadingMore} onMore={list.loadMore} error={list.moreError} noun={noun} />;
 }
 
 function opError(e) {
@@ -193,7 +219,7 @@ function QuarantineCard({ row, busy, onClear, onOpenSource }) {
   );
 }
 
-function MaintenanceTab({ onOpenSource }) {
+export function MaintenanceTab({ onOpenSource }) {
   const [hours, setHours] = useState(24);
   const { data: d, error, loading, reload } = useApi(`/api/admin/maintenance?hours=${hours}`, { deps: [hours] });
   const [busy, setBusy] = useState(new Set());
@@ -211,13 +237,21 @@ function MaintenanceTab({ onOpenSource }) {
   const revert = (r) => act(`r${r.id}`, () => api.del(`/api/admin/repairs/${r.id}`), `Repair #${r.id} reverted`);
   const clearQ = (id) => act(`q${id}`, () => api.post(`/api/admin/sources/${encodeURIComponent(id)}/unquarantine`), `Quarantine cleared for ${id}`);
 
-  const awaiting = useMemo(() => [...(d?.awaiting_review?.awaiting_apply || []), ...(d?.awaiting_review?.awaiting_pr || [])], [d]);
   const t = d?.totals || {};
-  // Awaiting / auto-dismissed are carved out of the newest MAINT_CAP.repairs
-  // verified repairs; when more were verified in the window, older candidates
-  // were never looked at.
-  const verifiedCapped = (t.verified ?? 0) > MAINT_CAP.repairs;
-  const fromVerified = verifiedCapped ? ` · from the newest ${MAINT_CAP.repairs} of ${t.verified} verified` : '';
+  const pages = d?.pages || {};
+  // Each list pages on its own. The awaiting buckets used to be carved out of
+  // the newest 50 verified repairs, so an older staged fix was never offered;
+  // the server now lists each bucket in full.
+  const apply = useMoreRows(d?.awaiting_review?.awaiting_apply, pages.awaiting_apply, digestListUrl('awaiting_apply', hours));
+  const pr = useMoreRows(d?.awaiting_review?.awaiting_pr, pages.awaiting_pr, digestListUrl('awaiting_pr', hours));
+  const awaitingList = mergeBuckets(apply, pr);
+  const awaiting = awaitingList.rows;
+  const needs = useMoreRows(d?.needs_human, pages.needs_human, digestListUrl('needs_human', hours));
+  const quar = useMoreRows(d?.quarantined, pages.quarantined, digestListUrl('quarantined', hours), { key: 'source_id' });
+  const fixed = useMoreRows(d?.auto_fixed, pages.auto_fixed, digestListUrl('auto_fixed', hours));
+  const overrides = useMoreRows(d?.url_overrides, pages.url_overrides, digestListUrl('url_overrides', hours), { key: 'source_id' });
+  const dismissed = useMoreRows(d?.auto_dismissed, pages.auto_dismissed, digestListUrl('auto_dismissed', hours));
+  const worst = useMoreRows(d?.worst_sources, pages.worst_sources, digestListUrl('worst_sources', hours), { key: 'source_id' });
 
   return (
     <div className="space-y-4">
@@ -237,7 +271,7 @@ function MaintenanceTab({ onOpenSource }) {
           <Section label={`Last ${d.window_hours ?? hours}h`}>
             <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
               <StatCard label="Auto-fixed" value={t.merged} tone="success" />
-              <StatCard label="Awaiting" value={verifiedCapped ? `${awaiting.length}+` : awaiting.length} tone="warning" />
+              <StatCard label="Awaiting" value={awaitingList.total ?? (awaitingList.hasMore ? `${awaiting.length}+` : awaiting.length)} tone="warning" />
               <StatCard label="Needs human" value={t.needs_human} tone="cyan" />
               <StatCard label="Verified" value={t.verified} tone="warning" />
               <StatCard label="Rejected" value={t.rejected} tone="neutral" />
@@ -245,48 +279,55 @@ function MaintenanceTab({ onOpenSource }) {
             </div>
           </Section>
 
-          <Section label={`Awaiting your review · ${awaiting.length}${fromVerified}`} padded={false}>
+          <Section label={`Awaiting your review · ${boundLabel(awaiting.length, awaitingList.total, awaitingList.hasMore)}`} padded={false}>
             {awaiting.length === 0 ? <EmptyState title="No staged fixes waiting." /> : (
               <div className="p-2 grid gap-2 md:grid-cols-2">
                 {awaiting.map((r) => <RepairCard key={r.id} row={r} busy={busy.has(`r${r.id}`)} onApprove={approve} onReject={reject} onOpenSource={onOpenSource} />)}
               </div>
             )}
+            <ListFooter list={awaitingList} noun="staged fixes" />
           </Section>
 
-          {(d.needs_human || []).length > 0 && (
-            <Section label={`Needs human · ${capLabel(d.needs_human.length, MAINT_CAP.repairs, t.needs_human)}`} padded={false}>
+          {needs.rows.length > 0 && (
+            <Section label={`Needs human · ${boundLabel(needs.rows.length, needs.total, needs.hasMore)}`} padded={false}>
               <div className="p-2 grid gap-2 md:grid-cols-2">
-                {d.needs_human.map((r) => <RepairCard key={r.id} row={r} onOpenSource={onOpenSource} />)}
+                {needs.rows.map((r) => <RepairCard key={r.id} row={r} onOpenSource={onOpenSource} />)}
               </div>
+              <ListFooter list={needs} noun="repairs" />
             </Section>
           )}
 
-          {(d.quarantined || []).length > 0 && (
-            <Section label={`Quarantined · ${d.quarantined.length}`} padded={false}>
+          {quar.rows.length > 0 && (
+            <Section label={`Quarantined · ${boundLabel(quar.rows.length, quar.total, quar.hasMore)}`} padded={false}>
               <div className="p-2 grid gap-2 md:grid-cols-2">
-                {d.quarantined.map((q) => <QuarantineCard key={q.source_id} row={q} busy={busy.has(`q${q.source_id}`)} onClear={clearQ} onOpenSource={onOpenSource} />)}
+                {quar.rows.map((q) => <QuarantineCard key={q.source_id} row={q} busy={busy.has(`q${q.source_id}`)} onClear={clearQ} onOpenSource={onOpenSource} />)}
               </div>
+              <ListFooter list={quar} noun="sources" />
             </Section>
           )}
 
-          {(d.auto_fixed || []).length > 0 && (
-            <Section label={`Recently auto-fixed · ${capLabel(d.auto_fixed.length, MAINT_CAP.repairs, t.merged)}`} padded={false}>
-              <div className="p-2 grid gap-2 md:grid-cols-2">
-                {d.auto_fixed.map((r) => <RepairCard key={r.id} row={r} busy={busy.has(`r${r.id}`)} onRevert={revert} onOpenSource={onOpenSource} />)}
-              </div>
-              {(d.url_overrides || []).length > 0 && (
-                <div className="px-3 pb-3">
+          {(fixed.rows.length > 0 || overrides.rows.length > 0) && (
+            <Section label={`Recently auto-fixed · ${boundLabel(fixed.rows.length, fixed.total, fixed.hasMore)}`} padded={false}>
+              {fixed.rows.length > 0 && (
+                <div className="p-2 grid gap-2 md:grid-cols-2">
+                  {fixed.rows.map((r) => <RepairCard key={r.id} row={r} busy={busy.has(`r${r.id}`)} onRevert={revert} onOpenSource={onOpenSource} />)}
+                </div>
+              )}
+              <ListFooter list={fixed} noun="repairs" />
+              {overrides.rows.length > 0 && (
+                <div className="px-3 pb-3 pt-1">
                   <button type="button" className="text-xs text-accent hover:underline" onClick={() => setShowOverrides((v) => !v)}>
-                    Active URL overrides ({capLabel(d.url_overrides.length, MAINT_CAP.overrides)}) {showOverrides ? '▴' : '▾'}
+                    Active URL overrides ({boundLabel(overrides.rows.length, overrides.total, overrides.hasMore)}) {showOverrides ? '▴' : '▾'}
                   </button>
                   {showOverrides && (
                     <div className="space-y-2 mt-2">
-                      {d.url_overrides.map((o, i) => (
+                      {overrides.rows.map((o, i) => (
                         <div key={`${o.source_id}${o.created_at || i}`}>
                           <div className="font-mono text-[11px] font-semibold text-osint-text">{o.source_id} <span className="text-osint-muted font-normal">{shortTime(o.created_at)}{o.anomaly_id != null ? ` · anomaly ${o.anomaly_id}` : ''}</span></div>
                           <UrlDiff oldUrl={o.old_url} newUrl={o.new_url} />
                         </div>
                       ))}
+                      <ListFooter list={overrides} noun="overrides" />
                     </div>
                   )}
                 </div>
@@ -294,11 +335,12 @@ function MaintenanceTab({ onOpenSource }) {
             </Section>
           )}
 
-          {(d.auto_dismissed || []).length > 0 && (
-            <Section label={`Auto-dismissed · ${d.auto_dismissed.length}${fromVerified}`} padded={false}>
+          {dismissed.rows.length > 0 && (
+            <Section label={`Auto-dismissed · ${boundLabel(dismissed.rows.length, dismissed.total, dismissed.hasMore)}`} padded={false}>
               <div className="p-2 grid gap-2 md:grid-cols-2">
-                {d.auto_dismissed.map((r) => <RepairCard key={r.id} row={r} onOpenSource={onOpenSource} />)}
+                {dismissed.rows.map((r) => <RepairCard key={r.id} row={r} onOpenSource={onOpenSource} />)}
               </div>
+              <ListFooter list={dismissed} noun="repairs" />
             </Section>
           )}
 
@@ -313,13 +355,14 @@ function MaintenanceTab({ onOpenSource }) {
                 ))}
               </Section>
             )}
-            {(d.worst_sources || []).length > 0 && (
-              <Section label={`Worst sources · ${capLabel(d.worst_sources.length, MAINT_CAP.repairs)}`}>
-                {d.worst_sources.map((s) => (
+            {worst.rows.length > 0 && (
+              <Section label={`Worst sources · ${boundLabel(worst.rows.length, worst.total, worst.hasMore)}`}>
+                {worst.rows.map((s) => (
                   <Row key={s.source_id} label={<span className="font-mono text-xs">{s.source_id}</span>} hint={`${s.success ?? 0} fixed · ${s.fail ?? 0} failed`} onClick={() => onOpenSource(s.source_id)}>
                     {s.success_rate != null && <span>{Math.round(s.success_rate * 100)}%</span>}<span>›</span>
                   </Row>
                 ))}
+                {(worst.hasMore || worst.moreError) && <PagedFooter className="pt-2" shown={worst.rows.length} total={worst.total} hasMore={worst.hasMore} busy={worst.loadingMore} onMore={worst.loadMore} error={worst.moreError} noun="sources" />}
               </Section>
             )}
           </div>
@@ -391,9 +434,13 @@ function SourcePipelineSheet({ sourceId, onClose }) {
     catch (e) { setActError(e); }
     finally { setBusy((s) => { const n = new Set(s); n.delete(key); return n; }); }
   };
+  const pp = p?.pages || {};
+  const runList = useMoreRows(p?.fetch_log, pp.fetch_log, sourceId ? sourceListUrl(sourceId, 'fetch_log') : null);
+  const anomList = useMoreRows(p?.anomalies, pp.anomalies, sourceId ? sourceListUrl(sourceId, 'anomalies') : null);
+  const repList = useMoreRows(p?.repairs, pp.repairs, sourceId ? sourceListUrl(sourceId, 'repairs') : null);
   if (!sourceId) return null;
   const s = p?.source;
-  const runs = p?.fetch_log || [];
+  const runs = runList.rows;
   const captureOn = Boolean(src.data?.capture_evidence);
 
   return (
@@ -439,7 +486,7 @@ function SourcePipelineSheet({ sourceId, onClose }) {
 
         {p && (
           <>
-            <Section label={`Fetch runs · ${capLabel(runs.length, MAINT_CAP.runs)}`}>
+            <Section label={`Fetch runs · ${boundLabel(runs.length, runList.total, runList.hasMore)}`}>
               {runs.length === 0 ? <div className="text-xs text-osint-muted">No recorded runs yet.</div> : (
                 <>
                   <div className="flex gap-0.5 mb-2">{[...runs].reverse().map((r, i) => <span key={r.id ?? i} className={cx('w-2 h-4 rounded-sm', (r.status || '').toLowerCase() === 'ok' ? 'bg-neon-green' : 'bg-neon-red')} />)}</div>
@@ -454,20 +501,22 @@ function SourcePipelineSheet({ sourceId, onClose }) {
                       </div>
                     ))}
                   </div>
+                  {(runList.hasMore || runList.moreError) && <PagedFooter className="pt-2" shown={runs.length} total={runList.total} hasMore={runList.hasMore} busy={runList.loadingMore} onMore={runList.loadMore} error={runList.moreError} noun="runs" />}
                 </>
               )}
             </Section>
-            <Section label={`Anomalies & triage · ${capLabel((p.anomalies || []).length, MAINT_CAP.anomalies)}`} padded={false}>
-              {(p.anomalies || []).length === 0 ? <EmptyState title="No anomalies — pipeline healthy." /> : (
+            <Section label={`Anomalies & triage · ${boundLabel(anomList.rows.length, anomList.total, anomList.hasMore)}`} padded={false}>
+              {anomList.rows.length === 0 ? <EmptyState title="No anomalies — pipeline healthy." /> : (
                 <div className="p-2 space-y-2">
-                  {p.anomalies.map((a) => <AnomalyCard key={a.id} a={a} busy={busy.has(`a${a.id}`)} onRequeue={(x) => act(`a${x.id}`, () => api.post(`/api/admin/anomalies/${x.id}/requeue`), `Anomaly #${x.id} re-queued`)} />)}
+                  {anomList.rows.map((a) => <AnomalyCard key={a.id} a={a} busy={busy.has(`a${a.id}`)} onRequeue={(x) => act(`a${x.id}`, () => api.post(`/api/admin/anomalies/${x.id}/requeue`), `Anomaly #${x.id} re-queued`)} />)}
                 </div>
               )}
+              <ListFooter list={anomList} noun="anomalies" />
             </Section>
-            {(p.repairs || []).length > 0 && (
-              <Section label={`Repair propositions · ${capLabel(p.repairs.length, MAINT_CAP.sourceRepairs)}`} padded={false}>
+            {repList.rows.length > 0 && (
+              <Section label={`Repair propositions · ${boundLabel(repList.rows.length, repList.total, repList.hasMore)}`} padded={false}>
                 <div className="p-2 space-y-2">
-                  {p.repairs.map((r) => (
+                  {repList.rows.map((r) => (
                     <RepairCard
                       key={r.id} row={r} busy={busy.has(`r${r.id}`)}
                       onApprove={(x) => act(`r${x.id}`, () => api.post(`/api/admin/repairs/${x.id}/approve`), `Repair #${x.id} applied`)}
@@ -476,6 +525,7 @@ function SourcePipelineSheet({ sourceId, onClose }) {
                     />
                   ))}
                 </div>
+                <ListFooter list={repList} noun="repairs" />
               </Section>
             )}
           </>

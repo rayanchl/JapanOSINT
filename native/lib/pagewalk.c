@@ -301,7 +301,8 @@ static char *pw_advance_url(const char *url, long page_size, int pages_done) {
  * boundary. The url is published as a property instead, where it belongs. */
 static void pw_notice(intel_sink *s, const char *id, const char *url,
                       long used, long available, int pages, long dropped,
-                      const char *reason, const char *remedy) {
+                      const char *reason, const char *remedy,
+                      int failed_page, long failed_status, const char *failed_url) {
   cJSON *extra = cJSON_CreateObject();
   if (extra) {
     cJSON_AddStringToObject(extra, "url", url ? url : "");
@@ -309,6 +310,13 @@ static void pw_notice(intel_sink *s, const char *id, const char *url,
     /* Records the pages held that the emitter could not turn into rows. Always
      * present so a consumer never has to infer it from a missing key. */
     cJSON_AddNumberToObject(extra, "records_dropped", (double)dropped);
+    /* The page that did not deliver, when one did not: which one, what it
+     * answered (feed_last_json_status's vocabulary) and where it was asked. */
+    if (failed_page > 0) {
+      cJSON_AddNumberToObject(extra, "failed_page", failed_page);
+      cJSON_AddNumberToObject(extra, "failed_page_status", (double)failed_status);
+      cJSON_AddStringToObject(extra, "failed_page_url", failed_url ? failed_url : "");
+    }
   }
   jo_truncation_notice_ex(s, id, NULL, used, available, reason, remedy, extra);
 }
@@ -370,15 +378,26 @@ int pw_walk(const source_ctx *c, intel_sink *s, const char *id,
   int  first_seen = -1;   /* the server's own page size, when the URL states none */
   int  stopped_at_ceiling = 0, stopped_on_repeat = 0, full_last = 0;
   int  stopped_on_same_body = 0;
+  /* A later page that failed. It used to share stopped_at_ceiling, so the
+   * notice blamed "the page ceiling (JO_PAGE_MAX) or a failed page" and named
+   * neither the page, nor what it answered, nor where. The status comes from
+   * feed_last_json_status(): pw_fetch_json goes through feed_get_json, and a
+   * fetch callback that does not leaves it FEED_ST_UNKNOWN, said as such. */
+  int  failed_page = 0;
+  long failed_status = FEED_ST_UNKNOWN;
+  char *failed_url = NULL;
   unsigned long prev_fp = 0;
   char *next = NULL;
 
   for (;;) {
+    feed_last_json_status_reset();
     cJSON *doc = fetch(c, cur, ud);
     if (!doc) {
       if (pages == 0) { free(cur); return -1; }   /* dead endpoint = error */
       /* A later page failing is not an error: keep what we have and say so. */
-      stopped_at_ceiling = 1;
+      failed_page = pages + 1;
+      failed_status = feed_last_json_status();
+      failed_url = strdup(cur);
       break;
     }
 
@@ -465,17 +484,25 @@ int pw_walk(const source_ctx *c, intel_sink *s, const char *id,
    *   - or the last page came back exactly full and nothing in the response or
    *     the URL let us ask for the rest, which is the 2,592-source case. */
   int more_known    = (available >= 0 && available > total);
-  if (stopped_at_ceiling || stopped_on_repeat || stopped_on_same_body ||
-      more_known || full_last || dropped > 0) {
+  char failwhy[320] = "";
+  if (failed_page > 0) {
+    char fdesc[64];
+    feed_status_describe(failed_status, fdesc, sizeof fdesc);
+    snprintf(failwhy, sizeof failwhy, "page %d answered %s, so the walk stopped "
+             "before the upstream ran out", failed_page, fdesc);
+  }
+  if (failed_page > 0 || stopped_at_ceiling || stopped_on_repeat ||
+      stopped_on_same_body || more_known || full_last || dropped > 0) {
     const char *reason =
-      stopped_on_same_body ? "the upstream answered the next page with the page "
+      failed_page > 0      ? failwhy
+      : stopped_on_same_body ? "the upstream answered the next page with the page "
                            "just fetched, byte for byte, so it is ignoring the "
                            "paging parameter this URL carries; the walk stopped "
                            "rather than re-collecting the same records"
       : stopped_on_repeat  ? "the upstream's next-page link pointed back at the page "
                            "just fetched, so the walk stopped rather than "
                            "re-collecting the same records"
-      : stopped_at_ceiling ? "the page ceiling (JO_PAGE_MAX) or a failed page stopped the walk"
+      : stopped_at_ceiling ? "the page ceiling (JO_PAGE_MAX) stopped the walk"
       : more_known       ? "the upstream reports more records than were collected"
       : full_last        ? "the last page came back full and the upstream offered "
                            "no next link, nor does this source's URL carry an "
@@ -484,7 +511,10 @@ int pw_walk(const source_ctx *c, intel_sink *s, const char *id,
                            "collector could use as a title, so they were not "
                            "emitted as rows";
     const char *remedy =
-      stopped_on_same_body ? "this endpoint does not page the way its URL implies — "
+      failed_page > 0      ? "re-run — the walk starts again from the same URL; a host "
+                           "that refuses or rate-limits later pages needs a per-host "
+                           "minimum gap (core/hostgate.c)"
+      : stopped_on_same_body ? "this endpoint does not page the way its URL implies — "
                            "check whether it needs a different parameter, or drop "
                            "the one it ignores so the bound is stated honestly"
       : stopped_on_repeat  ? "the upstream's pagination is not advancing — check whether "
@@ -497,13 +527,15 @@ int pw_walk(const source_ctx *c, intel_sink *s, const char *id,
                            "mapping — see docs/SOURCE_EXHAUSTIVENESS.md";
     /* records_used is what was EMITTED; records_seen is what the pages held.
      * When those differ the gap is the discard, and it is stated as data. */
-    pw_notice(s, id, url, total, available, pages, dropped, reason, remedy);
+    pw_notice(s, id, url, total, available, pages, dropped, reason, remedy,
+              failed_page, failed_status, failed_url);
     fprintf(stderr, "[%s] emitted %ld across %d page(s) — TRUNCATED (%s)\n",
             id, total, pages, reason);
   } else {
     fprintf(stderr, "[%s] emitted %ld across %d page(s)\n", id, total, pages);
   }
 
+  free(failed_url);
   free(cur);
   return (int)total;
 }

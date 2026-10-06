@@ -13,7 +13,8 @@
  *   - one item for the ADDRESS BALANCE (Etherscan balance)
  *       → remote_key "addr:<address>"  (carries known-whale label classifier)
  *   - one item per DeFiLlama protocol (every one, TVL-sorted)
- *       → remote_key "defi:<protocol-slug>"  body = name/tvl/chain
+ *       → remote_key "defi:<protocol-slug>"  body = name/tvl/chain summary
+ *         plus the whole protocol record under "protocol"
  *   - one item for the Bitcoin network stats (blockchain.info/stats)
  *       → remote_key "btcnet:stats"
  * Whale Alert tx feed is queried ONLY when WHALE_ALERT_API_KEY is present (else
@@ -216,6 +217,12 @@ static int emit_defi(intel_sink *sink, cJSON *pr) {
   if (c1 && cJSON_IsNumber(c1)) cJSON_AddNumberToObject(data, "change_1h_pct", c1->valuedouble);
   if (cd && cJSON_IsNumber(cd)) cJSON_AddNumberToObject(data, "change_24h_pct", cd->valuedouble);
   if (c7 && cJSON_IsNumber(c7)) cJSON_AddNumberToObject(data, "change_7d_pct", c7->valuedouble);
+  /* The whole protocol record as served (house rule 2): the eight fields above
+   * are a summary of ~40 — slug and DefiLlama id, url, description, audits and
+   * audit links, every chain and its per-chain TVL, oracles, forks, parent
+   * protocol, token breakdown, mcap, listing date, methodology, socials — all
+   * fetched for 8,452 protocols and dropped until 2026-10-06. */
+  cJSON_AddItemToObject(data, "protocol", cJSON_Duplicate(pr, 1));
   char *bj = cJSON_PrintUnformatted(data);
 
   cJSON *props = cJSON_CreateObject();

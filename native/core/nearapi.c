@@ -45,9 +45,11 @@ static int hexv(int c) {
   if (c >= 'A' && c <= 'F') return c - 'A' + 10;
   return -1;
 }
-static void url_decode(const char *s, size_t n, char *out, size_t cap) {
-  size_t o = 0;
-  for (size_t i = 0; i < n && o + 1 < cap; i++) {
+/* Decodes into out[cap]; returns 1 when the decoded value did NOT fit (the
+ * output is then a truncated prefix the caller must refuse, not use). */
+static int url_decode(const char *s, size_t n, char *out, size_t cap) {
+  size_t o = 0, i = 0;
+  for (; i < n && o + 1 < cap; i++) {
     int c = (unsigned char) s[i];
     if (c == '+') { out[o++] = ' '; continue; }
     if (c == '%' && i + 2 < n) {
@@ -57,8 +59,15 @@ static void url_decode(const char *s, size_t n, char *out, size_t cap) {
     out[o++] = (char) c;
   }
   out[o] = 0;
+  return i < n;
 }
-static int qget(const char *query, const char *key, char *out, size_t cap) {
+/* 1 = present, 0 = absent. A value too long for `out` sets *too_long: a
+ * truncated filter is a DIFFERENT filter (a clipped `since`, a clipped
+ * source id, half a phrase), and httpd.c's intel_items_run() answers the
+ * same case with a 414 rather than honour half of what was asked. This used
+ * to clip silently. */
+static int qget(const char *query, const char *key, char *out, size_t cap,
+                int *too_long) {
   out[0] = 0;
   if (!query || !*query) return 0;
   size_t klen = strlen(key);
@@ -70,7 +79,8 @@ static int qget(const char *query, const char *key, char *out, size_t cap) {
     size_t kn = eq ? (size_t) (eq - p) : (size_t) (seg_end - p);
     if (kn == klen && memcmp(p, key, klen) == 0) {
       const char *vstart = eq ? eq + 1 : seg_end;
-      url_decode(vstart, (size_t) (seg_end - vstart), out, cap);
+      if (url_decode(vstart, (size_t) (seg_end - vstart), out, cap) && too_long)
+        *too_long = 1;
       return 1;
     }
     if (!amp) break;
@@ -125,21 +135,43 @@ char *nearapi_items(db_handle *db, const char *tenant, const char *near,
     if (!(lon >= -180 && lon <= 180)) return errj(status, 400, "near_lon_invalid"); }
 
   char v[256];
+  int too_long = 0;
   double radius = NEAR_RADIUS_DEF;
-  if (qget(qs, "radius_m", v, sizeof v) && *v) radius = strtod(v, NULL);
+  if (qget(qs, "radius_m", v, sizeof v, &too_long) && *v) radius = strtod(v, NULL);
   if (!(radius > 0)) radius = NEAR_RADIUS_DEF;
   if (radius > NEAR_RADIUS_MAX) radius = NEAR_RADIUS_MAX;
 
   int limit = NEAR_LIMIT_DEF;
-  if (qget(qs, "limit", v, sizeof v) && *v) limit = atoi(v);
+  if (qget(qs, "limit", v, sizeof v, &too_long) && *v) limit = atoi(v);
   if (limit < 1) limit = NEAR_LIMIT_DEF;
   if (limit > NEAR_LIMIT_MAX) limit = NEAR_LIMIT_MAX;
 
-  char f_source[160] = {0}, f_rtype[64] = {0}, f_since[48] = {0}, f_until[48] = {0};
-  qget(qs, "source", f_source, sizeof f_source);
-  qget(qs, "record_type", f_rtype, sizeof f_rtype);
-  qget(qs, "since", f_since, sizeof f_since);
-  qget(qs, "until", f_until, sizeof f_until);
+  /* Buffer sizes match httpd.c's intel_items_run() where the two share a
+   * parameter (q/qAlt 256, source 160), so a value one mode accepts the other
+   * does not refuse. */
+  char f_source[160] = {0}, f_rtype[64] = {0}, f_since[48] = {0}, f_until[48] = {0},
+       f_q[256] = {0}, f_qalt[256] = {0};
+  qget(qs, "source", f_source, sizeof f_source, &too_long);
+  qget(qs, "record_type", f_rtype, sizeof f_rtype, &too_long);
+  qget(qs, "since", f_since, sizeof f_since, &too_long);
+  qget(qs, "until", f_until, sizeof f_until, &too_long);
+  qget(qs, "q", f_q, sizeof f_q, &too_long);
+  qget(qs, "qAlt", f_qalt, sizeof f_qalt, &too_long);
+  if (too_long) {
+    *status = 414;
+    return strdup("{\"error\":\"filter_too_long\",\"detail\":\"a query parameter "
+                  "exceeded its maximum length; half a filter set cannot be "
+                  "honoured\"}");
+  }
+
+  /* ?q= (and its translated counterpart ?qAlt=) — the same MATCH expression
+   * the plain feed builds (intelapi_fts_match), applied as a uid filter on the
+   * bbox candidates. This mode used to read only source/record_type/since/
+   * until, so a text filter the client sent was dropped without a word and
+   * every row in the radius came back as if it had matched. A q with no
+   * searchable token degrades to "no text filter" exactly as on the feed, and
+   * meta.q_applied=false says so. */
+  char *matchq = intelapi_fts_match(f_q, f_qalt);
 
   /* bbox prefilter. The longitudinal half-width uses the cosine at the query
    * latitude; near the poles that blows up, so it is clamped and the refine
@@ -161,16 +193,21 @@ char *nearapi_items(db_handle *db, const char *tenant, const char *near,
      * nothing here. */
     "AND tenant_id IN (?5,'legacy')");
   int bi = 6;
-  int b_source = 0, b_rtype = 0, b_since = 0, b_until = 0;
+  int b_source = 0, b_rtype = 0, b_since = 0, b_until = 0, b_q = 0;
   if (f_source[0]) { b_source = bi++; sql_append(sql, sizeof sql, &o, " AND source_id=?%d", b_source); }
   if (f_rtype[0])  { b_rtype  = bi++; sql_append(sql, sizeof sql, &o, " AND record_type=?%d", b_rtype); }
   if (f_since[0])  { b_since  = bi++; sql_append(sql, sizeof sql, &o, " AND COALESCE(published_at,fetched_at)>=?%d", b_since); }
   if (f_until[0])  { b_until  = bi++; sql_append(sql, sizeof sql, &o, " AND COALESCE(published_at,fetched_at)<=?%d", b_until); }
+  if (matchq)      { b_q      = bi++; sql_append(sql, sizeof sql, &o,
+                       " AND uid IN (SELECT uid FROM intel_items_fts"
+                       " WHERE intel_items_fts MATCH ?%d)", b_q); }
   sql_append(sql, sizeof sql, &o, " LIMIT %d", NEAR_SCAN_MAX);
 
   sqlite3_stmt *st = NULL;
-  if (sqlite3_prepare_v2(db->h, sql, -1, &st, NULL) != SQLITE_OK)
+  if (sqlite3_prepare_v2(db->h, sql, -1, &st, NULL) != SQLITE_OK) {
+    free(matchq);
     return errj(status, 500, "query_failed");
+  }
   sqlite3_bind_double(st, 1, lat - dlat);
   sqlite3_bind_double(st, 2, lat + dlat);
   sqlite3_bind_double(st, 3, lon - dlon);
@@ -180,6 +217,9 @@ char *nearapi_items(db_handle *db, const char *tenant, const char *near,
   if (b_rtype)  sqlite3_bind_text(st, b_rtype,  f_rtype,  -1, SQLITE_TRANSIENT);
   if (b_since)  sqlite3_bind_text(st, b_since,  f_since,  -1, SQLITE_TRANSIENT);
   if (b_until)  sqlite3_bind_text(st, b_until,  f_until,  -1, SQLITE_TRANSIENT);
+  if (b_q)      sqlite3_bind_text(st, b_q,      matchq,   -1, SQLITE_TRANSIENT);
+  int q_asked = f_q[0] != 0, q_applied = matchq != NULL;
+  free(matchq);
 
   int cap = 1024, n = 0, scanned = 0;
   near_hit *hits = malloc((size_t) cap * sizeof *hits);
@@ -236,6 +276,8 @@ char *nearapi_items(db_handle *db, const char *tenant, const char *near,
   if (f_rtype[0])  cJSON_AddStringToObject(filters, "record_type", f_rtype);
   if (f_since[0])  cJSON_AddStringToObject(filters, "since", f_since);
   if (f_until[0])  cJSON_AddStringToObject(filters, "until", f_until);
+  if (f_q[0])      cJSON_AddStringToObject(filters, "q", f_q);
+  if (f_q[0] && f_qalt[0]) cJSON_AddStringToObject(filters, "q_alt", f_qalt);
 
   cJSON *meta = cJSON_CreateObject();
   char ts[40];
@@ -246,6 +288,18 @@ char *nearapi_items(db_handle *db, const char *tenant, const char *near,
   cJSON_AddItemToObject(meta, "filters", filters);
   cJSON_AddStringToObject(meta, "order", "distance_m ASC");
   cJSON_AddNumberToObject(meta, "bbox_scanned", scanned);
+  /* Same disclosure as the feed (intelapi.c): present whenever a q was sent,
+   * false when it sanitised to nothing and the rows are therefore unfiltered
+   * by text. Omitted when no q was sent, which keeps the plain proximity
+   * envelope unchanged. */
+  if (q_asked) {
+    cJSON_AddBoolToObject(meta, "q_applied", q_applied);
+    if (!q_applied) {
+      cJSON *notes = cJSON_CreateArray();
+      cJSON_AddItemToArray(notes, cJSON_CreateString("q_ignored_no_searchable_token"));
+      cJSON_AddItemToObject(meta, "notes", notes);
+    }
+  }
   if (scanned >= NEAR_SCAN_MAX)
     cJSON_AddStringToObject(meta, "note",
       "bbox prefilter hit its scan ceiling; narrow the radius or add a filter "

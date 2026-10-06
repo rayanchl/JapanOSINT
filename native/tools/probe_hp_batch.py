@@ -18,7 +18,22 @@ empty result set counted as a failure rather than a one-record document.
 
 Usage:
   probe_hp_batch.py MANIFEST... [--out results.tsv] [--pass-ids ids.txt]
-                                [--jobs N] [--only ID,ID]
+                                [--jobs N] [--only ID,ID] [--check-filter]
+                                [--report-only]
+
+Exit status -- a gate, not a report:
+  0  every probed row PASSed
+  1  at least one row did not PASS (dead endpoint, empty result set, refusal,
+     FILTER_UNCHECKED, ...), or no row was probed at all (an --only that
+     matched nothing checked nothing, and "checked nothing" is not "clean")
+  3  --check-filter found at least one FILTER_IGNORED row. That is a confident
+     wrong answer on an entity pivot (house rule 4d) and is fatal even under
+     --report-only.
+
+This used to exit 0 whatever it found, so CI and scripts that ran it could not
+tell a batch of dead rows from a clean one. A survey of a raw candidate list,
+where failures are the expected output and --pass-ids is the product, passes
+--report-only to keep exit 0 for ordinary failures.
 """
 import os
 import sys
@@ -826,6 +841,12 @@ def main():
                          "it is opt-in; run it at least once per batch. A row "
                          "whose impossible-entity request could not be judged "
                          "is FILTER_UNCHECKED, not PASS.")
+    ap.add_argument("--report-only", action="store_true",
+                    help="exit 0 even when rows fail: for surveying a raw "
+                         "candidate list where failures are the expected "
+                         "output and --pass-ids is the product. FILTER_IGNORED "
+                         "under --check-filter still exits 3 -- that verdict "
+                         "is fatal (house rule 4d).")
     a = ap.parse_args()
     global CHECK_FILTER
     CHECK_FILTER = a.check_filter
@@ -860,7 +881,34 @@ def main():
     for row in results:
         if row[2] != "PASS":
             sys.stderr.write("  %-32s %-16s %s\n" % (row[0], row[2], str(row[7])[:60]))
+    return exit_status(results, a.report_only)
+
+
+def exit_status(results, report_only=False):
+    """The process exit status for a finished probe (see the module docstring).
+
+    FILTER_IGNORED is checked first and is not softened by --report-only: an
+    entity pivot answering every question with the whole collection is worse
+    than a dead row (house rule 4d), and a survey that ships one is wrong."""
+    ignored = [r[0] for r in results if r[2] == "FILTER_IGNORED"]
+    if ignored:
+        sys.stderr.write("# FATAL: %d row(s) FILTER_IGNORED -- drop them or "
+                         "re-point them at a parameter the upstream honours: "
+                         "%s\n" % (len(ignored), ", ".join(ignored)))
+        return 3
+    if report_only:
+        return 0
+    if not results:
+        sys.stderr.write("# FAIL: no rows were probed\n")
+        return 1
+    failed = sum(1 for r in results if r[2] != "PASS")
+    if failed:
+        sys.stderr.write("# FAIL: %d of %d row(s) did not PASS "
+                         "(--report-only to survey without failing)\n"
+                         % (failed, len(results)))
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
