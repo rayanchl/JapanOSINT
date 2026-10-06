@@ -30,6 +30,15 @@
 
 char *dataapi_layer(db_handle *db, const char *id);
 
+/* dataapi_layer() with an admission check consulted ONLY when the call would
+ * run the layer's collector (a registered source on a cache miss). allow_run
+ * returning 0 refuses the run: NULL comes back with *refused = 1 and nothing
+ * was fetched. httpd.c charges a per-user RL_COLLECTOR_RUN budget here, so a
+ * signed-in user walking /api/data/<id> across thousands of cold ids cannot
+ * turn into thousands of live collector runs. allow_run NULL == dataapi_layer. */
+char *dataapi_layer_admit(db_handle *db, const char *id,
+                          int (*allow_run)(void *), void *arg, int *refused);
+
 /* GET /api/layers/:layerId/geojson — the fused FeatureCollection of a LAYER
  * (curated in core/layers.def, declared by member sources, or a generated
  * `rt-<slug>` / `unassigned-geocoded` catch-all): every geocoded intel_items
