@@ -42,12 +42,22 @@ typedef struct http_client http_client; /* opaque (shared curl share/handle) */
  * instead of racing a second global init on a worker thread. */
 void         http_client_global_init(void);
 
+/* The transport policy http_request() puts on every transfer — redirects
+ * capped at 5, http/https only on the request AND the redirect chain, and the
+ * per-connection SSRF re-check at the floor — applied to a caller's own easy
+ * handle (a CURL *, typed void * so this header needs no curl.h). For the few
+ * paths that must drive libcurl directly (lib/jsonstream.c streams a body too
+ * big to buffer); a private handle otherwise starts with none of it. */
+void         http_easy_harden(void *curl_easy);
+
 http_client *http_client_new(void);
 void         http_client_free(http_client *);
 
 /* method: "GET"/"POST"/... ; headers: NULL-terminated array or NULL;
  * body/body_len for POST (may be NULL). timeout_ms<=0 → 30000. retries: extra
- * attempts on transport error or 5xx (exp backoff). Returns 0 on a completed
+ * attempts on transport error, 429 or 5xx (exp backoff; a Retry-After on a
+ * 429/503 is honoured when <= 30 s and <= timeout, and a longer one stops the
+ * retries and returns that status). Returns 0 on a completed
  * HTTP exchange (any status), non-zero only on hard failure. */
 int http_request(http_client *c, const char *method, const char *url,
                   const char *const *headers, const char *body, size_t body_len,

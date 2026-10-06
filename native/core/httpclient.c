@@ -10,6 +10,8 @@
 #include <strings.h>
 #include <unistd.h>
 #include <ctype.h>
+#include <errno.h>
+#include <time.h>
 #include <pthread.h>
 
 typedef struct { char *host; int requests; int ok; } host_log;
@@ -131,6 +133,37 @@ static int on_prereq(void *ud, char *conn_primary_ip, char *conn_local_ip,
   return CURL_PREREQFUNC_OK;
 }
 #endif
+
+void http_easy_harden(void *curl_easy) {
+  CURL *e = (CURL *)curl_easy;
+  if (!e) return;
+  curl_easy_setopt(e, CURLOPT_FOLLOWLOCATION, 1L);
+  curl_easy_setopt(e, CURLOPT_MAXREDIRS, 5L);
+  /* Pin the protocol set on BOTH the initial request and the redirect chain.
+   * Without REDIR_PROTOCOLS a 302 can walk an http(s) fetch into file:// or
+   * scp:// — libcurl's redirect default has historically been permissive. */
+#if LIBCURL_VERSION_NUM >= 0x075500            /* 7.85.0 */
+  curl_easy_setopt(e, CURLOPT_PROTOCOLS_STR, "http,https");
+  curl_easy_setopt(e, CURLOPT_REDIR_PROTOCOLS_STR, "http,https");
+#else
+  curl_easy_setopt(e, CURLOPT_PROTOCOLS,
+                   (long)(CURLPROTO_HTTP | CURLPROTO_HTTPS));
+  curl_easy_setopt(e, CURLOPT_REDIR_PROTOCOLS,
+                   (long)(CURLPROTO_HTTP | CURLPROTO_HTTPS));
+#endif
+#if LIBCURL_VERSION_NUM >= 0x075000
+  curl_easy_setopt(e, CURLOPT_PREREQFUNCTION, on_prereq);
+  curl_easy_setopt(e, CURLOPT_PREREQDATA, (void *)0);
+#endif
+}
+
+/* usleep() takes a 32-bit useconds_t and POSIX allows EINVAL past one second;
+ * a 30 s Retry-After is 3e10 µs. */
+static void sleep_ms(long ms) {
+  if (ms <= 0) return;
+  struct timespec ts = { (time_t)(ms / 1000), (long)(ms % 1000) * 1000000L };
+  while (nanosleep(&ts, &ts) != 0 && errno == EINTR) {}
+}
 
 /* Header names that must not follow a URL rewrite onto a different host. */
 static int header_is_credential(const char *h) {
@@ -401,9 +434,82 @@ static const char *ua_for_url(const char *url) {
   return o ? o : JO_USER_AGENT;
 }
 
+/* ── Retry-After ────────────────────────────────────────────────────────────
+ * The retry loop below used to answer every 429/503 with 250·2^n ms (capped at
+ * 4 s) and never looked at Retry-After, so a server that said "come back in
+ * 120 s" got up to `retries` more requests inside a few seconds — each one a
+ * fresh 429, and each one lengthening the ban on the shared IP for every other
+ * collector on that host.
+ *
+ * Now: the header is parsed in both of RFC 9110's forms (delta-seconds and an
+ * HTTP-date — curl_getdate() reads all three date spellings). A delay within
+ * HTTP_RETRY_AFTER_MAX_MS and within the caller's own timeout is slept before
+ * the retry; a longer one is NOT retried, and the 429/503 is returned for the
+ * caller to report. Either way the delay is recorded in the host gate
+ * (hostgate_penalize) so every other fetch to that host backs off too. */
+#define HTTP_RETRY_AFTER_MAX_MS 30000
+
+/* Retry-After value -> milliseconds from `now`, or -1 when the value is
+ * neither form. A date in the past is 0 ("now"). Bounded to a day so the
+ * arithmetic cannot overflow on a hostile value. */
+static long retry_after_parse_ms(const char *v, time_t now) {
+  if (!v) return -1;
+  while (*v == ' ' || *v == '\t') v++;
+  size_t n = strlen(v);
+  while (n && (v[n - 1] == ' ' || v[n - 1] == '\t' || v[n - 1] == '\r' ||
+               v[n - 1] == '\n')) n--;
+  if (n == 0 || n >= 128) return -1;
+  char buf[128];
+  memcpy(buf, v, n);
+  buf[n] = 0;
+  const long day_ms = 86400L * 1000L;
+  int digits = 1;
+  for (size_t i = 0; i < n; i++) if (!isdigit((unsigned char)buf[i])) { digits = 0; break; }
+  if (digits) {
+    if (n > 6) return day_ms;               /* > 999,999 s: clamp, no overflow */
+    long s = strtol(buf, NULL, 10);
+    return s * 1000L > day_ms ? day_ms : s * 1000L;
+  }
+  time_t t = curl_getdate(buf, NULL);
+  if (t == (time_t)-1) return -1;
+  if (t <= now) return 0;
+  double d = difftime(t, now) * 1000.0;
+  return d > (double)day_ms ? day_ms : (long)d;
+}
+
+/* What to do with a response's Retry-After: -2 not applicable (no header, or
+ * a status it does not govern here), -1 do not retry (longer than we will
+ * wait), else the milliseconds to sleep before retrying. */
+static long retry_after_decision(long status, long ra_ms, int timeout_ms) {
+  if (ra_ms < 0 || (status != 429 && status != 503)) return -2;
+  long bound = HTTP_RETRY_AFTER_MAX_MS;
+  if (timeout_ms > 0 && timeout_ms < bound) bound = timeout_ms;
+  return ra_ms > bound ? -1 : ra_ms;
+}
+
+typedef struct { long retry_after_ms; } hdr_state;
+
+/* Sees every header of every hop. A status line starts a new response, so a
+ * Retry-After from a redirect hop cannot leak onto the final one. */
+static size_t on_header(char *buf, size_t sz, size_t nm, void *ud) {
+  size_t n = sz * nm;
+  hdr_state *h = (hdr_state *)ud;
+  if (n >= 5 && strncmp(buf, "HTTP/", 5) == 0) { h->retry_after_ms = -1; return n; }
+  static const char K[] = "retry-after:";
+  if (n > sizeof K - 1 && n < 256 && strncasecmp(buf, K, sizeof K - 1) == 0) {
+    char v[256];
+    memcpy(v, buf + sizeof K - 1, n - (sizeof K - 1));
+    v[n - (sizeof K - 1)] = 0;
+    h->retry_after_ms = retry_after_parse_ms(v, time(NULL));
+  }
+  return n;
+}
+
 static int do_once(http_client *c, const char *method, const char *url,
                    const char *const *headers, const char *body,
-                   size_t body_len, int timeout_ms, http_response *out) {
+                   size_t body_len, int timeout_ms, http_response *out,
+                   long *retry_after_ms) {
+  *retry_after_ms = -1;
   /* Defensive: a NULL client/method/url must never segfault the process.
    * On-demand runs (e.g. dataapi_layer) may invoke an HTTP-backed collector
    * without a client wired up; treat that as a hard failure (rc=1 → caller
@@ -428,24 +534,10 @@ static int do_once(http_client *c, const char *method, const char *url,
   curl_easy_setopt(e, CURLOPT_URL, url);
   curl_easy_setopt(e, CURLOPT_WRITEFUNCTION, on_data);
   curl_easy_setopt(e, CURLOPT_WRITEDATA, &b);
-  curl_easy_setopt(e, CURLOPT_FOLLOWLOCATION, 1L);
-  curl_easy_setopt(e, CURLOPT_MAXREDIRS, 5L);
-  /* Pin the protocol set on BOTH the initial request and the redirect chain.
-   * Without REDIR_PROTOCOLS a 302 can walk an http(s) fetch into file:// or
-   * scp:// — libcurl's redirect default has historically been permissive. */
-#if LIBCURL_VERSION_NUM >= 0x075500            /* 7.85.0 */
-  curl_easy_setopt(e, CURLOPT_PROTOCOLS_STR, "http,https");
-  curl_easy_setopt(e, CURLOPT_REDIR_PROTOCOLS_STR, "http,https");
-#else
-  curl_easy_setopt(e, CURLOPT_PROTOCOLS,
-                   (long)(CURLPROTO_HTTP | CURLPROTO_HTTPS));
-  curl_easy_setopt(e, CURLOPT_REDIR_PROTOCOLS,
-                   (long)(CURLPROTO_HTTP | CURLPROTO_HTTPS));
-#endif
-#if LIBCURL_VERSION_NUM >= 0x075000
-  curl_easy_setopt(e, CURLOPT_PREREQFUNCTION, on_prereq);
-  curl_easy_setopt(e, CURLOPT_PREREQDATA, (void *)0);
-#endif
+  hdr_state hs = { -1 };
+  curl_easy_setopt(e, CURLOPT_HEADERFUNCTION, on_header);
+  curl_easy_setopt(e, CURLOPT_HEADERDATA, &hs);
+  http_easy_harden(e);
   /* Belt to the write-callback's braces: when the server DOES advertise a
    * length, refuse before a single byte is transferred. */
   if (b.cap) curl_easy_setopt(e, CURLOPT_MAXFILESIZE_LARGE, (curl_off_t)b.cap);
@@ -491,6 +583,7 @@ static int do_once(http_client *c, const char *method, const char *url,
   curl_easy_getinfo(e, CURLINFO_RESPONSE_CODE, &code);
   if (hl) curl_slist_free_all(hl);
   curl_easy_cleanup(e);
+  *retry_after_ms = hs.retry_after_ms;
 
   if (rc != CURLE_OK) {
     if (b.over || rc == CURLE_FILESIZE_EXCEEDED)
@@ -564,8 +657,21 @@ int http_request(http_client *c, const char *method, const char *url,
   int attempt = 0;
   for (;;) {
     http_response r = {0};
-    int hard = do_once(c, method, url, headers, body, body_len, timeout_ms, &r);
+    long ra_ms = -1;
+    int hard = do_once(c, method, url, headers, body, body_len, timeout_ms, &r,
+                       &ra_ms);
     int retryable = hard || (r.status >= 500 && r.status <= 599) || r.status == 429;
+    long ra_wait = hard ? -2 : retry_after_decision(r.status, ra_ms, timeout_ms);
+    if (ra_wait != -2) {
+      /* Every other fetch to this host honours the server's delay too. */
+      hostgate_penalize(url, ra_ms);
+      if (ra_wait == -1) {
+        if (retryable && attempt < retries)
+          fprintf(stderr, "[http] %s: %ld with Retry-After %ld s — longer than "
+                          "we wait, not retrying\n", url, r.status, ra_ms / 1000);
+        retryable = 0;
+      }
+    }
     if (!retryable || attempt >= retries) {
       *out = r;
       log_host(c, url, r.status, hard);   /* attribute to the real upstream host */
@@ -585,10 +691,12 @@ int http_request(http_client *c, const char *method, const char *url,
       return hard && attempt >= retries ? 1 : 0;
     }
     http_response_free(&r);
-    /* exponential backoff: 250ms, 500ms, 1s, ... capped at 4s */
-    int ms = 250 << attempt;
+    /* exponential backoff: 250ms, 500ms, 1s, ... capped at 4s — or the
+     * server's own Retry-After when it named one we are willing to wait. */
+    long ms = attempt < 5 ? 250L << attempt : 4000L;
     if (ms > 4000) ms = 4000;
-    usleep((useconds_t)ms * 1000);
+    if (ra_wait > ms) ms = ra_wait;
+    sleep_ms(ms);
     attempt++;
   }
 }

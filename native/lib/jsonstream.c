@@ -2,7 +2,8 @@
 #include "jsonstream.h"
 #include "jsonlist.h"
 #include "core/hostgate.h"
-#include "core/httpclient.h"   /* http_client_global_init: the one curl_global_init */
+#include "core/httpclient.h"   /* the one curl_global_init, UA, transport policy */
+#include "core/url_override.h"
 #include "third_party/cJSON.h"
 #include <curl/curl.h>
 #include <stdio.h>
@@ -209,6 +210,21 @@ int jsonstream_emit(intel_sink *sink, const char *source_id, const char *url,
                     const char *lang, const char *tags_json) {
   if (!sink || !url || !*url) return -1;
 
+  /* This file drives libcurl directly — a body this size cannot go through
+   * http_request(), which buffers — and so it used to inherit NONE of
+   * http_request()'s policy: no per-connection SSRF re-check (a 302 into
+   * 169.254.169.254 was followed), no host gate (a multi-minute stream
+   * ignored the per-host cap the rest of the fleet honours), no url_override
+   * repair, and a "Mozilla/5.0" agent the project rules out (httpclient.h:
+   * identify, never impersonate a browser). Each is now the same mechanism
+   * http_request() uses, not a copy of it. No credential headers are sent
+   * here, so an override crossing hosts has nothing to strip. */
+  const char *eff = url_override_apply(url);
+  if (eff && eff != url && strcmp(eff, url) != 0) {
+    fprintf(stderr, "[url-override] rewrite %s -> %s\n", url, eff);
+    url = eff;
+  }
+
   /* The SSRF floor, before a byte moves. A blocked destination is an explicit
    * failure, not a silent skip. */
   int hg = hostgate_url_check(url);
@@ -230,20 +246,24 @@ int jsonstream_emit(intel_sink *sink, const char *source_id, const char *url,
   curl_easy_setopt(e, CURLOPT_URL, url);
   curl_easy_setopt(e, CURLOPT_WRITEFUNCTION, js_write);
   curl_easy_setopt(e, CURLOPT_WRITEDATA, &c);
-  curl_easy_setopt(e, CURLOPT_FOLLOWLOCATION, 1L);
-  curl_easy_setopt(e, CURLOPT_MAXREDIRS, 5L);
-  curl_easy_setopt(e, CURLOPT_PROTOCOLS_STR, "http,https");
-  curl_easy_setopt(e, CURLOPT_REDIR_PROTOCOLS_STR, "http,https");
+  http_easy_harden(e);     /* redirects, protocol pins, per-hop SSRF check */
   curl_easy_setopt(e, CURLOPT_ACCEPT_ENCODING, "");   /* let curl gunzip */
-  curl_easy_setopt(e, CURLOPT_USERAGENT,
-                   "Mozilla/5.0 (compatible; JapanOSINT/1.0)");
+  { const char *ua = http_ua_override(url);
+    curl_easy_setopt(e, CURLOPT_USERAGENT, ua ? ua : JO_USER_AGENT); }
   curl_easy_setopt(e, CURLOPT_TIMEOUT_MS,
                    (long)(timeout_ms > 0 ? timeout_ms : 900000));
   curl_easy_setopt(e, CURLOPT_CONNECTTIMEOUT, 20L);
   curl_easy_setopt(e, CURLOPT_NOSIGNAL, 1L);
   curl_easy_setopt(e, CURLOPT_FAILONERROR, 1L);
 
+  /* Host gate, held for the whole stream: it IS one request in flight. The
+   * wait budget is capped at 30 s (http_request's default) rather than this
+   * call's 15-minute transfer timeout, which is a body budget, not a queue
+   * budget. Fails open, counted, exactly as for http_request. */
+  int gated = hostgate_acquire(url, (timeout_ms > 0 && timeout_ms < 30000)
+                                    ? timeout_ms : 30000);
   CURLcode rc = curl_easy_perform(e);
+  if (gated) hostgate_release(url);
   long status = 0;
   curl_easy_getinfo(e, CURLINFO_RESPONSE_CODE, &status);
   curl_off_t got = 0;
