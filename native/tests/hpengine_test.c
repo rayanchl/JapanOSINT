@@ -78,6 +78,9 @@ static char g_last_url[2048];
 static char g_last_body[2048];
 static char g_last_hdrs[1024];
 static int  g_ncalls = 0;
+/* Milliseconds every stub request takes — for the detail TIME budget, which
+ * nothing else in this harness can exercise. 0 everywhere else. */
+static int  g_fx_delay_ms = 0;
 
 static void fx_reset(void) { g_nfx = 0; g_ncalls = 0; g_last_url[0] = 0;
                              g_last_body[0] = 0; g_last_hdrs[0] = 0; }
@@ -93,6 +96,10 @@ int http_request(http_client *c, const char *method, const char *url,
                  int timeout_ms, int retries, http_response *out) {
   (void)c; (void)method; (void)timeout_ms; (void)retries;
   g_ncalls++;
+  if (g_fx_delay_ms > 0) {
+    struct timespec d = { g_fx_delay_ms / 1000, (long)(g_fx_delay_ms % 1000) * 1000000L };
+    nanosleep(&d, NULL);
+  }
   snprintf(g_last_url, sizeof g_last_url, "%s", url);
   snprintf(g_last_body, sizeof g_last_body, "%.*s", (int)body_len, body ? body : "");
   g_last_hdrs[0] = 0;
@@ -641,6 +648,32 @@ static const hp_source T[] = {
     .mode = HP_XML, .array_path = "item", .title_keys = "name", .id_keys = "ref",
     .detail_url = "https://x.test/xdd/{v}", .detail_key = "ref", .detail_max = 1,
     .interval = 3600, .record_type = "t-xmldeep", .free_tier = 1, .description = "d" },
+  /* A header-authenticated row with a detail hop (the UK_CQC_PROVIDERS shape). */
+  { .id = "T_DEEP_HDR", .name = "header auth + detail", .url = "https://x.test/hl",
+    .key_env = "HP_TEST_DKEY", .headers = { "Ocp-Apim-Subscription-Key: {key}", NULL },
+    .array_path = "items", .title_keys = "name", .id_keys = "num",
+    .detail_url = "https://x.test/hd/{v}", .detail_key = "num",
+    .interval = 3600, .record_type = "t-deephdr", .free_tier = 1, .description = "d" },
+  /* A CSV row whose detail hop is keyed on a column. */
+  { .id = "T_CSV_DEEP", .name = "csv with a detail hop", .url = "https://x.test/cd.csv",
+    .mode = HP_CSV, .title_keys = "name", .id_keys = "id",
+    .detail_url = "https://x.test/cdd/{v}", .detail_key = "id",
+    .interval = 3600, .record_type = "t-csvdeep", .free_tier = 1, .description = "d" },
+  /* A CSV whose column IS the detail URL (GBFS systems.csv's Auto-Discovery URL). */
+  { .id = "T_CSV_WHOLE", .name = "csv column is the detail url", .url = "https://x.test/cw.csv",
+    .mode = HP_CSV, .title_keys = "name", .id_keys = "id",
+    .detail_url = "{v}", .detail_key = "disc",
+    .interval = 3600, .record_type = "t-csvwhole", .free_tier = 1, .description = "d" },
+  /* HTML anchors deepen on their resolved url. */
+  { .id = "T_HTML_DEEP", .name = "html anchors with a detail hop", .url = "https://x.test/hdp",
+    .mode = HP_HTML, .href_must = "/hrec/", .base = "https://x.test",
+    .detail_url = "{v}", .detail_key = "url",
+    .interval = 3600, .record_type = "t-htmldeep", .free_tier = 1, .description = "d" },
+  /* No declared detail_max: the default count and the clock bound it. */
+  { .id = "T_DEEP_TIME", .name = "detail time budget", .url = "https://x.test/tl",
+    .array_path = "items", .title_keys = "name", .id_keys = "num",
+    .detail_url = "https://x.test/td/{v}", .detail_key = "num",
+    .interval = 3600, .record_type = "t-deeptime", .free_tier = 1, .description = "d" },
 };
 HP_REGISTER_TABLE(T)
 
@@ -2343,9 +2376,99 @@ int main(void) {
   rc = run_source("T_XML_DEEP", "");
   {
     int pend = 0;
-    for (int i = 0; i < g_ncap; i++) if (strstr(g_cap[i].props, "_detail_pending")) pend++;
-    ok(rc == 0 && g_ncap == 3 && g_ncalls == 2 && pend == 2,
+    for (int i = 0; i < g_ncap; i++)
+      if (!strcmp(g_cap[i].rtype, "t-xmldeep") &&
+          strstr(g_cap[i].props, "\"_detail_pending\":true")) pend++;
+    const cap *dn = NULL;
+    int recs = cap_count("t-xmldeep", NULL);
+    int notes = cap_count("collector-truncation-notice", &dn);
+    ok(rc == 0 && recs == 3 && g_ncalls == 2 && pend == 2,
        "35: detail_max=1 on an XML row makes ONE detail request; the rest are marked pending");
+    /* 35b. The shortfall is a truncation notice, not just a per-record flag. */
+    ok(notes == 1 && dn && strstr(dn->key, "T_XML_DEEP|detail-truncation:") &&
+       strstr(dn->props, "\"detail_fetched\":1") &&
+       strstr(dn->props, "\"detail_pending\":2") &&
+       strstr(dn->props, "\"detail_budget_hit\":\"count\""),
+       "35b: un-deepened records are counted into ONE collector-truncation-notice (1 fetched, 2 pending)");
+  }
+  /* 35c. A budget that reaches every record files no notice at all. */
+  fx_reset();
+  fx_add("/list?q=", 200, "{\"items\":[{\"name\":\"A\",\"num\":\"1\"},{\"name\":\"B\",\"num\":\"2\"}]}");
+  fx_add("/detail/", 200, "{\"role\":\"x\"}");
+  rc = run_source("T_DEEP", "acme");
+  ok(rc == 0 && g_ncap == 2 && cap_count("collector-truncation-notice", NULL) == 0,
+     "35c: every record deepened -> no detail notice (a notice is never invented)");
+
+  /* 36. The detail hop carries the row's headers, {key} expanded. It passed
+   * NULL, so a header-authenticated row lost every hop to a 401. */
+  setenv("HP_TEST_DKEY", "s3cret", 1);
+  fx_reset();
+  fx_add("/hd/", 200, "{\"role\":\"registered\"}");
+  fx_add("/hl", 200, "{\"items\":[{\"name\":\"P\",\"num\":\"9\"}]}");
+  rc = run_source("T_DEEP_HDR", "");
+  ok(rc == 0 && g_ncalls == 2 && strstr(g_last_url, "/hd/9") != NULL &&
+     strstr(g_last_hdrs, "Ocp-Apim-Subscription-Key: s3cret") != NULL,
+     "36: the detail GET sends the row's own header with {key} expanded");
+  ok(strstr(g_last_hdrs, "Content-Type") == NULL,
+     "36: and no Content-Type on a bodiless GET");
+  ok(g_ncap == 1 && strstr(g_cap[0].props, "\"detail.role\":\"registered\"") != NULL,
+     "36: so the authenticated detail merges");
+  unsetenv("HP_TEST_DKEY");
+
+  /* 37. CSV records deepen (they were stamped pending and never hopped). */
+  fx_reset();
+  fx_add("/cdd/r2", 200, "{\"owner\":\"Bo\"}");
+  fx_add("/cdd/r1", 200, "{\"owner\":\"Al\"}");
+  fx_add("/cd.csv", 200, "id,name\nr1,one\nr2,two\n");
+  rc = run_source("T_CSV_DEEP", "");
+  ok(rc == 0 && cap_count("t-csvdeep", NULL) == 2 && g_ncalls == 3,
+     "37: a CSV row with detail_url makes one hop per record");
+  ok(strstr(g_cap[0].props, "\"detail.owner\":\"Al\"") != NULL &&
+     strstr(g_cap[1].props, "\"detail.owner\":\"Bo\"") != NULL &&
+     !strstr(g_cap[0].props, "_detail_pending"),
+     "37: the detail merges keyed on the CSV column; nothing is stamped pending");
+
+  /* 37b. A column holding the whole detail URL is used as-is, not encoded. */
+  fx_reset();
+  fx_add("/gbfs/a.json", 200, "{\"ttl\":60}");
+  fx_add("/cw.csv", 200, "id,name,disc\ns1,one,https://x.test/gbfs/a.json\n");
+  rc = run_source("T_CSV_WHOLE", "");
+  ok(rc == 0 && !strcmp(g_last_url, "https://x.test/gbfs/a.json") &&
+     g_ncap >= 1 && strstr(g_cap[0].props, "\"detail.ttl\":60") != NULL,
+     "37b: detail_url \"{v}\" with an absolute URL fetches that URL verbatim");
+
+  /* 37c. HTML anchors deepen on their resolved url; a non-JSON detail body is
+   * stamped as such rather than read as an empty detail. */
+  fx_reset();
+  fx_add("/hrec/2", 200, "<html>not json</html>");
+  fx_add("/hrec/1", 200, "{\"kind\":\"profile\"}");
+  fx_add("/hdp", 200, "<a href=\"/hrec/1\">Record one</a><a href=\"/hrec/2\">Record two</a>");
+  rc = run_source("T_HTML_DEEP", "");
+  ok(rc == 0 && cap_count("t-htmldeep", NULL) == 2 && g_ncalls == 3,
+     "37c: an HTML row with detail_url hops once per anchor");
+  ok(strstr(g_cap[0].props, "\"detail.kind\":\"profile\"") != NULL &&
+     strstr(g_cap[1].props, "detail body is not JSON") != NULL,
+     "37c: JSON merges; an HTML detail body is stamped, not passed off as empty");
+
+  /* 38. The TIME budget: 3 records, 600 ms per request, a 1 s clock armed at
+   * the first hop. Hops 1 and 2 start inside it, the third does not. */
+  setenv("JO_HP_DETAIL_SEC", "1", 1);
+  fx_reset();
+  fx_add("/td/", 200, "{\"ok\":1}");
+  fx_add("/tl", 200, "{\"items\":[{\"name\":\"a\",\"num\":\"1\"},"
+         "{\"name\":\"b\",\"num\":\"2\"},{\"name\":\"c\",\"num\":\"3\"}]}");
+  g_fx_delay_ms = 600;
+  rc = run_source("T_DEEP_TIME", "");
+  g_fx_delay_ms = 0;
+  unsetenv("JO_HP_DETAIL_SEC");
+  {
+    const cap *tn = NULL;
+    int notes = cap_count("collector-truncation-notice", &tn);
+    ok(rc == 0 && cap_count("t-deeptime", NULL) == 3 && g_ncalls == 3,
+       "38: the clock stops the hops (list + 2 detail requests, not 3)");
+    ok(notes == 1 && tn && strstr(tn->props, "\"detail_budget_hit\":\"time\"") &&
+       strstr(tn->props, "\"detail_pending\":1"),
+       "38: and the notice says the TIME budget bit, with 1 pending");
   }
 
   /* Two transactions of the SAME activity, differing only in later parts of the

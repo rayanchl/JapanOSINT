@@ -13,9 +13,6 @@
 #include <time.h>
 #include <sys/stat.h>
 
-#ifndef JO_REPO_ROOT
-#define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
-#endif
 
 #define BJ_MAX 16
 
@@ -35,10 +32,10 @@ static int  g_seq = 0;
 static int  g_ingest_busy = 0, g_fetch_busy = 0;
 static pthread_mutex_t g_lock = PTHREAD_MUTEX_INITIALIZER;
 
-static const char *root_dir(void) {
-  const char *e = getenv("JO_BREACH_DIR");
-  return (e && *e) ? e : JO_REPO_ROOT "/data/breach";
-}
+/* The breach data root — breach_index.c owns the rule (JO_BREACH_DIR, else
+ * <repo>/data/breach); the confinement below must agree with where ingest
+ * actually shards, so it reads the same function. */
+#define root_dir breach_root_dir
 
 /* ── caller-supplied path confinement ──────────────────────────────────────
  * POST /api/admin/breach/ingest {"path":…} and
