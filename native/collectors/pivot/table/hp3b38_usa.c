@@ -537,7 +537,7 @@ static const hp_source HP3B38_USA[] = {
       "which passed the emit audit. Record count is UNMEASURED until a "
       "key is present." },
 
-  { .id = "US_CONGRESS_BILL", .name = "Us Congress Bill",
+  { .id = "US_CONGRESS_BILL", .name = "US Congress — bills",
     .category = "government", .portal = "https://api.congress.gov",
     .record_type = "legislation",
     .tags = "\"usa\",\"api-key-gated\"",
@@ -548,7 +548,7 @@ static const hp_source HP3B38_USA[] = {
     .interval = 86400,
     .key_env = "CONGRESS_GOV_API_KEY",
     .title_keys = "title",
-    .description = "Us Congress Bill. GATED on CONGRESS_GOV_API_KEY. Probed "
+    .description = "US Congress — bills. GATED on CONGRESS_GOV_API_KEY. Probed "
       "2026-10-06: answered HTTP 429 to a shared DEMO_KEY — the route "
       "exists and the quota, not the path, is what refused. Record "
       "count is UNMEASURED until a key is present. A row with key_env "
@@ -556,7 +556,7 @@ static const hp_source HP3B38_USA[] = {
       "until the variable is set, so it is honest about being unrun "
       "rather than silently empty." },
 
-  { .id = "US_CONGRESS_MEMBER", .name = "Us Congress Member",
+  { .id = "US_CONGRESS_MEMBER", .name = "US Congress — members",
     .category = "government", .portal = "https://api.congress.gov",
     .record_type = "legislator",
     .tags = "\"usa\",\"api-key-gated\"",
@@ -567,7 +567,7 @@ static const hp_source HP3B38_USA[] = {
     .interval = 86400,
     .key_env = "CONGRESS_GOV_API_KEY",
     .title_keys = "name",
-    .description = "Us Congress Member. GATED on CONGRESS_GOV_API_KEY. Probed "
+    .description = "US Congress — members. GATED on CONGRESS_GOV_API_KEY. Probed "
       "2026-10-06: answered HTTP 429 to a shared DEMO_KEY — the route "
       "exists and the quota, not the path, is what refused. Record "
       "count is UNMEASURED until a key is present. A row with key_env "
@@ -575,7 +575,7 @@ static const hp_source HP3B38_USA[] = {
       "until the variable is set, so it is honest about being unrun "
       "rather than silently empty." },
 
-  { .id = "US_CONGRESS_COMMITTEE", .name = "Us Congress Committee",
+  { .id = "US_CONGRESS_COMMITTEE", .name = "US Congress — committees",
     .category = "government", .portal = "https://api.congress.gov",
     .record_type = "committee",
     .tags = "\"usa\",\"api-key-gated\"",
@@ -586,7 +586,7 @@ static const hp_source HP3B38_USA[] = {
     .interval = 86400,
     .key_env = "CONGRESS_GOV_API_KEY",
     .title_keys = "name",
-    .description = "Us Congress Committee. GATED on CONGRESS_GOV_API_KEY. Probed "
+    .description = "US Congress — committees. GATED on CONGRESS_GOV_API_KEY. Probed "
       "2026-10-06: answered HTTP 429 to a shared DEMO_KEY — the route "
       "exists and the quota, not the path, is what refused. Record "
       "count is UNMEASURED until a key is present. A row with key_env "
@@ -594,7 +594,7 @@ static const hp_source HP3B38_USA[] = {
       "until the variable is set, so it is honest about being unrun "
       "rather than silently empty." },
 
-  { .id = "US_CONGRESS_NOMINATION", .name = "Us Congress Nomination",
+  { .id = "US_CONGRESS_NOMINATION", .name = "US Congress — presidential nominations",
     .category = "government", .portal = "https://api.congress.gov",
     .record_type = "nomination",
     .tags = "\"usa\",\"api-key-gated\"",
@@ -605,15 +605,15 @@ static const hp_source HP3B38_USA[] = {
     .interval = 86400,
     .key_env = "CONGRESS_GOV_API_KEY",
     .title_keys = "citation",
-    .description = "Us Congress Nomination. GATED on CONGRESS_GOV_API_KEY. Probed "
-      "2026-10-06: answered HTTP 429 to a shared DEMO_KEY — the route "
-      "exists and the quota, not the path, is what refused. Record "
-      "count is UNMEASURED until a key is present. A row with key_env "
-      "stores a needs-credential notice through _credential_notice.inc "
-      "until the variable is set, so it is honest about being unrun "
-      "rather than silently empty." },
+    .description = "US Congress — presidential nominations. GATED on "
+      "CONGRESS_GOV_API_KEY. Probed 2026-10-06: answered HTTP 429 to a "
+      "shared DEMO_KEY — the route exists and the quota, not the path, "
+      "is what refused. Record count is UNMEASURED until a key is "
+      "present. A row with key_env stores a needs-credential notice "
+      "through _credential_notice.inc until the variable is set, so it "
+      "is honest about being unrun rather than silently empty." },
 
-  { .id = "US_CONGRESS_TREATY", .name = "Us Congress Treaty",
+  { .id = "US_CONGRESS_TREATY", .name = "US Congress — treaty documents",
     .category = "government", .portal = "https://api.congress.gov",
     .record_type = "treaty",
     .tags = "\"usa\",\"api-key-gated\"",
@@ -624,15 +624,15 @@ static const hp_source HP3B38_USA[] = {
     .interval = 86400,
     .key_env = "CONGRESS_GOV_API_KEY",
     .title_keys = "topic",
-    .description = "Us Congress Treaty. GATED on CONGRESS_GOV_API_KEY. Probed "
-      "2026-10-06: answered HTTP 429 to a shared DEMO_KEY — the route "
-      "exists and the quota, not the path, is what refused. Record "
-      "count is UNMEASURED until a key is present. A row with key_env "
-      "stores a needs-credential notice through _credential_notice.inc "
-      "until the variable is set, so it is honest about being unrun "
-      "rather than silently empty." },
+    .description = "US Congress — treaty documents. GATED on CONGRESS_GOV_API_KEY. "
+      "Probed 2026-10-06: answered HTTP 429 to a shared DEMO_KEY — the "
+      "route exists and the quota, not the path, is what refused. "
+      "Record count is UNMEASURED until a key is present. A row with "
+      "key_env stores a needs-credential notice through "
+      "_credential_notice.inc until the variable is set, so it is "
+      "honest about being unrun rather than silently empty." },
 
-  { .id = "US_CONGRESS_HEARING", .name = "Us Congress Hearing",
+  { .id = "US_CONGRESS_HEARING", .name = "US Congress — committee hearings",
     .category = "government", .portal = "https://api.congress.gov",
     .record_type = "hearing",
     .tags = "\"usa\",\"api-key-gated\"",
@@ -643,15 +643,15 @@ static const hp_source HP3B38_USA[] = {
     .interval = 86400,
     .key_env = "CONGRESS_GOV_API_KEY",
     .title_keys = "chamber",
-    .description = "Us Congress Hearing. GATED on CONGRESS_GOV_API_KEY. Probed "
-      "2026-10-06: answered HTTP 429 to a shared DEMO_KEY — the route "
-      "exists and the quota, not the path, is what refused. Record "
-      "count is UNMEASURED until a key is present. A row with key_env "
-      "stores a needs-credential notice through _credential_notice.inc "
-      "until the variable is set, so it is honest about being unrun "
-      "rather than silently empty." },
+    .description = "US Congress — committee hearings. GATED on CONGRESS_GOV_API_KEY. "
+      "Probed 2026-10-06: answered HTTP 429 to a shared DEMO_KEY — the "
+      "route exists and the quota, not the path, is what refused. "
+      "Record count is UNMEASURED until a key is present. A row with "
+      "key_env stores a needs-credential notice through "
+      "_credential_notice.inc until the variable is set, so it is "
+      "honest about being unrun rather than silently empty." },
 
-  { .id = "US_CONGRESS_AMENDMENT", .name = "Us Congress Amendment",
+  { .id = "US_CONGRESS_AMENDMENT", .name = "US Congress — amendments",
     .category = "government", .portal = "https://api.congress.gov",
     .record_type = "amendment",
     .tags = "\"usa\",\"api-key-gated\"",
@@ -662,7 +662,7 @@ static const hp_source HP3B38_USA[] = {
     .interval = 86400,
     .key_env = "CONGRESS_GOV_API_KEY",
     .title_keys = "purpose",
-    .description = "Us Congress Amendment. GATED on CONGRESS_GOV_API_KEY. Probed "
+    .description = "US Congress — amendments. GATED on CONGRESS_GOV_API_KEY. Probed "
       "2026-10-06: answered HTTP 429 to a shared DEMO_KEY — the route "
       "exists and the quota, not the path, is what refused. Record "
       "count is UNMEASURED until a key is present. A row with key_env "
@@ -670,7 +670,7 @@ static const hp_source HP3B38_USA[] = {
       "until the variable is set, so it is honest about being unrun "
       "rather than silently empty." },
 
-  { .id = "US_EIA_ELEC_RETAIL", .name = "Us Eia Elec Retail",
+  { .id = "US_EIA_ELEC_RETAIL", .name = "US EIA — electricity retail sales",
     .category = "economy", .portal = "https://api.eia.gov",
     .record_type = "energy-observation",
     .tags = "\"usa\",\"api-key-gated\"",
@@ -681,15 +681,15 @@ static const hp_source HP3B38_USA[] = {
     .interval = 86400,
     .key_env = "EIA_API_KEY",
     .title_keys = "stateDescription",
-    .description = "Us Eia Elec Retail. GATED on EIA_API_KEY. Probed 2026-10-06: "
-      "answered HTTP 429 to a shared DEMO_KEY — the route exists and "
-      "the quota, not the path, is what refused. Record count is "
-      "UNMEASURED until a key is present. A row with key_env stores a "
-      "needs-credential notice through _credential_notice.inc until the "
-      "variable is set, so it is honest about being unrun rather than "
-      "silently empty." },
+    .description = "US EIA — electricity retail sales. GATED on EIA_API_KEY. Probed "
+      "2026-10-06: answered HTTP 429 to a shared DEMO_KEY — the route "
+      "exists and the quota, not the path, is what refused. Record "
+      "count is UNMEASURED until a key is present. A row with key_env "
+      "stores a needs-credential notice through _credential_notice.inc "
+      "until the variable is set, so it is honest about being unrun "
+      "rather than silently empty." },
 
-  { .id = "US_EIA_PETROLEUM", .name = "Us Eia Petroleum",
+  { .id = "US_EIA_PETROLEUM", .name = "US EIA — petroleum spot prices",
     .category = "economy", .portal = "https://api.eia.gov",
     .record_type = "energy-observation",
     .tags = "\"usa\",\"api-key-gated\"",
@@ -700,15 +700,15 @@ static const hp_source HP3B38_USA[] = {
     .interval = 86400,
     .key_env = "EIA_API_KEY",
     .title_keys = "series-description",
-    .description = "Us Eia Petroleum. GATED on EIA_API_KEY. Probed 2026-10-06: "
-      "answered HTTP 429 to a shared DEMO_KEY — the route exists and "
-      "the quota, not the path, is what refused. Record count is "
-      "UNMEASURED until a key is present. A row with key_env stores a "
-      "needs-credential notice through _credential_notice.inc until the "
-      "variable is set, so it is honest about being unrun rather than "
-      "silently empty." },
+    .description = "US EIA — petroleum spot prices. GATED on EIA_API_KEY. Probed "
+      "2026-10-06: answered HTTP 429 to a shared DEMO_KEY — the route "
+      "exists and the quota, not the path, is what refused. Record "
+      "count is UNMEASURED until a key is present. A row with key_env "
+      "stores a needs-credential notice through _credential_notice.inc "
+      "until the variable is set, so it is honest about being unrun "
+      "rather than silently empty." },
 
-  { .id = "US_EIA_NATGAS", .name = "Us Eia Natgas",
+  { .id = "US_EIA_NATGAS", .name = "US EIA — natural gas prices",
     .category = "economy", .portal = "https://api.eia.gov",
     .record_type = "energy-observation",
     .tags = "\"usa\",\"api-key-gated\"",
@@ -719,15 +719,15 @@ static const hp_source HP3B38_USA[] = {
     .interval = 86400,
     .key_env = "EIA_API_KEY",
     .title_keys = "area-name",
-    .description = "Us Eia Natgas. GATED on EIA_API_KEY. Probed 2026-10-06: answered "
-      "HTTP 200 to the shared DEMO_KEY, so its record shape was read "
-      "for real; a production key is still needed for sustained use. "
-      "Record shape READ via DEMO_KEY on 2026-10-06: 500 records. A row "
-      "with key_env stores a needs-credential notice through "
-      "_credential_notice.inc until the variable is set, so it is "
-      "honest about being unrun rather than silently empty." },
+    .description = "US EIA — natural gas prices. GATED on EIA_API_KEY. Probed "
+      "2026-10-06: answered HTTP 200 to the shared DEMO_KEY, so its "
+      "record shape was read for real; a production key is still needed "
+      "for sustained use. Record shape READ via DEMO_KEY on 2026-10-06: "
+      "500 records. A row with key_env stores a needs-credential notice "
+      "through _credential_notice.inc until the variable is set, so it "
+      "is honest about being unrun rather than silently empty." },
 
-  { .id = "US_EIA_CO2", .name = "Us Eia Co2",
+  { .id = "US_EIA_CO2", .name = "US EIA — CO2 emissions aggregates",
     .category = "environment", .portal = "https://api.eia.gov",
     .record_type = "emissions-observation",
     .tags = "\"usa\",\"api-key-gated\"",
@@ -738,15 +738,15 @@ static const hp_source HP3B38_USA[] = {
     .interval = 86400,
     .key_env = "EIA_API_KEY",
     .title_keys = "fuel-name",
-    .description = "Us Eia Co2. GATED on EIA_API_KEY. Probed 2026-10-06: answered "
-      "HTTP 200 to the shared DEMO_KEY, so its record shape was read "
-      "for real; a production key is still needed for sustained use. "
-      "Record shape READ via DEMO_KEY on 2026-10-06: 500 records. A row "
-      "with key_env stores a needs-credential notice through "
-      "_credential_notice.inc until the variable is set, so it is "
-      "honest about being unrun rather than silently empty." },
+    .description = "US EIA — CO2 emissions aggregates. GATED on EIA_API_KEY. Probed "
+      "2026-10-06: answered HTTP 200 to the shared DEMO_KEY, so its "
+      "record shape was read for real; a production key is still needed "
+      "for sustained use. Record shape READ via DEMO_KEY on 2026-10-06: "
+      "500 records. A row with key_env stores a needs-credential notice "
+      "through _credential_notice.inc until the variable is set, so it "
+      "is honest about being unrun rather than silently empty." },
 
-  { .id = "US_FEC_COMMITTEES", .name = "Us Fec Committees",
+  { .id = "US_FEC_COMMITTEES", .name = "US FEC — political committees",
     .category = "government", .portal = "https://api.open.fec.gov",
     .record_type = "political-committee",
     .tags = "\"usa\",\"api-key-gated\"",
@@ -757,15 +757,15 @@ static const hp_source HP3B38_USA[] = {
     .interval = 86400,
     .key_env = "FEC_API_KEY",
     .title_keys = "name",
-    .description = "Us Fec Committees. GATED on FEC_API_KEY. Probed 2026-10-06: "
-      "answered HTTP 429 to a shared DEMO_KEY — the route exists and "
-      "the quota, not the path, is what refused. Record count is "
-      "UNMEASURED until a key is present. A row with key_env stores a "
-      "needs-credential notice through _credential_notice.inc until the "
-      "variable is set, so it is honest about being unrun rather than "
-      "silently empty." },
+    .description = "US FEC — political committees. GATED on FEC_API_KEY. Probed "
+      "2026-10-06: answered HTTP 429 to a shared DEMO_KEY — the route "
+      "exists and the quota, not the path, is what refused. Record "
+      "count is UNMEASURED until a key is present. A row with key_env "
+      "stores a needs-credential notice through _credential_notice.inc "
+      "until the variable is set, so it is honest about being unrun "
+      "rather than silently empty." },
 
-  { .id = "US_REGULATIONS_DOCKETS", .name = "Us Regulations Dockets",
+  { .id = "US_REGULATIONS_DOCKETS", .name = "US regulations.gov — rulemaking dockets",
     .category = "government", .portal = "https://api.regulations.gov",
     .record_type = "rulemaking-docket",
     .tags = "\"usa\",\"api-key-gated\"",
@@ -776,15 +776,15 @@ static const hp_source HP3B38_USA[] = {
     .interval = 86400,
     .key_env = "REGULATIONS_GOV_API_KEY",
     .title_keys = "attributes.title",
-    .description = "Us Regulations Dockets. GATED on REGULATIONS_GOV_API_KEY. Probed "
-      "2026-10-06: answered HTTP 429 to a shared DEMO_KEY — the route "
-      "exists and the quota, not the path, is what refused. Record "
-      "count is UNMEASURED until a key is present. A row with key_env "
-      "stores a needs-credential notice through _credential_notice.inc "
-      "until the variable is set, so it is honest about being unrun "
-      "rather than silently empty." },
+    .description = "US regulations.gov — rulemaking dockets. GATED on "
+      "REGULATIONS_GOV_API_KEY. Probed 2026-10-06: answered HTTP 429 to "
+      "a shared DEMO_KEY — the route exists and the quota, not the "
+      "path, is what refused. Record count is UNMEASURED until a key is "
+      "present. A row with key_env stores a needs-credential notice "
+      "through _credential_notice.inc until the variable is set, so it "
+      "is honest about being unrun rather than silently empty." },
 
-  { .id = "US_FRED_RELEASES", .name = "Us Fred Releases",
+  { .id = "US_FRED_RELEASES", .name = "US FRED — statistical releases",
     .category = "economy", .portal = "https://api.stlouisfed.org",
     .record_type = "statistical-release",
     .tags = "\"usa\",\"api-key-gated\"",
@@ -795,15 +795,15 @@ static const hp_source HP3B38_USA[] = {
     .interval = 86400,
     .key_env = "FRED_API_KEY",
     .title_keys = "name",
-    .description = "Us Fred Releases. GATED on FRED_API_KEY. Probed 2026-10-06: "
-      "answered HTTP 400 to the literal string DEMO_KEY — FRED "
-      "validates the key format, so the route exists and rejected the "
-      "placeholder. Record count is UNMEASURED until a key is present. "
-      "A row with key_env stores a needs-credential notice through "
-      "_credential_notice.inc until the variable is set, so it is "
-      "honest about being unrun rather than silently empty." },
+    .description = "US FRED — statistical releases. GATED on FRED_API_KEY. Probed "
+      "2026-10-06: answered HTTP 400 to the literal string DEMO_KEY — "
+      "FRED validates the key format, so the route exists and rejected "
+      "the placeholder. Record count is UNMEASURED until a key is "
+      "present. A row with key_env stores a needs-credential notice "
+      "through _credential_notice.inc until the variable is set, so it "
+      "is honest about being unrun rather than silently empty." },
 
-  { .id = "US_FRED_SOURCES", .name = "Us Fred Sources",
+  { .id = "US_FRED_SOURCES", .name = "US FRED — statistical sources",
     .category = "economy", .portal = "https://api.stlouisfed.org",
     .record_type = "statistical-source",
     .tags = "\"usa\",\"api-key-gated\"",
@@ -814,15 +814,15 @@ static const hp_source HP3B38_USA[] = {
     .interval = 86400,
     .key_env = "FRED_API_KEY",
     .title_keys = "name",
-    .description = "Us Fred Sources. GATED on FRED_API_KEY. Probed 2026-10-06: "
-      "answered HTTP 400 to the literal string DEMO_KEY — FRED "
-      "validates the key format, so the route exists and rejected the "
-      "placeholder. Record count is UNMEASURED until a key is present. "
-      "A row with key_env stores a needs-credential notice through "
-      "_credential_notice.inc until the variable is set, so it is "
-      "honest about being unrun rather than silently empty." },
+    .description = "US FRED — statistical sources. GATED on FRED_API_KEY. Probed "
+      "2026-10-06: answered HTTP 400 to the literal string DEMO_KEY — "
+      "FRED validates the key format, so the route exists and rejected "
+      "the placeholder. Record count is UNMEASURED until a key is "
+      "present. A row with key_env stores a needs-credential notice "
+      "through _credential_notice.inc until the variable is set, so it "
+      "is honest about being unrun rather than silently empty." },
 
-  { .id = "US_FRED_TAGS", .name = "Us Fred Tags",
+  { .id = "US_FRED_TAGS", .name = "US FRED — series tags",
     .category = "economy", .portal = "https://api.stlouisfed.org",
     .record_type = "statistical-tag",
     .tags = "\"usa\",\"api-key-gated\"",
@@ -833,15 +833,15 @@ static const hp_source HP3B38_USA[] = {
     .interval = 86400,
     .key_env = "FRED_API_KEY",
     .title_keys = "name",
-    .description = "Us Fred Tags. GATED on FRED_API_KEY. Probed 2026-10-06: answered "
-      "HTTP 400 to the literal string DEMO_KEY — FRED validates the key "
-      "format, so the route exists and rejected the placeholder. Record "
-      "count is UNMEASURED until a key is present. A row with key_env "
-      "stores a needs-credential notice through _credential_notice.inc "
-      "until the variable is set, so it is honest about being unrun "
-      "rather than silently empty." },
+    .description = "US FRED — series tags. GATED on FRED_API_KEY. Probed 2026-10-06: "
+      "answered HTTP 400 to the literal string DEMO_KEY — FRED "
+      "validates the key format, so the route exists and rejected the "
+      "placeholder. Record count is UNMEASURED until a key is present. "
+      "A row with key_env stores a needs-credential notice through "
+      "_credential_notice.inc until the variable is set, so it is "
+      "honest about being unrun rather than silently empty." },
 
-  { .id = "US_NASA_NEO_BROWSE", .name = "Us Nasa Neo Browse",
+  { .id = "US_NASA_NEO_BROWSE", .name = "NASA — near-Earth object catalogue",
     .category = "research", .portal = "https://api.nasa.gov",
     .record_type = "near-earth-object",
     .tags = "\"usa\",\"api-key-gated\"",
@@ -852,11 +852,11 @@ static const hp_source HP3B38_USA[] = {
     .interval = 86400,
     .key_env = "NASA_API_KEY",
     .title_keys = "name",
-    .description = "Us Nasa Neo Browse. GATED on NASA_API_KEY. Probed 2026-10-06: "
-      "answered HTTP 200 to the shared DEMO_KEY, so its record shape "
-      "was read for real; a production key is still needed for "
-      "sustained use. Record count is UNMEASURED until a key is "
-      "present. A row with key_env stores a needs-credential notice "
+    .description = "NASA — near-Earth object catalogue. GATED on NASA_API_KEY. "
+      "Probed 2026-10-06: answered HTTP 200 to the shared DEMO_KEY, so "
+      "its record shape was read for real; a production key is still "
+      "needed for sustained use. Record count is UNMEASURED until a key "
+      "is present. A row with key_env stores a needs-credential notice "
       "through _credential_notice.inc until the variable is set, so it "
       "is honest about being unrun rather than silently empty." },
 };
