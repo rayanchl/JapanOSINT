@@ -201,7 +201,7 @@ char *semsearchapi_query(db_handle *db, const char *tenant, const char *q,
   if (embed_index_refused(db, why, sizeof why))
     return fail(status, 503, "semantic_unavailable", why, embed_coverage_json(db));
   char live[256];
-  if (embed_live_model(live, sizeof live) != 0)
+  if (embed_live_query_model(live, sizeof live) != 0)
     return fail(status, 502, "embedding_model_unverified", live,
                 embed_coverage_json(db));
   if (model[0] && strcmp(model, live) != 0) {
@@ -221,8 +221,11 @@ char *semsearchapi_query(db_handle *db, const char *tenant, const char *q,
   struct timespec t0; clock_gettime(CLOCK_MONOTONIC, &t0);
   char *qb = embed_bound_text(q);
   if (!qb) return fail(status, 500, "server_error", NULL, NULL);
-  llm_client llm = { .http = NULL, .base_url = base, .interactive = 1,
-                     .bound_queue_wait = 1 };
+  /* JO_EMBED_QUERY_URL (default JO_EMBED_URL): with a slot of its own the
+   * query never meets the backfill's queue at all; the model it serves was
+   * checked against the index's just above. */
+  llm_client llm = { .http = NULL, .base_url = embed_query_url(),
+                     .interactive = 1, .bound_queue_wait = 1 };
   const char *texts[1] = { qb };
   float *qv = NULL; int qdim = 0; llm_status st;
   int erc = llm_embed(&llm, texts, 1, &qv, &qdim, 15000, &st);

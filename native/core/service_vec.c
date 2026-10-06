@@ -615,7 +615,7 @@ char *service_vec_catalogue_bounded(db_handle *db, const char *query, int k,
   {
     char live[256];
     char *have = svec_meta_get(db, "model");
-    int same = have && embed_live_model(live, sizeof live) == 0 &&
+    int same = have && embed_live_query_model(live, sizeof live) == 0 &&
                !strcmp(have, live);
     if (!same)
       fprintf(stderr, "[svec] index model '%s' is not the server's (%s) — "
@@ -629,7 +629,7 @@ char *service_vec_catalogue_bounded(db_handle *db, const char *query, int k,
   if (!qb) return NULL;
   /* bound_queue_wait: this runs inside a user's search, and the embedding
    * worker is shared with the backfill pod's 120 s batches. */
-  llm_client llm = { .http = NULL, .base_url = embed_base_url(), .interactive = 1,
+  llm_client llm = { .http = NULL, .base_url = embed_query_url(), .interactive = 1,
                      .bound_queue_wait = 1 };
   const char *texts[1] = { qb };
   float *qv = NULL; int qdim = 0; llm_status st;

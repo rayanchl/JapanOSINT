@@ -88,7 +88,22 @@ static int note_llm_stage(osint_request *rp, const char *stage,
                           const char *raw, int parsed_ok) {
   char detail[384];
   if (st != LLM_OK) {
-    if (st == LLM_ERR_HTTP)
+    /* Queue time and HTTP time, separately: "ran out its budget" after 200 s
+     * in the queue and 2 s on the wire is a contention problem, not a slow
+     * model, and the two used to be one number. */
+    long qms = 0, hms = 0;
+    llm_last_call_timing(&qms, &hms);
+    if (st == LLM_ERR_QUEUE_TIMEOUT || st == LLM_ERR_QUEUE_FULL)
+      snprintf(detail, sizeof detail,
+               "%s was never asked: %s (waited %ld ms) — other LLM jobs on "
+               "this server were ahead of it; fewer concurrent searches, a "
+               "second --parallel slot or JO_LLM_QUEUE_MAX/"
+               "JO_LLM_QUEUE_WAIT_FACTOR are the levers, not the model",
+               base_url ? base_url : "(unset)",
+               st == LLM_ERR_QUEUE_FULL ? "its queue was full"
+                                        : "its queue deadline passed",
+               qms);
+    else if (st == LLM_ERR_HTTP)
       snprintf(detail, sizeof detail,
                "llama-server at %s answered HTTP %ld for this stage — if it is "
                "%d, the prompt did not fit the server's --ctx-size; the server "
@@ -98,15 +113,16 @@ static int note_llm_stage(osint_request *rp, const char *stage,
     else if (st == LLM_ERR_TIMEOUT)
       snprintf(detail, sizeof detail,
                "the call to %s ran out its %d ms budget "
-               "(JO_LLM_TIMEOUT_MS) — llama-server is reachable but did not "
+               "(JO_LLM_TIMEOUT_MS) after %ld ms in HTTP (%ld ms queued "
+               "before it) — llama-server is reachable but did not "
                "finish in time; a CPU-only host needs far longer than a "
                "GPU-offloaded one for a prompt this size",
-               base_url ? base_url : "(unset)", llm_timeout_ms());
+               base_url ? base_url : "(unset)", llm_timeout_ms(), hms, qms);
     else if (st == LLM_ERR_UNREACHABLE)
       snprintf(detail, sizeof detail,
                "no LLM reachable at %s (LLM_BASE_URL) — llama-server is not "
-               "running or is not listening there",
-               base_url ? base_url : "(unset)");
+               "running or is not listening there (%ld ms queued, %ld ms "
+               "HTTP)", base_url ? base_url : "(unset)", qms, hms);
     else if (st == LLM_ERR_BAD_REQUEST)
       /* Ours, not the model host's — the prompt could not even be built into a
        * request. Saying "llama-server returned no content" here would send an

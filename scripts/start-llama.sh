@@ -84,6 +84,17 @@ LLAMA_CTX="${LLAMA_CTX:-32768}"
 # --ubatch-size must hold the LONGEST input: embedding models run non-causal
 # attention over the whole prompt in one micro-batch; JO_EMBED_MAX_CHARS
 # (default 1000 bytes) is well inside 2048 tokens.
+#
+# The CONTEXT must hold a whole BATCH, not one input — the rule launch.sh's
+# cmd_llama_embed states and measured: a hardcoded 2048 fits one 1000-byte
+# text and not the 32 the embed pod sends per request (JO_EMBED_BATCH), so
+# the batch ran out core/embed_pod.c's 120 s and came back llm_timeout. This
+# script still said 2048 after launch.sh was fixed. bge-m3 is trained at
+# 8192. --parallel 2 gives user queries a slot of their own (export
+# JO_EMBED_QUERY_URL as below); --ctx-size is divided across slots, hence the
+# product.
+LLAMA_EMBED_CTX="${LLAMA_EMBED_CTX:-8192}"
+LLAMA_EMBED_PARALLEL="${LLAMA_EMBED_PARALLEL:-2}"
 LLAMA_EMBED_PORT="${LLAMA_EMBED_PORT:-8082}"
 LLAMA_EMBED_MODEL="${LLAMA_EMBED_MODEL:-$REPO_ROOT/models/bge-m3-Q8_0.gguf}"
 if curl -s "http://localhost:${LLAMA_EMBED_PORT}/health" >/dev/null 2>&1; then
@@ -94,10 +105,14 @@ elif [ ! -f "$LLAMA_EMBED_MODEL" ]; then
   echo "  or set LLAMA_EMBED_MODEL. /api/intel/semantic answers 503 until then." >&2
 else
   EMBED_ARGS=( -m "$LLAMA_EMBED_MODEL" --port "$LLAMA_EMBED_PORT" --host 127.0.0.1
-               --embedding --ctx-size 2048 --batch-size 2048 --ubatch-size 2048 )
+               --embedding --parallel "$LLAMA_EMBED_PARALLEL"
+               --ctx-size "$((LLAMA_EMBED_CTX * LLAMA_EMBED_PARALLEL))"
+               --batch-size "$LLAMA_EMBED_CTX" --ubatch-size "$LLAMA_EMBED_CTX" )
   [ -n "${LLAMA_EMBED_POOLING:-}" ] && EMBED_ARGS+=( --pooling "$LLAMA_EMBED_POOLING" )
   echo "[start-llama] launching embedding llama-server :${LLAMA_EMBED_PORT} (model: $LLAMA_EMBED_MODEL)"
   echo "  export JO_EMBED_URL=http://127.0.0.1:${LLAMA_EMBED_PORT} for the C binary's embedding pod"
+  [ "$LLAMA_EMBED_PARALLEL" -ge 2 ] && \
+    echo "  export JO_EMBED_QUERY_URL=http://127.0.0.1:${LLAMA_EMBED_PORT}/ so queries use the second slot"
   nohup "$LLAMA_BIN" "${EMBED_ARGS[@]}" >"${LLAMA_EMBED_LOG:-/tmp/llama-embed.log}" 2>&1 &
 fi
 

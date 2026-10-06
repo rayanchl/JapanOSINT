@@ -61,6 +61,16 @@
 /* The configured embedding base URL, or NULL when the pod is disabled. */
 const char *embed_base_url(void);
 
+/* Where QUERY-TIME embeds go (a user's semantic query, the service-routing
+ * catalogue query): JO_EMBED_QUERY_URL when set, else JO_EMBED_URL; NULL when
+ * JO_EMBED_URL is unset. core/llm_worker.c gives every distinct base_url
+ * string its own worker thread, so a query URL that differs from
+ * JO_EMBED_URL never queues behind a backfill batch — point it at a second
+ * instance, or at a --parallel 2 llama-server's second slot under a different
+ * spelling (launch.sh uses a trailing '/', which url_join strips from the
+ * request but which keys a separate worker). */
+const char *embed_query_url(void);
+
 /* 1 when the vec0 table exists on this connection (i.e. at least one run has
  * created it), else 0. semsearchapi uses it to answer an honest 503 rather
  * than a prepare error. */
@@ -88,6 +98,13 @@ int embed_detect_model(struct http_client *http, const char *base, char *out,
  * answers cached for a few seconds — for request paths that compare the live
  * model with the one an index was built with on every query. */
 int embed_live_model(char *out, size_t cap);
+
+/* embed_live_model(), plus — when JO_EMBED_QUERY_URL names a different URL —
+ * proof that the query server serves the same model as JO_EMBED_URL (both
+ * asked over /v1/models). Returns -1 with `out` holding the reason when the
+ * two disagree or either cannot be asked: the query side must then refuse,
+ * because its vectors would not share the index's space. */
+int embed_live_query_model(char *out, size_t cap);
 
 /* Build the `coverage` object for a semantic response:
  *   {enabled, model, dim, embedded_count, eligible_count, failed_count,

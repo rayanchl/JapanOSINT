@@ -629,7 +629,9 @@ static void test_bounded_queue_wait(void) {
   long long t0 = wall_ms();
   int rc = llm_embed(&c, t, 1, &v, &d, 800, &st);
   long long took = wall_ms() - t0;
-  assert(rc != 0 && st == LLM_ERR_TIMEOUT);
+  /* LLM_ERR_QUEUE_TIMEOUT, not LLM_ERR_TIMEOUT: it was never sent, and
+   * calling that a timeout tells an operator the model is slow. */
+  assert(rc != 0 && st == LLM_ERR_QUEUE_TIMEOUT);
   assert(took < 1500);                      /* not the ~2.7 s left of the batch */
   pthread_join(th, NULL);
   assert(r.rc == 0);                        /* the background job was unharmed */
@@ -639,6 +641,99 @@ static void test_bounded_queue_wait(void) {
   free(v);
   printf("  bounded queue wait: gave up after %lld ms behind a 3 s batch, "
          "worker intact: ok\n", took);
+}
+
+/* ---- F6: the query slot (JO_EMBED_QUERY_URL) ----------------------------- */
+
+/* A second stub on its own control file, so it can serve a different model. */
+static pid_t stub2_start(int port, const char *ctl) {
+  for (int tries = 0; tries < 40 && answers(port); tries++) port++;
+  pid_t p = fork();
+  if (p < 0) return -1;
+  if (p == 0) {
+    char ps[16];
+    snprintf(ps, sizeof ps, "%d", port);
+    setenv("P", ps, 1); setenv("CTL", ctl, 1);
+    if (!freopen("/dev/null", "w", stderr)) { /* stub noise is harmless */ }
+    execlp("python3", "python3", g_py, (char *)NULL);
+    _exit(127);
+  }
+  for (int i = 0; i < 100; i++) {
+    if (answers(port)) { char u[64]; snprintf(u, sizeof u, "%d", port); setenv("STUB2_PORT", u, 1); return p; }
+    usleep(100000);
+  }
+  kill(p, SIGKILL); waitpid(p, NULL, 0);
+  return -1;
+}
+
+static void test_query_slot(void) {
+  url_env();
+  setenv("JO_EMBED_MODEL_CHECK_TTL_MS", "0", 1);
+  char live[600];
+  const char *base = getenv("JO_EMBED_URL");
+
+  /* unset: queries share JO_EMBED_URL */
+  unsetenv("JO_EMBED_QUERY_URL");
+  assert(!strcmp(embed_query_url(), base));
+  assert(embed_live_query_model(live, sizeof live) == 0);
+
+  /* the same server under a second spelling (launch.sh's --parallel 2 slot):
+   * same model by construction, and a worker of its own — so a query does
+   * not wait behind a background batch on JO_EMBED_URL's worker. */
+  char q[160];
+  snprintf(q, sizeof q, "%s/", base);
+  setenv("JO_EMBED_QUERY_URL", q, 1);
+  assert(!strcmp(embed_query_url(), q));
+  assert(embed_live_query_model(live, sizeof live) == 0);
+  ctl_write("\"delay\":2");
+  bg_res r = { -9 };
+  pthread_t th;
+  assert(pthread_create(&th, NULL, bg_embed, &r) == 0);
+  usleep(300000);                           /* the batch holds JO_EMBED_URL's worker */
+  llm_client c = { .http = NULL, .base_url = embed_query_url(),
+                   .interactive = 1, .bound_queue_wait = 1 };
+  const char *t[1] = { "user query" };
+  float *v = NULL; int d = 0; llm_status st = LLM_OK;
+  long long t0 = wall_ms();
+  int rc = llm_embed(&c, t, 1, &v, &d, 3500, &st);
+  long long took = wall_ms() - t0;
+  free(v);
+  /* queued behind the batch it would need ~1.7 s + 2 s > its 3.5 s budget */
+  assert(rc == 0 && took < 3000);
+  pthread_join(th, NULL);
+  assert(r.rc == 0);
+  ctl_write("");
+
+  /* nothing answering on the query URL: cannot verify, refuse */
+  setenv("JO_EMBED_QUERY_URL", "http://127.0.0.1:1", 1);
+  assert(embed_live_query_model(live, sizeof live) != 0);
+  assert(strstr(live, "JO_EMBED_QUERY_URL"));
+
+  /* a second instance serving a DIFFERENT model: refuse, even though
+   * JO_EMBED_MODEL pins a name (the pin says what the index was built with;
+   * it cannot vouch for what a second server serves) */
+  char ctl2[300];
+  snprintf(ctl2, sizeof ctl2, "%s.2", g_ctl);
+  FILE *f = fopen(ctl2, "w");
+  assert(f);
+  fputs("{\"model\":\"other-model.gguf\"}", f);
+  fclose(f);
+  pid_t p2 = stub2_start(g_port + 50, ctl2);
+  if (p2 > 0) {
+    char u2[64];
+    snprintf(u2, sizeof u2, "http://127.0.0.1:%s", getenv("STUB2_PORT"));
+    setenv("JO_EMBED_QUERY_URL", u2, 1);
+    assert(embed_live_query_model(live, sizeof live) != 0);
+    assert(strstr(live, "other-model.gguf") && strstr(live, "refused"));
+    setenv("JO_EMBED_MODEL", "stub-a.gguf", 1);
+    assert(embed_live_query_model(live, sizeof live) != 0);
+    unsetenv("JO_EMBED_MODEL");
+    kill(p2, SIGKILL); waitpid(p2, NULL, 0);
+  } else printf("  (second stub unavailable: model-mismatch case skipped)\n");
+  unsetenv("JO_EMBED_QUERY_URL");
+  unsetenv("JO_EMBED_MODEL_CHECK_TTL_MS");
+  printf("  query slot: own worker (%lld ms beside a 2 s batch), unverifiable "
+         "or different model refused: ok\n", took);
 }
 
 int main(void) {
@@ -672,6 +767,7 @@ int main(void) {
   test_orphan_vec_row();
   test_query_side();
   test_bounded_queue_wait();
+  test_query_slot();
 
   stub_stop();
   db_close(&g_db);

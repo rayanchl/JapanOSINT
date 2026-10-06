@@ -122,6 +122,8 @@ static void test_llm_failures_are_named_not_collapsed(void) {
     { LLM_ERR_HTTP,        "llm_http_error"  },
     { LLM_ERR_EMPTY,       "llm_empty_response" },
     { LLM_ERR_BAD_REQUEST, "llm_bad_request" },
+    { LLM_ERR_QUEUE_TIMEOUT, "llm_queue_timeout" },
+    { LLM_ERR_QUEUE_FULL,  "llm_queue_full" },
   };
   for (unsigned i = 0; i < sizeof cases / sizeof *cases; i++) {
     char id[64];
