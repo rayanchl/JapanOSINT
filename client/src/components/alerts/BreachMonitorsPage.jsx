@@ -5,6 +5,9 @@ import { api, errorMessage, ApiError } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
 import { usePaged } from '../../hooks/useCases.js';
 import { relativeTime, fmtAbs } from '../../utils/time.js';
+import { useAuth } from '../../auth/AuthContext.jsx';
+import { canWriteWorkspace, isWorkspaceAdmin, readOnlyNote } from '../../auth/roles.js';
+import { useMemberNames, authorLabel } from '../../hooks/useMembers.js';
 import {
   Page, Section, Card, Pill, Button, Input, Field, Select, Sheet, ConfirmDialog, ErrorNotice, EmptyState,
   LoadingState, BoundNote, CopyButton, KV, toast, cx,
@@ -12,7 +15,7 @@ import {
 
 /**
  * Breach exposure monitors — port of iOS `BreachMonitorsView`.
- *   GET  /api/breach-monitors?limit&cursor → {data:[{id,kind,label,rule_id,value_domain,created_at,last_checked_at,hash_prefix,delivers}], page}
+ *   GET  /api/breach-monitors?limit&cursor → {data:[{id,kind,label,rule_id,value_domain,created_by,created_at,last_checked_at,hash_prefix,delivers}], page}
  *   POST /api/breach-monitors {kind: email|domain|username|phone, value, label?}
  *        403 {error:"domain_not_verified", remedy} · 409 {error:"already_monitored", id}
  *   GET  /api/breach-monitors/:id/hits?limit&cursor → {data:[{uid,type,breach_id,has_secret,count,first_seen,breach:{…}}], page:{next_cursor,limit}, meta:{count}}
@@ -20,6 +23,12 @@ import {
  *   DELETE /api/breach-monitors/:id
  *   GET/POST /api/breach-monitors/domains {domain} → TXT token · POST /domains/verify {domain}
  * Only a hash of the identifier is stored; the server never returns the value.
+ *
+ * Monitors belong to the workspace: every member sees all of them, each naming
+ * who added it. breach_monitor.c gates on the ROLE, not the author: delete,
+ * rescan and the domain proofs need analyst or above (any monitor); adding one
+ * needs owner/admin, or an analyst whose identifier sits under a domain this
+ * workspace has verified (the server's 403 says which).
  */
 const KINDS = [
   { value: 'email', label: 'Email address' },
@@ -29,6 +38,11 @@ const KINDS = [
 ];
 
 export default function BreachMonitorsPage() {
+  const auth = useAuth();
+  const names = useMemberNames();
+  const myId = auth.me?.user?.id;
+  const canWrite = canWriteWorkspace(auth.role);
+  const roNote = readOnlyNote(auth.role, 'monitor');
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(null);
   const [error, setError] = useState(null);
@@ -68,14 +82,15 @@ export default function BreachMonitorsPage() {
       actions={(
         <>
           <Button onClick={() => load()} title="Reload"><LuRefreshCw size={13} /></Button>
-          <Button variant="primary" onClick={() => setAdding(true)}><LuShieldPlus size={13} /> Add monitor</Button>
+          {canWrite && <Button variant="primary" onClick={() => setAdding(true)}><LuShieldPlus size={13} /> Add monitor</Button>}
         </>
       )}
     >
+      {roNote && <div className="text-[11px] text-osint-muted">{roNote}</div>}
       {error && <ErrorNotice error={error} title="Could not load monitors" onRetry={() => load()} />}
       {loading && rows.length === 0 && !error && <LoadingState label="Loading monitors…" />}
       {!loading && !error && rows.length === 0 && (
-        <EmptyState title="No monitors yet" action={<Button variant="primary" onClick={() => setAdding(true)}>Watch an identifier</Button>}>
+        <EmptyState title="No monitors yet" action={canWrite ? <Button variant="primary" onClick={() => setAdding(true)}>Watch an identifier</Button> : null}>
           Add an email, domain, username or phone. New breach records that contain it raise an inbox event; the identifier itself is stored as a hash.
         </EmptyState>
       )}
@@ -95,12 +110,12 @@ export default function BreachMonitorsPage() {
                     <LuLock size={10} /> only a hash is stored{m.hash_prefix ? ` · ${m.hash_prefix}` : ''}{m.value_domain ? ` · ${m.value_domain}` : ''}
                   </div>
                   <div className="text-[11px] text-osint-muted mt-0.5" title={fmtAbs(m.last_checked_at)}>
-                    WATCHING since {relativeTime(m.created_at)} · last checked {m.last_checked_at ? relativeTime(m.last_checked_at) : 'never'}
+                    WATCHING since {relativeTime(m.created_at)} · added by <span title={m.created_by || undefined}>{authorLabel(m, names, { userId: myId })}</span> · last checked {m.last_checked_at ? relativeTime(m.last_checked_at) : 'never'}
                   </div>
                 </div>
                 <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
                   <CopyButton text={m.id} label="Copy id" />
-                  <Button size="sm" variant="ghost" busy={busy === m.id} onClick={() => setConfirmDel(m)} title="Delete"><LuTrash2 size={12} /></Button>
+                  {canWrite && <Button size="sm" variant="ghost" busy={busy === m.id} onClick={() => setConfirmDel(m)} title="Delete"><LuTrash2 size={12} /></Button>}
                 </div>
               </button>
               {open?.id === m.id && <MonitorHits monitor={m} />}
@@ -113,9 +128,9 @@ export default function BreachMonitorsPage() {
         </div>
       )}
 
-      <DomainsSection />
+      <DomainsSection canWrite={canWrite} />
 
-      <AddMonitorSheet open={adding} onClose={() => setAdding(false)} onCreated={(row) => { setAdding(false); setRows((xs) => [row, ...xs]); }} />
+      <AddMonitorSheet open={adding} adminRole={isWorkspaceAdmin(auth.role)} onClose={() => setAdding(false)} onCreated={(row) => { setAdding(false); setRows((xs) => [row, ...xs]); }} />
 
       <ConfirmDialog
         open={confirmDel != null}
@@ -181,7 +196,7 @@ function MonitorHits({ monitor }) {
 }
 
 /** Domain ownership proofs — prerequisite for monitoring identifiers under a domain. */
-function DomainsSection() {
+function DomainsSection({ canWrite }) {
   const { data, error, loading, reload } = useApi('/api/breach-monitors/domains');
   const domains = Array.isArray(data?.data) ? data.data : [];
   const [domain, setDomain] = useState('');
@@ -215,7 +230,7 @@ function DomainsSection() {
   return (
     <Section label="Verified domains" right={<Button size="sm" variant="ghost" onClick={() => reload()}><LuRefreshCw size={11} /></Button>}>
       <div className="space-y-2 text-xs">
-        <div className="text-osint-muted">Monitoring an email or a domain requires proving control of the domain: publish the TXT record the server issues, then verify.</div>
+        <div className="text-osint-muted">An analyst may monitor an email or a domain once this workspace has proved control of the domain: publish the TXT record the server issues, then verify. Owners and admins may monitor without it; every creation is audited.</div>
         {error && <ErrorNotice error={error} title="Could not load domains" onRetry={reload} />}
         {loading && !data && <LoadingState label="Loading domains…" />}
         {domains.length > 0 && (
@@ -228,15 +243,17 @@ function DomainsSection() {
                 {d.last_error && !d.verified && <span className="text-neon-red truncate max-w-[40%]" title={d.last_error}>{d.last_error}</span>}
                 <span className="flex-1" />
                 {!d.verified && d.txt_record && <CopyButton text={d.txt_record} label="Copy TXT" />}
-                {!d.verified && <Button size="sm" busy={busy === d.domain} onClick={() => verify(d.domain)}>Verify now</Button>}
+                {!d.verified && canWrite && <Button size="sm" busy={busy === d.domain} onClick={() => verify(d.domain)}>Verify now</Button>}
               </li>
             ))}
           </ul>
         )}
-        <div className="flex gap-2">
-          <Input mono value={domain} onChange={(e) => setDomain(e.target.value)} placeholder="example.co.jp" onKeyDown={(e) => { if (e.key === 'Enter') claim(); }} />
-          <Button busy={busy === 'claim'} disabled={!domain.trim()} onClick={claim}>Claim domain</Button>
-        </div>
+        {canWrite && (
+          <div className="flex gap-2">
+            <Input mono value={domain} onChange={(e) => setDomain(e.target.value)} placeholder="example.co.jp" onKeyDown={(e) => { if (e.key === 'Enter') claim(); }} />
+            <Button busy={busy === 'claim'} disabled={!domain.trim()} onClick={claim}>Claim domain</Button>
+          </div>
+        )}
         {issued && (
           <div className="rounded-md border border-accent/40 bg-accent/10 p-2 space-y-1">
             <div className="text-accent font-medium">Publish this TXT record for {issued.domain}, then verify.</div>
@@ -251,7 +268,7 @@ function DomainsSection() {
   );
 }
 
-function AddMonitorSheet({ open, onClose, onCreated }) {
+function AddMonitorSheet({ open, adminRole, onClose, onCreated }) {
   const [kind, setKind] = useState('email');
   const [value, setValue] = useState('');
   const [label, setLabel] = useState('');
@@ -291,6 +308,7 @@ function AddMonitorSheet({ open, onClose, onCreated }) {
           <Input mono value={value} onChange={(e) => setValue(e.target.value)} placeholder={kind === 'email' ? 'ceo@example.co.jp' : kind === 'domain' ? 'example.co.jp' : kind === 'phone' ? '+81 90 …' : 'handle'} />
         </Field>
         <Field label="Label (optional)"><Input value={label} onChange={(e) => setLabel(e.target.value)} placeholder="e.g. CEO personal address" maxLength={200} /></Field>
+        {!adminRole && <div className="text-[11px] text-osint-muted">As an analyst you can watch an email address or domain under a domain this workspace has verified. A username, a phone number or an unverified domain needs a workspace owner or admin.</div>}
         {remedy && <div className="rounded-md border border-accent/40 bg-accent/10 px-3 py-2 text-xs text-accent">{remedy}</div>}
         {error && <ErrorNotice error={error} title="Could not add monitor" />}
         <KV pairs={[['stored', 'SHA-1 hash + 10-char prefix'], ['matches', 'raise an inbox event; add a channel via the rule to deliver']]} />

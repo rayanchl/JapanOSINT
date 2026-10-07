@@ -4,6 +4,9 @@ import { LuRefreshCw, LuMapPin, LuPencil, LuTrash2, LuBellRing, LuPenTool } from
 import { api, errorMessage } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
 import { relativeTime, fmtAbs } from '../../utils/time.js';
+import { useAuth } from '../../auth/AuthContext.jsx';
+import { canWriteWorkspace, readOnlyNote } from '../../auth/roles.js';
+import { useMemberNames, authorLabel } from '../../hooks/useMembers.js';
 import {
   Page, Card, Pill, Button, Input, TextArea, Field, Segmented, Sheet, ConfirmDialog, ErrorNotice, EmptyState,
   LoadingState, BoundNote, CopyButton, toast, cx,
@@ -11,16 +14,26 @@ import {
 
 /**
  * Areas of interest — port of iOS `AOIListView`.
- *   GET /api/aoi?limit&cursor → {data:[{id,name,kind,geometry,bbox:[w,s,e,n],created_at}], page:{next_cursor}}
+ *   GET /api/aoi?limit&cursor → {data:[{id,name,kind,geometry,bbox:[w,s,e,n],created_by,created_at}], page:{next_cursor}}
  *   POST /api/aoi {name, kind: bbox|polygon|circle, geometry}
  *     bbox     → [w, s, e, n]
  *     circle   → {lat, lon, radius_m}
  *     polygon  → ring of [lon, lat]
  *   PATCH /api/aoi/:id {name} (merge; shape untouched) · DELETE (409 while a rule references it)
  * Drawing happens on the map (`/?aoi=new`); this page creates from text.
+ *
+ * Every member sees every area, and each names who drew it (`created_by`).
+ * Creating, renaming and deleting are role-gated, not author-gated: aoiapi.c
+ * can_write() lets any analyst, admin or owner change ANY area and refuses a
+ * viewer, so the buttons follow the role.
  */
 export default function AOIPage() {
   const navigate = useNavigate();
+  const auth = useAuth();
+  const names = useMemberNames();
+  const myId = auth.me?.user?.id;
+  const canWrite = canWriteWorkspace(auth.role);
+  const roNote = readOnlyNote(auth.role, 'area');
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(null);
   const [error, setError] = useState(null);
@@ -60,15 +73,16 @@ export default function AOIPage() {
       actions={(
         <>
           <Button onClick={() => load()} title="Refresh areas"><LuRefreshCw size={13} /></Button>
-          <Button onClick={() => navigate('/?aoi=new')} title="Draw a new area on the map"><LuPenTool size={13} /> Draw on map</Button>
-          <Button variant="primary" onClick={() => setCreating(true)}><LuMapPin size={13} /> New area</Button>
+          {canWrite && <Button onClick={() => navigate('/?aoi=new')} title="Draw a new area on the map"><LuPenTool size={13} /> Draw on map</Button>}
+          {canWrite && <Button variant="primary" onClick={() => setCreating(true)}><LuMapPin size={13} /> New area</Button>}
         </>
       )}
     >
+      {roNote && <div className="text-[11px] text-osint-muted">{roNote}</div>}
       {error && <ErrorNotice error={error} title="Could not load areas" onRetry={() => load()} />}
       {loading && rows.length === 0 && !error && <LoadingState label="Loading areas…" />}
       {!loading && !error && rows.length === 0 && (
-        <EmptyState title="No saved areas" action={<div className="flex gap-2 justify-center"><Button onClick={() => navigate('/?aoi=new')}>Draw an area</Button><Button variant="primary" onClick={() => setCreating(true)}>Enter coordinates</Button></div>}>
+        <EmptyState title="No saved areas" action={canWrite ? <div className="flex gap-2 justify-center"><Button onClick={() => navigate('/?aoi=new')}>Draw an area</Button><Button variant="primary" onClick={() => setCreating(true)}>Enter coordinates</Button></div> : null}>
           Draw a polygon, circle or box on the map, or paste GeoJSON here. Then reference it from an alert rule.
         </EmptyState>
       )}
@@ -84,14 +98,14 @@ export default function AOIPage() {
                     <Pill tone="cyan">{a.kind}</Pill>
                   </div>
                   <div className="text-[11px] text-osint-muted font-mono mt-0.5">{geometrySummary(a)}</div>
-                  <div className="text-[11px] text-osint-muted mt-0.5" title={fmtAbs(a.created_at)}>Added {relativeTime(a.created_at)} · <span className="font-mono">{a.id}</span></div>
+                  <div className="text-[11px] text-osint-muted mt-0.5"><span title={fmtAbs(a.created_at)}>Added {relativeTime(a.created_at)}</span> by <span title={a.created_by || undefined}>{authorLabel(a, names, { userId: myId })}</span> · <span className="font-mono">{a.id}</span></div>
                 </div>
                 <div className="flex items-center gap-1 flex-wrap">
                   <Button size="sm" onClick={() => navigate(`/?aoi=${encodeURIComponent(a.id)}`)} title="Show on map"><LuMapPin size={12} /> Map</Button>
-                  <Link to={`/console/alerts?aoi=${encodeURIComponent(a.id)}`}><Button size="sm" title="Alert on this area"><LuBellRing size={12} /> Alert</Button></Link>
-                  <Button size="sm" onClick={() => setRenaming(a)} title="Rename"><LuPencil size={12} /></Button>
+                  {canWrite && <Link to={`/console/alerts?aoi=${encodeURIComponent(a.id)}`}><Button size="sm" title="Alert on this area"><LuBellRing size={12} /> Alert</Button></Link>}
+                  {canWrite && <Button size="sm" onClick={() => setRenaming(a)} title="Rename"><LuPencil size={12} /></Button>}
                   <CopyButton text={a.id} label="Copy id" />
-                  <Button size="sm" variant="ghost" busy={busy === a.id} onClick={() => setConfirmDel(a)} title="Delete"><LuTrash2 size={12} /></Button>
+                  {canWrite && <Button size="sm" variant="ghost" busy={busy === a.id} onClick={() => setConfirmDel(a)} title="Delete"><LuTrash2 size={12} /></Button>}
                 </div>
               </div>
             </Card>

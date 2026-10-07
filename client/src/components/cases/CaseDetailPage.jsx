@@ -6,8 +6,9 @@ import { useApi } from '../../hooks/useApi.js';
 import { useAuth } from '../../auth/AuthContext.jsx';
 import {
   usePaged, CASE_STATUSES, CaseStatus, CASE_PRIORITIES, CasePriority, CaseRefType, CaseActivityKind,
-  CASE_ROLES, refLink, downloadBlob, filenameFromDisposition,
+  CASE_ROLES, refLink, downloadBlob, filenameFromDisposition, caseCanWrite, caseCanDelete, caseCanManageRoster,
 } from '../../hooks/useCases.js';
+import { useMemberNames, authorLabel } from '../../hooks/useMembers.js';
 import {
   Page, Section, Card, Pill, Button, Input, TextArea, Field, Select, Segmented, Sheet,
   ErrorNotice, EmptyState, LoadingState, BoundNote, CopyButton, cx, toast,
@@ -30,6 +31,9 @@ export default function CaseDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const auth = useAuth();
+  const names = useMemberNames();
+  const myId = auth.me?.user?.id;
+  const who = (userId) => authorLabel({ user_id: userId }, names, { userId: myId });
   const [pane, setPane] = useState('findings');
   const [showEdit, setShowEdit] = useState(false);
   const [showReport, setShowReport] = useState(false);
@@ -39,9 +43,12 @@ export default function CaseDetailPage() {
   const { data, error, loading, reload, setData } = useApi(detailPath, { deps: [id] });
   const c = data?.data ?? null;
 
-  const myRole = c?.my_case_role;
-  const canWrite = auth.canManageWorkspace || myRole === 'lead' || myRole === 'contributor' || myRole == null;
-  const canManageRoster = auth.canManageWorkspace || myRole === 'lead';
+  // casesapi.c's gates, exactly (useCases.js): not "the author", and not
+  // "anyone not on the roster" — a workspace viewer off the roster is refused.
+  const myRole = c?.my_case_role ?? null;
+  const canWrite = caseCanWrite(auth.role, myRole);
+  const canDelete = caseCanDelete(auth.role, myRole);
+  const canManageRoster = caseCanManageRoster(auth.role, myRole);
 
   const onSaved = (updated) => { setData({ ...data, data: { ...c, ...updated } }); setShowEdit(false); };
 
@@ -66,15 +73,17 @@ export default function CaseDetailPage() {
         <span className="font-mono">
           created {relativeTime(c.created_at)} · updated {relativeTime(c.updated_at)}
           {c.closed_at && <> · closed {fmtAbs(c.closed_at)}</>}
-          {c.created_by && <> · by {c.created_by}</>}
+          <> · by <span title={c.created_by || undefined}>{authorLabel(c, names, { userId: myId })}</span></>
         </span>
       ) : null}
       actions={c && (
         <>
           <Button onClick={reload} title="Reload case"><LuRefreshCw size={13} /></Button>
           <Button onClick={() => setShowReport(true)}><LuFileText size={13} /> Report</Button>
-          <Button disabled={!canWrite} onClick={() => setShowEdit(true)}><LuPencil size={13} /> Edit</Button>
-          <Button variant="danger" disabled={!canWrite} onClick={() => setShowDelete(true)}><LuTrash2 size={13} /></Button>
+          <Button disabled={!canWrite} onClick={() => setShowEdit(true)}
+            title={canWrite ? 'Edit case' : 'Editing needs the analyst role or above, or a place on this case’s roster'}><LuPencil size={13} /> Edit</Button>
+          <Button variant="danger" disabled={!canDelete} onClick={() => setShowDelete(true)} aria-label="Delete case"
+            title={canDelete ? 'Delete case' : 'Only a workspace owner or admin, or the case lead, can delete a case'}><LuTrash2 size={13} /></Button>
         </>
       )}
     >
@@ -103,9 +112,9 @@ export default function CaseDetailPage() {
             }))} />
           </div>
 
-          {pane === 'findings' && <FindingsPane caseId={id} counts={c.item_counts} canWrite={canWrite} onChanged={reload} />}
-          {pane === 'notes' && <NotesPane caseId={id} canWrite={canWrite} />}
-          {pane === 'activity' && <ActivityPane caseId={id} canWrite={canWrite} />}
+          {pane === 'findings' && <FindingsPane caseId={id} counts={c.item_counts} canWrite={canWrite} onChanged={reload} who={who} />}
+          {pane === 'notes' && <NotesPane caseId={id} canWrite={canWrite} who={who} />}
+          {pane === 'activity' && <ActivityPane caseId={id} canWrite={canWrite} who={who} />}
           {pane === 'members' && <MembersPane caseId={id} members={c.members || []} canManage={canManageRoster} onChanged={reload} />}
         </>
       )}
@@ -119,7 +128,7 @@ export default function CaseDetailPage() {
 
 /* ── Findings ───────────────────────────────────────────────────────────── */
 
-function FindingsPane({ caseId, counts, canWrite, onChanged }) {
+function FindingsPane({ caseId, counts, canWrite, onChanged, who }) {
   const [refType, setRefType] = useState('');
   const path = `/api/cases/${encodeURIComponent(caseId)}/items${refType ? `?ref_type=${encodeURIComponent(refType)}` : ''}`;
   const { rows, setRows, hasMore, error, loading, loadingMore, reload, loadMore } = usePaged(path, { limit: 100, deps: [refType] });
@@ -164,7 +173,7 @@ function FindingsPane({ caseId, counts, canWrite, onChanged }) {
       {grouped.map(([type, items]) => (
         <Section key={type} label={`${CaseRefType.label(type)} · ${items.length}`} padded={false}>
           <ul className="divide-y divide-osint-border">
-            {items.map((it) => <FindingRow key={`${it.ref_type}:${it.ref_id}`} item={it} canWrite={canWrite} busy={busyKey === `${it.ref_type}:${it.ref_id}`} onUnpin={() => unpin(it)} />)}
+            {items.map((it) => <FindingRow key={`${it.ref_type}:${it.ref_id}`} item={it} canWrite={canWrite} who={who} busy={busyKey === `${it.ref_type}:${it.ref_id}`} onUnpin={() => unpin(it)} />)}
           </ul>
         </Section>
       ))}
@@ -189,7 +198,7 @@ function snapshotSummary(it) {
   return { title, sub, link, lat: d.lat ?? d.latitude, lon: d.lon ?? d.lng ?? d.longitude };
 }
 
-function FindingRow({ item, canWrite, busy, onUnpin }) {
+function FindingRow({ item, canWrite, busy, onUnpin, who }) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const s = snapshotSummary(item);
@@ -206,7 +215,7 @@ function FindingRow({ item, canWrite, busy, onUnpin }) {
           {s?.sub && <div className="text-xs text-osint-muted truncate">{String(s.sub)}</div>}
           <div className="text-[11px] text-osint-muted font-mono mt-0.5 flex flex-wrap gap-x-2">
             <span>{item.ref_type} · {item.ref_id}</span>
-            <span>pinned {relativeTime(item.added_at)}{item.added_by ? ` by ${item.added_by}` : ''}</span>
+            <span title={item.added_by || undefined}>pinned {relativeTime(item.added_at)}{item.added_by ? ` by ${who(item.added_by)}` : ''}</span>
             {item.snapshot?.origin && <span>snapshot: {item.snapshot.origin}{item.snapshot.captured_at ? ` @ ${fmtAbs(item.snapshot.captured_at)}` : ''}</span>}
           </div>
           {!resolved && (
@@ -237,7 +246,7 @@ function FindingRow({ item, canWrite, busy, onUnpin }) {
 
 /* ── Notes (annotations scoped to the case) ─────────────────────────────── */
 
-function NotesPane({ caseId, canWrite }) {
+function NotesPane({ caseId, canWrite, who }) {
   const path = `/api/annotations?case_id=${encodeURIComponent(caseId)}&include_deleted=1`;
   const { rows, hasMore, error, loading, loadingMore, reload, loadMore } = usePaged(path, { limit: 200 });
   const items = usePaged(`/api/cases/${encodeURIComponent(caseId)}/items`, { limit: 100 });
@@ -299,7 +308,7 @@ function NotesPane({ caseId, canWrite }) {
                 <div className="text-[11px] text-osint-muted font-mono flex flex-wrap gap-x-2">
                   <span>{a.ref_type} · {a.ref_id}</span>
                   <span>{fmtAbs(a.created_at)}</span>
-                  {a.author_id && <span>by {a.author_id}</span>}
+                  {a.author_id && <span title={a.author_id}>by {who(a.author_id)}</span>}
                   {a.updated_at && a.updated_at !== a.created_at && <span>edited {relativeTime(a.updated_at)}</span>}
                   {a.is_deleted && <Pill tone="danger">note deleted</Pill>}
                 </div>
@@ -320,7 +329,7 @@ function NotesPane({ caseId, canWrite }) {
 
 /* ── Activity ───────────────────────────────────────────────────────────── */
 
-function ActivityPane({ caseId, canWrite }) {
+function ActivityPane({ caseId, canWrite, who }) {
   const path = `/api/cases/${encodeURIComponent(caseId)}/activity`;
   const { rows, setRows, hasMore, error, loading, loadingMore, reload, loadMore } = usePaged(path, { limit: 100 });
   const [text, setText] = useState('');
@@ -363,7 +372,7 @@ function ActivityPane({ caseId, canWrite }) {
                   {ev.body && <div className={cx('text-sm whitespace-pre-wrap', CaseActivityKind.isSystem(ev.kind) ? 'text-osint-muted' : 'text-osint-text')}>{ev.body}</div>}
                   {ev.target_ref && <div className="text-[11px] text-osint-muted font-mono">→ {ev.target_ref}</div>}
                   {Array.isArray(ev.mentions) && ev.mentions.length > 0 && <div className="text-[11px] text-neon-cyan font-mono">@ {ev.mentions.join(', ')}</div>}
-                  <div className="text-[11px] text-osint-muted font-mono mt-0.5">{fmtAbs(ev.ts)}{ev.actor_id ? ` · ${ev.actor_id}` : ''}</div>
+                  <div className="text-[11px] text-osint-muted font-mono mt-0.5" title={ev.actor_id || undefined}>{fmtAbs(ev.ts)}{ev.actor_id ? ` · ${who(ev.actor_id)}` : ''}</div>
                 </div>
               </li>
             ))}
@@ -405,7 +414,7 @@ function MembersPane({ caseId, members, canManage, onChanged }) {
   return (
     <div className="space-y-3">
       <Section label={`Roster · ${draft.length}`} padded={false}>
-        {draft.length === 0 && <div className="p-3 text-xs text-osint-muted">No explicit roster. Workspace owners and admins can always read and edit; everyone else sees the case according to their workspace role.</div>}
+        {draft.length === 0 && <div className="p-3 text-xs text-osint-muted">No roster. Every workspace member can read this case; analysts, admins and owners can edit it, and owners and admins can delete it.</div>}
         <ul className="divide-y divide-osint-border">
           {draft.map((m) => (
             <li key={m.user_id} className="px-3 py-2 flex items-center gap-3">
@@ -449,7 +458,7 @@ function MembersPane({ caseId, members, canManage, onChanged }) {
           <Button variant="primary" busy={busy} disabled={!dirty} onClick={save}>Save roster</Button>
         </div>
       )}
-      {!canManage && <div className="text-[11px] text-osint-muted">Read-only: the roster is set by the case lead or a workspace owner/admin (PUT /api/cases/:id/members).</div>}
+      {!canManage && <div className="text-[11px] text-osint-muted">Read-only: the roster is set by the case lead or a workspace analyst, admin or owner (PUT /api/cases/:id/members). Anyone on it can edit the case; only its lead, or a workspace owner/admin, can delete it.</div>}
     </div>
   );
 }

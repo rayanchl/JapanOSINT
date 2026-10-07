@@ -5,6 +5,9 @@ import { api, errorMessage } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
 import { usePaged } from '../../hooks/useCases.js';
 import { relativeTime, fmtAbs } from '../../utils/time.js';
+import { useAuth } from '../../auth/AuthContext.jsx';
+import { canWriteWorkspace, readOnlyNote } from '../../auth/roles.js';
+import { useMemberNames, authorLabel } from '../../hooks/useMembers.js';
 import {
   Page, Section, Card, Pill, Button, Input, TextArea, Field, Select, Toggle, Segmented, Sheet,
   ConfirmDialog, ErrorNotice, EmptyState, LoadingState, BoundNote, KV, toast, cx,
@@ -19,10 +22,24 @@ import {
  * + `AlertEventsView`. Endpoints: GET/POST /api/alerts, PATCH/DELETE
  * /api/alerts/:id, POST /:id/mute|unmute|test, GET /:id/events, POST
  * /api/alerts/preview.
+ *
+ * Rules belong to the workspace: every member reads all of them. alertsapi.c
+ * gates every change — create, edit, enable, mute, test, delete — on the ROLE
+ * (analyst or above may change any rule; a viewer none), never on who wrote
+ * it, so the buttons follow the role. The rule's author is shown when the
+ * server sends `created_by`; GET /api/alerts does not today (alert_rules
+ * stores it, decode_row() does not emit it), and nothing is shown in its
+ * place rather than a guess.
  */
 export default function AlertsPage() {
+  const auth = useAuth();
   const { data, error, loading, reload } = useApi('/api/alerts');
   const rules = Array.isArray(data?.data) ? data.data : [];
+  const canWrite = canWriteWorkspace(auth.role);
+  const roNote = readOnlyNote(auth.role, 'alert rule');
+  const hasAuthors = rules.some((r) => r && Object.prototype.hasOwnProperty.call(r, 'created_by'));
+  const names = useMemberNames({ enabled: hasAuthors });
+  const myId = auth.me?.user?.id;
   const [editing, setEditing] = useState(null);   // null | 'new' | rule
   const [confirmDel, setConfirmDel] = useState(null);
   const [busyId, setBusyId] = useState(null);
@@ -44,7 +61,8 @@ export default function AlertsPage() {
     return p;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [presetAoi, presetNew, params.toString()]);
-  useEffect(() => { if (preset) setEditing('new'); }, [preset]);
+  // A viewer following the link gets the list, not an editor the server refuses.
+  useEffect(() => { if (preset && canWrite) setEditing('new'); }, [preset, canWrite]);
 
   const act = async (id, fn, okMsg) => {
     setBusyId(id);
@@ -72,15 +90,16 @@ export default function AlertsPage() {
       actions={(
         <>
           <Button onClick={() => reload()} title="Reload alert rules"><LuRefreshCw size={13} /></Button>
-          <Button variant="primary" onClick={() => setEditing('new')}><LuBellPlus size={14} /> New alert</Button>
+          {canWrite && <Button variant="primary" onClick={() => setEditing('new')}><LuBellPlus size={14} /> New alert</Button>}
         </>
       )}
     >
+      {roNote && <div className="text-[11px] text-osint-muted">{roNote}</div>}
       {error && <ErrorNotice error={error} title="Could not load alert rules" onRetry={reload} />}
       {loading && !data && <LoadingState label="Loading rules…" />}
 
       {!loading && !error && rules.length === 0 && (
-        <EmptyState title="No alert rules yet" action={<Button variant="primary" onClick={() => setEditing('new')}>Create your first rule</Button>}>
+        <EmptyState title="No alert rules yet" action={canWrite ? <Button variant="primary" onClick={() => setEditing('new')}>Create the first rule</Button> : null}>
           A rule is an FTS query plus optional source, tag, entity and spatial filters. Every new item that matches is delivered once per dedup window.
         </EmptyState>
       )}
@@ -91,6 +110,8 @@ export default function AlertsPage() {
             <RuleCard
               key={r.id}
               rule={r}
+              canWrite={canWrite}
+              author={hasAuthors && Object.prototype.hasOwnProperty.call(r, 'created_by') ? authorLabel(r, names, { userId: myId }) : null}
               busy={busyId === r.id}
               onEdit={() => setEditing(r)}
               onToggle={() => toggleEnabled(r)}
@@ -128,7 +149,7 @@ export default function AlertsPage() {
   );
 }
 
-function RuleCard({ rule: r, busy, onEdit, onToggle, onMute, onUnmute, onTest, onDelete, onHistory, historyOpen }) {
+function RuleCard({ rule: r, canWrite, author, busy, onEdit, onToggle, onMute, onUnmute, onTest, onDelete, onHistory, historyOpen }) {
   const muted = isMuted(r.muted_until);
   return (
     <Card padded={false} className={cx(!r.enabled && 'opacity-70')}>
@@ -146,22 +167,23 @@ function RuleCard({ rule: r, busy, onEdit, onToggle, onMute, onUnmute, onTest, o
             <Pill title="dedup window">dedup {r.dedup_window_sec ?? 3600}s</Pill>
             <Pill title="storm cap">≤ {r.storm_cap_per_hour ?? 100}/h</Pill>
             {r.updated_at && <span className="text-[10px] text-osint-muted font-mono ml-1">updated {relativeTime(r.updated_at)}</span>}
+            {author && <span className="text-[10px] text-osint-muted font-mono ml-1" title={r.created_by || undefined}>· by {author}</span>}
           </div>
         </div>
         <div className="flex items-center gap-1 flex-wrap">
-          <Toggle on={Boolean(r.enabled)} onChange={onToggle} disabled={busy} />
-          <Button size="sm" onClick={onEdit} title="Edit"><LuPencil size={12} /></Button>
-          <Button size="sm" onClick={onTest} busy={busy} title="Test fire through the real channels"><LuFlaskConical size={12} /> Test</Button>
-          {muted ? (
+          <Toggle on={Boolean(r.enabled)} onChange={onToggle} disabled={!canWrite || busy} />
+          {canWrite && <Button size="sm" onClick={onEdit} title="Edit"><LuPencil size={12} /></Button>}
+          {canWrite && <Button size="sm" onClick={onTest} busy={busy} title="Test fire through the real channels"><LuFlaskConical size={12} /> Test</Button>}
+          {canWrite && (muted ? (
             <Button size="sm" onClick={onUnmute} title="Unmute"><LuBell size={12} /> Unmute</Button>
           ) : (
             <Select className="text-[11px] py-1" value="" onChange={(e) => { if (e.target.value) onMute(e.target.value === 'forever' ? 'forever' : Number(e.target.value)); }} title="Mute this rule for…">
               <option value="">Mute…</option>
               {MUTE_OPTIONS.map((o) => <option key={String(o.value)} value={String(o.value)}>{o.label}</option>)}
             </Select>
-          )}
+          ))}
           <Button size="sm" onClick={onHistory} className={cx(historyOpen && 'border-accent/50 text-accent')} title="Firing history"><LuHistory size={12} /> History</Button>
-          <Button size="sm" variant="ghost" onClick={onDelete} title="Delete"><LuTrash2 size={12} /></Button>
+          {canWrite && <Button size="sm" variant="ghost" onClick={onDelete} title="Delete"><LuTrash2 size={12} /></Button>}
         </div>
       </div>
       {historyOpen && <RuleEvents rule={r} />}

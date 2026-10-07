@@ -5,6 +5,9 @@ import { api, errorMessage } from '../../api/client.js';
 import { useEntitySearch } from '../../hooks/useSearch.js';
 import { entityVisual } from '../../utils/entityVisuals.js';
 import { relativeTime, fmtAbs } from '../../utils/time.js';
+import { useAuth } from '../../auth/AuthContext.jsx';
+import { canWriteWorkspace, readOnlyNote } from '../../auth/roles.js';
+import { useMemberNames, authorLabel } from '../../hooks/useMembers.js';
 import {
   Page, Card, Pill, Button, Input, Field, Toggle, Sheet, ConfirmDialog, ErrorNotice, EmptyState, LoadingState,
   BoundNote, CopyButton, toast, cx,
@@ -14,12 +17,22 @@ import { isMuted, muteLabel } from './alertShared.jsx';
 /**
  * Watchlists — port of iOS `WatchlistsView`. A watchlist is sugar over an
  * alert rule whose predicate is `{entity_ids:[…]}`.
- *   GET  /api/watchlists?limit&cursor → {data:[{id,name,entity_ids,rule_id,enabled,muted_until,created_at,updated_at}], page}
+ *   GET  /api/watchlists?limit&cursor → {data:[{id,name,entity_ids,rule_id,created_by,enabled,muted_until,created_at,updated_at}], page}
  *   POST /api/watchlists {name, entity_ids}   (ids must exist; empty list refused)
  *   PATCH /api/watchlists/:id {name?, entity_ids?, enabled?}
  *   DELETE /api/watchlists/:id  — also deletes the rule and its history
+ *
+ * A watchlist belongs to the workspace: every member sees all of them, each
+ * naming who created it. aoiapi.c gates create, edit, enable and delete on the
+ * ROLE (analyst, admin or owner may change any watchlist; a viewer none), not
+ * on the author, so the buttons follow the role.
  */
 export default function WatchlistsPage() {
+  const auth = useAuth();
+  const names = useMemberNames();
+  const myId = auth.me?.user?.id;
+  const canWrite = canWriteWorkspace(auth.role);
+  const roNote = readOnlyNote(auth.role, 'watchlist');
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(null);
   const [error, setError] = useState(null);
@@ -67,14 +80,15 @@ export default function WatchlistsPage() {
       actions={(
         <>
           <Button onClick={() => load()} title="Refresh watchlists"><LuRefreshCw size={13} /></Button>
-          <Button variant="primary" onClick={() => setEditing('new')}><LuEye size={13} /> New watchlist</Button>
+          {canWrite && <Button variant="primary" onClick={() => setEditing('new')}><LuEye size={13} /> New watchlist</Button>}
         </>
       )}
     >
+      {roNote && <div className="text-[11px] text-osint-muted">{roNote}</div>}
       {error && <ErrorNotice error={error} title="Could not load watchlists" onRetry={() => load()} />}
       {loading && rows.length === 0 && !error && <LoadingState label="Loading watchlists…" />}
       {!loading && !error && rows.length === 0 && (
-        <EmptyState title="No watchlists" action={<Button variant="primary" onClick={() => setEditing('new')}>Create a watchlist</Button>}>
+        <EmptyState title="No watchlists" action={canWrite ? <Button variant="primary" onClick={() => setEditing('new')}>Create a watchlist</Button> : null}>
           Pick entities from the graph — people, organisations, domains, IPs — and get an inbox event whenever they show up again.
         </EmptyState>
       )}
@@ -99,15 +113,15 @@ export default function WatchlistsPage() {
                       {ids.length > 12 && <Pill>+{ids.length - 12} more</Pill>}
                     </div>
                     <div className="text-[11px] text-osint-muted mt-1" title={fmtAbs(w.created_at)}>
-                      created {relativeTime(w.created_at)}{w.rule_id && <> · rule <span className="font-mono">{w.rule_id}</span></>}
+                      created {relativeTime(w.created_at)} by <span title={w.created_by || undefined}>{authorLabel(w, names, { userId: myId })}</span>{w.rule_id && <> · rule <span className="font-mono">{w.rule_id}</span></>}
                     </div>
                   </div>
                   <div className="flex items-center gap-1 flex-wrap">
-                    {w.enabled != null && <Toggle on={Boolean(w.enabled)} onChange={() => toggle(w)} disabled={busy === w.id} />}
-                    <Button size="sm" onClick={() => setEditing(w)} title="Edit"><LuPencil size={12} /></Button>
+                    {w.enabled != null && <Toggle on={Boolean(w.enabled)} onChange={() => toggle(w)} disabled={!canWrite || busy === w.id} />}
+                    {canWrite && <Button size="sm" onClick={() => setEditing(w)} title="Edit"><LuPencil size={12} /></Button>}
                     <CopyButton text={w.id} label="Copy id" />
                     {w.rule_id && <Link to="/console/alerts"><Button size="sm" title={w.rule_id}>Rule</Button></Link>}
-                    <Button size="sm" variant="ghost" busy={busy === w.id} onClick={() => setConfirmDel(w)} title="Delete"><LuTrash2 size={12} /></Button>
+                    {canWrite && <Button size="sm" variant="ghost" busy={busy === w.id} onClick={() => setConfirmDel(w)} title="Delete"><LuTrash2 size={12} /></Button>}
                   </div>
                 </div>
               </Card>

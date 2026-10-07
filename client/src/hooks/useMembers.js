@@ -30,8 +30,15 @@ export function authorLabel(row, names, { userId } = {}) {
   return names[id] || 'a former member';
 }
 
-/** `{ [user_id]: email }` for the active workspace. Empty until loaded. */
-export function useMemberNames() {
-  const { data } = useApi('/api/members');
+/**
+ * `{ [user_id]: email }` for the active workspace. Empty until loaded.
+ *
+ * Call it on every render, BEFORE any early return (`if (!open) return null`):
+ * a hook that runs only while a component is open changes the hook count on
+ * the render that opens it, and React throws. `enabled: false` keeps the call
+ * but skips the request, so a closed sheet or dropdown fetches nothing.
+ */
+export function useMemberNames({ enabled = true } = {}) {
+  const { data } = useApi(enabled ? '/api/members' : null);
   return useMemo(() => memberNameMap(data), [data]);
 }

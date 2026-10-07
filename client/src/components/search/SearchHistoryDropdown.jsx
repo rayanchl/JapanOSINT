@@ -54,8 +54,9 @@ export default function SearchHistoryDropdown({ open, onRun, limit = 20, onClose
   const [confirmClear, setConfirmClear] = useState(false);
   const [clearing, setClearing] = useState(false);
   // Before the early return: a hook called after it runs only while open, and
-  // React throws on the render where the hook count changes (opening).
-  const names = useMemberNames();
+  // React throws on the render where the hook count changes (opening). It
+  // fetches only while open, like the list above.
+  const names = useMemberNames({ enabled: Boolean(open) });
   if (!open) return null;
   const retained = meta?.retained_max;
 
