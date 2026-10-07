@@ -20,6 +20,15 @@
  */
 #include "lib/hpengine.h"
 
+/* WB_INDICATOR_NOTE (2026-10-07). A World Bank indicator for every economy
+ * answers [meta, records] -- about 17,500 country-years (266 economies and
+ * aggregates x 66 years) -- and these rows asked for per_page=200 with no
+ * paging: ONE request, the first 200 rows, ~1% of the series, on every run.
+ * Now: array_path "1" (the records element; a page past the end is
+ * [meta, []] and reads empty, which ends the walk), page by number at 1,000,
+ * page_max 100 as a runaway guard. One record is one economy in one year:
+ * country.id is set on the regional aggregates too, whose countryiso3code is
+ * empty -- the identity WORLDBANK_NUCLEAR_SHARE already measured. */
 static const hp_source HP3_SOCIETY[] = {
   { .id = "WHO_DISEASE_OUTBREAK_NEWS", .name = "WHO — disease outbreak news",
     .name_ja = "WHO 疾病アウトブレイク情報",
@@ -110,7 +119,12 @@ static const hp_source HP3_SOCIETY[] = {
     .record_type = "food-price",
     .tags = "\"food\",\"agriculture\",\"fao\",\"commodities\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.worldbank.org/v2/country/all/indicator/AG.PRD.FOOD.XD?format=json&per_page=200",
+    .url = "https://api.worldbank.org/v2/country/all/indicator/AG.PRD.FOOD.XD?format=json&per_page=1000",
+    .array_path = "1",              /* [meta, records]: see WB_INDICATOR_NOTE */
+    .id_keys = "country.id+date",
+    .title_keys = "country.value",
+    .page_param = "page",
+    .page_max = 100,
     .interval = 3600,
     .description = "Food production index by country and year. A sustained fall "
       "against a stable population is the leading quantitative "
@@ -122,7 +136,12 @@ static const hp_source HP3_SOCIETY[] = {
     .record_type = "food-security",
     .tags = "\"food\",\"health\",\"worldbank\",\"nutrition\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.worldbank.org/v2/country/all/indicator/SN.ITK.DEFC.ZS?format=json&per_page=200",
+    .url = "https://api.worldbank.org/v2/country/all/indicator/SN.ITK.DEFC.ZS?format=json&per_page=1000",
+    .array_path = "1",              /* [meta, records]: see WB_INDICATOR_NOTE */
+    .id_keys = "country.id+date",
+    .title_keys = "country.value",
+    .page_param = "page",
+    .page_max = 100,
     .interval = 21600,
     .description = "The share of a national population that is undernourished, by "
       "country and year, on the FAO methodology. The headline "
@@ -134,7 +153,12 @@ static const hp_source HP3_SOCIETY[] = {
     .record_type = "military-spending",
     .tags = "\"military\",\"defence\",\"worldbank\",\"economy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.worldbank.org/v2/country/all/indicator/MS.MIL.XPND.GD.ZS?format=json&per_page=200",
+    .url = "https://api.worldbank.org/v2/country/all/indicator/MS.MIL.XPND.GD.ZS?format=json&per_page=1000",
+    .array_path = "1",              /* [meta, records]: see WB_INDICATOR_NOTE */
+    .id_keys = "country.id+date",
+    .title_keys = "country.value",
+    .page_param = "page",
+    .page_max = 100,
     .interval = 21600,
     .description = "Military expenditure as a share of GDP for every country and "
       "year, on the SIPRI methodology. A sustained step change is one "
@@ -147,7 +171,12 @@ static const hp_source HP3_SOCIETY[] = {
     .record_type = "military-personnel",
     .tags = "\"military\",\"defence\",\"worldbank\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.worldbank.org/v2/country/all/indicator/MS.MIL.TOTL.P1?format=json&per_page=200",
+    .url = "https://api.worldbank.org/v2/country/all/indicator/MS.MIL.TOTL.P1?format=json&per_page=1000",
+    .array_path = "1",              /* [meta, records]: see WB_INDICATOR_NOTE */
+    .id_keys = "country.id+date",
+    .title_keys = "country.value",
+    .page_param = "page",
+    .page_max = 100,
     .interval = 21600,
     .description = "Total armed forces personnel by country and year. Read against "
       "expenditure it distinguishes a manpower-heavy force from a "
@@ -159,7 +188,12 @@ static const hp_source HP3_SOCIETY[] = {
     .record_type = "arms-transfer",
     .tags = "\"military\",\"arms\",\"trade\",\"worldbank\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.worldbank.org/v2/country/all/indicator/MS.MIL.MPRT.KD?format=json&per_page=200",
+    .url = "https://api.worldbank.org/v2/country/all/indicator/MS.MIL.MPRT.KD?format=json&per_page=1000",
+    .array_path = "1",              /* [meta, records]: see WB_INDICATOR_NOTE */
+    .id_keys = "country.id+date",
+    .title_keys = "country.value",
+    .page_param = "page",
+    .page_max = 100,
     .interval = 21600,
     .description = "Arms imports at constant prices by country and year, derived "
       "from the SIPRI arms transfers database. The quantitative record "
@@ -171,7 +205,12 @@ static const hp_source HP3_SOCIETY[] = {
     .record_type = "arms-transfer",
     .tags = "\"military\",\"arms\",\"trade\",\"worldbank\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.worldbank.org/v2/country/all/indicator/MS.MIL.XPRT.KD?format=json&per_page=200",
+    .url = "https://api.worldbank.org/v2/country/all/indicator/MS.MIL.XPRT.KD?format=json&per_page=1000",
+    .array_path = "1",              /* [meta, records]: see WB_INDICATOR_NOTE */
+    .id_keys = "country.id+date",
+    .title_keys = "country.value",
+    .page_param = "page",
+    .page_max = 100,
     .interval = 21600,
     .description = "Arms exports at constant prices by country and year. Paired with "
       "the import series it reconstructs the supplier-recipient graph "
@@ -183,7 +222,12 @@ static const hp_source HP3_SOCIETY[] = {
     .record_type = "connectivity-statistic",
     .tags = "\"telecom\",\"internet\",\"worldbank\",\"development\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.worldbank.org/v2/country/all/indicator/IT.NET.USER.ZS?format=json&per_page=200",
+    .url = "https://api.worldbank.org/v2/country/all/indicator/IT.NET.USER.ZS?format=json&per_page=1000",
+    .array_path = "1",              /* [meta, records]: see WB_INDICATOR_NOTE */
+    .id_keys = "country.id+date",
+    .title_keys = "country.value",
+    .page_param = "page",
+    .page_max = 100,
     .interval = 86400,
     .description = "The share of population using the internet by country and year. "
       "The denominator for interpreting any measure of online activity, "
@@ -195,7 +239,12 @@ static const hp_source HP3_SOCIETY[] = {
     .record_type = "connectivity-statistic",
     .tags = "\"telecom\",\"mobile\",\"worldbank\",\"development\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.worldbank.org/v2/country/all/indicator/IT.CEL.SETS.P2?format=json&per_page=200",
+    .url = "https://api.worldbank.org/v2/country/all/indicator/IT.CEL.SETS.P2?format=json&per_page=1000",
+    .array_path = "1",              /* [meta, records]: see WB_INDICATOR_NOTE */
+    .id_keys = "country.id+date",
+    .title_keys = "country.value",
+    .page_param = "page",
+    .page_max = 100,
     .interval = 86400,
     .description = "Mobile cellular subscriptions per hundred people by country and "
       "year. In most of the world mobile is the only network access, so "
@@ -235,7 +284,12 @@ static const hp_source HP3_SOCIETY[] = {
     .record_type = "population-statistic",
     .tags = "\"population\",\"demographics\",\"un\",\"statistics\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL?format=json&per_page=200",
+    .url = "https://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL?format=json&per_page=1000",
+    .array_path = "1",              /* [meta, records]: see WB_INDICATOR_NOTE */
+    .id_keys = "country.id+date",
+    .title_keys = "country.value",
+    .page_param = "page",
+    .page_max = 100,
     .interval = 86400,
     .description = "Total population by country and year. The denominator for every "
       "per-capita measure, and the basis of any exposure estimate for a "
@@ -247,7 +301,12 @@ static const hp_source HP3_SOCIETY[] = {
     .record_type = "population-statistic",
     .tags = "\"population\",\"urban\",\"worldbank\",\"development\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.worldbank.org/v2/country/all/indicator/SP.URB.TOTL.IN.ZS?format=json&per_page=200",
+    .url = "https://api.worldbank.org/v2/country/all/indicator/SP.URB.TOTL.IN.ZS?format=json&per_page=1000",
+    .array_path = "1",              /* [meta, records]: see WB_INDICATOR_NOTE */
+    .id_keys = "country.id+date",
+    .title_keys = "country.value",
+    .page_param = "page",
+    .page_max = 100,
     .interval = 86400,
     .description = "The share of population living in urban areas by country and "
       "year. Urbanisation rate determines how concentrated a "

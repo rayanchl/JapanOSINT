@@ -20,6 +20,15 @@
  */
 #include "lib/hpengine.h"
 
+/* WB_INDICATOR_NOTE (2026-10-07). A World Bank indicator for every economy
+ * answers [meta, records] -- about 17,500 country-years (266 economies and
+ * aggregates x 66 years) -- and these rows asked for per_page=200 with no
+ * paging: ONE request, the first 200 rows, ~1% of the series, on every run.
+ * Now: array_path "1" (the records element; a page past the end is
+ * [meta, []] and reads empty, which ends the walk), page by number at 1,000,
+ * page_max 100 as a runaway guard. One record is one economy in one year:
+ * country.id is set on the regional aggregates too, whose countryiso3code is
+ * empty -- the identity WORLDBANK_NUCLEAR_SHARE already measured. */
 static const hp_source HP3_CORP[] = {
   { .id = "GLEIF_LEI_RECORDS", .name = "GLEIF — Legal Entity Identifier records",
     .name_ja = "GLEIF 取引主体識別子",
@@ -127,7 +136,12 @@ static const hp_source HP3_CORP[] = {
     .record_type = "economic-indicator",
     .tags = "\"economy\",\"statistics\",\"worldbank\",\"development\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.worldbank.org/v2/country/all/indicator/{q}?format=json&per_page=200",
+    .url = "https://api.worldbank.org/v2/country/all/indicator/{q}?format=json&per_page=1000",
+    .array_path = "1",              /* [meta, records]: see WB_INDICATOR_NOTE */
+    .id_keys = "country.id+date",
+    .title_keys = "country.value",
+    .page_param = "page",
+    .page_max = 100,
     .description = "World Development Indicators for every country and year, with "
       "the indicator definition, unit, and the value with its own "
       "source note. Covers GDP, military expenditure, energy use, debt "

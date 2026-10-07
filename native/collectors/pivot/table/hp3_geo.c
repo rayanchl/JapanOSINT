@@ -20,6 +20,15 @@
  */
 #include "lib/hpengine.h"
 
+/* WB_INDICATOR_NOTE (2026-10-07). A World Bank indicator for every economy
+ * answers [meta, records] -- about 17,500 country-years (266 economies and
+ * aggregates x 66 years) -- and these rows asked for per_page=200 with no
+ * paging: ONE request, the first 200 rows, ~1% of the series, on every run.
+ * Now: array_path "1" (the records element; a page past the end is
+ * [meta, []] and reads empty, which ends the walk), page by number at 1,000,
+ * page_max 100 as a runaway guard. One record is one economy in one year:
+ * country.id is set on the regional aggregates too, whose countryiso3code is
+ * empty -- the identity WORLDBANK_NUCLEAR_SHARE already measured. */
 static const hp_source HP3_GEO[] = {
   { .id = "USGS_VOLCANO_ALERTS", .name = "USGS — volcano alert levels",
     .name_ja = "USGS 火山警戒レベル",
@@ -272,7 +281,12 @@ static const hp_source HP3_GEO[] = {
     .record_type = "deforestation-alert",
     .tags = "\"environment\",\"forest\",\"deforestation\",\"geo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.worldbank.org/v2/country/all/indicator/AG.LND.FRST.ZS?format=json&per_page=200",
+    .url = "https://api.worldbank.org/v2/country/all/indicator/AG.LND.FRST.ZS?format=json&per_page=1000",
+    .array_path = "1",              /* [meta, records]: see WB_INDICATOR_NOTE */
+    .id_keys = "country.id+date",
+    .title_keys = "country.value",
+    .page_param = "page",
+    .page_max = 100,
     .interval = 3600,
     .description = "Forest area as a share of land area by country and year. The "
       "national-scale denominator against which a satellite-detected "
@@ -284,7 +298,12 @@ static const hp_source HP3_GEO[] = {
     .record_type = "water-stress",
     .tags = "\"environment\",\"water\",\"worldbank\",\"scarcity\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.worldbank.org/v2/country/all/indicator/ER.H2O.FWTL.ZS?format=json&per_page=200",
+    .url = "https://api.worldbank.org/v2/country/all/indicator/ER.H2O.FWTL.ZS?format=json&per_page=1000",
+    .array_path = "1",              /* [meta, records]: see WB_INDICATOR_NOTE */
+    .id_keys = "country.id+date",
+    .title_keys = "country.value",
+    .page_param = "page",
+    .page_max = 100,
     .interval = 21600,
     .description = "Annual freshwater withdrawal as a share of internal resources by "
       "country and year. The standard water-stress measure, and the "
@@ -296,7 +315,12 @@ static const hp_source HP3_GEO[] = {
     .record_type = "land-use",
     .tags = "\"environment\",\"agriculture\",\"worldbank\",\"land\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.worldbank.org/v2/country/all/indicator/AG.LND.AGRI.ZS?format=json&per_page=200",
+    .url = "https://api.worldbank.org/v2/country/all/indicator/AG.LND.AGRI.ZS?format=json&per_page=1000",
+    .array_path = "1",              /* [meta, records]: see WB_INDICATOR_NOTE */
+    .id_keys = "country.id+date",
+    .title_keys = "country.value",
+    .page_param = "page",
+    .page_max = 100,
     .interval = 21600,
     .description = "Agricultural land as a share of land area by country and year. "
       "The baseline for assessing land-use change, expropriation and "
@@ -308,7 +332,12 @@ static const hp_source HP3_GEO[] = {
     .record_type = "agricultural-yield",
     .tags = "\"environment\",\"agriculture\",\"worldbank\",\"food\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.worldbank.org/v2/country/all/indicator/AG.YLD.CREL.KG?format=json&per_page=200",
+    .url = "https://api.worldbank.org/v2/country/all/indicator/AG.YLD.CREL.KG?format=json&per_page=1000",
+    .array_path = "1",              /* [meta, records]: see WB_INDICATOR_NOTE */
+    .id_keys = "country.id+date",
+    .title_keys = "country.value",
+    .page_param = "page",
+    .page_max = 100,
     .interval = 21600,
     .description = "Cereal yield in kilograms per hectare by country and year. A "
       "yield collapse is the quantitative precursor of a food-price "
@@ -320,7 +349,12 @@ static const hp_source HP3_GEO[] = {
     .record_type = "energy-access",
     .tags = "\"energy\",\"development\",\"worldbank\",\"infrastructure\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.worldbank.org/v2/country/all/indicator/EG.ELC.ACCS.ZS?format=json&per_page=200",
+    .url = "https://api.worldbank.org/v2/country/all/indicator/EG.ELC.ACCS.ZS?format=json&per_page=1000",
+    .array_path = "1",              /* [meta, records]: see WB_INDICATOR_NOTE */
+    .id_keys = "country.id+date",
+    .title_keys = "country.value",
+    .page_param = "page",
+    .page_max = 100,
     .interval = 86400,
     .description = "The share of population with access to electricity by country "
       "and year. The baseline that distinguishes a grid failure from a "
