@@ -103,17 +103,6 @@ static const hp_source HP3B31_AFRGOV[] = {
       "Mauritius, Namibia, Eswatini, Tanzania, Zambia and Zimbabwe — parties, "
       "citation and the full text of the decision" },
 
-  { .id = "AFRICA_AFRICANLII", .name = "AfricanLII — pan-African law & judgments",
-    .name_ja = "アフリカ 法令判例データベース", .category = "legal",
-    .portal = "https://africanlii.org", .record_type = "africa-judgment",
-    .tags = "\"africa\",\"courts\",\"law\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://africanlii.org/search/?q={q}",
-    .base = "https://africanlii.org", .filter_query = 1,
-    .description = "Legislation, gazettes and judgments across the African "
-      "Union member states and the regional courts — the African Court on "
-      "Human and Peoples' Rights, the ECOWAS Court and the EAC Court" },
-
   { .id = "AFRICA_OPEN_AFRICA_CKAN", .name = "open.africa — continental dataset catalog",
     .name_ja = "アフリカ オープンデータ目録", .category = "government",
     .portal = "https://open.africa", .record_type = "africa-dataset",
@@ -162,28 +151,6 @@ static const hp_source HP3B31_AFRGOV[] = {
       "by field or lease, and the reconciliation discrepancies that name the "
       "operator responsible" },
 
-  { .id = "GH_RGD_BUSINESS_SEARCH", .name = "Ghana — Registrar General business search",
-    .name_ja = "ガーナ 企業登記", .category = "government",
-    .portal = "https://rgd.gov.gh", .record_type = "gh-entity",
-    .tags = "\"gh\",\"registry\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://rgd.gov.gh/?s={q}",
-    .base = "https://rgd.gov.gh", .filter_query = 1,
-    .description = "Ghana's Registrar General's Department — company "
-      "registration and status, plus the beneficial-ownership regime Ghana "
-      "introduced ahead of most of the region" },
-
-  { .id = "GH_PPA_PROCUREMENT", .name = "Ghana — Public Procurement Authority notices",
-    .name_ja = "ガーナ 公共調達庁", .category = "government",
-    .portal = "https://ppa.gov.gh", .record_type = "gh-procurement",
-    .tags = "\"gh\",\"procurement\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://ppa.gov.gh/?s={q}",
-    .base = "https://ppa.gov.gh", .filter_query = 1,
-    .description = "Ghanaian tender notices, contract award publications and "
-      "the suppliers' register — including the sole-sourcing approvals the "
-      "Authority must publish with reasons" },
-
   { .id = "SN_MARCHES_PUBLICS", .name = "Senegal — public procurement portal",
     .name_ja = "セネガル 公共調達", .category = "government",
     .portal = "https://www.marchespublics.sn", .record_type = "sn-procurement",
@@ -194,17 +161,6 @@ static const hp_source HP3B31_AFRGOV[] = {
     .description = "Senegal's ARMP procurement portal — tender notices, award "
       "decisions and the dispute rulings of the regulator, which name the "
       "excluded bidders and the reason" },
-
-  { .id = "CI_MARCHES_PUBLICS", .name = "Côte d'Ivoire — public procurement notices",
-    .name_ja = "コートジボワール 公共調達", .category = "government",
-    .portal = "https://www.marchespublics.ci", .record_type = "ci-procurement",
-    .tags = "\"ci\",\"procurement\",\"francophone\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.marchespublics.ci/recherche?q={q}",
-    .base = "https://www.marchespublics.ci", .filter_query = 1,
-    .description = "Ivorian tender notices and award publications, the "
-      "francophone West African procurement model where the regulator "
-      "publishes both the award and the losing bids' evaluation" },
 
   /* ── East Africa ──────────────────────────────────────────────────────── */
   { .id = "KE_PPRA_DEBARMENT", .name = "Kenya PPRA — debarred suppliers & tender portal",
@@ -217,17 +173,6 @@ static const hp_source HP3B31_AFRGOV[] = {
     .description = "Kenya's Public Procurement Regulatory Authority — the "
       "debarment register naming suppliers barred from public contracts, the "
       "Review Board decisions and the tender portal notices" },
-
-  { .id = "KE_BRS_BUSINESS_SEARCH", .name = "Kenya — business registration service search",
-    .name_ja = "ケニア 企業登記", .category = "government",
-    .portal = "https://brs.go.ke", .record_type = "ke-entity",
-    .tags = "\"ke\",\"registry\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://brs.go.ke/?s={q}",
-    .base = "https://brs.go.ke", .filter_query = 1,
-    .description = "Kenya's Business Registration Service — company and "
-      "business-name registration, directors, and the beneficial-ownership "
-      "filings the Companies Act now requires" },
 
   { .id = "KE_OPEN_DATA", .name = "Kenya Open Data — national dataset portal",
     .name_ja = "ケニア オープンデータ", .category = "government",
@@ -250,17 +195,6 @@ static const hp_source HP3B31_AFRGOV[] = {
     .description = "Tanzania's Business Registrations and Licensing Agency — "
       "company registration number, status, directors and the industrial "
       "licence attached to a manufacturing entity" },
-
-  { .id = "UG_URSB_REGISTRY", .name = "Uganda URSB — registration services bureau",
-    .name_ja = "ウガンダ 企業登記", .category = "government",
-    .portal = "https://ursb.go.ug", .record_type = "ug-entity",
-    .tags = "\"ug\",\"registry\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://ursb.go.ug/?s={q}",
-    .base = "https://ursb.go.ug", .filter_query = 1,
-    .description = "Uganda Registration Services Bureau — company and business "
-      "name registration, insolvency notices and the intellectual property "
-      "register, all administered from one body" },
 
   { .id = "RW_RDB_REGISTRY", .name = "Rwanda RDB — company registration",
     .name_ja = "ルワンダ 企業登記", .category = "government",
@@ -295,18 +229,6 @@ static const hp_source HP3B31_AFRGOV[] = {
     .description = "Botswana's Companies and Intellectual Property Authority — "
       "registration status, directors and the annual return record, in a "
       "jurisdiction used as a regional holding domicile" },
-
-  { .id = "NA_BIPA_REGISTRY", .name = "Namibia BIPA — business & IP authority register",
-    .name_ja = "ナミビア 企業登記", .category = "government",
-    .portal = "https://www.bipa.na", .record_type = "na-entity",
-    .tags = "\"na\",\"registry\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.bipa.na/?s={q}",
-    .base = "https://www.bipa.na", .filter_query = 1,
-    .description = "Namibia's Business and Intellectual Property Authority — "
-      "close corporations and companies with their registration number, "
-      "status, directors and members, in a jurisdiction that hosts fishing "
-      "quota and mining licence holders for foreign parents" },
 
   { .id = "AFRICA_RESOURCE_PROJECTS", .name = "Resource Projects — extractive payments by project",
     .name_ja = "資源事業 支払開示", .category = "government",

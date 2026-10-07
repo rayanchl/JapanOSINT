@@ -249,18 +249,6 @@ static const hp_source HP3B31_USFED[] = {
       "class, regulator, holding company, total assets and deposits, and the "
       "dates of establishment, merger or failure" },
 
-  { .id = "US_FDIC_FAILURES", .name = "FDIC — failed bank list",
-    .name_ja = "米国FDIC 破綻銀行", .category = "finance",
-    .portal = "https://banks.data.fdic.gov", .record_type = "us-bank-failure",
-    .tags = "\"us\",\"banking\",\"distress\"", .free_tier = 1,
-    .url = "https://banks.data.fdic.gov/api/failures?search={q}&limit=250&format=json",
-    .array_path = "data", .title_keys = "data.NAME,data.CITYST",
-    .id_keys = "data.CERT", .date_keys = "data.FAILDATE",
-    .page_param = "offset", .page_size = 250, .page_start = 0, .page_max = 20,
-    .description = "Bank failures and assisted transactions — the failure date, "
-      "the acquiring institution, total assets and deposits at failure and the "
-      "estimated cost to the insurance fund" },
-
   { .id = "US_NCUA_CREDIT_UNIONS", .name = "NCUA — federally insured credit unions",
     .name_ja = "米国NCUA 信用組合", .category = "finance",
     .portal = "https://mapping.ncua.gov", .record_type = "us-credit-union",

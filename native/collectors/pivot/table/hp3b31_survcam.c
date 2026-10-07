@@ -134,17 +134,6 @@ static const hp_source HP3B31_SURVCAM[] = {
       "tunnel portal and ferry-quay cameras with their road reference and "
       "coordinates, a network built for winter closure decisions" },
 
-  { .id = "CAM_NL_NDW_CAMERAS", .name = "Netherlands NDW — national road traffic data & cameras",
-    .name_ja = "オランダ 道路交通カメラ", .category = "surveillance",
-    .portal = "https://www.ndw.nu", .record_type = "road-camera",
-    .tags = "\"nl\",\"camera\",\"traffic\",\"surveillance\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.ndw.nu/zoeken?q={q}",
-    .base = "https://www.ndw.nu", .filter_query = 1,
-    .description = "The Nationaal Dataportaal Wegverkeer — the Dutch camera, "
-      "loop and travel-time measurement inventory, together with the open "
-      "datasets that publish the raw measurements from each site" },
-
   { .id = "CAM_CZ_RSD_KAMERY", .name = "Czech Republic ŘSD — motorway camera network",
     .name_ja = "チェコ 高速道路カメラ", .category = "surveillance",
     .portal = "https://kamery.rsd.cz", .record_type = "road-camera",
@@ -155,17 +144,6 @@ static const hp_source HP3B31_SURVCAM[] = {
     .description = "The Czech road and motorway directorate's camera network "
       "— device location by kilometre marker on each D-numbered motorway, with "
       "the live still images" },
-
-  { .id = "CAM_PL_GDDKIA", .name = "Poland GDDKiA — national road cameras",
-    .name_ja = "ポーランド 国道カメラ", .category = "surveillance",
-    .portal = "https://www.gov.pl", .record_type = "road-camera",
-    .tags = "\"pl\",\"camera\",\"traffic\",\"surveillance\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.gov.pl/web/gddkia/kamery?q={q}",
-    .base = "https://www.gov.pl", .filter_query = 1,
-    .description = "Poland's national roads authority camera list — motorway "
-      "and expressway devices with their road number and location, including "
-      "the border-crossing approaches to Ukraine and Belarus" },
 
   { .id = "CAM_EE_TARKTEE", .name = "Estonia Tark Tee — road cameras & conditions",
     .name_ja = "エストニア 道路カメラ", .category = "surveillance",
@@ -201,18 +179,6 @@ static const hp_source HP3B31_SURVCAM[] = {
       "state road network and the French and Portuguese border approaches" },
 
   /* ── Asia-Pacific ─────────────────────────────────────────────────────── */
-  { .id = "CAM_HK_TRANSPORT_SNAPSHOTS", .name = "Hong Kong — Transport Department traffic snapshots",
-    .name_ja = "香港 交通カメラ", .category = "surveillance",
-    .portal = "https://data.gov.hk", .record_type = "road-camera",
-    .tags = "\"hk\",\"camera\",\"traffic\",\"surveillance\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://data.gov.hk/en-data/dataset/hk-td-tis_2-traffic-snapshot-images"
-      "?q={q}",
-    .base = "https://data.gov.hk", .filter_query = 1,
-    .description = "Hong Kong's Transport Department camera inventory with the "
-      "snapshot image URLs, covering the cross-harbour tunnels, the container "
-      "port approaches and the boundary crossings to Shenzhen" },
-
   { .id = "CAM_TW_FREEWAY_CCTV", .name = "Taiwan — national freeway CCTV inventory",
     .name_ja = "台湾 高速道路カメラ", .category = "surveillance",
     .portal = "https://tisvcloud.freeway.gov.tw", .record_type = "road-camera",

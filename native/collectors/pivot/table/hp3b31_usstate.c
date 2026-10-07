@@ -91,17 +91,6 @@ static const hp_source HP3B31_USSTATE[] = {
     .description = "North Carolina corporations and LLCs — SOSID, status, "
       "registered agent and the scanned filings behind each record" },
 
-  { .id = "US_VA_SCC_BUSINESS", .name = "Virginia SCC — business entity search",
-    .name_ja = "米バージニア州 法人登記", .category = "government",
-    .portal = "https://cis.scc.virginia.gov", .record_type = "us-entity",
-    .tags = "\"us\",\"va\",\"registry\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://cis.scc.virginia.gov/EntitySearch/Index?searchTerm={q}",
-    .base = "https://cis.scc.virginia.gov", .filter_query = 1,
-    .description = "Virginia's Clerk's Information System — entity ID, status, "
-      "registered agent and, for stock corporations, the authorised share "
-      "structure that the annual assessment fee is calculated from" },
-
   { .id = "US_AZ_CORP_COMMISSION", .name = "Arizona Corporation Commission — entity search",
     .name_ja = "米アリゾナ州 法人委員会", .category = "government",
     .portal = "https://ecorp.azcc.gov", .record_type = "us-entity",
@@ -199,28 +188,6 @@ static const hp_source HP3B31_USSTATE[] = {
     .description = "Louisiana's commercial register — charter number, agent, "
       "officers and the amendment history; Louisiana publishes officer names "
       "and addresses more completely than most Gulf states" },
-
-  { .id = "US_MD_BUSINESS_EXPRESS", .name = "Maryland — business entity search",
-    .name_ja = "米メリーランド州 事業登記", .category = "government",
-    .portal = "https://egov.maryland.gov", .record_type = "us-entity",
-    .tags = "\"us\",\"md\",\"registry\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://egov.maryland.gov/BusinessExpress/EntitySearch/Search?query={q}",
-    .base = "https://egov.maryland.gov", .filter_query = 1,
-    .description = "Maryland entities with department ID, status, resident agent "
-      "and the personal property return that discloses business assets by "
-      "county — an unusual disclosure among state registers" },
-
-  { .id = "US_OR_BUSINESS_REGISTRY", .name = "Oregon — business registry search",
-    .name_ja = "米オレゴン州 事業登記", .category = "government",
-    .portal = "https://sos.oregon.gov", .record_type = "us-entity",
-    .tags = "\"us\",\"or\",\"registry\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://sos.oregon.gov/business/pages/find.aspx?q={q}",
-    .base = "https://sos.oregon.gov", .filter_query = 1,
-    .description = "Oregon's registry — registry number, registered agent, "
-      "principal place of business and the president and secretary Oregon "
-      "requires to be named on every annual report" },
 
   { .id = "US_AK_CORP_DATABASE", .name = "Alaska — corporations database",
     .name_ja = "米アラスカ州 法人データベース", .category = "government",

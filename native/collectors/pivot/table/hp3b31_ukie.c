@@ -43,20 +43,6 @@
 
 static const hp_source HP3B31_UKIE[] = {
   /* ── Public money ─────────────────────────────────────────────────────── */
-  { .id = "UK_PUBLIC_CONTRACTS_SCOTLAND", .name = "Public Contracts Scotland — devolved procurement",
-    .name_ja = "スコットランド 公共調達", .category = "government",
-    .portal = "https://www.publiccontractsscotland.gov.uk",
-    .record_type = "uk-contract-notice",
-    .tags = "\"uk\",\"scotland\",\"procurement\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.publiccontractsscotland.gov.uk/search/Search_MainPage.aspx"
-      "?searchTerm={q}",
-    .base = "https://www.publiccontractsscotland.gov.uk", .filter_query = 1,
-    .description = "Scottish public bodies procure separately from Whitehall "
-      "and publish here — councils, NHS boards, universities and the Scottish "
-      "Government, with the notice, the award and the supplier. None of it "
-      "appears in the UK-wide Contracts Finder" },
-
   { .id = "UK_GOVUK_SEARCH_API", .name = "GOV.UK — whole-estate content search",
     .name_ja = "英国政府 全文検索API", .category = "government",
     .portal = "https://www.gov.uk", .record_type = "uk-gov-publication",
@@ -227,67 +213,6 @@ static const hp_source HP3B31_UKIE[] = {
       "children's homes — the URN, the responsible body or trust, the judgement "
       "and the full inspector narrative" },
 
-  { .id = "UK_ICO_FEE_PAYERS", .name = "UK ICO — data protection fee register",
-    .name_ja = "英国ICO データ保護登録", .category = "government",
-    .portal = "https://ico.org.uk", .record_type = "uk-data-controller",
-    .tags = "\"uk\",\"privacy\",\"registry\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://ico.org.uk/ESDWebPages/Search?SearchOption=Contains&Name={q}",
-    .base = "https://ico.org.uk", .filter_query = 1,
-    .description = "Organisations registered as data controllers with the "
-      "Information Commissioner — registration number, the security and "
-      "trading names, the address and the data-protection officer contact" },
-
-  { .id = "UK_INSOLVENCY_INDIVIDUAL", .name = "UK Insolvency Service — individual insolvency register",
-    .name_ja = "英国 個人破産登録簿", .category = "legal",
-    .portal = "https://www.insolvencydirect.bis.gov.uk",
-    .record_type = "uk-individual-insolvency",
-    .tags = "\"uk\",\"insolvency\",\"distress\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.insolvencydirect.bis.gov.uk/eiir/IIRCaseNameSearchResult.asp"
-      "?txtSurname={q}",
-    .base = "https://www.insolvencydirect.bis.gov.uk", .filter_query = 1,
-    .description = "Bankruptcies, debt relief orders and individual voluntary "
-      "arrangements against a named person — court, case number, date and the "
-      "insolvency practitioner appointed. The personal counterpart to a "
-      "company's insolvency record" },
-
-  { .id = "UK_LAND_OVERSEAS_OWNERSHIP", .name = "HM Land Registry — overseas company ownership",
-    .name_ja = "英国土地登記 海外法人所有", .category = "government",
-    .portal = "https://use-land-property-data.service.gov.uk",
-    .record_type = "uk-property-ownership",
-    .tags = "\"uk\",\"property\",\"ownership\",\"offshore\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://use-land-property-data.service.gov.uk/datasets/ocod?q={q}",
-    .base = "https://use-land-property-data.service.gov.uk", .filter_query = 1,
-    .description = "Overseas Companies Ownership Data — freehold and leasehold "
-      "titles in England and Wales held by companies incorporated outside the "
-      "UK, with the proprietor name, its country of incorporation and the price "
-      "paid. The single most direct offshore-to-asset link the UK publishes" },
-
-  { .id = "UK_SCOTLAND_CHARITY_OSCR", .name = "Scotland OSCR — charity register",
-    .name_ja = "スコットランド 慈善団体登録", .category = "government",
-    .portal = "https://www.oscr.org.uk", .record_type = "uk-charity",
-    .tags = "\"uk\",\"scotland\",\"charity\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.oscr.org.uk/about-charities/search-the-register/charity-details"
-      "?searchTerm={q}",
-    .base = "https://www.oscr.org.uk", .filter_query = 1,
-    .description = "Scottish charities, which are outside the Charity "
-      "Commission for England and Wales entirely — SC number, trustees, "
-      "objects, accounts and any inquiry OSCR has opened" },
-
-  { .id = "UK_NI_CHARITY_COMMISSION", .name = "Northern Ireland — charity register",
-    .name_ja = "北アイルランド 慈善団体登録", .category = "government",
-    .portal = "https://www.charitycommissionni.org.uk", .record_type = "uk-charity",
-    .tags = "\"uk\",\"northern-ireland\",\"charity\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.charitycommissionni.org.uk/charity-search/?q={q}",
-    .base = "https://www.charitycommissionni.org.uk", .filter_query = 1,
-    .description = "The third UK charity jurisdiction — NIC number, trustees, "
-      "income, and the statutory inquiries the Commission has opened, which in "
-      "Northern Ireland often touch cross-border funding flows" },
-
   { .id = "UK_WDTK_FOI_REQUESTS", .name = "WhatDoTheyKnow — FOI request archive",
     .name_ja = "英国 情報公開請求アーカイブ", .category = "government",
     .portal = "https://www.whatdotheyknow.com", .record_type = "uk-foi-request",
@@ -298,19 +223,6 @@ static const hp_source HP3B31_UKIE[] = {
     .description = "Every Freedom of Information request made through mySociety "
       "and the authority's answer, in full. Where a government record is not "
       "published, this is often where a copy of it already exists" },
-
-  { .id = "UK_ELECTORAL_COMMISSION_ENTITIES", .name = "UK Electoral Commission — regulated entities",
-    .name_ja = "英国選挙委員会 規制対象団体", .category = "government",
-    .portal = "https://search.electoralcommission.org.uk",
-    .record_type = "uk-political-entity",
-    .tags = "\"uk\",\"elections\",\"political-finance\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://search.electoralcommission.org.uk/English/Registrations?"
-      "searchText={q}",
-    .base = "https://search.electoralcommission.org.uk", .filter_query = 1,
-    .description = "Registered political parties, third-party campaigners and "
-      "permitted participants — the registered officers, the accounting units "
-      "and the entity's registration status" },
 
   /* ── Ireland ──────────────────────────────────────────────────────────── */
   { .id = "IE_OIREACHTAS_MEMBERS", .name = "Oireachtas — members of the Irish parliament",
@@ -363,18 +275,6 @@ static const hp_source HP3B31_UKIE[] = {
       "the trustees, the charitable purpose, annual reports and the CRO number "
       "where the charity is also an incorporated company" },
 
-  { .id = "IE_GOV_OPEN_DATA", .name = "data.gov.ie — Irish public dataset catalog",
-    .name_ja = "アイルランド オープンデータ目録", .category = "government",
-    .portal = "https://data.gov.ie", .record_type = "ie-dataset",
-    .tags = "\"ie\",\"open-data\",\"catalog\"", .free_tier = 1,
-    .url = "https://data.gov.ie/api/3/action/package_search?q={q}&rows=100",
-    .array_path = "result.results", .title_keys = "title,organization.title",
-    .id_keys = "id", .date_keys = "metadata_modified",
-    .page_param = "start", .page_size = 100, .page_start = 0, .page_max = 30,
-    .description = "Ireland's CKAN catalog — which department or agency holds "
-      "a dataset on a subject, the resources behind it and the licence, "
-      "including the planning, procurement and health datasets that are not "
-      "linked from any department page" },
 };
 
 HP_REGISTER_TABLE(HP3B31_UKIE)

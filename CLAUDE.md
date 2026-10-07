@@ -10,6 +10,26 @@ hardcoded registry/source names emitted as if they were findings, no seeded
 values standing in for a failed fetch. A failure degrades to an explicit
 `error` / `not_found` / "needs credential" note, never to invented content.
 
+**That note did not exist until 2026-10-06.** The engine could not invent a
+record, so the first half held — but a refused fetch stored NOTHING, which made
+it identical in the database to a source that ran and found nothing:
+`records=0 stored=0 rc=0`, the invisible nothing this rule names. Eight
+`collector-shape-notice` kinds covered a body whose SHAPE surprised us; a body
+we were REFUSED had none. `lib/hpengine.c` now stores one
+**`collector-fetch-failure`** record per (source, entity) — upsert-keyed, so a
+permanently dead source carries one row that updates rather than one per run —
+naming the HTTP status, whether the body parsed, and the remedy (a `key_env`, a
+per-host gap in `core/hostgate.c` for a 429, or re-reading an endpoint that has
+moved). Found by measuring the 45 detail-hop rows: eight `il-knesset-*` rows
+whose OData service 303s to an HTML maintenance page, and `us-courtlistener-*`
+answering 429 — nine registered sources storing zero and saying nothing.
+
+It changes two things that read the run line. A dead source now reports
+`records=1 stored=1`, so `audit_registry_emit.py` counts engine notices
+separately from records and has a `FETCH_FAILED` verdict; and `hptest`'s
+404/5xx assertions now pin zero RECORDS plus one disclosure, which is what they
+always meant.
+
 Full audit of how each collector behaves today:
 `native/collectors/SOURCE_REALITY_REPORT.md`.
 
@@ -19,19 +39,19 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 18,812** (2026-10-07): main's 18,645 — batches 33–36
-(batch 33's 43 measured supply-chain rows, `docs/verified-sources-batch33.tsv`;
-batch 34's NDJSON row; batch 35's four string-array rows; the spec-families
-beats and batch 36's 188; then the audit follow-up's two SEC listings,
-`US_SEC_LITIGATION_RELEASES` and `US_SEC_TRADING_SUSPENSIONS`, which replace
-the dead srqsb search) on top of the 18,170 that included batch 32's 340
-Japanese rows, less batch 31's `EU_VIES_VAT_VALIDATION` (removed: it could not
-form a valid request) — plus this branch's 168: batch 40's 100 Japanese and
-Chinese rows (`docs/verified-sources-batch40.md`) less three dead rows removed
-in its follow-up, and batch 39's 72 rows unlocked by date tokens / JSONP /
-body paging / HTML tables less the frozen VCSV row one of them replaced
-(`docs/verified-sources-batch39.md`) — less batch 36's `CN_HK_LANDS_ADDR`,
-a fuzzy geocoder that answers any text with addresses (`FILTER_IGNORED`,
+**The registered count is 18,897** (2026-10-07). Main's 18,730: 18,645 —
+batches 33–36 (batch 33's 43 measured supply-chain rows,
+`docs/verified-sources-batch33.tsv`; batch 34's NDJSON row; batch 35's four
+string-array rows; the spec-families beats and batch 36's 188) and the audit
+follow-up's two SEC listings, on top of the 18,170 that included batch 32's 340
+Japanese rows, less batch 31's `EU_VIES_VAT_VALIDATION` — plus batch 38's 150
+(PR #37) less 65 batch-31 rows removed for rule 4d (PR #38). Then the
+JP/CN integration's 168: batch 40's 100 Japanese and Chinese rows
+(`docs/verified-sources-batch40.md`; authored as "batch 38" and renumbered when
+main's batch 38 merged first) and batch 39's 72 rows unlocked by date tokens /
+JSONP / body paging / HTML tables less the frozen VCSV row one of them replaced
+(`docs/verified-sources-batch39.md`) — less batch 36's `CN_HK_LANDS_ADDR`, a
+fuzzy geocoder that answers any text with addresses (`FILTER_IGNORED`,
 `docs/rejected-sources-batch36.china.tsv`). `make lint-sources`
 prints it, counting hp_source table rows as well as `REGISTER_SOURCE`, and
 `./bin/japanosint --list-sources` agrees.
@@ -130,11 +150,28 @@ which is precisely why it read as healthy for weeks. Fixed 2026-10-04 with
 **A row's record count says nothing about whether its FIELDS were parsed** —
 check one record's `properties` the first time a non-comma CSV row ships.
 
-**One exception to "every source is proof-of-life verified":** batch 31 — the
-government, public-record and surveillance tables from PR #23
-(`collectors/pivot/table/hp3b31_*.c`) — holds 360 rows, and 333 of them are
-entity pivots that have not been run against a real entity, nor
-`--check-filter`ed (rules 4 and 4d). The 27 scheduled rows were run on
+**Batch 31 has now had its `--check-filter` run (2026-10-06), and 65 rows
+failed it.** All 360 rows of `docs/candidate-sources-batch31.*.txt` were probed
+live; the full result is `docs/probe-sources-batch31.tsv`. 51 PASS. Sixty-five
+came back `FILTER_IGNORED` — the upstream takes the entity parameter, ignores
+it, and returns the same collection for a real entity and for one that cannot
+exist — which rule 4d calls a confident wrong answer and this file calls fatal.
+They were REMOVED (registry 18,643 → 18,578, both floors re-recorded), after two
+were confirmed by hand first, because 65 live sources is not something to delete
+on one tool's say-so: `UK_INSOLVENCY_INDIVIDUAL` answered 9,213 bytes for a real
+surname and 9,203 for an impossible one; `KE_BRS_BUSINESS_SEARCH` 348,130 and
+348,402. The lesson generalises past batch 31: **65 of 360 means roughly one
+entity pivot in six was answering about the wrong thing**, and nothing but
+`--check-filter` can see it.
+
+The rows that failed for other reasons — 146 HTTP_ERR, 39 UNPARSEABLE, 31
+NET_ERR, and the rest — were NOT removed. One probe is one reading and those
+verdicts can be transient, a user-agent or a bad afternoon, whereas
+FILTER_IGNORED is a property of the endpoint's query handling. They disclose
+themselves now instead; see the fetch-failure notice under rule 1.
+
+**The older exception still stands for rules 4 and 4b:** those 360 rows
+(now 295) are entity pivots that have not been run against a real entity. The 27 scheduled rows were run on
 2026-10-02: 13 store real records (FDSN 151,303; Safecast 30,000; Sejm 15,000;
 USGS NWIS 53,789 before the audit timeout …) and 14 need an API key and store a
 "gated" notice saying so. Ten rows were removed when the branches merged: seven
@@ -206,14 +243,14 @@ hpengine pages exactly as it did. Without that (or an explicit `next_path` /
 
 Where the tree actually stands, as `make audit-sources` reports it:
 
-* **strict set — 0 findings across 303 files** (2026-10-06; 256 on 2026-09-27):
+* **strict set — 0 findings across 308 files** (2026-10-07; 256 on 2026-09-27):
   `collectors/pivot/table/hp*_*.c` plus the generated deep-record tables
   `collectors/feed/generated/hp1[0-9]_*.c`. This is the part the Makefile
   gates on, and it is held clean. Run `make audit-sources`
   after adding a table: batch 18 introduced two `single-page` findings here (a
   paged endpoint declared without `page_param`) and they had to be fixed before
   the gate would pass again.
-* **the rest of the tree — 0 findings** (1,672 files scanned, 2026-10-06; it
+* **the rest of the tree — 0 findings** (1,678 files scanned, 2026-10-07; it
   first reached zero on 2026-08-24, from ~127 across ~74 files). Every first-only, single-page, record-cap, loop-break,
   limit-one and dedupe-ring finding has been read and closed one of three ways:
   the discard was real and was fixed, the line carries an `exhaustive-ok`
@@ -323,9 +360,22 @@ the check that actually works.
 `VJSON_KEYED`'s IDFIELD and `VJSON_IDKEYS`'s IDKEYS carry over verbatim into
 `.id_keys` — `_vjson_idkeys.inc` promises the same `+` composes semantics, and
 `hptest` now pins it, because rule 4b's failure is silent. The 45 rows that
-moved on that promise are listed in `docs/detail-hops-need-emit-check.tsv`:
-their identity is a faithful translation, but emitted-vs-stored has not been
-measured on them, and that needs egress this session did not have.
+moved on that promise are in `docs/detail-hops-need-emit-check.tsv`, and they
+were **MEASURED on 2026-10-06**: the promise held. The five 8-part composites
+(`af-dportal-trans-*`) store 90,785–96,154 rows each — had `+` been read as
+`,`, keying on `aid`, each would have collapsed to its few thousand distinct
+activities. Across all 19 COLLISION verdicts the loss is 218,769 emitted
+against 218,692 stored, 0.035%, which is the upstreams' own duplicates.
+
+What the pass found instead is what reasoning about `id_keys` could never have
+found: **nine rows that fetch nothing at all** — eight `il-knesset-*` whose
+OData service 303s to an HTML maintenance page, and `us-courtlistener-*`
+answering 429 — and one real defect that was not identity either.
+`us-sf-311-open311-requests` lost 5 of 20 because SF's Open311 server
+rate-limited both the page walk and the per-record detail hop; pacing
+`mobile311.sfgov.org` at 1200 ms in `core/hostgate.c` took it from 20 records
+across 5 pages to 90 across 19. **A collision verdict is a question, not a
+diagnosis** — measure the upstream before touching a key.
 
 `VJSON_PREP` is deliberately NOT converted: its extra argument is a C function
 that reshapes each page before emit, and a declarative row cannot hold code.
@@ -361,6 +411,20 @@ was never a test result, because nothing had ever been compiled or executed.
 PR #28 moved it to a `$GITHUB_ENV` step and the runs after it are the first
 real ones. A failing run with `total_count: 0` in its jobs list is this shape,
 not a gate.
+
+**And the inverse: "that job is just flaky" is also a question.** The `asan` job
+failed on `test_export_stream`'s backpressure assertion about 40% of the time
+for weeks, and runs #116 and #117 are the SAME SHA with opposite outcomes, which
+is as flaky as a signal gets. It was not noise. `xs_pump` set `x->queued = 0`
+before the bytes it had taken were counted into `x->unsent`, so between those
+two statements the worker's gate (`queued + unsent >= XS_HIGH_WATER`) saw
+neither, and a worker racing the first pump queued a SECOND full high-water mark
+while the first was in flight: 1.5 MB held against a 1 MB mark, on the one code
+path whose entire purpose is that the bound holds. An intermittent assertion
+means the invariant is intermittently false. Reproduce it (`2 of 30` runs
+locally without ASan) and instrument the quantity the assertion names — the peak
+distribution was `38 x 1024 KB, 1 x 1280, 1 x 1536` and said what the bug was —
+rather than widening the slack until the red goes away.
 
 If `make unit` dies with `tests/unit/run.sh: No such file or directory` (exit
 127) on a tree that came from a Windows checkout, the script has CRLF line

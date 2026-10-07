@@ -241,18 +241,6 @@ static const hp_source HP3B31_SURVTRANSPORT[] = {
       "provider, the vehicle, the pad with coordinates, the mission and its "
       "orbit, and the payload customers where disclosed" },
 
-  { .id = "US_BTS_TRANSPORT_STATISTICS", .name = "US BTS — transportation statistics & carrier data",
-    .name_ja = "米国運輸統計局 データ", .category = "transport",
-    .portal = "https://www.transtats.bts.gov", .record_type = "us-transport-statistic",
-    .tags = "\"us\",\"aviation\",\"statistics\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.transtats.bts.gov/DataIndex.asp?q={q}",
-    .base = "https://www.transtats.bts.gov", .filter_query = 1,
-    .description = "The Bureau of Transportation Statistics data index — "
-      "airline on-time performance by tail number, the T-100 segment traffic "
-      "by carrier and route, air carrier financials and the aircraft inventory "
-      "each carrier reports" },
-
   { .id = "EU_RAIL_RINF_INFRASTRUCTURE", .name = "EU RINF — register of railway infrastructure",
     .name_ja = "EU 鉄道インフラ登録", .category = "transport",
     .portal = "https://rinf.era.europa.eu", .record_type = "eu-rail-infrastructure",

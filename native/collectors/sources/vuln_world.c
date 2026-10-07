@@ -319,7 +319,11 @@ static int edb_flush(intel_sink *sink, edb_pending *pd) {
   char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char link[96];
+  /* 160, not 96: the prefix is 36 bytes and `id` comes from char id[64], so
+   * 96 could cut the exploit id off the end of the URL. The result is STORED
+   * as intel_item.link — a link that resolves to the wrong exploit, or to
+   * nothing, presented as the record's source. */
+  char link[160];
   snprintf(link, sizeof link, "https://www.exploit-db.com/exploits/%s", id);
 
   intel_item it = {0};
