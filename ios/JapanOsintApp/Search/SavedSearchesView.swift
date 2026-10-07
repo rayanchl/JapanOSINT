@@ -4,9 +4,12 @@ import Foundation
 // ─────────────────────────────────────────────────────────────────────────────
 // Roadmap item 38 — saved searches.
 //
-// A saved search is a private bookmark: `/api/saved-searches` carries
-// `tenant_id AND user_id` on every statement, including the fetch-by-id and the
-// DELETE, so nothing here is visible to a workspace admin.
+// A saved search belongs to the workspace (decided 2026-10-05): every member
+// lists every member's, each row naming its author (`user_id`, `mine`). It
+// used to be a private bookmark and this screen still said so. Renaming,
+// pinning and deleting stay with the author — `/api/saved-searches/:id` PATCH
+// and DELETE carry `user_id` and 404 anyone else — so those actions are
+// offered on your own rows only. Running one is open to every member.
 //
 // Two server behaviours shape this screen and are worth stating up front:
 //
@@ -125,6 +128,7 @@ struct SavedSearchesView: View {
     @Environment(\.theme) private var theme
 
     @State private var items: [SavedSearch] = []
+    @State private var names: [String: String] = [:]
     @State private var loading = true
     @State private var error: String?
     @State private var busyID: String?
@@ -207,7 +211,7 @@ struct SavedSearchesView: View {
             Button("Delete", role: .destructive) { Task { await delete(search) } }
             Button("Cancel", role: .cancel) {}
         } message: { search in
-            Text("\"\(displayName(search))\" is removed for good. Its run history stays in your search history until you clear that too.")
+            Text("\"\(displayName(search))\" is removed for everyone in the workspace. Runs already recorded stay in the search history.")
         }
         .alert("Can't turn this into an alert", isPresented: $showBlocked,
                presenting: blockedKind) { _ in
@@ -251,7 +255,7 @@ struct SavedSearchesView: View {
                 } header: {
                     sectionLabel(pinned.isEmpty ? "Saved" : "Everything else")
                 } footer: {
-                    Text("Saved searches are private to your account. Workspace owners and admins cannot read them.")
+                    Text("Shared with everyone in this workspace. Only the author can rename or delete a saved search.")
                         .font(.caption2)
                 }
             }
@@ -292,17 +296,24 @@ struct SavedSearchesView: View {
                      : "last run \(relativeTime(search.last_run_at))")
                     .font(.caption2.monospacedDigit())
                     .foregroundStyle(theme.textMuted)
+                Text("·").font(.caption2).foregroundStyle(theme.textMuted)
+                Text("saved by \(AuthorLabel.text(userId: search.user_id, mine: search.mine, names: names))")
+                    .font(.caption2)
+                    .foregroundStyle(theme.textMuted)
+                    .lineLimit(1)
                 Spacer(minLength: 0)
             }
         }
         .padding(.vertical, Space.xs)
         .listRowBackground(theme.surface)
         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-            Button(role: .destructive) {
-                deleteTarget = search
-                showDelete = true
-            } label: {
-                Label("Delete", systemImage: "trash")
+            if isMine(search) {
+                Button(role: .destructive) {
+                    deleteTarget = search
+                    showDelete = true
+                } label: {
+                    Label("Delete", systemImage: "trash")
+                }
             }
         }
         .swipeActions(edge: .leading, allowsFullSwipe: true) {
@@ -322,12 +333,14 @@ struct SavedSearchesView: View {
             } label: {
                 Label("Run", systemImage: "play.fill")
             }
-            Button {
-                renameTarget = search
-                renameText = search.name ?? ""
-                showRename = true
-            } label: {
-                Label("Rename", systemImage: "pencil")
+            if isMine(search) {
+                Button {
+                    renameTarget = search
+                    renameText = search.name ?? ""
+                    showRename = true
+                } label: {
+                    Label("Rename", systemImage: "pencil")
+                }
             }
             if search.kind == "intel" {
                 Button {
@@ -345,12 +358,14 @@ struct SavedSearchesView: View {
                     Label("Why can't this be an alert?", systemImage: "bell.slash")
                 }
             }
-            Divider()
-            Button(role: .destructive) {
-                deleteTarget = search
-                showDelete = true
-            } label: {
-                Label("Delete", systemImage: "trash")
+            if isMine(search) {
+                Divider()
+                Button(role: .destructive) {
+                    deleteTarget = search
+                    showDelete = true
+                } label: {
+                    Label("Delete", systemImage: "trash")
+                }
             }
         } label: {
             Image(systemName: "ellipsis.circle")
@@ -369,8 +384,8 @@ struct SavedSearchesView: View {
             }
         } description: {
             Text(currentSearch == nil
-                 ? "Save a search from the Search tab and it will appear here, private to your account."
-                 : "Tap + to save the search you are looking at. It stays private to your account.")
+                 ? "Save a search from the Search tab and it will appear here, for everyone in this workspace."
+                 : "Tap + to save the search you are looking at. Everyone in this workspace will see it; only you can rename or delete it.")
                 .foregroundStyle(theme.textMuted)
         } actions: {
             if currentSearch != nil {
@@ -397,6 +412,10 @@ struct SavedSearchesView: View {
     private var pinned: [SavedSearch] { items.filter { $0.pinned } }
     private var unpinned: [SavedSearch] { items.filter { !$0.pinned } }
 
+    /// The server's own `mine`. A row from an older server without the field
+    /// was always the caller's (saved searches were per-user then).
+    private func isMine(_ s: SavedSearch) -> Bool { s.mine != false }
+
     private func displayName(_ s: SavedSearch) -> String {
         if let n = s.name, !n.trimmingCharacters(in: .whitespaces).isEmpty {
             return n
@@ -415,6 +434,11 @@ struct SavedSearchesView: View {
         } catch {
             self.error = ServerError.message(error)
             Haptics.error()
+        }
+        // Author names are a nicety: without the roster a row still says
+        // "you" or "a teammate", so a failure here is not an error banner.
+        if let roster = try? await apiClient.api.membersList() {
+            names = AuthorLabel.names(roster)
         }
     }
 
@@ -506,7 +530,7 @@ private struct SaveSearchSheet: View {
                 } header: {
                     Text("Name")
                 } footer: {
-                    Text("Optional. An unnamed saved search still works — it just shows its query instead of a title.")
+                    Text("Optional. An unnamed saved search still works — it just shows its query instead of a title. Everyone in this workspace will see it; only you can rename or delete it.")
                         .font(.caption2)
                 }
 

@@ -440,6 +440,12 @@ struct SavedSearch: Codable, Identifiable, Hashable {
     let created_at: String
     let last_run_at: String?
     let run_count: Int
+    /// Saved searches are workspace-wide on read (decided 2026-10-05): every
+    /// member lists every member's. `user_id` names the author; `mine` is the
+    /// server's own answer to "is it the caller's". Renaming, pinning and
+    /// deleting stay with the author — the server 404s anyone else.
+    let user_id: String?
+    let mine: Bool?
 }
 struct SavedSearchesEnvelope: Decodable { let data: [SavedSearch] }
 struct SavedSearchEnvelope: Decodable { let data: SavedSearch }
@@ -450,6 +456,10 @@ struct SearchHistoryEntry: Codable, Identifiable, Hashable {
     let params: [String: AnyCodable]?
     let result_count: Int?
     let ts: String
+    /// Workspace-wide on read, like saved searches; clearing removes only the
+    /// caller's own entries.
+    let user_id: String?
+    let mine: Bool?
 }
 struct SearchHistoryEnvelope: Decodable { let data: [SearchHistoryEntry] }
 
