@@ -94,7 +94,7 @@ static cJSON *fra_soql(const source_ctx *ctx, const char *const *kv) {
   char *url = malloc(cap);
   if (!url) return NULL;
   size_t used = (size_t)snprintf(url, cap, "%s", FRA_RES);
-  for (int i = 0; kv[i] && kv[i + 1]; i += 2) {
+  for (int i = 0; kv[i] && kv[i + 1] && used < cap; i += 2) {
     char *ev = jo_urlencode(kv[i + 1]);
     if (!ev) { free(url); return NULL; }
     used += (size_t)snprintf(url + used, cap - used, "%c%s=%s",
@@ -131,11 +131,11 @@ static int fra_census(const source_ctx *ctx, keyqual *kq) {
     char *where = malloc(cap);
     if (!where) { rc = -1; break; }
     size_t used = (size_t)snprintf(where, cap, "crossingid in (");
-    for (int j = i; j < nid && j < i + FRA_CENSUS_CHUNK; j++)
+    for (int j = i; j < nid && j < i + FRA_CENSUS_CHUNK && used < cap; j++)
       used += (size_t)snprintf(where + used, cap - used, "%s'%s'",
                                j > i ? "," : "",
                                cJSON_GetArrayItem(ids, j)->valuestring);
-    snprintf(where + used, cap - used, ")");
+    if (used < cap) snprintf(where + used, cap - used, ")");
     const char *const rq[] = { "$select", "crossingid,agencyid",
                                "$where", where, "$limit", "50000", NULL };
     cJSON *rows = fra_soql(ctx, rq);
