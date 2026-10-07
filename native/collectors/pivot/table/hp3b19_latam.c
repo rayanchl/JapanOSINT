@@ -2535,7 +2535,7 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "foi-request",
     .tags = "\"paraguay\",\"transparency\",\"foi\",\"accesstoinformation\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://informacionpublica.paraguay.gov.py/api/dashboard/buscar?keyword={q}&pageSize=100",
+    .url = "https://informacionpublica.paraguay.gov.py/api/dashboard/buscar?keyword={q}&pageSize=5000",
     /* The server answers HTTP 500 "Content type '' not supported" without a
      * JSON Content-Type, on the list AND on /detalle. The manifest wrote it
      * `application/json\;charset=utf-8`, which gen_hp_batch rejects as a
@@ -2557,8 +2557,34 @@ static const hp_source HP3B19_LATAM[] = {
      * "puente" (totalRecords 415, five pages) returned 415 rows each, holding
      * 200 and 215 distinct ids. The front end sends no sort parameter either,
      * so there is none to pin. The sink keeps one row per distinct
-     * id+content. */
+     * id+content.
+     *
+     * NO SORT IS HONOURED; A LARGE PAGE IS (2026-10-07). The same backend's
+     * /api/solicitud/ list takes sortField + sortAsc (main-es2015 bundle), so
+     * those were tried here, with sort=id,asc, orderBy, order, sortOrder and
+     * ordenar: page=0 of "puente" came back in a different order on every
+     * request with each of them. The walk cannot be made stable, but it can
+     * be made to have no boundaries: pageSize is honoured far above 100 —
+     * 5,000 and 20,000 rows answered in full ("salud", 57,765 matches: 24 s
+     * and 69 s) — and a result set that fits in ONE page is the complete set
+     * whatever order it comes in. "puente" (415) at pageSize=500 returned 415
+     * rows holding 287 distinct ids and 385 distinct rows, identical on two
+     * requests, where the 100-row walk stored 293 rows over 212 ids. 5,000 is
+     * the page: every pivot up to 5,000 matches is one request with no
+     * boundary to repeat or skip across. What still collides inside one page
+     * is the upstream repeating a byte-identical row (puente 30, contrato
+     * 109) — real duplicates, which the sink collapses. timeout_ms covers the
+     * 24 s a full 5,000-row page takes.
+     *
+     * Above 5,000 the walk is still incomplete, and not only at the
+     * boundaries: the server shuffles the WHOLE match set per request, so
+     * each page is in effect a random 5,000 of it. "agua" (27,598 rows;
+     * 26,548 distinct, 21,769 ids in one 30,000-row response, 142 s, 37 MB)
+     * walked in 7 pages stored 18,803 rows over 15,407 ids — the ~70% that
+     * six random draws cover. No row can fix that: a single page as large as
+     * the match set is the only complete read, and "a" matches 172,247. */
     .headers = { "Content-Type: application/json" },
+    .timeout_ms = 120000,
     .array_path = "data.lista",
     .detail_key = "id",
     .detail_url = "https://informacionpublica.paraguay.gov.py/api/solicitud/{v}/detalle",
