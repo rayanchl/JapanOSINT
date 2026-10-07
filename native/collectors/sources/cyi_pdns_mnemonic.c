@@ -38,12 +38,33 @@
 #include "cyi_common.inc"
 
 /* The endpoint's own page size, not an editorial bound: `limit` caps a page
- * and `count` is the true total (1,000 for google.com on the open tier). This
- * collector used to send no limit at all — so it got the server default of 25
- * — and then capped itself at 50 rows on top, which meant 25 of 1,000 answers
- * reached the sink and the other 975 were never even requested. Now the walk
- * follows offset/limit to `count`. */
-#define PDNS_PAGE_SIZE 100
+ * and `count` is the total the server will serve. This collector used to send
+ * no limit at all — so it got the server default of 25 — and then capped
+ * itself at 50 rows on top, which meant 25 of 1,000 answers reached the sink
+ * and the other 975 were never even requested. Now the walk follows
+ * offset/limit to `count`.
+ *
+ * WHY THE PAGE IS 1,000 AND NOT 100. The answers come back ordered by
+ * lastUpdatedTimestamp, newest first, and Mnemonic updates that timestamp
+ * live as its sensors keep observing a name. An offset walk over a list that
+ * re-sorts itself between requests serves the record at a page boundary twice
+ * and never serves the one that slid past it. Measured 2026-10-07 on
+ * google.com: ten pages of 100 emitted 1,000 and stored 986
+ * (`UID-COLLISION: 14 of 1000`) — and the 14 missing answers are exactly the
+ * 14 that one limit=1000 request returns and the walk never saw; that single
+ * request has 1,000 distinct query|rrtype|answer keys and no duplicate. So
+ * the collisions were not records sharing a key, nor byte-identical copies;
+ * they were the walk re-serving records while losing others. 1,000 is the
+ * largest page the open tier accepts (`limit=5000` answers HTTP 412 "Maximum
+ * result limit for public usage is 1000"), so an anonymous pivot is now ONE
+ * request with no page boundary at all — and one request, not ten, against a
+ * quota that refuses the tenth. A keyed caller whose set exceeds 1,000 still
+ * pages, with a tenth of the boundaries. */
+#define PDNS_PAGE_SIZE 1000
+/* The open tier's ceiling on a whole result set, from the 412 above: `count`
+ * never exceeds it without a key, so count == 1,000 on an anonymous pivot is
+ * the ceiling, not a measurement of the name's history. */
+#define PDNS_PUBLIC_CAP 1000
 #define PDNS_MAX_PAGES 50   /* exhaustive-ok: offset-walk runaway guard; an early stop emits a collector-truncation-notice */
 
 static int looks_like_domain(const char *s) {
@@ -303,6 +324,21 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   fprintf(stderr, "[PDNS_MNEMONIC] emitted %d of %.0f known answers over %d "
                   "page(s) (%s)\n", n, total, pages, q);
+  /* An anonymous pivot whose count reached the open tier's ceiling has been
+   * served everything Mnemonic will serve WITHOUT a key, which is not the
+   * same as everything it holds. Say so in-band (rule 2) — the true total is
+   * unknown, so it is not invented. */
+  if (!stopped_early && !keyed && total >= PDNS_PUBLIC_CAP) {
+    char reason[320];
+    snprintf(reason, sizeof reason,
+             "Mnemonic's open tier serves at most %d results per query (HTTP 412 "
+             "\"Maximum result limit for public usage is %d\"), and %s reached "
+             "it, so this name may have more passive-DNS answers than were "
+             "served", PDNS_PUBLIC_CAP, PDNS_PUBLIC_CAP, q);
+    jo_trunc_notice_scoped(sink, "PDNS_MNEMONIC", q, base, n, -1, reason,
+                           "set MNEMONIC_API_KEY (sent as Argus-API-Key) to query "
+                           "above the anonymous tier");
+  }
   if (stopped_early) {
     char reason[400];
     if (stop_status == 402 || stop_status == 429)

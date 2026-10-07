@@ -31,6 +31,7 @@
  * is disclosed as a collector-truncation-notice (2026-09-03 audit).
  */
 #include "lib/jocore.h"
+#include "lib/keyqual.h"
 #include "trn_common.inc"
 
 #define FRA_URL "https://data.transportation.gov/resource/m2f8-22s6.json?$limit=1000&$order=:id"
@@ -42,9 +43,127 @@
  * inventory to grow, not to a round number that merely happens to fit today. */
 #define FRA_MAX_PAGES 600   /* exhaustive-ok: page-walk runaway guard (438,835 rows measured 2026-09-21); an early stop emits a collector-truncation-notice */
 
+/* IDENTITY. crossingid is the crossing's own DOT number and the key — but
+ * the inventory holds a handful of crossings TWICE, as different rows.
+ * Measured 2026-10-07 with `$group=crossingid&$having=count(*) > 1`: 11
+ * crossingids carry two rows each (the 11 of 438,865 the sink folded). They
+ * are not byte-identical copies: in every pair one row carries an agencyid
+ * (1141, 230, 520, 627, 2458, 13250) and the other carries none, and in six
+ * pairs the rows also differ in revisiondate, reasoncode/reasondescription
+ * ("Change in Primary Operating RR" vs "Closed"), railroadmilepostnumber or
+ * statenarrative. Keyed on crossingid alone, whichever row the walk met
+ * second overwrote the first.
+ *
+ * Both rows are kept, and which one is which no longer depends on walk order
+ * (lib/keyqual.h): every member of a colliding group is qualified by its
+ * agencyid — `022128G|1141` — and the row without one by the literal
+ * `no-agencyid`, so its uid does not move each time its content is revised
+ * (keyqual's content hash would). Two rows of one crossing that share an
+ * agencyid fall through to keyqual's content hash; a byte-identical repeat
+ * is folded.
+ *
+ * keyqual needs the whole group before the first uid is decided, and this
+ * walk is 439 pages of ~120-column rows — far too much to buffer. So the
+ * census is asked of the UPSTREAM before the walk, in two small queries: the
+ * crossingids that recur, then the agencyid of each of their rows. A unique
+ * crossingid is not in the census and keeps its plain uid, exactly as before.
+ * A census that fails is logged and the walk keys every row on crossingid as
+ * it used to — the run line's UID-COLLISION then shows what folded. */
+#define FRA_RES "https://data.transportation.gov/resource/m2f8-22s6.json"
+#define FRA_CENSUS_CHUNK 100   /* exhaustive-ok: ids per `in (...)` query; every chunk is asked */
+
+static const char *fra_disc(const cJSON *r) {
+  const char *a = jo_sv(r, "agencyid");
+  return a ? a : "no-agencyid";
+}
+
+/* An id safe to splice into a SoQL string literal: [0-9A-Za-z]. */
+static int fra_id_ok(const char *s) {
+  if (!s || !*s || strlen(s) > 32) return 0;
+  for (const char *p = s; *p; p++)
+    if (!((*p >= '0' && *p <= '9') || (*p >= 'A' && *p <= 'Z') ||
+          (*p >= 'a' && *p <= 'z'))) return 0;
+  return 1;
+}
+
+/* One SoQL query against the resource: `kv` is {name, value, name, value, …,
+ * NULL}; each value is percent-encoded. NULL unless the answer is an array. */
+static cJSON *fra_soql(const source_ctx *ctx, const char *const *kv) {
+  size_t cap = strlen(FRA_RES) + 2;
+  for (int i = 0; kv[i] && kv[i + 1]; i += 2) cap += strlen(kv[i]) + 3 * strlen(kv[i + 1]) + 2;
+  char *url = malloc(cap);
+  if (!url) return NULL;
+  size_t used = (size_t)snprintf(url, cap, "%s", FRA_RES);
+  for (int i = 0; kv[i] && kv[i + 1] && used < cap; i += 2) {
+    char *ev = jo_urlencode(kv[i + 1]);
+    if (!ev) { free(url); return NULL; }
+    used += (size_t)snprintf(url + used, cap - used, "%c%s=%s",
+                             i ? '&' : '?', kv[i], ev);
+    free(ev);
+  }
+  cJSON *doc = feed_get_json(ctx->http, url, 120000);
+  free(url);
+  if (doc && !cJSON_IsArray(doc)) { cJSON_Delete(doc); doc = NULL; }
+  return doc;
+}
+
+/* Pass 1 of keyqual, asked of the upstream. Returns the number of colliding
+ * crossingids found, or -1 when the census could not be taken. */
+static int fra_census(const source_ctx *ctx, keyqual *kq) {
+  const char *const gq[] = { "$select", "crossingid,count(*) as n",
+                             "$group", "crossingid", "$having", "count(*) > 1",
+                             "$limit", "50000", NULL };
+  cJSON *groups = fra_soql(ctx, gq);
+  if (!groups) return -1;
+  cJSON *ids = cJSON_CreateArray();
+  const cJSON *g;
+  cJSON_ArrayForEach(g, groups) {
+    const char *cid = jo_sv(g, "crossingid");
+    if (fra_id_ok(cid)) cJSON_AddItemToArray(ids, cJSON_CreateString(cid));
+    else if (cid) fprintf(stderr, "[fra-grade-crossing-inventory] census: "
+                          "crossingid \"%s\" cannot be quoted into SoQL; its "
+                          "rows keep the plain key\n", cid);
+  }
+  cJSON_Delete(groups);
+  int nid = cJSON_GetArraySize(ids), rc = nid;
+  for (int i = 0; i < nid && rc >= 0; i += FRA_CENSUS_CHUNK) {
+    size_t cap = 64 + (size_t)FRA_CENSUS_CHUNK * 40;
+    char *where = malloc(cap);
+    if (!where) { rc = -1; break; }
+    size_t used = (size_t)snprintf(where, cap, "crossingid in (");
+    for (int j = i; j < nid && j < i + FRA_CENSUS_CHUNK && used < cap; j++)
+      used += (size_t)snprintf(where + used, cap - used, "%s'%s'",
+                               j > i ? "," : "",
+                               cJSON_GetArrayItem(ids, j)->valuestring);
+    if (used < cap) snprintf(where + used, cap - used, ")");
+    const char *const rq[] = { "$select", "crossingid,agencyid",
+                               "$where", where, "$limit", "50000", NULL };
+    cJSON *rows = fra_soql(ctx, rq);
+    free(where);
+    if (!rows) { rc = -1; break; }
+    const cJSON *r;
+    cJSON_ArrayForEach(r, rows) {
+      const char *cid = jo_sv(r, "crossingid");
+      if (cid) keyqual_add(kq, cid, fra_disc(r));
+    }
+    cJSON_Delete(rows);
+  }
+  cJSON_Delete(ids);
+  keyqual_seal(kq);
+  return rc;
+}
+
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int n = 0, capped = 0, mid_fail = 0;
+  int n = 0, capped = 0, mid_fail = 0, folded = 0;
   long seen = 0;
+  keyqual kq = {0};
+  int census = fra_census(ctx, &kq);
+  if (census < 0)
+    fprintf(stderr, "[fra-grade-crossing-inventory] census of recurring "
+                    "crossingids failed; keying every row on crossingid\n");
+  else
+    fprintf(stderr, "[fra-grade-crossing-inventory] census: %d crossingid(s) "
+                    "carry more than one row\n", census);
   for (int page = 0; page < FRA_MAX_PAGES; page++) {
     char url[192];
     /* $order=:id is not optional on a Socrata $offset walk. Without a stable
@@ -68,6 +187,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON_Delete(doc);
       if (page == 0) {
         fprintf(stderr, "[fra-grade-crossing-inventory] fetch/parse failed\n");
+        keyqual_free(&kq);
         return -1;                                     /* the fetch failed (R3) */
       }
       fprintf(stderr, "[fra-grade-crossing-inventory] page at offset %d failed; "
@@ -82,6 +202,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_ArrayForEach(r, doc) {
       const char *cid = jo_sv(r, "crossingid");
       if (!cid) continue;
+      const char *rk = cid;
+      char rkbuf[256];
+      if (census > 0 && keyqual_count(&kq, cid) > 1) {
+        char *raw = cJSON_PrintUnformatted(r);
+        rk = keyqual_uid(&kq, cid, fra_disc(r), raw ? raw : "", rkbuf, sizeof rkbuf);
+        free(raw);
+        if (!keyqual_claim(&kq, cid, rk)) { folded++; continue; }
+      }
 
       cJSON *pr = cJSON_CreateObject();
       cJSON_AddStringToObject(pr, "operator",
@@ -126,7 +254,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       else summary[0] = 0;
 
       intel_item it = {0};
-      it.remote_key      = cid;
+      it.remote_key      = rk;
       it.title           = title;
       it.summary         = summary[0] ? summary : NULL;
       it.lang            = "en";
@@ -160,8 +288,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
                      "a page fetch failed mid-walk before the Socrata table was "
                      "exhausted; the true total is unknown",
                      "re-run; a transient upstream failure should clear on retry");
-  fprintf(stderr, "[fra-grade-crossing-inventory] emitted %d of %ld served\n",
-          n, seen);
+  keyqual_free(&kq);
+  fprintf(stderr, "[fra-grade-crossing-inventory] emitted %d of %ld served (%d "
+          "byte-identical repeats folded)\n", n, seen, folded);
   return 0;
 }
 
