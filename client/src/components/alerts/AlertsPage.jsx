@@ -26,10 +26,10 @@ import {
  * Rules belong to the workspace: every member reads all of them. alertsapi.c
  * gates every change — create, edit, enable, mute, test, delete — on the ROLE
  * (analyst or above may change any rule; a viewer none), never on who wrote
- * it, so the buttons follow the role. The rule's author is shown when the
- * server sends `created_by`; GET /api/alerts does not today (alert_rules
- * stores it, decode_row() does not emit it), and nothing is shown in its
- * place rather than a guess.
+ * it, so the buttons follow the role. The rule's author comes from
+ * `created_by` (null for rules created before it was recorded, shown as
+ * "unknown author"); a server that does not send the field at all gets
+ * nothing shown in its place rather than a guess.
  */
 export default function AlertsPage() {
   const auth = useAuth();
