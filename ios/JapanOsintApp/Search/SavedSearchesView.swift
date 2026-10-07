@@ -128,7 +128,18 @@ struct SavedSearchesView: View {
     var onRun: ((SavedSearch) -> Void)? = nil
 
     @EnvironmentObject var apiClient: APIClient
+    @EnvironmentObject var auth: AuthSession
     @Environment(\.theme) private var theme
+
+    /// POST /api/saved-searches/:id/to-alert creates an alert rule, and the
+    /// server refuses it below analyst (savedsearchapi.c to_alert) — so a
+    /// viewer is not offered a conversion that can only fail.
+    private var canCreateAlerts: Bool {
+        switch auth.me?.tenant?.role {
+        case "owner", "admin", "analyst": return true
+        default: return false
+        }
+    }
 
     @State private var items: [SavedSearch] = []
     @State private var page: OffsetPage?
@@ -356,10 +367,12 @@ struct SavedSearchesView: View {
                 }
             }
             if search.kind == "intel" {
-                Button {
-                    alertTarget = search
-                } label: {
-                    Label("Turn into alert", systemImage: "bell.badge")
+                if canCreateAlerts {
+                    Button {
+                        alertTarget = search
+                    } label: {
+                        Label("Turn into alert", systemImage: "bell.badge")
+                    }
                 }
             } else {
                 // The conversion itself is absent rather than disabled-and-
