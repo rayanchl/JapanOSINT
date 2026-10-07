@@ -3,6 +3,8 @@ import { LuFolderPlus } from 'react-icons/lu';
 import { api } from '../../api/client.js';
 import { usePaged } from '../../hooks/useCases.js';
 import { parseServerTime } from '../../utils/time.js';
+import { useAuth } from '../../auth/AuthContext.jsx';
+import { useMemberNames, authorLabel } from '../../hooks/useMembers.js';
 import { Sheet, Button, Input, ErrorNotice, LoadingState, EmptyState, BoundNote, cx, toast } from '../ui/kit.jsx';
 
 /**
@@ -63,28 +65,7 @@ export function CasePickerSheet({ open, onClose, refType, refId, label, onPinned
         {!loading && !error && cases.length === 0 && (
           <EmptyState title="No open cases yet.">Create one below and this item becomes its first pinned reference.</EmptyState>
         )}
-        {cases.length > 0 && (
-          <ul className="divide-y divide-osint-border rounded-md border border-osint-border">
-            {cases.map((c) => (
-              <li key={c.id}>
-                <button
-                  type="button"
-                  disabled={busy != null}
-                  onClick={() => pin(c)}
-                  className={cx('w-full flex items-center justify-between gap-3 px-3 py-2 text-left hover:bg-white/5 disabled:opacity-50')}
-                >
-                  <span className="min-w-0">
-                    <span className="block text-sm text-osint-text truncate">{c.name || c.id}</span>
-                    <span className="block text-[11px] text-osint-muted font-mono">
-                      {c.status || 'open'}{c.item_count != null ? ` · ${c.item_count} items` : ''}{c.updated_at ? ` · ${parseServerTime(c.updated_at).toLocaleDateString('en-GB', { timeZone: 'Asia/Tokyo' })}` : ''}
-                    </span>
-                  </span>
-                  <span className="text-xs text-accent">{busy === c.id ? '…' : 'Pin'}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
+        {cases.length > 0 && <CaseChoices cases={cases} busy={busy} onPick={pin} />}
         {cases.length > 0 && (
           <div className="flex items-center justify-between gap-2">
             <BoundNote shown={cases.length} total={hasMore ? null : cases.length} more={hasMore} noun="open cases" />
@@ -97,6 +78,42 @@ export function CasePickerSheet({ open, onClose, refType, refId, label, onPinned
         </div>
       </div>
     </Sheet>
+  );
+}
+
+/**
+ * The open cases, each naming who created it — every case in the workspace is
+ * listed, not only yours. Its own component so the member roster is fetched
+ * only once the sheet is open and has cases to show: Sheet renders nothing
+ * while closed, so this mounts on open and its hooks run on every one of its
+ * renders (no hook sits behind an early return).
+ */
+function CaseChoices({ cases, busy, onPick }) {
+  const auth = useAuth();
+  const names = useMemberNames();
+  const myId = auth.me?.user?.id;
+  return (
+    <ul className="divide-y divide-osint-border rounded-md border border-osint-border">
+      {cases.map((c) => (
+        <li key={c.id}>
+          <button
+            type="button"
+            disabled={busy != null}
+            onClick={() => onPick(c)}
+            className={cx('w-full flex items-center justify-between gap-3 px-3 py-2 text-left hover:bg-white/5 disabled:opacity-50')}
+          >
+            <span className="min-w-0">
+              <span className="block text-sm text-osint-text truncate">{c.name || c.id}</span>
+              <span className="block text-[11px] text-osint-muted font-mono">
+                {c.status || 'open'}{c.item_count != null ? ` · ${c.item_count} items` : ''}{c.updated_at ? ` · ${parseServerTime(c.updated_at).toLocaleDateString('en-GB', { timeZone: 'Asia/Tokyo' })}` : ''}
+                {' · by '}<span title={c.created_by || undefined}>{authorLabel(c, names, { userId: myId })}</span>
+              </span>
+            </span>
+            <span className="text-xs text-accent">{busy === c.id ? '…' : 'Pin'}</span>
+          </button>
+        </li>
+      ))}
+    </ul>
   );
 }
 

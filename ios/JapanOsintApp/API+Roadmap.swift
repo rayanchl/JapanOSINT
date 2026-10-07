@@ -381,11 +381,16 @@ extension API {
 
     // ── Item 38: saved searches, history, permalinks ───────────────────────
 
-    func savedSearches(kind: String? = nil) async throws -> [SavedSearch] {
-        var q: [URLQueryItem] = []
+    /// One page of the workspace's saved searches (pinned first, then newest).
+    /// The server clamps `limit` to 1…200 and defaults it to 50; read
+    /// `page.total` / `page.has_more` rather than assuming one page is all.
+    func savedSearches(kind: String? = nil, limit: Int = 50,
+                       offset: Int = 0) async throws -> OffsetPaged<SavedSearch> {
+        var q: [URLQueryItem] = [URLQueryItem(name: "limit", value: String(limit)),
+                                 URLQueryItem(name: "offset", value: String(offset))]
         if let kind { q.append(URLQueryItem(name: "kind", value: kind)) }
         let env: SavedSearchesEnvelope = try await get("/api/saved-searches", query: q)
-        return env.data
+        return OffsetPaged(rows: env.data, page: env.page)
     }
 
     @discardableResult
@@ -414,10 +419,13 @@ extension API {
             body: try enc(["channels": channels]), timeout: 20)
     }
 
-    func searchHistory(limit: Int = 100) async throws -> [SearchHistoryEntry] {
+    /// One page of the workspace's search history, newest first. Same paging
+    /// contract as `savedSearches`.
+    func searchHistory(limit: Int = 50, offset: Int = 0) async throws -> OffsetPaged<SearchHistoryEntry> {
         let env: SearchHistoryEnvelope = try await get("/api/search-history",
-            query: [URLQueryItem(name: "limit", value: String(limit))])
-        return env.data
+            query: [URLQueryItem(name: "limit", value: String(limit)),
+                    URLQueryItem(name: "offset", value: String(offset))])
+        return OffsetPaged(rows: env.data, page: env.page)
     }
 
     func searchHistoryClear() async throws {
@@ -437,9 +445,15 @@ extension API {
 
     // ── Item 17: evidence ──────────────────────────────────────────────────
 
-    func evidence(forItem uid: String) async throws -> [EvidenceRecord] {
-        let env: EvidenceEnvelope = try await get("/api/intel/items/\(esc(uid))/evidence")
-        return env.data
+    /// One page of an item's custody records. evidence.c defaults `limit` to
+    /// 50 and clamps it to 200; an item re-captured more often than that has
+    /// more pages, which `page.total` / `page.has_more` report.
+    func evidence(forItem uid: String, limit: Int = 50,
+                  offset: Int = 0) async throws -> OffsetPaged<EvidenceRecord> {
+        let env: EvidenceEnvelope = try await get("/api/intel/items/\(esc(uid))/evidence",
+            query: [URLQueryItem(name: "limit", value: String(limit)),
+                    URLQueryItem(name: "offset", value: String(offset))])
+        return OffsetPaged(rows: env.data, page: env.page)
     }
 
     /// Operator-gated. Returns raw captured bytes — untrusted third-party

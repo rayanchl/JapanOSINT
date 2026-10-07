@@ -46,7 +46,20 @@ int main(void) {
                " ('e1',0,'webhook','ok'),('e2',0,'webhook','pending')");
 
   int st = 0;
-  char *b = alertsapi(&db, "tB", "uB", "DELETE", "r1", "", NULL, 0, NULL, &st);
+  /* Every member reads every rule, so a rule names its author. created_by was
+   * stored on insert and never sent; the web client had nothing to show. */
+  exec_ok(&db, "INSERT INTO alert_rules(id,tenant_id,name,created_by) VALUES ('r2','tA','Kobe berths','uA')");
+  char *b = alertsapi(&db, "tA", "uA", "GET", "", "", NULL, 0, NULL, &st);
+  assert(st == 200 && b && strstr(b, "\"created_by\":\"uA\"") && "the list names the author");
+  assert(strstr(b, "\"created_by\":null") && "a rule with no recorded author says so");
+  free(b);
+  b = alertsapi(&db, "tA", "uA", "GET", "r2", "", NULL, 0, NULL, &st);
+  assert(st == 200 && b && strstr(b, "\"created_by\":\"uA\"") && "and so does one rule");
+  free(b);
+  exec_ok(&db, "DELETE FROM alert_rules WHERE id='r2'");
+  printf("  rules name their author (list and single), null when unrecorded: ok\n");
+
+  b = alertsapi(&db, "tB", "uB", "DELETE", "r1", "", NULL, 0, NULL, &st);
   free(b);
   assert(count(&db, "SELECT COUNT(*) FROM alert_rules WHERE id='r1'") == 1 &&
          "another tenant's delete removes nothing");

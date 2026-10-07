@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from '../api/client.js';
+import { canWriteWorkspace, isWorkspaceAdmin } from '../auth/roles.js';
 
 /* ------------------------------------------------------------------------
  * Cases — vocabularies (casesapi.h) and a keyset-paged list loader shared by
@@ -41,6 +42,31 @@ export const CaseActivityKind = {
 };
 
 export const CASE_ROLES = ['lead', 'contributor', 'viewer'];
+
+/*
+ * Who may change a case — exactly casesapi.c's three gates, which combine the
+ * caller's WORKSPACE role with their role on this case's roster
+ * (`my_case_role`, null when they are not on it; GET /api/cases/:id carries
+ * it, the list does not). Nothing here depends on who created the case: the
+ * creator is put on the roster as lead when the case is made, and that lead
+ * role — which the roster can later change — is what counts.
+ */
+
+/** can_write(): edit fields, change status, pin/unpin, comment. Analyst or
+ *  above in the workspace, or anyone on the case roster (any case role). */
+export function caseCanWrite(workspaceRole, myCaseRole) {
+  return canWriteWorkspace(workspaceRole) || Boolean(myCaseRole);
+}
+
+/** can_delete(): workspace owner/admin, or the case lead. */
+export function caseCanDelete(workspaceRole, myCaseRole) {
+  return isWorkspaceAdmin(workspaceRole) || myCaseRole === 'lead';
+}
+
+/** can_manage_roster(): analyst or above in the workspace, or the case lead. */
+export function caseCanManageRoster(workspaceRole, myCaseRole) {
+  return canWriteWorkspace(workspaceRole) || myCaseRole === 'lead';
+}
 
 /** Route for a pinned reference, or null when the web has no page for it. */
 export function refLink(refType, refId, snapshot) {

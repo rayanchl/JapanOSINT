@@ -10,15 +10,28 @@ import {
   LoadingState, BoundNote, cx, toast,
 } from '../ui/kit.jsx';
 import { relativeTime } from '../../utils/time.js';
+import { useAuth } from '../../auth/AuthContext.jsx';
+import { canWriteWorkspace } from '../../auth/roles.js';
+import { useMemberNames, authorLabel } from '../../hooks/useMembers.js';
 
 /**
  * Cases tab — the iOS `CasesTab`. Status filter (server-side `?status=`),
  * client-side name search over the LOADED rows, keyset paging with
  * load-more, create in a sheet, quick status changes from each row.
+ *
+ * Every member reads every case in the workspace, and each row names who
+ * opened it. Creating one needs analyst or above (casesapi.c POST). A status
+ * change is a content write — analyst or above, OR anyone on that case's
+ * roster — and the list does not carry `my_case_role`, so for a viewer the
+ * quick buttons are left to the case page, which knows the roster.
  */
 const STATUS_OPTIONS = [{ value: '', label: 'All' }, ...CASE_STATUSES.map((s) => ({ value: s, label: CaseStatus.label(s) }))];
 
 export default function CasesPage() {
+  const auth = useAuth();
+  const names = useMemberNames();
+  const myId = auth.me?.user?.id;
+  const canWrite = canWriteWorkspace(auth.role);
   const [status, setStatus] = useState('open');
   const [search, setSearch] = useState('');
   const [showCreate, setShowCreate] = useState(false);
@@ -71,10 +84,15 @@ export default function CasesPage() {
           <Button onClick={reload} title="Reload cases"><LuRefreshCw size={13} /></Button>
           <Button busy={exporting} onClick={() => exportCases('csv')} title="Export every case as CSV (GET /api/export/case)"><LuDownload size={13} /> CSV</Button>
           <Button busy={exporting} onClick={() => exportCases('json')} title="Export every case as JSON"><LuDownload size={13} /> JSON</Button>
-          <Button variant="primary" onClick={() => setShowCreate(true)}><LuPlus size={13} /> New case</Button>
+          {canWrite && <Button variant="primary" onClick={() => setShowCreate(true)}><LuPlus size={13} /> New case</Button>}
         </>
       )}
     >
+      {!canWrite && (
+        <div className="text-[11px] text-osint-muted">
+          Your role in this workspace is {auth.role || 'not known'}: you can read every case. Creating a case needs the analyst, admin or owner role; a case whose roster you are on can be changed from its own page.
+        </div>
+      )}
       <div className="flex flex-wrap items-center gap-2">
         <Segmented value={status} onChange={setStatus} options={STATUS_OPTIONS} />
         <Input className="flex-1 min-w-[160px]" placeholder="Filter loaded cases by name, summary or id…" value={search} onChange={(e) => setSearch(e.target.value)} />
@@ -88,7 +106,7 @@ export default function CasesPage() {
         <EmptyState
           icon={<LuFolder size={22} className="mx-auto" />}
           title={status ? `No ${CaseStatus.label(status).toLowerCase()} cases.` : 'No cases yet.'}
-          action={<Button variant="primary" onClick={() => setShowCreate(true)}><LuPlus size={13} /> New case</Button>}
+          action={canWrite ? <Button variant="primary" onClick={() => setShowCreate(true)}><LuPlus size={13} /> New case</Button> : null}
         >
           {status ? 'Nothing in this status. Switch to All to see every case in the workspace.' : 'Create a case, then pin findings into it from Intel, Entities, Saved or the map.'}
         </EmptyState>
@@ -119,13 +137,16 @@ export default function CasesPage() {
                       <span className="text-[11px] text-osint-muted font-mono">
                         {c.item_count != null && <>{c.item_count} pinned · </>}updated {relativeTime(c.updated_at)}
                       </span>
+                      <span className="text-[11px] text-osint-muted font-mono" title={c.created_by || undefined}>· created by {authorLabel(c, names, { userId: myId })}</span>
                     </div>
                   </div>
-                  <div className="flex flex-col gap-1 flex-shrink-0">
-                    {c.status !== 'open' && <Button size="sm" busy={busyId === c.id} onClick={() => patchStatus(c, 'open')}>Reopen</Button>}
-                    {c.status === 'open' && <Button size="sm" busy={busyId === c.id} onClick={() => patchStatus(c, 'closed')}>Close</Button>}
-                    {c.status !== 'archived' && <Button size="sm" variant="ghost" busy={busyId === c.id} onClick={() => patchStatus(c, 'archived')}>Archive</Button>}
-                  </div>
+                  {canWrite && (
+                    <div className="flex flex-col gap-1 flex-shrink-0">
+                      {c.status !== 'open' && <Button size="sm" busy={busyId === c.id} onClick={() => patchStatus(c, 'open')}>Reopen</Button>}
+                      {c.status === 'open' && <Button size="sm" busy={busyId === c.id} onClick={() => patchStatus(c, 'closed')}>Close</Button>}
+                      {c.status !== 'archived' && <Button size="sm" variant="ghost" busy={busyId === c.id} onClick={() => patchStatus(c, 'archived')}>Archive</Button>}
+                    </div>
+                  )}
                 </div>
               </Card>
             </li>
