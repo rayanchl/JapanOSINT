@@ -1,5 +1,0 @@
-id	url	verdict	kind	items	http	bytes	note
-JO38_CNGOV_CENC_EARTHQUAKES	https://www.ceic.ac.cn/data/data.json	PASS	json-array	889	200	212644	
-JO38_CNGOV_ICH_NATIONAL_ITEMS	https://www.ihchina.cn/Article/Index/getProject.html?province=&rx_time=&type=&cate=&keywords=&category_id=16&limit=500&p=1	NET_ERR		0	0	0	timed out
-JO38_CNGOV_ICH_INHERITORS	https://www.ihchina.cn/art/representative.html?limit=500&p=1	PASS	json:list	500	200	1051581	
-JO38_CNMKT_SZSE_REG_MEASURES	https://www.szse.cn/api/report/ShowReport?SHOWTYPE=xlsx&CATALOGID=1800_jgxxgk&TABKEY=tab1	PASS	xlsx:监管措施	4855	200	234039	header=公司代码|公司简称|采取监管措施日期|监管措施|函件内容|涉及对象

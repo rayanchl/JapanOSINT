@@ -20,7 +20,7 @@ row("JO39_CN_SSE_SUSPENSIONS", "json", "finance", "trading-suspension",
     "https://www.sse.com.cn/disclosure/dealinstruc/suspension/stock/",
     "Shanghai Stock Exchange: full history of trading suspensions and resumptions of stocks and convertible bonds",
     "上海证券交易所 停复牌信息（股票及可转债）", u, None,
-    "The suspension query the SSE page itself calls (sqlId GW_PL_JYTS_TFPXX), which batch 38 found failing on an empty startStopDate: the parameter wants YYYYMMDD, and the page's own date-picker minimum 19901219 with an empty end date opens the whole history, so no rolling window is needed. Fetched 2026-10-06: pageHelp.total 28,994 over 29 pages of 1,000 (page 30 empty), startStopDate 2008-04-02 to 2026-10-12 (announced future halts included), 21,689 temporary (LSTP) and 7,305 continuous (LXTP) halts with security code and name, halt reason, resumption date and reason, control type and intraday halt time. productCode+startStopDate+type+stopTime+controlType was distinct for all 28,994 and leaves out the end date and end reason, which the exchange fills in later.",
+    "The suspension query the SSE page itself calls (sqlId GW_PL_JYTS_TFPXX), which batch 40 found failing on an empty startStopDate: the parameter wants YYYYMMDD, and the page's own date-picker minimum 19901219 with an empty end date opens the whole history, so no rolling window is needed. Fetched 2026-10-06: pageHelp.total 28,994 over 29 pages of 1,000 (page 30 empty), startStopDate 2008-04-02 to 2026-10-12 (announced future halts included), 21,689 temporary (LSTP) and 7,305 continuous (LXTP) halts with security code and name, halt reason, resumption date and reason, control type and intraday halt time. productCode+startStopDate+type+stopTime+controlType was distinct for all 28,994 and leaves out the end date and end reason, which the exchange fills in later.",
     "array_path=pageHelp.data;id_keys=productCode+startStopDate+type+stopTime+controlType;title_keys=productName;date_keys=startStopDate;page_size=1000;page_max=40;interval=86400;timeout_ms=60000;" + SSE_REF)
 
 u = ("https://query.sse.com.cn/security/stock/queryCompanyBulletinNew.do?isPagination=true&pageHelp.pageSize=25"
@@ -48,7 +48,7 @@ for plate, sid, nm, nmz, day, two, pages in (
         "CNINFO full-text announcement archive: %s-listed companies, rolling two-day window" % nm,
         "巨潮资讯 历史公告查询（%s）" % nmz,
         "https://www.cninfo.com.cn/new/hisAnnouncement/query?plate=" + plate, None,
-        ("CNINFO, the CSRC-designated disclosure site, serves its announcement archive only to a form POST whose page number lives in the body (batch 38 got HTTP 500 on GET). The board filter plate=%s is honoured from the query string, so each exchange is its own endpoint, and the window is the two days ending today in Beijing time, stepped back over closures. Fetched 2026-10-06: %s %s announcements dated 30 Sep, %s for 29-30 Sep walked over %s pages of 30 with every announcementId distinct and a null page after the end; records carry security code and name, orgId, title, announcementTime, PDF path and size and type codes. The upstream caps any query at 100 pages (3,000), so reporting-season peaks (26,066 announcements across all boards on 29 Apr 2026) are cut at that ceiling with a notice."
+        ("CNINFO, the CSRC-designated disclosure site, serves its announcement archive only to a form POST whose page number lives in the body (batch 40 got HTTP 500 on GET). The board filter plate=%s is honoured from the query string, so each exchange is its own endpoint, and the window is the two days ending today in Beijing time, stepped back over closures. Fetched 2026-10-06: %s %s announcements dated 30 Sep, %s for 29-30 Sep walked over %s pages of 30 with every announcementId distinct and a null page after the end; records carry security code and name, orgId, title, announcementTime, PDF path and size and type codes. The upstream caps any query at 100 pages (3,000), so reporting-season peaks (26,066 announcements across all boards on 29 Apr 2026) are cut at that ceiling with a notice."
          % (plate, day, nm, two, pages)),
         cn_body + cn_opts)
 
@@ -59,7 +59,7 @@ row("JO39_CN_BSE_ANNOUNCEMENTS", "json", "finance", "listed-company-announcement
     "Beijing Stock Exchange: listed-company announcements, rolling seven-day window",
     "北京证券交易所 上市公司公告",
     "https://www.bse.cn/disclosureInfoController/companyAnnouncement.do", None,
-    "The BSE announcement list as its page sends it: a form POST with jQuery array fields (disclosureType[]=5, xxfcbj[]=2, needFields[]) and a 0-based page, answered as JSONP null([...]). Batch 38 sent a bare GET and got an empty list. Fetched 2026-10-06: 132,079 announcements without a date filter, 2,075 for 1 Sep to 6 Oct, and the seven-day window 24-30 Sep held 412 over 21 pages of 20 (the fixed page size) with every destFilePath distinct and page 21 empty. Records carry company code and name, title, publishDate, file type and the PDF path.",
+    "The BSE announcement list as its page sends it: a form POST with jQuery array fields (disclosureType[]=5, xxfcbj[]=2, needFields[]) and a 0-based page, answered as JSONP null([...]). Batch 40 sent a bare GET and got an empty list. Fetched 2026-10-06: 132,079 announcements without a date filter, 2,075 for 1 Sep to 6 Oct, and the seven-day window 24-30 Sep held 412 over 21 pages of 20 (the fixed page size) with every destFilePath distinct and page 21 empty. Records carry company code and name, title, publishDate, file type and the PDF path.",
     "post_body=disclosureType[]=5&page={page}&companyCd=&isNewThree=1&startTime={date-6d}&endTime={date}&keyword=&xxfcbj[]=2&hyType=&needFields[]=companyCd&needFields[]=companyName&needFields[]=disclosureTitle&needFields[]=disclosurePostTitle&needFields[]=destFilePath&needFields[]=publishDate&needFields[]=xxfcbj&needFields[]=fileExt&needFields[]=xxzrlx;content_type=" + FORM +
     ";array_path=0.listInfo.content;id_keys=destFilePath;title_keys=disclosureTitle;date_keys=publishDate;page_size=20;page_zero_based=1;page_max=200;tz_minutes=480;date_back=12;interval=86400;timeout_ms=60000")
 
@@ -79,7 +79,7 @@ row("JO39_CN_BSE_SECURITIES", "json", "finance", "listed-security",
     "Beijing Stock Exchange: register of listed securities",
     "北京证券交易所 上市公司证券列表",
     "https://www.bse.cn/nqxxController/nqxxCnzq.do", None,
-    "The BSE listed-company list as its page POSTs it: xxfcbj must be sent as the jQuery array field xxfcbj[]=2, which is why batch 38's GET with xxfcbj=2 got 请求参数异常. Fetched 2026-10-06: 348 securities over 18 pages of 20, page 18 empty, xxzqdm distinct for all 348. Each carries code, short and English name, ISIN, industry, region, sponsoring broker, total and float shares, listing date, trading method, daily price limits, EPS and the data date.",
+    "The BSE listed-company list as its page POSTs it: xxfcbj must be sent as the jQuery array field xxfcbj[]=2, which is why batch 40's GET with xxfcbj=2 got 请求参数异常. Fetched 2026-10-06: 348 securities over 18 pages of 20, page 18 empty, xxzqdm distinct for all 348. Each carries code, short and English name, ISIN, industry, region, sponsoring broker, total and float shares, listing date, trading method, daily price limits, EPS and the data date.",
     "post_body=page={page}&typejb=T&xxfcbj[]=2&xxzqdm=&sortfield=xxzqdm&sorttype=asc;content_type=" + FORM +
     ";array_path=0.content;id_keys=xxzqdm;title_keys=xxzqjc;page_size=20;page_zero_based=1;page_max=30;interval=86400;timeout_ms=60000")
 
@@ -89,7 +89,7 @@ row("JO39_CN_NEEQ_SECURITIES", "json", "finance", "listed-security",
     "National Equities Exchange and Quotations (New Third Board): register of quoted companies, basic and innovation tiers",
     "全国中小企业股份转让系统 挂牌公司列表（基础层 创新层）",
     "https://www.neeq.com.cn/nqxxController/nqxxCnzq.do", None,
-    "The NEEQ quoted-company list posted with both tiers as jQuery array fields (xxfcbj[]=0 basic, xxfcbj[]=1 innovation), answered as JSONP null([...]); without xxfcbj the server answers 请求参数异常, which is what batch 38 met. Fetched 2026-10-06: 5,789 companies (3,508 basic, 2,281 innovation) over 290 pages of 20, page 290 empty, xxzqdm distinct for all 5,789. Each carries code, short and English name, ISIN, industry, region, sponsoring broker, total and float shares, quotation date, trading method and price limits.",
+    "The NEEQ quoted-company list posted with both tiers as jQuery array fields (xxfcbj[]=0 basic, xxfcbj[]=1 innovation), answered as JSONP null([...]); without xxfcbj the server answers 请求参数异常, which is what batch 40 met. Fetched 2026-10-06: 5,789 companies (3,508 basic, 2,281 innovation) over 290 pages of 20, page 290 empty, xxzqdm distinct for all 5,789. Each carries code, short and English name, ISIN, industry, region, sponsoring broker, total and float shares, quotation date, trading method and price limits.",
     "post_body=page={page}&typejb=T&xxfcbj[]=0&xxfcbj[]=1&xxzqdm=&sortfield=xxzqdm&sorttype=asc;content_type=" + FORM +
     ";array_path=0.content;id_keys=xxzqdm;title_keys=xxzqjc;page_size=20;page_zero_based=1;page_max=330;interval=604800;timeout_ms=60000")
 
@@ -286,7 +286,7 @@ for sid, q, rtype, nm, nzh, n, extra in (
         "array_path=list;date_field=flight_date;id_keys=flight_date+time+flight.0.no;title_keys=flight.0.no;date_keys=flight_date;tz_minutes=480;date_back=3;interval=43200;timeout_ms=60000;pagination_ok=one response holds the whole queried day and the API has no paging")
 
 hdr = [
- "# Batch 39 beat cn39: Chinese and Hong Kong sources that batch 38 rejected because the engine or the probe could not express them,",
+ "# Batch 39 beat cn39: Chinese and Hong Kong sources that batch 40 rejected because the engine or the probe could not express them,",
  "# rebuilt on the 2026-10-06 mechanisms: POST bodies (form and JSON), {page} paging inside a POST body or a path, JSONP null([...]) unwrapping,",
  "# Beijing-time date tokens with date_back (exchange files named by trading day, rolling disclosure windows, weekly HK registry lists), and",
  "# date_field, which stamps the rendered file date onto rows that carry no date of their own (SHFE and CZCE daily files, SZSE margin, HKIA flights).",

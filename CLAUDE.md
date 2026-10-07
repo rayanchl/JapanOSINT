@@ -26,8 +26,8 @@ beats and batch 36's 188; then the audit follow-up's two SEC listings,
 `US_SEC_LITIGATION_RELEASES` and `US_SEC_TRADING_SUSPENSIONS`, which replace
 the dead srqsb search) on top of the 18,170 that included batch 32's 340
 Japanese rows, less batch 31's `EU_VIES_VAT_VALIDATION` (removed: it could not
-form a valid request) — plus this branch's 168: batch 38's 100 Japanese and
-Chinese rows (`docs/verified-sources-batch38.md`) less three dead rows removed
+form a valid request) — plus this branch's 168: batch 40's 100 Japanese and
+Chinese rows (`docs/verified-sources-batch40.md`) less three dead rows removed
 in its follow-up, and batch 39's 72 rows unlocked by date tokens / JSONP /
 body paging / HTML tables less the frozen VCSV row one of them replaced
 (`docs/verified-sources-batch39.md`) — less batch 36's `CN_HK_LANDS_ADDR`,

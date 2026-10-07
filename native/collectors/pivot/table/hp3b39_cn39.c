@@ -40,7 +40,7 @@ static const hp_source HP3B39_CN39[] = {
     .timeout_ms = 60000,
     .title_keys = "productName",
     .description = "The suspension query the SSE page itself calls (sqlId "
-      "GW_PL_JYTS_TFPXX), which batch 38 found failing on an empty "
+      "GW_PL_JYTS_TFPXX), which batch 40 found failing on an empty "
       "startStopDate: the parameter wants YYYYMMDD, and the page's own "
       "date-picker minimum 19901219 with an empty end date opens the "
       "whole history, so no rolling window is needed. Fetched "
@@ -107,7 +107,7 @@ static const hp_source HP3B39_CN39[] = {
     .tz_minutes = 480,
     .description = "CNINFO, the CSRC-designated disclosure site, serves its "
       "announcement archive only to a form POST whose page number lives "
-      "in the body (batch 38 got HTTP 500 on GET). The board filter "
+      "in the body (batch 40 got HTTP 500 on GET). The board filter "
       "plate=sz is honoured from the query string, so each exchange is "
       "its own endpoint, and the window is the two days ending today in "
       "Beijing time, stepped back over closures. Fetched 2026-10-06: "
@@ -141,7 +141,7 @@ static const hp_source HP3B39_CN39[] = {
     .tz_minutes = 480,
     .description = "CNINFO, the CSRC-designated disclosure site, serves its "
       "announcement archive only to a form POST whose page number lives "
-      "in the body (batch 38 got HTTP 500 on GET). The board filter "
+      "in the body (batch 40 got HTTP 500 on GET). The board filter "
       "plate=sh is honoured from the query string, so each exchange is "
       "its own endpoint, and the window is the two days ending today in "
       "Beijing time, stepped back over closures. Fetched 2026-10-06: "
@@ -175,7 +175,7 @@ static const hp_source HP3B39_CN39[] = {
     .tz_minutes = 480,
     .description = "CNINFO, the CSRC-designated disclosure site, serves its "
       "announcement archive only to a form POST whose page number lives "
-      "in the body (batch 38 got HTTP 500 on GET). The board filter "
+      "in the body (batch 40 got HTTP 500 on GET). The board filter "
       "plate=bj is honoured from the query string, so each exchange is "
       "its own endpoint, and the window is the two days ending today in "
       "Beijing time, stepped back over closures. Fetched 2026-10-06: "
@@ -211,7 +211,7 @@ static const hp_source HP3B39_CN39[] = {
     .description = "The BSE announcement list as its page sends it: a form POST with "
       "jQuery array fields (disclosureType[]=5, xxfcbj[]=2, "
       "needFields[]) and a 0-based page, answered as JSONP null([...]). "
-      "Batch 38 sent a bare GET and got an empty list. Fetched "
+      "Batch 40 sent a bare GET and got an empty list. Fetched "
       "2026-10-06: 132,079 announcements without a date filter, 2,075 "
       "for 1 Sep to 6 Oct, and the seven-day window 24-30 Sep held 412 "
       "over 21 pages of 20 (the fixed page size) with every "
@@ -293,7 +293,7 @@ static const hp_source HP3B39_CN39[] = {
     .description = "The NEEQ quoted-company list posted with both tiers as jQuery "
       "array fields (xxfcbj[]=0 basic, xxfcbj[]=1 innovation), answered "
       "as JSONP null([...]); without xxfcbj the server answers 请求参数异常, "
-      "which is what batch 38 met. Fetched 2026-10-06: 5,789 companies "
+      "which is what batch 40 met. Fetched 2026-10-06: 5,789 companies "
       "(3,508 basic, 2,281 innovation) over 290 pages of 20, page 290 "
       "empty, xxzqdm distinct for all 5,789. Each carries code, short "
       "and English name, ISIN, industry, region, sponsoring broker, "

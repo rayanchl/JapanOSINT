@@ -1,6 +1,6 @@
 # Batch 39 — date tokens, JSONP, POST-body and path paging (2026-10-06)
 
-Batch 38 listed what the engine could not express. Four mechanisms now cover
+Batch 40 listed what the engine could not express. Four mechanisms now cover
 the main gaps. Each is mirrored in the probe, so a row is proven under the
 conditions the engine runs it in. Each was then applied to every registered row
 that needed it, and to the rejected candidates it unblocks.

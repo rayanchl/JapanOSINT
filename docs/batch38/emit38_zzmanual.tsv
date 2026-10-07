@@ -1,2 +1,0 @@
-id	verdict	shell_rc	sched_rc	emitted	stored	db_rows	available	secs	note
-JO38_CNMKT_CSRC_LICENSING_RESULTS	SLOW	-1	0	-1	12360	12360	-1	670	standalone --run 2026-10-03, stopped by hand after 11 min with 12360 distinct rows stored; both audit runs failed to connect to www.csrc.gov.cn (intermittent: two 20 s connect timeouts), as did one run of CSRC_IPO_COMMITTEE that stored 4,997 standalone

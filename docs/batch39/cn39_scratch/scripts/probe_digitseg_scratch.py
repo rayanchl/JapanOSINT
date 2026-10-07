@@ -209,7 +209,7 @@ def row_body(r, entity=None, shift=0):
     The engine POSTs `post_body` with its entity tokens expanded and the row's
     `content_type` (default `Content-Type: application/json`, lib/hpengine.c).
     The probe used to GET every row, so a POST-only API could never be proven
-    -- batch 38 rejected the Palace Museum collection (1.86 M objects) and the
+    -- batch 40 rejected the Palace Museum collection (1.86 M objects) and the
     CNEMC station feed for exactly that. A pivot row's tokens take `entity`
     (the --check-filter impossible value) or PROBE_ENTITY."""
     o, _dups, _junk = parse_opts(r["opts"])
@@ -535,7 +535,7 @@ def _xlsx_rows(raw, sheet_name, sheet_index):
     # left; it also ignored the `r` refs, so a sheet starting at row 2 (the
     # FIT-portal registers) lost the blank line the engine writes for row 1,
     # and the two disagreed about which physical line csv_skip_lines lands on.
-    # Batch 38's MHLW drug-price lists hid their 品名 header that way.
+    # Batch 40's MHLW drug-price lists hid their 品名 header that way.
     rows = []
     cur_row = 0
     for rattrs, rbody in re.findall(r"<(?:\w+:)?row\b([^>]*?)(?:/>|>(.*?)</(?:\w+:)?row>)", sx, re.S):

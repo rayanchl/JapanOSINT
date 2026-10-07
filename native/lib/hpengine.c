@@ -1878,7 +1878,7 @@ static int hp_run_json(hp_run_state *st, const char *body) {
       /* Past the end is not drift. Eastmoney's data centre answers the page
        * after the last with {"result":null,"code":9201}, so every walk filed
        * an array-path-missing notice telling the analyst to re-point a path
-       * that was fine on all the pages before it (batch 38, 2026-10-05). A
+       * that was fine on all the pages before it (batch 40, 2026-10-05). A
        * LATER page whose path is null or gone, after this walk has emitted,
        * is the upstream's end of data: the walk stops on page_records == 0 as
        * for an empty array. Page 1, or a path now holding a string or a
@@ -4111,7 +4111,7 @@ dated_restart:;
       /* A later page: hp_later_page_cut() rules end-of-data vs cut short.
        * 403 counts as cut short — NFRA's penalty registers (32,938 and 41,797
        * notices) met a burst-403 WAF on page 41 and page 6 and used to report
-       * "emitted 800 of 800 available", rc=0 (batch 38, 2026-10-03). */
+       * "emitted 800 of 800 available", rc=0 (batch 40, 2026-10-03). */
       if (page > 0) {
         if (hp_later_page_cut(fst, prev_short, prev_full, next_evidence,
                               st.declared_total, (long)st.available)) {
