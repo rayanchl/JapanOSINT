@@ -13,7 +13,8 @@
  *   us-chicago-contracts           https://data.cityofchicago.org/resource/rsxa-ify5.json?$limit=200&$order=approval_date%20DESC
  *   us-chicago-business-licenses   https://data.cityofchicago.org/resource/r5kz-chrr.json?$limit=200
  *   us-la-business-registry        https://data.lacity.org/resource/6rrh-rzua.json?$limit=200
- *   us-sf-business-locations       https://data.sfgov.org/resource/g8m3-pdis.json?$limit=200
+ *   us-sf-business-locations       https://data.sf.gov/resource/g8m3-pdis.json?$limit=200
+ *                                  (was data.sfgov.org — see the note on the row)
  *   us-seattle-business-licenses   https://data.seattle.gov/resource/wnbq-64tb.json?$limit=200
  *   co-secop-contracts             https://www.datos.gov.co/resource/jbjy-vk9h.json?$limit=200&$order=fecha_de_firma%20DESC
  *
@@ -43,7 +44,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "_jp_osint.inc"
+#include <time.h>
+#include "_jp_osint.inc"         /* jo_sv, and lib/jocore.h for the notice builder */
 
 typedef struct {
   const char *service;      /* source id, stamped into properties          */
@@ -119,7 +121,88 @@ static const char *soc_base(const soc_src *s, const cJSON *row,
  * contract owns `us-chicago-contracts|347521` depended on where the
  * newest-first window happened to cut. pw_walk hands ONE userdata to every
  * page of a walk, which is exactly the right lifetime. */
-typedef struct { const soc_src *s; cJSON *rows; } soc_walk;
+typedef struct {
+  const soc_src *s;
+  cJSON *rows;
+  int pages;              /* pages handed to soc_collect_page so far          */
+  int first_bad;          /* page 1 was not a row array: a shape failure (R3) */
+  /* A LATER page that answered 2xx with JSON that is not a row array (a
+   * Socrata error envelope) even after soc_fetch's retries. pw_walk reads such
+   * a page as a short one — the end of the data — and stops WITHOUT a notice,
+   * so soc_run files it. */
+  int bad_page;
+  char bad_msg[200];
+  char *bad_url;
+  /* soc_fetch's bookkeeping, for the run log. */
+  int retried_pages, retries;
+  char *last_url;
+} soc_walk;
+
+/* RETRY. A Socrata page that fails is retried here, with waits long enough to
+ * outlast what an anonymous caller actually meets: throttling (429), a query
+ * that timed out upstream (5xx, or a 2xx error envelope), a dropped
+ * connection. http_request already makes two quick extra attempts on
+ * transport errors, 429 and 5xx (250 ms, 500 ms); those are spent inside one
+ * feed_get_json call, so the waits below come on top of them. (The audit's
+ * "data.sfgov.org fails a page intermittently" turned out to be a moved host
+ * refusing reused connections — see the us-sf-business-locations row — but
+ * a page that fails once and reads fine when asked again is real on these
+ * portals, and before this a walk lost every page after it.)
+ *
+ * A failure that survives every attempt is never a silent short result:
+ *   - no body / non-2xx / unparseable: NULL goes back to pw_walk, which files
+ *     a collector-truncation-notice naming the page, the status of the last
+ *     attempt (feed_last_json_status) and its URL;
+ *   - a 2xx JSON that is not a row array: the document goes back as-is so
+ *     soc_collect_page records it, and soc_run files the notice (pw_walk
+ *     alone would read it as a short final page).
+ * A 4xx other than 408/425/429 is the upstream refusing the query, which
+ * asking again does not change, so it is not retried. */
+#define SOC_FETCH_ATTEMPTS 4   /* exhaustive-ok: retry attempts per page; a page that still fails is disclosed */
+static const int SOC_RETRY_WAIT_S[SOC_FETCH_ATTEMPTS - 1] = { 2, 8, 20 };
+
+static void soc_wait(const source_ctx *ctx, int seconds) {
+  for (int i = 0; i < seconds * 4; i++) {
+    if (ctx->cancel && *ctx->cancel) return;
+    struct timespec ts = { 0, 250 * 1000 * 1000 };
+    nanosleep(&ts, NULL);
+  }
+}
+
+/* 425 Too Early is retryable by definition (RFC 8470). */
+static int soc_status_retryable(long st) {
+  return st == FEED_ST_TRANSPORT || st == FEED_ST_UNPARSED || st == 408 ||
+         st == 425 || st == 429 || (st >= 500 && st <= 599);
+}
+
+/* pw_fetch_fn */
+static cJSON *soc_fetch(const source_ctx *ctx, const char *url, void *ud) {
+  soc_walk *w = (soc_walk *)ud;
+  free(w->last_url);
+  w->last_url = strdup(url);
+  cJSON *doc = NULL;
+  for (int a = 0; a < SOC_FETCH_ATTEMPTS; a++) {
+    if (a > 0) {
+      if (a == 1) w->retried_pages++;
+      w->retries++;
+      long st = feed_last_json_status();
+      fprintf(stderr, "[%s] page %d (%s) failed (%s), retry %d of %d in %d s\n",
+              w->s->service, w->pages + 1, url,
+              doc ? "2xx JSON that is not a row array" :
+                    (st > 0 ? "HTTP status" : "transport/parse"),
+              a, SOC_FETCH_ATTEMPTS - 1, SOC_RETRY_WAIT_S[a - 1]);
+      cJSON_Delete(doc);
+      doc = NULL;
+      soc_wait(ctx, SOC_RETRY_WAIT_S[a - 1]);
+      if (ctx->cancel && *ctx->cancel) break;
+      feed_last_json_status_reset();
+    }
+    doc = feed_get_json(ctx->http, url, 25000);
+    if (cJSON_IsArray(doc)) return doc;
+    if (!doc && !soc_status_retryable(feed_last_json_status())) break;
+  }
+  return doc;      /* NULL, or the last non-array document (see above) */
+}
 
 /* pw_emit_fn: collect one already-fetched page, reporting what it CONTAINED.
  * `seen` is the array size, not the kept count — pw_walk drives "did this
@@ -133,8 +216,20 @@ static int soc_collect_page(const source_ctx *ctx, intel_sink *sink,
   (void)ctx; (void)sink;
   soc_walk *w = (soc_walk *)ud;
   *seen = 0;
+  w->pages++;
   if (!cJSON_IsArray(doc)) {
-    fprintf(stderr, "[%s] unexpected payload (not an array)\n", id);
+    fprintf(stderr, "[%s] page %d: unexpected payload (not an array)\n", id,
+            w->pages);
+    if (w->pages == 1) { w->first_bad = 1; return 0; }
+    if (!w->bad_page) {
+      w->bad_page = w->pages;
+      const char *m = jo_sv(doc, "message");
+      if (!m) m = jo_sv(doc, "code");
+      if (!m) m = jo_sv(doc, "error");
+      snprintf(w->bad_msg, sizeof w->bad_msg, "%s", m ? m : "no message");
+      free(w->bad_url);
+      w->bad_url = w->last_url ? strdup(w->last_url) : NULL;
+    }
     return 0;
   }
   *seen = cJSON_GetArraySize(doc);
@@ -251,15 +346,45 @@ static int soc_emit_row(const soc_src *s, intel_sink *sink, const cJSON *row,
  * size, and pw_walk states what it left behind as a
  * collector-truncation-notice rather than stopping silently. */
 static int soc_run(const soc_src *s, const source_ctx *ctx, intel_sink *sink) {
-  soc_walk w = { s, cJSON_CreateArray() };
+  soc_walk w;
+  memset(&w, 0, sizeof w);
+  w.s = s;
+  w.rows = cJSON_CreateArray();
   if (!w.rows) return -1;
-  int kept = pw_walk(ctx, sink, s->service, s->url, pw_fetch_json,
+  int kept = pw_walk(ctx, sink, s->service, s->url, soc_fetch,
                      soc_collect_page, &w);
-  if (kept < 0) {
+  free(w.last_url);
+  if (kept < 0 || w.first_bad) {
     cJSON_Delete(w.rows);
-    fprintf(stderr, "[%s] fetch/parse failed\n", s->service);
+    free(w.bad_url);
+    fprintf(stderr, "[%s] %s\n", s->service, kept < 0
+            ? "fetch/parse failed" : "page 1 is not a row array (shape change)");
     return -1;
   }
+  if (w.bad_page) {
+    char reason[400];
+    snprintf(reason, sizeof reason,
+             "page %d answered HTTP 2xx with JSON that is not a row array "
+             "(\"%s\") on all %d attempts, so the walk stopped before the "
+             "upstream ran out", w.bad_page, w.bad_msg, SOC_FETCH_ATTEMPTS);
+    cJSON *extra = cJSON_CreateObject();
+    if (extra) {
+      cJSON_AddStringToObject(extra, "url", s->url);
+      cJSON_AddNumberToObject(extra, "pages_read", w.pages - 1);
+      cJSON_AddNumberToObject(extra, "failed_page", w.bad_page);
+      cJSON_AddNumberToObject(extra, "failed_page_status", 200);
+      cJSON_AddStringToObject(extra, "failed_page_message", w.bad_msg);
+      cJSON_AddStringToObject(extra, "failed_page_url", w.bad_url ? w.bad_url : "");
+    }
+    jo_truncation_notice_ex(sink, s->service, NULL, kept, -1, reason,
+                            "re-run — the walk starts again from the same URL",
+                            extra);
+    fprintf(stderr, "[%s] TRUNCATED: %s\n", s->service, reason);
+  }
+  free(w.bad_url);
+  if (w.retries)
+    fprintf(stderr, "[%s] %d page(s) needed a retry (%d retries in all)\n",
+            s->service, w.retried_pages, w.retries);
 
   /* IDENTITY, decided over the WHOLE walk. Pass 1 counts every base key (the
    * dataset's own record id, or a hash of service+title where it has none);
@@ -435,9 +560,18 @@ SOC_SOURCE(la_biz, "us-la-business-registry",
   .sum1 = "primary_naics_description", .sum2 = "street_address", .sum3 = "council_district")
 
 /* --- San Francisco registered business locations ------------------------ */
+/* The portal moved: data.sfgov.org now answers every request with a 301 to
+ * data.sf.gov, and the redirector refuses the fifth request on a reused
+ * keep-alive connection — HTTP 425/428 with an empty body (measured
+ * 2026-10-07: curl reusing one connection got 200, 200, 200, 200, then 425;
+ * the same five on fresh connections, and seven in a row reusing a
+ * connection to data.sf.gov itself, all 200). This collector's client
+ * reuses connections, so every walk lost page 5 onward — `emitted 800 …
+ * page 5 answered HTTP 428`, twice running — which is the audit's
+ * "800 vs 1,000 rows". The row now asks the host the redirect names. */
 SOC_SOURCE(sf_biz, "us-sf-business-locations",
   "San Francisco registered business locations",
-  "https://data.sfgov.org/resource/g8m3-pdis.json?$limit=200&$offset=0&$order=:id",
+  "https://data.sf.gov/resource/g8m3-pdis.json?$limit=200&$offset=0&$order=:id",
   "economy", "economy", "SF Open Data, public record.",
   "SF Treasurer register of every business location, linking the registered "
   "ownership name to the trading (DBA) name, address and GeoJSON point.",
