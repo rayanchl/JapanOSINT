@@ -24,8 +24,12 @@
  *   - the worker blocks at the high-water mark: queued + unsent never grows
  *     with the size of the export;
  *   - closing the connection unblocks a waiting worker and stops its walk;
+ *   - a worker that writes while the loop is moving a batch into c->send sees
+ *     that batch as unsent (case 4b);
  *   - with the shutdown door shut, a worker never touches the manager (every
  *     wakeup here goes through that closed door; mgr is NULL). */
+static void (*g_pump_window)(void *x);  /* runs inside xs_pump's window, see httpd.c */
+#define XS_PUMP_WINDOW(x) do { if (g_pump_window) g_pump_window(x); } while (0)
 #include "../../core/httpd.c"
 
 #include <assert.h>
@@ -74,6 +78,21 @@ static int ends_with_terminator(struct mg_connection *c) {
 static char batch[65536];
 
 typedef struct { xstream *x; int batches; int rc; } wk;
+/* The worker landing in xs_pump's window: it writes for as long as ITS view
+ * (queued + unsent, exactly xs_write's admission test) says there is room.
+ * Single-threaded, so the interleaving that a slow CI runner hit by chance
+ * happens on every run. */
+static int g_window_writes;
+static void fill_in_window(void *vx) {
+  xstream *x = vx;
+  for (int i = 0; i < 64; i++) {
+    pthread_mutex_lock(&x->mu);
+    int room = x->queued + x->unsent < XS_HIGH_WATER;
+    pthread_mutex_unlock(&x->mu);
+    if (!room || xs_write(x, batch, sizeof batch)) break;
+    g_window_writes++;
+  }
+}
 static void *writer(void *p) {
   wk *w = p;
   for (int i = 0; i < w->batches; i++)
@@ -167,6 +186,33 @@ int main(void) {
     drop_conn(c);
     printf("  6 MB through a %u KB high-water mark: peak held %zu KB: ok\n",
            XS_HIGH_WATER / 1024, peak / 1024); }
+
+  /* 4b. a worker writing during the pump's window — the race case 4 can only
+   *     catch by timing (see the header). Here it happens on every run: with
+   *     the old accounting the worker queues 16 more batches and 2,048 KB is
+   *     held; with `unsent += queued` it queues none and 1,024 KB is held. */
+  { struct mg_connection *c = fake_conn(41);
+    xstream *x = new_stream(c);
+    assert(xs_write(x, batch, sizeof batch) == 0);
+    xs_on_io(c);                                   /* commit: headers + batch */
+    assert(has(c, "200 OK"));
+    mg_iobuf_del(&c->send, 0, c->send.len);        /* the socket took it all */
+    xs_on_io(c);                                   /* unsent = 0 */
+    while (x->queued + x->unsent < XS_HIGH_WATER)  /* the worker fills to the mark */
+      assert(xs_write(x, batch, sizeof batch) == 0);
+    g_window_writes = 0;
+    g_pump_window = fill_in_window;
+    xs_on_io(c);                                   /* moves ~1 MB into c->send */
+    g_pump_window = NULL;
+    size_t held = x->queued + c->send.len;
+    printf("  worker writing during the pump: %d more batch(es), %zu KB held\n",
+           g_window_writes, held / 1024);
+    assert(held <= XS_HIGH_WATER + 2 * (sizeof batch + 16) &&
+           "a batch on its way into c->send counts as unsent");
+    finish(x, 200, 1);
+    xs_on_io(c);
+    drop_conn(c);
+    printf("  a batch in flight counts against the high-water mark: ok\n"); }
 
   /* 5. hang-up while the worker waits on the high-water mark */
   { struct mg_connection *c = fake_conn(5);

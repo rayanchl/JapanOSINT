@@ -896,6 +896,12 @@ static void reply_busy(struct mg_connection *c) {
  * The loop also pumps every live stream on MG_EV_POLL and MG_EV_WRITE, so a
  * lost wakeup datagram costs one poll interval, never a stalled export. */
 #define XS_HIGH_WATER   (1u << 20)    /* queued + unsent bytes before the worker waits */
+/* The moment in xs_pump between detaching the queue and the batch reaching
+ * c->send, with x->mu released — where a worker's xs_write can land. A no-op
+ * here; test_export_stream.c defines it to act as that worker. */
+#ifndef XS_PUMP_WINDOW
+#define XS_PUMP_WINDOW(x) ((void) 0)
+#endif
 #define XS_COMMIT_BYTES 65536u        /* one exportapi/reportapi batch (OB_CAP) */
 #define XS_STALL_SEC    120           /* no drain at all for this long: the peer is gone */
 
@@ -1064,6 +1070,7 @@ static void xs_pump(struct mg_connection *c, xstream *x) {
   int done = x->done, status = x->status, oom = x->oom;
   int incomplete = x->incomplete || x->cancel || oom;
   pthread_mutex_unlock(&x->mu);
+  XS_PUMP_WINDOW(x);                /* test seam; the worker may run here */
 
   if (!x->headers_sent) {
     if (done && (status != 200 || incomplete)) {
