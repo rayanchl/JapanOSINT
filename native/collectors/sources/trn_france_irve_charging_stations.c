@@ -21,14 +21,33 @@
  * Parse notes: Opendatasoft v2.1 — {total_count, results[]}; limit maxes out at
  * 100 per page and offset+limit may not exceed 10000, so this walks up to that
  * ceiling (100 pages) once a week rather than pretending to mirror the whole
- * 231k-row dataset in one run.
+ * 231k-row dataset in one run. The walk is ordered (order_by, see IRVE_BASE),
+ * so the 10,000 it reads are the first 10,000 by roaming id, not whichever
+ * the index happens to hold first.
  */
 #include "lib/jocore.h"
 #include "lib/keyqual.h"
 #include "trn_common.inc"
 
+/* order_by is part of the paging, not decoration. Without it Opendatasoft
+ * serves the records in its index's internal order, which is whatever the
+ * last re-processing of the dataset left behind: two back-to-back walks agree
+ * (measured 2026-10-07, 0 of 10,000 uids differ), but nothing ties "the first
+ * 10,000" to any property of the data, so a re-index between weekly runs
+ * swaps which 10,000 charge points this source holds, and an offset walk
+ * over a re-sorting index serves some rows twice and others never. The sort
+ * is the charge point's roaming id, then its data.gouv resource — the same
+ * pair the identity below uses, because one roaming id recurs across
+ * submitters' resources. Only three text fields are declared sortable on this
+ * dataset (code_insee_commune, departement, region); id_pdc_itinerance and
+ * datagouv_resource_id are accepted all the same and honoured: pages 0, 1,
+ * 98 and 99 come back in that order, each page continuing where the last
+ * stopped, byte-identical on repeat. ODSQL refuses `>` between text values
+ * (IncompatibleTypesInComparisonFilter), so this order cannot be turned into
+ * a keyset walk past the 10,000 offset ceiling. */
 #define IRVE_BASE "https://odre.opendatasoft.com/api/explore/v2.1/catalog/" \
-                  "datasets/bornes-irve/records?limit=100&offset="
+                  "datasets/bornes-irve/records?order_by=id_pdc_itinerance" \
+                  "%2Cdatagouv_resource_id&limit=100&offset="
 #define IRVE_MAX_OFFSET 9900
 #define IRVE_ID "france-irve-charging-stations"
 
@@ -174,8 +193,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
    * counts every key over the WHOLE walk; pass 2 qualifies EVERY row of a
    * repeated id by its data.gouv resource, falling back to a hash of the row.
    * It used to be first-come-plain: the plain id went to whichever
-   * submitter's row this walk — which carries no order_by — met first, so a
-   * re-ordered walk stored one operator's charge point under another's uid.
+   * submitter's row this walk — which then carried no order_by — met first,
+   * so a re-ordered walk stored one operator's charge point under another's
+   * uid.
    * See lib/keyqual.h. */
   keyqual kq = {0};
   cJSON *pg, *r;
@@ -194,7 +214,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (available > rows && (last_full || rows > 0)) {
     jo_truncation_notice_ex(sink, IRVE_ID, NULL, rows, available,
       "Opendatasoft's records API refuses offset+limit above 10,000, so the "
-      "weekly walk reads the first 10,000 charge points of total_count",
+      "weekly walk reads the first 10,000 charge points of total_count, in "
+      "roaming-id order",
       "the dataset's bulk export (/exports/json or /exports/csv on the same "
       "dataset) carries every row in one request", NULL);
   }
