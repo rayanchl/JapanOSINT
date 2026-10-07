@@ -27,17 +27,33 @@
  * offset -- pages 1, 101, 201 ... -- so US_SOCRATA_CAMBRIDGEMA stored 100
  * datasets while pages 2 and 3 held 100 more each, and reported "emitted
  * 100 of 100 available". lint-sources: page-size-on-page-number. */
+/* openFDA identity (2026-10-07): the generator keyed every openFDA row on its
+ * FIRST field, which is an identity on four endpoints and a dimension on the
+ * rest — `status` (enforcement), `third_party_flag`, `igg_agree`,
+ * `update_type`, `has_donation_id_number`, `manufacturer_contact_zip_ext`, and
+ * the whole `submissions`/`codes` arrays. The in-page collision guard hid it
+ * on page 1; from page 2 on, every recall sharing a status collapsed onto one
+ * row. Each key below is the one measured unique over the stated sample.
+ *
+ * Paging: openFDA answers `skip` up to 25,000 and 400s past it ("Skip value
+ * must 25000 or less"), so page_max reaches exactly that far. The rows asked
+ * for 100 a page with the engine's default 10-page ceiling, and stopped at
+ * 1,000 of 1,415 device recalls for "pump". limit=1000 everywhere openFDA
+ * serves it without a key and under the 64 MB body cap; 500 for enforcement
+ * and recall (41-48 MB at 1,000), 100 for device/event (1,000 needs an
+ * api_key) and drug/label (91 MB at 1,000). */
 static const hp_source HP3B36_USA[] = {
   { .id = "US_FDA_ANIMALANDVETERINARY_EVENT", .name = "openFDA — Fda Animalandveterinary Event",
     .category = "health", .portal = "https://open.fda.gov",
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/animalandveterinary/event.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/animalandveterinary/event.json?search={q}&limit=1000",
     .array_path = "results",
     .id_keys = "unique_aer_id_number",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
     .title_keys = "unique_aer_id_number",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
@@ -53,13 +69,15 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/device/510k.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/device/510k.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "third_party_flag",
+    /* MEASURED 2026-10-07: k_number 1,000/1,000 distinct (search=pacemaker). */
+    .id_keys = "k_number",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "third_party_flag",
+    .title_keys = "device_name,k_number",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 894146 bytes. First "
       "record's fields: "
@@ -70,11 +88,13 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/device/classification.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/device/classification.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "third_party_flag",
+    /* MEASURED 2026-10-07: product_code 240/240 (search=catheter). */
+    .id_keys = "product_code",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
     .title_keys = "device_name",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
@@ -87,13 +107,15 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/device/covid19serology.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/device/covid19serology.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "igg_agree",
+    /* MEASURED 2026-10-07: evaluation_id+sample_id 220/220; evaluation_id alone 2 (search=Abbott). */
+    .id_keys = "evaluation_id+sample_id",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "igg_agree",
+    .title_keys = "device,manufacturer",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 96151 bytes. First "
       "record's fields: "
@@ -104,13 +126,15 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/device/enforcement.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/device/enforcement.json?search={q}&limit=500",
     .array_path = "results",
-    .id_keys = "status",
+    /* MEASURED 2026-10-07: recall_number 1,000/1,000; status had 2-3 values (search=pump). */
+    .id_keys = "recall_number",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 500,
+    .page_max = 51,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "status",
+    .title_keys = "product_description,recall_number",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 722465 bytes. First "
       "record's fields: "
@@ -123,11 +147,13 @@ static const hp_source HP3B36_USA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.fda.gov/device/event.json?search={q}&limit=100",
     .array_path = "results",
-    .id_keys = "manufacturer_contact_zip_ext",
+    /* MEASURED 2026-10-07: mdr_report_key 100/100 (search=pump). */
+    .id_keys = "mdr_report_key",
     .page_param = "skip",
     .page_size = 100,
+    .page_max = 251,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "manufacturer_contact_zip_ext",
+    .title_keys = "device.0.brand_name,device.0.generic_name,report_number",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 807978 bytes. First "
       "record's fields: "
@@ -138,11 +164,12 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/device/pma.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/device/pma.json?search={q}&limit=1000",
     .array_path = "results",
     .id_keys = "pma_number+supplement_number",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
     .title_keys = "trade_name",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
@@ -158,11 +185,12 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/device/recall.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/device/recall.json?search={q}&limit=500",
     .array_path = "results",
     .id_keys = "cfres_id",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 500,
+    .page_max = 51,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
     .title_keys = "product_description",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
@@ -175,13 +203,20 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/device/registrationlisting.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/device/registrationlisting.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "registration.registration_number+establishment_type+proprietary_name",
+    /* MEASURED 2026-10-07: no listing id is published. Over the
+     * whole of search=catheter (17,944 records, 16,938 distinct bodies: the
+     * other 1,006 are byte-identical repeats upstream) this tuple is 16,938
+     * distinct. A listing differs from its neighbour in its 2nd/3rd product,
+     * proprietary name or establishment type, and `establishment_type`
+     * named the bare array, which never matches a flattened field. */
+    .id_keys = "registration.registration_number+establishment_type.0+establishment_type.1+products.0.product_code+products.0.created_date+products.1.product_code+products.2.product_code+k_number+pma_number+proprietary_name.0+proprietary_name.1+proprietary_name.2",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "proprietary_name",
+    .title_keys = "proprietary_name.0,registration.name",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 354773 bytes. First "
       "record's fields: "
@@ -201,13 +236,15 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/device/udi.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/device/udi.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "has_donation_id_number",
+    /* MEASURED 2026-10-07: public_device_record_key 500/500 (search=catheter). */
+    .id_keys = "public_device_record_key",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "has_donation_id_number",
+    .title_keys = "brand_name,device_description",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 334759 bytes. First "
       "record's fields: "
@@ -218,13 +255,15 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/drug/drugsfda.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/drug/drugsfda.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "submissions",
+    /* MEASURED 2026-10-07: application_number 100/100 (search=aspirin). */
+    .id_keys = "application_number",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "submissions",
+    .title_keys = "products.0.brand_name,sponsor_name",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 413252 bytes. First "
       "record's fields: "
@@ -235,13 +274,15 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/drug/enforcement.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/drug/enforcement.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "status",
+    /* MEASURED 2026-10-07: recall_number 81/81 (search=aspirin). */
+    .id_keys = "recall_number",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "status",
+    .title_keys = "product_description,recall_number",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 214086 bytes. First "
       "record's fields: "
@@ -254,11 +295,13 @@ static const hp_source HP3B36_USA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.fda.gov/drug/label.json?search={q}&limit=100",
     .array_path = "results",
-    .id_keys = "spl_product_data_elements",
+    /* MEASURED 2026-10-07: id 500/500 (search=aspirin); set_id groups a label's versions. */
+    .id_keys = "id",
     .page_param = "skip",
     .page_size = 100,
+    .page_max = 251,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "spl_product_data_elements",
+    .title_keys = "openfda.brand_name.0,openfda.generic_name.0,id",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 8887355 bytes. First "
       "record's fields: "
@@ -269,13 +312,15 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/drug/ndc.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/drug/ndc.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "product_ndc",
+    /* MEASURED 2026-10-07: product_id 500/500, product_ndc 498/500 (search=aspirin). */
+    .id_keys = "product_id",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "brand_name",
+    .title_keys = "brand_name,generic_name",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 159973 bytes. First "
       "record's fields: "
@@ -286,13 +331,15 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/drug/shortages.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/drug/shortages.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "update_type",
+    /* MEASURED 2026-10-07: package_ndc+presentation+status+update_date 995/995; package_ndc alone 493/500 (search=injection). */
+    .id_keys = "package_ndc+presentation+status+update_date",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "update_type",
+    .title_keys = "presentation,generic_name",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 186728 bytes. First "
       "record's fields: "
@@ -303,13 +350,15 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/food/enforcement.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/food/enforcement.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "status",
+    /* MEASURED 2026-10-07: recall_number 500/500 (search=cheese). */
+    .id_keys = "recall_number",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "status",
+    .title_keys = "product_description,recall_number",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 140746 bytes. First "
       "record's fields: "
@@ -320,11 +369,12 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/food/event.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/food/event.json?search={q}&limit=1000",
     .array_path = "results",
     .id_keys = "report_number",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
     .title_keys = "report_number",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
@@ -337,13 +387,15 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/other/substance.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/other/substance.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "codes",
+    /* MEASURED 2026-10-07: uuid 23/23 (search=aspirin). */
+    .id_keys = "uuid",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "codes",
+    .title_keys = "names.0.name,unii,uuid",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 1177011 bytes. First "
       "record's fields: "
@@ -354,11 +406,13 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/other/unii.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/other/unii.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "substance_name",
+    /* MEASURED 2026-10-07: unii 18/18 (search=aspirin). */
+    .id_keys = "unii",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
     .title_keys = "substance_name",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
