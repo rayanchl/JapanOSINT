@@ -229,12 +229,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build all iOS targets
+      # -scheme, not -alltargets: without a scheme xcodebuild prints "Ignoring
+      # provided run destination because no scheme was passed" and builds with
+      # SDKROOT=auto, so this step compiled macOS twice and iOS never. The
+      # project has one target (JapanOsintApp); its scheme is that target.
+      - name: Build (iOS)
         run: |
-          xcodebuild -project ios/JapanOsintApp.xcodeproj -alltargets \
+          xcodebuild -project ios/JapanOsintApp.xcodeproj \
+            -scheme JapanOsintApp \
             -destination 'generic/platform=iOS' \
             CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
-            build
+            -quiet build
 
       # macOS is the SAME multiplatform target, not a separate app: the shared
       # sources compile against AppKit here and UIKit above, through the shims
