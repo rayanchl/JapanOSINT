@@ -19,7 +19,7 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 18,813** (2026-10-06): main's 18,645 — batches 33–36
+**The registered count is 18,812** (2026-10-07): main's 18,645 — batches 33–36
 (batch 33's 43 measured supply-chain rows, `docs/verified-sources-batch33.tsv`;
 batch 34's NDJSON row; batch 35's four string-array rows; the spec-families
 beats and batch 36's 188; then the audit follow-up's two SEC listings,
@@ -30,7 +30,9 @@ form a valid request) — plus this branch's 168: batch 38's 100 Japanese and
 Chinese rows (`docs/verified-sources-batch38.md`) less three dead rows removed
 in its follow-up, and batch 39's 72 rows unlocked by date tokens / JSONP /
 body paging / HTML tables less the frozen VCSV row one of them replaced
-(`docs/verified-sources-batch39.md`). `make lint-sources`
+(`docs/verified-sources-batch39.md`) — less batch 36's `CN_HK_LANDS_ADDR`,
+a fuzzy geocoder that answers any text with addresses (`FILTER_IGNORED`,
+`docs/rejected-sources-batch36.china.tsv`). `make lint-sources`
 prints it, counting hp_source table rows as well as `REGISTER_SOURCE`, and
 `./bin/japanosint --list-sources` agrees.
 
@@ -785,6 +787,17 @@ Engine subtleties worth knowing before writing a row:
   banner before the parse, which matters because URLhaus keeps its column names
   in a `#` line and header parsing would otherwise name every column after a
   comment.
+* **A generated row's `id_keys` is a guess until it is measured.** Batch 36's
+  generator keyed every openFDA row on the record's FIRST field — an identity
+  on four endpoints and a dimension on the rest (`status`, `third_party_flag`,
+  `update_type`, whole arrays). The in-page collision guard content-hashes
+  such rows, so `stored` matched `emitted` and nothing looked wrong; the cost
+  is that every uid is a content hash, so a recall whose status changes is a
+  NEW row instead of an update. A key naming a bare ARRAY
+  (`establishment_type`) matches no flattened field at all — name the element
+  (`establishment_type.0`). The same batch's World Bank `country/all` rows
+  read 200 of 17,490 country-years, one request per run: the seventh discard
+  shape, a limit asked of the upstream (`tools/audit_url_limits.py`).
 * Titles: the engine will key a record on its first non-empty scalar rather than
   drop it, so a row without `title_keys` still emits — but it emits titled
   `<record_type> <whatever came first>`. Declare `title_keys`/`id_keys` for

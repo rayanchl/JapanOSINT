@@ -115,18 +115,7 @@ static const hp_source HP3B36_CHINA[] = {
       "fields: "
       "author,author_email,creator_user_id,id,isopen,license_id,license_title,maintainer,maintainer_email,maintainer_phone,metadata_created,metadata_modified." },
 
-  { .id = "CN_HK_LANDS_ADDR", .name = "HK Address Lookup — Hk Lands Addr",
-    .category = "geospatial", .portal = "https://www.als.gov.hk",
-    .record_type = "address",
-    .tags = "\"hongkong\",\"china\",\"geospatial\",\"address\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.als.gov.hk/lookup?q=central&n=10",
-    .id_keys = "Address",
-    .interval = 86400,
-    .title_keys = "Address",
-    .description = "HK Address Lookup on www.als.gov.hk. Fetched live 2026-10-05 "
-      "under the engine's own User-Agent: 10 records in 7517 bytes. "
-      "First record's fields: Address,ValidationInformation." },
+  /* CN_HK_LANDS_ADDR removed 2026-10-07: docs/rejected-sources-batch36.china.tsv. */
 
   { .id = "CN_HK_MTR_LINES", .name = "MTR open data — Hk Mtr Lines",
     .category = "transport", .portal = "https://opendata.mtr.com.hk",
@@ -134,12 +123,17 @@ static const hp_source HP3B36_CHINA[] = {
     .tags = "\"hongkong\",\"china\",\"transport\",\"rail\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://opendata.mtr.com.hk/data/mtr_lines_and_stations.csv",
-    .id_keys = "﻿\"Line Code\"",
+    /* The engine strips the file's BOM (lib/csv.c), so the header is plain
+     * `Line Code`; the keys this row shipped with carried the BOM and the
+     * quotes and matched nothing, and every station was keyed on its line
+     * plus a content hash. One record is one station on one line in one
+     * direction: 270 rows, 270 distinct (2026-10-07). */
+    .id_keys = "Line Code+Direction+Station Code",
     .interval = 86400,
-    .title_keys = "﻿\"Line Code\"",
+    .title_keys = "English Name,Chinese Name",
     .description = "MTR open data on opendata.mtr.com.hk. Fetched live 2026-10-05 "
       "under the engine's own User-Agent: 273 records in 14161 bytes. "
-      "First record's fields: ﻿\"Line Code\",Direction,Station "
+      "Fields: Line Code,Direction,Station "
       "Code,Station ID,Chinese Name,English Name,Sequence." },
 };
 
