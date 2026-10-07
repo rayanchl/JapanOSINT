@@ -11,6 +11,9 @@ import Foundation
 // and DELETE carry `user_id` and 404 anyone else — so those actions are
 // offered on your own rows only. Running one is open to every member.
 //
+// The list is offset-paged (pinned first, then newest) with a measured
+// `page.total`; the footer shows "showing N of M" and loads the next page.
+//
 // Two server behaviours shape this screen and are worth stating up front:
 //
 //  · RUN IS BOOKKEEPING. `POST /:id/run` bumps `run_count`, stamps
@@ -128,7 +131,10 @@ struct SavedSearchesView: View {
     @Environment(\.theme) private var theme
 
     @State private var items: [SavedSearch] = []
+    @State private var page: OffsetPage?
     @State private var names: [String: String] = [:]
+    @State private var loadingMore = false
+    @State private var moreError: String?
     @State private var loading = true
     @State private var error: String?
     @State private var busyID: String?
@@ -185,9 +191,10 @@ struct SavedSearchesView: View {
         .refreshable { await reload() }
         .sheet(isPresented: $showSaveSheet) {
             if let draft = currentSearch {
-                SaveSearchSheet(draft: draft) { created in
-                    items.insert(created, at: 0)
+                SaveSearchSheet(draft: draft) { _ in
                     notice = "Saved."
+                    // Re-read rather than insert: the measured total moves too.
+                    Task { await reload() }
                 }
             }
         }
@@ -254,10 +261,16 @@ struct SavedSearchesView: View {
                     ForEach(unpinned) { row($0) }
                 } header: {
                     sectionLabel(pinned.isEmpty ? "Saved" : "Everything else")
-                } footer: {
-                    Text("Shared with everyone in this workspace. Only the author can rename or delete a saved search.")
-                        .font(.caption2)
                 }
+            }
+            Section {
+                PageBoundFooter(shown: items.count, page: page, noun: "saved searches",
+                                loadingMore: loadingMore, error: moreError,
+                                loadMore: { await loadMore() })
+                    .listRowBackground(theme.surface)
+            } footer: {
+                Text("Shared with everyone in this workspace. Only the author can rename or delete a saved search.")
+                    .font(.caption2)
             }
         }
         .listStyle(.plain)
@@ -425,12 +438,22 @@ struct SavedSearchesView: View {
 
     // MARK: - Work
 
+    /// Rows per page. The server clamps to 1…200.
+    private let pageSize = 50
+
+    /// Re-read from the top, as many rows as are on screen (up to the server's
+    /// 200), so a refresh or a mutation does not collapse a list the user has
+    /// paged through back to one page.
     private func reload() async {
         loading = true
         defer { loading = false }
         do {
-            items = try await apiClient.api.savedSearches(kind: kindFilter)
+            let size = PageBound.reloadSize(shown: items.count, pageSize: pageSize)
+            let r = try await apiClient.api.savedSearches(kind: kindFilter, limit: size, offset: 0)
+            items = r.rows
+            page = r.page
             error = nil
+            moreError = nil
         } catch {
             self.error = ServerError.message(error)
             Haptics.error()
@@ -439,6 +462,21 @@ struct SavedSearchesView: View {
         // "you" or "a teammate", so a failure here is not an error banner.
         if let roster = try? await apiClient.api.membersList() {
             names = AuthorLabel.names(roster)
+        }
+    }
+
+    private func loadMore() async {
+        guard page?.has_more == true, !loadingMore else { return }
+        loadingMore = true
+        defer { loadingMore = false }
+        do {
+            let next = page?.nextOffset(fallback: items.count) ?? items.count
+            let r = try await apiClient.api.savedSearches(kind: kindFilter, limit: pageSize, offset: next)
+            items = PageBound.append(items, r.rows)
+            page = r.page
+            moreError = nil
+        } catch {
+            moreError = ServerError.message(error)
         }
     }
 
@@ -496,6 +534,7 @@ struct SavedSearchesView: View {
             error = nil
             notice = "Deleted."
             Haptics.success()
+            await reload()      // the measured total moves too
         } catch {
             self.error = ServerError.message(error)
             Haptics.error()

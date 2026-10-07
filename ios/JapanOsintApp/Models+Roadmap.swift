@@ -115,6 +115,33 @@ struct PageInfo: Codable, Hashable {
     var cursor: String? { next_cursor }
 }
 
+/// Offset page block: `page:{limit, offset, count, total, has_more}`, answered
+/// by /api/saved-searches, /api/search-history and
+/// /api/intel/items/:uid/evidence (savedsearchapi.c, evidence.c). `total` is a
+/// COUNT(*) under the same filters as the rows, and null when that count
+/// failed — never a guess. `has_more` is measured by reading one row past the
+/// page. Every field is optional so an older server still decodes.
+struct OffsetPage: Decodable, Hashable {
+    let limit: Int?
+    let offset: Int?
+    let count: Int?
+    let total: Int?
+    let has_more: Bool?
+
+    /// Where the next page starts: what the server says it served, not how
+    /// many rows the client happens to hold.
+    func nextOffset(fallback: Int) -> Int {
+        if let offset, let count { return offset + count }
+        return fallback
+    }
+}
+
+/// One page of an offset-paged list plus its page block.
+struct OffsetPaged<Row> {
+    let rows: [Row]
+    let page: OffsetPage?
+}
+
 // ── Item 15: annotations ───────────────────────────────────────────────────
 
 struct Annotation: Codable, Identifiable, Hashable {
@@ -447,7 +474,7 @@ struct SavedSearch: Codable, Identifiable, Hashable {
     let user_id: String?
     let mine: Bool?
 }
-struct SavedSearchesEnvelope: Decodable { let data: [SavedSearch] }
+struct SavedSearchesEnvelope: Decodable { let data: [SavedSearch]; let page: OffsetPage? }
 struct SavedSearchEnvelope: Decodable { let data: SavedSearch }
 
 struct SearchHistoryEntry: Codable, Identifiable, Hashable {
@@ -461,7 +488,7 @@ struct SearchHistoryEntry: Codable, Identifiable, Hashable {
     let user_id: String?
     let mine: Bool?
 }
-struct SearchHistoryEnvelope: Decodable { let data: [SearchHistoryEntry] }
+struct SearchHistoryEnvelope: Decodable { let data: [SearchHistoryEntry]; let page: OffsetPage? }
 
 /// Wrapped: `permalinkapi()` replies `{"data":{"token":…,"version":"v1",…}}`.
 struct PermalinkTokenPayload: Decodable {
@@ -489,7 +516,7 @@ struct EvidenceRecord: Codable, Identifiable, Hashable {
     /// indistinguishable from tampering — so the UI says "evicted", not "gone".
     let blob_present: Bool?
 }
-struct EvidenceEnvelope: Decodable { let data: [EvidenceRecord] }
+struct EvidenceEnvelope: Decodable { let data: [EvidenceRecord]; let page: OffsetPage? }
 
 struct EvidenceVerifyResult: Decodable {
     let ok: Bool

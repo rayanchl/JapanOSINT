@@ -16,6 +16,9 @@ import Foundation
 // a privacy promise the server does not keep is worse than none, so the UI now
 // says plainly who sees the list.
 //
+// The list is offset-paged with a measured total (`page.total`); the footer
+// shows "showing N of M" and loads the next page.
+//
 // Re-running is a host concern: history rows carry `kind` + `params`, and the
 // endpoint that executes them differs per kind, so this view hands the entry
 // back through `onRerun` rather than pretending to run anything itself.
@@ -26,15 +29,18 @@ import Foundation
 struct SearchHistoryView: View {
     /// Tapping a row calls this. When `nil`, rows are read-only.
     var onRerun: ((SearchHistoryEntry) -> Void)? = nil
-    /// How many rows to ask for. The server clamps to 200.
-    var limit: Int = 100
+    /// Rows per page. The server clamps to 1…200.
+    var limit: Int = 50
 
     @EnvironmentObject var apiClient: APIClient
     @Environment(\.theme) private var theme
 
     @State private var entries: [SearchHistoryEntry] = []
+    @State private var page: OffsetPage?
     @State private var names: [String: String] = [:]
     @State private var loading = true
+    @State private var loadingMore = false
+    @State private var moreError: String?
     @State private var error: String?
     @State private var clearing = false
     @State private var showClear = false
@@ -108,6 +114,10 @@ struct SearchHistoryView: View {
                 ForEach(entries) { entry in
                     entryRow(entry)
                 }
+                PageBoundFooter(shown: entries.count, page: page, noun: "entries",
+                                loadingMore: loadingMore, error: moreError,
+                                loadMore: { await loadMore() })
+                    .listRowBackground(theme.surface)
             } header: {
                 Text("RECENT")
                     .font(Typography.display(10, weight: .semibold))
@@ -228,12 +238,19 @@ struct SearchHistoryView: View {
 
     // MARK: - Work
 
+    /// Re-read from the top, as many rows as are on screen (up to the server's
+    /// 200), so a refresh or a mutation does not collapse a list the user has
+    /// paged through back to one page.
     private func reload() async {
         loading = true
         defer { loading = false }
         do {
-            entries = try await apiClient.api.searchHistory(limit: limit)
+            let size = PageBound.reloadSize(shown: entries.count, pageSize: limit)
+            let r = try await apiClient.api.searchHistory(limit: size, offset: 0)
+            entries = r.rows
+            page = r.page
             error = nil
+            moreError = nil
         } catch {
             self.error = ServerError.message(error)
             Haptics.error()
@@ -242,6 +259,21 @@ struct SearchHistoryView: View {
         // "you" or "a teammate", so a failure here is not an error banner.
         if let roster = try? await apiClient.api.membersList() {
             names = AuthorLabel.names(roster)
+        }
+    }
+
+    private func loadMore() async {
+        guard page?.has_more == true, !loadingMore else { return }
+        loadingMore = true
+        defer { loadingMore = false }
+        do {
+            let next = page?.nextOffset(fallback: entries.count) ?? entries.count
+            let r = try await apiClient.api.searchHistory(limit: limit, offset: next)
+            entries = PageBound.append(entries, r.rows)
+            page = r.page
+            moreError = nil
+        } catch {
+            moreError = ServerError.message(error)
         }
     }
 
