@@ -25,10 +25,10 @@ export const CONSOLE_NAV = [
   { group: 'Operations', to: '/console/sources', label: 'Sources', subtitle: 'Status, charts, collectors', icon: LuChartPie },
 
   { group: 'Discovery', to: '/console/cameras', label: 'Camera discovery', subtitle: 'Probe public webcams', icon: LuVideo },
-  { group: 'Discovery', to: '/console/inbox', label: 'Inbox', subtitle: 'Everything your rules matched', icon: LuInbox, badge: 'unread' },
+  { group: 'Discovery', to: '/console/inbox', label: 'Inbox', subtitle: 'Everything the workspace’s rules matched', icon: LuInbox, badge: 'unread' },
   { group: 'Discovery', to: '/console/alerts', label: 'Alerts', subtitle: 'Rules, channels, history', icon: LuBellRing },
   { group: 'Discovery', to: '/console/aoi', label: 'Areas of interest', subtitle: 'Saved geofences for alert rules', icon: LuMapPin },
-  { group: 'Discovery', to: '/console/watchlists', label: 'Watchlists', subtitle: 'Entities you are following', icon: LuEye },
+  { group: 'Discovery', to: '/console/watchlists', label: 'Watchlists', subtitle: 'Entities the workspace follows', icon: LuEye },
   { group: 'Discovery', to: '/console/breach-monitors', label: 'Breach monitors', subtitle: 'Watch an address or domain', icon: LuShieldHalf },
   { group: 'Discovery', to: '/console/saved-searches', label: 'Saved searches', subtitle: 'Re-run and turn into alerts', icon: LuBookmark },
 

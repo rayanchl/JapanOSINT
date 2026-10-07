@@ -8,6 +8,8 @@ import {
   Page, Card, Pill, Button, Segmented, Select, ErrorNotice, EmptyState, LoadingState, BoundNote, CopyButton, toast, cx,
 } from '../ui/kit.jsx';
 import { MUTE_OPTIONS } from './alertShared.jsx';
+import { useAuth } from '../../auth/AuthContext.jsx';
+import { canWriteWorkspace } from '../../auth/roles.js';
 
 /**
  * Alert inbox — port of iOS `AlertInboxView`/`AlertInboxModel`.
@@ -16,10 +18,17 @@ import { MUTE_OPTIONS } from './alertShared.jsx';
  *   POST /api/alerts/:rule_id/mute {duration_sec} · /unmute
  * `page.total` is MEASURED by the server and null when its COUNT failed —
  * never rendered as a plausible 0.
+ *
+ * The inbox is the workspace's, not the reader's: every member sees every
+ * event, and read state is shared (alertsapi.c alerteventsapi), so marking an
+ * event read marks it read for everyone. Reading and marking read are open to
+ * every member; muting is a change to the rule and needs analyst or above.
  */
 const PAGE = 100;
 
 export default function AlertInboxPage() {
+  const auth = useAuth();
+  const canMute = canWriteWorkspace(auth.role);
   const [filter, setFilter] = useState('all');
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(null);
@@ -82,12 +91,12 @@ export default function AlertInboxPage() {
   return (
     <Page
       title="Inbox"
-      subtitle="Everything your alert rules matched, newest first."
+      subtitle="Everything this workspace's alert rules matched, newest first. Read state is shared: marking an event read marks it read for every member."
       actions={(
         <>
           <Segmented value={filter} onChange={setFilter} options={[{ value: 'all', label: 'All' }, { value: 'unread', label: 'Unread', count: unreadShown || undefined }]} />
           <Button onClick={() => load()} title="Refresh inbox"><LuRefreshCw size={13} /></Button>
-          <Button onClick={markAll} busy={busy === 'all'} disabled={rows.length === 0} title="Mark all read"><LuCheckCheck size={13} /> Mark all read</Button>
+          <Button onClick={markAll} busy={busy === 'all'} disabled={rows.length === 0} title="Mark every event read, for the whole workspace"><LuCheckCheck size={13} /> Mark all read</Button>
         </>
       )}
     >
@@ -123,11 +132,13 @@ export default function AlertInboxPage() {
                 </div>
                 <div className="flex items-center gap-1 flex-wrap justify-end">
                   {ev.unread && <Button size="sm" busy={busy === ev.id} onClick={() => markRead(ev)} title="Mark read"><LuMailOpen size={12} /> Read</Button>}
-                  <Select className="text-[11px] py-1" value="" title="Mute this rule for…" onChange={(e) => { const v = e.target.value; if (v) muteRule(ev, v === 'forever' || v === 'unmute' ? v : Number(v)); }}>
-                    <option value="">Rule…</option>
-                    {MUTE_OPTIONS.map((o) => <option key={String(o.value)} value={String(o.value)}>{o.label}</option>)}
-                    <option value="unmute">Unmute rule</option>
-                  </Select>
+                  {canMute && (
+                    <Select className="text-[11px] py-1" value="" title="Mute this rule for…" onChange={(e) => { const v = e.target.value; if (v) muteRule(ev, v === 'forever' || v === 'unmute' ? v : Number(v)); }}>
+                      <option value="">Rule…</option>
+                      {MUTE_OPTIONS.map((o) => <option key={String(o.value)} value={String(o.value)}>{o.label}</option>)}
+                      <option value="unmute">Unmute rule</option>
+                    </Select>
+                  )}
                   <CopyButton text={ev.item_uid} label="Copy id" />
                 </div>
               </div>
@@ -143,7 +154,7 @@ export default function AlertInboxPage() {
           </div>
         </div>
       )}
-      <div className="text-[11px] text-osint-muted flex items-center gap-1"><LuBell size={11} /> Muting from here silences the whole rule, not just this event. <LuBellOff size={11} /></div>
+      {canMute && <div className="text-[11px] text-osint-muted flex items-center gap-1"><LuBell size={11} /> Muting from here silences the whole rule for the workspace, not just this event. <LuBellOff size={11} /></div>}
     </Page>
   );
 }

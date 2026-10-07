@@ -76,7 +76,7 @@ export default function WatchlistsPage() {
   return (
     <Page
       title="Watchlists"
-      subtitle="Entities you are following. Any new item that mentions one of them fires the watchlist's alert rule."
+      subtitle="Entities this workspace is following — every member sees every watchlist. Any new item that mentions one of them fires the watchlist's alert rule."
       actions={(
         <>
           <Button onClick={() => load()} title="Refresh watchlists"><LuRefreshCw size={13} /></Button>

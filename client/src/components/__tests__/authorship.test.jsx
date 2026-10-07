@@ -21,6 +21,7 @@ import { CasePickerSheet } from '../cases/CasePickerSheet.jsx';
 import AOIPage from '../alerts/AOIPage.jsx';
 import WatchlistsPage from '../alerts/WatchlistsPage.jsx';
 import AlertsPage from '../alerts/AlertsPage.jsx';
+import AlertInboxPage from '../alerts/AlertInboxPage.jsx';
 import BreachMonitorsPage from '../alerts/BreachMonitorsPage.jsx';
 import SearchHistoryDropdown from '../search/SearchHistoryDropdown.jsx';
 import { caseCanWrite, caseCanDelete, caseCanManageRoster } from '../../hooks/useCases.js';
@@ -254,6 +255,25 @@ describe('alert rules', () => {
     expect(screen.queryByText('New alert')).toBeNull();
     expect(screen.getByText('History')).toBeTruthy();
     expect(screen.getByRole('switch').disabled).toBe(true);
+  });
+});
+
+describe('alert inbox', () => {
+  const events = { data: [{ id: 'e1', rule_id: 'r1', rule_name: 'Tokyo', item_uid: 'i1', item_title: 'Item one', matched_at: T, unread: true, delivered_channels: [] }], page: { next_cursor: null, total: 1 } };
+  it('says read state is shared, and offers mute (a rule change) to analysts only', async () => {
+    signedInAs('viewer');
+    mockFetch({ '/api/alert-events': events });
+    inRouter(<AlertInboxPage />);
+    await screen.findByText('Item one');
+    expect(screen.getByText(/marks it read for every member/)).toBeTruthy();
+    expect(screen.getByText('Read')).toBeTruthy();
+    expect(screen.queryByText('Rule…')).toBeNull();
+    cleanup();
+    signedInAs('analyst');
+    mockFetch({ '/api/alert-events': events });
+    inRouter(<AlertInboxPage />);
+    await screen.findByText('Item one');
+    expect(screen.getByText('Rule…')).toBeTruthy();
   });
 });
 
