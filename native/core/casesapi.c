@@ -267,14 +267,19 @@ static int tenant_is_admin(const tenant_ctx *t) {
   return !strcmp(t->role,"owner") || !strcmp(t->role,"admin");
 }
 /* Content writes: analyst+ in the tenant, or anyone on the case roster. */
+/* Content writes (case fields, pins, comments): analyst+ in the tenant, or a
+ * case LEAD or CONTRIBUTOR. A case viewer reads only — decided 2026-10-09; it
+ * used to be "any row in case_members", so a member added as viewer could
+ * edit the case, pin and unpin findings and post as a contributor. */
 static int can_write(db_handle *db, const tenant_ctx *t, const char *case_id) {
-  char rb[16];
+  char rb[16]; const char *r;
   if (tenant_at_least_analyst(t)) return 1;
-  return my_case_role(db, case_id, t->user_id, rb) != NULL;
+  r = my_case_role(db, case_id, t->user_id, rb);
+  return r && (!strcmp(r, "lead") || !strcmp(r, "contributor"));
 }
-/* Roster edits: analyst+ in the tenant, or the case lead. Deliberately
- * narrower than can_write() — a case viewer must not be able to promote
- * themselves by rewriting the roster. */
+/* Roster edits: analyst+ in the tenant, or the case lead. Narrower than
+ * can_write() — a contributor must not be able to promote themselves (or a
+ * viewer) by rewriting the roster. */
 static int can_manage_roster(db_handle *db, const tenant_ctx *t, const char *case_id) {
   char rb[16]; const char *r;
   if (tenant_at_least_analyst(t)) return 1;

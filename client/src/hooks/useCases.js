@@ -53,9 +53,10 @@ export const CASE_ROLES = ['lead', 'contributor', 'viewer'];
  */
 
 /** can_write(): edit fields, change status, pin/unpin, comment. Analyst or
- *  above in the workspace, or anyone on the case roster (any case role). */
+ *  above in the workspace, or the case's lead or a contributor — a case
+ *  viewer reads only (casesapi.c, decided 2026-10-09). */
 export function caseCanWrite(workspaceRole, myCaseRole) {
-  return canWriteWorkspace(workspaceRole) || Boolean(myCaseRole);
+  return canWriteWorkspace(workspaceRole) || myCaseRole === 'lead' || myCaseRole === 'contributor';
 }
 
 /** can_delete(): workspace owner/admin, or the case lead. */
