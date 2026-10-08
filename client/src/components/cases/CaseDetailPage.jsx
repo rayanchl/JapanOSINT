@@ -44,7 +44,7 @@ export default function CaseDetailPage() {
   const c = data?.data ?? null;
 
   // casesapi.c's gates, exactly (useCases.js): not "the author", and not
-  // "anyone not on the roster" — a workspace viewer off the roster is refused.
+  // "anyone on the roster" — a case viewer reads, a contributor or lead writes.
   const myRole = c?.my_case_role ?? null;
   const canWrite = caseCanWrite(auth.role, myRole);
   const canDelete = caseCanDelete(auth.role, myRole);
@@ -81,7 +81,7 @@ export default function CaseDetailPage() {
           <Button onClick={reload} title="Reload case"><LuRefreshCw size={13} /></Button>
           <Button onClick={() => setShowReport(true)}><LuFileText size={13} /> Report</Button>
           <Button disabled={!canWrite} onClick={() => setShowEdit(true)}
-            title={canWrite ? 'Edit case' : 'Editing needs the analyst role or above, or a place on this case’s roster'}><LuPencil size={13} /> Edit</Button>
+            title={canWrite ? 'Edit case' : 'Editing needs the analyst role or above, or the lead or contributor role on this case (a case viewer reads only)'}><LuPencil size={13} /> Edit</Button>
           <Button variant="danger" disabled={!canDelete} onClick={() => setShowDelete(true)} aria-label="Delete case"
             title={canDelete ? 'Delete case' : 'Only a workspace owner or admin, or the case lead, can delete a case'}><LuTrash2 size={13} /></Button>
         </>
@@ -256,11 +256,11 @@ function NotesPane({ caseId, canWrite, who }) {
   const [postError, setPostError] = useState(null);
 
   useEffect(() => {
-    if (!target && items.rows.length) setTarget(`${items.rows[0].ref_type} ${items.rows[0].ref_id}`);
+    if (!target && items.rows.length) setTarget(`${items.rows[0].ref_type}\u0000${items.rows[0].ref_id}`);
   }, [items.rows, target]);
 
   const add = async () => {
-    const [ref_type, ref_id] = target.split(' ');
+    const [ref_type, ref_id] = target.split('\u0000');
     if (!ref_type || !ref_id || !body.trim()) return;
     setBusy(true); setPostError(null);
     try {
@@ -284,7 +284,7 @@ function NotesPane({ caseId, canWrite, who }) {
             <Field label="Attach to">
               <Select value={target} onChange={(e) => setTarget(e.target.value)} className="w-full">
                 {items.rows.map((it) => (
-                  <option key={`${it.ref_type}:${it.ref_id}`} value={`${it.ref_type} ${it.ref_id}`}>
+                  <option key={`${it.ref_type}:${it.ref_id}`} value={`${it.ref_type}\u0000${it.ref_id}`}>
                     {CaseRefType.label(it.ref_type)} · {it.label || snapshotSummary(it)?.title || it.ref_id}
                   </option>
                 ))}

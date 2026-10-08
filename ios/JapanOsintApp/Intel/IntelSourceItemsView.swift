@@ -129,6 +129,11 @@ struct IntelSourceItemsView: View {
             TextField("Search this source", text: $searchText)
                 .textFieldStyle(.plain)
                 .submitLabel(.search)
+                .onSubmit {
+                    let q = searchText.trimmingCharacters(in: .whitespaces)
+                    Task { await apiClient.api.recordSearch(kind: "intel",
+                        params: ["view": "source", "source": source.id, "q": q]) }
+                }
             if !searchText.isEmpty {
                 Button {
                     searchText = ""

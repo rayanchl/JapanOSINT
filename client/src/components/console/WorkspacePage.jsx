@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LuUsers, LuSearch, LuSparkles, LuX, LuRefreshCw } from 'react-icons/lu';
 import { api } from '../../api/client.js';
+import { recordSearch } from '../../api/searchHistory.js';
 import { useApi } from '../../hooks/useApi.js';
 import { useAuth } from '../../auth/AuthContext.jsx';
 import { useSearchStore } from '../../hooks/useSearch.js';
@@ -241,6 +242,8 @@ function QueryView() {
       const r = await api.get('/api/intel/items', { query: { q: q.trim(), limit: 50 } });
       setResults(Array.isArray(r?.data) ? r.data : []);
       setPage(r?.page || null);
+      recordSearch('intel', { view: 'search', mode: 'fts', q: q.trim() },
+        r?.page?.total ?? (Array.isArray(r?.data) ? r.data.length : undefined));
     } catch (err) { setError(err); setResults(null); }
     finally { setRunning(false); }
   };

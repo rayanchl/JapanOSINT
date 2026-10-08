@@ -223,7 +223,7 @@ struct SearchHistoryView: View {
                     .accessibilityHidden(true)   // "No recent searches" is the label
             }
         } description: {
-            Text("Saved searches run by anyone in this workspace are recorded here, and every member can read this list.")
+            Text("Every search anyone in this workspace runs is recorded here, and every member can read this list.")
                 .foregroundStyle(theme.textMuted)
         } actions: {
             Button {

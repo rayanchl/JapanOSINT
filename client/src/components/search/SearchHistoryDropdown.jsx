@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { LuUsers, LuRotateCcw, LuTrash2 } from 'react-icons/lu';
 import { api } from '../../api/client.js';
 import { usePagedList } from '../../hooks/usePagedList.js';
+import { intelHistoryRoute } from '../../api/searchHistory.js';
 import { useMemberNames, authorLabel } from '../../hooks/useMembers.js';
 import { Pill, Button, ErrorNotice, LoadingState, ConfirmDialog, PagedFooter, cx, toast } from '../ui/kit.jsx';
 import { relativeTime } from '../../utils/time.js';
@@ -21,7 +22,8 @@ export function paramsSummary(params) {
   if (!params || typeof params !== 'object') return null;
   const q = params.q ?? params.query ?? params.value ?? params.text;
   if (typeof q === 'string' && q.trim()) return q.trim();
-  const parts = Object.entries(params).filter(([, v]) => v != null && v !== '').map(([k, v]) => `${k}=${typeof v === 'object' ? JSON.stringify(v) : v}`);
+  // `view` only says which tab an intel entry opens on; it is not a term.
+  const parts = Object.entries(params).filter(([k, v]) => k !== 'view' && v != null && v !== '').map(([k, v]) => `${k}=${typeof v === 'object' ? JSON.stringify(v) : v}`);
   return parts.length ? parts.join(' · ') : null;
 }
 
@@ -30,7 +32,7 @@ export function rerunTarget(entry) {
   const q = paramsSummary(entry.params);
   switch (entry.kind) {
     case 'osint': return q ? { run: q } : null;
-    case 'intel': return q ? { to: `/intel?q=${encodeURIComponent(q)}` } : { to: '/intel' };
+    case 'intel': return { to: intelHistoryRoute(entry.params) };   // all params, the right tab
     case 'entity': return q ? { to: `/entities?q=${encodeURIComponent(q)}` } : { to: '/entities' };
     case 'breach': return q ? { to: `/intel?source=breach&q=${encodeURIComponent(q)}` } : null;
     case 'map': return { to: '/' };
@@ -41,12 +43,12 @@ export function rerunTarget(entry) {
 /**
  * Inline recent-searches dropdown (Roadmap 38). `/api/search-history` is
  * WORKSPACE-wide on read (every member's entries, each with `user_id` and
- * `mine`; decided 2026-10-05) and author-only on clear. The server records a
- * row when a SAVED search is run (savedsearchapi.c run_saved →
- * search_history_record) — ad-hoc runs from the box are not written there;
- * those are listed under "Workspace runs" on the Search page instead. The
- * list is paged: the footer shows the server's measured total and loads the
- * next `limit`.
+ * `mine`; decided 2026-10-05) and author-only on clear. Every committed search
+ * is recorded (decided 2026-10-09): intel, near, semantic, per-source and
+ * entity searches by the clients (api/searchHistory.js), OSINT runs and saved-
+ * search runs by the server. The same search by the same person inside 10
+ * minutes is one entry. The list is paged: the footer shows the server's
+ * measured total and loads the next `limit`.
  */
 export default function SearchHistoryDropdown({ open, onRun, limit = 20, onClose }) {
   const list = usePagedList(open ? '/api/search-history' : null, { pageSize: limit, enabled: Boolean(open), deps: [open] });
@@ -87,7 +89,7 @@ export default function SearchHistoryDropdown({ open, onRun, limit = 20, onClose
       {loading && !list.loaded && <LoadingState label="Loading history…" />}
       {error && <div className="p-2"><ErrorNotice error={error} title="Couldn't load history" onRetry={reload} /></div>}
       {!loading && !error && rows.length === 0 && (
-        <div className="px-3 py-4 text-xs text-osint-muted text-center">No recorded searches yet. The server records a row each time a saved search is run.</div>
+        <div className="px-3 py-4 text-xs text-osint-muted text-center">No recorded searches yet. Every search anyone in this workspace runs is recorded here.</div>
       )}
       {rows.length > 0 && (
         <ul className="max-h-72 overflow-auto divide-y divide-osint-border">

@@ -1,6 +1,7 @@
 /* core/searchapi.c — see header. Port of routes/search.js (analyze/suggest/
  * results). The SSE /stream lives in httpd.c (it owns the connection loop). */
 #include "searchapi.h"
+#include "savedsearchapi.h"
 #include "pipeline.h"
 #include "progress.h"
 #include "llm.h"
@@ -168,6 +169,18 @@ char *searchapi_analyze(db_handle *db, const char *tenant_id,
                              tenant_id, skey)) {
     run_slot_release();
     return NULL;
+  }
+  /* Starting a run is always a committed search, so it goes into the
+   * workspace's search history here, for every client (decided 2026-10-09).
+   * The result count is not known yet: the run's own row carries it. */
+  {
+    cJSON *hp = cJSON_CreateObject();
+    if (hp && cJSON_AddStringToObject(hp, "q", query)) {
+      char *pj = cJSON_PrintUnformatted(hp);
+      if (pj) search_history_record(db, tenant_id, user_id, "osint", pj, -1);
+      free(pj);
+    }
+    cJSON_Delete(hp);
   }
 
   run_arg *a = calloc(1, sizeof *a);

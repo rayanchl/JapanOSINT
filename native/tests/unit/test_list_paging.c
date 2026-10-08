@@ -82,7 +82,7 @@ static char *ss_list(db_handle *db, const tenant_ctx *t, const char *qs, int *st
   return savedsearchapi(db, t, "GET", "", "", qs, NULL, st);
 }
 static char *hist_list(db_handle *db, const tenant_ctx *t, const char *qs, int *st) {
-  return searchhistoryapi(db, t, "GET", qs, st);
+  return searchhistoryapi(db, t, "GET", qs, NULL, st);
 }
 static int walk(list_fn fn, const tenant_ctx *t, const char *filter, int lim,
                 long expect_total) {

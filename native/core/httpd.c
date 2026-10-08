@@ -3905,8 +3905,20 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       memcpy(meth, hm->method.buf, ml);
       char qsb[512] = {0};
       if (qs_copy_or_414(c, hm, qsb, sizeof qsb)) { return; }
+      /* POST carries {kind,params,result_count}; params is capped at
+       * SS_PARAMS_MAX, so anything much larger is refused, never cut. */
+      char *in = NULL;
+      if (hm->body.len) {
+        if (hm->body.len > SS_PARAMS_MAX + 1024) {
+          reply_json(c, 413, "{\"error\":\"body_too_large\"}"); return;
+        }
+        in = malloc(hm->body.len + 1);
+        if (!in) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
+        memcpy(in, hm->body.buf, hm->body.len); in[hm->body.len] = 0;
+      }
       int status = 200;
-      char *body = searchhistoryapi(g_db, &tc, meth, qsb, &status);
+      char *body = searchhistoryapi(g_db, &tc, meth, qsb, in, &status);
+      free(in);
       if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
       reply_json(c, status, body); free(body); return;
     }

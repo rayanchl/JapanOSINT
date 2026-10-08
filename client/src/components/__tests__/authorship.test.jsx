@@ -68,7 +68,7 @@ describe('roles mirror the server ranking', () => {
       ['analyst', null, [true, false, true]],
       ['analyst', 'lead', [true, true, true]],
       ['viewer', null, [false, false, false]],
-      ['viewer', 'viewer', [true, false, false]],
+      ['viewer', 'viewer', [false, false, false]],   // a case viewer reads only (2026-10-09)
       ['viewer', 'contributor', [true, false, false]],
       ['viewer', 'lead', [true, true, true]],
       [undefined, null, [false, false, false]],
@@ -132,8 +132,10 @@ describe('case detail', () => {
   it('a workspace admin may delete any case', async () => {
     expect(await open('admin', null)).toEqual({ edit: true, del: true });
   });
-  it('a workspace viewer on the roster may edit; off it, neither', async () => {
-    expect(await open('viewer', 'viewer')).toEqual({ edit: true, del: false });
+  it('a workspace viewer may edit only as the case\'s contributor or lead; a case viewer reads only', async () => {
+    expect(await open('viewer', 'contributor')).toEqual({ edit: true, del: false });
+    cleanup();
+    expect(await open('viewer', 'viewer')).toEqual({ edit: false, del: false });
     cleanup();
     expect(await open('viewer', null)).toEqual({ edit: false, del: false });
   });

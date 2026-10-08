@@ -128,11 +128,12 @@
  *
  * ── AUTHORIZATION ──────────────────────────────────────────────────────────
  *   read    any tenant member (tenant_resolve already proves membership)
- *   write   tenant role analyst|admin|owner  OR  a row in case_members
+ *   write   tenant role analyst|admin|owner  OR  case_members.role IN
+ *           ('lead','contributor') — a case VIEWER reads only (decided
+ *           2026-10-09; "any row in case_members" let a viewer edit content)
  *   roster  tenant role analyst|admin|owner  OR  case_members.role='lead'
- *           (tightened from plain "write": letting a case *viewer* rewrite the
- *           roster would let them promote themselves; the brief's write rule
- *           is about content, not about who may see the case)
+ *           (narrower than write: a contributor rewriting the roster could
+ *           promote themselves)
  *   delete  tenant role owner|admin          OR  case_members.role='lead'
  *
  * ── AUDIT ──────────────────────────────────────────────────────────────────

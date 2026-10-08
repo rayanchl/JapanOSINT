@@ -432,6 +432,22 @@ extension API {
         try await delete("/api/search-history")
     }
 
+    /// Record a search the user COMMITTED (pressed Search, opened a result,
+    /// ran a query) in the workspace's history — every ad-hoc search is
+    /// recorded since 2026-10-09, never a keystroke. The server folds the same
+    /// search by the same person inside 10 minutes into one row. Best-effort:
+    /// a failed write never surfaces, because it must not break the search.
+    func recordSearch(kind: String, params: [String: String], resultCount: Int? = nil) async {
+        struct Ignored: Decodable {}
+        var p: [String: String] = [:]
+        for (k, v) in params where !v.trimmingCharacters(in: .whitespaces).isEmpty { p[k] = v }
+        guard !p.isEmpty else { return }
+        var body: [String: Any] = ["kind": kind, "params": p]
+        if let n = resultCount, n >= 0 { body["result_count"] = n }
+        guard let data = try? enc(body) else { return }
+        let _: Ignored? = try? await post("/api/search-history", body: data, timeout: 10)
+    }
+
     func permalinkMint(_ state: [String: Any]) async throws -> String {
         let env: PermalinkTokenEnvelope = try await post("/api/permalink",
                                                          body: try enc(state), timeout: 15)

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useEntitySearch } from '../../hooks/useSearch.js';
+import { recordSearch, useRecordSearch } from '../../api/searchHistory.js';
 import { entityVisual } from '../../utils/entityVisuals.js';
 
 /** Entities landing — FTS search across the unified entity graph (collector
@@ -11,7 +12,17 @@ export default function EntitiesPage() {
   const [params] = useSearchParams();
   const [q, setQ] = React.useState(() => params.get('q') || '');
   React.useEffect(() => { const pq = params.get('q'); if (pq != null && pq !== '') setQ(pq); }, [params]);
-  const { results, loading, error } = useEntitySearch(q);
+  const { results, loading, error, resolved } = useEntitySearch(q);
+  // The box searches as you type, so a keystroke is never recorded. A search
+  // is committed by Enter, by opening a result, or by arriving with ?q= (a
+  // link, a history or saved-search re-run) once its results are in.
+  const settled = !loading && !error && q.trim() !== '' && resolved === q.trim();
+  const commit = () => { if (settled) recordSearch('entity', { q: q.trim() }, results.length); };
+  const arrivedQ = params.get('q') || '';
+  useRecordSearch('entity', { q: arrivedQ.trim() }, {
+    enabled: arrivedQ.trim() !== '' && q.trim() === arrivedQ.trim(),
+    ready: settled, resultCount: results.length,
+  });
 
   return (
     <div className="h-full overflow-auto p-4">
@@ -26,6 +37,7 @@ export default function EntitiesPage() {
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter') commit(); }}
           placeholder="search entities (kanji or romaji)…"
           className="w-full px-3 py-2 rounded bg-osint-bg border border-osint-border text-sm text-osint-text focus:border-neon-cyan/50 outline-none"
         />
@@ -47,7 +59,7 @@ export default function EntitiesPage() {
               <li key={e.entity_id}>
                 <button
                   type="button"
-                  onClick={() => navigate(`/entities/${encodeURIComponent(String(e.type).toLowerCase())}/${encodeURIComponent(e.entity_id)}`)}
+                  onClick={() => { commit(); navigate(`/entities/${encodeURIComponent(String(e.type).toLowerCase())}/${encodeURIComponent(e.entity_id)}`); }}
                   className="w-full flex items-center gap-2 text-left rounded border border-osint-border bg-osint-surface px-3 py-2 hover:border-neon-cyan/40"
                 >
                   <span className={`px-1.5 py-0.5 rounded border text-[11px] ${v.color}`}>{v.label}</span>
