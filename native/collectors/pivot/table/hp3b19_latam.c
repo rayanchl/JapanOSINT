@@ -2615,7 +2615,6 @@ static const hp_source HP3B19_LATAM[] = {
      * later page collapsed onto the first. */
     .id_keys = "id+comentario",
     .page_param = "page",
-    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 0,
     .page_zero_based = 1,
     .page_max = 1000,
