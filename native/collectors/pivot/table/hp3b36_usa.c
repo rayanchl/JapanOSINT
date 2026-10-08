@@ -42,6 +42,21 @@
  * serves it without a key and under the 64 MB body cap; 500 for enforcement
  * and recall (41-48 MB at 1,000), 100 for device/event (1,000 needs an
  * api_key) and drug/label (91 MB at 1,000). */
+/* 14 portal-inventory rows that re-read a catalogue hp3_portals.c or
+ * hp3_society.c already reads were removed 2026-10-09:
+ * docs/rejected-sources-batch36.usa.tsv. */
+/* SOCRATA_VIEWS_NOTE (2026-10-09). A Socrata portal's /api/views.json lists
+ * every dataset it publishes, one page at a time: `page` is a page NUMBER
+ * and `limit` takes 1,000. The rows here asked for 100 or 200 -- most in ONE
+ * request, the rest under the default 10-page ceiling -- and read 200 of New
+ * York State's 5,360 datasets, 1,000 of San Francisco's 1,225 (measured
+ * 2026-10-09; every one of these hosts answers a different page 2). Now
+ * limit=1000 paged by number to an empty page, page_max 100 as a runaway
+ * guard, the root array declared (a view's own `columns` list must not win
+ * the densest-array guess on a short last page), keyed on the view's 4x4 id.
+ * timeout_ms 120000: a page carries every view's column schema and these
+ * hosts take 10-27 s to render one at ANY size (data.ny.gov: 21 s for 1,000,
+ * 25 s for 500, 11 s for 200), so the engine's 20 s default failed page 1. */
 static const hp_source HP3B36_USA[] = {
   { .id = "US_FDA_ANIMALANDVETERINARY_EVENT", .name = "openFDA — Fda Animalandveterinary Event",
     .category = "health", .portal = "https://open.fda.gov",
@@ -434,28 +449,14 @@ static const hp_source HP3B36_USA[] = {
       "record's fields: "
       "featured,formats,observationTypes,keywords,contactInfo,endDate,topics,orderable,description,people,searchable,frequency." },
 
-  { .id = "US_SOCRATA_AUSTINTEXAS", .name = "Socrata portal inventory — Socrata Austintexas",
-    .category = "government", .portal = "https://data.austintexas.gov",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.austintexas.gov/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.austintexas.gov. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 100 records in "
-      "401580 bytes. First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,domainCName,downloadCount,hideFromCatalog." },
-
   { .id = "US_SOCRATA_CAMBRIDGEMA", .name = "Socrata portal inventory — Socrata Cambridgema",
     .category = "government", .portal = "https://data.cambridgema.gov",
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.cambridgema.gov/api/views.json?limit=100",
+    .url = "https://data.cambridgema.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -466,28 +467,14 @@ static const hp_source HP3B36_USA[] = {
       "334734 bytes. First record's fields: "
       "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
 
-  { .id = "US_SOCRATA_CITYOFCHICAGO", .name = "Socrata portal inventory — Socrata Cityofchicago",
-    .category = "government", .portal = "https://data.cityofchicago.org",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.cityofchicago.org/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.cityofchicago.org. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 100 records in "
-      "340690 bytes. First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
-
   { .id = "US_SOCRATA_CITYOFNEWYORK", .name = "Socrata portal inventory — Socrata Cityofnewyork",
     .category = "government", .portal = "https://data.cityofnewyork.us",
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.cityofnewyork.us/api/views.json?limit=100",
+    .url = "https://data.cityofnewyork.us/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -498,44 +485,14 @@ static const hp_source HP3B36_USA[] = {
       "420355 bytes. First record's fields: "
       "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
 
-  { .id = "US_SOCRATA_COLORADO", .name = "Socrata portal inventory — Socrata Colorado",
-    .category = "government", .portal = "https://data.colorado.gov",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.colorado.gov/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.colorado.gov. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 100 records in "
-      "651889 bytes. First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
-
-  { .id = "US_SOCRATA_CT", .name = "Socrata portal inventory — Socrata Ct",
-    .category = "government", .portal = "https://data.ct.gov",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.ct.gov/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.ct.gov. Fetched live 2026-10-05 "
-      "under the engine's own User-Agent: 100 records in 926206 bytes. "
-      "First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
-
   { .id = "US_SOCRATA_KCMO", .name = "Socrata portal inventory — Socrata Kcmo",
     .category = "government", .portal = "https://data.kcmo.org",
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.kcmo.org/api/views.json?limit=100",
+    .url = "https://data.kcmo.org/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -546,44 +503,14 @@ static const hp_source HP3B36_USA[] = {
       "300020 bytes. First record's fields: "
       "id,name,assetType,averageRating,createdAt,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson,locked,newBackend." },
 
-  { .id = "US_SOCRATA_LACITY", .name = "Socrata portal inventory — Socrata Lacity",
-    .category = "government", .portal = "https://data.lacity.org",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.lacity.org/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.lacity.org. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 100 records in "
-      "342112 bytes. First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
-
-  { .id = "US_SOCRATA_MICHIGAN", .name = "Socrata portal inventory — Socrata Michigan",
-    .category = "government", .portal = "https://data.michigan.gov",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.michigan.gov/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.michigan.gov. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 100 records in "
-      "258562 bytes. First record's fields: "
-      "id,name,assetType,averageRating,createdAt,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson,locked,newBackend." },
-
   { .id = "US_SOCRATA_MONTGOMERYCOUNTYMD", .name = "Socrata portal inventory — Socrata Montgomerycountymd",
     .category = "government", .portal = "https://data.montgomerycountymd.gov",
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.montgomerycountymd.gov/api/views.json?limit=100",
+    .url = "https://data.montgomerycountymd.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -599,7 +526,9 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.nola.gov/api/views.json?limit=100",
+    .url = "https://data.nola.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -610,76 +539,14 @@ static const hp_source HP3B36_USA[] = {
       "322526 bytes. First record's fields: "
       "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
 
-  { .id = "US_SOCRATA_NY", .name = "Socrata portal inventory — Socrata Ny",
-    .category = "government", .portal = "https://data.ny.gov",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.ny.gov/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.ny.gov. Fetched live 2026-10-05 "
-      "under the engine's own User-Agent: 100 records in 476625 bytes. "
-      "First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,domainCName,downloadCount,hideFromCatalog." },
-
-  { .id = "US_SOCRATA_OREGON", .name = "Socrata portal inventory — Socrata Oregon",
-    .category = "government", .portal = "https://data.oregon.gov",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.oregon.gov/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.oregon.gov. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 100 records in "
-      "693992 bytes. First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
-
-  { .id = "US_SOCRATA_SEATTLE", .name = "Socrata portal inventory — Socrata Seattle",
-    .category = "government", .portal = "https://data.seattle.gov",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.seattle.gov/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.seattle.gov. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 100 records in "
-      "991360 bytes. First record's fields: "
-      "id,name,assetType,averageRating,createdAt,description,diciBackend,displayType,domainCName,downloadCount,hideFromCatalog,hideFromDataJson." },
-
-  { .id = "US_SOCRATA_SFGOV", .name = "Socrata portal inventory — Socrata Sfgov",
-    .category = "government", .portal = "https://data.sfgov.org",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.sfgov.org/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.sfgov.org. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 100 records in "
-      "489696 bytes. First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,domainCName,downloadCount,hideFromCatalog." },
-
   { .id = "US_SOC_BAYAREAMETRO", .name = "Socrata portal inventory — Soc Bayareametro",
     .category = "government", .portal = "https://data.bayareametro.gov",
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bayareametro.gov/api/views.json?limit=100",
+    .url = "https://data.bayareametro.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -695,7 +562,9 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bloomington.in.gov/api/views.json?limit=100",
+    .url = "https://data.bloomington.in.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -711,7 +580,9 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.brla.gov/api/views.json?limit=100",
+    .url = "https://data.brla.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -722,28 +593,14 @@ static const hp_source HP3B36_USA[] = {
       "332131 bytes. First record's fields: "
       "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
 
-  { .id = "US_SOC_CDC", .name = "Socrata portal inventory — Soc Cdc",
-    .category = "government", .portal = "https://data.cdc.gov",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.cdc.gov/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.cdc.gov. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 100 records in "
-      "533049 bytes. First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
-
   { .id = "US_SOC_CHRONICCDC", .name = "Socrata portal inventory — Soc Chroniccdc",
     .category = "government", .portal = "https://chronicdata.cdc.gov",
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://chronicdata.cdc.gov/api/views.json?limit=100",
+    .url = "https://chronicdata.cdc.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -759,7 +616,10 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.cityofberkeley.info/api/views.json?limit=100",
+    .url = "https://data.cityofberkeley.info/api/views.json?limit=1000",
+    .page_param = "page",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -774,7 +634,9 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.cityofgainesville.org/api/views.json?limit=100",
+    .url = "https://data.cityofgainesville.org/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -785,27 +647,14 @@ static const hp_source HP3B36_USA[] = {
       "in 246859 bytes. First record's fields: "
       "id,name,assetType,averageRating,createdAt,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson,locked,newBackend." },
 
-  { .id = "US_SOC_HEALTHDATA", .name = "Socrata portal inventory — Soc Healthdata",
-    .category = "government", .portal = "https://healthdata.gov",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://healthdata.gov/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .title_keys = "name",
-    .description = "Socrata portal inventory on healthdata.gov. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 100 records in "
-      "805015 bytes. First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,domainCName,downloadCount,hideFromCatalog." },
-
   { .id = "US_SOC_HONOLULU", .name = "Socrata portal inventory — Soc Honolulu",
     .category = "government", .portal = "https://data.honolulu.gov",
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.honolulu.gov/api/views.json?limit=100",
+    .url = "https://data.honolulu.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -821,7 +670,9 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.kingcounty.gov/api/views.json?limit=100",
+    .url = "https://data.kingcounty.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -832,28 +683,14 @@ static const hp_source HP3B36_USA[] = {
       "279624 bytes. First record's fields: "
       "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
 
-  { .id = "US_SOC_MARYLAND", .name = "Socrata portal inventory — Soc Maryland",
-    .category = "government", .portal = "https://opendata.maryland.gov",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.maryland.gov/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .title_keys = "name",
-    .description = "Socrata portal inventory on opendata.maryland.gov. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 100 records in "
-      "330748 bytes. First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
-
   { .id = "US_SOC_MESAAZ", .name = "Socrata portal inventory — Soc Mesaaz",
     .category = "government", .portal = "https://data.mesaaz.gov",
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.mesaaz.gov/api/views.json?limit=100",
+    .url = "https://data.mesaaz.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -864,28 +701,14 @@ static const hp_source HP3B36_USA[] = {
       "398103 bytes. First record's fields: "
       "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,domainCName,downloadCount,hideFromCatalog." },
 
-  { .id = "US_SOC_MO", .name = "Socrata portal inventory — Soc Mo",
-    .category = "government", .portal = "https://data.mo.gov",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.mo.gov/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.mo.gov. Fetched live 2026-10-05 "
-      "under the engine's own User-Agent: 100 records in 271058 bytes. "
-      "First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
-
   { .id = "US_SOC_NJ", .name = "Socrata portal inventory — Soc Nj",
     .category = "government", .portal = "https://data.nj.gov",
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.nj.gov/api/views.json?limit=100",
+    .url = "https://data.nj.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -901,7 +724,9 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.norfolk.gov/api/views.json?limit=100",
+    .url = "https://data.norfolk.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -917,7 +742,9 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.oaklandca.gov/api/views.json?limit=100",
+    .url = "https://data.oaklandca.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -933,7 +760,9 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.pa.gov/api/views.json?limit=100",
+    .url = "https://data.pa.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -949,7 +778,9 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.princegeorgescountymd.gov/api/views.json?limit=100",
+    .url = "https://data.princegeorgescountymd.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -965,7 +796,9 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.providenceri.gov/api/views.json?limit=100",
+    .url = "https://data.providenceri.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -981,7 +814,10 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.somervillema.gov/api/views.json?limit=100",
+    .url = "https://data.somervillema.gov/api/views.json?limit=1000",
+    .page_param = "page",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -996,7 +832,9 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.sonomacounty.ca.gov/api/views.json?limit=100",
+    .url = "https://data.sonomacounty.ca.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -1012,7 +850,9 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.transportation.gov/api/views.json?limit=100",
+    .url = "https://data.transportation.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -1028,7 +868,9 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.va.gov/api/views.json?limit=100",
+    .url = "https://data.va.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -1044,7 +886,9 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.vermont.gov/api/views.json?limit=100",
+    .url = "https://data.vermont.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,

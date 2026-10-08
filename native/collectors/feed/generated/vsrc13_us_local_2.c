@@ -196,35 +196,35 @@ VJSON(nam_septa_busdetours, "nam-septa-busdetours", "SEPTA — active bus detour
 
 VJSON(nam_sf_311_cases, "nam-sf-311-cases", "City and County of San Francisco — 311 cases", "City and County of San Francisco — 311 cases",
   "us_local", "opendata",
-  "https://data.sfgov.org/resource/vw6y-z8j6.json?$limit=500&$order=:id",
+  "https://data.sf.gov/resource/vw6y-z8j6.json?$limit=500&$order=:id",
   "",
   "en", "[\"usa\",\"ca\",\"311\",\"opendata\"]", 3600,
   "San Francisco 311 service cases with request type, responsible agency, status and location.");
 
 VJSON(nam_sf_air_traffic_passenger, "nam-sf-air-traffic-passenger", "City and County of San Francisco — SFO passenger traffic", "City and County of San Francisco — SFO passenger traffic",
   "us_local", "economy",
-  "https://data.sfgov.org/resource/rkru-6vcg.json?$limit=1000&$order=:id",
+  "https://data.sf.gov/resource/rkru-6vcg.json?$limit=1000&$order=:id",
   "",
   "en", "[\"usa\",\"ca\",\"aviation\",\"economy\"]", 86400,
   "Monthly SFO passenger counts by airline, terminal and geographic region.");
 
 VJSON(nam_sf_building_permits, "nam-sf-building-permits", "City and County of San Francisco — building permits", "City and County of San Francisco — building permits",
   "us_local", "economy",
-  "https://data.sfgov.org/resource/i98e-djp9.json?$limit=500&$order=:id",
+  "https://data.sf.gov/resource/i98e-djp9.json?$limit=500&$order=:id",
   "",
   "en", "[\"usa\",\"ca\",\"permits\",\"economy\"]", 21600,
   "San Francisco DBI permit records with proposed use, estimated cost and status.");
 
 VJSON(nam_sf_fire_calls, "nam-sf-fire-calls", "City and County of San Francisco — fire department calls for service", "City and County of San Francisco — fire department calls for service",
   "us_local", "hazard",
-  "https://data.sfgov.org/resource/nuek-vuh3.json?$limit=500&$order=:id",
+  "https://data.sf.gov/resource/nuek-vuh3.json?$limit=500&$order=:id",
   "",
   "en", "[\"usa\",\"ca\",\"fire\",\"hazard\"]", 3600,
   "SFFD calls for service including medical, alarm and fire responses with dispatch timing and neighbourhood.");
 
 VJSON(nam_sf_police_incidents, "nam-sf-police-incidents", "City and County of San Francisco — police incident reports", "City and County of San Francisco — police incident reports",
   "us_local", "crime",
-  "https://data.sfgov.org/resource/wg3w-h783.json?$limit=500&$order=:id",
+  "https://data.sf.gov/resource/wg3w-h783.json?$limit=500&$order=:id",
   "",
   "en", "[\"usa\",\"ca\",\"crime\",\"police\"]", 21600,
   "SFPD incident reports since 2018 with category, resolution, district and coordinates.");

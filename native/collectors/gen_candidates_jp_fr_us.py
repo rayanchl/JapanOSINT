@@ -752,7 +752,7 @@ US_SOCRATA = [
     ("california", "data.ca.gov", "State of California Open Data", "カリフォルニア州"),
     ("losangeles", "data.lacity.org", "City of Los Angeles Open Data", "ロサンゼルス市"),
     ("sandiego", "data.sandiego.gov", "City of San Diego Open Data", "サンディエゴ市"),
-    ("sfgov", "data.sfgov.org", "City of San Francisco Open Data", "サンフランシスコ市"),
+    ("sfgov", "data.sf.gov", "City of San Francisco Open Data", "サンフランシスコ市"),
     ("oakland", "data.oaklandca.gov", "City of Oakland Open Data", "オークランド市"),
     ("colorado", "data.colorado.gov", "State of Colorado Open Data", "コロラド州"),
     ("utah", "opendata.utah.gov", "State of Utah Open Data", "ユタ州"),

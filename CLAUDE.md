@@ -39,7 +39,7 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 18,897** (2026-10-07). Main's 18,730: 18,645 —
+**The registered count is 18,883** (2026-10-09). Main's 18,730: 18,645 —
 batches 33–36 (batch 33's 43 measured supply-chain rows,
 `docs/verified-sources-batch33.tsv`; batch 34's NDJSON row; batch 35's four
 string-array rows; the spec-families beats and batch 36's 188) and the audit
@@ -52,7 +52,9 @@ main's batch 38 merged first) and batch 39's 72 rows unlocked by date tokens /
 JSONP / body paging / HTML tables less the frozen VCSV row one of them replaced
 (`docs/verified-sources-batch39.md`) — less batch 36's `CN_HK_LANDS_ADDR`, a
 fuzzy geocoder that answers any text with addresses (`FILTER_IGNORED`,
-`docs/rejected-sources-batch36.china.tsv`). `make lint-sources`
+`docs/rejected-sources-batch36.china.tsv`), and less 14 batch-36 Socrata
+portal inventories that re-read a catalogue `hp3_portals.c`/`hp3_society.c`
+already reads (`docs/rejected-sources-batch36.usa.tsv`). `make lint-sources`
 prints it, counting hp_source table rows as well as `REGISTER_SOURCE`, and
 `./bin/japanosint --list-sources` agrees.
 

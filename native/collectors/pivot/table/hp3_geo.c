@@ -29,6 +29,18 @@
  * page_max 100 as a runaway guard. One record is one economy in one year:
  * country.id is set on the regional aggregates too, whose countryiso3code is
  * empty -- the identity WORLDBANK_NUCLEAR_SHARE already measured. */
+/* SOCRATA_VIEWS_NOTE (2026-10-09). A Socrata portal's /api/views.json lists
+ * every dataset it publishes, one page at a time: `page` is a page NUMBER
+ * and `limit` takes 1,000. The rows here asked for 100 or 200 -- most in ONE
+ * request, the rest under the default 10-page ceiling -- and read 200 of New
+ * York State's 5,360 datasets, 1,000 of San Francisco's 1,225 (measured
+ * 2026-10-09; every one of these hosts answers a different page 2). Now
+ * limit=1000 paged by number to an empty page, page_max 100 as a runaway
+ * guard, the root array declared (a view's own `columns` list must not win
+ * the densest-array guess on a short last page), keyed on the view's 4x4 id.
+ * timeout_ms 120000: a page carries every view's column schema and these
+ * hosts take 10-27 s to render one at ANY size (data.ny.gov: 21 s for 1,000,
+ * 25 s for 500, 11 s for 200), so the engine's 20 s default failed page 1. */
 static const hp_source HP3_GEO[] = {
   { .id = "USGS_VOLCANO_ALERTS", .name = "USGS — volcano alert levels",
     .name_ja = "USGS 火山警戒レベル",
@@ -370,7 +382,13 @@ static const hp_source HP3_GEO[] = {
      * "Environmental Health & Toxicology" (live category list 2026-09-15) —
      * and the filter is honoured, so the old value returned `[]` on every run
      * (EMITS_NOTHING). Same catalogue, the category's real name. */
-    .url = "https://data.cdc.gov/api/views.json?limit=100&category=Environmental%20Health%20%26%20Toxicology",
+    .url = "https://data.cdc.gov/api/views.json?limit=1000&category=Environmental%20Health%20%26%20Toxicology",
+    .array_path = ".",
+    .id_keys = "id",
+    .title_keys = "name",
+    .page_param = "page",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .interval = 86400,
     .description = "Environmental health datasets published through the US federal "
       "open-data platform, with the owning programme, schema and "

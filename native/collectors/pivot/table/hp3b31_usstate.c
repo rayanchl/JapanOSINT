@@ -291,9 +291,9 @@ static const hp_source HP3B31_USSTATE[] = {
 
   { .id = "US_SF_REGISTERED_BUSINESSES", .name = "San Francisco — registered business locations",
     .name_ja = "サンフランシスコ市 事業所登録", .category = "government",
-    .portal = "https://data.sfgov.org", .record_type = "us-city-registration",
+    .portal = "https://data.sf.gov", .record_type = "us-city-registration",
     .tags = "\"us\",\"sf\",\"registry\"", .free_tier = 1,
-    .url = "https://data.sfgov.org/resource/g8m3-pdis.json?$q={q}&$limit=1000",
+    .url = "https://data.sf.gov/resource/g8m3-pdis.json?$q={q}&$limit=1000",
     .title_keys = "dba_name,ownership_name", .id_keys = "ttxid",
     .date_keys = "dba_start_date",
     .page_param = "$offset", .page_size = 1000, .page_start = 0, .page_max = 25,

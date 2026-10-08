@@ -24,10 +24,10 @@ VJSON(us_socrata_discovery_seattle, "us-socrata-discovery-seattle", "City of Sea
 
 VJSON(us_socrata_discovery_sfgov, "us-socrata-discovery-sfgov", "City of San Francisco Open Data — Asset Discovery", "サンフランシスコ市 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.sfgov.org",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.sf.gov",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"sfgov\"]", 86400,
-  "Every dataset, chart, map, filtered view and file published on data.sfgov.org, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
+  "Every dataset, chart, map, filtered view and file published on data.sf.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_texas, "us-socrata-discovery-texas", "State of Texas Open Data — Asset Discovery", "テキサス州 データ資産一覧",
   "us_state", "registry",
@@ -255,10 +255,10 @@ VJSON(us_socrata_metadata_seattle, "us-socrata-metadata-seattle", "City of Seatt
 
 VJSON(us_socrata_metadata_sfgov, "us-socrata-metadata-sfgov", "City of San Francisco Open Data — Asset Metadata", "サンフランシスコ市 メタデータ",
   "us_state", "opendata",
-  "https://data.sfgov.org/api/views/metadata/v1?limit=500&page_size=500&page=1",
+  "https://data.sf.gov/api/views/metadata/v1?limit=500&page_size=500&page=1",
   "",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"metadata\",\"sfgov\"]", 86400,
-  "Portal-side metadata for the assets hosted on data.sfgov.org: name, description, category, tags, attribution, licence, owner and provenance for each view.");
+  "Portal-side metadata for the assets hosted on data.sf.gov: name, description, category, tags, attribution, licence, owner and provenance for each view.");
 
 VJSON(us_socrata_metadata_texas, "us-socrata-metadata-texas", "State of Texas Open Data — Asset Metadata", "テキサス州 メタデータ",
   "us_state", "opendata",
