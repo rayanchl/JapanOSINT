@@ -867,7 +867,16 @@ its members** (decided 2026-10-05): OSINT runs and their syntheses
 carry `user_id` + `mine` and `meta.scope`; `?mine=1` narrows a list (and its
 `total`) to the caller. Edits, deletes and clearing history stay with the
 author. Nothing crosses workspaces — `test_search_runs_workspace.c` and
-`test_saved_search_workspace.c` pin both halves. List routes answer
+`test_saved_search_workspace.c` pin both halves. A case VIEWER reads only;
+content writes are analyst+ or the case's lead or a contributor
+(`test_case_roles.c`).
+
+Search history holds every COMMITTED search (2026-10-09): the clients
+`POST /api/search-history` on submit / opening a result / a committed URL's
+results — never per keystroke, since `/api/entities/search` serves a
+search-as-you-type box — and `searchapi.c` records an OSINT run at start.
+The same search by the same person within `SS_HISTORY_MERGE_SEC` refreshes one
+row instead of copying it. Do not record from the search routes themselves. List routes answer
 `page:{limit,offset,count,total,has_more}`, `total` measured under the same
 filters as the rows.
 
