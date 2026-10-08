@@ -350,6 +350,69 @@ static void history_prune(db_handle *db, const char *tid, const char *uid) {
   sqlite3_step(s); sqlite3_finalize(s);
 }
 
+/* One history row for (tenant,user), or the refresh of an identical one.
+ *
+ * Every committed search is recorded now (decided 2026-10-09), not only saved-
+ * search runs — and a committed search is re-issued all the time: a page
+ * reload, a feed's refetch, the back button. The same search by the same
+ * person inside SS_HISTORY_MERGE_SEC therefore refreshes that row's ts and
+ * result_count instead of adding a copy, so the trail reads as searches, not
+ * as requests. A different kind or a single differing parameter is a new row.
+ * Returns the row id (0 on failure); *merged says which happened. */
+static sqlite3_int64 history_upsert(db_handle *db, const char *tid,
+                                    const char *uid, const char *kind,
+                                    const char *params_json, long result_count,
+                                    int *merged) {
+  if (merged) *merged = 0;
+  sqlite3_stmt *s;
+  sqlite3_int64 id = 0;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT id FROM search_history WHERE tenant_id=?1 AND user_id=?2 AND "
+        "kind=?3 AND params_json=?4 AND ts >= datetime('now', ?5) "
+        "ORDER BY id DESC LIMIT 1", -1, &s, NULL) == SQLITE_OK) {
+    char win[24];
+    snprintf(win, sizeof win, "-%d seconds", SS_HISTORY_MERGE_SEC);
+    sqlite3_bind_text(s,1,tid,-1,SQLITE_TRANSIENT);
+    sqlite3_bind_text(s,2,uid,-1,SQLITE_TRANSIENT);
+    sqlite3_bind_text(s,3,kind,-1,SQLITE_TRANSIENT);
+    sqlite3_bind_text(s,4,params_json,-1,SQLITE_TRANSIENT);
+    sqlite3_bind_text(s,5,win,-1,SQLITE_TRANSIENT);
+    if (sqlite3_step(s) == SQLITE_ROW) id = sqlite3_column_int64(s,0);
+    sqlite3_finalize(s);
+  }
+  if (id) {
+    if (sqlite3_prepare_v2(db->h,
+          "UPDATE search_history SET ts=datetime('now'), "
+          "result_count=COALESCE(?2,result_count) WHERE id=?1",
+          -1, &s, NULL) != SQLITE_OK)
+      return 0;
+    sqlite3_bind_int64(s,1,id);
+    if (result_count >= 0) sqlite3_bind_int64(s,2,(sqlite3_int64)result_count);
+    else                   sqlite3_bind_null (s,2);
+    int rc = sqlite3_step(s);
+    sqlite3_finalize(s);
+    if (rc != SQLITE_DONE) return 0;
+    if (merged) *merged = 1;
+    return id;
+  }
+  if (sqlite3_prepare_v2(db->h,
+        "INSERT INTO search_history (tenant_id,user_id,kind,params_json,"
+        "result_count) VALUES (?1,?2,?3,?4,?5)", -1, &s, NULL) != SQLITE_OK)
+    return 0;
+  sqlite3_bind_text(s,1,tid,-1,SQLITE_TRANSIENT);
+  sqlite3_bind_text(s,2,uid,-1,SQLITE_TRANSIENT);
+  sqlite3_bind_text(s,3,kind,-1,SQLITE_TRANSIENT);
+  sqlite3_bind_text(s,4,params_json,-1,SQLITE_TRANSIENT);
+  if (result_count >= 0) sqlite3_bind_int64(s,5,(sqlite3_int64)result_count);
+  else                   sqlite3_bind_null (s,5);
+  int rc = sqlite3_step(s);
+  sqlite3_finalize(s);
+  if (rc != SQLITE_DONE) return 0;
+  id = sqlite3_last_insert_rowid(db->h);
+  history_prune(db, tid, uid);
+  return id;
+}
+
 void search_history_record(db_handle *db, const char *tenant_id,
                            const char *user_id, const char *kind,
                            const char *params_json, long result_count) {
@@ -358,25 +421,90 @@ void search_history_record(db_handle *db, const char *tenant_id,
   if (!kind_valid(kind)) return;
   if (!params_json || !*params_json || strlen(params_json) > SS_PARAMS_MAX)
     return;
+  history_upsert(db, tenant_id, user_id, kind, params_json, result_count, NULL);
+}
+
+/* One history row, decoded as the list decodes it. NULL when it is not this
+ * tenant's. */
+static cJSON *history_row(db_handle *db, const tenant_ctx *t, sqlite3_int64 id) {
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h,
-        "INSERT INTO search_history (tenant_id,user_id,kind,params_json,"
-        "result_count) VALUES (?1,?2,?3,?4,?5)", -1, &s, NULL) != SQLITE_OK)
-    return;
-  sqlite3_bind_text(s,1,tenant_id,-1,SQLITE_TRANSIENT);
-  sqlite3_bind_text(s,2,user_id,-1,SQLITE_TRANSIENT);
-  sqlite3_bind_text(s,3,kind,-1,SQLITE_TRANSIENT);
-  sqlite3_bind_text(s,4,params_json,-1,SQLITE_TRANSIENT);
-  if (result_count >= 0) sqlite3_bind_int64(s,5,(sqlite3_int64)result_count);
-  else                   sqlite3_bind_null (s,5);
-  int rc = sqlite3_step(s);
+        "SELECT id,kind,params_json,result_count,ts,user_id FROM search_history "
+        "WHERE id=?1 AND tenant_id=?2", -1, &s, NULL) != SQLITE_OK)
+    return NULL;
+  sqlite3_bind_int64(s,1,id);
+  sqlite3_bind_text (s,2,t->tenant_id,-1,SQLITE_TRANSIENT);
+  cJSON *r = NULL;
+  if (sqlite3_step(s) == SQLITE_ROW) {
+    r = cJSON_CreateObject();
+    cJSON_AddItemToObject(r,"id",cJSON_CreateNumber((double)sqlite3_column_int64(s,0)));
+    cJSON_AddStringToObject(r,"kind",(const char *)sqlite3_column_text(s,1));
+    cJSON_AddItemToObject(r,"params", safe_json(ctext(s,2), 0));
+    if (sqlite3_column_type(s,3) == SQLITE_NULL)
+      cJSON_AddItemToObject(r,"result_count",cJSON_CreateNull());
+    else
+      cJSON_AddItemToObject(r,"result_count",
+        cJSON_CreateNumber((double)sqlite3_column_int64(s,3)));
+    cJSON_AddStringToObject(r,"ts",(const char *)sqlite3_column_text(s,4));
+    const char *author = ctext(s,5);
+    add_str_or_null(r,"user_id",author);
+    cJSON_AddBoolToObject(r,"mine", author && !strcmp(author, t->user_id));
+  }
   sqlite3_finalize(s);
-  if (rc == SQLITE_DONE) history_prune(db, tenant_id, user_id);
+  return r;
 }
 
 char *searchhistoryapi(db_handle *db, const tenant_ctx *t, const char *method,
-                       const char *qs, int *st) {
+                       const char *qs, const char *body, int *st) {
   if (!db || !db->h || !t || !method) return err(st, 500, "server_error");
+
+  if (!strcmp(method, "POST")) {
+    /* A client recording a search the user COMMITTED (submitted, opened a
+     * result of) — the server cannot tell a keystroke of a search-as-you-type
+     * box from a search, so the client says when one happened. Always the
+     * caller's own row; any role may write it, since searching is not a
+     * privileged act. */
+    if (!t->user_id[0]) return err(st, 401, "auth_required");
+    cJSON *b = body && *body ? cJSON_Parse(body) : NULL;
+    if (!b || !cJSON_IsObject(b)) { cJSON_Delete(b); return err(st, 400, "body required"); }
+    const cJSON *jk = cJSON_GetObjectItem(b, "kind");
+    const cJSON *jp = cJSON_GetObjectItem(b, "params");
+    const cJSON *jr = cJSON_GetObjectItem(b, "result_count");
+    if (!cJSON_IsString(jk) || !kind_valid(jk->valuestring)) {
+      cJSON_Delete(b); return err(st, 400, "invalid_kind");
+    }
+    if (!cJSON_IsObject(jp)) { cJSON_Delete(b); return err(st, 400, "params must be an object"); }
+    long rcount = -1;
+    if (jr && !cJSON_IsNull(jr)) {
+      if (!cJSON_IsNumber(jr) || jr->valuedouble < 0 || jr->valuedouble > 9e15) {
+        cJSON_Delete(b); return err(st, 400, "invalid result_count");
+      }
+      rcount = (long)jr->valuedouble;
+    }
+    char *pj = cJSON_PrintUnformatted(jp);
+    if (!pj) { cJSON_Delete(b); return err(st, 500, "server_error"); }
+    if (strlen(pj) > SS_PARAMS_MAX) {
+      free(pj); cJSON_Delete(b); return err(st, 400, "params_too_large");
+    }
+    char kind[16];
+    snprintf(kind, sizeof kind, "%s", jk->valuestring);
+    cJSON_Delete(b);
+    int merged = 0;
+    sqlite3_int64 id = history_upsert(db, t->tenant_id, t->user_id, kind, pj,
+                                      rcount, &merged);
+    free(pj);
+    if (!id) return err(st, 500, "server_error");
+    cJSON *row = history_row(db, t, id);
+    if (!row) return err(st, 500, "server_error");
+    cJSON *w = cJSON_CreateObject();
+    cJSON_AddItemToObject(w, "data", row);
+    cJSON *mt = cJSON_CreateObject();
+    cJSON_AddBoolToObject(mt, "merged", merged);
+    cJSON_AddNumberToObject(mt, "merge_window_sec", SS_HISTORY_MERGE_SEC);
+    cJSON_AddItemToObject(w, "meta", mt);
+    char *o = cJSON_PrintUnformatted(w); cJSON_Delete(w);
+    *st = merged ? 200 : 201; return o;
+  }
 
   if (!strcmp(method, "GET")) {
     char v_kind[32] = {0}, v_lim[24] = {0}, v_off[24] = {0}, v_mine[8] = {0};

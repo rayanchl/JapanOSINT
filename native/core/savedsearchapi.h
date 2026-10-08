@@ -109,6 +109,7 @@
 #define SS_PARAMS_MAX     16384   /* bytes of compact params_json            */
 #define SS_NAME_MAX       200     /* chars, trimmed                          */
 #define SS_HISTORY_KEEP   1000    /* newest rows kept per (tenant,user)      */
+#define SS_HISTORY_MERGE_SEC 600  /* same search, same person: refresh, not a copy */
 #define PL_TOKEN_MAX      4096    /* chars of "v1.<b64url>" accepted         */
 #define PL_STATE_MAX      3072    /* bytes of compact state JSON encoded     */
 
@@ -160,14 +161,25 @@ char *savedsearchapi(db_handle *db, const tenant_ctx *t, const char *method,
  *                                             page:{limit,offset,count,total,
  *                                             has_more}, meta:{scope,
  *                                             retained_max}
+ *   POST   /api/search-history                record a search the caller
+ *                                             COMMITTED {kind,params,
+ *                                             result_count?} → 201 {data:row},
+ *                                             or 200 when it refreshed the same
+ *                                             search made in the last
+ *                                             SS_HISTORY_MERGE_SEC (meta.merged)
  *   DELETE /api/search-history                clear MINE ONLY → {"ok":true,"deleted":n}
+ *
+ * Every committed search is recorded (decided 2026-10-09): the clients POST
+ * on submit or on opening a result, never per keystroke, and an OSINT run is
+ * recorded by searchapi.c when it starts. Saved-search runs record through
+ * run_saved as before.
  *
  * Every row names its author (user_id, mine) and meta.scope says which view
  * was served. Nothing crosses workspaces. limit defaults to 50 and clamps to
  * 1..200; offset < 0 reads as 0.
  * Sets *status; malloc'd; caller frees. */
 char *searchhistoryapi(db_handle *db, const tenant_ctx *t, const char *method,
-                       const char *qs, int *status);
+                       const char *qs, const char *body, int *status);
 
 /* Append one history row for (tenant,user) and prune to the newest
  * SS_HISTORY_KEEP. `kind` must be one of the five kinds (anything else is
@@ -177,13 +189,10 @@ char *searchhistoryapi(db_handle *db, const tenant_ctx *t, const char *method,
  * Fails silently, exactly like audit_write(): a history row must never break
  * the search it describes.
  *
- * ORCHESTRATOR (optional, not required for item 38): to make history reflect
- * every search rather than only saved-search runs, call this from the existing
- * search handlers in httpd.c after a successful response, e.g. in the
- * /api/intel/items block:
- *     search_history_record(g_db, tc.tenant_id, tc.user_id, "intel",
- *                           params_json, (long)returned_rows);
- * It is a plain void call with no ordering constraints. */
+ * The same search by the same person within SS_HISTORY_MERGE_SEC refreshes
+ * the existing row (ts, result_count) instead of adding a copy. Not called from
+ * the search ROUTES on purpose: /api/entities/search serves a search-as-you-type
+ * box, so recording there would store every prefix typed. */
 void search_history_record(db_handle *db, const char *tenant_id,
                            const char *user_id, const char *kind,
                            const char *params_json, long result_count);

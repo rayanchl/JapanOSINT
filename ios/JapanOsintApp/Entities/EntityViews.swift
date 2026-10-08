@@ -28,9 +28,11 @@ struct EntitiesView: View {
                             Text("\(h.mention_count ?? 0)").font(.caption2).foregroundColor(theme.textMuted)
                         }
                     }
+                    .simultaneousGesture(TapGesture().onEnded { commitSearch() })
                 }
             }
             .searchable(text: $q)
+            .onSubmit(of: .search) { commitSearch() }
             .navigationTitle("Entities")
             .themedScreenBackground(theme)
         }
@@ -49,6 +51,15 @@ struct EntitiesView: View {
             }
         }
         .onDisappear { searchTask?.cancel() }
+    }
+
+    /// The list searches as you type, so a keystroke is never recorded; the
+    /// Search key or opening a result commits it (workspace history).
+    private func commitSearch() {
+        let query = q.trimmingCharacters(in: .whitespaces)
+        guard query.count >= 2 else { return }
+        let n = hits.count
+        Task { await apiClient.api.recordSearch(kind: "entity", params: ["q": query], resultCount: n) }
     }
 }
 

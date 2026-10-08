@@ -64,6 +64,11 @@ struct IntelTab: View {
                 prompt: "Search across all sources"
             )
             .modifier(BilingualSearchModifier(query: searchText, bilingual: $bilingual))
+            .onSubmit(of: .search) {
+                let q = searchText.trimmingCharacters(in: .whitespaces)
+                Task { await apiClient.api.recordSearch(kind: "intel",
+                    params: ["view": "search", "mode": "fts", "q": q]) }
+            }
             .refreshable { await reload() }
             .toolbar {
                 ToolbarItem(placement: .compatPrimary) {

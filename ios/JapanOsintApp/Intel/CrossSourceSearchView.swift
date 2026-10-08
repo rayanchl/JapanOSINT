@@ -78,6 +78,7 @@ struct CrossSourceSearchView: View {
                                 IntelItemRow(item: item)
                             }
                         }
+                        .simultaneousGesture(TapGesture().onEnded { commitSearch() })
                     }
                     if nextCursor != nil {
                         loadMoreRow
@@ -161,6 +162,14 @@ struct CrossSourceSearchView: View {
         .padding(.vertical, 6)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(theme.surfaceElevated.opacity(0.6))
+    }
+
+    /// Opening a result commits the search that found it (workspace history).
+    private func commitSearch() {
+        let q = bilingual.original.trimmingCharacters(in: .whitespaces)
+        let n = totalLabel.flatMap { Int($0) } ?? items.count
+        Task { await apiClient.api.recordSearch(kind: "intel",
+            params: ["view": "search", "mode": "fts", "q": q], resultCount: n) }
     }
 
     private func search() async {

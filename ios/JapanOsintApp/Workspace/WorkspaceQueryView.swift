@@ -203,6 +203,9 @@ struct WorkspaceQueryView: View {
             defer { running = false }
             do {
                 results = try await api.intelItems(q: tq, limit: 50).data
+                let n = results.count
+                Task { await api.recordSearch(kind: "intel",
+                    params: ["view": "search", "mode": "fts", "q": tq], resultCount: n) }
             } catch let e {
                 error = e.localizedDescription
             }

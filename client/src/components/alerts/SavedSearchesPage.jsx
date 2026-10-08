@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { LuRefreshCw, LuPlay, LuPencil, LuTrash2, LuBellRing, LuPin, LuPinOff, LuHistory, LuEraser } from 'react-icons/lu';
 import { api, errorMessage, ApiError } from '../../api/client.js';
 import { usePagedList } from '../../hooks/usePagedList.js';
+import { intelHistoryRoute } from '../../api/searchHistory.js';
 import { useMemberNames, authorLabel } from '../../hooks/useMembers.js';
 import { relativeTime, fmtAbs } from '../../utils/time.js';
 import {
@@ -35,11 +36,7 @@ export function routeFor(kind, params) {
   const q = p.q ?? p.query ?? p.text ?? '';
   const enc = (v) => encodeURIComponent(String(v));
   switch (kind) {
-    case 'intel': {
-      const qs = new URLSearchParams();
-      for (const [k, v] of Object.entries(p)) if (v != null && v !== '') qs.set(k, String(v));
-      return `/intel${qs.toString() ? `?${qs}` : ''}`;
-    }
+    case 'intel': return intelHistoryRoute(p);
     case 'osint': return `/search${q ? `?q=${enc(q)}` : ''}`;
     case 'entity': return `/entities${q ? `?q=${enc(q)}` : ''}`;
     case 'breach': return `/intel?source=breach${q ? `&q=${enc(q)}` : ''}`;

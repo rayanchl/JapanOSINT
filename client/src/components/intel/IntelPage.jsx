@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { useRecordSearch } from '../../api/searchHistory.js';
 import { LuPlay, LuRefreshCw } from 'react-icons/lu';
 import { api, errorMessage } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
@@ -201,6 +202,11 @@ function FeedList({ feed, view, emptyTitle = 'No items matched.', noun = 'items'
 
 function FtsResults({ q, sort, view }) {
   const feed = useIntelItems('/api/intel/search', { q, sort, total: '1', collapse: '1', limit: 50, lang_view: 'both' });
+  // Recorded once the first page is in, with the server's total — the search
+  // was committed when q reached the URL (submit, a link, a history re-run).
+  useRecordSearch('intel', { view: 'search', mode: 'fts', q }, {
+    ready: !feed.loading && !feed.error, resultCount: feed.total ?? feed.items?.length,
+  });
   return <FeedList feed={feed} view={view} />;
 }
 
@@ -210,6 +216,9 @@ export function nearParams({ near, radius, q }) {
 
 function NearResults({ near, radius, q, view }) {
   const feed = useIntelItems('/api/intel/items', nearParams({ near, radius, q }));
+  useRecordSearch('intel', { view: 'search', mode: 'near', near, radius_m: radius, q }, {
+    ready: !feed.loading && !feed.error, resultCount: feed.total ?? feed.items?.length,
+  });
   return (
     <div className="space-y-2">
       {feed.meta?.note && <div className="text-[11px] text-accent font-mono">{feed.meta.note}</div>}
@@ -224,6 +233,9 @@ function SemanticResults({ q, semMode }) {
   const rows = Array.isArray(data?.data) ? data.data : [];
   const meta = data?.meta;
   const cov = error?.body?.meta?.coverage || meta?.coverage;
+  useRecordSearch('intel', { view: 'search', mode: 'semantic', q }, {
+    ready: !loading && !error && Boolean(data), resultCount: rows.length,
+  });
   return (
     <div className="space-y-2">
       {loading && <LoadingState label="Embedding the query…" />}

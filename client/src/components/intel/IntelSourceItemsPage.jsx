@@ -1,9 +1,10 @@
 import React, { useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useSearchParams, Link, useParams } from 'react-router-dom';
 import { LuPlay } from 'react-icons/lu';
 import { api, errorMessage } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
 import { useIntelItems, SINCE_PRESETS, useSinceIso } from '../../hooks/useIntel.js';
+import { useRecordSearch } from '../../api/searchHistory.js';
 import { Page, Card, Pill, Button, Input, Segmented, Toggle, ErrorNotice, EmptyState, LoadingState, BoundNote, KV, cx, toast } from '../ui/kit.jsx';
 import IntelItemRow from './IntelItemRow.jsx';
 import { isSafeUrl } from '../../utils/safeUrl.js';
@@ -14,8 +15,10 @@ export default function IntelSourceItemsPage() {
   const { id } = useParams();
   const sources = useApi('/api/intel/sources');
   const source = useMemo(() => (Array.isArray(sources.data?.data) ? sources.data.data.find((s) => s.id === id) : null), [sources.data, id]);
-  const [q, setQ] = useState('');
-  const [qApplied, setQApplied] = useState('');
+  // ?q= reopens a search made here (a history or shared link).
+  const [urlParams] = useSearchParams();
+  const [q, setQ] = useState(() => urlParams.get('q') || '');
+  const [qApplied, setQApplied] = useState(() => (urlParams.get('q') || '').trim());
   const [since, setSince] = useState('');
   const [rt, setRt] = useState('');
   const [geo, setGeo] = useState(false);
@@ -29,6 +32,11 @@ export default function IntelSourceItemsPage() {
     source: id, q: qApplied || undefined, since: sinceAt, record_type: rt.trim() || undefined,
     has_geom: geo ? 'yes' : undefined, sort: qApplied && sort !== 'newest' ? sort : undefined,
     limit: 50, total: '1', lang_view: 'both',
+  });
+  // A search submitted inside this source goes to the workspace's history once
+  // its first page is in. The filters beside it narrow a list; only q is a search.
+  useRecordSearch('intel', { view: 'source', source: id, q: qApplied }, {
+    enabled: Boolean(qApplied), ready: !feed.loading && !feed.error, resultCount: feed.total ?? feed.items?.length,
   });
   const { items, error, loading, loadingMore, hasMore, loadMore, reload, total, totalGte, meta } = feed;
 
