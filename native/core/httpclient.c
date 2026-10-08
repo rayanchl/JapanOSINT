@@ -351,6 +351,16 @@ static const struct { const char *host, *ua; } UA_OVERRIDE[] = {
     "contact via repo issues)" },
   { "www.ftc.gov",
     "JapanOSINT/1.0 (contact via repo issues)" },
+  /* The "collector" word filter once more (decided 2026-10-09 to route
+   * around it). Measured against /en/bycountry/JP/:
+   *     engine UA                                              403, 153 B
+   *     "RCorp-feeds/1.0 (…; feed collector; …)"               403
+   *     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas;
+   *      contact via repo issues)"                             200, 19,850 B
+   * cam-insecam-scrape had failed every run since 2026-10-06 on the 403. */
+  { "www.insecam.org",
+    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
+    "contact via repo issues)" },
 
   /* NOT LISTED, deliberately: registry.faa.gov.
    *
