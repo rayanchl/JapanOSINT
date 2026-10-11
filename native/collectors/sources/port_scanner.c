@@ -150,10 +150,11 @@ static int run_ports(const source_ctx *ctx, intel_sink *sink) {
  * stranger names is not something a language model should be able to trigger on
  * their behalf, however well the target is gated.
  *
- * Dispatch itself is unaffected: osint_dispatch() resolves through
- * registry_get(id), which does not consult .collector — so `--dispatch
- * PORT_SCANNER <host>` still works for a local operator. What changes is that
- * the model is no longer offered it.
+ * osint_dispatch() now refuses it outright (not_a_pivot: only collector
+ * "osint" with interval 0 runs on an entity from a request path), so neither
+ * the model nor a hand-written POST /api/search can name it. `--dispatch
+ * PORT_SCANNER <host>` still works for a local operator, through
+ * osint_dispatch_operator().
  *
  * The leading underscore also keeps it out of scheduler fetch_log/anomaly, which
  * is correct: it is on-demand (interval 0) and operator-invoked.

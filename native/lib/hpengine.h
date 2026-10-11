@@ -232,10 +232,14 @@ typedef struct hp_source {
   const char *base;
 
   /* Second hop — the actual penetrancy. detail_max 0 (the default) deepens
-   * EVERY list record, bounded operationally by $JO_HP_DETAIL_MAX (default 25)
-   * so one pivot cannot fire thousands of requests. Records that were not
-   * deepened carry `_detail_pending: true` — an un-fetched detail is reported,
-   * not quietly treated as absent. */
+   * EVERY list record, bounded operationally by $JO_HP_DETAIL_MAX (default
+   * 1,000) and by $JO_HP_DETAIL_SEC of detail fetching per run (default 120;
+   * the host gate paces each hop, so time is the honest politeness unit).
+   * Records that were not deepened carry `_detail_pending: true`, and the run
+   * files ONE collector-truncation-notice counting fetched vs pending — an
+   * un-fetched detail is reported, not quietly treated as absent. Every mode
+   * deepens (JSON, XML, CSV/XLSX columns, HTML anchors' title/url/id), the hop
+   * carries the row's own headers ({key} expanded) and is parsed as JSON. */
   const char *detail_url;     /* template, {v} from detail_key              */
   const char *detail_key;     /* field in the list record holding the id    */
   const char *detail_path;    /* array_path for the detail doc (or NULL)    */

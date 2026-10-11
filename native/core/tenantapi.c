@@ -1,7 +1,7 @@
 #include "tenantapi.h"
+#include "audit.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
-#include <openssl/sha.h>
 #include <openssl/rand.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -321,41 +321,22 @@ char *tenantapi_audit_list(db_handle *db, const char *tenant_id,
 }
 
 /* ── auditChain.verifyAuditChain ──────────────────────────────────────────
- * row_hash = sha256Hex(canonicalJson({sorted keys})). canonicalJson sorts
- * keys lexicographically; with the fixed schema the order is constant, so
- * we add them to a cJSON object in that order and PrintUnformatted (==
- * JSON.stringify; cJSON string-escaping matches for our data). */
-static void sha256_hex(const char *in, char out[65]) {
-  unsigned char d[SHA256_DIGEST_LENGTH];
-  SHA256((const unsigned char *)in, strlen(in), d);
-  for (int i = 0; i < SHA256_DIGEST_LENGTH; i++)
-    snprintf(out + i*2, 3, "%02x", d[i]);
-}
-static void put(cJSON *o, const char *k, const char *v) {
-  cJSON_AddItemToObject(o, k, v ? cJSON_CreateString(v) : cJSON_CreateNull());
-}
-/* keys sorted: action,chain_seq,id,ip,payload_json,prev_hash,target,
- * tenant_id,ts,ua,user_id */
-static void row_hash_of(const char *id, const char *tenant_id,
-    const char *user_id, const char *action, const char *target,
-    const char *payload_json, const char *ts, const char *ip,
-    const char *ua, const char *prev_hash, long chain_seq, char out[65]) {
-  cJSON *o = cJSON_CreateObject();
-  put(o, "action", action);
-  cJSON_AddNumberToObject(o, "chain_seq", (double)chain_seq);
-  put(o, "id", id);
-  put(o, "ip", ip);
-  put(o, "payload_json", payload_json);
-  put(o, "prev_hash", prev_hash);
-  put(o, "target", target);
-  put(o, "tenant_id", tenant_id);
-  put(o, "ts", ts);
-  put(o, "ua", ua);
-  put(o, "user_id", user_id);
-  char *cj = cJSON_PrintUnformatted(o);
-  cJSON_Delete(o);
-  sha256_hex(cj, out);
-  free(cj);
+ * Re-walks the tenant's chain with audit_row_hash() (core/audit.c), the same
+ * function audit_write() chains with. Rows with no row_hash — written before
+ * the writer chained, or kept unchained because the tail could not be locked —
+ * cannot be verified, and are COUNTED in the reply ("unchained") rather than
+ * passed over: a verifier that skips what it cannot check and says ok:true is
+ * how this answered "ok" over zero rows for every tenant. */
+static long count_unchained(sqlite3 *h, const char *tenant_id) {
+  sqlite3_stmt *s; long n = 0;
+  if (sqlite3_prepare_v2(h,
+        "SELECT COUNT(*) FROM audit_events WHERE tenant_id=?1 "
+        "AND row_hash IS NULL", -1, &s, NULL) != SQLITE_OK) return -1;
+  sqlite3_bind_text(s, 1, tenant_id, -1, SQLITE_TRANSIENT);
+  if (sqlite3_step(s) == SQLITE_ROW) n = (long)sqlite3_column_int64(s, 0);
+  else n = -1;
+  sqlite3_finalize(s);
+  return n;
 }
 
 char *tenantapi_audit_verify(db_handle *db, const char *tenant_id) {
@@ -419,8 +400,8 @@ char *tenantapi_audit_verify(db_handle *db, const char *tenant_id) {
       broken = i; break;
     }
     char rh[65];
-    row_hash_of(r->id, r->tid, r->uid, r->act, r->tgt, r->pj, r->ts,
-                r->ip, r->ua, r->ph, r->seq, rh);
+    audit_row_hash(r->id, r->tid, r->uid, r->act, r->tgt, r->pj, r->ts,
+                   r->ip, r->ua, r->ph, r->seq, rh);
     if (strcmp(rh, r->rh ? r->rh : "") != 0) {
       reason = "row_hash mismatch (row altered)"; broken = i; break;
     }
@@ -428,6 +409,9 @@ char *tenantapi_audit_verify(db_handle *db, const char *tenant_id) {
     expected_seq += 1;
   }
 
+  long unchained = count_unchained(db->h, tenant_id);
+  if (unchained < 0) cJSON_AddNullToObject(o, "unchained");    /* unmeasured */
+  else cJSON_AddNumberToObject(o, "unchained", (double)unchained);
   if (broken >= 0) {
     cJSON_AddBoolToObject(o, "ok", 0);
     cJSON_AddNumberToObject(o, "count", n);
@@ -496,25 +480,13 @@ static char *mok(int *status, int code, cJSON *o) {
   cJSON_Delete(o);
   return js;
 }
-/* Raw, unchained audit row (row_hash/chain_seq left NULL → excluded from
- * audit_verify, like break-glass logins). */
+/* Through the shared chained writer (core/audit.c). This used to be its own
+ * raw INSERT that left row_hash/chain_seq NULL, so member and invite changes —
+ * the events a tenant most needs tamper evidence for — were outside the chain. */
 static void member_audit(sqlite3 *h, const tenant_ctx *t, const char *action,
                          const char *target, const char *payload_json) {
-  char id[37]; uuid4(id);
-  sqlite3_stmt *s;
-  if (sqlite3_prepare_v2(h,
-        "INSERT INTO audit_events (id,tenant_id,user_id,action,target,"
-        "payload_json,ts) VALUES (?1,?2,?3,?4,?5,?6,datetime('now'))",
-        -1, &s, NULL) != SQLITE_OK) return;
-  sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
-  sqlite3_bind_text(s, 2, t->tenant_id, -1, SQLITE_TRANSIENT);
-  sqlite3_bind_text(s, 3, t->user_id, -1, SQLITE_TRANSIENT);
-  sqlite3_bind_text(s, 4, action, -1, SQLITE_TRANSIENT);
-  if (target) sqlite3_bind_text(s, 5, target, -1, SQLITE_TRANSIENT);
-  else        sqlite3_bind_null(s, 5);
-  sqlite3_bind_text(s, 6, payload_json ? payload_json : "{}", -1, SQLITE_TRANSIENT);
-  sqlite3_step(s);
-  sqlite3_finalize(s);
+  db_handle d = { h };
+  audit_write(&d, t->tenant_id, t->user_id, action, target, payload_json);
 }
 /* Count owners in the active tenant — used to block losing the last owner. */
 static int owner_count(sqlite3 *h, const char *tenant_id) {

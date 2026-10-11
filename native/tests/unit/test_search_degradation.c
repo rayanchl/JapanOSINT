@@ -122,6 +122,8 @@ static void test_llm_failures_are_named_not_collapsed(void) {
     { LLM_ERR_HTTP,        "llm_http_error"  },
     { LLM_ERR_EMPTY,       "llm_empty_response" },
     { LLM_ERR_BAD_REQUEST, "llm_bad_request" },
+    { LLM_ERR_QUEUE_TIMEOUT, "llm_queue_timeout" },
+    { LLM_ERR_QUEUE_FULL,  "llm_queue_full" },
   };
   for (unsigned i = 0; i < sizeof cases / sizeof *cases; i++) {
     char id[64];
@@ -326,8 +328,54 @@ static void test_source_attribution_states_only_what_was_measured(void) {
   db_close(&db);
 }
 
+/* ── 8. a follow-up round gets its own menu, its own enum, and says why ──── */
+static void test_followup_round_menu(void) {
+  /* No embedding server: the registry-order fallback, which phase 1 also
+   * takes, and which must say it was NOT driven by the entities found. */
+  unsetenv("JO_EMBED_URL");
+  db_handle db = {0};
+  assert(db_open(&db, NULL, NULL) == 0);
+  llm_client llm = { .http = NULL, .base_url = "http://127.0.0.1:1",
+                     .interactive = 1 };
+  cJSON *qents = cJSON_Parse("[{\"value\":\"Acme Corp\",\"type\":\"company\"}]");
+  cJSON *disc = cJSON_Parse("[{\"value\":\"acme.example\",\"type\":\"domain\"},"
+                            "{\"value\":\"Acme Corp\",\"type\":\"company\"}]");
+  int nent = 0;
+  char *drive = round_drive_text("who runs acme", qents, disc, &nent);
+  assert(drive && nent == 2 && "each entity once, query entities first");
+  assert(strstr(drive, "company: Acme Corp") && strstr(drive, "domain: acme.example"));
+  free(drive);
+
+  round_menu m;
+  round_menu_build(&m, &db, &llm, "unit-round", 2, "who runs acme", "[]",
+                   qents, disc);
+  assert(m.menu && !m.semantic);
+  assert(strstr(m.menu, "[MENU FOR FOLLOW-UP ROUND 2:") &&
+         strstr(m.menu, "registry order") &&
+         strstr(m.menu, "NOT chosen from the entities"));
+  assert(m.schema && "the round is sent WITH a schema");
+  cJSON *s = cJSON_Parse(m.schema);
+  cJSON *en = cJSON_GetObjectItem(cJSON_GetObjectItem(cJSON_GetObjectItem(
+      cJSON_GetObjectItem(cJSON_GetObjectItem(cJSON_GetObjectItem(s,
+      "properties"), "chain_services"), "items"), "properties"), "service"),
+      "enum");
+  assert(en && cJSON_GetArraySize(en) == m.cat.shown &&
+         "the round's enum is exactly the round's menu");
+  /* every enum entry is listed in the menu text */
+  cJSON *e;
+  cJSON_ArrayForEach(e, en) assert(strstr(m.menu, e->valuestring));
+  cJSON_Delete(s);
+  round_menu_free(&m);
+  cJSON_Delete(qents);
+  cJSON_Delete(disc);
+  db_close(&db);
+  printf("  ok: follow-up round menu rebuilt with entities, enum == menu, "
+         "driver stated in-band\n");
+}
+
 int main(void) {
   printf("test_search_degradation\n");
+  test_followup_round_menu();
   test_severity_separates_failure_from_disclosure();
   test_snapshot_always_states_degradation();
   test_llm_failures_are_named_not_collapsed();

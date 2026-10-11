@@ -24,4 +24,16 @@ char *breach_adapter_list(db_handle *db, const char *source_id,
  * Requires SECRETS_MASTER_KEY. NULL if not a breach uid / not found. Caller frees. */
 char *breach_adapter_reveal_by_uid(db_handle *db, const char *uid);
 
+/* THE route-facing reveal: requires a non-empty `reason` (400 otherwise),
+ * writes the 'platform' audit row action "breach.reveal", target = uid,
+ * payload {requester, requester_email?, reason} BEFORE decrypting, and reveals
+ * nothing (503) if that row cannot be written. 404 for an unknown uid. Always
+ * returns a JSON body and sets *status. The caller has already established
+ * that the requester is a platform operator. Caller frees. */
+char *breach_adapter_reveal_audited(db_handle *db, const char *uid,
+                                    const char *requester_id,
+                                    const char *requester_email,
+                                    const char *reason, const char *ip,
+                                    int *status);
+
 #endif

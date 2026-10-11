@@ -45,7 +45,8 @@ typedef struct {
  * NULL on SQL failure (caller degrades to unrated). */
 source_trust *source_trust_load(db_handle *db, int *out_n);
 
-/* Linear find by source id; NULL when the source has no entry (unrated). */
+/* Find by source id (bsearch: source_trust_load() returns the table sorted by
+ * id); NULL when the source has no entry (unrated). */
 const source_trust *source_trust_find(const source_trust *tbl, int n,
                                       const char *source_id);
 
@@ -53,8 +54,12 @@ const source_trust *source_trust_find(const source_trust *tbl, int n,
  * -1.0 when unrated (no fetch history in the window). Backed by a process-wide
  * cache of source_trust_load() refreshed at most every JO_TRUST_CACHE_SEC
  * (default 300) — the dispatcher asks once per due source per second and the
- * two GROUP BY queries behind the table are not free at that rate.
+ * GROUP BY behind the table is not free at that rate. The refresh runs on a
+ * background thread with its own connection to `db`'s file; this call never
+ * waits on SQL, and answers -1 until the first table has been built.
  * Thread-safe. */
 double source_trust_score(db_handle *db, const char *source_id);
+/* How many score tables the cache has installed so far (for tests). */
+long   source_trust_builds(void);
 
 #endif

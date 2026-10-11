@@ -599,6 +599,12 @@ CREATE INDEX IF NOT EXISTS idx_apikeys_tenant ON tenant_api_keys(tenant_id);
 CREATE INDEX IF NOT EXISTS idx_audit_chain
       ON audit_events(tenant_id, chain_seq)
       WHERE row_hash IS NOT NULL;
+-- One row per (tenant, chain position): two audit writers that read the same
+-- chain tail cannot both append to it (core/audit.c retries the loser).
+-- Partial on chain_seq IS NOT NULL so legacy unchained rows are untouched.
+CREATE UNIQUE INDEX IF NOT EXISTS idx_audit_chain_seq_uniq
+      ON audit_events(tenant_id, chain_seq)
+      WHERE chain_seq IS NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_audit_tenant_ts
       ON audit_events(tenant_id, ts DESC);
 CREATE INDEX IF NOT EXISTS idx_collector_cache_fetched
@@ -891,6 +897,13 @@ CREATE TABLE IF NOT EXISTS evidence (
 CREATE INDEX IF NOT EXISTS idx_evidence_item ON evidence(item_uid, captured_at DESC);
 -- Load-bearing: the insert is ON CONFLICT(content_sha256,item_uid) DO NOTHING.
 CREATE UNIQUE INDEX IF NOT EXISTS idx_evidence_sha ON evidence(content_sha256, item_uid);
+-- The chain tail (ORDER BY chain_seq DESC LIMIT 1 WHERE row_hash IS NOT NULL)
+-- is read on EVERY capture under evidence.c's process-wide mutex; without
+-- this it was a scan + sort of the whole table each time. The UNIQUE twin
+-- (idx_evidence_chain_seq_uniq) is created by evidence.c, not here: on a DB
+-- that already holds a forked chain it would fail and abort the schema.
+CREATE INDEX IF NOT EXISTS idx_evidence_chain
+  ON evidence(chain_seq) WHERE row_hash IS NOT NULL;
 
 -- Items 9/21 — geofence AOIs + entity watchlists.
 -- updated_at is load-bearing on both: alert_eval's rule cache keys its

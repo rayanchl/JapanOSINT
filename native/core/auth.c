@@ -16,6 +16,8 @@
 #include <stdio.h>
 #include "ratelimit.h"
 
+static void jwks_start(void);
+
 static const char *g_secret = NULL;   /* SUPABASE_JWT_SECRET */
 static const char *g_url    = NULL;   /* SUPABASE_URL (JWKS present) */
 static const char *g_aud    = "authenticated"; /* Node AUDIENCE default */
@@ -47,6 +49,9 @@ void auth_init(void) {
     fprintf(stderr, "[auth] neither JO_JWT_ISS nor SUPABASE_URL is set: "
                     "token issuer will NOT be validated\n");
   }
+  /* Fetch the JWKS now, off the loop, so the first asymmetric token after
+   * boot finds a document rather than a 401. */
+  if (g_url) jwks_start();
 }
 
 /* base64url -> bytes. Returns malloc'd buffer, sets *out_len. NULL on error. */
@@ -74,11 +79,11 @@ static unsigned char *b64url_decode(const char *in, size_t in_len, size_t *out_l
   *out_len = o; return out;
 }
 
-static int verify_hs256(const char *signing_input, size_t si_len,
-                        const char *sig_b64, size_t sig_len) {
-  if (!g_secret) return 0;
+static int verify_hs256(const char *secret, const char *signing_input,
+                        size_t si_len, const char *sig_b64, size_t sig_len) {
+  if (!secret || !*secret) return 0;
   unsigned char mac[32]; unsigned int mlen = 0;
-  HMAC(EVP_sha256(), g_secret, (int)strlen(g_secret),
+  HMAC(EVP_sha256(), secret, (int)strlen(secret),
        (const unsigned char *)signing_input, si_len, mac, &mlen);
   size_t glen = 0;
   unsigned char *given = b64url_decode(sig_b64, sig_len, &glen);
@@ -89,12 +94,37 @@ static int verify_hs256(const char *signing_input, size_t si_len,
 }
 
 /* ── Asymmetric (RS256/ES256) via the project JWKS — port of jose
- * createRemoteJWKSet + jwtVerify(algorithms:['ES256','RS256']). JWKS doc
- * cached 10 min; on unknown kid we refetch once (jose semantics). ── */
+ * createRemoteJWKSet + jwtVerify(algorithms:['ES256','RS256']).
+ *
+ * THE EVENT LOOP NEVER FETCHES. auth_check() runs on the mongoose loop for
+ * every /api request, before anything is authenticated, and it used to call
+ * http_request() (8 s timeout) inline whenever the cache was older than
+ * JWKS_TTL or a token named a kid the cache lacked. One request with a
+ * made-up kid froze every connection for up to 8 s, and the throttle meant to
+ * stop it was keyed on the kid — a fresh random kid per request was a fresh
+ * allowance per request, and the 64-slot negative cache was a ring the same
+ * spray rotated straight through.
+ *
+ * Now one refresher thread owns the network: it fetches at boot, every
+ * JWKS_TTL, and when asked. The loop only reads the cached document. An
+ * unknown kid answers 401 at once and ASKS for a refresh — jose's "refetch
+ * once on unknown kid", made asynchronous — and asks are single-flight and
+ * charged against ONE global budget (RL_JWKS, key "global": at most one forced
+ * refetch per JWKS_REFETCH_MIN_SEC however many kids are sprayed, and the
+ * class fails closed under limiter-table pressure, see ratelimit.h). The cost
+ * of a genuine key rotation is that the first token signed with the new key
+ * gets a 401 and its retry, one round trip later, verifies. */
 static pthread_mutex_t g_jwks_lock = PTHREAD_MUTEX_INITIALIZER;
-static char  *g_jwks_doc = NULL;
-static time_t g_jwks_at  = 0;
-#define JWKS_TTL 600
+static pthread_cond_t  g_jwks_cv   = PTHREAD_COND_INITIALIZER;
+static pthread_once_t  g_jwks_once = PTHREAD_ONCE_INIT;
+static char  *g_jwks_doc     = NULL;
+static time_t g_jwks_at      = 0;   /* last successful fetch            */
+static time_t g_jwks_tried   = 0;   /* last attempt, success or not     */
+static int    g_jwks_want    = 0;   /* refresh requested, not yet taken */
+static long   g_jwks_fetches = 0;   /* attempts since boot              */
+#define JWKS_TTL              600
+#define JWKS_REFETCH_MIN_SEC  30    /* global forced-refetch budget     */
+#define JWKS_RETRY_SEC        30    /* after a failed fetch             */
 
 static char *http_get_jwks(void) {
   if (!g_url) return NULL;
@@ -111,15 +141,84 @@ static char *http_get_jwks(void) {
   http_client_free(c);
   return doc;
 }
+/* The one network call. A pointer so tests/unit/test_auth_jwks.c can count
+ * fetches, and make one slow, without a server. */
+static char *(*g_jwks_fetch)(void) = http_get_jwks;
 
-/* cJSON of the cached JWKS doc (caller cJSON_Delete); force=1 refetches. */
-static cJSON *jwks_doc(int force) {
+static void kidneg_clear(void);
+
+static void *jwks_refresher(void *unused) {
+  (void)unused;
+  int failed = 0;
   pthread_mutex_lock(&g_jwks_lock);
-  time_t now = time(NULL);
-  if (force || !g_jwks_doc || now - g_jwks_at > JWKS_TTL) {
-    char *d = http_get_jwks();
-    if (d) { free(g_jwks_doc); g_jwks_doc = d; g_jwks_at = now; }
+  for (;;) {
+    while (!g_jwks_want) {
+      time_t now = time(NULL);
+      time_t due = !g_jwks_fetches ? now
+                 : failed          ? g_jwks_tried + JWKS_RETRY_SEC
+                                   : g_jwks_at + JWKS_TTL;
+      if (now >= due) break;
+      struct timespec ts = { .tv_sec = due, .tv_nsec = 0 };  /* CLOCK_REALTIME */
+      pthread_cond_timedwait(&g_jwks_cv, &g_jwks_lock, &ts);
+    }
+    g_jwks_want = 0;
+    g_jwks_fetches++;
+    g_jwks_tried = time(NULL);
+    pthread_mutex_unlock(&g_jwks_lock);
+
+    char *d = g_jwks_fetch();                  /* no lock held: may take 8 s */
+
+    pthread_mutex_lock(&g_jwks_lock);
+    if (d) {
+      /* A changed document may hold a kid already written off — the rotation
+       * case the negative cache must not outlive. */
+      if (!g_jwks_doc || strcmp(g_jwks_doc, d) != 0) kidneg_clear();
+      free(g_jwks_doc); g_jwks_doc = d; g_jwks_at = time(NULL);
+      failed = 0;
+    } else {
+      /* Stale-while-error: the previous document keeps verifying. */
+      failed = 1;
+      fprintf(stderr, "[auth] JWKS fetch failed (%s); retry in %ds\n",
+              g_jwks_doc ? "serving the cached document" : "no document yet",
+              JWKS_RETRY_SEC);
+    }
   }
+  return NULL;                                 /* not reached */
+}
+
+static void jwks_thread_start(void) {
+  pthread_t th;
+  if (pthread_create(&th, NULL, jwks_refresher, NULL) == 0)
+    pthread_detach(th);
+  else
+    fprintf(stderr, "[auth] could not start the JWKS refresher: asymmetric "
+                    "tokens will not verify\n");
+}
+
+static void jwks_start(void) { pthread_once(&g_jwks_once, jwks_thread_start); }
+
+/* Ask the refresher for an early fetch. Never touches the network. Returns 1
+ * if this call scheduled one, 0 if one was already pending or the global
+ * budget is spent. */
+static int jwks_request_refresh(void) {
+  if (!g_url) return 0;
+  jwks_start();
+  pthread_mutex_lock(&g_jwks_lock);
+  int sched = 0;
+  if (!g_jwks_want &&
+      ratelimit_allow(RL_JWKS, "global", 1, JWKS_REFETCH_MIN_SEC, NULL)) {
+    g_jwks_want = 1;
+    pthread_cond_signal(&g_jwks_cv);
+    sched = 1;
+  }
+  pthread_mutex_unlock(&g_jwks_lock);
+  return sched;
+}
+
+/* Parsed copy of the cached JWKS doc (caller cJSON_Delete), or NULL if none
+ * has been fetched yet. Memory only. */
+static cJSON *jwks_doc(void) {
+  pthread_mutex_lock(&g_jwks_lock);
   cJSON *j = g_jwks_doc ? cJSON_Parse(g_jwks_doc) : NULL;
   pthread_mutex_unlock(&g_jwks_lock);
   return j;
@@ -275,22 +374,20 @@ static int jwt_header(const char *tok, const char *d1, char *alg, size_t an,
 }
 
 /* ── unknown-kid negative cache ────────────────────────────────────────────
- * The refetch-once-on-unknown-kid rule below is jose's semantics and is right
- * for a real key rotation. It is also an amplifier: an UNAUTHENTICATED request
- * carrying a made-up kid costs us one outbound HTTPS round-trip to the IdP,
- * and the same kid replayed costs one each time. Remembering the kids we have
- * already looked up and failed to find turns a replay into a memcmp, and
- * ratelimit.c caps the rate at which genuinely-new unknown kids can force a
- * fetch. Both are needed: the cache alone is defeated by varying the kid, the
- * limiter alone would delay a real rotation. */
+ * No longer the network guard — the loop cannot fetch at all now, and forced
+ * refetches are globally budgeted. What it still buys is that a replayed bogus
+ * kid is a memcmp instead of a JWKS re-parse plus a refresh request. Cleared
+ * whenever the refresher installs a CHANGED document. */
 #define KIDNEG_SLOTS 64
-#define KIDNEG_TTL   300                     /* < JWKS_TTL, so a rotation that
-                                              * lands mid-window still recovers
-                                              * within one refresh cycle */
+#define KIDNEG_TTL   300
 static struct { char kid[256]; time_t at; } g_kidneg[KIDNEG_SLOTS];
 static int g_kidneg_next;                    /* round-robin victim */
 
-/* Caller holds g_jwks_lock. */
+/* Callers hold g_jwks_lock. */
+static void kidneg_clear(void) {
+  memset(g_kidneg, 0, sizeof g_kidneg);
+  g_kidneg_next = 0;
+}
 static int kid_known_bad(const char *kid, time_t now) {
   for (int i = 0; i < KIDNEG_SLOTS; i++)
     if (g_kidneg[i].kid[0] && strcmp(g_kidneg[i].kid, kid) == 0)
@@ -307,7 +404,8 @@ static void kid_mark_bad(const char *kid, time_t now) {
   g_kidneg[v].at = now;
 }
 
-/* Try RS256/ES256 over the JWKS (refetch once on unknown kid). */
+/* RS256/ES256 over the CACHED JWKS. A kid the cache lacks (or no cache yet)
+ * fails now and schedules a refresh; it never waits for one. */
 static int verify_jwks(const char *tok, const char *d1, const char *si,
                        size_t si_len, const char *sig, size_t sig_len) {
   if (!g_url) return 0;
@@ -323,31 +421,24 @@ static int verify_jwks(const char *tok, const char *d1, const char *si,
     if (bad) return 0;                       /* already looked up, not there */
   }
 
-  int ok = 0, seen = 0;
-  for (int attempt = 0; attempt < 2 && !ok; attempt++) {
-    /* Only the FORCED refetch is throttled — attempt 0 is served from the
-     * 10-minute cache and costs nothing. Keyed on the kid so one abusive kid
-     * cannot starve a genuine rotation of a different one. */
-    if (attempt == 1 &&
-        !ratelimit_allow(RL_JWKS, kid[0] ? kid : "-", 3, 60, NULL))
-      break;
-    cJSON *doc = jwks_doc(attempt);          /* attempt 1 forces refetch */
-    cJSON *jwk = find_jwk(doc, kid[0] ? kid : NULL);
-    if (jwk) {
-      seen = 1;
-      EVP_PKEY *pk = jwk_to_pkey(jwk);
-      if (pk) { ok = verify_asym(si, si_len, sig, sig_len, pk, alg);
-                EVP_PKEY_free(pk); }
+  cJSON *doc = jwks_doc();
+  if (!doc) { jwks_request_refresh(); return 0; }
+  int ok = 0;
+  cJSON *jwk = find_jwk(doc, kid[0] ? kid : NULL);
+  if (jwk) {
+    EVP_PKEY *pk = jwk_to_pkey(jwk);
+    if (pk) { ok = verify_asym(si, si_len, sig, sig_len, pk, alg);
+              EVP_PKEY_free(pk); }
+  } else {
+    if (kid[0]) {
+      time_t now = time(NULL);
+      pthread_mutex_lock(&g_jwks_lock);
+      kid_mark_bad(kid, now);
+      pthread_mutex_unlock(&g_jwks_lock);
     }
-    if (doc) cJSON_Delete(doc);
-    if (jwk) break;                          /* kid found: don't refetch */
+    jwks_request_refresh();
   }
-  if (!seen && kid[0]) {
-    time_t now = time(NULL);
-    pthread_mutex_lock(&g_jwks_lock);
-    kid_mark_bad(kid, now);
-    pthread_mutex_unlock(&g_jwks_lock);
-  }
+  cJSON_Delete(doc);
   return ok;
 }
 
@@ -384,9 +475,49 @@ static int email_verified_claim(cJSON *j) {
 
 int auth_email_verified(void) { return g_email_verified; }
 
+/* ── break-glass tokens ─────────────────────────────────────────────────────
+ * keysapi_breakglass() mints an HS256 token with BREAK_GLASS_JWT_SECRET after
+ * a TOTP login, for when Supabase auth is down — and nothing here ever
+ * verified that secret, so every break-glass token was a 401: the emergency
+ * path had never worked. It is verified now, under the issuer's own rules and
+ * nothing looser: the same three env gates the issuer applies (enabled, set,
+ * not reused as SUPABASE_JWT_SECRET), alg HS256, the claims the issuer writes
+ * (break_glass:true, sub "break-glass-admin"), and a lifetime no longer than
+ * the issuer grants. Read per call, like the issuer, so the two agree on
+ * whether break-glass is on. The ALLOW carries out->break_glass, which
+ * opgate_check() maps to operator and httpd.c audits per request. */
+static const char *bg_secret(void) {
+  const char *en = getenv("BREAK_GLASS_ENABLED");
+  if (!en || strcmp(en, "1") != 0) return NULL;
+  const char *s = getenv("BREAK_GLASS_JWT_SECRET");
+  if (!s || !*s) return NULL;
+  const char *sup = getenv("SUPABASE_JWT_SECRET");
+  if (sup && *sup && strcmp(s, sup) == 0) return NULL;   /* reuse guard */
+  return s;
+}
+
+/* Claims check for a token whose signature verified under bg_secret(). */
+static int bg_claims_ok(cJSON *j, time_t now) {
+  cJSON *bg  = cJSON_GetObjectItem(j, "break_glass");
+  cJSON *sub = cJSON_GetObjectItem(j, "sub");
+  cJSON *iat = cJSON_GetObjectItem(j, "iat");
+  cJSON *exp = cJSON_GetObjectItem(j, "exp");
+  if (!cJSON_IsTrue(bg)) return 0;
+  if (!cJSON_IsString(sub) || strcmp(sub->valuestring, "break-glass-admin") != 0)
+    return 0;
+  if (!cJSON_IsNumber(iat) || !cJSON_IsNumber(exp)) return 0;
+  double t = (double)now;
+  if (t >= exp->valuedouble) return 0;                    /* expired      */
+  if (iat->valuedouble > t + 60) return 0;                /* minted ahead */
+  if (exp->valuedouble - iat->valuedouble > BREAK_GLASS_TTL_SEC) return 0;
+  if (exp->valuedouble - t > BREAK_GLASS_TTL_SEC + 60) return 0;
+  return 1;
+}
+
 auth_result auth_check(const char *hdr, auth_user *out) {
   g_email_verified = 0;
-  if (!g_secret && !g_url) return AUTH_503_UNCONFIG;
+  const char *bgs = bg_secret();
+  if (!g_secret && !g_url && !bgs) return AUTH_503_UNCONFIG;
 
   if (!hdr) return AUTH_401_MISSING;
   while (*hdr == ' ') hdr++;
@@ -408,7 +539,16 @@ auth_result auth_check(const char *hdr, auth_user *out) {
   /* (1) Asymmetric ES256/RS256 via the project JWKS (auth.js step 1), then
    * (2) legacy symmetric HS256 (step 2). Either verifying is sufficient. */
   int verified = verify_jwks(tok, d1, tok, si_len, sig, sig_len);
-  if (!verified && g_secret) verified = verify_hs256(tok, si_len, sig, sig_len);
+  if (!verified && g_secret)
+    verified = verify_hs256(g_secret, tok, si_len, sig, sig_len);
+  /* (3) break-glass, last, and only for a header that says HS256. */
+  int bg = 0;
+  if (!verified && bgs) {
+    char alg[16], kid[256];
+    if (jwt_header(tok, d1, alg, sizeof alg, kid, sizeof kid) &&
+        strcmp(alg, "HS256") == 0)
+      bg = verified = verify_hs256(bgs, tok, si_len, sig, sig_len);
+  }
   if (!verified) return AUTH_401_INVALID;
 
   size_t plen = 0;
@@ -424,6 +564,22 @@ auth_result auth_check(const char *hdr, auth_user *out) {
   memcpy(pjson, pl, plen); pjson[plen] = 0; free(pl);
   cJSON *j = cJSON_Parse(pjson); free(pjson);
   if (!j) return AUTH_401_INVALID;
+
+  if (bg) {
+    /* The issuer sets neither aud nor iss, so the Supabase checks below do
+     * not apply; bg_claims_ok() is the whole of what a break-glass token must
+     * satisfy, and it is stricter than they are. */
+    int okc = bg_claims_ok(j, time(NULL));
+    cJSON_Delete(j);
+    if (!okc) return AUTH_401_INVALID;
+    if (out) {
+      snprintf(out->id, sizeof out->id, "%s", "break-glass-admin");
+      snprintf(out->email, sizeof out->email, "%s", "break-glass@local");
+      snprintf(out->role, sizeof out->role, "%s", "service_role");
+      out->break_glass = 1;
+    }
+    return AUTH_ALLOW;
+  }
 
   /* `exp` is MANDATORY and must be a number. The old form ("check it if it is
    * present and numeric") meant a token with no exp — or with exp as the
@@ -474,6 +630,7 @@ auth_result auth_check(const char *hdr, auth_user *out) {
     cJSON *ro = cJSON_GetObjectItem(j, "role");
     snprintf(out->role, sizeof out->role, "%s",
              (ro && cJSON_IsString(ro)) ? ro->valuestring : "authenticated");
+    out->break_glass = 0;    /* a break_glass CLAIM under the IdP's key is inert */
   }
   g_email_verified = email_verified_claim(j);
   cJSON_Delete(j);

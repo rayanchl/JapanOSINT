@@ -81,7 +81,13 @@ JO_DB_FROM_CALLER="${JO_DB:-}"
 # cmd_llama_embed. bge-m3's native context is 8192.
 : "${LLAMA_EMBED_CTX:=8192}"
 : "${LLAMA_EMBED_POOLING:=}"                        # cls|mean|last; empty = GGUF metadata
+# Slots on the embed server. 2 = one for the backfill pod's batches and one for
+# user queries (JO_EMBED_QUERY_URL below), so a semantic query never waits
+# behind a 120 s batch. The context is multiplied by it — llama-server divides
+# --ctx-size across slots, and each slot must still hold a whole batch.
+: "${LLAMA_EMBED_PARALLEL:=2}"
 : "${JO_EMBED_URL:=}"                               # set by cmd_llama_embed when the pod is up
+: "${JO_EMBED_QUERY_URL:=}"                         # ditto, when LLAMA_EMBED_PARALLEL >= 2
 # Web pod — client/ Vite dev server; its /api proxy targets the server pod
 : "${WEB_PORT:=5173}"
 : "${WEB_HOST:=127.0.0.1}"                          # 0.0.0.0 to expose the site on the LAN
@@ -185,7 +191,8 @@ binenv(){ BINENV=( "PORT=$PORT" "JO_DB=$JO_DB" "JO_SCHEMA=$JO_SCHEMA"
   [ -n "${SUPABASE_JWT_SECRET:-}" ]&& BINENV+=( "SUPABASE_JWT_SECRET=$SUPABASE_JWT_SECRET" )
   [ -n "${SUPABASE_AUD:-}" ]       && BINENV+=( "SUPABASE_AUD=$SUPABASE_AUD" )
   [ -n "${LLM_MODEL:-}" ]          && BINENV+=( "LLM_MODEL=$LLM_MODEL" );
-  [ -n "${JO_EMBED_URL:-}" ]       && BINENV+=( "JO_EMBED_URL=$JO_EMBED_URL" ); }
+  [ -n "${JO_EMBED_URL:-}" ]       && BINENV+=( "JO_EMBED_URL=$JO_EMBED_URL" )
+  [ -n "${JO_EMBED_QUERY_URL:-}" ] && BINENV+=( "JO_EMBED_QUERY_URL=$JO_EMBED_QUERY_URL" ); }
 
 # wait until $1 (a log file) contains regex $2, up to $3 seconds
 wait_log(){ local f="$1" re="$2" t="$3" e=$((SECONDS+$3))
@@ -430,8 +437,19 @@ cmd_llama_suggest(){
 # addition to the stack, not a precondition of it. JO_EMBED_URL is exported
 # only on success so the server pod — which must start AFTER this one for the
 # variable to reach it; cmd_up orders it so — sees a URL that answers.
+# The query slot. core/llm_worker.c gives each distinct base_url STRING its own
+# worker thread, and a worker sends one request at a time — so with one URL
+# the second --parallel slot would never be used and a query would still queue
+# behind a batch. A trailing '/' names the same server (url_join strips it from
+# the request) under a key of its own. The binary checks that both URLs serve
+# the same model before ranking anything. An operator-set value is kept.
+embed_query_url(){
+  [ -n "${JO_EMBED_QUERY_URL:-}" ] && return
+  [ "${LLAMA_EMBED_PARALLEL:-1}" -ge 2 ] 2>/dev/null && JO_EMBED_QUERY_URL="$JO_EMBED_URL/"
+  return 0
+}
 cmd_llama_embed(){
-  alive llama-embed && { warn "embed-llama pod already running (pid $(cat "$(pidfile llama-embed)"))"; JO_EMBED_URL="http://$LLAMA_HOST:$LLAMA_EMBED_PORT"; return; }
+  alive llama-embed && { warn "embed-llama pod already running (pid $(cat "$(pidfile llama-embed)"))"; JO_EMBED_URL="http://$LLAMA_HOST:$LLAMA_EMBED_PORT"; embed_query_url; return; }
   [ -x "$LLAMA_BIN" ] || { warn "embed-llama skipped: llama-server missing ($LLAMA_BIN)"; return; }
   [ -f "$LLAMA_EMBED_MODEL" ] || { warn "embed-llama skipped: no embedding model at $LLAMA_EMBED_MODEL (bge-m3 / multilingual-e5 GGUF; set LLAMA_EMBED_MODEL). /api/intel/semantic → 503"; return; }
   local lg; lg="$(logfile llama-embed)"; : >"$lg"
@@ -448,15 +466,20 @@ cmd_llama_embed(){
   # measured 2026-09-14, the backfill embedded 1,568 rows and then failed a
   # batch. bge-m3 is trained at 8192, so the ceiling costs nothing but RAM.
   # Keep LLAMA_EMBED_CTX >= JO_EMBED_BATCH x (JO_EMBED_MAX_CHARS / 2) tokens.
+  #
+  # That rule is PER SLOT: llama-server splits --ctx-size across --parallel
+  # slots, so the total is LLAMA_EMBED_CTX x LLAMA_EMBED_PARALLEL.
+  local par="$LLAMA_EMBED_PARALLEL"; [ "$par" -ge 1 ] 2>/dev/null || par=1
   ( cd "$libdir" && exec nohup env "DYLD_LIBRARY_PATH=$libdir:${DYLD_LIBRARY_PATH:-}" \
       "$LLAMA_BIN" -m "$LLAMA_EMBED_MODEL" --port "$LLAMA_EMBED_PORT" --host "$LLAMA_HOST" \
-      --embedding --ctx-size "$LLAMA_EMBED_CTX" --batch-size "$LLAMA_EMBED_CTX" \
-      --ubatch-size "$LLAMA_EMBED_CTX" "${pool[@]}" \
+      --embedding --parallel "$par" --ctx-size "$((LLAMA_EMBED_CTX * par))" \
+      --batch-size "$LLAMA_EMBED_CTX" --ubatch-size "$LLAMA_EMBED_CTX" "${pool[@]}" \
       >>"$lg" 2>&1 ) &
   echo $! >"$(pidfile llama-embed)"
   say "embed-llama: loading model — waiting up to ${LLAMA_WAIT}s for /health"
   if wait_http "http://$LLAMA_HOST:$LLAMA_EMBED_PORT/health" "$LLAMA_WAIT"; then
     JO_EMBED_URL="http://$LLAMA_HOST:$LLAMA_EMBED_PORT"
+    embed_query_url
     ok "embed-llama /health → 200 (ready @ $JO_EMBED_URL; JO_EMBED_URL passed to the server pod)"
   else tail -15 "$lg"; warn "embed-llama /health not ready in ${LLAMA_WAIT}s (see $lg); JO_EMBED_URL left unset"; fi
 }
