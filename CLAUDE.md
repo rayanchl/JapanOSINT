@@ -934,7 +934,8 @@ carry `user_id` + `mine` and `meta.scope`; `?mine=1` narrows a list (and its
 author. Nothing crosses workspaces — `test_search_runs_workspace.c` and
 `test_saved_search_workspace.c` pin both halves. A case VIEWER reads only;
 content writes are analyst+ or the case's lead or a contributor
-(`test_case_roles.c`).
+(`test_case_roles.c`). The case list and the case detail both carry the
+caller's `my_case_role`, so clients gate on that same rule.
 
 Search history holds every COMMITTED search (2026-10-09): the clients
 `POST /api/search-history` on submit / opening a result / a committed URL's
