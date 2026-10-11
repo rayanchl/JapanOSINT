@@ -3840,7 +3840,19 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
    * nothing to fetch without one and still returns the honest empty. */
   int scheduled = (!e || !*e);
   if (scheduled) {
-    if (s->interval <= 0) return 0;           /* on-demand pivot, no entity */
+    if (s->interval <= 0) {
+      /* An on-demand pivot asked with no entity. It used to return SILENTLY,
+       * and silence here is not harmless: the run line then reads
+       * `records=0 0ms stored=0` with nothing to explain it, which is
+       * byte-identical to a row that went and fetched and found nothing.
+       * audit_registry_emit.py reported 268 of batch 31's 295 rows as
+       * EMITS_NOTHING on exactly that basis (2026-10-11) — 268 sources that
+       * had never been asked anything. The tool's NEEDS_ENTITY verdict existed
+       * and could not fire, because the engine gave it nothing to match. */
+      fprintf(stderr, "[hp:%s] on-demand pivot and no entity was given — "
+                      "nothing was fetched\n", s->id);
+      return 0;
+    }
     if (hp_uses_entity(s->url) || hp_uses_entity(s->post_body)) {
       fprintf(stderr, "[hp:%s] scheduled run but the row needs an entity — skipped\n",
               s->id);

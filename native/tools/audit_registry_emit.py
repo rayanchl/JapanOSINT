@@ -91,8 +91,15 @@ HP_EMIT = re.compile(r"\[hp:[^\]]+\] emitted (\d+) of (\d+) available")
 # corroborated by the run output and not inferred from a row count alone.
 FETCH_FAILURE = re.compile(r'\[hp:[^\]]+\]\s+(?:status=\d+|transport failure|'
                            r'non-JSON body)')
+# The engine's three ways of saying "this row was never asked a question".
+# The third was added 2026-10-11 after the second-largest misreading in this
+# tool's history: an on-demand pivot with no entity returned silently, so 268
+# of batch 31's 295 rows came back EMITS_NOTHING — a verdict about sources
+# that had never been asked anything. Use audit_batch_emit.py with the
+# MANIFEST for pivot rows; it supplies each row's probe entity.
 NEEDS_ENTITY = re.compile(r"scheduled run but the row needs an entity|"
-                          r"entity yields no value")
+                          r"entity yields no value|"
+                          r"on-demand pivot and no entity was given")
 
 _lock = threading.Lock()
 
