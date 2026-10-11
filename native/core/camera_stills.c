@@ -70,6 +70,7 @@
 #include "camera_stills.h"
 #include "audit.h"
 #include "camera_feed.h"    /* properties → capture targets (views, upstream names) */
+#include "camera_privacy.h" /* may this camera's frames be indexed            */
 #include "evidence.h"
 #include "ffmpeg.h"         /* THE video seam — this file no longer has one   */
 #include "hostgate.h"       /* the SSRF floor every outbound fetch must clear */
@@ -1705,7 +1706,7 @@ char *camera_stills_list(db_handle *db, const char *camera_id, int limit,
   /* The opt-in lives on the RECORD; its views come from its current
    * properties, each with its own scheduler state, so a client can show
    * "3 views: 2 capturing, 1 backing off (http_404)". */
-  int opted = 0, fails = 0, targets_total = 0;
+  int opted = 0, fails = 0, targets_total = 0, indexable = 0;
   char nextat[64] = {0}, lasterr[192] = {0}, lastkind[32] = {0};
   cs_targets T = { 0 };
   if (sqlite3_prepare_v2(db->h,
@@ -1715,6 +1716,7 @@ char *camera_stills_list(db_handle *db, const char *camera_id, int limit,
     if (sqlite3_step(s) == SQLITE_ROW) {
       opted = sqlite3_column_int(s, 0) != 0;
       targets_total = expand_row(&T, rec_uid, ctext(s, 1), ctext(s, 2));
+      indexable = camera_record_indexable(ctext(s, 2), ctext(s, 1));
     }
     sqlite3_finalize(s);
   }
@@ -1811,6 +1813,9 @@ char *camera_stills_list(db_handle *db, const char *camera_id, int limit,
   else             cJSON_AddNullToObject(meta, "last_kind");
   cJSON_AddBoolToObject(meta, "scene_change_available", have_ph);
   cJSON_AddStringToObject(meta, "record_uid", rec_uid);
+  /* Whether this camera's frames may ever be indexed (vision embeddings,
+   * OCR search) — core/camera_privacy.h. Capture and viewing are unaffected. */
+  cJSON_AddBoolToObject(meta, "indexable", indexable);
   /* targets_total can exceed the array: CAM_FEED_MAX_TARGETS per record is
    * captured, and the difference is stated here rather than dropped. */
   cJSON_AddItemToObject(meta, "targets", tarr);

@@ -138,6 +138,7 @@ int main(void) {
   assert(cJSON_IsTrue(cJSON_GetObjectItem(meta, "capture_stills")));
   assert(cJSON_GetObjectItem(meta, "total")->valueint == 3);
   assert(cJSON_GetObjectItem(meta, "targets_total")->valueint == 2);
+  assert(cJSON_IsTrue(cJSON_GetObjectItem(meta, "indexable")));   /* digitraffic */
   cJSON *tg = cJSON_GetObjectItem(meta, "targets");
   assert(cJSON_GetArraySize(tg) == 2);
   assert(strcmp(cJSON_GetObjectItem(cJSON_GetArrayItem(tg, 0), "kind")->valuestring,
@@ -166,6 +167,8 @@ int main(void) {
   r = cJSON_Parse(j);
   assert(cJSON_GetArraySize(cJSON_GetObjectItem(r, "data")) == 1);
   assert(cJSON_IsNull(cJSON_GetObjectItem(cJSON_GetArrayItem(cJSON_GetObjectItem(r, "data"), 0), "view")));
+  /* windy_api is an aggregator, not public infrastructure: not indexable */
+  assert(cJSON_IsFalse(cJSON_GetObjectItem(cJSON_GetObjectItem(r, "meta"), "indexable")));
   cJSON_Delete(r); free(j);
 
   /* 7. capture_one */
