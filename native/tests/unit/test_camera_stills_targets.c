@@ -175,6 +175,46 @@ int main(void) {
   assert(e && strcmp(e, "view_not_in_record") == 0); free(e);
   assert(camera_stills_capture_one(&db, NULL, "hp|optedout") == 0);
 
+  /* 8. Capabilities name the decoders and the coverage. A fake tesseract that
+   * lists jpn is put first on PATH (the probe is once per process and has not
+   * run yet); MEDIA_NO_TOOLS keeps the pod from ever invoking it. */
+  {
+    char bindir[] = "/tmp/jo-cs-bin-XXXXXX";
+    assert(mkdtemp(bindir));
+    char tp[256];
+    snprintf(tp, sizeof tp, "%s/tesseract", bindir);
+    FILE *f = fopen(tp, "w");
+    assert(f);
+    fputs("#!/bin/sh\necho 'List of available languages in \"/usr/share/tessdata/\" (3):'\n"
+          "echo eng\necho jpn\necho osd\n", f);
+    fclose(f);
+    chmod(tp, 0755);
+    const char *op = getenv("PATH");
+    char np[4096];
+    snprintf(np, sizeof np, "%s:%s", bindir, op ? op : "/usr/bin:/bin");
+    setenv("PATH", np, 1);
+
+    exec_ok(&db, "UPDATE camera_stills SET phash=12345 WHERE id='s1'");
+    char *cj = camera_stills_capabilities(&db);
+    assert(cj);
+    cJSON *c = cJSON_Parse(cj);
+    cJSON *d = cJSON_GetObjectItem(c, "data");
+    cJSON *tz = cJSON_GetObjectItem(cJSON_GetObjectItem(d, "decoders"), "tesseract");
+    assert(cJSON_IsTrue(cJSON_GetObjectItem(tz, "present")));
+    assert(cJSON_IsTrue(cJSON_GetObjectItem(tz, "jpn")));
+    assert(strcmp(cJSON_GetObjectItem(tz, "langs")->valuestring, "eng,jpn,osd") == 0);
+    assert(cJSON_IsTrue(cJSON_GetObjectItem(cJSON_GetObjectItem(d, "decoders"),
+                                            "media_tools_disabled")));
+    cJSON *feat = cJSON_GetObjectItem(d, "features");
+    assert(cJSON_GetObjectItem(feat, "phash") && cJSON_GetObjectItem(feat, "ocr") &&
+           cJSON_GetObjectItem(feat, "rtsp_hls_stills"));
+    cJSON *cov = cJSON_GetObjectItem(d, "coverage");
+    assert(cJSON_GetObjectItem(cov, "stills")->valueint == 4);
+    assert(strcmp(cJSON_GetObjectItem(cov, "phash_text")->valuestring, "pHash on 1 of 4") == 0);
+    cJSON_Delete(c); free(cj);
+    unlink(tp); rmdir(bindir);
+  }
+
   db_close(&db);
   printf("test_camera_stills_targets: OK\n");
   return 0;

@@ -764,6 +764,11 @@ static void media_tools(int *have_phash, int *have_ocr) {
       cJSON_Delete(root);
       free(j);
     }
+    /* media_phash_file() tries ffmpeg FIRST (ffmpeg_gray32) and only then the
+     * ImageMagick/GraphicsMagick template media_capabilities() reports, so a
+     * host with ffmpeg alone hashes frames — and used to be told it could
+     * not, which skipped the hash on every frame of every camera. */
+    if (!ph && ffmpeg_available()) ph = 1;
   }
   if (have_phash) *have_phash = ph;
   if (have_ocr)   *have_ocr = oc;
@@ -1989,6 +1994,86 @@ char *camera_stills_capabilities(db_handle *db) {
   cJSON_AddBoolToObject(sc, "available", have_ph);
   cJSON_AddStringToObject(sc, "method", have_ph ? "phash" : "sha256_only");
   cJSON_AddItemToObject(d, "scene_change", sc);
+
+  /* ── which binaries, which features, and how much of the corpus they have
+   * actually reached. "pHash: available" says nothing about the frames
+   * captured before the package was installed; "pHash on 12 of 480" does. */
+  media_decoders md;
+  media_probe_decoders(&md);
+  int have_ocr = 0;
+  media_tools(NULL, &have_ocr);
+  cJSON *dec = cJSON_CreateObject();
+  struct { const char *k, *path, *pkg; } tools[] = {
+    { "magick",    md.magick,    "imagemagick" },
+    { "convert",   md.convert,   "imagemagick" },
+    { "gm",        md.gm,        "graphicsmagick" },
+    { "tesseract", md.tesseract, "tesseract-ocr" },
+    { "ffmpeg",    have_ff && tool ? tool : "", "ffmpeg" },
+  };
+  for (size_t i = 0; i < sizeof tools / sizeof tools[0]; i++) {
+    cJSON *o = cJSON_CreateObject();
+    cJSON_AddBoolToObject(o, "present", tools[i].path[0] != '\0');
+    if (tools[i].path[0]) cJSON_AddStringToObject(o, "path", tools[i].path);
+    else                  cJSON_AddNullToObject(o, "path");
+    cJSON_AddStringToObject(o, "package", tools[i].pkg);
+    if (i == 3) {
+      if (md.tesseract_jpn < 0) cJSON_AddNullToObject(o, "jpn");
+      else                      cJSON_AddBoolToObject(o, "jpn", md.tesseract_jpn);
+      if (md.tesseract_langs[0]) cJSON_AddStringToObject(o, "langs", md.tesseract_langs);
+      else                       cJSON_AddNullToObject(o, "langs");
+    }
+    cJSON_AddItemToObject(dec, tools[i].k, o);
+  }
+  cJSON_AddBoolToObject(dec, "media_tools_disabled", md.disabled);
+  cJSON_AddItemToObject(d, "decoders", dec);
+
+  int have_im = md.magick[0] || md.convert[0] || md.gm[0];
+  cJSON *feat = cJSON_CreateObject();
+  cJSON *fp = cJSON_CreateObject();
+  cJSON_AddBoolToObject(fp, "available", have_ph);
+  cJSON_AddStringToObject(fp, "via", have_ff ? "ffmpeg" : have_im ? "imagemagick"
+                                     : "none");
+  if (!have_ph)
+    cJSON_AddStringToObject(fp, "missing", "ffmpeg or imagemagick/graphicsmagick");
+  cJSON_AddItemToObject(feat, "phash", fp);
+  cJSON *fo = cJSON_CreateObject();
+  cJSON_AddBoolToObject(fo, "available", have_ocr);
+  /* Japanese signage is most of what OCR is for on this corpus; tesseract
+   * without jpn.traineddata reads it as noise and says nothing about it. */
+  if (md.tesseract_jpn < 0) cJSON_AddNullToObject(fo, "japanese");
+  else                      cJSON_AddBoolToObject(fo, "japanese", md.tesseract_jpn);
+  if (!md.tesseract[0])
+    cJSON_AddStringToObject(fo, "missing", "tesseract-ocr (+ tesseract-ocr-jpn)");
+  else if (md.tesseract_jpn == 0)
+    cJSON_AddStringToObject(fo, "missing", "tesseract-ocr-jpn (jpn.traineddata)");
+  cJSON_AddItemToObject(feat, "ocr", fo);
+  cJSON *fr = cJSON_CreateObject();
+  cJSON_AddBoolToObject(fr, "available", have_ff);
+  if (!have_ff) cJSON_AddStringToObject(fr, "missing", "ffmpeg");
+  cJSON_AddItemToObject(feat, "rtsp_hls_stills", fr);
+  cJSON_AddItemToObject(d, "features", feat);
+
+  int n_ph = 0, n_ocr = 0;
+  if (sqlite3_prepare_v2(db->h,
+      "SELECT SUM(CASE WHEN phash IS NOT NULL THEN 1 ELSE 0 END),"
+      "       SUM(CASE WHEN ocr_text IS NOT NULL THEN 1 ELSE 0 END)"
+      "  FROM camera_stills", -1, &s, NULL) == SQLITE_OK) {
+    if (sqlite3_step(s) == SQLITE_ROW) {
+      n_ph  = sqlite3_column_int(s, 0);
+      n_ocr = sqlite3_column_int(s, 1);
+    }
+    sqlite3_finalize(s);
+  }
+  cJSON *cov = cJSON_CreateObject();
+  cJSON_AddNumberToObject(cov, "stills", stills);
+  cJSON_AddNumberToObject(cov, "phash", n_ph);
+  cJSON_AddNumberToObject(cov, "ocr", n_ocr);
+  char line[96];
+  snprintf(line, sizeof line, "pHash on %d of %d", n_ph, stills);
+  cJSON_AddStringToObject(cov, "phash_text", line);
+  snprintf(line, sizeof line, "OCR on %d of %d", n_ocr, stills);
+  cJSON_AddStringToObject(cov, "ocr_text", line);
+  cJSON_AddItemToObject(d, "coverage", cov);
 
   cJSON *ret = cJSON_CreateObject();
   cJSON_AddNumberToObject(ret, "days", cfg_retain_days());

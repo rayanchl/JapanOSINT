@@ -1141,6 +1141,54 @@ int media_ocr_file(const char *path, char **out_text, double *out_conf) {
   return 1;
 }
 
+void media_probe_decoders(media_decoders *out) {
+  static pthread_mutex_t lk = PTHREAD_MUTEX_INITIALIZER;
+  static int probed = 0;
+  static media_decoders c;
+  if (!out) return;
+  pthread_mutex_lock(&lk);
+  if (!probed) {
+    probed = 1;
+    memset(&c, 0, sizeof c);
+    c.tesseract_jpn = -1;
+    c.disabled = tools_disabled();
+    /* Presence is reported even when MEDIA_NO_TOOLS is set — "installed but
+     * switched off" and "not installed" want different fixes. */
+    find_tool("magick", c.magick, sizeof c.magick);
+    find_tool("convert", c.convert, sizeof c.convert);
+    find_tool("gm", c.gm, sizeof c.gm);
+    if (find_tool("tesseract", c.tesseract, sizeof c.tesseract)) {
+      /* `--list-langs` prints a header line then one code per line; older
+       * builds print it on stderr, hence 2>&1. The path came from find_tool()
+       * (path_ok() already refused shell metacharacters). */
+      char cmd[MEDIA_TOOLPATH_MAX + 32];
+      snprintf(cmd, sizeof cmd, "%s --list-langs 2>&1", c.tesseract);
+      size_t n = 0;
+      char *o = run_capture(cmd, 64 * 1024, &n);
+      if (o) {
+        c.tesseract_jpn = 0;
+        size_t w = 0;
+        for (char *line = o, *nx; line && *line; line = nx) {
+          nx = line + strcspn(line, "\r\n");
+          if (*nx) *nx++ = '\0'; else nx = NULL;
+          if (!*line || strchr(line, ' ') || strchr(line, ':')) continue;   /* header */
+          if (strcmp(line, "jpn") == 0) c.tesseract_jpn = 1;
+          size_t ll = strlen(line);
+          if (w + ll + 2 < sizeof c.tesseract_langs) {
+            if (w) c.tesseract_langs[w++] = ',';
+            memcpy(c.tesseract_langs + w, line, ll);
+            w += ll;
+            c.tesseract_langs[w] = '\0';
+          }
+        }
+        free(o);
+      }
+    }
+  }
+  *out = c;
+  pthread_mutex_unlock(&lk);
+}
+
 char *media_capabilities(void) {
   pthread_mutex_lock(&g_tool_lock);
   probe_phash();

@@ -27,6 +27,33 @@ above at session start, so a web session builds without this step. The hook and
 `.github/workflows/ci.yml` must keep the same list; the hook's header says which
 two packages it adds beyond CI's and why.
 
+### 1b. Runtime media decoders (optional, not needed to build)
+
+The binary builds and runs without any of these. Each one that is missing
+turns a feature OFF rather than failing, and the server says which:
+`GET /api/camera-stills/capabilities` (operator-gated) reports every decoder
+(`data.decoders`), the features they enable (`data.features`, each with a
+`missing` hint), and how much of the stored frames they have actually reached
+(`data.coverage`: "pHash on N of M", "OCR on N of M" — frames captured before a
+package was installed stay unhashed). `./launch.sh preflight` prints the same
+check, and `./launch.sh serve` runs it before starting the server.
+
+| Tool | Enables | Debian/Ubuntu | macOS (Homebrew) |
+|---|---|---|---|
+| `ffmpeg` | RTSP/HLS camera stills (`core/ffmpeg.c`); first-choice pHash decoder for stills and media | `ffmpeg` | `brew install ffmpeg` |
+| ImageMagick (`magick`/`convert`) or GraphicsMagick (`gm`) | pHash fallback when ffmpeg is absent or refuses a format (`core/media.c`) | `imagemagick` (or `graphicsmagick`) | `brew install imagemagick` (or `graphicsmagick`) |
+| `tesseract` | OCR on stills and fetched images | `tesseract-ocr` | `brew install tesseract` |
+| tesseract Japanese data (`jpn.traineddata`) | OCR of Japanese signage — the default `MEDIA_OCR_LANG` is `jpn+eng`; without it Japanese text OCRs as noise | `tesseract-ocr-jpn` | `brew install tesseract-lang` |
+
+`MEDIA_NO_TOOLS=1` keeps the media module from running ImageMagick/tesseract
+even when installed (capabilities reports `media_tools_disabled: true`);
+`CAM_STILLS_NO_FFMPEG=1` does the same for ffmpeg on the stills path.
+
+No face or person detection exists anywhere in this pipeline, and none of the
+tools above is used for it: pHash is a 64-bit global brightness fingerprint for
+"did the scene change", OCR reads text. See `core/camera_privacy.h` for which
+camera channels may be indexed at all.
+
 **No single machine runs everything in this repo.** The Makefile knows about
 macOS/Homebrew, `launch.sh` sets `DYLD_LIBRARY_PATH` (macOS) while
 `native/llama/` ships mostly `.so` (Linux), and `native/tests/audit/` assumes

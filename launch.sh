@@ -355,12 +355,35 @@ cmd_build_verify(){
   fi
 }
 
+# ---- media decoder preflight ------------------------------------------------
+# The binary runs without any of these — each missing one turns a feature OFF
+# (and /api/camera-stills/capabilities says which). Warn here so "every phash
+# is NULL" is answered at launch, not after a week of unhashed frames.
+# Package names: docs/BUILD.md §1b. Never fatal.
+media_preflight(){
+  local miss=0
+  if command -v ffmpeg >/dev/null 2>&1; then ok "media: ffmpeg → RTSP/HLS stills + pHash"
+  else warn "media: ffmpeg missing → no RTSP/HLS camera stills (apt: ffmpeg | brew: ffmpeg)"; miss=1; fi
+  if command -v magick >/dev/null 2>&1 || command -v convert >/dev/null 2>&1 || command -v gm >/dev/null 2>&1; then
+    ok "media: ImageMagick/GraphicsMagick present (pHash fallback)"
+  elif ! command -v ffmpeg >/dev/null 2>&1; then
+    warn "media: no ffmpeg and no ImageMagick → no pHash, scene change is sha256-only (apt: imagemagick | brew: imagemagick)"
+  fi
+  if command -v tesseract >/dev/null 2>&1; then
+    if tesseract --list-langs 2>&1 | grep -qx jpn; then ok "media: tesseract with jpn → OCR (Japanese)"
+    else warn "media: tesseract has no jpn traineddata → Japanese OCR is noise (apt: tesseract-ocr-jpn | brew: tesseract-lang)"; miss=1; fi
+  else warn "media: tesseract missing → no OCR on stills/images (apt: tesseract-ocr tesseract-ocr-jpn | brew: tesseract tesseract-lang)"; miss=1; fi
+  [ "$miss" = 0 ] || say "media: optional features above are off; see docs/BUILD.md §1b"
+  return 0
+}
+
 # ---- server pod ------------------------------------------------------------
 cmd_serve(){
   [ -x "$BIN" ] || die "no bin/japanosint — run: ./launch.sh build"
   alive server && { warn "server pod already running (pid $(cat "$(pidfile server)"))"; return; }
   if [ -n "$(envget SUPABASE_URL)" ]; then ok "auth: SUPABASE_URL present (via ${SUPABASE_URL:+env}${SUPABASE_URL:-$JO_ENV_FILE})"
   else warn "SUPABASE_URL not in env or $JO_ENV_FILE — prod RS256/JWKS off (HS256/dev only)"; fi
+  media_preflight
   # A port still held after freeze means a stray nothing above could identify.
   # Say so NOW, naming the holder, instead of waiting 30s to report a symptom.
   if command -v ss >/dev/null 2>&1 && ss -ltn 2>/dev/null | grep -q ":$PORT "; then
@@ -866,6 +889,7 @@ case "$CMD" in
   down|stop)    cmd_down ;;
   logs)         cmd_logs "${1:-server}" ;;
   freeze)       cmd_freeze ;;
+  preflight)    media_preflight ;;
   tags|help)    cmd_tags ;;
   *) die "unknown command '$CMD' (up|build|serve|web|web-stop|llama|maint|status|down|logs|tags)";;
 esac
