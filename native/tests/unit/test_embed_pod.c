@@ -201,6 +201,7 @@ static void insert_row(const char *uid, const char *title, const char *pub,
 static void reset_all(void) {
   sql("DELETE FROM intel_items");
   sql("DROP TABLE IF EXISTS intel_vec");
+  sql("DROP TABLE IF EXISTS intel_vec_v2");
   sql("DROP TABLE IF EXISTS intel_vec_done");
   sql("DROP TABLE IF EXISTS intel_vec_failed");
   sql("DROP TABLE IF EXISTS intel_vec_meta");
