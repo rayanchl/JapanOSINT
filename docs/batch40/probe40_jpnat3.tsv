@@ -1,0 +1,41 @@
+id	url	verdict	kind	items	http	bytes	note
+JO40_JPNAT_TEIKOKU_GIKAI_PEERS	https://teikokugikai-i.ndl.go.jp/api/emp/meeting_list?nameOfHouse=%E8%B2%B4%E6%97%8F%E9%99%A2&maximumRecords=100&recordPacking=json&startRecord=1	PASS	json:meetingRecord	100	200	1750766	
+JO40_JPNAT_TEIKOKU_GIKAI_REPRESENTATIVES	https://teikokugikai-i.ndl.go.jp/api/emp/meeting_list?nameOfHouse=%E8%A1%86%E8%AD%B0%E9%99%A2&maximumRecords=100&recordPacking=json&startRecord=1	PASS	json:meetingRecord	100	200	2777621	
+JO40_JPNAT_DDBJ_JGA_GEA_METABOBANK	https://ddbj.nig.ac.jp/search/api/entries/?types=jga-study,jga-dataset,jga-policy,jga-dac,gea,metabobank&perPage=100&page=1&dbXrefsLimit=1000	PASS	json:items	100	200	796103	
+JO40_JPNAT_FIT_CERTIFIED_PLANTS_IBARAKI	https://www.fit-portal.go.jp/servlet/servlet.FileDownload?file=00PhA0000013RxiUAE	PASS	xlsx:認定設備	29675	200	6302348	header=10|他の筆数|20|給電用コンセントの有無
+JO40_JPNAT_FIT_CERTIFIED_PLANTS_CHIBA	https://www.fit-portal.go.jp/servlet/servlet.FileDownload?file=00PhA0000013PpsUAE	PASS	xlsx:認定設備	21263	200	4656208	header=10|他の筆数|20|給電用コンセントの有無
+JO40_JPNAT_FIT_CERTIFIED_PLANTS_GUNMA	https://www.fit-portal.go.jp/servlet/servlet.FileDownload?file=00PhA0000013TzOUAU	PASS	xlsx:認定設備	21219	200	4511115	header=10|他の筆数|20|給電用コンセントの有無
+JO40_JPNAT_FIT_CERTIFIED_PLANTS_TOCHIGI	https://www.fit-portal.go.jp/servlet/servlet.FileDownload?file=00PhA0000013TWNUA2	PASS	xlsx:認定設備	19131	200	4045526	header=10|他の筆数|20|給電用コンセントの有無
+JO40_JPNAT_FIT_CERTIFIED_PLANTS_MIE	https://www.fit-portal.go.jp/servlet/servlet.FileDownload?file=00PhA0000013R3MUAU	PASS	xlsx:認定設備	16499	200	4324181	header=10|他の筆数|20|給電用コンセントの有無
+JO40_JPNAT_FIT_CERTIFIED_PLANTS_KAGOSHIMA	https://www.fit-portal.go.jp/servlet/servlet.FileDownload?file=00PhA0000013QXaUAM	PASS	xlsx:認定設備	15961	200	3458313	header=10|他の筆数|20|給電用コンセントの有無
+JO40_JPNAT_FIT_CERTIFIED_PLANTS_AICHI	https://www.fit-portal.go.jp/servlet/servlet.FileDownload?file=00PhA0000013UIjUAM	PASS	xlsx:認定設備	15056	200	3421199	header=10|他の筆数|20|給電用コンセントの有無
+JO40_JPNAT_FIT_CERTIFIED_PLANTS_SHIZUOKA	https://www.fit-portal.go.jp/servlet/servlet.FileDownload?file=00PhA0000013TEfUAM	PASS	xlsx:認定設備	15008	200	3410663	header=10|他の筆数|20|給電用コンセントの有無
+JO40_JPNAT_KAIGO_CARE_MANAGEMENT	https://www.mhlw.go.jp/content/12300000/jigyosho_430_all_20260709180740.csv	PASS	csv	36212	200	15378232	
+JO40_JPNAT_KAIGO_COMMUNITY_DAY_CARE	https://www.mhlw.go.jp/content/12300000/jigyosho_780_all_20260709180927.csv	PASS	csv	18023	200	7768868	
+JO40_JPNAT_KAIGO_DEMENTIA_GROUP_HOMES	https://www.mhlw.go.jp/content/12300000/jigyosho_320_all_20260709180609.csv	PASS	csv	14236	200	5258347	
+JO40_JPNAT_KAIGO_SHORT_STAY	https://www.mhlw.go.jp/content/12300000/jigyosho_210_all_20260709180538.csv	PASS	csv	11275	200	4581143	
+JO40_JPNAT_KAIGO_SPECIAL_NURSING_HOMES	https://www.mhlw.go.jp/content/12300000/jigyosho_510_all_20260709180754.csv	PASS	csv	8527	200	3272310	
+JO40_JPNAT_ANZEN_INJURY_DB_R03	https://anzeninfo.mhlw.go.jp/anzen/shisyo_xls/sisyou_db_r03.xlsx	PASS	xlsx:sisyou_db_r03	29605	200	6371091	header=連結ID|ID|年号|年|月|発生時間|災害状況|コード
+JO40_JPNAT_ANZEN_INJURY_DB_R02	https://anzeninfo.mhlw.go.jp/anzen/shisyo_xls/sisyou_db_r02.xlsx	PASS	xlsx:sisyou_db_r02	29957	200	6324912	"header=連結ID|ID|年号|年|月|発生
+時間|災害状況|業種（大分類）"
+JO40_JPNAT_ANZEN_INJURY_DB_R01	https://anzeninfo.mhlw.go.jp/anzen/shisyo_xls/sisyou_db_r01.xlsx	PASS	xlsx:sisyou_db_r01	34796	200	7404987	header=連結ID|ID|年号|年|月|発生時間|災害状況|業種（大分類）
+JO40_JPNAT_ANZEN_FATALITY_DB_R06	https://anzeninfo.mhlw.go.jp/anzen/sib_xls/sibou_db_r06.xlsx	PASS	xlsx:死亡災害情報分析報告書	747	200	479038	header=ID|月|発生時間|災害状況|業種(大分類)|5|6|537
+JO40_JPNAT_SSDSE_A_MUNICIPAL	https://www.nstac.go.jp/files/SSDSE-A-2026.csv	PASS	text-lines	1744	200	940365	
+JO40_JPNAT_FOOD_POISONING_CASES_2025	https://www.mhlw.go.jp/content/001681445.xlsx	PASS	xlsx:令和7年食中毒発生事例	1176	200	69767	header=都道府県名等|発生月日|発生場所|原因食品|病因物質|原因施設|摂食者数|患者数
+JO40_JPNAT_NHI_DRUG_PRICE_ORAL	https://www.mhlw.go.jp/topics/2026/04/xls/tp20260813-01_01.xlsx	PASS	xlsx:ＨＰ用	7064	200	669579	header=区分|薬価基準収載医薬品コード|成分名|規格|14138|メーカー名|診療報酬において加算等の算定対象となる後発医薬品|先発医薬品
+JO40_JPNAT_NHI_DRUG_PRICE_INJECTION	https://www.mhlw.go.jp/topics/2026/04/xls/tp20260813-01_02.xlsx	PASS	xlsx:ＨＰ用	3476	200	357670	header=区分|薬価基準収載医薬品コード|成分名|規格|6973|メーカー名|診療報酬において加算等の算定対象となる後発医薬品|先発医薬品
+JO40_JPNAT_ROAD_TRAFFIC_CENSUS_AICHI	https://www.mlit.go.jp/road/census/r3/data/csv/kasyo23.csv	PASS	text-lines	4685	200	3220011	
+JO40_JPNAT_ROAD_TRAFFIC_CENSUS_HOKKAIDO	https://www.mlit.go.jp/road/census/r3/data/csv/kasyo01.csv	PASS	text-lines	4884	200	3130569	
+JO40_JPNAT_ROAD_TRAFFIC_CENSUS_FUKUOKA	https://www.mlit.go.jp/road/census/r3/data/csv/kasyo40.csv	PASS	text-lines	4374	200	2872796	
+JO40_JPNAT_ROAD_TRAFFIC_CENSUS_HYOGO	https://www.mlit.go.jp/road/census/r3/data/csv/kasyo28.csv	PASS	text-lines	3855	200	2535198	
+JO40_JPNAT_ROAD_TRAFFIC_CENSUS_NIIGATA	https://www.mlit.go.jp/road/census/r3/data/csv/kasyo15.csv	PASS	text-lines	3567	200	2349443	
+JO40_JPNAT_GEOSHAPE_HISTORICAL_PLACE_NAMES	https://geoshape.ex.nii.ac.jp/nrct/dataset/nrct-20250719.csv	PASS	csv	80502	200	10723294	
+JO40_JPNAT_GEOSHAPE_HISTORICAL_SITES	https://geoshape.ex.nii.ac.jp/nrct-poi/dataset/nrct-poi-20250515.csv	PASS	csv	32038	200	5576569	
+JO40_JPNAT_GEOSHAPE_EDO_VILLAGES	https://geoshape.ex.nii.ac.jp/edo/village/dataset/edo-village-20250917.csv	PASS	csv	56589	200	6749417	
+JO40_JPNAT_GEOSHAPE_HISTORICAL_MUNICIPALITIES	https://geoshape.ex.nii.ac.jp/city/dataset/geoshape_city_id.csv	PASS	csv	16756	200	1235352	
+JO40_JPNAT_MOE_REDLIST_2025_VASCULAR_PLANTS	https://ikilog.biodic.go.jp/rdbdata/files/redlist2025/redlist2025_ikansoku.csv	PASS	csv	2222	200	158285	
+JO40_JPNAT_MOE_RDB_PLANT_DISTRIBUTION_MESH	https://ikilog.biodic.go.jp/rdbdata/files/va_2007.csv	PASS	csv	13498	200	1196521	
+JO40_JPNAT_JALC_DOI_PREFIXES	https://api.japanlinkcenter.org/prefixes	PASS	json:data.items	4092	200	357127	
+JO40_JPNAT_MOFA_OVERSEAS_SAFETY_ALL	https://www.ezairyu.mofa.go.jp/opendata/area/00A.xml	PASS	xml:mail	4221	200	18873705	
+JO40_JPNAT_CODH_EDO_MAP_PLACES	https://codh.rois.ac.jp/edo-maps/dataset/owariya.csv	PASS	csv	8788	200	1554363	
+JO40_JPNAT_EGOV_PUBLIC_COMMENT_RESULTS	https://public-comment.e-gov.go.jp/rss/pcm_result.xml	PASS	rss	65	200	67491	

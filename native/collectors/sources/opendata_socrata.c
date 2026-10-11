@@ -29,7 +29,7 @@ static const char *SOCRATA_DOMAINS[] = {
   "data.wa.gov",             /* Washington State           */
   "data.cityofchicago.org",  /* Chicago                    */
   "data.seattle.gov",        /* Seattle                    */
-  "data.sfgov.org",          /* San Francisco              */
+  "data.sf.gov",          /* San Francisco              */
   "data.lacity.org",         /* Los Angeles                */
   "data.austintexas.gov",    /* Austin                     */
   "data.texas.gov",          /* Texas                      */

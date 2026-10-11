@@ -9,14 +9,14 @@
 
 VJSON(geo_afad_last, "geo-afad-last", "AFAD Turkey — last few days, newest first", "AFAD トルコ — 直近数日(新しい順)",
   "disaster", "seismic",
-  "https://deprem.afad.gov.tr/apiv2/event/filter?start=2026-08-05&end=2026-08-09&orderby=timedesc",
+  "https://deprem.afad.gov.tr/apiv2/event/filter?start={date-4d}&end={date+1d}&orderby=timedesc",
   "",
   "en", "[\"earthquake\",\"turkey\",\"afad\",\"realtime\"]", 900,
   "Rolling AFAD window ordered newest-first for near-real-time use.");
 
 VJSON(geo_afad_turkey_events, "geo-afad-turkey-events", "AFAD Turkey — earthquake catalogue", "AFAD トルコ — 地震カタログ",
   "disaster", "seismic",
-  "https://deprem.afad.gov.tr/apiv2/event/filter?start=2026-08-01&end=2026-08-09",
+  "https://deprem.afad.gov.tr/apiv2/event/filter?start={date-8d}&end={date+1d}",
   "",
   "en", "[\"earthquake\",\"turkey\",\"afad\"]", 900,
   "Turkish disaster agency event catalogue with lat/lon and depth.");

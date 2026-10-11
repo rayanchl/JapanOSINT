@@ -52,6 +52,28 @@ typedef struct {
  * not silently ending the scan. */
 const char *html_anchor_next(const char *from, html_anchor *out);
 
+/* ── tables ────────────────────────────────────────────────────────────────
+ * THE one <table> reader. A register published as an HTML table (FSA's 1,421
+ * money lenders, isms.jp's 8,466 certified organisations, METI's electricity
+ * retailers, prefectural water levels …) used to be unreadable: html mode
+ * keeps anchors only, and a row's cells are not anchors.
+ *
+ * html_table_parse() picks the `table_index`-th <table> whose raw HTML
+ * contains `must` (NULL/"" = any), and returns it as a RECTANGULAR grid:
+ * colspan repeats nothing (the extra slots are ""), rowspan carries the cell
+ * down into the rows it spans, so every row has the same width and every
+ * column means one thing. Cell text has tags stripped, <br> as a space,
+ * entities decoded (named, &#NNN; and &#xHH;), ASCII whitespace collapsed.
+ * `href` is the cell's first href (raw, unresolved), or NULL. A table nested
+ * inside a cell contributes its text to that cell, never rows to this one.
+ * Returns 1 when a table was found (it may have 0 rows), 0 when none was. */
+typedef struct { char *text; char *href; } html_cell;
+typedef struct { html_cell *cells; int ncells; } html_row;
+typedef struct { html_row *rows; int nrows; int width; } html_table;
+int  html_table_parse(const char *html, const char *must, int table_index,
+                      html_table *out);
+void html_table_free(html_table *t);
+
 /* Dedupe of hrefs already emitted is just the generic growable seen-set
  * (lib/seenset.h) — one implementation for the whole tree. */
 #include "seenset.h"

@@ -211,7 +211,7 @@ VRSS(geo_gdacs_rss_7d, "geo-gdacs-rss-7d", "GDACS — global disaster alerts, 7 
 
 VGEO(geo_gdacs_search_eq, "geo-gdacs-search-eq", "GDACS — filtered event search", "GDACS — 条件付きイベント検索",
   "disaster", "humanitarian",
-  "https://www.gdacs.org/gdacsapi/api/events/geteventlist/SEARCH?eventlist=EQ&fromDate=2026-07-01&toDate=2026-08-09",
+  "https://www.gdacs.org/gdacsapi/api/events/geteventlist/SEARCH?eventlist=EQ&fromDate={date-40d}&toDate={date}",
   "en", "[\"gdacs\",\"disaster\",\"search\"]", 3600,
   "GDACS SEARCH endpoint with a working event-type and date filter, unlike the MAP endpoint.");
 
@@ -373,7 +373,7 @@ VGEO(geo_ingv_events, "geo-ingv-events", "INGV Italy — recent earthquakes", "I
 
 VGEO(geo_ingv_events_30d, "geo-ingv-events-30d", "INGV Italy — M2+ last 30 days", "INGV イタリア — M2以上・過去30日",
   "disaster", "seismic",
-  "https://webservices.ingv.it/fdsnws/event/1/query?format=geojson&starttime=2026-07-10&endtime=2026-08-09&minmag=2&limit=500",
+  "https://webservices.ingv.it/fdsnws/event/1/query?format=geojson&starttime={date-30d}&endtime={date+1d}&minmag=2&limit=500",
   "en", "[\"earthquake\",\"italy\",\"ingv\"]", 3600,
   "Thirty days of Italian seismicity including swarm sequences.");
 
@@ -407,7 +407,7 @@ VJSON(geo_ipma_warnings, "geo-ipma-warnings", "IPMA Portugal — weather warning
 
 VGEO(geo_italy_ingv_last100, "geo-italy-ingv-last100", "INGV Italy — August 2026 catalogue window", "INGV イタリア — 2026年8月カタログ",
   "disaster", "seismic",
-  "https://webservices.ingv.it/fdsnws/event/1/query?starttime=2026-08-01&format=geojson&limit=200",
+  "https://webservices.ingv.it/fdsnws/event/1/query?starttime={date-30d}&format=geojson&limit=200",
   "en", "[\"earthquake\",\"italy\",\"ingv\"]", 3600,
   "INGV FDSN window query over the current month.");
 

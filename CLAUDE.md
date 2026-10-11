@@ -39,14 +39,22 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 18,645** (2026-10-06: 18,643 plus the audit
-follow-up's two SEC listings, `US_SEC_LITIGATION_RELEASES` and
-`US_SEC_TRADING_SUSPENSIONS`, which replace the dead srqsb search). 18,643 was main's batches 33–36 —
-batch 33's 43 measured supply-chain rows (`docs/verified-sources-batch33.tsv`),
-batch 34's NDJSON row, batch 35's four string-array rows, the spec-families
-beats and batch 36's 188 — on top of the 18,170 that included batch 32's 340
-Japanese rows, less batch 31's `EU_VIES_VAT_VALIDATION` (removed: it could not
-form a valid request). `make lint-sources`
+**The registered count is 18,883** (2026-10-09). Main's 18,730: 18,645 —
+batches 33–36 (batch 33's 43 measured supply-chain rows,
+`docs/verified-sources-batch33.tsv`; batch 34's NDJSON row; batch 35's four
+string-array rows; the spec-families beats and batch 36's 188) and the audit
+follow-up's two SEC listings, on top of the 18,170 that included batch 32's 340
+Japanese rows, less batch 31's `EU_VIES_VAT_VALIDATION` — plus batch 38's 150
+(PR #37) less 65 batch-31 rows removed for rule 4d (PR #38). Then the
+JP/CN integration's 168: batch 40's 100 Japanese and Chinese rows
+(`docs/verified-sources-batch40.md`; authored as "batch 38" and renumbered when
+main's batch 38 merged first) and batch 39's 72 rows unlocked by date tokens /
+JSONP / body paging / HTML tables less the frozen VCSV row one of them replaced
+(`docs/verified-sources-batch39.md`) — less batch 36's `CN_HK_LANDS_ADDR`, a
+fuzzy geocoder that answers any text with addresses (`FILTER_IGNORED`,
+`docs/rejected-sources-batch36.china.tsv`), and less 14 batch-36 Socrata
+portal inventories that re-read a catalogue `hp3_portals.c`/`hp3_society.c`
+already reads (`docs/rejected-sources-batch36.usa.tsv`). `make lint-sources`
 prints it, counting hp_source table rows as well as `REGISTER_SOURCE`, and
 `./bin/japanosint --list-sources` agrees.
 
@@ -237,14 +245,14 @@ hpengine pages exactly as it did. Without that (or an explicit `next_path` /
 
 Where the tree actually stands, as `make audit-sources` reports it:
 
-* **strict set — 0 findings across 295 files** (2026-10-05; 256 on 2026-09-27):
+* **strict set — 0 findings across 308 files** (2026-10-07; 256 on 2026-09-27):
   `collectors/pivot/table/hp*_*.c` plus the generated deep-record tables
   `collectors/feed/generated/hp1[0-9]_*.c`. This is the part the Makefile
   gates on, and it is held clean. Run `make audit-sources`
   after adding a table: batch 18 introduced two `single-page` findings here (a
   paged endpoint declared without `page_param`) and they had to be fixed before
   the gate would pass again.
-* **the rest of the tree — 0 findings** (1,650 files scanned, 2026-10-05; it
+* **the rest of the tree — 0 findings** (1,678 files scanned, 2026-10-07; it
   first reached zero on 2026-08-24, from ~127 across ~74 files). Every first-only, single-page, record-cap, loop-break,
   limit-one and dedupe-ring finding has been read and closed one of three ways:
   the discard was real and was fixed, the line carries an `exhaustive-ok`
@@ -709,6 +717,51 @@ Engine subtleties worth knowing before writing a row:
 * `page_start`'s unset value is 0, which is also a legitimate first page. Set
   **`page_zero_based=1`** for a 0-based API — otherwise the engine coerces the
   start to 1 and silently never fetches page 1.
+* **`page_size` makes `page_param` an OFFSET.** Declare it only for offset
+  parameters. On a page-NUMBER API (`page`, `pageNo`, `PAGENO`) it requests
+  pages 1, 1+N, 1+2N … and drops N−1 of every N pages with the run green.
+  83 shipped rows were in that state until 2026-10-05; `AP19_CN_SZSE_LISTED`
+  stored ~160 of 2,904 listings. Put the page size in the URL instead.
+  `make lint-sources` now fails the shape (`page-size-on-page-number`), and
+  on the merge with main it caught 97 more that batch 36 had shipped the
+  same day: every World Bank (`per_page`) and Socrata `views.json` (`limit`)
+  row. `US_SOCRATA_CAMBRIDGEMA` stored 100 datasets and reported "emitted 100
+  of 100 available"; without `page_size` it stores 446. An
+  API whose `page` really is a record offset (MapRoulette) says so with a
+  `page-offset-ok: <measurement>` marker in the row. And check where a
+  page-number API STARTS: a 0-based one (Spring, DSpace) needs
+  `page_zero_based=1`, or the walk goes page 0 → page 2.
+* **A file re-published under a new name each edition** (monthly attachment
+  ids) is not a static `url`: declare **`index_url`** (the landing page) and
+  **`index_href_must`** (a substring of the right link). The engine follows it
+  every run, and the generator and probe accept both. Batch 32's Niigata
+  register 404'd three days after shipping without it.
+* **Never freeze a date into a URL.** `{date}`, `{date-7d}`, `{date-1m:%Y%m}`,
+  `{date:@ms}`, main's `{date:%Y%m%d:-2}` and `{ago:N}` (lib/datetok.c — one implementation for hp rows AND the VJSON
+  fleet's `vsrc_url_dates`) render in UTC+**`tz_minutes`** (540 Japan, 480
+  China). **`date_back=N`** steps the date back when the first page is a 4xx
+  or empty (weekends, holidays, not yet published), in units of
+  **`date_step`** (d/w/m/y — `y` for EPA's TRI reporting year). 43 rows had a
+  window frozen at authoring and re-fetched the same past week forever. A
+  dated file whose ROWS carry no date (SHFE's daily kx, SZSE margin) re-keys
+  every day onto yesterday's uids: **`date_field=<name>`** stamps each record
+  with the rendered date (after any step back) so `id_keys` can include it.
+* **JSONP is unwrapped automatically** (`cb(…)`, `null(…)`, `(…)`, `)]}'`).
+* **A page that lives in a POST body or a URL path** is `{page}` / `{offset}` /
+  `{offset1}` / `{offset_end}` / `{size}`, re-expanded every page in the url
+  AND the body (EPA Envirofacts: `rows/{offset}:{offset_end}`). A body with a
+  literal `"page":1` reads page 1 forever: four pivots did, 40 records each.
+* A failure on the page AFTER a short page (fewer than `page_size` records) is
+  the upstream's end of data, not a truncation; later pages get 5 retries.
+* **`page_delay_ms=N`** paces a walk (a pause before every page after the
+  first) for a firewall that answers a burst with 403: the Palace Museum's
+  blocked us after 31 of 9,300 pages.
+* **A register published as an HTML table** is `mode=html` +
+  **`table_must=<caption or header text>`** (`table_index`,
+  `table_skip_rows`): every row becomes a record keyed by its header cells
+  (lib/htmlparse.c `html_table_parse` + hp_run_table; colspan/rowspan,
+  entities, nested tables handled; the row's first link is `link`). Before it,
+  html mode read anchors only, and ~20 tabular registers were rejected.
 * **A bare root array must be DECLARED: `array_path=.`** is the document
   itself. With no `array_path` the engine picks the densest array of OBJECTS,
   which is not the root as soon as a root record carries a longer nested array
@@ -800,6 +853,17 @@ Engine subtleties worth knowing before writing a row:
   banner before the parse, which matters because URLhaus keeps its column names
   in a `#` line and header parsing would otherwise name every column after a
   comment.
+* **A generated row's `id_keys` is a guess until it is measured.** Batch 36's
+  generator keyed every openFDA row on the record's FIRST field — an identity
+  on four endpoints and a dimension on the rest (`status`, `third_party_flag`,
+  `update_type`, whole arrays). The in-page collision guard content-hashes
+  such rows, so `stored` matched `emitted` and nothing looked wrong; the cost
+  is that every uid is a content hash, so a recall whose status changes is a
+  NEW row instead of an update. A key naming a bare ARRAY
+  (`establishment_type`) matches no flattened field at all — name the element
+  (`establishment_type.0`). The same batch's World Bank `country/all` rows
+  read 200 of 17,490 country-years, one request per run: the seventh discard
+  shape, a limit asked of the upstream (`tools/audit_url_limits.py`).
 * Titles: the engine will key a record on its first non-empty scalar rather than
   drop it, so a row without `title_keys` still emits — but it emits titled
   `<record_type> <whatever came first>`. Declare `title_keys`/`id_keys` for

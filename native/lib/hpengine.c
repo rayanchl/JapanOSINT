@@ -13,6 +13,7 @@
 #include "osintemit.h"   /* jo_shape_notice(): schema drift reported as data */
 #include "_credential_notice.inc"  /* jo_needs_credential — the key_env gate below */
 #include "htmlparse.h"   /* the one anchor scanner + dedupe set */
+#include "datetok.h"     /* {date…} tokens, shared with the VJSON fleet */
 #include "../core/httpclient.h"
 #include "../third_party/cJSON.h"
 #include <ctype.h>
@@ -21,7 +22,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
-#include <time.h>       /* {ago:N} and {date:FMT:±N} in hp_expand */
+#include <time.h>       /* {date…} and {ago:N} tokens: time() */
+#include <unistd.h>     /* usleep: page_delay_ms */
 
 /* Bounds exist only to keep one pathological response from exhausting memory —
  * they are NOT an editorial filter. Per the exhaustive-use rule
@@ -94,11 +96,68 @@ static char *hp_b64_userpass(const char *s) {
   return out;
 }
 
-/* Derived forms of the pivot entity. Every member is malloc'd or NULL. */
+/* Derived forms of the pivot entity. Every pointer member is malloc'd or NULL.
+ * The scalars below them drive the {date…} and {page}/{offset…} tokens. */
 typedef struct {
   char *raw, *enc, *digits, *cik10, *host, *user, *lower, *upper, *nospace,
        *key, *keyb64;
+  time_t now;        /* the run's instant; {date…} tokens are relative to it */
+  int    tz_min;     /* minutes east of UTC the date is rendered in          */
+  int    day_shift;  /* steps taken back by date_back …                      */
+  char   shift_unit; /* … each one this unit: 'd' 'w' 'm' 'y'                */
+  int    pg_set;     /* {page}/{offset…} are expanded only once this is set  */
+  char   date_stamp[64]; /* the first {date…} as rendered: date_field's value */
+  long   pg_page, pg_offset, pg_size;
 } hp_vars;
+
+/* ── date tokens: lib/datetok.c is the one implementation ────────────── *
+ * They exist for the upstreams that publish one answer per DAY (a gazette's
+ * notes for a date, a daily register file): without them such a row had to
+ * pin the date it was authored on, and then fetched that one day forever
+ * while reporting success. Both spellings render through datetok:
+ * `{date-2d:%Y%m%d}` and main's `{date:FORMAT:±N}` (the offset is the text
+ * after the LAST ':' only when it is a signed integer, so `%H:%M` parses).
+ * An offset lets a row ask for a day already complete where the upstream
+ * lives — "-2" is a finished day in every timezone at any hour. A token that
+ * does not render is left verbatim, as any unknown token is. */
+static int hp_render_date(const char *spec, size_t n, const hp_vars *v,
+                          char *out, size_t cap) {
+  return datetok_render(spec, n, v->now, v->tz_min, v->day_shift, v->shift_unit,
+                        out, cap);
+}
+static int hp_has_date_token(const char *s) { return datetok_present(s); }
+
+/* The first {date…} token of `tmpl` as this run renders it (date_field). */
+static void hp_first_date(const char *tmpl, const hp_vars *v, char *out, size_t cap) {
+  out[0] = 0;
+  for (const char *p = tmpl ? strstr(tmpl, "{date") : NULL; p; p = strstr(p + 1, "{date")) {
+    const char *close = strchr(p, '}');
+    if (close && strchr("}+-:", p[5]) &&
+        hp_render_date(p + 1, (size_t)(close - p - 1), v, out, cap))
+      return;
+  }
+  out[0] = 0;
+}
+
+/* date_field: stamp the record before it is keyed. Called from BOTH the
+ * collision map and the emitter so the two derive the same uid. A record that
+ * already carries the field keeps its own value. */
+static void hp_stamp_date(const hp_source *s, const hp_vars *v, cJSON *flat) {
+  if (!s->date_field || !*s->date_field || !v->date_stamp[0] || !cJSON_IsObject(flat)) return;
+  if (cJSON_GetObjectItemCaseSensitive(flat, s->date_field)) return;
+  cJSON_AddStringToObject(flat, s->date_field, v->date_stamp);
+}
+
+/* {page} {offset} {offset1} {offset_end} {size}: the per-page values of a walk
+ * whose page lives in the PATH (EPA Envirofacts `rows/{offset}:{offset_end}`)
+ * or in a POST BODY (`{"pageNum":{page}}`), where no query parameter reaches. */
+static char *hp_jsonp_inner(const char *body);   /* defined beside hp_run_json */
+
+static int hp_has_page_token(const char *s) {
+  return s && (strstr(s, "{page}") || strstr(s, "{offset}") ||
+               strstr(s, "{offset1}") || strstr(s, "{offset_end}") ||
+               strstr(s, "{size}"));
+}
 
 static void hp_vars_free(hp_vars *v) {
   free(v->raw); free(v->enc); free(v->digits); free(v->cik10); free(v->host);
@@ -245,47 +304,6 @@ static int hp_url_num_param(const char *url, const char *key, long *out) {
   return 0;
 }
 
-/* {date:FORMAT} and {date:FORMAT:+N} / {date:FORMAT:-N} — today's UTC date
- * shifted by N days and rendered with strftime(FORMAT). It exists for the
- * upstreams that publish one answer per DAY (a gazette's notes for a date, a
- * daily register file): without it such a row had to pin the date it was
- * authored on, and then fetched that one day forever while reporting success.
- * The offset lets a row ask for a day that is already complete where the
- * upstream lives — "-2" is a finished day in every timezone at any hour.
- *
- * The offset is the text after the LAST ':' only when that text is a signed
- * integer, so a format that itself contains ':' (%H:%M) still parses.
- * Returns 1 and fills out/consumed on success; 0 leaves the token verbatim,
- * exactly as any other unknown token is left. */
-static int hp_date_token(const char *p, char *out, size_t outn, size_t *consumed) {
-  if (strncmp(p, "{date:", 6) != 0) return 0;
-  const char *body = p + 6, *close = strchr(body, '}');
-  if (!close || close == body || close - body > 64) return 0;
-  char spec[65];
-  memcpy(spec, body, (size_t)(close - body));
-  spec[close - body] = 0;
-  long off = 0;
-  char *colon = strrchr(spec, ':');
-  if (colon) {
-    const char *d = colon + 1;
-    if (*d == '+' || *d == '-') d++;
-    int digits = 0;
-    while (isdigit((unsigned char)d[digits])) digits++;
-    if (digits > 0 && digits <= 5 && d[digits] == 0) {
-      off = strtol(colon + 1, NULL, 10);
-      *colon = 0;
-    }
-  }
-  if (!*spec) return 0;
-  time_t t = time(NULL) + (time_t)off * 86400;
-  struct tm g;
-  if (!gmtime_r(&t, &g)) return 0;
-  size_t n = strftime(out, outn, spec, &g);
-  if (n == 0) return 0;
-  *consumed = (size_t)(close - p) + 1;
-  return 1;
-}
-
 /* {token} expansion. An unknown token is left verbatim so a typo shows up in
  * the logged URL instead of silently vanishing. `extra_name`/`extra_val`
  * inject the second-hop {v}. Returns malloc'd.
@@ -305,14 +323,41 @@ static char *hp_expand(const char *tmpl, const hp_vars *v,
   size_t cap = strlen(tmpl) + 512, len = 0;
   char *out = malloc(cap);
   if (!out) return NULL;
-  char tbuf[32];
+  char dbuf[128], nbuf[32];
   for (const char *p = tmpl; *p; ) {
     const char *sub = NULL;
     size_t skip = 0;
-    char dbuf[128];
-    if (*p == '{' && hp_date_token(p, dbuf, sizeof dbuf, &skip)) {
-      sub = dbuf;
-    } else if (*p == '{') {
+    if (*p == '{' && !strncmp(p + 1, "ago:", 4)) {
+      const char *close = strchr(p, '}');
+      if (close && close - p < 12 &&    /* main's token-length bound */
+          datetok_render_any(p + 1, (size_t)(close - p - 1), v->now, 0, 0, 'd', dbuf, sizeof dbuf)) {
+        sub = dbuf;
+        skip = (size_t)(close - p) + 1;
+      }
+    } else if (*p == '{' && !strncmp(p + 1, "date", 4) && strchr("}+-:", p[5])) {
+      const char *close = strchr(p, '}');
+      if (close && close - p < 112 &&
+          hp_render_date(p + 1, (size_t)(close - p - 1), v, dbuf, sizeof dbuf)) {
+        sub = dbuf;
+        skip = (size_t)(close - p) + 1;
+      }
+    } else if (*p == '{' && v->pg_set) {
+      const char *close = strchr(p, '}');
+      size_t tn = close ? (size_t)(close - p - 1) : 0;
+      long val = 0; int hit = 1;
+      if      (tn == 4  && !strncmp(p + 1, "page", 4))        val = v->pg_page;
+      else if (tn == 6  && !strncmp(p + 1, "offset", 6))      val = v->pg_offset;
+      else if (tn == 7  && !strncmp(p + 1, "offset1", 7))     val = v->pg_offset + 1;
+      else if (tn == 10 && !strncmp(p + 1, "offset_end", 10)) val = v->pg_offset + v->pg_size - 1;
+      else if (tn == 4  && !strncmp(p + 1, "size", 4))        val = v->pg_size;
+      else hit = 0;
+      if (hit) {
+        snprintf(nbuf, sizeof nbuf, "%ld", val);
+        sub = nbuf;
+        skip = tn + 2;
+      }
+    }
+    if (!sub && *p == '{') {
       const char *close = strchr(p, '}');
       if (close && close - p < 12) {
         size_t tn = (size_t)(close - p - 1);
@@ -329,15 +374,6 @@ static char *hp_expand(const char *tmpl, const hp_vars *v,
         else if (!strcmp(tok, "qn"))     sub = v->nospace;
         else if (!strcmp(tok, "key"))    sub = v->key;
         else if (!strcmp(tok, "keyb64")) sub = v->keyb64;
-        else if (!strncmp(tok, "ago:", 4) && tok[4]) {
-          long secs = strtol(tok + 4, NULL, 10);
-          if (secs < 0) secs = 0;
-          time_t t = time(NULL) - (time_t)secs;
-          struct tm tmv;
-          if (gmtime_r(&t, &tmv) &&
-              strftime(tbuf, sizeof tbuf, "%Y-%m-%dT%H:%M:%SZ", &tmv))
-            sub = tbuf;
-        }
         else if (extra_name && !strcmp(tok, extra_name)) sub = extra_val;
         if (sub) skip = tn + 2;
       }
@@ -1169,7 +1205,9 @@ static void hp_deepen(hp_run_state *st, cJSON *flat) {
     /* Same gate as the page fetch: a detail endpoint on a .jp host serving
      * Shift_JIS would otherwise merge mojibake into the record it enriches. */
     char *dutf8 = hp_body_to_utf8(s, url, hr.body, hr.body_len);
-    cJSON *doc = cJSON_Parse(dutf8 ? dutf8 : hr.body);
+    char *djp = hp_jsonp_inner(dutf8 ? dutf8 : hr.body);
+    cJSON *doc = cJSON_Parse(djp ? djp : dutf8 ? dutf8 : hr.body);
+    free(djp);
     free(dutf8);
     if (doc) {
       cJSON *node = s->detail_path ? hp_path(doc, s->detail_path) : doc;
@@ -1361,6 +1399,7 @@ static unsigned char *hp_collision_map(hp_run_state *st, cJSON *arr, int n,
   cJSON_ArrayForEach(rec, arr) {
     cJSON *flat = flat_fn ? flat_fn(s, rec) : rec;
     if (!flat) { i++; continue; }
+    hp_stamp_date(s, st->vars, flat);
     /* Buffer sizes and pick modes IDENTICAL to hp_emit_record's, so the key
      * this guard derives is the key the emitter derives. */
     char sc_t[HP_PICK_TEXT_CAP], sc_r[64], lastbuf[64];
@@ -1413,6 +1452,7 @@ static void hp_emit_record(hp_run_state *st, cJSON *flat, int deepen) {
    * caller has already added this slot to `available` and the difference read
    * as a one-record shortfall that never happened. */
   if (cJSON_GetArraySize(flat) == 0) { st->empty++; return; }
+  hp_stamp_date(s, st->vars, flat);
 
   if (s->filter_query && st->vars->raw) {
     char *txt = cJSON_PrintUnformatted(flat);
@@ -1661,9 +1701,63 @@ static int hp_json_error_doc(cJSON *doc, char *msg, size_t cap, long *code) {
   return 1;
 }
 
+/* ── JSONP ───────────────────────────────────────────────────────────────
+ *
+ * `cb({...})`, `null([...]);`, `({...})`, a callback behind an empty block
+ * comment, and an XSSI guard
+ * line (`)]}'`) are JSON wrapped for a <script> tag. cJSON reads none of them,
+ * so every such upstream was rejected outright: NMC typhoon tracks, the BSE and
+ * NEEQ disclosure APIs (`null([...])`), Sabae's bus feed (`({...})`).
+ *
+ * -> a malloc'd copy of the JSON inside, or NULL when `body` is not wrapped.
+ * Valid JSON can never be mistaken for it: a JSON text does not begin with an
+ * identifier followed by `(`, and the inside must itself open with { or [. */
+static char *hp_jsonp_inner(const char *body) {
+  if (!body) return NULL;
+  const char *p = body;
+  if ((unsigned char)p[0] == 0xEF && (unsigned char)p[1] == 0xBB && (unsigned char)p[2] == 0xBF) p += 3;
+  while (isspace((unsigned char)*p)) p++;
+  if (!strncmp(p, ")]}'", 4)) {                       /* XSSI guard line */
+    const char *nl = strchr(p, '\n');
+    if (!nl) return NULL;
+    return hp_dup(nl + 1);
+  }
+  if (!strncmp(p, "/**/", 4)) { p += 4; while (isspace((unsigned char)*p)) p++; }
+  if (isalpha((unsigned char)*p) || *p == '_' || *p == '$') {      /* callback name */
+    while (isalnum((unsigned char)*p) || *p == '_' || *p == '$' || *p == '.') p++;
+  }
+  while (isspace((unsigned char)*p)) p++;
+  if (*p != '(') return NULL;
+  const char *in = p + 1;
+  const char *end = body + strlen(body);
+  while (end > in && isspace((unsigned char)end[-1])) end--;
+  if (end > in && end[-1] == ';') { end--; while (end > in && isspace((unsigned char)end[-1])) end--; }
+  if (end <= in || end[-1] != ')') return NULL;
+  end--;
+  const char *q = in;
+  while (q < end && isspace((unsigned char)*q)) q++;
+  /* cb(({...})): a second pair of parens around the payload (NMC typhoons). */
+  while (q < end && *q == '(') {
+    const char *e2 = end;
+    while (e2 > q && isspace((unsigned char)e2[-1])) e2--;
+    if (e2 <= q + 1 || e2[-1] != ')') break;
+    q++; end = e2 - 1;
+    while (q < end && isspace((unsigned char)*q)) q++;
+  }
+  if (q >= end || (*q != '{' && *q != '[')) return NULL;
+  size_t n = (size_t)(end - q);
+  char *out = malloc(n + 1);
+  if (!out) return NULL;
+  memcpy(out, q, n);
+  out[n] = 0;
+  return out;
+}
+
 static int hp_run_json(hp_run_state *st, const char *body) {
   const hp_source *s = st->s;
-  cJSON *doc = cJSON_Parse(body);
+  char *jsonp = hp_jsonp_inner(body);                  /* see hp_jsonp_inner */
+  cJSON *doc = cJSON_Parse(jsonp ? jsonp : body);
+  free(jsonp);
   if (!doc) {
     fprintf(stderr, "[hp:%s] non-JSON body\n", s->id);
     st->unreadable = 1;
@@ -1781,6 +1875,21 @@ static int hp_run_json(hp_run_state *st, const char *body) {
                        : cJSON_IsString(n) ? "a string" : cJSON_IsNumber(n) ? "a number"
                        : cJSON_IsBool(n)   ? "a boolean" : cJSON_IsNull(n) ? "null"
                        : "a node of another type";
+      /* Past the end is not drift. Eastmoney's data centre answers the page
+       * after the last with {"result":null,"code":9201}, so every walk filed
+       * an array-path-missing notice telling the analyst to re-point a path
+       * that was fine on all the pages before it (batch 40, 2026-10-05). A
+       * LATER page whose path is null or gone, after this walk has emitted,
+       * is the upstream's end of data: the walk stops on page_records == 0 as
+       * for an empty array. Page 1, or a path now holding a string or a
+       * number, is still drift and still a notice. */
+      if (st->page > 1 && st->emitted > 0 && (!n || cJSON_IsNull(n))) {
+        fprintf(stderr, "[hp:%s] page %d: array_path \"%s\" is %s after %d "
+                "record(s) — the upstream's end of data\n",
+                s->id, st->page, s->array_path, kind, st->emitted);
+        cJSON_Delete(doc);
+        return st->emitted;
+      }
       st->sh_path_missing++;
       snprintf(st->sh_path_kind, sizeof st->sh_path_kind, "%s", kind);
       fprintf(stderr,
@@ -1893,6 +2002,8 @@ static int hp_run_json(hp_run_state *st, const char *body) {
   return st->emitted;
 }
 
+static int hp_emit_rows(hp_run_state *st, cJSON *rows);
+
 static int hp_run_csv(hp_run_state *st, const char *body) {
   const hp_source *s = st->s;
   /* Headerless files (OFAC's sdn.csv and friends) must NOT be parsed with
@@ -1965,6 +2076,15 @@ static int hp_run_csv(hp_run_state *st, const char *body) {
    * served, and the run reports that smaller number as the whole truth. */
   st->sh_csv_repairs += csv_quote_repairs();
   free(stripped);
+  return hp_emit_rows(st, rows);
+}
+
+/* Named rows (an array of {column: text} objects) -> records: availability,
+ * page_records, the uid collision guard, the emit loop. Shared by the CSV/XLSX
+ * path and the HTML table path so the two key and dedupe identically.
+ * Consumes `rows`. */
+static int hp_emit_rows(hp_run_state *st, cJSON *rows) {
+  const hp_source *s = st->s;
   if (!rows) return 0;
   int max = hp_record_cap(s);
   st->available += cJSON_GetArraySize(rows);
@@ -3148,7 +3268,67 @@ static size_t hp_anchor_context_label(const char *tag, size_t taglen, const char
 
 /* Real anchors out of a real listing page. JS-rendered or anti-bot pages
  * simply yield nothing. */
+/* HTML table mode — see `table_must` in hpengine.h. */
+static int hp_run_table(hp_run_state *st, const char *body) {
+  const hp_source *s = st->s;
+  html_table tb;
+  if (!html_table_parse(body, s->table_must, s->table_index, &tb)) {
+    fprintf(stderr, "[hp:%s] no <table> containing \"%s\" (index %d)\n",
+            s->id, s->table_must, s->table_index);
+    return 0;
+  }
+  int hdr = s->table_skip_rows > 0 ? s->table_skip_rows : 0;
+  cJSON *rows = cJSON_CreateArray();
+  if (!rows || hdr >= tb.nrows) { html_table_free(&tb); return hp_emit_rows(st, rows); }
+  /* Column names: the header row's text; "" -> colN; a repeat gets _2, _3. */
+  char **names = calloc((size_t)tb.width + 1, sizeof *names);
+  int has_link = 0;
+  for (int k = 0; names && k < tb.width; k++) {
+    const char *h = tb.rows[hdr].cells[k].text;
+    char nb[300];
+    if (h && *h) snprintf(nb, sizeof nb, "%.250s", h); else snprintf(nb, sizeof nb, "col%d", k);
+    int dup = 1;                           /* against the RAW header texts */
+    for (int j = 0; j < k; j++) {
+      const char *hj = tb.rows[hdr].cells[j].text;
+      char rj[300];
+      if (hj && *hj) snprintf(rj, sizeof rj, "%.250s", hj); else snprintf(rj, sizeof rj, "col%d", j);
+      if (!strcmp(rj, nb)) dup++;
+    }
+    if (dup > 1) { char d[320]; snprintf(d, sizeof d, "%s_%d", nb, dup); names[k] = strdup(d); }
+    else names[k] = strdup(nb);
+    if (names[k] && !strcmp(names[k], "link")) has_link = 1;
+  }
+  for (int r = hdr + 1; names && r < tb.nrows; r++) {
+    html_row *row = &tb.rows[r];
+    int nonempty = 0, same_as_header = 1;
+    for (int k = 0; k < row->ncells; k++) {
+      if (row->cells[k].text && *row->cells[k].text) nonempty = 1;
+      if (strcmp(row->cells[k].text ? row->cells[k].text : "",
+                 tb.rows[hdr].cells[k].text ? tb.rows[hdr].cells[k].text : "")) same_as_header = 0;
+    }
+    if (!nonempty) { st->empty++; continue; }
+    if (same_as_header) continue;                 /* a header repeated mid-table */
+    cJSON *o = cJSON_CreateObject();
+    const char *first_href = NULL;
+    for (int k = 0; k < row->ncells; k++) {
+      cJSON_AddStringToObject(o, names[k], row->cells[k].text ? row->cells[k].text : "");
+      if (!first_href && row->cells[k].href) first_href = row->cells[k].href;
+    }
+    if (first_href && !has_link) {
+      char abs[2048];
+      hp_url_resolve(s->base && *s->base ? s->base : st->url, first_href, abs, sizeof abs);
+      cJSON_AddStringToObject(o, "link", abs);
+    }
+    cJSON_AddItemToArray(rows, o);
+  }
+  for (int k = 0; names && k < tb.width; k++) free(names[k]);
+  free(names);
+  html_table_free(&tb);
+  return hp_emit_rows(st, rows);
+}
+
 static int hp_run_html(hp_run_state *st, const char *html) {
+  if (st->s->table_must && *st->s->table_must) return hp_run_table(st, html);
   const hp_source *s = st->s;
   int max = hp_record_cap(s);
   /* What a relative href is relative to: the row's override, else the page's
@@ -3615,6 +3795,13 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
 
   hp_vars vars;
   hp_vars_build(&vars, e, key);
+  vars.now = time(NULL);                 /* one instant for the whole run */
+  vars.tz_min = s->tz_minutes;
+  vars.shift_unit = (s->date_step && strchr("dwmy", s->date_step[0]) && s->date_step[0])
+                    ? s->date_step[0] : 'd';
+  /* A dated row whose index_url supplies the data URL has nothing to step. */
+  int dated = !(s->index_url && s->index_url[0]) &&
+              (hp_has_date_token(s->url) || hp_has_date_token(s->post_body));
   if (hp_needs_missing(s->url, &vars) || hp_needs_missing(s->post_body, &vars)) {
     fprintf(stderr, "[hp:%s] entity yields no value for a required token — skipped\n", s->id);
     hp_vars_free(&vars);
@@ -3624,6 +3811,8 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   char *url  = hp_expand(s->url, &vars, NULL, NULL);
   char *body = s->post_body ? hp_expand(s->post_body, &vars, NULL, NULL) : NULL;
   if (!url) { free(body); hp_vars_free(&vars); return 0; }
+  hp_first_date(hp_has_date_token(s->url) ? s->url : s->post_body, &vars,
+                vars.date_stamp, sizeof vars.date_stamp);
 
   /* Headers: the row's own templates plus a JSON Accept and, when posting, a
    * content type. Bounded, NULL-terminated for http_request. */
@@ -3763,7 +3952,13 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
    * paging: the upstream numbers its pages in the path (kanpou.ai's
    * /tosan/p/N), which no query parameter can express. hp_expand leaves an
    * unknown token verbatim, so it survives to here untouched. */
-  int path_paged = strstr(url, "{page}") != NULL;
+  /* Extended 2026-10-06 to the POST body and to record offsets: {page},
+   * {offset}, {offset1}, {offset_end} and {size} are re-expanded for every
+   * page, in the url AND the body. EPA Envirofacts pages as rows/0:999 in the
+   * path; flk.npc.gov.cn and CNINFO read the page only from a POST body; and
+   * four pivots (USAspending x2, TED, NIH RePORTER) carried `"page":1` in a
+   * body nothing could advance, so they fetched page 1 and nothing else. */
+  int path_paged = hp_has_page_token(url) || hp_has_page_token(body);
   if (path_paged && s->page_param)
     fprintf(stderr, "[hp:%s] both {page} and page_param declared — {page} "
             "wins; the row should declare one\n", s->id);
@@ -3824,12 +4019,18 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
    * jsonlist_emit_paged does: http_request applies an operator-approved
    * override on the way out, and a cursor that exists only in the overridden
    * URL can only be advanced from it. Applying it twice is a no-op. */
+  long tmpl_step = s->page_size > 0 ? s->page_size : 0;  /* {offset} stride */
+  char *page_body = NULL;             /* the body for THIS page, when paged */
+dated_restart:;
   char *page_url = strdup(page_walk ? url_override_apply(url) : url);
   if (path_paged) {
-    char nb[24];
-    snprintf(nb, sizeof nb, "%d", page_start);
+    vars.pg_set = 1;
+    vars.pg_page = page_start;
+    vars.pg_offset = 0;
+    vars.pg_size = tmpl_step;
     free(page_url);
-    page_url = hp_expand(url, &vars, "page", nb);
+    page_url = hp_expand(url, &vars, NULL, NULL);
+    if (hp_has_page_token(body)) page_body = hp_expand(body, &vars, NULL, NULL);
   }
   /* The first page's outcome, kept for the fetch-failure notice: 0 = never
    * asked, 200 = served, -1 = transport failure, otherwise the status. */
@@ -3867,11 +4068,20 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     }
 
     http_response hr = {0};
+    if (page > 0 && s->page_delay_ms > 0)          /* see hpengine.h */
+      usleep((useconds_t)s->page_delay_ms * 1000);
+    const char *req_body = page_body ? page_body : body;
     const char *const *req_hdrs = page > 0 ? later_hdrs : hdrs;
-    int rc = http_request(ctx->http, body ? "POST" : "GET", page_url, req_hdrs,
-                          body, body ? strlen(body) : 0,
+    /* A later page gets five retries (0.25, 0.5, 1, 2, 4 s backoff on a 5xx,
+     * a 429 or a dropped connection), not one: a 2,000-page walk that dies on
+     * one transient 500 discards everything after it. Three (1.75 s) was not
+     * enough: EPA's joined TRI walk met a 500 at row 440,000 that outlasted
+     * them and answered 200 minutes later. The first page keeps one, so a dead
+     * endpoint still fails fast. */
+    int rc = http_request(ctx->http, req_body ? "POST" : "GET", page_url, req_hdrs,
+                          req_body, req_body ? strlen(req_body) : 0,
                           s->timeout_ms > 0 ? s->timeout_ms : HP_HTTP_TIMEOUT,
-                          1, &hr);
+                          page > 0 ? 5 : 1, &hr);
     /* 304 to a request that carried no condition is not the upstream's
      * answer: a cache on the path is answering for a page it never fetched.
      * One retry asks every cache to go back to the origin. */
@@ -3880,8 +4090,8 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
               "— retrying once with Cache-Control: no-cache\n", s->id, page + 1);
       http_response_free(&hr);
       hr = (http_response){0};
-      rc = http_request(ctx->http, body ? "POST" : "GET", page_url, nocache_hdrs,
-                        body, body ? strlen(body) : 0,
+      rc = http_request(ctx->http, req_body ? "POST" : "GET", page_url, nocache_hdrs,
+                        req_body, req_body ? strlen(req_body) : 0,
                         s->timeout_ms > 0 ? s->timeout_ms : HP_HTTP_TIMEOUT,
                         1, &hr);
     }
@@ -3889,6 +4099,13 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
       long fst = rc != 0 ? -1 : hr.status;
       if (rc != 0) fprintf(stderr, "[hp:%s] transport failure %s\n", s->id, page_url);
       else         fprintf(stderr, "[hp:%s] status=%ld %s\n", s->id, hr.status, page_url);
+      /* A dated row whose first page is a 4xx (today's file not published
+       * yet, a holiday) steps its date back — see date_back in hpengine.h. */
+      if (page == 0 && dated && vars.day_shift < s->date_back &&
+          fst >= 400 && fst < 500) {
+        http_response_free(&hr);
+        goto date_step_back;
+      }
       /* Page 1: a dead endpoint is a hard error; a 304 nobody asked for is
        * one too (the source was not actually checked); anything else is the
        * honest empty it always was. */
@@ -3898,6 +4115,10 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
       if (page == 0) first_status = fst;
       if (page == 0 && (fst < 0 || fst >= 500 || (fst == 304 && !first_conditional)))
         hard_error = 1;
+      /* A later page: hp_later_page_cut() rules end-of-data vs cut short.
+       * 403 counts as cut short — NFRA's penalty registers (32,938 and 41,797
+       * notices) met a burst-403 WAF on page 41 and page 6 and used to report
+       * "emitted 800 of 800 available", rc=0 (batch 40, 2026-10-03). */
       if (page > 0) {
         if (hp_later_page_cut(fst, prev_short, prev_full, next_evidence,
                               st.declared_total, (long)st.available)) {
@@ -4078,6 +4299,11 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
      * the difference between "this source found nothing" and "this source was
      * not actually checked", and collapsing the two is what house rule 1 is
      * about. Either way nothing is STORED, which is the part that matters. */
+    if (page == 0 && dated && vars.day_shift < s->date_back &&
+        st.page_records <= 0 && st.emitted == 0 &&
+        (!st.upstream_error || (st.err_code >= 400 && st.err_code < 500)))
+      goto date_step_back;
+
     /* A LATER page whose 200 could not be read at all is judged the same way:
      * a page that did not deliver its records. An error document keeps the
      * code it carried for the ruling (a `{"error":{"code":404}}` after a short
@@ -4123,10 +4349,16 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
         nextp = st.next_url;
       }
       st.next_url = NULL;
-    } else if (path_paged) {                 /* path segment: /p/<n> */
-      char nb[24];
-      snprintf(nb, sizeof nb, "%ld", (long)page_start + page + 1);
-      nextp = hp_expand(url, &vars, "page", nb);
+    } else if (path_paged) {                 /* {page}/{offset…} in path or body */
+      if (tmpl_step <= 0) tmpl_step = st.page_records;   /* no page_size: page 1 sets it */
+      vars.pg_page = (long)page_start + page + 1;
+      vars.pg_offset = (long)(page + 1) * tmpl_step;
+      vars.pg_size = tmpl_step;
+      nextp = hp_expand(url, &vars, NULL, NULL);
+      if (page_body) {
+        free(page_body);
+        page_body = hp_expand(body, &vars, NULL, NULL);
+      }
     } else if (s->page_param) {              /* offset/page arithmetic */
       /* Offset-style when the row declares page_size (or the param is named
        * like an offset); page-number style otherwise. */
@@ -4156,9 +4388,49 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   }
   free(prev_url);
   free(page_url);
+  free(page_body);
   free(st.next_url);
   free(st.pw_next);
   html_seen_free(&st.hseen);
+  if (0) {
+date_step_back:
+    /* The first request for a dated row found no data for that day: a
+     * weekend, a holiday, or today's file not published yet. Step every
+     * {date…} back one day and start the walk again from nothing — no record
+     * was emitted, so no state carries over. Bounded by date_back. */
+    vars.day_shift++;
+    free(page_url); page_url = NULL;
+    free(page_body); page_body = NULL;
+    free(st.next_url); free(st.pw_next);
+    html_seen_free(&st.hseen);
+    vars.pg_set = 0;
+    free(url); free(body);
+    url  = hp_expand(s->url, &vars, NULL, NULL);
+    body = s->post_body ? hp_expand(s->post_body, &vars, NULL, NULL) : NULL;
+    hp_first_date(hp_has_date_token(s->url) ? s->url : s->post_body, &vars,
+                  vars.date_stamp, sizeof vars.date_stamp);
+    if (!url) {
+      for (int i = 0; i < nh; i++) free(hdr_store[i]);
+      free(body);
+      hp_vars_free(&vars);
+      return -1;
+    }
+    fprintf(stderr, "[hp:%s] date_back %d/%d: no data on the first page, "
+            "retrying %s\n", s->id, vars.day_shift, s->date_back, url);
+    /* Exactly the initialiser at the top of hp_run: a field left out here
+     * would run the stepped-back date with that guarantee switched off. */
+    st = (hp_run_state){ .s = s, .ctx = ctx, .sink = sink, .vars = &vars,
+                         .detail_hdrs = detail_hdrs,
+                         .url = url, .emitted = 0,
+                         .deep_left = hp_detail_budget(s),
+                         .pw = page_walk, .declared_total = -1,
+                         .rec_guard = (paged || page_walk) && s->mode == HP_JSON };
+    out = 0; hard_error = 0; failed_midwalk = 0; failed_status = 0;
+    failed_unreadable = 0; failed_page = 0; free(failed_url); failed_url = NULL;
+    pw_stuck = 0; pw_repeat = 0;
+    tmpl_step = s->page_size > 0 ? s->page_size : 0;
+    goto dated_restart;
+  }
 
   /* `available` counts what the upstream handed over as records — array slots
    * that held nothing are reported separately rather than as a shortfall. */

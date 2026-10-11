@@ -10,6 +10,7 @@
 #include "lib/jsonlist.h"
 #include "lib/jsonstream.h"
 #include "lib/csv.h"
+#include "lib/datetok.h"   /* {date…} — the same tokens hp rows use */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>   /* strcmp — vgeo_cat_emit; strstr/strncmp — vsrc_url_dates */
@@ -65,7 +66,22 @@
  * literal suffixes: `from={{today-7}}T00:00Z` works. Manifest rows using
  * tokens keep them in the TSV so a regeneration is idempotent
  * (gen_verified_sources.py passes URLs through unchanged). */
+/* The VJSON/VGEO date tokens. The original form is {{today}} / {{today-N}}
+ * (UTC, YYYY-MM-DD, days only); since 2026-10-06 a URL may also carry the hp
+ * engine's {date…} tokens — any strftime format, d/w/m/y offsets — rendered by
+ * lib/datetok.c, the one implementation both engines share. A dozen VJSON rows
+ * (GDACS, INGV, AFAD, GFZ Kp, AusTender, eCFR, Elering …) had a window frozen
+ * at authoring because {{today-N}} could not express it. UTC: these rows have
+ * no timezone field. NULL when the URL holds neither form. */
+static inline char *vsrc_url_today(const char *url);
 static inline char *vsrc_url_dates(const char *url) {
+  char *legacy = vsrc_url_today(url);
+  char *d = datetok_expand(legacy ? legacy : url, 0, 0, 0, 'd');
+  if (!d) return legacy;
+  free(legacy);
+  return d;
+}
+static inline char *vsrc_url_today(const char *url) {
   const char *tok = strstr(url, "{{today");
   if (!tok) return NULL;              /* the common case: nothing to expand */
   char out[1024];

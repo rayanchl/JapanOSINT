@@ -381,7 +381,7 @@ VJSON(geo_gfw_datasets, "geo-gfw-datasets", "Global Forest Watch — dataset reg
 
 VJSON(geo_gfz_kp_nowcast, "geo-gfz-kp-nowcast", "GFZ Potsdam — Kp index nowcast", "GFZポツダム — Kp指数ナウキャスト",
   "science", "spaceweather",
-  "https://kp.gfz-potsdam.de/app/json/?start=2026-08-01T00:00:00Z&end=2026-08-09T00:00:00Z&index=Kp",
+  "https://kp.gfz-potsdam.de/app/json/?start={date-8d:%Y-%m-%dT00:00:00Z}&end={date:%Y-%m-%dT00:00:00Z}&index=Kp",
   "kp",
   "en", "[\"spaceweather\",\"kp\",\"gfz\"]", 3600,
   "Authoritative GFZ planetary Kp index series.");

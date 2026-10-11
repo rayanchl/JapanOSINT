@@ -1,0 +1,32 @@
+id	url	verdict	kind	items	http	bytes	note
+JO39_CN_SSE_SUSPENSIONS	https://query.sse.com.cn/commonSoaQuery.do?isPagination=true&sqlId=GW_PL_JYTS_TFPXX&pageHelp.pageSize=1000&pageHelp.pageNo=1&productCode=&keyWords=&startStopDate=19901219&endStopDate=	PASS	json:pageHelp.data	1000	200	430040	
+JO39_CN_SSE_ANNOUNCEMENTS	https://query.sse.com.cn/security/stock/queryCompanyBulletinNew.do?isPagination=true&pageHelp.pageSize=25&pageHelp.pageNo=1&pageHelp.beginPage=1&pageHelp.cacheSize=1&pageHelp.endPage=1&START_DATE=2026-10-01&END_DATE=2026-10-02&SECURITY_CODE=&TITLE=&BULLETIN_TYPE=&stockType=	PASS	json:pageHelp.data	25	200	33476	date_back 4: 
+JO39_CN_CNINFO_ANN_SZ	https://www.cninfo.com.cn/new/hisAnnouncement/query?plate=sz	PASS	json:announcements	1	200	165	
+JO39_CN_CNINFO_ANN_SH	https://www.cninfo.com.cn/new/hisAnnouncement/query?plate=sh	PASS	json:announcements	1	200	165	
+JO39_CN_CNINFO_ANN_BJ	https://www.cninfo.com.cn/new/hisAnnouncement/query?plate=bj	PASS	json:announcements	1	200	165	
+JO39_CN_BSE_ANNOUNCEMENTS	https://www.bse.cn/disclosureInfoController/companyAnnouncement.do	PASS	json:0.listInfo.content	20	200	8124	
+JO39_CN_BSE_IPO_REVIEW	https://www.bse.cn/projectNewsController/infoResult.do	PASS	json:0.listInfo.content	20	200	17599	
+JO39_CN_BSE_SECURITIES	https://www.bse.cn/nqxxController/nqxxCnzq.do	PASS	json:0.content	20	200	15826	
+JO39_CN_NEEQ_SECURITIES	https://www.neeq.com.cn/nqxxController/nqxxCnzq.do	PASS	json:0.content	20	200	15265	
+JO39_CN_SHFE_FUTURES_CONTRACTS	https://www.shfe.com.cn/data/busiparamdata/future/ContractBaseInfo20260930.dat	PASS	json:ContractBaseInfo	301	200	80724	date_back 6: 
+JO39_CN_SHFE_OPTIONS_CONTRACTS	https://www.shfe.com.cn/data/busiparamdata/option/ContractBaseInfo20260930.dat	PASS	json:OptionContractBaseInfo	6220	200	1443633	date_back 6: 
+JO39_CN_SHFE_FUTURES_TRADE_PARAMS	https://www.shfe.com.cn/data/busiparamdata/future/ContractDailyTradeArgument20260930.dat	PASS	json:ContractDailyTradeArgument	301	200	70211	date_back 6: 
+JO39_CN_SHFE_OPTIONS_TRADE_PARAMS	https://www.shfe.com.cn/data/busiparamdata/option/ContractDailyTradeArgument20260930.dat	PASS	json:OptionContractDailyTradeArgument	6220	200	1382412	date_back 6: 
+JO39_CN_CFFEX_DAILY	http://www.cffex.com.cn/sj/hqsj/rtj/202609/30/index.xml	PASS	xml:dailydata	684	200	468664	date_back 6: 
+JO39_CN_HK_CR_NEW_LOCAL_COMPANIES	https://www.cr.gov.hk/docs/wrpt/RNC063/RNC063L_20260921.csv	PASS	csv	4148	200	373600	date_back 15: 
+JO39_CN_HK_CR_NEW_NONHK_COMPANIES	https://www.cr.gov.hk/docs/wrpt/RNC063/RNC063F_20260921.csv	PASS	csv	45	200	3286	date_back 15: 
+JO39_CN_CNEMC_STATION_AQI	https://air.cnemc.cn:18007/HourChangesPublish/GetAllAQIPublishLive	PASS	json-array	1601	200	1202341	
+JO39_CN_CNEMC_SURFACE_WATER	https://szzdjc.cnemc.cn:8070/GJZ/Ajax/Publish.ashx	PASS	json:tbody	1556	200	1175783	
+JO39_CN_PALACE_MUSEUM_COLLECTION	https://zm-digicol.dpm.org.cn/cultural/queryList?page=1&pageSize=200	PASS	json:rows	200	200	78452	
+JO39_CN_AMAC_PRIVATE_FUND_MANAGERS	https://gs.amac.org.cn/amac-infodisc/api/pof/manager?rand=0.1&page=0&size=1000	PASS	json:content	1000	200	951685	
+JO39_CN_NPC_LOCAL_REGULATIONS	https://flk.npc.gov.cn/law-search/search/list	PASS	json:rows	10000	200	3832355	
+JO39_CN_NPC_LAWS_OTHER	https://flk.npc.gov.cn/law-search/highSearch/highSearch	PASS	json:rows	7421	200	3426466	
+JO39_CN_SHFE_FUTURES_DAILY	https://www.shfe.com.cn/data/tradedata/future/dailydata/kx20260930.dat	PASS	json:o_curinstrument	331	200	122959	date_back 6: 
+JO39_CN_SHFE_OPTIONS_DAILY	https://www.shfe.com.cn/data/tradedata/option/dailydata/kx20260930.dat	PASS	json:o_curinstrument	6244	200	2605076	date_back 6: 
+JO39_CN_SHFE_MEMBER_RANKINGS	https://www.shfe.com.cn/data/tradedata/future/dailydata/pm20260930.dat	PASS	json:o_cursor	1700	200	528585	date_back 6: 
+JO39_CN_CZCE_DAILY	https://www.czce.com.cn/cn/DFSStaticFiles/Future/2026/20260930/FutureDataDaily.txt	PASS	text-lines	272	200	38168	date_back 6: 
+JO39_CN_SZSE_MARGIN_BALANCES	https://www.szse.cn/api/report/ShowReport?SHOWTYPE=xlsx&CATALOGID=1837_xxpl&TABKEY=tab2&txtDate=2026-09-29	PASS	xlsx:融资融券交易明细	2107	200	144076	date_back 7: header=证券代码|证券简称|融资买入额(元)|融资余额(元)|融券卖出量(股/份)|融券余量(股/份)|融券余额(元)|融资融券余额(元)
+JO39_CN_HKIA_PASSENGER_DEPARTURES	https://www.hongkongairport.com/flightinfo-rest/rest/flights/past?date=2026-10-04&lang=en&cargo=false&arrival=false	PASS	json:list	449	200	89796	
+JO39_CN_HKIA_PASSENGER_ARRIVALS	https://www.hongkongairport.com/flightinfo-rest/rest/flights/past?date=2026-10-04&lang=en&cargo=false&arrival=true	PASS	json:list	456	200	96794	
+JO39_CN_HKIA_CARGO_DEPARTURES	https://www.hongkongairport.com/flightinfo-rest/rest/flights/past?date=2026-10-04&lang=en&cargo=true&arrival=false	PASS	json:list	100	200	12640	
+JO39_CN_HKIA_CARGO_ARRIVALS	https://www.hongkongairport.com/flightinfo-rest/rest/flights/past?date=2026-10-04&lang=en&cargo=true&arrival=true	PASS	json:list	90	200	11225	

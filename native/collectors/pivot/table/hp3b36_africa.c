@@ -21,6 +21,15 @@
  */
 #include "lib/hpengine.h"
 
+/* page_size removed (2026-10-06) from every World Bank / Socrata row here:
+ * their `page` is a page NUMBER and the page size is already in the URL
+ * (per_page= / limit=). With page_size the engine walks `page` as an
+ * offset -- pages 1, 101, 201 ... -- so US_SOCRATA_CAMBRIDGEMA stored 100
+ * datasets while pages 2 and 3 held 100 more each, and reported "emitted
+ * 100 of 100 available". lint-sources: page-size-on-page-number.
+ * The World Bank rows also declare array_path "1": without it a page past the
+ * end ([meta, []]) never read as empty, so every walk ran to page_max and
+ * filed a truncation notice for data it had already read in full. */
 static const hp_source HP3B36_AFRICA[] = {
   { .id = "AF_WB_AGO", .name = "World Bank indicator — Wb Ago",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -28,18 +37,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/ago/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13446 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -53,18 +63,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/bdi/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13707 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -78,18 +89,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/ben/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13613 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -103,18 +115,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/bfa/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14081 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -128,18 +141,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/bwa/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13817 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -153,18 +167,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/caf/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14870 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -178,18 +193,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/civ/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14141 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -203,18 +219,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/cmr/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13806 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -228,18 +245,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/cod/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14344 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -253,18 +271,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/cog/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14014 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -278,18 +297,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/com/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13509 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -303,18 +323,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/cpv/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13711 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -328,18 +349,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/dji/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13503 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -353,18 +375,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/dza/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13749 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -378,18 +401,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/egy/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14342 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -403,18 +427,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/eri/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13188 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -428,18 +453,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/eth/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13778 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -453,18 +479,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/gab/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13618 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -478,18 +505,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/gha/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13611 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -503,18 +531,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/gin/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13561 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -528,18 +557,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/gmb/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13941 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -553,18 +583,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/gnb/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14024 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -578,18 +609,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/gnq/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14338 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -603,18 +635,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/ken/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13616 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -628,18 +661,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/lbr/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13313 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -653,18 +687,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/lby/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13606 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -678,18 +713,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/lso/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13748 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -703,18 +739,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/mar/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13745 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -728,18 +765,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/mdg/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13940 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -753,18 +791,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/mli/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13469 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -778,18 +817,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/moz/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13574 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -803,18 +843,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/mrt/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13936 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -828,18 +869,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/mus/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13884 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -853,18 +895,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/mwi/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13440 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -878,18 +921,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/nam/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13511 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -903,18 +947,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/ner/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13619 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -928,18 +973,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/nga/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13739 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -953,18 +999,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/rwa/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13683 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -978,18 +1025,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/sdn/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13595 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -1003,18 +1051,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/sen/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13747 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -1028,18 +1077,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/sle/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14077 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -1053,18 +1103,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/som/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14430 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -1078,18 +1129,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/ssd/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13322 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -1103,18 +1155,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/stp/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14552 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -1128,18 +1181,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/swz/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13817 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -1153,18 +1207,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/syc/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13949 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -1178,18 +1233,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/tcd/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13551 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -1203,18 +1259,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/tgo/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13551 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -1228,18 +1285,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/tun/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13724 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -1253,18 +1311,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/tza/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13812 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -1278,18 +1337,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/uga/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13654 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -1303,18 +1363,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/zaf/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "14078 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -1328,18 +1389,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/zmb/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13676 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -1353,18 +1415,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"africa\",\"economy\",\"worldbank\",\"indicator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country/zwe/indicator/NY.GDP.MKTP.CD?format=json&per_page=200",
+    .array_path = "1",
     .id_keys = "countryiso3code+indicator.id+date",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 200,
     .title_keys = "country.value",
     .description = "World Bank indicator on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 66 records in "
       "13667 bytes. First record's fields: "
       "indicator,country,countryiso3code,date,value,unit,obs_status,decimal. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head). id_keys is the "
       "(country, indicator, year) tuple: MEASURED 2026-10-05 over "
       "Kenya's 66 observations, `date` is 1:1 with the records while "
@@ -1378,18 +1441,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"worldbank\",\"reference\",\"economy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country?format=json&per_page=400",
+    .array_path = "1",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 400,
     .title_keys = "name",
     .description = "World Bank reference on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 295 records in "
       "113590 bytes. First record's fields: "
       "id,iso2Code,name,region,adminregion,incomeLevel,lendingType,capitalCity,longitude,latitude. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head)." },
 
   { .id = "WORLD_WB_COUNTRY", .name = "World Bank reference — Wb Country",
@@ -1398,18 +1462,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"worldbank\",\"reference\",\"economy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/country?format=json&per_page=500",
+    .array_path = "1",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 500,
     .title_keys = "name",
     .description = "World Bank reference on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 295 records in "
       "113590 bytes. First record's fields: "
       "id,iso2Code,name,region,adminregion,incomeLevel,lendingType,capitalCity,longitude,latitude. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head)." },
 
   { .id = "WORLD_WB_INCOMELEVEL", .name = "World Bank reference — Wb Incomelevel",
@@ -1418,18 +1483,17 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"worldbank\",\"reference\",\"economy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/incomeLevel?format=json&per_page=500",
+    .array_path = "1",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 500,
     .title_keys = "value",
     .description = "World Bank reference on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 7 records in 442 "
       "bytes. First record's fields: id,iso2code,value. The data array "
       "is the second ELEMENT of a positional root array and has no key, "
-      "so no dotted array_path can name it; the engine's "
-      "densest-array-of-objects choice lands on it (66 observations "
-      "against a 1-object metadata head)." },
+      "and array_path \"1\" names it by position, so the page past "
+      "the end, [meta, []], reads empty and ends the walk." },
 
   { .id = "WORLD_WB_LENDINGTYPE", .name = "World Bank reference — Wb Lendingtype",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -1437,18 +1501,17 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"worldbank\",\"reference\",\"economy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/lendingType?format=json&per_page=500",
+    .array_path = "1",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 500,
     .title_keys = "value",
     .description = "World Bank reference on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 4 records in 243 "
       "bytes. First record's fields: id,iso2code,value. The data array "
       "is the second ELEMENT of a positional root array and has no key, "
-      "so no dotted array_path can name it; the engine's "
-      "densest-array-of-objects choice lands on it (66 observations "
-      "against a 1-object metadata head)." },
+      "and array_path \"1\" names it by position, so the page past "
+      "the end, [meta, []], reads empty and ends the walk." },
 
   { .id = "WORLD_WB_REGION", .name = "World Bank reference — Wb Region",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -1456,18 +1519,17 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"worldbank\",\"reference\",\"economy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/region?format=json&per_page=500",
+    .array_path = "1",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 500,
     .title_keys = "name",
     .description = "World Bank reference on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 43 records in 3465 "
       "bytes. First record's fields: id,code,iso2code,name. The data "
       "array is the second ELEMENT of a positional root array and has "
-      "no key, so no dotted array_path can name it; the engine's "
-      "densest-array-of-objects choice lands on it (66 observations "
-      "against a 1-object metadata head)." },
+      "no key, and array_path \"1\" names it by position, so the page past "
+      "the end, [meta, []], reads empty and ends the walk." },
 
   { .id = "WORLD_WB_SOURCE", .name = "World Bank reference — Wb Source",
     .category = "economy", .portal = "https://data.worldbank.org",
@@ -1475,18 +1537,19 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"worldbank\",\"reference\",\"economy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/source?format=json&per_page=500",
+    .array_path = "1",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 500,
     .title_keys = "name",
     .description = "World Bank reference on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 71 records in "
       "13048 bytes. First record's fields: "
       "id,lastupdated,name,code,description,url,dataavailability,metadataavailability,concepts. "
       "The data array is the second ELEMENT of a positional root array "
-      "and has no key, so no dotted array_path can name it; the "
-      "engine's densest-array-of-objects choice lands on it (66 "
+      "and has no key; array_path \"1\" names it by position, so the "
+      "page past the end, [meta, []], reads empty and ends the walk. "
+      "Discovery found the same array (66 "
       "observations against a 1-object metadata head)." },
 
   { .id = "WORLD_WB_TOPIC", .name = "World Bank reference — Wb Topic",
@@ -1495,18 +1558,17 @@ static const hp_source HP3B36_AFRICA[] = {
     .tags = "\"worldbank\",\"reference\",\"economy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.worldbank.org/v2/topic?format=json&per_page=500",
+    .array_path = "1",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 500,
     .title_keys = "value",
     .description = "World Bank reference on api.worldbank.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 21 records in "
       "13358 bytes. First record's fields: id,value,sourceNote. The "
       "data array is the second ELEMENT of a positional root array and "
-      "has no key, so no dotted array_path can name it; the engine's "
-      "densest-array-of-objects choice lands on it (66 observations "
-      "against a 1-object metadata head)." },
+      "has no key, and array_path \"1\" names it by position, so the page past "
+      "the end, [meta, []], reads empty and ends the walk." },
 };
 
 HP_REGISTER_TABLE(HP3B36_AFRICA)

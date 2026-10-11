@@ -136,6 +136,45 @@ int main(void) {
        "and the original data-src boundary fix still holds");
   }
 
+  printf("html_table_parse: a rectangular grid, whatever the markup\n");
+  {
+    const char *doc =
+      "<p>intro</p><table id=nav><tr><td>menu</td></tr></table>"
+      "<TABLE class=\"reg\"><caption>登録業者一覧</caption>"
+      "<thead><tr><th>番号</th><th colspan=2>名称</th><th>所在地</th></tr></thead>"
+      "<tbody>"
+      "<tr><td rowspan=2>関東</td><td><a href=\"/d/1\">A&amp;B 株式会社</a></td><td>A&nbsp;B</td><td>東京都<br>千代田区</td></tr>"
+      "<tr><td>C&#x6CB3;社</td><td>&#67;</td><td>横浜市</td></tr>"
+      "<tr><td>近畿</td><td colspan=3>大阪 <table><tr><td>nested</td></tr></table> 支店</td></tr>"
+      "<tr><td></td><td> </td><td></td><td></td></tr>"
+      "</tbody></TABLE>";
+    html_table tb;
+    int found = html_table_parse(doc, "登録業者", 0, &tb);
+    ok(found && tb.nrows == 5 && tb.width == 4, "the matching table, 5 rows x 4 columns (the nav table skipped)");
+    if (found && tb.nrows == 5) {
+      ok(!strcmp(tb.rows[0].cells[1].text, "名称") && !strcmp(tb.rows[0].cells[2].text, ""),
+         "colspan: the extra slot is empty, so columns stay aligned");
+      ok(!strcmp(tb.rows[1].cells[1].text, "A&B 株式会社") && tb.rows[1].cells[1].href &&
+         !strcmp(tb.rows[1].cells[1].href, "/d/1"), "entities decoded, the cell's link kept raw");
+      ok(!strcmp(tb.rows[1].cells[2].text, "A B") && !strcmp(tb.rows[1].cells[3].text, "東京都 千代田区"),
+         "&nbsp; and <br> are spaces");
+      ok(!strcmp(tb.rows[2].cells[0].text, "関東"), "rowspan carries the cell down");
+      ok(!strcmp(tb.rows[2].cells[1].text, "C\xe6\xb2\xb3\xe7\xa4\xbe") && !strcmp(tb.rows[2].cells[2].text, "C"),
+         "numeric entities, hex and decimal, become UTF-8");
+      ok(!strcmp(tb.rows[3].cells[1].text, "大阪 nested 支店") && !strcmp(tb.rows[3].cells[3].text, ""),
+         "a nested table is text in its cell, never rows of its own");
+      ok(tb.rows[4].ncells == 4 && !strcmp(tb.rows[4].cells[1].text, ""), "an empty row is still the table's width");
+    }
+    html_table_free(&tb);
+    ok(html_table_parse(doc, NULL, 1, &tb) && tb.nrows == 5, "no `must`: table_index counts every table");
+    html_table_free(&tb);
+    ok(!html_table_parse(doc, "no such text", 0, &tb), "no matching table -> 0, not an empty success");
+    ok(html_table_parse("<table><td>a<td>b<tr><td>c<td>d</table>", NULL, 0, &tb) &&
+       tb.nrows == 2 && !strcmp(tb.rows[0].cells[1].text, "b") && !strcmp(tb.rows[1].cells[0].text, "c"),
+       "omitted </td> and </tr>, and a cell before any <tr>");
+    html_table_free(&tb);
+  }
+
   /* The strongest label for a link wins, not the first anchor's (audit
    * 2026-10-02 open item 6, the Gifu Shimbun list): an icon anchor whose label
    * was borrowed from a neighbour, then the headline anchor to the same link. */

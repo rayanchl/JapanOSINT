@@ -1,0 +1,2 @@
+id	url	verdict	kind	items	http	bytes	note
+JO39_CN_SZSE_MARGIN_BALANCES	https://www.szse.cn/api/report/ShowReport?SHOWTYPE=xlsx&CATALOGID=1837_xxpl&TABKEY=tab2&txtDate=2026-09-29	PASS	xlsx:融资融券交易明细	2107	200	144076	date_back 7: header=证券代码|证券简称|融资买入额(元)|融资余额(元)|融券卖出量(股/份)|融券余量(股/份)|融券余额(元)|融资融券余额(元)

@@ -125,9 +125,11 @@ static const hp_source HP_EU[] = {
     .portal = "https://ted.europa.eu", .record_type = "eu-tender",
     .tags = "\"eu\",\"procurement\"", .free_tier = 1,
     .url = "https://api.ted.europa.eu/v3/notices/search",
-    .post_body = "{\"query\":\"FT~\\\"{Q}\\\"\",\"limit\":40,\"page\":1,"
+    .post_body = "{\"query\":\"FT~\\\"{Q}\\\"\",\"limit\":100,\"page\":{page},"
                  "\"fields\":[\"publication-number\",\"notice-title\",\"buyer-name\","
                  "\"place-of-performance\",\"publication-date\",\"deadline-receipt-request\"]}",
+    .page_max = 20,
+    /* 2026-10-06: the body carried a fixed "page":1, so every dispatch read the first 40 notices and nothing after; {page} is now re-expanded per page (paging inside a POST body) */
     .array_path = "notices", .title_keys = "notice-title,publication-number",
     .id_keys = "publication-number", .date_keys = "publication-date",
     .description = "Full-text search of EU tender notices: buyer, subject, place of "

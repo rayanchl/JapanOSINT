@@ -1,0 +1,14 @@
+id	url	verdict	kind	items	http	bytes	note
+JO39_TBL_ISMS_CERTIFIED_ORGS	https://isms.jp/lst/ind/search.cgi	PASS	html-table	8466	200	3701978	header=認証登録番号|組織名|都道府県|初回登録日|認定番号
+JO39_TBL_FNET_MT_CATALOG	https://www.fnet.bosai.go.jp/event/mcata/data/2026/202610_UT.txt	PASS	text-lines	5	200	827	
+JO39_TBL_RIKUDEN_OUTAGES_7D	https://www.rikuden.co.jp/nw/teiden/f1/sevendays/20261006/otj600.html	PASS	html-table	9	200	11889	header=発生日時|復旧日時|県名|市町村名|町域名|停電戸数|停電理由
+JO39_TBL_GSI_GEONET_OUTAGES	https://terras.gsi.go.jp/denshi_teiden.php	PASS	html-table	42	200	11557	header=開始時刻|終了時刻|都道府県|点番号|点名|備考
+JO39_TBL_JPX_DELISTED	https://www.jpx.co.jp/listing/stocks/delisted/index.html	PASS	html-table	137	200	91136	header=上場廃止日|銘柄名|コード|市場区分|上場廃止理由
+JO39_TBL_JPX_MARKET_TRANSFERS	https://www.jpx.co.jp/listing/stocks/transfers/index.html	PASS	html-table	48	200	59566	header=変更日|会社名 （注1）|コード|市場区分|以前の市場区分|幹事取引参加者 （注2）|代表者インタビュー
+JO39_TBL_JPX_DELISTED_ARCH01	https://www.jpx.co.jp/listing/stocks/delisted/archives-01.html	PASS	html-table	125	200	84365	header=上場廃止日|銘柄名|コード|市場区分|上場廃止理由
+JO39_TBL_JPX_DELISTED_ARCH02	https://www.jpx.co.jp/listing/stocks/delisted/archives-02.html	PASS	html-table	94	200	66216	header=上場廃止日|銘柄名|コード|市場区分|上場廃止理由
+JO39_TBL_JPX_DELISTED_ARCH03	https://www.jpx.co.jp/listing/stocks/delisted/archives-03.html	PASS	html-table	61	200	52289	header=上場廃止日|銘柄名|コード|市場区分|上場廃止理由
+JO39_TBL_JPX_DELISTED_ARCH04	https://www.jpx.co.jp/listing/stocks/delisted/archives-04.html	PASS	html-table	77	200	59022	header=上場廃止日|銘柄名|コード|市場区分|上場廃止理由
+JO39_TBL_JPX_DELISTED_ARCH05	https://www.jpx.co.jp/listing/stocks/delisted/archives-05.html	PASS	html-table	86	200	63234	header=上場廃止日|銘柄名|コード|市場区分|上場廃止理由
+JO39_TBL_JPX_DELISTED_ARCH06	https://www.jpx.co.jp/listing/stocks/delisted/archives-06.html	PASS	html-table	57	200	50235	header=上場廃止日|銘柄名|コード|市場区分|上場廃止理由
+JO39_TBL_CAA_TOKUSHOHO_ACTIONS	https://www.no-trouble.caa.go.jp/search/result1.html	PASS	html-table	20	200	79071	header=事業者名|処分内容|取引類型|取扱商品・役務|違反行為|適用条項|処分日|処分行政庁

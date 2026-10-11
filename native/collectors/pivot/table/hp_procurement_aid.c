@@ -29,7 +29,9 @@ static const hp_source HP_PROCUREMENT[] = {
                  "[\"A\",\"B\",\"C\",\"D\"]},\"subawards\":true,\"fields\":"
                  "[\"Sub-Award ID\",\"Sub-Awardee Name\",\"Sub-Award Amount\","
                  "\"Sub-Award Date\",\"Awarding Agency\",\"Prime Recipient Name\"],"
-                 "\"page\":1,\"limit\":40,\"sort\":\"Sub-Award Amount\",\"order\":\"desc\"}",
+                 "\"page\":{page},\"limit\":100,\"sort\":\"Sub-Award Amount\",\"order\":\"desc\"}",
+    .page_max = 20,
+    /* 2026-10-06: the body carried a fixed "page":1, so every dispatch read the first 40 sub-awards and nothing after; {page} is now re-expanded per page (paging inside a POST body) */
     .array_path = "results", .title_keys = "Sub-Awardee Name,Prime Recipient Name",
     .id_keys = "Sub-Award ID", .date_keys = "Sub-Award Date",
     .description = "The second tier of US federal contracting — who the prime "

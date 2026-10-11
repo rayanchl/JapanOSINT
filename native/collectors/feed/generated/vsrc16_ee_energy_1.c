@@ -9,7 +9,7 @@
 
 VJSON(ee_elering_nps_price, "ee-elering-nps-price", "Elering Nord Pool spot price (Baltic)", "Elering Nord Pool spot price (Baltic)",
   "ee_energy", "energy",
-  "https://dashboard.elering.ee/api/nps/price?start=2026-08-14T00:00:00.000Z&end=2026-08-15T00:00:00.000Z",
+  "https://dashboard.elering.ee/api/nps/price?start={date-1d:%Y-%m-%dT00:00:00.000Z}&end={date+1d:%Y-%m-%dT00:00:00.000Z}",
   "data.ee",
   "en", "[\"ee\",\"energy\",\"batch16\",\"high-penetrancy\"]", 86400,
   "15-minute Nord Pool day-ahead prices per Baltic bidding area (ee, lv, lt, fi) as timestamp/price pairs. Keyless, no registration, unlike ENTSO-E.");

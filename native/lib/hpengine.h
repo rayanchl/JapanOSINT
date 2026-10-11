@@ -396,6 +396,45 @@ typedef struct hp_source {
    * existing initializer moves. */
   const char *xlsx_sheet;
   int         xlsx_sheet_index;
+  /* Date tokens. `{date}` in the url, post_body or a header is today's date
+   * (YYYY-MM-DD); `{date-1d}`, `{date+2w}`, `{date-3m}`, `{date-1y}` shift it;
+   * `{date-1d:%Y%m%d}` formats it (strftime); `{date:@s}` / `{date:@ms}` is
+   * the epoch instant. Rendered in UTC+tz_minutes (540 = JST, 480 = China).
+   * Before these existed, a daily file or a date-window query could only be
+   * registered with the day it was authored frozen into it: 31 scheduled rows
+   * re-fetched one past week, month or day forever.
+   *
+   * date_back: when the FIRST request of a dated row answers 4xx or carries no
+   * records (a weekend, a holiday, a file not yet published), step every
+   * {date…} token back one day and try again, up to N times. Appended so no
+   * existing initializer moves. */
+  int         tz_minutes;
+  int         date_back;
+  /* The unit date_back steps in: "d" (default), "w", "m" or "y". A monthly
+   * file not yet out steps back a month; EPA's TRI reporting year is loaded
+   * months after it ends, so its rows step back a year. */
+  const char *date_step;
+  /* date_field=<name>: add the date this run's FIRST {date…} token rendered
+   * to (after any date_back step) to every record as field <name>, before it
+   * is keyed. A dated file whose rows carry no date of their own — SHFE's
+   * daily kx file, CZCE's daily table, SZSE's margin balances — otherwise
+   * re-keys every day's rows onto the previous day's uids and overwrites
+   * them. id_keys can then name it: `id_keys=trade_date+contract`. */
+  const char *date_field;
+  /* page_delay_ms: pause before every page after the first. A firewall that
+   * answers a burst with 403 (the Palace Museum's after 31 pages of a 9,300-
+   * page walk; NFRA after 40) ends the walk; a paced walk can finish. */
+  int         page_delay_ms;
+  /* HP_HTML table mode: records are the rows of the `table_index`-th <table>
+   * whose HTML contains `table_must` (lib/htmlparse.c html_table_parse). The
+   * first row after `table_skip_rows` names the columns; each later row is a
+   * record, with its first link as `link`. Without table_must, html mode is
+   * the anchor scanner it always was. A register published as an HTML table
+   * (FSA's money lenders, isms.jp's certified organisations, prefectural
+   * water levels) was unreadable before: its rows are cells, not anchors. */
+  const char *table_must;
+  int         table_index;
+  int         table_skip_rows;
 } hp_source;
 
 /* Register `n` rows. `defs` must be static storage of at least n entries owned

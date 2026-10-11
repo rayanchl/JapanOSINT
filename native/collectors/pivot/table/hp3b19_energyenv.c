@@ -579,7 +579,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .id_keys = "Id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 50,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "AnlagenbetreiberName",
     .description = "The German statutory register of every electricity generating "
@@ -1224,11 +1224,21 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "pollutant-release",
     .tags = "\"emissions\",\"epa\",\"us\",\"toxics\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.epa.gov/efservice/tri_release_qty/rows/0:100/JSON",
-    .interval = 86400,
-    .page_param = "rows",
-    .page_size = 100,
-    .title_keys = "doc_ctrl_num",
+    .url = "https://data.epa.gov/efservice/tri_reporting_form/reporting_year/{date-1y:%Y}"
+      "/tri_release_qty/rows/{offset}:{offset_end}/JSON",
+    /* 2026-10-06. Was rows/0:100 with page_param="rows": Envirofacts pages in the
+     * PATH, the query parameter was ignored, so every run stored the same 101 of
+     * 32,001,427 rows. Now one reporting year, joined to its form (facility,
+     * chemical, certifying official), walked as rows/{offset}:{offset_end}:
+     * RY2024 = 756,188 rows, positional order measured stable on the join
+     * (and NOT stable on the bare table). {date-1y:%Y} with date_back=2 /
+     * date_step=y reads the newest year EPA has loaded: RY2025 is 0 rows today. */
+    .date_back = 2, .date_step = "y", .timeout_ms = 300000,
+    .interval = 604800,   /* a reporting year changes rarely; one walk is ~4 h */
+    .page_size = 2000, .page_max = 420,   /* 2,000 rows = ~6.5 MB, ~40 s; 10,000 answered 500 on the join */
+    .title_keys = "tri_facility_id+tri_chem_id+environmental_medium",
+    .id_keys = "doc_ctrl_num+environmental_medium+water_sequence_num",   /* unique over 15,000 rows; doc_ctrl_num+medium alone was 14,993 */
+    .date_keys = "certif_date_signed",
     .description = "Reported quantities released to each environmental medium, air, "
       "water and land, per TRI reporting form, with the estimation "
       "basis code. The quantity table behind the facility names, which "
@@ -1240,11 +1250,17 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "waste-transfer",
     .tags = "\"emissions\",\"epa\",\"us\",\"waste\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.epa.gov/efservice/tri_transfer_qty/rows/0:100/JSON",
-    .interval = 86400,
-    .page_param = "rows",
-    .page_size = 100,
-    .title_keys = "doc_ctrl_num",
+    .url = "https://data.epa.gov/efservice/tri_reporting_form/reporting_year/{date-1y:%Y}"
+      "/tri_transfer_qty/rows/{offset}:{offset_end}/JSON",
+    /* 2026-10-06: as EPA_TRI_RELEASE_QUANTITIES. Was the same 101 of 9,255,866
+     * rows every run; now the newest loaded reporting year (RY2024 = 183,012),
+     * joined to its form, walked by path range. */
+    .date_back = 2, .date_step = "y", .timeout_ms = 300000,
+    .interval = 604800,
+    .page_size = 2000, .page_max = 110,   /* 0:9999 on this join answered HTTP 500 */
+    .title_keys = "tri_facility_id+tri_chem_id+type_of_waste_management",
+    .id_keys = "doc_ctrl_num+transfer_loc_num+type_of_waste_management+off_site_amount_sequence+potw_amount_seq",   /* 4,000 of 4,000 distinct; doc_ctrl_num+transfer_loc_num was 3,006 */
+    .date_keys = "certif_date_signed",
     .description = "Off-site transfers of TRI-listed chemicals by waste management "
       "type and receiving location number. Transfers name where a "
       "facility sends its waste, which is the half of the pollution "
@@ -1257,11 +1273,15 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "greenhouse-gas",
     .tags = "\"emissions\",\"epa\",\"us\",\"climate\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.epa.gov/efservice/pub_facts_subp_ghg_emission/rows/0:100/JSON",
-    .interval = 86400,
-    .page_param = "rows",
-    .page_size = 100,
-    .title_keys = "co2e_emission",
+    .url = "https://data.epa.gov/efservice/pub_facts_subp_ghg_emission/rows/{offset}:{offset_end}/JSON",
+    /* 2026-10-06: was rows/0:100 + an ignored page_param, so 101 of 395,894 rows
+     * every run. The whole table, by path range (positional order measured
+     * stable), 10,000 rows (~1 MB) a page. */
+    .timeout_ms = 120000,
+    .interval = 604800,   /* annual GHGRP data */
+    .page_size = 10000, .page_max = 45,
+    .title_keys = "facility_id+sub_part_id+gas_id+year",
+    .id_keys = "facility_id+sub_part_id+gas_id+year",
     .description = "Reported CO2-equivalent emissions per facility, per reporting "
       "subpart, per gas, per year under the US mandatory greenhouse gas "
       "reporting rule. Subpart and gas granularity separates process "

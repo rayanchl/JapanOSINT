@@ -275,7 +275,7 @@ static const hp_source HP3B23_JPSOCIAL[] = {
     .interval = 3600,
     .link_keys = "url",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title",
     .description = "Qiita is where Japanese software engineers publish, and the "
@@ -297,7 +297,7 @@ static const hp_source HP3B23_JPSOCIAL[] = {
     .interval = 0,
     .link_keys = "url",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title",
     .description = "Full-text search across Qiita, usable as an entity pivot on a "
@@ -317,7 +317,7 @@ static const hp_source HP3B23_JPSOCIAL[] = {
     .interval = 86400,
     .link_keys = "icon_url",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "id",
     .description = "Every tag on Qiita with its article and follower counts. As a "
@@ -337,7 +337,7 @@ static const hp_source HP3B23_JPSOCIAL[] = {
     .interval = 0,
     .link_keys = "url",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title",
     .description = "Articles carrying a given Qiita tag, newest first, each with the "

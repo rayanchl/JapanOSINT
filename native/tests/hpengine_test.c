@@ -114,7 +114,11 @@ int http_request(http_client *c, const char *method, const char *url,
     snprintf(g_call_hdrs[g_ncalls - 1], sizeof g_call_hdrs[0], "%s", g_last_hdrs);
   out->status = 404; out->body = NULL; out->body_len = 0;
   for (int i = 0; i < g_nfx; i++) {
-    if (strstr(url, g_fx[i].match)) {
+    /* "BODY:<s>" matches the POST body instead of the url (body paging). */
+    int hit = !strncmp(g_fx[i].match, "BODY:", 5)
+              ? strstr(g_last_body, g_fx[i].match + 5) != NULL
+              : strstr(url, g_fx[i].match) != NULL;
+    if (hit) {
       out->status = g_fx[i].status;
       if (out->status == FX_304_UNLESS_NOCACHE) {
         if (!strstr(g_last_hdrs, "Cache-Control: no-cache")) { out->status = 304; return 0; }
@@ -586,6 +590,12 @@ static const hp_source T[] = {
     .mode = HP_JSON, .array_path = "results",
     .title_keys = "legalName", .id_keys = "orgno",
     .record_type = "t-shape", .free_tier = 1, .description = "d" },
+  /* A composite TITLE longer than 63 bytes: kept whole, never hashed. */
+  { .id = "T_LONG_TITLE", .name = "long composite title",
+    .url = "https://x.test/lt?q={q}",
+    .mode = HP_JSON, .array_path = "rows",
+    .title_keys = "a+b", .id_keys = "id",
+    .record_type = "t-longtitle", .free_tier = 1, .description = "d" },
   /* No array_path: the densest-array guess, on a document that offers a choice. */
   { .id = "T_SHAPE_AUTO", .name = "undeclared shape, several arrays",
     .url = "https://x.test/shauto?q={q}",
@@ -654,6 +664,46 @@ static const hp_source T[] = {
     .mode = HP_XML, .array_path = "channel.item", .interval = 3600,
     .title_keys = "title", .id_keys = "link",
     .record_type = "t-xmldot", .free_tier = 1, .description = "d" },
+  /* Date tokens, rendered in JST. */
+  { .id = "T_DATE", .name = "date tokens", .interval = 3600, .tz_minutes = 540,
+    .url = "https://x.test/dt?d={date:%Y%m%d}&y={date-1d}&w={date-1w:%Y%m%d}",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .record_type = "t-date", .free_tier = 1, .description = "d" },
+  /* A daily file: today's is not published yet, so step back. */
+  { .id = "T_DATE_BACK", .name = "date_back", .interval = 3600, .date_back = 3,
+    .url = "https://x.test/db/{date:%Y%m%d}.json",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .record_type = "t-dateback", .free_tier = 1, .description = "d" },
+  { .id = "T_JSONP", .name = "jsonp", .interval = 3600, .url = "https://x.test/jp",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .record_type = "t-jsonp", .free_tier = 1, .description = "d" },
+  /* The page lives in the POST body. */
+  { .id = "T_BODY_PAGE", .name = "body paging", .interval = 3600, .url = "https://x.test/bp",
+    .post_body = "{\"pageNum\":{page},\"size\":2}", .page_max = 6,
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .record_type = "t-bodypage", .free_tier = 1, .description = "d" },
+  /* An annual dataset whose newest year is not loaded yet: step a YEAR back. */
+  { .id = "T_DATE_YEAR", .name = "date_step=y", .interval = 3600,
+    .date_back = 2, .date_step = "y",
+    .url = "https://x.test/ry/{date:%Y}/rows", .array_path = "items",
+    .title_keys = "name", .id_keys = "id",
+    .record_type = "t-dateyear", .free_tier = 1, .description = "d" },
+  /* A dated file whose rows carry no date: date_field stamps it in. */
+  { .id = "T_DATE_FIELD", .name = "date_field", .interval = 3600, .date_back = 2,
+    .date_field = "trade_date",
+    .url = "https://x.test/kx{date:%Y%m%d}.json", .array_path = "rows",
+    .title_keys = "contract", .id_keys = "trade_date+contract",
+    .record_type = "t-datefield", .free_tier = 1, .description = "d" },
+  /* A register published as an HTML table. */
+  { .id = "T_TABLE", .name = "html table", .interval = 3600, .mode = HP_HTML,
+    .url = "https://x.test/reg/list.html", .table_must = "登録", .table_skip_rows = 1,
+    .title_keys = "名称", .id_keys = "番号",
+    .record_type = "t-table", .free_tier = 1, .description = "d" },
+  /* EPA Envirofacts: an inclusive record range in the path. */
+  { .id = "T_OFFSET_PATH", .name = "offset path", .interval = 3600,
+    .url = "https://x.test/efs/rows/{offset}:{offset_end}/JSON", .page_size = 2, .page_max = 6,
+    .title_keys = "name", .id_keys = "id",
+    .record_type = "t-offpath", .free_tier = 1, .description = "d" },
   /* An HTML listing that links each item from an icon AND a headline (test 37). */
   { .id = "T_HTML_GIFU", .name = "icon + headline anchors", .url = "https://x.test/gifu",
     .mode = HP_HTML, .href_must = "/articles/-/", .base = "https://x.test", .interval = 3600,
@@ -1166,6 +1216,32 @@ int main(void) {
     for (int i = 0; i < g_ncap; i++)
       if (!strcmp(g_cap[i].rtype, "collector-truncation-notice")) notice = 1;
     ok(rc == 0 && notice, "a 429 on a later page emits a truncation notice");
+  }
+  /* …and so does a 403: a WAF refusing a burst, not the end of the data. */
+  fx_reset();
+  fx_add("offset=2", 403, "<html>Forbidden</html>");
+  fx_add("/po?q=", 200,
+    "{\"items\":[{\"name\":\"q1\",\"id\":\"1\"},{\"name\":\"q2\",\"id\":\"2\"}]}");
+  rc = run_source("T_PAGE_PARAM", "x");
+  {
+    int notice = 0;
+    for (int i = 0; i < g_ncap; i++)
+      if (!strcmp(g_cap[i].rtype, "collector-truncation-notice")) notice = 1;
+    ok(rc == 0 && notice, "a 403 on a later page emits a truncation notice");
+  }
+  /* A 404 after a SHORT page is the end: no notice. (After a FULL page it is
+   * the deep-paging-limit signature and files one — hp_later_page_cut.) */
+  fx_reset();
+  fx_add("offset=2", 404, "not found");
+  fx_add("/po?q=", 200,
+    "{\"items\":[{\"name\":\"q1\",\"id\":\"1\"}]}");
+  rc = run_source("T_PAGE_PARAM", "x");
+  {
+    int notice = 0;
+    for (int i = 0; i < g_ncap; i++)
+      if (!strcmp(g_cap[i].rtype, "collector-truncation-notice")) notice = 1;
+    ok(rc == 0 && !notice && g_ncap == 1,
+       "a 404 on a later page ends the walk without a notice");
   }
 
   /* 9f-sexies. A later page that does not deliver records: end of data, or a
@@ -1835,6 +1911,31 @@ int main(void) {
            strstr(nt->props, "\"records_emitted\":0") != NULL,
      "18a: the numbers are in the properties too");
 
+  /* 18a-ter. a composite title over 63 bytes is stored as text, not as the
+   * 16-digit FNV hash an over-long KEY becomes. 12 CJK characters each side
+   * = 72 bytes + the separator. */
+  fx_reset();
+  fx_add("/lt?q=", 200, "{\"rows\":[{\"id\":\"1\",\"a\":\"\xe4\xb8\xad\xe4\xbf\xa1\xe8\xaf\x81\xe5\x88\xb8\xe8\x82\xa1\xe4\xbb\xbd\xe6\x9c\x89\xe9\x99\x90\xe5\x85\xac\xe5\x8f\xb8\xe4\xb8\x8a\xe6\xb5\xb7\",\"b\":\"\xe5\x88\x86\xe5\x85\xac\xe5\x8f\xb8\xe8\xb4\xb5\xe5\xb7\x9e\xe8\x8c\x85\xe5\x8f\xb0\xe9\x85\x92\xe4\xb8\x9a\xe9\x9b\x86\xe5\x9b\xa2\"}]}");
+  rc = run_source("T_LONG_TITLE", "x");
+  ok(rc == 0 && g_ncap >= 1 && strlen(g_cap[0].title) > 63 && strchr(g_cap[0].title, '|') != NULL,
+     "18a-ter: a 73-byte composite title is stored whole, not hashed");
+
+  /* 18a-bis. a LATER page whose path is null is the end of data, not drift:
+   * Eastmoney answers past the last page with {"result":null,"code":9201}. */
+  fx_reset();
+  fx_add("offset=2", 200, "{\"items\":null,\"code\":9201}");
+  fx_add("/po?q=", 200,
+    "{\"items\":[{\"name\":\"e1\",\"id\":\"1\"},{\"name\":\"e2\",\"id\":\"2\"}]}");
+  rc = run_source("T_PAGE_PARAM", "x");
+  ok(rc == 0 && cap_count("t-page", NULL) == 2 && cap_count(NOTICE, NULL) == 0,
+     "18a-bis: a null path on a later page ends the walk without a shape notice");
+  /* ...but null on the FIRST page is still drift. */
+  fx_reset();
+  fx_add("/po?q=", 200, "{\"items\":null,\"code\":9201}");
+  rc = run_source("T_PAGE_PARAM", "x");
+  ok(cap_count(NOTICE, &nt) == 1 && nt && strstr(nt->key, "shape:array-path-missing:") != NULL,
+     "18a-bis: a null path on page 1 is still an array-path-missing notice");
+
   /* ...and the control: the declared shape, intact, produces records and NO notice. */
   fx_reset();
   fx_add("/shape?q=", 200,
@@ -2271,6 +2372,164 @@ int main(void) {
   ok(strstr(g_cap[0].key, "X1") != NULL && strstr(g_cap[0].key, "2026-01") != NULL,
      "both parts of the composite reach the uid");
 
+  /* 30. {date…} tokens, checked against gmtime_r rather than the engine's own
+   *     arithmetic, so the two must agree. */
+  {
+    char d0[16], d1[16], w1[16], u[64];
+    time_t now = time(NULL) + 540 * 60, y = now - 86400, w = now - 7 * 86400;
+    struct tm tm;
+    gmtime_r(&now, &tm); strftime(d0, sizeof d0, "%Y%m%d", &tm);
+    gmtime_r(&y, &tm);   strftime(d1, sizeof d1, "%Y-%m-%d", &tm);
+    gmtime_r(&w, &tm);   strftime(w1, sizeof w1, "%Y%m%d", &tm);
+    fx_reset();
+    fx_add("/dt?", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"}]}");
+    rc = run_source("T_DATE", "");
+    snprintf(u, sizeof u, "d=%s&y=%s&w=%s", d0, d1, w1);
+    ok(rc == 0 && g_ncap == 1 && strstr(g_last_url, u) != NULL,
+       "30: {date:%Y%m%d}, {date-1d} and {date-1w:...} render in UTC+tz_minutes");
+
+    /* date_back: today's file 404s, yesterday's exists. */
+    time_t t0 = time(NULL), t1 = t0 - 86400, t2 = t0 - 2 * 86400;
+    char p0[48], p1[48], p2[48];  /* fx_add keeps the pointer: same scope as the runs */
+    gmtime_r(&t1, &tm); strftime(p1, sizeof p1, "/db/%Y%m%d.json", &tm);
+    gmtime_r(&t2, &tm); strftime(p2, sizeof p2, "/db/%Y%m%d.json", &tm);
+    fx_reset();
+    fx_add(p1, 200, "{\"items\":[{\"name\":\"y\",\"id\":\"1\"},{\"name\":\"z\",\"id\":\"2\"}]}");
+    rc = run_source("T_DATE_BACK", "");
+    ok(rc == 0 && g_ncap == 2 && g_ncalls == 2 && strstr(g_last_url, p1) != NULL,
+       "30: date_back steps a 404 first page back one day and reads that file");
+    /* ...and an EMPTY first page counts as no data too. */
+    fx_reset();
+    gmtime_r(&t0, &tm); strftime(p0, sizeof p0, "/db/%Y%m%d.json", &tm);
+    fx_add(p0, 200, "{\"items\":[]}");
+    fx_add(p1, 200, "{\"items\":[]}");
+    fx_add(p2, 200, "{\"items\":[{\"name\":\"x\",\"id\":\"9\"}]}");
+    rc = run_source("T_DATE_BACK", "");
+    ok(rc == 0 && g_ncap == 1 && g_ncalls == 3 && cap_count(NOTICE, NULL) == 0,
+       "30: an empty first page steps back too, and leaves no shape notice behind");
+    /* ...bounded: nothing within date_back is an honest empty, not a loop —
+     * and, since main's rule-1 note, a disclosed one: the run stores the one
+     * collector-fetch-failure record and no data. */
+    fx_reset();
+    rc = run_source("T_DATE_BACK", "");
+    ok(g_ncalls == 4 && cap_count("t-dateback", NULL) == 0 &&
+       cap_count("collector-fetch-failure", NULL) == 1 && g_ncap == 1,
+       "30: date_back=3 stops after 4 requests and files one fetch-failure note");
+  }
+
+  /* 30b. date_step=y: this year empty, last year loaded. */
+  {
+    char ly[32]; time_t n0 = time(NULL); struct tm tmy; gmtime_r(&n0, &tmy);
+    snprintf(ly, sizeof ly, "/ry/%d/rows", tmy.tm_year + 1900 - 1);
+    fx_reset();
+    fx_add(ly, 200, "{\"items\":[{\"name\":\"ly\",\"id\":\"1\"}]}");
+    rc = run_source("T_DATE_YEAR", "");
+    ok(rc == 0 && g_ncap == 1 && g_ncalls == 2 && strstr(g_last_url, ly) != NULL,
+       "30b: date_step=y steps {date:%Y} back a whole year");
+  }
+
+  /* 30c. date_field: today's file is missing, yesterday's rows carry no
+   *      date; the stamp must be YESTERDAY's (the file actually read) and
+   *      reach the uid. */
+  {
+    char yk[48], ys[16]; time_t y0 = time(NULL) - 86400; struct tm tmf; gmtime_r(&y0, &tmf);
+    strftime(yk, sizeof yk, "/kx%Y%m%d.json", &tmf);
+    strftime(ys, sizeof ys, "%Y%m%d", &tmf);
+    fx_reset();
+    fx_add(yk, 200, "{\"rows\":[{\"contract\":\"cu2611\",\"close\":\"1\"},{\"contract\":\"al2611\",\"close\":\"2\"}]}");
+    rc = run_source("T_DATE_FIELD", "");
+    ok(rc == 0 && g_ncap == 2 && strstr(g_cap[0].key, ys) != NULL && strstr(g_cap[0].key, "cu2611") != NULL &&
+       strstr(g_cap[0].props, ys) != NULL,
+       "30c: date_field stamps the stepped-back file date into the record and its uid");
+  }
+
+  /* 35. HTML table mode: a banner row skipped, duplicate and empty header
+   *     names made unique, a repeated header and an empty row dropped, the
+   *     row's first link resolved against the page. */
+  fx_reset();
+  fx_add("/reg/list.html", 200,
+    "<table><tr><td>nav</td></tr></table>"
+    "<table><tr><td colspan=4>登録業者一覧 (2026-10-06)</td></tr>"
+    "<tr><th>番号</th><th>名称</th><th>名称</th><th></th><th>名称</th></tr>"
+    "<tr><td>1</td><td><a href=\"detail?id=1\">甲社</a></td><td>こう</td><td>x</td><td>三</td></tr>"
+    "<tr><th>番号</th><th>名称</th><th>名称</th><th></th><th>名称</th></tr>"
+    "<tr><td></td><td></td><td></td><td></td></tr>"
+    "<tr><td>2</td><td>乙社</td><td>おつ</td><td>y</td></tr></table>");
+  rc = run_source("T_TABLE", "");
+  {
+    const cap *c0 = NULL;
+    int n = cap_count("t-table", &c0);
+    ok(rc == 0 && n == 2 && c0 && !strcmp(c0->title, "甲社") &&
+       strstr(c0->props, "\"名称_2\":\"こう\"") && strstr(c0->props, "\"col3\":\"x\"") &&
+       strstr(c0->props, "\"名称_3\":\"三\"") &&
+       strstr(c0->props, "https://x.test/reg/detail?id=1"),
+       "35: table rows become records: header names made unique, link resolved, repeats and blanks dropped");
+  }
+
+  /* 31. JSONP and its cousins unwrap; plain JSON is untouched (every other test). */
+  {
+    static const char *wraps[] = {
+      "cb({\"items\":[{\"name\":\"a\",\"id\":\"1\"}]});",
+      "null({\"items\":[{\"name\":\"a\",\"id\":\"1\"}]})",
+      "({\"items\":[{\"name\":\"a\",\"id\":\"1\"}]})",
+      "/**/ jQuery1_2.cb ( {\"items\":[{\"name\":\"a\",\"id\":\"1\"}]} ) ;\n",
+      ")]}'\n{\"items\":[{\"name\":\"a\",\"id\":\"1\"}]}",
+      "typhoon_jsons_list_default(({\"items\":[{\"name\":\"a\",\"id\":\"1\"}]}))",
+      NULL };
+    int good = 0;
+    for (int i = 0; wraps[i]; i++) {
+      fx_reset();
+      fx_add("/jp", 200, wraps[i]);
+      rc = run_source("T_JSONP", "");
+      if (rc == 0 && g_ncap == 1 && !strcmp(g_cap[0].title, "a")) good++;
+      else printf("        jsonp form %d failed (ncap=%d)\n", i, g_ncap);
+    }
+    ok(good == 6, "31: cb(...), null(...), (...), /**/cb(...);, )]}' and cb((...)) all unwrap");
+  }
+
+  /* 32. paging inside a POST body: {page} re-expanded for every page. */
+  fx_reset();
+  fx_add("BODY:\"pageNum\":1,", 200, "{\"items\":[{\"name\":\"p1a\",\"id\":\"1\"},{\"name\":\"p1b\",\"id\":\"2\"}]}");
+  fx_add("BODY:\"pageNum\":2,", 200, "{\"items\":[{\"name\":\"p2a\",\"id\":\"3\"},{\"name\":\"p2b\",\"id\":\"4\"}]}");
+  fx_add("BODY:\"pageNum\":3,", 200, "{\"items\":[]}");
+  rc = run_source("T_BODY_PAGE", "");
+  ok(rc == 0 && g_ncap == 4 && g_ncalls == 3 && strstr(g_last_body, "\"pageNum\":3,") != NULL,
+     "32: a POST-body {page} walks 1, 2, 3 and stops on the empty page");
+
+  /* 33. EPA-style inclusive record range in the path. */
+  fx_reset();
+  fx_add("rows/0:1/", 200, "[{\"name\":\"r0\",\"id\":\"0\"},{\"name\":\"r1\",\"id\":\"1\"}]");
+  fx_add("rows/2:3/", 200, "[{\"name\":\"r2\",\"id\":\"2\"},{\"name\":\"r3\",\"id\":\"3\"}]");
+  fx_add("rows/4:5/", 200, "[]");
+  rc = run_source("T_OFFSET_PATH", "");
+  ok(rc == 0 && g_ncap == 4 && strstr(g_last_url, "rows/4:5/JSON") != NULL,
+     "33: rows/{offset}:{offset_end} walks 0:1, 2:3, 4:5");
+
+  /* 34. a SHORT page followed by an error is the end of data, not a
+   *     truncation (Envirofacts: a range starting past the last row is 500). */
+  fx_reset();
+  fx_add("rows/0:1/", 200, "[{\"name\":\"r0\",\"id\":\"0\"},{\"name\":\"r1\",\"id\":\"1\"}]");
+  fx_add("rows/2:3/", 200, "[{\"name\":\"r2\",\"id\":\"2\"}]");
+  fx_add("rows/4:5/", 500, "{\"error\":\"out of range\"}");
+  rc = run_source("T_OFFSET_PATH", "");
+  {
+    int notice = 0;
+    for (int i = 0; i < g_ncap; i++)
+      if (!strcmp(g_cap[i].rtype, "collector-truncation-notice")) notice = 1;
+    ok(rc == 0 && cap_count("t-offpath", NULL) == 3 && !notice,
+       "34: a 500 after a short page ends the walk without a truncation notice");
+  }
+  /* ...but after a FULL page it is still a walk cut short. */
+  fx_reset();
+  fx_add("rows/0:1/", 200, "[{\"name\":\"r0\",\"id\":\"0\"},{\"name\":\"r1\",\"id\":\"1\"}]");
+  fx_add("rows/2:3/", 500, "{\"error\":\"boom\"}");
+  rc = run_source("T_OFFSET_PATH", "");
+  {
+    int notice = 0;
+    for (int i = 0; i < g_ncap; i++)
+      if (!strcmp(g_cap[i].rtype, "collector-truncation-notice")) notice = 1;
+    ok(rc == 0 && notice, "34: a 500 after a full page is still a truncation");
+  }
   /* {date:FMT:-2} renders two days before today (UTC), and `a+b+c` emits the
    * records of every sibling array that is present — the absent one is not an
    * error. */

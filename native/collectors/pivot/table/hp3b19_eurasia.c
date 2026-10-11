@@ -2900,17 +2900,19 @@ static const hp_source HP3B19_EURASIA[] = {
 
   { .id = "CZ_CRO_PUBLIC_OFFICIALS", .name = "Czech Central Register of Public Officials — declarations",
     .name_ja = "チェコ公職者中央登録簿 資産申告",
-    .category = "government", .portal = "https://cro.justice.cz",
+    .category = "government", .portal = "https://cro.gov.cz",
     .record_type = "public-official",
     .tags = "\"czechia\",\"officials\",\"declaration\",\"conflictofinterest\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cro.justice.cz/verejnost/api/funkcionari?order=DESC&size=100&sort=id",
+    .url = "https://cro.gov.cz/verejnost/api/funkcionari?order=DESC&size=100&sort=id",
+    /* cro.gov.cz, not cro.justice.cz (2026-10-05): the old host answers an HTTP/1.0 301, and libcurl following it failed with 'Failure when receiving data from the peer' on every run (0 stored); the new host serves the same items over HTTP/1.1 */
     .array_path = "items",
     .date_keys = "workingFrom",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
+    .page_zero_based = 1,   /* 2026-10-05: 0-based: no page == page=0, page=1 disjoint. Coerced to 1, the walk went 0 -> 2 and never fetched page 1 */
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 0,
     .title_keys = "lastName,firstName",
     .description = "Every person subject to the Czech conflict-of-interest law, by "

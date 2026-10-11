@@ -9,6 +9,6 @@
 
 VRSS(nl_rechtspraak_uitspraken_modified_feed, "nl-rechtspraak-uitspraken-modified-feed", "Rechtspraak Open Data - uitspraken changed-since feed", "Rechtspraak Open Data - uitspraken changed-since feed",
   "nl_legal", "legal",
-  "https://data.rechtspraak.nl/uitspraken/zoeken?modified=2026-08-10&max=5&return=DOC",
+  "https://data.rechtspraak.nl/uitspraken/zoeken?modified={date-2d}&max=5&return=DOC",
   "nl", "[\"nl\",\"legal\",\"batch16\",\"high-penetrancy\",\"detail-hop\"]", 43200,
   "Atom feed of Dutch court rulings filtered by last-modified date (incremental harvest). Each entry: ECLI as <id>, court name, decision date, case number, plain-text summary, updated timestamp, alternate HTML link. The ECLI feeds the content detail hop which returns the ENTIRE ruling: RDF metadata block (court, jurisdiction, procedure type, subject area, references to legislation and cited case law) plus the full section-by-section judgment text.  A per-record detail endpoint was verified for this source; see docs/verified-sources-batch16.md. This collector fetches the list endpoint only.");

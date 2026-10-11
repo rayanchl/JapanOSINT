@@ -21,17 +21,54 @@
  */
 #include "lib/hpengine.h"
 
+/* page_size removed (2026-10-06) from every World Bank / Socrata row here:
+ * their `page` is a page NUMBER and the page size is already in the URL
+ * (per_page= / limit=). With page_size the engine walks `page` as an
+ * offset -- pages 1, 101, 201 ... -- so US_SOCRATA_CAMBRIDGEMA stored 100
+ * datasets while pages 2 and 3 held 100 more each, and reported "emitted
+ * 100 of 100 available". lint-sources: page-size-on-page-number. */
+/* openFDA identity (2026-10-07): the generator keyed every openFDA row on its
+ * FIRST field, which is an identity on four endpoints and a dimension on the
+ * rest — `status` (enforcement), `third_party_flag`, `igg_agree`,
+ * `update_type`, `has_donation_id_number`, `manufacturer_contact_zip_ext`, and
+ * the whole `submissions`/`codes` arrays. The in-page collision guard hid it
+ * on page 1; from page 2 on, every recall sharing a status collapsed onto one
+ * row. Each key below is the one measured unique over the stated sample.
+ *
+ * Paging: openFDA answers `skip` up to 25,000 and 400s past it ("Skip value
+ * must 25000 or less"), so page_max reaches exactly that far. The rows asked
+ * for 100 a page with the engine's default 10-page ceiling, and stopped at
+ * 1,000 of 1,415 device recalls for "pump". limit=1000 everywhere openFDA
+ * serves it without a key and under the 64 MB body cap; 500 for enforcement
+ * and recall (41-48 MB at 1,000), 100 for device/event (1,000 needs an
+ * api_key) and drug/label (91 MB at 1,000). */
+/* 14 portal-inventory rows that re-read a catalogue hp3_portals.c or
+ * hp3_society.c already reads were removed 2026-10-09:
+ * docs/rejected-sources-batch36.usa.tsv. */
+/* SOCRATA_VIEWS_NOTE (2026-10-09). A Socrata portal's /api/views.json lists
+ * every dataset it publishes, one page at a time: `page` is a page NUMBER
+ * and `limit` takes 1,000. The rows here asked for 100 or 200 -- most in ONE
+ * request, the rest under the default 10-page ceiling -- and read 200 of New
+ * York State's 5,360 datasets, 1,000 of San Francisco's 1,225 (measured
+ * 2026-10-09; every one of these hosts answers a different page 2). Now
+ * limit=1000 paged by number to an empty page, page_max 100 as a runaway
+ * guard, the root array declared (a view's own `columns` list must not win
+ * the densest-array guess on a short last page), keyed on the view's 4x4 id.
+ * timeout_ms 120000: a page carries every view's column schema and these
+ * hosts take 10-27 s to render one at ANY size (data.ny.gov: 21 s for 1,000,
+ * 25 s for 500, 11 s for 200), so the engine's 20 s default failed page 1. */
 static const hp_source HP3B36_USA[] = {
   { .id = "US_FDA_ANIMALANDVETERINARY_EVENT", .name = "openFDA — Fda Animalandveterinary Event",
     .category = "health", .portal = "https://open.fda.gov",
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/animalandveterinary/event.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/animalandveterinary/event.json?search={q}&limit=1000",
     .array_path = "results",
     .id_keys = "unique_aer_id_number",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
     .title_keys = "unique_aer_id_number",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
@@ -47,13 +84,15 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/device/510k.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/device/510k.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "third_party_flag",
+    /* MEASURED 2026-10-07: k_number 1,000/1,000 distinct (search=pacemaker). */
+    .id_keys = "k_number",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "third_party_flag",
+    .title_keys = "device_name,k_number",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 894146 bytes. First "
       "record's fields: "
@@ -64,11 +103,13 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/device/classification.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/device/classification.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "third_party_flag",
+    /* MEASURED 2026-10-07: product_code 240/240 (search=catheter). */
+    .id_keys = "product_code",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
     .title_keys = "device_name",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
@@ -81,13 +122,15 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/device/covid19serology.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/device/covid19serology.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "igg_agree",
+    /* MEASURED 2026-10-07: evaluation_id+sample_id 220/220; evaluation_id alone 2 (search=Abbott). */
+    .id_keys = "evaluation_id+sample_id",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "igg_agree",
+    .title_keys = "device,manufacturer",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 96151 bytes. First "
       "record's fields: "
@@ -98,13 +141,15 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/device/enforcement.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/device/enforcement.json?search={q}&limit=500",
     .array_path = "results",
-    .id_keys = "status",
+    /* MEASURED 2026-10-07: recall_number 1,000/1,000; status had 2-3 values (search=pump). */
+    .id_keys = "recall_number",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 500,
+    .page_max = 51,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "status",
+    .title_keys = "product_description,recall_number",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 722465 bytes. First "
       "record's fields: "
@@ -117,11 +162,13 @@ static const hp_source HP3B36_USA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.fda.gov/device/event.json?search={q}&limit=100",
     .array_path = "results",
-    .id_keys = "manufacturer_contact_zip_ext",
+    /* MEASURED 2026-10-07: mdr_report_key 100/100 (search=pump). */
+    .id_keys = "mdr_report_key",
     .page_param = "skip",
     .page_size = 100,
+    .page_max = 251,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "manufacturer_contact_zip_ext",
+    .title_keys = "device.0.brand_name,device.0.generic_name,report_number",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 807978 bytes. First "
       "record's fields: "
@@ -132,11 +179,12 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/device/pma.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/device/pma.json?search={q}&limit=1000",
     .array_path = "results",
     .id_keys = "pma_number+supplement_number",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
     .title_keys = "trade_name",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
@@ -152,11 +200,12 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/device/recall.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/device/recall.json?search={q}&limit=500",
     .array_path = "results",
     .id_keys = "cfres_id",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 500,
+    .page_max = 51,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
     .title_keys = "product_description",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
@@ -169,13 +218,20 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/device/registrationlisting.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/device/registrationlisting.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "registration.registration_number+establishment_type+proprietary_name",
+    /* MEASURED 2026-10-07: no listing id is published. Over the
+     * whole of search=catheter (17,944 records, 16,938 distinct bodies: the
+     * other 1,006 are byte-identical repeats upstream) this tuple is 16,938
+     * distinct. A listing differs from its neighbour in its 2nd/3rd product,
+     * proprietary name or establishment type, and `establishment_type`
+     * named the bare array, which never matches a flattened field. */
+    .id_keys = "registration.registration_number+establishment_type.0+establishment_type.1+products.0.product_code+products.0.created_date+products.1.product_code+products.2.product_code+k_number+pma_number+proprietary_name.0+proprietary_name.1+proprietary_name.2",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "proprietary_name",
+    .title_keys = "proprietary_name.0,registration.name",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 354773 bytes. First "
       "record's fields: "
@@ -195,13 +251,15 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/device/udi.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/device/udi.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "has_donation_id_number",
+    /* MEASURED 2026-10-07: public_device_record_key 500/500 (search=catheter). */
+    .id_keys = "public_device_record_key",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "has_donation_id_number",
+    .title_keys = "brand_name,device_description",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 334759 bytes. First "
       "record's fields: "
@@ -212,13 +270,15 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/drug/drugsfda.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/drug/drugsfda.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "submissions",
+    /* MEASURED 2026-10-07: application_number 100/100 (search=aspirin). */
+    .id_keys = "application_number",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "submissions",
+    .title_keys = "products.0.brand_name,sponsor_name",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 413252 bytes. First "
       "record's fields: "
@@ -229,13 +289,15 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/drug/enforcement.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/drug/enforcement.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "status",
+    /* MEASURED 2026-10-07: recall_number 81/81 (search=aspirin). */
+    .id_keys = "recall_number",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "status",
+    .title_keys = "product_description,recall_number",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 214086 bytes. First "
       "record's fields: "
@@ -248,11 +310,13 @@ static const hp_source HP3B36_USA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.fda.gov/drug/label.json?search={q}&limit=100",
     .array_path = "results",
-    .id_keys = "spl_product_data_elements",
+    /* MEASURED 2026-10-07: id 500/500 (search=aspirin); set_id groups a label's versions. */
+    .id_keys = "id",
     .page_param = "skip",
     .page_size = 100,
+    .page_max = 251,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "spl_product_data_elements",
+    .title_keys = "openfda.brand_name.0,openfda.generic_name.0,id",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 8887355 bytes. First "
       "record's fields: "
@@ -263,13 +327,15 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/drug/ndc.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/drug/ndc.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "product_ndc",
+    /* MEASURED 2026-10-07: product_id 500/500, product_ndc 498/500 (search=aspirin). */
+    .id_keys = "product_id",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "brand_name",
+    .title_keys = "brand_name,generic_name",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 159973 bytes. First "
       "record's fields: "
@@ -280,13 +346,15 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/drug/shortages.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/drug/shortages.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "update_type",
+    /* MEASURED 2026-10-07: package_ndc+presentation+status+update_date 995/995; package_ndc alone 493/500 (search=injection). */
+    .id_keys = "package_ndc+presentation+status+update_date",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "update_type",
+    .title_keys = "presentation,generic_name",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 186728 bytes. First "
       "record's fields: "
@@ -297,13 +365,15 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/food/enforcement.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/food/enforcement.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "status",
+    /* MEASURED 2026-10-07: recall_number 500/500 (search=cheese). */
+    .id_keys = "recall_number",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "status",
+    .title_keys = "product_description,recall_number",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 140746 bytes. First "
       "record's fields: "
@@ -314,11 +384,12 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/food/event.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/food/event.json?search={q}&limit=1000",
     .array_path = "results",
     .id_keys = "report_number",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
     .title_keys = "report_number",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
@@ -331,13 +402,15 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/other/substance.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/other/substance.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "codes",
+    /* MEASURED 2026-10-07: uuid 23/23 (search=aspirin). */
+    .id_keys = "uuid",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
-    .title_keys = "codes",
+    .title_keys = "names.0.name,unii,uuid",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 100 records in 1177011 bytes. First "
       "record's fields: "
@@ -348,11 +421,13 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "fda-record",
     .tags = "\"usa\",\"health\",\"fda\",\"regulatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fda.gov/other/unii.json?search={q}&limit=100",
+    .url = "https://api.fda.gov/other/unii.json?search={q}&limit=1000",
     .array_path = "results",
-    .id_keys = "substance_name",
+    /* MEASURED 2026-10-07: unii 18/18 (search=aspirin). */
+    .id_keys = "unii",
     .page_param = "skip",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 26,               /* skip 0..25000, openFDA's ceiling */
     .page_zero_based = 1,
     .title_keys = "substance_name",
     .description = "openFDA on api.fda.gov. Fetched live 2026-10-05 under the "
@@ -374,55 +449,22 @@ static const hp_source HP3B36_USA[] = {
       "record's fields: "
       "featured,formats,observationTypes,keywords,contactInfo,endDate,topics,orderable,description,people,searchable,frequency." },
 
-  { .id = "US_SOCRATA_AUSTINTEXAS", .name = "Socrata portal inventory — Socrata Austintexas",
-    .category = "government", .portal = "https://data.austintexas.gov",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.austintexas.gov/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .page_size = 100,
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.austintexas.gov. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 100 records in "
-      "401580 bytes. First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,domainCName,downloadCount,hideFromCatalog." },
-
   { .id = "US_SOCRATA_CAMBRIDGEMA", .name = "Socrata portal inventory — Socrata Cambridgema",
     .category = "government", .portal = "https://data.cambridgema.gov",
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.cambridgema.gov/api/views.json?limit=100",
+    .url = "https://data.cambridgema.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.cambridgema.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
       "334734 bytes. First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
-
-  { .id = "US_SOCRATA_CITYOFCHICAGO", .name = "Socrata portal inventory — Socrata Cityofchicago",
-    .category = "government", .portal = "https://data.cityofchicago.org",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.cityofchicago.org/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .page_size = 100,
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.cityofchicago.org. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 100 records in "
-      "340690 bytes. First record's fields: "
       "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
 
   { .id = "US_SOCRATA_CITYOFNEWYORK", .name = "Socrata portal inventory — Socrata Cityofnewyork",
@@ -430,50 +472,17 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.cityofnewyork.us/api/views.json?limit=100",
+    .url = "https://data.cityofnewyork.us/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.cityofnewyork.us. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
       "420355 bytes. First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
-
-  { .id = "US_SOCRATA_COLORADO", .name = "Socrata portal inventory — Socrata Colorado",
-    .category = "government", .portal = "https://data.colorado.gov",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.colorado.gov/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .page_size = 100,
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.colorado.gov. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 100 records in "
-      "651889 bytes. First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
-
-  { .id = "US_SOCRATA_CT", .name = "Socrata portal inventory — Socrata Ct",
-    .category = "government", .portal = "https://data.ct.gov",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.ct.gov/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .page_size = 100,
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.ct.gov. Fetched live 2026-10-05 "
-      "under the engine's own User-Agent: 100 records in 926206 bytes. "
-      "First record's fields: "
       "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
 
   { .id = "US_SOCRATA_KCMO", .name = "Socrata portal inventory — Socrata Kcmo",
@@ -481,50 +490,17 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.kcmo.org/api/views.json?limit=100",
+    .url = "https://data.kcmo.org/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.kcmo.org. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
       "300020 bytes. First record's fields: "
-      "id,name,assetType,averageRating,createdAt,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson,locked,newBackend." },
-
-  { .id = "US_SOCRATA_LACITY", .name = "Socrata portal inventory — Socrata Lacity",
-    .category = "government", .portal = "https://data.lacity.org",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.lacity.org/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .page_size = 100,
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.lacity.org. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 100 records in "
-      "342112 bytes. First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
-
-  { .id = "US_SOCRATA_MICHIGAN", .name = "Socrata portal inventory — Socrata Michigan",
-    .category = "government", .portal = "https://data.michigan.gov",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.michigan.gov/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .page_size = 100,
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.michigan.gov. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 100 records in "
-      "258562 bytes. First record's fields: "
       "id,name,assetType,averageRating,createdAt,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson,locked,newBackend." },
 
   { .id = "US_SOCRATA_MONTGOMERYCOUNTYMD", .name = "Socrata portal inventory — Socrata Montgomerycountymd",
@@ -532,12 +508,13 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.montgomerycountymd.gov/api/views.json?limit=100",
+    .url = "https://data.montgomerycountymd.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.montgomerycountymd.gov. Fetched "
       "live 2026-10-05 under the engine's own User-Agent: 100 records "
@@ -549,97 +526,31 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.nola.gov/api/views.json?limit=100",
+    .url = "https://data.nola.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.nola.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
       "322526 bytes. First record's fields: "
       "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
 
-  { .id = "US_SOCRATA_NY", .name = "Socrata portal inventory — Socrata Ny",
-    .category = "government", .portal = "https://data.ny.gov",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.ny.gov/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .page_size = 100,
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.ny.gov. Fetched live 2026-10-05 "
-      "under the engine's own User-Agent: 100 records in 476625 bytes. "
-      "First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,domainCName,downloadCount,hideFromCatalog." },
-
-  { .id = "US_SOCRATA_OREGON", .name = "Socrata portal inventory — Socrata Oregon",
-    .category = "government", .portal = "https://data.oregon.gov",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.oregon.gov/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .page_size = 100,
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.oregon.gov. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 100 records in "
-      "693992 bytes. First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
-
-  { .id = "US_SOCRATA_SEATTLE", .name = "Socrata portal inventory — Socrata Seattle",
-    .category = "government", .portal = "https://data.seattle.gov",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.seattle.gov/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .page_size = 100,
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.seattle.gov. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 100 records in "
-      "991360 bytes. First record's fields: "
-      "id,name,assetType,averageRating,createdAt,description,diciBackend,displayType,domainCName,downloadCount,hideFromCatalog,hideFromDataJson." },
-
-  { .id = "US_SOCRATA_SFGOV", .name = "Socrata portal inventory — Socrata Sfgov",
-    .category = "government", .portal = "https://data.sfgov.org",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.sfgov.org/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .page_size = 100,
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.sfgov.org. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 100 records in "
-      "489696 bytes. First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,domainCName,downloadCount,hideFromCatalog." },
-
   { .id = "US_SOC_BAYAREAMETRO", .name = "Socrata portal inventory — Soc Bayareametro",
     .category = "government", .portal = "https://data.bayareametro.gov",
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bayareametro.gov/api/views.json?limit=100",
+    .url = "https://data.bayareametro.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.bayareametro.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -651,12 +562,13 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bloomington.in.gov/api/views.json?limit=100",
+    .url = "https://data.bloomington.in.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.bloomington.in.gov. Fetched "
       "live 2026-10-05 under the engine's own User-Agent: 100 records "
@@ -668,33 +580,17 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.brla.gov/api/views.json?limit=100",
+    .url = "https://data.brla.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.brla.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
       "332131 bytes. First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
-
-  { .id = "US_SOC_CDC", .name = "Socrata portal inventory — Soc Cdc",
-    .category = "government", .portal = "https://data.cdc.gov",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.cdc.gov/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .page_size = 100,
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.cdc.gov. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 100 records in "
-      "533049 bytes. First record's fields: "
       "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
 
   { .id = "US_SOC_CHRONICCDC", .name = "Socrata portal inventory — Soc Chroniccdc",
@@ -702,12 +598,13 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://chronicdata.cdc.gov/api/views.json?limit=100",
+    .url = "https://chronicdata.cdc.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on chronicdata.cdc.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -719,7 +616,10 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.cityofberkeley.info/api/views.json?limit=100",
+    .url = "https://data.cityofberkeley.info/api/views.json?limit=1000",
+    .page_param = "page",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -734,44 +634,31 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.cityofgainesville.org/api/views.json?limit=100",
+    .url = "https://data.cityofgainesville.org/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.cityofgainesville.org. Fetched "
       "live 2026-10-05 under the engine's own User-Agent: 100 records "
       "in 246859 bytes. First record's fields: "
       "id,name,assetType,averageRating,createdAt,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson,locked,newBackend." },
 
-  { .id = "US_SOC_HEALTHDATA", .name = "Socrata portal inventory — Soc Healthdata",
-    .category = "government", .portal = "https://healthdata.gov",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://healthdata.gov/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .title_keys = "name",
-    .description = "Socrata portal inventory on healthdata.gov. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 100 records in "
-      "805015 bytes. First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,domainCName,downloadCount,hideFromCatalog." },
-
   { .id = "US_SOC_HONOLULU", .name = "Socrata portal inventory — Soc Honolulu",
     .category = "government", .portal = "https://data.honolulu.gov",
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.honolulu.gov/api/views.json?limit=100",
+    .url = "https://data.honolulu.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.honolulu.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -783,33 +670,17 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.kingcounty.gov/api/views.json?limit=100",
+    .url = "https://data.kingcounty.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.kingcounty.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
       "279624 bytes. First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
-
-  { .id = "US_SOC_MARYLAND", .name = "Socrata portal inventory — Soc Maryland",
-    .category = "government", .portal = "https://opendata.maryland.gov",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.maryland.gov/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .page_size = 100,
-    .title_keys = "name",
-    .description = "Socrata portal inventory on opendata.maryland.gov. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 100 records in "
-      "330748 bytes. First record's fields: "
       "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
 
   { .id = "US_SOC_MESAAZ", .name = "Socrata portal inventory — Soc Mesaaz",
@@ -817,46 +688,31 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.mesaaz.gov/api/views.json?limit=100",
+    .url = "https://data.mesaaz.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.mesaaz.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
       "398103 bytes. First record's fields: "
       "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,domainCName,downloadCount,hideFromCatalog." },
 
-  { .id = "US_SOC_MO", .name = "Socrata portal inventory — Soc Mo",
-    .category = "government", .portal = "https://data.mo.gov",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.mo.gov/api/views.json?limit=100",
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .page_size = 100,
-    .title_keys = "name",
-    .description = "Socrata portal inventory on data.mo.gov. Fetched live 2026-10-05 "
-      "under the engine's own User-Agent: 100 records in 271058 bytes. "
-      "First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
-
   { .id = "US_SOC_NJ", .name = "Socrata portal inventory — Soc Nj",
     .category = "government", .portal = "https://data.nj.gov",
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.nj.gov/api/views.json?limit=100",
+    .url = "https://data.nj.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.nj.gov. Fetched live 2026-10-05 "
       "under the engine's own User-Agent: 100 records in 334968 bytes. "
@@ -868,12 +724,13 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.norfolk.gov/api/views.json?limit=100",
+    .url = "https://data.norfolk.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.norfolk.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -885,12 +742,13 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.oaklandca.gov/api/views.json?limit=100",
+    .url = "https://data.oaklandca.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.oaklandca.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -902,12 +760,13 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.pa.gov/api/views.json?limit=100",
+    .url = "https://data.pa.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.pa.gov. Fetched live 2026-10-05 "
       "under the engine's own User-Agent: 100 records in 439148 bytes. "
@@ -919,12 +778,13 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.princegeorgescountymd.gov/api/views.json?limit=100",
+    .url = "https://data.princegeorgescountymd.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.princegeorgescountymd.gov. "
       "Fetched live 2026-10-05 under the engine's own User-Agent: 100 "
@@ -936,12 +796,13 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.providenceri.gov/api/views.json?limit=100",
+    .url = "https://data.providenceri.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.providenceri.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
@@ -953,7 +814,10 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.somervillema.gov/api/views.json?limit=100",
+    .url = "https://data.somervillema.gov/api/views.json?limit=1000",
+    .page_param = "page",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
@@ -968,12 +832,13 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.sonomacounty.ca.gov/api/views.json?limit=100",
+    .url = "https://data.sonomacounty.ca.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.sonomacounty.ca.gov. Fetched "
       "live 2026-10-05 under the engine's own User-Agent: 100 records "
@@ -985,12 +850,13 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.transportation.gov/api/views.json?limit=100",
+    .url = "https://data.transportation.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.transportation.gov. Fetched "
       "live 2026-10-05 under the engine's own User-Agent: 100 records "
@@ -1002,12 +868,13 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.va.gov/api/views.json?limit=100",
+    .url = "https://data.va.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.va.gov. Fetched live 2026-10-05 "
       "under the engine's own User-Agent: 100 records in 445408 bytes. "
@@ -1019,12 +886,13 @@ static const hp_source HP3B36_USA[] = {
     .record_type = "socrata-dataset",
     .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.vermont.gov/api/views.json?limit=100",
+    .url = "https://data.vermont.gov/api/views.json?limit=1000",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .array_path = ".",
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 100,
     .title_keys = "name",
     .description = "Socrata portal inventory on data.vermont.gov. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 100 records in "
