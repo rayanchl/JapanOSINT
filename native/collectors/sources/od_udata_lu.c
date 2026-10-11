@@ -1,5 +1,5 @@
 /* Luxembourg data.public.lu open-data catalogue (udata, NOT CKAN).
- * Endpoint: https://data.public.lu/api/1/datasets/?page_size=20
+ * Endpoint: https://data.public.lu/api/1/datasets/?page_size=200
  * Envelope is {"data":[...],"next_page":...} - there is no result.results[]
  * wrapper, and organization/owner are objects (od_udata_collect handles both).
  * Emits, per dataset: title, acronym, description, publishing organisation,
@@ -10,7 +10,7 @@
 #include "od_shared.inc"
 
 #define SID "ckan-lu-datapublic"
-static const char *URL = "https://data.public.lu/api/1/datasets/?page_size=20";
+static const char *URL = "https://data.public.lu/api/1/datasets/?page_size=200";
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   return od_rc(SID, od_udata_collect(ctx, sink, URL,
@@ -22,7 +22,7 @@ static const source_def od_udata_lu_def = {
   .name = "Luxembourg data.public.lu open-data catalogue",
   .update_interval_sec = 86400, .run = run,
   .category = "government", .type = "dataset",
-  .url = "https://data.public.lu/api/1/datasets/?page_size=20",
+  .url = "https://data.public.lu/api/1/datasets/?page_size=200",
   .description = "Luxembourg national open-data portal: new and updated dataset titles, publishing organisation, description and resources",
   .license = "Portal metadata open; datasets mostly CC-BY / CC0",
   .free_tier = 1,

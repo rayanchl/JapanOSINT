@@ -1,0 +1,24 @@
+# The audit_url_limits.py candidates, MEASURED. 2026-10-11.
+#
+# The lint reported 101 candidates and said running it was the start of the
+# work, not the result, because a URL limit on a ranked pivot is the question
+# being asked while one on a scheduled read of a finite collection is a
+# discard. This settles which is which for the 42 whose URL is a complete
+# literal (no runtime %s to fill), by asking each upstream the same question
+# with a tenfold limit and comparing.
+#
+# 18 TRUNCATING, 5 COMPLETE, 19 UNREACHABLE from here. A `bigger` value of
+# 1000/2000/5000 is this test's own ceiling, not the upstream's total -- the
+# real shortfall is at least that large.
+#
+# Fixed so far: the three udata catalogues, which share od_udata_collect() in
+# collectors/sources/od_shared.inc. It made ONE request while the envelope
+# published both next_page and the upstream's own total. Measured after:
+#   data.public.lu   20 -> 3,193 stored  (= its declared total)
+#   dados.gov.pt     20 -> 20,933
+#   data.gov.rs      20 -> 3,527
+# 27,653 records from three rows that together stored 60.
+#
+# The other 15 are NOT yet fixed and are listed here so the next pass has the
+# measurement rather than the inference.
+#
