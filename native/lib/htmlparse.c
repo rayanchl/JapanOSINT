@@ -401,7 +401,7 @@ static int ht_span(const char *tag_open, const char *gt, const char *attr) {
  * in pass 2 so their size is provably sane on untrusted input. */
 #define HT_MAX_WIDTH 65536
 /* Ceiling on a table's row count, for the same reason. */
-#define HT_MAX_ROWS  1000000
+#define HT_MAX_ROWS  1000000   /* exhaustive-ok: memory guard on untrusted HTML; biting sets html_table.capped_rows, filed by hp_run_table as shape notice (g) */
 
 typedef struct { const char *s, *e; int colspan, rowspan; } ht_raw;
 
@@ -449,7 +449,7 @@ int html_table_parse(const char *html, const char *must, int table_index,
          * HTML, so neither is theoretical. A table that claims more rows than
          * this is truncated at the parse, which the caller reads as a short
          * table rather than as invented rows. */
-        if (nrow >= HT_MAX_ROWS) break;
+        if (nrow >= HT_MAX_ROWS) { out->capped_rows = 1; break; }  /* disclosed: capped_rows */
         if (nrow == capr) { capr = capr ? capr * 2 : 64; int *nr = realloc(row_start, (size_t)capr * sizeof *nr); if (!nr) break; row_start = nr; }
         row_start[nrow++] = ncell;
       }
@@ -513,7 +513,8 @@ int html_table_parse(const char *html, const char *must, int table_index,
       if (i == b) break;
       char *txt = ht_text(cells[i].s, (size_t)(cells[i].e - cells[i].s));
       char *href = ht_href(cells[i].s, (size_t)(cells[i].e - cells[i].s));
-      for (int k = 0; k < cells[i].colspan && col < cap; k++, col++) {
+      int k = 0;
+      for (; k < cells[i].colspan && col < cap; k++, col++) {
         row->cells[col].text = k == 0 ? txt : strdup("");
         row->cells[col].href = k == 0 ? href : NULL;
         if (k == 0 && cells[i].rowspan > 1 && pend) {
@@ -522,6 +523,13 @@ int html_table_parse(const char *html, const char *must, int table_index,
           pend[col].text = strdup(txt ? txt : "");
           pend[col].href = href ? strdup(href) : NULL;
         }
+      }
+      /* The row ran past the width bound (+ its slack): this cell, or the
+       * rest of its colspan, has nowhere to go. Said, not swallowed — and a
+       * cell that got no slot at all frees what it parsed. */
+      if (k < cells[i].colspan) {
+        out->capped_width = 1;
+        if (k == 0) { free(txt); free(href); }
       }
     }
     if (col > out->width) out->width = col;

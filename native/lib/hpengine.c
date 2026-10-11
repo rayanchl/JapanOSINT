@@ -1126,6 +1126,7 @@ typedef struct {
    * upstream row that would otherwise have swallowed the lines after it. */
   int   sh_csv_repairs;
   int   sh_zip_extra;       /* the ZIP body held more than the one entry we read */
+  int   sh_table_capped;    /* HP_TABLE: 1 = rows, 2 = width, 3 = both hit a parser bound */
   int   sh_repeat_page;     /* 1-based page whose bytes equalled the previous page's */
   int   sh_repeat_skipped;  /* pages the walk would still have requested       */
   /* sh_repeat_page was set by the RECORDS guard below rather than by the
@@ -3351,6 +3352,8 @@ static int hp_run_table(hp_run_state *st, const char *body) {
             s->id, s->table_must, s->table_index);
     return 0;
   }
+  /* A table cut at the parser's memory bound is said so (shape notice (g)). */
+  st->sh_table_capped |= (tb.capped_rows ? 1 : 0) | (tb.capped_width ? 2 : 0);
   int hdr = s->table_skip_rows > 0 ? s->table_skip_rows : 0;
   cJSON *rows = cJSON_CreateArray();
   if (!rows || hdr >= tb.nrows) { html_table_free(&tb); return hp_emit_rows(st, rows); }
@@ -3733,6 +3736,27 @@ static void hp_shape_notices(hp_run_state *st, intel_sink *sink,
              "%s: the ZIP body holds more than one entry; only the first was "
              "read (%d record(s) emitted from it)", s->id, emitted);
     jo_shape_notice(sink, s->id, "zip-extra-entries", title, p, TAGS);
+  }
+
+  if (st->sh_table_capped) {                                   /* (g) */
+    p = cJSON_CreateObject();
+    cJSON_AddStringToObject(p, "query", q);
+    cJSON_AddBoolToObject(p, "rows_capped", (st->sh_table_capped & 1) != 0);
+    cJSON_AddBoolToObject(p, "width_capped", (st->sh_table_capped & 2) != 0);
+    cJSON_AddStringToObject(p, "reason",
+      "the HTML table claimed more rows (HT_MAX_ROWS, 1,000,000) or a wider row "
+      "(HT_MAX_WIDTH, 65,536 cells) than lib/htmlparse.c will allocate for "
+      "untrusted input, and was cut at that bound");
+    cJSON_AddStringToObject(p, "remedy",
+      "a real table this large wants a bulk download or an API, not a scraped "
+      "page; re-point the row");
+    cJSON_AddNumberToObject(p, "records_used", emitted);
+    snprintf(title, sizeof title,
+             "%s: the HTML table exceeded the parser's %s bound; %d record(s) "
+             "emitted from what was parsed", s->id,
+             st->sh_table_capped == 3 ? "row and width"
+               : (st->sh_table_capped & 1) ? "row" : "width", emitted);
+    jo_shape_notice(sink, s->id, "html-table-capped", title, p, TAGS);
   }
 }
 
