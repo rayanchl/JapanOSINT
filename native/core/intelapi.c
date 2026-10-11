@@ -464,35 +464,12 @@ char *intelapi_list_items_st(db_handle *db, const intel_items_query *Q,
   else if (cur_r)
     cursor_sql = " AND (f.r > ? OR (f.r = ? AND intel_items.uid > ?))";
 
-  /* Build the MATCH expression. fts_query_expr() quotes every token, so no
-   * character the user types can reach the FTS5 expression parser as syntax
-   * (`cam-tabi` used to mean `cam NOT tabi`, and a lone `"` failed the
-   * prepare outright), and it prefix-matches the final token so a half-typed
-   * word still hits.
-   *
-   * qAlt is the client's translated counterpart of q (iOS sends both when
-   * auto-translate is on). It was parsed nowhere and silently dropped, which
-   * is why bilingual search never widened a single result set. The two are
-   * OR'd: "match the Japanese OR the English", each independently sanitized
-   * and parenthesized so neither can bleed operators into the other.
-   *
-   * A non-empty q that yields no usable token (";;;" and friends) leaves
-   * matchq NULL, i.e. the text filter is dropped rather than the request
-   * failing — the same shape as any other unparseable filter here. */
-  char *matchq = NULL;
-  if (Q && Q->q && *Q->q) {
-    char *ea = fts_query_expr(Q->q);
-    char *eb = (Q->q_alt && *Q->q_alt) ? fts_query_expr(Q->q_alt) : NULL;
-    if (ea && eb && strcmp(ea, eb) != 0) {
-      size_t n = strlen(ea) + strlen(eb) + 12;
-      matchq = malloc(n);
-      if (matchq) snprintf(matchq, n, "(%s) OR (%s)", ea, eb);
-      free(ea); free(eb);
-    } else {
-      matchq = ea ? ea : eb;
-      if (ea && eb) free(eb);          /* identical after sanitizing */
-    }
-  }
+  /* Build the MATCH expression — see intelapi_fts_match() below. A non-empty
+   * q that yields no usable token (";;;" and friends) leaves matchq NULL,
+   * i.e. the text filter is dropped rather than the request failing — the
+   * same shape as any other unparseable filter here, and disclosed in
+   * meta.q_applied / meta.notes. */
+  char *matchq = Q ? intelapi_fts_match(Q->q, Q->q_alt) : NULL;
   int has_q = matchq != NULL;
   char *segq = matchq;
 
@@ -797,6 +774,32 @@ char *intelapi_list_items_st(db_handle *db, const intel_items_query *Q,
 
 char *intelapi_list_items(db_handle *db, const intel_items_query *Q) {
   return intelapi_list_items_st(db, Q, NULL);
+}
+
+/* fts_query_expr() quotes every token, so no character the user types can
+ * reach the FTS5 expression parser as syntax (`cam-tabi` used to mean
+ * `cam NOT tabi`, and a lone `"` failed the prepare outright), and it
+ * prefix-matches the final token so a half-typed word still hits.
+ *
+ * qAlt is the client's translated counterpart of q (iOS sends both when
+ * auto-translate is on). It was parsed nowhere and silently dropped, which
+ * is why bilingual search never widened a single result set. The two are
+ * OR'd: "match the Japanese OR the English", each independently sanitized
+ * and parenthesized so neither can bleed operators into the other. q_alt is
+ * ignored without q, as it always has been. */
+char *intelapi_fts_match(const char *q, const char *q_alt) {
+  if (!q || !*q) return NULL;
+  char *ea = fts_query_expr(q);
+  char *eb = (q_alt && *q_alt) ? fts_query_expr(q_alt) : NULL;
+  if (ea && eb && strcmp(ea, eb) != 0) {
+    size_t n = strlen(ea) + strlen(eb) + 12;
+    char *m = malloc(n);
+    if (m) snprintf(m, n, "(%s) OR (%s)", ea, eb);
+    free(ea); free(eb);
+    return m;
+  }
+  if (ea && eb) free(eb);              /* identical after sanitizing */
+  return ea ? ea : eb;
 }
 
 /* GET /api/sources — getAllSources(): SELECT * FROM sources

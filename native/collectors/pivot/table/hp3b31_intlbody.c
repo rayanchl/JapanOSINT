@@ -59,31 +59,6 @@ static const hp_source HP3B31_INTLBODY[] = {
       "Experts reports in particular name the companies, vessels and "
       "individuals behind sanctions evasion, in detail, with evidence" },
 
-  { .id = "UN_UNGM_PROCUREMENT", .name = "UNGM — UN system procurement notices & awards",
-    .name_ja = "国連調達 公告/落札", .category = "government",
-    .portal = "https://www.ungm.org", .record_type = "un-procurement",
-    .tags = "\"un\",\"procurement\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.ungm.org/Public/Notice?keyword={q}",
-    .base = "https://www.ungm.org", .filter_query = 1,
-    .description = "The United Nations Global Marketplace — tender notices and "
-      "contract awards across every UN agency, with the awarded supplier, the "
-      "country and the value. UN supply chains run through a small number of "
-      "repeat vendors and this is where they are named" },
-
-  { .id = "UN_OHCHR_TREATY_BODIES", .name = "OHCHR — treaty body & special procedures record",
-    .name_ja = "国連人権 条約機関文書", .category = "government",
-    .portal = "https://tbinternet.ohchr.org", .record_type = "un-human-rights-record",
-    .tags = "\"un\",\"human-rights\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://tbinternet.ohchr.org/_layouts/15/TreatyBodyExternal/"
-      "TBSearch.aspx?Lang=en&TreatyID=&DocTypeID=&Keyword={q}",
-    .base = "https://tbinternet.ohchr.org", .filter_query = 1,
-    .description = "State reports, concluding observations, individual "
-      "communications and the special rapporteurs' communications to "
-      "governments and companies — which name specific corporate actors and "
-      "the allegations put to them, together with any reply" },
-
   { .id = "UN_COMTRADE_TRADE_FLOWS", .name = "UN Comtrade — official bilateral trade statistics",
     .name_ja = "国連 貿易統計", .category = "finance",
     .portal = "https://comtradeplus.un.org", .record_type = "un-trade-flow",
@@ -99,17 +74,6 @@ static const hp_source HP3B31_INTLBODY[] = {
       "Mirror-statistics gaps — where A reports exporting far more to B than B "
       "reports importing — are the standard method for locating "
       "trade-based value transfer and sanctions circumvention" },
-
-  { .id = "IMO_GISIS_SHIPS", .name = "IMO GISIS — global integrated shipping information",
-    .name_ja = "IMO 船舶情報システム", .category = "maritime",
-    .portal = "https://gisis.imo.org", .record_type = "imo-vessel",
-    .tags = "\"un\",\"maritime\",\"vessel\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://gisis.imo.org/Public/SHIPS/Search.aspx?keyword={q}",
-    .base = "https://gisis.imo.org", .filter_query = 1,
-    .description = "The IMO's own ship database — IMO number, flag history, "
-      "registered owner and operator, company IMO numbers, port state control "
-      "detentions, casualties and reported acts of piracy against the vessel" },
 
   { .id = "ICAO_SAFETY_AUDITS", .name = "ICAO — state safety audit & aviation registry data",
     .name_ja = "ICAO 航空安全監査", .category = "transport",
@@ -164,17 +128,6 @@ static const hp_source HP3B31_INTLBODY[] = {
       "and social category and the summary of investment information. A direct "
       "link between a private company and development finance" },
 
-  { .id = "ADB_PROJECTS_TENDERS", .name = "Asian Development Bank — projects & procurement",
-    .name_ja = "アジア開発銀行 事業/調達", .category = "government",
-    .portal = "https://www.adb.org", .record_type = "mdb-project",
-    .tags = "\"mdb\",\"asia\",\"funding\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.adb.org/search?keywords={q}",
-    .base = "https://www.adb.org", .filter_query = 1,
-    .description = "ADB sovereign and non-sovereign operations — the executing "
-      "agency, loan amount, procurement plans, contract awards and the "
-      "anticorruption sanctions list of debarred entities" },
-
   { .id = "ISDB_PROJECT_DISCLOSURE", .name = "Islamic Development Bank — projects & procurement",
     .name_ja = "イスラム開発銀行 事業/調達", .category = "government",
     .portal = "https://www.isdb.org", .record_type = "mdb-project",
@@ -200,19 +153,6 @@ static const hp_source HP3B31_INTLBODY[] = {
       "money is traced to a local contractor" },
 
   /* ── Arbitration and international courts ─────────────────────────────── */
-  { .id = "ICSID_CASE_DATABASE", .name = "ICSID — investor-state arbitration cases",
-    .name_ja = "ICSID 投資家対国家仲裁", .category = "legal",
-    .portal = "https://icsid.worldbank.org", .record_type = "arbitration-case",
-    .tags = "\"arbitration\",\"investment\",\"disputes\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://icsid.worldbank.org/cases/case-database?keyword={q}",
-    .base = "https://icsid.worldbank.org", .filter_query = 1,
-    .description = "Investor-state cases — the claimant company and its "
-      "nationality, the respondent state, the economic sector, the treaty "
-      "invoked, the tribunal members and the outcome. An ICSID claim is a "
-      "public statement that an investment has gone wrong and how much is "
-      "being claimed" },
-
   { .id = "PCA_ARBITRATION_CASES", .name = "Permanent Court of Arbitration — cases",
     .name_ja = "常設仲裁裁判所 事件", .category = "legal",
     .portal = "https://pca-cpa.org", .record_type = "arbitration-case",
@@ -223,17 +163,6 @@ static const hp_source HP3B31_INTLBODY[] = {
     .description = "PCA-administered inter-state, investor-state and "
       "contract-based arbitrations — the parties, the applicable rules, the "
       "tribunal and the procedural orders and awards released publicly" },
-
-  { .id = "UNCITRAL_TRANSPARENCY_REGISTRY", .name = "UNCITRAL — treaty arbitration transparency registry",
-    .name_ja = "UNCITRAL 仲裁透明性登録", .category = "legal",
-    .portal = "https://www.uncitral.org", .record_type = "arbitration-case",
-    .tags = "\"arbitration\",\"transparency\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.uncitral.org/transparency-registry/registry/index.jspx?q={q}",
-    .base = "https://www.uncitral.org", .filter_query = 1,
-    .description = "Treaty-based investor-state arbitrations conducted under "
-      "the UNCITRAL transparency rules — the notice of arbitration, the "
-      "submissions and the awards, published in full where the rules apply" },
 
   { .id = "WTO_DISPUTE_SETTLEMENT", .name = "WTO — dispute settlement & trade measures",
     .name_ja = "WTO 紛争解決/貿易措置", .category = "government",
@@ -282,17 +211,6 @@ static const hp_source HP3B31_INTLBODY[] = {
       "every foreign-bribery enforcement action each signatory has taken and "
       "the cases it has closed without charge — plus the national contact point "
       "complaints against named multinationals" },
-
-  { .id = "OSCE_ODIHR_REPORTS", .name = "OSCE ODIHR — election & human dimension reports",
-    .name_ja = "OSCE 選挙監視報告", .category = "government",
-    .portal = "https://www.osce.org", .record_type = "osce-report",
-    .tags = "\"osce\",\"elections\",\"europe\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.osce.org/search?keys={q}",
-    .base = "https://www.osce.org", .filter_query = 1,
-    .description = "Election observation mission reports with the detailed "
-      "findings on media ownership, campaign finance and administrative "
-      "resources, plus the human dimension reporting on named states" },
 
   { .id = "IAEA_SAFEGUARDS_RECORD", .name = "IAEA — safeguards, incidents & facility reporting",
     .name_ja = "IAEA 保障措置/事象報告", .category = "government",

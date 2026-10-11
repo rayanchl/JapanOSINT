@@ -41,8 +41,10 @@ static const hp_source HP_AMERICAS[] = {
     .post_body = "{\"filters\":{\"keywords\":[\"{Q}\"],\"award_type_codes\":"
                  "[\"A\",\"B\",\"C\",\"D\"]},\"fields\":[\"Award ID\",\"Recipient Name\","
                  "\"Awarding Agency\",\"Award Amount\",\"Start Date\",\"End Date\","
-                 "\"Description\"],\"page\":1,\"limit\":40,\"sort\":\"Award Amount\","
+                 "\"Description\"],\"page\":{page},\"limit\":100,\"sort\":\"Award Amount\","
                  "\"order\":\"desc\"}",
+    .page_max = 20,
+    /* 2026-10-06: the body carried a fixed "page":1, so every dispatch read the first 40 awards and nothing after; {page} is now re-expanded per page (paging inside a POST body) */
     .array_path = "results", .title_keys = "Recipient Name,Description",
     .id_keys = "Award ID", .date_keys = "Start Date",
     .description = "Federal contracts awarded to an entity — award id, awarding "

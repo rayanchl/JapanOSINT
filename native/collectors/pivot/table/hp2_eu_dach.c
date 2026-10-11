@@ -236,11 +236,12 @@ static const hp_source HP2_EU_DACH[] = {
     .name_ja = "スイス 商業公報", .category = "government",
     .portal = "https://www.shab.ch", .record_type = "ch-gazette",
     .tags = "\"ch\",\"gazette\",\"registry\"", .free_tier = 1,
-    .url = "https://www.shab.ch/api/v1/publications?query={q}&pageRequest.size=100"
+    .url = "https://www.shab.ch/api/v1/publications?keyword={q}&publicationStates=PUBLISHED&pageRequest.size=100"
       "&pageRequest.page=0",
     .array_path = "content", .title_keys = "meta.title.de,meta.title.fr,meta.title.en",
     .id_keys = "meta.id", .date_keys = "meta.publicationDate",
-    .page_param = "pageRequest.page", .page_size = 100, .page_start = 0,
+    .page_param = "pageRequest.page", .page_zero_based = 1,
+    /* 2026-10-05: `query` is IGNORED (an impossible entity returned all 2,862,192 publications: rule 4d) and without publicationStates the API answers 401. `keyword` is honoured (impossible -> 0, Novartis -> 841). pageRequest.page is a 0-based page NUMBER, so no page_size */
     .description = "Every Swiss commercial-register mutation, debt-collection "
       "notice, bankruptcy schedule and legal announcement as structured "
       "records — the daily change stream behind Zefix, including the "

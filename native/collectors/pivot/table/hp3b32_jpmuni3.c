@@ -483,34 +483,7 @@ static const hp_source HP3B32_JPMUNI3[] = {
       "town and parcel number, going back to H15. Polygon layer, so no "
       "point coordinates are declared." },
 
-  { .id = "JO32_MUNI_HINO_BUILDING_CONFIRMATIONS", .name = "Hino City - building confirmation ledger",
-    .name_ja = "日野市 建築確認台帳（確認済有）",
-    .category = "permits", .portal = "https://hinocity.maps.arcgis.com",
-    .record_type = "building-confirmation",
-    .tags = "\"japan\",\"tokyo\",\"hino\",\"building\",\"permit\",\"construction\",\"geo\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services5.arcgis.com/akSheMdmUZiKa4BM/arcgis/rest/services/%E5%BB%BA%E7%AF%89%E7%A2%BA%E8%AA%8D%E5%8F%B0%E5%B8%B3(%E7%A2%BA%E8%AA%8D%E6%B8%88%E6%9C%89)20260914/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&resultRecordCount=1000&resultOffset=0",
-    .array_path = "features",
-    .date_keys = "attributes.確認年月日",
-    .id_keys = "attributes.FID",
-    .interval = 604800,
-    .lat_key = "geometry.y",
-    .lon_key = "geometry.x",
-    .page_max = 73,
-    .page_param = "resultOffset",
-    .page_size = 1000,
-    .page_zero_based = 1,
-    .timeout_ms = 60000,
-    .title_keys = "attributes.敷地地名地番",
-    .description = "Hino's ledger of building confirmations with a certificate "
-      "issued, 1964 onward: 70,707 points with receipt number, site "
-      "address and parcel, confirmation number and date, structure, "
-      "floors above and below ground, site, building and floor area, "
-      "main use, work type, completion-inspection date and number, and "
-      "the issuing body; the newest confirmations are dated R8 (2026) "
-      "August. The service name carries its publication date "
-      "(20260914), so a republish under a new name would retire this "
-      "URL." },
+  /* JO32_MUNI_HINO_BUILDING_CONFIRMATIONS removed 2026-10-05: Hino unshared the layer: the dated service 建築確認台帳(確認済有)20260914 answers ArcGIS 499 Token Required, and no public successor is in the org's 204 services or its portal search */
 
   { .id = "JO32_MUNI_TOCHIGI_AED", .name = "Tochigi Prefecture - AED locations (R8)",
     .name_ja = "栃木県 AED設置場所一覧（令和8年度）",

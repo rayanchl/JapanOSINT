@@ -45,7 +45,7 @@ struct ConsoleHub: View {
                         subtitle: "Probe public webcams")
                     row(.inbox, icon: "tray.full.fill",
                         title: "Inbox",
-                        subtitle: "Everything your rules matched")
+                        subtitle: "Everything the workspace’s rules matched")
                     row(.alerts, icon: "bell.badge.fill",
                         title: "Alerts",
                         subtitle: "Rules, channels, history")
@@ -54,7 +54,7 @@ struct ConsoleHub: View {
                         subtitle: "Saved geofences for alert rules")
                     row(.watchlists, icon: "eye.fill",
                         title: "Watchlists",
-                        subtitle: "Entities you are following")
+                        subtitle: "Entities the workspace follows")
                     row(.breachMonitors, icon: "shield.lefthalf.filled",
                         title: "Breach monitors",
                         subtitle: "Watch an address or domain")

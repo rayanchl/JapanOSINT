@@ -384,6 +384,29 @@ static const struct { const char *host, *ua; } UA_OVERRIDE[] = {
     "contact via repo issues)" },
   { "www.ftc.gov",
     "JapanOSINT/1.0 (contact via repo issues)" },
+  /* The "collector" word filter once more (decided 2026-10-09 to route
+   * around it). Measured against /en/bycountry/JP/:
+   *     engine UA                                              403, 153 B
+   *     "RCorp-feeds/1.0 (…; feed collector; …)"               403
+   *     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas;
+   *      contact via repo issues)"                             200, 19,850 B
+   * cam-insecam-scrape had failed every run since 2026-10-06 on the 403. */
+  { "www.insecam.org",
+    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
+    "contact via repo issues)" },
+
+  /* INGV's FDSN event service, the same one-word filter. Measured 2026-10-06
+   * against fdsnws/event/1/query?format=geojson:
+   *     "JapanOSINT/1.0"                                         200
+   *     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas)"   200
+   *     "JapanOSINT/1.0 (feed collector)"                        connection dropped
+   *     the full engine UA                                       connection dropped
+   *     the agent below                                          200 (61 KB)
+   * geo-ingv-events-30d and geo-italy-ingv-last100 failed every run with
+   * "fetch failed" — before and after their date windows were rolled. */
+  { "webservices.ingv.it",
+    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
+    "contact via repo issues)" },
 
   /* NOT LISTED, deliberately: registry.faa.gov.
    *
@@ -610,6 +633,8 @@ static int do_once(http_client *c, const char *method, const char *url,
     if (b.over || rc == CURLE_FILESIZE_EXCEEDED)
       fprintf(stderr, "[http] %s: response exceeded %zu byte ceiling\n",
               url, b.cap);
+    else  /* callers log only "transport failure"; say which one */
+      fprintf(stderr, "[http] %s: %s\n", url, curl_easy_strerror(rc));
     free(b.buf); out->status = 0; out->body = NULL; out->body_len = 0; return 1;
   }
   out->status = code;

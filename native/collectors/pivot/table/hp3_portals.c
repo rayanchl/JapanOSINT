@@ -20,6 +20,18 @@
  */
 #include "lib/hpengine.h"
 
+/* SOCRATA_VIEWS_NOTE (2026-10-09). A Socrata portal's /api/views.json lists
+ * every dataset it publishes, one page at a time: `page` is a page NUMBER
+ * and `limit` takes 1,000. The rows here asked for 100 or 200 -- most in ONE
+ * request, the rest under the default 10-page ceiling -- and read 200 of New
+ * York State's 5,360 datasets, 1,000 of San Francisco's 1,225 (measured
+ * 2026-10-09; every one of these hosts answers a different page 2). Now
+ * limit=1000 paged by number to an empty page, page_max 100 as a runaway
+ * guard, the root array declared (a view's own `columns` list must not win
+ * the densest-array guess on a short last page), keyed on the view's 4x4 id.
+ * timeout_ms 120000: a page carries every view's column schema and these
+ * hosts take 10-27 s to render one at ANY size (data.ny.gov: 21 s for 1,000,
+ * 25 s for 500, 11 s for 200), so the engine's 20 s default failed page 1. */
 static const hp_source HP3_PORTALS[] = {
   { .id = "SOCRATA_NY_STATE", .name = "New York State — open data catalogue",
     .name_ja = "ニューヨーク州 オープンデータ目録",
@@ -27,7 +39,13 @@ static const hp_source HP3_PORTALS[] = {
     .record_type = "dataset-catalogue",
     .tags = "\"opendata\",\"socrata\",\"us\",\"newyork\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.ny.gov/api/views.json?limit=200",
+    .url = "https://data.ny.gov/api/views.json?limit=1000",
+    .array_path = ".",
+    .id_keys = "id",
+    .title_keys = "name",
+    .page_param = "page",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .interval = 86400,
     .description = "Every dataset New York State publishes, with the owning agency, "
       "category, description, update cadence, licence, row count and "
@@ -41,7 +59,13 @@ static const hp_source HP3_PORTALS[] = {
     .record_type = "dataset-catalogue",
     .tags = "\"opendata\",\"socrata\",\"us\",\"chicago\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.cityofchicago.org/api/views.json?limit=200",
+    .url = "https://data.cityofchicago.org/api/views.json?limit=1000",
+    .array_path = ".",
+    .id_keys = "id",
+    .title_keys = "name",
+    .page_param = "page",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .interval = 86400,
     .description = "The Chicago municipal catalogue including crime incidents, "
       "business licences, building permits, lobbyist registrations and "
@@ -53,7 +77,13 @@ static const hp_source HP3_PORTALS[] = {
     .record_type = "dataset-catalogue",
     .tags = "\"opendata\",\"socrata\",\"us\",\"seattle\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.seattle.gov/api/views.json?limit=200",
+    .url = "https://data.seattle.gov/api/views.json?limit=1000",
+    .array_path = ".",
+    .id_keys = "id",
+    .title_keys = "name",
+    .page_param = "page",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .interval = 86400,
     .description = "Seattle municipal datasets covering police reports, permits, "
       "land use and city contracts, with owning department and column "
@@ -65,7 +95,13 @@ static const hp_source HP3_PORTALS[] = {
     .record_type = "dataset-catalogue",
     .tags = "\"opendata\",\"socrata\",\"us\",\"dallas\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.dallasopendata.com/api/views.json?limit=200",
+    .url = "https://www.dallasopendata.com/api/views.json?limit=1000",
+    .array_path = ".",
+    .id_keys = "id",
+    .title_keys = "name",
+    .page_param = "page",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .interval = 86400,
     .description = "Dallas municipal datasets with owning department, category and "
       "schema, covering police activity, code enforcement and city "
@@ -77,7 +113,13 @@ static const hp_source HP3_PORTALS[] = {
     .record_type = "dataset-catalogue",
     .tags = "\"opendata\",\"socrata\",\"us\",\"austin\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.austintexas.gov/api/views.json?limit=200",
+    .url = "https://data.austintexas.gov/api/views.json?limit=1000",
+    .array_path = ".",
+    .id_keys = "id",
+    .title_keys = "name",
+    .page_param = "page",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .interval = 86400,
     .description = "Austin municipal datasets including permits, inspections, "
       "incident response and contracts, each with agency, licence and "
@@ -89,7 +131,13 @@ static const hp_source HP3_PORTALS[] = {
     .record_type = "dataset-catalogue",
     .tags = "\"opendata\",\"socrata\",\"us\",\"losangeles\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.lacity.org/api/views.json?limit=200",
+    .url = "https://data.lacity.org/api/views.json?limit=1000",
+    .array_path = ".",
+    .id_keys = "id",
+    .title_keys = "name",
+    .page_param = "page",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .interval = 86400,
     .description = "Los Angeles municipal datasets with department, category and "
       "schema, covering crime, permits, business registrations and city "
@@ -97,11 +145,17 @@ static const hp_source HP3_PORTALS[] = {
 
   { .id = "SOCRATA_SF", .name = "City of San Francisco — open data catalogue",
     .name_ja = "サンフランシスコ市 オープンデータ目録",
-    .category = "government", .portal = "https://data.sfgov.org",
+    .category = "government", .portal = "https://data.sf.gov",
     .record_type = "dataset-catalogue",
     .tags = "\"opendata\",\"socrata\",\"us\",\"sanfrancisco\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.sfgov.org/api/views.json?limit=200",
+    .url = "https://data.sf.gov/api/views.json?limit=1000",
+    .array_path = ".",
+    .id_keys = "id",
+    .title_keys = "name",
+    .page_param = "page",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .interval = 86400,
     .description = "San Francisco municipal datasets including business "
       "registrations, permits, incident reports and lobbyist filings, "
@@ -113,7 +167,13 @@ static const hp_source HP3_PORTALS[] = {
     .record_type = "dataset-catalogue",
     .tags = "\"opendata\",\"socrata\",\"us\",\"maryland\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.maryland.gov/api/views.json?limit=200",
+    .url = "https://opendata.maryland.gov/api/views.json?limit=1000",
+    .array_path = ".",
+    .id_keys = "id",
+    .title_keys = "name",
+    .page_param = "page",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .interval = 86400,
     .description = "Maryland state datasets with owning agency, category and column "
       "schema, covering procurement, licensing, environment and public "
@@ -125,7 +185,13 @@ static const hp_source HP3_PORTALS[] = {
     .record_type = "dataset-catalogue",
     .tags = "\"opendata\",\"socrata\",\"us\",\"connecticut\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.ct.gov/api/views.json?limit=200",
+    .url = "https://data.ct.gov/api/views.json?limit=1000",
+    .array_path = ".",
+    .id_keys = "id",
+    .title_keys = "name",
+    .page_param = "page",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .interval = 86400,
     .description = "Connecticut state datasets including business registrations, "
       "licensing, health and transportation, each with agency and "
@@ -137,7 +203,13 @@ static const hp_source HP3_PORTALS[] = {
     .record_type = "dataset-catalogue",
     .tags = "\"opendata\",\"socrata\",\"us\",\"colorado\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.colorado.gov/api/views.json?limit=200",
+    .url = "https://data.colorado.gov/api/views.json?limit=1000",
+    .array_path = ".",
+    .id_keys = "id",
+    .title_keys = "name",
+    .page_param = "page",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .interval = 86400,
     .description = "Colorado state datasets covering business filings, licensing, "
       "energy and environment, with owning agency and full column "
@@ -149,7 +221,13 @@ static const hp_source HP3_PORTALS[] = {
     .record_type = "dataset-catalogue",
     .tags = "\"opendata\",\"socrata\",\"us\",\"oregon\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.oregon.gov/api/views.json?limit=200",
+    .url = "https://data.oregon.gov/api/views.json?limit=1000",
+    .array_path = ".",
+    .id_keys = "id",
+    .title_keys = "name",
+    .page_param = "page",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .interval = 86400,
     .description = "Oregon state datasets with agency, category and schema, covering "
       "procurement, environment, licensing and public health" },
@@ -189,7 +267,13 @@ static const hp_source HP3_PORTALS[] = {
     .record_type = "dataset-catalogue",
     .tags = "\"opendata\",\"socrata\",\"us\",\"michigan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.michigan.gov/api/views.json?limit=200",
+    .url = "https://data.michigan.gov/api/views.json?limit=1000",
+    .array_path = ".",
+    .id_keys = "id",
+    .title_keys = "name",
+    .page_param = "page",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .interval = 86400,
     .description = "Michigan state datasets covering manufacturing, environment, "
       "licensing and public health, with agency and column schema. "
@@ -202,7 +286,13 @@ static const hp_source HP3_PORTALS[] = {
     .record_type = "dataset-catalogue",
     .tags = "\"opendata\",\"socrata\",\"us\",\"missouri\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.mo.gov/api/views.json?limit=200",
+    .url = "https://data.mo.gov/api/views.json?limit=1000",
+    .array_path = ".",
+    .id_keys = "id",
+    .title_keys = "name",
+    .page_param = "page",
+    .page_max = 100,
+    .timeout_ms = 120000,
     .interval = 86400,
     .description = "Missouri state datasets with agency, category and schema, "
       "covering licensing, procurement and public safety" },
@@ -394,7 +484,12 @@ static const hp_source HP3_PORTALS[] = {
     .record_type = "dataset-catalogue",
     .tags = "\"opendata\",\"colombia\",\"socrata\",\"latam\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/api/views.json?limit=200",
+    .url = "https://www.datos.gov.co/api/views.json?limit=1000",
+    .array_path = ".",
+    .id_keys = "id",
+    .title_keys = "name",
+    .page_param = "page",
+    .page_max = 100,
     .interval = 86400,
     /* Round 8 (2026-09-20): the engine reported "transport failure" at
      * 40,257 ms — the 40 s default — and stored 0. The upstream answers 200

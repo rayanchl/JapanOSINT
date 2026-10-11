@@ -123,7 +123,7 @@ static const hp_source HP3B19_LANDREG[] = {
      * no entity (NEEDS_ENTITY every day). 0 = on-demand, as the URL says. */
     .interval = 0,
     .page_param = "side",
-    .page_size = 100,
+    /* no page_size: `side` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 0,
     .page_zero_based = 1,
     .description = "The Norwegian official address register with each address's "

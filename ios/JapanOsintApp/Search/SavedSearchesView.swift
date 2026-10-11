@@ -4,9 +4,15 @@ import Foundation
 // ─────────────────────────────────────────────────────────────────────────────
 // Roadmap item 38 — saved searches.
 //
-// A saved search is a private bookmark: `/api/saved-searches` carries
-// `tenant_id AND user_id` on every statement, including the fetch-by-id and the
-// DELETE, so nothing here is visible to a workspace admin.
+// A saved search belongs to the workspace (decided 2026-10-05): every member
+// lists every member's, each row naming its author (`user_id`, `mine`). It
+// used to be a private bookmark and this screen still said so. Renaming,
+// pinning and deleting stay with the author — `/api/saved-searches/:id` PATCH
+// and DELETE carry `user_id` and 404 anyone else — so those actions are
+// offered on your own rows only. Running one is open to every member.
+//
+// The list is offset-paged (pinned first, then newest) with a measured
+// `page.total`; the footer shows "showing N of M" and loads the next page.
 //
 // Two server behaviours shape this screen and are worth stating up front:
 //
@@ -122,9 +128,24 @@ struct SavedSearchesView: View {
     var onRun: ((SavedSearch) -> Void)? = nil
 
     @EnvironmentObject var apiClient: APIClient
+    @EnvironmentObject var auth: AuthSession
     @Environment(\.theme) private var theme
 
+    /// POST /api/saved-searches/:id/to-alert creates an alert rule, and the
+    /// server refuses it below analyst (savedsearchapi.c to_alert) — so a
+    /// viewer is not offered a conversion that can only fail.
+    private var canCreateAlerts: Bool {
+        switch auth.me?.tenant?.role {
+        case "owner", "admin", "analyst": return true
+        default: return false
+        }
+    }
+
     @State private var items: [SavedSearch] = []
+    @State private var page: OffsetPage?
+    @State private var names: [String: String] = [:]
+    @State private var loadingMore = false
+    @State private var moreError: String?
     @State private var loading = true
     @State private var error: String?
     @State private var busyID: String?
@@ -181,9 +202,10 @@ struct SavedSearchesView: View {
         .refreshable { await reload() }
         .sheet(isPresented: $showSaveSheet) {
             if let draft = currentSearch {
-                SaveSearchSheet(draft: draft) { created in
-                    items.insert(created, at: 0)
+                SaveSearchSheet(draft: draft) { _ in
                     notice = "Saved."
+                    // Re-read rather than insert: the measured total moves too.
+                    Task { await reload() }
                 }
             }
         }
@@ -207,7 +229,7 @@ struct SavedSearchesView: View {
             Button("Delete", role: .destructive) { Task { await delete(search) } }
             Button("Cancel", role: .cancel) {}
         } message: { search in
-            Text("\"\(displayName(search))\" is removed for good. Its run history stays in your search history until you clear that too.")
+            Text("\"\(displayName(search))\" is removed for everyone in the workspace. Runs already recorded stay in the search history.")
         }
         .alert("Can't turn this into an alert", isPresented: $showBlocked,
                presenting: blockedKind) { _ in
@@ -250,10 +272,16 @@ struct SavedSearchesView: View {
                     ForEach(unpinned) { row($0) }
                 } header: {
                     sectionLabel(pinned.isEmpty ? "Saved" : "Everything else")
-                } footer: {
-                    Text("Saved searches are private to your account. Workspace owners and admins cannot read them.")
-                        .font(.caption2)
                 }
+            }
+            Section {
+                PageBoundFooter(shown: items.count, page: page, noun: "saved searches",
+                                loadingMore: loadingMore, error: moreError,
+                                loadMore: { await loadMore() })
+                    .listRowBackground(theme.surface)
+            } footer: {
+                Text("Shared with everyone in this workspace. Only the author can rename or delete a saved search.")
+                    .font(.caption2)
             }
         }
         .listStyle(.plain)
@@ -292,17 +320,24 @@ struct SavedSearchesView: View {
                      : "last run \(relativeTime(search.last_run_at))")
                     .font(.caption2.monospacedDigit())
                     .foregroundStyle(theme.textMuted)
+                Text("·").font(.caption2).foregroundStyle(theme.textMuted)
+                Text("saved by \(AuthorLabel.text(userId: search.user_id, mine: search.mine, names: names))")
+                    .font(.caption2)
+                    .foregroundStyle(theme.textMuted)
+                    .lineLimit(1)
                 Spacer(minLength: 0)
             }
         }
         .padding(.vertical, Space.xs)
         .listRowBackground(theme.surface)
         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-            Button(role: .destructive) {
-                deleteTarget = search
-                showDelete = true
-            } label: {
-                Label("Delete", systemImage: "trash")
+            if isMine(search) {
+                Button(role: .destructive) {
+                    deleteTarget = search
+                    showDelete = true
+                } label: {
+                    Label("Delete", systemImage: "trash")
+                }
             }
         }
         .swipeActions(edge: .leading, allowsFullSwipe: true) {
@@ -322,18 +357,22 @@ struct SavedSearchesView: View {
             } label: {
                 Label("Run", systemImage: "play.fill")
             }
-            Button {
-                renameTarget = search
-                renameText = search.name ?? ""
-                showRename = true
-            } label: {
-                Label("Rename", systemImage: "pencil")
+            if isMine(search) {
+                Button {
+                    renameTarget = search
+                    renameText = search.name ?? ""
+                    showRename = true
+                } label: {
+                    Label("Rename", systemImage: "pencil")
+                }
             }
             if search.kind == "intel" {
-                Button {
-                    alertTarget = search
-                } label: {
-                    Label("Turn into alert", systemImage: "bell.badge")
+                if canCreateAlerts {
+                    Button {
+                        alertTarget = search
+                    } label: {
+                        Label("Turn into alert", systemImage: "bell.badge")
+                    }
                 }
             } else {
                 // The conversion itself is absent rather than disabled-and-
@@ -345,12 +384,14 @@ struct SavedSearchesView: View {
                     Label("Why can't this be an alert?", systemImage: "bell.slash")
                 }
             }
-            Divider()
-            Button(role: .destructive) {
-                deleteTarget = search
-                showDelete = true
-            } label: {
-                Label("Delete", systemImage: "trash")
+            if isMine(search) {
+                Divider()
+                Button(role: .destructive) {
+                    deleteTarget = search
+                    showDelete = true
+                } label: {
+                    Label("Delete", systemImage: "trash")
+                }
             }
         } label: {
             Image(systemName: "ellipsis.circle")
@@ -369,8 +410,8 @@ struct SavedSearchesView: View {
             }
         } description: {
             Text(currentSearch == nil
-                 ? "Save a search from the Search tab and it will appear here, private to your account."
-                 : "Tap + to save the search you are looking at. It stays private to your account.")
+                 ? "Save a search from the Search tab and it will appear here, for everyone in this workspace."
+                 : "Tap + to save the search you are looking at. Everyone in this workspace will see it; only you can rename or delete it.")
                 .foregroundStyle(theme.textMuted)
         } actions: {
             if currentSearch != nil {
@@ -397,6 +438,10 @@ struct SavedSearchesView: View {
     private var pinned: [SavedSearch] { items.filter { $0.pinned } }
     private var unpinned: [SavedSearch] { items.filter { !$0.pinned } }
 
+    /// The server's own `mine`. A row from an older server without the field
+    /// was always the caller's (saved searches were per-user then).
+    private func isMine(_ s: SavedSearch) -> Bool { s.mine != false }
+
     private func displayName(_ s: SavedSearch) -> String {
         if let n = s.name, !n.trimmingCharacters(in: .whitespaces).isEmpty {
             return n
@@ -406,15 +451,45 @@ struct SavedSearchesView: View {
 
     // MARK: - Work
 
+    /// Rows per page. The server clamps to 1…200.
+    private let pageSize = 50
+
+    /// Re-read from the top, as many rows as are on screen (up to the server's
+    /// 200), so a refresh or a mutation does not collapse a list the user has
+    /// paged through back to one page.
     private func reload() async {
         loading = true
         defer { loading = false }
         do {
-            items = try await apiClient.api.savedSearches(kind: kindFilter)
+            let size = PageBound.reloadSize(shown: items.count, pageSize: pageSize)
+            let r = try await apiClient.api.savedSearches(kind: kindFilter, limit: size, offset: 0)
+            items = r.rows
+            page = r.page
             error = nil
+            moreError = nil
         } catch {
             self.error = ServerError.message(error)
             Haptics.error()
+        }
+        // Author names are a nicety: without the roster a row still says
+        // "you" or "a teammate", so a failure here is not an error banner.
+        if let roster = try? await apiClient.api.membersList() {
+            names = AuthorLabel.names(roster)
+        }
+    }
+
+    private func loadMore() async {
+        guard page?.has_more == true, !loadingMore else { return }
+        loadingMore = true
+        defer { loadingMore = false }
+        do {
+            let next = page?.nextOffset(fallback: items.count) ?? items.count
+            let r = try await apiClient.api.savedSearches(kind: kindFilter, limit: pageSize, offset: next)
+            items = PageBound.append(items, r.rows)
+            page = r.page
+            moreError = nil
+        } catch {
+            moreError = ServerError.message(error)
         }
     }
 
@@ -472,6 +547,7 @@ struct SavedSearchesView: View {
             error = nil
             notice = "Deleted."
             Haptics.success()
+            await reload()      // the measured total moves too
         } catch {
             self.error = ServerError.message(error)
             Haptics.error()
@@ -506,7 +582,7 @@ private struct SaveSearchSheet: View {
                 } header: {
                     Text("Name")
                 } footer: {
-                    Text("Optional. An unnamed saved search still works — it just shows its query instead of a title.")
+                    Text("Optional. An unnamed saved search still works — it just shows its query instead of a title. Everyone in this workspace will see it; only you can rename or delete it.")
                         .font(.caption2)
                 }
 

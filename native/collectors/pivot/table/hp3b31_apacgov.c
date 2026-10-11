@@ -66,17 +66,6 @@ static const hp_source HP3B31_APACGOV[] = {
       "Department — the firm, its owners and employees, each client it acts "
       "for, and whether a lobbyist is a former government representative" },
 
-  { .id = "AU_AEC_TRANSPARENCY", .name = "Australian Electoral Commission — donations & returns",
-    .name_ja = "豪州選挙管理委員会 献金開示", .category = "government",
-    .portal = "https://transparency.aec.gov.au", .record_type = "au-political-donation",
-    .tags = "\"au\",\"political-finance\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://transparency.aec.gov.au/AnnualDonor?SearchText={q}",
-    .base = "https://transparency.aec.gov.au", .filter_query = 1,
-    .description = "Annual donor and party returns — who gave how much to "
-      "which party or associated entity, plus the associated-entity returns "
-      "that reveal party investment vehicles and union funds" },
-
   { .id = "AU_ASIC_BANNED_DISQUALIFIED", .name = "ASIC — banned and disqualified persons",
     .name_ja = "豪州ASIC 資格停止者名簿", .category = "government",
     .portal = "https://connectonline.asic.gov.au", .record_type = "au-disqualification",
@@ -136,17 +125,6 @@ static const hp_source HP3B31_APACGOV[] = {
       "opportunity and contract award notice across New Zealand central and "
       "local government, with the agency, category and award value" },
 
-  { .id = "NZ_CHARITIES_REGISTER", .name = "New Zealand — charities register",
-    .name_ja = "NZ 慈善団体登録", .category = "government",
-    .portal = "https://register.charities.govt.nz", .record_type = "nz-charity",
-    .tags = "\"nz\",\"charity\",\"registry\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://register.charities.govt.nz/CharitiesRegister/Search?search={q}",
-    .base = "https://register.charities.govt.nz", .filter_query = 1,
-    .description = "Registered New Zealand charities with the officer list, "
-      "annual returns including full financial statements, related entities and "
-      "any deregistration decision and its reason" },
-
   { .id = "NZ_DATA_CKAN", .name = "data.govt.nz — New Zealand dataset catalog",
     .name_ja = "NZ オープンデータ目録", .category = "government",
     .portal = "https://catalogue.data.govt.nz", .record_type = "nz-dataset",
@@ -182,17 +160,6 @@ static const hp_source HP3B31_APACGOV[] = {
       "institutions — executives and their appointment route, headcount, "
       "salaries, debt, subsidiary holdings and audit findings for every "
       "state-owned and quasi-governmental body" },
-
-  { .id = "KR_NEC_POLITICAL_FUNDS", .name = "Korea NEC — political funds disclosure",
-    .name_ja = "韓国選管 政治資金公開", .category = "government",
-    .portal = "https://www.nec.go.kr", .record_type = "kr-political-finance",
-    .tags = "\"kr\",\"political-finance\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.nec.go.kr/site/nec/ex/bbs/List.do?cbIdx=1129&searchWrd={q}",
-    .base = "https://www.nec.go.kr", .filter_query = 1,
-    .description = "National Election Commission disclosures — party and "
-      "candidate income and expenditure reports, the corporate and individual "
-      "supporters, and the election expense audits" },
 
   { .id = "TW_LEGISLATIVE_YUAN_DATA", .name = "Taiwan Legislative Yuan — open data API",
     .name_ja = "台湾立法院 オープンデータ", .category = "government",
@@ -286,17 +253,6 @@ static const hp_source HP3B31_APACGOV[] = {
       "licensing, land-use and public-health datasets published by ministries "
       "and provincial administrations" },
 
-  { .id = "MY_OPEN_DATA_CATALOG", .name = "Malaysia data.gov.my — dataset catalog",
-    .name_ja = "マレーシア オープンデータ目録", .category = "government",
-    .portal = "https://data.gov.my", .record_type = "my-dataset",
-    .tags = "\"my\",\"open-data\",\"catalog\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://data.gov.my/data-catalogue?search={q}",
-    .base = "https://data.gov.my", .filter_query = 1,
-    .description = "Malaysia's open data catalogue — federal and state agency "
-      "datasets including public expenditure, licensing and the "
-      "government-linked company holdings that dominate the economy" },
-
   { .id = "PH_OPEN_DATA_CATALOG", .name = "Philippines data.gov.ph — dataset catalog",
     .name_ja = "フィリピン オープンデータ目録", .category = "government",
     .portal = "https://data.gov.ph", .record_type = "ph-dataset",
@@ -307,17 +263,6 @@ static const hp_source HP3B31_APACGOV[] = {
     .description = "The Philippine open data portal — agency budgets, "
       "infrastructure project lists, disaster response data and the local "
       "government unit datasets that carry project-level spending" },
-
-  { .id = "IN_PARLIAMENT_QUESTIONS", .name = "India — parliamentary questions & answers",
-    .name_ja = "インド議会 質問答弁", .category = "government",
-    .portal = "https://sansad.in", .record_type = "in-parliamentary-question",
-    .tags = "\"in\",\"parliament\",\"oversight\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://sansad.in/ls/questions/questions-and-answers?keyword={q}",
-    .base = "https://sansad.in", .filter_query = 1,
-    .description = "Lok Sabha and Rajya Sabha questions and the ministry's "
-      "written answer — routinely the only public source for project status, "
-      "enforcement counts and contract detail in Indian ministries" },
 
   { .id = "IN_CPGRAMS_ENFORCEMENT", .name = "India — Ministry of Corporate Affairs prosecutions",
     .name_ja = "インド企業省 訴追情報", .category = "government",

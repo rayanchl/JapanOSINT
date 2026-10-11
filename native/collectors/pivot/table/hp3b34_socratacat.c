@@ -372,13 +372,13 @@ static const hp_source HP3B34_SOCRATACAT[] = {
       "catalog path, its q filter and its limit/offset paging are fixed "
       "by the Socrata Discovery API." },
 
-  { .id = "JO34_SOCCAT_DATA_SFGOV_ORG", .name = "data.sfgov.org — dataset catalogue search (Socrata Discovery)",
-    .name_ja = "data.sfgov.org データセット検索（Socrata）",
-    .category = "government", .portal = "https://data.sfgov.org",
+  { .id = "JO34_SOCCAT_DATA_SFGOV_ORG", .name = "data.sf.gov — dataset catalogue search (Socrata Discovery)",
+    .name_ja = "data.sf.gov データセット検索（Socrata）",
+    .category = "government", .portal = "https://data.sf.gov",
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"ngo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.sfgov.org/api/catalog/v1?q={q}&domains=data.sfgov.org&search_context=data.sfgov.org&limit=100",
+    .url = "https://data.sf.gov/api/catalog/v1?q={q}&domains=data.sf.gov&search_context=data.sf.gov&limit=100",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",

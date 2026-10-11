@@ -1,0 +1,424 @@
+# Batch 31 — the --check-filter run CLAUDE.md asked for, 2026-10-06.
+#
+# CLAUDE.md said of these tables: "333 of them are entity pivots that have not
+# been run against a real entity, nor --check-filter'ed (rules 4 and 4d) ...
+# Treat those pivots as registered, not proven, until they are verified." This
+# is that run, against all 360 rows of docs/candidate-sources-batch31.*.txt,
+# every one of which was registered in the binary at the time.
+#
+# 51 PASS. The rest did not, and one verdict is not a quality score but a
+# defect: 65 rows came back FILTER_IGNORED — the upstream accepts the entity
+# parameter, ignores it, and returns the same collection for a real entity and
+# for one that cannot exist. Rule 4d calls that "worse than a source that
+# returns nothing: it is a confident wrong answer", and CLAUDE.md says to treat
+# it as fatal. Those 65 were removed from the hp3b31_*.c tables; the registry
+# went 18,643 -> 18,578 and both floors were re-recorded.
+#
+# Two were confirmed by hand before any row was touched, because 65 live
+# sources is not something to delete on one tool's say-so:
+#   UK_INSOLVENCY_INDIVIDUAL  real surname 9,213 bytes / impossible 9,203
+#   KE_BRS_BUSINESS_SEARCH    real name  348,130 bytes / impossible 348,402
+#
+# The remaining non-PASS rows are NOT removed here. A single probe is one
+# reading, and HTTP_ERR/NET_ERR/TIMEOUT can be transient, a user-agent, or a
+# host having a bad afternoon — whereas FILTER_IGNORED is a property of the
+# endpoint's query handling and does not come and go. They now disclose
+# themselves instead: lib/hpengine.c stores a collector-fetch-failure record
+# naming the status, so a refused fetch is no longer indistinguishable from a
+# source that ran and found nothing.
+#
+# Verdict counts: HTTP_ERR=146, FILTER_IGNORED=65, PASS=51, UNPARSEABLE=39, NET_ERR=31, FILTER_UNCHECKED=11, EMPTY_RESULTSET=6, TIMEOUT=5, PATH_UNRESOLVED=2, ERR=2, PATH_NOT_ARRAY=1, EMPTY=1
+#
+id	url	verdict	kind	items	http	bytes	note
+ZA_CIPC_ENTERPRISE	https://eservices.cipc.co.za/EnterpriseSearch/Search?enterpriseName=Toyota	HTTP_ERR		0	404	0	Not Found
+ZA_GOVERNMENT_GAZETTE	https://www.gov.za/documents/government-gazette?search=energy	HTTP_ERR		0	404	0	Not Found
+ZA_MUNICIPAL_MONEY	https://municipalmoney.gov.za/search?q=Toyota	HTTP_ERR		0	404	0	Not Found
+ZA_PMG_PARLIAMENT	https://pmg.org.za/search/?q=energy	PASS	html-anchors	128	200	75087	
+AFRICA_SAFLII_JUDGMENTS	https://www.saflii.org/cgi-bin/sinosrch.cgi?query=energy&method=auto	HTTP_ERR		0	403	0	Forbidden
+AFRICA_AFRICANLII	https://africanlii.org/search/?q=energy	FILTER_IGNORED	html-anchors	48	200	23756	filter ignored: an impossible entity returned 48 records vs 48 for the real one
+AFRICA_OPEN_AFRICA_CKAN	https://open.africa/api/3/action/package_search?q=energy&rows=100	HTTP_ERR		0	403	0	Forbidden
+NG_CAC_COMPANY_SEARCH	https://search.cac.gov.ng/home?searchTerm=Toyota	HTTP_ERR		0	403	0	Forbidden
+NG_BPP_PROCUREMENT	https://www.bpp.gov.ng/?s=Toyota	FILTER_UNCHECKED	html-anchors	49	200	87925	impossible-entity request came back NET_ERR (0 [Errno 104] Connection reset by peer); the comparison was not made
+NG_NEITI_EXTRACTIVES	https://neiti.gov.ng/?s=energy	NET_ERR		0	0	0	[Errno 104] Connection reset by peer
+GH_RGD_BUSINESS_SEARCH	https://rgd.gov.gh/?s=Toyota	FILTER_IGNORED	html-anchors	25	200	22977	filter ignored: an impossible entity returned 25 records vs 25 for the real one
+GH_PPA_PROCUREMENT	https://ppa.gov.gh/?s=Toyota	FILTER_IGNORED	html-anchors	57	200	95040	filter ignored: an impossible entity returned 56 records vs 57 for the real one
+SN_MARCHES_PUBLICS	https://www.marchespublics.sn/index.php?option=com_search&searchword=Toyota	NET_ERR		0	0	0	[Errno 104] Connection reset by peer
+CI_MARCHES_PUBLICS	https://www.marchespublics.ci/recherche?q=Toyota	FILTER_IGNORED	html-anchors	540	200	405088	filter ignored: an impossible entity returned 540 records vs 540 for the real one
+KE_PPRA_DEBARMENT	https://ppra.go.ke/?s=energy	PASS	html-anchors	84	200	89934	
+KE_BRS_BUSINESS_SEARCH	https://brs.go.ke/?s=Toyota	FILTER_IGNORED	html-anchors	91	200	348145	filter ignored: an impossible entity returned 91 records vs 91 for the real one
+KE_OPEN_DATA	https://www.opendata.go.ke/search?q=energy	HTTP_ERR		0	404	0	Not Found
+TZ_BRELA_ENTITY	https://ors.brela.go.tz/orsAdmin/searchcompany?name=Toyota	HTTP_ERR		0	404	0	Not Found
+UG_URSB_REGISTRY	https://ursb.go.ug/?s=Toyota	FILTER_IGNORED	html-anchors	92	200	298335	filter ignored: an impossible entity returned 92 records vs 92 for the real one
+RW_RDB_REGISTRY	https://org.rdb.rw/business/search?q=Toyota	HTTP_ERR		0	404	0	Not Found
+ET_ETHIOPIA_TRADE_REGISTRY	https://etrade.gov.et/business-license-checker?businessName=Toyota	NET_ERR		0	0	0	[Errno 104] Connection reset by peer
+BW_CIPA_REGISTRY	https://www.cipa.co.bw/?s=Toyota	FILTER_UNCHECKED	html-anchors	49	200	99224	impossible-entity request came back NET_ERR (0 [Errno 104] Connection reset by peer); the comparison was not made
+NA_BIPA_REGISTRY	https://www.bipa.na/?s=Toyota	FILTER_IGNORED	html-anchors	68	200	136314	filter ignored: an impossible entity returned 67 records vs 68 for the real one
+AFRICA_RESOURCE_PROJECTS	https://resourceprojects.org/search?q=energy	HTTP_ERR		0	404	0	Not Found
+AU_AUSTENDER_CONTRACTS	https://www.tenders.gov.au/Search/CnSearch?keyword=Toyota	HTTP_ERR		0	403	0	Forbidden
+AU_LOBBYIST_REGISTER	https://lobbyists.ag.gov.au/register?search=Toyota	UNPARSEABLE		0	200	3378	"<!DOCTYPE html>
+ <html>
+ <head>
+     <meta charset=""utf-8"" />
+     <meta name=""v"
+AU_AEC_TRANSPARENCY	https://transparency.aec.gov.au/AnnualDonor?SearchText=energy	FILTER_IGNORED	html-anchors	23	200	25636	filter ignored: an impossible entity returned 23 records vs 23 for the real one
+AU_ASIC_BANNED_DISQUALIFIED	https://connectonline.asic.gov.au/RegistrySearch/faces/landing/bannedAndDisqualified.jspx?searchText=energy	HTTP_ERR		0	404	0	Not Found
+AU_ACNC_CHARITY_REGISTER	https://www.acnc.gov.au/charity/charities?search=energy	TIMEOUT		0	0	0	timeout
+AU_PARLINFO_HANSARD	https://parlinfo.aph.gov.au/parlInfo/search/summary/summary.w3p;query=energy	HTTP_ERR		0	403	0	Forbidden
+AU_DATA_GOV_CKAN	https://data.gov.au/data/api/3/action/package_search?q=energy&rows=100	PASS	json:result.results	100	200	688967	
+NZ_GETS_TENDERS	https://www.gets.govt.nz/ExternalIndex.htm?keyword=Toyota	NET_ERR		0	0	0	[Errno 104] Connection reset by peer
+NZ_CHARITIES_REGISTER	https://register.charities.govt.nz/CharitiesRegister/Search?search=energy	FILTER_IGNORED	html-anchors	61	200	58748	filter ignored: an impossible entity returned 61 records vs 61 for the real one
+NZ_DATA_CKAN	https://catalogue.data.govt.nz/api/3/action/package_search?q=energy&rows=100	UNPARSEABLE		0	200	6183	declared array_path but body is not JSON
+NZ_PARLIAMENT_PECUNIARY	https://www.parliament.nz/en/pb/sc/submissions-and-advice/search?Criteria.Keyword=energy	HTTP_ERR		0	404	0	Not Found
+KR_ALIO_PUBLIC_INSTITUTIONS	https://www.alio.go.kr/item/itemOrganList.do?searchWord=energy	NET_ERR		0	0	0	[Errno 104] Connection reset by peer
+KR_NEC_POLITICAL_FUNDS	https://www.nec.go.kr/site/nec/ex/bbs/List.do?cbIdx=1129&searchWrd=Toyota	FILTER_IGNORED	html-anchors	186	200	160592	filter ignored: an impossible entity returned 186 records vs 186 for the real one
+TW_LEGISLATIVE_YUAN_DATA	https://data.ly.gov.tw/getds.action?id=1&keyword=energy	NET_ERR		0	0	0	[SSL: UNSAFE_LEGACY_RENEGOTIATION_DISABLED] unsafe legacy re
+TW_DATA_GOV_CATALOG	https://data.gov.tw/api/front/dataset/search?qs=energy&size=100	HTTP_ERR		0	404	0	Not Found
+HK_DATA_GOV_CATALOG	https://data.gov.hk/en/search?q=energy	HTTP_ERR		0	404	0	Not Found
+HK_GLD_TENDER_AWARDS	https://www.gld.gov.hk/eng/tenders_notices.htm?q=Toyota	HTTP_ERR		0	404	0	Not Found
+ID_SUPREME_COURT_JUDGMENTS	https://putusan3.mahkamahagung.go.id/search.html?q=energy	HTTP_ERR		0	403	0	Forbidden
+ID_LKPP_BLACKLIST	https://inaproc.id/daftar-hitam?search=energy	HTTP_ERR		0	403	0	Forbidden
+ID_SATU_DATA_CATALOG	https://data.go.id/dataset?q=energy	PASS	html-anchors	26	200	304819	
+TH_OPEN_DATA_CKAN	https://data.go.th/api/3/action/package_search?q=energy&rows=100	HTTP_ERR		0	403	0	Forbidden
+MY_OPEN_DATA_CATALOG	https://data.gov.my/data-catalogue?search=energy	FILTER_IGNORED	html-anchors	15	200	60767	filter ignored: an impossible entity returned 15 records vs 15 for the real one
+PH_OPEN_DATA_CATALOG	https://data.gov.ph/search?q=energy	UNPARSEABLE		0	200	7364	"<!DOCTYPE html><html lang=""en""><head>   <meta charset=""utf-8"">   <title>Open Dat"
+IN_PARLIAMENT_QUESTIONS	https://sansad.in/ls/questions/questions-and-answers?keyword=energy	FILTER_IGNORED	html-anchors	10	200	312037	filter ignored: an impossible entity returned 10 records vs 10 for the real one
+IN_CPGRAMS_ENFORCEMENT	https://www.mca.gov.in/content/mca/global/en/search.html?q=energy	HTTP_ERR		0	403	0	Forbidden
+PACIFIC_ISLAND_REGISTRIES	https://pacificdata.org/data/dataset?q=Toyota	HTTP_ERR		0	403	0	Forbidden
+ES_CATASTRO_PARCELS	https://www1.sedecatastro.gob.es/Cartografia/BuscarParcela.aspx?busqueda=energy	HTTP_ERR		0	404	0	Not Found
+CZ_CUZK_CADASTRE	https://nahlizenidokn.cuzk.cz/VyberBudovu.aspx?typ=Parcela&hledat=energy	HTTP_ERR		0	404	0	Not Found
+FR_DVF_LAND_SALES	https://app.dvf.etalab.gouv.fr/?q=energy	FILTER_IGNORED	html-anchors	7	200	7226	filter ignored: an impossible entity returned 7 records vs 7 for the real one
+EE_LAND_BOARD_CADASTRE	https://xgis.maaamet.ee/ky/energy	UNPARSEABLE		0	200	1196	"<!doctype html><html lang=""en""><head><meta charset=""utf-8""/><link rel=""icon"" hre"
+GLOBAL_OPENLANDCONTRACTS	https://www.openlandcontracts.org/search?q=Toyota	PASS	html-anchors	54	200	166620	
+GLOBAL_RESOURCE_CONTRACTS	https://www.resourcecontracts.org/search?q=Toyota	HTTP_ERR		0	403	0	Forbidden
+NL_RDW_VEHICLE_REGISTER	https://opendata.rdw.nl/resource/m9d7-ebf2.json?$q=Toyota&$limit=1000	FILTER_UNCHECKED	json-array	1000	200	2055717	impossible-entity request came back TIMEOUT (0 timeout); the comparison was not made
+NL_RDW_VEHICLE_RECALLS	https://opendata.rdw.nl/resource/j9yg-7rg9.json?$q=Toyota&$limit=1000	PASS	json-array	12	200	21170	
+UK_DVLA_VEHICLE_ENQUIRY	https://driver-vehicle-licensing.api.gov.uk/vehicle-enquiry/v1/vehicles	HTTP_ERR		0	403	0	Forbidden
+EU_FISHING_FLEET_REGISTER	https://webgate.ec.europa.eu/fleet-europa/search_en?vesselName=Toyota	UNPARSEABLE		0	200	1147	"<!DOCTYPE html> <html lang=""en"">     <head>         <meta charset=""utf-8"">      "
+INDIAN_OCEAN_MOU_PSC	https://www.iomou.org/ipcqsearch.php?vessel=energy	HTTP_ERR		0	403	0	Forbidden
+CA_VESSEL_REGISTRY	https://wwwapps.tc.gc.ca/Saf-Sec-Sur/4/vrqs-srib/eng/vessel-registrations/vessel-registration-results?name=Toyota	TIMEOUT		0	0	0	timeout
+TOKYO_MOU_INSPECTIONS	https://www.tokyo-mou.org/inspections_detentions/psc_database.php?vessel=energy	HTTP_ERR		0	404	0	Not Found
+UK_CAA_GINFO_REGISTER	https://siteapps.caa.co.uk/g-info/?search=Toyota	NET_ERR		0	0	0	Tunnel connection failed: 502 Bad Gateway
+OFFSHORE_AIRCRAFT_REGISTRIES	https://www.planelogger.com/Aircraft/Search?searchterm=Toyota	HTTP_ERR		0	403	0	Forbidden
+AU_ACMA_SPECTRUM_LICENCES	https://web.acma.gov.au/rrl/register_search.main_page?search=Toyota	TIMEOUT		0	0	0	timeout
+CA_ISED_SPECTRUM_LICENCES	https://sms-sgs.ic.gc.ca/equipmentSearch/searchRadioEquipments?searchTerm=Toyota	HTTP_ERR		0	302	0	The HTTP server returned a redirect error that would lead to
+ITU_SPACE_NETWORKS	https://www.itu.int/net/search/index.aspx?cx=&q=energy	HTTP_ERR		0	404	0	Not Found
+AU_MINING_TENEMENTS	https://minedexext.dmirs.wa.gov.au/web/guest/minedex-search?q=energy	NET_ERR		0	0	0	Tunnel connection failed: 502 Bad Gateway
+CLIMATE_TRACE_ASSETS	https://api.climatetrace.org/v6/assets?limit=1000	PASS	json:assets	1000	200	3433723	
+GLOBAL_FOREST_CONCESSIONS	https://data.globalforestwatch.org/search?q=energy	UNPARSEABLE		0	200	36902	"<!DOCTYPE html><html lang=""en-us""><head>     <title>Global Forest Watch Open Dat"
+US_BLM_MINERAL_LEASES	https://reports.blm.gov/reports/LR2000?q=energy	FILTER_IGNORED	html-anchors	12	200	6469	filter ignored: an impossible entity returned 12 records vs 12 for the real one
+EU_INDUSTRIAL_EMISSIONS_PORTAL	https://industry.eea.europa.eu/explore/explore-data-map/results?q=energy	HTTP_ERR		0	404	0	Not Found
+DE_BUNDESTAG_DIP	https://search.dip.bundestag.de/api/v1/vorgang?f.titel=energy&apikey={key}	HTTP_ERR		0	401	0	Unauthorized
+DE_BUNDESKARTELLAMT_DECISIONS	https://www.bundeskartellamt.de/SiteGlobals/Forms/Suche/Entscheidungssuche_Formular.html?input_=energy	HTTP_ERR		0	403	0	Forbidden
+DE_PRTR_FACILITIES	https://www.thru.de/thrude/suche/?tx_solr[q]=energy	HTTP_ERR		0	302	0	The HTTP server returned a redirect error that would lead to
+AT_PARLAMENT_RECORDS	https://www.parlament.gv.at/recherchieren/suche?searchTerm=energy	HTTP_ERR		0	404	0	Not Found
+AT_LOBBYING_REGISTER	https://www.lobbyreg.justiz.gv.at/edikte/ll/lobbyreg.nsf/suche?openform&subf=Toyota	NET_ERR		0	0	0	[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: 
+CH_SIMAP_PROCUREMENT	https://www.simap.ch/shabforms/COMMON/search/searchResult.jsf?keyword=Toyota	FILTER_IGNORED	html-anchors	4	200	25172	filter ignored: an impossible entity returned 4 records vs 4 for the real one
+CH_PARLAMENT_ODATA	https://www.parlament.ch/en/ratsbetrieb/suche-curia-vista?k=energy&x=0&y=0	FILTER_IGNORED	html-anchors	210	200	145714	filter ignored: an impossible entity returned 210 records vs 210 for the real one
+FR_BOAMP_NOTICES	https://www.boamp.fr/api/explore/v2.1/catalog/datasets/boamp/records?where=search(%22Toyota%22)&limit=100	PASS	json:results	100	200	1510326	
+FR_ASSEMBLEE_NATIONALE	https://www.assemblee-nationale.fr/dyn/recherche?texte=energy	HTTP_ERR		0	503	0	Backend fetch failed
+NL_DATA_OVERHEID_CKAN	https://data.overheid.nl/data/api/3/action/package_search?q=energy&rows=100	PASS	json:result.results	100	200	672885	
+NL_TWEEDE_KAMER_OPENDATA	https://opendata.tweedekamer.nl/zoeken?q=energy	HTTP_ERR		0	404	0	Not Found
+BE_KAMER_PARLIAMENT	https://www.dekamer.be/kvvcr/showpage.cfm?section=/search&query=energy	FILTER_IGNORED	html-anchors	108	200	30770	filter ignored: an impossible entity returned 108 records vs 108 for the real one
+SE_RIKSDAGEN_DOCUMENTS	https://data.riksdagen.se/dokumentlista/?sok=energy&utformat=json&sz=200	FILTER_UNCHECKED	json:dokumentlista.dokument	201	200	1813404	impossible-entity request came back PATH_UNRESOLVED (200 array_path 'dokumentlista.dokument' not present in the respo); the comparison was not made
+NO_STORTINGET_DATA	https://www.stortinget.no/no/Saker-og-publikasjoner/Sok/?stq=energy	HTTP_ERR		0	404	0	Not Found
+NO_DOFFIN_TENDERS	https://www.doffin.no/search?searchString=Toyota	UNPARSEABLE		0	200	1951	"<!doctype html> <html lang=""nb"">   <head>     <meta charset=""utf-8"" />     <link"
+DK_FOLKETINGET_ODA	https://www.ft.dk/da/soegning?q=energy	HTTP_ERR		0	403	0	Forbidden
+DK_UDBUD_TENDERS	https://www.udbud.dk/Pages/Tenders/Search?searchTerm=Toyota	HTTP_ERR		0	403	0	Forbidden
+FI_EDUSKUNTA_RECORDS	https://www.eduskunta.fi/FI/search/Sivut/results.aspx?k=energy	HTTP_ERR		0	404	0	Not Found
+ES_CONTRATACION_ESTADO	https://contrataciondelestado.es/wps/portal/plataforma?text=Toyota	FILTER_IGNORED	html-anchors	61	200	95608	filter ignored: an impossible entity returned 61 records vs 61 for the real one
+ES_PORTAL_TRANSPARENCIA	https://transparencia.gob.es/es_ES/buscar?texto=energy	HTTP_ERR		0	404	0	Not Found
+PT_DIARIO_REPUBLICA	https://diariodarepublica.pt/dr/pesquisa?q=energy	UNPARSEABLE		0	200	2346	"
+ <!DOCTYPE html>
+ <html>
+     <head>
+         <meta http-equiv=""X-UA-Compatible"
+IT_ANAC_CONTRACTS	https://dati.anticorruzione.it/opendata/search?q=Toyota	HTTP_ERR		0	403	0	Forbidden
+IT_OPENCOESIONE_PROJECTS	https://opencoesione.gov.it/it/ricerca/?q=energy	HTTP_ERR		0	403	0	Forbidden
+PL_SEJM_API	https://api.sejm.gov.pl/sejm/term10/interpellations?limit=500	PASS	json-array	500	200	672405	
+CZ_NEN_PROCUREMENT	https://nen.nipez.cz/verejne-zakazky?search=Toyota	NET_ERR		0	0	0	[Errno 104] Connection reset by peer
+EU_EXPERT_GROUPS_REGISTER	https://ec.europa.eu/transparency/expert-groups-register/screen/expert-groups?keywords=energy&lang=en	UNPARSEABLE		0	200	2036	"<!doctype html> <html lang=""en"">      <head>         <meta content=""IE=edge,chro"
+EU_COMITOLOGY_REGISTER	https://ec.europa.eu/transparency/comitology-register/screen/search?fulltext=energy&lang=en	UNPARSEABLE		0	200	1368	"<!doctype html> <html class=""eui-t-eui-legacy"" lang=""en"">  <head>     <meta char"
+EU_COMMISSION_MEETINGS	https://ec.europa.eu/transparencyinitiative/meetings/meeting.do?host=&d-6679426-p=1&searchString=Toyota	HTTP_ERR		0	404	0	
+EU_HAVE_YOUR_SAY_FEEDBACK	https://ec.europa.eu/info/law/better-regulation/have-your-say/initiatives?text=energy	UNPARSEABLE		0	200	3966	"<!doctype html> <html class=""eui-t-eui-legacy"">  <head>     <meta charset=""utf-8"
+EU_DOCUMENTS_REGISTER	https://ec.europa.eu/transparency/documents-register/search?fulltext=energy&lang=en	UNPARSEABLE		0	200	55040	"<!doctype html> <html class=""eui-t-eui-legacy"" lang=""en"" data-beasties-container"
+EU_COUNCIL_PUBLIC_REGISTER	https://www.consilium.europa.eu/en/documents-publications/public-register/public-register-search/?SearchTerm=energy	HTTP_ERR		0	403	0	Forbidden
+EU_INTEGRITY_WATCH	https://www.integritywatch.eu/mepsincomes?search=energy	HTTP_ERR		0	404	0	Not Found
+EU_EP_OPENDATA_DOCUMENTS	https://data.europarl.europa.eu/api/v2/documents?format=application%2Fld%2Bjson&limit=100	PASS	json:data	100	200	15445	
+EU_EP_CORPORATE_BODIES	https://data.europarl.europa.eu/api/v2/corporate-bodies?format=application%2Fld%2Bjson&limit=200	PASS	json:data	200	200	27591	
+EU_EP_MEETINGS	https://data.europarl.europa.eu/api/v2/meetings?format=application%2Fld%2Bjson&limit=100	PASS	json:data	100	200	185628	
+EU_COHESION_DATA_CATALOG	https://cohesiondata.ec.europa.eu/api/catalog/v1?q=energy&domains=cohesiondata.ec.europa.eu&search_context=cohesiondata.ec.europa.eu&limit=100	PASS	json:results	100	200	669943	
+EU_KOHESIO_PROJECTS	https://kohesio.ec.europa.eu/en/projects/?keywords=energy	UNPARSEABLE		0	200	2651	"<!doctype html> <html lang=""en"" dir=""ltr""> <head>     <meta charset=""utf-8"">    "
+EU_FUNDING_TENDERS_PORTAL	https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-search?keywords=energy	FILTER_UNCHECKED	html-anchors	1	200	59960	real entity returned 1 record(s) and an impossible one 1 — too small to tell a filter from a coincidence
+EU_OLAF_INVESTIGATION_REPORTS	https://anti-fraud.ec.europa.eu/search_en?keys=energy	HTTP_ERR		0	404	0	Not Found
+EU_EUDAMED_DEVICES	https://ec.europa.eu/tools/eudamed/#/screen/search-device?submitted=true&deviceName=energy	UNPARSEABLE		0	200	48316	"<!doctype html> <html data-critters-container>  <head>     <meta charset=""utf-8"""
+EU_EASA_AIRWORTHINESS_DIRECTIVES	https://ad.easa.europa.eu/ad/search?searchTerm=energy	HTTP_ERR		0	302	0	The HTTP server returned a redirect error that would lead to
+EU_ERA_RAIL_ERADIS	https://eradis.era.europa.eu/safety_docs/scert/search.aspx?keyword=Toyota	FILTER_IGNORED	html-anchors	23	200	72137	filter ignored: an impossible entity returned 23 records vs 23 for the real one
+EU_ECDC_SURVEILLANCE_ATLAS	https://www.ecdc.europa.eu/en/search?s=energy	FILTER_IGNORED	html-anchors	156	200	186805	filter ignored: an impossible entity returned 156 records vs 156 for the real one
+EU_EMSA_MARITIME_SAFETY	https://www.emsa.europa.eu/search.html?searchword=energy	FILTER_IGNORED	html-anchors	68	200	180981	filter ignored: an impossible entity returned 68 records vs 68 for the real one
+EU_ACER_ENERGY_REMIT	https://www.acer.europa.eu/search?search_api_fulltext=energy	HTTP_ERR		0	403	0	Forbidden
+EU_CHAFEA_HEALTH_PROGRAMME	https://hadea.ec.europa.eu/search_en?keys=energy	HTTP_ERR		0	404	0	Not Found
+EU_EIOPA_PENSION_REGISTER	https://www.eiopa.europa.eu/search_en?keys=energy	HTTP_ERR		0	404	0	Not Found
+EU_ECB_SUPERVISED_ENTITIES	https://www.bankingsupervision.europa.eu/search/html/index.en.html?searchTerm=energy	HTTP_ERR		0	404	0	Not Found
+EU_EFTA_SURVEILLANCE_CASES	https://www.eftasurv.int/search?query=energy	UNPARSEABLE		0	200	16605	"<!doctype html><html lang=""en""><head><meta charset=""utf-8""><meta name=""viewport"""
+UN_DIGITAL_LIBRARY	https://digitallibrary.un.org/search?p=energy&rg=100	UNPARSEABLE		0	202	0	
+UN_UNGM_PROCUREMENT	https://www.ungm.org/Public/Notice?keyword=Toyota	FILTER_IGNORED	html-anchors	207	200	147805	filter ignored: an impossible entity returned 207 records vs 207 for the real one
+UN_OHCHR_TREATY_BODIES	https://tbinternet.ohchr.org/_layouts/15/TreatyBodyExternal/TBSearch.aspx?Lang=en&TreatyID=&DocTypeID=&Keyword=energy	FILTER_IGNORED	html-anchors	10	200	185462	filter ignored: an impossible entity returned 10 records vs 10 for the real one
+UN_COMTRADE_TRADE_FLOWS	https://comtradeapi.un.org/data/v1/get/C/A/HS?reporterCode=392&subscription-key={key}	HTTP_ERR		0	401	0	Access Denied
+IMO_GISIS_SHIPS	https://gisis.imo.org/Public/SHIPS/Search.aspx?keyword=Toyota	FILTER_IGNORED	html-anchors	14	200	18789	filter ignored: an impossible entity returned 14 records vs 14 for the real one
+ICAO_SAFETY_AUDITS	https://www.icao.int/search/pages/results.aspx?k=energy	HTTP_ERR		0	403	0	Forbidden
+WORLDBANK_PROJECTS_API	https://search.worldbank.org/api/v2/projects?qterm=energy&rows=100&format=json&fl=id,project_name,countryname,totalamt,boardapprovaldate,impagency,sector,theme,status,projectfinancialtype,url	PATH_NOT_ARRAY		0	200	176937	array_path 'projects' is dict, not an array
+WORLDBANK_CONTRACT_AWARDS	https://finances.worldbank.org/api/catalog/v1?q=Toyota&domains=finances.worldbank.org&search_context=finances.worldbank.org&limit=100	HTTP_ERR		0	404	0	Not Found
+IFC_PROJECT_DISCLOSURES	https://disclosures.ifc.org/results?q=energy	HTTP_ERR		0	404	0	Not Found
+ADB_PROJECTS_TENDERS	https://www.adb.org/search?keywords=energy	FILTER_IGNORED	html-anchors	160	200	62058	filter ignored: an impossible entity returned 160 records vs 160 for the real one
+ISDB_PROJECT_DISCLOSURE	https://www.isdb.org/projects?search=energy	HTTP_ERR		0	403	0	Forbidden
+IATI_AID_ACTIVITIES	https://d-portal.org/ctrack.html?search=energy	UNPARSEABLE		0	200	3347	"<!DOCTYPE HTML> <html lang=""en"">  	<head> 		<meta name=""viewport"" content=""width"
+ICSID_CASE_DATABASE	https://icsid.worldbank.org/cases/case-database?keyword=energy	FILTER_IGNORED	html-anchors	87	200	75893	filter ignored: an impossible entity returned 87 records vs 87 for the real one
+PCA_ARBITRATION_CASES	https://pca-cpa.org/en/cases/?s=energy	HTTP_ERR		0	404	0	Not Found
+UNCITRAL_TRANSPARENCY_REGISTRY	https://www.uncitral.org/transparency-registry/registry/index.jspx?q=energy	FILTER_IGNORED	html-anchors	11	200	75301	filter ignored: an impossible entity returned 11 records vs 11 for the real one
+WTO_DISPUTE_SETTLEMENT	https://www.wto.org/english/res_e/search_e.htm?q=energy	HTTP_ERR		0	403	0	Forbidden
+APG_FATF_STYLE_BODIES	https://www.apgml.org/search/default.aspx?q=energy	HTTP_ERR		0	404	0	Not Found
+COE_GRECO_MONEYVAL	https://www.coe.int/en/web/portal/search?p_p_id=search&q=energy	HTTP_ERR		0	403	0	Forbidden
+OECD_ANTIBRIBERY_REPORTS	https://www.oecd.org/en/search.html?q=energy	HTTP_ERR		0	403	0	Forbidden
+OSCE_ODIHR_REPORTS	https://www.osce.org/search?keys=energy	FILTER_IGNORED	html-anchors	194	200	157838	filter ignored: an impossible entity returned 194 records vs 194 for the real one
+IAEA_SAFEGUARDS_RECORD	https://www.iaea.org/search?search_api_fulltext=energy	HTTP_ERR		0	403	0	Forbidden
+OPCW_DECLARATIONS	https://www.opcw.org/search?search_api_fulltext=energy	HTTP_ERR		0	404	0	Not Found
+JP_NTA_HOUJIN_WEBAPI	https://api.houjin-bangou.nta.go.jp/4/name?id={key}&name=%E3%83%88%E3%83%A8%E3%82%BF%E8%87%AA%E5%8B%95%E8%BB%8A&type=02&mode=2&history=1	HTTP_ERR		0	404	0	Not Found
+JP_NTA_INVOICE_ISSUER	https://web-api.invoice-kohyo.nta.go.jp/1/num?id={key}&number=T1180301018771&type=21	HTTP_ERR		0	404	0	
+JP_GBIZINFO_COMPANY	https://info.gbiz.go.jp/hojin/v1/hojin?name=%E3%83%88%E3%83%A8%E3%82%BF&limit=5000	HTTP_ERR		0	401	0	
+JP_GBIZINFO_SUBSIDY	https://info.gbiz.go.jp/hojin/v1/hojin?name=%E3%83%88%E3%83%A8%E3%82%BF&limit=5000	HTTP_ERR		0	401	0	
+JP_GBIZINFO_PROCUREMENT	https://info.gbiz.go.jp/hojin/v1/hojin?name=%E3%83%88%E3%83%A8%E3%82%BF&limit=5000	HTTP_ERR		0	401	0	
+JP_GBIZINFO_CERTIFICATION	https://info.gbiz.go.jp/hojin/v1/hojin?name=%E3%83%88%E3%83%A8%E3%82%BF&limit=5000	HTTP_ERR		0	401	0	
+JP_GBIZINFO_PATENT	https://info.gbiz.go.jp/hojin/v1/hojin?name=%E3%83%88%E3%83%A8%E3%82%BF&limit=5000	HTTP_ERR		0	401	0	
+JP_GBIZINFO_FINANCE	https://info.gbiz.go.jp/hojin/v1/hojin?name=%E3%83%88%E3%83%A8%E3%82%BF&limit=5000	HTTP_ERR		0	401	0	
+JP_EGOV_LAW_SEARCH	https://laws.e-gov.go.jp/api/2/keyword?keyword=%E7%92%B0%E5%A2%83&limit=500	FILTER_UNCHECKED	json:items	68	200	212277	impossible-entity request came back HTTP_ERR (404 ); the comparison was not made
+JP_EGOV_PUBLIC_COMMENT	https://public-comment.e-gov.go.jp/pcm/search?searchWord=%E7%92%B0%E5%A2%83	HTTP_ERR		0	403	0	Forbidden
+JP_COURTS_HANREI	https://www.courts.go.jp/app/hanrei_jp/search1?filter[text]=%E7%92%B0%E5%A2%83	FILTER_IGNORED	html-anchors	148	200	587044	filter ignored: an impossible entity returned 148 records vs 148 for the real one
+JP_KANPO_GAZETTE	https://search.npb.go.jp/kanpou/search.html?q=%E7%92%B0%E5%A2%83	NET_ERR		0	0	0	[Errno 104] Connection reset by peer
+JP_JFTC_ENFORCEMENT	https://www.jftc.go.jp/cgi-bin/search.cgi?q=%E7%92%B0%E5%A2%83	HTTP_ERR		0	403	0	Forbidden
+JP_MLIT_CONSTRUCTION_LICENCE	https://etsuran2.mlit.go.jp/TAKKEN/kensetsuKensaku.do?companyName=%E3%83%88%E3%83%A8%E3%82%BF	HTTP_ERR		0	404	0	404
+JP_MLIT_REALESTATE_LICENCE	https://etsuran2.mlit.go.jp/TAKKEN/takkenKensaku.do?companyName=%E3%83%88%E3%83%A8%E3%82%BF	FILTER_IGNORED	html-anchors	7	200	28278	filter ignored: an impossible entity returned 7 records vs 7 for the real one
+JP_MLIT_LAND_TRADE_PRICES	https://www.land.mlit.go.jp/webland/api/TradeListSearch?from=20051&to=20244&area=13	NET_ERR		0	0	0	Tunnel connection failed: 502 Bad Gateway
+JP_MHLW_LABOUR_VIOLATIONS	https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/hourei/index.html?q=%E7%92%B0%E5%A2%83	HTTP_ERR		0	404	0	Not Found
+JP_PMDA_APPROVALS	https://www.pmda.go.jp/PmdaSearch/iyakuSearch/Result?keyword=%E7%92%B0%E5%A2%83	HTTP_ERR		0	404	0	404
+JP_TDNET_TIMELY_DISCLOSURE	https://www.release.tdnet.info/inbs/I_main_00.html?q=%E7%92%B0%E5%A2%83	UNPARSEABLE		0	200	7037	"<!DOCTYPE html> <html style=""height:100%; overflow:hidden;""> <head> <title>適時開示情"
+JP_PPORTAL_PROCUREMENT	https://www.p-portal.go.jp/pps-web-biz/UAA01/OAA0101?searchWord=%E3%83%88%E3%83%A8%E3%82%BF	FILTER_IGNORED	html-anchors	37	200	175408	filter ignored: an impossible entity returned 37 records vs 37 for the real one
+JP_KANKOJU_SME_PROCUREMENT	https://www.kkj.go.jp/s/?fromDate=&toDate=&keyword=%E3%83%88%E3%83%A8%E3%82%BF	FILTER_IGNORED	html-anchors	16	200	30511	filter ignored: an impossible entity returned 16 records vs 16 for the real one
+JP_ESTAT_STATSLIST	https://api.e-stat.go.jp/rest/3.0/app/json/getStatsList?appId={key}&searchWord=%E7%92%B0%E5%A2%83&limit=100000	PATH_UNRESOLVED		0	200	338	array_path 'GET_STATS_LIST.DATALIST_INF.TABLE_INF' not present in the response
+JP_TOKYO_OPENDATA_CKAN	https://catalog.data.metro.tokyo.lg.jp/api/3/action/package_search?q=%E7%92%B0%E5%A2%83&rows=100	FILTER_IGNORED	json:result.results	100	200	928576	filter ignored: an impossible entity returned 100 records vs 100 for the real one
+JP_NDL_SEARCH_API	https://ndlsearch.ndl.go.jp/api/opensearch?any=%E7%92%B0%E5%A2%83&cnt=200	TIMEOUT		0	0	0	timeout
+JP_SOUMU_POLITICAL_FUNDS	https://www.soumu.go.jp/senkyo/seiji_s/seijishikin/?q=%E3%83%88%E3%83%A8%E3%82%BF	FILTER_IGNORED	html-anchors	126	200	46171	filter ignored: an impossible entity returned 126 records vs 126 for the real one
+JP_DATA_GO_JP_SEARCH	https://www.data.go.jp/data/api/3/action/package_search?q=%E7%92%B0%E5%A2%83&rows=100	FILTER_IGNORED	json:result.results	10	200	87019	filter ignored: an impossible entity returned 10 records vs 10 for the real one
+BR_CAMARA_DEPUTADOS	https://dadosabertos.camara.leg.br/api/v2/deputados?nome=energy&itens=100	EMPTY_RESULTSET	json:dados	0	200	120	declared array_path resolved to an empty array
+BR_SENADO_ABERTO	https://www6g.senado.leg.br/busca/?q=energy	UNPARSEABLE		0	200	9050	"<!DOCTYPE html> <meta name=""viewport"" content=""width=device-width""> <title>Verif"
+BR_QUERIDO_DIARIO	https://queridodiario.ok.org.br/api/gazettes?querystring=energy&size=100	TIMEOUT		0	0	0	timeout
+BR_DOU_GAZETTE	https://www.in.gov.br/consulta/-/buscar/dou?q=energy	ERR		0	0	0	RemoteDisconnected: Remote end closed connection without res
+BR_TCU_AUDIT_DECISIONS	https://pesquisa.apps.tcu.gov.br/pesquisa/acordao?termo=energy	HTTP_ERR		0	499	0	Unknown Code
+BR_CGU_LENIENCY_AGREEMENTS	https://www.gov.br/cgu/pt-br/busca?SearchableText=energy	HTTP_ERR		0	404	0	Not Found
+CL_LEY_LOBBY_AUDIENCIAS	https://www.leylobby.gob.cl/instituciones/busqueda?q=Toyota	FILTER_IGNORED	html-anchors	2	200	6757	filter ignored: an impossible entity returned 2 records vs 2 for the real one
+CL_INFOPROBIDAD_DECLARATIONS	https://www.infoprobidad.cl/Consultas/Declaraciones?nombre=energy	HTTP_ERR		0	404	0	Not Found
+CL_TRANSPARENCIA_ACTIVA	https://www.portaltransparencia.cl/PortalPdT/buscador?q=energy	HTTP_ERR		0	403	0	Forbidden
+CO_DATOS_ABIERTOS_CATALOG	https://www.datos.gov.co/api/catalog/v1?q=energy&domains=www.datos.gov.co&search_context=www.datos.gov.co&limit=100	EMPTY_RESULTSET	json:results	0	200	129	declared array_path resolved to an empty array
+CO_SIGEP_PUBLIC_SERVANTS	https://www.funcionpublica.gov.co/busqueda?q=energy	NET_ERR		0	0	0	[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: 
+AR_HCDN_DIPUTADOS	https://datos.hcdn.gob.ar/dataset?q=energy	FILTER_IGNORED	html-anchors	9	200	11630	filter ignored: an impossible entity returned 9 records vs 9 for the real one
+AR_OFICINA_ANTICORRUPCION	https://www.argentina.gob.ar/buscar/energy	PASS	html-anchors	100	200	54377	
+PE_INFOBRAS_PUBLIC_WORKS	https://apps.contraloria.gob.pe/ciudadano/wfm_obras_resultado.aspx?nom=energy	NET_ERR		0	0	0	[Errno 104] Connection reset by peer
+MX_PLATAFORMA_TRANSPARENCIA	https://www.plataformadetransparencia.org.mx/buscador?texto=energy	UNPARSEABLE		0	200	11968	"<!DOCTYPE html><html lang=""es""><head>   <title>Plataforma Nacional de Transparen"
+MX_DECLARANET_ASSETS	https://declaranet.gob.mx/consulta?nombre=energy	HTTP_ERR		0	404	0	Not Found
+MX_INE_FISCALIZACION	https://www.ine.mx/buscador/?q=Toyota	HTTP_ERR		0	404	0	Not Found
+PA_REGISTRO_PUBLICO	https://www.registro-publico.gob.pa/es/consultas?busqueda=Toyota	FILTER_IGNORED	html-anchors	84	200	60145	filter ignored: an impossible entity returned 84 records vs 84 for the real one
+PA_PANAMACOMPRA	https://www.panamacompra.gob.pa/Inicio/#!/busquedaAvanzada?keyword=Toyota	UNPARSEABLE		0	200	34787	"<!doctype html> <html lang=""es-PA"" class=""h-100"" data-beasties-container> <head>"
+CR_SICOP_PROCUREMENT	https://www.sicop.go.cr/index.jsp?keyword=Toyota	UNPARSEABLE		0	200	278	<html><head><title>SICOP</title></head><body>No fue posible acceder a la página 
+GT_GUATECOMPRAS	https://www.guatecompras.gt/concursos/consultaConcurso.aspx?busqueda=Toyota	HTTP_ERR		0	403	0	Forbidden
+DO_COMPRAS_DOMINICANA	https://comunidad.comprasdominicana.gob.do/Public/Tendering/ContractNoticeManagement/Index?keyword=Toyota	FILTER_IGNORED	html-anchors	8	200	506543	filter ignored: an impossible entity returned 8 records vs 8 for the real one
+SV_COMPRASAL	https://www.comprasal.gob.sv/comprasalpublico/busqueda?texto=Toyota	UNPARSEABLE		0	200	35612	"<!DOCTYPE html><html lang=""es""><head><meta charset=""utf-8""><meta http-equiv=""X-U"
+CARIBBEAN_COMPANY_REGISTRIES	https://opencorporates.com/companies?jurisdiction_code=&q=Toyota&utf8=%E2%9C%93	PASS	html-anchors	590	200	162092	
+LATAM_IDB_PROJECT_DOCUMENTS	https://www.iadb.org/en/search?keyword=energy	FILTER_IGNORED	html-anchors	46	200	275703	filter ignored: an impossible entity returned 46 records vs 46 for the real one
+SA_ETIMAD_TENDERS	https://tenders.etimad.sa/Tender/AllTendersForVisitor?MultipleSearch=Toyota	UNPARSEABLE		0	200	49053	"<!DOCTYPE html>
+ <html><head>
+ <meta http-equiv=""Pragma"" content=""no-cache""/>
+ <"
+AE_BAYANAT_OPEN_DATA	https://bayanat.ae/en/DataSet?q=energy	FILTER_IGNORED	html-anchors	23	200	257128	filter ignored: an impossible entity returned 23 records vs 23 for the real one
+AE_DIFC_PUBLIC_REGISTER	https://www.difc.ae/public-register?search=Toyota	HTTP_ERR		0	429	0	Too Many Requests
+BH_SIJILAT_REGISTRY	https://www.sijilat.bh/Pages/CRSearch.aspx?name=Toyota	UNPARSEABLE		0	200	633	"
+ 
+ <!DOCTYPE html>
+ 
+ <html xmlns=""http://www.w3.org/1999/xhtml"">
+ <head><title"
+QA_MONAQASAT_TENDERS	https://monaqasat.mof.gov.qa/Tenders?search=Toyota	NET_ERR		0	0	0	[Errno 104] Connection reset by peer
+KW_KUWAIT_TENDERS	https://www.capt.gov.kw/search?q=Toyota	HTTP_ERR		0	403	0	Forbidden
+OM_ISTITHMAAR_TENDERS	https://etendering.tenderboard.gov.om/product/publicDashboard?search=Toyota	UNPARSEABLE		0	200	3063	"<html>
+ <head>
+ <title>Request Rejected</title>
+ <style>
+ 
+ body {
+   font-famil"
+IL_DATA_GOV_CKAN	https://data.gov.il/api/3/action/package_search?q=energy&rows=100	FILTER_IGNORED	json:result.results	8	200	51743	filter ignored: an impossible entity returned 77 records vs 8 for the real one
+IL_KNESSET_ODATA	https://main.knesset.gov.il/EN/Search/Pages/Results.aspx?k=energy	UNPARSEABLE		0	200	131618	"<!DOCTYPE html> <html dir=""rtl""> <head>     <meta charset=""UTF-8"">     <meta nam"
+TR_EKAP_PROCUREMENT	https://ekap.kik.gov.tr/EKAP/Ortak/IhaleArama/index.html?keyword=Toyota	NET_ERR		0	0	0	[SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] sslv3 alert handshake f
+TR_RESMI_GAZETE	https://www.resmigazete.gov.tr/arama?q=energy	FILTER_IGNORED	html-anchors	26	200	202801	filter ignored: an impossible entity returned 26 records vs 26 for the real one
+TR_KAP_DISCLOSURES	https://www.kap.org.tr/en/bildirim-sorgu?query=energy	FILTER_IGNORED	html-anchors	39	200	1173103	filter ignored: an impossible entity returned 39 records vs 39 for the real one
+MA_MARCHES_PUBLICS	https://www.marchespublics.gov.ma/index.php?page=entreprise.EntrepriseAdvancedSearch&keyword=Toyota	NET_ERR		0	0	0	[Errno 104] Connection reset by peer
+TN_OPEN_DATA_TENDERS	http://www.data.gov.tn/fr/dataset?q=energy	HTTP_ERR		0	403	0	Forbidden
+EG_EGYPT_GOV_SEARCH	https://www.egypt.gov.eg/english/search.aspx?q=energy	NET_ERR		0	0	0	[Errno 104] Connection reset by peer
+JO_JORDAN_TENDERS	https://gtd.gov.jo/en/search?q=Toyota	FILTER_IGNORED	html-anchors	115	200	320284	filter ignored: an impossible entity returned 115 records vs 115 for the real one
+RU_ZAKUPKI_PROCUREMENT	https://zakupki.gov.ru/epz/order/extendedsearch/results.html?searchString=Toyota&morphology=on	NET_ERR		0	0	0	[Errno 104] Connection reset by peer
+RU_FEDRESURS_FACTS	https://fedresurs.ru/search/entity?query=energy	UNPARSEABLE		0	200	22446	"<!DOCTYPE html><html lang=""ru""><head>   <base href=""/"">   <meta charset=""utf-8"">"
+RU_EGRUL_FNS_EXTRACT	https://egrul.nalog.ru/index.html?query=Toyota	FILTER_IGNORED	html-anchors	4	200	19321	filter ignored: an impossible entity returned 4 records vs 4 for the real one
+RU_ARBITR_BANKRUPTCY_GAZETTE	https://bankruptcy.kommersant.ru/search?query=energy	NET_ERR		0	0	0	[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: 
+UA_EDR_MINJUST	https://usr.minjust.gov.ua/content/free-search?query=Toyota	NET_ERR		0	0	0	[Errno 104] Connection reset by peer
+UA_OPENDATABOT_ENTITY	https://opendatabot.ua/search?query=Toyota	HTTP_ERR		0	404	0	Not Found
+BY_BELARUS_TENDERS	https://icetrade.by/search/auctions?search=Toyota	NET_ERR		0	0	0	[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: 
+AM_ARLIS_LEGAL	https://www.arlis.am/DocumentView.aspx?search=energy	HTTP_ERR		0	404	0	Not Found
+GE_MATSNE_GAZETTE	https://matsne.gov.ge/ka/search?q=energy	UNPARSEABLE		0	200	840	<html> <head>     <title>Access Denied</title>     <style>         body {       
+UZ_LEX_LEGISLATION	https://lex.uz/search/nat?query=energy	PASS	html-anchors	107	200	265121	
+CAM_WSDOT_HIGHWAY	https://www.wsdot.wa.gov/Traffic/api/HighwayCameras/HighwayCamerasREST.svc/GetCamerasAsJson?AccessCode={key}	HTTP_ERR		0	401	0	Unauthorized
+CAM_511NY_STATEWIDE	https://511ny.org/api/getcameras?key={key}&format=json	UNPARSEABLE		0	200	9364	"<!doctype html> <html lang=""en"">     <head>         <script>             ;(async"
+CAM_OHGO_OHIO	https://publicapi.ohgo.com/api/v1/cameras?page-all=true	HTTP_ERR		0	401	0	Unauthorized
+CAM_COTRIP_COLORADO	https://data.cotrip.org/api/v1/cameras?apiKey={key}	HTTP_ERR		0	404	0	Not Found
+CAM_DRIVEBC_BC	https://www.drivebc.ca/mobile/pub/cameras/index.html?q=energy	UNPARSEABLE		0	200	4111	"<!DOCTYPE html> <html lang=""en"">   <head><script>window.__ENV__ = {  BASE_MAP: '"
+CAM_NO_VEGVESEN	https://www.vegvesen.no/trafikk/kart/webkamera?q=energy	UNPARSEABLE		0	200	4610	"<!DOCTYPE html><html lang=""nb""><head><meta charSet=""utf-8"" data-next-head=""""/><m"
+CAM_NL_NDW_CAMERAS	https://www.ndw.nu/zoeken?q=energy	FILTER_IGNORED	html-anchors	10	200	188729	filter ignored: an impossible entity returned 10 records vs 10 for the real one
+CAM_CZ_RSD_KAMERY	https://kamery.rsd.cz/?q=energy	NET_ERR		0	0	0	Tunnel connection failed: 502 Bad Gateway
+CAM_PL_GDDKIA	https://www.gov.pl/web/gddkia/kamery?q=energy	FILTER_IGNORED	html-anchors	39	200	39686	filter ignored: an impossible entity returned 39 records vs 39 for the real one
+CAM_EE_TARKTEE	https://tarktee.mnt.ee/#/pois?q=energy	NET_ERR		0	0	0	[Errno 104] Connection reset by peer
+CAM_IS_VEGAGERDIN	https://www.vegagerdin.is/ferdaupplysingar/vefmyndavelar/?q=energy	HTTP_ERR		0	403	0	Forbidden
+CAM_ES_DGT_TRAFFIC	https://infocar.dgt.es/etraffic/BuscarElementos?q=energy	UNPARSEABLE		0	200	5039	"<!doctype html> <html lang=""es""> 	<head> 		<meta charset=""UTF-8"" /> 		<link rel="
+CAM_HK_TRANSPORT_SNAPSHOTS	https://data.gov.hk/en-data/dataset/hk-td-tis_2-traffic-snapshot-images?q=energy	FILTER_IGNORED	html-anchors	2096	200	2304202	filter ignored: an impossible entity returned 2096 records vs 2096 for the real one
+CAM_TW_FREEWAY_CCTV	https://tisvcloud.freeway.gov.tw/?q=energy	NET_ERR		0	0	0	[Errno 104] Connection reset by peer
+CAM_KR_ITS_OPENAPI	https://openapi.its.go.kr:9443/cctvInfo?apiKey={key}&type=all&cctvType=1&minX=124.0&maxX=132.0&minY=33.0&maxY=39.0&getType=json	NET_ERR		0	0	0	[Errno 104] Connection reset by peer
+CAM_NZ_NZTA_CAMERAS	https://trafficnz.info/camera/?q=energy	HTTP_ERR		0	500	0	500
+CAM_AU_NSW_LIVE	https://api.transport.nsw.gov.au/v1/live/cameras/open	HTTP_ERR		0	500	0	
+ONYPHE_HOST_SUMMARY	https://www.onyphe.io/api/v2/summary/ip/8.8.8.8	HTTP_ERR		0	400	0	Bad Request
+NETLAS_HOST_RESPONSES	https://app.netlas.io/api/responses/?q=energy&start=0	HTTP_ERR		0	400	0	Bad Request
+CRIMINALIP_ASSET_REPORT	https://api.criminalip.io/v1/asset/ip/report?ip=8.8.8.8&full=true	FILTER_UNCHECKED	json-object	1	200	59	real entity returned 1 record(s) and an impossible one 1 — too small to tell a filter from a coincidence
+LEAKIX_HOST_RECORD	https://leakix.net/search?scope=leak&q=energy	HTTP_ERR		0	401	0	Unauthorized
+CRTSH_CERTIFICATES	https://crt.sh/?q=%25.toyota.co.jp&output=json	HTTP_ERR		0	502	0	Bad Gateway
+HACKERTARGET_HOSTSEARCH	https://api.hackertarget.com/hostsearch/?q=toyota.co.jp	FILTER_UNCHECKED	text-lines	50	200	2198	impossible-entity request came back UNPARSEABLE (200 error invalid host); the comparison was not made
+TOR_ONIONOO_RELAYS	https://onionoo.torproject.org/details?search=energy&limit=1000	PASS	json:relays	1	200	1743	
+RIPE_ATLAS_PROBES	https://atlas.ripe.net/api/v2/probes/?search=energy&page_size=500	PASS	json:results	6	200	6448	
+RIPE_ATLAS_MEASUREMENTS	https://atlas.ripe.net/api/v2/measurements/?search=energy&page_size=500	PASS	json:results	500	200	515556	
+OONI_MEASUREMENTS	https://api.ooni.io/api/v1/measurements?domain=energy&limit=1000	EMPTY_RESULTSET	json:results	0	200	139	declared array_path resolved to an empty array
+OONI_COUNTRY_AGGREGATION	https://api.ooni.io/api/v1/aggregation?domain=energy&axis_x=measurement_start_day&axis_y=probe_cc	EMPTY_RESULTSET	json:result	0	200	157	declared array_path resolved to an empty array
+GRIP_BGP_HIJACKS	https://api.grip.inetintel.cc.gatech.edu/json/events?length=1000	PASS	json:data	1000	200	12335593	
+WIGLE_NETWORK_SEARCH	https://api.wigle.net/api/v2/network/search?ssid=energy&resultsPerPage=100	HTTP_ERR		0	401	0	Unauthorized
+OPENCELLID_TOWERS	https://opencellid.org/cell/getInArea?key={key}&BBOX=-180,-90,180,90&mcc=440&format=json&limit=1000	HTTP_ERR		0	401	0	Unauthorized
+CLOUDFLARE_RADAR_TRAFFIC	https://api.cloudflare.com/client/v4/radar/ranking/top?limit=1000&format=json	HTTP_ERR		0	400	0	Bad Request
+OPENAQ_LOCATIONS	https://api.openaq.org/v3/locations?limit=1000	HTTP_ERR		0	401	0	Unauthorized
+PURPLEAIR_SENSOR_INDEX	https://api.purpleair.com/v1/sensors?fields=name,latitude,longitude,altitude,location_type,pm2.5,humidity,temperature,last_seen,model,hardware,private,confidence	HTTP_ERR		0	403	0	Forbidden
+EEA_AIR_QUALITY_STATIONS	https://discomap.eea.europa.eu/App/AQViewer/index.html?fqn=energy	UNPARSEABLE		0	200	3630	"<!doctype html>
+ <html lang=""en"">
+ <!-- olakease -->
+ <head>
+     <!-- Required "
+SAFECAST_MEASUREMENTS	https://api.safecast.org/measurements.json?per_page=1000	PASS	json-array	1000	200	329479	
+EU_EURDEP_RADIOLOGICAL	https://remap.jrc.ec.europa.eu/Simple.aspx?q=energy	FILTER_IGNORED	html-anchors	23	200	24903	filter ignored: an impossible entity returned 23 records vs 23 for the real one
+JP_NRA_RADIATION_MONITORING	https://radioactivity.nra.go.jp/map/?q=%E7%92%B0%E5%A2%83	HTTP_ERR		0	404	0	Not Found
+FDSN_STATION_INVENTORY	https://service.iris.edu/fdsnws/station/1/query?level=station&format=text&nodata=404	PASS	text-lines	151304	200	14332341	
+SMITHSONIAN_VOLCANOES	https://volcano.si.edu/search_volcano_results.cfm?vname=energy	HTTP_ERR		0	403	0	Forbidden
+USGS_NWIS_SITE_INVENTORY	https://waterservices.usgs.gov/nwis/site/?format=rdb&stateCd=ca&siteOutput=expanded&siteStatus=all	PASS	text-lines	90568	200	22168638	
+GLOBAL_WATER_QUALITY_PORTAL	https://www.waterqualitydata.us/data/Station/search?mimeType=csv&organization=energy	HTTP_ERR		0	400	0	
+WMO_OSCAR_STATIONS	https://oscar.wmo.int/surface/#/search/station?q=energy	FILTER_IGNORED	html-anchors	2	200	8271	filter ignored: an impossible entity returned 2 records vs 2 for the real one
+NASA_FIRMS_FIRE_DETECTIONS	https://firms.modaps.eosdis.nasa.gov/api/area/csv/{key}/VIIRS_SNPP_NRT/world/1	HTTP_ERR		0	400	0	Bad Request
+COPERNICUS_EMS_ACTIVATIONS	https://emergency.copernicus.eu/mapping/list-of-components/EMSR?q=energy	HTTP_ERR		0	404	0	Not Found
+IGS_GNSS_STATIONS	https://network.igs.org/?q=energy	FILTER_IGNORED	html-anchors	8	200	58686	filter ignored: an impossible entity returned 8 records vs 8 for the real one
+GDACS_DISASTER_ALERTS	https://www.gdacs.org/gdacsapi/api/events/geteventlist/SEARCH	PASS	json:features	87	200	125661	
+TRANSITLAND_OPERATORS	https://transit.land/api/v2/rest/operators?search=energy&limit=100&apikey={key}	HTTP_ERR		0	401	0	Unauthorized
+TRANSITLAND_FEEDS	https://transit.land/api/v2/rest/feeds?search=energy&limit=100&apikey={key}	HTTP_ERR		0	401	0	Unauthorized
+JP_ODPT_TRANSPORT	https://api.odpt.org/api/v4/odpt:Railway?acl:consumerKey={key}	HTTP_ERR		0	403	0	Forbidden
+DE_DB_TRANSPORT_REST	https://v6.db.transport.rest/locations?query=energy&results=100&stops=true&addresses=true&poi=true	HTTP_ERR		0	503	0	Service Unavailable
+BE_IRAIL_API	https://api.irail.be/stations/?format=json&lang=en	PASS	json:station	715	200	121993	
+UK_BODS_BUS_DATA	https://data.bus-data.dft.gov.uk/api/v1/dataset/?api_key={key}&limit=100&status=published	HTTP_ERR		0	401	0	Unauthorized
+CH_OPENTRANSPORTDATA	https://opentransportdata.swiss/en/search/?q=energy	HTTP_ERR		0	404	0	Not Found
+DK_OPEN_AIS_ARCHIVE	https://web.ais.dk/aisdata/?q=Toyota	NET_ERR		0	0	0	[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: 
+NO_BARENTSWATCH_AIS	https://live.ais.barentswatch.no/v1/latest/combined	HTTP_ERR		0	401	0	Unauthorized
+GLOBAL_FISHING_WATCH_VESSELS	https://gateway.api.globalfishingwatch.org/v3/vessels/search?query=Toyota&datasets[0]=public-global-vessel-identity:latest&limit=100	HTTP_ERR		0	401	0	Unauthorized
+AIRPLANES_LIVE_CALLSIGN	https://api.airplanes.live/v2/callsign/JAL1	HTTP_ERR		0	403	0	Forbidden
+AIRPLANES_LIVE_REGISTRATION	https://api.airplanes.live/v2/reg/JAL1	HTTP_ERR		0	403	0	Forbidden
+OPENSKY_FLIGHT_HISTORY	https://opensky-network.org/api/flights/aircraft?icao24=86d6e3&begin=1420070400&end=2000000000	HTTP_ERR		0	403	0	
+SPACE_LAUNCH_SCHEDULE	https://ll.thespacedevs.com/2.2.0/launch/?search=energy&limit=100	PASS	json:results	29	200	85512	
+US_BTS_TRANSPORT_STATISTICS	https://www.transtats.bts.gov/DataIndex.asp?q=energy	FILTER_IGNORED	html-anchors	156	200	125907	filter ignored: an impossible entity returned 156 records vs 156 for the real one
+EU_RAIL_RINF_INFRASTRUCTURE	https://rinf.era.europa.eu/API/Search?q=energy	NET_ERR		0	0	0	Tunnel connection failed: 502 Bad Gateway
+UK_PUBLIC_CONTRACTS_SCOTLAND	https://www.publiccontractsscotland.gov.uk/search/Search_MainPage.aspx?searchTerm=Toyota	FILTER_IGNORED	html-anchors	35	200	4666863	filter ignored: an impossible entity returned 35 records vs 35 for the real one
+UK_GOVUK_SEARCH_API	https://www.gov.uk/api/search.json?q=energy&count=100&fields=title,link,description,public_timestamp,organisations,content_store_document_type,format	PASS	json:results	100	200	254306	
+UK_LEGISLATION_FEED	https://www.legislation.gov.uk/all?title=energy	PASS	html-anchors	139	200	37316	
+UK_CASELAW_ARCHIVE	https://caselaw.nationalarchives.gov.uk/search?query=energy&per_page=50	PASS	html-anchors	91	200	101080	
+UK_COMMONS_DIVISIONS	https://commonsvotes-api.parliament.uk/data/divisions.json/search?queryParameters.searchTerm=energy&queryParameters.take=100	PASS	json-array	25	200	30390	
+UK_PARLIAMENT_WRITTEN_QUESTIONS	https://questions-statements.parliament.uk/api/writtenquestions/questions?searchTerm=energy&take=100&expandMember=true	HTTP_ERR		0	403	0	Forbidden
+UK_PARLIAMENT_BILLS_API	https://bills-api.parliament.uk/api/v1/Bills?SearchTerm=energy&take=100	PASS	json:items	78	200	39672	
+UK_PARLIAMENT_COMMITTEES	https://committees-api.parliament.uk/api/Committees?SearchTerm=energy&take=50	PASS	json:items	2	200	4463	
+UK_LORDS_REGISTER_INTERESTS	https://interests-api.parliament.uk/api/v1/Interests/?Take=100	PASS	json:items	20	200	65859	
+UK_FCA_FIRM_REGISTER	https://register.fca.org.uk/services/V0.1/Search?q=energy&type=firm	HTTP_ERR		0	404	0	Not Found
+UK_FSA_HYGIENE_RATINGS	https://api.ratings.food.gov.uk/Establishments?name=energy&pageSize=100	PASS	json:establishments	100	200	79630	
+UK_CQC_PROVIDERS	https://api.service.cqc.org.uk/public/v1/providers?perPage=1000	HTTP_ERR		0	401	0	Access Denied
+UK_OFSTED_REPORTS	https://reports.ofsted.gov.uk/search?q=energy	PASS	html-anchors	19	200	39709	
+UK_ICO_FEE_PAYERS	https://ico.org.uk/ESDWebPages/Search?SearchOption=Contains&Name=energy	FILTER_IGNORED	html-anchors	19	200	21435	filter ignored: an impossible entity returned 19 records vs 19 for the real one
+UK_INSOLVENCY_INDIVIDUAL	https://www.insolvencydirect.bis.gov.uk/eiir/IIRCaseNameSearchResult.asp?txtSurname=energy	FILTER_IGNORED	html-anchors	7	200	9203	filter ignored: an impossible entity returned 7 records vs 7 for the real one
+UK_LAND_OVERSEAS_OWNERSHIP	https://use-land-property-data.service.gov.uk/datasets/ocod?q=energy	FILTER_IGNORED	html-anchors	19	200	42075	filter ignored: an impossible entity returned 19 records vs 19 for the real one
+UK_SCOTLAND_CHARITY_OSCR	https://www.oscr.org.uk/about-charities/search-the-register/charity-details?searchTerm=energy	FILTER_IGNORED	html-anchors	28	200	19699	filter ignored: an impossible entity returned 28 records vs 28 for the real one
+UK_NI_CHARITY_COMMISSION	https://www.charitycommissionni.org.uk/charity-search/?q=energy	FILTER_IGNORED	html-anchors	68	200	54949	filter ignored: an impossible entity returned 68 records vs 68 for the real one
+UK_WDTK_FOI_REQUESTS	https://www.whatdotheyknow.com/search/energy/requests	HTTP_ERR		0	403	0	Forbidden
+UK_ELECTORAL_COMMISSION_ENTITIES	https://search.electoralcommission.org.uk/English/Registrations?searchText=Toyota	FILTER_IGNORED	html-anchors	12	200	23953	filter ignored: an impossible entity returned 12 records vs 12 for the real one
+IE_OIREACHTAS_MEMBERS	https://api.oireachtas.ie/v1/members?limit=500	PASS	json:results	500	200	2493566	
+IE_OIREACHTAS_LEGISLATION	https://api.oireachtas.ie/v1/legislation?bill_source=Government&limit=500	PASS	json:results	500	200	9137417	
+IE_LOBBYING_REGISTER	https://www.lobbying.ie/app/search?query=Toyota	HTTP_ERR		0	404	0	Not Found
+IE_CHARITIES_REGULATOR	https://www.charitiesregulator.ie/en/information-for-the-public/search-the-register-of-charities?searchTerm=energy	HTTP_ERR		0	403	0	Forbidden
+IE_GOV_OPEN_DATA	https://data.gov.ie/api/3/action/package_search?q=energy&rows=100	FILTER_IGNORED	json:result.results	100	200	801053	filter ignored: an impossible entity returned 100 records vs 100 for the real one
+US_SENATE_LDA_LOBBYISTS	https://lda.senate.gov/api/v1/lobbyists/?lobbyist_name=Toyota&page_size=100	EMPTY_RESULTSET	json:results	0	200	52	declared array_path resolved to an empty array
+US_SENATE_LDA_CLIENTS	https://lda.senate.gov/api/v1/clients/?client_name=Toyota&page_size=100	PASS	json:results	25	200	26457	
+US_SENATE_LDA_REGISTRANTS	https://lda.senate.gov/api/v1/registrants/?registrant_name=Toyota&page_size=100	PASS	json:results	4	200	2264	
+US_SENATE_LDA_CONTRIBUTIONS	https://lda.senate.gov/api/v1/contributions/?registrant_name=Toyota&page_size=100	PASS	json:results	25	200	56311	
+US_FEC_CANDIDATE_SEARCH	https://api.open.fec.gov/v1/candidates/search/?api_key={key}&q=energy&per_page=100	HTTP_ERR		0	403	0	Forbidden
+US_FEC_COMMITTEE_SEARCH	https://api.open.fec.gov/v1/committees/?api_key={key}&q=energy&per_page=100	HTTP_ERR		0	403	0	Forbidden
+US_FEC_INDEPENDENT_EXPENDITURES	https://api.open.fec.gov/v1/schedules/schedule_e/?api_key={key}&payee_name=energy&per_page=100	HTTP_ERR		0	403	0	Forbidden
+US_FEC_ELECTIONEERING	https://api.open.fec.gov/v1/electioneering/?api_key={key}&candidate_name=energy&per_page=100	HTTP_ERR		0	403	0	Forbidden
+US_REGULATIONS_DOCUMENTS	https://api.regulations.gov/v4/documents?filter[searchTerm]=energy&page[size]=250&api_key={key}	HTTP_ERR		0	403	0	Forbidden
+US_REGULATIONS_COMMENTS	https://api.regulations.gov/v4/comments?filter[searchTerm]=energy&page[size]=250&api_key={key}	HTTP_ERR		0	403	0	Forbidden
+US_FR_PUBLIC_INSPECTION	https://www.federalregister.gov/api/v1/public-inspection-documents.json?conditions[term]=energy&per_page=1000	PATH_UNRESOLVED		0	200	241	array_path 'results' not present in the response
+US_ECFR_SEARCH	https://www.ecfr.gov/api/search/v1/results?query=energy&per_page=100	PASS	json:results	100	200	166749	
+US_CLINICAL_TRIALS_SPONSORS	https://clinicaltrials.gov/api/v2/studies?query.spons=energy&pageSize=1000	PASS	json:studies	105	200	1184877	
+US_DOE_OSTI_RECORDS	https://www.osti.gov/api/v1/records?q=energy&rows=100	PASS	json-array	100	200	365043	
+US_FDIC_INSTITUTIONS	https://banks.data.fdic.gov/api/institutions?search=energy&limit=250&format=json	EMPTY_RESULTSET	json:data	0	200	199	declared array_path resolved to an empty array
+US_FDIC_FAILURES	https://banks.data.fdic.gov/api/failures?search=energy&limit=250&format=json	FILTER_IGNORED	json:data	250	200	144108	filter ignored: an impossible entity returned 250 records vs 250 for the real one
+US_NCUA_CREDIT_UNIONS	https://mapping.ncua.gov/ResearchCreditUnion?searchTerm=energy	UNPARSEABLE		0	200	63657	"<!doctype html>
+ <html lang=""en"" data-beasties-container>
+ <head>
+   <meta chars"
+US_SAM_EXCLUSIONS	https://api.sam.gov/entity-information/v4/exclusions?api_key={key}&exclusionName=energy	HTTP_ERR		0	404	0	Not Found
+US_FPDS_CONTRACT_ACTIONS	https://www.fpds.gov/ezsearch/search.do?s=FPDS&indexName=awardfull&templateName=1.5.3&q=Toyota	UNPARSEABLE		0	200	43308	"<!doctype html> <html lang=""en"" data-beasties-container>   <head><base href=""/se"
+US_COLLEGE_SCORECARD	https://api.data.gov/ed/collegescorecard/v1/schools?api_key={key}&school.name=energy&per_page=100	HTTP_ERR		0	403	0	Forbidden
+US_FCC_ECFS_FILINGS	https://publicapi.fcc.gov/ecfs/filings?api_key={key}&q=energy&limit=100	HTTP_ERR		0	403	0	Forbidden
+US_FAA_AIRCRAFT_REGISTRY	https://registry.faa.gov/aircraftinquiry/Search/NameResult?Nametxt=Toyota	HTTP_ERR		0	403	0	Forbidden
+US_NARA_CATALOG	https://catalog.archives.gov/api/v1?q=energy&rows=100	UNPARSEABLE		0	200	5454	declared array_path but body is not JSON
+US_DATA_GOV_CKAN	https://catalog.data.gov/api/3/action/package_search?q=energy&rows=100	HTTP_ERR		0	404	0	Not Found
+US_PA_BUSINESS_SEARCH	https://file.dos.pa.gov/search/business?searchTerm=Toyota	HTTP_ERR		0	999	0	<none>
+US_MA_CORP_SEARCH	https://corp.sec.state.ma.us/CorpWeb/CorpSearch/CorpSearchResults.aspx?SEARCH_TYPE=1&sysvalue=Toyota	UNPARSEABLE		0	200	212	"<html>
+ <head>
+ <META NAME=""robots"" CONTENT=""noindex,nofollow"">
+ <script src=""/_"
+US_GA_SOS_BUSINESS	https://ecorp.sos.ga.gov/BusinessSearch/BusinessSearchResults?businessName=Toyota	HTTP_ERR		0	403	0	Forbidden
+US_NC_SOS_BUSINESS	https://www.sosnc.gov/online_services/search/by_title/_Business_Registration?searchStr=Toyota	HTTP_ERR		0	403	0	Forbidden
+US_VA_SCC_BUSINESS	https://cis.scc.virginia.gov/EntitySearch/Index?searchTerm=Toyota	FILTER_IGNORED	html-anchors	4	200	29231	filter ignored: an impossible entity returned 4 records vs 4 for the real one
+US_AZ_CORP_COMMISSION	https://ecorp.azcc.gov/EntitySearch/Index?searchTerm=Toyota	NET_ERR		0	0	0	Tunnel connection failed: 502 Bad Gateway
+US_WI_DFI_CORP	https://www.wdfi.org/apps/CorpSearch/Results.aspx?type=Simple&q=Toyota	NET_ERR		0	0	0	Tunnel connection failed: 502 Bad Gateway
+US_MN_SOS_BUSINESS	https://mblsportal.sos.state.mn.us/Business/Search?searchValue=Toyota	ERR		0	0	0	RemoteDisconnected: Remote end closed connection without res
+US_TN_SOS_BUSINESS	https://tnbear.tn.gov/Ecommerce/FilingSearch.aspx?CN=Toyota	NET_ERR		0	0	0	[Errno 104] Connection reset by peer
+US_MO_SOS_BUSINESS	https://bsd.sos.mo.gov/search/business/businesssearch.aspx?searchType=BusinessName&searchValue=Toyota	HTTP_ERR		0	302	0	The HTTP server returned a redirect error that would lead to
+US_IN_SOS_BUSINESS	https://bsd.sos.in.gov/publicbusinesssearch?searchType=Business&name=Toyota	UNPARSEABLE		0	202	0	
+US_UT_BUSINESS_SEARCH	https://secure.utah.gov/bes/action/details?entity=Toyota	HTTP_ERR		0	403	0	Forbidden
+US_OK_SOS_BUSINESS	https://www.sos.ok.gov/corp/corpInquiryFind.aspx?name=Toyota	HTTP_ERR		0	520	0	<none>
+US_LA_SOS_BUSINESS	https://coraweb.sos.la.gov/CommercialSearch/CommercialSearchDetails.aspx?SearchName=Toyota	FILTER_UNCHECKED	html-anchors	1	200	18165	real entity returned 1 record(s) and an impossible one 1 — too small to tell a filter from a coincidence
+US_MD_BUSINESS_EXPRESS	https://egov.maryland.gov/BusinessExpress/EntitySearch/Search?query=Toyota	FILTER_IGNORED	html-anchors	19	200	24986	filter ignored: an impossible entity returned 19 records vs 19 for the real one
+US_OR_BUSINESS_REGISTRY	https://sos.oregon.gov/business/pages/find.aspx?q=Toyota	FILTER_IGNORED	html-anchors	71	200	104092	filter ignored: an impossible entity returned 71 records vs 71 for the real one
+US_AK_CORP_DATABASE	https://www.commerce.alaska.gov/cbp/main/search/entities?entityName=Toyota	HTTP_ERR		0	403	0	Forbidden
+US_NYC_DCA_LICENSES	https://data.cityofnewyork.us/resource/w7w3-xahh.json?$q=Toyota&$limit=1000	PASS	json-array	10	200	7620	
+US_NYC_RESTAURANT_INSPECTIONS	https://data.cityofnewyork.us/resource/43nn-pn8j.json?$q=energy&$limit=1000	FILTER_UNCHECKED	json-array	67	200	62246	impossible-entity request came back TIMEOUT (0 timeout); the comparison was not made
+US_NYC_DOB_PERMITS	https://data.cityofnewyork.us/resource/ipu4-2q9a.json?$q=energy&$limit=1000	FILTER_UNCHECKED	json-array	1000	200	1218409	impossible-entity request came back TIMEOUT (0 timeout); the comparison was not made
+US_NYC_PAYROLL	https://data.cityofnewyork.us/resource/k397-673e.json?$q=energy&$limit=1000	PASS	json-array	70	200	33847	
+US_CHICAGO_BUSINESS_LICENSES	https://data.cityofchicago.org/resource/r5kz-chrr.json?$q=Toyota&$limit=1000	PASS	json-array	192	200	219442	
+US_CHICAGO_SALARIES	https://data.cityofchicago.org/resource/xzkq-xp2w.json?$q=energy&$limit=1000	EMPTY	json-array	0	200	3	parsed but zero items
+US_CHICAGO_FOOD_INSPECTIONS	https://data.cityofchicago.org/resource/4ijn-s7e5.json?$q=energy&$limit=1000	PASS	json-array	67	200	116423	
+US_SF_REGISTERED_BUSINESSES	https://data.sfgov.org/resource/g8m3-pdis.json?$q=energy&$limit=1000	PASS	json-array	907	200	681010	
+US_LA_ACTIVE_BUSINESSES	https://data.lacity.org/resource/6rrh-rzua.json?$q=energy&$limit=1000	PASS	json-array	762	200	435656	
+US_SEATTLE_BUSINESS_LICENSES	https://data.seattle.gov/resource/wnbq-64tb.json?$q=Toyota&$limit=1000	PASS	json-array	7	200	2960	

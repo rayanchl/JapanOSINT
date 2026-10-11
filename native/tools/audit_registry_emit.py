@@ -77,10 +77,20 @@ from concurrent.futures import ThreadPoolExecutor
 # matched separately rather than as part of this pattern.
 SCHED = re.compile(r"\[sched\] (\S+) run rc=(-?\d+) records=(-?\d+) (\d+)ms")
 STORED = re.compile(r"\bstored=(\?|>=\d+|\d+)")
+# core/scheduler.c trails `notices=N` after stored=. The run line's `stored` is
+# a DISTINCT-UID count over everything the run wrote, notices included; the
+# database reading below deliberately excludes them (see db_rows_for). Comparing
+# the two without subtracting is comparing different things, and it reported
+# SINK_MISMATCH for every healthy row that happened to file one notice.
+RUN_NOTICES = re.compile(r"\bnotices=(\d+)")
 LIST = re.compile(r"^(\S+)\s+collector=(\S+)\s+interval=(-?\d+)\s*$")
 # hpengine's own line, kept because it separates "the upstream had nothing"
 # from "we threw away what it gave us" — a distinction `records=0` cannot make.
 HP_EMIT = re.compile(r"\[hp:[^\]]+\] emitted (\d+) of (\d+) available")
+# The engine's own stderr when it was refused, so the FETCH_FAILED verdict is
+# corroborated by the run output and not inferred from a row count alone.
+FETCH_FAILURE = re.compile(r'\[hp:[^\]]+\]\s+(?:status=\d+|transport failure|'
+                           r'non-JSON body)')
 NEEDS_ENTITY = re.compile(r"scheduled run but the row needs an entity|"
                           r"entity yields no value")
 
@@ -153,15 +163,39 @@ def build_cmd(a, sid):
     return [a.bin, "--run", sid]
 
 
+# Record types the ENGINE writes about itself. They are real rows and they are
+# meant to be stored -- but they are not records FROM the upstream, and counting
+# them as such is how a dead source reads as a healthy one. lib/hpengine.c's
+# collector-fetch-failure notice made this urgent: a row whose upstream answers
+# 429 now stores exactly one row and the run line says `records=1 stored=1`,
+# which without this exclusion is indistinguishable from a source that fetched
+# one real record.
+ENGINE_NOTICES = (
+    "collector-fetch-failure",
+    "collector-truncation-notice",
+    "collector-shape-notice",
+)
+
+
 def db_rows_for(db, sid):
+    """-> (real_rows, notice_rows) or (None, None) when the DB is unreadable.
+
+    Unreadable is NOT zero -- see verdict_for()."""
     try:
         con = sqlite3.connect("file:%s?mode=ro" % db, uri=True)
-        n = con.execute("SELECT COUNT(*) FROM intel_items WHERE source_id=?",
-                        (sid,)).fetchone()[0]
+        qs = ",".join("?" * len(ENGINE_NOTICES))
+        real = con.execute(
+            "SELECT COUNT(*) FROM intel_items WHERE source_id=? "
+            "AND (record_type IS NULL OR record_type NOT IN (%s))" % qs,
+            (sid,) + ENGINE_NOTICES).fetchone()[0]
+        notices = con.execute(
+            "SELECT COUNT(*) FROM intel_items WHERE source_id=? "
+            "AND record_type IN (%s)" % qs,
+            (sid,) + ENGINE_NOTICES).fetchone()[0]
         con.close()
-        return n
+        return real, notices
     except Exception:
-        return None            # unreadable is NOT zero — see verdict_for()
+        return None, None
 
 
 def run_one(a, tmpl, sid, slot):
@@ -198,7 +232,7 @@ def run_one(a, tmpl, sid, slot):
                 isinstance(e.stderr, bytes) else (e.stderr or ""))
     secs = round(time.time() - t0, 1)
 
-    rows = db_rows_for(db, sid)
+    rows, notices = db_rows_for(db, sid)
     for suf in ("", "-wal", "-shm"):
         try:
             os.unlink(db + suf)
@@ -209,13 +243,13 @@ def run_one(a, tmpl, sid, slot):
         io.open(os.path.join(a.keep_logs, sid + ".log"), "w",
                 encoding="utf-8", newline="\n").write(blob[-40000:])
 
-    res = verdict_for(sid, blob, rc, rows, secs, timed_out)
+    res = verdict_for(sid, blob, rc, rows, secs, timed_out, notices)
     with _lock:
         emit_row(a, res)
     return res
 
 
-def verdict_for(sid, blob, rc, rows, secs, timed_out):
+def verdict_for(sid, blob, rc, rows, secs, timed_out, notices=0):
     sched = None
     for m in SCHED.finditer(blob):
         if m.group(1) == sid:
@@ -265,6 +299,17 @@ def verdict_for(sid, blob, rc, rows, secs, timed_out):
         return (sid, "UNREGISTERED", rc, 0, -1, -1, -1, -1, secs,
                 "the binary does not know this id")
     if sched is None:
+        # The database is the only witness when the process never printed its
+        # run line. A row killed after landing 96,244 records is NOT the same
+        # finding as one that died having stored nothing, and reporting both as
+        # NO_RUN_LINE buried five working d-portal rows in the batch that
+        # prompted this.
+        if rows:
+            return (sid, "SLOW", rc if rc is not None else -1, 0,
+                    -1, -1, rows, available, secs,
+                    "no [sched] line — the process was killed before the run "
+                    "returned, but the database holds %d rows for it, so it "
+                    "was working: unmeasured, not failed" % rows)
         n = "no [sched] line — the process died before the run returned"
         return (sid, "NO_RUN_LINE", rc if rc is not None else -1, 0,
                 -1, -1, rows if rows is not None else -1, available, secs, n)
@@ -274,16 +319,38 @@ def verdict_for(sid, blob, rc, rows, secs, timed_out):
                 "could not read the run's database back; the numbers above are "
                 "the process's own word and are NOT confirmed")
 
+    # The run line's notices, so `stored` and `rows` describe the same set.
+    run_notices = 0
+    if sched:
+        nm = RUN_NOTICES.search(blob[sched.end():sched.end() + 240])
+        if nm:
+            run_notices = int(nm.group(1))
+    stored_records = stored - run_notices if stored >= 0 else stored
+
+    # A refused fetch, judged BEFORE the mismatch test: its one stored row is a
+    # notice, so stored_records is 0 and rows is 0 — they agree, and what
+    # matters is saying WHY nothing came back rather than calling it empty.
+    if rows == 0 and notices > 0 and FETCH_FAILURE.search(blob):
+        return (sid, "FETCH_FAILED", rc, sched_rc, emitted, stored, rows,
+                available, secs,
+                "the upstream refused the request or served a body that did "
+                "not parse; the engine stored a collector-fetch-failure "
+                "notice and no records (rule 1)")
+
     note = stored_note
-    if stored >= 0 and rows != stored and not stored_note:
+    if stored_records >= 0 and rows != stored_records and not stored_note:
         return (sid, "SINK_MISMATCH", rc, sched_rc, emitted, stored, rows,
                 available, secs,
-                "run line says stored=%d, the database holds %d rows for this "
-                "source_id — a collector emitting under another id, or a bug"
-                % (stored, rows))
+                "run line says stored=%d (%d of them notices), the database "
+                "holds %d records for this source_id — a collector emitting "
+                "under another id, or a bug"
+                % (stored, run_notices, rows))
 
     # `rows`, not `stored`, decides the verdict: it is the reading this tool
-    # took itself.
+    # took itself -- and `rows` now EXCLUDES the engine's own notices, so a
+    # source that stored nothing but a collector-fetch-failure still reads as
+    # storing nothing. Without that split the notice would have made every
+    # refused source look like a one-record success.
     if emitted <= 0 and rows == 0:
         if NEEDS_ENTITY.search(blob):
             return (sid, "NEEDS_ENTITY", rc, sched_rc, emitted, stored, rows,
@@ -334,7 +401,8 @@ def main():
     ap = argparse.ArgumentParser(
         description="Prove registered sources EMIT and STORE, not merely fetch.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="verdicts: OK | EMITS_NOTHING | COLLISION | SLOW | NEEDS_ENTITY"
+        epilog="verdicts: OK | EMITS_NOTHING | COLLISION | FETCH_FAILED | "
+               "SLOW | NEEDS_ENTITY"
                " | SINK_MISMATCH | UNREADABLE_DB | NO_RUN_LINE | UNREGISTERED")
     ap.add_argument("--bin", required=True, help="path to the japanosint binary")
     sel = ap.add_argument_group("source selection (combined with AND)")

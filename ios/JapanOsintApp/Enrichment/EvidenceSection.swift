@@ -20,6 +20,11 @@ import SwiftUI
 //     as HTML, not as an image, not as an attributed string. The download
 //     sheet is deliberately the only way to it.
 //
+// The custody list is offset-paged (evidence.c: 50 per page by default, 200
+// at most, with a measured `page.total`). It used to be read as one bare page,
+// so an item captured more than 50 times listed 50 records and said nothing
+// about the rest; the footer now says "showing N of M" and loads the next page.
+//
 // Self-contained: takes the item uid, fetches its own data, and navigates
 // nowhere.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -35,6 +40,9 @@ struct EvidenceSection: View {
     @Environment(\.theme) private var theme
 
     @State private var records: [EvidenceRecord] = []
+    @State private var page: OffsetPage?
+    @State private var loadingMore = false
+    @State private var moreError: String?
     @State private var verify: EvidenceVerifyResult?
     @State private var loading = false
     @State private var verifying = false
@@ -61,6 +69,9 @@ struct EvidenceSection: View {
                 ForEach(records) { record in
                     row(record)
                 }
+                PageBoundFooter(shown: records.count, page: page, noun: "captures",
+                                loadingMore: loadingMore, error: moreError,
+                                loadMore: { await loadMore() })
             }
 
             if let downloadError {
@@ -297,14 +308,32 @@ struct EvidenceSection: View {
         loading = true
         defer { loading = false }
         do {
-            records = try await apiClient.api.evidence(forItem: itemUid)
+            let r = try await apiClient.api.evidence(forItem: itemUid)
+            records = r.rows
+            page = r.page
             error = nil
+            moreError = nil
         } catch {
             self.error = error.localizedDescription
             Haptics.error()
         }
         if verifiesChain && !records.isEmpty {
             await runVerify()
+        }
+    }
+
+    private func loadMore() async {
+        guard page?.has_more == true, !loadingMore else { return }
+        loadingMore = true
+        defer { loadingMore = false }
+        do {
+            let next = page?.nextOffset(fallback: records.count) ?? records.count
+            let r = try await apiClient.api.evidence(forItem: itemUid, offset: next)
+            records = PageBound.append(records, r.rows)
+            page = r.page
+            moreError = nil
+        } catch {
+            moreError = error.localizedDescription
         }
     }
 

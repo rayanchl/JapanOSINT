@@ -157,7 +157,9 @@ static const hp_source HP3B19_LATAM[] = {
      * `{page}` substitutes in place, which is the only spelling that can page a
      * URL that must already carry the parameter. Verified live: pages 1-10 give
      * 4,937 records, totalRegistros 4,937, 4,937 distinct numeroControlePNCP. */
-    .url = "https://pncp.gov.br/api/consulta/v1/contratos?dataInicial=20250102&dataFinal=20250103&pagina={page}",
+    .url = "https://pncp.gov.br/api/consulta/v1/contratos?dataInicial={date-1d:%Y%m%d}&dataFinal={date:%Y%m%d}&pagina={page}",
+    .tz_minutes = -180,
+    /* {date…} 2026-10-06: the window was frozen at authoring, so every run re-fetched the same past days of January 2025; now yesterday and today, every 6 h */
     .array_path = "data",
     .interval = 21600,
     .page_start = 1,
@@ -881,7 +883,9 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "tender-notice",
     .tags = "\"brazil\",\"procurement\",\"tender\",\"pncp\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://pncp.gov.br/api/consulta/v1/contratacoes/publicacao?dataInicial=20250102&dataFinal=20250103&codigoModalidadeContratacao=6&pagina=1",
+    .url = "https://pncp.gov.br/api/consulta/v1/contratacoes/publicacao?dataInicial={date-1d:%Y%m%d}&dataFinal={date:%Y%m%d}&codigoModalidadeContratacao=6&pagina=1",
+    .tz_minutes = -180,
+    /* {date…} 2026-10-06: the window was frozen at authoring, so every run re-fetched the same past days of January 2025; now yesterday and today, every 6 h */
     .array_path = "data",
     /* No id_keys meant the engine keyed each notice on its first scalar and a
      * later pagina's repeat upserted over a different tender (40 emitted, 37
@@ -914,7 +918,9 @@ static const hp_source HP3B19_LATAM[] = {
      * (once as an upstream 504 at 70 s), so the row stored nothing at all.
      * Live: 500 records per page, totalRegistros 321,337 over 643 pages; pages
      * 1-3 gave 1,500 records and 1,500 distinct numeroControlePNCPAta. */
-    .url = "https://pncp.gov.br/api/consulta/v1/atas?dataInicial=20250102&dataFinal=20250104&pagina={page}",
+    .url = "https://pncp.gov.br/api/consulta/v1/atas?dataInicial={date-1d:%Y%m%d}&dataFinal={date:%Y%m%d}&pagina={page}",
+    .tz_minutes = -180,
+    /* {date…} 2026-10-06: the window was frozen at authoring, so every run re-fetched the same past days of January 2025; now yesterday and today, every 6 h */
     .array_path = "data",
     .timeout_ms = 120000,
     .interval = 21600,
@@ -1061,7 +1067,9 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "market-price",
     .tags = "\"mexico\",\"electricity\",\"cenace\",\"price\",\"energy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ws01.cenace.gob.mx:8082/SWPML/SIM/SIN/MDA/01PLO-115/2026/08/10/2026/08/12/JSON",
+    .url = "https://ws01.cenace.gob.mx:8082/SWPML/SIM/SIN/MDA/01PLO-115/{date-2d:%Y/%m/%d}/{date:%Y/%m/%d}/JSON",
+    .tz_minutes = -360,
+    /* {date…} 2026-10-06: the window was frozen at authoring, so every run re-fetched the same past 3 days (Aug 10-12); now the last 3 days */
     .headers = { "User-Agent: Mozilla/5.0 (compatible;JapanOSINT-research/1.0)" },
     .array_path = "Resultados",
     .interval = 3600,
@@ -1078,7 +1086,9 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "market-price",
     .tags = "\"mexico\",\"electricity\",\"cenace\",\"price\",\"energy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ws01.cenace.gob.mx:8082/SWPEND/SIM/SIN/MDA/AGUASCALIENTES/2026/08/10/2026/08/12/JSON",
+    .url = "https://ws01.cenace.gob.mx:8082/SWPEND/SIM/SIN/MDA/AGUASCALIENTES/{date-2d:%Y/%m/%d}/{date:%Y/%m/%d}/JSON",
+    .tz_minutes = -360,
+    /* {date…} 2026-10-06: the window was frozen at authoring, so every run re-fetched the same past 3 days (Aug 10-12); now the last 3 days */
     .headers = { "User-Agent: Mozilla/5.0 (compatible;JapanOSINT-research/1.0)" },
     .array_path = "Resultados",
     .interval = 3600,
@@ -1985,7 +1995,7 @@ static const hp_source HP3B19_LATAM[] = {
     .id_keys = "siren",
     .interval = 86400,
     .page_param = "page",
-    .page_size = 25,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "nom_complet",
     .description = "Every legal entity registered in Guadeloupe as held in the "
@@ -2365,10 +2375,15 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "market-price",
     .tags = "\"colombia\",\"electricity\",\"xm\",\"simem\",\"price\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.simem.co/backend-files/api/PublicData?datasetId=EC6945&startdate=2026-08-01&enddate=2026-08-02",
+    .url = "https://www.simem.co/backend-files/api/PublicData?datasetId=EC6945&startdate={date-7d}&enddate={date-1d}",
+    .tz_minutes = -300,
+    /* {date…} 2026-10-06: the window was frozen at Aug 1-2. XM publishes ~3 days late (2026-10-05: data through 10-02), so a 2-day window ending yesterday is EMPTY; the last 7 days hold 576 records */
+    .date_back = 7,
     .array_path = "result.records",
     .interval = 3600,
-    .title_keys = "Valor",
+    .title_keys = "CodigoVariable+FechaHora",
+    .id_keys = "CodigoVariable+FechaHora+CodigoDuracion+Version",   /* 576 of 576; Valor (the title it had) is 170 distinct */
+    .date_keys = "FechaHora",
     .description = "The hourly spot electricity price for Colombia — national, "
       "international and TIE — published by XM, the grid and market "
       "operator, with the variable code, the timestamp, the duration "
@@ -2384,10 +2399,15 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "generation-record",
     .tags = "\"colombia\",\"electricity\",\"xm\",\"simem\",\"generation\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.simem.co/backend-files/api/PublicData?datasetId=ff027b&startdate=2026-08-15&enddate=2026-08-16",
+    .url = "https://www.simem.co/backend-files/api/PublicData?datasetId=ff027b&startdate={date-10d}&enddate={date-4d}",
+    .tz_minutes = -300,
+    /* {date…} 2026-10-06: the window was frozen at Aug 15-16. Dispatch publishes 7-10 days late (2026-10-05: data through 09-27), ~12,800 rows a day; days 10..4 ago, daily, overlapping run to run */
+    .date_back = 7,
     .array_path = "result.records",
-    .interval = 3600,
-    .title_keys = "Valor",
+    .interval = 86400,   /* one 7-day window is 64,032 rows */
+    .title_keys = "CodigoElementoGeneracion+FechaHora",
+    .id_keys = "FechaHora+CodigoElementoGeneracion+CodigoDuracion",   /* 64,032 of 64,032; Valor is 1,314 distinct */
+    .date_keys = "FechaHora",
     .description = "The scheduled generation programme of the Colombian economic "
       "dispatch, hour by hour and generating unit by generating unit, "
       "with the resource code, the timestamp, the duration code and the "
@@ -2535,16 +2555,69 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "foi-request",
     .tags = "\"paraguay\",\"transparency\",\"foi\",\"accesstoinformation\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://informacionpublica.paraguay.gov.py/api/dashboard/buscar?keyword={q}&pageSize=100",
-    .headers = { "Content-Type: application/json;charset=utf-8" },
+    .url = "https://informacionpublica.paraguay.gov.py/api/dashboard/buscar?keyword={q}&pageSize=5000",
+    /* The server answers HTTP 500 "Content type '' not supported" without a
+     * JSON Content-Type, on the list AND on /detalle. The manifest wrote it
+     * `application/json\;charset=utf-8`, which gen_hp_batch rejects as a
+     * swallowed `charset` opt; plain `application/json` is served the same
+     * (200, 100 records, totalRecords 57,748 for "salud", 2026-10-06), so
+     * both copies now say that and nothing is ambiguous.
+     *
+     * `page` is a page NUMBER: pageSize=100&page=577 is the last 48 of 57,748
+     * and page=578 is empty. The row also declared page_size=100, which makes
+     * the engine treat page_param as an OFFSET — it asked for pages 0, 100,
+     * 200 … 600, read 7 of 578 pages, and stored 571 of 57,748 (records=600,
+     * UID-COLLISION 29). page_size is gone; pageSize stays in the URL.
+     *
+     * Two upstream properties to know before trusting a count from this row:
+     * the order of a result set is NOT stable between identical requests (the
+     * same page=0 came back with different first ids three times running), and
+     * one request id can appear several times on a page (66093 x3). A walk can
+     * therefore repeat some requests and miss others: two identical walks of
+     * "puente" (totalRecords 415, five pages) returned 415 rows each, holding
+     * 200 and 215 distinct ids. The front end sends no sort parameter either,
+     * so there is none to pin. The sink keeps one row per distinct
+     * id+content.
+     *
+     * NO SORT IS HONOURED; A LARGE PAGE IS (2026-10-07). The same backend's
+     * /api/solicitud/ list takes sortField + sortAsc (main-es2015 bundle), so
+     * those were tried here, with sort=id,asc, orderBy, order, sortOrder and
+     * ordenar: page=0 of "puente" came back in a different order on every
+     * request with each of them. The walk cannot be made stable, but it can
+     * be made to have no boundaries: pageSize is honoured far above 100 —
+     * 5,000 and 20,000 rows answered in full ("salud", 57,765 matches: 24 s
+     * and 69 s) — and a result set that fits in ONE page is the complete set
+     * whatever order it comes in. "puente" (415) at pageSize=500 returned 415
+     * rows holding 287 distinct ids and 385 distinct rows, identical on two
+     * requests, where the 100-row walk stored 293 rows over 212 ids. 5,000 is
+     * the page: every pivot up to 5,000 matches is one request with no
+     * boundary to repeat or skip across. What still collides inside one page
+     * is the upstream repeating a byte-identical row (puente 30, contrato
+     * 109) — real duplicates, which the sink collapses. timeout_ms covers the
+     * 24 s a full 5,000-row page takes.
+     *
+     * Above 5,000 the walk is still incomplete, and not only at the
+     * boundaries: the server shuffles the WHOLE match set per request, so
+     * each page is in effect a random 5,000 of it. "agua" (27,598 rows;
+     * 26,548 distinct, 21,769 ids in one 30,000-row response, 142 s, 37 MB)
+     * walked in 7 pages stored 18,803 rows over 15,407 ids — the ~70% that
+     * six random draws cover. No row can fix that: a single page as large as
+     * the match set is the only complete read, and "a" matches 172,247. */
+    .headers = { "Content-Type: application/json" },
+    .timeout_ms = 120000,
     .array_path = "data.lista",
     .detail_key = "id",
     .detail_url = "https://informacionpublica.paraguay.gov.py/api/solicitud/{v}/detalle",
-    .id_keys = "id",
+    /* One row per (request, reply), not per request: a request answered
+     * twice comes back as two rows sharing `id` and differing only in
+     * `comentario`. "puente": 415 rows, 214 ids, 283 distinct rows, and
+     * id+comentario is 283 too. Keyed on `id` alone, a second reply on a
+     * later page collapsed onto the first. */
+    .id_keys = "id+comentario",
     .page_param = "page",
-    .page_size = 100,
     .page_start = 0,
     .page_zero_based = 1,
+    .page_max = 1000,
     .title_keys = "titulo",
     .description = "Every freedom-of-information request made under Paraguay's Law "
       "5282, searchable by keyword: the request id, the date filed, the "
@@ -2564,7 +2637,7 @@ static const hp_source HP3B19_LATAM[] = {
     .tags = "\"paraguay\",\"transparency\",\"institution\",\"directory\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://informacionpublica.paraguay.gov.py/api/institucion/list",
-    .headers = { "Content-Type: application/json;charset=utf-8" },
+    .headers = { "Content-Type: application/json" },   /* see PY_AIP_SOLICITUDES */
     .array_path = "data",
     .id_keys = "id",
     .interval = 21600,

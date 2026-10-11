@@ -18,7 +18,8 @@ static const hp_source T[] = {
     .collector = "gb_energy", .category = "energy",
     .description = "Index of REMIT inside-information filings (generation unavailability notices): id, mrid, revisionNumber, createdTime, publishTime and a direct url to the full message. Max 7-day window. This is the list half of the highest-value energy disclosure feed in GB.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "energy-record", .tags = "\"gb\",\"energy\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://data.elexon.co.uk/bmrs/api/v1/remit/list/by-event?from=2026-08-10T00:00Z&to=2026-08-16T00:00Z",
+    .url = "https://data.elexon.co.uk/bmrs/api/v1/remit/list/by-event?from={date-7d:%Y-%m-%dT00:00Z}&to={date:%Y-%m-%dT00:00Z}",
+    /* {date…} 2026-10-06: the window was frozen at authoring, so every run re-fetched the same past week (Aug 10-16); now the last 7 days */
     .array_path = "data",
     .detail_url = "https://data.elexon.co.uk/bmrs/api/v1/remit/{v}", .detail_key = "id",
     .page_walk = 1,

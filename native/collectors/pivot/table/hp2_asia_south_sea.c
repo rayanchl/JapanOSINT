@@ -132,16 +132,7 @@ static const hp_source HP2_ASIA_SS[] = {
       "Singapore, plus its Investor Alert List of unlicensed entities — the "
       "licence check for a Singapore-domiciled fund, broker or payment firm" },
 
-  { .id = "SG_SGX_ANNOUNCEMENTS", .name = "SGX — listed company announcements",
-    .name_ja = "シンガポール取引所 開示", .category = "economy",
-    .portal = "https://www.sgx.com", .record_type = "sg-filing",
-    .tags = "\"sg\",\"filings\"", .free_tier = 1,
-    .url = "https://api.sgx.com/announcements/v1.0/searchbytitle?title={q}&pagesize=100&pagestart=0",
-    .array_path = "data", .title_keys = "title,issuer_name", .id_keys = "id",
-    .date_keys = "broadcast_date_time", .page_param = "pagestart", .page_size = 100,
-    .description = "Announcements by SGX-listed issuers — results, substantial "
-      "shareholder changes, related-party transactions and queries from the "
-      "exchange; the disclosure stream for Singapore-listed groups" },
+  /* SG_SGX_ANNOUNCEMENTS removed 2026-10-05: api.sgx.com now answers 403 {"message":"Missing Authentication Token"} on every request; the token comes from SGX's web app, not a keyless API */
 
   { .id = "MY_EPEROLEHAN_TENDERS", .name = "Malaysia — federal tender notices",
     .name_ja = "マレーシア 公共調達", .category = "government",

@@ -285,7 +285,7 @@ static long count_stmt(sqlite3_stmt *s) {
 /* {data:{decoded rule}} — webhook secrets masked, never echoed. */
 static cJSON *decode_row(sqlite3_stmt *s) {
   /* cols: id,name,enabled,predicate_json,channels_json,dedup_window_sec,
-   *       storm_cap_per_hour,muted_until,created_at,updated_at */
+   *       storm_cap_per_hour,muted_until,created_at,updated_at,created_by */
   cJSON *o = cJSON_CreateObject();
   cJSON_AddStringToObject(o, "id", (const char *)sqlite3_column_text(s,0));
   cJSON_AddStringToObject(o, "name", (const char *)sqlite3_column_text(s,1));
@@ -313,12 +313,17 @@ static cJSON *decode_row(sqlite3_stmt *s) {
                         mu ? cJSON_CreateString(mu) : cJSON_CreateNull());
   cJSON_AddStringToObject(o, "created_at", (const char *)sqlite3_column_text(s,8));
   cJSON_AddStringToObject(o, "updated_at", (const char *)sqlite3_column_text(s,9));
+  /* Who wrote the rule: every member reads every rule (workspace-visible,
+   * decided 2026-10-05), so a row names its author like a saved search or a
+   * case does. It was stored on insert and never sent. */
+  const char *cb = ctext(s,10);
+  cJSON_AddItemToObject(o, "created_by", cb ? cJSON_CreateString(cb) : cJSON_CreateNull());
   return o;
 }
 
 static const char *DECODE_COLS =
   "SELECT id,name,enabled,predicate_json,channels_json,dedup_window_sec,"
-  "storm_cap_per_hour,muted_until,created_at,updated_at FROM alert_rules "
+  "storm_cap_per_hour,muted_until,created_at,updated_at,created_by FROM alert_rules "
   "WHERE id=?1 AND tenant_id=?2";
 
 static char *one_rule(db_handle *db, const char *tid, const char *id,
@@ -519,8 +524,8 @@ char *alertsapi(db_handle *db, const char *tid, const char *uid,
       sqlite3_stmt *s;
       sqlite3_prepare_v2(db->h,
         "SELECT id,name,enabled,predicate_json,channels_json,"
-        "dedup_window_sec,storm_cap_per_hour,muted_until,created_at,updated_at "
-        "FROM alert_rules WHERE tenant_id=?1 ORDER BY created_at DESC",
+        "dedup_window_sec,storm_cap_per_hour,muted_until,created_at,updated_at,"
+        "created_by FROM alert_rules WHERE tenant_id=?1 ORDER BY created_at DESC",
         -1, &s, NULL);
       sqlite3_bind_text(s,1,tid,-1,SQLITE_TRANSIENT);
       cJSON *arr = cJSON_CreateArray();

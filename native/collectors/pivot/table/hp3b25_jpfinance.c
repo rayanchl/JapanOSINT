@@ -107,7 +107,7 @@ static const hp_source HP3B25_JPFINANCE[] = {
     .interval = 43200,
     .link_keys = "link",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
     .description = "Every post the Howa Bank has published, through the WordPress "
@@ -147,7 +147,7 @@ static const hp_source HP3B25_JPFINANCE[] = {
     .interval = 43200,
     .link_keys = "link",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
     .description = "Every notice and release the Kinki Labour Bank has posted, via "
@@ -298,7 +298,7 @@ static const hp_source HP3B25_JPFINANCE[] = {
     .interval = 43200,
     .link_keys = "link",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
     .description = "Every post on the Sapporo Securities Exchange site through the "

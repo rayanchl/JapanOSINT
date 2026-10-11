@@ -80,15 +80,15 @@ int main(void) {
 
   search_history_record(&db, "tA", "uA1", "intel", "{\"q\":\"tokyo\"}", 3);
   search_history_record(&db, "tA", "uA2", "intel", "{\"q\":\"osaka\"}", 4);
-  r = searchhistoryapi(&db, &a2, "GET", "", &st);
+  r = searchhistoryapi(&db, &a2, "GET", "", NULL, &st);
   assert(r && strstr(r, "tokyo") && strstr(r, "osaka") && strstr(r, "\"scope\":\"workspace\""));
   free(r);
-  r = searchhistoryapi(&db, &a2, "GET", "mine=1", &st);
+  r = searchhistoryapi(&db, &a2, "GET", "mine=1", NULL, &st);
   assert(r && !strstr(r, "tokyo") && strstr(r, "osaka")); free(r);
-  r = searchhistoryapi(&db, &b1, "GET", "", &st);
+  r = searchhistoryapi(&db, &b1, "GET", "", NULL, &st);
   assert(r && !strstr(r, "tokyo") && !strstr(r, "osaka")); free(r);
-  r = searchhistoryapi(&db, &a2, "DELETE", "", &st); free(r);
-  r = searchhistoryapi(&db, &a1, "GET", "", &st);
+  r = searchhistoryapi(&db, &a2, "DELETE", "", NULL, &st); free(r);
+  r = searchhistoryapi(&db, &a1, "GET", "", NULL, &st);
   assert(r && strstr(r, "tokyo") && !strstr(r, "osaka") &&
          "clearing removes only the caller's own entries"); free(r);
   printf("  history: workspace-wide, ?mine=1, other workspaces excluded, clear is own-only: ok\n");

@@ -71,17 +71,6 @@ static const hp_source HP3B31_ASSETREG[] = {
       "and pending proceedings. One of the few European property registers "
       "where ownership is openly readable" },
 
-  { .id = "FR_DVF_LAND_SALES", .name = "France DVF — declared property transaction values",
-    .name_ja = "フランス 不動産取引価格", .category = "government",
-    .portal = "https://app.dvf.etalab.gouv.fr", .record_type = "fr-property-sale",
-    .tags = "\"fr\",\"property\",\"prices\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://app.dvf.etalab.gouv.fr/?q={q}",
-    .base = "https://app.dvf.etalab.gouv.fr", .filter_query = 1,
-    .description = "Demandes de valeurs foncières — every property sale "
-      "registered in France with the price, the date, the cadastral parcel, the "
-      "surface and the type. The transaction record behind the notarial deed" },
-
   { .id = "EE_LAND_BOARD_CADASTRE", .name = "Estonia Land Board — cadastre & address service",
     .name_ja = "エストニア 土地台帳", .category = "government",
     .portal = "https://xgis.maaamet.ee", .record_type = "ee-parcel",
@@ -308,18 +297,6 @@ static const hp_source HP3B31_ASSETREG[] = {
       "boundaries with the concession holder where published, joined to "
       "deforestation alerts inside those boundaries — a supply-chain claim "
       "checked against satellite fact" },
-
-  { .id = "US_BLM_MINERAL_LEASES", .name = "US BLM — federal mineral & land leases",
-    .name_ja = "米国土地管理局 鉱区リース", .category = "energy",
-    .portal = "https://reports.blm.gov", .record_type = "us-mineral-lease",
-    .tags = "\"us\",\"mining\",\"oil-gas\",\"lease\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://reports.blm.gov/reports/LR2000?q={q}",
-    .base = "https://reports.blm.gov", .filter_query = 1,
-    .description = "Bureau of Land Management case records — oil, gas, coal "
-      "and hardrock leases on federal land with the lessee of record, the "
-      "serial number, the acreage, the legal land description and the lease "
-      "status. Federal minerals are held by name and the name is public" },
 
   { .id = "EU_INDUSTRIAL_EMISSIONS_PORTAL", .name = "EU Industrial Emissions Portal — permitted installations",
     .name_ja = "EU 産業排出施設登録", .category = "environment",

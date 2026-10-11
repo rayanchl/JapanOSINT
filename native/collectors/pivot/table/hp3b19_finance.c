@@ -566,8 +566,8 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://avoindata.prh.fi/opendata-ytj-api/v3/companies?registrationDateStart={q}&registrationDateEnd={q}",
     .array_path = "companies",
-    .page_param = "resultsFrom",
-    .page_size = 100,
+    .page_param = "page",
+    /* 2026-10-05: v3 pages with `page` (1-based; page=0 == page=1). `resultsFrom` was the v1 parameter, ignored by v3, so every run stopped at the first 100 */
     .page_start = 0,
     .description = "Every Finnish company incorporated in a given date window, with "
       "business ID, all current and historical names with their "

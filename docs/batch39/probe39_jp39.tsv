@@ -1,0 +1,29 @@
+id	url	verdict	kind	items	http	bytes	note
+JO39_JP_JPX_MARGIN_DAILY	https://www.jpx.co.jp/markets/statistics-equities/margin/tvdivq0000001r92-att/20261002_mtdaily.xlsx	PASS	xlsx:日々公表銘柄等信用取引残高	418	200	97337	date_back 3: header=||||市場|銘柄種別|コード|新証券コード
+JO39_JP_OCCTO_RESERVE_MARGIN	https://web-kohyo.occto.or.jp/kks-web-public/home/download?range=today&fromDate=2026/10/06	PASS	text-lines	482	200	53424	
+JO39_JP_OCCTO_RESERVE_MARGIN_WEEKLY	https://web-kohyo.occto.or.jp/kks-web-public/home/download?range=week&fromDate=2026/10/06	PASS	text-lines	282	200	33682	
+JO39_JP_OCCTO_INTERTIE_DAILY	https://web-kohyo.occto.or.jp/kks-web-public/home/dailyData?inputDate=2026/10/06	PASS	json:todayRnksenList	11	200	190355	
+JO39_JP_OCCTO_INTERTIE_WEEKLY	https://web-kohyo.occto.or.jp/kks-web-public/home/weeklyData?fromDate=2026/10/06	PASS	json:weekRnksenList	11	200	129726	
+JO39_JP_HEPCO_AREA_SUPPLY_DEMAND	https://www.hepco.co.jp/network/con_service/public_document/supply_demand_results/csv/eria_jukyu_202610_01.csv	PASS	csv	1489	200	65803	
+JO39_JP_TEPCO_AREA_SUPPLY_DEMAND	https://www.tepco.co.jp/forecast/html/images/eria_jukyu_202610_03.csv	PASS	text-lines	255	200	23159	
+JO39_JP_CHUDEN_AREA_SUPPLY_DEMAND	https://powergrid.chuden.co.jp/denki_yoho_content_data/eria_jukyu_202610_04.csv	PASS	csv	253	200	22618	
+JO39_JP_RIKUDEN_AREA_SUPPLY_DEMAND	https://www.rikuden.co.jp/nw/denki-yoho/csv/eria_jukyu_202610_05.csv	PASS	text-lines	1490	200	65754	
+JO39_JP_KANSAI_AREA_SUPPLY_DEMAND	https://www.kansai-td.co.jp/interchange/denkiyoho/area-performance/eria_jukyu_202610_06.csv	PASS	text-lines	255	200	21889	
+JO39_JP_ENERGIA_AREA_SUPPLY_DEMAND	https://www.energia.co.jp/nw/jukyuu/sys/eria_jukyu_202610_07.csv	PASS	text-lines	255	200	21612	
+JO39_JP_YONDEN_AREA_SUPPLY_DEMAND	https://www.yonden.co.jp/nw/supply_demand/csv/eria_jukyu_202610_08.csv	PASS	csv	254	200	19223	
+JO39_JP_KYUDEN_AREA_SUPPLY_DEMAND	https://www.kyuden.co.jp/td_area_jukyu/csv/eria_jukyu_202610_09.csv	PASS	csv	254	200	32002	
+JO39_JP_OKIDEN_AREA_SUPPLY_DEMAND	https://www.okiden.co.jp/business-support/service/supply-and-demand/csv/eria_jukyu_202610_10.csv	PASS	text-lines	255	200	17651	
+JO39_JP_TOHOKU_AREA_SUPPLY_DEMAND_DAILY	https://setsuden.nw.tohoku-epco.co.jp/common/demand/realtime_jukyu/realtime_jukyu_20261005_02.csv	PASS	text-lines	50	200	4471	
+JO39_JP_JMA_SHINDO_DB_RECENT	https://www.data.jma.go.jp/eqdb/data/shindo/api/api.php?mode=search&dateTimeF%5B%5D=2026-10-02&dateTimeF%5B%5D=00%3A00&dateTimeT%5B%5D=2026-10-04&dateTimeT%5B%5D=23%3A59&mag%5B%5D=0.0&mag%5B%5D=9.9&dep%5B%5D=0&dep%5B%5D=999&epi%5B%5D=99&pref%5B%5D=99&city%5B%5D=99&station%5B%5D=99&obsInt=1&maxInt=1&additionalC=true&Sort=S0&Comp=C0&seisCount=false&observed=false	PASS	json:res	27	200	8366	date_back 1: 
+JO39_JP_CAA_ACCIDENT_DATABANK	https://www.jikojoho.caa.go.jp/web-server/national/index/searchForCsv.do	PASS	csv	10002	200	4457545	
+JO39_JP_JSDA_OTC_BOND_REFERENCE	https://market.jsda.or.jp/shijyo/saiken/baibai/baisanchi/files/2026/S261006.csv	PASS	csv	12409	200	2160498	date_back 1: 
+JO39_JP_HEPCO_UNIT_GENERATION	https://denkiyoho.hepco.co.jp/area/data/bghatsu_01_20261004.csv	PASS	csv	25	200	8594	date_back 1: 
+JO39_JP_TOHOKU_UNIT_GENERATION	https://setsuden.nw.tohoku-epco.co.jp/common/demand/bghatsu_02_20261004.csv	PASS	csv	40	200	16264	date_back 1: 
+JO39_JP_CHUDEN_UNIT_GENERATION	https://powergrid.chuden.co.jp/ippan/bghatsu_04_20261004.csv	PASS	csv	69	200	22081	date_back 1: 
+JO39_JP_RIKUDEN_UNIT_GENERATION	https://www.rikuden.co.jp/nw/denki-yoho/csv/hatsu/bghatsu_05_20261004.csv	PASS	csv	17	200	6451	date_back 1: 
+JO39_JP_KANSAI_UNIT_GENERATION	https://www.kansai-td.co.jp/interchange/denkiyoho/each-unit/bghatsu_06_20261004.csv	PASS	csv	64	200	21994	date_back 1: 
+JO39_JP_ENERGIA_UNIT_GENERATION	https://www.energia.co.jp/nw/jukyuu/sys/bghatsu_07_20261004.csv	PASS	csv	37	200	13472	date_back 1: 
+JO39_JP_YONDEN_UNIT_GENERATION	https://www.yonden.co.jp/nw/unit_result/csv/bghatsu_08_20261004.csv	PASS	csv	14	200	5822	date_back 1: 
+JO39_JP_KYUDEN_UNIT_GENERATION	https://www.kyuden.co.jp/td_area_jukyu/csv/bghatsu_09_20261005.csv	PASS	csv	41	200	14256	
+JO39_JP_OKIDEN_UNIT_GENERATION	https://www.okiden.co.jp/business-support/service/energy-production/bghatsu_10_20261004.csv	PASS	csv	13	200	5104	date_back 1: 
+JO39_JP_TEPCO_UNIT_GENERATION	https://www.tepco.co.jp/forecast/html/images/bghatsu_03.csv	PASS	csv	148	200	48556	

@@ -14,7 +14,7 @@
  *   https://data.cityofchicago.org/resource/r5kz-chrr.json
  *       → [{legal_name, doing_business_as_name, license_description,
  *           date_issued, expiration_date, address, latitude, longitude, …}]
- *   https://data.sfgov.org/resource/g8m3-pdis.json
+ *   https://data.sf.gov/resource/g8m3-pdis.json
  *       → [{dba_name, ownership_name, full_business_address, dba_start_date,
  *           dba_end_date, location:{type:"Point",coordinates:[lon,lat]}, …}]
  *
@@ -189,7 +189,7 @@ static int run_chicago(const source_ctx *ctx, intel_sink *sink) {
  * 2026-09-19, so the total is honestly unknown and pw_walk publishes
  * records_available as null rather than guessing one. */
 #define SF_BIZ_URL \
-  "https://data.sfgov.org/resource/g8m3-pdis.json" \
+  "https://data.sf.gov/resource/g8m3-pdis.json" \
   "?$limit=500&$offset=0&$order=dba_start_date%20DESC,:id"
 
 /* pw_emit_fn: one page, reporting what it CONTAINED in `seen`. */
@@ -242,7 +242,7 @@ static int sf_emit_page(const source_ctx *ctx, intel_sink *sink,
              addr ? " @ " : "", addr ? addr : "");
     n += bl_emit(sink, data, "business-licence", rk, title,
                  naic ? naic : own,
-                 "https://data.sfgov.org/d/g8m3-pdis",
+                 "https://data.sf.gov/d/g8m3-pdis",
                  closed ? ended : (started[0] ? started : NULL),
                  "[\"commercial\",\"business-licence\",\"san-francisco\"]",
                  geo, lat, lon);
@@ -276,7 +276,7 @@ static const source_def sf_biz_def = {
   .name = "San Francisco Registered Businesses", .name_ja = "サンフランシスコ市 事業登録",
   .update_interval_sec = 43200, .run = run_sf,
   .category = "commercial", .type = "api",
-  .url = "https://data.sfgov.org/resource/g8m3-pdis.json",
+  .url = "https://data.sf.gov/resource/g8m3-pdis.json",
   .description = "Most recent San Francisco business registrations and closures — "
                  "trade name, owner, address, start and end dates. Keyless.",
   .layer = NULL, .free_tier = 1,

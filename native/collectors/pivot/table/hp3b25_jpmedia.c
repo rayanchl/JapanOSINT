@@ -1378,7 +1378,7 @@ static const hp_source HP3B25_JPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
     .description = "Ishikawa TV's WordPress REST posts endpoint, 100 posts per page "
@@ -1399,7 +1399,7 @@ static const hp_source HP3B25_JPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
     .description = "The construction daily's WordPress REST posts endpoint, 100 "
@@ -1421,7 +1421,7 @@ static const hp_source HP3B25_JPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
     .description = "The second construction daily's WordPress REST posts endpoint, "
@@ -1440,7 +1440,7 @@ static const hp_source HP3B25_JPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
     .description = "LNEWS's WordPress REST posts endpoint, 100 posts per page and "
@@ -1460,7 +1460,7 @@ static const hp_source HP3B25_JPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
     .description = "LOGISTICS TODAY's WordPress REST posts endpoint, 100 posts per "
@@ -1497,7 +1497,7 @@ static const hp_source HP3B25_JPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
     .description = "Yakuji Nippo's WordPress REST posts endpoint, 100 posts per page "
@@ -1535,7 +1535,7 @@ static const hp_source HP3B25_JPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
     .description = "The steel and non-ferrous metals daily's WordPress REST posts "
@@ -1573,7 +1573,7 @@ static const hp_source HP3B25_JPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
     .description = "Dempa Shimbun's WordPress REST posts endpoint, 100 posts per "
@@ -1681,7 +1681,7 @@ static const hp_source HP3B25_JPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "page",
-    .page_size = 100,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
     .description = "Nihon Kyoiku Shimbun's WordPress REST posts endpoint, 100 posts "
@@ -2216,7 +2216,7 @@ static const hp_source HP3B25_JPMEDIA[] = {
     .interval = 0,
     .link_keys = "event.public_url",
     .page_param = "page",
-    .page_size = 25,
+    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "event.title",
     .description = "Doorkeeper's public event search, returning events with title, "

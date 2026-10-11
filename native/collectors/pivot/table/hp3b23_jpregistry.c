@@ -254,15 +254,13 @@ static const hp_source HP3B23_JPREGISTRY[] = {
     .record_type = "corporate-disclosure",
     .tags = "\"japan\",\"tdnet\",\"disclosure\",\"listed\",\"corporate\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://webapi.yanoshin.jp/webapi/tdnet/list/recent.json?limit=100",
+    .url = "https://webapi.yanoshin.jp/webapi/tdnet/list/recent.json?limit=300",
     .array_path = "items",
     .date_keys = "Tdnet.pubdate",
     .id_keys = "Tdnet.id,Tdnet.document_url",
     .interval = 900,
     .link_keys = "Tdnet.document_url",
-    .page_param = "page",
-    .page_size = 100,
-    .page_start = 1,
+    /* No paging: recent.json ignores page/offset/start/p (2026-10-05, five variants byte-identical), so the walk re-fetched page 1 and logged a repeat notice every run. limit=300 spans ~3 days of filings (limit=100 was 3.5 hours, less than the 15:00 disclosure peak); the 900 s interval overlaps it many times */
     .title_keys = "Tdnet.title",
     .description = "TDnet is where every company listed in Japan files material "
       "disclosure, and this returns the stream with the securities "
@@ -271,28 +269,7 @@ static const hp_source HP3B23_JPREGISTRY[] = {
       "irregularities and merger announcements all arrive here first, "
       "hours before the press reports them." },
 
-  { .id = "YANOSHIN_EDINET_RECENT", .name = "EDINET filings — recent submissions",
-    .name_ja = "EDINET 最近の提出書類",
-    .category = "finance", .portal = "https://webapi.yanoshin.jp",
-    .record_type = "corporate-filing",
-    .tags = "\"japan\",\"edinet\",\"filing\",\"fsa\",\"corporate\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://webapi.yanoshin.jp/webapi/edinet/list/recent.json?limit=100",
-    .array_path = "items",
-    .date_keys = "Edinet.pubdate",
-    .id_keys = "Edinet.id,Edinet.document_url",
-    .interval = 1800,
-    .link_keys = "Edinet.document_url",
-    .page_param = "page",
-    .page_size = 100,
-    .page_start = 1,
-    .title_keys = "Edinet.title",
-    .description = "EDINET carries the statutory filings - annual and quarterly "
-      "securities reports, large shareholding reports, tender offer "
-      "statements - for listed and certain unlisted Japanese companies. "
-      "The large-shareholding reports in particular are the public "
-      "record of who controls a Japanese company, and they land here as "
-      "they are filed." },
+  /* YANOSHIN_EDINET_RECENT removed 2026-10-05: Yanoshin's EDINET mirror stopped in 2018. recent.json's newest filing is 2018-06-04 and the dated lists are empty for 2026, so the row re-stored the same 8-year-old filings as 'recent submissions' every 30 minutes */
 
   { .id = "DREAMNEWS_FEED", .name = "DreamNews — press release feed",
     .name_ja = "ドリームニュース プレスリリース",

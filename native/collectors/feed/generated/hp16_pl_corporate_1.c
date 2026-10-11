@@ -18,9 +18,11 @@ static const hp_source T[] = {
     .collector = "pl_corporate", .category = "corporate",
     .description = "Reverse pivot: give a 26-digit Polish bank account number and get every taxpayer that has declared it — name, NIP, REGON, KRS, statusVat, addresses, representatives, partners. An account-number-to-company resolver, which is rare and very high value for tracing payments.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "corporate-record", .tags = "\"pl\",\"corporate\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "pl",
-    .url = "https://wl-api.mf.gov.pl/api/search/bank-account/17103015080000000503131100?date=2026-08-14",
+    .url = "https://wl-api.mf.gov.pl/api/search/bank-account/17103015080000000503131100?date={date}",
+    .tz_minutes = 60,
+    /* {date…} 2026-10-06: the whitelist status is AS OF a date; it was pinned to 2026-08-14, now today (Poland) */
     .array_path = "result.subjects",
-    .detail_url = "https://wl-api.mf.gov.pl/api/search/nip/{v}?date=2026-08-14", .detail_key = "nip",
+    .detail_url = "https://wl-api.mf.gov.pl/api/search/nip/{v}?date={date}", .detail_key = "nip",
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
@@ -29,9 +31,11 @@ static const hp_source T[] = {
     .collector = "pl_corporate", .category = "corporate",
     .description = "Batch form of the white list: comma-separated NIPs in one request, response grouped as entries[].identifier + entries[].subjects[] with the same full payload (name, statusVat, regon, krs, addresses, representatives, partners, accountNumbers). Lets you resolve a whole list of Polish counterparties in a single request.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "corporate-record", .tags = "\"pl\",\"corporate\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "pl",
-    .url = "https://wl-api.mf.gov.pl/api/search/nips/5260250995,5250008198?date=2026-08-14",
+    .url = "https://wl-api.mf.gov.pl/api/search/nips/5260250995,5250008198?date={date}",
+    .tz_minutes = 60,
+    /* {date…} 2026-10-06: the whitelist status is AS OF a date; it was pinned to 2026-08-14, now today (Poland) */
     .array_path = "result.entries",
-    .detail_url = "https://wl-api.mf.gov.pl/api/search/nip/{v}?date=2026-08-14", .detail_key = "identifier",
+    .detail_url = "https://wl-api.mf.gov.pl/api/search/nip/{v}?date={date}", .detail_key = "identifier",
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 

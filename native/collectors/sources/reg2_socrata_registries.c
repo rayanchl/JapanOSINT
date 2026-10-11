@@ -13,7 +13,8 @@
  *   us-chicago-contracts           https://data.cityofchicago.org/resource/rsxa-ify5.json?$limit=200&$order=approval_date%20DESC
  *   us-chicago-business-licenses   https://data.cityofchicago.org/resource/r5kz-chrr.json?$limit=200
  *   us-la-business-registry        https://data.lacity.org/resource/6rrh-rzua.json?$limit=200
- *   us-sf-business-locations       https://data.sfgov.org/resource/g8m3-pdis.json?$limit=200
+ *   us-sf-business-locations       https://data.sf.gov/resource/g8m3-pdis.json?$limit=200
+ *                                  (was data.sfgov.org — see the note on the row)
  *   us-seattle-business-licenses   https://data.seattle.gov/resource/wnbq-64tb.json?$limit=200
  *   co-secop-contracts             https://www.datos.gov.co/resource/jbjy-vk9h.json?$limit=200&$order=fecha_de_firma%20DESC
  *
@@ -38,12 +39,13 @@
 #include "core/httpclient.h"
 #include "lib/feedlib.h"
 #include "lib/pagewalk.h"
-#include "lib/seenset.h"
+#include "lib/keyqual.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "_jp_osint.inc"
+#include <time.h>
+#include "_jp_osint.inc"         /* jo_sv, and lib/jocore.h for the notice builder */
 
 typedef struct {
   const char *service;      /* source id, stamped into properties          */
@@ -52,9 +54,9 @@ typedef struct {
   const char *title_f;      /* primary title column                         */
   const char *title_alt_f;  /* fallback title column (may be NULL)          */
   const char *key_f;        /* natural record id column (may be NULL)       */
-  /* Column that tells apart rows sharing key_f (may be NULL). Applied only to
-   * a key_f value already seen in this run, so first occurrences keep the
-   * uid they were stored under. */
+  /* Column that tells apart rows sharing key_f (may be NULL). Applied to
+   * EVERY row of a key that recurs in the run, never to a unique one — see
+   * soc_run. */
   const char *key2_f;
   const char *date_f;       /* date column (may be NULL)                    */
   int   date_compact;       /* 1 => value is bare YYYYMMDD                  */
@@ -90,146 +92,246 @@ static int soc_num(const cJSON *o, const char *k, double *out) {
   return 0;
 }
 
-/* Paging state that must outlive ONE page.
- *
- * `key_seen` is the whole-run record of key_f values already emitted, and it is
- * what decides whether a repeat gets qualified by key2_f. A per-page copy would
- * let the first row of every page keep an unqualified key and upsert over a row
- * an earlier page had already stored — the rule 4b collision, reintroduced by
- * the paging itself. pw_walk hands ONE userdata to every page of a walk, which
- * is exactly the right lifetime, so it lives here rather than on the stack of a
- * per-page function. */
-typedef struct { const soc_src *s; seen_set key_seen; } soc_walk;
+/* The row's title, or 0 when it carries none (no real title -> no row, R1). */
+static int soc_title(const soc_src *s, const cJSON *row, char *title, size_t cap) {
+  char tbuf[64];
+  const char *raw = soc_field(row, s->title_f, tbuf, sizeof tbuf);
+  if (!raw) raw = soc_field(row, s->title_alt_f, tbuf, sizeof tbuf);
+  if (!raw) return 0;
+  snprintf(title, cap, "%s", raw);
+  return 1;
+}
 
-/* pw_emit_fn: emit one already-fetched page, reporting what it CONTAINED.
- * `seen` is the array size, not the emitted count — pw_walk drives "did this
- * page come back full", and therefore both continuation and disclosure, off
- * `seen`, so reporting the emitted count here would make a full page holding a
- * few untitled rows look short and stop the walk while claiming completeness. */
-static int soc_emit_page(const source_ctx *ctx, intel_sink *sink,
-                         const char *id, cJSON *doc, void *ud, int *seen) {
-  (void)ctx;
+/* The row's base key: its key_f value, else a hash of service+title. */
+static const char *soc_base(const soc_src *s, const cJSON *row,
+                            const char *title, char *kbuf, size_t kcap,
+                            char hashed[21]) {
+  const char *key = soc_field(row, s->key_f, kbuf, kcap);
+  if (key) return key;
+  const char *parts[2] = { s->service, title };
+  feed_hash_key(hashed, parts, 2);
+  return hashed;
+}
+
+/* Paging state that must outlive ONE page: every titled row of the walk,
+ * copied out of its page. The uid of a row depends on whether its key recurs
+ * ANYWHERE in the walk, which no page can know on its own — qualifying per
+ * page (or first-come-plain across pages, as this collector did) lets the
+ * first row of a group keep the plain key, so which revision of a Chicago
+ * contract owns `us-chicago-contracts|347521` depended on where the
+ * newest-first window happened to cut. pw_walk hands ONE userdata to every
+ * page of a walk, which is exactly the right lifetime. */
+typedef struct {
+  const soc_src *s;
+  cJSON *rows;
+  int pages;              /* pages handed to soc_collect_page so far          */
+  int first_bad;          /* page 1 was not a row array: a shape failure (R3) */
+  /* A LATER page that answered 2xx with JSON that is not a row array (a
+   * Socrata error envelope) even after soc_fetch's retries. pw_walk reads such
+   * a page as a short one — the end of the data — and stops WITHOUT a notice,
+   * so soc_run files it. */
+  int bad_page;
+  char bad_msg[200];
+  char *bad_url;
+  /* soc_fetch's bookkeeping, for the run log. */
+  int retried_pages, retries;
+  char *last_url;
+} soc_walk;
+
+/* RETRY. A Socrata page that fails is retried here, with waits long enough to
+ * outlast what an anonymous caller actually meets: throttling (429), a query
+ * that timed out upstream (5xx, or a 2xx error envelope), a dropped
+ * connection. http_request already makes two quick extra attempts on
+ * transport errors, 429 and 5xx (250 ms, 500 ms); those are spent inside one
+ * feed_get_json call, so the waits below come on top of them. (The audit's
+ * "data.sfgov.org fails a page intermittently" turned out to be a moved host
+ * refusing reused connections — see the us-sf-business-locations row — but
+ * a page that fails once and reads fine when asked again is real on these
+ * portals, and before this a walk lost every page after it.)
+ *
+ * A failure that survives every attempt is never a silent short result:
+ *   - no body / non-2xx / unparseable: NULL goes back to pw_walk, which files
+ *     a collector-truncation-notice naming the page, the status of the last
+ *     attempt (feed_last_json_status) and its URL;
+ *   - a 2xx JSON that is not a row array: the document goes back as-is so
+ *     soc_collect_page records it, and soc_run files the notice (pw_walk
+ *     alone would read it as a short final page).
+ * A 4xx other than 408/425/429 is the upstream refusing the query, which
+ * asking again does not change, so it is not retried. */
+#define SOC_FETCH_ATTEMPTS 4   /* exhaustive-ok: retry attempts per page; a page that still fails is disclosed */
+static const int SOC_RETRY_WAIT_S[SOC_FETCH_ATTEMPTS - 1] = { 2, 8, 20 };
+
+static void soc_wait(const source_ctx *ctx, int seconds) {
+  for (int i = 0; i < seconds * 4; i++) {
+    if (ctx->cancel && *ctx->cancel) return;
+    struct timespec ts = { 0, 250 * 1000 * 1000 };
+    nanosleep(&ts, NULL);
+  }
+}
+
+/* 425 Too Early is retryable by definition (RFC 8470). */
+static int soc_status_retryable(long st) {
+  return st == FEED_ST_TRANSPORT || st == FEED_ST_UNPARSED || st == 408 ||
+         st == 425 || st == 429 || (st >= 500 && st <= 599);
+}
+
+/* pw_fetch_fn */
+static cJSON *soc_fetch(const source_ctx *ctx, const char *url, void *ud) {
   soc_walk *w = (soc_walk *)ud;
-  const soc_src *s = w->s;
-  seen_set *key_seen_p = &w->key_seen;
+  free(w->last_url);
+  w->last_url = strdup(url);
+  cJSON *doc = NULL;
+  for (int a = 0; a < SOC_FETCH_ATTEMPTS; a++) {
+    if (a > 0) {
+      if (a == 1) w->retried_pages++;
+      w->retries++;
+      long st = feed_last_json_status();
+      fprintf(stderr, "[%s] page %d (%s) failed (%s), retry %d of %d in %d s\n",
+              w->s->service, w->pages + 1, url,
+              doc ? "2xx JSON that is not a row array" :
+                    (st > 0 ? "HTTP status" : "transport/parse"),
+              a, SOC_FETCH_ATTEMPTS - 1, SOC_RETRY_WAIT_S[a - 1]);
+      cJSON_Delete(doc);
+      doc = NULL;
+      soc_wait(ctx, SOC_RETRY_WAIT_S[a - 1]);
+      if (ctx->cancel && *ctx->cancel) break;
+      feed_last_json_status_reset();
+    }
+    doc = feed_get_json(ctx->http, url, 25000);
+    if (cJSON_IsArray(doc)) return doc;
+    if (!doc && !soc_status_retryable(feed_last_json_status())) break;
+  }
+  return doc;      /* NULL, or the last non-array document (see above) */
+}
+
+/* pw_emit_fn: collect one already-fetched page, reporting what it CONTAINED.
+ * `seen` is the array size, not the kept count — pw_walk drives "did this
+ * page come back full", and therefore both continuation and disclosure, off
+ * `seen`, so reporting the kept count here would make a full page holding a
+ * few untitled rows look short and stop the walk while claiming completeness.
+ * The return value is the number of rows that will be emitted after the walk
+ * (soc_run), which is what pw_walk's notice reports as used. */
+static int soc_collect_page(const source_ctx *ctx, intel_sink *sink,
+                            const char *id, cJSON *doc, void *ud, int *seen) {
+  (void)ctx; (void)sink;
+  soc_walk *w = (soc_walk *)ud;
   *seen = 0;
+  w->pages++;
   if (!cJSON_IsArray(doc)) {
-    fprintf(stderr, "[%s] unexpected payload (not an array)\n", id);
+    fprintf(stderr, "[%s] page %d: unexpected payload (not an array)\n", id,
+            w->pages);
+    if (w->pages == 1) { w->first_bad = 1; return 0; }
+    if (!w->bad_page) {
+      w->bad_page = w->pages;
+      const char *m = jo_sv(doc, "message");
+      if (!m) m = jo_sv(doc, "code");
+      if (!m) m = jo_sv(doc, "error");
+      snprintf(w->bad_msg, sizeof w->bad_msg, "%s", m ? m : "no message");
+      free(w->bad_url);
+      w->bad_url = w->last_url ? strdup(w->last_url) : NULL;
+    }
     return 0;
   }
   *seen = cJSON_GetArraySize(doc);
-
-  int n = 0;
+  int kept = 0;
   const cJSON *row;
   cJSON_ArrayForEach(row, doc) {
-    if (!cJSON_IsObject(row)) continue;
-
-    char tbuf[64];
-    const char *raw = soc_field(row, s->title_f, tbuf, sizeof tbuf);
-    if (!raw) raw = soc_field(row, s->title_alt_f, tbuf, sizeof tbuf);
-    if (!raw) continue;                       /* no real title -> no row (R1) */
     char title[400];
-    snprintf(title, sizeof title, "%s", raw);
-
-    char kbuf[64];
-    const char *key = soc_field(row, s->key_f, kbuf, sizeof kbuf);
-    char hashed[21];
-    if (!key) {
-      const char *parts[3] = { s->service, title, NULL };
-      feed_hash_key(hashed, parts, 2);
-      key = hashed;
-    }
-    char k2buf[64], kqual[160];
-    if (s->key2_f && key != hashed && !seen_add(key_seen_p, key)) {
-      const char *k2 = soc_field(row, s->key2_f, k2buf, sizeof k2buf);
-      snprintf(kqual, sizeof kqual, "%s|%s", key, k2 ? k2 : "");
-      key = kqual;
-    }
-
-    /* published_at strictly from the dataset's own date column. */
-    char dbuf[64], iso[64];
-    const char *pub = NULL;
-    const char *dv = soc_field(row, s->date_f, dbuf, sizeof dbuf);
-    if (dv) {
-      if (s->date_compact && strlen(dv) == 8) {
-        snprintf(iso, sizeof iso, "%.4s-%.2s-%.2s", dv, dv + 4, dv + 6);
-      } else {
-        snprintf(iso, sizeof iso, "%s", dv);
-        char *sp = strchr(iso, ' ');
-        if (sp) *sp = 'T';
-      }
-      pub = iso;
-    }
-
-    /* geo ONLY from coordinates the row itself carried (R2) */
-    double la = 0, lo = 0;
-    int hasgeo = 0;
-    if (s->geo_kind == 1) {
-      hasgeo = soc_num(row, s->geo_a, &la) && soc_num(row, s->geo_b, &lo);
-    } else if (s->geo_kind == 2) {
-      const cJSON *o = cJSON_GetObjectItem(row, s->geo_a);
-      if (cJSON_IsObject(o))
-        hasgeo = soc_num(o, "latitude", &la) && soc_num(o, "longitude", &lo);
-    } else if (s->geo_kind == 3) {
-      const cJSON *o = cJSON_GetObjectItem(row, s->geo_a);
-      const cJSON *c = o ? cJSON_GetObjectItem(o, "coordinates") : NULL;
-      if (cJSON_IsArray(c) && cJSON_GetArraySize(c) >= 2) {
-        const cJSON *x = cJSON_GetArrayItem(c, 0), *y = cJSON_GetArrayItem(c, 1);
-        if (cJSON_IsNumber(x) && cJSON_IsNumber(y)) {
-          lo = x->valuedouble; la = y->valuedouble; hasgeo = 1;
-        }
-      }
-    }
-    if (hasgeo && (la == 0.0 || lo == 0.0)) hasgeo = 0;   /* 0/0 placeholder */
-    if (hasgeo && (la < -90.0 || la > 90.0 || lo < -180.0 || lo > 180.0))
-      hasgeo = 0;
-
-    /* properties: every scalar column this row actually carried */
-    cJSON *props = cJSON_CreateObject();
-    cJSON_AddStringToObject(props, "service", s->service);
-    cJSON_AddStringToObject(props, "dataset_url", s->url);
-    for (const cJSON *f = row->child; f; f = f->next) {
-      if (!f->string || f->string[0] == ':') continue;   /* Socrata internals */
-      if (cJSON_IsString(f) && f->valuestring && f->valuestring[0])
-        cJSON_AddStringToObject(props, f->string, f->valuestring);
-      else if (cJSON_IsNumber(f))
-        cJSON_AddNumberToObject(props, f->string, f->valuedouble);
-      else if (cJSON_IsBool(f))
-        cJSON_AddBoolToObject(props, f->string, cJSON_IsTrue(f) ? 1 : 0);
-    }
-    if (hasgeo) {
-      cJSON_AddNumberToObject(props, "lat", la);
-      cJSON_AddNumberToObject(props, "lon", lo);
-    }
-    char *pj = cJSON_PrintUnformatted(props);
-    cJSON_Delete(props);
-
-    /* summary from up to three real columns */
-    char sbuf1[96], sbuf2[96], sbuf3[96], summary[320];
-    const char *a = soc_field(row, s->sum1, sbuf1, sizeof sbuf1);
-    const char *b = soc_field(row, s->sum2, sbuf2, sizeof sbuf2);
-    const char *c = soc_field(row, s->sum3, sbuf3, sizeof sbuf3);
-    snprintf(summary, sizeof summary, "%s%s%s%s%s",
-             a ? a : "", (a && b) ? " \xc2\xb7 " : "", b ? b : "",
-             ((a || b) && c) ? " \xc2\xb7 " : "", c ? c : "");
-
-    intel_item it = {0};
-    it.remote_key      = key;
-    it.title           = title;
-    it.summary         = summary[0] ? summary : NULL;
-    it.body            = pj;
-    it.link            = s->url;
-    it.published_at    = pub;
-    it.record_type     = s->rtype;
-    it.has_geo         = hasgeo;
-    it.lat             = la;
-    it.lon             = lo;
-    it.properties_json = pj;
-    it.tags_json       = "[\"registry\",\"open-data\"]";
-    if (sink->emit(sink, &it) >= 0) n++;
-    free(pj);
+    if (!cJSON_IsObject(row) || !soc_title(w->s, row, title, sizeof title)) continue;
+    cJSON *dup = cJSON_Duplicate(row, 1);
+    if (!dup) continue;
+    cJSON_AddItemToArray(w->rows, dup);
+    kept++;
   }
-  return n;
+  return kept;
+}
+
+/* Emit one collected row under the uid soc_run decided for it. */
+static int soc_emit_row(const soc_src *s, intel_sink *sink, const cJSON *row,
+                        const char *title, const char *key) {
+  /* published_at strictly from the dataset's own date column. */
+  char dbuf[64], iso[64];
+  const char *pub = NULL;
+  const char *dv = soc_field(row, s->date_f, dbuf, sizeof dbuf);
+  if (dv) {
+    if (s->date_compact && strlen(dv) == 8) {
+      snprintf(iso, sizeof iso, "%.4s-%.2s-%.2s", dv, dv + 4, dv + 6);
+    } else {
+      snprintf(iso, sizeof iso, "%s", dv);
+      char *sp = strchr(iso, ' ');
+      if (sp) *sp = 'T';
+    }
+    pub = iso;
+  }
+
+  /* geo ONLY from coordinates the row itself carried (R2) */
+  double la = 0, lo = 0;
+  int hasgeo = 0;
+  if (s->geo_kind == 1) {
+    hasgeo = soc_num(row, s->geo_a, &la) && soc_num(row, s->geo_b, &lo);
+  } else if (s->geo_kind == 2) {
+    const cJSON *o = cJSON_GetObjectItem(row, s->geo_a);
+    if (cJSON_IsObject(o))
+      hasgeo = soc_num(o, "latitude", &la) && soc_num(o, "longitude", &lo);
+  } else if (s->geo_kind == 3) {
+    const cJSON *o = cJSON_GetObjectItem(row, s->geo_a);
+    const cJSON *c = o ? cJSON_GetObjectItem(o, "coordinates") : NULL;
+    if (cJSON_IsArray(c) && cJSON_GetArraySize(c) >= 2) {
+      const cJSON *x = cJSON_GetArrayItem(c, 0), *y = cJSON_GetArrayItem(c, 1);
+      if (cJSON_IsNumber(x) && cJSON_IsNumber(y)) {
+        lo = x->valuedouble; la = y->valuedouble; hasgeo = 1;
+      }
+    }
+  }
+  if (hasgeo && (la == 0.0 || lo == 0.0)) hasgeo = 0;   /* 0/0 placeholder */
+  if (hasgeo && (la < -90.0 || la > 90.0 || lo < -180.0 || lo > 180.0))
+    hasgeo = 0;
+
+  /* properties: every scalar column this row actually carried */
+  cJSON *props = cJSON_CreateObject();
+  cJSON_AddStringToObject(props, "service", s->service);
+  cJSON_AddStringToObject(props, "dataset_url", s->url);
+  for (const cJSON *f = row->child; f; f = f->next) {
+    if (!f->string || f->string[0] == ':') continue;   /* Socrata internals */
+    if (cJSON_IsString(f) && f->valuestring && f->valuestring[0])
+      cJSON_AddStringToObject(props, f->string, f->valuestring);
+    else if (cJSON_IsNumber(f))
+      cJSON_AddNumberToObject(props, f->string, f->valuedouble);
+    else if (cJSON_IsBool(f))
+      cJSON_AddBoolToObject(props, f->string, cJSON_IsTrue(f) ? 1 : 0);
+  }
+  if (hasgeo) {
+    cJSON_AddNumberToObject(props, "lat", la);
+    cJSON_AddNumberToObject(props, "lon", lo);
+  }
+  char *pj = cJSON_PrintUnformatted(props);
+  cJSON_Delete(props);
+
+  /* summary from up to three real columns */
+  char sbuf1[96], sbuf2[96], sbuf3[96], summary[320];
+  const char *a = soc_field(row, s->sum1, sbuf1, sizeof sbuf1);
+  const char *b = soc_field(row, s->sum2, sbuf2, sizeof sbuf2);
+  const char *c = soc_field(row, s->sum3, sbuf3, sizeof sbuf3);
+  snprintf(summary, sizeof summary, "%s%s%s%s%s",
+           a ? a : "", (a && b) ? " \xc2\xb7 " : "", b ? b : "",
+           ((a || b) && c) ? " \xc2\xb7 " : "", c ? c : "");
+
+  intel_item it = {0};
+  it.remote_key      = key;
+  it.title           = title;
+  it.summary         = summary[0] ? summary : NULL;
+  it.body            = pj;
+  it.link            = s->url;
+  it.published_at    = pub;
+  it.record_type     = s->rtype;
+  it.has_geo         = hasgeo;
+  it.lat             = la;
+  it.lon             = lo;
+  it.properties_json = pj;
+  it.tags_json       = "[\"registry\",\"open-data\"]";
+  int ok = sink->emit(sink, &it) >= 0;
+  free(pj);
+  return ok;
 }
 
 /* Walk the register to exhaustion where the upstream permits.
@@ -244,14 +346,84 @@ static int soc_emit_page(const source_ctx *ctx, intel_sink *sink,
  * size, and pw_walk states what it left behind as a
  * collector-truncation-notice rather than stopping silently. */
 static int soc_run(const soc_src *s, const source_ctx *ctx, intel_sink *sink) {
-  soc_walk w = { s, {0} };
-  int n = pw_walk(ctx, sink, s->service, s->url, pw_fetch_json,
-                  soc_emit_page, &w);
-  seen_free(&w.key_seen);
-  if (n < 0) {
-    fprintf(stderr, "[%s] fetch/parse failed\n", s->service);
+  soc_walk w;
+  memset(&w, 0, sizeof w);
+  w.s = s;
+  w.rows = cJSON_CreateArray();
+  if (!w.rows) return -1;
+  int kept = pw_walk(ctx, sink, s->service, s->url, soc_fetch,
+                     soc_collect_page, &w);
+  free(w.last_url);
+  if (kept < 0 || w.first_bad) {
+    cJSON_Delete(w.rows);
+    free(w.bad_url);
+    fprintf(stderr, "[%s] %s\n", s->service, kept < 0
+            ? "fetch/parse failed" : "page 1 is not a row array (shape change)");
     return -1;
   }
+  if (w.bad_page) {
+    char reason[400];
+    snprintf(reason, sizeof reason,
+             "page %d answered HTTP 2xx with JSON that is not a row array "
+             "(\"%s\") on all %d attempts, so the walk stopped before the "
+             "upstream ran out", w.bad_page, w.bad_msg, SOC_FETCH_ATTEMPTS);
+    cJSON *extra = cJSON_CreateObject();
+    if (extra) {
+      cJSON_AddStringToObject(extra, "url", s->url);
+      cJSON_AddNumberToObject(extra, "pages_read", w.pages - 1);
+      cJSON_AddNumberToObject(extra, "failed_page", w.bad_page);
+      cJSON_AddNumberToObject(extra, "failed_page_status", 200);
+      cJSON_AddStringToObject(extra, "failed_page_message", w.bad_msg);
+      cJSON_AddStringToObject(extra, "failed_page_url", w.bad_url ? w.bad_url : "");
+    }
+    jo_truncation_notice_ex(sink, s->service, NULL, kept, -1, reason,
+                            "re-run — the walk starts again from the same URL",
+                            extra);
+    fprintf(stderr, "[%s] TRUNCATED: %s\n", s->service, reason);
+  }
+  free(w.bad_url);
+  if (w.retries)
+    fprintf(stderr, "[%s] %d page(s) needed a retry (%d retries in all)\n",
+            s->service, w.retried_pages, w.retries);
+
+  /* IDENTITY, decided over the WHOLE walk. Pass 1 counts every base key (the
+   * dataset's own record id, or a hash of service+title where it has none);
+   * pass 2 qualifies EVERY row of a key that recurs: by key2_f where the
+   * dataset declares one and it tells the group apart (Chicago: a contract
+   * number recurs once per revision — live 2026-10-06, 4,000 rows walked,
+   * 322 contract numbers carried by 693 rows), else by a hash of the row's
+   * own bytes. A key that is unique in the walk keeps its plain uid. A row
+   * byte-identical to one already emitted (offset paging over a register
+   * that changes mid-walk can serve one twice) is folded. See lib/keyqual.h. */
+  keyqual kq = {0};
+  const cJSON *row;
+  cJSON_ArrayForEach(row, w.rows) {
+    char title[400], kbuf[64], k2buf[64], hashed[21];
+    if (!soc_title(s, row, title, sizeof title)) continue;
+    const char *base = soc_base(s, row, title, kbuf, sizeof kbuf, hashed);
+    keyqual_add(&kq, base, soc_field(row, s->key2_f, k2buf, sizeof k2buf));
+  }
+  keyqual_seal(&kq);
+
+  int n = 0, folded = 0;
+  cJSON_ArrayForEach(row, w.rows) {
+    char title[400], kbuf[64], k2buf[64], hashed[21], ubuf[512];
+    if (!soc_title(s, row, title, sizeof title)) continue;
+    const char *base = soc_base(s, row, title, kbuf, sizeof kbuf, hashed);
+    const char *key = base;
+    if (keyqual_count(&kq, base) > 1) {
+      char *raw = cJSON_PrintUnformatted(row);
+      key = keyqual_uid(&kq, base, soc_field(row, s->key2_f, k2buf, sizeof k2buf),
+                        raw ? raw : "", ubuf, sizeof ubuf);
+      free(raw);
+      if (!keyqual_claim(&kq, base, key)) { folded++; continue; }
+    }
+    n += soc_emit_row(s, sink, row, title, key);
+  }
+  keyqual_free(&kq);
+  cJSON_Delete(w.rows);
+  fprintf(stderr, "[%s] emitted %d of %d titled rows walked (%d byte-identical "
+          "repeats folded)\n", s->service, n, kept, folded);
   return 0;                                   /* fetched fine (R3) */
 }
 
@@ -345,7 +517,8 @@ SOC_SOURCE(chi_con, "us-chicago-contracts",
   .rtype = "procurement-contract", .title_f = "purchase_order_description",
   /* A contract number recurs once per revision, the revisions differing in
    * revision_number and award_amount (live 2026-09-15: 200 rows, 194 contract
-   * numbers, 200 number+revision) — so a repeat is qualified by its revision. */
+   * numbers, 200 number+revision) — so every revision of a recurring number
+   * is qualified by its revision. */
   .title_alt_f = "vendor_name", .key_f = "purchase_order_contract_number",
   .key2_f = "revision_number",
   .date_f = "approval_date",
@@ -387,9 +560,18 @@ SOC_SOURCE(la_biz, "us-la-business-registry",
   .sum1 = "primary_naics_description", .sum2 = "street_address", .sum3 = "council_district")
 
 /* --- San Francisco registered business locations ------------------------ */
+/* The portal moved: data.sfgov.org now answers every request with a 301 to
+ * data.sf.gov, and the redirector refuses the fifth request on a reused
+ * keep-alive connection — HTTP 425/428 with an empty body (measured
+ * 2026-10-07: curl reusing one connection got 200, 200, 200, 200, then 425;
+ * the same five on fresh connections, and seven in a row reusing a
+ * connection to data.sf.gov itself, all 200). This collector's client
+ * reuses connections, so every walk lost page 5 onward — `emitted 800 …
+ * page 5 answered HTTP 428`, twice running — which is the audit's
+ * "800 vs 1,000 rows". The row now asks the host the redirect names. */
 SOC_SOURCE(sf_biz, "us-sf-business-locations",
   "San Francisco registered business locations",
-  "https://data.sfgov.org/resource/g8m3-pdis.json?$limit=200&$offset=0&$order=:id",
+  "https://data.sf.gov/resource/g8m3-pdis.json?$limit=200&$offset=0&$order=:id",
   "economy", "economy", "SF Open Data, public record.",
   "SF Treasurer register of every business location, linking the registered "
   "ownership name to the trading (DBA) name, address and GeoJSON point.",

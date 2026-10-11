@@ -6,9 +6,10 @@ import SaveStarButton from '../saved/SaveStarButton.jsx';
 import PinToCaseButton from '../cases/CasePickerSheet.jsx';
 
 /**
- * Save-search sheet (SaveSearchSheet on iOS). A saved search is a private
- * bookmark: POST /api/saved-searches { name?, kind, params } — `kind` is
- * fixed once saved, and only `intel` searches can later become alert rules.
+ * Save-search sheet (SaveSearchSheet on iOS). A saved search is shared with
+ * the workspace (every member sees it, only its author edits or deletes it):
+ * POST /api/saved-searches { name?, kind, params } — `kind` is fixed once
+ * saved, and only `intel` searches can later become alert rules.
  */
 export function SaveSearchSheet({ open, onClose, query, kind = 'osint' }) {
   const [name, setName] = useState('');
@@ -41,6 +42,7 @@ export function SaveSearchSheet({ open, onClose, query, kind = 'osint' }) {
           {kind === 'intel'
             ? 'Intel searches can later be turned into an alert rule from Console → Saved searches.'
             : 'Only intel searches can later become alert rules — this kind cannot. The kind is fixed once saved.'}
+          {' '}Everyone in this workspace will see it; only you can rename or delete it.
         </div>
         {error && <ErrorNotice error={error} title="Save failed" />}
       </div>

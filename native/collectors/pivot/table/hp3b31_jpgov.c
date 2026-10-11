@@ -192,17 +192,6 @@ static const hp_source HP3B31_JPGOV[] = {
       "response summaries — the earliest public signal that a ministry intends "
       "to change a licensing, safety or reporting requirement" },
 
-  { .id = "JP_COURTS_HANREI", .name = "Courts of Japan — published judgments (裁判例検索)",
-    .name_ja = "裁判所 裁判例検索", .category = "legal",
-    .portal = "https://www.courts.go.jp", .record_type = "jp-judgment",
-    .tags = "\"jp\",\"courts\",\"judgment\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.courts.go.jp/app/hanrei_jp/search1?filter[text]={q}",
-    .base = "https://www.courts.go.jp", .filter_query = 1,
-    .description = "The Supreme Court's judgment database — case number, court, "
-      "date, the provisions applied and the full text of decisions naming a "
-      "company or individual" },
-
   { .id = "JP_KANPO_GAZETTE", .name = "Kanpō — Japanese official gazette search",
     .name_ja = "官報検索", .category = "government",
     .portal = "https://search.npb.go.jp", .record_type = "jp-gazette-notice",
@@ -238,17 +227,6 @@ static const hp_source HP3B31_JPGOV[] = {
       "issuing prefecture, the 29 work categories permitted, the technical "
       "staff registered and any suspension. Construction licensing is where "
       "Japanese contractor sanctions become visible" },
-
-  { .id = "JP_MLIT_REALESTATE_LICENCE", .name = "MLIT — real estate agent licence search",
-    .name_ja = "国土交通省 宅建業者検索", .category = "government",
-    .portal = "https://etsuran2.mlit.go.jp", .record_type = "jp-licence",
-    .tags = "\"jp\",\"real-estate\",\"licence\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://etsuran2.mlit.go.jp/TAKKEN/takkenKensaku.do?companyName={q}",
-    .base = "https://etsuran2.mlit.go.jp", .filter_query = 1,
-    .description = "Licensed real estate brokers — licence number with its "
-      "renewal count (which dates the firm), the representative, the branch "
-      "offices and any administrative disposition recorded against them" },
 
   { .id = "JP_MLIT_LAND_TRADE_PRICES", .name = "MLIT — actual land transaction prices",
     .name_ja = "国土交通省 不動産取引価格情報", .category = "government",
@@ -303,29 +281,6 @@ static const hp_source HP3B31_JPGOV[] = {
       "listed company must report within the day it occurs" },
 
   /* ── Public money and procurement ─────────────────────────────────────── */
-  { .id = "JP_PPORTAL_PROCUREMENT", .name = "Japan — government procurement portal",
-    .name_ja = "調達ポータル 政府調達案件", .category = "government",
-    .portal = "https://www.p-portal.go.jp", .record_type = "jp-tender",
-    .tags = "\"jp\",\"procurement\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.p-portal.go.jp/pps-web-biz/UAA01/OAA0101?searchWord={q}",
-    .base = "https://www.p-portal.go.jp", .filter_query = 1,
-    .description = "Central government tender notices and award results — the "
-      "procuring ministry, the specification, the bidders and the successful "
-      "price, which together expose single-bid tenders" },
-
-  { .id = "JP_KANKOJU_SME_PROCUREMENT", .name = "Japan — SME public demand portal (官公需)",
-    .name_ja = "官公需情報ポータルサイト", .category = "government",
-    .portal = "https://www.kkj.go.jp", .record_type = "jp-tender",
-    .tags = "\"jp\",\"procurement\",\"sme\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.kkj.go.jp/s/?fromDate=&toDate=&keyword={q}",
-    .base = "https://www.kkj.go.jp", .filter_query = 1,
-    .description = "Procurement notices from national agencies, independent "
-      "administrative institutions and every prefecture and municipality that "
-      "publishes to the SME portal — the widest single view of Japanese public "
-      "buying below the central-government threshold" },
-
   { .id = "JP_ESTAT_STATSLIST", .name = "e-Stat — official statistics catalogue API",
     .name_ja = "e-Stat 統計表情報API", .category = "government",
     .portal = "https://www.e-stat.go.jp", .record_type = "jp-statistic",
@@ -344,19 +299,6 @@ static const hp_source HP3B31_JPGOV[] = {
       "which ministry produces it, the survey behind it, the geographic and "
       "time coverage, and the table ID needed to pull the actual figures" },
 
-  { .id = "JP_TOKYO_OPENDATA_CKAN", .name = "Tokyo Metropolitan Government — open data catalog",
-    .name_ja = "東京都オープンデータカタログ", .category = "government",
-    .portal = "https://catalog.data.metro.tokyo.lg.jp", .record_type = "jp-dataset",
-    .tags = "\"jp\",\"tokyo\",\"open-data\"", .free_tier = 1,
-    .url = "https://catalog.data.metro.tokyo.lg.jp/api/3/action/package_search"
-      "?q={q}&rows=100",
-    .array_path = "result.results", .title_keys = "title,organization.title",
-    .id_keys = "id", .date_keys = "metadata_modified",
-    .page_param = "start", .page_size = 100, .page_start = 0, .page_max = 30,
-    .description = "Tokyo's CKAN catalog — ward-level facility, welfare, "
-      "transport and disaster datasets published by the metropolitan government "
-      "and its bureaus, most of which never reach the national portal" },
-
   { .id = "JP_NDL_SEARCH_API", .name = "National Diet Library — search OpenSearch API",
     .name_ja = "国立国会図書館サーチAPI", .category = "research",
     .portal = "https://ndlsearch.ndl.go.jp", .record_type = "jp-bibliographic",
@@ -369,28 +311,6 @@ static const hp_source HP3B31_JPGOV[] = {
       "collections held across Japanese public libraries, with holdings "
       "location for each hit" },
 
-  { .id = "JP_SOUMU_POLITICAL_FUNDS", .name = "MIC — political funds reports (政治資金収支報告書)",
-    .name_ja = "総務省 政治資金収支報告書", .category = "government",
-    .portal = "https://www.soumu.go.jp", .record_type = "jp-political-finance",
-    .tags = "\"jp\",\"political-finance\",\"transparency\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.soumu.go.jp/senkyo/seiji_s/seijishikin/?q={q}",
-    .base = "https://www.soumu.go.jp", .filter_query = 1,
-    .description = "Income and expenditure reports for political organisations "
-      "— donations by company and individual, party subsidy allocations and "
-      "the fundraising-party receipts that dominate Japanese political money" },
-
-  { .id = "JP_DATA_GO_JP_SEARCH", .name = "data.go.jp — national open data catalog",
-    .name_ja = "データカタログサイト 検索", .category = "government",
-    .portal = "https://www.data.go.jp", .record_type = "jp-dataset",
-    .tags = "\"jp\",\"open-data\",\"catalog\"", .free_tier = 1,
-    .url = "https://www.data.go.jp/data/api/3/action/package_search?q={q}&rows=100",
-    .array_path = "result.results", .title_keys = "title,organization.title",
-    .id_keys = "id", .date_keys = "metadata_modified",
-    .page_param = "start", .page_size = 100, .page_start = 0, .page_max = 30,
-    .description = "Japan's national CKAN catalog across all ministries — which "
-      "body holds a dataset, the resource files behind it and the update "
-      "cadence; the directory step before pulling the raw ministry data" },
 };
 
 HP_REGISTER_TABLE(HP3B31_JPGOV)

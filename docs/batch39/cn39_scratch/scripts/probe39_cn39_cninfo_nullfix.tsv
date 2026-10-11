@@ -1,0 +1,4 @@
+id	url	verdict	kind	items	http	bytes	note
+JO39_CN_CNINFO_ANN_SZ	https://www.cninfo.com.cn/new/hisAnnouncement/query?plate=sz	PASS	json:announcements	30	200	22150	date_back 4: 
+JO39_CN_CNINFO_ANN_SH	https://www.cninfo.com.cn/new/hisAnnouncement/query?plate=sh	PASS	json:announcements	30	200	23067	date_back 4: 
+JO39_CN_CNINFO_ANN_BJ	https://www.cninfo.com.cn/new/hisAnnouncement/query?plate=bj	PASS	json:announcements	30	200	20327	date_back 5: 

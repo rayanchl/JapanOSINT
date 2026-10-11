@@ -101,6 +101,16 @@ def declares_paging(o, r=None):
                 and (o.get("page_walk") or "").strip() == "1")
 
 
+PAGE_TOKENS = ("{page}", "{offset}", "{offset1}", "{offset_end}")
+
+
+def declares_template_paging(o, r):
+    """A {page}/{offset…} token in the url or the post_body IS a paging
+    declaration: hp_run re-expands it for every page (lib/hpengine.c)."""
+    s = (r.get("url") or "") + " " + (o.get("post_body") or "")
+    return any(tok in s for tok in PAGE_TOKENS)
+
+
 def declares_exception(o):
     """`pagination_ok=<reason>` — the C tree's `exhaustive-ok` marker, in a
     manifest. Some endpoints genuinely cannot be paged: the Wikimedia core
@@ -138,7 +148,7 @@ def main():
             print("%-38s %-26s duplicate opt %r — UNVERIFIABLE"
                   % (r["_at"], r["id"], dups[0]))
             continue
-        if declares_paging(o, r):
+        if declares_paging(o, r) or declares_template_paging(o, r):
             continue
         if declares_exception(o):
             excepted += 1

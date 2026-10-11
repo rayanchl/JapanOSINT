@@ -110,15 +110,32 @@ STR_OPTS = {"array_path", "title_keys", "id_keys", "link_keys", "link_tmpl",
             "latlon_key", "lonlat_key", "href_must",
             "base", "detail_url", "detail_key", "detail_path", "next_path",
             "page_param", "post_body", "content_type", "key_env", "type",
-            "collector"}
-# page_walk: CLAUDE.md tells authors to use it ("page_walk=1 (HP_JSON only)
-# walks it the way a VJSON collector is walked"), and this set used to reject
-# it as an unknown opt, so the documented way to page a row could not be
-# written in a manifest at all.
+            "collector",
+            # The data URL is published on a landing page that re-links it
+            # each edition (monthly attachment ids): hp_run fetches index_url
+            # first and follows its first href containing index_href_must.
+            "index_url", "index_href_must",
+            # the unit date_back steps in: d (default), w, m, y
+            "date_step",
+            # the field each record gets the rendered {date…} in, for keying
+            "date_field",
+            # html table mode: the <table> whose HTML contains this text
+            "table_must"}
+# page_walk (an INT opt below): CLAUDE.md tells authors to use it ("page_walk=1
+# (HP_JSON only) walks it the way a VJSON collector is walked"), and this set
+# used to reject it as an unknown opt, so the documented way to page a row could
+# not be written in a manifest at all.
 INT_OPTS = {"detail_max", "page_start", "page_size", "page_max", "max_items",
             "timeout_ms",
             "page_zero_based", "csv_skip_lines", "xlsx_sheet_index",
             "filter_query", "csv_no_header", "free_tier", "interval",
+            # {date…} tokens: rendered in UTC+tz_minutes; a dated row whose
+            # first page is a 4xx or empty steps the date back up to date_back.
+            "tz_minutes", "date_back",
+            # pause before every page after the first (burst-403 firewalls)
+            "page_delay_ms",
+            # html table mode: which matching table; banner rows above the header
+            "table_index", "table_skip_rows",
             "page_walk"}
 # hp_source.headers is `const char *headers[5]`, so it cannot be set by the
 # generic scalar path above. A row declares them as header1/header2/header3 and
@@ -221,6 +238,13 @@ def validate_opts(r):
                              % (r["_src"], r["id"], r["mode"]))
     for k, v in parsed.items():
         m = SWALLOWED.search(v) if k != "post_body" else None
+        # `Content-Type: application/json;charset=utf-8` is a header written
+        # correctly, not a swallowed `charset` opt: in a media type, `;charset=`
+        # is the parameter syntax (RFC 9110 §8.3.1). PY_AIP_SOLICITUDES carries
+        # exactly that and was rejected by this check.
+        if (m and k in HDR_OPTS and m.group(1) == "charset" and
+                re.match(r"\s*content-type\s*:", v, re.I)):
+            m = None
         if m:
             raise SystemExit(
                 "%s: %s: opt %s=... swallowed %r -- a `\\;` escaped the "

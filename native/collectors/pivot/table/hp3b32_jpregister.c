@@ -639,7 +639,9 @@ static const hp_source HP3B32_JPREGISTER[] = {
     .record_type = "construction-licensee",
     .tags = "\"japan\",\"niigata\",\"construction\",\"licence\",\"registry\"",
     .mode = HP_XLSX, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.pref.niigata.lg.jp/uploaded/attachment/508974.xlsx",
+    .url = "https://www.pref.niigata.lg.jp/uploaded/attachment/511731.xlsx",
+    .index_url = "https://www.pref.niigata.lg.jp/sec/dobokukanri/1356808454613.html",
+    .index_href_must = ".xlsx",   /* 2026-10-05: the monthly edition moved 508974.xlsx -> 511731.xlsx and the old id 404s three days after this row shipped. The page links exactly one .xlsx (the register) beside its PDF, so each run follows it */
     .csv_skip_lines = 0,
     .id_keys = "許可番号",
     .interval = 604800,

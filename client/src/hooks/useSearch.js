@@ -33,9 +33,13 @@ export function useEntitySearch(q, type) {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  // The query the current `results` answer. `loading` is false on the render
+  // before the debounce starts, so "not loading" alone does not mean the
+  // results belong to the box's text — a caller recording a search needs this.
+  const [resolved, setResolved] = useState(null);
   useEffect(() => {
     const query = (q || '').trim();
-    if (!query) { setResults([]); setError(null); return undefined; }
+    if (!query) { setResults([]); setError(null); setResolved(null); return undefined; }
     let alive = true;
     setLoading(true);
     const t = setTimeout(async () => {
@@ -44,15 +48,15 @@ export function useEntitySearch(q, type) {
         const res = await fetch(apiUrl(url));
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const j = await res.json();
-        if (alive) { setResults(j.results || []); setError(null); }
+        if (alive) { setResults(j.results || []); setError(null); setResolved(query); }
       } catch (e) {
-        if (alive) { setResults([]); setError(e.message || 'request failed'); }
+        if (alive) { setResults([]); setError(e.message || 'request failed'); setResolved(null); }
       }
       finally { if (alive) setLoading(false); }
     }, 250);
     return () => { alive = false; clearTimeout(t); };
   }, [q, type]);
-  return { results, loading, error };
+  return { results, loading, error, resolved };
 }
 
 /** How many mentions the timeline asks for. EntityProfile prints this bound

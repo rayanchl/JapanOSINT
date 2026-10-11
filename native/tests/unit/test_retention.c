@@ -74,9 +74,9 @@ static void seed(db_handle *db) {
   /* Alerts. */
   exec_ok(db,
     "INSERT INTO alert_events(id,tenant_id,rule_id,item_uid,matched_at) VALUES"
-    " ('ev-old','t','r','u',datetime('now','-400 days')),"
-    " ('ev-old-pending','t','r','u',datetime('now','-400 days')),"
-    " ('ev-new','t','r','u',datetime('now','-10 days'));"
+    " ('ev-old','t','r','u-old',datetime('now','-400 days')),"
+    " ('ev-old-pending','t','r','u-old-pending',datetime('now','-400 days')),"
+    " ('ev-new','t','r','u-new',datetime('now','-10 days'));"
     "INSERT INTO alert_deliveries(event_id,channel_idx,channel_type,status,attempted_at) VALUES"
     " ('ev-new',0,'webhook','ok',datetime('now','-60 days')),"
     " ('ev-new',1,'webhook','dead',datetime('now','-5 days')),"

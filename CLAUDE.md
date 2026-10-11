@@ -10,6 +10,26 @@ hardcoded registry/source names emitted as if they were findings, no seeded
 values standing in for a failed fetch. A failure degrades to an explicit
 `error` / `not_found` / "needs credential" note, never to invented content.
 
+**That note did not exist until 2026-10-06.** The engine could not invent a
+record, so the first half held — but a refused fetch stored NOTHING, which made
+it identical in the database to a source that ran and found nothing:
+`records=0 stored=0 rc=0`, the invisible nothing this rule names. Eight
+`collector-shape-notice` kinds covered a body whose SHAPE surprised us; a body
+we were REFUSED had none. `lib/hpengine.c` now stores one
+**`collector-fetch-failure`** record per (source, entity) — upsert-keyed, so a
+permanently dead source carries one row that updates rather than one per run —
+naming the HTTP status, whether the body parsed, and the remedy (a `key_env`, a
+per-host gap in `core/hostgate.c` for a 429, or re-reading an endpoint that has
+moved). Found by measuring the 45 detail-hop rows: eight `il-knesset-*` rows
+whose OData service 303s to an HTML maintenance page, and `us-courtlistener-*`
+answering 429 — nine registered sources storing zero and saying nothing.
+
+It changes two things that read the run line. A dead source now reports
+`records=1 stored=1`, so `audit_registry_emit.py` counts engine notices
+separately from records and has a `FETCH_FAILED` verdict; and `hptest`'s
+404/5xx assertions now pin zero RECORDS plus one disclosure, which is what they
+always meant.
+
 Full audit of how each collector behaves today:
 `native/collectors/SOURCE_REALITY_REPORT.md`.
 
@@ -19,12 +39,22 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 18,643** (2026-10-06): main's batches 33–36 —
-batch 33's 43 measured supply-chain rows (`docs/verified-sources-batch33.tsv`),
-batch 34's NDJSON row, batch 35's four string-array rows, the spec-families
-beats and batch 36's 188 — on top of the 18,170 that included batch 32's 340
-Japanese rows, less batch 31's `EU_VIES_VAT_VALIDATION` (removed: it could not
-form a valid request). `make lint-sources`
+**The registered count is 18,883** (2026-10-09). Main's 18,730: 18,645 —
+batches 33–36 (batch 33's 43 measured supply-chain rows,
+`docs/verified-sources-batch33.tsv`; batch 34's NDJSON row; batch 35's four
+string-array rows; the spec-families beats and batch 36's 188) and the audit
+follow-up's two SEC listings, on top of the 18,170 that included batch 32's 340
+Japanese rows, less batch 31's `EU_VIES_VAT_VALIDATION` — plus batch 38's 150
+(PR #37) less 65 batch-31 rows removed for rule 4d (PR #38). Then the
+JP/CN integration's 168: batch 40's 100 Japanese and Chinese rows
+(`docs/verified-sources-batch40.md`; authored as "batch 38" and renumbered when
+main's batch 38 merged first) and batch 39's 72 rows unlocked by date tokens /
+JSONP / body paging / HTML tables less the frozen VCSV row one of them replaced
+(`docs/verified-sources-batch39.md`) — less batch 36's `CN_HK_LANDS_ADDR`, a
+fuzzy geocoder that answers any text with addresses (`FILTER_IGNORED`,
+`docs/rejected-sources-batch36.china.tsv`), and less 14 batch-36 Socrata
+portal inventories that re-read a catalogue `hp3_portals.c`/`hp3_society.c`
+already reads (`docs/rejected-sources-batch36.usa.tsv`). `make lint-sources`
 prints it, counting hp_source table rows as well as `REGISTER_SOURCE`, and
 `./bin/japanosint --list-sources` agrees.
 
@@ -122,11 +152,28 @@ which is precisely why it read as healthy for weeks. Fixed 2026-10-04 with
 **A row's record count says nothing about whether its FIELDS were parsed** —
 check one record's `properties` the first time a non-comma CSV row ships.
 
-**One exception to "every source is proof-of-life verified":** batch 31 — the
-government, public-record and surveillance tables from PR #23
-(`collectors/pivot/table/hp3b31_*.c`) — holds 360 rows, and 333 of them are
-entity pivots that have not been run against a real entity, nor
-`--check-filter`ed (rules 4 and 4d). The 27 scheduled rows were run on
+**Batch 31 has now had its `--check-filter` run (2026-10-06), and 65 rows
+failed it.** All 360 rows of `docs/candidate-sources-batch31.*.txt` were probed
+live; the full result is `docs/probe-sources-batch31.tsv`. 51 PASS. Sixty-five
+came back `FILTER_IGNORED` — the upstream takes the entity parameter, ignores
+it, and returns the same collection for a real entity and for one that cannot
+exist — which rule 4d calls a confident wrong answer and this file calls fatal.
+They were REMOVED (registry 18,643 → 18,578, both floors re-recorded), after two
+were confirmed by hand first, because 65 live sources is not something to delete
+on one tool's say-so: `UK_INSOLVENCY_INDIVIDUAL` answered 9,213 bytes for a real
+surname and 9,203 for an impossible one; `KE_BRS_BUSINESS_SEARCH` 348,130 and
+348,402. The lesson generalises past batch 31: **65 of 360 means roughly one
+entity pivot in six was answering about the wrong thing**, and nothing but
+`--check-filter` can see it.
+
+The rows that failed for other reasons — 146 HTTP_ERR, 39 UNPARSEABLE, 31
+NET_ERR, and the rest — were NOT removed. One probe is one reading and those
+verdicts can be transient, a user-agent or a bad afternoon, whereas
+FILTER_IGNORED is a property of the endpoint's query handling. They disclose
+themselves now instead; see the fetch-failure notice under rule 1.
+
+**The older exception still stands for rules 4 and 4b:** those 360 rows
+(now 295) are entity pivots that have not been run against a real entity. The 27 scheduled rows were run on
 2026-10-02: 13 store real records (FDSN 151,303; Safecast 30,000; Sejm 15,000;
 USGS NWIS 53,789 before the audit timeout …) and 14 need an API key and store a
 "gated" notice saying so. Ten rows were removed when the branches merged: seven
@@ -198,14 +245,14 @@ hpengine pages exactly as it did. Without that (or an explicit `next_path` /
 
 Where the tree actually stands, as `make audit-sources` reports it:
 
-* **strict set — 0 findings across 295 files** (2026-10-05; 256 on 2026-09-27):
+* **strict set — 0 findings across 308 files** (2026-10-07; 256 on 2026-09-27):
   `collectors/pivot/table/hp*_*.c` plus the generated deep-record tables
   `collectors/feed/generated/hp1[0-9]_*.c`. This is the part the Makefile
   gates on, and it is held clean. Run `make audit-sources`
   after adding a table: batch 18 introduced two `single-page` findings here (a
   paged endpoint declared without `page_param`) and they had to be fixed before
   the gate would pass again.
-* **the rest of the tree — 0 findings** (1,650 files scanned, 2026-10-05; it
+* **the rest of the tree — 0 findings** (1,678 files scanned, 2026-10-07; it
   first reached zero on 2026-08-24, from ~127 across ~74 files). Every first-only, single-page, record-cap, loop-break,
   limit-one and dedupe-ring finding has been read and closed one of three ways:
   the discard was real and was fixed, the line carries an `exhaustive-ok`
@@ -315,9 +362,22 @@ the check that actually works.
 `VJSON_KEYED`'s IDFIELD and `VJSON_IDKEYS`'s IDKEYS carry over verbatim into
 `.id_keys` — `_vjson_idkeys.inc` promises the same `+` composes semantics, and
 `hptest` now pins it, because rule 4b's failure is silent. The 45 rows that
-moved on that promise are listed in `docs/detail-hops-need-emit-check.tsv`:
-their identity is a faithful translation, but emitted-vs-stored has not been
-measured on them, and that needs egress this session did not have.
+moved on that promise are in `docs/detail-hops-need-emit-check.tsv`, and they
+were **MEASURED on 2026-10-06**: the promise held. The five 8-part composites
+(`af-dportal-trans-*`) store 90,785–96,154 rows each — had `+` been read as
+`,`, keying on `aid`, each would have collapsed to its few thousand distinct
+activities. Across all 19 COLLISION verdicts the loss is 218,769 emitted
+against 218,692 stored, 0.035%, which is the upstreams' own duplicates.
+
+What the pass found instead is what reasoning about `id_keys` could never have
+found: **nine rows that fetch nothing at all** — eight `il-knesset-*` whose
+OData service 303s to an HTML maintenance page, and `us-courtlistener-*`
+answering 429 — and one real defect that was not identity either.
+`us-sf-311-open311-requests` lost 5 of 20 because SF's Open311 server
+rate-limited both the page walk and the per-record detail hop; pacing
+`mobile311.sfgov.org` at 1200 ms in `core/hostgate.c` took it from 20 records
+across 5 pages to 90 across 19. **A collision verdict is a question, not a
+diagnosis** — measure the upstream before touching a key.
 
 `VJSON_PREP` is deliberately NOT converted: its extra argument is a C function
 that reshapes each page before emit, and a declarative row cannot hold code.
@@ -354,6 +414,20 @@ PR #28 moved it to a `$GITHUB_ENV` step and the runs after it are the first
 real ones. A failing run with `total_count: 0` in its jobs list is this shape,
 not a gate.
 
+**And the inverse: "that job is just flaky" is also a question.** The `asan` job
+failed on `test_export_stream`'s backpressure assertion about 40% of the time
+for weeks, and runs #116 and #117 are the SAME SHA with opposite outcomes, which
+is as flaky as a signal gets. It was not noise. `xs_pump` set `x->queued = 0`
+before the bytes it had taken were counted into `x->unsent`, so between those
+two statements the worker's gate (`queued + unsent >= XS_HIGH_WATER`) saw
+neither, and a worker racing the first pump queued a SECOND full high-water mark
+while the first was in flight: 1.5 MB held against a 1 MB mark, on the one code
+path whose entire purpose is that the bound holds. An intermittent assertion
+means the invariant is intermittently false. Reproduce it (`2 of 30` runs
+locally without ASan) and instrument the quantity the assertion names — the peak
+distribution was `38 x 1024 KB, 1 x 1280, 1 x 1536` and said what the bug was —
+rather than widening the slack until the red goes away.
+
 If `make unit` dies with `tests/unit/run.sh: No such file or directory` (exit
 127) on a tree that came from a Windows checkout, the script has CRLF line
 endings and the kernel is reading `#!/bin/bash\r` as the interpreter. The error
@@ -369,7 +443,8 @@ git ls-files -z '*.sh' '*.py' | xargs -0 sed -i 's/\r$//'   # content-identical 
 
 `make source-count` (and the `source-floor` gate built on it) counts hp table
 rows as well as `REGISTER_SOURCE`, and agrees with the binary. Both floors were
-recorded at 18,170 on 2026-10-02 and at 18,644 on 2026-10-05; they had been
+recorded at 18,170 on 2026-10-02, at 18,644 on 2026-10-05 and at 18,645 on
+2026-10-06; they had been
 left at 16,271 and 13,081, low
 enough that batches 31 and 32 could both stop registering with CI green.
 Re-record them when a batch lands (`make source-floor-record
@@ -642,6 +717,51 @@ Engine subtleties worth knowing before writing a row:
 * `page_start`'s unset value is 0, which is also a legitimate first page. Set
   **`page_zero_based=1`** for a 0-based API — otherwise the engine coerces the
   start to 1 and silently never fetches page 1.
+* **`page_size` makes `page_param` an OFFSET.** Declare it only for offset
+  parameters. On a page-NUMBER API (`page`, `pageNo`, `PAGENO`) it requests
+  pages 1, 1+N, 1+2N … and drops N−1 of every N pages with the run green.
+  83 shipped rows were in that state until 2026-10-05; `AP19_CN_SZSE_LISTED`
+  stored ~160 of 2,904 listings. Put the page size in the URL instead.
+  `make lint-sources` now fails the shape (`page-size-on-page-number`), and
+  on the merge with main it caught 97 more that batch 36 had shipped the
+  same day: every World Bank (`per_page`) and Socrata `views.json` (`limit`)
+  row. `US_SOCRATA_CAMBRIDGEMA` stored 100 datasets and reported "emitted 100
+  of 100 available"; without `page_size` it stores 446. An
+  API whose `page` really is a record offset (MapRoulette) says so with a
+  `page-offset-ok: <measurement>` marker in the row. And check where a
+  page-number API STARTS: a 0-based one (Spring, DSpace) needs
+  `page_zero_based=1`, or the walk goes page 0 → page 2.
+* **A file re-published under a new name each edition** (monthly attachment
+  ids) is not a static `url`: declare **`index_url`** (the landing page) and
+  **`index_href_must`** (a substring of the right link). The engine follows it
+  every run, and the generator and probe accept both. Batch 32's Niigata
+  register 404'd three days after shipping without it.
+* **Never freeze a date into a URL.** `{date}`, `{date-7d}`, `{date-1m:%Y%m}`,
+  `{date:@ms}`, main's `{date:%Y%m%d:-2}` and `{ago:N}` (lib/datetok.c — one implementation for hp rows AND the VJSON
+  fleet's `vsrc_url_dates`) render in UTC+**`tz_minutes`** (540 Japan, 480
+  China). **`date_back=N`** steps the date back when the first page is a 4xx
+  or empty (weekends, holidays, not yet published), in units of
+  **`date_step`** (d/w/m/y — `y` for EPA's TRI reporting year). 43 rows had a
+  window frozen at authoring and re-fetched the same past week forever. A
+  dated file whose ROWS carry no date (SHFE's daily kx, SZSE margin) re-keys
+  every day onto yesterday's uids: **`date_field=<name>`** stamps each record
+  with the rendered date (after any step back) so `id_keys` can include it.
+* **JSONP is unwrapped automatically** (`cb(…)`, `null(…)`, `(…)`, `)]}'`).
+* **A page that lives in a POST body or a URL path** is `{page}` / `{offset}` /
+  `{offset1}` / `{offset_end}` / `{size}`, re-expanded every page in the url
+  AND the body (EPA Envirofacts: `rows/{offset}:{offset_end}`). A body with a
+  literal `"page":1` reads page 1 forever: four pivots did, 40 records each.
+* A failure on the page AFTER a short page (fewer than `page_size` records) is
+  the upstream's end of data, not a truncation; later pages get 5 retries.
+* **`page_delay_ms=N`** paces a walk (a pause before every page after the
+  first) for a firewall that answers a burst with 403: the Palace Museum's
+  blocked us after 31 of 9,300 pages.
+* **A register published as an HTML table** is `mode=html` +
+  **`table_must=<caption or header text>`** (`table_index`,
+  `table_skip_rows`): every row becomes a record keyed by its header cells
+  (lib/htmlparse.c `html_table_parse` + hp_run_table; colspan/rowspan,
+  entities, nested tables handled; the row's first link is `link`). Before it,
+  html mode read anchors only, and ~20 tabular registers were rejected.
 * **A bare root array must be DECLARED: `array_path=.`** is the document
   itself. With no `array_path` the engine picks the densest array of OBJECTS,
   which is not the root as soon as a root record carries a longer nested array
@@ -697,6 +817,23 @@ Engine subtleties worth knowing before writing a row:
   it as the byte-identical duplicate it is. Do not widen `id_keys` to "fix" a
   `stored` that is a handful short of `emitted` on a cursor-paged feed —
   measure the upstream first.
+* **A later page that fails is disclosed, not a quiet end** (2026-10-06,
+  `hp_later_page_cut`). After a SHORT page any failure is the end of data.
+  Otherwise transport errors, 3xx/304, 401/403/407, 408, 429, 5xx and an
+  unreadable 200 always mean the walk was cut short, and other 4xx do when the
+  upstream showed more (its total, a next link, a full previous page). A cut
+  walk files a truncation notice naming `failed_page`, `failed_page_status` and
+  `failed_page_url`; VJSON, geojson and `pw_walk` name the same three. A
+  row-declared conditional header goes on page 1 only.
+* **A detail hop carries the row's headers** (token, UA, Accept), minus the
+  POST body's content type. It used to carry none, so a header-authenticated
+  row stored `_detail_error` on every record (PY_AIP: 500 without, 200 with).
+* **XML records keep every field**: repeated children are indexed (`name`,
+  `name.1`, `author.1.name`), text beside children is `<key>.#text`, and
+  whatever the depth (32) / field (`HP_MAX_PROPS`) bounds keep out is counted
+  into `_fields_dropped`. **An HTML link takes its strongest label** (own text
+  > image alt > borrowed text, a label that contains another is kept), the
+  others the page gave it land in `other_labels.N`.
 * A row that declares no paging does ONE request. **`page_walk=1`** (HP_JSON
   only) walks it the way a VJSON collector is walked instead — the server's own
   next link, else the cursor its declared page size pairs with, advanced while
@@ -716,6 +853,17 @@ Engine subtleties worth knowing before writing a row:
   banner before the parse, which matters because URLhaus keeps its column names
   in a `#` line and header parsing would otherwise name every column after a
   comment.
+* **A generated row's `id_keys` is a guess until it is measured.** Batch 36's
+  generator keyed every openFDA row on the record's FIRST field — an identity
+  on four endpoints and a dimension on the rest (`status`, `third_party_flag`,
+  `update_type`, whole arrays). The in-page collision guard content-hashes
+  such rows, so `stored` matched `emitted` and nothing looked wrong; the cost
+  is that every uid is a content hash, so a recall whose status changes is a
+  NEW row instead of an update. A key naming a bare ARRAY
+  (`establishment_type`) matches no flattened field at all — name the element
+  (`establishment_type.0`). The same batch's World Bank `country/all` rows
+  read 200 of 17,490 country-years, one request per run: the seventh discard
+  shape, a limit asked of the upstream (`tools/audit_url_limits.py`).
 * Titles: the engine will key a record on its first non-empty scalar rather than
   drop it, so a row without `title_keys` still emits — but it emits titled
   `<record_type> <whatever came first>`. Declare `title_keys`/`id_keys` for
@@ -776,3 +924,29 @@ Tenancy: OSINT records are one shared corpus (tenant `legacy`, uid
 that started it, `/api/intel/items`, `/search` and `/items/:uid` read "this
 tenant + the shared corpus", and `/api/search/results` plus the SSE stream
 answer the owner tenant (or the run's `stream_key`) only.
+
+Workspace = tenant, and **everything a workspace authors is readable by all of
+its members** (decided 2026-10-05): OSINT runs and their syntheses
+(`GET /api/search/runs`), saved searches, search history, case notes. Reads
+carry `user_id` + `mine` and `meta.scope`; `?mine=1` narrows a list (and its
+`total`) to the caller. Edits, deletes and clearing history stay with the
+author. Nothing crosses workspaces — `test_search_runs_workspace.c` and
+`test_saved_search_workspace.c` pin both halves. A case VIEWER reads only;
+content writes are analyst+ or the case's lead or a contributor
+(`test_case_roles.c`).
+
+Search history holds every COMMITTED search (2026-10-09): the clients
+`POST /api/search-history` on submit / opening a result / a committed URL's
+results — never per keystroke, since `/api/entities/search` serves a
+search-as-you-type box — and `searchapi.c` records an OSINT run at start.
+The same search by the same person within `SS_HISTORY_MERGE_SEC` refreshes one
+row instead of copying it. Do not record from the search routes themselves. List routes answer
+`page:{limit,offset,count,total,has_more}`, `total` measured under the same
+filters as the rows.
+
+CORS is an explicit allow-list or nothing: `JO_CORS_ORIGINS` (comma-separated
+exact `scheme://host[:port]`) is echoed with `Vary: Origin` and preflights are
+answered before auth; unset, no CORS header is sent at all. It used to be a
+hard-coded `*` on every reply — a cross-origin deployment of the web client
+(`VITE_API_HOST`) must now set the variable. Local dev goes through the Vite
+proxy and needs nothing.

@@ -108,7 +108,30 @@ static int run_sec_fulltext(const source_ctx *ctx, intel_sink *sink, const char 
       cJSON_AddStringToObject(d, "source", "SEC EDGAR FTS");
       cJSON *p = cJSON_CreateObject();
       char title[256]; snprintf(title, sizeof title, "%s%s%s", disp ? disp : "SEC filing", form ? " · " : "", form ? form : "");
-      n += oe2_emit(sink, "SEC_FULLTEXT", "sec-filing", hid, title, fdate, "https://www.sec.gov/cgi-bin/srqsb", d, p, 0, 0, 0);
+      /* Every hit used to link to https://www.sec.gov/cgi-bin/srqsb, a
+       * search page that answers 404 (2026-10-06). The hit's own _id is
+       * "<accession>:<file>" and _source.ciks names the filer, which locate
+       * the filing's EDGAR index page — every document of the filing, the
+       * hit's file among them (its name stays in doc_id). Without both, the
+       * EDGAR full-text search page for the same query. */
+      char link[512];
+      const char *colon = strchr(hid, ':');
+      const cJSON *ciks = src ? cJSON_GetObjectItem(src, "ciks") : NULL;
+      const cJSON *cik0 = cJSON_IsArray(ciks) ? cJSON_GetArrayItem(ciks, 0) : NULL;  /* exhaustive-ok: the index path needs one filer; filers_all keeps them all */
+      if (colon && colon > hid && (size_t)(colon - hid) < 32 &&
+          cJSON_IsString(cik0) && cik0->valuestring[0]) {
+        char adsh[32], flat[32]; size_t al = (size_t)(colon - hid), fl = 0;
+        memcpy(adsh, hid, al); adsh[al] = 0;
+        for (size_t i = 0; i < al; i++) if (adsh[i] != '-') flat[fl++] = adsh[i];
+        flat[fl] = 0;
+        const char *cik = cik0->valuestring;
+        while (*cik == '0' && cik[1]) cik++;
+        snprintf(link, sizeof link, "https://www.sec.gov/Archives/edgar/data/%s/%s/%s-index.htm",
+                 cik, flat, adsh);
+      } else {
+        snprintf(link, sizeof link, "https://www.sec.gov/edgar/search/#/q=%s", enc);
+      }
+      n += oe2_emit(sink, "SEC_FULLTEXT", "sec-filing", hid, title, fdate, link, d, p, 0, 0, 0);
       /* (cap removed: every record of the fetched array is emitted —
        * docs/SOURCE_EXHAUSTIVENESS.md) */
     }

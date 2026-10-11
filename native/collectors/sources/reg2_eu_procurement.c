@@ -37,11 +37,14 @@
  *    Licence: official UZP e-Zamowienia platform; notices are statutorily public.
  *
  *  gr-diavgeia-decisions
- *    GET https://diavgeia.gov.gr/opendata/search.json?q=type:%22ΣΥΜΒΑΣΗ%22&size=50
- *    Envelope {"decisions":[...]}. Emits ada / protocolNumber, subject,
- *    issueDate (epoch MILLISECONDS → ISO), organizationId, and from
- *    extraFieldValues: org.name / org.afm (buyer VAT number),
- *    sponsor[].sponsorAFMName (counterparty name + AFM) and expenseAmount.
+ *    GET https://diavgeia.gov.gr/opendata/search.json?type=Γ.3.4&size=500&page=0
+ *    (type Γ.3.4 is the one Diavgeia decision type labelled ΣΥΜΒΑΣΗ; see the
+ *    note above gr_run for why it is not `q=type:"ΣΥΜΒΑΣΗ"` any more.)
+ *    Envelope {"decisions":[...],"info":{"total":N}}. Emits ada /
+ *    protocolNumber, subject, issueDate (epoch MILLISECONDS → ISO),
+ *    organizationId, decisionTypeId, and from extraFieldValues: contractType,
+ *    numberOfPeople, financedProject, person[] (contractor name + AFM),
+ *    contractAmount, duration, relatedDecisions — plus every field verbatim.
  *    Licence: statutory transparency programme (Law 3861/2010); the opendata
  *    endpoint is the official machine interface.
  */
@@ -282,28 +285,160 @@ EU_SOURCE(pl_bzp, "pl-bzp-notices",
 
 /* ------------------------------------------------------ Greece — Diavgeia */
 
-static int gr_run(const source_ctx *ctx, intel_sink *sink) {
-  const char *url =
-    "https://diavgeia.gov.gr/opendata/search.json"
-    "?q=type:%22%CE%A3%CE%A5%CE%9C%CE%92%CE%91%CE%A3%CE%97%22&size=50";
+/* WHAT THIS ROW ASKS FOR, AND WHY IT USED TO GET SOMETHING ELSE.
+ * It asked the simple search for `q=type:"ΣΥΜΒΑΣΗ"`. /opendata/search ignores
+ * `q` altogether (bb7b3fc measured it for four sibling rows), so every run read
+ * the 50 newest acts of the whole Greek state — measured 2026-10-07: total
+ * 2,963,247, the first 50 typed Β.1.3 / Β.2.2 / Α.2 / 2.4.7.1, not one
+ * ΣΥΜΒΑΣΗ — and stored them as "contracts". The fields it extracted
+ * (extraFieldValues.org / expenseAmount / sponsor) are the ones expenditure
+ * decisions carry, so even the payload it read was misdescribed; and it read
+ * `decisionTypeUid`, which the records do not have (they carry
+ * `decisionTypeId`), so the type of what it stored was never recorded either.
+ *
+ * The decision-type filter the API honours is `type=<uid>`
+ * (https://diavgeia.gov.gr/luminapi/opendata/types.json). The one type whose
+ * label IS "ΣΥΜΒΑΣΗ" is Γ.3.4, under 2.4.3 (organisational and administrative
+ * acts): the contracts a public body signs with people — fixed-term and
+ * open-ended private-law employment contracts and contracts for services
+ * (σύμβαση έργου). type=Γ.3.4 → total 124,873, every record Γ.3.4;
+ * type=ZZ.9 → 0. No other row in the tree reads Γ.3.4 (the procurement award
+ * type Δ.1 is eur-diavgeia-anathesi, expenditure Β.2.1 is eur-diavgeia-dapani).
+ *
+ * What a Γ.3.4 record carries in extraFieldValues (500 records, 2026-10-07):
+ * contractType (all 500), documentType (500), financedProject (411),
+ * numberOfPeople (390), contractAmount {amount,currency} (129), person[]
+ * {name, afm, afmType} (122), duration "dd/mm/yyyy-dd/mm/yyyy" (118),
+ * relatedDecisions[] {relatedDecisionsADA}. No buyer name or AFM: the issuing
+ * body is organizationId. The detail endpoint (/opendata/decisions/<ada>.json)
+ * returns the same object as the search hit, field for field, so there is no
+ * second hop to make.
+ *
+ * Paging: page is 0-based, size is clamped to 500 server-side, and the search
+ * spans the last six months of issueDate only (a wider from_issue_date is
+ * narrowed back by the server). pw_walk advances `page` while pages come back
+ * full and its JO_PAGE_MAX ceiling is disclosed as a truncation notice; the
+ * upstream's own total sits at info.total, which pw_walk does not read, so the
+ * fetcher below lifts it to the top level where it does. */
+#define GR_TYPE_UID   "\xce\x93.3.4"                      /* Γ.3.4 ΣΥΜΒΑΣΗ */
+#define GR_URL "https://diavgeia.gov.gr/opendata/search.json" \
+               "?type=%CE%93.3.4&size=500&page=0"
+
+/* pw_fetch_fn: the JSON page, with the upstream's info.total copied to the
+ * top-level `total` pw_walk reads. The number is the server's own. */
+static cJSON *gr_fetch(const source_ctx *ctx, const char *url, void *ud) {
+  (void)ud;
   cJSON *doc = feed_get_json(ctx->http, url, 30000);
-  if (!doc) { fprintf(stderr, "[gr-diavgeia-decisions] fetch/parse failed\n"); return -1; }
+  const cJSON *info = doc ? cJSON_GetObjectItem(doc, "info") : NULL;
+  const cJSON *t = info ? cJSON_GetObjectItem(info, "total") : NULL;
+  if (cJSON_IsNumber(t) && !cJSON_GetObjectItem(doc, "total"))
+    cJSON_AddNumberToObject(doc, "total", t->valuedouble);
+  return doc;
+}
 
-  const cJSON *arr = cJSON_GetObjectItem(doc, "decisions");
-  if (!cJSON_IsArray(arr)) {
-    fprintf(stderr, "[gr-diavgeia-decisions] unexpected payload shape\n");
-    cJSON_Delete(doc);
-    return -1;
+/* The ADAs already emitted this walk. The search is newest-first, so a
+ * decision published while the walk is under way pushes every later record
+ * one place down and the record at a page boundary is served twice. The
+ * second copy is the same decision (same ADA, the uid) and is skipped rather
+ * than emitted onto its own uid. Open addressing over FNV-1a; the table grows
+ * at half full. */
+typedef struct { char **slot; size_t cap, n; } gr_seen;
+
+static unsigned long gr_hash(const char *s) {
+  unsigned long h = 1469598103934665603UL;
+  for (const unsigned char *p = (const unsigned char *)s; *p; p++) {
+    h ^= *p;
+    h *= 1099511628211UL;
   }
+  return h;
+}
 
-  int n = 0;
+/* 1 if `k` was new (and is now recorded), 0 if already seen, -1 on OOM. */
+static int gr_seen_add(gr_seen *s, const char *k) {
+  if (s->n * 2 >= s->cap) {
+    size_t nc = s->cap ? s->cap * 2 : 1024;
+    char **ns = calloc(nc, sizeof *ns);
+    if (!ns) return -1;
+    for (size_t i = 0; i < s->cap; i++) {
+      if (!s->slot[i]) continue;
+      size_t j = gr_hash(s->slot[i]) & (nc - 1);
+      while (ns[j]) j = (j + 1) & (nc - 1);
+      ns[j] = s->slot[i];
+    }
+    free(s->slot);
+    s->slot = ns;
+    s->cap = nc;
+  }
+  size_t j = gr_hash(k) & (s->cap - 1);
+  while (s->slot[j]) {
+    if (!strcmp(s->slot[j], k)) return 0;
+    j = (j + 1) & (s->cap - 1);
+  }
+  s->slot[j] = strdup(k);
+  if (!s->slot[j]) return -1;
+  s->n++;
+  return 1;
+}
+
+static void gr_seen_free(gr_seen *s) {
+  for (size_t i = 0; i < s->cap; i++) free(s->slot[i]);
+  free(s->slot);
+}
+
+typedef struct {
+  gr_seen seen;
+  int pages, first_bad;
+  int reserved;     /* re-served copies of an ADA already emitted (skipped) */
+  int off_type;     /* records of another decision type (not attributed)    */
+  char off_example[64];
+} gr_walk;
+
+/* Copy an epoch-ms field as ISO-8601, when the upstream's value renders. */
+static void gr_put_ms(cJSON *props, const char *name, const cJSON *d, const char *k) {
+  const cJSON *v = cJSON_GetObjectItem(d, k);
+  char iso[32];
+  if (cJSON_IsNumber(v) && v->valuedouble > 0 && jo_ms_iso(v->valuedouble, iso, sizeof iso))
+    cJSON_AddStringToObject(props, name, iso);
+}
+
+/* pw_emit_fn: one page of Γ.3.4 decisions. `seen` is what the page HELD. */
+static int gr_emit_page(const source_ctx *ctx, intel_sink *sink, const char *id,
+                        cJSON *doc, void *ud, int *seen) {
+  (void)ctx; (void)id;
+  gr_walk *w = (gr_walk *)ud;
+  const cJSON *arr = cJSON_GetObjectItem(doc, "decisions");
+  *seen = cJSON_IsArray(arr) ? cJSON_GetArraySize(arr) : 0;
+  if (!cJSON_IsArray(arr)) {
+    if (w->pages == 0) w->first_bad = 1;
+    w->pages++;
+    return 0;
+  }
+  w->pages++;
+
+  int n = 0, reserved_before = w->reserved;
   const cJSON *d;
   cJSON_ArrayForEach(d, arr) {
     if (!cJSON_IsObject(d)) continue;
     const char *subject = jo_sv(d, "subject");
     const char *ada     = jo_sv(d, "ada");
     const char *proto   = jo_sv(d, "protocolNumber");
+    const char *dtype   = jo_sv(d, "decisionTypeId");
     if (!subject && !ada) continue;
+
+    /* Rule 4d, per record: a record of another type is not a ΣΥΜΒΑΣΗ, so it
+     * is not stored under this row's label. Counted and disclosed after the
+     * walk — if the server ever stops honouring type= again, the run says so
+     * instead of filling the row with the national firehose. */
+    if (!dtype || strcmp(dtype, GR_TYPE_UID) != 0) {
+      if (!w->off_type)
+        snprintf(w->off_example, sizeof w->off_example, "%s", dtype ? dtype : "(none)");
+      w->off_type++;
+      continue;
+    }
+    if (ada) {
+      int fresh = gr_seen_add(&w->seen, ada);
+      if (fresh == 0) { w->reserved++; continue; }
+    }
 
     /* issueDate is epoch milliseconds. */
     char iso[32];
@@ -321,51 +456,90 @@ static int gr_run(const source_ctx *ctx, intel_sink *sink) {
     cJSON *props = cJSON_CreateObject();
     cJSON_AddStringToObject(props, "service", "gr-diavgeia-decisions");
     cJSON_AddStringToObject(props, "source", "diavgeia.gov.gr");
-    if (ada)   cJSON_AddStringToObject(props, "ada", ada);
-    if (proto) cJSON_AddStringToObject(props, "protocol_number", proto);
+    if (ada)     cJSON_AddStringToObject(props, "ada", ada);
+    if (proto)   cJSON_AddStringToObject(props, "protocol_number", proto);
     if (subject) cJSON_AddStringToObject(props, "subject", subject);
-    if (pub)   cJSON_AddStringToObject(props, "issue_date", pub);
+    if (pub)     cJSON_AddStringToObject(props, "issue_date", pub);
+    cJSON_AddStringToObject(props, "decision_type_id", dtype);
+    cJSON_AddStringToObject(props, "decision_type_label", "ΣΥΜΒΑΣΗ");
     if (jo_sv(d, "organizationId"))
       cJSON_AddStringToObject(props, "organization_id", jo_sv(d, "organizationId"));
-    if (jo_sv(d, "decisionTypeUid"))
-      cJSON_AddStringToObject(props, "decision_type_uid", jo_sv(d, "decisionTypeUid"));
     if (jo_sv(d, "documentUrl"))
       cJSON_AddStringToObject(props, "document_url", jo_sv(d, "documentUrl"));
+    gr_put_ms(props, "publish_timestamp", d, "publishTimestamp");
+    gr_put_ms(props, "submission_timestamp", d, "submissionTimestamp");
 
-    const char *buyer = NULL;
+    /* The contract itself — what a Γ.3.4 record carries, under readable
+     * names. Absent fields stay absent (R1). */
+    const char *ctype = NULL, *duration = NULL;
+    double amount = 0; const char *currency = NULL; int has_amount = 0;
+    char people[400] = "";
     const cJSON *efv = cJSON_GetObjectItem(d, "extraFieldValues");
-    if (efv) {
-      const cJSON *org = cJSON_GetObjectItem(efv, "org");
-      if (org) {
-        buyer = jo_sv(org, "name");
-        if (buyer) cJSON_AddStringToObject(props, "buyer_name", buyer);
-        if (jo_sv(org, "afm"))
-          cJSON_AddStringToObject(props, "buyer_afm", jo_sv(org, "afm"));
-      }
-      const cJSON *amt = cJSON_GetObjectItem(efv, "expenseAmount");
-      if (amt) {
+    if (cJSON_IsObject(efv)) {
+      ctype = jo_sv(efv, "contractType");
+      if (ctype) cJSON_AddStringToObject(props, "contract_type", ctype);
+      const cJSON *np = cJSON_GetObjectItem(efv, "numberOfPeople");
+      if (cJSON_IsNumber(np))
+        cJSON_AddNumberToObject(props, "number_of_people", np->valuedouble);
+      const cJSON *fp = cJSON_GetObjectItem(efv, "financedProject");
+      if (cJSON_IsBool(fp))
+        cJSON_AddBoolToObject(props, "financed_project", cJSON_IsTrue(fp));
+      duration = jo_sv(efv, "duration");
+      if (duration) cJSON_AddStringToObject(props, "duration", duration);
+      if (jo_sv(efv, "documentType"))
+        cJSON_AddStringToObject(props, "document_type", jo_sv(efv, "documentType"));
+      const cJSON *amt = cJSON_GetObjectItem(efv, "contractAmount");
+      if (cJSON_IsObject(amt)) {
         const cJSON *v = cJSON_GetObjectItem(amt, "amount");
-        if (cJSON_IsNumber(v))
-          cJSON_AddNumberToObject(props, "expense_amount", v->valuedouble);
-        if (jo_sv(amt, "currency"))
-          cJSON_AddStringToObject(props, "expense_currency", jo_sv(amt, "currency"));
+        if (cJSON_IsNumber(v)) {
+          amount = v->valuedouble; has_amount = 1;
+          cJSON_AddNumberToObject(props, "contract_amount", amount);
+        }
+        currency = jo_sv(amt, "currency");
+        if (currency) cJSON_AddStringToObject(props, "contract_currency", currency);
       }
-      const cJSON *sp = cJSON_GetObjectItem(efv, "sponsor");
-      if (cJSON_IsArray(sp)) {
+      /* person[]: the contractor(s) — name and AFM (tax number). Every
+       * entry is kept; the summary lists names until it runs out of room. */
+      const cJSON *pl = cJSON_GetObjectItem(efv, "person");
+      if (cJSON_IsArray(pl)) {
+        cJSON *list = cJSON_CreateArray();
+        size_t used = 0;
+        const cJSON *e;
+        cJSON_ArrayForEach(e, pl) {
+          const char *nm = jo_sv(e, "name"), *afm = jo_sv(e, "afm");
+          if (!nm && !afm) continue;
+          cJSON *o = cJSON_CreateObject();
+          if (nm)  cJSON_AddStringToObject(o, "name", nm);
+          if (afm) cJSON_AddStringToObject(o, "afm", afm);
+          if (jo_sv(e, "afmType")) cJSON_AddStringToObject(o, "afm_type", jo_sv(e, "afmType"));
+          cJSON_AddItemToArray(list, o);
+          if (nm && used < sizeof people - 1) {
+            int wr = snprintf(people + used, sizeof people - used, "%s%s",
+                              used ? ", " : "", nm);
+            if (wr > 0) used += (size_t)wr < sizeof people - used ? (size_t)wr
+                                                                  : sizeof people - used - 1;
+          }
+        }
+        cJSON_AddItemToObject(props, "contractors", list);
+      }
+      const cJSON *rel = cJSON_GetObjectItem(efv, "relatedDecisions");
+      if (cJSON_IsArray(rel)) {
         cJSON *list = cJSON_CreateArray();
         const cJSON *e;
-        cJSON_ArrayForEach(e, sp) {
-          const cJSON *sa = cJSON_GetObjectItem(e, "sponsorAFMName");
-          if (!sa) continue;
-          const char *nm = jo_sv(sa, "name");
-          if (!nm) continue;
-          cJSON *o = cJSON_CreateObject();
-          cJSON_AddStringToObject(o, "name", nm);
-          if (jo_sv(sa, "afm")) cJSON_AddStringToObject(o, "afm", jo_sv(sa, "afm"));
-          cJSON_AddItemToArray(list, o);
+        cJSON_ArrayForEach(e, rel) {
+          const char *ra = jo_sv(e, "relatedDecisionsADA");
+          if (ra) cJSON_AddItemToArray(list, cJSON_CreateString(ra));
         }
-        cJSON_AddItemToObject(props, "counterparties", list);
+        cJSON_AddItemToObject(props, "related_decision_adas", list);
       }
+    }
+    /* ...and every field the record carried, verbatim (house rule 2): signer,
+     * unit and thematic-category ids, version and status, attachments,
+     * checksum, the whole extraFieldValues object. The names above are a view.
+     * JSON nulls are skipped. */
+    for (const cJSON *f = d->child; f; f = f->next) {
+      if (!f->string || cJSON_IsNull(f) || cJSON_GetObjectItem(props, f->string)) continue;
+      cJSON_AddItemToObject(props, f->string, cJSON_Duplicate(f, 1));
     }
     char *pj = cJSON_PrintUnformatted(props);
     cJSON_Delete(props);
@@ -373,13 +547,20 @@ static int gr_run(const source_ctx *ctx, intel_sink *sink) {
     char title[500];
     snprintf(title, sizeof title, "%s", subject ? subject : ada);
 
-    char summary[420];
-    snprintf(summary, sizeof summary, "%s%s%s",
-             buyer ? buyer : "", (buyer && ada) ? " · " : "", ada ? ada : "");
+    char amt_s[64] = "";
+    if (has_amount)
+      snprintf(amt_s, sizeof amt_s, "%.2f %s", amount, currency ? currency : "");
+    char summary[640];
+    snprintf(summary, sizeof summary, "%s%s%s%s%s%s%s",
+             ctype ? ctype : "",
+             (ctype && amt_s[0]) ? " · " : "", amt_s,
+             ((ctype || amt_s[0]) && people[0]) ? " · " : "", people,
+             ((ctype || amt_s[0] || people[0]) && duration) ? " · " : "",
+             duration ? duration : "");
 
     char link[256];
     if (ada) snprintf(link, sizeof link, "https://diavgeia.gov.gr/decision/view/%s", ada);
-    else     snprintf(link, sizeof link, "%s", url);
+    else     snprintf(link, sizeof link, "%s", GR_URL);
 
     intel_item it = {0};
     it.remote_key      = ada ? ada : (proto ? proto : title);
@@ -389,27 +570,66 @@ static int gr_run(const source_ctx *ctx, intel_sink *sink) {
     it.link            = link;
     it.lang            = "el";
     it.published_at    = pub;
-    it.record_type     = "gr-transparency-decision";
+    it.record_type     = "gr-contract-decision";
     it.properties_json = pj;
-    it.tags_json       = "[\"procurement\",\"greece\",\"transparency\"]";
+    it.tags_json       = "[\"contracts\",\"greece\",\"transparency\"]";
     if (sink->emit(sink, &it) >= 0) n++;
     free(pj);
   }
+  /* A re-served copy is a record this walk already used, not one it
+   * discarded: counting it as used keeps pw_walk from reporting it as
+   * "dropped" (its records_dropped means records it could not turn into
+   * rows). The run line's records=/stored= count emit() calls and are not
+   * affected. Off-type records stay dropped — they were. */
+  return n + (w->reserved - reserved_before);
+}
 
-  cJSON_Delete(doc);
-  fprintf(stderr, "[gr-diavgeia-decisions] emitted %d\n", n);
+static int gr_run(const source_ctx *ctx, intel_sink *sink) {
+  gr_walk w;
+  memset(&w, 0, sizeof w);
+  int n = pw_walk(ctx, sink, "gr-diavgeia-decisions", GR_URL, gr_fetch,
+                  gr_emit_page, &w);
+  gr_seen_free(&w.seen);
+  if (n < 0) { fprintf(stderr, "[gr-diavgeia-decisions] fetch/parse failed\n"); return -1; }
+  if (w.first_bad) {
+    fprintf(stderr, "[gr-diavgeia-decisions] unexpected payload shape\n");
+    return -1;
+  }
+  if (w.off_type > 0) {
+    char reason[320];
+    snprintf(reason, sizeof reason,
+             "the upstream answered type=Γ.3.4 with %d record(s) of another "
+             "decision type (e.g. %s); they are not ΣΥΜΒΑΣΗ decisions and were "
+             "not stored under this row", w.off_type, w.off_example);
+    cJSON *extra = cJSON_CreateObject();
+    if (extra) {
+      cJSON_AddStringToObject(extra, "url", GR_URL);
+      cJSON_AddNumberToObject(extra, "records_off_type", w.off_type);
+    }
+    jo_truncation_notice_ex(sink, "gr-diavgeia-decisions", "off-type",
+                            n - w.reserved, -1,
+                            reason, "check whether /opendata/search still honours "
+                            "type= (rule 4d)", extra);
+  }
+  fprintf(stderr, "[gr-diavgeia-decisions] emitted %d Γ.3.4 decisions across %d "
+          "page(s) (%d re-served ADAs skipped, %d off-type)\n",
+          n - w.reserved, w.pages, w.reserved, w.off_type);
   return 0;
 }
 
 static const source_def reg2_gr_diavgeia_def = {
   .id = "gr-diavgeia-decisions", .collector = "government",
-  .name = "Greece Diavgeia transparency decisions (contracts/awards)",
+  .name = "Greece Diavgeia contract decisions (ΣΥΜΒΑΣΗ, type Γ.3.4)",
   .update_interval_sec = 10800, .run = gr_run,
   .category = "government", .type = "api",
-  .url = "https://diavgeia.gov.gr/opendata/search.json",
-  .description = "Greek public contracting stream from the statutory Diavgeia "
-                 "transparency programme — buyer VAT number (AFM), supplier AFM "
-                 "and amount for every published contract decision. Keyless.",
+  .url = "https://diavgeia.gov.gr/opendata/search.json?type=%CE%93.3.4",
+  .description = "Every ΣΥΜΒΑΣΗ (decision type Γ.3.4) a Greek public body "
+                 "published to the statutory Diavgeia transparency programme "
+                 "in the last six months: fixed-term and open-ended "
+                 "private-law employment contracts and contracts for services, "
+                 "with contract type, number of people, contractor name and "
+                 "AFM, amount and duration where the record states them, the "
+                 "issuing organisation id and the related decisions. Keyless.",
   .license = "Statutory transparency programme (Law 3861/2010); the opendata "
              "endpoint is the official machine interface.",
   .layer = NULL, .free_tier = 1,

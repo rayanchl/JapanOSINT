@@ -59,17 +59,6 @@ static const hp_source HP3B31_MENACIS[] = {
       "opening date and the award. The single best window into Saudi public "
       "spending and the contractors who receive it" },
 
-  { .id = "AE_BAYANAT_OPEN_DATA", .name = "UAE Bayanat — federal open data portal",
-    .name_ja = "UAE オープンデータ", .category = "government",
-    .portal = "https://bayanat.ae", .record_type = "ae-dataset",
-    .tags = "\"ae\",\"open-data\",\"gulf\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://bayanat.ae/en/DataSet?q={q}",
-    .base = "https://bayanat.ae", .filter_query = 1,
-    .description = "The UAE federal data portal — licensing counts, trade "
-      "volumes, sectoral registers and the emirate-level datasets that carry "
-      "establishment and permit records" },
-
   { .id = "AE_DIFC_PUBLIC_REGISTER", .name = "DIFC — Dubai International Financial Centre register",
     .name_ja = "DIFC 公開登録簿", .category = "finance",
     .portal = "https://www.difc.ae", .record_type = "ae-entity",
@@ -127,18 +116,6 @@ static const hp_source HP3B31_MENACIS[] = {
       "state-owned enterprise contracts" },
 
   /* ── Levant, Turkey, North Africa ─────────────────────────────────────── */
-  { .id = "IL_DATA_GOV_CKAN", .name = "Israel data.gov.il — national data catalog",
-    .name_ja = "イスラエル オープンデータ", .category = "government",
-    .portal = "https://data.gov.il", .record_type = "il-dataset",
-    .tags = "\"il\",\"open-data\",\"catalog\"", .free_tier = 1,
-    .url = "https://data.gov.il/api/3/action/package_search?q={q}&rows=100",
-    .array_path = "result.results", .title_keys = "title,organization.title",
-    .id_keys = "id", .date_keys = "metadata_modified",
-    .page_param = "start", .page_size = 100, .page_start = 0, .page_max = 30,
-    .description = "Israel's CKAN portal — the companies register extract, "
-      "non-profit register, licensed dealers, building permits and the "
-      "government contracts dataset, each with a datastore API behind it" },
-
   { .id = "IL_KNESSET_ODATA", .name = "Knesset — parliamentary OData service",
     .name_ja = "イスラエル国会 データサービス", .category = "government",
     .portal = "https://knesset.gov.il", .record_type = "il-parliamentary-record",
@@ -159,28 +136,6 @@ static const hp_source HP3B31_MENACIS[] = {
     .description = "Turkey's electronic procurement platform — tender notices "
       "and results, plus the Public Procurement Authority's ban list of firms "
       "excluded from bidding and the reason for each" },
-
-  { .id = "TR_RESMI_GAZETE", .name = "Turkey — Resmî Gazete official gazette",
-    .name_ja = "トルコ 官報", .category = "government",
-    .portal = "https://www.resmigazete.gov.tr", .record_type = "tr-gazette-notice",
-    .tags = "\"tr\",\"gazette\",\"law\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.resmigazete.gov.tr/arama?q={q}",
-    .base = "https://www.resmigazete.gov.tr", .filter_query = 1,
-    .description = "The Turkish official gazette — presidential decrees, asset "
-      "freezes, trustee appointments over companies, licence grants and the "
-      "regulatory decisions that take effect on publication" },
-
-  { .id = "TR_KAP_DISCLOSURES", .name = "Turkey KAP — public disclosure platform",
-    .name_ja = "トルコ 上場企業開示", .category = "finance",
-    .portal = "https://www.kap.org.tr", .record_type = "tr-listed-disclosure",
-    .tags = "\"tr\",\"listed\",\"disclosure\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.kap.org.tr/en/bildirim-sorgu?query={q}",
-    .base = "https://www.kap.org.tr", .filter_query = 1,
-    .description = "Material event disclosures by Turkish listed companies, "
-      "investment funds and their subsidiaries — shareholding changes, "
-      "management changes, related-party transactions and audit reports" },
 
   { .id = "MA_MARCHES_PUBLICS", .name = "Morocco — public procurement portal",
     .name_ja = "モロッコ 公共調達", .category = "government",
@@ -218,17 +173,6 @@ static const hp_source HP3B31_MENACIS[] = {
       "investment authority announcements, tender notices and the licensing "
       "decisions published centrally rather than by each ministry" },
 
-  { .id = "JO_JORDAN_TENDERS", .name = "Jordan — government tenders directorate",
-    .name_ja = "ヨルダン 政府調達", .category = "government",
-    .portal = "https://gtd.gov.jo", .record_type = "jo-tender",
-    .tags = "\"jo\",\"procurement\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://gtd.gov.jo/en/search?q={q}",
-    .base = "https://gtd.gov.jo", .filter_query = 1,
-    .description = "Jordan's General Tenders Directorate — tender "
-      "announcements, the classified contractor register with grades, and the "
-      "award decisions for ministry works and supply contracts" },
-
   /* ── Russia and the post-Soviet space ─────────────────────────────────── */
   { .id = "RU_ZAKUPKI_PROCUREMENT", .name = "Russia zakupki.gov.ru — unified procurement register",
     .name_ja = "ロシア 統一調達登録", .category = "government",
@@ -254,17 +198,6 @@ static const hp_source HP3B31_MENACIS[] = {
       "to file for bankruptcy, pledges over assets, leasing contracts, auditor "
       "opinions, net-asset reductions and reorganisations. Russian distress "
       "appears here months before it appears in a court file" },
-
-  { .id = "RU_EGRUL_FNS_EXTRACT", .name = "Russia EGRUL — tax service company extract",
-    .name_ja = "ロシア 法人登記抄本", .category = "government",
-    .portal = "https://egrul.nalog.ru", .record_type = "ru-entity",
-    .tags = "\"ru\",\"registry\",\"tax\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://egrul.nalog.ru/index.html?query={q}",
-    .base = "https://egrul.nalog.ru", .filter_query = 1,
-    .description = "The Federal Tax Service's own extract service — INN, OGRN, "
-      "registered address, director, founders with their shares, and the "
-      "unreliability flags the tax service stamps on an address or a director" },
 
   { .id = "RU_ARBITR_BANKRUPTCY_GAZETTE", .name = "Russia Kommersant — bankruptcy notices",
     .name_ja = "ロシア 破産公告", .category = "legal",

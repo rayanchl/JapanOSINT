@@ -174,7 +174,9 @@ static const hp_source HP_RESEARCH[] = {
     .post_body = "{\"criteria\":{\"pi_names\":[{\"any_name\":\"{Q}\"}]},"
                  "\"include_fields\":[\"ProjectNum\",\"ProjectTitle\",\"Organization\","
                  "\"AwardAmount\",\"FiscalYear\",\"PrincipalInvestigators\","
-                 "\"AgencyIcAdmin\",\"ProjectStartDate\"],\"offset\":0,\"limit\":40}",
+                 "\"AgencyIcAdmin\",\"ProjectStartDate\"],\"offset\":{offset},\"limit\":{size}}",
+    .page_size = 500, .page_max = 30,   /* RePORTER: limit <= 500, offset <= 14,999 */
+    /* 2026-10-06: the body carried a fixed "offset":0, so every dispatch read the first 40 projects and nothing after; {offset} is now re-expanded per page (paging inside a POST body) */
     .array_path = "results", .title_keys = "project_title", .id_keys = "project_num",
     .date_keys = "project_start_date",
     .description = "NIH awards to a named principal investigator — project number, "

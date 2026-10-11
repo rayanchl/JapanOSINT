@@ -18,6 +18,7 @@
 #include "../../core/entity_enrich.h"
 
 #include <assert.h>
+#include "fake_llm.h"
 
 static void ins(db_handle *db, const char *uid, const char *rt, const char *title) {
   sqlite3_stmt *s;
@@ -101,11 +102,16 @@ static void test_run_row_excluded(void) {
   ins(&db, "fence-run", "osint_search_run", "東京の地震について調査しました");
   assert(pending_count(db.h) == 1 && "the run row is not pending translation");
 
-  /* entity extraction: the selection is what decides. With nothing listening
-   * on the LLM URL each SELECTED row is recorded as a failed attempt, so the
-   * state table shows exactly which rows were picked. */
+  /* entity extraction: the selection is what decides. A server that is UP
+   * and answers garbage makes each SELECTED row a recorded failed attempt, so
+   * the state table shows exactly which rows were picked. (An unreachable one
+   * no longer does: an outage is deferred, not charged to the item.) */
+  int port = fake_llm_start();
+  fake_llm_set_content("not json");
+  char base[64];
+  snprintf(base, sizeof base, "http://127.0.0.1:%d", port);
   http_client *hc = http_client_new();
-  llm_client llm = { .http = hc, .base_url = "http://127.0.0.1:1" };
+  llm_client llm = { .http = hc, .base_url = base };
   entity_enrich_extract(&db, &llm, 50);
   assert(scalar(&db, "SELECT count(*) FROM entity_extraction_state "
                      "WHERE item_uid='fence-news'") == 1);

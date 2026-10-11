@@ -46,9 +46,13 @@
  *     bookmark their own query buys no safety. `to-alert` is the one write
  *     that escapes the user's own row (it creates tenant-visible, outbound-
  *     mailing infrastructure) and it requires analyst+, checked here.
- *  2. Lists are limit-paged, not keyset-paged. Saved searches are personal and
- *     few; history is hard-capped at SS_HISTORY_KEEP rows per user. A cursor
- *     encoder here would be dead code on a set that cannot grow.
+ *  2. Lists are offset-paged (limit + offset), not keyset-paged, with a
+ *     measured total: page:{limit,offset,count,total,has_more}. History is
+ *     hard-capped at SS_HISTORY_KEEP rows per user, so neither set grows fast
+ *     enough between two page requests for offset drift to matter, and a
+ *     cursor encoder would buy nothing a client needs. The total is a
+ *     COUNT(*) over the same WHERE text as the page, so ?mine=1, kind= and
+ *     pinned= narrow it exactly as they narrow the rows.
  *  3. Only saved_search.create / .delete / .to_alert are audited. Reads and
  *     runs are NOT: search_history already is the record of what ran, and
  *     copying it into audit_events would place the same investigative content
@@ -95,8 +99,8 @@
  *   CREATE INDEX IF NOT EXISTS idx_search_history_owner
  *     ON search_history(tenant_id, user_id, ts DESC);
  *
- * Note the owner indexes lead with (tenant_id, user_id): every read path in
- * this module filters on both, so the index and the privacy rule agree.
+ * The owner indexes lead with (tenant_id, user_id): the workspace view reads
+ * the tenant_id prefix, ?mine=1 and every author-only write use both.
  * search_history deliberately has no FK to saved_searches — history is a
  * record of what ran, and deleting the bookmark must not rewrite the trail.
  */
@@ -105,13 +109,18 @@
 #define SS_PARAMS_MAX     16384   /* bytes of compact params_json            */
 #define SS_NAME_MAX       200     /* chars, trimmed                          */
 #define SS_HISTORY_KEEP   1000    /* newest rows kept per (tenant,user)      */
+#define SS_HISTORY_MERGE_SEC 600  /* same search, same person: refresh, not a copy */
 #define PL_TOKEN_MAX      4096    /* chars of "v1.<b64url>" accepted         */
 #define PL_STATE_MAX      3072    /* bytes of compact state JSON encoded     */
 
 /* ── /api/saved-searches[...] ───────────────────────────────────────────────
- *   GET    /api/saved-searches?kind=&limit=   list MINE (pinned first)
+ *   GET    /api/saved-searches?kind=&pinned=&mine=&limit=&offset=
+ *                                             list the workspace's (pinned
+ *                                             first); ?mine=1 = the caller's.
+ *                                             page:{limit,offset,count,total,
+ *                                             has_more}, meta:{scope}
  *   POST   /api/saved-searches                create  {name?,kind,params|params_json,pinned?}
- *   GET    /api/saved-searches/:id            fetch mine
+ *   GET    /api/saved-searches/:id            fetch any in the workspace
  *   PATCH  /api/saved-searches/:id            {name?,params?,pinned?} — `kind`
  *                                             is immutable (see .c for why)
  *   DELETE /api/saved-searches/:id            204
@@ -128,9 +137,9 @@
  * success (DELETE); NULL + anything else means the caller emits a generic
  * error of that status. Caller frees.
  *
- * A row is only ever visible to the user who created it, in the tenant it was
- * created in. Someone else's id returns 404, not 403 — a 403 would confirm the
- * row exists, which is itself a leak about what a colleague saved.
+ * A row is visible to every member of the tenant it was created in, and to
+ * no one else: another workspace's id returns 404. PATCH and DELETE match the
+ * author too, so a teammate's attempt is the same 404 an unknown id gets.
  *
  * /run does NOT execute the query. It is bookkeeping plus a handoff: it
  * returns the saved search (including `params`) so the client re-issues the
@@ -146,14 +155,31 @@ char *savedsearchapi(db_handle *db, const tenant_ctx *t, const char *method,
                      const char *body, int *status);
 
 /* ── /api/search-history ────────────────────────────────────────────────────
- *   GET    /api/search-history?kind=&limit=   newest-first, MINE ONLY
+ *   GET    /api/search-history?kind=&mine=&limit=&offset=
+ *                                             newest-first, the workspace's;
+ *                                             ?mine=1 = the caller's own.
+ *                                             page:{limit,offset,count,total,
+ *                                             has_more}, meta:{scope,
+ *                                             retained_max}
+ *   POST   /api/search-history                record a search the caller
+ *                                             COMMITTED {kind,params,
+ *                                             result_count?} → 201 {data:row},
+ *                                             or 200 when it refreshed the same
+ *                                             search made in the last
+ *                                             SS_HISTORY_MERGE_SEC (meta.merged)
  *   DELETE /api/search-history                clear MINE ONLY → {"ok":true,"deleted":n}
  *
- * There is no ?user_id=, no ?all=1 and no admin variant, and adding one would
- * defeat the point of the table (see the privacy note at the top). limit
- * defaults to 50 and clamps to 1..200. Sets *status; malloc'd; caller frees. */
+ * Every committed search is recorded (decided 2026-10-09): the clients POST
+ * on submit or on opening a result, never per keystroke, and an OSINT run is
+ * recorded by searchapi.c when it starts. Saved-search runs record through
+ * run_saved as before.
+ *
+ * Every row names its author (user_id, mine) and meta.scope says which view
+ * was served. Nothing crosses workspaces. limit defaults to 50 and clamps to
+ * 1..200; offset < 0 reads as 0.
+ * Sets *status; malloc'd; caller frees. */
 char *searchhistoryapi(db_handle *db, const tenant_ctx *t, const char *method,
-                       const char *qs, int *status);
+                       const char *qs, const char *body, int *status);
 
 /* Append one history row for (tenant,user) and prune to the newest
  * SS_HISTORY_KEEP. `kind` must be one of the five kinds (anything else is
@@ -163,13 +189,10 @@ char *searchhistoryapi(db_handle *db, const tenant_ctx *t, const char *method,
  * Fails silently, exactly like audit_write(): a history row must never break
  * the search it describes.
  *
- * ORCHESTRATOR (optional, not required for item 38): to make history reflect
- * every search rather than only saved-search runs, call this from the existing
- * search handlers in httpd.c after a successful response, e.g. in the
- * /api/intel/items block:
- *     search_history_record(g_db, tc.tenant_id, tc.user_id, "intel",
- *                           params_json, (long)returned_rows);
- * It is a plain void call with no ordering constraints. */
+ * The same search by the same person within SS_HISTORY_MERGE_SEC refreshes
+ * the existing row (ts, result_count) instead of adding a copy. Not called from
+ * the search ROUTES on purpose: /api/entities/search serves a search-as-you-type
+ * box, so recording there would store every prefix typed. */
 void search_history_record(db_handle *db, const char *tenant_id,
                            const char *user_id, const char *kind,
                            const char *params_json, long result_count);

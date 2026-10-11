@@ -7,8 +7,8 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
-VCSV(hk_companies_registry_new_nonhk_companies, "hk-companies-registry-new-nonhk-companies", "Hong Kong Companies Registry — newly registered non-Hong Kong companies (weekly)", "Hong Kong Companies Registry — newly registered non-Hong Kong companies (weekly)",
-  "hk_registry", "registry",
-  "https://www.cr.gov.hk/docs/wrpt/RNC063/RNC063F_20250303.csv",
-  "en", "[\"hk\",\"registry\",\"batch17\",\"high-penetrancy\"]", 86400,
-  "Foreign companies newly registered to carry on business in Hong Kong: Seq, Current Corporate Name / Other Corporate Name, Current Approved Name for Carrying on Business in H.K., BR Number, Date of Registration and Date of Change of name. Each entity appears twice, once in Latin script and once in Chinese, sharing a Seq — the cross-script alias pair is itself the intel.");
+/* hk-companies-registry-new-nonhk-companies removed 2026-10-06. It read
+ * RNC063F_20250303.csv — one week, frozen since batch 17 — because the list is
+ * republished weekly under a new date and VCSV has no way to follow it.
+ * JO39_CN_HK_CR_NEW_NONHK_COMPANIES (collectors/pivot/table/hp3b39_cn39.c)
+ * reads the newest week with a {date…} token and date_back. */
