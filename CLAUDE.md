@@ -172,8 +172,26 @@ verdicts can be transient, a user-agent or a bad afternoon, whereas
 FILTER_IGNORED is a property of the endpoint's query handling. They disclose
 themselves now instead; see the fetch-failure notice under rule 1.
 
-**The older exception still stands for rules 4 and 4b:** those 360 rows
-(now 295) are entity pivots that have not been run against a real entity. The 27 scheduled rows were run on
+**Rules 4 and 4b are now measured too (2026-10-11), and the tool you pick
+decides whether the answer means anything.** `docs/emit-sources-batch31.tsv`
+holds it: of the 295 live rows, **53 OK** (they fetch and store real records
+for their probe entity), 99 `EMPTY_UPSTREAM` — which is not "broken", the
+endpoint answered and held nothing for that particular entity — and 48 404s,
+42 403s and 37 transport failures. The 65 `UNREGISTERED` are exactly the 65
+removed above, which is also the proof the removal was complete.
+
+**Use `audit_batch_emit.py` with the MANIFEST for pivot rows, never the
+registry sweep.** `audit_registry_emit.py` runs every row with no entity, so
+it reported **268 of these 295 as EMITS_NOTHING** — a verdict about sources
+that had never been asked anything. The sweep has a `NEEDS_ENTITY` verdict for
+exactly this and it could not fire, because an on-demand pivot asked with no
+entity returned SILENTLY from `hp_run`: the run line read
+`records=0 0ms stored=0`, byte-identical to a row that went and found nothing.
+The engine says it now and the sweep matches on it.
+
+Nothing is removed on that reading. One probe is one reading, 403 and 404 can
+be a user-agent or a bad afternoon, and each of these rows now files a
+collector-fetch-failure record naming its status. The 27 scheduled rows were run on
 2026-10-02: 13 store real records (FDSN 151,303; Safecast 30,000; Sejm 15,000;
 USGS NWIS 53,789 before the audit timeout …) and 14 need an API key and store a
 "gated" notice saying so. Ten rows were removed when the branches merged: seven
@@ -283,6 +301,23 @@ Where the tree actually stands, as `make audit-sources` reports it:
   4b's "the numbers look fine" traps at once. Measured 2026-10-05; that row is
   retired in favour of `GO_MODULE_INDEX`, which pages on
   `next_path=$last.Timestamp`.
+
+  **42 of those candidates are now MEASURED** (2026-10-11,
+  `docs/measured-url-limits-2026-10-11.tsv`): each upstream was asked the same
+  question with a tenfold limit. **18 are truncating**, 5 are complete, 19 are
+  unreachable from here. The first fix was the highest-leverage one:
+  `od_udata_collect()` in `collectors/sources/od_shared.inc` made ONE request
+  while the envelope published both `next_page` and the upstream's own `total`
+  — so three national open-data catalogues stored 20 datasets each. It pages
+  now, and discloses a ceiling or a `total` it did not reach:
+
+      data.public.lu   20 -> 3,193 stored (= its declared total)
+      dados.gov.pt     20 -> 20,933
+      data.gov.rs      20 -> 3,527
+
+  27,653 records from three rows that together stored 60. **The other 15
+  measured-truncating sites are not yet fixed** and are listed in that file, so
+  the next pass starts from the measurement.
 
   `tools/audit_url_limits.py` finds the shape, and is deliberately NOT in
   `make audit-sources`: **a URL limit is not automatically a discard and the
