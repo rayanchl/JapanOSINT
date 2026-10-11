@@ -274,3 +274,320 @@ LAYER("government-data", "Government Open Data", "government",
 LAYER("geodata", "Geospatial Reference", "geospatial",
       "geospatial-reference", NULL,
       "cat:geo|cat:geodata|cat:geospatial|cat:geology")
+
+/* ── Research / academia ────────────────────────────────────────────── */
+
+LAYER("research", "Research & Academia", "research",
+      "research-dataset", NULL,
+      "cat:research|cat:library|cat:archive|cat:science")
+
+/* ── Finance / markets ──────────────────────────────────────────────── */
+
+LAYER("finance", "Financial Markets", "finance",
+      "financial-data", NULL,
+      "cat:finance|cat:business|cat:corporate")
+
+/* ── Legal / courts ─────────────────────────────────────────────────── */
+
+LAYER("legal", "Legal & Courts", "legal",
+      "legal-record", NULL,
+      "cat:legal|cat:legal-record|cat:courts|cat:dispute-resolution|"
+      "cat:disciplinary|cat:licensing")
+
+/* ── Law enforcement (not crime events — facilities + investigations) ─ */
+
+LAYER("law-enforcement", "Law Enforcement", "police",
+      "law-enforcement-data", NULL,
+      "cat:police|cat:law-enforcement|cat:surveillance")
+
+/* ── Threat intelligence ────────────────────────────────────────────── */
+
+LAYER("threat-intel", "Threat Intelligence", "threat",
+      "threat-data", NULL,
+      "cat:threat|cat:vulnerability|cat:fraud-alert")
+
+/* ── Media / news ───────────────────────────────────────────────────── */
+
+LAYER("media-news", "Media & News", "media",
+      "media-content", NULL,
+      "cat:media|cat:news|cat:events")
+
+/* ── Investigations / OSINT tools ───────────────────────────────────── */
+
+LAYER("investigation", "Investigation Tools", "investigation",
+      "investigation-data", NULL,
+      "cat:investigation|cat:osint|cat:reference|cat:directory")
+
+/* ── Politics / parliament ──────────────────────────────────────────── */
+
+LAYER("politics", "Politics & Parliament", "politics",
+      "political-data", NULL,
+      "cat:politics|cat:parliament|cat:legislative|cat:sanctions")
+
+/* ── Disaster response ──────────────────────────────────────────────── */
+
+LAYER("disaster", "Disaster Response", "disaster",
+      "disaster-data", NULL,
+      "cat:disaster|cat:civilian|cat:public-safety|cat:emergency|cat:care|"
+      "cat:childcare|cat:accessibility")
+
+/* ── Aviation ───────────────────────────────────────────────────────── */
+
+LAYER("aviation", "Aviation", "aviation",
+      "aviation-data", NULL,
+      "cat:aviation")
+
+/* ── Maritime (distinct from AIS vessel tracking) ───────────────────── */
+
+LAYER("maritime-data", "Maritime Data", "maritime",
+      "maritime-data", NULL,
+      "cat:maritime|cat:maritime-safety")
+
+/* ── Labour / employment ────────────────────────────────────────────── */
+
+LAYER("labour", "Labour & Employment", "labour",
+      "labour-data", NULL,
+      "cat:labour|cat:labor")
+
+/* ── Commerce / trade ───────────────────────────────────────────────── */
+
+LAYER("commerce", "Commerce & Trade", "commerce",
+      "commerce-data", NULL,
+      "cat:commerce|cat:trade|cat:procurement|cat:spending|cat:consumer-safety")
+
+/* ── Registries (company, charity, asset) ───────────────────────────── */
+
+LAYER("registries", "Public Registries", "registry",
+      "registry-data", NULL,
+      "cat:registry|cat:company-registry|cat:charity|cat:organizations")
+
+/* ── Aid / humanitarian ─────────────────────────────────────────────── */
+
+LAYER("aid", "Aid & Humanitarian", "aid",
+      "aid-data", NULL,
+      "cat:aid|cat:conflict")
+
+/* ── Demographics / society ─────────────────────────────────────────── */
+
+LAYER("demographics", "Demographics & Society", "demographics",
+      "demographic-data", NULL,
+      "cat:demographics|cat:society|cat:microdata|cat:regional")
+
+/* ── Internet / network infrastructure ──────────────────────────────── */
+
+LAYER("internet", "Internet Infrastructure", "internet",
+      "internet-data", NULL,
+      "cat:internet|cat:ip|cat:network|cat:routing")
+
+/* ── Regulatory / enforcement ───────────────────────────────────────── */
+
+LAYER("regulatory", "Regulatory & Enforcement", "regulatory",
+      "regulatory-data", NULL,
+      "cat:regulatory|cat:regulator|cat:enforcement|cat:advisory|"
+      "cat:disclosure|cat:security")
+
+/* ── Construction / land ────────────────────────────────────────────── */
+
+LAYER("construction", "Construction & Land", "construction",
+      "construction-data", NULL,
+      "cat:construction|cat:land|cat:heritage|cat:local-history")
+
+/* ── Technology / webcams ───────────────────────────────────────────── */
+
+LAYER("webcams", "Webcams", "webcam",
+      "webcam-feed", "point",
+      "cat:webcam")
+
+LAYER("technology", "Technology", "technology",
+      "technology-data", NULL,
+      "cat:technology|cat:logistics")
+
+/* ── Space observation ──────────────────────────────────────────────── */
+
+LAYER("space-events", "Space Events", "space",
+      "space-event", "point",
+      "cat:space")
+
+/* ── JP-specific source layers (id: matchers) ───────────────────────── */
+
+LAYER("jma-weather-data", "JMA Weather", "weather",
+      "jma-weather", "point",
+      "id:jma-weather|id:jma-forecast-area|id:openmeteo-jma|id:tenki-jp|"
+      "id:windy-japan")
+
+LAYER("jma-seismic-data", "JMA Seismic", "seismic",
+      "jma-seismic", "point",
+      "id:jma-earthquake|id:jma-intensity|id:jma-tsunami|id:p2pquake-jma|"
+      "id:quake360-jp|id:hi-net|id:k-net|id:jshis-seismic")
+
+LAYER("jma-ocean-data", "JMA Ocean", "ocean",
+      "jma-ocean", "point",
+      "id:jma-ocean-wave|id:jma-ocean-temp|id:jma-tide|id:jma-ice|"
+      "id:msil-umishiru|id:nowphas-wave")
+
+LAYER("jma-hazard-data", "JMA Hazard", "hazard",
+      "jma-hazard", "point",
+      "id:jma-volcano|id:jma-warnings|id:jma-typhoon-json|"
+      "id:hazard-map-portal|id:bosai-shelter|id:nasa-firms-jp")
+
+LAYER("estat-data", "e-Stat Statistics", "statistics",
+      "estat-statistic", NULL,
+      "id:estat-population|id:estat-employment|id:estat-education|"
+      "id:estat-household|id:estat-industry|id:estat-census|id:estat-crime")
+
+LAYER("mlit-data", "MLIT Infrastructure", "infrastructure",
+      "mlit-infrastructure", "point",
+      "id:mlit-bridge|id:mlit-dam|id:mlit-river|id:mlit-landprice|"
+      "id:mlit-n05-rail-history|id:mlit-transaction")
+
+LAYER("resas-data", "RESAS Regional Statistics", "statistics",
+      "resas-statistic", NULL,
+      "id:resas-tourism|id:resas-industry|id:resas-municipality|"
+      "id:resas-population")
+
+LAYER("jp-power-grid", "JP Power Grid", "infrastructure",
+      "power-generation", "point",
+      "id:tepco-power|id:hokkaido-power|id:okinawa-power|id:electrical-grid")
+
+LAYER("jp-corporate-filings", "JP Corporate Filings", "finance",
+      "corporate-filing", NULL,
+      "id:edinet-filings|id:tdnet-disclosure|id:JPX_SHORT_SELLING|"
+      "id:japan-reit")
+
+LAYER("jp-govt-data", "JP Government Data", "government",
+      "jp-open-data", NULL,
+      "id:data-go-jp-ckan|id:geospatial-jp-ckan|id:kanpo-gazette|"
+      "id:os-jp-mof-sanctions")
+
+LAYER("jp-social-media", "JP Social Media", "social",
+      "social-media", NULL,
+      "id:hatena-bookmark|id:reddit-jp-subs|id:discord-jp-servers|"
+      "id:telegram-jp-channels|id:psn-xbox-jp|id:bird-makeup-jp|"
+      "id:linkedin-jp-search")
+
+LAYER("jp-cyber-recon", "JP Cyber Recon", "cyber",
+      "cyber-recon", "point",
+      "id:shodan-japan|id:shodan-cameras-jp|id:fofa-jp|id:censys-japan|"
+      "id:greynoise-jp|id:atlas-jp|id:ripestat-jp|id:dnstwist-jp-targets|"
+      "id:github-leaks-jp")
+
+LAYER("jp-satellite-imagery", "JP Satellite", "satellite",
+      "jp-satellite-image", "raster",
+      "id:jma-himawari|id:sentinel-japan|id:landsat-jp")
+
+LAYER("jp-transport-data", "JP Transport Data", "transport",
+      "jp-transport", "point",
+      "id:odpt-train|id:odpt-bus|id:odpt-flight|id:odpt-station|"
+      "id:odpt-transport|id:gtfs-jp|id:flightradar-jp|id:marinetraffic-jp|"
+      "id:navitime-api|id:luup-private")
+
+LAYER("jp-health-data", "JP Health", "health",
+      "jp-health", NULL,
+      "id:covid19-japan|id:pm25-japan")
+
+LAYER("jp-geo-reference", "JP Geographic Reference", "geospatial",
+      "jp-geo-reference", NULL,
+      "id:japan-api-prefectures|id:here-japan|id:openstreetmap-jp|"
+      "id:yahoo-map-api|id:JP_POSTAL")
+
+LAYER("jp-local-news", "JP Local News (Keizai)", "media",
+      "local-news", NULL,
+      "idp:JPKEIZAI_")
+
+LAYER("jp-archives", "JP Digital Archives", "archive",
+      "digital-archive", NULL,
+      "idp:JP25_JPARCH_")
+
+LAYER("jp-weko-repos", "JP University Repositories", "research",
+      "university-repository", NULL,
+      "idp:JO35_WEKO_|idp:JP25_JPARCH_WEKO_")
+
+LAYER("jp-search-cultural", "Japan Search Cultural", "culture",
+      "cultural-database", NULL,
+      "idp:JO32_JPS_")
+
+LAYER("jp-estat-dashboard", "e-Stat Dashboard", "statistics",
+      "estat-dashboard", NULL,
+      "idp:JPN_ESTAT_DASHBOARD_")
+
+LAYER("jp-boj-data", "Bank of Japan Data", "finance",
+      "boj-data", NULL,
+      "idp:JO30_BANK_BOJ_|idp:JO32_MKT_BOJ_")
+
+LAYER("jp-jpx-markets", "JPX Markets", "finance",
+      "jpx-market-data", NULL,
+      "idp:JO32_MKT_JPX_|idp:JO39_TBL_JPX_|idp:JPN_JPX_|idp:JPC_JPX_|"
+      "idp:JO39_JP_JPX_")
+
+LAYER("jp-mlit-geo", "MLIT Geospatial", "infrastructure",
+      "mlit-geo-data", "point",
+      "idp:JO32_ARC_MLIT_|idp:JO40_JPGEO_MLIT_")
+
+LAYER("jp-media-feeds", "JP Media Feeds", "media",
+      "jp-news-feed", NULL,
+      "idp:JP25_JPMEDIA_|idp:JO32_FEED_ASAHI_|idp:JO32_FEED_MAINICHI_|"
+      "idp:JO32_FEED_NHK_|id:nhk-news-rss|id:nhk-world-rss|"
+      "id:jp-news-rss|id:yahoo-news-jp-rss")
+
+LAYER("jp-cinii-research", "CiNii Research", "research",
+      "cinii-article", NULL,
+      "idp:JO28_CINII_|idp:CINII_")
+
+LAYER("jp-ndl-data", "National Diet Library", "library",
+      "ndl-data", NULL,
+      "idp:jp-ndl-")
+
+LAYER("jp-govt-pivots", "JP Government Pivots", "government",
+      "govt-pivot-data", NULL,
+      "idp:JO28_|idp:JPN_ESTAT_|idp:JPMUNI_")
+
+LAYER("jp-police-data", "JP Police & Crime Data", "police",
+      "police-data", NULL,
+      "idp:JPPOLICE_|id:pref-police-crime|id:npa-missing-persons|"
+      "id:npa-traffic-accidents|id:npa-important-wanted|id:npa-special-fraud|"
+      "id:npa-cyber-threat-obs|id:moj-crime-whitepaper")
+
+LAYER("jp-finance-pivots", "JP Finance Pivots", "finance",
+      "finance-pivot-data", NULL,
+      "idp:JPFIN_|idp:JPKEIZAI_FIN_|idp:JO30_BANK_")
+
+LAYER("jp-municipal-data", "JP Municipal Data", "government",
+      "municipal-data", NULL,
+      "idp:JPMUNI_")
+
+LAYER("jp-business-data", "JP Business Registry", "business",
+      "business-registry", NULL,
+      "idp:JPBIZ_|id:GBIZINFO")
+
+LAYER("jp-power-utilities", "JP Power Utilities", "infrastructure",
+      "power-utility", "point",
+      "id:tohoku-power|id:hokuriku-power|id:chubu-power|id:kepco-power|"
+      "id:chugoku-power|id:shikoku-power|id:kyushu-power")
+
+LAYER("jp-safecast", "JP Safecast Radiation", "environment",
+      "radiation-citizen", "point",
+      "idp:jp-safecast-")
+
+LAYER("jp-cam-discovery", "JP Camera Discovery", "cameras",
+      "jp-camera", "point",
+      "id:cam-curated-jp|id:cam-tabi_cam")
+
+LAYER("jp-bbs-forums", "JP BBS & Forums", "social",
+      "forum-post", NULL,
+      "idp:JPBBS_|id:chan-5ch")
+
+LAYER("jp-manhole-sakura", "JP Landmarks", "culture",
+      "jp-landmark", "point",
+      "id:manhole-covers|id:sakura-front|id:famous-places")
+
+LAYER("jp-jpcert", "JPCERT Alerts", "cyber",
+      "jpcert-alert", NULL,
+      "id:jpcert-alerts-rss")
+
+LAYER("jp-peeringdb", "JP PeeringDB", "telecom",
+      "peeringdb-facility", "point",
+      "id:peeringdb-jp|id:bgp-tools-jp")
+
+LAYER("jp-openalex", "OpenAlex JP Funders", "research",
+      "research-funder", NULL,
+      "idp:openalex-funders-country-jp")
