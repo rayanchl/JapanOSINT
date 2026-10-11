@@ -3,8 +3,8 @@
  * A `_maint` pod (registered from embed_pod.c with REGISTER_SOURCE, like
  * collectors/pod/simhash_pod.c) that embeds `title + ' ' + summary` (or the
  * first 512 bytes of body when there is no summary) of intel_items rows into
- * a sqlite-vec `vec0` virtual table, `intel_vec(uid TEXT PRIMARY KEY,
- * embedding float[N])`. N is whatever the configured embedding server
+ * a sqlite-vec `vec0` virtual table, `intel_vec_v2` (below; built on
+ * lib/vecindex). N is whatever the configured embedding server
  * answers with on the first call; it is recorded together with the model
  * name in `intel_vec_meta`, and a later run against a different model or
  * dimension REFUSES rather than mixing two spaces in one index — a nearest
@@ -50,10 +50,20 @@
 
 #include "db.h"
 #include "../third_party/cJSON.h"
+#include "../lib/vecindex.h"
 
-/* Names shared with semsearchapi.c. */
-#define EMBED_VEC_TABLE  "intel_vec"
-#define EMBED_META_TABLE "intel_vec_meta"
+/* Names shared with semsearchapi.c.
+ *
+ * intel_vec_v2(uid TEXT PRIMARY KEY, tenant_id TEXT PARTITION KEY,
+ * source_id TEXT, ts INTEGER, record_type TEXT, embedding float[N]) — the
+ * metadata columns are filterable INSIDE the KNN. `ts` is epoch seconds of
+ * the row's date (published_at when ISO, else fetched_at). The "_v2" is
+ * permanent: a vec0 table cannot gain columns and must never be renamed, so
+ * an older `intel_vec` (uid + embedding only) is migrated by copying into
+ * this one and dropping it (embed_pod.c, migrate_legacy). */
+#define EMBED_VEC_TABLE        "intel_vec_v2"
+#define EMBED_LEGACY_VEC_TABLE "intel_vec"
+#define EMBED_META_TABLE       "intel_vec_meta"
 /* Rows the embedding server would not take, with the text hash they failed
  * on: skipped until their text changes, and counted in the coverage block. */
 #define EMBED_FAIL_TABLE "intel_vec_failed"
@@ -125,5 +135,50 @@ char *embed_bound_text(const char *text);
  * byte; replacing, not dropping, keeps the text's shape. *replaced (may be
  * NULL) receives the number of bytes replaced. */
 char *embed_utf8_sanitize(const char *text, size_t *replaced);
+
+/* The intel index's spec (lib/vecindex), for code that queries it directly. */
+extern const vecindex_spec embed_intel_spec;
+
+/* The spec whose vec0 table answers queries NOW: the legacy intel_vec (no
+ * metadata columns, so no in-KNN filters) while a migration is pending, else
+ * embed_intel_spec. */
+const vecindex_spec *embed_query_spec(db_handle *db);
+
+/* ---- post-batch hook ------------------------------------------------------
+ *
+ * One row of a committed batch, as the hook sees it. Borrowed: valid only for
+ * the call. ts is epoch seconds of the row's date (the ROW_DATE rule). */
+typedef struct {
+  const char *uid;
+  const char *tenant_id;
+  const char *source_id;
+  long long   ts;
+  const char *record_type;
+} embed_row_meta;
+
+/* Called after the pod stores a batch (vecindex_embed_items): n rows, their
+ * uids, their vectors (n * dim floats, row-major), and per-row metadata.
+ *
+ * THE CONTRACT (lib/vecindex.h, vecindex_hook_fn, says the same):
+ *   - it runs on the embedding pod's thread — the scheduler's maintenance
+ *     lane — AFTER the batch's transaction committed, on the pod's own
+ *     connection `db`;
+ *   - it must be FAST: the next batch waits for it;
+ *   - it must NOT call the embedding server: the pod's send budget and the
+ *     server's queue are not the hook's to spend. Everything it needs is in
+ *     the arguments;
+ *   - it may write, in its own small transaction on `db`;
+ *   - it must not keep any pointer it was handed;
+ *   - it cannot undo the batch: whatever it does or fails to do, the vectors
+ *     are stored. A hook that must not miss a row records its own progress.
+ * Rows re-embedded because their text changed are delivered again; rows whose
+ * text was unchanged (or only their metadata moved), and vectors copied by
+ * the legacy migration, are not — nothing was embedded for them. */
+typedef void (*embed_hook_fn)(db_handle *db, int n, const char *const *uids,
+                              const float *vectors, int dim,
+                              const embed_row_meta *meta, void *user);
+
+/* Register a hook (up to 16 across every index). 0, or -1 when full. */
+int embed_hook_register(embed_hook_fn fn, void *user);
 
 #endif

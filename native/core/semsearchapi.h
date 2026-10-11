@@ -6,7 +6,11 @@
  *   &limit=N             rows returned, 1..200 (default 50)
  *   &k=N                 candidates per arm, 1..1000 (default 200)
  *
- * vector: embed q, k nearest in intel_vec, join intel_items.
+ * vector: embed q, k nearest in intel_vec_v2 WITHIN the caller's tenant
+ *         partitions (tenant + 'legacy', filtered inside the KNN — see
+ *         embed_pod.c "METADATA INSIDE THE KNN"), join intel_items.
+ *         `meta.knn_partitioned` says whether that filter ran in the KNN
+ *         (false while a pre-metadata index is being migrated).
  *
  * METRIC. vec0 is declared without `distance_metric`, so `distance` is L2,
  * not cosine. llama-server returns L2-normalised embeddings by default
