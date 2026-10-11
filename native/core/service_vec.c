@@ -3,11 +3,13 @@
 #include "embed_pod.h"
 #include "llm.h"
 #include "../source.h"
+#include "../lib/vecindex.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sqlite3.h>
+#include <time.h>
 
 /* One embedding request per this many services. Same default as the intel
  * pod: large enough that ~1,500 services is ~48 requests, small enough that a
@@ -18,12 +20,16 @@
  * the whole point: the registry-order path had to drop them at this size. */
 #define SVEC_TOPK_DEF 60
 
-/* Rank-fusion constant, the same value and meaning as semsearchapi.c's RRF_K:
- * a rank-1 hit contributes 1/61, rank-10 1/70, so a service both arms like
- * outranks one that only one arm likes, and neither arm's score scale (vec0's
- * L2 distance — cosine-equivalent in ranking for the L2-normalised vectors
- * llama-server returns — vs bm25) has to be normalised against the other. */
-#define SVEC_RRF_K 60.0
+/* The index, as lib/vecindex sees it. No done/fail tables: this index is
+ * rebuilt WHOLE when anything changes (all-or-nothing, see the build), so
+ * per-row incremental state would describe a build that no longer exists.
+ * Fusion uses VECINDEX_RRF_K, the same constant semsearchapi.c uses. */
+static const vecindex_spec svec_spec = {
+  .name = "service", .table = SVEC_TABLE, .key_col = "id",
+  .meta_table = SVEC_META_TABLE, .done_table = NULL, .fail_table = NULL,
+  .cols = NULL, .ncols = 0,
+  .rebuild_hint = " (the _svec_index pod rebuilds it on the next tick)" };
+VECINDEX_REGISTER(svec_spec)
 
 static int svec_enabled(void) {
   const char *e = getenv("JO_ROUTE_SEMANTIC");
@@ -138,30 +144,11 @@ static char *svec_text(const source_def *d) {
 /* ---- meta ---------------------------------------------------------------- */
 
 static void svec_meta_set(db_handle *db, const char *k, const char *v) {
-  sqlite3_stmt *s = NULL;
-  if (sqlite3_prepare_v2(db->h,
-        "INSERT INTO " SVEC_META_TABLE "(k,v) VALUES(?1,?2) "
-        "ON CONFLICT(k) DO UPDATE SET v=excluded.v", -1, &s, NULL) != SQLITE_OK)
-    return;
-  sqlite3_bind_text(s, 1, k, -1, SQLITE_STATIC);
-  sqlite3_bind_text(s, 2, v, -1, SQLITE_STATIC);
-  sqlite3_step(s);
-  sqlite3_finalize(s);
+  vecindex_meta_set(db, &svec_spec, k, v ? v : "");
 }
 
 static char *svec_meta_get(db_handle *db, const char *k) {
-  sqlite3_stmt *s = NULL;
-  char *out = NULL;
-  if (sqlite3_prepare_v2(db->h, "SELECT v FROM " SVEC_META_TABLE " WHERE k=?1",
-                         -1, &s, NULL) != SQLITE_OK)
-    return NULL;
-  sqlite3_bind_text(s, 1, k, -1, SQLITE_STATIC);
-  if (sqlite3_step(s) == SQLITE_ROW) {
-    const unsigned char *v = sqlite3_column_text(s, 0);
-    if (v) out = strdup((const char *)v);
-  }
-  sqlite3_finalize(s);
-  return out;
+  return vecindex_meta_dup(db, &svec_spec, k);
 }
 
 /* ---- build --------------------------------------------------------------- */
@@ -169,8 +156,7 @@ static char *svec_meta_get(db_handle *db, const char *k) {
 int service_vec_build(db_handle *db) {
   if (!db || !svec_enabled()) return 0;
 
-  sqlite3_exec(db->h, "CREATE TABLE IF NOT EXISTS " SVEC_META_TABLE
-               "(k TEXT PRIMARY KEY, v TEXT)", NULL, NULL, NULL);
+  vecindex_ensure_meta(db, &svec_spec);
 
   int want = 0;
   unsigned long long sig = svec_registry_sig(&want);
@@ -192,7 +178,7 @@ int service_vec_build(db_handle *db) {
    * Unidentifiable is not "changed": a server that does not answer right now
    * is a reason to do nothing, never a reason to drop a good index. */
   char model[256] = {0};
-  if (embed_detect_model(NULL, embed_base_url(), model, sizeof model) != 0) {
+  if (vecindex_detect_model(NULL, embed_base_url(), model, sizeof model) != 0) {
     fprintf(stderr, "[svec] cannot identify the embedding model (%s) — index "
                     "left as it is\n", model);
     char msg[320];
@@ -226,9 +212,9 @@ int service_vec_build(db_handle *db) {
                       "rather than mixing spaces\n",
               have_model ? have_model : "(not recorded)", model);
     } else {
-      const char *probe[1] = { "probe" };
-      float *pv = NULL; int pdim = 0; llm_status pst;
-      if (llm_embed(&llm, probe, 1, &pv, &pdim, 15000, &pst) != 0) {
+      llm_status pst;
+      int pdim = vecindex_probe_dim(&llm, 15000, &pst);
+      if (pdim <= 0) {
         /* The probe could not be answered. That says the SERVER is unwell,
          * not that the index is wrong — the old code fell through to the
          * rebuild, set state=building and DROPPED a good index on one 503. */
@@ -242,7 +228,6 @@ int service_vec_build(db_handle *db) {
                         "— rebuilding rather than mixing spaces\n", pdim,
                 have_dim ? have_dim : "?");
       }
-      free(pv);
     }
   }
   free(have_sig); free(have_model); free(have_dim); free(have_state); free(have_px);
@@ -279,7 +264,7 @@ int service_vec_build(db_handle *db) {
    * fraction happened to embed. */
   int dim = 0, indexed = 0, failed = 0;
   svec_meta_set(db, "state", "building");
-  sqlite3_exec(db->h, "DROP TABLE IF EXISTS " SVEC_TABLE, NULL, NULL, NULL);
+  vecindex_drop(db, &svec_spec);
 
   /* The LEXICAL arm of the router, built from the same rows in the same pass
    * so the two arms always describe the same corpus (an id in one and not the
@@ -330,11 +315,7 @@ int service_vec_build(db_handle *db) {
     }
     if (!dim) {
       dim = vdim;
-      char sql[256];
-      snprintf(sql, sizeof sql,
-        "CREATE VIRTUAL TABLE " SVEC_TABLE " USING vec0("
-        "id TEXT PRIMARY KEY, embedding float[%d])", dim);
-      if (sqlite3_exec(db->h, sql, NULL, NULL, NULL) != SQLITE_OK) failed = 1;
+      if (vecindex_create(db, &svec_spec, dim) != 0) failed = 1;
     } else if (vdim != dim) {
       /* One model must not change dimension mid-build. */
       fprintf(stderr, "[svec] server answered %d-d after %d-d — refusing\n", vdim, dim);
@@ -342,29 +323,25 @@ int service_vec_build(db_handle *db) {
     }
     /* One transaction per batch: 32 rows commit together, and a failure
      * rolls the batch back instead of leaving part of it on disk. */
-    if (!failed && sqlite3_exec(db->h, "BEGIN IMMEDIATE", NULL, NULL, NULL) != SQLITE_OK) {
+    if (!failed && vecindex_begin(db) != 0) {
       fprintf(stderr, "[svec] BEGIN failed: %s\n", sqlite3_errmsg(db->h));
       failed = 1;
     }
     if (!failed) {
       int batch_ok = 1;
-      sqlite3_stmt *ins = NULL;
-      if (sqlite3_prepare_v2(db->h, "INSERT INTO " SVEC_TABLE "(id,embedding) "
-                             "VALUES(?1,?2)", -1, &ins, NULL) == SQLITE_OK) {
+      vecindex_writer w;
+      if (vecindex_writer_open(&w, db, &svec_spec) == 0) {
         sqlite3_stmt *fins = NULL;
         if (fts_ok &&
             sqlite3_prepare_v2(db->h, "INSERT INTO " SVEC_FTS_TABLE "(id,text) "
                                "VALUES(?1,?2)", -1, &fins, NULL) != SQLITE_OK)
           batch_ok = 0;
         for (int j = 0; batch_ok && j < m; j++) {
-          sqlite3_reset(ins);
-          sqlite3_bind_text(ins, 1, svc[off + j]->id, -1, SQLITE_STATIC);
-          sqlite3_bind_blob(ins, 2, vecs + (size_t)j * dim,
-                            (int)(dim * sizeof(float)), SQLITE_STATIC);
           /* A row that does not go in fails the build: "ready" promises the
            * whole registry, and an index missing a service routes as if that
            * service did not exist. */
-          if (sqlite3_step(ins) != SQLITE_DONE) {
+          if (vecindex_writer_put(&w, svc[off + j]->id, vecs + (size_t)j * dim,
+                                  dim, NULL, 0, 0, NULL) != 0) {
             fprintf(stderr, "[svec] insert %s: %s\n", svc[off + j]->id,
                     sqlite3_errmsg(db->h));
             batch_ok = 0;
@@ -394,16 +371,20 @@ int service_vec_build(db_handle *db) {
           if (batch_ok) indexed++;
         }
         if (fins) sqlite3_finalize(fins);
-        sqlite3_finalize(ins);
+        vecindex_writer_close(&w);
       } else batch_ok = 0;
-      if (batch_ok &&
-          sqlite3_exec(db->h, "COMMIT", NULL, NULL, NULL) != SQLITE_OK) {
-        fprintf(stderr, "[svec] COMMIT failed: %s\n", sqlite3_errmsg(db->h));
-        batch_ok = 0;
-      }
-      if (!batch_ok) {
-        sqlite3_exec(db->h, "ROLLBACK", NULL, NULL, NULL);
+      if (vecindex_end(db, batch_ok) != 0) {
+        if (batch_ok)
+          fprintf(stderr, "[svec] COMMIT failed: %s\n", sqlite3_errmsg(db->h));
         failed = 1;
+      } else {
+        /* Post-batch hooks see the batch that committed (lib/vecindex.h's
+         * contract). The ids are the registry's own strings. */
+        const char *keys[SVEC_BATCH];
+        for (int j = 0; j < m; j++) keys[j] = svc[off + j]->id;
+        vecindex_batch b = { .spec = &svec_spec, .n = m, .dim = dim,
+                             .keys = keys, .vecs = vecs, .vals = NULL };
+        vecindex_fire_hooks(db, &b);
       }
     }
     for (int j = 0; j < m; j++) free(owned[j]);
@@ -411,6 +392,21 @@ int service_vec_build(db_handle *db) {
   }
   free(svc);
 
+  /* Coverage in lib/vecindex's one shape: eligible is the registry's pivot
+   * count, measured now; embedded is what this build stored. */
+  {
+    char at[40], nb[32];
+    time_t t = time(NULL);
+    struct tm tm;
+    gmtime_r(&t, &tm);
+    strftime(at, sizeof at, "%Y-%m-%dT%H:%M:%SZ", &tm);
+    snprintf(nb, sizeof nb, "%d", n);
+    svec_meta_set(db, "eligible_count", nb);
+    svec_meta_set(db, "eligible_counted_at", at);
+    svec_meta_set(db, "last_run_at", at);
+    snprintf(nb, sizeof nb, "%d", (failed || indexed < n) ? 0 : indexed);
+    svec_meta_set(db, "embedded_count", nb);
+  }
   if (failed || indexed < n) {
     /* `state` stays "building": whatever rows landed are on disk but the query
      * path will not touch them, and the next run rebuilds. The reason is
@@ -520,41 +516,6 @@ static int svec_fts_ready(db_handle *db) {
   return ok;
 }
 
-/* One candidate service, with its rank in each arm. rank 0 = that arm did not
- * return it, which is why the score is summed from the ranks that exist
- * rather than requiring both. */
-typedef struct { char *id; int vrank, frank; double score; } svec_cand;
-
-static void svec_cand_add(svec_cand *c, int *n, int cap, const char *id,
-                          int vrank, int frank) {
-  for (int i = 0; i < *n; i++) {
-    if (strcmp(c[i].id, id)) continue;
-    if (vrank && !c[i].vrank) { c[i].vrank = vrank; c[i].score += 1.0 / (SVEC_RRF_K + vrank); }
-    if (frank && !c[i].frank) { c[i].frank = frank; c[i].score += 1.0 / (SVEC_RRF_K + frank); }
-    return;
-  }
-  if (*n >= cap) return;
-  char *dup = strdup(id);
-  if (!dup) return;
-  c[*n].id = dup;
-  c[*n].vrank = vrank;
-  c[*n].frank = frank;
-  c[*n].score = (vrank ? 1.0 / (SVEC_RRF_K + vrank) : 0.0)
-              + (frank ? 1.0 / (SVEC_RRF_K + frank) : 0.0);
-  (*n)++;
-}
-
-static int svec_cand_cmp(const void *a, const void *b) {
-  const svec_cand *x = a, *y = b;
-  if (x->score > y->score) return -1;
-  if (x->score < y->score) return 1;
-  /* Deterministic tie-break, so the same query twice lists the same services
-   * in the same order: the vector rank, then the id. */
-  int xv = x->vrank ? x->vrank : 1 << 20, yv = y->vrank ? y->vrank : 1 << 20;
-  if (xv != yv) return xv < yv ? -1 : 1;
-  return strcmp(x->id, y->id);
-}
-
 char *service_vec_catalogue(db_handle *db, const char *query, int k,
                             osint_catalogue_note *note,
                             char ***out_ids, int *out_n) {
@@ -656,47 +617,26 @@ char *service_vec_catalogue_bounded(db_handle *db, const char *query, int k,
    * Vector KNN first, then the keyword index over the same cards, then
    * reciprocal-rank fusion. Each arm contributes at most `k` candidates and
    * the fused list is cut back to `k`, so the prompt budget is unchanged. */
-  svec_cand *cands = calloc((size_t)k * 2, sizeof *cands);
-  int nc = 0;
-  if (!cands) { free(qv); return NULL; }
-
-  sqlite3_stmt *s = NULL;
-  if (sqlite3_prepare_v2(db->h,
-        "SELECT id FROM " SVEC_TABLE " WHERE embedding MATCH ?1 AND k = ?2 "
-        "ORDER BY distance", -1, &s, NULL) != SQLITE_OK) {
-    free(cands);
+  vecindex_fused cands = {0};
+  {
+    vecindex_hit *h = NULL;
+    int nh = vecindex_knn(db, &svec_spec, qv, qdim, k, NULL, 0, &h, NULL, 0);
     free(qv);
-    return NULL;
+    if (nh < 0) return NULL;
+    vecindex_fused_add_hits(&cands, h, nh);
+    vecindex_hits_free(h, nh);
   }
-  sqlite3_bind_blob(s, 1, qv, (int)(qdim * sizeof(float)), SQLITE_STATIC);
-  sqlite3_bind_int(s, 2, k);
-  for (int rank = 1; sqlite3_step(s) == SQLITE_ROW; rank++) {
-    const unsigned char *id = sqlite3_column_text(s, 0);
-    if (id) svec_cand_add(cands, &nc, k * 2, (const char *)id, rank, 0);
-  }
-  sqlite3_finalize(s);
-  free(qv);
 
   int lex = 0;
   char *fexpr = svec_fts_expr(query);
   if (fexpr && svec_fts_ready(db)) {
-    sqlite3_stmt *f = NULL;
-    if (sqlite3_prepare_v2(db->h,
-          "SELECT id FROM " SVEC_FTS_TABLE " WHERE " SVEC_FTS_TABLE
-          " MATCH ?1 ORDER BY bm25(" SVEC_FTS_TABLE ") LIMIT ?2",
-          -1, &f, NULL) == SQLITE_OK) {
-      sqlite3_bind_text(f, 1, fexpr, -1, SQLITE_STATIC);
-      sqlite3_bind_int(f, 2, k);
-      for (int rank = 1; sqlite3_step(f) == SQLITE_ROW; rank++) {
-        const unsigned char *id = sqlite3_column_text(f, 0);
-        if (id) { svec_cand_add(cands, &nc, k * 2, (const char *)id, 0, rank); lex++; }
-      }
-      sqlite3_finalize(f);
-    }
+    int f = vecindex_fts_arm(db, SVEC_FTS_TABLE, "id", fexpr, k, &cands);
+    if (f > 0) lex = f;
   }
   free(fexpr);
 
-  qsort(cands, (size_t)nc, sizeof *cands, svec_cand_cmp);
+  vecindex_fused_sort(&cands);
+  int nc = cands.n;
 
   char **ids = calloc((size_t)k, sizeof *ids);
   int n = 0, trimmed = 0;
@@ -707,14 +647,13 @@ char *service_vec_catalogue_bounded(db_handle *db, const char *query, int k,
   char *out = malloc(cap);
   if (!ids || !out) {
     free(ids); free(out);
-    for (int i = 0; i < nc; i++) free(cands[i].id);
-    free(cands);
+    vecindex_fused_free(&cands);
     return NULL;
   }
   out[0] = 0;
 
   for (int i = 0; i < nc && n < k; i++) {
-    const char *id = cands[i].id;
+    const char *id = cands.v[i].key;
     const source_def *d = svec_lookup(id);
     if (!d) continue;                       /* registry moved under us */
     const char *ds = d->description ? d->description : "";
@@ -733,8 +672,7 @@ char *service_vec_catalogue_bounded(db_handle *db, const char *query, int k,
     len += (size_t)snprintf(out + len, cap - len, "%s: %s\n", id, ds);
     ids[n++] = strdup(id);
   }
-  for (int i = 0; i < nc; i++) free(cands[i].id);
-  free(cands);
+  vecindex_fused_free(&cands);
 
   if (n == 0) { free(ids); free(out); return NULL; }
 
