@@ -69,6 +69,7 @@
  */
 #include "camera_stills.h"
 #include "audit.h"
+#include "camera_feed.h"    /* properties → capture targets (views, upstream names) */
 #include "evidence.h"
 #include "ffmpeg.h"         /* THE video seam — this file no longer has one   */
 #include "hostgate.h"       /* the SSRF floor every outbound fetch must clear */
@@ -241,10 +242,28 @@ static int cfg_max_per_cam(void) {
   if (v > 10000) v = 10000;
   return v;
 }
+/* Captures attempted per tick. SIZED, not picked: the pod ticks every 300 s
+ * and a target is due every CAM_STILLS_INTERVAL_SEC (900 s), so N opted-in
+ * targets need N x 300/900 = N/3 captures per tick to keep up. 48 sustains
+ * 100 targets (34 per tick) with ~40% headroom for backoff retries and for
+ * ticks the budget below cuts short. The old default of 8 sustained 24; an
+ * operator who opted in a 100-camera list fell further behind on every tick,
+ * silently, with every camera permanently "due". */
 static int cfg_batch(void) {
-  int v = env_int("CAM_STILLS_BATCH", 8);
+  int v = env_int("CAM_STILLS_BATCH", 48);
   if (v < 1) v = 1;
-  if (v > 200) v = 200;
+  if (v > 500) v = 500;
+  return v;
+}
+/* Per-host ceiling inside ONE tick, on top of hostgate's per-request gap and
+ * in-flight cap. A 100-view station list on one DOT image server would
+ * otherwise spend the whole batch on that host back to back; with this the
+ * rest stay due and lead the next tick (the due list is oldest-first). 40 per
+ * tick x 3 ticks per interval = 120 targets per host at the default cadence. */
+static int cfg_host_per_tick(void) {
+  int v = env_int("CAM_STILLS_HOST_PER_TICK", 40);
+  if (v < 1) v = 1;
+  if (v > 500) v = 500;
   return v;
 }
 static long cfg_max_bytes(void) {
@@ -259,7 +278,10 @@ static int cfg_timeout_ms(void) {
   return v;
 }
 static int cfg_tick_budget_ms(void) {
-  int v = env_int("CAM_STILLS_TICK_BUDGET_MS", 60000);
+  /* 240 s of a 300 s tick: a full batch of healthy snapshots (~1 s each)
+   * fits, a batch of dead cameras (8 s timeouts) is cut off before it can run
+   * into the next tick, and the targets it did not reach stay due. */
+  int v = env_int("CAM_STILLS_TICK_BUDGET_MS", 240000);
   if (v < 5000) v = 5000;
   return v;
 }
@@ -454,26 +476,17 @@ static int url_exec_safe(const char *u) {
   return 1;
 }
 
-/* properties → feed URL. `url` is deliberately LAST: for most discovery
- * channels it is the page the camera is embedded in, not the image. */
-static char *feed_url_of(const char *props_json) {
-  if (!props_json || !*props_json) return NULL;
-  cJSON *p = cJSON_Parse(props_json);
-  if (!p) return NULL;
-  static const char *KEYS[] = { "snapshot_url", "still_url", "image_url",
-                                "stream_url", "thumbnail_url", "url", NULL };
-  char *out = NULL;
-  for (int i = 0; KEYS[i] && !out; i++) {
-    cJSON *v = cJSON_GetObjectItemCaseSensitive(p, KEYS[i]);
-    if (v && cJSON_IsString(v) && v->valuestring[0] &&
-        camera_stills_classify(v->valuestring) != CAM_FEED_UNSUPPORTED)
-      out = strdup(v->valuestring);
-  }
-  cJSON_Delete(p);
-  return out;
-}
+/* properties → feed URL(s) is core/camera_feed.h. It used to be a six-key
+ * top-level lookup here, which matched the camera-discovery rows and almost
+ * nothing else that carries a camera: hp tables keep upstream field names,
+ * flattened (`attributes.ImageURL`), and station records keep one image per
+ * view in an array. A record now yields one capture TARGET per view, each with
+ * its own id ("<uid>#view=<suffix>"), backoff state and timeline. The record
+ * itself stays the opt-in unit: capture_stills=1 on the row opts in every
+ * view it carries. */
 
-/* Accept either the full intel_items uid or a bare camera_uid. */
+/* Accept either the full intel_items uid (optionally with a view suffix) or a
+ * bare camera_uid. */
 static char *normalize_camera_id(const char *id) {
   if (!id || !*id) return NULL;
   if (strchr(id, '|')) return strdup(id);
@@ -606,6 +619,11 @@ static int stream_grab(const char *url, int timeout_ms, size_t maxb,
   http_client_global_init();
   CURL *e = curl_easy_init();
   if (!e) return 0;
+  /* Politeness: http_request() takes the per-host gate itself; this private
+   * handle has to take it explicitly or every MJPEG grab (and every snapshot
+   * fallback below) ignores the per-host gap and in-flight cap. Fail-open by
+   * hostgate's own contract. */
+  int gated = hostgate_acquire(url, timeout_ms);
 
   grab g;
   memset(&g, 0, sizeof g);
@@ -652,8 +670,9 @@ static int stream_grab(const char *url, int timeout_ms, size_t maxb,
   if (status_out) *status_out = code;
   if (hl) curl_slist_free_all(hl);
   curl_easy_cleanup(e);
+  if (gated) hostgate_release(url);
 
-  int ok = (rc == CURLE_OK) || g.got || (g.capped && g.len > 0);
+  int ok =(rc == CURLE_OK) || g.got || (g.capped && g.len > 0);
   if (!ok || g.len == 0) { free(g.buf); return 0; }
   *out = g.buf;
   *outlen = g.len;
@@ -1018,8 +1037,13 @@ static int fetch_frame(http_client *http, const char *url, int kind,
       return 0;
     } }
 
-  if (kind == CAM_FEED_RTSP || kind == CAM_FEED_HLS)
-    return ffmpeg_grab(url, kind, tmo, (size_t)maxb, out, outlen, reason);
+  if (kind == CAM_FEED_RTSP || kind == CAM_FEED_HLS) {
+    /* ffmpeg owns the socket, so the per-host gate is taken around it. */
+    int gated = hostgate_acquire(url, tmo);
+    int r = ffmpeg_grab(url, kind, tmo, (size_t)maxb, out, outlen, reason);
+    if (gated) hostgate_release(url);
+    return r;
+  }
 
   if (kind == CAM_FEED_MJPEG) {
     if (stream_grab(url, tmo, (size_t)maxb, 1, out, outlen, NULL, 0, out_status))
@@ -1079,8 +1103,8 @@ static int fetch_frame(http_client *http, const char *url, int kind,
 /* The whole per-camera write, from bytes to committed row. Returns 1 on a
  * captured frame. `reason` is set on every 0 return. */
 static int capture_frame(db_handle *db, http_client *http, const char *cam,
-                         const char *url, int kind, const char **reason,
-                         char *rbuf, size_t rcap) {
+                         const char *item_uid, const char *url, int kind,
+                         const char **reason, char *rbuf, size_t rcap) {
   sqlite3 *h = db->h;
   unsigned char *raw = NULL;
   size_t rawlen = 0;
@@ -1132,12 +1156,13 @@ static int capture_frame(db_handle *db, http_client *http, const char *cam,
    * operator has exactly one flag to flip to start keeping bytes and the
    * custody row says which camera the frame came from. evidence.c dedupes by
    * content hash, so a static scene is one file on disk however many rows
-   * point at it. */
-  evidence_capture(db, cam, CAM_STILLS_SID, url, "GET", NULL, status, NULL,
+   * point at it. Filed under the RECORD's uid, not the view's target id: the
+   * custody row must name an intel_items row, and the url says which view. */
+  evidence_capture(db, item_uid, CAM_STILLS_SID, url, "GET", NULL, status, NULL,
                    frame, flen, ct);
 
   char rel[160];
-  int have_rel = evidence_rel_path(h, sha, cam, rel, sizeof rel);
+  int have_rel = evidence_rel_path(h, sha, item_uid, rel, sizeof rel);
 
   /* Derived data, only when a tool exists — otherwise this would fork twice
    * per frame to be told there is no decoder. */
@@ -1243,26 +1268,147 @@ static int capture_frame(db_handle *db, http_client *http, const char *cam,
   return ok ? 1 : 0;
 }
 
-/* Read one camera's uid / properties / opt-in. Returns 1 when the row exists
- * AND is opted in. */
-static int load_camera(sqlite3 *h, const char *cam, char **out_url) {
-  *out_url = NULL;
+/* ── capture targets ───────────────────────────────────────────────────────
+ * One opted-in intel_items row → one or more targets (camera_feed.h). The row
+ * is the opt-in unit; the TARGET is the scheduling unit — each has its own
+ * camera_stills_state row keyed by its target id, so one dead view backs off
+ * without holding back the station's other views. A row with no feed at all
+ * is still one target (url NULL), so its "no_feed_url" is recorded and backed
+ * off rather than re-read on every tick. */
+typedef struct {
+  char *tid;        /* "<uid>" or "<uid>#view=<suffix>"                      */
+  char *uid;        /* the intel_items row it came from                      */
+  char *url;        /* NULL → the row has no feed                            */
+  char *next;       /* next_attempt_at, NULL = never attempted               */
+} cs_target;
+
+typedef struct { cs_target *v; int n, cap; } cs_targets;
+
+static void targets_free(cs_targets *T) {
+  for (int i = 0; i < T->n; i++) {
+    free(T->v[i].tid); free(T->v[i].uid); free(T->v[i].url); free(T->v[i].next);
+  }
+  free(T->v);
+  memset(T, 0, sizeof *T);
+}
+
+static int targets_push(cs_targets *T, const char *tid, const char *uid,
+                        const char *url) {
+  if (T->n == T->cap) {
+    int nc = T->cap ? T->cap * 2 : 64;
+    cs_target *q = realloc(T->v, (size_t)nc * sizeof *q);
+    if (!q) return 0;
+    T->v = q; T->cap = nc;
+  }
+  cs_target *t = &T->v[T->n];
+  memset(t, 0, sizeof *t);
+  t->tid = strdup(tid);
+  t->uid = strdup(uid);
+  t->url = url ? strdup(url) : NULL;
+  if (!t->tid || !t->uid || (url && !t->url)) {
+    free(t->tid); free(t->uid); free(t->url);
+    return 0;
+  }
+  T->n++;
+  return 1;
+}
+
+/* Append every target of one row. Returns how many the row HAS (which can
+ * exceed what was appended: CAM_FEED_MAX_TARGETS is a per-record ceiling and
+ * crossing it is logged here and reported by camera_stills_list's meta). */
+static int expand_row(cs_targets *T, const char *uid, const char *sid,
+                      const char *props) {
+  camera_feed_target *ft = calloc(CAM_FEED_MAX_TARGETS, sizeof *ft);
+  if (!ft) return 0;
+  int total = camera_feed_resolve(props, sid, ft, CAM_FEED_MAX_TARGETS);
+  int got = total < CAM_FEED_MAX_TARGETS ? total : CAM_FEED_MAX_TARGETS;
+  if (total > CAM_FEED_MAX_TARGETS)
+    fprintf(stderr, "[camera-stills] %s carries %d feed targets; the first %d "
+                    "are captured (targets_total in its stills meta)\n",
+            uid, total, CAM_FEED_MAX_TARGETS);
+  if (got == 0) {
+    targets_push(T, uid, uid, NULL);
+  } else {
+    for (int i = 0; i < got; i++) {
+      char tid[768];
+      if (!ft[i].url || !camera_feed_target_id(uid, ft[i].suffix, tid, sizeof tid))
+        continue;
+      targets_push(T, tid, uid, ft[i].url);
+    }
+  }
+  camera_feed_free(ft, got);
+  free(ft);
+  return total;
+}
+
+static int target_cmp(const void *a, const void *b) {
+  const cs_target *x = a, *y = b;
+  int c = strcmp(x->next ? x->next : "", y->next ? y->next : "");
+  return c ? c : strcmp(x->tid, y->tid);
+}
+
+/* Every DUE target of every opted-in row, oldest-due first (never-attempted
+ * first of all). Reads the opt-in list and FINALIZES before returning, so no
+ * read cursor survives into a network call. Driven by
+ * idx_intel_items_capture_stills — empty until an operator opts a row in, so
+ * a default deployment pays one empty index seek. Any source's row can be
+ * opted in (camera-discovery, the hp camera tables, trn_* station indexes):
+ * the opt-in route takes any uid and nothing here filters on source. */
+static int collect_due(sqlite3 *h, cs_targets *due) {
+  memset(due, 0, sizeof *due);
+  cs_targets all = { 0 };
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(h,
-      "SELECT properties, COALESCE(capture_stills,0) FROM intel_items"
-      " WHERE uid=?1", -1, &s, NULL) != SQLITE_OK) return 0;
-  sqlite3_bind_text(s, 1, cam, -1, SQLITE_TRANSIENT);
-  int on = 0;
-  char *props = NULL;
-  if (sqlite3_step(s) == SQLITE_ROW) {
-    props = dupcol(s, 0);
-    on = sqlite3_column_int(s, 1) != 0;
+      "SELECT uid, source_id, properties FROM intel_items"
+      " WHERE capture_stills=1 ORDER BY uid", -1, &s, NULL) != SQLITE_OK)
+    return 0;
+  while (sqlite3_step(s) == SQLITE_ROW) {
+    const char *uid = ctext(s, 0);
+    if (!uid) continue;
+    expand_row(&all, uid, ctext(s, 1), ctext(s, 2));
   }
   sqlite3_finalize(s);
-  if (!on) { free(props); return 0; }
-  *out_url = feed_url_of(props);
-  free(props);
-  return 1;
+
+  if (sqlite3_prepare_v2(h,
+      "SELECT next_attempt_at,"
+      "       (next_attempt_at IS NULL OR next_attempt_at <= datetime('now'))"
+      "  FROM camera_stills_state WHERE camera_id=?1", -1, &s, NULL)
+      != SQLITE_OK) { targets_free(&all); return 0; }
+  for (int i = 0; i < all.n; i++) {
+    sqlite3_reset(s);
+    sqlite3_bind_text(s, 1, all.v[i].tid, -1, SQLITE_TRANSIENT);
+    int is_due = 1;
+    char *next = NULL;
+    if (sqlite3_step(s) == SQLITE_ROW) {
+      next = dupcol(s, 0);
+      is_due = sqlite3_column_int(s, 1) != 0;
+    }
+    if (!is_due) { free(next); continue; }
+    if (targets_push(due, all.v[i].tid, all.v[i].uid, all.v[i].url))
+      due->v[due->n - 1].next = next;
+    else
+      free(next);
+  }
+  sqlite3_finalize(s);
+  targets_free(&all);
+  if (due->n > 1) qsort(due->v, (size_t)due->n, sizeof *due->v, target_cmp);
+  return due->n;
+}
+
+/* Capture one target and record its state. Returns 1 on a stored frame. */
+static int capture_target(db_handle *db, http_client *http, const cs_target *t) {
+  int kind = camera_stills_classify(t->url);
+  int got = 0;
+  char rbuf[32];
+  const char *reason = NULL;
+  if (kind == CAM_FEED_NONE)             reason = "no_feed_url";
+  else if (kind == CAM_FEED_UNSUPPORTED) reason = "unsupported_scheme";
+  else got = capture_frame(db, http, t->tid, t->uid, t->url, kind, &reason,
+                           rbuf, sizeof rbuf);
+  int fails = got ? 0 : state_fail_count(db->h, t->tid) + 1;
+  state_write(db->h, t->tid, got, got ? NULL : reason, kind_name(kind),
+              got ? cfg_interval() : backoff_sec(fails));
+  return got;
 }
 
 int camera_stills_capture_one(db_handle *db, http_client *http,
@@ -1271,36 +1417,58 @@ int camera_stills_capture_one(db_handle *db, http_client *http,
   camera_stills_migrate(db);
   char *cam = normalize_camera_id(camera_id);
   if (!cam) return 0;
+  const char *want = NULL;
+  char *uid = camera_feed_split(cam, &want);
+  if (!uid) { free(cam); return 0; }
 
-  char *url = NULL;
-  if (!load_camera(db->h, cam, &url)) { free(cam); return 0; }
+  cs_targets T = { 0 };
+  int on = 0;
+  sqlite3_stmt *s;
+  if (sqlite3_prepare_v2(db->h,
+      "SELECT source_id, properties, COALESCE(capture_stills,0)"
+      "  FROM intel_items WHERE uid=?1", -1, &s, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(s, 1, uid, -1, SQLITE_TRANSIENT);
+    if (sqlite3_step(s) == SQLITE_ROW && sqlite3_column_int(s, 2) != 0) {
+      on = 1;
+      expand_row(&T, uid, ctext(s, 0), ctext(s, 1));
+    }
+    sqlite3_finalize(s);
+  }
+  if (!on) { targets_free(&T); free(uid); free(cam); return 0; }
 
   http_client *own = NULL;
   if (!http) { own = http_client_new(); http = own; }
 
-  int kind = camera_stills_classify(url);
-  int got = 0;
-  char rbuf[32];
-  const char *reason = NULL;
-  if (kind == CAM_FEED_NONE)             reason = "no_feed_url";
-  else if (kind == CAM_FEED_UNSUPPORTED) reason = "unsupported_scheme";
-  else got = capture_frame(db, http, cam, url, kind, &reason, rbuf, sizeof rbuf);
-
-  int fails = got ? 0 : state_fail_count(db->h, cam) + 1;
-  state_write(db->h, cam, got, got ? NULL : reason, kind_name(kind),
-              got ? cfg_interval() : backoff_sec(fails));
+  /* A bare uid captures every view of the record; a target id captures that
+   * one view. A view that no longer exists in the record is RECORDED as such
+   * rather than silently doing nothing. */
+  int got = 0, matched = 0;
+  for (int i = 0; i < T.n; i++) {
+    if (want && strcmp(T.v[i].tid, cam) != 0) continue;
+    matched++;
+    got += capture_target(db, http, &T.v[i]);
+  }
+  if (want && !matched)
+    state_write(db->h, cam, 0, "view_not_in_record", kind_name(CAM_FEED_NONE),
+                backoff_sec(state_fail_count(db->h, cam) + 1));
 
   if (own) http_client_free(own);
-  free(url);
+  targets_free(&T);
+  free(uid);
   free(cam);
   return got;
+}
+
+/* Host bucket for the per-tick ceiling. Unparseable → its own bucket "". */
+static void host_key(const char *url, char *out, size_t cap) {
+  out[0] = '\0';
+  if (url) hostgate_url_host(url, out, cap);
 }
 
 int camera_stills_capture_batch(db_handle *db, http_client *http, int limit,
                                 volatile int *cancel) {
   if (!db || !db->h) return 0;
   camera_stills_migrate(db);
-  sqlite3 *h = db->h;
   if (limit <= 0) limit = cfg_batch();
 
   /* Turn OFF httpclient.c's automatic evidence hook for this thread. The
@@ -1311,71 +1479,52 @@ int camera_stills_capture_batch(db_handle *db, http_client *http, int limit,
    * unpaired and safe when no scope was ever bound. */
   evidence_scope_end();
 
-  typedef struct { char *cam, *url; } due;
-  due *rows = calloc((size_t)limit, sizeof *rows);
-  if (!rows) return 0;
-  int n = 0;
-
-  sqlite3_stmt *s;
-  /* Read the due list and FINALIZE before the first fetch: a read cursor held
-   * across an 8-second network call is an 8-second read lock. Driven by
-   * idx_intel_items_capture_stills, which is empty until an operator opts a
-   * camera in — so on a default deployment this is one empty index seek. */
-  if (sqlite3_prepare_v2(h,
-      "SELECT i.uid, i.properties FROM intel_items i"
-      " LEFT JOIN camera_stills_state st ON st.camera_id = i.uid"
-      " WHERE i.capture_stills=1"
-      "   AND (st.next_attempt_at IS NULL OR st.next_attempt_at <= datetime('now'))"
-      " ORDER BY COALESCE(st.next_attempt_at,'') ASC, i.uid ASC"
-      " LIMIT ?1", -1, &s, NULL) == SQLITE_OK) {
-    sqlite3_bind_int(s, 1, limit);
-    while (n < limit && sqlite3_step(s) == SQLITE_ROW) {
-      char *uid = dupcol(s, 0);
-      if (!uid) continue;
-      const char *props = ctext(s, 1);
-      rows[n].cam = uid;
-      rows[n].url = feed_url_of(props);
-      n++;
-    }
-    sqlite3_finalize(s);
-  }
+  cs_targets due;
+  collect_due(db->h, &due);
 
   http_client *own = NULL;
-  if (n > 0 && !http) { own = http_client_new(); http = own; }
+  if (due.n > 0 && !http) { own = http_client_new(); http = own; }
+
+  /* Per-host attempt counts for THIS tick. Linear: a tick is <= 500 attempts. */
+  typedef struct { char host[256]; int n; } hostc;
+  hostc *hc = calloc((size_t)(due.n ? due.n : 1), sizeof *hc);
+  int nh = 0;
+  int host_cap = cfg_host_per_tick();
 
   long long deadline = now_ms() + cfg_tick_budget_ms();
-  int done = 0, failed = 0;
-  for (int i = 0; i < n; i++) {
+  int done = 0, failed = 0, attempted = 0, host_deferred = 0, budget_left = 0;
+  for (int i = 0; i < due.n && attempted < limit; i++) {
     if (cancel && *cancel) break;
     /* A wall-clock ceiling on the whole tick. One slow camera cannot push the
-     * tick into the next one; the cameras that did not get their turn stay due
-     * and are picked up first next time, because the ORDER BY is oldest-due. */
-    if (now_ms() > deadline) {
-      fprintf(stderr, "[camera-stills] tick budget reached, %d camera(s) "
-                      "deferred to the next tick\n", n - i);
-      break;
+     * tick into the next one; the targets that did not get their turn stay due
+     * and are picked up first next time, because the order is oldest-due. */
+    if (now_ms() > deadline) { budget_left = due.n - i; break; }
+
+    char hk[256];
+    host_key(due.v[i].url, hk, sizeof hk);
+    hostc *slot = NULL;
+    if (hc && hk[0]) {
+      for (int k = 0; k < nh; k++) if (strcmp(hc[k].host, hk) == 0) { slot = &hc[k]; break; }
+      if (!slot) { slot = &hc[nh++]; snprintf(slot->host, sizeof slot->host, "%s", hk); }
+      if (slot->n >= host_cap) { host_deferred++; continue; }   /* stays due */
+      slot->n++;
     }
-    int kind = camera_stills_classify(rows[i].url);
-    int got = 0;
-    char rbuf[32];
-    const char *reason = NULL;
-    if (kind == CAM_FEED_NONE)             reason = "no_feed_url";
-    else if (kind == CAM_FEED_UNSUPPORTED) reason = "unsupported_scheme";
-    else got = capture_frame(db, http, rows[i].cam, rows[i].url, kind, &reason,
-                             rbuf, sizeof rbuf);
 
-    int fails = got ? 0 : state_fail_count(h, rows[i].cam) + 1;
-    state_write(h, rows[i].cam, got, got ? NULL : reason, kind_name(kind),
-                got ? cfg_interval() : backoff_sec(fails));
-    if (got) done++; else failed++;
+    attempted++;
+    if (capture_target(db, http, &due.v[i])) done++; else failed++;
   }
+  free(hc);
 
+  if (budget_left)
+    fprintf(stderr, "[camera-stills] tick budget reached, %d target(s) "
+                    "deferred to the next tick\n", budget_left);
   if (own) http_client_free(own);
-  for (int i = 0; i < n; i++) { free(rows[i].cam); free(rows[i].url); }
-  free(rows);
-  if (n)
-    fprintf(stderr, "[camera-stills] capture: due=%d ok=%d failed=%d\n",
-            n, done, failed);
+  if (due.n)
+    fprintf(stderr, "[camera-stills] capture: due=%d attempted=%d ok=%d "
+                    "failed=%d host_deferred=%d not_reached=%d\n",
+            due.n, attempted, done, failed, host_deferred,
+            due.n - attempted - host_deferred);
+  targets_free(&due);
   return done;
 }
 
@@ -1416,13 +1565,37 @@ char *camera_stills_list(db_handle *db, const char *camera_id, int limit,
     }
   }
 
+  /* A bare record uid lists EVERY view of the record as one timeline (each
+   * row says which view it is); a "<uid>#view=<suffix>" id lists that view.
+   * The views are the half-open key range [uid#view=, uid#view>) — '>' is
+   * the byte after '=' — so this rides idx_camera_stills_cam with no LIKE
+   * and no escaping of whatever a uid happens to contain. An exact target
+   * binds an empty range. */
+  const char *want_view = NULL;
+  char *rec_uid = camera_feed_split(cam, &want_view);
+  if (!rec_uid) { if (curj) cJSON_Delete(curj); free(cam); return NULL; }
+  size_t rl = strlen(cam) + sizeof CAM_FEED_VIEW_SEP + 1;
+  char *lo = malloc(rl), *hi = malloc(rl);
+  if (!lo || !hi) {
+    free(lo); free(hi); free(rec_uid);
+    if (curj) cJSON_Delete(curj);
+    free(cam); return NULL;
+  }
+  if (want_view) { lo[0] = hi[0] = '\0'; }
+  else {
+    snprintf(lo, rl, "%s" CAM_FEED_VIEW_SEP, cam);
+    snprintf(hi, rl, "%s" CAM_FEED_VIEW_SEP, cam);
+    hi[strlen(hi) - 1] = '>';
+  }
+#define CS_WHERE_CAM " (camera_id=?1 OR (camera_id >= ?5 AND camera_id < ?6))"
+
   const char *SQL_PLAIN =
     "SELECT id,captured_at,sha256,blob_path,bytes,phash,ocr_text,width,height,"
-    "       scene_changed FROM camera_stills WHERE camera_id=?1"
+    "       scene_changed,camera_id FROM camera_stills WHERE" CS_WHERE_CAM
     " ORDER BY captured_at DESC, id DESC LIMIT ?2";
   const char *SQL_CUR =
     "SELECT id,captured_at,sha256,blob_path,bytes,phash,ocr_text,width,height,"
-    "       scene_changed FROM camera_stills WHERE camera_id=?1"
+    "       scene_changed,camera_id FROM camera_stills WHERE" CS_WHERE_CAM
     "   AND (captured_at < ?3 OR (captured_at = ?3 AND id < ?4))"
     " ORDER BY captured_at DESC, id DESC LIMIT ?2";
 
@@ -1431,6 +1604,7 @@ char *camera_stills_list(db_handle *db, const char *camera_id, int limit,
   if (sqlite3_prepare_v2(db->h, use_cur ? SQL_CUR : SQL_PLAIN, -1, &s, NULL)
       != SQLITE_OK) {
     if (curj) cJSON_Delete(curj);
+    free(lo); free(hi); free(rec_uid);
     free(cam);
     return NULL;
   }
@@ -1440,6 +1614,8 @@ char *camera_stills_list(db_handle *db, const char *camera_id, int limit,
     sqlite3_bind_text(s, 3, cur_p, -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 4, cur_u, -1, SQLITE_TRANSIENT);
   }
+  sqlite3_bind_text(s, 5, lo, -1, SQLITE_TRANSIENT);
+  sqlite3_bind_text(s, 6, hi, -1, SQLITE_TRANSIENT);
 
   cJSON *arr = cJSON_CreateArray();
   int count = 0, present = 0;
@@ -1471,6 +1647,15 @@ char *camera_stills_list(db_handle *db, const char *camera_id, int limit,
     if (sqlite3_column_type(s, 9) != SQLITE_NULL)
       cJSON_AddBoolToObject(o, "scene_changed", sqlite3_column_int(s, 9) != 0);
     else cJSON_AddNullToObject(o, "scene_changed");
+    /* Which view of the record this frame is (null = the record's own feed),
+     * since a record-level listing interleaves every view's timeline. */
+    { const char *cid = ctext(s, 10);
+      const char *vs = NULL;
+      char *cu = cid ? camera_feed_split(cid, &vs) : NULL;
+      if (cid) cJSON_AddStringToObject(o, "camera_id", cid);
+      if (vs)  cJSON_AddStringToObject(o, "view", vs);
+      else     cJSON_AddNullToObject(o, "view");
+      free(cu); }
 
     const char *rel = ctext(s, 3);
     int have = 0;
@@ -1498,8 +1683,10 @@ char *camera_stills_list(db_handle *db, const char *camera_id, int limit,
       "SELECT COUNT(*), SUM(CASE WHEN scene_changed=1 THEN 1 ELSE 0 END),"
       "       SUM(CASE WHEN scene_changed IS NULL THEN 1 ELSE 0 END),"
       "       MIN(captured_at), MAX(captured_at)"
-      "  FROM camera_stills WHERE camera_id=?1", -1, &s, NULL) == SQLITE_OK) {
+      "  FROM camera_stills WHERE" CS_WHERE_CAM, -1, &s, NULL) == SQLITE_OK) {
     sqlite3_bind_text(s, 1, cam, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(s, 5, lo, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(s, 6, hi, -1, SQLITE_TRANSIENT);
     if (sqlite3_step(s) == SQLITE_ROW) {
       total = sqlite3_column_int(s, 0);
       changed = sqlite3_column_int(s, 1);
@@ -1510,15 +1697,61 @@ char *camera_stills_list(db_handle *db, const char *camera_id, int limit,
     sqlite3_finalize(s);
   }
 
-  int opted = 0, fails = 0;
+  /* The opt-in lives on the RECORD; its views come from its current
+   * properties, each with its own scheduler state, so a client can show
+   * "3 views: 2 capturing, 1 backing off (http_404)". */
+  int opted = 0, fails = 0, targets_total = 0;
   char nextat[64] = {0}, lasterr[192] = {0}, lastkind[32] = {0};
+  cs_targets T = { 0 };
   if (sqlite3_prepare_v2(db->h,
-      "SELECT COALESCE(capture_stills,0) FROM intel_items WHERE uid=?1",
-      -1, &s, NULL) == SQLITE_OK) {
-    sqlite3_bind_text(s, 1, cam, -1, SQLITE_TRANSIENT);
-    if (sqlite3_step(s) == SQLITE_ROW) opted = sqlite3_column_int(s, 0) != 0;
+      "SELECT COALESCE(capture_stills,0), source_id, properties"
+      "  FROM intel_items WHERE uid=?1", -1, &s, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(s, 1, rec_uid, -1, SQLITE_TRANSIENT);
+    if (sqlite3_step(s) == SQLITE_ROW) {
+      opted = sqlite3_column_int(s, 0) != 0;
+      targets_total = expand_row(&T, rec_uid, ctext(s, 1), ctext(s, 2));
+    }
     sqlite3_finalize(s);
   }
+  cJSON *tarr = cJSON_CreateArray();
+  if (sqlite3_prepare_v2(db->h,
+      "SELECT fail_count,next_attempt_at,last_error,last_kind"
+      "  FROM camera_stills_state WHERE camera_id=?1", -1, &s, NULL)
+      == SQLITE_OK) {
+    for (int i = 0; i < T.n; i++) {
+      cJSON *to = cJSON_CreateObject();
+      const char *vs = NULL;
+      char *cu = camera_feed_split(T.v[i].tid, &vs);
+      cJSON_AddStringToObject(to, "camera_id", T.v[i].tid);
+      if (vs) cJSON_AddStringToObject(to, "view", vs);
+      else    cJSON_AddNullToObject(to, "view");
+      free(cu);
+      if (T.v[i].url) {
+        cJSON_AddStringToObject(to, "url", T.v[i].url);
+        cJSON_AddStringToObject(to, "kind",
+                                kind_name(camera_stills_classify(T.v[i].url)));
+      } else {
+        cJSON_AddNullToObject(to, "url");
+        cJSON_AddStringToObject(to, "kind", kind_name(CAM_FEED_NONE));
+      }
+      sqlite3_reset(s);
+      sqlite3_bind_text(s, 1, T.v[i].tid, -1, SQLITE_TRANSIENT);
+      if (sqlite3_step(s) == SQLITE_ROW) {
+        cJSON_AddNumberToObject(to, "fail_count", sqlite3_column_int(s, 0));
+        if (ctext(s, 1)) cJSON_AddStringToObject(to, "next_attempt_at", ctext(s, 1));
+        else             cJSON_AddNullToObject(to, "next_attempt_at");
+        if (ctext(s, 2)) cJSON_AddStringToObject(to, "last_error", ctext(s, 2));
+        else             cJSON_AddNullToObject(to, "last_error");
+      } else {
+        cJSON_AddNumberToObject(to, "fail_count", 0);
+        cJSON_AddNullToObject(to, "next_attempt_at");
+        cJSON_AddNullToObject(to, "last_error");
+      }
+      cJSON_AddItemToArray(tarr, to);
+    }
+    sqlite3_finalize(s);
+  }
+  targets_free(&T);
   if (sqlite3_prepare_v2(db->h,
       "SELECT fail_count,next_attempt_at,last_error,last_kind"
       "  FROM camera_stills_state WHERE camera_id=?1", -1, &s, NULL)
@@ -1572,6 +1805,12 @@ char *camera_stills_list(db_handle *db, const char *camera_id, int limit,
   if (lastkind[0]) cJSON_AddStringToObject(meta, "last_kind", lastkind);
   else             cJSON_AddNullToObject(meta, "last_kind");
   cJSON_AddBoolToObject(meta, "scene_change_available", have_ph);
+  cJSON_AddStringToObject(meta, "record_uid", rec_uid);
+  /* targets_total can exceed the array: CAM_FEED_MAX_TARGETS per record is
+   * captured, and the difference is stated here rather than dropped. */
+  cJSON_AddItemToObject(meta, "targets", tarr);
+  cJSON_AddNumberToObject(meta, "targets_total", targets_total);
+  cJSON_AddNumberToObject(meta, "targets_captured_max", CAM_FEED_MAX_TARGETS);
 
   cJSON *env = cJSON_CreateObject();
   cJSON_AddItemToObject(env, "data", arr);
@@ -1579,6 +1818,7 @@ char *camera_stills_list(db_handle *db, const char *camera_id, int limit,
   cJSON_AddItemToObject(env, "meta", meta);
   char *j = cJSON_PrintUnformatted(env);
   cJSON_Delete(env);
+  free(lo); free(hi); free(rec_uid);
   free(cam);
   return j;
 }
