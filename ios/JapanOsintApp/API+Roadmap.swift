@@ -505,10 +505,15 @@ extension API {
 
     // ── Item 28: camera stills ─────────────────────────────────────────────
 
+    /// `cameraId` is an intel uid (every view of the record), a view target
+    /// "<uid>#view=<suffix>", or a bare camera_uid. `esc` percent-encodes the
+    /// '#' and '/' so the whole id reaches the server as one path segment.
     func cameraStills(_ cameraId: String,
-                      limit: Int = 50) async throws -> CameraStillsEnvelope {
-        try await get("/api/cameras/\(esc(cameraId))/stills",
-                      query: [URLQueryItem(name: "limit", value: String(limit))])
+                      limit: Int = 50,
+                      cursor: String? = nil) async throws -> CameraStillsEnvelope {
+        var q = [URLQueryItem(name: "limit", value: String(limit))]
+        if let cursor { q.append(URLQueryItem(name: "cursor", value: cursor)) }
+        return try await get("/api/cameras/\(esc(cameraId))/stills", query: q)
     }
 
     func cameraStillRaw(_ stillId: String) async throws -> Data {

@@ -52,8 +52,17 @@
  * that happens to look like something else. The read API accepts either
  * spelling and prefixes "camera-discovery|" when the caller passes a bare uid.
  *
- * FEED RESOLUTION, in priority order, from properties:
- *   snapshot_url, still_url, image_url, stream_url, thumbnail_url, url
+ * ANY intel_items row can be opted in, not only camera-discovery ones: the hp
+ * camera tables and the trn_* station indexes carry ~80k more cameras under
+ * their upstream field names. FEED RESOLUTION is core/camera_feed.h: one
+ * capture TARGET per image stream in the record — the record's own feed, plus
+ * one per element of an array of views (a Digitraffic station's presets, a
+ * 511 camera's views[]). A view target's id, its camera_stills.camera_id and
+ * its camera_stills_state key is "<uid>#view=<array>/<element id>"; the
+ * record's own feed keeps the bare uid, so existing rows are unchanged.
+ * Within one record or view the ranking is, case and `_` folded:
+ *   still-image keys (snapshot_url, still_url, image_url, ImageURL,
+ *   cameraimageurl, …), then streams, then thumbnails, then `url`.
  * `url` is LAST on purpose: for most discovery channels it is the human page
  * the camera is embedded in, not the image, and fetching a page and storing
  * the HTML as a "still" would be silent garbage. A resolved URL whose bytes
@@ -352,10 +361,12 @@
  *   CAM_STILLS_INTERVAL_SEC      seconds between frames, per camera    (900)
  *   CAM_STILLS_RETAIN_DAYS       age ceiling                             (3)
  *   CAM_STILLS_MAX_PER_CAM       frame ceiling per camera               (48)
- *   CAM_STILLS_BATCH             cameras attempted per tick              (8)
+ *   CAM_STILLS_BATCH             targets attempted per tick             (48)
+ *                                (100 targets x 300/900 = 34 per tick)
+ *   CAM_STILLS_HOST_PER_TICK     attempts per upstream host per tick    (40)
  *   CAM_STILLS_MAX_BYTES         per-frame byte cap          (2097152 = 2 MiB)
  *   CAM_STILLS_TIMEOUT_MS        per-camera fetch timeout            (8000)
- *   CAM_STILLS_TICK_BUDGET_MS    wall-clock ceiling for one tick    (60000)
+ *   CAM_STILLS_TICK_BUDGET_MS    wall-clock ceiling for one tick   (240000)
  *   CAM_STILLS_PHASH_THRESHOLD   Hamming distance called "changed"       (6)
  *   CAM_STILLS_MAX_BACKOFF_SEC   backoff ceiling for a failing camera (21600)
  *   CAM_STILLS_FFMPEG            path override; unset → probe PATH
@@ -481,16 +492,21 @@ void camera_stills_migrate(db_handle *db);
 
 /* Capture ONE frame from ONE camera, now, ignoring its backoff deadline but
  * NOT its opt-in (a camera with capture_stills=0 returns 0 and is never
- * fetched). `camera_id` may be the full intel_items uid or a bare camera_uid.
- * `http` may be NULL, in which case a private client is created and freed.
- * Returns 1 when a still row was written, 0 otherwise; the reason for a 0 is
+ * fetched). `camera_id` may be the full intel_items uid (every view of the
+ * record is captured), a view target id "<uid>#view=<suffix>" (that view
+ * only; one no longer in the record is recorded as "view_not_in_record"), or
+ * a bare camera_uid. `http` may be NULL, in which case a private client is
+ * created and freed. Returns the number of still rows written (0 when none);
+ * the reason for a 0 is
  * recorded in camera_stills_state.last_error and surfaced by the list route's
  * meta block. Never returns a partial write. */
 int camera_stills_capture_one(db_handle *db, http_client *http,
                               const char *camera_id);
 
-/* One capture batch: up to `limit` (<=0 → CAM_STILLS_BATCH) opted-in cameras
- * whose next_attempt_at is due, oldest-due first.
+/* One capture batch: up to `limit` (<=0 → CAM_STILLS_BATCH) capture targets
+ * of opted-in rows whose next_attempt_at is due, oldest-due first, at most
+ * CAM_STILLS_HOST_PER_TICK per upstream host (the rest stay due and lead the
+ * next tick). Every fetch leg also takes hostgate's per-host gate.
  *
  * Discipline, mirroring core/media.c: the due list is read and the statement
  * FINALIZED before the first fetch, so no read cursor is held across a network

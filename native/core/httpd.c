@@ -3741,7 +3741,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (!body) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
       reply_json(c, 200, body); free(body); return;
     }
-    { char cid2[192] = {0};
+    { char cid2[640] = {0};   /* a view target id is uid + "#view=" + suffix */
       if (seg(u, "/api/cameras/", "/stills", cid2, sizeof cid2)) {
         char lv[16] = {0}, cv2[512] = {0};
         int hl2 = mg_http_get_var(&hm->query, "limit", lv, sizeof lv);

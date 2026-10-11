@@ -593,17 +593,57 @@ struct CameraStill: Codable, Identifiable, Hashable {
     let width: Int?
     let height: Int?
     /// nil means "cannot tell" (no image decoder on the server), NOT "no
-    /// change". The UI must not render nil as unchanged.
-    let scene_changed: Int?
+    /// change". The UI must not render nil as unchanged. The server writes a
+    /// JSON BOOLEAN (true/false/null) — this was declared `Int?`, which failed
+    /// the decode of the whole envelope on the first frame that had one.
+    let scene_changed: Bool?
     let blob_present: Bool?
+    /// 16-hex pHash string, or nil when no decoder hashed this frame.
+    let phash: String?
+    let ocr_text: String?
+    /// The capture target this frame belongs to; `view` is nil for the
+    /// record's own feed and "views/<id>" for one view of a multi-view record.
+    let camera_id: String?
+    let view: String?
 }
 struct CameraStillsEnvelope: Decodable {
     let data: [CameraStill]
+    let page: CameraStillsPage?
     let meta: CameraStillsMeta?
+}
+struct CameraStillsPage: Decodable, Hashable {
+    let limit: Int?
+    let count: Int?
+    /// Opaque keyset cursor for the next (older) page; nil at the end.
+    let cursor: String?
 }
 struct CameraStillsMeta: Decodable, Hashable {
     let scene_change_available: Bool?
     let bytes_preserved: Bool?
+    let camera_id: String?
+    let record_uid: String?
+    let capture_stills: Bool?
+    let total: Int?
+    let changed: Int?
+    let unknown: Int?
+    let blobs_present: Int?
+    let oldest: String?
+    let newest: String?
+    let last_error: String?
+    let indexable: Bool?
+    let targets: [CameraStillTarget]?
+    /// Can exceed `targets.count`: views beyond the per-record capture limit
+    /// are counted here rather than silently dropped.
+    let targets_total: Int?
+}
+struct CameraStillTarget: Decodable, Hashable, Identifiable {
+    let camera_id: String
+    let view: String?
+    let kind: String?
+    let fail_count: Int?
+    let next_attempt_at: String?
+    let last_error: String?
+    var id: String { camera_id }
 }
 
 // ── Item 25 / 29: dedup + translation, as they ride on intel items ─────────

@@ -9,6 +9,8 @@ import StationPopup from './popups/StationPopup.jsx';
 import VehiclePopup from './popups/VehiclePopup.jsx';
 import { isSafeUrl } from '../../utils/safeUrl.js';
 import fetchImageObjectUrl from '../../utils/authedImage.js';
+import CameraStills from './CameraStills.jsx';
+import { cameraIdForProperties } from '../../utils/cameraStills.js';
 
 /**
  * Fetch a reverse-geocoded address label for a feature, using the server's
@@ -476,6 +478,10 @@ function CameraDetail({ properties }) {
       {properties.location && (
         <p className="text-xs text-gray-400">{properties.location}</p>
       )}
+      {/* Captured stills (operator opt-in, core/camera_stills.c). */}
+      {cameraIdForProperties(properties) && (
+        <CameraStills cameraId={cameraIdForProperties(properties)} />
+      )}
       {/* streamUrl comes from scraped camera-discovery data (dorks, webcam
         * directories, insecam) — not a value we generated. Handing it to
         * href unchecked would let a malicious `javascript:` URI in a scraped
@@ -896,6 +902,11 @@ function GenericDetail({ properties }) {
   return (
     <div className="space-y-1">
       {title && <p className="text-sm font-medium text-gray-200">{title}</p>}
+      {/* Camera records from the hp tables / trn_* station indexes render
+        * here, not in CameraDetail; their stills are under their own uid. */}
+      {/camera/i.test(String(properties.record_type || '')) && cameraIdForProperties(properties) && (
+        <CameraStills cameraId={cameraIdForProperties(properties)} />
+      )}
       <PropertyTable properties={properties} exclude={highlighted} />
     </div>
   );

@@ -579,6 +579,21 @@ int media_ocr_file(const char *path, char **out_text, double *out_conf);
  * without an SSH session. */
 char *media_capabilities(void);
 
+/* The individual decoders on PATH, for a capability report that has to say
+ * WHICH package is missing, not just that a feature is off. Probed once per
+ * process (tesseract's language list is one deadlined subprocess) and cached.
+ * Paths are "" when absent. `tesseract_jpn` is 1/0 from `tesseract
+ * --list-langs`, or -1 when there is no tesseract or the list could not be
+ * read. `disabled` mirrors MEDIA_NO_TOOLS: the tools may be present and the
+ * module still will not run them. */
+typedef struct {
+  char magick[512], convert[512], gm[512], tesseract[512];
+  int  tesseract_jpn;
+  char tesseract_langs[256];     /* "eng,jpn,osd" — "" when unknown           */
+  int  disabled;
+} media_decoders;
+void media_probe_decoders(media_decoders *out);
+
 /* ── pipeline ────────────────────────────────────────────────────────────── */
 
 /* Every table, column and index this module needs, in dependency order.
