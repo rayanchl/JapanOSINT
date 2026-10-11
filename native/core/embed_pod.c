@@ -782,7 +782,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
                now, m > 0 ? "cancelled" : "error");
       meta_set(db, "last_tick", lt);
       db_worker_close(&own);
-      return m > 0 ? 0 : -1;
+      /* cancelled mid-migration is not a failure; an SQL error is */
+      if (m < 0) return -1;
+      return 0;
     }
   }
 

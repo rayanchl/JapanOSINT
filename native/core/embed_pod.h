@@ -156,8 +156,8 @@ typedef struct {
   const char *record_type;
 } embed_row_meta;
 
-/* Called after the pod stores a batch (vecindex_embed_items): n rows, their uids, their vectors
- * (n * dim floats, row-major), and per-row metadata.
+/* Called after the pod stores a batch (vecindex_embed_items): n rows, their
+ * uids, their vectors (n * dim floats, row-major), and per-row metadata.
  *
  * THE CONTRACT (lib/vecindex.h, vecindex_hook_fn, says the same):
  *   - it runs on the embedding pod's thread — the scheduler's maintenance

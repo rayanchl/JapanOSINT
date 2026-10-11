@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 #include <sys/time.h>
 
 /* Failed rows listed in a coverage block. The count is always complete. */
@@ -28,6 +29,21 @@ static long long wall_ms(void) {
   struct timeval tv;
   gettimeofday(&tv, NULL);
   return (long long)tv.tv_sec * 1000LL + tv.tv_usec / 1000;
+}
+
+/* Append to a fixed SQL buffer. On the first append that would not fit, *ok
+ * goes to 0 and nothing more is written: a cut-off statement is never run —
+ * a truncated WHERE clause is a query with fewer filters, i.e. a different
+ * question answered confidently. */
+static void sql_appendf(char *buf, size_t cap, size_t *len, int *ok,
+                        const char *fmt, ...) {
+  if (!*ok || *len >= cap) { *ok = 0; return; }
+  va_list ap;
+  va_start(ap, fmt);
+  int n = vsnprintf(buf + *len, cap - *len, fmt, ap);
+  va_end(ap);
+  if (n < 0 || (size_t)n >= cap - *len) { *ok = 0; return; }
+  *len += (size_t)n;
 }
 
 /* ---- the embedding server ------------------------------------------------ */
@@ -71,7 +87,9 @@ int vecindex_served_model(http_client *http, const char *base, char *out,
   else {
     cJSON *j = cJSON_Parse(r.body);
     cJSON *data = j ? cJSON_GetObjectItem(j, "data") : NULL;
-    cJSON *d0 = data ? cJSON_GetArrayItem(data, 0) : NULL;
+    /* llama-server serves ONE model per instance and lists it as data[0]; the
+     * array is the OpenAI envelope, not a record set. */
+    cJSON *d0 = data ? cJSON_GetArrayItem(data, 0) : NULL; /* exhaustive-ok: one model per llama-server instance; /v1/models is identity, not records */
     cJSON *id = d0 ? cJSON_GetObjectItem(d0, "id") : NULL;
     if (cJSON_IsString(id) && id->valuestring[0]) {
       /* Basename only: the path is the deployment's, the model is the name. */
@@ -321,16 +339,17 @@ static const char *coltype_sql(vecindex_coltype t) {
 int vecindex_create(db_handle *db, const vecindex_spec *s, int dim) {
   if (dim <= 0) return -1;
   char sql[1024];
-  int n = snprintf(sql, sizeof sql,
+  size_t len = 0;
+  int ok = 1;
+  sql_appendf(sql, sizeof sql, &len, &ok,
     "CREATE VIRTUAL TABLE IF NOT EXISTS \"%s\" USING vec0(%s TEXT PRIMARY KEY",
     s->table, s->key_col);
-  for (int i = 0; i < s->ncols && n > 0 && (size_t)n < sizeof sql; i++)
-    n += snprintf(sql + n, sizeof sql - (size_t)n, ", %s %s%s", s->cols[i].name,
-                  coltype_sql(s->cols[i].type),
-                  s->cols[i].partition ? " partition key" : "");
-  if (n > 0 && (size_t)n < sizeof sql)
-    n += snprintf(sql + n, sizeof sql - (size_t)n, ", embedding float[%d])", dim);
-  if (n <= 0 || (size_t)n >= sizeof sql) return -1;
+  for (int i = 0; i < s->ncols; i++)
+    sql_appendf(sql, sizeof sql, &len, &ok, ", %s %s%s", s->cols[i].name,
+                coltype_sql(s->cols[i].type),
+                s->cols[i].partition ? " partition key" : "");
+  sql_appendf(sql, sizeof sql, &len, &ok, ", embedding float[%d])", dim);
+  if (!ok) return -1;
   char *err = NULL;
   if (sqlite3_exec(db->h, sql, NULL, NULL, &err) != SQLITE_OK) {
     fprintf(stderr, "[vecindex] cannot create %s: %s\n", s->table, err ? err : "?");
@@ -483,13 +502,16 @@ int vecindex_writer_open(vecindex_writer *w, db_handle *db, const vecindex_spec 
   char sql[1024];
   snprintf(sql, sizeof sql, "DELETE FROM \"%s\" WHERE %s=?1", s->table, s->key_col);
   if (sqlite3_prepare_v2(db->h, sql, -1, &w->del, NULL) != SQLITE_OK) goto fail;
-  int n = snprintf(sql, sizeof sql, "INSERT INTO \"%s\"(%s", s->table, s->key_col);
+  size_t len = 0;
+  int ok = 1;
+  sql_appendf(sql, sizeof sql, &len, &ok, "INSERT INTO \"%s\"(%s", s->table, s->key_col);
   for (int i = 0; i < s->ncols; i++)
-    n += snprintf(sql + n, sizeof sql - (size_t)n, ",%s", s->cols[i].name);
-  n += snprintf(sql + n, sizeof sql - (size_t)n, ",embedding) VALUES(?1");
+    sql_appendf(sql, sizeof sql, &len, &ok, ",%s", s->cols[i].name);
+  sql_appendf(sql, sizeof sql, &len, &ok, ",embedding) VALUES(?1");
   for (int i = 0; i < s->ncols + 1; i++)
-    n += snprintf(sql + n, sizeof sql - (size_t)n, ",?%d", i + 2);
-  snprintf(sql + n, sizeof sql - (size_t)n, ")");
+    sql_appendf(sql, sizeof sql, &len, &ok, ",?%d", i + 2);
+  sql_appendf(sql, sizeof sql, &len, &ok, ")");
+  if (!ok) goto fail;
   if (sqlite3_prepare_v2(db->h, sql, -1, &w->ins, NULL) != SQLITE_OK) goto fail;
   if (s->done_table) {
     snprintf(sql, sizeof sql,
@@ -1222,26 +1244,28 @@ static int knn_once(db_handle *db, const vecindex_spec *s, const float *q, int d
                     const vecindex_col *pcol, const vecindex_val *pval,
                     vecindex_hit **out, int *n, int *cap, char *err, size_t errcap) {
   char sql[2048];
-  int len = snprintf(sql, sizeof sql, "SELECT %s, distance FROM \"%s\" WHERE "
-                     "embedding MATCH ?1 AND k = ?2", s->key_col, s->table);
+  size_t len = 0;
+  int ok = 1;
+  sql_appendf(sql, sizeof sql, &len, &ok, "SELECT %s, distance FROM \"%s\" WHERE "
+              "embedding MATCH ?1 AND k = ?2", s->key_col, s->table);
   int arg = 3;
   if (pcol && pval)
-    len += snprintf(sql + len, sizeof sql - (size_t)len, " AND %s = ?%d", pcol->name, arg++);
+    sql_appendf(sql, sizeof sql, &len, &ok, " AND %s = ?%d", pcol->name, arg++);
   for (int i = 0; i < nf; i++) {
     const vecindex_col *c = find_col(s, f[i].col);
     if (c == pcol) continue;                     /* handled per partition */
     if (!strcmp(f[i].op, "IN")) {
-      len += snprintf(sql + len, sizeof sql - (size_t)len, " AND %s IN (", c->name);
+      sql_appendf(sql, sizeof sql, &len, &ok, " AND %s IN (", c->name);
       for (int j = 0; j < f[i].nvals; j++)
-        len += snprintf(sql + len, sizeof sql - (size_t)len, "%s?%d", j ? "," : "", arg++);
-      len += snprintf(sql + len, sizeof sql - (size_t)len, ")");
+        sql_appendf(sql, sizeof sql, &len, &ok, "%s?%d", j ? "," : "", arg++);
+      sql_appendf(sql, sizeof sql, &len, &ok, ")");
     } else {
-      len += snprintf(sql + len, sizeof sql - (size_t)len, " AND %s %s ?%d", c->name,
-                      sql_op(f[i].op), arg++);
+      sql_appendf(sql, sizeof sql, &len, &ok, " AND %s %s ?%d", c->name,
+                  sql_op(f[i].op), arg++);
     }
-    if (len <= 0 || (size_t)len >= sizeof sql) { snprintf(err, errcap, "filter too long"); return -1; }
   }
-  snprintf(sql + len, sizeof sql - (size_t)len, " ORDER BY distance");
+  sql_appendf(sql, sizeof sql, &len, &ok, " ORDER BY distance");
+  if (!ok) { snprintf(err, errcap, "filter too long"); return -1; }
   sqlite3_stmt *st;
   if (sqlite3_prepare_v2(db->h, sql, -1, &st, NULL) != SQLITE_OK) {
     snprintf(err, errcap, "%s", sqlite3_errmsg(db->h));
