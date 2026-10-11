@@ -204,21 +204,33 @@ static const hp_source HP2_EU_INSTITUTIONS[] = {
    * "siemens" totalResults 67, "bank" 4,401, an impossible word 0
    * (fOffices EM = EUIPO's own register, which is what this row names).
    *
-   * One page of at most 100: pageSize 101 is HTTP 400 ("shouldn't be greater
-   * than the maximum items per page") and the page number lives in the POST
-   * BODY, which this engine expands once per run, not per page. page_walk
-   * reads the upstream's `totalResults`, so a query matching more than 100
-   * marks files a truncation notice stating the true total instead of
-   * passing 100 off as everything. The per-mark detail endpoint answers 403;
-   * each record carries tmOfficeURL, EUIPO's own page for the mark. The WAF
-   * resets a connection that does not look like a browser. */
+   * Pages of at most 100: pageSize 101 is HTTP 400 ("shouldn't be greater
+   * than the maximum items per page"). The page number lives in the POST
+   * BODY, and until the engine re-expanded `{page}` in a body on every page
+   * this row read page 1 and nothing else — "bank" stored 100 of 4,401 and
+   * filed a notice saying so. Paged 2026-10-12: `"page":"{page}"`, 1-based
+   * (page 1 is the first 100, page 45 of "bank" holds the 4,401st mark alone,
+   * page 46 is an empty `tradeMarks`, which ends the walk). The order is
+   * stable between identical requests (page 20 of "bank" hashed the same
+   * three times running), so the walk neither repeats nor skips.
+   *
+   * The upstream's own ceiling is 10,000 results: "sun" (10,659 matches,
+   * totalPages 107) answers page 100 and gives HTTP 500 "Error while
+   * retrieving search results from search service" on page 101 and on every
+   * page after it — Elasticsearch's result window. page_max 100 is therefore
+   * the whole reachable set, and a query matching more stops at the page
+   * ceiling with a truncation notice stating the upstream's `totalResults`,
+   * not a failed-page notice blaming a rate limit. The per-mark detail
+   * endpoint answers 403; each record carries tmOfficeURL, EUIPO's own page
+   * for the mark. The WAF resets a connection that does not look like a
+   * browser. */
   { .id = "EU_EUIPO_TRADEMARKS", .name = "EUIPO — EU trademarks (TMview)",
     .name_ja = "EU知的財産庁 商標", .category = "government",
     .portal = "https://www.tmdn.org/tmview/", .record_type = "eu-trademark",
     .tags = "\"eu\",\"ip\",\"trademark\"",
     .mode = HP_JSON, .free_tier = 1,
     .url = "https://www.tmdn.org/tmview/api/search/results",
-    .post_body = "{\"page\":\"1\",\"pageSize\":\"100\",\"criteria\":\"C\","
+    .post_body = "{\"page\":\"{page}\",\"pageSize\":\"100\",\"criteria\":\"C\","
       "\"basicSearch\":\"{Q}\",\"fOffices\":[\"EM\"]}",
     .headers = { "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
                  "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0 Safari/537.36",
@@ -226,7 +238,7 @@ static const hp_source HP2_EU_INSTITUTIONS[] = {
                  "Referer: https://www.tmdn.org/tmview/" },
     .array_path = "tradeMarks", .id_keys = "ST13", .title_keys = "tmName",
     .date_keys = "applicationDate", .link_keys = "tmOfficeURL",
-    .page_walk = 1,
+    .page_start = 1, .page_max = 100,
     .description = "EU trade mark filings at EUIPO matching a name: the mark, its "
       "applicant, status, Nice classes, Vienna codes, filing, registration, "
       "opposition-period and expiry dates, and EUIPO's own page for the mark. "
