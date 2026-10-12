@@ -2483,6 +2483,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (intel_tenant_or_reply(c, hm, &usr, &itc) != 0) return;
       char *body = intelapi_item_by_uid_tenant(g_db, uid, itc.tenant_id);
       if (!body) { reply_json(c, 404, "{\"error\":\"not_found\"}"); return; }
+      translate_note_view(g_db, uid);   /* scopes the translate pod (M3) */
       reply_json(c, 200, body);
       free(body);
       return;
