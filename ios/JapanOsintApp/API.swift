@@ -706,10 +706,12 @@ struct API: Sendable {
         let body = try JSONSerialization.data(withJSONObject: ["query": query])
         return try await post("/api/search/analyze", body: body, timeout: 20)
     }
-    func searchSuggest(_ q: String) async throws -> [String] {
+    /// `cheap` is true when the server answered by retrieval, so the caller
+    /// may ask again sooner; an LLM-generated answer is not cheap.
+    func searchSuggest(_ q: String) async throws -> (suggestions: [String], cheap: Bool) {
         let env: SuggestEnvelope = try await get(
             "/api/search/suggest", query: [URLQueryItem(name: "q", value: q)])
-        return env.suggestions
+        return (env.suggestions, env.meta?.retrieval != nil)
     }
     func searchResults(_ id: String) async throws -> SearchSnapshot {
         try await get("/api/search/results/\(id)")

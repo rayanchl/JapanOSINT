@@ -30,6 +30,12 @@
  * failure. */
 char *prompt_analysis(const char *query, const char *services_list);
 
+/* prompt_analysis() with the routing examples supplied by the caller — a
+ * block in fewshot_static_block()'s format, normally fewshot_select()'s
+ * retrieval. NULL = every example (exactly prompt_analysis()). */
+char *prompt_analysis_with(const char *query, const char *services_list,
+                           const char *examples);
+
 /* Phase 2 service-chaining prompt over Phase 1 results JSON. `results_json`
  * is fenced as untrusted (it is what third-party services returned, and this
  * prompt decides the NEXT outbound calls); NULL services_list ->

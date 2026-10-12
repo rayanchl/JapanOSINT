@@ -218,7 +218,7 @@ struct WorkspaceQueryView: View {
         suggesting = true
         defer { suggesting = false }
         do {
-            let suggestions = try await api.searchSuggest(nl)
+            let suggestions = try await api.searchSuggest(nl).suggestions
             if let first = suggestions.first(where: { !$0.trimmingCharacters(in: .whitespaces).isEmpty }) {
                 q = first
                 error = nil

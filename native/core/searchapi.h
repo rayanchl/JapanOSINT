@@ -44,6 +44,17 @@ char *searchapi_analyze(db_handle *db, const char *tenant_id,
 /* {"suggestions":[...]} (never NULL; "[]" on failure). Caller frees. */
 char *searchapi_suggest(const char *q);
 
+/* searchapi_suggest() for a caller in a workspace. With an embedding server
+ * the answer comes from the retrieval arm (core/suggest.h): the workspace's
+ * search history and saved searches plus the nearest services, each
+ * suggestion naming its source, the cut at 9 disclosed in `meta`, and the
+ * LLM asked only when `expand` is set. Without one — or when retrieval fails
+ * — it is searchapi_suggest() exactly (plus the response cache on `db` when
+ * JO_LLM_CACHE_TTL_SEC is set). `suggestions` is a string array either way.
+ * `db`/`tenant` may be NULL. Caller frees. */
+char *searchapi_suggest_ex(db_handle *db, const char *tenant, const char *q,
+                           int expand);
+
 /* progress snapshot for :id (plus its `stream_key`), or the
  * reconstructed-from-store row, or NULL (caller: 404 not_found) — NULL too
  * when `tenant_id` did not start the run. Caller frees. */

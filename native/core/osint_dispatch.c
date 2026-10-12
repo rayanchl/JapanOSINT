@@ -8,6 +8,9 @@
 #include "evidence.h"       /* evidence_scope_begin/end */
 #include "content_change.h" /* content_change_scope_begin/end */
 #include "maint_detect.h"   /* anomaly_detect */
+#include "relevance.h"      /* run-time rule-4d check on a pivot's answer */
+#include "service_vec.h"    /* the resolver's embedding fallback asks the router */
+#include "qembed.h"
 #include <time.h>
 #include "../third_party/cJSON.h"
 #include <stdio.h>
@@ -18,7 +21,10 @@
 void osint_result_free(osint_result *r) {
   if (!r) return;
   free(r->data); free(r->error); free(r->sources_json); free(r->resolved_from);
+  free(r->relevance);
   r->data = r->error = r->sources_json = r->resolved_from = NULL;
+  r->relevance = NULL;
+  r->resolver = NULL;
 }
 
 int osint_canon(const char *name, char *out, size_t n) {
@@ -147,6 +153,90 @@ int osint_resolve_near(const char *canon, char *out, size_t n) {
   }
   if (!bestid || bestn != 1) return 0;   /* nothing near, or a tie: say so */
   snprintf(out, n, "%s", bestid);
+  return 1;
+}
+
+/* ── the embedding fallback ──────────────────────────────────────────────
+ *
+ * The note above keeps fuzzy matching out of this resolver because a fuzzy
+ * rule that picks by registry order is a coin flip. An embedding match is not
+ * registry order — but it is still a guess at what a name MEANT, so it runs
+ * only where spelling found nothing (or a tie), asks the router's own public
+ * query (service_vec_catalogue: the same index, the same model gate, entity
+ * pivots only) for a handful of candidates, and accepts one only when it is
+ * both close to the name and clearly closer than the runner-up. A near-tie is
+ * "we do not know", exactly as it is for edit distance. The vectors scored
+ * are the router's stored ones, read through lib/vecindex; service_vec.c is
+ * not touched. */
+#define RESOLVE_EMB_K        5      /* candidates asked of the router        */
+#define RESOLVE_EMB_MIN_COS  0.60   /* the winner must be at least this near */
+#define RESOLVE_EMB_MARGIN   0.10   /* … and this much nearer than #2        */
+
+/* A read-only view of the router's table (never registered, never written). */
+static const vecindex_spec resolve_svec_view = {
+  .name = "service", .table = SVEC_TABLE, .key_col = "id",
+  .meta_table = SVEC_META_TABLE };
+
+static int resolve_by_embedding(db_handle *db, const char *canon, char *out,
+                                size_t n) {
+  if (!db || !qembed_enabled()) return 0;            /* inert */
+  char norm[128];
+  resolve_normalise(canon, norm, sizeof norm);
+  if (!*norm) return 0;
+  /* DOMAIN_WHOIS_OWNER -> "domain whois owner": the words the cards hold. */
+  char words[160];
+  const char *px = getenv("JO_EMBED_QUERY_PREFIX");  /* as service_vec.c does */
+  int w = snprintf(words, sizeof words, "%s", px ? px : "");
+  for (size_t i = 0; norm[i] && w + 1 < (int)sizeof words; i++)
+    words[w++] = norm[i] == '_' ? ' ' : (char)tolower((unsigned char)norm[i]);
+  words[w] = 0;
+
+  char **ids = NULL; int nids = 0;
+  char *cat = service_vec_catalogue(db, words + (px ? strlen(px) : 0),
+                                    RESOLVE_EMB_K, NULL, &ids, &nids);
+  free(cat);
+  if (!ids || nids <= 0) { service_vec_free_ids(ids, nids); return 0; }
+
+  const char *texts[1] = { words };
+  float *qv = NULL; int qd = 0; llm_status st;
+  if (qembed_texts(texts, 1, &qv, &qd, &st) != 0) {
+    service_vec_free_ids(ids, nids);
+    return 0;
+  }
+  double best = -2, second = -2;
+  int bi = -1;
+  for (int i = 0; i < nids; i++) {
+    float *v = NULL; int d = 0;
+    if (vecindex_load(db, &resolve_svec_view, ids[i], &v, &d) != 0 || d != qd) {
+      free(v);
+      continue;
+    }
+    double c = vec_cosine(qv, v, d);
+    free(v);
+    if (c > best) { second = best; best = c; bi = i; }
+    else if (c > second) second = c;
+  }
+  free(qv);
+  int ok = bi >= 0 && best >= RESOLVE_EMB_MIN_COS &&
+           (second < -1 || best - second >= RESOLVE_EMB_MARGIN);
+  const source_def *hit = ok ? registry_get(ids[bi]) : NULL;
+  ok = hit && is_entity_pivot(hit);
+  if (bi >= 0)
+    fprintf(stderr, "[dispatch] embedding resolver: \"%s\" nearest %s "
+                    "cos=%.3f, runner-up %.3f — %s\n", canon, ids[bi], best,
+            second < -1 ? 0.0 : second, ok ? "accepted" : "not clear, refused");
+  if (ok) snprintf(out, n, "%s", hit->id);
+  service_vec_free_ids(ids, nids);
+  return ok;
+}
+
+int osint_resolve_near_db(db_handle *db, const char *canon, char *out, size_t n,
+                          int *by_emb) {
+  if (by_emb) *by_emb = 0;
+  if (osint_resolve_near(canon, out, n)) return 1;   /* spelling first */
+  if (!canon || !*canon || !out || n == 0) return 0;
+  if (!resolve_by_embedding(db, canon, out, n)) return 0;
+  if (by_emb) *by_emb = 1;
   return 1;
 }
 
@@ -533,6 +623,8 @@ typedef struct {
    * itself", resolved to the canonical id at finalize). */
   src_acc    *srcs;
   int         n_srcs, cap_srcs;
+  /* the first RELEV_SAMPLE_MAX accepted records, for relev_check() */
+  relev_sample rs;
 } dual_sink;
 
 /* Bump the record count for `name`, or append it. `name` may be "". */
@@ -594,6 +686,7 @@ static int dual_emit(struct intel_sink *s, const intel_item *it) {
   } else {
     acc_add(d, (it->sub_source_id && *it->sub_source_id) ? it->sub_source_id : "");
     d->n_emit++;
+    relev_sample_add(&d->rs, it);       /* no-op once the sample is full */
     if (rc > 0) d->any_new = 1;
   }
   return rc;
@@ -663,13 +756,16 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
     /* One clear candidate, or nothing: see osint_resolve_near(). The name the
      * caller used is kept so the answer can say what it actually ran. */
     char near[128];
-    if (osint_resolve_near(canon, near, sizeof near)) {
+    int by_emb = 0;
+    if (osint_resolve_near_db(db, canon, near, sizeof near, &by_emb)) {
       const source_def *nd = osint_lookup(near);
       if (nd) {
         out->resolved_from = strdup(canon);
+        if (by_emb) out->resolver = "embedding";
         snprintf(out->service, sizeof out->service, "%s", nd->id);
         fprintf(stderr, "[dispatch] \"%s\" is not registered; ran \"%s\" "
-                        "(reported as resolved_from)\n", canon, nd->id);
+                        "(reported as resolved_from%s)\n", canon, nd->id,
+                by_emb ? ", resolver embedding" : "");
         def = nd;
       }
     }
@@ -745,6 +841,19 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
 
   out->success    = (rc >= 0 && ds.n_emit > 0) ? 1 : 0;
   out->confidence = out->success ? 70 : 0;     /* JS default */
+  /* House rule 4d at run time: did the upstream answer THE QUESTION, or hand
+   * back its whole collection? A disclosure beside the records, never a
+   * filter on them. NULL (no note) without an embedding server. */
+  if (out->success) {
+    cJSON *rv = relev_check(&ds.rs, entity, ds.n_emit);
+    if (rv) {
+      out->relevance = cJSON_PrintUnformatted(rv);
+      fprintf(stderr, "[osint] %s(%s) relevance-suspect: %s\n", def->id, entity,
+              cJSON_GetObjectItem(rv, "note")->valuestring);
+      cJSON_Delete(rv);
+    }
+  }
+  relev_sample_free(&ds.rs);
   /* Hand over EVERY captured record, with its own count so a consumer can
    * bound its view without guessing how much it is not seeing. Notices ride
    * alongside under their own key and count — kept, never counted as data. */

@@ -24,6 +24,7 @@
 #include "nearapi.h"
 #include "cors.h"
 #include "semsearchapi.h"
+#include "qembed.h"        /* qembed_enabled: does /api/search/suggest retrieve? */
 #include "camera_stills.h"
 #include "cameraproxy.h"
 #include "uploadapi.h"
@@ -1589,10 +1590,19 @@ static void sem_spawn(struct mg_connection *c, struct mg_http_message *hm,
   reply_busy(c);
 }
 
-typedef struct { struct mg_mgr *mgr; unsigned long cid; char *q; } suggest_arg;
+typedef struct {
+  struct mg_mgr *mgr; unsigned long cid; char *q;
+  char tenant[64];        /* "" = no workspace resolved: no history arm */
+  int expand;             /* ?expand=1: also ask the LLM (core/suggest.h) */
+} suggest_arg;
 static void *suggest_thread(void *vp) {
   suggest_arg *a = vp;
-  char *body = searchapi_suggest(a->q);              /* blocks on suggest worker */
+  /* Its own connection: the retrieval arm reads history and the router's
+   * index, and the response cache writes (core/llmcache.h). */
+  db_handle own;
+  db_handle *db = db_worker_open(&own, g_db);
+  char *body = searchapi_suggest_ex(db, a->tenant, a->q, a->expand);
+  db_worker_close(&own);                             /* blocks on suggest worker */
   wakeup_reply(a->mgr, a->cid, 200, body ? body : "{\"suggestions\":[]}");
   free(body); free(a->q); free(a);
   worker_release();
@@ -2175,12 +2185,27 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, 200, body); free(body); return;
     }
     if (eq(u, "/api/search/suggest")) {
-      char q[512] = {0};
+      char q[512] = {0}, ex[8] = {0};
       mg_http_get_var(&hm->query, "q", q, sizeof q);
+      mg_http_get_var(&hm->query, "expand", ex, sizeof ex);
+      /* The workspace is resolved only when the retrieval arm can run (an
+       * embedding server is configured): without one this route does exactly
+       * what it did before, provisioning included. A failure to resolve is
+       * not an error here — the arm then simply has no history to read. */
+      tenant_ctx sgt;
+      int have_t = 0;
+      if (qembed_enabled()) {
+        struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+        char xtid[128] = {0};
+        if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len] = 0; }
+        have_t = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &sgt) == 0;
+      }
       if (!worker_admit()) { reply_busy(c); return; }
       suggest_arg *a = calloc(1, sizeof *a);
       if (a) {
         a->mgr = c->mgr; a->cid = c->id; a->q = strdup(q);
+        if (have_t) snprintf(a->tenant, sizeof a->tenant, "%s", sgt.tenant_id);
+        a->expand = ex[0] == '1';
         pthread_t th;
         if (a->q && pthread_create(&th, NULL, suggest_thread, a) == 0) {
           pthread_detach(th);
