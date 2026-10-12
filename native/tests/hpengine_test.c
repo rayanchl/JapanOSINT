@@ -2042,7 +2042,13 @@ int main(void) {
    *      page 1. The walk stops there (every further page is the same bytes)
    *      and says how many pages it did not request. T_PAGE_PARAM has
    *      page_size=2, so page 1's two full records used to trigger a walk to
-   *      the 10-page ceiling, re-emitting the same two records ten times. */
+   *      the ceiling, re-emitting the same two records that many times.
+   *
+   *      The ceiling is read from jo_page_max() rather than written here. It
+   *      was 10 — a private constant in hpengine.c with no environment knob,
+   *      where the rest of the tree used 20 — and this assertion pinned that
+   *      10, so unifying the three ceilings failed a test that was checking a
+   *      number rather than the disclosure. Derived, it holds either way. */
   fx_reset();
   fx_add("/po?q=", 200, "{\"items\":[{\"name\":\"P1\",\"id\":\"1\"},{\"name\":\"P2\",\"id\":\"2\"}]}");
   rc = run_source("T_PAGE_PARAM", "x");
@@ -2052,11 +2058,16 @@ int main(void) {
      "18d: the repeated page's records are not re-emitted");
   ok(cap_count(NOTICE, &nt) == 1 && nt && strstr(nt->key, "shape:page-param-ignored:") != NULL,
      "18d: one page-param-ignored notice");
-  ok(nt && strstr(nt->title, "page 2 was byte-identical to page 1") != NULL &&
-           strstr(nt->props, "\"pages_skipped\":8") != NULL &&
-           strstr(nt->props, "\"page_ceiling\":10") != NULL &&
-           strstr(nt->props, "\"page_param\":\"offset\"") != NULL,
-     "18d: the notice states the repeated page, the pages skipped and the ceiling");
+  { char want_skip[48], want_ceil[48];
+    snprintf(want_skip, sizeof want_skip, "\"pages_skipped\":%d",
+             jo_page_max(NULL) - 2);
+    snprintf(want_ceil, sizeof want_ceil, "\"page_ceiling\":%d",
+             jo_page_max(NULL));
+    ok(nt && strstr(nt->title, "page 2 was byte-identical to page 1") != NULL &&
+             strstr(nt->props, want_skip) != NULL &&
+             strstr(nt->props, want_ceil) != NULL &&
+             strstr(nt->props, "\"page_param\":\"offset\"") != NULL,
+       "18d: the notice states the repeated page, the pages skipped and the ceiling"); }
   /* ...and a walk whose pages differ is untouched: no notice. */
   fx_reset();
   fx_add("offset=4", 404, NULL);      /* the upstream's end of the collection */

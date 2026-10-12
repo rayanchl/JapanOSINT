@@ -11,15 +11,38 @@
 
 /* The ONLY cap in this file that stops a walk. Every stop it causes emits a
  * collector-truncation-notice naming JO_PAGE_MAX as the remedy, so the bound is
- * stated in-band rather than hidden. */
-#define PW_PAGE_MAX_DEFAULT 20   /* exhaustive-ok: runaway ceiling, disclosed as a truncation notice */
+ * stated in-band rather than hidden.
+ *
+ * ONE CEILING FOR THE WHOLE TREE, because there were three and an operator
+ * could not have known. This file's header calls pw_walk "the only page walk in
+ * the tree", and of the continuation DECISION that is true — but the BOUND was
+ * copied three times with two different numbers and two different knobs:
+ *
+ *   lib/pagewalk.c   20   $JO_PAGE_MAX            the generated V* fleet
+ *   lib/jsonlist.c   20   $JO_JSONLIST_PAGE_MAX   hpengine rows with page_walk=1
+ *   lib/hpengine.c   10   (no knob at all)        rows declaring their own paging
+ *
+ * So `JO_PAGE_MAX=50` raised one population, silently did nothing for the
+ * second, and could not reach the third at any value — and the third is the
+ * largest: 1,919 scheduled rows declare page_param/next_path/{page} without a
+ * per-row page_max, and stopped at 10 pages because of a number none of them
+ * mentions. A ceiling nobody can see is the same shape as the discard this
+ * module exists to disclose.
+ *
+ * `legacy_env` keeps an older spelling working rather than ignoring it: an
+ * operator who set $JO_JSONLIST_PAGE_MAX gets what they asked for, and
+ * $JO_PAGE_MAX wins when both are set. */
+#define JO_PAGE_MAX_DEFAULT 20   /* exhaustive-ok: runaway ceiling, disclosed as a truncation notice */
 
-static int pw_page_max(void) {
+int jo_page_max(const char *legacy_env) {
   const char *e = getenv("JO_PAGE_MAX");
-  int v = e ? atoi(e) : 0;
+  if ((!e || !*e) && legacy_env) e = getenv(legacy_env);
+  int v = (e && *e) ? atoi(e) : 0;
   if (v > 0) return v;
-  return PW_PAGE_MAX_DEFAULT;
+  return JO_PAGE_MAX_DEFAULT;
 }
+
+static int pw_page_max(void) { return jo_page_max(NULL); }
 static int pw_walk_enabled(void) {
   const char *e = getenv("JO_PAGE_WALK");
   return !(e && e[0] == '0' && e[1] == 0);
