@@ -945,6 +945,27 @@ char *service_vec_catalogue_filtered(db_handle *db, const char *query, int k,
   return out;
 }
 
+int service_vec_route_sources(db_handle *db, const char *query, const char *kind,
+                              int k, char ***out_ids) {
+  if (out_ids) *out_ids = NULL;
+  if (!out_ids) return -1;
+  service_vec_filter f = { .kind = (kind && *kind) ? kind : "scheduled" };
+  service_vec_hit *hits = NULL;
+  int n = service_vec_search(db, query, &f, k > 0 ? k : 10, &hits, NULL);
+  if (n < 0) return -1;
+  char **ids = calloc((size_t)(n > 0 ? n : 1), sizeof *ids);
+  if (!ids) { service_vec_hits_free(hits, n); return -1; }
+  int m = 0;
+  for (int i = 0; i < n; i++) {
+    /* hand the id over rather than copying it */
+    ids[m++] = hits[i].id;
+    hits[i].id = NULL;
+  }
+  service_vec_hits_free(hits, n);
+  *out_ids = ids;
+  return m;
+}
+
 cJSON *service_vec_coverage_json(db_handle *db) {
   cJSON *o = vecindex_coverage_json(db, &svec_spec);
   cJSON *kinds = cJSON_CreateObject();

@@ -24,6 +24,7 @@
 #include "nearapi.h"
 #include "cors.h"
 #include "semsearchapi.h"
+#include "sourceindexapi.h"
 #include "camera_stills.h"
 #include "cameraproxy.h"
 #include "uploadapi.h"
@@ -2226,6 +2227,13 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       } }
 
     if (eq(u, "/api/sources/stats")) { route_sources_stats(c); return; }
+    /* GET /api/sources/search?q=&kind=&k= — the registry by meaning
+     * (core/sourceindexapi.h). Embeds the query: off the loop. Matched
+     * before /api/sources/:id, which would read "search" as an id. */
+    if (eq(u, "/api/sources/search")) {
+      sem_spawn(c, hm, sourceindexapi_search, "", "", opgate_check(&usr) == 0);
+      return;
+    }
 
     /* GET /api/sources — full source registry/probe rows. */
     if (eq(u, "/api/sources")) {

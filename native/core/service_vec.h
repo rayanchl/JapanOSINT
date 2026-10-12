@@ -113,6 +113,18 @@ int service_vec_search(db_handle *db, const char *query,
                        service_vec_hit **out, service_vec_info *info);
 void service_vec_hits_free(service_vec_hit *h, int n);
 
+/* The SCHEDULED sources most relevant to a question that names no entity
+ * ("what is happening with earthquakes in Kyushu"): a scheduled source
+ * cannot be dispatched on an entity, but its stored records are what such a
+ * question is answered from, so this says WHICH sources' records to read.
+ * `kind` NULL = "scheduled"; another kind is honoured, never widened. Up to k
+ * ids (malloc'd; service_vec_free_ids) in relevance order, or -1 when the
+ * index cannot answer (inert, the kind not ready, model changed) — the caller
+ * then has no ranking and must say so, not guess one. Embeds the query: call
+ * it off the event loop. Function only: the pipeline wiring comes later. */
+int service_vec_route_sources(db_handle *db, const char *query, const char *kind,
+                              int k, char ***out_ids);
+
 /* lib/vecindex's coverage object plus `kinds`: {pivot:{registered,ready},…}. */
 #include "../third_party/cJSON.h"
 cJSON *service_vec_coverage_json(db_handle *db);
