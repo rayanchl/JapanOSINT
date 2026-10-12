@@ -13,6 +13,7 @@
  * are covered too. */
 #include "../lib/hpengine.h"
 #include "../lib/jsonlist.h"
+#include "../lib/pagewalk.h"   /* jo_page_max — 18d derives the ceiling, not a literal */
 #include "../lib/feedlib.h"
 #include "../lib/csv.h"
 #include "../core/httpclient.h"
