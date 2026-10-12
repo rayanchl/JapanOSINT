@@ -20,6 +20,7 @@
 #include <ctype.h>
 #include <openssl/sha.h>
 #include <stdlib.h>
+#include <unistd.h>   /* mkdtemp: <unistd.h> on macOS, not <stdlib.h> */
 
 static void exec_ok(db_handle *db, const char *sql) {
   char *e = NULL;
@@ -200,8 +201,11 @@ int main(void) {
   setenv("JO_REPO_ROOT", "/srv/jo", 1);
   assert(!strcmp(breach_root_dir(), "/srv/jo/data/breach"));
   unsetenv("JO_REPO_ROOT");
-  assert(strstr(breach_root_dir(), "/Users/rayan") == NULL &&
-         strstr(breach_root_dir(), "/data/breach") != NULL);
+  /* Without either variable: the repo the binary was BUILT from — never a
+   * path written into the source. This used to assert the absence of one
+   * developer's home directory, which failed on that developer's own machine
+   * for a checkout correctly living under it. */
+  assert(!strcmp(breach_root_dir(), JO_REPO_ROOT "/data/breach"));
 
   char cmd[160];
   snprintf(cmd, sizeof cmd, "rm -rf %s", bdir);

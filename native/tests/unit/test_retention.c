@@ -74,9 +74,12 @@ static void seed(db_handle *db) {
   /* Alerts. */
   exec_ok(db,
     "INSERT INTO alert_events(id,tenant_id,rule_id,item_uid,matched_at) VALUES"
-    " ('ev-old','t','r','u-old',datetime('now','-400 days')),"
-    " ('ev-old-pending','t','r','u-old-pending',datetime('now','-400 days')),"
-    " ('ev-new','t','r','u-new',datetime('now','-10 days'));"
+    /* Three different items: alert_events is UNIQUE(rule_id, item_uid) —
+     * one event per (rule, item), 98dd793a — so three events on one item
+     * cannot exist; the fixture used to try and died on the constraint. */
+    " ('ev-old','t','r','u1',datetime('now','-400 days')),"
+    " ('ev-old-pending','t','r','u2',datetime('now','-400 days')),"
+    " ('ev-new','t','r','u3',datetime('now','-10 days'));"
     "INSERT INTO alert_deliveries(event_id,channel_idx,channel_type,status,attempted_at) VALUES"
     " ('ev-new',0,'webhook','ok',datetime('now','-60 days')),"
     " ('ev-new',1,'webhook','dead',datetime('now','-5 days')),"

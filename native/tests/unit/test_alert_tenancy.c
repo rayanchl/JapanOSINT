@@ -54,13 +54,29 @@ static long events(db_handle *db, const char *rule, const char *uid,
 
 /* ── 3, threaded: two connections fire the same (rule, item) at once ─── */
 typedef struct { const char *dbp; const char *uid; } race_arg;
-static pthread_barrier_t g_bar;
+/* A two-party start line. pthread_barrier_t is POSIX's optional Barriers
+ * option, which macOS does not provide — the test did not compile there (and
+ * CI runs a macOS unit job). A mutex and a condition do the same job. */
+static struct { pthread_mutex_t mu; pthread_cond_t cv; int waiting, parties; } g_bar;
+static void bar_init(int parties) {
+  pthread_mutex_init(&g_bar.mu, NULL); pthread_cond_init(&g_bar.cv, NULL);
+  g_bar.waiting = 0; g_bar.parties = parties;
+}
+static void bar_wait(void) {
+  pthread_mutex_lock(&g_bar.mu);
+  if (++g_bar.waiting >= g_bar.parties) pthread_cond_broadcast(&g_bar.cv);
+  else while (g_bar.waiting < g_bar.parties) pthread_cond_wait(&g_bar.cv, &g_bar.mu);
+  pthread_mutex_unlock(&g_bar.mu);
+}
+static void bar_destroy(void) {
+  pthread_cond_destroy(&g_bar.cv); pthread_mutex_destroy(&g_bar.mu);
+}
 static void *racer(void *vp) {
   race_arg *a = vp;
   db_handle d = {0};
   assert(db_open(&d, a->dbp, NULL) == 0);
   sqlite3_busy_timeout(d.h, 5000);
-  pthread_barrier_wait(&g_bar);
+  bar_wait();
   fire(&d, "rZ", "tA", a->uid);
   db_close(&d);
   return NULL;
@@ -132,14 +148,14 @@ int main(void) {
     char uid[32];
     snprintf(uid, sizeof uid, "src-z|%d", k);
     item(&db, uid, "src-z", "legacy");
-    pthread_barrier_init(&g_bar, NULL, 2);
+    bar_init(2);
     race_arg a = { dbp, uid };
     pthread_t t1, t2;
     assert(pthread_create(&t1, NULL, racer, &a) == 0);
     assert(pthread_create(&t2, NULL, racer, &a) == 0);
     pthread_join(t1, NULL);
     pthread_join(t2, NULL);
-    pthread_barrier_destroy(&g_bar);
+    bar_destroy();
   }
   assert(scalar(&db, "SELECT count(*) FROM alert_events WHERE rule_id='rZ'")
          == ROUNDS && "two racing fires are one event");

@@ -67,11 +67,27 @@ curl -sf --max-time 2 "http://127.0.0.1:$PORT/api/health" >/dev/null || {
 # gate probed an IDLE server for 25 s and printed "ok" — a pass on a load that
 # never happened. A load only counts if it came back 200, and the gate only
 # counts if probes were actually taken while a load was in flight.
+#
+# Each load is a LOOP of /api/status builds for LOAD_SEC, not one request. One
+# build used to take seconds, so three single requests kept the server busy
+# for most of the probe window; once the registry index and the joined
+# source_trust query made a build take ~0.25 s, three requests overlapped two
+# or three 0.1 s probes and the gate failed (or passed) on timing alone. The
+# loop keeps the load on for a fixed time whatever one build costs, and every
+# build in it must come back 200.
+LOAD_SEC=${LOAD_SEC:-12}
+LOAD_END=$(( $(date +%s) + LOAD_SEC ))
 LOADPIDS=""
 for i in 1 2 3; do
-  ( curl -s --max-time 120 -o "$W/load$i.body" -w '%{http_code}' \
-      -H "Authorization: Bearer $T" "http://127.0.0.1:$PORT/api/status" \
-      > "$W/load$i.code" 2>/dev/null || echo 000 > "$W/load$i.code" ) &
+  ( n=0
+    while [ "$(date +%s)" -lt "$LOAD_END" ]; do
+      code=$(curl -s --max-time 120 -o "$W/load$i.body" -w '%{http_code}' \
+               -H "Authorization: Bearer $T" "http://127.0.0.1:$PORT/api/status" \
+               2>/dev/null) || code=000
+      n=$((n + 1))
+      if [ "$code" != "200" ]; then echo "$code $n" > "$W/load$i.code"; exit 0; fi
+    done
+    echo "200 $n" > "$W/load$i.code" ) &
   LOADPIDS="$LOADPIDS $!"
 done
 
@@ -91,8 +107,10 @@ done
 # shellcheck disable=SC2086
 wait $LOADPIDS 2>/dev/null || true
 
+BUILDS=0
 for i in 1 2 3; do
-  code=$(cat "$W/load$i.code" 2>/dev/null)
+  read -r code nb < "$W/load$i.code" 2>/dev/null || code=""
+  BUILDS=$((BUILDS + ${nb:-0}))
   if [ "$code" != "200" ]; then
     echo "gate: /api/status load $i returned HTTP ${code:-none}, not 200 —"
     echo "      the load never ran, so the latency below would measure an idle"
@@ -105,7 +123,7 @@ done
 N=$(wc -l < "$W/probe" | tr -d ' ')
 INFLIGHT=$(awk '$2 == 1' "$W/probe" | wc -l | tr -d ' ')
 WORST=$(awk '{print $1}' "$W/probe" | sort -n | tail -1)
-echo "gate: /api/health probed $N times, $INFLIGHT of them while 3 x /api/status were in flight"
+echo "gate: /api/health probed $N times, $INFLIGHT of them while 3 x /api/status were in flight ($BUILDS status builds in ${LOAD_SEC}s)"
 echo "gate: worst health latency ${WORST}s (limit ${MAX}s)"
 if [ "$INFLIGHT" -lt 3 ]; then
   echo

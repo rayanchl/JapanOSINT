@@ -18,7 +18,61 @@
 #include "../../core/entity_enrich.h"
 
 #include <assert.h>
-#include "fake_llm.h"
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <signal.h>
+#include <sys/socket.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+/* A model that answers every /completion with text that is not JSON — an
+ * answer the model actually GAVE, which entity_enrich holds against the item
+ * and records in entity_extraction_state for every row it SELECTED. The test
+ * used to point at a port nothing listens on and count those records, but a
+ * transport failure is no longer charged to the item (1858ddc, "LLM outages
+ * not charged"), so it recorded nothing and the selection became invisible. */
+static const char *FENCE_STUB =
+  "import http.server,json,os\n"
+  "class H(http.server.BaseHTTPRequestHandler):\n"
+  " def log_message(self,*a):pass\n"
+  " def s(self,o):\n"
+  "  b=json.dumps(o).encode();self.send_response(200)\n"
+  "  self.send_header('Content-Type','application/json')\n"
+  "  self.send_header('Content-Length',str(len(b)));self.end_headers();self.wfile.write(b)\n"
+  " def do_GET(self): self.s({'data':[{'id':'stub'}]})\n"
+  " def do_POST(self):\n"
+  "  self.rfile.read(int(self.headers.get('Content-Length',0)));self.s({'content':'not json'})\n"
+  "http.server.ThreadingHTTPServer(('127.0.0.1',int(os.environ['P'])),H).serve_forever()\n";
+
+static int port_open(int port) {
+  int fd = socket(AF_INET, SOCK_STREAM, 0);
+  if (fd < 0) return 0;
+  struct sockaddr_in a; memset(&a, 0, sizeof a);
+  a.sin_family = AF_INET; a.sin_port = htons((unsigned short)port);
+  a.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+  int ok = connect(fd, (struct sockaddr *)&a, sizeof a) == 0;
+  close(fd);
+  return ok;
+}
+
+/* Fork the stub on a free port; returns its pid (port in *out), or -1. */
+static pid_t stub_start(int *out) {
+  int port = 23000 + (int)(getpid() % 2000);
+  while (port_open(port) && port < 65000) port++;
+  pid_t p = fork();
+  if (p < 0) return -1;
+  if (p == 0) {
+    char ps[16]; snprintf(ps, sizeof ps, "%d", port);
+    setenv("P", ps, 1);
+    if (!freopen("/dev/null", "w", stderr)) { /* stub noise is harmless */ }
+    execlp("python3", "python3", "-c", FENCE_STUB, (char *)NULL);
+    _exit(127);
+  }
+  for (int i = 0; i < 100 && !port_open(port); i++) usleep(100000);
+  if (!port_open(port)) { kill(p, SIGKILL); waitpid(p, NULL, 0); return -1; }
+  *out = port;
+  return p;
+}
 
 static void ins(db_handle *db, const char *uid, const char *rt, const char *title) {
   sqlite3_stmt *s;
@@ -102,17 +156,17 @@ static void test_run_row_excluded(void) {
   ins(&db, "fence-run", "osint_search_run", "東京の地震について調査しました");
   assert(pending_count(db.h) == 1 && "the run row is not pending translation");
 
-  /* entity extraction: the selection is what decides. A server that is UP
-   * and answers garbage makes each SELECTED row a recorded failed attempt, so
-   * the state table shows exactly which rows were picked. (An unreachable one
-   * no longer does: an outage is deferred, not charged to the item.) */
-  int port = fake_llm_start();
-  fake_llm_set_content("not json");
-  char base[64];
-  snprintf(base, sizeof base, "http://127.0.0.1:%d", port);
+  /* entity extraction: the selection is what decides. The stub answers with
+   * text that is not JSON, so each SELECTED row is recorded as a failed
+   * attempt and the state table shows exactly which rows were picked. */
+  int port = 0;
+  pid_t stub = stub_start(&port);
+  assert(stub > 0 && "python3 stub model started");
+  char url[64]; snprintf(url, sizeof url, "http://127.0.0.1:%d", port);
   http_client *hc = http_client_new();
-  llm_client llm = { .http = hc, .base_url = base };
+  llm_client llm = { .http = hc, .base_url = url };
   entity_enrich_extract(&db, &llm, 50);
+  kill(stub, SIGKILL); waitpid(stub, NULL, 0);
   assert(scalar(&db, "SELECT count(*) FROM entity_extraction_state "
                      "WHERE item_uid='fence-news'") == 1);
   assert(scalar(&db, "SELECT count(*) FROM entity_extraction_state "

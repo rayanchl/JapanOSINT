@@ -39,7 +39,9 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 18,883** (2026-10-09). Main's 18,730: 18,645 —
+**The registered count is 18,884** (2026-10-12: 18,883 plus the `log-retention`
+maintenance pod from the infrastructure audit, see the last section). 18,883
+(2026-10-09) was main's 18,730: 18,645 —
 batches 33–36 (batch 33's 43 measured supply-chain rows,
 `docs/verified-sources-batch33.tsv`; batch 34's NDJSON row; batch 35's four
 string-array rows; the spec-families beats and batch 36's 188) and the audit
@@ -172,8 +174,26 @@ verdicts can be transient, a user-agent or a bad afternoon, whereas
 FILTER_IGNORED is a property of the endpoint's query handling. They disclose
 themselves now instead; see the fetch-failure notice under rule 1.
 
-**The older exception still stands for rules 4 and 4b:** those 360 rows
-(now 295) are entity pivots that have not been run against a real entity. The 27 scheduled rows were run on
+**Rules 4 and 4b are now measured too (2026-10-11), and the tool you pick
+decides whether the answer means anything.** `docs/emit-sources-batch31.tsv`
+holds it: of the 295 live rows, **53 OK** (they fetch and store real records
+for their probe entity), 99 `EMPTY_UPSTREAM` — which is not "broken", the
+endpoint answered and held nothing for that particular entity — and 48 404s,
+42 403s and 37 transport failures. The 65 `UNREGISTERED` are exactly the 65
+removed above, which is also the proof the removal was complete.
+
+**Use `audit_batch_emit.py` with the MANIFEST for pivot rows, never the
+registry sweep.** `audit_registry_emit.py` runs every row with no entity, so
+it reported **268 of these 295 as EMITS_NOTHING** — a verdict about sources
+that had never been asked anything. The sweep has a `NEEDS_ENTITY` verdict for
+exactly this and it could not fire, because an on-demand pivot asked with no
+entity returned SILENTLY from `hp_run`: the run line read
+`records=0 0ms stored=0`, byte-identical to a row that went and found nothing.
+The engine says it now and the sweep matches on it.
+
+Nothing is removed on that reading. One probe is one reading, 403 and 404 can
+be a user-agent or a bad afternoon, and each of these rows now files a
+collector-fetch-failure record naming its status. The 27 scheduled rows were run on
 2026-10-02: 13 store real records (FDSN 151,303; Safecast 30,000; Sejm 15,000;
 USGS NWIS 53,789 before the audit timeout …) and 14 need an API key and store a
 "gated" notice saying so. Ten rows were removed when the branches merged: seven
@@ -283,6 +303,23 @@ Where the tree actually stands, as `make audit-sources` reports it:
   4b's "the numbers look fine" traps at once. Measured 2026-10-05; that row is
   retired in favour of `GO_MODULE_INDEX`, which pages on
   `next_path=$last.Timestamp`.
+
+  **42 of those candidates are now MEASURED** (2026-10-11,
+  `docs/measured-url-limits-2026-10-11.tsv`): each upstream was asked the same
+  question with a tenfold limit. **18 are truncating**, 5 are complete, 19 are
+  unreachable from here. The first fix was the highest-leverage one:
+  `od_udata_collect()` in `collectors/sources/od_shared.inc` made ONE request
+  while the envelope published both `next_page` and the upstream's own `total`
+  — so three national open-data catalogues stored 20 datasets each. It pages
+  now, and discloses a ceiling or a `total` it did not reach:
+
+      data.public.lu   20 -> 3,193 stored (= its declared total)
+      dados.gov.pt     20 -> 20,933
+      data.gov.rs      20 -> 3,527
+
+  27,653 records from three rows that together stored 60. **The other 15
+  measured-truncating sites are not yet fixed** and are listed in that file, so
+  the next pass starts from the measurement.
 
   `tools/audit_url_limits.py` finds the shape, and is deliberately NOT in
   `make audit-sources`: **a URL limit is not automatically a discard and the
@@ -950,3 +987,46 @@ answered before auth; unset, no CORS header is sent at all. It used to be a
 hard-coded `*` on every reply — a cross-origin deployment of the web client
 (`VITE_API_HOST`) must now set the variable. Local dev goes through the Vite
 proxy and needs nothing.
+
+## Infrastructure audit (W1a–W2a, merged 2026-10-12)
+
+The `claude/audit-fixes-and-embeddings` work, integrated into main with its two
+failing tests repaired. What it guarantees, and the knobs it adds:
+
+* **Auth off the loop.** The JWKS is refreshed on its own thread, never fetched
+  inside a request; break-glass tokens verify and every use is audited.
+* **The audit log is a hash chain** (`audit_events`); verification reports
+  unchained rows. Collector runs started through the API are gated by role and
+  a per-user budget.
+* **Outbound politeness / SSRF** (`core/hostgate.c`): per-host capacity and
+  `Retry-After`; the camera proxy refuses LAN, metadata and link-local
+  targets (`JO_CAMERA_ALLOW_LAN=1` reopens LAN only).
+* **LLM queue**: bounded lanes (`JO_LLM_QUEUE_MAX`, default 64 waiting; a job
+  waits at most `JO_LLM_QUEUE_WAIT_FACTOR` × its timeout, default 4), no retry
+  after a timeout, queue time reported apart from model time;
+  `JO_EMBED_QUERY_URL` (default `JO_EMBED_URL`) serves query-time embeds on
+  their own slot, and both servers' `/v1/models` must agree. Triage and
+  translation inputs are FENCED as untrusted text; a run's synthesis row is
+  neither translated nor mined for entities. An LLM outage is NOT charged to
+  the items it was asked about (only an answer the model gave is).
+* **Scheduler**: a boot ramp (`JO_SCHED_RAMP_SEC`, 900 s) instead of a stampede,
+  a maintenance lane (`JO_SCHED_MAINT_WORKERS`, 2) that collectors and pods
+  never share, real cancellation; `log-retention` prunes fetch_log, anomalies,
+  repairs and alert deliveries/events in `JO_RETAIN_BATCH` (5,000) batches.
+* **Alerts**: shared-corpus rows meet every tenant's rules, and alert_events is
+  UNIQUE(rule_id, item_uid) — one event per (rule, item), even under racing
+  double-fires.
+* **Breach**: an audited reveal that carries a reason (iOS sends it), paged
+  search off the loop, a keyed lookup hash, and a corpus root of
+  `$JO_BREACH_DIR`, else `$JO_REPO_ROOT/data/breach`, else the repo the binary
+  was built from — never a path written into the source.
+* **Detail hops** (hpengine): one admission point, `hp_detail_admit()`, spends a
+  per-run budget of a count (default 1,000, was 25) and a clock
+  (`JO_HP_DETAIL_SEC`); every record it did not reach carries
+  `_detail_pending`, and the run files a `detail-truncation` notice with the
+  counts. Every mode deepens, not only JSON.
+
+The concurrency gate (`tools/ci_concurrency_gate.sh`) keeps three `/api/status`
+LOOPS running for `LOAD_SEC` (12 s) rather than three single requests: a build
+now takes ~0.25 s, which left the old gate passing or failing on timing. CI
+runs it with a 0.5 s health limit.
