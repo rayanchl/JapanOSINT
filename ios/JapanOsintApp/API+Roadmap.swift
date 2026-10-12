@@ -521,6 +521,25 @@ extension API {
         return try await request(url, timeout: 60)
     }
 
+    // ── Camera visual search (native/core/visualsearchapi.h) ───────────────
+
+    /// Cameras by what their frames SHOW. A 503 carries the server's reason
+    /// (no vision sidecar, index not built, a refused model change).
+    func cameraVisualSearch(_ q: String, k: Int = 12) async throws -> VisualSearchEnvelope {
+        try await get("/api/cameras/visual-search",
+                      query: [URLQueryItem(name: "q", value: q),
+                              URLQueryItem(name: "k", value: String(k))])
+    }
+
+    /// Image→image: cameras whose frames look like this still. The server
+    /// uses the still's stored vector; its own camera is left out.
+    func cameraVisualSearchSimilar(toStill stillId: String,
+                                   k: Int = 12) async throws -> VisualSearchEnvelope {
+        try await post("/api/cameras/visual-search/by-image",
+                       body: try enc(["still_id": stillId, "k": k]),
+                       timeout: API.userDefaultTimeout)
+    }
+
     // ── Roadmap 17 / 28: the capture opt-ins ───────────────────────────────
     //
     // `sources.capture_evidence` and `intel_items.capture_stills` both default
