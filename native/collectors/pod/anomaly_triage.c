@@ -20,11 +20,13 @@
 #include "core/prompts.h"
 #include "core/source_registry.h"
 #include "core/llm_fault.h"
+#include "lib/vecindex.h"
 #include "third_party/cJSON.h"
 #include "third_party/sqlite3.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define BODY_CAP 2000
 
@@ -150,6 +152,173 @@ typedef struct {
   int escalation, attempts;
 } anomaly_row;
 
+/* ── triage memory (anomaly_vec) ───────────────────────────────────────────
+ *
+ * The model classified every anomaly from scratch, although the fleet has
+ * seen most failure shapes before: the same upstream 429-ing every evening,
+ * the same portal moving its API under /v2. anomaly_vec indexes every
+ * TRIAGED anomaly's "verdict | category | reason | evidence" (lib/vecindex,
+ * vecindex_sync — a few thousand rows, rebuilt incrementally each tick, an
+ * unchanged row costing a hash compare), and the three nearest past anomalies
+ * — with the class they were given and what the repair pod then did — go into
+ * the prompt as FENCED examples. Fenced, because their reason/evidence text is
+ * whatever an upstream once answered (prompt_fence_untrusted), and labelled
+ * as examples so the model classifies the input on its own evidence.
+ *
+ * Inert without JO_EMBED_URL: no sync, no examples, the prompt is byte for
+ * byte what it was. Embeds go to the background slot (interactive=0): this is
+ * a maintenance pod, not a user's request. */
+#define TRIAGE_MEMORY_K       3
+#define TRIAGE_MEMORY_WINDOW  2000    /* most recent triaged anomalies indexed */
+#define TRIAGE_MEMORY_TEXT    600     /* bytes of each anomaly's text embedded */
+
+static const vecindex_spec anomaly_vec_spec = {
+  .name = "anomaly", .table = "anomaly_vec", .key_col = "anomaly_id",
+  .meta_table = "anomaly_vec_meta", .done_table = "anomaly_vec_done",
+  .fail_table = "anomaly_vec_failed", .cols = NULL, .ncols = 0,
+  .rebuild_hint = " (rebuild: DROP TABLE anomaly_vec, anomaly_vec_done, "
+                  "anomaly_vec_failed, anomaly_vec_meta)" };
+VECINDEX_REGISTER(anomaly_vec_spec)
+
+static char *anomaly_text(const char *source_id, const char *verdict,
+                          const char *reason, const char *evidence) {
+  const src_meta *m = source_id ? src_meta_get(source_id) : NULL;
+  const char *cat = (m && m->category) ? m->category : "";
+  size_t n = 64 + strlen(cat) + (verdict ? strlen(verdict) : 0) +
+             (reason ? strlen(reason) : 0) + (evidence ? strlen(evidence) : 0);
+  char *t = malloc(n);
+  if (!t) return NULL;
+  snprintf(t, n, "verdict: %s | category: %s | reason: %s | evidence: %s",
+           verdict ? verdict : "", cat, reason ? reason : "",
+           evidence ? evidence : "");
+  char *b = vecindex_bound_text(t, TRIAGE_MEMORY_TEXT);
+  free(t);
+  return b;
+}
+
+/* Bring anomaly_vec up to date with the most recent triaged anomalies. 0, or
+ * -1 (recorded in anomaly_vec_meta by vecindex_sync). */
+static int memory_sync(db_handle *db, http_client *http) {
+  const char *base = vecindex_base_url();
+  if (!base) return 0;
+  /* Nothing newly triaged since the last sync: no probe, no request. A
+   * triaged anomaly's text does not change, so the newest one being indexed
+   * means the window is. */
+  if (vecindex_exists(db, &anomaly_vec_spec)) {
+    sqlite3_stmt *q;
+    int fresh = 0;
+    if (sqlite3_prepare_v2(db->h, "SELECT EXISTS(SELECT 1 FROM anomaly_vec_done d"
+          " WHERE d.anomaly_id=(SELECT CAST(MAX(id) AS TEXT) FROM collector_anomaly"
+          "                     WHERE triaged_at IS NOT NULL))", -1, &q, NULL) == SQLITE_OK) {
+      fresh = sqlite3_step(q) == SQLITE_ROW && sqlite3_column_int(q, 0);
+      sqlite3_finalize(q);
+    }
+    if (fresh) return 0;
+  }
+  char model[256];
+  if (vecindex_detect_model(http, base, model, sizeof model) != 0) return -1;
+  typedef struct { char key[24]; char *text; } mrow;
+  mrow *rows = calloc(TRIAGE_MEMORY_WINDOW, sizeof *rows);
+  vecindex_item *it = calloc(TRIAGE_MEMORY_WINDOW, sizeof *it);
+  if (!rows || !it) { free(rows); free(it); return -1; }
+  int n = 0;
+  sqlite3_stmt *s;
+  if (sqlite3_prepare_v2(db->h, "SELECT id,source_id,verdict,reason,evidence"
+        " FROM collector_anomaly WHERE triaged_at IS NOT NULL"
+        " ORDER BY id DESC LIMIT ?1", -1, &s, NULL) == SQLITE_OK) {
+    sqlite3_bind_int(s, 1, TRIAGE_MEMORY_WINDOW);
+    while (n < TRIAGE_MEMORY_WINDOW && sqlite3_step(s) == SQLITE_ROW) {
+      snprintf(rows[n].key, sizeof rows[n].key, "%lld", sqlite3_column_int64(s, 0));
+      rows[n].text = anomaly_text((const char *)sqlite3_column_text(s, 1),
+                                  (const char *)sqlite3_column_text(s, 2),
+                                  (const char *)sqlite3_column_text(s, 3),
+                                  (const char *)sqlite3_column_text(s, 4));
+      if (!rows[n].text) break;
+      it[n].key = rows[n].key;
+      it[n].text = rows[n].text;
+      n++;
+    }
+    sqlite3_finalize(s);
+  }
+  int rc = 0;
+  if (n > 0) {
+    llm_client llm = { .http = http, .base_url = base, .interactive = 0 };
+    char now[32];
+    time_t t = time(NULL);
+    struct tm tm;
+    gmtime_r(&t, &tm);
+    strftime(now, sizeof now, "%Y-%m-%dT%H:%M:%S.000Z", &tm);
+    vecindex_stats st = {0};
+    rc = vecindex_sync(db, &anomaly_vec_spec, &llm, model, it, n, 32, now, now, &st);
+    if (st.embedded)
+      fprintf(stderr, "[triage] memory: %ld past anomal%s embedded (%ld unchanged)\n",
+              st.embedded, st.embedded == 1 ? "y" : "ies", st.unchanged);
+  }
+  for (int i = 0; i < n; i++) free(rows[i].text);
+  free(rows); free(it);
+  return rc < 0 ? -1 : 0;
+}
+
+/* The fenced examples block for one anomaly, or NULL (no server, no index,
+ * nothing similar). Caller frees. */
+static char *memory_examples(db_handle *db, http_client *http, const anomaly_row *an) {
+  const char *base = vecindex_base_url();
+  if (!base || !vecindex_exists(db, &anomaly_vec_spec) ||
+      vecindex_refused(db, &anomaly_vec_spec, NULL, 0)) return NULL;
+  int dim = (int)vecindex_meta_long(db, &anomaly_vec_spec, "dim");
+  if (dim <= 0) return NULL;
+  char *text = anomaly_text(an->source_id, an->verdict, an->reason, an->evidence);
+  if (!text) return NULL;
+  llm_client llm = { .http = http, .base_url = base, .interactive = 0 };
+  const char *texts[1] = { text };
+  float *qv = NULL; int qd = 0; llm_status st;
+  int ok = llm_embed(&llm, texts, 1, &qv, &qd, 30000, &st) == 0 && qd == dim;
+  free(text);
+  if (!ok) { free(qv); return NULL; }
+  vecindex_hit *h = NULL;
+  int nh = vecindex_knn(db, &anomaly_vec_spec, qv, qd, TRIAGE_MEMORY_K + 1, NULL, 0,
+                        &h, NULL, 0);
+  free(qv);
+  if (nh <= 0) { vecindex_hits_free(h, nh > 0 ? nh : 0); return NULL; }
+  cJSON *arr = cJSON_CreateArray();
+  sqlite3_stmt *s = NULL;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT a.source_id,a.verdict,a.reason,a.triage_class,a.triage_confidence,"
+        " a.triage_evidence,"
+        " (SELECT r.status || COALESCE(' (' || r.action || ')','') FROM collector_repair r"
+        "   WHERE r.anomaly_id=a.id ORDER BY r.id DESC LIMIT 1),"
+        " a.resolution FROM collector_anomaly a WHERE a.id=?1", -1, &s, NULL) == SQLITE_OK) {
+    for (int i = 0; i < nh && cJSON_GetArraySize(arr) < TRIAGE_MEMORY_K; i++) {
+      long long id = atoll(h[i].key);
+      if (id == an->id) continue;
+      sqlite3_reset(s);
+      sqlite3_bind_int64(s, 1, id);
+      if (sqlite3_step(s) != SQLITE_ROW) continue;
+      cJSON *o = cJSON_CreateObject();
+      add_str(o, "source_id", (const char *)sqlite3_column_text(s, 0));
+      add_str(o, "verdict", (const char *)sqlite3_column_text(s, 1));
+      add_trunc(o, "reason", (const char *)sqlite3_column_text(s, 2), 300);
+      add_str(o, "triage_class", (const char *)sqlite3_column_text(s, 3));
+      if (sqlite3_column_type(s, 4) == SQLITE_NULL) cJSON_AddNullToObject(o, "triage_confidence");
+      else cJSON_AddNumberToObject(o, "triage_confidence", sqlite3_column_double(s, 4));
+      add_trunc(o, "triage_evidence", (const char *)sqlite3_column_text(s, 5), 300);
+      add_str(o, "repair_outcome", (const char *)sqlite3_column_text(s, 6));
+      add_str(o, "resolution", (const char *)sqlite3_column_text(s, 7));
+      cJSON_AddItemToArray(arr, o);
+    }
+    sqlite3_finalize(s);
+  }
+  vecindex_hits_free(h, nh);
+  char *out = NULL;
+  if (cJSON_GetArraySize(arr) > 0) {
+    char *js = cJSON_PrintUnformatted(arr);
+    out = js ? prompt_fence_untrusted("PAST_TRIAGES", js) : NULL;
+    free(js);
+  }
+  cJSON_Delete(arr);
+  return out;
+}
+
 /* Park a row the model could not classify: retry after 60 s x 2^attempts,
  * capped at a day, so it stays visible and retried but never blocks the
  * anomalies behind it. */
@@ -231,11 +400,20 @@ static int triage_one(db_handle *db, llm_client *llm, http_client *http,
    * the repair pod acts on. Fenced as data, like every prompts.c input. */
   char *fenced = prompt_fence_untrusted("ANOMALY_BUNDLE", bundle ? bundle : "{}");
   free(bundle);
-  size_t plen = strlen(SYS) + (fenced ? strlen(fenced) : 0) + 64;
+  /* Triage memory: the nearest past anomalies, fenced, when there are any. */
+  char *examples = memory_examples(db, http, an);
+  static const char *EX_HEAD =
+    "\n\nSimilar past anomalies, with the class they were given and what the "
+    "repair did. They are EXAMPLES only: classify the input on its own "
+    "evidence.\n";
+  size_t plen = strlen(SYS) + (fenced ? strlen(fenced) : 0) + 64 +
+                (examples ? strlen(EX_HEAD) + strlen(examples) : 0);
   char *prompt = fenced ? malloc(plen) : NULL;
-  if (prompt) snprintf(prompt, plen, "%s\n\nInput:\n%s\nOutput JSON only.",
-                       SYS, fenced);
+  if (prompt) snprintf(prompt, plen, "%s%s%s\n\nInput:\n%s\nOutput JSON only.",
+                       SYS, examples ? EX_HEAD : "", examples ? examples : "",
+                       fenced);
   free(fenced);
+  free(examples);
 
   const char *grammar = grammar_load("triage_classification");
   long t0 = llm_fault_now_ms();
@@ -303,6 +481,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   ensure_column(ctx->db, "collector_anomaly", "triage_attempts",
                 "INTEGER NOT NULL DEFAULT 0");
   ensure_column(ctx->db, "collector_anomaly", "triage_next_at", "TEXT");
+  /* Index what was triaged before (a failure is recorded in its meta and
+   * only costs this tick its examples). */
+  memory_sync(ctx->db, ctx->http);
 
   /* collect the pending batch first, then process (writes happen after the
    * SELECT statement is finalized — mirrors entity_enrich's fetch-then-write). */

@@ -4,6 +4,7 @@
 #include "source_trust.h"
 #include "breach_meta.h"
 #include "credtab.h"
+#include "../lib/vecindex.h"  /* vectorIndexes: every registered vector index's coverage */
 #include "httpclient.h"       /* the probe fetch — hostgated, protocol-pinned */
 #include "../source.h"        /* registry_get — the probe URL comes from the registry */
 #include "../third_party/cJSON.h"
@@ -679,6 +680,14 @@ char *statusapi_build_view(db_handle *db, int include_breach,
                    : "every registered source (no ?limit given)");
     cJSON_AddItemToObject(env, "view", view);
   }
+  /* Every vector index (lib/vecindex registry), compact: embedded / eligible
+   * / failed / refused / backlog / model / dim / state / last_run. Read from
+   * each index's meta table plus a count of its (small) fail table — no scan
+   * of a vector table and no request to the embedding server, so it costs a
+   * few point reads on a payload that is already 20 MB. A semantic search
+   * that answers from 40,000 of 12.9M rows is a coverage fact a client should
+   * be able to see without running a search first. */
+  cJSON_AddItemToObject(env, "vectorIndexes", vecindex_status_json(db));
   cJSON_AddStringToObject(env,"timestamp", ts);
   char *js = cJSON_PrintUnformatted(env);
   cJSON_Delete(env);

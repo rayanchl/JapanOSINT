@@ -68,7 +68,7 @@ const char *html_anchor_next(const char *from, html_anchor *out);
  * inside a cell contributes its text to that cell, never rows to this one.
  * Returns 1 when a table was found (it may have 0 rows), 0 when none was. */
 typedef struct { char *text; char *href; } html_cell;
-typedef struct { html_cell *cells; int ncells; } html_row;
+typedef struct { html_cell *cells; int ncells; int ncap; /* allocated */ } html_row;
 /* capped_rows: the document had more rows than HT_MAX_ROWS and was cut there.
  * capped_width: a row had cells past HT_MAX_WIDTH (+ the parser's 1,000-cell
  * slack) that were dropped. Either way the caller must disclose it — a short

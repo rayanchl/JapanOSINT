@@ -1,7 +1,10 @@
 #include "entityapi.h"
 #include "entitystore.h"          /* ES_BREACH_TENANT + the scope migration */
 #include "fts.h"
+#include "entity_vec.h"           /* the hybrid search's vector arm */
+#include "qembed.h"
 #include "../third_party/cJSON.h"
+#include "../third_party/mongoose.h"
 #include "../third_party/sqlite3.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -451,6 +454,247 @@ char *entityapi_search_scoped(db_handle *db, const char *q, const char *type,
   char *js = cJSON_PrintUnformatted(o);
   cJSON_Delete(o);
   return js;
+}
+
+/* ── hybrid search: entities_fts + entity_vec, fused by RRF ─────────────────
+ *
+ * GET /api/entities/search?mode=hybrid. The FTS arm finds what was typed; it
+ * cannot find トヨタ自動車 for "Toyota Motor" unless the romaji happens to
+ * tokenise the same way, and it finds nothing for a near-miss spelling. The
+ * vector arm (core/entity_vec.h: "canonical (romaji)" per entity) does, and
+ * the two are fused by reciprocal rank so an entity both arms like comes
+ * first. Opt-in, because the default route serves a search-as-you-type box
+ * and a query embed per keystroke would queue on the interactive slot.
+ *
+ * DISCLOSED, never implied: meta.arms says which arms ran, how many hits each
+ * contributed, and why the vector arm did not run when it did not; each result
+ * carries arms{fts_rank, vec_rank, cos}. Each arm is asked for its top
+ * ENTITY_HYBRID_ARM_K, so page.total is the size of the FUSED window (stated
+ * as such in meta.arms.window), while meta.arms.fts.total is the measured
+ * count of every FTS match. Breach-scoped entities are in neither index; the
+ * tenant predicate is applied inside both arms (the vector arm's tenant_id IN
+ * ('', tenant) is a KNN filter, not a post-filter). Without a usable index the
+ * answer is the plain FTS search with arms.vector.used=false and the reason. */
+#define ENTITY_HYBRID_ARM_K 50
+
+static int fts_arm_scoped(db_handle *db, const char *segq, const char *tl,
+                          const char *tenant, vecindex_fused *f) {
+  const char *sql = tl[0]
+    ? "SELECT entities.entity_id FROM entities_fts JOIN entities"
+      " ON entities.entity_id=entities_fts.uid WHERE entities_fts MATCH ?1"
+      " AND (entities.tenant_id IS NULL OR entities.tenant_id=?2)"
+      " AND entities.type=?4 ORDER BY bm25(entities_fts) LIMIT ?3"
+    : "SELECT entities.entity_id FROM entities_fts JOIN entities"
+      " ON entities.entity_id=entities_fts.uid WHERE entities_fts MATCH ?1"
+      " AND (entities.tenant_id IS NULL OR entities.tenant_id=?2)"
+      " ORDER BY bm25(entities_fts) LIMIT ?3";
+  sqlite3_stmt *s;
+  if (sqlite3_prepare_v2(db->h, sql, -1, &s, NULL) != SQLITE_OK) return -1;
+  sqlite3_bind_text(s, 1, segq, -1, SQLITE_TRANSIENT);
+  sqlite3_bind_text(s, 2, tenant, -1, SQLITE_TRANSIENT);
+  sqlite3_bind_int(s, 3, ENTITY_HYBRID_ARM_K);
+  if (tl[0]) sqlite3_bind_text(s, 4, tl, -1, SQLITE_TRANSIENT);
+  int rank = 0, rc;
+  while ((rc = sqlite3_step(s)) == SQLITE_ROW)
+    if (!vecindex_fused_add(f, (const char *)sqlite3_column_text(s, 0), 0, ++rank, 0)) break;
+  sqlite3_finalize(s);
+  return (rc == SQLITE_ROW || rc == SQLITE_DONE) ? rank : -1;
+}
+
+/* The vector arm. Returns hits added, or -1 with `why` filled. */
+static int vec_arm(db_handle *db, const char *q, const char *tl,
+                   const char *tenant, vecindex_fused *f, char *why, size_t cap) {
+  int dim = 0;
+  if (!qembed_index_usable(db, &entity_vec_spec, &dim, why, cap)) return -1;
+  const char *texts[1] = { q };
+  float *qv = NULL; int qd = 0; llm_status st;
+  if (qembed_texts(texts, 1, &qv, &qd, &st) != 0) {
+    snprintf(why, cap, "query embedding failed (%s)", llm_status_code(st));
+    return -1;
+  }
+  if (qd != dim) {
+    free(qv);
+    snprintf(why, cap, "query is %d-d, the entity index is %d-d", qd, dim);
+    return -1;
+  }
+  vecindex_val tv[2] = { VI_S(""), VI_S(tenant) };
+  vecindex_val ty = VI_S(tl);
+  vecindex_filter fl[2] = {
+    { .col = "tenant_id", .op = "IN", .vals = tv, .nvals = tenant[0] ? 2 : 1 },
+    { .col = "type",      .op = "=",  .vals = &ty, .nvals = 1 },
+  };
+  vecindex_hit *h = NULL;
+  int n = vecindex_knn(db, &entity_vec_spec, qv, qd, ENTITY_HYBRID_ARM_K, fl,
+                       tl[0] ? 2 : 1, &h, why, cap);
+  free(qv);
+  if (n < 0) return -1;
+  vecindex_fused_add_hits(f, h, n);
+  vecindex_hits_free(h, n);
+  return n;
+}
+
+char *entityapi_search_hybrid(db_handle *db, const char *q, const char *type,
+                              int limit, int offset, const char *tenant,
+                              int is_operator) {
+  es_breach_scope_migrate(db);
+  tenant = vis_tenant(tenant);
+  int lim = limit > 0 ? limit : 30;
+  if (lim > 100) lim = 100;
+  int off = offset > 0 ? offset : 0;
+  char tl[128] = "";
+  if (type) {
+    snprintf(tl, sizeof tl, "%s", type);
+    for (char *p = tl; *p; p++) if (*p >= 'A' && *p <= 'Z') *p += 32;
+  }
+  char why[512] = "";
+  vecindex_fused f = {0};
+  int nv = (q && *q) ? vec_arm(db, q, tl, tenant, &f, why, sizeof why) : -1;
+  if (!(q && *q)) snprintf(why, sizeof why, "empty query");
+  if (nv < 0) {
+    /* No vector arm: the plain FTS answer, with the reason in-band. */
+    vecindex_fused_free(&f);
+    char *plain = entityapi_search_scoped(db, q ? q : "", type, limit, offset,
+                                          tenant, is_operator);
+    if (!plain) return NULL;
+    cJSON *o = cJSON_Parse(plain);
+    free(plain);
+    if (!o) return NULL;
+    cJSON *meta = cJSON_GetObjectItem(o, "meta");
+    cJSON *arms = cJSON_CreateObject();
+    cJSON *fa = cJSON_AddObjectToObject(arms, "fts");
+    cJSON_AddBoolToObject(fa, "used", 1);
+    cJSON *va = cJSON_AddObjectToObject(arms, "vector");
+    cJSON_AddBoolToObject(va, "used", 0);
+    cJSON_AddStringToObject(va, "reason", why);
+    cJSON_AddStringToObject(arms, "mode", "fts");
+    if (meta) cJSON_AddItemToObject(meta, "arms", arms);
+    else cJSON_Delete(arms);
+    char *js = cJSON_PrintUnformatted(o);
+    cJSON_Delete(o);
+    return js;
+  }
+  /* FTS arm, same predicate as the plain search; a query with no usable
+   * token simply contributes nothing. */
+  char *segq = fts_query_expr(q);
+  int nf = segq ? fts_arm_scoped(db, segq, tl, tenant, &f) : 0;
+  long fts_total = -1;
+  if (segq) {
+    sqlite3_stmt *cs = NULL;
+    if (sqlite3_prepare_v2(db->h, tl[0]
+          ? "SELECT COUNT(*) FROM entities_fts JOIN entities ON entities.entity_id="
+            "entities_fts.uid WHERE entities_fts MATCH ?1 AND (entities.tenant_id"
+            " IS NULL OR entities.tenant_id=?2) AND entities.type=?3"
+          : "SELECT COUNT(*) FROM entities_fts JOIN entities ON entities.entity_id="
+            "entities_fts.uid WHERE entities_fts MATCH ?1 AND (entities.tenant_id"
+            " IS NULL OR entities.tenant_id=?2)", -1, &cs, NULL) == SQLITE_OK) {
+      sqlite3_bind_text(cs, 1, segq, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(cs, 2, tenant, -1, SQLITE_TRANSIENT);
+      if (tl[0]) sqlite3_bind_text(cs, 3, tl, -1, SQLITE_TRANSIENT);
+      fts_total = count_step(cs);
+    }
+  }
+  free(segq);
+  vecindex_fused_sort(&f);
+
+  /* Materialise the page, through the tenant predicate once more: an index
+   * row can outlive its entity (a union folded it away) until the pod prunes
+   * it, and a vanished entity is skipped, never fabricated. */
+  cJSON *results = cJSON_CreateArray();
+  sqlite3_stmt *es = NULL;
+  int stale = 0;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT entity_id,type,canonical,mention_count,last_seen_at FROM entities"
+        " WHERE entity_id=?1 AND (tenant_id IS NULL OR tenant_id=?2)",
+        -1, &es, NULL) != SQLITE_OK) {
+    vecindex_fused_free(&f); cJSON_Delete(results); return NULL;
+  }
+  int live = 0;
+  for (int i = 0; i < f.n; i++) {
+    sqlite3_reset(es);
+    sqlite3_bind_text(es, 1, f.v[i].key, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(es, 2, tenant, -1, SQLITE_TRANSIENT);
+    if (sqlite3_step(es) != SQLITE_ROW) { stale++; continue; }
+    if (live++ < off || cJSON_GetArraySize(results) >= lim) continue;
+    cJSON *r = cJSON_CreateObject();
+    cJSON_AddStringToObject(r, "entity_id", (const char *)sqlite3_column_text(es, 0));
+    cJSON_AddStringToObject(r, "type",      (const char *)sqlite3_column_text(es, 1));
+    cJSON_AddStringToObject(r, "value",     (const char *)sqlite3_column_text(es, 2));
+    cJSON_AddNumberToObject(r, "mention_count", (double)sqlite3_column_int64(es, 3));
+    add_str_or_null(r, "last_seen_at", ctext(es, 4));
+    add_str_or_null(r, "excerpt", NULL);
+    cJSON *ra = cJSON_AddObjectToObject(r, "arms");
+    if (f.v[i].frank) cJSON_AddNumberToObject(ra, "fts_rank", f.v[i].frank);
+    else cJSON_AddNullToObject(ra, "fts_rank");
+    if (f.v[i].vrank) {
+      cJSON_AddNumberToObject(ra, "vec_rank", f.v[i].vrank);
+      cJSON_AddNumberToObject(ra, "distance", f.v[i].distance);
+    } else {
+      cJSON_AddNullToObject(ra, "vec_rank");
+    }
+    cJSON_AddNumberToObject(ra, "score", f.v[i].score);
+    cJSON_AddItemToArray(results, r);
+  }
+  sqlite3_finalize(es);
+  vecindex_fused_free(&f);
+  if (is_operator) search_breach_exact(db, q, type, lim, results);
+
+  cJSON *o = cJSON_CreateObject();
+  cJSON_AddItemToObject(o, "results", results);
+  cJSON *fl = cJSON_CreateObject();
+  add_str_or_null(fl, "q", q);
+  add_str_or_null(fl, "type", type);
+  cJSON_AddBoolToObject(fl, "q_applied", 1);
+  add_page_meta(o, lim, off, live, fl);
+  cJSON *meta = cJSON_GetObjectItem(o, "meta");
+  cJSON *arms = cJSON_AddObjectToObject(meta, "arms");
+  cJSON_AddStringToObject(arms, "mode", "hybrid");
+  cJSON_AddStringToObject(arms, "fusion", "rrf");
+  cJSON_AddNumberToObject(arms, "rrf_k", VECINDEX_RRF_K);
+  cJSON_AddNumberToObject(arms, "window", ENTITY_HYBRID_ARM_K);
+  cJSON_AddStringToObject(arms, "total_is",
+      "the fused window: each arm's top `window` hits, union; fts.total is "
+      "every FTS match");
+  cJSON *fa = cJSON_AddObjectToObject(arms, "fts");
+  cJSON_AddBoolToObject(fa, "used", nf >= 0);
+  cJSON_AddNumberToObject(fa, "hits", nf > 0 ? nf : 0);
+  if (fts_total >= 0) cJSON_AddNumberToObject(fa, "total", (double)fts_total);
+  else cJSON_AddNullToObject(fa, "total");
+  cJSON *va = cJSON_AddObjectToObject(arms, "vector");
+  cJSON_AddBoolToObject(va, "used", 1);
+  cJSON_AddNumberToObject(va, "hits", nv);
+  cJSON_AddStringToObject(va, "index", entity_vec_spec.table);
+  cJSON_AddNumberToObject(arms, "stale_skipped", stale);
+  char *js = cJSON_PrintUnformatted(o);
+  cJSON_Delete(o);
+  return js;
+}
+
+/* The sem_spawn shape (semsearchapi.h): parses its own query string. */
+static int ent_qs(const char *qs, const char *k, char *out, size_t cap, int *too_long) {
+  struct mg_str s = mg_str(qs ? qs : "");
+  int n = mg_http_get_var(&s, k, out, cap);
+  if (n == -3) *too_long = 1;
+  if (n <= 0) out[0] = 0;
+  return n > 0;
+}
+
+char *entityapi_search_route(db_handle *db, const char *tenant, const char *id,
+                             const char *qs, int is_operator, int *status) {
+  (void)id;
+  char q[512], type[128], lv[16], ov[16];
+  int tl = 0;
+  ent_qs(qs, "q", q, sizeof q, &tl);
+  int ht = ent_qs(qs, "type", type, sizeof type, &tl);
+  ent_qs(qs, "limit", lv, sizeof lv, &tl);
+  ent_qs(qs, "offset", ov, sizeof ov, &tl);
+  if (tl) { *status = 414; return strdup("{\"error\":\"query_value_too_long\"}"); }
+  char *qp = q; while (*qp == ' ') qp++;
+  size_t ql = strlen(qp);
+  while (ql && qp[ql - 1] == ' ') qp[--ql] = 0;
+  char *body = entityapi_search_hybrid(db, qp, ht ? type : NULL, atoi(lv),
+                                       atoi(ov), tenant, is_operator);
+  *status = body ? 200 : 500;
+  return body ? body : strdup("{\"error\":\"search_failed\"}");
 }
 
 /* getEntity(id) → row, with the entities.js type-guard. Caller frees ret.

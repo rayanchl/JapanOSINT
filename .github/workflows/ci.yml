@@ -143,6 +143,41 @@ jobs:
         working-directory: native
         run: make audit-sources
 
+      # THE MANIFEST GATES, offline. Each reads docs/candidate-sources-batch*
+      # through tools/manifest.py and needs no network; they were run by hand
+      # and by nothing else. Wired in only as far as they pass on the commit
+      # that added them (2026-10-06) — a gate red on day one is a gate nobody
+      # reads.
+      #
+      # House rule 3: a row with no entity token and no interval never runs.
+      # 0 of 7,685 rows across 147 manifests; exit 1 on any such row, an
+      # ambiguous opt, or a malformed line.
+      - name: Manifest reachability (house rule 3)
+        working-directory: native
+        run: python3 tools/audit_batch_reachable.py --quiet ../docs/candidate-sources-batch*.txt
+
+      # Duplicate ids/endpoints against the binary's registry. Only meaningful
+      # for a set NOT YET GENERATED into C — on a shipped manifest every row is
+      # its own DUP-ID — so it checks the staging set, which is batch 37
+      # (docs/batch37/STAGING_README.md). Measured 2026-10-06: 0 collisions,
+      # 0 near-misses against the 18,643 ids the binary registers. Move the glob when the staging set moves.
+      - name: Staging manifest exclusions (no duplicate id or endpoint)
+        working-directory: native
+        run: python3 tools/batch_exclusions.py --bin ./bin/japanosint --check ../docs/candidate-sources-batch37.*.txt
+
+      # NOT GATING, deliberately and visibly. On 2026-10-06 this reports 104 of
+      # 7,685 rows "declare no pagination but look paged" — all of them in the
+      # batch 18 (96) and batch 19 (8) manifests, 29 in 18.portals alone. Those beats shipped long ago and
+      # CLAUDE.md is explicit that the C, not the manifest, is the maintained
+      # copy, so a flag here may already be fixed in the table (make
+      # audit-sources gates the C for `single-page`). Each needs a human read
+      # against its .c before this can gate; until then it is printed on every
+      # run instead of not at all.
+      - name: Manifest pagination (report only — 104 rows untriaged)
+        working-directory: native
+        continue-on-error: true
+        run: python3 tools/audit_batch_pagination.py ../docs/candidate-sources-batch*.txt
+
       # THE SERVER MUST STAY ANSWERABLE WHILE IT IS BUSY.
       #
       # Twice now a route has been found holding the single mongoose event

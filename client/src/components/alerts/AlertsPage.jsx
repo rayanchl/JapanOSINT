@@ -17,6 +17,10 @@ import {
   splitList, joinList, predicateSummary, emptyChannel,
 } from './alertShared.jsx';
 
+/** The server's default similarity for a "Describe it in words" rule
+ * (native/core/alert_sem.h, ALERT_SEM_THRESHOLD_DEFAULT). */
+const SEM_THRESHOLD_DEFAULT = 0.82;
+
 /**
  * Alert rules — port of iOS `AlertsTab` + `AlertEditor` + `RulePreviewSection`
  * + `AlertEventsView`. Endpoints: GET/POST /api/alerts, PATCH/DELETE
@@ -159,7 +163,7 @@ function RuleCard({ rule: r, canWrite, author, busy, onEdit, onToggle, onMute, o
             <span className="text-sm font-medium text-osint-text truncate">{r.name}</span>
             {!r.enabled && <Pill>disabled</Pill>}
             {muted && <Pill tone="warning">{muteLabel(r.muted_until)}</Pill>}
-            {r.predicate?.mode === 'llm' && <Pill tone="purple">LLM</Pill>}
+            {r.predicate?.mode === 'llm' && <Pill tone="purple">Described</Pill>}
           </div>
           <div className="text-[11px] text-osint-muted font-mono mt-0.5 break-words">{predicateSummary(r.predicate)}</div>
           <div className="flex items-center gap-1 flex-wrap mt-1.5">
@@ -279,6 +283,7 @@ function draftFrom(rule) {
     mode: p.mode === 'llm' ? 'llm' : 'fts',
     q: p.q || '',
     nl_query: p.nl_query || '',
+    threshold: String(p.threshold ?? SEM_THRESHOLD_DEFAULT),
     source_ids: joinList(p.source_ids),
     tags_any: joinList(p.tags_any),
     tags_all: joinList(p.tags_all),
@@ -302,6 +307,9 @@ function buildPredicate(d) {
   if (d.mode === 'llm') {
     p.mode = 'llm';
     if (d.nl_query.trim()) p.nl_query = d.nl_query.trim();
+    const th = Number(d.threshold);
+    if (!Number.isFinite(th) || th <= 0 || th > 1) return [null, 'Similarity must be a number in (0, 1].'];
+    p.threshold = Math.round(th * 100) / 100;
     if (d.q.trim()) p.q = d.q.trim();
   } else if (d.q.trim()) p.q = d.q.trim();
   const si = splitList(d.source_ids); if (si.length) p.source_ids = si;
@@ -420,14 +428,20 @@ function RuleEditorSheet({ open, rule, onClose, onSaved, preset }) {
           <div className="space-y-3">
             <div className="flex items-center justify-between gap-2 flex-wrap">
               <span className="text-xs text-osint-muted">Query type</span>
-              <Segmented value={d.mode} onChange={(v) => set({ mode: v })} options={[{ value: 'fts', label: 'FTS' }, { value: 'llm', label: 'LLM pipeline' }]} />
+              <Segmented value={d.mode} onChange={(v) => set({ mode: v })} options={[{ value: 'fts', label: 'Keywords' }, { value: 'llm', label: 'Describe it in words' }]} />
             </div>
             {d.mode === 'llm' ? (
               <>
-                <Field label="Natural-language query" hint="Drives the agentic search pipeline. LLM-mode rules cannot be previewed and do not fire on new items until the pipeline produces an FTS query.">
-                  <Input value={d.nl_query} onChange={(e) => set({ nl_query: e.target.value })} placeholder="Natural-language query (e.g. phishing targeting JP banks)" />
+                <Field label="Description" hint="Fires on a new item that means what you describe: its embedding must reach the similarity below, and every other field must also match. Items are checked after the server embeds them (minutes after ingest); items outside the embedding window are never checked.">
+                  <Input value={d.nl_query} onChange={(e) => set({ nl_query: e.target.value })} placeholder="What should fire this alert? (e.g. phishing aimed at Japanese banks)" />
                 </Field>
-                <Field label="FTS query (chosen by the pipeline, editable)">
+                <Field label={`Similarity needed · ${Number(d.threshold).toFixed(2)}`} hint="Higher fires less often.">
+                  <input type="range" min="0.5" max="0.99" step="0.01" value={d.threshold} onChange={(e) => set({ threshold: e.target.value })} className="w-full" aria-label="Similarity needed" />
+                </Field>
+                {rule?.semantic && rule.semantic.evaluable === false && (
+                  <div className="text-xs text-accent">This rule cannot fire yet: {rule.semantic.reason || 'not evaluable'}</div>
+                )}
+                <Field label="Also require keywords (optional)">
                   <Input mono value={d.q} onChange={(e) => set({ q: e.target.value })} placeholder="FTS query" />
                 </Field>
               </>
@@ -516,10 +530,10 @@ export function PreviewSection({ predicate, mode, enabled = true }) {
   const [state, setState] = useState({ status: 'idle' });
   const key = JSON.stringify(predicate || {});
   const isLlm = mode === 'llm';
-  const empty = !predicate || Object.keys(predicate).filter((k) => k !== 'mode').length === 0;
+  const empty = !predicate || Object.keys(predicate).filter((k) => k !== 'mode' && k !== 'threshold').length === 0;
 
   useEffect(() => {
-    if (!enabled || isLlm || empty) { setState({ status: 'idle' }); return undefined; }
+    if (!enabled || empty) { setState({ status: 'idle' }); return undefined; }
     let alive = true;
     setState({ status: 'loading' });
     const t = setTimeout(async () => {
@@ -529,16 +543,18 @@ export function PreviewSection({ predicate, mode, enabled = true }) {
       } catch (e) { if (alive) setState({ status: 'error', error: e }); }
     }, 600);
     return () => { alive = false; clearTimeout(t); };
-  }, [key, enabled, isLlm, empty]);
+  }, [key, enabled, empty]);
 
   return (
     <Section label="Backtest" right={state.status === 'loading' ? <span className="text-[11px] text-osint-muted">Backtesting…</span> : null}>
-      {isLlm && <div className="text-xs text-osint-muted">LLM-mode rules can't be previewed — and they don't fire until the pipeline has produced an FTS query.</div>}
-      {!isLlm && empty && <div className="text-xs text-osint-muted">Edit the query above to see what it would have matched.</div>}
+      {isLlm && state.meta?.semantic && !state.meta?.skipped && (
+        <div className="text-[11px] text-osint-muted">Nearest {state.meta.semantic.k} embedded items at similarity ≥ {state.meta.semantic.threshold}; a truncated scan means more may match.</div>
+      )}
+      {empty && <div className="text-xs text-osint-muted">Edit the query above to see what it would have matched.</div>}
       {state.status === 'error' && <ErrorNotice error={state.error} title="Preview failed" />}
       {state.status === 'ok' && (
         <div className="space-y-2">
-          {state.meta?.skipped && <div className="text-xs text-accent">Preview skipped: {String(state.meta.skipped)}</div>}
+          {state.meta?.skipped && <div className="text-xs text-accent">Preview skipped: {String(state.meta.skipped)}{state.meta?.semantic?.reason ? ` — ${state.meta.semantic.reason}` : ''} (not the same as no matches)</div>}
           {state.meta?.match_count == null && !state.meta?.skipped && <div className="text-xs text-osint-muted">The server answered, but did not report a match count.</div>}
           {state.meta?.match_count != null && (
             <div className="text-xs text-osint-text">

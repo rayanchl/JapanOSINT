@@ -17,11 +17,14 @@ import { relativeTime, fmtAbs } from '../../utils/time.js';
 
 /* Written concurrently by the Intel agent. Absence degrades to "no section"
  * — the Notes pane below is self-sufficient. */
+import SimilarItems from '../intel/SimilarItems.jsx';
+
 const AnnotationsSection = React.lazy(() =>
   import('../intel/AnnotationsSection.jsx').catch(() => ({ default: () => null })));
 
 const PANES = [
   { value: 'findings', label: 'Findings' },
+  { value: 'related', label: 'Related' },
   { value: 'notes', label: 'Notes' },
   { value: 'activity', label: 'Activity' },
   { value: 'members', label: 'Members' },
@@ -113,6 +116,10 @@ export default function CaseDetailPage() {
           </div>
 
           {pane === 'findings' && <FindingsPane caseId={id} counts={c.item_counts} canWrite={canWrite} onChanged={reload} who={who} />}
+          {pane === 'related' && (
+            <SimilarItems path={`/api/cases/${encodeURIComponent(id)}/related?k=20`}
+              label="Related intel (vector similarity — suggestions, not findings)" noun="related items" />
+          )}
           {pane === 'notes' && <NotesPane caseId={id} canWrite={canWrite} who={who} />}
           {pane === 'activity' && <ActivityPane caseId={id} canWrite={canWrite} who={who} />}
           {pane === 'members' && <MembersPane caseId={id} members={c.members || []} canManage={canManageRoster} onChanged={reload} />}
@@ -523,6 +530,9 @@ function EditCaseSheet({ open, onClose, caseRow, onSaved }) {
 /* ── Report sheet (POST /api/cases/:id/report, streamed md/html) ───────── */
 
 const REPORT_SECTIONS = ['header', 'summary', 'findings', 'entities', 'citations', 'audit'];
+// 'suggestions' is opt-in on the server (reportapi.c) and off by default here:
+// it lists vector neighbours of the pins, which are not findings.
+const REPORT_SECTION_OPTIONS = [...REPORT_SECTIONS, 'suggestions'];
 
 function ReportSheet({ open, onClose, caseRow }) {
   const [format, setFormat] = useState('md');
@@ -567,7 +577,7 @@ function ReportSheet({ open, onClose, caseRow }) {
           <Field label="Format"><Segmented value={format} onChange={setFormat} options={[{ value: 'md', label: 'Markdown' }, { value: 'html', label: 'HTML' }]} /></Field>
           <Field label="Sections" hint="A section you leave out is omitted; the classification banner and provenance footer are always emitted.">
             <div className="flex flex-wrap gap-1.5">
-              {REPORT_SECTIONS.map((s) => (
+              {REPORT_SECTION_OPTIONS.map((s) => (
                 <button key={s} type="button" onClick={() => toggle(s)}
                   className={cx('px-2 py-0.5 rounded-full border text-[11px] font-mono', sections.includes(s) ? 'border-accent/40 text-accent bg-accent/10' : 'border-osint-border text-osint-muted')}>
                   {s}

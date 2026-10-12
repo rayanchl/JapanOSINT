@@ -52,8 +52,17 @@
  * that happens to look like something else. The read API accepts either
  * spelling and prefixes "camera-discovery|" when the caller passes a bare uid.
  *
- * FEED RESOLUTION, in priority order, from properties:
- *   snapshot_url, still_url, image_url, stream_url, thumbnail_url, url
+ * ANY intel_items row can be opted in, not only camera-discovery ones: the hp
+ * camera tables and the trn_* station indexes carry ~80k more cameras under
+ * their upstream field names. FEED RESOLUTION is core/camera_feed.h: one
+ * capture TARGET per image stream in the record — the record's own feed, plus
+ * one per element of an array of views (a Digitraffic station's presets, a
+ * 511 camera's views[]). A view target's id, its camera_stills.camera_id and
+ * its camera_stills_state key is "<uid>#view=<array>/<element id>"; the
+ * record's own feed keeps the bare uid, so existing rows are unchanged.
+ * Within one record or view the ranking is, case and `_` folded:
+ *   still-image keys (snapshot_url, still_url, image_url, ImageURL,
+ *   cameraimageurl, …), then streams, then thumbnails, then `url`.
  * `url` is LAST on purpose: for most discovery channels it is the human page
  * the camera is embedded in, not the image, and fetching a page and storing
  * the HTML as a "still" would be silent garbage. A resolved URL whose bytes
@@ -352,10 +361,12 @@
  *   CAM_STILLS_INTERVAL_SEC      seconds between frames, per camera    (900)
  *   CAM_STILLS_RETAIN_DAYS       age ceiling                             (3)
  *   CAM_STILLS_MAX_PER_CAM       frame ceiling per camera               (48)
- *   CAM_STILLS_BATCH             cameras attempted per tick              (8)
+ *   CAM_STILLS_BATCH             targets attempted per tick             (48)
+ *                                (100 targets x 300/900 = 34 per tick)
+ *   CAM_STILLS_HOST_PER_TICK     attempts per upstream host per tick    (40)
  *   CAM_STILLS_MAX_BYTES         per-frame byte cap          (2097152 = 2 MiB)
  *   CAM_STILLS_TIMEOUT_MS        per-camera fetch timeout            (8000)
- *   CAM_STILLS_TICK_BUDGET_MS    wall-clock ceiling for one tick    (60000)
+ *   CAM_STILLS_TICK_BUDGET_MS    wall-clock ceiling for one tick   (240000)
  *   CAM_STILLS_PHASH_THRESHOLD   Hamming distance called "changed"       (6)
  *   CAM_STILLS_MAX_BACKOFF_SEC   backoff ceiling for a failing camera (21600)
  *   CAM_STILLS_FFMPEG            path override; unset → probe PATH
@@ -481,16 +492,35 @@ void camera_stills_migrate(db_handle *db);
 
 /* Capture ONE frame from ONE camera, now, ignoring its backoff deadline but
  * NOT its opt-in (a camera with capture_stills=0 returns 0 and is never
- * fetched). `camera_id` may be the full intel_items uid or a bare camera_uid.
- * `http` may be NULL, in which case a private client is created and freed.
- * Returns 1 when a still row was written, 0 otherwise; the reason for a 0 is
+ * fetched). `camera_id` may be the full intel_items uid (every view of the
+ * record is captured), a view target id "<uid>#view=<suffix>" (that view
+ * only; one no longer in the record is recorded as "view_not_in_record"), or
+ * a bare camera_uid. `http` may be NULL, in which case a private client is
+ * created and freed. Returns the number of still rows written (0 when none);
+ * the reason for a 0 is
  * recorded in camera_stills_state.last_error and surfaced by the list route's
  * meta block. Never returns a partial write. */
 int camera_stills_capture_one(db_handle *db, http_client *http,
                               const char *camera_id);
 
-/* One capture batch: up to `limit` (<=0 → CAM_STILLS_BATCH) opted-in cameras
- * whose next_attempt_at is due, oldest-due first.
+/* ONE frame from a feed URL through this module's own fetch path — the
+ * camera destination gate (hostgate camera strength + SSRF re-check),
+ * hostgate's per-host politeness, the snapshot / MJPEG / RTSP / HLS legs and
+ * the size cap — trimmed to exactly one complete frame. Stores NOTHING: no
+ * still row, no state, no evidence (the caller decides what the frame is
+ * for; core/camera_refframe.c files it as a reference frame). 1 with *out
+ * (malloc'd, caller frees), *outlen, *ct (static) and *status (0 for the
+ * ffmpeg legs); 0 with *reason (the same tokens camera_stills_state.last_error
+ * carries; `rbuf` holds an "http_<code>" one). */
+int camera_stills_fetch_frame(http_client *http, const char *url,
+                              unsigned char **out, size_t *outlen,
+                              const char **ct, long *status,
+                              const char **reason, char *rbuf, size_t rcap);
+
+/* One capture batch: up to `limit` (<=0 → CAM_STILLS_BATCH) capture targets
+ * of opted-in rows whose next_attempt_at is due, oldest-due first, at most
+ * CAM_STILLS_HOST_PER_TICK per upstream host (the rest stay due and lead the
+ * next tick). Every fetch leg also takes hostgate's per-host gate.
  *
  * Discipline, mirroring core/media.c: the due list is read and the statement
  * FINALIZED before the first fetch, so no read cursor is held across a network
@@ -523,12 +553,16 @@ int camera_stills_sweep(db_handle *db, int limit, volatile int *cancel);
 
 /* One camera's stills, newest first, keyset-paged:
  *   {"data":[{id,captured_at,sha256,bytes,phash,width,height,scene_changed,
- *             blob_present,ocr_text}],
+ *             embed_drift,drift_from_mean,blob_present,ocr_text}],
  *    "page":{"limit":n,"count":n,"cursor":"<base64url>"|null},
  *    "meta":{"camera_id":…,"capture_stills":bool,"total":n,"changed":n,
  *            "unknown":n,"blobs_present":n,"oldest":…,"newest":…,"fail_count":n,
  *            "next_attempt_at":…,"last_error":…,"last_kind":…,
- *            "scene_change_available":bool}}
+ *            "scene_change_available":bool,"embed_drift_available":bool}}
+ * embed_drift / drift_from_mean are cosine distances in the camera image
+ * index's space (core/image_vec.h) to the previous embedded frame of the same
+ * target and to the mean of its recent frames; null = not measured. They are
+ * NOT scene_changed: that one is pHash/bytes and stays its own column.
  * `phash` is a 16-CHAR HEX STRING, never a number: a 64-bit value does not
  * survive an IEEE double and a silently truncated fingerprint is worse than
  * none. `scene_changed` is true/false/null — null meaning UNKNOWN, which is a

@@ -405,6 +405,19 @@ static int ht_span(const char *tag_open, const char *gt, const char *attr) {
 
 typedef struct { const char *s, *e; int colspan, rowspan; } ht_raw;
 
+/* Grow a row's cell array to hold at least `want` cells (never past `cap`),
+ * zero-filling the new tail. 0 when it cannot. */
+static int ht_row_grow(html_cell **cells, int *rcap, int want, int cap) {
+  if (want > cap) return 0;
+  int n = *rcap > 0 ? *rcap : 8;
+  while (n < want) n = n > cap / 2 ? cap : n * 2;
+  html_cell *g = realloc(*cells, (size_t)n * sizeof **cells);
+  if (!g) return 0;
+  memset(g + *rcap, 0, (size_t)(n - *rcap) * sizeof *g);
+  *cells = g; *rcap = n;
+  return 1;
+}
+
 int html_table_parse(const char *html, const char *must, int table_index,
                      html_table *out) {
   memset(out, 0, sizeof *out);
@@ -500,11 +513,20 @@ int html_table_parse(const char *html, const char *must, int table_index,
     int a = row_start[r], b = r + 1 < nrow ? row_start[r + 1] : ncell;
     html_row *row = &out->rows[out->nrows];
     int cap = width + 1000;
-    row->cells = calloc((size_t)cap, sizeof *row->cells);
+    /* Allocated for what THIS row holds and grown on demand, never `cap` up
+     * front: a tall narrow table (1,000,000 one-cell rows, the HT_MAX_ROWS
+     * test) asked for 1,001 cells per row — ~24 GB — and was OOM-killed on
+     * the bound that exists to keep memory bounded. `cap` still bounds the
+     * width; it is no longer what every row pays. */
+    int need = 8;
+    for (int i = a; i < b; i++) need += cells[i].colspan;
+    int rcap = need < cap ? need : cap;
+    row->cells = calloc((size_t)rcap, sizeof *row->cells);
     if (!row->cells) break;
+#define HT_ROW_ROOM(c) ((c) < rcap || ht_row_grow(&row->cells, &rcap, (c) + 1, cap))
     int col = 0;
     for (int i = a; i <= b; i++) {
-      while (col < cap && pend && pend[col].left > 0) {       /* rowspan from above */
+      while (col < cap && pend && pend[col].left > 0 && HT_ROW_ROOM(col)) {  /* rowspan from above */
         row->cells[col].text = strdup(pend[col].text ? pend[col].text : "");
         row->cells[col].href = pend[col].href ? strdup(pend[col].href) : NULL;
         if (--pend[col].left == 0) { free(pend[col].text); free(pend[col].href); pend[col].text = pend[col].href = NULL; }
@@ -514,7 +536,7 @@ int html_table_parse(const char *html, const char *must, int table_index,
       char *txt = ht_text(cells[i].s, (size_t)(cells[i].e - cells[i].s));
       char *href = ht_href(cells[i].s, (size_t)(cells[i].e - cells[i].s));
       int k = 0;
-      for (; k < cells[i].colspan && col < cap; k++, col++) {
+      for (; k < cells[i].colspan && col < cap && HT_ROW_ROOM(col); k++, col++) {
         row->cells[col].text = k == 0 ? txt : strdup("");
         row->cells[col].href = k == 0 ? href : NULL;
         if (k == 0 && cells[i].rowspan > 1 && pend) {
@@ -534,12 +556,19 @@ int html_table_parse(const char *html, const char *must, int table_index,
     }
     if (col > out->width) out->width = col;
     row->ncells = col;
+    row->ncap = rcap;
     out->nrows++;
+#undef HT_ROW_ROOM
   }
   if (pend) { for (int i = 0; i < width + 1000; i++) { free(pend[i].text); free(pend[i].href); } free(pend); }
   /* Rectangular: pad every row to the table's width. */
   for (int r = 0; r < out->nrows; r++) {
     html_row *row = &out->rows[r];
+    if (row->ncap < out->width) {
+      int rc = row->ncap;
+      if (!ht_row_grow(&row->cells, &rc, out->width, out->width)) continue;
+      row->ncap = rc;
+    }
     for (int k = row->ncells; k < out->width; k++) row->cells[k].text = strdup("");
     row->ncells = out->width;
   }

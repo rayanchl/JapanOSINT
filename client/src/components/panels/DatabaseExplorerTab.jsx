@@ -23,10 +23,11 @@ export default function DatabaseExplorerTab() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [expandedRow, setExpandedRow] = useState(null);
-  // /api/db/* sits behind the operator gate (native/core/httpd.c opgate_check)
-  // and the web client sends no Authorization header, so these calls 401.
-  // Swallowing that rendered "no tables"/"No rows." — an assertion that the
-  // database is empty, manufactured out of a request we were refused.
+  // /api/db/* sits behind the operator gate (native/core/httpd.c opgate_check):
+  // the session's bearer rides along (auth/session.js), but a session that is
+  // not an operator is refused. Swallowing that rendered "no tables"/"No
+  // rows." — an assertion that the database is empty, manufactured out of a
+  // request we were refused.
   const [tablesError, setTablesError] = useState(null);
   const [rowsError, setRowsError] = useState(null);
 
