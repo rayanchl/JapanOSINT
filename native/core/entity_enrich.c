@@ -2,6 +2,7 @@
  * of llmEnricher.js). SQL/constants verbatim. */
 #include "entity_enrich.h"
 #include "entitystore.h"
+#include "entity_vec.h"
 #include "prompts.h"
 #include "llm_fault.h"
 #include "../third_party/sqlite3.h"
@@ -238,7 +239,9 @@ int entity_enrich_extract(db_handle *db, llm_client *llm, int batch) {
  * nothing pairs is bounded; the cursor keeps the remainder for next tick. */
 #define RESOLVE_MAX_E1_WALK 5000
 
-typedef struct { char *a,*b,*ty,*ca,*cb; double cos; } pair;
+/* cos is the vector arm's similarity (-1 for a prefix pair); vsave is the
+ * vector-arm cursor that is safe to persist once this pair was attempted. */
+typedef struct { char *a,*b,*ty,*ca,*cb; double cos; char *vsave; } pair;
 typedef struct { pair *v; int n, cap; } pairs;
 
 static void resolve_state_ensure(sqlite3 *h) {
@@ -295,7 +298,7 @@ static int pairs_has(const pairs *p, const char *a, const char *b) {
 static void pairs_free(pairs *p) {
   for (int i = 0; i < p->n; i++) {
     free(p->v[i].a); free(p->v[i].b); free(p->v[i].ty);
-    free(p->v[i].ca); free(p->v[i].cb);
+    free(p->v[i].ca); free(p->v[i].cb); free(p->v[i].vsave);
   }
   free(p->v);
   p->v = NULL; p->n = p->cap = 0;
@@ -412,6 +415,108 @@ static void reset_prefix_cursor(sqlite3 *h) {
   sqlite3_exec(h, "DELETE FROM entity_resolve_state WHERE k LIKE 'prefix_%'", 0, 0, 0);
 }
 
+/* ── the vector arm ──────────────────────────────────────────────────────
+ *
+ * A prefix never pairs トヨタ自動車 with "Toyota Motor". entity_vec (core/
+ * entity_vec.h) holds each entity's "canonical (romaji)" vector; an entity's
+ * stored neighbours of the same type and scope with cosine >=
+ * entity_vec_cos_floor() become candidates for the SAME judge. Nothing about
+ * the decision changes: a vector neighbour is a question, recorded as same=0
+ * when the judge says so, and merged only by the union pass's 0.7 rule.
+ *
+ * Its own keyset (entity_resolve_state 'vec_after', by entity_id) walks the
+ * entities that have a vector. An entity's candidates are taken whole or not
+ * at all (except the first of a tick, so a tick always progresses), and the
+ * cursor moves past an entity only once its last pair was attempted.
+ * Neighbour lists are not symmetric, so an undecided pair can be met from
+ * both sides in one lap — at most twice, and only while the judge has not
+ * answered it. */
+#define RESOLVE_VEC_MAX_WALK 500
+
+static char *canonical_of(sqlite3 *h, const char *id) {
+  sqlite3_stmt *s; char *c = NULL;
+  if (sqlite3_prepare_v2(h, "SELECT canonical FROM entities WHERE entity_id=?1",
+                         -1, &s, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
+    if (sqlite3_step(s) == SQLITE_ROW) c = dupcol(s, 0);
+    sqlite3_finalize(s);
+  }
+  return c;
+}
+
+/* Appends up to `want` vector pairs to `out`. *walk_last gets the last entity
+ * whose candidates were all handed over (malloc'd, NULL if none); returns 1
+ * when the walk reached the end of the index. */
+static int collect_vector_pairs(db_handle *db, int want, pairs *out,
+                                char **walk_last) {
+  sqlite3 *h = db->h;
+  *walk_last = NULL;
+  char *after = state_get(h, "vec_after");
+  char *prev = strdup(after ? after : "");
+  double floor = entity_vec_cos_floor();
+  int reached_end = 0, walked = 0, rc = SQLITE_ROW, start = out->n;
+  want += out->n;
+  sqlite3_stmt *q;
+  if (sqlite3_prepare_v2(h,
+      "SELECT e.entity_id,e.type,COALESCE(e.tenant_id,''),e.canonical"
+      " FROM entity_vec_done d JOIN entities e ON e.entity_id=d.entity_id"
+      " WHERE e.type IN " RESOLVE_TYPES " AND d.entity_id>?1"
+      " ORDER BY d.entity_id LIMIT ?2", -1, &q, NULL) != SQLITE_OK) {
+    free(after); free(prev);
+    return 0;
+  }
+  sqlite3_bind_text(q, 1, after ? after : "", -1, SQLITE_TRANSIENT);
+  sqlite3_bind_int(q, 2, RESOLVE_VEC_MAX_WALK);
+  while (out->n < want && (rc = sqlite3_step(q)) == SQLITE_ROW) {
+    walked++;
+    const char *id  = (const char *)sqlite3_column_text(q, 0);
+    const char *ty  = (const char *)sqlite3_column_text(q, 1);
+    const char *eca = (const char *)sqlite3_column_text(q, 3);
+    entity_nb *nb = NULL;
+    int nn = entity_vec_neighbours(db, id, ty,
+                                   (const char *)sqlite3_column_text(q, 2),
+                                   ENTITY_VEC_K, floor, &nb);
+    int fresh[ENTITY_VEC_K], nf = 0;
+    for (int i = 0; i < nn && nf < ENTITY_VEC_K; i++) {
+      int lo = strcmp(id, nb[i].entity_id) < 0;
+      const char *a = lo ? id : nb[i].entity_id, *b = lo ? nb[i].entity_id : id;
+      if (es_merge_pair_exists(db, a, b) || pairs_has(out, a, b)) continue;
+      fresh[nf++] = i;
+    }
+    if (nf > 0 && out->n > start && out->n + nf > want) {
+      entity_nb_free(nb, nn > 0 ? nn : 0);
+      break;                            /* this entity waits for next tick */
+    }
+    for (int j = 0; j < nf && out->n < want; j++) {
+      entity_nb *x = &nb[fresh[j]];
+      int lo = strcmp(id, x->entity_id) < 0;
+      char *cb = canonical_of(h, x->entity_id);
+      if (!cb) continue;                /* folded away since it was indexed */
+      pair *p = pairs_push(out);
+      if (!p) { free(cb); break; }
+      p->a  = strdup(lo ? id : x->entity_id);
+      p->b  = strdup(lo ? x->entity_id : id);
+      p->ty = strdup(ty);
+      p->ca = lo ? strdup(eca) : cb;
+      p->cb = lo ? cb : strdup(eca);
+      p->cos = x->cos;
+      /* the entity's last pair carries the entity as the cursor; the others
+       * carry the cursor from before it */
+      p->vsave = strdup((j == nf - 1 || out->n == want) ? id : prev);
+    }
+    entity_nb_free(nb, nn > 0 ? nn : 0);
+    free(prev);
+    prev = strdup(id);
+    free(*walk_last);
+    *walk_last = strdup(id);
+  }
+  if (out->n < want && rc == SQLITE_DONE && walked < RESOLVE_VEC_MAX_WALK)
+    reached_end = 1;
+  sqlite3_finalize(q);
+  free(after); free(prev);
+  return reached_end;
+}
+
 int entity_enrich_resolve(db_handle *db, llm_client *llm, int batch) {
   sqlite3 *h = db->h;
   int TIMEOUT = env_int("LLM_TIMEOUT_MS", 30000);
@@ -421,8 +526,17 @@ int entity_enrich_resolve(db_handle *db, llm_client *llm, int batch) {
   pairs ps = {0};
   walk_pos *pos = calloc((size_t)batch, sizeof *pos);
   if (!pos) return 0;
+  /* Vector pairs first, up to half the judge budget, so a graph with a long
+   * prefix backlog still gets its cross-script pairs asked; the prefix arm
+   * takes everything the vector arm left. pos[] is indexed by pair index. */
+  char *vec_walk_last = NULL;
+  int vec_end = 0;
+  if (entity_vec_ready(db))
+    vec_end = collect_vector_pairs(db, batch / 2 > 0 ? batch / 2 : 1, &ps,
+                                   &vec_walk_last);
+  int n_vec = ps.n;
   int reached_end = collect_prefix_pairs(h, batch, &ps, pos);
-  int n_prefix = ps.n;
+  int n_prefix = ps.n - n_vec;
 
   sqlite3_stmt *s;
   int attempted = 0, decided = 0, deferred = 0, last_attempted = -1;
@@ -455,19 +569,34 @@ int entity_enrich_resolve(db_handle *db, llm_client *llm, int batch) {
     if (out) cJSON_Delete(out);
   }
   /* Advance past every pair attempted (answered or not). The walk wraps only
-   * when it reached the end AND every pair it handed over was attempted. */
-  if (last_attempted >= 0 && last_attempted < n_prefix) {
-    if (reached_end && last_attempted == n_prefix - 1) reset_prefix_cursor(h);
+   * when it reached the end AND every pair it handed over was attempted.
+   * Pairs are attempted in index order: vector pairs [0,n_vec), then prefix
+   * pairs [n_vec, ps.n). */
+  if (last_attempted >= n_vec) {
+    if (reached_end && last_attempted == ps.n - 1) reset_prefix_cursor(h);
     else save_prefix_cursor(h, &pos[last_attempted]);
   } else if (reached_end && n_prefix == 0) {
     reset_prefix_cursor(h);
   }
+  if (n_vec == 0 || last_attempted >= n_vec - 1) {
+    /* every vector pair handed over was attempted (or there were none and
+     * the walk only passed entities without candidates) */
+    if (vec_end) state_set(h, "vec_after", NULL);
+    else if (vec_walk_last) state_set(h, "vec_after", vec_walk_last);
+  } else if (last_attempted >= 0) {
+    state_set(h, "vec_after", ps.v[last_attempted].vsave);
+  }
   for (int i = 0; i < batch; i++) pos_free(&pos[i]);
   free(pos);
+  free(vec_walk_last);
   pairs_free(&ps);
   if (deferred)
     fprintf(stderr, "[entity-enrich] LLM unreachable or timed out; %d candidate "
                     "pair(s) left for the next tick\n", deferred);
+  if (n_vec)
+    fprintf(stderr, "[entity-enrich] candidates: %d by name vector (cos >= %.2f), "
+                    "%d by norm_key prefix\n", n_vec, entity_vec_cos_floor(),
+            n_prefix);
 
   /* union pass: fold same=1 & confidence>=0.7 (RESOLVE_THRESHOLD) */
   int merged = 0;
