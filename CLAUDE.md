@@ -39,7 +39,21 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 18,884** (2026-10-12: 18,883 plus the `log-retention`
+**The registered count is 19,321** (2026-10-12), measured — batch 41's 437
+measured Japanese WordPress-REST rows (`docs/verified-sources-batch41.tsv`,
+`native/collectors/OSINT_SOURCES_BATCH_41_JPWP.md`) on main's 18,884.
+
+**Batch 41 is numbered 41 because 38, 39 and 40 were all taken while it was
+open.** It was generated as 38, and by the time it came to merge, another
+session's batch 38 (africa/china/france/uk/usa) had landed along with 39 and 40
+— including a *direct* collision on `docs/verified-sources-batch38.tsv`, the
+exact file the note below predicts. Renumbering touched the ids (`JO38_`→`JO41_`),
+the four manifests, the four tables and their array symbols, the rejected and
+verified TSVs, the batch doc and its filename. Re-check at merge time, not just
+at generation time — this branch had to do it twice, because main moved again
+between the renumber and the merge.
+
+**The count was 18,884** (2026-10-12: 18,883 plus the `log-retention`
 maintenance pod from the infrastructure audit, see the last section). 18,883
 (2026-10-09) was main's 18,730: 18,645 —
 batches 33–36 (batch 33's 43 measured supply-chain rows,
