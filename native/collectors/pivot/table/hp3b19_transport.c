@@ -1131,6 +1131,7 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .id_keys = "count_point_id",
     .interval = 86400,
     .next_path = "next_page_url",
+    .page_max = 188,   /* 46,754 records at 250 a page, measured 2026-10-12; the 20-page default reached 5,000 */
     .description = "Every road traffic count point in Great Britain with its id, "
       "survey year, road name and category, the local authority and "
       "region it falls in, easting and northing, the start and end "

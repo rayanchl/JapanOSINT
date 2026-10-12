@@ -931,6 +931,42 @@ Engine subtleties worth knowing before writing a row:
   than ignored. Twenty-two comments in 14 collector files cite measurements made
   under "the default 10-page ceiling": those are dated records, not claims about
   today.
+* **The ceiling is now MEASURED across every paged scheduled row**
+  (2026-10-12, `docs/measured-page-ceilings-2026-10-12.tsv`): 2,137 rows,
+  3-page probe. 1,111 COMPLETE, 534 `CEILING_UNKNOWN` (the upstream publishes
+  no total, so only a full walk can size them), 282 `CEILING_DECLARED`, 114
+  SLOW, 89 `FETCH_FAILED`, 7 EMPTY. **149 declare a total needing more than 20
+  pages**, and they split on cost, which is the whole decision:
+  * **60 rows need ≤200 pages** — a per-row `page_max` completes them at a
+    sane request count. Done, with the measurement in each comment: 634,915
+    declared records against 148,840 the 20-page default reached, so **486,075
+    recovered**. `BGS_LANDSLIDE_INDEX` 2,000 → 18,698 (its whole total);
+    `CMS_NURSING_HOME_PROVIDER_INFO` → 14,690.
+  * **89 rows need more than 200**, up to 55,971 pages for a 5.6-million-item
+    STAC catalogue, and 1.93 BILLION declared records between them. Raising
+    `page_max` there is not exhaustiveness, it is tens of thousands of requests
+    per run against one host. Those rows are a DISCLOSED sample and need a
+    different strategy per row (a date window, a filter that slices the
+    collection, or a bulk dump), which is a design decision and not a number.
+    Listed in that file so the next pass starts from the measurement.
+* **A deep-paging cap is the upstream's, and it is disclosed by name.** GLEIF
+  refuses `page[number]=51` with HTTP 400 — 50 pages × 200 = 10,000 records —
+  so `GLEIF_LEI_HK` reaches 10,000 of 13,419 and the rest needs a narrower
+  filter per request. The notice says exactly that, including
+  `failed_page_url`. Leaving `page_max` ABOVE the cap is deliberate there: the
+  notice then names GLEIF's refusal rather than our own ceiling, for the price
+  of one 400 a run.
+* **`page_size` on a bracketed page-number parameter hid from the lint that
+  exists for it.** `_PAGENUM_NAME` in `tools/lint_sources.py` anchored the name
+  list with `$`, so JSON:API's `page[number]` — written percent-encoded in a
+  URL as `page%5Bnumber%5D` — matched nothing, and **63 rows shipped three days
+  after that check was added** with page_size on a page NUMBER. Every one asked
+  for page 201 (GLEIF) or 501 (US Treasury Fiscal Data) as its SECOND request,
+  got HTTP 400, and stored one page: `GLEIF_LEI_HK` 200 of 13,419,
+  `US_TREAS_MTS_TABLE_2` 500 of 2,070. Removing `page_size` (the size is
+  already in the URL as `page[size]`) took those two to 10,000 and 2,070. The
+  pattern now carries the bracketed and encoded spellings, and reintroducing
+  one `page_size` fails the gate by name.
 * **`more_pages_pending` is not the test for "data remains".** It reports
   whether the walk still held a next-page URL when it stopped, and it is FALSE
   at the ceiling. The authoritative signal is the upstream's own total —
