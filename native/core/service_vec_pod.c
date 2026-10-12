@@ -46,6 +46,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   /* Declared category labels need no embedding server: written every tick,
    * inert or not (core/source_category.h). Writes only what differs. */
   source_category_declare(db);
+  source_entity_types_write(db);
   const char *sem = getenv("JO_ROUTE_SEMANTIC");
   if (!embed_base_url() || !*embed_base_url() ||          /* inert, announced */
       (sem && sem[0] == '0' && sem[1] == 0)) {            /* by service_vec */

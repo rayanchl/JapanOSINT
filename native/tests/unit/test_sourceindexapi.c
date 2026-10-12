@@ -147,6 +147,40 @@ static void test_search(db_handle *db) {
   cJSON_Delete(o);
 }
 
+/* R7: an entity filter returns only pivots labelled for that type, on the
+ * API and on the catalogue; a bad type name is a 400. */
+static void test_entity_filter(db_handle *db) {
+  int st;
+  cJSON *o = call(db, "q=x&entity=ship", &st);
+  assert(st == 400); cJSON_Delete(o);
+  o = call(db, "q=domain%20dns%20whois%20ip%20address&entity=domain_ip&k=10", &st);
+  assert(st == 200);
+  cJSON *res = cJSON_GetObjectItem(o, "results"), *it;
+  assert(cJSON_GetArraySize(res) > 0);
+  cJSON_ArrayForEach(it, res) {
+    const source_card *c = source_card_get(cJSON_GetObjectItem(it, "id")->valuestring);
+    assert(c && c->kind == SC_KIND_PIVOT && (c->entity_types & SC_ET_DOMAIN_IP));
+    assert(cJSON_IsString(cJSON_GetObjectItem(it, "entity_types_provenance")));
+  }
+  cJSON *cov = cJSON_GetObjectItem(o, "coverage");
+  assert(cJSON_GetObjectItem(cov, "entity_filter_read")->valueint > 0);
+  printf("  entity=domain_ip: %d labelled pivots, filter read %d candidates: ok\n",
+         cJSON_GetArraySize(res), cJSON_GetObjectItem(cov, "entity_filter_read")->valueint);
+  cJSON_Delete(o);
+
+  service_vec_filter f = { .kind = "pivot", .entity_types = SC_ET_DOMAIN_IP };
+  char **ids = NULL; int cnt = 0;
+  osint_catalogue_note note = {0};
+  char *cat = service_vec_catalogue_filtered(db, "domain whois", 10, 0, &f, &note,
+                                             &ids, &cnt);
+  assert(cat && cnt > 0);
+  for (int i = 0; i < cnt; i++)
+    assert(source_card_get(ids[i])->entity_types & SC_ET_DOMAIN_IP);
+  assert(strstr(cat, "labelled for this entity type"));
+  printf("  catalogue filtered by entity type: %d of %d: ok\n", cnt, note.total);
+  service_vec_free_ids(ids, cnt); free(cat);
+}
+
 static void test_route_sources(db_handle *db) {
   char **ids = NULL;
   int n = service_vec_route_sources(db, "earthquake seismic intensity reports",
@@ -247,6 +281,7 @@ int main(void) {
   assert(service_vec_build(&db) > 0);
   test_search(&db);
   test_route_sources(&db);
+  test_entity_filter(&db);
   test_layers_review(&db);
   stub_stop();
   db_close(&db);

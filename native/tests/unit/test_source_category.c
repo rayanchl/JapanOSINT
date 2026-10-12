@@ -142,6 +142,27 @@ static void test_declared(db_handle *db) {
   long rows2 = 0;
   assert(category_fingerprint(db, &rows2) == before && rows2 == rows);
   assert(source_category_derive(db) == 0);         /* inert: nothing derived */
+
+  /* entity types land in the sources table: mask for pivots, NULL else */
+  assert(source_entity_types_write(db) > 0);
+  assert(source_entity_types_write(db) == 0);      /* steady: no writes */
+  long lab = 0, wrong = 0;
+  assert(sqlite3_prepare_v2(db->h, "SELECT id, entity_types, "
+         "entity_types_provenance FROM sources", -1, &s, NULL) == SQLITE_OK);
+  while (sqlite3_step(s) == SQLITE_ROW) {
+    const source_card *c = source_card_get((const char *)sqlite3_column_text(s, 0));
+    if (!c) continue;
+    int isnull = sqlite3_column_type(s, 1) == SQLITE_NULL;
+    if (c->kind != SC_KIND_PIVOT) { if (!isnull) wrong++; continue; }
+    if (isnull || (unsigned)sqlite3_column_int(s, 1) != c->entity_types) wrong++;
+    if (c->entity_types) {
+      lab++;
+      if (sqlite3_column_type(s, 2) == SQLITE_NULL) wrong++;
+    }
+  }
+  sqlite3_finalize(s);
+  assert(wrong == 0 && lab > 0);
+  printf("  entity types written: %ld labelled pivots, non-pivots NULL: ok\n", lab);
   printf("  declared: %ld sources labelled without an embedding server, "
          "category column untouched: ok\n", declared);
 }

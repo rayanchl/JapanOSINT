@@ -4,6 +4,7 @@
 #include "service_aliases.h"
 #include "source_registry.h"
 #include "../lib/vecindex.h"
+#include "../lib/hpengine.h"
 #include <ctype.h>
 #include <pthread.h>
 #include <stdio.h>
@@ -273,6 +274,195 @@ char *source_card_clean(const char *desc) {
   return o;
 }
 
+/* ---- entity types (pivots) ----------------------------------------------- */
+
+static const char *const ET_NAMES[SC_ET_COUNT] = {
+  "person", "company", "domain_ip", "email", "phone", "vessel", "aircraft",
+  "place", "document" };
+
+const char *source_entity_type_name(int bit) {
+  return (bit >= 0 && bit < SC_ET_COUNT) ? ET_NAMES[bit] : NULL;
+}
+
+long source_entity_types_parse(const char *list) {
+  long m = 0;
+  if (!list) return 0;
+  const char *p = list;
+  while (*p) {
+    while (*p == ',' || *p == ' ') p++;
+    const char *s = p;
+    while (*p && *p != ',') p++;
+    size_t n = (size_t)(p - s);
+    while (n && s[n - 1] == ' ') n--;
+    if (!n) continue;
+    int hit = -1;
+    for (int i = 0; i < SC_ET_COUNT; i++)
+      if (strlen(ET_NAMES[i]) == n && !strncmp(ET_NAMES[i], s, n)) hit = i;
+    if (hit < 0) return -1;
+    m |= 1L << hit;
+  }
+  return m;
+}
+
+/* The NAME an entity token is bound to, and what that name takes. Names are
+ * compared lower-cased with everything but [a-z0-9] removed ("e-mail" →
+ * "email", "company_number" → "companynumber"). Only names that say WHAT
+ * the value is: `q`, `query`, `search`, `term`, `name`, `id`, `number`,
+ * `registration`, `callsign` and `entity` are deliberately absent, because
+ * each is used for more than one of the nine types in this registry. */
+static const struct { const char *name; unsigned bit; } ET_PARAMS[] = {
+  { "domain", SC_ET_DOMAIN_IP }, { "domainname", SC_ET_DOMAIN_IP },
+  { "hostname", SC_ET_DOMAIN_IP }, { "host", SC_ET_DOMAIN_IP },
+  { "fqdn", SC_ET_DOMAIN_IP }, { "website", SC_ET_DOMAIN_IP },
+  { "site", SC_ET_DOMAIN_IP }, { "url", SC_ET_DOMAIN_IP },
+  { "ip", SC_ET_DOMAIN_IP }, { "ipaddress", SC_ET_DOMAIN_IP },
+  { "ipaddr", SC_ET_DOMAIN_IP }, { "asn", SC_ET_DOMAIN_IP },
+  { "autnum", SC_ET_DOMAIN_IP }, { "prefix", SC_ET_DOMAIN_IP },
+  { "resource", SC_ET_DOMAIN_IP },        /* RIPEstat: an IP, prefix or ASN */
+  { "email", SC_ET_EMAIL }, { "mail", SC_ET_EMAIL },
+  { "emailaddress", SC_ET_EMAIL },
+  { "phone", SC_ET_PHONE }, { "phonenumber", SC_ET_PHONE },
+  { "msisdn", SC_ET_PHONE }, { "tel", SC_ET_PHONE },
+  { "telephone", SC_ET_PHONE }, { "mobile", SC_ET_PHONE },
+  { "imo", SC_ET_VESSEL }, { "mmsi", SC_ET_VESSEL }, { "vessel", SC_ET_VESSEL },
+  { "vesselname", SC_ET_VESSEL }, { "ship", SC_ET_VESSEL },
+  { "shipname", SC_ET_VESSEL },
+  { "icao24", SC_ET_AIRCRAFT }, { "icao", SC_ET_AIRCRAFT },
+  { "tail", SC_ET_AIRCRAFT }, { "tailnumber", SC_ET_AIRCRAFT },
+  { "aircraft", SC_ET_AIRCRAFT },
+  { "lei", SC_ET_COMPANY }, { "cik", SC_ET_COMPANY }, { "siren", SC_ET_COMPANY },
+  { "siret", SC_ET_COMPANY }, { "company", SC_ET_COMPANY },
+  { "companyname", SC_ET_COMPANY }, { "companynumber", SC_ET_COMPANY },
+  { "corporate", SC_ET_COMPANY }, { "corporatenumber", SC_ET_COMPANY },
+  { "firm", SC_ET_COMPANY }, { "ticker", SC_ET_COMPANY },
+  { "orgnr", SC_ET_COMPANY }, { "organisation", SC_ET_COMPANY },
+  { "organization", SC_ET_COMPANY }, { "cnpj", SC_ET_COMPANY },
+  { "krs", SC_ET_COMPANY }, { "regon", SC_ET_COMPANY }, { "vat", SC_ET_COMPANY },
+  { "vatnumber", SC_ET_COMPANY }, { "ogrn", SC_ET_COMPANY },
+  { "houjinbangou", SC_ET_COMPANY }, { "businessname", SC_ET_COMPANY },
+  { "person", SC_ET_PERSON }, { "personname", SC_ET_PERSON },
+  { "surname", SC_ET_PERSON }, { "lastname", SC_ET_PERSON },
+  { "familyname", SC_ET_PERSON }, { "firstname", SC_ET_PERSON },
+  { "givenname", SC_ET_PERSON }, { "fullname", SC_ET_PERSON },
+  { "author", SC_ET_PERSON }, { "officer", SC_ET_PERSON },
+  { "officername", SC_ET_PERSON }, { "director", SC_ET_PERSON },
+  { "politician", SC_ET_PERSON }, { "candidate", SC_ET_PERSON },
+  { "lat", SC_ET_PLACE }, { "latitude", SC_ET_PLACE }, { "lon", SC_ET_PLACE },
+  { "lng", SC_ET_PLACE }, { "longitude", SC_ET_PLACE }, { "place", SC_ET_PLACE },
+  { "placename", SC_ET_PLACE }, { "city", SC_ET_PLACE },
+  { "address", SC_ET_PLACE }, { "location", SC_ET_PLACE },
+  { "geocode", SC_ET_PLACE }, { "postcode", SC_ET_PLACE },
+  { "postalcode", SC_ET_PLACE }, { "zip", SC_ET_PLACE },
+  { "zipcode", SC_ET_PLACE }, { "municipality", SC_ET_PLACE },
+  { "prefecture", SC_ET_PLACE },
+  { "doi", SC_ET_DOCUMENT }, { "isbn", SC_ET_DOCUMENT },
+  { "issn", SC_ET_DOCUMENT }, { "pmid", SC_ET_DOCUMENT },
+  { "pmcid", SC_ET_DOCUMENT }, { "arxiv", SC_ET_DOCUMENT },
+  { "arxivid", SC_ET_DOCUMENT }, { "patent", SC_ET_DOCUMENT },
+  { "patentnumber", SC_ET_DOCUMENT }, { "docket", SC_ET_DOCUMENT },
+  { "casenumber", SC_ET_DOCUMENT }, { "document", SC_ET_DOCUMENT },
+  { "documentnumber", SC_ET_DOCUMENT },
+};
+
+static int is_entity_token(const char *t, size_t n) {
+  static const char *const TOK[] = { "q", "Q", "qd", "qc", "qh", "qu", "ql",
+                                     "qU", "qn", NULL };
+  for (int i = 0; TOK[i]; i++)
+    if (strlen(TOK[i]) == n && !strncmp(TOK[i], t, n)) return 1;
+  return 0;
+}
+
+static void prov_add(char *prov, size_t cap, const char *what, const char *v) {
+  char item[96];
+  snprintf(item, sizeof item, "%s:%s", what, v);
+  /* once each */
+  const char *p = prov;
+  size_t il = strlen(item);
+  while ((p = strstr(p, item))) {
+    if ((p == prov || p[-1] == ',') && (p[il] == 0 || p[il] == ',')) return;
+    p += il;
+  }
+  size_t len = strlen(prov);
+  snprintf(prov + len, cap - len, "%s%s", len ? "," : "", item);
+}
+
+/* The normalised name `{…}` at s[p] is bound to, into key (may be ""). */
+static void bound_name(const char *s, size_t p, char *key, size_t cap) {
+  key[0] = 0;
+  if (p == 0) return;
+  size_t e = p, b;
+  char c = s[p - 1];
+  if (c == '=') {                                   /* ?name={q} */
+    e = p - 1; b = e;
+    while (b > 0 && s[b - 1] != '?' && s[b - 1] != '&' && s[b - 1] != ';' &&
+           s[b - 1] != '/') b--;
+  } else if (c == '/') {                            /* /name/{q} */
+    e = p - 1; b = e;
+    while (b > 0 && s[b - 1] != '/') b--;
+  } else if (c == '"' || c == ':' || c == ' ') {    /* "name":"{Q}" */
+    size_t i = p;
+    if (s[i - 1] == '"') i--;
+    while (i > 0 && s[i - 1] == ' ') i--;
+    if (i == 0 || s[i - 1] != ':') return;
+    i--;
+    while (i > 0 && s[i - 1] == ' ') i--;
+    if (i == 0 || s[i - 1] != '"') return;
+    e = i - 1; b = e;
+    while (b > 0 && s[b - 1] != '"') b--;
+  } else {
+    return;
+  }
+  size_t k = 0;
+  for (size_t i = b; i < e && k + 1 < cap; i++) {
+    unsigned char ch = (unsigned char)s[i];
+    if (isalnum(ch)) key[k++] = (char)tolower(ch);
+  }
+  key[k] = 0;
+}
+
+static unsigned scan_template(const char *s, char *prov, size_t cap) {
+  unsigned m = 0;
+  if (!s) return 0;
+  for (size_t i = 0; s[i]; i++) {
+    if (s[i] != '{') continue;
+    size_t j = i + 1;
+    while (s[j] && s[j] != '}' && j - i < 16) j++;
+    if (s[j] != '}' || !is_entity_token(s + i + 1, j - i - 1)) continue;
+    char tok[8];
+    snprintf(tok, sizeof tok, "%.*s", (int)(j - i - 1), s + i + 1);
+    if (!strcmp(tok, "qh")) { m |= SC_ET_DOMAIN_IP; prov_add(prov, cap, "token", "qh"); }
+    if (!strcmp(tok, "qu")) { m |= SC_ET_EMAIL; prov_add(prov, cap, "token", "qu"); }
+    char key[48];
+    bound_name(s, i, key, sizeof key);
+    for (size_t t = 0; key[0] && t < sizeof ET_PARAMS / sizeof *ET_PARAMS; t++)
+      if (!strcmp(ET_PARAMS[t].name, key)) {
+        m |= ET_PARAMS[t].bit;
+        prov_add(prov, cap, "param", key);
+        break;
+      }
+    i = j;
+  }
+  return m;
+}
+
+static unsigned derive_entity_types(const source_def *d, char *prov, size_t cap) {
+  prov[0] = 0;
+  const hp_source *h = hp_spec_get(d->id);
+  if (!h) return 0;                       /* hand-written: nothing declared */
+  unsigned m = 0;
+  switch (h->want) {
+    case HP_DOMAIN: m |= SC_ET_DOMAIN_IP; prov_add(prov, cap, "want", "domain"); break;
+    case HP_IP:     m |= SC_ET_DOMAIN_IP; prov_add(prov, cap, "want", "ip"); break;
+    case HP_ASN:    m |= SC_ET_DOMAIN_IP; prov_add(prov, cap, "want", "asn"); break;
+    case HP_EMAIL:  m |= SC_ET_EMAIL;     prov_add(prov, cap, "want", "email"); break;
+    case HP_ICAO24: m |= SC_ET_AIRCRAFT;  prov_add(prov, cap, "want", "icao24"); break;
+    default: break;          /* NUMERIC/HASH/ETH/BTC/ANY name no listed type */
+  }
+  m |= scan_template(h->url, prov, cap);
+  m |= scan_template(h->post_body, prov, cap);
+  return m;
+}
+
 /* ---- the corpus ---------------------------------------------------------- */
 
 /* Open-addressed count of sentence hashes. */
@@ -361,6 +551,11 @@ static void build_cards(void) {
                         : (d->category ? d->category : "investigation");
     cards[i].text = t;
     cards[i].hash = vecindex_hash(t);
+    if (cards[i].kind == SC_KIND_PIVOT) {
+      char prov[512];
+      cards[i].entity_types = derive_entity_types(d, prov, sizeof prov);
+      if (cards[i].entity_types) cards[i].entity_provenance = strdup(prov);
+    }
   }
   g_cards = cards;
   g_ncards = n;

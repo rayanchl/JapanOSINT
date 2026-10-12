@@ -1,11 +1,15 @@
 /* core/sourceindexapi.h — HTTP routes over the widened service index
  * (core/service_vec.h): searching the registry by meaning.
  *
- * GET /api/sources/search?q=&kind=&k=
+ * GET /api/sources/search?q=&kind=&k=&entity=
  *   The k registered sources closest to q — reciprocal-rank fusion of the
  *   vector arm and the keyword arm over every source's card
- *   (core/source_card.h). `kind` narrows to pivot|scheduled|pod|manual.
- *   Each result: id, name, category, kind, score, vector_rank, keyword_rank.
+ *   (core/source_card.h). `kind` narrows to pivot|scheduled|pod|manual;
+ *   `entity` (comma-separated person|company|domain_ip|email|phone|vessel|
+ *   aircraft|place|document) to pivots LABELLED as accepting one of them —
+ *   unlabelled pivots cannot match, and coverage says so.
+ *   Each result: id, name, category, kind, entity_types (+ provenance),
+ *   score, vector_rank, keyword_rank.
  *   `coverage` says which kinds were searched, which were asked for and are
  *   NOT ready yet (not searched, never silently), how many cards were in
  *   reach, and the index's own coverage object. 503 with the reason when the

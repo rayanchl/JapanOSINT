@@ -99,8 +99,49 @@ static void test_aliases(void) {
   printf("  %d aliases, every id registered and on its card: ok\n", n);
 }
 
+/* 5. Entity types: pivots only, every label backed by a recorded fact, and
+ * the declaration-derived facts agree with the row (want=HP_DOMAIN →
+ * domain_ip). Prints how many pivots stay unlabelled. */
+static void test_entity_types(void) {
+  char prov[256] = {0};
+  assert(scan_template("https://x/api?imo={qd}&page={page}", prov, sizeof prov)
+         == SC_ET_VESSEL && !strcmp(prov, "param:imo"));
+  prov[0] = 0;
+  assert(scan_template("https://x/v1/domain/{qh}/whois", prov, sizeof prov)
+         == SC_ET_DOMAIN_IP && strstr(prov, "token:qh") && strstr(prov, "param:domain"));
+  prov[0] = 0;
+  assert(scan_template("{\"e-mail\": \"{Q}\"}", prov, sizeof prov) == SC_ET_EMAIL);
+  prov[0] = 0;
+  assert(scan_template("https://x/search?q={q}&name={q}", prov, sizeof prov) == 0);
+  assert(source_entity_types_parse("vessel,domain_ip") ==
+         (long)(SC_ET_VESSEL | SC_ET_DOMAIN_IP));
+  assert(source_entity_types_parse("ship") == -1);
+
+  const source_card *c = NULL;
+  int n = source_cards_all(&c), pivots = 0, labelled = 0, per[SC_ET_COUNT] = {0};
+  for (int i = 0; i < n; i++) {
+    if (!c[i].text) continue;
+    if (c[i].kind != SC_KIND_PIVOT) { assert(c[i].entity_types == 0); continue; }
+    pivots++;
+    if (!c[i].entity_types) { assert(!c[i].entity_provenance); continue; }
+    labelled++;
+    assert(c[i].entity_provenance && *c[i].entity_provenance);
+    for (int b = 0; b < SC_ET_COUNT; b++) if (c[i].entity_types & (1u << b)) per[b]++;
+    const hp_source *h = hp_spec_get(c[i].def->id);
+    assert(h);                              /* only hp rows can be labelled */
+    if (h->want == HP_DOMAIN) assert(c[i].entity_types & SC_ET_DOMAIN_IP);
+    if (h->want == HP_EMAIL) assert(c[i].entity_types & SC_ET_EMAIL);
+  }
+  printf("  entity types: %d of %d pivots labelled, %d unlabelled (", labelled,
+         pivots, pivots - labelled);
+  for (int b = 0; b < SC_ET_COUNT; b++)
+    printf("%s%s %d", b ? ", " : "", source_entity_type_name(b), per[b]);
+  printf("): ok\n");
+}
+
 int main(void) {
   test_noise();
+  test_entity_types();
   test_cards();
   test_aliases();
   assert(source_kind_parse("pivot") == SC_KIND_PIVOT);

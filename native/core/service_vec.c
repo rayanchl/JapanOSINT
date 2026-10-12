@@ -678,12 +678,22 @@ int service_vec_search(db_handle *db, const char *query,
   }
   for (int i = 0; i < SC_NKINDS; i++)
     if ((want & (1u << i)) && svec_kind_ready(db, i)) ready |= 1u << i;
+  unsigned etm = f ? f->entity_types : 0;
   int total = 0;
   {
     const source_card *c = NULL;
     int n = source_cards_all(&c);
     for (int i = 0; c && i < n; i++)
-      if (c[i].text && (ready & (1u << c[i].kind))) total++;
+      if (c[i].text && (ready & (1u << c[i].kind)) &&
+          (!etm || (c[i].entity_types & etm))) total++;
+  }
+  /* An entity filter is applied after fusion, so each arm is asked for more
+   * than k: 10x, capped. A match ranked past what the arms returned is not
+   * seen, and info->filtered_from says how deep the filter read. */
+  int kq = k;
+  if (etm) {
+    kq = k * 10 < 500 ? k * 10 : 500;
+    if (kq < k) kq = k;
   }
   if (info) {
     info->searched_kinds = ready;
@@ -765,7 +775,7 @@ int service_vec_search(db_handle *db, const char *query,
                            .vals = kv, .nvals = nkv };
     vecindex_hit *h = NULL;
     char err[200] = {0};
-    int nh = vecindex_knn(db, &svec_spec, qv, qdim, k, &kf, 1, &h, err, sizeof err);
+    int nh = vecindex_knn(db, &svec_spec, qv, qdim, kq, &kf, 1, &h, err, sizeof err);
     free(qv);
     if (nh < 0) {
       fprintf(stderr, "[svec] knn: %s\n", err);
@@ -778,18 +788,20 @@ int service_vec_search(db_handle *db, const char *query,
   }
   char *fexpr = svec_fts_expr(query);
   if (fexpr) {
-    int fl = svec_fts_arm(db, fexpr, ready, k, &cands);
+    int fl = svec_fts_arm(db, fexpr, ready, kq, &cands);
     if (fl > 0 && info) info->lexical = fl;
   }
   free(fexpr);
   vecindex_fused_sort(&cands);
+  if (etm && info) info->filtered_from = cands.n;
 
   service_vec_hit *hits = calloc((size_t)(k > 0 ? k : 1), sizeof *hits);
   int n = 0;
   for (int i = 0; hits && i < cands.n && n < k; i++) {
     /* registry_get() through the card: a key the registry no longer has is
      * skipped, never reported as a source that exists. */
-    if (!source_card_get(cands.v[i].key)) continue;
+    const source_card *sc = source_card_get(cands.v[i].key);
+    if (!sc || (etm && !(sc->entity_types & etm))) continue;
     hits[n].id = strdup(cands.v[i].key);
     if (!hits[n].id) break;
     hits[n].score = cands.v[i].score;
@@ -920,6 +932,10 @@ char *service_vec_catalogue_filtered(db_handle *db, const char *query, int k,
   if (is_pivot) snprintf(what, sizeof what, "entity-pivot services");
   else if (kind) snprintf(what, sizeof what, "%s sources", kind);
   else snprintf(what, sizeof what, "sources");
+  if (filter && filter->entity_types) {
+    size_t wl = strlen(what);
+    snprintf(what + wl, sizeof what - wl, " labelled for this entity type");
+  }
   char tail[400];
   int tl = snprintf(tail, sizeof tail,
     "\n(%d of %d registered %s, selected as the closest matches to this query "

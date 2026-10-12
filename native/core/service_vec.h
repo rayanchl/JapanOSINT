@@ -85,6 +85,12 @@ int service_vec_build(db_handle *db);
 /* What a search may return. `kind` NULL/"" = every kind that is ready. */
 typedef struct {
   const char *kind;                 /* "pivot" | "scheduled" | "pod" | "manual" */
+  /* SC_ET_* mask (core/source_card.h); 0 = any. A card matches when it
+   * accepts at least one of the types asked for — so only LABELLED pivots
+   * can match, and the coverage `total` counts only those. Applied after
+   * fusion over an over-fetched candidate list (vec0 metadata has no
+   * bitwise operator), and that bound is stated in info->filtered_from. */
+  unsigned entity_types;
 } service_vec_filter;
 
 typedef struct {
@@ -100,6 +106,8 @@ typedef struct {
   unsigned unready_kinds;           /* asked for but not ready: NOT searched */
   int total;                        /* cards in the searched kinds           */
   int semantic, lexical;            /* candidates each arm contributed       */
+  int filtered_from;                /* candidates the entity filter read (0 =
+                                     * no entity filter)                     */
   char reason[160];                 /* why -1, when it is                    */
 } service_vec_info;
 

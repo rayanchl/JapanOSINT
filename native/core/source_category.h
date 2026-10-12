@@ -52,6 +52,14 @@ int source_category_declare(db_handle *db);
  * on failure. Reads vectors from the service index; never embeds. */
 int source_category_derive(db_handle *db);
 
+/* Write sources.entity_types / entity_types_provenance from the cards
+ * (core/source_card.h): the mask for pivots (0 = unlabelled), NULL for every
+ * other kind. No embedding; writes only what differs. Rows changed, or -1. */
+int source_entity_types_write(db_handle *db);
+
+/* {pivots, labelled, unlabelled, by_type:{person:n,…}} from the cards. */
+cJSON *source_entity_types_summary(void);
+
 /* {declared:{cat:n…}, derived:{cat:n…}, unlabelled:n, derived_at, basis}
  * from the sources table. Never NULL. */
 cJSON *source_category_distribution(db_handle *db);

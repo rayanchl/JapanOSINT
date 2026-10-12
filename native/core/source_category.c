@@ -111,6 +111,61 @@ int source_category_declare(db_handle *db) {
   return ok ? changed : -1;
 }
 
+/* ---- entity types -------------------------------------------------------- */
+
+int source_entity_types_write(db_handle *db) {
+  if (!db || !db->h) return -1;
+  const source_card *c = NULL;
+  int n = source_cards_all(&c), changed = 0, ok = 1;
+  if (!c) return 0;
+  sqlite3_stmt *up = NULL;
+  /* pivots get their mask (0 = unlabelled), everything else NULL */
+  if (sqlite3_prepare_v2(db->h,
+        "UPDATE sources SET entity_types=?2, entity_types_provenance=?3 "
+        "WHERE id=?1 AND (entity_types IS NOT ?2 OR "
+        "entity_types_provenance IS NOT ?3)", -1, &up, NULL) != SQLITE_OK)
+    return -1;
+  if (sqlite3_exec(db->h, "BEGIN IMMEDIATE", NULL, NULL, NULL) != SQLITE_OK) {
+    sqlite3_finalize(up);
+    return -1;
+  }
+  for (int i = 0; ok && i < n; i++) {
+    if (!c[i].text) continue;
+    sqlite3_reset(up);
+    sqlite3_bind_text(up, 1, c[i].def->id, -1, SQLITE_STATIC);
+    if (c[i].kind == SC_KIND_PIVOT) sqlite3_bind_int(up, 2, (int)c[i].entity_types);
+    else sqlite3_bind_null(up, 2);
+    if (c[i].entity_provenance)
+      sqlite3_bind_text(up, 3, c[i].entity_provenance, -1, SQLITE_STATIC);
+    else sqlite3_bind_null(up, 3);
+    if (sqlite3_step(up) != SQLITE_DONE) ok = 0;
+    else changed += sqlite3_changes(db->h);
+  }
+  sqlite3_finalize(up);
+  sqlite3_exec(db->h, ok ? "COMMIT" : "ROLLBACK", NULL, NULL, NULL);
+  return ok ? changed : -1;
+}
+
+cJSON *source_entity_types_summary(void) {
+  const source_card *c = NULL;
+  int n = source_cards_all(&c), pivots = 0, lab = 0, per[SC_ET_COUNT] = {0};
+  for (int i = 0; c && i < n; i++) {
+    if (!c[i].text || c[i].kind != SC_KIND_PIVOT) continue;
+    pivots++;
+    if (c[i].entity_types) lab++;
+    for (int b = 0; b < SC_ET_COUNT; b++) if (c[i].entity_types & (1u << b)) per[b]++;
+  }
+  cJSON *o = cJSON_CreateObject();
+  cJSON_AddNumberToObject(o, "pivots", pivots);
+  cJSON_AddNumberToObject(o, "labelled", lab);
+  cJSON_AddNumberToObject(o, "unlabelled", pivots - lab);
+  cJSON *t = cJSON_CreateObject();
+  for (int b = 0; b < SC_ET_COUNT; b++)
+    cJSON_AddNumberToObject(t, source_entity_type_name(b), per[b]);
+  cJSON_AddItemToObject(o, "by_type", t);
+  return o;
+}
+
 /* ---- derived ------------------------------------------------------------- */
 
 typedef struct { float *v; int cat; } scat_label;

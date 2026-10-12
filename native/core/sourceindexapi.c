@@ -229,6 +229,7 @@ char *sourceindexapi_categories(db_handle *db) {
   for (int i = 0; i < SOURCE_CATEGORY_COUNT; i++)
     cJSON_AddItemToArray(v, cJSON_CreateString(SOURCE_CATEGORIES[i]));
   cJSON_AddItemToObject(o, "vocabulary", v);
+  cJSON_AddItemToObject(o, "pivot_entity_types", source_entity_types_summary());
   char *s = cJSON_PrintUnformatted(o);
   cJSON_Delete(o);
   return s;
@@ -237,21 +238,29 @@ char *sourceindexapi_categories(db_handle *db) {
 char *sourceindexapi_search(db_handle *db, const char *tenant, const char *id,
                             const char *qs, int is_operator, int *status) {
   (void)tenant; (void)id; (void)is_operator;
-  char q[1024], kind[16], kk[16];
+  char q[1024], kind[16], kk[16], ent[160];
   int tl = 0;
   qs_get(qs, "q", q, sizeof q, &tl);
   qs_get(qs, "kind", kind, sizeof kind, &tl);
   qs_get(qs, "k", kk, sizeof kk, &tl);
+  qs_get(qs, "entity", ent, sizeof ent, &tl);
   if (tl) return err_body(status, 414, "query_param_too_long", NULL, NULL);
   if (!q[0]) return err_body(status, 400, "q_required", NULL, NULL);
   if (kind[0] && source_kind_parse(kind) < 0)
     return err_body(status, 400, "unknown_kind",
                     "kind is one of pivot, scheduled, pod, manual", NULL);
+  long etm = ent[0] ? source_entity_types_parse(ent) : 0;
+  if (etm < 0)
+    return err_body(status, 400, "unknown_entity_type",
+                    "entity is a comma-separated list of person, company, "
+                    "domain_ip, email, phone, vessel, aircraft, place, document",
+                    NULL);
   int k_req = kk[0] ? atoi(kk) : SIDX_K_DEF;
   if (k_req <= 0) k_req = SIDX_K_DEF;
   int k = k_req > SIDX_K_MAX ? SIDX_K_MAX : k_req;
 
-  service_vec_filter f = { .kind = kind[0] ? kind : NULL };
+  service_vec_filter f = { .kind = kind[0] ? kind : NULL,
+                           .entity_types = (unsigned)etm };
   service_vec_hit *hits = NULL;
   service_vec_info info;
   int n = service_vec_search(db, q, &f, k, &hits, &info);
@@ -262,6 +271,13 @@ char *sourceindexapi_search(db_handle *db, const char *tenant, const char *id,
   cJSON_AddNumberToObject(cov, "cards_searched", info.total);
   cJSON_AddNumberToObject(cov, "semantic_candidates", info.semantic);
   cJSON_AddNumberToObject(cov, "keyword_candidates", info.lexical);
+  if (etm) {
+    /* the entity filter reads a bounded candidate list: say how deep */
+    cJSON_AddNumberToObject(cov, "entity_filter_read", info.filtered_from);
+    cJSON_AddStringToObject(cov, "entity_filter_note",
+      "only pivots whose entity types are derived from their declaration can "
+      "match; unlabelled pivots are not searched by this filter");
+  }
   cJSON_AddItemToObject(cov, "index", service_vec_coverage_json(db));
   if (n < 0)
     return err_body(status, 503, "service_index_unavailable", info.reason, cov);
@@ -286,6 +302,14 @@ char *sourceindexapi_search(db_handle *db, const char *tenant, const char *id,
     else cJSON_AddNullToObject(r, "name");
     cJSON_AddStringToObject(r, "category", c->category ? c->category : "");
     cJSON_AddStringToObject(r, "kind", source_kind_name(c->kind));
+    cJSON *et = cJSON_CreateArray();
+    for (int b = 0; b < SC_ET_COUNT; b++)
+      if (c->entity_types & (1u << b))
+        cJSON_AddItemToArray(et, cJSON_CreateString(source_entity_type_name(b)));
+    cJSON_AddItemToObject(r, "entity_types", et);
+    if (c->entity_provenance)
+      cJSON_AddStringToObject(r, "entity_types_provenance", c->entity_provenance);
+    else cJSON_AddNullToObject(r, "entity_types_provenance");
     cJSON_AddNumberToObject(r, "score", hits[i].score);
     if (hits[i].vrank) cJSON_AddNumberToObject(r, "vector_rank", hits[i].vrank);
     else cJSON_AddNullToObject(r, "vector_rank");
