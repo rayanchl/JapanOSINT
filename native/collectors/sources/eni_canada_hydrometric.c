@@ -153,7 +153,7 @@ static const source_def eni_canada_hydrometric_def = {
   .name = "Environment Canada realtime hydrometric stations",
   .update_interval_sec = 900, .run = run,
   .category = "environment", .type = "api",
-  .url = "https://api.weather.gc.ca/collections/hydrometric-realtime/items?limit=500&sortby=-DATETIME&f=json&datetime={date-1h}/..",
+  .url = "https://api.weather.gc.ca/collections/hydrometric-realtime/items?limit=500&sortby=-DATETIME&f=json&datetime=<now-1h, ISO, from CAHY_WINDOW_HOURS>/..",
   .description = "Canadian national water-level (m) and discharge (m3/s) network, 5-minute telemetry with station geometry.",
   .license = "Open Government Licence - Canada (api.weather.gc.ca GeoMet-OGC-API), keyless.",
   .free_tier = 1,

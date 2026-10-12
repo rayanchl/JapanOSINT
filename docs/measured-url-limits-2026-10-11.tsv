@@ -133,7 +133,14 @@ collectors/sources/soc_news_media.c	138	limit=20	20	500	TRUNCATING
 #     ckan-au-wa              20 -> 2,917     =
 #     ckan-ca-ontario         20 -> 2,964     =
 #     ckan-au-nsw             20 -> 17,192 emitted / 17,191 stored
-#     ckan-au-qld             20 -> 188,879 declared (walk in progress)
+#     ckan-au-qld             20 -> 188,880 emitted / 188,879 stored = its own
+#       result.count exactly, 945 pages, CONFIRMED end to end 2026-10-12. It
+#       took three attempts and the first two are the lesson: at a 250 ms
+#       hostgate gap page 77 answered HTTP 429 and the walk stopped and said
+#       so, which is how the pacing was found to be wrong rather than the
+#       ceiling. At 1,500 ms the complete read takes 72 minutes with no 429 and
+#       no truncation notice. The single collision is one record against
+#       188,880 over a 72-minute walk -- a dataset added while it ran.
 #     ckan-de-muenchen        503 behind a bot wall at rows=20 as much as 200
 #     ckan-open-africa        403 likewise
 #
@@ -161,8 +168,15 @@ collectors/sources/soc_news_media.c	138	limit=20	20	500	TRUNCATING
 #     observation-level twin of gc-hydrometric on the same endpoint.
 #
 # NOT changed, and why: od_ods_rte_eco2mix asks for limit=48&order_by=date_heure
-# desc -- the last 48 half-hours of the French grid mix, which is a ranked
-# window whose limit IS the question, not a truncation of a finite collection.
+# desc -- the newest 48 readings of the French grid mix, which is a recency
+# window, not a truncation of a finite collection. eco2mix-national-tr is
+# QUARTER-hourly, so 48 readings are 12 hours against a 1,800 s schedule: 24
+# runs of overlap, nothing falls between two runs. (An earlier draft of this
+# line said "48 half-hours", which was wrong about the resolution; the
+# conclusion holds either way, since both are far wider than the interval.)
+# opendata.reseaux-energies.fr answers an EMPTY body from this environment, so
+# the total_count is unmeasured here and the reasoning above is interval
+# arithmetic against the collector's own declared limit, not a live reading.
 #
 # ---- individual rows, second pass 2026-10-12 -------------------------------
 #   who-gho-indicator       100 -> 14,112  = @odata.count ($top/$skip/$count)

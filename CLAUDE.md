@@ -39,7 +39,26 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 18,884** (2026-10-12: 18,883 plus the `log-retention`
+**The registered count is 19,320** (2026-10-12), measured — batch 41's 437
+measured Japanese WordPress-REST rows (`docs/verified-sources-batch41.tsv`,
+`native/collectors/OSINT_SOURCES_BATCH_41_JPWP.md`) on main's 18,884, which
+made 19,321, LESS the one duplicate the url-limit pass removed:
+`geo-stac-swisstopo-swissimage` read the same swisstopo endpoint, interval and
+collection as the hand-written `swisstopo-stac`, and `make lint-sources` caught
+it (dup-endpoint) the moment that row's page size changed to match. Both floors
+are re-recorded at 19,320 and `make source-count` agrees.
+
+**Batch 41 is numbered 41 because 38, 39 and 40 were all taken while it was
+open.** It was generated as 38, and by the time it came to merge, another
+session's batch 38 (africa/china/france/uk/usa) had landed along with 39 and 40
+— including a *direct* collision on `docs/verified-sources-batch38.tsv`, the
+exact file the note below predicts. Renumbering touched the ids (`JO38_`→`JO41_`),
+the four manifests, the four tables and their array symbols, the rejected and
+verified TSVs, the batch doc and its filename. Re-check at merge time, not just
+at generation time — this branch had to do it twice, because main moved again
+between the renumber and the merge.
+
+**The count was 18,884** (2026-10-12: 18,883 plus the `log-retention`
 maintenance pod from the infrastructure audit, see the last section). 18,883
 (2026-10-09) was main's 18,730: 18,645 —
 batches 33–36 (batch 33's 43 measured supply-chain rows,
@@ -384,7 +403,8 @@ Where the tree actually stands, as `make audit-sources` reports it:
     forever while `result.count` sat in the same envelope. Measured and
     re-measured live: Zurich 20 → 942, energydata.info → 1,191, London → 1,306,
     South Australia → 1,929, Berlin → 2,627, Western Australia → 2,917,
-    Ontario → 2,964, NSW → 17,192, Queensland → 188,879. (München 503s and
+    Ontario → 2,964, NSW → 17,192, Queensland → 188,880 emitted / 188,879
+    stored, its own `result.count` exactly, across 945 pages. (München 503s and
     open.africa 403s behind bot walls, at `rows=20` as much as at 200 — checked,
     not assumed.)
   * `od_ods_catalog_collect()` — **7 OpenDataSoft catalogues** at
@@ -432,10 +452,17 @@ Where the tree actually stands, as `make audit-sources` reports it:
   otherwise. The four ODS records rows and OpenAerialMap carry it now; the CKAN
   rows already had `sort=id asc` and the ODS catalogues `order_by=dataset_id`.
 
-  **Two large portals got a hostgate gap rather than a lower ceiling.**
-  `data.qld.gov.au` is a complete read of ~945 pages and `data.nsw.gov.au` ~86;
-  250 ms each spreads the burst over minutes and still finishes inside one run.
-  A public portal is the reason to pace, not the reason to truncate.
+  **Two large portals got a hostgate gap rather than a lower ceiling — and the
+  first gap was wrong.** `data.qld.gov.au` is a complete read of ~945 pages and
+  `data.nsw.gov.au` ~86. At 250 ms the QLD walk got 76 pages in 47 s and page
+  77 answered **HTTP 429**; `lib/pagewalk.c` stopped and filed a notice naming
+  the status and pointing at `core/hostgate.c`, which is the only reason the
+  pacing was identified as the problem rather than the ceiling. The budget is
+  not a per-second rate — twelve requests at 250 ms all answered 200 — so at
+  **1,500 ms** the complete read finishes in 72 minutes with no 429 and no
+  notice: 188,880 emitted / 188,879 stored, its own `result.count` exactly.
+  A public portal is the reason to pace, not the reason to truncate; and a gap
+  is a measurement, not a guess you leave in.
 
   **Six more individual rows, then the rest TRIAGED** (2026-10-12). WHO GHO
   100 → 14,112 (`@odata.count`), openFDA enforcement 100 → 18,002
