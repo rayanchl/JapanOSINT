@@ -1,0 +1,27 @@
+id	url	verdict	http	bytes	note
+JO42_WP_UNIV_DAIICHICPS_EVENT	https://www.daiichi-cps.ac.jp/wp-json/wp/v2/event?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_KEIWAC_PICKUP	https://www.keiwa-c.ac.jp/wp-json/wp/v2/pickup?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_KOKA_TEACHERFACULTY	https://www.koka.ac.jp/wp-json/wp/v2/teacher_faculty?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_KOKA_TEACHERFIELD	https://www.koka.ac.jp/wp-json/wp/v2/teacher_field?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_KYORINU_CATFEMALERESEA	https://www.kyorin-u.ac.jp/wp-json/wp/v2/cat_female_researcher?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_KYORINU_CATNEWS	https://www.kyorin-u.ac.jp/wp-json/wp/v2/cat_news?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_KYORINU_CATNYUGAKU	https://www.kyorin-u.ac.jp/wp-json/wp/v2/cat_nyugaku?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_KYORINU_CATRESEARCH	https://www.kyorin-u.ac.jp/wp-json/wp/v2/cat_research?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_KYORINU_CATTRILINGUAL	https://www.kyorin-u.ac.jp/wp-json/wp/v2/cat_trilingual?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_MUSASHINOMUSIC_ACHIEVEMENTPAR	https://www.musashino-music.ac.jp/wp-json/wp/v2/achievement_part?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_MUSASHINOMUSIC_ACHIEVEMENTYEA	https://www.musashino-music.ac.jp/wp-json/wp/v2/achievement_year?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_MUSASHINOMUSIC_TEACHERINSTRUM	https://www.musashino-music.ac.jp/wp-json/wp/v2/teacher_instrument?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_NAGOYAKU_BLOGCATE	https://www.nagoya-ku.ac.jp/wp-json/wp/v2/blog_cate?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_NAGOYAKU_FESEVENT	https://www.nagoya-ku.ac.jp/wp-json/wp/v2/fesevent?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_NAGOYAKU_NEWSBLOGCATE	https://www.nagoya-ku.ac.jp/wp-json/wp/v2/newsblog_cate?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_NAGOYAKU_OBOGCATE	https://www.nagoya-ku.ac.jp/wp-json/wp/v2/obog_cate?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_NAGOYAKU_SYOZOKU	https://www.nagoya-ku.ac.jp/wp-json/wp/v2/syozoku?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_NIIGATAUM_GRADYM	https://www.niigataum.ac.jp/wp-json/wp/v2/grad_ym?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_NIIGATAUM_OGOBYEAR	https://www.niigataum.ac.jp/wp-json/wp/v2/ogob_year?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_NIIGATAUM_SUCCESSKINDS	https://www.niigataum.ac.jp/wp-json/wp/v2/success_kinds?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_TBGU_FACULTYDEPARTM	https://www.tbgu.ac.jp/wp-json/wp/v2/faculty-department?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_TBGU_PROFESSORFIELD	https://www.tbgu.ac.jp/wp-json/wp/v2/professor-field?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_TBGU_SIAPPROACHFIEL	https://www.tbgu.ac.jp/wp-json/wp/v2/si-approach-field?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_TOKAIGAKUENU_CLUBCANVAS	https://www.tokaigakuen-u.ac.jp/wp-json/wp/v2/club_canvas?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_TOKAIGAKUENU_GRADUATED	https://www.tokaigakuen-u.ac.jp/wp-json/wp/v2/graduated?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_UNIV_TOKAIGAKUENU_NEWSPICKUP	https://www.tokaigakuen-u.ac.jp/wp-json/wp/v2/news_pickup?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request

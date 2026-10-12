@@ -39,7 +39,21 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 19,321** (2026-10-12), measured — batch 41's 437
+**The registered count is 21,237** (2026-10-12), measured — batch 42's 1,916
+measured rows (`docs/verified-sources-batch42.tsv`,
+`native/collectors/OSINT_SOURCES_BATCH_42_JPWPROUTES.md`) on 19,321.
+
+**Batch 42 is batch 41 asked properly.** Batch 41 requested ONE collection per
+Japanese WordPress host, `wp/v2/posts`, because that is the path everyone knows.
+Asking each host for its own route table at `/wp-json` instead found 6,726
+advertised collections on 433 hosts — 1,067 distinct custom post types, the
+registers where a company publishes its IR releases and a university its staff —
+of which 2,567 held records and 1,916 survived probe and the emit sweep. **The
+generalisable part is the method: ask the endpoint what it serves, rather than
+probing the paths you can name.** A convention sweep found 465 live endpoints on
+6,720 hosts; the route tables of those same hosts held four times as many.
+
+**The registered count was 19,321** (2026-10-12): batch 41's 437
 measured Japanese WordPress-REST rows (`docs/verified-sources-batch41.tsv`,
 `native/collectors/OSINT_SOURCES_BATCH_41_JPWP.md`) on main's 18,884.
 
