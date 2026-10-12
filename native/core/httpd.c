@@ -27,6 +27,7 @@
 #include "storyapi.h"
 #include "alert_sem.h"
 #include "qembed.h"        /* qembed_enabled: does /api/search/suggest retrieve? */
+#include "sourceindexapi.h"
 #include "camera_stills.h"
 #include "cameraproxy.h"
 #include "uploadapi.h"
@@ -2289,6 +2290,19 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       } }
 
     if (eq(u, "/api/sources/stats")) { route_sources_stats(c); return; }
+    /* GET /api/sources/search?q=&kind=&k= — the registry by meaning
+     * (core/sourceindexapi.h). Embeds the query: off the loop. Matched
+     * before /api/sources/:id, which would read "search" as an id. */
+    if (eq(u, "/api/sources/search")) {
+      sem_spawn(c, hm, sourceindexapi_search, "", "", opgate_check(&usr) == 0);
+      return;
+    }
+    if (eq(u, "/api/sources/categories")) {
+      char *body = sourceindexapi_categories(g_db);
+      reply_json(c, body ? 200 : 500, body ? body : "{\"error\":\"server_error\"}");
+      free(body);
+      return;
+    }
 
     /* GET /api/sources — full source registry/probe rows. */
     if (eq(u, "/api/sources")) {
@@ -2803,6 +2817,12 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       /* Which ffmpeg answered, and whether it ran at all. "available: true"
        * is not much help when two are installed, and the honest answer to
        * "why is RTSP capture failing" is usually here. */
+      /* Layer-assignment proposals (core/sourceindexapi.h): an index scan,
+       * off the loop. Read-only. */
+      if (eq(u,"/api/admin/layers/review")) {
+        sem_spawn(c, hm, sourceindexapi_layers_review, "", "", 1);
+        return;
+      }
       if (eq(u,"/api/admin/ffmpeg/capabilities")) {
         char *body = ffmpeg_capabilities();
         if (!body) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }

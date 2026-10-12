@@ -487,6 +487,17 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
    * created inside content_change_ensure_schema() for the same reason as
    * above — the column does not exist when schema.sql runs. */
   ensure_column(db, "sources", "watch_content", "INTEGER");
+  /* DERIVED labels, never renames (core/source_category.h): `category` stays
+   * what the source declared; these say which of source.h's 31 categories it
+   * belongs to and how that was decided ('declared' | 'derived'). */
+  ensure_column(db, "sources", "category_canonical", "TEXT");
+  ensure_column(db, "sources", "category_provenance", "TEXT");
+  ensure_column(db, "sources", "category_confidence", "REAL");
+  /* What a pivot can be asked about (core/source_card.h: a SC_ET_* mask
+   * derived from its declaration) and the facts it was derived from. NULL on
+   * a non-pivot; 0 with NULL provenance on an unlabelled pivot. */
+  ensure_column(db, "sources", "entity_types", "INTEGER");
+  ensure_column(db, "sources", "entity_types_provenance", "TEXT");
   /* The workspace run list names each run's query (searchapi_runs). */
   ensure_column(db, "search_run_owners", "query", "TEXT");
   content_change_ensure_schema(db);

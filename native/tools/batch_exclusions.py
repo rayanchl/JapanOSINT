@@ -69,19 +69,50 @@ all of the same shape -- a check that could not see something, and said
     being checked, which would otherwise self-collide). When a skip is in
     effect the tool prints what it suppressed.
 
+ 5. NEW ID, NEW ENDPOINT, SAME DATA. Every check above compares STRINGS, so
+    a candidate that re-reads an existing dataset through a mirror, a
+    different API version or another portal's copy is reported clean. Batch
+    36 shipped 14 Socrata portal inventories that re-read a catalogue two
+    hand-written collectors already read; batch 31 shipped three rows that
+    re-fetched what an existing collector reads. `--semantic` compares
+    MEANING: each candidate row (name + description + host/path) is embedded
+    through JO_EMBED_URL and compared with every registered source's card —
+    the exact text the service index embeds, from `japanosint
+    --dump-source-cards` (core/source_card.h) — and a cosine at or above
+    --semantic-threshold (0.92) is a SEMANTIC-DUP. It is a question for a
+    human, not a verdict: counted with the near-misses, fatal only under
+    --strict. Without JO_EMBED_URL it says the semantic check was SKIPPED;
+    it never reports "0 semantic duplicates" for a check it did not make.
+
+    Card vectors are cached per model (--semantic-cache) keyed by a hash of
+    the exact text embedded, so only cards whose text changed are sent: the
+    whole registry is ~18,900 cards, ~45 minutes of CPU embedding cold.
+
+    `--coverage` prints the registry's cards counted by category x country
+    (country read off the id's ISO 3166 token; "??" when the id carries
+    none), and where the candidate rows would land — a thin cell is where a
+    batch adds coverage, a thick one is where it more likely duplicates.
+
 Usage:
   batch_exclusions.py --dump-ids ids.txt --dump-urls urls.txt [--bin BIN]
   batch_exclusions.py --check MANIFEST... [--bin BIN] [--strict]
+                      [--semantic [--semantic-threshold 0.92]] [--coverage]
 """
 import argparse
+import array
 import collections
+import hashlib
 import io
+import json
+import math
 import os
 import re
 import shutil
 import subprocess
 import tempfile
 import sys
+import urllib.parse
+import urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 NATIVE = os.path.dirname(HERE)
@@ -364,6 +395,261 @@ def load_manifest(paths):
     return rows, bad
 
 
+# ---- semantic duplicates (blind spot 5) -----------------------------------
+
+def load_cards(binpath):
+    """[(id, kind, category, card_text)] from `--dump-source-cards`, with the
+    dump's \\n \\t \\\\ escapes undone so the text is byte-identical to what
+    the C index embeds."""
+    out = subprocess.run([binpath, "--dump-source-cards"], capture_output=True,
+                         check=True).stdout.decode("utf-8", "replace")
+    cards = []
+    for line in out.split("\n"):
+        if not line:
+            continue
+        parts = line.split("\t", 3)
+        if len(parts) != 4:
+            continue
+        t = re.sub(r"\\(.)", lambda m: {"n": "\n", "t": "\t"}.get(m.group(1),
+                                                              m.group(1)), parts[3])
+        cards.append((parts[0], parts[1], parts[2], t))
+    return cards
+
+
+def bound_text(s):
+    """The C side's bound (embed_bound_text): JO_EMBED_MAX_CHARS BYTES,
+    default 1000, cut on a UTF-8 boundary — so a long card is embedded
+    exactly as the index embedded it."""
+    try:
+        m = int(os.environ.get("JO_EMBED_MAX_CHARS", "1000"))
+    except ValueError:
+        m = 1000
+    if m < 64:
+        m = 1000
+    b = s.encode("utf-8", "replace")
+    return b[:m].decode("utf-8", "ignore") if len(b) > m else s
+
+
+def http_json(url, body=None, timeout=120):
+    data = json.dumps(body).encode() if body is not None else None
+    req = urllib.request.Request(url, data=data, headers={
+        "Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return json.loads(r.read().decode("utf-8"))
+
+
+def embed_model(base):
+    m = os.environ.get("JO_EMBED_MODEL")
+    if m:
+        return m
+    d = http_json(base.rstrip("/") + "/v1/models", timeout=15)
+    return os.path.basename(str(d["data"][0]["id"]))
+
+
+def embed_batch(base, texts):
+    d = http_json(base.rstrip("/") + "/v1/embeddings", {"input": texts})
+    rows = sorted(d["data"], key=lambda e: e.get("index", 0))
+    if len(rows) != len(texts):
+        raise RuntimeError("embedding server answered %d vectors for %d inputs"
+                           % (len(rows), len(texts)))
+    return [unit(r["embedding"]) for r in rows]
+
+
+def unit(v):
+    n = math.sqrt(sum(x * x for x in v)) or 1.0
+    return [x / n for x in v]
+
+
+def text_key(t):
+    return hashlib.sha1(t.encode("utf-8")).digest()[:8]
+
+
+def cache_path(arg, model):
+    if arg:
+        return arg
+    root = os.environ.get("XDG_CACHE_HOME") or os.path.join(
+        os.path.expanduser("~"), ".cache")
+    safe = re.sub(r"[^A-Za-z0-9_.-]", "_", model)
+    return os.path.join(root, "japanosint", "source-cards-%s.bin" % safe)
+
+
+def cache_load(path):
+    """{8-byte text key: unit vector}. A cache of another width is ignored."""
+    out, dim = {}, 0
+    try:
+        raw = open(path, "rb").read()
+    except OSError:
+        return out, 0
+    if len(raw) < 4:
+        return out, 0
+    dim = int.from_bytes(raw[:4], "little")
+    rec = 8 + 4 * dim
+    if dim <= 0 or (len(raw) - 4) % rec:
+        return {}, 0
+    for off in range(4, len(raw), rec):
+        a = array.array("f")
+        a.frombytes(raw[off + 8:off + rec])
+        out[raw[off:off + 8]] = list(a)
+    return out, dim
+
+
+def cache_save(path, vecs, dim):
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    tmp = path + ".tmp"
+    with open(tmp, "wb") as f:
+        f.write(int(dim).to_bytes(4, "little"))
+        for k, v in vecs.items():
+            if len(v) != dim:
+                continue
+            f.write(k)
+            f.write(array.array("f", v).tobytes())
+    os.replace(tmp, path)
+
+
+def embed_all(base, texts, cache, batch=32, label="cards"):
+    """Vectors for `texts`, from the cache where the exact text is there."""
+    need = [t for t in dict.fromkeys(texts) if text_key(t) not in cache]
+    if need:
+        sys.stderr.write("semantic: embedding %d %s (%d cached)\n"
+                         % (len(need), label, len(texts) - len(need)))
+    for i in range(0, len(need), batch):
+        chunk = need[i:i + batch]
+        for t, v in zip(chunk, embed_batch(base, chunk)):
+            cache[text_key(t)] = v
+    return [cache[text_key(t)] for t in texts]
+
+
+def dot(a, b):
+    return sum(x * y for x, y in zip(a, b))
+
+
+def candidate_text(r):
+    """name + description + host/path — the candidate's own words, and the
+    endpoint, which is where two rows reading one dataset most often agree."""
+    u = urllib.parse.urlsplit(r.get("url", ""))
+    return "%s. %s %s%s" % (r.get("name", ""), r.get("description", ""),
+                            u.netloc, u.path)
+
+
+def semantic_check(paths, binpath, threshold, cache_arg):
+    """Print SEMANTIC-DUP lines; return the count, or None when skipped."""
+    base = os.environ.get("JO_EMBED_URL", "").strip()
+    if not base:
+        print("SEMANTIC: SKIPPED — JO_EMBED_URL is not set, so no semantic "
+              "duplicate check was made (this is not '0 semantic duplicates').")
+        return None
+    if not binpath:
+        print("SEMANTIC: SKIPPED — --semantic needs --bin: the registry's cards "
+              "come from japanosint --dump-source-cards.")
+        return None
+    px = os.environ.get("JO_EMBED_DOC_PREFIX", "")
+    model = embed_model(base)
+    cpath = cache_path(cache_arg, model)
+    cache, cdim = cache_load(cpath)
+    # The live width decides: a cache written at another width is another
+    # space, even under the same model name.
+    dim = len(embed_batch(base, ["dimension probe"])[0])
+    if cdim != dim:
+        cache = {}
+    n_cached = len(cache)
+    cards = load_cards(binpath)
+    ctexts = [bound_text(px + c[3]) for c in cards]
+    cvecs = embed_all(base, ctexts, cache)
+    rows = []
+    for p in paths:
+        for lno, _raw, kind, r in iter_lines(p):
+            if kind == "row":
+                rows.append((os.path.basename(p), lno, r))
+    qtexts = [bound_text(px + candidate_text(r)) for _f, _l, r in rows]
+    qvecs = embed_all(base, qtexts, cache, label="candidate rows")
+    if len(cache) != n_cached:
+        cache_save(cpath, cache, dim)
+    found = 0
+    for i, (fname, lno, r) in enumerate(rows):
+        q = qvecs[i]
+        best, bi = -2.0, -1
+        for j, v in enumerate(cvecs):
+            s = dot(q, v)
+            if s > best:
+                best, bi = s, j
+        if bi >= 0 and best >= threshold:
+            print("%s:%d SEMANTIC-DUP %s ~ %s (cosine %.3f, %s/%s) — review: "
+                  "the same data under another id or endpoint?"
+                  % (fname, lno, r["id"], cards[bi][0], best, cards[bi][1],
+                     cards[bi][2]))
+            found += 1
+        for k in range(i):
+            s = dot(q, qvecs[k])
+            if s >= threshold:
+                print("%s:%d SEMANTIC-DUP-BATCH %s ~ %s (%s:%d, cosine %.3f)"
+                      % (fname, lno, r["id"], rows[k][2]["id"], rows[k][0],
+                         rows[k][1], s))
+                found += 1
+                break
+    print("semantic: %d candidate row(s) against %d registry cards, model %s, "
+          "threshold %.2f: %d flagged for review"
+          % (len(rows), len(cards), model, threshold, found))
+    return found
+
+
+# ISO 3166-1 alpha-2, plus the two non-ISO tokens this registry's ids use
+# for a jurisdiction ("uk", "eu").
+ISO2 = frozenset("""
+ad ae af ag ai al am ao aq ar as at au aw ax az ba bb bd be bf bg bh bi bj bl
+bm bn bo bq br bs bt bv bw by bz ca cc cd cf cg ch ci ck cl cm cn co cr cu cv
+cw cx cy cz de dj dk dm do dz ec ee eg eh er es et fi fj fk fm fo fr ga gb gd
+ge gf gg gh gi gl gm gn gp gq gr gs gt gu gw gy hk hm hn hr ht hu id ie il im
+in io iq ir is it je jm jo jp ke kg kh ki km kn kp kr kw ky kz la lb lc li lk
+lr ls lt lu lv ly ma mc md me mf mg mh mk ml mm mn mo mp mq mr ms mt mu mv mw
+mx my mz na nc ne nf ng ni nl no np nr nu nz om pa pe pf pg ph pk pl pm pn pr
+ps pt pw py qa re ro rs ru rw sa sb sc sd se sg sh si sj sk sl sm sn so sr ss
+st sv sx sy sz tc td tf tg th tj tk tl tm tn to tr tt tv tw tz ua ug um us uy
+uz va vc ve vg vi vn vu wf ws ye yt za zm zw uk eu
+""".split())
+# Batch / family prefixes that come before the jurisdiction token.
+BATCH_TOK = re.compile(r"^(jo|ap|vs|cs|hp|vsrc|csrc)\d*$")
+
+
+def country_of(sid):
+    toks = [t for t in re.split(r"[_\-.:]+", sid.lower()) if t]
+    while toks and BATCH_TOK.match(toks[0]):
+        toks = toks[1:]
+    for t in toks[:2]:
+        if t in ISO2:
+            return "gb" if t == "uk" else t
+        if t.startswith("jp") or t.startswith("jpl"):
+            return "jp"
+    return "??"
+
+
+def coverage_report(paths, binpath):
+    if not binpath:
+        print("COVERAGE: SKIPPED — --coverage needs --bin for the registry's cards.")
+        return
+    cards = load_cards(binpath)
+    cell = collections.Counter((c[2], country_of(c[0])) for c in cards
+                               if c[1] != "pod")
+    unknown = sum(n for (cat, cc), n in cell.items() if cc == "??")
+    print("coverage: %d non-pod cards in %d category x country cells "
+          "(%d with no country token in the id)"
+          % (sum(cell.values()), len(cell), unknown))
+    for (cat, cc), n in cell.most_common(25):
+        print("  %-20s %-3s %6d" % (cat, cc, n))
+    rows = []
+    for p in paths or []:
+        for lno, _raw, kind, r in iter_lines(p):
+            if kind == "row":
+                rows.append(r)
+    if rows:
+        land = collections.Counter((r.get("category", ""), country_of(r["id"]))
+                                   for r in rows)
+        print("candidate rows by cell (registry count beside each):")
+        for (cat, cc), n in sorted(land.items(), key=lambda kv: -kv[1]):
+            print("  %-20s %-3s +%-4d (registry %d)%s"
+                  % (cat, cc, n, cell.get((cat, cc), 0),
+                     "  NEW CELL" if not cell.get((cat, cc)) else ""))
+
+
 def main():
     ap = argparse.ArgumentParser(
         description="Duplicate ids and endpoints, against the whole tree.")
@@ -389,7 +675,22 @@ def main():
                          "tree'. Repeatable. --check only; NEVER applied to "
                          "the dumps. Use it only for the tables generated "
                          "from the manifests being checked.")
+    ap.add_argument("--semantic", action="store_true",
+                    help="also embed each --check row and compare it with every "
+                         "registered source's card (blind spot 5). Needs --bin "
+                         "and JO_EMBED_URL; says SKIPPED without them.")
+    ap.add_argument("--semantic-threshold", type=float, default=0.92,
+                    help="cosine at or above which a row is a SEMANTIC-DUP")
+    ap.add_argument("--semantic-cache",
+                    help="card-vector cache file (default "
+                         "~/.cache/japanosint/source-cards-<model>.bin)")
+    ap.add_argument("--coverage", action="store_true",
+                    help="print registry cards by category x country, and "
+                         "where the --check rows land")
     a = ap.parse_args()
+
+    if a.coverage:
+        coverage_report(a.check, a.bin)
 
     # The dumps always see the whole tree. A discovery pass reads them, and a
     # dump with a hole in it proposes sources that already exist.
@@ -458,6 +759,12 @@ def main():
             print("%s:%d NEAR-ENDPOINT %s -> %s" % (fname, lno, sid, hit[2]))
             near += 1
         eps[k].add("(this batch)")
+
+    if a.semantic:
+        sem = semantic_check(a.check, a.bin, a.semantic_threshold,
+                             a.semantic_cache)
+        if sem:
+            near += sem
 
     print("collisions: %d   near-misses needing a human read: %d" % (bad, near))
     if malformed:
