@@ -1,0 +1,285 @@
+/* tests/unit/test_semsearch.c — the SEARCH surfaces over the intel vector
+ * index (core/semsearchapi.c and the endpoints built on it), against the
+ * trigram-hash stub embedding server (tools/embed_stub_server.py), with the
+ * index built by the real backfill pod.
+ *
+ * WHAT IS BEING PROTECTED:
+ *   S1. /api/intel/semantic filters (source list, record_type, since, until)
+ *       run INSIDE the KNN — a narrow filter is never starved by the k nearest
+ *       of everything — and bbox, a post-filter, COUNTS what it dropped. An
+ *       unreadable filter is a 400, never a search without it.
+ *
+ * Includes embed_pod.c directly to reach run() (the pod tick), so run.sh
+ * links every object EXCEPT obj/core/embed_pod.o and obj/main.o. */
+
+#include "../../core/embed_pod.c"
+#include "../../core/semsearchapi.h"
+
+#include <assert.h>
+#include <math.h>
+#include <signal.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+static pid_t g_stub = 0;
+static int   g_port = 0;
+static db_handle g_db;
+
+/* ---- the stub ------------------------------------------------------------ */
+
+static int answers(int port) {
+  char url[128];
+  snprintf(url, sizeof url, "http://127.0.0.1:%d", port);
+  llm_client c = { .http = NULL, .base_url = url, .interactive = 1 };
+  const char *t[1] = { "ping" };
+  float *v = NULL; int d = 0; llm_status st;
+  int ok = (llm_embed(&c, t, 1, &v, &d, 500, &st) == 0);
+  free(v);
+  return ok;
+}
+
+static void stub_stop(void) {
+  if (g_stub > 0) { kill(g_stub, SIGKILL); waitpid(g_stub, NULL, 0); g_stub = 0; }
+}
+
+/* Own the port or fail: see test_service_vec.c's port_busy() for why. */
+static int stub_start(int port) {
+  for (int tries = 0; tries < 40 && answers(port); tries++) port++;
+  if (answers(port)) return -1;
+  if (access("tools/embed_stub_server.py", R_OK) != 0) return -1;
+  pid_t p = fork();
+  if (p < 0) return -1;
+  if (p == 0) {
+    char ps[16];
+    snprintf(ps, sizeof ps, "%d", port);
+    if (!freopen("/dev/null", "w", stdout)) { /* stub noise is harmless */ }
+    if (!freopen("/dev/null", "w", stderr)) { /* stub noise is harmless */ }
+    execlp("python3", "python3", "tools/embed_stub_server.py", ps, "64", (char *)NULL);
+    _exit(127);
+  }
+  g_stub = p; g_port = port;
+  for (int i = 0; i < 100; i++) { if (answers(port)) return 0; usleep(100000); }
+  return -1;
+}
+
+/* ---- database helpers ---------------------------------------------------- */
+
+static void sql(const char *q) {
+  char *e = NULL;
+  if (sqlite3_exec(g_db.h, q, NULL, NULL, &e) != SQLITE_OK) {
+    fprintf(stderr, "SQL failed: %s\n  %s\n", e ? e : "?", q);
+    sqlite3_free(e);
+    assert(0);
+  }
+}
+
+static long sql_long(const char *q) {
+  sqlite3_stmt *s;
+  long v = -1;
+  if (sqlite3_prepare_v2(g_db.h, q, -1, &s, NULL) == SQLITE_OK) {
+    if (sqlite3_step(s) == SQLITE_ROW) v = (long)sqlite3_column_int64(s, 0);
+    sqlite3_finalize(s);
+  }
+  return v;
+}
+
+/* One intel_items row. pub NULL = fetched_at is the date; lat/lon NaN = no
+ * geometry. */
+typedef struct {
+  const char *uid, *src, *title, *rtype, *pub, *tenant, *lang;
+  double lat, lon;
+} row;
+
+static void put(const row *r) {
+  char now[40];
+  iso_ms(now, sizeof now, wall_ms() - 30000);
+  sqlite3_stmt *s;
+  assert(sqlite3_prepare_v2(g_db.h,
+    "INSERT INTO intel_items(uid,source_id,title,summary,published_at,fetched_at,"
+    "record_type,tenant_id,language,lat,lon) "
+    "VALUES(?1,?2,?3,?3,?4,?5,?6,?7,?8,?9,?10)", -1, &s, NULL) == SQLITE_OK);
+  sqlite3_bind_text(s, 1, r->uid, -1, SQLITE_STATIC);
+  sqlite3_bind_text(s, 2, r->src ? r->src : "src-a", -1, SQLITE_STATIC);
+  sqlite3_bind_text(s, 3, r->title, -1, SQLITE_STATIC);
+  if (r->pub) sqlite3_bind_text(s, 4, r->pub, -1, SQLITE_STATIC);
+  else        sqlite3_bind_null(s, 4);
+  sqlite3_bind_text(s, 5, now, -1, SQLITE_TRANSIENT);
+  sqlite3_bind_text(s, 6, r->rtype ? r->rtype : "news", -1, SQLITE_STATIC);
+  sqlite3_bind_text(s, 7, r->tenant ? r->tenant : "legacy", -1, SQLITE_STATIC);
+  if (r->lang) sqlite3_bind_text(s, 8, r->lang, -1, SQLITE_STATIC);
+  else         sqlite3_bind_null(s, 8);
+  if (r->lat == r->lat) sqlite3_bind_double(s, 9, r->lat); else sqlite3_bind_null(s, 9);
+  if (r->lon == r->lon) sqlite3_bind_double(s, 10, r->lon); else sqlite3_bind_null(s, 10);
+  assert(sqlite3_step(s) == SQLITE_DONE);
+  sqlite3_finalize(s);
+}
+
+static void reset_all(void) {
+  sql("DELETE FROM intel_items");
+  sql("DROP TABLE IF EXISTS intel_vec");
+  sql("DROP TABLE IF EXISTS intel_vec_v2");
+  sql("DROP TABLE IF EXISTS intel_vec_done");
+  sql("DROP TABLE IF EXISTS intel_vec_failed");
+  sql("DROP TABLE IF EXISTS intel_vec_meta");
+}
+
+/* One pod tick: embeds every eligible row of a small corpus. */
+static void build_index(void) {
+  http_client *hc = http_client_new();
+  volatile int cancel = 0;
+  source_ctx ctx = { .source_id = EMBED_SID, .http = hc, .db = &g_db,
+                     .cancel = &cancel };
+  assert(run(&ctx, NULL) == 0);
+  http_client_free(hc);
+}
+
+static cJSON *jget(cJSON *o, const char *path) {
+  char buf[128];
+  snprintf(buf, sizeof buf, "%s", path);
+  for (char *p = strtok(buf, "."); p && o; p = strtok(NULL, "."))
+    o = cJSON_GetObjectItem(o, p);
+  return o;
+}
+static double jnum(cJSON *o, const char *path) {
+  cJSON *v = jget(o, path);
+  assert(v && cJSON_IsNumber(v));
+  return v->valuedouble;
+}
+static int has_uid(cJSON *root, const char *uid) {
+  cJSON *it;
+  cJSON_ArrayForEach(it, cJSON_GetObjectItem(root, "data")) {
+    cJSON *u = cJSON_GetObjectItem(it, "uid");
+    if (u && cJSON_IsString(u) && !strcmp(u->valuestring, uid)) return 1;
+  }
+  return 0;
+}
+
+#define NOGEO NAN, NAN
+
+/* ---- S1: filters ---------------------------------------------------------- */
+
+static cJSON *sem(const char *tenant, const char *q, int k,
+                  const semsearch_filters *f, int want) {
+  int st = 0;
+  char *b = semsearchapi_query_ex(&g_db, tenant, q, "vector", 50, k, 0, f, &st);
+  if (st != want) fprintf(stderr, "status %d (want %d): %s\n", st, want, b ? b : "");
+  assert(st == want && b);
+  cJSON *j = cJSON_Parse(b);
+  free(b);
+  assert(j);
+  return j;
+}
+
+static void test_s1_filters(void) {
+  reset_all();
+  /* Ten near-identical rows from src-a, and the one src-b / record_type
+   * 'report' / dated row that a post-filter on the k=3 nearest would starve. */
+  char t[64];
+  for (int i = 0; i < 10; i++) {
+    char u[16]; snprintf(u, sizeof u, "a%d", i);
+    snprintf(t, sizeof t, "harbour crane inspection report %d", i);
+    row r = { u, "src-a", t, "news", NULL, "t1", "en", 35.0, 139.0 };
+    put(&r);
+  }
+  row rb = { "b-far", "src-b", "volcanic ash advisory for aviation", "report",
+             "2026-01-15T00:00:00Z", "t1", "ja", 43.0, 141.0 };
+  put(&rb);
+  row ro = { "o-1", "src-b", "harbour crane inspection report", "news", NULL,
+             "t-other", "en", NOGEO };
+  put(&ro);
+  build_index();
+  assert(sql_long("SELECT count(*) FROM intel_vec_v2") == 12);
+
+  const char *q = "harbour crane inspection report";
+  /* source inside the KNN: k=3 still reaches the far src-b row */
+  semsearch_filters f = { .source = "src-b" };
+  cJSON *j = sem("t1", q, 3, &f, 200);
+  assert(has_uid(j, "b-far") && !has_uid(j, "a0") && !has_uid(j, "o-1"));
+  assert(jnum(j, "meta.total") == 1 && jnum(j, "meta.shown") == 1);
+  cJSON *ik = jget(j, "meta.filters.in_knn");
+  assert(cJSON_GetArraySize(ik) == 1 &&
+         !strcmp(cJSON_GetArrayItem(ik, 0)->valuestring, "source"));
+  cJSON_Delete(j);
+
+  /* a list: both sources, and the count is what the KNN answered */
+  f = (semsearch_filters){ .source = "src-a, src-b" };
+  j = sem("t1", q, 20, &f, 200);
+  assert(jnum(j, "meta.total") == 11 && has_uid(j, "b-far"));
+  assert(cJSON_GetArraySize(jget(j, "meta.filters.source")) == 2);
+  cJSON_Delete(j);
+
+  /* record_type and dates, inside the KNN */
+  f = (semsearch_filters){ .record_type = "report" };
+  j = sem("t1", q, 2, &f, 200);
+  assert(jnum(j, "meta.total") == 1 && has_uid(j, "b-far"));
+  cJSON_Delete(j);
+  f = (semsearch_filters){ .until = "2026-02-01" };
+  j = sem("t1", q, 2, &f, 200);
+  assert(jnum(j, "meta.total") == 1 && has_uid(j, "b-far"));
+  cJSON_Delete(j);
+  f = (semsearch_filters){ .since = "2026-02-01" };
+  j = sem("t1", q, 50, &f, 200);
+  assert(jnum(j, "meta.total") == 10 && !has_uid(j, "b-far"));
+  cJSON_Delete(j);
+
+  /* bbox: a post-filter, and every row it removed is counted */
+  f = (semsearch_filters){ .bbox = "140,42,142,44" };
+  j = sem("t1", q, 50, &f, 200);
+  assert(jnum(j, "meta.total") == 1 && has_uid(j, "b-far"));
+  assert(jnum(j, "meta.filters.dropped.bbox") == 10);
+  assert(jnum(j, "meta.filters.dropped_total") == 10);
+  assert(jget(j, "meta.filters.post_note"));
+  assert(jget(j, "meta.coverage"));
+  cJSON_Delete(j);
+
+  /* unreadable filters are refused, never ignored */
+  f = (semsearch_filters){ .bbox = "142,42,140,44" };
+  j = sem("t1", q, 50, &f, 400);
+  assert(!strcmp(jget(j, "error")->valuestring, "invalid_bbox"));
+  cJSON_Delete(j);
+  f = (semsearch_filters){ .since = "last tuesday" };
+  j = sem("t1", q, 50, &f, 400);
+  assert(!strcmp(jget(j, "error")->valuestring, "invalid_since"));
+  cJSON_Delete(j);
+
+  /* hybrid: the FTS arm honours the same filters and the tenant */
+  int st = 0;
+  f = (semsearch_filters){ .source = "src-b" };
+  char *b = semsearchapi_query_ex(&g_db, "t1", q, "hybrid", 50, 50, 0, &f, &st);
+  assert(st == 200 && b);
+  j = cJSON_Parse(b); free(b);
+  assert(jnum(j, "meta.total") == 1 && has_uid(j, "b-far") && !has_uid(j, "o-1"));
+  cJSON_Delete(j);
+  printf("  S1: source/record_type/since/until inside the KNN, bbox dropped "
+         "counted, bad filter 400: ok\n");
+}
+
+int main(void) {
+  const char *dbp = getenv("JO_DB");
+  assert(dbp && "run.sh sets JO_DB to a scratch database");
+  if (db_open(&g_db, dbp, NULL) != 0) {
+    fprintf(stderr, "test_semsearch: cannot open db\n");
+    return 2;
+  }
+  unsetenv("JO_EMBED_MODEL");
+  unsetenv("JO_EMBED_RECORD_TYPES");
+  unsetenv("JO_EMBED_QUERY_URL");
+  setenv("JO_EMBED_SINCE_DAYS", "3650", 1);      /* fixtures carry 2026-01 dates */
+  setenv("JO_EMBED_MODEL_CHECK_TTL_MS", "0", 1);
+  if (stub_start(18290) != 0) {
+    printf("test_semsearch: stub unavailable, server-backed cases skipped\n");
+    stub_stop();
+    db_close(&g_db);
+    return 0;
+  }
+  char url[64];
+  snprintf(url, sizeof url, "http://127.0.0.1:%d", g_port);
+  setenv("JO_EMBED_URL", url, 1);
+
+  test_s1_filters();
+
+  stub_stop();
+  db_close(&g_db);
+  printf("test_semsearch: ok\n");
+  return 0;
+}

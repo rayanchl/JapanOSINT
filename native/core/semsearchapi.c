@@ -1,10 +1,11 @@
 /* core/semsearchapi.c — see semsearchapi.h. */
 #include "semsearchapi.h"
 #include "embed_pod.h"
+#include "intelapi.h"
 #include "fts.h"
 #include "llm.h"
-#include "source_registry.h"
 #include "../third_party/cJSON.h"
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,93 +14,13 @@
 #define RRF_K VECINDEX_RRF_K
 
 /* ---- item shape ----------------------------------------------------------
- * DUPLICATED from core/intelapi.c (ITEM_COLS / row_to_item, list shape,
- * full=0). intelapi.h exports no row builder — row_to_item is static — and
- * intelapi.c is owned by another change in flight, so the column list and
- * key order are copied here verbatim. If /api/intel/items grows a column,
- * this SELECT and item_from_row() must follow it; intelapi.c is the source of
- * truth. */
-#define ITEM_COLS \
-  "uid,source_id,title,body,summary,link,author,language," \
-  "published_at,fetched_at,tags,properties,keywords,lat,lon,geom_source," \
-  "geom_at,record_type,sub_source_id"
-
-static const char *ctext(sqlite3_stmt *s, int i) {
-  return (sqlite3_column_type(s, i) == SQLITE_NULL)
-           ? NULL : (const char *)sqlite3_column_text(s, i);
-}
-static void add_str_or_null(cJSON *o, const char *k, const char *v) {
-  cJSON_AddItemToObject(o, k, v ? cJSON_CreateString(v) : cJSON_CreateNull());
-}
-static cJSON *parse_or(cJSON *fallback, const char *txt) {
-  if (txt && *txt) { cJSON *j = cJSON_Parse(txt); if (j) { cJSON_Delete(fallback); return j; } }
-  return fallback;
-}
-
-static cJSON *item_from_row(sqlite3_stmt *s) {
-  const char *c_uid=ctext(s,0), *c_src=ctext(s,1), *c_title=ctext(s,2),
-    *c_summary=ctext(s,4), *c_link=ctext(s,5),
-    *c_author=ctext(s,6), *c_lang=ctext(s,7), *c_pub=ctext(s,8),
-    *c_fetch=ctext(s,9), *c_tags=ctext(s,10), *c_props=ctext(s,11),
-    *c_kw=ctext(s,12), *c_gsrc=ctext(s,15), *c_gat=ctext(s,16),
-    *c_rt=ctext(s,17), *c_sub=ctext(s,18);
-  int latnull = sqlite3_column_type(s,13)==SQLITE_NULL;
-  int lonnull = sqlite3_column_type(s,14)==SQLITE_NULL;
-  double lat = sqlite3_column_double(s,13), lon = sqlite3_column_double(s,14);
-
-  cJSON *tags = parse_or(cJSON_CreateArray(), c_tags);
-  cJSON *props = parse_or(cJSON_CreateObject(), c_props);
-  cJSON *kw = (c_kw && *c_kw) ? cJSON_Parse(c_kw) : NULL;
-
-  const src_meta *m = src_meta_get(c_src);
-  cJSON *lic = cJSON_GetObjectItem(props, "license");
-  if (!lic || cJSON_IsNull(lic)) lic = cJSON_GetObjectItem(props, "license_id");
-  if (!lic || cJSON_IsNull(lic)) lic = cJSON_GetObjectItem(props, "license_name");
-  const char *licstr = (lic && cJSON_IsString(lic)) ? lic->valuestring
-                       : (m && m->license ? m->license : NULL);
-  char licbuf[128] = {0};
-  if (!licstr && lic && cJSON_IsNumber(lic)) { snprintf(licbuf,sizeof licbuf,"%g",lic->valuedouble); licstr=licbuf; }
-  cJSON *conf = cJSON_GetObjectItem(props, "confidence");
-  if (!conf) conf = cJSON_GetObjectItem(props, "_confidence");
-
-  cJSON *pv = cJSON_CreateObject();
-  add_str_or_null(pv,"source_id", c_src);
-  cJSON_AddItemToObject(pv,"source_name", cJSON_CreateString(m&&m->name?m->name:(c_src?c_src:"")));
-  add_str_or_null(pv,"source_name_ja", m?m->name_ja:NULL);
-  add_str_or_null(pv,"category", m?m->category:NULL);
-  add_str_or_null(pv,"collection_method", m?m->type:NULL);
-  add_str_or_null(pv,"source_url", m?m->url:NULL);
-  add_str_or_null(pv,"item_url", c_link);
-  add_str_or_null(pv,"sub_source_id", c_sub);
-  add_str_or_null(pv,"fetched_at", c_fetch);
-  add_str_or_null(pv,"published_at", c_pub);
-  add_str_or_null(pv,"license", licstr);
-  cJSON_AddItemToObject(pv,"confidence",
-     (conf && cJSON_IsNumber(conf)) ? cJSON_CreateNumber(conf->valuedouble) : cJSON_CreateNull());
-
-  cJSON *out = cJSON_CreateObject();
-  add_str_or_null(out,"uid", c_uid);
-  add_str_or_null(out,"source_id", c_src);
-  add_str_or_null(out,"title", c_title);
-  add_str_or_null(out,"summary", c_summary);
-  add_str_or_null(out,"link", c_link);
-  add_str_or_null(out,"author", c_author);
-  add_str_or_null(out,"language", c_lang);
-  add_str_or_null(out,"published_at", c_pub);
-  add_str_or_null(out,"fetched_at", c_fetch);
-  cJSON_AddItemToObject(out,"tags", tags);
-  cJSON_AddItemToObject(out,"lat", latnull?cJSON_CreateNull():cJSON_CreateNumber(lat));
-  cJSON_AddItemToObject(out,"lon", lonnull?cJSON_CreateNull():cJSON_CreateNumber(lon));
-  add_str_or_null(out,"geom_source", c_gsrc);
-  add_str_or_null(out,"geom_at", c_gat);
-  add_str_or_null(out,"record_type", c_rt);
-  add_str_or_null(out,"sub_source_id", c_sub);
-  cJSON_AddItemToObject(out,"provenance", pv);
-  if (cJSON_GetArraySize(props) > 0) cJSON_AddItemToObject(out,"properties", props);
-  else cJSON_Delete(props);
-  if (kw) cJSON_AddItemToObject(out,"keywords", kw);
-  return out;
-}
+ * The row is rendered by intelapi_row_to_item(), the builder /api/intel/items
+ * uses — this file used to carry a verbatim copy of it, which had already
+ * drifted (no cluster_id). Column 20 is the row's date as the index's `ts`
+ * column holds it (EMBED_ROW_TS), so a post-filter on the date reads the
+ * same rule the KNN filter did. */
+#define SEL_ROW "SELECT " INTELAPI_ITEM_COLS ", " EMBED_ROW_TS " FROM intel_items"
+enum { C_SRC = 1, C_LANG = 7, C_LAT = 13, C_LON = 14, C_RTYPE = 17, C_TS = 20 };
 
 static char *fail(int *status, int code, const char *err, const char *detail,
                   cJSON *coverage) {
@@ -122,20 +43,131 @@ static long ms_since(const struct timespec *t0) {
   return (t1.tv_sec - t0->tv_sec) * 1000L + (t1.tv_nsec - t0->tv_nsec) / 1000000L;
 }
 
-char *semsearchapi_query(db_handle *db, const char *tenant, const char *q,
-                         const char *mode, int limit, int k, int is_operator,
-                         int *status) {
-  *status = 500;
-  if (!q || !*q) return fail(status, 400, "missing_q", "q is required", NULL);
-  int hybrid;
-  if (!mode || !*mode || !strcmp(mode, "hybrid")) hybrid = 1;
-  else if (!strcmp(mode, "vector")) hybrid = 0;
-  else return fail(status, 400, "bad_mode", "mode must be hybrid or vector", NULL);
-  if (limit <= 0) limit = 50;
-  if (limit > 200) limit = 200;
-  if (k <= 0) k = 200;
-  if (k > 1000) k = 1000;
+/* ---- filters ------------------------------------------------------------- */
 
+void semsearch_rf_free(semsearch_rf *rf) {
+  if (!rf) return;
+  free(rf->srcbuf);
+  memset(rf, 0, sizeof *rf);
+}
+
+/* Epoch seconds of any time text SQLite's strftime reads — the parser that
+ * produced the index's `ts` column — or -1 when it reads nothing. */
+static long long epoch_of(db_handle *db, const char *t) {
+  sqlite3_stmt *s;
+  long long v = -1;
+  if (sqlite3_prepare_v2(db->h, "SELECT CAST(strftime('%s', ?1) AS INTEGER)",
+                         -1, &s, NULL) != SQLITE_OK) return -1;
+  sqlite3_bind_text(s, 1, t, -1, SQLITE_STATIC);
+  if (sqlite3_step(s) == SQLITE_ROW && sqlite3_column_type(s, 0) != SQLITE_NULL)
+    v = sqlite3_column_int64(s, 0);
+  sqlite3_finalize(s);
+  return v;
+}
+
+int semsearch_resolve(db_handle *db, const semsearch_filters *f,
+                      semsearch_rf *rf, char *err, size_t cap) {
+  memset(rf, 0, sizeof *rf);
+  if (err && cap) err[0] = 0;
+  if (!f) return 0;
+  if (f->source && *f->source) {
+    rf->srcbuf = strdup(f->source);
+    if (!rf->srcbuf) { snprintf(err, cap, "server_error"); return -1; }
+    for (char *p = rf->srcbuf; p && *p; ) {
+      char *c = strchr(p, ',');
+      if (c) *c = 0;
+      while (*p == ' ') p++;
+      size_t L = strlen(p);
+      while (L && p[L - 1] == ' ') p[--L] = 0;
+      if (*p) {
+        /* Refuse rather than drop the 33rd: a source list cut short is a
+         * different question. */
+        if (rf->nsrc >= SEMSEARCH_MAX_SOURCES) {
+          snprintf(err, cap, "too_many_sources");
+          semsearch_rf_free(rf);
+          return -1;
+        }
+        rf->src[rf->nsrc++] = p;
+      }
+      p = c ? c + 1 : NULL;
+    }
+  }
+  if (f->record_type && *f->record_type) rf->rtype = f->record_type;
+  if (f->since && *f->since) {
+    rf->since_ts = epoch_of(db, f->since);
+    if (rf->since_ts < 0) { snprintf(err, cap, "invalid_since"); semsearch_rf_free(rf); return -1; }
+    rf->has_since = 1;
+  }
+  if (f->until && *f->until) {
+    rf->until_ts = epoch_of(db, f->until);
+    if (rf->until_ts < 0) { snprintf(err, cap, "invalid_until"); semsearch_rf_free(rf); return -1; }
+    rf->has_until = 1;
+  }
+  if (f->lang && *f->lang) rf->lang = f->lang;
+  if (f->bbox && *f->bbox) {
+    double c[4]; const char *p = f->bbox; char *e;
+    for (int i = 0; i < 4; i++) {
+      c[i] = strtod(p, &e);
+      if (e == p || (i < 3 && *e != ',') || (i == 3 && *e)) {
+        snprintf(err, cap, "invalid_bbox"); semsearch_rf_free(rf); return -1;
+      }
+      p = e + 1;
+    }
+    /* w,s,e,n — the timeline's rule: an inverted or out-of-range box is a
+     * 400, not a box that silently matches nothing. */
+    if (c[0] > c[2] || c[1] > c[3] || c[1] < -90 || c[3] > 90 ||
+        c[0] < -180 || c[2] > 180) {
+      snprintf(err, cap, "invalid_bbox"); semsearch_rf_free(rf); return -1;
+    }
+    rf->has_bbox = 1; rf->bw = c[0]; rf->bs = c[1]; rf->be = c[2]; rf->bn = c[3];
+  }
+  return 0;
+}
+
+static int rf_any_knn(const semsearch_rf *rf) {
+  return rf && (rf->nsrc || rf->rtype || rf->has_since || rf->has_until);
+}
+static int rf_any(const semsearch_rf *rf) {
+  return rf_any_knn(rf) || (rf && (rf->lang || rf->has_bbox));
+}
+
+/* Which filter a stepped SEL_ROW row fails, first match wins; -1 = passes. */
+enum { D_SOURCE = 0, D_RTYPE, D_DATE, D_LANG, D_BBOX, D_N };
+static const char *D_NAMES[D_N] = { "source", "record_type", "date", "lang", "bbox" };
+static int row_fails(sqlite3_stmt *s, const semsearch_rf *rf) {
+  if (!rf) return -1;
+  if (rf->nsrc) {
+    const char *v = (const char *)sqlite3_column_text(s, C_SRC);
+    int ok = 0;
+    for (int i = 0; v && i < rf->nsrc && !ok; i++) ok = !strcmp(v, rf->src[i]);
+    if (!ok) return D_SOURCE;
+  }
+  if (rf->rtype) {
+    const char *v = (const char *)sqlite3_column_text(s, C_RTYPE);
+    if (!v || strcmp(v, rf->rtype)) return D_RTYPE;
+  }
+  long long ts = sqlite3_column_int64(s, C_TS);
+  if (rf->has_since && ts < rf->since_ts) return D_DATE;
+  if (rf->has_until && ts > rf->until_ts) return D_DATE;
+  if (rf->lang) {
+    const char *v = (const char *)sqlite3_column_text(s, C_LANG);
+    if (!v || strcmp(v, rf->lang)) return D_LANG;
+  }
+  if (rf->has_bbox) {
+    if (sqlite3_column_type(s, C_LAT) == SQLITE_NULL ||
+        sqlite3_column_type(s, C_LON) == SQLITE_NULL) return D_BBOX;
+    double la = sqlite3_column_double(s, C_LAT), lo = sqlite3_column_double(s, C_LON);
+    if (la < rf->bs || la > rf->bn || lo < rf->bw || lo > rf->be) return D_BBOX;
+  }
+  return -1;
+}
+
+/* ---- the query vector ---------------------------------------------------- */
+
+char *semsearch_embed(db_handle *db, const char *q, float **qv_out,
+                      int *dim_out, long *embed_ms, int *status) {
+  *qv_out = NULL; *dim_out = 0;
+  if (embed_ms) *embed_ms = 0;
   /* The 503s carry coverage so the caller can tell "not configured" from
    * "configured, index not built yet" from the body alone. */
   const char *base = embed_base_url();
@@ -190,7 +222,7 @@ char *semsearchapi_query(db_handle *db, const char *tenant, const char *q,
   float *qv = NULL; int qdim = 0; llm_status st;
   int erc = llm_embed(&llm, texts, 1, &qv, &qdim, 15000, &st);
   free(qb);
-  long embed_ms = ms_since(&t0);
+  if (embed_ms) *embed_ms = ms_since(&t0);
   if (erc != 0)
     return fail(status, 502, "embedding_failed", llm_status_code(st),
                 embed_coverage_json(db));
@@ -201,43 +233,284 @@ char *semsearchapi_query(db_handle *db, const char *tenant, const char *q,
              "(model '%.60s'); refusing to compare", qdim, dim, model);
     return fail(status, 502, "embedding_dim_mismatch", d, embed_coverage_json(db));
   }
+  *qv_out = qv; *dim_out = dim;
+  return NULL;
+}
+
+/* ---- the vector arm ------------------------------------------------------ */
+
+int semsearch_knn(db_handle *db, const char *tenant, const float *qv, int dim,
+                  int k, const semsearch_rf *rf, vecindex_hit **out,
+                  int *in_knn, char *err, size_t errcap) {
+  /* FILTERED INSIDE THE KNN. The index is partitioned on tenant_id, so a
+   * tenant's query asks for the k nearest among its own rows and the shared
+   * corpus — it used to ask for the k nearest across EVERY tenant and then
+   * drop what it could not show, so a tenant whose rows sat below k
+   * other-tenant rows was answered with nothing. source/record_type/ts are
+   * metadata columns and are filtered the same way. While a migration from
+   * the pre-metadata table is pending (embed_query_spec) there is nothing to
+   * filter on, and the per-row post-check in materialize() is all there is —
+   * `in_knn` says which happened. */
+  const vecindex_spec *vs = embed_query_spec(db);
+  int meta = (vs == &embed_intel_spec);
+  vecindex_val tv[2] = { VI_S(tenant), VI_S("legacy") };
+  vecindex_val sv[SEMSEARCH_MAX_SOURCES];
+  vecindex_val rv[1], sinv[1], unv[1];
+  vecindex_filter f[5];
+  int nf = 0;
+  if (meta && tenant && *tenant)
+    f[nf++] = (vecindex_filter){ .col = "tenant_id", .op = "IN", .vals = tv,
+                                 .nvals = !strcmp(tenant, "legacy") ? 1 : 2 };
+  if (meta && rf && rf->nsrc) {
+    for (int i = 0; i < rf->nsrc; i++) sv[i] = VI_S(rf->src[i]);
+    f[nf++] = (vecindex_filter){ .col = "source_id", .op = rf->nsrc > 1 ? "IN" : "=",
+                                 .vals = sv, .nvals = rf->nsrc };
+  }
+  if (meta && rf && rf->rtype) {
+    rv[0] = VI_S(rf->rtype);
+    f[nf++] = (vecindex_filter){ .col = "record_type", .op = "=", .vals = rv, .nvals = 1 };
+  }
+  if (meta && rf && rf->has_since) {
+    sinv[0] = VI_I(rf->since_ts);
+    f[nf++] = (vecindex_filter){ .col = "ts", .op = ">=", .vals = sinv, .nvals = 1 };
+  }
+  if (meta && rf && rf->has_until) {
+    unv[0] = VI_I(rf->until_ts);
+    f[nf++] = (vecindex_filter){ .col = "ts", .op = "<=", .vals = unv, .nvals = 1 };
+  }
+  if (in_knn) *in_knn = meta;
+  if (k > SEMSEARCH_KNN_MAX) k = SEMSEARCH_KNN_MAX;
+  return vecindex_knn(db, vs, qv, dim, k, f, nf, out, err, errcap);
+}
+
+/* ---- materialising a ranked list ---------------------------------------- */
+
+typedef struct {
+  int visible, shown, withheld, orphans, excluded, skipped;
+  int dropped[D_N];
+} sem_counts;
+
+static int in_set(const char *k, const char *const *set, int n) {
+  for (int i = 0; i < n; i++) if (!strcmp(k, set[i])) return 1;
+  return 0;
+}
+
+/* Walk the ranked candidates, nearest/best first: look every one up (a
+ * primary-key seek each) so `visible` is the number the caller could page to,
+ * not a guess; build items only for [offset, offset+limit). A candidate that
+ * is not a visible row is another tenant's (withheld) or a vector whose row
+ * is gone (orphan) — only an operator is told either number, because how many
+ * of OTHER tenants' rows match is information about those tenants. A
+ * candidate in `excl` (the item itself, a case's own items) is counted, not
+ * shown. A row a post-filter rejects is counted under that filter. */
+static int materialize(db_handle *db, const char *tenant, int is_operator,
+                       const vecindex_fused *L, int offset, int limit,
+                       const semsearch_rf *rf, const char *const *excl, int nexcl,
+                       cJSON *data, sem_counts *c) {
+  memset(c, 0, sizeof *c);
+  sqlite3_stmt *get;
+  const char *sql = (tenant && *tenant)
+    ? SEL_ROW " WHERE uid=?1 AND tenant_id IN (?2,'legacy')"
+    : SEL_ROW " WHERE uid=?1";
+  if (sqlite3_prepare_v2(db->h, sql, -1, &get, NULL) != SQLITE_OK) return -1;
+  sqlite3_stmt *exists = NULL;
+  if (is_operator &&
+      sqlite3_prepare_v2(db->h, "SELECT 1 FROM intel_items WHERE uid=?1",
+                         -1, &exists, NULL) != SQLITE_OK)
+    exists = NULL;
+  for (int i = 0; i < L->n; i++) {
+    const vecindex_cand *cd = &L->v[i];
+    if (nexcl && in_set(cd->key, excl, nexcl)) { c->excluded++; continue; }
+    sqlite3_reset(get);
+    sqlite3_bind_text(get, 1, cd->key, -1, SQLITE_STATIC);
+    if (tenant && *tenant) sqlite3_bind_text(get, 2, tenant, -1, SQLITE_STATIC);
+    if (sqlite3_step(get) != SQLITE_ROW) {
+      if (exists) {
+        sqlite3_reset(exists);
+        sqlite3_bind_text(exists, 1, cd->key, -1, SQLITE_STATIC);
+        if (sqlite3_step(exists) == SQLITE_ROW) c->withheld++; else c->orphans++;
+      }
+      continue;
+    }
+    int why = row_fails(get, rf);
+    if (why >= 0) { c->dropped[why]++; continue; }
+    c->visible++;
+    if (c->visible <= offset) { c->skipped++; continue; }
+    if (c->shown >= limit) continue;
+    cJSON *it = intelapi_row_to_item(get, 0);
+    cJSON *sem = cJSON_CreateObject();
+    cJSON_AddNumberToObject(sem, "score", cd->score);
+    cJSON_AddNumberToObject(sem, "rank", offset + ++c->shown);
+    if (cd->vrank) { cJSON_AddNumberToObject(sem, "vector_rank", cd->vrank);
+                     cJSON_AddNumberToObject(sem, "distance", cd->distance); }
+    else           { cJSON_AddNullToObject(sem, "vector_rank");
+                     cJSON_AddNullToObject(sem, "distance"); }
+    if (cd->frank) cJSON_AddNumberToObject(sem, "fts_rank", cd->frank);
+    else           cJSON_AddNullToObject(sem, "fts_rank");
+    cJSON_AddItemToObject(it, "semantic", sem);
+    cJSON_AddItemToArray(data, it);
+  }
+  sqlite3_finalize(get);
+  sqlite3_finalize(exists);
+  return 0;
+}
+
+/* The filter block of meta: what was asked, where each filter ran, and how
+ * many candidates each post-filter (and, while the index has no metadata
+ * columns, each KNN filter's post-check) removed. */
+static cJSON *filters_meta(const semsearch_filters *f, const semsearch_rf *rf,
+                           int in_knn, const sem_counts *c) {
+  cJSON *o = cJSON_CreateObject();
+  cJSON *src = cJSON_CreateArray();
+  for (int i = 0; rf && i < rf->nsrc; i++)
+    cJSON_AddItemToArray(src, cJSON_CreateString(rf->src[i]));
+  if (rf && rf->nsrc) cJSON_AddItemToObject(o, "source", src);
+  else { cJSON_Delete(src); cJSON_AddNullToObject(o, "source"); }
+#define FS(k, v) cJSON_AddItemToObject(o, k, (v) && *(v) ? cJSON_CreateString(v) : cJSON_CreateNull())
+  FS("record_type", f ? f->record_type : NULL);
+  FS("since", f ? f->since : NULL);
+  FS("until", f ? f->until : NULL);
+  FS("lang", f ? f->lang : NULL);
+  FS("bbox", f ? f->bbox : NULL);
+#undef FS
+  /* Where each ran. The partition (tenant) is reported as knn_partitioned. */
+  cJSON *ik = cJSON_CreateArray(), *pf = cJSON_CreateArray();
+  if (rf && rf->nsrc)  cJSON_AddItemToArray(in_knn ? ik : pf, cJSON_CreateString("source"));
+  if (rf && rf->rtype) cJSON_AddItemToArray(in_knn ? ik : pf, cJSON_CreateString("record_type"));
+  if (rf && (rf->has_since || rf->has_until))
+    cJSON_AddItemToArray(in_knn ? ik : pf, cJSON_CreateString("date"));
+  if (rf && rf->lang)     cJSON_AddItemToArray(pf, cJSON_CreateString("lang"));
+  if (rf && rf->has_bbox) cJSON_AddItemToArray(pf, cJSON_CreateString("bbox"));
+  cJSON_AddItemToObject(o, "in_knn", ik);
+  cJSON_AddItemToObject(o, "post", pf);
+  cJSON *d = cJSON_CreateObject();
+  int any = 0;
+  for (int i = 0; i < D_N; i++) { cJSON_AddNumberToObject(d, D_NAMES[i], c->dropped[i]); any += c->dropped[i]; }
+  cJSON_AddItemToObject(o, "dropped", d);
+  /* A post-filter can only remove from the k candidates the KNN returned; it
+   * cannot reach past them. Said in-band so "3 results" is never read as "3
+   * matching rows exist". */
+  if (cJSON_GetArraySize(pf) > 0)
+    cJSON_AddStringToObject(o, "post_note",
+      "post-filters apply to the k nearest candidates only; rows they drop are "
+      "counted in `dropped` and a larger k widens the candidate set");
+  cJSON_AddNumberToObject(o, "dropped_total", any);
+  return o;
+}
+
+/* An FTS arm that honours the same filters AND the caller's tenant. With
+ * neither this is vecindex_fts_arm(), unchanged; otherwise the MATCH is joined
+ * to its rows so the arm's k slots are spent on rows that can be shown — an
+ * unscoped arm spent them on other tenants' rows, which materialize() then
+ * hid, and a tenant's own match below k of theirs never surfaced. */
+static int fts_arm(db_handle *db, const char *tenant, const char *matchq, int k,
+                   const semsearch_rf *rf, vecindex_fused *L) {
+  int scoped = tenant && *tenant;
+  if (!rf_any(rf) && !scoped)
+    return vecindex_fts_arm(db, "intel_items_fts", "uid", matchq, k, L);
+  char sql[2048];
+  int o = snprintf(sql, sizeof sql,
+    "SELECT f.uid FROM (SELECT uid, bm25(intel_items_fts) AS r FROM intel_items_fts "
+    "WHERE intel_items_fts MATCH ?1) f JOIN intel_items ON intel_items.uid = f.uid "
+    "WHERE 1=1");
+#define AP(...) do { if (o > 0 && (size_t)o < sizeof sql) { \
+    int _n = snprintf(sql + o, sizeof sql - (size_t)o, __VA_ARGS__); \
+    o = (_n < 0 || (size_t)(o + _n) >= sizeof sql) ? -1 : o + _n; } } while (0)
+  if (scoped)        AP(" AND intel_items.tenant_id IN (?%d,'legacy')", 11 + SEMSEARCH_MAX_SOURCES);
+  if (rf->nsrc) {
+    AP(" AND intel_items.source_id IN (");
+    for (int i = 0; i < rf->nsrc; i++) AP("%s?%d", i ? "," : "", 3 + i);
+    AP(")");
+  }
+  if (rf->rtype)     AP(" AND intel_items.record_type = ?%d", 3 + SEMSEARCH_MAX_SOURCES);
+  /* EMBED_ROW_TS carries strftime's own '%s': an argument, never format text. */
+  if (rf->has_since) AP(" AND %s >= ?%d", EMBED_ROW_TS, 4 + SEMSEARCH_MAX_SOURCES);
+  if (rf->has_until) AP(" AND %s <= ?%d", EMBED_ROW_TS, 5 + SEMSEARCH_MAX_SOURCES);
+  if (rf->lang)      AP(" AND intel_items.language = ?%d", 6 + SEMSEARCH_MAX_SOURCES);
+  if (rf->has_bbox)  AP(" AND intel_items.lat BETWEEN ?%d AND ?%d AND intel_items.lon "
+                        "BETWEEN ?%d AND ?%d", 7 + SEMSEARCH_MAX_SOURCES,
+                        8 + SEMSEARCH_MAX_SOURCES, 9 + SEMSEARCH_MAX_SOURCES,
+                        10 + SEMSEARCH_MAX_SOURCES);
+  AP(" ORDER BY f.r LIMIT ?2");
+#undef AP
+  if (o < 0) return -1;
+  sqlite3_stmt *st;
+  if (sqlite3_prepare_v2(db->h, sql, -1, &st, NULL) != SQLITE_OK) return -1;
+  sqlite3_bind_text(st, 1, matchq, -1, SQLITE_STATIC);
+  sqlite3_bind_int(st, 2, k);
+  for (int i = 0; i < rf->nsrc; i++) sqlite3_bind_text(st, 3 + i, rf->src[i], -1, SQLITE_STATIC);
+  const int B = SEMSEARCH_MAX_SOURCES;
+  if (rf->rtype)     sqlite3_bind_text(st, 3 + B, rf->rtype, -1, SQLITE_STATIC);
+  if (rf->has_since) sqlite3_bind_int64(st, 4 + B, rf->since_ts);
+  if (rf->has_until) sqlite3_bind_int64(st, 5 + B, rf->until_ts);
+  if (rf->lang)      sqlite3_bind_text(st, 6 + B, rf->lang, -1, SQLITE_STATIC);
+  if (rf->has_bbox) {
+    sqlite3_bind_double(st, 7 + B, rf->bs); sqlite3_bind_double(st, 8 + B, rf->bn);
+    sqlite3_bind_double(st, 9 + B, rf->bw); sqlite3_bind_double(st, 10 + B, rf->be);
+  }
+  if (scoped) sqlite3_bind_text(st, 11 + B, tenant, -1, SQLITE_STATIC);
+  int rank = 0;
+  while (sqlite3_step(st) == SQLITE_ROW) {
+    const char *key = (const char *)sqlite3_column_text(st, 0);
+    if (!key) continue;
+    if (!vecindex_fused_add(L, key, 0, ++rank, 0)) break;
+  }
+  sqlite3_finalize(st);
+  return rank;
+}
+
+/* ---- GET /api/intel/semantic --------------------------------------------- */
+
+char *semsearchapi_query_ex(db_handle *db, const char *tenant, const char *q,
+                            const char *mode, int limit, int k, int is_operator,
+                            const semsearch_filters *flt, int *status) {
+  *status = 500;
+  if (!q || !*q) return fail(status, 400, "missing_q", "q is required", NULL);
+  int hybrid;
+  if (!mode || !*mode || !strcmp(mode, "hybrid")) hybrid = 1;
+  else if (!strcmp(mode, "vector")) hybrid = 0;
+  else return fail(status, 400, "bad_mode", "mode must be hybrid or vector", NULL);
+  if (limit <= 0) limit = 50;
+  if (limit > 200) limit = 200;
+  if (k <= 0) k = 200;
+  if (k > 1000) k = 1000;
+
+  semsearch_rf rf;
+  char ferr[48];
+  if (semsearch_resolve(db, flt, &rf, ferr, sizeof ferr) != 0)
+    return fail(status, 400, ferr, "a filter could not be read; nothing was "
+                "searched rather than searching without it", NULL);
+
+  struct timespec t0; clock_gettime(CLOCK_MONOTONIC, &t0);
+  float *qv = NULL; int dim = 0; long embed_ms = 0;
+  char *eb = semsearch_embed(db, q, &qv, &dim, &embed_ms, status);
+  if (eb) { semsearch_rf_free(&rf); return eb; }
 
   vecindex_fused L = {0};
-  int vector_hits = 0, fts_hits = 0;
-
-  /* Vector arm, FILTERED INSIDE THE KNN. The index is partitioned on
-   * tenant_id, so a tenant's query asks for the k nearest among its own rows
-   * and the shared corpus — it used to ask for the k nearest across EVERY
-   * tenant and then drop what it could not show, so a tenant whose rows sat
-   * below k other-tenant rows was answered with nothing. While a migration
-   * from the pre-metadata table is pending (embed_query_spec) there is no
-   * partition to filter on, and the post-filter below is all there is. */
+  int vector_hits = 0, fts_hits = 0, in_knn = 0;
   const vecindex_spec *vs = embed_query_spec(db);
   int partitioned = (vs == &embed_intel_spec) && tenant && *tenant;
-  vecindex_val tv[2] = { VI_S(tenant), VI_S("legacy") };
-  vecindex_filter tf = { .col = "tenant_id", .op = "IN", .vals = tv,
-                         .nvals = (tenant && !strcmp(tenant, "legacy")) ? 1 : 2 };
   {
     vecindex_hit *h = NULL;
     char err[256];
-    int n = vecindex_knn(db, vs, qv, dim, k, partitioned ? &tf : NULL,
-                         partitioned ? 1 : 0, &h, err, sizeof err);
+    int n = semsearch_knn(db, tenant, qv, dim, k, &rf, &h, &in_knn, err, sizeof err);
     if (n < 0) {
-      free(qv);
+      free(qv); semsearch_rf_free(&rf);
       return fail(status, 500, "vector_query_failed", err, NULL);
     }
     vector_hits = vecindex_fused_add_hits(&L, h, n);
     vecindex_hits_free(h, n);
   }
   /* What an operator is told about the rows a tenant could NOT see: the same
-   * k nearest WITHOUT the partition filter; each one the fused list does not
-   * hold is another tenant's (or an orphan vector). Only for an operator —
-   * how many of OTHER tenants' rows match is itself information about those
-   * tenants — and so the extra KNN costs nothing on an ordinary query. */
+   * k nearest WITHOUT the partition filter (other filters kept); each one the
+   * fused list does not hold is another tenant's (or an orphan vector). Only
+   * for an operator — how many of OTHER tenants' rows match is itself
+   * information about those tenants — and so the extra KNN costs nothing on
+   * an ordinary query. */
   vecindex_hit *wh = NULL;
   int nwh = 0;
   if (is_operator && partitioned) {
-    nwh = vecindex_knn(db, vs, qv, dim, k, NULL, 0, &wh, NULL, 0);
+    nwh = semsearch_knn(db, NULL, qv, dim, k, &rf, &wh, NULL, NULL, 0);
     if (nwh < 0) nwh = 0;
   }
   free(qv);
@@ -249,76 +522,37 @@ char *semsearchapi_query(db_handle *db, const char *tenant, const char *q,
   if (hybrid) {
     matchq = fts_query_expr(q);
     if (matchq) {
-      int f = vecindex_fts_arm(db, "intel_items_fts", "uid", matchq, k, &L);
+      int f = fts_arm(db, tenant, matchq, k, &rf, &L);
       if (f > 0) fts_hits = f;
     }
   }
 
   vecindex_fused_sort(&L);
 
-  /* Materialise. Every fused candidate is looked up (a primary-key seek
-   * each) so `total` is the number the caller could page to, not a guess;
-   * items are only built for the first `limit` visible ones. */
-  sqlite3_stmt *get;
-  const char *sql = (tenant && *tenant)
-    ? "SELECT " ITEM_COLS " FROM intel_items WHERE uid=?1 AND tenant_id IN (?2,'legacy')"
-    : "SELECT " ITEM_COLS " FROM intel_items WHERE uid=?1";
-  if (sqlite3_prepare_v2(db->h, sql, -1, &get, NULL) != SQLITE_OK) {
-    free(matchq); vecindex_fused_free(&L); vecindex_hits_free(wh, nwh);
+  cJSON *data = cJSON_CreateArray();
+  sem_counts c;
+  if (materialize(db, tenant, is_operator, &L, 0, limit, &rf, NULL, 0, data, &c) != 0) {
+    cJSON_Delete(data); free(matchq); vecindex_fused_free(&L);
+    vecindex_hits_free(wh, nwh); semsearch_rf_free(&rf);
     return fail(status, 500, "server_error", sqlite3_errmsg(db->h), NULL);
   }
-  /* Candidates that do not resolve to a visible row are one of two things:
-   * another tenant's row, or a vector whose intel_items row is gone (an
-   * orphan). The split is an extra primary-key seek per such candidate, and
-   * only an operator is told either number: how many of OTHER tenants' rows
-   * match a query is itself information about those tenants. */
-  sqlite3_stmt *exists = NULL;
-  if (is_operator &&
-      sqlite3_prepare_v2(db->h, "SELECT 1 FROM intel_items WHERE uid=?1",
-                         -1, &exists, NULL) != SQLITE_OK)
-    exists = NULL;
-  cJSON *data = cJSON_CreateArray();
-  int shown = 0, visible = 0, withheld = 0, orphans = 0;
-  for (int i = 0; i < L.n; i++) {
-    vecindex_cand *c = &L.v[i];
-    sqlite3_reset(get);
-    sqlite3_bind_text(get, 1, c->key, -1, SQLITE_STATIC);
-    if (tenant && *tenant) sqlite3_bind_text(get, 2, tenant, -1, SQLITE_STATIC);
-    if (sqlite3_step(get) != SQLITE_ROW) {
-      if (exists) {
-        sqlite3_reset(exists);
-        sqlite3_bind_text(exists, 1, c->key, -1, SQLITE_STATIC);
-        if (sqlite3_step(exists) == SQLITE_ROW) withheld++; else orphans++;
-      }
-      continue;
-    }
-    visible++;
-    if (shown >= limit) continue;
-    cJSON *it = item_from_row(get);
-    cJSON *sem = cJSON_CreateObject();
-    cJSON_AddNumberToObject(sem, "score", c->score);
-    cJSON_AddNumberToObject(sem, "rank", ++shown);
-    if (c->vrank) { cJSON_AddNumberToObject(sem, "vector_rank", c->vrank);
-                    cJSON_AddNumberToObject(sem, "distance", c->distance); }
-    else          { cJSON_AddNullToObject(sem, "vector_rank");
-                    cJSON_AddNullToObject(sem, "distance"); }
-    if (c->frank) cJSON_AddNumberToObject(sem, "fts_rank", c->frank);
-    else          cJSON_AddNullToObject(sem, "fts_rank");
-    cJSON_AddItemToObject(it, "semantic", sem);
-    cJSON_AddItemToArray(data, it);
-  }
   /* The unfiltered arm's rows the partition kept out (see above). */
-  for (int i = 0; exists && i < nwh; i++) {
-    int in_list = 0;
-    for (int j = 0; j < L.n && !in_list; j++) in_list = !strcmp(L.v[j].key, wh[i].key);
-    if (in_list) continue;
-    sqlite3_reset(exists);
-    sqlite3_bind_text(exists, 1, wh[i].key, -1, SQLITE_STATIC);
-    if (sqlite3_step(exists) == SQLITE_ROW) withheld++; else orphans++;
+  if (nwh > 0) {
+    sqlite3_stmt *exists = NULL;
+    if (sqlite3_prepare_v2(db->h, "SELECT 1 FROM intel_items WHERE uid=?1",
+                           -1, &exists, NULL) == SQLITE_OK) {
+      for (int i = 0; i < nwh; i++) {
+        int in_list = 0;
+        for (int j = 0; j < L.n && !in_list; j++) in_list = !strcmp(L.v[j].key, wh[i].key);
+        if (in_list) continue;
+        sqlite3_reset(exists);
+        sqlite3_bind_text(exists, 1, wh[i].key, -1, SQLITE_STATIC);
+        if (sqlite3_step(exists) == SQLITE_ROW) c.withheld++; else c.orphans++;
+      }
+    }
+    sqlite3_finalize(exists);
   }
   vecindex_hits_free(wh, nwh);
-  sqlite3_finalize(get);
-  sqlite3_finalize(exists);
 
   cJSON *meta = cJSON_CreateObject();
   cJSON_AddStringToObject(meta, "mode", hybrid ? "hybrid" : "vector");
@@ -336,19 +570,21 @@ char *semsearchapi_query(db_handle *db, const char *tenant, const char *q,
   /* Whether the tenant filter ran INSIDE the KNN (false with no tenant, or
    * while a migration of the pre-metadata index is pending). */
   cJSON_AddBoolToObject(meta, "knn_partitioned", partitioned);
+  cJSON_AddItemToObject(meta, "filters", filters_meta(flt, &rf, in_knn, &c));
   if (is_operator) {
-    cJSON_AddNumberToObject(meta, "tenant_withheld", withheld);
-    cJSON_AddNumberToObject(meta, "index_orphans", orphans);
+    cJSON_AddNumberToObject(meta, "tenant_withheld", c.withheld);
+    cJSON_AddNumberToObject(meta, "index_orphans", c.orphans);
   }
   /* The bounded view states its bound in-band: shown of total. */
-  cJSON_AddNumberToObject(meta, "shown", shown);
-  cJSON_AddNumberToObject(meta, "total", visible);
-  cJSON_AddBoolToObject(meta, "truncated", visible > shown);
+  cJSON_AddNumberToObject(meta, "shown", c.shown);
+  cJSON_AddNumberToObject(meta, "total", c.visible);
+  cJSON_AddBoolToObject(meta, "truncated", c.visible > c.shown);
   cJSON_AddNumberToObject(meta, "embed_ms", (double)embed_ms);
   cJSON_AddNumberToObject(meta, "total_ms", (double)ms_since(&t0));
   cJSON_AddItemToObject(meta, "coverage", embed_coverage_json(db));
   free(matchq);
   vecindex_fused_free(&L);
+  semsearch_rf_free(&rf);
 
   cJSON *env = cJSON_CreateObject();
   cJSON_AddItemToObject(env, "data", data);
@@ -357,4 +593,11 @@ char *semsearchapi_query(db_handle *db, const char *tenant, const char *q,
   cJSON_Delete(env);
   *status = out ? 200 : 500;
   return out;
+}
+
+char *semsearchapi_query(db_handle *db, const char *tenant, const char *q,
+                         const char *mode, int limit, int k, int is_operator,
+                         int *status) {
+  return semsearchapi_query_ex(db, tenant, q, mode, limit, k, is_operator, NULL,
+                               status);
 }

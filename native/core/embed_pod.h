@@ -68,6 +68,18 @@
  * on: skipped until their text changes, and counted in the coverage block. */
 #define EMBED_FAIL_TABLE "intel_vec_failed"
 
+/* THE date of a row (embed_pod.c, WHICH ROWS ARE ELIGIBLE): published_at when
+ * it is ISO-8601 text, else fetched_at. EMBED_ROW_TS is that date as epoch
+ * seconds — exactly what the `ts` column of intel_vec_v2 holds. An ISO prefix
+ * strftime cannot read ("2026-10", a week date) falls back to fetched_at,
+ * exactly as a non-ISO published_at does; 0 only if neither parses. SQL over
+ * an `intel_items` row. */
+#define EMBED_ISO_PUB  "intel_items.published_at GLOB '[0-9][0-9][0-9][0-9]-*'"
+#define EMBED_ROW_DATE "(CASE WHEN " EMBED_ISO_PUB " THEN intel_items.published_at " \
+                       "ELSE intel_items.fetched_at END)"
+#define EMBED_ROW_TS   "CAST(COALESCE(strftime('%s'," EMBED_ROW_DATE ")," \
+                       "strftime('%s',intel_items.fetched_at),0) AS INTEGER)"
+
 /* The configured embedding base URL, or NULL when the pod is disabled. */
 const char *embed_base_url(void);
 

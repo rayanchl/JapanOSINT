@@ -1543,6 +1543,9 @@ static void *iso_thread(void *vp) {
 typedef struct {
   struct mg_mgr *mgr; unsigned long cid;
   char tenant[128], q[1024], mode[16];
+  /* S1 filters (semsearchapi.h): source list, record_type, since/until in the
+   * KNN; lang and bbox as counted post-filters. */
+  char source[1024], rtype[64], since[48], until[48], lang[16], bbox[96];
   int limit, k, op;
 } sem_arg;
 
@@ -1551,8 +1554,10 @@ static void *sem_thread(void *vp) {
   db_handle own;
   db_handle *db = db_worker_open(&own, g_db);
   int st = 500;
-  char *body = semsearchapi_query(db, a->tenant[0] ? a->tenant : NULL, a->q,
-                                  a->mode, a->limit, a->k, a->op, &st);
+  semsearch_filters f = { a->source, a->rtype, a->since, a->until, a->lang,
+                           a->bbox };
+  char *body = semsearchapi_query_ex(db, a->tenant[0] ? a->tenant : NULL, a->q,
+                                     a->mode, a->limit, a->k, a->op, &f, &st);
   db_worker_close(&own);
   if (body) wakeup_reply_big(a->mgr, a->cid, st, body);   /* consumes body */
   else      wakeup_reply(a->mgr, a->cid, 500, "{\"error\":\"server_error\"}");
@@ -2480,18 +2485,26 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, 200, body); free(body); return;
     }
 
-    /* GET /api/intel/semantic?q=&mode=hybrid|vector&limit=&k= — vector /
+    /* GET /api/intel/semantic?q=&mode=hybrid|vector&limit=&k=[&source=a,b
+     * &record_type=&since=&until=&lang=&bbox=w,s,e,n] — vector /
      * hybrid (RRF) search over the sqlite-vec index (core/semsearchapi.c).
      * Tenant-resolved like the ?near= mode of /api/intel/items above, and for
      * the same reason: the vector arm ranks over the whole index, so rows are
      * filtered to `tenant_id IN (?,'legacy')` on the way out. */
     if (eq(u, "/api/intel/semantic")) {
       char sq[1024] = {0}, smode[16] = {0}, slim[16] = {0}, sk[16] = {0};
+      sem_arg fl = {0};
       int stl = 0;
       qvar(hm, "q", sq, sizeof sq, &stl);
       qvar(hm, "mode", smode, sizeof smode, &stl);
       qvar(hm, "limit", slim, sizeof slim, &stl);
       qvar(hm, "k", sk, sizeof sk, &stl);
+      qvar(hm, "source", fl.source, sizeof fl.source, &stl);
+      qvar(hm, "record_type", fl.rtype, sizeof fl.rtype, &stl);
+      qvar(hm, "since", fl.since, sizeof fl.since, &stl);
+      qvar(hm, "until", fl.until, sizeof fl.until, &stl);
+      qvar(hm, "lang", fl.lang, sizeof fl.lang, &stl);
+      qvar(hm, "bbox", fl.bbox, sizeof fl.bbox, &stl);
       if (stl) { reply_json(c, 414,
         "{\"error\":\"filter_too_long\",\"detail\":\"a query parameter exceeded "
         "its maximum length; half a query cannot be honoured\"}"); return; }
@@ -2505,6 +2518,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (!worker_admit()) { reply_busy(c); return; }
       sem_arg *sa = calloc(1, sizeof *sa);
       if (sa) {
+        *sa = fl;
         sa->mgr = c->mgr; sa->cid = c->id;
         snprintf(sa->tenant, sizeof sa->tenant, "%s", tc.tenant_id);
         snprintf(sa->q, sizeof sa->q, "%s", sq);

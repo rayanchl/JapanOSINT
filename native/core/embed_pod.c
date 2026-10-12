@@ -425,16 +425,12 @@ static char *compose_text(const char *title, const char *summary,
 /* Selection SQL. The record-type predicate is bound as a JSON array through
  * json_each so the allowlist never touches SQL text. ?1 = since cutoff,
  * ?2 = record types (NULL = default), ?3/?4 = keyset, ?5 = page size. */
-#define ISO_PUB  "intel_items.published_at GLOB '[0-9][0-9][0-9][0-9]-*'"
+#define ISO_PUB  EMBED_ISO_PUB
 #define EFF_DATE "COALESCE(intel_items.published_at,intel_items.fetched_at)"
-/* THE date of a row — see WHICH ROWS ARE ELIGIBLE. */
-#define ROW_DATE "(CASE WHEN " ISO_PUB " THEN intel_items.published_at " \
-                 "ELSE intel_items.fetched_at END)"
-/* ROW_DATE as epoch seconds, for the `ts` metadata column. An ISO prefix
- * strftime cannot read ("2026-10", a week date) falls back to fetched_at,
- * exactly as a non-ISO published_at does; 0 only if neither parses. */
-#define ROW_TS "CAST(COALESCE(strftime('%s'," ROW_DATE ")," \
-               "strftime('%s',intel_items.fetched_at),0) AS INTEGER)"
+/* THE date of a row — see WHICH ROWS ARE ELIGIBLE. Defined in embed_pod.h so
+ * a query side that checks a row against a `ts` filter reads the same rule. */
+#define ROW_DATE EMBED_ROW_DATE
+#define ROW_TS   EMBED_ROW_TS
 #define SEL_COLS(KEY) \
   "intel_items.uid, intel_items.title, intel_items.summary, " \
   "substr(intel_items.body,1,512), " KEY ", " \

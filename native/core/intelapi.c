@@ -16,10 +16,7 @@
 
 /* explicit column order shared by item-by-uid and list-items so rows can be
  * read by fixed index (== rowToItem field access in intelStore.js). */
-#define ITEM_COLS \
-  "uid,source_id,title,body,summary,link,author,language," \
-  "published_at,fetched_at,tags,properties,keywords,lat,lon,geom_source," \
-  "geom_at,record_type,sub_source_id,cluster_id"
+#define ITEM_COLS INTELAPI_ITEM_COLS
 
 /* Same columns, same order, table-qualified — for the FTS branch where the
  * join to intel_items_fts makes title/body/summary/keywords ambiguous. The
@@ -113,8 +110,9 @@ static char *b64url_decode(const char *in) {
 }
 
 /* Build the rowToItem(row,{full}) object in EXACT Node key order. The stmt
- * must have stepped to a row selecting ITEM_COLS. */
-static cJSON *row_to_item(sqlite3_stmt *s, int full) {
+ * must have stepped to a row selecting ITEM_COLS. Exported (intelapi.h) so
+ * every item endpoint renders through this one copy. */
+cJSON *intelapi_row_to_item(sqlite3_stmt *s, int full) {
   const char *c_uid=ctext(s,0), *c_src=ctext(s,1), *c_title=ctext(s,2),
     *c_body=ctext(s,3), *c_summary=ctext(s,4), *c_link=ctext(s,5),
     *c_author=ctext(s,6), *c_lang=ctext(s,7), *c_pub=ctext(s,8),
@@ -216,7 +214,7 @@ char *intelapi_item_by_uid_tenant(db_handle *db, const char *uid,
   sqlite3_bind_text(s, 1, uid, -1, SQLITE_TRANSIENT);
   if (scoped) sqlite3_bind_text(s, 2, tenant, -1, SQLITE_TRANSIENT);
   if (sqlite3_step(s) != SQLITE_ROW) { sqlite3_finalize(s); return NULL; }
-  cJSON *out = row_to_item(s, 1);
+  cJSON *out = intelapi_row_to_item(s, 1);
   sqlite3_finalize(s);
 
   cJSON *env = cJSON_CreateObject();
@@ -320,6 +318,80 @@ static char *err_body(int *status, int code, const char *err, const char *detail
   char *js = cJSON_PrintUnformatted(o);
   cJSON_Delete(o);
   return js;
+}
+
+/* The feed's structured filters as " AND ..." fragments over intel_items —
+ * tenant first, then source/since/until/lang/tag/record_type/sub_source_id/
+ * has_geom — with their binds in bnd[] in SQL text order. ONE copy, shared
+ * with the hybrid sort (semsearchapi.c), so a filter means the same thing in
+ * both arms of a fused list. Returns the number of binds. */
+int intelapi_where(const intel_items_query *Q, char *wbuf, size_t cap,
+                   const char **bnd, int maxb) {
+  size_t wl = 0; int nb = 0;
+  if (!wbuf || !cap) return 0;
+  wbuf[0] = 0;
+#define WPUSH(frag) do { int _n = snprintf(wbuf + wl, cap - wl, \
+    " AND %s", (frag)); if (_n > 0) wl += (size_t)_n; \
+    if (wl >= cap) wl = cap - 1; } while (0)
+  /* Tenant scope FIRST, exactly as exportapi.c's build_intel_sql() does it and
+   * for the same reason: wbuf is clamped, and the guard must never be the
+   * fragment a clamp drops. `IN (?,'legacy')` because intel_items.tenant_id is
+   * NOT NULL DEFAULT 'legacy' (schema.sql:308) — the `IS NULL OR tenant_id=?`
+   * spelling used for the nullable `entities` column returns nothing here.
+   * NULL/"" leaves the predicate off; see intel_items_query::tenant. */
+  if (Q && Q->tenant && *Q->tenant)
+                             { WPUSH("intel_items.tenant_id IN (?,'legacy')"); if (nb < maxb) bnd[nb++] = Q->tenant; }
+  if (Q && Q->source)        { WPUSH("intel_items.source_id = ?");        if (nb < maxb) bnd[nb++] = Q->source; }
+  if (Q && Q->since)         { WPUSH("COALESCE(intel_items.published_at,intel_items.fetched_at) >= ?"); if (nb < maxb) bnd[nb++] = Q->since; }
+  if (Q && Q->until)         { WPUSH("COALESCE(intel_items.published_at,intel_items.fetched_at) <= ?"); if (nb < maxb) bnd[nb++] = Q->until; }
+  if (Q && Q->lang)          { WPUSH("intel_items.language = ?");          if (nb < maxb) bnd[nb++] = Q->lang; }
+  if (Q && Q->tag)           { WPUSH("EXISTS (SELECT 1 FROM json_each(intel_items.tags) WHERE json_each.value = ?)"); if (nb < maxb) bnd[nb++] = Q->tag; }
+  if (Q && Q->record_type)   { WPUSH("intel_items.record_type = ?");       if (nb < maxb) bnd[nb++] = Q->record_type; }
+  if (Q && Q->sub_source_id) { WPUSH("intel_items.sub_source_id = ?");     if (nb < maxb) bnd[nb++] = Q->sub_source_id; }
+  if (Q && Q->has_geom && !strcmp(Q->has_geom, "yes")) WPUSH("intel_items.lat IS NOT NULL");
+  if (Q && Q->has_geom && !strcmp(Q->has_geom, "no"))  WPUSH("intel_items.lat IS NULL");
+#undef WPUSH
+  return nb;
+}
+
+/* The BM25 arm of sort=hybrid: exactly the uids sort=relevance would list
+ * first — same MATCH expression (q OR q_alt), same structured filters, same
+ * BM25_EXPR weights, same (rank, uid) order — up to k of them. */
+int intelapi_relevance_uids(db_handle *db, const intel_items_query *Q, int k,
+                            char ***out) {
+  *out = NULL;
+  char *matchq = Q ? intelapi_fts_match(Q->q, Q->q_alt) : NULL;
+  if (!matchq) return -1;
+  char wbuf[4096];
+  const char *bnd[24];
+  int nb = intelapi_where(Q, wbuf, sizeof wbuf, bnd, 24);
+  char sql[5400];
+  snprintf(sql, sizeof sql,
+    "SELECT intel_items.uid FROM (SELECT uid, " BM25_EXPR " AS r "
+    "FROM intel_items_fts WHERE intel_items_fts MATCH ?) f "
+    "JOIN intel_items ON intel_items.uid = f.uid WHERE 1=1%s "
+    "ORDER BY f.r ASC, intel_items.uid ASC LIMIT ?", wbuf);
+  sqlite3_stmt *s;
+  if (sqlite3_prepare_v2(db->h, sql, -1, &s, NULL) != SQLITE_OK) {
+    free(matchq); return -1;
+  }
+  int bi = 1;
+  sqlite3_bind_text(s, bi++, matchq, -1, SQLITE_TRANSIENT);
+  for (int i = 0; i < nb; i++) sqlite3_bind_text(s, bi++, bnd[i], -1, SQLITE_TRANSIENT);
+  sqlite3_bind_int(s, bi++, k);
+  char **v = calloc((size_t)(k > 0 ? k : 1), sizeof *v);
+  int n = 0;
+  while (v && n < k && sqlite3_step(s) == SQLITE_ROW) {
+    const char *u = ctext(s, 0);
+    if (!u) continue;
+    if (!(v[n] = strdup(u))) break;
+    n++;
+  }
+  sqlite3_finalize(s);
+  free(matchq);
+  if (!v) return -1;
+  *out = v;
+  return n;
 }
 
 /* GET /api/intel/items — faithful port of intelStore.listItems({}):
@@ -434,29 +506,9 @@ char *intelapi_list_items_st(db_handle *db, const intel_items_query *Q,
   /* WHERE fragments + ordered binds — Node listItems() order verbatim. The
    * cursor predicate is kept in its OWN buffer so the total count can reuse
    * wbuf without it (a total that shrank as you paged would be a lie). */
-  char wbuf[4096]; size_t wl = 0; wbuf[0] = 0;
-  const char *bnd[24]; int nb = 0;
-#define WPUSH(frag) do { int _n = snprintf(wbuf + wl, sizeof wbuf - wl, \
-    " AND %s", (frag)); if (_n > 0) wl += (size_t)_n; \
-    if (wl >= sizeof wbuf) wl = sizeof wbuf - 1; } while (0)
-  /* Tenant scope FIRST, exactly as exportapi.c's build_intel_sql() does it and
-   * for the same reason: wbuf is clamped, and the guard must never be the
-   * fragment a clamp drops. `IN (?,'legacy')` because intel_items.tenant_id is
-   * NOT NULL DEFAULT 'legacy' (schema.sql:308) — the `IS NULL OR tenant_id=?`
-   * spelling used for the nullable `entities` column returns nothing here.
-   * NULL/"" leaves the predicate off; see intel_items_query::tenant. */
-  if (Q && Q->tenant && *Q->tenant)
-                             { WPUSH("intel_items.tenant_id IN (?,'legacy')"); bnd[nb++] = Q->tenant; }
-  if (Q && Q->source)        { WPUSH("intel_items.source_id = ?");        bnd[nb++] = Q->source; }
-  if (Q && Q->since)         { WPUSH("COALESCE(intel_items.published_at,intel_items.fetched_at) >= ?"); bnd[nb++] = Q->since; }
-  if (Q && Q->until)         { WPUSH("COALESCE(intel_items.published_at,intel_items.fetched_at) <= ?"); bnd[nb++] = Q->until; }
-  if (Q && Q->lang)          { WPUSH("intel_items.language = ?");          bnd[nb++] = Q->lang; }
-  if (Q && Q->tag)           { WPUSH("EXISTS (SELECT 1 FROM json_each(intel_items.tags) WHERE json_each.value = ?)"); bnd[nb++] = Q->tag; }
-  if (Q && Q->record_type)   { WPUSH("intel_items.record_type = ?");       bnd[nb++] = Q->record_type; }
-  if (Q && Q->sub_source_id) { WPUSH("intel_items.sub_source_id = ?");     bnd[nb++] = Q->sub_source_id; }
-  if (Q && Q->has_geom && !strcmp(Q->has_geom, "yes")) WPUSH("intel_items.lat IS NOT NULL");
-  if (Q && Q->has_geom && !strcmp(Q->has_geom, "no"))  WPUSH("intel_items.lat IS NULL");
-#undef WPUSH
+  char wbuf[4096];
+  const char *bnd[24];
+  int nb = intelapi_where(Q, wbuf, sizeof wbuf, bnd, 24);
   const char *cursor_sql = "";
   if (cur_p)
     cursor_sql = " AND (COALESCE(intel_items.published_at,intel_items.fetched_at) < ? OR "
@@ -567,7 +619,7 @@ char *intelapi_list_items_st(db_handle *db, const intel_items_query *Q,
       collapsed++; continue;
     }
 
-    cJSON *it = row_to_item(s, 0);
+    cJSON *it = intelapi_row_to_item(s, 0);
     if (snip) {
       sqlite3_reset(snip);
       sqlite3_bind_text(snip, 1, segq, -1, SQLITE_TRANSIENT);
