@@ -94,6 +94,14 @@ int main(void) {
     cJSON_Delete(st);
   }
   assert(!alert_sem_status(&g_db, "x", "{\"q\":\"kobe\"}"));
+  {
+    int st = 0;
+    char *js = alert_eval_preview(&g_db, "t1",
+      "{\"mode\":\"llm\",\"nl_query\":\"earthquake tsunami kobe\"}", NULL, &st);
+    assert(st == 200 && strstr(js, "\"skipped\":\"semantic_index_unavailable\""));
+    assert(strstr(js, "\"reason\""));
+    free(js);
+  }
   printf("  inert: nothing embedded, the rule states it cannot fire and why: ok\n");
 
   if (estub_start(18480, 64, "stub-bow") != 0) {
@@ -165,6 +173,35 @@ int main(void) {
   assert(fired("r-sem", "i|hit2") == 0);
   assert(alert_sem_embed_missing(&g_db) == 1);
   printf("  edited description: the old vector is never used; the sweep re-embeds: ok\n");
+
+  /* A2b: preview of a semantic predicate is a KNN, with the live tenancy and
+   * the other terms, and states its window and threshold. */
+  {
+    int st = 0;
+    char *js = alert_eval_preview(&g_db, "t1",
+      "{\"mode\":\"llm\",\"nl_query\":\"earthquake tsunami kobe\",\"threshold\":0.7}",
+      NULL, &st);
+    assert(st == 200 && js);
+    cJSON *o = cJSON_Parse(js);
+    cJSON *m = cJSON_GetObjectItem(o, "meta");
+    assert(cJSON_IsNull(cJSON_GetObjectItem(m, "skipped")));
+    assert(cJSON_GetObjectItem(cJSON_GetObjectItem(m, "semantic"), "threshold"));
+    int n = cJSON_GetObjectItem(m, "match_count")->valueint;
+    assert(n == 2);                                 /* i|hit, i|hit2 (legacy) */
+    cJSON *r;
+    cJSON_ArrayForEach(r, cJSON_GetObjectItem(o, "data")) {
+      assert(strcmp(cJSON_GetObjectItem(r, "uid")->valuestring, "i|t2") != 0);
+      assert(cJSON_GetObjectItem(r, "cosine")->valuedouble >= 0.7);
+    }
+    cJSON_Delete(o); free(js);
+    js = alert_eval_preview(&g_db, "t1",
+      "{\"mode\":\"llm\",\"nl_query\":\"earthquake tsunami kobe\",\"threshold\":0.7,"
+      "\"source_ids\":[\"other-src\"]}", NULL, &st);
+    assert(strstr(js, "\"match_count\":0"));
+    free(js);
+    printf("  preview: KNN over the index, legacy + own tenant, other terms "
+           "applied, window and threshold stated: ok\n");
+  }
 
   estub_stop();
   db_close(&g_db);

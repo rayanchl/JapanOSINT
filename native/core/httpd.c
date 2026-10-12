@@ -25,6 +25,7 @@
 #include "cors.h"
 #include "semsearchapi.h"
 #include "storyapi.h"
+#include "alert_sem.h"
 #include "qembed.h"        /* qembed_enabled: does /api/search/suggest retrieve? */
 #include "camera_stills.h"
 #include "cameraproxy.h"
@@ -1588,6 +1589,42 @@ static void sem_spawn(struct mg_connection *c, struct mg_http_message *hm,
   worker_release();
   /* No thread (allocation failure): refuse rather than run a network call
    * or an index scan on the event loop, which is the stall this moved off. */
+  reply_busy(c);
+}
+
+/* POST /api/alerts/preview for a semantic rule: sem_spawn's job, but the
+ * predicate arrives in the BODY, so it carries its own copy. */
+typedef struct {
+  struct mg_mgr *mgr; unsigned long cid;
+  char tenant[128]; char *pj, *since;
+} apv_arg;
+static void *apv_thread(void *vp) {
+  apv_arg *a = vp;
+  db_handle own;
+  db_handle *db = db_worker_open(&own, g_db);
+  int st = 500;
+  char *body = alert_eval_preview(db, a->tenant, a->pj, a->since, &st);
+  db_worker_close(&own);
+  if (body) wakeup_reply_big(a->mgr, a->cid, st, body);
+  else      wakeup_reply(a->mgr, a->cid, 500, "{\"error\":\"server_error\"}");
+  free(a->pj); free(a->since); free(a);
+  worker_release();
+  return NULL;
+}
+static void apv_spawn(struct mg_connection *c, const char *tenant,
+                      const char *pj, const char *since) {
+  if (!worker_admit()) { reply_busy(c); return; }
+  apv_arg *a = calloc(1, sizeof *a);
+  if (a) {
+    a->mgr = c->mgr; a->cid = c->id;
+    snprintf(a->tenant, sizeof a->tenant, "%s", tenant ? tenant : "");
+    a->pj = pj ? strdup(pj) : NULL;
+    a->since = since ? strdup(since) : NULL;
+    pthread_t th;
+    if (pthread_create(&th, NULL, apv_thread, a) == 0) { pthread_detach(th); return; }
+    free(a->pj); free(a->since); free(a);
+  }
+  worker_release();
   reply_busy(c);
 }
 
@@ -3335,6 +3372,13 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       cJSON *pred = b ? cJSON_GetObjectItem(b, "predicate") : NULL;
       cJSON *sn = b ? cJSON_GetObjectItem(b, "since") : NULL;
       char *pj = pred ? cJSON_PrintUnformatted(pred) : NULL;
+      /* A semantic rule's preview embeds its description and scans the
+       * vector index: off the event loop (apv_spawn). */
+      if (alert_sem_is_semantic(pred)) {
+        apv_spawn(c, tc.tenant_id, pj,
+                  (sn && cJSON_IsString(sn)) ? sn->valuestring : NULL);
+        free(pj); cJSON_Delete(b); return;
+      }
       int status = 200;
       char *body = alert_eval_preview(g_db, tc.tenant_id, pj,
         (sn && cJSON_IsString(sn)) ? sn->valuestring : NULL, &status);

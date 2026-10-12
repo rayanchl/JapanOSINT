@@ -2,6 +2,7 @@
 #include "alert_sem.h"
 #include "embed_pod.h"
 #include "story.h"
+#include "qembed.h"
 #include "fts.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
@@ -1285,7 +1286,8 @@ void alert_eval_sweep_stop(void) {
 
 static char *preview_envelope(int *status, long matches, long scanned,
                               int truncated, const char *since_used,
-                              const char *skipped, cJSON *samples) {
+                              const char *skipped, cJSON *samples,
+                              cJSON *semantic) {
   cJSON *w = cJSON_CreateObject();
   cJSON_AddItemToObject(w, "data", samples ? samples : cJSON_CreateArray());
   cJSON *pg = cJSON_CreateObject();
@@ -1301,11 +1303,158 @@ static char *preview_envelope(int *status, long matches, long scanned,
   cJSON_AddBoolToObject(m, "writes_events", 0);
   cJSON_AddItemToObject(m, "skipped",
     skipped ? cJSON_CreateString(skipped) : cJSON_CreateNull());
+  if (semantic) cJSON_AddItemToObject(m, "semantic", semantic);
   cJSON_AddItemToObject(w, "meta", m);
   char *out = cJSON_PrintUnformatted(w);
   cJSON_Delete(w);
   *status = 200;
   return out ? out : strdup("{\"data\":[]}");
+}
+
+/* ── preview of a semantic rule (A2b) ─────────────────────────────────────────
+ *
+ * The live rule is "cos(rule, item) >= threshold AND the other terms", so
+ * the backtest is a KNN over intel_vec_v2 with the rule's description as the
+ * query: the PREVIEW_SEM_K nearest items of this tenant + the shared corpus
+ * (the live path's tenancy) dated inside the window, kept when the cosine
+ * clears the threshold, then put through the same facts_match_terms +
+ * fts_probe + novelty gate the hook applies. The description is embedded
+ * here (a saved rule's stored vector may be stale or absent; the text in
+ * the request is the rule being asked about), which is why httpd.c runs a
+ * semantic preview off the event loop.
+ *
+ * Stated in meta.semantic: the threshold and k, that the KNN window is on
+ * the row's DATE (the index's ts column) while the fetched_at bound is
+ * applied to each hit as well, the index coverage, and truncated=true when
+ * the k-th neighbour still cleared the threshold — more matches may exist
+ * beyond k, so match_count is a lower bound. Without a usable index the
+ * answer is skipped:"semantic_index_unavailable" with the reason, never a
+ * fabricated zero. */
+#define PREVIEW_SEM_K 1000
+
+static char *preview_semantic(db_handle *db, const char *tenant_id,
+                              const jo_pred *p, const char *bound, int *status) {
+  cJSON *sem = cJSON_CreateObject();
+  cJSON_AddNumberToObject(sem, "threshold", p->sem_thr);
+  cJSON_AddNumberToObject(sem, "k", PREVIEW_SEM_K);
+  if (p->has_nov) cJSON_AddNumberToObject(sem, "novelty_min", p->nov_min);
+  cJSON_AddStringToObject(sem, "window",
+      "the KNN is restricted to rows whose date (published_at when ISO, else "
+      "fetched_at) is inside the window, and each hit must also have been "
+      "fetched inside it");
+  cJSON_AddItemToObject(sem, "coverage", embed_coverage_json(db));
+  int dim = 0;
+  char why[512] = "";
+  if (!qembed_index_usable(db, &embed_intel_spec, &dim, why, sizeof why)) {
+    cJSON_AddStringToObject(sem, "reason", why);
+    return preview_envelope(status, 0, 0, 0, bound,
+                            "semantic_index_unavailable", NULL, sem);
+  }
+  const char *texts[1] = { p->nl };
+  float *qv = NULL; int qd = 0; llm_status st;
+  if (qembed_texts(texts, 1, &qv, &qd, &st) != 0 || qd != dim) {
+    snprintf(why, sizeof why, "embedding the description failed (%s)",
+             qv ? "dimension mismatch" : llm_status_code(st));
+    free(qv);
+    cJSON_AddStringToObject(sem, "reason", why);
+    return preview_envelope(status, 0, 0, 0, bound,
+                            "semantic_index_unavailable", NULL, sem);
+  }
+  /* the window bound as epoch seconds for the ts filter */
+  long long since_ts = 0;
+  {
+    sqlite3_stmt *s = NULL;
+    if (sqlite3_prepare_v2(db->h, "SELECT CAST(strftime('%s',?1) AS INTEGER)",
+                           -1, &s, NULL) == SQLITE_OK) {
+      sqlite3_bind_text(s, 1, bound, -1, SQLITE_TRANSIENT);
+      if (sqlite3_step(s) == SQLITE_ROW) since_ts = sqlite3_column_int64(s, 0);
+      sqlite3_finalize(s);
+    }
+  }
+  int legacy = !strcmp(tenant_id, "legacy");
+  vecindex_val tv[2] = { VI_S(tenant_id), VI_S("legacy") };
+  vecindex_val lo = VI_I(since_ts);
+  vecindex_filter f[2] = {
+    { .col = "tenant_id", .op = "IN", .vals = tv, .nvals = legacy ? 1 : 2 },
+    { .col = "ts", .op = ">=", .vals = &lo, .nvals = 1 },
+  };
+  vecindex_hit *h = NULL;
+  int nh = vecindex_knn(db, &embed_intel_spec, qv, qd, PREVIEW_SEM_K, f, 2, &h,
+                        why, sizeof why);
+  if (nh < 0) {
+    free(qv);
+    cJSON_AddStringToObject(sem, "reason", why);
+    return preview_envelope(status, 0, 0, 0, bound,
+                            "semantic_index_unavailable", NULL, sem);
+  }
+  sqlite3_stmt *s = NULL;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT uid, source_id, title, link, published_at, lat, lon, tags, ts_ok"
+        " FROM (SELECT uid, source_id, title, link, published_at, lat, lon, tags,"
+        "       fetched_at >= ?2 AS ts_ok, tenant_id FROM intel_items WHERE uid=?1)",
+        -1, &s, NULL) != SQLITE_OK) {
+    vecindex_hits_free(h, nh); free(qv); cJSON_Delete(sem);
+    return err(status, 500, "server_error");
+  }
+  cJSON *samples = cJSON_CreateArray();
+  long matches = 0, scanned = 0;
+  int last_cleared = 0;
+  for (int i = 0; i < nh; i++) {
+    float *v = NULL; int d = 0;
+    if (vecindex_load(db, &embed_intel_spec, h[i].key, &v, &d) != 0 || d != qd) {
+      free(v);
+      continue;
+    }
+    double c = vec_cosine(qv, v, qd);
+    if (c < p->sem_thr) { free(v); last_cleared = 0; continue; }
+    last_cleared = (i == nh - 1);
+    scanned++;
+    sqlite3_reset(s);
+    sqlite3_bind_text(s, 1, h[i].key, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(s, 2, bound, -1, SQLITE_TRANSIENT);
+    if (sqlite3_step(s) != SQLITE_ROW || !sqlite3_column_int(s, 8)) { free(v); continue; }
+    item_facts fa;
+    facts_from_row(&fa, s, db->h, tenant_id, 0, 1, 5, 6, 7);
+    int hit = facts_match_terms(p, &fa) &&
+              (!p->fts_q || fts_probe(db->h, p->fts_q, h[i].key));
+    facts_clear(&fa);
+    if (hit && p->has_nov) {
+      double nov;
+      long long ts = 0;
+      sqlite3_stmt *q = NULL;
+      if (sqlite3_prepare_v2(db->h, "SELECT ts, tenant_id FROM " EMBED_VEC_TABLE
+                             " WHERE uid=?1", -1, &q, NULL) == SQLITE_OK) {
+        sqlite3_bind_text(q, 1, h[i].key, -1, SQLITE_TRANSIENT);
+        if (sqlite3_step(q) == SQLITE_ROW) ts = sqlite3_column_int64(q, 0);
+        sqlite3_finalize(q);
+      }
+      hit = story_novelty(db, h[i].key, tenant_id, ts, v, d, &nov) == 0 &&
+            nov >= p->nov_min;
+    }
+    free(v);
+    if (!hit) continue;
+    matches++;
+    if (matches <= PREVIEW_SAMPLES) {
+      cJSON *o = cJSON_CreateObject();
+      const char *uid = ctext(s,0), *src = ctext(s,1), *ti = ctext(s,2),
+                 *lk = ctext(s,3), *pb = ctext(s,4);
+      cJSON_AddStringToObject(o, "uid", uid ? uid : "");
+      cJSON_AddItemToObject(o, "source_id", src ? cJSON_CreateString(src) : cJSON_CreateNull());
+      cJSON_AddItemToObject(o, "title", ti ? cJSON_CreateString(ti) : cJSON_CreateNull());
+      cJSON_AddItemToObject(o, "link", lk ? cJSON_CreateString(lk) : cJSON_CreateNull());
+      cJSON_AddItemToObject(o, "published_at", pb ? cJSON_CreateString(pb) : cJSON_CreateNull());
+      cJSON_AddNumberToObject(o, "cosine", c);
+      cJSON_AddItemToArray(samples, o);
+    }
+  }
+  sqlite3_finalize(s);
+  vecindex_hits_free(h, nh);
+  free(qv);
+  /* the k-th neighbour still cleared the bar: the KNN stopped, the matches
+   * did not — match_count is a lower bound */
+  int truncated = (nh == PREVIEW_SEM_K && last_cleared);
+  return preview_envelope(status, matches, scanned, truncated, bound, NULL,
+                          samples, sem);
 }
 
 char *alert_eval_preview(db_handle *db, const char *tenant_id,
@@ -1350,12 +1499,12 @@ char *alert_eval_preview(db_handle *db, const char *tenant_id,
   if (!bound[0]) { pred_free(&p); return err(status, 500, "server_error"); }
 
   if (p.llm_only) {
-    /* Same verdict the live path reaches, for the same reason — reporting a
-     * match count computed from a predicate MINUS its nl_query would be a
-     * preview of a rule that does not exist. */
+    /* A semantic rule: the KNN drives (preview_semantic). Never a preview
+     * of the predicate MINUS its nl_query — that would be a rule that does
+     * not exist. */
+    char *out = preview_semantic(db, tenant_id, &p, bound, status);
     pred_free(&p);
-    return preview_envelope(status, 0, 0, 0, bound,
-                            "llm_mode_unsupported", NULL);
+    return out;
   }
 
   /* Same eight columns, same order, both drivers: with q, FTS drives and the
@@ -1419,5 +1568,5 @@ char *alert_eval_preview(db_handle *db, const char *tenant_id,
   sqlite3_finalize(s);
   pred_free(&p);
   return preview_envelope(status, matches, scanned,
-                          scanned >= PREVIEW_SCAN_CAP, bound, NULL, samples);
+                          scanned >= PREVIEW_SCAN_CAP, bound, NULL, samples, NULL);
 }
