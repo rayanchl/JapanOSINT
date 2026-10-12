@@ -591,3 +591,11 @@ LAYER("jp-peeringdb", "JP PeeringDB", "telecom",
 LAYER("jp-openalex", "OpenAlex JP Funders", "research",
       "research-funder", NULL,
       "idp:openalex-funders-country-jp")
+
+LAYER("jp-google-trends", "Google Trends (Japan)", "media",
+      "trending-topic", NULL,
+      "id:google-trends-jp")
+
+LAYER("jp-wikimedia-photos", "Wikimedia Commons (Japan)", "media",
+      "geotagged-photo", "point",
+      "id:wikimedia-commons-jp")

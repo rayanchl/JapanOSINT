@@ -1763,6 +1763,20 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/hatena-bookmark',
     category: 'Social',
   },
+  googleTrendsJp: {
+    name: 'Google Trends (Japan)',
+    icon: '\u{1F4C8}',
+    color: '#4285f4',
+    endpoint: '/api/data/jp-google-trends',
+    category: 'Social',
+  },
+  wikimediaCommonsJp: {
+    name: 'Wikimedia Commons (Japan)',
+    icon: '\u{1F4F7}',
+    color: '#006699',
+    endpoint: '/api/data/jp-wikimedia-photos',
+    category: 'Culture',
+  },
 };
 
 export const LAYER_CATEGORIES = [
