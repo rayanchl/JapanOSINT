@@ -96,4 +96,10 @@ for src in tests/unit/test_*.c; do
   [ $rc -eq 0 ] || { echo "FAILED (exit $rc)"; fail=1; }
 done
 
+# tools/cleanup_stale_uids.py deletes rows from a live database. Its self-test
+# builds a scratch DB from core/schema.sql and pins that only rows whose
+# replacement is proven go, and nothing else does.
+echo "--- cleanup_stale_uids self-test ---"
+python3 tools/cleanup_stale_uids.py --self-test || { echo "FAILED"; fail=1; }
+
 exit $fail

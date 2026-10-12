@@ -31,6 +31,12 @@ struct CaseSummary: Codable, Identifiable, Hashable {
     /// Served per-row by `GET /api/cases` (casesapi.c:563) so the list can
     /// show a pin count on first paint without opening each case.
     let item_count: Int?
+    /// The signed-in user's role on this case's roster — "lead",
+    /// "contributor" or "viewer" — or nil when they are not on it. Every row
+    /// of `GET /api/cases` carries it, as does `GET /api/cases/:id`, so the
+    /// list can offer status changes exactly where the server accepts them
+    /// (`CaseAccess.canWrite`).
+    let my_case_role: String?
 
     var isOpen: Bool { status == "open" }
 }
@@ -92,6 +98,10 @@ struct CaseDetail: Codable, Hashable {
     let closed_at: String?
     let item_counts: [String: Int]?
     let members: [CaseMemberRef]?
+    /// The signed-in user's role on this case, or nil (see `CaseSummary`).
+    /// Carried into the list row a PATCH reply replaces, so a contributor's
+    /// status buttons do not vanish after their first change.
+    let my_case_role: String?
 }
 
 struct CasesEnvelope: Decodable { let data: [CaseSummary]; let page: PageInfo? }
