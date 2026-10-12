@@ -437,16 +437,49 @@ Where the tree actually stands, as `make audit-sources` reports it:
   250 ms each spreads the burst over minutes and still finishes inside one run.
   A public portal is the reason to pace, not the reason to truncate.
 
+  **Six more individual rows, then the rest TRIAGED** (2026-10-12). WHO GHO
+  100 → 14,112 (`@odata.count`), openFDA enforcement 100 → 18,002
+  (`meta.results.total`), the ArcGIS layer 100 → 900 (`returnCountOnly`), BC
+  mineral tenure 500 → 42,234 (`numberMatched`), FediDB 40 → 4,320 (a
+  `links.next` cursor nobody followed), and the two EMSC FDSN rows and IODA.
+  Two of them had the capability named **in their own header and unused** —
+  openFDA's note said `total` "supports skip/limit paging" two lines after "the
+  URL is used EXACTLY as verified", and the ArcGIS row emitted
+  `exceededTransferLimit` into its properties "so truncation is visible". **A
+  capability a comment claims is not a capability anything uses.**
+
+  BC's WFS is the same unstable-order hazard from the other side: it **refuses**
+  `startIndex` without `sortBy` ("Cannot do natural order without a primary
+  key"). A hard 400 is the better failure — it cannot be mistaken for success.
+
+  And **an honest empty must not read as a dead source.** Windowing the EMSC
+  rows surfaced it: FDSN answers an empty result set with HTTP **204 and no
+  body**, so `feed_get_json` returns NULL where rule 1's honest empty belongs,
+  and `fdsn_quakes` reported `rc=-1`. The Iceland AOI held zero events for the
+  last day, so the narrow window would have marked a working source dead every
+  quiet day. Check what an upstream does with an EMPTY result before narrowing
+  a window.
+
+  The remaining 89 candidates are triaged **with their reasons** in
+  `docs/measured-url-limits-2026-10-11.tsv` — ranked/keyed searches where the
+  limit is the question, recency windows whose count is generous against a
+  measured interval, rows already paged on a stride, and one
+  (`trickest_cve`) recorded as **unmeasurable from here** rather than fixed on
+  inference. Do not re-litigate them; read the file.
+
   `tools/audit_url_limits.py` finds the shape, and is deliberately NOT in
   `make audit-sources`: **a URL limit is not automatically a discard and the
   script cannot tell.** A relevance-ranked search pivot asking for the top 15
   has no complete answer to truncate — that limit IS the question. A scheduled
   read of a collection that has an end stores `limit` of however many exist,
   forever, and that is the violation. They are identical in C. The narrow scope
-  reports **103 sites across 78 files**, none of them measured, so running it
-  is the START of the work; wiring it into the gate would put a hundred
-  untriaged findings into a tree whose invariant is that a new finding is a
-  regression.
+  reported **103 sites across 78 files** when it was written; after this pass it
+  reports 89, and every one of those 89 is either a shape the lint cannot see
+  through (a row that now pages via `pw_walk`, whose `.url` and page-ceiling
+  lines carry `exhaustive-ok` markers) or a triaged non-discard recorded in
+  `docs/measured-url-limits-2026-10-11.tsv`. It still is not gated, for the
+  reason above: the script cannot tell a question from a bound, so a number
+  from it is the START of the work and never the result.
 
 Deliberate exceptions carry an inline `/* exhaustive-ok: <reason> */` marker
 (`grep -rn exhaustive-ok`). The marker must sit **on the flagged line itself** —
