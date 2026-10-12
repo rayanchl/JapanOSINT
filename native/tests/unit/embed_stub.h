@@ -51,6 +51,10 @@ static const char *ESTUB_PY =
   " def do_POST(self):\n"
   "  n=int(self.headers.get('Content-Length',0))\n"
   "  b=json.loads(self.rfile.read(n) or b'{}');i=b.get('input',[])\n"
+  "  if self.path.endswith('/completion'):\n"
+  "   if L:\n"
+  "    with open(L,'a') as f: f.write('c\\n')\n"
+  "   return self.s({'content':os.environ.get('COMPLETION','[]')})\n"
   "  i=[i] if isinstance(i,str) else i\n"
   "  if L:\n"
   "   with open(L,'a') as f: f.write(json.dumps(len(i))+'\\n')\n"
@@ -77,11 +81,23 @@ static void estub_stop(void) {
 }
 
 /* POSTs received since start (or estub_log_reset), probes included. */
-static int estub_posts(void) {
+__attribute__((unused)) static int estub_posts(void) {
   FILE *f = fopen(estub_log, "r");
   if (!f) return 0;
   int n = 0, c;
   while ((c = fgetc(f)) != EOF) if (c == '\n') n++;
+  fclose(f);
+  return n;
+}
+/* POST /completion requests (the stub answers them with $ESTUB_COMPLETION as
+ * the generated content — a stand-in generation server for the suggest
+ * tests). Counted in estub_posts() too. */
+__attribute__((unused)) static int estub_completions(void) {
+  FILE *f = fopen(estub_log, "r");
+  if (!f) return 0;
+  char line[64];
+  int n = 0;
+  while (fgets(line, sizeof line, f)) if (!strcmp(line, "c\n")) n++;
   fclose(f);
   return n;
 }
@@ -115,6 +131,8 @@ static int estub_start(int port, int dim, const char *model) {
     snprintf(ps, sizeof ps, "%d", port);
     setenv("D", ds, 1); setenv("P", ps, 1); setenv("M", model, 1);
     setenv("LOG", estub_log, 1);
+    const char *cmp = getenv("ESTUB_COMPLETION");
+    setenv("COMPLETION", cmp ? cmp : "[]", 1);
     /* Die with the test, and never hold its stdout: a test that aborts on an
      * assert would otherwise leave the stub alive, owning the port and the
      * pipe a `| tail` is waiting on. */

@@ -6,6 +6,7 @@
 #include "service_vec.h"
 #include "prompt_rank.h"
 #include "fewshot.h"
+#include "llmcache.h"
 #include "intel.h"
 #include "entitystore.h"
 #include "../source.h"
@@ -1164,6 +1165,10 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
 }
 
 char *osint_suggest(llm_client *llm, const char *query) {
+  return osint_suggest_db(NULL, llm, query);
+}
+
+char *osint_suggest_db(db_handle *db, llm_client *llm, const char *query) {
   /* Native /completion path (raw few-shot prompt + GBNF), NOT llm_chat:
      prompt_suggestions() is a completion-style few-shot prompt. Routed
      through the chat template, gpt-oss's harmony scaffolding primes channel
@@ -1171,10 +1176,32 @@ char *osint_suggest(llm_client *llm, const char *query) {
      into dot-spam. Raw /completion has no harmony wrapper, so the grammar
      agrees with the model's natural continuation. */
   char *p = prompt_suggestions(query);
-  char *out = llm_complete(llm, p, grammar_load("suggestions"), 1024, 0.3, 20000);
+  const char *grammar = grammar_load("suggestions");
+  /* The exact-response cache (core/llmcache.h): off unless
+   * JO_LLM_CACHE_TTL_SEC is set, and then keyed on the model the server says
+   * it serves plus every byte of the request that shapes the answer. */
+  char model[256], key[65] = "";
+  int cacheable = db && p && llmcache_ttl() > 0 &&
+                  llmcache_model(llm, model, sizeof model) == 0;
+  char *out = NULL;
+  if (cacheable) {
+    char params[160];
+    snprintf(params, sizeof params,
+             "completion|max_tokens=1024|temperature=0.3|grammar=%016llx",
+             vecindex_hash(grammar ? grammar : ""));
+    llmcache_key_prompt(p, params, key);
+    cacheable = key[0] != 0;
+    if (cacheable) out = llmcache_get(db, model, key);
+  }
+  int hit = out != NULL;
+  if (!out) out = llm_complete(llm, p, grammar, 1024, 0.3, 20000);
   free(p);
   cJSON *arr = extract_json(out);            /* tolerant; may be [...] too */
   if (!arr && out) arr = cJSON_Parse(out);
+  /* Only an answer that parsed into suggestions is worth reusing; a broken
+   * one cached would be served broken for the whole TTL. */
+  if (cacheable && !hit && arr && cJSON_IsArray(arr) && cJSON_GetArraySize(arr) > 0)
+    llmcache_put(db, model, key, out);
   free(out);
   cJSON *result = cJSON_CreateArray();
   if (arr && cJSON_IsArray(arr)) {
