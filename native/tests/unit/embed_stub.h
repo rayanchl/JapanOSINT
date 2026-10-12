@@ -106,6 +106,7 @@ static int estub_start(int port, int dim, const char *model) {
   if (!f) return -1;
   fputs(ESTUB_PY, f);
   fclose(f);
+  fflush(stdout);                 /* or the child repeats buffered lines */
   pid_t p = fork();
   if (p < 0) return -1;
   if (p == 0) {

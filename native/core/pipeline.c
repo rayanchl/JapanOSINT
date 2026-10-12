@@ -4,6 +4,7 @@
 #include "progress.h"
 #include "osint_dispatch.h"
 #include "service_vec.h"
+#include "prompt_rank.h"
 #include "intel.h"
 #include "entitystore.h"
 #include "../source.h"
@@ -379,7 +380,11 @@ static int prompt_records_per_service(void) {
   return v > 0 ? v : 8;
 }
 
-static char *results_view_for_prompt(const cJSON *results) {
+/* WHICH records fill the bound: the first ones (positional, the upstream's
+ * order) unless `pr` is a live ranker (core/prompt_rank.h), in which case the
+ * ones most similar to the query — and the view says which rule chose them.
+ * `pr` NULL is the positional path byte for byte. */
+static char *results_view_for_prompt(const cJSON *results, prompt_rank *pr) {
   cJSON *wrap = cJSON_CreateObject();
   cJSON *svcs = cJSON_Duplicate(results, 1);
   int keep = prompt_records_per_service();
@@ -391,11 +396,26 @@ static char *results_view_for_prompt(const cJSON *results) {
     int total = cJSON_GetArraySize(recs);
     cJSON_AddNumberToObject(data, "records_shown", total > keep ? keep : total);
     if (total > keep) {
-      for (int i = total - 1; i >= keep; i--) cJSON_DeleteItemFromArray(recs, i);
+      int ranked = 0;
+      int by_sim = prompt_rank_select(pr, recs, keep, &ranked);
+      for (int i = cJSON_GetArraySize(recs) - 1; i >= keep; i--)
+        cJSON_DeleteItemFromArray(recs, i);
       cJSON_AddBoolToObject(data, "prompt_truncated", 1);
-      cJSON_AddStringToObject(data, "prompt_truncated_note",
-        "only the first records are shown here; ALL record_count records were "
-        "fetched, stored and are served by /api/search/results");
+      if (by_sim) {
+        cJSON_AddStringToObject(data, "records_selected_by", "similarity_to_query");
+        cJSON_AddNumberToObject(data, "records_ranked", ranked);
+        cJSON_AddStringToObject(data, "prompt_truncated_note",
+          ranked < total
+            ? "the records shown are the most similar to the query among the "
+              "first records_ranked, best first; ALL record_count records were "
+              "fetched, stored and are served by /api/search/results"
+            : "the records shown are the most similar to the query, best "
+              "first; ALL record_count records were fetched, stored and are "
+              "served by /api/search/results");
+      } else
+        cJSON_AddStringToObject(data, "prompt_truncated_note",
+          "only the first records are shown here; ALL record_count records were "
+          "fetched, stored and are served by /api/search/results");
     }
   }
   cJSON_AddItemToObject(wrap, "services", svcs);
@@ -613,6 +633,10 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
   if (max_rounds <= 0) max_rounds = 5;
 
   progress_set_phase(rp, "queued", 5);
+  /* One ranker per run: phase-2 rounds and the synthesis reuse the vectors
+   * the first view embedded. NULL (no embedding server) = positional views,
+   * exactly as before. See core/prompt_rank.h. */
+  prompt_rank *prank = prompt_rank_new(query);
 
   /* ── Phase 1: analysis ─────────────────────────────────────────────── */
   progress_set_phase(rp, "gpt_analyzing", 15);
@@ -826,7 +850,7 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
     int pct = 60 + round * 6; if (pct > 85) pct = 85;
     progress_set_phase(rp, "followup_analyzing", pct);
 
-    char *rj = results_view_for_prompt(results);   /* labelled, bounded view */
+    char *rj = results_view_for_prompt(results, prank);   /* labelled, bounded view */
     round_menu rm;
     round_menu_build(&rm, db, llm, request_id, round, query, rj, qents,
                      discovered);
@@ -941,7 +965,7 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
    * schema. Any failure falls back to the counts template. */
   char *synth_llm = NULL;
   {
-    char *rj = results_view_for_prompt(results);   /* labelled, bounded view */
+    char *rj = results_view_for_prompt(results, prank);   /* labelled, bounded view */
     char *ps = rj ? prompt_synthesis(query, rj) : NULL;
     free(rj);
     char *ms = ps ? prompt_to_messages(ps) : NULL;
@@ -1097,6 +1121,13 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
   if (analysis) cJSON_Delete(analysis);
   strset_free(&executed);
   intel_sink_free(&sink);          /* make() heap-allocates; nothing freed it */
+  if (prank)
+    fprintf(stderr, "[pipeline] %s prompt record selection: %s, %ld text(s) "
+                    "embedded\n", request_id,
+            prompt_rank_active(prank) ? "similarity to query"
+                                      : "positional (embedding failed)",
+            prompt_rank_sent(prank));
+  prompt_rank_free(prank);
   db_worker_close(&own);           /* no-op if we fell back to shared_db */
   fprintf(stderr, "[pipeline] %s done: %d svc, %d ok, %d round(s)%s\n",
           request_id, total, ok, round + 1,
