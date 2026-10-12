@@ -539,12 +539,16 @@ int camera_stills_sweep(db_handle *db, int limit, volatile int *cancel);
 
 /* One camera's stills, newest first, keyset-paged:
  *   {"data":[{id,captured_at,sha256,bytes,phash,width,height,scene_changed,
- *             blob_present,ocr_text}],
+ *             embed_drift,drift_from_mean,blob_present,ocr_text}],
  *    "page":{"limit":n,"count":n,"cursor":"<base64url>"|null},
  *    "meta":{"camera_id":…,"capture_stills":bool,"total":n,"changed":n,
  *            "unknown":n,"blobs_present":n,"oldest":…,"newest":…,"fail_count":n,
  *            "next_attempt_at":…,"last_error":…,"last_kind":…,
- *            "scene_change_available":bool}}
+ *            "scene_change_available":bool,"embed_drift_available":bool}}
+ * embed_drift / drift_from_mean are cosine distances in the camera image
+ * index's space (core/image_vec.h) to the previous embedded frame of the same
+ * target and to the mean of its recent frames; null = not measured. They are
+ * NOT scene_changed: that one is pHash/bytes and stays its own column.
  * `phash` is a 16-CHAR HEX STRING, never a number: a 64-bit value does not
  * survive an IEEE double and a silently truncated fingerprint is worse than
  * none. `scene_changed` is true/false/null — null meaning UNKNOWN, which is a

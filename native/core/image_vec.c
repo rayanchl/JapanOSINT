@@ -335,6 +335,7 @@ int image_vec_embed_text(http_client *http, const char *text, float **out,
 typedef struct {
   const char *kind;                 /* IMAGE_VEC_KIND_*                       */
   int media;                        /* kind is media (needs proof of a camera) */
+  int drifted;                      /* embed drift written for this still     */
   char *ref_id, *sha, *cam, *item, *cap, *rel;
   int state;                        /* see C_* below                          */
 } ivc;
@@ -565,6 +566,85 @@ static int refs_for(db_handle *db, ivc *v, int n, const char *sha,
     st->refs++;
   }
   return 0;
+}
+
+/* Embedding drift of one still whose ref and vector just landed (I5): cosine
+ * distance to the previous EMBEDDED frame of the same capture target, and to
+ * the mean of its last IMAGE_VEC_DRIFT_WINDOW embedded frames. "Embedded"
+ * because a frame with no preserved bytes has no vector to compare; the
+ * comparison skips it rather than inventing one. A target's first embedded
+ * frame has nothing before it: both stay NULL. In the caller's transaction. */
+static void still_drift(db_handle *db, const ivc *c) {
+  const vecindex_spec *s = &image_vec_spec;
+  float *v = NULL, *mean = NULL, *pv = NULL;
+  int dim = 0, n = 0;
+  double prev = 0.0;
+  char last_sha[65] = "";
+  if (vecindex_load(db, s, c->sha, &v, &dim) != 0) return;
+  sqlite3_stmt *q;
+  if (sqlite3_prepare_v2(db->h,
+      "SELECT st.sha256 FROM camera_stills st WHERE st.camera_id=?1"
+      "   AND (st.captured_at < ?2 OR (st.captured_at = ?2 AND st.id < ?3))"
+      "   AND EXISTS (SELECT 1 FROM image_vec_ref r WHERE r.kind='"
+      IMAGE_VEC_KIND_STILL "' AND r.ref_id=st.id)"
+      " ORDER BY st.captured_at DESC, st.id DESC LIMIT ?4", -1, &q, NULL) != SQLITE_OK) {
+    free(v); return;
+  }
+  sqlite3_bind_text(q, 1, c->cam, -1, SQLITE_TRANSIENT);
+  sqlite3_bind_text(q, 2, c->cap ? c->cap : "", -1, SQLITE_TRANSIENT);
+  sqlite3_bind_text(q, 3, c->ref_id, -1, SQLITE_TRANSIENT);
+  sqlite3_bind_int(q, 4, IMAGE_VEC_DRIFT_WINDOW);
+  mean = calloc((size_t)dim, sizeof *mean);
+  while (mean && sqlite3_step(q) == SQLITE_ROW) {
+    const char *sh = (const char *)sqlite3_column_text(q, 0);
+    if (!sh) continue;
+    /* a static scene repeats one sha: load it once */
+    if (strcmp(sh, last_sha)) {
+      free(pv); pv = NULL;
+      int d = 0;
+      if (vecindex_load(db, s, sh, &pv, &d) != 0 || d != dim) { free(pv); pv = NULL; }
+      snprintf(last_sha, sizeof last_sha, "%s", sh);
+    }
+    if (!pv) continue;
+    if (n == 0) prev = 1.0 - vec_cosine(v, pv, dim);
+    for (int i = 0; i < dim; i++) mean[i] += pv[i];
+    n++;
+  }
+  sqlite3_finalize(q);
+  sqlite3_stmt *u;
+  if (sqlite3_prepare_v2(db->h, "UPDATE camera_stills SET embed_drift=?1,"
+                         " drift_from_mean=?2 WHERE id=?3", -1, &u, NULL) == SQLITE_OK) {
+    if (n > 0) {
+      /* vec_cosine normalises, so the sum serves as the mean's direction */
+      sqlite3_bind_double(u, 1, prev);
+      sqlite3_bind_double(u, 2, 1.0 - vec_cosine(v, mean, dim));
+    } else {
+      sqlite3_bind_null(u, 1);
+      sqlite3_bind_null(u, 2);
+    }
+    sqlite3_bind_text(u, 3, c->ref_id, -1, SQLITE_TRANSIENT);
+    sqlite3_step(u);
+    sqlite3_finalize(u);
+  }
+  free(pv); free(mean); free(v);
+}
+
+/* Drift for every still whose ref this tick wrote, AFTER every vector of the
+ * tick is in: a batch writes its vectors one sha at a time, and a frame's
+ * predecessor (another sha) may be later in the same batch — or in the
+ * ref-only pass, which runs first. Candidates are in walk (rowid) order,
+ * which is capture order. One transaction. */
+static void drift_all(db_handle *db, ivc *v, int n) {
+  int any = 0;
+  for (int i = 0; i < n; i++)
+    if (v[i].state == C_DONE && !v[i].media && v[i].cam) any = 1;
+  if (!any || vecindex_begin(db) != 0) return;
+  for (int i = 0; i < n; i++)
+    if (v[i].state == C_DONE && !v[i].media && v[i].cam && !v[i].drifted) {
+      still_drift(db, &v[i]);
+      v[i].drifted = 1;
+    }
+  vecindex_end(db, 1);
 }
 
 /* Embed pending[0..m) (their bytes in imgs/lens), write vectors + refs in one
@@ -798,6 +878,9 @@ int image_vec_tick(db_handle *db, http_client *http, int max_walk) {
   }
   if (rc == 0 && b.m > 0) rc = flush_batch(db, http, model, v, n, &b, now, &st);
   for (int k = 0; k < b.m; k++) free(b.imgs[k]);
+
+  /* refs that landed get their drift even when a later batch failed */
+  drift_all(db, v, n);
 
   /* 4. cursors move only past a page that was fully settled; a short page is
    * the end of the lap, so the next tick starts over (which is what picks up

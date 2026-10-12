@@ -58,6 +58,17 @@ struct http_client;
 #define IMAGE_VEC_KIND_MEDIA    "media"
 #define IMAGE_VEC_KIND_REFFRAME "refframe"
 
+/* EMBEDDING DRIFT. When a still's vector lands, camera_stills gets
+ *   embed_drift      1 − cos(frame, the target's previous embedded frame)
+ *   drift_from_mean  1 − cos(frame, mean of its last IMAGE_VEC_DRIFT_WINDOW)
+ * NULL for a target's first embedded frame. The mean is the slow baseline
+ * (a camera re-aimed, a lens fogging, snow settling); the previous frame is
+ * the fast one. Both are separate from scene_changed, which is pHash/bytes
+ * and keeps its own meaning. A frame embedded out of order (its bytes landed
+ * late) is compared with what was embedded before it; later frames' values
+ * are not rewritten. */
+#define IMAGE_VEC_DRIFT_WINDOW 10
+
 extern const vecindex_spec image_vec_spec;
 
 /* JO_VISION_EMBED_URL, or NULL when unset/empty. */

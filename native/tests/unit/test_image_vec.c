@@ -17,7 +17,11 @@
  *   9. GET /api/cameras/visual-search: one result per camera with its newest
  *      matching still, bbox/since/k honoured, the privacy policy applied at
  *      QUERY time, "N of M cameras indexed" in-band, and a 503 that says why
- *      whenever the sidecar or the index cannot answer.
+ *      whenever the sidecar or the index cannot answer;
+ *  10. embedding drift: a target's first frame NULL, then 1-cos to the
+ *      previous EMBEDDED frame and to the mean of the recent ones, written
+ *      when the vector lands and exposed by the stills list beside (not in
+ *      place of) scene_changed.
  *
  * Includes image_vec.c directly, so run.sh links every object except
  * obj/core/image_vec.o. */
@@ -26,6 +30,7 @@
 #include "vision_stub.h"
 
 #include <assert.h>
+#include <math.h>
 #include <sys/stat.h>
 
 static db_handle g_db;
@@ -126,6 +131,41 @@ static double jnum(cJSON *o, const char *path) {
     x = cJSON_IsArray(x) ? cJSON_GetArrayItem(x, atoi(t)) : cJSON_GetObjectItem(x, t);
   return cJSON_IsNumber(x) ? x->valuedouble : -1;
 }
+
+/* camera_stills.<col> for one still; NAN when NULL. */
+static double still_col(const char *id, const char *col) {
+  char sql[256];
+  snprintf(sql, sizeof sql, "SELECT %s FROM camera_stills WHERE id='%s'", col, id);
+  sqlite3_stmt *s; double v = NAN;
+  assert(sqlite3_prepare_v2(g_db.h, sql, -1, &s, NULL) == SQLITE_OK);
+  if (sqlite3_step(s) == SQLITE_ROW && sqlite3_column_type(s, 0) != SQLITE_NULL)
+    v = sqlite3_column_double(s, 0);
+  sqlite3_finalize(s);
+  return v;
+}
+
+static double cos_of(const char *a, const char *b) {
+  float *va = NULL, *vb = NULL; int da = 0, db = 0;
+  assert(vecindex_load(&g_db, &image_vec_spec, a, &va, &da) == 0);
+  assert(vecindex_load(&g_db, &image_vec_spec, b, &vb, &db) == 0 && da == db);
+  double c = vec_cosine(va, vb, da);
+  free(va); free(vb);
+  return c;
+}
+
+/* cos(x, a+b): the direction of the mean of a and b */
+static double cos_mean2(const char *x, const char *a, const char *b) {
+  float *vx = NULL, *va = NULL, *vb = NULL; int d = 0;
+  assert(vecindex_load(&g_db, &image_vec_spec, x, &vx, &d) == 0);
+  assert(vecindex_load(&g_db, &image_vec_spec, a, &va, &d) == 0);
+  assert(vecindex_load(&g_db, &image_vec_spec, b, &vb, &d) == 0);
+  for (int i = 0; i < d; i++) va[i] += vb[i];
+  double c = vec_cosine(vx, va, d);
+  free(vx); free(va); free(vb);
+  return c;
+}
+
+#define NEAR(a, b) (fabs((a) - (b)) < 1e-6)
 
 int main(void) {
   const char *dbp = getenv("JO_DB");
@@ -282,6 +322,44 @@ int main(void) {
   printf("  visual search: grouped by camera, newest still of the nearest frame, "
          "bbox/since honoured, policy at query time, 400s send nothing: ok\n");
 
+  /* 10. drift, written as each vector landed (st1, st2, st3 in order) */
+  {
+    assert(isnan(still_col("st1", "embed_drift")));        /* first frame */
+    assert(isnan(still_col("st1", "drift_from_mean")));
+    double c12 = cos_of(s1, s2);
+    assert(NEAR(still_col("st2", "embed_drift"), 1.0 - c12));
+    assert(NEAR(still_col("st2", "drift_from_mean"), 1.0 - c12));  /* mean of one */
+    assert(NEAR(still_col("st3", "embed_drift"), 1.0 - c12));      /* vs st2 */
+    assert(NEAR(still_col("st3", "drift_from_mean"), 1.0 - cos_mean2(s1, s1, s2)));
+    assert(still_col("st3", "drift_from_mean") < still_col("st3", "embed_drift"));
+    assert(isnan(still_col("st4", "embed_drift")));        /* never embedded */
+
+    char *js = camera_stills_list(&g_db, "camera-discovery|river1", 50, NULL);
+    assert(js);
+    cJSON *j = cJSON_Parse(js);
+    free(js);
+    assert(cJSON_IsTrue(cJSON_GetObjectItem(cJSON_GetObjectItem(j, "meta"),
+                                            "embed_drift_available")));
+    int seen = 0;
+    cJSON *x;
+    cJSON_ArrayForEach(x, cJSON_GetObjectItem(j, "data")) {
+      const char *id = cJSON_GetObjectItem(x, "id")->valuestring;
+      cJSON *ed = cJSON_GetObjectItem(x, "embed_drift");
+      cJSON *dm = cJSON_GetObjectItem(x, "drift_from_mean");
+      assert(ed && dm && cJSON_GetObjectItem(x, "scene_changed"));
+      if (!strcmp(id, "st3")) {
+        assert(cJSON_IsNumber(ed) && NEAR(ed->valuedouble, 1.0 - c12));
+        assert(cJSON_IsNumber(dm));
+        seen++;
+      }
+      if (!strcmp(id, "st1")) { assert(cJSON_IsNull(ed) && cJSON_IsNull(dm)); seen++; }
+    }
+    assert(seen == 2);
+    cJSON_Delete(j);
+  }
+  printf("  drift: first frame null, previous-frame and recent-mean cosine "
+         "distances, exposed by the stills list: ok\n");
+
   /* the image index is not a text index */
   assert(!vecindex_table_exists(&g_db, "intel_vec") ||
          count("SELECT count(*) FROM intel_vec") == 0);
@@ -298,6 +376,9 @@ int main(void) {
     snprintf(q, sizeof q, "SELECT ts FROM image_vec WHERE sha256='%s'", s2);
     assert(count(q) == count("SELECT CAST(strftime('%s','2026-10-12 02:15:00') AS INTEGER)"));
   }
+  /* a frame that arrives as a ref (bytes already embedded) gets drift too,
+   * against the previous EMBEDDED frame (st3; st4/st5 have no vector) */
+  assert(NEAR(still_col("st6", "embed_drift"), 1.0 - cos_of(s2, s1)));
   printf("  re-tick: no request for unchanged or identical frames, ts follows the "
          "newest ref: ok\n");
 
