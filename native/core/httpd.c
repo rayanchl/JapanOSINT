@@ -2414,6 +2414,38 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
      * swallowed into the uid. Own buffer since `p` is declared further down. */
     {
       char pe[600];   /* seg() URL-decodes the segment into pe — already decoded */
+      /* Every sub-route below answers about ONE item, so it must first be an
+       * item the caller may see — the same "this tenant + the shared corpus"
+       * rule as GET /api/intel/items/:uid. These were plain-auth reads keyed
+       * only on the uid, so /evidence listed another workspace's
+       * `upload:<id>` custody rows and /entities a private search run's
+       * entities to anyone who could name the uid. Breach uids keep their
+       * own operator gate; operators are unscoped as everywhere else. */
+      int item_sub = seg(u, "/api/intel/items/", "/evidence", pe, sizeof pe) ||
+                     seg(u, "/api/intel/items/", "/entities", pe, sizeof pe) ||
+                     seg(u, "/api/intel/items/", "/media", pe, sizeof pe);
+      if (item_sub && strncmp(pe, "breach:", 7) != 0 && opgate_check(&usr) != 0) {
+        tenant_ctx vtc;
+        if (intel_tenant_or_reply(c, hm, &usr, &vtc) != 0) return;
+        int visible = 0;
+        if (strncmp(pe, "upload:", 7) == 0) {
+          sqlite3_stmt *vs;
+          if (sqlite3_prepare_v2(g_db->h, "SELECT 1 FROM uploads WHERE id=?1 "
+                                 "AND tenant_id=?2", -1, &vs, NULL) == SQLITE_OK) {
+            sqlite3_bind_text(vs, 1, pe + 7, -1, SQLITE_TRANSIENT);
+            sqlite3_bind_text(vs, 2, vtc.tenant_id, -1, SQLITE_TRANSIENT);
+            visible = sqlite3_step(vs) == SQLITE_ROW;
+            sqlite3_finalize(vs);
+          }
+        } else {
+          char *vb = intelapi_item_by_uid_tenant(g_db, pe, vtc.tenant_id);
+          visible = vb != NULL;
+          free(vb);
+        }
+        /* The same 404 as a missing item: whether another workspace holds
+         * this uid is not this caller's to learn. */
+        if (!visible) { reply_json(c, 404, "{\"error\":\"not_found\"}"); return; }
+      }
       /* GET /api/intel/items/:uid/entities — entities mentioned in an item
        * (works for both breach records and normal intel items). Plain-auth read. */
       if (seg(u, "/api/intel/items/", "/entities", pe, sizeof pe)) {
