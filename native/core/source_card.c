@@ -7,6 +7,7 @@
 #include "../lib/hpengine.h"
 #include <ctype.h>
 #include <pthread.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,6 +21,19 @@
  * "Pagination follows links.next" (56). Each says the same thing about every
  * row that carries it, so it can only pull those rows towards each other. */
 #define SC_FREQ_MIN 25
+
+/* Append to buf[0..cap) at len, clamped: the result never passes cap - 1,
+ * whatever the format expands to. */
+static size_t sc_app(char *buf, size_t cap, size_t len, const char *fmt, ...) {
+  if (len >= cap) return cap ? cap - 1 : 0;
+  va_list ap;
+  va_start(ap, fmt);
+  int n = vsnprintf(buf + len, cap - len, fmt, ap);
+  va_end(ap);
+  if (n < 0) return len;
+  len += (size_t)n;
+  return len >= cap ? cap - 1 : len;
+}
 
 /* ---- kind ---------------------------------------------------------------- */
 
@@ -534,17 +548,17 @@ static void build_cards(void) {
     if (nm && strcmp(nm, d->id)) {
       size_t nl = strlen(nm);
       while (nl && (nm[nl - 1] == '.' || nm[nl - 1] == ' ')) nl--;
-      len += (size_t)snprintf(t + len, cap - len, ": %.*s.", (int)nl, nm);
+      len = sc_app(t, cap, len, ": %.*s.", (int)nl, nm);
     } else {
-      len += (size_t)snprintf(t + len, cap - len, ".");
+      len = sc_app(t, cap, len, ".");
     }
     for (int j = 0; j < nsent[i]; j++) {
       if (!keep_all && *count_slot(&cnt, vecindex_hash(sents[i][j])) >= SC_FREQ_MIN)
         continue;
-      len += (size_t)snprintf(t + len, cap - len, " %s%s", sents[i][j],
+      len = sc_app(t, cap, len, " %s%s", sents[i][j],
                               terms[i][j][0] ? terms[i][j] : ".");
     }
-    if (alias) len += (size_t)snprintf(t + len, cap - len, "\nAlso asked as: %s.", alias);
+    if (alias) len = sc_app(t, cap, len, "\nAlso asked as: %s.", alias);
     cards[i].def = d;
     cards[i].kind = source_kind_of(d);
     cards[i].category = (m && m->category) ? m->category

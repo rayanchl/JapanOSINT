@@ -6,6 +6,7 @@
 #include "../source.h"
 #include "../lib/vecindex.h"
 #include <ctype.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -107,6 +108,19 @@ static const char *svec_query_prefix(void) {
 static const char *svec_doc_prefix(void) {
   const char *e = getenv("JO_EMBED_DOC_PREFIX");
   return e ? e : "";
+}
+
+/* Append to buf[0..cap) at len, clamped: the result never passes cap - 1,
+ * whatever the format expands to. */
+static size_t svec_app(char *buf, size_t cap, size_t len, const char *fmt, ...) {
+  if (len >= cap) return cap ? cap - 1 : 0;
+  va_list ap;
+  va_start(ap, fmt);
+  int n = vsnprintf(buf + len, cap - len, fmt, ap);
+  va_end(ap);
+  if (n < 0) return len;
+  len += (size_t)n;
+  return len >= cap ? cap - 1 : len;
 }
 
 /* ---- the registry side ---------------------------------------------------
@@ -624,8 +638,8 @@ static int svec_fts_arm(db_handle *db, const char *expr, unsigned mask, int k,
                                 " WHERE " SVEC_FTS_TABLE " MATCH ?1 AND kind IN (");
   int arg = 2, nk = 0;
   for (int i = 0; i < SC_NKINDS; i++)
-    if (mask & (1u << i)) len += (size_t)snprintf(sql + len, sizeof sql - len,
-                                                  "%s?%d", nk++ ? "," : "", arg++);
+    if (mask & (1u << i)) len = svec_app(sql, sizeof sql, len,
+                                         "%s?%d", nk++ ? "," : "", arg++);
   if (!nk) return 0;
   snprintf(sql + len, sizeof sql - len, ") ORDER BY bm25(" SVEC_FTS_TABLE
            ") LIMIT ?%d", arg);
