@@ -2,6 +2,8 @@
 #include "semsearchapi.h"
 #include "embed_pod.h"
 #include "intelapi.h"
+#include "breach_meta.h"
+#include "translate.h"
 #include "fts.h"
 #include "llm.h"
 #include "../third_party/cJSON.h"
@@ -289,6 +291,7 @@ int semsearch_knn(db_handle *db, const char *tenant, const float *qv, int dim,
 typedef struct {
   int visible, shown, withheld, orphans, excluded, skipped;
   int dropped[D_N];
+  int post_dropped;            /* rows the caller's `post` statement rejected */
 } sem_counts;
 
 static int in_set(const char *k, const char *const *set, int n) {
@@ -303,11 +306,15 @@ static int in_set(const char *k, const char *const *set, int n) {
  * is gone (orphan) — only an operator is told either number, because how many
  * of OTHER tenants' rows match is information about those tenants. A
  * candidate in `excl` (the item itself, a case's own items) is counted, not
- * shown. A row a post-filter rejects is counted under that filter. */
+ * shown. A row a post-filter rejects is counted under that filter. `post`
+ * (may be NULL) is a caller's prepared `SELECT 1 … WHERE uid=?1 AND …` with
+ * its other parameters already bound — a filter set the KNN cannot express
+ * (the feed's own WHERE, for sort=hybrid); a row it does not return is
+ * counted in post_dropped. */
 static int materialize(db_handle *db, const char *tenant, int is_operator,
                        const vecindex_fused *L, int offset, int limit,
                        const semsearch_rf *rf, const char *const *excl, int nexcl,
-                       cJSON *data, sem_counts *c) {
+                       sqlite3_stmt *post, cJSON *data, sem_counts *c) {
   memset(c, 0, sizeof *c);
   sqlite3_stmt *get;
   const char *sql = (tenant && *tenant)
@@ -335,6 +342,11 @@ static int materialize(db_handle *db, const char *tenant, int is_operator,
     }
     int why = row_fails(get, rf);
     if (why >= 0) { c->dropped[why]++; continue; }
+    if (post) {
+      sqlite3_reset(post);
+      sqlite3_bind_text(post, 1, cd->key, -1, SQLITE_STATIC);
+      if (sqlite3_step(post) != SQLITE_ROW) { c->post_dropped++; continue; }
+    }
     c->visible++;
     if (c->visible <= offset) { c->skipped++; continue; }
     if (c->shown >= limit) continue;
@@ -532,7 +544,7 @@ char *semsearchapi_query_ex(db_handle *db, const char *tenant, const char *q,
 
   cJSON *data = cJSON_CreateArray();
   sem_counts c;
-  if (materialize(db, tenant, is_operator, &L, 0, limit, &rf, NULL, 0, data, &c) != 0) {
+  if (materialize(db, tenant, is_operator, &L, 0, limit, &rf, NULL, 0, NULL, data, &c) != 0) {
     cJSON_Delete(data); free(matchq); vecindex_fused_free(&L);
     vecindex_hits_free(wh, nwh); semsearch_rf_free(&rf);
     return fail(status, 500, "server_error", sqlite3_errmsg(db->h), NULL);
@@ -655,6 +667,214 @@ char *semsearchapi_http(db_handle *db, const char *tenant, const char *id,
                                atoi(p.k), is_operator, &f, status);
 }
 
+/* ---- GET /api/intel/items?q=&sort=hybrid --------------------------------- */
+
+/* An envelope's JSON goes out through ?lang_view= exactly like the feed's
+ * (httpd.c intel_lang_view): translate_shape_items() on the same body. */
+static char *lang_view(db_handle *db, const char *qs, char *body) {
+  char lv[16];
+  int tl = 0;
+  if (!body || !qs_get(qs, "lang_view", lv, sizeof lv, &tl)) return body;
+  char *sh = translate_shape_items(db, body, translate_view_parse(lv));
+  if (!sh) return body;
+  free(body);
+  return sh;
+}
+
+char *semsearchapi_items_hybrid(db_handle *db, const char *tenant,
+                                const char *id, const char *qs, int is_operator,
+                                int *status) {
+  *status = 500;
+  char src[160], q[256], qalt[256], lang[16], since[40], until[40], rt[48],
+       ssid[120], hg[8], tag[120], cur[2048], lim[16], kk[16];
+  int tl = 0, ctl = 0;
+  intel_items_query Q = {0};
+#define QV(name, buf, field) if (qs_get(qs, name, buf, sizeof buf, &tl)) Q.field = buf
+  QV("source", src, source); QV("q", q, q); QV("qAlt", qalt, q_alt);
+  QV("lang", lang, lang); QV("since", since, since); QV("until", until, until);
+  QV("record_type", rt, record_type); QV("sub_source_id", ssid, sub_source_id);
+  QV("has_geom", hg, has_geom); QV("tag", tag, tag);
+#undef QV
+  /* A cursor too long even for this buffer is not one of this sort's
+   * ("hybrid:<offset>"): ignored and disclosed below, as the feed does. */
+  int cur_given = qs_get(qs, "cursor", cur, sizeof cur, &ctl);
+  if (ctl) { cur[0] = 0; cur_given = 1; }
+  qs_get(qs, "limit", lim, sizeof lim, &tl);
+  qs_get(qs, "k", kk, sizeof kk, &tl);
+  if (tl) return too_long(status);
+  Q.tenant = tenant;
+  if (!Q.q || !*Q.q)
+    return fail(status, 400, "sort_requires_q", "sort=hybrid ranks full-text "
+                "and semantic hits; there is nothing to rank without q", NULL);
+  if (Q.source && *Q.source && breach_meta_is_source(db, Q.source))
+    return fail(status, 400, "sort_not_supported_for_breach_source",
+                "breach sources are served by the breach adapter, which orders "
+                "by record id only; drop sort= for this source", NULL);
+  int limit = atoi(lim);
+  if (limit <= 0) limit = 50;
+  if (limit > 200) limit = 200;
+  int k = atoi(kk);
+  if (k <= 0) k = 200;
+  if (k > 1000) k = 1000;
+  long off = 0;
+  int cur_used = 0;
+  if (cur_given && !strncmp(cur, "hybrid:", 7)) {
+    off = strtol(cur + 7, NULL, 10);
+    if (off < 0) off = 0;
+    cur_used = 1;
+  }
+  struct timespec t0; clock_gettime(CLOCK_MONOTONIC, &t0);
+
+  /* BM25 arm: exactly the list sort=relevance would page through, every feed
+   * filter applied (intelapi_relevance_uids). */
+  vecindex_fused L = {0};
+  char **fu = NULL;
+  int nf = intelapi_relevance_uids(db, &Q, k, &fu);
+  int fts_hits = nf > 0 ? nf : 0;
+  for (int i = 0; i < nf; i++) {
+    vecindex_fused_add(&L, fu[i], 0, i + 1, 0);
+    free(fu[i]);
+  }
+  free(fu);
+
+  /* Vector arm. source/record_type and the dates run INSIDE the KNN (the
+   * feed's since/until compare text, the index's ts is epoch — the post-check
+   * below applies the feed's own rule, so the two cannot disagree on what is
+   * shown). A vector arm that cannot answer (no server, no index, a swapped
+   * model) does not fail the request: the list is the BM25 arm alone, and
+   * meta.hybrid.vector_arm says so with the reason and coverage. */
+  semsearch_filters sf = { .source = Q.source, .record_type = Q.record_type,
+                           .since = Q.since, .until = Q.until };
+  semsearch_rf rf;
+  char ferr[48];
+  int rf_ok = semsearch_resolve(db, &sf, &rf, ferr, sizeof ferr) == 0;
+  if (!rf_ok) {
+    /* the feed reads since/until as text; an epoch the index cannot read
+     * them as just leaves the dates to the post-check */
+    sf.since = sf.until = NULL;
+    rf_ok = semsearch_resolve(db, &sf, &rf, ferr, sizeof ferr) == 0;
+  }
+  int vector_hits = 0, in_knn = 0;
+  long embed_ms = 0;
+  cJSON *varm_err = NULL;
+  float *qv = NULL; int dim = 0, est = 0;
+  char *eb = rf_ok ? semsearch_embed(db, Q.q, &qv, &dim, &embed_ms, &est) : NULL;
+  if (eb) { varm_err = cJSON_Parse(eb); free(eb); }
+  else if (qv) {
+    vecindex_hit *h = NULL;
+    char err[256];
+    int n = semsearch_knn(db, tenant, qv, dim, k, &rf, &h, &in_knn, err, sizeof err);
+    if (n >= 0) {
+      vector_hits = n;
+      for (int i = 0; i < n; i++)
+        vecindex_fused_add(&L, h[i].key, i + 1, 0, h[i].distance);
+      vecindex_hits_free(h, n);
+    } else {
+      varm_err = cJSON_CreateObject();
+      cJSON_AddStringToObject(varm_err, "error", "vector_query_failed");
+      cJSON_AddStringToObject(varm_err, "detail", err);
+    }
+  }
+  free(qv);
+  vecindex_fused_sort(&L);
+
+  /* The feed's WHERE as the post-check, tenant left to materialize(). */
+  intel_items_query Q2 = Q;
+  Q2.tenant = NULL;
+  char wbuf[4096];
+  const char *bnd[24];
+  int nb = intelapi_where(&Q2, wbuf, sizeof wbuf, bnd, 24);
+  char psql[4400];
+  snprintf(psql, sizeof psql, "SELECT 1 FROM intel_items WHERE intel_items.uid=?1%s", wbuf);
+  sqlite3_stmt *post = NULL;
+  if (sqlite3_prepare_v2(db->h, psql, -1, &post, NULL) != SQLITE_OK) {
+    vecindex_fused_free(&L); if (rf_ok) semsearch_rf_free(&rf);
+    cJSON_Delete(varm_err);
+    return fail(status, 500, "server_error", sqlite3_errmsg(db->h), NULL);
+  }
+  for (int i = 0; i < nb; i++)
+    sqlite3_bind_text(post, 2 + i, bnd[i], -1, SQLITE_TRANSIENT);
+
+  cJSON *data = cJSON_CreateArray();
+  sem_counts c;
+  /* rf NULL: the feed's WHERE (post) is the one rule for what is shown; the
+   * index's epoch dates only narrowed the KNN. */
+  int mr = materialize(db, tenant, is_operator, &L, (int)off, limit,
+                       NULL, NULL, 0, post, data, &c);
+  sqlite3_finalize(post);
+  if (mr != 0) {
+    cJSON_Delete(data); vecindex_fused_free(&L); if (rf_ok) semsearch_rf_free(&rf);
+    cJSON_Delete(varm_err);
+    return fail(status, 500, "server_error", sqlite3_errmsg(db->h), NULL);
+  }
+
+  cJSON *page = cJSON_CreateObject();
+  if (c.visible > off + c.shown) {
+    char nc[48];
+    snprintf(nc, sizeof nc, "hybrid:%ld", off + c.shown);
+    cJSON_AddStringToObject(page, "next_cursor", nc);
+  } else cJSON_AddNullToObject(page, "next_cursor");
+  cJSON_AddNumberToObject(page, "limit", limit);
+  cJSON_AddNumberToObject(page, "total", c.visible);
+
+  cJSON *filters = cJSON_CreateObject();
+#define FS(k, v) cJSON_AddItemToObject(filters, k, (v) ? cJSON_CreateString(v) : cJSON_CreateNull())
+  FS("source", Q.source); FS("q", Q.q); FS("q_alt", Q.q_alt); FS("lang", Q.lang);
+  FS("record_type", Q.record_type); FS("sub_source_id", Q.sub_source_id);
+  FS("has_geom", Q.has_geom);
+#undef FS
+  cJSON *meta = cJSON_CreateObject();
+  { char ts[40]; time_t now = time(NULL); struct tm tmv; gmtime_r(&now, &tmv);
+    strftime(ts, sizeof ts, "%Y-%m-%dT%H:%M:%SZ", &tmv);
+    cJSON_AddStringToObject(meta, "fetched_at", ts); }
+  cJSON_AddItemToObject(meta, "filters", filters);
+  cJSON_AddStringToObject(meta, "sort", "hybrid");
+  cJSON_AddBoolToObject(meta, "q_applied", 1);
+  cJSON *hy = cJSON_CreateObject();
+  cJSON_AddNumberToObject(hy, "k", k);
+  cJSON_AddNumberToObject(hy, "rrf_k", RRF_K);
+  cJSON_AddNumberToObject(hy, "fts_hits", fts_hits);
+  cJSON_AddNumberToObject(hy, "vector_hits", vector_hits);
+  cJSON_AddNumberToObject(hy, "fused", L.n);
+  cJSON_AddStringToObject(hy, "vector_arm", varm_err ? "unavailable" : "ok");
+  if (varm_err) cJSON_AddItemToObject(hy, "vector_arm_error", varm_err);
+  cJSON_AddBoolToObject(hy, "vector_filters_in_knn", in_knn);
+  /* Rows a filter removed after the arms answered: the feed's own WHERE
+   * (lang, tag, sub_source_id, has_geom, and the text date rule) on the
+   * vector arm's candidates. */
+  cJSON_AddNumberToObject(hy, "filtered_out", c.post_dropped);
+  if (is_operator) {
+    cJSON_AddNumberToObject(hy, "tenant_withheld", c.withheld);
+    cJSON_AddNumberToObject(hy, "index_orphans", c.orphans);
+  }
+  /* page.total is the fused list, which is a BOUNDED VIEW: each arm's top k. */
+  cJSON_AddBoolToObject(hy, "bounded", fts_hits >= k || vector_hits >= k);
+  cJSON_AddStringToObject(hy, "note",
+    "page.total counts the fused top-k of each arm (BM25 over the feed's "
+    "filters, vector KNN inside the tenant's partitions), not every match; "
+    "raise k to widen it");
+  cJSON_AddNumberToObject(hy, "embed_ms", (double)embed_ms);
+  cJSON_AddNumberToObject(hy, "total_ms", (double)ms_since(&t0));
+  cJSON_AddItemToObject(hy, "coverage", embed_coverage_json(db));
+  cJSON_AddItemToObject(meta, "hybrid", hy);
+  if (cur_given && !cur_used) {
+    cJSON *notes = cJSON_CreateArray();
+    cJSON_AddItemToArray(notes, cJSON_CreateString("cursor_ignored"));
+    cJSON_AddItemToObject(meta, "notes", notes);
+  }
+  vecindex_fused_free(&L);
+  if (rf_ok) semsearch_rf_free(&rf);
+
+  cJSON *env = cJSON_CreateObject();
+  cJSON_AddItemToObject(env, "data", data);
+  cJSON_AddItemToObject(env, "page", page);
+  cJSON_AddItemToObject(env, "meta", meta);
+  char *out = cJSON_PrintUnformatted(env);
+  cJSON_Delete(env);
+  *status = out ? 200 : 500;
+  return lang_view(db, qs, out);
+}
+
 /* ---- GET /api/intel/items/:uid/similar ----------------------------------- */
 
 /* 1 when `uid` is a row the caller may read (tenant + shared corpus). */
@@ -757,7 +977,7 @@ char *semsearchapi_similar(db_handle *db, const char *tenant, const char *uid,
   cJSON *data = cJSON_CreateArray();
   sem_counts c;
   const char *self[1] = { uid };
-  if (materialize(db, tenant, is_operator, &L, 0, k, &rf, self, 1, data, &c) != 0) {
+  if (materialize(db, tenant, is_operator, &L, 0, k, &rf, self, 1, NULL, data, &c) != 0) {
     cJSON_Delete(data); vecindex_fused_free(&L); semsearch_rf_free(&rf);
     return fail(status, 500, "server_error", sqlite3_errmsg(db->h), NULL);
   }

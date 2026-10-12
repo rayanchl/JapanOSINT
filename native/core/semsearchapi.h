@@ -144,6 +144,25 @@ typedef char *(*semsearch_route_fn)(db_handle *db, const char *tenant,
 char *semsearchapi_http(db_handle *db, const char *tenant, const char *id,
                         const char *qs, int is_operator, int *status);
 
+/* GET /api/intel/items?q=…&sort=hybrid[&k=N] (and /api/intel/search) — the
+ * feed's own query parameters, ranked by RRF of two arms: the BM25 list
+ * sort=relevance would page through (intelapi_relevance_uids: same MATCH,
+ * same filters, same weights) and a vector KNN of q inside the caller's
+ * tenant partitions (source/record_type/dates in the KNN). Every candidate is
+ * then checked against the feed's own WHERE (intelapi_where) and rendered by
+ * intelapi_row_to_item, so a hybrid row is a feed row plus `semantic`
+ * {score, vector_rank, fts_rank, distance}. Paged by offset
+ * (page.next_cursor "hybrid:<n>"); page.total is the fused list, a bounded
+ * view of each arm's top k, and meta.hybrid says so with both arm sizes, what
+ * the post-check filtered out, and coverage. When the vector arm cannot
+ * answer (no server, no index, a swapped model) the list is the BM25 arm
+ * alone and meta.hybrid.vector_arm = "unavailable" carries the reason — never
+ * a silent relevance list. ?lang_view= applies as on the feed. Embeds q: run
+ * it off the event loop. */
+char *semsearchapi_items_hybrid(db_handle *db, const char *tenant,
+                                const char *id, const char *qs, int is_operator,
+                                int *status);
+
 /* GET /api/intel/items/:uid/similar?k=N (1..200, default 20) plus the S1
  * filters. The k nearest rows to the item's OWN stored vector
  * (vecindex_load; no embedding call, so no server need answer), inside the

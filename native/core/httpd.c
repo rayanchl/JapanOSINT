@@ -1870,6 +1870,20 @@ static int breach_gate(struct mg_connection *c, const auth_user *usr) {
   return 1;
 }
 
+/* ?sort=hybrid on the feed: it embeds q, so it is answered by
+ * semsearchapi_items_hybrid on a worker (sem_spawn). 1 = handled (replied or
+ * deferred); 0 = not a hybrid request, carry on. */
+static int intel_sort_hybrid(struct mg_connection *c, struct mg_http_message *hm,
+                             const auth_user *usr) {
+  char sv[16] = {0};
+  if (mg_http_get_var(&hm->query, "sort", sv, sizeof sv) <= 0 || strcmp(sv, "hybrid"))
+    return 0;
+  tenant_ctx tc;
+  if (intel_tenant_or_reply(c, hm, usr, &tc) != 0) return 1;
+  sem_spawn(c, hm, semsearchapi_items_hybrid, tc.tenant_id, "", opgate_check(usr) == 0);
+  return 1;
+}
+
 /* True when this /api/intel/items request is really a breach-corpus read. */
 static int intel_query_is_breach(struct mg_http_message *hm) {
   char src[160] = {0};
@@ -2288,6 +2302,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           if (nst == 200) nb = intel_lang_view(hm, nb);
           reply_json(c, nst, nb); free(nb); return;
         } }
+      if (intel_sort_hybrid(c, hm, &usr)) return;
       int qtl = 0, ist = 200;
       tenant_ctx itc;
       if (intel_tenant_or_reply(c, hm, &usr, &itc) != 0) return;
@@ -2532,6 +2547,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     /* GET /api/intel/search — alias of /api/intel/items */
     if (eq(u, "/api/intel/search")) {
       if (intel_query_is_breach(hm) && breach_gate(c, &usr)) return;
+      if (intel_sort_hybrid(c, hm, &usr)) return;
       int qtl = 0, ist = 200;
       tenant_ctx itc;
       if (intel_tenant_or_reply(c, hm, &usr, &itc) != 0) return;

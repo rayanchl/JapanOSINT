@@ -14,6 +14,7 @@
 
 #include "../../core/embed_pod.c"
 #include "../../core/semsearchapi.h"
+#include "../../core/intel.h"
 
 #include <assert.h>
 #include <math.h>
@@ -112,9 +113,11 @@ static void put(const row *r) {
   if (r->lon == r->lon) sqlite3_bind_double(s, 10, r->lon); else sqlite3_bind_null(s, 10);
   assert(sqlite3_step(s) == SQLITE_DONE);
   sqlite3_finalize(s);
+  intel_fts_remirror(&g_db, r->uid);       /* the BM25 arm reads the FTS mirror */
 }
 
 static void reset_all(void) {
+  sql("DELETE FROM intel_items_fts");
   sql("DELETE FROM intel_items");
   sql("DROP TABLE IF EXISTS intel_vec");
   sql("DROP TABLE IF EXISTS intel_vec_v2");
@@ -320,6 +323,67 @@ static void test_s4_similar(void) {
          "409 not_embedded with coverage; S1 query string + 414: ok\n");
 }
 
+/* ---- S2: sort=hybrid on the feed ----------------------------------------- */
+
+static void test_s2_items_hybrid(void) {
+  /* the S1 corpus: a0..a9 match "harbour crane" in both arms; b-far only by
+   * meaning-ish proximity (the vector arm returns it under source=src-b) */
+  cJSON *j = route(semsearchapi_items_hybrid, "t1", "",
+                   "q=harbour%20crane&sort=hybrid&limit=4", 200);
+  cJSON *d = cJSON_GetObjectItem(j, "data");
+  assert(cJSON_GetArraySize(d) == 4 && !has_uid(j, "o-1"));
+  cJSON *first = cJSON_GetArrayItem(d, 0);
+  assert(jnum(first, "semantic.fts_rank") >= 1 && jnum(first, "semantic.vector_rank") >= 1);
+  assert(!strcmp(jget(j, "meta.sort")->valuestring, "hybrid"));
+  assert(!strcmp(jget(j, "meta.hybrid.vector_arm")->valuestring, "ok"));
+  assert(jnum(j, "meta.hybrid.fts_hits") == 10);
+  assert(jget(j, "meta.hybrid.coverage") && jget(j, "meta.hybrid.note"));
+  long total = (long)jnum(j, "page.total");
+  assert(total >= 10);
+  cJSON *nc = jget(j, "page.next_cursor");
+  assert(nc && cJSON_IsString(nc) && !strcmp(nc->valuestring, "hybrid:4"));
+  cJSON_Delete(j);
+  /* page 2 continues where page 1 stopped, ranks carry on */
+  j = route(semsearchapi_items_hybrid, "t1", "",
+            "q=harbour%20crane&sort=hybrid&limit=4&cursor=hybrid:4", 200);
+  first = cJSON_GetArrayItem(cJSON_GetObjectItem(j, "data"), 0);
+  assert(jnum(first, "semantic.rank") == 5);
+  cJSON_Delete(j);
+
+  /* the vector arm reaches what BM25 cannot */
+  j = route(semsearchapi_items_hybrid, "t1", "",
+            "q=harbour%20crane&sort=hybrid&source=src-b", 200);
+  assert(jnum(j, "page.total") == 1 && has_uid(j, "b-far"));
+  first = cJSON_GetArrayItem(cJSON_GetObjectItem(j, "data"), 0);
+  assert(cJSON_IsNull(jget(first, "semantic.fts_rank")));
+  cJSON_Delete(j);
+
+  /* a feed filter the KNN cannot express is applied and counted */
+  j = route(semsearchapi_items_hybrid, "t1", "",
+            "q=harbour%20crane&sort=hybrid&lang=ja", 200);
+  assert(jnum(j, "page.total") <= 1 && !has_uid(j, "a0"));
+  assert(jnum(j, "meta.hybrid.filtered_out") >= 10);
+  cJSON_Delete(j);
+
+  /* q is required; a breach source is refused like sort=relevance */
+  j = route(semsearchapi_items_hybrid, "t1", "", "sort=hybrid", 400);
+  cJSON_Delete(j);
+
+  /* no embedding server: BM25 alone, and the envelope says so */
+  char *saved = strdup(getenv("JO_EMBED_URL"));
+  unsetenv("JO_EMBED_URL");
+  j = route(semsearchapi_items_hybrid, "t1", "", "q=harbour%20crane&sort=hybrid", 200);
+  assert(!strcmp(jget(j, "meta.hybrid.vector_arm")->valuestring, "unavailable"));
+  assert(!strcmp(jget(j, "meta.hybrid.vector_arm_error.error")->valuestring,
+                 "semantic_unavailable"));
+  assert(jnum(j, "page.total") == 10 && jnum(j, "meta.hybrid.vector_hits") == 0);
+  cJSON_Delete(j);
+  setenv("JO_EMBED_URL", saved, 1);
+  free(saved);
+  printf("  S2: sort=hybrid fuses BM25 + KNN, pages by offset, feed filters "
+         "post-checked and counted, BM25-only fallback disclosed: ok\n");
+}
+
 int main(void) {
   const char *dbp = getenv("JO_DB");
   assert(dbp && "run.sh sets JO_DB to a scratch database");
@@ -344,6 +408,7 @@ int main(void) {
 
   test_s1_filters();
   test_s4_similar();
+  test_s2_items_hybrid();
 
   stub_stop();
   db_close(&g_db);
