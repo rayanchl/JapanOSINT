@@ -317,6 +317,10 @@ static void dispatch_one(disp_pool *p, disp_job *job, db_handle *db,
   cJSON_AddStringToObject(sr, "name", r.resolved_from ? r.service : t->service);
   if (r.resolved_from)
     cJSON_AddStringToObject(sr, "resolved_from", r.resolved_from);
+  /* Only when the match was by meaning rather than spelling: a weaker kind
+   * of evidence, so it is named (core/osint_dispatch.h). */
+  if (r.resolved_from && r.resolver)
+    cJSON_AddStringToObject(sr, "resolver", r.resolver);
   cJSON_AddStringToObject(sr, "entity", t->entity);
   cJSON_AddBoolToObject(sr, "success", r.success);
   cJSON_AddNumberToObject(sr, "confidence", r.confidence);

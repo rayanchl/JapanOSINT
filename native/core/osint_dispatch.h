@@ -66,6 +66,11 @@ typedef struct {
    * puts it beside the records as `relevance`. Only ever set with an
    * embedding server configured. */
   char *relevance;
+  /* NULL in the ordinary case (and for an edit-distance resolution, which is
+   * what resolved_from has always meant); the static string "embedding" when
+   * resolved_from was matched by osint_resolve_near_db()'s embedding
+   * fallback — a weaker kind of evidence, so it is said. Never freed. */
+  const char *resolver;
 } osint_result;
 
 void osint_result_free(osint_result *r);
@@ -76,6 +81,16 @@ void osint_result_free(osint_result *r);
  * the resolved id into `out`. Callers MUST report the substitution — see
  * osint_result.resolved_from. */
 int osint_resolve_near(const char *canon, char *out, size_t n);
+
+/* osint_resolve_near(), and — only when it finds nothing or a tie — the
+ * embedding fallback: the name (as words) is asked of the service router
+ * (service_vec_catalogue) for its RESOLVE_EMB_K nearest pivots, each is
+ * scored by cosine to the name, and the best is accepted only when it clears
+ * RESOLVE_EMB_MIN_COS AND beats the runner-up by RESOLVE_EMB_MARGIN. *by_emb
+ * (may be NULL) is set to 1 when the embedding path chose. Without an
+ * embedding server or a ready service index this IS osint_resolve_near(). */
+int osint_resolve_near_db(db_handle *db, const char *canon, char *out, size_t n,
+                          int *by_emb);
 
 /* Canonical service name: trimmed, upper-cased into out (or 0 if empty). */
 int  osint_canon(const char *name, char *out, size_t n);
