@@ -12,6 +12,7 @@ int sqlite3_vec_init(sqlite3 *db, char **pzErrMsg, const sqlite3_api_routines *p
 #include "media.h"             /* media_migrate (same reason) */
 #include "camera_stills.h"     /* camera_stills_migrate (same reason) */
 #include "story.h"             /* story_migrate (story_id, novelty columns) */
+#include "alert_sem.h"         /* alert_sem_migrate (alert_rule_vec)        */
 #include "fts_schema.h"        /* fts_schema_migrate (widens intel_items_fts) */
 #include "entitystore.h"       /* es_norm_migrate */
 #include "source_registry.h"   /* src_meta_get (merged metadata)        */
@@ -515,6 +516,8 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
    * story.h): intel_items.story_id (separate from simhash's cluster_id) and
    * .novelty, plus the story index and the hook's pending queue. */
   story_migrate(db);
+  /* Semantic alert rules' stored vectors (core/alert_sem.h). */
+  alert_sem_migrate(db);
 
   /* Widen intel_items_fts to also index link/author/tags/properties. No-op
    * unless the live index is still the old column set. Deliberately LAST of

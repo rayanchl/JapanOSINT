@@ -2,6 +2,7 @@
 #include "alert_deliver.h"
 #include "breach_adapter.h"
 #include "alert_eval.h"
+#include "alert_sem.h"
 #include "audit.h"
 #include "hostgate.h"
 #include "../third_party/cJSON.h"
@@ -283,7 +284,7 @@ static long count_stmt(sqlite3_stmt *s) {
 }
 
 /* {data:{decoded rule}} — webhook secrets masked, never echoed. */
-static cJSON *decode_row(sqlite3_stmt *s) {
+static cJSON *decode_row(db_handle *db, sqlite3_stmt *s) {
   /* cols: id,name,enabled,predicate_json,channels_json,dedup_window_sec,
    *       storm_cap_per_hour,muted_until,created_at,updated_at,created_by */
   cJSON *o = cJSON_CreateObject();
@@ -318,6 +319,10 @@ static cJSON *decode_row(sqlite3_stmt *s) {
    * case does. It was stored on insert and never sent. */
   const char *cb = ctext(s,10);
   cJSON_AddItemToObject(o, "created_by", cb ? cJSON_CreateString(cb) : cJSON_CreateNull());
+  /* A semantic rule says in-band whether it can fire and when it is evaluated
+   * (alert_sem.h); absent for every other rule. */
+  cJSON *sem = alert_sem_status(db, (const char *)sqlite3_column_text(s,0), ctext(s,3));
+  if (sem) cJSON_AddItemToObject(o, "semantic", sem);
   return o;
 }
 
@@ -336,7 +341,7 @@ static char *one_rule(db_handle *db, const char *tid, const char *id,
   char *out;
   if (sqlite3_step(s) == SQLITE_ROW) {
     cJSON *w = cJSON_CreateObject();
-    cJSON_AddItemToObject(w, "data", decode_row(s));
+    cJSON_AddItemToObject(w, "data", decode_row(db, s));
     out = cJSON_PrintUnformatted(w); cJSON_Delete(w); *st = code;
   } else {
     out = err(st, 404, "Not found");
@@ -425,6 +430,20 @@ static const char *validate_rule(cJSON *b, const char **name, int *enabled,
       return "predicate.mode must be \"fts\" or \"llm\"";
     if ((x=cJSON_GetObjectItem(pred,"nl_query")) && !cJSON_IsNull(x) && !cJSON_IsString(x))
       return "predicate.nl_query must be string";
+    /* Semantic rules (alert_sem.h): the description is embedded, so it is
+     * bounded, and the two numbers they may carry are a cosine in (0,1] and
+     * a novelty in [0,1]. An "llm" rule saved WITHOUT words is not rejected
+     * (stored rules of that shape must stay editable); it is not semantic
+     * and matches on its other terms, as before. */
+    if ((x=cJSON_GetObjectItem(pred,"nl_query")) && cJSON_IsString(x) &&
+        strlen(x->valuestring) > 2000)
+      return "predicate.nl_query too long";
+    if ((x=cJSON_GetObjectItem(pred,"threshold")) && !cJSON_IsNull(x) &&
+        (!cJSON_IsNumber(x) || x->valuedouble <= 0 || x->valuedouble > 1))
+      return "predicate.threshold must be a number in (0,1]";
+    if ((x=cJSON_GetObjectItem(pred,"novelty_min")) && !cJSON_IsNull(x) &&
+        (!cJSON_IsNumber(x) || x->valuedouble < 0 || x->valuedouble > 1))
+      return "predicate.novelty_min must be a number in [0,1]";
   }
   *predicate = pred ? cJSON_Duplicate(pred,1) : cJSON_CreateObject();
 
@@ -529,7 +548,7 @@ char *alertsapi(db_handle *db, const char *tid, const char *uid,
         -1, &s, NULL);
       sqlite3_bind_text(s,1,tid,-1,SQLITE_TRANSIENT);
       cJSON *arr = cJSON_CreateArray();
-      while (sqlite3_step(s)==SQLITE_ROW) cJSON_AddItemToArray(arr, decode_row(s));
+      while (sqlite3_step(s)==SQLITE_ROW) cJSON_AddItemToArray(arr, decode_row(db, s));
       sqlite3_finalize(s);
       cJSON *w = cJSON_CreateObject(); cJSON_AddItemToObject(w,"data",arr);
       char *o = cJSON_PrintUnformatted(w); cJSON_Delete(w);
@@ -571,6 +590,8 @@ char *alertsapi(db_handle *db, const char *tid, const char *uid,
         char *apj = cJSON_PrintUnformatted(ap); cJSON_Delete(ap);
         audit_write(db, tid, uid, "alert_rule.create", nid, apj);
         free(apj); }
+      /* a semantic rule's description is embedded off the request path */
+      alert_sem_embed_async(nid);
       return one_rule(db,tid,nid,201,st);
     }
     if (jb) cJSON_Delete(jb);
@@ -658,6 +679,7 @@ char *alertsapi(db_handle *db, const char *tid, const char *uid,
       sqlite3_step(s); sqlite3_finalize(s); free(pj); free(cj);
       if (jb) cJSON_Delete(jb);
       audit_write(db, tid, uid, "alert_rule.update", id, NULL);
+      alert_sem_embed_async(id);
       return one_rule(db,tid,id,200,st);
     }
     if (jb) cJSON_Delete(jb);
