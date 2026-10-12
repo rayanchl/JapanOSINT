@@ -1120,6 +1120,59 @@ static int fetch_frame(http_client *http, const char *url, int kind,
   return 0;
 }
 
+/* Trim to exactly ONE frame. For JPEG this also PROVES the frame is
+ * complete — a half-received image would otherwise be stored, hashed and
+ * compared as though it were real, and every truncated frame would read as a
+ * scene change. 1 with the frame's span inside `raw` and its type; 0 with
+ * `reason`. */
+static int trim_frame(const unsigned char *raw, size_t rawlen,
+                      const unsigned char **frame, size_t *flen,
+                      const char **ct, const char **reason) {
+  *frame = raw;
+  *flen = rawlen;
+  *ct = media_sniff_type(raw, rawlen);
+  if (!*ct || strcmp(*ct, "image/jpeg") == 0) {
+    size_t off = 0, n = 0;
+    if (camera_stills_jpeg_frame(raw, rawlen, &off, &n)) {
+      *frame = raw + off;
+      *flen = n;
+      *ct = "image/jpeg";
+    } else {
+      *reason = *ct ? "incomplete_jpeg" : "not_an_image";
+      return 0;
+    }
+  }
+  if (*flen < 16 || (long)*flen > cfg_max_bytes()) {
+    *reason = "bad_frame_size";
+    return 0;
+  }
+  return 1;
+}
+
+int camera_stills_fetch_frame(http_client *http, const char *url,
+                              unsigned char **out, size_t *outlen,
+                              const char **ct, long *status,
+                              const char **reason, char *rbuf, size_t rcap) {
+  *out = NULL; *outlen = 0; *ct = NULL; *status = 0; *reason = NULL;
+  int kind = camera_stills_classify(url);
+  if (kind == CAM_FEED_NONE) { *reason = "no_feed_url"; return 0; }
+  if (kind == CAM_FEED_UNSUPPORTED) { *reason = "unsupported_scheme"; return 0; }
+  unsigned char *raw = NULL;
+  size_t rawlen = 0;
+  int eff = kind;
+  if (!fetch_frame(http, url, kind, &raw, &rawlen, &eff, status, reason, rbuf, rcap)) {
+    if (!*reason) *reason = "fetch_failed";
+    return 0;
+  }
+  const unsigned char *frame = raw;
+  size_t flen = rawlen;
+  if (!trim_frame(raw, rawlen, &frame, &flen, ct, reason)) { free(raw); return 0; }
+  if (frame != raw) memmove(raw, frame, flen);
+  *out = raw;
+  *outlen = flen;
+  return 1;
+}
+
 /* The whole per-camera write, from bytes to committed row. Returns 1 on a
  * captured frame. `reason` is set on every 0 return. */
 static int capture_frame(db_handle *db, http_client *http, const char *cam,
@@ -1138,32 +1191,11 @@ static int capture_frame(db_handle *db, http_client *http, const char *cam,
     return 0;
   }
 
-  /* Trim to exactly ONE frame. For JPEG this also PROVES the frame is
-   * complete — a half-received image would otherwise be stored, hashed and
-   * compared as though it were real, and every truncated frame would read as a
-   * scene change. */
   const unsigned char *frame = raw;
   size_t flen = rawlen;
-  const char *ct = media_sniff_type(raw, rawlen);
-  if (!ct || strcmp(ct, "image/jpeg") == 0) {
-    size_t off = 0, n = 0;
-    if (camera_stills_jpeg_frame(raw, rawlen, &off, &n)) {
-      frame = raw + off;
-      flen = n;
-      ct = "image/jpeg";
-    } else if (!ct) {
-      free(raw);
-      *reason = "not_an_image";
-      return 0;
-    } else {
-      free(raw);
-      *reason = "incomplete_jpeg";
-      return 0;
-    }
-  }
-  if (flen < 16 || (long)flen > cfg_max_bytes()) {
+  const char *ct = NULL;
+  if (!trim_frame(raw, rawlen, &frame, &flen, &ct, reason)) {
     free(raw);
-    *reason = "bad_frame_size";
     return 0;
   }
 

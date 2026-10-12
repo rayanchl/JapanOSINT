@@ -4,8 +4,11 @@
  *
  * WHAT IS INDEXED, AND WHAT IS NOT.
  *   - Frames already in the evidence blob store: camera_stills rows (kind
- *     "still") and media_assets image rows of a camera record (kind "media").
- *     Nothing is fetched for this index; a frame whose bytes were never
+ *     "still"), media_assets image rows of a camera record (kind "media";
+ *     never a client upload — media.h, client uploads) and the weekly
+ *     reference frame of each indexable camera record (kind "refframe",
+ *     core/camera_refframe.h, which fetches it).
+ *     Nothing is fetched by this pod; a frame whose bytes were never
  *     preserved (sources.capture_evidence off) has nothing to embed and is
  *     counted as `no_bytes`, never guessed at.
  *   - ONLY cameras that pass camera_record_indexable() (core/camera_privacy.h):
@@ -43,7 +46,12 @@
  * The vec0 metadata, filterable inside the KNN: `ts` (epoch seconds of the
  * NEWEST ref's captured_at — a `since` filter can then never drop a frame that
  * still has a recent ref) and `kind` ("still" whenever any still points at the
- * sha, else the first ref's kind).
+ * sha, else "refframe" when a reference frame does — the two kinds the search
+ * answers with — else "media").
+ *
+ * The coverage carries an `extra` block (vecindex_spec.coverage_extra): refs
+ * per kind and the reference-frame pod's progress, so /api/status's
+ * vectorIndexes.image says how many cameras have a frame at all.
  *
  * INERT without JO_VISION_EMBED_URL: no table is created and nothing is sent. */
 #ifndef JO_IMAGE_VEC_H

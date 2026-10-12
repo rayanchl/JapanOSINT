@@ -26,7 +26,11 @@
  *      STORED vector (nothing sent) and its own camera left out; an upload is
  *      embedded for the query only, never indexed, readable by its tenant
  *      only; a committed image upload becomes a tenant-scoped media row the
- *      media pod analyses from the evidence store and the index never walks.
+ *      media pod analyses from the evidence store and the index never walks;
+ *  12. reference frames (core/camera_refframe.c): one frame per INDEXABLE
+ *      camera record through the stills fetch path, failures recorded, at
+ *      most weekly, inert without the sidecar, embedded as kind refframe,
+ *      answering the search, and a refresh moving the ref to the new bytes.
  *
  * Includes image_vec.c directly, so run.sh links every object except
  * obj/core/image_vec.o. */
@@ -34,6 +38,7 @@
 #include "core/visualsearchapi.h"
 #include "core/media.h"
 #include "core/uploadapi.h"
+#include "core/camera_refframe.h"
 #include "vision_stub.h"
 
 #include <assert.h>
@@ -173,6 +178,51 @@ static double cos_mean2(const char *x, const char *a, const char *b) {
 }
 
 #define NEAR(a, b) (fabs((a) - (b)) < 1e-6)
+
+/* A plain local web server for the reference-frame fetches. */
+static pid_t web_pid = 0;
+
+static int web_answers(int port) {
+  char url[128];
+  snprintf(url, sizeof url, "http://127.0.0.1:%d/", port);
+  http_client *h = http_client_new();
+  http_response r = {0};
+  int ok = h && http_request(h, "GET", url, NULL, NULL, 0, 500, 0, &r) == 0 &&
+           r.status == 200;
+  http_response_free(&r);
+  if (h) http_client_free(h);
+  return ok;
+}
+
+static void web_stop(void) {
+  if (web_pid > 0) { kill(web_pid, SIGKILL); waitpid(web_pid, NULL, 0); }
+  web_pid = 0;
+}
+
+static int web_start(const char *dir, int port) {
+  for (int tries = 0; tries < 40 && web_answers(port); tries++) port++;
+  fflush(stdout);
+  pid_t p = fork();
+  if (p < 0) return -1;
+  if (p == 0) {
+    char ps[16];
+    snprintf(ps, sizeof ps, "%d", port);
+    prctl(PR_SET_PDEATHSIG, SIGKILL);
+    if (!freopen("/dev/null", "w", stdout)) { /* harmless */ }
+    if (!freopen("/dev/null", "w", stderr)) { /* harmless */ }
+    execlp("python3", "python3", "-m", "http.server", ps, "--bind", "127.0.0.1",
+           "--directory", dir, (char *)NULL);
+    _exit(127);
+  }
+  web_pid = p;
+  for (int i = 0; i < 100; i++) {
+    if (web_answers(port)) return port;
+    struct timespec ts = { 0, 50 * 1000000L };
+    nanosleep(&ts, NULL);
+  }
+  web_stop();
+  return -1;
+}
 
 int main(void) {
   const char *dbp = getenv("JO_DB");
@@ -569,6 +619,135 @@ int main(void) {
   printf("  by-image: a still's stored vector (own camera excluded, nothing sent), "
          "an upload embedded per query and never indexed, tenant-scoped media "
          "rows, 403/404/409s: ok\n");
+
+  /* 12. reference frames: one per indexable camera record, fetched through
+   * the stills fetch path from a local server (JO_CAMERA_ALLOW_LAN=1) */
+  {
+    char webdir[300], path[400];
+    snprintf(webdir, sizeof webdir, "%s.web", getenv("JO_DB"));
+    mkdir(webdir, 0700);
+    /* a COMPLETE jpeg frame, as the stills trim demands: SOI, an APP0 segment
+     * by length, SOS with entropy bytes, EOI */
+    unsigned char rf[256];
+    size_t nrf = 0;
+    const char *tag = "road-ref-frame";
+    rf[nrf++] = 0xFF; rf[nrf++] = 0xD8; rf[nrf++] = 0xFF; rf[nrf++] = 0xE0;
+    rf[nrf++] = 0; rf[nrf++] = (unsigned char)(2 + strlen(tag));
+    memcpy(rf + nrf, tag, strlen(tag)); nrf += strlen(tag);
+    rf[nrf++] = 0xFF; rf[nrf++] = 0xDA; rf[nrf++] = 0; rf[nrf++] = 2;
+    memcpy(rf + nrf, "entropy-bytes", 13); nrf += 13;
+    rf[nrf++] = 0xFF; rf[nrf++] = 0xD9;
+    snprintf(path, sizeof path, "%s/road.jpg", webdir);
+    FILE *f = fopen(path, "wb"); assert(f); fwrite(rf, 1, nrf, f); fclose(f);
+    char rfsha[65];
+    hexsha(rf, nrf, rfsha);
+    int port = web_start(webdir, 18680);
+    if (port < 0) {
+      printf("  SKIP refframes: no local web server (python3 -m http.server)\n");
+    } else {
+      setenv("JO_CAMERA_ALLOW_LAN", "1", 1);
+      char sql[1200];
+      snprintf(sql, sizeof sql,
+        "INSERT INTO intel_items(uid,source_id,title,fetched_at,properties,"
+        " record_type,lat,lon) VALUES"
+        " ('camera-discovery|road1','camera-discovery','Route 1',datetime('now'),"
+        "  '{\"discovery_channel\":\"mlit_road\",\"snapshot_url\":\"http://127.0.0.1:%d/road.jpg\"}',"
+        "  'camera',35.62,139.62),"
+        " ('camera-discovery|road2','camera-discovery','Route 2',datetime('now'),"
+        "  '{\"discovery_channel\":\"mlit_road\",\"snapshot_url\":\"http://127.0.0.1:%d/gone.jpg\"}',"
+        "  'camera',35.63,139.63),"
+        " ('camera-discovery|open2','camera-discovery','Open 2',datetime('now'),"
+        "  '{\"discovery_channel\":\"insecam_scrape\",\"snapshot_url\":\"http://127.0.0.1:%d/road.jpg\"}',"
+        "  'camera',35.64,139.64)", port, port, port);
+      exec(sql);
+
+      /* inert without the sidecar */
+      char keep[128];
+      snprintf(keep, sizeof keep, "%s", getenv("JO_VISION_EMBED_URL"));
+      unsetenv("JO_VISION_EMBED_URL");
+      assert(camera_refframe_tick(&g_db, NULL, NULL) == 0);
+      assert(!vecindex_table_exists(&g_db, "camera_refframes") ||
+             count("SELECT count(*) FROM camera_refframes") == 0);
+      setenv("JO_VISION_EMBED_URL", keep, 1);
+
+      assert(camera_refframe_tick(&g_db, NULL, NULL) == 1);
+      /* river1/river2 (cam.example does not resolve) are recorded, not skipped */
+      assert(count("SELECT count(*) FROM camera_refframes WHERE"
+                   " last_error='blocked_destination'") == 2);
+      {
+        char q[300];
+        snprintf(q, sizeof q, "SELECT count(*) FROM camera_refframes WHERE"
+                 " item_uid='camera-discovery|road1' AND sha256='%s'"
+                 " AND evidence_id IS NOT NULL AND last_error IS NULL", rfsha);
+        assert(count(q) == 1);
+      }
+      assert(count("SELECT count(*) FROM camera_refframes WHERE"
+                   " item_uid='camera-discovery|road2' AND sha256 IS NULL"
+                   " AND last_error='http_404' AND fail_count=1") == 1);
+      /* the insecam record is never fetched */
+      assert(count("SELECT count(*) FROM camera_refframes WHERE"
+                   " item_uid='camera-discovery|open2'") == 0);
+      /* attempted this week: nothing is due */
+      assert(camera_refframe_tick(&g_db, NULL, NULL) == 0);
+      assert(count("SELECT fail_count FROM camera_refframes WHERE"
+                   " item_uid='camera-discovery|road2'") == 1);
+
+      /* the image pod embeds it as kind refframe */
+      assert(image_vec_tick(&g_db, NULL, 0) == 1);
+      assert(count("SELECT count(*) FROM image_vec_ref WHERE kind='refframe'") == 1);
+      assert(count("SELECT count(*) FROM image_vec WHERE kind='refframe'") == 1);
+      int st;
+      cJSON *j = vsearch("q=road&k=10", &st);
+      assert(st == 200);
+      int seen = 0;
+      cJSON *x;
+      cJSON_ArrayForEach(x, cJSON_GetObjectItem(j, "data")) {
+        cJSON *c = cJSON_GetObjectItem(x, "camera_id");
+        if (strcmp(c->valuestring, "camera-discovery|road1")) continue;
+        seen++;
+        assert(cJSON_IsNull(cJSON_GetObjectItem(x, "still")));
+        cJSON *fr = cJSON_GetObjectItem(x, "frame");
+        assert(!strcmp(cJSON_GetObjectItem(fr, "kind")->valuestring, "refframe"));
+        assert(cJSON_IsString(cJSON_GetObjectItem(fr, "evidence_id")));
+      }
+      assert(seen == 1);
+      assert(jnum(j, "meta.cameras.indexed") == 3);    /* river1, river2, road1 */
+      cJSON_Delete(j);
+
+      /* coverage reports both pods' numbers */
+      cJSON *cov = vecindex_coverage_json(&g_db, &image_vec_spec);
+      assert(jnum(cov, "extra.refs.refframe") == 1);
+      assert(jnum(cov, "extra.refframes.cameras_with_frame") == 1);
+      assert(jnum(cov, "extra.refframes.failing") >= 1);
+      assert(jnum(cov, "extra.refframes.last_tick.walked") >= 3);
+      cJSON_Delete(cov);
+
+      /* a week later the camera shows something else: the ref moves to the
+       * new bytes and the old vector goes */
+      rf[25] ^= 0x01;                                /* entropy, still no FF */
+      f = fopen(path, "wb"); assert(f); fwrite(rf, 1, nrf, f); fclose(f);
+      char rfsha2[65];
+      hexsha(rf, nrf, rfsha2);
+      exec("UPDATE camera_refframes SET attempted_at=datetime('now','-8 days')"
+           " WHERE item_uid='camera-discovery|road1'");
+      exec("UPDATE image_vec_meta SET v='0' WHERE k='refframe_cursor'");
+      assert(camera_refframe_tick(&g_db, NULL, NULL) == 1);
+      assert(image_vec_tick(&g_db, NULL, 0) == 1);
+      {
+        char q[300];
+        snprintf(q, sizeof q, "SELECT count(*) FROM image_vec_ref WHERE"
+                 " kind='refframe' AND sha256='%s'", rfsha2);
+        assert(count(q) == 1);
+        snprintf(q, sizeof q, "SELECT count(*) FROM image_vec_done WHERE sha256='%s'", rfsha);
+        assert(count(q) == 0);
+      }
+      unsetenv("JO_CAMERA_ALLOW_LAN");
+      web_stop();
+      printf("  refframes: one frame per indexable record via the stills fetch "
+             "path, insecam never fetched, failures recorded, weekly, embedded as "
+             "refframe, searchable, refreshed bytes move the ref: ok\n");
+    }
+  }
 
   /* 8. a sidecar with a different width is refused, not mixed */
   vstub_stop();

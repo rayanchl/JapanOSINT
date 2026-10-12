@@ -1,6 +1,7 @@
 /* core/visualsearchapi.c — see visualsearchapi.h. */
 #include "visualsearchapi.h"
 #include "camera_feed.h"
+#include "camera_refframe.h"
 #include "camera_stills.h"
 #include "image_vec.h"
 #include "media.h"                    /* media_sniff_type */
@@ -78,15 +79,19 @@ static int parse_since(db_handle *db, const char *t, char out[32], long long *ep
   return ok;
 }
 
-/* "N of M cameras indexed": M = capture targets with stills whose camera may
- * be indexed, N = those with at least one still in the index. */
+/* "N of M cameras indexed": M = capture targets with a still or a reference
+ * frame (core/camera_refframe.h) whose camera may be indexed, N = those with
+ * at least one of either in the index. */
 static cJSON *camera_counts(db_handle *db) {
   long eligible = 0, indexed = 0, excluded = 0;
   sqlite3_stmt *q;
   if (sqlite3_prepare_v2(db->h,
       "SELECT c.camera_id, EXISTS (SELECT 1 FROM image_vec_ref r"
-      "   WHERE r.kind='" IMAGE_VEC_KIND_STILL "' AND r.camera_uid=c.camera_id)"
-      "  FROM (SELECT DISTINCT camera_id FROM camera_stills) c", -1, &q, NULL)
+      "   WHERE r.kind IN ('" IMAGE_VEC_KIND_STILL "','" IMAGE_VEC_KIND_REFFRAME "')"
+      "   AND r.camera_uid=c.camera_id)"
+      "  FROM (SELECT camera_id FROM camera_stills"
+      "        UNION SELECT camera_uid FROM camera_refframes WHERE sha256 IS NOT NULL) c",
+      -1, &q, NULL)
       == SQLITE_OK) {
     char *last_item = NULL;
     int last_ok = 0;
@@ -217,6 +222,7 @@ static char *index_unavailable(db_handle *db, int *status) {
   if (!image_vec_ready(db))
     return unavailable(status, "the camera image index has not been built yet "
                        "(the _image_embed pod has embedded no frame)");
+  camera_refframe_migrate(db);  /* an index built before reference frames */
   return NULL;
 }
 
@@ -230,9 +236,12 @@ static char *answer(db_handle *db, const float *qv, int qdim, const char *model,
   const vecindex_spec *s = &image_vec_spec;
   int k = p->k;
   char err[400];
-  vecindex_val kv = VI_S(IMAGE_VEC_KIND_STILL), tv = VI_I(p->since_epoch);
+  /* frames a camera answers with: its stills and its reference frame (never
+   * a media asset, which is an item's image, not a view) */
+  vecindex_val kv[2] = { VI_S(IMAGE_VEC_KIND_STILL), VI_S(IMAGE_VEC_KIND_REFFRAME) };
+  vecindex_val tv = VI_I(p->since_epoch);
   vecindex_filter f[2] = {
-    { .col = "kind", .op = "=",  .vals = &kv, .nvals = 1 },
+    { .col = "kind", .op = "IN", .vals = kv, .nvals = 2 },
     { .col = "ts",   .op = ">=", .vals = &tv, .nvals = 1 },
   };
   int limit = (k + (exclude_cam ? 1 : 0)) * VS_PER_CAMERA;
@@ -247,11 +256,18 @@ static char *answer(db_handle *db, const float *qv, int qdim, const char *model,
   long self_frames = 0;
   sqlite3_stmt *rq = NULL;
   int prep = sqlite3_prepare_v2(db->h,
-    "SELECT r.ref_id, r.camera_uid, r.item_uid, r.captured_at FROM image_vec_ref r"
-    "  JOIN camera_stills st ON st.id=r.ref_id"
-    " WHERE r.sha256=?1 AND r.kind='" IMAGE_VEC_KIND_STILL "'"
-    "   AND (?2 = '' OR r.captured_at >= ?2)"
-    " ORDER BY r.captured_at DESC, r.ref_id DESC", -1, &rq, NULL) == SQLITE_OK;
+    "SELECT r.ref_id, r.camera_uid, r.item_uid, r.captured_at, r.kind,"
+    "       (SELECT f.evidence_id FROM camera_refframes f WHERE f.item_uid=r.ref_id)"
+    "  FROM image_vec_ref r"
+    " WHERE r.sha256=?1 AND (?2 = '' OR r.captured_at >= ?2)"
+    "   AND ((r.kind='" IMAGE_VEC_KIND_STILL "'"
+    "         AND EXISTS (SELECT 1 FROM camera_stills st WHERE st.id=r.ref_id))"
+    "     OR (r.kind='" IMAGE_VEC_KIND_REFFRAME "'"
+    "         AND EXISTS (SELECT 1 FROM camera_refframes f WHERE f.item_uid=r.ref_id"
+    "                     AND f.sha256=r.sha256)))"
+    /* a still first: it is the frame a client can open and pivot on */
+    " ORDER BY r.kind='" IMAGE_VEC_KIND_STILL "' DESC, r.captured_at DESC, r.ref_id DESC",
+    -1, &rq, NULL) == SQLITE_OK;
   for (int i = 0; prep && i < nh; i++) {
     sqlite3_reset(rq);
     sqlite3_bind_text(rq, 1, h[i].key, -1, SQLITE_TRANSIENT);
@@ -262,7 +278,10 @@ static char *answer(db_handle *db, const float *qv, int qdim, const char *model,
       const char *cam = (const char *)sqlite3_column_text(rq, 1);
       const char *item = (const char *)sqlite3_column_text(rq, 2);
       const char *at = (const char *)sqlite3_column_text(rq, 3);
-      if (!sid || !cam || !item) continue;
+      const char *rk = (const char *)sqlite3_column_text(rq, 4);
+      const char *evid = (const char *)sqlite3_column_text(rq, 5);
+      int is_still = rk && !strcmp(rk, IMAGE_VEC_KIND_STILL);
+      if (!sid || !cam || !item || !rk) continue;
       if (exclude_cam && !strcmp(cam, exclude_cam)) { self_frames++; continue; }
       cJSON *have = find_camera(data, cam);
       if (have) {                  /* a nearer frame of this camera won */
@@ -296,11 +315,23 @@ static char *answer(db_handle *db, const float *qv, int qdim, const char *model,
       } else { cJSON_AddNullToObject(o, "lat"); cJSON_AddNullToObject(o, "lon"); }
       cJSON_AddNumberToObject(o, "distance", h[i].distance);
       cJSON_AddNumberToObject(o, "cosine", cosv);
-      cJSON *st = cJSON_AddObjectToObject(o, "still");
-      cJSON_AddStringToObject(st, "id", sid);
-      if (at) cJSON_AddStringToObject(st, "captured_at", at);
-      else    cJSON_AddNullToObject(st, "captured_at");
-      cJSON_AddStringToObject(st, "sha256", h[i].key);
+      if (is_still) {
+        cJSON *st = cJSON_AddObjectToObject(o, "still");
+        cJSON_AddStringToObject(st, "id", sid);
+        if (at) cJSON_AddStringToObject(st, "captured_at", at);
+        else    cJSON_AddNullToObject(st, "captured_at");
+        cJSON_AddStringToObject(st, "sha256", h[i].key);
+      } else cJSON_AddNullToObject(o, "still");
+      /* the matched frame, whatever its kind: a reference frame has no still
+       * row, only its evidence blob */
+      cJSON *fr = cJSON_AddObjectToObject(o, "frame");
+      cJSON_AddStringToObject(fr, "kind", rk);
+      cJSON_AddStringToObject(fr, "ref_id", sid);
+      if (at) cJSON_AddStringToObject(fr, "captured_at", at);
+      else    cJSON_AddNullToObject(fr, "captured_at");
+      cJSON_AddStringToObject(fr, "sha256", h[i].key);
+      if (!is_still && evid) cJSON_AddStringToObject(fr, "evidence_id", evid);
+      else                   cJSON_AddNullToObject(fr, "evidence_id");
       cJSON_AddNumberToObject(o, "frames_matched", 1);
       cJSON_AddItemToArray(data, o);
       ncam++;

@@ -503,6 +503,20 @@ void camera_stills_migrate(db_handle *db);
 int camera_stills_capture_one(db_handle *db, http_client *http,
                               const char *camera_id);
 
+/* ONE frame from a feed URL through this module's own fetch path — the
+ * camera destination gate (hostgate camera strength + SSRF re-check),
+ * hostgate's per-host politeness, the snapshot / MJPEG / RTSP / HLS legs and
+ * the size cap — trimmed to exactly one complete frame. Stores NOTHING: no
+ * still row, no state, no evidence (the caller decides what the frame is
+ * for; core/camera_refframe.c files it as a reference frame). 1 with *out
+ * (malloc'd, caller frees), *outlen, *ct (static) and *status (0 for the
+ * ffmpeg legs); 0 with *reason (the same tokens camera_stills_state.last_error
+ * carries; `rbuf` holds an "http_<code>" one). */
+int camera_stills_fetch_frame(http_client *http, const char *url,
+                              unsigned char **out, size_t *outlen,
+                              const char **ct, long *status,
+                              const char **reason, char *rbuf, size_t rcap);
+
 /* One capture batch: up to `limit` (<=0 → CAM_STILLS_BATCH) capture targets
  * of opted-in rows whose next_attempt_at is due, oldest-due first, at most
  * CAM_STILLS_HOST_PER_TICK per upstream host (the rest stay due and lead the

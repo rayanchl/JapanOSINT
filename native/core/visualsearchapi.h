@@ -10,10 +10,16 @@
  * frames were embedded in — core/image_vec.h), the KNN runs over image_vec
  * with kind/ts filtered inside it, and the hits are grouped BY CAMERA: one
  * result per capture target, its nearest frame, and that frame's newest still
- * (several stills can share one content-addressed vector):
+ * (several stills can share one content-addressed vector). A camera's frames
+ * are its stills AND its weekly reference frame (core/camera_refframe.h), so a
+ * camera nobody opted into stills still answers; such a hit has `still` null
+ * and `frame.kind` "refframe" with the frame's evidence id (its bytes are at
+ * GET /api/evidence/:id/raw, gated like every raw route):
  *
  *   {"data":[{camera_id, item_uid, view, name, lat, lon, distance, cosine,
- *             still:{id, captured_at, sha256}, frames_matched}],
+ *             still:{id, captured_at, sha256}|null,
+ *             frame:{kind:"still"|"refframe", ref_id, captured_at, sha256,
+ *                    evidence_id|null}, frames_matched}],
  *    "meta":{query, k, since, bbox, model, dim,
  *            cameras:{indexed:N, eligible:M, excluded_by_policy:X,
  *                     note:"N of M cameras indexed"},

@@ -1,6 +1,7 @@
 /* core/image_vec.c — see image_vec.h. */
 #include "image_vec.h"
 #include "camera_feed.h"
+#include "camera_refframe.h"
 #include "camera_privacy.h"
 #include "camera_stills.h"
 #include "httpclient.h"
@@ -27,6 +28,8 @@
 /* Orphan vectors removed per gc pass. */
 #define IVEC_GC_PER_TICK 1000
 
+static cJSON *coverage_extra(db_handle *db);
+
 static const vecindex_col IVEC_COLS[] = {
   { "ts",   VI_INT,  0 },           /* epoch s of the newest ref's capture    */
   { "kind", VI_TEXT, 0 },           /* still | media | refframe               */
@@ -37,7 +40,8 @@ const vecindex_spec image_vec_spec = {
   .fail_table = "image_vec_failed", .cols = IVEC_COLS, .ncols = 2,
   .rebuild_hint = " (rebuild: DROP TABLE image_vec, image_vec_done, "
                   "image_vec_failed, image_vec_meta, image_vec_ref; the pod "
-                  "re-embeds from the evidence store)" };
+                  "re-embeds from the evidence store)",
+  .coverage_extra = coverage_extra };
 VECINDEX_REGISTER(image_vec_spec)
 
 const char *image_vec_base_url(void) {
@@ -88,6 +92,32 @@ void image_vec_migrate(db_handle *db) {
     "CREATE INDEX IF NOT EXISTS idx_image_vec_ref_sha ON image_vec_ref(sha256);"
     "CREATE INDEX IF NOT EXISTS idx_image_vec_ref_cam"
     "  ON image_vec_ref(camera_uid, captured_at DESC);");
+  camera_refframe_migrate(db);      /* the third kind's referent table      */
+}
+
+/* Refs per kind and the reference-frame pod's progress: the "extra" block of
+ * this index's coverage (and of /api/status's vectorIndexes.image). */
+static cJSON *coverage_extra(db_handle *db) {
+  cJSON *o = cJSON_CreateObject();
+  cJSON *refs = cJSON_AddObjectToObject(o, "refs");
+  static const char *const kinds[] = { IMAGE_VEC_KIND_STILL, IMAGE_VEC_KIND_MEDIA,
+                                       IMAGE_VEC_KIND_REFFRAME };
+  sqlite3_stmt *q = NULL;
+  int have = db && db->h && vecindex_table_exists(db, "image_vec_ref") &&
+             sqlite3_prepare_v2(db->h, "SELECT count(*) FROM image_vec_ref"
+                                " WHERE kind=?1", -1, &q, NULL) == SQLITE_OK;
+  for (size_t i = 0; i < sizeof kinds / sizeof *kinds; i++) {
+    long n = 0;
+    if (have) {
+      sqlite3_reset(q);
+      sqlite3_bind_text(q, 1, kinds[i], -1, SQLITE_STATIC);
+      if (sqlite3_step(q) == SQLITE_ROW) n = (long)sqlite3_column_int64(q, 0);
+    }
+    cJSON_AddNumberToObject(refs, kinds[i], (double)n);
+  }
+  if (q) sqlite3_finalize(q);
+  cJSON_AddItemToObject(o, "refframes", camera_refframe_coverage(db));
+  return o;
 }
 
 int image_vec_ready(db_handle *db) {
@@ -198,6 +228,14 @@ int image_vec_gc(db_handle *db, int limit) {
       "DELETE FROM image_vec_ref WHERE kind='" IMAGE_VEC_KIND_MEDIA "'"
       "  AND NOT EXISTS (SELECT 1 FROM media_assets m WHERE m.id=image_vec_ref.ref_id"
       "                  AND m.sha256=image_vec_ref.sha256)");
+  /* a reference frame gone, or refreshed to other bytes (its new sha gets its
+   * own ref when the walk reaches it) */
+  if (vecindex_table_exists(db, "camera_refframes"))
+    ok = ok && exec_ok(db,
+      "DELETE FROM image_vec_ref WHERE kind='" IMAGE_VEC_KIND_REFFRAME "'"
+      "  AND NOT EXISTS (SELECT 1 FROM camera_refframes f"
+      "                  WHERE f.item_uid=image_vec_ref.ref_id"
+      "                  AND f.sha256=image_vec_ref.sha256)");
   char **shas = calloc((size_t)limit, sizeof *shas);
   int n = 0;
   sqlite3_stmt *q;
@@ -220,7 +258,8 @@ int image_vec_gc(db_handle *db, int limit) {
 }
 
 /* The metadata a sha's vector should carry, from its refs: the newest
- * capture, and "still" whenever any still points at it. */
+ * capture, and "still" whenever any still points at it, else "refframe" when
+ * a reference frame does (both are searched), else "media". */
 static void ref_vals(db_handle *db, const char *sha, long long *ts,
                      const char **kind) {
   *ts = 0;
@@ -228,14 +267,14 @@ static void ref_vals(db_handle *db, const char *sha, long long *ts,
   sqlite3_stmt *q;
   if (sqlite3_prepare_v2(db->h,
       "SELECT MAX(CAST(strftime('%s', captured_at) AS INTEGER)),"
-      "       MAX(kind='" IMAGE_VEC_KIND_STILL "'), MAX(kind='" IMAGE_VEC_KIND_MEDIA "')"
+      "       MAX(kind='" IMAGE_VEC_KIND_STILL "'), MAX(kind='" IMAGE_VEC_KIND_REFFRAME "')"
       "  FROM image_vec_ref WHERE sha256=?1", -1, &q, NULL) != SQLITE_OK) return;
   sqlite3_bind_text(q, 1, sha, -1, SQLITE_TRANSIENT);
   if (sqlite3_step(q) == SQLITE_ROW) {
     *ts = sqlite3_column_int64(q, 0);
     *kind = sqlite3_column_int(q, 1) ? IMAGE_VEC_KIND_STILL
-          : sqlite3_column_int(q, 2) ? IMAGE_VEC_KIND_MEDIA
-          : IMAGE_VEC_KIND_REFFRAME;
+          : sqlite3_column_int(q, 2) ? IMAGE_VEC_KIND_REFFRAME
+          : IMAGE_VEC_KIND_MEDIA;
   }
   sqlite3_finalize(q);
 }
@@ -442,6 +481,13 @@ static int walk_kind(db_handle *db, const char *kind, long long after, int limit
       "  FROM camera_stills s WHERE s.rowid > ?1 AND NOT EXISTS"
       "  (SELECT 1 FROM image_vec_ref r WHERE r.kind='" IMAGE_VEC_KIND_STILL "'"
       "   AND r.ref_id=s.id) ORDER BY s.rowid LIMIT ?2"
+    : !strcmp(kind, IMAGE_VEC_KIND_REFFRAME)
+    /* one row per camera record; a refresh to new bytes is a new ref */
+    ? "SELECT f.rowid, f.item_uid, f.sha256, f.camera_uid, f.fetched_at, f.blob_path"
+      "  FROM camera_refframes f WHERE f.rowid > ?1 AND f.sha256 IS NOT NULL"
+      "   AND NOT EXISTS (SELECT 1 FROM image_vec_ref r WHERE r.kind='"
+      IMAGE_VEC_KIND_REFFRAME "' AND r.ref_id=f.item_uid AND r.sha256=f.sha256)"
+      " ORDER BY f.rowid LIMIT ?2"
     : "SELECT m.rowid, m.id, m.sha256, NULL,"
       "       COALESCE(datetime(m.analyzed_at), datetime('now')), NULL"
       "  FROM media_assets m WHERE m.rowid > ?1 AND m.sha256 IS NOT NULL"
@@ -468,8 +514,9 @@ static int walk_kind(db_handle *db, const char *kind, long long after, int limit
     }
     ivc *c = &(*v)[*n];
     memset(c, 0, sizeof *c);
-    c->media = strcmp(kind, IMAGE_VEC_KIND_STILL) != 0;
-    c->kind = c->media ? IMAGE_VEC_KIND_MEDIA : IMAGE_VEC_KIND_STILL;
+    c->media = !strcmp(kind, IMAGE_VEC_KIND_MEDIA);
+    c->kind = !strcmp(kind, IMAGE_VEC_KIND_STILL) ? IMAGE_VEC_KIND_STILL
+            : c->media ? IMAGE_VEC_KIND_MEDIA : IMAGE_VEC_KIND_REFFRAME;
     c->ref_id = dupcol(q, 1);
     c->sha = dupcol(q, 2);
     c->cap = dupcol(q, 4);
@@ -693,10 +740,11 @@ static void still_drift(db_handle *db, const ivc *c) {
 static void drift_all(db_handle *db, ivc *v, int n) {
   int any = 0;
   for (int i = 0; i < n; i++)
-    if (v[i].state == C_DONE && !v[i].media && v[i].cam) any = 1;
+    if (v[i].state == C_DONE && !strcmp(v[i].kind, IMAGE_VEC_KIND_STILL) && v[i].cam) any = 1;
   if (!any || vecindex_begin(db) != 0) return;
   for (int i = 0; i < n; i++)
-    if (v[i].state == C_DONE && !v[i].media && v[i].cam && !v[i].drifted) {
+    if (v[i].state == C_DONE && !strcmp(v[i].kind, IMAGE_VEC_KIND_STILL) && v[i].cam &&
+        !v[i].drifted) {
       still_drift(db, &v[i]);
       v[i].drifted = 1;
     }
@@ -853,7 +901,8 @@ int image_vec_tick(db_handle *db, http_client *http, int max_walk) {
     return -1;
   }
 
-  /* 1. the walk: stills, then media, each from its own cursor */
+  /* 1. the walk: stills, then media, then reference frames, each from its
+   * own cursor */
   ivc *v = NULL;
   int n = 0, cap = 0;
   long long s_after = vecindex_meta_long(db, s, "still_after");
@@ -863,6 +912,8 @@ int image_vec_tick(db_handle *db, http_client *http, int max_walk) {
   int n_still = n;
   int m_rows = walk_kind(db, IMAGE_VEC_KIND_MEDIA, m_after, max_walk, &v, &n, &cap, &m_last);
   for (int i = n_still; i < n; i++) media_item(db, &v[i]);
+  long long r_after = vecindex_meta_long(db, s, "refframe_after"), r_last = r_after;
+  int r_rows = walk_kind(db, IMAGE_VEC_KIND_REFFRAME, r_after, max_walk, &v, &n, &cap, &r_last);
 
   ivstats st = {0};
   st.walked = n;
@@ -870,7 +921,10 @@ int image_vec_tick(db_handle *db, http_client *http, int max_walk) {
   int ncache = 0;
   for (int i = 0; i < n; i++) {
     ivc *c = &v[i];
-    if (!c->item || !item_indexable(db, c->item, c->media,
+    /* a still was opted in as a camera; media and reference frames must
+     * also prove the record is one (it has a feed) */
+    if (!c->item || !item_indexable(db, c->item,
+                                    strcmp(c->kind, IMAGE_VEC_KIND_STILL) != 0,
                                     &cache, &ncache)) {
       c->state = C_SKIP; st.not_indexable++; continue;
     }
@@ -944,6 +998,7 @@ int image_vec_tick(db_handle *db, http_client *http, int max_walk) {
   if (rc == 0) {
     vecindex_meta_set_long(db, s, "still_after", s_rows < max_walk ? 0 : (long)s_last);
     vecindex_meta_set_long(db, s, "media_after", m_rows < max_walk ? 0 : (long)m_last);
+    vecindex_meta_set_long(db, s, "refframe_after", r_rows < max_walk ? 0 : (long)r_last);
     image_vec_gc(db, IVEC_GC_PER_TICK);
   }
   for (int i = 0; i < n; i++) ivc_free(&v[i]);
