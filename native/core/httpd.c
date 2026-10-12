@@ -24,6 +24,7 @@
 #include "nearapi.h"
 #include "cors.h"
 #include "semsearchapi.h"
+#include "storyapi.h"
 #include "qembed.h"        /* qembed_enabled: does /api/search/suggest retrieve? */
 #include "camera_stills.h"
 #include "cameraproxy.h"
@@ -2419,6 +2420,16 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         sem_spawn(c, hm, semsearchapi_similar, tc.tenant_id, pe, opgate_check(&usr) == 0);
         return;
       }
+    }
+
+    /* GET /api/stories/:id — members of one story (core/storyapi.c). */
+    if (starts(u, "/api/stories/") && u.len > 13 && u.len - 13 < 64) {
+      char sid[64] = {0};
+      memcpy(sid, u.buf + 13, u.len - 13);
+      tenant_ctx tc;
+      if (intel_tenant_or_reply(c, hm, &usr, &tc) != 0) return;
+      sem_spawn(c, hm, storyapi_get, tc.tenant_id, sid, opgate_check(&usr) == 0);
+      return;
     }
 
     /* GET /api/intel/items/:uid  (uid is URL-encoded; may contain '|',':') */

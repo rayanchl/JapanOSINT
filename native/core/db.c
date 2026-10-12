@@ -11,6 +11,7 @@ int sqlite3_vec_init(sqlite3 *db, char **pzErrMsg, const sqlite3_api_routines *p
 #include "content_change.h"    /* content_change_ensure_schema (same reason) */
 #include "media.h"             /* media_migrate (same reason) */
 #include "camera_stills.h"     /* camera_stills_migrate (same reason) */
+#include "story.h"             /* story_migrate (story_id, novelty columns) */
 #include "fts_schema.h"        /* fts_schema_migrate (widens intel_items_fts) */
 #include "entitystore.h"       /* es_norm_migrate */
 #include "source_registry.h"   /* src_meta_get (merged metadata)        */
@@ -509,6 +510,11 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
    * which just means its first re-fetch is a full write, as before. */
   ensure_column(db, "intel_items", "content_hash", "BLOB");
   ensure_column(db, "intel_items", "last_seen_at", "TEXT");
+
+  /* Stories and novelty from the embedding pod's post-batch hook (core/
+   * story.h): intel_items.story_id (separate from simhash's cluster_id) and
+   * .novelty, plus the story index and the hook's pending queue. */
+  story_migrate(db);
 
   /* Widen intel_items_fts to also index link/author/tags/properties. No-op
    * unless the live index is still the old column set. Deliberately LAST of
