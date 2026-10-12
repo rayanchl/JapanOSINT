@@ -4331,6 +4331,13 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       char *qs = qv; while (*qs == ' ') qs++;
       size_t ql = strlen(qs);
       while (ql && qs[ql-1] == ' ') qs[--ql] = 0;
+      /* ?mode=hybrid embeds the query: off the event loop (entityapi.h). */
+      char mv[16] = {0};
+      if (*qs && mg_http_get_var(&hm->query, "mode", mv, sizeof mv) > 0 &&
+          !strcmp(mv, "hybrid")) {
+        sem_spawn(c, hm, entityapi_search_route, etc.tenant_id, "", e_op);
+        return;
+      }
       /* This used to answer the bare literal {"results":[]}, which is now the
        * one reply on this route without the page/meta envelope every other
        * reply carries — a client would have to special-case it. Left to

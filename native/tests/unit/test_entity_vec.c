@@ -16,6 +16,7 @@
  * obj/core/entity_vec.o. */
 #include "../../core/entity_vec.c"
 #include "core/entity_enrich.h"
+#include "core/entityapi.h"
 #include "core/httpclient.h"
 #include "embed_stub.h"
 #include "fake_llm.h"
@@ -61,7 +62,19 @@ int main(void) {
   assert(entity_vec_tick(&g_db, NULL, 0) == 0);
   assert(!vecindex_exists(&g_db, &entity_vec_spec));
   assert(!entity_vec_ready(&g_db));
-  printf("  inert: no server, no table, resolver unchanged: ok\n");
+  {
+    char *js = entityapi_search_hybrid(&g_db, "Toyota", NULL, 10, 0, "t1", 0);
+    assert(js);
+    cJSON *o = cJSON_Parse(js);
+    cJSON *va = cJSON_GetObjectItem(cJSON_GetObjectItem(cJSON_GetObjectItem(o, "meta"),
+                                                        "arms"), "vector");
+    assert(va && cJSON_IsFalse(cJSON_GetObjectItem(va, "used")));
+    assert(cJSON_IsString(cJSON_GetObjectItem(va, "reason")));
+    assert(cJSON_GetArraySize(cJSON_GetObjectItem(o, "results")) >= 1);
+    cJSON_Delete(o); free(js);
+  }
+  printf("  inert: no server, no table, resolver unchanged, hybrid search = FTS "
+         "with vector.used=false and the reason: ok\n");
 
   if (estub_start(18420, 64, "stub-bow") != 0) {
     printf("  SKIP: embedding stub did not start (python3?)\n");
@@ -116,6 +129,41 @@ int main(void) {
            "'%s', recorded same=0, nothing merged: ok\n", ro);
   } else {
     printf("  SKIP cross-script case: no MeCab reading for トヨタ (got '%s')\n", ro);
+  }
+
+  /* E2: hybrid entity search. A tenant-private entity of t2 is invisible to
+   * t1 inside the KNN; トヨタ comes back for "toyota" through the vector arm
+   * when its romaji makes it a neighbour. */
+  {
+    char *priv = es_upsert_entity(&g_db, "company", "Toyota Private Desk");
+    char sql2[256];
+    snprintf(sql2, sizeof sql2, "UPDATE entities SET tenant_id='t2' WHERE entity_id='%s'", priv);
+    assert(sqlite3_exec(g_db.h, sql2, NULL, NULL, NULL) == SQLITE_OK);
+    snprintf(sql2, sizeof sql2, "DELETE FROM entity_vec_meta WHERE k='walk_after'");
+    sqlite3_exec(g_db.h, sql2, NULL, NULL, NULL);
+    assert(entity_vec_tick(&g_db, NULL, 0) >= 1);
+    char *js = entityapi_search_hybrid(&g_db, "toyota", NULL, 20, 0, "t1", 0);
+    assert(js);
+    cJSON *o = cJSON_Parse(js);
+    cJSON *arms = cJSON_GetObjectItem(cJSON_GetObjectItem(o, "meta"), "arms");
+    assert(!strcmp(cJSON_GetObjectItem(arms, "mode")->valuestring, "hybrid"));
+    assert(cJSON_IsTrue(cJSON_GetObjectItem(cJSON_GetObjectItem(arms, "vector"), "used")));
+    int saw_ja = 0;
+    cJSON *r;
+    cJSON_ArrayForEach(r, cJSON_GetObjectItem(o, "results")) {
+      const char *id = cJSON_GetObjectItem(r, "entity_id")->valuestring;
+      assert(strcmp(id, priv) != 0 && "t2's private entity reached t1");
+      assert(cJSON_GetObjectItem(r, "arms"));
+      if (!strcmp(id, ja)) saw_ja = 1;
+    }
+    if (!strcasecmp(ro, "toyota")) assert(saw_ja);
+    cJSON_Delete(o); free(js);
+    /* and t2 sees its own */
+    js = entityapi_search_hybrid(&g_db, "toyota private desk", NULL, 20, 0, "t2", 0);
+    assert(js && strstr(js, priv));
+    free(js); free(priv);
+    printf("  hybrid entity search: arms disclosed, tenant scoped inside the KNN, "
+           "cross-script hit by vector: ok\n");
   }
 
   /* 6. a folded-away entity's vector is pruned */
