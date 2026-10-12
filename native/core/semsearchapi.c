@@ -875,6 +875,189 @@ char *semsearchapi_items_hybrid(db_handle *db, const char *tenant,
   return lang_view(db, qs, out);
 }
 
+/* ---- GET /api/cases/:id/related ------------------------------------------ */
+
+/* Pinned intel items whose vectors are averaged. A case is an analyst's
+ * evidence set, usually tens of items; past this the oldest pins are used and
+ * meta.case.vectors_capped says how many were left out. */
+#define CASE_VEC_MAX 1000
+
+char *semsearchapi_case_related(db_handle *db, const char *tenant,
+                                const char *case_id, const char *qs,
+                                int is_operator, int *status) {
+  *status = 500;
+  sem_params p;
+  semsearch_filters flt;
+  if (parse_params(qs, &p, &flt) != 0) return too_long(status);
+  int k = atoi(p.k);
+  if (k <= 0) k = 20;
+  if (k > 200) k = 200;
+  /* THE case gate (casesapi.c case_in_tenant): another tenant's case is the
+   * same 404 as one that does not exist. Reading needs tenant membership
+   * only, which tenant_resolve() has proved. */
+  sqlite3_stmt *s;
+  int found = 0;
+  if (sqlite3_prepare_v2(db->h, "SELECT 1 FROM cases WHERE id=?1 AND tenant_id=?2",
+                         -1, &s, NULL) != SQLITE_OK)
+    return fail(status, 500, "server_error", sqlite3_errmsg(db->h), NULL);
+  sqlite3_bind_text(s, 1, case_id ? case_id : "", -1, SQLITE_STATIC);
+  sqlite3_bind_text(s, 2, tenant ? tenant : "", -1, SQLITE_STATIC);
+  found = sqlite3_step(s) == SQLITE_ROW;
+  sqlite3_finalize(s);
+  if (!found) return fail(status, 404, "not_found", NULL, NULL);
+
+  long pins_total = 0;
+  if (sqlite3_prepare_v2(db->h, "SELECT count(*) FROM case_items WHERE case_id=?1",
+                         -1, &s, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(s, 1, case_id, -1, SQLITE_STATIC);
+    if (sqlite3_step(s) == SQLITE_ROW) pins_total = (long)sqlite3_column_int64(s, 0);
+    sqlite3_finalize(s);
+  }
+  /* Every pinned intel uid (all of them are excluded from the answer), the
+   * first CASE_VEC_MAX by pin order read for their vectors. */
+  char **uids = NULL;
+  int nu = 0, cu = 0;
+  if (sqlite3_prepare_v2(db->h, "SELECT ref_id FROM case_items WHERE case_id=?1 "
+                         "AND ref_type='intel_item' ORDER BY added_at, ref_id",
+                         -1, &s, NULL) != SQLITE_OK)
+    return fail(status, 500, "server_error", sqlite3_errmsg(db->h), NULL);
+  sqlite3_bind_text(s, 1, case_id, -1, SQLITE_STATIC);
+  while (sqlite3_step(s) == SQLITE_ROW) {
+    const char *u = (const char *)sqlite3_column_text(s, 0);
+    if (!u) continue;
+    if (nu == cu) {
+      int nc = cu ? cu * 2 : 32;
+      char **nv = realloc(uids, (size_t)nc * sizeof *nv);
+      if (!nv) break;
+      uids = nv; cu = nc;
+    }
+    if (!(uids[nu] = strdup(u))) break;
+    nu++;
+  }
+  sqlite3_finalize(s);
+#define FREE_UIDS() do { for (int _i = 0; _i < nu; _i++) free(uids[_i]); free(uids); } while (0)
+  if (!embed_table_exists(db)) {
+    FREE_UIDS();
+    return fail(status, 503, "semantic_unavailable",
+                "the embedding pod has not built an index yet",
+                embed_coverage_json(db));
+  }
+  semsearch_rf rf;
+  char ferr[48];
+  if (semsearch_resolve(db, &flt, &rf, ferr, sizeof ferr) != 0) {
+    FREE_UIDS();
+    return fail(status, 400, ferr, "a filter could not be read; nothing was "
+                "searched rather than searching without it", NULL);
+  }
+
+  /* The mean of the pinned items' stored vectors, re-normalised: for unit
+   * vectors the KNN's L2 ranking on it is the cosine ranking against the
+   * case's centroid. No embedding call. */
+  struct timespec t0; clock_gettime(CLOCK_MONOTONIC, &t0);
+  const vecindex_spec *vs = embed_query_spec(db);
+  double *acc = NULL;
+  int dim = 0, with_vec = 0, read = 0;
+  for (int i = 0; i < nu && read < CASE_VEC_MAX; i++, read++) {
+    float *v = NULL; int d = 0;
+    if (vecindex_load(db, vs, uids[i], &v, &d) != 0 || d <= 0) { free(v); continue; }
+    if (!acc) { acc = calloc((size_t)d, sizeof *acc); dim = d; }
+    if (acc && d == dim) {
+      for (int j = 0; j < d; j++) acc[j] += v[j];
+      with_vec++;
+    }
+    free(v);
+  }
+  int capped = nu - read;
+  cJSON *cs = cJSON_CreateObject();
+  cJSON_AddStringToObject(cs, "id", case_id);
+  cJSON_AddNumberToObject(cs, "pinned_total", (double)pins_total);
+  cJSON_AddNumberToObject(cs, "intel_items", nu);
+  cJSON_AddNumberToObject(cs, "with_vector", with_vec);
+  cJSON_AddNumberToObject(cs, "without_vector", read - with_vec);
+  cJSON_AddNumberToObject(cs, "vectors_capped", capped);
+  cJSON_AddNumberToObject(cs, "vector_cap", CASE_VEC_MAX);
+  if (!with_vec) {
+    free(acc); FREE_UIDS(); semsearch_rf_free(&rf);
+    char d[300];
+    snprintf(d, sizeof d, "none of this case's %d pinned intel item(s) has a "
+             "vector yet (%ld pin(s) in all); there is nothing to average, so "
+             "nothing is ranked", nu, pins_total);
+    char *b = fail(status, 409, "not_embedded", d, embed_coverage_json(db));
+    cJSON *j = b ? cJSON_Parse(b) : NULL;
+    free(b);
+    if (!j) { cJSON_Delete(cs); return NULL; }
+    cJSON_AddItemToObject(cJSON_GetObjectItem(j, "meta"), "case", cs);
+    b = cJSON_PrintUnformatted(j);
+    cJSON_Delete(j);
+    return b;
+  }
+  float *q = malloc((size_t)dim * sizeof *q);
+  double nn = 0;
+  for (int j = 0; j < dim; j++) nn += acc[j] * acc[j];
+  nn = sqrt(nn);
+  for (int j = 0; q && j < dim; j++) q[j] = (float)(nn > 0 ? acc[j] / nn : 0);
+  free(acc);
+  if (!q) { FREE_UIDS(); semsearch_rf_free(&rf); cJSON_Delete(cs);
+            return fail(status, 500, "server_error", NULL, NULL); }
+
+  /* k + the pins: the case's own items are its nearest and are excluded. */
+  int kq = k + nu;
+  if (kq > SEMSEARCH_KNN_MAX) kq = SEMSEARCH_KNN_MAX;
+  vecindex_hit *h = NULL;
+  char err[256];
+  int in_knn = 0;
+  int n = semsearch_knn(db, tenant, q, dim, kq, &rf, &h, &in_knn, err, sizeof err);
+  free(q);
+  if (n < 0) { FREE_UIDS(); semsearch_rf_free(&rf); cJSON_Delete(cs);
+               return fail(status, 500, "vector_query_failed", err, NULL); }
+  vecindex_fused L = {0};
+  int vector_hits = vecindex_fused_add_hits(&L, h, n);
+  vecindex_hits_free(h, n);
+  vecindex_fused_sort(&L);
+  cJSON *data = cJSON_CreateArray();
+  sem_counts c;
+  int mr = materialize(db, tenant, is_operator, &L, 0, k, &rf,
+                       (const char *const *)uids, nu, NULL, data, &c);
+  FREE_UIDS();
+#undef FREE_UIDS
+  if (mr != 0) {
+    cJSON_Delete(data); cJSON_Delete(cs); vecindex_fused_free(&L);
+    semsearch_rf_free(&rf);
+    return fail(status, 500, "server_error", sqlite3_errmsg(db->h), NULL);
+  }
+  cJSON *meta = cJSON_CreateObject();
+  cJSON_AddStringToObject(meta, "mode", "case_related");
+  cJSON_AddItemToObject(meta, "case", cs);
+  cJSON_AddNumberToObject(meta, "k", k);
+  cJSON_AddNumberToObject(meta, "vector_hits", vector_hits);
+  cJSON_AddNumberToObject(meta, "excluded_case_items", c.excluded);
+  cJSON_AddBoolToObject(meta, "knn_partitioned",
+                        (vs == &embed_intel_spec) && tenant && *tenant);
+  cJSON_AddItemToObject(meta, "filters", filters_meta(&flt, &rf, in_knn, &c));
+  if (is_operator) {
+    cJSON_AddNumberToObject(meta, "tenant_withheld", c.withheld);
+    cJSON_AddNumberToObject(meta, "index_orphans", c.orphans);
+  }
+  cJSON_AddNumberToObject(meta, "shown", c.shown);
+  cJSON_AddNumberToObject(meta, "total", c.visible);
+  cJSON_AddBoolToObject(meta, "truncated", c.visible > c.shown);
+  cJSON_AddStringToObject(meta, "note",
+    "the k nearest rows to the mean of the pinned intel items' stored vectors "
+    "(meta.case.with_vector of meta.case.intel_items had one), the case's own "
+    "items excluded; suggestions, not findings");
+  cJSON_AddNumberToObject(meta, "total_ms", (double)ms_since(&t0));
+  cJSON_AddItemToObject(meta, "coverage", embed_coverage_json(db));
+  vecindex_fused_free(&L);
+  semsearch_rf_free(&rf);
+  cJSON *env = cJSON_CreateObject();
+  cJSON_AddItemToObject(env, "data", data);
+  cJSON_AddItemToObject(env, "meta", meta);
+  char *out = cJSON_PrintUnformatted(env);
+  cJSON_Delete(env);
+  *status = out ? 200 : 500;
+  return out;
+}
+
 /* ---- GET /api/intel/items/:uid/similar ----------------------------------- */
 
 /* 1 when `uid` is a row the caller may read (tenant + shared corpus). */

@@ -3609,6 +3609,14 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         if (sl) { *sl = 0; snprintf(act, sizeof act, "%s", sl + 1); }
         mg_url_decode(rest, strlen(rest), cid, sizeof cid, 0);
       }
+      /* GET /api/cases/:id/related?k= — rows nearest the case's pinned items
+       * (semsearchapi_case_related; a KNN scan, so off-loop). */
+      if (cid[0] && !strcmp(act, "related") && hm->method.len == 3 &&
+          !memcmp(hm->method.buf, "GET", 3)) {
+        sem_spawn(c, hm, semsearchapi_case_related, tc.tenant_id, cid,
+                  opgate_check(&usr) == 0);
+        return;
+      }
       char meth[12] = {0};
       size_t ml = hm->method.len < sizeof meth - 1 ? hm->method.len : sizeof meth - 1;
       memcpy(meth, hm->method.buf, ml);

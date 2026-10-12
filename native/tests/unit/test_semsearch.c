@@ -16,6 +16,7 @@
 #include "../../core/semsearchapi.h"
 #include "../../core/intel.h"
 #include "../../core/nearapi.h"
+#include "../../core/reportapi.h"
 
 #include <assert.h>
 #include <math.h>
@@ -435,6 +436,68 @@ static void test_s6_near(void) {
          "last, FTS fallback disclosed: ok\n");
 }
 
+/* ---- S5: case related + report suggestions -------------------------------- */
+
+static char g_rep[65536];
+static size_t g_repn = 0;
+static int rep_write(void *ctx, const char *buf, size_t n) {
+  (void)ctx;
+  if (g_repn + n >= sizeof g_rep) n = sizeof g_rep - 1 - g_repn;
+  memcpy(g_rep + g_repn, buf, n);
+  g_repn += n;
+  g_rep[g_repn] = 0;
+  return 0;
+}
+
+static void test_s5_case_related(void) {
+  sql("INSERT OR IGNORE INTO tenants(id,slug,name) VALUES ('t1','t1','T1'),"
+      "('t-other','t-other','Other')");
+  sql("INSERT INTO cases(id,tenant_id,name) VALUES ('case-1','t1','harbour'),"
+      "('case-x','t-other','theirs'),('case-u','t1','unembedded')");
+  sql("INSERT INTO case_items(case_id,ref_type,ref_id) VALUES "
+      "('case-1','intel_item','a0'),('case-1','intel_item','a1'),"
+      "('case-1','entity','ent-1'),('case-u','intel_item','never-embedded')");
+
+  cJSON *j = route(semsearchapi_case_related, "t1", "case-1", "k=3", 200);
+  assert(!has_uid(j, "a0") && !has_uid(j, "a1") && !has_uid(j, "o-1"));
+  assert(jnum(j, "meta.shown") == 3 && jnum(j, "meta.excluded_case_items") == 2);
+  assert(jnum(j, "meta.case.pinned_total") == 3 && jnum(j, "meta.case.intel_items") == 2);
+  assert(jnum(j, "meta.case.with_vector") == 2 && jnum(j, "meta.case.vectors_capped") == 0);
+  cJSON *first = cJSON_GetArrayItem(cJSON_GetObjectItem(j, "data"), 0);
+  assert(!strncmp(cJSON_GetObjectItem(first, "uid")->valuestring, "a", 1));
+  assert(jget(j, "meta.coverage"));
+  cJSON_Delete(j);
+  /* another tenant's case is the same 404 as none */
+  j = route(semsearchapi_case_related, "t1", "case-x", "", 404);
+  cJSON_Delete(j);
+  /* no pinned vector: 409 with the counts */
+  j = route(semsearchapi_case_related, "t1", "case-u", "", 409);
+  assert(!strcmp(jget(j, "error")->valuestring, "not_embedded"));
+  assert(jnum(j, "meta.case.intel_items") == 1 && jnum(j, "meta.case.with_vector") == 0);
+  cJSON_Delete(j);
+
+  /* the report's opt-in section renders the same list, no generated text */
+  tenant_ctx t; memset(&t, 0, sizeof t);
+  snprintf(t.tenant_id, sizeof t.tenant_id, "t1");
+  int st = 0; long bytes = 0;
+  g_repn = 0; g_rep[0] = 0;
+  assert(report_run(&g_db, &t, "case-1", "{\"sections\":[\"suggestions\"]}",
+                    rep_write, NULL, &bytes, &st) == 0 && st == 200);
+  assert(strstr(g_rep, "Evidence suggestions") && strstr(g_rep, "S-1"));
+  assert(strstr(g_rep, "of 2 of this case's 2 pinned intel item"));
+  assert(strstr(g_rep, "harbour crane inspection report"));
+  /* and the default report does not carry it */
+  g_repn = 0; g_rep[0] = 0;
+  assert(report_run(&g_db, &t, "case-1", NULL, rep_write, NULL, &bytes, &st) == 0);
+  assert(!strstr(g_rep, "Evidence suggestions"));
+  g_repn = 0; g_rep[0] = 0;
+  assert(report_run(&g_db, &t, "case-u", "{\"sections\":[\"suggestions\"]}",
+                    rep_write, NULL, &bytes, &st) == 0);
+  assert(strstr(g_rep, "No suggestions could be built") && strstr(g_rep, "not_embedded"));
+  printf("  S5: case related averages pinned vectors, excludes pins, states "
+         "counts; report suggestions opt-in: ok\n");
+}
+
 int main(void) {
   const char *dbp = getenv("JO_DB");
   assert(dbp && "run.sh sets JO_DB to a scratch database");
@@ -461,6 +524,7 @@ int main(void) {
   test_s4_similar();
   test_s2_items_hybrid();
   test_s6_near();
+  test_s5_case_related();
 
   stub_stop();
   db_close(&g_db);

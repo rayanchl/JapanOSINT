@@ -163,6 +163,20 @@ char *semsearchapi_items_hybrid(db_handle *db, const char *tenant,
                                 const char *id, const char *qs, int is_operator,
                                 int *status);
 
+/* GET /api/cases/:id/related?k=N (1..200, default 20) plus the S1 filters.
+ * The mean of the case's pinned intel items' STORED vectors (re-normalised;
+ * no embedding call), then the k nearest rows inside the caller's tenant
+ * partitions, every pinned item excluded. meta.case states how many pins
+ * there are, how many are intel items, how many had a vector (and how many
+ * were past the CASE_VEC_MAX read cap). 404 for a case outside the caller's
+ * tenant (same as no case); 409 not_embedded (with meta.case and coverage)
+ * when no pinned item has a vector yet. The same list is the report's
+ * "suggestions" section (reportapi.c), which renders it without generating
+ * any text. */
+char *semsearchapi_case_related(db_handle *db, const char *tenant,
+                                const char *case_id, const char *qs,
+                                int is_operator, int *status);
+
 /* GET /api/intel/items/:uid/similar?k=N (1..200, default 20) plus the S1
  * filters. The k nearest rows to the item's OWN stored vector
  * (vecindex_load; no embedding call, so no server need answer), inside the
