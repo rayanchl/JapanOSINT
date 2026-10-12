@@ -75,6 +75,7 @@
 #include "ffmpeg.h"         /* THE video seam — this file no longer has one   */
 #include "hostgate.h"       /* the SSRF floor every outbound fetch must clear */
 #include "httpclient.h"     /* http_client_global_init() — the one curl init */
+#include "image_vec.h"      /* a pruned frame's image-index ref goes with it   */
 #include "media.h"
 #include "operatorgate.h"
 #include "../source.h"
@@ -354,6 +355,14 @@ void camera_stills_migrate(db_handle *db) {
     fprintf(stderr, "[camera-stills] migrate: %s\n", e ? e : "?");
     sqlite3_free(e);
   }
+  /* Embedding drift (core/image_vec.c writes them when the frame's vector
+   * lands): cosine distance to the target's previous embedded frame, and to
+   * the mean of its last IMAGE_VEC_DRIFT_WINDOW. NULL = not measured (no
+   * index, no bytes, the target's first frame). After the CREATE above, so a
+   * fresh database gets them too; never in schema.sql (see (B) in the
+   * header). */
+  ensure_column(db, "camera_stills", "embed_drift", "REAL");
+  ensure_column(db, "camera_stills", "drift_from_mean", "REAL");
   g_migrated = 1;
   pthread_mutex_unlock(&g_mig_lock);
 }
@@ -937,6 +946,11 @@ int camera_stills_prune_camera(db_handle *db, const char *camera_id) {
   int n = 0;
   if (sqlite3_step(s) == SQLITE_DONE) n = sqlite3_changes(db->h);
   sqlite3_finalize(s);
+  /* The image index points at frames by ref; a pruned frame's ref goes in
+   * the same transaction, and its vector with it once nothing else (another
+   * frame with the same bytes) points there. A no-op when it was never
+   * built. */
+  if (n > 0) image_vec_unref_stills(db, camera_id);
   return n;
 }
 
@@ -1597,11 +1611,13 @@ char *camera_stills_list(db_handle *db, const char *camera_id, int limit,
 
   const char *SQL_PLAIN =
     "SELECT id,captured_at,sha256,blob_path,bytes,phash,ocr_text,width,height,"
-    "       scene_changed,camera_id FROM camera_stills WHERE" CS_WHERE_CAM
+    "       scene_changed,camera_id,embed_drift,drift_from_mean"
+    "  FROM camera_stills WHERE" CS_WHERE_CAM
     " ORDER BY captured_at DESC, id DESC LIMIT ?2";
   const char *SQL_CUR =
     "SELECT id,captured_at,sha256,blob_path,bytes,phash,ocr_text,width,height,"
-    "       scene_changed,camera_id FROM camera_stills WHERE" CS_WHERE_CAM
+    "       scene_changed,camera_id,embed_drift,drift_from_mean"
+    "  FROM camera_stills WHERE" CS_WHERE_CAM
     "   AND (captured_at < ?3 OR (captured_at = ?3 AND id < ?4))"
     " ORDER BY captured_at DESC, id DESC LIMIT ?2";
 
@@ -1653,6 +1669,15 @@ char *camera_stills_list(db_handle *db, const char *camera_id, int limit,
     if (sqlite3_column_type(s, 9) != SQLITE_NULL)
       cJSON_AddBoolToObject(o, "scene_changed", sqlite3_column_int(s, 9) != 0);
     else cJSON_AddNullToObject(o, "scene_changed");
+    /* Embedding drift — a DIFFERENT question from scene_changed (which is
+     * pHash/bytes): how far the frame moved in the image index's space from
+     * the previous frame and from the recent mean. null = not measured. */
+    if (sqlite3_column_type(s, 11) != SQLITE_NULL)
+      cJSON_AddNumberToObject(o, "embed_drift", sqlite3_column_double(s, 11));
+    else cJSON_AddNullToObject(o, "embed_drift");
+    if (sqlite3_column_type(s, 12) != SQLITE_NULL)
+      cJSON_AddNumberToObject(o, "drift_from_mean", sqlite3_column_double(s, 12));
+    else cJSON_AddNullToObject(o, "drift_from_mean");
     /* Which view of the record this frame is (null = the record's own feed),
      * since a record-level listing interleaves every view's timeline. */
     { const char *cid = ctext(s, 10);
@@ -1812,6 +1837,8 @@ char *camera_stills_list(db_handle *db, const char *camera_id, int limit,
   if (lastkind[0]) cJSON_AddStringToObject(meta, "last_kind", lastkind);
   else             cJSON_AddNullToObject(meta, "last_kind");
   cJSON_AddBoolToObject(meta, "scene_change_available", have_ph);
+  /* drift is measured only where the image index exists and holds frames */
+  cJSON_AddBoolToObject(meta, "embed_drift_available", image_vec_ready(db));
   cJSON_AddStringToObject(meta, "record_uid", rec_uid);
   /* Whether this camera's frames may ever be indexed (vision embeddings,
    * OCR search) — core/camera_privacy.h. Capture and viewing are unaffected. */
