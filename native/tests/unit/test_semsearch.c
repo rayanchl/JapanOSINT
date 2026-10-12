@@ -15,6 +15,7 @@
 #include "../../core/embed_pod.c"
 #include "../../core/semsearchapi.h"
 #include "../../core/intel.h"
+#include "../../core/nearapi.h"
 
 #include <assert.h>
 #include <math.h>
@@ -384,6 +385,56 @@ static void test_s2_items_hybrid(void) {
          "post-checked and counted, BM25-only fallback disclosed: ok\n");
 }
 
+/* ---- S6: Nearby honours q ------------------------------------------------- */
+
+static void test_s6_near(void) {
+  /* a0..a9 sit exactly on the point; this one is 150 m away but is the only
+   * row about volcanic ash */
+  row rv = { "v-near", "src-a", "volcanic ash advisory for aviation", "news", NULL,
+             "t1", "en", 35.001, 139.001 };
+  put(&rv);
+  build_index();
+  const char *qs = "near=35.0,139.0&radius_m=5000&q=volcanic%20ash%20advisory";
+  cJSON *j = route(nearapi_items_route, "t1", "35.0,139.0", qs, 200);
+  cJSON *d = cJSON_GetObjectItem(j, "data");
+  assert(!strcmp(jget(j, "meta.q_mode")->valuestring, "semantic"));
+  /* ranked, not filtered: every in-radius row, the ash advisory first */
+  assert(jnum(j, "page.total") == 11 && cJSON_GetArraySize(d) == 11);
+  cJSON *first = cJSON_GetArrayItem(d, 0);
+  assert(!strcmp(cJSON_GetObjectItem(first, "uid")->valuestring, "v-near"));
+  assert(jnum(first, "similarity") > jnum(cJSON_GetArrayItem(d, 1), "similarity"));
+  assert(jnum(first, "distance_m") > 0);
+  assert(jnum(j, "meta.semantic.ranked") == 11 && jget(j, "meta.semantic.coverage"));
+  cJSON_Delete(j);
+
+  /* a row not embedded yet is listed after, by distance, similarity null */
+  row ru = { "u-near", "src-a", "unembedded harbour row", "news", NULL,
+             "t1", "en", 35.0, 139.0 };
+  put(&ru);
+  j = route(nearapi_items_route, "t1", "35.0,139.0", qs, 200);
+  d = cJSON_GetObjectItem(j, "data");
+  assert(jnum(j, "page.total") == 12 && jnum(j, "meta.semantic.unembedded") == 1);
+  cJSON *last = cJSON_GetArrayItem(d, 11);
+  assert(!strcmp(cJSON_GetObjectItem(last, "uid")->valuestring, "u-near"));
+  assert(cJSON_IsNull(cJSON_GetObjectItem(last, "similarity")));
+  cJSON_Delete(j);
+  sql("DELETE FROM intel_items WHERE uid='u-near'");
+
+  /* no embedding server: the FTS filter, disclosed */
+  char *saved = strdup(getenv("JO_EMBED_URL"));
+  unsetenv("JO_EMBED_URL");
+  j = route(nearapi_items_route, "t1", "35.0,139.0", qs, 200);
+  assert(!strcmp(jget(j, "meta.q_mode")->valuestring, "fts"));
+  assert(jget(j, "meta.semantic_unavailable.error"));
+  assert(jnum(j, "page.total") == 1 && has_uid(j, "v-near"));
+  assert(!strcmp(jget(j, "meta.order")->valuestring, "distance_m ASC"));
+  cJSON_Delete(j);
+  setenv("JO_EMBED_URL", saved, 1);
+  free(saved);
+  printf("  S6: Nearby ranks the radius by similarity to q, unembedded rows "
+         "last, FTS fallback disclosed: ok\n");
+}
+
 int main(void) {
   const char *dbp = getenv("JO_DB");
   assert(dbp && "run.sh sets JO_DB to a scratch database");
@@ -409,6 +460,7 @@ int main(void) {
   test_s1_filters();
   test_s4_similar();
   test_s2_items_hybrid();
+  test_s6_near();
 
   stub_stop();
   db_close(&g_db);

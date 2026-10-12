@@ -2292,6 +2292,14 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
           if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
           if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+          /* With q it ranks the radius by similarity to q, which embeds:
+           * off-loop (nearapi_items_route; FTS fallback inside). */
+          { char nq[8] = {0};
+            int qn = mg_http_get_var(&hm->query, "q", nq, sizeof nq);
+            if (qn > 0 || qn == -3) {
+              sem_spawn(c, hm, nearapi_items_route, tc.tenant_id, nv,
+                        opgate_check(&usr) == 0);
+              return; } }
           char nqs[1024] = {0};
           if (hm->query.len >= sizeof nqs) {
             reply_json(c, 414, "{\"error\":\"query_string_too_long\"}"); return; }
