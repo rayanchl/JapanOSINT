@@ -1162,6 +1162,10 @@ cJSON *vecindex_coverage_json(db_handle *db, const vecindex_spec *s) {
     cJSON *lt = cJSON_Parse(buf);
     cJSON_AddItemToObject(o, "last_tick", lt ? lt : cJSON_CreateNull());
   } else cJSON_AddNullToObject(o, "last_tick");
+  if (s->coverage_extra) {
+    cJSON *x = s->coverage_extra(db);
+    cJSON_AddItemToObject(o, "extra", x ? x : cJSON_CreateNull());
+  }
   return o;
 }
 
@@ -1183,6 +1187,10 @@ cJSON *vecindex_coverage_compact(db_handle *db, const vecindex_spec *s) {
   cJSON_AddNumberToObject(o, "dim", have_meta ? (double)vecindex_meta_long(db, s, "dim") : 0);
   add_meta_str(o, "state", db, s, "state", have_meta);
   add_meta_str(o, "last_run", db, s, "last_run_at", have_meta);
+  if (s->coverage_extra) {
+    cJSON *x = s->coverage_extra(db);
+    cJSON_AddItemToObject(o, "extra", x ? x : cJSON_CreateNull());
+  }
   return o;
 }
 

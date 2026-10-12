@@ -30,6 +30,7 @@
 #include "sourceindexapi.h"
 #include "camera_stills.h"
 #include "visualsearchapi.h"   /* GET /api/cameras/visual-search */
+#include "camera_dupes.h"      /* GET /api/admin/cameras/duplicates */
 #include "cameraproxy.h"
 #include "uploadapi.h"
 #include "ffmpeg.h"
@@ -2824,6 +2825,12 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         sem_spawn(c, hm, sourceindexapi_layers_review, "", "", 1);
         return;
       }
+      /* Proposed duplicate camera feeds (core/camera_dupes.h): every camera's
+       * latest frame and some vectors, off the loop. Read-only. */
+      if (eq(u,"/api/admin/cameras/duplicates")) {
+        sem_spawn(c, hm, camera_dupes_route, "", "", 1);
+        return;
+      }
       if (eq(u,"/api/admin/ffmpeg/capabilities")) {
         char *body = ffmpeg_capabilities();
         if (!body) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
@@ -3890,6 +3897,23 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
      * sidecar: off the loop. Corpus data, plain auth, like .../stills. */
     if (eq(u, "/api/cameras/visual-search")) {
       sem_spawn(c, hm, visualsearchapi_route, "", "", opgate_check(&usr) == 0);
+      return;
+    }
+    /* POST .../by-image {still_id|upload_id} — image→image. The body is
+     * parsed (and an upload's role checked) here; the KNN, the blob read and
+     * the sidecar call run off the loop. Tenant: an upload is one tenant's. */
+    if (eq(u, "/api/cameras/visual-search/by-image")) {
+      if (mg_strcmp(hm->method, mg_str("POST")) != 0) {
+        reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return; }
+      tenant_ctx tc;
+      if (intel_tenant_or_reply(c, hm, &usr, &tc) != 0) return;
+      char va[VS_BYIMAGE_ARGS_MAX];
+      int vst = 400;
+      char *ve = visualsearchapi_by_image_args(hm->body.buf, hm->body.len, tc.role,
+                                               va, sizeof va, &vst);
+      if (ve) { reply_json(c, vst, ve); free(ve); return; }
+      sem_spawn(c, hm, visualsearchapi_by_image_route, tc.tenant_id, va,
+                opgate_check(&usr) == 0);
       return;
     }
     { char cid2[640] = {0};   /* a view target id is uid + "#view=" + suffix */

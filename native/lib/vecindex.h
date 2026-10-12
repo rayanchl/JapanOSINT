@@ -81,6 +81,9 @@ typedef struct vecindex_spec {
   const vecindex_col *cols;  /* metadata / partition columns, in order       */
   int ncols;
   const char *rebuild_hint;  /* appended to a refusal: how to start over     */
+  /* Optional: index-specific counts, added as "extra" to both coverage
+   * shapes (so /api/status's vectorIndexes carries them). NULL = none. */
+  cJSON *(*coverage_extra)(db_handle *db);
 } vecindex_spec;
 
 /* One metadata value. vec0 rejects NULL in a TEXT metadata column ("Expected

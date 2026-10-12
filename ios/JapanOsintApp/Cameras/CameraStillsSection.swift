@@ -166,8 +166,9 @@ struct CameraStillsSection: View {
     }
 }
 
-/// One frame, fetched from the operator-gated raw route.
-private struct CameraStillFrameView: View {
+/// One frame, fetched from the operator-gated raw route. Internal (not
+/// private) so the visual-search thumbnails share its sniff/decode/message.
+struct CameraStillFrameView: View {
     let still: CameraStill
     let onClose: () -> Void
 
@@ -176,6 +177,8 @@ private struct CameraStillFrameView: View {
 
     @State private var image: Image?
     @State private var failure: String?
+    /// Image→image search from this frame, on demand (CameraSimilarList).
+    @State private var showSimilar = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -202,10 +205,16 @@ private struct CameraStillFrameView: View {
                     .font(.caption2.monospaced())
                     .foregroundStyle(theme.textMuted)
                 Spacer()
+                Button("Find similar cameras") { showSimilar.toggle() }.font(.caption2)
                 Button("Close", action: onClose).font(.caption2)
             }
             if let ocr = still.ocr_text, !ocr.isEmpty {
                 Text("OCR: \(ocr)").font(.caption2).foregroundStyle(theme.textMuted)
+            }
+            if showSimilar {
+                CameraSimilarList(stillId: still.id,
+                                  label: "the \(still.captured_at) frame",
+                                  onClose: { showSimilar = false })
             }
         }
         .task(id: still.id) { await fetch() }
@@ -214,6 +223,7 @@ private struct CameraStillFrameView: View {
     private func fetch() async {
         image = nil
         failure = nil
+        showSimilar = false
         do {
             let data = try await apiClient.api.cameraStillRaw(still.id)
             guard Self.isImage(data), let img = Self.decode(data) else {

@@ -646,6 +646,62 @@ struct CameraStillsMeta: Decodable, Hashable {
     /// are counted here rather than silently dropped.
     let targets_total: Int?
 }
+// ── Camera visual search (native/core/visualsearchapi.h) ───────────────────
+
+/// One camera matched by what its frames show. `still` is nil when the match
+/// was the camera's weekly REFERENCE frame (frame.kind "refframe"): there is
+/// no still to show or to pivot "find similar" on.
+struct VisualSearchHit: Decodable, Identifiable, Hashable {
+    let camera_id: String
+    let item_uid: String?
+    let view: String?
+    let name: String?
+    let lat: Double?
+    let lon: Double?
+    let distance: Double?
+    let cosine: Double?
+    let still: VisualSearchStill?
+    let frame: VisualSearchFrame?
+    let frames_matched: Int?
+    var id: String { camera_id }
+}
+struct VisualSearchStill: Decodable, Hashable {
+    let id: String
+    let captured_at: String?
+    let sha256: String?
+}
+struct VisualSearchFrame: Decodable, Hashable {
+    let kind: String?
+    let ref_id: String?
+    let captured_at: String?
+    let sha256: String?
+    let evidence_id: String?
+}
+/// `meta.query` is a string for a text search and an object for an image
+/// search, so it is deliberately not decoded.
+struct VisualSearchEnvelope: Decodable {
+    let data: [VisualSearchHit]
+    let meta: VisualSearchMeta?
+}
+struct VisualSearchMeta: Decodable, Hashable {
+    let model: String?
+    let cameras: VisualSearchCameraCounts?
+    let candidates: VisualSearchCandidates?
+}
+struct VisualSearchCameraCounts: Decodable, Hashable {
+    let indexed: Int?
+    let eligible: Int?
+    let excluded_by_policy: Int?
+    /// "N of M cameras indexed" — shown as-is.
+    let note: String?
+}
+struct VisualSearchCandidates: Decodable, Hashable {
+    let examined: Int?
+    let limit: Int?
+    /// false = the candidate pool ran out before k cameras were found.
+    let exhausted: Bool?
+}
+
 struct CameraStillTarget: Decodable, Hashable, Identifiable {
     let camera_id: String
     let view: String?
