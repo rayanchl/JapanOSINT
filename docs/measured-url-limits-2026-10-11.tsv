@@ -19,8 +19,52 @@
 #   data.gov.rs      20 -> 3,527
 # 27,653 records from three rows that together stored 60.
 #
-# The other 15 are NOT yet fixed and are listed here so the next pass has the
-# measurement rather than the inference.
+# ALL 18 ARE NOW FIXED (2026-10-12), and measured again after. Complete, with
+# stored == emitted and no truncation notice:
+#   nasa-eonet-events        50 -> 7,208    the whole status=open set, 1 request
+#   emsc-moment-tensors      50 -> 48,729   = the service's own full_count
+#   ifrc-go-emergencies      50 -> 6,088    = its own count
+#   peertube-instance-dir   100 -> 1,785    = its own total
+#   stats-ar-datos-series   100 -> 271      = its own count
+#   gc-hydrometric          500 -> 3,366 observations -> 955 stations
+#   geofon-quakes            50 -> 163      a 7-day window, not a count
+#   nrcan-quakes             50 -> 42       likewise (and the host 301'd)
+#   openaerialmap-imagery    50 -> 21,437 emitted / 21,291 stored
+#   stats-nl-cbs-cpi         20 -> 159,120  = /TypedDataSet/$count exactly
+#
+# Bounded and DISCLOSED where the corpus is larger than anything wants:
+#   spaceflight-news-api     20 -> 2,000 of 36,457   + 1 truncation notice
+#   gc-swob-observations    500 -> 10,000 of 18,950  + 1
+#   cdse-stac                20 -> 2,000             + 1
+#   dea-stac                 20 -> 2,000             + 1
+#   swisstopo-stac           50 -> 2,000             + 1
+#   bdc-stac                 20 -> unmeasurable: data.inpe.br resets the
+#     connection from here at any limit, which is the UNREACHABLE verdict its
+#     own row (line 159) already carried. It shares stac_collect() with the
+#     other three, so it is paged and disclosed the same way, unprobed.
+#
+# gc-swob-observations was ALSO a rule-4b defect, found by this pass rather
+# than reasoned about: it deduped on `tc_id-value` while keying rows on
+# `tc_id-value` OR `stn_nam-value`, so a station with no tc_id passed the
+# dedupe every time it reported and collapsed at the sink. 25 of 384 on the
+# first run; 0 of 432 once both were the same value.
+#
+# dea-stac's fix is visible in the DATES it stores: 2026-10-10..2026-10-11
+# after, where before it held 2015-10-22 scenes and only those.
+#
+# OpenAerialMap's 146 collapses are the UPSTREAM's own duplicates, measured
+# directly rather than inferred: 10 contiguous pages of 100 hold 6 repeated
+# _ids (0.6%, against the run's 0.68%), because the index's order is not stable
+# across an 83-second walk. Nothing was widened to "fix" it.
+#
+# Two were not truncation bugs at all, and no record count could have shown it:
+# dea-stac's default order is OLDEST FIRST, so limit=20 stored the twenty
+# oldest Sentinel-2 scenes over Africa (2015-10-22) and re-stored those same
+# twenty every six hours; and od_stats_nl_cbs read /ODataApi/, which answers
+# $skip with HTTP 500 saying skip lives on /ODataFeed/ only.
+#
+# STILL UNMEASURED: the ~59 candidates whose URL carries a runtime %s, which
+# cannot be fetched as a literal. tools/audit_url_limits.py lists them.
 #
 file	line	param	declared	bigger	verdict
 collectors/sources/eight_sansan.c	38	limit=50	-1	-1	UNREACHABLE

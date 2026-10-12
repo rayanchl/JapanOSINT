@@ -317,9 +317,59 @@ Where the tree actually stands, as `make audit-sources` reports it:
       dados.gov.pt     20 -> 20,933
       data.gov.rs      20 -> 3,527
 
-  27,653 records from three rows that together stored 60. **The other 15
-  measured-truncating sites are not yet fixed** and are listed in that file, so
-  the next pass starts from the measurement.
+  27,653 records from three rows that together stored 60. **All 18 are fixed as
+  of 2026-10-12**, each re-measured after, and the readings are in that file.
+  Eleven rows went through `lib/pagewalk.c` rather than growing a loop of their
+  own, so the continuation rules, the repeat-page guards and the disclosure
+  stay in one place. Ten are now COMPLETE (`stored == emitted`, no notice):
+  EONET 50 → 7,208, EMSC moment tensors 50 → 48,729, IFRC GO 50 → 6,088,
+  OpenAerialMap 50 → 21,437, the PeerTube index 100 → 1,785, Argentina's series
+  100 → 271, ECCC hydrometric 500 → 3,366, and Statistics Netherlands' CPI
+  table 20 → 159,120, which is exactly its own `$count`.
+  Five are bounded and DISCLOSED,
+  because their corpus is larger than anything wants: Spaceflight News 2,000 of
+  36,457, ECCC SWOB 10,000 of 18,950, and the STAC catalogues.
+
+  **`pw_walk_max()`** is the new piece: an explicit page ceiling for a source
+  whose total the UPSTREAM itself publishes. The 20-page default is a brake on
+  an unknown upstream and raising it globally would lift that brake for all
+  2,727 of them; `JO_PAGE_MAX` still overrides in both directions, and the
+  notice now names which ceiling bit.
+
+  **Two of the 15 were not truncation bugs at all, and no record count could
+  have shown it.** `dea-stac`'s default order is OLDEST FIRST, so `?limit=20`
+  stored the twenty oldest Sentinel-2 scenes over Africa — acquired 2015-10-22
+  — and re-stored those same twenty every six hours while 6,594,309 items
+  accumulated behind them: 20 of 20 emitted, 20 of 20 stored, every gate green.
+  All four STAC rows and both ECCC OGC rows now ask for newest-first
+  (`sortby=-datetime`, `sortby=-DATETIME`, `sortby=-date_tm-value` — the SWOB
+  key keeps its `-value` suffix or it is a 400). **When a row carries a limit,
+  ask what the upstream's DEFAULT ORDER is before deciding the limit is the
+  problem** — a bound over the newest records is a window, a bound over an
+  arbitrary slice is a lie about what the source holds. And
+  `od_stats_nl_cbs` read `/ODataApi/`, which answers `$skip` with HTTP 500 and
+  the remedy in its own body: skip exists only on **`/ODataFeed/`**, which
+  additionally needs `$format=json` or the 200 is Atom XML. Every CBS row that
+  needs to page needs that path.
+
+  Two more generalisable findings from the pass:
+
+  * **A dedupe keyed on a different field from the row's `remote_key` is a
+    silent 4b failure.** `gc-swob-observations` deduped on `tc_id-value` while
+    keying rows on `tc_id-value` OR `stn_nam-value`, so every station without a
+    tc_id passed the dedupe and collapsed at the sink — 25 of 384, measured.
+    Dedupe on the identity, not on a field near it.
+  * **`lib/seenset.c` already exists**; do not hand-roll a second one. It grows,
+    which is the property a fixed ring lacks, and it replaced an O(n²)
+    scan-the-whole-array dedupe that was tolerable at 500 records and is not at
+    10,000.
+
+  And a bound can be honest and still be a bug: `html_table_parse` allocated
+  `width + 1000` cells for EVERY row, so the 1,000,000-row `htmlparsetest`
+  fixture asked for **16 GB** and `make` printed `*** Killed` — which reads
+  like a flaky runner, not an allocation bug (see the "that job is just flaky"
+  note below). Rows grow towards the bound as their cells arrive; peak RSS is
+  now 350 MB.
 
   `tools/audit_url_limits.py` finds the shape, and is deliberately NOT in
   `make audit-sources`: **a URL limit is not automatically a discard and the
