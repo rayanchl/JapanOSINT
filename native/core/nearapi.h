@@ -8,7 +8,8 @@
  * /api/intel/items request goes to intelapi_list_items() exactly as before, so
  * this adds a mode rather than changing one.
  *
- * TEXT FILTER. `q` (+ `qAlt`) is the feed's own MATCH expression
+ * TEXT FILTER (inline, and the fallback of the semantic mode below). `q`
+ * (+ `qAlt`) is the feed's own MATCH expression
  * (intelapi_fts_match), applied to the bbox candidates before the scan
  * ceiling, and disclosed the same way (meta.q_applied, meta.notes). It used to
  * be ignored, so a text filter returned every row in the radius.
@@ -60,5 +61,19 @@
  * optional filters). Returns malloc'd JSON and sets *status. */
 char *nearapi_items(db_handle *db, const char *tenant, const char *near,
                     const char *qs, int *status);
+
+/* SEMANTIC q (S6). The same query, with `q` RANKING the radius instead of
+ * filtering it: the radius prefilter and refine run as above (without the
+ * FTS MATCH), then the nearest NEAR_SEM_MAX in-radius rows are ordered by the
+ * cosine of their stored vector (intel_vec_v2) with q's embedding; rows with
+ * no vector follow by distance with `similarity: null`. meta.q_mode is
+ * "semantic", meta.semantic counts ranked / unembedded / beyond_cap and
+ * carries coverage. When q cannot be embedded (no JO_EMBED_URL, no index, a
+ * refused or swapped model) this IS nearapi_items() — the FTS filter — with
+ * meta.q_mode "fts" and meta.semantic_unavailable giving the reason. Embeds:
+ * a semsearch_route_fn that httpd.c runs off the event loop when q is set
+ * (`near` is the route's id). Applies ?lang_view= itself. */
+char *nearapi_items_route(db_handle *db, const char *tenant, const char *near,
+                          const char *qs, int is_operator, int *status);
 
 #endif

@@ -28,6 +28,7 @@
  */
 #include "reportapi.h"
 #include "entityapi.h"
+#include "semsearchapi.h"
 #include "audit.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
@@ -281,6 +282,9 @@ int report_template_load(db_handle *db, const char *tenant_id,
 #define RS_CITATIONS 0x10
 #define RS_AUDIT     0x20
 #define RS_ALL       0x3F
+/* Opt-in, never in RS_ALL: suggestions are not findings, and a default report
+ * is a statement of what the analyst pinned. */
+#define RS_SUGGEST   0x40
 
 typedef struct { int html; unsigned sections; } report_req;
 
@@ -292,6 +296,7 @@ static unsigned section_bit(const char *n) {
   if (!strcmp(n, "entities"))  return RS_ENTITIES;
   if (!strcmp(n, "citations")) return RS_CITATIONS;
   if (!strcmp(n, "audit"))     return RS_AUDIT;
+  if (!strcmp(n, "suggestions")) return RS_SUGGEST;
   return 0;
 }
 /* 0 on success; -1 with `errcode` filled otherwise. `body` may be NULL. */
@@ -1146,6 +1151,78 @@ static long sec_audit(demit *d, db_handle *db, const tenant_ctx *t,
   return n;
 }
 
+/* ── evidence suggestions (opt-in) ──────────────────────────────────────────
+ *
+ * The SAME list GET /api/cases/:id/related answers (semsearchapi_case_related:
+ * the k nearest rows to the mean of the pinned items' stored vectors, pins
+ * excluded), rendered as a table of what the index returned — title, source,
+ * link, distance — and a note stating how many pins had a vector. Nothing is
+ * generated: no summary, no rationale. A list that could not be built (no
+ * index, no pinned vector) says why in the document instead of vanishing. */
+static long sec_suggestions(demit *d, db_handle *db, const tenant_ctx *t,
+                            const char *case_id) {
+  static const char *HEADS[] = { "#", "Title", "Source", "Link", "Distance" };
+  d_heading(d, 2, "7. Evidence suggestions (vector similarity)");
+  int st = 500;
+  char *b = semsearchapi_case_related(db, t->tenant_id, case_id, "k=20", 0, &st);
+  cJSON *j = b ? cJSON_Parse(b) : NULL;
+  free(b);
+  if (!j || st != 200) {
+    const char *e = j ? jstr(j, "error") : NULL;
+    const char *dt = j ? jstr(j, "detail") : NULL;
+    /* The reason is server text that can carry a model name or a path: it
+     * goes through the escaping block emitter, never through d_em. */
+    char why[640];
+    snprintf(why, sizeof why, "%s%s%.500s", e ? e : "server_error",
+             dt ? " — " : "", dt ? dt : "");
+    d_em(d, "No suggestions could be built:");
+    d_block(d, why, sizeof why);
+    cJSON_Delete(j);
+    return 0;
+  }
+  cJSON *meta = cJSON_GetObjectItem(j, "meta");
+  cJSON *cs = cJSON_GetObjectItem(meta, "case");
+  cJSON *wv = cJSON_GetObjectItem(cs, "with_vector");
+  cJSON *ni = cJSON_GetObjectItem(cs, "intel_items");
+  cJSON *sh = cJSON_GetObjectItem(meta, "shown");
+  cJSON *tt = cJSON_GetObjectItem(meta, "total");
+  char note[400];
+  snprintf(note, sizeof note,
+           "Suggestions, not findings: the %d rows nearest the mean of the stored "
+           "vectors of %d of this case's %d pinned intel item(s) (%d candidate(s) "
+           "returned), pinned items excluded. Distances are L2 between unit "
+           "vectors; nothing here was written by a model.",
+           sh ? sh->valueint : 0, wv ? wv->valueint : 0, ni ? ni->valueint : 0,
+           tt ? tt->valueint : 0);
+  d_note(d, note);
+  long n = 0;
+  cJSON *it = NULL;
+  int opened = 0;
+  cJSON_ArrayForEach(it, cJSON_GetObjectItem(j, "data")) {
+    if (d->o->broken) break;
+    if (!opened) { d_table_begin(d, HEADS, 5); opened = 1; }
+    cJSON *sem = cJSON_GetObjectItem(it, "semantic");
+    cJSON *dist = sem ? cJSON_GetObjectItem(sem, "distance") : NULL;
+    const char *title = jstr(it, "title");
+    d_tr_begin(d);
+    d_td_begin(d); ob_fmt(d->o, "S-%ld", n + 1); d_td_end(d);
+    d_td_begin(d); d_text(d, title ? title : (jstr(it, "uid") ? jstr(it, "uid") : ""),
+                          TX_INLINE, CAP_INLINE); d_td_end(d);
+    d_td_begin(d); d_code_inline(d, jstr(it, "source_id") ? jstr(it, "source_id") : ""); d_td_end(d);
+    d_td_begin(d); d_url(d, jstr(it, "link")); d_td_end(d);
+    d_td_begin(d);
+    if (dist && cJSON_IsNumber(dist)) ob_fmt(d->o, "%.4f", dist->valuedouble);
+    else ob_s(d->o, d->html ? "&mdash;" : "—");
+    d_td_end(d);
+    d_tr_end(d);
+    n++;
+  }
+  if (opened) d_table_end(d);
+  else d_em(d, "No suggestions: the index returned no row outside this case.");
+  cJSON_Delete(j);
+  return n;
+}
+
 /* ── public API ─────────────────────────────────────────────────────────── */
 
 /* Filename alphabet is [a-z0-9-] plus a generated timestamp, so the
@@ -1228,7 +1305,7 @@ int report_run(db_handle *db, const tenant_ctx *t, const char *case_id,
   char gen[40];
   iso_now(gen, sizeof gen);
 
-  long findings = 0, entities = 0, citations = 0, audits = 0;
+  long findings = 0, entities = 0, citations = 0, audits = 0, suggestions = 0;
   int audit_trunc = 0;
 
   doc_open(&d, &h);
@@ -1239,6 +1316,7 @@ int report_run(db_handle *db, const tenant_ctx *t, const char *case_id,
   if (rq.sections & RS_ENTITIES)  entities  = sec_entities(&d, db, case_id);
   if (rq.sections & RS_CITATIONS) citations = sec_citations(&d, db, t, case_id, &ep);
   if (rq.sections & RS_AUDIT)     audits    = sec_audit(&d, db, t, case_id, &audit_trunc);
+  if (rq.sections & RS_SUGGEST)   suggestions = sec_suggestions(&d, db, t, case_id);
   doc_close(&d, gen);
   ob_flush(o);
 
@@ -1256,7 +1334,8 @@ int report_run(db_handle *db, const tenant_ctx *t, const char *case_id,
     static const struct { unsigned bit; const char *name; } SEC[] = {
       { RS_HEADER, "header" }, { RS_SUMMARY, "summary" },
       { RS_FINDINGS, "findings" }, { RS_ENTITIES, "entities" },
-      { RS_CITATIONS, "citations" }, { RS_AUDIT, "audit" } };
+      { RS_CITATIONS, "citations" }, { RS_AUDIT, "audit" },
+      { RS_SUGGEST, "suggestions" } };
     for (size_t i = 0; i < sizeof SEC / sizeof SEC[0]; i++)
       if (rq.sections & SEC[i].bit)
         cJSON_AddItemToArray(secs, cJSON_CreateString(SEC[i].name));
@@ -1264,6 +1343,8 @@ int report_run(db_handle *db, const tenant_ctx *t, const char *case_id,
     cJSON_AddNumberToObject(p, "entities",   (double)entities);
     cJSON_AddNumberToObject(p, "citations",  (double)citations);
     cJSON_AddNumberToObject(p, "audit_rows", (double)audits);
+    if (rq.sections & RS_SUGGEST)
+      cJSON_AddNumberToObject(p, "suggestions", (double)suggestions);
     cJSON_AddNumberToObject(p, "bytes",      (double)bytes);
     cJSON_AddBoolToObject(p, "evidence",        ep.available);
     cJSON_AddBoolToObject(p, "template",        tpl.present);

@@ -877,6 +877,44 @@ struct IntelItemEnvelope: Decodable {
     let data: IntelItem
 }
 
+/// /api/intel/semantic and /api/intel/items/:uid/similar (core/semsearchapi.c).
+/// Rows have the feed's item shape; the per-row `semantic` scores are not
+/// decoded. `meta.shown` of `meta.total` is the bound the server states.
+struct SemanticEnvelope: Decodable {
+    let data: [IntelItem]
+    let meta: SemanticMeta?
+}
+
+struct SemanticMeta: Decodable {
+    let mode: String?
+    let shown: Int?
+    let total: Int?
+    let k: Int?
+    let vector_hits: Int?
+    let fts_hits: Int?
+}
+
+/// The `{error, detail}` body of a refused vector query, so a view can say WHY
+/// (no index, no vector yet) instead of showing an empty list.
+struct SemanticErrorBody: Decodable {
+    let error: String?
+    let detail: String?
+
+    static func message(_ err: Error) -> String {
+        if case .http(let code, let body)? = err as? APIError,
+           let d = body.data(using: .utf8),
+           let e = try? JSONDecoder().decode(SemanticErrorBody.self, from: d) {
+            let what = e.detail ?? e.error ?? "HTTP \(code)"
+            switch code {
+            case 409: return "No vector yet: \(what)"
+            case 503: return "Vector search is unavailable on this server: \(what)"
+            default: return what
+            }
+        }
+        return err.localizedDescription
+    }
+}
+
 // ── Alerts ─────────────────────────────────────────────────────────────────
 
 struct AlertChannel: Codable, Hashable, Identifiable {

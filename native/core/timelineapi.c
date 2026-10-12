@@ -27,6 +27,8 @@
  * there). The encoding must stay byte-identical: clients hold one cursor
  * parser for /api/intel/items and /api/timeline. */
 #include "timelineapi.h"
+#include "embed_pod.h"
+#include "semsearchapi.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
 #include <stdio.h>
@@ -202,6 +204,7 @@ typedef struct {
   const char *source;             /* NULL = unfiltered */
   int    has_bbox; double bw, bs, be, bn;
   const char *case_id;            /* NULL = unfiltered */
+  const char *uids_json;          /* ?q=: JSON array of the KNN's uids, or NULL */
   const char *cur_p, *cur_u;      /* NULL = first page */
   int    limit;
 } tq;
@@ -267,6 +270,12 @@ static int build_sql(const tq *q, int events, char *sql, size_t cap,
             "%s IN (SELECT ref_id FROM case_items WHERE case_id=?)",
             UIDX[k]) >= (int)sizeof tmp) return -1;
       WP(tmp); bt(B, nb, q->case_id);
+    }
+    if (q->uids_json) {
+      /* ?q=: the same restriction case_id applies, to the KNN's uid set */
+      if (snprintf(tmp, sizeof tmp, "%s IN (SELECT value FROM json_each(?))",
+                   UIDX[k]) >= (int)sizeof tmp) return -1;
+      WP(tmp); bt(B, nb, q->uids_json);
     }
     if (events && q->cur_p) {
       /* identical shape to intelapi.c's keyset predicate, with the synthetic
@@ -344,6 +353,14 @@ static int resolve_window(sqlite3 *h, const char *since_in, const char *until_in
   return ret;
 }
 
+char *timelineapi_route(db_handle *db, const char *tenant, const char *id,
+                        const char *qs, int is_operator, int *status) {
+  tenant_ctx t;
+  memset(&t, 0, sizeof t);
+  snprintf(t.tenant_id, sizeof t.tenant_id, "%s", tenant ? tenant : "");
+  return timelineapi_query(db, &t, qs, status);
+}
+
 char *timelineapi_query(db_handle *db, const tenant_ctx *t,
                         const char *query_string, int *status) {
   if (!status) return NULL;
@@ -351,7 +368,7 @@ char *timelineapi_query(db_handle *db, const tenant_ctx *t,
   if (!db || !db->h || !t) return err(status, 500, "server_error");
 
   char v_since[96], v_until[96], v_bucket[24], v_source[192],
-       v_bbox[192], v_case[96], v_limit[24], v_cursor[768];
+       v_bbox[192], v_case[96], v_limit[24], v_cursor[768], v_q[1024], v_k[16];
   int has_since  = qs_get(query_string, "since",   v_since,  sizeof v_since)  && v_since[0];
   int has_until  = qs_get(query_string, "until",   v_until,  sizeof v_until)  && v_until[0];
   qs_get(query_string, "bucket",  v_bucket, sizeof v_bucket);
@@ -360,6 +377,8 @@ char *timelineapi_query(db_handle *db, const tenant_ctx *t,
   qs_get(query_string, "case_id", v_case,   sizeof v_case);
   qs_get(query_string, "limit",   v_limit,  sizeof v_limit);
   qs_get(query_string, "cursor",  v_cursor, sizeof v_cursor);
+  qs_get(query_string, "q",       v_q,      sizeof v_q);
+  qs_get(query_string, "k",       v_k,      sizeof v_k);
 
   tq q;
   memset(&q, 0, sizeof q);
@@ -456,6 +475,64 @@ char *timelineapi_query(db_handle *db, const tenant_ctx *t,
     if (!q.cur_p) cJSON_AddItemToArray(notes, cJSON_CreateString("cursor_ignored"));
   }
 
+  /* ?q= — a SEMANTIC timeline: the k nearest intel items to q (inside the
+   * tenant's partitions, source and the window filtered in the KNN), and the
+   * three streams restricted to those items exactly as case_id restricts them
+   * to a case's pins; bucketing is unchanged. meta.semantic states k, how
+   * many the KNN returned and the index's coverage — a timeline of 200
+   * nearest items must never read as a timeline of everything about q. An
+   * index that cannot answer is the semantic endpoint's own 503/502. */
+  char *uids_json = NULL;
+  cJSON *sem = NULL;
+  if (v_q[0] && !skip_all) {
+    int k = atoi(v_k);
+    if (k <= 0) k = 200;
+    if (k > 1000) k = 1000;
+    semsearch_filters sf = { .source = q.source, .since = since_n, .until = until_n };
+    semsearch_rf rf;
+    char ferr[48];
+    if (semsearch_resolve(db, &sf, &rf, ferr, sizeof ferr) != 0) {
+      cJSON_Delete(notes); if (curj) cJSON_Delete(curj);
+      return err(status, 400, ferr);
+    }
+    float *qv = NULL; int dim = 0; long embed_ms = 0;
+    char *eb = semsearch_embed(db, v_q, &qv, &dim, &embed_ms, status);
+    if (eb) {
+      semsearch_rf_free(&rf); cJSON_Delete(notes); if (curj) cJSON_Delete(curj);
+      return eb;
+    }
+    vecindex_hit *h = NULL;
+    char kerr[256];
+    int in_knn = 0;
+    int n = semsearch_knn(db, t->tenant_id, qv, dim, k, &rf, &h, &in_knn,
+                          kerr, sizeof kerr);
+    free(qv);
+    semsearch_rf_free(&rf);
+    if (n < 0) {
+      cJSON_Delete(notes); if (curj) cJSON_Delete(curj);
+      return err(status, 500, "vector_query_failed");
+    }
+    cJSON *arr = cJSON_CreateArray();
+    for (int i = 0; i < n; i++) cJSON_AddItemToArray(arr, cJSON_CreateString(h[i].key));
+    vecindex_hits_free(h, n);
+    uids_json = cJSON_PrintUnformatted(arr);
+    cJSON_Delete(arr);
+    if (!uids_json) { cJSON_Delete(notes); if (curj) cJSON_Delete(curj);
+                      return err(status, 500, "server_error"); }
+    q.uids_json = uids_json;
+    sem = cJSON_CreateObject();
+    cJSON_AddStringToObject(sem, "q", v_q);
+    cJSON_AddNumberToObject(sem, "k", k);
+    cJSON_AddNumberToObject(sem, "vector_hits", n);
+    cJSON_AddBoolToObject(sem, "filters_in_knn", in_knn);
+    cJSON_AddNumberToObject(sem, "embed_ms", (double)embed_ms);
+    cJSON_AddStringToObject(sem, "note",
+      "events are those of the k nearest intel items to q whose date falls in "
+      "the window (mentions and alerts of the same items); totals and buckets "
+      "count those items' events only, not every event about q");
+    cJSON_AddItemToObject(sem, "coverage", embed_coverage_json(db));
+  }
+
   cJSON *buckets = cJSON_CreateArray();
   cJSON *events  = cJSON_CreateArray();
   long long tot_i = 0, tot_m = 0, tot_a = 0;
@@ -471,12 +548,14 @@ char *timelineapi_query(db_handle *db, const tenant_ctx *t,
         sqlite3_prepare_v2(db->h, sql, -1, &s, NULL) != SQLITE_OK) {
       cJSON_Delete(notes); cJSON_Delete(buckets); cJSON_Delete(events);
       if (curj) cJSON_Delete(curj);
+      free(uids_json); cJSON_Delete(sem);
       return err(status, 500, "server_error");
     }
     if (bind_all(s, B, nb) != 0) {
       sqlite3_finalize(s);
       cJSON_Delete(notes); cJSON_Delete(buckets); cJSON_Delete(events);
       if (curj) cJSON_Delete(curj);
+      free(uids_json); cJSON_Delete(sem);
       return err(status, 500, "server_error");
     }
     while (sqlite3_step(s) == SQLITE_ROW) {
@@ -499,12 +578,14 @@ char *timelineapi_query(db_handle *db, const tenant_ctx *t,
         sqlite3_prepare_v2(db->h, sql, -1, &s, NULL) != SQLITE_OK) {
       cJSON_Delete(notes); cJSON_Delete(buckets); cJSON_Delete(events);
       if (curj) cJSON_Delete(curj);
+      free(uids_json); cJSON_Delete(sem);
       return err(status, 500, "server_error");
     }
     if (bind_all(s, B, nb) != 0) {
       sqlite3_finalize(s);
       cJSON_Delete(notes); cJSON_Delete(buckets); cJSON_Delete(events);
       if (curj) cJSON_Delete(curj);
+      free(uids_json); cJSON_Delete(sem);
       return err(status, 500, "server_error");
     }
     while (sqlite3_step(s) == SQLITE_ROW) {
@@ -568,6 +649,8 @@ char *timelineapi_query(db_handle *db, const tenant_ctx *t,
   cJSON_AddItemToObject(meta, "totals",  totals);
   cJSON_AddItemToObject(meta, "filters", filters);
   cJSON_AddItemToObject(meta, "notes",   notes);
+  if (sem) cJSON_AddItemToObject(meta, "semantic", sem);
+  free(uids_json);
 
   cJSON *env = cJSON_CreateObject();
   cJSON_AddItemToObject(env, "data", data);

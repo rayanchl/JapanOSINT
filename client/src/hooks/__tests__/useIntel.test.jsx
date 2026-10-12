@@ -82,13 +82,14 @@ describe('Intel pages', () => {
     expect(items.length).toBeLessThanOrEqual(3);
   });
 
-  it('Nearby mode offers the text filter and translation toggle the server now applies', async () => {
-    // nearapi.c applies q/qAlt and httpd.c shapes lang_view on the ?near=
-    // route; this test used to pin the opposite, from when it did neither.
+  it('Nearby mode offers the q box and translation toggle the server now applies', async () => {
+    // nearapi.c ranks the radius by similarity to q (FTS filter without an
+    // embedding index) and lang_view is shaped on the ?near= route; this test
+    // used to pin the opposite, from when it did neither.
     const calls = mockFetch();
     render(<MemoryRouter initialEntries={['/intel?view=search&mode=near&near=35.68,139.76&q=fire']}><IntelPage /></MemoryRouter>);
     await sleep(50);
-    expect(screen.getByPlaceholderText(/text filter/i)).toBeTruthy();
+    expect(screen.getByPlaceholderText(/rank the radius/i)).toBeTruthy();
     expect(screen.getByText('原文')).toBeTruthy();
     expect(screen.queryByText(/Filters by distance only/)).toBeNull();
     const near = calls.find((u) => u.includes('/api/intel/items') && u.includes('near='));
