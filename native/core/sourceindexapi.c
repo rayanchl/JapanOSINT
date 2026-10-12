@@ -2,6 +2,7 @@
 #include "sourceindexapi.h"
 #include "service_vec.h"
 #include "source_card.h"
+#include "source_category.h"
 #include "../source.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/mongoose.h"
@@ -39,6 +40,17 @@ static cJSON *kinds_array(unsigned mask) {
     if (mask & (1u << i))
       cJSON_AddItemToArray(a, cJSON_CreateString(source_kind_name((source_kind)i)));
   return a;
+}
+
+char *sourceindexapi_categories(db_handle *db) {
+  cJSON *o = source_category_distribution(db);
+  cJSON *v = cJSON_CreateArray();
+  for (int i = 0; i < SOURCE_CATEGORY_COUNT; i++)
+    cJSON_AddItemToArray(v, cJSON_CreateString(SOURCE_CATEGORIES[i]));
+  cJSON_AddItemToObject(o, "vocabulary", v);
+  char *s = cJSON_PrintUnformatted(o);
+  cJSON_Delete(o);
+  return s;
 }
 
 char *sourceindexapi_search(db_handle *db, const char *tenant, const char *id,

@@ -125,6 +125,13 @@ void service_vec_hits_free(service_vec_hit *h, int n);
 int service_vec_route_sources(db_handle *db, const char *query, const char *kind,
                               int k, char ***out_ids);
 
+/* 1 when EVERY kind is indexed for the registry as it stands, with `sig`
+ * (may be NULL) set to a string naming that exact index (card signature,
+ * model, dim) — for a consumer that derives something from the vectors
+ * (core/source_category.c) and must redo it when, and only when, they
+ * change. 0 otherwise. Reads meta only: no embedding call. */
+int service_vec_ready_all(db_handle *db, char *sig, size_t cap);
+
 /* lib/vecindex's coverage object plus `kinds`: {pivot:{registered,ready},…}. */
 #include "../third_party/cJSON.h"
 cJSON *service_vec_coverage_json(db_handle *db);

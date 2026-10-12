@@ -2234,6 +2234,12 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       sem_spawn(c, hm, sourceindexapi_search, "", "", opgate_check(&usr) == 0);
       return;
     }
+    if (eq(u, "/api/sources/categories")) {
+      char *body = sourceindexapi_categories(g_db);
+      reply_json(c, body ? 200 : 500, body ? body : "{\"error\":\"server_error\"}");
+      free(body);
+      return;
+    }
 
     /* GET /api/sources — full source registry/probe rows. */
     if (eq(u, "/api/sources")) {

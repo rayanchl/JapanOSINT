@@ -966,6 +966,20 @@ int service_vec_route_sources(db_handle *db, const char *query, const char *kind
   return m;
 }
 
+int service_vec_ready_all(db_handle *db, char *sig, size_t cap) {
+  if (sig && cap) sig[0] = 0;
+  if (!db || !svec_enabled() || !vecindex_table_exists(db, SVEC_META_TABLE) ||
+      !vecindex_exists(db, &svec_spec)) return 0;
+  char cur[32];
+  snprintf(cur, sizeof cur, "%llu", svec_kind_sig(-1, NULL));
+  char *st = svec_meta_get(db, "state"), *rs = svec_meta_get(db, "registry_sig"),
+       *md = svec_meta_get(db, "model"), *dm = svec_meta_get(db, "dim");
+  int ok = st && !strcmp(st, "ready") && rs && !strcmp(rs, cur) && md && *md;
+  if (ok && sig && cap) snprintf(sig, cap, "%s|%s|%s", cur, md, dm ? dm : "");
+  free(st); free(rs); free(md); free(dm);
+  return ok;
+}
+
 cJSON *service_vec_coverage_json(db_handle *db) {
   cJSON *o = vecindex_coverage_json(db, &svec_spec);
   cJSON *kinds = cJSON_CreateObject();

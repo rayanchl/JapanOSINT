@@ -23,6 +23,13 @@
 #define SIDX_K_DEF 20
 #define SIDX_K_MAX 200
 
+/* GET /api/sources/categories — how the registry maps onto source.h's 31
+ * categories (core/source_category.h): {declared:{cat:n}, derived:{cat:n},
+ * unlabelled, derived_at, vote_k, vocabulary}. Reads the sources table only;
+ * the per-source labels are the category_canonical / category_provenance /
+ * category_confidence columns of GET /api/sources. */
+char *sourceindexapi_categories(db_handle *db);
+
 char *sourceindexapi_search(db_handle *db, const char *tenant, const char *id,
                             const char *qs, int is_operator, int *status);
 
