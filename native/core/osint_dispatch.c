@@ -8,6 +8,7 @@
 #include "evidence.h"       /* evidence_scope_begin/end */
 #include "content_change.h" /* content_change_scope_begin/end */
 #include "maint_detect.h"   /* anomaly_detect */
+#include "relevance.h"      /* run-time rule-4d check on a pivot's answer */
 #include <time.h>
 #include "../third_party/cJSON.h"
 #include <stdio.h>
@@ -18,7 +19,9 @@
 void osint_result_free(osint_result *r) {
   if (!r) return;
   free(r->data); free(r->error); free(r->sources_json); free(r->resolved_from);
+  free(r->relevance);
   r->data = r->error = r->sources_json = r->resolved_from = NULL;
+  r->relevance = NULL;
 }
 
 int osint_canon(const char *name, char *out, size_t n) {
@@ -533,6 +536,8 @@ typedef struct {
    * itself", resolved to the canonical id at finalize). */
   src_acc    *srcs;
   int         n_srcs, cap_srcs;
+  /* the first RELEV_SAMPLE_MAX accepted records, for relev_check() */
+  relev_sample rs;
 } dual_sink;
 
 /* Bump the record count for `name`, or append it. `name` may be "". */
@@ -594,6 +599,7 @@ static int dual_emit(struct intel_sink *s, const intel_item *it) {
   } else {
     acc_add(d, (it->sub_source_id && *it->sub_source_id) ? it->sub_source_id : "");
     d->n_emit++;
+    relev_sample_add(&d->rs, it);       /* no-op once the sample is full */
     if (rc > 0) d->any_new = 1;
   }
   return rc;
@@ -745,6 +751,19 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
 
   out->success    = (rc >= 0 && ds.n_emit > 0) ? 1 : 0;
   out->confidence = out->success ? 70 : 0;     /* JS default */
+  /* House rule 4d at run time: did the upstream answer THE QUESTION, or hand
+   * back its whole collection? A disclosure beside the records, never a
+   * filter on them. NULL (no note) without an embedding server. */
+  if (out->success) {
+    cJSON *rv = relev_check(&ds.rs, entity, ds.n_emit);
+    if (rv) {
+      out->relevance = cJSON_PrintUnformatted(rv);
+      fprintf(stderr, "[osint] %s(%s) relevance-suspect: %s\n", def->id, entity,
+              cJSON_GetObjectItem(rv, "note")->valuestring);
+      cJSON_Delete(rv);
+    }
+  }
+  relev_sample_free(&ds.rs);
   /* Hand over EVERY captured record, with its own count so a consumer can
    * bound its view without guessing how much it is not seeing. Notices ride
    * alongside under their own key and count — kept, never counted as data. */

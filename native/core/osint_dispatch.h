@@ -59,6 +59,13 @@ typedef struct {
    * 187 for one 60-host service. A consumer must treat null as "not measured",
    * never as zero. */
   char *sources_json;
+  /* malloc'd JSON object, NULL in the ordinary case: the run-time relevance
+   * check (core/relevance.h) found that nearly none of the records this
+   * service returned are about the entity — {"verdict":"relevance-suspect",
+   * sampled, carrying_entity, semantically_related, note, …}. The pipeline
+   * puts it beside the records as `relevance`. Only ever set with an
+   * embedding server configured. */
+  char *relevance;
 } osint_result;
 
 void osint_result_free(osint_result *r);

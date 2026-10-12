@@ -326,6 +326,13 @@ static void dispatch_one(disp_pool *p, disp_job *job, db_handle *db,
   /* Every record the service emitted is inside data.records; carry the count
    * up here too so a client can see at a glance that nothing was dropped. */
   cJSON_AddNumberToObject(sr, "record_count", r.records);
+  /* Rule 4d, in-band: the records are kept, and the reader (model or human)
+   * is told they look like an unfiltered collection. Absent in the ordinary
+   * case and always without an embedding server (core/relevance.h). */
+  if (r.relevance) {
+    cJSON *rv = cJSON_Parse(r.relevance);
+    if (rv) cJSON_AddItemToObject(sr, "relevance", rv);
+  }
   cJSON_AddItemToObject(sr, "error",
     r.error ? cJSON_CreateString(r.error) : cJSON_CreateNull());
   /* underlying sources the service hit (provider/endpoint/corpus-source) */
