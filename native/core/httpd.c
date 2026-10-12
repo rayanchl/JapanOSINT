@@ -3507,6 +3507,11 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
       if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      /* ?q= embeds the query (a semantic timeline): off-loop. */
+      { char tq[8] = {0};
+        int tqn = mg_http_get_var(&hm->query, "q", tq, sizeof tq);
+        if (tqn > 0 || tqn == -3) {
+          sem_spawn(c, hm, timelineapi_route, tc.tenant_id, "", 0); return; } }
       /* qs_copy_or_414, not a clamp: the timeline query string IS the filter
        * set (kinds, window, cursor, limit). Truncating it at 1023 bytes handed
        * timelineapi_query a mangled — or, on a boundary, empty — filter and it

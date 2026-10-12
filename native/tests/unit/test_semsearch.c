@@ -17,6 +17,7 @@
 #include "../../core/intel.h"
 #include "../../core/nearapi.h"
 #include "../../core/reportapi.h"
+#include "../../core/timelineapi.h"
 
 #include <assert.h>
 #include <math.h>
@@ -498,6 +499,43 @@ static void test_s5_case_related(void) {
          "counts; report suggestions opt-in: ok\n");
 }
 
+/* ---- S7: semantic timeline ------------------------------------------------- */
+
+static void test_s7_timeline(void) {
+  cJSON *j = route(timelineapi_route, "t1", "", "q=harbour%20crane%20inspection&k=3", 200);
+  cJSON *ev = jget(j, "data.events");
+  assert(cJSON_GetArraySize(ev) == 3);
+  assert(jnum(j, "meta.totals.intel") == 3 && jnum(j, "meta.semantic.k") == 3);
+  assert(jnum(j, "meta.semantic.vector_hits") == 3 && jget(j, "meta.semantic.coverage"));
+  double sum = 0;
+  cJSON *b;
+  cJSON_ArrayForEach(b, jget(j, "data.buckets")) sum += jnum(b, "intel");
+  assert(sum == 3);
+  cJSON *e1;
+  cJSON_ArrayForEach(e1, ev)                /* another tenant's twin never appears */
+    assert(strcmp(cJSON_GetObjectItem(e1, "uid")->valuestring, "o-1"));
+  cJSON_Delete(j);
+  /* the window is inside the KNN: b-far (2026-01) is not one of the k */
+  j = route(timelineapi_route, "t1", "", "q=volcanic%20ash%20advisory&k=1", 200);
+  ev = jget(j, "data.events");
+  assert(cJSON_GetArraySize(ev) == 1);
+  assert(!strcmp(cJSON_GetObjectItem(cJSON_GetArrayItem(ev, 0), "uid")->valuestring, "v-near"));
+  cJSON_Delete(j);
+  /* without q the timeline is unchanged (no semantic block) */
+  j = route(timelineapi_route, "t1", "", "", 200);
+  assert(!jget(j, "meta.semantic") && jnum(j, "meta.totals.intel") >= 11);
+  cJSON_Delete(j);
+  char *saved = strdup(getenv("JO_EMBED_URL"));
+  unsetenv("JO_EMBED_URL");
+  j = route(timelineapi_route, "t1", "", "q=harbour", 503);
+  assert(jget(j, "meta.coverage"));
+  cJSON_Delete(j);
+  setenv("JO_EMBED_URL", saved, 1);
+  free(saved);
+  printf("  S7: timeline ?q= buckets the k nearest items' events, states k and "
+         "coverage: ok\n");
+}
+
 int main(void) {
   const char *dbp = getenv("JO_DB");
   assert(dbp && "run.sh sets JO_DB to a scratch database");
@@ -525,6 +563,7 @@ int main(void) {
   test_s2_items_hybrid();
   test_s6_near();
   test_s5_case_related();
+  test_s7_timeline();
 
   stub_stop();
   db_close(&g_db);
