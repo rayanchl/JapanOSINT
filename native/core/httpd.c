@@ -30,6 +30,7 @@
 #include "sourceindexapi.h"
 #include "camera_stills.h"
 #include "visualsearchapi.h"   /* GET /api/cameras/visual-search */
+#include "camera_dupes.h"      /* GET /api/admin/cameras/duplicates */
 #include "cameraproxy.h"
 #include "uploadapi.h"
 #include "ffmpeg.h"
@@ -2822,6 +2823,12 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
        * off the loop. Read-only. */
       if (eq(u,"/api/admin/layers/review")) {
         sem_spawn(c, hm, sourceindexapi_layers_review, "", "", 1);
+        return;
+      }
+      /* Proposed duplicate camera feeds (core/camera_dupes.h): every camera's
+       * latest frame and some vectors, off the loop. Read-only. */
+      if (eq(u,"/api/admin/cameras/duplicates")) {
+        sem_spawn(c, hm, camera_dupes_route, "", "", 1);
         return;
       }
       if (eq(u,"/api/admin/ffmpeg/capabilities")) {
