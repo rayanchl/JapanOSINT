@@ -117,15 +117,30 @@ REGISTER_SOURCE(soc_mastodon_servers_def)
 
 /* ---- 2. FediDB server census ------------------------------------------- */
 
-static int run_fedidb_servers(const source_ctx *ctx, intel_sink *sink) {
-  cJSON *doc = feed_get_json_h(ctx->http,
-                               "https://api.fedidb.org/v1/servers?limit=40",
-                               SOC_UA, 25000);
-  if (!doc) { fprintf(stderr, "[fedidb-servers] fetch failed\n"); return -1; }
+/* PAGED 2026-10-12. `?limit=40` stored 40 servers of the 4,320 the census
+ * holds, daily, while `links.next` sat in the same envelope carrying the
+ * cursor — the seventh discard shape (tools/audit_url_limits.py). Measured by
+ * walking that cursor by hand: 4,320 servers across 109 pages, and `limit`
+ * above 40 is refused (the API answers an HTML error page, so 40 is the page
+ * size, not a choice). lib/pagewalk.c follows `links.next`; 150 pages covers
+ * 6,000 against the measured 4,320. */
+#define FEDIDB_SERVERS_URL "https://api.fedidb.org/v1/servers?limit=40"
+#define FEDIDB_PAGE_MAX 150  /* exhaustive-ok: page ceiling handed to pw_walk_max(); a stop at it files a collector-truncation-notice */
+
+/* pw_fetch_fn: this census wants the shared user-agent. */
+static cJSON *fedidb_fetch(const source_ctx *c, const char *url, void *ud) {
+  (void)ud;
+  return feed_get_json_h(c->http, url, SOC_UA, 25000);
+}
+
+static int fedidb_page(const source_ctx *ctx, intel_sink *sink,
+                       const char *sid, cJSON *doc, void *ud, int *seen) {
+  (void)ctx; (void)ud;
   const cJSON *arr = cJSON_IsArray(doc) ? doc : cJSON_GetObjectItem(doc, "data");
+  *seen = cJSON_IsArray(arr) ? cJSON_GetArraySize(arr) : 0;
   if (!cJSON_IsArray(arr)) {
-    fprintf(stderr, "[fedidb-servers] unexpected shape\n");
-    cJSON_Delete(doc); return -1;
+    fprintf(stderr, "[%s] unexpected shape\n", sid);
+    return 0;
   }
   int n = 0;
   const cJSON *it;
@@ -167,8 +182,15 @@ static int run_fedidb_servers(const source_ctx *ctx, intel_sink *sink) {
                   "[\"fediverse\",\"instance\",\"census\"]",
                   domain, domain, summary, link, NULL, NULL);
   }
-  cJSON_Delete(doc);
-  fprintf(stderr, "[fedidb-servers] emitted %d\n", n);
+  return n;
+}
+
+static int run_fedidb_servers(const source_ctx *ctx, intel_sink *sink) {
+  if (pw_walk_max(ctx, sink, "fedidb-servers", FEDIDB_SERVERS_URL,
+                  fedidb_fetch, fedidb_page, NULL, FEDIDB_PAGE_MAX) < 0) {
+    fprintf(stderr, "[fedidb-servers] fetch failed\n");
+    return -1;
+  }
   return 0;
 }
 
@@ -177,7 +199,7 @@ static const source_def soc_fedidb_servers_def = {
   .name = "FediDB Fediverse Server Census",
   .update_interval_sec = 86400, .run = run_fedidb_servers,
   .category = "social", .type = "api",
-  .url = "https://api.fedidb.org/v1/servers",
+  .url = FEDIDB_SERVERS_URL,
   .description = "Cross-software fediverse census: per-instance software fingerprint, version, hosting city/country and post/user/MAU statistics.",
   .license = "Keyless public API documented at fedidb.org/docs; free tier, rate limited.",
   .layer = NULL, .free_tier = 1,

@@ -184,3 +184,55 @@ collectors/sources/soc_news_media.c	138	limit=20	20	500	TRUNCATING
 # written, so a 1-day window would have marked a working source dead every
 # quiet day. 204 is now rc=0, and the AOI window is 14 days because a single
 # box does not produce events the way the globe does.
+#
+#   fedidb-servers            40 -> 4,320. `links.next` carried the cursor in
+#     the same envelope and nothing followed it; walked by hand, 4,320 servers
+#     across 109 pages. `limit` above 40 is refused (the API answers an HTML
+#     error page), so 40 is the page size rather than a choice.
+#   ioda-outage-alerts       16 of a 200 limit on a quiet hour, so it never
+#     truncated on an ordinary day and would truncate silently on exactly the
+#     day it matters: a 48-hour window measured 200+ per page. `page` is
+#     0-BASED and works (pages 0/1/2 open on different alerts), so `page=0` is
+#     in the URL and the walk continues only when a page comes back full. A
+#     normal run is still one request.
+#
+# ---- TRIAGED, no change, with the reason ----------------------------------
+# A URL limit is not automatically a discard, and these are the three shapes
+# where it is not. Recorded so the next pass does not re-litigate them.
+#
+# the limit IS the question (a ranked or keyed search has no complete answer):
+#   cloudflare_radar_jp (top origins / top locations), grayhat_buckets,
+#   linkedin_jp_search, note_com_profiles, telegram_jp_channels,
+#   tabelog_restaurants, here_japan, mapfan_api, fofa_jp, flickr_geo,
+#   satellite_imagery ($top with $orderby ContentDate desc on an entity pivot),
+#   soc_fediverse mastodon/lemmy trend lists, eight_sansan (keyed, and the
+#   host is unreachable from here).
+#
+# a RECENCY window whose count is generous against a short schedule, so no
+# record falls between two runs (measured intervals in brackets):
+#   eni_energinet_co2 [300 s, limit=10 = 50 min of 5-minute readings],
+#   eni_energinet_prodex [300 s, limit=200], eni_elia_load [900 s, limit=100
+#   desc = ~25 h of quarter-hours], eni_ukpn_live_faults [300 s, limit=100 and
+#   total_count measured at 63 — complete], reddit_jp_subs [limit=100 is
+#   Reddit's own listing maximum], mastodon_jp_instances [per-instance public
+#   timeline], soc_forges GitHub /events and /gists/public [GitHub caps the
+#   public event stream at 300 events whatever is asked, so this is a sample by
+#   construction], soc_forges GitLab projects [order_by=last_activity_at].
+#
+# already paged, the limit being the STRIDE and not the bound:
+#   estat_census / estat_crime / estat_education / estat_employment /
+#   estat_household / estat_industry / jstat_map — limit=100000 with
+#   startPosition walked off RESULT_INF.NEXT_KEY to the end of the table.
+#
+# COMPLETE on the 2026-10-11 measurement, nothing to page:
+#   sanc_uk_caselaw (3 of 3), soc_bluesky plc.directory export (1,000 of
+#   1,000), od_ckan_london_datastore (it ignores paging and answers whole),
+#   soc_fediverse /v1/software (72 of 72), lemmy trends (20 of 20).
+#
+# UNMEASURABLE FROM HERE, so unchanged on purpose:
+#   trickest_cve — `contents/<year>?per_page=100` against api.github.com, which
+#   this session's GitHub proxy answers 403 for repositories outside its scope.
+#   The contents API is documented to cap a directory listing at 1,000 entries
+#   and to ignore pagination parameters, which would make per_page a no-op and
+#   the real remedy the git trees API (/git/trees/{sha}?recursive=1) — but that
+#   is inference, not a measurement, so no code changed.
