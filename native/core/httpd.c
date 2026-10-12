@@ -2743,6 +2743,12 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       /* Which ffmpeg answered, and whether it ran at all. "available: true"
        * is not much help when two are installed, and the honest answer to
        * "why is RTSP capture failing" is usually here. */
+      /* Layer-assignment proposals (core/sourceindexapi.h): an index scan,
+       * off the loop. Read-only. */
+      if (eq(u,"/api/admin/layers/review")) {
+        sem_spawn(c, hm, sourceindexapi_layers_review, "", "", 1);
+        return;
+      }
       if (eq(u,"/api/admin/ffmpeg/capabilities")) {
         char *body = ffmpeg_capabilities();
         if (!body) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }

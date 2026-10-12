@@ -53,7 +53,11 @@ static int stub_start(int port) {
   if (p == 0) {
     char ps[16];
     snprintf(ps, sizeof ps, "%d", port);
-    if (!freopen("/dev/null", "w", stdout)) { /* stub noise is harmless */ }
+    /* Both streams: an inherited pipe would hold a reader open after this
+     * test died, which hangs `run.sh | tail` rather than failing it. */
+    if (!freopen("/dev/null", "w", stdout) || !freopen("/dev/null", "w", stderr)) {
+      /* stub noise is harmless */
+    }
     execlp("python3", "python3", "tools/embed_stub_server.py", ps, "64", (char *)NULL);
     _exit(127);
   }

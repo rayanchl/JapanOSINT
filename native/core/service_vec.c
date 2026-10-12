@@ -966,6 +966,23 @@ int service_vec_route_sources(db_handle *db, const char *query, const char *kind
   return m;
 }
 
+int service_vec_scan(db_handle *db, service_vec_scan_fn fn, void *user) {
+  if (!db || !fn || !vecindex_exists(db, &svec_spec)) return -1;
+  sqlite3_stmt *s = NULL;
+  if (sqlite3_prepare_v2(db->h, "SELECT id, embedding FROM " SVEC_TABLE, -1, &s,
+                         NULL) != SQLITE_OK) return -1;
+  int n = 0, dim = (int)vecindex_meta_long(db, &svec_spec, "dim");
+  while (sqlite3_step(s) == SQLITE_ROW) {
+    const char *id = (const char *)sqlite3_column_text(s, 0);
+    int bytes = sqlite3_column_bytes(s, 1);
+    if (!id || bytes <= 0 || (dim && bytes != dim * (int)sizeof(float))) continue;
+    fn(id, (const float *)sqlite3_column_blob(s, 1), bytes / (int)sizeof(float), user);
+    n++;
+  }
+  sqlite3_finalize(s);
+  return n;
+}
+
 int service_vec_ready_all(db_handle *db, char *sig, size_t cap) {
   if (sig && cap) sig[0] = 0;
   if (!db || !svec_enabled() || !vecindex_table_exists(db, SVEC_META_TABLE) ||

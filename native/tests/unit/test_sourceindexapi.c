@@ -52,7 +52,11 @@ static int stub_start(int port) {
   if (p == 0) {
     char ps[16];
     snprintf(ps, sizeof ps, "%d", port);
-    if (!freopen("/dev/null", "w", stdout)) { /* stub noise is harmless */ }
+    /* Both streams: an inherited pipe would hold a reader open after this
+     * test died, which hangs `run.sh | tail` rather than failing it. */
+    if (!freopen("/dev/null", "w", stdout) || !freopen("/dev/null", "w", stderr)) {
+      /* stub noise is harmless */
+    }
     execlp("python3", "python3", "tools/embed_stub_server.py", ps, "64", (char *)NULL);
     _exit(127);
   }
@@ -164,6 +168,65 @@ static void test_route_sources(db_handle *db) {
   service_vec_free_ids(ids, n);
 }
 
+static void add_geo_row(db_handle *db, const char *uid, const char *sid) {
+  sqlite3_stmt *s = NULL;
+  assert(sqlite3_prepare_v2(db->h, "INSERT INTO intel_items(uid,source_id,title,"
+         "fetched_at,lat,lon) VALUES(?1,?2,'t','2026-10-12T00:00:00Z',35.6,139.7)",
+         -1, &s, NULL) == SQLITE_OK);
+  sqlite3_bind_text(s, 1, uid, -1, SQLITE_STATIC);
+  sqlite3_bind_text(s, 2, sid, -1, SQLITE_STATIC);
+  assert(sqlite3_step(s) == SQLITE_DONE);
+  sqlite3_finalize(s);
+}
+
+/* R5: geodata sources without a layer, with proposals; operator only; a
+ * source already on a layer is not proposed for. */
+static void test_layers_review(db_handle *db) {
+  const char *unassigned = NULL, *assigned = NULL;
+  const source_def **all = registry_all();
+  for (int i = 0; i < registry_count() && (!assigned || !unassigned); i++) {
+    if (layertab_layer_for_source(all[i]->id)) { if (!assigned) assigned = all[i]->id; }
+    else if (!unassigned && source_kind_of(all[i]) == SC_KIND_SCHEDULED)
+      unassigned = all[i]->id;
+  }
+  assert(assigned && unassigned);
+  add_geo_row(db, "lr-1", unassigned);
+  add_geo_row(db, "lr-2", unassigned);
+  add_geo_row(db, "lr-3", assigned);
+  int st = 0;
+  char *b = sourceindexapi_layers_review(db, NULL, "", "", 0, &st);
+  assert(st == 403);
+  free(b);
+  b = sourceindexapi_layers_review(db, NULL, "", "", 1, &st);
+  assert(st == 200 && b);
+  cJSON *o = cJSON_Parse(b);
+  free(b);
+  assert(o);
+  cJSON *arr = cJSON_GetObjectItem(o, "sources"), *it;
+  int seen_un = 0, seen_as = 0;
+  cJSON_ArrayForEach(it, arr) {
+    const char *id = cJSON_GetObjectItem(it, "id")->valuestring;
+    if (!strcmp(id, assigned)) seen_as = 1;
+    if (!strcmp(id, unassigned)) {
+      seen_un = 1;
+      assert(cJSON_GetObjectItem(it, "geocoded_rows")->valueint == 2);
+      cJSON *pr = cJSON_GetObjectItem(it, "proposals");
+      assert(cJSON_GetArraySize(pr) >= 1 && cJSON_GetArraySize(pr) <= 3);
+      cJSON *p0 = cJSON_GetArrayItem(pr, 0);
+      assert(cJSON_IsString(cJSON_GetObjectItem(p0, "layer")));
+      assert(cJSON_IsNumber(cJSON_GetObjectItem(p0, "similarity")));
+      printf("  layers review: %s -> %s (%.3f): ", id,
+             cJSON_GetObjectItem(p0, "layer")->valuestring,
+             cJSON_GetObjectItem(p0, "similarity")->valuedouble);
+    }
+  }
+  assert(seen_un && !seen_as);
+  assert(cJSON_GetObjectItem(cJSON_GetObjectItem(o, "coverage"),
+                             "layers_compared")->valueint > 0);
+  printf("operator-only, layered source not proposed: ok\n");
+  cJSON_Delete(o);
+}
+
 int main(void) {
   const char *dbp = getenv("JO_DB");
   assert(dbp && "run.sh sets JO_DB to a scratch database");
@@ -184,6 +247,7 @@ int main(void) {
   assert(service_vec_build(&db) > 0);
   test_search(&db);
   test_route_sources(&db);
+  test_layers_review(&db);
   stub_stop();
   db_close(&db);
   printf("test_sourceindexapi: ok\n");

@@ -30,6 +30,17 @@
  * category_confidence columns of GET /api/sources. */
 char *sourceindexapi_categories(db_handle *db);
 
+/* GET /api/admin/layers/review — OPERATOR ONLY. Every source that has stored
+ * geocoded rows but resolves to no map layer (core/layertab.h step 3), with
+ * the three layers whose members' cards are closest to its card (cosine to
+ * each layer's centroid of unit vectors), similarity and member counts.
+ * PROPOSALS ONLY: nothing is assigned or written. A source without a card
+ * vector is listed with `no_proposal` saying why. Reads stored vectors only
+ * (no embedding), but scans intel_items and the whole index: sem_spawn. */
+char *sourceindexapi_layers_review(db_handle *db, const char *tenant,
+                                   const char *id, const char *qs,
+                                   int is_operator, int *status);
+
 char *sourceindexapi_search(db_handle *db, const char *tenant, const char *id,
                             const char *qs, int is_operator, int *status);
 

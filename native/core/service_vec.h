@@ -125,6 +125,15 @@ void service_vec_hits_free(service_vec_hit *h, int n);
 int service_vec_route_sources(db_handle *db, const char *query, const char *kind,
                               int k, char ***out_ids);
 
+/* Every stored card vector, once: fn(id, vec, dim, user) per row, vectors
+ * borrowed for the call. For read-only consumers that compare sources with
+ * each other (GET /api/admin/layers/review). Returns rows visited, -1 when
+ * there is no index. Whatever is stored is visited — ready or not; a caller
+ * that needs completeness checks service_vec_ready_all() and says which. */
+typedef void (*service_vec_scan_fn)(const char *id, const float *vec, int dim,
+                                    void *user);
+int service_vec_scan(db_handle *db, service_vec_scan_fn fn, void *user);
+
 /* 1 when EVERY kind is indexed for the registry as it stands, with `sig`
  * (may be NULL) set to a string naming that exact index (card signature,
  * model, dim) — for a consumer that derives something from the vectors
