@@ -9,6 +9,7 @@ import { usePagedList } from '../../hooks/usePagedList.js';
 import SaveStarButton from '../saved/SaveStarButton.jsx';
 import PinToCaseButton from '../cases/CasePickerSheet.jsx';
 import AnnotationsSection from './AnnotationsSection.jsx';
+import SimilarItems from './SimilarItems.jsx';
 import { entityVisual } from '../../utils/entityVisuals.js';
 import { isSafeUrl } from '../../utils/safeUrl.js';
 import { fmtAbs, relativeTime } from '../../utils/time.js';
@@ -81,6 +82,7 @@ export default function IntelItemPage() {
             <EvidenceSection uid={uid} />
             {isBreach && <RevealSection uid={uid} />}
             <AnnotationsSection refType="intel_item" refId={uid} />
+            {!isBreach && <SimilarItems path={`/api/intel/items/${enc}/similar?k=20`} />}
             <RawSection item={item} />
           </div>
 

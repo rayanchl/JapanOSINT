@@ -133,6 +133,12 @@ function SearchView() {
   const [near, setNear] = useState(params.get('near') || '');
   const [radius, setRadius] = useState(params.get('radius_m') || '2000');
   const [view, setView] = useState('original');
+  // Semantic filters (S1): source / record_type / since run INSIDE the KNN on
+  // the server, bbox is a post-filter whose drops the server counts.
+  const [semSource, setSemSource] = useState('');
+  const [semType, setSemType] = useState('');
+  const [semSince, setSemSince] = useState('');
+  const [semBbox, setSemBbox] = useState('');
 
   const commit = (patch) => {
     const p = new URLSearchParams(params);
@@ -157,6 +163,15 @@ function SearchView() {
           * (httpd.c intel_lang_view), so rows carry their stored translation. */}
         {mode !== 'semantic' && <Segmented value={view} onChange={setView} options={[{ value: 'original', label: '原文' }, { value: 'translated', label: 'EN' }, { value: 'both', label: 'both' }]} />}
       </div>
+      {mode === 'semantic' && (
+        <div className="flex flex-wrap items-center gap-2">
+          <SectionLabel>filters</SectionLabel>
+          <Input mono className="w-[220px]" placeholder="source ids, comma-separated" value={semSource} onChange={(e) => setSemSource(e.target.value)} />
+          <Input mono className="w-[150px]" placeholder="record_type" value={semType} onChange={(e) => setSemType(e.target.value)} />
+          <Segmented value={semSince} onChange={setSemSince} options={SINCE_PRESETS} />
+          <Input mono className="w-[200px]" placeholder="bbox w,s,e,n" value={semBbox} onChange={(e) => setSemBbox(e.target.value)} />
+        </div>
+      )}
       <form onSubmit={submit} className="flex flex-wrap gap-2">
         {mode === 'near' && (
           <>
@@ -164,14 +179,14 @@ function SearchView() {
             <Input mono className="w-[110px]" type="number" min="50" step="50" placeholder="radius m" value={radius} onChange={(e) => setRadius(e.target.value)} />
           </>
         )}
-        {/* In Nearby mode q is an optional text filter over the radius: the
-          * server builds the same MATCH expression as full-text search
-          * (nearapi.c → intelapi_fts_match) and says so in meta.q_applied. */}
-        <Input className="flex-1 min-w-[200px]" placeholder={mode === 'semantic' ? 'describe what you are looking for…' : mode === 'near' ? 'optional text filter within the radius (kanji or romaji)…' : 'search every stored item (kanji or romaji)…'} value={draft} onChange={(e) => setDraft(e.target.value)} />
+        {/* In Nearby mode q RANKS the radius by similarity when the server has
+          * an embedding index (nearapi.c, meta.q_mode "semantic"), and falls
+          * back to the full-text filter without one (meta.q_mode "fts"). */}
+        <Input className="flex-1 min-w-[200px]" placeholder={mode === 'semantic' ? 'describe what you are looking for…' : mode === 'near' ? 'optional: rank the radius by meaning (kanji or romaji)…' : 'search every stored item (kanji or romaji)…'} value={draft} onChange={(e) => setDraft(e.target.value)} />
         <Button type="submit" variant="primary">Search</Button>
       </form>
       {mode === 'fts' && q && <FtsResults q={q} sort={sort} view={view} />}
-      {mode === 'semantic' && q && <SemanticResults q={q} semMode={semMode} />}
+      {mode === 'semantic' && q && <SemanticResults q={q} semMode={semMode} filters={{ source: semSource, record_type: semType, since: semSince, bbox: semBbox }} />}
       {mode === 'near' && params.get('near') && <NearResults near={params.get('near')} radius={params.get('radius_m')} q={q} view={view} />}
       {!q && mode !== 'near' && <EmptyState title="Enter a query.">{mode === 'semantic' ? 'Semantic search needs the embedding pod; the server says so if it is not running.' : 'Full-text search runs over titles, summaries and bodies across every source, with Japanese normalisation.'}</EmptyState>}
     </div>
@@ -222,13 +237,38 @@ function NearResults({ near, radius, q, view }) {
   return (
     <div className="space-y-2">
       {feed.meta?.note && <div className="text-[11px] text-accent font-mono">{feed.meta.note}</div>}
-      <FeedList feed={feed} view={view} emptyTitle={q ? 'Nothing within that radius matched the text filter.' : 'Nothing stored within that radius.'} noun="items by distance" />
+      {q && feed.meta?.q_mode === 'semantic' && (
+        <div className="text-[11px] font-mono text-osint-muted" title={feed.meta.semantic?.note}>
+          ranked by similarity to “{q}” · {feed.meta.semantic?.ranked ?? 0} ranked
+          {feed.meta.semantic?.unembedded > 0 && ` · ${feed.meta.semantic.unembedded} without a vector (listed after, by distance)`}
+          {feed.meta.semantic?.beyond_cap > 0 && ` · ${feed.meta.semantic.beyond_cap} past the ${feed.meta.semantic.cap}-row ranking cap`}
+        </div>
+      )}
+      {q && feed.meta?.q_mode === 'fts' && (
+        <div className="text-[11px] font-mono text-osint-muted">text filter (no embedding index{feed.meta.semantic_unavailable?.error ? `: ${feed.meta.semantic_unavailable.error}` : ''})</div>
+      )}
+      <FeedList feed={feed} view={view} emptyTitle={q ? 'Nothing within that radius matched the text filter.' : 'Nothing stored within that radius.'} noun={feed.meta?.q_mode === 'semantic' ? 'items by similarity' : 'items by distance'} />
     </div>
   );
 }
 
-function SemanticResults({ q, semMode }) {
-  const path = `/api/intel/semantic?q=${encodeURIComponent(q)}&mode=${semMode}&limit=50`;
+/** /api/intel/semantic URL with the S1 filters; empty ones are not sent.
+ *  `since` is an ISO instant (already anchored by useSinceIso). */
+export function semanticPath({ q, semMode, source, record_type: rt, since, bbox }) {
+  const p = new URLSearchParams({ q, mode: semMode || 'hybrid', limit: '50' });
+  const src = String(source || '').split(',').map((x) => x.trim()).filter(Boolean).join(',');
+  if (src) p.set('source', src);
+  if (rt?.trim()) p.set('record_type', rt.trim());
+  if (since) p.set('since', since);
+  if (bbox?.trim()) p.set('bbox', bbox.replace(/\s+/g, ''));
+  return `/api/intel/semantic?${p.toString()}`;
+}
+
+function SemanticResults({ q, semMode, filters = {} }) {
+  // The since preset is anchored once per preset change (useSinceIso), so the
+  // request key does not move every render.
+  const sinceAt = useSinceIso(filters.since);
+  const path = semanticPath({ q, semMode, ...filters, since: sinceAt });
   const { data, error, loading, reload } = useApi(path, { deps: [path] });
   const rows = Array.isArray(data?.data) ? data.data : [];
   const meta = data?.meta;
@@ -250,6 +290,12 @@ function SemanticResults({ q, semMode }) {
           <BoundNote shown={meta.shown} total={meta.total} noun="semantic hits" />
           <span className="font-mono text-[11px] text-osint-muted">{meta.mode} · vector {meta.vector_hits}{meta.fts_hits != null ? ` · fts ${meta.fts_hits}` : ''} · {meta.embed_ms} ms embed · {meta.total_ms} ms</span>
           {meta.tenant_withheld > 0 && <Pill tone="warning">{meta.tenant_withheld} withheld (other tenants)</Pill>}
+          {meta.filters?.in_knn?.length > 0 && <span className="font-mono text-[11px] text-osint-muted">in KNN: {meta.filters.in_knn.join(', ')}</span>}
+          {meta.filters?.dropped_total > 0 && (
+            <Pill tone="warning" title={meta.filters.post_note}>
+              {meta.filters.dropped_total} of the k nearest dropped by {meta.filters.post?.join(', ') || 'post-filters'}
+            </Pill>
+          )}
         </div>
       )}
       {!loading && !error && data && rows.length === 0 && <EmptyState title="No semantic match." />}
