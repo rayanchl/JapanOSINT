@@ -5,6 +5,7 @@
 #include "osint_dispatch.h"
 #include "service_vec.h"
 #include "prompt_rank.h"
+#include "fewshot.h"
 #include "intel.h"
 #include "entitystore.h"
 #include "../source.h"
@@ -665,11 +666,27 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
    * costs today, then hand the catalogue whatever the server's real context
    * leaves over. The measurement is done on every call, so the preamble can
    * grow again without anyone having to remember this comment exists. */
+  /* The routing examples nearest this query (plus the spine) when an
+   * embedding server is up, else NULL = all of them, as before. Chosen first
+   * so the preamble measured below is the preamble actually sent: whatever
+   * the retrieval saves goes to the service catalogue. See core/fewshot.h. */
+  fewshot_note fsn;
+  char *fsblock = fewshot_select(db, query, &fsn);
+  if (fsblock) {
+    char d[300];
+    snprintf(d, sizeof d,
+      "the analysis model was shown %d of %d routing examples: the %d whose "
+      "query is nearest this one by embedding similarity, plus %d always "
+      "included (multi-entity, typos)", fsn.chosen, fsn.total,
+      fsn.by_similarity, fsn.spine);
+    progress_stage_note(rp, "analysis", "fewshot_examples_selected", d);
+    fprintf(stderr, "[pipeline] %s %s\n", request_id, d);
+  }
   long allow = 0;
   size_t ctx_chars = llm_ctx_chars(llm, 2048);     /* 2048 reserved for the answer */
   size_t preamble = 0;
   if (ctx_chars > 0) {
-    char *probe = prompt_analysis(query, "");
+    char *probe = prompt_analysis_with(query, "", fsblock);
     preamble = probe ? strlen(probe) : 0;
     free(probe);
     /* 90% of what is left, so a tokenizer that does slightly worse than the
@@ -706,7 +723,8 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
     }
     svcs = osint_services_list_bounded(&cat);
   }
-  char *p1 = prompt_analysis(query, svcs ? svcs : "");
+  char *p1 = prompt_analysis_with(query, svcs ? svcs : "", fsblock);
+  free(fsblock);
   /* The size of the request we are about to make, on the record. The analysis
    * call failed for months with "request (207353 tokens) exceeds the available
    * context size (16384 tokens)" and the only place that number existed was
