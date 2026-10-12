@@ -30,7 +30,9 @@ final class CollectorFavorites: ObservableObject {
     }
 }
 
-/// View-model wrapping a layer with all the sources reporting under it.
+/// View-model wrapping a COLLECTOR with all the sources reporting under it.
+/// (It wrapped a map layer until 2026-10-12; a collector is the beat a source
+/// was authored and probed in, and every source has one.)
 ///
 /// The five status counts are STORED, not computed. They used to be `filter`
 /// properties — five O(n) passes recomputed on every access — and
@@ -39,7 +41,7 @@ final class CollectorFavorites: ObservableObject {
 /// row breach catalog for operators, that is ~17k row scans on every keystroke
 /// in the search field. `groupedAsCollectors()` now counts each bucket once.
 struct Collector: Identifiable, Hashable {
-    let id: String                 // = layer id
+    let id: String                 // = collector key
     let name: String
     let category: String?
     let sources: [StatusRow]
@@ -64,22 +66,26 @@ struct Collector: Identifiable, Hashable {
 }
 
 extension Array where Element == StatusRow {
-    /// Group sources by their `layer` field. Sources with no layer are bucketed
-    /// under "(no layer)" so they're still discoverable.
+    /// Group sources by their `collector`. Every registered source carries
+    /// one, so nothing lands in a catch-all; a row from a server predating the
+    /// field (or a cached envelope) groups under its own id, alone, which is
+    /// still visible rather than hidden. The name is the server's label from
+    /// core/collectors.def when it has one, else the key itself — never a
+    /// prettified guess. The category is the most common one among the
+    /// sources, so a mixed beat is labelled by its majority, not its first row.
     func groupedAsCollectors() -> [Collector] {
-        var byLayer: [String: [StatusRow]] = [:]
+        var byKey: [String: [StatusRow]] = [:]
+        var labels: [String: String] = [:]
         for row in self {
-            let key = (row.layer?.isEmpty == false ? row.layer! : "(no layer)")
-            byLayer[key, default: []].append(row)
+            let key = (row.collector?.isEmpty == false) ? row.collector! : row.id
+            byKey[key, default: []].append(row)
+            if let l = row.collectorLabel, !l.isEmpty { labels[key] = l }
         }
-        return byLayer.map { (layerId, rows) in
-            let name = layerId == "(no layer)"
-                ? "Uncategorised"
-                : layerId.replacingOccurrences(of: "-", with: " ")
-                    .split(separator: " ")
-                    .map { $0.prefix(1).uppercased() + $0.dropFirst() }
-                    .joined(separator: " ")
-            let category = rows.compactMap(\.category).first
+        return byKey.map { (key, rows) in
+            let name = labels[key] ?? key
+            var catCounts: [String: Int] = [:]
+            for r in rows { if let c = r.category { catCounts[c, default: 0] += 1 } }
+            let category = catCounts.max { a, b in a.value != b.value ? a.value < b.value : a.key > b.key }?.key
             // One pass for all five tallies.
             var online = 0, degraded = 0, offline = 0, pending = 0, gated = 0
             for row in rows {

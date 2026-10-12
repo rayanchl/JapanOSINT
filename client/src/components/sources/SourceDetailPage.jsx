@@ -288,7 +288,7 @@ export default function SourceDetailPage() {
           <div className="text-[10px] uppercase tracking-wider text-osint-muted mb-1">recent runs</div>
           {(d.runs?.recent || []).length === 0 ? <span className="text-xs text-osint-muted">this source has never run</span> : (
             <table className="w-full text-[11px]">
-              <thead><tr className="text-osint-muted text-left"><th className="py-1 pr-2">when</th><th className="pr-2">status</th><th className="pr-2 text-right">fetched</th><th className="pr-2 text-right">stored</th><th className="pr-2 text-right">ms</th><th>error</th></tr></thead>
+              <thead><tr className="text-osint-muted text-left"><th className="py-1 pr-2">when</th><th className="pr-2">status</th><th className="pr-2 text-right">fetched</th><th className="pr-2 text-right">stored</th><th className="pr-2 text-right">ms</th><th className="pr-2 text-right">bytes</th><th>error</th></tr></thead>
               <tbody>
                 {d.runs.recent.map((r) => (
                   <tr key={r.id} className="border-t border-osint-border/40">
@@ -297,6 +297,7 @@ export default function SourceDetailPage() {
                     <td className="pr-2 text-right font-mono">{fmtCount(r.records_fetched)}</td>
                     <td className="pr-2 text-right font-mono">{r.stored == null ? NOT_MEASURED : fmtCount(r.stored)}</td>
                     <td className="pr-2 text-right font-mono">{r.duration_ms == null ? '—' : r.duration_ms}</td>
+                    <td className="pr-2 text-right font-mono" title={r.bytes_fetched == null ? 'run predates byte accounting' : `${r.bytes_fetched} bytes`}>{r.bytes_fetched == null ? NOT_MEASURED : fmtBytes(r.bytes_fetched)}</td>
                     <td className="text-osint-muted break-all">{r.error || ''}</td>
                   </tr>
                 ))}
@@ -355,7 +356,8 @@ export default function SourceDetailPage() {
             ['records last run (distinct uids)', measured(st.records_last_run, fmtCount)],
             ['records in 30 days of runs', measured(sch.stats_30d?.records_30d, fmtCount)],
             ['DB text size', fmtBytes(data.db_text_bytes)],
-            ['transfer bytes', 'not recorded — fetch_log carries no byte count'],
+            ['transfer, last run', (() => { const r = (d.runs?.recent || [])[0]; return r ? (r.bytes_fetched == null ? `${NOT_MEASURED} (run predates byte accounting)` : `${fmtBytes(r.bytes_fetched)} received`) : 'never run'; })()],
+            ['transfer, 30 days', sch.stats_30d?.bytes_30d != null ? `${fmtBytes(sch.stats_30d.bytes_30d)} over ${fmtCount(sch.stats_30d.runs_with_bytes_30d)} run${sch.stats_30d.runs_with_bytes_30d === 1 ? '' : 's'}` : (sch.stats_30d?.runs_30d > 0 ? `${NOT_MEASURED} (runs predate byte accounting)` : 'no runs in 30 days')],
           ]} />
         </Card>
       </Section>

@@ -172,10 +172,11 @@ int main(void) {
   printf("  %s", l);
   assert(strstr(l, " records=8 ") && strstr(l, " stored=8"));
   assert(strstr(l, " failed=2 ") && "refused emits were not reported");
+  assert(strstr(l, " bytes=0 requests=0") && "the run line carries the transfer size");
   free(l);
   {
     sqlite3_stmt *s;
-    assert(sqlite3_prepare_v2(db.h, "SELECT status,records_fetched,error FROM fetch_log"
+    assert(sqlite3_prepare_v2(db.h, "SELECT status,records_fetched,error,bytes_fetched FROM fetch_log"
                               " WHERE source_id=?1 ORDER BY id DESC LIMIT 1", -1, &s,
                               NULL) == SQLITE_OK);
     sqlite3_bind_text(s, 1, D_REFUSED.id, -1, SQLITE_TRANSIENT);
@@ -185,6 +186,9 @@ int main(void) {
            (const char *)sqlite3_column_text(s, 0), sqlite3_column_int(s, 1),
            err ? err : "(null)");
     assert(err && strstr(err, "2 emitted record(s) refused"));
+    /* transfer bytes are RECORDED for every run — 0 for these in-process fakes,
+     * which made no HTTP request, and never NULL on a row this build wrote */
+    assert(sqlite3_column_type(s, 3) != SQLITE_NULL && sqlite3_column_int64(s, 3) == 0);
     sqlite3_finalize(s);
   }
 

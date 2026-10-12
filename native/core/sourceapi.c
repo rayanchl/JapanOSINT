@@ -1011,7 +1011,7 @@ static cJSON *runs_json(db_handle *db, const char *id, cJSON **out_stats) {
     sqlite3_finalize(st);
   }
   if (sqlite3_prepare_v2(db->h,
-        "SELECT id,timestamp,status,records_fetched,stored,duration_ms,error FROM fetch_log "
+        "SELECT id,timestamp,status,records_fetched,stored,duration_ms,error,bytes_fetched FROM fetch_log "
         "WHERE source_id=?1 ORDER BY timestamp DESC, id DESC LIMIT 20", -1, &st, NULL) == SQLITE_OK) {
     sqlite3_bind_text(st, 1, id, -1, SQLITE_TRANSIENT);
     while (sqlite3_step(st) == SQLITE_ROW) {
@@ -1023,6 +1023,7 @@ static cJSON *runs_json(db_handle *db, const char *id, cJSON **out_stats) {
       col_num_or_null(e, "stored", st, 4);
       col_num_or_null(e, "duration_ms", st, 5);
       add_str_or_null(e, "error", ctext(st, 6));
+      col_num_or_null(e, "bytes_fetched", st, 7);
       cJSON_AddItemToArray(arr, e);
     }
     sqlite3_finalize(st);
@@ -1035,7 +1036,7 @@ static cJSON *runs_json(db_handle *db, const char *id, cJSON **out_stats) {
   cJSON *stats = cJSON_CreateObject();
   if (sqlite3_prepare_v2(db->h,
         "SELECT COUNT(*),SUM(status='ok'),AVG(duration_ms),MAX(timestamp),MIN(timestamp),"
-        "SUM(COALESCE(stored,records_fetched,0)) FROM fetch_log "
+        "SUM(COALESCE(stored,records_fetched,0)),SUM(bytes_fetched),COUNT(bytes_fetched) FROM fetch_log "
         "WHERE source_id=?1 AND timestamp >= datetime('now','-30 days')", -1, &st, NULL) == SQLITE_OK) {
     sqlite3_bind_text(st, 1, id, -1, SQLITE_TRANSIENT);
     if (sqlite3_step(st) == SQLITE_ROW) {
@@ -1048,6 +1049,10 @@ static cJSON *runs_json(db_handle *db, const char *id, cJSON **out_stats) {
       add_str_or_null(stats, "last_run_at", ctext(st, 3));
       add_str_or_null(stats, "first_run_30d_at", ctext(st, 4));
       col_num_or_null(stats, "records_30d", st, 5);
+      /* SUM over a column that is NULL on every row is NULL: not measured,
+       * not zero. runs_with_bytes says how many of the runs carried it. */
+      col_num_or_null(stats, "bytes_30d", st, 6);
+      cJSON_AddNumberToObject(stats, "runs_with_bytes_30d", (double)sqlite3_column_int64(st, 7));
     }
     sqlite3_finalize(st);
   }

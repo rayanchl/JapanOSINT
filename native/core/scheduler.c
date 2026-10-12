@@ -111,6 +111,16 @@ static const char *run_status(int rc, long records, int hosts, int hosts_ok,
  * column for "at least", and writing the floor as though it were the truth
  * would be exactly the quiet over-reporting rule 4b exists to stop; a reader
  * seeing stored < 0 knows the real value is >= -stored. */
+static void fetch_log_set_bytes(db_handle *db, long flid, unsigned long long bytes) {
+  if (flid <= 0) return;
+  sqlite3_stmt *s = NULL;
+  if (sqlite3_prepare_v2(db->h, "UPDATE fetch_log SET bytes_fetched=?1 WHERE id=?2",
+                         -1, &s, NULL) != SQLITE_OK) return;
+  sqlite3_bind_int64(s, 1, (sqlite3_int64)bytes);
+  sqlite3_bind_int64(s, 2, flid);
+  sqlite3_step(s);
+  sqlite3_finalize(s);
+}
 static void fetch_log_set_stored(db_handle *db, long flid, long stored,
                                  int exact) {
   if (!db || !db->h || flid < 0 || stored < 0) return;
@@ -385,6 +395,8 @@ int scheduler_run_source(db_handle *db, const source_def *d,
     int ok = 0;
     if (http_client_host_at(http, i, NULL, &ok) && ok) hosts_ok++;
   }
+  unsigned long long bytes_in = http_client_bytes_in(http);
+  int requests = http_client_request_count(http);
   http_client_free(http);
   /* Read the distinct-row count BEFORE the sink is freed — it lives in the
    * sink_state that free() is about to release. */
@@ -434,8 +446,12 @@ int scheduler_run_source(db_handle *db, const source_def *d,
   if (cs.failed > 0)
     snprintf(fbuf, sizeof fbuf, " failed=%ld EMIT-FAILED: the sink refused %ld"
              " record(s); they are not stored", cs.failed, cs.failed);
-  fprintf(stderr, "[sched] %s run rc=%d records=%ld %ldms %s%s%s%s\n",
-          d->id, rc, cs.n, duration_ms, sbuf, nbuf, fbuf, note);
+  /* bytes= trails the other fields like stored= does: the eight run-line
+   * parsers match `records=N Nms` as one unit and ignore what follows. */
+  char bbuf[64];
+  snprintf(bbuf, sizeof bbuf, " bytes=%llu requests=%d", bytes_in, requests);
+  fprintf(stderr, "[sched] %s run rc=%d records=%ld %ldms %s%s%s%s%s\n",
+          d->id, rc, cs.n, duration_ms, sbuf, nbuf, fbuf, bbuf, note);
 
   /* Stage 0+1: log the run and detect anomalies — but only for real data
    * collectors. The internal pods (_maint, _enrich) emit nothing and would
@@ -454,6 +470,7 @@ int scheduler_run_source(db_handle *db, const source_def *d,
     long flid = fetch_log_write(db, d->id, status, (int)cs.n, duration_ms, why);
     anomaly_detect(db, d->id, flid, status, (int)cs.n, duration_ms);
     fetch_log_set_stored(db, flid, stored, stored_exact);
+    fetch_log_set_bytes(db, flid, bytes_in);
     sources_row_record(db, d->id, status, stored >= 0 ? stored_data : cs.n,
                        duration_ms, why);
     if (!entity) sched_state_record(db, d, status, cs.n);

@@ -1,4 +1,5 @@
 #include "statusapi.h"
+#include "collectortab.h"
 #include "intelapi.h"           /* intelapi_is_intel_id — INTEL_SOURCE_IDS */
 #include "source_registry.h"
 #include "source_trust.h"
@@ -326,6 +327,21 @@ static cJSON *status_row(sqlite3_stmt *s, agg_t *A, int na,
   cJSON_AddItemToObject(o,"free",
     m ? cJSON_CreateBool(m->free) : cJSON_CreateNull());
   add_str_or_null(o,"layer", m && m->layer && m->layer[0] ? m->layer : NULL);
+  /* The collector a source belongs to (every registered source has exactly
+   * one; hpengine rows default to their table's name), its display label from
+   * core/collectors.def, the engine that runs it, and its kind. The iOS
+   * dashboard groups on `collector`; it used to group on `layer`, which only
+   * ~1% of sources declare, so 99% sat in one "Uncategorised" bucket. */
+  {
+    const source_def *d = registry_get(id);
+    const collector_meta *cm = d ? collector_meta_get(d->collector) : NULL;
+    add_str_or_null(o,"collector", d ? d->collector : NULL);
+    add_str_or_null(o,"collectorLabel", cm ? cm->label : NULL);
+    add_str_or_null(o,"engine", d ? (d->engine && d->engine[0] ? d->engine : "native") : NULL);
+    add_str_or_null(o,"kind", d ? (d->collector && d->collector[0] == '_' ? "internal"
+                                 : d->update_interval_sec > 0 ? "scheduled"
+                                 : registry_is_entity_pivot(d) ? "pivot" : "unreachable") : NULL);
+  }
   cJSON_AddItemToObject(o,"updateInterval",
     (m && m->update_interval > 0) ? cJSON_CreateNumber((double)m->update_interval)
                                   : cJSON_CreateNull());
@@ -424,6 +440,10 @@ static cJSON *breach_status_row(const breach_src_row *br) {
   cJSON_AddNullToObject(o, "nameJa");
   add_str_or_null(o, "type", "dataset");
   add_str_or_null(o, "category", "breach");
+  add_str_or_null(o, "collector", "_breach");
+  add_str_or_null(o, "collectorLabel", "Breach corpus");
+  add_str_or_null(o, "engine", "breach");
+  add_str_or_null(o, "kind", "corpus");
   add_str_or_null(o, "url", br->domain[0] ? br->domain : NULL);
   add_str_or_null(o, "description", desc);
   cJSON_AddBoolToObject(o, "free", 1);

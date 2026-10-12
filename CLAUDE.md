@@ -473,6 +473,13 @@ underneath them that older notes in this file predate:
   and (hpengine) an entity token in the URL/body. `collector=="osint"` is no
   longer part of the definition.
 
+* **`fetch_log.bytes_fetched`** (2026-10-12) is the run's transfer size —
+  every response body `http_client` received, retries included — and the run
+  line ends ` bytes=N requests=M`. NULL = a row from before the column.
+* `/api/status` rows carry `collector`, `collectorLabel`, `engine`, `kind`;
+  the iOS dashboard groups on `collector` (it grouped on `layer`, which ~1% of
+  sources declare).
+
 Plan, audit and as-built notes: `docs/source-pages-revamp/`.
 
 ## Where things live

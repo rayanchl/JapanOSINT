@@ -14,7 +14,8 @@
 
 typedef struct { char *host; int requests; int ok; } host_log;
 
-struct http_client { CURLSH *share; host_log *hosts; int n_hosts, cap_hosts; };
+struct http_client { CURLSH *share; host_log *hosts; int n_hosts, cap_hosts;
+                     unsigned long long bytes_in; int requests; };
 
 /* Record one request's host (parsed from the effective URL) + outcome. */
 static void log_host(http_client *c, const char *url, long status, int hard) {
@@ -590,6 +591,10 @@ int http_request(http_client *c, const char *method, const char *url,
   for (;;) {
     http_response r = {0};
     int hard = do_once(c, method, url, headers, body, body_len, timeout_ms, &r);
+    /* Every attempt's body counts, retried ones included: transfer is what
+     * the upstream sent us, not what we kept. */
+    c->bytes_in += (unsigned long long)r.body_len;
+    c->requests++;
     int retryable = hard || (r.status >= 500 && r.status <= 599) || r.status == 429;
     if (!retryable || attempt >= retries) {
       *out = r;
@@ -621,3 +626,6 @@ int http_request(http_client *c, const char *method, const char *url,
 void http_response_free(http_response *r) {
   if (r && r->body) { free(r->body); r->body = NULL; r->body_len = 0; r->status = 0; }
 }
+
+unsigned long long http_client_bytes_in(const http_client *c) { return c ? c->bytes_in : 0; }
+int http_client_request_count(const http_client *c) { return c ? c->requests : 0; }

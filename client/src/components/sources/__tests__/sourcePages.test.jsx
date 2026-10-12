@@ -150,7 +150,7 @@ describe('SourceDetailPage', () => {
     expect(screen.getAllByText(/2.0 KB/).length).toBeGreaterThan(0);         // db text size (data + size sections)
     expect(screen.getAllByText(new RegExp(NOT_MEASURED)).length).toBeGreaterThan(0);   // nulls say so
     expect(screen.getByText(/this source has never run/)).toBeTruthy();
-    expect(screen.getByText(/not recorded — fetch_log carries no byte count/)).toBeTruthy();
+    expect(screen.getAllByText(/never run|no runs in 30 days/).length).toBeGreaterThan(0);   // transfer rows say so for a source that never ran
   });
   it('shows the llm status and the facts, never prose, when the model is unreachable', async () => {
     mockFetch((url) => {
