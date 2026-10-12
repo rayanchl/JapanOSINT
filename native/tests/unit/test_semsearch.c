@@ -254,6 +254,72 @@ static void test_s1_filters(void) {
          "counted, bad filter 400: ok\n");
 }
 
+/* ---- S1 over the query string; S4: similar ------------------------------- */
+
+static cJSON *route(semsearch_route_fn fn, const char *tenant, const char *id,
+                    const char *qs, int want) {
+  int st = 0;
+  char *b = fn(&g_db, tenant, id, qs, 0, &st);
+  if (st != want) fprintf(stderr, "status %d (want %d): %s\n", st, want, b ? b : "");
+  assert(st == want && b);
+  cJSON *j = cJSON_Parse(b);
+  free(b);
+  assert(j);
+  return j;
+}
+
+static void test_s4_similar(void) {
+  /* the S1 corpus is still in place */
+  cJSON *j = route(semsearchapi_http, "t1", "",
+                   "q=harbour%20crane&mode=vector&source=src-b&k=3", 200);
+  assert(jnum(j, "meta.total") == 1 && has_uid(j, "b-far"));
+  cJSON_Delete(j);
+  char big[1400];
+  memset(big, 'x', sizeof big - 1); big[sizeof big - 1] = 0;
+  memcpy(big, "q=", 2);
+  j = route(semsearchapi_http, "t1", "", big, 414);
+  cJSON_Delete(j);
+
+  /* neighbours of a0 are the other a* rows; a0 itself is excluded and
+   * o-1 (another tenant's identical text) is not reachable */
+  j = route(semsearchapi_similar, "t1", "a0", "k=5", 200);
+  assert(!has_uid(j, "a0") && !has_uid(j, "o-1"));
+  assert(jnum(j, "meta.shown") == 5 && jnum(j, "meta.excluded_self") == 1);
+  assert(jnum(j, "meta.total") == 5);
+  cJSON *first = cJSON_GetArrayItem(cJSON_GetObjectItem(j, "data"), 0);
+  assert(!strncmp(cJSON_GetObjectItem(first, "uid")->valuestring, "a", 1));
+  assert(jget(j, "meta.coverage"));
+  cJSON_Delete(j);
+  /* with a filter inside the KNN */
+  j = route(semsearchapi_similar, "t1", "a0", "k=5&source=src-b", 200);
+  assert(jnum(j, "meta.total") == 1 && has_uid(j, "b-far"));
+  cJSON_Delete(j);
+  /* another tenant's item: 404, same as one that does not exist */
+  j = route(semsearchapi_similar, "t1", "o-1", "", 404);
+  cJSON_Delete(j);
+  j = route(semsearchapi_similar, "t1", "nope", "", 404);
+  cJSON_Delete(j);
+  /* no embedding server needed: the stored vector is the query */
+  char *saved = strdup(getenv("JO_EMBED_URL"));
+  unsetenv("JO_EMBED_URL");
+  j = route(semsearchapi_similar, "t1", "a1", "k=2", 200);
+  assert(jnum(j, "meta.shown") == 2);
+  cJSON_Delete(j);
+  setenv("JO_EMBED_URL", saved, 1);
+  free(saved);
+  /* a visible row the pod has not reached: 409 with coverage, not a 404 */
+  row rn = { "new-1", "src-a", "freshly fetched harbour notice", "news", NULL,
+             "t1", "en", NOGEO };
+  put(&rn);
+  j = route(semsearchapi_similar, "t1", "new-1", "", 409);
+  assert(!strcmp(jget(j, "error")->valuestring, "not_embedded"));
+  assert(jget(j, "meta.coverage"));
+  cJSON_Delete(j);
+  sql("DELETE FROM intel_items WHERE uid='new-1'");
+  printf("  S4: similar excludes itself, tenant-scoped, no embed call, "
+         "409 not_embedded with coverage; S1 query string + 414: ok\n");
+}
+
 int main(void) {
   const char *dbp = getenv("JO_DB");
   assert(dbp && "run.sh sets JO_DB to a scratch database");
@@ -277,6 +343,7 @@ int main(void) {
   setenv("JO_EMBED_URL", url, 1);
 
   test_s1_filters();
+  test_s4_similar();
 
   stub_stop();
   db_close(&g_db);

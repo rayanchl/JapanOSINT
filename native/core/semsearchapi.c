@@ -5,6 +5,7 @@
 #include "fts.h"
 #include "llm.h"
 #include "../third_party/cJSON.h"
+#include "../third_party/mongoose.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -600,4 +601,194 @@ char *semsearchapi_query(db_handle *db, const char *tenant, const char *q,
                          int *status) {
   return semsearchapi_query_ex(db, tenant, q, mode, limit, k, is_operator, NULL,
                                status);
+}
+
+/* ---- the raw query string ------------------------------------------------ */
+
+/* mg_http_get_var: -3 = the value would not fit. A clipped filter is a
+ * DIFFERENT filter, so that is a 414, never half of what was asked
+ * (httpd.c qvar() is the same rule). */
+static int qs_get(const char *qs, const char *k, char *out, size_t cap,
+                  int *too_long) {
+  struct mg_str s = mg_str(qs ? qs : "");
+  int n = mg_http_get_var(&s, k, out, cap);
+  if (n == -3) *too_long = 1;
+  if (n <= 0) out[0] = 0;
+  return n > 0;
+}
+
+typedef struct {
+  char q[1024], mode[16], source[1024], rtype[64], since[48], until[48],
+       lang[16], bbox[96], limit[16], k[16];
+} sem_params;
+
+/* 0, or -1 when a value was too long (the caller answers 414). */
+static int parse_params(const char *qs, sem_params *p, semsearch_filters *f) {
+  int tl = 0;
+  memset(p, 0, sizeof *p);
+  qs_get(qs, "q", p->q, sizeof p->q, &tl);
+  qs_get(qs, "mode", p->mode, sizeof p->mode, &tl);
+  qs_get(qs, "limit", p->limit, sizeof p->limit, &tl);
+  qs_get(qs, "k", p->k, sizeof p->k, &tl);
+  qs_get(qs, "source", p->source, sizeof p->source, &tl);
+  qs_get(qs, "record_type", p->rtype, sizeof p->rtype, &tl);
+  qs_get(qs, "since", p->since, sizeof p->since, &tl);
+  qs_get(qs, "until", p->until, sizeof p->until, &tl);
+  qs_get(qs, "lang", p->lang, sizeof p->lang, &tl);
+  qs_get(qs, "bbox", p->bbox, sizeof p->bbox, &tl);
+  *f = (semsearch_filters){ p->source, p->rtype, p->since, p->until, p->lang,
+                            p->bbox };
+  return tl ? -1 : 0;
+}
+
+static char *too_long(int *status) {
+  return fail(status, 414, "filter_too_long", "a query parameter exceeded its "
+              "maximum length; half a query cannot be honoured", NULL);
+}
+
+char *semsearchapi_http(db_handle *db, const char *tenant, const char *id,
+                        const char *qs, int is_operator, int *status) {
+  sem_params p;
+  semsearch_filters f;
+  if (parse_params(qs, &p, &f) != 0) return too_long(status);
+  return semsearchapi_query_ex(db, tenant, p.q, p.mode, atoi(p.limit),
+                               atoi(p.k), is_operator, &f, status);
+}
+
+/* ---- GET /api/intel/items/:uid/similar ----------------------------------- */
+
+/* 1 when `uid` is a row the caller may read (tenant + shared corpus). */
+static int item_visible(db_handle *db, const char *tenant, const char *uid) {
+  sqlite3_stmt *s;
+  const char *sql = (tenant && *tenant)
+    ? "SELECT 1 FROM intel_items WHERE uid=?1 AND tenant_id IN (?2,'legacy')"
+    : "SELECT 1 FROM intel_items WHERE uid=?1";
+  if (sqlite3_prepare_v2(db->h, sql, -1, &s, NULL) != SQLITE_OK) return 0;
+  sqlite3_bind_text(s, 1, uid, -1, SQLITE_STATIC);
+  if (tenant && *tenant) sqlite3_bind_text(s, 2, tenant, -1, SQLITE_STATIC);
+  int ok = sqlite3_step(s) == SQLITE_ROW;
+  sqlite3_finalize(s);
+  return ok;
+}
+
+/* Why the pod has no vector for `uid`: the fail table's reason, or NULL. */
+static char *failed_reason(db_handle *db, const char *uid) {
+  if (!vecindex_table_exists(db, EMBED_FAIL_TABLE)) return NULL;
+  sqlite3_stmt *s;
+  char *r = NULL;
+  if (sqlite3_prepare_v2(db->h, "SELECT reason FROM " EMBED_FAIL_TABLE
+                         " WHERE uid=?1", -1, &s, NULL) != SQLITE_OK) return NULL;
+  sqlite3_bind_text(s, 1, uid, -1, SQLITE_STATIC);
+  if (sqlite3_step(s) == SQLITE_ROW && sqlite3_column_text(s, 0))
+    r = strdup((const char *)sqlite3_column_text(s, 0));
+  sqlite3_finalize(s);
+  return r;
+}
+
+/* A stored vector that the index cannot answer about is told apart from "no
+ * such item": 503 (no index at all), or 409 not_embedded with the coverage
+ * block and, when the server refused the row, the reason it gave. */
+static char *not_embedded(db_handle *db, const char *what, const char *reason,
+                          int *status) {
+  char d[600];
+  if (reason)
+    snprintf(d, sizeof d, "%s has no vector: the embedding server refused its "
+             "text (%.300s); it is retried when the text changes", what, reason);
+  else
+    snprintf(d, sizeof d, "%s has no vector yet: the embedding pod has not "
+             "reached it (see coverage.backlog); nothing is ranked against a "
+             "vector that does not exist", what);
+  return fail(status, 409, "not_embedded", d, embed_coverage_json(db));
+}
+
+char *semsearchapi_similar(db_handle *db, const char *tenant, const char *uid,
+                           const char *qs, int is_operator, int *status) {
+  *status = 500;
+  if (!uid || !*uid) return fail(status, 400, "missing_uid", NULL, NULL);
+  sem_params p;
+  semsearch_filters flt;
+  if (parse_params(qs, &p, &flt) != 0) return too_long(status);
+  int k = atoi(p.k);
+  if (k <= 0) k = 20;
+  if (k > 200) k = 200;
+  /* Not visible and not existing answer the same 404: whether another
+   * tenant's uid exists is information about that tenant. */
+  if (!item_visible(db, tenant, uid))
+    return fail(status, 404, "not_found", NULL, NULL);
+  if (!embed_table_exists(db))
+    return fail(status, 503, "semantic_unavailable",
+                "the embedding pod has not built an index yet",
+                embed_coverage_json(db));
+  semsearch_rf rf;
+  char ferr[48];
+  if (semsearch_resolve(db, &flt, &rf, ferr, sizeof ferr) != 0)
+    return fail(status, 400, ferr, "a filter could not be read; nothing was "
+                "searched rather than searching without it", NULL);
+
+  /* The item's OWN stored vector: no embedding call, so no server is needed
+   * and a refused/swapped server does not matter — every stored vector is in
+   * the index's one space. */
+  struct timespec t0; clock_gettime(CLOCK_MONOTONIC, &t0);
+  const vecindex_spec *vs = embed_query_spec(db);
+  float *v = NULL; int dim = 0;
+  int lr = vecindex_load(db, vs, uid, &v, &dim);
+  if (lr != 0) {
+    semsearch_rf_free(&rf);
+    if (lr < 0) return fail(status, 500, "vector_read_failed",
+                            sqlite3_errmsg(db->h), NULL);
+    char *why = failed_reason(db, uid);
+    char *b = not_embedded(db, "this item", why, status);
+    free(why);
+    return b;
+  }
+  /* k + 1: the item is its own nearest neighbour and is excluded. */
+  vecindex_hit *h = NULL;
+  char err[256];
+  int in_knn = 0;
+  int n = semsearch_knn(db, tenant, v, dim, k + 1, &rf, &h, &in_knn, err, sizeof err);
+  free(v);
+  if (n < 0) { semsearch_rf_free(&rf);
+               return fail(status, 500, "vector_query_failed", err, NULL); }
+  vecindex_fused L = {0};
+  int vector_hits = vecindex_fused_add_hits(&L, h, n);
+  vecindex_hits_free(h, n);
+  /* RRF with one arm: the score is 1/(60+rank), the order is the KNN's. */
+  vecindex_fused_sort(&L);
+  cJSON *data = cJSON_CreateArray();
+  sem_counts c;
+  const char *self[1] = { uid };
+  if (materialize(db, tenant, is_operator, &L, 0, k, &rf, self, 1, data, &c) != 0) {
+    cJSON_Delete(data); vecindex_fused_free(&L); semsearch_rf_free(&rf);
+    return fail(status, 500, "server_error", sqlite3_errmsg(db->h), NULL);
+  }
+  cJSON *meta = cJSON_CreateObject();
+  cJSON_AddStringToObject(meta, "mode", "similar");
+  cJSON_AddStringToObject(meta, "uid", uid);
+  cJSON_AddNumberToObject(meta, "k", k);
+  cJSON_AddNumberToObject(meta, "vector_hits", vector_hits);
+  cJSON_AddNumberToObject(meta, "excluded_self", c.excluded);
+  cJSON_AddBoolToObject(meta, "knn_partitioned",
+                        (vs == &embed_intel_spec) && tenant && *tenant);
+  cJSON_AddItemToObject(meta, "filters", filters_meta(&flt, &rf, in_knn, &c));
+  if (is_operator) {
+    cJSON_AddNumberToObject(meta, "tenant_withheld", c.withheld);
+    cJSON_AddNumberToObject(meta, "index_orphans", c.orphans);
+  }
+  cJSON_AddNumberToObject(meta, "shown", c.shown);
+  cJSON_AddNumberToObject(meta, "total", c.visible);
+  cJSON_AddBoolToObject(meta, "truncated", c.visible > c.shown);
+  cJSON_AddStringToObject(meta, "note",
+    "the k nearest rows by the item's stored vector (no embedding call); "
+    "total counts what that KNN returned, not every row with any similarity");
+  cJSON_AddNumberToObject(meta, "total_ms", (double)ms_since(&t0));
+  cJSON_AddItemToObject(meta, "coverage", embed_coverage_json(db));
+  vecindex_fused_free(&L);
+  semsearch_rf_free(&rf);
+  cJSON *env = cJSON_CreateObject();
+  cJSON_AddItemToObject(env, "data", data);
+  cJSON_AddItemToObject(env, "meta", meta);
+  char *out = cJSON_PrintUnformatted(env);
+  cJSON_Delete(env);
+  *status = out ? 200 : 500;
+  return out;
 }

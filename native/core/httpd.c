@@ -1539,14 +1539,14 @@ static void *iso_thread(void *vp) {
  * server's worker is shared with the backfill pod, whose batches run for up
  * to 120 s; inline, a query queued behind one held the whole HTTP server
  * (measured: /api/health took 7 s during an 8 s embed). Its own connection,
- * for the same reason as iso_thread's. */
+ * for the same reason as iso_thread's. Every route that ranks by the vector
+ * index goes through this one job (semsearch_route_fn): a KNN over a large
+ * index is a scan, and the ones that embed a query make network calls. */
 typedef struct {
   struct mg_mgr *mgr; unsigned long cid;
-  char tenant[128], q[1024], mode[16];
-  /* S1 filters (semsearchapi.h): source list, record_type, since/until in the
-   * KNN; lang and bbox as counted post-filters. */
-  char source[1024], rtype[64], since[48], until[48], lang[16], bbox[96];
-  int limit, k, op;
+  semsearch_route_fn fn;
+  char tenant[128], id[600], qs[4096];
+  int op;
 } sem_arg;
 
 static void *sem_thread(void *vp) {
@@ -1554,16 +1554,39 @@ static void *sem_thread(void *vp) {
   db_handle own;
   db_handle *db = db_worker_open(&own, g_db);
   int st = 500;
-  semsearch_filters f = { a->source, a->rtype, a->since, a->until, a->lang,
-                           a->bbox };
-  char *body = semsearchapi_query_ex(db, a->tenant[0] ? a->tenant : NULL, a->q,
-                                     a->mode, a->limit, a->k, a->op, &f, &st);
+  char *body = a->fn(db, a->tenant[0] ? a->tenant : NULL, a->id, a->qs, a->op, &st);
   db_worker_close(&own);
   if (body) wakeup_reply_big(a->mgr, a->cid, st, body);   /* consumes body */
   else      wakeup_reply(a->mgr, a->cid, 500, "{\"error\":\"server_error\"}");
   free(a);
   worker_release();
   return NULL;
+}
+
+/* Run `fn` on a worker; always replies (now, or deferred to MG_EV_WAKEUP). */
+static void sem_spawn(struct mg_connection *c, struct mg_http_message *hm,
+                      semsearch_route_fn fn, const char *tenant, const char *id,
+                      int op) {
+  if (hm->query.len >= sizeof ((sem_arg *)0)->qs) {
+    reply_json(c, 414, "{\"error\":\"query_string_too_long\"}"); return; }
+  if (!worker_admit()) { reply_busy(c); return; }
+  sem_arg *sa = calloc(1, sizeof *sa);
+  if (sa) {
+    sa->mgr = c->mgr; sa->cid = c->id; sa->fn = fn; sa->op = op;
+    snprintf(sa->tenant, sizeof sa->tenant, "%s", tenant ? tenant : "");
+    snprintf(sa->id, sizeof sa->id, "%s", id ? id : "");
+    memcpy(sa->qs, hm->query.buf, hm->query.len);
+    pthread_t th;
+    if (pthread_create(&th, NULL, sem_thread, sa) == 0) {
+      pthread_detach(th);
+      return;          /* reply deferred to MG_EV_WAKEUP — loop stays free */
+    }
+    free(sa);
+  }
+  worker_release();
+  /* No thread (allocation failure): refuse rather than run a network call
+   * or an index scan on the event loop, which is the stall this moved off. */
+  reply_busy(c);
 }
 
 typedef struct { struct mg_mgr *mgr; unsigned long cid; char *q; } suggest_arg;
@@ -2339,6 +2362,15 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         reply_json(c, st, body ? body : "{\"error\":\"server_error\"}");
         free(body); return;
       }
+      /* GET /api/intel/items/:uid/similar?k= — nearest rows to the item's
+       * stored vector (semsearchapi_similar; no embedding call). Off-loop:
+       * the KNN is an index scan. */
+      if (seg(u, "/api/intel/items/", "/similar", pe, sizeof pe)) {
+        tenant_ctx tc;
+        if (intel_tenant_or_reply(c, hm, &usr, &tc) != 0) return;
+        sem_spawn(c, hm, semsearchapi_similar, tc.tenant_id, pe, opgate_check(&usr) == 0);
+        return;
+      }
     }
 
     /* GET /api/intel/items/:uid  (uid is URL-encoded; may contain '|',':') */
@@ -2487,55 +2519,14 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
 
     /* GET /api/intel/semantic?q=&mode=hybrid|vector&limit=&k=[&source=a,b
      * &record_type=&since=&until=&lang=&bbox=w,s,e,n] — vector /
-     * hybrid (RRF) search over the sqlite-vec index (core/semsearchapi.c).
-     * Tenant-resolved like the ?near= mode of /api/intel/items above, and for
-     * the same reason: the vector arm ranks over the whole index, so rows are
-     * filtered to `tenant_id IN (?,'legacy')` on the way out. */
+     * hybrid (RRF) search over the sqlite-vec index (core/semsearchapi.c),
+     * which parses the query string itself. Tenant-resolved: the KNN runs
+     * inside the caller's tenant partitions + the shared corpus. */
     if (eq(u, "/api/intel/semantic")) {
-      char sq[1024] = {0}, smode[16] = {0}, slim[16] = {0}, sk[16] = {0};
-      sem_arg fl = {0};
-      int stl = 0;
-      qvar(hm, "q", sq, sizeof sq, &stl);
-      qvar(hm, "mode", smode, sizeof smode, &stl);
-      qvar(hm, "limit", slim, sizeof slim, &stl);
-      qvar(hm, "k", sk, sizeof sk, &stl);
-      qvar(hm, "source", fl.source, sizeof fl.source, &stl);
-      qvar(hm, "record_type", fl.rtype, sizeof fl.rtype, &stl);
-      qvar(hm, "since", fl.since, sizeof fl.since, &stl);
-      qvar(hm, "until", fl.until, sizeof fl.until, &stl);
-      qvar(hm, "lang", fl.lang, sizeof fl.lang, &stl);
-      qvar(hm, "bbox", fl.bbox, sizeof fl.bbox, &stl);
-      if (stl) { reply_json(c, 414,
-        "{\"error\":\"filter_too_long\",\"detail\":\"a query parameter exceeded "
-        "its maximum length; half a query cannot be honoured\"}"); return; }
-      struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
-      char xtid[128] = {0};
-      if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len]=0; }
       tenant_ctx tc;
-      int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
-      if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
-      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
-      if (!worker_admit()) { reply_busy(c); return; }
-      sem_arg *sa = calloc(1, sizeof *sa);
-      if (sa) {
-        *sa = fl;
-        sa->mgr = c->mgr; sa->cid = c->id;
-        snprintf(sa->tenant, sizeof sa->tenant, "%s", tc.tenant_id);
-        snprintf(sa->q, sizeof sa->q, "%s", sq);
-        snprintf(sa->mode, sizeof sa->mode, "%s", smode);
-        sa->limit = atoi(slim); sa->k = atoi(sk);
-        sa->op = (opgate_check(&usr) == 0);
-        pthread_t th;
-        if (pthread_create(&th, NULL, sem_thread, sa) == 0) {
-          pthread_detach(th);
-          return;        /* reply deferred to MG_EV_WAKEUP — loop stays free */
-        }
-        free(sa);
-      }
-      worker_release();
-      /* No thread (allocation failure): refuse rather than run a network
-       * call on the event loop, which is the stall this route moved off. */
-      reply_busy(c); return;
+      if (intel_tenant_or_reply(c, hm, &usr, &tc) != 0) return;
+      sem_spawn(c, hm, semsearchapi_http, tc.tenant_id, "", opgate_check(&usr) == 0);
+      return;
     }
 
     /* GET /api/intel/search — alias of /api/intel/items */

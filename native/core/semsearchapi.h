@@ -1,5 +1,6 @@
 /* core/semsearchapi.h — GET /api/intel/semantic: vector and hybrid search
- * over the sqlite-vec index that core/embed_pod.c maintains.
+ * over the sqlite-vec index that core/embed_pod.c maintains — and the other
+ * routes that rank by that index (/similar below).
  *
  *   ?q=<text>            required
  *   &mode=hybrid|vector  default hybrid
@@ -129,5 +130,28 @@ char *semsearchapi_query(db_handle *db, const char *tenant, const char *q,
 char *semsearchapi_query_ex(db_handle *db, const char *tenant, const char *q,
                             const char *mode, int limit, int k, int is_operator,
                             const semsearch_filters *f, int *status);
+
+/* THE WORKER-ROUTE SHAPE. Every vector route answers through one signature so
+ * httpd.c runs them all through one off-loop job (sem_spawn): `tenant` is the
+ * resolved tenant (NULL/"" = unscoped), `id` the path parameter (an item uid,
+ * a case id; "" when the route has none), `qs` the raw query string, parsed
+ * here — a value too long for its buffer is a 414, never half a filter. */
+typedef char *(*semsearch_route_fn)(db_handle *db, const char *tenant,
+                                    const char *id, const char *qs,
+                                    int is_operator, int *status);
+
+/* GET /api/intel/semantic — semsearchapi_query_ex() over the query string. */
+char *semsearchapi_http(db_handle *db, const char *tenant, const char *id,
+                        const char *qs, int is_operator, int *status);
+
+/* GET /api/intel/items/:uid/similar?k=N (1..200, default 20) plus the S1
+ * filters. The k nearest rows to the item's OWN stored vector
+ * (vecindex_load; no embedding call, so no server need answer), inside the
+ * caller's tenant partitions, the item itself excluded (meta.excluded_self).
+ * 404 when the item is not visible to the caller; 409 `not_embedded` with
+ * coverage (and the server's refusal reason when there is one) when the item
+ * has no vector yet; 503 when there is no index at all. */
+char *semsearchapi_similar(db_handle *db, const char *tenant, const char *uid,
+                           const char *qs, int is_operator, int *status);
 
 #endif
