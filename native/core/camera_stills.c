@@ -75,6 +75,7 @@
 #include "ffmpeg.h"         /* THE video seam — this file no longer has one   */
 #include "hostgate.h"       /* the SSRF floor every outbound fetch must clear */
 #include "httpclient.h"     /* http_client_global_init() — the one curl init */
+#include "image_vec.h"      /* a pruned frame's image-index ref goes with it   */
 #include "media.h"
 #include "operatorgate.h"
 #include "../source.h"
@@ -937,6 +938,11 @@ int camera_stills_prune_camera(db_handle *db, const char *camera_id) {
   int n = 0;
   if (sqlite3_step(s) == SQLITE_DONE) n = sqlite3_changes(db->h);
   sqlite3_finalize(s);
+  /* The image index points at frames by ref; a pruned frame's ref goes in
+   * the same transaction, and its vector with it once nothing else (another
+   * frame with the same bytes) points there. A no-op when it was never
+   * built. */
+  if (n > 0) image_vec_unref_stills(db, camera_id);
   return n;
 }
 
