@@ -339,6 +339,29 @@ struct API: Sendable {
         }
         return try await get("/api/intel/items", query: qs)
     }
+    // ── Vector search (core/semsearchapi.c) ───────────────────────────────
+    /// GET /api/intel/semantic — hybrid (RRF of vector + full-text) or
+    /// vector-only ranking over the embedding index. A 503 means the server
+    /// has no usable index — not an empty result; `SemanticErrorBody.message`
+    /// turns the body into the reason to show.
+    func intelSemantic(q: String, mode: String = "hybrid", limit: Int = 50) async throws -> SemanticEnvelope {
+        try await get("/api/intel/semantic", query: [
+            URLQueryItem(name: "q", value: q),
+            URLQueryItem(name: "mode", value: mode),
+            URLQueryItem(name: "limit", value: String(limit)),
+        ])
+    }
+    /// GET /api/intel/items/:uid/similar — the rows nearest this item's stored
+    /// vector (no embedding call on the server). 409 `not_embedded` when the
+    /// item has no vector yet. The uid is percent-encoded: uids carry `|` and
+    /// `:`, which a URL string cannot hold raw.
+    func similarItems(uid: String, k: Int = 20) async throws -> SemanticEnvelope {
+        let enc = uid.addingPercentEncoding(
+            withAllowedCharacters: .alphanumerics.union(CharacterSet(charactersIn: "-._~"))) ?? uid
+        return try await get("/api/intel/items/\(enc)/similar",
+                             query: [URLQueryItem(name: "k", value: String(k))])
+    }
+
     func intelItem(uid: String) async throws -> IntelItem {
         let env: IntelItemEnvelope = try await get("/api/intel/items/\(uid)")
         return env.data
