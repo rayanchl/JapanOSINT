@@ -24,6 +24,8 @@
 #include "nearapi.h"
 #include "cors.h"
 #include "semsearchapi.h"
+#include "storyapi.h"
+#include "alert_sem.h"
 #include "qembed.h"        /* qembed_enabled: does /api/search/suggest retrieve? */
 #include "camera_stills.h"
 #include "cameraproxy.h"
@@ -1590,6 +1592,42 @@ static void sem_spawn(struct mg_connection *c, struct mg_http_message *hm,
   reply_busy(c);
 }
 
+/* POST /api/alerts/preview for a semantic rule: sem_spawn's job, but the
+ * predicate arrives in the BODY, so it carries its own copy. */
+typedef struct {
+  struct mg_mgr *mgr; unsigned long cid;
+  char tenant[128]; char *pj, *since;
+} apv_arg;
+static void *apv_thread(void *vp) {
+  apv_arg *a = vp;
+  db_handle own;
+  db_handle *db = db_worker_open(&own, g_db);
+  int st = 500;
+  char *body = alert_eval_preview(db, a->tenant, a->pj, a->since, &st);
+  db_worker_close(&own);
+  if (body) wakeup_reply_big(a->mgr, a->cid, st, body);
+  else      wakeup_reply(a->mgr, a->cid, 500, "{\"error\":\"server_error\"}");
+  free(a->pj); free(a->since); free(a);
+  worker_release();
+  return NULL;
+}
+static void apv_spawn(struct mg_connection *c, const char *tenant,
+                      const char *pj, const char *since) {
+  if (!worker_admit()) { reply_busy(c); return; }
+  apv_arg *a = calloc(1, sizeof *a);
+  if (a) {
+    a->mgr = c->mgr; a->cid = c->id;
+    snprintf(a->tenant, sizeof a->tenant, "%s", tenant ? tenant : "");
+    a->pj = pj ? strdup(pj) : NULL;
+    a->since = since ? strdup(since) : NULL;
+    pthread_t th;
+    if (pthread_create(&th, NULL, apv_thread, a) == 0) { pthread_detach(th); return; }
+    free(a->pj); free(a->since); free(a);
+  }
+  worker_release();
+  reply_busy(c);
+}
+
 typedef struct {
   struct mg_mgr *mgr; unsigned long cid; char *q;
   char tenant[64];        /* "" = no workspace resolved: no history arm */
@@ -2421,6 +2459,16 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       }
     }
 
+    /* GET /api/stories/:id — members of one story (core/storyapi.c). */
+    if (starts(u, "/api/stories/") && u.len > 13 && u.len - 13 < 64) {
+      char sid[64] = {0};
+      memcpy(sid, u.buf + 13, u.len - 13);
+      tenant_ctx tc;
+      if (intel_tenant_or_reply(c, hm, &usr, &tc) != 0) return;
+      sem_spawn(c, hm, storyapi_get, tc.tenant_id, sid, opgate_check(&usr) == 0);
+      return;
+    }
+
     /* GET /api/intel/items/:uid  (uid is URL-encoded; may contain '|',':') */
     if (starts(u, "/api/intel/items/") && u.len > 17) {
       char enc[600] = {0}, uid[600] = {0};
@@ -2435,6 +2483,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (intel_tenant_or_reply(c, hm, &usr, &itc) != 0) return;
       char *body = intelapi_item_by_uid_tenant(g_db, uid, itc.tenant_id);
       if (!body) { reply_json(c, 404, "{\"error\":\"not_found\"}"); return; }
+      translate_note_view(g_db, uid);   /* scopes the translate pod (M3) */
       reply_json(c, 200, body);
       free(body);
       return;
@@ -3324,6 +3373,13 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       cJSON *pred = b ? cJSON_GetObjectItem(b, "predicate") : NULL;
       cJSON *sn = b ? cJSON_GetObjectItem(b, "since") : NULL;
       char *pj = pred ? cJSON_PrintUnformatted(pred) : NULL;
+      /* A semantic rule's preview embeds its description and scans the
+       * vector index: off the event loop (apv_spawn). */
+      if (alert_sem_is_semantic(pred)) {
+        apv_spawn(c, tc.tenant_id, pj,
+                  (sn && cJSON_IsString(sn)) ? sn->valuestring : NULL);
+        free(pj); cJSON_Delete(b); return;
+      }
       int status = 200;
       char *body = alert_eval_preview(g_db, tc.tenant_id, pj,
         (sn && cJSON_IsString(sn)) ? sn->valuestring : NULL, &status);
@@ -4331,6 +4387,13 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       char *qs = qv; while (*qs == ' ') qs++;
       size_t ql = strlen(qs);
       while (ql && qs[ql-1] == ' ') qs[--ql] = 0;
+      /* ?mode=hybrid embeds the query: off the event loop (entityapi.h). */
+      char mv[16] = {0};
+      if (*qs && mg_http_get_var(&hm->query, "mode", mv, sizeof mv) > 0 &&
+          !strcmp(mv, "hybrid")) {
+        sem_spawn(c, hm, entityapi_search_route, etc.tenant_id, "", e_op);
+        return;
+      }
       /* This used to answer the bare literal {"results":[]}, which is now the
        * one reply on this route without the page/meta envelope every other
        * reply carries — a client would have to special-case it. Left to

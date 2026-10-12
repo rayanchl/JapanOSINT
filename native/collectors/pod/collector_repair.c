@@ -34,6 +34,8 @@
 #include "core/source_registry.h"
 #include "core/url_override.h"
 #include "core/llm_fault.h"
+#include "core/embed_pod.h"
+#include "lib/vecindex.h"
 #include "third_party/cJSON.h"
 #include "third_party/sqlite3.h"
 #include <stdio.h>
@@ -366,10 +368,145 @@ static char *build_sample(const char *body) {
   return sample;
 }
 
-/* Gate (c): 4B-style sanity re-check. Returns 1 if looks_correct, sets reason. */
-static int sanity_ok(llm_client *llm, const char *name, const char *category,
+/* ── Gate (c'): does the new URL's payload look like THIS source? ──────────
+ *
+ * The sanity classifier asks "is this a healthy payload?" and a healthy
+ * payload of the WRONG dataset — a portal's other API, a sibling city's
+ * register at a guessed URL — passes it: records > 0, plausible JSON, and the
+ * swap makes the source report about something else under its own name, the
+ * confident wrong answer of CLAUDE.md 4d. The source's own history says what
+ * it is about: the centroid of its last REPAIR_SEM_CENTROID_N stored item
+ * vectors (intel_vec_v2). The new payload's sample is embedded and must reach
+ * REPAIR_SEM_COS_FLOOR cosine to that centroid.
+ *
+ * 0.70, not the 0.8x of item-to-item comparisons: the sample is raw payload
+ * (JSON keys and values, up to three records) while the stored vectors are of
+ * title + summary text, so even the right dataset scores lower than two items
+ * of it do. A payload of an unrelated dataset or an error/landing page falls
+ * well below it. JO_REPAIR_SEM_FLOOR overrides.
+ *
+ * SKIPPED, and said so in the gate record, when it cannot be measured: no
+ * embedding server, an index refused or built with another model, or fewer
+ * than REPAIR_SEM_MIN_VECTORS stored vectors for the source. Skipping is the
+ * old behaviour, never a pass the record pretends happened. */
+#define REPAIR_SEM_COS_FLOOR   0.70
+#define REPAIR_SEM_CENTROID_N  50
+#define REPAIR_SEM_MIN_VECTORS 5
+
+static double repair_sem_floor(void) {
+  const char *e = getenv("JO_REPAIR_SEM_FLOOR");
+  double v = (e && *e) ? atof(e) : 0;
+  return (v > 0 && v <= 1) ? v : REPAIR_SEM_COS_FLOOR;
+}
+
+/* 1 pass, 0 fail, -1 skipped. Writes {cos, floor, vectors, skipped} to `g`. */
+static int semantic_gate(db_handle *db, http_client *http, const char *source_id,
+                         const char *body, cJSON *g) {
+  cJSON_AddNumberToObject(g, "floor", repair_sem_floor());
+  const char *why = NULL;
+  char buf[300];
+  const char *base = vecindex_base_url();
+  int dim = 0;
+  if (!base) why = "no embedding server configured (JO_EMBED_URL is unset)";
+  else if (!vecindex_exists(db, &embed_intel_spec)) why = "the intel embedding index has not been built";
+  else if (vecindex_refused(db, &embed_intel_spec, NULL, 0)) why = "the intel embedding index is refused";
+  else if ((dim = (int)vecindex_meta_long(db, &embed_intel_spec, "dim")) <= 0)
+    why = "the intel embedding index records no dimension";
+  char model[256], live[256];
+  if (!why) {
+    vecindex_meta_get(db, &embed_intel_spec, "model", model, sizeof model);
+    if (vecindex_detect_model(http, base, live, sizeof live) != 0 || strcmp(model, live) != 0) {
+      snprintf(buf, sizeof buf, "the embedding server does not serve the index's model");
+      why = buf;
+    }
+  }
+  /* the centroid of the source's most recent stored vectors */
+  double *cen = NULL;
+  int nv = 0;
+  if (!why) {
+    cen = calloc((size_t)dim, sizeof *cen);
+    sqlite3_stmt *s;
+    if (cen && sqlite3_prepare_v2(db->h, "SELECT d.uid FROM intel_vec_done d"
+          " JOIN intel_items i ON i.uid=d.uid WHERE i.source_id=?1"
+          " ORDER BY i.fetched_at DESC LIMIT ?2", -1, &s, NULL) == SQLITE_OK) {
+      sqlite3_bind_text(s, 1, source_id, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_int(s, 2, REPAIR_SEM_CENTROID_N);
+      while (sqlite3_step(s) == SQLITE_ROW) {
+        float *v = NULL; int d = 0;
+        if (vecindex_load(db, &embed_intel_spec, (const char *)sqlite3_column_text(s, 0),
+                          &v, &d) == 0 && d == dim) {
+          for (int k = 0; k < dim; k++) cen[k] += v[k];
+          nv++;
+        }
+        free(v);
+      }
+      sqlite3_finalize(s);
+    }
+    if (nv < REPAIR_SEM_MIN_VECTORS) {
+      snprintf(buf, sizeof buf, "only %d stored item vector(s) for this source "
+               "(need %d)", nv, REPAIR_SEM_MIN_VECTORS);
+      why = buf;
+    }
+  }
+  cJSON_AddNumberToObject(g, "vectors", nv);
+  float *q = NULL;
+  int qd = 0;
+  if (!why) {
+    char *sample = build_sample(body);
+    char *bounded = sample ? embed_bound_text(sample) : NULL;
+    free(sample);
+    llm_client llm = { .http = http, .base_url = base, .interactive = 0 };
+    const char *texts[1] = { bounded ? bounded : "" };
+    llm_status st;
+    if (!bounded || llm_embed(&llm, texts, 1, &q, &qd, 30000, &st) != 0 || qd != dim) {
+      snprintf(buf, sizeof buf, "embedding the new payload failed");
+      why = buf;
+    }
+    free(bounded);
+  }
+  int rc = -1;
+  if (!why) {
+    float *cf = malloc((size_t)dim * sizeof *cf);
+    if (cf) {
+      for (int k = 0; k < dim; k++) cf[k] = (float)(cen[k] / nv);
+      double c = vec_cosine(q, cf, dim);
+      free(cf);
+      cJSON_AddNumberToObject(g, "cos", c);
+      rc = c >= repair_sem_floor() ? 1 : 0;
+    } else why = "out of memory";
+  }
+  if (why) {
+    cJSON_AddNullToObject(g, "cos");
+    cJSON_AddStringToObject(g, "skipped", why);
+  }
+  free(cen); free(q);
+  return rc;
+}
+
+/* Gate (c): 4B-style sanity re-check. Returns 1 if looks_correct AND the
+ * semantic gate did not fail (semantic_gate; skipped is stated in `sem`, not
+ * a failure), sets reason. */
+static int sanity_ok_llm(llm_client *llm, const char *name, const char *category,
+                         const char *type, const char *body, int records,
+                         char *reason_out, int reason_sz);
+static int sanity_ok(db_handle *db, http_client *http, const char *source_id,
+                     llm_client *llm, const char *name, const char *category,
                      const char *type, const char *body, int records,
-                     char *reason_out, int reason_sz) {
+                     char *reason_out, int reason_sz, cJSON *sem) {
+  if (!sanity_ok_llm(llm, name, category, type, body, records, reason_out, reason_sz))
+    return 0;
+  if (semantic_gate(db, http, source_id, body, sem) == 0) {
+    cJSON *c = cJSON_GetObjectItem(sem, "cos");
+    snprintf(reason_out, reason_sz, "payload unlike this source's stored items "
+             "(cosine %.3f < %.2f)", c ? c->valuedouble : 0.0, repair_sem_floor());
+    return 0;
+  }
+  return 1;
+}
+
+static int sanity_ok_llm(llm_client *llm, const char *name, const char *category,
+                         const char *type, const char *body, int records,
+                         char *reason_out, int reason_sz) {
   if (!body || !*body) { snprintf(reason_out, reason_sz, "empty body"); return 0; }
   char *sample = build_sample(body);
   size_t plen = strlen(SYS_SANITY) + strlen(sample) + 400;
@@ -681,18 +818,22 @@ static int attempt_repair(db_handle *db, llm_client *llm, http_client *http,
 
   /* Gate (c): sanity re-check on the new payload. */
   char sreason[260];
-  int sok = sanity_ok(llm, name, cat, type, vr.body, got, sreason, sizeof sreason);
+  cJSON *sem = cJSON_CreateObject();
+  int sok = sanity_ok(db, http, a->source_id, llm, name, cat, type, vr.body, got,
+                      sreason, sizeof sreason, sem);
   http_response_free(&vr);
   if (!sok) {
     cJSON *g = cJSON_CreateObject();
     cJSON_AddStringToObject(g, "failed", "sanity re-check failed");
     cJSON_AddStringToObject(g, "sanity", sreason);
+    cJSON_AddItemToObject(g, "semantic", sem);
     do_reject(db, a, new_url, g, model);
     goto cleanup_prop;
   }
 
   /* ── Gate passed ─────────────────────────────────────────────────────── */
   cJSON *gp = cJSON_CreateObject();
+  cJSON_AddItemToObject(gp, "semantic", sem);
   cJSON_AddNumberToObject(gp, "records", got);
   if (have_base) cJSON_AddNumberToObject(gp, "baseline_mean", mean);
   else cJSON_AddNullToObject(gp, "baseline_mean");

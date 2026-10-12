@@ -954,10 +954,30 @@ struct AlertPredicate: Codable, Hashable {
     /// filter that silently does nothing is worse than a missing one.
     var record_types: [String]?
     /// Query authoring mode. `nil`/"fts" ⇒ the FTS predicate `q` matches new
-    /// items; "llm" ⇒ `nl_query` drives the agentic search pipeline (which
-    /// also produces an FTS `q` the user chose). Round-trips opaquely.
+    /// items; "llm" ⇒ a SEMANTIC rule ("Describe it in words"): the server
+    /// embeds `nl_query` and fires on an item whose embedding is within
+    /// `threshold` cosine of it, AND every other term (q, sources, tags, …)
+    /// also holds. Evaluated after the server embeds each item
+    /// (core/alert_sem.h), so it fires minutes after ingest, not at ingest.
     var mode: String?
     var nl_query: String?
+    /// Semantic rules only: cosine in (0, 1]; nil ⇒ the server default (0.82).
+    var threshold: Double?
+    /// Semantic rules only: fire only when the item's novelty (1 − its
+    /// similarity to the previous week's items) is at least this.
+    var novelty_min: Double?
+}
+
+/// The server's in-band word on a semantic rule (`semantic` on every rule
+/// response for mode "llm" + nl_query): whether it can fire and, if not, why.
+struct AlertSemanticStatus: Codable, Hashable {
+    var threshold: Double?
+    var novelty_min: Double?
+    var embedded: Bool?
+    var evaluable: Bool?
+    var reason: String?
+    var evaluates: String?
+    var model: String?
 }
 
 struct AlertCircle: Codable, Hashable {
@@ -977,6 +997,9 @@ struct AlertRule: Codable, Identifiable, Hashable {
     var muted_until: String?
     let created_at: String?
     let updated_at: String?
+    /// Read-only server status for a semantic rule; nil for every other rule.
+    /// Ignored by the server when echoed back on a save.
+    var semantic: AlertSemanticStatus? = nil
 }
 
 struct AlertRuleEnvelope: Decodable { let data: AlertRule }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LuUsers, LuSearch, LuSparkles, LuX, LuRefreshCw } from 'react-icons/lu';
+import { LuUsers, LuSearch, LuX, LuRefreshCw } from 'react-icons/lu';
 import { api } from '../../api/client.js';
 import { recordSearch } from '../../api/searchHistory.js';
 import { useApi } from '../../hooks/useApi.js';
@@ -22,7 +22,8 @@ import {
  *   DELETE /api/members/:userId
  *   DELETE /api/members/invite/:id
  * Queries: GET /api/intel/items?q=&limit= (FTS), the search pipeline store
- * (LLM), GET /api/search/suggest?q= (draft an FTS string).
+ * (LLM). Saved as an alert, an LLM query becomes a "Describe it in words"
+ * (semantic) rule — the description itself matches, by embedding.
  */
 const ROLES = ['owner', 'admin', 'analyst', 'viewer'];
 const ROLE_TONE = { owner: 'accent', admin: 'cyan', analyst: 'neutral', viewer: 'neutral' };
@@ -222,7 +223,6 @@ function QueryView() {
   const [results, setResults] = useState(null);
   const [page, setPage] = useState(null);
   const [running, setRunning] = useState(false);
-  const [suggesting, setSuggesting] = useState(false);
   const [error, setError] = useState(null);
 
   const canRun = mode === 'llm' ? nl.trim().length > 0 : q.trim().length > 0;
@@ -248,16 +248,6 @@ function QueryView() {
     finally { setRunning(false); }
   };
 
-  const suggest = async () => {
-    setSuggesting(true); setError(null);
-    try {
-      const r = await api.get('/api/search/suggest', { query: { q: nl.trim() } });
-      const first = (r?.suggestions || []).find((s) => String(s).trim());
-      if (first) setQ(first); else setError(new Error('No FTS suggestion returned'));
-    } catch (err) { setError(err); }
-    finally { setSuggesting(false); }
-  };
-
   const saveAsAlert = () => {
     const p = new URLSearchParams({ new: '1', mode });
     if (q.trim()) p.set('q', q.trim());
@@ -271,12 +261,9 @@ function QueryView() {
         <form onSubmit={run} className="space-y-2">
           <Segmented value={mode} onChange={setMode} options={[{ value: 'fts', label: 'FTS' }, { value: 'llm', label: 'LLM pipeline' }]} />
           {mode === 'llm' && (
-            <div className="flex gap-2">
-              <Input placeholder="Natural-language query (e.g. phishing targeting JP banks)" value={nl} onChange={(e) => setNl(e.target.value)} />
-              <Button busy={suggesting} disabled={!nl.trim()} onClick={suggest} type="button"><LuSparkles size={13} /> Suggest FTS</Button>
-            </div>
+            <Input placeholder="Natural-language query (e.g. phishing targeting JP banks)" value={nl} onChange={(e) => setNl(e.target.value)} />
           )}
-          <Input mono placeholder="FTS query (e.g. phishing AND tld:.jp)" value={q} onChange={(e) => setQ(e.target.value)} />
+          <Input mono placeholder={mode === 'llm' ? 'Also require keywords (optional, alert only)' : 'FTS query (e.g. phishing AND tld:.jp)'} value={q} onChange={(e) => setQ(e.target.value)} />
           <div className="flex flex-wrap gap-2">
             <Button type="submit" variant="primary" busy={running} disabled={!canRun}><LuSearch size={13} /> Run</Button>
             <Button type="button" disabled={!canRun} onClick={saveAsAlert}>Save as alert</Button>
@@ -284,7 +271,7 @@ function QueryView() {
         </form>
         <div className="text-[11px] text-osint-muted mt-2">
           {mode === 'llm'
-            ? 'Runs the agentic search pipeline on your natural-language query, ingesting new intel. “Suggest FTS” drafts the FTS string the LLM would use — edit it, then save as an alert.'
+            ? 'Runs the agentic search pipeline on your natural-language query, ingesting new intel. “Save as alert” makes it a “Describe it in words” rule: new items that mean the same thing fire it.'
             : 'Searches existing intel via full-text search. Save it as an alert to get pinged on new matches. “Save as alert” opens the alert editor pre-filled with this query.'}
         </div>
       </Section>

@@ -3,8 +3,10 @@ import SwiftUI
 /// Build and run a workspace query — either a direct FTS query over existing
 /// intel, or a full LLM agentic-search run (which ingests new intel into the
 /// DB as usual). Either can be promoted to an alert rule via the same
-/// `AlertEditor` the Alerts tab uses, so both query types converge on one
-/// `AlertRule` (carrying `predicate.mode`).
+/// `AlertEditor` the Alerts tab uses: an FTS query becomes a keyword rule, a
+/// natural-language one becomes a "Describe it in words" (semantic) rule that
+/// the server matches by embedding similarity — never an FTS string guessed
+/// from the description.
 struct WorkspaceQueryView: View {
     @EnvironmentObject var apiClient: APIClient
     @Environment(\.theme) private var theme
@@ -16,7 +18,6 @@ struct WorkspaceQueryView: View {
     @State private var nlQuery = ""
     @State private var results: [IntelItem] = []
     @State private var running = false
-    @State private var suggesting = false
     @State private var error: String?
     @State private var draft: AlertRule?
 
@@ -35,16 +36,10 @@ struct WorkspaceQueryView: View {
                     TextField("Natural-language query (e.g. phishing targeting JP banks)",
                               text: $nlQuery)
                         .compatNoAutocap()
-                    Button {
-                        Task { await suggestFTS() }
-                    } label: {
-                        Label(suggesting ? "Suggesting…" : "Suggest FTS query",
-                              systemImage: "sparkles")
-                    }
-                    .disabled(suggesting || nlQuery.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
 
-                TextField("FTS query (e.g. phishing AND tld:.jp)", text: $q)
+                TextField(mode == "llm" ? "Also require keywords (optional, alert only)"
+                                        : "FTS query (e.g. phishing AND tld:.jp)", text: $q)
                     .compatNoAutocap()
                     .autocorrectionDisabled()
                     .font(.system(.body, design: .monospaced))
@@ -66,7 +61,7 @@ struct WorkspaceQueryView: View {
                 Text("Query")
             } footer: {
                 Text(mode == "llm"
-                     ? "Runs the agentic search pipeline on your natural-language query, ingesting new intel. “Suggest FTS query” drafts the FTS string the LLM would use — edit it, then save as an alert."
+                     ? "Runs the agentic search pipeline on your natural-language query, ingesting new intel. Saved as an alert, the description itself is what matches: new items that mean the same thing fire it."
                      : "Searches existing intel via full-text search. Save it as an alert to get pinged on new matches.")
                     .font(.caption2)
             }
@@ -83,7 +78,9 @@ struct WorkspaceQueryView: View {
                     Spacer()
                 }
             } footer: {
-                Text("Opens the alert editor pre-filled with this query. Add a delivery channel there to finish.")
+                Text(mode == "llm"
+                     ? "Opens the alert editor with this description as a “Describe it in words” rule. Add a delivery channel there to finish."
+                     : "Opens the alert editor pre-filled with this query. Add a delivery channel there to finish.")
                     .font(.caption2)
             }
 
@@ -209,26 +206,6 @@ struct WorkspaceQueryView: View {
             } catch let e {
                 error = e.localizedDescription
             }
-        }
-    }
-
-    private func suggestFTS() async {
-        let nl = nlQuery.trimmingCharacters(in: .whitespaces)
-        guard !nl.isEmpty else { return }
-        suggesting = true
-        defer { suggesting = false }
-        do {
-            let suggestions = try await api.searchSuggest(nl).suggestions
-            if let first = suggestions.first(where: { !$0.trimmingCharacters(in: .whitespaces).isEmpty }) {
-                q = first
-                error = nil
-                Haptics.success()
-            } else {
-                error = "No FTS suggestion returned"
-            }
-        } catch let e {
-            error = e.localizedDescription
-            Haptics.error()
         }
     }
 

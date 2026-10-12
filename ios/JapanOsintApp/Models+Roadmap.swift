@@ -276,7 +276,17 @@ struct AlertPreviewMeta: Decodable, Hashable {
     let truncated: Bool?
     let scanned: Int?
     let since: String?
-    let skipped: String?          // e.g. "llm_mode_unsupported"
+    let skipped: String?          // e.g. "semantic_index_unavailable"
+    /// Present for a semantic ("Describe it in words") predicate: the
+    /// threshold and KNN size the backtest used, and — when it was skipped —
+    /// why the vector index could not answer.
+    let semantic: AlertPreviewSemantic?
+}
+struct AlertPreviewSemantic: Decodable, Hashable {
+    let threshold: Double?
+    let k: Int?
+    let window: String?
+    let reason: String?
 }
 
 // ── Item 9: areas of interest ──────────────────────────────────────────────

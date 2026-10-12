@@ -23,9 +23,12 @@ import SwiftUI
 // misread as "no matches":
 //   • `meta.truncated`  — the scan hit its row cap, so the real number is
 //                         higher. Rendered as "at least N", never as N.
-//   • `meta.skipped == "llm_mode_unsupported"` — an LLM-mode rule is not
-//                         evaluable inline. It cannot be previewed AND it does
-//                         not fire; saying "0 matches" there would be a lie.
+//   • `meta.skipped == "semantic_index_unavailable"` — a described
+//                         ("Describe it in words") rule is backtested as a
+//                         nearest-neighbour search over the server's embedding
+//                         index; without one there is no count, and saying
+//                         "0 matches" would be a lie. (`llm_mode_unsupported`
+//                         is the older servers' word for the same gap.)
 // ─────────────────────────────────────────────────────────────────────────────
 
 struct RulePreviewSection: View {
@@ -146,9 +149,15 @@ struct RulePreviewSection: View {
         }
     }
 
-    /// The server refused to evaluate this predicate. The only value it emits
-    /// today is `llm_mode_unsupported`; anything else is surfaced verbatim
+    /// The server refused to evaluate this predicate. The value it emits today
+    /// is `semantic_index_unavailable`; anything else is surfaced verbatim
     /// rather than silently treated as a zero.
+    /// ": <the server's reason>" when it gave one, else ".".
+    private var semanticReasonSuffix: String {
+        if let r = result?.meta?.semantic?.reason, !r.isEmpty { return ": " + r + "." }
+        return "."
+    }
+
     @ViewBuilder
     private func skippedNotice(_ skipped: String) -> some View {
         HStack(alignment: .top, spacing: Space.sm) {
@@ -156,12 +165,23 @@ struct RulePreviewSection: View {
                 .foregroundStyle(theme.warning)
                 .accessibilityHidden(true)   // the notice text follows
             VStack(alignment: .leading, spacing: 3) {
-                if skipped == "llm_mode_unsupported" {
-                    Text("LLM-mode rules can't be previewed — and they don't fire.")
+                if skipped == "semantic_index_unavailable" {
+                    Text("This description can't be backtested right now.")
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(theme.warning)
                         .fixedSize(horizontal: false, vertical: true)
-                    Text("A natural-language query is not something the ingest matcher can evaluate, so this rule will never match an incoming item on its own. Use “Suggest FTS query” above to turn it into an FTS expression — that expression is what actually fires, and it is what this backtest measures.")
+                    Text("The server's embedding index could not answer\(semanticReasonSuffix) The rule can still be saved; it fires once items are embedded. No match count is available — that is not the same as “no matches”.")
+                        .font(.caption2)
+                        .foregroundStyle(theme.textMuted)
+                        .fixedSize(horizontal: false, vertical: true)
+                } else if skipped == "llm_mode_unsupported" {
+                    // An older server: it stores described rules but cannot
+                    // evaluate them.
+                    Text("This server can't evaluate described rules.")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(theme.warning)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text("It stores the description but never matches items against it. Use keywords instead, or update the server.")
                         .font(.caption2)
                         .foregroundStyle(theme.textMuted)
                         .fixedSize(horizontal: false, vertical: true)
