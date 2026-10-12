@@ -163,3 +163,24 @@ collectors/sources/soc_news_media.c	138	limit=20	20	500	TRUNCATING
 # NOT changed, and why: od_ods_rte_eco2mix asks for limit=48&order_by=date_heure
 # desc -- the last 48 half-hours of the French grid mix, which is a ranked
 # window whose limit IS the question, not a truncation of a finite collection.
+#
+# ---- individual rows, second pass 2026-10-12 -------------------------------
+#   who-gho-indicator       100 -> 14,112  = @odata.count ($top/$skip/$count)
+#   openfda-enforcement      100 -> 18,002 = meta.results.total. The note in
+#     that file said total "supports skip/limit paging" and nothing used it;
+#     limit=1000 is honoured and skip caps at 25,000, which this corpus fits.
+#   arcgis-featureserver     100 -> 900    = returnCountOnly. exceededTransfer-
+#     Limit was already carried in the properties, unread.
+#   bc-mineral-tenure        500 -> 42,234 = numberMatched. WFS 2.0 REFUSES
+#     startIndex without sortBy ("Cannot do natural order without a primary
+#     key") -- the same hazard the ODS/OAM rows hit as a silent skip, here as
+#     a hard 400, which is the better failure.
+#   emsc-quakes              300 -> 437 over a 1-day window
+#   iceland-quakes           300 -> 22 over a 14-day AOI window
+#
+# FDSN answers an empty result set with HTTP 204 AND NO BODY, so a NULL doc
+# arrives where an honest empty belongs. fdsn_quakes() used to report that as
+# rc=-1: the Iceland AOI held zero events for the last day when this was
+# written, so a 1-day window would have marked a working source dead every
+# quiet day. 204 is now rc=0, and the AOI window is 14 days because a single
+# box does not produce events the way the globe does.
