@@ -112,4 +112,19 @@ int image_vec_embed_text(struct http_client *http, const char *text,
                          float **out, int *dim, char *model, size_t mcap,
                          char *err, size_t ecap);
 
+/* Embed ONE image with the sidecar's POST /embed/image — the query side of an
+ * image→image search (POST /api/cameras/visual-search/by-image). Same contract
+ * as image_vec_embed_text; a body the sidecar will not embed comes back as -1
+ * with its per-image error ("not_an_image", "image_too_large") in `err`. */
+int image_vec_embed_image(struct http_client *http, const unsigned char *bytes,
+                          size_t len, float **out, int *dim, char *model,
+                          size_t mcap, char *err, size_t ecap);
+
+/* The bytes of a frame from the evidence blob store, proven to hash to `sha`
+ * (the walk's own read). `rel` is the blob path when the caller has it, else
+ * NULL and any evidence row of that content serves. NULL when there are none
+ * or they are over the sidecar's per-image cap (*too_large set). */
+unsigned char *image_vec_read_frame(db_handle *db, const char *sha,
+                                    const char *rel, size_t *len, int *too_large);
+
 #endif

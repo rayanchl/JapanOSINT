@@ -21,12 +21,19 @@
  *  10. embedding drift: a target's first frame NULL, then 1-cos to the
  *      previous EMBEDDED frame and to the mean of the recent ones, written
  *      when the vector lands and exposed by the stills list beside (not in
- *      place of) scene_changed.
+ *      place of) scene_changed;
+ *  11. POST /api/cameras/visual-search/by-image: a still queries with its
+ *      STORED vector (nothing sent) and its own camera left out; an upload is
+ *      embedded for the query only, never indexed, readable by its tenant
+ *      only; a committed image upload becomes a tenant-scoped media row the
+ *      media pod analyses from the evidence store and the index never walks.
  *
  * Includes image_vec.c directly, so run.sh links every object except
  * obj/core/image_vec.o. */
 #include "../../core/image_vec.c"
 #include "core/visualsearchapi.h"
+#include "core/media.h"
+#include "core/uploadapi.h"
 #include "vision_stub.h"
 
 #include <assert.h>
@@ -414,6 +421,154 @@ int main(void) {
     assert(qd == 64 && !strcmp(model, "stub-sha256-v1"));
     free(qv);
   }
+
+  /* 11. image→image: POST /api/cameras/visual-search/by-image */
+  {
+    camera("camera-discovery|river2", "mlit_river", "Asa River", 35.61, 139.61);
+    unsigned char b4[256];
+    size_t n4 = frame(b4, "four", 1);
+    char s4[65], r4[160];
+    blob(b4, n4, s4, r4);
+    still("r2a", "camera-discovery|river2", s4, r4, "2026-10-12 04:00:00");
+    still("r2b", "camera-discovery|river2", s2, r2, "2026-10-12 04:15:00"); /* = st6's frame */
+    int before = vstub_posts("/embed/image");
+    assert(image_vec_tick(&g_db, NULL, 0) == 1);           /* s4; s2 is a ref */
+    assert(vstub_posts("/embed/image") == before + 1);
+    long done_n = count("SELECT count(*) FROM image_vec_done");
+
+    /* the args step: parse + role, no I/O */
+    char va[VS_BYIMAGE_ARGS_MAX];
+    int st = 0;
+    char *e;
+#define ARGS(body, role) visualsearchapi_by_image_args(body, strlen(body), role, va, sizeof va, &st)
+    assert((e = ARGS("{}", "viewer")) && st == 400); free(e);
+    assert((e = ARGS("not json", "viewer")) && st == 400); free(e);
+    assert((e = ARGS("{\"still_id\":\"a\",\"upload_id\":\"b\"}", "owner")) && st == 400); free(e);
+    assert((e = ARGS("{\"upload_id\":\"b\"}", "viewer")) && st == 403); free(e);
+    assert((e = ARGS("{\"still_id\":\"a\",\"k\":true}", "viewer")) && st == 400); free(e);
+    assert(!ARGS("{\"still_id\":\"st6\",\"k\":5,\"bbox\":[139,35,140,36]}", "viewer"));
+    assert(strstr(va, "still_id=st6") && strstr(va, "k=5") && strstr(va, "bbox=139%2c35%2c140%2c36"));
+
+    /* by a still: its vector is loaded, nothing is sent, its own camera is out */
+    int posts_now = vstub_posts("/embed/image");
+    char *b = visualsearchapi_by_image_route(&g_db, "t1", va, "", 0, &st);
+    assert(b && st == 200);
+    cJSON *j = cJSON_Parse(b);
+    free(b);
+    assert(cJSON_GetArraySize(cJSON_GetObjectItem(j, "data")) == 1);
+    assert(!strcmp(jstr(j, "data.0.camera_id"), "camera-discovery|river2"));
+    assert(!strcmp(jstr(j, "data.0.still.id"), "r2b"));    /* the identical frame */
+    assert(!strcmp(jstr(j, "data.0.still.sha256"), s2));
+    assert(NEAR(jnum(j, "data.0.cosine"), 1.0));
+    assert(jnum(j, "data.0.frames_matched") == 2);
+    assert(!strcmp(jstr(j, "meta.query.by"), "still"));
+    assert(!strcmp(jstr(j, "meta.query.camera_id"), "camera-discovery|river1"));
+    assert(!strcmp(jstr(j, "meta.excluded_camera.camera_id"), "camera-discovery|river1"));
+    assert(jnum(j, "meta.k") == 5 && jnum(j, "meta.cameras.indexed") == 2);
+    cJSON_Delete(j);
+    assert(vstub_posts("/embed/image") == posts_now);
+    /* bbox from the query string when the body has none; body wins otherwise */
+    b = visualsearchapi_by_image_route(&g_db, "", "still_id=st6", "bbox=0,0,1,1", 0, &st);
+    j = cJSON_Parse(b); free(b);
+    assert(st == 200 && cJSON_GetArraySize(cJSON_GetObjectItem(j, "data")) == 0);
+    cJSON_Delete(j);
+
+    b = visualsearchapi_by_image_route(&g_db, "", "still_id=op1", "", 0, &st);
+    assert(st == 409 && strstr(b, "still_not_indexable")); free(b);
+    b = visualsearchapi_by_image_route(&g_db, "", "still_id=st5", "", 0, &st);
+    assert(st == 409 && strstr(b, "still_not_embedded")); free(b);
+    b = visualsearchapi_by_image_route(&g_db, "", "still_id=nope", "", 0, &st);
+    assert(st == 404); free(b);
+
+    /* an upload, end to end through uploadapi: the commit records a pending
+     * media row of ITS tenant only */
+    char updir[300];
+    snprintf(updir, sizeof updir, "%s.uploads", getenv("JO_DB"));
+    setenv("JO_UPLOAD_DIR", updir, 1);
+    uploadapi_migrate(&g_db);
+    tenant_ctx t1, t2;
+    memset(&t1, 0, sizeof t1);
+    snprintf(t1.tenant_id, sizeof t1.tenant_id, "t1");
+    snprintf(t1.user_id, sizeof t1.user_id, "u1");
+    snprintf(t1.role, sizeof t1.role, "analyst");
+    t2 = t1;
+    snprintf(t2.tenant_id, sizeof t2.tenant_id, "t2");
+    char beg[160];
+    snprintf(beg, sizeof beg, "{\"filename\":\"q.jpg\",\"content_type\":\"image/jpeg\","
+             "\"total_bytes\":%zu}", n4);
+    b = uploadapi(&g_db, &t1, "POST", "begin", "", NULL, beg, strlen(beg), &st);
+    assert(b && st == 201);
+    j = cJSON_Parse(b); free(b);
+    char upid[64];
+    snprintf(upid, sizeof upid, "%s", jstr(j, "data.upload_id"));
+    cJSON_Delete(j);
+    b = uploadapi(&g_db, &t1, "POST", upid, "part", "seq=0", (const char *)b4, n4, &st);
+    assert(b && st == 200); free(b);
+    b = uploadapi(&g_db, &t1, "POST", upid, "commit", "", NULL, 0, &st);
+    assert(b && st == 200);
+    j = cJSON_Parse(b); free(b);
+    assert(cJSON_GetArraySize(cJSON_GetObjectItem(cJSON_GetObjectItem(j, "data"), "media")) == 1);
+    assert(!strcmp(jstr(j, "data.media.0.sha256"), s4));
+    cJSON_Delete(j);
+    char muid[80];
+    snprintf(muid, sizeof muid, "upload:%s", upid);
+    {
+      char q[256];
+      snprintf(q, sizeof q, "SELECT count(*) FROM media_assets WHERE item_uid='%s'"
+               " AND tenant_id='t1' AND analyzed_at IS NULL", muid);
+      assert(count(q) == 1);
+    }
+    /* the plain-auth item route never lists it; the other tenant never sees it */
+    char *ml = media_list_for_item(&g_db, muid, 0);
+    j = cJSON_Parse(ml); free(ml);
+    assert(cJSON_GetArraySize(cJSON_GetObjectItem(j, "data")) == 0); cJSON_Delete(j);
+    ml = media_list_for_upload(&g_db, "t2", muid, 0);
+    j = cJSON_Parse(ml); free(ml);
+    assert(cJSON_GetArraySize(cJSON_GetObjectItem(j, "data")) == 0); cJSON_Delete(j);
+    b = uploadapi(&g_db, &t2, "GET", upid, "", NULL, NULL, 0, &st);
+    assert(st == 404); free(b);
+
+    /* the media pod analyses it from the evidence store, no fetch */
+    setenv("MEDIA_NO_TOOLS", "1", 1);
+    assert(media_analyze_batch(&g_db, NULL, 0, NULL) == 1);
+    {
+      char q[256];
+      snprintf(q, sizeof q, "SELECT count(*) FROM media_assets WHERE item_uid='%s'"
+               " AND analyzed_at IS NOT NULL AND content_type='image/jpeg'", muid);
+      assert(count(q) == 1);
+    }
+    /* and the image index never walks it */
+    assert(image_vec_tick(&g_db, NULL, 0) == 0);
+    {
+      char q[256];
+      snprintf(q, sizeof q, "SELECT count(*) FROM image_vec_ref r JOIN media_assets m"
+               " ON m.id=r.ref_id WHERE m.item_uid='%s'", muid);
+      assert(count(q) == 0);
+    }
+
+    /* by an upload: embedded for the query, written nowhere */
+    snprintf(beg, sizeof beg, "{\"upload_id\":\"%s\"}", upid);
+    assert(!ARGS(beg, "analyst"));
+    posts_now = vstub_posts("/embed/image");
+    b = visualsearchapi_by_image_route(&g_db, "t1", va, "", 0, &st);
+    assert(b && st == 200);
+    j = cJSON_Parse(b); free(b);
+    assert(vstub_posts("/embed/image") == posts_now + 1);
+    assert(!strcmp(jstr(j, "data.0.camera_id"), "camera-discovery|river2"));
+    assert(!strcmp(jstr(j, "data.0.still.id"), "r2a"));    /* the same bytes */
+    assert(NEAR(jnum(j, "data.0.cosine"), 1.0));
+    assert(!strcmp(jstr(j, "meta.query.by"), "upload"));
+    assert(!cJSON_GetObjectItem(cJSON_GetObjectItem(j, "meta"), "excluded_camera"));
+    cJSON_Delete(j);
+    assert(count("SELECT count(*) FROM image_vec_done") == done_n);
+    /* another tenant's upload id is 404, never 403 */
+    b = visualsearchapi_by_image_route(&g_db, "t2", va, "", 0, &st);
+    assert(st == 404); free(b);
+#undef ARGS
+  }
+  printf("  by-image: a still's stored vector (own camera excluded, nothing sent), "
+         "an upload embedded per query and never indexed, tenant-scoped media "
+         "rows, 403/404/409s: ok\n");
 
   /* 8. a sidecar with a different width is refused, not mixed */
   vstub_stop();

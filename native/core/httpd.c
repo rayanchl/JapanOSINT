@@ -3892,6 +3892,23 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       sem_spawn(c, hm, visualsearchapi_route, "", "", opgate_check(&usr) == 0);
       return;
     }
+    /* POST .../by-image {still_id|upload_id} — image→image. The body is
+     * parsed (and an upload's role checked) here; the KNN, the blob read and
+     * the sidecar call run off the loop. Tenant: an upload is one tenant's. */
+    if (eq(u, "/api/cameras/visual-search/by-image")) {
+      if (mg_strcmp(hm->method, mg_str("POST")) != 0) {
+        reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return; }
+      tenant_ctx tc;
+      if (intel_tenant_or_reply(c, hm, &usr, &tc) != 0) return;
+      char va[VS_BYIMAGE_ARGS_MAX];
+      int vst = 400;
+      char *ve = visualsearchapi_by_image_args(hm->body.buf, hm->body.len, tc.role,
+                                               va, sizeof va, &vst);
+      if (ve) { reply_json(c, vst, ve); free(ve); return; }
+      sem_spawn(c, hm, visualsearchapi_by_image_route, tc.tenant_id, va,
+                opgate_check(&usr) == 0);
+      return;
+    }
     { char cid2[640] = {0};   /* a view target id is uid + "#view=" + suffix */
       if (seg(u, "/api/cameras/", "/stills", cid2, sizeof cid2)) {
         char lv[16] = {0}, cv2[512] = {0};

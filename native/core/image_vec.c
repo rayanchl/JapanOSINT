@@ -330,6 +330,48 @@ int image_vec_embed_text(http_client *http, const char *text, float **out,
   return 0;
 }
 
+int image_vec_embed_image(http_client *http, const unsigned char *bytes,
+                          size_t len, float **out, int *dim, char *model,
+                          size_t mcap, char *err, size_t ecap) {
+  *out = NULL; *dim = 0;
+  if (model && mcap) model[0] = 0;
+  if (!bytes || !len) { snprintf(err, ecap, "empty image"); return -1; }
+  if ((long)len > IVEC_MAX_IMAGE_BYTES) {
+    snprintf(err, ecap, "image_too_large: %zu bytes, the sidecar takes at most %ld",
+             len, (long)IVEC_MAX_IMAGE_BYTES);
+    return -1;
+  }
+  size_t cap = 4 * ((len + 2) / 3) + 32;
+  char *body = malloc(cap);
+  if (!body) { snprintf(err, ecap, "out of memory"); return -1; }
+  /* cap was sized for every part, as in embed_batch */
+  memcpy(body, "{\"images\":[\"", 12);
+  size_t bl = 12;
+  bl += mg_base64_encode(bytes, len, body + bl, cap - bl);
+  memcpy(body + bl, "\"]}", 4);                /* with its NUL             */
+  bl += 3;
+  long st = 0;
+  cJSON *j = sidecar_post(http, "/embed/image", body, bl,
+                          (int)env_long("JO_VISION_QUERY_TIMEOUT_MS", 15000),
+                          &st, err, ecap);
+  free(body);
+  if (!j) return -1;
+  cJSON *d0 = cJSON_GetArrayItem(cJSON_GetObjectItem(j, "data"), 0); /* exhaustive-ok: one image sent, one vector back */
+  float *v = d0 ? vec_of(cJSON_GetObjectItem(d0, "embedding"), dim) : NULL;
+  if (!v) {
+    cJSON *e0 = cJSON_GetArrayItem(cJSON_GetObjectItem(j, "errors"), 0); /* exhaustive-ok: one image sent */
+    cJSON *e = e0 ? cJSON_GetObjectItem(e0, "error") : NULL;
+    snprintf(err, ecap, "POST /embed/image: %s",
+             cJSON_IsString(e) ? e->valuestring : "no vector in the answer");
+  }
+  cJSON *m = cJSON_GetObjectItem(j, "model");
+  if (model && mcap) model_base(cJSON_IsString(m) ? m->valuestring : "", model, mcap);
+  cJSON_Delete(j);
+  if (!v) return -1;
+  *out = v;
+  return 0;
+}
+
 /* ---- the walk ------------------------------------------------------------ */
 
 typedef struct {
@@ -403,7 +445,10 @@ static int walk_kind(db_handle *db, const char *kind, long long after, int limit
     : "SELECT m.rowid, m.id, m.sha256, NULL,"
       "       COALESCE(datetime(m.analyzed_at), datetime('now')), NULL"
       "  FROM media_assets m WHERE m.rowid > ?1 AND m.sha256 IS NOT NULL"
-      "   AND m.content_type LIKE 'image/%' AND NOT EXISTS"
+      "   AND m.content_type LIKE 'image/%'"
+      /* a client upload is one tenant's evidence, never corpus (media.h,
+       * client uploads): not walked at all, whatever the camera check says */
+      "   AND m.tenant_id IS NULL AND m.item_uid NOT LIKE 'upload:%' AND NOT EXISTS"
       "  (SELECT 1 FROM image_vec_ref r WHERE r.kind='" IMAGE_VEC_KIND_MEDIA "'"
       "   AND r.ref_id=m.id) ORDER BY m.rowid LIMIT ?2";
   sqlite3_stmt *q;
@@ -489,6 +534,17 @@ static unsigned char *read_blob(db_handle *db, const ivc *c, size_t *len,
   if (strcmp(hex, c->sha) != 0) { free(b); return NULL; }
   *len = got;
   return b;
+}
+
+unsigned char *image_vec_read_frame(db_handle *db, const char *sha,
+                                    const char *rel, size_t *len, int *too_large) {
+  *len = 0; *too_large = 0;
+  if (!db || !db->h || !sha || strlen(sha) != 64) return NULL;
+  ivc c;
+  memset(&c, 0, sizeof c);
+  c.sha = (char *)sha;          /* read only; never freed through c */
+  c.rel = (char *)rel;
+  return read_blob(db, &c, len, too_large);
 }
 
 static int put_ref(db_handle *db, const ivc *c, const char *now) {

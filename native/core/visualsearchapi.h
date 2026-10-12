@@ -39,8 +39,42 @@
 #define JO_VISUALSEARCHAPI_H
 
 #include "db.h"
+#include <stddef.h>
 
 char *visualsearchapi_route(db_handle *db, const char *tenant, const char *id,
                             const char *qs, int is_operator, int *status);
+
+/* POST /api/cameras/visual-search/by-image — cameras whose frames look like
+ * THIS frame (image→image), with the same grouping, filters and meta as the
+ * text search. The JSON body names exactly one query frame:
+ *
+ *   {"still_id":"<camera_stills.id>"}   a stored still: its vector is LOADED
+ *       from the index by the frame's sha256 (vecindex_load), nothing is sent
+ *       to the sidecar. Its camera must pass camera_record_indexable() now
+ *       (409 still_not_indexable) and the frame must already be embedded (409
+ *       still_not_embedded). The still's own camera is left out of `data`
+ *       (it matches itself at distance 0) and named in meta.excluded_camera.
+ *   {"upload_id":"<uuid>"}             a committed client upload of THIS
+ *       tenant (another tenant's id is 404, uploadapi.h's error model), role
+ *       analyst+ like the upload routes (403). Its bytes are read from the
+ *       evidence store, proven by sha256, and embedded with the sidecar's
+ *       POST /embed/image for this query only — an upload is never written to
+ *       the index, so it can never answer anyone else's search.
+ *
+ * plus optional "k", "bbox" (string "w,s,e,n" or [w,s,e,n]) and "since",
+ * which the URL's query string may also carry (the body wins). meta.query is
+ * {by:"still"|"upload", still_id|upload_id, camera_id?, sha256}.
+ *
+ * httpd.c calls visualsearchapi_by_image_args() ON the loop (parse + role
+ * check only, no I/O) and hands its url-encoded result to
+ * visualsearchapi_by_image_route() as `id` through sem_spawn: an upload query
+ * reads a blob and calls the sidecar. */
+#define VS_BYIMAGE_ARGS_MAX 600     /* = sizeof sem_arg.id in httpd.c */
+
+char *visualsearchapi_by_image_args(const char *body, size_t len, const char *role,
+                                    char *out, size_t cap, int *status);
+char *visualsearchapi_by_image_route(db_handle *db, const char *tenant,
+                                     const char *id, const char *qs,
+                                     int is_operator, int *status);
 
 #endif

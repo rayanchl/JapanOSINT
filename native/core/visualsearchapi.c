@@ -3,6 +3,7 @@
 #include "camera_feed.h"
 #include "camera_stills.h"
 #include "image_vec.h"
+#include "media.h"                    /* media_sniff_type */
 #include "../lib/vecindex.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/mongoose.h"
@@ -166,64 +167,84 @@ static cJSON *find_camera(cJSON *data, const char *cam) {
   return NULL;
 }
 
-char *visualsearchapi_route(db_handle *db, const char *tenant, const char *id,
-                            const char *qs, int is_operator, int *status) {
-  (void)tenant; (void)id; (void)is_operator;
-  const vecindex_spec *s = &image_vec_spec;
-  char q[1024], bbox_s[128], since_s[64], k_s[16];
-  if (qs_get(qs, "q", q, sizeof q) < 0 || qs_get(qs, "bbox", bbox_s, sizeof bbox_s) < 0 ||
-      qs_get(qs, "since", since_s, sizeof since_s) < 0 || qs_get(qs, "k", k_s, sizeof k_s) < 0)
+/* k / bbox / since, shared by both query kinds. `primary` is read first and
+ * `fallback` (the URL's query string) answers what it leaves out. NULL on
+ * success; otherwise the error body, *status set. */
+typedef struct {
+  int k, have_bbox;
+  double bb[4];
+  char since[32];
+  long long since_epoch;
+} vs_params;
+
+static int arg_get(const char *primary, const char *fallback, const char *k,
+                   char *out, size_t cap) {
+  int r = qs_get(primary, k, out, cap);
+  if (r != 0) return r;
+  return qs_get(fallback, k, out, cap);
+}
+
+static char *parse_params(db_handle *db, const char *primary, const char *fallback,
+                          vs_params *p, int *status) {
+  char bbox_s[128], since_s[64], k_s[16];
+  memset(p, 0, sizeof *p);
+  if (arg_get(primary, fallback, "bbox", bbox_s, sizeof bbox_s) < 0 ||
+      arg_get(primary, fallback, "since", since_s, sizeof since_s) < 0 ||
+      arg_get(primary, fallback, "k", k_s, sizeof k_s) < 0)
     return err_json(status, 414, "query_parameter_too_long", NULL);
-  if (!q[0]) return err_json(status, 400, "bad_request", "q is required");
-  int k = VS_K_DEFAULT;
+  p->k = VS_K_DEFAULT;
   if (k_s[0]) {
     char *end = NULL;
     long v = strtol(k_s, &end, 10);
     if (!end || *end || v < 1) return err_json(status, 400, "bad_request", "k must be a positive integer");
-    k = v > VS_K_MAX ? VS_K_MAX : (int)v;
+    p->k = v > VS_K_MAX ? VS_K_MAX : (int)v;
   }
-  double bb[4];
-  int have_bbox = bbox_s[0] != 0;
-  if (have_bbox && !parse_bbox(bbox_s, bb))
+  p->have_bbox = bbox_s[0] != 0;
+  if (p->have_bbox && !parse_bbox(bbox_s, p->bb))
     return err_json(status, 400, "bad_request", "bbox must be w,s,e,n in degrees");
-  char since[32] = "";
-  long long since_epoch = 0;
-  if (since_s[0] && !parse_since(db, since_s, since, &since_epoch))
+  if (since_s[0] && !parse_since(db, since_s, p->since, &p->since_epoch))
     return err_json(status, 400, "bad_request", "since must be an ISO date or date-time");
+  return NULL;
+}
 
-  /* availability, most fundamental first, each with its own reason */
+/* The index can answer at all: sidecar configured, not refused, built. */
+static char *index_unavailable(db_handle *db, int *status) {
   if (!image_vec_base_url())
     return unavailable(status, "the vision sidecar is not configured "
                        "(JO_VISION_EMBED_URL is unset)");
   char why[600];
-  if (vecindex_refused(db, s, why, sizeof why)) return unavailable(status, why);
+  if (vecindex_refused(db, &image_vec_spec, why, sizeof why)) return unavailable(status, why);
   if (!image_vec_ready(db))
     return unavailable(status, "the camera image index has not been built yet "
                        "(the _image_embed pod has embedded no frame)");
-  float *qv = NULL;
-  int qdim = 0;
-  char model[256], err[400];
-  if (image_vec_embed_text(NULL, q, &qv, &qdim, model, sizeof model, err, sizeof err) != 0)
-    return unavailable(status, err);
-  if (vecindex_check_identity(db, s, model, qdim, why, sizeof why) != VI_ID_OK) {
-    free(qv);
-    return unavailable(status, why[0] ? why : "the index has no recorded model");
-  }
+  return NULL;
+}
 
-  vecindex_val kv = VI_S(IMAGE_VEC_KIND_STILL), tv = VI_I(since_epoch);
+/* KNN for `qv`, grouped BY CAMERA, and the envelope both routes answer with.
+ * `query` (consumed) becomes meta.query. `exclude_cam`, when set, is the
+ * camera the query frame came from: it is left out of `data` (it would match
+ * itself at distance 0) and named in meta.excluded_camera. */
+static char *answer(db_handle *db, const float *qv, int qdim, const char *model,
+                    const vs_params *p, cJSON *query, const char *exclude_cam,
+                    int *status) {
+  const vecindex_spec *s = &image_vec_spec;
+  int k = p->k;
+  char err[400];
+  vecindex_val kv = VI_S(IMAGE_VEC_KIND_STILL), tv = VI_I(p->since_epoch);
   vecindex_filter f[2] = {
     { .col = "kind", .op = "=",  .vals = &kv, .nvals = 1 },
     { .col = "ts",   .op = ">=", .vals = &tv, .nvals = 1 },
   };
-  int limit = k * VS_PER_CAMERA;
+  int limit = (k + (exclude_cam ? 1 : 0)) * VS_PER_CAMERA;
   if (limit > VS_CAND_MAX) limit = VS_CAND_MAX;
   vecindex_hit *h = NULL;
-  int nh = vecindex_knn(db, s, qv, qdim, limit, f, since[0] ? 2 : 1, &h, err, sizeof err);
-  if (nh < 0) { free(qv); return unavailable(status, err); }
+  int nh = vecindex_knn(db, s, qv, qdim, limit, f, p->since[0] ? 2 : 1, &h, err, sizeof err);
+  if (nh < 0) { cJSON_Delete(query); return unavailable(status, err); }
 
   cJSON *data = cJSON_CreateArray();
   vs_item *cache = NULL;
   int ncache = 0, ncam = 0;
+  long self_frames = 0;
   sqlite3_stmt *rq = NULL;
   int prep = sqlite3_prepare_v2(db->h,
     "SELECT r.ref_id, r.camera_uid, r.item_uid, r.captured_at FROM image_vec_ref r"
@@ -234,7 +255,7 @@ char *visualsearchapi_route(db_handle *db, const char *tenant, const char *id,
   for (int i = 0; prep && i < nh; i++) {
     sqlite3_reset(rq);
     sqlite3_bind_text(rq, 1, h[i].key, -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(rq, 2, since, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(rq, 2, p->since, -1, SQLITE_TRANSIENT);
     double cosv = NAN;
     while (sqlite3_step(rq) == SQLITE_ROW) {
       const char *sid = (const char *)sqlite3_column_text(rq, 0);
@@ -242,6 +263,7 @@ char *visualsearchapi_route(db_handle *db, const char *tenant, const char *id,
       const char *item = (const char *)sqlite3_column_text(rq, 2);
       const char *at = (const char *)sqlite3_column_text(rq, 3);
       if (!sid || !cam || !item) continue;
+      if (exclude_cam && !strcmp(cam, exclude_cam)) { self_frames++; continue; }
       cJSON *have = find_camera(data, cam);
       if (have) {                  /* a nearer frame of this camera won */
         cJSON *fm = cJSON_GetObjectItem(have, "frames_matched");
@@ -251,7 +273,7 @@ char *visualsearchapi_route(db_handle *db, const char *tenant, const char *id,
       if (ncam >= k) continue;
       vs_item *it = item_get(db, &cache, &ncache, item);
       if (!it || !it->ok) continue;               /* policy, at query time */
-      if (have_bbox && !in_bbox(it, bb)) continue;
+      if (p->have_bbox && !in_bbox(it, p->bb)) continue;
       if (isnan(cosv)) {
         float *sv = NULL; int sd = 0;
         cosv = (vecindex_load(db, s, h[i].key, &sv, &sd) == 0 && sd == qdim)
@@ -287,21 +309,25 @@ char *visualsearchapi_route(db_handle *db, const char *tenant, const char *id,
   if (rq) sqlite3_finalize(rq);
   for (int i = 0; i < ncache; i++) { free(cache[i].item); free(cache[i].name); }
   free(cache);
-  free(qv);
   vecindex_hits_free(h, nh);
 
   cJSON *root = cJSON_CreateObject();
   cJSON_AddItemToObject(root, "data", data);
   cJSON *meta = cJSON_AddObjectToObject(root, "meta");
-  cJSON_AddStringToObject(meta, "query", q);
+  cJSON_AddItemToObject(meta, "query", query);
   cJSON_AddNumberToObject(meta, "k", k);
   cJSON_AddNumberToObject(meta, "count", ncam);
-  if (since[0]) cJSON_AddStringToObject(meta, "since", since);
-  else          cJSON_AddNullToObject(meta, "since");
-  if (have_bbox) {
+  if (p->since[0]) cJSON_AddStringToObject(meta, "since", p->since);
+  else             cJSON_AddNullToObject(meta, "since");
+  if (p->have_bbox) {
     cJSON *b = cJSON_AddArrayToObject(meta, "bbox");
-    for (int i = 0; i < 4; i++) cJSON_AddItemToArray(b, cJSON_CreateNumber(bb[i]));
+    for (int i = 0; i < 4; i++) cJSON_AddItemToArray(b, cJSON_CreateNumber(p->bb[i]));
   } else cJSON_AddNullToObject(meta, "bbox");
+  if (exclude_cam) {
+    cJSON *ex = cJSON_AddObjectToObject(meta, "excluded_camera");
+    cJSON_AddStringToObject(ex, "camera_id", exclude_cam);
+    cJSON_AddNumberToObject(ex, "frames_skipped", (double)self_frames);
+  }
   cJSON_AddStringToObject(meta, "model", model);
   cJSON_AddNumberToObject(meta, "dim", qdim);
   cJSON_AddItemToObject(meta, "cameras", camera_counts(db));
@@ -318,3 +344,230 @@ char *visualsearchapi_route(db_handle *db, const char *tenant, const char *id,
   *status = out ? 200 : 500;
   return out;
 }
+
+char *visualsearchapi_route(db_handle *db, const char *tenant, const char *id,
+                            const char *qs, int is_operator, int *status) {
+  (void)tenant; (void)id; (void)is_operator;
+  const vecindex_spec *s = &image_vec_spec;
+  char q[1024];
+  if (qs_get(qs, "q", q, sizeof q) < 0)
+    return err_json(status, 414, "query_parameter_too_long", NULL);
+  vs_params p;
+  char *e = parse_params(db, NULL, qs, &p, status);
+  if (e) return e;
+  if (!q[0]) return err_json(status, 400, "bad_request", "q is required");
+
+  /* availability, most fundamental first, each with its own reason */
+  if ((e = index_unavailable(db, status)) != NULL) return e;
+  float *qv = NULL;
+  int qdim = 0;
+  char model[256], err[400], why[600];
+  if (image_vec_embed_text(NULL, q, &qv, &qdim, model, sizeof model, err, sizeof err) != 0)
+    return unavailable(status, err);
+  if (vecindex_check_identity(db, s, model, qdim, why, sizeof why) != VI_ID_OK) {
+    free(qv);
+    return unavailable(status, why[0] ? why : "the index has no recorded model");
+  }
+  char *out = answer(db, qv, qdim, model, &p, cJSON_CreateString(q), NULL, status);
+  free(qv);
+  return out;
+}
+
+/* ---- POST /api/cameras/visual-search/by-image ---------------------------- */
+
+static int role_analyst(const char *r) {
+  return r && (!strcmp(r, "owner") || !strcmp(r, "admin") || !strcmp(r, "analyst"));
+}
+
+/* One url-encoded `k=v` onto out; 0, or -1 when it does not fit. */
+static int put_arg(char *out, size_t cap, const char *k, const char *v) {
+  size_t used = strlen(out);
+  char enc[VS_BYIMAGE_ARGS_MAX];
+  size_t n = mg_url_encode(v, strlen(v), enc, sizeof enc);
+  if (n == 0 && *v) return -1;
+  int w = snprintf(out + used, cap - used, "%s%s=%s", used ? "&" : "", k, enc);
+  return (w < 0 || (size_t)w >= cap - used) ? -1 : 0;
+}
+
+char *visualsearchapi_by_image_args(const char *body, size_t len, const char *role,
+                                    char *out, size_t cap, int *status) {
+  out[0] = 0;
+  if (!body || !len) return err_json(status, 400, "bad_request",
+                                     "a JSON body with still_id or upload_id is required");
+  if (len > 8192) return err_json(status, 413, "body_too_large", NULL);
+  /* a bounded NUL-terminated copy: cJSON's number path runs strtod on the raw
+   * pointer (uploadapi.h, BINARY BODIES) */
+  char *copy = malloc(len + 1);
+  if (!copy) return err_json(status, 500, "server_error", NULL);
+  memcpy(copy, body, len);
+  copy[len] = 0;
+  cJSON *j = cJSON_Parse(copy);
+  free(copy);
+  if (!cJSON_IsObject(j)) {
+    cJSON_Delete(j);
+    return err_json(status, 400, "bad_request", "the body must be a JSON object");
+  }
+  cJSON *sid = cJSON_GetObjectItem(j, "still_id"), *uid = cJSON_GetObjectItem(j, "upload_id");
+  int has_s = cJSON_IsString(sid) && sid->valuestring[0];
+  int has_u = cJSON_IsString(uid) && uid->valuestring[0];
+  char *e = NULL;
+  char num[160];
+  if (has_s == has_u)
+    e = err_json(status, 400, "bad_request", "exactly one of still_id or upload_id");
+  /* an upload in flight or committed is unreleased evidence: the same role
+   * the upload routes themselves demand (uploadapi.h, ROUTES) */
+  else if (has_u && !role_analyst(role))
+    e = err_json(status, 403, "forbidden", "searching by an upload needs the analyst role");
+  else if (put_arg(out, cap, has_s ? "still_id" : "upload_id",
+                   has_s ? sid->valuestring : uid->valuestring) != 0)
+    e = err_json(status, 414, "query_parameter_too_long", NULL);
+  static const char *const keys[] = { "k", "bbox", "since" };
+  for (size_t i = 0; !e && i < sizeof keys / sizeof *keys; i++) {
+    cJSON *x = cJSON_GetObjectItem(j, keys[i]);
+    if (!x || cJSON_IsNull(x)) continue;
+    const char *v = NULL;
+    if (cJSON_IsString(x)) v = x->valuestring;
+    else if (cJSON_IsNumber(x) && i == 0) {
+      snprintf(num, sizeof num, "%.17g", x->valuedouble);
+      v = num;
+    } else if (cJSON_IsArray(x) && i == 1 && cJSON_GetArraySize(x) == 4) {
+      size_t o = 0;
+      cJSON *c;
+      cJSON_ArrayForEach(c, x) {
+        if (!cJSON_IsNumber(c)) { o = 0; break; }
+        o += (size_t)snprintf(num + o, sizeof num - o, "%s%.9g", o ? "," : "", c->valuedouble);
+        if (o >= sizeof num) { o = 0; break; }
+      }
+      if (o) v = num;
+    }
+    if (!v) {
+      char why[64];
+      snprintf(why, sizeof why, "%s has the wrong type", keys[i]);
+      e = err_json(status, 400, "bad_request", why);
+    } else if (put_arg(out, cap, keys[i], v) != 0)
+      e = err_json(status, 414, "query_parameter_too_long", NULL);
+  }
+  cJSON_Delete(j);
+  if (e) out[0] = 0;
+  return e;
+}
+
+/* A still's frame: its camera must pass the policy NOW, and its bytes must
+ * already be embedded (this route sends nothing to the sidecar for a still). */
+static char *by_still(db_handle *db, const char *still_id, const vs_params *p,
+                      int *status) {
+  const vecindex_spec *s = &image_vec_spec;
+  char cam[640] = "", sha[65] = "";
+  sqlite3_stmt *q;
+  if (sqlite3_prepare_v2(db->h, "SELECT camera_id, sha256 FROM camera_stills"
+                         " WHERE id=?1", -1, &q, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(q, 1, still_id, -1, SQLITE_TRANSIENT);
+    if (sqlite3_step(q) == SQLITE_ROW && sqlite3_column_text(q, 0) &&
+        sqlite3_column_text(q, 1)) {
+      snprintf(cam, sizeof cam, "%s", (const char *)sqlite3_column_text(q, 0));
+      snprintf(sha, sizeof sha, "%s", (const char *)sqlite3_column_text(q, 1));
+    }
+    sqlite3_finalize(q);
+  }
+  if (!cam[0]) return err_json(status, 404, "not_found", "no such still");
+  const char *sfx = NULL;
+  char *item = camera_feed_split(cam, &sfx);
+  int ok = item && image_vec_item_indexable(db, item, 0);
+  free(item);
+  if (!ok) return err_json(status, 409, "still_not_indexable",
+                           "this camera is outside the public-infrastructure "
+                           "allowlist (camera_privacy.h); its frames are never "
+                           "indexed or searched");
+  char *e = index_unavailable(db, status);
+  if (e) return e;
+  float *v = NULL;
+  int dim = 0;
+  if (vecindex_load(db, s, sha, &v, &dim) != 0)
+    return err_json(status, 409, "still_not_embedded",
+                    "this frame has no vector yet: the _image_embed pod has not "
+                    "reached it, or its bytes were never preserved");
+  char model[256] = "";
+  vecindex_meta_get(db, s, "model", model, sizeof model);
+  cJSON *qm = cJSON_CreateObject();
+  cJSON_AddStringToObject(qm, "by", "still");
+  cJSON_AddStringToObject(qm, "still_id", still_id);
+  cJSON_AddStringToObject(qm, "camera_id", cam);
+  cJSON_AddStringToObject(qm, "sha256", sha);
+  char *out = answer(db, v, dim, model, p, qm, cam, status);
+  free(v);
+  return out;
+}
+
+/* An upload's bytes: this tenant's, committed, preserved. Embedded for the
+ * query and NOT written anywhere — an upload never enters the index. */
+static char *by_upload(db_handle *db, const char *tenant, const char *upload_id,
+                       const vs_params *p, int *status) {
+  const vecindex_spec *s = &image_vec_spec;
+  char sha[65] = "", stt[16] = "";
+  sqlite3_stmt *q;
+  /* a tenant mismatch is 404, never 403 (uploadapi.h, ERROR MODEL) */
+  if (tenant && *tenant && vecindex_table_exists(db, "uploads") &&
+      sqlite3_prepare_v2(db->h, "SELECT status, sha256 FROM uploads"
+                         " WHERE id=?1 AND tenant_id=?2", -1, &q, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(q, 1, upload_id, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(q, 2, tenant, -1, SQLITE_TRANSIENT);
+    if (sqlite3_step(q) == SQLITE_ROW) {
+      const char *a = (const char *)sqlite3_column_text(q, 0);
+      const char *b = (const char *)sqlite3_column_text(q, 1);
+      snprintf(stt, sizeof stt, "%s", a ? a : "");
+      snprintf(sha, sizeof sha, "%s", b ? b : "");
+    }
+    sqlite3_finalize(q);
+  }
+  if (!stt[0]) return err_json(status, 404, "not_found", "no such upload");
+  if (strcmp(stt, "committed") || strlen(sha) != 64)
+    return err_json(status, 409, "upload_not_committed", NULL);
+  char *e = index_unavailable(db, status);
+  if (e) return e;
+  size_t len = 0;
+  int big = 0;
+  unsigned char *b = image_vec_read_frame(db, sha, NULL, &len, &big);
+  if (!b)
+    return err_json(status, 409, "upload_bytes_unavailable", big
+                    ? "the upload is larger than the vision sidecar takes per image"
+                    : "the upload's bytes are not in the evidence store "
+                      "(too large to preserve, or reaped)");
+  if (!media_sniff_type(b, len)) {
+    free(b);
+    return err_json(status, 415, "not_an_image", "the upload is not a recognised image");
+  }
+  float *v = NULL;
+  int dim = 0;
+  char model[256], err[400], why[600];
+  int rc = image_vec_embed_image(NULL, b, len, &v, &dim, model, sizeof model, err, sizeof err);
+  free(b);
+  if (rc != 0) return unavailable(status, err);
+  if (vecindex_check_identity(db, s, model, dim, why, sizeof why) != VI_ID_OK) {
+    free(v);
+    return unavailable(status, why[0] ? why : "the index has no recorded model");
+  }
+  cJSON *qm = cJSON_CreateObject();
+  cJSON_AddStringToObject(qm, "by", "upload");
+  cJSON_AddStringToObject(qm, "upload_id", upload_id);
+  cJSON_AddStringToObject(qm, "sha256", sha);
+  char *out = answer(db, v, dim, model, p, qm, NULL, status);
+  free(v);
+  return out;
+}
+
+char *visualsearchapi_by_image_route(db_handle *db, const char *tenant,
+                                     const char *id, const char *qs,
+                                     int is_operator, int *status) {
+  (void)is_operator;
+  char still_id[256], upload_id[64];
+  if (qs_get(id, "still_id", still_id, sizeof still_id) < 0 ||
+      qs_get(id, "upload_id", upload_id, sizeof upload_id) < 0)
+    return err_json(status, 400, "bad_request", "id too long");
+  vs_params p;
+  char *e = parse_params(db, id, qs, &p, status);
+  if (e) return e;
+  if (still_id[0] && !upload_id[0]) return by_still(db, still_id, &p, status);
+  if (upload_id[0] && !still_id[0]) return by_upload(db, tenant, upload_id, &p, status);
+  return err_json(status, 400, "bad_request", "exactly one of still_id or upload_id");
+}
+
