@@ -58,7 +58,38 @@ static int g_n = 0;
  * complete before main() and never changes after. A late registry_add() is
  * still handled — it is inserted into the built index — but it is not
  * thread-safe and nothing in the tree does it. */
+/* THE OTHER WAY A REGISTERED SOURCE DOES NOTHING, and it is the same misery
+ * the duplicate check above exists for: the row is unique, it registers, it
+ * appears in /api/status — and neither of the two things that can RUN a source
+ * will ever pick it.
+ *
+ * The scheduler takes `update_interval_sec > 0`. The OSINT dispatcher takes
+ * `is_entity_pivot()` (core/osint_dispatch.c), which is
+ * `collector == "osint" && update_interval_sec == 0`. A row with an interval of
+ * 0 and any OTHER collector label satisfies neither, so it is dead — and
+ * `collector` is a field nobody connects to dispatch, which is what makes this
+ * invisible. Found 2026-10-12 across 16 live sources, every one an entity pivot
+ * by design and saying so in its own file: the nine openFDA identifier pivots
+ * (whose header documents them being converted from scheduled feeds to lookups
+ * — the conversion kept the `us_health` label and so never took effect), CVE
+ * Program record lookup, MITRE CWE lookup, two elevation lookups, NASA POWER,
+ * Diavgeia by issuing body, and MLIT Kawabou observatory detail.
+ *
+ * The internal lanes are exempt by the convention source.h documents: a
+ * collector beginning with '_' is a pipeline pod or test fixture ("_maint",
+ * "_enrich", "_test", "_probe", "_breach"), not a data source, and
+ * core/scheduler.c already routes on that prefix. PORT_SCANNER is deliberately
+ * "_probe": it opens raw sockets, so keeping it out of the LLM's schema enum is
+ * a security decision, not an oversight. */
+static int source_never_runs(const source_def *d) {
+  if (!d || d->update_interval_sec > 0) return 0;
+  if (!d->collector || !d->collector[0]) return 1;
+  if (d->collector[0] == '_') return 0;
+  return strcmp(d->collector, "osint") != 0;
+}
+
 static int g_dupes;
+static int g_dead;
 static int     *g_slot;          /* index+1 into g_srcs, 0 = empty          */
 static unsigned g_mask;          /* capacity-1 (capacity is a power of two) */
 static int      g_built;
@@ -101,6 +132,15 @@ static void index_build(void) {
   }
   g_mask = cap - 1;
   for (int i = 0; i < g_n; i++) index_insert(i);
+  for (int i = 0; i < g_n; i++) {
+    if (!source_never_runs(g_srcs[i])) continue;
+    fprintf(stderr, "[registry] NEVER-RUNS id '%s' (collector '%s',"
+                    " interval 0) — the scheduler skips it and"
+                    " is_entity_pivot() rejects it\n",
+            g_srcs[i]->id ? g_srcs[i]->id : "?",
+            g_srcs[i]->collector ? g_srcs[i]->collector : "");
+    g_dead++;
+  }
   g_built = 1;
 }
 
@@ -118,6 +158,7 @@ void registry_add(const source_def *def) {
 }
 
 int registry_duplicate_count(void) { registry_freeze(); return g_dupes; }
+int registry_never_runs_count(void) { registry_freeze(); return g_dead; }
 int registry_count(void) { return g_n; }
 const source_def **registry_all(void) { return g_srcs; }
 
