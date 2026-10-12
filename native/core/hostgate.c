@@ -119,12 +119,21 @@ static struct { char host[HG_HOSTLEN]; int gap_ms; } g_over[HG_MAX_OVERRIDES] = 
    * "TRUNCATED: a later page failed", and 5 of 20 records collapsed — the
    * engine's own truncation notice pointed here for the remedy. */
   { "mobile311.sfgov.org", 1200 },
+  /* data.qld.gov.au publishes 188,879 datasets through CKAN package_search
+   * (result.count, measured 2026-10-12 — Queensland registers individual
+   * borehole and core records as datasets), so ckan-au-qld's complete daily
+   * read is ~945 pages of 200 back to back. A government portal should not
+   * take that as a burst; 250 ms spreads it over about four minutes and the
+   * walk still finishes inside one run. */
+  { "data.qld.gov.au", 250 },
+  /* data.nsw.gov.au is the same shape at 17,192 datasets / ~86 pages. */
+  { "data.nsw.gov.au", 250 },
 };
 /* The number of LIVE entries above. This was `1` while the table held two, so
  * gap_for_host() — which scans only the first g_nover entries — never saw the
  * news.google.com gap its comment describes: the 615 gnews-* rows kept firing
  * together (found 2026-09-15). Keep it equal to the initialiser count. */
-static int g_nover = 5;
+static int g_nover = 7;
 
 static void override_set(const char *host, int gap_ms) {
   for (int i = 0; i < g_nover; i++)

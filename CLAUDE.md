@@ -371,6 +371,72 @@ Where the tree actually stands, as `make audit-sources` reports it:
   note below). Rows grow towards the bound as their cells arrive; peak RSS is
   now 350 MB.
 
+  **Then the SHARED HELPERS, which are where the leverage is** (2026-10-12).
+  Three of them took one page while the caller's URL hard-coded a tiny size,
+  and because they are shared the same discard was multiplied by every portal
+  behind them. Each is now one `pw_walk` call, and the callers' URLs carry the
+  offset the engine advances (`od_shared.inc` — the engine never invents a
+  parameter, so a caller that forgets `start=0`/`offset=0` gets one page AND a
+  notice rather than a silent single read):
+
+  * `od_ckan_collect()` — **11 CKAN portals**, every one asking
+    `rows=20&sort=id asc`, so each stored the first twenty datasets by id
+    forever while `result.count` sat in the same envelope. Measured and
+    re-measured live: Zurich 20 → 942, energydata.info → 1,191, London → 1,306,
+    South Australia → 1,929, Berlin → 2,627, Western Australia → 2,917,
+    Ontario → 2,964, NSW → 17,192, Queensland → 188,879. (München 503s and
+    open.africa 403s behind bot walls, at `rows=20` as much as at 200 — checked,
+    not assumed.)
+  * `od_ods_catalog_collect()` — **7 OpenDataSoft catalogues** at
+    `limit=20&order_by=dataset_id`. ODS caps `limit` at 100, so the default
+    ceiling covers all seven: Vancouver 20 → 200, Brussels → 207, Namur → 295,
+    Basel-Stadt → 364, Thurgau → 458, Rennes → 672, Toulouse → 845. Every one
+    equals its own `total_count` exactly.
+  * `canada-hydrometric-realtime` — the OBSERVATION-level twin of
+    `gc-hydrometric` on the same collection, `limit=500` of 19,108,759 with no
+    window at all. A one-hour window, paged: 500 → 7,821. The two are a
+    deliberate pair (newest-per-station for the map, every observation for the
+    series) and must be fixed together.
+
+  **A declared page size is not evidence the server honours it.** `pw_walk`'s
+  same-body guard — stop when the next page comes back byte for byte — used to
+  run on the INFERRED-size walk only, on the reasoning that a URL stating its
+  own size documents an author who knew the paging contract. The London
+  Datastore disproves it: `?rows=200&start=0` declares both, and that server
+  honours neither, answering every request with its whole 1,306-dataset
+  catalogue. 1,306 ≥ 200 reads as a full page, so the walk would have advanced
+  `start` to the ceiling, re-emitted the same records every time, and published
+  the multiple in the notice **as fact** — the disclosure becoming the
+  fabrication. The guard runs on every walk now; it can only ever stop a walk
+  early, because two pages of genuinely different records cannot be
+  byte-identical. `pagewalk_test.c` pins the shape, and its fixtures now stamp
+  a page serial so a multi-page test models a server that actually pages (they
+  were arrays of empty objects, hence byte-identical, hence silently testing
+  the broken case).
+
+  **An offset or page walk with no STABLE SORT silently skips records, and the
+  only visible symptom is a collision.** Measured twice on 2026-10-12.
+  OpenAerialMap reported 21,437 emitted / 21,291 stored, and 10 contiguous
+  pages of 100 really do hold 6 repeated `_id`s — so the first reading of this
+  was "the upstream's own duplicates, nothing to fix". That was a true
+  observation and the wrong diagnosis: an index that reorders between requests
+  serves one record twice and another NOT AT ALL, and the skip leaves no trace.
+  `order_by=_id&sort=asc` takes the duplicates to 0 per 1,000 and the run to
+  21,437 / 21,437. Velib was the same: 1,519 / 1,508, and a
+  `where=stationcode="13022"` query proved the dataset holds exactly ONE record
+  for the code that had supposedly appeared twice. **A collision that is really
+  a skip is the worst shape in this file** — the visible half is harmless and
+  the invisible half is lost data. So: whenever a row pages by `offset` or
+  `page` against a live dataset, give it `order_by` on the row's own id, and
+  treat a small collision count on such a walk as a skip until measured
+  otherwise. The four ODS records rows and OpenAerialMap carry it now; the CKAN
+  rows already had `sort=id asc` and the ODS catalogues `order_by=dataset_id`.
+
+  **Two large portals got a hostgate gap rather than a lower ceiling.**
+  `data.qld.gov.au` is a complete read of ~945 pages and `data.nsw.gov.au` ~86;
+  250 ms each spreads the burst over minutes and still finishes inside one run.
+  A public portal is the reason to pace, not the reason to truncate.
+
   `tools/audit_url_limits.py` finds the shape, and is deliberately NOT in
   `make audit-sources`: **a URL limit is not automatically a discard and the
   script cannot tell.** A relevance-ranked search pivot asking for the top 15

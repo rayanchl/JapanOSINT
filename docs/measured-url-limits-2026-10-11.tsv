@@ -52,10 +52,19 @@
 # dea-stac's fix is visible in the DATES it stores: 2026-10-10..2026-10-11
 # after, where before it held 2015-10-22 scenes and only those.
 #
-# OpenAerialMap's 146 collapses are the UPSTREAM's own duplicates, measured
-# directly rather than inferred: 10 contiguous pages of 100 hold 6 repeated
-# _ids (0.6%, against the run's 0.68%), because the index's order is not stable
-# across an 83-second walk. Nothing was widened to "fix" it.
+# OpenAerialMap's 146 collapses: CORRECTED 2026-10-12. The first reading was
+# "the upstream's own duplicates, nothing to fix", on the measurement that 10
+# contiguous pages of 100 hold 6 repeated _ids. That measurement is right and
+# the conclusion was wrong: an index that reorders between requests serves one
+# record twice and another NOT AT ALL, so each visible duplicate implies a
+# silent skip. `order_by=_id&sort=asc` takes it to 0 duplicates per 1,000 and
+# the run to 21,437 emitted / 21,437 stored. Velib was the same shape
+# (1,519/1,508 -> 1,519/1,519); a `where=stationcode="13022"` query proved the
+# dataset holds exactly one record for the code that appeared twice.
+#
+# Rule: an offset or page walk against a live dataset needs order_by on the
+# row's own id, and a small collision count on such a walk is a SKIP until
+# measured otherwise.
 #
 # Two were not truncation bugs at all, and no record count could have shown it:
 # dea-stac's default order is OLDEST FIRST, so limit=20 stored the twenty
@@ -109,3 +118,48 @@ collectors/sources/soc_fediverse.c	517	count=100	100	1785	TRUNCATING
 collectors/sources/soc_forges.c	76	per_page=30	-1	-1	UNREACHABLE
 collectors/sources/soc_forges.c	208	per_page=30	-1	-1	UNREACHABLE
 collectors/sources/soc_news_media.c	138	limit=20	20	500	TRUNCATING
+#
+# ---- the SHARED HELPERS, fixed 2026-10-12 after the 18 above ---------------
+# Three helpers took one page while the caller's URL hard-coded a tiny size, so
+# the same discard was multiplied by every portal behind them. Measured before
+# and after, live:
+#
+#   od_ckan_collect()         11 CKAN portals, rows=20&sort=id asc
+#     ckan-ch-zurich          20 -> 942       = result.count
+#     ckan-energydata-info    20 -> 1,191     =
+#     ckan-london-datastore   20 -> 1,306     = (+1 notice: it ignores paging)
+#     ckan-au-sa              20 -> 1,929     =
+#     ckan-de-berlin          20 -> 2,627     =
+#     ckan-au-wa              20 -> 2,917     =
+#     ckan-ca-ontario         20 -> 2,964     =
+#     ckan-au-nsw             20 -> 17,192 emitted / 17,191 stored
+#     ckan-au-qld             20 -> 188,879 declared (walk in progress)
+#     ckan-de-muenchen        503 behind a bot wall at rows=20 as much as 200
+#     ckan-open-africa        403 likewise
+#
+#   od_ods_catalog_collect()  7 ODS catalogues, limit=20&order_by=dataset_id
+#     ods-ca-vancouver        20 -> 200       = total_count
+#     ods-be-brussels         20 -> 207       =
+#     ods-be-namur            20 -> 295       =
+#     ods-ch-basel            20 -> 364       =
+#     ods-ch-thurgau          20 -> 458       =
+#     ods-fr-rennes           20 -> 672       =
+#     ods-fr-toulouse         20 -> 845       =
+#
+#   ODS records tier (od_walk_rows_max / pw_walk_max), + order_by on the id:
+#     ods-paris-velib        100 -> 1,519     = total_count
+#     ods-sncf-stations      100 -> 2,792     =
+#     ods-fr-fuel-prices     100 -> 9,814     =
+#     ods-public-geonames     20 -> 10,000 of 171,176, disclosed. The ceiling
+#       is the UPSTREAM's: ODS refuses offset+limit past 10,000. The complete
+#       set is .../exports/json, 111 MB for all 171,176 rows, which needs a
+#       streaming parse this collector does not have -- named in the notice as
+#       the remedy rather than silently attempted.
+#
+#   canada-hydrometric-realtime  500 -> 7,821 in a one-hour window (the whole
+#     collection is 19,108,759 observations and it had no window at all). The
+#     observation-level twin of gc-hydrometric on the same endpoint.
+#
+# NOT changed, and why: od_ods_rte_eco2mix asks for limit=48&order_by=date_heure
+# desc -- the last 48 half-hours of the French grid mix, which is a ranked
+# window whose limit IS the question, not a truncation of a finite collection.

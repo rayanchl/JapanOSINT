@@ -2,7 +2,7 @@
  * drone and aerial surveys, mostly flown for disaster response and
  * humanitarian mapping.
  *
- * Endpoint (keyless): https://api.openaerialmap.org/meta?limit=100&page=1
+ * Endpoint (keyless): https://api.openaerialmap.org/meta?limit=100&page=1&order_by=_id&sort=asc
  * Emits per image: _id, title, uuid (the COG URL), gsd, acquisition_start /
  *   acquisition_end, provider, platform, per-image license, and the image
  *   footprint.
@@ -22,6 +22,16 @@
  *  - 'meta' reports `page: 1, limit: 10` whatever was ASKED for, so it is not
  *    a reading of the request — the `results` array is. Do not drive paging
  *    off it.
+ *  - `order_by=_id&sort=asc` IS LOAD-BEARING, and this is a correction of what
+ *    the first version of this fix concluded. Without it the walk reported
+ *    21,437 emitted and 21,291 stored, and the 146 collapses were written off
+ *    as "the upstream's own duplicates" because 10 contiguous pages of 100 do
+ *    hold 6 repeated `_id`s. They do — but a duplicate on an UNORDERED offset
+ *    walk is the visible half of a pair: the index reorders between requests,
+ *    so a record served twice means another was never served at all, and the
+ *    skip is silent. Measured 2026-10-12: the default order gives 6 duplicates
+ *    per 1,000 records, `order_by=_id&sort=asc` gives 0. "The upstream's own
+ *    duplicates" was a true observation and the wrong diagnosis.
  *  - THREE representations of the same geometry are present: `bbox` (an
  *    array), `footprint` (a WKT POLYGON STRING — deliberately NOT JSON-parsed,
  *    it is carried as text) and `geojson` (a real GeoJSON Polygon object). The
@@ -36,7 +46,7 @@
 #include "lib/pagewalk.h"
 #include "geoeo_common.inc"
 
-static const char *URL = "https://api.openaerialmap.org/meta?limit=100&page=1";  /* exhaustive-ok: walked by lib/pagewalk.c, which advances the offset/page this URL carries */
+static const char *URL = "https://api.openaerialmap.org/meta?limit=100&page=1&order_by=_id&sort=asc";  /* exhaustive-ok: walked by lib/pagewalk.c, which advances the offset/page this URL carries */
 
 /* 21,437 images at 100 a page = 215; 250 is that with headroom. */
 #define OAM_PAGE_MAX 250  /* exhaustive-ok: page ceiling handed to pw_walk_max(); a stop at it files a collector-truncation-notice */
@@ -136,7 +146,7 @@ static const source_def geoeo_oam_def = {
   .name = "OpenAerialMap Imagery Index",
   .update_interval_sec = 86400, .run = run,
   .category = "satellite", .type = "api",
-  .url = "https://api.openaerialmap.org/meta?limit=100&page=1",  /* exhaustive-ok: documentation of the row, never fetched; the walk is pw_walk_max() above */
+  .url = "https://api.openaerialmap.org/meta?limit=100&page=1&order_by=_id&sort=asc",  /* exhaustive-ok: documentation of the row, never fetched; the walk is pw_walk_max() above */
   .description = "The Humanitarian OpenStreetMap Team's open imagery index — drone and aerial surveys flown for disaster response and humanitarian mapping, each with a footprint, GSD and a direct COG URL.",
   .license = "Service metadata declares CC-BY 4.0; individual images carry their own licence field, carried per row.",
   .free_tier = 1,

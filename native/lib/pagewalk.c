@@ -376,8 +376,12 @@ int pw_walk_max(const source_ctx *c, intel_sink *s, const char *id,
   const int has_page_param =
     pw_find_any(url, PW_PAGE_PARAMS, NULL, &pn, &pds, &pde);
   /* The walk this module could not do before: page numbers, no declared size,
-   * yardstick taken from the server's own first page. */
+   * yardstick taken from the server's own first page. (void)-ed rather than
+   * deleted because it names the case the fullness test below branches on, and
+   * the same-body guard that used to be gated on it now runs on every walk —
+   * see the London Datastore note inside the loop. */
   const int infer_size_from_server = (page_size <= 0 && has_page_param);
+  (void)infer_size_from_server;
 
   const int page_max = pw_page_max(page_max_declared);
   const int may_walk = pw_walk_enabled();
@@ -420,18 +424,22 @@ int pw_walk_max(const source_ctx *c, intel_sink *s, const char *id,
      * — every re-emit added to `total`, which the notice then publishes as
      * fact, so the disclosure becomes the fabrication.
      *
-     * Checked ONLY on the inferred-size walk, which is the one case where the
-     * collector's URL never stated a page size and the yardstick came from the
-     * server instead. A URL that declares its own size documents that its
-     * author knew the endpoint's paging contract; a bare `?page=1` documents
-     * nothing, so it earns the extra evidence before we keep asking. Narrow on
-     * purpose: this compares response BODIES, and the rest of the module
-     * deliberately reasons about paging without reading content.
+     * Checked on EVERY walk since 2026-10-12. It used to be the inferred-size
+     * walk only, on the reasoning that a URL declaring its own page size
+     * documents an author who knew the endpoint's paging contract. The London
+     * Datastore disproves that: `?rows=200&start=0` is a declared size and a
+     * declared offset, and that server honours NEITHER — it answers every
+     * request with its whole catalogue of 1,306 datasets. 1,306 >= 200 reads
+     * as a full page, so the walk would have advanced `start` twenty times,
+     * emitted the same 1,306 records on each, and published 26,120 in the
+     * notice as fact. The guard costs one FNV pass over a page already held
+     * and can only ever stop a walk EARLY: two pages of genuinely different
+     * records cannot be byte-identical.
      *
      * Compared BEFORE emitting, so a repeat costs one wasted fetch and changes
      * nothing else: no duplicate rows, no inflated count, and `pages` stays
      * the number of DISTINCT pages collected. */
-    if (infer_size_from_server) {
+    {
       unsigned long fp = pw_fingerprint(doc);
       if (pages > 0 && fp == prev_fp) {
         cJSON_Delete(doc);
