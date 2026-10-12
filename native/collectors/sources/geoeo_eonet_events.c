@@ -2,7 +2,15 @@
  * storms, volcanoes, icebergs, floods, dust and haze), each linked back to the
  * authoritative source system.
  *
- * Endpoint (keyless): https://eonet.gsfc.nasa.gov/api/v3/events?limit=50&status=open
+ * Endpoint (keyless): https://eonet.gsfc.nasa.gov/api/v3/events?status=open
+ *
+ * NO `limit` (2026-10-12). It used to carry `limit=50`, and EONET honours that
+ * literally: 50 of the 7,208 events `status=open` actually holds, every hour,
+ * with nothing in the envelope to page and no offset parameter to advance
+ * (tools/audit_url_limits.py; docs/measured-url-limits-2026-10-11.tsv). The
+ * endpoint has no paging because it needs none — the complete open set comes
+ * back in ONE request (5.0 MB measured 2026-10-12), so the fix is to stop
+ * asking for a slice of it. `status=open` is what bounds this feed, not a count.
  * Emits: event id, title, description, category ids/titles, source ids and
  *   URLs, the most recent observation's date, magnitudeValue/magnitudeUnit
  *   when the category carries them, and that observation's geometry.
@@ -21,10 +29,12 @@
 #include "geoeo_common.inc"
 
 static const char *URL =
-    "https://eonet.gsfc.nasa.gov/api/v3/events?limit=50&status=open";
+    "https://eonet.gsfc.nasa.gov/api/v3/events?status=open";
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  cJSON *doc = feed_get_json(ctx->http, URL, 30000);
+  /* 90 s, not 30: the complete open set is 5.0 MB and the old 30 s was sized
+   * for the 50-event slice this no longer asks for. */
+  cJSON *doc = feed_get_json(ctx->http, URL, 90000);
   if (!doc) {
     fprintf(stderr, "[nasa-eonet-events] fetch/parse failed\n");
     return -1;
@@ -140,7 +150,7 @@ static const source_def geoeo_eonet_def = {
   .name = "NASA EONET Natural Event Tracker",
   .update_interval_sec = 3600, .run = run,
   .category = "environment", .type = "api",
-  .url = "https://eonet.gsfc.nasa.gov/api/v3/events?limit=50&status=open",
+  .url = "https://eonet.gsfc.nasa.gov/api/v3/events?status=open",
   .description = "NASA's curated feed of currently-open natural events — wildfires, storms, volcanoes, icebergs, floods, dust and haze — each linked back to the authoritative source system.",
   .license = "NASA EONET, US Government open data; no key, no restriction.",
   .free_tier = 1,

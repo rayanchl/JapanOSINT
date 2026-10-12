@@ -2,7 +2,7 @@
  * drone and aerial surveys, mostly flown for disaster response and
  * humanitarian mapping.
  *
- * Endpoint (keyless): https://api.openaerialmap.org/meta?limit=50
+ * Endpoint (keyless): https://api.openaerialmap.org/meta?limit=100&page=1
  * Emits per image: _id, title, uuid (the COG URL), gsd, acquisition_start /
  *   acquisition_end, provider, platform, per-image license, and the image
  *   footprint.
@@ -12,7 +12,16 @@
  *
  * parse_notes honoured:
  *  - Records live under 'results'; 'meta.found' is the corpus total and is
- *    logged, never emitted as a per-record value.
+ *    never emitted as a per-record value. It used to be only LOGGED, from a
+ *    single `?limit=50` request: 50 of the 21,437 images the index holds,
+ *    re-read daily, the rest dropped in silence (tools/audit_url_limits.py;
+ *    docs/measured-url-limits-2026-10-11.tsv). The service takes `page`
+ *    (measured 2026-10-12: pages 1, 2 and 3 return disjoint _id sets), so the
+ *    URL carries `page=1` and lib/pagewalk.c advances it. 250 pages of 100
+ *    covers 25,000 against the measured 21,437.
+ *  - 'meta' reports `page: 1, limit: 10` whatever was ASKED for, so it is not
+ *    a reading of the request — the `results` array is. Do not drive paging
+ *    off it.
  *  - THREE representations of the same geometry are present: `bbox` (an
  *    array), `footprint` (a WKT POLYGON STRING — deliberately NOT JSON-parsed,
  *    it is carried as text) and `geojson` (a real GeoJSON Polygon object). The
@@ -24,26 +33,23 @@
  */
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/pagewalk.h"
 #include "geoeo_common.inc"
 
-static const char *URL = "https://api.openaerialmap.org/meta?limit=50";
+static const char *URL = "https://api.openaerialmap.org/meta?limit=100&page=1";  /* exhaustive-ok: walked by lib/pagewalk.c, which advances the offset/page this URL carries */
 
-static int run(const source_ctx *ctx, intel_sink *sink) {
-  cJSON *doc = feed_get_json(ctx->http, URL, 45000);
-  if (!doc) {
-    fprintf(stderr, "[openaerialmap-imagery] fetch/parse failed\n");
-    return -1;
-  }
+/* 21,437 images at 100 a page = 215; 250 is that with headroom. */
+#define OAM_PAGE_MAX 250  /* exhaustive-ok: page ceiling handed to pw_walk_max(); a stop at it files a collector-truncation-notice */
+
+static int oam_emit_page(const source_ctx *ctx, intel_sink *sink,
+                         const char *sid, cJSON *doc, void *ud, int *seen) {
+  (void)ctx; (void)ud;
   cJSON *results = cJSON_GetObjectItem(doc, "results");
+  *seen = cJSON_IsArray(results) ? cJSON_GetArraySize(results) : 0;
   if (!cJSON_IsArray(results)) {
-    fprintf(stderr, "[openaerialmap-imagery] no results array\n");
-    cJSON_Delete(doc);
-    return -1;
+    fprintf(stderr, "[%s] no results array\n", sid);
+    return 0;
   }
-  cJSON *meta = cJSON_GetObjectItem(doc, "meta");
-  double found = 0;
-  if (meta && geoeo_num(meta, "found", &found))
-    fprintf(stderr, "[openaerialmap-imagery] index reports %.0f images\n", found);
 
   static const char *KEYS[] = { "_id", "title", "uuid", "gsd", "provider",
                                 "platform", "license", "acquisition_start",
@@ -112,8 +118,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
     free(gj);
   }
-  cJSON_Delete(doc);
-  fprintf(stderr, "[openaerialmap-imagery] emitted %d images\n", n);
+  return n;
+}
+
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  int n = pw_walk_max(ctx, sink, "openaerialmap-imagery", URL, pw_fetch_json,
+                      oam_emit_page, NULL, OAM_PAGE_MAX);
+  if (n < 0) {
+    fprintf(stderr, "[openaerialmap-imagery] fetch/parse failed\n");
+    return -1;
+  }
   return 0;
 }
 
@@ -122,7 +136,7 @@ static const source_def geoeo_oam_def = {
   .name = "OpenAerialMap Imagery Index",
   .update_interval_sec = 86400, .run = run,
   .category = "satellite", .type = "api",
-  .url = "https://api.openaerialmap.org/meta?limit=50",
+  .url = "https://api.openaerialmap.org/meta?limit=100&page=1",  /* exhaustive-ok: documentation of the row, never fetched; the walk is pw_walk_max() above */
   .description = "The Humanitarian OpenStreetMap Team's open imagery index — drone and aerial surveys flown for disaster response and humanitarian mapping, each with a footprint, GSD and a direct COG URL.",
   .license = "Service metadata declares CC-BY 4.0; individual images carry their own licence field, carried per row.",
   .free_tier = 1,

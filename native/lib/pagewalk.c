@@ -14,10 +14,16 @@
  * stated in-band rather than hidden. */
 #define PW_PAGE_MAX_DEFAULT 20   /* exhaustive-ok: runaway ceiling, disclosed as a truncation notice */
 
-static int pw_page_max(void) {
+/* `declared` is a source's own measured ceiling (pw_walk_max), 0 for "use the
+ * default". JO_PAGE_MAX always wins, because it is the operator's brake and a
+ * source is not allowed to talk past it — including downwards: an operator who
+ * sets JO_PAGE_MAX=1 to make a run cheap must get one page from every source,
+ * not 160 from the ones that asked for more. */
+static int pw_page_max(int declared) {
   const char *e = getenv("JO_PAGE_MAX");
   int v = e ? atoi(e) : 0;
   if (v > 0) return v;
+  if (declared > 0) return declared;
   return PW_PAGE_MAX_DEFAULT;
 }
 static int pw_walk_enabled(void) {
@@ -323,6 +329,12 @@ static void pw_notice(intel_sink *s, const char *id, const char *url,
 
 int pw_walk(const source_ctx *c, intel_sink *s, const char *id,
             const char *url, pw_fetch_fn fetch, pw_emit_fn emit_page, void *ud) {
+  return pw_walk_max(c, s, id, url, fetch, emit_page, ud, 0);
+}
+
+int pw_walk_max(const source_ctx *c, intel_sink *s, const char *id,
+                const char *url, pw_fetch_fn fetch, pw_emit_fn emit_page,
+                void *ud, int page_max_declared) {
   if (!c || !s || !url || !fetch || !emit_page) return -1;
 
   /* Plan against the URL that will ACTUALLY be fetched. http_request applies
@@ -367,7 +379,7 @@ int pw_walk(const source_ctx *c, intel_sink *s, const char *id,
    * yardstick taken from the server's own first page. */
   const int infer_size_from_server = (page_size <= 0 && has_page_param);
 
-  const int page_max = pw_page_max();
+  const int page_max = pw_page_max(page_max_declared);
   const int may_walk = pw_walk_enabled();
 
   char *cur = strdup(url);
@@ -485,6 +497,16 @@ int pw_walk(const source_ctx *c, intel_sink *s, const char *id,
    *     the URL let us ask for the rest, which is the 2,592-source case. */
   int more_known    = (available >= 0 && available > total);
   char failwhy[320] = "";
+  /* Name the ceiling that actually bit. It used to read "JO_PAGE_MAX" always,
+   * which is wrong for a source carrying its own measured ceiling: the reader
+   * would go looking for an environment variable nobody set. */
+  char ceilwhy[200];
+  snprintf(ceilwhy, sizeof ceilwhy,
+           "the page ceiling (%d page%s, %s) stopped the walk", page_max,
+           page_max == 1 ? "" : "s",
+           getenv("JO_PAGE_MAX")   ? "JO_PAGE_MAX"
+           : page_max_declared > 0 ? "this source's own measured ceiling"
+                                   : "the pagewalk default");
   if (failed_page > 0) {
     char fdesc[64];
     feed_status_describe(failed_status, fdesc, sizeof fdesc);
@@ -502,7 +524,7 @@ int pw_walk(const source_ctx *c, intel_sink *s, const char *id,
       : stopped_on_repeat  ? "the upstream's next-page link pointed back at the page "
                            "just fetched, so the walk stopped rather than "
                            "re-collecting the same records"
-      : stopped_at_ceiling ? "the page ceiling (JO_PAGE_MAX) stopped the walk"
+      : stopped_at_ceiling ? ceilwhy
       : more_known       ? "the upstream reports more records than were collected"
       : full_last        ? "the last page came back full and the upstream offered "
                            "no next link, nor does this source's URL carry an "

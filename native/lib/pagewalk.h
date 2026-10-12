@@ -72,6 +72,24 @@ typedef int (*pw_emit_fn)(const source_ctx *c, intel_sink *s, const char *id,
 int pw_walk(const source_ctx *c, intel_sink *s, const char *id,
             const char *url, pw_fetch_fn fetch, pw_emit_fn emit_page, void *ud);
 
+/* As pw_walk, with an explicit page ceiling for a source whose collection size
+ * has been MEASURED and is larger than the 20-page default.
+ *
+ * The default exists as a brake on a runaway walk against an unknown upstream,
+ * and raising it globally would lift that brake for all 2,727 of them. But a
+ * source whose total the upstream itself publishes — EMSC's 48,729 moment
+ * tensors, CBS's 159,120 CPI rows, OpenAerialMap's 21,437 images — is not
+ * unknown, and capping it at 20 pages turns a complete read into a permanently
+ * disclosed shortfall. Pass the number of pages that covers the measured total
+ * with headroom, and say in the caller where the measurement came from.
+ *
+ * 0 means "use the default". JO_PAGE_MAX still overrides, in both directions:
+ * it is the operator's brake, so a source cannot talk past it, and an operator
+ * who lowers it to make a run cheap gets that from every source. */
+int pw_walk_max(const source_ctx *c, intel_sink *s, const char *id,
+                const char *url, pw_fetch_fn fetch, pw_emit_fn emit_page,
+                void *ud, int page_max_declared);
+
 /* The default fetcher: feed_get_json with the 25 s timeout the macros used. */
 cJSON *pw_fetch_json(const source_ctx *c, const char *url, void *ud);
 

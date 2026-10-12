@@ -381,11 +381,22 @@ VJSON(geo_stac_swisstopo_collections, "geo-stac-swisstopo-collections", "swissto
   "en", "[\"stac\",\"switzerland\",\"geodata\"]", 86400,
   "Swiss national geodata STAC collections.");
 
-VGEO(geo_stac_swisstopo_swissimage, "geo-stac-swisstopo-swissimage", "swisstopo — SWISSIMAGE orthophoto tiles", "swisstopo — SWISSIMAGE 正射画像",
-  "science", "earthobs",
-  "https://data.geo.admin.ch/api/stac/v0.9/collections/ch.swisstopo.swissimage-dop10/items?limit=100",
-  "en", "[\"stac\",\"switzerland\",\"orthophoto\"]", 86400,
-  "10 cm Swiss orthophoto tile index with footprints.");
+/* geo-stac-swisstopo-swissimage was HERE, reading
+ * data.geo.admin.ch/.../ch.swisstopo.swissimage-dop10/items?limit=100 — the
+ * same endpoint, page size and interval as `swisstopo-stac` in
+ * collectors/sources/geoeo_stac_items.c. The two were not an exact endpoint
+ * match only because the hand-written row asked for limit=50, and that was an
+ * accident of authoring, not a difference in what either one read: both walk
+ * the collection to its end (this one through geojson_emit_paged, that one
+ * through pw_walk), so both stored the same tiles under two source ids.
+ *
+ * Removed 2026-10-12 in favour of the hand-written row, which is strictly
+ * richer on the same bytes: it carries the item's STAC properties (gsd,
+ * datetime, per-item licence), sets sub_source_id to the collection, and
+ * records geo_precision="tile-footprint" so nobody reads the derived pin as a
+ * target. `make lint-sources` found it (dup-endpoint) the moment the page
+ * sizes matched.
+ */
 
 VJSON(geo_swiss_geoadmin_search, "geo-swiss-geoadmin-search", "swisstopo geo.admin.ch — layer catalogue", "swisstopo geo.admin.ch — レイヤ目録",
   "science", "earthobs",

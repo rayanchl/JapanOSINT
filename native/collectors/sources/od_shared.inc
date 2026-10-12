@@ -394,6 +394,18 @@ static inline int od_walk_rows(const source_ctx *ctx, intel_sink *sink,
                  od_walk_emit_page, &w);
 }
 
+/* As od_walk_rows, with an explicit page ceiling for a table whose row count
+ * has been MEASURED and needs more than the 20-page default — see pw_walk_max
+ * in lib/pagewalk.h for why that is a per-source number and not a global one. */
+static inline int od_walk_rows_max(const source_ctx *ctx, intel_sink *sink,
+                                   const char *source_id, const char *url,
+                                   const char *path, const od_rowspec *sp,
+                                   int page_max) {
+  od_walk_ctx w = { path, sp };
+  return pw_walk_max(ctx, sink, source_id, url, pw_fetch_json,
+                     od_walk_emit_page, &w, page_max);
+}
+
 /* ---------------------------------------------------------- CKAN / udata  */
 
 /* CKAN package_search → one row per dataset. The array is result.results[]
