@@ -1,0 +1,70 @@
+/* core/collectors.def — display metadata for collector keys.
+ *
+ * `source_def.collector` is a MACHINE KEY: the beat a source was authored and
+ * probed in (hpengine rows default to their table's file name; generated
+ * feeds carry the beat the generator was run for; hand-written collectors
+ * name their family). It is what groups sources in /api/collectors and the
+ * web Collectors page. This table lays a human label, an optional Japanese
+ * label, a one-line description and an optional PARENT key over it. A key
+ * ABSENT from this table still renders — with the key itself as its label —
+ * so a new beat is never hidden by not being listed here.
+ *
+ * PARENT is how "some sources sit alone in their collector, some are grouped"
+ * is expressed without renaming anything: a child key keeps its identity (its
+ * rows, its probe record), and the UI nests it under the parent. Every parent
+ * is empty until someone decides a grouping; the census that informs that
+ * decision is docs/source-pages-revamp/collector-census-2026-10-11.tsv.
+ *
+ *   COLLECTOR(key, label, label_ja, description, parent)
+ *
+ * Labels describe, they do not promise: "Japanese prefectural portals" says
+ * what the beat set out to cover, not that every row is healthy today — the
+ * per-collector tallies next to it are the measurement. */
+COLLECTOR("osint",            "Hand-written OSINT pivots", "手書きOSINTピボット",
+          "Entity-pivot collectors written by hand in collectors/sources/, plus the gnews-* news feeds.", NULL)
+COLLECTOR("government",       "Government feeds", "政府・自治体フィード",
+          "Scheduled feeds from national and municipal government sites.", NULL)
+COLLECTOR("academic",         "Academic and research feeds", "学術・研究フィード", NULL, NULL)
+COLLECTOR("science",          "Science feeds", "科学フィード", NULL, NULL)
+COLLECTOR("europe_data",      "European open data", "欧州オープンデータ", NULL, NULL)
+COLLECTOR("europe_news",      "European news", "欧州ニュース", NULL, NULL)
+COLLECTOR("europe_env",       "European environment", "欧州環境", NULL, NULL)
+COLLECTOR("europe_gov",       "European government", "欧州政府", NULL, NULL)
+COLLECTOR("fr_opendata",      "France — open data", "フランス オープンデータ", NULL, NULL)
+COLLECTOR("fr_prefectural",   "France — prefectures", "フランス 県", NULL, NULL)
+COLLECTOR("de_opendata",      "Germany — open data", "ドイツ オープンデータ", NULL, NULL)
+COLLECTOR("ch_opendata",      "Switzerland — open data", "スイス オープンデータ", NULL, NULL)
+COLLECTOR("us_opendata",      "United States — open data", "米国 オープンデータ", NULL, NULL)
+COLLECTOR("us_state",         "United States — states", "米国 州", NULL, NULL)
+COLLECTOR("latam_data",       "Latin America — open data", "中南米 オープンデータ", NULL, NULL)
+COLLECTOR("africa_gov",       "Africa — government", "アフリカ 政府", NULL, NULL)
+COLLECTOR("oceania_data",     "Oceania — open data", "オセアニア オープンデータ", NULL, NULL)
+COLLECTOR("jp_prefectural",   "Japan — prefectural portals", "日本 都道府県ポータル", NULL, NULL)
+COLLECTOR("jp_local",         "Japan — municipalities", "日本 市区町村", NULL, NULL)
+COLLECTOR("jp_river",         "Japan — rivers and flood", "日本 河川・洪水", NULL, NULL)
+COLLECTOR("disaster",         "Disaster and hazard", "災害・ハザード", NULL, NULL)
+COLLECTOR("environment",      "Environment", "環境", NULL, NULL)
+COLLECTOR("earthobs",         "Earth observation", "地球観測", NULL, NULL)
+COLLECTOR("space",            "Space", "宇宙", NULL, NULL)
+COLLECTOR("satellite",        "Satellites", "衛星", NULL, NULL)
+COLLECTOR("cyber",            "Cyber threat intelligence", "サイバー脅威情報", NULL, NULL)
+COLLECTOR("security",         "Security advisories", "セキュリティ勧告", NULL, NULL)
+COLLECTOR("infrastructure",   "Infrastructure", "インフラ", NULL, NULL)
+COLLECTOR("transport",        "Transport", "交通", NULL, NULL)
+COLLECTOR("maritime",         "Maritime", "海事", NULL, NULL)
+COLLECTOR("telecom",          "Telecom and networks", "通信・ネットワーク", NULL, NULL)
+COLLECTOR("statistics",       "Statistics", "統計", NULL, NULL)
+COLLECTOR("health",           "Health", "保健・医療", NULL, NULL)
+COLLECTOR("legal",            "Legal", "法務", NULL, NULL)
+COLLECTOR("news",             "News", "ニュース", NULL, NULL)
+COLLECTOR("sanctions",        "Sanctions lists", "制裁リスト", NULL, NULL)
+COLLECTOR("social",           "Social platforms", "ソーシャル", NULL, NULL)
+COLLECTOR("camera-discovery", "Camera discovery", "カメラ探索",
+          "The per-channel camera discovery fan-out (one source per channel).", NULL)
+COLLECTOR("_maint",           "Maintenance pods", "保守ポッド",
+          "Internal pipeline pods — not data sources.", NULL)
+COLLECTOR("_enrich",          "Enrichment pods", "エンリッチメントポッド",
+          "Internal enrichment pods — not data sources.", NULL)
+COLLECTOR("_test",            "Test fixtures", "テスト用", "Fixtures for the test suite — not data sources.", NULL)
+COLLECTOR("_probe",           "Probe tools", "プローブ", "Operator probe tools — not data sources.", NULL)
+COLLECTOR("_breach",          "Breach corpus", "漏洩コーパス", NULL, NULL)

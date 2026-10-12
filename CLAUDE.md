@@ -450,6 +450,31 @@ enough that batches 31 and 32 could both stop registering with CI green.
 Re-record them when a batch lands (`make source-floor-record
 registry-floor-record`).
 
+## Source pages API (2026-10-12)
+
+`core/sourceapi.c` serves the Sources, source detail and Collectors pages:
+`GET /api/sources/search` (server-searched, paged, `meta.facets`),
+`GET /api/sources/:id/detail` (the row as declared via `hp_describe_json`,
+schedule, status, data shape, notices, runs, credentials, pacing, provenance),
+`GET /api/sources/:id/summary` (small-model summary from measured facts only —
+on any LLM failure it returns the status code AND the facts, never prose),
+`GET /api/collectors`, `GET /api/collectors/:key`. Three things changed
+underneath them that older notes in this file predate:
+
+* **`sources.status` is now written** by `scheduler_run_source()` after every
+  run (`sources_row_record`): online / degraded (ok, stored nothing) / offline
+  / pending (never ran). Until then nothing wrote it after the seed, so every
+  row read `pending` forever and `/api/status`'s online count was the seed.
+* **An hpengine row's default collector is its table file's basename**
+  (`hp3b25_jpmedia`), not `osint`. Every source has a collector; 525 keys;
+  `core/collectors.def` labels them (parent = grouping, none set yet).
+* **"Entity pivot" is `registry_is_entity_pivot()`** in `registry.c`, the one
+  rule both the dispatcher and `service_vec` use: interval 0, not a `_` pod,
+  and (hpengine) an entity token in the URL/body. `collector=="osint"` is no
+  longer part of the definition.
+
+Plan, audit and as-built notes: `docs/source-pages-revamp/`.
+
 ## Where things live
 
 ```

@@ -190,8 +190,7 @@ static void sl_append(char **buf, size_t *len, size_t *cap, const char *s) {
  * an interval. update_interval_sec == 0 is the registry's own word for
  * "on-demand pivot", which is exactly the set this catalogue is for. */
 static int is_entity_pivot(const source_def *d) {
-  return d->collector && strcmp(d->collector, "osint") == 0
-         && d->update_interval_sec == 0;
+  return registry_is_entity_pivot(d);     /* the ONE rule — source.h */
 }
 
 /* THE PROMPT IS A CONSUMER THAT PHYSICALLY CANNOT TAKE EVERYTHING.

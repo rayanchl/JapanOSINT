@@ -3175,6 +3175,31 @@ int main(void) {
   ok(g_ncap >= 4 && !strcmp(g_cap[1].link, "https://x.test/articles/-/409812"),
      "37: records keep first-appearance order and their resolved link");
 
+  /* 38. hp_describe_json says what a row DECLARES, in words a client can show:
+   * the mode and entity shape as names, the entity tokens the URL carries,
+   * the kind (pivot: takes an entity, no interval), the paging strategy, and
+   * whether a detail hop exists. An id this engine does not run is NULL, not
+   * an empty object — a client must be able to tell "not hpengine" from
+   * "hpengine with nothing declared". */
+  {
+    char *d = hp_describe_json("T_JSON");
+    ok(d != NULL, "38: describe returns JSON for a registered row");
+    ok(d && strstr(d, "\"mode\":\"json\""), "38: mode as a word");
+    ok(d && strstr(d, "\"want\":\"any\""), "38: want as a word");
+    ok(d && strstr(d, "\"kind\":\"pivot\""), "38: interval 0 + entity token = pivot");
+    ok(d && strstr(d, "\"entity_tokens\":[\"{q}\",\"{qd}\"]"), "38: entity tokens listed once each");
+    ok(d && strstr(d, "\"strategy\":\"single_request\""), "38: no paging declared = single_request");
+    ok(d && strstr(d, "\"url\":\"https://x.test/s?q={q}&d={qd}\""), "38: url template verbatim");
+    ok(d && strstr(d, "\"engine\":\"hpengine\""), "38: engine named");
+    free(d);
+    char *dd = hp_describe_json("T_DEEP");
+    ok(dd && strstr(dd, "\"detail_hop\":{\"declared\":true"), "38: detail hop declared");
+    free(dd);
+    ok(hp_describe_json("NOT_A_ROW") == NULL, "38: unknown id is NULL, not {}");
+    ok(hp_source_uses_entity("T_JSON") == 1 && hp_source_uses_entity("nope") == 0,
+       "38: uses_entity is 1 for a {q} row and 0 for an unknown id");
+  }
+
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;
 }

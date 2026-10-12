@@ -28,7 +28,7 @@
   static int run_##SYM(const source_ctx *c, intel_sink *s) {                 \
     int n = rss_collect(c, s, URL, LANG, TAGS); return n < 0 ? -1 : 0; }     \
   static const source_def SYM = {                                           \
-    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,            \
+    .id = ID, .collector = COLL, .engine = "rss", .name = NAME, .name_ja = NAMEJA,            \
     .update_interval_sec = IVAL, .run = run_##SYM,                           \
     .category = CAT, .type = "web_request", .url = URL,                      \
     .description = DESC, .layer = NULL, .free_tier = 1 };                    \
@@ -40,7 +40,7 @@
   static int run_##SYM(const source_ctx *c, intel_sink *s) {                 \
     int n = rss_collect(c, s, URL, LANG, TAGS); return n < 0 ? -1 : 0; }     \
   static const source_def SYM = {                                           \
-    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,            \
+    .id = ID, .collector = COLL, .engine = "rss", .name = NAME, .name_ja = NAMEJA,            \
     .update_interval_sec = INTERVAL, .run = run_##SYM,                       \
     .category = CAT, .type = "web_request", .url = URL,                      \
     .description = DESC, .layer = NULL, .free_tier = 1 };                    \

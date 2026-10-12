@@ -460,6 +460,12 @@ static cJSON *breach_status_row(const breach_src_row *br) {
   return o;
 }
 
+cJSON *statusapi_cred_json(const char *id) {
+  cJSON *o = cJSON_CreateObject();
+  add_cred_status(o, id);
+  return o;
+}
+
 #define STATUS_SRC_COLS \
   "SELECT id,name,type,category,url,status,last_check,last_success," \
   "response_time_ms,records_count,error_message,probe_request_url," \

@@ -439,7 +439,35 @@ typedef struct hp_source {
 
 /* Register `n` rows. `defs` must be static storage of at least n entries owned
  * by the caller (source_def pointers live for the process lifetime). */
-void hp_register(const hp_source *specs, int n, source_def *defs);
+/* `table` is the registering file's basename without `.c` (HP_REGISTER_TABLE
+ * passes __FILE__): it becomes the default `collector` of every row in the
+ * table that declares none. It used to be the literal "osint" for all of
+ * them, which put 8,445 rows from 183 unrelated tables into one collector —
+ * a Japanese media beat, a SCADA beat and a Brazilian registry beat
+ * indistinguishable in every client. The beat a row was authored and probed
+ * in IS its natural group, and the file name is the one spelling of that
+ * beat every gate already uses. A row that names its own collector keeps it.
+ * NULL/"" falls back to "osint" (the offline test harness, nothing live). */
+void hp_register(const hp_source *specs, int n, source_def *defs,
+                 const char *table);
+
+/* Serialise one registered row AS DECLARED, for the source detail API:
+ * every non-default field by name, enums as words, plus the derived facts a
+ * client would otherwise have to re-derive from the C — `kind`
+ * (pivot | scheduled | scheduled-pivot | unreachable), the entity tokens the
+ * URL and body use, the paging strategy as one word, whether a detail hop is
+ * declared and whether {date…}/{ago:} tokens are rendered. Header templates
+ * are shown verbatim: they carry `{env}` tokens, never values. malloc'd JSON,
+ * caller frees; NULL for an id this engine does not run. */
+char *hp_describe_json(const char *id);
+/* The declared row itself (read-only, lives for the process), or NULL when
+ * `id` is not an hpengine source. For callers that want one field, not JSON. */
+const hp_source *hp_source_get(const char *id);
+/* 1 when `id` is an hpengine row whose URL or POST body carries an entity
+ * token, i.e. it is dispatchable as an entity pivot. 0 for a fixed-endpoint
+ * row AND for an id this engine does not run — callers that need to tell
+ * those apart ask hp_describe_json(). */
+int hp_source_uses_entity(const char *id);
 
 /* XML text → the characters it denotes, in place: unwraps every CDATA section
  * (payload verbatim), decodes the five predefined entities and numeric
@@ -453,7 +481,8 @@ void hp_xml_decode(char *s);
 #define HP_REGISTER_TABLE(TBL)                                                \
   static source_def TBL##_defs[sizeof(TBL) / sizeof((TBL)[0])];               \
   __attribute__((constructor)) static void hp_reg_##TBL(void) {               \
-    hp_register((TBL), (int)(sizeof(TBL) / sizeof((TBL)[0])), TBL##_defs);    \
+    hp_register((TBL), (int)(sizeof(TBL) / sizeof((TBL)[0])), TBL##_defs,    \
+                __FILE__);                                                    \
   }
 
 #endif

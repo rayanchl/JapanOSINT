@@ -62,9 +62,61 @@ int registry_duplicate_count(void) { return g_dupes; }
 int registry_count(void) { return g_n; }
 const source_def **registry_all(void) { return g_srcs; }
 
+/* Lookup is by bsearch over a sorted shadow of g_srcs, rebuilt lazily when
+ * the registry has grown since it was last built. registry_all() keeps
+ * registration order (the scheduler and the floors walk it), so the shadow is
+ * a second array, not a reordering. A linear scan here cost the provenance
+ * index 20 s on first use — one registry_get per docs/ row, 18,883 strcmp
+ * each — and the OSINT dispatcher resolves ids on every search. Constructors
+ * register before main() on one thread; later callers come from the worker
+ * threads, hence the mutex around the rebuild. */
+#include <pthread.h>
+#include <stdlib.h>
+static const source_def **g_sorted = NULL;
+static int g_sorted_n = 0;
+static pthread_mutex_t g_sorted_mu = PTHREAD_MUTEX_INITIALIZER;
+static int def_cmp(const void *a, const void *b) {
+  const source_def *const *x = a, *const *y = b;
+  return strcmp((*x)->id, (*y)->id);
+}
+static int def_key_cmp(const void *k, const void *e) {
+  return strcmp((const char *)k, (*(const source_def *const *)e)->id);
+}
 const source_def *registry_get(const char *id) {
-  if (!id) return NULL;
-  for (int i = 0; i < g_n; i++)
-    if (strcmp(g_srcs[i]->id, id) == 0) return g_srcs[i];
-  return NULL;
+  if (!id || g_n == 0) return NULL;
+  pthread_mutex_lock(&g_sorted_mu);
+  if (g_sorted_n != g_n) {
+    const source_def **ns = realloc((void *)g_sorted, (size_t)g_n * sizeof *ns);
+    if (ns) {
+      memcpy(ns, g_srcs, (size_t)g_n * sizeof *ns);
+      qsort(ns, (size_t)g_n, sizeof *ns, def_cmp);
+      g_sorted = ns; g_sorted_n = g_n;
+    }
+  }
+  const source_def **sorted = g_sorted; int n = g_sorted_n;
+  pthread_mutex_unlock(&g_sorted_mu);
+  if (!sorted) {                      /* allocation failed: the slow path still answers */
+    for (int i = 0; i < g_n; i++)
+      if (strcmp(g_srcs[i]->id, id) == 0) return g_srcs[i];
+    return NULL;
+  }
+  /* duplicate ids: the FIRST registered wins, as before — bsearch may land on
+   * either copy, so step back to the lowest registration index among equals */
+  const source_def **hit = bsearch(id, sorted, (size_t)n, sizeof *sorted, def_key_cmp);
+  if (!hit) return NULL;
+  const source_def *best = *hit;
+  if (g_dupes) {
+    for (int i = 0; i < g_n; i++)
+      if (strcmp(g_srcs[i]->id, id) == 0) return g_srcs[i];
+  }
+  return best;
+}
+
+#include "lib/hpengine.h"
+int registry_is_entity_pivot(const source_def *d) {
+  if (!d || d->update_interval_sec != 0) return 0;
+  if (!d->collector || d->collector[0] == '_') return 0;
+  if (d->engine && !strcmp(d->engine, "hpengine"))
+    return hp_source_uses_entity(d->id);
+  return 1;
 }

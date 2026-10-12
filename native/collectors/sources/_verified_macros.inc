@@ -24,7 +24,7 @@
     free(du);                                                                 \
     return n < 0 ? -1 : 0; }                                                  \
   static const source_def SYM = {                                            \
-    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,             \
+    .id = ID, .collector = COLL, .engine = "vrss", .name = NAME, .name_ja = NAMEJA,             \
     .update_interval_sec = IVAL, .run = run_##SYM,                            \
     .category = CAT, .type = "web_request", .url = URL,                       \
     .description = DESC, .layer = NULL, .free_tier = 1 };                     \
@@ -141,7 +141,7 @@ static inline int vgeo_cat_emit(struct intel_sink *s, const intel_item *it) {
     if (n < 0) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }     \
     return 0; }                                                               \
   static const source_def SYM = {                                            \
-    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,             \
+    .id = ID, .collector = COLL, .engine = "vgeo", .name = NAME, .name_ja = NAMEJA,             \
     .update_interval_sec = IVAL, .run = run_##SYM,                            \
     .category = CAT, .type = "api", .url = URL,                               \
     .description = DESC, .layer = NULL, .free_tier = 1 };                     \
@@ -173,7 +173,7 @@ static inline int vgeo_cat_emit(struct intel_sink *s, const intel_item *it) {
     if (n < 0) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }     \
     return 0; }                                                               \
   static const source_def SYM = {                                            \
-    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,             \
+    .id = ID, .collector = COLL, .engine = "vjson", .name = NAME, .name_ja = NAMEJA,             \
     .update_interval_sec = IVAL, .run = run_##SYM,                            \
     .category = CAT, .type = "api", .url = URL,                               \
     .description = DESC, .layer = NULL, .free_tier = 1 };                     \
@@ -194,7 +194,7 @@ static inline int vgeo_cat_emit(struct intel_sink *s, const intel_item *it) {
     if (n < 0) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }     \
     return 0; }                                                               \
   static const source_def SYM = {                                            \
-    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,             \
+    .id = ID, .collector = COLL, .engine = "vjson", .name = NAME, .name_ja = NAMEJA,             \
     .update_interval_sec = IVAL, .run = run_##SYM,                            \
     .category = CAT, .type = "api", .url = URL,                               \
     .description = DESC, .layer = NULL, .free_tier = 1 };                     \
@@ -222,7 +222,7 @@ static inline int vgeo_cat_emit(struct intel_sink *s, const intel_item *it) {
     if (n < 0) { fprintf(stderr, "[%s] stream failed\n", ID); return -1; }    \
     return 0; }                                                               \
   static const source_def SYM = {                                            \
-    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,             \
+    .id = ID, .collector = COLL, .engine = "vjson", .name = NAME, .name_ja = NAMEJA,             \
     .update_interval_sec = IVAL, .run = run_##SYM,                            \
     .category = CAT, .type = "dataset", .url = URL,                           \
     .description = DESC, .layer = NULL, .free_tier = 1 };                     \
@@ -257,7 +257,7 @@ static inline int vgeo_cat_emit(struct intel_sink *s, const intel_item *it) {
     fprintf(stderr, "[%s] emitted %d\n", ID, n);                              \
     return 0; }                                                               \
   static const source_def SYM = {                                            \
-    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,             \
+    .id = ID, .collector = COLL, .engine = "vcsv", .name = NAME, .name_ja = NAMEJA,             \
     .update_interval_sec = IVAL, .run = run_##SYM,                            \
     .category = CAT, .type = "web_request", .url = URL,                       \
     .description = DESC, .layer = NULL, .free_tier = 1 };                     \

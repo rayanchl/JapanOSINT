@@ -181,9 +181,9 @@ static void test_catalogue_excludes_scheduled_feeds(void) {
   int pivots = 0, scheduled_osint = 0;
   const source_def **all = registry_all();
   for (int i = 0; i < registry_count(); i++) {
-    if (!all[i]->collector || strcmp(all[i]->collector, "osint")) continue;
-    if (all[i]->update_interval_sec == 0) pivots++;
-    else scheduled_osint++;
+    if (registry_is_entity_pivot(all[i])) pivots++;
+    else if (all[i]->update_interval_sec > 0 && all[i]->collector
+             && all[i]->collector[0] != '_') scheduled_osint++;
   }
   assert(note.total == pivots &&
          "catalogue total must be the on-demand pivots, not every osint row");
@@ -191,8 +191,8 @@ static void test_catalogue_excludes_scheduled_feeds(void) {
     /* Spot-check that a known scheduled row is absent from the text. */
     for (int i = 0; i < registry_count(); i++) {
       const source_def *d = all[i];
-      if (!d->collector || strcmp(d->collector, "osint")) continue;
-      if (d->update_interval_sec == 0) continue;
+      if (d->update_interval_sec <= 0 || registry_is_entity_pivot(d)) continue;
+      if (!d->collector || d->collector[0] == '_') continue;
       assert(!strstr(list, d->id) &&
              "a scheduled feed must not be offered as an entity pivot");
       break;
