@@ -380,6 +380,16 @@ static int item_indexable(db_handle *db, const char *uid, int need_feed,
   return ok;
 }
 
+int image_vec_item_indexable(db_handle *db, const char *item_uid, int need_feed) {
+  if (!db || !db->h || !item_uid) return 0;
+  icache *c = NULL;
+  int n = 0;
+  int ok = item_indexable(db, item_uid, need_feed, &c, &n);
+  for (int i = 0; i < n; i++) free(c[i].uid);
+  free(c);
+  return ok;
+}
+
 /* Rows of one kind after the walk cursor that have no ref yet. Returns how
  * many rows the page held (the cursor's business), appending candidates. */
 static int walk_kind(db_handle *db, const char *kind, long long after, int limit,

@@ -70,6 +70,12 @@ void image_vec_migrate(db_handle *db);
 /* 1 when the index exists, holds a dimension and is not refused. */
 int image_vec_ready(db_handle *db);
 
+/* May frames of this intel_items row be indexed and searched?
+ * camera_record_indexable() on its properties and source id, plus — when
+ * `need_feed` — proof that the row is a camera at all (camera_feed_resolve
+ * finds a feed). 0 for an unknown uid. */
+int image_vec_item_indexable(db_handle *db, const char *item_uid, int need_feed);
+
 /* One pod tick: walk up to `max_walk` (<=0 → JO_IMAGE_EMBED_MAX_WALK, 512)
  * stills and as many media assets without a ref, embed the new frames, add
  * refs for frames already embedded, gc orphans. Returns frames embedded, 0

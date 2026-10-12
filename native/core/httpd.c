@@ -29,6 +29,7 @@
 #include "qembed.h"        /* qembed_enabled: does /api/search/suggest retrieve? */
 #include "sourceindexapi.h"
 #include "camera_stills.h"
+#include "visualsearchapi.h"   /* GET /api/cameras/visual-search */
 #include "cameraproxy.h"
 #include "uploadapi.h"
 #include "ffmpeg.h"
@@ -3883,6 +3884,13 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       char *body = camera_stills_capabilities(g_db);
       if (!body) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
       reply_json(c, 200, body); free(body); return;
+    }
+    /* GET /api/cameras/visual-search?q=&bbox=&since=&k= — cameras by what
+     * their frames show (core/visualsearchapi.h). Embeds q via the vision
+     * sidecar: off the loop. Corpus data, plain auth, like .../stills. */
+    if (eq(u, "/api/cameras/visual-search")) {
+      sem_spawn(c, hm, visualsearchapi_route, "", "", opgate_check(&usr) == 0);
+      return;
     }
     { char cid2[640] = {0};   /* a view target id is uid + "#view=" + suffix */
       if (seg(u, "/api/cameras/", "/stills", cid2, sizeof cid2)) {

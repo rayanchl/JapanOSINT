@@ -13,11 +13,16 @@
  *   6. stills retention removes the pruned frame's ref, and the vector only
  *      once no ref is left;
  *   7. image vectors never land in a text index;
- *   8. a sidecar whose dimension changed is refused, not mixed.
+ *   8. a sidecar whose dimension changed is refused, not mixed;
+ *   9. GET /api/cameras/visual-search: one result per camera with its newest
+ *      matching still, bbox/since/k honoured, the privacy policy applied at
+ *      QUERY time, "N of M cameras indexed" in-band, and a 503 that says why
+ *      whenever the sidecar or the index cannot answer.
  *
  * Includes image_vec.c directly, so run.sh links every object except
  * obj/core/image_vec.o. */
 #include "../../core/image_vec.c"
+#include "core/visualsearchapi.h"
 #include "vision_stub.h"
 
 #include <assert.h>
@@ -93,6 +98,35 @@ static void still(const char *id, const char *cam, const char *sha,
   exec(sql);
 }
 
+/* visualsearchapi_route() → parsed JSON; *st gets the status. */
+static cJSON *vsearch(const char *qs, int *st) {
+  *st = 0;
+  char *b = visualsearchapi_route(&g_db, "", "", qs, 0, st);
+  assert(b);
+  cJSON *j = cJSON_Parse(b);
+  assert(j);
+  free(b);
+  return j;
+}
+
+static const char *jstr(cJSON *o, const char *path) {
+  char buf[256];
+  snprintf(buf, sizeof buf, "%s", path);
+  cJSON *x = o;
+  for (char *t = strtok(buf, "."); t && x; t = strtok(NULL, "."))
+    x = cJSON_IsArray(x) ? cJSON_GetArrayItem(x, atoi(t)) : cJSON_GetObjectItem(x, t);
+  return cJSON_IsString(x) ? x->valuestring : NULL;
+}
+
+static double jnum(cJSON *o, const char *path) {
+  char buf[256];
+  snprintf(buf, sizeof buf, "%s", path);
+  cJSON *x = o;
+  for (char *t = strtok(buf, "."); t && x; t = strtok(NULL, "."))
+    x = cJSON_IsArray(x) ? cJSON_GetArrayItem(x, atoi(t)) : cJSON_GetObjectItem(x, t);
+  return cJSON_IsNumber(x) ? x->valuedouble : -1;
+}
+
 int main(void) {
   const char *dbp = getenv("JO_DB");
   if (!dbp || !*dbp) { fprintf(stderr, "set JO_DB to a scratch path\n"); return 2; }
@@ -140,11 +174,23 @@ int main(void) {
   assert(image_vec_tick(&g_db, NULL, 0) == 0);
   assert(!vecindex_exists(&g_db, &image_vec_spec));
   assert(!image_vec_ready(&g_db));
-  printf("  inert: no sidecar, no table, nothing sent: ok\n");
+  {
+    int st; cJSON *j = vsearch("q=snow", &st);
+    assert(st == 503 && !strcmp(jstr(j, "error"), "visual_search_unavailable"));
+    assert(strstr(jstr(j, "reason"), "JO_VISION_EMBED_URL"));
+    cJSON_Delete(j);
+  }
+  printf("  inert: no sidecar, no table, nothing sent, search 503 says why: ok\n");
 
   if (vstub_start(18620, 64) != 0) {
     printf("  SKIP: vision sidecar stub did not start (python3?)\n");
     return 0;
+  }
+
+  {
+    int st; cJSON *j = vsearch("q=snow", &st);
+    assert(st == 503 && strstr(jstr(j, "reason"), "not been built"));
+    cJSON_Delete(j);
   }
 
   /* 2-5. the first real tick */
@@ -177,6 +223,65 @@ int main(void) {
   assert(posts == 1);
   printf("  embed: 3 distinct frames, 4 refs, insecam never sent, not_an_image "
          "recorded, no-bytes counted, 1 request: ok\n");
+  /* 9. visual search */
+  {
+    int st; cJSON *j = vsearch("q=snow%20on%20the%20road", &st);
+    assert(st == 200);
+    cJSON *d = cJSON_GetObjectItem(j, "data");
+    assert(cJSON_GetArraySize(d) == 1);           /* river1 only: open1 denied */
+    assert(!strcmp(jstr(j, "data.0.camera_id"), "camera-discovery|river1"));
+    assert(!strcmp(jstr(j, "data.0.name"), "Tama River"));
+    assert(jnum(j, "data.0.frames_matched") == 3);   /* st1, st2, st3 */
+    const char *sid = jstr(j, "data.0.still.id");
+    const char *sha = jstr(j, "data.0.still.sha256");
+    /* the newest still of the nearest frame */
+    assert((!strcmp(sha, s1) && !strcmp(sid, "st3")) ||
+           (!strcmp(sha, s2) && !strcmp(sid, "st2")));
+    assert(jnum(j, "data.0.distance") >= 0 && jnum(j, "data.0.lat") > 35);
+    assert(jnum(j, "meta.cameras.indexed") == 1 && jnum(j, "meta.cameras.eligible") == 1);
+    assert(jnum(j, "meta.cameras.excluded_by_policy") == 1);
+    assert(!strcmp(jstr(j, "meta.cameras.note"), "1 of 1 cameras indexed"));
+    assert(!strcmp(jstr(j, "meta.model"), "stub-sha256-v1"));
+    assert(jnum(j, "meta.coverage.embedded_count") == 3);
+    assert(cJSON_IsTrue(cJSON_GetObjectItem(cJSON_GetObjectItem(
+      cJSON_GetObjectItem(j, "meta"), "candidates"), "exhausted")));
+    cJSON_Delete(j);
+
+    j = vsearch("q=snow&bbox=0,0,1,1", &st);
+    assert(st == 200 && cJSON_GetArraySize(cJSON_GetObjectItem(j, "data")) == 0);
+    cJSON_Delete(j);
+    j = vsearch("q=snow&bbox=139,35,140,36", &st);
+    assert(st == 200 && cJSON_GetArraySize(cJSON_GetObjectItem(j, "data")) == 1);
+    cJSON_Delete(j);
+
+    j = vsearch("q=snow&since=2026-10-12T01:20:00", &st);
+    assert(st == 200 && cJSON_GetArraySize(cJSON_GetObjectItem(j, "data")) == 1);
+    assert(!strcmp(jstr(j, "data.0.still.id"), "st3"));      /* st1/st2 too old */
+    assert(jnum(j, "data.0.frames_matched") == 1);
+    assert(!strcmp(jstr(j, "meta.since"), "2026-10-12 01:20:00"));
+    cJSON_Delete(j);
+    j = vsearch("q=snow&since=2027-01-01", &st);
+    assert(st == 200 && cJSON_GetArraySize(cJSON_GetObjectItem(j, "data")) == 0);
+    cJSON_Delete(j);
+
+    /* the policy is read at QUERY time */
+    setenv("JO_CAMERA_INDEX_CHANNELS", "volcano", 1);
+    j = vsearch("q=snow", &st);
+    assert(st == 200 && cJSON_GetArraySize(cJSON_GetObjectItem(j, "data")) == 0);
+    assert(jnum(j, "meta.cameras.eligible") == 0);
+    cJSON_Delete(j);
+    unsetenv("JO_CAMERA_INDEX_CHANNELS");
+
+    j = vsearch("bbox=0,0,1,1", &st); assert(st == 400); cJSON_Delete(j);
+    j = vsearch("q=x&bbox=1,2,3", &st); assert(st == 400); cJSON_Delete(j);
+    j = vsearch("q=x&bbox=10,50,20,40", &st); assert(st == 400); cJSON_Delete(j);
+    j = vsearch("q=x&k=0", &st); assert(st == 400); cJSON_Delete(j);
+    j = vsearch("q=x&since=yesterday-ish", &st); assert(st == 400); cJSON_Delete(j);
+    assert(vstub_posts("/embed/text") == 6);  /* rejected requests sent nothing */
+  }
+  printf("  visual search: grouped by camera, newest still of the nearest frame, "
+         "bbox/since honoured, policy at query time, 400s send nothing: ok\n");
+
   /* the image index is not a text index */
   assert(!vecindex_table_exists(&g_db, "intel_vec") ||
          count("SELECT count(*) FROM intel_vec") == 0);
@@ -237,7 +342,12 @@ int main(void) {
   assert(vecindex_refused(&g_db, &image_vec_spec, NULL, 0));
   assert(!image_vec_ready(&g_db));
   assert(count("SELECT count(*) FROM image_vec_ref WHERE ref_id='st7'") == 0);
-  printf("  identity: a 32-d sidecar against a 64-d index is refused: ok\n");
+  {
+    int st; cJSON *j = vsearch("q=snow", &st);
+    assert(st == 503 && strstr(jstr(j, "reason"), "refusing to mix"));
+    cJSON_Delete(j);
+  }
+  printf("  identity: a 32-d sidecar against a 64-d index is refused, search 503: ok\n");
 
   vstub_stop();
   db_close(&g_db);
