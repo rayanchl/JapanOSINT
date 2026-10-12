@@ -12,6 +12,7 @@ import {
   MdClose,
 } from 'react-icons/md';
 import useCameraDiscoveryStream from '../../hooks/useCameraDiscoveryStream';
+import CameraVisualSearch from './CameraVisualSearch.jsx';
 import { isSafeUrl } from '../../utils/safeUrl.js';
 import { CAMERA_FAVORITES_KEY } from '../../auth/localData.js';
 
@@ -842,6 +843,7 @@ export default function CameraDiscoveryThread() {
           Camera Discovery — live stream of cameras being found by the discovery collector. Each row is a single camera either newly added to the DB (NEW) or re-confirmed (UPDATED). Runs are triggered hourly by the scheduler; toggle the Cameras layer on the map to force a run on demand.
         </div>
       </div>
+      <CameraVisualSearch />
       <RunBanner activeRun={activeRun} lastRun={lastRun} />
 
       {header && header.length > 0 && (

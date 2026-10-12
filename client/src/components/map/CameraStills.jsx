@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
   fetchStills, fetchStillObjectUrl,
 } from '../../utils/cameraStills.js';
+import { SimilarCameras } from '../panels/CameraVisualSearch.jsx';
 
 /**
  * Stills timeline for one camera record (native/core/camera_stills.c).
@@ -21,6 +22,7 @@ function sceneBadge(v) {
 
 function StillFrame({ still, onClose }) {
   const [img, setImg] = useState({ status: 'loading', src: null, why: null });
+  const [similar, setSimilar] = useState(false);   // image→image, on demand
   useEffect(() => {
     let cancelled = false;
     let objectUrl = null;
@@ -58,10 +60,18 @@ function StillFrame({ still, onClose }) {
       </div>
       <div className="flex justify-between text-[10px] text-gray-500 font-mono">
         <span>{still.captured_at} UTC{still.view ? ` · ${still.view}` : ''}</span>
-        <button type="button" onClick={onClose} className="text-neon-cyan hover:underline">close</button>
+        <span className="flex gap-2">
+          <button type="button" onClick={() => setSimilar((v) => !v)} className="text-neon-cyan hover:underline">
+            find similar cameras
+          </button>
+          <button type="button" onClick={onClose} className="text-neon-cyan hover:underline">close</button>
+        </span>
       </div>
       {still.ocr_text && (
         <p className="text-[11px] text-gray-400 whitespace-pre-wrap">OCR: {still.ocr_text}</p>
+      )}
+      {similar && (
+        <SimilarCameras stillId={still.id} label={`the ${still.captured_at} frame`} onClose={() => setSimilar(false)} />
       )}
     </div>
   );

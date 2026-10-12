@@ -82,4 +82,23 @@ describe('<CameraStills>', () => {
     expect(alert.textContent).toMatch(/restricted to platform operators/);
     await waitFor(() => expect(String(f.mock.calls[1][0])).toContain('/api/camera-stills/s2/raw'));
   });
+
+  it('finds similar cameras from an opened still', async () => {
+    const f = vi.spyOn(globalThis, 'fetch').mockImplementation(async (url, init) => {
+      const u = String(url);
+      if (u.includes('/stills?')) return jsonRes(200, LIST);
+      if (u.includes('/raw')) return jsonRes(403, { error: 'Platform operator role required' });
+      if (u.endsWith('/by-image')) {
+        return jsonRes(503, { error: 'visual_search_unavailable', reason: 'JO_VISION_EMBED_URL is unset' });
+      }
+      return jsonRes(404, {});
+    });
+    render(<CameraStills cameraId="cam1" />);
+    fireEvent.click(screen.getByRole('button', { name: /stills timeline/i }));
+    fireEvent.click(await screen.findByText('2026-10-10 10:15:00'));
+    fireEvent.click(screen.getByRole('button', { name: /find similar cameras/i }));
+    await screen.findByText(/Visual search is unavailable: JO_VISION_EMBED_URL is unset/);
+    const call = f.mock.calls.find((c) => String(c[0]).endsWith('/by-image'));
+    expect(JSON.parse(call[1].body).still_id).toBe('s2');
+  });
 });
