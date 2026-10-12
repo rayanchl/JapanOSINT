@@ -59,13 +59,63 @@
  * time. Separate table rather than a column because vec0 has no text index
  * and fts5 has no vectors; they are two views of one corpus. */
 #define SVEC_FTS_TABLE  "service_fts"
+/* lib/vecindex's incremental state: one row per embedded card with its text
+ * hash, one per card the server refused. */
+#define SVEC_DONE_TABLE "service_vec_done"
+#define SVEC_FAIL_TABLE "service_vec_failed"
 
-/* Build or refresh the service index. Safe to call repeatedly: it returns
- * immediately unless the registry signature, model or dimension changed. A
- * partial build is discarded rather than left as a half-index that would
- * answer confidently from a subset. Returns the number of services indexed,
- * 0 when inert (not an error), negative on failure. */
+/* WIDENED 2026-10-12 to EVERY registered source (~18,900: pivots, scheduled
+ * feeds, pods, manual runs — core/source_card.h defines the four kinds and
+ * the card text). The catalogue functions below still answer with PIVOTS
+ * ONLY unless a kind is asked for, because the pipeline's analysis schema is
+ * built from what they return and a scheduled feed cannot be dispatched on an
+ * entity. The other kinds serve GET /api/sources/search and
+ * service_vec_route_sources(). */
+
+/* Build or refresh the service index, INCREMENTALLY: a card whose text hash
+ * is unchanged costs a hash compare, a changed one is re-embedded, at most
+ * JO_SVEC_MAX_PER_RUN (default 4096; 0 = no cap) embeds per call, pivots
+ * first. Each kind answers queries only once all of its cards are settled for
+ * the registry as it stands (meta sig_<kind>), so a partial build never
+ * answers from a fraction of a kind. A model or dimension change starts the
+ * index over. Returns the number of cards indexed, 0 when inert (not an
+ * error), negative on failure. */
 int service_vec_build(db_handle *db);
+
+/* What a search may return. `kind` NULL/"" = every kind that is ready. */
+typedef struct {
+  const char *kind;                 /* "pivot" | "scheduled" | "pod" | "manual" */
+} service_vec_filter;
+
+typedef struct {
+  char *id;
+  double score;                     /* RRF score, higher = closer            */
+  int vrank, frank;                 /* 1-based rank per arm; 0 = absent      */
+  double distance;                  /* vector arm's L2 distance (vrank > 0)  */
+} service_vec_hit;
+
+/* What a search could see — the coverage a caller must disclose. */
+typedef struct {
+  unsigned searched_kinds;          /* bit (1 << source_kind) per kind used  */
+  unsigned unready_kinds;           /* asked for but not ready: NOT searched */
+  int total;                        /* cards in the searched kinds           */
+  int semantic, lexical;            /* candidates each arm contributed       */
+  char reason[160];                 /* why -1, when it is                    */
+} service_vec_info;
+
+/* The k cards most relevant to `query` (RRF of the vector arm and the keyword
+ * arm, both restricted to `f`'s kind and to kinds that are READY). Returns
+ * the hit count (*out malloc'd, service_vec_hits_free) or -1 with
+ * info->reason saying why (inert, not built, model changed, …). `info` may
+ * be NULL. Embeds the query: call it off the event loop. */
+int service_vec_search(db_handle *db, const char *query,
+                       const service_vec_filter *f, int k,
+                       service_vec_hit **out, service_vec_info *info);
+void service_vec_hits_free(service_vec_hit *h, int n);
+
+/* lib/vecindex's coverage object plus `kinds`: {pivot:{registered,ready},…}. */
+#include "../third_party/cJSON.h"
+cJSON *service_vec_coverage_json(db_handle *db);
 
 /* The K services most similar to `query`, as the same catalogue text
  * osint_services_list_bounded() produces (one `id: description` per line, with
@@ -85,6 +135,16 @@ char *service_vec_catalogue_bounded(db_handle *db, const char *query, int k,
                                     size_t max_bytes,
                                     osint_catalogue_note *note,
                                     char ***out_ids, int *out_n);
+
+/* service_vec_catalogue_bounded() for an explicit filter: `filter->kind`
+ * "pivot" is exactly service_vec_catalogue_bounded(); another kind lists
+ * those sources instead, and NULL lists every ready kind. The in-band bound
+ * names what was listed ("… registered scheduled sources"). */
+char *service_vec_catalogue_filtered(db_handle *db, const char *query, int k,
+                                     size_t max_bytes,
+                                     const service_vec_filter *filter,
+                                     osint_catalogue_note *note,
+                                     char ***out_ids, int *out_n);
 
 /* Free what service_vec_catalogue() returned through out_ids/out_n. */
 void service_vec_free_ids(char **ids, int n);

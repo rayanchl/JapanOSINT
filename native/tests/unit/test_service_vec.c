@@ -166,7 +166,7 @@ static void test_build_and_catalogue(db_handle *db) {
   use_stub(g_port);
   int n = service_vec_build(db);
   assert(n > 0);
-  printf("  indexed %d entity-pivot services\n", n);
+  printf("  indexed %d source cards\n", n);
 
   /* idempotent: an unchanged registry must not re-embed */
   int again = service_vec_build(db);
@@ -352,6 +352,125 @@ static void test_byte_budget(db_handle *db) {
   free(ca); free(cb);
 }
 
+static long meta_long(db_handle *db, const char *k) {
+  char *v = svec_meta_get(db, k);
+  long n = v ? atol(v) : -1;
+  free(v);
+  return n;
+}
+
+static void exec_sql(db_handle *db, const char *sql) {
+  char *err = NULL;
+  if (sqlite3_exec(db->h, sql, NULL, NULL, &err) != SQLITE_OK) {
+    fprintf(stderr, "sql failed: %s: %s\n", sql, err ? err : "?");
+    assert(0);
+  }
+}
+
+/* 10 (widening): every registered source is a card with a kind, the default
+ * catalogue still lists pivots ONLY (the pipeline builds its dispatch enum
+ * from it), and an explicit kind lists that kind only. */
+static void test_kinds(db_handle *db) {
+  use_stub(g_port);
+  int cards = 0;
+  svec_kind_sig(-1, &cards);
+  assert(cards == registry_count() || cards == registry_count() - registry_duplicate_count());
+  long rows = vecindex_count(db, SVEC_DONE_TABLE) + vecindex_count(db, SVEC_FAIL_TABLE);
+  assert(rows == cards);                      /* every card is settled */
+  char **ids = NULL; int cnt = 0;
+  char *cat = service_vec_catalogue(db, "earthquake seismic intensity feed", 20,
+                                    NULL, &ids, &cnt);
+  assert(cat && cnt > 0);
+  for (int i = 0; i < cnt; i++)
+    assert(source_kind_of(registry_get(ids[i])) == SC_KIND_PIVOT);
+  service_vec_free_ids(ids, cnt); free(cat);
+  service_vec_filter f = { .kind = "scheduled" };
+  osint_catalogue_note note = {0};
+  cat = service_vec_catalogue_filtered(db, "earthquake seismic intensity feed", 20,
+                                       0, &f, &note, &ids, &cnt);
+  assert(cat && cnt > 0);
+  for (int i = 0; i < cnt; i++)
+    assert(source_kind_of(registry_get(ids[i])) == SC_KIND_SCHEDULED);
+  assert(strstr(cat, "registered scheduled sources"));
+  printf("  kinds: %d cards; default catalogue pivots only, kind=scheduled "
+         "lists %d of %d scheduled: ok\n", cards, cnt, note.total);
+  service_vec_free_ids(ids, cnt); free(cat);
+}
+
+/* 11: INCREMENTAL. A steady registry embeds nothing; a changed card is the
+ * only one re-embedded; a budget-cut tick leaves its kind refusing queries
+ * until the kind is complete; a retired id's rows go. */
+static void test_incremental(db_handle *db) {
+  use_stub(g_port);
+  exec_sql(db, "UPDATE " SVEC_META_TABLE " SET v='0' WHERE k='registry_sig'");
+  assert(service_vec_build(db) > 0);
+  assert(meta_long(db, "last_embedded") == 0);   /* nothing changed: no embeds */
+
+  /* One card "changed" (its stored hash no longer matches). */
+  exec_sql(db, "UPDATE " SVEC_DONE_TABLE " SET text_hash=1 WHERE id='DOMAIN_WHOIS'");
+  exec_sql(db, "UPDATE " SVEC_META_TABLE " SET v='0' WHERE k IN ('registry_sig','sig_pivot')");
+  assert(service_vec_build(db) > 0);
+  assert(meta_long(db, "last_embedded") == 1);
+  printf("  incremental: steady registry embeds 0, one changed card embeds 1: ok\n");
+
+  /* 150 pivot cards changed, budget 100: the pivot kind is NOT ready after the
+   * first tick (the catalogue refuses), and is after the second. */
+  exec_sql(db, "UPDATE " SVEC_DONE_TABLE " SET text_hash=1 WHERE id IN ("
+               "SELECT id FROM " SVEC_TABLE " WHERE kind='pivot' LIMIT 150)");
+  exec_sql(db, "UPDATE " SVEC_META_TABLE " SET v='0' WHERE k IN ('registry_sig','sig_pivot')");
+  setenv("JO_SVEC_MAX_PER_RUN", "100", 1);
+  assert(service_vec_build(db) > 0);
+  assert(meta_long(db, "last_embedded") == 100);
+  char *st = svec_meta_get(db, "state");
+  assert(st && !strcmp(st, "building"));
+  free(st);
+  char **ids = NULL; int cnt = 0;
+  char *cat = service_vec_catalogue(db, "domain whois", 5, NULL, &ids, &cnt);
+  assert(cat == NULL && cnt == 0);            /* a partial kind never answers */
+  assert(service_vec_build(db) > 0);
+  assert(meta_long(db, "last_embedded") == 50);
+  setenv("JO_SVEC_MAX_PER_RUN", "0", 1);
+  st = svec_meta_get(db, "state");
+  assert(st && !strcmp(st, "ready"));
+  free(st);
+  cat = service_vec_catalogue(db, "domain whois", 5, NULL, &ids, &cnt);
+  assert(cat && cnt > 0);
+  service_vec_free_ids(ids, cnt); free(cat);
+  printf("  budget: 150 changed pivots over two ticks (100 + 50), kind refused "
+         "until complete: ok\n");
+
+  /* A retired source's rows are dropped. */
+  exec_sql(db, "INSERT INTO " SVEC_DONE_TABLE "(id,text_hash,embedded_at) "
+               "VALUES('NO_SUCH_SOURCE_X',1,'x')");
+  exec_sql(db, "UPDATE " SVEC_META_TABLE " SET v='0' WHERE k='registry_sig'");
+  assert(service_vec_build(db) > 0);
+  sqlite3_stmt *s = NULL;
+  int left = -1;
+  if (sqlite3_prepare_v2(db->h, "SELECT count(*) FROM " SVEC_DONE_TABLE
+                         " WHERE id='NO_SUCH_SOURCE_X'", -1, &s, NULL) == SQLITE_OK) {
+    if (sqlite3_step(s) == SQLITE_ROW) left = sqlite3_column_int(s, 0);
+    sqlite3_finalize(s);
+  }
+  assert(left == 0);
+  printf("  a retired id's index rows are dropped: ok\n");
+}
+
+/* 12: an index from before the widening (no `kind` column) starts over rather
+ * than being written into with a shape it does not have. */
+static void test_old_schema(db_handle *db) {
+  use_stub(g_port);
+  exec_sql(db, "DROP TABLE IF EXISTS " SVEC_TABLE);
+  exec_sql(db, "CREATE VIRTUAL TABLE " SVEC_TABLE " USING vec0("
+               "id TEXT PRIMARY KEY, embedding float[64])");
+  assert(service_vec_build(db) > 0);
+  assert(svec_schema_current(db));
+  char **ids = NULL; int cnt = 0;
+  char *cat = service_vec_catalogue(db, "domain whois", 5, NULL, &ids, &cnt);
+  assert(cat && cnt > 0);
+  service_vec_free_ids(ids, cnt); free(cat);
+  printf("  a pivots-only index without `kind` is rebuilt: ok\n");
+}
+
 int main(void) {
   const char *dbp = getenv("JO_DB");
   assert(dbp && "run.sh sets JO_DB to a scratch database");
@@ -364,6 +483,9 @@ int main(void) {
    * cases swap stubs faster than that. */
   setenv("JO_EMBED_MODEL_CHECK_TTL_MS", "0", 1);
   unsetenv("JO_EMBED_MODEL");
+  /* The whole registry per build: the per-tick cap is exercised on its own
+   * (test_incremental), every other case wants a complete index. */
+  setenv("JO_SVEC_MAX_PER_RUN", "0", 1);
 
   test_inert(&db);
 
@@ -388,6 +510,9 @@ int main(void) {
   assert(service_vec_build(&db) > 0);
   test_unreachable_leaves_index(&db);
   test_byte_budget(&db);
+  test_kinds(&db);
+  test_incremental(&db);
+  test_old_schema(&db);
   test_same_dim_swap(&db);
   assert(stub_start(18099, 64, "stub-a") == 0);
   use_stub(g_port);
