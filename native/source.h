@@ -143,6 +143,10 @@ int                registry_count(void);
 /* >0 means some source id is defined twice and the second copy is
  * unreachable via registry_get/--run/the OSINT dispatcher. */
 int                registry_duplicate_count(void);
+/* >0 means some source can never execute: interval 0 (so the scheduler skips
+ * it) under a collector that is neither "osint" nor an internal "_" lane (so
+ * core/osint_dispatch.c's is_entity_pivot() rejects it too). House rule 3. */
+int                registry_never_runs_count(void);
 const source_def **registry_all(void);
 const source_def  *registry_get(const char *id);
 /* Index of `id` in registry_all(), or -1. O(1): a hash built once after the

@@ -1115,6 +1115,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .lat_key = "properties.latitude",
     .lon_key = "properties.longitude",
     .next_path = "links.rel=next.href",
+    .page_max = 79,   /* 7,834 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "properties.earthquake_event_id",
     .description = "Every earthquake instrumentally recorded in and around the "
       "United Kingdom since 1970, with origin time, latitude, "
@@ -1161,6 +1162,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .lat_key = "geometry.coordinates.1",
     .lon_key = "geometry.coordinates.0",
     .next_path = "links.rel=next.href",
+    .page_max = 187,   /* 18,698 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "properties.landslide_name,properties.locality_details",
     .description = "Over eighteen thousand recorded landslides in Great Britain, "
       "each with a landslide number, survey number, name, locality "
@@ -1203,6 +1205,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .lat_key = "geometry.coordinates.1",
     .lon_key = "geometry.coordinates.0",
     .next_path = "links.rel=next.href",
+    .page_max = 134,   /* 13,308 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "properties.wellname",
     .description = "Thirteen thousand offshore hydrocarbon wells on the UK "
       "continental shelf, each with well identifier and name, licence, "
@@ -1244,6 +1247,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .lat_key = "geometry.coordinates.1",
     .lon_key = "geometry.coordinates.0",
     .next_path = "links.rel=next.href",
+    .page_max = 27,   /* 2,672 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "properties.volcano_name",
     .description = "Eruption source parameters for volcanoes worldwide, each record "
       "naming the volcano and its alternative names, volcano type, "
@@ -1280,6 +1284,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 3600,
     .next_path = "links.next",
+    .page_max = 100,   /* 10,000 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "id",
     .description = "Alert loci from the NOIRLab ANTARES broker, each a JSON:API "
       "resource carrying the locus identifier, its aggregated alert "
@@ -1383,6 +1388,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 604800,
     .next_path = "links.rel=next.href",
+    .page_max = 28,   /* 2,741 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "id",
     .description = "Every mapped fault in the national 1:625000 bedrock geology of "
       "Great Britain as a geometry with its classification attributes. "
@@ -1404,6 +1410,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .lat_key = "geometry.coordinates.1",
     .lon_key = "geometry.coordinates.0",
     .next_path = "links.rel=next.href",
+    .page_max = 37,   /* 3,663 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "id",
     .description = "Analytical results from core samples taken in offshore oil and "
       "gas wells on the UK continental shelf, each tied to its well and "

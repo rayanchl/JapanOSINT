@@ -321,6 +321,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
+    .page_max = 30,   /* 2,917 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "value",
     .description = "Ships arriving at Saudi ports broken out by year, flag state of "
       "registration and port of call. A flag-by-port arrival series for "
@@ -374,6 +375,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 21600,
     .page_param = "offset",
     .page_size = 100,
+    .page_max = 107,   /* 10,695 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "item",
     .description = "Saudi Central Bank balance of payments by year, quarter and line "
       "item. Current account, oil and non-oil trade, services, "
@@ -392,6 +394,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 900,
     .page_param = "offset",
     .page_size = 100,
+    .page_max = 21,   /* 2,052 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "category",
     .description = "The Saudi Central Bank international investment position "
       "statement by period and instrument — direct investment, "
@@ -431,6 +434,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
+    .page_max = 43,   /* 4,276 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "economic_activity",
     .description = "Operating surplus of Saudi establishments broken out by "
       "employee-count band and economic activity, from the GASTAT "
@@ -451,6 +455,7 @@ static const hp_source HP3B19_MENA[] = {
     .interval = 3600,
     .page_param = "offset",
     .page_size = 100,
+    .page_max = 27,   /* 2,650 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "region",
     .description = "Observed wind speed in knots at named Presidency of Meteorology "
       "and Environment stations across Saudi Arabia. Station-level wind "

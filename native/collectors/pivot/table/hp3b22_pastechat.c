@@ -751,6 +751,7 @@ static const hp_source HP3B22_PASTECHAT[] = {
     .page_param = "start",
     .page_size = 50,
     .page_zero_based = 1,
+    .page_max = 24,   /* 1,181 records at 50 a page, measured 2026-10-12; the 20-page default reached 1,000 */
     .title_keys = "displayName",
     .description = "Video channel directory of the PeerTube instance "
       "tube.baeddel.social, each channel with its display name, host, "
@@ -810,6 +811,7 @@ static const hp_source HP3B22_PASTECHAT[] = {
     .page_param = "start",
     .page_size = 50,
     .page_zero_based = 1,
+    .page_max = 102,   /* 5,060 records at 50 a page, measured 2026-10-12; the 20-page default reached 1,000 */
     .title_keys = "displayName",
     .description = "Video channel directory of the PeerTube instance "
       "video.gregtech.eu, each channel with its display name, host, "
@@ -910,6 +912,7 @@ static const hp_source HP3B22_PASTECHAT[] = {
     .page_param = "start",
     .page_size = 50,
     .page_zero_based = 1,
+    .page_max = 116,   /* 5,790 records at 50 a page, measured 2026-10-12; the 20-page default reached 1,000 */
     .title_keys = "displayName",
     .description = "Video channel directory of the PeerTube instance holm.video, "
       "each channel with its display name, host, follower and video "
@@ -1027,6 +1030,7 @@ static const hp_source HP3B22_PASTECHAT[] = {
     .page_param = "start",
     .page_size = 50,
     .page_zero_based = 1,
+    .page_max = 57,   /* 2,811 records at 50 a page, measured 2026-10-12; the 20-page default reached 1,000 */
     .title_keys = "displayName",
     .description = "Video channel directory of the PeerTube instance "
       "tube.fulda.social, each channel with its display name, host, "
@@ -1225,6 +1229,7 @@ static const hp_source HP3B22_PASTECHAT[] = {
     .page_param = "start",
     .page_size = 50,
     .page_zero_based = 1,
+    .page_max = 21,   /* 1,039 records at 50 a page, measured 2026-10-12; the 20-page default reached 1,000 */
     .title_keys = "displayName",
     .description = "Video channel directory of the PeerTube instance "
       "video.feelgoodtv.de, each channel with its display name, host, "

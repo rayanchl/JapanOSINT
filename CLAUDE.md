@@ -552,6 +552,43 @@ checked for.
 python3 native/tools/audit_batch_reachable.py docs/candidate-sources-batch*.txt
 ```
 
+**The DISPATCHER does not test for an entity token, and a wrong `collector`
+label silently retired 16 live pivots.** `is_entity_pivot()`
+(`core/osint_dispatch.c`) asks `collector == "osint" && update_interval_sec == 0`
+— a proxy for "takes an entity", and it cannot do better, because
+`source_def.url` is the human-facing portal, not the URL template, so nothing
+at that layer can see `{q}`. The proxy holds only because every hand-written
+osint service is labelled that way. A row authored as a pivot under a FAMILY
+label satisfies neither reach path: not the scheduler (interval 0) and not the
+dispatcher (collector ≠ "osint"). Found 2026-10-12: the nine openFDA identifier
+pivots (`us_health`), CVE Program and MITRE CWE lookup (`cyber`), two elevation
+lookups and NASA POWER (`geospatial`/`environment`), Diavgeia by issuing body
+and MLIT Kawabou detail. `core/service_vec.c` asks the same question, so they
+were out of the service-vector index too.
+
+The openFDA nine are the lesson: `hp18_us_openfda_ids.c`'s header documents
+converting them from scheduled feeds that re-fetched one 2009 device clearance
+twice a day into lookups answering for any identifier. **That repair landed and
+did nothing**, because dropping the interval to 0 while keeping the feed-era
+label removed them from the only path left that could run them.
+
+Two things now hold it:
+
+* `registry.c` prints `[registry] NEVER-RUNS id '…'` for any source with
+  interval 0 under a collector that is neither `"osint"` nor an internal `_`
+  lane, beside the DUPLICATE and OVERFLOW reports it already makes for the same
+  reason, and **`make registry-floor` fails on a non-zero count**. The `_`
+  exemption is the convention `source.h` documents; `PORT_SCANNER` is
+  deliberately `_probe` because it opens raw sockets, and keeping it out of the
+  LLM's schema enum is a security decision, not an oversight.
+* `osint_lookup()` resolves a UNIQUE case-fold match after an exact miss.
+  `osint_canon()` uppercases and `registry_get()` is a strcmp hash, so a
+  lower-case id — 9,941 of 18,884 — could never be found by name at all, and
+  `osint_resolve_near()` could not rescue it either: a pure case difference
+  costs one edit per letter, 22 for `cve-program-record-api`, against a ceiling
+  of 2. An AMBIGUOUS fold is refused rather than guessed, because `RELIEFWEB`
+  (an osint pivot) and `reliefweb` (a scheduled feed) are two different sources.
+
 ## Batch tooling
 
 New sources are AUTHORED as a pipe-delimited manifest and scaffolded, not
@@ -586,6 +623,7 @@ says why.
 | `tools/audit_batch_pagination.py` | a paged endpoint declares `page_param` or `next_path` — read from the parsed opts, not as a substring of the whole field |
 | `tools/audit_batch_reachable.py` | rule 3 above. A row whose opts are ambiguous is reported UNVERIFIABLE, never "never runs" |
 | `tools/audit_url_limits.py` | the seventh discard shape — a record limit asked of the UPSTREAM in a URL, with no paging to follow it. Read, not gated: 103 narrow candidates, unmeasured, and a limit on a ranked pivot is legitimate |
+| `tools/audit_page_ceiling.py` | which scheduled rows stop at the PAGE CEILING, and how many pages their own upstream says they need. Probes SHALLOW (`--probe-pages`, default 3) and then does arithmetic, because the engine's truncation notice already carries the only number that settles it: a `records_available` whose basis is "upstream declared this total". `CEILING_DECLARED` is measured (pages_needed = total / page_size, the page size derived from the probe when the row declares none); `CEILING_UNKNOWN` means the upstream publishes no total and only a full walk can size it, which is a decision to take deliberately, not a finding. Reads `collector-fetch-failure` too, so a 429 is `FETCH_FAILED` and not "this source returns nothing" |
 | `tools/audit_page_param.py` | rows whose URL already binds their own `page_param`. The engine used to APPEND (`…&pagina=1&pagina=2`) and a server binding the first occurrence then served page 1 for the whole walk — N pages emitted, one stored, `rc=0`. Fixed in `hp_url_set_param` and pinned by `hptest` "9f-bis"; the lint stays because 103 of 1,431 paged rows are that shape and their paging depends on the replacement being right |
 | `tools/audit_batch_emit.py` | rule 4 below: runs each MANIFEST row through the real binary and reads back `emitted N of M`. `--timeout S` moves the kill line; a run that hits it is **`SLOW`**, carrying its partial counts — unmeasured, not failed. Each run gets a scratch DB from a warm template (it used to write the developer's live DB), and it exits non-zero on UNREGISTERED, UNPARSEABLE, NO_RUN_LINE or when nothing was measured |
 | `tools/audit_registry_emit.py` | rule 4 **and** 4b for the whole REGISTRY, manifest or not — `--list-sources` is the source list, so nothing registered can hide. Measures emitted *and* stored, per run, against a fresh copy of a warm template DB. `--scheduled`/`--match`/`--only`/`--ids-file`, `--jobs`, `--timeout`, TSV out, `--resume` |
@@ -907,6 +945,65 @@ Engine subtleties worth knowing before writing a row:
   the one copy of that decision. The 322 batch-16/17 rows moved onto hpengine for
   their detail hops (`collectors/gen_detail_hop_upgrade.py`) carry it so they
   did not trade their later pages for the second hop.
+* **The page ceiling is one number with one knob: `jo_page_max()`, 20, under
+  `$JO_PAGE_MAX`** (`lib/pagewalk.c`). It was three, with two numbers and two
+  knobs, one of which did not exist — `pagewalk.c` 20/`$JO_PAGE_MAX`,
+  `jsonlist.c` 20/`$JO_JSONLIST_PAGE_MAX`, and `hpengine.c` **10 with no
+  variable at all**. So `JO_PAGE_MAX=50` raised the generated fleet, silently
+  did nothing for `page_walk` rows, and could not move a row that declares its
+  own paging at any value. That third group is the largest: 1,919 scheduled rows
+  declare `page_param`/`next_path`/`{page}` with no per-row `page_max`, and
+  stopped at ten pages on a constant none of them mentions.
+  `JSTAGE_CORPUS_BULK` went from 1,000 records to 2,000 on the unification, and
+  its own notice had been saying `declared_max_items: 20000` the whole time.
+  The legacy variable still works, so an operator who set it is honoured rather
+  than ignored. Twenty-two comments in 14 collector files cite measurements made
+  under "the default 10-page ceiling": those are dated records, not claims about
+  today.
+* **The ceiling is now MEASURED across every paged scheduled row**
+  (2026-10-12, `docs/measured-page-ceilings-2026-10-12.tsv`): 2,137 rows,
+  3-page probe. 1,111 COMPLETE, 534 `CEILING_UNKNOWN` (the upstream publishes
+  no total, so only a full walk can size them), 282 `CEILING_DECLARED`, 114
+  SLOW, 89 `FETCH_FAILED`, 7 EMPTY. **149 declare a total needing more than 20
+  pages**, and they split on cost, which is the whole decision:
+  * **60 rows need ≤200 pages** — a per-row `page_max` completes them at a
+    sane request count. Done, with the measurement in each comment: 634,915
+    declared records against 148,840 the 20-page default reached, so **486,075
+    recovered**. `BGS_LANDSLIDE_INDEX` 2,000 → 18,698 (its whole total);
+    `CMS_NURSING_HOME_PROVIDER_INFO` → 14,690.
+  * **89 rows need more than 200**, up to 55,971 pages for a 5.6-million-item
+    STAC catalogue, and 1.93 BILLION declared records between them. Raising
+    `page_max` there is not exhaustiveness, it is tens of thousands of requests
+    per run against one host. Those rows are a DISCLOSED sample and need a
+    different strategy per row (a date window, a filter that slices the
+    collection, or a bulk dump), which is a design decision and not a number.
+    Listed in that file so the next pass starts from the measurement.
+* **A deep-paging cap is the upstream's, and it is disclosed by name.** GLEIF
+  refuses `page[number]=51` with HTTP 400 — 50 pages × 200 = 10,000 records —
+  so `GLEIF_LEI_HK` reaches 10,000 of 13,419 and the rest needs a narrower
+  filter per request. The notice says exactly that, including
+  `failed_page_url`. Leaving `page_max` ABOVE the cap is deliberate there: the
+  notice then names GLEIF's refusal rather than our own ceiling, for the price
+  of one 400 a run.
+* **`page_size` on a bracketed page-number parameter hid from the lint that
+  exists for it.** `_PAGENUM_NAME` in `tools/lint_sources.py` anchored the name
+  list with `$`, so JSON:API's `page[number]` — written percent-encoded in a
+  URL as `page%5Bnumber%5D` — matched nothing, and **63 rows shipped three days
+  after that check was added** with page_size on a page NUMBER. Every one asked
+  for page 201 (GLEIF) or 501 (US Treasury Fiscal Data) as its SECOND request,
+  got HTTP 400, and stored one page: `GLEIF_LEI_HK` 200 of 13,419,
+  `US_TREAS_MTS_TABLE_2` 500 of 2,070. Removing `page_size` (the size is
+  already in the URL as `page[size]`) took those two to 10,000 and 2,070. The
+  pattern now carries the bracketed and encoded spellings, and reintroducing
+  one `page_size` fails the gate by name.
+* **`more_pages_pending` is not the test for "data remains".** It reports
+  whether the walk still held a next-page URL when it stopped, and it is FALSE
+  at the ceiling. The authoritative signal is the upstream's own total —
+  `records_available` with `records_available_basis: "upstream declared this
+  total"` — exceeding `records_used`. `JPN_EGOV_DATA_ORG_ORG_0300` files 300 of
+  a declared 325 with `more_pages_pending: false`, so a checker keyed on the
+  flag calls it complete while 25 declared records are dropped every run.
+  `tools/audit_page_ceiling.py` keys on the totals for that reason.
 * `next_path` accepts a `key=value` segment: write **`links.rel=next.href`**,
   not `links.1.href`. Indexing a hypermedia link array positionally breaks when
   a server reorders it, and the failure mode is the engine refetching page 1

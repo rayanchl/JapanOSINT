@@ -1012,6 +1012,7 @@ static const hp_source HP3B19_APAC[] = {
     .interval = 300,
     .page_param = "offset",
     .page_size = 100,
+    .page_max = 64,   /* 6,324 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "status_description",
     .description = "Live occupancy status for every instrumented on-street parking "
       "bay in central Melbourne with bay id, kerbside id, zone, status, "
@@ -1199,6 +1200,7 @@ static const hp_source HP3B19_APAC[] = {
     .id_keys = "code",
     .interval = 86400,
     .page_param = "page",
+    .page_max = 141,   /* 14,061 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .title_keys = "companyName",
     .description = "Every equity listed on the Ho Chi Minh, Hanoi and UPCoM "
@@ -1255,6 +1257,7 @@ static const hp_source HP3B19_APAC[] = {
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
+    .page_max = 29,   /* 2,876 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "name",
     .description = "Every named street in the City of Melbourne with street id, "
       "name, type, suburb, segment geometry and the naming authority "

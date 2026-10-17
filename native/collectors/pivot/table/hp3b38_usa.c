@@ -61,7 +61,6 @@ static const hp_source HP3B38_USA[] = {
     .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 500,
     .title_keys = "sub_table_name",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 251892 bytes. id_keys is a (date, line) tuple, not "
@@ -88,7 +87,6 @@ static const hp_source HP3B38_USA[] = {
     .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 500,
     .title_keys = "transaction_catg_desc",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 271555 bytes. id_keys is a (date, line) tuple, not "
@@ -115,7 +113,6 @@ static const hp_source HP3B38_USA[] = {
     .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 500,
     .title_keys = "sub_table_name",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 240292 bytes. id_keys is a (date, line) tuple, not "
@@ -142,7 +139,6 @@ static const hp_source HP3B38_USA[] = {
     .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 500,
     .title_keys = "sub_table_name",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 229908 bytes. id_keys is a (date, line) tuple, not "
@@ -169,7 +165,6 @@ static const hp_source HP3B38_USA[] = {
     .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 500,
     .title_keys = "security_class2_desc",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 440020 bytes. id_keys is a (date, line) tuple, not "
@@ -196,7 +191,6 @@ static const hp_source HP3B38_USA[] = {
     .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 500,
     .title_keys = "security_class_desc",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 248173 bytes. id_keys is a (date, line) tuple, not "
@@ -223,7 +217,6 @@ static const hp_source HP3B38_USA[] = {
     .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 500,
     .title_keys = "security_class2_desc",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 249843 bytes. id_keys is a (date, line) tuple, not "
@@ -250,7 +243,6 @@ static const hp_source HP3B38_USA[] = {
     .id_keys = "record_date+classification_id",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 500,
     .title_keys = "classification_desc",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 345030 bytes. id_keys is a (date, line) tuple, not "
@@ -277,7 +269,6 @@ static const hp_source HP3B38_USA[] = {
     .id_keys = "record_date+classification_id",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 500,
     .title_keys = "classification_desc",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 330271 bytes. id_keys is a (date, line) tuple, not "
@@ -304,7 +295,6 @@ static const hp_source HP3B38_USA[] = {
     .id_keys = "record_date+classification_id",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 500,
     .title_keys = "classification_desc",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 427206 bytes. id_keys is a (date, line) tuple, not "
@@ -331,7 +321,6 @@ static const hp_source HP3B38_USA[] = {
     .id_keys = "record_date+classification_id",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 500,
     .title_keys = "classification_desc",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 432436 bytes. id_keys is a (date, line) tuple, not "
@@ -358,7 +347,6 @@ static const hp_source HP3B38_USA[] = {
     .id_keys = "record_date+classification_id",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 500,
     .title_keys = "classification_desc",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 371387 bytes. id_keys is a (date, line) tuple, not "
@@ -385,7 +373,6 @@ static const hp_source HP3B38_USA[] = {
     .id_keys = "record_date+classification_id",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 500,
     .title_keys = "classification_desc",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 307900 bytes. id_keys is a (date, line) tuple, not "
@@ -412,7 +399,6 @@ static const hp_source HP3B38_USA[] = {
     .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 500,
     .title_keys = "table_nm",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 248298 bytes. id_keys is a (date, line) tuple, not "
@@ -439,7 +425,6 @@ static const hp_source HP3B38_USA[] = {
     .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 500,
     .title_keys = "security_class_desc",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 188344 bytes. id_keys is a (date, line) tuple, not "
@@ -466,7 +451,6 @@ static const hp_source HP3B38_USA[] = {
     .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 500,
     .title_keys = "security_class_desc",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 216144 bytes. id_keys is a (date, line) tuple, not "
@@ -493,7 +477,6 @@ static const hp_source HP3B38_USA[] = {
     .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 500,
     .title_keys = "sub_table_name",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 262872 bytes. id_keys is a (date, line) tuple, not "
