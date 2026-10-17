@@ -18,3 +18,13 @@ int collector_meta_count(void) { return NTAB; }
 const collector_meta *collector_meta_at(int i) {
   return (i >= 0 && i < NTAB) ? &TAB[i] : NULL;
 }
+
+int collector_meta_is_group(const collector_meta *m) {
+  return m && m->parent == NULL && strncmp(m->key, "grp_", 4) == 0;
+}
+const char *collector_group_of(const char *collector_key) {
+  const collector_meta *m = collector_meta_get(collector_key);
+  if (m && m->parent && m->parent[0]) return m->parent;
+  if (collector_meta_is_group(m)) return m->key;
+  return COLLECTOR_GROUP_UNASSIGNED;
+}

@@ -6,7 +6,7 @@ import { useApi } from '../../hooks/useApi.js';
 import { Page, Card, Pill, Button, Input, Segmented, ErrorNotice, EmptyState, LoadingState, BoundNote, PagedFooter, KV } from '../ui/kit.jsx';
 import { relativeTime } from '../../utils/time.js';
 import { fmtCount, fmtInterval, statusTone, gradeTone } from '../../utils/sourceFormat.js';
-import { HealthBar } from './CollectorsPage.jsx';
+import { HealthBar, CollectorCard } from './CollectorsPage.jsx';
 
 /* /console/collectors/:key — one collector: its measured header, the id
  * prefixes its sources share (a sub-grouping hint the server computed, not a
@@ -42,8 +42,9 @@ export default function CollectorDetailPage() {
     } catch (e) { setMore({ busy: false, error: e }); }
   };
   const c = head.data?.collector;
-  const groups = head.data?.groups;
-  const children = head.data?.children || [];
+  const isGroup = Boolean(head.data?.is_group);
+  const groups = isGroup ? null : head.data?.groups;
+  const children = head.data?.children || [];   // a group: its member collectors (full rows)
   const set = (patch) => { const n = new URLSearchParams(sp); for (const [k, v] of Object.entries(patch)) { if (v) n.set(k, v); else n.delete(k); } setSp(n, { replace: true }); };
   const prefixOf = (id) => { const m = /^[^_-]+[_-]/.exec(id); return m ? m[0] : null; };
   const grouped = useMemo(() => {
@@ -90,8 +91,8 @@ export default function CollectorDetailPage() {
 
   return (
     <Page wide
-      title={<span className="flex items-center gap-2 flex-wrap">{c.label || c.key}{c.label_ja && <span className="text-sm text-osint-muted font-normal">{c.label_ja}</span>}</span>}
-      subtitle={<span className="flex flex-wrap items-center gap-x-2"><Link to="/console/collectors" className="hover:text-accent">← all collectors</Link><span>·</span><span className="font-mono">{c.key}</span>{c.parent && <><span>·</span><span>under <Link to={`/console/collectors/${encodeURIComponent(c.parent)}`} className="text-accent hover:underline">{c.parent}</Link></span></>}</span>}
+      title={<span className="flex items-center gap-2 flex-wrap">{c.label || c.key}{c.label_ja && <span className="text-sm text-osint-muted font-normal">{c.label_ja}</span>}{isGroup && <Pill tone="accent" mono={false}>group of {fmtCount(children.length)} collectors</Pill>}</span>}
+      subtitle={<span className="flex flex-wrap items-center gap-x-2"><Link to="/console/collectors" className="hover:text-accent">← all collectors</Link><span>·</span><span className="font-mono">{c.key}</span>{!isGroup && c.group && <><span>·</span><span>in <Link to={`/console/collectors/${encodeURIComponent(c.group)}`} className="text-accent hover:underline">{c.group_label || c.group}</Link></span></>}</span>}
       actions={<Button size="sm" onClick={() => head.reload()} title="Reload"><LuRefreshCw size={12} /></Button>}
     >
       {c.description && <p className="text-xs text-osint-muted -mt-2">{c.description}</p>}
@@ -113,10 +114,15 @@ export default function CollectorDetailPage() {
           <div className="text-[10px] uppercase tracking-wider text-osint-muted mb-1">health (last run of each source)</div>
           <HealthBar status={c.status} total={c.sources} />
           <div className="mt-1 text-[11px] font-mono text-osint-muted">{c.status?.online || 0} online · {c.status?.degraded || 0} degraded · {c.status?.offline || 0} offline · {c.status?.pending || 0} pending (never run)</div>
-          {children.length > 0 && <div className="mt-3 text-[11px]"><span className="text-osint-muted">child collectors: </span>{children.map((k) => <Link key={k} to={`/console/collectors/${encodeURIComponent(k)}`} className="font-mono text-accent hover:underline mr-2">{k}</Link>)}</div>}
           {groups?.values?.length > 0 && <div className="mt-3 text-[11px]"><span className="text-osint-muted">shared id prefixes: </span>{groups.values.map((g) => <Pill key={g.key} className="mr-1">{g.key} {fmtCount(g.count)}</Pill>)}<BoundNote shown={groups.shown} total={groups.total} noun="prefix groups" className="ml-2" /></div>}
         </Card>
       </div>
+      {isGroup && children.length > 0 && (
+        <div>
+          <div className="text-[10px] uppercase tracking-wider text-osint-muted mb-1">collectors in this group · {fmtCount(children.length)}</div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">{children.map((ch) => <CollectorCard key={ch.key} c={ch} />)}</div>
+        </div>
+      )}
 
       <form onSubmit={(e) => { e.preventDefault(); set({ q: draft.trim() }); }} className="flex flex-wrap items-center gap-2">
         <Input className="flex-1 min-w-[200px]" placeholder="search within this collector…" value={draft} onChange={(e) => setDraft(e.target.value)} />

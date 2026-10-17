@@ -44,6 +44,11 @@ struct Collector: Identifiable, Hashable {
     let id: String                 // = collector key
     let name: String
     let category: String?
+    /// Group key and label from the server (grp_*); "grp_unassigned" when the
+    /// server has none for this collector, so a hole in collectors.def is a
+    /// visible heading rather than a missing one.
+    let group: String
+    let groupLabel: String
     let sources: [StatusRow]
     let onlineCount: Int
     let degradedCount: Int
@@ -76,10 +81,14 @@ extension Array where Element == StatusRow {
     func groupedAsCollectors() -> [Collector] {
         var byKey: [String: [StatusRow]] = [:]
         var labels: [String: String] = [:]
+        var groupOf: [String: (String, String)] = [:]
         for row in self {
             let key = (row.collector?.isEmpty == false) ? row.collector! : row.id
             byKey[key, default: []].append(row)
             if let l = row.collectorLabel, !l.isEmpty { labels[key] = l }
+            if let g = row.collectorGroup, !g.isEmpty {
+                groupOf[key] = (g, row.collectorGroupLabel ?? g)
+            }
         }
         return byKey.map { (key, rows) in
             let name = labels[key] ?? key
@@ -98,7 +107,8 @@ extension Array where Element == StatusRow {
                 default:        break
                 }
             }
-            return Collector(id: layerId, name: name, category: category, sources: rows,
+            let (group, groupLabel) = groupOf[key] ?? ("grp_unassigned", "Unassigned")
+            return Collector(id: key, name: name, category: category, group: group, groupLabel: groupLabel, sources: rows,
                              onlineCount: online, degradedCount: degraded,
                              offlineCount: offline, pendingCount: pending,
                              gatedCount: gated)

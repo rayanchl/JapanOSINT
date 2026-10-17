@@ -96,6 +96,7 @@ export default function SourcesListPage() {
           <Input className="pl-7 w-full" placeholder="search id, name, 日本語, description, collector, host…" value={draft} onChange={(e) => setDraft(e.target.value)} />
         </div>
         <Button type="submit" variant="primary">Search</Button>
+        <FacetSelect label="all groups" value={filters.group} onChange={(v) => set({ group: v })} facet={facets?.groups} labelled />
         <FacetSelect label="all collectors" value={filters.collector} onChange={(v) => set({ collector: v })} facet={facets?.collectors} labelled />
         <FacetSelect label="all categories" value={filters.category} onChange={(v) => set({ category: v })} facet={facets?.categories} />
         <FacetSelect label="all engines" value={filters.engine} onChange={(v) => set({ engine: v })} facet={facets?.engines} />
@@ -136,7 +137,10 @@ export default function SourcesListPage() {
                     {s.name_ja && s.name_ja !== s.name && <span className="ml-2 text-osint-muted">{s.name_ja}</span>}
                     <div className="font-mono text-[10px] text-osint-muted truncate max-w-[360px]" title={s.id}>{s.id}{s.category ? ` · ${s.category}` : ''}{s.host ? ` · ${s.host}` : ''}</div>
                   </td>
-                  <td className="px-3 py-2"><Link to={`/console/collectors/${encodeURIComponent(s.collector)}`} className="font-mono text-[11px] text-osint-muted hover:text-accent" title={s.collector_label || s.collector}>{s.collector}</Link></td>
+                  <td className="px-3 py-2">
+                    <Link to={`/console/collectors/${encodeURIComponent(s.collector)}`} className="font-mono text-[11px] text-osint-muted hover:text-accent" title={s.collector_label || s.collector}>{s.collector}</Link>
+                    {s.group && <div><Link to={`/console/collectors/${encodeURIComponent(s.group)}`} className="text-[10px] text-osint-muted hover:text-accent" title={s.group}>{s.group_label || s.group}</Link></div>}
+                  </td>
                   <td className="px-3 py-2 font-mono text-[11px] text-osint-muted">{s.engine} · {s.kind}</td>
                   <td className="px-3 py-2 font-mono text-[11px] text-osint-muted">{fmtInterval(s.interval)}{s.sched?.effectiveInterval && s.sched.effectiveInterval !== s.interval ? ` → ${fmtInterval(s.sched.effectiveInterval)}` : ''}</td>
                   <td className="px-3 py-2 text-right font-mono text-neon-green">{fmtCount(s.item_count)}{s.notices > 0 && <span className="text-osint-muted" title="engine notices stored"> +{s.notices}n</span>}</td>

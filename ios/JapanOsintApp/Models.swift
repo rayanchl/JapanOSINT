@@ -432,6 +432,10 @@ struct StatusRow: Decodable, Identifiable, Hashable {
     /// still decodes; a row without it groups under its own id.
     let collector: String?
     let collectorLabel: String?
+    /// The natural-language GROUP the collector sits under (core/collectors.def,
+    /// `grp_*`): the heading the dashboard sections collectors by.
+    let collectorGroup: String?
+    let collectorGroupLabel: String?
     /// hpengine | vjson | vrss | vgeo | vcsv | rss | socrata | native | breach
     let engine: String?
     /// scheduled | pivot | unreachable | internal | corpus

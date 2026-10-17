@@ -141,7 +141,7 @@ export default function SourceDetailPage() {
       subtitle={<span className="flex flex-wrap items-center gap-x-2 gap-y-1">
         <Link to="/console/sources" className="hover:text-accent">← all sources</Link>
         <span>·</span><Mono>{reg.id}</Mono>
-        <span>·</span><Link to={`/console/collectors/${encodeURIComponent(reg.collector)}`} className="hover:text-accent" title="collector">{reg.collector_meta?.label || reg.collector}</Link>
+        <span>·</span>{reg.collector_meta?.parent && <><Link to={`/console/collectors/${encodeURIComponent(reg.collector_meta.parent)}`} className="hover:text-accent" title="group">{reg.collector_meta.parent}</Link><span>›</span></>}<Link to={`/console/collectors/${encodeURIComponent(reg.collector)}`} className="hover:text-accent" title="collector">{reg.collector_meta?.label || reg.collector}</Link>
         {reg.category && <Pill>{reg.category}</Pill>}
         {reg.type && <Pill>{reg.type}</Pill>}
         <Pill tone="cyan" mono={false}>{engineLabel(reg.engine)}</Pill>

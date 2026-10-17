@@ -172,6 +172,29 @@ int main(void) {
   assert(sum == registry_count() && "every source is in exactly one collector");
   assert(mine);
   assert(num(o, "meta.total") == cJSON_GetArraySize(get(o, "data")));
+  /* 3b. groups: every collector has a parent group in collectors.def (zero
+   * unassigned), and the groups' source counts sum to the registry too */
+  assert(num(o, "meta.unassigned_collectors") == 0 && "a registered collector is missing from core/collectors.def");
+  {
+    long gsum = 0; const cJSON *g; int ng = 0;
+    cJSON_ArrayForEach(g, get(o, "groups")) {
+      ng++; gsum += (long)num(g, "sources");
+      assert(cJSON_IsTrue(get(g, "is_group")) && get(g, "collectors") && cJSON_GetArraySize(get(g, "collectors")) > 0);
+      assert(str(g, "label") && "a group has a label");
+    }
+    assert(gsum == registry_count() && "groups partition the registry");
+    assert(ng >= 10 && "the grouping is in several natural-language headings");
+  }
+  cJSON_Delete(o);
+  sourceapi_query gq = { .limit = 5 };
+  js = sourceapi_collector(&db, "grp_government", &gq); assert(js && "a group key answers like a collector");
+  o = cJSON_Parse(js); free(js);
+  assert(cJSON_IsTrue(get(o, "is_group")) && cJSON_GetArraySize(get(o, "children")) > 5);
+  assert(num(o, "sources.page.total") == num(o, "collector.sources") && "a group page lists its members' sources");
+  {
+    const cJSON *row; cJSON_ArrayForEach(row, get(o, "sources.data"))
+      assert(!strcmp(str(row, "group"), "grp_government"));
+  }
   cJSON_Delete(o);
   sourceapi_query cq = { .limit = 5 };
   js = sourceapi_collector(&db, d->collector, &cq); assert(js);

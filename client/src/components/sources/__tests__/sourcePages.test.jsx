@@ -16,7 +16,7 @@ import { render, cleanup, screen, waitFor, fireEvent } from '@testing-library/re
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import SourcesListPage, { readFilters, writeFilters } from '../SourcesListPage.jsx';
 import SourceDetailPage, { SummaryCard } from '../SourceDetailPage.jsx';
-import CollectorsPage, { nestCollectors } from '../../collectors/CollectorsPage.jsx';
+import CollectorsPage, { groupCollectors } from '../../collectors/CollectorsPage.jsx';
 import { fmtInterval, fmtBytes, measured, kindLabel, splitTemplate, searchPath, NOT_MEASURED } from '../../../utils/sourceFormat.js';
 
 vi.mock('../../panels/SourcesPanel.jsx', () => ({ default: () => null }));
@@ -179,20 +179,25 @@ describe('SummaryCard', () => {
 });
 
 describe('CollectorsPage', () => {
-  it('nests children under parents and shows server tallies', async () => {
+  it('nests collectors under their server-side groups and shows server tallies', async () => {
     const rows = [
-      { key: 'jp_police', label: 'Prefectural police', parent: null, sources: 47, scheduled: 47, pivots: 0, internal: 0, unreachable: 0, items: 1200, notices: 0, last_fetched: null, status: { online: 40, degraded: 5, offline: 2, pending: 0 }, categories: { values: [{ key: 'crime', count: 47 }] }, engines: { values: [{ key: 'vrss', count: 47 }] } },
-      { key: 'jp_police_tokyo', label: null, parent: 'jp_police', sources: 1, scheduled: 1, pivots: 0, internal: 0, unreachable: 0, items: 30, notices: 0, last_fetched: null, status: { online: 1, degraded: 0, offline: 0, pending: 0 }, categories: { values: [] }, engines: { values: [] } },
-      { key: 'solo_beat', label: null, parent: null, sources: 1, scheduled: 0, pivots: 1, internal: 0, unreachable: 0, items: 0, notices: 0, last_fetched: null, status: { online: 0, degraded: 0, offline: 0, pending: 1 }, categories: { values: [] }, engines: { values: [] } },
+      { key: 'jp_police', label: 'Prefectural police', parent: 'grp_safety', group: 'grp_safety', sources: 47, scheduled: 47, pivots: 0, internal: 0, unreachable: 0, items: 1200, notices: 0, last_fetched: null, status: { online: 40, degraded: 5, offline: 2, pending: 0 }, categories: { values: [{ key: 'crime', count: 47 }] }, engines: { values: [{ key: 'vrss', count: 47 }] } },
+      { key: 'solo_beat', label: null, parent: 'grp_osint', group: 'grp_osint', sources: 1, scheduled: 0, pivots: 1, internal: 0, unreachable: 0, items: 0, notices: 0, last_fetched: null, status: { online: 0, degraded: 0, offline: 0, pending: 1 }, categories: { values: [] }, engines: { values: [] } },
     ];
-    expect(nestCollectors(rows).map((c) => c.key)).toEqual(['jp_police', 'solo_beat']);
-    expect(nestCollectors(rows)[0].children.map((c) => c.key)).toEqual(['jp_police_tokyo']);
-    mockFetch(() => ({ data: rows, meta: { total: 3, sources: 49, labelled: 1, snapshot_at: '2026-10-12T00:00:00Z' } }));
+    const groups = [
+      { key: 'grp_safety', label: 'Crime, policing, defense & conflict', is_group: true, collectors: ['jp_police'], collector_count: 1, sources: 47, scheduled: 47, pivots: 0, internal: 0, unreachable: 0, items: 1200, notices: 0, last_fetched: null, status: { online: 40, degraded: 5, offline: 2, pending: 0 }, categories: { values: [] }, engines: { values: [] } },
+      { key: 'grp_osint', label: 'Investigation pivots & reference', is_group: true, collectors: ['solo_beat'], collector_count: 1, sources: 1, scheduled: 0, pivots: 1, internal: 0, unreachable: 0, items: 0, notices: 0, last_fetched: null, status: { online: 0, degraded: 0, offline: 0, pending: 1 }, categories: { values: [] }, engines: { values: [] } },
+    ];
+    const g = groupCollectors(groups, rows);
+    expect(g.map((x) => x.key)).toEqual(['grp_safety', 'grp_osint']);
+    expect(g[0].members.map((m) => m.key)).toEqual(['jp_police']);
+    expect(groupCollectors(groups, rows, (r) => r.key === 'solo_beat').map((x) => x.key)).toEqual(['grp_osint']);
+    mockFetch(() => ({ data: rows, groups, meta: { total: 2, sources: 48, labelled: 2, groups: 2, unassigned_collectors: 0, snapshot_at: '2026-10-12T00:00:00Z' } }));
     render(<MemoryRouter><CollectorsPage /></MemoryRouter>);
     await waitFor(() => expect(screen.getByText('Prefectural police')).toBeTruthy());
-    expect(screen.getAllByText('jp_police_tokyo').length).toBeGreaterThan(0);
+    expect(screen.getByText('Crime, policing, defense & conflict')).toBeTruthy();
     expect(screen.getAllByText('solo_beat').length).toBeGreaterThan(0);
-    expect(screen.getByText(/49 sources in 3 collectors/)).toBeTruthy();
-    expect(screen.getByText('1,200 items')).toBeTruthy();
+    expect(screen.getByText(/48 sources · 2 collectors · 2 groups/)).toBeTruthy();
+    expect(screen.getAllByText('1,200 items').length).toBeGreaterThan(0);
   });
 });

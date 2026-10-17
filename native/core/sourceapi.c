@@ -316,6 +316,10 @@ static cJSON *row_json(const reg_ent *e, const snapshot *s, long long now) {
   {
     const collector_meta *cm = collector_meta_get(d->collector);
     add_str_or_null(o, "collector_label", cm ? cm->label : NULL);
+    const char *g = collector_group_of(d->collector);
+    const collector_meta *gm = collector_meta_get(g);
+    cJSON_AddStringToObject(o, "group", g);
+    add_str_or_null(o, "group_label", gm ? gm->label : NULL);
   }
   add_str_or_null(o, "category", (m && m->category) ? m->category : d->category);
   add_str_or_null(o, "type", (m && m->type) ? m->type : d->type);
@@ -433,6 +437,7 @@ static int hit_matches(const reg_ent *e, const snapshot *s, const sourceapi_quer
                        hit_t *out) {
   const source_def *d = e->d;
   if (nonempty(q->collector) && !streq(d->collector, q->collector)) return 0;
+  if (nonempty(q->group) && strcmp(collector_group_of(d->collector), q->group)) return 0;
   if (nonempty(q->engine) && strcmp(engine_of(d), q->engine)) return 0;
   if (nonempty(q->kind) && strcmp(e->kind, q->kind)) return 0;
   const src_meta *m = src_meta_get(d->id);
@@ -477,7 +482,7 @@ static cJSON *search_obj(db_handle *db, const sourceapi_query *q, const char *fo
 
   hit_t *hits = malloc((size_t)(g_nreg > 0 ? g_nreg : 1) * sizeof *hits);
   int nh = 0;
-  facets f_coll = {0}, f_cat = {0}, f_eng = {0}, f_kind = {0}, f_status = {0};
+  facets f_coll = {0}, f_cat = {0}, f_eng = {0}, f_kind = {0}, f_status = {0}, f_grp = {0};
   if (hits) {
     for (int i = 0; i < g_nreg; i++) {
       hit_t h;
@@ -485,6 +490,7 @@ static cJSON *search_obj(db_handle *db, const sourceapi_query *q, const char *fo
       hits[nh++] = h;
       const src_meta *m = src_meta_get(h.e->d->id);
       facet_add(&f_coll, h.e->d->collector ? h.e->d->collector : "(none)");
+      facet_add(&f_grp, collector_group_of(h.e->d->collector));
       facet_add(&f_cat, (m && m->category) ? m->category : (h.e->d->category ? h.e->d->category : "(none)"));
       facet_add(&f_eng, engine_of(h.e->d));
       facet_add(&f_kind, h.e->kind);
@@ -507,6 +513,7 @@ static cJSON *search_obj(db_handle *db, const sourceapi_query *q, const char *fo
   cJSON_AddBoolToObject(page, "has_more", hits && off + shown < nh);
   cJSON_AddItemToObject(o, "page", page);
   cJSON *fa = cJSON_CreateObject();
+  cJSON_AddItemToObject(fa, "groups", facet_json(&f_grp, 40, 1));
   cJSON_AddItemToObject(fa, "collectors", facet_json(&f_coll, 80, 1));
   cJSON_AddItemToObject(fa, "categories", facet_json(&f_cat, 60, 0));
   cJSON_AddItemToObject(fa, "engines", facet_json(&f_eng, 16, 0));
@@ -521,6 +528,7 @@ static cJSON *search_obj(db_handle *db, const sourceapi_query *q, const char *fo
   cJSON *fl = cJSON_CreateObject();
   add_str_or_null(fl, "q", qq.q);
   add_str_or_null(fl, "collector", qq.collector);
+  add_str_or_null(fl, "group", qq.group);
   add_str_or_null(fl, "category", qq.category);
   add_str_or_null(fl, "engine", qq.engine);
   add_str_or_null(fl, "kind", qq.kind);
@@ -572,6 +580,14 @@ static cJSON *coll_json(coll_t *c) {
   add_str_or_null(o, "label_ja", cm ? cm->label_ja : NULL);
   add_str_or_null(o, "description", cm ? cm->description : NULL);
   add_str_or_null(o, "parent", cm ? cm->parent : NULL);
+  {
+    int is_group = collector_meta_is_group(cm) || !strcmp(c->key, COLLECTOR_GROUP_UNASSIGNED);
+    cJSON_AddBoolToObject(o, "is_group", is_group);
+    const char *g = is_group ? c->key : collector_group_of(c->key);
+    const collector_meta *gm = collector_meta_get(g);
+    cJSON_AddStringToObject(o, "group", g);
+    add_str_or_null(o, "group_label", gm ? gm->label : NULL);
+  }
   cJSON_AddNumberToObject(o, "sources", (double)c->sources);
   cJSON_AddNumberToObject(o, "scheduled", (double)c->scheduled);
   cJSON_AddNumberToObject(o, "pivots", (double)c->pivots);
@@ -637,6 +653,52 @@ static coll_t *coll_build(const snapshot *s, const char *only, int *out_n) {
   return c;
 }
 
+/* Fold the collectors of one group into a group-level coll_t. `members`
+ * receives the member keys (a JSON array). The group's facets are rebuilt
+ * from the members' facets, which coll_json() has NOT yet consumed. */
+static void coll_fold_group(const coll_t *c, int n, const char *gkey, coll_t *g, cJSON *members) {
+  memset(g, 0, sizeof *g);
+  g->key = gkey;
+  for (int i = 0; i < n; i++) {
+    if (strcmp(collector_group_of(c[i].key), gkey)) continue;
+    cJSON_AddItemToArray(members, cJSON_CreateString(c[i].key));
+    g->sources += c[i].sources; g->scheduled += c[i].scheduled; g->pivots += c[i].pivots;
+    g->internal += c[i].internal; g->unreachable += c[i].unreachable;
+    g->items += c[i].items; g->notices += c[i].notices;
+    g->online += c[i].online; g->degraded += c[i].degraded; g->offline += c[i].offline; g->pending += c[i].pending;
+    if (strcmp(c[i].last_fetched, g->last_fetched) > 0)
+      snprintf(g->last_fetched, sizeof g->last_fetched, "%s", c[i].last_fetched);
+    for (int k = 0; k < c[i].cats.n; k++)
+      for (long r = 0; r < c[i].cats.v[k].n; r++) facet_add(&g->cats, c[i].cats.v[k].key);
+    for (int k = 0; k < c[i].engines.n; k++)
+      for (long r = 0; r < c[i].engines.v[k].n; r++) facet_add(&g->engines, c[i].engines.v[k].key);
+  }
+}
+
+/* Every group that has members (plus grp_unassigned when anything lands
+ * there), as a JSON array of group objects carrying `collectors` (keys). */
+static cJSON *groups_json(const coll_t *c, int n) {
+  cJSON *arr = cJSON_CreateArray();
+  int ng = collector_meta_count();
+  for (int gi = 0; gi <= ng; gi++) {
+    const char *gkey;
+    if (gi < ng) {
+      const collector_meta *gm = collector_meta_at(gi);
+      if (!collector_meta_is_group(gm)) continue;
+      gkey = gm->key;
+    } else gkey = COLLECTOR_GROUP_UNASSIGNED;
+    cJSON *members = cJSON_CreateArray();
+    coll_t g;
+    coll_fold_group(c, n, gkey, &g, members);
+    if (g.sources == 0) { cJSON_Delete(members); continue; }
+    cJSON *gj = coll_json(&g);           /* consumes g's facets */
+    cJSON_AddItemToObject(gj, "collectors", members);
+    cJSON_AddNumberToObject(gj, "collector_count", cJSON_GetArraySize(members));
+    cJSON_AddItemToArray(arr, gj);
+  }
+  return arr;
+}
+
 char *sourceapi_collectors(db_handle *db) {
   reg_build();
   snapshot *s = snap_lock(db);
@@ -644,10 +706,12 @@ char *sourceapi_collectors(db_handle *db) {
   coll_t *c = coll_build(s, NULL, &n);
   qsort(c, (size_t)n, sizeof *c, coll_cmp);
   cJSON *o = cJSON_CreateObject();
+  cJSON *groups = groups_json(c, n);     /* before coll_json() eats the facets */
   cJSON *data = cJSON_CreateArray();
   long srcs = 0;
   for (int i = 0; i < n; i++) { srcs += c[i].sources; cJSON_AddItemToArray(data, coll_json(&c[i])); }
   cJSON_AddItemToObject(o, "data", data);
+  cJSON_AddItemToObject(o, "groups", groups);
   cJSON *meta = cJSON_CreateObject();
   char ts[40]; iso_now(ts, sizeof ts);
   cJSON_AddStringToObject(meta, "fetched_at", ts);
@@ -656,6 +720,13 @@ char *sourceapi_collectors(db_handle *db) {
   cJSON_AddNumberToObject(meta, "sources", (double)srcs);
   cJSON_AddNumberToObject(meta, "registry_total", g_nreg);
   cJSON_AddNumberToObject(meta, "labelled", collector_meta_count());
+  cJSON_AddNumberToObject(meta, "groups", cJSON_GetArraySize(groups));
+  {
+    long un = 0;
+    for (int i = 0; i < n; i++)
+      if (!strcmp(collector_group_of(c[i].key), COLLECTOR_GROUP_UNASSIGNED)) un++;
+    cJSON_AddNumberToObject(meta, "unassigned_collectors", (double)un);
+  }
   cJSON_AddItemToObject(o, "meta", meta);
   snap_unlock();
   free(c);
@@ -704,24 +775,51 @@ char *sourceapi_collector(db_handle *db, const char *key, const sourceapi_query 
   if (!key || !*key) return NULL;
   reg_build();
   snapshot *s = snap_lock(db);
-  int n = 0;
-  coll_t *c = coll_build(s, key, &n);
-  if (n == 0) { snap_unlock(); free(c); return NULL; }
+  const collector_meta *km = collector_meta_get(key);
+  int is_group = collector_meta_is_group(km) || !strcmp(key, COLLECTOR_GROUP_UNASSIGNED);
   cJSON *o = cJSON_CreateObject();
-  cJSON_AddItemToObject(o, "collector", coll_json(&c[0]));
+  cJSON *members = cJSON_CreateArray();
+  if (is_group) {
+    /* a GROUP: its header is the fold of its member collectors, and its
+     * sources page is every source whose collector is a member */
+    int n = 0;
+    coll_t *all = coll_build(s, NULL, &n);
+    coll_t g;
+    coll_fold_group(all, n, key, &g, members);
+    for (int i = 0; i < n; i++) { free(all[i].cats.v); free(all[i].engines.v); }
+    free(all);
+    if (g.sources == 0) { cJSON_Delete(members); cJSON_Delete(o); snap_unlock(); return NULL; }
+    cJSON_AddItemToObject(o, "collector", coll_json(&g));
+  } else {
+    int n = 0;
+    coll_t *c = coll_build(s, key, &n);
+    if (n == 0) { snap_unlock(); free(c); cJSON_Delete(members); cJSON_Delete(o); return NULL; }
+    cJSON_AddItemToObject(o, "collector", coll_json(&c[0]));
+    free(c);
+  }
+  /* member collectors (with their own tallies) for a group; children by
+   * collectors.def parent for a collector (none today, kept for the data) */
   cJSON *children = cJSON_CreateArray();
-  for (int i = 0; i < collector_meta_count(); i++) {
-    const collector_meta *cm = collector_meta_at(i);
-    if (cm->parent && !strcmp(cm->parent, key)) cJSON_AddItemToArray(children, cJSON_CreateString(cm->key));
+  if (is_group) {
+    int n = 0;
+    coll_t *all = coll_build(s, NULL, &n);
+    qsort(all, (size_t)n, sizeof *all, coll_cmp);
+    for (int i = 0; i < n; i++)
+      if (!strcmp(collector_group_of(all[i].key), key)) cJSON_AddItemToArray(children, coll_json(&all[i]));
+      else { free(all[i].cats.v); free(all[i].engines.v); }
+    free(all);
   }
   cJSON_AddItemToObject(o, "children", children);
-  /* groups and the sources page read the same snapshot; the lock is reentrant
-   * in effect because search_obj takes it itself — so release first. */
+  cJSON_AddItemToObject(o, "member_keys", members);
+  cJSON_AddBoolToObject(o, "is_group", is_group);
+  /* the sources page reads the same snapshot; search_obj takes the lock
+   * itself — so release first. */
   snap_unlock();
-  free(c);
-  cJSON_AddItemToObject(o, "groups", coll_groups(key));
+  cJSON_AddItemToObject(o, "groups", is_group ? cJSON_CreateNull() : coll_groups(key));
   sourceapi_query z = {0};
-  cJSON_AddItemToObject(o, "sources", search_obj(db, q ? q : &z, key));
+  sourceapi_query qq = q ? *q : z;
+  if (is_group) { qq.group = key; qq.collector = NULL; }
+  cJSON_AddItemToObject(o, "sources", search_obj(db, &qq, is_group ? NULL : key));
   char *js = cJSON_PrintUnformatted(o);
   cJSON_Delete(o);
   return js;

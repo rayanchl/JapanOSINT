@@ -476,9 +476,20 @@ underneath them that older notes in this file predate:
 * **`fetch_log.bytes_fetched`** (2026-10-12) is the run's transfer size —
   every response body `http_client` received, retries included — and the run
   line ends ` bytes=N requests=M`. NULL = a row from before the column.
-* `/api/status` rows carry `collector`, `collectorLabel`, `engine`, `kind`;
-  the iOS dashboard groups on `collector` (it grouped on `layer`, which ~1% of
+* `/api/status` rows carry `collector`, `collectorLabel`, `collectorGroup`,
+  `collectorGroupLabel`, `engine`, `kind`; the iOS dashboard groups on
+  `collector` under group headings (it grouped on `layer`, which ~1% of
   sources declare).
+* **Collectors are grouped** (2026-10-17): `core/collectors.def` is GENERATED
+  by `tools/gen_collectors_def.py` from the collector census and gives every
+  collector key a `parent` among 22 `grp_*` groups (government, legal,
+  corporate, procurement, open data, science, health, environment, space,
+  cyber, telecom, infrastructure, transport, media, social, geo, safety,
+  sanctions, culture, surveillance, OSINT pivots, internal). **A new beat
+  needs a line there**: a collector the def does not list shows under
+  `grp_unassigned` on every page and `test_sourceapi.c` fails. Re-run the
+  generator on a fresh census (`GET /api/collectors` → TSV) or add the line
+  by hand; the rules live in the script (OVERRIDES, KEYWORDS, CATEGORY_GROUP).
 
 Plan, audit and as-built notes: `docs/source-pages-revamp/`.
 

@@ -337,6 +337,12 @@ static cJSON *status_row(sqlite3_stmt *s, agg_t *A, int na,
     const collector_meta *cm = d ? collector_meta_get(d->collector) : NULL;
     add_str_or_null(o,"collector", d ? d->collector : NULL);
     add_str_or_null(o,"collectorLabel", cm ? cm->label : NULL);
+    {
+      const char *g = d ? collector_group_of(d->collector) : NULL;
+      const collector_meta *gm = g ? collector_meta_get(g) : NULL;
+      add_str_or_null(o,"collectorGroup", g);
+      add_str_or_null(o,"collectorGroupLabel", gm ? gm->label : NULL);
+    }
     add_str_or_null(o,"engine", d ? (d->engine && d->engine[0] ? d->engine : "native") : NULL);
     add_str_or_null(o,"kind", d ? (d->collector && d->collector[0] == '_' ? "internal"
                                  : d->update_interval_sec > 0 ? "scheduled"
@@ -442,6 +448,9 @@ static cJSON *breach_status_row(const breach_src_row *br) {
   add_str_or_null(o, "category", "breach");
   add_str_or_null(o, "collector", "_breach");
   add_str_or_null(o, "collectorLabel", "Breach corpus");
+  add_str_or_null(o, "collectorGroup", collector_group_of("_breach"));
+  { const collector_meta *gm = collector_meta_get(collector_group_of("_breach"));
+    add_str_or_null(o, "collectorGroupLabel", gm ? gm->label : NULL); }
   add_str_or_null(o, "engine", "breach");
   add_str_or_null(o, "kind", "corpus");
   add_str_or_null(o, "url", br->domain[0] ? br->domain : NULL);

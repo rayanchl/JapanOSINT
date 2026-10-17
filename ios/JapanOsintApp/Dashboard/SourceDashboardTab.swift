@@ -455,13 +455,39 @@ struct SourceDashboardTab: View {
         }
     }
 
+    /// Collectors sectioned by their server-side GROUP (collectors.def
+    /// headings), groups ordered by source count, each group's collectors in
+    /// the `collectors` order (favourites first, then name). Every collector
+    /// is in exactly one section; a collector the server could not place sits
+    /// under "Unassigned" rather than being dropped.
+    private struct CollectorGroupSection: Identifiable {
+        let id: String
+        let label: String
+        let collectors: [Collector]
+        var sourceCount: Int { collectors.reduce(0) { $0 + $1.sourceCount } }
+    }
+    private var collectorSections: [CollectorGroupSection] {
+        var byGroup: [String: [Collector]] = [:]
+        var labels: [String: String] = [:]
+        for c in collectors {
+            byGroup[c.group, default: []].append(c)
+            labels[c.group] = c.groupLabel
+        }
+        return byGroup.map { CollectorGroupSection(id: $0.key, label: labels[$0.key] ?? $0.key, collectors: $0.value) }
+            .sorted { lhs, rhs in
+                if lhs.sourceCount != rhs.sourceCount { return lhs.sourceCount > rhs.sourceCount }
+                return lhs.label < rhs.label
+            }
+    }
+
     private var collectorsList: some View {
         // Bound once: `collectors` filters, groups and sorts ~1,700 rows, and
         // the count in the header plus the ForEach made that twice per keystroke.
         let items = collectors
+        let sections = collectorSections
         return VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Text("Collectors (\(items.count))")
+                Text("Collectors (\(items.count)) in \(sections.count) groups")
                     .font(.headline.monospacedDigit())
                     .foregroundStyle(theme.text)
                 Spacer()
@@ -470,7 +496,19 @@ struct SourceDashboardTab: View {
                     .foregroundStyle(theme.textMuted)
             }
             VStack(spacing: 8) {
-                ForEach(items) { c in
+                ForEach(sections) { section in
+                  HStack {
+                    Text(section.label)
+                        .font(.subheadline.bold())
+                        .foregroundStyle(section.id == "grp_unassigned" ? theme.danger : theme.text)
+                    Spacer()
+                    Text("\(section.collectors.count) collector\(section.collectors.count == 1 ? "" : "s") · \(section.sourceCount) sources")
+                        .font(.caption2.monospacedDigit())
+                        .foregroundStyle(theme.textMuted)
+                  }
+                  .padding(.top, 6)
+                  .accessibilityAddTraits(.isHeader)
+                  ForEach(section.collectors) { c in
                     CollectorRow(
                         collector: c,
                         isFavorite: favs.contains(c.id),
@@ -482,6 +520,7 @@ struct SourceDashboardTab: View {
                         refresh: { Task { await refresh(c.id) } },
                         selectSource: { selected = $0 }
                     )
+                  }
                 }
             }
         }
@@ -794,6 +833,7 @@ private struct SourceDetail: View {
 
                 section("Identity") {
                     kv("ID",        row.id)
+                    kv("Group",     row.collectorGroupLabel ?? row.collectorGroup ?? "not reported by this server")
                     kv("Collector", row.collectorLabel.map { "\($0) (\(row.collector ?? "?"))" } ?? row.collector ?? "not reported by this server")
                     kv("Engine",    row.engine ?? "not reported by this server")
                     kv("Kind",      row.kind ?? "not reported by this server")

@@ -26,6 +26,8 @@ typedef struct {
   const char *q;          /* substring over id, name, name_ja, description,
                            * collector, fetch host (case-insensitive)       */
   const char *collector;  /* exact collector key                            */
+  const char *group;      /* exact group key (grp_*): every collector whose
+                           * parent in collectors.def is this group          */
   const char *category;   /* exact category                                 */
   const char *engine;     /* hpengine | vjson | vrss | vgeo | vcsv | rss |
                            * socrata | native                                */
