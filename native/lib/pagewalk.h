@@ -35,8 +35,11 @@
  * reads. Silence is the violation; a stated bound is not.
  *
  * ENV
- *   JO_PAGE_MAX   pages per run, default 20. 1 restores the old
- *                 single-fetch behaviour while KEEPING the disclosure.
+ *   JO_PAGE_MAX   pages per run, default 20, for EVERY walk in the tree — this
+ *                 module, lib/jsonlist.c and lib/hpengine.c alike. It used to
+ *                 reach only this one; see jo_page_max() in pagewalk.c for what
+ *                 the other two did instead. 1 restores the old single-fetch
+ *                 behaviour while KEEPING the disclosure.
  *   JO_PAGE_WALK  0 disables continuation entirely (disclosure still emitted).
  */
 #ifndef JO_PAGEWALK_H
@@ -69,6 +72,12 @@ typedef int (*pw_emit_fn)(const source_ctx *c, intel_sink *s, const char *id,
  *
  * Returns the number of records emitted (the notice is not counted), or -1 if
  * the FIRST fetch failed — a dead endpoint is an error, an empty one is not. */
+/* The page ceiling every walk in the tree uses: $JO_PAGE_MAX when set, else
+ * `legacy_env` when that name is set (NULL for none), else 20. One function
+ * because there were three bounds with two numbers and two knobs, and one of
+ * them had no knob at all — see jo_page_max() in pagewalk.c. */
+int jo_page_max(const char *legacy_env);
+
 int pw_walk(const source_ctx *c, intel_sink *s, const char *id,
             const char *url, pw_fetch_fn fetch, pw_emit_fn emit_page, void *ud);
 

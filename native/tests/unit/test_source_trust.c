@@ -91,7 +91,26 @@ int main(void) {
   assert(source_trust_builds() > b0 && "background rebuild never landed");
   double s1 = source_trust_score(&db, "UNIT_TRUST_C");
   printf("  score: %.1f before the background build, %.3f after\n", s0, s1);
-  assert(fabs(s1 - c_rel) < 1e-9);
+  /* RELIABILITY DECAYS WITH WALL-CLOCK TIME, so this cannot be an equality.
+   * `c_rel` was computed by the synchronous load above; `s1` comes from the
+   * table the BACKGROUND thread built, one connection and one GROUP BY later.
+   * reliability carries 0.30 * freshness, and freshness is
+   * clamp01(1 - age/horizon) against a 7-day horizon for a source with no
+   * declared interval — so it loses 0.30/604800 = 4.96e-7 per second, and
+   * `now` is whole seconds from time(NULL). Measured on this fixture: two
+   * loads one second apart give 0.739988095238 and 0.739987599206, a
+   * difference of 4.96031746e-07.
+   *
+   * The old bound was 1e-9, which holds ONLY when both loads land inside the
+   * same wall-clock second. It passed on a fast tree and failed under TSan,
+   * where the rebuild is slow enough that crossing a second is near-certain —
+   * the same commit went green in one CI run and aborted here in another.
+   * 1e-4 still catches every regression this line is for (an unrated -1.0, a
+   * quarantined 0.0, or another source's score all differ by far more) while
+   * admitting ~200 s of legitimate decay, well past the 10 s this test will
+   * wait for the rebuild. */
+  assert(fabs(s1 - c_rel) < 1e-4);
+  assert(s1 > 0.0 && "the score must come from the table, not read as unrated");
   assert(source_trust_score(&db, "UNIT_TRUST_NONE") == -1.0);
 
   free(T);

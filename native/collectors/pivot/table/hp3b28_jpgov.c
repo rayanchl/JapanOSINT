@@ -108,6 +108,7 @@ static const hp_source HP3B28_JPGOV[] = {
     .page_param = "start",
     .page_size = 100,
     .page_zero_based = 1,
+    .page_max = 181,   /* 18,096 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "title",
     .description = "The e-Gov open data portal runs on CKAN and exposes its full "
       "package_search API; a live query returned valid JSON reporting "

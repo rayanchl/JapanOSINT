@@ -4,6 +4,7 @@ import { LuFolder, LuPlus, LuRefreshCw, LuDownload, LuArchive, LuCheck } from 'r
 import { api, errorMessage } from '../../api/client.js';
 import {
   usePaged, CASE_STATUSES, CaseStatus, CASE_PRIORITIES, CasePriority, downloadBlob, filenameFromDisposition,
+  caseCanWrite,
 } from '../../hooks/useCases.js';
 import {
   Page, Card, Pill, Button, Input, TextArea, Field, Select, Segmented, Sheet, ErrorNotice, EmptyState,
@@ -21,9 +22,10 @@ import { useMemberNames, authorLabel } from '../../hooks/useMembers.js';
  *
  * Every member reads every case in the workspace, and each row names who
  * opened it. Creating one needs analyst or above (casesapi.c POST). A status
- * change is a content write — analyst or above, OR anyone on that case's
- * roster — and the list does not carry `my_case_role`, so for a viewer the
- * quick buttons are left to the case page, which knows the roster.
+ * change is a content write — analyst or above, or the case's lead or a
+ * contributor; a case viewer reads only — so each row offers the quick
+ * buttons exactly when caseCanWrite() says the server would accept them, from
+ * the `my_case_role` every list row carries.
  */
 const STATUS_OPTIONS = [{ value: '', label: 'All' }, ...CASE_STATUSES.map((s) => ({ value: s, label: CaseStatus.label(s) }))];
 
@@ -90,7 +92,7 @@ export default function CasesPage() {
     >
       {!canWrite && (
         <div className="text-[11px] text-osint-muted">
-          Your role in this workspace is {auth.role || 'not known'}: you can read every case. Creating a case needs the analyst, admin or owner role; a case whose roster you are on can be changed from its own page.
+          Your role in this workspace is {auth.role || 'not known'}: you can read every case. Creating a case needs the analyst, admin or owner role; a case you lead or contribute to you can also change, here or from its own page.
         </div>
       )}
       <div className="flex flex-wrap items-center gap-2">
@@ -140,7 +142,7 @@ export default function CasesPage() {
                       <span className="text-[11px] text-osint-muted font-mono" title={c.created_by || undefined}>· created by {authorLabel(c, names, { userId: myId })}</span>
                     </div>
                   </div>
-                  {canWrite && (
+                  {caseCanWrite(auth.role, c.my_case_role) && (
                     <div className="flex flex-col gap-1 flex-shrink-0">
                       {c.status !== 'open' && <Button size="sm" busy={busyId === c.id} onClick={() => patchStatus(c, 'open')}>Reopen</Button>}
                       {c.status === 'open' && <Button size="sm" busy={busyId === c.id} onClick={() => patchStatus(c, 'closed')}>Close</Button>}

@@ -231,6 +231,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .link_keys = "identifier",
     .link_tmpl = "https://archive.org/details/{v}",
     .page_param = "page",
+    .page_max = 183,   /* 91,403 records at 500 a page, measured 2026-10-12; the 20-page default reached 10,000 */
     .title_keys = "title,identifier",
     .description = "Newest items in the Internet Archive collection 'bitsavers': "
       "Bitsavers' mirror of historic computer manuals, software and "
@@ -479,6 +480,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .link_keys = "identifier",
     .link_tmpl = "https://archive.org/details/{v}",
     .page_param = "page",
+    .page_max = 152,   /* 75,678 records at 500 a page, measured 2026-10-12; the 20-page default reached 10,000 */
     .title_keys = "title,identifier",
     .description = "The newest Japanese-language text items uploaded to the Internet "
       "Archive - books, pamphlets, reports and document scans - with "

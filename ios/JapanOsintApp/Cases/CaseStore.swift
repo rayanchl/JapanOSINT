@@ -262,7 +262,8 @@ final class CaseStore: ObservableObject {
                     closed_at: d.closed_at,
                     // Detail carries per-ref-type counts; the summary shows the
                     // total (nil stays nil so "unknown" isn't rendered as 0).
-                    item_count: d.item_counts?.values.reduce(0, +))
+                    item_count: d.item_counts?.values.reduce(0, +),
+                    my_case_role: d.my_case_role)
     }
 
     private static func sorted(_ rows: [CaseSummary]) -> [CaseSummary] {
@@ -288,7 +289,24 @@ extension CaseSummary {
                     created_at: created_at,
                     updated_at: updated_at,
                     closed_at: closed_at,
-                    item_count: item_count)
+                    item_count: item_count,
+                    my_case_role: my_case_role)
+    }
+}
+
+// MARK: - Who may change a case (casesapi.c)
+
+/// casesapi.c's `can_write()` — edit fields, change status, pin, comment —
+/// exactly: analyst or above in the workspace, or the case's lead or a
+/// contributor. A case VIEWER reads only (decided 2026-10-09). Nothing here
+/// depends on who created the case. The web client's `caseCanWrite()`
+/// (client/src/hooks/useCases.js) is the same rule.
+enum CaseAccess {
+    static func canWrite(workspaceRole: String?, myCaseRole: String?) -> Bool {
+        switch workspaceRole {
+        case "owner", "admin", "analyst": return true
+        default: return myCaseRole == "lead" || myCaseRole == "contributor"
+        }
     }
 }
 

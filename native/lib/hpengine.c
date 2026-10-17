@@ -6,6 +6,7 @@
  * that cannot fetch emits zero items and logs why. */
 #include "hpengine.h"
 #include "jsonlist.h"      /* jsonlist_next_page: page_walk rows page as VJSON did */
+#include "pagewalk.h"      /* jo_page_max: the tree's one page ceiling */
 #include "../core/url_override.h"
 #include "csv.h"
 #include "xlsx.h"
@@ -35,7 +36,13 @@
 #define HP_MAX_ARR        256   /* exhaustive-ok: memory guard, stamped     */
 #define HP_MAX_DEPTH        8   /* exhaustive-ok: memory guard, stamped     */
 #define HP_HTTP_TIMEOUT 20000
-#define HP_PAGE_MAX_DEF    10   /* exhaustive-ok: runaway guard, stamped    */
+/* The page ceiling for a row that declares its own paging is jo_page_max()
+ * (lib/pagewalk.c) — the SAME bound and the same $JO_PAGE_MAX knob as the
+ * generated fleet and as this engine's own page_walk rows. It was a private
+ * `10` here with no environment override, so these rows stopped at half the
+ * tree's documented depth and no setting could move them: 1,919 scheduled rows
+ * declare page_param/next_path/{page} with no per-row page_max. A row that
+ * genuinely wants a different depth still says so in `page_max`. */
 /* The detail budget is a COUNT and a CLOCK, and the clock is the one that
  * normally binds. It used to be a count of 25, applied to all ~633 rows that
  * declare a second hop: a CQC provider list is 1,000 records a page, so 975 of
@@ -4060,7 +4067,7 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     if (!has_accept && s->mode != HP_JSON) detail_hdrs[nd++] = "Accept: application/json";
     detail_hdrs[nd] = NULL;
   }
-  int page_max = s->page_max > 0 ? s->page_max : HP_PAGE_MAX_DEF;
+  int page_max = s->page_max > 0 ? s->page_max : jo_page_max(NULL);
   /* A `{page}` token left in the URL after entity expansion is path-segment
    * paging: the upstream numbers its pages in the path (kanpou.ai's
    * /tosan/p/N), which no query parameter can express. hp_expand leaves an

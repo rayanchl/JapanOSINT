@@ -8,12 +8,13 @@
 // editable as your own for an analyst, and neither is for a viewer:
 //   aoiapi.c / alertsapi.c   create, edit, delete: analyst, admin or owner
 //   breach_monitor.c         delete, rescan, domain proofs: analyst or above
-//   casesapi.c               write: analyst+ OR on the roster;
+//   casesapi.c               write: analyst+ OR the case's lead or a
+//                            contributor (a case viewer reads only);
 //                            delete: owner/admin OR the case lead;
 //                            roster: analyst+ OR the case lead
 import React from 'react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { render, cleanup, screen } from '@testing-library/react';
+import { render, cleanup, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import CasesPage from '../cases/CasesPage.jsx';
 import CaseDetailPage from '../cases/CaseDetailPage.jsx';
@@ -96,7 +97,7 @@ describe('cases list', () => {
     expect(screen.getByText('New case')).toBeTruthy();
   });
 
-  it('offers a viewer no create or status change (403 unless on the roster, which the list does not carry), and says why', async () => {
+  it('offers a viewer no create, and no status change on a case they are not on, and says why', async () => {
     signedInAs('viewer');
     mockFetch({ '/api/members': MEMBERS, '/api/cases': CASES });
     inRouter(<CasesPage />);
@@ -104,6 +105,52 @@ describe('cases list', () => {
     expect(screen.queryByText('Close')).toBeNull();
     expect(screen.queryByText('New case')).toBeNull();
     expect(screen.getByText(/you can read every case/)).toBeTruthy();
+  });
+
+  // GET /api/cases carries the caller's `my_case_role` on every row, so the
+  // list offers exactly what casesapi.c's can_write() accepts: a workspace
+  // viewer who leads or contributes to a case may change its status; as that
+  // case's VIEWER, or off its roster, they read only (decided 2026-10-09).
+  it('gives a workspace viewer the status buttons on the cases they lead or contribute to, and only those', async () => {
+    signedInAs('viewer');
+    const row = (id, name, mine, status = 'open') => ({ id, name, status, priority: 0, created_by: 'u-mate', created_at: T, updated_at: T, item_count: 0, my_case_role: mine });
+    mockFetch({ '/api/members': MEMBERS, '/api/cases': { data: [
+      row('c1', 'Contributed case', 'contributor'),
+      row('c2', 'Led case', 'lead', 'closed'),
+      row('c3', 'Watched case', 'viewer'),
+      row('c4', 'Unrelated case', null),
+    ], page: { next_cursor: null } } });
+    inRouter(<CasesPage />);
+    await screen.findByText('Watched case');
+    const buttonsOf = (name) => {
+      const card = screen.getByText(name).closest('li');
+      return Array.from(card.querySelectorAll('button')).map((b) => b.textContent.trim());
+    };
+    expect(buttonsOf('Contributed case')).toEqual(['Close', 'Archive']);
+    expect(buttonsOf('Led case')).toEqual(['Reopen', 'Archive']);
+    expect(buttonsOf('Watched case')).toEqual([]);
+    expect(buttonsOf('Unrelated case')).toEqual([]);
+    expect(screen.queryByText('New case')).toBeNull();     // creating still needs analyst+
+  });
+
+  it('sends the status change a contributor asked for', async () => {
+    signedInAs('viewer');
+    const calls = [];
+    globalThis.fetch = vi.fn(async (input, init) => {
+      const url = typeof input === 'string' ? input : input.url;
+      calls.push({ url, method: init?.method || 'GET', body: init?.body });
+      const path = new URL(url, 'http://x').pathname;
+      const body = path === '/api/members' ? MEMBERS
+        : path === '/api/cases' ? { data: [{ id: 'c1', name: 'Contributed case', status: 'open', priority: 0, created_by: 'u-mate', created_at: T, updated_at: T, item_count: 0, my_case_role: 'contributor' }], page: { next_cursor: null } }
+        : { data: { id: 'c1', name: 'Contributed case', status: 'closed', priority: 0, created_at: T, updated_at: T, my_case_role: 'contributor' } };
+      return new Response(JSON.stringify(body), { status: 200, headers: { 'content-type': 'application/json' } });
+    });
+    inRouter(<CasesPage />);
+    (await screen.findByText('Close')).click();
+    await waitFor(() => expect(calls.some((c) => c.method === 'PATCH')).toBe(true));
+    const patch = calls.find((c) => c.method === 'PATCH');
+    expect(new URL(patch.url, 'http://x').pathname).toBe('/api/cases/c1');
+    expect(JSON.parse(patch.body)).toEqual({ status: 'closed' });
   });
 });
 

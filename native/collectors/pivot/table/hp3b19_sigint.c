@@ -1238,6 +1238,7 @@ static const hp_source HP3B19_SIGINT[] = {
     .page_param = "start",
     .page_size = 1000,
     .page_start = 0,
+    .page_max = 58,   /* 57,822 records at 1000 a page, measured 2026-10-12; the 20-page default reached 20,000 */
     .title_keys = "fields.adm_lb_nom",
     .description = "The monthly deployment observatory: for each operator, "
       "generation and frequency band, the number of sites authorised, "

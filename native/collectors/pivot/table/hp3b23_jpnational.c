@@ -2194,6 +2194,7 @@ static const hp_source HP3B23_JPNATIONAL[] = {
     .page_param = "start",
     .page_size = 100,
     .page_zero_based = 1,
+    .page_max = 25,   /* 2,479 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "title,name",
     .description = "Every dataset that Ministry of Health, Labour and Welfare "
       "(厚生労働省) publishes on the national e-Gov data portal "
@@ -2224,6 +2225,7 @@ static const hp_source HP3B23_JPNATIONAL[] = {
     .page_param = "start",
     .page_size = 100,
     .page_zero_based = 1,
+    .page_max = 23,   /* 2,210 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "title,name",
     .description = "Every dataset that Ministry of Agriculture, Forestry and "
       "Fisheries (農林水産省) publishes on the national e-Gov data portal "

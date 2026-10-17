@@ -11,11 +11,23 @@ import SwiftUI
 // Deleting a case is NOT a swipe action here. It is irreversible and takes the
 // findings, notes and activity with it, so it lives behind a typed confirmation
 // inside `CaseDetailView` — where the user can see what they are about to lose.
+//
+// The status actions (swipe and context menu) are offered exactly where the
+// server would accept them: `CaseAccess.canWrite` over the workspace role and
+// the `my_case_role` every list row carries. A workspace viewer who leads or
+// contributes to a case gets them on that case; as its viewer, or off its
+// roster, they read only.
 // ─────────────────────────────────────────────────────────────────────────────
 
 struct CasesTab: View {
     @EnvironmentObject var store: CaseStore
+    @EnvironmentObject var auth: AuthSession
     @Environment(\.theme) private var theme
+
+    private func canChangeStatus(_ summary: CaseSummary) -> Bool {
+        CaseAccess.canWrite(workspaceRole: auth.me?.tenant?.role,
+                            myCaseRole: summary.my_case_role)
+    }
 
     @State private var filter: Filter = .open
     @State private var searchText: String = ""
@@ -173,6 +185,13 @@ struct CasesTab: View {
 
     @ViewBuilder
     private func swipeActions(for summary: CaseSummary) -> some View {
+        if canChangeStatus(summary) {
+            statusSwipeActions(for: summary)
+        }
+    }
+
+    @ViewBuilder
+    private func statusSwipeActions(for summary: CaseSummary) -> some View {
         if summary.status != "archived" {
             Button {
                 Task { await store.setStatus(summary.id, to: "archived") }
@@ -206,7 +225,21 @@ struct CasesTab: View {
         } label: {
             Label("Make active case", systemImage: "target")
         }
+        if canChangeStatus(summary) {
+            Divider()
+            statusMenuActions(for: summary)
+        }
         Divider()
+        Button {
+            Clipboard.copy(summary.id)
+            Haptics.tap()
+        } label: {
+            Label("Copy case id", systemImage: "doc.on.doc")
+        }
+    }
+
+    @ViewBuilder
+    private func statusMenuActions(for summary: CaseSummary) -> some View {
         if summary.status != "open" {
             Button {
                 Task { await store.setStatus(summary.id, to: "open") }
@@ -227,13 +260,6 @@ struct CasesTab: View {
             } label: {
                 Label("Archive", systemImage: "archivebox")
             }
-        }
-        Divider()
-        Button {
-            Clipboard.copy(summary.id)
-            Haptics.tap()
-        } label: {
-            Label("Copy case id", systemImage: "doc.on.doc")
         }
     }
 
