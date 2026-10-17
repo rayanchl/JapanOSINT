@@ -39,12 +39,33 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 21,252** (2026-10-17): main's 21,237 (below) plus batch 37's 14
+**The registered count is 22,408** (2026-10-17): batch 43's 1,156 measured
+Japanese municipal feed rows (`docs/verified-sources-batch43.tsv`,
+`native/collectors/OSINT_SOURCES_BATCH_43_JPRSS.md`) on 21,252. Both floors are
+re-recorded at 22,408 and `make source-count` agrees.
+
+**Batch 43 is what the municipalities themselves publish, and how it was found
+matters more than the number.** The Digital Agency's list of 1,648 open-data
+municipalities was followed to each site root; the catalogue axis yielded zero
+(776 hosts swept for CKAN/ODS/Hub/dataeye paths, body-judged:
+`docs/discovery-jp-catalogue-hosts-2026-10-17.tsv`), the feed axis 1,156 rows on
+546 municipalities — 195 declared in `<link rel=alternate>`, the rest found by
+reading the root page's anchors. Three things from the gates generalise. **A
+substring count of `<item` is not a record count**: RSS 1.0 wraps its sequence in
+an `<items>` container, so 60 EMPTY feeds carried "1 items" until every row was
+re-measured at the element start. **A well-formed feed with zero items is
+`EMPTY_RESULTSET`, not UNPARSEABLE** — `probe_hp_batch.py` says so now; the 60 are
+almost all 緊急 (emergency) feeds that are empty on every day there is no
+emergency, and they are NOT registered, because a source never seen to emit is
+not verified however plausible its purpose. And **one reading is one reading**:
+18 probe transport failures became 11 PASS on a second probe, and the one
+`FETCH_FAILED` of the emit sweep stored 10 of 10 minutes later. 45,217 emitted,
+45,216 stored; the one collision is an upstream feed carrying the same notice
+three times, two copies byte-identical.
+
+**The count was 21,252** (2026-10-17): main's 21,237 (below) plus batch 37's 14
 measured rows and the two data.e-gov.go.jp organisation rows it surfaced, less the
 one duplicate the url-limit pass removed (`geo-stac-swisstopo-swissimage`).
-
-measured rows (`docs/verified-sources-batch42.tsv`,
-`native/collectors/OSINT_SOURCES_BATCH_42_JPWPROUTES.md`) on 19,321.
 
 **Batch 42 is batch 41 asked properly.** Batch 41 requested ONE collection per
 Japanese WordPress host, `wp/v2/posts`, because that is the path everyone knows.
