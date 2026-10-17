@@ -39,10 +39,30 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 22,408** (2026-10-17): batch 43's 1,156 measured
+**The registered count is 26,123** (2026-10-17): batch 44's 3,715 measured
+US and UK public-body feed rows (`docs/verified-sources-batch44.tsv`,
+`native/collectors/OSINT_SOURCES_BATCH_44_GOVFEEDS.md`) on 22,408. Both floors
+are re-recorded at 26,123 and `make source-count` agrees.
+
+**Batch 44 is batch 43's method on two public registers of official domains**
+— CISA's 16,906 `.gov` domains and the Cabinet Office's 7,927 `.gov.uk` names —
+each root fetched once for the feeds it declares or links: 2,075 US and 1,640 UK
+rows, 45,705 emitted / 45,704 stored. What generalises: **a domain
+registration is not a website** (4,372 `.gov` and 1,564 `.gov.uk` names have no
+server at the root; 1,639 and 992 answer 403 to a non-browser client);
+**WordPress declares a COMMENTS feed beside every posts feed**, so drop
+`/comments/feed/` before it ships as thousands of rows of nothing; and
+**the engine measurement outranks the probe in both directions** — 91 UK rows
+answered 403 to the probe's client and 200 to curl, so the table was generated
+with all of them and the emit audit decided: 98 of those 403s refuse the engine
+too (a bot wall, removed), and 4 rows the probe refused store their whole feed
+(kept, both readings in the TSV). `gen_hp_batch.py` now escapes `.name_ja` as it
+did `.name`: a feed title with a double quote broke the build.
+
+**The count was 22,408** (2026-10-17): batch 43's 1,156 measured
 Japanese municipal feed rows (`docs/verified-sources-batch43.tsv`,
-`native/collectors/OSINT_SOURCES_BATCH_43_JPRSS.md`) on 21,252. Both floors are
-re-recorded at 22,408 and `make source-count` agrees.
+`native/collectors/OSINT_SOURCES_BATCH_43_JPRSS.md`) on 21,252. Both floors were
+re-recorded at 22,408 and `make source-count` agreed.
 
 **Batch 43 is what the municipalities themselves publish, and how it was found
 matters more than the number.** The Digital Agency's list of 1,648 open-data

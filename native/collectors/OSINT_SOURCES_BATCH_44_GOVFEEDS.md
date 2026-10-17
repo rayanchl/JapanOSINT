@@ -47,12 +47,55 @@ fetch that qualified it**.
 | register | domains | root answered 200 | declared a feed | anchor hints | WordPress | candidate URLs | feed with ≥1 record |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | US `.gov` | 16,906 | 10,489 | 2,602 | 1,159 | 2,818 | 6,469 | 2,113 |
-| UK `.gov.uk` | 7,927 | (see Gates) | 2,124 | 411 | 2,787 | | |
+| UK `.gov.uk` | 7,927 | 5,284 | 2,124 | 411 | 2,787 | 2,688 | 1,753 |
 
 Of the 16,906 US domains, 4,372 have no web server answering at the root at all
 (registered, parked or mail-only), 1,639 answer 403 to a non-browser client and
-89 answered 429 to a single request. A `.gov` registration is not a website.
+89 answered 429 to a single request; of the 7,927 UK names, 1,564 have no
+server and 992 answer 403. A domain registration is not a website.
 
-## Gates
+## Gates (2026-10-17, all live)
 
-(filled in from the run below)
+**3,715 rows ship — 2,075 US, 1,640 UK — every one measured emitted-AND-stored
+in the real binary.** `docs/verified-sources-batch44.tsv` carries the probe
+reading and the emit reading per row; the 3,369 candidates that did not ship are
+in `docs/rejected-sources-batch44.tsv` by beat and by the stage that refused
+them.
+
+| stage | US in → out | UK in → out | refused |
+| --- | --- | --- | --- |
+| builder: fetch, classify, count at the element start | 6,469 → 2,113 | 2,688 → 1,753 | US: 1,187 not a feed, 756 empty, 109 no connection, 53 403, 34 404, 10 429 …; UK: 457 not a feed, 315 empty, 115 no connection, 19 404, 16 403 … |
+| `batch_exclusions.py --bin` | 2,113 → 2,100 | 1,753 → 1,742 | US: NHC hurricanes, tsunami.gov, BEA, FMC feeds already in the tree, 2 within-batch; UK: DWP, Companies House, Judiciary, DfT, Cabinet Office, Ofqual, DVSA, DfE, FSA, HMCE, CJS already in the tree |
+| `audit_batch_reachable.py` / `audit_batch_pagination.py` | 0 / 0 | 0 / 0 | |
+| `probe_hp_batch.py` (+ one retry) | 2,100 → 2,079 | 1,742 → 1,636 PASS | US: 12 403, 9 429, timeouts, resets; UK: 91 403, 8 disconnects, 6 timeouts |
+| `audit_registry_emit.py` (+ one re-run of each FETCH_FAILED) | 2,079 → 2,075 | 1,742 → 1,640 | US: 4 hosts answering 500 / timing out to every client; UK: 102, of which 98 are the probe's 403s |
+
+Emitted 45,705, stored 45,704. The one collision is `JO44_UK_OSBASTONPARISHCOUNCIL_GOV_UK`,
+whose feed lists one road-closure notice twice under one guid, byte-identical:
+the sink collapsed exactly that pair. Two US rows and three UK rows came back
+`FETCH_FAILED` on the sweep and stored their whole feed on a re-run minutes
+later — one reading, recorded as such in the TSV.
+
+**The UK beat was generated with ALL 1,742 rows, not only the probe's 1,636,
+and that was the right call for the wrong-looking reason.** 91 UK rows answered
+403 to the probe's client but 200 with records to curl minutes earlier, which
+is the shape rule 4c warns about (a probe calling DEAD what the engine handles).
+Measured in the engine: 98 of the 102 that failed there are those same probe
+failures, so the 403 is a host-side bot wall that refuses the engine's client
+too, not a probe artefact — and **four rows the probe refused store their feed
+in the engine** (`JO44_UK_SWANLEYTOWNCOUNCIL_GOV_UK` 10 of 10 among them) and
+ship with both readings in the TSV. The engine measurement is the gate that
+matters; the probe is the cheaper first reading.
+
+**Two generalisable findings.** `gen_hp_batch.py` escaped `.name` through
+`cstr()` and wrote `.name_ja` raw, so a feed title carrying a double quote
+(Medina NY's alerts feed is titled "Village of Medina") produced C that did not
+compile; both fields are escaped now. And WordPress declares its COMMENTS feed
+beside its posts feed on every site — 2,818 US and 2,787 UK sites are WordPress
+— so `/comments/feed/` is dropped before validation rather than shipped as
+2,000 rows of nothing.
+
+Tree gates after both tables landed: build 0 warnings; `lint-sources` OK;
+`audit-sources` 0 findings across 326 strict-set files; `hptest`,
+`pagewalktest`, `htmlparsetest`, `authtest`, `unit`, `selftest` all pass;
+`source-floor` and `registry-floor` re-recorded at 26,123.
