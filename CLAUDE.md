@@ -39,7 +39,7 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 19,320** (2026-10-12), measured — batch 41's 437
+**The registered count is 19,336** (2026-10-17): batch 37's 14 measured rows plus the two data.e-gov.go.jp organisation rows it surfaced (next paragraph) on 19,320. 19,320 (2026-10-12) was batch 41's 437
 measured Japanese WordPress-REST rows (`docs/verified-sources-batch41.tsv`,
 `native/collectors/OSINT_SOURCES_BATCH_41_JPWP.md`) on main's 18,884, which
 made 19,321, LESS the one duplicate the url-limit pass removed:
@@ -47,6 +47,34 @@ made 19,321, LESS the one duplicate the url-limit pass removed:
 collection as the hand-written `swisstopo-stac`, and `make lint-sources` caught
 it (dup-endpoint) the moment that row's page size changed to match. Both floors
 are re-recorded at 19,320 and `make source-count` agrees.
+
+**Batch 37 is the staging set finally probed (2026-10-12..17), and the headline is
+15 of 80.** It was authored 2026-10-02 with no egress to any of its hosts, so every
+host and path was inferred from its family's convention, and its README predicted a
+high pass rate because a catalogue endpoint "needs only the host to be correct".
+Sound reasoning, wrong conclusion, 19%: **a uniform API family tells you the shape of
+the request, not whether the host serves it.** The whole `cam` beat is gone (every
+ArcGIS path guessed; the server answers HTTP 200 carrying
+`{"error":{"code":400,"Invalid URL"}}`, which only a body judgement can see),
+eight cities have left Socrata, four national portals are not CKAN at all. The 65
+are kept with their measured verdicts in `docs/rejected-sources-batch37.<beat>.tsv`;
+the 15 are `hp3b37_{jp,fr,us,eu,row}.c`, every one measured emitted-AND-stored
+(`docs/verified-sources-batch37.tsv`): Alberta 37,515, Greece 22,780, BODIK
+18,535, opendata.swiss 16,521 — each equal to its own declared count.
+Three defects were in the rows that PASSED, none visible to a probe: all 75 paged
+rows lacked a stable sort (and Socrata's `order=name` is NOT unique — Colombia
+stored 9,934 of 10,000 on it and 10,000 on `order=dataset_id`); `EU_ECB_FXREF`
+keyed 29 daily rates on a field not on the record (repeated XML siblings are
+INDEXED fields, not an array — read one record's `properties` before choosing a
+key); and `JP_CKAN_DATAGOJP` pointed at `www.data.go.jp`, which **301s to
+`data.e-gov.go.jp` and drops the query string**, so it stored ten of 18,826 at
+`rc=0`. The first repair there lowered the stride to match "a server that serves
+10" — the right observation and the wrong diagnosis. **Follow a 301 by hand before
+concluding anything about what a server will serve.** And once it was pointed at
+the real host it measured 18,826/18,826 — and `make lint-sources` removed it as a
+duplicate: `hp3b23_jpnational.c` already reads that endpoint per organisation,
+23 rows of `fq=organization:`. The portal has 25; the two it lacked are added as
+rows of that family rather than as a second full read of the catalogue.
 
 **Batch 41 is numbered 41 because 38, 39 and 40 were all taken while it was
 open.** It was generated as 38, and by the time it came to merge, another
