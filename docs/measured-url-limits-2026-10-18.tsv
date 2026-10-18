@@ -1,0 +1,149 @@
+# audit_url_limits.py's 101 candidates, MEASURED. 2026-10-18.
+#
+# WHY THIS FILE EXISTS AND THE 2026-10-11 ONE DOES NOT CARRY ITS OWN ROWS.
+# docs/measured-url-limits-2026-10-11.tsv says "18 TRUNCATING, 5 COMPLETE, 19
+# UNREACHABLE" and "the other 15 are NOT yet fixed and are listed here so the
+# next pass has the measurement rather than the inference" -- but that file has
+# had 24 lines and ZERO data rows since the commit that created it. The rows
+# were never written, so CLAUDE.md was pointing the next pass at nothing. This
+# redoes the measurement over all 101 candidates (not just the 42 literal ones)
+# and writes them down.
+#
+# METHOD, and the correction it needed. For each candidate whose URL is a
+# complete literal, ask the upstream the SAME question with a tenfold limit and
+# compare record counts (verify_feeds' own count_json/count_feed/count_csv, so a
+# record means here what it means to the rest of the tree).
+#
+# THAT TEST ALONE OVER-REPORTS, and od_udata_pt.c is the proof: it answered 200
+# for one request and 2,000 for a tenfold ask, which looks exactly like a
+# discard -- but od_udata_collect() already walks it with pw_walk, so its
+# page_size=200 is a PAGE SIZE. A one-request-vs-one-request comparison cannot
+# see a collector that follows pages. Every TRUNCATING candidate here was
+# therefore also read in its collector to ask whether anything pages it, and
+# the fixes were proved by running the source before and after.
+#
+# 26 of 101 truncate on a single request. 6 sites are FIXED here; the rest carry
+# the reason they are not, which is the thing the 10-11 file meant to record.
+#
+#   FIXED_PAGED                     6   the upstream published links[rel=next]
+#   NOT_FIXED_CROSS_PAGE            1   per-page emit would be WRONG, not just partial
+#   NOT_FIXED_NO_CONTINUATION      17   no next link, no offset/page in the URL
+#   NOT_FIXED_QUESTION_NOT_DISCARD  1   newest-first feed; the limit is the question
+#   PAGES_ALREADY                   1   false positive of the single-request test
+#
+# Measured recovery from the 6 fixed, run before and after through
+# audit_registry_emit.py: 590 -> 11,800 records per pass.
+#   cdse-stac                     20 ->    400
+#   dea-stac                      20 ->    400
+#   swisstopo-stac                50 ->  1,000
+#   canada-hydrometric-realtime  500 -> 10,000
+# Every one of those lands on the 20-page ceiling, so each now also files a
+# truncation notice and the real totals are larger still. bdc-stac is 0 both
+# before and after: data.inpe.br is unreachable from the authoring container
+# (SSL connect error), which the collector reports as rc=-1 rather than hiding.
+#
+# A `tenfold_ask` of 1000/2000/5000 is this test's own ceiling, not the
+# upstream's total, so the shortfall on those rows is at least that large.
+#
+file	param	one_request	tenfold_ask	verdict	url	note
+collectors/sources/eni_canada_hydrometric.c:27	limit=500	500	5000	FIXED_PAGED	https://api.weather.gc.ca/collections/hydrometric-realtime/items?limit=500&sortby=-DATETIME&f=json	paged via pw_walk (links[rel=next]); 500->10,000 measured
+collectors/sources/geoeo_stac_items.c:151	limit=20	20	200	FIXED_PAGED	https://stac.dataspace.copernicus.eu/v1/search?collections=sentinel-1-grd&limit=20	paged via pw_walk (links[rel=next]); cdse 20->400, dea 20->400, swisstopo 50->1000 measured
+collectors/sources/geoeo_stac_items.c:168	limit=20	20	200	FIXED_PAGED	https://explorer.digitalearth.africa/stac/collections/s2_l2a/items?limit=20	paged via pw_walk (links[rel=next]); cdse 20->400, dea 20->400, swisstopo 50->1000 measured
+collectors/sources/geoeo_stac_items.c:178	limit=50	50	100	FIXED_PAGED	https://data.geo.admin.ch/api/stac/v0.9/collections/ch.swisstopo.swissimage-dop10/items?limit=50	paged via pw_walk (links[rel=next]); cdse 20->400, dea 20->400, swisstopo 50->1000 measured
+collectors/sources/geoeo_stac_items.c:213	limit=20	20	200	FIXED_PAGED	https://explorer.digitalearth.africa/stac/collections/s2_l2a/items?limit=20	paged via pw_walk (links[rel=next]); cdse 20->400, dea 20->400, swisstopo 50->1000 measured
+collectors/sources/geoeo_stac_items.c:225	limit=50	50	100	FIXED_PAGED	https://data.geo.admin.ch/api/stac/v0.9/collections/ch.swisstopo.swissimage-dop10/items?limit=50	paged via pw_walk (links[rel=next]); cdse 20->400, dea 20->400, swisstopo 50->1000 measured
+collectors/sources/geoeo_gc_ogcapi.c:249	limit=500	500	5000	NOT_FIXED_CROSS_PAGE	https://api.weather.gc.ca/collections/hydrometric-realtime/items?limit=500&f=json	Publishes links[rel=next], but superseded() compares each feature against every OTHER to keep the latest per station. A per-page emit would publish superseded observations whenever the newer one lands on a later page. Needs whole-result accumulation, not a page walk.
+collectors/sources/eni_bc_mineral_tenure.c:71	count=500	500	5000	NOT_FIXED_NO_CONTINUATION	https://openmaps.gov.bc.ca/geo/pub/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW&count=500&outputFormat=application/json&srsName=EPSG:4326	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 500 -> 5000 records when the limit went 500 -> 5000
+collectors/sources/geoeo_emsc_moment_tensors.c:142	limit=50	50	500	NOT_FIXED_NO_CONTINUATION	https://www.seismicportal.eu/mtws/api/search?limit=50&format=jsonEMSC/CSEM	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 50 -> 500 records when the limit went 50 -> 500
+collectors/sources/geoeo_eonet_events.c:143	limit=50	50	500	NOT_FIXED_NO_CONTINUATION	https://eonet.gsfc.nasa.gov/api/v3/events?limit=50&status=open	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 50 -> 500 records when the limit went 50 -> 500
+collectors/sources/geoeo_fdsn_text.c:181	limit=50	50	500	NOT_FIXED_NO_CONTINUATION	https://geofon.gfz.de/fdsnws/event/1/query?format=text&limit=50&orderby=time	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 50 -> 500 records when the limit went 50 -> 500
+collectors/sources/geoeo_fdsn_text.c:188	limit=50	50	500	NOT_FIXED_NO_CONTINUATION	https://earthquakescanada.nrcan.gc.ca/api/fdsnws/event/1/query?format=text&limit=50	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 50 -> 500 records when the limit went 50 -> 500
+collectors/sources/geoeo_fdsn_text.c:209	limit=50	50	500	NOT_FIXED_NO_CONTINUATION	https://earthquakescanada.nrcan.gc.ca/api/fdsnws/event/1/query?format=text&limit=50	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 50 -> 500 records when the limit went 50 -> 500
+collectors/sources/geoeo_openaerialmap.c:125	limit=50	50	500	NOT_FIXED_NO_CONTINUATION	https://api.openaerialmap.org/meta?limit=50	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 50 -> 500 records when the limit went 50 -> 500
+collectors/sources/geohazard_extra.c:112	limit=300	300	3000	NOT_FIXED_NO_CONTINUATION	https://www.seismicportal.eu/fdsnws/event/1/query?format=json&orderby=time&limit=300https://www.seismicportal.eu/fdsnws/event/1/query?format=json&orderby=time&limit=300&minlat=62.5&maxlat=67.5&minlon=-25.5&maxlon=-12.5	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 300 -> 3000 records when the limit went 300 -> 3000
+collectors/sources/geohazard_extra.c:116	limit=300	300	3000	NOT_FIXED_NO_CONTINUATION	https://www.seismicportal.eu/fdsnws/event/1/query?format=json&orderby=time&limit=300&minlat=62.5&maxlat=67.5&minlon=-25.5&maxlon=-12.5	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 300 -> 3000 records when the limit went 300 -> 3000
+collectors/sources/od_stats_ar_series.c:88	limit=100	100	271	NOT_FIXED_NO_CONTINUATION	https://apis.datos.gob.ar/series/api/series/?ids=143.3_NO_PR_2004_A_21&limit=100&format=json	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 100 -> 271 records when the limit went 100 -> 1000
+collectors/sources/od_stats_nl_cbs.c:35	$top=20	20	200	NOT_FIXED_NO_CONTINUATION	https://opendata.cbs.nl/ODataApi/odata/83131NED/TypedDataSet?$top=20	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 20 -> 200 records when the limit went 20 -> 200
+collectors/sources/od_who_gho.c:68	$top=100	100	1000	NOT_FIXED_NO_CONTINUATION	https://ghoapi.azureedge.net/api/WHOSIS_000001?$top=100	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 100 -> 1000 records when the limit went 100 -> 1000
+collectors/sources/sanc_openfda_enforcement.c:124	limit=100	100	1000	NOT_FIXED_NO_CONTINUATION	https://api.fda.gov/drug/enforcement.json?limit=100	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 100 -> 1000 records when the limit went 100 -> 1000
+collectors/sources/sanc_openfda_enforcement.c:25	limit=100	100	1000	NOT_FIXED_NO_CONTINUATION	https://api.fda.gov/drug/enforcement.json?limit=100	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 100 -> 1000 records when the limit went 100 -> 1000
+collectors/sources/sanc_uk_caselaw.c:69	per_page=50	50	500	NOT_FIXED_NO_CONTINUATION	https://caselaw.nationalarchives.gov.uk/atom.xml?per_page=50	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 50 -> 500 records when the limit went 50 -> 500
+collectors/sources/soc_fediverse.c:517	count=100	100	1000	NOT_FIXED_NO_CONTINUATION	https://instances.joinpeertube.org/api/v1/instances?count=100	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 100 -> 1000 records when the limit went 100 -> 1000
+collectors/sources/soc_forges.c:286	per_page=20	20	100	NOT_FIXED_NO_CONTINUATION	https://gitlab.com/api/v4/projects?visibility=public&order_by=last_activity_at&per_page=20	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 20 -> 100 records when the limit went 20 -> 200
+collectors/sources/soc_news_media.c:138	limit=20	20	200	NOT_FIXED_QUESTION_NOT_DISCARD	https://api.spaceflightnewsapi.net/v4/articles/?limit=20	spaceflight-news-api is newest-first with a top-level next link; limit=20 on a scheduled newest-first feed is plausibly the question being asked. Depth is available if wanted.
+collectors/sources/od_udata_pt.c:23	page_size=200	200	2000	PAGES_ALREADY	https://dados.gov.pt/api/1/datasets/?page_size=200	FALSE POSITIVE of the one-request test: od_udata_collect() walks this with pw_walk, so page_size=200 is a PAGE SIZE. A single-request comparison cannot see a collector that follows pages.
+collectors/sources/ag_commodity.c:140	per_page=60			RUNTIME_URL	https://api.worldbank.org/v2/country/WLD/indicator/%s?format=json&per_page=60&mrv=20	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/cloudflare_radar_jp.c:52	limit=10			NO_URL		could not join a URL literal at this line
+collectors/sources/cloudflare_radar_jp.c:53	per_page=20			NO_URL		could not join a URL literal at this line
+collectors/sources/cloudflare_radar_jp.c:55	limit=10			NO_URL		could not join a URL literal at this line
+collectors/sources/cyi_ioda_outage_alerts.c:42	limit=200			RUNTIME_URL	https://api.ioda.inetintel.cc.gatech.edu/v2/outages/alerts?from=%ld&until=%ld&limit=200	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/eight_sansan.c:38	limit=50			UNREACHABLE	https://8card.net/api/v2/cards/search?limit=50	baseline http=404 
+collectors/sources/eni_elia_load.c:25	limit=100			RUNTIME_URL	https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods001/records?limit=100&order_by=datetime%20desc&where=totalload%20is%20not%20null	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/eni_energinet_co2.c:22	limit=10			RUNTIME_URL	https://api.energidataservice.dk/dataset/CO2Emis?limit=10&sort=Minutes5UTC%20DESC	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/eni_energinet_prodex.c:33	limit=200			RUNTIME_URL	https://api.energidataservice.dk/dataset/ElectricityProdex5MinRealtime?limit=200&sort=Minutes5UTC%20DESC	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/eni_ukpn_live_faults.c:31	limit=100	45		BIGGER_REFUSED	https://ukpowernetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/ukpn-live-faults/records?limit=100	tenfold ask http=400
+collectors/sources/estat_census.c:32	limit=100000			NO_URL		could not join a URL literal at this line
+collectors/sources/estat_crime.c:198	limit=100000			NO_URL		could not join a URL literal at this line
+collectors/sources/estat_education.c:32	limit=100000			NO_URL		could not join a URL literal at this line
+collectors/sources/estat_employment.c:38	limit=100000			NO_URL		could not join a URL literal at this line
+collectors/sources/estat_household.c:36	limit=100000			NO_URL		could not join a URL literal at this line
+collectors/sources/estat_industry.c:32	limit=100000			NO_URL		could not join a URL literal at this line
+collectors/sources/flickr_geo.c:40	per_page=250			RUNTIME_URL	https://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&nojsoncallback=1&api_key=%s&bbox=%s&has_geo=1&content_type=1&extras=geo,url_s,owner_name,date_taken&per_page=250&sort=date-posted-desc	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/fofa_jp.c:87	size=100			RUNTIME_URL	https://fofa.info/api/v1/search/all?email=%s&key=%s&qbase64=%s&size=100&fields=%s	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/gcom_w.c:30	page_size=50			RUNTIME_URL	https://cmr.earthdata.nasa.gov/search/granules.json?short_name=%s&bounding_box=122.0,24.0,146.0,46.0&sort_key=-start_date&page_size=50	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/geoeo_afad_quakes.c:46	limit=100			RUNTIME_URL	https://deprem.afad.gov.tr/apiv2/event/filter?start=%s&end=%s&minmag=3&limit=100	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/geoeo_fdsn_text.c:197	limit=50			UNREACHABLE	https://geofon.gfz.de/fdsnws/event/1/query?format=text&limit=50&orderby=timeGEOFON/GFZ	baseline http=400 
+collectors/sources/geoeo_gc_ogcapi.c:261	limit=500	500		BIGGER_REFUSED	https://api.weather.gc.ca/collections/swob-realtime/items?limit=500&f=json	tenfold ask http=200
+collectors/sources/geoeo_gc_ogcapi.c:87	limit=500			RUNTIME_URL	https://api.weather.gc.ca/collections/%s/items?limit=500&f=json&datetime=%s/..	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/geoeo_ifrc_go.c:144	limit=50	50	50	SAME_AT_CAP	https://goadmin.ifrc.org/api/v2/event/?limit=50The	50 both ways at limit 50: upstream caps the page itself
+collectors/sources/geoeo_stac_items.c:159	limit=20			UNREACHABLE	https://data.inpe.br/bdc/stac/v1/search?limit=20	baseline http=None URLError
+collectors/sources/geoeo_stac_items.c:189	limit=20			UNREACHABLE	https://stac.dataspace.copernicus.eu/v1/search?collections=sentinel-1-grd&limit=20Copernicus	baseline http=400 
+collectors/sources/geoeo_stac_items.c:201	limit=20			UNREACHABLE	https://data.inpe.br/bdc/stac/v1/search?limit=20INPE	baseline http=None URLError
+collectors/sources/grayhat_buckets.c:33	limit=100			UNREACHABLE	https://buckets.grayhatwarfare.com/api/v2/buckets?keywords=&limit=100	baseline http=401 
+collectors/sources/here_japan.c:33	limit=100			RUNTIME_URL	https://browse.search.hereapi.com/v1/browse?at=%.4f,%.4f&limit=100&apiKey=%s	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/jstat_map.c:39	limit=100000			NO_URL		could not join a URL literal at this line
+collectors/sources/linkedin_jp_search.c:75	count=20			RUNTIME_URL	https://www.linkedin.com/voyager/api/search/blended?keywords=%s&origin=GLOBAL_SEARCH_HEADER&count=20	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/mapfan_api.c:50	limit=200			RUNTIME_URL	https://api.mapfan.com/v1/poi/search?bbox=122,24,146,46&limit=200&key=%s	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/mastodon_jp_instances.c:96	limit=25			RUNTIME_URL	https://%s/api/v1/timelines/public?local=true&limit=25	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/note_com_profiles.c:50	size=20			RUNTIME_URL	https://note.com/api/v3/searches?context=user&q=%s&size=20	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/od_arcgis_featureserver.c:93	resultRecordCount=100			RUNTIME_URL	https://services.arcgis.com/ePKBjXrBZ2vEEgWd/arcgis/rest/services/Emails_to_the_City_Council_Hotline/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=100&f=json	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/od_ckan_au_nsw.c:27	rows=20			RUNTIME_URL	https://data.nsw.gov.au/data/api/3/action/package_search?rows=20&sort=id%20asc	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/od_ckan_au_qld.c:28	rows=20			RUNTIME_URL	https://www.data.qld.gov.au/api/3/action/package_search?rows=20&sort=id%20asc	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/od_ckan_au_sa.c:26	rows=20			RUNTIME_URL	https://data.sa.gov.au/data/api/3/action/package_search?rows=20&sort=id%20asc	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/od_ckan_au_wa.c:27	rows=20			RUNTIME_URL	https://catalogue.data.wa.gov.au/api/3/action/package_search?rows=20&sort=id%20asc	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/od_ckan_ca_ontario.c:29	rows=20			RUNTIME_URL	https://data.ontario.ca/api/3/action/package_search?rows=20&sort=id%20asc	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/od_ckan_ch_zurich.c:27	rows=20			RUNTIME_URL	https://data.stadt-zuerich.ch/api/3/action/package_search?rows=20&sort=id%20ascCC-BY	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/od_ckan_de_berlin.c:27	rows=20			RUNTIME_URL	https://datenregister.berlin.de/api/3/action/package_search?rows=20&sort=id%20ascBerlin	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/od_ckan_de_muenchen.c:25	rows=20			RUNTIME_URL	https://opendata.muenchen.de/api/3/action/package_search?rows=20&sort=id%20ascCC-BY	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/od_ckan_energydata_info.c:27	rows=20			RUNTIME_URL	https://energydata.info/api/3/action/package_search?rows=20&sort=id%20ascWorld	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/od_ckan_london_datastore.c:29	rows=20	1306	1306	SAME_AT_CAP	https://data.london.gov.uk/api/action/package_search?rows=20	1306 both ways at limit 20: upstream caps the page itself
+collectors/sources/od_ckan_open_africa.c:27	rows=20			RUNTIME_URL	https://open.africa/api/3/action/package_search?rows=20&sort=id%20asc	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/od_ods_be_brussels.c:28	limit=20	20		BIGGER_REFUSED	https://opendata.brussels.be/api/explore/v2.1/catalog/datasets?limit=20&order_by=dataset_id	tenfold ask http=400
+collectors/sources/od_ods_be_namur.c:24	limit=20			UNREACHABLE	https://data.namur.be/api/explore/v2.1/catalog/datasets?limit=20&order_by=dataset_idVille	baseline http=400 
+collectors/sources/od_ods_ca_vancouver.c:27	limit=20	20		BIGGER_REFUSED	https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets?limit=20&order_by=dataset_id	tenfold ask http=400
+collectors/sources/od_ods_ch_basel.c:25	limit=20			UNREACHABLE	https://data.bs.ch/api/explore/v2.1/catalog/datasets?limit=20&order_by=dataset_idCC-BY	baseline http=400 
+collectors/sources/od_ods_ch_thurgau.c:24	limit=20	20		BIGGER_REFUSED	https://data.tg.ch/api/explore/v2.1/catalog/datasets?limit=20&order_by=dataset_id	tenfold ask http=400
+collectors/sources/od_ods_fr_fuel.c:81	limit=100	100		BIGGER_REFUSED	https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/prix-des-carburants-en-france-flux-instantane-v2/records?limit=100	tenfold ask http=400
+collectors/sources/od_ods_fr_rennes.c:24	limit=20			UNREACHABLE	https://data.rennesmetropole.fr/api/explore/v2.1/catalog/datasets?limit=20&order_by=dataset_idLicence	baseline http=400 
+collectors/sources/od_ods_fr_toulouse.c:27	limit=20	20		BIGGER_REFUSED	https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets?limit=20&order_by=dataset_id	tenfold ask http=400
+collectors/sources/od_ods_geonames.c:37	limit=20	20		BIGGER_REFUSED	https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-all-cities-with-a-population-1000/records?limit=20	tenfold ask http=400
+collectors/sources/od_ods_paris_velib.c:39	limit=100			UNREACHABLE	https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/velib-disponibilite-en-temps-reel/records?limit=100ODbL	baseline http=400 
+collectors/sources/od_ods_rte_eco2mix.c:66	limit=48			RUNTIME_URL	https://opendata.reseaux-energies.fr/api/explore/v2.1/catalog/datasets/eco2mix-national-tr/records?limit=48&order_by=date_heure%20desc&where=consommation%20is%20not%20null	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/od_ods_sncf_stations.c:36	limit=100			UNREACHABLE	https://data.sncf.com/api/explore/v2.1/catalog/datasets/gares-de-voyageurs/records?limit=100Licence	baseline http=400 
+collectors/sources/od_udata_lu.c:25	page_size=200			UNREACHABLE	https://data.public.lu/api/1/datasets/?page_size=200Portal	baseline http=400 
+collectors/sources/od_udata_rs.c:25	page_size=200	200		BIGGER_REFUSED	https://data.gov.rs/api/1/datasets/?page_size=200	tenfold ask http=200
+collectors/sources/reddit_jp_subs.c:25	limit=100			RUNTIME_URL	https://www.reddit.com/r/%s/new.json?limit=100	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/sanc_uk_caselaw.c:79	per_page=50	50	50	SAME_AT_CAP	https://caselaw.nationalarchives.gov.uk/atom.xml?per_page=50Open	50 both ways at limit 50: upstream caps the page itself
+collectors/sources/satellite_imagery.c:351	$top=60			RUNTIME_URL	https://catalogue.dataspace.copernicus.eu/odata/v1/Products?$filter=%s&$top=60&$orderby=ContentDate/Start	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/satellite_imagery.c:466	$top=40			RUNTIME_URL	https://catalogue.dataspace.copernicus.eu/odata/v1/Products?$filter=%s&$top=40&$orderby=ContentDate/Start	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/soc_bluesky.c:338	count=1000	999	999	COMPLETE	https://plc.directory/export?count=1000	999 records, under its own limit of 1000: the collection ends first
+collectors/sources/soc_fediverse.c:121	limit=40	40		BIGGER_REFUSED	https://api.fedidb.org/v1/servers?limit=40	tenfold ask http=422
+collectors/sources/soc_fediverse.c:190	limit=40	519	519	SAME_AT_CAP	https://api.fedidb.org/v1/software?limit=40	519 both ways at limit 40: upstream caps the page itself
+collectors/sources/soc_fediverse.c:251	limit=20	20	20	SAME_AT_CAP	https://mastodon.social/api/v1/trends/links?limit=20	20 both ways at limit 20: upstream caps the page itself
+collectors/sources/soc_fediverse.c:360	limit=20			UNREACHABLE	https://lemmy.world/api/v3/post/list?type_=All&sort=Active&limit=20https://lemmy.world/api/v4/post/list?type_=All&sort=Active&limit=20	baseline http=400 
+collectors/sources/soc_fediverse.c:361	limit=20			UNREACHABLE	https://lemmy.world/api/v3/post/list?type_=All&sort=Active&limit=20https://lemmy.world/api/v4/post/list?type_=All&sort=Active&limit=20	baseline http=400 
+collectors/sources/soc_forges.c:208	per_page=30			UNREACHABLE	https://api.github.com/gists/public?per_page=30	baseline http=403 
+collectors/sources/soc_forges.c:76	per_page=30			UNREACHABLE	https://api.github.com/events?per_page=30	baseline http=403 
+collectors/sources/tabelog_restaurants.c:88	count=100			RUNTIME_URL	https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=%s&format=json&count=100&large_area=Z011	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/telegram_jp_channels.c:58	limit=30			RUNTIME_URL	https://api.tgstat.com/channels/search?token=%s&q=%s&country=JP&limit=30	URL is composed at runtime, so it cannot be asked as a literal
+collectors/sources/trickest_cve.c:77	per_page=100			NO_URL		could not join a URL literal at this line

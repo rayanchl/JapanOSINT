@@ -44,23 +44,46 @@
  */
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/pagewalk.h"
 #include "geoeo_common.inc"
 
-static int stac_collect(const source_ctx *ctx, intel_sink *sink,
-                        const char *sid, const char *url,
-                        const char *record_type, const char *tags,
-                        const char *geo_precision, int exclude_ccm) {
-  cJSON *doc = feed_get_json(ctx->http, url, 60000);
-  if (!doc) {
-    fprintf(stderr, "[%s] fetch/parse failed\n", sid);
-    return -1;
-  }
+/* These four all answered `limit` with exactly `limit` items and published a
+ * STAC `links:[{"rel":"next","href":…}]` alongside, so the limit was a discard
+ * and the continuation was sitting in the response. Measured 2026-10-18:
+ * CDSE/BDC/DEA 20 -> 200 and swisstopo 50 -> 100 when asked for ten times as
+ * many, which is the shortfall ONE page was dropping. pw_walk follows the
+ * server's own next link (lib/pagewalk.c selects it by `rel`, never by
+ * position) and discloses whatever the page ceiling leaves behind, so the
+ * `limit` in each URL is now a page size rather than a cap. */
+typedef struct {
+  const char *record_type, *tags, *geo_precision;
+  int exclude_ccm;
+} stac_page_ud;
+
+/* STAC search can be slow to answer; keep the 60 s this collector always used
+ * rather than inherit pw_fetch_json's 25 s. */
+static cJSON *stac_fetch(const source_ctx *c, const char *url, void *ud) {
+  (void)ud;
+  return feed_get_json(c->http, url, 60000);
+}
+
+static int stac_emit_page(const source_ctx *ctx, intel_sink *sink,
+                          const char *sid, cJSON *doc, void *ud, int *seen) {
+  const stac_page_ud *u = (const stac_page_ud *)ud;
+  const char *record_type = u->record_type, *tags = u->tags,
+             *geo_precision = u->geo_precision;
+  const int exclude_ccm = u->exclude_ccm;
+  (void)ctx;
   cJSON *feats = cJSON_GetObjectItem(doc, "features");
   if (!cJSON_IsArray(feats)) {
     fprintf(stderr, "[%s] no features array (not a STAC ItemCollection)\n", sid);
-    cJSON_Delete(doc);
-    return -1;
+    return 0;
   }
+  /* What the page CONTAINED, not what we emitted: the ccm filter below refuses
+   * records, and driving "was this page full" off the emitted count would make
+   * a full page of excluded scenes look short — stopping the walk AND
+   * suppressing its own truncation notice (lib/pagewalk.h). */
+  *seen = cJSON_GetArraySize(feats);
   cJSON *context = cJSON_GetObjectItem(doc, "context");
   double matched = 0;
   if (context && geoeo_num(context, "matched", &matched))
@@ -140,7 +163,19 @@ static int stac_collect(const source_ctx *ctx, intel_sink *sink,
     free(pj);
     free(gj);
   }
-  cJSON_Delete(doc);
+  return n;
+}
+
+static int stac_collect(const source_ctx *ctx, intel_sink *sink,
+                        const char *sid, const char *url,
+                        const char *record_type, const char *tags,
+                        const char *geo_precision, int exclude_ccm) {
+  stac_page_ud u = { record_type, tags, geo_precision, exclude_ccm };
+  int n = pw_walk(ctx, sink, sid, url, stac_fetch, stac_emit_page, &u);
+  if (n < 0) {                        /* only the FIRST fetch failing is an error */
+    fprintf(stderr, "[%s] fetch/parse failed\n", sid);
+    return -1;
+  }
   fprintf(stderr, "[%s] emitted %d STAC items\n", sid, n);
   return 0;
 }

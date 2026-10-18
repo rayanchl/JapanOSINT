@@ -15,6 +15,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/pagewalk.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,15 +23,34 @@
 
 #define SRC "canada-hydrometric-realtime"
 
-static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *url = "https://api.weather.gc.ca/collections/hydrometric-realtime/"
-                    "items?limit=500&sortby=-DATETIME&f=json";
-  cJSON *doc = feed_get_json(ctx->http, url, 45000);
-  if (!doc) { fprintf(stderr, "[" SRC "] fetch failed\n"); return -1; }
+static cJSON *hydro_fetch(const source_ctx *c, const char *url, void *ud) {
+  (void)ud;
+  return feed_get_json(c->http, url, 45000);
+}
 
+/* PAGED, because the limit was a discard and GeoMet publishes the way out of
+ * it. Measured 2026-10-18: ?limit=500 answered with exactly 500 features and
+ * `numberMatched` alongside a STAC/OGC `links:[{"rel":"next","href":…}]`, and
+ * asking for ten times as many returned 5,000 — so one page was dropping at
+ * least 4,500 station observations per run, every run. pw_walk follows the
+ * server's own next link, so `limit=500` is now a page size.
+ *
+ * Safe to page here, which is NOT true of every OGC API collector in this
+ * tree: this one emits each feature independently and keys it
+ * STATION_NUMBER|DATETIME, so later pages add distinct observations.
+ * geoeo_gc_ogcapi.c is deliberately left alone — its superseded() compares a
+ * feature against every OTHER feature to keep the latest per station, and a
+ * per-page emit would publish superseded observations whenever the newer one
+ * landed on a later page. */
+static int hydro_emit_page(const source_ctx *ctx, intel_sink *sink,
+                           const char *sid, cJSON *doc, void *ud, int *seen) {
+  (void)ctx; (void)ud;
   cJSON *feats = cJSON_GetObjectItem(doc, "features");
-  if (!cJSON_IsArray(feats)) { cJSON_Delete(doc); fprintf(stderr, "[" SRC "] no features[]\n"); return -1; }
-
+  if (!cJSON_IsArray(feats)) {
+    fprintf(stderr, "[%s] no features[]\n", sid);
+    return 0;
+  }
+  *seen = cJSON_GetArraySize(feats);   /* contained, not emitted (pagewalk.h) */
   int n = 0;
   cJSON *f;
   cJSON_ArrayForEach(f, feats) {
@@ -102,7 +122,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (sink->emit(sink, &row) >= 0) n++;
     free(pj);
   }
-  cJSON_Delete(doc);
+  return n;
+}
+
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  const char *url = "https://api.weather.gc.ca/collections/hydrometric-realtime/"
+                    "items?limit=500&sortby=-DATETIME&f=json";
+  int n = pw_walk(ctx, sink, SRC, url, hydro_fetch, hydro_emit_page, NULL);
+  if (n < 0) { fprintf(stderr, "[" SRC "] fetch failed\n"); return -1; }
   fprintf(stderr, "[" SRC "] emitted %d\n", n);
   return 0;
 }

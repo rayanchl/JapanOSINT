@@ -19,6 +19,21 @@
 #   data.gov.rs      20 -> 3,527
 # 27,653 records from three rows that together stored 60.
 #
-# The other 15 are NOT yet fixed and are listed here so the next pass has the
+# The other 15 were meant to be listed below so the next pass had the
 # measurement rather than the inference.
+#
+# THEY WERE NEVER WRITTEN. This file has held 24 lines and ZERO data rows since
+# the commit that created it, so the sentence above was pointing at nothing, and
+# so was the CLAUDE.md paragraph that cited it. Noticed 2026-10-18 when the next
+# pass came to start from it.
+#
+# The measurement is redone, over all 101 candidates rather than the 42 literal
+# ones, WITH its rows, in:
+#
+#     docs/measured-url-limits-2026-10-18.tsv
+#
+# That pass also found this test over-reports on its own: a limit the collector
+# PAGES on looks identical to a discard when you compare one request with one
+# request. od_udata_pt.c -- fixed by the very commit that wrote this file -- is
+# the proof, so each candidate now gets read in its collector too.
 #
