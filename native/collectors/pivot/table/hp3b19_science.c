@@ -915,6 +915,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 86400,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "id",
     .description = "Scene-level metadata for the Swiss national high-resolution "
       "digital elevation model, one record per tile with its footprint "
@@ -994,6 +995,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 21600,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "id",
     .description = "Scene metadata for the Sentinel-1 ground range detected radar "
       "archive, one record per acquisition with its exact footprint "
@@ -1013,6 +1015,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 86400,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "title,id",
     .description = "The collections published by the UK Earth Observation DataHub, "
       "with title, description, licence, keywords, providers, item "
@@ -1032,6 +1035,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 86400,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "title,id",
     .description = "Every collection distributed by the Alaska Satellite Facility "
       "DAAC, the NASA archive for synthetic aperture radar, with title, "
@@ -1051,6 +1055,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 86400,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "title,id",
     .description = "Every collection distributed by the Goddard Earth Sciences Data "
       "and Information Services Center, the NASA archive for "
@@ -1144,6 +1149,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .lat_key = "properties.LAT",
     .lon_key = "properties.LON",
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "properties.LOCALITY",
     .description = "The UK pre-instrumental earthquake catalogue, one record per "
       "event with date, time to the second where known, latitude and "
@@ -1491,6 +1497,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 86400,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "title,id",
     .description = "Every collection distributed by the NASA Ocean Biology "
       "Distributed Active Archive Center, with title, description, "
@@ -1511,6 +1518,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 86400,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "title,id",
     .description = "Every collection distributed by the NASA Global Hydrometeorology "
       "Resource Center, with title, description, licence, providers, "
@@ -1530,6 +1538,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 21600,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "id",
     .description = "Scene metadata for the reprocessed Sentinel-2 collection 1 "
       "surface reflectance archive, one record per tile acquisition "
@@ -1550,6 +1559,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 21600,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "id",
     .description = "Scene metadata for the Landsat 8 and 9 collection 2 level 2 "
       "archive, one record per scene with path and row, footprint, "

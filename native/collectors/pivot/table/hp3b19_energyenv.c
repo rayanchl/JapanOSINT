@@ -32,6 +32,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .id_keys = "_id",
     .interval = 86400,
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 50,
     .description = "Every generator holding a transmission connection agreement in "
       "Great Britain with the project name, the connection site, the "
@@ -50,6 +51,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .id_keys = "_id",
     .interval = 86400,
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 50,
     .description = "Capacity Market Units with the applicant company, the CMU "
       "identifier, the technology class, the de-rated capacity and the "
@@ -67,6 +69,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .id_keys = "_id",
     .interval = 86400,
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 50,
     .description = "The individual generating components behind each Capacity Market "
       "Unit with the site, the technology and the capacity "
@@ -84,6 +87,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .id_keys = "_id",
     .interval = 86400,
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 50,
     .description = "Generation embedded in the distribution networks rather than "
       "connected to the transmission system, with the site, the "
@@ -137,6 +141,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .id_keys = "_id",
     .interval = 21600,
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 50,
     .description = "Forecast flows against the thermal and stability limit on each "
       "named transmission boundary for the following day. Boundary "
@@ -358,6 +363,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .array_path = "records",
     .interval = 86400,
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 50,
     .description = "Installed generation capacity per Danish municipality per month "
       "split by offshore wind, onshore wind, solar and plant size band. "
@@ -501,6 +507,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .lat_key = "tpMapY",
     .lon_key = "tpMapX",
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 50,
     .description = "Every physical point in the European gas transmission network "
       "with its EIC code, the operators either side, the importing and "
@@ -815,6 +822,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .detail_url = "https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.1/odata/Vedenkorkeus?$filter=Paikka_Id%20eq%20{v}&$top=500",
     .interval = 21600,
     .page_param = "$skip",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 50,
     .description = "Finnish hydrological observation sites with the municipality, "
       "the site number and name, the measured quantity and the "
@@ -879,6 +887,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .array_path = "items",
     .interval = 86400,
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 50,
     .title_keys = "ts_afs_name",
     .description = "US commercial fishery landings by species, state, region and "
@@ -903,6 +912,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .id_keys = "year+month+hts_number+cntry_code+custom_district_code+source",
     .interval = 86400,
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 50,
     .title_keys = "name",
     .description = "Monthly US seafood imports and exports by harmonised tariff "
@@ -1059,6 +1069,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .array_path = "features",
     .interval = 21600,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .description = "Global thirty metre height above nearest drainage tiles as STAC "
       "items with geometry, datetime and the cloud-optimised asset "
       "href. HAND is the terrain model that turns a rainfall figure "
@@ -1319,6 +1330,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .id_keys = "_id",
     .interval = 21600,
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 50,
     .description = "Capacity offered and sold on each Great Britain interconnector "
       "auction with the requirement behind it. Auction clearing on a "

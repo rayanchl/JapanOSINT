@@ -1022,15 +1022,53 @@ Engine subtleties worth knowing before writing a row:
   all say recency is the point, and a cycle would cost it exactly that. The
   whole PLOS corpus wants a second row with an ascending sort.
 
-  **A descending sort and a cycle do not compose exactly.** 24 cycling rows ask
-  their upstream for newest-first (20 Internet Archive collections, four FR
-  BODACC gazettes); new items land at the HEAD, so the slices shift under a
-  walk and a seam can re-read or skip a few records — the same drift
-  `wayback_jp.c` documents. It is still strictly better than reading 10,000 of
-  5,430,347 forever, and the sort was left as it is because changing it changes
-  what each row returns first and wants its own measurement. An ascending sort
-  is the exact fix (archive.org honours `sort[]=publicdate+asc`, measured
-  2026-10-18: same 5.43M total, oldest first).
+  **A descending sort and a cycle do not compose, and the fix is the sort.**
+  New items land at the HEAD of a newest-first collection, so every page
+  boundary shifts under a walk that is halfway down and a seam can re-read or
+  skip records — the drift `wayback_jp.c` documents. Ascending puts new items at
+  the TAIL, where a forward walk has not been yet, so a resumed run asks for the
+  pages it meant to. **22 rows were re-sorted on 2026-10-18**, each verified
+  against its own upstream first: 17 Internet Archive collections
+  (`sort[]=publicdate+asc` — same 5,430,347 total, oldest first), four FR BODACC
+  gazettes (`order_by=dateparution asc` — same 6,641,689 total, from
+  2008-01-02), and `CZ_CRO_PUBLIC_OFFICIALS`, which already sorted on `id`, the
+  most stable key there is, and only needed `order=ASC`. Measured after: 2,000 /
+  400 / 40 distinct rows over two runs each, no overlap.
+
+  `UK_EC_DONATIONS` kept `order=desc`: ascending leads with records whose
+  `AcceptedDate` is null, so that sort is not a stable ordering, and a drifting
+  head is the documented trade rather than a silent one. A row that does NOT
+  cycle keeps `desc` deliberately — reading the newest pages is then the
+  question being asked.
+
+  **The 534 `CEILING_UNKNOWN` rows: 452 of them now cycle too** (2026-10-18).
+  No arithmetic can size them, which is exactly why a cycle fits — the walk does
+  not need to know how big the collection is, only where it stopped. Three
+  measured properties make it safe to apply without probing each one:
+  * a row that COMPLETES inside its ceiling stores no position, so cycling is a
+    genuine no-op for it. `JPN_EGOV_DATA_ORG_ORG_0100`: 13 records on both runs,
+    token `(none)`. `hptest` 40b-ii pins the same thing offline;
+  * a row that does not complete reads a further slice instead of the same first
+    pages — strictly more of the collection;
+  * every stop is still disclosed, now naming the slice.
+
+  Four exclusions, each a case where a cycle costs something: **cadence under
+  six hours** (44 rows — the row exists to be fresh), **recency in its own
+  identity** (29 — its id or record_type says `recent`/`latest`/`newest`/
+  `daily`), **a declared descending sort** (8 — the fix is an ascending sort
+  verified per host, which was done for the 22 above and is not extended to
+  hundreds of unverified hosts), and **a `{page}` token** (1 — the engine
+  refuses it). A 24-row sample was run twice each against one database, and all
+  three expected behaviours appear in it: `TX_TCEQ_VIOLATION_CITATIONS`
+  20,000 → 40,000, `FAA_ARCGIS_OBSTACLES` 10,000 → 20,000,
+  `au-asic-financial-advisers` 1,800 → 2,122 (its whole set),
+  `MD_LOBBYIST_CAMPAIGN_CONTRIBUTIONS` 20,000 → 20,387 then the token cleared,
+  `au-asic-smsf-auditors` 2,000 → 2,400 and cleared, `WA_CRIME_NIBRS`
+  3,471 → 3,471 with no token at all.
+
+  533 rows cycle in total. One shape to keep in mind: `interval = 2592000` is
+  monthly, so a 500-page collection on that cadence takes about two years to
+  come round — better than never, and the notice says where it is.
 * **A deep-paging cap is the upstream's, and it is disclosed by name.** GLEIF
   refuses `page[number]=51` with HTTP 400 — 50 pages × 200 = 10,000 records —
   so `GLEIF_LEI_HK` reaches 10,000 of 13,419 and the rest needs a narrower

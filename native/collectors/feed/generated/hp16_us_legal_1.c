@@ -195,6 +195,7 @@ static const hp_source T[] = {
     .id_keys = "EventId",
     .detail_url = "https://webapi.legistar.com/v1/seattle/events/{v}/eventitems", .detail_key = "EventId",
     .page_walk = 1,
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-legistar-seattle-matters",
@@ -236,6 +237,7 @@ static const hp_source T[] = {
     .url = "https://api.oyez.org/advocates?per_page=3",
     .detail_url = "https://api.oyez.org/people/{v}", .detail_key = "identifier",
     .page_walk = 1,
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-oyez-case-detail",
@@ -257,6 +259,7 @@ static const hp_source T[] = {
     .url = "https://api.oyez.org/cases?filter=term:2022&labels=true&per_page=3",
     .detail_url = "https://api.oyez.org/cases/2022/{v}", .detail_key = "docket_number",
     .page_walk = 1,
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-oyez-natural-court",

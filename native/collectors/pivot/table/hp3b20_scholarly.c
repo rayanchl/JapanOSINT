@@ -33,6 +33,7 @@ static const hp_source HP3B20_SCHOLARLY[] = {
     .id_keys = "id",
     .interval = 86400,
     .next_path = "nextPageUrl",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "title",
     .description = "The NCBI Bookshelf stream inside Europe PMC: monographs, "
       "clinical reference works and government reports that carry no "
@@ -128,6 +129,7 @@ static const hp_source HP3B20_SCHOLARLY[] = {
     .id_keys = "code",
     .interval = 604800,
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 100,
     .title_keys = "code",
     .description = "The Mexican SciELO journal register, deepened per record into "

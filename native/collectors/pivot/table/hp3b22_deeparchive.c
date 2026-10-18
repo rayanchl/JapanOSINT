@@ -134,12 +134,31 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
       "what the Archive holds and see everything an item contains "
       "beyond what its detail page renders." },
 
+  /* ── THE COLLECTION ROWS BELOW SORT ASCENDING, and that is a paging decision
+   * rather than an editorial one.
+   *
+   * Each of these collections is far larger than any page ceiling (archiveteam
+   * alone: 5,430,347 items), so they read over a cycle — `page_resume`, one
+   * ceiling's worth a run, the position stored between runs. A cycle and a
+   * NEWEST-FIRST sort do not compose: new items land at the HEAD, so every page
+   * boundary shifts under a walk that is halfway down, and a seam can re-read
+   * or skip items. Ascending puts new items at the TAIL, where a forward walk
+   * has not been yet, so the pages a resumed run asks for are the pages it
+   * meant to ask for.
+   *
+   * Measured 2026-10-18 before the change: `sort[]=publicdate+asc` answers with
+   * the same 5,430,347 total and starts at the oldest item, so this costs
+   * nothing but the order in which the corpus arrives — and over a cycle the
+   * whole corpus arrives either way.
+   *
+   * A row that does NOT cycle keeps `desc` deliberately: reading the newest 20
+   * pages is then the question being asked, which rule 2's carve-out allows. */
   { .id = "IA_COLLECTION_ARCHIVETEAM", .name = "Internet Archive - Archive Team rescue uploads",
     .category = "investigation", .portal = "https://archive.org/details/archiveteam",
     .record_type = "archive-item",
     .tags = "\"archive\",\"internet-archive\",\"collection\",\"archiveteam\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://archive.org/advancedsearch.php?q=collection:archiveteam&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+desc&output=json",
+    .url = "https://archive.org/advancedsearch.php?q=collection:archiveteam&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json",
     .array_path = "response.docs",
     .date_keys = "date",
     .id_keys = "identifier",
@@ -161,7 +180,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "archive-item",
     .tags = "\"archive\",\"internet-archive\",\"collection\",\"webwidecrawl\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://archive.org/advancedsearch.php?q=collection:webwidecrawl&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+desc&output=json",
+    .url = "https://archive.org/advancedsearch.php?q=collection:webwidecrawl&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json",
     .array_path = "response.docs",
     .date_keys = "date",
     .id_keys = "identifier",
@@ -183,7 +202,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "archive-item",
     .tags = "\"archive\",\"internet-archive\",\"collection\",\"wikiteam\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://archive.org/advancedsearch.php?q=collection:wikiteam&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+desc&output=json",
+    .url = "https://archive.org/advancedsearch.php?q=collection:wikiteam&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json",
     .array_path = "response.docs",
     .date_keys = "date",
     .id_keys = "identifier",
@@ -248,7 +267,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "archive-item",
     .tags = "\"archive\",\"internet-archive\",\"collection\",\"nasa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://archive.org/advancedsearch.php?q=collection:nasa&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+desc&output=json",
+    .url = "https://archive.org/advancedsearch.php?q=collection:nasa&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json",
     .array_path = "response.docs",
     .date_keys = "date",
     .id_keys = "identifier",
@@ -269,7 +288,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "archive-item",
     .tags = "\"archive\",\"internet-archive\",\"collection\",\"tvnews\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://archive.org/advancedsearch.php?q=collection:tvnews&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+desc&output=json",
+    .url = "https://archive.org/advancedsearch.php?q=collection:tvnews&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json",
     .array_path = "response.docs",
     .date_keys = "date",
     .id_keys = "identifier",
@@ -291,7 +310,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "archive-item",
     .tags = "\"archive\",\"internet-archive\",\"collection\",\"web\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://archive.org/advancedsearch.php?q=collection:web&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+desc&output=json",
+    .url = "https://archive.org/advancedsearch.php?q=collection:web&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json",
     .array_path = "response.docs",
     .date_keys = "date",
     .id_keys = "identifier",
@@ -312,7 +331,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "archive-item",
     .tags = "\"archive\",\"internet-archive\",\"collection\",\"fedlink\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://archive.org/advancedsearch.php?q=collection:fedlink&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+desc&output=json",
+    .url = "https://archive.org/advancedsearch.php?q=collection:fedlink&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json",
     .array_path = "response.docs",
     .date_keys = "date",
     .id_keys = "identifier",
@@ -334,7 +353,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "archive-item",
     .tags = "\"archive\",\"internet-archive\",\"collection\",\"documentcloud\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://archive.org/advancedsearch.php?q=collection:documentcloud&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+desc&output=json",
+    .url = "https://archive.org/advancedsearch.php?q=collection:documentcloud&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json",
     .array_path = "response.docs",
     .date_keys = "date",
     .id_keys = "identifier",
@@ -357,7 +376,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "archive-item",
     .tags = "\"archive\",\"internet-archive\",\"collection\",\"softwarelibrary\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://archive.org/advancedsearch.php?q=collection:softwarelibrary&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+desc&output=json",
+    .url = "https://archive.org/advancedsearch.php?q=collection:softwarelibrary&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json",
     .array_path = "response.docs",
     .date_keys = "date",
     .id_keys = "identifier",
@@ -378,7 +397,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "archive-item",
     .tags = "\"archive\",\"internet-archive\",\"collection\",\"magazine_rack\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://archive.org/advancedsearch.php?q=collection:magazine_rack&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+desc&output=json",
+    .url = "https://archive.org/advancedsearch.php?q=collection:magazine_rack&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json",
     .array_path = "response.docs",
     .date_keys = "date",
     .id_keys = "identifier",
@@ -400,7 +419,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "archive-item",
     .tags = "\"archive\",\"internet-archive\",\"collection\",\"podcasts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://archive.org/advancedsearch.php?q=collection:podcasts&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+desc&output=json",
+    .url = "https://archive.org/advancedsearch.php?q=collection:podcasts&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json",
     .array_path = "response.docs",
     .date_keys = "date",
     .id_keys = "identifier",
@@ -421,7 +440,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "archive-item",
     .tags = "\"archive\",\"internet-archive\",\"collection\",\"inlibrary\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://archive.org/advancedsearch.php?q=collection:inlibrary&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+desc&output=json",
+    .url = "https://archive.org/advancedsearch.php?q=collection:inlibrary&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json",
     .array_path = "response.docs",
     .date_keys = "date",
     .id_keys = "identifier",
@@ -443,7 +462,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "archive-item",
     .tags = "\"archive\",\"internet-archive\",\"collection\",\"jstor_ejc\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://archive.org/advancedsearch.php?q=collection:jstor_ejc&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+desc&output=json",
+    .url = "https://archive.org/advancedsearch.php?q=collection:jstor_ejc&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json",
     .array_path = "response.docs",
     .date_keys = "date",
     .id_keys = "identifier",
@@ -465,7 +484,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "archive-item",
     .tags = "\"archive\",\"internet-archive\",\"collection\",\"universallibrary\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://archive.org/advancedsearch.php?q=collection:universallibrary&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+desc&output=json",
+    .url = "https://archive.org/advancedsearch.php?q=collection:universallibrary&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json",
     .array_path = "response.docs",
     .date_keys = "date",
     .id_keys = "identifier",
@@ -507,7 +526,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "archive-item",
     .tags = "\"archive\",\"internet-archive\",\"texts\",\"language\",\"ara\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://archive.org/advancedsearch.php?q=mediatype:texts+AND+language:ara&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+desc&output=json",
+    .url = "https://archive.org/advancedsearch.php?q=mediatype:texts+AND+language:ara&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json",
     .array_path = "response.docs",
     .date_keys = "date",
     .id_keys = "identifier",
@@ -528,7 +547,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "archive-item",
     .tags = "\"archive\",\"internet-archive\",\"texts\",\"language\",\"rus\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://archive.org/advancedsearch.php?q=mediatype:texts+AND+language:rus&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+desc&output=json",
+    .url = "https://archive.org/advancedsearch.php?q=mediatype:texts+AND+language:rus&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json",
     .array_path = "response.docs",
     .date_keys = "date",
     .id_keys = "identifier",
@@ -549,7 +568,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "archive-item",
     .tags = "\"archive\",\"internet-archive\",\"texts\",\"language\",\"chi\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://archive.org/advancedsearch.php?q=mediatype:texts+AND+language:chi&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+desc&output=json",
+    .url = "https://archive.org/advancedsearch.php?q=mediatype:texts+AND+language:chi&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json",
     .array_path = "response.docs",
     .date_keys = "date",
     .id_keys = "identifier",
@@ -1069,6 +1088,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .interval = 604800,
     .link_keys = "links.html",
     .next_path = "links.next",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "attributes.text",
     .description = "The bepress-derived subject taxonomy OSF classifies preprints "
       "and projects against: subject text, parent and child links. "

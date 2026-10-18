@@ -840,6 +840,7 @@ static const hp_source HP3B25_JPINFRA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "page",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
@@ -931,6 +932,7 @@ static const hp_source HP3B25_JPINFRA[] = {
     .interval = 43200,
     .link_keys = "link",
     .page_param = "page",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
@@ -953,6 +955,7 @@ static const hp_source HP3B25_JPINFRA[] = {
     .interval = 86400,
     .link_keys = "link",
     .page_param = "page",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title.rendered",
