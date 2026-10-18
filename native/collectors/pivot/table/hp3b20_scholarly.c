@@ -33,6 +33,7 @@ static const hp_source HP3B20_SCHOLARLY[] = {
     .id_keys = "id",
     .interval = 86400,
     .next_path = "nextPageUrl",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "title",
     .description = "The NCBI Bookshelf stream inside Europe PMC: monographs, "
       "clinical reference works and government reports that carry no "
@@ -128,6 +129,7 @@ static const hp_source HP3B20_SCHOLARLY[] = {
     .id_keys = "code",
     .interval = 604800,
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 100,
     .title_keys = "code",
     .description = "The Mexican SciELO journal register, deepened per record into "
@@ -381,6 +383,7 @@ static const hp_source HP3B20_SCHOLARLY[] = {
     .id_keys = "code",
     .interval = 604800,
     .page_param = "offset",
+    .page_resume = 1,   /* 31,637 records, measured 2026-10-12: read over a cycle, 100 pages a run */
     .page_size = 100,
     .title_keys = "code",
     .description = "Issue-level identifiers for the Brazilian collection, deepened "
@@ -487,6 +490,14 @@ static const hp_source HP3B20_SCHOLARLY[] = {
     .id_keys = "id",
     .interval = 21600,
     .page_param = "start",
+    /* NOT page_resume, although the measurement says 417,719 records against a
+     * 20-page ceiling. This row's name, tags and sort all say the same thing:
+     * it is the NEWEST articles. A cycling walk would spend most of a cycle
+     * deep in the back catalogue and stop seeing new papers for days, so the
+     * cycle would cost this row exactly what it exists for. The whole PLOS
+     * corpus wants its own row with an ascending sort; recency wants this one.
+     * The 20-page read is a ranked head, which rule 2's own carve-out allows,
+     * and the truncation notice states it. */
     .page_size = 100,
     .page_zero_based = 1,
     .title_keys = "title_display,title",

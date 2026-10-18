@@ -109,6 +109,7 @@ static const hp_source HP3B19_FISHERIES[] = {
     .array_path = "items",
     .interval = 604800,
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 100,
     .title_keys = "links.0.href",
     .description = "Haul-level catch from the Alaska Fisheries Science Center "

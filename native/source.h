@@ -73,6 +73,37 @@ typedef struct source_ctx {
   const char  *tenant_id;
   volatile int *cancel;
   void (*progress)(const char *json);
+  /* ── WHERE THE LAST RUN STOPPED, so a collection larger than one run's page
+   * budget is read over a CYCLE instead of re-reading its first pages forever.
+   *
+   * Measured 2026-10-12 (docs/measured-page-ceilings-2026-10-12.tsv): 89
+   * scheduled rows declare an upstream total needing more than 200 pages — up
+   * to 55,971 pages for one 5.6-million-item STAC catalogue, 1.93 billion
+   * records between them — and 534 more page past their ceiling with no total
+   * published at all. Raising a page ceiling does not serve those: 55,971
+   * requests a run against one host is not exhaustiveness. Reading the next
+   * slice each run is, and it is what collectors/sources/wayback_jp.c already
+   * does by hand (mhlw's index, 2,064 pages, over ~207 daily runs).
+   *
+   * `resume_in` is the token this source stored on its previous run, or NULL;
+   * `resume_out` stores one for the next (NULL clears it, which is how a
+   * collector says the cycle completed and the next run starts over). The
+   * token is OPAQUE to the caller — a page number, a cursor, a next-page URL —
+   * and a collector must treat a token it does not recognise as absent.
+   *
+   * WHY THIS IS ON THE CONTEXT and not in the engine: lib/ holds no database
+   * code (hptest links lib/hpengine.c with no sqlite3 at all), and putting
+   * persistence behind the ABI keeps that true while making the mechanism
+   * available to every collector rather than to one engine.
+   *
+   * Both are NULL on an ENTITY PIVOT, deliberately: "what do we have on X"
+   * must answer from the start of X's result set, not from page 37 of the last
+   * entity someone asked about. core/scheduler.c sets them, core/osint_dispatch.c
+   * does not. Appended last so every existing initializer keeps compiling. */
+  const char  *resume_in;
+  /* `struct source_ctx` spelled out: the typedef is not complete yet inside
+   * its own definition, and `source_ctx` here compiles as an unknown type. */
+  void (*resume_out)(const struct source_ctx *ctx, const char *token);
 } source_ctx;
 
 typedef struct source_def {

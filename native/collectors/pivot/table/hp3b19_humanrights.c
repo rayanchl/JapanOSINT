@@ -157,6 +157,7 @@ static const hp_source HP3B19_HUMANRIGHTS[] = {
     .id_keys = "coa_iso",
     .interval = 86400,
     .page_param = "page",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "coa_name,coo_name",
     .description = "New asylum applications by origin, destination and procedure "
       "type. Applications lead recognised-refugee counts by months to "
@@ -173,6 +174,7 @@ static const hp_source HP3B19_HUMANRIGHTS[] = {
     .id_keys = "footnote",
     .interval = 604800,
     .page_param = "page",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "footnote",
     .description = "The caveats attached to individual UNHCR figures — estimation "
       "method, exclusions, government-versus-UNHCR sourcing. A "

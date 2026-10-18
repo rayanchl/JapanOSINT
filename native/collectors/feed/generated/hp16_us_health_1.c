@@ -22,6 +22,7 @@ static const hp_source T[] = {
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
     .page_walk = 1,
+    .page_resume = 1,   /* 867 records, measured 2026-10-12: read over a cycle, 3~ pages a run */
     .interval = 43200, .free_tier = 1 },
 
   { .id = "uk-govuk-search-medical-safety-alerts",
@@ -33,6 +34,7 @@ static const hp_source T[] = {
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
     .page_walk = 1,
+    .page_resume = 1,   /* 1,453 records, measured 2026-10-12: read over a cycle, 3~ pages a run */
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-cms-data-catalog",

@@ -97,6 +97,7 @@ static const hp_source HP3B19_INTLORG[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "name",
     .description = "Roughly 25,000 indicator definitions with source note, "
       "organisation and topic. Enumerating it is the difference between "

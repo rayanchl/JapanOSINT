@@ -46,6 +46,7 @@ static const hp_source HP3B19_MEDIA[] = {
     .array_path = "objects",
     .interval = 21600,
     .next_path = "meta.next",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .description = "German freedom-of-information requests with the public body "
       "addressed, the request and response text, the legal basis "
       "invoked, the resolution status and any refusal grounds. "
@@ -62,6 +63,7 @@ static const hp_source HP3B19_MEDIA[] = {
     .array_path = "objects",
     .interval = 21600,
     .next_path = "meta.next",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .description = "Austrian freedom-of-information requests on the same Froide "
       "platform, with the addressed authority, request and response "
       "text, status and jurisdiction. Austria's transparency regime "
