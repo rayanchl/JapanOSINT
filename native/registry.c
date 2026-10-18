@@ -27,8 +27,15 @@
  * verified-source batch. Raising the cap is deliberately cheap and is done
  * BEFORE the sources land, because the failure mode when it is not is silent
  * in the only place that matters: the build succeeds, the fleet looks healthy,
- * and the sources past the cap simply do not exist at runtime. */
-#define MAX_SOURCES 32768
+ * and the sources past the cap simply do not exist at runtime.
+ *
+ * 2026-10-18: hit in exactly that way. Batch 45's French beat took the tree to
+ * 43,453 and the build was clean, lint was clean, and 2,392 of its 11,021 rows
+ * were OVERFLOW-dropped — found only because the beat's own registration count
+ * (8,629) was compared against its table (11,021) before the emit audit was
+ * believed. 32768 -> 131072 (1 MB in .bss): room to triple again, and raised
+ * BEFORE the next batch rather than after it. */
+#define MAX_SOURCES 131072
 static const source_def *g_srcs[MAX_SOURCES];
 static int g_n = 0;
 
