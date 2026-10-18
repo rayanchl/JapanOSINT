@@ -220,6 +220,29 @@ static int run_source(const char *id, const char *entity) {
   return d->run(&ctx, &sink);
 }
 
+/* The reading position a run stored (source.h's resume_out). `g_res_set` tells
+ * "stored nothing" apart from "was never asked", which is the difference
+ * between a completed cycle and a row that does not cycle at all. */
+static char g_res_out[1024];
+static int  g_res_set;
+static void res_capture(const struct source_ctx *ctx, const char *token) {
+  (void)ctx;
+  g_res_set = 1;
+  snprintf(g_res_out, sizeof g_res_out, "%s", token ? token : "");
+}
+static int run_source_resume(const char *id, const char *entity,
+                             const char *resume_in) {
+  g_ncap = 0;
+  g_res_set = 0;
+  g_res_out[0] = 0;
+  const source_def *d = find_def(id);
+  if (!d) { printf("FAIL  no such source %s\n", id); g_fail++; return -99; }
+  intel_sink sink = { .ctx = NULL, .emit = cap_emit };
+  source_ctx ctx = { .source_id = id, .entity = entity,
+                     .resume_in = resume_in, .resume_out = res_capture };
+  return d->run(&ctx, &sink);
+}
+
 /* ── the table under test ────────────────────────────────────────────────── */
 static const hp_source T[] = {
   /* One "lon,lat" field (CALIL's geocode), and the lat,lon order for the
@@ -294,6 +317,22 @@ static const hp_source T[] = {
   { .id = "T_PAGE_PARAM", .name = "offset pagination", .url = "https://x.test/po?q={q}",
     .array_path = "items", .title_keys = "name", .id_keys = "id",
     .page_param = "offset", .page_size = 2,
+    .record_type = "t-page", .free_tier = 1, .description = "d" },
+  /* A collection read over a CYCLE: the same offset walk, bounded to two pages
+   * a run, storing where it stopped (test 40). */
+  { .id = "T_RESUME", .name = "cycled offset pagination",
+    .url = "https://x.test/rz?all=1",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .page_param = "offset", .page_size = 2, .page_max = 2, .page_resume = 1,
+    .interval = 3600,
+    .record_type = "t-page", .free_tier = 1, .description = "d" },
+  /* Same row with a date token: a stored URL would pin one day, so the engine
+   * must refuse to cycle it (test 40c). */
+  { .id = "T_RESUME_DATED", .name = "cycled walk with a date token",
+    .url = "https://x.test/rd?day={date:%Y-%m-%d}",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .page_param = "offset", .page_size = 2, .page_max = 2, .page_resume = 1,
+    .interval = 3600,
     .record_type = "t-page", .free_tier = 1, .description = "d" },
   /* The same walk with a row-declared conditional header: it belongs to the
    * first request only (test 9f-sexies). */
@@ -852,6 +891,19 @@ static int cap_count(const char *rtype, const cap **first) {
   return n;
 }
 #define NOTICE "collector-shape-notice"
+
+/* Did the run capture a record whose id_keys value was `id`? The engine keys a
+ * record's uid as "<source>|<id>", so the key's tail is the identity — which is
+ * what distinguishes "this run read records 5-8" from "it read 1-4 again". */
+static int g_cap_ids_has(const char *id) {
+  size_t n = strlen(id);
+  for (int i = 0; i < g_ncap; i++) {
+    const char *k = g_cap[i].key, *bar = strrchr(k, '|');
+    const char *tail = bar ? bar + 1 : k;
+    if (strlen(tail) == n && !strcmp(tail, id)) return 1;
+  }
+  return 0;
+}
 
 int main(void) {
   printf("hpengine test\n");
@@ -3309,6 +3361,92 @@ int main(void) {
      "37: an image-only link keeps its alt text — a weak label is still a record");
   ok(g_ncap >= 4 && !strcmp(g_cap[1].link, "https://x.test/articles/-/409812"),
      "37: records keep first-appearance order and their resolved link");
+
+  /* 40. A collection larger than one run's page budget is read over a CYCLE.
+   *     T_RESUME walks an offset parameter two pages a run over four pages of
+   *     two records. Three runs should read 4, then 4, then find the end —
+   *     and the third must CLEAR the position so the fourth starts over. */
+  fx_reset();
+  fx_add("offset=6", 200, "{\"items\":[{\"name\":\"g\",\"id\":\"7\"},{\"name\":\"h\",\"id\":\"8\"}]}");
+  fx_add("offset=4", 200, "{\"items\":[{\"name\":\"e\",\"id\":\"5\"},{\"name\":\"f\",\"id\":\"6\"}]}");
+  fx_add("offset=2", 200, "{\"items\":[{\"name\":\"c\",\"id\":\"3\"},{\"name\":\"d\",\"id\":\"4\"}]}");
+  fx_add("/rz?all=1", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  rc = run_source_resume("T_RESUME", NULL, NULL);
+  ok(rc == 0 && cap_count("t-page", NULL) == 4,
+     "40: a cycling row reads its ceiling's worth on the first run");
+  ok(g_res_set && strstr(g_res_out, "offset=4") != NULL,
+     "40: and stores the page it did not reach");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-truncation-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"reads_over_a_cycle\":true") != NULL &&
+       strstr(nt->props, "\"resumed_this_run\":false") != NULL &&
+       strstr(nt->props, "offset=4") != NULL,
+       "40: the notice says it cycles, that this run did not resume, and where "
+       "the next one starts");
+    ok(nt && strstr(nt->title, "the next run continues the cycle") != NULL,
+       "40: and the TITLE says so, not just the properties — \"used 4 of 4\" "
+       "read alone is a ceiling nobody passes"); }
+
+  /* 40b. The second run continues where the first stopped — and must not walk
+   *      BACKWARDS, which is what resuming by URL alone does when the next
+   *      page is computed from page_start rather than from the page fetched. */
+  char saved[1024];
+  snprintf(saved, sizeof saved, "%s", g_res_out);
+  rc = run_source_resume("T_RESUME", NULL, saved);
+  ok(rc == 0 && cap_count("t-page", NULL) == 4,
+     "40b: the next run reads the next slice");
+  ok(g_cap_ids_has("5") && g_cap_ids_has("8") &&
+     !g_cap_ids_has("1") && !g_cap_ids_has("3"),
+     "40b: records 5-8, not 1-4 again and not 3-6 going backwards");
+  ok(g_res_set && strstr(g_res_out, "offset=8") != NULL,
+     "40b: and stores the page after the slice it read — it stopped at its own "
+     "ceiling, and cannot know the collection ends there without asking");
+
+  /* 40b-ii. The run that ASKS finds the end: an empty page is the upstream
+   *         saying so, and the position is CLEARED, which is what makes this a
+   *         cycle rather than a walk that parks at the end forever. */
+  /* Re-registered in specificity order: the matcher takes the FIRST fixture
+   * whose string appears in the URL, and "/rz?all=1" appears in every one of
+   * them — so the catch-all has to come last or it answers for offset=8 with
+   * page 1's body. */
+  fx_reset();
+  fx_add("offset=8", 200, "{\"items\":[]}");
+  fx_add("offset=6", 200, "{\"items\":[{\"name\":\"g\",\"id\":\"7\"},{\"name\":\"h\",\"id\":\"8\"}]}");
+  fx_add("offset=4", 200, "{\"items\":[{\"name\":\"e\",\"id\":\"5\"},{\"name\":\"f\",\"id\":\"6\"}]}");
+  fx_add("offset=2", 200, "{\"items\":[{\"name\":\"c\",\"id\":\"3\"},{\"name\":\"d\",\"id\":\"4\"}]}");
+  fx_add("/rz?all=1", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  snprintf(saved, sizeof saved, "%s", g_res_out);
+  rc = run_source_resume("T_RESUME", NULL, saved);
+  ok(rc == 0 && cap_count("t-page", NULL) == 0 && g_res_set && g_res_out[0] == 0,
+     "40b-ii: the run that reaches the end stores nothing, so the next starts "
+     "the cycle over");
+
+  /* 40c. A row whose URL carries a date token must not cycle: the stored URL
+   *      would pin one day forever. Refused, and nothing is stored. */
+  fx_reset();
+  fx_add("/rd?day=", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  rc = run_source_resume("T_RESUME_DATED", NULL, NULL);
+  ok(rc == 0 && !g_res_set,
+     "40c: a {date…} row is refused the cycle and stores no position");
+
+  /* 40d. A stored position on a DIFFERENT host is dropped, not followed: a
+   *      reading position moves us through a collection, never to another
+   *      server. */
+  fx_reset();
+  fx_add("offset=2", 200, "{\"items\":[{\"name\":\"c\",\"id\":\"3\"},{\"name\":\"d\",\"id\":\"4\"}]}");
+  fx_add("/rz?all=1", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  rc = run_source_resume("T_RESUME", NULL, "https://evil.test/rz?all=1&offset=4");
+  ok(rc == 0 && g_cap_ids_has("1"),
+     "40d: a position on another host is dropped and the run starts from the "
+     "row's own URL");
+  ok(strstr(g_last_url, "evil.test") == NULL,
+     "40d: and that host is never requested");
+
+  /* 40e. An ENTITY run ignores the position entirely: "what do we have on X"
+   *      answers from the start of X's results, not from page 37. */
+  rc = run_source_resume("T_RESUME", "somebody", saved);
+  ok(rc == 0 && g_cap_ids_has("1") && !g_res_set,
+     "40e: an entity run neither resumes nor stores a position");
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

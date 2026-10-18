@@ -80,6 +80,7 @@ static const hp_source T[] = {
     .array_path = "data",
     .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}", .detail_key = "lei",
     .page_walk = 1,
+    .page_resume = 1,   /* 1,208,986 records, measured 2026-10-12: read over a cycle, 10~ pages a run */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "gleif-lei-filter-nonconforming",
@@ -91,6 +92,7 @@ static const hp_source T[] = {
     .array_path = "data",
     .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}/direct-parent-relationship", .detail_key = "lei",
     .page_walk = 1,
+    .page_resume = 1,   /* 1,318,962 records, measured 2026-10-12: read over a cycle, 10~ pages a run */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "gleif-lei-filter-owns",

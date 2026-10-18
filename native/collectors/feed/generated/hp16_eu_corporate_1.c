@@ -22,6 +22,7 @@ static const hp_source T[] = {
     .array_path = "response.docs",
     .detail_url = "https://registers.esma.europa.eu/publication/details?core=esma_registers_upreg&docId={v}", .detail_key = "id",
     .page_walk = 1,
+    .page_resume = 1,   /* 101,689 records, measured 2026-10-12: read over a cycle, 3~ pages a run */
     .interval = 86400, .free_tier = 1 },
 
 };

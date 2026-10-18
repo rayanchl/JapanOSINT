@@ -410,6 +410,13 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
     "TEXT NOT NULL DEFAULT 'map_cron' "
     "CHECK(schedule_mode IN ('map_cron','search_only'))");
 
+  /* Where a collector stopped reading, so a collection larger than one run's
+   * page budget is read over a cycle rather than from page 1 forever
+   * (source.h's resume_in / resume_out, core/scheduler.c's resume load/store).
+   * One row per scheduled source already exists here; this is one more column
+   * on it, not a table of its own. */
+  ensure_column(db, "source_sched_state", "resume_token", "TEXT");
+
   /* Notification inbox (roadmap item 11): read/unread state per event. */
   ensure_column(db, "alert_events", "read_at", "TEXT");
   /* The rule's name, stamped when the rule is deleted: events outlive their

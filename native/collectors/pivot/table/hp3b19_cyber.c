@@ -545,6 +545,7 @@ static const hp_source HP3B19_CYBER[] = {
     .array_path = "data",
     .interval = 86400,
     .page_param = "offset",
+    .page_resume = 1,   /* 385,738 records, measured 2026-10-12: read over a cycle, 100 pages a run */
     .page_size = 100,
     .description = "The Exploit Prediction Scoring System over the whole CVE corpus, "
       "paged: each CVE with its probability of exploitation in the next "

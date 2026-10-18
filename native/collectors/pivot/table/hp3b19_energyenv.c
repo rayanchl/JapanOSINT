@@ -444,6 +444,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .array_path = "results",
     .interval = 21600,
     .page_param = "offset",
+    .page_resume = 1,   /* 1,564,388 records, measured 2026-10-12: read over a cycle, 50 pages a run */
     .page_size = 50,
     .title_keys = "generatedpower",
     .description = "Quarter-hourly Belgian generation by fuel code with the total, "
@@ -579,6 +580,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .id_keys = "Id",
     .interval = 86400,
     .page_param = "page",
+    .page_resume = 1,   /* 9,600,436 records, measured 2026-10-12: read over a cycle, 50~ pages a run */
     /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "AnlagenbetreiberName",
@@ -935,6 +937,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .array_path = "features",
     .interval = 86400,
     .page_param = "startIndex",
+    .page_resume = 1,   /* 42,234 records, measured 2026-10-12: read over a cycle, 50 pages a run */
     .page_size = 50,
     .description = "Mineral, placer and coal tenures in British Columbia with the "
       "tenure number, the owner name, the issue and expiry dates, the "

@@ -1725,6 +1725,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .id_keys = "facility_id",
     .interval = 604800,
     .page_param = "offset",
+    .page_resume = 1,   /* 172,440 records, measured 2026-10-12: read over a cycle, 500 pages a run */
     .page_size = 500,
     .page_start = 0,
     .title_keys = "facility_name",

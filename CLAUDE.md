@@ -974,10 +974,63 @@ Engine subtleties worth knowing before writing a row:
   * **89 rows need more than 200**, up to 55,971 pages for a 5.6-million-item
     STAC catalogue, and 1.93 BILLION declared records between them. Raising
     `page_max` there is not exhaustiveness, it is tens of thousands of requests
-    per run against one host. Those rows are a DISCLOSED sample and need a
-    different strategy per row (a date window, a filter that slices the
-    collection, or a bulk dump), which is a design decision and not a number.
-    Listed in that file so the next pass starts from the measurement.
+    per run against one host. **81 of them now read their collection over a
+    CYCLE** — see `page_resume` below; the other eight are named there.
+* **`page_resume = 1` reads a collection over a CYCLE**, one ceiling's worth a
+  run, instead of re-reading its first pages forever. The walk starts where the
+  last run stopped and stores where this one stopped; when it reaches the end
+  the position is CLEARED and the next run starts over. This is what
+  `collectors/sources/wayback_jp.c` has always done by hand (mhlw's 2,064-page
+  index over ~207 daily runs); it is now a field, so 81 rows got it without 81
+  hand-written collectors.
+
+  The position is a URL — the one the engine would have requested next — so
+  `page_param`, `next_path` and `page_walk` all resume from one stored string.
+  A URL is NOT enough on its own for `page_param`: the next page is computed as
+  `page_start + (page+1)*step` from the ROW's url, so a run resumed at
+  `offset=4` with `page_start` still 0 asks for `offset=2` next and walks
+  BACKWARDS over ground it covered, every page full and the run green. The
+  engine reads the number back out of the stored URL for that reason.
+
+  Persistence is NOT in the engine: `lib/` holds no database code (hptest links
+  `lib/hpengine.c` with no sqlite3 at all), so the position crosses the ABI as
+  `source_ctx`'s `resume_in` / `resume_out`, and `core/scheduler.c` keeps it in
+  `source_sched_state.resume_token`. That also makes the mechanism available to
+  every collector rather than to one engine.
+
+  Measured live, three mechanisms, two runs each against one database:
+  `BGS_ONSHORE_BOREHOLE_INDEX` (next_path) 300 → 600 distinct rows,
+  `IA_COLLECTION_ARCHIVETEAM` (page_param) 1,000 → 2,000,
+  `gleif-lei-filter-lapsed` (page_walk) 20 → 40. `hptest` 40–40e pins the
+  cycle, the clearing, the backwards-walk trap, and all three refusals.
+
+  **It is refused, with a line on stderr, for an ENTITY run** ("what do we have
+  on X" must answer from the start of X's results, not page 37 of the last
+  entity asked about — the scheduler also passes no position on a pivot run),
+  for a `{date…}`/`{ago…}` row (a stored URL would pin one day forever; those
+  rows already walk forward by date), for a `{page}`/`{offset}` token in the
+  path or body (the position is not readable back out of the URL), and for a
+  stored position whose HOST is not the row's own — a reading position moves us
+  through a collection, never to another server.
+
+  **Two things a cycle does not fix, so they were left alone.** Five ELIA grid
+  rows run every 900–3,600 s over millions of quarter-hourly points: a cycle
+  would blind them to the current grid for days, and a date window is the right
+  shape. Two GOV.UK report searches are the same cadence and fell under the
+  same rule. And `PLOS_RECENT` — 417,719 records against a 20-page ceiling —
+  deliberately does NOT cycle: its name, tags and `publication_date desc` sort
+  all say recency is the point, and a cycle would cost it exactly that. The
+  whole PLOS corpus wants a second row with an ascending sort.
+
+  **A descending sort and a cycle do not compose exactly.** 24 cycling rows ask
+  their upstream for newest-first (20 Internet Archive collections, four FR
+  BODACC gazettes); new items land at the HEAD, so the slices shift under a
+  walk and a seam can re-read or skip a few records — the same drift
+  `wayback_jp.c` documents. It is still strictly better than reading 10,000 of
+  5,430,347 forever, and the sort was left as it is because changing it changes
+  what each row returns first and wants its own measurement. An ascending sort
+  is the exact fix (archive.org honours `sort[]=publicdate+asc`, measured
+  2026-10-18: same 5.43M total, oldest first).
 * **A deep-paging cap is the upstream's, and it is disclosed by name.** GLEIF
   refuses `page[number]=51` with HTTP 400 — 50 pages × 200 = 10,000 records —
   so `GLEIF_LEI_HK` reaches 10,000 of 13,419 and the rest needs a narrower

@@ -147,6 +147,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .link_keys = "identifier",
     .link_tmpl = "https://archive.org/details/{v}",
     .page_param = "page",
+    .page_resume = 1,   /* 5,408,802 records, measured 2026-10-12: read over a cycle, 500~ pages a run */
     .title_keys = "title,identifier",
     .description = "Newest items in the Internet Archive collection 'archiveteam': "
       "everything Archive Team has uploaded - the emergency grabs of "
@@ -168,6 +169,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .link_keys = "identifier",
     .link_tmpl = "https://archive.org/details/{v}",
     .page_param = "page",
+    .page_resume = 1,   /* 2,185,546 records, measured 2026-10-12: read over a cycle, 500~ pages a run */
     .title_keys = "title,identifier",
     .description = "Newest items in the Internet Archive collection 'webwidecrawl': "
       "the Internet Archive's own wide-crawl WARC items, the raw "
@@ -189,6 +191,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .link_keys = "identifier",
     .link_tmpl = "https://archive.org/details/{v}",
     .page_param = "page",
+    .page_resume = 1,   /* 443,608 records, measured 2026-10-12: read over a cycle, 500~ pages a run */
     .title_keys = "title,identifier",
     .description = "Newest items in the Internet Archive collection 'wikiteam': full "
       "XML and image dumps of independent MediaWiki sites preserved by "
@@ -253,6 +256,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .link_keys = "identifier",
     .link_tmpl = "https://archive.org/details/{v}",
     .page_param = "page",
+    .page_resume = 1,   /* 208,891 records, measured 2026-10-12: read over a cycle, 500~ pages a run */
     .title_keys = "title,identifier",
     .description = "Newest items in the Internet Archive collection 'nasa': NASA "
       "imagery, video and technical documents mirrored into the "
@@ -273,6 +277,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .link_keys = "identifier",
     .link_tmpl = "https://archive.org/details/{v}",
     .page_param = "page",
+    .page_resume = 1,   /* 4,572,550 records, measured 2026-10-12: read over a cycle, 500~ pages a run */
     .title_keys = "title,identifier",
     .description = "Newest items in the Internet Archive collection 'tvnews': the "
       "Internet Archive TV News Archive: recorded television news "
@@ -294,6 +299,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .link_keys = "identifier",
     .link_tmpl = "https://archive.org/details/{v}",
     .page_param = "page",
+    .page_resume = 1,   /* 17,523,155 records, measured 2026-10-12: read over a cycle, 500~ pages a run */
     .title_keys = "title,identifier",
     .description = "Newest items in the Internet Archive collection 'web': the "
       "top-level web collection of the Internet Archive, the crawl "
@@ -314,6 +320,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .link_keys = "identifier",
     .link_tmpl = "https://archive.org/details/{v}",
     .page_param = "page",
+    .page_resume = 1,   /* 393,838 records, measured 2026-10-12: read over a cycle, 500~ pages a run */
     .title_keys = "title,identifier",
     .description = "Newest items in the Internet Archive collection 'fedlink': "
       "documents uploaded through the US federal library network "
@@ -335,6 +342,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .link_keys = "identifier",
     .link_tmpl = "https://archive.org/details/{v}",
     .page_param = "page",
+    .page_resume = 1,   /* 758,304 records, measured 2026-10-12: read over a cycle, 500~ pages a run */
     .title_keys = "title,identifier",
     .description = "Newest items in the Internet Archive collection 'documentcloud': "
       "primary-source documents published by newsrooms through "
@@ -357,6 +365,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .link_keys = "identifier",
     .link_tmpl = "https://archive.org/details/{v}",
     .page_param = "page",
+    .page_resume = 1,   /* 275,669 records, measured 2026-10-12: read over a cycle, 500~ pages a run */
     .title_keys = "title,identifier",
     .description = "Newest items in the Internet Archive collection "
       "'softwarelibrary': the Internet Archive Software Library, "
@@ -377,6 +386,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .link_keys = "identifier",
     .link_tmpl = "https://archive.org/details/{v}",
     .page_param = "page",
+    .page_resume = 1,   /* 658,714 records, measured 2026-10-12: read over a cycle, 500~ pages a run */
     .title_keys = "title,identifier",
     .description = "Newest items in the Internet Archive collection 'magazine_rack': "
       "scanned periodicals in the Magazine Rack collection, one item "
@@ -398,6 +408,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .link_keys = "identifier",
     .link_tmpl = "https://archive.org/details/{v}",
     .page_param = "page",
+    .page_resume = 1,   /* 1,310,445 records, measured 2026-10-12: read over a cycle, 500~ pages a run */
     .title_keys = "title,identifier",
     .description = "Newest items in the Internet Archive collection 'podcasts': "
       "podcast episodes preserved in the Internet Archive with show "
@@ -418,6 +429,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .link_keys = "identifier",
     .link_tmpl = "https://archive.org/details/{v}",
     .page_param = "page",
+    .page_resume = 1,   /* 4,422,042 records, measured 2026-10-12: read over a cycle, 500~ pages a run */
     .title_keys = "title,identifier",
     .description = "Newest items in the Internet Archive collection 'inlibrary': "
       "books digitised for the Internet Archive lending library with "
@@ -439,6 +451,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .link_keys = "identifier",
     .link_tmpl = "https://archive.org/details/{v}",
     .page_param = "page",
+    .page_resume = 1,   /* 452,029 records, measured 2026-10-12: read over a cycle, 500~ pages a run */
     .title_keys = "title,identifier",
     .description = "Newest items in the Internet Archive collection 'jstor_ejc': the "
       "JSTOR Early Journal Content release mirrored at the Internet "
@@ -460,6 +473,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .link_keys = "identifier",
     .link_tmpl = "https://archive.org/details/{v}",
     .page_param = "page",
+    .page_resume = 1,   /* 119,426 records, measured 2026-10-12: read over a cycle, 500~ pages a run */
     .title_keys = "title,identifier",
     .description = "Newest items in the Internet Archive collection "
       "'universallibrary': the Universal Library / Million Book Project "
@@ -501,6 +515,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .link_keys = "identifier",
     .link_tmpl = "https://archive.org/details/{v}",
     .page_param = "page",
+    .page_resume = 1,   /* 226,397 records, measured 2026-10-12: read over a cycle, 500~ pages a run */
     .title_keys = "title,identifier",
     .description = "The newest Arabic-language text items uploaded to the Internet "
       "Archive - books, pamphlets, reports and document scans - with "
@@ -521,6 +536,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .link_keys = "identifier",
     .link_tmpl = "https://archive.org/details/{v}",
     .page_param = "page",
+    .page_resume = 1,   /* 124,055 records, measured 2026-10-12: read over a cycle, 500~ pages a run */
     .title_keys = "title,identifier",
     .description = "The newest Russian-language text items uploaded to the Internet "
       "Archive - books, pamphlets, reports and document scans - with "
@@ -541,6 +557,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .link_keys = "identifier",
     .link_tmpl = "https://archive.org/details/{v}",
     .page_param = "page",
+    .page_resume = 1,   /* 636,507 records, measured 2026-10-12: read over a cycle, 500~ pages a run */
     .title_keys = "title,identifier",
     .description = "The newest Chinese-language text items uploaded to the Internet "
       "Archive - books, pamphlets, reports and document scans - with "

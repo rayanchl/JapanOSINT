@@ -997,6 +997,7 @@ static const hp_source HP3B19_APAC[] = {
     .array_path = "results",
     .interval = 86400,
     .page_param = "offset",
+    .page_resume = 1,   /* 1,625,615 records, measured 2026-10-12: read over a cycle, 100 pages a run */
     .page_size = 100,
     .description = "Hourly pedestrian counts by sensor location across central "
       "Melbourne with sensor id, sensor description, date, hour and "
@@ -1280,6 +1281,7 @@ static const hp_source HP3B19_APAC[] = {
     .id_keys = "census_year+property_id+trading_name+seating_type",
     .interval = 86400,
     .page_param = "offset",
+    .page_resume = 1,   /* 66,356 records, measured 2026-10-12: read over a cycle, 100 pages a run */
     .page_size = 100,
     .title_keys = "trading_name",
     .description = "Every registered cafe, restaurant and bar in the City of "

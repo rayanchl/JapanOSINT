@@ -528,6 +528,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* 14,451 records, measured 2026-10-12: read over a cycle, 50 pages a run */
     .page_size = 50,
     .page_zero_based = 1,
     .title_keys = "title",

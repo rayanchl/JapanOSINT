@@ -245,6 +245,67 @@ int sched_state_load_one(db_handle *db, const char *id, sched_state *st) {
   return rc;
 }
 
+/* ── WHERE A COLLECTOR STOPPED, kept across runs (source.h's resume_in /
+ * resume_out). Deliberately NOT part of `sched_state`: that struct is the
+ * scheduler's own health view — failures, backoff, quarantine — and a
+ * collector's reading position has nothing to do with whether the source is
+ * healthy. Writing them together would also mean every resume update rewrote
+ * the backoff columns.
+ *
+ * The column is on source_sched_state because that table is already one row
+ * per scheduled source with the same lifetime. A row that is not scheduled has
+ * no resume position by construction: only this path sets the callbacks. */
+#define SCHED_RESUME_MAX 1024
+
+static int sched_resume_load(db_handle *db, const char *id, char *out, size_t cap) {
+  if (out && cap) out[0] = 0;
+  if (!db || !db->h || !id || !out || !cap) return 0;
+  sqlite3_stmt *s;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT resume_token FROM source_sched_state WHERE source_id=?1",
+        -1, &s, NULL) != SQLITE_OK)
+    return 0;
+  sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
+  int got = 0;
+  if (sqlite3_step(s) == SQLITE_ROW && sqlite3_column_type(s, 0) != SQLITE_NULL) {
+    const char *v = (const char *)sqlite3_column_text(s, 0);
+    if (v && v[0] && strlen(v) < cap) { snprintf(out, cap, "%s", v); got = 1; }
+  }
+  sqlite3_finalize(s);
+  return got;
+}
+
+/* The row may not exist yet (a first run that resumes before any save), so this
+ * inserts rather than updating — with the defaults the table declares. A NULL
+ * or empty token CLEARS the position, which is how a collector says its cycle
+ * completed and the next run should start over. */
+static void sched_resume_store(db_handle *db, const char *id, const char *token) {
+  if (!db || !db->h || !id) return;
+  if (token && strlen(token) >= SCHED_RESUME_MAX) {
+    fprintf(stderr, "[sched] %s resume token is %zu bytes (max %d); dropped, "
+                    "the next run starts over\n",
+            id, strlen(token), SCHED_RESUME_MAX - 1);
+    token = NULL;
+  }
+  sqlite3_stmt *s;
+  if (sqlite3_prepare_v2(db->h,
+        "INSERT INTO source_sched_state(source_id,resume_token,updated_at) "
+        "VALUES(?1,?2,?3) ON CONFLICT(source_id) DO UPDATE SET "
+        "resume_token=excluded.resume_token,updated_at=excluded.updated_at",
+        -1, &s, NULL) != SQLITE_OK)
+    return;
+  sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
+  if (token && token[0]) sqlite3_bind_text(s, 2, token, -1, SQLITE_TRANSIENT);
+  else                   sqlite3_bind_null(s, 2);
+  sqlite3_bind_int64(s, 3, (sqlite3_int64)time(NULL));
+  sqlite3_step(s);
+  sqlite3_finalize(s);
+}
+
+static void sched_resume_out(const source_ctx *ctx, const char *token) {
+  if (ctx) sched_resume_store(ctx->db, ctx->source_id, token);
+}
+
 int sched_state_save(db_handle *db, const char *id, const sched_state *st,
                      long declared, time_t now) {
   if (!db || !db->h) return -1;
@@ -329,6 +390,14 @@ int scheduler_run_source(db_handle *db, const source_def *d,
   ctx.http = http;
   ctx.llm = &llm;
   ctx.cancel = cancel;
+  /* The reading position is for a SCHEDULED run only. An entity pivot must
+   * answer from the start of the result set for the entity it was just asked
+   * about — resuming there would hand back page 37 of whatever the previous
+   * caller asked. source.h says this; here is where it is true. */
+  char resume_tok[SCHED_RESUME_MAX];
+  if (!entity && sched_resume_load(db, d->id, resume_tok, sizeof resume_tok))
+    ctx.resume_in = resume_tok;
+  if (!entity) ctx.resume_out = sched_resume_out;
 
   struct timespec t0, t1;
   clock_gettime(CLOCK_MONOTONIC, &t0);
