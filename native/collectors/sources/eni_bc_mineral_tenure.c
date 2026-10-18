@@ -1,7 +1,8 @@
 /* British Columbia mineral and placer tenure register (BC Data Catalogue WFS).
  * Endpoint: https://openmaps.gov.bc.ca/geo/pub/wfs?service=WFS&version=2.0.0
  *   &request=GetFeature&typeName=WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW
- *   &count=500&outputFormat=application/json&srsName=EPSG:4326      (keyless)
+ *   &count=2500&outputFormat=application/json&srsName=EPSG:4326
+ *   &sortBy=TENURE_NUMBER_ID&startIndex=0                           (keyless)
  * Emits one row per active claim: tenure number, claim name, tenure type/
  * sub-type, title type, issue and expiry dates, area, and the claim POLYGON as
  * geometry_geojson plus a representative point from the polygon's own vertices.
@@ -16,6 +17,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/pagewalk.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -64,16 +66,49 @@ static int poly_point(const cJSON *geom, double *olat, double *olon) {
   return 1;
 }
 
-static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *url =
-    "https://openmaps.gov.bc.ca/geo/pub/wfs?service=WFS&version=2.0.0"
-    "&request=GetFeature&typeName=WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW"
-    "&count=500&outputFormat=application/json&srsName=EPSG:4326";
-  cJSON *doc = feed_get_json(ctx->http, url, 60000);
-  if (!doc) { fprintf(stderr, "[" SRC "] fetch failed\n"); return -1; }
+/* PAGED, and it took a sort order to get there. Measured 2026-10-18: this
+ * layer's own `numberMatched` is 42,277 and the collector stored the first 500
+ * — 41,777 active claims dropped on every weekly run, at rc=0.
+ *
+ * WFS 2.0's continuation is `startIndex`, and GeoServer refuses it on its own:
+ * `startIndex=500` answers HTTP 400 "Cannot do natural order without a primary
+ * key, please add it or specify a manual sort over existing attributes",
+ * because an unsorted paged walk has no stable record order to offset into.
+ * Adding `sortBy=TENURE_NUMBER_ID` makes it 200, and the pages are DISJOINT
+ * (measured at startIndex 0 / 500 / 1000: zero features shared between
+ * consecutive pages). That refusal is worth reading as a feature — the server
+ * would rather fail than hand back an arbitrary slice.
+ *
+ * `count` is raised 500 -> 2500 (3.6 MB a page, served) so the walk completes
+ * inside the 20-page ceiling: 42,277 / 2,500 = 17 pages. At 500 it would have
+ * needed 85 and stopped at 10,000, which is a disclosed sample rather than the
+ * register. `startIndex=0` is in the URL deliberately: pw_walk only ever
+ * advances a parameter the author wrote. */
+#define BC_URL \
+  "https://openmaps.gov.bc.ca/geo/pub/wfs?service=WFS&version=2.0.0" \
+  "&request=GetFeature&typeName=WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW" \
+  "&count=2500&outputFormat=application/json&srsName=EPSG:4326" \
+  "&sortBy=TENURE_NUMBER_ID&startIndex=0"
 
+static cJSON *bc_fetch(const source_ctx *c, const char *url, void *ud) {
+  (void)ud;
+  return feed_get_json(c->http, url, 120000);   /* 3.6 MB a page */
+}
+
+/* pw_emit_fn. `seen` is the page's feature count, not the emitted count: a
+ * feature with no TENURE_NUMBER_ID is skipped below, and reporting the emitted
+ * count would make a full page look short — which stops the walk AND suppresses
+ * its own truncation notice (lib/pagewalk.h). */
+static int bc_emit_page(const source_ctx *ctx, intel_sink *sink,
+                        const char *sid, cJSON *doc, void *ud, int *seen) {
+  (void)ctx; (void)ud;
   cJSON *feats = cJSON_GetObjectItem(doc, "features");
-  if (!cJSON_IsArray(feats)) { cJSON_Delete(doc); fprintf(stderr, "[" SRC "] no features[]\n"); return -1; }
+  if (!cJSON_IsArray(feats)) {
+    fprintf(stderr, "[%s] no features[]\n", sid);
+    *seen = 0;
+    return 0;
+  }
+  *seen = cJSON_GetArraySize(feats);
 
   int n = 0;
   cJSON *f;
@@ -134,8 +169,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
     free(gj);
   }
-  cJSON_Delete(doc);
-  fprintf(stderr, "[" SRC "] emitted %d\n", n);
+  return n;
+}
+
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  int n = pw_walk(ctx, sink, SRC, BC_URL, bc_fetch, bc_emit_page, NULL);
+  if (n < 0) { fprintf(stderr, "[" SRC "] fetch failed\n"); return -1; }
   return 0;
 }
 

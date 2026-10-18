@@ -9,41 +9,98 @@
 # redoes the measurement over all 101 candidates (not just the 42 literal ones)
 # and writes them down.
 #
-# METHOD, and the correction it needed. For each candidate whose URL is a
-# complete literal, ask the upstream the SAME question with a tenfold limit and
-# compare record counts (verify_feeds' own count_json/count_feed/count_csv, so a
-# record means here what it means to the rest of the tree).
+# METHOD, and the two corrections it needed.
 #
-# THAT TEST ALONE OVER-REPORTS, and od_udata_pt.c is the proof: it answered 200
-# for one request and 2,000 for a tenfold ask, which looks exactly like a
-# discard -- but od_udata_collect() already walks it with pw_walk, so its
-# page_size=200 is a PAGE SIZE. A one-request-vs-one-request comparison cannot
-# see a collector that follows pages. Every TRUNCATING candidate here was
-# therefore also read in its collector to ask whether anything pages it, and
-# the fixes were proved by running the source before and after.
+# 1. For each candidate whose URL is a complete literal, ask the upstream the
+#    SAME question with a tenfold limit and compare record counts
+#    (verify_feeds' own count_json/count_feed/count_csv, so a record means here
+#    what it means to the rest of the tree).
 #
-# 26 of 101 truncate on a single request. 6 sites are FIXED here; the rest carry
-# the reason they are not, which is the thing the 10-11 file meant to record.
+# 2. THAT TEST ALONE OVER-REPORTS, and od_udata_pt.c is the proof: it answered
+#    200 for one request and 2,000 for a tenfold ask, which looks exactly like a
+#    discard -- but od_udata_collect() already walks it with pw_walk, so its
+#    page_size=200 is a PAGE SIZE. A one-request-vs-one-request comparison
+#    cannot see a collector that follows pages, so every TRUNCATING candidate
+#    was also read in its collector.
 #
-#   FIXED_PAGED                     6   the upstream published links[rel=next]
+# 3. IT ALSO UNDER-REPORTS WHAT CAN BE DONE ABOUT ONE. The first pass filed 17
+#    rows as "no next link and no offset/page parameter in the URL, so pw_walk
+#    would have to INVENT one" and left them. That reads pw_walk's rule 2
+#    backwards: it will not invent a parameter, but it WILL advance one the
+#    author wrote, and 11 of those 17 upstreams document a continuation their
+#    collector simply never asked for ($skip, skip, start, startIndex, page).
+#    So each was asked whether it HONOURS that parameter -- page 2 compared
+#    against page 1, record by record -- and the honoured ones had it written
+#    into the URL deliberately. One parameter was accepted and ignored (EONET's
+#    offset returns page 1 again), which is why this is measured and not
+#    reasoned: writing it would have made the walk re-emit page 1 twenty times.
+#
+# RESULT: 26 of 101 truncate on a single request. 14 rows / 11 sources are now
+# fixed, 12 rows carry the reason they are not, and the reasons are all
+# different in kind -- a cross-page comparison, a licence, a text format, an
+# upstream that refuses, a real-time tail, a firehose.
+#
+#   FIXED_PAGED                     6   upstream published links[rel=next]
+#   FIXED_PAGED_OFFSET              6   a documented offset, measured honoured
+#   FIXED_PAGED_PAGENUM             1   a documented page number
+#   FIXED_BIGGER_PAGE               1   offset ignored; the limit itself was the way
 #   NOT_FIXED_CROSS_PAGE            1   per-page emit would be WRONG, not just partial
-#   NOT_FIXED_NO_CONTINUATION      17   no next link, no offset/page in the URL
-#   NOT_FIXED_QUESTION_NOT_DISCARD  1   newest-first feed; the limit is the question
+#   NOT_FIXED_REALTIME_TAIL         3   pageable, but re-walking it hourly is the wrong fix
+#   NOT_FIXED_TEXT_FORMAT           3   pw_walk takes a parsed JSON document
+#   NOT_FIXED_UPSTREAM_REFUSES      1   "the 'Skip' query option is not supported"
+#   NOT_FIXED_LICENCE               1   bulk reuse needs a separate licence
+#   NOT_FIXED_QUESTION_NOT_DISCARD  2   newest-first feed with no end to truncate
 #   PAGES_ALREADY                   1   false positive of the single-request test
 #
-# Measured recovery from the 6 fixed, run before and after through
-# audit_registry_emit.py: 590 -> 11,800 records per pass.
-#   cdse-stac                     20 ->    400
-#   dea-stac                      20 ->    400
-#   swisstopo-stac                50 ->  1,000
-#   canada-hydrometric-realtime  500 -> 10,000
-# Every one of those lands on the 20-page ceiling, so each now also files a
-# truncation notice and the real totals are larger still. bdc-stac is 0 both
+# MEASURED RECOVERY, every number read off a real run against a scratch DB
+# (`--run <ID>`, stored = distinct uids the run wrote).
+#
+# Seven sources now reach their upstream's OWN declared total, in one run:
+#   bc-mineral-tenure             500 ->  42,277   (= numberMatched)
+#   openaerialmap-imagery          50 ->  21,426   (= meta.found, less 29 upstream dupes)
+#   openfda-enforcement-reports   100 ->  18,010   (= meta.results.total)
+#   who-gho-indicator             100 ->  14,112   (= $count=true)
+#   nasa-eonet-events              50 ->   7,222   (the whole open set)
+#   peertube-instance-directory   100 ->   1,772   (= the envelope's total)
+#   stats-ar-datos-series         100 ->     271   (= the series' length)
+#                               1,000 -> 105,090
+#
+# Four more were paged earlier the same day on a next link the upstream
+# published, 590 -> 11,800 (cdse/dea-stac 20 -> 400 each, swisstopo-stac
+# 50 -> 1,000, canada-hydrometric-realtime 500 -> 10,000). Those land on the
+# 20-page ceiling, so each also files a truncation notice. bdc-stac is 0 both
 # before and after: data.inpe.br is unreachable from the authoring container
 # (SSL connect error), which the collector reports as rc=-1 rather than hiding.
 #
+# And three real-time seismic rows were raised to their served maximum and
+# routed through pw_walk so that what they leave behind is STATED rather than
+# silent -- 650 -> 3,000 records and three collector-truncation-notices:
+#   emsc-moment-tensors            50 -> 1,000 + notice
+#   emsc-quakes                   300 -> 1,000 + notice
+#   iceland-quakes                300 -> 1,000 + notice
+#
+# TWO FINDINGS THAT GENERALISE PAST THESE ROWS.
+#
+# * TWO SERVICES IMPLEMENTING ONE SPEC DISAGREED ABOUT THE BASE INDEX. The FDSN
+#   spec says `offset=1` is the first record. EMSC's fdsnws/event does that;
+#   Earthquakes Canada's does NOT (offset=2 starts at the third record), and so
+#   does EMSC's own mtws search. A stride written from the spec would have
+#   skipped one event per page boundary, silently, on the services that are
+#   0-based. Ask for offset=2 and see whether its first record is the plain
+#   page's second or third -- it is one request and it is not inferable.
+#
+# * A SERVER THAT REFUSES IS DOING YOU A FAVOUR. BC's GeoServer answers
+#   startIndex=500 with HTTP 400 "Cannot do natural order without a primary
+#   key, please add it or specify a manual sort over existing attributes": it
+#   would rather fail than hand back an arbitrary slice of an unsorted result.
+#   Adding sortBy made it 200 with provably disjoint pages. A 400 on a paging
+#   parameter is worth reading before it is written off as "no continuation".
+#
 # A `tenfold_ask` of 1000/2000/5000 is this test's own ceiling, not the
 # upstream's total, so the shortfall on those rows is at least that large.
+# `file:line` is where the limit stood when the row was MEASURED on 2026-10-18;
+# the fixed rows have moved since, and their collectors carry the measurement
+# in a comment beside the URL.
 #
 file	param	one_request	tenfold_ask	verdict	url	note
 collectors/sources/eni_canada_hydrometric.c:27	limit=500	500	5000	FIXED_PAGED	https://api.weather.gc.ca/collections/hydrometric-realtime/items?limit=500&sortby=-DATETIME&f=json	paged via pw_walk (links[rel=next]); 500->10,000 measured
@@ -53,23 +110,23 @@ collectors/sources/geoeo_stac_items.c:178	limit=50	50	100	FIXED_PAGED	https://da
 collectors/sources/geoeo_stac_items.c:213	limit=20	20	200	FIXED_PAGED	https://explorer.digitalearth.africa/stac/collections/s2_l2a/items?limit=20	paged via pw_walk (links[rel=next]); cdse 20->400, dea 20->400, swisstopo 50->1000 measured
 collectors/sources/geoeo_stac_items.c:225	limit=50	50	100	FIXED_PAGED	https://data.geo.admin.ch/api/stac/v0.9/collections/ch.swisstopo.swissimage-dop10/items?limit=50	paged via pw_walk (links[rel=next]); cdse 20->400, dea 20->400, swisstopo 50->1000 measured
 collectors/sources/geoeo_gc_ogcapi.c:249	limit=500	500	5000	NOT_FIXED_CROSS_PAGE	https://api.weather.gc.ca/collections/hydrometric-realtime/items?limit=500&f=json	Publishes links[rel=next], but superseded() compares each feature against every OTHER to keep the latest per station. A per-page emit would publish superseded observations whenever the newer one lands on a later page. Needs whole-result accumulation, not a page walk.
-collectors/sources/eni_bc_mineral_tenure.c:71	count=500	500	5000	NOT_FIXED_NO_CONTINUATION	https://openmaps.gov.bc.ca/geo/pub/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW&count=500&outputFormat=application/json&srsName=EPSG:4326	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 500 -> 5000 records when the limit went 500 -> 5000
-collectors/sources/geoeo_emsc_moment_tensors.c:142	limit=50	50	500	NOT_FIXED_NO_CONTINUATION	https://www.seismicportal.eu/mtws/api/search?limit=50&format=jsonEMSC/CSEM	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 50 -> 500 records when the limit went 50 -> 500
-collectors/sources/geoeo_eonet_events.c:143	limit=50	50	500	NOT_FIXED_NO_CONTINUATION	https://eonet.gsfc.nasa.gov/api/v3/events?limit=50&status=open	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 50 -> 500 records when the limit went 50 -> 500
-collectors/sources/geoeo_fdsn_text.c:181	limit=50	50	500	NOT_FIXED_NO_CONTINUATION	https://geofon.gfz.de/fdsnws/event/1/query?format=text&limit=50&orderby=time	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 50 -> 500 records when the limit went 50 -> 500
-collectors/sources/geoeo_fdsn_text.c:188	limit=50	50	500	NOT_FIXED_NO_CONTINUATION	https://earthquakescanada.nrcan.gc.ca/api/fdsnws/event/1/query?format=text&limit=50	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 50 -> 500 records when the limit went 50 -> 500
-collectors/sources/geoeo_fdsn_text.c:209	limit=50	50	500	NOT_FIXED_NO_CONTINUATION	https://earthquakescanada.nrcan.gc.ca/api/fdsnws/event/1/query?format=text&limit=50	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 50 -> 500 records when the limit went 50 -> 500
-collectors/sources/geoeo_openaerialmap.c:125	limit=50	50	500	NOT_FIXED_NO_CONTINUATION	https://api.openaerialmap.org/meta?limit=50	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 50 -> 500 records when the limit went 50 -> 500
-collectors/sources/geohazard_extra.c:112	limit=300	300	3000	NOT_FIXED_NO_CONTINUATION	https://www.seismicportal.eu/fdsnws/event/1/query?format=json&orderby=time&limit=300https://www.seismicportal.eu/fdsnws/event/1/query?format=json&orderby=time&limit=300&minlat=62.5&maxlat=67.5&minlon=-25.5&maxlon=-12.5	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 300 -> 3000 records when the limit went 300 -> 3000
-collectors/sources/geohazard_extra.c:116	limit=300	300	3000	NOT_FIXED_NO_CONTINUATION	https://www.seismicportal.eu/fdsnws/event/1/query?format=json&orderby=time&limit=300&minlat=62.5&maxlat=67.5&minlon=-25.5&maxlon=-12.5	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 300 -> 3000 records when the limit went 300 -> 3000
-collectors/sources/od_stats_ar_series.c:88	limit=100	100	271	NOT_FIXED_NO_CONTINUATION	https://apis.datos.gob.ar/series/api/series/?ids=143.3_NO_PR_2004_A_21&limit=100&format=json	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 100 -> 271 records when the limit went 100 -> 1000
-collectors/sources/od_stats_nl_cbs.c:35	$top=20	20	200	NOT_FIXED_NO_CONTINUATION	https://opendata.cbs.nl/ODataApi/odata/83131NED/TypedDataSet?$top=20	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 20 -> 200 records when the limit went 20 -> 200
-collectors/sources/od_who_gho.c:68	$top=100	100	1000	NOT_FIXED_NO_CONTINUATION	https://ghoapi.azureedge.net/api/WHOSIS_000001?$top=100	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 100 -> 1000 records when the limit went 100 -> 1000
-collectors/sources/sanc_openfda_enforcement.c:124	limit=100	100	1000	NOT_FIXED_NO_CONTINUATION	https://api.fda.gov/drug/enforcement.json?limit=100	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 100 -> 1000 records when the limit went 100 -> 1000
-collectors/sources/sanc_openfda_enforcement.c:25	limit=100	100	1000	NOT_FIXED_NO_CONTINUATION	https://api.fda.gov/drug/enforcement.json?limit=100	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 100 -> 1000 records when the limit went 100 -> 1000
-collectors/sources/sanc_uk_caselaw.c:69	per_page=50	50	500	NOT_FIXED_NO_CONTINUATION	https://caselaw.nationalarchives.gov.uk/atom.xml?per_page=50	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 50 -> 500 records when the limit went 50 -> 500
-collectors/sources/soc_fediverse.c:517	count=100	100	1000	NOT_FIXED_NO_CONTINUATION	https://instances.joinpeertube.org/api/v1/instances?count=100	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 100 -> 1000 records when the limit went 100 -> 1000
-collectors/sources/soc_forges.c:286	per_page=20	20	100	NOT_FIXED_NO_CONTINUATION	https://gitlab.com/api/v4/projects?visibility=public&order_by=last_activity_at&per_page=20	upstream offers no next link and the URL carries no offset/page parameter, so pw_walk would have to INVENT one. 20 -> 100 records when the limit went 20 -> 200
+collectors/sources/eni_bc_mineral_tenure.c:71	count=500	500	5000	FIXED_PAGED_OFFSET	https://openmaps.gov.bc.ca/geo/pub/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW&count=500&outputFormat=application/json&srsName=EPSG:4326	WFS 2.0 startIndex, which GeoServer refuses without a sort: startIndex=500 answers HTTP 400 'Cannot do natural order without a primary key'. With sortBy=TENURE_NUMBER_ID it is 200 and consecutive pages share zero features. count 500->2500 so the walk finishes inside the 20-page ceiling. MEASURED 500 -> 42,277 stored across 17 pages, = the layer's own numberMatched.
+collectors/sources/geoeo_emsc_moment_tensors.c:142	limit=50	50	500	NOT_FIXED_REALTIME_TAIL	https://www.seismicportal.eu/mtws/api/search?limit=50&format=jsonEMSC/CSEM	offset IS honoured and is 0-BASED here (offset=2 starts at the third record), limit caps at 1000 server-side, full_count is 48,863. Paging is still the wrong fix: this row runs every 30 min, the 20-page ceiling stops at 20,000 and it would re-walk those same 20,000 twice an hour while never reaching the rest. limit 50->1000 (the server's cap) covers the window with days to spare, and it now goes through pw_walk so the bound is DISCLOSED. The backlog needs a dated window or a bulk catalogue.
+collectors/sources/geoeo_eonet_events.c:143	limit=50	50	500	FIXED_BIGGER_PAGE	https://eonet.gsfc.nasa.gov/api/v3/events?limit=50&status=open	offset is ACCEPTED (HTTP 200) and IGNORED: offset=50 returns the same 50 events as offset=0, so writing it would make pw_walk re-emit page 1 twenty times. limit IS honoured and unbounded in practice: one request at limit=20000 returns all 7,222 currently-open events (5 MB). Asked above the collection deliberately, and routed through pw_walk so an exactly-full page would still disclose.
+collectors/sources/geoeo_fdsn_text.c:181	limit=50	50	500	NOT_FIXED_TEXT_FORMAT	https://geofon.gfz.de/fdsnws/event/1/query?format=text&limit=50&orderby=time	GEOFON, format=text. pw_walk's fetch returns a parsed cJSON document, so a pipe-separated text body cannot go through it without an ndjson-style line-to-array adapter. Also UNMEASURED here: geofon.gfz.de resets the connection from this container, and the NRCan/EMSC base-index split below is exactly why its offset must not be assumed from the spec.
+collectors/sources/geoeo_fdsn_text.c:188	limit=50	50	500	NOT_FIXED_TEXT_FORMAT	https://earthquakescanada.nrcan.gc.ca/api/fdsnws/event/1/query?format=text&limit=50	NRCan, format=text — same adapter gap as :181. Its offset IS honoured and is 0-BASED, which is NOT what the FDSN spec says and not what EMSC's fdsnws does: a stride written from the spec would have skipped one event per page boundary. Measure the base index before adding an offset here.
+collectors/sources/geoeo_fdsn_text.c:209	limit=50	50	500	NOT_FIXED_TEXT_FORMAT	https://earthquakescanada.nrcan.gc.ca/api/fdsnws/event/1/query?format=text&limit=50	Same request as :188 (this line is the source_def .url); see that row.
+collectors/sources/geoeo_openaerialmap.c:125	limit=50	50	500	FIXED_PAGED_PAGENUM	https://api.openaerialmap.org/meta?limit=50	page number, honoured; limit 50->2000 (7.2 MB a page) so 21,455 finishes in 11 pages. MEASURED 50 -> 21,455 emitted / 21,426 stored, = meta.found. The 29-record gap is the UPSTREAM's own duplicates: 29 _ids are served twice and both copies are byte-identical, which is real dedupe, not a key defect (checked by fetching all 11 pages and comparing).
+collectors/sources/geohazard_extra.c:112	limit=300	300	3000	NOT_FIXED_REALTIME_TAIL	https://www.seismicportal.eu/fdsnws/event/1/query?format=json&orderby=time&limit=300https://www.seismicportal.eu/fdsnws/event/1/query?format=json&orderby=time&limit=300&minlat=62.5&maxlat=67.5&minlon=-25.5&maxlon=-12.5	Same decision as geoeo_emsc_moment_tensors.c, and note the split: this fdsnws endpoint's offset is 1-BASED (the FDSN spec) while the SAME organisation's mtws endpoint is 0-based — each was measured, not inferred. limit 300->1000 (the served maximum) and now through pw_walk, so a full page discloses. 15-minute interval against a catalogue of >1M events.
+collectors/sources/geohazard_extra.c:116	limit=300	300	3000	NOT_FIXED_REALTIME_TAIL	https://www.seismicportal.eu/fdsnws/event/1/query?format=json&orderby=time&limit=300&minlat=62.5&maxlat=67.5&minlon=-25.5&maxlon=-12.5	The Iceland AOI variant of :112; same change, same reason.
+collectors/sources/od_stats_ar_series.c:88	limit=100	100	271	FIXED_PAGED_OFFSET	https://apis.datos.gob.ar/series/api/series/?ids=143.3_NO_PR_2004_A_21&limit=100&format=json	datos.gob.ar start, a 0-based record offset, honoured; limit 100->1000 so the series arrives whole. MEASURED 100 -> 271 stored in 1 page, = the series' own length; start=0 stays in the URL so growth past 1,000 pages rather than truncating.
+collectors/sources/od_stats_nl_cbs.c:35	$top=20	20	200	NOT_FIXED_UPSTREAM_REFUSES	https://opendata.cbs.nl/ODataApi/odata/83131NED/TypedDataSet?$top=20	"CBS v3 ODataApi answers HTTP 500 ""The 'Skip' query option is not supported"" and ALSO refuses the query with no $top at all (""The given query is not allowed on this table""), so there is no continuation and no unbounded read. datasets.cbs.nl/odata/v1 does serve this table, but as long-format Observations rather than the wide TypedDataSet, so re-pointing is a record-shape change and a design decision, not a paging fix."
+collectors/sources/od_who_gho.c:68	$top=100	100	1000	FIXED_PAGED_OFFSET	https://ghoapi.azureedge.net/api/WHOSIS_000001?$top=100	OData $skip, honoured (page 2 shares no record with page 1). $top 100->1000. MEASURED 100 -> 14,112 stored across 15 pages, = the collection's own $count=true.
+collectors/sources/sanc_openfda_enforcement.c:124	limit=100	100	1000	FIXED_PAGED_OFFSET	https://api.fda.gov/drug/enforcement.json?limit=100	Same request as :25 (this line is the source_def .url); see that row.
+collectors/sources/sanc_openfda_enforcement.c:25	limit=100	100	1000	FIXED_PAGED_OFFSET	https://api.fda.gov/drug/enforcement.json?limit=100	openFDA skip, honoured; limit raised to its documented maximum of 1000. MEASURED 100 -> 18,010 stored across 19 pages, = meta.results.total. skip caps at 25,000, so growth past that discloses rather than silently stops.
+collectors/sources/sanc_uk_caselaw.c:69	per_page=50	50	500	NOT_FIXED_LICENCE	https://caselaw.nationalarchives.gov.uk/atom.xml?per_page=50	The collector's own header states the terms: polling this public Atom feed for new judgments is within the Open Justice Licence, but BULK or computational reuse of the whole corpus needs a separate licence from The National Archives — 'do not turn this into a crawler over the full archive'. per_page=50 of a newest-first feed is the question being asked. A licence bound is not a defect to fix.
+collectors/sources/soc_fediverse.c:517	count=100	100	1000	FIXED_PAGED_OFFSET	https://instances.joinpeertube.org/api/v1/instances?count=100	joinpeertube start, a 0-based record offset, honoured; count 100->1000. MEASURED 100 -> 1,772 stored across 2 pages, = the envelope's own total.
+collectors/sources/soc_forges.c:286	per_page=20	20	100	NOT_FIXED_QUESTION_NOT_DISCARD	https://gitlab.com/api/v4/projects?visibility=public&order_by=last_activity_at&per_page=20	gitlab.com public projects ordered by last_activity_at: an unbounded, constantly-reordered firehose with no end to truncate. per_page=100 is served (max), but 20 or 100 of a stream with millions of members is a sample either way, and the row's question is 'what moved recently'.
 collectors/sources/soc_news_media.c:138	limit=20	20	200	NOT_FIXED_QUESTION_NOT_DISCARD	https://api.spaceflightnewsapi.net/v4/articles/?limit=20	spaceflight-news-api is newest-first with a top-level next link; limit=20 on a scheduled newest-first feed is plausibly the question being asked. Depth is available if wanted.
 collectors/sources/od_udata_pt.c:23	page_size=200	200	2000	PAGES_ALREADY	https://dados.gov.pt/api/1/datasets/?page_size=200	FALSE POSITIVE of the one-request test: od_udata_collect() walks this with pw_walk, so page_size=200 is a PAGE SIZE. A single-request comparison cannot see a collector that follows pages.
 collectors/sources/ag_commodity.c:140	per_page=60			RUNTIME_URL	https://api.worldbank.org/v2/country/WLD/indicator/%s?format=json&per_page=60&mrv=20	URL is composed at runtime, so it cannot be asked as a literal

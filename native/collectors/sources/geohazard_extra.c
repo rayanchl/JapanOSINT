@@ -6,6 +6,7 @@
 #include "source.h"
 #include "lib/rss_atom.h"
 #include "lib/feedlib.h"
+#include "lib/pagewalk.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,15 +22,36 @@ static int pnum(cJSON *o, const char *k, double *out) {
   *out = cJSON_GetNumberValue(v); return 1;
 }
 
-/* One intel row per event, geo-pinned on the hypocentre. Returns the number
- * emitted, or -1 only when the fetch itself failed (an empty catalogue window
- * is an honest 0, not an error). */
-static int fdsn_quakes(const source_ctx *ctx, intel_sink *sink,
-                       const char *url, const char *tags) {
-  cJSON *doc = feed_get_json(ctx->http, url, 15000);
-  if (!doc) { fprintf(stderr, "[%s] fetch failed\n", ctx->source_id); return -1; }
+/* One intel row per event, geo-pinned on the hypocentre.
+ *
+ * A BIGGER PAGE AND A DISCLOSED BOUND, DELIBERATELY NOT A FULL WALK — the same
+ * decision as geoeo_emsc_moment_tensors.c, reached from the same measurement.
+ * 2026-10-18: seismicportal's fdsnws/event serves up to 1,000 features a page
+ * (`limit=300` was keeping a third of that) and it honours `offset`, 1-BASED,
+ * per the FDSN spec — note that the SAME organisation's mtws endpoint is
+ * 0-based, which is why each was measured rather than inferred from the spec.
+ *
+ * `offset` is not written into these URLs. These two rows run every 15 minutes
+ * against a catalogue of well over a million events: a walk would stop at the
+ * 20-page ceiling, re-read the same 20,000 events ninety-six times a day and
+ * still never reach the back of the catalogue, while a newest-first page of
+ * 1,000 covers a 15-minute window with days to spare. pw_walk advances only a
+ * parameter the author wrote, so its absence IS the single request — and
+ * routing through pw_walk anyway means a page that comes back exactly full
+ * files a truncation notice rather than going quiet. Reaching the historical
+ * catalogue needs a dated window or a bulk download, which is a design decision
+ * and not a page size.
+ *
+ * `seen` is what the page CONTAINED, not what was emitted: an event with no
+ * properties block is skipped, and reporting the emitted count would make a
+ * full page look short — stopping the walk and suppressing its own notice. */
+static int fdsn_emit_page(const source_ctx *ctx, intel_sink *sink,
+                          const char *sid, cJSON *doc, void *ud, int *seen) {
+  (void)sid;
+  const char *tags = (const char *)ud;
   cJSON *feats = cJSON_GetObjectItem(doc, "features");
-  if (!cJSON_IsArray(feats)) { cJSON_Delete(doc); return -1; }
+  if (!cJSON_IsArray(feats)) { *seen = 0; return 0; }
+  *seen = cJSON_GetArraySize(feats);
 
   int n = 0;
   cJSON *f;
@@ -103,17 +125,23 @@ static int fdsn_quakes(const source_ctx *ctx, intel_sink *sink,
     if (sink->emit(sink, &it) >= 0) n++;
     free(pj); cJSON_Delete(pr);
   }
-  cJSON_Delete(doc);
-  fprintf(stderr, "[%s] emitted %d\n", ctx->source_id, n);
   return n;
 }
 
+/* Returns the number emitted, or -1 only when the FIRST fetch failed (an empty
+ * catalogue window is an honest 0, not an error). */
+static int fdsn_quakes(const source_ctx *ctx, intel_sink *sink,
+                       const char *url, const char *tags) {
+  return pw_walk(ctx, sink, ctx->source_id, url, pw_fetch_json,
+                 fdsn_emit_page, (void *)tags);
+}
+
 #define FDSN_GLOBAL "https://www.seismicportal.eu/fdsnws/event/1/query" \
-                    "?format=json&orderby=time&limit=300"
+                    "?format=json&orderby=time&limit=1000"
 /* Iceland AOI — events here are contributed by IMO (Icelandic Met Office),
  * whose own RSS endpoint (en.vedur.is/.../earthquakes/rss/) now 404s. */
 #define FDSN_ICELAND "https://www.seismicportal.eu/fdsnws/event/1/query" \
-                     "?format=json&orderby=time&limit=300" \
+                     "?format=json&orderby=time&limit=1000" \
                      "&minlat=62.5&maxlat=67.5&minlon=-25.5&maxlon=-12.5"
 
 static int run_geo_emsc_quakes(const source_ctx *c, intel_sink *s) {

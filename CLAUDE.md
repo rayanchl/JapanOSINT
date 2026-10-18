@@ -359,35 +359,63 @@ Where the tree actually stands, as `make audit-sources` reports it:
   wrote the empty file — answers 200 for one request and 2,000 for a tenfold
   ask, which is indistinguishable from a discard; but `od_udata_collect()`
   already walks it with `pw_walk`, so its 200 is a PAGE SIZE. One request
-  compared with one request cannot see a collector that follows pages. **26 of
-  101 truncate on a single request**, and what to do about one depends on
-  something no probe can answer:
+  compared with one request cannot see a collector that follows pages.
 
-  * **6 are FIXED** (`FIXED_PAGED`) — the upstream published
-    `links:[{"rel":"next"}]`, so the one-shot fetch became a `pw_walk`:
-    `geoeo_stac_items.c` (5 STAC catalogues) and
-    `eni_canada_hydrometric.c`. Measured through `audit_registry_emit.py`
-    before and after: **590 -> 11,800 records per pass**
-    (canada-hydrometric-realtime 500 -> 10,000). All six land on the 20-page
-    ceiling, so each now also files a truncation notice and the real totals are
-    larger still.
-  * **1 is NOT fixed because paging it would be WRONG, not merely partial.**
-    `geoeo_gc_ogcapi.c` has the same `rel=next` link, but its `superseded()`
-    compares each feature against every OTHER feature to keep the latest per
-    station — a per-page emit publishes superseded observations as soon as the
-    newer one lands on a later page. **A next link is permission to page only
-    when the emit is per-record.**
-  * **17 have no continuation at all** — no next link, no offset or page
-    parameter the server honours. Each needs a per-row strategy (a date window,
-    a filter that slices the collection, a bulk dump), which is a design
-    decision and not a number; they are listed so that pass starts from the
-    measurement.
-  * 1 is the question rather than a discard (a newest-first feed) and 1 was a
-    false positive of the single-request test.
+  **And it under-reports what can be DONE about one.** The first pass of that
+  day filed 17 rows as "no next link and no offset/page parameter in the URL,
+  so `pw_walk` would have to INVENT one" and stopped there. That reads
+  `pw_walk`'s rule 2 backwards: it never invents a parameter, but it **does
+  advance one the author wrote**, and 11 of those 17 upstreams document a
+  continuation their collector had simply never asked for. **26 of 101 truncate
+  on a single request; 14 rows across 11 sources are now fixed**, each proved by
+  a run rather than by the spec:
 
-  The remainder could not be asked as literals: 32 `RUNTIME_URL`, 16
-  `UNREACHABLE` from this container, 11 whose URL would not join, 10 whose
-  tenfold ask was refused, 5 capped at the same count both ways, 1 complete.
+      bc-mineral-tenure             500 ->  42,277   (= numberMatched)
+      openaerialmap-imagery          50 ->  21,426   (= meta.found)
+      openfda-enforcement-reports   100 ->  18,010   (= meta.results.total)
+      who-gho-indicator             100 ->  14,112   (= $count=true)
+      nasa-eonet-events              50 ->   7,222   (the whole open set)
+      peertube-instance-directory   100 ->   1,772   (= the envelope's total)
+      stats-ar-datos-series         100 ->     271   (= the series' length)
+                                  1,000 -> 105,090
+
+  plus the four paged on a published `links[rel=next]` (590 -> 11,800, the
+  `geoeo_stac_items.c` catalogues and `eni_canada_hydrometric.c`) and three
+  real-time seismic rows raised to their served maximum, 650 -> 3,000, each now
+  filing the truncation notice it had been owing. **Three traps worth carrying
+  forward:**
+
+  * **Two services implementing ONE spec disagreed about the base index.** FDSN
+    says `offset=1` is the first record. EMSC's `fdsnws/event` does that;
+    Earthquakes Canada's does not, and neither does EMSC's own `mtws` search
+    (`offset=2` starts at the third record). A stride written from the spec
+    would have skipped one event per page boundary, silently, on two of the
+    three. Ask for `offset=2` and see whether its first record is the plain
+    page's second or its third — one request, and not inferable.
+  * **A 400 on a paging parameter is worth reading before it is written off.**
+    BC's GeoServer refuses `startIndex=500` with "Cannot do natural order
+    without a primary key, please add it or specify a manual sort over existing
+    attributes" — it would rather fail than hand back an arbitrary slice of an
+    unsorted result. `sortBy=TENURE_NUMBER_ID` made it 200 with provably
+    disjoint pages, and 500 records became 42,277.
+  * **A parameter can be accepted and ignored.** EONET answers `offset=50` with
+    the same 50 events as `offset=0`, HTTP 200 — writing it would have made the
+    walk re-emit page 1 twenty times, which is rule 4d in paging form. Its
+    `limit` is what is honoured: one request at `limit=20000` returns all 7,222
+    open events. **Measure the continuation; do not reason about it.**
+
+  The 12 rows still not fixed each carry their own reason, and the reasons are
+  different in kind — a cross-page comparison that per-page emit would corrupt
+  (`geoeo_gc_ogcapi.c`'s `superseded()`, so **a next link is permission to page
+  only when the emit is per-record**), a licence that forbids bulk reuse (Find
+  Case Law), a pipe-separated text body that `pw_walk`'s JSON fetch cannot
+  carry, an upstream that answers "the 'Skip' query option is not supported"
+  and also refuses an unbounded read (CBS), a real-time tail where re-walking
+  20,000 records twice an hour would never reach the back of the catalogue, and
+  an unbounded firehose with no end to truncate. The remainder could not be
+  asked as literals: 32 `RUNTIME_URL`, 16 `UNREACHABLE` from this container, 11
+  whose URL would not join, 10 whose tenfold ask was refused, 5 capped at the
+  same count both ways, 1 complete.
 
   `tools/audit_url_limits.py` finds the shape, and is deliberately NOT in
   `make audit-sources`: **a URL limit is not automatically a discard and the
@@ -395,11 +423,12 @@ Where the tree actually stands, as `make audit-sources` reports it:
   has no complete answer to truncate — that limit IS the question. A scheduled
   read of a collection that has an end stores `limit` of however many exist,
   forever, and that is the violation. They are identical in C. The narrow scope
-  reports **100 sites across 75 files** (103 across 78 before the fixes above),
-  so running it is the START of the work; wiring it into the gate would put a
-  hundred candidates — most of them legitimate, several of them page sizes —
-  into a tree whose invariant is that a new finding is a regression. The
-  triage, with a verdict and a reason per site, is the 2026-10-18 file.
+  reports **89 sites across 67 files** (103 across 78 before the fixes above,
+  100 across 75 after the first half of them), so running it is the START of
+  the work; wiring it into the gate would put ninety candidates — most of them
+  legitimate, several of them page sizes — into a tree whose invariant is that
+  a new finding is a regression. The triage, with a verdict and a reason per
+  site, is the 2026-10-18 file.
 
 Deliberate exceptions carry an inline `/* exhaustive-ok: <reason> */` marker
 (`grep -rn exhaustive-ok`). The marker must sit **on the flagged line itself** —

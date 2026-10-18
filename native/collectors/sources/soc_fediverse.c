@@ -47,6 +47,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/pagewalk.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -512,16 +513,35 @@ REGISTER_SOURCE(soc_misskey_dir_def)
 
 /* ---- 8. PeerTube instance directory ------------------------------------- */
 
-static int run_peertube_dir(const source_ctx *ctx, intel_sink *sink) {
-  cJSON *doc = feed_get_json_h(ctx->http,
-      "https://instances.joinpeertube.org/api/v1/instances?count=100",
-      SOC_UA, 30000);
-  if (!doc) { fprintf(stderr, "[peertube-instance-directory] fetch failed\n"); return -1; }
+/* PAGED. The envelope's own `total` is 1,772 instances and `count=100` kept the
+ * first 100 of them. Measured 2026-10-18: `start` is a 0-based record offset and
+ * it is honoured (start=100 shares no instance with start=0), and `count=1000`
+ * is served at 1.1 MB, so the whole directory arrives in 2 pages. `start=0` is
+ * in the URL deliberately — pw_walk advances a parameter the author wrote and
+ * never invents one, so without it a directory that grows past 1,000 would
+ * silently truncate again. */
+#define PEERTUBE_URL \
+  "https://instances.joinpeertube.org/api/v1/instances?count=1000&start=0"
+
+static cJSON *peertube_fetch(const source_ctx *c, const char *url, void *ud) {
+  (void)ud;
+  return feed_get_json_h(c->http, url, SOC_UA, 45000);
+}
+
+/* pw_emit_fn. `seen` is the page's instance count, not the emitted count: an
+ * entry with no host is skipped below, and reporting the emitted count would
+ * make a full page look short — stopping the walk and suppressing its own
+ * truncation notice (lib/pagewalk.h). */
+static int peertube_emit_page(const source_ctx *ctx, intel_sink *sink,
+                              const char *sid, cJSON *doc, void *ud, int *seen) {
+  (void)ctx; (void)ud;
   const cJSON *arr = cJSON_GetObjectItem(doc, "data");
   if (!cJSON_IsArray(arr)) {
-    fprintf(stderr, "[peertube-instance-directory] unexpected shape\n");
-    cJSON_Delete(doc); return -1;
+    fprintf(stderr, "[%s] unexpected shape\n", sid);
+    *seen = 0;
+    return 0;
   }
+  *seen = cJSON_GetArraySize(arr);
   int n = 0;
   const cJSON *it;
   cJSON_ArrayForEach(it, arr) {
@@ -556,8 +576,16 @@ static int run_peertube_dir(const source_ctx *ctx, intel_sink *sink) {
                   host, jo_sv(it, "name") ? jo_sv(it, "name") : host,
                   summary, link, NULL, NULL);
   }
-  cJSON_Delete(doc);
-  fprintf(stderr, "[peertube-instance-directory] emitted %d\n", n);
+  return n;
+}
+
+static int run_peertube_dir(const source_ctx *ctx, intel_sink *sink) {
+  int n = pw_walk(ctx, sink, "peertube-instance-directory", PEERTUBE_URL,
+                  peertube_fetch, peertube_emit_page, NULL);
+  if (n < 0) {
+    fprintf(stderr, "[peertube-instance-directory] fetch failed\n");
+    return -1;
+  }
   return 0;
 }
 
@@ -566,7 +594,7 @@ static const source_def soc_peertube_dir_def = {
   .name = "PeerTube Instance Directory",
   .update_interval_sec = 86400, .run = run_peertube_dir,
   .category = "media", .type = "api",
-  .url = "https://instances.joinpeertube.org/api/v1/instances",
+  .url = "https://instances.joinpeertube.org/api/v1/instances?count=1000&start=0",
   .description = "Registry of federated PeerTube video servers with software version, catalogue size, user count, declared country and health score.",
   .license = "Public API of the Framasoft-run instance index; keyless, documented.",
   .layer = NULL, .free_tier = 1,
