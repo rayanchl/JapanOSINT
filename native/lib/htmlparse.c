@@ -397,6 +397,12 @@ static int ht_span(const char *tag_open, const char *gt, const char *attr) {
   return v < 1 ? 1 : v > 1000 ? 1000 : v;
 }
 
+/* Ceiling on a single table row's width, in cells. Bounds the two calloc()s
+ * in pass 2 so their size is provably sane on untrusted input. */
+#define HT_MAX_WIDTH 65536
+/* Ceiling on a table's row count, for the same reason. */
+#define HT_MAX_ROWS  1000000   /* exhaustive-ok: memory guard on untrusted HTML; biting sets html_table.capped_rows, filed by hp_run_table as shape notice (g) */
+
 typedef struct { const char *s, *e; int colspan, rowspan; } ht_raw;
 
 int html_table_parse(const char *html, const char *must, int table_index,
@@ -434,6 +440,16 @@ int html_table_parse(const char *html, const char *must, int table_index,
     if (is_tr || is_cell || ends) {
       if (cur) { cur->e = p; cur = NULL; }
       if (is_tr || (is_cell && nrow == 0)) {
+        /* Bounded, and the bound is why: `nrow` feeds
+         * calloc((size_t)nrow, …) below, and an int that grows without a
+         * ceiling can overflow to negative on a pathological document — a
+         * negative int cast to size_t becomes ~SIZE_MAX, which calloc refuses,
+         * but `capr * 2` overflowing first would make the realloc here small
+         * and the writes past it real. This parser is fed arbitrary scraped
+         * HTML, so neither is theoretical. A table that claims more rows than
+         * this is truncated at the parse, which the caller reads as a short
+         * table rather than as invented rows. */
+        if (nrow >= HT_MAX_ROWS) { out->capped_rows = 1; break; }  /* disclosed: capped_rows */
         if (nrow == capr) { capr = capr ? capr * 2 : 64; int *nr = realloc(row_start, (size_t)capr * sizeof *nr); if (!nr) break; row_start = nr; }
         row_start[nrow++] = ncell;
       }
@@ -453,16 +469,33 @@ int html_table_parse(const char *html, const char *must, int table_index,
   }
   if (cur) cur->e = te;
 
-  /* Pass 2: the grid, with rowspans carried down. */
-  int width = 0;
+  /* Pass 2: the grid, with rowspans carried down.
+   *
+   * The row width is summed in a WIDE type and clamped. ht_span() already
+   * bounds one colspan to [1, 1000], but a row's width is the SUM over its
+   * cells, and this parser is fed arbitrary scraped HTML — a table with enough
+   * cells could overflow an int and make `(size_t)width + 1000` wrap to near
+   * SIZE_MAX at the calloc below. gcc saw exactly that and reported an
+   * allocation range starting at 18446744071562067968, which is
+   * (size_t)INT_MIN + 1000. A wrapped size is not a big allocation, it is a
+   * small one followed by writes past its end. */
+  long long width_ll = 0;
   for (int r = 0; r < nrow; r++) {
-    int a = row_start[r], b = r + 1 < nrow ? row_start[r + 1] : ncell, w = 0;
+    int a = row_start[r], b = r + 1 < nrow ? row_start[r + 1] : ncell;
+    long long w = 0;
     for (int i = a; i < b; i++) w += cells[i].colspan;
-    if (w > width) width = w;
+    if (w > width_ll) width_ll = w;
   }
+  /* A real table does not exceed this; a document that claims to has been
+   * truncated at the parse, which the caller sees as a short row rather than
+   * as invented cells. */
+  if (width_ll > HT_MAX_WIDTH) width_ll = HT_MAX_WIDTH;
+  if (width_ll < 0) width_ll = 0;
+  int width = (int)width_ll;
   typedef struct { int left; char *text; char *href; } carry;
   carry *pend = width ? calloc((size_t)width + 1000, sizeof *pend) : NULL;
-  out->rows = nrow ? calloc((size_t)nrow, sizeof *out->rows) : NULL;
+  size_t nrow_sz = (nrow > 0 && nrow <= HT_MAX_ROWS) ? (size_t)nrow : 0;
+  out->rows = nrow_sz ? calloc(nrow_sz, sizeof *out->rows) : NULL;
   for (int r = 0; r < nrow && out->rows; r++) {
     int a = row_start[r], b = r + 1 < nrow ? row_start[r + 1] : ncell;
     html_row *row = &out->rows[out->nrows];
@@ -480,7 +513,8 @@ int html_table_parse(const char *html, const char *must, int table_index,
       if (i == b) break;
       char *txt = ht_text(cells[i].s, (size_t)(cells[i].e - cells[i].s));
       char *href = ht_href(cells[i].s, (size_t)(cells[i].e - cells[i].s));
-      for (int k = 0; k < cells[i].colspan && col < cap; k++, col++) {
+      int k = 0;
+      for (; k < cells[i].colspan && col < cap; k++, col++) {
         row->cells[col].text = k == 0 ? txt : strdup("");
         row->cells[col].href = k == 0 ? href : NULL;
         if (k == 0 && cells[i].rowspan > 1 && pend) {
@@ -489,6 +523,13 @@ int html_table_parse(const char *html, const char *must, int table_index,
           pend[col].text = strdup(txt ? txt : "");
           pend[col].href = href ? strdup(href) : NULL;
         }
+      }
+      /* The row ran past the width bound (+ its slack): this cell, or the
+       * rest of its colspan, has nowhere to go. Said, not swallowed — and a
+       * cell that got no slot at all frees what it parsed. */
+      if (k < cells[i].colspan) {
+        out->capped_width = 1;
+        if (k == 0) { free(txt); free(href); }
       }
     }
     if (col > out->width) out->width = col;

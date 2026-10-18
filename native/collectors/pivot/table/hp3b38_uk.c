@@ -32,7 +32,6 @@ static const hp_source HP3B38_UK[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in GB, from the GLEIF Level-1 register — legal name, LEI, "

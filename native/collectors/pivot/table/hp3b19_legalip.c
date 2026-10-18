@@ -72,6 +72,7 @@ static const hp_source HP3B19_LEGALIP[] = {
     .id_keys = "id",
     .interval = 86400,
     .next_path = "_links.next.href",
+    .page_max = 180,   /* 17,911 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "name",
     .description = "Every organisation that has ever held a W3C affiliation -- "
       "17,700 companies, universities and agencies -- with its numeric "
@@ -527,6 +528,7 @@ static const hp_source HP3B19_LEGALIP[] = {
     .interval = 21600,
     .page_param = "start",
     .page_size = 100,
+    .page_max = 183,   /* 18,291 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "title",
     .description = "Decisions of the First-tier Tribunal (Property Chamber) on "
       "service charges, leasehold enfranchisement, rent determinations "
@@ -546,6 +548,7 @@ static const hp_source HP3B19_LEGALIP[] = {
     .interval = 21600,
     .page_param = "start",
     .page_size = 100,
+    .page_max = 27,   /* 2,631 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "title",
     .description = "Judgments of the Employment Appeal Tribunal with the neutral "
       "citation, the parties, the presiding judge and the decision "

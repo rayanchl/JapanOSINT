@@ -32,7 +32,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in DZ, from the GLEIF Level-1 register — legal name, LEI, "
@@ -52,7 +51,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in AO, from the GLEIF Level-1 register — legal name, LEI, "
@@ -72,7 +70,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in BJ, from the GLEIF Level-1 register — legal name, LEI, "
@@ -92,7 +89,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in BF, from the GLEIF Level-1 register — legal name, LEI, "
@@ -112,7 +108,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in BI, from the GLEIF Level-1 register — legal name, LEI, "
@@ -132,7 +127,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in CM, from the GLEIF Level-1 register — legal name, LEI, "
@@ -152,7 +146,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in CV, from the GLEIF Level-1 register — legal name, LEI, "
@@ -172,7 +165,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in CF, from the GLEIF Level-1 register — legal name, LEI, "
@@ -192,7 +184,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in TD, from the GLEIF Level-1 register — legal name, LEI, "
@@ -212,7 +203,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in KM, from the GLEIF Level-1 register — legal name, LEI, "
@@ -232,7 +222,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in CD, from the GLEIF Level-1 register — legal name, LEI, "
@@ -252,7 +241,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in CG, from the GLEIF Level-1 register — legal name, LEI, "
@@ -272,7 +260,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in CI, from the GLEIF Level-1 register — legal name, LEI, "
@@ -292,7 +279,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in DJ, from the GLEIF Level-1 register — legal name, LEI, "
@@ -312,7 +298,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in EG, from the GLEIF Level-1 register — legal name, LEI, "
@@ -332,7 +317,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in GQ, from the GLEIF Level-1 register — legal name, LEI, "
@@ -352,7 +336,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in SZ, from the GLEIF Level-1 register — legal name, LEI, "
@@ -372,7 +355,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in GA, from the GLEIF Level-1 register — legal name, LEI, "
@@ -392,7 +374,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in GM, from the GLEIF Level-1 register — legal name, LEI, "
@@ -412,7 +393,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in GN, from the GLEIF Level-1 register — legal name, LEI, "
@@ -432,7 +412,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in GW, from the GLEIF Level-1 register — legal name, LEI, "
@@ -452,7 +431,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in LS, from the GLEIF Level-1 register — legal name, LEI, "
@@ -472,7 +450,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in LR, from the GLEIF Level-1 register — legal name, LEI, "
@@ -492,7 +469,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in LY, from the GLEIF Level-1 register — legal name, LEI, "
@@ -512,7 +488,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in MG, from the GLEIF Level-1 register — legal name, LEI, "
@@ -532,7 +507,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in MW, from the GLEIF Level-1 register — legal name, LEI, "
@@ -552,7 +526,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in ML, from the GLEIF Level-1 register — legal name, LEI, "
@@ -572,7 +545,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in MR, from the GLEIF Level-1 register — legal name, LEI, "
@@ -592,7 +564,11 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
+    /* 4,671 entities at 200 a page, measured 2026-10-12. This row had stored
+     * 200 — one page — for the reason the GLEIF row in hp3b38_china.c explains
+     * at length: page_size on a page-NUMBER parameter. 24 pages is inside
+     * GLEIF's 50-page deep-paging cap, so this one completes. */
+    .page_max = 24,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in MU, from the GLEIF Level-1 register — legal name, LEI, "
@@ -612,7 +588,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in MA, from the GLEIF Level-1 register — legal name, LEI, "
@@ -632,7 +607,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in MZ, from the GLEIF Level-1 register — legal name, LEI, "
@@ -652,7 +626,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in NE, from the GLEIF Level-1 register — legal name, LEI, "
@@ -672,7 +645,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in ST, from the GLEIF Level-1 register — legal name, LEI, "
@@ -692,7 +664,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in SN, from the GLEIF Level-1 register — legal name, LEI, "
@@ -712,7 +683,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in SC, from the GLEIF Level-1 register — legal name, LEI, "
@@ -732,7 +702,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in SL, from the GLEIF Level-1 register — legal name, LEI, "
@@ -752,7 +721,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in SO, from the GLEIF Level-1 register — legal name, LEI, "
@@ -772,7 +740,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in SS, from the GLEIF Level-1 register — legal name, LEI, "
@@ -792,7 +759,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in SD, from the GLEIF Level-1 register — legal name, LEI, "
@@ -812,7 +778,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in TG, from the GLEIF Level-1 register — legal name, LEI, "
@@ -832,7 +797,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in TN, from the GLEIF Level-1 register — legal name, LEI, "
@@ -852,7 +816,6 @@ static const hp_source HP3B38_AFRICA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in ZW, from the GLEIF Level-1 register — legal name, LEI, "

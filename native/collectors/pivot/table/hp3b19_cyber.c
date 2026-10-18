@@ -644,6 +644,7 @@ static const hp_source HP3B19_CYBER[] = {
     .interval = 86400,
     .page_param = "page",
     .page_start = 1,
+    .page_max = 43,   /* 2,121 records at 50 a page, measured 2026-10-12; the 20-page default reached 1,000 */
     .description = "Each Jenkins plugin with its maintainer list, dependency set, "
       "required core version, installation count and release history. "
       "The dependency graph across plugins is what makes a single "

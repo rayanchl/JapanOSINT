@@ -92,8 +92,7 @@ static const char *svec_doc_prefix(void) {
  * duplicated loosely: collector=="osint" AND update_interval_sec==0. If that
  * definition ever moves, both copies must move together. */
 static int svec_is_pivot(const source_def *d) {
-  return d && d->collector && strcmp(d->collector, "osint") == 0
-         && d->update_interval_sec == 0;
+  return registry_is_entity_pivot(d);     /* the ONE rule — source.h */
 }
 
 /* A cheap signature of the registered pivot set: count plus an FNV-1a of the
@@ -615,7 +614,7 @@ char *service_vec_catalogue_bounded(db_handle *db, const char *query, int k,
   {
     char live[256];
     char *have = svec_meta_get(db, "model");
-    int same = have && embed_live_model(live, sizeof live) == 0 &&
+    int same = have && embed_live_query_model(live, sizeof live) == 0 &&
                !strcmp(have, live);
     if (!same)
       fprintf(stderr, "[svec] index model '%s' is not the server's (%s) — "
@@ -629,7 +628,7 @@ char *service_vec_catalogue_bounded(db_handle *db, const char *query, int k,
   if (!qb) return NULL;
   /* bound_queue_wait: this runs inside a user's search, and the embedding
    * worker is shared with the backfill pod's 120 s batches. */
-  llm_client llm = { .http = NULL, .base_url = embed_base_url(), .interactive = 1,
+  llm_client llm = { .http = NULL, .base_url = embed_query_url(), .interactive = 1,
                      .bound_queue_wait = 1 };
   const char *texts[1] = { qb };
   float *qv = NULL; int qdim = 0; llm_status st;

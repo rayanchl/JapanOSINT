@@ -110,6 +110,7 @@ static const hp_source T[] = {
     .array_path = "items",
     .detail_url = "https://api.ror.org/v2/organizations/{v}", .detail_key = "id",
     .page_walk = 1,
+    .page_max = 82,   /* 1,628 records at 20 a page, measured 2026-10-12; the 20-page default reached 400 */
     .interval = 86400, .free_tier = 1 },
 
 };

@@ -111,6 +111,13 @@ typedef struct source_def {
   const char *license;
   const char *layer;          /* map layer id; NULL for services             */
   int  free_tier;             /* 1 = free; 0 (default) = paid                */
+  /* Which machinery runs this row — "hpengine" (lib/hpengine.c, set by
+   * hp_register), "vjson" / "vrss" / "vgeo" / "vcsv" (the generated feed
+   * macros in _verified_macros.inc), "socrata", "rss", or NULL for a
+   * hand-written run(), which the API serialises as "native". It exists so a
+   * client can show HOW a source is fetched and parsed without guessing from
+   * the run pointer; nothing dispatches on it. */
+  const char *engine;
 } source_def;
 
 /* The `category` vocabulary — ONE list, for both registries.
@@ -143,8 +150,29 @@ int                registry_count(void);
 /* >0 means some source id is defined twice and the second copy is
  * unreachable via registry_get/--run/the OSINT dispatcher. */
 int                registry_duplicate_count(void);
+/* >0 means some source can never execute: interval 0 (so the scheduler skips
+ * it) under a collector that is neither "osint" nor an internal "_" lane (so
+ * core/osint_dispatch.c's is_entity_pivot() rejects it too). House rule 3. */
+int                registry_never_runs_count(void);
 const source_def **registry_all(void);
 const source_def  *registry_get(const char *id);
+/* THE one definition of "entity pivot" — the set the OSINT dispatcher offers
+ * the analysis LLM and service_vec indexes. House rule 3's distinction: a row
+ * is a pivot because it takes an entity, and scheduled because it declares an
+ * interval. So: update_interval_sec == 0, not an internal pod (collector
+ * starting with '_'), and — for an hpengine row — a URL or POST body that
+ * carries an entity token (a fixed-endpoint row with interval 0 is rule 3's
+ * unreachable row, not a pivot). It used to be `collector == "osint" &&
+ * interval == 0` in two places; that stopped describing the registry when
+ * hpengine rows took their table's name as collector, and it had always left
+ * out the 15 interval-0 {q} rows that named another collector. */
+int                registry_is_entity_pivot(const source_def *d);
+/* Index of `id` in registry_all(), or -1. O(1): a hash built once after the
+ * constructors (registry.c). */
+int                registry_index(const char *id);
+/* Build the id index and report DUPLICATE ids now rather than at the first
+ * lookup. Idempotent and thread-safe; main() calls it first thing. */
+void               registry_freeze(void);
 
 #define REGISTER_SOURCE(defsym) \
   __attribute__((constructor)) static void reg_##defsym(void) { \

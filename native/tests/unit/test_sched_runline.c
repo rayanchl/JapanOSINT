@@ -146,16 +146,37 @@ int main(void) {
   assert(!strstr(l, "UID-COLLISION") && !strstr(l, "failed="));
   free(l);
 
+  /* 1b. the run also lands on the sources row the dashboards read: a run that
+   * stored records is online, with the run's distinct-uid count, duration and
+   * a last_success stamp. Before this write existed every row stayed at the
+   * seed's 'pending' / 0 forever (see sources_row_record in scheduler.c). */
+  {
+    sqlite3_stmt *s;
+    assert(sqlite3_prepare_v2(db.h, "SELECT status,records_count,response_time_ms,"
+             "last_check,last_success FROM sources WHERE id=?1", -1, &s, NULL) == SQLITE_OK);
+    sqlite3_bind_text(s, 1, D_COLLIDE.id, -1, SQLITE_STATIC);
+    assert(sqlite3_step(s) == SQLITE_ROW);
+    const char *st = (const char *)sqlite3_column_text(s, 0);
+    assert(st && !strcmp(st, "online") && "a run that stored records is online");
+    /* 2000 uids were stored: 1999 records plus the collision NOTICE. The row
+     * counts DATA records, so a notice never inflates a source's record count. */
+    assert(sqlite3_column_int(s, 1) == 1999 && "records_count is the stored DATA count");
+    assert(sqlite3_column_type(s, 2) != SQLITE_NULL && "response_time_ms recorded");
+    assert(sqlite3_column_type(s, 3) != SQLITE_NULL && sqlite3_column_type(s, 4) != SQLITE_NULL);
+    sqlite3_finalize(s);
+  }
+
   /* 2. refused emits are on the run line and in fetch_log */
   add_source_row(&db, D_REFUSED.id);
   l = run_line(&db, &D_REFUSED, cap);
   printf("  %s", l);
   assert(strstr(l, " records=8 ") && strstr(l, " stored=8"));
   assert(strstr(l, " failed=2 ") && "refused emits were not reported");
+  assert(strstr(l, " bytes=0 requests=0") && "the run line carries the transfer size");
   free(l);
   {
     sqlite3_stmt *s;
-    assert(sqlite3_prepare_v2(db.h, "SELECT status,records_fetched,error FROM fetch_log"
+    assert(sqlite3_prepare_v2(db.h, "SELECT status,records_fetched,error,bytes_fetched FROM fetch_log"
                               " WHERE source_id=?1 ORDER BY id DESC LIMIT 1", -1, &s,
                               NULL) == SQLITE_OK);
     sqlite3_bind_text(s, 1, D_REFUSED.id, -1, SQLITE_TRANSIENT);
@@ -165,6 +186,9 @@ int main(void) {
            (const char *)sqlite3_column_text(s, 0), sqlite3_column_int(s, 1),
            err ? err : "(null)");
     assert(err && strstr(err, "2 emitted record(s) refused"));
+    /* transfer bytes are RECORDED for every run — 0 for these in-process fakes,
+     * which made no HTTP request, and never NULL on a row this build wrote */
+    assert(sqlite3_column_type(s, 3) != SQLITE_NULL && sqlite3_column_int64(s, 3) == 0);
     sqlite3_finalize(s);
   }
 

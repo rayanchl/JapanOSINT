@@ -1,0 +1,7 @@
+id	url	verdict	http	bytes	note
+JO42_WP_BANK_GIFU_CATBLOG	https://www.gifu.med.or.jp/wp-json/wp/v2/cat_blog?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_BANK_GIFU_CATDISTRICTS	https://www.gifu.med.or.jp/wp-json/wp/v2/cat_districts?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_BANK_TSURUOKASK_DENSAIINFOCATE	https://www.tsuruoka-sk.jp/wp-json/wp/v2/densai-info-cate?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_BANK_TSURUOKASK_IBNEWSCATE	https://www.tsuruoka-sk.jp/wp-json/wp/v2/ib-news-cate?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_BANK_TSURUOKASK_IMPORTANTNOTIC2	https://www.tsuruoka-sk.jp/wp-json/wp/v2/important-notices-cate?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_BANK_TSURUOKASK_NEWSRELEASECAT	https://www.tsuruoka-sk.jp/wp-json/wp/v2/news-release-cate?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request

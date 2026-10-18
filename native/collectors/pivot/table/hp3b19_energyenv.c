@@ -1024,6 +1024,7 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .array_path = "features",
     .interval = 21600,
     .next_path = "links.rel=next.href",
+    .page_max = 164,   /* 81,606 records at 500 a page, measured 2026-10-12; the 20-page default reached 10,000 */
     .description = "Individual VEDA data granules with their footprint, datetime, "
       "collection and asset links, covering methane plumes, fire, flood "
       "and air quality products. Granule-level search is how a specific "

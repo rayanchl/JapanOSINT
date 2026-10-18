@@ -580,6 +580,7 @@ static const hp_source HP3B19_OSM[] = {
     .interval = 3600,
     .page_param = "page",
     .page_start = 1,
+    .page_max = 63,   /* 878 records at 14 a page, measured 2026-10-12; the 20-page default reached 280 */
     .title_keys = "name",
     .description = "Every humanitarian mapping project HOT has opened, with the area "
       "of interest geometry, the country, the sponsoring organisation, "

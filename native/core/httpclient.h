@@ -42,18 +42,39 @@ typedef struct http_client http_client; /* opaque (shared curl share/handle) */
  * instead of racing a second global init on a worker thread. */
 void         http_client_global_init(void);
 
+/* The transport policy http_request() puts on every transfer — redirects
+ * capped at 5, http/https only on the request AND the redirect chain, and the
+ * per-connection SSRF re-check at the floor — applied to a caller's own easy
+ * handle (a CURL *, typed void * so this header needs no curl.h). For the few
+ * paths that must drive libcurl directly (lib/jsonstream.c streams a body too
+ * big to buffer); a private handle otherwise starts with none of it. */
+void         http_easy_harden(void *curl_easy);
+
 http_client *http_client_new(void);
 void         http_client_free(http_client *);
 
 /* method: "GET"/"POST"/... ; headers: NULL-terminated array or NULL;
  * body/body_len for POST (may be NULL). timeout_ms<=0 → 30000. retries: extra
- * attempts on transport error or 5xx (exp backoff). Returns 0 on a completed
+ * attempts on transport error, 429 or 5xx (exp backoff; a Retry-After on a
+ * 429/503 is honoured when <= 30 s and <= timeout, and a longer one stops the
+ * retries and returns that status). Returns 0 on a completed
  * HTTP exchange (any status), non-zero only on hard failure. */
 int http_request(http_client *c, const char *method, const char *url,
                   const char *const *headers, const char *body, size_t body_len,
                   int timeout_ms, int retries, http_response *out);
 
 void http_response_free(http_response *r);
+
+/* Why the most recent attempt made by http_request() ON THE CALLING THREAD
+ * failed: HTTP_TE_NONE when it completed an exchange (any status),
+ * HTTP_TE_CONNECT when nothing answered (refused, unresolvable, or the connect
+ * itself timed out), HTTP_TE_TIMEOUT when a connected exchange ran out its
+ * timeout, HTTP_TE_OTHER for anything else (TLS, oversize body, a refused
+ * URL). http_request's own retry treats all of them alike; the LLM worker
+ * (core/llm_worker.c) must not, because retrying a 120 s generation that
+ * timed out spends a second 120 s the caller never granted. */
+enum { HTTP_TE_NONE = 0, HTTP_TE_CONNECT, HTTP_TE_TIMEOUT, HTTP_TE_OTHER };
+int http_last_transport_error(void);
 
 /* Per-client log of the distinct hosts contacted (every http_request goes
  * through one client). Lets the OSINT dispatcher attribute a service's output
@@ -66,5 +87,11 @@ int  http_client_host_count(http_client *c);
  * out of range. The pointer is owned by the client. */
 const char *http_client_host_at(http_client *c, int i,
                                  int *out_requests, int *out_ok);
+/* Response body bytes received through this client over its lifetime (every
+ * attempt, retries included) and the number of attempts. The scheduler makes
+ * one client per run, so these are the run's transfer size — the figure
+ * fetch_log.bytes_fetched records and the source detail page shows. */
+unsigned long long http_client_bytes_in(const http_client *c);
+int                http_client_request_count(const http_client *c);
 
 #endif

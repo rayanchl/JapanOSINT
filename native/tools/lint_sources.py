@@ -1208,7 +1208,17 @@ def check_phantom_index():
 
 _PAGENUM_NAME = re.compile(
     r"^(?:.*\.)?(?:page|pagina|pagenum|pagenumber|page_number|pageno|page_no|"
-    r"pageindex|page_index|pg|side|seite)$", re.I)
+    r"pageindex|page_index|pg|side|seite)"
+    # JSON:API spells it `page[number]`, and a row writes that parameter
+    # PERCENT-ENCODED because it sits in a URL: `page%5Bnumber%5D`. The `$`
+    # after the name list rejected both, so this check — added for exactly this
+    # family on 2026-10-05 — could not see 63 rows that shipped three days
+    # later, every one of them declaring page_size on a page NUMBER. GLEIF
+    # answered HTTP 400 to `page[number]=201` on its second request and stored
+    # 200 of 13,419 entities; the sixteen US Treasury Fiscal Data rows asked
+    # for page 501 and stored one page each. The spelling is a property of the
+    # API, so the name list has to carry it rather than the suffix.
+    r"(?:(?:%5B|\[)(?:number|no|num|index)(?:%5D|\]))?$", re.I)
 
 
 def check_page_size_on_page_number():

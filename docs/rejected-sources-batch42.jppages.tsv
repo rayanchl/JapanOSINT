@@ -1,0 +1,15 @@
+id	url	verdict	http	bytes	note
+JO42_WP_CORP_3267_PAGES	https://philcompany.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	HTTP_ERR	500	0	Internal Server Error
+JO42_WP_CORP_4381_PAGES	https://www.bplats.co.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	UNPARSEABLE	200	3215458	declared array_path but body is not JSON
+JO42_WP_CORP_2883_PAGES	https://www.dai-rei.co.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[Errno 104] Connection reset by peer
+JO42_WP_CORP_2876_PAGES	https://www.del-sole.co.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	UNPARSEABLE	200	371534	declared array_path but body is not JSON
+JO42_WP_CORP_9769_PAGES	https://www.gakkyusha.com/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	UNPARSEABLE	200	227299	declared array_path but body is not JSON
+JO42_WP_CORP_8078_PAGES	https://www.hanwa.co.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[Errno 104] Connection reset by peer
+JO42_WP_CORP_4992_PAGES	https://www.hokkochem.co.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	UNPARSEABLE	200	1022948	declared array_path but body is not JSON
+JO42_WP_CORP_3306_PAGES	https://www.nihonseima.co.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	NET_ERR	0	0	[Errno 104] Connection reset by peer
+JO42_WP_CORP_7527_PAGES	https://www.systemsoft.co.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	HTTP_ERR	500	0	Internal Server Error
+JO42_WP_CORP_6424_PAGES	https://www.tacy.co.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	UNPARSEABLE	200	489583	declared array_path but body is not JSON
+JO42_WP_UNIV_TAIS_PAGES	https://www.tais.ac.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	HTTP_ERR	500	0	Internal Server Error
+JO42_WP_CORP_4512_PAGES	https://www.wakamoto-pharm.co.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	UNPARSEABLE	200	302252	declared array_path but body is not JSON
+JO42_WP_CORP_2813_PAGES	https://www.wakoushokuhin.co.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	UNPARSEABLE	200	534125	declared array_path but body is not JSON
+JO42_WP_CORP_6407_PAGES	https://www.ckd.co.jp/wp-json/wp/v2/pages?per_page=100	EMIT_COLLISION	200	19	Same upstream defect batch 41 measured on this host and dropped there: www.ckd.co.jp (証券コード 6407) serves overlapping page contents deterministically, so records that exist are never served. On wp/v2/pages it emitted 19 and stored 9. The defect is a property of this host, not of the collection — it recurred on a different collection of the same site.

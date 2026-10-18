@@ -22,6 +22,7 @@ static const hp_source T[] = {
     .array_path = "results",
     .detail_url = "https://api.pmg.org.za/briefing/{v}/", .detail_key = "id",
     .page_walk = 1,
+    .page_max = 22,   /* 1,070 records at 50 a page, measured 2026-10-12; the 20-page default reached 1,000 */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "af-pmg-calls-for-comment",
@@ -33,6 +34,7 @@ static const hp_source T[] = {
     .array_path = "results",
     .detail_url = "https://api.pmg.org.za/call-for-comment/{v}/", .detail_key = "id",
     .page_walk = 1,
+    .page_max = 35,   /* 1,727 records at 50 a page, measured 2026-10-12; the 20-page default reached 1,000 */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "af-pmg-gazettes",
@@ -55,6 +57,7 @@ static const hp_source T[] = {
     .array_path = "results",
     .detail_url = "https://api.pmg.org.za/hansard/{v}/", .detail_key = "id",
     .page_walk = 1,
+    .page_max = 52,   /* 2,558 records at 50 a page, measured 2026-10-12; the 20-page default reached 1,000 */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "af-pmg-ministers",
@@ -77,6 +80,7 @@ static const hp_source T[] = {
     .array_path = "results",
     .detail_url = "https://api.pmg.org.za/policy-document/{v}/", .detail_key = "id",
     .page_walk = 1,
+    .page_max = 26,   /* 1,270 records at 50 a page, measured 2026-10-12; the 20-page default reached 1,000 */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "af-pmg-question-replies",
@@ -99,6 +103,7 @@ static const hp_source T[] = {
     .array_path = "results",
     .detail_url = "https://api.pmg.org.za/tabled-committee-report/{v}/", .detail_key = "id",
     .page_walk = 1,
+    .page_max = 134,   /* 6,696 records at 50 a page, measured 2026-10-12; the 20-page default reached 1,000 */
     .interval = 86400, .free_tier = 1 },
 
 };

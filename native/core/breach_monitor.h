@@ -258,9 +258,12 @@
  * read: "complete" (initial_hits is a real committed count), "running" (the
  * corpus match is on a background thread because the value_domain backfill had
  * to run — initial_hits is null and MUST NOT be read as zero), "failed" (the
- * match did not commit) or "not_started" (no thread could be started; the
- * monitor is stored and POST .../rescan will match it). initial_hits is null
- * in every case but the first.
+ * match did not commit), "busy" (another rescan holds the one slot; the
+ * monitor is stored, POST .../rescan matches it once that finishes) or
+ * "not_started" (no thread could be started; the monitor is stored and POST
+ * .../rescan will match it). initial_hits is null in every case but the
+ * first. POST .../rescan answers 409 {error:"rescan_in_progress"} while
+ * another rescan runs.
  *
  * AUTH: read = any tenant member (tenant_resolve already proved membership);
  * write (POST/DELETE/rescan) = role analyst|admin|owner, else 403 forbidden.
@@ -330,11 +333,20 @@ long long breach_monitor_scan_new(db_handle *db, const char *source_id,
  * 50,000-row UPDATE batches, and a `cancel` of NULL cannot stop it. The HTTP
  * create path checks that (any domain monitor → detached thread, and the
  * response carries meta.scan="running" with a null initial_hits rather than a
- * count nobody measured); POST /rescan runs it inline because that is what the
- * operator asked for. */
+ * count nobody measured); POST /rescan waits for it, on an httpd worker thread
+ * rather than the event loop. Both hold the one rescan slot below. */
 int breach_monitor_rescan_all(db_handle *db, const char *tenant_id,
                               const char *monitor_id, volatile int *cancel,
                               long long *out_monitors, long long *out_hits);
+
+/* The single corpus-rescan slot. A full rescan walks the whole corpus, so at
+ * most one runs per process: the create path's background rescan reports
+ * meta.scan="busy" and POST .../rescan answers 409 rescan_in_progress while
+ * the slot is held. try_begin returns 1 and takes the slot, or 0 when busy;
+ * the holder MUST call _end. */
+int  breach_monitor_rescan_try_begin(void);
+void breach_monitor_rescan_end(void);
+int  breach_monitor_rescan_busy(void);
 
 /* One entrypoint for the whole /api/breach-monitors subtree.
  *   `seg`    = monitor id, "" for the collection            (NULL treated as "")
