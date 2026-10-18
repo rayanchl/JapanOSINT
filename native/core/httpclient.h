@@ -87,5 +87,11 @@ int  http_client_host_count(http_client *c);
  * out of range. The pointer is owned by the client. */
 const char *http_client_host_at(http_client *c, int i,
                                  int *out_requests, int *out_ok);
+/* Response body bytes received through this client over its lifetime (every
+ * attempt, retries included) and the number of attempts. The scheduler makes
+ * one client per run, so these are the run's transfer size — the figure
+ * fetch_log.bytes_fetched records and the source detail page shows. */
+unsigned long long http_client_bytes_in(const http_client *c);
+int                http_client_request_count(const http_client *c);
 
 #endif

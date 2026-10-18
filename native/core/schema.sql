@@ -1039,3 +1039,16 @@ CREATE TABLE IF NOT EXISTS source_sched_state (
   quarantined_at       INTEGER,
   last_probe           INTEGER,
   updated_at           INTEGER);
+-- GET /api/sources/:id/summary — the small-model description of one source,
+-- cached by (source, a fingerprint of the facts it was shown, the model). A
+-- row is a GENERATED summary; the route never stores a failure here, it
+-- returns the llm status and the facts instead (core/sourceapi_summary.c).
+CREATE TABLE IF NOT EXISTS source_summary (
+    source_id    TEXT NOT NULL,
+    fingerprint  TEXT NOT NULL,
+    model        TEXT NOT NULL,
+    summary_json TEXT NOT NULL,
+    facts_used   INTEGER,
+    generated_at TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (source_id, fingerprint, model)
+  );

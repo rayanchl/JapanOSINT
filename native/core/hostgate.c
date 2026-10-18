@@ -628,3 +628,11 @@ int hostgate_same_host(const char *a, const char *b) {
   if (!hostgate_url_host(b, hb, sizeof hb)) return 0;
   return strcmp(ha, hb) == 0;
 }
+
+int hostgate_pace_ms(const char *host) {
+  if (!host || !*host) return 0;
+  pthread_mutex_lock(&g_mu);
+  int gap = gap_for_host(host);
+  pthread_mutex_unlock(&g_mu);
+  return gap;
+}
