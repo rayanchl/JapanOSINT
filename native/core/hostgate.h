@@ -171,6 +171,11 @@ int hostgate_camera_addr_check(const char *ip_text);
  * out[], including loopback — url_host()'s politeness exemption is NOT applied.
  * Returns 1 on success, 0 if there is no parseable host. */
 int hostgate_url_host(const char *url, char *out, size_t cap);
+/* The per-host minimum gap, in ms, this process paces `host` at: the override
+ * table (reddit 30 s, news.google.com 1.5 s, …) by longest dotted-suffix
+ * match, else the global default gap. Read-only; for the source detail API, so
+ * a row's pacing is a fact on its page rather than a comment in this file. */
+int hostgate_pace_ms(const char *host);
 
 /* True when `a` and `b` have the same (lowercased) host. Used to decide
  * whether a URL rewrite may keep carrying the original request's credentials.

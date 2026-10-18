@@ -453,6 +453,9 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
    * A NEGATIVE value is a floor, not a count — see fetch_log_set_stored() in
    * core/scheduler.c. */
   ensure_column(db, "fetch_log", "stored", "INTEGER");
+  /* transfer size of the run (every response body, retries included); NULL
+   * on rows written before the column existed = not measured */
+  ensure_column(db, "fetch_log", "bytes_fetched", "INTEGER");
 
   /* Evidence capture (roadmap 17) is per-source OPT-IN and defaults OFF. 415
    * sources on schedules down to 60s would fill a disk in days otherwise, and

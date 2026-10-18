@@ -55,7 +55,7 @@ export default function IntelSourceItemsPage() {
   return (
     <Page wide
       title={<span className="flex items-center gap-2 flex-wrap">{source?.name || id}{source?.name_ja && source.name_ja !== source.name && <span className="text-sm text-osint-muted font-normal">{source.name_ja}</span>}</span>}
-      subtitle={<span><Link to="/intel?view=sources" className="hover:text-accent">← all sources</Link> · <span className="font-mono">{id}</span>{source?.description ? ` — ${source.description}` : ''}</span>}
+      subtitle={<span><Link to="/intel?view=sources" className="hover:text-accent">← all sources</Link> · <span className="font-mono">{id}</span> · <Link to={`/console/sources/${encodeURIComponent(id)}`} className="text-accent hover:underline">how this source works →</Link>{source?.description ? ` — ${source.description}` : ''}</span>}
       actions={!isBreach && <Button variant="primary" busy={running} onClick={run}><LuPlay size={13} /> Run now</Button>}
     >
       {sources.error && <ErrorNotice error={sources.error} title="Could not load source metadata" onRetry={sources.reload} />}

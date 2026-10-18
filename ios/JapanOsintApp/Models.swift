@@ -424,6 +424,22 @@ struct StatusRow: Decodable, Identifiable, Hashable {
     let description: String?
     let free: Bool?
     let layer: String?
+    /// The collector this source belongs to — every registered source has
+    /// exactly one (hpengine rows default to their table's name), so grouping
+    /// on it shows EVERY source. `layer` is declared by ~1% of sources and
+    /// was what the dashboard used to group on, leaving the other 99% in one
+    /// "Uncategorised" bucket. Optional so cached JSON predating the field
+    /// still decodes; a row without it groups under its own id.
+    let collector: String?
+    let collectorLabel: String?
+    /// The natural-language GROUP the collector sits under (core/collectors.def,
+    /// `grp_*`): the heading the dashboard sections collectors by.
+    let collectorGroup: String?
+    let collectorGroupLabel: String?
+    /// hpengine | vjson | vrss | vgeo | vcsv | rss | socrata | native | breach
+    let engine: String?
+    /// scheduled | pivot | unreachable | internal | corpus
+    let kind: String?
     let status: String?
     let lastCheck: String?
     let lastSuccess: String?

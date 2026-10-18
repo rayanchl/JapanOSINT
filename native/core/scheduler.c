@@ -112,6 +112,16 @@ static const char *run_status(int rc, long records, int hosts, int hosts_ok,
  * column for "at least", and writing the floor as though it were the truth
  * would be exactly the quiet over-reporting rule 4b exists to stop; a reader
  * seeing stored < 0 knows the real value is >= -stored. */
+static void fetch_log_set_bytes(db_handle *db, long flid, unsigned long long bytes) {
+  if (flid <= 0) return;
+  sqlite3_stmt *s = NULL;
+  if (sqlite3_prepare_v2(db->h, "UPDATE fetch_log SET bytes_fetched=?1 WHERE id=?2",
+                         -1, &s, NULL) != SQLITE_OK) return;
+  sqlite3_bind_int64(s, 1, (sqlite3_int64)bytes);
+  sqlite3_bind_int64(s, 2, flid);
+  sqlite3_step(s);
+  sqlite3_finalize(s);
+}
 static void fetch_log_set_stored(db_handle *db, long flid, long stored,
                                  int exact) {
   if (!db || !db->h || flid < 0 || stored < 0) return;
@@ -366,6 +376,49 @@ static void sched_state_record(db_handle *db, const source_def *d,
     fprintf(stderr, "[sched] %s released from health quarantine\n", d->id);
 }
 
+/* ── the sources table's operational columns ─────────────────────────────
+ *
+ * `sources.status / last_check / last_success / response_time_ms /
+ * records_count / error_message` are what GET /api/sources, GET /api/status
+ * and the iOS dashboard read as "is this source alive". Until 2026-10-12
+ * NOTHING wrote them after db_seed_sources() set status='pending': every one of
+ * 18,883 rows read pending / 0 records / no response time forever, the status
+ * tiles and pie pictured the seed, and /api/status's online/offline summary
+ * counted it. The run that just finished knows all five facts, so it writes
+ * them here, once, next to fetch_log — one more UPDATE on a row the run
+ * already touched. The vocabulary (schema CHECK): online = the run succeeded
+ * and stored at least one record; degraded = it succeeded and stored none (an
+ * honest empty, or a feed that only re-fetched what it had — not a failure,
+ * not health either); offline = the run failed; pending = never run, which
+ * only the seed writes. records_count is the DISTINCT uids this run stored
+ * (the run line's second number), falling back to emits when the sink could
+ * not count. last_success moves only on a successful run. */
+static void sources_row_record(db_handle *db, const char *id, const char *status,
+                               long records, long duration_ms, const char *why) {
+  int ok = status && !strcmp(status, "ok");
+  const char *st = !ok ? "offline" : (records > 0 ? "online" : "degraded");
+  sqlite3_stmt *s = NULL;
+  if (sqlite3_prepare_v2(db->h,
+        "UPDATE sources SET status=?1, last_check=datetime('now'),"
+        " last_success=CASE WHEN ?2 THEN datetime('now') ELSE last_success END,"
+        " response_time_ms=?3, records_count=?4, error_message=?5 WHERE id=?6",
+        -1, &s, NULL) != SQLITE_OK) {
+    fprintf(stderr, "[sched] %s: could not record run on sources row: %s\n",
+            id, sqlite3_errmsg(db->h));
+    return;
+  }
+  sqlite3_bind_text(s, 1, st, -1, SQLITE_STATIC);
+  sqlite3_bind_int(s, 2, ok);
+  sqlite3_bind_int64(s, 3, duration_ms);
+  sqlite3_bind_int64(s, 4, records < 0 ? 0 : records);
+  if (why && *why) sqlite3_bind_text(s, 5, why, -1, SQLITE_TRANSIENT);
+  else             sqlite3_bind_null(s, 5);
+  sqlite3_bind_text(s, 6, id, -1, SQLITE_TRANSIENT);
+  if (sqlite3_step(s) != SQLITE_DONE)
+    fprintf(stderr, "[sched] %s: could not record run on sources row: %s\n",
+            id, sqlite3_errmsg(db->h));
+  sqlite3_finalize(s);
+}
 static volatile int *sched_cancel_slot(const char *id);
 
 int scheduler_run_source(db_handle *db, const source_def *d,
@@ -420,6 +473,8 @@ int scheduler_run_source(db_handle *db, const source_def *d,
     int ok = 0;
     if (http_client_host_at(http, i, NULL, &ok) && ok) hosts_ok++;
   }
+  unsigned long long bytes_in = http_client_bytes_in(http);
+  int requests = http_client_request_count(http);
   http_client_free(http);
   /* Read the distinct-row count BEFORE the sink is freed — it lives in the
    * sink_state that free() is about to release. */
@@ -469,8 +524,12 @@ int scheduler_run_source(db_handle *db, const source_def *d,
   if (cs.failed > 0)
     snprintf(fbuf, sizeof fbuf, " failed=%ld EMIT-FAILED: the sink refused %ld"
              " record(s); they are not stored", cs.failed, cs.failed);
-  fprintf(stderr, "[sched] %s run rc=%d records=%ld %ldms %s%s%s%s\n",
-          d->id, rc, cs.n, duration_ms, sbuf, nbuf, fbuf, note);
+  /* bytes= trails the other fields like stored= does: the eight run-line
+   * parsers match `records=N Nms` as one unit and ignore what follows. */
+  char bbuf[64];
+  snprintf(bbuf, sizeof bbuf, " bytes=%llu requests=%d", bytes_in, requests);
+  fprintf(stderr, "[sched] %s run rc=%d records=%ld %ldms %s%s%s%s%s\n",
+          d->id, rc, cs.n, duration_ms, sbuf, nbuf, fbuf, bbuf, note);
 
   /* Stage 0+1: log the run and detect anomalies — but only for real data
    * collectors. The internal pods (_maint, _enrich) emit nothing and would
@@ -489,6 +548,9 @@ int scheduler_run_source(db_handle *db, const source_def *d,
     long flid = fetch_log_write(db, d->id, status, (int)cs.n, duration_ms, why);
     anomaly_detect(db, d->id, flid, status, (int)cs.n, duration_ms);
     fetch_log_set_stored(db, flid, stored, stored_exact);
+    fetch_log_set_bytes(db, flid, bytes_in);
+    sources_row_record(db, d->id, status, stored >= 0 ? stored_data : cs.n,
+                       duration_ms, why);
     if (!entity) sched_state_record(db, d, status, cs.n);
   }
   return rc;

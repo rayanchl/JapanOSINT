@@ -515,6 +515,52 @@ enough that batches 31 and 32 could both stop registering with CI green.
 Re-record them when a batch lands (`make source-floor-record
 registry-floor-record`).
 
+## Source pages API (2026-10-12)
+
+`core/sourceapi.c` serves the Sources, source detail and Collectors pages:
+`GET /api/sources/search` (server-searched, paged, `meta.facets`),
+`GET /api/sources/:id/detail` (the row as declared via `hp_describe_json`,
+schedule, status, data shape, notices, runs, credentials, pacing, provenance),
+`GET /api/sources/:id/summary` (small-model summary from measured facts only —
+on any LLM failure it returns the status code AND the facts, never prose),
+`GET /api/collectors`, `GET /api/collectors/:key`. Three things changed
+underneath them that older notes in this file predate:
+
+* **`sources.status` is now written** by `scheduler_run_source()` after every
+  run (`sources_row_record`): online / degraded (ok, stored nothing) / offline
+  / pending (never ran). Until then nothing wrote it after the seed, so every
+  row read `pending` forever and `/api/status`'s online count was the seed.
+* **An hpengine row's default collector is its table file's basename**
+  (`hp3b25_jpmedia`), not `osint`. Every source has a collector; 535 keys
+  (2026-10-18); `core/collectors.def` labels and groups them (below).
+* **"Entity pivot" is `registry_is_entity_pivot()`** in `registry.c`, the one
+  rule both the dispatcher and `service_vec` use: interval 0, not a `_` pod,
+  and (hpengine) an entity token in the URL/body OR `filter_query=1` (a bulk
+  file filtered by the entity locally — 18 such rows, OFAC's sdn.csv among
+  them, read as "never runs" until that counted). `collector=="osint"` is no
+  longer part of the definition, and `registry.c`'s NEVER-RUNS check (the
+  `make registry-floor` gate) is the complement of this same rule.
+
+* **`fetch_log.bytes_fetched`** (2026-10-12) is the run's transfer size —
+  every response body `http_client` received, retries included — and the run
+  line ends ` bytes=N requests=M`. NULL = a row from before the column.
+* `/api/status` rows carry `collector`, `collectorLabel`, `collectorGroup`,
+  `collectorGroupLabel`, `engine`, `kind`; the iOS dashboard groups on
+  `collector` under group headings (it grouped on `layer`, which ~1% of
+  sources declare).
+* **Collectors are grouped** (2026-10-17): `core/collectors.def` is GENERATED
+  by `tools/gen_collectors_def.py` from the collector census and gives every
+  collector key a `parent` among 22 `grp_*` groups (government, legal,
+  corporate, procurement, open data, science, health, environment, space,
+  cyber, telecom, infrastructure, transport, media, social, geo, safety,
+  sanctions, culture, surveillance, OSINT pivots, internal). **A new beat
+  needs a line there**: a collector the def does not list shows under
+  `grp_unassigned` on every page and `test_sourceapi.c` fails. Re-run the
+  generator on a fresh census (`GET /api/collectors` → TSV) or add the line
+  by hand; the rules live in the script (OVERRIDES, KEYWORDS, CATEGORY_GROUP).
+
+Plan, audit and as-built notes: `docs/source-pages-revamp/`.
+
 ## Where things live
 
 ```

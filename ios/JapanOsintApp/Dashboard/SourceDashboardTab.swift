@@ -455,13 +455,39 @@ struct SourceDashboardTab: View {
         }
     }
 
+    /// Collectors sectioned by their server-side GROUP (collectors.def
+    /// headings), groups ordered by source count, each group's collectors in
+    /// the `collectors` order (favourites first, then name). Every collector
+    /// is in exactly one section; a collector the server could not place sits
+    /// under "Unassigned" rather than being dropped.
+    private struct CollectorGroupSection: Identifiable {
+        let id: String
+        let label: String
+        let collectors: [Collector]
+        var sourceCount: Int { collectors.reduce(0) { $0 + $1.sourceCount } }
+    }
+    private var collectorSections: [CollectorGroupSection] {
+        var byGroup: [String: [Collector]] = [:]
+        var labels: [String: String] = [:]
+        for c in collectors {
+            byGroup[c.group, default: []].append(c)
+            labels[c.group] = c.groupLabel
+        }
+        return byGroup.map { CollectorGroupSection(id: $0.key, label: labels[$0.key] ?? $0.key, collectors: $0.value) }
+            .sorted { lhs, rhs in
+                if lhs.sourceCount != rhs.sourceCount { return lhs.sourceCount > rhs.sourceCount }
+                return lhs.label < rhs.label
+            }
+    }
+
     private var collectorsList: some View {
         // Bound once: `collectors` filters, groups and sorts ~1,700 rows, and
         // the count in the header plus the ForEach made that twice per keystroke.
         let items = collectors
+        let sections = collectorSections
         return VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Text("Collectors (\(items.count))")
+                Text("Collectors (\(items.count)) in \(sections.count) groups")
                     .font(.headline.monospacedDigit())
                     .foregroundStyle(theme.text)
                 Spacer()
@@ -470,7 +496,19 @@ struct SourceDashboardTab: View {
                     .foregroundStyle(theme.textMuted)
             }
             VStack(spacing: 8) {
-                ForEach(items) { c in
+                ForEach(sections) { section in
+                  HStack {
+                    Text(section.label)
+                        .font(.subheadline.bold())
+                        .foregroundStyle(section.id == "grp_unassigned" ? theme.danger : theme.text)
+                    Spacer()
+                    Text("\(section.collectors.count) collector\(section.collectors.count == 1 ? "" : "s") · \(section.sourceCount) sources")
+                        .font(.caption2.monospacedDigit())
+                        .foregroundStyle(theme.textMuted)
+                  }
+                  .padding(.top, 6)
+                  .accessibilityAddTraits(.isHeader)
+                  ForEach(section.collectors) { c in
                     CollectorRow(
                         collector: c,
                         isFavorite: favs.contains(c.id),
@@ -482,6 +520,7 @@ struct SourceDashboardTab: View {
                         refresh: { Task { await refresh(c.id) } },
                         selectSource: { selected = $0 }
                     )
+                  }
                 }
             }
         }
@@ -510,18 +549,26 @@ struct SourceDashboardTab: View {
         else { expanded.insert(id) }
     }
 
+    /// Runs every source of a collector, one at a time, through the same
+    /// POST /api/intel/sources/:id/run the web client uses. It used to fetch
+    /// a map LAYER named after the group — a collector key is not a layer, so
+    /// that request answered nothing about these sources. Bounded to
+    /// `runAllMax` sources: a 500-source beat is not something to fire from a
+    /// phone, and the button says so instead of silently running the first N.
+    static let runAllMax = 12
     private func refresh(_ collectorId: String) async {
-        guard collectorId != "(no layer)" else { return }
+        guard let c = apis.groupedAsCollectors().first(where: { $0.id == collectorId }),
+              c.sourceCount <= Self.runAllMax else { return }
         refreshing.insert(collectorId)
         refreshError.removeValue(forKey: collectorId)
         defer { refreshing.remove(collectorId) }
-        do {
-            let layer = LayerDef(id: collectorId, name: collectorId, category: nil, sources: nil, temporal: nil, liveOnly: nil)
-            _ = try await apiClient.api.data(for: layer)
-            await load()
-        } catch {
-            refreshError[collectorId] = error.localizedDescription
+        var failures: [String] = []
+        for row in c.sources where row.category != "breach" {
+            do { _ = try await apiClient.api.intelRunSource(row.id) }
+            catch { failures.append("\(row.id): \(error.localizedDescription)") }
         }
+        if !failures.isEmpty { refreshError[collectorId] = failures.joined(separator: "\n") }
+        await load()
     }
 
     // MARK: - Loading
@@ -660,12 +707,15 @@ struct CollectorRow: View {
                             Image(systemName: "arrow.clockwise")
                                 .accessibilityHidden(true)   // button title follows
                         }
-                        Text(isRefreshing ? "Refreshing…" : "Refresh collector")
+                        Text(isRefreshing ? "Running…"
+                             : collector.sourceCount > SourceDashboardTab.runAllMax
+                               ? "Run all: too many (\(collector.sourceCount) > \(SourceDashboardTab.runAllMax)) — run one from its sheet"
+                               : "Run all \(collector.sourceCount) source\(collector.sourceCount == 1 ? "" : "s") now")
                     }
                 }
                 .buttonStyle(.borderedProminent)
                 .controlSize(.small)
-                .disabled(isRefreshing || collector.id == "(no layer)")
+                .disabled(isRefreshing || collector.sourceCount > SourceDashboardTab.runAllMax)
                 Spacer()
             }
             .padding(.horizontal, 8)
@@ -761,8 +811,11 @@ private struct SourceDetail: View {
     var onUpdate: (StatusRow) -> Void = { _ in }
     @EnvironmentObject var nav: MapNavigation
     @EnvironmentObject var settings: AppSettings
+    @EnvironmentObject var apiClient: APIClient
     @Environment(\.theme) private var theme
     @Environment(\.dismiss) private var dismiss
+    @State private var running = false
+    @State private var runNote: String?
 
     var body: some View {
         ScrollView {
@@ -780,7 +833,11 @@ private struct SourceDetail: View {
 
                 section("Identity") {
                     kv("ID",        row.id)
-                    kv("Layer",     row.layer ?? "—")
+                    kv("Group",     row.collectorGroupLabel ?? row.collectorGroup ?? "not reported by this server")
+                    kv("Collector", row.collectorLabel.map { "\($0) (\(row.collector ?? "?"))" } ?? row.collector ?? "not reported by this server")
+                    kv("Engine",    row.engine ?? "not reported by this server")
+                    kv("Kind",      row.kind ?? "not reported by this server")
+                    kv("Layer",     row.layer ?? "none")
                     kv("Category",  row.category ?? "—")
                     kv("Type",      row.type ?? "—")
                     kv("Free?",     row.free.map { $0 ? "yes" : "no" } ?? "—")
@@ -796,7 +853,7 @@ private struct SourceDetail: View {
                     kv("Records",      row.recordsCount.map(String.init) ?? "—")
                 }
 
-                if isBreach { breachSection }
+                if isBreach { breachSection } else { runSection }
 
                 if row.requiresKey == true {
                     section("API key") {
@@ -899,6 +956,40 @@ private struct SourceDetail: View {
                     last_published: row.lastSuccess,
                     ttl_ms: nil,
                     parent_id: nil)
+    }
+
+    /// POST /api/intel/sources/:id/run — the same call the web client's "Run
+    /// now" makes. The result line is the server's own numbers (ingested rows,
+    /// duration) or its error, never a guess; the row's counts refresh on the
+    /// dashboard's next load.
+    private var runSection: some View {
+        section("Run") {
+            HStack {
+                Button {
+                    running = true; runNote = nil
+                    Task {
+                        defer { running = false }
+                        do {
+                            let r = try await apiClient.api.intelRunSource(row.id)
+                            runNote = r.error.map { "failed: \($0)" }
+                                ?? "ran: \(r.ingested.map(String.init) ?? "?") new rows in \(r.duration_ms.map(String.init) ?? "?") ms"
+                        } catch { runNote = "failed: \(error.localizedDescription)" }
+                    }
+                } label: {
+                    HStack(spacing: 6) {
+                        if running { ProgressView().scaleEffect(0.7) } else { Image(systemName: "play.fill").accessibilityHidden(true) }
+                        Text(running ? "Running…" : "Run now")
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.small)
+                .disabled(running || row.kind == "internal")
+                if let n = runNote {
+                    Text(n).font(.caption2).foregroundStyle(n.hasPrefix("failed") ? theme.danger : theme.textMuted)
+                }
+                Spacer()
+            }
+        }
     }
 
     private var probeActions: some View {
