@@ -501,7 +501,7 @@ static char *normalize_camera_id(const char *id) {
 static int cam_prereq(void *ud, char *primary_ip, char *local_ip,
                       int primary_port, int local_port) {
   (void)ud; (void)local_ip; (void)primary_port; (void)local_port;
-  if (hostgate_addr_check_floor(primary_ip) != HG_URL_OK) {
+  if (hostgate_camera_addr_check(primary_ip) != HG_URL_OK) {
     fprintf(stderr, "[camera-stills] blocked connection to %s "
                     "(private/link-local)\n", primary_ip ? primary_ip : "?");
     return CURL_PREREQFUNC_ABORT;
@@ -510,31 +510,29 @@ static int cam_prereq(void *ud, char *primary_ip, char *local_ip,
 }
 #endif
 
-/* THE DESTINATION check for this module's own sockets, at the FLOOR strength
- * (hostgate_url_check, not _strict): every camera in the corpus is somebody
- * else's LAN box reached over RFC1918 or a plain public address, and the strict
- * ruleset — written for URLs an API CALLER supplied — would refuse the LAN
- * cameras hostgate.h explicitly names as a shipped feature. An operator who
- * wants those refused sets JO_HTTP_BLOCK_PRIVATE=1, which raises this call and
- * cam_prereq() together, because both read the floor rather than hardcoding a
- * strength.
+/* THE DESTINATION check for this module's own sockets, at the CAMERA strength
+ * (hostgate.h): every camera URL in the corpus was written by a discovery
+ * collector from whatever its upstream reported, so loopback and RFC1918 are
+ * refused unless the operator set JO_CAMERA_ALLOW_LAN=1. This used to be the
+ * floor ("LAN cameras are a shipped feature"), which let one poisoned record
+ * point the pod — and capture_one, on a user's request — at the server's own
+ * network.
  *
- * rtsp/rtsps cannot go through hostgate_url_check() — it answers BAD_SCHEME for
- * anything that is not http(s) — and ffmpeg owns that socket, so there is no
- * connect callback to hang the resolved-address half on. What is checkable is
- * the literal address, which is what an SSRF payload actually spells
- * (rtsp://169.254.169.254/…): hostgate_addr_check_floor() classifies it and
- * fails open on a hostname, exactly as it does on the http path before DNS. A
- * NAME that resolves into a blocked range is therefore NOT caught on the rtsp
- * leg; that gap belongs to core/ffmpeg.h, and it is stated here rather than
- * left to be discovered. */
+ * The name is RESOLVED here and every answer judged. On the MJPEG leg
+ * cam_prereq() re-checks the peer actually connected to; the snapshot leg goes
+ * through http_request(), whose per-connection check is only the floor; and on
+ * the rtsp/HLS legs ffmpeg owns the socket (core/ffmpeg.c repeats this check
+ * before spawning). For those two this lookup is the resolved-address check. A
+ * DNS answer that changes between it and the real connect is the remaining
+ * gap, stated in ffmpeg.h. One lookup per capture costs nothing on a
+ * serialised pod. */
 static int cam_gate_url(const char *url) {
   if (!url || !*url) return HG_URL_BAD_HOST;
-  if (strncasecmp(url, "http://", 7) == 0 || strncasecmp(url, "https://", 8) == 0)
-    return hostgate_url_check(url);
-  char host[256];
-  if (!hostgate_url_host(url, host, sizeof host)) return HG_URL_BAD_HOST;
-  return hostgate_addr_check_floor(host);
+  if (strncasecmp(url, "http://", 7) == 0 || strncasecmp(url, "https://", 8) == 0) {
+    int rc = hostgate_url_check(url);
+    if (rc != HG_URL_OK) return rc;
+  }
+  return hostgate_camera_url_check(url, 1);
 }
 
 typedef struct {
@@ -600,6 +598,7 @@ static int stream_grab(const char *url, int timeout_ms, size_t maxb,
                        char *ct_out, size_t ct_cap, long *status_out) {
   if (!url || !out || !outlen) return 0;
   { int gk = hostgate_url_check(url);
+    if (gk == HG_URL_OK) gk = hostgate_camera_url_check(url, 0);
     if (gk != HG_URL_OK) {
       fprintf(stderr, "[stills] refused %s: %s\n", url, hostgate_url_reason(gk));
       return 0;

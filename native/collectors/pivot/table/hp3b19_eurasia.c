@@ -3157,6 +3157,7 @@ static const hp_source HP3B19_EURASIA[] = {
     .page_param = "startIndex",
     .page_size = 100,
     .page_start = 0,
+    .page_max = 36,   /* 3,581 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "properties.label",
     .description = "Hungarian administrative units as INSPIRE features: national, "
       "county, district and municipal levels with their official codes, "

@@ -150,6 +150,10 @@ int                registry_count(void);
 /* >0 means some source id is defined twice and the second copy is
  * unreachable via registry_get/--run/the OSINT dispatcher. */
 int                registry_duplicate_count(void);
+/* >0 means some source can never execute: interval 0 (so the scheduler skips
+ * it) under a collector that is neither "osint" nor an internal "_" lane (so
+ * core/osint_dispatch.c's is_entity_pivot() rejects it too). House rule 3. */
+int                registry_never_runs_count(void);
 const source_def **registry_all(void);
 const source_def  *registry_get(const char *id);
 /* THE one definition of "entity pivot" — the set the OSINT dispatcher offers
@@ -163,6 +167,12 @@ const source_def  *registry_get(const char *id);
  * hpengine rows took their table's name as collector, and it had always left
  * out the 15 interval-0 {q} rows that named another collector. */
 int                registry_is_entity_pivot(const source_def *d);
+/* Index of `id` in registry_all(), or -1. O(1): a hash built once after the
+ * constructors (registry.c). */
+int                registry_index(const char *id);
+/* Build the id index and report DUPLICATE ids now rather than at the first
+ * lookup. Idempotent and thread-safe; main() calls it first thing. */
+void               registry_freeze(void);
 
 #define REGISTER_SOURCE(defsym) \
   __attribute__((constructor)) static void reg_##defsym(void) { \

@@ -1,6 +1,7 @@
 /* core/breach_adapter.c — see breach_adapter.h. */
 #include "breach_adapter.h"
 #include "breach_index.h"
+#include "audit.h"
 #include "../third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -255,4 +256,85 @@ char *breach_adapter_reveal_by_uid(db_handle *db, const char *uid) {
   char *js = cJSON_PrintUnformatted(out);
   cJSON_Delete(out);
   return js;
+}
+
+/* ── the audited door ───────────────────────────────────────────────────────
+ * breach_adapter_reveal_by_uid() decrypts a third party's leaked password and
+ * the HTTP route in front of it checked one thing — platform operator — and
+ * wrote nothing down. docs/breach-check-pipeline.md §6.5 promises "every check
+ * writes an audit_events row"; the one call that returns PLAINTEXT was the one
+ * that did not. So, here and not in httpd.c (where it would be one more thing
+ * a second caller could forget):
+ *   - a non-empty `reason` is required — the audit row has to say WHY, or it
+ *     is a log of who, which an operator token already implies;
+ *   - the audit row is written BEFORE decryption, and if it cannot be written
+ *     at all, nothing is revealed (fail closed: an unrecorded reveal is the
+ *     exact outcome this exists to prevent);
+ *   - an unknown uid is a 404 with no row — nothing was revealed. */
+#define REVEAL_REASON_MAX 500
+
+static char *reveal_err(int *status, int code, const char *err, const char *detail) {
+  *status = code;
+  cJSON *o = cJSON_CreateObject();
+  cJSON_AddStringToObject(o, "error", err);
+  if (detail) cJSON_AddStringToObject(o, "detail", detail);
+  char *js = cJSON_PrintUnformatted(o);
+  cJSON_Delete(o);
+  return js;
+}
+
+char *breach_adapter_reveal_audited(db_handle *db, const char *uid,
+                                    const char *requester_id,
+                                    const char *requester_email,
+                                    const char *reason, const char *ip,
+                                    int *status) {
+  int st_dummy;
+  if (!status) status = &st_dummy;
+  if (!db || !db->h || !uid || strncmp(uid, "breach:", 7) != 0)
+    return reveal_err(status, 404, "not_found", NULL);
+
+  /* Trim, then require. Whitespace is not a reason. */
+  const char *r = reason ? reason : "";
+  while (*r == ' ' || *r == '\t' || *r == '\n' || *r == '\r') r++;
+  size_t rl = strlen(r);
+  while (rl && (r[rl - 1] == ' ' || r[rl - 1] == '\t' || r[rl - 1] == '\n' ||
+                r[rl - 1] == '\r')) rl--;
+  if (!rl)
+    return reveal_err(status, 400, "reason_required",
+      "revealing a leaked secret is audited; pass ?reason= saying why "
+      "(case / ticket reference)");
+  if (rl > REVEAL_REASON_MAX)
+    return reveal_err(status, 400, "reason_too_long", "at most 500 characters");
+
+  sqlite3_stmt *q = NULL;
+  int exists = 0;
+  if (sqlite3_prepare_v2(db->h, "SELECT 1 FROM breach_items WHERE keyid=?1",
+                         -1, &q, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(q, 1, uid + 7, -1, SQLITE_TRANSIENT);
+    exists = sqlite3_step(q) == SQLITE_ROW;
+    sqlite3_finalize(q);
+  }
+  if (!exists) return reveal_err(status, 404, "not_found", NULL);
+
+  cJSON *pl = cJSON_CreateObject();
+  cJSON_AddStringToObject(pl, "requester", requester_id ? requester_id : "");
+  if (requester_email && *requester_email)
+    cJSON_AddStringToObject(pl, "requester_email", requester_email);
+  char *rs = malloc(rl + 1);
+  if (rs) { memcpy(rs, r, rl); rs[rl] = 0; }
+  cJSON_AddStringToObject(pl, "reason", rs ? rs : "");
+  free(rs);
+  char *pj = cJSON_PrintUnformatted(pl);
+  cJSON_Delete(pl);
+  int arc = audit_write_ex(db, "platform", requester_id, "breach.reveal", uid,
+                           pj, ip, NULL);
+  free(pj);
+  if (arc < 0)
+    return reveal_err(status, 503, "audit_unavailable",
+      "the reveal could not be recorded, so nothing was revealed; retry");
+
+  char *body = breach_adapter_reveal_by_uid(db, uid);
+  if (!body) return reveal_err(status, 404, "not_found", NULL);
+  *status = 200;
+  return body;
 }

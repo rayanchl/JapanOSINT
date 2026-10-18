@@ -65,7 +65,7 @@ COLLECTOR("grp_unassigned", "Unassigned — add to core/collectors.def", "未分
           "Collectors the registry carries that collectors.def does not list yet. Should be empty.", NULL)
 
 /* ── collectors (parent = group) ─────────────────────────────────────── */
-/* Government & public administration: 111 collector(s), 5307 sources */
+/* Government & public administration: 113 collector(s), 5343 sources */
 COLLECTOR("government", "Government feeds", "政府・自治体フィード", "Scheduled feeds from national and municipal government sites.", "grp_government")  /* 535 src; local-gov 180, government 116, transparency 61 */
 COLLECTOR("us_state", "United States — states", "米国 州", NULL, "grp_government")  /* 192 src; opendata 57, registry 33, transport 19 */
 COLLECTOR("hp3b23_jpmuni", "Japan — municipalities (batch 23)", "日本 市区町村", NULL, "grp_government")  /* 190 src; government 190 */
@@ -121,6 +121,7 @@ COLLECTOR("hp2_asia_east", "asia_east (hp2 table)", NULL, NULL, "grp_government"
 COLLECTOR("hp2_asia_south_sea", "asia_south_sea (hp2 table)", NULL, NULL, "grp_government")  /* 22 src; government 11, economy 8, legal 2 */
 COLLECTOR("hp2_eu_institutions", "eu_institutions (hp2 table)", NULL, NULL, "grp_government")  /* 22 src; government 18, safety 3, research 1 */
 COLLECTOR("hp2_southam_brazil", "southam_brazil (hp2 table)", NULL, NULL, "grp_government")  /* 22 src; government 14, economy 2, industry 2 */
+COLLECTOR("hp3b42_jpcptmuni", "Japan — municipal sites, WordPress custom post types (batch 42)", "日本 自治体サイト カスタム投稿", NULL, "grp_government")  /* 22 src; government 22 */
 COLLECTOR("hp_americas_deep", "americas_deep (hp table)", NULL, NULL, "grp_government")  /* 22 src; government 15, economy 3, health 2 */
 COLLECTOR("hp_uk_deep", "uk_deep (hp table)", NULL, NULL, "grp_government")  /* 22 src; government 19, economy 2, health 1 */
 COLLECTOR("hp2_eu_central", "eu_central (hp2 table)", NULL, NULL, "grp_government")  /* 21 src; government 21 */
@@ -146,6 +147,7 @@ COLLECTOR("hp2_asia_central", "asia_central (hp2 table)", NULL, NULL, "grp_gover
 COLLECTOR("hp3_gov", "gov (hp3 table)", NULL, NULL, "grp_government")  /* 16 src; government 11, legal 3, economy 1 */
 COLLECTOR("hp3b40_cngov", "cngov (batch 40)", NULL, NULL, "grp_government")  /* 16 src; government 5, registry 3, culture 2 */
 COLLECTOR("hp3b31_intlbody", "intlbody (batch 31)", NULL, NULL, "grp_government")  /* 15 src; government 11, finance 2, legal 1 */
+COLLECTOR("hp3b41_jpmuniwp", "Japan — municipal websites, WordPress feeds (batch 41)", "日本 自治体サイト WordPress", NULL, "grp_government")  /* 15 src; government 15 */
 COLLECTOR("int_government", "International — government", NULL, NULL, "grp_government")  /* 15 src; government 15 */
 COLLECTOR("hp3b19_northam", "northam (batch 19)", NULL, NULL, "grp_government")  /* 13 src; government 5, environment 3, transport 3 */
 COLLECTOR("es_government", "Spain — government", NULL, NULL, "grp_government")  /* 8 src; government 8 */
@@ -155,10 +157,10 @@ COLLECTOR("id_permits", "Indonesia — permits", NULL, NULL, "grp_government")  
 COLLECTOR("eg_government", "Egypt — government", NULL, NULL, "grp_government")  /* 5 src; government 5 */
 COLLECTOR("hp3b38_china", "china (batch 38)", NULL, NULL, "grp_government")  /* 5 src; economy 2, environment 2, research 1 */
 COLLECTOR("hp3b38_uk", "uk (batch 38)", NULL, NULL, "grp_government")  /* 4 src; economy 1, environment 1, health 1 */
-COLLECTOR("gr_government", "Greece — government", NULL, NULL, "grp_government")  /* 3 src; government 3 */
 COLLECTOR("hp3b38_france", "france (batch 38)", NULL, NULL, "grp_government")  /* 3 src; economy 1, environment 1, research 1 */
 COLLECTOR("il_government", "Israel — government", NULL, NULL, "grp_government")  /* 3 src; government 3 */
 COLLECTOR("au_regulatory", "Australia — regulatory", NULL, NULL, "grp_government")  /* 2 src; regulatory 2 */
+COLLECTOR("gr_government", "Greece — government", NULL, NULL, "grp_government")  /* 2 src; government 2 */
 COLLECTOR("id_property", "Indonesia — property", NULL, NULL, "grp_government")  /* 2 src; property 2 */
 COLLECTOR("lk_regulator", "Sri Lanka — regulator", NULL, NULL, "grp_government")  /* 2 src; regulator 2 */
 COLLECTOR("np_gov-publications", "Nepal — gov publications", NULL, NULL, "grp_government")  /* 2 src; gov-publications 2 */
@@ -207,7 +209,11 @@ COLLECTOR("int_legal", "International — legal", NULL, NULL, "grp_legal")  /* 1
 COLLECTOR("nl_legal", "Netherlands — legal", NULL, NULL, "grp_legal")  /* 1 src; legal 1 */
 COLLECTOR("sk_legal", "Slovakia — legal", NULL, NULL, "grp_legal")  /* 1 src; legal 1 */
 
-/* Companies, finance & markets: 61 collector(s), 1142 sources */
+/* Companies, finance & markets: 67 collector(s), 3226 sources */
+COLLECTOR("hp3b42_jpcptcorp", "Japan — company sites, WordPress custom post types (batch 42)", "日本 企業サイト カスタム投稿", NULL, "grp_corporate")  /* 912 src; corporate 912 */
+COLLECTOR("hp3b42_jppages", "Japan — company sites, WordPress pages (batch 42)", "日本 企業サイト 固定ページ", NULL, "grp_corporate")  /* 409 src; corporate 356, research 24, finance 15 */
+COLLECTOR("hp3b41_jpcorpwp", "Japan — company websites, WordPress feeds (batch 41)", "日本 企業サイト WordPress", NULL, "grp_corporate")  /* 380 src; corporate 380 */
+COLLECTOR("hp3b42_jpusers", "Japan — company sites, WordPress authors (batch 42)", "日本 企業サイト 投稿者", NULL, "grp_corporate")  /* 347 src; corporate 306, research 18, government 14 */
 COLLECTOR("hp3b30_jpbank2", "Japan — banks (batch 30)", "日本 銀行", NULL, "grp_corporate")  /* 122 src; finance 122 */
 COLLECTOR("hp3b25_jpbizreg", "jpbizreg (batch 25)", NULL, NULL, "grp_corporate")  /* 104 src; government 50, business 25, health 19 */
 COLLECTOR("hp3b19_finance", "finance (batch 19)", NULL, NULL, "grp_corporate")  /* 102 src; corporate 66, economy 27, legal 4 */
@@ -221,12 +227,14 @@ COLLECTOR("hp3b38_usa", "usa (batch 38)", NULL, NULL, "grp_corporate")  /* 36 sr
 COLLECTOR("hp3b39_cn39", "cn39 (batch 39)", NULL, NULL, "grp_corporate")  /* 31 src; finance 20, transport 4, environment 2 */
 COLLECTOR("hp3b32_jpregister", "jpregister (batch 32)", NULL, NULL, "grp_corporate")  /* 29 src; registry 21, finance 5, government 3 */
 COLLECTOR("hp3b40_cnmkt", "cnmkt (batch 40)", NULL, NULL, "grp_corporate")  /* 23 src; finance 11, regulatory 10, registry 2 */
+COLLECTOR("hp3b42_jpcptbank", "Japan — bank sites, WordPress custom post types (batch 42)", "日本 銀行サイト カスタム投稿", NULL, "grp_corporate")  /* 21 src; finance 21 */
 COLLECTOR("hp3b32_jpmarket", "jpmarket (batch 32)", NULL, NULL, "grp_corporate")  /* 20 src; finance 20 */
 COLLECTOR("hp_chain_finance", "chain_finance (hp table)", NULL, NULL, "grp_corporate")  /* 20 src; cyber 12, economy 8 */
 COLLECTOR("hp3b20_tradestat", "tradestat (batch 20)", NULL, NULL, "grp_corporate")  /* 17 src; economy 17 */
 COLLECTOR("finreg", "finreg", NULL, NULL, "grp_corporate")  /* 16 src; finance 16 */
 COLLECTOR("fr_corporate", "France — corporate", NULL, NULL, "grp_corporate")  /* 16 src; corporate 16 */
 COLLECTOR("industry", "industry", NULL, NULL, "grp_corporate")  /* 16 src; industry 16 */
+COLLECTOR("hp3b41_jpbankwp", "Japan — bank websites, WordPress feeds (batch 41)", "日本 銀行サイト WordPress", NULL, "grp_corporate")  /* 15 src; finance 15 */
 COLLECTOR("hp3_corp", "corp (hp3 table)", NULL, NULL, "grp_corporate")  /* 13 src; corporate 7, economy 6 */
 COLLECTOR("hp3b28_jpbank", "jpbank (batch 28)", NULL, NULL, "grp_corporate")  /* 13 src; finance 7, regulator 4, disclosure 2 */
 COLLECTOR("hp3b39_tbl39", "tbl39 (batch 39)", NULL, NULL, "grp_corporate")  /* 13 src; finance 8, infrastructure 2, geo 1 */
@@ -382,14 +390,16 @@ COLLECTOR("qa_statistics", "Qatar — statistics", NULL, NULL, "grp_opendata")  
 COLLECTOR("sl_statistics", "Sierra Leone — statistics", NULL, NULL, "grp_opendata")  /* 1 src; statistics 1 */
 COLLECTOR("tn_microdata", "Tunisia — microdata", NULL, NULL, "grp_opendata")  /* 1 src; microdata 1 */
 
-/* Science, research & academia: 16 collector(s), 1288 sources */
+/* Science, research & academia: 18 collector(s), 1520 sources */
 COLLECTOR("academic", "Academic and research feeds", "学術・研究フィード", NULL, "grp_science")  /* 371 src; literature 134, clinical 61, genomics 41 */
 COLLECTOR("science", "Science feeds", "科学フィード", NULL, "grp_science")  /* 341 src; earthobs 61, spaceweather 51, genomics 42 */
+COLLECTOR("hp3b42_jpcptuni", "Japan — university sites, WordPress custom post types (batch 42)", "日本 大学サイト カスタム投稿", NULL, "grp_science")  /* 205 src; research 205 */
 COLLECTOR("hp3b38_africa", "africa (batch 38)", NULL, NULL, "grp_science")  /* 102 src; research 54, economy 42, environment 6 */
 COLLECTOR("hp3b35_jpweko", "Japan — JAIRO Cloud repositories (batch 35)", "日本 機関リポジトリ", NULL, "grp_science")  /* 100 src; research 100 */
 COLLECTOR("hp3b25_jpacademic", "jpacademic (batch 25)", NULL, NULL, "grp_science")  /* 95 src; research 95 */
 COLLECTOR("hp3b19_science", "science (batch 19)", NULL, NULL, "grp_science")  /* 85 src; research 53, maritime 22, disaster 6 */
 COLLECTOR("hp3b32_jprepo2", "jprepo2 (batch 32)", NULL, NULL, "grp_science")  /* 75 src; research 75 */
+COLLECTOR("hp3b41_jpuniwp", "Japan — university websites, WordPress feeds (batch 41)", "日本 大学サイト WordPress", NULL, "grp_science")  /* 27 src; research 27 */
 COLLECTOR("hp3b20_scholarly", "scholarly (batch 20)", NULL, NULL, "grp_science")  /* 26 src; research 26 */
 COLLECTOR("hp_research_ip", "research_ip (hp table)", NULL, NULL, "grp_science")  /* 22 src; research 19, economy 2, health 1 */
 COLLECTOR("hp3_research", "research (hp3 table)", NULL, NULL, "grp_science")  /* 16 src; research 10, reference 3, health 2 */
@@ -400,12 +410,12 @@ COLLECTOR("de_research", "Germany — research", NULL, NULL, "grp_science")  /* 
 COLLECTOR("fr_research", "France — research", NULL, NULL, "grp_science")  /* 3 src; research 3 */
 COLLECTOR("it_research", "Italy — research", NULL, NULL, "grp_science")  /* 2 src; research 2 */
 
-/* Health, food & agriculture: 23 collector(s), 393 sources */
+/* Health, food & agriculture: 23 collector(s), 384 sources */
 COLLECTOR("health", "Health", "保健・医療", NULL, "grp_health")  /* 125 src; clinical 53, literature 25, outbreak 16 */
 COLLECTOR("hp3b19_health", "health (batch 19)", NULL, NULL, "grp_health")  /* 115 src; health 115 */
 COLLECTOR("hp3b25_jpkaigo", "jpkaigo (batch 25)", NULL, NULL, "grp_health")  /* 35 src; health 35 */
-COLLECTOR("us_health", "United States — health", NULL, NULL, "grp_health")  /* 27 src; health 27 */
 COLLECTOR("int_health", "International — health", NULL, NULL, "grp_health")  /* 19 src; health 19 */
+COLLECTOR("us_health", "United States — health", NULL, NULL, "grp_health")  /* 18 src; health 18 */
 COLLECTOR("hp3b21_healthpay", "healthpay (batch 21)", NULL, NULL, "grp_health")  /* 16 src; health 16 */
 COLLECTOR("agriculture", "agriculture", NULL, NULL, "grp_health")  /* 11 src; agriculture 8, wildlife 3 */
 COLLECTOR("hp3b21_providerreg", "providerreg (batch 21)", NULL, NULL, "grp_health")  /* 10 src; health 10 */
@@ -425,9 +435,9 @@ COLLECTOR("mg_health", "Madagascar — health", NULL, NULL, "grp_health")  /* 1 
 COLLECTOR("ml_health", "Mali — health", NULL, NULL, "grp_health")  /* 1 src; health 1 */
 COLLECTOR("sn_health", "Senegal — health", NULL, NULL, "grp_health")  /* 1 src; health 1 */
 
-/* Environment, climate & hazards: 30 collector(s), 1045 sources */
+/* Environment, climate & hazards: 30 collector(s), 1043 sources */
 COLLECTOR("disaster", "Disaster and hazard", "災害・ハザード", NULL, "grp_environment")  /* 247 src; weather 69, wildfire 66, seismic 46 */
-COLLECTOR("environment", "Environment", "環境", NULL, "grp_environment")  /* 228 src; environment 94, weather 45, ocean 29 */
+COLLECTOR("environment", "Environment", "環境", NULL, "grp_environment")  /* 227 src; environment 93, weather 45, ocean 29 */
 COLLECTOR("earthobs", "Earth observation", "地球観測", NULL, "grp_environment")  /* 129 src; geodata 63, science 25, environment 17 */
 COLLECTOR("europe_env", "European environment", "欧州環境", NULL, "grp_environment")  /* 120 src; geo 88, environment 26, hazard 6 */
 COLLECTOR("climate_air", "climate air", NULL, NULL, "grp_environment")  /* 50 src; environment 49, geodata 1 */
@@ -447,7 +457,7 @@ COLLECTOR("hp3b19_fisheries", "fisheries (batch 19)", NULL, NULL, "grp_environme
 COLLECTOR("np_disaster", "Nepal — disaster", NULL, NULL, "grp_environment")  /* 6 src; disaster 6 */
 COLLECTOR("eu_environment", "EU — environment", NULL, NULL, "grp_environment")  /* 5 src; environment 5 */
 COLLECTOR("hp3b34_fdsnevent", "fdsnevent (batch 34)", NULL, NULL, "grp_environment")  /* 5 src; surveillance 5 */
-COLLECTOR("jp_river", "Japan — rivers and flood", "日本 河川・洪水", NULL, "grp_environment")  /* 5 src; disaster 5 */
+COLLECTOR("jp_river", "Japan — rivers and flood", "日本 河川・洪水", NULL, "grp_environment")  /* 4 src; disaster 4 */
 COLLECTOR("th_hazard", "Thailand — hazard", NULL, NULL, "grp_environment")  /* 4 src; hazard 4 */
 COLLECTOR("de_environment", "Germany — environment", NULL, NULL, "grp_environment")  /* 3 src; environment 3 */
 COLLECTOR("np_hydrology", "Nepal — hydrology", NULL, NULL, "grp_environment")  /* 2 src; hydrology 2 */
@@ -462,8 +472,8 @@ COLLECTOR("space", "Space", "宇宙", NULL, "grp_space")  /* 114 src; astronomy 
 COLLECTOR("space_sci", "space sci", NULL, NULL, "grp_space")  /* 56 src; space 56 */
 COLLECTOR("satellite", "Satellites", "衛星", NULL, "grp_space")  /* 34 src; satellite 34 */
 
-/* Cyber threat intelligence & hacking: 19 collector(s), 1182 sources */
-COLLECTOR("cyber", "Cyber threat intelligence", "サイバー脅威情報", NULL, "grp_cyber")  /* 203 src; cyber 202, infrastructure 1 */
+/* Cyber threat intelligence & hacking: 19 collector(s), 1180 sources */
+COLLECTOR("cyber", "Cyber threat intelligence", "サイバー脅威情報", NULL, "grp_cyber")  /* 201 src; cyber 200, infrastructure 1 */
 COLLECTOR("hp3b22_pastechat", "Paste sites and chat leaks (batch 22)", "ペーストサイト・チャット", NULL, "grp_cyber")  /* 148 src; social 148 */
 COLLECTOR("security", "Security advisories", "セキュリティ勧告", NULL, "grp_cyber")  /* 130 src; advisory 84, vulnerability 26, policy 13 */
 COLLECTOR("hp3b19_cyber", "cyber (batch 19)", NULL, NULL, "grp_cyber")  /* 124 src; threat 53, infrastructure 51, research 14 */
@@ -558,12 +568,12 @@ COLLECTOR("marketplace", "marketplace", NULL, NULL, "grp_social")  /* 5 src; mar
 COLLECTOR("classifieds", "classifieds", NULL, NULL, "grp_social")  /* 2 src; classifieds 2 */
 COLLECTOR("np_people", "Nepal — people", NULL, NULL, "grp_social")  /* 1 src; people 1 */
 
-/* Geospatial & mapping: 17 collector(s), 277 sources */
+/* Geospatial & mapping: 17 collector(s), 275 sources */
 COLLECTOR("hp3b25_jpgeospatial", "jpgeospatial (batch 25)", NULL, NULL, "grp_geo")  /* 88 src; government 88 */
 COLLECTOR("hp3b32_jparcgis", "jparcgis (batch 32)", NULL, NULL, "grp_geo")  /* 53 src; infrastructure 18, public-safety 12, environment 8 */
 COLLECTOR("hp3b19_osm", "osm (batch 19)", NULL, NULL, "grp_geo")  /* 33 src; reference 13, transport 8, osint 6 */
 COLLECTOR("hp3b40_jpgeo3", "jpgeo3 (batch 40)", NULL, NULL, "grp_geo")  /* 29 src; environment 7, registry 4, economy 3 */
-COLLECTOR("geospatial", "geospatial", NULL, NULL, "grp_geo")  /* 26 src; geospatial 18, opendata 6, commercial 2 */
+COLLECTOR("geospatial", "geospatial", NULL, NULL, "grp_geo")  /* 24 src; geospatial 16, opendata 6, commercial 2 */
 COLLECTOR("us_civilian", "United States — civilian", NULL, NULL, "grp_geo")  /* 14 src; civilian 14 */
 COLLECTOR("ar_geography", "Argentina — geography", NULL, NULL, "grp_geo")  /* 7 src; geography 7 */
 COLLECTOR("mm_geodata", "Myanmar — geodata", NULL, NULL, "grp_geo")  /* 4 src; geodata 4 */
@@ -616,8 +626,8 @@ COLLECTOR("hp3b31_survcam", "survcam (batch 31)", NULL, NULL, "grp_surveillance"
 COLLECTOR("hp_exposure_geo", "exposure_geo (hp table)", NULL, NULL, "grp_surveillance")  /* 14 src; cyber 9, geospatial 4, satellite 1 */
 COLLECTOR("hp3b31_survsensor", "survsensor (batch 31)", NULL, NULL, "grp_surveillance")  /* 12 src; surveillance 12 */
 
-/* Investigation pivots & reference: 10 collector(s), 1677 sources */
-COLLECTOR("osint", "Hand-written OSINT pivots", "手書きOSINTピボット", "Entity-pivot collectors written by hand in collectors/sources/, plus the gnews-* news feeds.", "grp_osint")  /* 1427 src; news 919, government 142, cyber 127 */
+/* Investigation pivots & reference: 10 collector(s), 1693 sources */
+COLLECTOR("osint", "Hand-written OSINT pivots", "手書きOSINTピボット", "Entity-pivot collectors written by hand in collectors/sources/, plus the gnews-* news feeds.", "grp_osint")  /* 1443 src; news 919, government 143, cyber 129 */
 COLLECTOR("hp3b22_deeparchive", "Web archives (batch 22)", "ウェブアーカイブ", NULL, "grp_osint")  /* 190 src; investigation 123, cyber 41, government 20 */
 COLLECTOR("hp3b19_reference", "reference (batch 19)", NULL, NULL, "grp_osint")  /* 28 src; government 7, energy 4, maritime 4 */
 COLLECTOR("hp3b19_idbridge", "idbridge (batch 19)", NULL, NULL, "grp_osint")  /* 15 src; corporate 5, aviation 2, economy 2 */
@@ -628,8 +638,8 @@ COLLECTOR("hp3b28_jpdb", "jpdb (batch 28)", NULL, NULL, "grp_osint")  /* 1 src; 
 COLLECTOR("intelligence", "intelligence", NULL, NULL, "grp_osint")  /* 1 src; intelligence 1 */
 COLLECTOR("lk_reference", "Sri Lanka — reference", NULL, NULL, "grp_osint")  /* 1 src; reference 1 */
 
-/* Internal pods & tools: 4 collector(s), 16 sources */
-COLLECTOR("_maint", "Maintenance pods", "保守ポッド", "Internal pipeline pods — not data sources.", "grp_internal")  /* 11 src; maintenance 11 */
+/* Internal pods & tools: 4 collector(s), 17 sources */
+COLLECTOR("_maint", "Maintenance pods", "保守ポッド", "Internal pipeline pods — not data sources.", "grp_internal")  /* 12 src; maintenance 12 */
 COLLECTOR("_enrich", "Enrichment pods", "エンリッチメントポッド", "Internal enrichment pods — not data sources.", "grp_internal")  /* 3 src; enrichment 3 */
 COLLECTOR("_probe", "Probe tools", "プローブ", "Operator probe tools — not data sources.", "grp_internal")  /* 1 src; cyber 1 */
 COLLECTOR("_test", "Test fixtures", "テスト用", "Fixtures for the test suite — not data sources.", "grp_internal")  /* 1 src; test 1 */

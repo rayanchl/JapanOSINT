@@ -17,6 +17,7 @@
 #include "source.h"
 #include "lib/feedlib.h"
 #include "lib/pagewalk.h"
+#include "lib/jocore.h"   /* jo_trunc_notice: a bound disclosed as data */
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -469,14 +470,41 @@ static inline int od_ckan_collect(const source_ctx *ctx, intel_sink *sink,
 /* udata portal API (data.public.lu, dados.gov.pt, data.gov.rs). The envelope
  * is {"data":[…],"next_page":…} — there is NO CKAN result.results wrapper,
  * and organization/owner are objects. Returns #emitted or -1. */
+/* Pages a udata catalogue to its end.
+ *
+ * It used to make ONE request. udata publishes both `next_page` and its own
+ * `total`, so the shortfall was measurable the whole time and nobody measured
+ * it: data.public.lu answered `page_size=20` with 20 datasets out of a
+ * declared total of 3,193 (2026-10-11). The same helper serves Luxembourg,
+ * Portugal and Serbia, so one request per run was the whole catalogue for
+ * three countries — 20 of 3,193 is not a sample, it is the first page.
+ *
+ * The walk follows the server's own next_page, which is the only cursor worth
+ * trusting, and stops at a ceiling. When the ceiling bites, or when the
+ * upstream's own total exceeds what we took, it is DISCLOSED as a
+ * collector-truncation-notice rather than left as a number nobody compares. */
+#define OD_UDATA_MAX_PAGES 400
+
 static inline int od_udata_collect(const source_ctx *ctx, intel_sink *sink,
                                    const char *url, const char *tags) {
-  cJSON *doc = feed_get_json(ctx->http, url, 30000);
-  if (!doc) return -1;
-  const cJSON *arr = cJSON_GetObjectItem(doc, "data");
-  if (!cJSON_IsArray(arr)) { cJSON_Delete(doc); return -1; }
+  char *next = url ? strdup(url) : NULL;
+  if (!next) return -1;
+  int n = 0, pages = 0, first = 1;
+  long total = -1;
 
-  int n = 0;
+  while (next && pages < OD_UDATA_MAX_PAGES) {
+  cJSON *doc = feed_get_json(ctx->http, next, 30000);
+  free(next); next = NULL;
+  if (!doc) { if (first) return -1; break; }
+  const cJSON *arr = cJSON_GetObjectItem(doc, "data");
+  if (!cJSON_IsArray(arr)) { cJSON_Delete(doc); if (first) return -1; break; }
+  first = 0;
+  pages++;
+  {
+    const cJSON *t = cJSON_GetObjectItem(doc, "total");
+    if (total < 0 && cJSON_IsNumber(t)) total = (long)t->valuedouble;
+  }
+
   const cJSON *d;
   cJSON_ArrayForEach(d, arr) {
     if (!cJSON_IsObject(d)) continue;
@@ -522,7 +550,27 @@ static inline int od_udata_collect(const source_ctx *ctx, intel_sink *sink,
     it.tags_json = tags;
     n += od_emit(sink, &it, props);
   }
+  {
+    const cJSON *np = cJSON_GetObjectItem(doc, "next_page");
+    if (cJSON_IsString(np) && np->valuestring[0]) next = strdup(np->valuestring);
+  }
   cJSON_Delete(doc);
+  }
+
+  if (next) {
+    jo_trunc_notice(sink, ctx->source_id, url, n,
+                    total > n ? total : (long)n,
+                    "the page ceiling stopped the walk and the upstream still "
+                    "published a next page",
+                    "raise OD_UDATA_MAX_PAGES in collectors/sources/od_shared.inc");
+    free(next);
+  } else if (total > n) {
+    jo_trunc_notice(sink, ctx->source_id, url, n, total,
+                    "the upstream's own total is larger than the number of "
+                    "datasets its pages handed over",
+                    "re-run; if it persists the catalogue is filtering rows it "
+                    "still counts in `total`");
+  }
   return n;
 }
 

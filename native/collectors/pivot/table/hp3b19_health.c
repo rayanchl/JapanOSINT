@@ -1337,6 +1337,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .page_param = "start",
     .page_size = 100,
     .page_start = 0,
+    .page_max = 22,   /* 2,197 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "title",
     .description = "The NHS Business Services Authority open data catalogue, which "
       "is where English prescribing, dispensing and dental data "
@@ -1748,6 +1749,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .page_param = "offset",
     .page_size = 500,
     .page_start = 0,
+    .page_max = 30,   /* 14,690 records at 500 a page, measured 2026-10-12; the 20-page default reached 10,000 */
     .title_keys = "provider_name",
     .description = "Every Medicare and Medicaid certified nursing home in the United "
       "States: CMS certification number, provider name and address, "

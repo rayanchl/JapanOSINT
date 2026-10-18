@@ -584,6 +584,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .page_param = "start",
     .page_size = 50,
     .page_zero_based = 1,
+    .page_max = 23,   /* 1,137 records at 50 a page, measured 2026-10-12; the 20-page default reached 1,000 */
     .title_keys = "title",
     .description = "Documents published by Dstl, the MOD research agency, as "
       "structured records with title, path, format, organisation and "
@@ -1464,6 +1465,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .page_param = "start",
     .page_size = 50,
     .page_zero_based = 1,
+    .page_max = 35,   /* 1,749 records at 50 a page, measured 2026-10-12; the 20-page default reached 1,000 */
     .title_keys = "title",
     .description = "The Australian federal open data catalogue filtered to defence, "
       "returning datasets published by the Department of Defence and by "

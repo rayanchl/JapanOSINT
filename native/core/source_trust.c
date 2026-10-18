@@ -73,114 +73,94 @@ static double stability_of(long n, double sum, double sumsq) {
   return clamp01(1.0 - cv);
 }
 
-typedef struct { char id[256]; long n, ok; double sum, sumsq; } flrow;
-typedef struct { char id[256]; long n; } anrow;
+/* ONE QUERY, NOT A QUERY PLUS A NESTED LOOP. This used to run the fetch_log
+ * GROUP BY, then the anomaly GROUP BY into a second array, then join the two
+ * with a strcmp loop over every (fetch_log row, anomaly row) pair — O(fn x an)
+ * — and then a per-source SELECT against `sources`. The join is SQLite's job:
+ * both aggregates and the sources row arrive on one row per source. Rows are
+ * sorted by id below so source_trust_find() can bsearch.
+ *
+ * collector_anomaly may be absent (a fixture database booted without
+ * schema.sql); the old code tolerated that by skipping the anomaly half, so
+ * this degrades the same way: without the anomaly join every anomalies_30d is
+ * 0. */
+#define TQ_FETCH_AGG                                                          \
+  "(SELECT source_id,COUNT(*) n,"                                             \
+  "        SUM(CASE WHEN status='ok' THEN 1 ELSE 0 END) ok,"                  \
+  "        SUM(COALESCE(records_fetched,0)) sm,"                              \
+  "        SUM(CAST(COALESCE(records_fetched,0) AS REAL)"                     \
+  "            *COALESCE(records_fetched,0)) sq"                              \
+  " FROM fetch_log WHERE timestamp >= datetime('now','-30 days')"             \
+  " GROUP BY source_id) f "
+static const char *TQ_FULL =
+  "SELECT f.source_id,f.n,f.ok,f.sm,f.sq,COALESCE(a.n,0),"
+  "       s.last_success,s.quarantined_until FROM " TQ_FETCH_AGG
+  "LEFT JOIN (SELECT source_id,COUNT(*) n FROM collector_anomaly"
+  "           WHERE created_at >= datetime('now','-30 days')"
+  "           GROUP BY source_id) a ON a.source_id=f.source_id "
+  "LEFT JOIN sources s ON s.id=f.source_id";
+static const char *TQ_NO_ANOMALY =
+  "SELECT f.source_id,f.n,f.ok,f.sm,f.sq,0,"
+  "       s.last_success,s.quarantined_until FROM " TQ_FETCH_AGG
+  "LEFT JOIN sources s ON s.id=f.source_id";
+
+static int trust_cmp(const void *a, const void *b) {
+  return strcmp(((const source_trust *)a)->source_id,
+                ((const source_trust *)b)->source_id);
+}
 
 source_trust *source_trust_load(db_handle *db, int *out_n) {
   if (out_n) *out_n = 0;
   if (!db || !db->h) return NULL;
 
-  /* ---- fetch_log, trailing 30 days ---------------------------------- */
-  static const char *FQ =
-    "SELECT source_id,COUNT(*),"
-    "SUM(CASE WHEN status='ok' THEN 1 ELSE 0 END),"
-    "SUM(COALESCE(records_fetched,0)),"
-    "SUM(CAST(COALESCE(records_fetched,0) AS REAL)*COALESCE(records_fetched,0)) "
-    "FROM fetch_log WHERE timestamp >= datetime('now','-30 days') "
-    "GROUP BY source_id";
   sqlite3_stmt *s;
-  if (sqlite3_prepare_v2(db->h, FQ, -1, &s, NULL) != SQLITE_OK) return NULL;
-  int fcap = 64, fn = 0;
-  flrow *F = malloc((size_t)fcap * sizeof *F);
-  if (!F) { sqlite3_finalize(s); return NULL; }
+  if (sqlite3_prepare_v2(db->h, TQ_FULL, -1, &s, NULL) != SQLITE_OK &&
+      sqlite3_prepare_v2(db->h, TQ_NO_ANOMALY, -1, &s, NULL) != SQLITE_OK)
+    return NULL;
+  int cap = 64, n = 0;
+  source_trust *T = calloc((size_t)cap, sizeof *T);
+  if (!T) { sqlite3_finalize(s); return NULL; }
+  time_t now = time(NULL);
+
   while (sqlite3_step(s) == SQLITE_ROW) {
     const unsigned char *sid = sqlite3_column_text(s, 0);
     if (!sid) continue;
-    if (fn == fcap) {
-      int nc = fcap * 2;
-      flrow *nf = realloc(F, (size_t)nc * sizeof *F);
-      if (!nf) { free(F); sqlite3_finalize(s); return NULL; }
-      F = nf; fcap = nc;
+    if (n == cap) {
+      int nc = cap * 2;
+      source_trust *nt = realloc(T, (size_t)nc * sizeof *T);
+      if (!nt) { free(T); sqlite3_finalize(s); return NULL; }
+      memset(nt + cap, 0, (size_t)(nc - cap) * sizeof *T);
+      T = nt; cap = nc;
     }
-    flrow *r = &F[fn++];
-    snprintf(r->id, sizeof r->id, "%s", (const char *)sid);
-    r->n     = sqlite3_column_int64(s, 1);
-    r->ok    = sqlite3_column_int64(s, 2);
-    r->sum   = sqlite3_column_double(s, 3);
-    r->sumsq = sqlite3_column_double(s, 4);
-  }
-  sqlite3_finalize(s);
-
-  /* ---- anomalies, trailing 30 days ---------------------------------- */
-  static const char *AQ =
-    "SELECT source_id,COUNT(*) FROM collector_anomaly "
-    "WHERE created_at >= datetime('now','-30 days') GROUP BY source_id";
-  int acap = 64, an = 0;
-  anrow *A = malloc((size_t)acap * sizeof *A);
-  if (!A) { free(F); return NULL; }
-  if (sqlite3_prepare_v2(db->h, AQ, -1, &s, NULL) == SQLITE_OK) {
-    while (sqlite3_step(s) == SQLITE_ROW) {
-      const unsigned char *sid = sqlite3_column_text(s, 0);
-      if (!sid) continue;
-      if (an == acap) {
-        int nc = acap * 2;
-        anrow *na2 = realloc(A, (size_t)nc * sizeof *A);
-        if (!na2) break;
-        A = na2; acap = nc;
-      }
-      snprintf(A[an].id, sizeof A[an].id, "%s", (const char *)sid);
-      A[an].n = sqlite3_column_int64(s, 1);
-      an++;
-    }
-    sqlite3_finalize(s);
-  }
-
-  /* ---- join against sources for last_success + quarantine ----------- */
-  source_trust *T = calloc((size_t)(fn > 0 ? fn : 1), sizeof *T);
-  if (!T) { free(F); free(A); return NULL; }
-  time_t now = time(NULL);
-
-  sqlite3_stmt *ss = NULL;
-  sqlite3_prepare_v2(db->h,
-      "SELECT last_success,quarantined_until FROM sources WHERE id=?1",
-      -1, &ss, NULL);
-
-  for (int i = 0; i < fn; i++) {
-    source_trust *t = &T[i];
-    snprintf(t->source_id, sizeof t->source_id, "%s", F[i].id);
-    t->runs_30d = F[i].n;
-
-    for (int k = 0; k < an; k++)
-      if (strcmp(A[k].id, F[i].id) == 0) { t->anomalies_30d = A[k].n; break; }
+    source_trust *t = &T[n++];
+    snprintf(t->source_id, sizeof t->source_id, "%s", (const char *)sid);
+    long   runs  = (long)sqlite3_column_int64(s, 1);
+    long   ok    = (long)sqlite3_column_int64(s, 2);
+    double sum   = sqlite3_column_double(s, 3);
+    double sumsq = sqlite3_column_double(s, 4);
+    t->runs_30d      = runs;
+    t->anomalies_30d = (long)sqlite3_column_int64(s, 5);
 
     const char *last_success = NULL;
     char lsbuf[64] = {0};
-    if (ss) {
-      sqlite3_reset(ss);
-      sqlite3_clear_bindings(ss);
-      sqlite3_bind_text(ss, 1, F[i].id, -1, SQLITE_TRANSIENT);
-      if (sqlite3_step(ss) == SQLITE_ROW) {
-        if (sqlite3_column_type(ss, 0) != SQLITE_NULL) {
-          snprintf(lsbuf, sizeof lsbuf, "%s",
-                   (const char *)sqlite3_column_text(ss, 0));
-          last_success = lsbuf;
-        }
-        if (sqlite3_column_type(ss, 1) != SQLITE_NULL) {
-          time_t qu = parse_ts((const char *)sqlite3_column_text(ss, 1));
-          if (qu > now) t->quarantined = 1;
-        }
-      }
+    if (sqlite3_column_type(s, 6) != SQLITE_NULL) {
+      snprintf(lsbuf, sizeof lsbuf, "%s", (const char *)sqlite3_column_text(s, 6));
+      last_success = lsbuf;
+    }
+    if (sqlite3_column_type(s, 7) != SQLITE_NULL) {
+      time_t qu = parse_ts((const char *)sqlite3_column_text(s, 7));
+      if (qu > now) t->quarantined = 1;
     }
 
-    const src_meta *m = src_meta_get(F[i].id);
+    const src_meta *m = src_meta_get(t->source_id);
     int interval = (m && m->update_interval > 0) ? m->update_interval : 0;
 
-    t->success_rate     = F[i].n > 0 ? (double)F[i].ok / (double)F[i].n : 0.0;
+    t->success_rate     = runs > 0 ? (double)ok / (double)runs : 0.0;
     t->freshness        = freshness_of(last_success, interval, now);
-    t->anomaly_rate     = F[i].n > 0
-                          ? clamp01((double)t->anomalies_30d / (double)F[i].n)
+    t->anomaly_rate     = runs > 0
+                          ? clamp01((double)t->anomalies_30d / (double)runs)
                           : 0.0;
-    t->volume_stability = stability_of(F[i].n, F[i].sum, F[i].sumsq);
+    t->volume_stability = stability_of(runs, sum, sumsq);
 
     double r = 0.40 * t->success_rate
              + 0.30 * t->freshness
@@ -193,32 +173,94 @@ source_trust *source_trust_load(db_handle *db, int *out_n) {
     t->grade[0]    = grade_of(t->reliability);
     t->grade[1]    = 0;
   }
-
-  if (ss) sqlite3_finalize(ss);
-  free(F);
-  free(A);
-  if (out_n) *out_n = fn;
+  sqlite3_finalize(s);
+  qsort(T, (size_t)n, sizeof *T, trust_cmp);
+  if (out_n) *out_n = n;
   return T;
 }
 
 const source_trust *source_trust_find(const source_trust *tbl, int n,
                                       const char *source_id) {
-  if (!tbl || !source_id) return NULL;
-  for (int i = 0; i < n; i++)
-    if (strcmp(tbl[i].source_id, source_id) == 0) return &tbl[i];
-  return NULL;
+  if (!tbl || !source_id || n <= 0) return NULL;
+  source_trust key;
+  snprintf(key.source_id, sizeof key.source_id, "%s", source_id);
+  return bsearch(&key, tbl, (size_t)n, sizeof *tbl, trust_cmp);
 }
 
 /* ── cached scalar for the scheduler ─────────────────────────────────────
- * One table for the process, rebuilt lazily when older than the TTL. The
- * lookup is the same linear find as above; at ~2k rated sources that is a
- * few µs per due source, which is nothing next to the second the dispatcher
- * sleeps between walks. A failed load keeps the previous table (stale is
- * better than unrated-for-everyone) and retries on the next call after TTL. */
+ *
+ * The dispatcher asks for a score once per due source per second. The table
+ * behind it is a 30-day GROUP BY over fetch_log (~216k rows a day, so ~6.5 M
+ * rows in the window), and it used to be REBUILT ON THE DISPATCHER THREAD,
+ * inside the lock every lookup takes: once per TTL the whole fleet's
+ * scheduling stopped for as long as that query ran.
+ *
+ * Now the dispatcher only reads. A stale (or missing) table starts ONE
+ * background rebuild on its own connection, which swaps the finished table in
+ * with a pointer exchange under the lock; lookups — a bsearch whose answer is
+ * copied out under the same lock — never wait on SQL. Until the first rebuild
+ * lands every source reads as unrated (-1), which sched_priority() places
+ * mid-band: no evidence yet, rather than invented evidence.
+ *
+ * A failed load keeps the previous table (stale is better than
+ * unrated-for-everyone); the TTL clock restarts either way, so a failing query
+ * is retried once per TTL rather than every second. */
 static pthread_mutex_t g_score_mu = PTHREAD_MUTEX_INITIALIZER;
 static source_trust   *g_score_tbl;
 static int             g_score_n;
-static time_t          g_score_at;
+static time_t          g_score_at;          /* when the last rebuild STARTED */
+static int             g_score_busy;        /* a rebuild is in flight        */
+static long            g_score_builds;      /* tables installed (tests)      */
+
+typedef struct { char path[1024]; } trust_job;
+
+static void trust_install(source_trust *t, int n) {
+  pthread_mutex_lock(&g_score_mu);
+  source_trust *old = NULL;
+  if (t) { old = g_score_tbl; g_score_tbl = t; g_score_n = n; g_score_builds++; }
+  g_score_busy = 0;
+  pthread_mutex_unlock(&g_score_mu);
+  free(old);           /* no reader holds it: lookups copy out under the lock */
+}
+
+static void *trust_rebuild_thread(void *arg) {
+  trust_job *j = arg;
+  db_handle own = {0};
+  source_trust *t = NULL;
+  int n = 0;
+  if (db_attach(&own, j->path) == 0) {
+    t = source_trust_load(&own, &n);
+    db_close(&own);
+  } else {
+    fprintf(stderr, "[trust] rebuild: cannot open %s; keeping the previous "
+                    "table\n", j->path);
+  }
+  free(j);
+  trust_install(t, n);
+  return NULL;
+}
+
+/* Start a rebuild from the database `db` is attached to. The caller has
+ * already claimed g_score_busy. */
+static void trust_rebuild_async(db_handle *db) {
+  const char *f = (db && db->h) ? sqlite3_db_filename(db->h, "main") : NULL;
+  trust_job *j = (f && *f) ? malloc(sizeof *j) : NULL;
+  if (j) {
+    snprintf(j->path, sizeof j->path, "%s", f);
+    pthread_t th;
+    if (pthread_create(&th, NULL, trust_rebuild_thread, j) == 0) {
+      pthread_detach(th);
+      return;
+    }
+    free(j);
+  }
+  /* An in-memory database has no file a second connection could open, and a
+   * failed thread spawn has nowhere else to run: build it here, once, rather
+   * than leave every source unrated for good. */
+  int n = 0;
+  source_trust *t = source_trust_load(db, &n);
+  trust_install(t, n);
+}
 
 double source_trust_score(db_handle *db, const char *source_id) {
   if (!source_id) return -1.0;
@@ -226,15 +268,23 @@ double source_trust_score(db_handle *db, const char *source_id) {
   const char *e = getenv("JO_TRUST_CACHE_SEC");
   if (e && *e) { ttl = atol(e); if (ttl < 1) ttl = 1; }
   time_t now = time(NULL);
+  int kick = 0;
   pthread_mutex_lock(&g_score_mu);
-  if (!g_score_tbl || now - g_score_at >= ttl) {
-    int n = 0;
-    source_trust *t = source_trust_load(db, &n);
-    if (t) { free(g_score_tbl); g_score_tbl = t; g_score_n = n; }
-    g_score_at = now;                 /* also throttles retries after a failure */
+  if (!g_score_busy && (!g_score_tbl || now - g_score_at >= ttl)) {
+    g_score_busy = 1;
+    g_score_at = now;
+    kick = 1;
   }
   const source_trust *t = source_trust_find(g_score_tbl, g_score_n, source_id);
   double r = (t && t->rated) ? t->reliability : -1.0;
   pthread_mutex_unlock(&g_score_mu);
+  if (kick) trust_rebuild_async(db);
   return r;
+}
+
+long source_trust_builds(void) {
+  pthread_mutex_lock(&g_score_mu);
+  long n = g_score_builds;
+  pthread_mutex_unlock(&g_score_mu);
+  return n;
 }

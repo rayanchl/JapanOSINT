@@ -16,6 +16,20 @@ void scheduler_start_background(db_handle *db);
  * so on stderr when it does. Safe to call when the scheduler never started. */
 void scheduler_stop_background(int wait_ms);
 
+/* Skip-if-running, shared with callers outside the pool (the manual
+ * POST /api/intel/sources/:id/run path in core/httpd.c). claim returns 0 when
+ * the scheduler has `id` queued or running (or another claim holds it), and
+ * otherwise marks it running so the pool will not start it until release.
+ * Returns 1 when there is nothing to claim (no pool, unknown id) — release is
+ * then a no-op. A claimed run gets a cancel slot that shutdown sets. */
+int  scheduler_claim(const char *id);
+void scheduler_release(const char *id);
+
+/* First-run offset (seconds after boot) of the k-th of m scheduled sources in
+ * one lane — see the boot ramp note in scheduler.c. Pure, for tests. */
+long sched_boot_offset(int k, int m, int workers, long stag, long ramp,
+                       long interval);
+
 /* ── health-driven scheduling (no LLM) ───────────────────────────────────
  *
  * Per-source state persisted in `source_sched_state` so a restart does not

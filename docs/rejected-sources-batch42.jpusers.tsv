@@ -1,0 +1,2 @@
+id	url	verdict	http	bytes	note
+JO42_WP_CORP_9051_USERS	https://www.senkon.co.jp/wp-json/wp/v2/users?per_page=100	NET_ERR	0	0	[Errno 104] Connection reset by peer

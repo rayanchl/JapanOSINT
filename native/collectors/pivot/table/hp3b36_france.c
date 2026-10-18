@@ -360,6 +360,7 @@ static const hp_source HP3B36_FRANCE[] = {
     .page_param = "offset",
     .page_size = 50,
     .page_zero_based = 1,
+    .page_max = 21,   /* 1,022 records at 50 a page, measured 2026-10-12; the 20-page default reached 1,000 */
     .title_keys = "metas.default.title",
     .description = "OpenDataSoft catalogue on data.iledefrance.fr. Fetched live "
       "2026-10-05 under the engine's own User-Agent: 50 records in "

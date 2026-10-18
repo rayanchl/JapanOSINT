@@ -500,6 +500,36 @@ int main(void) {
     ok(strstr(sc.seen[1], "offset=4") != NULL, "so the offset advances by it");
   }
 
+  /* One ceiling for the whole tree. There were three — 20 here under
+   * $JO_PAGE_MAX, 20 in lib/jsonlist.c under $JO_JSONLIST_PAGE_MAX, and 10 in
+   * lib/hpengine.c under no variable at all — so an operator who set
+   * JO_PAGE_MAX moved one population, silently did not move the second, and
+   * could not reach the third at any value. jo_page_max() is now the single
+   * answer; these pin its precedence, because the failure of the old
+   * arrangement was that nothing contradicted it. */
+  {
+    unsetenv("JO_PAGE_MAX");
+    unsetenv("JO_JSONLIST_PAGE_MAX");
+    ok(jo_page_max(NULL) == 20, "the default ceiling is 20 pages");
+    ok(jo_page_max("JO_JSONLIST_PAGE_MAX") == 20, "and 20 for a legacy caller");
+
+    setenv("JO_JSONLIST_PAGE_MAX", "7", 1);
+    ok(jo_page_max("JO_JSONLIST_PAGE_MAX") == 7,
+       "an older spelling is honoured, not ignored");
+    ok(jo_page_max(NULL) == 20, "but only for the caller that names it");
+
+    setenv("JO_PAGE_MAX", "9", 1);
+    ok(jo_page_max(NULL) == 9, "JO_PAGE_MAX reaches every walk");
+    ok(jo_page_max("JO_JSONLIST_PAGE_MAX") == 9, "and wins when both are set");
+
+    setenv("JO_PAGE_MAX", "0", 1);
+    ok(jo_page_max(NULL) == 20, "0 is not a ceiling of zero pages");
+    setenv("JO_PAGE_MAX", "not-a-number", 1);
+    ok(jo_page_max(NULL) == 20, "nor is garbage");
+    setenv("JO_PAGE_MAX", "5", 1);          /* as the walks above expect */
+    unsetenv("JO_JSONLIST_PAGE_MAX");
+  }
+
   printf(failures ? "\n%d FAILED\n" : "\nall passed\n", failures);
   return failures ? 1 : 0;
 }

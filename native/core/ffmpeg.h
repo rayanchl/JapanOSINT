@@ -275,6 +275,11 @@
 #define FFMPEG_ERR_PARSE        (-10)
 #define FFMPEG_ERR_NO_DURATION  (-11)
 #define FFMPEG_ERR_OOM          (-12)
+/* A network input whose host is loopback/private/link-local/metadata under
+ * the camera destination policy (core/hostgate.h; JO_CAMERA_ALLOW_LAN=1 admits
+ * LAN hosts). Checked before spawning. Segment URLs INSIDE an HLS playlist are
+ * fetched by ffmpeg itself and are constrained only by -protocol_whitelist. */
+#define FFMPEG_ERR_BLOCKED      (-13)
 
 /* Stable snake_case token for a code — safe to store in a column or return in
  * an API body, and stable across releases. Returns a static string; never

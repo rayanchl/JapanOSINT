@@ -2036,6 +2036,7 @@ static const hp_source HP3B23_JPLOCAL[] = {
     .page_param = "start",
     .page_size = 100,
     .page_zero_based = 1,
+    .page_max = 50,   /* 4,937 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "title,name",
     .description = "The full dataset catalogue of Miyazaki Prefecture's CKAN at "
       "ckan.pref.miyazaki.lg.jp, walked newest-modified first: 4,937 "

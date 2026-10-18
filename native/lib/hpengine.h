@@ -232,10 +232,14 @@ typedef struct hp_source {
   const char *base;
 
   /* Second hop — the actual penetrancy. detail_max 0 (the default) deepens
-   * EVERY list record, bounded operationally by $JO_HP_DETAIL_MAX (default 25)
-   * so one pivot cannot fire thousands of requests. Records that were not
-   * deepened carry `_detail_pending: true` — an un-fetched detail is reported,
-   * not quietly treated as absent. */
+   * EVERY list record, bounded operationally by $JO_HP_DETAIL_MAX (default
+   * 1,000) and by $JO_HP_DETAIL_SEC of detail fetching per run (default 120;
+   * the host gate paces each hop, so time is the honest politeness unit).
+   * Records that were not deepened carry `_detail_pending: true`, and the run
+   * files ONE collector-truncation-notice counting fetched vs pending — an
+   * un-fetched detail is reported, not quietly treated as absent. Every mode
+   * deepens (JSON, XML, CSV/XLSX columns, HTML anchors' title/url/id), the hop
+   * carries the row's own headers ({key} expanded) and is parsed as JSON. */
   const char *detail_url;     /* template, {v} from detail_key              */
   const char *detail_key;     /* field in the list record holding the id    */
   const char *detail_path;    /* array_path for the detail doc (or NULL)    */
@@ -254,8 +258,9 @@ typedef struct hp_source {
    *                 empty or repeated page ends the walk). Mutually exclusive
    *                 with page_param: gen_hp_batch.py rejects a row with both.
    * page_size is what one page returns (needed for offset-style paging), and
-   * page_max bounds the walk (default 10 pages) so a runaway feed cannot spin
-   * forever — when that bound bites it is stamped on every record, never
+   * page_max bounds the walk (default jo_page_max(), 20 pages, raised or
+   * lowered for the whole tree by $JO_PAGE_MAX — lib/pagewalk.c) so a runaway
+   * feed cannot spin forever — when that bound bites it is stamped on every record, never
    * silent. */
   /* Dotted path to the next-page cursor or URL in the response. A segment of
    * `$last` is the final element of an array, for an upstream whose cursor is
@@ -290,14 +295,15 @@ typedef struct hp_source {
    * `page_start` that happens to cancel out. */
   int         page_zero_based;/* 1 = the first page is numbered 0, not 1      */
   int         page_size;      /* records per page, for offset-style paging    */
-  int         page_max;       /* max pages to walk (default 10)              */
+  int         page_max;       /* max pages to walk (default jo_page_max())   */
   /* Walk pages the way a VJSON collector is walked, for a row that declares
    * none of next_path / page_param / {page}: the server's own next link, else
    * the cursor its declared page size pairs with, advanced only while pages
    * come back full (jsonlist_next_page — one decision for both engines).
    * Opt-in, and HP_JSON only: it exists so a verified list collector moved onto
    * this engine to walk its detail hop does not lose every page after the
-   * first. The ceiling is page_max when set, else $JO_JSONLIST_PAGE_MAX (20). */
+   * first. The ceiling is page_max when set, else jo_page_max() — 20, under
+   * $JO_PAGE_MAX or the legacy $JO_JSONLIST_PAGE_MAX. */
   int         page_walk;
 
   int csv_no_header;          /* CSV mode: file has no header row → col0..colN */
@@ -464,7 +470,8 @@ char *hp_describe_json(const char *id);
  * `id` is not an hpengine source. For callers that want one field, not JSON. */
 const hp_source *hp_source_get(const char *id);
 /* 1 when `id` is an hpengine row whose URL or POST body carries an entity
- * token, i.e. it is dispatchable as an entity pivot. 0 for a fixed-endpoint
+ * token, or that declares filter_query (a bulk fetch filtered by the entity
+ * locally), i.e. it is dispatchable as an entity pivot. 0 for a fixed-endpoint
  * row AND for an id this engine does not run — callers that need to tell
  * those apart ask hp_describe_json(). */
 int hp_source_uses_entity(const char *id);

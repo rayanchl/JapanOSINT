@@ -16,6 +16,7 @@
  * the attribute name). */
 #include "../lib/htmlparse.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 static int g_fail = 0;
@@ -172,7 +173,41 @@ int main(void) {
     ok(html_table_parse("<table><td>a<td>b<tr><td>c<td>d</table>", NULL, 0, &tb) &&
        tb.nrows == 2 && !strcmp(tb.rows[0].cells[1].text, "b") && !strcmp(tb.rows[1].cells[0].text, "c"),
        "omitted </td> and </tr>, and a cell before any <tr>");
+    ok(!tb.capped_rows && !tb.capped_width, "an ordinary table is not capped");
     html_table_free(&tb);
+
+    /* The memory bounds on untrusted HTML say when they cut a table: a short
+     * table is otherwise indistinguishable from a complete one (rule 2). */
+    { size_t cells = 65536 + 1000 + 64, n = 0;   /* past the bound AND its slack */
+      char *wide = malloc(cells * 7 + 64);
+      if (wide) {
+        n += (size_t)sprintf(wide + n, "<table><tr>");
+        for (size_t k = 0; k < cells; k++) { memcpy(wide + n, "<td>x", 5); n += 5; }
+        n += (size_t)sprintf(wide + n, "</table>");
+        ok(html_table_parse(wide, NULL, 0, &tb) && tb.capped_width && !tb.capped_rows &&
+           tb.width == 65536 + 1000, "a row wider than HT_MAX_WIDTH + slack is cut there AND flagged");
+        html_table_free(&tb);
+        /* Inside the slack nothing is lost, so nothing is flagged. */
+        wide[0] = 0; n = 0;
+        n += (size_t)sprintf(wide + n, "<table><tr>");
+        for (size_t k = 0; k < 65536 + 8; k++) { memcpy(wide + n, "<td>x", 5); n += 5; }
+        n += (size_t)sprintf(wide + n, "</table>");
+        ok(html_table_parse(wide, NULL, 0, &tb) && !tb.capped_width && tb.width == 65536 + 8,
+           "a wide row that still fits loses nothing and is not flagged");
+        html_table_free(&tb);
+        free(wide);
+      } }
+    { size_t rows = 1000000 + 4, n = 0;
+      char *tall = malloc(rows * 9 + 64);
+      if (tall) {
+        n += (size_t)sprintf(tall + n, "<table>");
+        for (size_t k = 0; k < rows; k++) { memcpy(tall + n, "<tr><td>y", 9); n += 9; }
+        n += (size_t)sprintf(tall + n, "</table>");
+        ok(html_table_parse(tall, NULL, 0, &tb) && tb.capped_rows && tb.nrows == 1000000,
+           "a table taller than HT_MAX_ROWS is cut there AND flagged");
+        html_table_free(&tb);
+        free(tall);
+      } }
   }
 
   /* The strongest label for a link wins, not the first anchor's (audit

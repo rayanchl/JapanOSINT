@@ -96,6 +96,9 @@ static void usage(FILE *out) {
 static int is_flag(const char *a) { return a && a[0] == '-' && a[1] == '-'; }
 
 int main(int argc, char **argv) {
+  /* The registry is complete once the constructors have run; index it (and
+   * report any DUPLICATE id) before anything looks a source up. */
+  registry_freeze();
   /* Order matters: the api-keys.json overlay is applied FIRST so it wins over
    * .env, matching keysapi.c's resolved_env(). Both use overwrite=0, so a real
    * shell export still beats either. */
@@ -264,7 +267,7 @@ int main(int argc, char **argv) {
       llm_client lc; llm_init(&lc, hc);
       intel_sink sink = intel_sink_make(&db, argv[i + 1], "legacy");
       osint_result r;
-      osint_dispatch(&db, &lc, argv[i + 1], argv[i + 2], NULL, &sink, &r);
+      osint_dispatch_operator(&db, &lc, argv[i + 1], argv[i + 2], NULL, &sink, &r);
       printf("service=%s success=%d records=%d notices=%d\n%s\n", r.service,
              r.success, r.records, r.notices, r.data ? r.data : "(no data)");
       if (r.resolved_from) printf("resolved_from=%s\n", r.resolved_from);

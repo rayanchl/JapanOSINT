@@ -508,6 +508,7 @@ static const hp_source HP3B20_SCHOLARLY[] = {
     .interval = 21600,
     .page_param = "page",
     .page_start = 1,
+    .page_max = 36,   /* 3,571 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "title",
     .description = "Every seminar announced through INSPIRE: title, abstract, "
       "speaker with their INSPIRE author identifier and affiliation, "
@@ -527,6 +528,7 @@ static const hp_source HP3B20_SCHOLARLY[] = {
     .interval = 86400,
     .page_param = "page",
     .page_start = 1,
+    .page_max = 117,   /* 11,637 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "title",
     .description = "The dataset records INSPIRE holds, mostly HEPData tables "
       "released alongside collaboration papers, each with the title, "

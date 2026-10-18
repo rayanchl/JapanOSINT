@@ -928,6 +928,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .page_param = "offset",
     .page_size = 100,
     .page_start = 0,
+    .page_max = 42,   /* 4,117 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .description = "Every bank failure the FDIC has resolved since 1934 with the "
       "institution name, city and state, failure date, resolution type, "
       "the acquiring institution where there was one, total assets and "

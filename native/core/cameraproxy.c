@@ -16,6 +16,8 @@
 #define CAM_PROXY_TIMEOUT_MS 5000
 #define CAM_PROXY_MAX_BYTES  (5 * 1024 * 1024)
 #define CAM_PROXY_TTL_SEC    30
+/* The one body every upstream-side failure answers with (see the fetch). */
+#define CAM_PROXY_GENERIC_ERR "camera upstream unavailable"
 /* Entry count, not bytes, is what has to be bounded here: each entry can hold
  * up to CAM_PROXY_MAX_BYTES, and there are ~2k proxied cameras — an unbounded
  * uid-keyed map is a 10 GB ceiling. 16 entries × 5 MB is a hard 80 MB, and the
@@ -145,7 +147,8 @@ static char *upstream_url_of(const char *props_json) {
 static int proxy_prereq(void *ud, char *primary_ip, char *local_ip,
                         int primary_port, int local_port) {
   (void)ud; (void)local_ip; (void)primary_port; (void)local_port;
-  if (hostgate_addr_check_floor(primary_ip) != HG_URL_OK) {
+  /* The CAMERA strength, not the floor: see hostgate.h's camera policy. */
+  if (hostgate_camera_addr_check(primary_ip) != HG_URL_OK) {
     fprintf(stderr, "[camera-proxy] blocked connection to %s "
                     "(private/link-local)\n", primary_ip ? primary_ip : "?");
     return CURL_PREREQFUNC_ABORT;
@@ -206,13 +209,21 @@ char *camera_proxy_fetch(db_handle *db, const char *camera_uid,
    * meta-data/` through as a "camera", and this route hands the response body
    * back to the caller — so this path gets the same three defences
    * http_request() has, rather than a scheme check on its own:
-   *   1. hostgate_url_check() before dialling,
+   *   1. hostgate_url_check() (scheme) + hostgate_camera_url_check() before
+   *      dialling,
    *   2. the protocol set pinned on the initial request AND the redirect chain,
    *   3. proxy_prereq() re-checking the peer address on every hop.
-   * Floor strength, not _strict: LAN cameras on RFC1918 are a shipped feature
-   * (hostgate.h says so), and JO_HTTP_BLOCK_PRIVATE=1 raises this call and
-   * proxy_prereq() together. */
+   * CAMERA strength: loopback and RFC1918 are refused unless the operator set
+   * JO_CAMERA_ALLOW_LAN=1. The floor used to apply here, and since any
+   * signed-in user picks the uid, one poisoned record made this route an
+   * internal-network fetcher.
+   *
+   * Every failure below answers with ONE generic body. The route used to echo
+   * "upstream 401", "upstream returned no bytes", the hostgate reason… which
+   * told the caller whether an internal port was open and what it answered.
+   * The detail goes to the server log instead. */
   { int gk = hostgate_url_check(url);
+    if (gk == HG_URL_OK) gk = hostgate_camera_url_check(url, 0);
     if (gk != HG_URL_OK) {
       fprintf(stderr, "[camera-proxy] refused %s: %s\n", url,
               hostgate_url_reason(gk));
@@ -220,7 +231,7 @@ char *camera_proxy_fetch(db_handle *db, const char *camera_uid,
       /* 502, not 400: the caller's request was well-formed — it is the
        * upstream this row points at that we refuse to dial. */
       if (status) *status = 502;
-      return errj(hostgate_url_reason(gk));
+      return errj(CAM_PROXY_GENERIC_ERR);
     } }
 
   http_client_global_init();
@@ -272,34 +283,29 @@ char *camera_proxy_fetch(db_handle *db, const char *camera_uid,
     } }
   if (hl) curl_slist_free_all(hl);
   curl_easy_cleanup(e);
-  free(url);
 
   /* An MJPEG camera streams forever; hitting the cap is how that transfer
    * ends, so `capped` with bytes in hand is a SUCCESS, not a failure — the
    * partial buffer still starts with a complete JPEG the client can draw. */
   int aborted_at_cap = (rc == CURLE_WRITE_ERROR && sk.capped && sk.len > 0);
-  if (rc != CURLE_OK && !aborted_at_cap) {
+  const char *why = NULL;
+  char m[64];
+  if (rc != CURLE_OK && !aborted_at_cap) why = curl_easy_strerror(rc);
+  else if (code < 200 || code >= 300) {
+    snprintf(m, sizeof m, "upstream status %ld", code);
+    why = m;
+  }
+  else if (sk.len == 0) why = "upstream returned no bytes";
+  else if (strncasecmp(upstream_ct, "image/", 6) != 0)
+    why = "upstream did not return an image";
+  if (why) {
+    fprintf(stderr, "[camera-proxy] %s: %s\n", url, why);
+    free(url);
     free(sk.buf);
     if (status) *status = 502;
-    return errj("upstream fetch failed");
+    return errj(CAM_PROXY_GENERIC_ERR);
   }
-  if (code < 200 || code >= 300) {
-    free(sk.buf);
-    if (status) *status = 502;
-    char m[64];
-    snprintf(m, sizeof m, "upstream %ld", code);
-    return errj(m);
-  }
-  if (sk.len == 0) {
-    free(sk.buf);
-    if (status) *status = 502;
-    return errj("upstream returned no bytes");
-  }
-  if (strncasecmp(upstream_ct, "image/", 6) != 0) {
-    free(sk.buf);
-    if (status) *status = 502;
-    return errj("upstream did not return an image");
-  }
+  free(url);
 
   snprintf(ct, ct_cap, "%s", upstream_ct);
   cache_put(camera_uid, sk.buf, sk.len, upstream_ct);

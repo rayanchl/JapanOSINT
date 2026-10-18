@@ -6,6 +6,7 @@
  * that cannot fetch emits zero items and logs why. */
 #include "hpengine.h"
 #include "jsonlist.h"      /* jsonlist_next_page: page_walk rows page as VJSON did */
+#include "pagewalk.h"      /* jo_page_max: the tree's one page ceiling */
 #include "../core/url_override.h"
 #include "csv.h"
 #include "xlsx.h"
@@ -36,8 +37,26 @@
 #define HP_MAX_ARR        256   /* exhaustive-ok: memory guard, stamped     */
 #define HP_MAX_DEPTH        8   /* exhaustive-ok: memory guard, stamped     */
 #define HP_HTTP_TIMEOUT 20000
-#define HP_PAGE_MAX_DEF    10   /* exhaustive-ok: runaway guard, stamped    */
-#define HP_DETAIL_MAX_DEF  25   /* exhaustive-ok: request budget, stamped   */
+/* The page ceiling for a row that declares its own paging is jo_page_max()
+ * (lib/pagewalk.c) — the SAME bound and the same $JO_PAGE_MAX knob as the
+ * generated fleet and as this engine's own page_walk rows. It was a private
+ * `10` here with no environment override, so these rows stopped at half the
+ * tree's documented depth and no setting could move them: 1,919 scheduled rows
+ * declare page_param/next_path/{page} with no per-row page_max. A row that
+ * genuinely wants a different depth still says so in `page_max`. */
+/* The detail budget is a COUNT and a CLOCK, and the clock is the one that
+ * normally binds. It used to be a count of 25, applied to all ~633 rows that
+ * declare a second hop: a CQC provider list is 1,000 records a page, so 975 of
+ * every page's records shipped as `_detail_pending` — a per-record flag nobody
+ * aggregates — and the run line, the fetch_log and the truncation notice all
+ * reported a complete run. A count is the wrong unit for politeness anyway:
+ * core/hostgate.c already spaces requests to one host, so what a run actually
+ * spends is TIME on that host, and a fast host can afford far more hops in the
+ * same budget than a slow one. So: up to 1,000 hops, inside 120 s of detail
+ * fetching per run (JO_HP_DETAIL_MAX / JO_HP_DETAIL_SEC), and whatever the
+ * budget did not reach is disclosed as a collector-truncation-notice. */
+#define HP_DETAIL_MAX_DEF 1000  /* exhaustive-ok: request budget, disclosed */
+#define HP_DETAIL_SEC_DEF  120  /* exhaustive-ok: time budget, disclosed    */
 
 /* Grown on demand rather than fixed. The fixed HP_MAX_SOURCES array silently
  * ate every row past the cap: measured 2026-08-22, 1,481 rows were dropped at
@@ -1043,7 +1062,14 @@ typedef struct {
    * page_max 10 could fire 10 x JO_HP_DETAIL_MAX (250) detail requests, which
    * is exactly the runaway hpengine.h promises the budget prevents. */
   int   deep_left;
-  char *next_url;         /* next-page URL from the response, when declared  */
+  /* What the second hop actually did this run, for the detail truncation
+   * notice: hops made, hops that failed, and records the budget did not
+   * reach. `deep_deadline` is the time budget, armed at the FIRST hop (the
+   * list fetch is not the detail host's time) — 0 until then, -1 = no clock. */
+  int   deep_done, deep_failed, deep_pending;
+  int   deep_by_time;       /* the clock, not the count, stopped the hops    */
+  double deep_deadline;
+  char *next_url;      /* next-page URL from the response, when declared  */
   /* HTML mode: the href dedupe set spans the WHOLE walk, not one page. Per
    * page it could not tell "page 2 is new content" from "the site ignored our
    * page param and re-served page 1", so the walk had no honest stop signal. */
@@ -1108,6 +1134,7 @@ typedef struct {
    * upstream row that would otherwise have swallowed the lines after it. */
   int   sh_csv_repairs;
   int   sh_zip_extra;       /* the ZIP body held more than the one entry we read */
+  int   sh_table_capped;    /* HP_TABLE: 1 = rows, 2 = width, 3 = both hit a parser bound */
   int   sh_repeat_page;     /* 1-based page whose bytes equalled the previous page's */
   int   sh_repeat_skipped;  /* pages the walk would still have requested       */
   /* sh_repeat_page was set by the RECORDS guard below rather than by the
@@ -1131,9 +1158,12 @@ typedef struct {
    * the probe as a page. Once per run. */
   const char *prev_url;     /* the URL of the page read before this one      */
   int   pw_probe, pw_probed;
-  /* What a detail hop is sent with: the row's own headers (token, UA, Accept)
-   * minus conditional ones and the content type the engine adds for a POST
-   * body — the hop is a body-less GET. NULL = none. */
+  /* What a detail hop is sent with: the row's own headers (token, UA, Accept,
+   * {key} expanded) minus conditional ones and minus ANY Content-Type — the
+   * hop is a bodiless GET, and a row's own Content-Type describes its POST —
+   * plus the JSON Accept default the hop's parser needs, also for a row whose
+   * list is XML/CSV/HTML. NULL-ended. (Fixed on two branches at once; both
+   * cases are in hptest: 2b, and the branch's UK_CQC-shaped case.) */
   const char *const *detail_hdrs;
 } hp_run_state;
 
@@ -1151,6 +1181,43 @@ static int hp_detail_budget(const hp_source *s) {
   const char *e = getenv("JO_HP_DETAIL_MAX");
   int v = (e && *e) ? atoi(e) : 0;
   return v > 0 ? v : HP_DETAIL_MAX_DEF;
+}
+
+/* Seconds of detail fetching one run may spend; 0 = no clock. Applies to a
+ * row's explicit detail_max too: that is the author's ceiling on COUNT, and
+ * says nothing about how long a slow host may hold the run. */
+static int hp_detail_secs(void) {
+  const char *e = getenv("JO_HP_DETAIL_SEC");
+  if (!e || !*e) return HP_DETAIL_SEC_DEF;
+  int v = atoi(e);
+  return v > 0 ? v : 0;
+}
+
+static double hp_mono_sec(void) {
+  struct timespec ts;
+  clock_gettime(CLOCK_MONOTONIC, &ts);
+  return (double)ts.tv_sec + (double)ts.tv_nsec / 1e9;
+}
+
+/* May THIS record take a second hop? Spends the budget when it says yes, and
+ * counts the record as pending when it says no — the one place the decision
+ * is made, so no mode path can forget either half (four of them used to
+ * decrement the count themselves and two never deepened at all). */
+static int hp_detail_admit(hp_run_state *st) {
+  if (!st->s->detail_url) return 0;
+  int ok = st->deep_left > 0;
+  if (ok && st->deep_deadline > 0 && hp_mono_sec() >= st->deep_deadline) {
+    ok = 0;
+    st->deep_by_time = 1;
+  }
+  if (!ok) { st->deep_pending++; return 0; }
+  if (st->deep_deadline == 0) {
+    int secs = hp_detail_secs();
+    st->deep_deadline = secs > 0 ? hp_mono_sec() + secs : -1;
+  }
+  st->deep_left--;
+  st->deep_done++;
+  return 1;
 }
 
 static double hp_num(const cJSON *flat, const char *key) {
@@ -1180,6 +1247,7 @@ static void hp_deepen(hp_run_state *st, cJSON *flat) {
   if (!s->detail_url || !s->detail_key) return;
   const cJSON *idv = hp_flat_get(flat, s->detail_key);
   if (!idv) {
+    st->deep_failed++;
     cJSON_AddStringToObject(flat, "_detail_error", "list record carries no detail key");
     return;
   }
@@ -1189,15 +1257,22 @@ static void hp_deepen(hp_run_state *st, cJSON *flat) {
   else return;
   if (!idbuf[0]) return;
 
-  char *enc = hp_urlenc(idbuf);
+  /* A template that IS the value ("{v}") hands over a whole URL — GBFS's
+   * systems.csv publishes each system's Auto-Discovery URL and the hop is
+   * that URL. Percent-encoding it made "https%3A%2F%2F…", which no client can
+   * fetch; every other position is a path or query component and is encoded. */
+  int whole = !strncmp(s->detail_url, "{v}", 3) &&
+              (!strncmp(idbuf, "https://", 8) || !strncmp(idbuf, "http://", 7));
+  char *enc = whole ? NULL : hp_urlenc(idbuf);
   char *url = hp_expand(s->detail_url, st->vars, "v", enc ? enc : idbuf);
   free(enc);
   if (!url) return;
 
   /* With the row's headers. This used to send none, so every detail hop on a
-   * row that authenticates by header (gBizINFO's X-hojinInfo-api-token, 26
-   * rows with headers and a detail_url) or needs a UA the firewall accepts
-   * (sec.gov) got 401/403/500, and each record carried _detail_error. */
+   * row that authenticates by header (gBizINFO's X-hojinInfo-api-token,
+   * UK_CQC_PROVIDERS' Ocp-Apim-Subscription-Key; 26 rows with headers and a
+   * detail_url) or needs a UA the firewall accepts (sec.gov) got 401/403/500,
+   * and each record carried _detail_error with the run green. */
   http_response hr = {0};
   int rc = http_request(st->ctx->http, "GET", url, st->detail_hdrs, NULL, 0,
                         s->timeout_ms > 0 ? s->timeout_ms : HP_HTTP_TIMEOUT,
@@ -1214,10 +1289,18 @@ static void hp_deepen(hp_run_state *st, cJSON *flat) {
       cJSON *node = s->detail_path ? hp_path(doc, s->detail_path) : doc;
       if (node) hp_flatten(node, "detail", flat, 1);
       cJSON_Delete(doc);
+    } else {
+      /* A 200 whose body is not JSON (an HTML profile page behind an HTML
+       * row's anchor) used to merge nothing and stamp only `detail_url` — read
+       * as "the detail came back empty", which is not what happened. */
+      st->deep_failed++;
+      cJSON_AddStringToObject(flat, "_detail_error",
+                              "detail body is not JSON; nothing merged");
     }
     cJSON_AddStringToObject(flat, "detail_url", url);
   } else {
     fprintf(stderr, "[hp:%s] detail status=%ld %s\n", s->id, hr.status, url);
+    st->deep_failed++;
     cJSON_AddStringToObject(flat, "_detail_error",
                             rc != 0 ? "detail fetch transport failure"
                                     : "detail fetch returned non-200");
@@ -1445,7 +1528,7 @@ static unsigned char *hp_collision_map(hp_run_state *st, cJSON *arr, int n,
   return dup;
 }
 
-static void hp_emit_record(hp_run_state *st, cJSON *flat, int deepen) {
+static void hp_emit_record(hp_run_state *st, cJSON *flat) {
   const hp_source *s = st->s;
   /* Nothing survived flattening — an array slot that held no value at all. The
    * trailing newline of a CSV is the common case: every field maps to "" and
@@ -1464,10 +1547,11 @@ static void hp_emit_record(hp_run_state *st, cJSON *flat, int deepen) {
      * in with `available` overstated what the endpoint offered for this query. */
     if (!hit) { st->filtered++; return; }
   }
-  if (deepen) hp_deepen(st, flat);
+  if (hp_detail_admit(st)) hp_deepen(st, flat);
   else if (s->detail_url)
     /* The row has a second hop but this record was past the per-run detail
-     * budget. Say so — an un-fetched detail is not an absent detail. */
+     * budget. Say so — an un-fetched detail is not an absent detail — and
+     * hp_detail_admit() has counted it for the run's truncation notice. */
     cJSON_AddBoolToObject(flat, "_detail_pending", 1);
 
   /* Flatten bounds are memory guards, not filters: if one bit, the record is
@@ -1821,7 +1905,7 @@ static int hp_run_json(hp_run_state *st, const char *body) {
       st->available += 1;
       cJSON *flat = cJSON_CreateObject();
       hp_flatten(n, "", flat, 0);
-      hp_emit_record(st, flat, st->deep_left > 0);
+      hp_emit_record(st, flat);
       cJSON_Delete(flat);
       cJSON_Delete(doc);
       return st->emitted;
@@ -1909,7 +1993,7 @@ static int hp_run_json(hp_run_state *st, const char *body) {
     st->available += 1;
     cJSON *flat = cJSON_CreateObject();
     hp_flatten(doc, "", flat, 0);
-    hp_emit_record(st, flat, st->deep_left > 0);
+    hp_emit_record(st, flat);
     cJSON_Delete(flat);
     cJSON_Delete(doc);
     return st->emitted;
@@ -1961,10 +2045,8 @@ static int hp_run_json(hp_run_state *st, const char *body) {
     if (st->ctx->cancel && *st->ctx->cancel) { st->truncated = 1; break; }
     cJSON *flat = hp_json_flat(s, rec);
     if (!flat) { ri++; continue; }
-    int before = st->emitted;
     st->rec_idx = ri;
-    hp_emit_record(st, flat, st->deep_left > 0);
-    if (st->emitted > before && st->deep_left > 0) st->deep_left--;
+    hp_emit_record(st, flat);     /* spends the detail budget itself */
     cJSON_Delete(flat);
     ri++;
   }
@@ -2106,7 +2188,11 @@ static int hp_emit_rows(hp_run_state *st, cJSON *rows) {
     cJSON *flat = hp_csv_flat(s, row);
     if (!flat) { ri++; continue; }
     st->rec_idx = ri;
-    hp_emit_record(st, flat, 0);
+    /* CSV records take the detail hop too, keyed on a column name exactly as
+     * a JSON record is keyed on a field. This path passed deepen=0, so a CSV
+     * row declaring detail_url stamped EVERY record `_detail_pending` and
+     * never made one hop — "pending" for a fetch that could never happen. */
+    hp_emit_record(st, flat);
     cJSON_Delete(flat);
     ri++;
   }
@@ -2659,13 +2745,11 @@ static int hp_run_xml(hp_run_state *st, const char *body) {
     st->rec_idx = ri;
     hp_flat_reset();
     g_flat_drops = ri < ndrops ? drops[ri] : 0;
-    int before = st->emitted;
     /* An element that flattened to nothing (`<row/>`) is counted as an empty
-     * slot there, not passed over in silence. */
-    hp_emit_record(st, flat, st->deep_left > 0);
-    /* The detail budget is spent per record that hopped, as on the JSON
-     * path; without this an XML row deepened every record on every page. */
-    if (st->emitted > before && st->deep_left > 0) st->deep_left--;
+     * slot there, not passed over in silence; hp_emit_record spends the detail
+     * budget per record that hops (this path once deepened every record on
+     * every page, then decremented the budget itself). */
+    hp_emit_record(st, flat);
     ri++;
   }
   hp_flat_reset();
@@ -2878,9 +2962,7 @@ static int hp_run_recjar(hp_run_state *st, const char *body) {
     if (st->ctx->cancel && *st->ctx->cancel) { st->truncated = 1; break; }
     st->rec_idx = ri;
     hp_flat_reset();
-    int before = st->emitted;
-    hp_emit_record(st, flat, st->deep_left > 0);
-    if (st->emitted > before && st->deep_left > 0) st->deep_left--;
+    hp_emit_record(st, flat);
     ri++;
   }
   st->dup_map = NULL;
@@ -3278,6 +3360,8 @@ static int hp_run_table(hp_run_state *st, const char *body) {
             s->id, s->table_must, s->table_index);
     return 0;
   }
+  /* A table cut at the parser's memory bound is said so (shape notice (g)). */
+  st->sh_table_capped |= (tb.capped_rows ? 1 : 0) | (tb.capped_width ? 2 : 0);
   int hdr = s->table_skip_rows > 0 ? s->table_skip_rows : 0;
   cJSON *rows = cJSON_CreateArray();
   if (!rows || hdr >= tb.nrows) { html_table_free(&tb); return hp_emit_rows(st, rows); }
@@ -3424,7 +3508,7 @@ static int hp_run_html(hp_run_state *st, const char *html) {
       cJSON_AddStringToObject(flat, "url", link);
       cJSON_AddStringToObject(flat, "id", link);
       hp_flat_reset();
-      hp_emit_record(st, flat, 0);
+      hp_emit_record(st, flat);
       cJSON_Delete(flat);
     }
   }
@@ -3445,7 +3529,9 @@ static int hp_run_html(hp_run_state *st, const char *html) {
       cJSON_AddStringToObject(flat, ok_, labels.v[i].others[j]);
     }
     hp_flat_reset();
-    hp_emit_record(st, flat, 0);
+    /* Deepens like every other mode (detail_key = "url" / "id" / "title"); it
+     * used to pass deepen=0 and stamp each anchor pending forever. */
+    hp_emit_record(st, flat);
     cJSON_Delete(flat);
   }
   html_label_free(&labels);
@@ -3682,6 +3768,27 @@ static void hp_shape_notices(hp_run_state *st, intel_sink *sink,
              "read (%d record(s) emitted from it)", s->id, emitted);
     jo_shape_notice(sink, s->id, "zip-extra-entries", title, p, TAGS);
   }
+
+  if (st->sh_table_capped) {                                   /* (g) */
+    p = cJSON_CreateObject();
+    cJSON_AddStringToObject(p, "query", q);
+    cJSON_AddBoolToObject(p, "rows_capped", (st->sh_table_capped & 1) != 0);
+    cJSON_AddBoolToObject(p, "width_capped", (st->sh_table_capped & 2) != 0);
+    cJSON_AddStringToObject(p, "reason",
+      "the HTML table claimed more rows (HT_MAX_ROWS, 1,000,000) or a wider row "
+      "(HT_MAX_WIDTH, 65,536 cells) than lib/htmlparse.c will allocate for "
+      "untrusted input, and was cut at that bound");
+    cJSON_AddStringToObject(p, "remedy",
+      "a real table this large wants a bulk download or an API, not a scraped "
+      "page; re-point the row");
+    cJSON_AddNumberToObject(p, "records_used", emitted);
+    snprintf(title, sizeof title,
+             "%s: the HTML table exceeded the parser's %s bound; %d record(s) "
+             "emitted from what was parsed", s->id,
+             st->sh_table_capped == 3 ? "row and width"
+               : (st->sh_table_capped & 1) ? "row" : "width", emitted);
+    jo_shape_notice(sink, s->id, "html-table-capped", title, p, TAGS);
+  }
 }
 
 /* A conditional request header. The engine itself sends none — there is no
@@ -3788,7 +3895,19 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
    * nothing to fetch without one and still returns the honest empty. */
   int scheduled = (!e || !*e);
   if (scheduled) {
-    if (s->interval <= 0) return 0;           /* on-demand pivot, no entity */
+    if (s->interval <= 0) {
+      /* An on-demand pivot asked with no entity. It used to return SILENTLY,
+       * and silence here is not harmless: the run line then reads
+       * `records=0 0ms stored=0` with nothing to explain it, which is
+       * byte-identical to a row that went and fetched and found nothing.
+       * audit_registry_emit.py reported 268 of batch 31's 295 rows as
+       * EMITS_NOTHING on exactly that basis (2026-10-11) — 268 sources that
+       * had never been asked anything. The tool's NEEDS_ENTITY verdict existed
+       * and could not fire, because the engine gave it nothing to match. */
+      fprintf(stderr, "[hp:%s] on-demand pivot and no entity was given — "
+                      "nothing was fetched\n", s->id);
+      return 0;
+    }
     if (hp_uses_entity(s->url) || hp_uses_entity(s->post_body)) {
       fprintf(stderr, "[hp:%s] scheduled run but the row needs an entity — skipped\n",
               s->id);
@@ -3960,18 +4079,19 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     }
     nocache_hdrs[nn] = NULL;
   }
-  /* Detail hops: later_hdrs without the POST body's default content type. */
-  const char *detail_hdrs[12];
+  /* Detail hops (see hp_run_state.detail_hdrs): later_hdrs without any
+   * Content-Type, plus the JSON Accept the hop's parser needs. */
+  const char *detail_hdrs[13];
   {
     int nd = 0;
     for (int i = 0; later_hdrs[i]; i++) {
-      if (body && !has_ctype && !strncasecmp(later_hdrs[i], "Content-Type:", 13))
-        continue;
+      if (!strncasecmp(later_hdrs[i], "Content-Type:", 13)) continue;
       detail_hdrs[nd++] = later_hdrs[i];
     }
+    if (!has_accept && s->mode != HP_JSON) detail_hdrs[nd++] = "Accept: application/json";
     detail_hdrs[nd] = NULL;
   }
-  int page_max = s->page_max > 0 ? s->page_max : HP_PAGE_MAX_DEF;
+  int page_max = s->page_max > 0 ? s->page_max : jo_page_max(NULL);
   /* A `{page}` token left in the URL after entity expansion is path-segment
    * paging: the upstream numbers its pages in the path (kanpou.ai's
    * /tosan/p/N), which no query parameter can express. hp_expand leaves an
@@ -4669,6 +4789,54 @@ date_step_back:
     free(pj);
   }
 
+  /* The detail budget's shortfall, as data. `_detail_pending` on each record
+   * says THAT record was not deepened; nothing said how many were not, so a
+   * run that deepened 25 of 1,000 reported itself complete everywhere a human
+   * looks. Its own remote_key beside the page-walk notice: a run can be short
+   * on pages and on hops at once, and one must not overwrite the other. */
+  if (st.deep_pending > 0) {
+    int dsecs = hp_detail_secs();
+    cJSON *p = cJSON_CreateObject();
+    cJSON_AddStringToObject(p, "source_id", s->id);
+    cJSON_AddStringToObject(p, "query", vars.raw ? vars.raw : "");
+    cJSON_AddNumberToObject(p, "records_used", out);
+    cJSON_AddNumberToObject(p, "detail_fetched", st.deep_done);
+    cJSON_AddNumberToObject(p, "detail_failed", st.deep_failed);
+    cJSON_AddNumberToObject(p, "detail_pending", st.deep_pending);
+    cJSON_AddNumberToObject(p, "detail_budget_records", hp_detail_budget(s));
+    cJSON_AddNumberToObject(p, "detail_budget_seconds", dsecs);
+    cJSON_AddStringToObject(p, "detail_budget_hit", st.deep_by_time ? "time" : "count");
+    cJSON_AddStringToObject(p, "reason", st.deep_by_time
+      ? "the per-run detail time budget ran out; the remaining records were "
+        "emitted from the list response with `_detail_pending: true`"
+      : "the per-run detail request budget ran out; the remaining records were "
+        "emitted from the list response with `_detail_pending: true`");
+    cJSON_AddStringToObject(p, "remedy", st.deep_by_time
+      ? "raise JO_HP_DETAIL_SEC (0 = no clock) or re-run; the host's own pace "
+        "(core/hostgate.c) is what the clock measures"
+      : "raise this row's detail_max, or JO_HP_DETAIL_MAX for rows that "
+        "declare none — see docs/SOURCE_EXHAUSTIVENESS.md");
+    char *pj = cJSON_PrintUnformatted(p);
+    cJSON_Delete(p);
+    char key[320], title[256];
+    snprintf(key, sizeof key, "%.150s|detail-truncation:%.120s", s->id,
+             vars.raw ? vars.raw : "");
+    snprintf(title, sizeof title, "%s deepened %d of %d records (%d pending)",
+             s->id, st.deep_done, st.deep_done + st.deep_pending, st.deep_pending);
+    fprintf(stderr, "[hp:%s] detail hops: %d made, %d failed, %d pending (%s budget)\n",
+            s->id, st.deep_done, st.deep_failed, st.deep_pending,
+            st.deep_by_time ? "time" : "count");
+    intel_item note = {0};
+    note.remote_key      = key;
+    note.title           = title;
+    note.lang            = "en";
+    note.record_type     = "collector-truncation-notice";
+    note.properties_json = pj ? pj : "{}";
+    note.tags_json       = "[\"osint-search\",\"truncation-notice\"]";
+    sink->emit(sink, &note);
+    free(pj);
+  }
+
   /* Schema drift, if any was measured above — one record per condition, in
    * ADDITION to whatever the walk found, never instead of it. */
   hp_shape_notices(&st, sink, &vars, out, page_max);
@@ -4795,10 +4963,15 @@ static void hp_desc_tokens(cJSON *arr, const char *tmpl) {
   }
 }
 
+/* A row takes an entity when its URL or body carries a token — or when it
+ * declares filter_query: a bulk file (OFAC's sdn.csv, the IRS exempt-orgs
+ * zip, OurAirports) fetched whole and filtered by the entity locally is an
+ * entity pivot too, and 18 such rows read as rule-3 "never runs" until this
+ * counted them (2026-10-18). */
 int hp_source_uses_entity(const char *id) {
   const hp_source *s = hp_lookup(id);
   if (!s) return 0;
-  return hp_uses_entity(s->url) || hp_uses_entity(s->post_body);
+  return hp_uses_entity(s->url) || hp_uses_entity(s->post_body) || s->filter_query;
 }
 
 char *hp_describe_json(const char *id) {
@@ -4810,7 +4983,7 @@ char *hp_describe_json(const char *id) {
   cJSON_AddStringToObject(o, "mode", hp_mode_name(s->mode));
   cJSON_AddStringToObject(o, "want", hp_want_name(s->want));
 
-  int uses = hp_uses_entity(s->url) || hp_uses_entity(s->post_body);
+  int uses = hp_uses_entity(s->url) || hp_uses_entity(s->post_body) || s->filter_query;
   const char *kind = uses ? (s->interval > 0 ? "scheduled-pivot" : "pivot")
                           : (s->interval > 0 ? "scheduled" : "unreachable");
   cJSON_AddStringToObject(o, "kind", kind);

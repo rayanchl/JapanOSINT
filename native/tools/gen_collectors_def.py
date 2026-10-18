@@ -150,6 +150,11 @@ OVERRIDES = {
     "agriculture": "grp_health", "food": "grp_health",
     "disaster": "grp_environment", "jp_river": "grp_environment", "earthobs": "grp_environment",
     "europe_env": "grp_environment",   # an environment beat whose rows are geo-tagged
+    # batches 41/42 (2026-10-18): Japanese WordPress REST beats, by the kind of host
+    "hp3b41_jpcorpwp": "grp_corporate", "hp3b42_jpcptcorp": "grp_corporate", "hp3b42_jppages": "grp_corporate",
+    "hp3b42_jpusers": "grp_corporate", "hp3b41_jpbankwp": "grp_corporate", "hp3b42_jpcptbank": "grp_corporate",
+    "hp3b41_jpuniwp": "grp_science", "hp3b42_jpcptuni": "grp_science",
+    "hp3b41_jpmuniwp": "grp_government", "hp3b42_jpcptmuni": "grp_government",
     "satellite": "grp_space", "space": "grp_space",
     "crime": "grp_safety", "safety": "grp_safety", "defense": "grp_safety",
     "statistics": "grp_opendata", "economy": "grp_corporate", "industry": "grp_corporate", "finance": "grp_corporate",
@@ -280,6 +285,17 @@ LABELS = {
     "hp3b22_deeparchive": ("Web archives (batch 22)", "ウェブアーカイブ", None),
     "hp3b35_jpweko": ("Japan — JAIRO Cloud repositories (batch 35)", "日本 機関リポジトリ", None),
     "hp3b30_jplibrary": ("Japan — libraries (batch 30)", "日本 図書館", None),
+    # batches 41/42: WordPress REST feeds read from the hosts' own route tables
+    "hp3b41_jpcorpwp": ("Japan — company websites, WordPress feeds (batch 41)", "日本 企業サイト WordPress", None),
+    "hp3b41_jpuniwp": ("Japan — university websites, WordPress feeds (batch 41)", "日本 大学サイト WordPress", None),
+    "hp3b41_jpbankwp": ("Japan — bank websites, WordPress feeds (batch 41)", "日本 銀行サイト WordPress", None),
+    "hp3b41_jpmuniwp": ("Japan — municipal websites, WordPress feeds (batch 41)", "日本 自治体サイト WordPress", None),
+    "hp3b42_jpcptcorp": ("Japan — company sites, WordPress custom post types (batch 42)", "日本 企業サイト カスタム投稿", None),
+    "hp3b42_jppages": ("Japan — company sites, WordPress pages (batch 42)", "日本 企業サイト 固定ページ", None),
+    "hp3b42_jpusers": ("Japan — company sites, WordPress authors (batch 42)", "日本 企業サイト 投稿者", None),
+    "hp3b42_jpcptuni": ("Japan — university sites, WordPress custom post types (batch 42)", "日本 大学サイト カスタム投稿", None),
+    "hp3b42_jpcptmuni": ("Japan — municipal sites, WordPress custom post types (batch 42)", "日本 自治体サイト カスタム投稿", None),
+    "hp3b42_jpcptbank": ("Japan — bank sites, WordPress custom post types (batch 42)", "日本 銀行サイト カスタム投稿", None),
 }
 
 COUNTRY = {

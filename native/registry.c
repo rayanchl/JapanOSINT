@@ -1,4 +1,7 @@
 #include "source.h"
+#include <pthread.h>
+#include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
@@ -35,81 +38,154 @@ static int g_n = 0;
  * dispatched, --run'd, or resolved by the OSINT router, and both write to the
  * same source_id rows. With sources authored in parallel across many files
  * that collision is a matter of time, and "my collector is registered and
- * still does nothing" is a miserable thing to debug. Fail loud at startup. */
+ * still does nothing" is a miserable thing to debug. Fail loud at startup.
+ *
+ * THE CHECK USED TO BE THE BOOT COST. It was a linear scan inside
+ * registry_add(), i.e. O(n^2) across the constructors: at 18,643 sources that
+ * is ~174 M strcmp() calls before main() runs. registry_get() was the same
+ * linear scan, and db_seed_sources() calls it (through src_meta_get) once per
+ * source, so every boot — `--list-sources` included — paid for it twice.
+ *
+ * Now registry_add() only appends, and an open-addressing hash of indices is
+ * built ONCE, after the constructors: by registry_freeze() from main(), or
+ * lazily by the first lookup. Building it is where duplicates are detected and
+ * reported, with the same message as before (Makefile's registry-floor and
+ * tests/contract/accept_new_sources.sh grep for "DUPLICATE id"), and the FIRST
+ * definition keeps the slot so registry_get() answers exactly what it did.
+ *
+ * Immutability: every registry_add() caller is an __attribute__((constructor))
+ * (REGISTER_SOURCE, and hp_register() via HP_REGISTER_TABLE), so the array is
+ * complete before main() and never changes after. A late registry_add() is
+ * still handled — it is inserted into the built index — but it is not
+ * thread-safe and nothing in the tree does it. */
+/* THE OTHER WAY A REGISTERED SOURCE DOES NOTHING, and it is the same misery
+ * the duplicate check above exists for: the row is unique, it registers, it
+ * appears in /api/status — and neither of the two things that can RUN a source
+ * will ever pick it.
+ *
+ * The scheduler takes `update_interval_sec > 0`. The OSINT dispatcher takes
+ * `is_entity_pivot()` (core/osint_dispatch.c), which is
+ * `collector == "osint" && update_interval_sec == 0`. A row with an interval of
+ * 0 and any OTHER collector label satisfies neither, so it is dead — and
+ * `collector` is a field nobody connects to dispatch, which is what makes this
+ * invisible. Found 2026-10-12 across 16 live sources, every one an entity pivot
+ * by design and saying so in its own file: the nine openFDA identifier pivots
+ * (whose header documents them being converted from scheduled feeds to lookups
+ * — the conversion kept the `us_health` label and so never took effect), CVE
+ * Program record lookup, MITRE CWE lookup, two elevation lookups, NASA POWER,
+ * Diavgeia by issuing body, and MLIT Kawabou observatory detail.
+ *
+ * The internal lanes are exempt by the convention source.h documents: a
+ * collector beginning with '_' is a pipeline pod or test fixture ("_maint",
+ * "_enrich", "_test", "_probe", "_breach"), not a data source, and
+ * core/scheduler.c already routes on that prefix. PORT_SCANNER is deliberately
+ * "_probe": it opens raw sockets, so keeping it out of the LLM's schema enum is
+ * a security decision, not an oversight. */
+/* The complement of registry_is_entity_pivot() under ONE definition: a row
+ * with no interval that is not an internal lane and that no entity can reach
+ * — for an hpengine row, a URL/body without an entity token (house rule 3's
+ * static-URL-no-interval row). The collector NAME is no longer part of either
+ * rule: hpengine rows take their table's name as collector (2026-10-12), so
+ * `collector != "osint"` would call 1,864 live pivots dead. */
+static int source_never_runs(const source_def *d) {
+  if (!d || d->update_interval_sec > 0) return 0;
+  if (!d->collector || !d->collector[0]) return 1;
+  if (d->collector[0] == '_') return 0;
+  return !registry_is_entity_pivot(d);
+}
+
 static int g_dupes;
+static int g_dead;
+static int     *g_slot;          /* index+1 into g_srcs, 0 = empty          */
+static unsigned g_mask;          /* capacity-1 (capacity is a power of two) */
+static int      g_built;
+static pthread_once_t g_once = PTHREAD_ONCE_INIT;
+
+static uint64_t id_hash(const char *s) {          /* FNV-1a 64 */
+  uint64_t h = 1469598103934665603ULL;
+  for (; *s; s++) { h ^= (unsigned char)*s; h *= 1099511628211ULL; }
+  return h;
+}
+
+/* Insert g_srcs[i]; report and skip when its id is already present. */
+static void index_insert(int i) {
+  const source_def *d = g_srcs[i];
+  if (!d || !d->id || !g_slot) return;
+  for (unsigned p = (unsigned)id_hash(d->id) & g_mask;; p = (p + 1) & g_mask) {
+    int k = g_slot[p];
+    if (!k) { g_slot[p] = i + 1; return; }
+    if (strcmp(g_srcs[k - 1]->id, d->id) == 0) {
+      fprintf(stderr, "[registry] DUPLICATE id '%s' (collector '%s' vs '%s')"
+                      " — second definition is unreachable\n",
+              d->id, g_srcs[k - 1]->collector ? g_srcs[k - 1]->collector : "?",
+              d->collector ? d->collector : "?");
+      g_dupes++;
+      return;
+    }
+  }
+}
+
+static void index_build(void) {
+  /* Sized for MAX_SOURCES, not for g_n, so a late registry_add() can never
+   * push the load factor past 1/2 and no rehash path is needed. 256 KB. */
+  unsigned cap = 1;
+  while (cap < 2u * (unsigned)MAX_SOURCES) cap <<= 1;
+  g_slot = calloc(cap, sizeof *g_slot);
+  if (!g_slot) {
+    fprintf(stderr, "[registry] out of memory for the id index; lookups fall "
+                    "back to a linear scan\n");
+    return;
+  }
+  g_mask = cap - 1;
+  for (int i = 0; i < g_n; i++) index_insert(i);
+  for (int i = 0; i < g_n; i++) {
+    if (!source_never_runs(g_srcs[i])) continue;
+    fprintf(stderr, "[registry] NEVER-RUNS id '%s' (collector '%s',"
+                    " interval 0) — the scheduler skips it and"
+                    " is_entity_pivot() rejects it\n",
+            g_srcs[i]->id ? g_srcs[i]->id : "?",
+            g_srcs[i]->collector ? g_srcs[i]->collector : "");
+    g_dead++;
+  }
+  g_built = 1;
+}
+
+void registry_freeze(void) { pthread_once(&g_once, index_build); }
 
 void registry_add(const source_def *def) {
   if (!def) return;
-  if (def->id) {
-    for (int i = 0; i < g_n; i++) {
-      if (strcmp(g_srcs[i]->id, def->id) == 0) {
-        fprintf(stderr, "[registry] DUPLICATE id '%s' (collector '%s' vs '%s')"
-                        " — second definition is unreachable\n",
-                def->id, g_srcs[i]->collector ? g_srcs[i]->collector : "?",
-                def->collector ? def->collector : "?");
-        g_dupes++;
-        break;
-      }
-    }
+  if (g_n < MAX_SOURCES) {
+    g_srcs[g_n++] = def;
+    if (g_built) index_insert(g_n - 1);
   }
-  if (g_n < MAX_SOURCES) g_srcs[g_n++] = def;
   /* Loud on overflow so this never silently truncates again. */
   else fprintf(stderr, "[registry] OVERFLOW: dropped '%s' (cap %d)\n",
                def->id ? def->id : "?", MAX_SOURCES);
 }
 
-int registry_duplicate_count(void) { return g_dupes; }
+int registry_duplicate_count(void) { registry_freeze(); return g_dupes; }
+int registry_never_runs_count(void) { registry_freeze(); return g_dead; }
 int registry_count(void) { return g_n; }
 const source_def **registry_all(void) { return g_srcs; }
 
-/* Lookup is by bsearch over a sorted shadow of g_srcs, rebuilt lazily when
- * the registry has grown since it was last built. registry_all() keeps
- * registration order (the scheduler and the floors walk it), so the shadow is
- * a second array, not a reordering. A linear scan here cost the provenance
- * index 20 s on first use — one registry_get per docs/ row, 18,883 strcmp
- * each — and the OSINT dispatcher resolves ids on every search. Constructors
- * register before main() on one thread; later callers come from the worker
- * threads, hence the mutex around the rebuild. */
-#include <pthread.h>
-#include <stdlib.h>
-static const source_def **g_sorted = NULL;
-static int g_sorted_n = 0;
-static pthread_mutex_t g_sorted_mu = PTHREAD_MUTEX_INITIALIZER;
-static int def_cmp(const void *a, const void *b) {
-  const source_def *const *x = a, *const *y = b;
-  return strcmp((*x)->id, (*y)->id);
+int registry_index(const char *id) {
+  if (!id) return -1;
+  registry_freeze();
+  if (!g_slot) {                                   /* OOM fallback */
+    for (int i = 0; i < g_n; i++)
+      if (g_srcs[i]->id && strcmp(g_srcs[i]->id, id) == 0) return i;
+    return -1;
+  }
+  for (unsigned p = (unsigned)id_hash(id) & g_mask;; p = (p + 1) & g_mask) {
+    int k = g_slot[p];
+    if (!k) return -1;
+    if (strcmp(g_srcs[k - 1]->id, id) == 0) return k - 1;
+  }
 }
-static int def_key_cmp(const void *k, const void *e) {
-  return strcmp((const char *)k, (*(const source_def *const *)e)->id);
-}
+
 const source_def *registry_get(const char *id) {
-  if (!id || g_n == 0) return NULL;
-  pthread_mutex_lock(&g_sorted_mu);
-  if (g_sorted_n != g_n) {
-    const source_def **ns = realloc((void *)g_sorted, (size_t)g_n * sizeof *ns);
-    if (ns) {
-      memcpy(ns, g_srcs, (size_t)g_n * sizeof *ns);
-      qsort(ns, (size_t)g_n, sizeof *ns, def_cmp);
-      g_sorted = ns; g_sorted_n = g_n;
-    }
-  }
-  const source_def **sorted = g_sorted; int n = g_sorted_n;
-  pthread_mutex_unlock(&g_sorted_mu);
-  if (!sorted) {                      /* allocation failed: the slow path still answers */
-    for (int i = 0; i < g_n; i++)
-      if (strcmp(g_srcs[i]->id, id) == 0) return g_srcs[i];
-    return NULL;
-  }
-  /* duplicate ids: the FIRST registered wins, as before — bsearch may land on
-   * either copy, so step back to the lowest registration index among equals */
-  const source_def **hit = bsearch(id, sorted, (size_t)n, sizeof *sorted, def_key_cmp);
-  if (!hit) return NULL;
-  const source_def *best = *hit;
-  if (g_dupes) {
-    for (int i = 0; i < g_n; i++)
-      if (strcmp(g_srcs[i]->id, id) == 0) return g_srcs[i];
-  }
-  return best;
+  int i = registry_index(id);
+  return i >= 0 ? g_srcs[i] : NULL;
 }
 
 #include "lib/hpengine.h"

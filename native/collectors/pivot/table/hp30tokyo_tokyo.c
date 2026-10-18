@@ -355,6 +355,7 @@ static const hp_source HP30TOKYO_TOKYO[] = {
     .page_param = "start",
     .page_size = 100,
     .page_start = 0,
+    .page_max = 39,   /* 3,889 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "title,name",
     .description = "Every dataset filed under the portal's 行財政 category (3881 "
       "datasets on 2026-09-21): title, publisher, licence, update time "
@@ -1781,6 +1782,7 @@ static const hp_source HP30TOKYO_TOKYO[] = {
     .page_param = "start",
     .page_size = 100,
     .page_start = 0,
+    .page_max = 63,   /* 6,241 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "title,name",
     .description = "Every dataset in the catalogue that ships at least one CSV "
       "resource (6236 datasets on 2026-09-21), with the resource URLs "
