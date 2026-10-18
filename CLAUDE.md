@@ -531,8 +531,19 @@ underneath them that older notes in this file predate:
   / pending (never ran). Until then nothing wrote it after the seed, so every
   row read `pending` forever and `/api/status`'s online count was the seed.
 * **An hpengine row's default collector is its table file's basename**
-  (`hp3b25_jpmedia`), not `osint`. Every source has a collector; 535 keys
-  (2026-10-18); `core/collectors.def` labels and groups them (below).
+  (`hp3b25_jpmedia`), not `osint`. Every source has a collector; 545 keys
+  (2026-10-18, round 3); `core/collectors.def` labels and groups them (below).
+  **`osint` is the collector of hand-written entity PIVOTS only** since round 3:
+  968 scheduled feeds had been authored under that label (Google News
+  editions and keyword monitors, world outlets, arXiv, think tanks, threat
+  feeds, Reddit multireddits) and sat under "Investigation pivots" as one
+  1,443-row collector. They now carry `gnews`, `gnews_monitors`,
+  `world_outlets`, `conflict_press`, `trade_press`, `thinktanks`,
+  `ngo_rights`, `arxiv`, `science_press`, `finance_press`, `reddit`, `cyber`
+  — the collector of what they are — and `osint` holds its 492 pivots and
+  nothing scheduled. Safe because the pivot rule below never read the label;
+  check that a scheduled row's `collector` names its beat, not the macro's
+  default.
 * **"Entity pivot" is `registry_is_entity_pivot()`** in `registry.c`, the one
   rule both the dispatcher and `service_vec` use: interval 0, not a `_` pod,
   and (hpengine) an entity token in the URL/body OR `filter_query=1` (a bulk

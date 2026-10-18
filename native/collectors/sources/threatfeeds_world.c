@@ -446,7 +446,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 #define TF_DEF(SYM, ID, NAME, NAMEJA, INTERVAL, URL, DESC) \
-  static const source_def SYM = { .id = ID, .collector = "osint", .name = NAME, \
+  static const source_def SYM = { .id = ID, .collector = "cyber", .name = NAME, \
     .name_ja = NAMEJA, .update_interval_sec = INTERVAL, .run = run, \
     .category = "cyber", .type = "dataset", .url = URL, .description = DESC, \
     .layer = NULL, .free_tier = 1 }; \

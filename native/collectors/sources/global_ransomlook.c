@@ -122,7 +122,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def ransomlook_def = {
-  .id = "RANSOMLOOK", .collector = "osint",
+  .id = "RANSOMLOOK", .collector = "cyber",
   .name = "RansomLook Victim Tracker", .name_ja = "RansomLook 被害組織追跡",
   .update_interval_sec = 3600, .run = run,
   .category = "cyber", .type = "api",
