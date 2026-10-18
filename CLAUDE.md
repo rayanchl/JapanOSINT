@@ -332,22 +332,62 @@ Where the tree actually stands, as `make audit-sources` reports it:
   retired in favour of `GO_MODULE_INDEX`, which pages on
   `next_path=$last.Timestamp`.
 
-  **42 of those candidates are now MEASURED** (2026-10-11,
-  `docs/measured-url-limits-2026-10-11.tsv`): each upstream was asked the same
-  question with a tenfold limit. **18 are truncating**, 5 are complete, 19 are
-  unreachable from here. The first fix was the highest-leverage one:
-  `od_udata_collect()` in `collectors/sources/od_shared.inc` made ONE request
-  while the envelope published both `next_page` and the upstream's own `total`
-  — so three national open-data catalogues stored 20 datasets each. It pages
-  now, and discloses a ceiling or a `total` it did not reach:
+  The first fix was the highest-leverage one: `od_udata_collect()` in
+  `collectors/sources/od_shared.inc` made ONE request while the envelope
+  published both `next_page` and the upstream's own `total` — so three national
+  open-data catalogues stored 20 datasets each. It pages now, and discloses a
+  ceiling or a `total` it did not reach:
 
       data.public.lu   20 -> 3,193 stored (= its declared total)
       dados.gov.pt     20 -> 20,933
       data.gov.rs      20 -> 3,527
 
-  27,653 records from three rows that together stored 60. **The other 15
-  measured-truncating sites are not yet fixed** and are listed in that file, so
-  the next pass starts from the measurement.
+  27,653 records from three rows that together stored 60.
+
+  **Every candidate is now MEASURED, and the file to start from is
+  `docs/measured-url-limits-2026-10-18.tsv`** — 101 rows, one per candidate.
+  Its predecessor `docs/measured-url-limits-2026-10-11.tsv` said "18
+  truncating, 5 complete, 19 unreachable" of 42 and that "the other 15 are
+  listed here so the next pass has the measurement rather than the inference":
+  **those rows were never written.** That file has held 24 lines and ZERO data
+  rows since the commit that created it, and this paragraph cited it for a week
+  — so the next pass was being pointed at nothing, which is the same invisible
+  nothing rule 1 is about, one layer up in the documentation.
+
+  **The tenfold-limit test over-reports on its own, and a candidate must also
+  be read in its collector.** `od_udata_pt.c` — fixed by the very commit that
+  wrote the empty file — answers 200 for one request and 2,000 for a tenfold
+  ask, which is indistinguishable from a discard; but `od_udata_collect()`
+  already walks it with `pw_walk`, so its 200 is a PAGE SIZE. One request
+  compared with one request cannot see a collector that follows pages. **26 of
+  101 truncate on a single request**, and what to do about one depends on
+  something no probe can answer:
+
+  * **6 are FIXED** (`FIXED_PAGED`) — the upstream published
+    `links:[{"rel":"next"}]`, so the one-shot fetch became a `pw_walk`:
+    `geoeo_stac_items.c` (5 STAC catalogues) and
+    `eni_canada_hydrometric.c`. Measured through `audit_registry_emit.py`
+    before and after: **590 -> 11,800 records per pass**
+    (canada-hydrometric-realtime 500 -> 10,000). All six land on the 20-page
+    ceiling, so each now also files a truncation notice and the real totals are
+    larger still.
+  * **1 is NOT fixed because paging it would be WRONG, not merely partial.**
+    `geoeo_gc_ogcapi.c` has the same `rel=next` link, but its `superseded()`
+    compares each feature against every OTHER feature to keep the latest per
+    station — a per-page emit publishes superseded observations as soon as the
+    newer one lands on a later page. **A next link is permission to page only
+    when the emit is per-record.**
+  * **17 have no continuation at all** — no next link, no offset or page
+    parameter the server honours. Each needs a per-row strategy (a date window,
+    a filter that slices the collection, a bulk dump), which is a design
+    decision and not a number; they are listed so that pass starts from the
+    measurement.
+  * 1 is the question rather than a discard (a newest-first feed) and 1 was a
+    false positive of the single-request test.
+
+  The remainder could not be asked as literals: 32 `RUNTIME_URL`, 16
+  `UNREACHABLE` from this container, 11 whose URL would not join, 10 whose
+  tenfold ask was refused, 5 capped at the same count both ways, 1 complete.
 
   `tools/audit_url_limits.py` finds the shape, and is deliberately NOT in
   `make audit-sources`: **a URL limit is not automatically a discard and the
@@ -355,10 +395,11 @@ Where the tree actually stands, as `make audit-sources` reports it:
   has no complete answer to truncate — that limit IS the question. A scheduled
   read of a collection that has an end stores `limit` of however many exist,
   forever, and that is the violation. They are identical in C. The narrow scope
-  reports **103 sites across 78 files**, none of them measured, so running it
-  is the START of the work; wiring it into the gate would put a hundred
-  untriaged findings into a tree whose invariant is that a new finding is a
-  regression.
+  reports **100 sites across 75 files** (103 across 78 before the fixes above),
+  so running it is the START of the work; wiring it into the gate would put a
+  hundred candidates — most of them legitimate, several of them page sizes —
+  into a tree whose invariant is that a new finding is a regression. The
+  triage, with a verdict and a reason per site, is the 2026-10-18 file.
 
 Deliberate exceptions carry an inline `/* exhaustive-ok: <reason> */` marker
 (`grep -rn exhaustive-ok`). The marker must sit **on the flagged line itself** —
