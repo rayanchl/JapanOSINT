@@ -215,25 +215,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "19:26:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_0AIQ5Z0T", .name = "Servizi Ambientali Provincia di Rieti s.r.l. (Stazioni "
-      "Appaltanti, Rieti, RI) - saprodir",
-    .name_ja = "Servizi Ambientali Provincia di Rieti s.r.l. (Stazioni Appaltanti, Rieti, RI) - saprodir",
-    .category = "government", .portal = "https://saprodir.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://saprodir.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 16 Jan 2025 "
-      "13:05:17 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_0E843YSW", .name = "FONDAZIONE ISTITUTO TECNICO SUPERIORE PER LE NUOVE TECNOLOGIE "
       "PER IL MADE IN ITALY LA FILIERA AGROALIMENTARE RISORSA PER LO "
       "SVILUPPO DELLA LOMBARDIA (Gestori di Pubblici Servizi, Lodi, LO) "
@@ -273,26 +254,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "17:39:21 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_0LWWUVBK", .name = "Azienda Casa Emilia Romagna della Provincia di Reggio Emilia "
-      "(Gestori di Pubblici Servizi, Reggio nell'Emilia, RE) - ACER "
-      "Reggio Emilia",
-    .name_ja = "Azienda Casa Emilia Romagna della Provincia di Reggio Emilia (Gestori di Pubblici Servizi, Reggio nell'Emilia, RE) - ACER Reggio Emilia",
-    .category = "government", .portal = "https://www.acer.re.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.acer.re.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
-      "11:08:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_0M9HV9B8", .name = "ASECO S.P.A. (Stazioni Appaltanti, Bari, BA) - ASECO s.p.a.",
@@ -508,46 +469,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "07:48:09 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_1JRW5QXG", .name = "ISTITUTO COMPRENSIVO STATALE \"GIOVANNI FALCONE e PAOLO "
-      "BORSELLINO - FRANCESCO CARELLI\" (Pubbliche Amministrazioni, "
-      "Conversano, BA) - HOME",
-    .name_ja = "ISTITUTO COMPRENSIVO STATALE \"GIOVANNI FALCONE e PAOLO BORSELLINO - FRANCESCO CARELLI\" (Pubbliche Amministrazioni, Conversano, BA) - HOME",
-    .category = "government", .portal = "https://icfalconeborsellinocarelli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://icfalconeborsellinocarelli.edu.it/index.php?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Tue, 08 Feb 2022 "
-      "15:23:47 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_1JRW5QXG_2", .name = "ISTITUTO COMPRENSIVO STATALE \"GIOVANNI FALCONE e PAOLO "
-      "BORSELLINO - FRANCESCO CARELLI\" (Pubbliche Amministrazioni, "
-      "Conversano, BA) - HOME",
-    .name_ja = "ISTITUTO COMPRENSIVO STATALE \"GIOVANNI FALCONE e PAOLO BORSELLINO - FRANCESCO CARELLI\" (Pubbliche Amministrazioni, Conversano, BA) - HOME",
-    .category = "government", .portal = "https://icfalconeborsellinocarelli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://icfalconeborsellinocarelli.edu.it/index.php?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:29:08+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
-
   { .id = "JO45_IT_1KAWR6TY", .name = "ISTITUTO COMPRENSIVO 8  (Pubbliche Amministrazioni, Piacenza, "
       "PC) - ISTITUTO COMPRENSIVO 8 PIACENZA",
     .name_ja = "ISTITUTO COMPRENSIVO 8  (Pubbliche Amministrazioni, Piacenza, PC) - ISTITUTO COMPRENSIVO 8 PIACENZA",
@@ -682,44 +603,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "14:41:16 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_1R25HBXU", .name = "CONSORZIO DI BONIFICA 1 TRAPANI (Stazioni Appaltanti, Trapani, "
-      "TP) - Consorzio di Bonifica 1 Trapani",
-    .name_ja = "CONSORZIO DI BONIFICA 1 TRAPANI (Stazioni Appaltanti, Trapani, TP) - Consorzio di Bonifica 1 Trapani",
-    .category = "government", .portal = "http://www.cobon1tp.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.cobon1tp.it/cobon1tp/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 01 Feb 2021 "
-      "17:54:34 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_1R9VQFM0", .name = "Consorzio di Bonifica Alta Pianura Veneta (Gestori di Pubblici "
-      "Servizi, San Bonifacio, VR) - Alta Pianura Veneta",
-    .name_ja = "Consorzio di Bonifica Alta Pianura Veneta (Gestori di Pubblici Servizi, San Bonifacio, VR) - Alta Pianura Veneta",
-    .category = "government", .portal = "https://www.altapianuraveneta.eu/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.altapianuraveneta.eu/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "11:25:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_1TCBA2KR", .name = "Società Intercomunale Servizi Idrici S.r.l. (Stazioni "
       "Appaltanti, Alba, CN) - Società Intercomunale Servizi Idrici "
       "S.r.l.",
@@ -759,26 +642,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "13:02:48 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_20IURH3M", .name = "I.C. S.CIRO-DE AMICIS-PIO XII (Pubbliche Amministrazioni, "
-      "Foggia, FG) - ISTITUTO COMPRENSIVO &quot;DE AMICIS &#8211; PIO "
-      "XII&quot; &#8211; FOGGIA",
-    .name_ja = "I.C. S.CIRO-DE AMICIS-PIO XII (Pubbliche Amministrazioni, Foggia, FG) - ISTITUTO COMPRENSIVO &quot;DE AMICIS &#8211; PIO XII&quot; &#8211; FOGGIA",
-    .category = "government", .portal = "https://www.icsancirodeamicispioxii.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsancirodeamicispioxii.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 12 Sep 2026 "
-      "07:18:46 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_21M650RW", .name = "AZIENDA FARMACEUTICA MUNICIPALIZZATA DI CREMA  (Gestori di "
       "Pubblici Servizi, Crema, CR) - AFM Crema",
     .name_ja = "AZIENDA FARMACEUTICA MUNICIPALIZZATA DI CREMA  (Gestori di Pubblici Servizi, Crema, CR) - AFM Crema",
@@ -815,25 +678,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 06 Oct 2026 "
       "13:24:17 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_28WXF4F1", .name = "Salerno Pompei Napoli S.p.A. (Stazioni Appaltanti, Torino, TO) - "
-      "Salerno Pompei Napoli",
-    .name_ja = "Salerno Pompei Napoli S.p.A. (Stazioni Appaltanti, Torino, TO) - Salerno Pompei Napoli",
-    .category = "government", .portal = "https://salernopompeinapolispa.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://salernopompeinapolispa.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "13:40:18 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_2BLMCDR6", .name = "Azienda Trasporti Milanesi (Gestori di Pubblici Servizi, Milano, "
@@ -1007,25 +851,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:52:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_2SWLAIU2", .name = "Catanzaro Servizi spa (Gestori di Pubblici Servizi, Catanzaro, "
-      "CZ) - Catanzaro Servizi",
-    .name_ja = "Catanzaro Servizi spa (Gestori di Pubblici Servizi, Catanzaro, CZ) - Catanzaro Servizi",
-    .category = "government", .portal = "https://www.catanzaroservizi.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.catanzaroservizi.it/index.php/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 21 Aug 2025 "
-      "12:32:33 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_2TX6NDU6", .name = "Fondoprofessioni (Stazioni Appaltanti, Roma, RM) - "
       "Fondoprofessioni",
     .name_ja = "Fondoprofessioni (Stazioni Appaltanti, Roma, RM) - Fondoprofessioni",
@@ -1083,25 +908,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 13 items, RSS2 feed, newest Sun, 23 Aug 2026 "
       "07:03:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_2YOQHVIP", .name = "AZIENDA RIFIUTI ALESSANDRINA SPA (Stazioni Appaltanti, "
-      "Alessandria, AL) - Aral",
-    .name_ja = "AZIENDA RIFIUTI ALESSANDRINA SPA (Stazioni Appaltanti, Alessandria, AL) - Aral",
-    .category = "government", .portal = "https://aralspa.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://aralspa.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 30 Sep 2026 "
-      "08:27:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_2Z7G71Y3", .name = "AMBITO TERRITORIALE DI CACCIA \"B\" PROVINCIA DI MATERA (Gestori "
@@ -1599,26 +1405,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:52:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_48JYY1FM", .name = "ORDINE DEI MEDICI VETERINARI DI BENEVENTO (Pubbliche "
-      "Amministrazioni, Benevento, BN) - Ordine dei Medici Veterinari "
-      "della Provincia di Benevento",
-    .name_ja = "ORDINE DEI MEDICI VETERINARI DI BENEVENTO (Pubbliche Amministrazioni, Benevento, BN) - Ordine dei Medici Veterinari della Provincia di Benevento",
-    .category = "government", .portal = "https://www.ordineveterinaribenevento.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordineveterinaribenevento.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
-      "22:24:03 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_48LQPAQ6", .name = "ORDINE DEI BIOLOGI DEL PIEMONTE, DELLA LIGURIA E DELLA VALLE "
       "D'AOSTA (Pubbliche Amministrazioni, Torino, TO) - Ordine dei "
       "Biologi del Piemonte, della Liguria e della Valle d'Aosta",
@@ -1794,24 +1580,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "11:12:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_4JTCHUHK", .name = "GE.TE.T. SPA (Gestori di Pubblici Servizi, Roma, RM) - Getet",
-    .name_ja = "GE.TE.T. SPA (Gestori di Pubblici Servizi, Roma, RM) - Getet",
-    .category = "government", .portal = "https://getet.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://getet.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, RSS2 feed, newest Fri, 14 Apr 2023 "
-      "13:18:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_4KM8UAYZ", .name = "ENTE PORTO GIULIANOVA (Gestori di Pubblici Servizi, Giulianova, "
       "TE) - ENTE PORTO GIULIANOVA",
     .name_ja = "ENTE PORTO GIULIANOVA (Gestori di Pubblici Servizi, Giulianova, TE) - ENTE PORTO GIULIANOVA",
@@ -1949,26 +1717,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:57:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_4YP9RIEW", .name = "ISTITUTO SUPERIORE FRANCESCO GIORDANI (Pubbliche "
-      "Amministrazioni, Caserta, CE) - ISTITUTO DI ISTRUZIONE SUPERIORE "
-      "&quot;F. Giordani&quot; – Caserta",
-    .name_ja = "ISTITUTO SUPERIORE FRANCESCO GIORDANI (Pubbliche Amministrazioni, Caserta, CE) - ISTITUTO DI ISTRUZIONE SUPERIORE &quot;F. Giordani&quot; – Caserta",
-    .category = "government", .portal = "https://www.giordanicaserta.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.giordanicaserta.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
-      "08:58:52 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_51XXY94X", .name = "LICEO DOMENICO DE RUGGIERI (Pubbliche Amministrazioni, Massafra, "
       "TA) - Liceo D. De Ruggieri",
     .name_ja = "LICEO DOMENICO DE RUGGIERI (Pubbliche Amministrazioni, Massafra, TA) - Liceo D. De Ruggieri",
@@ -2102,25 +1850,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "05:42:30 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_5B67E3T4", .name = "ISTITUTO COMPRENSIVO CAPOTERRA N. 2 (Pubbliche Amministrazioni, "
-      "Capoterra, CA) - ISTITUTO COMPRENSIVO CAPOTERRA  2",
-    .name_ja = "ISTITUTO COMPRENSIVO CAPOTERRA N. 2 (Pubbliche Amministrazioni, Capoterra, CA) - ISTITUTO COMPRENSIVO CAPOTERRA  2",
-    .category = "government", .portal = "https://www.capoterra2.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.capoterra2.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "07:40:25 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_5B6CJIEW", .name = "Secif Srl (Gestori di Pubblici Servizi, Argenta, FE) - Secif "
       "s.r.l. &#8211; Servizi cimiteriali, funerari e di cremazione",
     .name_ja = "Secif Srl (Gestori di Pubblici Servizi, Argenta, FE) - Secif s.r.l. &#8211; Servizi cimiteriali, funerari e di cremazione",
@@ -2176,25 +1905,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "14:44:43 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_5DQHOLMZ", .name = "ISTITUTO D'ISTRUZIONE SUPERIORE FRANCESCO DATINI (Pubbliche "
-      "Amministrazioni, Prato, PO) - Istituto Francesco Datini di Prato",
-    .name_ja = "ISTITUTO D'ISTRUZIONE SUPERIORE FRANCESCO DATINI (Pubbliche Amministrazioni, Prato, PO) - Istituto Francesco Datini di Prato",
-    .category = "government", .portal = "https://www.datiniprato.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datiniprato.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "11:19:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_5EHNYROS", .name = "ISTITUTO ISTRUZIONE SUPERIORE \"A.MEUCCI-E.MATTEI\" (Pubbliche "
@@ -2372,26 +2082,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "13:12:05 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_6D4BRU39", .name = "I.I.S.S. \"G. CESARE - D. ROMANAZZI\" (Pubbliche "
-      "Amministrazioni, Bari, BA) - ISTITUTO ISTRUZIONE SECONDARIA "
-      "SUPERIORE GIULIO CESARE GIULIO CESARE &#8211; BAR",
-    .name_ja = "I.I.S.S. \"G. CESARE - D. ROMANAZZI\" (Pubbliche Amministrazioni, Bari, BA) - ISTITUTO ISTRUZIONE SECONDARIA SUPERIORE GIULIO CESARE GIULIO CESARE &#8211; BAR",
-    .category = "government", .portal = "https://www.giuliocesareromanazzi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.giuliocesareromanazzi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 28 Sep 2026 "
-      "18:34:44 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_6F18K2W9", .name = "IC DON MILANI GARIBALDI LEONE (Pubbliche Amministrazioni, "
       "Trinitapoli, BT) - Istituto Comprensivo Don Milani Garibaldi "
       "Leone",
@@ -2469,25 +2159,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 30 Jul 2026 "
       "09:43:47 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_6PAVRHY5", .name = "ATER Provincia Aquila (Stazioni Appaltanti, L'Aquila, AQ) - Ater "
-      "L&#039;Aquila",
-    .name_ja = "ATER Provincia Aquila (Stazioni Appaltanti, L'Aquila, AQ) - Ater L&#039;Aquila",
-    .category = "government", .portal = "https://ateraq.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ateraq.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 12 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "10:15:16 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_6TAN6PRP", .name = "AZIENDA SERVIZI ECOLOGICI (Gestori di Pubblici Servizi, "
@@ -3014,26 +2685,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "08:39:16 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_7QCUI616", .name = "Cassa Mutua Nazionale tra i Cancellieri ed i Segretari "
-      "Giudiziari (Pubbliche Amministrazioni, Roma, RM) - Cassa Mutua "
-      "Cancellieri",
-    .name_ja = "Cassa Mutua Nazionale tra i Cancellieri ed i Segretari Giudiziari (Pubbliche Amministrazioni, Roma, RM) - Cassa Mutua Cancellieri",
-    .category = "government", .portal = "https://www.cassamutuacancellieri.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cassamutuacancellieri.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Thu, 22 Dec 2022 "
-      "13:35:24 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_7RIG1C6B", .name = "SOCIETA ITALIANA TRAFORO GRAN SAN BERNARDO  (Stazioni "
       "Appaltanti, Saint-Rhémy-en-Bosses, AO) - Le Tunnel du "
       "Grand-Saint-Bernard",
@@ -3541,26 +3192,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:35:49 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_954L4IVP", .name = "Istituto Comprensivo Statale Madre Teresa di Calcutta (Pubbliche "
-      "Amministrazioni, Belpasso, CT) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;MADRE TERESA DI CALCUTTA&quot;",
-    .name_ja = "Istituto Comprensivo Statale Madre Teresa di Calcutta (Pubbliche Amministrazioni, Belpasso, CT) - ISTITUTO COMPRENSIVO STATALE &quot;MADRE TERESA DI CALCUTTA&quot;",
-    .category = "government", .portal = "https://www.icmadreteresadicalcutta.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icmadreteresadicalcutta.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 24 Sep 2026 "
-      "07:17:35 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_955B3556", .name = "CENTRO AGRO ALIMENTARE DI NAPOLI SCPA (Stazioni Appaltanti, "
       "Volla, NA) - caan",
     .name_ja = "CENTRO AGRO ALIMENTARE DI NAPOLI SCPA (Stazioni Appaltanti, Volla, NA) - caan",
@@ -3618,45 +3249,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 10 Aug 2026 "
       "10:08:41 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_9K1N4U94", .name = "Agenzia per l'Occupazione e lo Sviluppo dell'Area nord Barese "
-      "Ofantino soc.cons arl (Stazioni Appaltanti, Barletta, BT) - "
-      "AGENZIA OCCUPAZIONE E SVILUPPO AREA NBO",
-    .name_ja = "Agenzia per l'Occupazione e lo Sviluppo dell'Area nord Barese Ofantino soc.cons arl (Stazioni Appaltanti, Barletta, BT) - AGENZIA OCCUPAZIONE E SVILUPPO AREA NBO",
-    .category = "government", .portal = "https://www.pattonordbareseofantino.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.pattonordbareseofantino.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 14 Sep 2026 "
-      "10:09:16 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_9M9DRXI6", .name = "LICEO RITA LEVI MONTALCINI (Pubbliche Amministrazioni, Casarano, "
-      "LE) - LICEO &quot;RITA LEVI MONTALCINI&quot; &#8211; CASARANO",
-    .name_ja = "LICEO RITA LEVI MONTALCINI (Pubbliche Amministrazioni, Casarano, LE) - LICEO &quot;RITA LEVI MONTALCINI&quot; &#8211; CASARANO",
-    .category = "government", .portal = "https://www.liceomontalcini.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceomontalcini.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "13:15:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_9NOWRM5S", .name = "Tecnoborsa Scpa (Stazioni Appaltanti, Roma, RM) - TECNOBORSA",
@@ -3736,25 +3328,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "00:00:00 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_9UQVTN4B", .name = "STUDIO RADIOLOGICO DIAGNOSTICA PER IMMAGINI SRL  (Gestori di "
-      "Pubblici Servizi, Varese, VA) - Studio Radiologico",
-    .name_ja = "STUDIO RADIOLOGICO DIAGNOSTICA PER IMMAGINI SRL  (Gestori di Pubblici Servizi, Varese, VA) - Studio Radiologico",
-    .category = "government", .portal = "https://www.studioradiologico.com/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.studioradiologico.com/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 24 Sep 2026 "
-      "09:54:52 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_9WQ8OC8R", .name = "Adriafer Rail Services S.r.l. (Stazioni Appaltanti, Trieste, TS) "
       "- ARS &#8211; Adriafer Rail Sevices",
     .name_ja = "Adriafer Rail Services S.r.l. (Stazioni Appaltanti, Trieste, TS) - ARS &#8211; Adriafer Rail Sevices",
@@ -3813,26 +3386,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "14:29:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_A6E9WZKL", .name = "I.C. -BORGESE-PARTANNA MONDELLO (Pubbliche Amministrazioni, "
-      "Palermo, PA) - I.C.S. &quot;Borgese &#8211; Partanna "
-      "Mondello&quot; Palermo",
-    .name_ja = "I.C. -BORGESE-PARTANNA MONDELLO (Pubbliche Amministrazioni, Palermo, PA) - I.C.S. &quot;Borgese &#8211; Partanna Mondello&quot; Palermo",
-    .category = "government", .portal = "https://www.icsborgesepartannamondello.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsborgesepartannamondello.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "16:47:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_A92VTEIY", .name = "ISTITUTO ISTRUZIONE SUPERIORE M. DELPOZZO (Pubbliche "
       "Amministrazioni, Cuneo, CN) - Istituto Statale Cuneo",
     .name_ja = "ISTITUTO ISTRUZIONE SUPERIORE M. DELPOZZO (Pubbliche Amministrazioni, Cuneo, CN) - Istituto Statale Cuneo",
@@ -3869,25 +3422,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Thu, 19 Jan 2023 "
       "08:46:25 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_AA5602E4", .name = "I.C. SIRAGUSA (Pubbliche Amministrazioni, Palermo, PA) - IC "
-      "Alessandra Siragusa",
-    .name_ja = "I.C. SIRAGUSA (Pubbliche Amministrazioni, Palermo, PA) - IC Alessandra Siragusa",
-    .category = "government", .portal = "https://www.icsiragusa.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsiragusa.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 30 Sep 2026 "
-      "15:10:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_AACI", .name = "Autorita di Ambito Calore Irpino (Pubbliche Amministrazioni, "
@@ -4100,26 +3634,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "08:31:04 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_AAST", .name = "Azienda Autonoma di Soggiorno e Turismo Termoli (Pubbliche "
-      "Amministrazioni, Termoli, CB) - Azienda Autonoma di Soggiorno e "
-      "Turismo del Molise",
-    .name_ja = "Azienda Autonoma di Soggiorno e Turismo Termoli (Pubbliche Amministrazioni, Termoli, CB) - Azienda Autonoma di Soggiorno e Turismo del Molise",
-    .category = "government", .portal = "https://termoli.net/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://termoli.net/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
-      "11:08:35 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_AASTP", .name = "Azienda Autonoma Soggiorno e Turismo di Positano (Pubbliche "
       "Amministrazioni, Positano, SA) - Guida di Positano",
     .name_ja = "Azienda Autonoma Soggiorno e Turismo di Positano (Pubbliche Amministrazioni, Positano, SA) - Guida di Positano",
@@ -4294,26 +3808,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:56:45 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ABDAS", .name = "Autorita' di Bacino Distrettuale dell'Appennino Settentrionale "
-      "(Pubbliche Amministrazioni, Firenze, FI) - AUTORITÀ DI BACINO "
-      "DISTRETTUALE  DELL&#039;APPENNINO SETTENTRIONALE",
-    .name_ja = "Autorita' di Bacino Distrettuale dell'Appennino Settentrionale (Pubbliche Amministrazioni, Firenze, FI) - AUTORITÀ DI BACINO DISTRETTUALE  DELL&#039;APPENNINO SETTENTRIONALE",
-    .category = "government", .portal = "https://www.appenninosettentrionale.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.appenninosettentrionale.it/itc/?feed=rss2",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "10:09:13 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ABLLMCMV", .name = "Autorita' di Bacino Lacuale Dei Laghi Maggiore Comabbio Monate "
       "Varese (Pubbliche Amministrazioni, Laveno-Mombello, VA) - "
       "Autorità di bacino lacuale dei laghi Maggiore, Comabbio, Monate "
@@ -4409,25 +3903,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 12 items, RSS2 feed, newest Wed, 16 Sep 2026 "
       "09:12:11 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ACERPFC", .name = "Azienda Casa Emilia Romagna della Provincia di Forli' Cesena "
-      "(Gestori di Pubblici Servizi, Forlì, FC) - Acer Azienda Casa",
-    .name_ja = "Azienda Casa Emilia Romagna della Provincia di Forli' Cesena (Gestori di Pubblici Servizi, Forlì, FC) - Acer Azienda Casa",
-    .category = "government", .portal = "https://aziendacasa.fc.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://aziendacasa.fc.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 28 Sep 2026 "
-      "08:53:22 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ACL", .name = "Agenzia Regionale per le Politiche Attive del Lavoro - ARPAL "
@@ -4529,25 +4004,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "12:11:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ACREE", .name = "Automobile Club Reggio Emilia (Pubbliche Amministrazioni, Reggio "
-      "nell'Emilia, RE) - AciReggio",
-    .name_ja = "Automobile Club Reggio Emilia (Pubbliche Amministrazioni, Reggio nell'Emilia, RE) - AciReggio",
-    .category = "government", .portal = "https://acireggio.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://acireggio.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "05:38:43 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ACSPA", .name = "Arezzo Casa Spa (Gestori di Pubblici Servizi, Arezzo, AR) - "
       "ArezzoCasa",
     .name_ja = "Arezzo Casa Spa (Gestori di Pubblici Servizi, Arezzo, AR) - ArezzoCasa",
@@ -4565,25 +4021,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 30 Mar 2026 "
       "08:08:51 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ACSS", .name = "Alto Calore Servizi Spa (Gestori di Pubblici Servizi, Avellino, "
-      "AV) - Alto Calore Servizi",
-    .name_ja = "Alto Calore Servizi Spa (Gestori di Pubblici Servizi, Avellino, AV) - Alto Calore Servizi",
-    .category = "government", .portal = "https://altocalore.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://altocalore.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, RSS2 feed, newest Thu, 24 Sep 2026 "
-      "14:20:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ACSS_024", .name = "ACQUE DEL CHIAMPO S.P.A. SOCIETA' BENEFIT (Gestori di Pubblici "
@@ -5403,25 +4840,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "08:37:22 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_AITPLBB", .name = "Agenzia per Il Trasporto Pubblico Locale del Bacino di Bergamo "
-      "(Pubbliche Amministrazioni, Bergamo, BG) - TPL",
-    .name_ja = "Agenzia per Il Trasporto Pubblico Locale del Bacino di Bergamo (Pubbliche Amministrazioni, Bergamo, BG) - TPL",
-    .category = "government", .portal = "https://www.agenziatplbergamo.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.agenziatplbergamo.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 25 Sep 2026 "
-      "07:34:53 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_AKP3SCHD", .name = "ALTO GARDA SERVIZI SPA (Stazioni Appaltanti, Riva del Garda, TN) "
       "- Alto Garda Servizi",
     .name_ja = "ALTO GARDA SERVIZI SPA (Stazioni Appaltanti, Riva del Garda, TN) - Alto Garda Servizi",
@@ -5770,25 +5188,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "17:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_AMROV", .name = "Societa' Multiservizi Rovereto Srl (Gestori di Pubblici Servizi, "
-      "Rovereto, TN) - SMR Società Multiservizi Rovereto",
-    .name_ja = "Societa' Multiservizi Rovereto Srl (Gestori di Pubblici Servizi, Rovereto, TN) - SMR Società Multiservizi Rovereto",
-    .category = "government", .portal = "https://www.smr.tn.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.smr.tn.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "08:48:50 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_AMSP", .name = "Azienda Multi Servizi Spa (Gestori di Pubblici Servizi, San "
       "Benedetto del Tronto, AP) - Azienda Multi Servizi spa",
     .name_ja = "Azienda Multi Servizi Spa (Gestori di Pubblici Servizi, San Benedetto del Tronto, AP) - Azienda Multi Servizi spa",
@@ -5806,25 +5205,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 05 Oct 2026 "
       "07:16:40 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_AMSPA", .name = "Arechi Multiservice Spa (Gestori di Pubblici Servizi, Salerno, "
-      "SA) - XIV° Bando di Asta Pubblica per la vendita di immobile",
-    .name_ja = "Arechi Multiservice Spa (Gestori di Pubblici Servizi, Salerno, SA) - XIV° Bando di Asta Pubblica per la vendita di immobile",
-    .category = "government", .portal = "https://www.arechimultiservice.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.arechimultiservice.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 12 items, RSS2 feed, newest Mon, 28 Jul 2025 "
-      "11:04:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_AMTBS", .name = "Azienda Mobilita' e Trasporti Bari Spa (Gestori di Pubblici "
@@ -7827,25 +7207,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:17:15 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ASMTO", .name = "Azienda Speciale Multiservizi (Gestori di Pubblici Servizi, "
-      "Venaria Reale, TO) - Asmvenaria",
-    .name_ja = "Azienda Speciale Multiservizi (Gestori di Pubblici Servizi, Venaria Reale, TO) - Asmvenaria",
-    .category = "government", .portal = "https://www.asmvenaria.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.asmvenaria.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "10:38:06 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ASMU", .name = "I Care s.r.l. - Uninominale (Gestori di Pubblici Servizi, "
       "Viareggio, LU) - iCARE",
     .name_ja = "I Care s.r.l. - Uninominale (Gestori di Pubblici Servizi, Viareggio, LU) - iCARE",
@@ -8312,26 +7673,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 01 Aug 2026 "
       "09:00:58 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ASPPR", .name = "Asp Paolo Ricci (Pubbliche Amministrazioni, Civitanova Marche, "
-      "MC) - ASP Paolo Ricci &#8211; Azienda pubblica di servizi alla "
-      "persona. Servizi riabil",
-    .name_ja = "Asp Paolo Ricci (Pubbliche Amministrazioni, Civitanova Marche, MC) - ASP Paolo Ricci &#8211; Azienda pubblica di servizi alla persona. Servizi riabil",
-    .category = "government", .portal = "https://www.paoloricci.org/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.paoloricci.org/feed",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "09:49:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ASPRCR", .name = "Azienda Servizi alla Persona Ravenna Cervia e Russi (Pubbliche "
@@ -9238,26 +8579,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "01:09:20 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_AUPR", .name = "Scuola Materna Paritaria Asilo Umberto I (Pubbliche "
-      "Amministrazioni, Conegliano, TV) - Delibera CdA n. 17 del "
-      "29/12/2025 &#8211; Esercizio Provvisorio 2026. Approvazio",
-    .name_ja = "Scuola Materna Paritaria Asilo Umberto I (Pubbliche Amministrazioni, Conegliano, TV) - Delibera CdA n. 17 del 29/12/2025 &#8211; Esercizio Provvisorio 2026. Approvazio",
-    .category = "government", .portal = "https://www.asiloumbertoprimoconegliano.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.asiloumbertoprimoconegliano.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Mon, 29 Dec 2025 "
-      "15:39:57 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_AUSL_MO", .name = "Azienda Unita' Sanitaria Locale di Modena (Pubbliche "
       "Amministrazioni, Modena, MO) - AUSL Modena",
     .name_ja = "Azienda Unita' Sanitaria Locale di Modena (Pubbliche Amministrazioni, Modena, MO) - AUSL Modena",
@@ -9276,45 +8597,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "10:51:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
-
-  { .id = "JO45_IT_AV9ALT9C", .name = "ISTITUTO COMPRENSIVO GIOVANNI XXIII DE AMICIS (Pubbliche "
-      "Amministrazioni, Triggiano, BA) - I.C. GIOVANNI XXIII-DE AMICIS",
-    .name_ja = "ISTITUTO COMPRENSIVO GIOVANNI XXIII DE AMICIS (Pubbliche Amministrazioni, Triggiano, BA) - I.C. GIOVANNI XXIII-DE AMICIS",
-    .category = "government", .portal = "https://www.secondocircolotriggiano.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.secondocircolotriggiano.edu.it/index.php?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "16:09:34 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_AV9ALT9C_2", .name = "ISTITUTO COMPRENSIVO GIOVANNI XXIII DE AMICIS (Pubbliche "
-      "Amministrazioni, Triggiano, BA) - titleI.C. GIOVANNI XXIII-DE "
-      "AMICIS",
-    .name_ja = "ISTITUTO COMPRENSIVO GIOVANNI XXIII DE AMICIS (Pubbliche Amministrazioni, Triggiano, BA) - titleI.C. GIOVANNI XXIII-DE AMICIS",
-    .category = "government", .portal = "https://www.secondocircolotriggiano.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.secondocircolotriggiano.edu.it/index.php?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T11:30:15+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO45_IT_AVMS", .name = "Associazione Valdostana Maestri di Sci (Pubbliche "
       "Amministrazioni, Aosta, AO) - Maestri di sci",
@@ -9683,44 +8965,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Tue, 28 Oct 2025 "
       "15:06:14 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_BNP7SAQ0", .name = "Superstrada Pedemontana Veneta S.p.A. (Gestori di Pubblici "
-      "Servizi, Torino, TO) - Superstrada Pedemontana Veneta",
-    .name_ja = "Superstrada Pedemontana Veneta S.p.A. (Gestori di Pubblici Servizi, Torino, TO) - Superstrada Pedemontana Veneta",
-    .category = "government", .portal = "https://superstradapedemontanaveneta.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://superstradapedemontanaveneta.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 03 Nov 2025 "
-      "08:00:04 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_BNP7SAQ0_2", .name = "Superstrada Pedemontana Veneta S.p.A. (Gestori di Pubblici "
-      "Servizi, Torino, TO) - Commenti a: Home",
-    .name_ja = "Superstrada Pedemontana Veneta S.p.A. (Gestori di Pubblici Servizi, Torino, TO) - Commenti a: Home",
-    .category = "government", .portal = "https://superstradapedemontanaveneta.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://superstradapedemontanaveneta.it/pagina-di-esempio/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, RSS2 feed, newest Fri, 19 Jan 2024 "
-      "14:05:48 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_BONROS", .name = "Liceo Bonghi-Rosmini (Pubbliche Amministrazioni, Lucera, FG) - "
@@ -11414,26 +10658,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Mon, 03 Jul 2023 "
       "10:56:55 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_C_B118", .name = "Comune di Brancaleone (Pubbliche Amministrazioni, Brancaleone, "
-      "RC) - Novità  - Comune di BrancaleoneCittà Metropolitana di "
-      "Reggio Calabria",
-    .name_ja = "Comune di Brancaleone (Pubbliche Amministrazioni, Brancaleone, RC) - Novità  - Comune di BrancaleoneCittà Metropolitana di Reggio Calabria",
-    .category = "government", .portal = "https://www.comune.brancaleone.rc.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comune.brancaleone.rc.it/po/elenco_news_rss.php?tags=&amp;area=H",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "00:00:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_C_B120", .name = "Comune di Brandico (Pubbliche Amministrazioni, Brandico, BS) - "
@@ -17943,25 +17167,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:59:58 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_C_G574", .name = "Comune di Piario (Pubbliche Amministrazioni, Piario, BG) - "
-      "comune di piario",
-    .name_ja = "Comune di Piario (Pubbliche Amministrazioni, Piario, BG) - comune di piario",
-    .category = "government", .portal = "https://www.comune.piario.bg.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comune.piario.bg.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Sat, 31 May 2025 "
-      "08:19:30 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_C_G582", .name = "Comune di Piazza al Serchio (Pubbliche Amministrazioni, Piazza "
       "al Serchio, LU) - Comune di Piazza al Serchio",
     .name_ja = "Comune di Piazza al Serchio (Pubbliche Amministrazioni, Piazza al Serchio, LU) - Comune di Piazza al Serchio",
@@ -18264,25 +17469,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 25 Mar 2025 "
       "11:34:06 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_C_G912", .name = "Comune di Portoferraio (Pubbliche Amministrazioni, Portoferraio, "
-      "LI) - Comune di Portoferraio",
-    .name_ja = "Comune di Portoferraio (Pubbliche Amministrazioni, Portoferraio, LI) - Comune di Portoferraio",
-    .category = "government", .portal = "https://www.comune.portoferraio.li.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comune.portoferraio.li.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, RSS2 feed, newest Thu, 17 Sep 2026 "
-      "08:52:38 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_C_G919", .name = "Comune di Porto Recanati (Pubbliche Amministrazioni, Porto "
@@ -18891,25 +18077,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "07:20:57 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_C_H356", .name = "Comune di Rivoli Veronese (Pubbliche Amministrazioni, Rivoli "
-      "Veronese, VR) - Comune di Rivoli Veronese",
-    .name_ja = "Comune di Rivoli Veronese (Pubbliche Amministrazioni, Rivoli Veronese, VR) - Comune di Rivoli Veronese",
-    .category = "government", .portal = "https://www.comune.rivoli.vr.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comune.rivoli.vr.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Wed, 01 Feb 2023 "
-      "09:03:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_C_H369", .name = "Comune di Robbio (Pubbliche Amministrazioni, Robbio, PV) - "
@@ -19539,25 +18706,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "11:21:16 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_C_H951", .name = "Comune di San Leonardo (Pubbliche Amministrazioni, San Leonardo, "
-      "UD) - Comune di San Leonardo",
-    .name_ja = "Comune di San Leonardo (Pubbliche Amministrazioni, San Leonardo, UD) - Comune di San Leonardo",
-    .category = "government", .portal = "https://www.comune.sanleonardo.ud.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comune.sanleonardo.ud.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Wed, 01 Feb 2023 "
-      "09:03:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_C_H952", .name = "Comune di San Leonardo in Passiria (Pubbliche Amministrazioni, "
@@ -20541,25 +19689,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 6 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "17:59:24 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_C_I538", .name = "Comune di Scillato (Pubbliche Amministrazioni, Scillato, PA) - "
-      "Novità  - Comune di Scillato",
-    .name_ja = "Comune di Scillato (Pubbliche Amministrazioni, Scillato, PA) - Novità  - Comune di Scillato",
-    .category = "government", .portal = "https://www.comunescillato.pa.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comunescillato.pa.it/po/elenco_news_rss.php?tags=&amp;area=H",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, RSS2 feed, newest Wed, 30 Sep 2026 "
-      "00:00:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_C_I541", .name = "Comune di Sclafani Bagni (Pubbliche Amministrazioni, Sclafani "
@@ -22202,25 +21331,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:55:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_C_L598", .name = "Comune di Vallecorsa (Pubbliche Amministrazioni, Vallecorsa, FR) "
-      "- Comune di Vallecorsa",
-    .name_ja = "Comune di Vallecorsa (Pubbliche Amministrazioni, Vallecorsa, FR) - Comune di Vallecorsa",
-    .category = "government", .portal = "https://www.comune.vallecorsa.fr.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comune.vallecorsa.fr.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Tue, 21 Apr 2026 "
-      "21:16:19 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_C_L627", .name = "Comune di Vallo di Nera (Pubbliche Amministrazioni, Vallo di "
       "Nera, PG) - Comune di Vallo di Nera",
     .name_ja = "Comune di Vallo di Nera (Pubbliche Amministrazioni, Vallo di Nera, PG) - Comune di Vallo di Nera",
@@ -22485,25 +21595,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 29 Jun 2026 "
       "10:57:16 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_C_L938", .name = "Comune di Villa D'ogna (Pubbliche Amministrazioni, Villa d'Ogna, "
-      "BG) - comune di villa d ogna",
-    .name_ja = "Comune di Villa D'ogna (Pubbliche Amministrazioni, Villa d'Ogna, BG) - comune di villa d ogna",
-    .category = "government", .portal = "https://www.comune.villadogna.bg.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comune.villadogna.bg.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, RSS2 feed, newest Sat, 16 Sep 2023 "
-      "19:45:29 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_C_L9516B", .name = "Comune di Campofiorito (Pubbliche Amministrazioni, Campofiorito, "
@@ -23000,25 +22091,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "12:01:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_C0DGZ4G8", .name = "CONSORZIO IRRIGUO BEALEROTTO MUSSI (Stazioni Appaltanti, "
-      "Mondovì, CN) - Consorzio del Pesio",
-    .name_ja = "CONSORZIO IRRIGUO BEALEROTTO MUSSI (Stazioni Appaltanti, Mondovì, CN) - Consorzio del Pesio",
-    .category = "government", .portal = "https://consorziodelpesio.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://consorziodelpesio.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Tue, 25 Jul 2017 "
-      "14:11:17 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_C1Y99NWI", .name = "Fondazione Biotech for Life ITS Academy (Gestori di Pubblici "
       "Servizi, Lecce, LE) - Biotech for life",
     .name_ja = "Fondazione Biotech for Life ITS Academy (Gestori di Pubblici Servizi, Lecce, LE) - Biotech for life",
@@ -23171,25 +22243,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 06 Feb 2026 "
       "17:15:07 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CAA_VR", .name = "CASA ASSISTENZA ANZIANI (Pubbliche Amministrazioni, Malcesine, "
-      "VR) - A. TOBLINI",
-    .name_ja = "CASA ASSISTENZA ANZIANI (Pubbliche Amministrazioni, Malcesine, VR) - A. TOBLINI",
-    .category = "government", .portal = "https://caatoblini.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://caatoblini.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 30 Dec 2022 "
-      "10:09:13 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_CAARONE", .name = "Casa Albergo per Anziani (Pubbliche Amministrazioni, Lendinara, "
@@ -23618,26 +22671,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:25:14 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_CBC", .name = "Consorzio di Bonifica Chiese (Gestori di Pubblici Servizi, "
-      "Calcinato, BS) - Consorzio di Bonifica Chiese &#8211; "
-      "Comprensorio n° 7",
-    .name_ja = "Consorzio di Bonifica Chiese (Gestori di Pubblici Servizi, Calcinato, BS) - Consorzio di Bonifica Chiese &#8211; Comprensorio n° 7",
-    .category = "government", .portal = "https://www.consorziodibonificachiese.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.consorziodibonificachiese.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Fri, 17 Jul 2026 "
-      "04:00:09 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_CBCAD", .name = "Consorzio di Bonifica della Conca di Agnano e Dei Bacini Flegrei "
       "(Gestori di Pubblici Servizi, Napoli, NA) - Consorzio di "
       "Bonifica della Conca di Agnano e dei Bacini Flegrei",
@@ -23775,25 +22808,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:39:44 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_CBIMDV", .name = "Consorzio Bacino Imbrifero Montano del Varaita (Pubbliche "
-      "Amministrazioni, Frassino, CN) - Consorzio BIM del Varaita",
-    .name_ja = "Consorzio Bacino Imbrifero Montano del Varaita (Pubbliche Amministrazioni, Frassino, CN) - Consorzio BIM del Varaita",
-    .category = "government", .portal = "https://consorziobimvaraita.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://consorziobimvaraita.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Tue, 17 Feb 2015 "
-      "14:27:12 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_CBIMT", .name = "Consorzio di Bacino Imbrifero Montano del Taloro (Pubbliche "
       "Amministrazioni, Gavoi, NU) - BIM TALORO",
     .name_ja = "Consorzio di Bacino Imbrifero Montano del Taloro (Pubbliche Amministrazioni, Gavoi, NU) - BIM TALORO",
@@ -23831,25 +22845,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 19 items, RSS2 feed, newest Sun, 30 Aug 2026 "
       "05:20:33 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CBM", .name = "Consorzio del Bosco Montello (Pubbliche Amministrazioni, Volpago "
-      "del Montello, TV) - Consorzio del Bosco Montello",
-    .name_ja = "Consorzio del Bosco Montello (Pubbliche Amministrazioni, Volpago del Montello, TV) - Consorzio del Bosco Montello",
-    .category = "government", .portal = "https://consorziodelboscomontello.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://consorziodelboscomontello.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 16 items, RSS2 feed, newest Mon, 31 Aug 2026 "
-      "10:37:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_CBMDG", .name = "Consorzio di Bonifica Montana del Gargano (Gestori di Pubblici "
@@ -24004,46 +22999,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "2026-10-18T09:38:33+00:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_IT_CBPF", .name = "Consorzio di Bonifica Pianura di Ferrara (Gestori di Pubblici "
-      "Servizi, Ferrara, FE) - HOME - Consorzio di bonifica Pianura di "
-      "Ferrara",
-    .name_ja = "Consorzio di Bonifica Pianura di Ferrara (Gestori di Pubblici Servizi, Ferrara, FE) - HOME - Consorzio di bonifica Pianura di Ferrara",
-    .category = "government", .portal = "https://www.bonificaferrara.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.bonificaferrara.it/?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Mon, 08 Apr 2024 "
-      "09:53:01 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CBPF_2", .name = "Consorzio di Bonifica Pianura di Ferrara (Gestori di Pubblici "
-      "Servizi, Ferrara, FE) - HOME - Consorzio di bonifica Pianura di "
-      "Ferrara",
-    .name_ja = "Consorzio di Bonifica Pianura di Ferrara (Gestori di Pubblici Servizi, Ferrara, FE) - HOME - Consorzio di bonifica Pianura di Ferrara",
-    .category = "government", .portal = "https://www.bonificaferrara.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.bonificaferrara.it/?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T09:38:33+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
-
   { .id = "JO45_IT_CBRO_039", .name = "Consorzio di Bonifica della Romagna Occidentale (Gestori di "
       "Pubblici Servizi, Lugo, RA) - Consorzio di Bonifica della "
       "Romagna Occidentale",
@@ -24063,46 +23018,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "07:48:11 +0000. A feed the organisation itself declares or links "
       "on its site root." },
-
-  { .id = "JO45_IT_CBSC", .name = "Consorzio di Bonifica della Sardegna Centrale (Gestori di "
-      "Pubblici Servizi, Nuoro, NU) - Consorzio di Bonifica della "
-      "Sardegna Centrale - CBSC",
-    .name_ja = "Consorzio di Bonifica della Sardegna Centrale (Gestori di Pubblici Servizi, Nuoro, NU) - Consorzio di Bonifica della Sardegna Centrale - CBSC",
-    .category = "government", .portal = "https://www.cbsc.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cbsc.it/index.php?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, RSS2 feed, newest Wed, 07 Oct 2026 "
-      "14:11:14 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CBSC_2", .name = "Consorzio di Bonifica della Sardegna Centrale (Gestori di "
-      "Pubblici Servizi, Nuoro, NU) - Consorzio di Bonifica della "
-      "Sardegna Centrale - CBSC",
-    .name_ja = "Consorzio di Bonifica della Sardegna Centrale (Gestori di Pubblici Servizi, Nuoro, NU) - Consorzio di Bonifica della Sardegna Centrale - CBSC",
-    .category = "government", .portal = "https://www.cbsc.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cbsc.it/index.php?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:38:33+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO45_IT_CBSGI", .name = "Consorzio di Bonifica di Secondo Grado per Il Canale Emiliano "
       "Romagnolo (Gestori di Pubblici Servizi, Bologna, BO) - Consorzio "
@@ -24780,45 +23695,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "17:31:27 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_CCPIA", .name = "Cpia - Centro Provinciale Istruzione Adulti di Venezia "
-      "(Pubbliche Amministrazioni, Venezia, VE) - Centro Provinciale "
-      "Istruzione Adulti VENEZIA",
-    .name_ja = "Cpia - Centro Provinciale Istruzione Adulti di Venezia (Pubbliche Amministrazioni, Venezia, VE) - Centro Provinciale Istruzione Adulti VENEZIA",
-    .category = "government", .portal = "https://www.cpiavenezia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cpiavenezia.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "07:41:31 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CCPIAME", .name = "Cpia Centro Provinciale Istruzione Adulti Messina (Pubbliche "
-      "Amministrazioni, Messina, ME) - C. P. I. A. provincia di Messina",
-    .name_ja = "Cpia Centro Provinciale Istruzione Adulti Messina (Pubbliche Amministrazioni, Messina, ME) - C. P. I. A. provincia di Messina",
-    .category = "government", .portal = "https://www.cpiamessina.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cpiamessina.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 28 Sep 2026 "
-      "11:31:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_CCPIAP", .name = "Cpia 7 Centro Prov.Le di Istruzione Adulti (Pubbliche "
       "Amministrazioni, Pomezia, RM) - CPIA7",
     .name_ja = "Cpia 7 Centro Prov.Le di Istruzione Adulti (Pubbliche Amministrazioni, Pomezia, RM) - CPIA7",
@@ -25385,25 +24261,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:10:43 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_CDIP_093", .name = "Ordine delle Professioni Infermieristiche di Pordenone "
-      "(Pubbliche Amministrazioni, Pordenone, PN) - OPI Pordenone",
-    .name_ja = "Ordine delle Professioni Infermieristiche di Pordenone (Pubbliche Amministrazioni, Pordenone, PN) - OPI Pordenone",
-    .category = "government", .portal = "https://www.opipordenone.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.opipordenone.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "13:02:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_CDIPA_05", .name = "Ordine Delle Professioni Infermieristiche Di Arezzo (Pubbliche "
       "Amministrazioni, Arezzo, AR) - O.P.I. Arezzo",
     .name_ja = "Ordine Delle Professioni Infermieristiche Di Arezzo (Pubbliche Amministrazioni, Arezzo, AR) - O.P.I. Arezzo",
@@ -25582,27 +24439,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "19:58:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_CDPAD_CH", .name = "Collegio dei Periti Agrari e dei Periti Agrari Laureati della "
-      "Provincia di Chieti - L'Aquila - Molise (Pubbliche "
-      "Amministrazioni, Scerni, CH) - Collegio Territoriale dei Periti "
-      "Agrari e dei Periti Agrari Laureati CHIETI –",
-    .name_ja = "Collegio dei Periti Agrari e dei Periti Agrari Laureati della Provincia di Chieti - L'Aquila - Molise (Pubbliche Amministrazioni, Scerni, CH) - Collegio Territoriale dei Periti Agrari e dei Periti Agrari Laureati CHIETI –",
-    .category = "government", .portal = "https://peritiagrarichietilaquila.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://peritiagrarichietilaquila.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 23 Mar 2026 "
-      "15:41:44 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_CDPAD_PZ", .name = "Collegio dei Periti Agrari e dei Periti Agrari Laureati della "
       "Provincia di Potenza (Pubbliche Amministrazioni, Lavello, PZ) - "
       "Collegio dei Periti Agrari e dei Periti Agrari Laureati della "
@@ -25622,27 +24458,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 05 Oct 2026 "
       "12:38:06 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CDPAMC", .name = "Collegio Dei Periti Agrari e Dei Periti Agrari Laureati di "
-      "Pu-an-mc (Pubbliche Amministrazioni, Fano, PU) - Collegio dei "
-      "Periti Agrari e Periti Agrari Laureati di Pesaro Urbino, Ancona, "
-      "Ma",
-    .name_ja = "Collegio Dei Periti Agrari e Dei Periti Agrari Laureati di Pu-an-mc (Pubbliche Amministrazioni, Fano, PU) - Collegio dei Periti Agrari e Periti Agrari Laureati di Pesaro Urbino, Ancona, Ma",
-    .category = "government", .portal = "https://peritiagrarimarche.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://peritiagrarimarche.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 28 Sep 2026 "
-      "15:25:06 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_CDPAPM", .name = "Collegio Dei Periti Agrari e Periti Agrari Laureati della "
@@ -25996,27 +24811,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "06:59:51 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_CDPIDA", .name = "Collegio Dei Periti Industriali e Dei Periti Industriali "
-      "Laureati della Provincia di L' Aquila (Pubbliche "
-      "Amministrazioni, L'Aquila, AQ) - Ordine dei Periti Industriali e "
-      "Periti Industriali Laureati della Provincia dell",
-    .name_ja = "Collegio Dei Periti Industriali e Dei Periti Industriali Laureati della Provincia di L' Aquila (Pubbliche Amministrazioni, L'Aquila, AQ) - Ordine dei Periti Industriali e Periti Industriali Laureati della Provincia dell",
-    .category = "government", .portal = "https://www.peritiindustriali.laquila.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.peritiindustriali.laquila.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 04 Aug 2026 "
-      "16:04:52 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_CDPIDLM", .name = "Ordine dei Periti Industriali della provincia di Modena "
       "(Pubbliche Amministrazioni, Modena, MO) - Ordine dei Periti "
       "Industriali della Provincia di Modena",
@@ -26097,25 +24891,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 29 Jun 2026 "
       "07:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CDPIP_PI", .name = "ORDINE DEI PERITI INDUSTRIALI DELLA PROVINCIA DI PISA (Pubbliche "
-      "Amministrazioni, Pisa, PI) - Periti Industriali Pisa",
-    .name_ja = "ORDINE DEI PERITI INDUSTRIALI DELLA PROVINCIA DI PISA (Pubbliche Amministrazioni, Pisa, PI) - Periti Industriali Pisa",
-    .category = "government", .portal = "https://periti-industriali.pisa.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://periti-industriali.pisa.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "16:59:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_CDPIP_SA", .name = "Ordine dei Periti Industriali e dei Periti Industriali Laureati "
@@ -26655,25 +25430,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "14:18:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_CGGL", .name = "Collegio Geometri e Geometri Laureati di Ragusa (Pubbliche "
-      "Amministrazioni, Ragusa, RG) - Collegio dei Geometri di Ragusa",
-    .name_ja = "Collegio Geometri e Geometri Laureati di Ragusa (Pubbliche Amministrazioni, Ragusa, RG) - Collegio dei Geometri di Ragusa",
-    .category = "government", .portal = "https://www.collegiogeometri.rg.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.collegiogeometri.rg.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 19 May 2026 "
-      "09:55:35 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_CGGL_027", .name = "Collegio Geometri e Geometri Laureati Venezia (Pubbliche "
       "Amministrazioni, Venezia, VE) - Collegio dei Geometri e Geometri "
       "Laureati di Venezia",
@@ -26952,25 +25708,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 4 items, RSS2 feed, newest Mon, 10 Oct 2016 "
       "10:56:46 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CGGLPLC", .name = "Collegio Geometri e Geometri Laureati della Provincia di Lecco "
-      "(Pubbliche Amministrazioni, Lecco, LC) - Geometri Lecco",
-    .name_ja = "Collegio Geometri e Geometri Laureati della Provincia di Lecco (Pubbliche Amministrazioni, Lecco, LC) - Geometri Lecco",
-    .category = "government", .portal = "https://www.geometri.lecco.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.geometri.lecco.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 01 Oct 2026 "
-      "11:50:45 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_CGGLPMA", .name = "Collegio Geometri e Geometri Laureati della Provincia di Mantova "
@@ -28316,44 +27053,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "2026-10-18T11:39:00+02:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_IT_CIR_EMVA", .name = "Unione dei Comuni Circondario dell'Empolese Valdelsa (Pubbliche "
-      "Amministrazioni, Empoli, FI) - Circondario Empolese Valdelsa",
-    .name_ja = "Unione dei Comuni Circondario dell'Empolese Valdelsa (Pubbliche Amministrazioni, Empoli, FI) - Circondario Empolese Valdelsa",
-    .category = "government", .portal = "https://www.empolese-valdelsa.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.empolese-valdelsa.it/index.php?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Sun, 13 Sep 2026 "
-      "23:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CIR_EMVA_2", .name = "Unione dei Comuni Circondario dell'Empolese Valdelsa (Pubbliche "
-      "Amministrazioni, Empoli, FI) - Circondario Empolese Valdelsa",
-    .name_ja = "Unione dei Comuni Circondario dell'Empolese Valdelsa (Pubbliche Amministrazioni, Empoli, FI) - Circondario Empolese Valdelsa",
-    .category = "government", .portal = "https://www.empolese-valdelsa.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.empolese-valdelsa.it/index.php?format=feed&amp;type=atom",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Sun, 13 Sep 2026 "
-      "23:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_CIRA", .name = "C.I.R.A. SRL (Gestori di Pubblici Servizi, Dego, SV) - Cira "
       "Servizio Idrico",
     .name_ja = "C.I.R.A. SRL (Gestori di Pubblici Servizi, Dego, SV) - Cira Servizio Idrico",
@@ -28780,25 +27479,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 24 Sep 2026 "
       "11:50:42 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CLSM_093", .name = "Consorzio per La Scuola Mosaicisti del Friuli (Pubbliche "
-      "Amministrazioni, Spilimbergo, PN) - Scuola Mosaicisti del Friuli",
-    .name_ja = "Consorzio per La Scuola Mosaicisti del Friuli (Pubbliche Amministrazioni, Spilimbergo, PN) - Scuola Mosaicisti del Friuli",
-    .category = "government", .portal = "https://scuolamosaicistifriuli.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://scuolamosaicistifriuli.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 12 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "04:52:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_CLSPU", .name = "Consorzio per lo Sviluppo del Polo Universitario di Gorizia "
@@ -29768,26 +28448,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "14:04:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_CNDC", .name = "Convitto Nazionale Domenico Cotugno - L'Aquila (Pubbliche "
-      "Amministrazioni, L'Aquila, AQ) - Convitto Nazionale &quot;D. "
-      "Cotugno&quot;",
-    .name_ja = "Convitto Nazionale Domenico Cotugno - L'Aquila (Pubbliche Amministrazioni, L'Aquila, AQ) - Convitto Nazionale &quot;D. Cotugno&quot;",
-    .category = "government", .portal = "https://www.convittocotugno.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.convittocotugno.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "08:20:17 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_CNDDA", .name = "Consiglio Nazionale dei Dottori Agronomi e dei Dottori Forestali "
       "(Pubbliche Amministrazioni, Roma, RM) - CONAF",
     .name_ja = "Consiglio Nazionale dei Dottori Agronomi e dei Dottori Forestali (Pubbliche Amministrazioni, Roma, RM) - CONAF",
@@ -29825,26 +28485,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 25 Aug 2026 "
       "15:34:19 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CNDDRB", .name = "Consiglio Notarile Dei Distretti Riuniti di Benevento e Ariano "
-      "Irpino (Pubbliche Amministrazioni, Benevento, BN) - Consiglio "
-      "Notarile dei Distretti Riuniti di Benvento e Ariano Irpino",
-    .name_ja = "Consiglio Notarile Dei Distretti Riuniti di Benevento e Ariano Irpino (Pubbliche Amministrazioni, Benevento, BN) - Consiglio Notarile dei Distretti Riuniti di Benvento e Ariano Irpino",
-    .category = "government", .portal = "https://www.consiglionotarilebenevento.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.consiglionotarilebenevento.it/feed",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Fri, 15 Jan 2016 "
-      "11:00:08 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_CNDDRCL", .name = "Consiglio Notarile dei Distretti Riuniti di Reggio Calabria, "
@@ -30021,26 +28661,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 14 Apr 2026 "
       "10:10:51 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CNDRTMA", .name = "Consiglio Notarile Dei Distretti Riuniti di Trapani e Marsala "
-      "(Pubbliche Amministrazioni, Trapani, TP) - Consiglio Notarile "
-      "dei Distretti Riuniti di Trapani e Marsala",
-    .name_ja = "Consiglio Notarile Dei Distretti Riuniti di Trapani e Marsala (Pubbliche Amministrazioni, Trapani, TP) - Consiglio Notarile dei Distretti Riuniti di Trapani e Marsala",
-    .category = "government", .portal = "https://www.consnot-trapani.org/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.consnot-trapani.org/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 14 Jan 2024 "
-      "19:29:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_CNDSD", .name = "Consiglio Nazionale Degli Spedizionieri Doganali (Pubbliche "
@@ -31370,26 +29990,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "20:55:13 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_COPFR", .name = "Ordine della Professione di Ostetrica della Provincia di "
-      "Frosinone (Pubbliche Amministrazioni, Frosinone, FR) - Ordine "
-      "della Professione di Ostetrica della Provincia di Frosinone",
-    .name_ja = "Ordine della Professione di Ostetrica della Provincia di Frosinone (Pubbliche Amministrazioni, Frosinone, FR) - Ordine della Professione di Ostetrica della Provincia di Frosinone",
-    .category = "government", .portal = "https://www.ordineostetrichefr.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordineostetrichefr.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 17 Jun 2026 "
-      "18:13:30 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_COPS", .name = "Ordine della Professione di Ostetrica della Provincia di Salerno "
       "(Pubbliche Amministrazioni, Salerno, SA) - Home",
     .name_ja = "Ordine della Professione di Ostetrica della Provincia di Salerno (Pubbliche Amministrazioni, Salerno, SA) - Home",
@@ -31427,26 +30027,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
       "2026-10-18T09:39:22+00:00. A feed the organisation itself "
       "declares or links on its site root." },
-
-  { .id = "JO45_IT_COSVU", .name = "Consorzio Obbligatorio Strade Vicinali di Uso Pubblico Comune di "
-      "Corchiano (Pubbliche Amministrazioni, Corchiano, VT) - Consorzio "
-      "Stradale Corchiano",
-    .name_ja = "Consorzio Obbligatorio Strade Vicinali di Uso Pubblico Comune di Corchiano (Pubbliche Amministrazioni, Corchiano, VT) - Consorzio Stradale Corchiano",
-    .category = "government", .portal = "https://www.consorziostradecorchiano.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.consorziostradecorchiano.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 20 Aug 2025 "
-      "14:24:31 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO45_IT_COTN", .name = "Consorzio 1 Toscana Nord (Gestori di Pubblici Servizi, "
       "Viareggio, LU) - Consorzio 1 Toscana Nord",
@@ -31685,26 +30265,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 8 items, RSS2 feed, newest Tue, 05 May 2026 "
       "09:34:11 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CPDADB", .name = "Collegio Provinciale Degli Agrotecnici e Degli Agrotecnici "
-      "Laureati di Belluno (Pubbliche Amministrazioni, Sedico, BL) - "
-      "Belluno Agrotecnici",
-    .name_ja = "Collegio Provinciale Degli Agrotecnici e Degli Agrotecnici Laureati di Belluno (Pubbliche Amministrazioni, Sedico, BL) - Belluno Agrotecnici",
-    .category = "government", .portal = "https://www.bellunoagrotecnici.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.bellunoagrotecnici.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Mon, 10 Sep 2018 "
-      "06:29:04 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_CPDADF", .name = "Collegio Provinciale Degli Agrotecnici e Degli Agrotecnici "
@@ -32068,27 +30628,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "15:07:18 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_CPGSR", .name = "Consorzio per La Gestione Integrata di Raccolta e Smaltimento "
-      "Dei Rifiuti Solidi Urbani Bacino Sa1 (Pubbliche Amministrazioni, "
-      "Cava de' Tirreni, SA) - Consorzio Bacino Salerno 1 in "
-      "liquidazione",
-    .name_ja = "Consorzio per La Gestione Integrata di Raccolta e Smaltimento Dei Rifiuti Solidi Urbani Bacino Sa1 (Pubbliche Amministrazioni, Cava de' Tirreni, SA) - Consorzio Bacino Salerno 1 in liquidazione",
-    .category = "government", .portal = "https://www.sa1.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.sa1.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 28 May 2026 "
-      "10:05:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_CPI", .name = "Ordine delle Professioni Infermieristiche della Provincia di "
       "Cuneo (Pubbliche Amministrazioni, Cuneo, CN) - OPI Cuneo",
     .name_ja = "Ordine delle Professioni Infermieristiche della Provincia di Cuneo (Pubbliche Amministrazioni, Cuneo, CN) - OPI Cuneo",
@@ -32186,63 +30725,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 26 Aug 2026 "
       "10:31:11 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CPIA3TO", .name = "C.P.I.A. 3 Torino (Pubbliche Amministrazioni, Moncalieri, TO) - "
-      "CPIA 3 Torino",
-    .name_ja = "C.P.I.A. 3 Torino (Pubbliche Amministrazioni, Moncalieri, TO) - CPIA 3 Torino",
-    .category = "government", .portal = "https://www.cpia3torino.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cpia3torino.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 15 Sep 2026 "
-      "06:00:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CPIAAN", .name = "C.P.I.A. Centro Provinciale per L'Istruzione Degli Adulti - Sede "
-      "Ancona (Pubbliche Amministrazioni, Ancona, AN) - CPIA – Ancona",
-    .name_ja = "C.P.I.A. Centro Provinciale per L'Istruzione Degli Adulti - Sede Ancona (Pubbliche Amministrazioni, Ancona, AN) - CPIA – Ancona",
-    .category = "government", .portal = "https://www.cpiaancona.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cpiaancona.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "13:03:04 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CPIAAR", .name = "Centro Prov.le Istruzione Adulti - CPIA 1 Arezzo (Pubbliche "
-      "Amministrazioni, Arezzo, AR) - C.P.I.A. &#8211; AREZZO",
-    .name_ja = "Centro Prov.le Istruzione Adulti - CPIA 1 Arezzo (Pubbliche Amministrazioni, Arezzo, AR) - C.P.I.A. &#8211; AREZZO",
-    .category = "government", .portal = "https://www.cpiaarezzo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cpiaarezzo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "05:17:18 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_CPIABA", .name = "CPIA 1 BARI ALESSANDRO LEOGRANDE (Pubbliche Amministrazioni, "
@@ -32572,26 +31054,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "13:30:07 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_CPIALI", .name = "CENTRO PROVINCIALE ISTRUZIONE ADULTI CPIA1 LIVORNO (Pubbliche "
-      "Amministrazioni, Livorno, LI) - CENTRO PROVINCIALE ISTRUZIONE "
-      "DEGLI ADULTI &quot;CPIA1 LIVORNO&quot;",
-    .name_ja = "CENTRO PROVINCIALE ISTRUZIONE ADULTI CPIA1 LIVORNO (Pubbliche Amministrazioni, Livorno, LI) - CENTRO PROVINCIALE ISTRUZIONE DEGLI ADULTI &quot;CPIA1 LIVORNO&quot;",
-    .category = "government", .portal = "https://www.cpia1livorno.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cpia1livorno.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "10:27:29 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_CPIALO", .name = "Centro Provinciale per L'Istruzione Degli Adulti - Lodi "
       "(Pubbliche Amministrazioni, Lodi, LO) - CPIA Lodi",
     .name_ja = "Centro Provinciale per L'Istruzione Degli Adulti - Lodi (Pubbliche Amministrazioni, Lodi, LO) - CPIA Lodi",
@@ -32766,64 +31228,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "13:03:48 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_CPIAPIM", .name = "C.P.I.A. Provincia di Imperia (Pubbliche Amministrazioni, "
-      "Imperia, IM) - C.P.I.A. – Provincia di Imperia",
-    .name_ja = "C.P.I.A. Provincia di Imperia (Pubbliche Amministrazioni, Imperia, IM) - C.P.I.A. – Provincia di Imperia",
-    .category = "government", .portal = "https://www.cpiaimperia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cpiaimperia.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "11:36:13 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CPIAPPO", .name = "Centro Provinciale Istruzione Adulti Prato 1 (Pubbliche "
-      "Amministrazioni, Prato, PO) - CPIA1 di Prato",
-    .name_ja = "Centro Provinciale Istruzione Adulti Prato 1 (Pubbliche Amministrazioni, Prato, PO) - CPIA1 di Prato",
-    .category = "government", .portal = "https://www.cpiaprato.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cpiaprato.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 25 Sep 2026 "
-      "13:26:49 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CPIAPRA", .name = "Centro Provinciale Istruzione Adulti Provincia di Ravenna "
-      "(Pubbliche Amministrazioni, Lugo, RA) - Centro Provinciale per "
-      "l’Istruzione degli Adulti RAVENNA",
-    .name_ja = "Centro Provinciale Istruzione Adulti Provincia di Ravenna (Pubbliche Amministrazioni, Lugo, RA) - Centro Provinciale per l’Istruzione degli Adulti RAVENNA",
-    .category = "government", .portal = "https://www.cpiaravenna.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cpiaravenna.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 29 Sep 2026 "
-      "09:49:48 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_CPIAPT", .name = "C.P.I.A. Provincia di Teramo (Pubbliche Amministrazioni, "
       "Montorio al Vomano, TE) - CPIA Teramo",
     .name_ja = "C.P.I.A. Provincia di Teramo (Pubbliche Amministrazioni, Montorio al Vomano, TE) - CPIA Teramo",
@@ -32863,25 +31267,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "12:47:08 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_CPIARG", .name = "C.P.I.A. Ragusa (Pubbliche Amministrazioni, Ragusa, RG) - "
-      "C.P.I.A. RAGUSA",
-    .name_ja = "C.P.I.A. Ragusa (Pubbliche Amministrazioni, Ragusa, RG) - C.P.I.A. RAGUSA",
-    .category = "government", .portal = "https://www.cpiaragusa.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cpiaragusa.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "10:57:21 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_CPIARN", .name = "Centro per Istruzione Adulti 1 Rimini (Pubbliche "
       "Amministrazioni, Rimini, RN) - CENTRO PROVINCIALE ISTRUZIONE "
       "ADULTI &quot;CPIA 1 RIMINI&quot;",
@@ -32919,45 +31304,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
       "10:38:51 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CPIATA", .name = "Centro Provinciale Istruzione Adulti Taranto (Pubbliche "
-      "Amministrazioni, Taranto, TA) - Centro Provinciale per "
-      "l&#039;Istruzione degli Adulti di Taranto Centro Provinci",
-    .name_ja = "Centro Provinciale Istruzione Adulti Taranto (Pubbliche Amministrazioni, Taranto, TA) - Centro Provinciale per l&#039;Istruzione degli Adulti di Taranto Centro Provinci",
-    .category = "government", .portal = "https://www.cpiataranto.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cpiataranto.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "18:16:56 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CPIATO", .name = "CPIA1 Paulo Freire Torino (Pubbliche Amministrazioni, Torino, "
-      "TO) - CPIA 1 Paulo Freire Torino",
-    .name_ja = "CPIA1 Paulo Freire Torino (Pubbliche Amministrazioni, Torino, TO) - CPIA 1 Paulo Freire Torino",
-    .category = "government", .portal = "https://www.cpia1-torino.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cpia1-torino.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 08 Apr 2026 "
-      "08:31:17 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_CPIATOMM", .name = "Cpia 5 Torino (Pubbliche Amministrazioni, Rivoli, TO) - CPIA 5 "
@@ -33171,25 +31517,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 24 Sep 2026 "
       "17:04:12 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CPIDAPT", .name = "Centro Provinciale per L'Istruzione Degli Adulti (Pubbliche "
-      "Amministrazioni, Pistoia, PT) - CPIA 1 PISTOIA",
-    .name_ja = "Centro Provinciale per L'Istruzione Degli Adulti (Pubbliche Amministrazioni, Pistoia, PT) - CPIA 1 PISTOIA",
-    .category = "government", .portal = "https://www.cpiapistoia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cpiapistoia.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 21 Sep 2026 "
-      "17:52:40 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_CPIDC", .name = "ORDINE DEI PERITI INDUSTRIALI E DEI PERITI INDUSTRIALI LAUREATI "
@@ -34111,26 +32438,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 06 Mar 2026 "
       "10:14:16 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CPLAIA", .name = "Centro Provinciale per l'Istruzione degli adulti di Agrigento "
-      "(Pubbliche Amministrazioni, Agrigento, AG) - CENTRO PROVINCIALE "
-      "PER L&#039;ISTRUZIONE DEGLI ADULTI &#8211; AGRIGENTO",
-    .name_ja = "Centro Provinciale per l'Istruzione degli adulti di Agrigento (Pubbliche Amministrazioni, Agrigento, AG) - CENTRO PROVINCIALE PER L&#039;ISTRUZIONE DEGLI ADULTI &#8211; AGRIGENTO",
-    .category = "government", .portal = "https://www.cpia-agrigento.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cpia-agrigento.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "12:08:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_CPLID", .name = "Centro Provinciale per Istruzione Adulti - Cpia Perugia "
@@ -35126,26 +33433,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "13:36:49 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_CRGAE", .name = "Collegio Regionale Guide Alpine Emilia Romagna (Pubbliche "
-      "Amministrazioni, Castelnovo ne' Monti, RE) - Guide Alpine Emilia "
-      "Romagna",
-    .name_ja = "Collegio Regionale Guide Alpine Emilia Romagna (Pubbliche Amministrazioni, Castelnovo ne' Monti, RE) - Guide Alpine Emilia Romagna",
-    .category = "government", .portal = "https://www.guidealpine-er.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.guidealpine-er.it/feed.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-01-20T10:58:48+01:00. A feed the organisation itself "
-      "declares or links on its site root." },
-
   { .id = "JO45_IT_CRGAL", .name = "Collegio Regionale Guide Alpine Lombardia (Pubbliche "
       "Amministrazioni, Sondrio, SO) - GUIDE ALPINE LOMBARDIA",
     .name_ja = "Collegio Regionale Guide Alpine Lombardia (Pubbliche Amministrazioni, Sondrio, SO) - GUIDE ALPINE LOMBARDIA",
@@ -35319,25 +33606,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 19 Apr 2026 "
       "05:51:59 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CRMSDM", .name = "Collegio Regionale Maestri di Sci Delle Marche (Pubbliche "
-      "Amministrazioni, Visso, MC) - Assemblea Annuale 2023",
-    .name_ja = "Collegio Regionale Maestri di Sci Delle Marche (Pubbliche Amministrazioni, Visso, MC) - Assemblea Annuale 2023",
-    .category = "government", .portal = "https://www.maestridiscimarche.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.maestridiscimarche.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Thu, 05 Oct 2023 "
-      "22:22:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_CRMSV", .name = "Collegio Regionale Maestri di Sci del Veneto (Pubbliche "
@@ -35670,46 +33938,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "11:05:20 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_CSAAMB", .name = "Centro Servizi per Anziani Anna Moretti Bonora (Pubbliche "
-      "Amministrazioni, Camposampiero, PD) - Centro Servizi per Anziani "
-      "&quot;A. Moretti Bonora&quot;",
-    .name_ja = "Centro Servizi per Anziani Anna Moretti Bonora (Pubbliche Amministrazioni, Camposampiero, PD) - Centro Servizi per Anziani &quot;A. Moretti Bonora&quot;",
-    .category = "government", .portal = "https://www.csabonora.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.csabonora.it/?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, RSS2 feed, newest Wed, 04 May 2016 "
-      "17:41:15 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CSAAMB_2", .name = "Centro Servizi per Anziani Anna Moretti Bonora (Pubbliche "
-      "Amministrazioni, Camposampiero, PD) - Centro Servizi per Anziani "
-      "&quot;A. Moretti Bonora&quot;",
-    .name_ja = "Centro Servizi per Anziani Anna Moretti Bonora (Pubbliche Amministrazioni, Camposampiero, PD) - Centro Servizi per Anziani &quot;A. Moretti Bonora&quot;",
-    .category = "government", .portal = "https://www.csabonora.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.csabonora.it/?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T11:39:48+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
-
   { .id = "JO45_IT_CSAD", .name = "Centro Servizi Anziani di Dueville (Pubbliche Amministrazioni, "
       "Dueville, VI) - Centro Servizi Anziani Umberto Bagarella",
     .name_ja = "Centro Servizi Anziani di Dueville (Pubbliche Amministrazioni, Dueville, VI) - Centro Servizi Anziani Umberto Bagarella",
@@ -35965,26 +34193,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "11:35:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_CSMGV_TO", .name = "CONSERVATORIO STATALE DI MUSICA G.VERDI DI TORINO (Pubbliche "
-      "Amministrazioni, Torino, TO) - News Archivi - Conservatorio "
-      "Statale di Musica &quot;Giuseppe Verdi&quot; Torino",
-    .name_ja = "CONSERVATORIO STATALE DI MUSICA G.VERDI DI TORINO (Pubbliche Amministrazioni, Torino, TO) - News Archivi - Conservatorio Statale di Musica &quot;Giuseppe Verdi&quot; Torino",
-    .category = "government", .portal = "https://www.conservatoriotorino.eu/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.conservatoriotorino.eu/news/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 25 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "12:43:56 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_CSMJT_UD", .name = "Conservatorio Statale di Musica Jacopo Tomadini (Pubbliche "
       "Amministrazioni, Udine, UD) - Conservatorio statale di Musica "
       "Jacopo Tomadini - Udine",
@@ -36198,25 +34406,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
       "13:08:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_CTOSC", .name = "Consorzio 6 Toscana Sud (Gestori di Pubblici Servizi, Grosseto, "
-      "GR) - Consorzio di bonifica 6 Toscana Sud",
-    .name_ja = "Consorzio 6 Toscana Sud (Gestori di Pubblici Servizi, Grosseto, GR) - Consorzio di bonifica 6 Toscana Sud",
-    .category = "government", .portal = "https://cb6toscanasud.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cb6toscanasud.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "05:24:15 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_CTPR", .name = "Consorzio Tutela e Prevenzione Randagismo San Francesco "
@@ -36910,25 +35099,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:06:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_DC8B7IBD", .name = "I.C. VILLABATE 2 (Pubbliche Amministrazioni, Villabate, PA) - "
-      "Istituto Comprensivo Villabate 2",
-    .name_ja = "I.C. VILLABATE 2 (Pubbliche Amministrazioni, Villabate, PA) - Istituto Comprensivo Villabate 2",
-    .category = "government", .portal = "https://www.icvillabate2.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icvillabate2.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "12:30:51 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_DF2LVH50", .name = "Diocesi di Nuoro (Gestori di Pubblici Servizi, Nuoro, NU) - "
       "Diocesi di Nuoro",
     .name_ja = "Diocesi di Nuoro (Gestori di Pubblici Servizi, Nuoro, NU) - Diocesi di Nuoro",
@@ -37023,26 +35193,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "12:42:49 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_DI1DTXPK", .name = "I.C. \"ALTO VERBANO - CANNOBIO\" (Pubbliche Amministrazioni, "
-      "Ghiffa, VB) - ISTITUTO COMPRENSIVO STATALE &quot;P. "
-      "Carmine&quot;",
-    .name_ja = "I.C. \"ALTO VERBANO - CANNOBIO\" (Pubbliche Amministrazioni, Ghiffa, VB) - ISTITUTO COMPRENSIVO STATALE &quot;P. Carmine&quot;",
-    .category = "government", .portal = "https://www.icaltoverbanocannobio.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icaltoverbanocannobio.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "13:21:43 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_DSC", .name = "Azienda Speciale Consortile del Distretto Sociale Cremonese "
@@ -37659,26 +35809,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 2 items, RSS2 feed, newest Fri, 23 Dec 2022 "
       "10:48:33 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_EIFBJ21C", .name = "Istituto Comprensivo \"P.N. Vaccina G. Lotti Della Vittoria\" "
-      "(Pubbliche Amministrazioni, Andria, BT) - Scuola Statale "
-      "&quot;P. N. Vaccina&quot; Andria (BT)",
-    .name_ja = "Istituto Comprensivo \"P.N. Vaccina G. Lotti Della Vittoria\" (Pubbliche Amministrazioni, Andria, BT) - Scuola Statale &quot;P. N. Vaccina&quot; Andria (BT)",
-    .category = "government", .portal = "https://www.scuolavaccina.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.scuolavaccina.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "13:37:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ELRTM", .name = "Ente Lirico Regionale Teatro Massimo Vincenzo Bellini (Pubbliche "
@@ -38555,26 +36685,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:07:57 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_F1RKE7HD", .name = "ISTITUTO ISTRUZIONE SUPERIORE F. DE CECCO (Pubbliche "
-      "Amministrazioni, Pescara, PE) - Istituto Professionale per "
-      "l&#039;Enogastronomia e l&#039;Ospitalità Alberghier",
-    .name_ja = "ISTITUTO ISTRUZIONE SUPERIORE F. DE CECCO (Pubbliche Amministrazioni, Pescara, PE) - Istituto Professionale per l&#039;Enogastronomia e l&#039;Ospitalità Alberghier",
-    .category = "government", .portal = "https://www.alberghierodececco.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.alberghierodececco.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "15:22:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_F3DETGNF", .name = "Centro Studi Interdisciplinari Gaiola ETS (Gestori di Pubblici "
       "Servizi, Napoli, NA) - ampgaiola",
     .name_ja = "Centro Studi Interdisciplinari Gaiola ETS (Gestori di Pubblici Servizi, Napoli, NA) - ampgaiola",
@@ -38611,25 +36721,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 12 items, RSS2 feed, newest Wed, 30 Sep 2026 "
       "14:18:51 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_F4GOX8IR", .name = "I.C. CASTELNUOVO LUNI ORTONOVO (Pubbliche Amministrazioni, "
-      "Castelnuovo Magra, SP) - IC Castenuovo Luni Ortonovo",
-    .name_ja = "I.C. CASTELNUOVO LUNI ORTONOVO (Pubbliche Amministrazioni, Castelnuovo Magra, SP) - IC Castenuovo Luni Ortonovo",
-    .category = "government", .portal = "https://www.iccastelnuovoluniortonovo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iccastelnuovoluniortonovo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 25 Sep 2026 "
-      "08:17:48 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_F6U7ODCM", .name = "I.T.S. Archimede per le attività  tecnologiche innovative per i "
@@ -39292,25 +37383,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "10:58:35 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_FFCRC", .name = "Fondazione Film Commission Regione Campania (Pubbliche "
-      "Amministrazioni, Napoli, NA) - Film Commission Regione Campania",
-    .name_ja = "Fondazione Film Commission Regione Campania (Pubbliche Amministrazioni, Napoli, NA) - Film Commission Regione Campania",
-    .category = "government", .portal = "https://fcrc.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://fcrc.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 14 items, RSS2 feed, newest Wed, 30 Sep 2026 "
-      "14:30:26 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_FGUFCF2Y", .name = "A.P.E.F. AGENZIA PROVINCIALE PER L'ENERGIA FROSINONE SRL  "
@@ -40513,26 +38585,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:26:43 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_GB", .name = "I. C. Giovanni Blandini (Pubbliche Amministrazioni, Palagonia, "
-      "CT) - ISTITUTO COMPRENSIVO STATALE &quot;G. BLANDINI&quot; "
-      "&#8211; PALAGONIA",
-    .name_ja = "I. C. Giovanni Blandini (Pubbliche Amministrazioni, Palagonia, CT) - ISTITUTO COMPRENSIVO STATALE &quot;G. BLANDINI&quot; &#8211; PALAGONIA",
-    .category = "government", .portal = "https://www.icblandinipalagonia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icblandinipalagonia.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 03 Sep 2026 "
-      "17:51:23 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_GB6QL6FQ", .name = "Ordine dei Dottori Agronomi e dei Dottori Forestali della "
       "Provincia di Pescara (Pubbliche Amministrazioni, Pescara, PE) - "
       "Ordine Pescara",
@@ -41112,45 +39164,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "11:42:48 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_HL49LMGS", .name = "azienda  servizi  igiene  e  pubblica  ulitità srl (Stazioni "
-      "Appaltanti, Corato, BA) - A.S.I.P.U.",
-    .name_ja = "azienda  servizi  igiene  e  pubblica  ulitità srl (Stazioni Appaltanti, Corato, BA) - A.S.I.P.U.",
-    .category = "government", .portal = "https://asipu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://asipu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 13 Jul 2026 "
-      "17:48:28 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_HQVL0IPQ", .name = "ISTITUTO COMPRENSIVO \"G. PASCOLI - A. DE STEFANO\" (Pubbliche "
-      "Amministrazioni, Erice, TP) - Istituto Comprensivo Statale “G. "
-      "Pascoli – A. De Stefano”",
-    .name_ja = "ISTITUTO COMPRENSIVO \"G. PASCOLI - A. DE STEFANO\" (Pubbliche Amministrazioni, Erice, TP) - Istituto Comprensivo Statale “G. Pascoli – A. De Stefano”",
-    .category = "government", .portal = "https://www.icpascolidestefano.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icpascolidestefano.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "15:46:03 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_HRDAQNXW", .name = "SANTA TERESA SPA (Stazioni Appaltanti, Brindisi, BR) - Home",
     .name_ja = "SANTA TERESA SPA (Stazioni Appaltanti, Brindisi, BR) - Home",
     .category = "government", .portal = "https://www.santateresaspa.it/",
@@ -41243,24 +39256,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 03 Oct 2026 "
       "14:34:24 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_HZWS36TD", .name = "SOAIC SPA (Gestori di Pubblici Servizi, Bari, BA) - SoaIC",
-    .name_ja = "SOAIC SPA (Gestori di Pubblici Servizi, Bari, BA) - SoaIC",
-    .category = "government", .portal = "https://www.soaic.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.soaic.it/site/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Mon, 10 Jul 2023 "
-      "14:37:41 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_I_OCR", .name = "Ipab Oasi Cristo Re (Pubbliche Amministrazioni, Acireale, CT) - "
@@ -41401,26 +39396,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "07:29:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_IACP_SR", .name = "Istituto Autonomo per le Case Popolari della Provincia di "
-      "Siracusa (Pubbliche Amministrazioni, Siracusa, SR) - IACP "
-      "Siracusa",
-    .name_ja = "Istituto Autonomo per le Case Popolari della Provincia di Siracusa (Pubbliche Amministrazioni, Siracusa, SR) - IACP Siracusa",
-    .category = "government", .portal = "https://www.iacpsiracusa.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iacpsiracusa.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "11:15:17 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_IACPCAC", .name = "Istituto Autonomo Case Popolare Comprensori di Acireale "
       "(Pubbliche Amministrazioni, Acireale, CT) - IACP Acireale",
     .name_ja = "Istituto Autonomo Case Popolare Comprensori di Acireale (Pubbliche Amministrazioni, Acireale, CT) - IACP Acireale",
@@ -41495,26 +39470,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "14:59:31 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_IAFC", .name = "ISTITUTO DI ASSISTENZA 'FRANCESCO CAPEZZUTO' (Pubbliche "
-      "Amministrazioni, Ariano Irpino, AV) - Istituto di Assistenza "
-      "Francesco Capezzuto",
-    .name_ja = "ISTITUTO DI ASSISTENZA 'FRANCESCO CAPEZZUTO' (Pubbliche Amministrazioni, Ariano Irpino, AV) - Istituto di Assistenza Francesco Capezzuto",
-    .category = "government", .portal = "https://www.istitutocapezzuto.com/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocapezzuto.com/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Mon, 10 Oct 2022 "
-      "20:44:57 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_IALCP_RG", .name = "Istituto Autonomo per le Case Popolari della Provincia di Ragusa "
@@ -41689,26 +39644,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 18 Nov 2024 "
       "16:01:14 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_IC_071", .name = "Istituto Comprensivo Zannotti Fraccacreta (Pubbliche "
-      "Amministrazioni, San Severo, FG) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;ZANNOTTI &#8211; FRACCACRETA&quot;",
-    .name_ja = "Istituto Comprensivo Zannotti Fraccacreta (Pubbliche Amministrazioni, San Severo, FG) - ISTITUTO COMPRENSIVO STATALE &quot;ZANNOTTI &#8211; FRACCACRETA&quot;",
-    .category = "government", .portal = "https://www.iczannotti.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iczannotti.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 26 Aug 2025 "
-      "10:27:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_IC_072", .name = "ISTITUTO COMPRENSIVO JAPIGIA 1 - VERGA CENTRALE (Pubbliche "
@@ -41905,25 +39840,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "11:23:45 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ICAGAB", .name = "Istituto Comprensivo Aristide Gabelli (Pubbliche "
-      "Amministrazioni, Torino, TO) - Istituto Comprensivo Gabelli",
-    .name_ja = "Istituto Comprensivo Aristide Gabelli (Pubbliche Amministrazioni, Torino, TO) - Istituto Comprensivo Gabelli",
-    .category = "government", .portal = "https://www.icgabellitorino.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icgabellitorino.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 04 Sep 2026 "
-      "15:56:47 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ICAIG_06", .name = "Istituto Comprensivo Agerola Ic di Giacomo-de Nicola (Pubbliche "
       "Amministrazioni, Agerola, NA) - Istituto Comprensivo S. Di "
       "Giacomo &#8211; E. De Nicola di Agerola",
@@ -42002,26 +39918,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "17:21:19 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ICAP_TN", .name = "Istituto Comprensivo Altopiano di Pine' di Baselga di Pine' "
-      "(Pubbliche Amministrazioni, Baselga di Pinè, TN) - IC Altopiano "
-      "di Pinè",
-    .name_ja = "Istituto Comprensivo Altopiano di Pine' di Baselga di Pine' (Pubbliche Amministrazioni, Baselga di Pinè, TN) - IC Altopiano di Pinè",
-    .category = "government", .portal = "https://www.icpine.eu/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icpine.eu/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "11:09:52 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ICAQMO", .name = "Istituto Comprensivo Alba Quartiere Moretta (Pubbliche "
       "Amministrazioni, Alba, CN) - Istituto Comprensivo Statale – "
       "Quartiere Moretta di Alba",
@@ -42040,26 +39936,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 06 Oct 2026 "
       "13:19:05 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICAQP", .name = "Istituto Comprensivo Alba Quartiere Piave S. Cassiano (Pubbliche "
-      "Amministrazioni, Alba, CN) - Istituto Comprensivo Alba Istituto "
-      "Comprensivo Alba Quartiere Piave San Cassiano",
-    .name_ja = "Istituto Comprensivo Alba Quartiere Piave S. Cassiano (Pubbliche Amministrazioni, Alba, CN) - Istituto Comprensivo Alba Istituto Comprensivo Alba Quartiere Piave San Cassiano",
-    .category = "government", .portal = "https://www.icalbasancassiano.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icalbasancassiano.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 14 Sep 2026 "
-      "07:02:32 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ICASC", .name = "Istituto Comprensivo 1 A. Salvetti Colle di Val D'Elsa "
@@ -42718,66 +40594,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "15:38:01 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ICCFANC", .name = "Istituto Comprensivo Casa del Fanciullo (Pubbliche "
-      "Amministrazioni, Partinico, PA) - Istituto Comprensivo Statale "
-      "&quot;Casa del Fanciullo&quot;",
-    .name_ja = "Istituto Comprensivo Casa del Fanciullo (Pubbliche Amministrazioni, Partinico, PA) - Istituto Comprensivo Statale &quot;Casa del Fanciullo&quot;",
-    .category = "government", .portal = "https://www.iccasadelfanciullo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iccasadelfanciullo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 09 Sep 2026 "
-      "14:28:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICCI", .name = "Istituto Comprensivo Chieri III (Pubbliche Amministrazioni, "
-      "Chieri, TO) - ISTITUTO COMPRENSIVO STATALE &quot;CHIERI "
-      "III&quot;",
-    .name_ja = "Istituto Comprensivo Chieri III (Pubbliche Amministrazioni, Chieri, TO) - ISTITUTO COMPRENSIVO STATALE &quot;CHIERI III&quot;",
-    .category = "government", .portal = "https://www.chieri3.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.chieri3.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 24 Sep 2026 "
-      "15:24:07 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICCI_063", .name = "Istituto Comprensivo Casoria I.C. Cortese (Pubbliche "
-      "Amministrazioni, Casoria, NA) - Istituto Comprensivo Nino "
-      "Cortese &#8211; Casoria",
-    .name_ja = "Istituto Comprensivo Casoria I.C. Cortese (Pubbliche Amministrazioni, Casoria, NA) - Istituto Comprensivo Nino Cortese &#8211; Casoria",
-    .category = "government", .portal = "https://www.icninocortese.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icninocortese.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "14:33:56 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ICCI_TN", .name = "Istituto Comprensivo Civezzano (Pubbliche Amministrazioni, "
       "Civezzano, TN) - Istituto Comprensivo Civezzano",
     .name_ja = "Istituto Comprensivo Civezzano (Pubbliche Amministrazioni, Civezzano, TN) - Istituto Comprensivo Civezzano",
@@ -42969,26 +40785,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Tue, 27 Aug 2024 "
       "00:00:00 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICCV", .name = "Istituto Comprensivo Corso Vercelli (Pubbliche Amministrazioni, "
-      "Torino, TO) - Istituto Comprensivo Statale &#8211; &quot;Ennio "
-      "Morricone&quot; &#8211; Torino",
-    .name_ja = "Istituto Comprensivo Corso Vercelli (Pubbliche Amministrazioni, Torino, TO) - Istituto Comprensivo Statale &#8211; &quot;Ennio Morricone&quot; &#8211; Torino",
-    .category = "government", .portal = "https://www.icmorricone.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icmorricone.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 11 Oct 2026 "
-      "19:13:43 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ICCV_022", .name = "Istituto Comprensivo Centro Valsugana (Pubbliche "
@@ -43245,44 +41041,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "06:57:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ICEE", .name = "Istituto Comprensivo Empoli Est (Pubbliche Amministrazioni, "
-      "Empoli, FI) - Istituto Comprensivo Empoli Est",
-    .name_ja = "Istituto Comprensivo Empoli Est (Pubbliche Amministrazioni, Empoli, FI) - Istituto Comprensivo Empoli Est",
-    .category = "government", .portal = "https://www.istitutocomprensivoempoliest.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivoempoliest.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "10:42:39 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICEM_TN", .name = "Istituto Comprensivo - 'Levico Terme' (Pubbliche "
-      "Amministrazioni, Levico Terme, TN) - IC Levico Terme",
-    .name_ja = "Istituto Comprensivo - 'Levico Terme' (Pubbliche Amministrazioni, Levico Terme, TN) - IC Levico Terme",
-    .category = "government", .portal = "https://www.iclevico.eu/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iclevico.eu/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 23 Sep 2026 "
-      "13:49:23 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ICEP", .name = "Istituto Comprensivo Eugenio Pertini (Pubbliche Amministrazioni, "
       "Trapani, TP) - I.C. &#8220;Pertini&#8221; Trapani",
     .name_ja = "Istituto Comprensivo Eugenio Pertini (Pubbliche Amministrazioni, Trapani, TP) - I.C. &#8220;Pertini&#8221; Trapani",
@@ -43361,26 +41119,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:41:51 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ICFB", .name = "Istituto Comprensivo Fossano B (Pubbliche Amministrazioni, "
-      "Fossano, CN) - Istituto Comprensivo Federico Sacco &#8211; "
-      "Fossano Cuneo",
-    .name_ja = "Istituto Comprensivo Fossano B (Pubbliche Amministrazioni, Fossano, CN) - Istituto Comprensivo Federico Sacco &#8211; Fossano Cuneo",
-    .category = "government", .portal = "https://www.icsacco.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsacco.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "14:39:34 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ICFCAS", .name = "Istituto Comprensivo Falcone-cascino (Pubbliche Amministrazioni, "
       "Piazza Armerina, EN) - Istituto Comprensivo Falcone &#8211; "
       "Cascino",
@@ -43419,26 +41157,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "13:58:16 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICFLL_TN", .name = "Istituto Comprensivo Folgaria Lavarone Luserna (Pubbliche "
-      "Amministrazioni, Folgaria, TN) - Istituto Comprensivo Folgaria "
-      "Lavarone Luserna",
-    .name_ja = "Istituto Comprensivo Folgaria Lavarone Luserna (Pubbliche Amministrazioni, Folgaria, TN) - Istituto Comprensivo Folgaria Lavarone Luserna",
-    .category = "government", .portal = "https://www.icfolgarialavaroneluserna.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icfolgarialavaroneluserna.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "10:34:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ICFPG", .name = "Istituto Comprensivo Foligno 1 (Pubbliche Amministrazioni, "
@@ -43540,26 +41258,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "07:56:04 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ICGCG_04", .name = "Istituto Comprensivo G. Carducci G. Fattori (Pubbliche "
-      "Amministrazioni, Rosignano Marittimo, LI) - Istituto Comprensivo "
-      "Statale &quot;G. Carducci G. Fattori&quot;",
-    .name_ja = "Istituto Comprensivo G. Carducci G. Fattori (Pubbliche Amministrazioni, Rosignano Marittimo, LI) - Istituto Comprensivo Statale &quot;G. Carducci G. Fattori&quot;",
-    .category = "government", .portal = "https://www.fattorirosignano.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.fattorirosignano.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 07 Sep 2026 "
-      "19:47:15 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ICGE_22", .name = "Istituto Comprensivo Giudicarie Esteriori (Pubbliche "
       "Amministrazioni, Comano Terme, TN) - Istituto Comprensivo "
       "Giudicarie Esteriori",
@@ -43598,25 +41296,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "09:08:08 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICGG_001", .name = "Istituto Comprensivo G. Gozzano (Pubbliche Amministrazioni, "
-      "Rivoli, TO) - Istituto Comprensivo &quot;Gozzano&quot; di Rivoli",
-    .name_ja = "Istituto Comprensivo G. Gozzano (Pubbliche Amministrazioni, Rivoli, TO) - Istituto Comprensivo &quot;Gozzano&quot; di Rivoli",
-    .category = "government", .portal = "https://www.icgozzanorivoli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icgozzanorivoli.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 03 Oct 2026 "
-      "17:38:55 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ICGGM", .name = "ISTITUTO COMPRENSIVO - 'G.GARIBALDI  V.PIPITONE' (Pubbliche "
@@ -43678,45 +41357,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "13:48:01 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICGM", .name = "Istituto Comprensivo Grazzanise (Pubbliche Amministrazioni, "
-      "Grazzanise, CE) - Istituto Comprensivo Statale  "
-      "&quot;Grazzanise&quot;",
-    .name_ja = "Istituto Comprensivo Grazzanise (Pubbliche Amministrazioni, Grazzanise, CE) - Istituto Comprensivo Statale  &quot;Grazzanise&quot;",
-    .category = "government", .portal = "https://www.istitutocomprensivograzzanise.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivograzzanise.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "14:16:52 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICGOB", .name = "Istituto Comprensivo Gobetti (Pubbliche Amministrazioni, Rivoli, "
-      "TO) - Istituto Comprensivo Statale “Piero Gobetti”",
-    .name_ja = "Istituto Comprensivo Gobetti (Pubbliche Amministrazioni, Rivoli, TO) - Istituto Comprensivo Statale “Piero Gobetti”",
-    .category = "government", .portal = "https://www.icgobettirivoli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icgobettirivoli.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "13:15:05 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ICGR_087", .name = "Istituto Comprensivo G. Rodari - G. Nosengo (Pubbliche "
@@ -43855,25 +41495,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "07:03:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ICIC_027", .name = "Istituto Comprensivo C.Baseggio (Pubbliche Amministrazioni, "
-      "Venezia, VE) - I.C. &quot;Cesco Baseggio&quot;",
-    .name_ja = "Istituto Comprensivo C.Baseggio (Pubbliche Amministrazioni, Venezia, VE) - I.C. &quot;Cesco Baseggio&quot;",
-    .category = "government", .portal = "https://www.icbaseggio.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icbaseggio.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "08:49:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ICIC_069", .name = "ISTITUTO COMPRENSIVO GIANNI RODARI (Pubbliche Amministrazioni, "
       "San Salvo, CH) - San Salvo Rodari",
     .name_ja = "ISTITUTO COMPRENSIVO GIANNI RODARI (Pubbliche Amministrazioni, San Salvo, CH) - San Salvo Rodari",
@@ -43911,25 +41532,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "09:27:53 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICICL", .name = "Istituto Comprensivo Iv Circolo Lodi (Pubbliche Amministrazioni, "
-      "Lodi, LO) - Istituto Comprensivo Lodi IV",
-    .name_ja = "Istituto Comprensivo Iv Circolo Lodi (Pubbliche Amministrazioni, Lodi, LO) - Istituto Comprensivo Lodi IV",
-    .category = "government", .portal = "https://www.iclodi4.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iclodi4.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
-      "08:31:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ICICM", .name = "Istituto Comprensivo 2 Montichiari (Pubbliche Amministrazioni, "
@@ -44050,26 +41652,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "2026 00:00:00 +0200. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO45_IT_ICJAC_TN", .name = "Istituto Comprensivo di Scuola Primaria e Secondaria di I Grado "
-      "Johannes Amos Comenius di Trento (Pubbliche Amministrazioni, "
-      "Trento, TN) - Istituto Comprensivo Trento 2",
-    .name_ja = "Istituto Comprensivo di Scuola Primaria e Secondaria di I Grado Johannes Amos Comenius di Trento (Pubbliche Amministrazioni, Trento, TN) - Istituto Comprensivo Trento 2",
-    .category = "government", .portal = "https://www.icomenius.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icomenius.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, RSS2 feed, newest Thu, 03 Sep 2026 "
-      "20:08:48 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ICL_098", .name = "Istituto Comprensivo di Lodi 2 (Pubbliche Amministrazioni, Lodi, "
       "LO) - IC Lodi Secondo",
     .name_ja = "Istituto Comprensivo di Lodi 2 (Pubbliche Amministrazioni, Lodi, LO) - IC Lodi Secondo",
@@ -44106,25 +41688,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 22 Sep 2026 "
       "13:52:35 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICLI_098", .name = "Istituto Comprensivo Lodi I (Pubbliche Amministrazioni, Lodi, "
-      "LO) - Istituto Comprensivo Lodi I",
-    .name_ja = "Istituto Comprensivo Lodi I (Pubbliche Amministrazioni, Lodi, LO) - Istituto Comprensivo Lodi I",
-    .category = "government", .portal = "https://www.iclodiprimo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iclodiprimo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "07:00:07 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ICLI_108", .name = "Istituto Comprensivo Lissone II Piazza Caduti di Via Fani "
@@ -44301,26 +41864,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "13:34:13 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ICMB_082", .name = "Istituto Comprensivo Marineo Bolognetta (Pubbliche "
-      "Amministrazioni, Marineo, PA) - ISTITUTO COMPRENSIVO STATALE "
-      "MARINEO &#8211; BOLOGNETTA &quot;MARIO FRANCESE&quo",
-    .name_ja = "Istituto Comprensivo Marineo Bolognetta (Pubbliche Amministrazioni, Marineo, PA) - ISTITUTO COMPRENSIVO STATALE MARINEO &#8211; BOLOGNETTA &quot;MARIO FRANCESE&quo",
-    .category = "government", .portal = "https://www.icmarineobolognetta.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icmarineobolognetta.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 23 Sep 2026 "
-      "08:25:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ICMCB", .name = "Istituto Comprensivo Montini (Pubbliche Amministrazioni, "
       "Campobasso, CB) - Istituto comprensivo statale "
       "&quot;L.Montini&quot;",
@@ -44359,25 +41902,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Fri, 04 Sep 2026 "
       "08:02:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICMID", .name = "I.C. Maneri Ingrassia - Don Milani (Pubbliche Amministrazioni, "
-      "Palermo, PA) - I.C. Maneri-Ingrassia-Don Milani",
-    .name_ja = "I.C. Maneri Ingrassia - Don Milani (Pubbliche Amministrazioni, Palermo, PA) - I.C. Maneri-Ingrassia-Don Milani",
-    .category = "government", .portal = "https://www.icmaneriingrassiadonmilani.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icmaneriingrassiadonmilani.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "10:13:53 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ICMNA", .name = "Istituto Comprensivo 5 Montale (Pubbliche Amministrazioni, "
@@ -44515,45 +42039,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "13:55:29 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ICNFOR", .name = "Istituto Comprensivo N.1 Forli (Pubbliche Amministrazioni, "
-      "Forlì, FC) - Istituto Comprensivo N. 1 Forlì",
-    .name_ja = "Istituto Comprensivo N.1 Forli (Pubbliche Amministrazioni, Forlì, FC) - Istituto Comprensivo N. 1 Forlì",
-    .category = "government", .portal = "https://www.ic1forli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ic1forli.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "10:25:19 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICNFORLQ", .name = "Istituto Comprensivo N. 4 Forli (Pubbliche Amministrazioni, "
-      "Forlì, FC) - ISTITUTO COMPRENSIVO STATALE N. 4 &quot;ANNALENA "
-      "TONELLI&quot;",
-    .name_ja = "Istituto Comprensivo N. 4 Forli (Pubbliche Amministrazioni, Forlì, FC) - ISTITUTO COMPRENSIVO STATALE N. 4 &quot;ANNALENA TONELLI&quot;",
-    .category = "government", .portal = "https://www.icquattroforli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icquattroforli.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "15:07:13 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ICNFPS", .name = "Istituto Comprensivo Umberto Eco (Pubbliche Amministrazioni, "
       "Milano, MI) - IC Umberto Eco",
     .name_ja = "Istituto Comprensivo Umberto Eco (Pubbliche Amministrazioni, Milano, MI) - IC Umberto Eco",
@@ -44631,25 +42116,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "18:45:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ICNP_052", .name = "Istituto Comprensivo n.1 Poggibonsi (Pubbliche Amministrazioni, "
-      "Poggibonsi, SI) - Istituto Comprensivo 1 Poggibonsi",
-    .name_ja = "Istituto Comprensivo n.1 Poggibonsi (Pubbliche Amministrazioni, Poggibonsi, SI) - Istituto Comprensivo 1 Poggibonsi",
-    .category = "government", .portal = "https://www.comprensivo1poggibonsi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comprensivo1poggibonsi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "07:33:05 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ICNSF", .name = "Istituto Comprensivo N. 3 Sesto Fiorentino (Pubbliche "
       "Amministrazioni, Sesto Fiorentino, FI) - IC Sesto3",
     .name_ja = "Istituto Comprensivo N. 3 Sesto Fiorentino (Pubbliche Amministrazioni, Sesto Fiorentino, FI) - IC Sesto3",
@@ -44706,26 +42172,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "12:15:44 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICP_065", .name = "Istituto Comprensivo di Pellezzano (Pubbliche Amministrazioni, "
-      "Pellezzano, SA) - ISTITUTO COMPRENSIVO STATALE &#8211; "
-      "PELLEZZANO",
-    .name_ja = "Istituto Comprensivo di Pellezzano (Pubbliche Amministrazioni, Pellezzano, SA) - ISTITUTO COMPRENSIVO STATALE &#8211; PELLEZZANO",
-    .category = "government", .portal = "https://www.icpellezzano.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icpellezzano.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 10 Oct 2026 "
-      "17:08:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ICP_083", .name = "Istituto Comprensivo Paradiso di Messina (Pubbliche "
@@ -44825,26 +42271,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "11:49:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ICPD_063", .name = "Istituto Comprensivo Pertini - 87 D.Guanella (Pubbliche "
-      "Amministrazioni, Napoli, NA) - Istituto Comprensivo Statale "
-      "PERTINI – 87° D. GUANELLA",
-    .name_ja = "Istituto Comprensivo Pertini - 87 D.Guanella (Pubbliche Amministrazioni, Napoli, NA) - Istituto Comprensivo Statale PERTINI – 87° D. GUANELLA",
-    .category = "government", .portal = "https://www.icpertiniguanella.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icpertiniguanella.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 05 Sep 2026 "
-      "10:33:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ICPDV", .name = "Istituto Comprensivo Pier Delle Vigne (Pubbliche "
       "Amministrazioni, Capua, CE) - I.C. PIER DELLE VIGNE",
     .name_ja = "Istituto Comprensivo Pier Delle Vigne (Pubbliche Amministrazioni, Capua, CE) - I.C. PIER DELLE VIGNE",
@@ -44940,25 +42366,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "11:54:43 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ICPINERO", .name = "Istituto Comprensivo Pinerolo I (Pubbliche Amministrazioni, "
-      "Pinerolo, TO) - ISTITUTO COMPRENSIVO PINEROLO 1",
-    .name_ja = "Istituto Comprensivo Pinerolo I (Pubbliche Amministrazioni, Pinerolo, TO) - ISTITUTO COMPRENSIVO PINEROLO 1",
-    .category = "government", .portal = "https://www.istitutocomprensivopinerolo1.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivopinerolo1.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
-      "12:46:14 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ICPMCOPM", .name = "Istituto Comprensivo Pignataro Maggiore - Camigliano (Pubbliche "
       "Amministrazioni, Pignataro Maggiore, CE) - I.C. Pignataro "
       "Maggiore-Camigliano",
@@ -44977,46 +42384,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "13:13:30 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICPP", .name = "Istituto Comprensivo 'Principe di Piemonte' (Pubbliche "
-      "Amministrazioni, Maglie, LE) - ISTITUTO COMPRENSIVO "
-      "&quot;PRINCIPE DI PIEMONTE&quot;  Maglie",
-    .name_ja = "Istituto Comprensivo 'Principe di Piemonte' (Pubbliche Amministrazioni, Maglie, LE) - ISTITUTO COMPRENSIVO &quot;PRINCIPE DI PIEMONTE&quot;  Maglie",
-    .category = "government", .portal = "https://www.icprincipedipiemontemaglie.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icprincipedipiemontemaglie.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 01 Oct 2026 "
-      "08:59:59 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICPPPOLI", .name = "I.C. Partinico Privitera Polizzi (Pubbliche Amministrazioni, "
-      "Partinico, PA) - Logo ISTITUTO COMPRENSIVO &quot;PRIVITERA "
-      "&#8211; POLIZZI&quot; &#8211; PARTINIC",
-    .name_ja = "I.C. Partinico Privitera Polizzi (Pubbliche Amministrazioni, Partinico, PA) - Logo ISTITUTO COMPRENSIVO &quot;PRIVITERA &#8211; POLIZZI&quot; &#8211; PARTINIC",
-    .category = "government", .portal = "https://www.icpriviterapolizzi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icpriviterapolizzi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "13:19:29 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ICPT", .name = "Istituto Comprensivo Pasquale Tola (Pubbliche Amministrazioni, "
@@ -45075,25 +42442,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 15 items, RSS2 feed, newest Mon, 05 Oct 2026 "
       "19:20:53 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICPV", .name = "I.C. Parri - Vian (Pubbliche Amministrazioni, Torino, TO) - "
-      "ISTITUTO COMPRENSIVO STATALE &quot;PARRI-VIAN&quot;",
-    .name_ja = "I.C. Parri - Vian (Pubbliche Amministrazioni, Torino, TO) - ISTITUTO COMPRENSIVO STATALE &quot;PARRI-VIAN&quot;",
-    .category = "government", .portal = "https://www.icparri-vian.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icparri-vian.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "12:58:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ICQSE", .name = "Istituto Comprensivo N.4 Quartu S. Elena (Pubbliche "
@@ -45231,46 +42579,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "08:51:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ICS_025", .name = "Istituto Comprensivo Sedico/sospirolo (Pubbliche "
-      "Amministrazioni, Sedico, BL) - Istituto Comprensivo "
-      "Sedico-Sospirolo",
-    .name_ja = "Istituto Comprensivo Sedico/sospirolo (Pubbliche Amministrazioni, Sedico, BL) - Istituto Comprensivo Sedico-Sospirolo",
-    .category = "government", .portal = "https://www.istitutocomprensivosedico-sospirolo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivosedico-sospirolo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "08:14:53 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICS_039", .name = "Istituto Comprensivo Statale Guido Novello (Pubbliche "
-      "Amministrazioni, Ravenna, RA) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;GUIDO NOVELLO&quot;",
-    .name_ja = "Istituto Comprensivo Statale Guido Novello (Pubbliche Amministrazioni, Ravenna, RA) - ISTITUTO COMPRENSIVO STATALE &quot;GUIDO NOVELLO&quot;",
-    .category = "government", .portal = "https://www.icsnovello.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsnovello.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 17 Sep 2026 "
-      "09:24:33 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ICS_06", .name = "Istituto Comprensivo Francesco Guarini Solofra (Pubbliche "
       "Amministrazioni, Solofra, AV) - IC Solofra Francesco Guarini",
     .name_ja = "Istituto Comprensivo Francesco Guarini Solofra (Pubbliche Amministrazioni, Solofra, AV) - IC Solofra Francesco Guarini",
@@ -45288,26 +42596,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "18:16:53 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICS_061", .name = "Istituto Comprensivo Statale di Gricignano D'Aversa (Pubbliche "
-      "Amministrazioni, Gricignano di Aversa, CE) - ISTITUTO "
-      "COMPRENSIVO STATALE &quot;FILIPPO SANTAGATA&quot;",
-    .name_ja = "Istituto Comprensivo Statale di Gricignano D'Aversa (Pubbliche Amministrazioni, Gricignano di Aversa, CE) - ISTITUTO COMPRENSIVO STATALE &quot;FILIPPO SANTAGATA&quot;",
-    .category = "government", .portal = "https://www.icgricignanodiaversa.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icgricignanodiaversa.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 21 Sep 2026 "
-      "08:03:08 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ICS_063", .name = "Istituto Comprensivo Statale Brusciano De Filippo - De Ruggiero "
@@ -45528,26 +42816,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "2026 00:00:00 +0200. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO45_IT_ICSCD", .name = "Istituto Comprensivo Statale Cervia 2 (Pubbliche "
-      "Amministrazioni, Cervia, RA) - Istituto Comprensivo Statale  "
-      "CERVIA 2",
-    .name_ja = "Istituto Comprensivo Statale Cervia 2 (Pubbliche Amministrazioni, Cervia, RA) - Istituto Comprensivo Statale  CERVIA 2",
-    .category = "government", .portal = "https://www.iccervia2.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iccervia2.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 18 Sep 2026 "
-      "11:02:47 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ICSCE", .name = "ISTITUTO COMPRENSIVO STATALE CERISANO (Pubbliche "
       "Amministrazioni, Cosenza, CS) - Istituto Istruzione Superiore "
       "Alberghiero-Tecnico-Agrario",
@@ -45607,26 +42875,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "17:56:43 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ICSD1C", .name = "Istituto Comprensivo S. Donato 1 Circolo (Pubbliche "
-      "Amministrazioni, Sassari, SS) - ISTITUTO COMPRENSIVO STATALE  "
-      "&quot;SAN DONATO&quot; SASSARI",
-    .name_ja = "Istituto Comprensivo S. Donato 1 Circolo (Pubbliche Amministrazioni, Sassari, SS) - ISTITUTO COMPRENSIVO STATALE  &quot;SAN DONATO&quot; SASSARI",
-    .category = "government", .portal = "https://www.icsandonato.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsandonato.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 11 Sep 2026 "
-      "18:17:19 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ICSDMA", .name = "Istituto Comprensivo Eduardo De Filippo Sant Egidio Del Monte "
       "Albino (Pubbliche Amministrazioni, Sant'Egidio del Monte Albino, "
       "SA) - Istituto Comprensivo &quot;E. De Filippo&quot;",
@@ -45667,25 +42915,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:23:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ICSG", .name = "Istituto Comprensivo S.G.Bosco (Pubbliche Amministrazioni, "
-      "Isernia, IS) - Istituto Comprensivo &quot;S. G. Bosco&quot;",
-    .name_ja = "Istituto Comprensivo S.G.Bosco (Pubbliche Amministrazioni, Isernia, IS) - Istituto Comprensivo &quot;S. G. Bosco&quot;",
-    .category = "government", .portal = "https://www.icsangiovanniboscoisernia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsangiovanniboscoisernia.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 05 Oct 2026 "
-      "17:53:34 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ICSGBB", .name = "Istituto Comprensivo S.G. Bosco Buonarroti (Pubbliche "
       "Amministrazioni, Giovinazzo, BA) - Bosco Buonarroti Giovinazzo",
     .name_ja = "Istituto Comprensivo S.G. Bosco Buonarroti (Pubbliche Amministrazioni, Giovinazzo, BA) - Bosco Buonarroti Giovinazzo",
@@ -45722,25 +42951,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Jan 2026 "
       "17:48:05 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICSI_028", .name = "Istituto Comprensivo Statale II (Pubbliche Amministrazioni, "
-      "Piove di Sacco, PD) - IC Piove di Sacco 2",
-    .name_ja = "Istituto Comprensivo Statale II (Pubbliche Amministrazioni, Piove di Sacco, PD) - IC Piove di Sacco 2",
-    .category = "government", .portal = "https://www.ics2davila.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ics2davila.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "10:42:26 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ICSI_071", .name = "Istituto Comprensivo di Scuola dell'Infanzia, Primaria e "
@@ -45804,44 +43014,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "12:50:37 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ICSJI_07", .name = "ISTITUTO COMPRENSIVO STATALE JAPIGIA II TORRE A MARE (Pubbliche "
-      "Amministrazioni, Bari, BA) - Homepage Istituto",
-    .name_ja = "ISTITUTO COMPRENSIVO STATALE JAPIGIA II TORRE A MARE (Pubbliche Amministrazioni, Bari, BA) - Homepage Istituto",
-    .category = "government", .portal = "https://www.japigiaii-torreamare.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.japigiaii-torreamare.edu.it/index.php?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 11 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "10:51:29 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICSJI_07_2", .name = "ISTITUTO COMPRENSIVO STATALE JAPIGIA II TORRE A MARE (Pubbliche "
-      "Amministrazioni, Bari, BA) - Homepage Istituto",
-    .name_ja = "ISTITUTO COMPRENSIVO STATALE JAPIGIA II TORRE A MARE (Pubbliche Amministrazioni, Bari, BA) - Homepage Istituto",
-    .category = "government", .portal = "https://www.japigiaii-torreamare.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.japigiaii-torreamare.edu.it/index.php?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 11 items, ATOM feed, newest "
-      "2026-10-18T09:40:48+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
-
   { .id = "JO45_IT_ICSLDV", .name = "Istituto Comprensivo Statale Piazza Leonardo da Vinci (Pubbliche "
       "Amministrazioni, Milano, MI) - Istituto Comprensivo Piazza "
       "Leonardo da Vinci",
@@ -45901,26 +43073,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "A feed the organisation itself declares or links on its site "
       "root." },
 
-  { .id = "JO45_IT_ICSMI", .name = "Istituto Comprensivo Statale  Miglionico (Pubbliche "
-      "Amministrazioni, Miglionico, MT) - Istituto Comprensivo Statale "
-      "di Miglionico",
-    .name_ja = "Istituto Comprensivo Statale  Miglionico (Pubbliche Amministrazioni, Miglionico, MT) - Istituto Comprensivo Statale di Miglionico",
-    .category = "government", .portal = "https://www.icmiglionico.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icmiglionico.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 02 May 2024 "
-      "06:22:33 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ICSMM", .name = "Istituto Comprensivo Statale MIGNANO M.L. - MARZANO (Pubbliche "
       "Amministrazioni, Mignano Monte Lungo, CE) - Istituto Comprensivo "
       "Mignano M.L.- Marzano",
@@ -45939,46 +43091,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "06:54:15 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICSMR", .name = "Istituto Comprensivo Statale Montecorvino Rovella Macchia "
-      "(Pubbliche Amministrazioni, Montecorvino Rovella, SA) - Istituto "
-      "Comprensivo &quot;Montecorvino Rovella – Macchia&quot;",
-    .name_ja = "Istituto Comprensivo Statale Montecorvino Rovella Macchia (Pubbliche Amministrazioni, Montecorvino Rovella, SA) - Istituto Comprensivo &quot;Montecorvino Rovella – Macchia&quot;",
-    .category = "government", .portal = "https://www.icmontecorvinorovella.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icmontecorvinorovella.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 02 Sep 2026 "
-      "13:27:14 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICSMV_61", .name = "Istituto Comprensivo - Santa Maria a Vico (Pubbliche "
-      "Amministrazioni, Santa Maria a Vico, CE) - ISTITUTO COMPRENSIVO "
-      "STATALE &quot;S. MARIA A VICO&quot;",
-    .name_ja = "Istituto Comprensivo - Santa Maria a Vico (Pubbliche Amministrazioni, Santa Maria a Vico, CE) - ISTITUTO COMPRENSIVO STATALE &quot;S. MARIA A VICO&quot;",
-    .category = "government", .portal = "https://www.scuolasantamariavico.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.scuolasantamariavico.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "11:25:18 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ICSN", .name = "Istituto Comprensivo Selargius N. 2 (Pubbliche Amministrazioni, "
@@ -46119,25 +43231,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:56:01 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ICSSB", .name = "Istituto Comprensivo Statale (Pubbliche Amministrazioni, "
-      "Palermo, PA) - I.C. Silvio Boccone &#8211; Palermo",
-    .name_ja = "Istituto Comprensivo Statale (Pubbliche Amministrazioni, Palermo, PA) - I.C. Silvio Boccone &#8211; Palermo",
-    .category = "government", .portal = "https://www.icboccone.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icboccone.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "18:33:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ICSSC", .name = "Istituto Comprensivo di Santo Stefano di Camastra (Pubbliche "
       "Amministrazioni, Santo Stefano di Camastra, ME) - Istituto "
       "Comprensivo &#8211; Santo Stefano di Camastra",
@@ -46218,26 +43311,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "13:26:09 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ICSTD", .name = "Istituto Comprensivo Statale Tisia D'Imera (Pubbliche "
-      "Amministrazioni, Termini Imerese, PA) - Istituto Comprensivo "
-      "Tisia D&#039;Imera &#8211; Termini Imerese",
-    .name_ja = "Istituto Comprensivo Statale Tisia D'Imera (Pubbliche Amministrazioni, Termini Imerese, PA) - Istituto Comprensivo Tisia D&#039;Imera &#8211; Termini Imerese",
-    .category = "government", .portal = "https://www.tisia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.tisia.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 15 Sep 2026 "
-      "07:58:07 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ICSTT", .name = "Istituto Comprensivo Statale Torquato Tasso (Pubbliche "
       "Amministrazioni, Sorrento, NA) - Istituto Comprensivo &quot;T. "
       "Tasso&quot;",
@@ -46296,26 +43369,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "18:02:49 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICSVDF", .name = "Istituto Comprensivo Statale Vittorino da Feltre (Pubbliche "
-      "Amministrazioni, Torino, TO) - Istituto Comprensivo Vittorino da "
-      "Feltre",
-    .name_ja = "Istituto Comprensivo Statale Vittorino da Feltre (Pubbliche Amministrazioni, Torino, TO) - Istituto Comprensivo Vittorino da Feltre",
-    .category = "government", .portal = "https://www.vittorinodafeltre.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.vittorinodafeltre.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "13:19:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ICSVG", .name = "Istituto Comprensivo Statale di Via Gattamelata 35 (Pubbliche "
@@ -46609,45 +43662,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "00:00:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ICTP", .name = "Istituto Comprensivo T. Patini (Pubbliche Amministrazioni, "
-      "L'Aquila, AQ) - ISTITUTO COMPRENSIVO TEOFILO PATINI",
-    .name_ja = "Istituto Comprensivo T. Patini (Pubbliche Amministrazioni, L'Aquila, AQ) - ISTITUTO COMPRENSIVO TEOFILO PATINI",
-    .category = "government", .portal = "https://www.icpatini.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icpatini.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "10:42:40 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICTS", .name = "Istituto Comprensivo Trento 7 (Pubbliche Amministrazioni, "
-      "Trento, TN) - Istituto Comprensivo Trento 7 &quot;Rita Levi "
-      "Montalcini&quot;",
-    .name_ja = "Istituto Comprensivo Trento 7 (Pubbliche Amministrazioni, Trento, TN) - Istituto Comprensivo Trento 7 &quot;Rita Levi Montalcini&quot;",
-    .category = "government", .portal = "https://www.trento7.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.trento7.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "07:24:16 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ICU", .name = "Istituto Comprensivo Umbertide (Pubbliche Amministrazioni, "
       "Umbertide, PG) - ISTITUTO COMPRENSIVO UMBERTIDE MONTONE "
       "PIETRALUNGA",
@@ -46723,26 +43737,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "08:13:03 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ICUMTDC", .name = "I.C. Ungaretti - Madre Teresa di Calcutta (Pubbliche "
-      "Amministrazioni, Manfredonia, FG) - Istituto Comprensivo Statale "
-      "Ungaretti &#8211; Madre Teresa di Calcutta",
-    .name_ja = "I.C. Ungaretti - Madre Teresa di Calcutta (Pubbliche Amministrazioni, Manfredonia, FG) - Istituto Comprensivo Statale Ungaretti &#8211; Madre Teresa di Calcutta",
-    .category = "government", .portal = "https://www.ungaretti-madreteresa.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ungaretti-madreteresa.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "09:01:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ICV", .name = "Istituto Comprensivo Volpiano (Pubbliche Amministrazioni, "
@@ -47405,46 +44399,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "13:51:29 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_IDISGBG", .name = "Istituto D'Istruzione Superiore G.B. Vico-umberto I-r. Gagliardi "
-      "(Pubbliche Amministrazioni, Ragusa, RG) - IIS &quot;G.B. Vico - "
-      "Umberto I - R. Gagliardi&quot; Ragusa - vicoumbertogagliar",
-    .name_ja = "Istituto D'Istruzione Superiore G.B. Vico-umberto I-r. Gagliardi (Pubbliche Amministrazioni, Ragusa, RG) - IIS &quot;G.B. Vico - Umberto I - R. Gagliardi&quot; Ragusa - vicoumbertogagliar",
-    .category = "government", .portal = "https://www.vicoumbertogagliardi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.vicoumbertogagliardi.edu.it/index.php?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Tue, 01 Sep 2026 "
-      "08:39:50 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_IDISGBG_2", .name = "Istituto D'Istruzione Superiore G.B. Vico-umberto I-r. Gagliardi "
-      "(Pubbliche Amministrazioni, Ragusa, RG) - IIS &quot;G.B. Vico - "
-      "Umberto I - R. Gagliardi&quot; Ragusa - vicoumbertogagliar",
-    .name_ja = "Istituto D'Istruzione Superiore G.B. Vico-umberto I-r. Gagliardi (Pubbliche Amministrazioni, Ragusa, RG) - IIS &quot;G.B. Vico - Umberto I - R. Gagliardi&quot; Ragusa - vicoumbertogagliar",
-    .category = "government", .portal = "https://www.vicoumbertogagliardi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.vicoumbertogagliardi.edu.it/index.php?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:41:02+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
-
   { .id = "JO45_IT_IDISGM", .name = "ISTITUTO D'ISTRUZIONE SUPERIORE GIUSEPPE MAZZINI (Pubbliche "
       "Amministrazioni, Vittoria, RG) - Istituto d&#039;Istruzione "
       "Superiore &quot;G. MAZZINI&quot;- Vittoria (RG)",
@@ -47485,26 +44439,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "06:35:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_IDISM", .name = "Istituto di Istruzione Superiore Marconi Lussu San Gavino "
-      "Monreale  (Pubbliche Amministrazioni, San Gavino Monreale, VS) - "
-      "ISTITUTO DI ISTRUZIONE SUPERIORE &quot;MARCONI-LUSSU&quot;",
-    .name_ja = "Istituto di Istruzione Superiore Marconi Lussu San Gavino Monreale  (Pubbliche Amministrazioni, San Gavino Monreale, VS) - ISTITUTO DI ISTRUZIONE SUPERIORE &quot;MARCONI-LUSSU&quot;",
-    .category = "government", .portal = "https://www.iismarconilussu.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iismarconilussu.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 11 Sep 2026 "
-      "08:13:28 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_IDISPL", .name = "ISTITUTO ISTRUZIONE SUPERIORE PERITO - LEVI (Pubbliche "
       "Amministrazioni, Eboli, SA) - scuola",
     .name_ja = "ISTITUTO ISTRUZIONE SUPERIORE PERITO - LEVI (Pubbliche Amministrazioni, Eboli, SA) - scuola",
@@ -47542,26 +44476,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "08:51:14 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_IDISSEC", .name = "ISTITUTO DI ISTRUZIONE SECONDARIA SUPERIORE ETTORE CARAFA "
-      "(Pubbliche Amministrazioni, Andria, BT) - Ites &quot;E. "
-      "Carafa&quot;",
-    .name_ja = "ISTITUTO DI ISTRUZIONE SECONDARIA SUPERIORE ETTORE CARAFA (Pubbliche Amministrazioni, Andria, BT) - Ites &quot;E. Carafa&quot;",
-    .category = "government", .portal = "https://www.itescarafa.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.itescarafa.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 04 Sep 2026 "
-      "12:30:06 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_IDL", .name = "Isiss De Luca (Pubbliche Amministrazioni, Avellino, AV) - ISISS "
@@ -47757,46 +44671,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "12:31:05 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_IFPSA", .name = "Ic Fresa Pascoli (Pubbliche Amministrazioni, Nocera Superiore, "
-      "SA) - Istituto Comprensivo Statale &quot;Fresa &#8211; "
-      "Pascoli&quot;",
-    .name_ja = "Ic Fresa Pascoli (Pubbliche Amministrazioni, Nocera Superiore, SA) - Istituto Comprensivo Statale &quot;Fresa &#8211; Pascoli&quot;",
-    .category = "government", .portal = "https://www.fresapascoli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.fresapascoli.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "09:50:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_IGC", .name = "Istituto Gregorio da Catino (Pubbliche Amministrazioni, Poggio "
-      "Mirteto, RI) - ISTITUTO ISTRUZIONE SUPERIORE &quot;Gregorio da "
-      "Catino&quot; POGGIO MIRTETO (RI)",
-    .name_ja = "Istituto Gregorio da Catino (Pubbliche Amministrazioni, Poggio Mirteto, RI) - ISTITUTO ISTRUZIONE SUPERIORE &quot;Gregorio da Catino&quot; POGGIO MIRTETO (RI)",
-    .category = "government", .portal = "https://www.iisgregoriodacatino.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iisgregoriodacatino.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "08:42:25 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_IGG_010", .name = "Istituto Giannina Gaslini (Pubbliche Amministrazioni, Genova, "
       "GE) - GASLINI",
     .name_ja = "Istituto Giannina Gaslini (Pubbliche Amministrazioni, Genova, GE) - GASLINI",
@@ -47956,45 +44830,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
       "2026-10-07T08:03:08Z. A feed the organisation itself declares or "
       "links on its site root." },
-
-  { .id = "JO45_IT_IICL", .name = "Iis Copernico Luxemburg (Pubbliche Amministrazioni, Torino, TO) "
-      "- IIS Copernico-Luxemburg",
-    .name_ja = "Iis Copernico Luxemburg (Pubbliche Amministrazioni, Torino, TO) - IIS Copernico-Luxemburg",
-    .category = "government", .portal = "https://www.coplux.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.coplux.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "10:24:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_IICNI", .name = "II Istituto Comprensivo Nocera Inferiore (Pubbliche "
-      "Amministrazioni, Nocera Inferiore, SA) - II ISTITUTO COMPRENSIVO "
-      "NOCERA INFERIORE",
-    .name_ja = "II Istituto Comprensivo Nocera Inferiore (Pubbliche Amministrazioni, Nocera Inferiore, SA) - II ISTITUTO COMPRENSIVO NOCERA INFERIORE",
-    .category = "government", .portal = "https://www.comprensivo2nocera.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comprensivo2nocera.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "21:23:39 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO45_IT_IIEDN", .name = "Iis Enrico De Nicola (Pubbliche Amministrazioni, San Giovanni la "
       "Punta, CT) - I.T.E.T. &quot;E. DE NICOLA&quot; - Home",
@@ -48231,85 +45066,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "20:55:55 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_IISB_052", .name = "Istituto di Istruzione Superiore Bettino Ricasoli (Pubbliche "
-      "Amministrazioni, Siena, SI) - ISTITUTO DI ISTRUZIONE SUPERIORE "
-      "&quot;BETTINO RICASOLI&quot; &#8211; SIENA",
-    .name_ja = "Istituto di Istruzione Superiore Bettino Ricasoli (Pubbliche Amministrazioni, Siena, SI) - ISTITUTO DI ISTRUZIONE SUPERIORE &quot;BETTINO RICASOLI&quot; &#8211; SIENA",
-    .category = "government", .portal = "https://www.iisricasoli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iisricasoli.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "19:43:57 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_IISBF", .name = "Istituto di Istruzione Superiore Bernalda Ferrandina (Pubbliche "
-      "Amministrazioni, Bernalda, MT) - Istituto d&#039;Istruzione "
-      "Superiore  &quot;BERNALDA FERRANDINA&quot;",
-    .name_ja = "Istituto di Istruzione Superiore Bernalda Ferrandina (Pubbliche Amministrazioni, Bernalda, MT) - Istituto d&#039;Istruzione Superiore  &quot;BERNALDA FERRANDINA&quot;",
-    .category = "government", .portal = "https://www.iisbernaldaferrandina.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iisbernaldaferrandina.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "07:52:56 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_IISBP", .name = "Istituto Istruzione Superiore Biagio Pascal (Pubbliche "
-      "Amministrazioni, Roma, RM) - IIS Biagio Pascal di Roma",
-    .name_ja = "Istituto Istruzione Superiore Biagio Pascal (Pubbliche Amministrazioni, Roma, RM) - IIS Biagio Pascal di Roma",
-    .category = "government", .portal = "https://www.pascalroma.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.pascalroma.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 27 Aug 2026 "
-      "10:54:53 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_IISC_02", .name = "Istituto di Istruzione Superiore Cestari-righi (Pubbliche "
-      "Amministrazioni, Chioggia, VE) - I.I.S. CESTARI-RIGHI  "
-      "ISTRUZIONE TECNICA e PROFESSIONALE",
-    .name_ja = "Istituto di Istruzione Superiore Cestari-righi (Pubbliche Amministrazioni, Chioggia, VE) - I.I.S. CESTARI-RIGHI  ISTRUZIONE TECNICA e PROFESSIONALE",
-    .category = "government", .portal = "https://www.cestari-righi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cestari-righi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "09:45:56 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_IISC_046", .name = "I.I.S. Chini-Michelangelo (Pubbliche Amministrazioni, Camaiore, "
       "LU) - IIS &quot;Chini &#8211; Michelangelo&quot;",
     .name_ja = "I.I.S. Chini-Michelangelo (Pubbliche Amministrazioni, Camaiore, LU) - IIS &quot;Chini &#8211; Michelangelo&quot;",
@@ -48404,25 +45160,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 6 items, RSS2 feed, newest Wed, 02 Sep 2026 "
       "12:45:15 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_IISDSD", .name = "Istituto di Istruzione Superiore De Sanctis Deledda (Pubbliche "
-      "Amministrazioni, Cagliari, CA) - IIS De Sanctis Deledda",
-    .name_ja = "Istituto di Istruzione Superiore De Sanctis Deledda (Pubbliche Amministrazioni, Cagliari, CA) - IIS De Sanctis Deledda",
-    .category = "government", .portal = "https://www.desanctisdeledda.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.desanctisdeledda.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "22:17:53 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_IISDV", .name = "Istituto Istruzione Superiore Devilla (Pubbliche "
@@ -48540,46 +45277,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "11:36:16 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_IISEPRI", .name = "I.I.S. Elena Principessa di Napoli (Pubbliche Amministrazioni, "
-      "Rieti, RI) - ISTITUTO DI ISTRUZIONE SUPERIORE &quot;ELENA "
-      "PRINCIPESSA DI NAPOLI&quot;",
-    .name_ja = "I.I.S. Elena Principessa di Napoli (Pubbliche Amministrazioni, Rieti, RI) - ISTITUTO DI ISTRUZIONE SUPERIORE &quot;ELENA PRINCIPESSA DI NAPOLI&quot;",
-    .category = "government", .portal = "https://www.iisepnrieti.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iisepnrieti.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "07:49:56 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_IISFB", .name = "ISTITUTO D'ISTRUZIONE SUPERIORE LA FARINA - BASILE (Pubbliche "
-      "Amministrazioni, Messina, ME) - ISTITUTO DI ISTRUZIONE SUPERIORE "
-      "“LA FARINA – BASILE”",
-    .name_ja = "ISTITUTO D'ISTRUZIONE SUPERIORE LA FARINA - BASILE (Pubbliche Amministrazioni, Messina, ME) - ISTITUTO DI ISTRUZIONE SUPERIORE “LA FARINA – BASILE”",
-    .category = "government", .portal = "https://www.iislafarinabasile.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iislafarinabasile.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "16:35:07 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_IISFL", .name = "Istituto di Istruzione Superiore F.Lli Taddia (Pubbliche "
@@ -48717,26 +45414,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 02 Oct 2026 "
       "16:01:14 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_IISGV", .name = "Istituto Istruzione Superiore Genovesi Da Vinci (Pubbliche "
-      "Amministrazioni, Salerno, SA) - IIS Genovesi &#8211; Da Vinci "
-      "Salerno",
-    .name_ja = "Istituto Istruzione Superiore Genovesi Da Vinci (Pubbliche Amministrazioni, Salerno, SA) - IIS Genovesi &#8211; Da Vinci Salerno",
-    .category = "government", .portal = "https://www.genovesidavinci.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.genovesidavinci.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "07:12:22 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_IISGW", .name = "Istituto Istruzione Superiore Giorgi-woolf (Pubbliche "
@@ -48935,26 +45612,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "16:13:43 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_IISM_063", .name = "Istituto Istruzione Superiore Miano (Pubbliche Amministrazioni, "
-      "Napoli, NA) - ISTITUTO STATALE DI ISTRUZIONE SUPERIORE "
-      "&quot;Attilio Romanò&quot;",
-    .name_ja = "Istituto Istruzione Superiore Miano (Pubbliche Amministrazioni, Napoli, NA) - ISTITUTO STATALE DI ISTRUZIONE SUPERIORE &quot;Attilio Romanò&quot;",
-    .category = "government", .portal = "https://www.isisromano.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.isisromano.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "09:51:14 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_IISMB", .name = "Istituto D'Istruzione Superiore Monza (Pubbliche "
       "Amministrazioni, Monza, MB) - IIS Enzo Ferrari Monza",
     .name_ja = "Istituto D'Istruzione Superiore Monza (Pubbliche Amministrazioni, Monza, MB) - IIS Enzo Ferrari Monza",
@@ -49029,25 +45686,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "12:04:47 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_IISOMC", .name = "Istituto di Istruzione Superiore Orso Mario Corbino (Pubbliche "
-      "Amministrazioni, Partinico, PA) - IIS Orso Mario Corbino",
-    .name_ja = "Istituto di Istruzione Superiore Orso Mario Corbino (Pubbliche Amministrazioni, Partinico, PA) - IIS Orso Mario Corbino",
-    .category = "government", .portal = "https://www.iis-orsocorbino.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iis-orsocorbino.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 05 Sep 2026 "
-      "15:11:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_IISOP", .name = "IISS - 'Del Prete - Falcone' (Pubbliche Amministrazioni, Sava, "
@@ -49301,26 +45939,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "07:46:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_IISVDV", .name = "Istituto Istruzione Superiore Vico De Vivo (Pubbliche "
-      "Amministrazioni, Agropoli, SA) - ISTITUTO ISTRUZIONE SUPERIORE "
-      "IIS &quot;VICO DE VIVO&quot;",
-    .name_ja = "Istituto Istruzione Superiore Vico De Vivo (Pubbliche Amministrazioni, Agropoli, SA) - ISTITUTO ISTRUZIONE SUPERIORE IIS &quot;VICO DE VIVO&quot;",
-    .category = "government", .portal = "https://www.iisvicodevivo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iisvicodevivo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "11:31:23 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_IISVR", .name = "I.I.S. Viola-marchesini - Rovigo (Pubbliche Amministrazioni, "
       "Rovigo, RO) - IIS Viola Marchesini Rovigo",
     .name_ja = "I.I.S. Viola-marchesini - Rovigo (Pubbliche Amministrazioni, Rovigo, RO) - IIS Viola Marchesini Rovigo",
@@ -49339,46 +45957,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "09:53:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
-
-  { .id = "JO45_IT_IISVS", .name = "I.I.S. Via Silvestri 301 (Pubbliche Amministrazioni, Roma, RM) - "
-      "Istituto Istruzione Superiore &quot;Via Silvestri 301&quot; ROMA "
-      "- www.iisviasil",
-    .name_ja = "I.I.S. Via Silvestri 301 (Pubbliche Amministrazioni, Roma, RM) - Istituto Istruzione Superiore &quot;Via Silvestri 301&quot; ROMA - www.iisviasil",
-    .category = "government", .portal = "https://www.iisviasilvestri301roma.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iisviasilvestri301roma.edu.it/index.php?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
-      "10:47:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_IISVS_2", .name = "I.I.S. Via Silvestri 301 (Pubbliche Amministrazioni, Roma, RM) - "
-      "Istituto Istruzione Superiore &quot;Via Silvestri 301&quot; ROMA "
-      "- www.iisviasil",
-    .name_ja = "I.I.S. Via Silvestri 301 (Pubbliche Amministrazioni, Roma, RM) - Istituto Istruzione Superiore &quot;Via Silvestri 301&quot; ROMA - www.iisviasil",
-    .category = "government", .portal = "https://www.iisviasilvestri301roma.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iisviasilvestri301roma.edu.it/index.php?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T09:41:13+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO45_IT_ILE", .name = "Iiss Luigi dell'Erba (Pubbliche Amministrazioni, Castellana "
       "Grotte, BA) - I.I.S.S. Luigi dell&#039;Erba",
@@ -50096,26 +46674,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "13:24:05 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_IPLSD", .name = "I.P. Luigi Santarella-severina De Lilla (Pubbliche "
-      "Amministrazioni, Bari, BA) - ISTITUTO PROFESSIONALE &quot;LUIGI "
-      "SANTARELLA &#8211; SEVERINA DE LILLA&quot;",
-    .name_ja = "I.P. Luigi Santarella-severina De Lilla (Pubbliche Amministrazioni, Bari, BA) - ISTITUTO PROFESSIONALE &quot;LUIGI SANTARELLA &#8211; SEVERINA DE LILLA&quot;",
-    .category = "government", .portal = "https://www.ipsantarelladelilla.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ipsantarelladelilla.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "20:55:12 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_IPPST", .name = "I.P.PERSOLINO-STROCCHI (Pubbliche Amministrazioni, Faenza, RA) - "
       "Istituto Professionale &quot;Persolino Strocchi&quot;",
     .name_ja = "I.P.PERSOLINO-STROCCHI (Pubbliche Amministrazioni, Faenza, RA) - Istituto Professionale &quot;Persolino Strocchi&quot;",
@@ -50288,27 +46846,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Wed, 29 Mar 2023 "
       "13:31:56 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_IRB", .name = "Azienda Pubblica di Servizi alla Persona Casa di Riposo Andrea "
-      "Rossi (Pubbliche Amministrazioni, Assisi, PG) - Casa di Riposo "
-      "Andrea Rossi   Avviso pubblico di selezione per il conferimento "
-      "d",
-    .name_ja = "Azienda Pubblica di Servizi alla Persona Casa di Riposo Andrea Rossi (Pubbliche Amministrazioni, Assisi, PG) - Casa di Riposo Andrea Rossi   Avviso pubblico di selezione per il conferimento d",
-    .category = "government", .portal = "https://www.casadiriposoandrearossi.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.casadiriposoandrearossi.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
-      "08:54:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_IRCCS_LS", .name = "IRCCS Lazzaro Spallanzani (Pubbliche Amministrazioni, Roma, RM) "
@@ -50698,26 +47235,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "18:23:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISEVL", .name = "Istituto Superiore Gorgia Vittorini Moncada (Pubbliche "
-      "Amministrazioni, Lentini, SR) - Istituto Superiore &quot;Gorgia "
-      "Vittorini&quot;",
-    .name_ja = "Istituto Superiore Gorgia Vittorini Moncada (Pubbliche Amministrazioni, Lentini, SR) - Istituto Superiore &quot;Gorgia Vittorini&quot;",
-    .category = "government", .portal = "https://www.gorgiavittorinimoncada.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gorgiavittorinimoncada.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "15:10:02 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISFDG", .name = "Istituto Statale Istruzione Superiore (ISIS) F. De Gennaro "
       "(Pubbliche Amministrazioni, Vico Equense, NA) - itimedi.edu.it",
     .name_ja = "Istituto Statale Istruzione Superiore (ISIS) F. De Gennaro (Pubbliche Amministrazioni, Vico Equense, NA) - itimedi.edu.it",
@@ -50793,26 +47310,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
       "10:41:52 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISGF", .name = "Istituto Superiore Giorgi-fermi (Pubbliche Amministrazioni, "
-      "Treviso, TV) - ISTITUTO SUPERIORE STATALE "
-      "&quot;GIORGI-FERMI&quot;",
-    .name_ja = "Istituto Superiore Giorgi-fermi (Pubbliche Amministrazioni, Treviso, TV) - ISTITUTO SUPERIORE STATALE &quot;GIORGI-FERMI&quot;",
-    .category = "government", .portal = "https://www.giorgifermi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.giorgifermi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "08:19:03 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISGMAR", .name = "Istituto Superiore Guglielmo Marconi (Pubbliche Amministrazioni, "
@@ -50932,26 +47429,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:35:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISISF", .name = "Istituto Superiore Istruzione Secondaria F. De Sanctis - O. "
-      "D'Agostino (Pubbliche Amministrazioni, Avellino, AV) - Tecnico "
-      "Agrario e Tecnico Geometri Avellino",
-    .name_ja = "Istituto Superiore Istruzione Secondaria F. De Sanctis - O. D'Agostino (Pubbliche Amministrazioni, Avellino, AV) - Tecnico Agrario e Tecnico Geometri Avellino",
-    .category = "government", .portal = "https://agrariogeometra.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://agrariogeometra.edu.it/?feed=rss2",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 10 Oct 2026 "
-      "06:11:17 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISISFM", .name = "Istituto Statale di Istruzione Superiore Fermi - Mattei "
       "(Pubbliche Amministrazioni, Isernia, IS) - ISIS "
       "&quot;Fermi-Mattei&quot;",
@@ -50970,26 +47447,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
       "11:15:24 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISISGM", .name = "Istituto Statale di Istruzione Superiore G. Marconi (Pubbliche "
-      "Amministrazioni, Viareggio, LU) - ISTITUTO DI ISTRUZIONE "
-      "SUPERIORE  “G. MARCONI”  Viareggio Seravezza",
-    .name_ja = "Istituto Statale di Istruzione Superiore G. Marconi (Pubbliche Amministrazioni, Viareggio, LU) - ISTITUTO DI ISTRUZIONE SUPERIORE  “G. MARCONI”  Viareggio Seravezza",
-    .category = "government", .portal = "https://www.isimarconi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.isimarconi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 01 Oct 2026 "
-      "14:18:30 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISISMFI", .name = "ISIS MAJORANA FASCITELLI ISERNIA (Pubbliche Amministrazioni, "
@@ -51049,25 +47506,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "07:00:50 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISISSMOL", .name = "I.S.I.S.S. L.Einaudi - R.Molari (Pubbliche Amministrazioni, "
-      "Santarcangelo di Romagna, RN) - I.S.I.S.S. Einaudi Molari",
-    .name_ja = "I.S.I.S.S. L.Einaudi - R.Molari (Pubbliche Amministrazioni, Santarcangelo di Romagna, RN) - I.S.I.S.S. Einaudi Molari",
-    .category = "government", .portal = "https://www.einaudi-molari.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.einaudi-molari.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 25 Sep 2026 "
-      "07:37:33 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISISSPSL", .name = "Istituto Statale Istruzione Secondaria Superiore P.S. Lener "
@@ -51264,49 +47702,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 23 Jan 2026 "
       "16:44:42 +0000. A feed the organisation itself declares or links "
       "on its site root." },
-
-  { .id = "JO45_IT_ISSCG", .name = "I.S.S.CALVINO G.B. AMICO (Pubbliche Amministrazioni, Trapani, "
-      "TP) - ISTITUTO DI ISTRUZIONE SUPERIORE &quot;S. Calvino &#8211; "
-      "G.B. Amico&quot;",
-    .name_ja = "I.S.S.CALVINO G.B. AMICO (Pubbliche Amministrazioni, Trapani, TP) - ISTITUTO DI ISTRUZIONE SUPERIORE &quot;S. Calvino &#8211; G.B. Amico&quot;",
-    .category = "government", .portal = "https://www.iscalvinoamico.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iscalvinoamico.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "06:32:42 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISSCO", .name = "Istituto di Istruzione Superiore Ipsaa e Ipssar Don Deodato "
-      "Meloni  Settore Servizi per Agricoltura e Lo Sviluppo Rurale e "
-      "Servizi per Enogastronomia e Ospitalita Alberghiera e I Servizi "
-      "Commerciali Servizi Sociali e Odontotecnico (Pubbliche "
-      "Amministrazioni, Oristano, OR) - Ultime notizie dal sito "
-      "dell&quot;Istituto di Istruzione Superiore &quot;Don Deo",
-    .name_ja = "Istituto di Istruzione Superiore Ipsaa e Ipssar Don Deodato Meloni  Settore Servizi per Agricoltura e Lo Sviluppo Rurale e Servizi per Enogastronomia e Ospitalita Alberghiera e I Servizi Commerciali Servizi Sociali e Odontotecnico (Pubbliche Amministrazioni, Oristano, OR) - Ultime notizie dal sito dell&quot;Istituto di Istruzione Superiore &quot;Don Deo",
-    .category = "government", .portal = "https://www.ipsaameloni.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ipsaameloni.edu.it/rss.asp",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest (no date field). "
-      "A feed the organisation itself declares or links on its site "
-      "root." },
 
   { .id = "JO45_IT_ISSCUM", .name = "Istituto Statale d'Istruzione Superiore Cuoco Manuppella "
       "(Pubbliche Amministrazioni, Isernia, IS) - I.S.I.S. Cuoco "
@@ -51722,26 +48117,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "11:14:17 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_AGIC805003", .name = "Istituto Comprensivo G. Galilei (Pubbliche Amministrazioni, "
-      "Raffadali, AG) - ISTITUTO COMPRENSIVO AD INDIRIZZO MUSICALE "
-      "&quot;G. GALILEI&quot; &#8211; RAFFAD",
-    .name_ja = "Istituto Comprensivo G. Galilei (Pubbliche Amministrazioni, Raffadali, AG) - ISTITUTO COMPRENSIVO AD INDIRIZZO MUSICALE &quot;G. GALILEI&quot; &#8211; RAFFAD",
-    .category = "government", .portal = "https://www.icgalileiraffadali.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icgalileiraffadali.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 10 Sep 2026 "
-      "09:59:21 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_AGIC812006", .name = "ISTITUTO COMPRENSIVO - IC A.MANZONI (Pubbliche Amministrazioni, "
       "Alessandria della Rocca, AG) - ICS ad Indirizzo Musicale "
       "&quot;A. Manzoni&quot;",
@@ -51760,66 +48135,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 6 items, RSS2 feed, newest Fri, 28 Aug 2026 "
       "07:24:24 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_AGIC81500N", .name = "IC Gangitano Canicatti' - Agrigento (Pubbliche Amministrazioni, "
-      "Canicattì, AG) - Istituto Comprensivo &quot;Salvatore "
-      "Gangitano&quot; di Canicattì",
-    .name_ja = "IC Gangitano Canicatti' - Agrigento (Pubbliche Amministrazioni, Canicattì, AG) - Istituto Comprensivo &quot;Salvatore Gangitano&quot; di Canicattì",
-    .category = "government", .portal = "https://www.icgangitano.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icgangitano.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "09:40:48 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_AGIC818005", .name = "ISTITUTO COMPRENSIVO \"G. PHILIPPONE/GIOVANNI XXIII\" - San "
-      "Giovanni Gemini (AG) (Pubbliche Amministrazioni, San Giovanni "
-      "Gemini, AG) - Istituto Comprensivo G. Philippone/Giovanni XXIII",
-    .name_ja = "ISTITUTO COMPRENSIVO \"G. PHILIPPONE/GIOVANNI XXIII\" - San Giovanni Gemini (AG) (Pubbliche Amministrazioni, San Giovanni Gemini, AG) - Istituto Comprensivo G. Philippone/Giovanni XXIII",
-    .category = "government", .portal = "https://www.ic-philippone.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ic-philippone.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 10 Sep 2026 "
-      "15:13:39 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_AGIC82200R", .name = "Istituto Comprensivo Esseneto (Pubbliche Amministrazioni, "
-      "Agrigento, AG) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;Esseneto&quot;",
-    .name_ja = "Istituto Comprensivo Esseneto (Pubbliche Amministrazioni, Agrigento, AG) - ISTITUTO COMPRENSIVO STATALE &quot;Esseneto&quot;",
-    .category = "government", .portal = "https://www.scuolaicesseneto.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.scuolaicesseneto.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 05 Sep 2026 "
-      "08:37:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_AGIC82900G", .name = "Istituto Comprensivo Statale Mario Rapisardi (Pubbliche "
@@ -51900,26 +48215,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "08:49:44 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_AGIC83800A", .name = "ISTITUTO COMPRENSIVO - IC 'F.E. CANGIAMILA' (Pubbliche "
-      "Amministrazioni, Palma di Montechiaro, AG) - ISTITUTO "
-      "COMPRENSIVO STATALE &quot;F.E. Cangiamila&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC 'F.E. CANGIAMILA' (Pubbliche Amministrazioni, Palma di Montechiaro, AG) - ISTITUTO COMPRENSIVO STATALE &quot;F.E. Cangiamila&quot;",
-    .category = "government", .portal = "https://www.cangiamila.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cangiamila.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 29 Jan 2026 "
-      "16:30:47 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_AGIC841006", .name = "ISTITUTO COMPRENSIVO - IC A.MANZONI (Pubbliche Amministrazioni, "
       "Ravanusa, AG) - ISTITUTO COMPRENSIVO STATALE &quot;A. "
       "Manzoni&quot;",
@@ -51938,46 +48233,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 24 Sep 2026 "
       "06:23:12 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_AGIC848001", .name = "ISTITUTO COMPRENSIVO - IC FRANCESCO GIORGIO (Pubbliche "
-      "Amministrazioni, Licata, AG) - Istituto Comprensivo Statale "
-      "&quot;Francesco Giorgio&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC FRANCESCO GIORGIO (Pubbliche Amministrazioni, Licata, AG) - Istituto Comprensivo Statale &quot;Francesco Giorgio&quot;",
-    .category = "government", .portal = "https://www.icfrancescogiorgio.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icfrancescogiorgio.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 08 Sep 2026 "
-      "14:06:57 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_AGIC850001", .name = "ISTITUTO COMPRENSIVO - IC ANGELO D'ARRIGO (Pubbliche "
-      "Amministrazioni, Palma di Montechiaro, AG) - Istituto "
-      "Comprensivo Statale Giuseppe Tomasi di Lampedusa",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC ANGELO D'ARRIGO (Pubbliche Amministrazioni, Palma di Montechiaro, AG) - Istituto Comprensivo Statale Giuseppe Tomasi di Lampedusa",
-    .category = "government", .portal = "https://www.icgtomasidilampedusa.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icgtomasidilampedusa.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Jan 2026 "
-      "21:16:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_AGIC85100R", .name = "LEONARDO SCIASCIA (Pubbliche Amministrazioni, Racalmuto, AG) - "
@@ -52037,25 +48292,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 01 Jul 2026 "
       "10:14:13 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_AGIC855004", .name = "Rita Levi Montalcini (Pubbliche Amministrazioni, Agrigento, AG) "
-      "- I.C.S. &quot;RITA LEVI MONTALCINI&quot;",
-    .name_ja = "Rita Levi Montalcini (Pubbliche Amministrazioni, Agrigento, AG) - I.C.S. &quot;RITA LEVI MONTALCINI&quot;",
-    .category = "government", .portal = "https://www.icritalevimontalciniag.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icritalevimontalciniag.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "09:01:44 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_AGIC85800G", .name = "ISTITUTO COMPRENSIVO \"ANDREA CAMILLERI\" (Pubbliche "
@@ -52196,26 +48432,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "2026-10-18T11:41:28+02:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_IT_ISTSC_AGIS01700D", .name = "ISTITUTO SUPERIORE - I.I.S.S. 'LUIGI PIRANDELLO' (Pubbliche "
-      "Amministrazioni, Bivona, AG) - ISTITUTO ISTRUZIONE SECONDARIA "
-      "SUPERIORE &quot;LUIGI PIRANDELLO&quot; DI BIVONA",
-    .name_ja = "ISTITUTO SUPERIORE - I.I.S.S. 'LUIGI PIRANDELLO' (Pubbliche Amministrazioni, Bivona, AG) - ISTITUTO ISTRUZIONE SECONDARIA SUPERIORE &quot;LUIGI PIRANDELLO&quot; DI BIVONA",
-    .category = "government", .portal = "https://www.iiss-pirandello-bivona.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iiss-pirandello-bivona.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 29 Sep 2026 "
-      "09:24:39 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_AGIS018009", .name = "ISTITUTO SUPERIORE - I.I.S. GIUDICI SAETTA E LIVATINO (Pubbliche "
       "Amministrazioni, Ravanusa, AG) - Istituto d'Istruzione Superiore "
       "Statale &quot;Giudici Saetta e Livanino&quot; di",
@@ -52256,26 +48472,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "19:10:45 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_AGIS021005", .name = "ISTITUTO SUPERIORE - I.I.S. FRANCESCO CRISPI (Pubbliche "
-      "Amministrazioni, Ribera, AG) - ISTITUTO D&#039;ISTRUZIONE "
-      "SUPERIORE &quot;Francesco Crispi&quot; &#8211; Ribera",
-    .name_ja = "ISTITUTO SUPERIORE - I.I.S. FRANCESCO CRISPI (Pubbliche Amministrazioni, Ribera, AG) - ISTITUTO D&#039;ISTRUZIONE SUPERIORE &quot;Francesco Crispi&quot; &#8211; Ribera",
-    .category = "government", .portal = "https://www.istitutosuperiorecrispiribera.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutosuperiorecrispiribera.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "14:42:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_AGPC060002", .name = "LICEO CLASSICO - 'VINCENZO LINARES' (Pubbliche Amministrazioni, "
       "Licata, AG) - Liceo Linares",
     .name_ja = "LICEO CLASSICO - 'VINCENZO LINARES' (Pubbliche Amministrazioni, Licata, AG) - Liceo Linares",
@@ -52293,45 +48489,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "11:03:35 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_AGPM02000Q", .name = "ISTITUTO MAGISTRALE - LICEO STATALE 'MARTIN LUTHER KING' "
-      "(Pubbliche Amministrazioni, Favara, AG) - I.P.S.S.E.O.A. "
-      "&quot;G. Ambrosini&quot;",
-    .name_ja = "ISTITUTO MAGISTRALE - LICEO STATALE 'MARTIN LUTHER KING' (Pubbliche Amministrazioni, Favara, AG) - I.P.S.S.E.O.A. &quot;G. Ambrosini&quot;",
-    .category = "government", .portal = "https://www.ambrosinimlking.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ambrosinimlking.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "10:04:06 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_ALEE037007", .name = "Direzione Didattica Valenza (Pubbliche Amministrazioni, Valenza, "
-      "AL) - DIREZIONE DIDATTICA STATALE VALENZA",
-    .name_ja = "Direzione Didattica Valenza (Pubbliche Amministrazioni, Valenza, AL) - DIREZIONE DIDATTICA STATALE VALENZA",
-    .category = "government", .portal = "https://www.ddvalenza.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ddvalenza.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "06:45:30 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_ALIC81200R", .name = "ISTITUTO COMPRENSIVO - VIGUZZOLO - ISTITUTO COMPRENSIV "
@@ -52607,25 +48764,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "15:15:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_ANIS00400L", .name = "ISTRUZIONE SECONDARIA SUPERIORE - VANVITELLI - STRACCA - "
-      "ANGELINI (Pubbliche Amministrazioni, Ancona, AN) - Istvas",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - VANVITELLI - STRACCA - ANGELINI (Pubbliche Amministrazioni, Ancona, AN) - Istvas",
-    .category = "government", .portal = "https://istvas.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://istvas.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "07:12:52 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_ANIS01200G", .name = "ISTRUZIONE SECONDARIA SUPERIORE - L.DI SAVOIA - G. BENINCASA "
       "(Pubbliche Amministrazioni, Ancona, AN) - IIS Savoia Benincasa",
     .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - L.DI SAVOIA - G. BENINCASA (Pubbliche Amministrazioni, Ancona, AN) - IIS Savoia Benincasa",
@@ -52897,26 +49035,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "13:26:46 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_AQIC82100B", .name = "ISTITUTO COMPRENSIVO - IC IGNAZIO SILONE (Pubbliche "
-      "Amministrazioni, Luco dei Marsi, AQ) - I.C. “Ignazio Silone” di "
-      "Luco dei Marsi",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC IGNAZIO SILONE (Pubbliche Amministrazioni, Luco dei Marsi, AQ) - I.C. “Ignazio Silone” di Luco dei Marsi",
-    .category = "government", .portal = "https://www.scuolelucodeimarsi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.scuolelucodeimarsi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 14 Sep 2026 "
-      "11:35:02 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_AQIC823003", .name = "ISTITUTO COMPRENSIVO - IC NAVELLI (Pubbliche Amministrazioni, "
       "Navelli, AQ) - ISTITUTO COMPRENSIVO NAVELLI (AQ)",
     .name_ja = "ISTITUTO COMPRENSIVO - IC NAVELLI (Pubbliche Amministrazioni, Navelli, AQ) - ISTITUTO COMPRENSIVO NAVELLI (AQ)",
@@ -52934,106 +49052,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "08:57:22 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_AQIC828006", .name = "ISTITUTO COMPRENSIVO - IST. COMPRENSIVO FONTAMARA (Pubbliche "
-      "Amministrazioni, Pescina, AQ) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;FONTAMARA&quot; &#8211; PESCINA",
-    .name_ja = "ISTITUTO COMPRENSIVO - IST. COMPRENSIVO FONTAMARA (Pubbliche Amministrazioni, Pescina, AQ) - ISTITUTO COMPRENSIVO STATALE &quot;FONTAMARA&quot; &#8211; PESCINA",
-    .category = "government", .portal = "https://www.icfontamara.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icfontamara.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "11:59:29 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_AQIC831002", .name = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO TRASACCO (Pubbliche "
-      "Amministrazioni, Trasacco, AQ) - ISTITUTO COMPRENSIVO STATALE "
-      "Trasacco",
-    .name_ja = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO TRASACCO (Pubbliche Amministrazioni, Trasacco, AQ) - ISTITUTO COMPRENSIVO STATALE Trasacco",
-    .category = "government", .portal = "https://www.istitutocomprensivotrasacco.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivotrasacco.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "13:04:58 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_AQIC83300N", .name = "ISTITUTO COMPRENSIVO - 'GIANNI RODARI' (Pubbliche "
-      "Amministrazioni, L'Aquila, AQ) - ISTITUTO COMPRENSIVO  "
-      "&quot;GIANNI RODARI&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - 'GIANNI RODARI' (Pubbliche Amministrazioni, L'Aquila, AQ) - ISTITUTO COMPRENSIVO  &quot;GIANNI RODARI&quot;",
-    .category = "government", .portal = "https://www.rodariscuola.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.rodariscuola.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 01 Oct 2026 "
-      "12:32:04 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_AQIC83800R", .name = "ISTITUTO COMPRENSIVO - IST.COMPRENSIVO  A. B. SABIN (Pubbliche "
-      "Amministrazioni, Capistrello, AQ) - Istituto Comprensivo Statale "
-      "&quot;Albert Bruce Sabin&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - IST.COMPRENSIVO  A. B. SABIN (Pubbliche Amministrazioni, Capistrello, AQ) - Istituto Comprensivo Statale &quot;Albert Bruce Sabin&quot;",
-    .category = "government", .portal = "https://www.iccapistrello.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iccapistrello.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 07 Sep 2026 "
-      "08:47:39 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_AQIC84100L", .name = "ISTITUTO COMPRENSIVO - I.C. CORRADINI -POMILIO (Pubbliche "
-      "Amministrazioni, Avezzano, AQ) - Istituto Comprensivo "
-      "&quot;Corradini&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. CORRADINI -POMILIO (Pubbliche Amministrazioni, Avezzano, AQ) - Istituto Comprensivo &quot;Corradini&quot;",
-    .category = "government", .portal = "https://www.corradinipomilio.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.corradinipomilio.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 09 Sep 2026 "
-      "14:42:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_AQIC84200C", .name = "ISTITUTO COMPRENSIVO - I.C. VIVENZA- GIOVANNI XXIII (Pubbliche "
@@ -53073,47 +49091,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 28 Sep 2026 "
       "14:17:38 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_AQIS007009", .name = "Istituto di Istruzione Superiore Leonardo da Vinci - Ottavio "
-      "Colecchi (Pubbliche Amministrazioni, L'Aquila, AQ) - I.I.S. "
-      "&quot;L. da Vinci &#8211; O. Colecchi&quot; &#8211; "
-      "L&#039;Aquila",
-    .name_ja = "Istituto di Istruzione Superiore Leonardo da Vinci - Ottavio Colecchi (Pubbliche Amministrazioni, L'Aquila, AQ) - I.I.S. &quot;L. da Vinci &#8211; O. Colecchi&quot; &#8211; L&#039;Aquila",
-    .category = "government", .portal = "https://www.iisdavincicolecchiaq.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iisdavincicolecchiaq.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "13:22:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_AQIS016004", .name = "ISTITUTO SUPERIORE - ISTITUTO SUPERIORE 'AMEDEO D AOSTA' "
-      "(Pubbliche Amministrazioni, L'Aquila, AQ) - Istituto Istruzione "
-      "Superiore &quot;Amedeo d&#039;Aosta&quot;",
-    .name_ja = "ISTITUTO SUPERIORE - ISTITUTO SUPERIORE 'AMEDEO D AOSTA' (Pubbliche Amministrazioni, L'Aquila, AQ) - Istituto Istruzione Superiore &quot;Amedeo d&#039;Aosta&quot;",
-    .category = "government", .portal = "https://www.iisdaostalaquila.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iisdaostalaquila.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "12:53:20 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_AQMM060003", .name = "ISTITUTO SECONDARIO DI I GRADO - IST. ONNICOMPRENSIVO A. ARGOLI "
@@ -53289,25 +49266,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "2026 00:00:00 +0200. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO45_IT_ISTSC_ARIC83000R", .name = "ISTITUTO COMPRENSIVO - POPPI (Pubbliche Amministrazioni, Poppi, "
-      "AR) - ISTITUTO COMPRENSIVO STATALE &#8211; POPPI (Ar)",
-    .name_ja = "ISTITUTO COMPRENSIVO - POPPI (Pubbliche Amministrazioni, Poppi, AR) - ISTITUTO COMPRENSIVO STATALE &#8211; POPPI (Ar)",
-    .category = "government", .portal = "https://www.poppiscuola.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.poppiscuola.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "16:56:18 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_ARIS001001", .name = "ISTRUZIONE SECONDARIA SUPERIORE - LUCA SIGNORELLI (Pubbliche "
       "Amministrazioni, Cortona, AR) - I.I.S. &quot;Luca "
       "Signorelli&quot;",
@@ -53445,26 +49403,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "14:01:16 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_ARIS01600P", .name = "ISTRUZIONE SECONDARIA SUPERIORE - ISIS 'ANGELO VEGNI'- CAPEZZINE "
-      "(Pubbliche Amministrazioni, Cortona, AR) - I.S.I.S. &quot;A. "
-      "Vegni&quot; – Capezzine",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - ISIS 'ANGELO VEGNI'- CAPEZZINE (Pubbliche Amministrazioni, Cortona, AR) - I.S.I.S. &quot;A. Vegni&quot; – Capezzine",
-    .category = "government", .portal = "https://www.campusvegni.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.campusvegni.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "14:19:56 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_ARIS019006", .name = "ISTITUTO DI ISTRUZIONE SUPERIORE STATALE BENEDETTO VARCHI "
       "(Pubbliche Amministrazioni, Montevarchi, AR) - Istituto di "
       "Istruzione Superiore &quot;Benedetto Varchi&quot;",
@@ -53544,47 +49482,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "05:45:09 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_ARVC010009", .name = "Convitto Nazionale V. Emanuele II - Arezzo (Pubbliche "
-      "Amministrazioni, Arezzo, AR) - Convitto Nazionale Vittorio "
-      "Emanuele II",
-    .name_ja = "Convitto Nazionale V. Emanuele II - Arezzo (Pubbliche Amministrazioni, Arezzo, AR) - Convitto Nazionale Vittorio Emanuele II",
-    .category = "government", .portal = "https://www.convittonazionalearezzo.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.convittonazionalearezzo.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "15:06:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_ATIC80100B", .name = "Istituto Comprensivo di Castelnuovo Don Bosco Cocconato "
-      "Montiglio Monferrato At (Pubbliche Amministrazioni, Castelnuovo "
-      "Don Bosco, AT) - ISTITUTO COMPRENSIVO DI CASTELNUOVO DON BOSCO "
-      "COCCONATO, MONTIGLIO MONFERRATO",
-    .name_ja = "Istituto Comprensivo di Castelnuovo Don Bosco Cocconato Montiglio Monferrato At (Pubbliche Amministrazioni, Castelnuovo Don Bosco, AT) - ISTITUTO COMPRENSIVO DI CASTELNUOVO DON BOSCO COCCONATO, MONTIGLIO MONFERRATO",
-    .category = "government", .portal = "https://www.iccastelnuovodonbosco.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iccastelnuovodonbosco.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "07:39:24 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_ATIC80500P", .name = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO (Pubbliche "
       "Amministrazioni, Castell'Alfero, AT) - Istituto Comprensivo di "
       "Castell&#039;Alfero",
@@ -53605,26 +49502,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "08:01:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_ATIC808006", .name = "ISTITUTO COMPRENSIVO - IC MONTEGROSSO (Pubbliche "
-      "Amministrazioni, Montegrosso d'Asti, AT) - ISTITUTO COMPRENSIVO "
-      "STATALE di Montegrosso d&#039;Asti",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC MONTEGROSSO (Pubbliche Amministrazioni, Montegrosso d'Asti, AT) - ISTITUTO COMPRENSIVO STATALE di Montegrosso d&#039;Asti",
-    .category = "government", .portal = "https://www.scuolevaltiglione.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.scuolevaltiglione.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 03 Oct 2026 "
-      "10:05:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_ATIS003007", .name = "ISTRUZIONE SECONDARIA SUPERIORE - VITTORIO ALFIERI (Pubbliche "
       "Amministrazioni, Asti, AT) - I.I.S. &quot;V. Alfieri&quot;",
     .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - VITTORIO ALFIERI (Pubbliche Amministrazioni, Asti, AT) - I.I.S. &quot;V. Alfieri&quot;",
@@ -53642,26 +49519,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 06 Oct 2026 "
       "12:54:49 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_ATIS004003", .name = "ISTRUZIONE SECONDARIA SUPERIORE - IST.ISTR.SEC.STAT. G. PENNA "
-      "(Pubbliche Amministrazioni, Asti, AT) - Istituto "
-      "d&#039;Istruzione Secondaria Superiore “G. Penna” Asti",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - IST.ISTR.SEC.STAT. G. PENNA (Pubbliche Amministrazioni, Asti, AT) - Istituto d&#039;Istruzione Secondaria Superiore “G. Penna” Asti",
-    .category = "government", .portal = "https://www.istitutopennaasti.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutopennaasti.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 21 Sep 2026 "
-      "15:29:38 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_ATPS01000Q", .name = "LICEO SCIENTIFICO - F. VERCELLI (Pubbliche Amministrazioni, "
@@ -53701,66 +49558,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 16 Sep 2026 "
       "14:04:26 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_AVIC82000B", .name = "ISTITUTO COMPRENSIVO STATALE - 'Carlo del Balzo - San Martino "
-      "Valle Caudina' (Pubbliche Amministrazioni, San Martino Valle "
-      "Caudina, AV) - Istituto Comprensivo &quot;CARLO DEL BALZO&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO STATALE - 'Carlo del Balzo - San Martino Valle Caudina' (Pubbliche Amministrazioni, San Martino Valle Caudina, AV) - Istituto Comprensivo &quot;CARLO DEL BALZO&quot;",
-    .category = "government", .portal = "https://www.iccarlodelbalzo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iccarlodelbalzo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "09:48:31 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_AVIC83200N", .name = "ISTITUTO COMPRENSIVO - T.TASSO - BISACCIA (Pubbliche "
-      "Amministrazioni, Bisaccia, AV) - Istituto Comprensivo Statale "
-      "&quot;T. Tasso&quot; Bisaccia (AV)",
-    .name_ja = "ISTITUTO COMPRENSIVO - T.TASSO - BISACCIA (Pubbliche Amministrazioni, Bisaccia, AV) - Istituto Comprensivo Statale &quot;T. Tasso&quot; Bisaccia (AV)",
-    .category = "government", .portal = "https://www.icbisaccia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icbisaccia.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 15 Sep 2026 "
-      "05:52:48 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_AVIC842008", .name = "ISTITUTO COMPRENSIVO - MONS.P.GUERRIERO-AVELLA (Pubbliche "
-      "Amministrazioni, Avella, AV) - ISTITUTO COMPRENSIVO &quot;MONS. "
-      "P. GUERRIERO&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - MONS.P.GUERRIERO-AVELLA (Pubbliche Amministrazioni, Avella, AV) - ISTITUTO COMPRENSIVO &quot;MONS. P. GUERRIERO&quot;",
-    .category = "government", .portal = "https://www.icavella.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icavella.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 01 Oct 2026 "
-      "12:01:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_AVIC848007", .name = "ISTITUTO COMPRENSIVO - C.CARUSO - ALTAVILLA I. (Pubbliche "
@@ -53821,46 +49618,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 10 Oct 2026 "
       "16:56:29 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_AVIC857002", .name = "Istituto Comprensivo Di Pratola Serra (Pubbliche "
-      "Amministrazioni, Pratola Serra, AV) - Istituto Comprensivo "
-      "Pratola Serra (AV)",
-    .name_ja = "Istituto Comprensivo Di Pratola Serra (Pubbliche Amministrazioni, Pratola Serra, AV) - Istituto Comprensivo Pratola Serra (AV)",
-    .category = "government", .portal = "https://www.icpratolaserra.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icpratolaserra.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 02 Oct 2026 "
-      "16:10:04 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_AVIC86000T", .name = "ISTITUTO COMPRENSIVO - N. IANNACCONE DI LIONI (Pubbliche "
-      "Amministrazioni, Lioni, AV) - Istituto Comprensivo  Statale  "
-      "&quot;N.Iannaccone&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - N. IANNACCONE DI LIONI (Pubbliche Amministrazioni, Lioni, AV) - Istituto Comprensivo  Statale  &quot;N.Iannaccone&quot;",
-    .category = "government", .portal = "https://www.iclioni.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iclioni.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "08:14:55 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_AVIC86100N", .name = "Istituto Comprensivo Mercogliano (Pubbliche Amministrazioni, "
@@ -53943,26 +49700,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "16:32:42 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_AVIC869008", .name = "ISTITUTO COMPRENSIVO - 'REGINA MARGHERITA'-'DA VINCI' (Pubbliche "
-      "Amministrazioni, Avellino, AV) - IC &quot;REGINA MARGHERITA "
-      "&#8211; L. DA VINCI&quot;  AVELLINO",
-    .name_ja = "ISTITUTO COMPRENSIVO - 'REGINA MARGHERITA'-'DA VINCI' (Pubbliche Amministrazioni, Avellino, AV) - IC &quot;REGINA MARGHERITA &#8211; L. DA VINCI&quot;  AVELLINO",
-    .category = "government", .portal = "https://www.icreginamargheritaldavinci.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icreginamargheritaldavinci.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "20:40:40 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_AVIC87000C", .name = "Istituto Comprensivo Statale R. Guarini (Pubbliche "
       "Amministrazioni, Mirabella Eclano, AV) - ISTITUTO COMPRENSIVO "
       "STATALE &quot;Raimondo Guarini&quot;",
@@ -54020,65 +49757,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 02 Oct 2026 "
       "11:03:04 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_AVPM040007", .name = "ISTITUTO MAGISTRALE - LICEO LINGUISTICO-SCIENTIFICO P.IMBRIANI "
-      "(Pubbliche Amministrazioni, Avellino, AV) - Liceo Imbriani",
-    .name_ja = "ISTITUTO MAGISTRALE - LICEO LINGUISTICO-SCIENTIFICO P.IMBRIANI (Pubbliche Amministrazioni, Avellino, AV) - Liceo Imbriani",
-    .category = "government", .portal = "https://www.liceoimbrianiavellino.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceoimbrianiavellino.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "21:22:58 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_AVPS12000T", .name = "LICEO SCIENTIFICO - P. S. MANCINI (Pubbliche Amministrazioni, "
-      "Avellino, AV) - Liceo scientifico statale Pasquale Stanislao "
-      "Mancini",
-    .name_ja = "LICEO SCIENTIFICO - P. S. MANCINI (Pubbliche Amministrazioni, Avellino, AV) - Liceo scientifico statale Pasquale Stanislao Mancini",
-    .category = "government", .portal = "https://www.liceomanciniavellino.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceomanciniavellino.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "12:45:01 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_AVTD03000B", .name = "ISTITUTO TECNICO COMMERCIALE - L. AMABILE (Pubbliche "
-      "Amministrazioni, Avellino, AV) - Istituto Tecnico Economico "
-      "&quot;Luigi Amabile&quot;",
-    .name_ja = "ISTITUTO TECNICO COMMERCIALE - L. AMABILE (Pubbliche Amministrazioni, Avellino, AV) - Istituto Tecnico Economico &quot;Luigi Amabile&quot;",
-    .category = "government", .portal = "https://www.iteamabile.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iteamabile.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
-      "11:27:51 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_BAEE01400Q", .name = "DIREZIONE DIDATTICA - C.D. 14 RE DAVID - BARI (Pubbliche "
@@ -54217,26 +49895,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
       "12:17:13 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_BAIC80000Q", .name = "ISTITUTO COMPRENSIVO - C.D. PIETROCOLA - S.M. MAZZINI (Pubbliche "
-      "Amministrazioni, Minervino Murge, BT) - ISTITUTO COMPRENSIVO "
-      "STATALE &quot;PIETROCOLA &#8211; MAZZINI&quot; &#8211; MINE",
-    .name_ja = "ISTITUTO COMPRENSIVO - C.D. PIETROCOLA - S.M. MAZZINI (Pubbliche Amministrazioni, Minervino Murge, BT) - ISTITUTO COMPRENSIVO STATALE &quot;PIETROCOLA &#8211; MAZZINI&quot; &#8211; MINE",
-    .category = "government", .portal = "https://www.icminervinomurge.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icminervinomurge.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "16:51:13 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_BAIC80100G", .name = "ISTITUTO COMPRENSIVO - C.D. MAZZINI - S.M. DE CESARE (Pubbliche "
@@ -54417,26 +50075,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "19:02:38 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_BAIC81900R", .name = "ISTITUTO COMPRENSIVO - CLEMENTINA PERONE - LEVI (Pubbliche "
-      "Amministrazioni, Bari, BA) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;CLEMENTINA PERONE &#8211; CARLO LEVI&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - CLEMENTINA PERONE - LEVI (Pubbliche Amministrazioni, Bari, BA) - ISTITUTO COMPRENSIVO STATALE &quot;CLEMENTINA PERONE &#8211; CARLO LEVI&quot;",
-    .category = "government", .portal = "https://www.comprensivoperonelevi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comprensivoperonelevi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 11 Oct 2026 "
-      "08:41:17 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_BAIC820001", .name = "ISTITUTO COMPRENSIVO - DON D. MOREA - L. TINELLI (Pubbliche "
       "Amministrazioni, Alberobello, BA) - Istituto Comprensivo "
       "&quot;Don D. Morea &#8211; L. Tinelli&quot;",
@@ -54455,26 +50093,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
       "13:11:45 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_BAIC82100R", .name = "ISTITUTO COMPRENSIVO - S.G. BOSCO - FIORE (Pubbliche "
-      "Amministrazioni, Altamura, BA) - Istituto Comprensivo Statale "
-      "I.C. &quot;S.G. Bosco – T. Fiore&quot; – Altamu",
-    .name_ja = "ISTITUTO COMPRENSIVO - S.G. BOSCO - FIORE (Pubbliche Amministrazioni, Altamura, BA) - Istituto Comprensivo Statale I.C. &quot;S.G. Bosco – T. Fiore&quot; – Altamu",
-    .category = "government", .portal = "https://www.icboscofiorealtamura.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icboscofiorealtamura.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 28 May 2026 "
-      "06:59:19 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_BAIC824008", .name = "ISTITUTO COMPRENSIVO SAN DOMENICO SAVIO - RITA LEVI MONTALCINI "
@@ -54695,65 +50313,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:36:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_BAIC853008", .name = "Istituto Comprensivo Statale \"Marconi-Carella-Losito-Bovio\" "
-      "(Pubbliche Amministrazioni, Canosa di Puglia, BT) - ISTITUTO "
-      "COMPRENSIVO STATALE   &quot;MARCONI &#8211; M. CARELLA -PAM "
-      "LOSITO&quot",
-    .name_ja = "Istituto Comprensivo Statale \"Marconi-Carella-Losito-Bovio\" (Pubbliche Amministrazioni, Canosa di Puglia, BT) - ISTITUTO COMPRENSIVO STATALE   &quot;MARCONI &#8211; M. CARELLA -PAM LOSITO&quot",
-    .category = "government", .portal = "https://www.istitutocomprensivomarconicarella.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivomarconicarella.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 25 Sep 2026 "
-      "22:05:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_BAIC85700G", .name = "ISTITUTO COMPRENSIVO - 5 CD R.SCARDIGNO - SM 'SAVIO' (Pubbliche "
-      "Amministrazioni, Molfetta, BA) - Scuola",
-    .name_ja = "ISTITUTO COMPRENSIVO - 5 CD R.SCARDIGNO - SM 'SAVIO' (Pubbliche Amministrazioni, Molfetta, BA) - Scuola",
-    .category = "government", .portal = "https://www.scardignosaviomolfetta.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.scardignosaviomolfetta.edu.it/index.php?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "17:38:49 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_BAIC85700G_2", .name = "ISTITUTO COMPRENSIVO - 5 CD R.SCARDIGNO - SM 'SAVIO' (Pubbliche "
-      "Amministrazioni, Molfetta, BA) - Scuola",
-    .name_ja = "ISTITUTO COMPRENSIVO - 5 CD R.SCARDIGNO - SM 'SAVIO' (Pubbliche Amministrazioni, Molfetta, BA) - Scuola",
-    .category = "government", .portal = "https://www.scardignosaviomolfetta.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.scardignosaviomolfetta.edu.it/index.php?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, ATOM feed, newest "
-      "2026-10-18T11:41:41+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
-
   { .id = "JO45_IT_ISTSC_BAIC859007", .name = "ISTITUTO COMPRENSIVO - 'DE GASPERI-STEFANO DA PUTIGN.' "
       "(Pubbliche Amministrazioni, Putignano, BA) - Istituto "
       "Comprensivo De Gasperi Stefano",
@@ -54971,46 +50530,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:41:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_BAIC88000L", .name = "ISTITUTO COMPRENSIVO - CIFARELLI - SANTARELLA - BATTISTI "
-      "(Pubbliche Amministrazioni, Corato, BA) - Istituto Comprensivo "
-      "&quot;Cifarelli &#8211; Santarella&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - CIFARELLI - SANTARELLA - BATTISTI (Pubbliche Amministrazioni, Corato, BA) - Istituto Comprensivo &quot;Cifarelli &#8211; Santarella&quot;",
-    .category = "government", .portal = "https://www.cifarellisantarellabattisti.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cifarellisantarellabattisti.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "07:18:26 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_BAIC88100C", .name = "ISTITUTO COMPRENSIVO SGBOSCO-BENEDETTO13-POGGIORSINI (Pubbliche "
-      "Amministrazioni, Gravina in Puglia, BA) - IC &quot;SG Bosco "
-      "&#8211; Benedetto XIII &#8211; Poggiorsini&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO SGBOSCO-BENEDETTO13-POGGIORSINI (Pubbliche Amministrazioni, Gravina in Puglia, BA) - IC &quot;SG Bosco &#8211; Benedetto XIII &#8211; Poggiorsini&quot;",
-    .category = "government", .portal = "https://www.icsgboscogravina.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsgboscogravina.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "17:37:06 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_BAIC882008", .name = "ISTITUTO COMPRENSIVO STATALE 'SAN GIOVANNI BOSCO' - MOLFETTA  "
       "(BA) (Pubbliche Amministrazioni, Molfetta, BA) - Istituto "
       "Comprensivo San Giovanni Bosco",
@@ -55109,26 +50628,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Mon, 02 Sep 2024 "
       "15:07:26 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_BAIS02900G", .name = "ISTRUZIONE SECONDARIA SUPERIORE - I.I.S.S. TOMMASO FIORE "
-      "(Pubbliche Amministrazioni, Modugno, BA) - IISS &quot;TOMMASO "
-      "FIORE&quot;",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - I.I.S.S. TOMMASO FIORE (Pubbliche Amministrazioni, Modugno, BA) - IISS &quot;TOMMASO FIORE&quot;",
-    .category = "government", .portal = "https://www.iissfiore.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iissfiore.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "11:53:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_BAIS033007", .name = "ISTRUZIONE SECONDARIA SUPERIORE - I.I.S.S. 'ROSA LUXEMBURG' "
@@ -55660,27 +51159,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "15:32:51 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_BARI05000G", .name = "ISTITUTO PROFESSIONALE INDUSTRIA E ARTIGIANATO - I.P.S.I.A. "
-      "'ARCHIMEDE ' (Pubbliche Amministrazioni, Barletta, BT) - "
-      "ISTITUTO PROFESSIONALE di STATO per l&#039;INDUSTRIA e "
-      "l&#039;ARTIGIANATO ARCHIM",
-    .name_ja = "ISTITUTO PROFESSIONALE INDUSTRIA E ARTIGIANATO - I.P.S.I.A. 'ARCHIMEDE ' (Pubbliche Amministrazioni, Barletta, BT) - ISTITUTO PROFESSIONALE di STATO per l&#039;INDUSTRIA e l&#039;ARTIGIANATO ARCHIM",
-    .category = "government", .portal = "https://www.ipsiarchimede.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ipsiarchimede.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "08:00:46 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_BATD09000L", .name = "Istituto Tecnico Economico e Tecnologico Padre A.M. Tannoia "
       "(Pubbliche Amministrazioni, Corato, BA) - ITET Padre A.M. "
       "Tannoia",
@@ -55699,25 +51177,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 28 Sep 2026 "
       "15:04:11 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_BAVC010004", .name = "CONVITTO NAZIONALE - D. CIRILLO (Pubbliche Amministrazioni, "
-      "Bari, BA) - Convitto Nazionale Statale &quot;D. Cirillo&quot;",
-    .name_ja = "CONVITTO NAZIONALE - D. CIRILLO (Pubbliche Amministrazioni, Bari, BA) - Convitto Nazionale Statale &quot;D. Cirillo&quot;",
-    .category = "government", .portal = "https://www.convittocirillo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.convittocirillo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 16 Sep 2026 "
-      "14:21:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_BGIC80700G", .name = "ISTITUTO COMPRENSIVO - BERGAMO DE AMICIS (Pubbliche "
@@ -55778,26 +51237,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "17:34:58 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_BGIC81600A", .name = "ISTITUTO COMPRENSIVO - BERGAMO - G.D. PETTENI (Pubbliche "
-      "Amministrazioni, Bergamo, BG) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;Giuliano Donati Petteni&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - BERGAMO - G.D. PETTENI (Pubbliche Amministrazioni, Bergamo, BG) - ISTITUTO COMPRENSIVO STATALE &quot;Giuliano Donati Petteni&quot;",
-    .category = "government", .portal = "https://www.icpetteni.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icpetteni.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 10 Sep 2026 "
-      "11:22:02 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_BGIC81900T", .name = "ISTITUTO COMPRENSIVO - ALMENNO S.B. LUIGI ANGELINI (Pubbliche "
       "Amministrazioni, Almenno San Bartolomeo, BG) - IC LUIGI ANGELINI",
     .name_ja = "ISTITUTO COMPRENSIVO - ALMENNO S.B. LUIGI ANGELINI (Pubbliche Amministrazioni, Almenno San Bartolomeo, BG) - IC LUIGI ANGELINI",
@@ -55815,26 +51254,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 27 Aug 2026 "
       "06:21:14 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_BGIC820002", .name = "ISTITUTO COMPRENSIVO - ALMENNO S.S. - GIOVANNI XXIII (Pubbliche "
-      "Amministrazioni, Almenno San Salvatore, BG) - ISTITUTO "
-      "COMPRENSIVO STATALE di Almenno San Salvatore",
-    .name_ja = "ISTITUTO COMPRENSIVO - ALMENNO S.S. - GIOVANNI XXIII (Pubbliche Amministrazioni, Almenno San Salvatore, BG) - ISTITUTO COMPRENSIVO STATALE di Almenno San Salvatore",
-    .category = "government", .portal = "https://www.icalmennosansalvatore.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icalmennosansalvatore.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
-      "12:00:03 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_BGIC82100T", .name = "ISTITUTO COMPRENSIVO - ALZANO LOMBARDO (Pubbliche "
@@ -55855,26 +51274,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 11 Sep 2026 "
       "07:18:33 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_BGIC826001", .name = "ISTITUTO COMPRENSIVO - BONATE SOPRA - ALDO MORO (Pubbliche "
-      "Amministrazioni, Bonate Sopra, BG) - Istituto Comprensivo "
-      "Statale &quot;Aldo Moro&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - BONATE SOPRA - ALDO MORO (Pubbliche Amministrazioni, Bonate Sopra, BG) - Istituto Comprensivo Statale &quot;Aldo Moro&quot;",
-    .category = "government", .portal = "https://www.icaldomorobonatesopra.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icaldomorobonatesopra.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 09 Sep 2026 "
-      "15:50:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_BGIC82700R", .name = "ISTITUTO COMPRENSIVO - BONATE SOTTO I C. 'CLARA LEVI' (Pubbliche "
@@ -55935,26 +51334,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 01 Oct 2026 "
       "17:16:04 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_BGIC83000L", .name = "Istituto Comprensivo di Val Brembilla Giovanni XXIII (Pubbliche "
-      "Amministrazioni, Val Brembilla, BG) - Istituto Comprensivo di "
-      "Val Brembilla",
-    .name_ja = "Istituto Comprensivo di Val Brembilla Giovanni XXIII (Pubbliche Amministrazioni, Val Brembilla, BG) - Istituto Comprensivo di Val Brembilla",
-    .category = "government", .portal = "https://www.icvalbrembilla.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icvalbrembilla.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Wed, 26 Aug 2026 "
-      "16:27:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_BGIC833004", .name = "ISTITUTO COMPRENSIVO - CALUSCO D'ADDA CAP. (Pubbliche "
@@ -56112,25 +51491,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "11:04:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_BGIC854005", .name = "ISTITUTO COMPRENSIVO - OSIO SOPRA (Pubbliche Amministrazioni, "
-      "Osio Sopra, BG) - I.C. di OSIO SOPRA",
-    .name_ja = "ISTITUTO COMPRENSIVO - OSIO SOPRA (Pubbliche Amministrazioni, Osio Sopra, BG) - I.C. di OSIO SOPRA",
-    .category = "government", .portal = "https://www.icosiosopra.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icosiosopra.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 26 Aug 2026 "
-      "14:22:55 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_BGIC85600R", .name = "ISTITUTO COMPRENSIVO - MAPELLO - PIERA GELPI (Pubbliche "
       "Amministrazioni, Mapello, BG) - Istituto Comprensivo di Mapello",
     .name_ja = "ISTITUTO COMPRENSIVO - MAPELLO - PIERA GELPI (Pubbliche Amministrazioni, Mapello, BG) - Istituto Comprensivo di Mapello",
@@ -56189,26 +51549,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "11:00:19 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_BGIC87200P", .name = "ISTITUTO COMPRENSIVO - S. OMOBONO TERME (Pubbliche "
-      "Amministrazioni, Sant'Omobono Terme, BG) - Istituto Comprensivo "
-      "di Sant&#039;Omobono Terme",
-    .name_ja = "ISTITUTO COMPRENSIVO - S. OMOBONO TERME (Pubbliche Amministrazioni, Sant'Omobono Terme, BG) - Istituto Comprensivo di Sant&#039;Omobono Terme",
-    .category = "government", .portal = "https://www.icsantomobono.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsantomobono.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "09:25:56 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_BGIC875006", .name = "ISTITUTO COMPRENSIVO - SERIATE - CESARE BATTISTI (Pubbliche "
       "Amministrazioni, Seriate, BG) - Istituto Comprensivo Cesare "
       "Battisti Seriate",
@@ -56248,25 +51588,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:35:19 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_BGIC88000N", .name = "ISTITUTO COMPRENSIVO - SUISIO (Pubbliche Amministrazioni, "
-      "Suisio, BG) - ISTITUTO COMPRENSIVO STATALE di SUISIO",
-    .name_ja = "ISTITUTO COMPRENSIVO - SUISIO (Pubbliche Amministrazioni, Suisio, BG) - ISTITUTO COMPRENSIVO STATALE di SUISIO",
-    .category = "government", .portal = "https://www.icsuisio.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsuisio.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 29 Jul 2026 "
-      "10:45:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_BGIC88100D", .name = "ISTITUTO COMPRENSIVO - TERNO ISOLA -PADRE C.ALBISETTI (Pubbliche "
       "Amministrazioni, Terno d'Isola, BG) - Istituto Comprensivo "
       "Statale Padre Cesare Albisetti Terno d&#039;Isola",
@@ -56285,26 +51606,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 06 Oct 2026 "
       "15:07:30 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_BGIC884001", .name = "ISTITUTO COMPRENSIVO - TREVIOLO 'CESARE ZONCA' (Pubbliche "
-      "Amministrazioni, Treviolo, BG) - Istituto Comprensivo "
-      "&quot;Cesare Zonca&quot; &#8211; Treviolo",
-    .name_ja = "ISTITUTO COMPRENSIVO - TREVIOLO 'CESARE ZONCA' (Pubbliche Amministrazioni, Treviolo, BG) - Istituto Comprensivo &quot;Cesare Zonca&quot; &#8211; Treviolo",
-    .category = "government", .portal = "https://www.ictreviolo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ictreviolo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 30 Sep 2026 "
-      "10:41:09 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_BGIC88500R", .name = "ISTITUTO COMPRENSIVO - VALNEGRA - F. GERVASONI (Pubbliche "
@@ -56421,46 +51722,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "07:25:44 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_BGIS01100B", .name = "ISTRUZIONE SECONDARIA SUPERIORE - 'LUIGI EINAUDI' (Pubbliche "
-      "Amministrazioni, Dalmine, BG) - Istituto Statale di Istruzione "
-      "Superiore  &quot;Luigi Einaudi&quot;",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - 'LUIGI EINAUDI' (Pubbliche Amministrazioni, Dalmine, BG) - Istituto Statale di Istruzione Superiore  &quot;Luigi Einaudi&quot;",
-    .category = "government", .portal = "https://www.isiseinaudi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.isiseinaudi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "13:35:18 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_BGIS013003", .name = "ISTRUZIONE SECONDARIA SUPERIORE - 'DAVID MARIA TUROLDO' "
-      "(Pubbliche Amministrazioni, Zogno, BG) - Istituto di Istruzione "
-      "Superiore &quot;D.M. Turoldo&quot;",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - 'DAVID MARIA TUROLDO' (Pubbliche Amministrazioni, Zogno, BG) - Istituto di Istruzione Superiore &quot;D.M. Turoldo&quot;",
-    .category = "government", .portal = "https://www.istitutoturoldo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutoturoldo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 20 May 2026 "
-      "06:36:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_BGIS026005", .name = "ISTRUZIONE SECONDARIA SUPERIORE - 'MARIAGRAZIA MAMOLI' "
@@ -56662,26 +51923,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:30:27 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_BLIC80900T", .name = "ISTITUTO COMPRENSIVO - IC MARCO DA MELO MEL (Pubbliche "
-      "Amministrazioni, Borgo Valbelluna, BL) - Istituto Comprensivo di "
-      "Mel “Marco da Melo”",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC MARCO DA MELO MEL (Pubbliche Amministrazioni, Borgo Valbelluna, BL) - Istituto Comprensivo di Mel “Marco da Melo”",
-    .category = "government", .portal = "https://www.comprensivomel.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comprensivomel.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 26 Aug 2026 "
-      "15:53:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_BLIC82400X", .name = "ISTITUTO COMPRENSIVO - PIEVE DI CADORE (Pubbliche "
       "Amministrazioni, Pieve di Cadore, BL) - Istituto Comprensivo "
       "Statale",
@@ -56758,27 +51999,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Fri, 02 Aug 2024 "
       "11:29:43 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_BLIS00100B", .name = "ISTRUZIONE SECONDARIA SUPERIORE - ENRICO FERMI (Pubbliche "
-      "Amministrazioni, Pieve di Cadore, BL) - Istituto "
-      "d&#039;Istruzione Superiore &#039;&#039;Enrico Fermi&#039;&#039; "
-      "Pieve",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - ENRICO FERMI (Pubbliche Amministrazioni, Pieve di Cadore, BL) - Istituto d&#039;Istruzione Superiore &#039;&#039;Enrico Fermi&#039;&#039; Pieve",
-    .category = "government", .portal = "https://www.cadorescuola.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cadorescuola.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "14:00:46 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_BLIS011002", .name = "Istituto Istruzione Superiore \"Segato\" (Pubbliche "
@@ -57466,26 +52686,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "15:56:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_BRIC817007", .name = "ISTITUTO COMPRENSIVO - I.C. 'CASALE' (Pubbliche Amministrazioni, "
-      "Brindisi, BR) - Istituto Comprensivo Statale ad indirizzo "
-      "musicale  &quot;Casale&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. 'CASALE' (Pubbliche Amministrazioni, Brindisi, BR) - Istituto Comprensivo Statale ad indirizzo musicale  &quot;Casale&quot;",
-    .category = "government", .portal = "https://www.istitutocomprensivocasalebrindisi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivocasalebrindisi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 02 Oct 2026 "
-      "15:33:38 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_BRIC818003", .name = "ISTITUTO COMPRENSIVO CAROVIGNO (Pubbliche Amministrazioni, "
       "Carovigno, BR) - Istituto Comprensivo &quot;Carovigno&quot;",
     .name_ja = "ISTITUTO COMPRENSIVO CAROVIGNO (Pubbliche Amministrazioni, Carovigno, BR) - Istituto Comprensivo &quot;Carovigno&quot;",
@@ -57543,26 +52743,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 02 Oct 2026 "
       "15:42:15 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_BRIC83500R", .name = "ISTITUTO COMPRENSIVO STATALE \"CENTRO\" BRINDISI-TUTURANO "
-      "(Pubbliche Amministrazioni, Brindisi, BR) - Istituto Comprensivo "
-      "Statale &quot;CENTRO&quot; Brindisi &#8211; Tuturano",
-    .name_ja = "ISTITUTO COMPRENSIVO STATALE \"CENTRO\" BRINDISI-TUTURANO (Pubbliche Amministrazioni, Brindisi, BR) - Istituto Comprensivo Statale &quot;CENTRO&quot; Brindisi &#8211; Tuturano",
-    .category = "government", .portal = "https://www.iccentrobrindisituturano.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iccentrobrindisituturano.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "11:34:48 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_BRIS01400X", .name = "I.I.S.S. \"Ferraris - De Marco - Valzani\" - BRINDISI (Pubbliche "
@@ -58410,25 +53590,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:28:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_CAEE033002", .name = "DIREZIONE DIDATTICA - SESTU 1 (Pubbliche Amministrazioni, Sestu, "
-      "CA) - I Circolo Didattico &quot;S. G. Bosco&quot; Sestu",
-    .name_ja = "DIREZIONE DIDATTICA - SESTU 1 (Pubbliche Amministrazioni, Sestu, CA) - I Circolo Didattico &quot;S. G. Bosco&quot; Sestu",
-    .category = "government", .portal = "https://www.primocircolosgboscosestu.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.primocircolosgboscosestu.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 25 Sep 2026 "
-      "13:24:15 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_CAEE038005", .name = "DIREZIONE DIDATTICA - ASSEMINI 2 'DIONIGI SCALAS' (Pubbliche "
       "Amministrazioni, Assemini, CA) - Istituto Comprensivo Assemini 2",
     .name_ja = "DIREZIONE DIDATTICA - ASSEMINI 2 'DIONIGI SCALAS' (Pubbliche Amministrazioni, Assemini, CA) - Istituto Comprensivo Assemini 2",
@@ -58446,46 +53607,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 06 Oct 2026 "
       "06:47:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CAEE039001", .name = "DIREZIONE DIDATTICA - CAPOTERRA 1 (Pubbliche Amministrazioni, "
-      "Capoterra, CA) - Istituto Comprensivo Statale n. 1 &#8211; "
-      "Capoterra",
-    .name_ja = "DIREZIONE DIDATTICA - CAPOTERRA 1 (Pubbliche Amministrazioni, Capoterra, CA) - Istituto Comprensivo Statale n. 1 &#8211; Capoterra",
-    .category = "government", .portal = "https://www.istitutocomprensivocapoterra1.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivocapoterra1.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 16 Sep 2026 "
-      "08:25:19 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CAIC81200V", .name = "Istituto Comprensivo Statale Randaccio-Tuveri-Don Milani-Colombo "
-      "(Pubbliche Amministrazioni, Cagliari, CA) - Istituto Comprensivo "
-      "Randaccio Tuveri Don Milani",
-    .name_ja = "Istituto Comprensivo Statale Randaccio-Tuveri-Don Milani-Colombo (Pubbliche Amministrazioni, Cagliari, CA) - Istituto Comprensivo Randaccio Tuveri Don Milani",
-    .category = "government", .portal = "https://www.randaccio-tuveri-donmilani-colombo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.randaccio-tuveri-donmilani-colombo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "10:56:42 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CAIC824005", .name = "ISTITUTO COMPRENSIVO - SAN GIOVANNI SUERGIU (Pubbliche "
@@ -58525,25 +53646,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
       "17:40:50 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CAIC83000C", .name = "ISTITUTO COMPRENSIVO - SENORBI' (Pubbliche Amministrazioni, "
-      "Senorbì, CA) - Istituto Comprensivo Senorbì",
-    .name_ja = "ISTITUTO COMPRENSIVO - SENORBI' (Pubbliche Amministrazioni, Senorbì, CA) - Istituto Comprensivo Senorbì",
-    .category = "government", .portal = "https://www.comprensivosenorbi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comprensivosenorbi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 01 Oct 2026 "
-      "09:57:46 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CAIC83300X", .name = "ISTITUTO COMPRENSIVO - VILLASIMIUS (Pubbliche Amministrazioni, "
@@ -58621,46 +53723,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 4 items, RSS2 feed, newest Thu, 05 Feb 2026 "
       "10:08:07 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CAIC84400A", .name = "ISTITUTO COMPRENSIVO - ELMAS 'M. SABA' (Pubbliche "
-      "Amministrazioni, Elmas, CA) - Istituto Comprensivo "
-      "&quot;Monsignor Saba&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - ELMAS 'M. SABA' (Pubbliche Amministrazioni, Elmas, CA) - Istituto Comprensivo &quot;Monsignor Saba&quot;",
-    .category = "government", .portal = "https://www.comprensivoelmas.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comprensivoelmas.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "15:53:17 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CAIC845006", .name = "ISTITUTO COMPRENSIVO - PULA (Pubbliche Amministrazioni, Pula, "
-      "CA) - ISTITUTO COMPRENSIVO STATALE &quot;BENEDETTO CROCE&quot; "
-      "PULA",
-    .name_ja = "ISTITUTO COMPRENSIVO - PULA (Pubbliche Amministrazioni, Pula, CA) - ISTITUTO COMPRENSIVO STATALE &quot;BENEDETTO CROCE&quot; PULA",
-    .category = "government", .portal = "https://www.comprensivopula.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comprensivopula.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 22 Sep 2026 "
-      "11:22:13 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CAIC84700T", .name = "ISTITUTO COMPRENSIVO - SETTIMO S. PIETRO (Pubbliche "
@@ -58900,26 +53962,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:42:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_CAIC88500L", .name = "ISTITUTO COMPRENSIVO - SAN NICOLO' GERREI (Pubbliche "
-      "Amministrazioni, San Nicolò Gerrei, CA) - ISTITUTO COMPRENSIVO "
-      "STATALE &quot;E.DE MAGISTRIS&quot; &#8211; S. NICOLO&#039;",
-    .name_ja = "ISTITUTO COMPRENSIVO - SAN NICOLO' GERREI (Pubbliche Amministrazioni, San Nicolò Gerrei, CA) - ISTITUTO COMPRENSIVO STATALE &quot;E.DE MAGISTRIS&quot; &#8211; S. NICOLO&#039;",
-    .category = "government", .portal = "https://www.icgerrei.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icgerrei.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "07:10:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_CAIC890004", .name = "ISTITUTO COMPRENSIVO STATALE SINNAI 1-2 (Pubbliche "
       "Amministrazioni, Sinnai, CA) - Istituto Comprensivo Statale "
       "Sinnai 1-2",
@@ -58938,86 +53980,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "10:05:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CAIS00100L", .name = "ISTRUZIONE SECONDARIA SUPERIORE - GRAMSCI- AMALDI (CARBONIA) "
-      "(Pubbliche Amministrazioni, Carbonia, CI) - IIS GRAMSCI AMALDI",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - GRAMSCI- AMALDI (CARBONIA) (Pubbliche Amministrazioni, Carbonia, CI) - IIS GRAMSCI AMALDI",
-    .category = "government", .portal = "https://www.liceogramsciamaldi.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceogramsciamaldi.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "10:43:05 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CAIS00200C", .name = "ISTRUZIONE SECONDARIA SUPERIORE - AZUNI (CAGLIARI) (Pubbliche "
-      "Amministrazioni, Cagliari, CA) - Istituto di Istruzione "
-      "Superiore &quot;Domenico Alberto Azuni&quot;",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - AZUNI (CAGLIARI) (Pubbliche Amministrazioni, Cagliari, CA) - Istituto di Istruzione Superiore &quot;Domenico Alberto Azuni&quot;",
-    .category = "government", .portal = "https://www.azunicagliari.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.azunicagliari.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "18:07:59 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CAIS004004", .name = "ISTRUZIONE SECONDARIA SUPERIORE - I.I.S.S. GIUSEPPE DESSI "
-      "(Pubbliche Amministrazioni, Villaputzu, CA) - ISTITUTO DI "
-      "ISTRUZIONE SUPERIORE &quot;G. DESSI&#039;&quot; VILLAPUTZU",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - I.I.S.S. GIUSEPPE DESSI (Pubbliche Amministrazioni, Villaputzu, CA) - ISTITUTO DI ISTRUZIONE SUPERIORE &quot;G. DESSI&#039;&quot; VILLAPUTZU",
-    .category = "government", .portal = "https://www.professionalevillaputzu.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.professionalevillaputzu.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, RSS2 feed, newest Mon, 20 Nov 2023 "
-      "14:48:23 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CAIS00600Q", .name = "ISTRUZIONE SECONDARIA SUPERIORE - I.T.C.GEOMETRI 'L. EINAUDI' "
-      "MUR (Pubbliche Amministrazioni, Muravera, CA) - ISTITUTO "
-      "D’ISTRUZIONE SECONDARIA SUPERIORE I.T.C.G. “L. EINAUDI” &#8211; "
-      "L",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - I.T.C.GEOMETRI 'L. EINAUDI' MUR (Pubbliche Amministrazioni, Muravera, CA) - ISTITUTO D’ISTRUZIONE SECONDARIA SUPERIORE I.T.C.G. “L. EINAUDI” &#8211; L",
-    .category = "government", .portal = "https://www.iiseinaudimuravera.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iiseinaudimuravera.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 26 Sep 2026 "
-      "11:10:15 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CAIS009007", .name = "ISTRUZIONE SECONDARIA SUPERIORE - M. BUONARROTI (GUSPINI) "
@@ -59099,26 +54061,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "12:38:07 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_CAIS02100T", .name = "ISTITUTO SUPERIORE - I.T.COMM.GEOMETRI - SANLURI (Pubbliche "
-      "Amministrazioni, Sanluri, VS) - ITCG &quot;P.C. Vignarelli&quot; "
-      "Sanluri &#8211; IPSAR &quot;G.B. Tuveri&quot; V",
-    .name_ja = "ISTITUTO SUPERIORE - I.T.COMM.GEOMETRI - SANLURI (Pubbliche Amministrazioni, Sanluri, VS) - ITCG &quot;P.C. Vignarelli&quot; Sanluri &#8211; IPSAR &quot;G.B. Tuveri&quot; V",
-    .category = "government", .portal = "https://www.iissanluri.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iissanluri.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 30 Sep 2026 "
-      "15:11:55 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_CAPC09000E", .name = "LICEO CLASSICO - LICEO CLASS. E SCIENZE UMANE'B.R. MOTZO' "
       "(Pubbliche Amministrazioni, Quartu Sant'Elena, CA) - Circolari - "
       "RSS",
@@ -59138,25 +54080,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .description = "Fetched 2026-10-18: 1315 items, RSS2 feed, newest Sat, 17 Oct "
       "2026 00:00:00 +0200. A feed the organisation itself declares or "
       "links on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CAPM02000C", .name = "ISTITUTO MAGISTRALE - D'ARBOREA (Pubbliche Amministrazioni, "
-      "Cagliari, CA) - Liceo Eleonora d&#039;Arborea &#8211; Cagliari",
-    .name_ja = "ISTITUTO MAGISTRALE - D'ARBOREA (Pubbliche Amministrazioni, Cagliari, CA) - Liceo Eleonora d&#039;Arborea &#8211; Cagliari",
-    .category = "government", .portal = "https://www.liceoeleonoradarborea.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceoeleonoradarborea.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "05:51:42 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CAPM04000N", .name = "ISTITUTO MAGISTRALE - 'C.BAUDI DI VESME' IGLESIAS (Pubbliche "
       "Amministrazioni, Iglesias, CI) - Istituto Baudi di Vesme "
@@ -59254,26 +54177,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "10:48:03 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CARI02000L", .name = "ISTITUTO PROFESSIONALE INDUSTRIA E ARTIGIANATO - I.P.I.A. "
-      "'FERRARIS' IGLESIAS (Pubbliche Amministrazioni, Iglesias, CI) - "
-      "I.P.I.A. &quot;G. FERRARIS&quot;",
-    .name_ja = "ISTITUTO PROFESSIONALE INDUSTRIA E ARTIGIANATO - I.P.I.A. 'FERRARIS' IGLESIAS (Pubbliche Amministrazioni, Iglesias, CI) - I.P.I.A. &quot;G. FERRARIS&quot;",
-    .category = "government", .portal = "https://www.ipsiaiglesias.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ipsiaiglesias.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 08 Sep 2026 "
-      "10:03:19 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CATD020007", .name = "ISTITUTO TECNICO COMMERCIALE - G. M. ANGIOJ CARBONIA (Pubbliche "
@@ -59810,26 +54713,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "14:04:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CEIC84600C", .name = "ISTITUTO COMPRENSIVO - I.A.C. 'SOLIMENE'- SPARANISE (Pubbliche "
-      "Amministrazioni, Sparanise, CE) - ISTITUTO COMPRENSIVO AUTONOMO "
-      "STATALE &quot;S. SOLIMENE&quot; &#8211; SPARANISE",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.A.C. 'SOLIMENE'- SPARANISE (Pubbliche Amministrazioni, Sparanise, CE) - ISTITUTO COMPRENSIVO AUTONOMO STATALE &quot;S. SOLIMENE&quot; &#8211; SPARANISE",
-    .category = "government", .portal = "https://www.icassolimene.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icassolimene.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "09:27:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CEIC848004", .name = "ISTITUTO COMPRENSIVO - I.A.C. 'GALILEI' -ARIENZO- (Pubbliche "
@@ -60462,27 +55345,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:49:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_CHIC816009", .name = "ISTITUTO COMPRENSIVO - I.C. CASTIGLIONE M. MARINO (Pubbliche "
-      "Amministrazioni, Castiglione Messer Marino, CH) - ISTITUTO "
-      "COMPRENSIVO STATALE di Castiglione Messer Marino &#8211; "
-      "Carunchio",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. CASTIGLIONE M. MARINO (Pubbliche Amministrazioni, Castiglione Messer Marino, CH) - ISTITUTO COMPRENSIVO STATALE di Castiglione Messer Marino &#8211; Carunchio",
-    .category = "government", .portal = "https://www.iccastiglionemm.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iccastiglionemm.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "13:20:14 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_CHIC818001", .name = "Istituto Omnicomprensivo Ciampoli - Spaventa (Pubbliche "
       "Amministrazioni, Atessa, CH) - ISTITUTO OMNICOMPRENSIVO STATALE "
       "&quot;CIAMPOLI-SPAVENTA&quot;",
@@ -60561,26 +55423,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "15:21:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CHIC83100B", .name = "ISTITUTO COMPRENSIVO - I.C. 'UMBERTO I' LANCIANO (Pubbliche "
-      "Amministrazioni, Lanciano, CH) - Istituto Comprensivo Statale "
-      "&quot;UMBERTO I&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. 'UMBERTO I' LANCIANO (Pubbliche Amministrazioni, Lanciano, CH) - Istituto Comprensivo Statale &quot;UMBERTO I&quot;",
-    .category = "government", .portal = "https://www.icumbertoprimolanciano.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icumbertoprimolanciano.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
-      "08:04:07 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CHIC833003", .name = "ISTITUTO COMPRENSIVO - IST. COMPRENSIVO N.1 VASTO (Pubbliche "
@@ -60699,26 +55541,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "11:03:56 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CHIS00900A", .name = "ISTRUZIONE SECONDARIA SUPERIORE - V.EMANUELE II LANCIANO "
-      "(Pubbliche Amministrazioni, Lanciano, CH) - I.I.S. "
-      "&quot;Vittorio Emanuele II&quot; di Lanciano",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - V.EMANUELE II LANCIANO (Pubbliche Amministrazioni, Lanciano, CH) - I.I.S. &quot;Vittorio Emanuele II&quot; di Lanciano",
-    .category = "government", .portal = "https://www.iislanciano.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iislanciano.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 04 Sep 2026 "
-      "18:45:37 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CHIS01100A", .name = "ISTITUTO SUPERIORE - DA VINCI - DE GIORGIO  LANCIANO (Pubbliche "
@@ -60977,26 +55799,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "11:43:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_CLIC81800D", .name = "ISTITUTO COMPRENSIVO - 1 'L. DA VINCI' - MUSSOMELI (Pubbliche "
-      "Amministrazioni, Mussomeli, CL) - 1° ISTITUTO COMPRENSIVO "
-      "STATALE AD INDIRIZZO MUSICALE &quot;LEONARDO DA VINCI&q",
-    .name_ja = "ISTITUTO COMPRENSIVO - 1 'L. DA VINCI' - MUSSOMELI (Pubbliche Amministrazioni, Mussomeli, CL) - 1° ISTITUTO COMPRENSIVO STATALE AD INDIRIZZO MUSICALE &quot;LEONARDO DA VINCI&q",
-    .category = "government", .portal = "https://www.primomussomeli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.primomussomeli.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "12:01:18 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_CLIC822005", .name = "ISTITUTO COMPRENSIVO - I.C. V. VENETO CL (Pubbliche "
       "Amministrazioni, Caltanissetta, CL) - Istituto Comprensivo "
       "Statale",
@@ -61016,66 +55818,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
       "20:55:14 +0000. A feed the organisation itself declares or links "
       "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CLIC823001", .name = "ISTITUTO COMPRENSIVO STATALE \"DON BOSCO\" GELA (Pubbliche "
-      "Amministrazioni, Gela, CL) - ISTITUTO COMPRENSIVO &quot;DON "
-      "BOSCO&quot; GELA",
-    .name_ja = "ISTITUTO COMPRENSIVO STATALE \"DON BOSCO\" GELA (Pubbliche Amministrazioni, Gela, CL) - ISTITUTO COMPRENSIVO &quot;DON BOSCO&quot; GELA",
-    .category = "government", .portal = "https://www.icdonboscogela.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icdonboscogela.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 22 Sep 2026 "
-      "05:28:33 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CLIS00600B", .name = "ISTRUZIONE SECONDARIA SUPERIORE - E. MAJORANA (Pubbliche "
-      "Amministrazioni, Gela, CL) - I.I.S.S. &quot;E. Majorana&quot; di "
-      "Gela - istitutomajoranagela.edu.it",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - E. MAJORANA (Pubbliche Amministrazioni, Gela, CL) - I.I.S.S. &quot;E. Majorana&quot; di Gela - istitutomajoranagela.edu.it",
-    .category = "government", .portal = "https://www.istitutomajoranagela.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutomajoranagela.edu.it/index.php?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Fri, 15 Sep 2023 "
-      "12:17:57 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CLIS00600B_2", .name = "ISTRUZIONE SECONDARIA SUPERIORE - E. MAJORANA (Pubbliche "
-      "Amministrazioni, Gela, CL) - I.I.S.S. &quot;E. Majorana&quot; di "
-      "Gela - istitutomajoranagela.edu.it",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - E. MAJORANA (Pubbliche Amministrazioni, Gela, CL) - I.I.S.S. &quot;E. Majorana&quot; di Gela - istitutomajoranagela.edu.it",
-    .category = "government", .portal = "https://www.istitutomajoranagela.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutomajoranagela.edu.it/index.php?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T11:42:10+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO45_IT_ISTSC_CLIS007007", .name = "Istituto Di Istruzione Superiore Carlo Maria Carafa Mazzarino E "
       "Riesi (Pubbliche Amministrazioni, Mazzarino, CL) - I.I.S.S. "
@@ -61097,85 +55839,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "17:40:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_CLIS008003", .name = "ISTRUZIONE SECONDARIA SUPERIORE - 'VIRGILIO' MUSSOMELI "
-      "(Pubbliche Amministrazioni, Mussomeli, CL) - Istituto "
-      "d&#8217;Istruzione Superiore&#8221;Virgilio&#8221; Mussomeli",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - 'VIRGILIO' MUSSOMELI (Pubbliche Amministrazioni, Mussomeli, CL) - Istituto d&#8217;Istruzione Superiore&#8221;Virgilio&#8221; Mussomeli",
-    .category = "government", .portal = "https://www.virgiliomussomeli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.virgiliomussomeli.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 11 Jul 2026 "
-      "09:23:08 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CLIS01300E", .name = "ISTITUTO SUPERIORE - L. RUSSO (Pubbliche Amministrazioni, "
-      "Caltanissetta, CL) - IISS Luigi Russo",
-    .name_ja = "ISTITUTO SUPERIORE - L. RUSSO (Pubbliche Amministrazioni, Caltanissetta, CL) - IISS Luigi Russo",
-    .category = "government", .portal = "https://www.issrusso.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.issrusso.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "07:29:56 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CNIC80300A", .name = "ISTITUTO COMPRENSIVO - DEMONTE 'L. ROMANO' (Pubbliche "
-      "Amministrazioni, Demonte, CN) - ISTITUTO COMPRENSIVO STATALE "
-      "“LALLA ROMANO” DEMONTE",
-    .name_ja = "ISTITUTO COMPRENSIVO - DEMONTE 'L. ROMANO' (Pubbliche Amministrazioni, Demonte, CN) - ISTITUTO COMPRENSIVO STATALE “LALLA ROMANO” DEMONTE",
-    .category = "government", .portal = "https://www.icdemonte.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icdemonte.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
-      "15:33:42 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CNIC804006", .name = "ISTITUTO COMPRENSIVO - A.M.RIBERI - CARAGLIO (Pubbliche "
-      "Amministrazioni, Caraglio, CN) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;Alfonso Maria Riberi&quot; Caraglio",
-    .name_ja = "ISTITUTO COMPRENSIVO - A.M.RIBERI - CARAGLIO (Pubbliche Amministrazioni, Caraglio, CN) - ISTITUTO COMPRENSIVO STATALE &quot;Alfonso Maria Riberi&quot; Caraglio",
-    .category = "government", .portal = "https://www.iccaraglio.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iccaraglio.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 10 Sep 2026 "
-      "13:00:31 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_CNIC80700N", .name = "ISTITUTO COMPRENSIVO - IC BENE VAGIENNA (Pubbliche "
       "Amministrazioni, Bene Vagienna, CN) - Circolari - RSS",
     .name_ja = "ISTITUTO COMPRENSIVO - IC BENE VAGIENNA (Pubbliche Amministrazioni, Bene Vagienna, CN) - Circolari - RSS",
@@ -61193,27 +55856,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Thu, 12 Dec 2024 "
       "00:00:00 +0100. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CNIC80800D", .name = "ISTITUTO COMPRENSIVO - I.C. 'S.GRANDIS' BORGO S. DALM. "
-      "(Pubbliche Amministrazioni, Borgo San Dalmazzo, CN) - ISTITUTO "
-      "COMPRENSIVO STATALE &quot;ING. S. GRANDIS&quot; &#8211; BORGO "
-      "SAN DALMA",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. 'S.GRANDIS' BORGO S. DALM. (Pubbliche Amministrazioni, Borgo San Dalmazzo, CN) - ISTITUTO COMPRENSIVO STATALE &quot;ING. S. GRANDIS&quot; &#8211; BORGO SAN DALMA",
-    .category = "government", .portal = "https://www.icborgosd.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icborgosd.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 28 Aug 2026 "
-      "10:26:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CNIC81400R", .name = "ISTITUTO COMPRENSIVO - IC BOSSOLASCO 'ALTA LANGA' (Pubbliche "
@@ -61349,105 +55991,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "00:00:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_CNIC83700D", .name = "ISTITUTO COMPRENSIVO - 'B.FENOGLIO' - NEIVE (Pubbliche "
-      "Amministrazioni, Neive, CN) - I.C. &quot;Beppe Fenoglio&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - 'B.FENOGLIO' - NEIVE (Pubbliche Amministrazioni, Neive, CN) - I.C. &quot;Beppe Fenoglio&quot;",
-    .category = "government", .portal = "https://www.istitutocomprensivofenoglio.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivofenoglio.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "07:03:16 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CNIC838009", .name = "ISTITUTO COMPRENSIVO - 'CAVALLERMAGGIORE' (Pubbliche "
-      "Amministrazioni, Cavallermaggiore, CN) - Istituto Comprensivo di "
-      "Cavallermaggiore",
-    .name_ja = "ISTITUTO COMPRENSIVO - 'CAVALLERMAGGIORE' (Pubbliche Amministrazioni, Cavallermaggiore, CN) - Istituto Comprensivo di Cavallermaggiore",
-    .category = "government", .portal = "https://iccavallermaggiore.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://iccavallermaggiore.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 07 Aug 2026 "
-      "13:29:30 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CNIC84300R", .name = "Istituto Comprensivo Centallo Villafalletto (Pubbliche "
-      "Amministrazioni, Centallo, CN) - Istituto Comprensivo "
-      "&quot;Isoardo-Vanzetti&quot;",
-    .name_ja = "Istituto Comprensivo Centallo Villafalletto (Pubbliche Amministrazioni, Centallo, CN) - Istituto Comprensivo &quot;Isoardo-Vanzetti&quot;",
-    .category = "government", .portal = "https://www.comprensivocentallo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comprensivocentallo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 28 Sep 2026 "
-      "13:51:37 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CNIC84500C", .name = "ISTITUTO COMPRENSIVO - VERZUOLO - L. DA VINCI (Pubbliche "
-      "Amministrazioni, Verzuolo, CN) - Istituto Comprensivo Statale "
-      "Istituto Comprensivo Statale “Leonardo da Vinci",
-    .name_ja = "ISTITUTO COMPRENSIVO - VERZUOLO - L. DA VINCI (Pubbliche Amministrazioni, Verzuolo, CN) - Istituto Comprensivo Statale Istituto Comprensivo Statale “Leonardo da Vinci",
-    .category = "government", .portal = "https://www.icverzuolo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icverzuolo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 29 Sep 2026 "
-      "09:15:58 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CNIC84800X", .name = "ISTITUTO COMPRENSIVO - CUNEO - OLTRESTURA (Pubbliche "
-      "Amministrazioni, Cuneo, CN) - ISTITUTO COMPRENSIVO &quot;CUNEO "
-      "OLTRESTURA&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - CUNEO - OLTRESTURA (Pubbliche Amministrazioni, Cuneo, CN) - ISTITUTO COMPRENSIVO &quot;CUNEO OLTRESTURA&quot;",
-    .category = "government", .portal = "https://www.iccuneooltrestura.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iccuneooltrestura.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 22 May 2026 "
-      "08:16:05 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_CNIC85200G", .name = "ISTITUTO COMPRENSIVO - SAVIGLIANO - PAPA GIOVANNI XXII "
       "(Pubbliche Amministrazioni, Savigliano, CN) - IC Papa Giovanni "
       "XXIII",
@@ -61526,25 +56069,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "08:14:30 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_CNPM010004", .name = "ISTITUTO MAGISTRALE - CUNEO - 'EDMONDO DE AMICIS' (Pubbliche "
-      "Amministrazioni, Cuneo, CN) - LICEO STATALE  “Edmondo De Amicis”",
-    .name_ja = "ISTITUTO MAGISTRALE - CUNEO - 'EDMONDO DE AMICIS' (Pubbliche Amministrazioni, Cuneo, CN) - LICEO STATALE  “Edmondo De Amicis”",
-    .category = "government", .portal = "https://www.liceodeamiciscuneo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceodeamiciscuneo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "06:30:53 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_CNPS010003", .name = "LICEO SCIENTIFICO - FOSSANO - 'G.ANCINA' (Pubbliche "
       "Amministrazioni, Fossano, CN) - Liceo Ancina",
     .name_ja = "LICEO SCIENTIFICO - FOSSANO - 'G.ANCINA' (Pubbliche Amministrazioni, Fossano, CN) - Liceo Ancina",
@@ -61562,26 +56086,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "14:00:53 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CNPS02000N", .name = "Liceo Scientifico e Classico G.Peano - S.Pellico di Cuneo "
-      "(Pubbliche Amministrazioni, Cuneo, CN) - Liceo Classico e "
-      "Scientifico Statale &quot;Pellico‑Peano&quot; Cuneo",
-    .name_ja = "Liceo Scientifico e Classico G.Peano - S.Pellico di Cuneo (Pubbliche Amministrazioni, Cuneo, CN) - Liceo Classico e Scientifico Statale &quot;Pellico‑Peano&quot; Cuneo",
-    .category = "government", .portal = "https://liceocuneo.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://liceocuneo.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "13:49:22 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CNPS030008", .name = "LICEO SCIENTIFICO - ALBA - 'LEONARDO COCITO' (Pubbliche "
@@ -62044,25 +56548,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "12:22:02 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_COIS00200B", .name = "ISTRUZIONE SECONDARIA SUPERIORE - I.I.S. JEAN MONNET (Pubbliche "
-      "Amministrazioni, Mariano Comense, CO) - IIS JEAN MONNET",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - I.I.S. JEAN MONNET (Pubbliche Amministrazioni, Mariano Comense, CO) - IIS JEAN MONNET",
-    .category = "government", .portal = "https://www.ismonnet.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ismonnet.edu.it/index.php/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 28 Sep 2026 "
-      "10:49:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_COIS00600P", .name = "ISTRUZIONE SECONDARIA SUPERIORE - F. MELOTTI (Pubbliche "
@@ -62596,25 +57081,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "11:45:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_CSIC85200V", .name = "ISTITUTO COMPRENSIVO - IC AMENDOLARA (Pubbliche Amministrazioni, "
-      "Cosenza, CS) - I.C. AMENDOLARA",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC AMENDOLARA (Pubbliche Amministrazioni, Cosenza, CS) - I.C. AMENDOLARA",
-    .category = "government", .portal = "https://www.istitutocomprensivoamendolara.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivoamendolara.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "13:26:04 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_CSIC85400E", .name = "ISTITUTO COMPRENSIVO CASALI DEL MANCO - PIETRAFITTA (Pubbliche "
       "Amministrazioni, Casali del Manco, CS) - Istituto Comprensivo "
       "Casali del Manco &#8211; Pietrafitta",
@@ -63130,26 +57596,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "06:56:43 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_CSIC8AL008", .name = "ISTITUTO COMPRENSIVO - IC CS V 'D. MILANI-DE MATERA' (Pubbliche "
-      "Amministrazioni, Cosenza, CS) - I.C. &quot;DON MILANI &#8211; DE "
-      "MATERA&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC CS V 'D. MILANI-DE MATERA' (Pubbliche Amministrazioni, Cosenza, CS) - I.C. &quot;DON MILANI &#8211; DE MATERA&quot;",
-    .category = "government", .portal = "https://www.icdonmilanidemateraapriglianocs.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icdonmilanidemateraapriglianocs.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "08:29:05 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_CSIC8AM004", .name = "ISTITUTO COMPRENSIVO - IC ROSSANO I (Pubbliche Amministrazioni, "
       "Corigliano-Rossano, CS) - Istituto Comprensivo Rossano 1",
     .name_ja = "ISTITUTO COMPRENSIVO - IC ROSSANO I (Pubbliche Amministrazioni, Corigliano-Rossano, CS) - Istituto Comprensivo Rossano 1",
@@ -63345,25 +57791,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:42:07 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_CSIS01600X", .name = "ISTRUZIONE SECONDARIA SUPERIORE - I.I.S. BISIGNANO 'ITI-LS' "
-      "(Pubbliche Amministrazioni, Bisignano, CS) - IIS E.SICILIANO",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - I.I.S. BISIGNANO 'ITI-LS' (Pubbliche Amministrazioni, Bisignano, CS) - IIS E.SICILIANO",
-    .category = "government", .portal = "https://www.iisbisignano.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iisbisignano.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "10:23:44 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_CSIS01800G", .name = "I.I.S. ACRI L.C.L.S. Julia - ITCGT Falcone - IPSIA-ITI "
       "(Pubbliche Amministrazioni, Acri, CS) - IIS "
       "&quot;Julia-Falcone-Ipsia-Iti&quot;",
@@ -63443,26 +57870,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "11:51:28 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CSIS049007", .name = "ISTRUZIONE SECONDARIA SUPERIORE - I.I.S. CASTROLIBERO 'LS-ITCG' "
-      "(Pubbliche Amministrazioni, Castrolibero, CS) - I.I.S. "
-      "Castrolibero &quot;Valentini-Majorana&quot; &#8211; Castrolibero",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - I.I.S. CASTROLIBERO 'LS-ITCG' (Pubbliche Amministrazioni, Castrolibero, CS) - I.I.S. Castrolibero &quot;Valentini-Majorana&quot; &#8211; Castrolibero",
-    .category = "government", .portal = "https://www.iiscastrolibero.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iiscastrolibero.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 27 Sep 2026 "
-      "17:34:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CSIS051007", .name = "ISTRUZIONE SECONDARIA SUPERIORE - I.I.S. COSENZA 'IPSS-ITAS' "
@@ -63741,26 +58148,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "08:31:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_CTIC80900Q", .name = "ISTITUTO COMPRENSIVO - I.C. E. DE AMICIS MIRABELLA I. (Pubbliche "
-      "Amministrazioni, Mirabella Imbaccari, CT) - Istituto Comprensivo "
-      "Statale &quot;Edmondo De Amicis&quot; – Mirabella Imbacca",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. E. DE AMICIS MIRABELLA I. (Pubbliche Amministrazioni, Mirabella Imbaccari, CT) - Istituto Comprensivo Statale &quot;Edmondo De Amicis&quot; – Mirabella Imbacca",
-    .category = "government", .portal = "https://www.icmirabella.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icmirabella.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 30 Sep 2026 "
-      "17:59:22 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_CTIC81200G", .name = "ISTITUTO COMPRENSIVO - IC MALETTO (Pubbliche Amministrazioni, "
       "Maletto, CT) - Istituto Comprensivo “G. Galilei”",
     .name_ja = "ISTITUTO COMPRENSIVO - IC MALETTO (Pubbliche Amministrazioni, Maletto, CT) - Istituto Comprensivo “G. Galilei”",
@@ -63778,26 +58165,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 09 Sep 2026 "
       "11:49:03 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CTIC814007", .name = "ISTITUTO COMPRENSIVO - IC SCANDURA ACI CATENA (Pubbliche "
-      "Amministrazioni, Aci Catena, CT) - I ISTITUTO COMPRENSIVO "
-      "&#8211; SEBASTIANO SCANDURA",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC SCANDURA ACI CATENA (Pubbliche Amministrazioni, Aci Catena, CT) - I ISTITUTO COMPRENSIVO &#8211; SEBASTIANO SCANDURA",
-    .category = "government", .portal = "https://www.icscandura.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icscandura.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "15:12:44 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CTIC815003", .name = "ISTITUTO COMPRENSIVO - IC F.GUGLIELMINO ACICATENA (Pubbliche "
@@ -63820,26 +58187,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:24:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_CTIC82000E", .name = "ISTITUTO COMPRENSIVO - IC A. BRUNO - BIANCAVILLA (Pubbliche "
-      "Amministrazioni, Biancavilla, CT) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;ANTONIO BRUNO&quot; &#8211; BIANCAVILLA",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC A. BRUNO - BIANCAVILLA (Pubbliche Amministrazioni, Biancavilla, CT) - ISTITUTO COMPRENSIVO STATALE &quot;ANTONIO BRUNO&quot; &#8211; BIANCAVILLA",
-    .category = "government", .portal = "https://www.icbrunobiancavilla.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icbrunobiancavilla.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "11:33:18 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_CTIC82100A", .name = "ISTITUTO COMPRENSIVO - IC G.MACHERIONE -CALATABIANO (Pubbliche "
       "Amministrazioni, Calatabiano, CT) - Istituto Comprensivo "
       "Macherione &#8211; Galilei",
@@ -63858,67 +58205,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 06 Oct 2026 "
       "20:45:38 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CTIC82500N", .name = "ISTITUTO COMPRENSIVO - IC A. NARBONE - CALTAGIRONE (Pubbliche "
-      "Amministrazioni, Caltagirone, CT) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;ALESSIO NARBONE&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC A. NARBONE - CALTAGIRONE (Pubbliche Amministrazioni, Caltagirone, CT) - ISTITUTO COMPRENSIVO STATALE &quot;ALESSIO NARBONE&quot;",
-    .category = "government", .portal = "https://www.alessionarbone.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.alessionarbone.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 01 Oct 2026 "
-      "16:50:59 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CTIC82600D", .name = "ISTITUTO COMPRENSIVO - I.C. VERGA FIUMEFREDDO (Pubbliche "
-      "Amministrazioni, Fiumefreddo di Sicilia, CT) - ISTITUTO "
-      "COMPRENSIVO &quot;GIOVANNI VERGA&quot; Fiumefreddo di Sicilia "
-      "(CT)",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. VERGA FIUMEFREDDO (Pubbliche Amministrazioni, Fiumefreddo di Sicilia, CT) - ISTITUTO COMPRENSIVO &quot;GIOVANNI VERGA&quot; Fiumefreddo di Sicilia (CT)",
-    .category = "government", .portal = "https://www.icvergafiumefreddodisicilia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icvergafiumefreddodisicilia.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 18 Sep 2026 "
-      "17:50:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CTIC830005", .name = "ISTITUTO COMPRENSIVO - IC VIGO FUCCIO-LA SPINA (Pubbliche "
-      "Amministrazioni, Acireale, CT) - II Istituto Comprensivo Statale "
-      "&quot;Vigo Fuccio &#8211; La Spina&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC VIGO FUCCIO-LA SPINA (Pubbliche Amministrazioni, Acireale, CT) - II Istituto Comprensivo Statale &quot;Vigo Fuccio &#8211; La Spina&quot;",
-    .category = "government", .portal = "https://www.fucciolaspina.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.fucciolaspina.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 16 Sep 2026 "
-      "15:23:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CTIC83200R", .name = "Istituto Comprensivo Santo Cali (Pubbliche Amministrazioni, "
@@ -63959,27 +58245,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 10 Sep 2026 "
       "13:06:26 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CTIC83700X", .name = "ISTITUTO COMPRENSIVO - I.C. MOTTA S.ANASTASIA (Pubbliche "
-      "Amministrazioni, Motta Sant'Anastasia, CT) - Istituto "
-      "Comprensivo Statale &quot;Gabriele D&#039;Annunzio&quot; – Motta "
-      "S.A.",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. MOTTA S.ANASTASIA (Pubbliche Amministrazioni, Motta Sant'Anastasia, CT) - Istituto Comprensivo Statale &quot;Gabriele D&#039;Annunzio&quot; – Motta S.A.",
-    .category = "government", .portal = "https://www.icmottasantanastasia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icmottasantanastasia.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "17:58:44 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CTIC84100G", .name = "ISTITUTO COMPRENSIVO - IC G. PONTE - PALAGONIA (Pubbliche "
@@ -64042,86 +58307,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "16:10:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_CTIC85000A", .name = "ISTITUTO COMPRENSIVO - IC DON BOSCO - S.M.LICODIA (Pubbliche "
-      "Amministrazioni, Santa Maria di Licodia, CT) - Homepage Istituto "
-      "Scolastico - www.icsdonbosco.edu.it",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC DON BOSCO - S.M.LICODIA (Pubbliche Amministrazioni, Santa Maria di Licodia, CT) - Homepage Istituto Scolastico - www.icsdonbosco.edu.it",
-    .category = "government", .portal = "https://www.icsdonbosco.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsdonbosco.edu.it/index.php?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Thu, 21 Nov 2024 "
-      "15:20:28 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CTIC85000A_2", .name = "ISTITUTO COMPRENSIVO - IC DON BOSCO - S.M.LICODIA (Pubbliche "
-      "Amministrazioni, Santa Maria di Licodia, CT) - Homepage Istituto "
-      "Scolastico - www.icsdonbosco.edu.it",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC DON BOSCO - S.M.LICODIA (Pubbliche Amministrazioni, Santa Maria di Licodia, CT) - Homepage Istituto Scolastico - www.icsdonbosco.edu.it",
-    .category = "government", .portal = "https://www.icsdonbosco.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsdonbosco.edu.it/index.php?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T09:42:21+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CTIC85000A_3", .name = "ISTITUTO COMPRENSIVO - IC DON BOSCO - S.M.LICODIA (Pubbliche "
-      "Amministrazioni, Santa Maria di Licodia, CT) - Tutte le news - "
-      "www.icsdonbosco.edu.it",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC DON BOSCO - S.M.LICODIA (Pubbliche Amministrazioni, Santa Maria di Licodia, CT) - Tutte le news - www.icsdonbosco.edu.it",
-    .category = "government", .portal = "https://www.icsdonbosco.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsdonbosco.edu.it/index.php/tutte-le-news?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 23 Dec 2025 "
-      "09:33:39 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CTIC852002", .name = "ISTITUTO COMPRENSIVO - IC D. SAVIO - S. GREGORIO (Pubbliche "
-      "Amministrazioni, San Gregorio di Catania, CT) - ISTITUTO "
-      "COMPRENSIVO STATALE &quot;SAN DOMENICO SAVIO&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC D. SAVIO - S. GREGORIO (Pubbliche Amministrazioni, San Gregorio di Catania, CT) - ISTITUTO COMPRENSIVO STATALE &quot;SAN DOMENICO SAVIO&quot;",
-    .category = "government", .portal = "https://www.icsaviosangregorio.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsaviosangregorio.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "14:12:39 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_CTIC85300T", .name = "ISTITUTO COMPRENSIVO - I.C. VITTORINI-S.P.CLARENZA (Pubbliche "
       "Amministrazioni, San Pietro Clarenza, CT) - Istituto Scolastico "
       "Comprensivo Statale Elio Vittorini San Pietro Clarenza",
@@ -64180,26 +58365,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "11:09:09 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CTIC858001", .name = "ISTITUTO COMPRENSIVO - IC. DE AMICIS TREMESTIERI ETNEO "
-      "(Pubbliche Amministrazioni, Tremestieri Etneo, CT) - ISTITUTO "
-      "COMPRENSIVO STATALE &quot;E. De Amicis&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC. DE AMICIS TREMESTIERI ETNEO (Pubbliche Amministrazioni, Tremestieri Etneo, CT) - ISTITUTO COMPRENSIVO STATALE &quot;E. De Amicis&quot;",
-    .category = "government", .portal = "https://www.icdeamicistremestieri.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icdeamicistremestieri.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 08 Apr 2026 "
-      "08:35:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CTIC86100R", .name = "ISTITUTO COMPRENSIVO - IC M.PURRELLO - S.GREGORIO (Pubbliche "
@@ -64281,25 +58446,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "04:41:11 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_CTIC885009", .name = "ISTITUTO COMPRENSIVO - IC G.PARINI - CATANIA (Pubbliche "
-      "Amministrazioni, Catania, CT) - IC G. Parini",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC G.PARINI - CATANIA (Pubbliche Amministrazioni, Catania, CT) - IC G. Parini",
-    .category = "government", .portal = "https://www.parinict.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.parinict.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "06:40:50 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_CTIC886005", .name = "ISTITUTO COMPRENSIVO - IC V.BRANCATI - CATANIA (Pubbliche "
       "Amministrazioni, Catania, CT) - Istituto Brancati - Catania",
     .name_ja = "ISTITUTO COMPRENSIVO - IC V.BRANCATI - CATANIA (Pubbliche Amministrazioni, Catania, CT) - Istituto Brancati - Catania",
@@ -64338,46 +58484,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "16:56:44 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_CTIC89100L", .name = "ISTITUTO COMPRENSIVO - IC DE CRUYLLAS RAMACCA (Pubbliche "
-      "Amministrazioni, Ramacca, CT) - I.C.S. OTTAVIO GRAVINA DE "
-      "CRUYLLAS",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC DE CRUYLLAS RAMACCA (Pubbliche Amministrazioni, Ramacca, CT) - I.C.S. OTTAVIO GRAVINA DE CRUYLLAS",
-    .category = "government", .portal = "https://www.icsdecruyllasramacca.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsdecruyllasramacca.edu.it/index.php?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Sun, 13 Sep 2026 "
-      "19:53:02 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CTIC89100L_2", .name = "ISTITUTO COMPRENSIVO - IC DE CRUYLLAS RAMACCA (Pubbliche "
-      "Amministrazioni, Ramacca, CT) - I.C.S. OTTAVIO GRAVINA DE "
-      "CRUYLLAS",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC DE CRUYLLAS RAMACCA (Pubbliche Amministrazioni, Ramacca, CT) - I.C.S. OTTAVIO GRAVINA DE CRUYLLAS",
-    .category = "government", .portal = "https://www.icsdecruyllasramacca.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsdecruyllasramacca.edu.it/index.php?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T09:42:22+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
-
   { .id = "JO45_IT_ISTSC_CTIC893008", .name = "ISTITUTO COMPRENSIVO - IC G.B. NICOLOSI - PATERNO' (Pubbliche "
       "Amministrazioni, Paternò, CT) - Istituto Comprensivo &quot;G. B. "
       "Nicolosi &#8211; Giovanni XXIII&quot;",
@@ -64398,25 +58504,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:26:32 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_CTIC894004", .name = "ISTITUTO COMPRENSIVO - IC MALERBA CATANIA (Pubbliche "
-      "Amministrazioni, Catania, CT) - IC MALERBA CATANIA",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC MALERBA CATANIA (Pubbliche Amministrazioni, Catania, CT) - IC MALERBA CATANIA",
-    .category = "government", .portal = "https://www.icmalerba.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icmalerba.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 29 Sep 2026 "
-      "04:07:09 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_CTIC8A000X", .name = "ISTITUTO COMPRENSIVO - III-STITUTO COMPRENSIVO GIARRE (Pubbliche "
       "Amministrazioni, Giarre, CT) - 3 Istituto Comprensivo &#8211; "
       "Giarre",
@@ -64435,26 +58522,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "09:57:43 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CTIC8A100Q", .name = "ISTITUTO COMPRENSIVO - I - ISTITUTO COMPRENSIVO ADRANO "
-      "(Pubbliche Amministrazioni, Adrano, CT) - I ISTITUTO COMPRENSIVO "
-      "&quot;G.GUZZARDI&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - I - ISTITUTO COMPRENSIVO ADRANO (Pubbliche Amministrazioni, Adrano, CT) - I ISTITUTO COMPRENSIVO  &quot;G.GUZZARDI&quot;",
-    .category = "government", .portal = "https://www.scuolaguzzardi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.scuolaguzzardi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 24 Sep 2026 "
-      "07:46:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CTIC8A300B", .name = "ISTITUTO COMPRENSIVO - IC LEONARDO DA VINCI-MASCALUCIA "
@@ -64536,26 +58603,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:16:17 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_CTIC8AG00P", .name = "ISTITUTO COMPRENSIVO - I.C. P.S. DI GUARDO - QUASIMODO "
-      "(Pubbliche Amministrazioni, Catania, CT) - Istituto Comprensivo "
-      "Di Guardo Quasimodo",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. P.S. DI GUARDO - QUASIMODO (Pubbliche Amministrazioni, Catania, CT) - Istituto Comprensivo Di Guardo Quasimodo",
-    .category = "government", .portal = "https://www.diguardoquasimodo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.diguardoquasimodo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "10:09:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_CTIC8AJ00Q", .name = "Istituto Comprensivo - G. Galilei - G. Mazzini Grammichele  "
       "(Pubbliche Amministrazioni, Grammichele, CT) - "
       "Icgalileimazzinigrammichele.it",
@@ -64574,46 +58621,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 30 Aug 2026 "
       "18:22:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CTIC8AL00B", .name = "ISTITUTO COMPRENSIVO - I.C. GIOVANNI VERGA RIPOSTO (Pubbliche "
-      "Amministrazioni, Riposto, CT) - Istituto Comprensivo "
-      "&quot;Giovanni Verga&quot; di Riposto",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. GIOVANNI VERGA RIPOSTO (Pubbliche Amministrazioni, Riposto, CT) - Istituto Comprensivo &quot;Giovanni Verga&quot; di Riposto",
-    .category = "government", .portal = "https://www.icvergariposto.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icvergariposto.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "07:21:22 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CTIC8AN003", .name = "ISTITUTO COMPRENSIVO - I.C. ' G. VERGA' SCORDIA (Pubbliche "
-      "Amministrazioni, Scordia, CT) - III ISTITUTO COMPRENSIVO STATALE "
-      "&quot;Giovanni Verga&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. ' G. VERGA' SCORDIA (Pubbliche Amministrazioni, Scordia, CT) - III ISTITUTO COMPRENSIVO STATALE &quot;Giovanni Verga&quot;",
-    .category = "government", .portal = "https://www.icsvergascordia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsvergascordia.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 11 Oct 2026 "
-      "10:41:42 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CTIC8AQ00E", .name = "ISTITUTO COMPRENSIVO - I.C. S.VENERINA (Pubbliche "
@@ -64636,26 +58643,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "11:32:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_CTIC8AS00G", .name = "ISTITUTO COMPRENSIVO - II - I.C. A. DE GASPERI (Pubbliche "
-      "Amministrazioni, Aci Sant'Antonio, CT) - II ISTITUTO COMPRENSIVO "
-      "STATALE &quot;Alcide De Gasperi&quot; &#8211; Aci Sant&#",
-    .name_ja = "ISTITUTO COMPRENSIVO - II - I.C. A. DE GASPERI (Pubbliche Amministrazioni, Aci Sant'Antonio, CT) - II ISTITUTO COMPRENSIVO STATALE &quot;Alcide De Gasperi&quot; &#8211; Aci Sant&#",
-    .category = "government", .portal = "https://www.icadegasperi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icadegasperi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 22 May 2026 "
-      "18:38:41 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_CTIC8AT00B", .name = "ISTITUTO COMPRENSIVO - I - I.C. VIA MARCH. S.GIULIANO (Pubbliche "
       "Amministrazioni, Acireale, CT) - Primo Istituto Comprensivo "
       "Acireale",
@@ -64674,26 +58661,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "10:38:52 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CTIC8AU007", .name = "ISTITUTO COMPRENSIVO - III - I.C. RODARI ACIREALE (Pubbliche "
-      "Amministrazioni, Acireale, CT) - 3° Istituto Comprensivo "
-      "&quot;G. Rodari&quot; di Acireale",
-    .name_ja = "ISTITUTO COMPRENSIVO - III - I.C. RODARI ACIREALE (Pubbliche Amministrazioni, Acireale, CT) - 3° Istituto Comprensivo &quot;G. Rodari&quot; di Acireale",
-    .category = "government", .portal = "https://www.3icrodari.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.3icrodari.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 08 Sep 2026 "
-      "09:54:57 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CTIC8AV003", .name = "ISTITUTO COMPRENSIVO - IV - I.C. GALILEI ACIREALE (Pubbliche "
@@ -64735,25 +58702,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "15:32:13 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_CTIS001009", .name = "IIS \"Amari Rizzo Pantano\" (Pubbliche Amministrazioni, Giarre, "
-      "CT) - ISTRUZIONE SECONDARIA SUPERIORE &#8211; IS MICHELE AMARI",
-    .name_ja = "IIS \"Amari Rizzo Pantano\" (Pubbliche Amministrazioni, Giarre, CT) - ISTRUZIONE SECONDARIA SUPERIORE &#8211; IS MICHELE AMARI",
-    .category = "government", .portal = "https://www.iisamari.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iisamari.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "05:54:24 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_CTIS00400R", .name = "IIS Cucuzza - Euclide (Pubbliche Amministrazioni, Caltagirone, "
       "CT) - Istituto d&#039;Istruzione Superiore "
       "&quot;Cucuzza-Euclide&quot; Caltagirone &#8",
@@ -64772,26 +58720,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "21:36:29 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CTIS00600C", .name = "ISTRUZIONE SECONDARIA SUPERIORE - IS ENRICO MEDI (Pubbliche "
-      "Amministrazioni, Randazzo, CT) - ISTITUTO D&#039;ISTRUZIONE "
-      "SECONDARIA SUPERIORE &quot;Enrico Medi&quot;",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - IS ENRICO MEDI (Pubbliche Amministrazioni, Randazzo, CT) - ISTITUTO D&#039;ISTRUZIONE SECONDARIA SUPERIORE &quot;Enrico Medi&quot;",
-    .category = "government", .portal = "https://www.iissmedirandazzo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iissmedirandazzo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "10:01:55 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CTIS007008", .name = "ISTITUTO SUPERIORE - ISIS  DUCA DEGLI ABRUZZI (Pubbliche "
@@ -64813,47 +58741,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "17:03:38 +0000. A feed the organisation itself declares or links "
       "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CTIS008004", .name = "ISTRUZIONE SECONDARIA SUPERIORE - IS FILIPPO BRUNELLESCHI "
-      "(Pubbliche Amministrazioni, Acireale, CT) - Istituto "
-      "d’Istruzione Superiore Statale “F. Brunelleschi” - "
-      "www.iis-brunel",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - IS FILIPPO BRUNELLESCHI (Pubbliche Amministrazioni, Acireale, CT) - Istituto d’Istruzione Superiore Statale “F. Brunelleschi” - www.iis-brunel",
-    .category = "government", .portal = "https://www.iis-brunelleschi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iis-brunelleschi.edu.it/index.php?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Tue, 06 Oct 2026 "
-      "18:14:45 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CTIS008004_2", .name = "ISTRUZIONE SECONDARIA SUPERIORE - IS FILIPPO BRUNELLESCHI "
-      "(Pubbliche Amministrazioni, Acireale, CT) - titleIstituto "
-      "d’Istruzione Superiore Statale “F. Brunelleschi” - www.iis-b",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - IS FILIPPO BRUNELLESCHI (Pubbliche Amministrazioni, Acireale, CT) - titleIstituto d’Istruzione Superiore Statale “F. Brunelleschi” - www.iis-b",
-    .category = "government", .portal = "https://www.iis-brunelleschi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iis-brunelleschi.edu.it/index.php?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T11:42:24+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO45_IT_ISTSC_CTIS00900X", .name = "ISTRUZIONE SECONDARIA SUPERIORE - IS VEN. IGNAZIO CAPIZZI "
       "(Pubbliche Amministrazioni, Bronte, CT) - Istituto Superiore "
@@ -64932,26 +58819,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "06:11:09 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CTIS01700V", .name = "ISTRUZIONE SECONDARIA SUPERIORE - IS G. B. VACCARINI (Pubbliche "
-      "Amministrazioni, Catania, CT) - Istituto Istruzione Superiore "
-      "G.B. Vaccarini",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - IS G. B. VACCARINI (Pubbliche Amministrazioni, Catania, CT) - Istituto Istruzione Superiore G.B. Vaccarini",
-    .category = "government", .portal = "https://www.vaccarinict.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.vaccarinict.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "15:04:15 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CTIS023006", .name = "ISTITUTO SUPERIORE - IS CARLO GEMMELLARO (Pubbliche "
@@ -65052,26 +58919,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "11:20:07 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CTPC040006", .name = "LICEO CLASSICO - LC 'MARIO CUTELLI' (Pubbliche Amministrazioni, "
-      "Catania, CT) - LICEO GINNASIO STATALE &quot;M. CUTELLI E C. "
-      "SALANITRO&quot;",
-    .name_ja = "LICEO CLASSICO - LC 'MARIO CUTELLI' (Pubbliche Amministrazioni, Catania, CT) - LICEO GINNASIO STATALE &quot;M. CUTELLI E C. SALANITRO&quot;",
-    .category = "government", .portal = "https://www.liceocutelli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceocutelli.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "09:53:17 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CTPC070002", .name = "LICEO CLASSICO - LC SPEDALIERI (Pubbliche Amministrazioni, "
@@ -65210,26 +59057,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
       "2026-10-18T11:42:25+02:00. A feed the organisation itself "
       "declares or links on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CTRH03000C", .name = "ISTITUTO PROFESSIONALE PER I SERVIZI ALBERGHIERI E RISTORAZIONE "
-      "- IPSSA I.P.S.S.A.R.'KAROL WOJTYLA'CATANIA (Pubbliche "
-      "Amministrazioni, Catania, CT) - I.P.S.S.E.O.A. Karol Wojtyla",
-    .name_ja = "ISTITUTO PROFESSIONALE PER I SERVIZI ALBERGHIERI E RISTORAZIONE - IPSSA I.P.S.S.A.R.'KAROL WOJTYLA'CATANIA (Pubbliche Amministrazioni, Catania, CT) - I.P.S.S.E.O.A. Karol Wojtyla",
-    .category = "government", .portal = "https://www.alberghierowojtyla.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.alberghierowojtyla.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 27 Aug 2026 "
-      "10:02:39 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CTRH05000N", .name = "ISTITUTO PROFESSIONALE PER I SERVIZI ALBERGHIERI E RISTORAZIONE "
       "- IPSSAR DI NICOLOSI (Pubbliche Amministrazioni, Nicolosi, CT) - "
@@ -65387,25 +59214,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "09:35:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_CZIC82200V", .name = "ISTITUTO COMPRENSIVO - IC CURINGA (Pubbliche Amministrazioni, "
-      "Curinga, CZ) - Istituto Comprensivo IC CURINGA",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC CURINGA (Pubbliche Amministrazioni, Curinga, CZ) - Istituto Comprensivo IC CURINGA",
-    .category = "government", .portal = "https://www.curingascuola.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.curingascuola.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "14:55:15 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_CZIC82400E", .name = "ISTITUTO COMPRENSIVO - IC CROPANI (Pubbliche Amministrazioni, "
@@ -65921,26 +59729,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "22:13:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_ENEE091002", .name = "DIREZIONE DIDATTICA - BORGO (TROINA) (Pubbliche Amministrazioni, "
-      "Troina, EN) - Omnicomprensivo &quot;Don Bosco &#8211; E. "
-      "Majorana&quot;",
-    .name_ja = "DIREZIONE DIDATTICA - BORGO (TROINA) (Pubbliche Amministrazioni, Troina, EN) - Omnicomprensivo &quot;Don Bosco &#8211; E. Majorana&quot;",
-    .category = "government", .portal = "https://www.icdonboscotroina.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icdonboscotroina.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 02 Oct 2026 "
-      "06:00:14 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_ENIC80500Q", .name = "ISTITUTO COMPRENSIVO - 'E.PANTANO' (ASSORO) (Pubbliche "
       "Amministrazioni, Assoro, EN) - Istituto Comprensivo Statale E. "
       "Pantano &#8211; Assoro",
@@ -66059,26 +59847,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "18:17:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_ENIS00800B", .name = "ISTRUZIONE SECONDARIA SUPERIORE - FORTUNATO FEDELE (Pubbliche "
-      "Amministrazioni, Agira, EN) - Istituto di Istruzione Superiore "
-      "&quot;FORTUNATO FEDELE&quot;",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - FORTUNATO FEDELE (Pubbliche Amministrazioni, Agira, EN) - Istituto di Istruzione Superiore &quot;FORTUNATO FEDELE&quot;",
-    .category = "government", .portal = "https://www.fortunatofedele.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.fortunatofedele.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "09:46:51 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_ENIS017006", .name = "ISTITUTO SUPERIORE - LEONARDO DA VINCI (Pubbliche "
       "Amministrazioni, Piazza Armerina, EN) - Istituto "
       "d&#8217;Istruzione Superiore I.I.S. Leonardo Da Vinci Piazza "
@@ -66098,26 +59866,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 22 Sep 2026 "
       "17:47:13 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_FEIS008008", .name = "ISTRUZIONE SECONDARIA SUPERIORE - IST.ISTRUZ.SUP.'REMO BRINDISI' "
-      "(Pubbliche Amministrazioni, Comacchio, FE) - Istituto "
-      "d&#039;Istruzione Superiore &quot;Remo Brindisi&quot;",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - IST.ISTRUZ.SUP.'REMO BRINDISI' (Pubbliche Amministrazioni, Comacchio, FE) - Istituto d&#039;Istruzione Superiore &quot;Remo Brindisi&quot;",
-    .category = "government", .portal = "https://www.istitutoremobrindisi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutoremobrindisi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 14 Sep 2026 "
-      "07:00:16 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_FETD08000Q", .name = "ISTITUTO TECNICO ECONOMICO \"VITTORIO BACHELET\" (Pubbliche "
@@ -66292,26 +60040,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 04 Jan 2024 "
       "11:34:25 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_FGIC82900Q", .name = "ISTITUTO COMPRENSIVO DON MILANI UNO-MAIORANO (Pubbliche "
-      "Amministrazioni, Manfredonia, FG) - ISTITUTO COMPRENSIVO "
-      "&quot;DON MILANI UNO + MAIORANO&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO DON MILANI UNO-MAIORANO (Pubbliche Amministrazioni, Manfredonia, FG) - ISTITUTO COMPRENSIVO &quot;DON MILANI UNO + MAIORANO&quot;",
-    .category = "government", .portal = "https://www.icdonmilaniunomaiorano.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icdonmilaniunomaiorano.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "06:18:18 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_FGIC83300B", .name = "ISTITUTO COMPRENSIVO - LIBETTA - PESCHICI (Pubbliche "
@@ -66547,27 +60275,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
       "07:51:43 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_FGIS03700V", .name = "Istituto di Istruzione Secondaria Superiore - Polo Tecnologico "
-      "A. Minuziano - M. Di Sangro - L.B. Alberti (Pubbliche "
-      "Amministrazioni, San Severo, FG) - IIS &quot;Di Sangro Minuziano "
-      "Alberti&quot;",
-    .name_ja = "Istituto di Istruzione Secondaria Superiore - Polo Tecnologico A. Minuziano - M. Di Sangro - L.B. Alberti (Pubbliche Amministrazioni, San Severo, FG) - IIS &quot;Di Sangro Minuziano Alberti&quot;",
-    .category = "government", .portal = "https://www.iisdisangrominuzianoalberti.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iisdisangrominuzianoalberti.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "07:22:46 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_FGIS044002", .name = "ISTITUTO SUPERIORE - F I A N I - LECCISOTTI (Pubbliche "
@@ -66885,25 +60592,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:13:03 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_FIIC81300V", .name = "Istituto Comprensivo Amerigo Vespucci (Pubbliche "
-      "Amministrazioni, Firenze, FI) - ICS Amerigo Vespucci",
-    .name_ja = "Istituto Comprensivo Amerigo Vespucci (Pubbliche Amministrazioni, Firenze, FI) - ICS Amerigo Vespucci",
-    .category = "government", .portal = "https://www.icamerigovespucci.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icamerigovespucci.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "16:49:25 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_FIIC81600A", .name = "ISTITUTO COMPRENSIVO - IC DON LORENZO MILANI (Pubbliche "
       "Amministrazioni, Firenzuola, FI) - Istituto comprensivo "
       "&quot;Don Lorenzo Milani&quot;",
@@ -66942,26 +60630,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "10:49:41 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_FIIC81900T", .name = "ISTITUTO COMPRENSIVO - DON LORENZO MILANI (Pubbliche "
-      "Amministrazioni, Barberino Tavarnelle, FI) - Istituto "
-      "Comprensivo &quot;Don Lorenzo Milani&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - DON LORENZO MILANI (Pubbliche Amministrazioni, Barberino Tavarnelle, FI) - Istituto Comprensivo &quot;Don Lorenzo Milani&quot;",
-    .category = "government", .portal = "https://www.icbarberinotavarnelle.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icbarberinotavarnelle.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
-      "08:29:59 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_FIIC820002", .name = "ISTITUTO COMPRENSIVO - E. BALDUCCI (Pubbliche Amministrazioni, "
@@ -67137,65 +60805,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "21:20:37 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_FIIC84800T", .name = "ISTITUTO COMPRENSIVO - PIERACCINI (Pubbliche Amministrazioni, "
-      "Firenze, FI) - Istituto Comprensivo &quot;Gaetano "
-      "Pieraccini&quot; &#8211; Firenze",
-    .name_ja = "ISTITUTO COMPRENSIVO - PIERACCINI (Pubbliche Amministrazioni, Firenze, FI) - Istituto Comprensivo &quot;Gaetano Pieraccini&quot; &#8211; Firenze",
-    .category = "government", .portal = "https://www.icpieraccini.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icpieraccini.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "14:34:44 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_FIIC85000T", .name = "Istituto Comprensivo Statale Le Cure  (Pubbliche "
-      "Amministrazioni, Firenze, FI) - Istituto Comprensivo &quot;Le "
-      "Cure&quot;",
-    .name_ja = "Istituto Comprensivo Statale Le Cure  (Pubbliche Amministrazioni, Firenze, FI) - Istituto Comprensivo &quot;Le Cure&quot;",
-    .category = "government", .portal = "https://www.iclecure.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iclecure.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 26 Sep 2026 "
-      "11:54:57 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_FIIC854005", .name = "ISTITUTO COMPRENSIVO - PUCCINI (Pubbliche Amministrazioni, "
-      "Firenze, FI) - Istituto Comprensivo Puccini",
-    .name_ja = "ISTITUTO COMPRENSIVO - PUCCINI (Pubbliche Amministrazioni, Firenze, FI) - Istituto Comprensivo Puccini",
-    .category = "government", .portal = "https://www.icpuccini.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icpuccini.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
-      "15:34:23 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_FIIC85800C", .name = "ISTITUTO COMPRENSIVO - GUICCIARDINI (Pubbliche Amministrazioni, "
       "Firenze, FI) - IC Guicciardini FIRENZE",
     .name_ja = "ISTITUTO COMPRENSIVO - GUICCIARDINI (Pubbliche Amministrazioni, Firenze, FI) - IC Guicciardini FIRENZE",
@@ -67234,45 +60843,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "07:07:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_FIIC86000C", .name = "ISTITUTO COMPRENSIVO -  BEATO  ANGELICO (Pubbliche "
-      "Amministrazioni, Firenze, FI) - I.C. “Beato Angelico”",
-    .name_ja = "ISTITUTO COMPRENSIVO -  BEATO  ANGELICO (Pubbliche Amministrazioni, Firenze, FI) - I.C. “Beato Angelico”",
-    .category = "government", .portal = "https://www.comprensivobeatoangelico.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comprensivobeatoangelico.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "18:45:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_FIIC861008", .name = "ISTITUTO COMPRENSIVO - SAN CASCIANO (Pubbliche Amministrazioni, "
-      "San Casciano in Val di Pesa, FI) - ISTITUTO COMPRENSIVO STATALE "
-      "DI SAN CASCIANO",
-    .name_ja = "ISTITUTO COMPRENSIVO - SAN CASCIANO (Pubbliche Amministrazioni, San Casciano in Val di Pesa, FI) - ISTITUTO COMPRENSIVO STATALE DI SAN CASCIANO",
-    .category = "government", .portal = "https://www.icsancasciano.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsancasciano.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "12:13:44 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_FIIC86300X", .name = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO RIGNANO-INCISA V.NO "
       "(Pubbliche Amministrazioni, Rignano sull'Arno, FI) - Istituto "
       "Comprensivo Rignano Incisa Valdarno",
@@ -67291,66 +60861,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 21 Sep 2026 "
       "19:49:29 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_FIIC868003", .name = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO VINCI (Pubbliche "
-      "Amministrazioni, Vinci, FI) - Istituto Comprensivo Statale "
-      "&quot;Vinci&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO VINCI (Pubbliche Amministrazioni, Vinci, FI) - Istituto Comprensivo Statale &quot;Vinci&quot;",
-    .category = "government", .portal = "https://www.icvinci.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icvinci.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "12:56:14 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_FIIS00100R", .name = "ISTRUZIONE SECONDARIA SUPERIORE - MACHIAVELLI (Pubbliche "
-      "Amministrazioni, Firenze, FI) - LICEO STATALE NICCOLÒ "
-      "MACHIAVELLI  FIRENZE",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - MACHIAVELLI (Pubbliche Amministrazioni, Firenze, FI) - LICEO STATALE NICCOLÒ MACHIAVELLI  FIRENZE",
-    .category = "government", .portal = "https://www.liceomachiavelli-firenze.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceomachiavelli-firenze.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "15:13:49 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_FIIS00300C", .name = "ISTRUZIONE SECONDARIA SUPERIORE - IS 'A. CHECCHI' (Pubbliche "
-      "Amministrazioni, Fucecchio, FI) - Istituto di Istruzione "
-      "Superiore &quot;Arturo Checchi&quot;",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - IS 'A. CHECCHI' (Pubbliche Amministrazioni, Fucecchio, FI) - Istituto di Istruzione Superiore &quot;Arturo Checchi&quot;",
-    .category = "government", .portal = "https://www.istitutochecchi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutochecchi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
-      "08:11:05 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_FIIS004008", .name = "ISTRUZIONE SECONDARIA SUPERIORE - 'ELSA MORANTE' (Pubbliche "
@@ -67411,26 +60921,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "19:26:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_FIIS01100B", .name = "ISTRUZIONE SECONDARIA SUPERIORE - GIORGIO VASARI (Pubbliche "
-      "Amministrazioni, Figline e Incisa Valdarno, FI) - Istituto "
-      "d&#039;Istruzione Superiore GIORGIO VASARI",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - GIORGIO VASARI (Pubbliche Amministrazioni, Figline e Incisa Valdarno, FI) - Istituto d&#039;Istruzione Superiore GIORGIO VASARI",
-    .category = "government", .portal = "https://www.isisgiorgiovasari.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.isisgiorgiovasari.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 28 Sep 2026 "
-      "08:28:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_FIIS012007", .name = "ISTRUZIONE SECONDARIA SUPERIORE - G. FERRARIS - F. BRUNELLESCHI "
       "(Pubbliche Amministrazioni, Empoli, FI) - G. Ferraris F. "
       "Brunelleschi",
@@ -67469,26 +60959,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "07:05:33 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_FIIS01400V", .name = "ISTRUZIONE SECONDARIA SUPERIORE - VIRGILIO (Pubbliche "
-      "Amministrazioni, Empoli, FI) - IIS Virgilio di Empoli Liceo "
-      "Artistico &#8211; Liceo Classico &#8211; Liceo Ling",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - VIRGILIO (Pubbliche Amministrazioni, Empoli, FI) - IIS Virgilio di Empoli Liceo Artistico &#8211; Liceo Classico &#8211; Liceo Ling",
-    .category = "government", .portal = "https://www.virgilioempoli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.virgilioempoli.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "16:21:49 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_FIIS026005", .name = "ISTITUTO SUPERIORE -  GIOTTO ULIVI (Pubbliche Amministrazioni, "
@@ -67531,26 +61001,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "08:27:58 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_FIPM02000L", .name = "ISTITUTO MAGISTRALE - GIOVANNI PASCOLI (Pubbliche "
-      "Amministrazioni, Firenze, FI) - Liceo Statale &quot;G. "
-      "Pascoli&quot;",
-    .name_ja = "ISTITUTO MAGISTRALE - GIOVANNI PASCOLI (Pubbliche Amministrazioni, Firenze, FI) - Liceo Statale &quot;G. Pascoli&quot;",
-    .category = "government", .portal = "https://www.liceopascoli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceopascoli.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "15:18:41 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_FIPS030006", .name = "LICEO SCIENTIFICO - LEONARDO DA VINCI (Pubbliche "
       "Amministrazioni, Firenze, FI) - Liceo Scientifico Leonardo da "
       "Vinci di Firenze",
@@ -67589,64 +61039,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "13:07:42 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_FIVE010004", .name = "Educandato SS. Annunziata (Pubbliche Amministrazioni, Firenze, "
-      "FI) - Poggio",
-    .name_ja = "Educandato SS. Annunziata (Pubbliche Amministrazioni, Firenze, FI) - Poggio",
-    .category = "government", .portal = "https://poggio-imperiale.ssannunziatascuole.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://poggio-imperiale.ssannunziatascuole.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "00:52:47 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_FOEE021005", .name = "DIREZIONE DIDATTICA - CD CESENA 5 (Pubbliche Amministrazioni, "
-      "Cesena, FC) - DIREZIONE DIDATTICA QUINTO CIRCOLO CESENA",
-    .name_ja = "DIREZIONE DIDATTICA - CD CESENA 5 (Pubbliche Amministrazioni, Cesena, FC) - DIREZIONE DIDATTICA QUINTO CIRCOLO CESENA",
-    .category = "government", .portal = "https://www.cesena5circolo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cesena5circolo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 13 Aug 2026 "
-      "09:08:19 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_FOIC80800L", .name = "Istituto Comprensivo Valle del Montone Castrocaro Terme "
-      "(Pubbliche Amministrazioni, Castrocaro Terme e Terra del Sole, "
-      "FC) - ISTITUTO COMPRENSIVO VALLE DEL MONTONE",
-    .name_ja = "Istituto Comprensivo Valle del Montone Castrocaro Terme (Pubbliche Amministrazioni, Castrocaro Terme e Terra del Sole, FC) - ISTITUTO COMPRENSIVO VALLE DEL MONTONE",
-    .category = "government", .portal = "https://www.icsvalledelmontone.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsvalledelmontone.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "14:43:48 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_FOIC81100C", .name = "ISTITUTO COMPRENSIVO - IC MELDOLA (Pubbliche Amministrazioni, "
@@ -67728,26 +61120,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "14:01:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_FOMM03100P", .name = "ISTITUTO SECONDARIO DI I GRADO - S.S. I GRADO VIA PASCOLI CESENA "
-      "(Pubbliche Amministrazioni, Cesena, FC) - Scuola Secondaria di "
-      "1º Grado &quot;Via Pascoli&quot; Cesena",
-    .name_ja = "ISTITUTO SECONDARIO DI I GRADO - S.S. I GRADO VIA PASCOLI CESENA (Pubbliche Amministrazioni, Cesena, FC) - Scuola Secondaria di 1º Grado &quot;Via Pascoli&quot; Cesena",
-    .category = "government", .portal = "https://www.viapascolicesena.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.viapascolicesena.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "14:27:56 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_FOPC04000V", .name = "LICEO CLASSICO - 'G.B.MORGAGNI' SOCIO-PED.-LIN. (Pubbliche "
       "Amministrazioni, Forlì, FC) - Liceo Morgagni",
     .name_ja = "LICEO CLASSICO - 'G.B.MORGAGNI' SOCIO-PED.-LIN. (Pubbliche Amministrazioni, Forlì, FC) - Liceo Morgagni",
@@ -67825,26 +61197,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "11:23:33 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_FOTF03000D", .name = "ISTITUTO TECNICO INDUSTRIALE - MARCONI FORLI' (Pubbliche "
-      "Amministrazioni, Forlì, FC) - Istituto Tecnico Tecnologico "
-      "Statale &quot;G. Marconi&quot;",
-    .name_ja = "ISTITUTO TECNICO INDUSTRIALE - MARCONI FORLI' (Pubbliche Amministrazioni, Forlì, FC) - Istituto Tecnico Tecnologico Statale &quot;G. Marconi&quot;",
-    .category = "government", .portal = "https://www.ittsmarconiforli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ittsmarconiforli.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "07:43:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_FRIC80300L", .name = "ISTITUTO COMPRENSIVO - I.C. ESPERIA (Pubbliche Amministrazioni, "
@@ -68021,25 +61373,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "08:42:49 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_FRIC84500P", .name = "ISTITUTO COMPRENSIVO - I.C. 2^ ANAGNI (Pubbliche "
-      "Amministrazioni, Anagni, FR) - Istituto Comprensivo 2 Anagni",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. 2^ ANAGNI (Pubbliche Amministrazioni, Anagni, FR) - Istituto Comprensivo 2 Anagni",
-    .category = "government", .portal = "https://www.ic2anagni.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ic2anagni.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "08:49:29 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_FRIC849002", .name = "ISTITUTO COMPRENSIVO - I.C. 1^ SORA (Pubbliche Amministrazioni, "
       "Sora, FR) - Istituto Comprensivo &quot;Sora 1&quot;",
     .name_ja = "ISTITUTO COMPRENSIVO - I.C. 1^ SORA (Pubbliche Amministrazioni, Sora, FR) - Istituto Comprensivo &quot;Sora 1&quot;",
@@ -68134,27 +61467,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 4 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "06:56:38 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_FRIS00300R", .name = "ISTRUZIONE SECONDARIA SUPERIORE - IST. ISTR. SUP. 'SANDRO "
-      "PERTINI' ALATRI (Pubbliche Amministrazioni, Alatri, FR) - "
-      "ISTITUTO D&#039;ISTRUZIONE SUPERIORE &quot;SANDRO PERTINI&quot; "
-      "&#8211; ALATRI",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - IST. ISTR. SUP. 'SANDRO PERTINI' ALATRI (Pubbliche Amministrazioni, Alatri, FR) - ISTITUTO D&#039;ISTRUZIONE SUPERIORE &quot;SANDRO PERTINI&quot; &#8211; ALATRI",
-    .category = "government", .portal = "https://www.istitutopertinialatri.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutopertinialatri.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 14 Sep 2026 "
-      "19:33:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_FRIS007004", .name = "Istituto di Istruzione Superiore San Benedetto Cassino "
@@ -68312,26 +61624,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "07:00:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_GEIC81500B", .name = "ISTITUTO COMPRENSIVO - I.C. VALTREBBIA (Pubbliche "
-      "Amministrazioni, Torriglia, GE) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;VALTREBBIA&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. VALTREBBIA (Pubbliche Amministrazioni, Torriglia, GE) - ISTITUTO COMPRENSIVO STATALE &quot;VALTREBBIA&quot;",
-    .category = "government", .portal = "https://www.icvaltrebbia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icvaltrebbia.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 22 Sep 2026 "
-      "07:27:53 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_GEIC816007", .name = "ISTITUTO COMPRENSIVO - I.C. PONTEDECIMO (Pubbliche "
       "Amministrazioni, Genova, GE) - IC Pontedecimo",
     .name_ja = "ISTITUTO COMPRENSIVO - I.C. PONTEDECIMO (Pubbliche Amministrazioni, Genova, GE) - IC Pontedecimo",
@@ -68425,25 +61717,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 29 Sep 2026 "
       "08:56:17 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_GEIC84800P", .name = "ISTITUTO COMPRENSIVO - I.C. COGORNO (Pubbliche Amministrazioni, "
-      "Cogorno, GE) - ISTITUTO COMPRENSIVO STATALE COGORNO",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. COGORNO (Pubbliche Amministrazioni, Cogorno, GE) - ISTITUTO COMPRENSIVO STATALE COGORNO",
-    .category = "government", .portal = "https://www.istitutocomprensivocogorno.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivocogorno.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 05 Oct 2026 "
-      "06:51:22 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_GEIC85000P", .name = "ISTITUTO COMPRENSIVO - I.C. PEGLI (Pubbliche Amministrazioni, "
@@ -68913,47 +62186,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "20:25:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_IMIC81800A", .name = "ISTITUTO COMPRENSIVO - I.C. 'G.BIANCHERI-VENTIMIGLIA' (Pubbliche "
-      "Amministrazioni, Ventimiglia, IM) - I.C. "
-      "&quot;G.BIANCHERI-VENTIMIGLIA&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. 'G.BIANCHERI-VENTIMIGLIA' (Pubbliche Amministrazioni, Ventimiglia, IM) - I.C. &quot;G.BIANCHERI-VENTIMIGLIA&quot;",
-    .category = "government", .portal = "https://www.ic1ventimiglia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ic1ventimiglia.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 21 Sep 2026 "
-      "13:56:08 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_IMIS001005", .name = "ISTRUZIONE SECONDARIA SUPERIORE - 'E.FERMI CON "
-      "IPSCT'M.POLO'VENT.(SEZ.AS.) (Pubbliche Amministrazioni, "
-      "Ventimiglia, IM) - ISTITUTO SUPERIORE "
-      "&quot;FERMI-POLO-MONTALE&quot;",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - 'E.FERMI CON IPSCT'M.POLO'VENT.(SEZ.AS.) (Pubbliche Amministrazioni, Ventimiglia, IM) - ISTITUTO SUPERIORE &quot;FERMI-POLO-MONTALE&quot;",
-    .category = "government", .portal = "https://www.fermipolomontale.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.fermipolomontale.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "09:42:42 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_IMIS002001", .name = "ISTRUZIONE SECONDARIA SUPERIORE - 'GALILEI' SEZ.NAUT.ANN. E "
       "IPSCT (Pubbliche Amministrazioni, Imperia, IM) - I.I.S. Polo "
       "Tecnologico Imperiese",
@@ -68991,25 +62223,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 07 Sep 2026 "
       "10:43:01 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_IMPS03000E", .name = "Liceo Statale Angelico Aprosio (Pubbliche Amministrazioni, "
-      "Ventimiglia, IM) - LICEO STATALE  &quot;APROSIO&quot;",
-    .name_ja = "Liceo Statale Angelico Aprosio (Pubbliche Amministrazioni, Ventimiglia, IM) - LICEO STATALE  &quot;APROSIO&quot;",
-    .category = "government", .portal = "https://www.liceoaprosio.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceoaprosio.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "17:12:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_ISIC82600E", .name = "ISTITUTO COMPRENSIVO - IST. COMP. COLOZZA FROSOLONE (Pubbliche "
@@ -69186,26 +62399,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "08:58:17 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_LCIC81600V", .name = "ISTITUTO COMPRENSIVO - I.C.S. DI ROBBIATE (Pubbliche "
-      "Amministrazioni, Robbiate, LC) - Istituto Comprensivo Statale di "
-      "Robbiate",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C.S. DI ROBBIATE (Pubbliche Amministrazioni, Robbiate, LC) - Istituto Comprensivo Statale di Robbiate",
-    .category = "government", .portal = "https://www.scuolarobbiate.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.scuolarobbiate.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "13:00:19 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_LCIS003001", .name = "ISTRUZIONE SECONDARIA SUPERIORE - MARCO POLO COLICO (Pubbliche "
       "Amministrazioni, Colico, LC) - Marco Polo Colico",
     .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - MARCO POLO COLICO (Pubbliche Amministrazioni, Colico, LC) - Marco Polo Colico",
@@ -69360,25 +62553,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "07:11:27 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_LEIC816004", .name = "ISTITUTO COMPRENSIVO - CALIMERA (Pubbliche Amministrazioni, "
-      "Calimera, LE) - Istituto Comprensivo Statale Calimera",
-    .name_ja = "ISTITUTO COMPRENSIVO - CALIMERA (Pubbliche Amministrazioni, Calimera, LE) - Istituto Comprensivo Statale Calimera",
-    .category = "government", .portal = "https://www.icscalimera.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icscalimera.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 28 Sep 2026 "
-      "10:02:46 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_LEIC81900G", .name = "ISTITUTO COMPRENSIVO - CORIGLIANO D'OTRANTO (Pubbliche "
       "Amministrazioni, Corigliano d'Otranto, LE) - IC Corigliano",
     .name_ja = "ISTITUTO COMPRENSIVO - CORIGLIANO D'OTRANTO (Pubbliche Amministrazioni, Corigliano d'Otranto, LE) - IC Corigliano",
@@ -69436,26 +62610,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "16:25:06 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_LEIC824003", .name = "ISTITUTO COMPRENSIVO - GAGLIANO DEL CAPO VITO DE BLASI "
-      "(Pubbliche Amministrazioni, Gagliano del Capo, LE) - ISTITUTO "
-      "COMPRENSIVO STATALE &#8211; GAGLIANO DEL CAPO",
-    .name_ja = "ISTITUTO COMPRENSIVO - GAGLIANO DEL CAPO VITO DE BLASI (Pubbliche Amministrazioni, Gagliano del Capo, LE) - ISTITUTO COMPRENSIVO STATALE &#8211; GAGLIANO DEL CAPO",
-    .category = "government", .portal = "https://www.icgaglianodelcapo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icgaglianodelcapo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 02 Feb 2026 "
-      "16:40:48 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_LEIC82700E", .name = "ISTITUTO COMPRENSIVO STATALE RITA LEVI MONTALCINI LEQUILE - SAN "
       "PIETRO IN LAMA (Pubbliche Amministrazioni, Lequile, LE) - "
       "Istituto Comprensivo Statale Lequile &#8211; San Pietro in Lama "
@@ -69475,26 +62629,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 25 Sep 2026 "
       "16:01:58 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_LEIC82800A", .name = "ISTITUTO COMPRENSIVO - LIZZANELLO (Pubbliche Amministrazioni, "
-      "Lizzanello, LE) - Istituto Scolastico Comprensivo &quot;C. De "
-      "Giorgi&quot; Lizzanello con Merine",
-    .name_ja = "ISTITUTO COMPRENSIVO - LIZZANELLO (Pubbliche Amministrazioni, Lizzanello, LE) - Istituto Scolastico Comprensivo &quot;C. De Giorgi&quot; Lizzanello con Merine",
-    .category = "government", .portal = "https://www.comprensivolizzanello.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comprensivolizzanello.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "08:29:07 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_LEIC829006", .name = "ISTITUTO COMPRENSIVO - MELENDUGNO (Pubbliche Amministrazioni, "
@@ -69673,26 +62807,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "07:04:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_LEIC853003", .name = "ISTITUTO COMPRENSIVO - SAN CESARIO (Pubbliche Amministrazioni, "
-      "San Cesario di Lecce, LE) - Istituto Comprensivo San Cesario di "
-      "Lecce con San Donato e Galugnano",
-    .name_ja = "ISTITUTO COMPRENSIVO - SAN CESARIO (Pubbliche Amministrazioni, San Cesario di Lecce, LE) - Istituto Comprensivo San Cesario di Lecce con San Donato e Galugnano",
-    .category = "government", .portal = "https://comprensivosancesario.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://comprensivosancesario.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 28 Sep 2026 "
-      "11:29:42 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_LEIC85500P", .name = "ISTITUTO COMPRENSIVO - SOLETO (Pubbliche Amministrazioni, "
       "Soleto, LE) - ISTITUTO COMPRENSIVO STATALE &quot;G. Falcone e P. "
       "Borsellino&quot;",
@@ -69750,26 +62864,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 10 Sep 2026 "
       "17:34:16 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_LEIC86400D", .name = "ISTITUTO COMPRENSIVO - COPERTINO POLO 4 'G. FALCONE' (Pubbliche "
-      "Amministrazioni, Copertino, LE) - Istituto Comprensivo Falcone "
-      "Copertino",
-    .name_ja = "ISTITUTO COMPRENSIVO - COPERTINO POLO 4 'G. FALCONE' (Pubbliche Amministrazioni, Copertino, LE) - Istituto Comprensivo Falcone Copertino",
-    .category = "government", .portal = "https://www.comprensivofalconecopertino.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comprensivofalconecopertino.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 09 Sep 2026 "
-      "10:36:48 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_LEIC865009", .name = "Istituto Comprensivo - 'San Giuseppe da Copertino' (Pubbliche "
@@ -69927,26 +63021,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 02 Sep 2026 "
       "08:20:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_LEIC894009", .name = "ISTITUTO COMPRENSIVO - GALATONE POLO 1 (Pubbliche "
-      "Amministrazioni, Galatone, LE) - ISTITUTO COMPRENSIVO GALATONE "
-      "POLO I",
-    .name_ja = "ISTITUTO COMPRENSIVO - GALATONE POLO 1 (Pubbliche Amministrazioni, Galatone, LE) - ISTITUTO COMPRENSIVO GALATONE POLO I",
-    .category = "government", .portal = "https://www.polo1galatone.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.polo1galatone.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "09:46:43 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_LEIC895005", .name = "Istituto Comprensivo Galatone Polo 2 (Pubbliche Amministrazioni, "
@@ -70146,27 +63220,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "06:51:41 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_LEIS00100E", .name = "ISTRUZIONE SECONDARIA SUPERIORE - IST.SUP.(LUCIO MODERATO "
-      "COLUMELLA)-LECCE (Pubbliche Amministrazioni, Lecce, LE) - "
-      "ISTITUTO DI ISTRUZIONE SECONDARIA SUPERIORE &quot;PRESTA  "
-      "COLUMELLA&quot;",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - IST.SUP.(LUCIO MODERATO COLUMELLA)-LECCE (Pubbliche Amministrazioni, Lecce, LE) - ISTITUTO DI ISTRUZIONE SECONDARIA SUPERIORE &quot;PRESTA  COLUMELLA&quot;",
-    .category = "government", .portal = "https://www.istitutoprestacolumella.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutoprestacolumella.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "10:20:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_LEIS00600N", .name = "ISTRUZIONE SECONDARIA SUPERIORE - ANTONIO MEUCCI CASARANO "
       "(Pubbliche Amministrazioni, Casarano, LE) - Istituto "
       "d&#039;Istruzione Superiore &quot;A. Meucci&quot;",
@@ -70344,26 +63397,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:22:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_LEMM00400V", .name = "ISTITUTO SECONDARIO DI I GRADO - SMS Q. ENNI0 - LECCE (Pubbliche "
-      "Amministrazioni, Lecce, LE) - SCUOLA SECONDARIA DI PRIMO GRADO "
-      "STATALE &quot;Quinto Ennio&quot; &#8211; Lecce",
-    .name_ja = "ISTITUTO SECONDARIO DI I GRADO - SMS Q. ENNI0 - LECCE (Pubbliche Amministrazioni, Lecce, LE) - SCUOLA SECONDARIA DI PRIMO GRADO STATALE &quot;Quinto Ennio&quot; &#8211; Lecce",
-    .category = "government", .portal = "https://www.quintoenniobattisti.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.quintoenniobattisti.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 16 Sep 2026 "
-      "14:46:04 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_LEPC01000G", .name = "LICEO CLASSICO - LICEO CLASSICO'CAPECE'-MAGLIE (Pubbliche "
       "Amministrazioni, Maglie, LE) - Liceo Classico Statale F. Capece "
       "Maglie Lecce",
@@ -70424,45 +63457,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "07:11:44 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_LEPS01000P", .name = "LICEO SCIENTIFICO - LICEO SCIENTIFICO'DE GIORGI'LECCE (Pubbliche "
-      "Amministrazioni, Lecce, LE) - Liceo Scientifico Cosimo De Giorgi",
-    .name_ja = "LICEO SCIENTIFICO - LICEO SCIENTIFICO'DE GIORGI'LECCE (Pubbliche Amministrazioni, Lecce, LE) - Liceo Scientifico Cosimo De Giorgi",
-    .category = "government", .portal = "https://liceodegiorgi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://liceodegiorgi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "21:27:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_LEPS04000E", .name = "LICEO SCIENTIFICO - LICEO SCIENT. E LING. STATALE'A.VALLONE' "
-      "(Pubbliche Amministrazioni, Galatina, LE) - Liceo Scientifico e "
-      "Linguistico Statale &quot;Antonio Vallone&quot; &#8211; Gala",
-    .name_ja = "LICEO SCIENTIFICO - LICEO SCIENT. E LING. STATALE'A.VALLONE' (Pubbliche Amministrazioni, Galatina, LE) - Liceo Scientifico e Linguistico Statale &quot;Antonio Vallone&quot; &#8211; Gala",
-    .category = "government", .portal = "https://www.liceovallone.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceovallone.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 11 Oct 2026 "
-      "16:39:23 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_LEPS050005", .name = "LICEO SCIENTIFICO - LEONARDO DA VINCI MAGLIE (Pubbliche "
       "Amministrazioni, Maglie, LE) - Ldvmaglie",
     .name_ja = "LICEO SCIENTIFICO - LEONARDO DA VINCI MAGLIE (Pubbliche Amministrazioni, Maglie, LE) - Ldvmaglie",
@@ -70502,26 +63496,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "16:52:30 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_LIIC803009", .name = "ISTITUTO COMPRENSIVO - GIUSTI GIUSEPPE (Pubbliche "
-      "Amministrazioni, Campo nell'Elba, LI) - ISTITUTO COMPRENSIVO "
-      "STATALE &quot;G. GIUSTI&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - GIUSTI GIUSEPPE (Pubbliche Amministrazioni, Campo nell'Elba, LI) - ISTITUTO COMPRENSIVO STATALE &quot;G. GIUSTI&quot;",
-    .category = "government", .portal = "https://www.comprensivogiusti.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comprensivogiusti.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 10 Jul 2026 "
-      "12:05:56 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_LIIC80700L", .name = "ISTITUTO COMPRENSIVO - 'MASCAGNI PIETRO' (Pubbliche "
       "Amministrazioni, San Vincenzo, LI) - IC Mascagni",
     .name_ja = "ISTITUTO COMPRENSIVO - 'MASCAGNI PIETRO' (Pubbliche Amministrazioni, San Vincenzo, LI) - IC Mascagni",
@@ -70558,26 +63532,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "08:18:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_LIIC811008", .name = "ISTITUTO COMPRENSIVO - VIALE ELBA (Pubbliche Amministrazioni, "
-      "Portoferraio, LI) - ISTITUTO COMPRENSIVO STATALE &#8211; SCUOLA "
-      "DELL&#039;INFANZIA, PRIMARIA E SECON",
-    .name_ja = "ISTITUTO COMPRENSIVO - VIALE ELBA (Pubbliche Amministrazioni, Portoferraio, LI) - ISTITUTO COMPRENSIVO STATALE &#8211; SCUOLA DELL&#039;INFANZIA, PRIMARIA E SECON",
-    .category = "government", .portal = "https://www.comprensivoportoferraio.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comprensivoportoferraio.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 25 Sep 2026 "
-      "10:47:59 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_LIIC81400Q", .name = "ISTITUTO COMPRENSIVO -'MICHELI  - BOLOGNESI' (Pubbliche "
@@ -71973,25 +64927,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "16:49:16 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_LUIS016002", .name = "ISTITUTO SUPERIORE - E.FERMI (Pubbliche Amministrazioni, Lucca, "
-      "LU) - POLO SC. TEC. PROF.LE FERMI &#8211; GIORGI",
-    .name_ja = "ISTITUTO SUPERIORE - E.FERMI (Pubbliche Amministrazioni, Lucca, LU) - POLO SC. TEC. PROF.LE FERMI &#8211; GIORGI",
-    .category = "government", .portal = "https://www.polofermigiorgi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.polofermigiorgi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
-      "13:56:26 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_LUPS01000C", .name = "LICEO SCIENTIFICO - 'A.VALLISNERI' (Pubbliche Amministrazioni, "
       "Lucca, LU) - Liceo &quot;Antonio Vallisneri&quot; &#8211; Lucca",
     .name_ja = "LICEO SCIENTIFICO - 'A.VALLISNERI' (Pubbliche Amministrazioni, Lucca, LU) - Liceo &quot;Antonio Vallisneri&quot; &#8211; Lucca",
@@ -72169,26 +65104,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "16:59:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_MEIC813006", .name = "ISTITUTO COMPRENSIVO CAPIZZI - CESARO'  (Pubbliche "
-      "Amministrazioni, Capizzi, ME) - ISTITUTO COMPRENSIVO CAPIZZI "
-      "&#8211; CESARO&#039;",
-    .name_ja = "ISTITUTO COMPRENSIVO CAPIZZI - CESARO'  (Pubbliche Amministrazioni, Capizzi, ME) - ISTITUTO COMPRENSIVO CAPIZZI &#8211; CESARO&#039;",
-    .category = "government", .portal = "https://www.istitutocomprensivocapizzicesaro.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivocapizzicesaro.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "07:08:38 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_MEIC81600N", .name = "ISTITUTO COMPRENSIVO NOVARA DI SICILIA (Pubbliche "
       "Amministrazioni, Novara di Sicilia, ME) - Istituto Comprensivo "
       "Novara di Sicilia",
@@ -72207,45 +65122,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "13:49:41 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_MEIC81700D", .name = "ISTITUTO COMPRENSIVO LIPARI (Pubbliche Amministrazioni, Lipari, "
-      "ME) - ISTITUTO COMPRENSIVO &quot;S. LUCIA&quot; &#8211; LIPARI",
-    .name_ja = "ISTITUTO COMPRENSIVO LIPARI (Pubbliche Amministrazioni, Lipari, ME) - ISTITUTO COMPRENSIVO &quot;S. LUCIA&quot; &#8211; LIPARI",
-    .category = "government", .portal = "https://www.iclipari.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iclipari.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "09:23:58 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_MEIC82400L", .name = "ISTITUTO COMPRENSIVO - N.1 BARCELLONA (Pubbliche "
-      "Amministrazioni, Barcellona Pozzo di Gotto, ME) - Istituto "
-      "Comprensivo Statale “D&#039;Alcontres &#8211; Balotta”",
-    .name_ja = "ISTITUTO COMPRENSIVO - N.1 BARCELLONA (Pubbliche Amministrazioni, Barcellona Pozzo di Gotto, ME) - Istituto Comprensivo Statale “D&#039;Alcontres &#8211; Balotta”",
-    .category = "government", .portal = "https://www.icdalcontres.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icdalcontres.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "14:28:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_MEIC83000X", .name = "ISTITUTO COMRENSIVO STATALE \"GIOVANNI PAOLO II\" (Pubbliche "
@@ -72343,46 +65219,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 09 Sep 2026 "
       "19:02:38 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_MEIC848005", .name = "ISTITUTO COMPRENSIVO - N.2 PATTI (Pubbliche Amministrazioni, "
-      "Patti, ME) - Istituto Comprensivo N.2 &quot;Luigi "
-      "Pirandello&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - N.2 PATTI (Pubbliche Amministrazioni, Patti, ME) - Istituto Comprensivo N.2 &quot;Luigi Pirandello&quot;",
-    .category = "government", .portal = "https://www.istitutopirandellopatti.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutopirandellopatti.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Tue, 28 Jul 2026 "
-      "10:16:48 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_MEIC849001", .name = "ISTITUTO COMPRENSIVO - N.3 PATTI (Pubbliche Amministrazioni, "
-      "Patti, ME) - Istituto Comprensivo N. 3 &quot;Lombardo "
-      "Radice&quot; di Patti",
-    .name_ja = "ISTITUTO COMPRENSIVO - N.3 PATTI (Pubbliche Amministrazioni, Patti, ME) - Istituto Comprensivo N. 3 &quot;Lombardo Radice&quot; di Patti",
-    .category = "government", .portal = "https://www.icradicebellini.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icradicebellini.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "21:17:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_MEIC85200R", .name = "ISTITUTO COMPRENSIVO - SAN FILIPPO DEL MELA (Pubbliche "
@@ -72680,26 +65516,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "17:55:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_MEIS001004", .name = "ISTRUZIONE SECONDARIA SUPERIORE - I.S.MISTRETTA MANZONI "
-      "(Pubbliche Amministrazioni, Mistretta, ME) - I.I.S. &quot;A. "
-      "MANZONI&quot;",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - I.S.MISTRETTA MANZONI (Pubbliche Amministrazioni, Mistretta, ME) - I.I.S. &quot;A. MANZONI&quot;",
-    .category = "government", .portal = "https://www.iismanzoni.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iismanzoni.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 15 Sep 2026 "
-      "20:37:26 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_MEIS00300Q", .name = "ISTRUZIONE SECONDARIA SUPERIORE - I.S.S.AGATA M.LLO SCIASCIA "
       "(Pubbliche Amministrazioni, Sant'Agata di Militello, ME) - Liceo "
       "Sciascia Fermi",
@@ -72817,45 +65633,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "13:38:49 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_MEPM010009", .name = "ISTITUTO MAGISTRALE - ' AINIS ' MESSINA (Pubbliche "
-      "Amministrazioni, Messina, ME) - LICEO &quot;E. AINIS&quot;",
-    .name_ja = "ISTITUTO MAGISTRALE - ' AINIS ' MESSINA (Pubbliche Amministrazioni, Messina, ME) - LICEO &quot;E. AINIS&quot;",
-    .category = "government", .portal = "https://www.ainis.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ainis.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "06:07:01 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_MEPS010008", .name = "LICEO SCIENTIFICO - 'ARCHIMEDE' MESSINA (Pubbliche "
-      "Amministrazioni, Messina, ME) - Liceo Scientifico e Linguistico "
-      "Statale ARCHIMEDE",
-    .name_ja = "LICEO SCIENTIFICO - 'ARCHIMEDE' MESSINA (Pubbliche Amministrazioni, Messina, ME) - Liceo Scientifico e Linguistico Statale ARCHIMEDE",
-    .category = "government", .portal = "https://www.liceoarchimedeme.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceoarchimedeme.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 06 Oct 2026 "
-      "10:36:49 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_METD05000E", .name = "Istituto Tecnico L. Da Vinci Economico Tecnologico (Pubbliche "
@@ -76020,26 +68797,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "18:19:53 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_MNIC80100Q", .name = "ISTITUTO COMPRENSIVO - I.C. CANNETO SULL'OGLIO (Pubbliche "
-      "Amministrazioni, Canneto sull'Oglio, MN) - ISTITUTO COMPRENSIVO "
-      "&quot;P.BORSELLINO&quot; DI CANNETO SULL&#039;OGLIO",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. CANNETO SULL'OGLIO (Pubbliche Amministrazioni, Canneto sull'Oglio, MN) - ISTITUTO COMPRENSIVO &quot;P.BORSELLINO&quot; DI CANNETO SULL&#039;OGLIO",
-    .category = "government", .portal = "https://www.iccanneto.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iccanneto.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
-      "08:02:17 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_MNIC80800E", .name = "ISTITUTO COMPRENSIVO - I.C. CASTIGLIONE STIVIERE 1 (Pubbliche "
       "Amministrazioni, Castiglione delle Stiviere, MN) - Istituto "
       "Comprensivo Castiglione 1",
@@ -76353,26 +69110,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "15:49:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_MSIC807002", .name = "ISTITUTO COMPRENSIVO - FLAVIO TORELLO BARACCHINI (Pubbliche "
-      "Amministrazioni, Villafranca in Lunigiana, MS) - Istituto "
-      "Comprensivo Statale FLAVIO TORELLO BARACCHINI",
-    .name_ja = "ISTITUTO COMPRENSIVO - FLAVIO TORELLO BARACCHINI (Pubbliche Amministrazioni, Villafranca in Lunigiana, MS) - Istituto Comprensivo Statale FLAVIO TORELLO BARACCHINI",
-    .category = "government", .portal = "https://www.icbaracchini.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icbaracchini.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 04 Oct 2026 "
-      "18:41:30 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_MSIC813009", .name = "ISTITUTO COMPRENSIVO - MONTIGNOSO (Pubbliche Amministrazioni, "
       "Montignoso, MS) - ISTITUTO COMPRENSIVO STATALE",
     .name_ja = "ISTITUTO COMPRENSIVO - MONTIGNOSO (Pubbliche Amministrazioni, Montignoso, MS) - ISTITUTO COMPRENSIVO STATALE",
@@ -76409,26 +69146,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 04 Sep 2026 "
       "11:58:58 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_MSIC81800C", .name = "ISTITUTO COMPRENSIVO MALASPINA MASSA  VI (Pubbliche "
-      "Amministrazioni, Massa, MS) - Istituto Comprensivo Statale "
-      "“Malaspina”",
-    .name_ja = "ISTITUTO COMPRENSIVO MALASPINA MASSA  VI (Pubbliche Amministrazioni, Massa, MS) - Istituto Comprensivo Statale “Malaspina”",
-    .category = "government", .portal = "https://www.malaspina.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.malaspina.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "20:34:29 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_MSIC822004", .name = "ISTITUTO COMPRENSIVO - I.C. 'CARRARA E PAESI A MONTE' (Pubbliche "
@@ -76489,26 +69206,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:33:07 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_MSIS014009", .name = "ISTRUZIONE SECONDARIA SUPERIORE - ARTEMISIA GENTILESCHI "
-      "(Pubbliche Amministrazioni, Carrara, MS) - I.I.S. &quot;A. "
-      "Gentileschi&quot;",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - ARTEMISIA GENTILESCHI (Pubbliche Amministrazioni, Carrara, MS) - I.I.S. &quot;A. Gentileschi&quot;",
-    .category = "government", .portal = "https://www.artisticogentileschi.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.artisticogentileschi.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "09:56:03 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_MTIC808001", .name = "I.C.  GRASSANO-MIGLIONICO (Pubbliche Amministrazioni, Grassano, "
       "MT) - IC Ilvento",
     .name_ja = "I.C.  GRASSANO-MIGLIONICO (Pubbliche Amministrazioni, Grassano, MT) - IC Ilvento",
@@ -76526,25 +69223,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 03 Oct 2026 "
       "13:49:28 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_MTIC810001", .name = "ISTITUTO COMPRENSIVO - P.PIO DA PIETRELCINA PISTICCI (Pubbliche "
-      "Amministrazioni, Pisticci, MT) - IC Padre Pio da Pietrelcina",
-    .name_ja = "ISTITUTO COMPRENSIVO - P.PIO DA PIETRELCINA PISTICCI (Pubbliche Amministrazioni, Pisticci, MT) - IC Padre Pio da Pietrelcina",
-    .category = "government", .portal = "https://www.icpisticci.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icpisticci.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 13 Sep 2026 "
-      "16:22:57 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_MTIC81700Q", .name = "ISTITUTO COMPRENSIVO - NOVA SIRI SCALO (Pubbliche "
@@ -76646,46 +69324,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "20:21:29 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_MTIC83200T", .name = "ISTITUTO COMPRENSIVO N. 2 (Pubbliche Amministrazioni, Policoro, "
-      "MT) - ISTITUTO COMPRENSIVO STATALE N.2 – &quot;Giovanni Paolo "
-      "II&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO N. 2 (Pubbliche Amministrazioni, Policoro, MT) - ISTITUTO COMPRENSIVO STATALE N.2 – &quot;Giovanni Paolo II&quot;",
-    .category = "government", .portal = "https://www.ic2policoro.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ic2policoro.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 28 Oct 2025 "
-      "07:49:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_MTIS00400T", .name = "ISTRUZIONE SECONDARIA SUPERIORE - CARLO LEVI (Pubbliche "
-      "Amministrazioni, Tricarico, MT) - IIS Carlo Levi Istituto di "
-      "Istruzione Superiore Carlo Levi Liceo Scientifico &#8",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - CARLO LEVI (Pubbliche Amministrazioni, Tricarico, MT) - IIS Carlo Levi Istituto di Istruzione Superiore Carlo Levi Liceo Scientifico &#8",
-    .category = "government", .portal = "https://www.iiscarlolevi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iiscarlolevi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 18 May 2026 "
-      "08:08:57 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_MTIS011001", .name = "IIS Pisticci-Montalbano Jonico (Pubbliche Amministrazioni, "
       "Pisticci, MT) - IIS Pisticci Montalbano",
     .name_ja = "IIS Pisticci-Montalbano Jonico (Pubbliche Amministrazioni, Pisticci, MT) - IIS Pisticci Montalbano",
@@ -76761,26 +69399,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
       "17:29:59 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_NAEE118005", .name = "DIREZIONE DIDATTICA - CARDITO 1 - VIA PRAMPOLINI (Pubbliche "
-      "Amministrazioni, Cardito, NA) - PRIMO CIRCOLO DIDATTICO di "
-      "Cardito",
-    .name_ja = "DIREZIONE DIDATTICA - CARDITO 1 - VIA PRAMPOLINI (Pubbliche Amministrazioni, Cardito, NA) - PRIMO CIRCOLO DIDATTICO di Cardito",
-    .category = "government", .portal = "https://www.primocircolocardito.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.primocircolocardito.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 11 Sep 2026 "
-      "08:35:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_NAEE125008", .name = "I CIRCOLO DIDATTICO 'BASILIO CECCHI' DI CASTELLAMMARE DI STABIA "
@@ -76864,46 +69482,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "11:42:48 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_NAEE332005", .name = "DIREZIONE DIDATTICA - FRATTAMAGGIORE 4 - MARCONI (Pubbliche "
-      "Amministrazioni, Frattamaggiore, NA) - IV CIRCOLO DIDATTICO "
-      "G.MARCONI  FRATTAMAGGIORE",
-    .name_ja = "DIREZIONE DIDATTICA - FRATTAMAGGIORE 4 - MARCONI (Pubbliche Amministrazioni, Frattamaggiore, NA) - IV CIRCOLO DIDATTICO G.MARCONI  FRATTAMAGGIORE",
-    .category = "government", .portal = "https://www.gmarconi4.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gmarconi4.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "16:52:04 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_NAIC820006", .name = "ISTITUTO COMPRENSIVO - NA - I.C. NEVIO (Pubbliche "
-      "Amministrazioni, Napoli, NA) - Istituto Comprensivo &quot;Gneo "
-      "Nevio&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - NA - I.C. NEVIO (Pubbliche Amministrazioni, Napoli, NA) - Istituto Comprensivo &quot;Gneo Nevio&quot;",
-    .category = "government", .portal = "https://www.icnevio.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icnevio.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 10 Sep 2026 "
-      "08:51:52 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_NAIC826005", .name = "ISTITUTO COMPRENSIVO - NA - I.C.PASCOLI 2 (Pubbliche "
       "Amministrazioni, Napoli, NA) - IC Pascoli 2",
     .name_ja = "ISTITUTO COMPRENSIVO - NA - I.C.PASCOLI 2 (Pubbliche Amministrazioni, Napoli, NA) - IC Pascoli 2",
@@ -76941,26 +69519,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "07:36:07 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_NAIC850002", .name = "ISTITUTO COMPRENSIVO - CERCOLA - I.C. CUSTRA (Pubbliche "
-      "Amministrazioni, Cercola, NA) - Istituto Comprensivo Antonio "
-      "Custra",
-    .name_ja = "ISTITUTO COMPRENSIVO - CERCOLA - I.C. CUSTRA (Pubbliche Amministrazioni, Cercola, NA) - Istituto Comprensivo Antonio Custra",
-    .category = "government", .portal = "https://www.iccustra.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iccustra.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Jan 2026 "
-      "10:06:29 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_NAIC855005", .name = "ISTITUTO COMPRENSIVO - STRIANO - I.C. A. D'AVINO (Pubbliche "
@@ -77083,27 +69641,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:16:19 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_NAIC87900N", .name = "ISTITUTO COMPRENSIVO - CASALNUOVO - I.C. VIVIANI (Pubbliche "
-      "Amministrazioni, Casalnuovo di Napoli, NA) - ISTITUTO "
-      "COMPRENSIVO STATALE &quot;R. VIVIANI&quot; &#8211; CASALNUOVO DI "
-      "NAPOLI",
-    .name_ja = "ISTITUTO COMPRENSIVO - CASALNUOVO - I.C. VIVIANI (Pubbliche Amministrazioni, Casalnuovo di Napoli, NA) - ISTITUTO COMPRENSIVO STATALE &quot;R. VIVIANI&quot; &#8211; CASALNUOVO DI NAPOLI",
-    .category = "government", .portal = "https://www.icvivianicasalnuovona.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icvivianicasalnuovona.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 24 Sep 2026 "
-      "08:24:49 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_NAIC885001", .name = "ISTITUTO COMPRENSIVO - VILLARICCA - I.C CALVINO (Pubbliche "
       "Amministrazioni, Villaricca, NA) - IC Calvino Villaricca",
     .name_ja = "ISTITUTO COMPRENSIVO - VILLARICCA - I.C CALVINO (Pubbliche Amministrazioni, Villaricca, NA) - IC Calvino Villaricca",
@@ -77142,26 +69679,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
       "22:24:12 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_NAIC8A500P", .name = "ISTITUTO COMPRENSIVO - NA - I.C. S. GIOVANNI BOSCO (Pubbliche "
-      "Amministrazioni, Napoli, NA) - Istituto Comprensivo 57°San "
-      "Giovanni Bosco",
-    .name_ja = "ISTITUTO COMPRENSIVO - NA - I.C. S. GIOVANNI BOSCO (Pubbliche Amministrazioni, Napoli, NA) - Istituto Comprensivo 57°San Giovanni Bosco",
-    .category = "government", .portal = "https://www.ic57bosco.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ic57bosco.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 25 Sep 2026 "
-      "10:58:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_NAIC8A700A", .name = "ISTITUTO COMPRENSIVO - I.C. A.DE CURTIS (Pubbliche "
@@ -77224,46 +69741,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "13:59:14 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_NAIC8AR00E", .name = "ISTITUTO COMPRENSIVO - CASAMICCIOLA - I.C. IBSEN (Pubbliche "
-      "Amministrazioni, Casamicciola Terme, NA) - Istituto Comprensivo "
-      "Statale “IBSEN”",
-    .name_ja = "ISTITUTO COMPRENSIVO - CASAMICCIOLA - I.C. IBSEN (Pubbliche Amministrazioni, Casamicciola Terme, NA) - Istituto Comprensivo Statale “IBSEN”",
-    .category = "government", .portal = "https://www.icibsencasamicciola.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icibsencasamicciola.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "12:06:46 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_NAIC8B5009", .name = "ISTITUTO COMPRENSIVO - POMPEI IC AMEDEO MAIURI (Pubbliche "
-      "Amministrazioni, Pompei, NA) - I ISTITUTO COMPRENSIVO  &quot;A "
-      ".Maiuri&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - POMPEI IC AMEDEO MAIURI (Pubbliche Amministrazioni, Pompei, NA) - I ISTITUTO COMPRENSIVO  &quot;A .Maiuri&quot;",
-    .category = "government", .portal = "https://www.scuolamaiuripompei.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.scuolamaiuripompei.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "18:52:31 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_NAIC8BE009", .name = "ISTITUTO COMPRENSIVO - MARIGLIANO I.C. PACINOTTI (Pubbliche "
       "Amministrazioni, Marigliano, NA) - Variazione orario di entrata "
       "causa Assemblea Sindacale scuola Primaria  12.10.20",
@@ -77282,25 +69759,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
       "12:43:58 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_NAIC8BF005", .name = "Istituto Comprensivo San Gennarello (Pubbliche Amministrazioni, "
-      "Ottaviano, NA) - Istituto Comprensivo San Gennarello Ottaviano",
-    .name_ja = "Istituto Comprensivo San Gennarello (Pubbliche Amministrazioni, Ottaviano, NA) - Istituto Comprensivo San Gennarello Ottaviano",
-    .category = "government", .portal = "https://www.icsangennarellodiottaviano.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsangennarellodiottaviano.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "06:55:23 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_NAIC8BM00D", .name = "ISTITUTO COMPRENSIVO - I.C. ANGIOLETTI-TORRE DEL GRECO "
@@ -77383,26 +69841,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:53:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_NAIC8C3008", .name = "ISTITUTO COMPRENSIVO - TERZIGNO I.C. GIUSTI (Pubbliche "
-      "Amministrazioni, Terzigno, NA) - Istituto Comprensivo Statale "
-      "Giuseppe Giusti",
-    .name_ja = "ISTITUTO COMPRENSIVO - TERZIGNO I.C. GIUSTI (Pubbliche Amministrazioni, Terzigno, NA) - Istituto Comprensivo Statale Giuseppe Giusti",
-    .category = "government", .portal = "https://www.icsgiusti.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsgiusti.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 10 Oct 2026 "
-      "07:34:06 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_NAIC8C4004", .name = "ISTITUTO COMPRENSIVO - T.GRECO IC 3 D. BOSCO-D'ASSISI (Pubbliche "
       "Amministrazioni, Torre del Greco, NA) - Istituto Comprensivo "
       "Statale &#8211; I.C. 3 “Don Bosco – Francesco d’Assis",
@@ -77441,25 +69879,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 09 Sep 2026 "
       "13:26:31 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_NAIC8CK00C", .name = "ISTITUTO COMPRENSIVO - NA IC 71 AGANOOR - MARCONI (Pubbliche "
-      "Amministrazioni, Napoli, NA) - I.C. 71° Aganoor Marconi",
-    .name_ja = "ISTITUTO COMPRENSIVO - NA IC 71 AGANOOR - MARCONI (Pubbliche Amministrazioni, Napoli, NA) - I.C. 71° Aganoor Marconi",
-    .category = "government", .portal = "https://www.aganoormarconi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.aganoormarconi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 20 Sep 2026 "
-      "07:53:49 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_NAIC8CL008", .name = "ISTITUTO COMPRENSIVO - T.GRECO IC 1 MAZZA-COLAMARINO (Pubbliche "
@@ -77542,26 +69961,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "11:47:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_NAIC8CT008", .name = "Istituto Comprensivo Gaetano Donizetti (Pubbliche "
-      "Amministrazioni, Pollena Trocchia, NA) - Istituto comprensivo "
-      "Gaetano Donizetti Pollena Trocchia (NA)",
-    .name_ja = "Istituto Comprensivo Gaetano Donizetti (Pubbliche Amministrazioni, Pollena Trocchia, NA) - Istituto comprensivo Gaetano Donizetti Pollena Trocchia (NA)",
-    .category = "government", .portal = "https://www.icgaetanodonizetti.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icgaetanodonizetti.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 08 Sep 2026 "
-      "07:42:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_NAIC8DA007", .name = "IC 3 \"de Curtis - Ungaretti - Iovino\" (Pubbliche "
       "Amministrazioni, Ercolano, NA) - IC 3 de Curtis – Ungaretti",
     .name_ja = "IC 3 \"de Curtis - Ungaretti - Iovino\" (Pubbliche Amministrazioni, Ercolano, NA) - IC 3 de Curtis – Ungaretti",
@@ -77619,26 +70018,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "11:04:30 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_NAIC8DQ002", .name = "ISTITUTO COMPRENSIVO - AFRAGOLA IC 2 CASTALDO-NOSENG0 (Pubbliche "
-      "Amministrazioni, Afragola, NA) - Istituto Comprensivo 2 "
-      "&quot;Castaldo &#8211; Nosengo&quot; di Afragola",
-    .name_ja = "ISTITUTO COMPRENSIVO - AFRAGOLA IC 2 CASTALDO-NOSENG0 (Pubbliche Amministrazioni, Afragola, NA) - Istituto Comprensivo 2 &quot;Castaldo &#8211; Nosengo&quot; di Afragola",
-    .category = "government", .portal = "https://www.ic2castaldo-nosengo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ic2castaldo-nosengo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
-      "09:26:06 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_NAIS00300L", .name = "ISTRUZIONE SECONDARIA SUPERIORE - I.S.-ITN.DUCA DEGLI "
@@ -77762,66 +70141,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "13:13:43 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_NAIS021006", .name = "ISTRUZIONE SECONDARIA SUPERIORE - I.S. - ITAS - L. SC. - 'E. DI "
-      "SAVOIA' (Pubbliche Amministrazioni, Napoli, NA) - I.S.I.S. ELENA "
-      "DI SAVOIA",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - I.S. - ITAS - L. SC. - 'E. DI SAVOIA' (Pubbliche Amministrazioni, Napoli, NA) - I.S.I.S. ELENA DI SAVOIA",
-    .category = "government", .portal = "https://www.isiselenadisavoia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.isiselenadisavoia.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "05:58:55 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_NAIS022002", .name = "Istruzione Secondaria Superiore I.S.-ITE-L.S.C.-F.S. Nitti di "
-      "Napoli (Pubbliche Amministrazioni, Napoli, NA) - IISS "
-      "&quot;Francesco Saverio Nitti&quot;",
-    .name_ja = "Istruzione Secondaria Superiore I.S.-ITE-L.S.C.-F.S. Nitti di Napoli (Pubbliche Amministrazioni, Napoli, NA) - IISS &quot;Francesco Saverio Nitti&quot;",
-    .category = "government", .portal = "https://www.isnitti.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.isnitti.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "09:30:16 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_NAIS048006", .name = "ISTRUZIONE SECONDARIA SUPERIORE - I.S.F.DEGNI-T.GRECO- "
-      "(Pubbliche Amministrazioni, Torre del Greco, NA) - ISTITUTO "
-      "D’ISTRUZIONE SUPERIORE “FRANCESCO DEGNI”",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - I.S.F.DEGNI-T.GRECO- (Pubbliche Amministrazioni, Torre del Greco, NA) - ISTITUTO D’ISTRUZIONE SUPERIORE “FRANCESCO DEGNI”",
-    .category = "government", .portal = "https://www.isdegni.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.isdegni.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "07:45:57 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_NAIS06200C", .name = "ISTRUZIONE SECONDARIA SUPERIORE - I.S.'G. FALCONE' POZZUOLI "
       "(Pubbliche Amministrazioni, Pozzuoli, NA) - Istituto Superiore "
       "&quot;G. Falcone&quot;",
@@ -77882,26 +70201,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:31:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_NAIS086001", .name = "ISTRUZIONE SECONDARIA SUPERIORE - I.S. NINO BIXIO-PIANO SORRENTO "
-      "(Pubbliche Amministrazioni, Piano di Sorrento, NA) - I.I.S Nino "
-      "Bixio",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - I.S. NINO BIXIO-PIANO SORRENTO (Pubbliche Amministrazioni, Piano di Sorrento, NA) - I.I.S Nino Bixio",
-    .category = "government", .portal = "https://www.ninobixio.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ninobixio.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 28 Sep 2026 "
-      "15:37:40 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_NAIS08700R", .name = "I.S. MARIO PAGANO (Pubbliche Amministrazioni, Napoli, NA) - "
       "Istituto Statale Internazionale Mario Pagano",
     .name_ja = "I.S. MARIO PAGANO (Pubbliche Amministrazioni, Napoli, NA) - Istituto Statale Internazionale Mario Pagano",
@@ -77919,26 +70218,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "06:20:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_NAMM15100Q", .name = "ISTITUTO SECONDARIO DI I GRADO - S.M.S. G. CAPORALE ACERRA "
-      "(Pubbliche Amministrazioni, Acerra, NA) - Tutte le news - "
-      "www.scuolacaporaleacerra.edu.it",
-    .name_ja = "ISTITUTO SECONDARIO DI I GRADO - S.M.S. G. CAPORALE ACERRA (Pubbliche Amministrazioni, Acerra, NA) - Tutte le news - www.scuolacaporaleacerra.edu.it",
-    .category = "government", .portal = "https://www.scuolacaporaleacerra.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.scuolacaporaleacerra.edu.it/index.php/tutte-le-news?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "18:10:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_NAMM28400X", .name = "SCUOLA SECONDARIA DI PRIMO GRADO MASSIMO STANZIONE (Pubbliche "
@@ -78022,26 +70301,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:48:29 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_NAPC09000V", .name = "LICEO CLASSICO - L.CLAS.VICO DI NAPOLI (Pubbliche "
-      "Amministrazioni, Napoli, NA) - LICEO CLASSICO STATALE &quot;Gian "
-      "Battista Vico&quot;",
-    .name_ja = "LICEO CLASSICO - L.CLAS.VICO DI NAPOLI (Pubbliche Amministrazioni, Napoli, NA) - LICEO CLASSICO STATALE &quot;Gian Battista Vico&quot;",
-    .category = "government", .portal = "https://www.liceoviconapoli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceoviconapoli.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "10:29:39 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_NAPC22000A", .name = "Liceo Statale Ischia (Pubbliche Amministrazioni, Ischia, NA) - "
       "LICEO STATALE &quot;G. Buchner&quot;",
     .name_ja = "Liceo Statale Ischia (Pubbliche Amministrazioni, Ischia, NA) - LICEO STATALE &quot;G. Buchner&quot;",
@@ -78059,27 +70318,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "11:20:52 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_NAPC230001", .name = "LICEO CLASSICO - LICEO CLASSICO STATALE PLINIO SENIORE "
-      "(Pubbliche Amministrazioni, Castellammare di Stabia, NA) - LICEO "
-      "CLASSICO STATALE &quot;PLINIO SENIORE&quot; &#8211; "
-      "CASTELLAMMARE DI STABI",
-    .name_ja = "LICEO CLASSICO - LICEO CLASSICO STATALE PLINIO SENIORE (Pubbliche Amministrazioni, Castellammare di Stabia, NA) - LICEO CLASSICO STATALE &quot;PLINIO SENIORE&quot; &#8211; CASTELLAMMARE DI STABI",
-    .category = "government", .portal = "https://www.plinioseniore.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.plinioseniore.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "05:11:45 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_NAPC300002", .name = "LICEO CLASSICO - L.CL.F.DURANTE-F/MAGGIORE- (Pubbliche "
@@ -78181,26 +70419,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "12:24:32 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_NAPS27000E", .name = "LICEO SCIENTIFICO - L.SC.C.MIRANDA-F/MAGGIORE- (Pubbliche "
-      "Amministrazioni, Frattamaggiore, NA) - Liceo Scientifico Statale "
-      "“Carlo Miranda”",
-    .name_ja = "LICEO SCIENTIFICO - L.SC.C.MIRANDA-F/MAGGIORE- (Pubbliche Amministrazioni, Frattamaggiore, NA) - Liceo Scientifico Statale “Carlo Miranda”",
-    .category = "government", .portal = "https://www.liceocarlomiranda.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceocarlomiranda.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 02 Sep 2026 "
-      "16:44:58 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_NAPS43000T", .name = "LICEO SCIENTIFICO - LICEO SCIENTIFICO - ARZANO (Pubbliche "
       "Amministrazioni, Arzano, NA) - Liceo Giordano Bruno",
     .name_ja = "LICEO SCIENTIFICO - LICEO SCIENTIFICO - ARZANO (Pubbliche Amministrazioni, Arzano, NA) - Liceo Giordano Bruno",
@@ -78259,26 +70477,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "11:23:31 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_NATD05000B", .name = "ISTITUTO TECNICO COMMERCIALE - ITCG E.MATTEI-CASAMICCIOLA- "
-      "(Pubbliche Amministrazioni, Casamicciola Terme, NA) - ISTITUTO "
-      "TECNICO STATALE &quot;ENRICO MATTEI&quot;",
-    .name_ja = "ISTITUTO TECNICO COMMERCIALE - ITCG E.MATTEI-CASAMICCIOLA- (Pubbliche Amministrazioni, Casamicciola Terme, NA) - ISTITUTO TECNICO STATALE &quot;ENRICO MATTEI&quot;",
-    .category = "government", .portal = "https://www.itmattei.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.itmattei.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "14:11:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_NATD100007", .name = "ISTITUTO TECNICO COMMERCIALE - ITC L.STURZO-C/MMARE- (Pubbliche "
       "Amministrazioni, Castellammare di Stabia, NA) - Istituto Tecnico "
       "Statale “Luigi Sturzo” Castellammare di Stabia (NA)",
@@ -78297,26 +70495,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
       "16:16:13 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_NATF010007", .name = "ISTITUTO TECNICO INDUSTRIALE - ITI VOLTA - NAPOLI- (Pubbliche "
-      "Amministrazioni, Napoli, NA) - ITIS &quot;Alessandro Volta&quot; "
-      "Napoli",
-    .name_ja = "ISTITUTO TECNICO INDUSTRIALE - ITI VOLTA - NAPOLI- (Pubbliche Amministrazioni, Napoli, NA) - ITIS &quot;Alessandro Volta&quot; Napoli",
-    .category = "government", .portal = "https://www.itisvoltanapoli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.itisvoltanapoli.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "09:30:59 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_NATF10000D", .name = "ISTITUTO TECNICO INDUSTRIALE - ITI R.ELIA- C/MMARE- (Pubbliche "
@@ -78357,86 +70535,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "15:00:00 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_NATF15000E", .name = "ISTITUTO TECNICO INDUSTRIALE - ITI E. MAJORANA SOMMA VESUVIANA "
-      "(Pubbliche Amministrazioni, Somma Vesuviana, NA) - Istituto "
-      "Tecnico Industriale Statale &quot;E. Majorana&quot;",
-    .name_ja = "ISTITUTO TECNICO INDUSTRIALE - ITI E. MAJORANA SOMMA VESUVIANA (Pubbliche Amministrazioni, Somma Vesuviana, NA) - Istituto Tecnico Industriale Statale &quot;E. Majorana&quot;",
-    .category = "government", .portal = "https://www.itismajoranasommaves.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.itismajoranasommaves.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "06:38:51 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_NATF17000Q", .name = "ISTITUTO TECNICO INDUSTRIALE - ITI G.FERRARIS-NAPOLI- (Pubbliche "
-      "Amministrazioni, Napoli, NA) - ISTITUTO TECNICO INDUSTRIALE "
-      "&quot;Galileo Ferraris&quot; &#8211; Napoli",
-    .name_ja = "ISTITUTO TECNICO INDUSTRIALE - ITI G.FERRARIS-NAPOLI- (Pubbliche Amministrazioni, Napoli, NA) - ISTITUTO TECNICO INDUSTRIALE &quot;Galileo Ferraris&quot; &#8211; Napoli",
-    .category = "government", .portal = "https://www.itiferraris.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.itiferraris.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "14:26:57 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_NATF190001", .name = "ISTITUTO TECNICO INDUSTRIALE - I.T.I. 'MARIE CURIE' NAPOLI "
-      "(Pubbliche Amministrazioni, Napoli, NA) - ISTITUTO TECNICO "
-      "TECNOLOGICO “Marie Curie”",
-    .name_ja = "ISTITUTO TECNICO INDUSTRIALE - I.T.I. 'MARIE CURIE' NAPOLI (Pubbliche Amministrazioni, Napoli, NA) - ISTITUTO TECNICO TECNOLOGICO “Marie Curie”",
-    .category = "government", .portal = "https://www.itimariecurie.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.itimariecurie.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "09:20:23 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_NAVC010009", .name = "CONVITTO NAZIONALE - CONV.NAZ.EMAN.LE II-NAPOLI- (Pubbliche "
-      "Amministrazioni, Napoli, NA) - CONVITTO NAZIONALE &quot;Vittorio "
-      "Emanuele II&quot;",
-    .name_ja = "CONVITTO NAZIONALE - CONV.NAZ.EMAN.LE II-NAPOLI- (Pubbliche Amministrazioni, Napoli, NA) - CONVITTO NAZIONALE &quot;Vittorio Emanuele II&quot;",
-    .category = "government", .portal = "https://www.convittonapoli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.convittonapoli.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 04 Oct 2026 "
-      "19:32:04 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_NOIC804007", .name = "ISTITUTO COMPRENSIVO - S.M.S. SAN MAURIZIO D'OPAGLIO (Pubbliche "
       "Amministrazioni, San Maurizio d'Opaglio, NO) - IC San Giulio",
     .name_ja = "ISTITUTO COMPRENSIVO - S.M.S. SAN MAURIZIO D'OPAGLIO (Pubbliche Amministrazioni, San Maurizio d'Opaglio, NO) - IC San Giulio",
@@ -78454,26 +70552,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "09:10:53 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_NOIC80600V", .name = "ISTITUTO COMPRENSIVO - 'VARALLO POMBIA' (Pubbliche "
-      "Amministrazioni, Varallo Pombia, NO) - Istituto Comprensivo "
-      "Statale &quot;Andrea Camilleri&quot; – Varallo Pombia (NO",
-    .name_ja = "ISTITUTO COMPRENSIVO - 'VARALLO POMBIA' (Pubbliche Amministrazioni, Varallo Pombia, NO) - Istituto Comprensivo Statale &quot;Andrea Camilleri&quot; – Varallo Pombia (NO",
-    .category = "government", .portal = "https://www.ic-varallo-pombia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ic-varallo-pombia.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "08:44:59 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_NOIC80700P", .name = "ISTITUTO COMPRENSIVO - PIERO FORNARA (Pubbliche Amministrazioni, "
@@ -78646,26 +70724,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 10 Sep 2026 "
       "09:00:30 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_NOIC821001", .name = "ISTITUTO COMPRENSIVO - GIOVANNI XXIII (Pubbliche "
-      "Amministrazioni, Arona, NO) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;GIOVANNI XXIII&quot; &#8211; ARONA",
-    .name_ja = "ISTITUTO COMPRENSIVO - GIOVANNI XXIII (Pubbliche Amministrazioni, Arona, NO) - ISTITUTO COMPRENSIVO STATALE &quot;GIOVANNI XXIII&quot; &#8211; ARONA",
-    .category = "government", .portal = "https://www.icarona.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icarona.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 27 Aug 2026 "
-      "07:33:16 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_NOIC82300L", .name = "ISTITUTO COMPRENSIVO - 'BELLINI' (Pubbliche Amministrazioni, "
@@ -78861,26 +70919,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "06:22:59 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_NUIC82300T", .name = "ISTITUTO COMPRENSIVO - ORANI (Pubbliche Amministrazioni, Orani, "
-      "NU) - ISTITUTO COMPRENSIVO STATALE &quot;FRANCESCO "
-      "DELITALA&quot; ORANI &#8211; OROTEL",
-    .name_ja = "ISTITUTO COMPRENSIVO - ORANI (Pubbliche Amministrazioni, Orani, NU) - ISTITUTO COMPRENSIVO STATALE &quot;FRANCESCO DELITALA&quot; ORANI &#8211; OROTEL",
-    .category = "government", .portal = "https://www.scuoleorani.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.scuoleorani.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "16:21:13 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_NUIC835004", .name = "ISTITUTO COMPRENSIVO - DESULO (Pubbliche Amministrazioni, "
       "Desulo, NU) - Istituto Comprensivo di Desulo",
     .name_ja = "ISTITUTO COMPRENSIVO - DESULO (Pubbliche Amministrazioni, Desulo, NU) - Istituto Comprensivo di Desulo",
@@ -78996,45 +71034,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "06:42:55 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_NUIC86800B", .name = "ISTITUTO COMPRENSIVO - OLIENA (Pubbliche Amministrazioni, "
-      "Oliena, NU) - ISTITUTO COMPRENSIVO STATALE &quot;OLIENA&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - OLIENA (Pubbliche Amministrazioni, Oliena, NU) - ISTITUTO COMPRENSIVO STATALE &quot;OLIENA&quot;",
-    .category = "government", .portal = "https://www.icoliena.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icoliena.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "13:35:05 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_NUIC87000B", .name = "ISTITUTO COMPRENSIVO - TORTOLI' 2 - 'MONTE ATTU' (Pubbliche "
-      "Amministrazioni, Tortolì, OG) - Istituto Comprensivo Due "
-      "&quot;Monte Attu&quot; Tortolì NU",
-    .name_ja = "ISTITUTO COMPRENSIVO - TORTOLI' 2 - 'MONTE ATTU' (Pubbliche Amministrazioni, Tortolì, OG) - Istituto Comprensivo Due &quot;Monte Attu&quot; Tortolì NU",
-    .category = "government", .portal = "https://www.ic2tortoli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ic2tortoli.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "15:35:42 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_NUIC871007", .name = "ISTITUTO COMPRENSIVO - DORGALI - 'G.M.GISELLU' (Pubbliche "
       "Amministrazioni, Dorgali, NU) - Istituto Comprensivo G.M. "
       "Gisellu – Dorgali",
@@ -79075,26 +71074,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:02:05 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_NUIC87500E", .name = "ISTITUTO COMPRENSIVO - NUORO 3 - 'MARIANGELA MACCIONI' "
-      "(Pubbliche Amministrazioni, Nuoro, NU) - ISTITUTO COMPRENSIVO "
-      "STATALE NUORO 3 &quot;Mariangela Maccioni&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - NUORO 3 - 'MARIANGELA MACCIONI' (Pubbliche Amministrazioni, Nuoro, NU) - ISTITUTO COMPRENSIVO STATALE NUORO 3 &quot;Mariangela Maccioni&quot;",
-    .category = "government", .portal = "https://www.ic3nuoro.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ic3nuoro.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "15:22:28 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_NUIS01200G", .name = "ISTRUZIONE SECONDARIA SUPERIORE - ISTIT ISTRUZ SUPER COSTA AZARA "
       "(Pubbliche Amministrazioni, Sorgono, NU) - Istituto di "
       "Istruzione Superiore &quot;F.lli Costa Azara&quot; Sorgono",
@@ -79113,26 +71092,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 29 Jun 2026 "
       "09:20:26 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_NUPS010009", .name = "LICEO SCIENTIFICO - L.SC.-G.GALILEI-MACOMER (Pubbliche "
-      "Amministrazioni, Macomer, NU) - Liceo Scientifico Galilei "
-      "Macomer",
-    .name_ja = "LICEO SCIENTIFICO - L.SC.-G.GALILEI-MACOMER (Pubbliche Amministrazioni, Macomer, NU) - Liceo Scientifico Galilei Macomer",
-    .category = "government", .portal = "https://www.liceogalileimacomer.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceogalileimacomer.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 30 Sep 2026 "
-      "09:44:53 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_NUTD040001", .name = "Istituto Istruzione Superiore L. Oggiano Siniscola (Pubbliche "
@@ -79231,25 +71190,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "20:21:38 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_ORIC82000T", .name = "ISTITUTO COMPRENSIVO STATALE 1-2 ORISTANO (Pubbliche "
-      "Amministrazioni, Oristano, OR) - Istituto Comprensivo 1 Oristano",
-    .name_ja = "ISTITUTO COMPRENSIVO STATALE 1-2 ORISTANO (Pubbliche Amministrazioni, Oristano, OR) - Istituto Comprensivo 1 Oristano",
-    .category = "government", .portal = "https://www.istitutocomprensivo1-2oristano.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivo1-2oristano.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 01 Apr 2026 "
-      "13:14:40 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_ORIC82100N", .name = "ISTITUTO COMPRENSIVO - I.C. ALES (Pubbliche Amministrazioni, "
       "Ales, OR) - IC Ales",
     .name_ja = "ISTITUTO COMPRENSIVO - I.C. ALES (Pubbliche Amministrazioni, Ales, OR) - IC Ales",
@@ -79267,26 +71207,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
       "05:04:06 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_ORIC823009", .name = "ISTITUTO COMPRENSIVO - I.C. SIMAXIS - VILLAURBANA (Pubbliche "
-      "Amministrazioni, Simaxis, OR) - Istituto Comprensivo Simaxis "
-      "Villaurbana",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. SIMAXIS - VILLAURBANA (Pubbliche Amministrazioni, Simaxis, OR) - Istituto Comprensivo Simaxis Villaurbana",
-    .category = "government", .portal = "https://www.icsimaxis-villaurbana.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsimaxis-villaurbana.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "18:51:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_ORIC82700L", .name = "ISTITUTO COMPRENSIVO - I.C. ORISTANO N. 4 (Pubbliche "
@@ -79329,45 +71249,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "17:57:09 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_ORIC82800C", .name = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO BOSA (Pubbliche "
-      "Amministrazioni, Bosa, OR) - ISTITUTO COMPRENSIVO STATALE BOSA",
-    .name_ja = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO BOSA (Pubbliche Amministrazioni, Bosa, OR) - ISTITUTO COMPRENSIVO STATALE BOSA",
-    .category = "government", .portal = "https://www.istitutocomprensivobosa.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivobosa.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 12 Sep 2026 "
-      "06:32:22 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_ORIC829008", .name = "ISTITUTO COMPRENSIVO - TERRALBA    'A. CARTA' (Pubbliche "
-      "Amministrazioni, Terralba, OR) - ISTITUTO COMPRENSIVO STATALE "
-      "&#8211; TERRALBA",
-    .name_ja = "ISTITUTO COMPRENSIVO - TERRALBA    'A. CARTA' (Pubbliche Amministrazioni, Terralba, OR) - ISTITUTO COMPRENSIVO STATALE &#8211; TERRALBA",
-    .category = "government", .portal = "https://www.istitutocomprensivoterralba.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivoterralba.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "14:30:29 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_ORIS00800B", .name = "ISTITUTO STATALE DI ISTRUZIONE SUPERIORE \"G. A. PISCHEDDA\" "
       "(Pubbliche Amministrazioni, Bosa, OR) - L &#8216;eco della "
       "biblioteca &#8211; Settembre 2026",
@@ -79407,26 +71288,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "11:54:44 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PAEE019001", .name = "DIREZIONE DIDATTICA - GABELLI ARISTIDE (Pubbliche "
-      "Amministrazioni, Palermo, PA) - DIREZIONE DIDATTICA STATALE "
-      "&quot;ARISTIDE GABELLI&quot; PALERMO",
-    .name_ja = "DIREZIONE DIDATTICA - GABELLI ARISTIDE (Pubbliche Amministrazioni, Palermo, PA) - DIREZIONE DIDATTICA STATALE &quot;ARISTIDE GABELLI&quot; PALERMO",
-    .category = "government", .portal = "https://www.ddgabelli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ddgabelli.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 21 Aug 2025 "
-      "10:34:37 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PAEE063003", .name = "DIREZIONE DIDATTICA - DE GASPERI A. CAPACI (Pubbliche "
       "Amministrazioni, Capaci, PA) - I.C.  &quot;B. Siciliano &#8211; "
       "A. De Gasperi&quot; &#8211; Capaci",
@@ -79445,46 +71306,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 21 Sep 2026 "
       "12:06:34 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PAIC811008", .name = "ISTITUTO COMPRENSIVO - I.C. ALTAVILLA MILICIA (Pubbliche "
-      "Amministrazioni, Altavilla Milicia, PA) - Istituto Comprensivo "
-      "Altavilla Milicia",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. ALTAVILLA MILICIA (Pubbliche Amministrazioni, Altavilla Milicia, PA) - Istituto Comprensivo Altavilla Milicia",
-    .category = "government", .portal = "https://www.icaltavillamilicia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icaltavillamilicia.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "11:49:31 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PAIC812004", .name = "ISTITUTO COMPRENSIVO - I.C.CIMINNA-DON RIZZO (Pubbliche "
-      "Amministrazioni, Ciminna, PA) - Istituto Comprensivo Ciminna "
-      "&#8211; Don Rizzo",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C.CIMINNA-DON RIZZO (Pubbliche Amministrazioni, Ciminna, PA) - Istituto Comprensivo Ciminna &#8211; Don Rizzo",
-    .category = "government", .portal = "https://www.icciminna.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icciminna.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "12:27:58 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_PAIC81400Q", .name = "ISTITUTO COMPRENSIVO STATALE - BORGETTO PARTINICO (Pubbliche "
@@ -79526,25 +71347,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "13:33:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PAIC818003", .name = "ISTITUTO COMPRENSIVO - I.C.POLLINA-A.GAGINI (Pubbliche "
-      "Amministrazioni, Pollina, PA) - Istituto Comprensivo Statale",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C.POLLINA-A.GAGINI (Pubbliche Amministrazioni, Pollina, PA) - Istituto Comprensivo Statale",
-    .category = "government", .portal = "https://www.icpollinasanmaurocastelverde.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icpollinasanmaurocastelverde.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 01 Sep 2026 "
-      "08:16:58 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PAIC820003", .name = "Istituto Comprensivo Castellana Sicula Polizzi Generosa "
       "(Pubbliche Amministrazioni, Castellana Sicula, PA) - IC "
       "Castellana Polizzi",
@@ -79565,46 +71367,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "07:06:30 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PAIC82300E", .name = "ISTITUTO COMPRENSIVO - I.C. CHIUSA SCLAFANI REINA G. (Pubbliche "
-      "Amministrazioni, Chiusa Sclafani, PA) - Istituto Comprensivo "
-      "G.Reina",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. CHIUSA SCLAFANI REINA G. (Pubbliche Amministrazioni, Chiusa Sclafani, PA) - Istituto Comprensivo G.Reina",
-    .category = "government", .portal = "https://www.istitutocomprensivochiusasclafani.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivochiusasclafani.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "19:43:44 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PAIC825006", .name = "ISTITUTO COMPRENSIVO - I.C. MONTEMAGGIORE BELSITO (Pubbliche "
-      "Amministrazioni, Montemaggiore Belsito, PA) - Istituto "
-      "Comprensivo Statale Montemaggiore Belsito",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. MONTEMAGGIORE BELSITO (Pubbliche Amministrazioni, Montemaggiore Belsito, PA) - Istituto Comprensivo Statale Montemaggiore Belsito",
-    .category = "government", .portal = "https://www.icmontemaggiorebelsito.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icmontemaggiorebelsito.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "06:16:58 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PAIC834001", .name = "ISTITUTO COMPRENSIVO - I.C.ISOLA DELLE FEMMINE'F.RISO' "
       "(Pubbliche Amministrazioni, Isola delle Femmine, PA) - Istituto "
       "Comprensivo Statale",
@@ -79623,26 +71385,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "09:42:39 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PAIC83600L", .name = "ISTITUTO COMPRENSIVO - I.C. BAGHERIA 'T. AIELLO' (Pubbliche "
-      "Amministrazioni, Bagheria, PA) - Istituto Comprensivo Statale "
-      "&quot;Tommaso Aiello&quot; &#8211; Bagheria (Pa)",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. BAGHERIA 'T. AIELLO' (Pubbliche Amministrazioni, Bagheria, PA) - Istituto Comprensivo Statale &quot;Tommaso Aiello&quot; &#8211; Bagheria (Pa)",
-    .category = "government", .portal = "https://www.icstaiello.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icstaiello.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 06 Oct 2026 "
-      "20:37:19 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_PAIC83700C", .name = "ISTITUTO COMPRENSIVO - I.C. BALESTRATE RETTORE EVOLA (Pubbliche "
@@ -79763,26 +71505,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "16:40:01 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PAIC847003", .name = "Istituto Comprensivo Antonino Caponnetto (Pubbliche "
-      "Amministrazioni, Palermo, PA) - Istituto Comprensivo Statale ad "
-      "Indirizzo Musicale Antonino Caponnetto Istituto",
-    .name_ja = "Istituto Comprensivo Antonino Caponnetto (Pubbliche Amministrazioni, Palermo, PA) - Istituto Comprensivo Statale ad Indirizzo Musicale Antonino Caponnetto Istituto",
-    .category = "government", .portal = "https://www.iccaponnetto.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iccaponnetto.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 03 Sep 2026 "
-      "09:28:28 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PAIC85100P", .name = "ISTITUTO COMPRENSIVO - I.C. COLOZZA G.A. / BONFIGLIO (Pubbliche "
       "Amministrazioni, Palermo, PA) - Istituto Comprensivo Statale "
       "“Colozza – Bonfiglio”",
@@ -79823,26 +71545,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:20:05 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PAIC855002", .name = "ISTITUTO COMPRENSIVO - IC RENATO GUTTUSO (Pubbliche "
-      "Amministrazioni, Palermo, PA) - Istituto Comprensivo Statale "
-      "&quot;Renato Guttuso&quot; &#8211; Palermo",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC RENATO GUTTUSO (Pubbliche Amministrazioni, Palermo, PA) - Istituto Comprensivo Statale &quot;Renato Guttuso&quot; &#8211; Palermo",
-    .category = "government", .portal = "https://www.icsguttusopalermo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsguttusopalermo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
-      "11:35:04 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PAIC85800D", .name = "Istituto Comprensivo Statale Margherita di Navarra (Pubbliche "
       "Amministrazioni, Monreale, PA) - ICS Margherita Di Navarra",
     .name_ja = "Istituto Comprensivo Statale Margherita di Navarra (Pubbliche Amministrazioni, Monreale, PA) - ICS Margherita Di Navarra",
@@ -79860,105 +71562,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 11 Oct 2026 "
       "09:18:02 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PAIC859009", .name = "ISTITUTO COMPRENSIVO STATALE A. VENEZIANO - P. NOVELLI "
-      "(Pubbliche Amministrazioni, Monreale, PA) - ISTITUTO COMPRENSIVO "
-      "STATALE &quot;A. VENEZIANO &#8211; P. NOVELLI&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO STATALE A. VENEZIANO - P. NOVELLI (Pubbliche Amministrazioni, Monreale, PA) - ISTITUTO COMPRENSIVO STATALE &quot;A. VENEZIANO &#8211; P. NOVELLI&quot;",
-    .category = "government", .portal = "https://www.icsvenezianonovelli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsvenezianonovelli.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "15:48:53 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PAIC86900X", .name = "ISTITUTO COMPRENSIVO - I.C.FALCONE -FONDO RAFFO (Pubbliche "
-      "Amministrazioni, Palermo, PA) - Istituto Comprensivo Statale "
-      "&quot;Giovanni Falcone&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C.FALCONE -FONDO RAFFO (Pubbliche Amministrazioni, Palermo, PA) - Istituto Comprensivo Statale &quot;Giovanni Falcone&quot;",
-    .category = "government", .portal = "https://www.icsgiovannifalcone.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsgiovannifalcone.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "11:09:13 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PAIC87100X", .name = "ISTITUTO COMPRENSIVO - I.C. MICHELANGELO BUONARROTI (Pubbliche "
-      "Amministrazioni, Palermo, PA) - ICS Michelangelo Buonarroti",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. MICHELANGELO BUONARROTI (Pubbliche Amministrazioni, Palermo, PA) - ICS Michelangelo Buonarroti",
-    .category = "government", .portal = "https://www.icsbuonarroti.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsbuonarroti.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 28 Sep 2026 "
-      "13:11:21 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PAIC87300G", .name = "ISTITUTO COMPRENSIVO - I.C. L. PIRANDELLO-BORGO ULIVIA "
-      "(Pubbliche Amministrazioni, Palermo, PA) - ISTITUTO COMPRENSIVO "
-      "STATALE L.PIRANDELLO-BORGO ULIVIA &#8211; PALERMO",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. L. PIRANDELLO-BORGO ULIVIA (Pubbliche Amministrazioni, Palermo, PA) - ISTITUTO COMPRENSIVO STATALE L.PIRANDELLO-BORGO ULIVIA &#8211; PALERMO",
-    .category = "government", .portal = "https://www.icspirandelloborgoulivia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icspirandelloborgoulivia.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "18:35:14 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PAIC87700V", .name = "ISTITUTO COMPRENSIVO - I.C. ANTONIO UGO (Pubbliche "
-      "Amministrazioni, Palermo, PA) - Istituto Comprensivo Statale "
-      "&quot;Antonio Ugo&quot; &#8211; Palermo",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. ANTONIO UGO (Pubbliche Amministrazioni, Palermo, PA) - Istituto Comprensivo Statale &quot;Antonio Ugo&quot; &#8211; Palermo",
-    .category = "government", .portal = "https://www.icsaugo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsaugo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
-      "11:07:07 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_PAIC87800P", .name = "ISTITUTO COMPRENSIVO - I.C.S. 'GIUSEPPE VERDI' (Pubbliche "
@@ -79979,26 +71582,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "10:47:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PAIC88000P", .name = "ISTITUTO COMPRENSIVO - I.C. PARTINICO-CASSARA' (Pubbliche "
-      "Amministrazioni, Partinico, PA) - Istituto Comprensivo Statale "
-      "Cassarà &#8211; Guida Partinico",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. PARTINICO-CASSARA' (Pubbliche Amministrazioni, Partinico, PA) - Istituto Comprensivo Statale Cassarà &#8211; Guida Partinico",
-    .category = "government", .portal = "https://www.istitutocomprensivocassara.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivocassara.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 17 Sep 2025 "
-      "13:30:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_PAIC88100E", .name = "ISTITUTO COMPRENSIVO - I.C.PIANA DEGLI ALBANESI (Pubbliche "
@@ -80058,45 +71641,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "12:09:49 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PAIC888009", .name = "ISTITUTO COMPRENSIVO - IC.TRABIA-GIOVANNI XXIII (Pubbliche "
-      "Amministrazioni, Trabia, PA) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;GIOVANNI XXIII&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC.TRABIA-GIOVANNI XXIII (Pubbliche Amministrazioni, Trabia, PA) - ISTITUTO COMPRENSIVO STATALE &quot;GIOVANNI XXIII&quot;",
-    .category = "government", .portal = "https://www.comprensivotrabia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comprensivotrabia.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "17:35:19 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PAIC890009", .name = "I.C.S. Politeama (Pubbliche Amministrazioni, Palermo, PA) - "
-      "Istituto Comprensivo Statale Politeama",
-    .name_ja = "I.C.S. Politeama (Pubbliche Amministrazioni, Palermo, PA) - Istituto Comprensivo Statale Politeama",
-    .category = "government", .portal = "https://www.icspoliteama.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icspoliteama.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Wed, 03 Dec 2025 "
-      "12:28:38 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PAIC89300R", .name = "ISTITUTO COMPRENSIVO - I.C. G. MARCONI (Pubbliche "
       "Amministrazioni, Palermo, PA) - I.C.S. GUGLIELMO MARCONI",
     .name_ja = "ISTITUTO COMPRENSIVO - I.C. G. MARCONI (Pubbliche Amministrazioni, Palermo, PA) - I.C.S. GUGLIELMO MARCONI",
@@ -80116,45 +71660,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:39:23 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PAIC89800X", .name = "I.C.S. Rita Borsellino (Pubbliche Amministrazioni, Palermo, PA) "
-      "- ISTITUTO COMPRENSIVO STATALE &quot;Rita Borsellino&quot;",
-    .name_ja = "I.C.S. Rita Borsellino (Pubbliche Amministrazioni, Palermo, PA) - ISTITUTO COMPRENSIVO STATALE &quot;Rita Borsellino&quot;",
-    .category = "government", .portal = "https://www.icsritaborsellino.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsritaborsellino.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "07:01:19 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PAIC8AC00X", .name = "ISTITUTO COMPRENSIVO - I.C. SCINA'/COSTA (Pubbliche "
-      "Amministrazioni, Palermo, PA) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;D. Scinà &#8211; G. Costa&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. SCINA'/COSTA (Pubbliche Amministrazioni, Palermo, PA) - ISTITUTO COMPRENSIVO STATALE &quot;D. Scinà &#8211; G. Costa&quot;",
-    .category = "government", .portal = "https://www.icscina-costa.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icscina-costa.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "19:32:13 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PAIC8AJ008", .name = "ISTITUTO COMPRENSIVO - CEFALU' N. BOTTA (Pubbliche "
       "Amministrazioni, Cefalù, PA) - IC Botta Cefalu",
     .name_ja = "ISTITUTO COMPRENSIVO - CEFALU' N. BOTTA (Pubbliche Amministrazioni, Cefalù, PA) - IC Botta Cefalu",
@@ -80172,26 +71677,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "14:51:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PAIC8AK004", .name = "ISTITUTO COMPRENSIVO - I.C. DA VINCI L. - CARDUCCI G. (Pubbliche "
-      "Amministrazioni, Palermo, PA) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;L. DA VINCI &#8211; G. CARDUCCI&quot; &#8211;",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. DA VINCI L. - CARDUCCI G. (Pubbliche Amministrazioni, Palermo, PA) - ISTITUTO COMPRENSIVO STATALE &quot;L. DA VINCI &#8211; G. CARDUCCI&quot; &#8211;",
-    .category = "government", .portal = "https://www.icdavincicarducci.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icdavincicarducci.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 29 Jul 2026 "
-      "16:25:18 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_PAIC8AL00X", .name = "ISTITUTO COMPRENSIVO - GIOVANNI 23 - PIAZZI (Pubbliche "
@@ -80214,46 +71699,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "14:33:45 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PAIC8AR00V", .name = "ISTITUTO COMPRENSIVO - I.C. GIUSEPPE SCELSA (Pubbliche "
-      "Amministrazioni, Palermo, PA) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;Giuseppe Scelsa&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. GIUSEPPE SCELSA (Pubbliche Amministrazioni, Palermo, PA) - ISTITUTO COMPRENSIVO STATALE &quot;Giuseppe Scelsa&quot;",
-    .category = "government", .portal = "https://www.icscelsa.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icscelsa.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 17 Jun 2026 "
-      "06:27:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PAIC8AT00X", .name = "ISTITUTO COMPRENSIVO - I.C. SPERONE - PERTINI (Pubbliche "
-      "Amministrazioni, Palermo, PA) - Istituto Comprensivo Statale "
-      "&quot;Sperone &#8211; Pertini&quot; Istituto Compre",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. SPERONE - PERTINI (Pubbliche Amministrazioni, Palermo, PA) - Istituto Comprensivo Statale &quot;Sperone &#8211; Pertini&quot; Istituto Compre",
-    .category = "government", .portal = "https://www.icssperonepertini.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icssperonepertini.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
-      "12:08:33 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PAIC8AW00B", .name = "Istituto Comprensivo  Statale Archimede - La Fata (Pubbliche "
       "Amministrazioni, Partinico, PA) - IC Archimede La Fata",
     .name_ja = "Istituto Comprensivo  Statale Archimede - La Fata (Pubbliche Amministrazioni, Partinico, PA) - IC Archimede La Fata",
@@ -80271,26 +71716,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "07:21:04 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PAIC8AX007", .name = "ISTITUTO COMPRENSIVO - I.C. FLORIO IGNAZIO - S. LORENZO "
-      "(Pubbliche Amministrazioni, Palermo, PA) - I.C.S. ad Indirizzo "
-      "Musicale &#8220;I. Florio &#8211; San Lorenzo&#8221;  Palerm",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. FLORIO IGNAZIO - S. LORENZO (Pubbliche Amministrazioni, Palermo, PA) - I.C.S. ad Indirizzo Musicale &#8220;I. Florio &#8211; San Lorenzo&#8221;  Palerm",
-    .category = "government", .portal = "https://www.icfloriosanlorenzo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icfloriosanlorenzo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "17:28:38 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_PAIC8AY003", .name = "ISTITUTO COMPRENSIVO - I.C. MONTEGRAPPA - R. SANZIO (Pubbliche "
@@ -80353,65 +71778,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "07:15:27 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PAIS00900C", .name = "ISTRUZIONE SECONDARIA SUPERIORE - IS DON G. COLLETTO (Pubbliche "
-      "Amministrazioni, Corleone, PA) - IISS DON GIOVANNI COLLETTO",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - IS DON G. COLLETTO (Pubbliche Amministrazioni, Corleone, PA) - IISS DON GIOVANNI COLLETTO",
-    .category = "government", .portal = "https://www.doncolletto.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.doncolletto.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "18:25:11 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PAIS01100C", .name = "ISTRUZIONE SECONDARIA SUPERIORE - I.I.S.S. LERCARA FRIDDI "
-      "(Pubbliche Amministrazioni, Lercara Friddi, PA) - I.I.S.S. "
-      "Lercara Friddi",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - I.I.S.S. LERCARA FRIDDI (Pubbliche Amministrazioni, Lercara Friddi, PA) - I.I.S.S. Lercara Friddi",
-    .category = "government", .portal = "https://www.iislercarafriddi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iislercarafriddi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "05:38:23 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PAIS013004", .name = "ISTRUZIONE SECONDARIA SUPERIORE - IISS STENIO (Pubbliche "
-      "Amministrazioni, Termini Imerese, PA) - ISTITUTO DI ISTRUZIONE "
-      "SECONDARIA SUPERIORE &quot;STENIO&quot;",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - IISS STENIO (Pubbliche Amministrazioni, Termini Imerese, PA) - ISTITUTO DI ISTRUZIONE SECONDARIA SUPERIORE &quot;STENIO&quot;",
-    .category = "government", .portal = "https://www.stenio.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.stenio.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "09:28:44 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PAIS01600G", .name = "ISTITUTO SUPERIORE - IS 'MAJORANA' (Pubbliche Amministrazioni, "
       "Palermo, PA) - Istituto Superiore Majorana",
     .name_ja = "ISTITUTO SUPERIORE - IS 'MAJORANA' (Pubbliche Amministrazioni, Palermo, PA) - Istituto Superiore Majorana",
@@ -80467,26 +71833,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "12:52:48 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PAIS02300P", .name = "ISTITUTO SUPERIORE - F. FERRARA (Pubbliche Amministrazioni, "
-      "Palermo, PA) - Istituto di Istruzione Secondaria Superiore "
-      "&quot;Francesco Ferrara&quot;",
-    .name_ja = "ISTITUTO SUPERIORE - F. FERRARA (Pubbliche Amministrazioni, Palermo, PA) - Istituto di Istruzione Secondaria Superiore &quot;Francesco Ferrara&quot;",
-    .category = "government", .portal = "https://www.iissferrara.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iissferrara.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "19:49:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_PAIS02400E", .name = "ISTITUTO SUPERIORE - E. MEDI (Pubbliche Amministrazioni, "
@@ -80547,25 +71893,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "18:29:32 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PAPM02000N", .name = "ISTITUTO MAGISTRALE - DE COSMI (Pubbliche Amministrazioni, "
-      "Palermo, PA) - Liceo G.A. De Cosmi",
-    .name_ja = "ISTITUTO MAGISTRALE - DE COSMI (Pubbliche Amministrazioni, Palermo, PA) - Liceo G.A. De Cosmi",
-    .category = "government", .portal = "https://www.liceodecosmi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceodecosmi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 26 May 2026 "
-      "15:06:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PAPM04000V", .name = "ISTITUTO MAGISTRALE - IM REGINA MARGHERITA (Pubbliche "
       "Amministrazioni, Palermo, PA) - ISTITUTO MAGISTRALE STATALE "
       "&quot;REGINA MARGHERITA&quot; &#8211; PALERMO",
@@ -80604,25 +71931,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "09:38:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PAPS010002", .name = "LICEO SCIENTIFICO - GALILEI (Pubbliche Amministrazioni, Palermo, "
-      "PA) - LICEO SCIENTIFICO STATALE  &quot;Galileo Galilei&quot;",
-    .name_ja = "LICEO SCIENTIFICO - GALILEI (Pubbliche Amministrazioni, Palermo, PA) - LICEO SCIENTIFICO STATALE  &quot;Galileo Galilei&quot;",
-    .category = "government", .portal = "https://www.liceoggalileipalermo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceoggalileipalermo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 11 Oct 2026 "
-      "16:55:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_PAPS02000L", .name = "LICEO SCIENTIFICO - LICEO SCIENTIFICO STATALE 'S.CANNIZZARO' "
@@ -80881,63 +72189,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "05:43:01 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PDIC824006", .name = "ISTITUTO COMPRENSIVO - DI CORREZZOLA (Pubbliche Amministrazioni, "
-      "Correzzola, PD) - Home",
-    .name_ja = "ISTITUTO COMPRENSIVO - DI CORREZZOLA (Pubbliche Amministrazioni, Correzzola, PD) - Home",
-    .category = "government", .portal = "https://www.icscorrezzola.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icscorrezzola.edu.it/index.php?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Fri, 04 Sep 2026 "
-      "11:57:06 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PDIC824006_2", .name = "ISTITUTO COMPRENSIVO - DI CORREZZOLA (Pubbliche Amministrazioni, "
-      "Correzzola, PD) - Home",
-    .name_ja = "ISTITUTO COMPRENSIVO - DI CORREZZOLA (Pubbliche Amministrazioni, Correzzola, PD) - Home",
-    .category = "government", .portal = "https://www.icscorrezzola.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icscorrezzola.edu.it/index.php?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T11:43:42+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PDIC831009", .name = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO PONSO (Pubbliche "
-      "Amministrazioni, Ponso, PD) - Istituto Comprensivo Statale Ponso",
-    .name_ja = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO PONSO (Pubbliche Amministrazioni, Ponso, PD) - Istituto Comprensivo Statale Ponso",
-    .category = "government", .portal = "https://www.icponso.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icponso.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "10:12:09 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PDIC83600C", .name = "Istituto Comprensivo di Carmignano Fontaniva (Pubbliche "
       "Amministrazioni, Carmignano di Brenta, PD) - ISTITUTO "
       "COMPRENSIVO STATALE CARMIGNANO-FONTANIVA",
@@ -81016,65 +72267,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "09:29:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PDIC866008", .name = "ISTITUTO COMPRENSIVO - DI MONTEGROTTO TERME (Pubbliche "
-      "Amministrazioni, Montegrotto Terme, PD) - Istituto Comprensivo "
-      "Statale di MONTEGROTTO TERME",
-    .name_ja = "ISTITUTO COMPRENSIVO - DI MONTEGROTTO TERME (Pubbliche Amministrazioni, Montegrotto Terme, PD) - Istituto Comprensivo Statale di MONTEGROTTO TERME",
-    .category = "government", .portal = "https://www.icmontegrotto.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icmontegrotto.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 02 Sep 2026 "
-      "14:26:37 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PDIC87100Q", .name = "ISTITUTO COMPRENSIVO - ISTITUTO COMP.DI VILLA ESTENSE (Pubbliche "
-      "Amministrazioni, Villa Estense, PD) - IC DI VILLA ESTENSE",
-    .name_ja = "ISTITUTO COMPRENSIVO - ISTITUTO COMP.DI VILLA ESTENSE (Pubbliche Amministrazioni, Villa Estense, PD) - IC DI VILLA ESTENSE",
-    .category = "government", .portal = "https://www.icvillaestense.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icvillaestense.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 29 Jun 2026 "
-      "14:13:15 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PDIC874007", .name = "ISTITUTO COMPRENSIVO - DI MONSELICE 'ZANELLATO' (Pubbliche "
-      "Amministrazioni, Monselice, PD) - ISTITUTO COMPRENSIVO DI "
-      "MONSELICE &quot;G. ZANELLATO&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - DI MONSELICE 'ZANELLATO' (Pubbliche Amministrazioni, Monselice, PD) - ISTITUTO COMPRENSIVO DI MONSELICE &quot;G. ZANELLATO&quot;",
-    .category = "government", .portal = "https://www.iczanellato.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iczanellato.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 15 Sep 2026 "
-      "09:48:45 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_PDIC88600D", .name = "ISTITUTO COMPRENSIVO - IX DI PADOVA 'CURBASTRO' (Pubbliche "
@@ -81431,26 +72623,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:13:30 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PEIC828004", .name = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO 'I.SILONE' "
-      "(Pubbliche Amministrazioni, Montesilvano, PE) - Istituto "
-      "Comprensivo &quot;I. Silone&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO 'I.SILONE' (Pubbliche Amministrazioni, Montesilvano, PE) - Istituto Comprensivo &quot;I. Silone&quot;",
-    .category = "government", .portal = "https://www.icsilonemontesilvano.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsilonemontesilvano.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 05 Sep 2026 "
-      "13:08:17 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PEIC830004", .name = "ISTITUTO COMPRENSIVO - I.C. PESCARA 7 (Pubbliche "
       "Amministrazioni, Pescara, PE) - icpescarasette.edu.it",
     .name_ja = "ISTITUTO COMPRENSIVO - I.C. PESCARA 7 (Pubbliche Amministrazioni, Pescara, PE) - icpescarasette.edu.it",
@@ -81506,44 +72678,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "12:48:51 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PEIC83800P", .name = "ISTITUTO COMPRENSIVO - I.C. PESCARA 10 (Pubbliche "
-      "Amministrazioni, Pescara, PE) - Istituto Comprensivo PESCARA 10",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. PESCARA 10 (Pubbliche Amministrazioni, Pescara, PE) - Istituto Comprensivo PESCARA 10",
-    .category = "government", .portal = "https://www.icpescara10.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icpescara10.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "07:37:31 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PEIS001008", .name = "ISTITUTO OMNICOMPRENSIVO POPOLI (Pubbliche Amministrazioni, "
-      "Popoli Terme, PE) - Istituto Omnicomprensivo di Popoli",
-    .name_ja = "ISTITUTO OMNICOMPRENSIVO POPOLI (Pubbliche Amministrazioni, Popoli Terme, PE) - Istituto Omnicomprensivo di Popoli",
-    .category = "government", .portal = "https://www.omnicomprensivopopoli.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.omnicomprensivopopoli.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 03 Oct 2026 "
-      "08:07:32 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_PEIS00400Q", .name = "Istituto Omnicomprensivo (Pubbliche Amministrazioni, Città "
@@ -81956,26 +73090,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "13:10:41 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PIIC82500X", .name = "ISTITUTO COMPRENSIVO - I.C. G.CARDUCCI S.MARIA A MONTE "
-      "(Pubbliche Amministrazioni, Santa Maria a Monte, PI) - Istituto "
-      "Comprensivo Statale “Carducci”",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. G.CARDUCCI S.MARIA A MONTE (Pubbliche Amministrazioni, Santa Maria a Monte, PI) - Istituto Comprensivo Statale “Carducci”",
-    .category = "government", .portal = "https://www.istitutocomprensivocarduccismm.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivocarduccismm.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 13 Jul 2026 "
-      "08:54:25 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PIIC82600Q", .name = "ISTITUTO COMPRENSIVO - I.C. BUONARROTI PONTE A EGOLA (Pubbliche "
       "Amministrazioni, San Miniato, PI) - Istituto Comprensivo M. "
       "Buonarroti",
@@ -82015,25 +73129,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "2026-10-18T09:43:47+00:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PIIC829007", .name = "ISTITUTO COMPRENSIVO - I.C. G.MARITI (Pubbliche Amministrazioni, "
-      "Fauglia, PI) - I.C. Giovanni Mariti – Fauglia",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. G.MARITI (Pubbliche Amministrazioni, Fauglia, PI) - I.C. Giovanni Mariti – Fauglia",
-    .category = "government", .portal = "https://www.icmariti.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icmariti.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "06:46:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PIIC83000B", .name = "ISTITUTO COMPRENSIVO - I.C. LARI (Pubbliche Amministrazioni, "
       "Casciana Terme Lari, PI) - IC Lari",
     .name_ja = "ISTITUTO COMPRENSIVO - I.C. LARI (Pubbliche Amministrazioni, Casciana Terme Lari, PI) - IC Lari",
@@ -82070,26 +73165,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "11:23:55 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PIIS00200B", .name = "ISTRUZIONE SECONDARIA SUPERIORE - XXV APRILE (Pubbliche "
-      "Amministrazioni, Pontedera, PI) - Liceo Classico Scientifico XXV "
-      "Aprile",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - XXV APRILE (Pubbliche Amministrazioni, Pontedera, PI) - Liceo Classico Scientifico XXV Aprile",
-    .category = "government", .portal = "https://www.liceoxxvaprile.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceoxxvaprile.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
-      "10:02:07 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_PIIS003007", .name = "ISTRUZIONE SECONDARIA SUPERIORE - IS 'E. SANTONI' (Pubbliche "
@@ -82305,26 +73380,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:59:19 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_POIC80700G", .name = "ISTITUTO COMPRENSIVO - BARTOLINI (Pubbliche Amministrazioni, "
-      "Vaiano, PO) - Istituto Comprensivo Statale&quot;Lorenzo "
-      "Bartolini&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - BARTOLINI (Pubbliche Amministrazioni, Vaiano, PO) - Istituto Comprensivo Statale&quot;Lorenzo Bartolini&quot;",
-    .category = "government", .portal = "https://www.comprensivovaiano.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comprensivovaiano.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
-      "05:52:50 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_POIC81000B", .name = "ISTITUTO COMPRENSIVO - 'FILIPPO MAZZEI' (Pubbliche "
       "Amministrazioni, Poggio a Caiano, PO) - Scuola Mazzei di Poggio "
       "a Caiano",
@@ -82365,44 +73420,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "13:23:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_POIC81300V", .name = "ISTITUTO COMPRENSIVO - DON LORENZO MILANI (Pubbliche "
-      "Amministrazioni, Prato, PO) - ICS Don Milani di Prato",
-    .name_ja = "ISTITUTO COMPRENSIVO - DON LORENZO MILANI (Pubbliche Amministrazioni, Prato, PO) - ICS Don Milani di Prato",
-    .category = "government", .portal = "https://www.donmilaniprato.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.donmilaniprato.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "17:38:19 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_POIC81400P", .name = "ISTITUTO COMPRENSIVO - GANDHI (Pubbliche Amministrazioni, Prato, "
-      "PO) - ICS Gandhi – Prato",
-    .name_ja = "ISTITUTO COMPRENSIVO - GANDHI (Pubbliche Amministrazioni, Prato, PO) - ICS Gandhi – Prato",
-    .category = "government", .portal = "https://www.gandhiprato.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gandhiprato.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 09 Sep 2026 "
-      "17:20:12 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_POIC81500E", .name = "ISTITUTO COMPRENSIVO - F.LIPPI (Pubbliche Amministrazioni, "
       "Prato, PO) - Istituto Comprensivo Filippino Lippi di Prato",
     .name_ja = "ISTITUTO COMPRENSIVO - F.LIPPI (Pubbliche Amministrazioni, Prato, PO) - Istituto Comprensivo Filippino Lippi di Prato",
@@ -82420,26 +73437,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "14:20:59 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_POIC820002", .name = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO NORD (Pubbliche "
-      "Amministrazioni, Prato, PO) - ISTITUTO COMPRENSIVO NORD &#8211; "
-      "PRATO",
-    .name_ja = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO NORD (Pubbliche Amministrazioni, Prato, PO) - ISTITUTO COMPRENSIVO NORD &#8211; PRATO",
-    .category = "government", .portal = "https://www.icnordprato.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icnordprato.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 02 Oct 2026 "
-      "12:04:43 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_POIS00200L", .name = "ISTITUTO SUPERIORE - A. GRAMSCI - J. M. KEYNES (Pubbliche "
@@ -82460,25 +73457,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "19:35:09 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_POIS00300C", .name = "ISTITUTO SUPERIORE -  C. LIVI (Pubbliche Amministrazioni, Prato, "
-      "PO) - Istituto d’Istruzione Superiore “Carlo Livi”",
-    .name_ja = "ISTITUTO SUPERIORE -  C. LIVI (Pubbliche Amministrazioni, Prato, PO) - Istituto d’Istruzione Superiore “Carlo Livi”",
-    .category = "government", .portal = "https://www.liviprato.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liviprato.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 29 Sep 2026 "
-      "08:15:15 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_POPS02000G", .name = "LICEO SCIENTIFICO - N. COPERNICO (Pubbliche Amministrazioni, "
@@ -82575,26 +73553,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "12:05:49 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PRIC81000E", .name = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO VAL CENO (Pubbliche "
-      "Amministrazioni, Bardi, PR) - Istituto Comprensivo Val Ceno "
-      "&#8211; Bardi (PR)",
-    .name_ja = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO VAL CENO (Pubbliche Amministrazioni, Bardi, PR) - Istituto Comprensivo Val Ceno &#8211; Bardi (PR)",
-    .category = "government", .portal = "https://www.icvalceno.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icvalceno.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "07:15:31 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_PRIC81400T", .name = "ISTITUTO COMPRENSIVO - IST. COMPRENSIVO DI SORBOLO (Pubbliche "
@@ -82792,26 +73750,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "15:08:46 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PRTD02000E", .name = "ISTITUTO TECNICO COMMERCIALE - 'MELLONI' (Pubbliche "
-      "Amministrazioni, Parma, PR) - Istituto Tecnico Economico "
-      "Macedonio Melloni Parma",
-    .name_ja = "ISTITUTO TECNICO COMMERCIALE - 'MELLONI' (Pubbliche Amministrazioni, Parma, PR) - Istituto Tecnico Economico Macedonio Melloni Parma",
-    .category = "government", .portal = "https://www.itemelloni.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.itemelloni.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 04 Sep 2026 "
-      "17:16:07 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PRTF010006", .name = "ISTITUTO TECNICO INDUSTRIALE - 'LEONARDO DA VINCI' (Pubbliche "
       "Amministrazioni, Parma, PR) - Itis Leonardo da Vinci &#8211; "
       "Parma",
@@ -82890,26 +73828,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:38:05 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PSIC830007", .name = "ISTITUTO COMPRENSIVO - FANO 'G.PADALINO' (Pubbliche "
-      "Amministrazioni, Fano, PU) - Istituto Comprensivo Statale "
-      "G.Padalino",
-    .name_ja = "ISTITUTO COMPRENSIVO - FANO 'G.PADALINO' (Pubbliche Amministrazioni, Fano, PU) - Istituto Comprensivo Statale G.Padalino",
-    .category = "government", .portal = "https://www.icpadalinofano.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icpadalinofano.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "14:49:51 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PSIC83200V", .name = "ISTITUTO COMPRENSIVO - MONDOLFO 'ENRICO FERMI' (Pubbliche "
       "Amministrazioni, Mondolfo, PU) - ICS Fermi",
     .name_ja = "ISTITUTO COMPRENSIVO - MONDOLFO 'ENRICO FERMI' (Pubbliche Amministrazioni, Mondolfo, PU) - ICS Fermi",
@@ -82946,46 +73864,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Wed, 15 Jun 2016 "
       "13:10:11 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PSIC83400E", .name = "ISTITUTO COMPRENSIVO - PERGOLA 'G.BINOTTI' (Pubbliche "
-      "Amministrazioni, Pergola, PU) - ISTITUTO COMPRENSIVO STATALE  "
-      "&quot;G. BINOTTI&quot; &#8211; PERGOLA",
-    .name_ja = "ISTITUTO COMPRENSIVO - PERGOLA 'G.BINOTTI' (Pubbliche Amministrazioni, Pergola, PU) - ISTITUTO COMPRENSIVO STATALE  &quot;G. BINOTTI&quot; &#8211; PERGOLA",
-    .category = "government", .portal = "https://www.icbinottipergola.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icbinottipergola.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "12:54:13 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PSIS00100B", .name = "ISTRUZIONE SECONDARIA SUPERIORE - ISTITUTO OMNICOMPRENSIVO "
-      "MONTEFELTRO (Pubbliche Amministrazioni, Sassocorvaro Auditore, "
-      "PU) - ISTITUTO OMNICOMPRENSIVO &quot;MONTEFELTRO&quot;",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - ISTITUTO OMNICOMPRENSIVO MONTEFELTRO (Pubbliche Amministrazioni, Sassocorvaro Auditore, PU) - ISTITUTO OMNICOMPRENSIVO &quot;MONTEFELTRO&quot;",
-    .category = "government", .portal = "https://www.iomontefeltro.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iomontefeltro.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 28 Aug 2026 "
-      "11:00:42 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_PSIS00700A", .name = "ISTRUZIONE SECONDARIA SUPERIORE - I.I.S. 'DELLA ROVERE' "
@@ -83224,45 +74102,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "13:12:23 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PTIC82600P", .name = "ISTITUTO COMPRENSIVO - BONACCORSO DA MONTEMAGNO (Pubbliche "
-      "Amministrazioni, Quarrata, PT) - ICS &quot;Bonaccorso da "
-      "Montemagno&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - BONACCORSO DA MONTEMAGNO (Pubbliche Amministrazioni, Quarrata, PT) - ICS &quot;Bonaccorso da Montemagno&quot;",
-    .category = "government", .portal = "https://www.bonaccorso.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.bonaccorso.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 03 Oct 2026 "
-      "10:06:51 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PTIC82700E", .name = "ISTITUTO COMPRENSIVO - MARIO NANNINI (Pubbliche Amministrazioni, "
-      "Quarrata, PT) - Istituto Comprensivo Statale “Mario Nannini”",
-    .name_ja = "ISTITUTO COMPRENSIVO - MARIO NANNINI (Pubbliche Amministrazioni, Quarrata, PT) - Istituto Comprensivo Statale “Mario Nannini”",
-    .category = "government", .portal = "https://www.icnanniniquarrata.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icnanniniquarrata.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 10 Sep 2026 "
-      "10:49:17 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PTPM02000A", .name = "ISTITUTO MAGISTRALE - IM STATALE LORENZINI (Pubbliche "
       "Amministrazioni, Pescia, PT) - ISTITUTO MAGISTRALE STATALE "
       "&quot;C. Lorenzini&quot; – Pescia",
@@ -83362,67 +74201,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "06:55:37 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PTRH01000C", .name = "ISTITUTO PROFESSIONALE PER I SERVIZI ALBERGHIERI E RISTORAZIONE "
-      "- 'MARTINI' (Pubbliche Amministrazioni, Montecatini-Terme, PT) - "
-      "Istituto Professionale di Stato &quot;F. Martini&quot; per "
-      "l&#039;Enogastronomia",
-    .name_ja = "ISTITUTO PROFESSIONALE PER I SERVIZI ALBERGHIERI E RISTORAZIONE - 'MARTINI' (Pubbliche Amministrazioni, Montecatini-Terme, PT) - Istituto Professionale di Stato &quot;F. Martini&quot; per l&#039;Enogastronomia",
-    .category = "government", .portal = "https://www.alberghieromontecatini.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.alberghieromontecatini.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 10 Oct 2026 "
-      "08:19:39 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PTSD010005", .name = "Liceo Artistico \"P. Petrocchi\" Pistoia (Pubbliche "
-      "Amministrazioni, Pistoia, PT) - Liceo Artistico Statale "
-      "&quot;Policarpo Petrocchi&quot;",
-    .name_ja = "Liceo Artistico \"P. Petrocchi\" Pistoia (Pubbliche Amministrazioni, Pistoia, PT) - Liceo Artistico Statale &quot;Policarpo Petrocchi&quot;",
-    .category = "government", .portal = "https://www.liceoartisticopistoia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceoartisticopistoia.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "09:14:19 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PTTD01000E", .name = "ISTITUTO TECNICO COMMERCIALE - F.MARCHI (Pubbliche "
-      "Amministrazioni, Pescia, PT) - Istituto Tecnico Statale "
-      "&quot;Marchi-Forti&quot;",
-    .name_ja = "ISTITUTO TECNICO COMMERCIALE - F.MARCHI (Pubbliche Amministrazioni, Pescia, PT) - Istituto Tecnico Statale &quot;Marchi-Forti&quot;",
-    .category = "government", .portal = "https://www.itsmarchiforti.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.itsmarchiforti.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
-      "08:42:59 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PTTF01000R", .name = "I.T.T.S. Silvano Fedi - Enrico Fermi (Pubbliche Amministrazioni, "
       "Pistoia, PT) - I.T.T.S. SILVANO FEDI-ENRICO FERMI",
     .name_ja = "I.T.T.S. Silvano Fedi - Enrico Fermi (Pubbliche Amministrazioni, Pistoia, PT) - I.T.T.S. SILVANO FEDI-ENRICO FERMI",
@@ -83519,26 +74297,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "00:00:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PVIC80900G", .name = "ISTITUTO COMPRENSIVO - IC M. MONTANARI-SANNAZZARO (Pubbliche "
-      "Amministrazioni, Sannazzaro de' Burgondi, PV) - Istituto "
-      "Omnicomprensivo Statale di SANNAZZARO DE&#039; BURGONDI",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC M. MONTANARI-SANNAZZARO (Pubbliche Amministrazioni, Sannazzaro de' Burgondi, PV) - Istituto Omnicomprensivo Statale di SANNAZZARO DE&#039; BURGONDI",
-    .category = "government", .portal = "https://www.icmariangelamontanari.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icmariangelamontanari.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 06 Oct 2026 "
-      "10:26:53 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PVIC81100G", .name = "ISTITUTO COMPRENSIVO - IST. COMPRENSIVO RIVANAZZANO (Pubbliche "
       "Amministrazioni, Rivanazzano Terme, PV) - Istituto Comprensivo "
       "di Rivanazzano Terme",
@@ -83597,25 +74355,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "17:52:03 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PVIC814003", .name = "ISTITUTO COMPRENSIVO - BELGIOIOSO (Pubbliche Amministrazioni, "
-      "Belgioioso, PV) - Istituto Comprensivo di Belgioioso",
-    .name_ja = "ISTITUTO COMPRENSIVO - BELGIOIOSO (Pubbliche Amministrazioni, Belgioioso, PV) - Istituto Comprensivo di Belgioioso",
-    .category = "government", .portal = "https://www.icbelgioioso.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icbelgioioso.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "16:54:35 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PVIC81600P", .name = "ISTITUTO COMPRENSIVO - SAN MARTINO SICCOMARIO (Pubbliche "
       "Amministrazioni, San Martino Siccomario, PV) - ISTITUTO "
       "COMPRENSIVO STATALE &#8211; S. MARTINO SICCOMARIO",
@@ -83634,46 +74373,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 25 Jun 2026 "
       "06:33:18 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PVIC81700E", .name = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO MORTARA (Pubbliche "
-      "Amministrazioni, Mortara, PV) - Istituto Comprensivo Statale di "
-      "Mortara (PV)",
-    .name_ja = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO MORTARA (Pubbliche Amministrazioni, Mortara, PV) - Istituto Comprensivo Statale di Mortara (PV)",
-    .category = "government", .portal = "https://www.icmortara.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icmortara.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "11:29:42 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PVIC81800A", .name = "ISTITUTO COMPRENSIVO DI LANDRIANO (Pubbliche Amministrazioni, "
-      "Landriano, PV) - Istituto Comprensivo Statale "
-      "&quot;Landriano&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO DI LANDRIANO (Pubbliche Amministrazioni, Landriano, PV) - Istituto Comprensivo Statale &quot;Landriano&quot;",
-    .category = "government", .portal = "https://www.iclandriano.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iclandriano.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "14:28:51 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_PVIC822002", .name = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO STRADELLA (Pubbliche "
@@ -83735,25 +74434,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:01:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PVIS00900Q", .name = "ISTRUZIONE SECONDARIA SUPERIORE - ALFIERI MASERATI - VOGHERA "
-      "(Pubbliche Amministrazioni, Voghera, PV) - I.I.S. Maserati",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - ALFIERI MASERATI - VOGHERA (Pubbliche Amministrazioni, Voghera, PV) - I.I.S. Maserati",
-    .category = "government", .portal = "https://www.iismaserati.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iismaserati.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 16 May 2026 "
-      "20:27:56 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PVPC010006", .name = "LICEO CLASSICO - BENEDETTO CAIROLI - VIGEVANO (Pubbliche "
       "Amministrazioni, Vigevano, PV) - Liceo Ginnasio Statale B. "
       "Cairoli &#8211; Vigevano",
@@ -83794,25 +74474,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "06:55:14 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PVTA01000P", .name = "ISTITUTO TECNICO AGRARIO - C. GALLINI - VOGHERA (Pubbliche "
-      "Amministrazioni, Voghera, PV) - ITAS &quot;CARLO GALLINI&quot;",
-    .name_ja = "ISTITUTO TECNICO AGRARIO - C. GALLINI - VOGHERA (Pubbliche Amministrazioni, Voghera, PV) - ITAS &quot;CARLO GALLINI&quot;",
-    .category = "government", .portal = "https://www.istitutocarlogallini.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocarlogallini.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 31 Jul 2026 "
-      "14:41:26 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PZIC815001", .name = "Istituto Comprensivo Rapolla  Barile (Pubbliche Amministrazioni, "
       "Rapolla, PZ) - Istituto Comprensivo Barile",
     .name_ja = "Istituto Comprensivo Rapolla  Barile (Pubbliche Amministrazioni, Rapolla, PZ) - Istituto Comprensivo Barile",
@@ -83830,26 +74491,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 25 Sep 2026 "
       "17:18:23 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PZIC81700L", .name = "ISTITUTO COMPRENSIVO SATRIANO-BRIENZA (Pubbliche "
-      "Amministrazioni, Satriano di Lucania, PZ) - ISTITUTO COMPRENSIVO "
-      "DI SATRIANO DI LUCANIA",
-    .name_ja = "ISTITUTO COMPRENSIVO SATRIANO-BRIENZA (Pubbliche Amministrazioni, Satriano di Lucania, PZ) - ISTITUTO COMPRENSIVO DI SATRIANO DI LUCANIA",
-    .category = "government", .portal = "https://www.icsatrianodilucania.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsatrianodilucania.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, RSS2 feed, newest Mon, 21 Sep 2026 "
-      "13:45:41 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_PZIC821008", .name = "ISTITUTO COMPRENSIVO - 'ALFIERI' LAURENZANA (Pubbliche "
@@ -83870,46 +74511,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 11 Jun 2026 "
       "09:05:35 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PZIC82600B", .name = "Istituto Omnicomprensivo Di Villa D'Agri (Pubbliche "
-      "Amministrazioni, Marsicovetere, PZ) - Ultime notizie dal sito "
-      "dell'Istituto Omnicomprensivo Marsicovetere - Villa d'Ag",
-    .name_ja = "Istituto Omnicomprensivo Di Villa D'Agri (Pubbliche Amministrazioni, Marsicovetere, PZ) - Ultime notizie dal sito dell'Istituto Omnicomprensivo Marsicovetere - Villa d'Ag",
-    .category = "government", .portal = "https://www.scuolemarsicovetere.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.scuolemarsicovetere.it/rss.asp",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest (no date field). "
-      "A feed the organisation itself declares or links on its site "
-      "root." },
-
-  { .id = "JO45_IT_ISTSC_PZIC828003", .name = "ISTITUTO COMPRENSIVO ROTONDA-VIGGIANELLO  di  ROTONDA (PZ) "
-      "(Pubbliche Amministrazioni, Rotonda, PZ) - Istituto Comprensivo "
-      "&quot;Don Bosco&quot;- Rotonda",
-    .name_ja = "ISTITUTO COMPRENSIVO ROTONDA-VIGGIANELLO  di  ROTONDA (PZ) (Pubbliche Amministrazioni, Rotonda, PZ) - Istituto Comprensivo &quot;Don Bosco&quot;- Rotonda",
-    .category = "government", .portal = "https://www.comprensivorotonda.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comprensivorotonda.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 10 Oct 2026 "
-      "08:04:38 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_PZIC82900V", .name = "ISTITUTO COMPRENSIVO - PIETRAGALLA (Pubbliche Amministrazioni, "
@@ -83988,66 +74589,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 09 Sep 2026 "
       "04:02:03 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PZIC842009", .name = "ISTITUTO COMPRENSIVO M.FERRARA-MAROTTOLI MELFI (Pubbliche "
-      "Amministrazioni, Melfi, PZ) - Sito Istituzionale &quot;IC "
-      "ferrara Marottoli&quot; Melfi (Pz) - www.icferrarama",
-    .name_ja = "ISTITUTO COMPRENSIVO M.FERRARA-MAROTTOLI MELFI (Pubbliche Amministrazioni, Melfi, PZ) - Sito Istituzionale &quot;IC ferrara Marottoli&quot; Melfi (Pz) - www.icferrarama",
-    .category = "government", .portal = "https://www.icferraramarottoli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icferraramarottoli.edu.it/index.php?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Wed, 06 Jan 2021 "
-      "16:33:13 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PZIC842009_2", .name = "ISTITUTO COMPRENSIVO M.FERRARA-MAROTTOLI MELFI (Pubbliche "
-      "Amministrazioni, Melfi, PZ) - Sito Istituzionale &quot;IC "
-      "ferrara Marottoli&quot; Melfi (Pz) - www.icferrarama",
-    .name_ja = "ISTITUTO COMPRENSIVO M.FERRARA-MAROTTOLI MELFI (Pubbliche Amministrazioni, Melfi, PZ) - Sito Istituzionale &quot;IC ferrara Marottoli&quot; Melfi (Pz) - www.icferrarama",
-    .category = "government", .portal = "https://www.icferraramarottoli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icferraramarottoli.edu.it/index.php?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:43:58+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PZIC842009_3", .name = "ISTITUTO COMPRENSIVO M.FERRARA-MAROTTOLI MELFI (Pubbliche "
-      "Amministrazioni, Melfi, PZ) - Tutte le news - "
-      "www.icferraramarottoli.edu.it",
-    .name_ja = "ISTITUTO COMPRENSIVO M.FERRARA-MAROTTOLI MELFI (Pubbliche Amministrazioni, Melfi, PZ) - Tutte le news - www.icferraramarottoli.edu.it",
-    .category = "government", .portal = "https://www.icferraramarottoli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icferraramarottoli.edu.it/index.php/tutte-le-news?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 07 Jul 2026 "
-      "09:15:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_PZIC85200X", .name = "ISTITUTO COMPRENSIVO LAGONEGRO (Pubbliche Amministrazioni, "
@@ -84165,44 +74706,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "2026-10-18T11:43:59+02:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PZIC86300A", .name = "ISTITUTO COMPRENSIVO - TITO (Pubbliche Amministrazioni, Tito, "
-      "PZ) - Istituto Comprensivo Tito",
-    .name_ja = "ISTITUTO COMPRENSIVO - TITO (Pubbliche Amministrazioni, Tito, PZ) - Istituto Comprensivo Tito",
-    .category = "government", .portal = "https://www.ictito.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ictito.edu.it/index.php?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 23 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "10:24:47 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PZIC86300A_2", .name = "ISTITUTO COMPRENSIVO - TITO (Pubbliche Amministrazioni, Tito, "
-      "PZ) - titleIstituto Comprensivo Tito",
-    .name_ja = "ISTITUTO COMPRENSIVO - TITO (Pubbliche Amministrazioni, Tito, PZ) - titleIstituto Comprensivo Tito",
-    .category = "government", .portal = "https://www.ictito.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ictito.edu.it/index.php?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 23 items, ATOM feed, newest "
-      "2026-10-18T11:43:59+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
-
   { .id = "JO45_IT_ISTSC_PZIC864006", .name = "ISTITUTO COMPRENSIVO - 'J. STELLA' MURO LUCANO (Pubbliche "
       "Amministrazioni, Muro Lucano, PZ) - IC &quot;J. Stella&quot; "
       "Muro Lucano",
@@ -84221,47 +74724,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
       "11:25:08 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PZIC87000D", .name = "I.C. SPAVENTA FILIPPI - Avigliano centro (Pubbliche "
-      "Amministrazioni, Avigliano, PZ) - Istituto Comprensivo "
-      "&quot;Silvio Spaventa Filippi&quot;",
-    .name_ja = "I.C. SPAVENTA FILIPPI - Avigliano centro (Pubbliche Amministrazioni, Avigliano, PZ) - Istituto Comprensivo &quot;Silvio Spaventa Filippi&quot;",
-    .category = "government", .portal = "https://www.comprensivoaviglianocentro.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comprensivoaviglianocentro.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 05 Oct 2026 "
-      "16:43:40 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PZIC871009", .name = "Istituto Comprensivo Federico II di Svevia - Avigliano Frazioni "
-      "- Filiano (Pubbliche Amministrazioni, Avigliano, PZ) - ISTITUTO "
-      "COMPRENSIVO &quot;FEDERICO II DI SVEVIA&quot; AVIGLIANO FRAZIONI "
-      "&#8211",
-    .name_ja = "Istituto Comprensivo Federico II di Svevia - Avigliano Frazioni - Filiano (Pubbliche Amministrazioni, Avigliano, PZ) - ISTITUTO COMPRENSIVO &quot;FEDERICO II DI SVEVIA&quot; AVIGLIANO FRAZIONI &#8211",
-    .category = "government", .portal = "https://www.icaviglianofrazioni.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icaviglianofrazioni.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 16 Jun 2025 "
-      "09:45:32 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_PZIC88200Q", .name = "Istituto Comprensivo Statale - 'G. Leopardi' (Pubbliche "
@@ -84363,26 +74825,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "15:59:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PZIC89600N", .name = "ISTITUTO COMPRENSIVO - I.C. EX S.M. 'D. SAVIO' (Pubbliche "
-      "Amministrazioni, Potenza, PZ) - ISTITUTO COMPRENSIVO EX S.M. "
-      "DOMENICO SAVIO",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. EX S.M. 'D. SAVIO' (Pubbliche Amministrazioni, Potenza, PZ) - ISTITUTO COMPRENSIVO EX S.M. DOMENICO SAVIO",
-    .category = "government", .portal = "https://www.icdomenicosaviopz.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icdomenicosaviopz.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "14:44:29 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PZIS001007", .name = "ISTRUZIONE SECONDARIA SUPERIORE - ISTITUTO D'ISTRUZIONE SUP.'F. "
       "DE SARLO' (Pubbliche Amministrazioni, Lagonegro, PZ) - ISTITUTO "
       "DI ISTRUZIONE SUPERIORE “F. DE SARLO – G. DE LORENZO”",
@@ -84401,26 +74843,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
       "15:26:22 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PZIS002003", .name = "ISTRUZIONE SECONDARIA SUPERIORE - I.I.S. 'G. FORTUNATO' RIONERO "
-      "IN VULTURE (Pubbliche Amministrazioni, Rionero in Vulture, PZ) - "
-      "ISTITUTO D&#039;ISTRUZIONE SUPERIORE  G. FORTUNATO",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - I.I.S. 'G. FORTUNATO' RIONERO IN VULTURE (Pubbliche Amministrazioni, Rionero in Vulture, PZ) - ISTITUTO D&#039;ISTRUZIONE SUPERIORE  G. FORTUNATO",
-    .category = "government", .portal = "https://www.liceirionero.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceirionero.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "13:35:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_PZIS00600A", .name = "ISTRUZIONE SECONDARIA SUPERIORE - 'N. MIRAGLIA' LAURIA "
@@ -84563,66 +74985,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "13:16:03 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_PZIS028007", .name = "ISTITUTO DI ISTRUZIONE GASPARRINI RIGHETTI (Pubbliche "
-      "Amministrazioni, Melfi, PZ) - Istituto di Istruzione Superiore "
-      "&quot;Gasparrini &#8211; Righetti&quot;",
-    .name_ja = "ISTITUTO DI ISTRUZIONE GASPARRINI RIGHETTI (Pubbliche Amministrazioni, Melfi, PZ) - Istituto di Istruzione Superiore &quot;Gasparrini &#8211; Righetti&quot;",
-    .category = "government", .portal = "https://www.iisgasparrini-righetti.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iisgasparrini-righetti.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 17 Sep 2026 "
-      "14:23:39 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PZPS12000V", .name = "LICEO SCIENTIFICO - 'PIER PAOLO PASOLINI' (Pubbliche "
-      "Amministrazioni, Potenza, PZ) - LICEO SCIENTIFICO STATALE "
-      "&quot;PIER PAOLO PASOLINI&quot; &#8211; POTENZA",
-    .name_ja = "LICEO SCIENTIFICO - 'PIER PAOLO PASOLINI' (Pubbliche Amministrazioni, Potenza, PZ) - LICEO SCIENTIFICO STATALE &quot;PIER PAOLO PASOLINI&quot; &#8211; POTENZA",
-    .category = "government", .portal = "https://www.liceoscientificopasolinipz.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceoscientificopasolinipz.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
-      "21:25:06 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PZRI04000C", .name = "ISTITUTO PROFESSIONALE INDUSTRIA E ARTIGIANATO - POTENZA "
-      "(Pubbliche Amministrazioni, Potenza, PZ) - ISTITUTO PROF.LE "
-      "STATO PER L&#039;INDUSTRIA E L&#039;ARTIGIANATO &quot;G. GIORGI",
-    .name_ja = "ISTITUTO PROFESSIONALE INDUSTRIA E ARTIGIANATO - POTENZA (Pubbliche Amministrazioni, Potenza, PZ) - ISTITUTO PROF.LE STATO PER L&#039;INDUSTRIA E L&#039;ARTIGIANATO &quot;G. GIORGI",
-    .category = "government", .portal = "https://www.ipsiapotenza.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ipsiapotenza.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 06 Oct 2026 "
-      "12:21:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_PZSD030003", .name = "ISTITUTO D'ARTE - ISTITUTO STATALE D'ARTE (Pubbliche "
       "Amministrazioni, Potenza, PZ) - Liceo Statale &#8211; "
       "&quot;Walter Gropius&quot;",
@@ -84641,26 +75003,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "13:21:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_PZVC01000G", .name = "Convitto Nazionale Salvator Rosa - Potenza (Pubbliche "
-      "Amministrazioni, Potenza, PZ) - CONVITTO NAZIONALE "
-      "&quot;Salvator Rosa&quot; con annesso Liceo &quot; Rosa-Giant",
-    .name_ja = "Convitto Nazionale Salvator Rosa - Potenza (Pubbliche Amministrazioni, Potenza, PZ) - CONVITTO NAZIONALE &quot;Salvator Rosa&quot; con annesso Liceo &quot; Rosa-Giant",
-    .category = "government", .portal = "https://www.convittoliceoannessopz.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.convittoliceoannessopz.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "06:36:44 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_RAIC802007", .name = "ISTITUTO COMPRENSIVO - IC S.P. IN VINCOLI (Pubbliche "
@@ -84703,66 +75045,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "22:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_RAIC81200T", .name = "ISTITUTO COMPRENSIVO - I.C. CORSO MATTEOTTI ALFONSINE (Pubbliche "
-      "Amministrazioni, Alfonsine, RA) - Homepage Istituto Scolastico - "
-      "www.icalfonsine.edu.it",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. CORSO MATTEOTTI ALFONSINE (Pubbliche Amministrazioni, Alfonsine, RA) - Homepage Istituto Scolastico - www.icalfonsine.edu.it",
-    .category = "government", .portal = "https://www.icalfonsine.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icalfonsine.edu.it/index.php?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, RSS2 feed, newest Wed, 03 Jun 2026 "
-      "07:26:25 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RAIC81200T_2", .name = "ISTITUTO COMPRENSIVO - I.C. CORSO MATTEOTTI ALFONSINE (Pubbliche "
-      "Amministrazioni, Alfonsine, RA) - Homepage Istituto Scolastico - "
-      "www.icalfonsine.edu.it",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. CORSO MATTEOTTI ALFONSINE (Pubbliche Amministrazioni, Alfonsine, RA) - Homepage Istituto Scolastico - www.icalfonsine.edu.it",
-    .category = "government", .portal = "https://www.icalfonsine.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icalfonsine.edu.it/index.php?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T09:44:02+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RAIC81400D", .name = "ISTITUTO COMPRENSIVO - 'S.GHERARDI' - LUGO (Pubbliche "
-      "Amministrazioni, Lugo, RA) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;SILVESTRO GHERARDI&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - 'S.GHERARDI' - LUGO (Pubbliche Amministrazioni, Lugo, RA) - ISTITUTO COMPRENSIVO STATALE &quot;SILVESTRO GHERARDI&quot;",
-    .category = "government", .portal = "https://www.istitutocomprensivogherardi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivogherardi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "12:16:03 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_RAIC815009", .name = "ISTITUTO COMPRENSIVO - 'F.BARACCA' - LUGO (Pubbliche "
       "Amministrazioni, Lugo, RA) - ISTITUTO COMPRENSIVO STATALE  LUGO1 "
       "&quot;FRANCESCO BARACCA&quot;",
@@ -84781,26 +75063,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 03 Oct 2026 "
       "06:33:33 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RAIC816005", .name = "ISTITUTO COMPRENSIVO - 'G. PASCOLI' - RIOLO TERME (Pubbliche "
-      "Amministrazioni, Riolo Terme, RA) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;G.Pascoli&quot; di RIOLO TERME e CASOLA VALSE",
-    .name_ja = "ISTITUTO COMPRENSIVO - 'G. PASCOLI' - RIOLO TERME (Pubbliche Amministrazioni, Riolo Terme, RA) - ISTITUTO COMPRENSIVO STATALE &quot;G.Pascoli&quot; di RIOLO TERME e CASOLA VALSE",
-    .category = "government", .portal = "https://www.icpascoliriolo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icpascoliriolo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 16 Sep 2026 "
-      "22:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_RAIC817001", .name = "ISTITUTO COMPRENSIVO GIANCARLO CERINI (Pubbliche "
@@ -84841,105 +75103,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 29 Sep 2026 "
       "10:46:18 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RAPS01000Q", .name = "LICEO SCIENTIFICO - A. ORIANI (Pubbliche Amministrazioni, "
-      "Ravenna, RA) - LICEO SCIENTIFICO STATALE &quot;A.ORIANI&quot;",
-    .name_ja = "LICEO SCIENTIFICO - A. ORIANI (Pubbliche Amministrazioni, Ravenna, RA) - LICEO SCIENTIFICO STATALE &quot;A.ORIANI&quot;",
-    .category = "government", .portal = "https://www.liceoscientificoravenna.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceoscientificoravenna.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 30 Sep 2026 "
-      "16:29:26 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RAPS030001", .name = "LICEO SCIENTIFICO - LS G. RICCI CURBASTRO (Pubbliche "
-      "Amministrazioni, Lugo, RA) - Homepage Istituto Scolastico - "
-      "www.liceolugo.it",
-    .name_ja = "LICEO SCIENTIFICO - LS G. RICCI CURBASTRO (Pubbliche Amministrazioni, Lugo, RA) - Homepage Istituto Scolastico - www.liceolugo.it",
-    .category = "government", .portal = "https://www.liceolugo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceolugo.edu.it/index.php?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, RSS2 feed, newest Fri, 02 Oct 2026 "
-      "20:01:44 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RAPS030001_2", .name = "LICEO SCIENTIFICO - LS G. RICCI CURBASTRO (Pubbliche "
-      "Amministrazioni, Lugo, RA) - Homepage Istituto Scolastico - "
-      "www.liceolugo.it",
-    .name_ja = "LICEO SCIENTIFICO - LS G. RICCI CURBASTRO (Pubbliche Amministrazioni, Lugo, RA) - Homepage Istituto Scolastico - www.liceolugo.it",
-    .category = "government", .portal = "https://www.liceolugo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceolugo.edu.it/index.php?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T09:44:02+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RATD01000G", .name = "Istituto Tecnico Statale Economico e Tecnologico - A. Oriani "
-      "(Pubbliche Amministrazioni, Faenza, RA) - ISTITUTO TECNICO "
-      "STATALE &quot;ORIANI&quot; &#8211; FAENZA",
-    .name_ja = "Istituto Tecnico Statale Economico e Tecnologico - A. Oriani (Pubbliche Amministrazioni, Faenza, RA) - ISTITUTO TECNICO STATALE &quot;ORIANI&quot; &#8211; FAENZA",
-    .category = "government", .portal = "https://www.itoriani.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.itoriani.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
-      "07:30:22 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RATD03000R", .name = "ISTITUTO TECNICO COMMERCIALE - G.GINANNI (Pubbliche "
-      "Amministrazioni, Ravenna, RA) - Istituto Tecnico Commerciale "
-      "“G.Ginanni”",
-    .name_ja = "ISTITUTO TECNICO COMMERCIALE - G.GINANNI (Pubbliche Amministrazioni, Ravenna, RA) - Istituto Tecnico Commerciale “G.Ginanni”",
-    .category = "government", .portal = "https://www.itcginanni.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.itcginanni.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 30 Sep 2026 "
-      "14:18:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_RCIC80200C", .name = "Istituto Comprensivo San Giorgio Morgeto-Maropati (Pubbliche "
@@ -85472,25 +75635,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "18:16:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_REIC81000L", .name = "Istituto Comprensivo E. Fermi (Pubbliche Amministrazioni, Reggio "
-      "nell'Emilia, RE) - Istituto Comprensivo E. Fermi",
-    .name_ja = "Istituto Comprensivo E. Fermi (Pubbliche Amministrazioni, Reggio nell'Emilia, RE) - Istituto Comprensivo E. Fermi",
-    .category = "government", .portal = "https://www.icfermi-re.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icfermi-re.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 10 Oct 2026 "
-      "07:23:35 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_REIC826006", .name = "Istituto Comprensivo Carpineti - Casina (Pubbliche "
       "Amministrazioni, Carpineti, RE) - Istituto comprensivo  "
       "&quot;Giorgio Gregori&quot;",
@@ -85705,46 +75849,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "17:38:15 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_REVC01000A", .name = "CONVITTO NAZIONALE - R. CORSO (Pubbliche Amministrazioni, "
-      "Correggio, RE) - CONVITTO NAZIONALE STATALE &quot;Rinaldo "
-      "Corso&quot;",
-    .name_ja = "CONVITTO NAZIONALE - R. CORSO (Pubbliche Amministrazioni, Correggio, RE) - CONVITTO NAZIONALE STATALE &quot;Rinaldo Corso&quot;",
-    .category = "government", .portal = "https://www.convittocorreggio.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.convittocorreggio.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 08 Sep 2026 "
-      "10:50:56 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RGIC80100C", .name = "ISTITUTO COMPRENSIVO - LUIGI CAPUANA (Pubbliche Amministrazioni, "
-      "Giarratana, RG) - ISTITUTO COMPRENSIVO STATALE &quot;Luigi "
-      "Capuana",
-    .name_ja = "ISTITUTO COMPRENSIVO - LUIGI CAPUANA (Pubbliche Amministrazioni, Giarratana, RG) - ISTITUTO COMPRENSIVO STATALE &quot;Luigi Capuana",
-    .category = "government", .portal = "https://www.iccapuana.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iccapuana.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "18:25:44 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_RGIC80500Q", .name = "I.C. G. Bufalino (Pubbliche Amministrazioni, Comiso, RG) - "
       "I.C.S. Gesualdo Bufalino",
     .name_ja = "I.C. G. Bufalino (Pubbliche Amministrazioni, Comiso, RG) - I.C.S. Gesualdo Bufalino",
@@ -85762,26 +75866,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
       "17:12:57 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RGIC80600G", .name = "ISTITUTO COMPRENSIVO - S.A.GUASTELLA (Pubbliche Amministrazioni, "
-      "Chiaramonte Gulfi, RG) - Istituto Comprensivo Serafino Amabile "
-      "Guastella",
-    .name_ja = "ISTITUTO COMPRENSIVO - S.A.GUASTELLA (Pubbliche Amministrazioni, Chiaramonte Gulfi, RG) - Istituto Comprensivo Serafino Amabile Guastella",
-    .category = "government", .portal = "https://www.istitutocomprensivoserafinoamabileguastella.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivoserafinoamabileguastella.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 20 Jul 2026 "
-      "04:53:13 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_RGIC80700B", .name = "ISTITUTO COMPRENSIVO - LEONARDO DA VINCI (Pubbliche "
@@ -85843,46 +75927,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "16:52:15 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_RGIC81300P", .name = "ISTITUTO COMPRENSIVO - ELIO VITTORINI (Pubbliche "
-      "Amministrazioni, Scicli, RG) - Istituto Comprensivo “Elio "
-      "Vittorini” &#8211; Scicli",
-    .name_ja = "ISTITUTO COMPRENSIVO - ELIO VITTORINI (Pubbliche Amministrazioni, Scicli, RG) - Istituto Comprensivo “Elio Vittorini” &#8211; Scicli",
-    .category = "government", .portal = "https://www.istitutocomprensivovittorini.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivovittorini.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 29 Sep 2026 "
-      "14:28:11 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RGIC81500A", .name = "IC STATALE G. RODARI SAN BIAGIO (Pubbliche Amministrazioni, "
-      "Vittoria, RG) - ISTITUTO COMPRENSIVO STATALE &quot;G.RODARI "
-      "&#8211; S. BIAGIO&quot; &#8211; VITT",
-    .name_ja = "IC STATALE G. RODARI SAN BIAGIO (Pubbliche Amministrazioni, Vittoria, RG) - ISTITUTO COMPRENSIVO STATALE &quot;G.RODARI &#8211; S. BIAGIO&quot; &#8211; VITT",
-    .category = "government", .portal = "https://www.icrodarisanbiagio.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icrodarisanbiagio.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 02 Oct 2026 "
-      "12:40:19 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_RGIC816006", .name = "ISTITUTO COMPRENSIVO - G. VERGA (Pubbliche Amministrazioni, "
       "Comiso, RG) - Istituto Comprensivo Statale &quot;Giovanni "
       "Verga&quot; &#8211; Comiso (Ragusa)",
@@ -85903,26 +75947,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:10:38 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_RGIC81800T", .name = "ISTITUTO COMPRENSIVO - G.ROGASI (Pubbliche Amministrazioni, "
-      "Pozzallo, RG) - ISTITUTO COMPRENSIVO STATALE &quot;G. "
-      "ROGASI&quot; POZZALLO",
-    .name_ja = "ISTITUTO COMPRENSIVO - G.ROGASI (Pubbliche Amministrazioni, Pozzallo, RG) - ISTITUTO COMPRENSIVO STATALE &quot;G. ROGASI&quot; POZZALLO",
-    .category = "government", .portal = "https://www.istitutorogasi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutorogasi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "10:43:40 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_RGIC82000T", .name = "ISTITUTO COMPRENSIVO - BERLINGUER (Pubbliche Amministrazioni, "
       "Ragusa, RG) - I.C. BERLINGUER",
     .name_ja = "ISTITUTO COMPRENSIVO - BERLINGUER (Pubbliche Amministrazioni, Ragusa, RG) - I.C. BERLINGUER",
@@ -85940,26 +75964,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "12:03:31 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RGIC824005", .name = "ISTITUTO COMPRENSIVO - MARIA SCHININA' (Pubbliche "
-      "Amministrazioni, Ragusa, RG) - ISTITUTO COMPRENSIVO STATALE "
-      "&#8211; M. SCHININA&#039;",
-    .name_ja = "ISTITUTO COMPRENSIVO - MARIA SCHININA' (Pubbliche Amministrazioni, Ragusa, RG) - ISTITUTO COMPRENSIVO STATALE &#8211; M. SCHININA&#039;",
-    .category = "government", .portal = "https://www.scuolaschinina.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.scuolaschinina.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "10:23:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_RGIC825001", .name = "ISTITUTO COMPRENSIVO - RAFFAELE POIDOMANI (Pubbliche "
@@ -86001,26 +76005,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "19:23:19 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_RGIC829008", .name = "ISTITUTO COMPRENSIVO - PORTELLA DELLE GINESTRE (Pubbliche "
-      "Amministrazioni, Vittoria, RG) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;Portella della Ginestra&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - PORTELLA DELLE GINESTRE (Pubbliche Amministrazioni, Vittoria, RG) - ISTITUTO COMPRENSIVO STATALE &quot;Portella della Ginestra&quot;",
-    .category = "government", .portal = "https://www.istitutocomprensivoportella.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivoportella.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 24 Sep 2026 "
-      "23:57:25 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_RGIC831008", .name = "ISTITUTO COMPRENSIVO - S. QUASIMODO (Pubbliche Amministrazioni, "
       "Ragusa, RG) - IC &quot;S.Quasimodo &#8211; Ventre&quot;",
     .name_ja = "ISTITUTO COMPRENSIVO - S. QUASIMODO (Pubbliche Amministrazioni, Ragusa, RG) - IC &quot;S.Quasimodo &#8211; Ventre&quot;",
@@ -86038,26 +76022,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "21:01:48 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RGIS00200C", .name = "ISTRUZIONE SECONDARIA SUPERIORE - G. CURCIO (Pubbliche "
-      "Amministrazioni, Ispica, RG) - Istituto di Istruzione Secondaria "
-      "Superiore &quot;G. Curcio&quot;",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - G. CURCIO (Pubbliche Amministrazioni, Ispica, RG) - Istituto di Istruzione Secondaria Superiore &quot;G. Curcio&quot;",
-    .category = "government", .portal = "https://www.istitutocurcio.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocurcio.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "06:02:22 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_RGIS00600Q", .name = "ISTRUZIONE SECONDARIA SUPERIORE - GIORGIO LA PIRA (Pubbliche "
@@ -86098,45 +76062,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 25 Sep 2026 "
       "07:14:13 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RGIS01300V", .name = "ISTRUZIONE SECONDARIA SUPERIORE - GALILEO FERRARIS (Pubbliche "
-      "Amministrazioni, Ragusa, RG) - ISTITUTO DI ISTRUZIONE SUPERIORE "
-      "&quot;GALILEO FERRARIS&quot;",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - GALILEO FERRARIS (Pubbliche Amministrazioni, Ragusa, RG) - ISTITUTO DI ISTRUZIONE SUPERIORE &quot;GALILEO FERRARIS&quot;",
-    .category = "government", .portal = "https://www.istitutoferraris.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutoferraris.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 11 Sep 2026 "
-      "17:36:35 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RIIC80800X", .name = "ISTITUTO COMPRENSIVO - FORUM NOVUM (Pubbliche Amministrazioni, "
-      "Torri in Sabina, RI) - IC FORUM NOVUM &#8211; TORRI IN SABINA",
-    .name_ja = "ISTITUTO COMPRENSIVO - FORUM NOVUM (Pubbliche Amministrazioni, Torri in Sabina, RI) - IC FORUM NOVUM &#8211; TORRI IN SABINA",
-    .category = "government", .portal = "https://www.icforumnovum.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icforumnovum.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "12:14:57 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_RIIC81600V", .name = "ISTITUTO COMPRENSIVO - IC A.M.RICCI (Pubbliche Amministrazioni, "
@@ -86195,26 +76120,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "15:03:45 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RIIS00600C", .name = "ISTRUZIONE SECONDARIA SUPERIORE - L. DI SAVOIA (Pubbliche "
-      "Amministrazioni, Rieti, RI) - Istituto di Istruzione Superiore "
-      "&#8211; Luigi di Savoia",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - L. DI SAVOIA (Pubbliche Amministrazioni, Rieti, RI) - Istituto di Istruzione Superiore &#8211; Luigi di Savoia",
-    .category = "government", .portal = "https://www.iisluigidisavoia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iisluigidisavoia.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 24 Sep 2026 "
-      "17:50:05 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_RIIS007008", .name = "ISTRUZIONE SECONDARIA SUPERIORE - 'C. ROSATELLI' (Pubbliche "
@@ -86390,26 +76295,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 08 Sep 2026 "
       "09:35:24 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RMIC825008", .name = "ISTITUTO COMPRENSIVO - MARCELLO MASTROIANNI (Pubbliche "
-      "Amministrazioni, Roma, RM) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;MARCELLO MASTROIANNI&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - MARCELLO MASTROIANNI (Pubbliche Amministrazioni, Roma, RM) - ISTITUTO COMPRENSIVO STATALE &quot;MARCELLO MASTROIANNI&quot;",
-    .category = "government", .portal = "https://www.icmmastroianni.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icmmastroianni.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 18 Sep 2026 "
-      "11:49:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_RMIC82700X", .name = "ISTITUTO COMPRENSIVO - VIA DELL'ARCHEOLOGIA (Pubbliche "
@@ -86699,26 +76584,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "17:00:50 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RMIC855004", .name = "ISTITUTO COMPRENSIVO - 'MARCO POLO' (Pubbliche Amministrazioni, "
-      "Roma, RM) - ISTITUTO COMPRENSIVO STATALE &quot;Marco Polo&quot; "
-      "&#8211; Roma",
-    .name_ja = "ISTITUTO COMPRENSIVO - 'MARCO POLO' (Pubbliche Amministrazioni, Roma, RM) - ISTITUTO COMPRENSIVO STATALE &quot;Marco Polo&quot; &#8211; Roma",
-    .category = "government", .portal = "https://www.istitutocomprensivomarcopoloroma.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivomarcopoloroma.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 29 Sep 2026 "
-      "12:14:45 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_RMIC85600X", .name = "ISTITUTO COMPRENSIVO - I.C. FRATELLI CERVI (Pubbliche "
@@ -87540,26 +77405,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "08:02:45 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_RMIC8BD00C", .name = "ISTITUTO COMPRENSIVO - CARDINALE ORESTE GIORGI (Pubbliche "
-      "Amministrazioni, Valmontone, RM) - ISTITUTO COMPRENSIVO "
-      "&quot;CARDINALE ORESTE GIORGI&quot; VALMONTONE",
-    .name_ja = "ISTITUTO COMPRENSIVO - CARDINALE ORESTE GIORGI (Pubbliche Amministrazioni, Valmontone, RM) - ISTITUTO COMPRENSIVO &quot;CARDINALE ORESTE GIORGI&quot; VALMONTONE",
-    .category = "government", .portal = "https://www.istitutogiorgi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutogiorgi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "07:40:48 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_RMIC8BF004", .name = "ISTITUTO COMPRENSIVO - CASTEL MADAMA (Pubbliche Amministrazioni, "
       "Castel Madama, RM) - Istituto Comprensivo &quot;Castel "
       "Madama&quot;",
@@ -87578,26 +77423,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "07:23:01 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RMIC8BH00Q", .name = "ISTITUTO COMPRENSIVO - LANUVIO - 'MARIANNA DIONIGI' (Pubbliche "
-      "Amministrazioni, Lanuvio, RM) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;Marianna Dionigi&quot; di Lanuvio",
-    .name_ja = "ISTITUTO COMPRENSIVO - LANUVIO - 'MARIANNA DIONIGI' (Pubbliche Amministrazioni, Lanuvio, RM) - ISTITUTO COMPRENSIVO STATALE &quot;Marianna Dionigi&quot; di Lanuvio",
-    .category = "government", .portal = "https://www.icdionigi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icdionigi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 17 Sep 2026 "
-      "18:30:40 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_RMIC8BJ00G", .name = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO 'F.DE SANC "
@@ -88064,25 +77889,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "07:01:14 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_RMIC8DD00N", .name = "ISTITUTO COMPRENSIVO - IC CENA (Pubbliche Amministrazioni, "
-      "Cerveteri, RM) - Istituto Comprensivo Cena",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC CENA (Pubbliche Amministrazioni, Cerveteri, RM) - Istituto Comprensivo Cena",
-    .category = "government", .portal = "https://www.iccena.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iccena.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "08:37:34 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_RMIC8DL00T", .name = "ISTITUTO COMPRENSIVO - IC G.B. GRASSI (Pubbliche "
       "Amministrazioni, Fiumicino, RM) - ISTITUTO COMPRENSIVO "
       "G.B.GRASSI",
@@ -88334,25 +78140,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "19:01:52 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RMIC8E300C", .name = "ISTITUTO COMPRENSIVO - LARGO COCCONI (Pubbliche Amministrazioni, "
-      "Roma, RM) - IC Largo Cocconi",
-    .name_ja = "ISTITUTO COMPRENSIVO - LARGO COCCONI (Pubbliche Amministrazioni, Roma, RM) - IC Largo Cocconi",
-    .category = "government", .portal = "https://www.largococconi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.largococconi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 17 Sep 2026 "
-      "06:26:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_RMIC8E4008", .name = "ISTITUTO COMPRENSIVO \"NICOLA CALIPARI\" (Pubbliche "
@@ -88852,25 +78639,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 30 Sep 2026 "
       "23:47:07 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RMIC8FW00E", .name = "Nelson Mandela (Pubbliche Amministrazioni, Roma, RM) - ISTITUTO "
-      "COMPRENSIVO STATALE “Nelson Mandela” ROMA",
-    .name_ja = "Nelson Mandela (Pubbliche Amministrazioni, Roma, RM) - ISTITUTO COMPRENSIVO STATALE “Nelson Mandela” ROMA",
-    .category = "government", .portal = "https://www.icnelsonmandela.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icnelsonmandela.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "08:59:57 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_RMIC8FX00A", .name = "ISTITUTO COMPRENSIVO PINO PUGLISI (Pubbliche Amministrazioni, "
@@ -89496,44 +79264,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "08:57:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_RMIS063007", .name = "I.I.S. LUCIO ANNEO SENECA (Pubbliche Amministrazioni, Roma, RM) "
-      "- Home",
-    .name_ja = "I.I.S. LUCIO ANNEO SENECA (Pubbliche Amministrazioni, Roma, RM) - Home",
-    .category = "government", .portal = "https://www.liceoseneca.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceoseneca.edu.it/index.php?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "10:06:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RMIS063007_2", .name = "I.I.S. LUCIO ANNEO SENECA (Pubbliche Amministrazioni, Roma, RM) "
-      "- Home",
-    .name_ja = "I.I.S. LUCIO ANNEO SENECA (Pubbliche Amministrazioni, Roma, RM) - Home",
-    .category = "government", .portal = "https://www.liceoseneca.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceoseneca.edu.it/index.php?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T09:44:25+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
-
   { .id = "JO45_IT_ISTSC_RMIS069006", .name = "ISTRUZIONE SECONDARIA SUPERIORE - ISTITUTO ISTRUZIONE SUPERIORE "
       "E. AMALDI (Pubbliche Amministrazioni, Roma, RM) - "
       "liceo-amaldi.edu.it",
@@ -89802,25 +79532,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "11:14:28 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RMPC09000T", .name = "LICEO CLASSICO - VIVONA (Pubbliche Amministrazioni, Roma, RM) - "
-      "LICEO CLASSICO STATALE &quot;FRANCESCO VIVONA&quot; &#8211; ROMA",
-    .name_ja = "LICEO CLASSICO - VIVONA (Pubbliche Amministrazioni, Roma, RM) - LICEO CLASSICO STATALE &quot;FRANCESCO VIVONA&quot; &#8211; ROMA",
-    .category = "government", .portal = "https://www.liceovivona.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceovivona.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "07:51:01 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_RMPC150008", .name = "LICEO CLASSICO - LICEO GINNASIO STATALE ORAZIO (Pubbliche "
@@ -90594,26 +80305,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:34:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_RMVC010008", .name = "Convitto Nazionale Vittorio Emanuele II - Roma (Pubbliche "
-      "Amministrazioni, Roma, RM) - CONVITTO NAZIONALE &quot;V.EMANUELE "
-      "II&quot; &#8211; ROMA",
-    .name_ja = "Convitto Nazionale Vittorio Emanuele II - Roma (Pubbliche Amministrazioni, Roma, RM) - CONVITTO NAZIONALE &quot;V.EMANUELE II&quot; &#8211; ROMA",
-    .category = "government", .portal = "https://www.convittonazionaleroma.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.convittonazionaleroma.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 21 Sep 2026 "
-      "06:34:46 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_RMVC02000V", .name = "CONVITTO NAZIONALE - 'A.DI SAVOIA,DUCA D'AOSTA' (Pubbliche "
       "Amministrazioni, Tivoli, RM) - Convitto Nazionale",
     .name_ja = "CONVITTO NAZIONALE - 'A.DI SAVOIA,DUCA D'AOSTA' (Pubbliche Amministrazioni, Tivoli, RM) - Convitto Nazionale",
@@ -90650,46 +80341,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "09:00:48 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RNIC803009", .name = "ISTITUTO COMPRENSIVO - IC VERUCCHIO (Pubbliche Amministrazioni, "
-      "Verucchio, RN) - Istituto Comprensivo Statale &quot;Ponte sul "
-      "Marecchia&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC VERUCCHIO (Pubbliche Amministrazioni, Verucchio, RN) - Istituto Comprensivo Statale &quot;Ponte sul Marecchia&quot;",
-    .category = "government", .portal = "https://www.icpontesulmarecchia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icpontesulmarecchia.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 10 Sep 2026 "
-      "17:26:26 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RNIC804005", .name = "ISTITUTO COMPRENSIVO - IC CATTOLICA (Pubbliche Amministrazioni, "
-      "Cattolica, RN) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;Cattolica&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC CATTOLICA (Pubbliche Amministrazioni, Cattolica, RN) - ISTITUTO COMPRENSIVO STATALE &quot;Cattolica&quot;",
-    .category = "government", .portal = "https://www.iccattolica.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iccattolica.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "14:00:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_RNIC805001", .name = "ISTITUTO COMPRENSIVO - IC MIRAMARE -RIMINI- (Pubbliche "
@@ -90729,26 +80380,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "09:15:02 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RNIC81300X", .name = "ISTITUTO COMPRENSIVO GIANFRANCO ZAVALLONI - RICCIONE (Pubbliche "
-      "Amministrazioni, Riccione, RN) - Istituto Comprensivo Statale "
-      "&quot;G. Zavalloni&quot; &#8211; Riccione",
-    .name_ja = "ISTITUTO COMPRENSIVO GIANFRANCO ZAVALLONI - RICCIONE (Pubbliche Amministrazioni, Riccione, RN) - Istituto Comprensivo Statale &quot;G. Zavalloni&quot; &#8211; Riccione",
-    .category = "government", .portal = "https://www.iczavalloniriccione.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iczavalloniriccione.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "12:18:19 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_RNIS00200N", .name = "ISTRUZIONE SECONDARIA SUPERIORE - IS 'P. GOBETTI' (Pubbliche "
@@ -90792,46 +80423,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "06:02:06 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_RNMM02100X", .name = "ISTITUTO SECONDARIO DI I GRADO - 'A. BERTOLA' (Pubbliche "
-      "Amministrazioni, Rimini, RN) - SCUOLA STATALE DI ISTRUZIONE "
-      "SECONDARIA DI 1° GRADO “AURELIO BERTOLA”",
-    .name_ja = "ISTITUTO SECONDARIO DI I GRADO - 'A. BERTOLA' (Pubbliche Amministrazioni, Rimini, RN) - SCUOLA STATALE DI ISTRUZIONE SECONDARIA DI 1° GRADO “AURELIO BERTOLA”",
-    .category = "government", .portal = "https://www.scuolabertola.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.scuolabertola.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "16:31:18 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RNPC01000V", .name = "Liceo G. Cesare M. Valgimigli (Pubbliche Amministrazioni, "
-      "Rimini, RN) - LICEO “G. CESARE – M. VALGIMIGLI” Classico &#8211; "
-      "Linguistico &#8211; Sci",
-    .name_ja = "Liceo G. Cesare M. Valgimigli (Pubbliche Amministrazioni, Rimini, RN) - LICEO “G. CESARE – M. VALGIMIGLI” Classico &#8211; Linguistico &#8211; Sci",
-    .category = "government", .portal = "https://www.liceocesarevalgimigli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceocesarevalgimigli.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "18:51:01 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_RNPS02000L", .name = "LICEO SCIENTIFICO - 'A. EINSTEIN' (Pubbliche Amministrazioni, "
       "Rimini, RN) - Liceo A. Einstein di Rimini",
     .name_ja = "LICEO SCIENTIFICO - 'A. EINSTEIN' (Pubbliche Amministrazioni, Rimini, RN) - Liceo A. Einstein di Rimini",
@@ -90849,27 +80440,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "11:37:06 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_RNRH030001", .name = "ISTITUTO PROFESSIONALE PER I SERVIZI ALBERGHIERI E RISTORAZIONE "
-      "- 'S.P. MALATESTA' (Pubbliche Amministrazioni, Rimini, RN) - "
-      "ISTITUTO PROFESSIONALE PER I SERVIZI DELL&#039;ENOGASTRONOMIA E "
-      "DELL&#039;OSPITA",
-    .name_ja = "ISTITUTO PROFESSIONALE PER I SERVIZI ALBERGHIERI E RISTORAZIONE - 'S.P. MALATESTA' (Pubbliche Amministrazioni, Rimini, RN) - ISTITUTO PROFESSIONALE PER I SERVIZI DELL&#039;ENOGASTRONOMIA E DELL&#039;OSPITA",
-    .category = "government", .portal = "https://www.alberghieromalatestarimini.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.alberghieromalatestarimini.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "21:01:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_ROIC802006", .name = "ISTITUTO COMPRENSIVO - LOREO (Pubbliche Amministrazioni, Loreo, "
@@ -90949,26 +80519,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "00:00:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_SAEE07500V", .name = "DIREZIONE DIDATTICA - MERCATO S. SEVERINO II (Pubbliche "
-      "Amministrazioni, Mercato San Severino, SA) - IC Mercato San "
-      "Severino 2",
-    .name_ja = "DIREZIONE DIDATTICA - MERCATO S. SEVERINO II (Pubbliche Amministrazioni, Mercato San Severino, SA) - IC Mercato San Severino 2",
-    .category = "government", .portal = "https://www.ictrotuladeruggieromss.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ictrotuladeruggieromss.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "06:41:38 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_SAEE102002", .name = "DIREZIONE DIDATTICA - PAGANI I (Pubbliche Amministrazioni, "
       "Pagani, SA) - DIREZIONE DIDATTICA STATALE &quot;PRIMO CIRCOLO "
       "PAGANI&quot;",
@@ -91026,26 +80576,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "11:03:45 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_SAIC816001", .name = "ISTITUTO COMPRENSIVO - IST.COMPR. TORRE ORSAIA (Pubbliche "
-      "Amministrazioni, Torre Orsaia, SA) - Istituto Omnicomprensivo di "
-      "Torre Orsaia Autonomia 168",
-    .name_ja = "ISTITUTO COMPRENSIVO - IST.COMPR. TORRE ORSAIA (Pubbliche Amministrazioni, Torre Orsaia, SA) - Istituto Omnicomprensivo di Torre Orsaia Autonomia 168",
-    .category = "government", .portal = "https://www.scuoletorreorsaia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.scuoletorreorsaia.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "07:02:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_SAIC81900C", .name = "Istituto Comprensivo Virgilio - Gonzaga (Pubbliche "
@@ -91307,45 +80837,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:08:32 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_SAIC88200X", .name = "Istituto Comprensivo (Pubbliche Amministrazioni, Scafati, SA) - "
-      "Istituto Comprensivo “Samuele Falco” &#8211; Scafati",
-    .name_ja = "Istituto Comprensivo (Pubbliche Amministrazioni, Scafati, SA) - Istituto Comprensivo “Samuele Falco” &#8211; Scafati",
-    .category = "government", .portal = "https://www.icsamuelefalco.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsamuelefalco.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "15:43:24 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_SAIC89200E", .name = "ISTITUTO COMPRENSIVO - DON ALFONSO DE CARO (Pubbliche "
-      "Amministrazioni, Fisciano, SA) - Istituto Comprensivo Don "
-      "Alfonso De Caro Lancusi-Fisciano",
-    .name_ja = "ISTITUTO COMPRENSIVO - DON ALFONSO DE CARO (Pubbliche Amministrazioni, Fisciano, SA) - Istituto Comprensivo Don Alfonso De Caro Lancusi-Fisciano",
-    .category = "government", .portal = "https://www.icfiscianolancusi.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icfiscianolancusi.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 09 Sep 2026 "
-      "08:00:38 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_SAIC89300A", .name = "ISTITUTO COMPRENSIVO - IC ALFANO - QUASIMODO (Pubbliche "
       "Amministrazioni, Salerno, SA) - IC &quot;Alfano &#8211; "
       "Quasimodo&quot; &#8211; Salerno",
@@ -91404,46 +80895,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "08:16:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_SAIC899009", .name = "ISTITUTO COMPRENSIVO - IST.COMPR. S. VALENTINO TORIO (Pubbliche "
-      "Amministrazioni, San Valentino Torio, SA) - ISTITUTO COMPRENSIVO "
-      "STATALE di &quot;San Valentino Torio&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - IST.COMPR. S. VALENTINO TORIO (Pubbliche Amministrazioni, San Valentino Torio, SA) - ISTITUTO COMPRENSIVO STATALE di &quot;San Valentino Torio&quot;",
-    .category = "government", .portal = "https://www.istitutocomprensivosanvalentinotorio.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivosanvalentinotorio.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 05 Oct 2026 "
-      "08:46:55 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_SAIC8AB00N", .name = "Istituto Comprensivo Statale Rita Levi Montalcini (Pubbliche "
-      "Amministrazioni, Salerno, SA) - Istituto Comprensivo Statale "
-      "&quot;Rita Levi &#8211; Montalcini&quot;",
-    .name_ja = "Istituto Comprensivo Statale Rita Levi Montalcini (Pubbliche Amministrazioni, Salerno, SA) - Istituto Comprensivo Statale &quot;Rita Levi &#8211; Montalcini&quot;",
-    .category = "government", .portal = "https://www.icritalevimontalcini.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icritalevimontalcini.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 24 Aug 2026 "
-      "14:22:31 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_SAIC8AD009", .name = "ISTITUTO COMPRENSIVO - IST. C. 'MARCONI' BATTIPAGLIA (Pubbliche "
@@ -91585,26 +81036,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:46:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_SAIS02700G", .name = "ISTRUZIONE SECONDARIA SUPERIORE - LICEO SCIENTIFICO 'ASSTEAS' "
-      "(Pubbliche Amministrazioni, Buccino, SA) - Istituto di "
-      "Istruzione Superiore ASSTEAS",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - LICEO SCIENTIFICO 'ASSTEAS' (Pubbliche Amministrazioni, Buccino, SA) - Istituto di Istruzione Superiore ASSTEAS",
-    .category = "government", .portal = "https://www.iisassteas.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iisassteas.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "15:49:34 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_SAIS029007", .name = "ISTRUZIONE SECONDARIA SUPERIORE - 'E. FERRARI' (Pubbliche "
       "Amministrazioni, Battipaglia, SA) - IIS Enzo Ferrari",
     .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - 'E. FERRARI' (Pubbliche Amministrazioni, Battipaglia, SA) - IIS Enzo Ferrari",
@@ -91684,26 +81115,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "08:59:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_SAIS04300D", .name = "ISTITUTO SUPERIORE - 'G. FORTUNATO' (Pubbliche Amministrazioni, "
-      "Angri, SA) - Istituto Statale Istruzione Superiore &quot;G. "
-      "Fortunato&quot; &#8211; Angri",
-    .name_ja = "ISTITUTO SUPERIORE - 'G. FORTUNATO' (Pubbliche Amministrazioni, Angri, SA) - Istituto Statale Istruzione Superiore &quot;G. Fortunato&quot; &#8211; Angri",
-    .category = "government", .portal = "https://www.isisfortunatoangri.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.isisfortunatoangri.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 05 Jul 2026 "
-      "12:21:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_SAIS053004", .name = "ISTITUTO SUPERIORE - 'T.CONFALONIERI' (Pubbliche "
       "Amministrazioni, Campagna, SA) - scuola",
     .name_ja = "ISTITUTO SUPERIORE - 'T.CONFALONIERI' (Pubbliche Amministrazioni, Campagna, SA) - scuola",
@@ -91721,63 +81132,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "08:00:58 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_SAPC10000P", .name = "LICEO CLASSICO - T.L.CARO (Pubbliche Amministrazioni, Sarno, SA) "
-      "- Liceo Statale “Tito Lucrezio Caro”",
-    .name_ja = "LICEO CLASSICO - T.L.CARO (Pubbliche Amministrazioni, Sarno, SA) - Liceo Statale “Tito Lucrezio Caro”",
-    .category = "government", .portal = "https://www.liceosarno.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceosarno.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 25 Sep 2026 "
-      "17:31:31 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_SAPC12000X", .name = "LICEO CLASSICO - 'T.TASSO' (Pubbliche Amministrazioni, Salerno, "
-      "SA) - Liceo Classico Torquato Tasso Salerno",
-    .name_ja = "LICEO CLASSICO - 'T.TASSO' (Pubbliche Amministrazioni, Salerno, SA) - Liceo Classico Torquato Tasso Salerno",
-    .category = "government", .portal = "https://www.liceotassosalerno.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceotassosalerno.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 05 Oct 2026 "
-      "19:20:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_SAPM020007", .name = "ISTITUTO MAGISTRALE - ALFANO I (Pubbliche Amministrazioni, "
-      "Salerno, SA) - Liceo Statale – &quot;Alfano 1&quot;",
-    .name_ja = "ISTITUTO MAGISTRALE - ALFANO I (Pubbliche Amministrazioni, Salerno, SA) - Liceo Statale – &quot;Alfano 1&quot;",
-    .category = "government", .portal = "https://www.liceoalfano1.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceoalfano1.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "13:22:26 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_SAPM050003", .name = "ISTITUTO MAGISTRALE - 'REGINA MARGHERITA' (Pubbliche "
@@ -91856,25 +81210,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:50:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_SAPS09000C", .name = "LICEO SCIENTIFICO - 'GENOINO' (Pubbliche Amministrazioni, Cava "
-      "de' Tirreni, SA) - Liceo Scientifico Statale Andrea Genoino",
-    .name_ja = "LICEO SCIENTIFICO - 'GENOINO' (Pubbliche Amministrazioni, Cava de' Tirreni, SA) - Liceo Scientifico Statale Andrea Genoino",
-    .category = "government", .portal = "https://www.liceogenoino.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceogenoino.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 16 Aug 2026 "
-      "15:33:02 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_SAPS120003", .name = "LICEO SCIENTIFICO - ENRICO MEDI (Pubbliche Amministrazioni, "
       "Battipaglia, SA) - Liceo Scientifico Linguistico Classico "
       "Statale  &quot;Enrico Medi&quot;",
@@ -91931,27 +81266,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 25 Sep 2026 "
       "14:36:50 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_SARA010005", .name = "ISTITUTO PROFESSIONALE PER L'AGRICOLTURA E L'AMBIENTE - IPAA "
-      "SALERNO (Pubbliche Amministrazioni, Salerno, SA) - Istituto "
-      "Professionale Servizi per l&#039;Agricoltura e lo Sviluppo "
-      "Rurale SALER",
-    .name_ja = "ISTITUTO PROFESSIONALE PER L'AGRICOLTURA E L'AMBIENTE - IPAA SALERNO (Pubbliche Amministrazioni, Salerno, SA) - Istituto Professionale Servizi per l&#039;Agricoltura e lo Sviluppo Rurale SALER",
-    .category = "government", .portal = "https://www.profagrisalerno.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.profagrisalerno.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
-      "14:43:32 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_SIIC806004", .name = "ISTITUTO COMPRENSIVO - IC 'FOLGORE DA SAN GIMIGNANO' (Pubbliche "
@@ -92052,26 +81366,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:59:45 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_SIIS00300R", .name = "ISTRUZIONE SECONDARIA SUPERIORE - S. GIOVANNI BOSCO (Pubbliche "
-      "Amministrazioni, Colle di Val d'Elsa, SI) - Istituto San "
-      "Giovanni Bosco e Cennino Cennini",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - S. GIOVANNI BOSCO (Pubbliche Amministrazioni, Colle di Val d'Elsa, SI) - Istituto San Giovanni Bosco e Cennino Cennini",
-    .category = "government", .portal = "https://www.sangiovanniboscocennini.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.sangiovanniboscocennini.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "06:49:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_SIIS00400L", .name = "ISTRUZIONE SECONDARIA SUPERIORE - IS 'CASELLI' (Pubbliche "
       "Amministrazioni, Siena, SI) - Istituto Istruzione Superiore "
       "&quot;G. Caselli&quot; di Siena",
@@ -92090,26 +81384,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "12:57:48 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_SIIS007004", .name = "ISTRUZIONE SECONDARIA SUPERIORE - I.I.S. DELLA VALDICHIANA "
-      "(Pubbliche Amministrazioni, Chiusi, SI) - ISTITUTO ISTRUZIONE "
-      "SUPERIORE &quot;VALDICHIANA&quot;",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - I.I.S. DELLA VALDICHIANA (Pubbliche Amministrazioni, Chiusi, SI) - ISTITUTO ISTRUZIONE SUPERIORE &quot;VALDICHIANA&quot;",
-    .category = "government", .portal = "https://www.istitutovaldichiana.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutovaldichiana.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 29 Jul 2026 "
-      "10:31:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_SIPS010009", .name = "LICEO SCIENTIFICO - LS A. VOLTA (Pubbliche Amministrazioni, "
@@ -92285,26 +81559,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "00:00:00 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_SPIC80400G", .name = "ISTITUTO COMPRENSIVO - ISA 20 - IC BOLANO (Pubbliche "
-      "Amministrazioni, Bolano, SP) - Istituto Comprensivo di Bolano "
-      "(SP)",
-    .name_ja = "ISTITUTO COMPRENSIVO - ISA 20 - IC BOLANO (Pubbliche Amministrazioni, Bolano, SP) - Istituto Comprensivo di Bolano (SP)",
-    .category = "government", .portal = "https://www.istitutocomprensivobolano.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivobolano.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "09:38:07 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_SPIC815002", .name = "ISTITUTO COMPRENSIVO - ISA 2 - ISTITUTO COMPRENSIVO (Pubbliche "
       "Amministrazioni, La Spezia, SP) - ISTITUTO COMPRENSIVO ISA 2  LA "
       "SPEZIA E PORTOVENERE",
@@ -92462,27 +81716,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "14:10:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_SPRH010006", .name = "ISTITUTO PROFESSIONALE PER I SERVIZI ALBERGHIERI E RISTORAZIONE "
-      "- G. CASINI (Pubbliche Amministrazioni, La Spezia, SP) - IST. "
-      "PROF.LE DI STATO PER I SERVIZI ALBERGHIERI &quot;G. CASINI&quot; "
-      "&#8211; LA",
-    .name_ja = "ISTITUTO PROFESSIONALE PER I SERVIZI ALBERGHIERI E RISTORAZIONE - G. CASINI (Pubbliche Amministrazioni, La Spezia, SP) - IST. PROF.LE DI STATO PER I SERVIZI ALBERGHIERI &quot;G. CASINI&quot; &#8211; LA",
-    .category = "government", .portal = "https://www.alberghierolaspezia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.alberghierolaspezia.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 03 Sep 2026 "
-      "11:24:08 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_SRIC801009", .name = "ISTITUTO COMPRENSIVO - II I.C. FALCONE-BORSELLINO SR (Pubbliche "
       "Amministrazioni, Siracusa, SR) - II Istituto Comprensivo "
       "G.Falcone P.Borsellino",
@@ -92582,26 +81815,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:10:18 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_SRIC80900X", .name = "ISTITUTO COMPRENSIVO - XV I.C. P.ORSI SIRACUSA (Pubbliche "
-      "Amministrazioni, Siracusa, SR) - XV ISTITUTO COMPRENSIVO STATALE "
-      "&quot;PAOLO ORSI&quot; &#8211; SIRACUSA",
-    .name_ja = "ISTITUTO COMPRENSIVO - XV I.C. P.ORSI SIRACUSA (Pubbliche Amministrazioni, Siracusa, SR) - XV ISTITUTO COMPRENSIVO STATALE &quot;PAOLO ORSI&quot; &#8211; SIRACUSA",
-    .category = "government", .portal = "https://www.15icpaolorsi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.15icpaolorsi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 28 Sep 2026 "
-      "14:18:48 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_SRIC81100X", .name = "Istituto Comprensivo XIV K. Wojtyla Siracusa (Pubbliche "
       "Amministrazioni, Siracusa, SR) - Ist. Comp. &quot;K.Wojtyla "
       "&#8211; C. Chindemi&quot;",
@@ -92642,26 +81855,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "12:39:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_SRIC81300G", .name = "ISTITUTO COMPRENSIVO - XIII I.C.'ARCHIMEDE' SIRACUSA (Pubbliche "
-      "Amministrazioni, Siracusa, SR) - ISTITUTO COMPRENSIVO STATALE "
-      "N.13 &quot;ARCHIMEDE&quot; &#8211; SIRACUSA",
-    .name_ja = "ISTITUTO COMPRENSIVO - XIII I.C.'ARCHIMEDE' SIRACUSA (Pubbliche Amministrazioni, Siracusa, SR) - ISTITUTO COMPRENSIVO STATALE N.13 &quot;ARCHIMEDE&quot; &#8211; SIRACUSA",
-    .category = "government", .portal = "https://www.istitutocomprensivoarchimede.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivoarchimede.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 22 Sep 2026 "
-      "17:18:58 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_SRIC82100E", .name = "ISTITUTO COMPRENSIVO - I I.C. 'E. DE AMICIS' FLORIDIA (Pubbliche "
       "Amministrazioni, Floridia, SR) - 1° Istituto Comprensivo "
       "&quot;De Amicis&quot;",
@@ -92680,26 +81873,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "18:57:24 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_SRIC829005", .name = "ISTITUTO COMPRENSIVO - VIII I.C. E. VITTORINI SIRACUSA "
-      "(Pubbliche Amministrazioni, Siracusa, SR) - Istituto Comprensivo "
-      "Statale &#8211; Elio Vittorini",
-    .name_ja = "ISTITUTO COMPRENSIVO - VIII I.C. E. VITTORINI SIRACUSA (Pubbliche Amministrazioni, Siracusa, SR) - Istituto Comprensivo Statale &#8211; Elio Vittorini",
-    .category = "government", .portal = "https://www.vittorini.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.vittorini.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "13:47:42 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_SRIC837004", .name = "ISTITUTO COMPRENSIVO - I I.C. 'P. DI NAPOLI' AUGUSTA (Pubbliche "
@@ -92922,66 +82095,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:01:48 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_SRIC86200R", .name = "ISTITUTO COMPRENSIVO - I.C. G. LOMBARDO RADICE SR (Pubbliche "
-      "Amministrazioni, Siracusa, SR) - ISTITUTO COMPRENSIVO "
-      "&quot;G.LOMBARDO RADICE&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. G. LOMBARDO RADICE SR (Pubbliche Amministrazioni, Siracusa, SR) - ISTITUTO COMPRENSIVO &quot;G.LOMBARDO RADICE&quot;",
-    .category = "government", .portal = "https://www.istitutocomprensivoglradice.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivoglradice.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "13:39:35 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_SRIS003005", .name = "ISTRUZIONE SECONDARIA SUPERIORE - IST.ISTR.SUPERIORE PALAZZOLO "
-      "ACREIDE (Pubbliche Amministrazioni, Palazzolo Acreide, SR) - "
-      "Home",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - IST.ISTR.SUPERIORE PALAZZOLO ACREIDE (Pubbliche Amministrazioni, Palazzolo Acreide, SR) - Home",
-    .category = "government", .portal = "https://www.polivalentepalazzolo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.polivalentepalazzolo.edu.it/index.php?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Thu, 24 Oct 2019 "
-      "10:33:34 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_SRIS003005_2", .name = "ISTRUZIONE SECONDARIA SUPERIORE - IST.ISTR.SUPERIORE PALAZZOLO "
-      "ACREIDE (Pubbliche Amministrazioni, Palazzolo Acreide, SR) - "
-      "Home",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - IST.ISTR.SUPERIORE PALAZZOLO ACREIDE (Pubbliche Amministrazioni, Palazzolo Acreide, SR) - Home",
-    .category = "government", .portal = "https://www.polivalentepalazzolo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.polivalentepalazzolo.edu.it/index.php?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:44:41+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
-
   { .id = "JO45_IT_ISTSC_SRIS011004", .name = "Istituto Istruzione Superiore \"Pier Luigi Nervi - Alaimo\" "
       "(Pubbliche Amministrazioni, Lentini, SR) - I.I.S. &quot;Nervi "
       "&#8211; Alaimo&quot; &#8211; Lentini (SR)",
@@ -93002,26 +82115,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "17:09:01 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_SRIS01400G", .name = "ISTITUTO SUPERIORE - MICHELANGELO BARTOLO (Pubbliche "
-      "Amministrazioni, Pachino, SR) - IISS &quot;M.Bartolo &#8211; "
-      "Pachino (SR)",
-    .name_ja = "ISTITUTO SUPERIORE - MICHELANGELO BARTOLO (Pubbliche Amministrazioni, Pachino, SR) - IISS &quot;M.Bartolo &#8211; Pachino (SR)",
-    .category = "government", .portal = "https://www.istitutobartolo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutobartolo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
-      "15:02:33 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_SRIS016007", .name = "ISTRUZIONE SECONDARIA SUPERIORE - 'MATTEO RAELI' (Pubbliche "
       "Amministrazioni, Noto, SR) - Istituto di Istruzione Superiore "
       "&quot;M. Raeli&quot; &#8211; Noto (SR)",
@@ -93040,45 +82133,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 30 Sep 2026 "
       "16:39:42 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_SRIS017003", .name = "ISTRUZIONE SECONDARIA SUPERIORE - 'ARCHIMEDE' ROSOLINI "
-      "(Pubbliche Amministrazioni, Rosolini, SR) - Istituto di "
-      "Istruzione Secondaria Superiore Archimede &#8211; Rosolini",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - 'ARCHIMEDE' ROSOLINI (Pubbliche Amministrazioni, Rosolini, SR) - Istituto di Istruzione Secondaria Superiore Archimede &#8211; Rosolini",
-    .category = "government", .portal = "https://www.istitutosuperiorearchimede.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutosuperiorearchimede.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "14:50:31 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_SRPC070006", .name = "LICEO CLASSICO - MEGARA (SEZIONE SCIENTIFICA ANNESSA) (Pubbliche "
-      "Amministrazioni, Augusta, SR) - Liceo Megara",
-    .name_ja = "LICEO CLASSICO - MEGARA (SEZIONE SCIENTIFICA ANNESSA) (Pubbliche Amministrazioni, Augusta, SR) - Liceo Megara",
-    .category = "government", .portal = "https://www.liceomegara.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceomegara.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "17:05:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_SRPM01000P", .name = "ISTITUTO MAGISTRALE - 8 I.I.S.S. 'M.F.QUINTILIANO' (Pubbliche "
@@ -93121,26 +82175,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:00:57 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_SSIC800001", .name = "ISTITUTO COMPRENSIVO - PERFUGAS - SEBASTIANO SATTA (Pubbliche "
-      "Amministrazioni, Perfugas, SS) - Istituto Comprensivo "
-      "&quot;Satta-Fais&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - PERFUGAS - SEBASTIANO SATTA (Pubbliche Amministrazioni, Perfugas, SS) - Istituto Comprensivo &quot;Satta-Fais&quot;",
-    .category = "government", .portal = "https://www.ic-perfugas.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ic-perfugas.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 19 Sep 2025 "
-      "12:46:41 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_SSIC80600X", .name = "ISTITUTO COMPRENSIVO - D.A.AZUNI - BUDDUSO' (Pubbliche "
       "Amministrazioni, Buddusò, OT) - ISTITUTO COMPRENSIVO &#8211; D. "
       "A. AZUNI",
@@ -93161,46 +82195,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "11:44:41 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_SSIC80800G", .name = "ISTITUTO COMPRENSIVO - BADESI (Pubbliche Amministrazioni, "
-      "Badesi, OT) - ISTITUTO COMPRENSIVO STATALE BADESI",
-    .name_ja = "ISTITUTO COMPRENSIVO - BADESI (Pubbliche Amministrazioni, Badesi, OT) - ISTITUTO COMPRENSIVO STATALE BADESI",
-    .category = "government", .portal = "https://www.icbadesi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icbadesi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 14 Sep 2026 "
-      "08:15:59 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_SSIC812007", .name = "ISTITUTO COMPRENSIVO - ELEONORA D'ARBOREA-VILLANOVA (Pubbliche "
-      "Amministrazioni, Villanova Monteleone, SS) - ISTITUTO "
-      "COMPRENSIVO STATALE &quot;Eleonora D&#039;Arborea&quot; &#8211; "
-      "Villano",
-    .name_ja = "ISTITUTO COMPRENSIVO - ELEONORA D'ARBOREA-VILLANOVA (Pubbliche Amministrazioni, Villanova Monteleone, SS) - ISTITUTO COMPRENSIVO STATALE &quot;Eleonora D&#039;Arborea&quot; &#8211; Villano",
-    .category = "government", .portal = "https://www.icvillanovam.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icvillanovam.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "09:08:23 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_SSIC820006", .name = "ISTITUTO COMPRENSIVO - IST. COMPRENSIVO - BONO (Pubbliche "
       "Amministrazioni, Bono, SS) - ICS Bono",
     .name_ja = "ISTITUTO COMPRENSIVO - IST. COMPRENSIVO - BONO (Pubbliche Amministrazioni, Bono, SS) - ICS Bono",
@@ -93218,26 +82212,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "10:32:43 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_SSIC833008", .name = "ISTITUTO COMPRENSIVO - VIA CARDUCCI - LA MADDALENA (Pubbliche "
-      "Amministrazioni, La Maddalena, OT) - Istituto Comprensivo La "
-      "Maddalena",
-    .name_ja = "ISTITUTO COMPRENSIVO - VIA CARDUCCI - LA MADDALENA (Pubbliche Amministrazioni, La Maddalena, OT) - Istituto Comprensivo La Maddalena",
-    .category = "government", .portal = "https://www.ic-lamaddalena.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ic-lamaddalena.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "18:01:31 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_SSIC83500X", .name = "ISTITUTO COMPRENSIVO - THIESI (Pubbliche Amministrazioni, "
@@ -93278,46 +82252,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "08:36:46 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_SSIC83800B", .name = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO LATTE DOLCE/AGRO "
-      "(Pubbliche Amministrazioni, Sassari, SS) - ISTITUTO COMPRENSIVO "
-      "LATTE DOLCE &#8211; AGRO &#8211; SASSARI",
-    .name_ja = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO LATTE DOLCE/AGRO (Pubbliche Amministrazioni, Sassari, SS) - ISTITUTO COMPRENSIVO LATTE DOLCE &#8211; AGRO &#8211; SASSARI",
-    .category = "government", .portal = "https://www.iclattedolceagro.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iclattedolceagro.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 03 Aug 2026 "
-      "10:38:29 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_SSIC84000B", .name = "ISTITUTO COMPRENSIVO - I.C. PIAZZA DELLA LIBERTA'-TEMP "
-      "(Pubbliche Amministrazioni, Tempio Pausania, OT) - ISTITUTO "
-      "COMPRENSIVO STATALE TEMPIO PAUSANIA",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. PIAZZA DELLA LIBERTA'-TEMP (Pubbliche Amministrazioni, Tempio Pausania, OT) - ISTITUTO COMPRENSIVO STATALE TEMPIO PAUSANIA",
-    .category = "government", .portal = "https://www.comprensivotempio.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comprensivotempio.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 30 Sep 2026 "
-      "12:54:50 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_SSIC842003", .name = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO N. 2 PORTO "
       "(Pubbliche Amministrazioni, Porto Torres, SS) - Istituto "
       "Comprensivo 2 &quot;Don Antonio Sanna&quot;",
@@ -93338,25 +82272,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "15:44:03 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_SSIC84300V", .name = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO SORSO (Pubbliche "
-      "Amministrazioni, Sorso, SS) - ISTITUTO COMPRENSIVO STATALE SORSO",
-    .name_ja = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO SORSO (Pubbliche Amministrazioni, Sorso, SS) - ISTITUTO COMPRENSIVO STATALE SORSO",
-    .category = "government", .portal = "https://www.icsorso.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsorso.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 28 Sep 2026 "
-      "07:10:59 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_SSIC84600A", .name = "Istituto Comprensivo N. 2 Alghero (Pubbliche Amministrazioni, "
       "Alghero, SS) - ISTITUTO COMPRENSIVO STATALE 2 di ALGHERO",
     .name_ja = "Istituto Comprensivo N. 2 Alghero (Pubbliche Amministrazioni, Alghero, SS) - ISTITUTO COMPRENSIVO STATALE 2 di ALGHERO",
@@ -93374,26 +82289,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "14:54:49 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_SSIC848002", .name = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO N. 1 OZIERI "
-      "(Pubbliche Amministrazioni, Ozieri, SS) - ISTITUTO COMPRENSIVO "
-      "STATALE OZIERI",
-    .name_ja = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO N. 1 OZIERI (Pubbliche Amministrazioni, Ozieri, SS) - ISTITUTO COMPRENSIVO STATALE OZIERI",
-    .category = "government", .portal = "https://www.icozieri.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icozieri.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 02 Jul 2026 "
-      "18:35:37 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_SSIC84900T", .name = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO MONTE ROSELLO ALTO "
@@ -93435,46 +82330,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "17:03:58 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_SSIS00400C", .name = "ISTRUZIONE SECONDARIA SUPERIORE - M.PAGLIETTI (Pubbliche "
-      "Amministrazioni, Porto Torres, SS) - ISTITUTO D&#039;ISTRUZIONE "
-      "SUPERIORE &quot;Mario Paglietti&quot;",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - M.PAGLIETTI (Pubbliche Amministrazioni, Porto Torres, SS) - ISTITUTO D&#039;ISTRUZIONE SUPERIORE &quot;Mario Paglietti&quot;",
-    .category = "government", .portal = "https://www.iispaglietti.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iispaglietti.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 30 Sep 2026 "
-      "19:36:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_SSIS01600P", .name = "ISTRUZIONE SECONDARIA SUPERIORE - IST. TEC. COMM.LE GEOMETRI E "
-      "AGRARIO (Pubbliche Amministrazioni, Ozieri, SS) - ISTITUTO DI "
-      "ISTRUZIONE SUPERIORE “ ENRICO FERMI ”",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - IST. TEC. COMM.LE GEOMETRI E AGRARIO (Pubbliche Amministrazioni, Ozieri, SS) - ISTITUTO DI ISTRUZIONE SUPERIORE “ ENRICO FERMI ”",
-    .category = "government", .portal = "https://www.itozieri.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.itozieri.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 08 Jul 2026 "
-      "19:30:11 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_SSIS019006", .name = "ISTITUTO SUPERIORE - ANGELO ROTH (Pubbliche Amministrazioni, "
       "Alghero, SS) - ISTITUTO SUPERIORE ANGELO ROTH",
     .name_ja = "ISTITUTO SUPERIORE - ANGELO ROTH (Pubbliche Amministrazioni, Alghero, SS) - ISTITUTO SUPERIORE ANGELO ROTH",
@@ -93492,46 +82347,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "09:59:52 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_SSIS02300T", .name = "ISTITUTO SUPERIORE - G.GARIBALDI (Pubbliche Amministrazioni, La "
-      "Maddalena, OT) - ISTITUTO DI ISTRUZIONE SUPERIORE "
-      "&quot;G.GARIBALDI&quot;",
-    .name_ja = "ISTITUTO SUPERIORE - G.GARIBALDI (Pubbliche Amministrazioni, La Maddalena, OT) - ISTITUTO DI ISTRUZIONE SUPERIORE &quot;G.GARIBALDI&quot;",
-    .category = "government", .portal = "https://www.iisgaribaldi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iisgaribaldi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "08:57:23 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_SSIS02400N", .name = "ISTITUTO SUPERIORE - ANTONIO SEGNI OZIERI (Pubbliche "
-      "Amministrazioni, Ozieri, SS) - ISTITUTO DI ISTRUZIONE SUPERIORE "
-      "&quot;A.SEGNI&quot;",
-    .name_ja = "ISTITUTO SUPERIORE - ANTONIO SEGNI OZIERI (Pubbliche Amministrazioni, Ozieri, SS) - ISTITUTO DI ISTRUZIONE SUPERIORE &quot;A.SEGNI&quot;",
-    .category = "government", .portal = "https://www.iisantoniosegni.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iisantoniosegni.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 27 Sep 2026 "
-      "16:17:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_SSMM027002", .name = "SCUOLA PRIMO GRADO - OLBIA - S.M. N.1 E. PAIS (Pubbliche "
@@ -93653,26 +82468,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "14:05:48 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_SSTF010007", .name = "ISTITUTO TECNICO INDUSTRIALE - G. M. ANGIOY SASSARI (Pubbliche "
-      "Amministrazioni, Sassari, SS) - ISTITUTO TECNICO INDUSTRIALE "
-      "&quot;G.M. ANGIOY&quot;",
-    .name_ja = "ISTITUTO TECNICO INDUSTRIALE - G. M. ANGIOY SASSARI (Pubbliche Amministrazioni, Sassari, SS) - ISTITUTO TECNICO INDUSTRIALE &quot;G.M. ANGIOY&quot;",
-    .category = "government", .portal = "https://www.itiangioy.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.itiangioy.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 29 Sep 2026 "
-      "08:22:34 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_SSVC010009", .name = "CONVITTO NAZIONALE - CANOPOLENO (Pubbliche Amministrazioni, "
       "Sassari, SS) - Convitto Nazionale Canopoleno Sassari",
     .name_ja = "CONVITTO NAZIONALE - CANOPOLENO (Pubbliche Amministrazioni, Sassari, SS) - Convitto Nazionale Canopoleno Sassari",
@@ -93709,26 +82504,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 04 Sep 2026 "
       "12:32:35 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_SVIC808009", .name = "ISTITUTO COMPRENSIVO - LOANO-BOISSANO (Pubbliche "
-      "Amministrazioni, Loano, SV) - Istituto Comprensivo Loano "
-      "Boissano",
-    .name_ja = "ISTITUTO COMPRENSIVO - LOANO-BOISSANO (Pubbliche Amministrazioni, Loano, SV) - Istituto Comprensivo Loano Boissano",
-    .category = "government", .portal = "https://www.icloano-boissano.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icloano-boissano.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "19:36:41 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_SVIS00700N", .name = "ISTRUZIONE SECONDARIA SUPERIORE - 'GIANCARDI-GALILEI-AICARDI' "
@@ -93848,25 +82623,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 30 Sep 2026 "
       "18:12:15 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_TAIC80500G", .name = "ISTITUTO COMPRENSIVO - R.LEONE (Pubbliche Amministrazioni, "
-      "Ginosa, TA) - ISTITUTO COMPRENSIVO STATALE &quot;R. LEONE&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - R.LEONE (Pubbliche Amministrazioni, Ginosa, TA) - ISTITUTO COMPRENSIVO STATALE &quot;R. LEONE&quot;",
-    .category = "government", .portal = "https://www.comprensivoleone.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comprensivoleone.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 12 Nov 2024 "
-      "14:38:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_TAIC807007", .name = "ISTITUTO COMPRENSIVO - MORLEO (Pubbliche Amministrazioni, "
@@ -94144,26 +82900,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "14:05:30 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_TAIC84800D", .name = "ISTITUTO COMPRENSIVO - MICHELE GRECO - MANDURIA (Pubbliche "
-      "Amministrazioni, Manduria, TA) - ISTITUTO COMPRENSIVO STATALE  "
-      "&quot; Michele Greco &quot;  di  Manduria  (Ta)",
-    .name_ja = "ISTITUTO COMPRENSIVO - MICHELE GRECO - MANDURIA (Pubbliche Amministrazioni, Manduria, TA) - ISTITUTO COMPRENSIVO STATALE  &quot; Michele Greco &quot;  di  Manduria  (Ta)",
-    .category = "government", .portal = "https://www.icsmichelegreco.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsmichelegreco.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "15:48:51 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_TAIC849009", .name = "PRIMO ISTITUTO COMPRENSIVO - DE AMICIS-MASSAFRA (Pubbliche "
       "Amministrazioni, Massafra, TA) - Istituto Comprensivo Statale De "
       "Amicis-Manzoni &#8211; Massafra (TA)",
@@ -94222,26 +82958,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 8 items, RSS2 feed, newest Wed, 03 Dec 2025 "
       "12:38:45 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_TAIC853001", .name = "ISTITUTO COMPRENSIVO - GIOVANNI XXIII - SAVA (Pubbliche "
-      "Amministrazioni, Sava, TA) - Istituto Comprensivo Giovanni XXIII "
-      "– Sava",
-    .name_ja = "ISTITUTO COMPRENSIVO - GIOVANNI XXIII - SAVA (Pubbliche Amministrazioni, Sava, TA) - Istituto Comprensivo Giovanni XXIII – Sava",
-    .category = "government", .portal = "https://www.icgiovanni23sava.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icgiovanni23sava.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 06 Oct 2026 "
-      "18:10:13 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_TAIC85400R", .name = "ISTITUTO COMPRENSIVO - GIOVANNI XXIII - STATTE (Pubbliche "
@@ -94403,25 +83119,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "17:03:29 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_TAIS02600R", .name = "ISTITUTO SUPERIORE - L. EINAUDI (Pubbliche Amministrazioni, "
-      "Manduria, TA) - I.I.S.S. &quot;L. Einaudi&quot; – Manduria (Ta)",
-    .name_ja = "ISTITUTO SUPERIORE - L. EINAUDI (Pubbliche Amministrazioni, Manduria, TA) - I.I.S.S. &quot;L. Einaudi&quot; – Manduria (Ta)",
-    .category = "government", .portal = "https://www.einaudimanduria.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.einaudimanduria.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Tue, 29 Sep 2026 "
-      "17:01:38 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_TAIS02700L", .name = "ISTITUTO SUPERIORE - C. MONDELLI (Pubbliche Amministrazioni, "
       "Massafra, TA) - I.I.S.S. &quot;C. MONDELLI&quot;",
     .name_ja = "ISTITUTO SUPERIORE - C. MONDELLI (Pubbliche Amministrazioni, Massafra, TA) - I.I.S.S. &quot;C. MONDELLI&quot;",
@@ -94500,26 +83197,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "14:31:29 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_TAPS03000T", .name = "LICEO SCIENTIFICO - LS G. BATTAGLINI (Pubbliche Amministrazioni, "
-      "Taranto, TA) - Liceo Scientifico di Stato &quot;G. "
-      "Battaglini&quot;",
-    .name_ja = "LICEO SCIENTIFICO - LS G. BATTAGLINI (Pubbliche Amministrazioni, Taranto, TA) - Liceo Scientifico di Stato &quot;G. Battaglini&quot;",
-    .category = "government", .portal = "https://www.battaglini.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.battaglini.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "13:31:50 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_TEIC81600C", .name = "IC VALLE DEL FINO (Pubbliche Amministrazioni, Castiglione Messer "
       "Raimondo, TE) - Istituto Comprensivo Valle del Fino",
     .name_ja = "IC VALLE DEL FINO (Pubbliche Amministrazioni, Castiglione Messer Raimondo, TE) - Istituto Comprensivo Valle del Fino",
@@ -94537,46 +83214,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Tue, 06 Oct 2026 "
       "20:56:49 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_TEIC81900X", .name = "ISTITUTO COMPRENSIVO ISOLA DEL GRAN SASSO - COLLEDARA ( TE)  "
-      "(Pubbliche Amministrazioni, Isola del Gran Sasso d'Italia, TE) - "
-      "I.C. ISOLA DEL GRAN SASSO",
-    .name_ja = "ISTITUTO COMPRENSIVO ISOLA DEL GRAN SASSO - COLLEDARA ( TE)  (Pubbliche Amministrazioni, Isola del Gran Sasso d'Italia, TE) - I.C. ISOLA DEL GRAN SASSO",
-    .category = "government", .portal = "https://www.icisolacolledara.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icisolacolledara.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
-      "11:26:50 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_TEIC826003", .name = "ISTITUTO COMPRENSIVO - I.C. NERETO (Pubbliche Amministrazioni, "
-      "Nereto, TE) - Istituto Comprensivo Nereto &#8211; "
-      "Sant&#039;Omero &#8211; Torano",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. NERETO (Pubbliche Amministrazioni, Nereto, TE) - Istituto Comprensivo Nereto &#8211; Sant&#039;Omero &#8211; Torano",
-    .category = "government", .portal = "https://www.icneretosantomerotorano.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icneretosantomerotorano.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
-      "20:43:22 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_TEIC84500C", .name = "I C TE1 TORRICELLA S. - ZIPPILLI - LUCIDI (Pubbliche "
@@ -94597,26 +83234,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 8 items, RSS2 feed, newest Wed, 10 Jun 2026 "
       "15:40:24 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_TEPS010003", .name = "LICEO SCIENTIFICO - LICEO SCIENTIFICO ALBERT EINSTEIN (Pubbliche "
-      "Amministrazioni, Teramo, TE) - Liceo Statale &quot;Albert "
-      "Einstein&quot; di Teramo",
-    .name_ja = "LICEO SCIENTIFICO - LICEO SCIENTIFICO ALBERT EINSTEIN (Pubbliche Amministrazioni, Teramo, TE) - Liceo Statale &quot;Albert Einstein&quot; di Teramo",
-    .category = "government", .portal = "https://www.liceoeinsteinte.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceoeinsteinte.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "14:32:15 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_TEPS02000N", .name = "LICEO SCIENTIFICO - LS M.CURIE (Pubbliche Amministrazioni, "
@@ -94734,26 +83351,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "15:50:44 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_TOIC81300D", .name = "ISTITUTO COMPRENSIVO - I.C. - TORRE PELLICE (Pubbliche "
-      "Amministrazioni, Torre Pellice, TO) - Istituto Comprensivo "
-      "&quot;Gianni Rodari&quot; – Torre Pellice",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. - TORRE PELLICE (Pubbliche Amministrazioni, Torre Pellice, TO) - Istituto Comprensivo &quot;Gianni Rodari&quot; – Torre Pellice",
-    .category = "government", .portal = "https://www.ictorrepellice.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ictorrepellice.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 10 Jun 2026 "
-      "09:00:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_TOIC814009", .name = "ISTITUTO COMPRENSIVO - I.C. - PONT CANAVESE (Pubbliche "
       "Amministrazioni, Pont Canavese, TO) - Istituto Comprensivo "
       "&#8211; Pont Canavese",
@@ -94850,26 +83447,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "08:24:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_TOIC82000L", .name = "ISTITUTO COMPRENSIVO - I.C. - TORINO - SALVEMINI (Pubbliche "
-      "Amministrazioni, Torino, TO) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;Gaetano Salvemini&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. - TORINO - SALVEMINI (Pubbliche Amministrazioni, Torino, TO) - ISTITUTO COMPRENSIVO STATALE &quot;Gaetano Salvemini&quot;",
-    .category = "government", .portal = "https://www.icsalvemini.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsalvemini.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "11:35:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_TOIC82400X", .name = "ISTITUTO COMPRENSIVO - I.C. - SANT'ANTONINO DI SUSA (Pubbliche "
       "Amministrazioni, Sant'Antonino di Susa, TO) - Circolari - RSS",
     .name_ja = "ISTITUTO COMPRENSIVO - I.C. - SANT'ANTONINO DI SUSA (Pubbliche Amministrazioni, Sant'Antonino di Susa, TO) - Circolari - RSS",
@@ -94887,25 +83464,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 18 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "00:00:00 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_TOIC82500Q", .name = "ISTITUTO COMPRENSIVO - I.C. - CONDOVE (Pubbliche "
-      "Amministrazioni, Condove, TO) - Istituto Comprensivo Condove",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. - CONDOVE (Pubbliche Amministrazioni, Condove, TO) - Istituto Comprensivo Condove",
-    .category = "government", .portal = "https://www.icscondove.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icscondove.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "08:16:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_TOIC828007", .name = "ISTITUTO COMPRENSIVO - I.C. - FIANO (Pubbliche Amministrazioni, "
@@ -94966,26 +83524,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "16:33:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_TOIC83200V", .name = "ISTITUTO COMPRENSIVO - I.C. - TROFARELLO (Pubbliche "
-      "Amministrazioni, Trofarello, TO) - ISTITUTO COMPRENSIVO STATALE "
-      "&quot;TROFARELLO&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. - TROFARELLO (Pubbliche Amministrazioni, Trofarello, TO) - ISTITUTO COMPRENSIVO STATALE &quot;TROFARELLO&quot;",
-    .category = "government", .portal = "https://www.ictrofarello.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ictrofarello.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 14 Sep 2026 "
-      "10:10:17 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_TOIC83500A", .name = "ISTITUTO COMPRENSIVO - I.C. - AIRASCA (Pubbliche "
       "Amministrazioni, Airasca, TO) - ISTITUTO COMPRENSIVO STATALE "
       "&quot;di Airasca&quot;",
@@ -95006,25 +83544,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:20:58 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_TOIC84100N", .name = "ISTITUTO COMPRENSIVO - I.C. RIVALTA (Pubbliche Amministrazioni, "
-      "Rivalta di Torino, TO) - Istituto comprensivo di Rivalta",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. RIVALTA (Pubbliche Amministrazioni, Rivalta di Torino, TO) - Istituto comprensivo di Rivalta",
-    .category = "government", .portal = "https://www.icrivalta.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icrivalta.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 09 Sep 2026 "
-      "08:25:44 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_TOIC845001", .name = "ISTITUTO COMPRENSIVO - I.C. - CAVOUR (Pubbliche Amministrazioni, "
       "Cavour, TO) - I.C. Cavour",
     .name_ja = "ISTITUTO COMPRENSIVO - I.C. - CAVOUR (Pubbliche Amministrazioni, Cavour, TO) - I.C. Cavour",
@@ -95042,26 +83561,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 2 items, RSS2 feed, newest Fri, 27 Jun 2025 "
       "15:04:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_TOIC84600R", .name = "ISTITUTO COMPRENSIVO - I.C. - CUMIANA (Pubbliche "
-      "Amministrazioni, Cumiana, TO) - Istituto Comprensivo Pinerolo V "
-      "&#8211; Cumiana",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. - CUMIANA (Pubbliche Amministrazioni, Cumiana, TO) - Istituto Comprensivo Pinerolo V &#8211; Cumiana",
-    .category = "government", .portal = "https://www.icpinerolo5.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icpinerolo5.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
-      "13:29:05 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_TOIC852004", .name = "ISTITUTO COMPRENSIVO - I.C. - MONTANARO (Pubbliche "
@@ -95299,46 +83798,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "14:10:53 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_TOIC88500B", .name = "Istituto Comprensivo Moncalieri - Santa Maria (Pubbliche "
-      "Amministrazioni, Moncalieri, TO) - Istituto Comprensivo Statale "
-      "Istituto Comprensivo Statale &quot;Santa Maria&quot",
-    .name_ja = "Istituto Comprensivo Moncalieri - Santa Maria (Pubbliche Amministrazioni, Moncalieri, TO) - Istituto Comprensivo Statale Istituto Comprensivo Statale &quot;Santa Maria&quot",
-    .category = "government", .portal = "https://www.icsantamaria.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsantamaria.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "19:51:26 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_TOIC886007", .name = "ISTITUTO COMPRENSIVO - I.C. LA LOGGIA (Pubbliche "
-      "Amministrazioni, La Loggia, TO) - ISTITUTO COMPRENSIVO STATALE "
-      "LA LOGGIA",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. LA LOGGIA (Pubbliche Amministrazioni, La Loggia, TO) - ISTITUTO COMPRENSIVO STATALE LA LOGGIA",
-    .category = "government", .portal = "https://www.iclaloggia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iclaloggia.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "17:34:05 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_TOIC88800V", .name = "ISTITUTO COMPRENSIVO - I.C. MONCALIERI CENTRO STORICO (Pubbliche "
       "Amministrazioni, Moncalieri, TO) - IC Centro Storico Moncalieri",
     .name_ja = "ISTITUTO COMPRENSIVO - I.C. MONCALIERI CENTRO STORICO (Pubbliche Amministrazioni, Moncalieri, TO) - IC Centro Storico Moncalieri",
@@ -95375,45 +83834,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 15 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "11:16:03 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_TOIC895002", .name = "ISTITUTO COMPRENSIVO - IC. BORGARETTO-BEINASCO (Pubbliche "
-      "Amministrazioni, Beinasco, TO) - Istituto Comprensivo Borgaretto "
-      "Beinasco",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC. BORGARETTO-BEINASCO (Pubbliche Amministrazioni, Beinasco, TO) - Istituto Comprensivo Borgaretto Beinasco",
-    .category = "government", .portal = "https://www.icborgarettobeinasco.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icborgarettobeinasco.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 05 Oct 2026 "
-      "19:37:57 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_TOIC8AK00N", .name = "ISTITUTO COMPRENSIVO - I.C. CIRIE' I (Pubbliche Amministrazioni, "
-      "Ciriè, TO) - ISTITUTO COMPRENSIVO CIRIÉ 1",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. CIRIE' I (Pubbliche Amministrazioni, Ciriè, TO) - ISTITUTO COMPRENSIVO CIRIÉ 1",
-    .category = "government", .portal = "https://www.iccirie1.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iccirie1.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 25 Sep 2026 "
-      "14:30:06 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_TOIC8AN005", .name = "ISTITUTO COMPRENSIVO - I.C. CARMAGNOLA I (Pubbliche "
@@ -95685,25 +84105,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "15:38:04 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_TOIS04300D", .name = "ISTRUZIONE SECONDARIA SUPERIORE - P. LEVI (Pubbliche "
-      "Amministrazioni, Torino, TO) - IIS Primo Levi",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - P. LEVI (Pubbliche Amministrazioni, Torino, TO) - IIS Primo Levi",
-    .category = "government", .portal = "https://www.istitutoprimolevi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutoprimolevi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 30 Sep 2026 "
-      "10:45:23 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_TOIS044009", .name = "ISTRUZIONE SECONDARIA SUPERIORE - PREVER (Pubbliche "
       "Amministrazioni, Pinerolo, TO) - Istituto di Istruzione "
       "Superiore &quot;Arturo Prever&quot;",
@@ -95951,26 +84352,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 27 Aug 2024 "
       "08:58:41 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_TPEE01200N", .name = "DIREZIONE DIDATTICA - CD SAN GIOVANNI BOSCO (Pubbliche "
-      "Amministrazioni, Alcamo, TP) - Direzione Didattica &#8220;San "
-      "Giovanni Bosco&#8221; Alcamo",
-    .name_ja = "DIREZIONE DIDATTICA - CD SAN GIOVANNI BOSCO (Pubbliche Amministrazioni, Alcamo, TP) - Direzione Didattica &#8220;San Giovanni Bosco&#8221; Alcamo",
-    .category = "government", .portal = "https://www.ddsangiovannibosco.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ddsangiovannibosco.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 23 Apr 2024 "
-      "06:08:05 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_TPIC806008", .name = "ISTITUTO COMPRENSIVO - 'G.NOSENGO' PETROSINO (Pubbliche "
@@ -96247,25 +84628,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "06:05:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_TPIC82500N", .name = "L. Bassi - S. Catalano (Pubbliche Amministrazioni, Trapani, TP) "
-      "- Istituto Comprensivo Statale Livio Bassi",
-    .name_ja = "L. Bassi - S. Catalano (Pubbliche Amministrazioni, Trapani, TP) - Istituto Comprensivo Statale Livio Bassi",
-    .category = "government", .portal = "https://www.icliviobassi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icliviobassi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 16 Sep 2026 "
-      "21:50:35 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_TPIC82600D", .name = "Istituto Comprensivo Giuseppe Montalto (Pubbliche "
       "Amministrazioni, Misiliscemi, TP) - Istituto Giuseppe Montalto "
       "&#8211; Misiliscemi",
@@ -96363,26 +84725,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 29 Sep 2026 "
       "15:52:44 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_TPIC835008", .name = "ISTITUTO COMPRENSIVO - ' G.PAGOTO ' ERICE (Pubbliche "
-      "Amministrazioni, Erice, TP) - I.C.S. Giuseppe Pagoto &#8211; "
-      "Casa Santa &#8211; Erice",
-    .name_ja = "ISTITUTO COMPRENSIVO - ' G.PAGOTO ' ERICE (Pubbliche Amministrazioni, Erice, TP) - I.C.S. Giuseppe Pagoto &#8211; Casa Santa &#8211; Erice",
-    .category = "government", .portal = "https://www.icgpagoto.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icgpagoto.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 30 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "18:11:53 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_TPIC836004", .name = "ISTITUTO COMPRENSIVO - G.G.CIACCIO MONTALTO (TP) (Pubbliche "
@@ -96543,26 +84885,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:01:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_TPIS024002", .name = "ISTITUTO SUPERIORE - 'G.P.BALLATORE' MAZARA DEL VALLO (Pubbliche "
-      "Amministrazioni, Mazara del Vallo, TP) - IIS Liceo G.G. Adria "
-      "&#8211; G.P. Ballatore",
-    .name_ja = "ISTITUTO SUPERIORE - 'G.P.BALLATORE' MAZARA DEL VALLO (Pubbliche Amministrazioni, Mazara del Vallo, TP) - IIS Liceo G.G. Adria &#8211; G.P. Ballatore",
-    .category = "government", .portal = "https://www.liceomazara.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceomazara.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 17 Jun 2026 "
-      "09:01:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_TPPM03000Q", .name = "LICEO PASCASINO - GIOVANNI XXIII (Pubbliche Amministrazioni, "
       "Marsala, TP) - Liceo Statale Pascasino &#8211; Giovanni XXIII",
     .name_ja = "LICEO PASCASINO - GIOVANNI XXIII (Pubbliche Amministrazioni, Marsala, TP) - Liceo Statale Pascasino &#8211; Giovanni XXIII",
@@ -96599,26 +84921,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 15 Sep 2026 "
       "07:25:22 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_TPTD03000E", .name = "ISTITUTO TECNICO COMMERCIALE - 'G. GARIBALDI' MARSALA (Pubbliche "
-      "Amministrazioni, Marsala, TP) - Istituto Tecnico Economico e "
-      "Tecnologico &quot;G. Garibaldi&quot;",
-    .name_ja = "ISTITUTO TECNICO COMMERCIALE - 'G. GARIBALDI' MARSALA (Pubbliche Amministrazioni, Marsala, TP) - Istituto Tecnico Economico e Tecnologico &quot;G. Garibaldi&quot;",
-    .category = "government", .portal = "https://itetgaribaldi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://itetgaribaldi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 16 Sep 2026 "
-      "13:33:31 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_TRIC811001", .name = "ISTITUTO COMPRENSIVO - I.C. TERNI 'A.DE FILIS' (Pubbliche "
@@ -96857,26 +85159,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "17:58:07 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_TVIC82100R", .name = "ISTITUTO COMPRENSIVO - IC CAERANO DI SAN MARCO (Pubbliche "
-      "Amministrazioni, Caerano di San Marco, TV) - Istituto "
-      "Comprensivo di Caerano S.Marco",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC CAERANO DI SAN MARCO (Pubbliche Amministrazioni, Caerano di San Marco, TV) - Istituto Comprensivo di Caerano S.Marco",
-    .category = "government", .portal = "https://www.iccaerano.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iccaerano.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "01:57:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_TVIC824008", .name = "Istituto Comprensivo Statale Di Loria E Castello Di Godego "
       "(Pubbliche Amministrazioni, Loria, TV) - ICS di Loria e Castello "
       "di Godego",
@@ -97012,46 +85294,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 14 Aug 2026 "
       "09:15:28 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_TVIC86000B", .name = "ISTITUTO COMPRENSIVO - IC SAN POLO DI PIAVE (Pubbliche "
-      "Amministrazioni, San Polo di Piave, TV) - I.C. &quot;L. "
-      "Luzzatti&quot; di San Polo di Piave",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC SAN POLO DI PIAVE (Pubbliche Amministrazioni, San Polo di Piave, TV) - I.C. &quot;L. Luzzatti&quot; di San Polo di Piave",
-    .category = "government", .portal = "https://www.icsanpolodipiave.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsanpolodipiave.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "13:49:18 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_TVIC862003", .name = "ISTITUTO COMPRENSIVO - IC SAN ZENONE DEGLI EZZELINI (Pubbliche "
-      "Amministrazioni, San Zenone degli Ezzelini, TV) - I.C. San "
-      "Zenone degli Ezzelini",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC SAN ZENONE DEGLI EZZELINI (Pubbliche Amministrazioni, San Zenone degli Ezzelini, TV) - I.C. San Zenone degli Ezzelini",
-    .category = "government", .portal = "https://www.comprensivosanzenone.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comprensivosanzenone.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "10:24:51 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_TVIC870002", .name = "ISTITUTO COMPRENSIVO TREVISO 1 'A. MARTINI' (Pubbliche "
@@ -97209,26 +85451,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "08:04:37 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_TVIS018005", .name = "ISTRUZIONE SECONDARIA SUPERIORE - IS SARTOR (Pubbliche "
-      "Amministrazioni, Castelfranco Veneto, TV) - ISISS Domenico "
-      "Sartor",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - IS SARTOR (Pubbliche Amministrazioni, Castelfranco Veneto, TV) - ISISS Domenico Sartor",
-    .category = "government", .portal = "https://www.istitutoagrariosartor.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutoagrariosartor.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 22 Jul 2026 "
-      "06:33:21 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_TVPC01000R", .name = "LICEO CLASSICO - LC A.CANOVA (Pubbliche Amministrazioni, "
       "Treviso, TV) - Liceo Ginnasio Statale Antonio Canova",
     .name_ja = "LICEO CLASSICO - LC A.CANOVA (Pubbliche Amministrazioni, Treviso, TV) - Liceo Ginnasio Statale Antonio Canova",
@@ -97246,25 +85468,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 18 Sep 2026 "
       "17:00:47 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_TVPM02000G", .name = "ISTITUTO MAGISTRALE - IM VERONESE (Pubbliche Amministrazioni, "
-      "Montebelluna, TV) - Liceo &quot;Angela Veronese&quot;",
-    .name_ja = "ISTITUTO MAGISTRALE - IM VERONESE (Pubbliche Amministrazioni, Montebelluna, TV) - Liceo &quot;Angela Veronese&quot;",
-    .category = "government", .portal = "https://www.liceoveronese.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceoveronese.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Sat, 03 Oct 2026 "
-      "10:00:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_TVPS04000Q", .name = "LICEO SCIENTIFICO - LS GIUSEPPE BERTO (Pubbliche "
@@ -97285,26 +85488,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "12:57:23 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_TVTF04000T", .name = "ISTITUTO TECNICO INDUSTRIALE - ITI PLANCK (Pubbliche "
-      "Amministrazioni, Villorba, TV) - Istituto Max Planck Tecnico "
-      "Industriale (Automazione &#8211; Elettronica &#8211;",
-    .name_ja = "ISTITUTO TECNICO INDUSTRIALE - ITI PLANCK (Pubbliche Amministrazioni, Villorba, TV) - Istituto Max Planck Tecnico Industriale (Automazione &#8211; Elettronica &#8211;",
-    .category = "government", .portal = "https://www.maxplanck.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.maxplanck.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
-      "06:30:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_UDIC819005", .name = "I.C. BASILIANO E SEDEGLIANO (Pubbliche Amministrazioni, "
@@ -97422,26 +85605,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "06:04:23 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_UDPS010008", .name = "LICEO SCIENTIFICO - LICEO SCIENTIFICO 'G. MARINELLI' UDINE "
-      "(Pubbliche Amministrazioni, Udine, UD) - Liceo Scientifico "
-      "Marinelli",
-    .name_ja = "LICEO SCIENTIFICO - LICEO SCIENTIFICO 'G. MARINELLI' UDINE (Pubbliche Amministrazioni, Udine, UD) - Liceo Scientifico Marinelli",
-    .category = "government", .portal = "https://liceomarinelli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://liceomarinelli.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "08:37:53 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_UDVE01000B", .name = "EDUCANDATO - UCCELLIS (Pubbliche Amministrazioni, Udine, UD) - "
@@ -98011,26 +86174,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "11:28:26 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_VAIC86200L", .name = "ISTITUTO COMPRENSIVO - I.C. VENEGONO SUP.'G. MARCONI' (Pubbliche "
-      "Amministrazioni, Venegono Superiore, VA) - Istituto Comprensivo "
-      "Statale Marconi",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. VENEGONO SUP.'G. MARCONI' (Pubbliche Amministrazioni, Venegono Superiore, VA) - Istituto Comprensivo Statale Marconi",
-    .category = "government", .portal = "https://www.icsvenegono.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsvenegono.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 10 Oct 2026 "
-      "09:05:41 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_VAIC865004", .name = "ISTITUTO COMPRENSIVO - I.C. CASORATE S. 'TOSCANINI' (Pubbliche "
       "Amministrazioni, Casorate Sempione, VA) - Istituto Comprensivo "
       "Toscanini",
@@ -98425,46 +86568,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "21:04:01 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_VBIC81500N", .name = "ISTITUTO COMPRENSIVO - IC DI VERBANIA INTRA (Pubbliche "
-      "Amministrazioni, Verbania, VB) - Istituto Comprensivo Statale "
-      "Verbania Intra",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC DI VERBANIA INTRA (Pubbliche Amministrazioni, Verbania, VB) - Istituto Comprensivo Statale Verbania Intra",
-    .category = "government", .portal = "https://www.icverbania-intra.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icverbania-intra.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 03 Sep 2026 "
-      "15:07:39 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_VBIC817009", .name = "ISTITUTO COMPRENSIVO - IC DI OMEGNA - VIA DE AMICIS (Pubbliche "
-      "Amministrazioni, Omegna, VB) - ISTITUTO COMPRENSIVO FILIPPO "
-      "MARIA BELTRAMI",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC DI OMEGNA - VIA DE AMICIS (Pubbliche Amministrazioni, Omegna, VB) - ISTITUTO COMPRENSIVO FILIPPO MARIA BELTRAMI",
-    .category = "government", .portal = "https://www.icbeltrami.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icbeltrami.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Thu, 24 Sep 2026 "
-      "08:58:44 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_VBIC819001", .name = "ISTITUTO COMPRENSIVO - \"GIANNI RODARI\" (Pubbliche "
       "Amministrazioni, Omegna, VB) - ISTITUTO COMPRENSIVO STATALE "
       "&quot;G. RODARI&quot;",
@@ -98755,26 +86858,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:30:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_VEIC81400N", .name = "ISTITUTO COMPRENSIVO - UGO FOSCOLO (Pubbliche Amministrazioni, "
-      "Venezia, VE) - I.C. DI MURANO &#8211; BURANO &#8211; VENEZIA "
-      "&quot;U. FOSCOLO&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO - UGO FOSCOLO (Pubbliche Amministrazioni, Venezia, VE) - I.C. DI MURANO &#8211; BURANO &#8211; VENEZIA &quot;U. FOSCOLO&quot;",
-    .category = "government", .portal = "https://www.icmuranoburanosanterasmo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icmuranoburanosanterasmo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 21 Sep 2026 "
-      "07:02:05 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_VEIC82200L", .name = "ISTITUTO COMPRENSIVO - ANGELO RONCALLI (Pubbliche "
       "Amministrazioni, Quarto d'Altino, VE) - Istituto Comprensivo "
       "Statale &quot;A.Roncalli&quot;",
@@ -98813,66 +86896,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
       "13:38:12 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_VEIC83400V", .name = "ISTITUTO COMPRENSIVO - I.C. ILARIA ALPI (Pubbliche "
-      "Amministrazioni, Venezia, VE) - IC ILARIA ALPI &#8211; ANTONIO "
-      "GRAMSCI Favaro Veneto &#8211; Venezia",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. ILARIA ALPI (Pubbliche Amministrazioni, Venezia, VE) - IC ILARIA ALPI &#8211; ANTONIO GRAMSCI Favaro Veneto &#8211; Venezia",
-    .category = "government", .portal = "https://www.icalpigramscifavaro.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icalpigramscifavaro.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "08:30:30 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_VEIC83600E", .name = "ISTITUTO COMPRENSIVO \"GALILEI - MARTINI\" (Pubbliche "
-      "Amministrazioni, Scorzè, VE) - Istituto Comprensivo G. Galilei "
-      "Scorzè",
-    .name_ja = "ISTITUTO COMPRENSIVO \"GALILEI - MARTINI\" (Pubbliche Amministrazioni, Scorzè, VE) - Istituto Comprensivo G. Galilei Scorzè",
-    .category = "government", .portal = "https://www.istitutocomprensivogalileimartini.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivogalileimartini.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "21:12:07 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_VEIC838006", .name = "ISTITUTO COMPRENSIVO - IC C.GOLDONI (Pubbliche Amministrazioni, "
-      "Martellago, VE) - Istituto Comprensivo &quot;Carlo Goldoni&quot; "
-      "di Martellago",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC C.GOLDONI (Pubbliche Amministrazioni, Martellago, VE) - Istituto Comprensivo &quot;Carlo Goldoni&quot; di Martellago",
-    .category = "government", .portal = "https://www.icgoldonimartellago.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icgoldonimartellago.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "16:07:33 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_VEIC839002", .name = "ISTITUTO COMPRENSIVO - DANTE ALIGHIERI (Pubbliche "
@@ -99501,26 +87524,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "08:16:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_VTIC805005", .name = "ISTITUTO COMPRENSIVO - MONTALTO DI CASTRO (Pubbliche "
-      "Amministrazioni, Montalto di Castro, VT) - Istituto Comprensivo "
-      "Statale MONTALTO DI CASTRO",
-    .name_ja = "ISTITUTO COMPRENSIVO - MONTALTO DI CASTRO (Pubbliche Amministrazioni, Montalto di Castro, VT) - Istituto Comprensivo Statale MONTALTO DI CASTRO",
-    .category = "government", .portal = "https://www.icmontaltodicastro.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icmontaltodicastro.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 09 Jul 2026 "
-      "09:27:24 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_VTIC80800L", .name = "ISTITUTO COMPRENSIVO - PIO FEDI (Pubbliche Amministrazioni, "
       "Viterbo, VT) - I.C. Pio Fedi",
     .name_ja = "ISTITUTO COMPRENSIVO - PIO FEDI (Pubbliche Amministrazioni, Viterbo, VT) - I.C. Pio Fedi",
@@ -99538,26 +87541,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
       "10:25:14 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_VTIC81000L", .name = "ISTITUTO COMPRENSIVO - MARIANGELA VIRGILI (Pubbliche "
-      "Amministrazioni, Ronciglione, VT) - L’Istituto Comprensivo “M. "
-      "Virgili” di Ronciglione",
-    .name_ja = "ISTITUTO COMPRENSIVO - MARIANGELA VIRGILI (Pubbliche Amministrazioni, Ronciglione, VT) - L’Istituto Comprensivo “M. Virgili” di Ronciglione",
-    .category = "government", .portal = "https://www.icronciglione.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icronciglione.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 16 Jul 2026 "
-      "07:21:55 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_VTIC81100C", .name = "ISTITUTO COMPRENSIVO - ALDO MORO (Pubbliche Amministrazioni, "
@@ -99697,46 +87680,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "17:55:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_VTIC82900N", .name = "ISTITUTO COMPRENSIVO - I. C. LUIGI FANTAPPIE (Pubbliche "
-      "Amministrazioni, Viterbo, VT) - Istituto Comprensivo Statale "
-      "&quot;Luigi Fantappiè&quot; &#8211; Viterbo Istitu",
-    .name_ja = "ISTITUTO COMPRENSIVO - I. C. LUIGI FANTAPPIE (Pubbliche Amministrazioni, Viterbo, VT) - Istituto Comprensivo Statale &quot;Luigi Fantappiè&quot; &#8211; Viterbo Istitu",
-    .category = "government", .portal = "https://www.icfantappie.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icfantappie.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "05:59:58 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_VTIC83100N", .name = "ISTITUTO COMPRENSIVO - PIETRO EGIDI (Pubbliche Amministrazioni, "
-      "Viterbo, VT) - Istituto Comprensivo Statale &quot;Pietro "
-      "Egidi&quot; di Viterbo",
-    .name_ja = "ISTITUTO COMPRENSIVO - PIETRO EGIDI (Pubbliche Amministrazioni, Viterbo, VT) - Istituto Comprensivo Statale &quot;Pietro Egidi&quot; di Viterbo",
-    .category = "government", .portal = "https://www.icegidi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icegidi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 11 Sep 2026 "
-      "17:22:31 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISTSC_VTIC83200D", .name = "ISTITUTO COMPRENSIVO - PIETRO VANNI (Pubbliche Amministrazioni, "
       "Viterbo, VT) - Istituto Comprensivo Statale &quot;Pietro "
       "Vanni&quot;",
@@ -99812,25 +87755,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "11:38:44 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_VTIS00400D", .name = "ISTITUTO OMNICOMPRENSIVO ORTE (Pubbliche Amministrazioni, Orte, "
-      "VT) - ISTITUTO OMNICOMPRENSIVO DI ORTE",
-    .name_ja = "ISTITUTO OMNICOMPRENSIVO ORTE (Pubbliche Amministrazioni, Orte, VT) - ISTITUTO OMNICOMPRENSIVO DI ORTE",
-    .category = "government", .portal = "https://www.scuoleorte.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.scuoleorte.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "21:21:55 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_VTIS007001", .name = "ISTRUZIONE SECONDARIA SUPERIORE - U. MIDOSSI CON S.M.S. ANNESSA "
@@ -99951,46 +87875,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "06:31:01 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_VTPM010007", .name = "ISTITUTO MAGISTRALE - I.M. S. ROSA DA VITERBO (Pubbliche "
-      "Amministrazioni, Viterbo, VT) - Homepage Istituto Scolastico - "
-      "www.liceosantarosavt.edu.it",
-    .name_ja = "ISTITUTO MAGISTRALE - I.M. S. ROSA DA VITERBO (Pubbliche Amministrazioni, Viterbo, VT) - Homepage Istituto Scolastico - www.liceosantarosavt.edu.it",
-    .category = "government", .portal = "https://liceosantarosavt.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://liceosantarosavt.edu.it/index.php?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Thu, 07 Jun 2018 "
-      "10:43:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_VTPM010007_2", .name = "ISTITUTO MAGISTRALE - I.M. S. ROSA DA VITERBO (Pubbliche "
-      "Amministrazioni, Viterbo, VT) - Homepage Istituto Scolastico - "
-      "www.liceosantarosavt.edu.it",
-    .name_ja = "ISTITUTO MAGISTRALE - I.M. S. ROSA DA VITERBO (Pubbliche Amministrazioni, Viterbo, VT) - Homepage Istituto Scolastico - www.liceosantarosavt.edu.it",
-    .category = "government", .portal = "https://liceosantarosavt.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://liceosantarosavt.edu.it/index.php?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:45:13+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
-
   { .id = "JO45_IT_ISTSC_VTPS010006", .name = "LICEO SCIENTIFICO - P. RUFFINI (Pubbliche Amministrazioni, "
       "Viterbo, VT) - LICEO SCIENTIFICO STATALE PAOLO RUFFINI",
     .name_ja = "LICEO SCIENTIFICO - P. RUFFINI (Pubbliche Amministrazioni, Viterbo, VT) - LICEO SCIENTIFICO STATALE PAOLO RUFFINI",
@@ -100008,25 +87892,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "11:03:02 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTSC_VTTF010008", .name = "Istituto Tecnico Tecnologico (Pubbliche Amministrazioni, "
-      "Viterbo, VT) - Portale Scolastico",
-    .name_ja = "Istituto Tecnico Tecnologico (Pubbliche Amministrazioni, Viterbo, VT) - Portale Scolastico",
-    .category = "government", .portal = "https://www.ittvt.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ittvt.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 05 Oct 2026 "
-      "18:45:27 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ISTSC_VVIC803004", .name = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO D'ANTONA (Pubbliche "
@@ -100229,46 +88094,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "07:29:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ISTSC_VVPS01000R", .name = "LICEO SCIENTIFICO - LICEO SCIENTIFICO G.BERTO (Pubbliche "
-      "Amministrazioni, Vibo Valentia, VV) - Liceo Scientifico Statale "
-      "&quot;G. Berto&quot;",
-    .name_ja = "LICEO SCIENTIFICO - LICEO SCIENTIFICO G.BERTO (Pubbliche Amministrazioni, Vibo Valentia, VV) - Liceo Scientifico Statale &quot;G. Berto&quot;",
-    .category = "government", .portal = "https://www.liceobertovv.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceobertovv.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "05:53:14 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISTTSA", .name = "Istituto Comprensivo T. Tasso (Pubbliche Amministrazioni, "
-      "Salerno, SA) - Istituto Comprensivo Statale &quot;Torquato "
-      "Tasso&quot; &#8211; Salerno",
-    .name_ja = "Istituto Comprensivo T. Tasso (Pubbliche Amministrazioni, Salerno, SA) - Istituto Comprensivo Statale &quot;Torquato Tasso&quot; &#8211; Salerno",
-    .category = "government", .portal = "https://www.ictassosalerno.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ictassosalerno.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 17 Sep 2026 "
-      "19:19:26 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ISVALMA", .name = "Istituto Superiore V Almanza (Pubbliche Amministrazioni, "
       "Pantelleria, TP) - ISTITUTO DI ISTRUZIONE SUPERIORE “V. ALMANZA "
       "– A. D’AJETTI” OMNICOMPRENS",
@@ -100287,25 +88112,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "17:35:31 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ISVE", .name = "IIS VITTORIO EMANUELE II - BRUNO CHIMIRRI (Pubbliche "
-      "Amministrazioni, Catanzaro, CZ) - IIS VITTORIO EMANUELE II",
-    .name_ja = "IIS VITTORIO EMANUELE II - BRUNO CHIMIRRI (Pubbliche Amministrazioni, Catanzaro, CZ) - IIS VITTORIO EMANUELE II",
-    .category = "government", .portal = "https://www.iisvemanuele.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iisvemanuele.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "15:18:26 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_IT2XSB04", .name = "FONDAZIONE ITS TURISMO LIGURIA ACADEMY OF TO URISM, CULTURE AND "
@@ -100523,25 +88329,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "19:55:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ITMB", .name = "Its Buonarroti Caserta (Pubbliche Amministrazioni, Caserta, CE) "
-      "- ISTITUTO TECNICO STATALE &quot;M. BUONARROTI&quot;  CASERTA",
-    .name_ja = "Its Buonarroti Caserta (Pubbliche Amministrazioni, Caserta, CE) - ISTITUTO TECNICO STATALE &quot;M. BUONARROTI&quot;  CASERTA",
-    .category = "government", .portal = "https://www.istitutotecnicobuonarroti.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutotecnicobuonarroti.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "09:45:11 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ITS_022", .name = "Trentino Digitale S.p.a. (Gestori di Pubblici Servizi, Trento, "
       "TN) - Trentino Digitale",
     .name_ja = "Trentino Digitale S.p.a. (Gestori di Pubblici Servizi, Trento, TN) - Trentino Digitale",
@@ -100559,25 +88346,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "10:39:18 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ITSA", .name = "ISTITUTO TECNICO SAFFI ALBERTI (Pubbliche Amministrazioni, "
-      "Forlì, FC) - Istituto Tecnico “Saffi/Alberti”",
-    .name_ja = "ISTITUTO TECNICO SAFFI ALBERTI (Pubbliche Amministrazioni, Forlì, FC) - Istituto Tecnico “Saffi/Alberti”",
-    .category = "government", .portal = "https://www.saffialberti.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.saffialberti.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "09:26:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ITTNG", .name = "Istituto Tecnico Tecnologico Nervi - Galilei (Pubbliche "
@@ -100695,46 +88463,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Wed, 15 Jan 2025 "
       "15:11:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
-
-  { .id = "JO45_IT_IVIN_015", .name = "Istituto Comprensivo Via IV Novembre di Parabiago (Pubbliche "
-      "Amministrazioni, Parabiago, MI) - I.C: &quot;A. Manzoni&quot; di "
-      "Parabiago - www.icmanzoniparabiago.edu.it",
-    .name_ja = "Istituto Comprensivo Via IV Novembre di Parabiago (Pubbliche Amministrazioni, Parabiago, MI) - I.C: &quot;A. Manzoni&quot; di Parabiago - www.icmanzoniparabiago.edu.it",
-    .category = "government", .portal = "https://www.icmanzoniparabiago.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icmanzoniparabiago.edu.it/index.php?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 12 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "12:42:05 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_IVIN_015_2", .name = "Istituto Comprensivo Via IV Novembre di Parabiago (Pubbliche "
-      "Amministrazioni, Parabiago, MI) - I.C: &quot;A. Manzoni&quot; di "
-      "Parabiago - www.icmanzoniparabiago.edu.it",
-    .name_ja = "Istituto Comprensivo Via IV Novembre di Parabiago (Pubbliche Amministrazioni, Parabiago, MI) - I.C: &quot;A. Manzoni&quot; di Parabiago - www.icmanzoniparabiago.edu.it",
-    .category = "government", .portal = "https://www.icmanzoniparabiago.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icmanzoniparabiago.edu.it/index.php?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 12 items, ATOM feed, newest "
-      "2026-10-18T11:45:17+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO45_IT_IVSAPIC", .name = "IVASS - Istituto per la Vigilanza sulle Assicurazioni (Pubbliche "
       "Amministrazioni, Roma, RM) - Sito IVASS",
@@ -101371,26 +89099,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "07:12:17 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_KUA0LWFK", .name = "ISTITUTO D'ISTRUZIONE SUPERIORE ARIANO IRPINO (Pubbliche "
-      "Amministrazioni, Ariano Irpino, AV) - Polo Tecnico Professionale "
-      "Ariano Irpino",
-    .name_ja = "ISTITUTO D'ISTRUZIONE SUPERIORE ARIANO IRPINO (Pubbliche Amministrazioni, Ariano Irpino, AV) - Polo Tecnico Professionale Ariano Irpino",
-    .category = "government", .portal = "https://www.istitutosuperioreariano.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutosuperioreariano.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 11 Oct 2026 "
-      "10:27:11 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_KUE9J1VN", .name = "COLLEGIO INTERPROVINCIALE DEI PERITI AGRARI E DEI PERITI AGRARI "
       "LAUREATI DI BRESCIA CREMONA MANTOVA SONDRIO (Pubbliche "
       "Amministrazioni, Cremona, CR) - home page  Collegio "
@@ -101649,44 +89357,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "11:49:51 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_LASMMLA", .name = "Liceo Artistico Statale M.M. Lazzaro (Pubbliche Amministrazioni, "
-      "Catania, CT) - Homepage Istituto Scolastico",
-    .name_ja = "Liceo Artistico Statale M.M. Lazzaro (Pubbliche Amministrazioni, Catania, CT) - Homepage Istituto Scolastico",
-    .category = "government", .portal = "https://www.liceoartisticoct.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceoartisticoct.edu.it/index.php?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "16:23:50 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_LASMMLA_2", .name = "Liceo Artistico Statale M.M. Lazzaro (Pubbliche Amministrazioni, "
-      "Catania, CT) - Homepage Istituto Scolastico",
-    .name_ja = "Liceo Artistico Statale M.M. Lazzaro (Pubbliche Amministrazioni, Catania, CT) - Homepage Istituto Scolastico",
-    .category = "government", .portal = "https://www.liceoartisticoct.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceoartisticoct.edu.it/index.php?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T09:45:22+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
-
   { .id = "JO45_IT_LASPA", .name = "Latina Ambiente Spa (Gestori di Pubblici Servizi, Latina, LT) - "
       "Discarica.it",
     .name_ja = "Latina Ambiente Spa (Gestori di Pubblici Servizi, Latina, LT) - Discarica.it",
@@ -101704,25 +89374,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 46 items, RSS2 feed, newest Wed, 20 May 2026 "
       "06:00:57 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_LAVFFE", .name = "Liceo A.Volta F.Fellini (Pubbliche Amministrazioni, Riccione, "
-      "RN) - LICEO VOLTA FELLINI DI RICCIONE",
-    .name_ja = "Liceo A.Volta F.Fellini (Pubbliche Amministrazioni, Riccione, RN) - LICEO VOLTA FELLINI DI RICCIONE",
-    .category = "government", .portal = "https://www.liceovoltafellini.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceovoltafellini.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "14:59:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_LBQ2CU6I", .name = "AREA S.R.L. (Gestori di Pubblici Servizi, Mondovì, CN) - Area "
@@ -101974,25 +89625,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "08:59:05 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_LEPEST", .name = "Liceo E. Pestalozzi (Pubbliche Amministrazioni, San Severo, FG) "
-      "- Liceo Statale &quot;E. Pestalozzi&quot;",
-    .name_ja = "Liceo E. Pestalozzi (Pubbliche Amministrazioni, San Severo, FG) - Liceo Statale &quot;E. Pestalozzi&quot;",
-    .category = "government", .portal = "https://www.liceopestalozzi.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceopestalozzi.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
-      "19:10:48 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_LEV", .name = "Licei Einstein - Da Vinci (Pubbliche Amministrazioni, Molfetta, "
       "BA) - Licei Einstein Da Vinci Molfetta",
     .name_ja = "Licei Einstein - Da Vinci (Pubbliche Amministrazioni, Molfetta, BA) - Licei Einstein Da Vinci Molfetta",
@@ -102048,64 +89680,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "09:01:38 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_LG7MDDV2", .name = "ISTITUTO COMPRENSIVO COLLESANO (Pubbliche Amministrazioni, "
-      "Collesano, PA) - ISTITUTO COMPRENSIVO STATALE  "
-      "&quot;COLLESANO&quot;",
-    .name_ja = "ISTITUTO COMPRENSIVO COLLESANO (Pubbliche Amministrazioni, Collesano, PA) - ISTITUTO COMPRENSIVO STATALE  &quot;COLLESANO&quot;",
-    .category = "government", .portal = "https://www.istitutocomprensivocollesano.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivocollesano.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 26 Sep 2026 "
-      "16:22:24 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_LGM", .name = "Liceo Galilei-moro (Pubbliche Amministrazioni, Manfredonia, FG) "
-      "- Liceo &#039;Galilei-Moro&#039;",
-    .name_ja = "Liceo Galilei-moro (Pubbliche Amministrazioni, Manfredonia, FG) - Liceo &#039;Galilei-Moro&#039;",
-    .category = "government", .portal = "https://www.galileimoro.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.galileimoro.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 02 Oct 2026 "
-      "13:28:50 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_LIFAEN", .name = "Liceo Torricelli Ballardini (Pubbliche Amministrazioni, Faenza, "
-      "RA) - LICEO TORRICELLI-BALLARDINI &#8211; FAENZA",
-    .name_ja = "Liceo Torricelli Ballardini (Pubbliche Amministrazioni, Faenza, RA) - LICEO TORRICELLI-BALLARDINI &#8211; FAENZA",
-    .category = "government", .portal = "https://www.liceotorricelli-ballardini.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceotorricelli-ballardini.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "16:49:41 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_LISPARM", .name = "Lazio Innova S.P.A. (Societa' in Conto Economico Consolidato, "
@@ -102203,25 +89777,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "07:41:16 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_LM", .name = "Liceo 'Marzolla-leo-simone-durano' (Pubbliche Amministrazioni, "
-      "Brindisi, BR) - Liceo Marzolla Leo Simone Durano",
-    .name_ja = "Liceo 'Marzolla-leo-simone-durano' (Pubbliche Amministrazioni, Brindisi, BR) - Liceo Marzolla Leo Simone Durano",
-    .category = "government", .portal = "https://www.marzollaleosimonedurano.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.marzollaleosimonedurano.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 24 Jun 2026 "
-      "16:29:15 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_LMLAT", .name = "Liceo Majorana Laterza (Pubbliche Amministrazioni, Putignano, "
       "BA) - Liceo &quot;Majorana &#8211; Laterza&quot;",
     .name_ja = "Liceo Majorana Laterza (Pubbliche Amministrazioni, Putignano, BA) - Liceo &quot;Majorana &#8211; Laterza&quot;",
@@ -102296,25 +89851,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "08:56:47 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_LOBCIHMD", .name = "GIGAS RETE S.R.L. (Gestori di Pubblici Servizi, Lodi, LO) - "
-      "Gigas Rete",
-    .name_ja = "GIGAS RETE S.R.L. (Gestori di Pubblici Servizi, Lodi, LO) - Gigas Rete",
-    .category = "government", .portal = "https://www.gigasrete.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gigasrete.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 29 Sep 2026 "
-      "08:46:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_LOPZE33J", .name = "ISTITUZIONE TEATRO BAGLIO (Gestori di Pubblici Servizi, "
@@ -102433,25 +89969,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "11:32:41 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_LSFS", .name = "Liceo Scientifico Francesco Sbordone (Pubbliche Amministrazioni, "
-      "Napoli, NA) - LICEO SCIENTIFICO “F. SBORDONE” – NAPOLI",
-    .name_ja = "Liceo Scientifico Francesco Sbordone (Pubbliche Amministrazioni, Napoli, NA) - LICEO SCIENTIFICO “F. SBORDONE” – NAPOLI",
-    .category = "government", .portal = "https://www.liceosbordone.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceosbordone.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "11:32:56 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_LSLMS", .name = "Line Servizi per La Mobilita Spa (Gestori di Pubblici Servizi, "
       "Pavia, PV) - STAR Mobility",
     .name_ja = "Line Servizi per La Mobilita Spa (Gestori di Pubblici Servizi, Pavia, PV) - STAR Mobility",
@@ -102470,46 +89987,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "12:05:31 +0000. A feed the organisation itself declares or links "
       "on its site root." },
-
-  { .id = "JO45_IT_LSLSUOM", .name = "Liceo Scientifico e Liceo Scienze Umane O. M. Corbino (Pubbliche "
-      "Amministrazioni, Siracusa, SR) - Liceo Scientifico e Liceo delle "
-      "Scienze Umane &quot;O.M. Corbino&quot; - Siracus",
-    .name_ja = "Liceo Scientifico e Liceo Scienze Umane O. M. Corbino (Pubbliche Amministrazioni, Siracusa, SR) - Liceo Scientifico e Liceo delle Scienze Umane &quot;O.M. Corbino&quot; - Siracus",
-    .category = "government", .portal = "https://www.liceocorbinosiracusa.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceocorbinosiracusa.edu.it/index.php?format=feed&amp;type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 17 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "22:56:44 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_LSLSUOM_2", .name = "Liceo Scientifico e Liceo Scienze Umane O. M. Corbino (Pubbliche "
-      "Amministrazioni, Siracusa, SR) - Liceo Scientifico e Liceo delle "
-      "Scienze Umane &quot;O.M. Corbino&quot; - Siracus",
-    .name_ja = "Liceo Scientifico e Liceo Scienze Umane O. M. Corbino (Pubbliche Amministrazioni, Siracusa, SR) - Liceo Scientifico e Liceo delle Scienze Umane &quot;O.M. Corbino&quot; - Siracus",
-    .category = "government", .portal = "https://www.liceocorbinosiracusa.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceocorbinosiracusa.edu.it/index.php?format=feed&amp;type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 17 items, ATOM feed, newest "
-      "2026-10-18T11:45:27+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO45_IT_LSLTS", .name = "Liceo Scientifico Ls Trebisacce Sez.Cl. Ann. (Pubbliche "
       "Amministrazioni, Trebisacce, CS) - Licei Trebisacce",
@@ -102627,26 +90104,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "18:33:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_LSSCT", .name = "LICEO SCIENTIFICO STATALE CAMINITI TRIMARCHI (Pubbliche "
-      "Amministrazioni, Santa Teresa di Riva, ME) - IIS CAMINITI "
-      "TRIMARCHI",
-    .name_ja = "LICEO SCIENTIFICO STATALE CAMINITI TRIMARCHI (Pubbliche Amministrazioni, Santa Teresa di Riva, ME) - IIS CAMINITI TRIMARCHI",
-    .category = "government", .portal = "https://www.iiscaminititrimarchi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iiscaminititrimarchi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "17:21:13 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_LSSEA", .name = "Liceo Scientifico Statale Edoardo Amaldi (Pubbliche "
       "Amministrazioni, Alzano Lombardo, BG) - Liceo Amaldi &#8211; "
       "Alzano Lombardo (Bergamo)",
@@ -102685,25 +90142,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 10 Oct 2026 "
       "15:04:56 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_LSUA", .name = "Liceo Delle Scienze Umane e Artistico (Pubbliche "
-      "Amministrazioni, Bolzano, BZ) - Liceo Pascoli di Bolzano",
-    .name_ja = "Liceo Delle Scienze Umane e Artistico (Pubbliche Amministrazioni, Bolzano, BZ) - Liceo Pascoli di Bolzano",
-    .category = "government", .portal = "https://www.liceopascolibz.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceopascolibz.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 29 Sep 2026 "
-      "17:08:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_LT321HPJ", .name = "Metro Holding Torino S.r.l. (Societa' in Conto Economico "
@@ -102838,26 +90276,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Thu, 13 Jun 2024 "
       "12:08:38 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_M2EXTCTQ", .name = "Istituto Comprensivo \"F. D. Guerrazzi\" (Pubbliche "
-      "Amministrazioni, Cecina, LI) - Istituto Comprensivo Statale "
-      "“Francesco Domenico Guerrazzi”",
-    .name_ja = "Istituto Comprensivo \"F. D. Guerrazzi\" (Pubbliche Amministrazioni, Cecina, LI) - Istituto Comprensivo Statale “Francesco Domenico Guerrazzi”",
-    .category = "government", .portal = "https://www.guerrazzi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.guerrazzi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 02 Oct 2026 "
-      "11:40:45 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_M9PDJGZL", .name = "PABLO NERUDA SRL (Gestori di Pubblici Servizi, Cicciano, NA) - "
@@ -103222,26 +90640,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 28 Nov 2025 "
       "11:13:49 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_MQBBG04M", .name = "ISTITUTO COMPRENSIVO STATALE \"HERO PARADISO-S.G. BOSCO\" "
-      "(Pubbliche Amministrazioni, Santeramo in Colle, BA) - Istituto "
-      "Comprensivo Hero Paradiso &#8211; San Giovanni Bosco",
-    .name_ja = "ISTITUTO COMPRENSIVO STATALE \"HERO PARADISO-S.G. BOSCO\" (Pubbliche Amministrazioni, Santeramo in Colle, BA) - Istituto Comprensivo Hero Paradiso &#8211; San Giovanni Bosco",
-    .category = "government", .portal = "https://herobosco.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://herobosco.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "21:49:20 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_MS_042", .name = "Viva Servizi Spa (Gestori di Pubblici Servizi, Ancona, AN) - "
@@ -104219,25 +91617,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:41:49 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_O38F2F0B", .name = "Fondazione Montagna sicura (Societa' in Conto Economico "
-      "Consolidato, Courmayeur, AO) - Fondazione Montagna Sicura",
-    .name_ja = "Fondazione Montagna sicura (Societa' in Conto Economico Consolidato, Courmayeur, AO) - Fondazione Montagna Sicura",
-    .category = "government", .portal = "https://www.fondazionemontagnasicura.org/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.fondazionemontagnasicura.org/rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Tue, 29 Sep 2026 "
-      "22:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_O49H33BL", .name = "PLURISERVIZI CAMAIORE S.P.A. (Stazioni Appaltanti, Camaiore, LU) "
       "- Pluriservizi Camaiore spa",
     .name_ja = "PLURISERVIZI CAMAIORE S.P.A. (Stazioni Appaltanti, Camaiore, LU) - Pluriservizi Camaiore spa",
@@ -104705,26 +92084,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "00:35:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_OAPPC_IM", .name = "Ordine degli Architetti Pianificatori Paesaggisti e Conservatori "
-      "della Provincia di Imperia (Pubbliche Amministrazioni, Imperia, "
-      "IM) - Ordine Architetti P.P.C. della Provincia di Imperia",
-    .name_ja = "Ordine degli Architetti Pianificatori Paesaggisti e Conservatori della Provincia di Imperia (Pubbliche Amministrazioni, Imperia, IM) - Ordine Architetti P.P.C. della Provincia di Imperia",
-    .category = "government", .portal = "https://www.architettiimperia.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.architettiimperia.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "10:37:22 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_OAPPC_MS", .name = "Ordine degli Architetti Pianificatori Paesaggisti e Conservatori "
       "della Provincia di Massa Carrara (Pubbliche Amministrazioni, "
       "Carrara, MS) - Ordine Architetti P.P.C. di Massa Carrara",
@@ -104923,26 +92282,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 06 Oct 2026 "
       "07:55:30 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_OAPT", .name = "COLLEGIO PROVINCIALE DEGLI AGROTECNICI E DEGLI AGROTECNICI "
-      "LAUREATI DI TREVISO (Pubbliche Amministrazioni, Castelfranco "
-      "Veneto, TV) - Treviso Agrotecnici",
-    .name_ja = "COLLEGIO PROVINCIALE DEGLI AGROTECNICI E DEGLI AGROTECNICI LAUREATI DI TREVISO (Pubbliche Amministrazioni, Castelfranco Veneto, TV) - Treviso Agrotecnici",
-    .category = "government", .portal = "https://agrotecnicitreviso.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://agrotecnicitreviso.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 30 Jul 2026 "
-      "09:57:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_OAR", .name = "Ordine Degli Avvocati di Rovereto (Pubbliche Amministrazioni, "
@@ -105427,26 +92766,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "09:39:40 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ODAB_021", .name = "Ordine degli Avvocati di Bolzano - Rechtsanwaltskammer Bozen "
-      "(Pubbliche Amministrazioni, Bolzano, BZ) - Ordine degli Avvocati "
-      "di Bolzano",
-    .name_ja = "Ordine degli Avvocati di Bolzano - Rechtsanwaltskammer Bozen (Pubbliche Amministrazioni, Bolzano, BZ) - Ordine degli Avvocati di Bolzano",
-    .category = "government", .portal = "https://www.ordineavvocati.bz.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordineavvocati.bz.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Wed, 30 Sep 2026 "
-      "06:20:03 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ODAB_025", .name = "Ordine Degli Avvocati di Belluno (Pubbliche Amministrazioni, "
@@ -107010,26 +94329,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "2026 10:20:18 +0000. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO45_IT_ODCC_080", .name = "Ordine Regionale dei Chimici e dei Fisici della Calabria "
-      "(Pubbliche Amministrazioni, Reggio di Calabria, RC) - Ordine "
-      "Regionale dei Chimici e Fisici della Calabria",
-    .name_ja = "Ordine Regionale dei Chimici e dei Fisici della Calabria (Pubbliche Amministrazioni, Reggio di Calabria, RC) - Ordine Regionale dei Chimici e Fisici della Calabria",
-    .category = "government", .portal = "https://www.ordinechimicicalabria.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordinechimicicalabria.it/?feed=rss2",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 30 Oct 2025 "
-      "19:44:15 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ODCDE_06", .name = "Ordine Dottori Commercialisti e Degli Esperti Contabili del "
       "Circondario del Tribunale di Cassino (Pubbliche Amministrazioni, "
       "Cassino, FR) - Home",
@@ -107696,26 +94995,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:29:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ODCPSR", .name = "Ordine dei Chimici e dei Fisici di Siracusa (Pubbliche "
-      "Amministrazioni, Siracusa, SR) - ORDINE DEI CHIMICI E FISICI "
-      "DELLA PROVINCIA DI SIRACUSA",
-    .name_ja = "Ordine dei Chimici e dei Fisici di Siracusa (Pubbliche Amministrazioni, Siracusa, SR) - ORDINE DEI CHIMICI E FISICI DELLA PROVINCIA DI SIRACUSA",
-    .category = "government", .portal = "https://www.ordinechimicisiracusa.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordinechimicisiracusa.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 03 Jul 2025 "
-      "14:24:21 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ODCPV_02", .name = "Ordine Provinciale dei Chimici e dei Fisici di Venezia "
       "(Pubbliche Amministrazioni, Venezia, VE) - ESITO ELEZIONI "
       "CONSIGLIO DIRETTIVO E COLLEGIO DEI REVISORI",
@@ -108231,27 +95510,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
       "13:14:37 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ODDC_062", .name = "Ordine Dei Dottori Commercialisti e Degli Esperti Contabili di "
-      "Benevento (Pubbliche Amministrazioni, Benevento, BN) - Ordine "
-      "dei Dottori Commercialisti e degli Esperti Contabili di "
-      "Benevento",
-    .name_ja = "Ordine Dei Dottori Commercialisti e Degli Esperti Contabili di Benevento (Pubbliche Amministrazioni, Benevento, BN) - Ordine dei Dottori Commercialisti e degli Esperti Contabili di Benevento",
-    .category = "government", .portal = "https://www.odcecbenevento.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.odcecbenevento.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "08:04:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ODDC_063", .name = "Ordine Dei Dottori Commercialisti e Degli Esperti Contabili di "
@@ -111103,25 +98361,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "2026-10-18T11:46:15+02:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_IT_OFPP_100", .name = "Ordine Dei Farmacisti della Provincia di Prato (Pubbliche "
-      "Amministrazioni, Prato, PO) - Ordine Farmacisti Prato",
-    .name_ja = "Ordine Dei Farmacisti della Provincia di Prato (Pubbliche Amministrazioni, Prato, PO) - Ordine Farmacisti Prato",
-    .category = "government", .portal = "https://www.ordinefarmacistiprato.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordinefarmacistiprato.it/CMS/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, RSS2 feed, newest Fri, 24 Sep 2021 "
-      "14:33:59 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_OGER", .name = "Ordine Geologi Emilia Romagna (Pubbliche Amministrazioni, "
       "Bologna, BO) - Ordine dei Geologi Regione Emilia-Romagna",
     .name_ja = "Ordine Geologi Emilia Romagna (Pubbliche Amministrazioni, Bologna, BO) - Ordine dei Geologi Regione Emilia-Romagna",
@@ -112090,26 +99329,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "08:31:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_OMV_NO", .name = "Ordine dei Medici Veterinari della Provincia di Novara "
-      "(Pubbliche Amministrazioni, Novara, NO) - Ordine dei Medici "
-      "Veterinari della provincia di Novara",
-    .name_ja = "Ordine dei Medici Veterinari della Provincia di Novara (Pubbliche Amministrazioni, Novara, NO) - Ordine dei Medici Veterinari della provincia di Novara",
-    .category = "government", .portal = "https://www.ordineveterinarinovara.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordineveterinarinovara.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 25 May 2025 "
-      "20:47:31 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_OMV_PD", .name = "Ordine dei Medici Veterinari della Provincia di Padova "
       "(Pubbliche Amministrazioni, Padova, PD) - Home",
     .name_ja = "Ordine dei Medici Veterinari della Provincia di Padova (Pubbliche Amministrazioni, Padova, PD) - Home",
@@ -112445,25 +99664,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 17 Jul 2026 "
       "13:34:35 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_OPCL_BS", .name = "Ordine dei Consulenti del Lavoro di Brescia (Pubbliche "
-      "Amministrazioni, Brescia, BS) - Consulenti del lavoro di Brescia",
-    .name_ja = "Ordine dei Consulenti del Lavoro di Brescia (Pubbliche Amministrazioni, Brescia, BS) - Consulenti del lavoro di Brescia",
-    .category = "government", .portal = "https://consulentidellavoro.bs.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://consulentidellavoro.bs.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "08:34:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_OPCLCB", .name = "Ordine Consulenti del Lavoro di Campobasso (Pubbliche "
@@ -113219,26 +100419,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "17:13:43 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_ORCHP_ME", .name = "Ordine dei Chimici e dei Fisici della Provincia di Messina "
-      "(Pubbliche Amministrazioni, Messina, ME) - Ordine dei Chimici e "
-      "dei Fisici della Provincia di Messina",
-    .name_ja = "Ordine dei Chimici e dei Fisici della Provincia di Messina (Pubbliche Amministrazioni, Messina, ME) - Ordine dei Chimici e dei Fisici della Provincia di Messina",
-    .category = "government", .portal = "https://www.chimicimessina.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.chimicimessina.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "08:15:15 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_ORCHP_MI", .name = "ORDINE INTERPROVINCIALE DEI CHIMICI E DEI FISICI DELLA LOMBARDIA "
       "(Pubbliche Amministrazioni, Milano, MI) - Ordine "
       "Interprovinciale dei Chimici della Lombardia",
@@ -113356,26 +100536,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "07:35:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_ORDCF", .name = "Ordine Regionale dei Chimici e dei Fisici del Friuli Venezia "
-      "Giulia (Pubbliche Amministrazioni, Trieste, TS) - Ordine "
-      "Regionale dei Chimici e dei Fisici del Friuli Venezia Giulia",
-    .name_ja = "Ordine Regionale dei Chimici e dei Fisici del Friuli Venezia Giulia (Pubbliche Amministrazioni, Trieste, TS) - Ordine Regionale dei Chimici e dei Fisici del Friuli Venezia Giulia",
-    .category = "government", .portal = "http://www.chimicifvg.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.chimicifvg.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Fri, 30 Mar 2018 "
-      "07:46:14 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_ORDGS_PA", .name = "Ordine dei Geologi della Sicilia (Pubbliche Amministrazioni, "
@@ -114401,25 +101561,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "09:43:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
-
-  { .id = "JO45_IT_ORING_TP", .name = "Ordine degli Ingegneri della Provincia di Trapani (Pubbliche "
-      "Amministrazioni, Trapani, TP) - Ording.TP.it",
-    .name_ja = "Ordine degli Ingegneri della Provincia di Trapani (Pubbliche Amministrazioni, Trapani, TP) - Ording.TP.it",
-    .category = "government", .portal = "https://www.ording.tp.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ording.tp.it/?mod=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "11:46:35 Europe/Rome. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO45_IT_ORING_TS", .name = "Ordine degli Ingegneri della Provincia di Trieste (Pubbliche "
       "Amministrazioni, Trieste, TS) - ORDINE DEGLI INGEGNERI DELLA "
@@ -116735,26 +103876,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "11:51:48 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_RHQ88HKD", .name = "I.C. FERMI-LEOPARDI (Pubbliche Amministrazioni, Centuripe, EN) - "
-      "Istituto Comprensivo &quot;Fermi-Leopardi&quot; "
-      "(Catenanuova-Centuripe)",
-    .name_ja = "I.C. FERMI-LEOPARDI (Pubbliche Amministrazioni, Centuripe, EN) - Istituto Comprensivo &quot;Fermi-Leopardi&quot; (Catenanuova-Centuripe)",
-    .category = "government", .portal = "https://www.fermileopardicenturipe.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.fermileopardicenturipe.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 23 Jun 2026 "
-      "18:54:28 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_RIBPHM8O", .name = "Fondazione Istituto di San Ponziano (Stazioni Appaltanti, Lucca, "
       "LU) - Fondazione San Ponziano",
     .name_ja = "Fondazione Istituto di San Ponziano (Stazioni Appaltanti, Lucca, LU) - Fondazione San Ponziano",
@@ -116831,25 +103952,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 10 Oct 2026 "
       "13:26:57 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_RP8EQLPE", .name = "ISTITUTO COMPRENSIVO LUZZI (Pubbliche Amministrazioni, Luzzi, "
-      "CS) - Istituto Comprensivo di Luzzi",
-    .name_ja = "ISTITUTO COMPRENSIVO LUZZI (Pubbliche Amministrazioni, Luzzi, CS) - Istituto Comprensivo di Luzzi",
-    .category = "government", .portal = "https://www.icluzzi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icluzzi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "18:19:48 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_RPFDE", .name = "Raffaele Piria-ferraris da Empoli (Pubbliche Amministrazioni, "
@@ -117546,25 +104648,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "06:25:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_SLMSPA", .name = "Spv Linea M4 S.P.A. (Gestori di Pubblici Servizi, Milano, MI) - "
-      "Metro 4 &#8211; La linea Blu di Milano",
-    .name_ja = "Spv Linea M4 S.P.A. (Gestori di Pubblici Servizi, Milano, MI) - Metro 4 &#8211; La linea Blu di Milano",
-    .category = "government", .portal = "https://www.metro4milano.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.metro4milano.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "09:24:39 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_SLRS", .name = "Societa Locale di Riscossione Spa (Gestori di Pubblici Servizi, "
       "Verona, VR) - Solori",
     .name_ja = "Societa Locale di Riscossione Spa (Gestori di Pubblici Servizi, Verona, VR) - Solori",
@@ -117775,25 +104858,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 06 Oct 2026 "
       "16:58:37 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_SQFU4YLW", .name = "LICEO PIETRO COLONNA (Pubbliche Amministrazioni, Galatina, LE) - "
-      "Liceo “Pietro Colonna” Galatina (LE)",
-    .name_ja = "LICEO PIETRO COLONNA (Pubbliche Amministrazioni, Galatina, LE) - Liceo “Pietro Colonna” Galatina (LE)",
-    .category = "government", .portal = "https://www.liceocolonna.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceocolonna.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 18 Jun 2026 "
-      "13:40:16 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_SR", .name = "Sardegna Ricerche (Pubbliche Amministrazioni, Cagliari, CA) - "
@@ -118834,25 +105898,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "09:08:18 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_UCAM", .name = "Unione Comuni dell'Alta Murgia (Pubbliche Amministrazioni, "
-      "Gravina in Puglia, BA) - Unione dei Comuni dell&#039;Alta Murgia",
-    .name_ja = "Unione Comuni dell'Alta Murgia (Pubbliche Amministrazioni, Gravina in Puglia, BA) - Unione dei Comuni dell&#039;Alta Murgia",
-    .category = "government", .portal = "https://www.unionecomunialtamurgia.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.unionecomunialtamurgia.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 21 May 2026 "
-      "10:48:02 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_UCC", .name = "Unioncamere Calabria (Pubbliche Amministrazioni, Lamezia Terme, "
       "CZ) - News",
     .name_ja = "Unioncamere Calabria (Pubbliche Amministrazioni, Lamezia Terme, CZ) - News",
@@ -118908,25 +105953,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 06 Oct 2026 "
       "15:03:01 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_UCDT", .name = "Unione Comuni della Trexenta (Pubbliche Amministrazioni, "
-      "Senorbì, CA) - Novità  - Unione dei Comuni della Trexenta",
-    .name_ja = "Unione Comuni della Trexenta (Pubbliche Amministrazioni, Senorbì, CA) - Novità  - Unione dei Comuni della Trexenta",
-    .category = "government", .portal = "https://www.unionecomunitrexenta.ca.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.unionecomunitrexenta.ca.it/po/elenco_news_rss.php?tags=&amp;area=H",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, RSS2 feed, newest Sun, 09 Aug 2026 "
-      "00:00:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_UCG", .name = "Unione Comuni Garfagnana (Pubbliche Amministrazioni, Castelnuovo "
@@ -119711,26 +106737,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "08:47:43 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_UDCVDB", .name = "Unione Dei Comuni Valle del Belice (Pubbliche Amministrazioni, "
-      "Partanna, TP) - Novità  - Unione dei Comuni Valle del "
-      "Belice(Partanna - Santa Ninfa - Gibellin",
-    .name_ja = "Unione Dei Comuni Valle del Belice (Pubbliche Amministrazioni, Partanna, TP) - Novità  - Unione dei Comuni Valle del Belice(Partanna - Santa Ninfa - Gibellin",
-    .category = "government", .portal = "https://www.unionebelice.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.unionebelice.it/po/elenco_news_rss.php?tags=&amp;area=H",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, RSS2 feed, newest Thu, 04 Jun 2026 "
-      "00:00:00 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_UDM_069", .name = "Unione Dei Miracoli (Pubbliche Amministrazioni, Casalbordino, "
       "CH) - Unione dei Miracoli",
     .name_ja = "Unione Dei Miracoli (Pubbliche Amministrazioni, Casalbordino, CH) - Unione dei Miracoli",
@@ -119748,25 +106754,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 29 Sep 2026 "
       "08:51:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_UDPIE", .name = "Uncem Delegazione Piemontese (Pubbliche Amministrazioni, Torino, "
-      "TO) - UNCEM Piemonte",
-    .name_ja = "Uncem Delegazione Piemontese (Pubbliche Amministrazioni, Torino, TO) - UNCEM Piemonte",
-    .category = "government", .portal = "https://uncem.piemonte.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://uncem.piemonte.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "11:14:23 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_UF", .name = "Unione del Fossanese (Pubbliche Amministrazioni, Bene Vagienna, "
@@ -119824,26 +106811,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 08 May 2026 "
       "10:11:34 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_UIS", .name = "Unifidi Imprese Sicilia (Gestori di Pubblici Servizi, Ragusa, "
-      "RG) - Credito alle imprese, UNI.CO.: «La Regione Marche dimostra "
-      "con i fatti di esser",
-    .name_ja = "Unifidi Imprese Sicilia (Gestori di Pubblici Servizi, Ragusa, RG) - Credito alle imprese, UNI.CO.: «La Regione Marche dimostra con i fatti di esser",
-    .category = "government", .portal = "https://uni-co.eu/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://uni-co.eu/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "14:40:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_UITS_58", .name = "Unione Italiana Tiro a Segno (Pubbliche Amministrazioni, Roma, "
@@ -121086,44 +108053,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "15:37:44 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_UUZPJAEE", .name = "LICEO  \"G. GALILEI - E. VANONI\" (Pubbliche Amministrazioni, "
-      "Nardò, LE) - Liceo Galilei",
-    .name_ja = "LICEO  \"G. GALILEI - E. VANONI\" (Pubbliche Amministrazioni, Nardò, LE) - Liceo Galilei",
-    .category = "government", .portal = "https://liceogalileinardo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://liceogalileinardo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "07:01:51 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_UVVVGUNW", .name = "STUDIO RADIOLOGICO PAVESE S.R.L. (Gestori di Pubblici Servizi, "
-      "Pavia, PV) - Studio Radiologico Pavese",
-    .name_ja = "STUDIO RADIOLOGICO PAVESE S.R.L. (Gestori di Pubblici Servizi, Pavia, PV) - Studio Radiologico Pavese",
-    .category = "government", .portal = "https://studioradiologicopavese.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://studioradiologicopavese.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Tue, 09 Jul 2024 "
-      "00:40:23 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_V4MGG89Y", .name = "TIVOLI FORMA SRL (Stazioni Appaltanti, Tivoli, RM) - Tivoli "
       "Forma &#8211; Antonio Rosmini",
     .name_ja = "TIVOLI FORMA SRL (Stazioni Appaltanti, Tivoli, RM) - Tivoli Forma &#8211; Antonio Rosmini",
@@ -121160,45 +108089,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Tue, 31 Mar 2026 "
       "14:58:38 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_V5RKW893", .name = "I.I.S.S. \"E. FERMI - L. EINAUDI\" (Pubbliche Amministrazioni, "
-      "Canosa di Puglia, BT) - ISTITUTO D&#039;ISTRUZIONE SECONDARIA "
-      "SUPERIORE &quot;L.EINAUDI&quot; &#8211; CA",
-    .name_ja = "I.I.S.S. \"E. FERMI - L. EINAUDI\" (Pubbliche Amministrazioni, Canosa di Puglia, BT) - ISTITUTO D&#039;ISTRUZIONE SECONDARIA SUPERIORE &quot;L.EINAUDI&quot; &#8211; CA",
-    .category = "government", .portal = "https://www.fermieinaudi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.fermieinaudi.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, RSS2 feed, newest Thu, 01 Oct 2026 "
-      "09:36:28 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_V7Y5GF6H", .name = "Società Trasporti Novaresi srl (Gestori di Pubblici Servizi, "
-      "Novara, NO) - Stnnet.it",
-    .name_ja = "Società Trasporti Novaresi srl (Gestori di Pubblici Servizi, Novara, NO) - Stnnet.it",
-    .category = "government", .portal = "https://www.stnnet.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.stnnet.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "14:14:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_V8BDU188", .name = "Accademia di Belle Arti \"Pietro Vannucci\" (Pubbliche "
@@ -121392,25 +108282,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "10:41:55 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_VSLSSSP", .name = "Villa Serena Lonigo Servizi Sociali e Sociosanitari alla Persona "
-      "(Pubbliche Amministrazioni, Lonigo, VI) - Villa Serena",
-    .name_ja = "Villa Serena Lonigo Servizi Sociali e Sociosanitari alla Persona (Pubbliche Amministrazioni, Lonigo, VI) - Villa Serena",
-    .category = "government", .portal = "https://www.villaserenalonigo.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.villaserenalonigo.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 18 May 2026 "
-      "09:48:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_VT5GWEFZ", .name = "Istituto Comprensivo 3 (Pubbliche Amministrazioni, Piacenza, PC) "
       "- ISTITUTO COMPRENSIVO 3 &#8211; PIACENZA",
     .name_ja = "Istituto Comprensivo 3 (Pubbliche Amministrazioni, Piacenza, PC) - ISTITUTO COMPRENSIVO 3 &#8211; PIACENZA",
@@ -121447,26 +108318,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "13:46:52 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_VWLC4TXV", .name = "Istituto Comprensivo Giuseppe Mazzini (Pubbliche "
-      "Amministrazioni, Livorno, LI) - Istituto comprensivo &quot;G. "
-      "Mazzini&quot;",
-    .name_ja = "Istituto Comprensivo Giuseppe Mazzini (Pubbliche Amministrazioni, Livorno, LI) - Istituto comprensivo &quot;G. Mazzini&quot;",
-    .category = "government", .portal = "https://www.scuolamazzinilivorno.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.scuolamazzinilivorno.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "13:27:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_VZQ8VV7A", .name = "ISTITUTO COMPRENSIVO \"COLLODI-BIANCO\" (Pubbliche "
@@ -121776,25 +108627,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 10 Sep 2026 "
       "09:29:50 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_WSYNIKV7", .name = "ISTITUTO COMPRENSIVO STATALE RAGUSA MOLETI (Pubbliche "
-      "Amministrazioni, Palermo, PA) - ICS Ragusa Moleti",
-    .name_ja = "ISTITUTO COMPRENSIVO STATALE RAGUSA MOLETI (Pubbliche Amministrazioni, Palermo, PA) - ICS Ragusa Moleti",
-    .category = "government", .portal = "https://www.icsragusamoleti.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsragusamoleti.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 13 Mar 2026 "
-      "10:40:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_WTNJYK0B", .name = "AZIENDA PROVINCIALE TRASPORTI SPA (Gestori di Pubblici Servizi, "
@@ -122377,25 +109209,6 @@ static const hp_source HP3B45_ITGOV[] = {
       "06:18:43 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_IT_YFWUYHVB", .name = "I.C. DE AMICIS EDMONDO (Pubbliche Amministrazioni, Livorno, LI) "
-      "- ISTITUTO COMPRENSIVO &quot;E. DE AMICIS&quot; &#8211; LIVORNO",
-    .name_ja = "I.C. DE AMICIS EDMONDO (Pubbliche Amministrazioni, Livorno, LI) - ISTITUTO COMPRENSIVO &quot;E. DE AMICIS&quot; &#8211; LIVORNO",
-    .category = "government", .portal = "https://www.deamicislivorno.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.deamicislivorno.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
-      "16:51:37 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_IT_YHV3CHZM", .name = "esna soa s.p.a. (Gestori di Pubblici Servizi, Padova, PD) - "
       "ESNA-SOA",
     .name_ja = "esna soa s.p.a. (Gestori di Pubblici Servizi, Padova, PD) - ESNA-SOA",
@@ -122531,26 +109344,6 @@ static const hp_source HP3B45_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 03 Mar 2026 "
       "15:04:50 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_IT_YYYA2OZI", .name = "ISTITUTO COMPRENSIVO STATALE \"A. DE GASPERI - A. PECORARO\" "
-      "(Pubbliche Amministrazioni, Palermo, PA) - Istituto Comprensivo "
-      "“ A. DE GASPERI – A. PECORARO”",
-    .name_ja = "ISTITUTO COMPRENSIVO STATALE \"A. DE GASPERI - A. PECORARO\" (Pubbliche Amministrazioni, Palermo, PA) - Istituto Comprensivo “ A. DE GASPERI – A. PECORARO”",
-    .category = "government", .portal = "https://www.icsdegasperipecoraro.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icsdegasperipecoraro.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "08:18:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_IT_Z0O0K9KU", .name = "A.C.S.E. S.p.A. (Gestori di Pubblici Servizi, Scafati, SA) - "
