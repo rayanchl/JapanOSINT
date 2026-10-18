@@ -546,9 +546,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q30266878", .name = "Instituto de Investigaciones en Ciencia y Tecnología de "
-      "Materiales (government-agency, AR) - INTEMA &#8211; Instituto de "
+      "Materiales (government-agency, AR) - INTEMA – Instituto de "
       "Investigaciones en Ciencia y Tecnología de Material",
-    .name_ja = "Instituto de Investigaciones en Ciencia y Tecnología de Materiales (government-agency, AR) - INTEMA &#8211; Instituto de Investigaciones en Ciencia y Tecnología de Material",
+    .name_ja = "Instituto de Investigaciones en Ciencia y Tecnología de Materiales (government-agency, AR) - INTEMA – Instituto de Investigaciones en Ciencia y Tecnología de Material",
     .category = "government", .portal = "https://intema.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -621,8 +621,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q16566000", .name = "Faculty of Astronomical and Geophysical Sciences "
-      "(government-organization, AR) - FCAGLP &#8211; UNLP",
-    .name_ja = "Faculty of Astronomical and Geophysical Sciences (government-organization, AR) - FCAGLP &#8211; UNLP",
+      "(government-organization, AR) - FCAGLP – UNLP",
+    .name_ja = "Faculty of Astronomical and Geophysical Sciences (government-organization, AR) - FCAGLP – UNLP",
     .category = "government", .portal = "https://www.fcaglp.unlp.edu.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -1559,8 +1559,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q50039032", .name = "Aboriginal Health and Medical Research Council of New South "
-      "Wales (government-agency, AU) - AH&amp;MRC",
-    .name_ja = "Aboriginal Health and Medical Research Council of New South Wales (government-agency, AU) - AH&amp;MRC",
+      "Wales (government-agency, AU) - AH&MRC",
+    .name_ja = "Aboriginal Health and Medical Research Council of New South Wales (government-agency, AU) - AH&MRC",
     .category = "government", .portal = "https://www.ahmrc.org.au/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -1938,8 +1938,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q108052803", .name = "Q108052803 (government-agency, BA) - Federalno ministarstvo "
-      "okoliša i turizma &#8211; Bosna i Hercegovina",
-    .name_ja = "Q108052803 (government-agency, BA) - Federalno ministarstvo okoliša i turizma &#8211; Bosna i Hercegovina",
+      "okoliša i turizma – Bosna i Hercegovina",
+    .name_ja = "Q108052803 (government-agency, BA) - Federalno ministarstvo okoliša i turizma – Bosna i Hercegovina",
     .category = "government", .portal = "https://fmoit.gov.ba/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -2238,63 +2238,6 @@ static const hp_source HP3B45_WDGOV[] = {
       "2026-07-02T10:01:21+02:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_WD_Q685918", .name = "National Bank of Belgium (central-bank, BE) - National Bank of "
-      "Belgium – News",
-    .name_ja = "National Bank of Belgium (central-bank, BE) - National Bank of Belgium – News",
-    .category = "government", .portal = "https://www.nbb.be/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.nbb.be/en/news_rss.xml",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Thu, 24 Sep 2026 "
-      "14:00:00 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_WD_Q685918_2", .name = "National Bank of Belgium (central-bank, BE) - National Bank of "
-      "Belgium – Blog",
-    .name_ja = "National Bank of Belgium (central-bank, BE) - National Bank of Belgium – Blog",
-    .category = "government", .portal = "https://www.nbb.be/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.nbb.be/en/blog_rss.xml",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Thu, 01 Oct 2026 "
-      "12:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_WD_Q685918_3", .name = "National Bank of Belgium (central-bank, BE) - National Bank of "
-      "Belgium – Publications",
-    .name_ja = "National Bank of Belgium (central-bank, BE) - National Bank of Belgium – Publications",
-    .category = "government", .portal = "https://www.nbb.be/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.nbb.be/en/publication_rss.xml",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "10:00:00 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_WD_Q2582528", .name = "Assembly of the Flemish Community Commission (legislature, BE) - "
       "raadvgc.be",
     .name_ja = "Assembly of the Flemish Community Commission (legislature, BE) - raadvgc.be",
@@ -2430,9 +2373,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q5000985", .name = "Ministry of Hydraulics, Energy and Mines (ministry, BI) - "
-      "MINISTERE DES RESSOURCES MINIERES, ENERGETIQUE, DE "
-      "L&#039;INDUSTRIE, DU COMMERCE",
-    .name_ja = "Ministry of Hydraulics, Energy and Mines (ministry, BI) - MINISTERE DES RESSOURCES MINIERES, ENERGETIQUE, DE L&#039;INDUSTRIE, DU COMMERCE",
+      "MINISTERE DES RESSOURCES MINIERES, ENERGETIQUE, DE L'INDUSTRIE, "
+      "DU COMMERCE",
+    .name_ja = "Ministry of Hydraulics, Energy and Mines (ministry, BI) - MINISTERE DES RESSOURCES MINIERES, ENERGETIQUE, DE L'INDUSTRIE, DU COMMERCE",
     .category = "government", .portal = "https://mrmeict.gov.bi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -2490,8 +2433,8 @@ static const hp_source HP3B45_WDGOV[] = {
 
   { .id = "JO45_WD_Q141189474", .name = "Ministry of Finance, Budget and Digital Economy of Burundi "
       "(ministry, BI) - Ministère des Finances , du Budget et de "
-      "l&#039;Economie Numérique",
-    .name_ja = "Ministry of Finance, Budget and Digital Economy of Burundi (ministry, BI) - Ministère des Finances , du Budget et de l&#039;Economie Numérique",
+      "l'Economie Numérique",
+    .name_ja = "Ministry of Finance, Budget and Digital Economy of Burundi (ministry, BI) - Ministère des Finances , du Budget et de l'Economie Numérique",
     .category = "government", .portal = "https://finances.gov.bi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -2548,9 +2491,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q141189480", .name = "Ministry of Youth, Sports and Culture of Burundi (ministry, BI) "
-      "- Petit dossier d&#8217;appel d&#8217;offres N° Réf "
-      "1701.3/04/S/CM/2026-2027 pou",
-    .name_ja = "Ministry of Youth, Sports and Culture of Burundi (ministry, BI) - Petit dossier d&#8217;appel d&#8217;offres N° Réf 1701.3/04/S/CM/2026-2027 pou",
+      "- Petit dossier d’appel d’offres N° Réf 1701.3/04/S/CM/2026-2027 "
+      "pou",
+    .name_ja = "Ministry of Youth, Sports and Culture of Burundi (ministry, BI) - Petit dossier d’appel d’offres N° Réf 1701.3/04/S/CM/2026-2027 pou",
     .category = "government", .portal = "https://www.mjsc.gov.bi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -2736,9 +2679,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "07:00:33 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_WD_Q113226902", .name = "Prime Minister's Office (ministry, BN) - Prime Minister&#039;s "
-      "Office Brunei Darussalam",
-    .name_ja = "Prime Minister's Office (ministry, BN) - Prime Minister&#039;s Office Brunei Darussalam",
+  { .id = "JO45_WD_Q113226902", .name = "Prime Minister's Office (ministry, BN) - Prime Minister's Office "
+      "Brunei Darussalam",
+    .name_ja = "Prime Minister's Office (ministry, BN) - Prime Minister's Office Brunei Darussalam",
     .category = "government", .portal = "https://www.pmo.gov.bn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -2985,9 +2928,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q45132861", .name = "Alagoas State Research Foundation (government-agency, BR) - "
-      "FAPEAL &#8211; Fundação de Amparo à Pesquisa do Estado de "
-      "Alagoas",
-    .name_ja = "Alagoas State Research Foundation (government-agency, BR) - FAPEAL &#8211; Fundação de Amparo à Pesquisa do Estado de Alagoas",
+      "FAPEAL – Fundação de Amparo à Pesquisa do Estado de Alagoas",
+    .name_ja = "Alagoas State Research Foundation (government-agency, BR) - FAPEAL – Fundação de Amparo à Pesquisa do Estado de Alagoas",
     .category = "government", .portal = "https://www.fapeal.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -3080,9 +3022,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "19:01:14 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_WD_Q96473009", .name = "Department of Highways of Piauí (government-agency, BR) - DER "
-      "&#8211; Departamento de Estradas de Rodagem do Piauí",
-    .name_ja = "Department of Highways of Piauí (government-agency, BR) - DER &#8211; Departamento de Estradas de Rodagem do Piauí",
+  { .id = "JO45_WD_Q96473009", .name = "Department of Highways of Piauí (government-agency, BR) - DER – "
+      "Departamento de Estradas de Rodagem do Piauí",
+    .name_ja = "Department of Highways of Piauí (government-agency, BR) - DER – Departamento de Estradas de Rodagem do Piauí",
     .category = "government", .portal = "https://www.der.pi.gov.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -3253,8 +3195,8 @@ static const hp_source HP3B45_WDGOV[] = {
 
   { .id = "JO45_WD_Q125416877", .name = "CORECON/SE   REGIONAL OF ECONOMICS COUNCIL OF THE 16TH "
       "REGION-SERGIPE (government-agency, BR) - Conselho Regional de "
-      "Economia da 16ª Região &#8211; SE",
-    .name_ja = "CORECON/SE   REGIONAL OF ECONOMICS COUNCIL OF THE 16TH REGION-SERGIPE (government-agency, BR) - Conselho Regional de Economia da 16ª Região &#8211; SE",
+      "Economia da 16ª Região – SE",
+    .name_ja = "CORECON/SE   REGIONAL OF ECONOMICS COUNCIL OF THE 16TH REGION-SERGIPE (government-agency, BR) - Conselho Regional de Economia da 16ª Região – SE",
     .category = "government", .portal = "https://corecon-se.org.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -3528,9 +3470,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "2023-05-16T19:10:43-03:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_WD_Q136776270", .name = "Water and Sewage Corporation (government-agency, BS) - Water "
-      "&amp; Sewerage Corporation",
-    .name_ja = "Water and Sewage Corporation (government-agency, BS) - Water &amp; Sewerage Corporation",
+  { .id = "JO45_WD_Q136776270", .name = "Water and Sewage Corporation (government-agency, BS) - Water & "
+      "Sewerage Corporation",
+    .name_ja = "Water and Sewage Corporation (government-agency, BS) - Water & Sewerage Corporation",
     .category = "government", .portal = "https://wsc.com.bs/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -3791,8 +3733,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q137588622", .name = "Q137588622 (ministry, BZ) - Ministry of Infrastructure "
-      "Development &amp; Housing",
-    .name_ja = "Q137588622 (ministry, BZ) - Ministry of Infrastructure Development &amp; Housing",
+      "Development & Housing",
+    .name_ja = "Q137588622 (ministry, BZ) - Ministry of Infrastructure Development & Housing",
     .category = "government", .portal = "https://www.midh.gov.bz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -3847,24 +3789,6 @@ static const hp_source HP3B45_WDGOV[] = {
       "19:44:44 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_WD_Q140351626", .name = "Chiefs of Ontario (government-agency, CA) - Chiefs of Ontario",
-    .name_ja = "Chiefs of Ontario (government-agency, CA) - Chiefs of Ontario",
-    .category = "government", .portal = "https://chiefs-of-ontario.org/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://chiefs-of-ontario.org/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "19:21:09 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_WD_Q2860571", .name = "Archives of Ontario (government-agency, CA) - Archives of "
       "Ontario",
     .name_ja = "Archives of Ontario (government-agency, CA) - Archives of Ontario",
@@ -3884,9 +3808,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "19:34:44 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_WD_Q3487586", .name = "Makivik Corporation (government-agency, CA) - ᒪᑭᕝᕕᒃ &#8211; "
-      "Makivvik",
-    .name_ja = "Makivik Corporation (government-agency, CA) - ᒪᑭᕝᕕᒃ &#8211; Makivvik",
+  { .id = "JO45_WD_Q3487586", .name = "Makivik Corporation (government-agency, CA) - ᒪᑭᕝᕕᒃ – Makivvik",
+    .name_ja = "Makivik Corporation (government-agency, CA) - ᒪᑭᕝᕕᒃ – Makivvik",
     .category = "government", .portal = "https://www.makivvik.ca/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -4989,8 +4912,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q113551492", .name = "Instituto Nacional de Metrología de Colombia (government-agency, "
-      "CO) - Instituto Nacional de Metrología &#8211; INM",
-    .name_ja = "Instituto Nacional de Metrología de Colombia (government-agency, CO) - Instituto Nacional de Metrología &#8211; INM",
+      "CO) - Instituto Nacional de Metrología – INM",
+    .name_ja = "Instituto Nacional de Metrología de Colombia (government-agency, CO) - Instituto Nacional de Metrología – INM",
     .category = "government", .portal = "https://inm.gov.co/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -5701,25 +5624,6 @@ static const hp_source HP3B45_WDGOV[] = {
     .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
       "2026-10-18T13:22:19+02:00. A feed the organisation itself "
       "declares or links on its site root." },
-
-  { .id = "JO45_WD_Q107658460", .name = "Landratsamt Freising (government-agency, DE) - News aus dem "
-      "Landratsamt",
-    .name_ja = "Landratsamt Freising (government-agency, DE) - News aus dem Landratsamt",
-    .category = "government", .portal = "https://www.kreis-freising.de/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kreis-freising.de/landratsamt/aktuelles/pressemitteilungen?type=100",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 35 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "01:31:28 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO45_WD_Q136663821", .name = "Kompetenzzentrum Wasser Hessen (government-agency, DE) - "
       "Kompetenzzentrum Wasser Hessen",
@@ -6685,8 +6589,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q116730788", .name = "Ministry of Sports and Recreation (ministry, DO) - Ministerio de "
-      "Deportes &amp; Recreación (MIDEREC)",
-    .name_ja = "Ministry of Sports and Recreation (ministry, DO) - Ministerio de Deportes &amp; Recreación (MIDEREC)",
+      "Deportes & Recreación (MIDEREC)",
+    .name_ja = "Ministry of Sports and Recreation (ministry, DO) - Ministerio de Deportes & Recreación (MIDEREC)",
     .category = "government", .portal = "https://miderec.gob.do/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -7117,8 +7021,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q124970017", .name = "Supreme Council for Media Regulation (government-agency, EG) - "
-      "المجلس الاعلى لتنظيم الاعلام &#8211; الموقع ال",
-    .name_ja = "Supreme Council for Media Regulation (government-agency, EG) - المجلس الاعلى لتنظيم الاعلام &#8211; الموقع ال",
+      "المجلس الاعلى لتنظيم الاعلام – الموقع ال",
+    .name_ja = "Supreme Council for Media Regulation (government-agency, EG) - المجلس الاعلى لتنظيم الاعلام – الموقع ال",
     .category = "government", .portal = "https://scm.gov.eg/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -7213,8 +7117,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q22704014_3", .name = "Cartographic and Geological Institute of Catalonia "
-      "(government-agency, ES) - Posicionament a l&#39;ICGC",
-    .name_ja = "Cartographic and Geological Institute of Catalonia (government-agency, ES) - Posicionament a l&#39;ICGC",
+      "(government-agency, ES) - Posicionament a l'ICGC",
+    .name_ja = "Cartographic and Geological Institute of Catalonia (government-agency, ES) - Posicionament a l'ICGC",
     .category = "government", .portal = "https://geofons.blogspot.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -7382,8 +7286,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q30285209_2", .name = "Institut d'Assistència Sanitària (government-agency, ES) - "
-      "Institut d&#039;Assistència Sanitària",
-    .name_ja = "Institut d'Assistència Sanitària (government-agency, ES) - Institut d&#039;Assistència Sanitària",
+      "Institut d'Assistència Sanitària",
+    .name_ja = "Institut d'Assistència Sanitària (government-agency, ES) - Institut d'Assistència Sanitària",
     .category = "government", .portal = "http://www.ias.cat/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -7609,9 +7513,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "14:42:16 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_WD_Q928087", .name = "CESGA (government-agency, ES) - Cesga &#8211; Centro de "
+  { .id = "JO45_WD_Q928087", .name = "CESGA (government-agency, ES) - Cesga – Centro de "
       "Supercomputación de Galicia",
-    .name_ja = "CESGA (government-agency, ES) - Cesga &#8211; Centro de Supercomputación de Galicia",
+    .name_ja = "CESGA (government-agency, ES) - Cesga – Centro de Supercomputación de Galicia",
     .category = "government", .portal = "https://www.cesga.es/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -7629,8 +7533,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q5712781", .name = "Autoridad Portuaria de Gijon (government-agency, ES) - Puerto de "
-      "Gijón &#8211; Autoridad Portuaria de Gijón",
-    .name_ja = "Autoridad Portuaria de Gijon (government-agency, ES) - Puerto de Gijón &#8211; Autoridad Portuaria de Gijón",
+      "Gijón – Autoridad Portuaria de Gijón",
+    .name_ja = "Autoridad Portuaria de Gijon (government-agency, ES) - Puerto de Gijón – Autoridad Portuaria de Gijón",
     .category = "government", .portal = "https://www.puertogijon.es/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -7739,25 +7643,6 @@ static const hp_source HP3B45_WDGOV[] = {
       "17:49:40 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_WD_Q22039400", .name = "Salud Mental España (government-organization, ES) - "
-      "Confederación Salud Mental España",
-    .name_ja = "Salud Mental España (government-organization, ES) - Confederación Salud Mental España",
-    .category = "government", .portal = "https://consaludmental.org/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://consaludmental.org/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "12:10:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_WD_Q4890912", .name = "General Assemblies of Gipuzkoa (legislature, ES) - Gipuzkoako "
       "Batzar Nagusiak - Agenda",
     .name_ja = "General Assemblies of Gipuzkoa (legislature, ES) - Gipuzkoako Batzar Nagusiak - Agenda",
@@ -7835,8 +7720,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q108737221", .name = "Ethiopian Biodiversity Institute (government-agency, ET) - "
-      "Ethiopian Biodiversity Institute &#8211; EBI",
-    .name_ja = "Ethiopian Biodiversity Institute (government-agency, ET) - Ethiopian Biodiversity Institute &#8211; EBI",
+      "Ethiopian Biodiversity Institute – EBI",
+    .name_ja = "Ethiopian Biodiversity Institute (government-agency, ET) - Ethiopian Biodiversity Institute – EBI",
     .category = "government", .portal = "https://ebi.gov.et/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -7908,26 +7793,6 @@ static const hp_source HP3B45_WDGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 03 Oct 2026 "
       "16:53:06 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_WD_Q135274966", .name = "Consortium of Ethiopian Human Rights Organizations "
-      "(government-agency, ET) - &#x1f5f3;&#xfe0f;CEHRO Hosts Policy "
-      "Debate Among Political Parties and Civil Soc",
-    .name_ja = "Consortium of Ethiopian Human Rights Organizations (government-agency, ET) - &#x1f5f3;&#xfe0f;CEHRO Hosts Policy Debate Among Political Parties and Civil Soc",
-    .category = "government", .portal = "https://cehro.org/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cehro.org/now/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 20 May 2026 "
-      "08:37:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_WD_Q136723669", .name = "Refugees and Returnees Service (government-agency, ET) - "
@@ -8591,25 +8456,6 @@ static const hp_source HP3B45_WDGOV[] = {
       "10:11:37 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_WD_Q5096902", .name = "Chief Scientist Office (government-agency, GB) - Chief Scientist "
-      "Office",
-    .name_ja = "Chief Scientist Office (government-agency, GB) - Chief Scientist Office",
-    .category = "government", .portal = "https://www.cso.scot.nhs.uk/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cso.scot.nhs.uk/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "15:15:47 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_WD_Q5152798", .name = "Commissioner for Children and Young People, Northern Ireland "
       "(government-agency, GB) - Niccy",
     .name_ja = "Commissioner for Children and Young People, Northern Ireland (government-agency, GB) - Niccy",
@@ -8704,25 +8550,6 @@ static const hp_source HP3B45_WDGOV[] = {
       "2026-07-31T08:30:05Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO45_WD_Q7437864", .name = "Scottish National Blood Transfusion Service (government-agency, "
-      "GB) - Scotblood",
-    .name_ja = "Scottish National Blood Transfusion Service (government-agency, GB) - Scotblood",
-    .category = "government", .portal = "https://www.scotblood.co.uk/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.scotblood.co.uk/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
-      "06:17:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_WD_Q7579368", .name = "Sport Northern Ireland (government-agency, GB) - Sport NI",
     .name_ja = "Sport Northern Ireland (government-agency, GB) - Sport NI",
     .category = "government", .portal = "https://www.sportni.net/",
@@ -8741,48 +8568,10 @@ static const hp_source HP3B45_WDGOV[] = {
       "15:19:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_WD_Q16933548", .name = "NHS Scotland (government-agency, GB) - Scotland&#039;s Health on "
-      "the Web",
-    .name_ja = "NHS Scotland (government-agency, GB) - Scotland&#039;s Health on the Web",
-    .category = "government", .portal = "https://www.scot.nhs.uk/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.scot.nhs.uk/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 29 Aug 2024 "
-      "12:14:07 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_WD_Q16983657", .name = "Healthcare Improvement Scotland (government-agency, GB) - "
-      "Healthcare Improvement Scotland",
-    .name_ja = "Healthcare Improvement Scotland (government-agency, GB) - Healthcare Improvement Scotland",
-    .category = "government", .portal = "https://www.healthcareimprovementscotland.scot/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.healthcareimprovementscotland.scot/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "09:08:06 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_WD_Q30297190", .name = "NIHR Nottingham Digestive Diseases Biomedical Research Unit "
-      "(government-agency, GB) - Gastrointestinal &amp; Liver - "
-      "Nottingham Biomedical Research Centre",
-    .name_ja = "NIHR Nottingham Digestive Diseases Biomedical Research Unit (government-agency, GB) - Gastrointestinal &amp; Liver - Nottingham Biomedical Research Centre",
+      "(government-agency, GB) - Gastrointestinal & Liver - Nottingham "
+      "Biomedical Research Centre",
+    .name_ja = "NIHR Nottingham Digestive Diseases Biomedical Research Unit (government-agency, GB) - Gastrointestinal & Liver - Nottingham Biomedical Research Centre",
     .category = "government", .portal = "https://nottinghambrc.nihr.ac.uk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -8800,9 +8589,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q30297190_2", .name = "NIHR Nottingham Digestive Diseases Biomedical Research Unit "
-      "(government-agency, GB) - Gastrointestinal &amp; Liver - "
-      "Nottingham Biomedical Research Centre",
-    .name_ja = "NIHR Nottingham Digestive Diseases Biomedical Research Unit (government-agency, GB) - Gastrointestinal &amp; Liver - Nottingham Biomedical Research Centre",
+      "(government-agency, GB) - Gastrointestinal & Liver - Nottingham "
+      "Biomedical Research Centre",
+    .name_ja = "NIHR Nottingham Digestive Diseases Biomedical Research Unit (government-agency, GB) - Gastrointestinal & Liver - Nottingham Biomedical Research Centre",
     .category = "government", .portal = "https://nottinghambrc.nihr.ac.uk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -8878,9 +8667,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q6974279", .name = "National Measurement Office (government-agency, GB) - Department "
-      "for Business, Energy &amp; Industrial Strategy - Activity on "
-      "GOV.UK",
-    .name_ja = "National Measurement Office (government-agency, GB) - Department for Business, Energy &amp; Industrial Strategy - Activity on GOV.UK",
+      "for Business, Energy & Industrial Strategy - Activity on GOV.UK",
+    .name_ja = "National Measurement Office (government-agency, GB) - Department for Business, Energy & Industrial Strategy - Activity on GOV.UK",
     .category = "government", .portal = "https://www.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -9008,24 +8796,6 @@ static const hp_source HP3B45_WDGOV[] = {
     .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
       "2026-10-16T11:00:12Z. A feed the organisation itself declares or "
       "links on its site root." },
-
-  { .id = "JO45_WD_Q4585192", .name = "Belfast Harbour Police (police, GB) - Belfast Harbour",
-    .name_ja = "Belfast Harbour Police (police, GB) - Belfast Harbour",
-    .category = "government", .portal = "https://www.belfast-harbour.co.uk/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.belfast-harbour.co.uk/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 18 Sep 2026 "
-      "13:12:16 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO45_WD_Q105430648", .name = "Land Data (regulatory-agency, GB) - Land Data",
     .name_ja = "Land Data (regulatory-agency, GB) - Land Data",
@@ -9541,9 +9311,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "15:05:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_WD_Q1661087", .name = "Independent Electoral Commission (government-agency, GM) - IEC "
-      "&#8211; Independent Electoral Commission",
-    .name_ja = "Independent Electoral Commission (government-agency, GM) - IEC &#8211; Independent Electoral Commission",
+  { .id = "JO45_WD_Q1661087", .name = "Independent Electoral Commission (government-agency, GM) - IEC – "
+      "Independent Electoral Commission",
+    .name_ja = "Independent Electoral Commission (government-agency, GM) - IEC – Independent Electoral Commission",
     .category = "government", .portal = "https://iec.gm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -9598,8 +9368,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q110920340", .name = "National Council for Arts and Culture (government-agency, GM) - "
-      "NATIONAL CENTRE FOR ARTS &amp; CALTURE",
-    .name_ja = "National Council for Arts and Culture (government-agency, GM) - NATIONAL CENTRE FOR ARTS &amp; CALTURE",
+      "NATIONAL CENTRE FOR ARTS & CALTURE",
+    .name_ja = "National Council for Arts and Culture (government-agency, GM) - NATIONAL CENTRE FOR ARTS & CALTURE",
     .category = "government", .portal = "https://ncac.gm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -9864,8 +9634,8 @@ static const hp_source HP3B45_WDGOV[] = {
 
   { .id = "JO45_WD_Q5707312", .name = "Hellenic Telecommunications and Post Commission "
       "(government-agency, GR) - EETT   Εθνική Επιτροπή Τηλεπικοινωνιών "
-      "&amp; Ταχ",
-    .name_ja = "Hellenic Telecommunications and Post Commission (government-agency, GR) - EETT   Εθνική Επιτροπή Τηλεπικοινωνιών &amp; Ταχ",
+      "& Ταχ",
+    .name_ja = "Hellenic Telecommunications and Post Commission (government-agency, GR) - EETT   Εθνική Επιτροπή Τηλεπικοινωνιών & Ταχ",
     .category = "government", .portal = "https://www.eett.gr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -10637,25 +10407,6 @@ static const hp_source HP3B45_WDGOV[] = {
       "08:48:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_WD_Q103779640", .name = "Sea Fisheries Protection Authority (government-agency, IE) - Sea "
-      "Fisheries Protection Authority",
-    .name_ja = "Sea Fisheries Protection Authority (government-agency, IE) - Sea Fisheries Protection Authority",
-    .category = "government", .portal = "https://www.sfpa.ie/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.sfpa.ie/Home/rss/1206",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "07:56:00 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_WD_Q112130898", .name = "Rannóg an Aistriúcháin (government-agency, IE) - Dail Schedule",
     .name_ja = "Rannóg an Aistriúcháin (government-agency, IE) - Dail Schedule",
     .category = "government", .portal = "https://www.oireachtas.ie/",
@@ -10861,25 +10612,6 @@ static const hp_source HP3B45_WDGOV[] = {
       "09:56:27 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_WD_Q50041046", .name = "Israel Olive Oil Board (government-agency, IL) - ענף הזית במועצת "
-      "הצמחים",
-    .name_ja = "Israel Olive Oil Board (government-agency, IL) - ענף הזית במועצת הצמחים",
-    .category = "government", .portal = "https://www.oliveboard.org.il/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.oliveboard.org.il/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 16 Sep 2026 "
-      "11:15:11 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_WD_Q105674543", .name = "South Jordan Drainage and Streams Authority "
       "(government-organization, IL) - רשות ניקוז ונחלים",
     .name_ja = "South Jordan Drainage and Streams Authority (government-organization, IL) - רשות ניקוז ונחלים",
@@ -11017,8 +10749,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q64143616", .name = "Animal Husbandry & Veterinary (government-agency, IN) - Animal "
-      "Husbandry &amp; Veterinary",
-    .name_ja = "Animal Husbandry & Veterinary (government-agency, IN) - Animal Husbandry &amp; Veterinary",
+      "Husbandry & Veterinary",
+    .name_ja = "Animal Husbandry & Veterinary (government-agency, IN) - Animal Husbandry & Veterinary",
     .category = "government", .portal = "https://animalhusbandry.assam.gov.in/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -11431,8 +11163,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q113551480", .name = "Institute for Agricultural and Forest Systems in the "
-      "Mediterranean (government-agency, IT) - CNR &#8211; ISAFOM",
-    .name_ja = "Institute for Agricultural and Forest Systems in the Mediterranean (government-agency, IT) - CNR &#8211; ISAFOM",
+      "Mediterranean (government-agency, IT) - CNR – ISAFOM",
+    .name_ja = "Institute for Agricultural and Forest Systems in the Mediterranean (government-agency, IT) - CNR – ISAFOM",
     .category = "government", .portal = "https://isafom.cnr.it/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -11542,8 +11274,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q113555413", .name = "Q113555413 (government-organization, IT) - Musei nazionali di "
-      "Perugia &#8211; Direzione regionale Musei nazionali Umbria",
-    .name_ja = "Q113555413 (government-organization, IT) - Musei nazionali di Perugia &#8211; Direzione regionale Musei nazionali Umbria",
+      "Perugia – Direzione regionale Musei nazionali Umbria",
+    .name_ja = "Q113555413 (government-organization, IT) - Musei nazionali di Perugia – Direzione regionale Musei nazionali Umbria",
     .category = "government", .portal = "https://www.musei.umbria.beniculturali.it/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -11906,8 +11638,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q127607197", .name = "Attorney-General’s Chambers of Jamaica (government-agency, JM) - "
-      "Attorney-General&#039;s Chambers",
-    .name_ja = "Attorney-General’s Chambers of Jamaica (government-agency, JM) - Attorney-General&#039;s Chambers",
+      "Attorney-General's Chambers",
+    .name_ja = "Attorney-General’s Chambers of Jamaica (government-agency, JM) - Attorney-General's Chambers",
     .category = "government", .portal = "https://agc.gov.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -11925,8 +11657,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q127607284", .name = "Betting, Gaming and Lotteries Commission (government-agency, JM) "
-      "- Betting, Gaming &amp; Lotteries Commission",
-    .name_ja = "Betting, Gaming and Lotteries Commission (government-agency, JM) - Betting, Gaming &amp; Lotteries Commission",
+      "- Betting, Gaming & Lotteries Commission",
+    .name_ja = "Betting, Gaming and Lotteries Commission (government-agency, JM) - Betting, Gaming & Lotteries Commission",
     .category = "government", .portal = "https://www.bglc.gov.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -11944,8 +11676,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q127607290", .name = "Accountant General’s Department of Jamaica (government-agency, "
-      "JM) - Accountant General&#039;s Department",
-    .name_ja = "Accountant General’s Department of Jamaica (government-agency, JM) - Accountant General&#039;s Department",
+      "JM) - Accountant General's Department",
+    .name_ja = "Accountant General’s Department of Jamaica (government-agency, JM) - Accountant General's Department",
     .category = "government", .portal = "https://www.treasury.gov.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -13253,9 +12985,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "2026-10-18T13:23:17+02:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_WD_Q136341210", .name = "Q136341210 (government-organization, LU) - CDM Luxembourg "
-      "&#8211; Centre pour le développement moteur",
-    .name_ja = "Q136341210 (government-organization, LU) - CDM Luxembourg &#8211; Centre pour le développement moteur",
+  { .id = "JO45_WD_Q136341210", .name = "Q136341210 (government-organization, LU) - CDM Luxembourg – "
+      "Centre pour le développement moteur",
+    .name_ja = "Q136341210 (government-organization, LU) - CDM Luxembourg – Centre pour le développement moteur",
     .category = "government", .portal = "https://cc-cdm.lu/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -13801,29 +13533,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "13:18:46 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_WD_Q140563694", .name = "Q140563694 (government-agency, MG) - Bureau des Normes de "
-      "Madagascar",
-    .name_ja = "Q140563694 (government-agency, MG) - Bureau des Normes de Madagascar",
-    .category = "government", .portal = "https://www.bnm.mg/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.bnm.mg/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "21:53:09 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_WD_Q141141917", .name = "Ministry of Agriculture and Food Sovereignty (ministry, MG) - "
-      "Ministère de l&#039;Agriculture et de la Souveraineté "
-      "Alimentaire",
-    .name_ja = "Ministry of Agriculture and Food Sovereignty (ministry, MG) - Ministère de l&#039;Agriculture et de la Souveraineté Alimentaire",
+      "Ministère de l'Agriculture et de la Souveraineté Alimentaire",
+    .name_ja = "Ministry of Agriculture and Food Sovereignty (ministry, MG) - Ministère de l'Agriculture et de la Souveraineté Alimentaire",
     .category = "government", .portal = "https://www.miasa.gov.mg/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -13838,24 +13550,6 @@ static const hp_source HP3B45_WDGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
       "01:57:08 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_WD_Q141146099", .name = "Q141146099 (ministry, MG) - Midsp",
-    .name_ja = "Q141146099 (ministry, MG) - Midsp",
-    .category = "government", .portal = "https://midsp.gov.mg/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://midsp.gov.mg/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "06:30:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_WD_Q108382270", .name = "Economic Policy, Planning and Statistics Office "
@@ -13879,9 +13573,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q12906246", .name = "State Statistical Office of North Macedonia (government-agency, "
-      "MK) - &#1044;&#1088;&#1078;&#1072;&#1074;&#1077;&#1085; "
-      "&#1079;&#1072;&#1074;&#1086;&#",
-    .name_ja = "State Statistical Office of North Macedonia (government-agency, MK) - &#1044;&#1088;&#1078;&#1072;&#1074;&#1077;&#1085; &#1079;&#1072;&#1074;&#1086;&#",
+      "MK) - Државен заво&#",
+    .name_ja = "State Statistical Office of North Macedonia (government-agency, MK) - Државен заво&#",
     .category = "government", .portal = "https://www.stat.gov.mk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -13939,8 +13632,8 @@ static const hp_source HP3B45_WDGOV[] = {
 
   { .id = "JO45_WD_Q135289680", .name = "Information and Communication Technologies Agency "
       "(government-agency, ML) - Agence des Technologies de "
-      "l&#039;Information et de la Communication-AGETIC",
-    .name_ja = "Information and Communication Technologies Agency (government-agency, ML) - Agence des Technologies de l&#039;Information et de la Communication-AGETIC",
+      "l'Information et de la Communication-AGETIC",
+    .name_ja = "Information and Communication Technologies Agency (government-agency, ML) - Agence des Technologies de l'Information et de la Communication-AGETIC",
     .category = "government", .portal = "https://agetic.gouv.ml/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -13958,9 +13651,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q137784097", .name = "Ministry of Higher Education and Research of Mali (ministry, ML) "
-      "- Ministère de l&#039;Enseignement Supérieur et de la Recherche "
+      "- Ministère de l'Enseignement Supérieur et de la Recherche "
       "Scientifique",
-    .name_ja = "Ministry of Higher Education and Research of Mali (ministry, ML) - Ministère de l&#039;Enseignement Supérieur et de la Recherche Scientifique",
+    .name_ja = "Ministry of Higher Education and Research of Mali (ministry, ML) - Ministère de l'Enseignement Supérieur et de la Recherche Scientifique",
     .category = "government", .portal = "https://www.enseignementsuperieur.gouv.ml/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -13978,8 +13671,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q141214737", .name = "Ministry of Energy and Water (Mali) (ministry, ML) - Ministere "
-      "de l&#039;Energie et de l&#039;Eau",
-    .name_ja = "Ministry of Energy and Water (Mali) (ministry, ML) - Ministere de l&#039;Energie et de l&#039;Eau",
+      "de l'Energie et de l'Eau",
+    .name_ja = "Ministry of Energy and Water (Mali) (ministry, ML) - Ministere de l'Energie et de l'Eau",
     .category = "government", .portal = "https://energie.gouv.ml/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -14107,25 +13800,6 @@ static const hp_source HP3B45_WDGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "10:02:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_WD_Q59536295", .name = "Centre National de Lutte Antiacridienne (government-agency, MR) "
-      "- CNLA",
-    .name_ja = "Centre National de Lutte Antiacridienne (government-agency, MR) - CNLA",
-    .category = "government", .portal = "https://cnla.mr/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cnla.mr/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 09 Nov 2021 "
-      "15:41:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_WD_Q124219563", .name = "Ministry of Digital Transformation, Innovation, and "
@@ -14262,8 +13936,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q107178973", .name = "Ministry of Economic Development (ministry, MV) - Ministry of "
-      "Economic Development Transport &amp; Trade",
-    .name_ja = "Ministry of Economic Development (ministry, MV) - Ministry of Economic Development Transport &amp; Trade",
+      "Economic Development Transport & Trade",
+    .name_ja = "Ministry of Economic Development (ministry, MV) - Ministry of Economic Development Transport & Trade",
     .category = "government", .portal = "https://trade.gov.mv/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -14741,8 +14415,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q130314550", .name = "National Metrology Institute of Malaysia (government-agency, MY) "
-      "- Home &#8211; NMIM",
-    .name_ja = "National Metrology Institute of Malaysia (government-agency, MY) - Home &#8211; NMIM",
+      "- Home – NMIM",
+    .name_ja = "National Metrology Institute of Malaysia (government-agency, MY) - Home – NMIM",
     .category = "government", .portal = "https://nmim.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -15278,9 +14952,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q130458740", .name = "Nasarawa State Ministry of Information, Culture and Tourism "
-      "(government-agency, NG) - Ministry of Information, Culture &amp; "
+      "(government-agency, NG) - Ministry of Information, Culture & "
       "Tourism",
-    .name_ja = "Nasarawa State Ministry of Information, Culture and Tourism (government-agency, NG) - Ministry of Information, Culture &amp; Tourism",
+    .name_ja = "Nasarawa State Ministry of Information, Culture and Tourism (government-agency, NG) - Ministry of Information, Culture & Tourism",
     .category = "government", .portal = "https://moi.na.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -15773,25 +15447,6 @@ static const hp_source HP3B45_WDGOV[] = {
       "14:48:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_WD_Q60740327", .name = "National Environmental Standards and Regulations Enforcement "
-      "Agency (government-agency, NG) - NESREA",
-    .name_ja = "National Environmental Standards and Regulations Enforcement Agency (government-agency, NG) - NESREA",
-    .category = "government", .portal = "https://nesrea.gov.ng/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nesrea.gov.ng/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "12:42:06 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_WD_Q104844764", .name = "Librarians' Registration Council of Nigeria (government-agency, "
       "NG) - LRCN",
     .name_ja = "Librarians' Registration Council of Nigeria (government-agency, NG) - LRCN",
@@ -15927,9 +15582,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q122643808", .name = "KADUNA STATE Ministry Of Environment & Natural Resources "
-      "(ministry, NG) - KDSG   Official Website &#8211; Kaduna State "
+      "(ministry, NG) - KDSG   Official Website – Kaduna State "
       "Government, Nigeria",
-    .name_ja = "KADUNA STATE Ministry Of Environment & Natural Resources (ministry, NG) - KDSG   Official Website &#8211; Kaduna State Government, Nigeria",
+    .name_ja = "KADUNA STATE Ministry Of Environment & Natural Resources (ministry, NG) - KDSG   Official Website – Kaduna State Government, Nigeria",
     .category = "government", .portal = "https://kdsg.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -16702,9 +16357,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "22:21:20 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_WD_Q30083612", .name = "Servicio de Parques de Lima (government-agency, PE) - SERPAR "
-      "&#8211; Servicio de Parques de Lima",
-    .name_ja = "Servicio de Parques de Lima (government-agency, PE) - SERPAR &#8211; Servicio de Parques de Lima",
+  { .id = "JO45_WD_Q30083612", .name = "Servicio de Parques de Lima (government-agency, PE) - SERPAR – "
+      "Servicio de Parques de Lima",
+    .name_ja = "Servicio de Parques de Lima (government-agency, PE) - SERPAR – Servicio de Parques de Lima",
     .category = "government", .portal = "https://www.serpar.gob.pe/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -16780,8 +16435,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q31810190", .name = "Mactan Cebu International Airport Authority (government-agency, "
-      "PH) - Mactan &#8211; Cebu International Airport Authority",
-    .name_ja = "Mactan Cebu International Airport Authority (government-agency, PH) - Mactan &#8211; Cebu International Airport Authority",
+      "PH) - Mactan – Cebu International Airport Authority",
+    .name_ja = "Mactan Cebu International Airport Authority (government-agency, PH) - Mactan – Cebu International Airport Authority",
     .category = "government", .portal = "https://mciaa.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -16799,8 +16454,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q31810189", .name = "Southern Philippines Development Authority (government-agency, "
-      "PH) - Southern Philippines Development Authority &#8211; SPDA",
-    .name_ja = "Southern Philippines Development Authority (government-agency, PH) - Southern Philippines Development Authority &#8211; SPDA",
+      "PH) - Southern Philippines Development Authority – SPDA",
+    .name_ja = "Southern Philippines Development Authority (government-agency, PH) - Southern Philippines Development Authority – SPDA",
     .category = "government", .portal = "https://spda.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -16952,8 +16607,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q31811619", .name = "Employees' Compensation Commission (government-agency, PH) - "
-      "Employees&#039; Compensation Commission",
-    .name_ja = "Employees' Compensation Commission (government-agency, PH) - Employees&#039; Compensation Commission",
+      "Employees' Compensation Commission",
+    .name_ja = "Employees' Compensation Commission (government-agency, PH) - Employees' Compensation Commission",
     .category = "government", .portal = "https://ecc.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -17336,8 +16991,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q5152717", .name = "Commission on Human Rights (government-agency, PH) - CHR "
-      "Philippines &#8211;",
-    .name_ja = "Commission on Human Rights (government-agency, PH) - CHR Philippines &#8211;",
+      "Philippines –",
+    .name_ja = "Commission on Human Rights (government-agency, PH) - CHR Philippines –",
     .category = "government", .portal = "https://chr.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -18119,8 +17774,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q18210694", .name = "Palestinian Environmental Quality Authority (government-agency, "
-      "PS) - سلطة جودة البيئة &#8211; فلسطين",
-    .name_ja = "Palestinian Environmental Quality Authority (government-agency, PS) - سلطة جودة البيئة &#8211; فلسطين",
+      "PS) - سلطة جودة البيئة – فلسطين",
+    .name_ja = "Palestinian Environmental Quality Authority (government-agency, PS) - سلطة جودة البيئة – فلسطين",
     .category = "government", .portal = "https://environment.ps/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -18138,8 +17793,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q24911155", .name = "Palestinian Civil Defence (government-agency, PS) - الدفاع "
-      "المدني الفلسطيني &#8211; Palestinian Civil Defense",
-    .name_ja = "Palestinian Civil Defence (government-agency, PS) - الدفاع المدني الفلسطيني &#8211; Palestinian Civil Defense",
+      "المدني الفلسطيني – Palestinian Civil Defense",
+    .name_ja = "Palestinian Civil Defence (government-agency, PS) - الدفاع المدني الفلسطيني – Palestinian Civil Defense",
     .category = "government", .portal = "https://pcd.ps/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -18781,26 +18436,6 @@ static const hp_source HP3B45_WDGOV[] = {
       "08:50:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_WD_Q127038351", .name = "Plano Nacional das Artes (government-organization, PT) - "
-      "Resultado das candidaturas das escolas PNA às assinaturas "
-      "digitais do Público",
-    .name_ja = "Plano Nacional das Artes (government-organization, PT) - Resultado das candidaturas das escolas PNA às assinaturas digitais do Público",
-    .category = "government", .portal = "https://www.pna.gov.pt/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.pna.gov.pt/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Tue, 27 Sep 2022 "
-      "15:44:12 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_WD_Q7232691", .name = "Portuguese Supreme Administrative Court (court, PT) - Supremo "
       "Tribunal Administrativo",
     .name_ja = "Portuguese Supreme Administrative Court (court, PT) - Supremo Tribunal Administrativo",
@@ -18879,8 +18514,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q18537264", .name = "National Administration of Land Improvements (government-agency, "
-      "RO) - ANIF &#8211; Agenţia Naţională de Îmbunătăţiri Funciare",
-    .name_ja = "National Administration of Land Improvements (government-agency, RO) - ANIF &#8211; Agenţia Naţională de Îmbunătăţiri Funciare",
+      "RO) - ANIF – Agenţia Naţională de Îmbunătăţiri Funciare",
+    .name_ja = "National Administration of Land Improvements (government-agency, RO) - ANIF – Agenţia Naţională de Îmbunătăţiri Funciare",
     .category = "government", .portal = "https://www.anif.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -19630,9 +19265,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "05:00:13 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_WD_Q141484910", .name = "Q141484910 (government-agency, RO) - ANMAP &#8211; Agenția "
-      "Națională pentru Mediu și Arii Protejate",
-    .name_ja = "Q141484910 (government-agency, RO) - ANMAP &#8211; Agenția Națională pentru Mediu și Arii Protejate",
+  { .id = "JO45_WD_Q141484910", .name = "Q141484910 (government-agency, RO) - ANMAP – Agenția Națională "
+      "pentru Mediu și Arii Protejate",
+    .name_ja = "Q141484910 (government-agency, RO) - ANMAP – Agenția Națională pentru Mediu și Arii Protejate",
     .category = "government", .portal = "https://anmap.gov.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -19799,25 +19434,6 @@ static const hp_source HP3B45_WDGOV[] = {
       "16:26:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_WD_Q141665287", .name = "Mining Institute Ltd. Belgrade (government-agency, RS) - "
-      "РУДАРСКИ ИНСТИТУТ   Павле Стјепановић, дипл.",
-    .name_ja = "Mining Institute Ltd. Belgrade (government-agency, RS) - РУДАРСКИ ИНСТИТУТ   Павле Стјепановић, дипл.",
-    .category = "government", .portal = "https://ribeograd.ac.rs/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ribeograd.ac.rs/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, RSS2 feed, newest Mon, 03 Nov 2025 "
-      "20:21:18 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_WD_Q110661272", .name = "Ministry of Family Welfare and Demography (ministry, RS) - "
       "Ministarstvo za brigu o porodici i demografiju",
     .name_ja = "Ministry of Family Welfare and Demography (ministry, RS) - Ministarstvo za brigu o porodici i demografiju",
@@ -19915,9 +19531,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_WD_Q4481716", .name = "Federal Agency for Health and Social Development "
-      "(government-agency, RU) - &#x41E;&#x43A;&#x43E;&#x43B;&#x43E; 40 "
-      "&#x432;&#x44B;&#x43B;&#x435;&#x442;&#x43E",
-    .name_ja = "Federal Agency for Health and Social Development (government-agency, RU) - &#x41E;&#x43A;&#x43E;&#x43B;&#x43E; 40 &#x432;&#x44B;&#x43B;&#x435;&#x442;&#x43E",
+      "(government-agency, RU) - Около 40 вылето",
+    .name_ja = "Federal Agency for Health and Social Development (government-agency, RU) - Около 40 вылето",
     .category = "government", .portal = "https://roszdravnadzor.gov.ru/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -20049,46 +19664,6 @@ static const hp_source HP3B45_WDGOV[] = {
     .description = "Fetched 2026-10-18: 15 items, RSS2 feed, newest Fri, 16 October "
       "2026 16:03:00 MSK. A feed the organisation itself declares or "
       "links on its site root." },
-
-  { .id = "JO45_WD_Q32360938", .name = "Ministry of Health and Social Development of the Russian "
-      "Federation (ministry, RU) - Новости министерства здравоохранения "
-      "РФ",
-    .name_ja = "Ministry of Health and Social Development of the Russian Federation (ministry, RU) - Новости министерства здравоохранения РФ",
-    .category = "government", .portal = "https://minzdrav.gov.ru/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://minzdrav.gov.ru/news.atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 50 items, ATOM feed, newest "
-      "2026-10-07T07:21:48Z. A feed the organisation itself declares or "
-      "links on its site root." },
-
-  { .id = "JO45_WD_Q32360938_2", .name = "Ministry of Health and Social Development of the Russian "
-      "Federation (ministry, RU) - Новости министерства здравоохранения "
-      "РФ",
-    .name_ja = "Ministry of Health and Social Development of the Russian Federation (ministry, RU) - Новости министерства здравоохранения РФ",
-    .category = "government", .portal = "https://minzdrav.gov.ru/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://minzdrav.gov.ru/news.rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 50 items, RSS2 feed, newest Wed, 07 Oct 2026 "
-      "10:00:00 +0300. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO45_WD_Q4235558", .name = "Kostroma Oblast Duma (legislature, RU) - Новое на сайте "
       "Костромская областная Дума",
@@ -20486,8 +20061,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q141194387", .name = "Singapore Institute of Legal Education (government-agency, SG) - "
-      "Singapore Institute of Legal Education   Bar Admission &amp; CPD",
-    .name_ja = "Singapore Institute of Legal Education (government-agency, SG) - Singapore Institute of Legal Education   Bar Admission &amp; CPD",
+      "Singapore Institute of Legal Education   Bar Admission & CPD",
+    .name_ja = "Singapore Institute of Legal Education (government-agency, SG) - Singapore Institute of Legal Education   Bar Admission & CPD",
     .category = "government", .portal = "https://www.sile.edu.sg/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -20558,24 +20133,6 @@ static const hp_source HP3B45_WDGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Fri, 16 Oct "
       "2026 13:55:00 +0200. A feed the organisation itself declares or "
-      "links on its site root." },
-
-  { .id = "JO45_WD_Q7541794", .name = "Slovenian Book Agency (government-agency, SI) - JAK RS - Novice",
-    .name_ja = "Slovenian Book Agency (government-agency, SI) - JAK RS - Novice",
-    .category = "government", .portal = "https://www.jakrs.si/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.jakrs.si/rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Fri, 02 Oct "
-      "2026 12:39:00 +0200. A feed the organisation itself declares or "
       "links on its site root." },
 
   { .id = "JO45_WD_Q12784020", .name = "Radioactive Waste Management Agency (government-agency, SI) - "
@@ -20674,25 +20231,6 @@ static const hp_source HP3B45_WDGOV[] = {
       "08:18:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_WD_Q30280183", .name = "National Institute of Public Health (government-agency, SI) - "
-      "Nijz",
-    .name_ja = "National Institute of Public Health (government-agency, SI) - Nijz",
-    .category = "government", .portal = "https://nijz.si/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nijz.si/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "10:09:22 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_WD_Q30290519", .name = "Ministry of Culture of Slovenia (government-agency, SI) - Novice "
       "Ministrstvo za kulturo",
     .name_ja = "Ministry of Culture of Slovenia (government-agency, SI) - Novice   Ministrstvo za kulturo",
@@ -20751,25 +20289,6 @@ static const hp_source HP3B45_WDGOV[] = {
       "2026 10:34:00 +0100. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO45_WD_Q30299334", .name = "Institute for the Protection of Cultural Heritage of Slovenia "
-      "(government-agency, SI) - ZVKDS",
-    .name_ja = "Institute for the Protection of Cultural Heritage of Slovenia (government-agency, SI) - ZVKDS",
-    .category = "government", .portal = "https://www.zvkds.si/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.zvkds.si/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "08:58:21 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_WD_Q30299343", .name = "Inspectorate of the Republic of Slovenia for the Environment and "
       "Spatial Planning (government-agency, SI) - Novice   Inšpektorat "
       "Republike Slovenije za okolje in prostor",
@@ -20827,25 +20346,6 @@ static const hp_source HP3B45_WDGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Thu, 15 Oct "
       "2026 10:07:00 +0200. A feed the organisation itself declares or "
-      "links on its site root." },
-
-  { .id = "JO45_WD_Q67524540", .name = "Agency for Medicinal Products and Medical Devices of the "
-      "Republic of Slovenia (government-agency, SI) - JAZMP",
-    .name_ja = "Agency for Medicinal Products and Medical Devices of the Republic of Slovenia (government-agency, SI) - JAZMP",
-    .category = "government", .portal = "https://www.jazmp.si/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.jazmp.si/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Thu, 15 Oct "
-      "2026 11:33:18 +0000. A feed the organisation itself declares or "
       "links on its site root." },
 
   { .id = "JO45_WD_Q12796751", .name = "Ministry of Agriculture, Forestry and Food (ministry, SI) - "
@@ -20922,25 +20422,6 @@ static const hp_source HP3B45_WDGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 50 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "00:00:00 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_WD_Q30254732", .name = "Geological Survey Ljubljana (government-organization, SI) - "
-      "GeoZS",
-    .name_ja = "Geological Survey Ljubljana (government-organization, SI) - GeoZS",
-    .category = "government", .portal = "https://www.geo-zs.si/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.geo-zs.si/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "11:33:01 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_WD_Q49216959", .name = "Office of the Prime Minister Slovenia (government-organization, "
@@ -21308,8 +20789,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q30285491", .name = "Ministry of Health of Senegal (government-agency, SN) - "
-      "MINISTÈRE DE LA SANTÉ ET DE L&#039;ACTION SOCIALE",
-    .name_ja = "Ministry of Health of Senegal (government-agency, SN) - MINISTÈRE DE LA SANTÉ ET DE L&#039;ACTION SOCIALE",
+      "MINISTÈRE DE LA SANTÉ ET DE L'ACTION SOCIALE",
+    .name_ja = "Ministry of Health of Senegal (government-agency, SN) - MINISTÈRE DE LA SANTÉ ET DE L'ACTION SOCIALE",
     .category = "government", .portal = "https://www.sante.gouv.sn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -21386,8 +20867,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_WD_Q140843647", .name = "Ministry of Family, Social Action and Solidarity (ministry, SN) "
-      "- MIFASS &#8211; Sénégal",
-    .name_ja = "Ministry of Family, Social Action and Solidarity (ministry, SN) - MIFASS &#8211; Sénégal",
+      "- MIFASS – Sénégal",
+    .name_ja = "Ministry of Family, Social Action and Solidarity (ministry, SN) - MIFASS – Sénégal",
     .category = "government", .portal = "https://femme.gouv.sn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -21460,8 +20941,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q139381107", .name = "Ministry of Energy, Petroleum and Mines of Senegal (ministry, "
-      "SN) - Ministère de l&#039;Energie, du Pétrole et des Mines",
-    .name_ja = "Ministry of Energy, Petroleum and Mines of Senegal (ministry, SN) - Ministère de l&#039;Energie, du Pétrole et des Mines",
+      "SN) - Ministère de l'Energie, du Pétrole et des Mines",
+    .name_ja = "Ministry of Energy, Petroleum and Mines of Senegal (ministry, SN) - Ministère de l'Energie, du Pétrole et des Mines",
     .category = "government", .portal = "https://energie-mines.gouv.sn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -21498,9 +20979,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q140067386", .name = "Ministry of Water and Sanitation of Senegal (ministry, SN) - "
-      "Ministère de l&#039;Hydraulique et de l&#039;Assainissement du "
-      "Sénégal",
-    .name_ja = "Ministry of Water and Sanitation of Senegal (ministry, SN) - Ministère de l&#039;Hydraulique et de l&#039;Assainissement du Sénégal",
+      "Ministère de l'Hydraulique et de l'Assainissement du Sénégal",
+    .name_ja = "Ministry of Water and Sanitation of Senegal (ministry, SN) - Ministère de l'Hydraulique et de l'Assainissement du Sénégal",
     .category = "government", .portal = "https://mha.gouv.sn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -21783,8 +21263,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q130525724", .name = "Foundation Plan bureau Suriname (government-organization, SR) - "
-      "Planning Office Suriname &#8211; SPS",
-    .name_ja = "Foundation Plan bureau Suriname (government-organization, SR) - Planning Office Suriname &#8211; SPS",
+      "Planning Office Suriname – SPS",
+    .name_ja = "Foundation Plan bureau Suriname (government-organization, SR) - Planning Office Suriname – SPS",
     .category = "government", .portal = "https://www.planningofficesuriname.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -21990,9 +21470,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q135337850", .name = "Ministry of Territorial Planning, Urbanism and Housing "
-      "(ministry, TG) - Ministère de l&#039;Aménagement du Territoire "
-      "et de l&#039;Urbanisme",
-    .name_ja = "Ministry of Territorial Planning, Urbanism and Housing (ministry, TG) - Ministère de l&#039;Aménagement du Territoire et de l&#039;Urbanisme",
+      "(ministry, TG) - Ministère de l'Aménagement du Territoire et de "
+      "l'Urbanisme",
+    .name_ja = "Ministry of Territorial Planning, Urbanism and Housing (ministry, TG) - Ministère de l'Aménagement du Territoire et de l'Urbanisme",
     .category = "government", .portal = "https://urbanisme.gouv.tg/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -22030,8 +21510,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q139833516", .name = "Ministry of National Education of Togo (ministry, TG) - "
-      "Ministère de l&#039;Education Nationale",
-    .name_ja = "Ministry of National Education of Togo (ministry, TG) - Ministère de l&#039;Education Nationale",
+      "Ministère de l'Education Nationale",
+    .name_ja = "Ministry of National Education of Togo (ministry, TG) - Ministère de l'Education Nationale",
     .category = "government", .portal = "https://education.gouv.tg/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -22275,25 +21755,6 @@ static const hp_source HP3B45_WDGOV[] = {
       "07:10:58 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_WD_Q4146822", .name = "Ministry of Sports (ministry, TM) - Türkmenistanyň Bedenterbiýe "
-      "we sport baradaky döwlet komiteti",
-    .name_ja = "Ministry of Sports (ministry, TM) - Türkmenistanyň Bedenterbiýe we sport baradaky döwlet komiteti",
-    .category = "government", .portal = "https://sportcom.gov.tm/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://sportcom.gov.tm/rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "17:55:53 +0500. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO45_WD_Q16123967", .name = "Q16123967 (government-agency, TN) - OTE",
     .name_ja = "Q16123967 (government-agency, TN) - OTE",
     .category = "government", .portal = "https://ote.nat.tn/",
@@ -22500,25 +21961,6 @@ static const hp_source HP3B45_WDGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 50 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "15:06:09 +0300. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_WD_Q110944005", .name = "Turkish Higher Education Quality Council (government-agency, TR) "
-      "- Yükseköğretim Kalite Kurulu Başkanlığı",
-    .name_ja = "Turkish Higher Education Quality Council (government-agency, TR) - Yükseköğretim Kalite Kurulu Başkanlığı",
-    .category = "government", .portal = "https://www.yokak.gov.tr/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.yokak.gov.tr/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "12:27:48 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_WD_Q137409005", .name = "Kastamonu Ölçme Değerlendirme Merkezi (government-agency, TR) - "
@@ -24909,9 +24351,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q4816515", .name = "Atlantic Oceanographic and Meteorological Laboratory "
-      "(government-agency, US) - NOAA&#039;s Atlantic Oceanographic and "
+      "(government-agency, US) - NOAA's Atlantic Oceanographic and "
       "Meteorological Laboratory",
-    .name_ja = "Atlantic Oceanographic and Meteorological Laboratory (government-agency, US) - NOAA&#039;s Atlantic Oceanographic and Meteorological Laboratory",
+    .name_ja = "Atlantic Oceanographic and Meteorological Laboratory (government-agency, US) - NOAA's Atlantic Oceanographic and Meteorological Laboratory",
     .category = "government", .portal = "https://www.aoml.noaa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -24929,9 +24371,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q7163703", .name = "Pennsylvania Department of Community and Economic Development "
-      "(government-agency, US) - PA Department of Community &amp; "
-      "Economic Development",
-    .name_ja = "Pennsylvania Department of Community and Economic Development (government-agency, US) - PA Department of Community &amp; Economic Development",
+      "(government-agency, US) - PA Department of Community & Economic "
+      "Development",
+    .name_ja = "Pennsylvania Department of Community and Economic Development (government-agency, US) - PA Department of Community & Economic Development",
     .category = "government", .portal = "https://dced.pa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -25329,9 +24771,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q139771366", .name = "Hawaii Department of Agriculture and Biosecurity "
-      "(government-agency, US) - Department of Agriculture &amp; "
+      "(government-agency, US) - Department of Agriculture & "
       "Biosecurity",
-    .name_ja = "Hawaii Department of Agriculture and Biosecurity (government-agency, US) - Department of Agriculture &amp; Biosecurity",
+    .name_ja = "Hawaii Department of Agriculture and Biosecurity (government-agency, US) - Department of Agriculture & Biosecurity",
     .category = "government", .portal = "https://dab.hawaii.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -25915,9 +25357,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q5025252", .name = "Cambria County Conservation And Recreation Authority "
-      "(government-agency, US) - Cambria County Conservation &amp; "
+      "(government-agency, US) - Cambria County Conservation & "
       "Recreation Authority",
-    .name_ja = "Cambria County Conservation And Recreation Authority (government-agency, US) - Cambria County Conservation &amp; Recreation Authority",
+    .name_ja = "Cambria County Conservation And Recreation Authority (government-agency, US) - Cambria County Conservation & Recreation Authority",
     .category = "government", .portal = "https://www.cambriaconservationrecreation.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -25992,9 +25434,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q140868559", .name = "Office of the Under Secretary of War for Research and "
-      "Engineering (government-agency, US) - DoW Research &amp; "
-      "Engineering, OUSW(R&amp;E)",
-    .name_ja = "Office of the Under Secretary of War for Research and Engineering (government-agency, US) - DoW Research &amp; Engineering, OUSW(R&amp;E)",
+      "Engineering (government-agency, US) - DoW Research & "
+      "Engineering, OUSW(R&E)",
+    .name_ja = "Office of the Under Secretary of War for Research and Engineering (government-agency, US) - DoW Research & Engineering, OUSW(R&E)",
     .category = "government", .portal = "https://www.cto.mil/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -26221,9 +25663,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q136441463", .name = "Pennsylvania State Constable's Office Nazareth – Lehigh Valley "
-      "(government-agency, US) - PA State Constable&#039;s Office "
-      "Nazareth – Lehigh Valley",
-    .name_ja = "Pennsylvania State Constable's Office Nazareth – Lehigh Valley (government-agency, US) - PA State Constable&#039;s Office Nazareth – Lehigh Valley",
+      "(government-agency, US) - PA State Constable's Office Nazareth – "
+      "Lehigh Valley",
+    .name_ja = "Pennsylvania State Constable's Office Nazareth – Lehigh Valley (government-agency, US) - PA State Constable's Office Nazareth – Lehigh Valley",
     .category = "government", .portal = "https://nazarethconstable.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -26583,8 +26025,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q4705239", .name = "Alabama Department of Agriculture and Industries "
-      "(government-agency, US) - Alabama Agriculture &amp; Industries",
-    .name_ja = "Alabama Department of Agriculture and Industries (government-agency, US) - Alabama Agriculture &amp; Industries",
+      "(government-agency, US) - Alabama Agriculture & Industries",
+    .name_ja = "Alabama Department of Agriculture and Industries (government-agency, US) - Alabama Agriculture & Industries",
     .category = "government", .portal = "https://agi.alabama.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -27136,8 +26578,8 @@ static const hp_source HP3B45_WDGOV[] = {
 
   { .id = "JO45_WD_Q7972237", .name = "Washington State Department of Archaeology and Historic "
       "Preservation (government-agency, US) - Washington State "
-      "Department of Archaeology &amp; Historic Preservation (DAHP)",
-    .name_ja = "Washington State Department of Archaeology and Historic Preservation (government-agency, US) - Washington State Department of Archaeology &amp; Historic Preservation (DAHP)",
+      "Department of Archaeology & Historic Preservation (DAHP)",
+    .name_ja = "Washington State Department of Archaeology and Historic Preservation (government-agency, US) - Washington State Department of Archaeology & Historic Preservation (DAHP)",
     .category = "government", .portal = "https://dahp.wa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -27193,9 +26635,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q43401683", .name = "California Governor's Office of Planning and Research "
-      "(government-agency, US) - Governor&#039;s Office of Land Use and "
+      "(government-agency, US) - Governor's Office of Land Use and "
       "Climate Innovation",
-    .name_ja = "California Governor's Office of Planning and Research (government-agency, US) - Governor&#039;s Office of Land Use and Climate Innovation",
+    .name_ja = "California Governor's Office of Planning and Research (government-agency, US) - Governor's Office of Land Use and Climate Innovation",
     .category = "government", .portal = "https://lci.ca.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -27384,9 +26826,9 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q140873634", .name = "Rhode Island Science and Technology Advisory Council "
-      "(government-agency, US) - RI Science &amp; Technology Advisory "
+      "(government-agency, US) - RI Science & Technology Advisory "
       "Council",
-    .name_ja = "Rhode Island Science and Technology Advisory Council (government-agency, US) - RI Science &amp; Technology Advisory Council",
+    .name_ja = "Rhode Island Science and Technology Advisory Council (government-agency, US) - RI Science & Technology Advisory Council",
     .category = "government", .portal = "https://stac.ri.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -27539,9 +26981,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q140876657", .name = "Utah Division of Forestry, Fire and State Lands "
-      "(government-agency, US) - Forestry, Fire &amp; State Lands "
-      "Website",
-    .name_ja = "Utah Division of Forestry, Fire and State Lands (government-agency, US) - Forestry, Fire &amp; State Lands Website",
+      "(government-agency, US) - Forestry, Fire & State Lands Website",
+    .name_ja = "Utah Division of Forestry, Fire and State Lands (government-agency, US) - Forestry, Fire & State Lands Website",
     .category = "government", .portal = "https://ffsl.utah.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -27598,8 +27039,8 @@ static const hp_source HP3B45_WDGOV[] = {
 
   { .id = "JO45_WD_Q141670126", .name = "Juvenile Court of Metropolitan Nashville and Davidson County "
       "(government-agency, US) - Juvenile Court of Metropolitan "
-      "Nashville &amp; Davidson County",
-    .name_ja = "Juvenile Court of Metropolitan Nashville and Davidson County (government-agency, US) - Juvenile Court of Metropolitan Nashville &amp; Davidson County",
+      "Nashville & Davidson County",
+    .name_ja = "Juvenile Court of Metropolitan Nashville and Davidson County (government-agency, US) - Juvenile Court of Metropolitan Nashville & Davidson County",
     .category = "government", .portal = "https://juvenilecourt.nashville.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -28108,8 +27549,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q124525999", .name = "Arkansas Rice Research and Promotion Board (government-agency, "
-      "US) - Arkansas Rice Research &#038; Promotion Board",
-    .name_ja = "Arkansas Rice Research and Promotion Board (government-agency, US) - Arkansas Rice Research &#038; Promotion Board",
+      "US) - Arkansas Rice Research & Promotion Board",
+    .name_ja = "Arkansas Rice Research and Promotion Board (government-agency, US) - Arkansas Rice Research & Promotion Board",
     .category = "government", .portal = "https://arkrice.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -28199,25 +27640,6 @@ static const hp_source HP3B45_WDGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "04:00:00 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_WD_Q128034413", .name = "Camden County Improvement Authority (government-agency, US) - "
-      "Camden County, NJ",
-    .name_ja = "Camden County Improvement Authority (government-agency, US) - Camden County, NJ",
-    .category = "government", .portal = "https://www.camdencounty.com/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.camdencounty.com/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "19:22:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_WD_Q61359691", .name = "Montgomery Parks (government-agency, US) - Montgomery Parks",
@@ -28410,8 +27832,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q105952371", .name = "Arkansas Game and Fish Commission (government-agency, US) - "
-      "Arkansas Game &amp; Fish Commission",
-    .name_ja = "Arkansas Game and Fish Commission (government-agency, US) - Arkansas Game &amp; Fish Commission",
+      "Arkansas Game & Fish Commission",
+    .name_ja = "Arkansas Game and Fish Commission (government-agency, US) - Arkansas Game & Fish Commission",
     .category = "government", .portal = "https://www.agfc.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
@@ -28637,25 +28059,6 @@ static const hp_source HP3B45_WDGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "16:56:44 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO45_WD_Q117405650", .name = "Uzbek National Institute of Metrology (government-agency, UZ) - "
-      "nim.uz",
-    .name_ja = "Uzbek National Institute of Metrology (government-agency, UZ) - nim.uz",
-    .category = "government", .portal = "https://nim.uz/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nim.uz/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "12:04:59 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO45_WD_Q105267358", .name = "National Emergency Management Organisation of St. Vincent and "
@@ -29786,8 +29189,8 @@ static const hp_source HP3B45_WDGOV[] = {
       "on its site root." },
 
   { .id = "JO45_WD_Q16358583", .name = "Institute of the History of Kosovo (government-agency, XK) - "
-      "Instituti i Historis&euml; &quot;Ali Hadri&quot; Prishtin&euml;",
-    .name_ja = "Institute of the History of Kosovo (government-agency, XK) - Instituti i Historis&euml; &quot;Ali Hadri&quot; Prishtin&euml;",
+      "Instituti i Historisë \"Ali Hadri\" Prishtinë",
+    .name_ja = "Institute of the History of Kosovo (government-agency, XK) - Instituti i Historisë \"Ali Hadri\" Prishtinë",
     .category = "government", .portal = "https://ih-rks.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",

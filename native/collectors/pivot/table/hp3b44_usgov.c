@@ -149,9 +149,9 @@ static const hp_source HP3B44_USGOV[] = {
       "06:36:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_ALBERTTWPMI_GOV", .name = "Township of Albert (City, Lewiston, MI) - Albert Township "
-      "&#8211; Lewiston Michigan",
-    .name_ja = "Township of Albert (City, Lewiston, MI) - Albert Township &#8211; Lewiston Michigan",
+  { .id = "JO44_US_ALBERTTWPMI_GOV", .name = "Township of Albert (City, Lewiston, MI) - Albert Township – "
+      "Lewiston Michigan",
+    .name_ja = "Township of Albert (City, Lewiston, MI) - Albert Township – Lewiston Michigan",
     .category = "government", .portal = "https://alberttwpmi.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -244,8 +244,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_ALMACENTERWI_GOV", .name = "Village of Alma Center (City, Alma Center, WI) - Village of Alma "
-      "Center, WI &#8211; Official Website &#8211; Strawberry Capital o",
-    .name_ja = "Village of Alma Center (City, Alma Center, WI) - Village of Alma Center, WI &#8211; Official Website &#8211; Strawberry Capital o",
+      "Center, WI – Official Website – Strawberry Capital o",
+    .name_ja = "Village of Alma Center (City, Alma Center, WI) - Village of Alma Center, WI – Official Website – Strawberry Capital o",
     .category = "government", .portal = "https://almacenterwi.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -1387,8 +1387,8 @@ static const hp_source HP3B44_USGOV[] = {
       "20:35:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_BETHANYCT_GOV", .name = "Town of Bethany (City, Bethany, CT) - Bethany News &amp; Updates",
-    .name_ja = "Town of Bethany (City, Bethany, CT) - Bethany News &amp; Updates",
+  { .id = "JO44_US_BETHANYCT_GOV", .name = "Town of Bethany (City, Bethany, CT) - Bethany News & Updates",
+    .name_ja = "Town of Bethany (City, Bethany, CT) - Bethany News & Updates",
     .category = "government", .portal = "https://bethanyct.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -2351,9 +2351,9 @@ static const hp_source HP3B44_USGOV[] = {
       "14:59:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_BURTTOWNSHIPACMI_GOV", .name = "Burt Township (City, Grand Marais, MI) - Burt Township &#8211; "
-      "Grand Marais, MI",
-    .name_ja = "Burt Township (City, Grand Marais, MI) - Burt Township &#8211; Grand Marais, MI",
+  { .id = "JO44_US_BURTTOWNSHIPACMI_GOV", .name = "Burt Township (City, Grand Marais, MI) - Burt Township – Grand "
+      "Marais, MI",
+    .name_ja = "Burt Township (City, Grand Marais, MI) - Burt Township – Grand Marais, MI",
     .category = "government", .portal = "https://burttownshipacmi.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -3201,8 +3201,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_CITYOFBULLSHOALS_GOV", .name = "City of Bull Shoals (City, Bull Shoals, AR) - CITY OF BULL "
-      "SHOALS NEWS &amp; UPDATES",
-    .name_ja = "City of Bull Shoals (City, Bull Shoals, AR) - CITY OF BULL SHOALS NEWS &amp; UPDATES",
+      "SHOALS NEWS & UPDATES",
+    .name_ja = "City of Bull Shoals (City, Bull Shoals, AR) - CITY OF BULL SHOALS NEWS & UPDATES",
     .category = "government", .portal = "https://www.cityofbullshoals.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -3220,8 +3220,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_CITYOFBULLSHOALS_GOV_2", .name = "City of Bull Shoals (City, Bull Shoals, AR) - CITY OF BULL "
-      "SHOALS NEWS &amp; UPDATES",
-    .name_ja = "City of Bull Shoals (City, Bull Shoals, AR) - CITY OF BULL SHOALS NEWS &amp; UPDATES",
+      "SHOALS NEWS & UPDATES",
+    .name_ja = "City of Bull Shoals (City, Bull Shoals, AR) - CITY OF BULL SHOALS NEWS & UPDATES",
     .category = "government", .portal = "https://www.cityofbullshoals.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -4868,9 +4868,9 @@ static const hp_source HP3B44_USGOV[] = {
       "15:50:17 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_CRANETWPPCOHIO_GOV", .name = "Crane Township (City, Cecil, OH) - Crane Township &#8211; "
-      "Paulding County, Ohio",
-    .name_ja = "Crane Township (City, Cecil, OH) - Crane Township &#8211; Paulding County, Ohio",
+  { .id = "JO44_US_CRANETWPPCOHIO_GOV", .name = "Crane Township (City, Cecil, OH) - Crane Township – Paulding "
+      "County, Ohio",
+    .name_ja = "Crane Township (City, Cecil, OH) - Crane Township – Paulding County, Ohio",
     .category = "government", .portal = "https://www.cranetwppcohio.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -5256,9 +5256,9 @@ static const hp_source HP3B44_USGOV[] = {
       "21:58:33 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_DENNINGNY_GOV", .name = "Town of Denning (City, Claryville, NY) - Town of Denning &#8211; "
+  { .id = "JO44_US_DENNINGNY_GOV", .name = "Town of Denning (City, Claryville, NY) - Town of Denning – "
       "Ulster County, New York",
-    .name_ja = "Town of Denning (City, Claryville, NY) - Town of Denning &#8211; Ulster County, New York",
+    .name_ja = "Town of Denning (City, Claryville, NY) - Town of Denning – Ulster County, New York",
     .category = "government", .portal = "https://www.denningny.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -7117,8 +7117,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_GREENFIELDTOWNSHIPPA_GOV", .name = "Greenfield Township (City, Claysburg, PA) - Can you park facing "
-      "the wrong direction on a two-way road? &#8211; Greenfield To",
-    .name_ja = "Greenfield Township (City, Claysburg, PA) - Can you park facing the wrong direction on a two-way road? &#8211; Greenfield To",
+      "the wrong direction on a two-way road? – Greenfield To",
+    .name_ja = "Greenfield Township (City, Claysburg, PA) - Can you park facing the wrong direction on a two-way road? – Greenfield To",
     .category = "government", .portal = "https://www.greenfieldtownshippa.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -7284,8 +7284,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_GREENWOODTOWNSHIPIL_GOV", .name = "Greenwood Township (City, Wonder Lake, IL) - Greenwood Township "
-      "&#8211; McHenry County, IL",
-    .name_ja = "Greenwood Township (City, Wonder Lake, IL) - Greenwood Township &#8211; McHenry County, IL",
+      "– McHenry County, IL",
+    .name_ja = "Greenwood Township (City, Wonder Lake, IL) - Greenwood Township – McHenry County, IL",
     .category = "government", .portal = "https://greenwoodtownshipil.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -7302,9 +7302,9 @@ static const hp_source HP3B44_USGOV[] = {
       "05:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_GREYBULLWY_GOV", .name = "Town of Greybull (City, Greybull, WY) - Town of Greybull &#8211; "
-      "Hub of the Bighorn Basin",
-    .name_ja = "Town of Greybull (City, Greybull, WY) - Town of Greybull &#8211; Hub of the Bighorn Basin",
+  { .id = "JO44_US_GREYBULLWY_GOV", .name = "Town of Greybull (City, Greybull, WY) - Town of Greybull – Hub "
+      "of the Bighorn Basin",
+    .name_ja = "Town of Greybull (City, Greybull, WY) - Town of Greybull – Hub of the Bighorn Basin",
     .category = "government", .portal = "https://townofgreybull.com/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -8484,9 +8484,9 @@ static const hp_source HP3B44_USGOV[] = {
       "17:54:31 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_HOMERTOWNSHIPCALHOUNCOUNTY_GOV", .name = "Homer Township (City, Homer, MI) - Homer Township &#8211; "
-      "Calhoun County",
-    .name_ja = "Homer Township (City, Homer, MI) - Homer Township &#8211; Calhoun County",
+  { .id = "JO44_US_HOMERTOWNSHIPCALHOUNCOUNTY_GOV", .name = "Homer Township (City, Homer, MI) - Homer Township – Calhoun "
+      "County",
+    .name_ja = "Homer Township (City, Homer, MI) - Homer Township – Calhoun County",
     .category = "government", .portal = "https://homertownshipcalhouncounty.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -11268,8 +11268,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_MELROSEWI_GOV", .name = "Village of Melrose (City, Melrose, WI) - Village of Melrose, "
-      "Wisconsin &#8211; Official Website",
-    .name_ja = "Village of Melrose (City, Melrose, WI) - Village of Melrose, Wisconsin &#8211; Official Website",
+      "Wisconsin – Official Website",
+    .name_ja = "Village of Melrose (City, Melrose, WI) - Village of Melrose, Wisconsin – Official Website",
     .category = "government", .portal = "https://melrosewi.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -11341,8 +11341,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_MERRILLANWI_GOV", .name = "Village of Merrillan (City, Merrillan, WI) - Village of "
-      "Merrillan, WI &#8211; Official Website",
-    .name_ja = "Village of Merrillan (City, Merrillan, WI) - Village of Merrillan, WI &#8211; Official Website",
+      "Merrillan, WI – Official Website",
+    .name_ja = "Village of Merrillan (City, Merrillan, WI) - Village of Merrillan, WI – Official Website",
     .category = "government", .portal = "https://merrillanwi.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -11581,8 +11581,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_MILLSTONWI_GOV", .name = "Town of Millston (City, Black River Falls, WI) - Town of "
-      "Millston Wisconsin &#8211; Jackson County",
-    .name_ja = "Town of Millston (City, Black River Falls, WI) - Town of Millston Wisconsin &#8211; Jackson County",
+      "Millston Wisconsin – Jackson County",
+    .name_ja = "Town of Millston (City, Black River Falls, WI) - Town of Millston Wisconsin – Jackson County",
     .category = "government", .portal = "https://millstonwi.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -11730,8 +11730,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_MONCKSCORNERSC_GOV", .name = "Town of Moncks Corner (City, Moncks Corner, SC) - Moncks Corner "
-      "&#8211; South Carolina",
-    .name_ja = "Town of Moncks Corner (City, Moncks Corner, SC) - Moncks Corner &#8211; South Carolina",
+      "– South Carolina",
+    .name_ja = "Town of Moncks Corner (City, Moncks Corner, SC) - Moncks Corner – South Carolina",
     .category = "government", .portal = "https://monckscornersc.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -13968,8 +13968,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_PLANDOMEHEIGHTS_NY_GOV", .name = "Village of Plandome Heights (City, Manhasset, NY) - Village of "
-      "Plandome Heights &#8211;",
-    .name_ja = "Village of Plandome Heights (City, Manhasset, NY) - Village of Plandome Heights &#8211;",
+      "Plandome Heights –",
+    .name_ja = "Village of Plandome Heights (City, Manhasset, NY) - Village of Plandome Heights –",
     .category = "government", .portal = "https://plandomeheights-ny.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -15131,8 +15131,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_SANDLAKETOWNSHIP_GOV", .name = "Sand Lake Township (City, Spring Lake, MN) - Sand Lake Township "
-      "&#8211; Itasca County, Minnesota",
-    .name_ja = "Sand Lake Township (City, Spring Lake, MN) - Sand Lake Township &#8211; Itasca County, Minnesota",
+      "– Itasca County, Minnesota",
+    .name_ja = "Sand Lake Township (City, Spring Lake, MN) - Sand Lake Township – Itasca County, Minnesota",
     .category = "government", .portal = "https://sandlaketownship.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -15204,8 +15204,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_SANTACLARAUTAH_GOV", .name = "Santa Clara City (City, Santa Clara, UT) - Santa Clara City – "
-      "Government Information &amp; Services",
-    .name_ja = "Santa Clara City (City, Santa Clara, UT) - Santa Clara City – Government Information &amp; Services",
+      "Government Information & Services",
+    .name_ja = "Santa Clara City (City, Santa Clara, UT) - Santa Clara City – Government Information & Services",
     .category = "government", .portal = "https://www.santaclarautah.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -15518,8 +15518,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_SHAWANGUNK_GOV", .name = "Town of Shawangunk (City, Wallkill, NY) - Town of Shawangunk, "
-      "New York &#8211; Official Town of Shawangunk Web Site",
-    .name_ja = "Town of Shawangunk (City, Wallkill, NY) - Town of Shawangunk, New York &#8211; Official Town of Shawangunk Web Site",
+      "New York – Official Town of Shawangunk Web Site",
+    .name_ja = "Town of Shawangunk (City, Wallkill, NY) - Town of Shawangunk, New York – Official Town of Shawangunk Web Site",
     .category = "government", .portal = "https://shawangunk.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -15629,9 +15629,9 @@ static const hp_source HP3B44_USGOV[] = {
       "21:09:01 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_SHERMANTWPHURONMI_GOV", .name = "Sherman Township (City, Rush, MI) - Sherman Township &#8211; "
-      "Huron County",
-    .name_ja = "Sherman Township (City, Rush, MI) - Sherman Township &#8211; Huron County",
+  { .id = "JO44_US_SHERMANTWPHURONMI_GOV", .name = "Sherman Township (City, Rush, MI) - Sherman Township – Huron "
+      "County",
+    .name_ja = "Sherman Township (City, Rush, MI) - Sherman Township – Huron County",
     .category = "government", .portal = "https://shermantwphuronmi.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -15830,9 +15830,9 @@ static const hp_source HP3B44_USGOV[] = {
       "12:45:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_SOMERSWI_GOV", .name = "Village of Somers (City, Kenosha, WI) - Village &amp; Town of "
+  { .id = "JO44_US_SOMERSWI_GOV", .name = "Village of Somers (City, Kenosha, WI) - Village & Town of "
       "Somers, WI",
-    .name_ja = "Village of Somers (City, Kenosha, WI) - Village &amp; Town of Somers, WI",
+    .name_ja = "Village of Somers (City, Kenosha, WI) - Village & Town of Somers, WI",
     .category = "government", .portal = "https://www.somerswi.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -16127,9 +16127,9 @@ static const hp_source HP3B44_USGOV[] = {
       "17:47:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_SPENCERNC_GOV", .name = "Town of Spencer (City, Spencer, NC) - Town of Spencer &#8211; "
-      "North Carolina",
-    .name_ja = "Town of Spencer (City, Spencer, NC) - Town of Spencer &#8211; North Carolina",
+  { .id = "JO44_US_SPENCERNC_GOV", .name = "Town of Spencer (City, Spencer, NC) - Town of Spencer – North "
+      "Carolina",
+    .name_ja = "Town of Spencer (City, Spencer, NC) - Town of Spencer – North Carolina",
     .category = "government", .portal = "https://spencernc.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -17900,9 +17900,9 @@ static const hp_source HP3B44_USGOV[] = {
       "18:17:23 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_TOWNOFDEWHURSTWI_GOV", .name = "DEWHURST TN OF WBS (City, Merrillan, WI) - Town of Dewhurst "
-      "&#8211; Clark County, WI",
-    .name_ja = "DEWHURST TN OF WBS (City, Merrillan, WI) - Town of Dewhurst &#8211; Clark County, WI",
+  { .id = "JO44_US_TOWNOFDEWHURSTWI_GOV", .name = "DEWHURST TN OF WBS (City, Merrillan, WI) - Town of Dewhurst – "
+      "Clark County, WI",
+    .name_ja = "DEWHURST TN OF WBS (City, Merrillan, WI) - Town of Dewhurst – Clark County, WI",
     .category = "government", .portal = "https://townofdewhurstwi.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -18792,9 +18792,9 @@ static const hp_source HP3B44_USGOV[] = {
       "16:04:58 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_TOWNOFPULASKIWI_GOV", .name = "Town of Pulaski (City, Avoca, WI) - Town of Pulaski &#8211; "
-      "Official Site",
-    .name_ja = "Town of Pulaski (City, Avoca, WI) - Town of Pulaski &#8211; Official Site",
+  { .id = "JO44_US_TOWNOFPULASKIWI_GOV", .name = "Town of Pulaski (City, Avoca, WI) - Town of Pulaski – Official "
+      "Site",
+    .name_ja = "Town of Pulaski (City, Avoca, WI) - Town of Pulaski – Official Site",
     .category = "government", .portal = "https://townofpulaskiwi.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -19971,9 +19971,9 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_VILLAGENHPNY_GOV", .name = "Incorporated Village of New Hyde Park (City, New Hyde Park, NY) "
-      "- Mayor&#8217;s Letter to the Residents January 2024   Village "
-      "of New Hyde Park, N",
-    .name_ja = "Incorporated Village of New Hyde Park (City, New Hyde Park, NY) - Mayor&#8217;s Letter to the Residents January 2024   Village of New Hyde Park, N",
+      "- Mayor’s Letter to the Residents January 2024   Village of New "
+      "Hyde Park, N",
+    .name_ja = "Incorporated Village of New Hyde Park (City, New Hyde Park, NY) - Mayor’s Letter to the Residents January 2024   Village of New Hyde Park, N",
     .category = "government", .portal = "https://villagenhpny.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -22182,8 +22182,8 @@ static const hp_source HP3B44_USGOV[] = {
       "links on its site root." },
 
   { .id = "JO44_US_ANTWERPTOWNSHIPMI_GOV", .name = "Antwerp Township (City - Election, Mattawan, MI) - Antwerp "
-      "Township &#8211; Michigan",
-    .name_ja = "Antwerp Township (City - Election, Mattawan, MI) - Antwerp Township &#8211; Michigan",
+      "Township – Michigan",
+    .name_ja = "Antwerp Township (City - Election, Mattawan, MI) - Antwerp Township – Michigan",
     .category = "government", .portal = "https://antwerptownshipmi.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -22520,8 +22520,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_DETOURMI_GOV", .name = "DeTour Village (City - Election, DeTour Village, MI) - DeTour "
-      "Village &amp; Township",
-    .name_ja = "DeTour Village (City - Election, DeTour Village, MI) - DeTour Village &amp; Township",
+      "Village & Township",
+    .name_ja = "DeTour Village (City - Election, DeTour Village, MI) - DeTour Village & Township",
     .category = "government", .portal = "https://detourmi.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -22934,8 +22934,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_NORWALKWI_GOV", .name = "Village of Norwalk (City - Election, Norwalk, WI) - Village of "
-      "Norwalk, Wisconsin &#8211; Gateway to the Tunnels",
-    .name_ja = "Village of Norwalk (City - Election, Norwalk, WI) - Village of Norwalk, Wisconsin &#8211; Gateway to the Tunnels",
+      "Norwalk, Wisconsin – Gateway to the Tunnels",
+    .name_ja = "Village of Norwalk (City - Election, Norwalk, WI) - Village of Norwalk, Wisconsin – Gateway to the Tunnels",
     .category = "government", .portal = "https://norwalkwi.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -23796,8 +23796,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_BATESCOUNTYSHERIFF_GOV", .name = "Bates County Sheriff's Office (County, Butler, MO) - Bates "
-      "County Sheriff&#039;s Office",
-    .name_ja = "Bates County Sheriff's Office (County, Butler, MO) - Bates County Sheriff&#039;s Office",
+      "County Sheriff's Office",
+    .name_ja = "Bates County Sheriff's Office (County, Butler, MO) - Bates County Sheriff's Office",
     .category = "government", .portal = "https://batescountysheriff.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -24610,9 +24610,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_COLLIERCLERK_GOV", .name = "Collier County Clerk of the Circuit Court & Comptroller (County, "
-      "Naples, FL) - Collier Clerk of the Circuit Court &amp; "
-      "Comptroller",
-    .name_ja = "Collier County Clerk of the Circuit Court & Comptroller (County, Naples, FL) - Collier Clerk of the Circuit Court &amp; Comptroller",
+      "Naples, FL) - Collier Clerk of the Circuit Court & Comptroller",
+    .name_ja = "Collier County Clerk of the Circuit Court & Comptroller (County, Naples, FL) - Collier Clerk of the Circuit Court & Comptroller",
     .category = "government", .portal = "https://www.collierclerk.com/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -24650,8 +24649,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_COOKCOUNTYSHERIFFIL_GOV", .name = "Cook County Sheriff's Office (County, Chicago, IL) - Cook County "
-      "Sheriff&#039;s Office",
-    .name_ja = "Cook County Sheriff's Office (County, Chicago, IL) - Cook County Sheriff&#039;s Office",
+      "Sheriff's Office",
+    .name_ja = "Cook County Sheriff's Office (County, Chicago, IL) - Cook County Sheriff's Office",
     .category = "government", .portal = "https://cookcountysheriffil.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -24724,8 +24723,8 @@ static const hp_source HP3B44_USGOV[] = {
       "19:37:19 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_CUMBERLANDCOUNTYNJ_GOV", .name = "County of Cumberland (County, Bridgeton, NJ) - Bids &amp; RFP's",
-    .name_ja = "County of Cumberland (County, Bridgeton, NJ) - Bids &amp; RFP's",
+  { .id = "JO44_US_CUMBERLANDCOUNTYNJ_GOV", .name = "County of Cumberland (County, Bridgeton, NJ) - Bids & RFP's",
+    .name_ja = "County of Cumberland (County, Bridgeton, NJ) - Bids & RFP's",
     .category = "government", .portal = "https://www.cumberlandcountynj.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -24815,8 +24814,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_CUMBERLANDSHERIFFNC_GOV", .name = "Cumberland County Sheriff's Office (County, Fayetteville, NC) - "
-      "Cumberland County Sheriff&#039;s Office",
-    .name_ja = "Cumberland County Sheriff's Office (County, Fayetteville, NC) - Cumberland County Sheriff&#039;s Office",
+      "Cumberland County Sheriff's Office",
+    .name_ja = "Cumberland County Sheriff's Office (County, Fayetteville, NC) - Cumberland County Sheriff's Office",
     .category = "government", .portal = "https://cumberlandsheriffnc.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -25298,8 +25297,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_FINNEYCOUNTYSHERIFFKS_GOV", .name = "Finney County Sheriff's Office (County, Garden City, KS) - "
-      "Finney County, KS &#8211; Sheriff Office",
-    .name_ja = "Finney County Sheriff's Office (County, Garden City, KS) - Finney County, KS &#8211; Sheriff Office",
+      "Finney County, KS – Sheriff Office",
+    .name_ja = "Finney County Sheriff's Office (County, Garden City, KS) - Finney County, KS – Sheriff Office",
     .category = "government", .portal = "https://finneycountysheriffks.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -25634,8 +25633,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_GUERNSEYSHERIFF_GOV", .name = "Guernsey County Sheriffs Office (County, Cambridge, OH) - "
-      "Guernsey County Sheriff&#8217;s Office",
-    .name_ja = "Guernsey County Sheriffs Office (County, Cambridge, OH) - Guernsey County Sheriff&#8217;s Office",
+      "Guernsey County Sheriff’s Office",
+    .name_ja = "Guernsey County Sheriffs Office (County, Cambridge, OH) - Guernsey County Sheriff’s Office",
     .category = "government", .portal = "https://guernseysheriff.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -25877,8 +25876,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_HOUSTONCOSOAL_GOV", .name = "Houston County Sheriff's Office (County, Dothan, AL) - Houston "
-      "County Sheriff&#039;s Office",
-    .name_ja = "Houston County Sheriff's Office (County, Dothan, AL) - Houston County Sheriff&#039;s Office",
+      "County Sheriff's Office",
+    .name_ja = "Houston County Sheriff's Office (County, Dothan, AL) - Houston County Sheriff's Office",
     .category = "government", .portal = "https://houstoncosoal.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -25896,8 +25895,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_HUMPHREYSTNSHERIFF_GOV", .name = "Humphreys County Sheriffs Office (County, Waverly, TN) - "
-      "Humphreys County Sheriff&#039;s Office",
-    .name_ja = "Humphreys County Sheriffs Office (County, Waverly, TN) - Humphreys County Sheriff&#039;s Office",
+      "Humphreys County Sheriff's Office",
+    .name_ja = "Humphreys County Sheriffs Office (County, Waverly, TN) - Humphreys County Sheriff's Office",
     .category = "government", .portal = "https://hcsotn.com/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -26066,8 +26065,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_JOHNSONSOTN_GOV", .name = "Johnson County Sheriffs Office (County, Mountain City, TN) - "
-      "Johnson County Sheriff&#039;s Office",
-    .name_ja = "Johnson County Sheriffs Office (County, Mountain City, TN) - Johnson County Sheriff&#039;s Office",
+      "Johnson County Sheriff's Office",
+    .name_ja = "Johnson County Sheriffs Office (County, Mountain City, TN) - Johnson County Sheriff's Office",
     .category = "government", .portal = "https://johnsoncountysd.org/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -26251,9 +26250,9 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_LAKECLERKFL_GOV", .name = "Lake County Clerk of the Circuit Court and Comptroller (County, "
-      "Tavares, FL) - Lake County Clerk of the Circuit Court &amp; "
+      "Tavares, FL) - Lake County Clerk of the Circuit Court & "
       "Comptroller",
-    .name_ja = "Lake County Clerk of the Circuit Court and Comptroller (County, Tavares, FL) - Lake County Clerk of the Circuit Court &amp; Comptroller",
+    .name_ja = "Lake County Clerk of the Circuit Court and Comptroller (County, Tavares, FL) - Lake County Clerk of the Circuit Court & Comptroller",
     .category = "government", .portal = "https://www.lakecountyclerkfl.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -26552,8 +26551,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_LOUDONSHERIFF_GOV", .name = "Loudon County Sheriff's Office (County, Lenoir City, TN) - "
-      "Loudon County Sheriff&#039;s Office",
-    .name_ja = "Loudon County Sheriff's Office (County, Lenoir City, TN) - Loudon County Sheriff&#039;s Office",
+      "Loudon County Sheriff's Office",
+    .name_ja = "Loudon County Sheriff's Office (County, Lenoir City, TN) - Loudon County Sheriff's Office",
     .category = "government", .portal = "https://loudonsheriff.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -26590,8 +26589,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_MADISONSHERIFFNE_GOV", .name = "Madison County Sheriff (County, Madison, NE) - MADISON COUNTY "
-      "SHERIFF&#039;S DEPARTMENT",
-    .name_ja = "Madison County Sheriff (County, Madison, NE) - MADISON COUNTY SHERIFF&#039;S DEPARTMENT",
+      "SHERIFF'S DEPARTMENT",
+    .name_ja = "Madison County Sheriff (County, Madison, NE) - MADISON COUNTY SHERIFF'S DEPARTMENT",
     .category = "government", .portal = "https://madisonsheriffne.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -27132,8 +27131,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_OSAGECOUNTYOK_GOV", .name = "Osage County Sheriffs Office (County, Pawhuska, OK) - Osage "
-      "County Sheriff&#039;s Office",
-    .name_ja = "Osage County Sheriffs Office (County, Pawhuska, OK) - Osage County Sheriff&#039;s Office",
+      "County Sheriff's Office",
+    .name_ja = "Osage County Sheriffs Office (County, Pawhuska, OK) - Osage County Sheriff's Office",
     .category = "government", .portal = "https://www.osagecountyok.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -27151,8 +27150,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_OSPSANDIEGOCOUNTY_GOV", .name = "One Safe Place San Diego (County, San Marcos, CA) - One Safe "
-      "Place &#8211; County Family Justice Center",
-    .name_ja = "One Safe Place San Diego (County, San Marcos, CA) - One Safe Place &#8211; County Family Justice Center",
+      "Place – County Family Justice Center",
+    .name_ja = "One Safe Place San Diego (County, San Marcos, CA) - One Safe Place – County Family Justice Center",
     .category = "government", .portal = "https://ospsandiegocounty.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -27466,8 +27465,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_PULASKISOAR_GOV", .name = "Pulaski County Sheriff's Office (County, Little Rock, AR) - "
-      "Pulaski County Sheriff&#039;s Office",
-    .name_ja = "Pulaski County Sheriff's Office (County, Little Rock, AR) - Pulaski County Sheriff&#039;s Office",
+      "Pulaski County Sheriff's Office",
+    .name_ja = "Pulaski County Sheriff's Office (County, Little Rock, AR) - Pulaski County Sheriff's Office",
     .category = "government", .portal = "https://pcso.org/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -27576,8 +27575,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_RHEACOUNTYTN_GOV", .name = "Rhea County Sheriff's Department (County, Dayton, TN) - Rhea "
-      "County Sheriff&#039;s Office.",
-    .name_ja = "Rhea County Sheriff's Department (County, Dayton, TN) - Rhea County Sheriff&#039;s Office.",
+      "County Sheriff's Office.",
+    .name_ja = "Rhea County Sheriff's Department (County, Dayton, TN) - Rhea County Sheriff's Office.",
     .category = "government", .portal = "https://rheacountytn.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -27687,8 +27686,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_ROGERSCOUNTYSHERIFF_GOV", .name = "Rogers County Sheriff's Office (County, Claremore, OK) - Rogers "
-      "County Sheriff&#039;s Department",
-    .name_ja = "Rogers County Sheriff's Office (County, Claremore, OK) - Rogers County Sheriff&#039;s Department",
+      "County Sheriff's Department",
+    .name_ja = "Rogers County Sheriff's Office (County, Claremore, OK) - Rogers County Sheriff's Department",
     .category = "government", .portal = "https://www.rogerscountysheriff.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -27856,8 +27855,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_SCREVENCOSHERIFFGA_GOV", .name = "Screven County Sheriff's Office (County, Sylvania, GA) - Screven "
-      "County Sheriff&#039;s Office",
-    .name_ja = "Screven County Sheriff's Office (County, Sylvania, GA) - Screven County Sheriff&#039;s Office",
+      "County Sheriff's Office",
+    .name_ja = "Screven County Sheriff's Office (County, Sylvania, GA) - Screven County Sheriff's Office",
     .category = "government", .portal = "https://screvencosheriffga.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -27949,8 +27948,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_SHERIFFLOGANIL_GOV", .name = "Logan County Sheriff's Office (County, Lincoln, IL) - Logan "
-      "County Sheriff&#039;s Office",
-    .name_ja = "Logan County Sheriff's Office (County, Lincoln, IL) - Logan County Sheriff&#039;s Office",
+      "County Sheriff's Office",
+    .name_ja = "Logan County Sheriff's Office (County, Lincoln, IL) - Logan County Sheriff's Office",
     .category = "government", .portal = "https://sheriffloganil.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -28437,8 +28436,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_UCSOOREGON_GOV", .name = "Union County Sheriff's Office (County, La Grande, OR) - Union "
-      "County Sheriff&#039;s Office",
-    .name_ja = "Union County Sheriff's Office (County, La Grande, OR) - Union County Sheriff&#039;s Office",
+      "County Sheriff's Office",
+    .name_ja = "Union County Sheriff's Office (County, La Grande, OR) - Union County Sheriff's Office",
     .category = "government", .portal = "https://ucsooregon.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -28960,8 +28959,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_BERGENCOUNTYNJ_GOV", .name = "The County of Bergen (County - Election, Hackensack, NJ) - "
-      "Bergen County, NJ &#8211; Official Website",
-    .name_ja = "The County of Bergen (County - Election, Hackensack, NJ) - Bergen County, NJ &#8211; Official Website",
+      "Bergen County, NJ – Official Website",
+    .name_ja = "The County of Bergen (County - Election, Hackensack, NJ) - Bergen County, NJ – Official Website",
     .category = "government", .portal = "https://bergencountynj.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -29510,8 +29509,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_VOTEPULASKIAR_GOV", .name = "Pulaski County Election Department (County - Election, Little "
-      "Rock, AR) - Vote Pulaski &#8211; Ensuring Your Voice Is Heard!",
-    .name_ja = "Pulaski County Election Department (County - Election, Little Rock, AR) - Vote Pulaski &#8211; Ensuring Your Voice Is Heard!",
+      "Rock, AR) - Vote Pulaski – Ensuring Your Voice Is Heard!",
+    .name_ja = "Pulaski County Election Department (County - Election, Little Rock, AR) - Vote Pulaski – Ensuring Your Voice Is Heard!",
     .category = "government", .portal = "https://votepulaskiar.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -29567,8 +29566,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_DA17COLORADO_GOV", .name = "17th Judicial District (County - Election, Brighton, CO) - 17th "
-      "Judicial DA&apos;s Office",
-    .name_ja = "17th Judicial District (County - Election, Brighton, CO) - 17th Judicial DA&apos;s Office",
+      "Judicial DA's Office",
+    .name_ja = "17th Judicial District (County - Election, Brighton, CO) - 17th Judicial DA's Office",
     .category = "government", .portal = "https://da17colorado.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -29644,8 +29643,8 @@ static const hp_source HP3B44_USGOV[] = {
 
   { .id = "JO44_US_GOLDWATERSCHOLARSHIP_GOV", .name = "Barry Goldwater Scholarship and Excellence in Education "
       "Foundation (Federal - Executive, Front Royal, VA) - Barry "
-      "Goldwater Scholarship &amp; Excellence in Education Foundation",
-    .name_ja = "Barry Goldwater Scholarship and Excellence in Education Foundation (Federal - Executive, Front Royal, VA) - Barry Goldwater Scholarship &amp; Excellence in Education Foundation",
+      "Goldwater Scholarship & Excellence in Education Foundation",
+    .name_ja = "Barry Goldwater Scholarship and Excellence in Education Foundation (Federal - Executive, Front Royal, VA) - Barry Goldwater Scholarship & Excellence in Education Foundation",
     .category = "government", .portal = "https://goldwaterscholarship.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -30422,8 +30421,8 @@ static const hp_source HP3B44_USGOV[] = {
 
   { .id = "JO44_US_HURRICANES_GOV_43", .name = "Department of Commerce / National Oceanic and Atmospheric "
       "Administration (Federal - Executive, Silver Spring, MD) - NHC "
-      "Pan American Temperature &amp;amp; Precipitation Reports",
-    .name_ja = "Department of Commerce / National Oceanic and Atmospheric Administration (Federal - Executive, Silver Spring, MD) - NHC Pan American Temperature &amp;amp; Precipitation Reports",
+      "Pan American Temperature &amp; Precipitation Reports",
+    .name_ja = "Department of Commerce / National Oceanic and Atmospheric Administration (Federal - Executive, Silver Spring, MD) - NHC Pan American Temperature &amp; Precipitation Reports",
     .category = "government", .portal = "https://www.nhc.noaa.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -31519,9 +31518,9 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_GSAIG_GOV", .name = "General Services Administration / Office of Inspector General "
-      "(Federal - Executive, Washington, DC) - All Documents &amp;amp; "
+      "(Federal - Executive, Washington, DC) - All Documents &amp; "
       "Reports",
-    .name_ja = "General Services Administration / Office of Inspector General (Federal - Executive, Washington, DC) - All Documents &amp;amp; Reports",
+    .name_ja = "General Services Administration / Office of Inspector General (Federal - Executive, Washington, DC) - All Documents &amp; Reports",
     .category = "government", .portal = "https://gsaig.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -31731,8 +31730,8 @@ static const hp_source HP3B44_USGOV[] = {
 
   { .id = "JO44_US_HERITAGEABROAD_GOV", .name = "U.S. Commission for the Preservation of Americas Heritage Abroad "
       "/ USCPAHA (Federal - Executive, Washington, DC) - U.S Commission "
-      "for the Preservation of America&#039;s Heritage Abroad",
-    .name_ja = "U.S. Commission for the Preservation of Americas Heritage Abroad / USCPAHA (Federal - Executive, Washington, DC) - U.S Commission for the Preservation of America&#039;s Heritage Abroad",
+      "for the Preservation of America's Heritage Abroad",
+    .name_ja = "U.S. Commission for the Preservation of Americas Heritage Abroad / USCPAHA (Federal - Executive, Washington, DC) - U.S Commission for the Preservation of America's Heritage Abroad",
     .category = "government", .portal = "https://www.heritageabroad.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -32178,9 +32177,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_ALABAMASOILANDWATER_GOV", .name = "Alabama Soil and Water Conservation Committee (Interstate, "
-      "Montgomery, AL) - Alabama Soil &amp; Water Conservation "
-      "Committee",
-    .name_ja = "Alabama Soil and Water Conservation Committee (Interstate, Montgomery, AL) - Alabama Soil &amp; Water Conservation Committee",
+      "Montgomery, AL) - Alabama Soil & Water Conservation Committee",
+    .name_ja = "Alabama Soil and Water Conservation Committee (Interstate, Montgomery, AL) - Alabama Soil & Water Conservation Committee",
     .category = "government", .portal = "https://alabamasoilandwater.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -32789,8 +32787,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_CASSCOROADMI_GOV", .name = "Cass County Road Commission (Special district, Cassopolis, MI) - "
-      "Cass County Road Commission &#8211; Michigan",
-    .name_ja = "Cass County Road Commission (Special district, Cassopolis, MI) - Cass County Road Commission &#8211; Michigan",
+      "Cass County Road Commission – Michigan",
+    .name_ja = "Cass County Road Commission (Special district, Cassopolis, MI) - Cass County Road Commission – Michigan",
     .category = "government", .portal = "https://casscoroadmi.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -32827,8 +32825,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_CDFR_OR_GOV", .name = "Central Douglas Fire & Rescue Authority (Special district, "
-      "Winston, OR) - Central Douglas Fire &amp; Rescue",
-    .name_ja = "Central Douglas Fire & Rescue Authority (Special district, Winston, OR) - Central Douglas Fire &amp; Rescue",
+      "Winston, OR) - Central Douglas Fire & Rescue",
+    .name_ja = "Central Douglas Fire & Rescue Authority (Special district, Winston, OR) - Central Douglas Fire & Rescue",
     .category = "government", .portal = "https://cdfr-or.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -32904,8 +32902,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_CENTRALOREGONCOASTFIRE_GOV", .name = "Central Oregon Coast Fire and Rescue (Special district, "
-      "Waldport, OR) - Central Oregon Coast Fire &amp; Rescue",
-    .name_ja = "Central Oregon Coast Fire and Rescue (Special district, Waldport, OR) - Central Oregon Coast Fire &amp; Rescue",
+      "Waldport, OR) - Central Oregon Coast Fire & Rescue",
+    .name_ja = "Central Oregon Coast Fire and Rescue (Special district, Waldport, OR) - Central Oregon Coast Fire & Rescue",
     .category = "government", .portal = "https://centraloregoncoastfire.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -33724,8 +33722,8 @@ static const hp_source HP3B44_USGOV[] = {
       "links on its site root." },
 
   { .id = "JO44_US_HESPERIAPARKS_GOV", .name = "Hesperia Recreation & Parks District (Special district, "
-      "Hesperia, CA) - Hesperia Parks &amp; Recreation",
-    .name_ja = "Hesperia Recreation & Parks District (Special district, Hesperia, CA) - Hesperia Parks &amp; Recreation",
+      "Hesperia, CA) - Hesperia Parks & Recreation",
+    .name_ja = "Hesperia Recreation & Parks District (Special district, Hesperia, CA) - Hesperia Parks & Recreation",
     .category = "government", .portal = "https://hesperiaparks.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -34314,9 +34312,9 @@ static const hp_source HP3B44_USGOV[] = {
       "22:24:47 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_NAPALIBRARY_GOV", .name = "Napa County Library (Special district, Napa, CA) - News &#8211; "
-      "Napa County Library",
-    .name_ja = "Napa County Library (Special district, Napa, CA) - News &#8211; Napa County Library",
+  { .id = "JO44_US_NAPALIBRARY_GOV", .name = "Napa County Library (Special district, Napa, CA) - News – Napa "
+      "County Library",
+    .name_ja = "Napa County Library (Special district, Napa, CA) - News – Napa County Library",
     .category = "government", .portal = "https://napalibrary.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -34716,9 +34714,9 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_SCERS_GOV", .name = "Sacramento County Employees' Retirement System (Special "
-      "district, Sacramento, CA) - Sacramento County Employees&#039; "
-      "Retirement System &#8211; SCERS",
-    .name_ja = "Sacramento County Employees' Retirement System (Special district, Sacramento, CA) - Sacramento County Employees&#039; Retirement System &#8211; SCERS",
+      "district, Sacramento, CA) - Sacramento County Employees' "
+      "Retirement System – SCERS",
+    .name_ja = "Sacramento County Employees' Retirement System (Special district, Sacramento, CA) - Sacramento County Employees' Retirement System – SCERS",
     .category = "government", .portal = "https://www.scers.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -34850,8 +34848,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_SOUTHGATERECANDPARK_GOV", .name = "Southgate Recreation & Park District (Special district, "
-      "SACRAMENTO, CA) - Southgate Recreation &amp; Park District",
-    .name_ja = "Southgate Recreation & Park District (Special district, SACRAMENTO, CA) - Southgate Recreation &amp; Park District",
+      "SACRAMENTO, CA) - Southgate Recreation & Park District",
+    .name_ja = "Southgate Recreation & Park District (Special district, SACRAMENTO, CA) - Southgate Recreation & Park District",
     .category = "government", .portal = "https://southgaterecandpark.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -35611,8 +35609,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_ALABAMAAG_GOV", .name = "Alabama Office of the Attorney General (State or territory, "
-      "Montgomery, AL) - Alabama Attorney General&#039;s Office",
-    .name_ja = "Alabama Office of the Attorney General (State or territory, Montgomery, AL) - Alabama Attorney General&#039;s Office",
+      "Montgomery, AL) - Alabama Attorney General's Office",
+    .name_ja = "Alabama Office of the Attorney General (State or territory, Montgomery, AL) - Alabama Attorney General's Office",
     .category = "government", .portal = "https://www.alabamaag.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -35725,8 +35723,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_AZOCA_GOV", .name = "Arizona Ombudsman - Citizens' Aide (State or territory, Phoenix, "
-      "AZ) - Arizona Ombudsman Citizens&#039; Aide",
-    .name_ja = "Arizona Ombudsman - Citizens' Aide (State or territory, Phoenix, AZ) - Arizona Ombudsman Citizens&#039; Aide",
+      "AZ) - Arizona Ombudsman Citizens' Aide",
+    .name_ja = "Arizona Ombudsman - Citizens' Aide (State or territory, Phoenix, AZ) - Arizona Ombudsman Citizens' Aide",
     .category = "government", .portal = "https://www.azoca.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -35820,9 +35818,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_CODA1_GOV", .name = "Colorado 1st Judicial District Attorney (State or territory, "
-      "Golden, CO) - Colorado First Judicial District Attorney&#039;s "
-      "Office",
-    .name_ja = "Colorado 1st Judicial District Attorney (State or territory, Golden, CO) - Colorado First Judicial District Attorney&#039;s Office",
+      "Golden, CO) - Colorado First Judicial District Attorney's Office",
+    .name_ja = "Colorado 1st Judicial District Attorney (State or territory, Golden, CO) - Colorado First Judicial District Attorney's Office",
     .category = "government", .portal = "https://firstda.co/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -36185,9 +36182,9 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_FLHEALTHSOURCE_GOV", .name = "Florida Department of Health (State or territory, Tallahassee, "
-      "FL) - FL HealthSource • Health Care Resources for Consumers "
-      "&amp; Providers",
-    .name_ja = "Florida Department of Health (State or territory, Tallahassee, FL) - FL HealthSource • Health Care Resources for Consumers &amp; Providers",
+      "FL) - FL HealthSource • Health Care Resources for Consumers & "
+      "Providers",
+    .name_ja = "Florida Department of Health (State or territory, Tallahassee, FL) - FL HealthSource • Health Care Resources for Consumers & Providers",
     .category = "government", .portal = "https://flhealthsource.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -36338,9 +36335,9 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_FLORIDASMENTALHEALTHPROFESSIONS_GOV", .name = "Florida Department of Health (State or territory, Tallahassee, "
-      "FL) - Florida Board of Clinical Social Work, Marriage &amp; "
-      "Family Therapy and Mental",
-    .name_ja = "Florida Department of Health (State or territory, Tallahassee, FL) - Florida Board of Clinical Social Work, Marriage &amp; Family Therapy and Mental",
+      "FL) - Florida Board of Clinical Social Work, Marriage & Family "
+      "Therapy and Mental",
+    .name_ja = "Florida Department of Health (State or territory, Tallahassee, FL) - Florida Board of Clinical Social Work, Marriage & Family Therapy and Mental",
     .category = "government", .portal = "https://floridasmentalhealthprofessions.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -36453,8 +36450,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_FLORIDASORTHOTISTSPROSTHETISTS_GOV", .name = "Florida Department of Health (State or territory, Tallahassee, "
-      "FL) - Florida Board of Orthotists &amp; Prosthetists",
-    .name_ja = "Florida Department of Health (State or territory, Tallahassee, FL) - Florida Board of Orthotists &amp; Prosthetists",
+      "FL) - Florida Board of Orthotists & Prosthetists",
+    .name_ja = "Florida Department of Health (State or territory, Tallahassee, FL) - Florida Board of Orthotists & Prosthetists",
     .category = "government", .portal = "https://floridasorthotistsprosthetists.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -36586,8 +36583,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_FLORIDASSPEECHAUDIOLOGY_GOV", .name = "Florida Department of Health (State or territory, Tallahassee, "
-      "FL) - Florida Board of Speech-Language Pathology &amp; Audiology",
-    .name_ja = "Florida Department of Health (State or territory, Tallahassee, FL) - Florida Board of Speech-Language Pathology &amp; Audiology",
+      "FL) - Florida Board of Speech-Language Pathology & Audiology",
+    .name_ja = "Florida Department of Health (State or territory, Tallahassee, FL) - Florida Board of Speech-Language Pathology & Audiology",
     .category = "government", .portal = "https://floridasspeechaudiology.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -36951,8 +36948,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_KSCHILDRENSCABINET_GOV", .name = "Kansas Children's Cabinet and Trust Fund (State or territory, "
-      "Topeka, KS) - Kansas Children&#039;s Cabinet and Trust Fund",
-    .name_ja = "Kansas Children's Cabinet and Trust Fund (State or territory, Topeka, KS) - Kansas Children&#039;s Cabinet and Trust Fund",
+      "Topeka, KS) - Kansas Children's Cabinet and Trust Fund",
+    .name_ja = "Kansas Children's Cabinet and Trust Fund (State or territory, Topeka, KS) - Kansas Children's Cabinet and Trust Fund",
     .category = "government", .portal = "https://kschildrenscabinet.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -36971,8 +36968,8 @@ static const hp_source HP3B44_USGOV[] = {
 
   { .id = "JO44_US_KSCPOST_GOV", .name = "Kansas Commission on Peace Officers' Standards and Training "
       "(State or territory, Wichita, KS) - Kansas Commission on Peace "
-      "Officers&#039; Standards and Training CPOST",
-    .name_ja = "Kansas Commission on Peace Officers' Standards and Training (State or territory, Wichita, KS) - Kansas Commission on Peace Officers&#039; Standards and Training CPOST",
+      "Officers' Standards and Training CPOST",
+    .name_ja = "Kansas Commission on Peace Officers' Standards and Training (State or territory, Wichita, KS) - Kansas Commission on Peace Officers' Standards and Training CPOST",
     .category = "government", .portal = "https://kscpost.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -37354,8 +37351,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_NEBRASKADRYPEAS_GOV", .name = "Nebraska Dry Pea and Lentil Commission (State or territory, "
-      "lincoln, NE) - Nebraska Dry Pea &amp; Lentil Commission",
-    .name_ja = "Nebraska Dry Pea and Lentil Commission (State or territory, lincoln, NE) - Nebraska Dry Pea &amp; Lentil Commission",
+      "lincoln, NE) - Nebraska Dry Pea & Lentil Commission",
+    .name_ja = "Nebraska Dry Pea and Lentil Commission (State or territory, lincoln, NE) - Nebraska Dry Pea & Lentil Commission",
     .category = "government", .portal = "https://nebraskadrypeas.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -37411,9 +37408,9 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_NVCOGCT_GOV", .name = "Naugatuck Valley Council of Governments (State or territory, "
-      "Waterbury, CT) - NVCOG CT &#8211; Naugatuck Valley Council of "
+      "Waterbury, CT) - NVCOG CT – Naugatuck Valley Council of "
       "Governments",
-    .name_ja = "Naugatuck Valley Council of Governments (State or territory, Waterbury, CT) - NVCOG CT &#8211; Naugatuck Valley Council of Governments",
+    .name_ja = "Naugatuck Valley Council of Governments (State or territory, Waterbury, CT) - NVCOG CT – Naugatuck Valley Council of Governments",
     .category = "government", .portal = "https://nvcogct.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -37662,8 +37659,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_OPC_DC_GOV", .name = "Office of the People's Counsel (State or territory, Washington, "
-      "DC) - Office of the People&#039;s Counsel",
-    .name_ja = "Office of the People's Counsel (State or territory, Washington, DC) - Office of the People&#039;s Counsel",
+      "DC) - Office of the People's Counsel",
+    .name_ja = "Office of the People's Counsel (State or territory, Washington, DC) - Office of the People's Counsel",
     .category = "government", .portal = "https://opc-dc.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -37681,9 +37678,9 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_VIVOTE_GOV", .name = "Election System of the Virgin Islands (State or territory - "
-      "Election, St Croix, VI) - VIVOTE &#8211; Election System of the "
-      "Virgin Islands",
-    .name_ja = "Election System of the Virgin Islands (State or territory - Election, St Croix, VI) - VIVOTE &#8211; Election System of the Virgin Islands",
+      "Election, St Croix, VI) - VIVOTE – Election System of the Virgin "
+      "Islands",
+    .name_ja = "Election System of the Virgin Islands (State or territory - Election, St Croix, VI) - VIVOTE – Election System of the Virgin Islands",
     .category = "government", .portal = "https://vivote.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -37908,8 +37905,8 @@ static const hp_source HP3B44_USGOV[] = {
       "links on its site root." },
 
   { .id = "JO44_US_CSKT_GOV", .name = "Confederated Salish and Kootenai Tribes (Tribal, Pablo, MT) - "
-      "Confederated Salish &amp; Kootenai Tribes",
-    .name_ja = "Confederated Salish and Kootenai Tribes (Tribal, Pablo, MT) - Confederated Salish &amp; Kootenai Tribes",
+      "Confederated Salish & Kootenai Tribes",
+    .name_ja = "Confederated Salish and Kootenai Tribes (Tribal, Pablo, MT) - Confederated Salish & Kootenai Tribes",
     .category = "government", .portal = "https://cskt.org/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -38021,8 +38018,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_HERRINGPONDWAMPANOAGTRIBE_GOV", .name = "Herring Pond Wampanoag Tribe (Tribal, Plymouth, MA) - The "
-      "Herring Pond Wampanoag Tribe &#8211; The People of the Light",
-    .name_ja = "Herring Pond Wampanoag Tribe (Tribal, Plymouth, MA) - The Herring Pond Wampanoag Tribe &#8211; The People of the Light",
+      "Herring Pond Wampanoag Tribe – The People of the Light",
+    .name_ja = "Herring Pond Wampanoag Tribe (Tribal, Plymouth, MA) - The Herring Pond Wampanoag Tribe – The People of the Light",
     .category = "government", .portal = "https://herringpondwampanoagtribe.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -38511,8 +38508,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_SCAT_NSN_GOV", .name = "San Carlos Apache Tribe (Tribal, San Carlos, AZ) - SAN CARLOS "
-      "APACHE TRIBE &#8211; OFFICIAL WEBSITE",
-    .name_ja = "San Carlos Apache Tribe (Tribal, San Carlos, AZ) - SAN CARLOS APACHE TRIBE &#8211; OFFICIAL WEBSITE",
+      "APACHE TRIBE – OFFICIAL WEBSITE",
+    .name_ja = "San Carlos Apache Tribe (Tribal, San Carlos, AZ) - SAN CARLOS APACHE TRIBE – OFFICIAL WEBSITE",
     .category = "government", .portal = "https://www.scat-nsn.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -38623,8 +38620,8 @@ static const hp_source HP3B44_USGOV[] = {
       "on its site root." },
 
   { .id = "JO44_US_TLINGITANDHAIDA_GOV", .name = "Central Council Tlingit & Haida Indian Tribes of Alaska (Tribal, "
-      "Juneau, AK) - Tlingit &amp; Haida",
-    .name_ja = "Central Council Tlingit & Haida Indian Tribes of Alaska (Tribal, Juneau, AK) - Tlingit &amp; Haida",
+      "Juneau, AK) - Tlingit & Haida",
+    .name_ja = "Central Council Tlingit & Haida Indian Tribes of Alaska (Tribal, Juneau, AK) - Tlingit & Haida",
     .category = "government", .portal = "https://tlingitandhaida.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -38641,9 +38638,9 @@ static const hp_source HP3B44_USGOV[] = {
       "22:30:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_TOJC_NSN_GOV", .name = "Tohono O'odham Nation (Tribal, Sells, AZ) - Tohono O&#039;odham "
+  { .id = "JO44_US_TOJC_NSN_GOV", .name = "Tohono O'odham Nation (Tribal, Sells, AZ) - Tohono O'odham "
       "Judicial Courts",
-    .name_ja = "Tohono O'odham Nation (Tribal, Sells, AZ) - Tohono O&#039;odham Judicial Courts",
+    .name_ja = "Tohono O'odham Nation (Tribal, Sells, AZ) - Tohono O'odham Judicial Courts",
     .category = "government", .portal = "https://tojc-nsn.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
@@ -38660,9 +38657,9 @@ static const hp_source HP3B44_USGOV[] = {
       "16:57:49 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_TONATION_NSN_GOV", .name = "Tohono O'odham Nation (Tribal, Sells, AZ) - Tohono O&#039;odham "
+  { .id = "JO44_US_TONATION_NSN_GOV", .name = "Tohono O'odham Nation (Tribal, Sells, AZ) - Tohono O'odham "
       "Nation",
-    .name_ja = "Tohono O'odham Nation (Tribal, Sells, AZ) - Tohono O&#039;odham Nation",
+    .name_ja = "Tohono O'odham Nation (Tribal, Sells, AZ) - Tohono O'odham Nation",
     .category = "government", .portal = "https://www.tonation-nsn.gov/",
     .record_type = "government-notice",
     .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",

@@ -39,10 +39,35 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 26,123** (2026-10-17): batch 44's 3,715 measured
+**The registered count is 42,643** (2026-10-18): batch 45's 16,520 measured
+public-body feed rows (`docs/verified-sources-batch45.tsv`,
+`native/collectors/OSINT_SOURCES_BATCH_45_WORLDGOVFEEDS.md`) on 26,123. Both
+floors are re-recorded at 42,643 and `make source-count` agrees.
+
+**Batch 45 is the same method on three more registers, and it hit the registry
+cap.** Italy's IPA (22,455 official sites → 5,640 rows), France's DILA annuaire
+(28,885 → 9,319) and Wikidata's public bodies in 196 countries, harvested one
+cheap (country, class) SPARQL query at a time because a world-wide query times
+out (11,245 → 1,561 rows from 157 countries): 277,289 emitted / 276,945 stored.
+Four things generalise. **`MAX_SOURCES` (`registry.c`) was 32,768 and the tree
+reached 43,453**: the build was clean and 2,392 rows did not exist at runtime,
+found only by comparing a beat's registration count with its table — the cap
+is 131,072 now, and `make registry-floor` fails on any OVERFLOW line, so run it
+before believing an audit. **A URL changed after validation is unvalidated**:
+fixing an HTML-escaped `&amp;` in 534 French URLs made Joomla finally receive
+`type=atom` and serve Atom where the rows declared `channel.item`; every changed
+row was re-fetched, re-classified and re-measured. **The engine's measurement
+outranks the probe**: 392 rows the probe refused (502s and 403s from shared
+municipal hosting at twelve concurrent requests) store their feed at six, and
+ship with both readings. And **rebuilding the binary while an emit audit runs
+corrupts the audit** (NO_RUN_LINE, UNREGISTERED): finish or stop the audit
+first. Feed titles are unescaped and whitespace-normalised by the builder now;
+batches 43–45 were regenerated with the names fixed.
+
+**The count was 26,123** (2026-10-17): batch 44's 3,715 measured
 US and UK public-body feed rows (`docs/verified-sources-batch44.tsv`,
 `native/collectors/OSINT_SOURCES_BATCH_44_GOVFEEDS.md`) on 22,408. Both floors
-are re-recorded at 26,123 and `make source-count` agrees.
+were re-recorded at 26,123 and `make source-count` agreed.
 
 **Batch 44 is batch 43's method on two public registers of official domains**
 — CISA's 16,906 `.gov` domains and the Cabinet Office's 7,927 `.gov.uk` names —

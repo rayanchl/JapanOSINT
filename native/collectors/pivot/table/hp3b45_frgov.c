@@ -169,8 +169,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_42793A04_75C6_482D_8512_C42BEC48330C", .name = "Mairie - Mareuil-sur-Arnon (SL, INSEE 18137) - Commune de "
-      "Mareuil-sur-Arnon &#8211; Commune de Mareuil-sur-Arnon",
-    .name_ja = "Mairie - Mareuil-sur-Arnon (SL, INSEE 18137) - Commune de Mareuil-sur-Arnon &#8211; Commune de Mareuil-sur-Arnon",
+      "Mareuil-sur-Arnon – Commune de Mareuil-sur-Arnon",
+    .name_ja = "Mairie - Mareuil-sur-Arnon (SL, INSEE 18137) - Commune de Mareuil-sur-Arnon – Commune de Mareuil-sur-Arnon",
     .category = "government", .portal = "https://commune-mareuil-sur-arnon.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -188,8 +188,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_427C1790_8F2E_42DB_9706_63E0BC21FBAE", .name = "Mairie - Saint-Palais (SL, INSEE 64493) - Saint-Palais au Pays "
-      "Basque &#8211; 64",
-    .name_ja = "Mairie - Saint-Palais (SL, INSEE 64493) - Saint-Palais au Pays Basque &#8211; 64",
+      "Basque – 64",
+    .name_ja = "Mairie - Saint-Palais (SL, INSEE 64493) - Saint-Palais au Pays Basque – 64",
     .category = "government", .portal = "https://www.saint-palais.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -225,8 +225,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_428EAFB9_3310_46DE_B678_66E5CD5CA78F", .name = "Mairie - Pont-l'Abbé-d'Arnoult (SL, INSEE 17284) - Site Officiel "
-      "de la Mairie de Pont l&#039;Abbé d&#039;Arnoult",
-    .name_ja = "Mairie - Pont-l'Abbé-d'Arnoult (SL, INSEE 17284) - Site Officiel de la Mairie de Pont l&#039;Abbé d&#039;Arnoult",
+      "de la Mairie de Pont l'Abbé d'Arnoult",
+    .name_ja = "Mairie - Pont-l'Abbé-d'Arnoult (SL, INSEE 17284) - Site Officiel de la Mairie de Pont l'Abbé d'Arnoult",
     .category = "government", .portal = "https://www.ville-pont-labbe-darnoult.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -261,9 +261,9 @@ static const hp_source HP3B45_FRGOV[] = {
     .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest 2024-12-10. A "
       "feed the organisation itself declares or links on its site root." },
 
-  { .id = "JO45_FR_42C245DC_3B7C_454C_847C_5CC1EC4B40AC", .name = "Mairie - Arvillard (SL, INSEE 73021) - Mairie d&#039;Arvillard "
+  { .id = "JO45_FR_42C245DC_3B7C_454C_847C_5CC1EC4B40AC", .name = "Mairie - Arvillard (SL, INSEE 73021) - Mairie d'Arvillard "
       "(Savoie)",
-    .name_ja = "Mairie - Arvillard (SL, INSEE 73021) - Mairie d&#039;Arvillard (Savoie)",
+    .name_ja = "Mairie - Arvillard (SL, INSEE 73021) - Mairie d'Arvillard (Savoie)",
     .category = "government", .portal = "https://arvillard.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -471,9 +471,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "04:39:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_4430A06A_BAF2_4055_9360_828F6B0A22E6", .name = "Mairie - Mundolsheim (SL, INSEE 67309) - Mairie de Mundolsheim "
-      "&#8211; Alsace (Bas-Rhin, 67)",
-    .name_ja = "Mairie - Mundolsheim (SL, INSEE 67309) - Mairie de Mundolsheim &#8211; Alsace (Bas-Rhin, 67)",
+  { .id = "JO45_FR_4430A06A_BAF2_4055_9360_828F6B0A22E6", .name = "Mairie - Mundolsheim (SL, INSEE 67309) - Mairie de Mundolsheim – "
+      "Alsace (Bas-Rhin, 67)",
+    .name_ja = "Mairie - Mundolsheim (SL, INSEE 67309) - Mairie de Mundolsheim – Alsace (Bas-Rhin, 67)",
     .category = "government", .portal = "https://www.mundolsheim.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -510,9 +510,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_4492A6F2_4BAD_4345_A558_968BBB8590C1", .name = "Point conseil budget - Fondation Agir Contre l'Exclusion (FACE "
-      "34) - Montpellier (SL, INSEE 34172) - FACE Hérault &#8211; "
-      "Fondation Agir Contre l&#039;Exclusion",
-    .name_ja = "Point conseil budget - Fondation Agir Contre l'Exclusion (FACE 34) - Montpellier (SL, INSEE 34172) - FACE Hérault &#8211; Fondation Agir Contre l&#039;Exclusion",
+      "34) - Montpellier (SL, INSEE 34172) - FACE Hérault – Fondation "
+      "Agir Contre l'Exclusion",
+    .name_ja = "Point conseil budget - Fondation Agir Contre l'Exclusion (FACE 34) - Montpellier (SL, INSEE 34172) - FACE Hérault – Fondation Agir Contre l'Exclusion",
     .category = "government", .portal = "https://www.face-herault.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -695,9 +695,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_4653EA3E_65DB_43A4_83AD_31E878FD1655", .name = "Service de renseignement en droit du travail - Nord (SL, INSEE "
-      "59606) - Directions r&#233;gionales de l'&#233;conomie, de "
-      "l'emploi, du travail et des so",
-    .name_ja = "Service de renseignement en droit du travail - Nord (SL, INSEE 59606) - Directions r&#233;gionales de l'&#233;conomie, de l'emploi, du travail et des so",
+      "59606) - Directions régionales de l'économie, de l'emploi, du "
+      "travail et des so",
+    .name_ja = "Service de renseignement en droit du travail - Nord (SL, INSEE 59606) - Directions régionales de l'économie, de l'emploi, du travail et des so",
     .category = "government", .portal = "https://hauts-de-france.dreets.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -1109,8 +1109,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_497BCACE_072B_402D_84AF_F6E0905400E3", .name = "Centre communal d'action sociale (CCAS) - Clères (SL, INSEE "
-      "76179) - Mairie de Cl&egrave;res",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Clères (SL, INSEE 76179) - Mairie de Cl&egrave;res",
+      "76179) - Mairie de Clères",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Clères (SL, INSEE 76179) - Mairie de Clères",
     .category = "government", .portal = "https://www.cleres.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -1146,8 +1146,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_49C20E81_0364_4D95_A3A6_AB6B4E812E75", .name = "Mairie - L Hospitalet-près-l Andorre (SL, INSEE 09139) - Mairie "
-      "de l&#039;Hospitalet-près-l&#039;Andorre",
-    .name_ja = "Mairie - L Hospitalet-près-l Andorre (SL, INSEE 09139) - Mairie de l&#039;Hospitalet-près-l&#039;Andorre",
+      "de l'Hospitalet-près-l'Andorre",
+    .name_ja = "Mairie - L Hospitalet-près-l Andorre (SL, INSEE 09139) - Mairie de l'Hospitalet-près-l'Andorre",
     .category = "government", .portal = "https://mairie-hospitalet.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -1242,8 +1242,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_4B1BACCC_40AA_43C6_BAE7_077B35CB210B", .name = "Mairie - Sainte-Foy-d'Aigrefeuille (SL, INSEE 31480) - Mairie de "
-      "Sainte-Foy-d&#039;Aigrefeuille",
-    .name_ja = "Mairie - Sainte-Foy-d'Aigrefeuille (SL, INSEE 31480) - Mairie de Sainte-Foy-d&#039;Aigrefeuille",
+      "Sainte-Foy-d'Aigrefeuille",
+    .name_ja = "Mairie - Sainte-Foy-d'Aigrefeuille (SL, INSEE 31480) - Mairie de Sainte-Foy-d'Aigrefeuille",
     .category = "government", .portal = "https://www.mairiesaintefoydaigrefeuille.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -1261,8 +1261,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_4B640AA1_6BE4_46EC_B459_FFF95A63DA48", .name = "Mairie - Berteaucourt-les-Dames (SL, INSEE 80093) - Commune de "
-      "Berteaucourt-les-Dames &#8211; Somme",
-    .name_ja = "Mairie - Berteaucourt-les-Dames (SL, INSEE 80093) - Commune de Berteaucourt-les-Dames &#8211; Somme",
+      "Berteaucourt-les-Dames – Somme",
+    .name_ja = "Mairie - Berteaucourt-les-Dames (SL, INSEE 80093) - Commune de Berteaucourt-les-Dames – Somme",
     .category = "government", .portal = "https://www.berteaucourtlesdames.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -1280,8 +1280,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_4BA839A9_AF1F_436D_82AE_C664FC3C9B80", .name = "Centre communal d'action sociale (CCAS) - Issoudun (SL, INSEE "
-      "36088) - Mairie d&#039;Issoudun",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Issoudun (SL, INSEE 36088) - Mairie d&#039;Issoudun",
+      "36088) - Mairie d'Issoudun",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Issoudun (SL, INSEE 36088) - Mairie d'Issoudun",
     .category = "government", .portal = "https://www.issoudun.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -1427,9 +1427,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "16:17:13 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_4CA0DC1A_BBAF_4619_B12D_836C360103F5", .name = "Mairie - L'Épine (SL, INSEE 85083) - Ville de L&#039;Épine, Ile "
-      "de Noirmoutier",
-    .name_ja = "Mairie - L'Épine (SL, INSEE 85083) - Ville de L&#039;Épine, Ile de Noirmoutier",
+  { .id = "JO45_FR_4CA0DC1A_BBAF_4619_B12D_836C360103F5", .name = "Mairie - L'Épine (SL, INSEE 85083) - Ville de L'Épine, Ile de "
+      "Noirmoutier",
+    .name_ja = "Mairie - L'Épine (SL, INSEE 85083) - Ville de L'Épine, Ile de Noirmoutier",
     .category = "government", .portal = "https://www.lepine-iledenoirmoutier.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -1485,8 +1485,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_4D1AEF47_BA70_4743_99F0_BA4E6F0E7FDD", .name = "Centre communal d'action sociale (CCAS) - Hourtin (SL, INSEE "
-      "33203) - Mairie d&#039;Hourtin",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Hourtin (SL, INSEE 33203) - Mairie d&#039;Hourtin",
+      "33203) - Mairie d'Hourtin",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Hourtin (SL, INSEE 33203) - Mairie d'Hourtin",
     .category = "government", .portal = "https://mairie-hourtin.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -1803,9 +1803,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_50EE9452_0346_4268_A7FD_D2A526D26911", .name = "Conseil régional de l'ordre des architectes (CROA) - "
-      "Ile-de-France (SIL, INSEE 75110) - L&#039;Ordre des architectes "
-      "d&#039;Ile-de-France",
-    .name_ja = "Conseil régional de l'ordre des architectes (CROA) - Ile-de-France (SIL, INSEE 75110) - L&#039;Ordre des architectes d&#039;Ile-de-France",
+      "Ile-de-France (SIL, INSEE 75110) - L'Ordre des architectes "
+      "d'Ile-de-France",
+    .name_ja = "Conseil régional de l'ordre des architectes (CROA) - Ile-de-France (SIL, INSEE 75110) - L'Ordre des architectes d'Ile-de-France",
     .category = "government", .portal = "https://www.architectes-idf.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -2290,8 +2290,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_54859430_FF98_4F11_8460_6F325FAE64E0", .name = "Point-justice du Tribunal Proximité de Péronne (SL, INSEE 80620) "
-      "- CDAD de la Somme &#8211; point justice",
-    .name_ja = "Point-justice du Tribunal Proximité de Péronne (SL, INSEE 80620) - CDAD de la Somme &#8211; point justice",
+      "- CDAD de la Somme – point justice",
+    .name_ja = "Point-justice du Tribunal Proximité de Péronne (SL, INSEE 80620) - CDAD de la Somme – point justice",
     .category = "government", .portal = "https://cdad-somme.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -2346,8 +2346,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_5577015B_CDCF_4F9D_8D10_9756684574DB", .name = "Mairie - Ornans (SL, INSEE 25434) - Ville d&#039;Ornans",
-    .name_ja = "Mairie - Ornans (SL, INSEE 25434) - Ville d&#039;Ornans",
+  { .id = "JO45_FR_5577015B_CDCF_4F9D_8D10_9756684574DB", .name = "Mairie - Ornans (SL, INSEE 25434) - Ville d'Ornans",
+    .name_ja = "Mairie - Ornans (SL, INSEE 25434) - Ville d'Ornans",
     .category = "government", .portal = "https://www.ornans.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -2569,8 +2569,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_581496CA_E7A4_48E2_99C2_FFE6D57AE2DB", .name = "Conseil départemental d'accès au droit de la Côte d'Or (SL, "
-      "INSEE 21231) - CDAD Côte d&#039;Or",
-    .name_ja = "Conseil départemental d'accès au droit de la Côte d'Or (SL, INSEE 21231) - CDAD Côte d&#039;Or",
+      "INSEE 21231) - CDAD Côte d'Or",
+    .name_ja = "Conseil départemental d'accès au droit de la Côte d'Or (SL, INSEE 21231) - CDAD Côte d'Or",
     .category = "government", .portal = "https://cdad-cotedor.justice.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -2812,8 +2812,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "22:10:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_5B5B4B9A_1024_4A4F_AFE1_CCDF02137D7C", .name = "Mairie - Évron (SL, INSEE 53097) - Ville d&#039;Évron",
-    .name_ja = "Mairie - Évron (SL, INSEE 53097) - Ville d&#039;Évron",
+  { .id = "JO45_FR_5B5B4B9A_1024_4A4F_AFE1_CCDF02137D7C", .name = "Mairie - Évron (SL, INSEE 53097) - Ville d'Évron",
+    .name_ja = "Mairie - Évron (SL, INSEE 53097) - Ville d'Évron",
     .category = "government", .portal = "https://www.evron.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -3052,9 +3052,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_5DAB61FE_3CE7_4313_9825_0B731DAC28A3", .name = "Centre communal d'action sociale (CCAS) - Cournon-d'Auvergne "
-      "(SL, INSEE 63124) - Ville de Cournon-d&#039;Auvergne &#8211; "
-      "site officiel",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Cournon-d'Auvergne (SL, INSEE 63124) - Ville de Cournon-d&#039;Auvergne &#8211; site officiel",
+      "(SL, INSEE 63124) - Ville de Cournon-d'Auvergne – site officiel",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Cournon-d'Auvergne (SL, INSEE 63124) - Ville de Cournon-d'Auvergne – site officiel",
     .category = "government", .portal = "https://www.cournon-auvergne.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -3262,8 +3261,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_5EEE8D7A_6B60_4AFB_BC53_BD7EBB82B6F9", .name = "Agence nationale de lutte contre l'illettrisme (ANLCI) - "
       "Coordination régionale - Bourgogne - Franche-Comté (SIL, INSEE "
-      "21231) - Agence Nationale de Lutte Contre l&#039;Illettrisme",
-    .name_ja = "Agence nationale de lutte contre l'illettrisme (ANLCI) - Coordination régionale - Bourgogne - Franche-Comté (SIL, INSEE 21231) - Agence Nationale de Lutte Contre l&#039;Illettrisme",
+      "21231) - Agence Nationale de Lutte Contre l'Illettrisme",
+    .name_ja = "Agence nationale de lutte contre l'illettrisme (ANLCI) - Coordination régionale - Bourgogne - Franche-Comté (SIL, INSEE 21231) - Agence Nationale de Lutte Contre l'Illettrisme",
     .category = "government", .portal = "https://www.anlci.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -3394,9 +3393,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_5FF2157C_F5FA_4093_B7DB_36DA1E386791", .name = "Service départemental d'incendie et de secours (SDIS) - Somme "
-      "(SIL, INSEE 80021) - Service départemental d&#039;incendie et de "
+      "(SIL, INSEE 80021) - Service départemental d'incendie et de "
       "secours de la somme",
-    .name_ja = "Service départemental d'incendie et de secours (SDIS) - Somme (SIL, INSEE 80021) - Service départemental d&#039;incendie et de secours de la somme",
+    .name_ja = "Service départemental d'incendie et de secours (SDIS) - Somme (SIL, INSEE 80021) - Service départemental d'incendie et de secours de la somme",
     .category = "government", .portal = "https://sdis80.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -3716,8 +3715,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_63CCE5F9_448F_4820_AD98_B884FC7AC884", .name = "Agence nationale de l'habitat (Anah) - Délégation locale - "
       "Communauté d'Agglomération Lens-Liévin (SL, INSEE 62498) - "
-      "Communauté d&#039;agglomération de Lens-Liévin",
-    .name_ja = "Agence nationale de l'habitat (Anah) - Délégation locale - Communauté d'Agglomération Lens-Liévin (SL, INSEE 62498) - Communauté d&#039;agglomération de Lens-Liévin",
+      "Communauté d'agglomération de Lens-Liévin",
+    .name_ja = "Agence nationale de l'habitat (Anah) - Délégation locale - Communauté d'Agglomération Lens-Liévin (SL, INSEE 62498) - Communauté d'agglomération de Lens-Liévin",
     .category = "government", .portal = "https://www.agglo-lenslievin.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -4257,8 +4256,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_6917A9D3_CF24_4D25_B7D3_4E2CF4F8D0F5", .name = "Centre communal d'action sociale (CCAS) - Avallon (SL, INSEE "
-      "89025) - Ville d&#039;Avallon",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Avallon (SL, INSEE 89025) - Ville d&#039;Avallon",
+      "89025) - Ville d'Avallon",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Avallon (SL, INSEE 89025) - Ville d'Avallon",
     .category = "government", .portal = "https://www.ville-avallon.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -4331,8 +4330,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "16:33:38 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_6A36A987_99B2_4ADB_A0F5_4383D0C5649E", .name = "Mairie - Orgibet (SL, INSEE 09219) - mairie d&#039;orgibet",
-    .name_ja = "Mairie - Orgibet (SL, INSEE 09219) - mairie d&#039;orgibet",
+  { .id = "JO45_FR_6A36A987_99B2_4ADB_A0F5_4383D0C5649E", .name = "Mairie - Orgibet (SL, INSEE 09219) - mairie d'orgibet",
+    .name_ja = "Mairie - Orgibet (SL, INSEE 09219) - mairie d'orgibet",
     .category = "government", .portal = "https://mairieorgibet.wordpress.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -4369,8 +4368,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_6A45A0E9_F42E_4891_84EA_8B80D225957F", .name = "Mairie - Eteimbes (SL, INSEE 68085) - Portrait du Maire - "
-      "Commune d&#039;Eteimbes",
-    .name_ja = "Mairie - Eteimbes (SL, INSEE 68085) - Portrait du Maire - Commune d&#039;Eteimbes",
+      "Commune d'Eteimbes",
+    .name_ja = "Mairie - Eteimbes (SL, INSEE 68085) - Portrait du Maire - Commune d'Eteimbes",
     .category = "government", .portal = "https://eteimbes.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -4597,8 +4596,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_6CF76BB6_A780_47C1_AAA8_E777C75D4FAE", .name = "Mairie - Monferran-Savès (SL, INSEE 32268) - Mairie de Monferran "
-      "Saves (32) &#8211; Gers &#8211; Midi Pyrénées &#8211; Fran",
-    .name_ja = "Mairie - Monferran-Savès (SL, INSEE 32268) - Mairie de Monferran Saves (32) &#8211; Gers &#8211; Midi Pyrénées &#8211; Fran",
+      "Saves (32) – Gers – Midi Pyrénées – Fran",
+    .name_ja = "Mairie - Monferran-Savès (SL, INSEE 32268) - Mairie de Monferran Saves (32) – Gers – Midi Pyrénées – Fran",
     .category = "government", .portal = "https://monferran-saves.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -4616,8 +4615,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_6D179C58_D194_4022_8DF3_F475BBB8D7FF", .name = "Espace conseil France Rénov' - Troyes (SL, INSEE 10387) - "
-      "ECOTOIT &#8211; Troyes Champagne Métropole",
-    .name_ja = "Espace conseil France Rénov' - Troyes (SL, INSEE 10387) - ECOTOIT &#8211; Troyes Champagne Métropole",
+      "ECOTOIT – Troyes Champagne Métropole",
+    .name_ja = "Espace conseil France Rénov' - Troyes (SL, INSEE 10387) - ECOTOIT – Troyes Champagne Métropole",
     .category = "government", .portal = "https://ecotoit.troyes-champagne-metropole.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -4729,8 +4728,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:37:19 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_6DC3D734_21DD_4902_B9C6_9A3CA36BB4A2", .name = "Mairie - Anglefort (SL, INSEE 01010) - Mairie d&#039;Anglefort",
-    .name_ja = "Mairie - Anglefort (SL, INSEE 01010) - Mairie d&#039;Anglefort",
+  { .id = "JO45_FR_6DC3D734_21DD_4902_B9C6_9A3CA36BB4A2", .name = "Mairie - Anglefort (SL, INSEE 01010) - Mairie d'Anglefort",
+    .name_ja = "Mairie - Anglefort (SL, INSEE 01010) - Mairie d'Anglefort",
     .category = "government", .portal = "https://www.anglefort.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -5385,8 +5384,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_74F623D1_A40E_4F74_9CC4_5DD14982075B", .name = "Centre communal d'action sociale (CCAS) - Buschwiller (SL, INSEE "
-      "68061) - Commune de Buschwiller &#8211; Alsace",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Buschwiller (SL, INSEE 68061) - Commune de Buschwiller &#8211; Alsace",
+      "68061) - Commune de Buschwiller – Alsace",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Buschwiller (SL, INSEE 68061) - Commune de Buschwiller – Alsace",
     .category = "government", .portal = "https://www.buschwiller.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -5635,8 +5634,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_774534A4_CAB0_4E9F_8C04_7F5C74897749", .name = "Mission locale pour l'insertion professionnelle et sociale des "
       "jeunes (16-25 ans) - Orléans (SL, INSEE 45234) - Mission Locale "
-      "de l&rsquo;Orléanais",
-    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Orléans (SL, INSEE 45234) - Mission Locale de l&rsquo;Orléanais",
+      "de l’Orléanais",
+    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Orléans (SL, INSEE 45234) - Mission Locale de l’Orléanais",
     .category = "government", .portal = "https://www.mlo.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -5747,9 +5746,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_783FC934_7ACC_4F08_BAC7_1BDA4E97C18E", .name = "Direction interrégionale de la mer (DIRM) - Nord-Atlantique, "
-      "Manche-Ouest (SIL, INSEE 44109) - Direction Interr&#233;gionale "
-      "de la Mer Nord Atlantique Manche Ouest",
-    .name_ja = "Direction interrégionale de la mer (DIRM) - Nord-Atlantique, Manche-Ouest (SIL, INSEE 44109) - Direction Interr&#233;gionale de la Mer Nord Atlantique Manche Ouest",
+      "Manche-Ouest (SIL, INSEE 44109) - Direction Interrégionale de la "
+      "Mer Nord Atlantique Manche Ouest",
+    .name_ja = "Direction interrégionale de la mer (DIRM) - Nord-Atlantique, Manche-Ouest (SIL, INSEE 44109) - Direction Interrégionale de la Mer Nord Atlantique Manche Ouest",
     .category = "government", .portal = "https://www.dirm.nord-atlantique-manche-ouest.developpement-durable.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -5787,8 +5786,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_7892FF26_2C3B_4FCE_A285_EDB7E81A5A69", .name = "Point-justice de la Maison du département de Villard-de-Lans "
-      "(SL, INSEE 38548) - CDAD de l&#039;Isère",
-    .name_ja = "Point-justice de la Maison du département de Villard-de-Lans (SL, INSEE 38548) - CDAD de l&#039;Isère",
+      "(SL, INSEE 38548) - CDAD de l'Isère",
+    .name_ja = "Point-justice de la Maison du département de Villard-de-Lans (SL, INSEE 38548) - CDAD de l'Isère",
     .category = "government", .portal = "https://www.cdad38.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -5881,8 +5880,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_7965FFA9_C894_4846_B00C_A6D18E0E27BE", .name = "Mairie - Saint-Martin-d'Auxigny (SL, INSEE 18223) - Saint Martin "
-      "d&#039;Auxigny &#8211; (18)",
-    .name_ja = "Mairie - Saint-Martin-d'Auxigny (SL, INSEE 18223) - Saint Martin d&#039;Auxigny &#8211; (18)",
+      "d'Auxigny – (18)",
+    .name_ja = "Mairie - Saint-Martin-d'Auxigny (SL, INSEE 18223) - Saint Martin d'Auxigny – (18)",
     .category = "government", .portal = "https://www.stmartin-auxigny.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -6104,9 +6103,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:49:20 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_7B471D72_8B0D_4EB2_8AB7_313AD053BCE0", .name = "Mairie déléguée - Loré (SL, INSEE 61235) - Juvigny Val "
-      "d&#039;Andaine",
-    .name_ja = "Mairie déléguée - Loré (SL, INSEE 61235) - Juvigny Val d&#039;Andaine",
+  { .id = "JO45_FR_7B471D72_8B0D_4EB2_8AB7_313AD053BCE0", .name = "Mairie déléguée - Loré (SL, INSEE 61235) - Juvigny Val d'Andaine",
+    .name_ja = "Mairie déléguée - Loré (SL, INSEE 61235) - Juvigny Val d'Andaine",
     .category = "government", .portal = "https://juvignyvaldandaine.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -6271,8 +6269,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_7CBB8EAF_5084_44A5_9604_BA0D0EDACAC6", .name = "Espace conseil France Rénov' - Toulouse (SL, INSEE 31555) - "
-      "Toulouse Renov&#039;",
-    .name_ja = "Espace conseil France Rénov' - Toulouse (SL, INSEE 31555) - Toulouse Renov&#039;",
+      "Toulouse Renov'",
+    .name_ja = "Espace conseil France Rénov' - Toulouse (SL, INSEE 31555) - Toulouse Renov'",
     .category = "government", .portal = "https://renov.toulouse-metropole.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -6382,8 +6380,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_243DF57D_8EC0_4D06_8C5B_BB5690A2506F", .name = "Maison de l'emploi (MDE) - Bordeaux (SL, INSEE 33063) - Maison "
-      "de l&#039;Emploi de Bordeaux",
-    .name_ja = "Maison de l'emploi (MDE) - Bordeaux (SL, INSEE 33063) - Maison de l&#039;Emploi de Bordeaux",
+      "de l'Emploi de Bordeaux",
+    .name_ja = "Maison de l'emploi (MDE) - Bordeaux (SL, INSEE 33063) - Maison de l'Emploi de Bordeaux",
     .category = "government", .portal = "https://www.emploi-bordeaux.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -6439,8 +6437,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_24756D3A_4398_40F1_9D0F_E36A9B288786", .name = "Mairie déléguée - Sainte-Austreberthe (SL, INSEE 62743) - Ville "
-      "d&#039;Hesdin-la-Forêt    Pas-de-Calais",
-    .name_ja = "Mairie déléguée - Sainte-Austreberthe (SL, INSEE 62743) - Ville d&#039;Hesdin-la-Forêt    Pas-de-Calais",
+      "d'Hesdin-la-Forêt    Pas-de-Calais",
+    .name_ja = "Mairie déléguée - Sainte-Austreberthe (SL, INSEE 62743) - Ville d'Hesdin-la-Forêt    Pas-de-Calais",
     .category = "government", .portal = "https://hesdinlaforet.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -6742,9 +6740,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:01:58 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_27B8F335_0637_4C76_8F65_CEA3B0FD7DF7", .name = "Mairie - Altkirch (SL, INSEE 68004) - Ville d&#039;Altkirch "
-      "&#8211; Mairie d&#039;Altkirch",
-    .name_ja = "Mairie - Altkirch (SL, INSEE 68004) - Ville d&#039;Altkirch &#8211; Mairie d&#039;Altkirch",
+  { .id = "JO45_FR_27B8F335_0637_4C76_8F65_CEA3B0FD7DF7", .name = "Mairie - Altkirch (SL, INSEE 68004) - Ville d'Altkirch – Mairie "
+      "d'Altkirch",
+    .name_ja = "Mairie - Altkirch (SL, INSEE 68004) - Ville d'Altkirch – Mairie d'Altkirch",
     .category = "government", .portal = "https://altkirch-alsace.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -7493,9 +7491,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-10-18T11:17:14+00:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_FR_2DFF25A3_CF6E_459C_B028_F5359243EAF4", .name = "Mairie - Argent-sur-Sauldre (SL, INSEE 18011) - Mairie "
-      "d&#039;Argent sur Sauldre",
-    .name_ja = "Mairie - Argent-sur-Sauldre (SL, INSEE 18011) - Mairie d&#039;Argent sur Sauldre",
+  { .id = "JO45_FR_2DFF25A3_CF6E_459C_B028_F5359243EAF4", .name = "Mairie - Argent-sur-Sauldre (SL, INSEE 18011) - Mairie d'Argent "
+      "sur Sauldre",
+    .name_ja = "Mairie - Argent-sur-Sauldre (SL, INSEE 18011) - Mairie d'Argent sur Sauldre",
     .category = "government", .portal = "https://www.argentsursauldre.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -7659,8 +7657,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "06:00:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_2FA3AFC8_1E6F_4542_925A_192B43BDDCC8", .name = "Mairie - Alairac (SL, INSEE 11005) - Mairie d&#039;Alairac",
-    .name_ja = "Mairie - Alairac (SL, INSEE 11005) - Mairie d&#039;Alairac",
+  { .id = "JO45_FR_2FA3AFC8_1E6F_4542_925A_192B43BDDCC8", .name = "Mairie - Alairac (SL, INSEE 11005) - Mairie d'Alairac",
+    .name_ja = "Mairie - Alairac (SL, INSEE 11005) - Mairie d'Alairac",
     .category = "government", .portal = "https://www.mairie-alairac.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -7918,8 +7916,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_32291207_DD2D_4BC5_80A3_DC05AA5064E2", .name = "Mission locale pour l'insertion professionnelle et sociale des "
       "jeunes (16-25 ans) - La Madeleine (SL, INSEE 59368) - Maison de "
-      "l&#039;Emploi, Mission Locale et PLIE Métropole Nord-Ouest",
-    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - La Madeleine (SL, INSEE 59368) - Maison de l&#039;Emploi, Mission Locale et PLIE Métropole Nord-Ouest",
+      "l'Emploi, Mission Locale et PLIE Métropole Nord-Ouest",
+    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - La Madeleine (SL, INSEE 59368) - Maison de l'Emploi, Mission Locale et PLIE Métropole Nord-Ouest",
     .category = "government", .portal = "https://emploi-mno.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -8087,9 +8085,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-10-18T13:17:14+02:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_FR_333B2917_9222_4F80_859A_FA040FB93D49", .name = "Mairie - Nonant (SL, INSEE 14465) - Site d&#039;information de "
-      "la commune de Nonant",
-    .name_ja = "Mairie - Nonant (SL, INSEE 14465) - Site d&#039;information de la commune de Nonant",
+  { .id = "JO45_FR_333B2917_9222_4F80_859A_FA040FB93D49", .name = "Mairie - Nonant (SL, INSEE 14465) - Site d'information de la "
+      "commune de Nonant",
+    .name_ja = "Mairie - Nonant (SL, INSEE 14465) - Site d'information de la commune de Nonant",
     .category = "government", .portal = "https://nonant.wordpress.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -8328,9 +8326,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:22:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_35C1227C_5CF4_49A7_A603_BD21BBB09E2D", .name = "Info Jeunes - Bezons (SL, INSEE 95063) - Info Jeunes Val "
-      "d&#039;Oise",
-    .name_ja = "Info Jeunes - Bezons (SL, INSEE 95063) - Info Jeunes Val d&#039;Oise",
+  { .id = "JO45_FR_35C1227C_5CF4_49A7_A603_BD21BBB09E2D", .name = "Info Jeunes - Bezons (SL, INSEE 95063) - Info Jeunes Val d'Oise",
+    .name_ja = "Info Jeunes - Bezons (SL, INSEE 95063) - Info Jeunes Val d'Oise",
     .category = "government", .portal = "https://infojeunes.valdoise.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -8422,9 +8419,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "11:11:51 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_3649F7A8_AD4A_487F_9B18_A83660804A6F", .name = "Mairie - Albertville (SL, INSEE 73011) - Ville "
-      "d&#039;Albertville",
-    .name_ja = "Mairie - Albertville (SL, INSEE 73011) - Ville d&#039;Albertville",
+  { .id = "JO45_FR_3649F7A8_AD4A_487F_9B18_A83660804A6F", .name = "Mairie - Albertville (SL, INSEE 73011) - Ville d'Albertville",
+    .name_ja = "Mairie - Albertville (SL, INSEE 73011) - Ville d'Albertville",
     .category = "government", .portal = "https://www.albertville.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -8536,8 +8532,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_3721010C_2E55_4182_AE44_E3F300E6F724", .name = "Mairie - Charmeil (SL, INSEE 03060) - Mairie de Charmeil (03110) "
-      "&#8211; Site officiel",
-    .name_ja = "Mairie - Charmeil (SL, INSEE 03060) - Mairie de Charmeil (03110) &#8211; Site officiel",
+      "– Site officiel",
+    .name_ja = "Mairie - Charmeil (SL, INSEE 03060) - Mairie de Charmeil (03110) – Site officiel",
     .category = "government", .portal = "https://ville-charmeil.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -8573,8 +8569,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_37831768_F408_42AD_AACB_CCC55EFBC9C4", .name = "Mairie - Breitenbach-Haut-Rhin (SL, INSEE 68051) - Commune de "
-      "Breitenbach &#8211; Haut-Rhin",
-    .name_ja = "Mairie - Breitenbach-Haut-Rhin (SL, INSEE 68051) - Commune de Breitenbach &#8211; Haut-Rhin",
+      "Breitenbach – Haut-Rhin",
+    .name_ja = "Mairie - Breitenbach-Haut-Rhin (SL, INSEE 68051) - Commune de Breitenbach – Haut-Rhin",
     .category = "government", .portal = "https://www.breitenbach-hautrhin.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -8609,9 +8605,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:59:59 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_37F77977_5027_4527_8FF1_D27D53BFDCE7", .name = "Communauté de communes - Val ès Dunes (SL, INSEE 14020) - CDC "
-      "&#8211; Val ès dunes",
-    .name_ja = "Communauté de communes - Val ès Dunes (SL, INSEE 14020) - CDC &#8211; Val ès dunes",
+  { .id = "JO45_FR_37F77977_5027_4527_8FF1_D27D53BFDCE7", .name = "Communauté de communes - Val ès Dunes (SL, INSEE 14020) - CDC – "
+      "Val ès dunes",
+    .name_ja = "Communauté de communes - Val ès Dunes (SL, INSEE 14020) - CDC – Val ès dunes",
     .category = "government", .portal = "https://www.valesdunes.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -8741,8 +8737,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_39396F1B_CEB7_47F5_AD95_DEE8624A2E18", .name = "Mairie - Saint-François (SL, INSEE 97125) - Ville de "
-      "Saint-Fran&#231;ois",
-    .name_ja = "Mairie - Saint-François (SL, INSEE 97125) - Ville de Saint-Fran&#231;ois",
+      "Saint-François",
+    .name_ja = "Mairie - Saint-François (SL, INSEE 97125) - Ville de Saint-François",
     .category = "government", .portal = "https://www.villesaintfrancois.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -8928,9 +8924,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:24:33 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_3AE386C6_F672_4ACF_A749_3451B10A1365", .name = "Mairie - Lonlay-l'Abbaye (SL, INSEE 61232) - Lonlay "
-      "l&#039;Abbaye",
-    .name_ja = "Mairie - Lonlay-l'Abbaye (SL, INSEE 61232) - Lonlay l&#039;Abbaye",
+  { .id = "JO45_FR_3AE386C6_F672_4ACF_A749_3451B10A1365", .name = "Mairie - Lonlay-l'Abbaye (SL, INSEE 61232) - Lonlay l'Abbaye",
+    .name_ja = "Mairie - Lonlay-l'Abbaye (SL, INSEE 61232) - Lonlay l'Abbaye",
     .category = "government", .portal = "https://lonlaylabbaye.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -9985,9 +9980,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:06:38 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_0A2FB0F6_438E_4630_8BEE_EB50C3DB4670", .name = "Mairie - Rosay (SL, INSEE 78530) - Mairie de Rosay &#8211; Site "
+  { .id = "JO45_FR_0A2FB0F6_438E_4630_8BEE_EB50C3DB4670", .name = "Mairie - Rosay (SL, INSEE 78530) - Mairie de Rosay – Site "
       "officiel de la commune",
-    .name_ja = "Mairie - Rosay (SL, INSEE 78530) - Mairie de Rosay &#8211; Site officiel de la commune",
+    .name_ja = "Mairie - Rosay (SL, INSEE 78530) - Mairie de Rosay – Site officiel de la commune",
     .category = "government", .portal = "http://www.rosay.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -10040,9 +10035,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "16:34:42 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_0A8D0D0A_8CAB_4757_A902_47A896F3805A", .name = "Point-justice de Bras-Panon (SL, INSEE 97402) - CDAD &#8211; La "
+  { .id = "JO45_FR_0A8D0D0A_8CAB_4757_A902_47A896F3805A", .name = "Point-justice de Bras-Panon (SL, INSEE 97402) - CDAD – La "
       "Réunion",
-    .name_ja = "Point-justice de Bras-Panon (SL, INSEE 97402) - CDAD &#8211; La Réunion",
+    .name_ja = "Point-justice de Bras-Panon (SL, INSEE 97402) - CDAD – La Réunion",
     .category = "government", .portal = "https://cdad-reunion.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -10325,8 +10320,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_0D2E617F_150A_4936_8FF5_DAAA14B9191D", .name = "Centre communal d'action sociale (CCAS) - École-Valentin (SL, "
-      "INSEE 25212) - Mairie d&#039;École-Valentin",
-    .name_ja = "Centre communal d'action sociale (CCAS) - École-Valentin (SL, INSEE 25212) - Mairie d&#039;École-Valentin",
+      "INSEE 25212) - Mairie d'École-Valentin",
+    .name_ja = "Centre communal d'action sociale (CCAS) - École-Valentin (SL, INSEE 25212) - Mairie d'École-Valentin",
     .category = "government", .portal = "https://www.ecole-valentin.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -10658,8 +10653,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_10AF6F31_F368_468B_A5C9_4674B63C5254", .name = "Centre communal d'action sociale (CCAS) - Itteville (SL, INSEE "
-      "91315) - Commune d&#039;Itteville",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Itteville (SL, INSEE 91315) - Commune d&#039;Itteville",
+      "91315) - Commune d'Itteville",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Itteville (SL, INSEE 91315) - Commune d'Itteville",
     .category = "government", .portal = "https://www.itteville.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -10902,9 +10897,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_14A2CDAE_6516_4F65_BD65_4AD2CD5E1FB3", .name = "Agence départementale d'information sur le logement (ADIL) - "
-      "Doubs - Montbéliard (SL, INSEE 25228) - Maison de l&#039;habitat "
-      "du Doubs",
-    .name_ja = "Agence départementale d'information sur le logement (ADIL) - Doubs - Montbéliard (SL, INSEE 25228) - Maison de l&#039;habitat du Doubs",
+      "Doubs - Montbéliard (SL, INSEE 25228) - Maison de l'habitat du "
+      "Doubs",
+    .name_ja = "Agence départementale d'information sur le logement (ADIL) - Doubs - Montbéliard (SL, INSEE 25228) - Maison de l'habitat du Doubs",
     .category = "government", .portal = "https://www.maisonhabitatdoubs.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -10941,9 +10936,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "06:50:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_14AA1C4F_F24C_46CD_B722_A4BCB4196910", .name = "Mairie - La Cadière-d'Azur (SL, INSEE 83027) - La Cadière "
-      "d&#039;Azur",
-    .name_ja = "Mairie - La Cadière-d'Azur (SL, INSEE 83027) - La Cadière d&#039;Azur",
+  { .id = "JO45_FR_14AA1C4F_F24C_46CD_B722_A4BCB4196910", .name = "Mairie - La Cadière-d'Azur (SL, INSEE 83027) - La Cadière d'Azur",
+    .name_ja = "Mairie - La Cadière-d'Azur (SL, INSEE 83027) - La Cadière d'Azur",
     .category = "government", .portal = "https://lacadieredazur.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -11205,8 +11199,8 @@ static const hp_source HP3B45_FRGOV[] = {
   { .id = "JO45_FR_17E2A6A2_4D99_4E24_A57C_1F094BAB2A0E", .name = "Direction régionale et interdépartementale de l'environnement, "
       "de l'aménagement et des transports (DRIEAT) - Île-de-France - "
       "Unité départementale de la Seine-Saint-Denis (SIL, INSEE 93008) "
-      "- DRIEAT &#206;le-de-France",
-    .name_ja = "Direction régionale et interdépartementale de l'environnement, de l'aménagement et des transports (DRIEAT) - Île-de-France - Unité départementale de la Seine-Saint-Denis (SIL, INSEE 93008) - DRIEAT &#206;le-de-France",
+      "- DRIEAT Île-de-France",
+    .name_ja = "Direction régionale et interdépartementale de l'environnement, de l'aménagement et des transports (DRIEAT) - Île-de-France - Unité départementale de la Seine-Saint-Denis (SIL, INSEE 93008) - DRIEAT Île-de-France",
     .category = "government", .portal = "https://www.drieat.ile-de-france.developpement-durable.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -11391,8 +11385,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_1A25644A_8A92_404D_AFC5_6D25E90BCE5A", .name = "Point-justice du Palais de justice de Laval (SL, INSEE 53130) - "
-      "Conseil départemental de l&#039;accès au droit de la Mayenne",
-    .name_ja = "Point-justice du Palais de justice de Laval (SL, INSEE 53130) - Conseil départemental de l&#039;accès au droit de la Mayenne",
+      "Conseil départemental de l'accès au droit de la Mayenne",
+    .name_ja = "Point-justice du Palais de justice de Laval (SL, INSEE 53130) - Conseil départemental de l'accès au droit de la Mayenne",
     .category = "government", .portal = "https://www.cdad-mayenne.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -11743,8 +11737,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_1D3D5AB0_E3DB_4F5A_8B4D_3E5DE6ED7927", .name = "Police municipale - Nézignan-l'Evêque (SL, INSEE 34182) - "
-      "Nézignan-l&#039;Évêque &#8211; Site Officiel",
-    .name_ja = "Police municipale - Nézignan-l'Evêque (SL, INSEE 34182) - Nézignan-l&#039;Évêque &#8211; Site Officiel",
+      "Nézignan-l'Évêque – Site Officiel",
+    .name_ja = "Police municipale - Nézignan-l'Evêque (SL, INSEE 34182) - Nézignan-l'Évêque – Site Officiel",
     .category = "government", .portal = "https://www.nezignan.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -11838,8 +11832,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_1F0738CD_8DD4_4284_AD7B_3B447A2FAB56", .name = "Commission départementale de conciliation - Seine-Saint-Denis "
-      "(SL, INSEE 93008) - Drihl &#206;le-de-France",
-    .name_ja = "Commission départementale de conciliation - Seine-Saint-Denis (SL, INSEE 93008) - Drihl &#206;le-de-France",
+      "(SL, INSEE 93008) - Drihl Île-de-France",
+    .name_ja = "Commission départementale de conciliation - Seine-Saint-Denis (SL, INSEE 93008) - Drihl Île-de-France",
     .category = "government", .portal = "https://www.drihl.ile-de-france.developpement-durable.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -11857,8 +11851,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_1F2F7798_054A_4870_8533_71FF0C94622E", .name = "Mairie - Saint-Martin-des-Champs (SL, INSEE 89352) - Saint "
-      "Martin des Champs &#8211; Yonne",
-    .name_ja = "Mairie - Saint-Martin-des-Champs (SL, INSEE 89352) - Saint Martin des Champs &#8211; Yonne",
+      "Martin des Champs – Yonne",
+    .name_ja = "Mairie - Saint-Martin-des-Champs (SL, INSEE 89352) - Saint Martin des Champs – Yonne",
     .category = "government", .portal = "https://www.saintmartin89.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -11876,8 +11870,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_1F2F7798_054A_4870_8533_71FF0C94622E_2", .name = "Mairie - Saint-Martin-des-Champs (SL, INSEE 89352) - Saint "
-      "Martin des Champs &#8211; Yonne",
-    .name_ja = "Mairie - Saint-Martin-des-Champs (SL, INSEE 89352) - Saint Martin des Champs &#8211; Yonne",
+      "Martin des Champs – Yonne",
+    .name_ja = "Mairie - Saint-Martin-des-Champs (SL, INSEE 89352) - Saint Martin des Champs – Yonne",
     .category = "government", .portal = "https://www.saintmartin89.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -11895,8 +11889,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_1F2F7798_054A_4870_8533_71FF0C94622E_3", .name = "Mairie - Saint-Martin-des-Champs (SL, INSEE 89352) - Saint "
-      "Martin des Champs &#8211; Yonne",
-    .name_ja = "Mairie - Saint-Martin-des-Champs (SL, INSEE 89352) - Saint Martin des Champs &#8211; Yonne",
+      "Martin des Champs – Yonne",
+    .name_ja = "Mairie - Saint-Martin-des-Champs (SL, INSEE 89352) - Saint Martin des Champs – Yonne",
     .category = "government", .portal = "https://www.saintmartin89.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -11914,8 +11908,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_1F3799E5_7510_4924_851F_51B7A511D2BC", .name = "Mairie - Escherange (SL, INSEE 57199) - commune "
-      "d&#039;ESCHERANGE-MOLVANGE",
-    .name_ja = "Mairie - Escherange (SL, INSEE 57199) - commune d&#039;ESCHERANGE-MOLVANGE",
+      "d'ESCHERANGE-MOLVANGE",
+    .name_ja = "Mairie - Escherange (SL, INSEE 57199) - commune d'ESCHERANGE-MOLVANGE",
     .category = "government", .portal = "https://escherange.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -11952,8 +11946,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_1FAFCB91_AF73_4CEA_B494_F9C75583EBFD", .name = "Communauté de communes - Lamballe Terre et Mer (SL, INSEE 22093) "
-      "- Lamballe Terre &amp; Mer",
-    .name_ja = "Communauté de communes - Lamballe Terre et Mer (SL, INSEE 22093) - Lamballe Terre &amp; Mer",
+      "- Lamballe Terre & Mer",
+    .name_ja = "Communauté de communes - Lamballe Terre et Mer (SL, INSEE 22093) - Lamballe Terre & Mer",
     .category = "government", .portal = "https://www.lamballe-terre-mer.bzh/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -11990,8 +11984,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_201BAC4B_3A7F_4716_B14A_15E4C3B9E54A", .name = "Mairie - Couzon-au-Mont-d'Or (SL, INSEE 69068) - Mairie de "
-      "Couzon-au-Mont-d&#039;Or",
-    .name_ja = "Mairie - Couzon-au-Mont-d'Or (SL, INSEE 69068) - Mairie de Couzon-au-Mont-d&#039;Or",
+      "Couzon-au-Mont-d'Or",
+    .name_ja = "Mairie - Couzon-au-Mont-d'Or (SL, INSEE 69068) - Mairie de Couzon-au-Mont-d'Or",
     .category = "government", .portal = "https://www.couzonaumontdor.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -12601,9 +12595,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_7FD40A17_6EF7_42A1_A528_9F32C7E49123", .name = "Communauté de communes - Domme Villefranche-du-Périgord (SL, "
-      "INSEE 24450) - Communauté de Communes Domme &#8211; Villefranche "
-      "du Périgord",
-    .name_ja = "Communauté de communes - Domme Villefranche-du-Périgord (SL, INSEE 24450) - Communauté de Communes Domme &#8211; Villefranche du Périgord",
+      "INSEE 24450) - Communauté de Communes Domme – Villefranche du "
+      "Périgord",
+    .name_ja = "Communauté de communes - Domme Villefranche-du-Périgord (SL, INSEE 24450) - Communauté de Communes Domme – Villefranche du Périgord",
     .category = "government", .portal = "https://domme-villefranche-du-perigord.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -13200,8 +13194,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_85FD21FF_17DF_4563_8A6F_84F7A42BD762", .name = "Mairie - Lanouaille (SL, INSEE 24227) - Commune de Lanouaille en "
-      "P&#233;rigord Vert",
-    .name_ja = "Mairie - Lanouaille (SL, INSEE 24227) - Commune de Lanouaille en P&#233;rigord Vert",
+      "Périgord Vert",
+    .name_ja = "Mairie - Lanouaille (SL, INSEE 24227) - Commune de Lanouaille en Périgord Vert",
     .category = "government", .portal = "https://www.lanouaille.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -13219,8 +13213,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_85FD21FF_17DF_4563_8A6F_84F7A42BD762_2", .name = "Mairie - Lanouaille (SL, INSEE 24227) - Agenda Commune de "
-      "Lanouaille en P&#233;rigord Vert",
-    .name_ja = "Mairie - Lanouaille (SL, INSEE 24227) - Agenda Commune de Lanouaille en P&#233;rigord Vert",
+      "Lanouaille en Périgord Vert",
+    .name_ja = "Mairie - Lanouaille (SL, INSEE 24227) - Agenda Commune de Lanouaille en Périgord Vert",
     .category = "government", .portal = "https://www.lanouaille.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -13238,8 +13232,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_85FD21FF_17DF_4563_8A6F_84F7A42BD762_3", .name = "Mairie - Lanouaille (SL, INSEE 24227) - Commune de Lanouaille en "
-      "P&#233;rigord Vert",
-    .name_ja = "Mairie - Lanouaille (SL, INSEE 24227) - Commune de Lanouaille en P&#233;rigord Vert",
+      "Périgord Vert",
+    .name_ja = "Mairie - Lanouaille (SL, INSEE 24227) - Commune de Lanouaille en Périgord Vert",
     .category = "government", .portal = "https://www.lanouaille.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -13296,9 +13290,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_865D034F_089B_4F4A_9370_55AB3FB6AA69", .name = "Mission locale pour l'insertion professionnelle et sociale des "
       "jeunes (16-25 ans) - Beauvais (SL, INSEE 60057) - Cité des "
-      "métiers &#8211; Maison de l&#039;Emploi et de la Formation du "
-      "Pays du",
-    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Beauvais (SL, INSEE 60057) - Cité des métiers &#8211; Maison de l&#039;Emploi et de la Formation du Pays du",
+      "métiers – Maison de l'Emploi et de la Formation du Pays du",
+    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Beauvais (SL, INSEE 60057) - Cité des métiers – Maison de l'Emploi et de la Formation du Pays du",
     .category = "government", .portal = "https://mef-beauvaisis.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -13336,9 +13329,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_86A28E9C_0B17_4D28_A5D2_F2076FECEAFF", .name = "Institut national supérieur du professorat et de l'éducation "
       "(Inspé) - Académie de Strasbourg (SIL, INSEE 67482) - INSPÉ   "
-      "Institut national supérieur du professorat et de "
-      "l&#039;éducation",
-    .name_ja = "Institut national supérieur du professorat et de l'éducation (Inspé) - Académie de Strasbourg (SIL, INSEE 67482) - INSPÉ   Institut national supérieur du professorat et de l&#039;éducation",
+      "Institut national supérieur du professorat et de l'éducation",
+    .name_ja = "Institut national supérieur du professorat et de l'éducation (Inspé) - Académie de Strasbourg (SIL, INSEE 67482) - INSPÉ   Institut national supérieur du professorat et de l'éducation",
     .category = "government", .portal = "https://inspe.unistra.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -13357,9 +13349,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_86A28E9C_0B17_4D28_A5D2_F2076FECEAFF_2", .name = "Institut national supérieur du professorat et de l'éducation "
       "(Inspé) - Académie de Strasbourg (SIL, INSEE 67482) - INSPÉ   "
-      "Institut national supérieur du professorat et de "
-      "l&#039;éducation",
-    .name_ja = "Institut national supérieur du professorat et de l'éducation (Inspé) - Académie de Strasbourg (SIL, INSEE 67482) - INSPÉ   Institut national supérieur du professorat et de l&#039;éducation",
+      "Institut national supérieur du professorat et de l'éducation",
+    .name_ja = "Institut national supérieur du professorat et de l'éducation (Inspé) - Académie de Strasbourg (SIL, INSEE 67482) - INSPÉ   Institut national supérieur du professorat et de l'éducation",
     .category = "government", .portal = "https://inspe.unistra.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -13378,9 +13369,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_86A28E9C_0B17_4D28_A5D2_F2076FECEAFF_3", .name = "Institut national supérieur du professorat et de l'éducation "
       "(Inspé) - Académie de Strasbourg (SIL, INSEE 67482) - INSPÉ   "
-      "Institut national supérieur du professorat et de "
-      "l&#039;éducation",
-    .name_ja = "Institut national supérieur du professorat et de l'éducation (Inspé) - Académie de Strasbourg (SIL, INSEE 67482) - INSPÉ   Institut national supérieur du professorat et de l&#039;éducation",
+      "Institut national supérieur du professorat et de l'éducation",
+    .name_ja = "Institut national supérieur du professorat et de l'éducation (Inspé) - Académie de Strasbourg (SIL, INSEE 67482) - INSPÉ   Institut national supérieur du professorat et de l'éducation",
     .category = "government", .portal = "https://inspe.unistra.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -13583,8 +13573,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_889262FE_2F8F_4ED7_AAE0_82633096BAD4", .name = "Communauté de communes - Est de la Somme (SL, INSEE 80410) - COM "
-      "de COM de l&#039;Est de la Somme",
-    .name_ja = "Communauté de communes - Est de la Somme (SL, INSEE 80410) - COM de COM de l&#039;Est de la Somme",
+      "de COM de l'Est de la Somme",
+    .name_ja = "Communauté de communes - Est de la Somme (SL, INSEE 80410) - COM de COM de l'Est de la Somme",
     .category = "government", .portal = "https://estdelasomme.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -13676,8 +13666,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_8A691039_29C4_40D5_9B14_56A624F1DE9D", .name = "Mairie - Huchenneville (SL, INSEE 80444) - Mairie "
-      "d&#039;Huchenneville",
-    .name_ja = "Mairie - Huchenneville (SL, INSEE 80444) - Mairie d&#039;Huchenneville",
+      "d'Huchenneville",
+    .name_ja = "Mairie - Huchenneville (SL, INSEE 80444) - Mairie d'Huchenneville",
     .category = "government", .portal = "https://www.huchenneville.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -13770,8 +13760,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_8B66A055_89B6_463B_8E32_D0B7D4E02480", .name = "Mairie - Aubeterre-sur-Dronne (SL, INSEE 16020) - Aubeterre sur "
-      "Dronne &#8211; Site officiel du village",
-    .name_ja = "Mairie - Aubeterre-sur-Dronne (SL, INSEE 16020) - Aubeterre sur Dronne &#8211; Site officiel du village",
+      "Dronne – Site officiel du village",
+    .name_ja = "Mairie - Aubeterre-sur-Dronne (SL, INSEE 16020) - Aubeterre sur Dronne – Site officiel du village",
     .category = "government", .portal = "https://www.aubeterresurdronne.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -13975,8 +13965,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_8CD711BE_4CBD_499C_8BED_383C5E8F0BDC", .name = "Centre communal d'action sociale (CCAS) - Asques (SL, INSEE "
-      "33016) - Mairie d&#039;Asques",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Asques (SL, INSEE 33016) - Mairie d&#039;Asques",
+      "33016) - Mairie d'Asques",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Asques (SL, INSEE 33016) - Mairie d'Asques",
     .category = "government", .portal = "https://www.mairie-asques.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -14198,9 +14188,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:11:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_8ED5F23D_4B23_4374_8C40_4C07E6E1C530", .name = "Police municipale - Anduze (SL, INSEE 30010) - Ville "
-      "d&#039;Anduze",
-    .name_ja = "Police municipale - Anduze (SL, INSEE 30010) - Ville d&#039;Anduze",
+  { .id = "JO45_FR_8ED5F23D_4B23_4374_8C40_4C07E6E1C530", .name = "Police municipale - Anduze (SL, INSEE 30010) - Ville d'Anduze",
+    .name_ja = "Police municipale - Anduze (SL, INSEE 30010) - Ville d'Anduze",
     .category = "government", .portal = "https://mairie-anduze.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -14311,8 +14300,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_900289C8_CE38_4592_9064_D2B75E2E6595", .name = "Mairie - Villarodin-Bourget (SL, INSEE 73322) - Commune de "
-      "Villarodin &#8211; Bourget",
-    .name_ja = "Mairie - Villarodin-Bourget (SL, INSEE 73322) - Commune de Villarodin &#8211; Bourget",
+      "Villarodin – Bourget",
+    .name_ja = "Mairie - Villarodin-Bourget (SL, INSEE 73322) - Commune de Villarodin – Bourget",
     .category = "government", .portal = "https://villarodin-bourget.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -14367,9 +14356,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:57:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_90FB9DD9_8F20_44E8_955D_C04E692377B1", .name = "Mairie - La Châtaigneraie (SL, INSEE 85059) - La Chataigneraie "
-      "&#8211; Site internet de la Mairie",
-    .name_ja = "Mairie - La Châtaigneraie (SL, INSEE 85059) - La Chataigneraie &#8211; Site internet de la Mairie",
+  { .id = "JO45_FR_90FB9DD9_8F20_44E8_955D_C04E692377B1", .name = "Mairie - La Châtaigneraie (SL, INSEE 85059) - La Chataigneraie – "
+      "Site internet de la Mairie",
+    .name_ja = "Mairie - La Châtaigneraie (SL, INSEE 85059) - La Chataigneraie – Site internet de la Mairie",
     .category = "government", .portal = "https://lachataigneraie.eu/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -14441,9 +14430,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "18:16:04 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_91377159_8796_4B7E_A8FE_367492E75699", .name = "Mairie - Beaupuy (SL, INSEE 31053) - Ville de Beaupuy &#8211; "
+  { .id = "JO45_FR_91377159_8796_4B7E_A8FE_367492E75699", .name = "Mairie - Beaupuy (SL, INSEE 31053) - Ville de Beaupuy – "
       "Haute-Garonne",
-    .name_ja = "Mairie - Beaupuy (SL, INSEE 31053) - Ville de Beaupuy &#8211; Haute-Garonne",
+    .name_ja = "Mairie - Beaupuy (SL, INSEE 31053) - Ville de Beaupuy – Haute-Garonne",
     .category = "government", .portal = "https://www.ville-beaupuy.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -14481,8 +14470,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_917A740B_AB34_47E4_A90C_04DFBA64A7F2", .name = "Centre de ressources et d'information des bénévoles (CRIB) - "
       "Profession sport et loisirs - Maine-et-Loire (SL, INSEE 49246) - "
-      "Profession Sport &amp; Loisirs Maine et Loire",
-    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Profession sport et loisirs - Maine-et-Loire (SL, INSEE 49246) - Profession Sport &amp; Loisirs Maine et Loire",
+      "Profession Sport & Loisirs Maine et Loire",
+    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Profession sport et loisirs - Maine-et-Loire (SL, INSEE 49246) - Profession Sport & Loisirs Maine et Loire",
     .category = "government", .portal = "https://maine-loire.profession-sport-loisirs.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -14687,9 +14676,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_92BA7855_B44C_43C3_A3E8_F8F6F02ABB0F", .name = "Centre communal d'action sociale (CCAS) - Flayosc (SL, INSEE "
-      "83058) - Ville de Flayosc &#8211; Première porte du haut var "
-      "&#8211; Paca &#8211; 83780",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Flayosc (SL, INSEE 83058) - Ville de Flayosc &#8211; Première porte du haut var &#8211; Paca &#8211; 83780",
+      "83058) - Ville de Flayosc – Première porte du haut var – Paca – "
+      "83780",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Flayosc (SL, INSEE 83058) - Ville de Flayosc – Première porte du haut var – Paca – 83780",
     .category = "government", .portal = "https://www.flayosc.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -14910,8 +14899,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:12:14 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_95325E9D_3060_4734_A407_44440E199B4D", .name = "Mairie - Chauzon (SL, INSEE 07061) - CHAUZON &#8211;  ARDECHE",
-    .name_ja = "Mairie - Chauzon (SL, INSEE 07061) - CHAUZON &#8211;  ARDECHE",
+  { .id = "JO45_FR_95325E9D_3060_4734_A407_44440E199B4D", .name = "Mairie - Chauzon (SL, INSEE 07061) - CHAUZON –  ARDECHE",
+    .name_ja = "Mairie - Chauzon (SL, INSEE 07061) - CHAUZON –  ARDECHE",
     .category = "government", .portal = "https://chauzon.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -14984,9 +14973,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:43:22 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_95ED6DCC_654F_4A32_9130_7AB82B3B0A67", .name = "Mairie - Monsireigne (SL, INSEE 85145) - Monsireigne &#8211; "
-      "Pays de Pouzauges &#8211; Vendée &#8211; Pays de Loire",
-    .name_ja = "Mairie - Monsireigne (SL, INSEE 85145) - Monsireigne &#8211; Pays de Pouzauges &#8211; Vendée &#8211; Pays de Loire",
+  { .id = "JO45_FR_95ED6DCC_654F_4A32_9130_7AB82B3B0A67", .name = "Mairie - Monsireigne (SL, INSEE 85145) - Monsireigne – Pays de "
+      "Pouzauges – Vendée – Pays de Loire",
+    .name_ja = "Mairie - Monsireigne (SL, INSEE 85145) - Monsireigne – Pays de Pouzauges – Vendée – Pays de Loire",
     .category = "government", .portal = "https://www.monsireigne.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -15097,9 +15086,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_202769D7_B923_4873_943F_31FADBFB680A", .name = "Bureau d'enquêtes sur les événements de mer (SI, INSEE ) - "
-      "Bureau d'enqu&#234;tes sur les &#233;v&#233;nements de mer (BEA "
-      "MER)",
-    .name_ja = "Bureau d'enquêtes sur les événements de mer (SI, INSEE ) - Bureau d'enqu&#234;tes sur les &#233;v&#233;nements de mer (BEA MER)",
+      "Bureau d'enquêtes sur les événements de mer (BEA MER)",
+    .name_ja = "Bureau d'enquêtes sur les événements de mer (SI, INSEE ) - Bureau d'enquêtes sur les événements de mer (BEA MER)",
     .category = "government", .portal = "https://www.bea-mer.developpement-durable.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -15247,9 +15235,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:50:49 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_5AB11965_858E_4FB3_8240_BB9B0D5591D0", .name = "Haute autorité de l'audit (SI, INSEE ) - H2A &#8211; Haute "
-      "Autorité de l&#039;audit",
-    .name_ja = "Haute autorité de l'audit (SI, INSEE ) - H2A &#8211; Haute Autorité de l&#039;audit",
+  { .id = "JO45_FR_5AB11965_858E_4FB3_8240_BB9B0D5591D0", .name = "Haute autorité de l'audit (SI, INSEE ) - H2A – Haute Autorité de "
+      "l'audit",
+    .name_ja = "Haute autorité de l'audit (SI, INSEE ) - H2A – Haute Autorité de l'audit",
     .category = "government", .portal = "https://h2a-france.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -15267,8 +15255,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_6779DFC8_183D_4BA8_B23F_8BBFB946BFA2", .name = "Université du Havre Normandie (SI, INSEE ) - UNIVERSITÉ LE HAVRE "
-      "NORMANDIE &#8211; ULHN",
-    .name_ja = "Université du Havre Normandie (SI, INSEE ) - UNIVERSITÉ LE HAVRE NORMANDIE &#8211; ULHN",
+      "NORMANDIE – ULHN",
+    .name_ja = "Université du Havre Normandie (SI, INSEE ) - UNIVERSITÉ LE HAVRE NORMANDIE – ULHN",
     .category = "government", .portal = "https://www.univ-lehavre.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -15305,8 +15293,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_6EDDE632_F52C_4DEB_A40F_C120737660FB", .name = "Mission Juridique et management (SI, INSEE ) - STRMTG - Service "
-      "technique des remont&#233;es m&#233;caniques et des transports",
-    .name_ja = "Mission Juridique et management (SI, INSEE ) - STRMTG - Service technique des remont&#233;es m&#233;caniques et des transports",
+      "technique des remontées mécaniques et des transports",
+    .name_ja = "Mission Juridique et management (SI, INSEE ) - STRMTG - Service technique des remontées mécaniques et des transports",
     .category = "government", .portal = "https://www.strmtg.developpement-durable.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -15512,8 +15500,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_E9BBF925_7A0E_4B50_A94C_830AA83E498B", .name = "Conseil national de la protection de la nature (CNPN) (SI, INSEE "
-      ") - Avis biodiversit&#233;",
-    .name_ja = "Conseil national de la protection de la nature (CNPN) (SI, INSEE ) - Avis biodiversit&#233;",
+      ") - Avis biodiversité",
+    .name_ja = "Conseil national de la protection de la nature (CNPN) (SI, INSEE ) - Avis biodiversité",
     .category = "government", .portal = "https://www.avis-biodiversite.developpement-durable.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -15606,9 +15594,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_00641145_C587_4F4E_9EC5_4D55CDCE26CD", .name = "Espace conseil France Rénov' - Ruisseauville (SL, INSEE 62726) - "
-      "À Petits PAS &#8211; Terre de création • Graine d&#039;écologie "
-      "&#8211; 623",
-    .name_ja = "Espace conseil France Rénov' - Ruisseauville (SL, INSEE 62726) - À Petits PAS &#8211; Terre de création • Graine d&#039;écologie &#8211; 623",
+      "À Petits PAS – Terre de création • Graine d'écologie – 623",
+    .name_ja = "Espace conseil France Rénov' - Ruisseauville (SL, INSEE 62726) - À Petits PAS – Terre de création • Graine d'écologie – 623",
     .category = "government", .portal = "https://apetitspas.net/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -15774,8 +15761,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_027D6EE6_EAC1_4E93_9F51_51CFE8192676", .name = "Greta-CFA de Haute-Corse - Bastia (SL, INSEE 2B033) - GR.ETA-CFA "
-      "de Haute-Corse &#8211; Centre de formation Continue",
-    .name_ja = "Greta-CFA de Haute-Corse - Bastia (SL, INSEE 2B033) - GR.ETA-CFA de Haute-Corse &#8211; Centre de formation Continue",
+      "de Haute-Corse – Centre de formation Continue",
+    .name_ja = "Greta-CFA de Haute-Corse - Bastia (SL, INSEE 2B033) - GR.ETA-CFA de Haute-Corse – Centre de formation Continue",
     .category = "government", .portal = "https://2b.gretacfa.corsica/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -15792,9 +15779,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:02:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_0298B1F8_F9EC_4704_86BE_0FA7BAF687CB", .name = "Mairie - Villaz (SL, INSEE 74303) - Mairie de Villaz &#8211; "
-      "74370 Haute-Savoie",
-    .name_ja = "Mairie - Villaz (SL, INSEE 74303) - Mairie de Villaz &#8211; 74370 Haute-Savoie",
+  { .id = "JO45_FR_0298B1F8_F9EC_4704_86BE_0FA7BAF687CB", .name = "Mairie - Villaz (SL, INSEE 74303) - Mairie de Villaz – 74370 "
+      "Haute-Savoie",
+    .name_ja = "Mairie - Villaz (SL, INSEE 74303) - Mairie de Villaz – 74370 Haute-Savoie",
     .category = "government", .portal = "http://www.villaz.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -15847,9 +15834,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:03:16 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_034F4324_81B2_42B0_9A27_11D1984F7F8E", .name = "Mairie - Dixmont (SL, INSEE 89142) - Le site de Dixmont &#8211; "
-      "Yonne",
-    .name_ja = "Mairie - Dixmont (SL, INSEE 89142) - Le site de Dixmont &#8211; Yonne",
+  { .id = "JO45_FR_034F4324_81B2_42B0_9A27_11D1984F7F8E", .name = "Mairie - Dixmont (SL, INSEE 89142) - Le site de Dixmont – Yonne",
+    .name_ja = "Mairie - Dixmont (SL, INSEE 89142) - Le site de Dixmont – Yonne",
     .category = "government", .portal = "https://www.dixmont-yonne.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -16056,9 +16042,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_96937ABD_1DD2_4650_9B30_D97EB358596A", .name = "Service de renseignement en droit du travail - Seine-et-Marne "
-      "(SL, INSEE 77288) - Direction r&#233;gionale "
-      "interd&#233;partementale de l'&#233;conomie, de l'emplo",
-    .name_ja = "Service de renseignement en droit du travail - Seine-et-Marne (SL, INSEE 77288) - Direction r&#233;gionale interd&#233;partementale de l'&#233;conomie, de l'emplo",
+      "(SL, INSEE 77288) - Direction régionale interdépartementale de "
+      "l'économie, de l'emplo",
+    .name_ja = "Service de renseignement en droit du travail - Seine-et-Marne (SL, INSEE 77288) - Direction régionale interdépartementale de l'économie, de l'emplo",
     .category = "government", .portal = "https://idf.drieets.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -16206,9 +16192,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_98EC14D4_C636_4A4B_82A8_4B4B0BD850F4", .name = "Service de renseignement en droit du travail - Charente-Maritime "
-      "(SL, INSEE 17300) - Direction r&#233;gionale de l'&#233;conomie, "
-      "de l'emploi, du travail et des soli",
-    .name_ja = "Service de renseignement en droit du travail - Charente-Maritime (SL, INSEE 17300) - Direction r&#233;gionale de l'&#233;conomie, de l'emploi, du travail et des soli",
+      "(SL, INSEE 17300) - Direction régionale de l'économie, de "
+      "l'emploi, du travail et des soli",
+    .name_ja = "Service de renseignement en droit du travail - Charente-Maritime (SL, INSEE 17300) - Direction régionale de l'économie, de l'emploi, du travail et des soli",
     .category = "government", .portal = "https://nouvelle-aquitaine.dreets.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -16484,8 +16470,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_9B5AB543_B779_424B_857A_3E4D719A22E8", .name = "Mairie - Gonfreville-l'Orcher (SL, INSEE 76305) - "
-      "Gonfreville-l&#039;Orcher",
-    .name_ja = "Mairie - Gonfreville-l'Orcher (SL, INSEE 76305) - Gonfreville-l&#039;Orcher",
+      "Gonfreville-l'Orcher",
+    .name_ja = "Mairie - Gonfreville-l'Orcher (SL, INSEE 76305) - Gonfreville-l'Orcher",
     .category = "government", .portal = "https://www.gonfreville-l-orcher.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -16541,9 +16527,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_9D1502FC_763E_428B_98CF_D60AC6540E08", .name = "Mairie déléguée - La Bernardière (SL, INSEE 85076) - 1 Agent "
-      "d&#8217;accompagnement de jour f/h &#8211; résidence le Val des "
-      "Maines",
-    .name_ja = "Mairie déléguée - La Bernardière (SL, INSEE 85076) - 1 Agent d&#8217;accompagnement de jour f/h &#8211; résidence le Val des Maines",
+      "d’accompagnement de jour f/h – résidence le Val des Maines",
+    .name_ja = "Mairie déléguée - La Bernardière (SL, INSEE 85076) - 1 Agent d’accompagnement de jour f/h – résidence le Val des Maines",
     .category = "government", .portal = "https://www.cugandlabernardiere.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -16768,8 +16753,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_9FA1CF72_2C42_4F11_9BC3_AD2314C16DC3", .name = "Centre communal d'action sociale (CCAS) - Arles-sur-Tech (SL, "
-      "INSEE 66009) - Mairie d&#039;Arles Sur Tech",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Arles-sur-Tech (SL, INSEE 66009) - Mairie d&#039;Arles Sur Tech",
+      "INSEE 66009) - Mairie d'Arles Sur Tech",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Arles-sur-Tech (SL, INSEE 66009) - Mairie d'Arles Sur Tech",
     .category = "government", .portal = "https://www.ville-arles-sur-tech.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -16843,8 +16828,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-10-18T13:17:16+02:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_FR_A0114814_1168_4A03_B15B_9A63256EAF42", .name = "Mairie - L'Herbergement (SL, INSEE 85108) - L&#039;Herbergement",
-    .name_ja = "Mairie - L'Herbergement (SL, INSEE 85108) - L&#039;Herbergement",
+  { .id = "JO45_FR_A0114814_1168_4A03_B15B_9A63256EAF42", .name = "Mairie - L'Herbergement (SL, INSEE 85108) - L'Herbergement",
+    .name_ja = "Mairie - L'Herbergement (SL, INSEE 85108) - L'Herbergement",
     .category = "government", .portal = "https://www.lherbergement.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -17031,9 +17016,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_A4D544D2_2B4B_4A65_8D4F_00EA6BC2D641", .name = "Service de renseignement en droit du travail - Tarn (SL, INSEE "
-      "81004) - Direction r&#233;gionale de l'&#233;conomie, de "
-      "l'emploi, du travail et des soli",
-    .name_ja = "Service de renseignement en droit du travail - Tarn (SL, INSEE 81004) - Direction r&#233;gionale de l'&#233;conomie, de l'emploi, du travail et des soli",
+      "81004) - Direction régionale de l'économie, de l'emploi, du "
+      "travail et des soli",
+    .name_ja = "Service de renseignement en droit du travail - Tarn (SL, INSEE 81004) - Direction régionale de l'économie, de l'emploi, du travail et des soli",
     .category = "government", .portal = "https://occitanie.dreets.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -17088,8 +17073,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "23:59:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_A5A1744D_FD9D_4759_9D47_F5C3438210C6", .name = "Mairie - Étrépilly (SL, INSEE 77173) - Commune d&#039;ETREPILLY",
-    .name_ja = "Mairie - Étrépilly (SL, INSEE 77173) - Commune d&#039;ETREPILLY",
+  { .id = "JO45_FR_A5A1744D_FD9D_4759_9D47_F5C3438210C6", .name = "Mairie - Étrépilly (SL, INSEE 77173) - Commune d'ETREPILLY",
+    .name_ja = "Mairie - Étrépilly (SL, INSEE 77173) - Commune d'ETREPILLY",
     .category = "government", .portal = "https://www.etrepilly.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -17126,8 +17111,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_A5F1D8E5_DBEF_4A3E_9ED9_119345FAB89C", .name = "Mairie - Razac-de-Saussignac (SL, INSEE 24349) - Site Internet "
-      "de la Communauté d&#039;Agglomération Bergeracoise",
-    .name_ja = "Mairie - Razac-de-Saussignac (SL, INSEE 24349) - Site Internet de la Communauté d&#039;Agglomération Bergeracoise",
+      "de la Communauté d'Agglomération Bergeracoise",
+    .name_ja = "Mairie - Razac-de-Saussignac (SL, INSEE 24349) - Site Internet de la Communauté d'Agglomération Bergeracoise",
     .category = "government", .portal = "https://la-cab.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -17144,9 +17129,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:13:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_A65DEC32_1F79_4FBD_943A_DF0F15249A1A", .name = "Mairie - Recologne (SL, INSEE 25482) - RECOLOGNE &#8211; Mairie "
-      "de Recologne / Commune du Doubs (25)",
-    .name_ja = "Mairie - Recologne (SL, INSEE 25482) - RECOLOGNE &#8211; Mairie de Recologne / Commune du Doubs (25)",
+  { .id = "JO45_FR_A65DEC32_1F79_4FBD_943A_DF0F15249A1A", .name = "Mairie - Recologne (SL, INSEE 25482) - RECOLOGNE – Mairie de "
+      "Recologne / Commune du Doubs (25)",
+    .name_ja = "Mairie - Recologne (SL, INSEE 25482) - RECOLOGNE – Mairie de Recologne / Commune du Doubs (25)",
     .category = "government", .portal = "https://recologne.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -17200,9 +17185,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:09:20 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_A6B02FE4_302E_4A4C_AE02_7EA780D38629", .name = "Mairie - La Désirade (SL, INSEE 97110) - Mairie de la "
-      "D&#233;sirade",
-    .name_ja = "Mairie - La Désirade (SL, INSEE 97110) - Mairie de la D&#233;sirade",
+  { .id = "JO45_FR_A6B02FE4_302E_4A4C_AE02_7EA780D38629", .name = "Mairie - La Désirade (SL, INSEE 97110) - Mairie de la Désirade",
+    .name_ja = "Mairie - La Désirade (SL, INSEE 97110) - Mairie de la Désirade",
     .category = "government", .portal = "https://www.mairie-ladesirade.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -17219,9 +17203,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "2023-08-04T14:53:47Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO45_FR_A6B02FE4_302E_4A4C_AE02_7EA780D38629_2", .name = "Mairie - La Désirade (SL, INSEE 97110) - Mairie de la "
-      "D&#233;sirade",
-    .name_ja = "Mairie - La Désirade (SL, INSEE 97110) - Mairie de la D&#233;sirade",
+  { .id = "JO45_FR_A6B02FE4_302E_4A4C_AE02_7EA780D38629_2", .name = "Mairie - La Désirade (SL, INSEE 97110) - Mairie de la Désirade",
+    .name_ja = "Mairie - La Désirade (SL, INSEE 97110) - Mairie de la Désirade",
     .category = "government", .portal = "https://www.mairie-ladesirade.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -17333,8 +17316,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_A76E81CD_66D3_4608_8CEE_013B5E45F5D9", .name = "Centre communal d'action sociale (CCAS) - Les Hauts-d'Anjou (SL, "
-      "INSEE 49080) - Mairie des Hauts d&#039;Anjou",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Les Hauts-d'Anjou (SL, INSEE 49080) - Mairie des Hauts d&#039;Anjou",
+      "INSEE 49080) - Mairie des Hauts d'Anjou",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Les Hauts-d'Anjou (SL, INSEE 49080) - Mairie des Hauts d'Anjou",
     .category = "government", .portal = "https://leshautsdanjou.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -18022,8 +18005,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_B1A04027_A7E2_4350_AC9A_D68AF592DAF5", .name = "Mairie - Saint-Maixent-l École (SL, INSEE 79270) - Site officiel "
-      "de la Ville de Saint-Maixent-L&#039;Ecole",
-    .name_ja = "Mairie - Saint-Maixent-l École (SL, INSEE 79270) - Site officiel de la Ville de Saint-Maixent-L&#039;Ecole",
+      "de la Ville de Saint-Maixent-L'Ecole",
+    .name_ja = "Mairie - Saint-Maixent-l École (SL, INSEE 79270) - Site officiel de la Ville de Saint-Maixent-L'Ecole",
     .category = "government", .portal = "https://www.saint-maixent-lecole.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -18172,9 +18155,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_B3B8CA7E_CEA0_4B08_93BE_76F6E3F397F5", .name = "Centre Local d’Information et de Coordination (CLIC) des 4 "
-      "Rivières / Antenne MDPH (SL, INSEE 35126) - Accueil &#8211; Clic "
-      "des 4 rivières / Antenne MDPH",
-    .name_ja = "Centre Local d’Information et de Coordination (CLIC) des 4 Rivières / Antenne MDPH (SL, INSEE 35126) - Accueil &#8211; Clic des 4 rivières / Antenne MDPH",
+      "Rivières / Antenne MDPH (SL, INSEE 35126) - Accueil – Clic des 4 "
+      "rivières / Antenne MDPH",
+    .name_ja = "Centre Local d’Information et de Coordination (CLIC) des 4 Rivières / Antenne MDPH (SL, INSEE 35126) - Accueil – Clic des 4 rivières / Antenne MDPH",
     .category = "government", .portal = "https://clic4rivieres.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -18264,8 +18247,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_B44FC3D4_74E6_4467_80CE_FF4C2AA03CAC", .name = "Direction de l'environnement, de l'aménagement et du logement "
-      "(Deal) - Réunion (SIL, INSEE 97411) - DEAL R&#233;union",
-    .name_ja = "Direction de l'environnement, de l'aménagement et du logement (Deal) - Réunion (SIL, INSEE 97411) - DEAL R&#233;union",
+      "(Deal) - Réunion (SIL, INSEE 97411) - DEAL Réunion",
+    .name_ja = "Direction de l'environnement, de l'aménagement et du logement (Deal) - Réunion (SIL, INSEE 97411) - DEAL Réunion",
     .category = "government", .portal = "https://www.reunion.developpement-durable.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -18358,8 +18341,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_B4F5C1AC_9765_4B5B_A48D_77EB84FCF182", .name = "Centre communal d'action sociale (CCAS) - Aiglun (SL, INSEE "
-      "04001) - Marie d&#039;Aiglun",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Aiglun (SL, INSEE 04001) - Marie d&#039;Aiglun",
+      "04001) - Marie d'Aiglun",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Aiglun (SL, INSEE 04001) - Marie d'Aiglun",
     .category = "government", .portal = "https://commune-aiglun04.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -18376,8 +18359,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:46:32 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_B4FD93D2_448C_4052_9B8E_DA0F7FCC389B", .name = "Mairie - Bort-l'Étang (SL, INSEE 63045) - Bort l&#039;Etang",
-    .name_ja = "Mairie - Bort-l'Étang (SL, INSEE 63045) - Bort l&#039;Etang",
+  { .id = "JO45_FR_B4FD93D2_448C_4052_9B8E_DA0F7FCC389B", .name = "Mairie - Bort-l'Étang (SL, INSEE 63045) - Bort l'Etang",
+    .name_ja = "Mairie - Bort-l'Étang (SL, INSEE 63045) - Bort l'Etang",
     .category = "government", .portal = "https://www.bortletang.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -18413,8 +18396,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_B596F588_8C65_4B50_A728_035370047EE6", .name = "Mairie - Saint-Germain-au-Mont-d'Or (SL, INSEE 69207) - "
-      "Saint-Germain-au-Mont-d&#039;Or",
-    .name_ja = "Mairie - Saint-Germain-au-Mont-d'Or (SL, INSEE 69207) - Saint-Germain-au-Mont-d&#039;Or",
+      "Saint-Germain-au-Mont-d'Or",
+    .name_ja = "Mairie - Saint-Germain-au-Mont-d'Or (SL, INSEE 69207) - Saint-Germain-au-Mont-d'Or",
     .category = "government", .portal = "https://www.saintgermainaumontdor.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -18617,8 +18600,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_B8F9D439_438D_4FE8_A6CD_68EDA81BAA3A", .name = "Centre communal d'action sociale (CCAS) - Saint-Denis-d'Oléron "
-      "(SL, INSEE 17323) - Mairie de Saint-Denis-d&#039;Oléron",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Saint-Denis-d'Oléron (SL, INSEE 17323) - Mairie de Saint-Denis-d&#039;Oléron",
+      "(SL, INSEE 17323) - Mairie de Saint-Denis-d'Oléron",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Saint-Denis-d'Oléron (SL, INSEE 17323) - Mairie de Saint-Denis-d'Oléron",
     .category = "government", .portal = "https://www.st-denis-oleron.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -18769,8 +18752,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_BABC8EE1_79F8_4BFA_8DF9_C23CF7BC5C8E", .name = "Centre de ressources et d'information des bénévoles (CRIB) - "
       "Fédération des oeuvres laïques du Cher (SL, INSEE 18033) - Ligue "
-      "de l&#039;enseignement 18",
-    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Fédération des oeuvres laïques du Cher (SL, INSEE 18033) - Ligue de l&#039;enseignement 18",
+      "de l'enseignement 18",
+    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Fédération des oeuvres laïques du Cher (SL, INSEE 18033) - Ligue de l'enseignement 18",
     .category = "government", .portal = "https://www.laliguedelenseignement-18.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -18885,8 +18868,8 @@ static const hp_source HP3B45_FRGOV[] = {
   { .id = "JO45_FR_BC3B1DB7_5C3D_444D_86B9_0A0581EADE81", .name = "Direction régionale de l'environnement, de l'aménagement et du "
       "logement (Dréal) Provence-Alpes-Côte d'Azur - Unité "
       "interdépartementale Alpes-de-Haute-Provence et Hautes Alpes "
-      "(Gap) (SIL, INSEE 05061) - DREAL Provence-Alpes-C&#244;te d'Azur",
-    .name_ja = "Direction régionale de l'environnement, de l'aménagement et du logement (Dréal) Provence-Alpes-Côte d'Azur - Unité interdépartementale Alpes-de-Haute-Provence et Hautes Alpes (Gap) (SIL, INSEE 05061) - DREAL Provence-Alpes-C&#244;te d'Azur",
+      "(Gap) (SIL, INSEE 05061) - DREAL Provence-Alpes-Côte d'Azur",
+    .name_ja = "Direction régionale de l'environnement, de l'aménagement et du logement (Dréal) Provence-Alpes-Côte d'Azur - Unité interdépartementale Alpes-de-Haute-Provence et Hautes Alpes (Gap) (SIL, INSEE 05061) - DREAL Provence-Alpes-Côte d'Azur",
     .category = "government", .portal = "https://www.paca.developpement-durable.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -18998,8 +18981,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "1947-06-05T04:49:44+01:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_FR_BDC01897_7C26_4B6F_A257_473CBBBD0117", .name = "Mairie - Alleins (SL, INSEE 13003) - Ville d&#039;Alleins",
-    .name_ja = "Mairie - Alleins (SL, INSEE 13003) - Ville d&#039;Alleins",
+  { .id = "JO45_FR_BDC01897_7C26_4B6F_A257_473CBBBD0117", .name = "Mairie - Alleins (SL, INSEE 13003) - Ville d'Alleins",
+    .name_ja = "Mairie - Alleins (SL, INSEE 13003) - Ville d'Alleins",
     .category = "government", .portal = "https://www.alleins.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -19409,8 +19392,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_C11E35D9_A820_4D49_90DA_B17EFEDD36A7", .name = "Communauté de communes - Pays Châtillonnais (SL, INSEE 21154) - "
-      "Communaut&#233; de Communes du Pays Ch&#226;tillonnais",
-    .name_ja = "Communauté de communes - Pays Châtillonnais (SL, INSEE 21154) - Communaut&#233; de Communes du Pays Ch&#226;tillonnais",
+      "Communauté de Communes du Pays Châtillonnais",
+    .name_ja = "Communauté de communes - Pays Châtillonnais (SL, INSEE 21154) - Communauté de Communes du Pays Châtillonnais",
     .category = "government", .portal = "https://www.chatillonnais.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -19446,9 +19429,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:22:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_C1AE33CE_EDD2_40F7_911E_2E439F8F08A7", .name = "Mairie - Voulangis (SL, INSEE 77529) - Mairie de Voulangis "
-      "&#8211; Site officiel",
-    .name_ja = "Mairie - Voulangis (SL, INSEE 77529) - Mairie de Voulangis &#8211; Site officiel",
+  { .id = "JO45_FR_C1AE33CE_EDD2_40F7_911E_2E439F8F08A7", .name = "Mairie - Voulangis (SL, INSEE 77529) - Mairie de Voulangis – "
+      "Site officiel",
+    .name_ja = "Mairie - Voulangis (SL, INSEE 77529) - Mairie de Voulangis – Site officiel",
     .category = "government", .portal = "https://voulangis.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -19522,9 +19505,9 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_C22B8614_8F17_4D1E_999B_5B5FE1EFA4A3", .name = "Direction départementale de l'emploi, du travail et des "
       "solidarités (DDETS) - Maine-et-Loire (SIL, INSEE 49007) - "
-      "Directions r&#233;gionales de l'&#233;conomie, de l'emploi, du "
-      "travail et des so",
-    .name_ja = "Direction départementale de l'emploi, du travail et des solidarités (DDETS) - Maine-et-Loire (SIL, INSEE 49007) - Directions r&#233;gionales de l'&#233;conomie, de l'emploi, du travail et des so",
+      "Directions régionales de l'économie, de l'emploi, du travail et "
+      "des so",
+    .name_ja = "Direction départementale de l'emploi, du travail et des solidarités (DDETS) - Maine-et-Loire (SIL, INSEE 49007) - Directions régionales de l'économie, de l'emploi, du travail et des so",
     .category = "government", .portal = "https://pays-de-la-loire.dreets.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -19541,9 +19524,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-10-13T06:26:25Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO45_FR_C292DAB4_8627_4B77_92FF_BE9F8ECBB98A", .name = "Mairie - Le Bousquet-d'Orb (SL, INSEE 34038) - Le Bousquet "
-      "d&#039;Orb",
-    .name_ja = "Mairie - Le Bousquet-d'Orb (SL, INSEE 34038) - Le Bousquet d&#039;Orb",
+  { .id = "JO45_FR_C292DAB4_8627_4B77_92FF_BE9F8ECBB98A", .name = "Mairie - Le Bousquet-d'Orb (SL, INSEE 34038) - Le Bousquet d'Orb",
+    .name_ja = "Mairie - Le Bousquet-d'Orb (SL, INSEE 34038) - Le Bousquet d'Orb",
     .category = "government", .portal = "https://lebousquetdorb.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -19561,8 +19543,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_C2A29591_E90B_49CA_830F_C90052605683", .name = "Centre communal d'action sociale (CCAS) - Allenc (SL, INSEE "
-      "48003) - Commune d&#039;Allenc",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Allenc (SL, INSEE 48003) - Commune d&#039;Allenc",
+      "48003) - Commune d'Allenc",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Allenc (SL, INSEE 48003) - Commune d'Allenc",
     .category = "government", .portal = "https://www.allenc.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -19637,8 +19619,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_C379766E_600C_4E47_991C_803B7E2E0BF9", .name = "Mairie - Oncy-sur-École (SL, INSEE 91463) - Mairie "
-      "d&#039;oncy-sur-ecole",
-    .name_ja = "Mairie - Oncy-sur-École (SL, INSEE 91463) - Mairie d&#039;oncy-sur-ecole",
+      "d'oncy-sur-ecole",
+    .name_ja = "Mairie - Oncy-sur-École (SL, INSEE 91463) - Mairie d'oncy-sur-ecole",
     .category = "government", .portal = "https://www.oncy-sur-ecole.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -19768,8 +19750,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_C6AD32ED_7799_4EB7_98F9_E87262D18AA7", .name = "Ordre des avocats - Barreau de Pontoise (SL, INSEE 95500) - "
-      "Ordre des avocats du val d&#039;Oise",
-    .name_ja = "Ordre des avocats - Barreau de Pontoise (SL, INSEE 95500) - Ordre des avocats du val d&#039;Oise",
+      "Ordre des avocats du val d'Oise",
+    .name_ja = "Ordre des avocats - Barreau de Pontoise (SL, INSEE 95500) - Ordre des avocats du val d'Oise",
     .category = "government", .portal = "https://avocat-95.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -19863,9 +19845,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_C70C29B7_DB0F_4A09_8626_77F9DD6304C1", .name = "Mairie - Saint-Sulpice-le-Dunois (SL, INSEE 23244) - Site "
-      "officiel de la Communaut&#233; de Communes du Pays Dunois en "
-      "Creuse",
-    .name_ja = "Mairie - Saint-Sulpice-le-Dunois (SL, INSEE 23244) - Site officiel de la Communaut&#233; de Communes du Pays Dunois en Creuse",
+      "officiel de la Communauté de Communes du Pays Dunois en Creuse",
+    .name_ja = "Mairie - Saint-Sulpice-le-Dunois (SL, INSEE 23244) - Site officiel de la Communauté de Communes du Pays Dunois en Creuse",
     .category = "government", .portal = "https://www.paysdunois.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -19902,8 +19883,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_C71F7BA8_A41E_4ECA_8ACF_ABB210E09469_2", .name = "Info Jeunes - Courbevoie (SL, INSEE 92026) - Ville de Mairie de "
-      "Courbevoie : Flux RSS de l&#039;agenda",
-    .name_ja = "Info Jeunes - Courbevoie (SL, INSEE 92026) - Ville de Mairie de Courbevoie : Flux RSS de l&#039;agenda",
+      "Courbevoie : Flux RSS de l'agenda",
+    .name_ja = "Info Jeunes - Courbevoie (SL, INSEE 92026) - Ville de Mairie de Courbevoie : Flux RSS de l'agenda",
     .category = "government", .portal = "https://www.ville-courbevoie.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -19996,8 +19977,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:32:13 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_C7EE20E3_CEBE_4667_B880_A6717BD96F42", .name = "Mairie - Araujuzon (SL, INSEE 64032) - Mairie d&#039;Araujuzon",
-    .name_ja = "Mairie - Araujuzon (SL, INSEE 64032) - Mairie d&#039;Araujuzon",
+  { .id = "JO45_FR_C7EE20E3_CEBE_4667_B880_A6717BD96F42", .name = "Mairie - Araujuzon (SL, INSEE 64032) - Mairie d'Araujuzon",
+    .name_ja = "Mairie - Araujuzon (SL, INSEE 64032) - Mairie d'Araujuzon",
     .category = "government", .portal = "https://araujuzon.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -20069,8 +20050,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:52:48 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_C889C166_5DE4_4348_B3B1_2E9727B7D807", .name = "Mairie - Bogève (SL, INSEE 74038) - Mairie de Bog&#232;ve",
-    .name_ja = "Mairie - Bogève (SL, INSEE 74038) - Mairie de Bog&#232;ve",
+  { .id = "JO45_FR_C889C166_5DE4_4348_B3B1_2E9727B7D807", .name = "Mairie - Bogève (SL, INSEE 74038) - Mairie de Bogève",
+    .name_ja = "Mairie - Bogève (SL, INSEE 74038) - Mairie de Bogève",
     .category = "government", .portal = "https://www.bogeve.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -20199,8 +20180,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:14:29 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_C91A15A4_DB9F_4E9D_A253_FD50C62563F6", .name = "Mairie - Ortale (SL, INSEE 2B194) - Ortale d&#039;Alesani",
-    .name_ja = "Mairie - Ortale (SL, INSEE 2B194) - Ortale d&#039;Alesani",
+  { .id = "JO45_FR_C91A15A4_DB9F_4E9D_A253_FD50C62563F6", .name = "Mairie - Ortale (SL, INSEE 2B194) - Ortale d'Alesani",
+    .name_ja = "Mairie - Ortale (SL, INSEE 2B194) - Ortale d'Alesani",
     .category = "government", .portal = "https://ortale.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -20405,9 +20386,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "11:28:26 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_CB9C4C70_D4EF_4A67_9659_9845CBDEE358", .name = "Mairie - Trégastel (SL, INSEE 22353) - Mairie de Tr&#233;gastel "
-      "dans les C&#244;tes d'Armor en Bretagne",
-    .name_ja = "Mairie - Trégastel (SL, INSEE 22353) - Mairie de Tr&#233;gastel dans les C&#244;tes d'Armor en Bretagne",
+  { .id = "JO45_FR_CB9C4C70_D4EF_4A67_9659_9845CBDEE358", .name = "Mairie - Trégastel (SL, INSEE 22353) - Mairie de Trégastel dans "
+      "les Côtes d'Armor en Bretagne",
+    .name_ja = "Mairie - Trégastel (SL, INSEE 22353) - Mairie de Trégastel dans les Côtes d'Armor en Bretagne",
     .category = "government", .portal = "https://www.tregastel.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -20425,8 +20406,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_CBBEEA3E_4563_4FFC_B4C3_854F5C81045E", .name = "Centre communal d'action sociale (CCAS) - Penmarch (SL, INSEE "
-      "29158) - Mairie de Penmarc&#039;h",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Penmarch (SL, INSEE 29158) - Mairie de Penmarc&#039;h",
+      "29158) - Mairie de Penmarc'h",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Penmarch (SL, INSEE 29158) - Mairie de Penmarc'h",
     .category = "government", .portal = "https://www.penmarch.bzh/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -20575,9 +20556,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "11:16:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_CD32EACC_3829_4431_A26E_2D98756438C2", .name = "Mairie - L'Isle-en-Dodon (SL, INSEE 31239) - "
-      "L&#039;ISLE-EN-DODON",
-    .name_ja = "Mairie - L'Isle-en-Dodon (SL, INSEE 31239) - L&#039;ISLE-EN-DODON",
+  { .id = "JO45_FR_CD32EACC_3829_4431_A26E_2D98756438C2", .name = "Mairie - L'Isle-en-Dodon (SL, INSEE 31239) - L'ISLE-EN-DODON",
+    .name_ja = "Mairie - L'Isle-en-Dodon (SL, INSEE 31239) - L'ISLE-EN-DODON",
     .category = "government", .portal = "https://www.lisleendodon.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -20673,9 +20653,9 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_CE9B7A0F_8114_472C_B1E5_AFDF3B22F1E7", .name = "Direction départementale de l'emploi, du travail et des "
       "solidarités (DDETS) - Ille-et-Vilaine (SIL, INSEE 35051) - "
-      "Directions r&#233;gionales de l'&#233;conomie, de l'emploi, du "
-      "travail et des so",
-    .name_ja = "Direction départementale de l'emploi, du travail et des solidarités (DDETS) - Ille-et-Vilaine (SIL, INSEE 35051) - Directions r&#233;gionales de l'&#233;conomie, de l'emploi, du travail et des so",
+      "Directions régionales de l'économie, de l'emploi, du travail et "
+      "des so",
+    .name_ja = "Direction départementale de l'emploi, du travail et des solidarités (DDETS) - Ille-et-Vilaine (SIL, INSEE 35051) - Directions régionales de l'économie, de l'emploi, du travail et des so",
     .category = "government", .portal = "https://bretagne.dreets.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -20877,8 +20857,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_D19B174D_D3B5_4FB8_9627_CD59D1DCA84E", .name = "Centre communal d'action sociale (CCAS) - Avord (SL, INSEE "
-      "18018) - Mairie d&#039;Avord",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Avord (SL, INSEE 18018) - Mairie d&#039;Avord",
+      "18018) - Mairie d'Avord",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Avord (SL, INSEE 18018) - Mairie d'Avord",
     .category = "government", .portal = "https://www.ville-avord.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -21159,9 +21139,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:48:26 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_D3F80B7B_937B_4F6B_98E8_7F39336A0B45", .name = "Mairie - Touet-sur-Var (SL, INSEE 06143) - Touët-sur-Var &#8211; "
-      "Site officiel",
-    .name_ja = "Mairie - Touet-sur-Var (SL, INSEE 06143) - Touët-sur-Var &#8211; Site officiel",
+  { .id = "JO45_FR_D3F80B7B_937B_4F6B_98E8_7F39336A0B45", .name = "Mairie - Touet-sur-Var (SL, INSEE 06143) - Touët-sur-Var – Site "
+      "officiel",
+    .name_ja = "Mairie - Touet-sur-Var (SL, INSEE 06143) - Touët-sur-Var – Site officiel",
     .category = "government", .portal = "https://www.touet-sur-var.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -21272,8 +21252,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_D528F2E9_F189_4F3A_8871_99FBE6F457B9", .name = "Mairie - Sainte-Marie-d'Alvey (SL, INSEE 73254) - "
-      "Sainte-Marie-d&#039;Alvey",
-    .name_ja = "Mairie - Sainte-Marie-d'Alvey (SL, INSEE 73254) - Sainte-Marie-d&#039;Alvey",
+      "Sainte-Marie-d'Alvey",
+    .name_ja = "Mairie - Sainte-Marie-d'Alvey (SL, INSEE 73254) - Sainte-Marie-d'Alvey",
     .category = "government", .portal = "https://saintemariedalvey.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -21421,9 +21401,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:35:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_D6B56728_2FC3_4C70_A3E3_81D548E786E9", .name = "Mairie - Bournand (SL, INSEE 86036) - Bournand &#8211; commune "
-      "de la Vienne (86)",
-    .name_ja = "Mairie - Bournand (SL, INSEE 86036) - Bournand &#8211; commune de la Vienne (86)",
+  { .id = "JO45_FR_D6B56728_2FC3_4C70_A3E3_81D548E786E9", .name = "Mairie - Bournand (SL, INSEE 86036) - Bournand – commune de la "
+      "Vienne (86)",
+    .name_ja = "Mairie - Bournand (SL, INSEE 86036) - Bournand – commune de la Vienne (86)",
     .category = "government", .portal = "https://www.villagebournand.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -21551,8 +21531,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "19:32:20 CEST. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_D840597B_3190_421D_88A2_5F935DA8D6C2", .name = "Mairie - Autouillet (SL, INSEE 78036) - Mairie d&#039;Autouillet",
-    .name_ja = "Mairie - Autouillet (SL, INSEE 78036) - Mairie d&#039;Autouillet",
+  { .id = "JO45_FR_D840597B_3190_421D_88A2_5F935DA8D6C2", .name = "Mairie - Autouillet (SL, INSEE 78036) - Mairie d'Autouillet",
+    .name_ja = "Mairie - Autouillet (SL, INSEE 78036) - Mairie d'Autouillet",
     .category = "government", .portal = "https://autouillet.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -21625,9 +21605,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:09:20 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_D89A9995_6CA5_4EBE_A9B9_D91D3544877A", .name = "Crédit municipal - Bastia (SL, INSEE 2B033) - CMT &#8211; Crédit "
+  { .id = "JO45_FR_D89A9995_6CA5_4EBE_A9B9_D91D3544877A", .name = "Crédit municipal - Bastia (SL, INSEE 2B033) - CMT – Crédit "
       "Municipal de Toulon",
-    .name_ja = "Crédit municipal - Bastia (SL, INSEE 2B033) - CMT &#8211; Crédit Municipal de Toulon",
+    .name_ja = "Crédit municipal - Bastia (SL, INSEE 2B033) - CMT – Crédit Municipal de Toulon",
     .category = "government", .portal = "https://www.credit-municipal-toulon.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -21869,9 +21849,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_DAD9E793_746F_4EDB_B522_9F27DBC8E8A7", .name = "Centre communal d'action sociale (CCAS) - Pont-l'Abbé (SL, INSEE "
-      "29220) - Ville de Pont-l&#039;Abbé &#8211; Capitale du Pays "
-      "Bigouden",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Pont-l'Abbé (SL, INSEE 29220) - Ville de Pont-l&#039;Abbé &#8211; Capitale du Pays Bigouden",
+      "29220) - Ville de Pont-l'Abbé – Capitale du Pays Bigouden",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Pont-l'Abbé (SL, INSEE 29220) - Ville de Pont-l'Abbé – Capitale du Pays Bigouden",
     .category = "government", .portal = "https://ville-pontlabbe.bzh/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -21961,9 +21940,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:32:08 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_DB64CB80_FFF7_4756_96DF_F916F4B9FC3B_2", .name = "Mairie - Coignières (SL, INSEE 78168) - Albums &#8211; "
-      "Coignières",
-    .name_ja = "Mairie - Coignières (SL, INSEE 78168) - Albums &#8211; Coignières",
+  { .id = "JO45_FR_DB64CB80_FFF7_4756_96DF_F916F4B9FC3B_2", .name = "Mairie - Coignières (SL, INSEE 78168) - Albums – Coignières",
+    .name_ja = "Mairie - Coignières (SL, INSEE 78168) - Albums – Coignières",
     .category = "government", .portal = "https://www.coignieres.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -22146,8 +22124,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_DCE7916A_5B86_4553_8356_7A7B7B4AE9AC", .name = "Info Jeunes - Boën-sur-Lignon (SL, INSEE 42019) - NOUVELLE "
-      "SAISON À L&#8217;APIJ",
-    .name_ja = "Info Jeunes - Boën-sur-Lignon (SL, INSEE 42019) - NOUVELLE SAISON À L&#8217;APIJ",
+      "SAISON À L’APIJ",
+    .name_ja = "Info Jeunes - Boën-sur-Lignon (SL, INSEE 42019) - NOUVELLE SAISON À L’APIJ",
     .category = "government", .portal = "https://www.apij.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -22200,8 +22178,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-10-18T11:17:18+00:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_FR_DCEC9AD9_4A10_4D41_9DEF_EB846A7EBE0D", .name = "Mairie - Antugnac (SL, INSEE 11010) - COMMUNE D&#8217;ANTUGNAC",
-    .name_ja = "Mairie - Antugnac (SL, INSEE 11010) - COMMUNE D&#8217;ANTUGNAC",
+  { .id = "JO45_FR_DCEC9AD9_4A10_4D41_9DEF_EB846A7EBE0D", .name = "Mairie - Antugnac (SL, INSEE 11010) - COMMUNE D’ANTUGNAC",
+    .name_ja = "Mairie - Antugnac (SL, INSEE 11010) - COMMUNE D’ANTUGNAC",
     .category = "government", .portal = "https://mairie-antugnac.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -22426,8 +22404,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_DE9D08F3_A6B4_4A2F_ADF3_DA96975E07AE", .name = "Communauté d'agglomération - Sophia Antipolis (SL, INSEE 06004) "
-      "- Casa infos &#8211; votre blog Immobilier Travaux et Déco !",
-    .name_ja = "Communauté d'agglomération - Sophia Antipolis (SL, INSEE 06004) - Casa infos &#8211; votre blog Immobilier Travaux et Déco !",
+      "- Casa infos – votre blog Immobilier Travaux et Déco !",
+    .name_ja = "Communauté d'agglomération - Sophia Antipolis (SL, INSEE 06004) - Casa infos – votre blog Immobilier Travaux et Déco !",
     .category = "government", .portal = "https://casa-infos.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -22690,8 +22668,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_E1AD3CD8_F32F_4A27_94AD_C133E473971D", .name = "Communauté de communes - Terres d'Auxois (SL, INSEE 21603) - "
-      "Communauté de Communes des Terres d&#039;Auxois",
-    .name_ja = "Communauté de communes - Terres d'Auxois (SL, INSEE 21603) - Communauté de Communes des Terres d&#039;Auxois",
+      "Communauté de Communes des Terres d'Auxois",
+    .name_ja = "Communauté de communes - Terres d'Auxois (SL, INSEE 21603) - Communauté de Communes des Terres d'Auxois",
     .category = "government", .portal = "https://ccterres-auxois.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -22710,8 +22688,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_E1F1949F_B7D6_49A8_AB4B_3D3946A61CD3", .name = "Mission locale pour l'insertion professionnelle et sociale des "
       "jeunes (16-25 ans) - Clermont l’Hérault (SL, INSEE 34079) - "
-      "Mission Locale Jeunes &#8211; Cœur d&#039;Hérault",
-    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Clermont l’Hérault (SL, INSEE 34079) - Mission Locale Jeunes &#8211; Cœur d&#039;Hérault",
+      "Mission Locale Jeunes – Cœur d'Hérault",
+    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Clermont l’Hérault (SL, INSEE 34079) - Mission Locale Jeunes – Cœur d'Hérault",
     .category = "government", .portal = "https://mlj-coeurherault.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -22750,8 +22728,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "logement (Dréal) Bourgogne-Franche-Comté - Unité "
       "interdépartementale Jura et Saône-et-Loire (Lons-le-Saunier) "
       "(SIL, INSEE 39300) - Portail internet DREAL "
-      "Bourgogne-Franche-Comt&#233;",
-    .name_ja = "Direction régionale de l'environnement, de l'aménagement et du logement (Dréal) Bourgogne-Franche-Comté - Unité interdépartementale Jura et Saône-et-Loire (Lons-le-Saunier) (SIL, INSEE 39300) - Portail internet DREAL Bourgogne-Franche-Comt&#233;",
+      "Bourgogne-Franche-Comté",
+    .name_ja = "Direction régionale de l'environnement, de l'aménagement et du logement (Dréal) Bourgogne-Franche-Comté - Unité interdépartementale Jura et Saône-et-Loire (Lons-le-Saunier) (SIL, INSEE 39300) - Portail internet DREAL Bourgogne-Franche-Comté",
     .category = "government", .portal = "https://www.bourgogne-franche-comte.developpement-durable.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -22824,8 +22802,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_E38057B4_FF25_40EA_B3DB_7758A043D9B8", .name = "Mairie - Sainte-Feyre (SL, INSEE 23193) - Commune Sainte Feyre "
-      "Mairie Creuse 23   Evolis 23 &#8211; Un jeu grandeur nature",
-    .name_ja = "Mairie - Sainte-Feyre (SL, INSEE 23193) - Commune Sainte Feyre Mairie Creuse 23   Evolis 23 &#8211; Un jeu grandeur nature",
+      "Mairie Creuse 23   Evolis 23 – Un jeu grandeur nature",
+    .name_ja = "Mairie - Sainte-Feyre (SL, INSEE 23193) - Commune Sainte Feyre Mairie Creuse 23   Evolis 23 – Un jeu grandeur nature",
     .category = "government", .portal = "https://www.saintefeyre.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -23048,8 +23026,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "11:51:29 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_E61ECB68_7318_4272_B192_1722BDB35176", .name = "Mairie - Chèvremont (SL, INSEE 90026) - Ch&#232;vremont",
-    .name_ja = "Mairie - Chèvremont (SL, INSEE 90026) - Ch&#232;vremont",
+  { .id = "JO45_FR_E61ECB68_7318_4272_B192_1722BDB35176", .name = "Mairie - Chèvremont (SL, INSEE 90026) - Chèvremont",
+    .name_ja = "Mairie - Chèvremont (SL, INSEE 90026) - Chèvremont",
     .category = "government", .portal = "http://www.chevremont.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -23234,8 +23212,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_E8735016_0D00_4FFF_A54B_2849D80F4AA4", .name = "Mairie - Val-d'Aigoual (SL, INSEE 30339) - Mairie de "
-      "Val-d&#039;Aigoual",
-    .name_ja = "Mairie - Val-d'Aigoual (SL, INSEE 30339) - Mairie de Val-d&#039;Aigoual",
+      "Val-d'Aigoual",
+    .name_ja = "Mairie - Val-d'Aigoual (SL, INSEE 30339) - Mairie de Val-d'Aigoual",
     .category = "government", .portal = "https://valdaigoual.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -23344,8 +23322,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:44:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_E9C9C2C3_7177_4A83_89EC_3D20B9E6DD40", .name = "Mairie - Arsy (SL, INSEE 60024) - Mairie d&#039;Arsy (60)",
-    .name_ja = "Mairie - Arsy (SL, INSEE 60024) - Mairie d&#039;Arsy (60)",
+  { .id = "JO45_FR_E9C9C2C3_7177_4A83_89EC_3D20B9E6DD40", .name = "Mairie - Arsy (SL, INSEE 60024) - Mairie d'Arsy (60)",
+    .name_ja = "Mairie - Arsy (SL, INSEE 60024) - Mairie d'Arsy (60)",
     .category = "government", .portal = "https://arsy.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -23381,9 +23359,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:45:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_EB04F4F6_3403_4B81_B40A_910D21B44F5E", .name = "Mairie - Saint-Séverin (SL, INSEE 16350) - Saint-Séverin &#8211; "
+  { .id = "JO45_FR_EB04F4F6_3403_4B81_B40A_910D21B44F5E", .name = "Mairie - Saint-Séverin (SL, INSEE 16350) - Saint-Séverin – "
       "Village en Sud-Charente",
-    .name_ja = "Mairie - Saint-Séverin (SL, INSEE 16350) - Saint-Séverin &#8211; Village en Sud-Charente",
+    .name_ja = "Mairie - Saint-Séverin (SL, INSEE 16350) - Saint-Séverin – Village en Sud-Charente",
     .category = "government", .portal = "https://www.saintseverin.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -23869,8 +23847,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_F0A0224A_E072_4C25_99B1_34196147C127", .name = "Mairie - Sainte-Cécile-d'Andorge (SL, INSEE 30239) - Sainte "
-      "Cécile d&#039;Andorge",
-    .name_ja = "Mairie - Sainte-Cécile-d'Andorge (SL, INSEE 30239) - Sainte Cécile d&#039;Andorge",
+      "Cécile d'Andorge",
+    .name_ja = "Mairie - Sainte-Cécile-d'Andorge (SL, INSEE 30239) - Sainte Cécile d'Andorge",
     .category = "government", .portal = "https://www.saintececiledandorge.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -23906,9 +23884,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "05:58:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F10865A3_0107_4914_85E6_2F14C5F1A926", .name = "Info Jeunes - Rambouillet (SL, INSEE 78517) - L&#039;Usine à "
-      "Chapeaux",
-    .name_ja = "Info Jeunes - Rambouillet (SL, INSEE 78517) - L&#039;Usine à Chapeaux",
+  { .id = "JO45_FR_F10865A3_0107_4914_85E6_2F14C5F1A926", .name = "Info Jeunes - Rambouillet (SL, INSEE 78517) - L'Usine à Chapeaux",
+    .name_ja = "Info Jeunes - Rambouillet (SL, INSEE 78517) - L'Usine à Chapeaux",
     .category = "government", .portal = "https://www.usineachapeaux.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -24019,8 +23996,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_F25A3782_7000_4A65_A9DF_4F913C838559", .name = "Mairie - Pont-de-l'Isère (SL, INSEE 26250) - Mairie de Pont de "
-      "l&#039;Isère",
-    .name_ja = "Mairie - Pont-de-l'Isère (SL, INSEE 26250) - Mairie de Pont de l&#039;Isère",
+      "l'Isère",
+    .name_ja = "Mairie - Pont-de-l'Isère (SL, INSEE 26250) - Mairie de Pont de l'Isère",
     .category = "government", .portal = "https://www.mairiedepontdelisere.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -24112,8 +24089,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_F379CD4C_F165_47FC_84E4_FB61777EAD8A", .name = "Centre communal d'action sociale (CCAS) - Cotignac (SL, INSEE "
-      "83046) - Mairie de Cotignac &#8211; Village de caractère",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Cotignac (SL, INSEE 83046) - Mairie de Cotignac &#8211; Village de caractère",
+      "83046) - Mairie de Cotignac – Village de caractère",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Cotignac (SL, INSEE 83046) - Mairie de Cotignac – Village de caractère",
     .category = "government", .portal = "https://mairiecotignac.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -24186,9 +24163,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:27:03 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F43EB2D2_681A_4BCA_8E4E_1BD6A196BA02", .name = "Police municipale - Albert (SL, INSEE 80016) - Ville "
-      "d&#039;Albert",
-    .name_ja = "Police municipale - Albert (SL, INSEE 80016) - Ville d&#039;Albert",
+  { .id = "JO45_FR_F43EB2D2_681A_4BCA_8E4E_1BD6A196BA02", .name = "Police municipale - Albert (SL, INSEE 80016) - Ville d'Albert",
+    .name_ja = "Police municipale - Albert (SL, INSEE 80016) - Ville d'Albert",
     .category = "government", .portal = "https://www.ville-albert.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -24392,8 +24368,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_F6715661_C5FD_4448_9A4D_E41441F8A5C7", .name = "Espace conseil France Rénov' - Reims (SL, INSEE 51454) - La "
-      "maison de l&#039;habitat &#8211; Reims",
-    .name_ja = "Espace conseil France Rénov' - Reims (SL, INSEE 51454) - La maison de l&#039;habitat &#8211; Reims",
+      "maison de l'habitat – Reims",
+    .name_ja = "Espace conseil France Rénov' - Reims (SL, INSEE 51454) - La maison de l'habitat – Reims",
     .category = "government", .portal = "https://www.lamaisondelhabitat-reims.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -24521,9 +24497,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "18:38:01 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F7F07BD7_CA70_4D3D_ACAB_A33DA67F61BA", .name = "Mairie - Lanas (SL, INSEE 07131) - Lanas &#8211; Ardèche &#8211; "
-      "Site du village",
-    .name_ja = "Mairie - Lanas (SL, INSEE 07131) - Lanas &#8211; Ardèche &#8211; Site du village",
+  { .id = "JO45_FR_F7F07BD7_CA70_4D3D_ACAB_A33DA67F61BA", .name = "Mairie - Lanas (SL, INSEE 07131) - Lanas – Ardèche – Site du "
+      "village",
+    .name_ja = "Mairie - Lanas (SL, INSEE 07131) - Lanas – Ardèche – Site du village",
     .category = "government", .portal = "https://lanas.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -24540,9 +24516,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:21:31 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F804D86C_0A62_482B_81EA_4986DFDD4CB6", .name = "Info Jeunes - Mayenne (SL, INSEE 53147) - L&#039;association Les "
+  { .id = "JO45_FR_F804D86C_0A62_482B_81EA_4986DFDD4CB6", .name = "Info Jeunes - Mayenne (SL, INSEE 53147) - L'association Les "
       "Possibles",
-    .name_ja = "Info Jeunes - Mayenne (SL, INSEE 53147) - L&#039;association Les Possibles",
+    .name_ja = "Info Jeunes - Mayenne (SL, INSEE 53147) - L'association Les Possibles",
     .category = "government", .portal = "https://www.lespossibles.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -24653,8 +24629,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_FA13C316_DC30_42F6_89BB_860B0485E839", .name = "Mairie - Hornoy-le-Bourg (SL, INSEE 80443) - Commune "
-      "d&#039;Hornoy-le-Bourg",
-    .name_ja = "Mairie - Hornoy-le-Bourg (SL, INSEE 80443) - Commune d&#039;Hornoy-le-Bourg",
+      "d'Hornoy-le-Bourg",
+    .name_ja = "Mairie - Hornoy-le-Bourg (SL, INSEE 80443) - Commune d'Hornoy-le-Bourg",
     .category = "government", .portal = "https://www.hornoylebourg.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -24709,8 +24685,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_FA6B0201_A30B_4B1F_BB0F_3767A8CCFC18", .name = "Mairie - La Neuveville-devant-Lépanges (SL, INSEE 88322) - La "
-      "Neuveville dvt L&#233;panges - Le Boulay- St Jean du March&#233;",
-    .name_ja = "Mairie - La Neuveville-devant-Lépanges (SL, INSEE 88322) - La Neuveville dvt L&#233;panges - Le Boulay- St Jean du March&#233;",
+      "Neuveville dvt Lépanges - Le Boulay- St Jean du Marché",
+    .name_ja = "Mairie - La Neuveville-devant-Lépanges (SL, INSEE 88322) - La Neuveville dvt Lépanges - Le Boulay- St Jean du Marché",
     .category = "government", .portal = "http://www.laneuvevilledevantlepanges.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -24728,8 +24704,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_FA6B0201_A30B_4B1F_BB0F_3767A8CCFC18_2", .name = "Mairie - La Neuveville-devant-Lépanges (SL, INSEE 88322) - La "
-      "Neuveville dvt L&#233;panges - Le Boulay- St Jean du March&#233;",
-    .name_ja = "Mairie - La Neuveville-devant-Lépanges (SL, INSEE 88322) - La Neuveville dvt L&#233;panges - Le Boulay- St Jean du March&#233;",
+      "Neuveville dvt Lépanges - Le Boulay- St Jean du Marché",
+    .name_ja = "Mairie - La Neuveville-devant-Lépanges (SL, INSEE 88322) - La Neuveville dvt Lépanges - Le Boulay- St Jean du Marché",
     .category = "government", .portal = "http://www.laneuvevilledevantlepanges.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -24746,9 +24722,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:52:00 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_FA8CFB7A_3A2C_441F_904F_62C38C3DC3A5", .name = "Mairie - Gabaston (SL, INSEE 64227) - Commune de Gabaston "
-      "&#8211; Béarn, 64",
-    .name_ja = "Mairie - Gabaston (SL, INSEE 64227) - Commune de Gabaston &#8211; Béarn, 64",
+  { .id = "JO45_FR_FA8CFB7A_3A2C_441F_904F_62C38C3DC3A5", .name = "Mairie - Gabaston (SL, INSEE 64227) - Commune de Gabaston – "
+      "Béarn, 64",
+    .name_ja = "Mairie - Gabaston (SL, INSEE 64227) - Commune de Gabaston – Béarn, 64",
     .category = "government", .portal = "https://gabaston.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -24837,9 +24813,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:56:32 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_FB8810EF_4DE9_401B_A47C_341B16DA8B39", .name = "Mairie - Osthoffen (SL, INSEE 67363) - Goûter d&#8217;Halloween "
-      "organisée par l&#8217;APE pour nos enfants &#8211; Ma",
-    .name_ja = "Mairie - Osthoffen (SL, INSEE 67363) - Goûter d&#8217;Halloween organisée par l&#8217;APE pour nos enfants &#8211; Ma",
+  { .id = "JO45_FR_FB8810EF_4DE9_401B_A47C_341B16DA8B39", .name = "Mairie - Osthoffen (SL, INSEE 67363) - Goûter d’Halloween "
+      "organisée par l’APE pour nos enfants – Ma",
+    .name_ja = "Mairie - Osthoffen (SL, INSEE 67363) - Goûter d’Halloween organisée par l’APE pour nos enfants – Ma",
     .category = "government", .portal = "https://mairie-osthoffen.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -24877,8 +24853,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_FC7F6856_CF6D_458D_ACA3_22381CCFD380", .name = "Mairie - Fresselines (SL, INSEE 23087) - Site officiel de la "
-      "Communaut&#233; de Communes du Pays Dunois en Creuse",
-    .name_ja = "Mairie - Fresselines (SL, INSEE 23087) - Site officiel de la Communaut&#233; de Communes du Pays Dunois en Creuse",
+      "Communauté de Communes du Pays Dunois en Creuse",
+    .name_ja = "Mairie - Fresselines (SL, INSEE 23087) - Site officiel de la Communauté de Communes du Pays Dunois en Creuse",
     .category = "government", .portal = "https://paysdunois.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -24896,8 +24872,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_FC9204FE_0B47_48BC_8380_6E323E1BE59A", .name = "Mairie - Collonges-au-Mont-d'Or (SL, INSEE 69063) - Mairie de "
-      "Collonges-au-Mont-d&#039;Or",
-    .name_ja = "Mairie - Collonges-au-Mont-d'Or (SL, INSEE 69063) - Mairie de Collonges-au-Mont-d&#039;Or",
+      "Collonges-au-Mont-d'Or",
+    .name_ja = "Mairie - Collonges-au-Mont-d'Or (SL, INSEE 69063) - Mairie de Collonges-au-Mont-d'Or",
     .category = "government", .portal = "https://www.collongesaumontdor.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -25362,9 +25338,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_09A0C1D6_C8EA_44D9_B3C4_93BB5B7683D7", .name = "Chambre de métiers et de l'artisanat (CMA) - Guadeloupe (SL, "
-      "INSEE 97124) - Chambre de M&#233;tiers et de l'Artisanat de "
-      "R&#233;gion Guadeloupe",
-    .name_ja = "Chambre de métiers et de l'artisanat (CMA) - Guadeloupe (SL, INSEE 97124) - Chambre de M&#233;tiers et de l'Artisanat de R&#233;gion Guadeloupe",
+      "INSEE 97124) - Chambre de Métiers et de l'Artisanat de Région "
+      "Guadeloupe",
+    .name_ja = "Chambre de métiers et de l'artisanat (CMA) - Guadeloupe (SL, INSEE 97124) - Chambre de Métiers et de l'Artisanat de Région Guadeloupe",
     .category = "government", .portal = "https://cmarguadeloupe.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -25589,9 +25565,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:10:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_0C2C4FC0_05DA_413F_88BC_7EA625E1F776", .name = "Mairie - Bassurels (SL, INSEE 48020) - Commune de Bassurels  "
-      "&#8211; Lozère",
-    .name_ja = "Mairie - Bassurels (SL, INSEE 48020) - Commune de Bassurels  &#8211; Lozère",
+  { .id = "JO45_FR_0C2C4FC0_05DA_413F_88BC_7EA625E1F776", .name = "Mairie - Bassurels (SL, INSEE 48020) - Commune de Bassurels  – "
+      "Lozère",
+    .name_ja = "Mairie - Bassurels (SL, INSEE 48020) - Commune de Bassurels  – Lozère",
     .category = "government", .portal = "https://www.mairie-bassurels.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -25814,9 +25790,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_0DE471FA_47DD_4E3A_B0E9_D6F5B912B545", .name = "Service d'État des affaires maritimes - Polynésie française "
-      "(SIL, INSEE 98735) - Service d'&#201;tat des affaires maritimes "
-      "en Polyn&#233;sie fran&#231;aise",
-    .name_ja = "Service d'État des affaires maritimes - Polynésie française (SIL, INSEE 98735) - Service d'&#201;tat des affaires maritimes en Polyn&#233;sie fran&#231;aise",
+      "(SIL, INSEE 98735) - Service d'État des affaires maritimes en "
+      "Polynésie française",
+    .name_ja = "Service d'État des affaires maritimes - Polynésie française (SIL, INSEE 98735) - Service d'État des affaires maritimes en Polynésie française",
     .category = "government", .portal = "https://www.seam.polynesie-francaise.mer.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -26187,8 +26163,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_11A6B3B3_53CB_4C7E_BC66_15495FFEFDE9", .name = "Centre communal d'action sociale (CCAS) - Bénodet (SL, INSEE "
-      "29006) - Mairie de Bénodet &#8211; Site Officiel",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Bénodet (SL, INSEE 29006) - Mairie de Bénodet &#8211; Site Officiel",
+      "29006) - Mairie de Bénodet – Site Officiel",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Bénodet (SL, INSEE 29006) - Mairie de Bénodet – Site Officiel",
     .category = "government", .portal = "https://www.mairie-benodet.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -26357,8 +26333,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_142C99E7_BA32_4B50_B3E7_36DE1FC9EAC9", .name = "Point conseil budget - Union départementale des associations "
       "familiales (UDAF 72) - Le Lude (SL, INSEE 72176) - Le Blog de "
-      "l&#39;UDAF de la sarthe (72)",
-    .name_ja = "Point conseil budget - Union départementale des associations familiales (UDAF 72) - Le Lude (SL, INSEE 72176) - Le Blog de l&#39;UDAF de la sarthe (72)",
+      "l'UDAF de la sarthe (72)",
+    .name_ja = "Point conseil budget - Union départementale des associations familiales (UDAF 72) - Le Lude (SL, INSEE 72176) - Le Blog de l'UDAF de la sarthe (72)",
     .category = "government", .portal = "https://udaf72.blogspot.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -26377,8 +26353,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_142C99E7_BA32_4B50_B3E7_36DE1FC9EAC9_2", .name = "Point conseil budget - Union départementale des associations "
       "familiales (UDAF 72) - Le Lude (SL, INSEE 72176) - Le Blog de "
-      "l&#39;UDAF de la sarthe (72)",
-    .name_ja = "Point conseil budget - Union départementale des associations familiales (UDAF 72) - Le Lude (SL, INSEE 72176) - Le Blog de l&#39;UDAF de la sarthe (72)",
+      "l'UDAF de la sarthe (72)",
+    .name_ja = "Point conseil budget - Union départementale des associations familiales (UDAF 72) - Le Lude (SL, INSEE 72176) - Le Blog de l'UDAF de la sarthe (72)",
     .category = "government", .portal = "https://udaf72.blogspot.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -26397,8 +26373,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_142C99E7_BA32_4B50_B3E7_36DE1FC9EAC9_3", .name = "Point conseil budget - Union départementale des associations "
       "familiales (UDAF 72) - Le Lude (SL, INSEE 72176) - Le Blog de "
-      "l&#39;UDAF de la sarthe (72)",
-    .name_ja = "Point conseil budget - Union départementale des associations familiales (UDAF 72) - Le Lude (SL, INSEE 72176) - Le Blog de l&#39;UDAF de la sarthe (72)",
+      "l'UDAF de la sarthe (72)",
+    .name_ja = "Point conseil budget - Union départementale des associations familiales (UDAF 72) - Le Lude (SL, INSEE 72176) - Le Blog de l'UDAF de la sarthe (72)",
     .category = "government", .portal = "https://www.blogger.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -26526,8 +26502,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_15B77F74_E9D3_4C78_8776_8802C360A025", .name = "Mairie - La Répara-Auriples (SL, INSEE 26020) - Mairie de la "
-      "Répara-Auriples &#8211; Drôme",
-    .name_ja = "Mairie - La Répara-Auriples (SL, INSEE 26020) - Mairie de la Répara-Auriples &#8211; Drôme",
+      "Répara-Auriples – Drôme",
+    .name_ja = "Mairie - La Répara-Auriples (SL, INSEE 26020) - Mairie de la Répara-Auriples – Drôme",
     .category = "government", .portal = "https://www.larepara-auriples.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -26656,8 +26632,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:48:08 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_16DC8C12_5052_4DCB_A19C_00D4AECF6C26", .name = "Mairie - Osmoy (SL, INSEE 18174) - Commune d&#039;Osmoy",
-    .name_ja = "Mairie - Osmoy (SL, INSEE 18174) - Commune d&#039;Osmoy",
+  { .id = "JO45_FR_16DC8C12_5052_4DCB_A19C_00D4AECF6C26", .name = "Mairie - Osmoy (SL, INSEE 18174) - Commune d'Osmoy",
+    .name_ja = "Mairie - Osmoy (SL, INSEE 18174) - Commune d'Osmoy",
     .category = "government", .portal = "https://osmoy.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -26692,9 +26668,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "19:57:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_170C6073_11D7_4875_85FC_0A356DE7D8DE", .name = "France services - Hyères (SL, INSEE 83069) - Ville d&#039;Hyères "
-      "les Palmiers",
-    .name_ja = "France services - Hyères (SL, INSEE 83069) - Ville d&#039;Hyères les Palmiers",
+  { .id = "JO45_FR_170C6073_11D7_4875_85FC_0A356DE7D8DE", .name = "France services - Hyères (SL, INSEE 83069) - Ville d'Hyères les "
+      "Palmiers",
+    .name_ja = "France services - Hyères (SL, INSEE 83069) - Ville d'Hyères les Palmiers",
     .category = "government", .portal = "https://hyeres.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -26915,8 +26891,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_19387EC3_E774_4C3C_BD73_FCEEE5E31279", .name = "Mairie - Autruy-sur-Juine (SL, INSEE 45015) - Mairie "
-      "d&#039;Autruy-sur-Juine",
-    .name_ja = "Mairie - Autruy-sur-Juine (SL, INSEE 45015) - Mairie d&#039;Autruy-sur-Juine",
+      "d'Autruy-sur-Juine",
+    .name_ja = "Mairie - Autruy-sur-Juine (SL, INSEE 45015) - Mairie d'Autruy-sur-Juine",
     .category = "government", .portal = "https://autruy-sur-juine.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -26953,8 +26929,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_198E18B9_867C_4BDD_A8B4_1B446ECDB7E4", .name = "Espace conseil France Rénov' - Louviers (SL, INSEE 27375) - "
-      "Maison de l&#039;Habitat",
-    .name_ja = "Espace conseil France Rénov' - Louviers (SL, INSEE 27375) - Maison de l&#039;Habitat",
+      "Maison de l'Habitat",
+    .name_ja = "Espace conseil France Rénov' - Louviers (SL, INSEE 27375) - Maison de l'Habitat",
     .category = "government", .portal = "https://maison-habitat.seine-eure.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -26972,9 +26948,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_19D25218_6686_49AC_BC57_F6C6059DC186", .name = "Chambre de métiers et de l'artisanat (CMA) - Aisne (SL, INSEE "
-      "02408) - Boutique &#8211; Chambre de Métiers et d&#039;Artisanat "
-      "des Hauts-de-France",
-    .name_ja = "Chambre de métiers et de l'artisanat (CMA) - Aisne (SL, INSEE 02408) - Boutique &#8211; Chambre de Métiers et d&#039;Artisanat des Hauts-de-France",
+      "02408) - Boutique – Chambre de Métiers et d'Artisanat des "
+      "Hauts-de-France",
+    .name_ja = "Chambre de métiers et de l'artisanat (CMA) - Aisne (SL, INSEE 02408) - Boutique – Chambre de Métiers et d'Artisanat des Hauts-de-France",
     .category = "government", .portal = "https://www.cma-hautsdefrance.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -27009,8 +26985,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:39:45 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_1A519DE5_3DEC_4E34_8A73_23A36A9773EB", .name = "Mairie - Tostat (SL, INSEE 65446) - Tostat en Val d&#039;Adour",
-    .name_ja = "Mairie - Tostat (SL, INSEE 65446) - Tostat en Val d&#039;Adour",
+  { .id = "JO45_FR_1A519DE5_3DEC_4E34_8A73_23A36A9773EB", .name = "Mairie - Tostat (SL, INSEE 65446) - Tostat en Val d'Adour",
+    .name_ja = "Mairie - Tostat (SL, INSEE 65446) - Tostat en Val d'Adour",
     .category = "government", .portal = "https://www.tostat.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -27196,8 +27172,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_1D12FE02_5A66_4CD1_96CB_E0A191681F9F", .name = "Centre communal d'action sociale (CCAS) - Aubiet (SL, INSEE "
-      "32012) - Commune d&#039;Aubiet",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Aubiet (SL, INSEE 32012) - Commune d&#039;Aubiet",
+      "32012) - Commune d'Aubiet",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Aubiet (SL, INSEE 32012) - Commune d'Aubiet",
     .category = "government", .portal = "https://www.mairie-aubiet.net/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -27749,8 +27725,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_21DBF405_EF3E_4CF6_8811_53A37A17E14A", .name = "Mairie - Hames-Boucres (SL, INSEE 62408) - Commune "
-      "d&#039;Hames-Boucres",
-    .name_ja = "Mairie - Hames-Boucres (SL, INSEE 62408) - Commune d&#039;Hames-Boucres",
+      "d'Hames-Boucres",
+    .name_ja = "Mairie - Hames-Boucres (SL, INSEE 62408) - Commune d'Hames-Boucres",
     .category = "government", .portal = "https://hames-boucres.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -27822,9 +27798,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:49:57 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_22814CD8_B19D_4CBC_9837_3A621A3BD1E7", .name = "Mairie déléguée - Bauquay (SL, INSEE 14056) - Les monts "
-      "d&#039;Aunay",
-    .name_ja = "Mairie déléguée - Bauquay (SL, INSEE 14056) - Les monts d&#039;Aunay",
+  { .id = "JO45_FR_22814CD8_B19D_4CBC_9837_3A621A3BD1E7", .name = "Mairie déléguée - Bauquay (SL, INSEE 14056) - Les monts d'Aunay",
+    .name_ja = "Mairie déléguée - Bauquay (SL, INSEE 14056) - Les monts d'Aunay",
     .category = "government", .portal = "https://lesmontsdaunay.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -27972,9 +27947,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "16:13:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_249DCC50_CC75_4073_96AC_7A3D96EAE341", .name = "Mairie - Le Bourg-d Hem (SL, INSEE 23029) - Le Bourg D&#039;Hem  "
+  { .id = "JO45_FR_249DCC50_CC75_4073_96AC_7A3D96EAE341", .name = "Mairie - Le Bourg-d Hem (SL, INSEE 23029) - Le Bourg D'Hem   "
       "HORAIRES OUVERTURE DE LA MAIRIE DU 17/08 AU 05/09/2026",
-    .name_ja = "Mairie - Le Bourg-d Hem (SL, INSEE 23029) - Le Bourg D&#039;Hem   HORAIRES OUVERTURE DE LA MAIRIE DU 17/08 AU 05/09/2026",
+    .name_ja = "Mairie - Le Bourg-d Hem (SL, INSEE 23029) - Le Bourg D'Hem   HORAIRES OUVERTURE DE LA MAIRIE DU 17/08 AU 05/09/2026",
     .category = "government", .portal = "https://lebourgdhem.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -28011,8 +27986,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_255D9137_405D_40B0_BFBF_D1C1E30072F2", .name = "Centre intercommunal d'action sociale (CIAS) du Pays d'Opale "
-      "(SL, INSEE 62397) - Pays d&#039;Opale",
-    .name_ja = "Centre intercommunal d'action sociale (CIAS) du Pays d'Opale (SL, INSEE 62397) - Pays d&#039;Opale",
+      "(SL, INSEE 62397) - Pays d'Opale",
+    .name_ja = "Centre intercommunal d'action sociale (CIAS) du Pays d'Opale (SL, INSEE 62397) - Pays d'Opale",
     .category = "government", .portal = "https://paysdopale.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -28067,8 +28042,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_25C62EFE_414A_4BF2_9809_0505790C4852", .name = "Centre communal d'action sociale (CCAS) - Menthon-Saint-Bernard "
-      "(SL, INSEE 74176) - Bienvenue &#224; Menthon-Saint-Bernard",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Menthon-Saint-Bernard (SL, INSEE 74176) - Bienvenue &#224; Menthon-Saint-Bernard",
+      "(SL, INSEE 74176) - Bienvenue à Menthon-Saint-Bernard",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Menthon-Saint-Bernard (SL, INSEE 74176) - Bienvenue à Menthon-Saint-Bernard",
     .category = "government", .portal = "https://www.menthon-saint-bernard.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -28124,8 +28099,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_26C11A91_2D9E_4E44_A65D_2DDE989D7EE8", .name = "Mairie - Coulonges-sur-l Autize (SL, INSEE 79101) - Coulonges "
-      "sur l&#039;Autize",
-    .name_ja = "Mairie - Coulonges-sur-l Autize (SL, INSEE 79101) - Coulonges sur l&#039;Autize",
+      "sur l'Autize",
+    .name_ja = "Mairie - Coulonges-sur-l Autize (SL, INSEE 79101) - Coulonges sur l'Autize",
     .category = "government", .portal = "https://www.coulonges-sur-lautize.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -28199,8 +28174,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_27392117_8077_45C1_B4CB_57B8EC261A73", .name = "Mairie - Berstheim (SL, INSEE 67035) - Site officiel de la "
-      "Commune de Berstheim &#8211; www.berstheim.fr",
-    .name_ja = "Mairie - Berstheim (SL, INSEE 67035) - Site officiel de la Commune de Berstheim &#8211; www.berstheim.fr",
+      "Commune de Berstheim – www.berstheim.fr",
+    .name_ja = "Mairie - Berstheim (SL, INSEE 67035) - Site officiel de la Commune de Berstheim – www.berstheim.fr",
     .category = "government", .portal = "https://www.berstheim.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -28366,8 +28341,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_29CCC5E7_9578_452B_9381_96883D3E6BB5", .name = "Centre communal d'action sociale (CCAS) - Bellegarde Gard (SL, "
-      "INSEE 30034) - Ville de Bellegarde (Gard) &#8211; site officiel",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Bellegarde Gard (SL, INSEE 30034) - Ville de Bellegarde (Gard) &#8211; site officiel",
+      "INSEE 30034) - Ville de Bellegarde (Gard) – site officiel",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Bellegarde Gard (SL, INSEE 30034) - Ville de Bellegarde (Gard) – site officiel",
     .category = "government", .portal = "https://www.bellegarde.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -28422,8 +28397,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_29FD0F5F_6EE6_4CCF_B4BB_3D81A61CC0C3", .name = "Centre communal d'action sociale (CCAS) - Pouzols (SL, INSEE "
-      "34215) - pouzols-d&#039;hérault",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Pouzols (SL, INSEE 34215) - pouzols-d&#039;hérault",
+      "34215) - pouzols-d'hérault",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Pouzols (SL, INSEE 34215) - pouzols-d'hérault",
     .category = "government", .portal = "https://www.pouzols-dherault.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -28441,8 +28416,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_2A018BE9_647D_4484_B428_3B23C2535E03", .name = "Centre communal d'action sociale (CCAS) - Angliers (SL, INSEE "
-      "17009) - Commune d&#039;Angliers",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Angliers (SL, INSEE 17009) - Commune d&#039;Angliers",
+      "17009) - Commune d'Angliers",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Angliers (SL, INSEE 17009) - Commune d'Angliers",
     .category = "government", .portal = "https://www.angliers.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -28536,8 +28511,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_2B5E5FDD_A25A_4C81_9090_7934019E279C", .name = "Centre communal d'action sociale (CCAS) - Airaines (SL, INSEE "
-      "80013) - Plan Canicule 2025 &#8211; Mairie d&#039;Airaines",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Airaines (SL, INSEE 80013) - Plan Canicule 2025 &#8211; Mairie d&#039;Airaines",
+      "80013) - Plan Canicule 2025 – Mairie d'Airaines",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Airaines (SL, INSEE 80013) - Plan Canicule 2025 – Mairie d'Airaines",
     .category = "government", .portal = "https://airaines.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -29131,9 +29106,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:36:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_3294AF78_21F7_44A0_974E_A212AAD389D5", .name = "Mairie - Floing (SL, INSEE 08174) - Recensement militaire "
-      "&#8211; Bientôt 16 ans ! Pensez au recensement   www.vill",
-    .name_ja = "Mairie - Floing (SL, INSEE 08174) - Recensement militaire &#8211; Bientôt 16 ans ! Pensez au recensement   www.vill",
+  { .id = "JO45_FR_3294AF78_21F7_44A0_974E_A212AAD389D5", .name = "Mairie - Floing (SL, INSEE 08174) - Recensement militaire – "
+      "Bientôt 16 ans ! Pensez au recensement   www.vill",
+    .name_ja = "Mairie - Floing (SL, INSEE 08174) - Recensement militaire – Bientôt 16 ans ! Pensez au recensement   www.vill",
     .category = "government", .portal = "https://www.villedefloing.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -29205,9 +29180,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026 10:31:51 +0000. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO45_FR_32A408D6_A4D7_4A6B_BF4D_BBA757DF8298", .name = "Mairie - Aunay-sous-Crécy (SL, INSEE 28014) - Mairie "
-      "d&#8217;Aunay sous Crécy",
-    .name_ja = "Mairie - Aunay-sous-Crécy (SL, INSEE 28014) - Mairie d&#8217;Aunay sous Crécy",
+  { .id = "JO45_FR_32A408D6_A4D7_4A6B_BF4D_BBA757DF8298", .name = "Mairie - Aunay-sous-Crécy (SL, INSEE 28014) - Mairie d’Aunay "
+      "sous Crécy",
+    .name_ja = "Mairie - Aunay-sous-Crécy (SL, INSEE 28014) - Mairie d’Aunay sous Crécy",
     .category = "government", .portal = "https://aunay-sous-crecy.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -29469,8 +29444,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_37C41AD3_38D1_490B_9C3D_B67852611A05", .name = "Mairie - Les Bois d'Anjou (SL, INSEE 49138) - Mairie des Bois "
-      "d&#039;Anjou",
-    .name_ja = "Mairie - Les Bois d'Anjou (SL, INSEE 49138) - Mairie des Bois d&#039;Anjou",
+      "d'Anjou",
+    .name_ja = "Mairie - Les Bois d'Anjou (SL, INSEE 49138) - Mairie des Bois d'Anjou",
     .category = "government", .portal = "https://www.boisdanjou.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -29488,9 +29463,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_38383B5E_686C_4979_A2F2_BE2B050BF7DD", .name = "Point-justice du Palais de justice de Castelnaudary (SL, INSEE "
-      "11076) - Conseil Départemental de l’Accès au Droit de "
-      "l&#039;Aude",
-    .name_ja = "Point-justice du Palais de justice de Castelnaudary (SL, INSEE 11076) - Conseil Départemental de l’Accès au Droit de l&#039;Aude",
+      "11076) - Conseil Départemental de l’Accès au Droit de l'Aude",
+    .name_ja = "Point-justice du Palais de justice de Castelnaudary (SL, INSEE 11076) - Conseil Départemental de l’Accès au Droit de l'Aude",
     .category = "government", .portal = "https://cdad-aude.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -29806,8 +29780,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_3DD50A74_8C4B_4EA6_A57B_15067FE83853", .name = "Mairie - Saint-Étienne-l'Allier (SL, INSEE 27538) - Saint "
-      "Etienne L&#039;Allier &#8211; Site officiel",
-    .name_ja = "Mairie - Saint-Étienne-l'Allier (SL, INSEE 27538) - Saint Etienne L&#039;Allier &#8211; Site officiel",
+      "Etienne L'Allier – Site officiel",
+    .name_ja = "Mairie - Saint-Étienne-l'Allier (SL, INSEE 27538) - Saint Etienne L'Allier – Site officiel",
     .category = "government", .portal = "https://www.saintetiennelallier.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -30083,8 +30057,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:38:11 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_41466EA5_6AB2_437A_B404_E4D62DC017A4", .name = "Mairie - Andryes (SL, INSEE 89007) - Mairie d&#039;Andryes",
-    .name_ja = "Mairie - Andryes (SL, INSEE 89007) - Mairie d&#039;Andryes",
+  { .id = "JO45_FR_41466EA5_6AB2_437A_B404_E4D62DC017A4", .name = "Mairie - Andryes (SL, INSEE 89007) - Mairie d'Andryes",
+    .name_ja = "Mairie - Andryes (SL, INSEE 89007) - Mairie d'Andryes",
     .category = "government", .portal = "https://andryes.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -30214,9 +30188,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:45:59 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_4249F3D9_9636_4D04_B0B2_B9CC1ECF8A7A", .name = "Mairie - Le Louroux (SL, INSEE 37136) - Le Louroux &#8211; "
-      "Village de Touraine",
-    .name_ja = "Mairie - Le Louroux (SL, INSEE 37136) - Le Louroux &#8211; Village de Touraine",
+  { .id = "JO45_FR_4249F3D9_9636_4D04_B0B2_B9CC1ECF8A7A", .name = "Mairie - Le Louroux (SL, INSEE 37136) - Le Louroux – Village de "
+      "Touraine",
+    .name_ja = "Mairie - Le Louroux (SL, INSEE 37136) - Le Louroux – Village de Touraine",
     .category = "government", .portal = "https://www.lelouroux.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -30288,9 +30262,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:23:46 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_42A69ED3_E27D_45A4_9130_41938982CCE1", .name = "Mairie - Piégut (SL, INSEE 04150) - Mairie de Pi&#233;gut "
-      "(05130)",
-    .name_ja = "Mairie - Piégut (SL, INSEE 04150) - Mairie de Pi&#233;gut (05130)",
+  { .id = "JO45_FR_42A69ED3_E27D_45A4_9130_41938982CCE1", .name = "Mairie - Piégut (SL, INSEE 04150) - Mairie de Piégut (05130)",
+    .name_ja = "Mairie - Piégut (SL, INSEE 04150) - Mairie de Piégut (05130)",
     .category = "government", .portal = "https://www.mairie-piegut.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -30362,9 +30335,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:40:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_43D84249_EEB7_44A6_A3FA_7523F030BC04", .name = "Mairie - Isle-Saint-Georges (SL, INSEE 33206) - Mairie de "
-      "l&#039;Isle Saint Georges",
-    .name_ja = "Mairie - Isle-Saint-Georges (SL, INSEE 33206) - Mairie de l&#039;Isle Saint Georges",
+  { .id = "JO45_FR_43D84249_EEB7_44A6_A3FA_7523F030BC04", .name = "Mairie - Isle-Saint-Georges (SL, INSEE 33206) - Mairie de l'Isle "
+      "Saint Georges",
+    .name_ja = "Mairie - Isle-Saint-Georges (SL, INSEE 33206) - Mairie de l'Isle Saint Georges",
     .category = "government", .portal = "http://islesaintgeorges.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -31050,9 +31023,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "17:41:59 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_4C4D9D72_16D2_46BA_809A_04439B8E3A71", .name = "Mairie - Algolsheim (SL, INSEE 68001) - Commune "
-      "d&#039;Algolsheim",
-    .name_ja = "Mairie - Algolsheim (SL, INSEE 68001) - Commune d&#039;Algolsheim",
+  { .id = "JO45_FR_4C4D9D72_16D2_46BA_809A_04439B8E3A71", .name = "Mairie - Algolsheim (SL, INSEE 68001) - Commune d'Algolsheim",
+    .name_ja = "Mairie - Algolsheim (SL, INSEE 68001) - Commune d'Algolsheim",
     .category = "government", .portal = "https://www.algolsheim.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -31070,8 +31042,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_4C55F493_26A3_4964_B35A_3B11BE3DD470", .name = "Mairie - Anglesqueville-l'Esneval (SL, INSEE 76017) - "
-      "Anglesqueville l&#039;Esneval",
-    .name_ja = "Mairie - Anglesqueville-l'Esneval (SL, INSEE 76017) - Anglesqueville l&#039;Esneval",
+      "Anglesqueville l'Esneval",
+    .name_ja = "Mairie - Anglesqueville-l'Esneval (SL, INSEE 76017) - Anglesqueville l'Esneval",
     .category = "government", .portal = "https://anglesqueville-lesneval.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -31108,8 +31080,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_4CED9A02_3BA4_4D1B_A392_25E6A5448093", .name = "Communauté de communes - Pays d'Huriel (SL, INSEE 03128) - "
-      "Communauté de Communes du Pays d&#039;Huriel",
-    .name_ja = "Communauté de communes - Pays d'Huriel (SL, INSEE 03128) - Communauté de Communes du Pays d&#039;Huriel",
+      "Communauté de Communes du Pays d'Huriel",
+    .name_ja = "Communauté de communes - Pays d'Huriel (SL, INSEE 03128) - Communauté de Communes du Pays d'Huriel",
     .category = "government", .portal = "https://www.cc-pays-huriel.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -31257,9 +31229,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_4E20990E_E139_4625_8213_7F718BFAD012", .name = "Centre communal d'action sociale (CCAS) - Villemandeur (SL, "
-      "INSEE 45338) - MAIRIE VILLEMANDEUR &#8211; Site officiel de la "
-      "commune",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Villemandeur (SL, INSEE 45338) - MAIRIE VILLEMANDEUR &#8211; Site officiel de la commune",
+      "INSEE 45338) - MAIRIE VILLEMANDEUR – Site officiel de la commune",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Villemandeur (SL, INSEE 45338) - MAIRIE VILLEMANDEUR – Site officiel de la commune",
     .category = "government", .portal = "https://villemandeur.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -31499,8 +31470,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "16:03:15 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_514909D8_5C20_4233_BC35_C137A8EF3B05", .name = "Mairie - Verneuil (SL, INSEE 58306) - VERNEUIL &#8211; NIEVRE",
-    .name_ja = "Mairie - Verneuil (SL, INSEE 58306) - VERNEUIL &#8211; NIEVRE",
+  { .id = "JO45_FR_514909D8_5C20_4233_BC35_C137A8EF3B05", .name = "Mairie - Verneuil (SL, INSEE 58306) - VERNEUIL – NIEVRE",
+    .name_ja = "Mairie - Verneuil (SL, INSEE 58306) - VERNEUIL – NIEVRE",
     .category = "government", .portal = "https://verneuil-nievre.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -31780,8 +31751,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_543186B4_8F43_4231_8841_1E74E58E350E", .name = "Point conseil budget - FACE Côte D'Opale - Calais (SL, INSEE "
-      "62193) - FACE la Fondation pour l&#039;inclusion",
-    .name_ja = "Point conseil budget - FACE Côte D'Opale - Calais (SL, INSEE 62193) - FACE la Fondation pour l&#039;inclusion",
+      "62193) - FACE la Fondation pour l'inclusion",
+    .name_ja = "Point conseil budget - FACE Côte D'Opale - Calais (SL, INSEE 62193) - FACE la Fondation pour l'inclusion",
     .category = "government", .portal = "https://www.fondationface.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -32265,8 +32236,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_59F05644_BD97_4906_8F8F_77C20A963E25", .name = "Centre communal d'action sociale (CCAS) - Lescure-d'Albigeois "
-      "(SL, INSEE 81144) - Lescure d&#039;Albigeois",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Lescure-d'Albigeois (SL, INSEE 81144) - Lescure d&#039;Albigeois",
+      "(SL, INSEE 81144) - Lescure d'Albigeois",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Lescure-d'Albigeois (SL, INSEE 81144) - Lescure d'Albigeois",
     .category = "government", .portal = "https://www.lescure-albigeois.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -32322,8 +32293,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_5A91D006_D30F_412F_82F9_1F18D53B5262", .name = "Mairie - Saint-Martin-d'Arrossa (SL, INSEE 64490) - Saint-Martin "
-      "d&#039;Arrossa",
-    .name_ja = "Mairie - Saint-Martin-d'Arrossa (SL, INSEE 64490) - Saint-Martin d&#039;Arrossa",
+      "d'Arrossa",
+    .name_ja = "Mairie - Saint-Martin-d'Arrossa (SL, INSEE 64490) - Saint-Martin d'Arrossa",
     .category = "government", .portal = "https://www.saintmartindarrossa.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -32902,8 +32873,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:50:00 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_6227840F_0AF3_4006_933E_B7E6AA3B9CF7", .name = "Mairie - Ibos (SL, INSEE 65226) - Mairie d&#039;Ibos",
-    .name_ja = "Mairie - Ibos (SL, INSEE 65226) - Mairie d&#039;Ibos",
+  { .id = "JO45_FR_6227840F_0AF3_4006_933E_B7E6AA3B9CF7", .name = "Mairie - Ibos (SL, INSEE 65226) - Mairie d'Ibos",
+    .name_ja = "Mairie - Ibos (SL, INSEE 65226) - Mairie d'Ibos",
     .category = "government", .portal = "https://www.mairie-ibos.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -32941,8 +32912,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_62FD7D1D_2161_46F6_912E_8BAF2D692D37", .name = "Mairie - Ouzouer-le-Doyen (SL, INSEE 41172) - Mairie "
-      "d&#039;Ouzouer-le-Doyen",
-    .name_ja = "Mairie - Ouzouer-le-Doyen (SL, INSEE 41172) - Mairie d&#039;Ouzouer-le-Doyen",
+      "d'Ouzouer-le-Doyen",
+    .name_ja = "Mairie - Ouzouer-le-Doyen (SL, INSEE 41172) - Mairie d'Ouzouer-le-Doyen",
     .category = "government", .portal = "https://ouzouerledoyen.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -33256,9 +33227,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:56:01 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_67BEC970_1930_4DFB_8AC4_5ADD2CB24B9A", .name = "Mairie - Louvignies-Quesnoy (SL, INSEE 59363) - Louvignies "
-      "&#8211; Quesnoy",
-    .name_ja = "Mairie - Louvignies-Quesnoy (SL, INSEE 59363) - Louvignies &#8211; Quesnoy",
+  { .id = "JO45_FR_67BEC970_1930_4DFB_8AC4_5ADD2CB24B9A", .name = "Mairie - Louvignies-Quesnoy (SL, INSEE 59363) - Louvignies – "
+      "Quesnoy",
+    .name_ja = "Mairie - Louvignies-Quesnoy (SL, INSEE 59363) - Louvignies – Quesnoy",
     .category = "government", .portal = "https://louvignies-quesnoy.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -33618,8 +33589,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:20:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_6CDBF368_C7AD_4E38_8DF6_2514F57BD7AF", .name = "Mairie - Jonzier-Épagny (SL, INSEE 74144) - Jonzier-&#201;pagny",
-    .name_ja = "Mairie - Jonzier-Épagny (SL, INSEE 74144) - Jonzier-&#201;pagny",
+  { .id = "JO45_FR_6CDBF368_C7AD_4E38_8DF6_2514F57BD7AF", .name = "Mairie - Jonzier-Épagny (SL, INSEE 74144) - Jonzier-Épagny",
+    .name_ja = "Mairie - Jonzier-Épagny (SL, INSEE 74144) - Jonzier-Épagny",
     .category = "government", .portal = "https://www.jonzier-epagny.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -33803,9 +33774,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "00:30:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_6E902DE4_8424_41C7_839C_91FD6A9BF264", .name = "Mairie - Daglan (SL, INSEE 24150) - Bienvenue à Daglan &#8211; "
-      "Site Officiel de la Mairie de Daglan",
-    .name_ja = "Mairie - Daglan (SL, INSEE 24150) - Bienvenue à Daglan &#8211; Site Officiel de la Mairie de Daglan",
+  { .id = "JO45_FR_6E902DE4_8424_41C7_839C_91FD6A9BF264", .name = "Mairie - Daglan (SL, INSEE 24150) - Bienvenue à Daglan – Site "
+      "Officiel de la Mairie de Daglan",
+    .name_ja = "Mairie - Daglan (SL, INSEE 24150) - Bienvenue à Daglan – Site Officiel de la Mairie de Daglan",
     .category = "government", .portal = "https://www.daglan.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -33860,9 +33831,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "06:47:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_6EFD41BD_DF3E_4D68_A29E_1BC9CB66F5A0", .name = "Mairie - Preuschdorf (SL, INSEE 67379) - Preuschdorf &#8211; "
+  { .id = "JO45_FR_6EFD41BD_DF3E_4D68_A29E_1BC9CB66F5A0", .name = "Mairie - Preuschdorf (SL, INSEE 67379) - Preuschdorf – "
       "Brischdorf",
-    .name_ja = "Mairie - Preuschdorf (SL, INSEE 67379) - Preuschdorf &#8211; Brischdorf",
+    .name_ja = "Mairie - Preuschdorf (SL, INSEE 67379) - Preuschdorf – Brischdorf",
     .category = "government", .portal = "https://preuschdorf.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -33937,8 +33908,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_6FAEC5BD_10DD_4D73_9537_BBB1A74224FD", .name = "Fédération départementale des chasseurs - Isère (SL, INSEE "
-      "38179) - Fédération Départementale des Chasseurs de l&#039;Isère",
-    .name_ja = "Fédération départementale des chasseurs - Isère (SL, INSEE 38179) - Fédération Départementale des Chasseurs de l&#039;Isère",
+      "38179) - Fédération Départementale des Chasseurs de l'Isère",
+    .name_ja = "Fédération départementale des chasseurs - Isère (SL, INSEE 38179) - Fédération Départementale des Chasseurs de l'Isère",
     .category = "government", .portal = "https://www.chasse38.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -33956,9 +33927,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_6FE39D52_7BDD_462F_9272_FB6E328EC555", .name = "Centre communal d'action sociale (CCAS) - Hangenbieten (SL, "
-      "INSEE 67182) - Journée Portes Ouvertes à la crèche &#8220;Les "
-      "Lutins des Châteaux&#8221; !",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Hangenbieten (SL, INSEE 67182) - Journée Portes Ouvertes à la crèche &#8220;Les Lutins des Châteaux&#8221; !",
+      "INSEE 67182) - Journée Portes Ouvertes à la crèche “Les Lutins "
+      "des Châteaux” !",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Hangenbieten (SL, INSEE 67182) - Journée Portes Ouvertes à la crèche “Les Lutins des Châteaux” !",
     .category = "government", .portal = "https://hangenbieten.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -34012,9 +33983,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:24:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_716426ED_FB98_40A3_BAA7_BF5479214286", .name = "Mairie - Batzendorf (SL, INSEE 67023) - BATZENDORF &#8211; site "
+  { .id = "JO45_FR_716426ED_FB98_40A3_BAA7_BF5479214286", .name = "Mairie - Batzendorf (SL, INSEE 67023) - BATZENDORF – site "
       "officiel de la commune",
-    .name_ja = "Mairie - Batzendorf (SL, INSEE 67023) - BATZENDORF &#8211; site officiel de la commune",
+    .name_ja = "Mairie - Batzendorf (SL, INSEE 67023) - BATZENDORF – site officiel de la commune",
     .category = "government", .portal = "https://www.batzendorf.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -34031,9 +34002,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:40:19 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_716426ED_FB98_40A3_BAA7_BF5479214286_2", .name = "Mairie - Batzendorf (SL, INSEE 67023) - BATZENDORF &#8211; site "
+  { .id = "JO45_FR_716426ED_FB98_40A3_BAA7_BF5479214286_2", .name = "Mairie - Batzendorf (SL, INSEE 67023) - BATZENDORF – site "
       "officiel de la commune",
-    .name_ja = "Mairie - Batzendorf (SL, INSEE 67023) - BATZENDORF &#8211; site officiel de la commune",
+    .name_ja = "Mairie - Batzendorf (SL, INSEE 67023) - BATZENDORF – site officiel de la commune",
     .category = "government", .portal = "https://www.batzendorf.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -34315,8 +34286,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-10-18T13:17:20+02:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_FR_73B268F6_0F98_459C_AFE8_F80A6B4D8928", .name = "Mairie - Ornaisons (SL, INSEE 11267) - Commune d&#039;Ornaisons",
-    .name_ja = "Mairie - Ornaisons (SL, INSEE 11267) - Commune d&#039;Ornaisons",
+  { .id = "JO45_FR_73B268F6_0F98_459C_AFE8_F80A6B4D8928", .name = "Mairie - Ornaisons (SL, INSEE 11267) - Commune d'Ornaisons",
+    .name_ja = "Mairie - Ornaisons (SL, INSEE 11267) - Commune d'Ornaisons",
     .category = "government", .portal = "https://ornaisons.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -34465,8 +34436,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:16:45 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_775CC426_DEB4_421E_BF94_397DA2F780A2", .name = "Mairie - Englos (SL, INSEE 59195) - Mairie d&#8217;Englos",
-    .name_ja = "Mairie - Englos (SL, INSEE 59195) - Mairie d&#8217;Englos",
+  { .id = "JO45_FR_775CC426_DEB4_421E_BF94_397DA2F780A2", .name = "Mairie - Englos (SL, INSEE 59195) - Mairie d’Englos",
+    .name_ja = "Mairie - Englos (SL, INSEE 59195) - Mairie d’Englos",
     .category = "government", .portal = "https://englos.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -34613,9 +34584,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "05:48:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_78D4C9CB_C80B_4237_AD2E_CA8FFADC73C3", .name = "Mairie - Millançay (SL, INSEE 41140) - Millancay &#8211; Site "
-      "officiel",
-    .name_ja = "Mairie - Millançay (SL, INSEE 41140) - Millancay &#8211; Site officiel",
+  { .id = "JO45_FR_78D4C9CB_C80B_4237_AD2E_CA8FFADC73C3", .name = "Mairie - Millançay (SL, INSEE 41140) - Millancay – Site officiel",
+    .name_ja = "Mairie - Millançay (SL, INSEE 41140) - Millancay – Site officiel",
     .category = "government", .portal = "https://millancay.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -34804,8 +34774,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_7C052413_EE54_453E_A699_F208AD2B0838", .name = "Mairie - Chamagnieu (SL, INSEE 38067) - COLLECTE DE TÉLÉPHONES "
-      "PORTABLES &#8211; Mairie de Chamagnieu",
-    .name_ja = "Mairie - Chamagnieu (SL, INSEE 38067) - COLLECTE DE TÉLÉPHONES PORTABLES &#8211; Mairie de Chamagnieu",
+      "PORTABLES – Mairie de Chamagnieu",
+    .name_ja = "Mairie - Chamagnieu (SL, INSEE 38067) - COLLECTE DE TÉLÉPHONES PORTABLES – Mairie de Chamagnieu",
     .category = "government", .portal = "https://www.chamagnieu.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -34823,8 +34793,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_7C5B6727_C724_4D2E_A48C_6C938AE87A6F", .name = "Mairie - Neugartheim-Ittlenheim (SL, INSEE 67228) - Mairie "
-      "Neugartheim-Ittlenheim &#8211; Site Officiel",
-    .name_ja = "Mairie - Neugartheim-Ittlenheim (SL, INSEE 67228) - Mairie Neugartheim-Ittlenheim &#8211; Site Officiel",
+      "Neugartheim-Ittlenheim – Site Officiel",
+    .name_ja = "Mairie - Neugartheim-Ittlenheim (SL, INSEE 67228) - Mairie Neugartheim-Ittlenheim – Site Officiel",
     .category = "government", .portal = "https://www.neugartheim-ittlenheim.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -35049,9 +35019,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:48:43 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_7D836E95_D9FA_49C3_B60D_D4EFC9D33203", .name = "Intercom - La Vire au Noireau (SL, INSEE 14762) - "
-      "L&#039;Intercom de la Vire au Noireau",
-    .name_ja = "Intercom - La Vire au Noireau (SL, INSEE 14762) - L&#039;Intercom de la Vire au Noireau",
+  { .id = "JO45_FR_7D836E95_D9FA_49C3_B60D_D4EFC9D33203", .name = "Intercom - La Vire au Noireau (SL, INSEE 14762) - L'Intercom de "
+      "la Vire au Noireau",
+    .name_ja = "Intercom - La Vire au Noireau (SL, INSEE 14762) - L'Intercom de la Vire au Noireau",
     .category = "government", .portal = "https://www.vireaunoireau.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -35183,8 +35153,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_7FB1959D_4FDB_4712_8A12_3B31D3CF85E2", .name = "Bureau d'aide aux victimes du tribunal judiciaire de Tarbes (SL, "
-      "INSEE 65440) - FV65 &#8211; FV65",
-    .name_ja = "Bureau d'aide aux victimes du tribunal judiciaire de Tarbes (SL, INSEE 65440) - FV65 &#8211; FV65",
+      "INSEE 65440) - FV65 – FV65",
+    .name_ja = "Bureau d'aide aux victimes du tribunal judiciaire de Tarbes (SL, INSEE 65440) - FV65 – FV65",
     .category = "government", .portal = "https://francevictimes65.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -35591,8 +35561,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_8446271C_5C8B_4F6E_A5BA_CB7A8801B60B", .name = "Mairie - Ougney-Douvot (SL, INSEE 25439) - Ougney douvot : "
-      "Commune du Doubs, Franche Comté &#8211; Village en pleine natur",
-    .name_ja = "Mairie - Ougney-Douvot (SL, INSEE 25439) - Ougney douvot : Commune du Doubs, Franche Comté &#8211; Village en pleine natur",
+      "Commune du Doubs, Franche Comté – Village en pleine natur",
+    .name_ja = "Mairie - Ougney-Douvot (SL, INSEE 25439) - Ougney douvot : Commune du Doubs, Franche Comté – Village en pleine natur",
     .category = "government", .portal = "https://www.ougney-douvot.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -35610,8 +35580,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_8446271C_5C8B_4F6E_A5BA_CB7A8801B60B_2", .name = "Mairie - Ougney-Douvot (SL, INSEE 25439) - Ougney douvot : "
-      "Commune du Doubs, Franche Comté &#8211; Village en pleine natur",
-    .name_ja = "Mairie - Ougney-Douvot (SL, INSEE 25439) - Ougney douvot : Commune du Doubs, Franche Comté &#8211; Village en pleine natur",
+      "Commune du Doubs, Franche Comté – Village en pleine natur",
+    .name_ja = "Mairie - Ougney-Douvot (SL, INSEE 25439) - Ougney douvot : Commune du Doubs, Franche Comté – Village en pleine natur",
     .category = "government", .portal = "https://www.ougney-douvot.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -35648,8 +35618,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_8558EA85_BD31_4FC2_B1B0_AAB396F309C2", .name = "Mairie - Saint-Étienne-du-Bois (SL, INSEE 85210) - Saint Etienne "
-      "du Bois &#8211; Vendée",
-    .name_ja = "Mairie - Saint-Étienne-du-Bois (SL, INSEE 85210) - Saint Etienne du Bois &#8211; Vendée",
+      "du Bois – Vendée",
+    .name_ja = "Mairie - Saint-Étienne-du-Bois (SL, INSEE 85210) - Saint Etienne du Bois – Vendée",
     .category = "government", .portal = "https://www.stetiennedubois85.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -35851,9 +35821,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:48:08 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_87F78F0F_54EB_45CA_B4BE_B3344FABD7D2", .name = "Mairie - Cipières (SL, INSEE 06041) - Cipières &#8211; Site "
-      "officiel",
-    .name_ja = "Mairie - Cipières (SL, INSEE 06041) - Cipières &#8211; Site officiel",
+  { .id = "JO45_FR_87F78F0F_54EB_45CA_B4BE_B3344FABD7D2", .name = "Mairie - Cipières (SL, INSEE 06041) - Cipières – Site officiel",
+    .name_ja = "Mairie - Cipières (SL, INSEE 06041) - Cipières – Site officiel",
     .category = "government", .portal = "https://www.cipieres.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -35948,9 +35917,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-10-18T11:17:20+00:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_FR_88B5203E_915C_4B50_9080_BB793DFC2316", .name = "Info Jeunes - Eaubonne (SL, INSEE 95203) - Ville "
-      "d&rsquo;Eaubonne",
-    .name_ja = "Info Jeunes - Eaubonne (SL, INSEE 95203) - Ville d&rsquo;Eaubonne",
+  { .id = "JO45_FR_88B5203E_915C_4B50_9080_BB793DFC2316", .name = "Info Jeunes - Eaubonne (SL, INSEE 95203) - Ville d’Eaubonne",
+    .name_ja = "Info Jeunes - Eaubonne (SL, INSEE 95203) - Ville d’Eaubonne",
     .category = "government", .portal = "https://www.eaubonne.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -36022,9 +35990,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:48:13 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_890E82B4_5907_460C_8229_1FB9217AF6DA", .name = "Mairie - Chaulhac (SL, INSEE 48046) - Commune de Chaulhac "
-      "&#8211; Lozère",
-    .name_ja = "Mairie - Chaulhac (SL, INSEE 48046) - Commune de Chaulhac &#8211; Lozère",
+  { .id = "JO45_FR_890E82B4_5907_460C_8229_1FB9217AF6DA", .name = "Mairie - Chaulhac (SL, INSEE 48046) - Commune de Chaulhac – "
+      "Lozère",
+    .name_ja = "Mairie - Chaulhac (SL, INSEE 48046) - Commune de Chaulhac – Lozère",
     .category = "government", .portal = "https://www.chaulhac.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -36041,9 +36009,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "11:19:51 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_8924D39C_F0E9_444A_AE30_CE6B2EE2C9CC", .name = "Mairie - Hardricourt (SL, INSEE 78299) - Ville "
-      "d&#039;Hardricourt",
-    .name_ja = "Mairie - Hardricourt (SL, INSEE 78299) - Ville d&#039;Hardricourt",
+  { .id = "JO45_FR_8924D39C_F0E9_444A_AE30_CE6B2EE2C9CC", .name = "Mairie - Hardricourt (SL, INSEE 78299) - Ville d'Hardricourt",
+    .name_ja = "Mairie - Hardricourt (SL, INSEE 78299) - Ville d'Hardricourt",
     .category = "government", .portal = "https://hardricourt.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -36289,8 +36256,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_8C8295F6_8631_40A7_93E9_2EDA707A93F0", .name = "Chambre interdépartementale des notaires - Ain, Loire, Rhône "
       "(SL, INSEE 69386) - Chambre interdépartementale des notaires de "
-      "la Cour d&#039;appel de Lyon",
-    .name_ja = "Chambre interdépartementale des notaires - Ain, Loire, Rhône (SL, INSEE 69386) - Chambre interdépartementale des notaires de la Cour d&#039;appel de Lyon",
+      "la Cour d'appel de Lyon",
+    .name_ja = "Chambre interdépartementale des notaires - Ain, Loire, Rhône (SL, INSEE 69386) - Chambre interdépartementale des notaires de la Cour d'appel de Lyon",
     .category = "government", .portal = "https://cin-lyon.notaires.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -36346,8 +36313,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_8DCBFE4F_0024_42D9_ADD8_90D7975D3BF7", .name = "Centre communal d'action sociale (CCAS) - Les Corvées-les-Yys "
-      "(SL, INSEE 28109) - Les Corvées &#8211; Les Yys",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Les Corvées-les-Yys (SL, INSEE 28109) - Les Corvées &#8211; Les Yys",
+      "(SL, INSEE 28109) - Les Corvées – Les Yys",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Les Corvées-les-Yys (SL, INSEE 28109) - Les Corvées – Les Yys",
     .category = "government", .portal = "https://www.les-corvees-les-yys.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -36442,8 +36409,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_8F7E697D_F801_491B_AEF4_0627B06B70B7", .name = "Centre communal d'action sociale (CCAS) - "
       "Saint-Germain-lès-Corbeil (SL, INSEE 91553) - Ville de Ville de "
-      "Saint-Germain-lès-Corbeil : Flux RSS de l&#039;agenda",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Saint-Germain-lès-Corbeil (SL, INSEE 91553) - Ville de Ville de Saint-Germain-lès-Corbeil : Flux RSS de l&#039;agenda",
+      "Saint-Germain-lès-Corbeil : Flux RSS de l'agenda",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Saint-Germain-lès-Corbeil (SL, INSEE 91553) - Ville de Ville de Saint-Germain-lès-Corbeil : Flux RSS de l'agenda",
     .category = "government", .portal = "https://www.saint-germain-les-corbeil.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -36520,8 +36487,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_904F9B1A_3790_4B6A_A671_DE46BA8A1225", .name = "Mission locale pour l'insertion professionnelle et sociale des "
       "jeunes (16-25 ans) - Arras - Charles-Peggy (SL, INSEE 62041) - "
-      "Maison de l&#039;Emploi et des Métiers en pays d&#039;artois",
-    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Arras - Charles-Peggy (SL, INSEE 62041) - Maison de l&#039;Emploi et des Métiers en pays d&#039;artois",
+      "Maison de l'Emploi et des Métiers en pays d'artois",
+    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Arras - Charles-Peggy (SL, INSEE 62041) - Maison de l'Emploi et des Métiers en pays d'artois",
     .category = "government", .portal = "https://www.mem-artois.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -36707,8 +36674,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_9303AAB5_D862_43AF_8699_DFE25BDCAAE6", .name = "Mairie - Auzouville-l'Esneval (SL, INSEE 76045) - Auzouville "
-      "l&#x27;Esneval",
-    .name_ja = "Mairie - Auzouville-l'Esneval (SL, INSEE 76045) - Auzouville l&#x27;Esneval",
+      "l'Esneval",
+    .name_ja = "Mairie - Auzouville-l'Esneval (SL, INSEE 76045) - Auzouville l'Esneval",
     .category = "government", .portal = "https://auzouvillelesneval.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -37156,8 +37123,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_6C901391_8C0E_4D34_9880_FD50D67CA03A", .name = "Institut national d'enseignement pour l'agriculture, "
       "l'alimentation et l'environnement (Institut Agro) (SI, INSEE ) - "
-      "L&#039;Institut Agro Dijon",
-    .name_ja = "Institut national d'enseignement pour l'agriculture, l'alimentation et l'environnement (Institut Agro) (SI, INSEE ) - L&#039;Institut Agro Dijon",
+      "L'Institut Agro Dijon",
+    .name_ja = "Institut national d'enseignement pour l'agriculture, l'alimentation et l'environnement (Institut Agro) (SI, INSEE ) - L'Institut Agro Dijon",
     .category = "government", .portal = "https://institut-agro-dijon.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -37175,8 +37142,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_74935183_7042_4FFC_A6CC_32F3421A3B26", .name = "École normale supérieure Paris-Saclay (SI, INSEE ) - flux RSS de "
-      "l&#039;actualité",
-    .name_ja = "École normale supérieure Paris-Saclay (SI, INSEE ) - flux RSS de l&#039;actualité",
+      "l'actualité",
+    .name_ja = "École normale supérieure Paris-Saclay (SI, INSEE ) - flux RSS de l'actualité",
     .category = "government", .portal = "https://ens-paris-saclay.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -37212,9 +37179,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:48:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_7CC0D593_AB90_4651_A952_1B3E5CC75B2D", .name = "Département de la session nationale (SI, INSEE ) - L&#039;IHEDN "
-      ": Institut des hautes études de défense nationale",
-    .name_ja = "Département de la session nationale (SI, INSEE ) - L&#039;IHEDN : Institut des hautes études de défense nationale",
+  { .id = "JO45_FR_7CC0D593_AB90_4651_A952_1B3E5CC75B2D", .name = "Département de la session nationale (SI, INSEE ) - L'IHEDN : "
+      "Institut des hautes études de défense nationale",
+    .name_ja = "Département de la session nationale (SI, INSEE ) - L'IHEDN : Institut des hautes études de défense nationale",
     .category = "government", .portal = "https://ihedn.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -37251,8 +37218,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_932DA84F_7BED_49E3_9991_55F9A26DE720", .name = "Département des ressources humaines (SI, INSEE ) - Direction de "
-      "l'information l&#233;gale et administrative &#8211; DILA",
-    .name_ja = "Département des ressources humaines (SI, INSEE ) - Direction de l'information l&#233;gale et administrative &#8211; DILA",
+      "l'information légale et administrative – DILA",
+    .name_ja = "Département des ressources humaines (SI, INSEE ) - Direction de l'information légale et administrative – DILA",
     .category = "government", .portal = "https://www.dila.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -37323,9 +37290,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "field). A feed the organisation itself declares or links on its "
       "site root." },
 
-  { .id = "JO45_FR_EB7BCB73_193B_4C55_BCDB_E922CC748431", .name = "Centre d'études des tunnels (SI, INSEE ) - Centre d'&#201;tudes "
-      "des Tunnels",
-    .name_ja = "Centre d'études des tunnels (SI, INSEE ) - Centre d'&#201;tudes des Tunnels",
+  { .id = "JO45_FR_EB7BCB73_193B_4C55_BCDB_E922CC748431", .name = "Centre d'études des tunnels (SI, INSEE ) - Centre d'Études des "
+      "Tunnels",
+    .name_ja = "Centre d'études des tunnels (SI, INSEE ) - Centre d'Études des Tunnels",
     .category = "government", .portal = "https://www.cetu.developpement-durable.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -37436,8 +37403,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_00FBD9E4_8590_45D1_9DF9_1C46CC363D19_2", .name = "Centre communal d'action sociale (CCAS) - Cesson (SL, INSEE "
-      "77067) - Ville de Ville de Cesson : Flux RSS de l&#039;agenda",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Cesson (SL, INSEE 77067) - Ville de Ville de Cesson : Flux RSS de l&#039;agenda",
+      "77067) - Ville de Ville de Cesson : Flux RSS de l'agenda",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Cesson (SL, INSEE 77067) - Ville de Ville de Cesson : Flux RSS de l'agenda",
     .category = "government", .portal = "https://www.ville-cesson.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -37509,9 +37476,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_025D9541_5634_43B0_972C_8D8944284658", .name = "Mairie - Saint-Bonnet-les-Oules (SL, INSEE 42206) - Inondations "
-      "des 16 et 17 juillet 2026 : non-reconnaissance de l&rsquo;état "
-      "de c",
-    .name_ja = "Mairie - Saint-Bonnet-les-Oules (SL, INSEE 42206) - Inondations des 16 et 17 juillet 2026 : non-reconnaissance de l&rsquo;état de c",
+      "des 16 et 17 juillet 2026 : non-reconnaissance de l’état de c",
+    .name_ja = "Mairie - Saint-Bonnet-les-Oules (SL, INSEE 42206) - Inondations des 16 et 17 juillet 2026 : non-reconnaissance de l’état de c",
     .category = "government", .portal = "https://saint-bonnet-les-oules.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -37548,8 +37514,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:29:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_028CD6A9_BFFF_42EC_B4A4_317F87C2A0E4", .name = "Mairie - Inguiniel (SL, INSEE 56089) - Commune d&#039;Inguiniel",
-    .name_ja = "Mairie - Inguiniel (SL, INSEE 56089) - Commune d&#039;Inguiniel",
+  { .id = "JO45_FR_028CD6A9_BFFF_42EC_B4A4_317F87C2A0E4", .name = "Mairie - Inguiniel (SL, INSEE 56089) - Commune d'Inguiniel",
+    .name_ja = "Mairie - Inguiniel (SL, INSEE 56089) - Commune d'Inguiniel",
     .category = "government", .portal = "https://www.inguiniel.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -37584,9 +37550,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:39:20 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_0395F093_9B98_476C_83E7_450B90F43B73_2", .name = "Mairie - Warluzel (SL, INSEE 62879) - Actualités &#8211; "
-      "Warluzel",
-    .name_ja = "Mairie - Warluzel (SL, INSEE 62879) - Actualités &#8211; Warluzel",
+  { .id = "JO45_FR_0395F093_9B98_476C_83E7_450B90F43B73_2", .name = "Mairie - Warluzel (SL, INSEE 62879) - Actualités – Warluzel",
+    .name_ja = "Mairie - Warluzel (SL, INSEE 62879) - Actualités – Warluzel",
     .category = "government", .portal = "https://warluzel.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -37941,9 +37906,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:23:33 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_983BFC92_D1B8_44A5_B05A_72861F7DE492_2", .name = "Mairie - Rosny-sous-Bois (SL, INSEE 93064) - Agenda  &#8211; "
+  { .id = "JO45_FR_983BFC92_D1B8_44A5_B05A_72861F7DE492_2", .name = "Mairie - Rosny-sous-Bois (SL, INSEE 93064) - Agenda  – "
       "Rosny-sous-Bois",
-    .name_ja = "Mairie - Rosny-sous-Bois (SL, INSEE 93064) - Agenda  &#8211; Rosny-sous-Bois",
+    .name_ja = "Mairie - Rosny-sous-Bois (SL, INSEE 93064) - Agenda  – Rosny-sous-Bois",
     .category = "government", .portal = "https://www.rosnysousbois.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -37980,8 +37945,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_98FD2D41_48BA_4EAA_977E_7656905B7AB0", .name = "Centre communal d'action sociale (CCAS) - Bodilis (SL, INSEE "
-      "29010) - Commune de Bodilis &#8211; Site officiel de la mairie",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Bodilis (SL, INSEE 29010) - Commune de Bodilis &#8211; Site officiel de la mairie",
+      "29010) - Commune de Bodilis – Site officiel de la mairie",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Bodilis (SL, INSEE 29010) - Commune de Bodilis – Site officiel de la mairie",
     .category = "government", .portal = "https://www.mairie-bodilis.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -38054,8 +38019,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:20:55 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_994D73CD_D5AB_4BED_A450_DCD179E0EAB9_2", .name = "Mairie - Mitry-Mory (SL, INSEE 77294) - Pages &#8211; Mitry Mory",
-    .name_ja = "Mairie - Mitry-Mory (SL, INSEE 77294) - Pages &#8211; Mitry Mory",
+  { .id = "JO45_FR_994D73CD_D5AB_4BED_A450_DCD179E0EAB9_2", .name = "Mairie - Mitry-Mory (SL, INSEE 77294) - Pages – Mitry Mory",
+    .name_ja = "Mairie - Mitry-Mory (SL, INSEE 77294) - Pages – Mitry Mory",
     .category = "government", .portal = "https://www.mitry-mory.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -38481,8 +38446,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:58:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_9ED35985_E378_4389_8B66_EB9A5060016B", .name = "Mairie - Aubiac (SL, INSEE 47016) - Mairie d&#039;AUBIAC",
-    .name_ja = "Mairie - Aubiac (SL, INSEE 47016) - Mairie d&#039;AUBIAC",
+  { .id = "JO45_FR_9ED35985_E378_4389_8B66_EB9A5060016B", .name = "Mairie - Aubiac (SL, INSEE 47016) - Mairie d'AUBIAC",
+    .name_ja = "Mairie - Aubiac (SL, INSEE 47016) - Mairie d'AUBIAC",
     .category = "government", .portal = "https://commune-aubiac.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -38593,8 +38558,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_A02598B5_4F89_4A0A_8871_9DE0394E0BCD", .name = "Mairie - Anctoville-sur-Boscq (SL, INSEE 50008) - Commune "
-      "d&#039;Anctoville-sur-Boscq",
-    .name_ja = "Mairie - Anctoville-sur-Boscq (SL, INSEE 50008) - Commune d&#039;Anctoville-sur-Boscq",
+      "d'Anctoville-sur-Boscq",
+    .name_ja = "Mairie - Anctoville-sur-Boscq (SL, INSEE 50008) - Commune d'Anctoville-sur-Boscq",
     .category = "government", .portal = "https://anctovillesurboscq.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -39546,9 +39511,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:33:32 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_B211E96F_357C_49F9_A14B_B866939975E5", .name = "Mairie - Port (SL, INSEE 01307) - Mission maitrise d&#8217;œuvre "
-      "pour travaux d&#8217;amélioration de la dessert",
-    .name_ja = "Mairie - Port (SL, INSEE 01307) - Mission maitrise d&#8217;œuvre pour travaux d&#8217;amélioration de la dessert",
+  { .id = "JO45_FR_B211E96F_357C_49F9_A14B_B866939975E5", .name = "Mairie - Port (SL, INSEE 01307) - Mission maitrise d’œuvre pour "
+      "travaux d’amélioration de la dessert",
+    .name_ja = "Mairie - Port (SL, INSEE 01307) - Mission maitrise d’œuvre pour travaux d’amélioration de la dessert",
     .category = "government", .portal = "https://www.mairie-port.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -39749,8 +39714,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_B4794867_86FB_4583_819D_D366F3AAB1B7", .name = "Mairie - Saint-Georges-d'Orques (SL, INSEE 34259) - "
-      "Saint-Georges-d&#039;Orques",
-    .name_ja = "Mairie - Saint-Georges-d'Orques (SL, INSEE 34259) - Saint-Georges-d&#039;Orques",
+      "Saint-Georges-d'Orques",
+    .name_ja = "Mairie - Saint-Georges-d'Orques (SL, INSEE 34259) - Saint-Georges-d'Orques",
     .category = "government", .portal = "https://www.ville-st-georges-dorques.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -39823,9 +39788,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:11:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_B5E816D9_3FBD_4FE1_A97B_7260BB4AE1B8", .name = "Mairie - Le Gua (SL, INSEE 38187) - Mairie le Gua &#8211; Isère "
-      "38",
-    .name_ja = "Mairie - Le Gua (SL, INSEE 38187) - Mairie le Gua &#8211; Isère 38",
+  { .id = "JO45_FR_B5E816D9_3FBD_4FE1_A97B_7260BB4AE1B8", .name = "Mairie - Le Gua (SL, INSEE 38187) - Mairie le Gua – Isère 38",
+    .name_ja = "Mairie - Le Gua (SL, INSEE 38187) - Mairie le Gua – Isère 38",
     .category = "government", .portal = "https://www.legua-mairie.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -40210,8 +40174,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:37:20 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_BBE41CE0_8D35_417F_8A42_4C208D9A2386", .name = "Mairie - Rully (SL, INSEE 60560) - COMMUNE DE RULLY &#8211; BRAY",
-    .name_ja = "Mairie - Rully (SL, INSEE 60560) - COMMUNE DE RULLY &#8211; BRAY",
+  { .id = "JO45_FR_BBE41CE0_8D35_417F_8A42_4C208D9A2386", .name = "Mairie - Rully (SL, INSEE 60560) - COMMUNE DE RULLY – BRAY",
+    .name_ja = "Mairie - Rully (SL, INSEE 60560) - COMMUNE DE RULLY – BRAY",
     .category = "government", .portal = "https://rully.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -40285,8 +40249,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_BD7C9B94_338F_4955_9D13_B15804EDD051", .name = "Mairie - Saint-André (SL, INSEE 31468) - Saint André en "
-      "Comminges &#8211; 31420",
-    .name_ja = "Mairie - Saint-André (SL, INSEE 31468) - Saint André en Comminges &#8211; 31420",
+      "Comminges – 31420",
+    .name_ja = "Mairie - Saint-André (SL, INSEE 31468) - Saint André en Comminges – 31420",
     .category = "government", .portal = "https://saint-andre-en-comminges.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -40303,9 +40267,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "16:26:20 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_BDA9F79B_28C4_47BA_9C83_937926729238", .name = "Mairie - Mesnil-Roc'h (SL, INSEE 35308) - Mairie de "
-      "Mesnil-Roc&#039;h",
-    .name_ja = "Mairie - Mesnil-Roc'h (SL, INSEE 35308) - Mairie de Mesnil-Roc&#039;h",
+  { .id = "JO45_FR_BDA9F79B_28C4_47BA_9C83_937926729238", .name = "Mairie - Mesnil-Roc'h (SL, INSEE 35308) - Mairie de Mesnil-Roc'h",
+    .name_ja = "Mairie - Mesnil-Roc'h (SL, INSEE 35308) - Mairie de Mesnil-Roc'h",
     .category = "government", .portal = "https://mesnilroch.bzh/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -40492,8 +40455,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_BFA47A75_EB67_4142_91F0_051FB5CCEA63", .name = "Centre communal d'action sociale (CCAS) - Plouézec (SL, INSEE "
-      "22214) - Mairie de Plou&#233;zec - Site officiel de la commune",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Plouézec (SL, INSEE 22214) - Mairie de Plou&#233;zec - Site officiel de la commune",
+      "22214) - Mairie de Plouézec - Site officiel de la commune",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Plouézec (SL, INSEE 22214) - Mairie de Plouézec - Site officiel de la commune",
     .category = "government", .portal = "https://www.plouezec.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -40603,8 +40566,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_C29DA605_1DEC_4B5E_B13D_1DCD976DC137", .name = "Mairie - Rumigny (SL, INSEE 80690) - Arrêté prescrivant "
-      "l&#8217;enquête publique sur le projet SCoT révisé du gr",
-    .name_ja = "Mairie - Rumigny (SL, INSEE 80690) - Arrêté prescrivant l&#8217;enquête publique sur le projet SCoT révisé du gr",
+      "l’enquête publique sur le projet SCoT révisé du gr",
+    .name_ja = "Mairie - Rumigny (SL, INSEE 80690) - Arrêté prescrivant l’enquête publique sur le projet SCoT révisé du gr",
     .category = "government", .portal = "https://www.rumigny.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -41031,8 +40994,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_C9C2E8CB_EF44_4CF2_B180_B2A31864F703", .name = "Mairie - Rozier-Côtes-d'Aurec (SL, INSEE 42192) - Rozier Côtes "
-      "d&#039;Aurec",
-    .name_ja = "Mairie - Rozier-Côtes-d'Aurec (SL, INSEE 42192) - Rozier Côtes d&#039;Aurec",
+      "d'Aurec",
+    .name_ja = "Mairie - Rozier-Côtes-d'Aurec (SL, INSEE 42192) - Rozier Côtes d'Aurec",
     .category = "government", .portal = "https://roziercotesdaurec.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -41104,8 +41067,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_CA5D6669_2789_4157_A7B5_260F911AF0BC", .name = "Centre communal d'action sociale (CCAS) - Courthézon (SL, INSEE "
-      "84039) - Ville de Courth&#233;zon",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Courthézon (SL, INSEE 84039) - Ville de Courth&#233;zon",
+      "84039) - Ville de Courthézon",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Courthézon (SL, INSEE 84039) - Ville de Courthézon",
     .category = "government", .portal = "https://www.courthezon.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -41305,8 +41268,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:00:04 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_CC60F326_3CDF_4163_83F6_35ACAD972AB7", .name = "Mairie - Ansacq (SL, INSEE 60016) - Mairie d&#8217;Ansacq",
-    .name_ja = "Mairie - Ansacq (SL, INSEE 60016) - Mairie d&#8217;Ansacq",
+  { .id = "JO45_FR_CC60F326_3CDF_4163_83F6_35ACAD972AB7", .name = "Mairie - Ansacq (SL, INSEE 60016) - Mairie d’Ansacq",
+    .name_ja = "Mairie - Ansacq (SL, INSEE 60016) - Mairie d’Ansacq",
     .category = "government", .portal = "https://ansacq60.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -41342,8 +41305,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_CCE9A598_B0D0_4B45_A9C4_99593DD79FE6", .name = "Mairie - Saint-André-des-Eaux (SL, INSEE 22274) - "
-      "Saint-André-des-Eaux (Côtes-d&#039;Armor)",
-    .name_ja = "Mairie - Saint-André-des-Eaux (SL, INSEE 22274) - Saint-André-des-Eaux (Côtes-d&#039;Armor)",
+      "Saint-André-des-Eaux (Côtes-d'Armor)",
+    .name_ja = "Mairie - Saint-André-des-Eaux (SL, INSEE 22274) - Saint-André-des-Eaux (Côtes-d'Armor)",
     .category = "government", .portal = "http://st-andre-des-eaux22.bzh/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -41398,8 +41361,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_CD414A40_47E5_400E_A870_DF5F9CC2A31C", .name = "Conseil d'architecture, d'urbanisme et de l'environnement (CAUE) "
-      "- Aveyron (SIL, INSEE 12202) - C.A.U.E. de l&#039;AVEYRON",
-    .name_ja = "Conseil d'architecture, d'urbanisme et de l'environnement (CAUE) - Aveyron (SIL, INSEE 12202) - C.A.U.E. de l&#039;AVEYRON",
+      "- Aveyron (SIL, INSEE 12202) - C.A.U.E. de l'AVEYRON",
+    .name_ja = "Conseil d'architecture, d'urbanisme et de l'environnement (CAUE) - Aveyron (SIL, INSEE 12202) - C.A.U.E. de l'AVEYRON",
     .category = "government", .portal = "https://caueaveyron.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -41510,9 +41473,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:39:20 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_CE6A468B_2A5F_4AAC_BF39_088D3EA33B6A", .name = "Mairie - Narcastet (SL, INSEE 64413) - &#8211; Mairie de "
-      "Narcastet",
-    .name_ja = "Mairie - Narcastet (SL, INSEE 64413) - &#8211; Mairie de Narcastet",
+  { .id = "JO45_FR_CE6A468B_2A5F_4AAC_BF39_088D3EA33B6A", .name = "Mairie - Narcastet (SL, INSEE 64413) - – Mairie de Narcastet",
+    .name_ja = "Mairie - Narcastet (SL, INSEE 64413) - – Mairie de Narcastet",
     .category = "government", .portal = "https://narcastet.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -41625,8 +41587,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_D0374A95_AF33_417E_B4AB_CC50995739C0", .name = "Centre de ressources et d'information des bénévoles (CRIB) - "
       "Profession sport et loisirs de Dordogne (SL, INSEE 24138) - "
-      "Profession Sport &amp; Loisirs Dordogne",
-    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Profession sport et loisirs de Dordogne (SL, INSEE 24138) - Profession Sport &amp; Loisirs Dordogne",
+      "Profession Sport & Loisirs Dordogne",
+    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Profession sport et loisirs de Dordogne (SL, INSEE 24138) - Profession Sport & Loisirs Dordogne",
     .category = "government", .portal = "https://dordogne.profession-sport-loisirs.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -42165,9 +42127,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "17:22:01 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_D73BD487_78C7_4F57_83CC_C4D990B6ED0B_2", .name = "Mairie - Simencourt (SL, INSEE 62796) - Actualités &#8211; "
-      "Simencourt",
-    .name_ja = "Mairie - Simencourt (SL, INSEE 62796) - Actualités &#8211; Simencourt",
+  { .id = "JO45_FR_D73BD487_78C7_4F57_83CC_C4D990B6ED0B_2", .name = "Mairie - Simencourt (SL, INSEE 62796) - Actualités – Simencourt",
+    .name_ja = "Mairie - Simencourt (SL, INSEE 62796) - Actualités – Simencourt",
     .category = "government", .portal = "https://simencourt.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -42368,8 +42329,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_DA5C0EB4_7148_4CE7_AE93_933005B0C957", .name = "Centre communal d'action sociale (CCAS) - Rue (SL, INSEE 80688) "
-      "- Ville de RUE &#8211; Baie de Somme &#8211; Marquenterre",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Rue (SL, INSEE 80688) - Ville de RUE &#8211; Baie de Somme &#8211; Marquenterre",
+      "- Ville de RUE – Baie de Somme – Marquenterre",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Rue (SL, INSEE 80688) - Ville de RUE – Baie de Somme – Marquenterre",
     .category = "government", .portal = "https://www.villederue.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -42425,8 +42386,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_DC42E137_0C26_48BD_9C69_2FDE37E5DC8D", .name = "Centre communal d'action sociale (CCAS) - Saint-Pierre-d'Oléron "
       "(SL, INSEE 17385) - Site officiel de la ville de Saint-Pierre "
-      "d&#039;Oléron",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Saint-Pierre-d'Oléron (SL, INSEE 17385) - Site officiel de la ville de Saint-Pierre d&#039;Oléron",
+      "d'Oléron",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Saint-Pierre-d'Oléron (SL, INSEE 17385) - Site officiel de la ville de Saint-Pierre d'Oléron",
     .category = "government", .portal = "https://www.saintpierreoleron.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -42443,9 +42404,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:48:31 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_DC887A64_C363_4DD0_BA76_C6F560D2FEA6", .name = "Mairie - Cattenières (SL, INSEE 59138) - Mairie de Cattenières "
-      "&#8211; Site internet officiel",
-    .name_ja = "Mairie - Cattenières (SL, INSEE 59138) - Mairie de Cattenières &#8211; Site internet officiel",
+  { .id = "JO45_FR_DC887A64_C363_4DD0_BA76_C6F560D2FEA6", .name = "Mairie - Cattenières (SL, INSEE 59138) - Mairie de Cattenières – "
+      "Site internet officiel",
+    .name_ja = "Mairie - Cattenières (SL, INSEE 59138) - Mairie de Cattenières – Site internet officiel",
     .category = "government", .portal = "https://www.commune-cattenieres.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -43157,8 +43118,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_E4B4C7CA_A20E_47AB_AE93_1F73616D794C", .name = "France services - Val d'Arros - Tournay (SL, INSEE 65447) - "
-      "Communauté de Communes des Coteaux du Val d&#039;Arros",
-    .name_ja = "France services - Val d'Arros - Tournay (SL, INSEE 65447) - Communauté de Communes des Coteaux du Val d&#039;Arros",
+      "Communauté de Communes des Coteaux du Val d'Arros",
+    .name_ja = "France services - Val d'Arros - Tournay (SL, INSEE 65447) - Communauté de Communes des Coteaux du Val d'Arros",
     .category = "government", .portal = "https://www.coteaux-val-arros.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -43569,8 +43530,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_E9D9F9BB_DA75_477B_8024_8FFC6D653C25", .name = "Mairie - Scherwiller (SL, INSEE 67445) - Commune de Scherwiller "
-      "&#8211; Bas-Rhin",
-    .name_ja = "Mairie - Scherwiller (SL, INSEE 67445) - Commune de Scherwiller &#8211; Bas-Rhin",
+      "– Bas-Rhin",
+    .name_ja = "Mairie - Scherwiller (SL, INSEE 67445) - Commune de Scherwiller – Bas-Rhin",
     .category = "government", .portal = "https://scherwiller.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -43737,9 +43698,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_EDFFAF94_792B_49AE_AB47_02C0F7B68200", .name = "Communauté de communes - Haute-Provence Pays de Banon (SL, INSEE "
-      "04111) - Communauté de Communes Haute-Provence &amp; Pays de "
-      "Banon",
-    .name_ja = "Communauté de communes - Haute-Provence Pays de Banon (SL, INSEE 04111) - Communauté de Communes Haute-Provence &amp; Pays de Banon",
+      "04111) - Communauté de Communes Haute-Provence & Pays de Banon",
+    .name_ja = "Communauté de communes - Haute-Provence Pays de Banon (SL, INSEE 04111) - Communauté de Communes Haute-Provence & Pays de Banon",
     .category = "government", .portal = "https://www.cchppb.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -43831,8 +43791,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_EF414A05_6095_42D8_A871_4B229DF2146D", .name = "Centre communal d'action sociale (CCAS) - Arpajon (SL, INSEE "
-      "91021) - Ville de Ville d&#039;Arpajon : Flux RSS des actualités",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Arpajon (SL, INSEE 91021) - Ville de Ville d&#039;Arpajon : Flux RSS des actualités",
+      "91021) - Ville de Ville d'Arpajon : Flux RSS des actualités",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Arpajon (SL, INSEE 91021) - Ville de Ville d'Arpajon : Flux RSS des actualités",
     .category = "government", .portal = "https://www.arpajon91.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -43850,9 +43810,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_EF414A05_6095_42D8_A871_4B229DF2146D_2", .name = "Centre communal d'action sociale (CCAS) - Arpajon (SL, INSEE "
-      "91021) - Ville de Ville d&#039;Arpajon : Flux RSS de "
-      "l&#039;agenda",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Arpajon (SL, INSEE 91021) - Ville de Ville d&#039;Arpajon : Flux RSS de l&#039;agenda",
+      "91021) - Ville de Ville d'Arpajon : Flux RSS de l'agenda",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Arpajon (SL, INSEE 91021) - Ville de Ville d'Arpajon : Flux RSS de l'agenda",
     .category = "government", .portal = "https://www.arpajon91.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -43964,9 +43923,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:55:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F058CE8B_8990_4D27_AE4D_73386A4A4305", .name = "Mairie - Saignes (SL, INSEE 15169) - REHABILITATION du GYMNASE "
-      "&#8211; Mairie de Saignes",
-    .name_ja = "Mairie - Saignes (SL, INSEE 15169) - REHABILITATION du GYMNASE &#8211; Mairie de Saignes",
+  { .id = "JO45_FR_F058CE8B_8990_4D27_AE4D_73386A4A4305", .name = "Mairie - Saignes (SL, INSEE 15169) - REHABILITATION du GYMNASE – "
+      "Mairie de Saignes",
+    .name_ja = "Mairie - Saignes (SL, INSEE 15169) - REHABILITATION du GYMNASE – Mairie de Saignes",
     .category = "government", .portal = "https://saignes15.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -44002,9 +43961,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:38:38 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F13EBB55_D575_45AA_B9A4_53410AE2CA24", .name = "Mairie - Alex (SL, INSEE 74003) - Mairie d&#039;Alex &#8211; "
-      "Haute-Savoie",
-    .name_ja = "Mairie - Alex (SL, INSEE 74003) - Mairie d&#039;Alex &#8211; Haute-Savoie",
+  { .id = "JO45_FR_F13EBB55_D575_45AA_B9A4_53410AE2CA24", .name = "Mairie - Alex (SL, INSEE 74003) - Mairie d'Alex – Haute-Savoie",
+    .name_ja = "Mairie - Alex (SL, INSEE 74003) - Mairie d'Alex – Haute-Savoie",
     .category = "government", .portal = "https://www.alex-village.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -44115,8 +44073,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_F2050DDC_1341_49D5_BA1D_EB8D1CFF7E65", .name = "Communauté de communes - Quercy Rouergue et des Gorges de "
       "l'Aveyron (SL, INSEE 82155) - Communauté de communes du Quercy "
-      "Rouergue et des Gorges de l&#039;Aveyron",
-    .name_ja = "Communauté de communes - Quercy Rouergue et des Gorges de l'Aveyron (SL, INSEE 82155) - Communauté de communes du Quercy Rouergue et des Gorges de l&#039;Aveyron",
+      "Rouergue et des Gorges de l'Aveyron",
+    .name_ja = "Communauté de communes - Quercy Rouergue et des Gorges de l'Aveyron (SL, INSEE 82155) - Communauté de communes du Quercy Rouergue et des Gorges de l'Aveyron",
     .category = "government", .portal = "https://cc-qrga.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -44134,8 +44092,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_F221313A_7FCA_47BE_9E3A_7B2AAF8C4DA7", .name = "Mairie - Saint-Gervais-d'Auvergne (SL, INSEE 63354) - Saint "
-      "Gervais d&#039;Auvergne",
-    .name_ja = "Mairie - Saint-Gervais-d'Auvergne (SL, INSEE 63354) - Saint Gervais d&#039;Auvergne",
+      "Gervais d'Auvergne",
+    .name_ja = "Mairie - Saint-Gervais-d'Auvergne (SL, INSEE 63354) - Saint Gervais d'Auvergne",
     .category = "government", .portal = "https://mairie-saintgervaisauvergne.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -44153,9 +44111,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_F2BE82B0_68C4_40F3_AFFF_12FC9FE65F86", .name = "Bureau d'aide aux victimes du tribunal judiciaire de Coutances "
-      "(SL, INSEE 50147) - Association ACJM dans la Manche, l&#039;Orne "
-      "et le Calvados",
-    .name_ja = "Bureau d'aide aux victimes du tribunal judiciaire de Coutances (SL, INSEE 50147) - Association ACJM dans la Manche, l&#039;Orne et le Calvados",
+      "(SL, INSEE 50147) - Association ACJM dans la Manche, l'Orne et "
+      "le Calvados",
+    .name_ja = "Bureau d'aide aux victimes du tribunal judiciaire de Coutances (SL, INSEE 50147) - Association ACJM dans la Manche, l'Orne et le Calvados",
     .category = "government", .portal = "https://acjm.info/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -44172,8 +44130,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:44:43 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F2D2DB9C_BC17_47A5_9592_A5045852DCDF", .name = "Mairie - Eschau (SL, INSEE 67131) - Commune d&#039;Eschau",
-    .name_ja = "Mairie - Eschau (SL, INSEE 67131) - Commune d&#039;Eschau",
+  { .id = "JO45_FR_F2D2DB9C_BC17_47A5_9592_A5045852DCDF", .name = "Mairie - Eschau (SL, INSEE 67131) - Commune d'Eschau",
+    .name_ja = "Mairie - Eschau (SL, INSEE 67131) - Commune d'Eschau",
     .category = "government", .portal = "https://www.eschau.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -44560,8 +44518,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:59:09 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F606C005_4FDE_436A_9C49_79BDBADE8D8F", .name = "Mairie - Ollioules (SL, INSEE 83090) - Ville d&#039;Ollioules",
-    .name_ja = "Mairie - Ollioules (SL, INSEE 83090) - Ville d&#039;Ollioules",
+  { .id = "JO45_FR_F606C005_4FDE_436A_9C49_79BDBADE8D8F", .name = "Mairie - Ollioules (SL, INSEE 83090) - Ville d'Ollioules",
+    .name_ja = "Mairie - Ollioules (SL, INSEE 83090) - Ville d'Ollioules",
     .category = "government", .portal = "https://www.ollioules.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -44820,8 +44778,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:43:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_FA68ED31_B12B_4782_8AC2_78D0B3CFE39E", .name = "Mairie - L'Orbrie (SL, INSEE 85167) - Mairie de L&#039;Orbrie",
-    .name_ja = "Mairie - L'Orbrie (SL, INSEE 85167) - Mairie de L&#039;Orbrie",
+  { .id = "JO45_FR_FA68ED31_B12B_4782_8AC2_78D0B3CFE39E", .name = "Mairie - L'Orbrie (SL, INSEE 85167) - Mairie de L'Orbrie",
+    .name_ja = "Mairie - L'Orbrie (SL, INSEE 85167) - Mairie de L'Orbrie",
     .category = "government", .portal = "https://lorbrie.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -44973,8 +44931,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_FCE952C0_31DA_496F_981C_411C474DF9A9", .name = "Centre communal d'action sociale (CCAS) - Alzonne (SL, INSEE "
-      "11009) - Maire d&#039;Alzonne",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Alzonne (SL, INSEE 11009) - Maire d&#039;Alzonne",
+      "11009) - Maire d'Alzonne",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Alzonne (SL, INSEE 11009) - Maire d'Alzonne",
     .category = "government", .portal = "https://www.alzonne.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -45047,9 +45005,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_FEE3F427_013C_4DAE_AD64_37B318FDF418", .name = "Mairie - Châteauneuf-d'Ille-et-Vilaine (SL, INSEE 35070) - "
-      "Mairie de Châteauneuf d&#039;Ille et Vilaine   HALLOWEEN AU FORT "
-      "DE ST PERE",
-    .name_ja = "Mairie - Châteauneuf-d'Ille-et-Vilaine (SL, INSEE 35070) - Mairie de Châteauneuf d&#039;Ille et Vilaine   HALLOWEEN AU FORT DE ST PERE",
+      "Mairie de Châteauneuf d'Ille et Vilaine   HALLOWEEN AU FORT DE "
+      "ST PERE",
+    .name_ja = "Mairie - Châteauneuf-d'Ille-et-Vilaine (SL, INSEE 35070) - Mairie de Châteauneuf d'Ille et Vilaine   HALLOWEEN AU FORT DE ST PERE",
     .category = "government", .portal = "https://chateauneuf-d-illeetvilaine.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -45940,9 +45898,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:57:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_6831DB19_900E_480D_B33D_84173BADDC24", .name = "Mairie - Courcival (SL, INSEE 72102) - Courcival &#8211; site "
-      "officiel",
-    .name_ja = "Mairie - Courcival (SL, INSEE 72102) - Courcival &#8211; site officiel",
+  { .id = "JO45_FR_6831DB19_900E_480D_B33D_84173BADDC24", .name = "Mairie - Courcival (SL, INSEE 72102) - Courcival – site officiel",
+    .name_ja = "Mairie - Courcival (SL, INSEE 72102) - Courcival – site officiel",
     .category = "government", .portal = "https://courcival.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -46164,9 +46121,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "06:12:44 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_6B19ECD0_3782_47A1_91F4_A8A9134F51C7", .name = "Mairie - Attenschwiller (SL, INSEE 68013) - Commune d&#039; "
+  { .id = "JO45_FR_6B19ECD0_3782_47A1_91F4_A8A9134F51C7", .name = "Mairie - Attenschwiller (SL, INSEE 68013) - Commune d' "
       "Attenschwiller",
-    .name_ja = "Mairie - Attenschwiller (SL, INSEE 68013) - Commune d&#039; Attenschwiller",
+    .name_ja = "Mairie - Attenschwiller (SL, INSEE 68013) - Commune d' Attenschwiller",
     .category = "government", .portal = "https://attenschwiller.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -46555,9 +46512,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "06:46:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_6F302949_1AE2_4A0D_AA27_7ACA17ABA1DB", .name = "Mairie - Émagny (SL, INSEE 25217) - Émagny : Commune "
-      "d&#039;Émagny 25170 : Canton de Saint-Vit &#8211; Doubs",
-    .name_ja = "Mairie - Émagny (SL, INSEE 25217) - Émagny : Commune d&#039;Émagny 25170 : Canton de Saint-Vit &#8211; Doubs",
+  { .id = "JO45_FR_6F302949_1AE2_4A0D_AA27_7ACA17ABA1DB", .name = "Mairie - Émagny (SL, INSEE 25217) - Émagny : Commune d'Émagny "
+      "25170 : Canton de Saint-Vit – Doubs",
+    .name_ja = "Mairie - Émagny (SL, INSEE 25217) - Émagny : Commune d'Émagny 25170 : Canton de Saint-Vit – Doubs",
     .category = "government", .portal = "https://emagny.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -46575,8 +46532,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_6FA48813_8B77_40FE_856A_0E577A814CC0", .name = "Communauté de communes - Île-Rousse-Balagne (SL, INSEE 2B134) - "
-      "CC de L&#039;Île-Rousse &#8211; Balagne",
-    .name_ja = "Communauté de communes - Île-Rousse-Balagne (SL, INSEE 2B134) - CC de L&#039;Île-Rousse &#8211; Balagne",
+      "CC de L'Île-Rousse – Balagne",
+    .name_ja = "Communauté de communes - Île-Rousse-Balagne (SL, INSEE 2B134) - CC de L'Île-Rousse – Balagne",
     .category = "government", .portal = "https://www.lisula-balagna.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -46632,8 +46589,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_702F230D_75C8_4A57_B143_CF3F2D78BC94", .name = "Communauté de communes - Hautes Terres de l'Aubrac (SL, INSEE "
-      "48009) - Hautes Terres de l&#039;Aubrac",
-    .name_ja = "Communauté de communes - Hautes Terres de l'Aubrac (SL, INSEE 48009) - Hautes Terres de l&#039;Aubrac",
+      "48009) - Hautes Terres de l'Aubrac",
+    .name_ja = "Communauté de communes - Hautes Terres de l'Aubrac (SL, INSEE 48009) - Hautes Terres de l'Aubrac",
     .category = "government", .portal = "https://hautes-terres-aubrac.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -46858,9 +46815,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-07-30T07:40:26Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO45_FR_729D0307_8D84_4B50_A18C_F67777E812FE", .name = "Mairie - L'Hermenault (SL, INSEE 85110) - Mairie de "
-      "l&#039;Hermenault",
-    .name_ja = "Mairie - L'Hermenault (SL, INSEE 85110) - Mairie de l&#039;Hermenault",
+  { .id = "JO45_FR_729D0307_8D84_4B50_A18C_F67777E812FE", .name = "Mairie - L'Hermenault (SL, INSEE 85110) - Mairie de l'Hermenault",
+    .name_ja = "Mairie - L'Hermenault (SL, INSEE 85110) - Mairie de l'Hermenault",
     .category = "government", .portal = "https://www.lhermenault.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -46953,9 +46909,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_73304605_875C_4A14_9195_B2554A000ADF", .name = "Dispositif spécifique régional du cancer (DSRC) - Onco "
-      "Martinique (SIL, INSEE 97209) - Groupement d&#039;intérêt public "
-      "national- Plateforme régionale d&#039;oncolo",
-    .name_ja = "Dispositif spécifique régional du cancer (DSRC) - Onco Martinique (SIL, INSEE 97209) - Groupement d&#039;intérêt public national- Plateforme régionale d&#039;oncolo",
+      "Martinique (SIL, INSEE 97209) - Groupement d'intérêt public "
+      "national- Plateforme régionale d'oncolo",
+    .name_ja = "Dispositif spécifique régional du cancer (DSRC) - Onco Martinique (SIL, INSEE 97209) - Groupement d'intérêt public national- Plateforme régionale d'oncolo",
     .category = "government", .portal = "http://cancer-martinique.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -47270,8 +47226,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_788FC16E_2CC2_47E4_BB7C_A16B0A493FD7", .name = "Mairie - Meyrieu-les-Étangs (SL, INSEE 38231) - PROGRAMME "
-      "D&#8217;AMELIORATION DU RESEAU FIBRE",
-    .name_ja = "Mairie - Meyrieu-les-Étangs (SL, INSEE 38231) - PROGRAMME D&#8217;AMELIORATION DU RESEAU FIBRE",
+      "D’AMELIORATION DU RESEAU FIBRE",
+    .name_ja = "Mairie - Meyrieu-les-Étangs (SL, INSEE 38231) - PROGRAMME D’AMELIORATION DU RESEAU FIBRE",
     .category = "government", .portal = "https://www.meyrieulesetangs.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -47327,8 +47283,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_78B61062_7A84_4014_915D_390847918839", .name = "Centre communal d'action sociale (CCAS) - L'Étrat (SL, INSEE "
-      "42092) - L&#039;Étrat",
-    .name_ja = "Centre communal d'action sociale (CCAS) - L'Étrat (SL, INSEE 42092) - L&#039;Étrat",
+      "42092) - L'Étrat",
+    .name_ja = "Centre communal d'action sociale (CCAS) - L'Étrat (SL, INSEE 42092) - L'Étrat",
     .category = "government", .portal = "https://ville-letrat.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -47345,9 +47301,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:45:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_78BE55F5_AA98_4F90_A194_92105CCA289A", .name = "Mairie - Arçay (SL, INSEE 86008) - Mairie d&#039;Arçay commune "
-      "de la Vienne",
-    .name_ja = "Mairie - Arçay (SL, INSEE 86008) - Mairie d&#039;Arçay commune de la Vienne",
+  { .id = "JO45_FR_78BE55F5_AA98_4F90_A194_92105CCA289A", .name = "Mairie - Arçay (SL, INSEE 86008) - Mairie d'Arçay commune de la "
+      "Vienne",
+    .name_ja = "Mairie - Arçay (SL, INSEE 86008) - Mairie d'Arçay commune de la Vienne",
     .category = "government", .portal = "https://www.arcay-vienne.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -47647,8 +47603,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_4203DB9C_D655_4444_865C_D6114C5E8F7E", .name = "Mairie - Notre-Dame-de-l'Isle (SL, INSEE 27440) - Notre-Dame de "
-      "l&#039;Isle",
-    .name_ja = "Mairie - Notre-Dame-de-l'Isle (SL, INSEE 27440) - Notre-Dame de l&#039;Isle",
+      "l'Isle",
+    .name_ja = "Mairie - Notre-Dame-de-l'Isle (SL, INSEE 27440) - Notre-Dame de l'Isle",
     .category = "government", .portal = "https://notre-dame-de-lisle.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -47958,8 +47914,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:32:45 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_469F0248_9F25_42E7_B5CA_A92DDAC3CC96", .name = "Mairie - Vald'Yerre (SL, INSEE 28012) - Vald&#039;yerre",
-    .name_ja = "Mairie - Vald'Yerre (SL, INSEE 28012) - Vald&#039;yerre",
+  { .id = "JO45_FR_469F0248_9F25_42E7_B5CA_A92DDAC3CC96", .name = "Mairie - Vald'Yerre (SL, INSEE 28012) - Vald'yerre",
+    .name_ja = "Mairie - Vald'Yerre (SL, INSEE 28012) - Vald'yerre",
     .category = "government", .portal = "https://valdyerre.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -48106,9 +48062,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "00:00:00 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_48DAED63_F10E_4C03_89DF_9F0269C4F81E", .name = "Mairie - Ambonnay (SL, INSEE 51007) - Commune d&#039;Ambonnay en "
+  { .id = "JO45_FR_48DAED63_F10E_4C03_89DF_9F0269C4F81E", .name = "Mairie - Ambonnay (SL, INSEE 51007) - Commune d'Ambonnay en "
       "Champagne-Ardenne",
-    .name_ja = "Mairie - Ambonnay (SL, INSEE 51007) - Commune d&#039;Ambonnay en Champagne-Ardenne",
+    .name_ja = "Mairie - Ambonnay (SL, INSEE 51007) - Commune d'Ambonnay en Champagne-Ardenne",
     .category = "government", .portal = "https://ambonnay.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -48201,8 +48157,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_4A4D4248_3D20_45DA_BD7C_5CA1D9125BC5", .name = "Centre communal d'action sociale (CCAS) - Aléria (SL, INSEE "
-      "2B009) - Mairie d&#039;Aleria",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Aléria (SL, INSEE 2B009) - Mairie d&#039;Aleria",
+      "2B009) - Mairie d'Aleria",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Aléria (SL, INSEE 2B009) - Mairie d'Aleria",
     .category = "government", .portal = "https://aleria.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -48463,8 +48419,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_4D88DD3D_96DC_4BAF_9F7B_80BEE3299F4D", .name = "Mairie - Cosne-d'Allier (SL, INSEE 03084) - Ville de Cosne "
-      "d&#039;Allier",
-    .name_ja = "Mairie - Cosne-d'Allier (SL, INSEE 03084) - Ville de Cosne d&#039;Allier",
+      "d'Allier",
+    .name_ja = "Mairie - Cosne-d'Allier (SL, INSEE 03084) - Ville de Cosne d'Allier",
     .category = "government", .portal = "https://www.cosnedallier.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -48802,8 +48758,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_513FFE74_AE67_47CC_922C_89794D29A602", .name = "Centre communal d'action sociale (CCAS) - "
       "Prats-de-Mollo-la-Preste (SL, INSEE 66150) - Immersions "
-      "thermales   Mairie de Prats de Mollo &#8211; La Preste",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Prats-de-Mollo-la-Preste (SL, INSEE 66150) - Immersions thermales   Mairie de Prats de Mollo &#8211; La Preste",
+      "thermales   Mairie de Prats de Mollo – La Preste",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Prats-de-Mollo-la-Preste (SL, INSEE 66150) - Immersions thermales   Mairie de Prats de Mollo – La Preste",
     .category = "government", .portal = "https://www.mairie-pratsdemollolapreste.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -49196,8 +49152,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_55A7F483_3100_45E2_8A15_C06C56E49A45", .name = "Point information jeunesse - Saint-Égrève (SL, INSEE 38382) - "
-      "MEE &#8211; MIFE Isère",
-    .name_ja = "Point information jeunesse - Saint-Égrève (SL, INSEE 38382) - MEE &#8211; MIFE Isère",
+      "MEE – MIFE Isère",
+    .name_ja = "Point information jeunesse - Saint-Égrève (SL, INSEE 38382) - MEE – MIFE Isère",
     .category = "government", .portal = "https://www.mee-mife.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -49362,9 +49318,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_5890915B_DF6F_43F7_B314_4DD43180FD17", .name = "Mission locale pour l'insertion professionnelle et sociale des "
-      "jeunes (16-25 ans) - Sète (SL, INSEE 34301) - MLIJ &#8211; "
-      "Mission Locale Insertion Jeunes du Bassin de Thau",
-    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Sète (SL, INSEE 34301) - MLIJ &#8211; Mission Locale Insertion Jeunes du Bassin de Thau",
+      "jeunes (16-25 ans) - Sète (SL, INSEE 34301) - MLIJ – Mission "
+      "Locale Insertion Jeunes du Bassin de Thau",
+    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Sète (SL, INSEE 34301) - MLIJ – Mission Locale Insertion Jeunes du Bassin de Thau",
     .category = "government", .portal = "https://www.mlijbt.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -49439,8 +49395,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_594B997A_ECAB_4659_B371_905DE9E2B728", .name = "Service de santé au travail de la Haute-Corse 2B - Bastia (SIL, "
-      "INSEE 2B033) - SPST2B &#8211; Médecine du Travail",
-    .name_ja = "Service de santé au travail de la Haute-Corse 2B - Bastia (SIL, INSEE 2B033) - SPST2B &#8211; Médecine du Travail",
+      "INSEE 2B033) - SPST2B – Médecine du Travail",
+    .name_ja = "Service de santé au travail de la Haute-Corse 2B - Bastia (SIL, INSEE 2B033) - SPST2B – Médecine du Travail",
     .category = "government", .portal = "https://www.spst2b.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -49477,10 +49433,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_59857371_4463_4B5A_BDBF_AFD1CAA843BF", .name = "Conseil d'architecture, d'urbanisme et de l'environnement (CAUE) "
-      "- Alpes-Maritimes (SIL, INSEE 06088) - CONSEIL "
-      "D&#039;ARCHITECTURE D&#039;URBANISME ET DE L&#039;ENVIRONNEMENT "
-      "DES ALPE",
-    .name_ja = "Conseil d'architecture, d'urbanisme et de l'environnement (CAUE) - Alpes-Maritimes (SIL, INSEE 06088) - CONSEIL D&#039;ARCHITECTURE D&#039;URBANISME ET DE L&#039;ENVIRONNEMENT DES ALPE",
+      "- Alpes-Maritimes (SIL, INSEE 06088) - CONSEIL D'ARCHITECTURE "
+      "D'URBANISME ET DE L'ENVIRONNEMENT DES ALPE",
+    .name_ja = "Conseil d'architecture, d'urbanisme et de l'environnement (CAUE) - Alpes-Maritimes (SIL, INSEE 06088) - CONSEIL D'ARCHITECTURE D'URBANISME ET DE L'ENVIRONNEMENT DES ALPE",
     .category = "government", .portal = "https://www.caue06.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -49591,9 +49546,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:00:30 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_5B0BAD65_CE4F_4004_BC1F_301725D81C86", .name = "Mairie - Écrainville (SL, INSEE 76224) - Mairie "
-      "d&#039;Écrainville",
-    .name_ja = "Mairie - Écrainville (SL, INSEE 76224) - Mairie d&#039;Écrainville",
+  { .id = "JO45_FR_5B0BAD65_CE4F_4004_BC1F_301725D81C86", .name = "Mairie - Écrainville (SL, INSEE 76224) - Mairie d'Écrainville",
+    .name_ja = "Mairie - Écrainville (SL, INSEE 76224) - Mairie d'Écrainville",
     .category = "government", .portal = "https://mairie-ecrainville.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -49648,9 +49602,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_5BED766A_550D_420E_B7E6_1BF2A0C1357C", .name = "Mairie - Plateau-des-Petites-Roches (SL, INSEE 38395) - Mairie "
-      "du Plateau des petites Roches &#8211; Saint Bernard &#8211; "
-      "Saint Hilaire",
-    .name_ja = "Mairie - Plateau-des-Petites-Roches (SL, INSEE 38395) - Mairie du Plateau des petites Roches &#8211; Saint Bernard &#8211; Saint Hilaire",
+      "du Plateau des petites Roches – Saint Bernard – Saint Hilaire",
+    .name_ja = "Mairie - Plateau-des-Petites-Roches (SL, INSEE 38395) - Mairie du Plateau des petites Roches – Saint Bernard – Saint Hilaire",
     .category = "government", .portal = "https://www.petites-roches.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -50118,8 +50071,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:57:48 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_26C25932_AF5B_4126_B70A_C4496ECEA51C", .name = "Mairie - Amenucourt (SL, INSEE 95012) - Mairie d&#039;amenucourt",
-    .name_ja = "Mairie - Amenucourt (SL, INSEE 95012) - Mairie d&#039;amenucourt",
+  { .id = "JO45_FR_26C25932_AF5B_4126_B70A_C4496ECEA51C", .name = "Mairie - Amenucourt (SL, INSEE 95012) - Mairie d'amenucourt",
+    .name_ja = "Mairie - Amenucourt (SL, INSEE 95012) - Mairie d'amenucourt",
     .category = "government", .portal = "https://mairie-amenucourt.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -50362,9 +50315,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:50:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_29CBD54B_C863_48EF_B967_2847E904504B", .name = "Mairie - Aizier (SL, INSEE 27006) - Aizier &#8211; Site officiel "
-      "de la Mairie",
-    .name_ja = "Mairie - Aizier (SL, INSEE 27006) - Aizier &#8211; Site officiel de la Mairie",
+  { .id = "JO45_FR_29CBD54B_C863_48EF_B967_2847E904504B", .name = "Mairie - Aizier (SL, INSEE 27006) - Aizier – Site officiel de la "
+      "Mairie",
+    .name_ja = "Mairie - Aizier (SL, INSEE 27006) - Aizier – Site officiel de la Mairie",
     .category = "government", .portal = "https://www.aizier.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -50475,9 +50428,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "16:17:26 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_2B8B7B47_C6DD_4F0B_A7E6_39DD79D1454A", .name = "Mairie - Magnat-l Étrange (SL, INSEE 23115) - Magnat "
-      "l&#039;étrange",
-    .name_ja = "Mairie - Magnat-l Étrange (SL, INSEE 23115) - Magnat l&#039;étrange",
+  { .id = "JO45_FR_2B8B7B47_C6DD_4F0B_A7E6_39DD79D1454A", .name = "Mairie - Magnat-l Étrange (SL, INSEE 23115) - Magnat l'étrange",
+    .name_ja = "Mairie - Magnat-l Étrange (SL, INSEE 23115) - Magnat l'étrange",
     .category = "government", .portal = "https://www.magnatletrange23.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -50551,9 +50503,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:06:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_2C21C616_C260_4FF1_8B22_C6ECBF9F7E70", .name = "Mairie - Nesmy (SL, INSEE 85160) - Mairie de Nesmy &#8211; "
-      "Vendée",
-    .name_ja = "Mairie - Nesmy (SL, INSEE 85160) - Mairie de Nesmy &#8211; Vendée",
+  { .id = "JO45_FR_2C21C616_C260_4FF1_8B22_C6ECBF9F7E70", .name = "Mairie - Nesmy (SL, INSEE 85160) - Mairie de Nesmy – Vendée",
+    .name_ja = "Mairie - Nesmy (SL, INSEE 85160) - Mairie de Nesmy – Vendée",
     .category = "government", .portal = "https://nesmy.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -50645,8 +50596,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:27:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_2DCC71F5_6099_4828_B75C_7839ADEF12CA", .name = "Mairie - Châteauvert (SL, INSEE 83039) - CHÂTEAUVERT &#8211; 83",
-    .name_ja = "Mairie - Châteauvert (SL, INSEE 83039) - CHÂTEAUVERT &#8211; 83",
+  { .id = "JO45_FR_2DCC71F5_6099_4828_B75C_7839ADEF12CA", .name = "Mairie - Châteauvert (SL, INSEE 83039) - CHÂTEAUVERT – 83",
+    .name_ja = "Mairie - Châteauvert (SL, INSEE 83039) - CHÂTEAUVERT – 83",
     .category = "government", .portal = "https://chateauvert.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -50663,9 +50614,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "06:55:05 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_2E00C31B_67E2_4212_AEA2_91FDAC92DDC6", .name = "Mairie - Miserey (SL, INSEE 27410) - Site officiel d&#039;Evreux "
+  { .id = "JO45_FR_2E00C31B_67E2_4212_AEA2_91FDAC92DDC6", .name = "Mairie - Miserey (SL, INSEE 27410) - Site officiel d'Evreux "
       "Portes de Normandie",
-    .name_ja = "Mairie - Miserey (SL, INSEE 27410) - Site officiel d&#039;Evreux Portes de Normandie",
+    .name_ja = "Mairie - Miserey (SL, INSEE 27410) - Site officiel d'Evreux Portes de Normandie",
     .category = "government", .portal = "https://www.evreuxportesdenormandie.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -50720,8 +50671,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_2E50DC23_F836_4F94_B0C1_B2BD2E2E30BD", .name = "Alsace santé au travail - Strasbourg (SIL, INSEE 67482) - AST67 "
-      "&#8211; Alsace Santé au Travail",
-    .name_ja = "Alsace santé au travail - Strasbourg (SIL, INSEE 67482) - AST67 &#8211; Alsace Santé au Travail",
+      "– Alsace Santé au Travail",
+    .name_ja = "Alsace santé au travail - Strasbourg (SIL, INSEE 67482) - AST67 – Alsace Santé au Travail",
     .category = "government", .portal = "https://www.ast67.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -50851,8 +50802,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_2F0F5F67_2966_4F1B_90E9_D544B2200993", .name = "Mairie - Saint-Privat-d'Allier (SL, INSEE 43221) - Mairie Saint "
-      "Privat d&#039;Allier",
-    .name_ja = "Mairie - Saint-Privat-d'Allier (SL, INSEE 43221) - Mairie Saint Privat d&#039;Allier",
+      "Privat d'Allier",
+    .name_ja = "Mairie - Saint-Privat-d'Allier (SL, INSEE 43221) - Mairie Saint Privat d'Allier",
     .category = "government", .portal = "https://www.mairie-saintprivatdallier.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -50870,9 +50821,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_2F710DC4_1799_43C6_93B7_D51C40F8C89D", .name = "Point conseil budget - Association tutélaire d'Eure-et-Loir "
-      "(ATEL 28) - Lucé (SL, INSEE 28218) - ATEL &#8211; Association "
-      "Tutélaire d&#039;Eure et Loir",
-    .name_ja = "Point conseil budget - Association tutélaire d'Eure-et-Loir (ATEL 28) - Lucé (SL, INSEE 28218) - ATEL &#8211; Association Tutélaire d&#039;Eure et Loir",
+      "(ATEL 28) - Lucé (SL, INSEE 28218) - ATEL – Association "
+      "Tutélaire d'Eure et Loir",
+    .name_ja = "Point conseil budget - Association tutélaire d'Eure-et-Loir (ATEL 28) - Lucé (SL, INSEE 28218) - ATEL – Association Tutélaire d'Eure et Loir",
     .category = "government", .portal = "https://asso-atel.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -50928,8 +50879,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_30393D05_7EC9_48C7_9347_6E68F9E62FB7", .name = "Centre de ressources et d'information des bénévoles (CRIB) - "
       "Ligue de l'enseignement - Moulins (SL, INSEE 30189) - Ligue de "
-      "l&#039;enseignement de l&#039;Allier",
-    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Ligue de l'enseignement - Moulins (SL, INSEE 30189) - Ligue de l&#039;enseignement de l&#039;Allier",
+      "l'enseignement de l'Allier",
+    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Ligue de l'enseignement - Moulins (SL, INSEE 30189) - Ligue de l'enseignement de l'Allier",
     .category = "government", .portal = "https://laligue03.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -51358,9 +51309,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_3465C2E7_15C3_466D_930D_03998BE20572", .name = "Mairie - Breuschwickersheim (SL, INSEE 67065) - BOURSE AUX "
-      "JOUETS &#8211; dimanche 8 novembre 2026 &#8211; 9h/16h &#8211; "
-      "Mairie",
-    .name_ja = "Mairie - Breuschwickersheim (SL, INSEE 67065) - BOURSE AUX JOUETS &#8211; dimanche 8 novembre 2026 &#8211; 9h/16h &#8211; Mairie",
+      "JOUETS – dimanche 8 novembre 2026 – 9h/16h – Mairie",
+    .name_ja = "Mairie - Breuschwickersheim (SL, INSEE 67065) - BOURSE AUX JOUETS – dimanche 8 novembre 2026 – 9h/16h – Mairie",
     .category = "government", .portal = "https://breuschwickersheim.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -51436,9 +51386,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_34F1DA09_0747_4CB0_BF99_845E2A01678A", .name = "Service de renseignement en droit du travail - Manche (SL, INSEE "
-      "50129) - Directions r&#233;gionales de l'&#233;conomie, de "
-      "l'emploi, du travail et des so",
-    .name_ja = "Service de renseignement en droit du travail - Manche (SL, INSEE 50129) - Directions r&#233;gionales de l'&#233;conomie, de l'emploi, du travail et des so",
+      "50129) - Directions régionales de l'économie, de l'emploi, du "
+      "travail et des so",
+    .name_ja = "Service de renseignement en droit du travail - Manche (SL, INSEE 50129) - Directions régionales de l'économie, de l'emploi, du travail et des so",
     .category = "government", .portal = "https://normandie.dreets.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -51456,8 +51406,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_35402D81_A016_4F33_A97B_EE96C111AF07", .name = "Mairie - Saint-Mars-d'Outillé (SL, INSEE 72299) - Mairie "
-      "Saint-Mars-d&#039;Outillé",
-    .name_ja = "Mairie - Saint-Mars-d'Outillé (SL, INSEE 72299) - Mairie Saint-Mars-d&#039;Outillé",
+      "Saint-Mars-d'Outillé",
+    .name_ja = "Mairie - Saint-Mars-d'Outillé (SL, INSEE 72299) - Mairie Saint-Mars-d'Outillé",
     .category = "government", .portal = "https://stmarsdoutille.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -51700,8 +51650,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_3691AEA1_4A71_400F_ACE5_9638C99203F5", .name = "Mairie - Salles-d'Angles (SL, INSEE 16359) - Mairie de Salles "
-      "d&#039;Angles",
-    .name_ja = "Mairie - Salles-d'Angles (SL, INSEE 16359) - Mairie de Salles d&#039;Angles",
+      "d'Angles",
+    .name_ja = "Mairie - Salles-d'Angles (SL, INSEE 16359) - Mairie de Salles d'Angles",
     .category = "government", .portal = "https://sallesdangles.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -51812,8 +51762,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_37C8BB14_CA6C_47A6_B02C_90E54CCC574C", .name = "Centre communal d'action sociale (CCAS) - Esmans (SL, INSEE "
-      "77172) - Commune d&#039;Esmans en Seine-et-Marne",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Esmans (SL, INSEE 77172) - Commune d&#039;Esmans en Seine-et-Marne",
+      "77172) - Commune d'Esmans en Seine-et-Marne",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Esmans (SL, INSEE 77172) - Commune d'Esmans en Seine-et-Marne",
     .category = "government", .portal = "https://www.esmans.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -51851,9 +51801,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_37DFF518_E400_4456_82FE_FDB11AC6FB44", .name = "Direction de l'économie, de l'emploi, du travail et des "
       "solidarités (DEETS) - Guadeloupe (SIL, INSEE 97105) - Direction "
-      "de l'&#233;conomie, de l'emploi, du travail et des "
-      "solidarit&#233;s (D",
-    .name_ja = "Direction de l'économie, de l'emploi, du travail et des solidarités (DEETS) - Guadeloupe (SIL, INSEE 97105) - Direction de l'&#233;conomie, de l'emploi, du travail et des solidarit&#233;s (D",
+      "de l'économie, de l'emploi, du travail et des solidarités (D",
+    .name_ja = "Direction de l'économie, de l'emploi, du travail et des solidarités (DEETS) - Guadeloupe (SIL, INSEE 97105) - Direction de l'économie, de l'emploi, du travail et des solidarités (D",
     .category = "government", .portal = "https://guadeloupe.deets.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -51925,8 +51874,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_397B0ABA_11DC_45CA_B444_04D3332FB7FC", .name = "Mairie - Saint-Marcel-d'Urfé (SL, INSEE 42255) - Saint Marcel "
-      "d&#039;Urfé",
-    .name_ja = "Mairie - Saint-Marcel-d'Urfé (SL, INSEE 42255) - Saint Marcel d&#039;Urfé",
+      "d'Urfé",
+    .name_ja = "Mairie - Saint-Marcel-d'Urfé (SL, INSEE 42255) - Saint Marcel d'Urfé",
     .category = "government", .portal = "https://st-marcel-d-urfe.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -51981,8 +51930,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_39F7172A_43D7_4AA7_A04D_6EE84EC1A369", .name = "Mairie - Eyzerac (SL, INSEE 24171) - Site officiel de la Commune "
-      "d&#039;Eyzerac &#8211; Accueil",
-    .name_ja = "Mairie - Eyzerac (SL, INSEE 24171) - Site officiel de la Commune d&#039;Eyzerac &#8211; Accueil",
+      "d'Eyzerac – Accueil",
+    .name_ja = "Mairie - Eyzerac (SL, INSEE 24171) - Site officiel de la Commune d'Eyzerac – Accueil",
     .category = "government", .portal = "https://www.eyzerac.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -52111,9 +52060,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:40:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_3B429B25_0903_4CC6_8F9D_1BC71AADBC5F", .name = "Mairie - Guéret (SL, INSEE 23096) - Ville de Guéret  &#8211; "
-      "Site officiel",
-    .name_ja = "Mairie - Guéret (SL, INSEE 23096) - Ville de Guéret  &#8211; Site officiel",
+  { .id = "JO45_FR_3B429B25_0903_4CC6_8F9D_1BC71AADBC5F", .name = "Mairie - Guéret (SL, INSEE 23096) - Ville de Guéret  – Site "
+      "officiel",
+    .name_ja = "Mairie - Guéret (SL, INSEE 23096) - Ville de Guéret  – Site officiel",
     .category = "government", .portal = "https://www.ville-gueret.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -52374,9 +52323,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:12:14 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_3DF8FC03_8EB1_4D84_A5D9_A3DBA61F5D14", .name = "Mairie - Lamanère (SL, INSEE 66091) - Lamanère &#8211; Site "
-      "Officiel de la Commune",
-    .name_ja = "Mairie - Lamanère (SL, INSEE 66091) - Lamanère &#8211; Site Officiel de la Commune",
+  { .id = "JO45_FR_3DF8FC03_8EB1_4D84_A5D9_A3DBA61F5D14", .name = "Mairie - Lamanère (SL, INSEE 66091) - Lamanère – Site Officiel "
+      "de la Commune",
+    .name_ja = "Mairie - Lamanère (SL, INSEE 66091) - Lamanère – Site Officiel de la Commune",
     .category = "government", .portal = "https://lamanere.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -52695,8 +52644,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_0707A247_91EA_4D89_BDF3_76568A8102D4", .name = "Bureau d'information et d'orientation (BIO) - Université Marie "
-      "et Louis Pasteur - Besançon (SL, INSEE 25056) - L&#039;ACTU",
-    .name_ja = "Bureau d'information et d'orientation (BIO) - Université Marie et Louis Pasteur - Besançon (SL, INSEE 25056) - L&#039;ACTU",
+      "et Louis Pasteur - Besançon (SL, INSEE 25056) - L'ACTU",
+    .name_ja = "Bureau d'information et d'orientation (BIO) - Université Marie et Louis Pasteur - Besançon (SL, INSEE 25056) - L'ACTU",
     .category = "government", .portal = "https://actu.umlp.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -52788,8 +52737,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_0973B541_2971_4317_B59F_F3E049EDC38C", .name = "Communauté de communes - Pays de L'Aigle (SL, INSEE 61214) - "
-      "Pays de l&#039;Aigle",
-    .name_ja = "Communauté de communes - Pays de L'Aigle (SL, INSEE 61214) - Pays de l&#039;Aigle",
+      "Pays de l'Aigle",
+    .name_ja = "Communauté de communes - Pays de L'Aigle (SL, INSEE 61214) - Pays de l'Aigle",
     .category = "government", .portal = "https://www.paysdelaigle.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -52807,8 +52756,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_0A615A8F_30A1_48B1_9E78_223560B9D16E", .name = "Parc naturel régional - Brière (SIL, INSEE 44168) - Parc naturel "
-      "régional de Brière &#8211; Une autre vie s&#039;invente ici",
-    .name_ja = "Parc naturel régional - Brière (SIL, INSEE 44168) - Parc naturel régional de Brière &#8211; Une autre vie s&#039;invente ici",
+      "régional de Brière – Une autre vie s'invente ici",
+    .name_ja = "Parc naturel régional - Brière (SIL, INSEE 44168) - Parc naturel régional de Brière – Une autre vie s'invente ici",
     .category = "government", .portal = "https://www.parc-naturel-briere.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -52898,9 +52847,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "06:34:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_0B195399_ED59_46A4_B0F5_B19F33620ADE", .name = "Mairie - Thézac (SL, INSEE 17445) - Mairie de Thézac 17 &#8211; "
-      "Site officiel de la commune",
-    .name_ja = "Mairie - Thézac (SL, INSEE 17445) - Mairie de Thézac 17 &#8211; Site officiel de la commune",
+  { .id = "JO45_FR_0B195399_ED59_46A4_B0F5_B19F33620ADE", .name = "Mairie - Thézac (SL, INSEE 17445) - Mairie de Thézac 17 – Site "
+      "officiel de la commune",
+    .name_ja = "Mairie - Thézac (SL, INSEE 17445) - Mairie de Thézac 17 – Site officiel de la commune",
     .category = "government", .portal = "https://xn--thzac17-cya.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -53047,8 +52996,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_0D3665AA_8AB9_4EDC_9C0A_B45A59265C11", .name = "Mairie - Fontevraud-l'Abbaye (SL, INSEE 49140) - "
-      "Fontevraud-l&#039;Abbaye",
-    .name_ja = "Mairie - Fontevraud-l'Abbaye (SL, INSEE 49140) - Fontevraud-l&#039;Abbaye",
+      "Fontevraud-l'Abbaye",
+    .name_ja = "Mairie - Fontevraud-l'Abbaye (SL, INSEE 49140) - Fontevraud-l'Abbaye",
     .category = "government", .portal = "https://fontevraud-abbaye.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -53575,8 +53524,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_0FA8DEE6_A89A_46A3_A1F6_27A89795903B", .name = "Centre communal d'action sociale (CCAS) - Achicourt (SL, INSEE "
-      "62004) - Ville d&#039;Achicourt &#8211; Site officiel",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Achicourt (SL, INSEE 62004) - Ville d&#039;Achicourt &#8211; Site officiel",
+      "62004) - Ville d'Achicourt – Site officiel",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Achicourt (SL, INSEE 62004) - Ville d'Achicourt – Site officiel",
     .category = "government", .portal = "https://achicourt.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -53632,8 +53581,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_10A55405_F178_471B_AA7F_41CDF97FB858", .name = "Agence nationale de l'habitat (Anah) - Délégation locale - "
       "Communauté d'Agglomération La Roche-sur-Yon (SL, INSEE 85191) - "
-      "La Roche-sur-Yon &#8211; Ville et Agglomération",
-    .name_ja = "Agence nationale de l'habitat (Anah) - Délégation locale - Communauté d'Agglomération La Roche-sur-Yon (SL, INSEE 85191) - La Roche-sur-Yon &#8211; Ville et Agglomération",
+      "La Roche-sur-Yon – Ville et Agglomération",
+    .name_ja = "Agence nationale de l'habitat (Anah) - Délégation locale - Communauté d'Agglomération La Roche-sur-Yon (SL, INSEE 85191) - La Roche-sur-Yon – Ville et Agglomération",
     .category = "government", .portal = "https://larochesuryon.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -53669,8 +53618,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_11691404_9C59_4460_A828_DB2E4C29DE60", .name = "Centre communal d'action sociale (CCAS) - Féchain (SL, INSEE "
-      "59224) - Commune de F&#233;chain - site officiel",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Féchain (SL, INSEE 59224) - Commune de F&#233;chain - site officiel",
+      "59224) - Commune de Féchain - site officiel",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Féchain (SL, INSEE 59224) - Commune de Féchain - site officiel",
     .category = "government", .portal = "https://www.fechain.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -53688,8 +53637,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_11A8A955_3601_46BF_A103_FB0F7801F154", .name = "Centre communal d'action sociale (CCAS) - Aubers (SL, INSEE "
-      "59025) - Mairie d&#039;Aubers",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Aubers (SL, INSEE 59025) - Mairie d&#039;Aubers",
+      "59025) - Mairie d'Aubers",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Aubers (SL, INSEE 59025) - Mairie d'Aubers",
     .category = "government", .portal = "https://aubers.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -54170,8 +54119,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_17695DAC_38CE_4E3A_9538_6BDDD03B8D2B", .name = "Mairie - Esquay-sur-Seulles (SL, INSEE 14250) - Commune "
-      "d&#039;Esquay-sur-Seulles",
-    .name_ja = "Mairie - Esquay-sur-Seulles (SL, INSEE 14250) - Commune d&#039;Esquay-sur-Seulles",
+      "d'Esquay-sur-Seulles",
+    .name_ja = "Mairie - Esquay-sur-Seulles (SL, INSEE 14250) - Commune d'Esquay-sur-Seulles",
     .category = "government", .portal = "https://esquay-sur-seulles.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -54208,8 +54157,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_17CDDBC2_A78F_4A29_B046_04D7FBE2B45B", .name = "Centre de ressources et d'information des bénévoles (CRIB) - "
       "Ligue de l'enseignement d'Évry (SL, INSEE 91228) - LA LIGUE DE "
-      "L&#039;ENSEIGNEMENT DE L&#039;ESSONNE",
-    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Ligue de l'enseignement d'Évry (SL, INSEE 91228) - LA LIGUE DE L&#039;ENSEIGNEMENT DE L&#039;ESSONNE",
+      "L'ENSEIGNEMENT DE L'ESSONNE",
+    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Ligue de l'enseignement d'Évry (SL, INSEE 91228) - LA LIGUE DE L'ENSEIGNEMENT DE L'ESSONNE",
     .category = "government", .portal = "http://www.ligue91.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -54937,8 +54886,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_220755F5_ABD6_4724_AAF2_397908BDE7EF", .name = "Mairie - Saint-Alban-de-Montbel (SL, INSEE 73219) - Mairie de "
-      "Saint-Alban de Montbel &#8211; Savoie (73)",
-    .name_ja = "Mairie - Saint-Alban-de-Montbel (SL, INSEE 73219) - Mairie de Saint-Alban de Montbel &#8211; Savoie (73)",
+      "Saint-Alban de Montbel – Savoie (73)",
+    .name_ja = "Mairie - Saint-Alban-de-Montbel (SL, INSEE 73219) - Mairie de Saint-Alban de Montbel – Savoie (73)",
     .category = "government", .portal = "https://stalbandemontbel.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -55161,8 +55110,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_7FBFDA44_F190_4789_A35F_09827141DF4E", .name = "Point conseil budget - Association Malouine d'Insertion et de "
       "Développement Social (AMIDS 35) - Saint-Malo (SL, INSEE 35288) - "
-      "Centre Social de L&#039;AMIDS &#8211; Saint-Malo",
-    .name_ja = "Point conseil budget - Association Malouine d'Insertion et de Développement Social (AMIDS 35) - Saint-Malo (SL, INSEE 35288) - Centre Social de L&#039;AMIDS &#8211; Saint-Malo",
+      "Centre Social de L'AMIDS – Saint-Malo",
+    .name_ja = "Point conseil budget - Association Malouine d'Insertion et de Développement Social (AMIDS 35) - Saint-Malo (SL, INSEE 35288) - Centre Social de L'AMIDS – Saint-Malo",
     .category = "government", .portal = "http://centresocial-saintmalo.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -55438,9 +55387,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:35:48 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_81955A7A_DFFD_479B_B12B_11434176F216", .name = "Mairie - Les Mées (SL, INSEE 04116) - Mairie &#8211; Site "
-      "officiel de la commune de Les Mées",
-    .name_ja = "Mairie - Les Mées (SL, INSEE 04116) - Mairie &#8211; Site officiel de la commune de Les Mées",
+  { .id = "JO45_FR_81955A7A_DFFD_479B_B12B_11434176F216", .name = "Mairie - Les Mées (SL, INSEE 04116) - Mairie – Site officiel de "
+      "la commune de Les Mées",
+    .name_ja = "Mairie - Les Mées (SL, INSEE 04116) - Mairie – Site officiel de la commune de Les Mées",
     .category = "government", .portal = "https://les-mees.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -55704,8 +55653,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_86AD19FF_D731_4E8E_ADA0_2D7D80DC40A3", .name = "Centre communal d'action sociale (CCAS) - Bavent (SL, INSEE "
-      "14046) - Mairie de Bavent &#8211; 14",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Bavent (SL, INSEE 14046) - Mairie de Bavent &#8211; 14",
+      "14046) - Mairie de Bavent – 14",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Bavent (SL, INSEE 14046) - Mairie de Bavent – 14",
     .category = "government", .portal = "https://bavent.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -55980,9 +55929,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "05:30:46 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_8B339F24_1519_45E8_861A_6A4492A9E81A", .name = "Mairie - Aulnay-de-Saintonge (SL, INSEE 17024) - Mairie "
-      "d&#039;Aulnay",
-    .name_ja = "Mairie - Aulnay-de-Saintonge (SL, INSEE 17024) - Mairie d&#039;Aulnay",
+  { .id = "JO45_FR_8B339F24_1519_45E8_861A_6A4492A9E81A", .name = "Mairie - Aulnay-de-Saintonge (SL, INSEE 17024) - Mairie d'Aulnay",
+    .name_ja = "Mairie - Aulnay-de-Saintonge (SL, INSEE 17024) - Mairie d'Aulnay",
     .category = "government", .portal = "https://www.aulnay-de-saintonge.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -56039,8 +55987,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_8B77A589_3239_436E_AD49_2FC37F4CCB3C", .name = "Mission locale pour l'insertion professionnelle et sociale des "
       "jeunes (16-25 ans) - Yvetot (SL, INSEE 76758) - Mission Locale "
-      "Caux &#8211; Seine &#8211; Austreberthe",
-    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Yvetot (SL, INSEE 76758) - Mission Locale Caux &#8211; Seine &#8211; Austreberthe",
+      "Caux – Seine – Austreberthe",
+    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Yvetot (SL, INSEE 76758) - Mission Locale Caux – Seine – Austreberthe",
     .category = "government", .portal = "https://www.mission-locale-csa.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -56246,9 +56194,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:39:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_8D2D9AEA_FF47_4003_AB08_42C4AFB34674", .name = "Mairie - Claix (SL, INSEE 16101) - Claix16.fr &#8211; Site de la "
+  { .id = "JO45_FR_8D2D9AEA_FF47_4003_AB08_42C4AFB34674", .name = "Mairie - Claix (SL, INSEE 16101) - Claix16.fr – Site de la "
       "Commune de Claix en Charente (16440)",
-    .name_ja = "Mairie - Claix (SL, INSEE 16101) - Claix16.fr &#8211; Site de la Commune de Claix en Charente (16440)",
+    .name_ja = "Mairie - Claix (SL, INSEE 16101) - Claix16.fr – Site de la Commune de Claix en Charente (16440)",
     .category = "government", .portal = "https://www.claix16.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -56284,8 +56232,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:35:18 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_8D6EA009_67A3_414F_B973_FA72D77D1870", .name = "Mairie - Opio (SL, INSEE 06089) - Mairie d&#039;Opio",
-    .name_ja = "Mairie - Opio (SL, INSEE 06089) - Mairie d&#039;Opio",
+  { .id = "JO45_FR_8D6EA009_67A3_414F_B973_FA72D77D1870", .name = "Mairie - Opio (SL, INSEE 06089) - Mairie d'Opio",
+    .name_ja = "Mairie - Opio (SL, INSEE 06089) - Mairie d'Opio",
     .category = "government", .portal = "https://mairie-opio.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -56302,8 +56250,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:59:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_8D6EA009_67A3_414F_B973_FA72D77D1870_2", .name = "Mairie - Opio (SL, INSEE 06089) - Mairie d&#039;Opio",
-    .name_ja = "Mairie - Opio (SL, INSEE 06089) - Mairie d&#039;Opio",
+  { .id = "JO45_FR_8D6EA009_67A3_414F_B973_FA72D77D1870_2", .name = "Mairie - Opio (SL, INSEE 06089) - Mairie d'Opio",
+    .name_ja = "Mairie - Opio (SL, INSEE 06089) - Mairie d'Opio",
     .category = "government", .portal = "https://mairie-opio.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -56322,9 +56270,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_8D6F14C4_D073_48FE_915A_A201F33450E2", .name = "Direction de l'économie, de l'emploi, du travail et des "
       "solidarités (DEETS) - La Réunion (SIL, INSEE 97411) - Direction "
-      "de l'&#233;conomie, de l'emploi, du travail et des "
-      "solidarit&#233;s (D",
-    .name_ja = "Direction de l'économie, de l'emploi, du travail et des solidarités (DEETS) - La Réunion (SIL, INSEE 97411) - Direction de l'&#233;conomie, de l'emploi, du travail et des solidarit&#233;s (D",
+      "de l'économie, de l'emploi, du travail et des solidarités (D",
+    .name_ja = "Direction de l'économie, de l'emploi, du travail et des solidarités (DEETS) - La Réunion (SIL, INSEE 97411) - Direction de l'économie, de l'emploi, du travail et des solidarités (D",
     .category = "government", .portal = "https://reunion.deets.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -56658,8 +56605,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "19:02:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_91B25E7A_3692_4CBD_AE07_CE050D248670", .name = "Mairie - Étrelles (SL, INSEE 35109) - Commune d&#039;Etrelles",
-    .name_ja = "Mairie - Étrelles (SL, INSEE 35109) - Commune d&#039;Etrelles",
+  { .id = "JO45_FR_91B25E7A_3692_4CBD_AE07_CE050D248670", .name = "Mairie - Étrelles (SL, INSEE 35109) - Commune d'Etrelles",
+    .name_ja = "Mairie - Étrelles (SL, INSEE 35109) - Commune d'Etrelles",
     .category = "government", .portal = "https://etrelles.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -56697,9 +56644,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_91E6D4C6_4B4A_4F7C_8129_60AB00473014", .name = "Maison Départementale des Solidarités (MDS) Territoire du Velay "
-      "(SL, INSEE 43157) - D&#233;partement 43 : Culture, sports et "
-      "loisirs, &#233;conomie et tourisme en H",
-    .name_ja = "Maison Départementale des Solidarités (MDS) Territoire du Velay (SL, INSEE 43157) - D&#233;partement 43 : Culture, sports et loisirs, &#233;conomie et tourisme en H",
+      "(SL, INSEE 43157) - Département 43 : Culture, sports et loisirs, "
+      "économie et tourisme en H",
+    .name_ja = "Maison Départementale des Solidarités (MDS) Territoire du Velay (SL, INSEE 43157) - Département 43 : Culture, sports et loisirs, économie et tourisme en H",
     .category = "government", .portal = "http://feeds.feedburner.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -57069,8 +57016,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_95827367_AE25_43D8_B08E_00C376761DB0", .name = "Centre communal d'action sociale (CCAS) - Hasnon (SL, INSEE "
-      "59284) - VILLE D&#039;HASNON",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Hasnon (SL, INSEE 59284) - VILLE D&#039;HASNON",
+      "59284) - VILLE D'HASNON",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Hasnon (SL, INSEE 59284) - VILLE D'HASNON",
     .category = "government", .portal = "http://hasnon.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -57088,8 +57035,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_95B72492_B316_400E_88A7_66CA414214CD", .name = "Point information jeunesse - Valderiès (SL, INSEE 81306) - "
-      "Association Séga&#039;liens",
-    .name_ja = "Point information jeunesse - Valderiès (SL, INSEE 81306) - Association Séga&#039;liens",
+      "Association Séga'liens",
+    .name_ja = "Point information jeunesse - Valderiès (SL, INSEE 81306) - Association Séga'liens",
     .category = "government", .portal = "http://www.cs-segalatarnais.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -57331,9 +57278,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_68C54A12_2377_4D44_B170_C210312D37B6", .name = "Sous-direction des publics et des produits (SI, INSEE ) - "
-      "Direction de l'information l&#233;gale et administrative &#8211; "
-      "DILA",
-    .name_ja = "Sous-direction des publics et des produits (SI, INSEE ) - Direction de l'information l&#233;gale et administrative &#8211; DILA",
+      "Direction de l'information légale et administrative – DILA",
+    .name_ja = "Sous-direction des publics et des produits (SI, INSEE ) - Direction de l'information légale et administrative – DILA",
     .category = "government", .portal = "https://dila.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -57389,9 +57335,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_7CD81799_8C7B_4454_BE38_11C031CF122A", .name = "Autorité de la qualité de service dans les transports (SI, INSEE "
-      ") - Qualit&#233; Transports - Autorit&#233; de la qualit&#233; "
-      "de service dans les t",
-    .name_ja = "Autorité de la qualité de service dans les transports (SI, INSEE ) - Qualit&#233; Transports - Autorit&#233; de la qualit&#233; de service dans les t",
+      ") - Qualité Transports - Autorité de la qualité de service dans "
+      "les t",
+    .name_ja = "Autorité de la qualité de service dans les transports (SI, INSEE ) - Qualité Transports - Autorité de la qualité de service dans les t",
     .category = "government", .portal = "https://www.qualitetransports.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -57448,8 +57394,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_B549B6F5_76B3_4AC6_9B45_C732CD3078C0", .name = "Inspection générale des affaires maritimes (SI, INSEE ) - "
-      "Inspection g&#233;n&#233;rale des affaires maritimes",
-    .name_ja = "Inspection générale des affaires maritimes (SI, INSEE ) - Inspection g&#233;n&#233;rale des affaires maritimes",
+      "Inspection générale des affaires maritimes",
+    .name_ja = "Inspection générale des affaires maritimes (SI, INSEE ) - Inspection générale des affaires maritimes",
     .category = "government", .portal = "https://www.igam.developpement-durable.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -57729,8 +57675,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:53:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_031ECC74_CF50_4761_B800_F8B857DED603", .name = "Mairie - Oudezeele (SL, INSEE 59453) - Commune d&#039;Oudezeele",
-    .name_ja = "Mairie - Oudezeele (SL, INSEE 59453) - Commune d&#039;Oudezeele",
+  { .id = "JO45_FR_031ECC74_CF50_4761_B800_F8B857DED603", .name = "Mairie - Oudezeele (SL, INSEE 59453) - Commune d'Oudezeele",
+    .name_ja = "Mairie - Oudezeele (SL, INSEE 59453) - Commune d'Oudezeele",
     .category = "government", .portal = "https://oudezeele.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -57767,8 +57713,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_0372A166_B077_42D3_BC35_52C0C9BB4647", .name = "Mairie - Audun-le-Roman (SL, INSEE 54029) - Mairie "
-      "d&#039;Audun-le-Roman",
-    .name_ja = "Mairie - Audun-le-Roman (SL, INSEE 54029) - Mairie d&#039;Audun-le-Roman",
+      "d'Audun-le-Roman",
+    .name_ja = "Mairie - Audun-le-Roman (SL, INSEE 54029) - Mairie d'Audun-le-Roman",
     .category = "government", .portal = "https://audunleroman.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -57986,9 +57932,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:02:53 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_989D4E3B_0745_452B_A6B1_3C9F237A64C8", .name = "Mairie - Montpeyroux (SL, INSEE 34173) - Montpeyroux &#8211; "
-      "Hérault",
-    .name_ja = "Mairie - Montpeyroux (SL, INSEE 34173) - Montpeyroux &#8211; Hérault",
+  { .id = "JO45_FR_989D4E3B_0745_452B_A6B1_3C9F237A64C8", .name = "Mairie - Montpeyroux (SL, INSEE 34173) - Montpeyroux – Hérault",
+    .name_ja = "Mairie - Montpeyroux (SL, INSEE 34173) - Montpeyroux – Hérault",
     .category = "government", .portal = "https://montpeyroux34.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -58176,9 +58121,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_99A3A283_9B43_4370_B16C_AB531CA98C27", .name = "Centre communal d'action sociale (CCAS) - Besse-sur-Issole (SL, "
-      "INSEE 83018) - Les déchèteries passent à l&#8217;heure "
-      "d&#8217;hiver",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Besse-sur-Issole (SL, INSEE 83018) - Les déchèteries passent à l&#8217;heure d&#8217;hiver",
+      "INSEE 83018) - Les déchèteries passent à l’heure d’hiver",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Besse-sur-Issole (SL, INSEE 83018) - Les déchèteries passent à l’heure d’hiver",
     .category = "government", .portal = "https://www.besse-sur-issole.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -58909,8 +58853,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_A0B691B0_2A5F_4E89_91CB_A14C3FFDD949", .name = "Centre d'information et d'orientation (CIO) - Ambérieu-en-Bugey "
-      "(SL, INSEE 01004) - CIO d'Amb&#233;rieu-en-Bugey",
-    .name_ja = "Centre d'information et d'orientation (CIO) - Ambérieu-en-Bugey (SL, INSEE 01004) - CIO d'Amb&#233;rieu-en-Bugey",
+      "(SL, INSEE 01004) - CIO d'Ambérieu-en-Bugey",
+    .name_ja = "Centre d'information et d'orientation (CIO) - Ambérieu-en-Bugey (SL, INSEE 01004) - CIO d'Ambérieu-en-Bugey",
     .category = "government", .portal = "https://amberieu.cio.ac-lyon.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -58983,9 +58927,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "06:00:07 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_A251D576_3DEA_42CD_871D_03342447EEE7", .name = "Mairie - Mazerolles (SL, INSEE 64374) - Permanence de la BTM "
-      "&#8211; octobre 2026",
-    .name_ja = "Mairie - Mazerolles (SL, INSEE 64374) - Permanence de la BTM &#8211; octobre 2026",
+  { .id = "JO45_FR_A251D576_3DEA_42CD_871D_03342447EEE7", .name = "Mairie - Mazerolles (SL, INSEE 64374) - Permanence de la BTM – "
+      "octobre 2026",
+    .name_ja = "Mairie - Mazerolles (SL, INSEE 64374) - Permanence de la BTM – octobre 2026",
     .category = "government", .portal = "https://mazerolles64.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -59188,9 +59132,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_A46E7C9E_2CA4_493F_A5CB_A08607E07BC8", .name = "Communauté de communes - La Gascogne Toulousaine (SL, INSEE "
-      "32160) - Communauté de Communes de la Gascogne Toulousaine "
-      "&#8211; Site officiel",
-    .name_ja = "Communauté de communes - La Gascogne Toulousaine (SL, INSEE 32160) - Communauté de Communes de la Gascogne Toulousaine &#8211; Site officiel",
+      "32160) - Communauté de Communes de la Gascogne Toulousaine – "
+      "Site officiel",
+    .name_ja = "Communauté de communes - La Gascogne Toulousaine (SL, INSEE 32160) - Communauté de Communes de la Gascogne Toulousaine – Site officiel",
     .category = "government", .portal = "https://www.ccgascognetoulousaine.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -59301,9 +59245,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:13:18 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_A5C02E42_E0C3_4768_9355_E4655E587EEE", .name = "Mairie - L'Hôme-Chamondot (SL, INSEE 61206) - "
-      "L&#039;Hôme-Chamondot",
-    .name_ja = "Mairie - L'Hôme-Chamondot (SL, INSEE 61206) - L&#039;Hôme-Chamondot",
+  { .id = "JO45_FR_A5C02E42_E0C3_4768_9355_E4655E587EEE", .name = "Mairie - L'Hôme-Chamondot (SL, INSEE 61206) - L'Hôme-Chamondot",
+    .name_ja = "Mairie - L'Hôme-Chamondot (SL, INSEE 61206) - L'Hôme-Chamondot",
     .category = "government", .portal = "https://lhomechamondot.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -59360,8 +59303,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_A60E92B8_4B5F_4608_9584_4297F4DFB923", .name = "Mairie - Cornillon-sur-l'Oule (SL, INSEE 26105) - Cornillon sur "
-      "l&#039;Oule",
-    .name_ja = "Mairie - Cornillon-sur-l'Oule (SL, INSEE 26105) - Cornillon sur l&#039;Oule",
+      "l'Oule",
+    .name_ja = "Mairie - Cornillon-sur-l'Oule (SL, INSEE 26105) - Cornillon sur l'Oule",
     .category = "government", .portal = "https://cornillonsurloule.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -59711,8 +59654,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_AB5054C8_60FB_4F90_83BE_6D2168CAC261", .name = "Institut national supérieur du professorat et de l'éducation "
       "(Inspé) - Académie de Limoges (SIL, INSEE 87085) - Inspé de "
-      "l&#039;académie de Limoges",
-    .name_ja = "Institut national supérieur du professorat et de l'éducation (Inspé) - Académie de Limoges (SIL, INSEE 87085) - Inspé de l&#039;académie de Limoges",
+      "l'académie de Limoges",
+    .name_ja = "Institut national supérieur du professorat et de l'éducation (Inspé) - Académie de Limoges (SIL, INSEE 87085) - Inspé de l'académie de Limoges",
     .category = "government", .portal = "https://www.inspe.unilim.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -59970,8 +59913,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_AE821B4B_429B_4CE1_86A2_4C8CA617097B", .name = "Mairie - Laneuvelotte (SL, INSEE 54296) - Mairie de Laneuvelotte "
-      "&#8211; Site officiel",
-    .name_ja = "Mairie - Laneuvelotte (SL, INSEE 54296) - Mairie de Laneuvelotte &#8211; Site officiel",
+      "– Site officiel",
+    .name_ja = "Mairie - Laneuvelotte (SL, INSEE 54296) - Mairie de Laneuvelotte – Site officiel",
     .category = "government", .portal = "https://laneuvelotte.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -60063,8 +60006,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:47:23 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_AFDA509C_D5E6_4808_9098_16C701BA0EA8", .name = "Mairie - Allenjoie (SL, INSEE 25011) - Commune d&#039;Allenjoie",
-    .name_ja = "Mairie - Allenjoie (SL, INSEE 25011) - Commune d&#039;Allenjoie",
+  { .id = "JO45_FR_AFDA509C_D5E6_4808_9098_16C701BA0EA8", .name = "Mairie - Allenjoie (SL, INSEE 25011) - Commune d'Allenjoie",
+    .name_ja = "Mairie - Allenjoie (SL, INSEE 25011) - Commune d'Allenjoie",
     .category = "government", .portal = "https://www.allenjoie.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -60081,8 +60024,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:04:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_AFDA509C_D5E6_4808_9098_16C701BA0EA8_2", .name = "Mairie - Allenjoie (SL, INSEE 25011) - Commune d&#039;Allenjoie",
-    .name_ja = "Mairie - Allenjoie (SL, INSEE 25011) - Commune d&#039;Allenjoie",
+  { .id = "JO45_FR_AFDA509C_D5E6_4808_9098_16C701BA0EA8_2", .name = "Mairie - Allenjoie (SL, INSEE 25011) - Commune d'Allenjoie",
+    .name_ja = "Mairie - Allenjoie (SL, INSEE 25011) - Commune d'Allenjoie",
     .category = "government", .portal = "http://www.allenjoie.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -60198,8 +60141,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_B0F5164F_8E1C_400F_8BFF_56EB0C858A17_3", .name = "Centre de protection maternelle et infantile (PMI) - "
       "Saint-Maurice (SL, INSEE 94069) - Ville de Saint Maurice : Flux "
-      "RSS des offres d&#039;emploi",
-    .name_ja = "Centre de protection maternelle et infantile (PMI) - Saint-Maurice (SL, INSEE 94069) - Ville de Saint Maurice : Flux RSS des offres d&#039;emploi",
+      "RSS des offres d'emploi",
+    .name_ja = "Centre de protection maternelle et infantile (PMI) - Saint-Maurice (SL, INSEE 94069) - Ville de Saint Maurice : Flux RSS des offres d'emploi",
     .category = "government", .portal = "https://www.ville-saint-maurice.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -60422,8 +60365,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_B263FE35_1F29_4FB1_AD3E_99E298405746", .name = "Mairie - La Tourette (SL, INSEE 42312) - Commune de La Tourette "
-      "&#8211; Loire",
-    .name_ja = "Mairie - La Tourette (SL, INSEE 42312) - Commune de La Tourette &#8211; Loire",
+      "– Loire",
+    .name_ja = "Mairie - La Tourette (SL, INSEE 42312) - Commune de La Tourette – Loire",
     .category = "government", .portal = "https://latourette42.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -60630,8 +60573,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_B533A516_A756_40FF_8D91_7AC9BD3C7C25", .name = "Ordre des avocats - Barreau d'Auxerre (SL, INSEE 89024) - "
-      "Barreau d&#039;Auxerre",
-    .name_ja = "Ordre des avocats - Barreau d'Auxerre (SL, INSEE 89024) - Barreau d&#039;Auxerre",
+      "Barreau d'Auxerre",
+    .name_ja = "Ordre des avocats - Barreau d'Auxerre (SL, INSEE 89024) - Barreau d'Auxerre",
     .category = "government", .portal = "https://www.avocats-auxerre.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -60706,8 +60649,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_B617B709_4E88_4D73_9A90_E6BC0CB79F90", .name = "Mairie - Anglards-de-Salers (SL, INSEE 15006) - MAIRIE "
-      "D&#8217;ANGLARDS-DE-SALERS",
-    .name_ja = "Mairie - Anglards-de-Salers (SL, INSEE 15006) - MAIRIE D&#8217;ANGLARDS-DE-SALERS",
+      "D’ANGLARDS-DE-SALERS",
+    .name_ja = "Mairie - Anglards-de-Salers (SL, INSEE 15006) - MAIRIE D’ANGLARDS-DE-SALERS",
     .category = "government", .portal = "https://anglards-de-salers.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -60874,8 +60817,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_B8312DF5_7373_4F26_A657_2FA1BEE2A595", .name = "Mairie - Ongles (SL, INSEE 04141) - Le site de la commune "
-      "d&#039;Ongles",
-    .name_ja = "Mairie - Ongles (SL, INSEE 04141) - Le site de la commune d&#039;Ongles",
+      "d'Ongles",
+    .name_ja = "Mairie - Ongles (SL, INSEE 04141) - Le site de la commune d'Ongles",
     .category = "government", .portal = "https://www.mairie-ongles.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -60911,9 +60854,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_B8C11197_D619_40B4_9F2B_71CC465714A2", .name = "Chambre de métiers et de l'artisanat (CMA) - La Réunion (SL, "
-      "INSEE 97411) - Chambre de Métiers et de l&#039;Artisanat de La "
+      "INSEE 97411) - Chambre de Métiers et de l'Artisanat de La "
       "Réunion",
-    .name_ja = "Chambre de métiers et de l'artisanat (CMA) - La Réunion (SL, INSEE 97411) - Chambre de Métiers et de l&#039;Artisanat de La Réunion",
+    .name_ja = "Chambre de métiers et de l'artisanat (CMA) - La Réunion (SL, INSEE 97411) - Chambre de Métiers et de l'Artisanat de La Réunion",
     .category = "government", .portal = "https://www.artisanat974.re/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -61135,8 +61078,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_BB7E81CF_AFBE_4F0A_98EC_8BCC475F4962", .name = "Greta Velay - Le Puy-en-Velay (SL, INSEE 43157) - Greta Auvergne "
-      "&#8211; Agence43, formation continue pour adultes",
-    .name_ja = "Greta Velay - Le Puy-en-Velay (SL, INSEE 43157) - Greta Auvergne &#8211; Agence43, formation continue pour adultes",
+      "– Agence43, formation continue pour adultes",
+    .name_ja = "Greta Velay - Le Puy-en-Velay (SL, INSEE 43157) - Greta Auvergne – Agence43, formation continue pour adultes",
     .category = "government", .portal = "https://www.velay.greta.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -61338,8 +61281,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_BD66C5C2_5393_424B_BA68_5D589D3FA06D", .name = "Mairie - Avignon-lès-Saint-Claude (SL, INSEE 39032) - Mairie "
-      "d&#039;Avignon-Lès-Saint-Claude",
-    .name_ja = "Mairie - Avignon-lès-Saint-Claude (SL, INSEE 39032) - Mairie d&#039;Avignon-Lès-Saint-Claude",
+      "d'Avignon-Lès-Saint-Claude",
+    .name_ja = "Mairie - Avignon-lès-Saint-Claude (SL, INSEE 39032) - Mairie d'Avignon-Lès-Saint-Claude",
     .category = "government", .portal = "https://avignonlessaintclaude.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -61504,8 +61447,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:40:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_BEEEE2D8_41BB_4E48_81BC_8AD0209696F0", .name = "Mairie - L'Hôpital (SL, INSEE 57336) - Ville de l&#039;Hopital",
-    .name_ja = "Mairie - L'Hôpital (SL, INSEE 57336) - Ville de l&#039;Hopital",
+  { .id = "JO45_FR_BEEEE2D8_41BB_4E48_81BC_8AD0209696F0", .name = "Mairie - L'Hôpital (SL, INSEE 57336) - Ville de l'Hopital",
+    .name_ja = "Mairie - L'Hôpital (SL, INSEE 57336) - Ville de l'Hopital",
     .category = "government", .portal = "https://ville-lhopital.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -61931,9 +61874,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:24:51 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_C42BE997_7708_4B26_8F03_C8640D62694A", .name = "Mairie - Beychac-et-Caillau (SL, INSEE 33049) - Beychac &amp; "
+  { .id = "JO45_FR_C42BE997_7708_4B26_8F03_C8640D62694A", .name = "Mairie - Beychac-et-Caillau (SL, INSEE 33049) - Beychac & "
       "Caillau",
-    .name_ja = "Mairie - Beychac-et-Caillau (SL, INSEE 33049) - Beychac &amp; Caillau",
+    .name_ja = "Mairie - Beychac-et-Caillau (SL, INSEE 33049) - Beychac & Caillau",
     .category = "government", .portal = "https://www.beychac-caillau.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -62119,8 +62062,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_C60DC101_89CB_43E8_B147_1AA991FC15E9", .name = "Mairie - Saint-Victor (SL, INSEE 07301) - Mairie de Saint-Victor "
-      "Ard&amp;egrave;che",
-    .name_ja = "Mairie - Saint-Victor (SL, INSEE 07301) - Mairie de Saint-Victor Ard&amp;egrave;che",
+      "Ard&egrave;che",
+    .name_ja = "Mairie - Saint-Victor (SL, INSEE 07301) - Mairie de Saint-Victor Ard&egrave;che",
     .category = "government", .portal = "https://www.saint-victor-ardeche.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -62139,8 +62082,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_C6598D1E_AFD6_46AC_A859_AC3FC44BE78E", .name = "Centre de ressources et d'information des bénévoles (CRIB) - "
       "Association profession sport et loisirs de Seine-et-Marne (SL, "
-      "INSEE 77288) - Profession Sport &amp; Loisirs Francilien",
-    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Association profession sport et loisirs de Seine-et-Marne (SL, INSEE 77288) - Profession Sport &amp; Loisirs Francilien",
+      "INSEE 77288) - Profession Sport & Loisirs Francilien",
+    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Association profession sport et loisirs de Seine-et-Marne (SL, INSEE 77288) - Profession Sport & Loisirs Francilien",
     .category = "government", .portal = "https://francilien.profession-sport-loisirs.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -62254,8 +62197,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_C73843A4_CADB_4255_B368_5B2DF92128CA", .name = "Communauté de communes - Petite Camargue (SL, INSEE 30341) - "
-      "Actualités &#8211; Communauté de Communes de Petite Camargue",
-    .name_ja = "Communauté de communes - Petite Camargue (SL, INSEE 30341) - Actualités &#8211; Communauté de Communes de Petite Camargue",
+      "Actualités – Communauté de Communes de Petite Camargue",
+    .name_ja = "Communauté de communes - Petite Camargue (SL, INSEE 30341) - Actualités – Communauté de Communes de Petite Camargue",
     .category = "government", .portal = "https://www.petitecamargue.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -62310,8 +62253,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_C7C0361D_05B7_4444_9804_9D6B738B838A", .name = "Mairie - Acquigny (SL, INSEE 27003) - Site officiel de la Mairie "
-      "d&#039;Acquigny",
-    .name_ja = "Mairie - Acquigny (SL, INSEE 27003) - Site officiel de la Mairie d&#039;Acquigny",
+      "d'Acquigny",
+    .name_ja = "Mairie - Acquigny (SL, INSEE 27003) - Site officiel de la Mairie d'Acquigny",
     .category = "government", .portal = "https://ville-acquigny.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -62422,8 +62365,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:03:46 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_CA5B22AB_A8A3_46F8_B818_7A9549D69803", .name = "Mairie - Châtel (SL, INSEE 74063) - Mairie de Ch&#226;tel",
-    .name_ja = "Mairie - Châtel (SL, INSEE 74063) - Mairie de Ch&#226;tel",
+  { .id = "JO45_FR_CA5B22AB_A8A3_46F8_B818_7A9549D69803", .name = "Mairie - Châtel (SL, INSEE 74063) - Mairie de Châtel",
+    .name_ja = "Mairie - Châtel (SL, INSEE 74063) - Mairie de Châtel",
     .category = "government", .portal = "https://www.mairie-chatel.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -62516,8 +62459,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:55:31 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_CBF35913_B3E9_455A_83A8_15483173107F", .name = "Mairie - Herry (SL, INSEE 18110) - Mairie d&#039;Herry",
-    .name_ja = "Mairie - Herry (SL, INSEE 18110) - Mairie d&#039;Herry",
+  { .id = "JO45_FR_CBF35913_B3E9_455A_83A8_15483173107F", .name = "Mairie - Herry (SL, INSEE 18110) - Mairie d'Herry",
+    .name_ja = "Mairie - Herry (SL, INSEE 18110) - Mairie d'Herry",
     .category = "government", .portal = "https://herry.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -62628,8 +62571,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_CCDC4DDA_95B9_4BAE_AAEF_852E60962293", .name = "Centre communal d'action sociale (CCAS) - "
       "Saint-Étienne-du-Vauvray (SL, INSEE 27537) - Ville de "
-      "Saint-Étienne-du-Rouvray &#8211; Site officiel",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Saint-Étienne-du-Vauvray (SL, INSEE 27537) - Ville de Saint-Étienne-du-Rouvray &#8211; Site officiel",
+      "Saint-Étienne-du-Rouvray – Site officiel",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Saint-Étienne-du-Vauvray (SL, INSEE 27537) - Ville de Saint-Étienne-du-Rouvray – Site officiel",
     .category = "government", .portal = "https://www.saintetiennedurouvray.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -62740,9 +62683,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:39:53 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_CDEB2FA4_9D82_4940_9B8F_8D9DA01BA0D0", .name = "Mairie - Willgottheim (SL, INSEE 67532) - Willgottheim &#8211; "
+  { .id = "JO45_FR_CDEB2FA4_9D82_4940_9B8F_8D9DA01BA0D0", .name = "Mairie - Willgottheim (SL, INSEE 67532) - Willgottheim – "
       "Woellenheim",
-    .name_ja = "Mairie - Willgottheim (SL, INSEE 67532) - Willgottheim &#8211; Woellenheim",
+    .name_ja = "Mairie - Willgottheim (SL, INSEE 67532) - Willgottheim – Woellenheim",
     .category = "government", .portal = "https://www.willgottheim.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -63092,9 +63035,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:24:27 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_D20C9571_904E_400C_8FE3_50C06F8CAA6B", .name = "Mairie - Branscourt (SL, INSEE 51081) - Branscourt &#8211; Marne "
-      "51140",
-    .name_ja = "Mairie - Branscourt (SL, INSEE 51081) - Branscourt &#8211; Marne 51140",
+  { .id = "JO45_FR_D20C9571_904E_400C_8FE3_50C06F8CAA6B", .name = "Mairie - Branscourt (SL, INSEE 51081) - Branscourt – Marne 51140",
+    .name_ja = "Mairie - Branscourt (SL, INSEE 51081) - Branscourt – Marne 51140",
     .category = "government", .portal = "https://branscourt.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -63204,9 +63146,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:40:13 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_D399CE8E_86C8_4C23_905F_B7B2B32EA826", .name = "Mairie - Spéracèdes (SL, INSEE 06137) - Spéracèdes &#8211; Site "
+  { .id = "JO45_FR_D399CE8E_86C8_4C23_905F_B7B2B32EA826", .name = "Mairie - Spéracèdes (SL, INSEE 06137) - Spéracèdes – Site "
       "officiel",
-    .name_ja = "Mairie - Spéracèdes (SL, INSEE 06137) - Spéracèdes &#8211; Site officiel",
+    .name_ja = "Mairie - Spéracèdes (SL, INSEE 06137) - Spéracèdes – Site officiel",
     .category = "government", .portal = "https://www.speracedes.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -63317,8 +63259,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:58:38 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_D62279D4_FFF5_452F_8B2A_3760884FBE93", .name = "Mairie - Hermé (SL, INSEE 77227) - Commune d&#039;Hermé",
-    .name_ja = "Mairie - Hermé (SL, INSEE 77227) - Commune d&#039;Hermé",
+  { .id = "JO45_FR_D62279D4_FFF5_452F_8B2A_3760884FBE93", .name = "Mairie - Hermé (SL, INSEE 77227) - Commune d'Hermé",
+    .name_ja = "Mairie - Hermé (SL, INSEE 77227) - Commune d'Hermé",
     .category = "government", .portal = "https://herme.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -63671,9 +63613,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_DC089088_5357_4A6B_81EC_9ADBB17055D7", .name = "Direction de l'économie, de l'emploi, du travail et des "
       "solidarités (DEETS) - Martinique (SIL, INSEE 97209) - Direction "
-      "de l'&#233;conomie, de l'emploi, du travail et des "
-      "solidarit&#233;s (D",
-    .name_ja = "Direction de l'économie, de l'emploi, du travail et des solidarités (DEETS) - Martinique (SIL, INSEE 97209) - Direction de l'&#233;conomie, de l'emploi, du travail et des solidarit&#233;s (D",
+      "de l'économie, de l'emploi, du travail et des solidarités (D",
+    .name_ja = "Direction de l'économie, de l'emploi, du travail et des solidarités (DEETS) - Martinique (SIL, INSEE 97209) - Direction de l'économie, de l'emploi, du travail et des solidarités (D",
     .category = "government", .portal = "https://martinique.deets.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -63747,8 +63688,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_DD0C7608_738E_4314_B074_37DD63D7CE6C", .name = "Centre communal d'action sociale (CCAS) - Audincourt (SL, INSEE "
-      "25031) - Ville d&#039;Audincourt",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Audincourt (SL, INSEE 25031) - Ville d&#039;Audincourt",
+      "25031) - Ville d'Audincourt",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Audincourt (SL, INSEE 25031) - Ville d'Audincourt",
     .category = "government", .portal = "https://www.audincourt.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -64009,8 +63950,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_DFA1540C_4C08_458E_A2D8_B796677125B1", .name = "Conseil régional de l'ordre des experts-comptables (CROEC) - "
       "Centre-Val-de-Loire (SIL, INSEE 45234) - Ordre des Experts "
-      "Comptables &#8211; Région Centre Val de Loire",
-    .name_ja = "Conseil régional de l'ordre des experts-comptables (CROEC) - Centre-Val-de-Loire (SIL, INSEE 45234) - Ordre des Experts Comptables &#8211; Région Centre Val de Loire",
+      "Comptables – Région Centre Val de Loire",
+    .name_ja = "Conseil régional de l'ordre des experts-comptables (CROEC) - Centre-Val-de-Loire (SIL, INSEE 45234) - Ordre des Experts Comptables – Région Centre Val de Loire",
     .category = "government", .portal = "https://www.experts-comptables-centrevaldeloire.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -64250,8 +64191,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_E2ED7049_1FD2_4EAD_9D30_AAFABBD930E2", .name = "Mairie - Beyren-lès-Sierck (SL, INSEE 57076) - Beyren-les-Sierck "
-      "&#8211; Gandren",
-    .name_ja = "Mairie - Beyren-lès-Sierck (SL, INSEE 57076) - Beyren-les-Sierck &#8211; Gandren",
+      "– Gandren",
+    .name_ja = "Mairie - Beyren-lès-Sierck (SL, INSEE 57076) - Beyren-les-Sierck – Gandren",
     .category = "government", .portal = "https://beyren-gandren.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -64528,9 +64469,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026 00:00:00 +0200. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO45_FR_E965154F_3E2B_4D29_8035_D2C88D9DAC47", .name = "Mairie - Siouville-Hague (SL, INSEE 50576) - Siouville &#8211; "
-      "Hague",
-    .name_ja = "Mairie - Siouville-Hague (SL, INSEE 50576) - Siouville &#8211; Hague",
+  { .id = "JO45_FR_E965154F_3E2B_4D29_8035_D2C88D9DAC47", .name = "Mairie - Siouville-Hague (SL, INSEE 50576) - Siouville – Hague",
+    .name_ja = "Mairie - Siouville-Hague (SL, INSEE 50576) - Siouville – Hague",
     .category = "government", .portal = "https://siouville-hague.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -64768,9 +64708,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:30:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_EDB761AC_7CE7_4723_ADA6_FB7857D534AC", .name = "Mairie - Ueberstrass (SL, INSEE 68340) - Mairie "
-      "d&#039;Ueberstrass",
-    .name_ja = "Mairie - Ueberstrass (SL, INSEE 68340) - Mairie d&#039;Ueberstrass",
+  { .id = "JO45_FR_EDB761AC_7CE7_4723_ADA6_FB7857D534AC", .name = "Mairie - Ueberstrass (SL, INSEE 68340) - Mairie d'Ueberstrass",
+    .name_ja = "Mairie - Ueberstrass (SL, INSEE 68340) - Mairie d'Ueberstrass",
     .category = "government", .portal = "https://www.ueberstrass.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -64880,9 +64819,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:44:11 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_EFD4EE84_EA74_4110_A836_AACD148A60B8", .name = "Mairie - Brech (SL, INSEE 56023) - Mairie de Brec&#039;h (56) "
-      "&#8211; Site officiel",
-    .name_ja = "Mairie - Brech (SL, INSEE 56023) - Mairie de Brec&#039;h (56) &#8211; Site officiel",
+  { .id = "JO45_FR_EFD4EE84_EA74_4110_A836_AACD148A60B8", .name = "Mairie - Brech (SL, INSEE 56023) - Mairie de Brec'h (56) – Site "
+      "officiel",
+    .name_ja = "Mairie - Brech (SL, INSEE 56023) - Mairie de Brec'h (56) – Site officiel",
     .category = "government", .portal = "https://www.brech.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -65230,8 +65169,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:10:37 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F68456A8_1CF5_482B_8E06_EC890702E356", .name = "Mairie - Urval (SL, INSEE 24560) - Mairie d&#039;Urval Dordogne",
-    .name_ja = "Mairie - Urval (SL, INSEE 24560) - Mairie d&#039;Urval Dordogne",
+  { .id = "JO45_FR_F68456A8_1CF5_482B_8E06_EC890702E356", .name = "Mairie - Urval (SL, INSEE 24560) - Mairie d'Urval Dordogne",
+    .name_ja = "Mairie - Urval (SL, INSEE 24560) - Mairie d'Urval Dordogne",
     .category = "government", .portal = "https://urval.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -65644,8 +65583,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_FB823B53_06C1_40AD_AE0D_3D8585366375", .name = "Point information jeunesse - Hennebont (SL, INSEE 56083) - Envie "
-      "de voyage ? Un projet à l&#8217;étranger ?",
-    .name_ja = "Point information jeunesse - Hennebont (SL, INSEE 56083) - Envie de voyage ? Un projet à l&#8217;étranger ?",
+      "de voyage ? Un projet à l’étranger ?",
+    .name_ja = "Point information jeunesse - Hennebont (SL, INSEE 56083) - Envie de voyage ? Un projet à l’étranger ?",
     .category = "government", .portal = "https://crij.bzh/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -65755,8 +65694,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_FC295C85_27D9_4E49_83E2_1F35F2C3D9DD", .name = "Mairie - Saint-Roman-de-Codières (SL, INSEE 30296) - "
-      "Saint-Roman-de-Codi&#232;res",
-    .name_ja = "Mairie - Saint-Roman-de-Codières (SL, INSEE 30296) - Saint-Roman-de-Codi&#232;res",
+      "Saint-Roman-de-Codières",
+    .name_ja = "Mairie - Saint-Roman-de-Codières (SL, INSEE 30296) - Saint-Roman-de-Codières",
     .category = "government", .portal = "https://saintromandecodieres.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -65867,8 +65806,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_FEA27A30_6B4A_40E2_9022_74441AE04500", .name = "Mairie - Plumieux (SL, INSEE 22241) - Mairie de Plumieux dans "
-      "les C&#244;tes d'Armor",
-    .name_ja = "Mairie - Plumieux (SL, INSEE 22241) - Mairie de Plumieux dans les C&#244;tes d'Armor",
+      "les Côtes d'Armor",
+    .name_ja = "Mairie - Plumieux (SL, INSEE 22241) - Mairie de Plumieux dans les Côtes d'Armor",
     .category = "government", .portal = "https://www.plumieux.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -66188,8 +66127,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_64048589_BC98_46BD_8E01_816A15D9F8C8", .name = "Centre communal d'action sociale (CCAS) - Aiglemont (SL, INSEE "
-      "08003) - Site officiel de la commune d&#039;Aiglemont",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Aiglemont (SL, INSEE 08003) - Site officiel de la commune d&#039;Aiglemont",
+      "08003) - Site officiel de la commune d'Aiglemont",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Aiglemont (SL, INSEE 08003) - Site officiel de la commune d'Aiglemont",
     .category = "government", .portal = "https://www.aiglemont.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -66467,8 +66406,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:36:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_687BD29E_C6F6_465C_8D37_91284608A4B8", .name = "Mairie - Epfig (SL, INSEE 67125) - Commune d&#039;Epfig",
-    .name_ja = "Mairie - Epfig (SL, INSEE 67125) - Commune d&#039;Epfig",
+  { .id = "JO45_FR_687BD29E_C6F6_465C_8D37_91284608A4B8", .name = "Mairie - Epfig (SL, INSEE 67125) - Commune d'Epfig",
+    .name_ja = "Mairie - Epfig (SL, INSEE 67125) - Commune d'Epfig",
     .category = "government", .portal = "https://www.epfig.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -67233,8 +67172,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_7086993E_60C6_4AA1_B71D_08FE205DD0D1", .name = "Mairie - Yvré-le-Pôlin (SL, INSEE 72385) - Commune "
-      "d&#039;Yvré-le-Pôlin",
-    .name_ja = "Mairie - Yvré-le-Pôlin (SL, INSEE 72385) - Commune d&#039;Yvré-le-Pôlin",
+      "d'Yvré-le-Pôlin",
+    .name_ja = "Mairie - Yvré-le-Pôlin (SL, INSEE 72385) - Commune d'Yvré-le-Pôlin",
     .category = "government", .portal = "https://yvrelepolin.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -67343,8 +67282,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_71F18535_9DAE_46D6_B381_4CC1186701B3", .name = "Centre communal d'action sociale (CCAS) - Argentré (SL, INSEE "
-      "53007) - Mairie d&#039;Argentré",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Argentré (SL, INSEE 53007) - Mairie d&#039;Argentré",
+      "53007) - Mairie d'Argentré",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Argentré (SL, INSEE 53007) - Mairie d'Argentré",
     .category = "government", .portal = "https://www.argentre.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -67396,9 +67335,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "18:21:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_7357BF13_93EE_4E85_99EB_6FCCEF52A0E2", .name = "Mairie - Écury-sur-Coole (SL, INSEE 51227) - Commune "
-      "d&#039;Écury sur Coole",
-    .name_ja = "Mairie - Écury-sur-Coole (SL, INSEE 51227) - Commune d&#039;Écury sur Coole",
+  { .id = "JO45_FR_7357BF13_93EE_4E85_99EB_6FCCEF52A0E2", .name = "Mairie - Écury-sur-Coole (SL, INSEE 51227) - Commune d'Écury sur "
+      "Coole",
+    .name_ja = "Mairie - Écury-sur-Coole (SL, INSEE 51227) - Commune d'Écury sur Coole",
     .category = "government", .portal = "https://ecury-sur-coole.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -67710,8 +67649,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_7893863D_FC0B_440B_8122_30E65322356D", .name = "Mairie - L'Hôpital-d'Orion (SL, INSEE 64263) - La commune de "
-      "L&#039;Hôpital d&#039;Orion dans le Béarn",
-    .name_ja = "Mairie - L'Hôpital-d'Orion (SL, INSEE 64263) - La commune de L&#039;Hôpital d&#039;Orion dans le Béarn",
+      "L'Hôpital d'Orion dans le Béarn",
+    .name_ja = "Mairie - L'Hôpital-d'Orion (SL, INSEE 64263) - La commune de L'Hôpital d'Orion dans le Béarn",
     .category = "government", .portal = "https://hopitaldorion.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -67766,9 +67705,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_79E8C6B6_FC16_479A_9ACB_3ADCC564254E", .name = "Centre d'information et d'orientation (CIO) - Besançon (SL, "
-      "INSEE 25056) - Centre d&#039;Information et d&#039;Orientation "
-      "de Besançon",
-    .name_ja = "Centre d'information et d'orientation (CIO) - Besançon (SL, INSEE 25056) - Centre d&#039;Information et d&#039;Orientation de Besançon",
+      "INSEE 25056) - Centre d'Information et d'Orientation de Besançon",
+    .name_ja = "Centre d'information et d'orientation (CIO) - Besançon (SL, INSEE 25056) - Centre d'Information et d'Orientation de Besançon",
     .category = "government", .portal = "https://cio-besancon.ac-besancon.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -68066,8 +68004,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_072A1F1B_28A5_4655_8203_899D41B4844C", .name = "Centre communal d'action sociale (CCAS) - Escalquens (SL, INSEE "
-      "31169) - Mairie d&#039;Escalquens",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Escalquens (SL, INSEE 31169) - Mairie d&#039;Escalquens",
+      "31169) - Mairie d'Escalquens",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Escalquens (SL, INSEE 31169) - Mairie d'Escalquens",
     .category = "government", .portal = "https://www.escalquens.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -68380,8 +68318,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_0B1F603A_34E3_421B_9366_277059F02C0C", .name = "Centre d'information et d'orientation (CIO) - Vénissieux (SL, "
-      "INSEE 69259) - CIO de V&#233;nissieux",
-    .name_ja = "Centre d'information et d'orientation (CIO) - Vénissieux (SL, INSEE 69259) - CIO de V&#233;nissieux",
+      "INSEE 69259) - CIO de Vénissieux",
+    .name_ja = "Centre d'information et d'orientation (CIO) - Vénissieux (SL, INSEE 69259) - CIO de Vénissieux",
     .category = "government", .portal = "https://venissieux.cio.ac-lyon.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -68455,9 +68393,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_0BBE4615_96F8_4E9F_833A_4FAC753FB611", .name = "Centre de gestion de la fonction publique territoriale - "
-      "Charente (SL, INSEE 16015) - CDG16 &#8211; Centre de Gestion de "
-      "la Fonction Publique Territoriale de la Chare",
-    .name_ja = "Centre de gestion de la fonction publique territoriale - Charente (SL, INSEE 16015) - CDG16 &#8211; Centre de Gestion de la Fonction Publique Territoriale de la Chare",
+      "Charente (SL, INSEE 16015) - CDG16 – Centre de Gestion de la "
+      "Fonction Publique Territoriale de la Chare",
+    .name_ja = "Centre de gestion de la fonction publique territoriale - Charente (SL, INSEE 16015) - CDG16 – Centre de Gestion de la Fonction Publique Territoriale de la Chare",
     .category = "government", .portal = "https://www.cdg16.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -68474,8 +68412,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:51:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_0BC6BDD1_CC4C_45D1_A596_00EEEC52B7CE", .name = "Mairie - Fons (SL, INSEE 46108) - Fons &#8211; Village du Quercy",
-    .name_ja = "Mairie - Fons (SL, INSEE 46108) - Fons &#8211; Village du Quercy",
+  { .id = "JO45_FR_0BC6BDD1_CC4C_45D1_A596_00EEEC52B7CE", .name = "Mairie - Fons (SL, INSEE 46108) - Fons – Village du Quercy",
+    .name_ja = "Mairie - Fons (SL, INSEE 46108) - Fons – Village du Quercy",
     .category = "government", .portal = "https://fons-lot.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -68621,8 +68559,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:11:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_0C96ECCC_873C_4B8D_BB2A_72A1A7B03325", .name = "Mairie - Apprieu (SL, INSEE 38013) - Ville d&#039;Apprieu",
-    .name_ja = "Mairie - Apprieu (SL, INSEE 38013) - Ville d&#039;Apprieu",
+  { .id = "JO45_FR_0C96ECCC_873C_4B8D_BB2A_72A1A7B03325", .name = "Mairie - Apprieu (SL, INSEE 38013) - Ville d'Apprieu",
+    .name_ja = "Mairie - Apprieu (SL, INSEE 38013) - Ville d'Apprieu",
     .category = "government", .portal = "https://www.apprieu.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -68828,9 +68766,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_11C6BCB6_1DF4_44AB_A9EE_9550CFB831C1", .name = "Point d'information local dédié aux personnes âgées - "
-      "Segré-en-Anjou Bleu (SL, INSEE 49331) - Pays de l&#039;Anjou "
-      "Bleu",
-    .name_ja = "Point d'information local dédié aux personnes âgées - Segré-en-Anjou Bleu (SL, INSEE 49331) - Pays de l&#039;Anjou Bleu",
+      "Segré-en-Anjou Bleu (SL, INSEE 49331) - Pays de l'Anjou Bleu",
+    .name_ja = "Point d'information local dédié aux personnes âgées - Segré-en-Anjou Bleu (SL, INSEE 49331) - Pays de l'Anjou Bleu",
     .category = "government", .portal = "https://anjoubleu.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -69142,9 +69079,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:52:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_166AA965_AC4D_4171_86C7_4C6B352FB2BE", .name = "Mairie - Saint-Rémy (SL, INSEE 21568) - Saint-Rémy en Côte "
-      "d&#039;Or",
-    .name_ja = "Mairie - Saint-Rémy (SL, INSEE 21568) - Saint-Rémy en Côte d&#039;Or",
+  { .id = "JO45_FR_166AA965_AC4D_4171_86C7_4C6B352FB2BE", .name = "Mairie - Saint-Rémy (SL, INSEE 21568) - Saint-Rémy en Côte d'Or",
+    .name_ja = "Mairie - Saint-Rémy (SL, INSEE 21568) - Saint-Rémy en Côte d'Or",
     .category = "government", .portal = "https://saint-remy-21.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -69552,8 +69488,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "A feed the organisation itself declares or links on its site "
       "root." },
 
-  { .id = "JO45_FR_1CD44577_2A7F_476C_AA01_29CD82D7AC68", .name = "Mairie - Villar-d'Arène (SL, INSEE 05181) - Villar-d&#039;Arène",
-    .name_ja = "Mairie - Villar-d'Arène (SL, INSEE 05181) - Villar-d&#039;Arène",
+  { .id = "JO45_FR_1CD44577_2A7F_476C_AA01_29CD82D7AC68", .name = "Mairie - Villar-d'Arène (SL, INSEE 05181) - Villar-d'Arène",
+    .name_ja = "Mairie - Villar-d'Arène (SL, INSEE 05181) - Villar-d'Arène",
     .category = "government", .portal = "https://villardarene.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -69719,9 +69655,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:00:31 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_1ED949DE_1A66_4B0E_AE82_808AFA5856C7", .name = "Mairie - Incheville (SL, INSEE 76374) - Commune "
-      "d&#039;Incheville",
-    .name_ja = "Mairie - Incheville (SL, INSEE 76374) - Commune d&#039;Incheville",
+  { .id = "JO45_FR_1ED949DE_1A66_4B0E_AE82_808AFA5856C7", .name = "Mairie - Incheville (SL, INSEE 76374) - Commune d'Incheville",
+    .name_ja = "Mairie - Incheville (SL, INSEE 76374) - Commune d'Incheville",
     .category = "government", .portal = "https://www.incheville.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -69889,8 +69824,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_2222F080_92ED_41F4_9C30_AA92993276B7", .name = "Mairie - Saint-Priest-les-Fougères (SL, INSEE 24489) - Commune "
-      "de Saint Priest Les Foug&#232;res",
-    .name_ja = "Mairie - Saint-Priest-les-Fougères (SL, INSEE 24489) - Commune de Saint Priest Les Foug&#232;res",
+      "de Saint Priest Les Fougères",
+    .name_ja = "Mairie - Saint-Priest-les-Fougères (SL, INSEE 24489) - Commune de Saint Priest Les Fougères",
     .category = "government", .portal = "https://www.saintpriestlesfougeres.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -69946,8 +69881,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_22963839_0941_47AD_B8E0_E36C4FBB5A62", .name = "Crédit municipal - Arles (SL, INSEE 13004) - Crédit Municipal "
-      "d&#039;Avignon",
-    .name_ja = "Crédit municipal - Arles (SL, INSEE 13004) - Crédit Municipal d&#039;Avignon",
+      "d'Avignon",
+    .name_ja = "Crédit municipal - Arles (SL, INSEE 13004) - Crédit Municipal d'Avignon",
     .category = "government", .portal = "https://www.cmavignon.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -70129,8 +70064,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_23BCFA4A_4CED_4FA7_A447_15332420476B", .name = "Mairie - Étoile-Saint-Cyrice (SL, INSEE 05051) - Mairie "
-      "d&#8217;Etoile-Saint-Cyrice",
-    .name_ja = "Mairie - Étoile-Saint-Cyrice (SL, INSEE 05051) - Mairie d&#8217;Etoile-Saint-Cyrice",
+      "d’Etoile-Saint-Cyrice",
+    .name_ja = "Mairie - Étoile-Saint-Cyrice (SL, INSEE 05051) - Mairie d’Etoile-Saint-Cyrice",
     .category = "government", .portal = "https://etoilestcyrice.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -70147,9 +70082,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "06:11:15 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_23C33D69_B607_4DB0_8EFB_4A0DDDA5835F", .name = "Mairie - Hagenbach (SL, INSEE 68119) - Mairie de Hagenbach "
-      "&#8211; Haut-Rhin",
-    .name_ja = "Mairie - Hagenbach (SL, INSEE 68119) - Mairie de Hagenbach &#8211; Haut-Rhin",
+  { .id = "JO45_FR_23C33D69_B607_4DB0_8EFB_4A0DDDA5835F", .name = "Mairie - Hagenbach (SL, INSEE 68119) - Mairie de Hagenbach – "
+      "Haut-Rhin",
+    .name_ja = "Mairie - Hagenbach (SL, INSEE 68119) - Mairie de Hagenbach – Haut-Rhin",
     .category = "government", .portal = "https://www.hagenbach.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -70507,8 +70442,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_2606B717_552A_40F0_A08C_FB93D44C7191", .name = "Centre communal d'action sociale (CCAS) - Mittelwihr (SL, INSEE "
-      "68209) - Mon Immo, Toit &amp; Jardin",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Mittelwihr (SL, INSEE 68209) - Mon Immo, Toit &amp; Jardin",
+      "68209) - Mon Immo, Toit & Jardin",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Mittelwihr (SL, INSEE 68209) - Mon Immo, Toit & Jardin",
     .category = "government", .portal = "https://www.mittelwihr.eu/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -70601,8 +70536,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_26FDE0E0_36CD_4FC4_8B73_F07F5925FED9", .name = "Agence départementale d'information sur le logement (ADIL) - "
       "Val-de-Marne (SL, INSEE 94028) - Agence Départementale "
-      "d&#039;information sur le Logement du Val-de-Marne",
-    .name_ja = "Agence départementale d'information sur le logement (ADIL) - Val-de-Marne (SL, INSEE 94028) - Agence Départementale d&#039;information sur le Logement du Val-de-Marne",
+      "d'information sur le Logement du Val-de-Marne",
+    .name_ja = "Agence départementale d'information sur le logement (ADIL) - Val-de-Marne (SL, INSEE 94028) - Agence Départementale d'information sur le Logement du Val-de-Marne",
     .category = "government", .portal = "https://www.adil94.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -70937,8 +70872,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_2BA460A0_182B_4A44_9886_98CF1C703CB5", .name = "Mairie - Bénévent-l Abbaye (SL, INSEE 23021) - Mairie de "
-      "Benevent-l&#039;Abbaye",
-    .name_ja = "Mairie - Bénévent-l Abbaye (SL, INSEE 23021) - Mairie de Benevent-l&#039;Abbaye",
+      "Benevent-l'Abbaye",
+    .name_ja = "Mairie - Bénévent-l Abbaye (SL, INSEE 23021) - Mairie de Benevent-l'Abbaye",
     .category = "government", .portal = "https://beneventlabbaye.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -71105,9 +71040,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:52:06 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_2D22B8E1_8AD3_46EC_83E0_A7A8DE528994", .name = "Mairie - Kernouës (SL, INSEE 29094) - Commune de Kernouës "
-      "&#8211; Site officiel de la mairie",
-    .name_ja = "Mairie - Kernouës (SL, INSEE 29094) - Commune de Kernouës &#8211; Site officiel de la mairie",
+  { .id = "JO45_FR_2D22B8E1_8AD3_46EC_83E0_A7A8DE528994", .name = "Mairie - Kernouës (SL, INSEE 29094) - Commune de Kernouës – Site "
+      "officiel de la mairie",
+    .name_ja = "Mairie - Kernouës (SL, INSEE 29094) - Commune de Kernouës – Site officiel de la mairie",
     .category = "government", .portal = "https://www.kernoues.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -71292,8 +71227,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "00:07:17 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_2EB6A393_8850_44F3_9FEC_BAE11796DCC0", .name = "Mairie - Ambleville (SL, INSEE 95011) - Mairie d&#039;Ambleville",
-    .name_ja = "Mairie - Ambleville (SL, INSEE 95011) - Mairie d&#039;Ambleville",
+  { .id = "JO45_FR_2EB6A393_8850_44F3_9FEC_BAE11796DCC0", .name = "Mairie - Ambleville (SL, INSEE 95011) - Mairie d'Ambleville",
+    .name_ja = "Mairie - Ambleville (SL, INSEE 95011) - Mairie d'Ambleville",
     .category = "government", .portal = "https://ambleville.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -71367,8 +71302,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:46:07 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_2FDA29A5_6430_4AFF_B625_75A7B0A23D39", .name = "Mairie - Issou (SL, INSEE 78314) - Ville d&#039;Issou",
-    .name_ja = "Mairie - Issou (SL, INSEE 78314) - Ville d&#039;Issou",
+  { .id = "JO45_FR_2FDA29A5_6430_4AFF_B625_75A7B0A23D39", .name = "Mairie - Issou (SL, INSEE 78314) - Ville d'Issou",
+    .name_ja = "Mairie - Issou (SL, INSEE 78314) - Ville d'Issou",
     .category = "government", .portal = "https://issou.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -71441,8 +71376,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:09:26 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_30C90277_EAA3_4C20_9F51_F25197666039", .name = "Mairie - Argoules (SL, INSEE 80025) - Commune d&#039;Argoules",
-    .name_ja = "Mairie - Argoules (SL, INSEE 80025) - Commune d&#039;Argoules",
+  { .id = "JO45_FR_30C90277_EAA3_4C20_9F51_F25197666039", .name = "Mairie - Argoules (SL, INSEE 80025) - Commune d'Argoules",
+    .name_ja = "Mairie - Argoules (SL, INSEE 80025) - Commune d'Argoules",
     .category = "government", .portal = "https://www.argoules.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -71667,9 +71602,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_33285C6D_55B6_42B5_BFA4_1E0AB67CEAA4", .name = "Centre communal d'action sociale (CCAS) - Pierrevert (SL, INSEE "
-      "04152) - Site de la Mairie de Pierrevert &#8211; Ville de "
-      "Pierrevert",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Pierrevert (SL, INSEE 04152) - Site de la Mairie de Pierrevert &#8211; Ville de Pierrevert",
+      "04152) - Site de la Mairie de Pierrevert – Ville de Pierrevert",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Pierrevert (SL, INSEE 04152) - Site de la Mairie de Pierrevert – Ville de Pierrevert",
     .category = "government", .portal = "https://www.mairie-pierrevert.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -71815,8 +71749,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:50:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_35462B5A_F241_4CCF_AC63_33DDCC8291C4", .name = "Mairie - Le Rove (SL, INSEE 13088) - Evénements &#8211; Le Rove",
-    .name_ja = "Mairie - Le Rove (SL, INSEE 13088) - Evénements &#8211; Le Rove",
+  { .id = "JO45_FR_35462B5A_F241_4CCF_AC63_33DDCC8291C4", .name = "Mairie - Le Rove (SL, INSEE 13088) - Evénements – Le Rove",
+    .name_ja = "Mairie - Le Rove (SL, INSEE 13088) - Evénements – Le Rove",
     .category = "government", .portal = "https://www.lerove.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -71870,9 +71804,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "01:06:20 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_36392E4F_42AD_477B_BA0F_E5264C90716D", .name = "Mairie - Viry (SL, INSEE 74309) - Site de la commune de Viry "
-      "&#8211; Haute Savoie",
-    .name_ja = "Mairie - Viry (SL, INSEE 74309) - Site de la commune de Viry &#8211; Haute Savoie",
+  { .id = "JO45_FR_36392E4F_42AD_477B_BA0F_E5264C90716D", .name = "Mairie - Viry (SL, INSEE 74309) - Site de la commune de Viry – "
+      "Haute Savoie",
+    .name_ja = "Mairie - Viry (SL, INSEE 74309) - Site de la commune de Viry – Haute Savoie",
     .category = "government", .portal = "https://www.viry74.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -72072,8 +72006,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_391D8364_6894_4523_9A04_6768B303CAEE", .name = "Centre communal d'action sociale (CCAS) - Égreville (SL, INSEE "
-      "77168) - Mairie d&#039;Égreville",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Égreville (SL, INSEE 77168) - Mairie d&#039;Égreville",
+      "77168) - Mairie d'Égreville",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Égreville (SL, INSEE 77168) - Mairie d'Égreville",
     .category = "government", .portal = "https://egreville.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -72200,9 +72134,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-10-18T11:17:31+00:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_FR_3AEFFF70_7E86_4123_A5C0_743FAB5390E4", .name = "Mairie - Albon-d'Ardèche (SL, INSEE 07006) - Albon "
-      "d&#039;Ardèche",
-    .name_ja = "Mairie - Albon-d'Ardèche (SL, INSEE 07006) - Albon d&#039;Ardèche",
+  { .id = "JO45_FR_3AEFFF70_7E86_4123_A5C0_743FAB5390E4", .name = "Mairie - Albon-d'Ardèche (SL, INSEE 07006) - Albon d'Ardèche",
+    .name_ja = "Mairie - Albon-d'Ardèche (SL, INSEE 07006) - Albon d'Ardèche",
     .category = "government", .portal = "https://albondardeche.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -72238,8 +72171,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:49:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_3B723422_53A9_4868_8AF8_A920D731B9F3", .name = "Mairie - Arnac (SL, INSEE 15011) - Mairie d&#039;Arnac",
-    .name_ja = "Mairie - Arnac (SL, INSEE 15011) - Mairie d&#039;Arnac",
+  { .id = "JO45_FR_3B723422_53A9_4868_8AF8_A920D731B9F3", .name = "Mairie - Arnac (SL, INSEE 15011) - Mairie d'Arnac",
+    .name_ja = "Mairie - Arnac (SL, INSEE 15011) - Mairie d'Arnac",
     .category = "government", .portal = "https://www.arnac.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -72662,8 +72595,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "16:18:46 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_3FACE42A_2B03_4347_91FB_DDC660032AEA", .name = "Mairie - Escorpain (SL, INSEE 28143) - Mairie d&#039;Escorpain",
-    .name_ja = "Mairie - Escorpain (SL, INSEE 28143) - Mairie d&#039;Escorpain",
+  { .id = "JO45_FR_3FACE42A_2B03_4347_91FB_DDC660032AEA", .name = "Mairie - Escorpain (SL, INSEE 28143) - Mairie d'Escorpain",
+    .name_ja = "Mairie - Escorpain (SL, INSEE 28143) - Mairie d'Escorpain",
     .category = "government", .portal = "https://www.escorpain.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -73520,9 +73453,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:39:14 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_4ACA9232_EC73_4DB2_8ADF_C67FB26FAF2C", .name = "Mairie - Argentières (SL, INSEE 77007) - Commune "
-      "d&#039;Argentières",
-    .name_ja = "Mairie - Argentières (SL, INSEE 77007) - Commune d&#039;Argentières",
+  { .id = "JO45_FR_4ACA9232_EC73_4DB2_8ADF_C67FB26FAF2C", .name = "Mairie - Argentières (SL, INSEE 77007) - Commune d'Argentières",
+    .name_ja = "Mairie - Argentières (SL, INSEE 77007) - Commune d'Argentières",
     .category = "government", .portal = "https://argentieres77.wordpress.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -73576,8 +73508,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_4AFEF519_698E_4AE5_8E9F_44A8489FC432", .name = "Mairie - Fieffes-Montrelet (SL, INSEE 80566) - Calendrier de "
-      "collecte 2026 &#8211; SMIRTOM Plateau Picard Nord",
-    .name_ja = "Mairie - Fieffes-Montrelet (SL, INSEE 80566) - Calendrier de collecte 2026 &#8211; SMIRTOM Plateau Picard Nord",
+      "collecte 2026 – SMIRTOM Plateau Picard Nord",
+    .name_ja = "Mairie - Fieffes-Montrelet (SL, INSEE 80566) - Calendrier de collecte 2026 – SMIRTOM Plateau Picard Nord",
     .category = "government", .portal = "https://www.fieffes-montrelet.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -73899,8 +73831,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_50595A6F_3069_4B86_9B1C_0E1CE110FA9A", .name = "Communauté de communes - La Vallée d'Ossau (SL, INSEE 64062) - "
-      "Vallée d&#039;Ossau Communauté de Communes",
-    .name_ja = "Communauté de communes - La Vallée d'Ossau (SL, INSEE 64062) - Vallée d&#039;Ossau Communauté de Communes",
+      "Vallée d'Ossau Communauté de Communes",
+    .name_ja = "Communauté de communes - La Vallée d'Ossau (SL, INSEE 64062) - Vallée d'Ossau Communauté de Communes",
     .category = "government", .portal = "https://cc-ossau.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -74066,8 +73998,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_515DC7EF_C7A2_4950_8E05_79EA6F863358", .name = "Mairie - Saint-Martin-l'Ars (SL, INSEE 86234) - "
-      "Saint-Martin-l&#039;Ars",
-    .name_ja = "Mairie - Saint-Martin-l'Ars (SL, INSEE 86234) - Saint-Martin-l&#039;Ars",
+      "Saint-Martin-l'Ars",
+    .name_ja = "Mairie - Saint-Martin-l'Ars (SL, INSEE 86234) - Saint-Martin-l'Ars",
     .category = "government", .portal = "https://www.saint-martin-lars.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -74085,8 +74017,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_52A06825_53A8_41E7_BEED_62A819348444", .name = "Info Jeunes - Pays Mauléonais (SL, INSEE 79079) - Centre "
-      "SocioCulturel du Pays Maul&#233;onais",
-    .name_ja = "Info Jeunes - Pays Mauléonais (SL, INSEE 79079) - Centre SocioCulturel du Pays Maul&#233;onais",
+      "SocioCulturel du Pays Mauléonais",
+    .name_ja = "Info Jeunes - Pays Mauléonais (SL, INSEE 79079) - Centre SocioCulturel du Pays Mauléonais",
     .category = "government", .portal = "https://mauleonais.csc79.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -74122,8 +74054,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:05:31 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_52C3A40C_7464_46CA_9A27_9CB101AA0726", .name = "Mairie - Excenevex (SL, INSEE 74121) - Mairie d&#039;Excenevex",
-    .name_ja = "Mairie - Excenevex (SL, INSEE 74121) - Mairie d&#039;Excenevex",
+  { .id = "JO45_FR_52C3A40C_7464_46CA_9A27_9CB101AA0726", .name = "Mairie - Excenevex (SL, INSEE 74121) - Mairie d'Excenevex",
+    .name_ja = "Mairie - Excenevex (SL, INSEE 74121) - Mairie d'Excenevex",
     .category = "government", .portal = "https://www.excenevex.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -74308,8 +74240,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_55A0F059_2A98_4DE3_829A_7A34877AE98D", .name = "Mairie - Saint-Just-d'Avray (SL, INSEE 69217) - Saint Just "
-      "d&#039;Avray",
-    .name_ja = "Mairie - Saint-Just-d'Avray (SL, INSEE 69217) - Saint Just d&#039;Avray",
+      "d'Avray",
+    .name_ja = "Mairie - Saint-Just-d'Avray (SL, INSEE 69217) - Saint Just d'Avray",
     .category = "government", .portal = "http://www.stjustdavray.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -74437,8 +74369,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_57783918_0E6A_45D3_872E_1E87F729BDCA", .name = "Centre communal d'action sociale (CCAS) - Lucciana (SL, INSEE "
-      "2B148) - Ville de Lucciana : Site officiel &#8211; Haute-Corse",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Lucciana (SL, INSEE 2B148) - Ville de Lucciana : Site officiel &#8211; Haute-Corse",
+      "2B148) - Ville de Lucciana : Site officiel – Haute-Corse",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Lucciana (SL, INSEE 2B148) - Ville de Lucciana : Site officiel – Haute-Corse",
     .category = "government", .portal = "https://www.ville-lucciana.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -74732,8 +74664,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_5B73E340_D1EF_48DD_9255_257D1D2B6BEB", .name = "Mairie - Saint-Rémy-l'Honoré (SL, INSEE 78576) - Mairie de Saint "
-      "Remy l&rsquo;Honore 78",
-    .name_ja = "Mairie - Saint-Rémy-l'Honoré (SL, INSEE 78576) - Mairie de Saint Remy l&rsquo;Honore 78",
+      "Remy l’Honore 78",
+    .name_ja = "Mairie - Saint-Rémy-l'Honoré (SL, INSEE 78576) - Mairie de Saint Remy l’Honore 78",
     .category = "government", .portal = "https://www.saintremylhonore.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -74842,8 +74774,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-10-18T11:17:32+00:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_FR_5D994F41_9C1D_45B5_9513_0A936C105B12", .name = "Mairie - Ordizan (SL, INSEE 65335) - Commune d&#8217;Ordizan",
-    .name_ja = "Mairie - Ordizan (SL, INSEE 65335) - Commune d&#8217;Ordizan",
+  { .id = "JO45_FR_5D994F41_9C1D_45B5_9513_0A936C105B12", .name = "Mairie - Ordizan (SL, INSEE 65335) - Commune d’Ordizan",
+    .name_ja = "Mairie - Ordizan (SL, INSEE 65335) - Commune d’Ordizan",
     .category = "government", .portal = "https://ordizan.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -75120,8 +75052,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "16:06:27 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_800AC191_0B55_41F4_93E3_D3FF95736C36", .name = "Mairie - Montpezat (SL, INSEE 47190) - Montpezat d&#039;Agenais",
-    .name_ja = "Mairie - Montpezat (SL, INSEE 47190) - Montpezat d&#039;Agenais",
+  { .id = "JO45_FR_800AC191_0B55_41F4_93E3_D3FF95736C36", .name = "Mairie - Montpezat (SL, INSEE 47190) - Montpezat d'Agenais",
+    .name_ja = "Mairie - Montpezat (SL, INSEE 47190) - Montpezat d'Agenais",
     .category = "government", .portal = "https://montpezat-agenais.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -75253,8 +75185,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_8159EF9D_FF6E_429D_846B_05C3028FE82F", .name = "Mairie - Alsting (SL, INSEE 57013) - Site officiel de la commune "
-      "d&#039;ALSTING",
-    .name_ja = "Mairie - Alsting (SL, INSEE 57013) - Site officiel de la commune d&#039;ALSTING",
+      "d'ALSTING",
+    .name_ja = "Mairie - Alsting (SL, INSEE 57013) - Site officiel de la commune d'ALSTING",
     .category = "government", .portal = "https://www.alsting.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -75344,8 +75276,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_821F97D8_51EC_45F1_B97D_0F3D137ACA19", .name = "Mairie - Bessey-en-Chaume (SL, INSEE 21065) - Le Guide de "
-      "l&#039;Auxois",
-    .name_ja = "Mairie - Bessey-en-Chaume (SL, INSEE 21065) - Le Guide de l&#039;Auxois",
+      "l'Auxois",
+    .name_ja = "Mairie - Bessey-en-Chaume (SL, INSEE 21065) - Le Guide de l'Auxois",
     .category = "government", .portal = "https://commune-besseyenchaume.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -75515,8 +75447,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_8628AE7B_05F4_4780_81BD_E92BAABB3FA6", .name = "Centre communal d'action sociale (CCAS) - Saint-Féliu-d'Avall "
-      "(SL, INSEE 66174) - Saint-Feliu d&#039;Avall",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Saint-Féliu-d'Avall (SL, INSEE 66174) - Saint-Feliu d&#039;Avall",
+      "(SL, INSEE 66174) - Saint-Feliu d'Avall",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Saint-Féliu-d'Avall (SL, INSEE 66174) - Saint-Feliu d'Avall",
     .category = "government", .portal = "https://saintfeliu-avall.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -75681,8 +75613,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_8A7C0D40_4513_4A81_B92D_2D2F29D24D3D", .name = "France services - Évrecy (SL, INSEE 14257) - Communauté de "
-      "Communes Vallées de l&#039;Orne et de l&#039;Odon",
-    .name_ja = "France services - Évrecy (SL, INSEE 14257) - Communauté de Communes Vallées de l&#039;Orne et de l&#039;Odon",
+      "Communes Vallées de l'Orne et de l'Odon",
+    .name_ja = "France services - Évrecy (SL, INSEE 14257) - Communauté de Communes Vallées de l'Orne et de l'Odon",
     .category = "government", .portal = "https://cdc.vallees-orne-odon.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -75811,9 +75743,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:57:27 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_8BD26747_876E_4629_8876_63CE246BE253", .name = "Mairie - La Morte (SL, INSEE 38264) - Commune de La Morte "
-      "&#8211; L&#039;Alpe du Grand Serre",
-    .name_ja = "Mairie - La Morte (SL, INSEE 38264) - Commune de La Morte &#8211; L&#039;Alpe du Grand Serre",
+  { .id = "JO45_FR_8BD26747_876E_4629_8876_63CE246BE253", .name = "Mairie - La Morte (SL, INSEE 38264) - Commune de La Morte – "
+      "L'Alpe du Grand Serre",
+    .name_ja = "Mairie - La Morte (SL, INSEE 38264) - Commune de La Morte – L'Alpe du Grand Serre",
     .category = "government", .portal = "https://www.mairielamorte.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -76037,8 +75969,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_9099AF62_251C_460A_90D4_52C6290CA117", .name = "Mairie - Noeux-les-Mines (SL, INSEE 62617) - Nœux-les-Mines "
-      "l&#039;Attractive",
-    .name_ja = "Mairie - Noeux-les-Mines (SL, INSEE 62617) - Nœux-les-Mines l&#039;Attractive",
+      "l'Attractive",
+    .name_ja = "Mairie - Noeux-les-Mines (SL, INSEE 62617) - Nœux-les-Mines l'Attractive",
     .category = "government", .portal = "https://www.noeux-les-mines.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -76282,8 +76214,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_167AFE78_D58C_47C8_A6C4_A4A1CDCF3693", .name = "Institut régional d'administration - Lyon (SI, INSEE ) - "
-      "Institut Régional d&#039;Administration de Lyon",
-    .name_ja = "Institut régional d'administration - Lyon (SI, INSEE ) - Institut Régional d&#039;Administration de Lyon",
+      "Institut Régional d'Administration de Lyon",
+    .name_ja = "Institut régional d'administration - Lyon (SI, INSEE ) - Institut Régional d'Administration de Lyon",
     .category = "government", .portal = "https://www.ira-lyon.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -76472,10 +76404,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_80AE3A4D_F934_4C0E_8A30_56FF009C23FA", .name = "Centre d'études pour le développement, l'innovation et la "
-      "prospective en ressources humaines (SI, INSEE ) - "
-      "Secr&#233;tariat G&#233;n&#233;ral - DRH - Centre "
-      "minist&#233;riel de valorisati",
-    .name_ja = "Centre d'études pour le développement, l'innovation et la prospective en ressources humaines (SI, INSEE ) - Secr&#233;tariat G&#233;n&#233;ral - DRH - Centre minist&#233;riel de valorisati",
+      "prospective en ressources humaines (SI, INSEE ) - Secrétariat "
+      "Général - DRH - Centre ministériel de valorisati",
+    .name_ja = "Centre d'études pour le développement, l'innovation et la prospective en ressources humaines (SI, INSEE ) - Secrétariat Général - DRH - Centre ministériel de valorisati",
     .category = "government", .portal = "https://www.cmvrh.developpement-durable.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -76609,8 +76540,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_A5AA12B0_08C6_42D3_B232_553FD94B1FAD", .name = "Agence française de l'adoption (AFA) (SI, INSEE ) - Agence "
-      "Francaise de l&#039;adoption",
-    .name_ja = "Agence française de l'adoption (AFA) (SI, INSEE ) - Agence Francaise de l&#039;adoption",
+      "Francaise de l'adoption",
+    .name_ja = "Agence française de l'adoption (AFA) (SI, INSEE ) - Agence Francaise de l'adoption",
     .category = "government", .portal = "https://www.agence-adoption.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -76648,8 +76579,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_C964D4AC_3042_4CD6_B076_758CA8966A3E", .name = "Conseil national de l'information géolocalisée (SI, INSEE ) - "
-      "Conseil national de l'information g&#233;olocalis&#233;e",
-    .name_ja = "Conseil national de l'information géolocalisée (SI, INSEE ) - Conseil national de l'information g&#233;olocalis&#233;e",
+      "Conseil national de l'information géolocalisée",
+    .name_ja = "Conseil national de l'information géolocalisée (SI, INSEE ) - Conseil national de l'information géolocalisée",
     .category = "government", .portal = "https://cnig.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -77003,9 +76934,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:39:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_03D19950_37AF_41D5_AD4E_E5EF1C0E706C", .name = "Mairie - Chaource (SL, INSEE 10080) - Chaource en pays "
-      "d&#039;Armance",
-    .name_ja = "Mairie - Chaource (SL, INSEE 10080) - Chaource en pays d&#039;Armance",
+  { .id = "JO45_FR_03D19950_37AF_41D5_AD4E_E5EF1C0E706C", .name = "Mairie - Chaource (SL, INSEE 10080) - Chaource en pays d'Armance",
+    .name_ja = "Mairie - Chaource (SL, INSEE 10080) - Chaource en pays d'Armance",
     .category = "government", .portal = "https://www.chaource.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -77077,8 +77007,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:29:58 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_050E66B5_766F_4FB3_9E7C_8DAAD2112589", .name = "Mairie - Caumont (SL, INSEE 33112) - Commune d&#039;albret",
-    .name_ja = "Mairie - Caumont (SL, INSEE 33112) - Commune d&#039;albret",
+  { .id = "JO45_FR_050E66B5_766F_4FB3_9E7C_8DAAD2112589", .name = "Mairie - Caumont (SL, INSEE 33112) - Commune d'albret",
+    .name_ja = "Mairie - Caumont (SL, INSEE 33112) - Commune d'albret",
     .category = "government", .portal = "https://www.castelmorondalbret.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -77134,8 +77064,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_05C38A21_6643_4E9B_B7FF_56B343006506", .name = "Mairie - Prunelli-di-Fiumorbo (SL, INSEE 2B251) - Prunelli di "
-      "Fium&#039;Orbu",
-    .name_ja = "Mairie - Prunelli-di-Fiumorbo (SL, INSEE 2B251) - Prunelli di Fium&#039;Orbu",
+      "Fium'Orbu",
+    .name_ja = "Mairie - Prunelli-di-Fiumorbo (SL, INSEE 2B251) - Prunelli di Fium'Orbu",
     .category = "government", .portal = "https://prunellidifiumorbu.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -77415,8 +77345,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_989E39CF_0843_447B_88D7_17CACE2B9D3D", .name = "Communauté de communes - Outre Forêt (SL, INSEE 67184) - "
-      "Communauté de communes de l&#039;Outre-Forêt",
-    .name_ja = "Communauté de communes - Outre Forêt (SL, INSEE 67184) - Communauté de communes de l&#039;Outre-Forêt",
+      "Communauté de communes de l'Outre-Forêt",
+    .name_ja = "Communauté de communes - Outre Forêt (SL, INSEE 67184) - Communauté de communes de l'Outre-Forêt",
     .category = "government", .portal = "https://www.cc-outreforet.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -77618,8 +77548,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:00:33 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_9C82A5BE_A4EC_4E66_A8DA_E31FD35C0104", .name = "Mairie - Hargeville (SL, INSEE 78300) - MAIRIE D&#039;HARGEVILLE",
-    .name_ja = "Mairie - Hargeville (SL, INSEE 78300) - MAIRIE D&#039;HARGEVILLE",
+  { .id = "JO45_FR_9C82A5BE_A4EC_4E66_A8DA_E31FD35C0104", .name = "Mairie - Hargeville (SL, INSEE 78300) - MAIRIE D'HARGEVILLE",
+    .name_ja = "Mairie - Hargeville (SL, INSEE 78300) - MAIRIE D'HARGEVILLE",
     .category = "government", .portal = "https://hargeville78.wordpress.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -77691,8 +77621,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_9D6BE338_9EFA_4773_A5BE_3FB94199CEB3", .name = "Centre communal d'action sociale (CCAS) - Pezens (SL, INSEE "
-      "11288) - Mairie de Pezens &#8211; Aude",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Pezens (SL, INSEE 11288) - Mairie de Pezens &#8211; Aude",
+      "11288) - Mairie de Pezens – Aude",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Pezens (SL, INSEE 11288) - Mairie de Pezens – Aude",
     .category = "government", .portal = "https://pezens.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -77822,8 +77752,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_A0184ABE_DBC6_455F_854E_D4258591213C", .name = "Mairie - Saint-Vincent-d'Olargues (SL, INSEE 34291) - ST VINCENT "
-      "D&#039;OLARGUES",
-    .name_ja = "Mairie - Saint-Vincent-d'Olargues (SL, INSEE 34291) - ST VINCENT D&#039;OLARGUES",
+      "D'OLARGUES",
+    .name_ja = "Mairie - Saint-Vincent-d'Olargues (SL, INSEE 34291) - ST VINCENT D'OLARGUES",
     .category = "government", .portal = "https://mairiesaintvincentdolargues.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -77897,8 +77827,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_A0D15C41_A2AB_496D_8EBC_3AF31506C817", .name = "Centre communal d'action sociale (CCAS) - Eymoutiers (SL, INSEE "
-      "87064) - Commune d&#039;Eymoutiers",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Eymoutiers (SL, INSEE 87064) - Commune d&#039;Eymoutiers",
+      "87064) - Commune d'Eymoutiers",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Eymoutiers (SL, INSEE 87064) - Commune d'Eymoutiers",
     .category = "government", .portal = "https://www.mairie-eymoutiers.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -78119,8 +78049,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:07:22 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_A3322F37_6DDD_463D_A6C4_C3BC633F78E1", .name = "Mairie - Ocqueville (SL, INSEE 76480) - Mairie d&#039;Ocqueville",
-    .name_ja = "Mairie - Ocqueville (SL, INSEE 76480) - Mairie d&#039;Ocqueville",
+  { .id = "JO45_FR_A3322F37_6DDD_463D_A6C4_C3BC633F78E1", .name = "Mairie - Ocqueville (SL, INSEE 76480) - Mairie d'Ocqueville",
+    .name_ja = "Mairie - Ocqueville (SL, INSEE 76480) - Mairie d'Ocqueville",
     .category = "government", .portal = "https://ocqueville.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -78156,8 +78086,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_A36F01D6_787D_4ADD_B9DF_CED6EC903FB3", .name = "Parc naturel régional - Préalpes d'Azur (SIL, INSEE 06130) - "
-      "Parc naturel régional des Préalpes d&#039;Azur",
-    .name_ja = "Parc naturel régional - Préalpes d'Azur (SIL, INSEE 06130) - Parc naturel régional des Préalpes d&#039;Azur",
+      "Parc naturel régional des Préalpes d'Azur",
+    .name_ja = "Parc naturel régional - Préalpes d'Azur (SIL, INSEE 06130) - Parc naturel régional des Préalpes d'Azur",
     .category = "government", .portal = "https://www.parc-prealpesdazur.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -78543,9 +78473,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:45:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_AA7760DD_8D81_4C1C_914B_EEB171A9D904", .name = "Mairie - Ruelisheim (SL, INSEE 68289) - RUELISHEIM &#8211; "
-      "Haut-Rhin (68)",
-    .name_ja = "Mairie - Ruelisheim (SL, INSEE 68289) - RUELISHEIM &#8211; Haut-Rhin (68)",
+  { .id = "JO45_FR_AA7760DD_8D81_4C1C_914B_EEB171A9D904", .name = "Mairie - Ruelisheim (SL, INSEE 68289) - RUELISHEIM – Haut-Rhin "
+      "(68)",
+    .name_ja = "Mairie - Ruelisheim (SL, INSEE 68289) - RUELISHEIM – Haut-Rhin (68)",
     .category = "government", .portal = "https://ruelisheim.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -78953,8 +78883,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_AFAFE52F_CA9E_42A9_B0D0_D1A822B32F23", .name = "Mairie - Saint-Laurent-de-Chamousset (SL, INSEE 69220) - "
-      "Saint-Laurent de Chamousset &#8211; Bienvenue",
-    .name_ja = "Mairie - Saint-Laurent-de-Chamousset (SL, INSEE 69220) - Saint-Laurent de Chamousset &#8211; Bienvenue",
+      "Saint-Laurent de Chamousset – Bienvenue",
+    .name_ja = "Mairie - Saint-Laurent-de-Chamousset (SL, INSEE 69220) - Saint-Laurent de Chamousset – Bienvenue",
     .category = "government", .portal = "https://www.saint-laurent-de-chamousset.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -79215,8 +79145,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_B48A9186_65AC_480C_AF75_B31D623AEBFB", .name = "Centre hospitalier universitaire (CHU) - Amiens-Picardie (SIL, "
-      "INSEE 80021) - CHU D&#039;Amiens",
-    .name_ja = "Centre hospitalier universitaire (CHU) - Amiens-Picardie (SIL, INSEE 80021) - CHU D&#039;Amiens",
+      "INSEE 80021) - CHU D'Amiens",
+    .name_ja = "Centre hospitalier universitaire (CHU) - Amiens-Picardie (SIL, INSEE 80021) - CHU D'Amiens",
     .category = "government", .portal = "https://www.chu-amiens.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -79289,8 +79219,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:59:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_B570DC47_880A_4FC0_B274_2FF8BC84B7E7", .name = "Mairie - Oresmaux (SL, INSEE 80611) - Commune d&#039;Oresmaux",
-    .name_ja = "Mairie - Oresmaux (SL, INSEE 80611) - Commune d&#039;Oresmaux",
+  { .id = "JO45_FR_B570DC47_880A_4FC0_B274_2FF8BC84B7E7", .name = "Mairie - Oresmaux (SL, INSEE 80611) - Commune d'Oresmaux",
+    .name_ja = "Mairie - Oresmaux (SL, INSEE 80611) - Commune d'Oresmaux",
     .category = "government", .portal = "https://www.oresmaux.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -79421,8 +79351,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_B7F6D441_57A1_41FC_8903_F488837DE256", .name = "Communauté de communes - La Grande Vallée de la Marne (SL, INSEE "
-      "51030) - CCGV &#8211; Communauté de Communes de la Grande Vallée",
-    .name_ja = "Communauté de communes - La Grande Vallée de la Marne (SL, INSEE 51030) - CCGV &#8211; Communauté de Communes de la Grande Vallée",
+      "51030) - CCGV – Communauté de Communes de la Grande Vallée",
+    .name_ja = "Communauté de communes - La Grande Vallée de la Marne (SL, INSEE 51030) - CCGV – Communauté de Communes de la Grande Vallée",
     .category = "government", .portal = "https://ccgvm.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -79475,9 +79405,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "22:02:41 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_B915EF1A_2EE3_45CB_B654_4AD09606129E", .name = "Mairie - Le Bec-Thomas (SL, INSEE 27053) - Mairie &#8212; Le Bec "
+  { .id = "JO45_FR_B915EF1A_2EE3_45CB_B654_4AD09606129E", .name = "Mairie - Le Bec-Thomas (SL, INSEE 27053) - Mairie — Le Bec "
       "Thomas",
-    .name_ja = "Mairie - Le Bec-Thomas (SL, INSEE 27053) - Mairie &#8212; Le Bec Thomas",
+    .name_ja = "Mairie - Le Bec-Thomas (SL, INSEE 27053) - Mairie — Le Bec Thomas",
     .category = "government", .portal = "https://lebecthomas.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -79660,9 +79590,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:42:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_BD0BB2B5_CA73_484E_A6AA_9C9F43396F50", .name = "Mairie - Nalliers (SL, INSEE 85159) - Nalliers (85370) &#8211; "
-      "Commune de Vendée",
-    .name_ja = "Mairie - Nalliers (SL, INSEE 85159) - Nalliers (85370) &#8211; Commune de Vendée",
+  { .id = "JO45_FR_BD0BB2B5_CA73_484E_A6AA_9C9F43396F50", .name = "Mairie - Nalliers (SL, INSEE 85159) - Nalliers (85370) – Commune "
+      "de Vendée",
+    .name_ja = "Mairie - Nalliers (SL, INSEE 85159) - Nalliers (85370) – Commune de Vendée",
     .category = "government", .portal = "https://nalliers.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -79680,8 +79610,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_BD3B8F26_DB63_4AA4_8E07_CB5188A87F16", .name = "Mairie - Eteaux (SL, INSEE 74116) - Site Officiel de la Mairie "
-      "d&#039;Eteaux",
-    .name_ja = "Mairie - Eteaux (SL, INSEE 74116) - Site Officiel de la Mairie d&#039;Eteaux",
+      "d'Eteaux",
+    .name_ja = "Mairie - Eteaux (SL, INSEE 74116) - Site Officiel de la Mairie d'Eteaux",
     .category = "government", .portal = "https://eteaux.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -79976,9 +79906,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "11:58:17 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_C392A68B_4CBA_4B3B_82F3_66100EA94115", .name = "Mairie - Osmanville (SL, INSEE 14480) - Mairie d&#039;Osmanville "
-      ": Bienvenue !",
-    .name_ja = "Mairie - Osmanville (SL, INSEE 14480) - Mairie d&#039;Osmanville : Bienvenue !",
+  { .id = "JO45_FR_C392A68B_4CBA_4B3B_82F3_66100EA94115", .name = "Mairie - Osmanville (SL, INSEE 14480) - Mairie d'Osmanville : "
+      "Bienvenue !",
+    .name_ja = "Mairie - Osmanville (SL, INSEE 14480) - Mairie d'Osmanville : Bienvenue !",
     .category = "government", .portal = "https://osmanville.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -80257,9 +80187,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_C8B73A6D_4148_4664_9970_CFF1FF2CE7F7", .name = "Conseil d'architecture, d'urbanisme et de l'environnement (CAUE) "
       "- Alsace - Site de Colmar (SIL, INSEE 68066) - CAUE Alsace   "
-      "Conseil d&#039;architecture, d&#039;urbanisme et de "
-      "l&#039;environ",
-    .name_ja = "Conseil d'architecture, d'urbanisme et de l'environnement (CAUE) - Alsace - Site de Colmar (SIL, INSEE 68066) - CAUE Alsace   Conseil d&#039;architecture, d&#039;urbanisme et de l&#039;environ",
+      "Conseil d'architecture, d'urbanisme et de l'environ",
+    .name_ja = "Conseil d'architecture, d'urbanisme et de l'environnement (CAUE) - Alsace - Site de Colmar (SIL, INSEE 68066) - CAUE Alsace   Conseil d'architecture, d'urbanisme et de l'environ",
     .category = "government", .portal = "https://www.caue-alsace.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -80278,9 +80207,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_C8B73A6D_4148_4664_9970_CFF1FF2CE7F7_2", .name = "Conseil d'architecture, d'urbanisme et de l'environnement (CAUE) "
       "- Alsace - Site de Colmar (SIL, INSEE 68066) - CAUE Alsace   "
-      "Conseil d&#039;architecture, d&#039;urbanisme et de "
-      "l&#039;environ",
-    .name_ja = "Conseil d'architecture, d'urbanisme et de l'environnement (CAUE) - Alsace - Site de Colmar (SIL, INSEE 68066) - CAUE Alsace   Conseil d&#039;architecture, d&#039;urbanisme et de l&#039;environ",
+      "Conseil d'architecture, d'urbanisme et de l'environ",
+    .name_ja = "Conseil d'architecture, d'urbanisme et de l'environnement (CAUE) - Alsace - Site de Colmar (SIL, INSEE 68066) - CAUE Alsace   Conseil d'architecture, d'urbanisme et de l'environ",
     .category = "government", .portal = "https://www.caue-alsace.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -80807,8 +80735,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_D0E72DDB_5BF3_4C41_9BCD_15A9D75A090C", .name = "Centre communal d'action sociale (CCAS) - Boëge (SL, INSEE "
-      "74037) - Commune de Bo&#235;ge",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Boëge (SL, INSEE 74037) - Commune de Bo&#235;ge",
+      "74037) - Commune de Boëge",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Boëge (SL, INSEE 74037) - Commune de Boëge",
     .category = "government", .portal = "https://www.boege.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -81104,8 +81032,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:07:51 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_D5E5794C_7F68_4EF3_9C93_55B13676697C", .name = "Mairie - Ambert (SL, INSEE 63003) - Ville d&#039;Ambert",
-    .name_ja = "Mairie - Ambert (SL, INSEE 63003) - Ville d&#039;Ambert",
+  { .id = "JO45_FR_D5E5794C_7F68_4EF3_9C93_55B13676697C", .name = "Mairie - Ambert (SL, INSEE 63003) - Ville d'Ambert",
+    .name_ja = "Mairie - Ambert (SL, INSEE 63003) - Ville d'Ambert",
     .category = "government", .portal = "https://www.ville-ambert.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -81363,9 +81291,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "18:22:01 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_D9C123D0_166C_4C8E_8A3F_C29F392C4A5F", .name = "Mairie - Les Salelles (SL, INSEE 48185) - Les Salelles &#8211; "
-      "Lozère",
-    .name_ja = "Mairie - Les Salelles (SL, INSEE 48185) - Les Salelles &#8211; Lozère",
+  { .id = "JO45_FR_D9C123D0_166C_4C8E_8A3F_C29F392C4A5F", .name = "Mairie - Les Salelles (SL, INSEE 48185) - Les Salelles – Lozère",
+    .name_ja = "Mairie - Les Salelles (SL, INSEE 48185) - Les Salelles – Lozère",
     .category = "government", .portal = "https://www.les-salelles-lozere.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -81382,9 +81309,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "17:16:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_D9C123D0_166C_4C8E_8A3F_C29F392C4A5F_2", .name = "Mairie - Les Salelles (SL, INSEE 48185) - Les Salelles &#8211; "
-      "Lozère",
-    .name_ja = "Mairie - Les Salelles (SL, INSEE 48185) - Les Salelles &#8211; Lozère",
+  { .id = "JO45_FR_D9C123D0_166C_4C8E_8A3F_C29F392C4A5F_2", .name = "Mairie - Les Salelles (SL, INSEE 48185) - Les Salelles – Lozère",
+    .name_ja = "Mairie - Les Salelles (SL, INSEE 48185) - Les Salelles – Lozère",
     .category = "government", .portal = "https://www.les-salelles-lozere.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -81722,8 +81648,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_DDB693D8_B23D_412F_B8D3_0C2FF8CCC6EA", .name = "Mission locale pour l'insertion professionnelle et sociale des "
       "jeunes (16-25 ans) - Charleville-Mézières (SL, INSEE 08105) - "
-      "Mission Locale du bassin d&#039;emploi de charleville mézières",
-    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Charleville-Mézières (SL, INSEE 08105) - Mission Locale du bassin d&#039;emploi de charleville mézières",
+      "Mission Locale du bassin d'emploi de charleville mézières",
+    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Charleville-Mézières (SL, INSEE 08105) - Mission Locale du bassin d'emploi de charleville mézières",
     .category = "government", .portal = "https://missionlocale-charleville.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -81741,8 +81667,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_DDC3702F_6B07_42AB_A649_432EFE84132C", .name = "Point conseil budget - Association LOGIAH - Manosque (SL, INSEE "
-      "04112) - Logiah04 &#8211; Alpes de Haute-Provence",
-    .name_ja = "Point conseil budget - Association LOGIAH - Manosque (SL, INSEE 04112) - Logiah04 &#8211; Alpes de Haute-Provence",
+      "04112) - Logiah04 – Alpes de Haute-Provence",
+    .name_ja = "Point conseil budget - Association LOGIAH - Manosque (SL, INSEE 04112) - Logiah04 – Alpes de Haute-Provence",
     .category = "government", .portal = "https://www.logiah.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -82193,8 +82119,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "03:50:37 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_E226F6A8_15FE_477A_9738_8E33B88E8156", .name = "Mairie - Arpenans (SL, INSEE 70029) - Commune d&#8217;Arpenans",
-    .name_ja = "Mairie - Arpenans (SL, INSEE 70029) - Commune d&#8217;Arpenans",
+  { .id = "JO45_FR_E226F6A8_15FE_477A_9738_8E33B88E8156", .name = "Mairie - Arpenans (SL, INSEE 70029) - Commune d’Arpenans",
+    .name_ja = "Mairie - Arpenans (SL, INSEE 70029) - Commune d’Arpenans",
     .category = "government", .portal = "https://arpenans.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -82544,8 +82470,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "16:27:53 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_E5D63AA9_591A_4F31_A812_1EFD65C7BF07", .name = "Mairie - Asquins (SL, INSEE 89021) - Mairie d&#039;Asquins",
-    .name_ja = "Mairie - Asquins (SL, INSEE 89021) - Mairie d&#039;Asquins",
+  { .id = "JO45_FR_E5D63AA9_591A_4F31_A812_1EFD65C7BF07", .name = "Mairie - Asquins (SL, INSEE 89021) - Mairie d'Asquins",
+    .name_ja = "Mairie - Asquins (SL, INSEE 89021) - Mairie d'Asquins",
     .category = "government", .portal = "https://www.asquins.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -82711,8 +82637,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:40:51 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_E7A6BBEB_D94D_4BC8_896D_C5707834C811", .name = "Mairie - Azillanet (SL, INSEE 34020) - Mairie d&#039;Azillanet",
-    .name_ja = "Mairie - Azillanet (SL, INSEE 34020) - Mairie d&#039;Azillanet",
+  { .id = "JO45_FR_E7A6BBEB_D94D_4BC8_896D_C5707834C811", .name = "Mairie - Azillanet (SL, INSEE 34020) - Mairie d'Azillanet",
+    .name_ja = "Mairie - Azillanet (SL, INSEE 34020) - Mairie d'Azillanet",
     .category = "government", .portal = "https://mairieazillanet.net/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -82973,9 +82899,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "11:39:49 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_EA88F09F_FEC0_408E_BD6E_1185B22052CF", .name = "Mairie - Bielle (SL, INSEE 64127) - Mairie de BIELLE &#8211; "
-      "Site officiel",
-    .name_ja = "Mairie - Bielle (SL, INSEE 64127) - Mairie de BIELLE &#8211; Site officiel",
+  { .id = "JO45_FR_EA88F09F_FEC0_408E_BD6E_1185B22052CF", .name = "Mairie - Bielle (SL, INSEE 64127) - Mairie de BIELLE – Site "
+      "officiel",
+    .name_ja = "Mairie - Bielle (SL, INSEE 64127) - Mairie de BIELLE – Site officiel",
     .category = "government", .portal = "https://www.mairie-bielle.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -83254,8 +83180,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-10-18T13:17:33+02:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_FR_EEEF49F8_39DF_4291_8842_8CDCE5F17908", .name = "Mairie - Oberbronn (SL, INSEE 67340) - Commune d&#039;Oberbronn",
-    .name_ja = "Mairie - Oberbronn (SL, INSEE 67340) - Commune d&#039;Oberbronn",
+  { .id = "JO45_FR_EEEF49F8_39DF_4291_8842_8CDCE5F17908", .name = "Mairie - Oberbronn (SL, INSEE 67340) - Commune d'Oberbronn",
+    .name_ja = "Mairie - Oberbronn (SL, INSEE 67340) - Commune d'Oberbronn",
     .category = "government", .portal = "http://www.oberbronn.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -83328,8 +83254,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_F1BE3F36_6CF4_4D6B_AF3C_6E28221E8A48", .name = "Mairie - Castelnau-d'Estrétefonds (SL, INSEE 31118) - Site "
-      "officiel de la ville de Castelnau d&#039;Estrétefonds",
-    .name_ja = "Mairie - Castelnau-d'Estrétefonds (SL, INSEE 31118) - Site officiel de la ville de Castelnau d&#039;Estrétefonds",
+      "officiel de la ville de Castelnau d'Estrétefonds",
+    .name_ja = "Mairie - Castelnau-d'Estrétefonds (SL, INSEE 31118) - Site officiel de la ville de Castelnau d'Estrétefonds",
     .category = "government", .portal = "https://www.castelnau-estretefonds.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -83460,8 +83386,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_F3C75F31_D1AA_4D9E_9A87_6AE1259AF2B6", .name = "Communauté de communes - Chaourçois et du Val d'Armance (SL, "
       "INSEE 10140) - Communauté de Communes du Chaourçois et du Val "
-      "d&#039;Armance",
-    .name_ja = "Communauté de communes - Chaourçois et du Val d'Armance (SL, INSEE 10140) - Communauté de Communes du Chaourçois et du Val d&#039;Armance",
+      "d'Armance",
+    .name_ja = "Communauté de communes - Chaourçois et du Val d'Armance (SL, INSEE 10140) - Communauté de Communes du Chaourçois et du Val d'Armance",
     .category = "government", .portal = "https://cc-chaourcois-val-armance.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -83607,9 +83533,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:42:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F6BB4F29_D4AC_46FB_9223_F70D54AE4ACF", .name = "Info Jeunes - Ermont (SL, INSEE 95219) - Ville de Ville "
-      "d&#039;Ermont : Actualités",
-    .name_ja = "Info Jeunes - Ermont (SL, INSEE 95219) - Ville de Ville d&#039;Ermont : Actualités",
+  { .id = "JO45_FR_F6BB4F29_D4AC_46FB_9223_F70D54AE4ACF", .name = "Info Jeunes - Ermont (SL, INSEE 95219) - Ville de Ville d'Ermont "
+      ": Actualités",
+    .name_ja = "Info Jeunes - Ermont (SL, INSEE 95219) - Ville de Ville d'Ermont : Actualités",
     .category = "government", .portal = "https://www.ermont.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -83626,9 +83552,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "11:38:04 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F6BB4F29_D4AC_46FB_9223_F70D54AE4ACF_2", .name = "Info Jeunes - Ermont (SL, INSEE 95219) - Ville de Ville "
-      "d&#039;Ermont : Agenda",
-    .name_ja = "Info Jeunes - Ermont (SL, INSEE 95219) - Ville de Ville d&#039;Ermont : Agenda",
+  { .id = "JO45_FR_F6BB4F29_D4AC_46FB_9223_F70D54AE4ACF_2", .name = "Info Jeunes - Ermont (SL, INSEE 95219) - Ville de Ville d'Ermont "
+      ": Agenda",
+    .name_ja = "Info Jeunes - Ermont (SL, INSEE 95219) - Ville de Ville d'Ermont : Agenda",
     .category = "government", .portal = "https://www.ermont.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -83645,8 +83571,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "11:34:08 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F774E4FA_98FA_48FB_9874_1234ACD2D3AB", .name = "Mairie - Humbligny (SL, INSEE 18111) - Commune d&#039;Humbligny",
-    .name_ja = "Mairie - Humbligny (SL, INSEE 18111) - Commune d&#039;Humbligny",
+  { .id = "JO45_FR_F774E4FA_98FA_48FB_9874_1234ACD2D3AB", .name = "Mairie - Humbligny (SL, INSEE 18111) - Commune d'Humbligny",
+    .name_ja = "Mairie - Humbligny (SL, INSEE 18111) - Commune d'Humbligny",
     .category = "government", .portal = "https://humbligny.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -83757,9 +83683,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:31:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F96C7188_C3D4_4B34_9F4A_6CA18F935761", .name = "Mairie - Lougres (SL, INSEE 25350) - Commune de LOUGRES &#8211; "
-      "Doubs &#8211; 25260",
-    .name_ja = "Mairie - Lougres (SL, INSEE 25350) - Commune de LOUGRES &#8211; Doubs &#8211; 25260",
+  { .id = "JO45_FR_F96C7188_C3D4_4B34_9F4A_6CA18F935761", .name = "Mairie - Lougres (SL, INSEE 25350) - Commune de LOUGRES – Doubs "
+      "– 25260",
+    .name_ja = "Mairie - Lougres (SL, INSEE 25350) - Commune de LOUGRES – Doubs – 25260",
     .category = "government", .portal = "https://www.lougres.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -84131,8 +84057,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:39:45 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_FFBC0CCF_AC39_4E70_8B31_B43382FD26F7", .name = "Mairie - Aspet (SL, INSEE 31020) - Mairie d&#039;Aspet",
-    .name_ja = "Mairie - Aspet (SL, INSEE 31020) - Mairie d&#039;Aspet",
+  { .id = "JO45_FR_FFBC0CCF_AC39_4E70_8B31_B43382FD26F7", .name = "Mairie - Aspet (SL, INSEE 31020) - Mairie d'Aspet",
+    .name_ja = "Mairie - Aspet (SL, INSEE 31020) - Mairie d'Aspet",
     .category = "government", .portal = "https://mairie-aspet31.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -84375,8 +84301,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:23:51 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_43ECC74A_73F9_4597_96DF_F02007CCBCD1", .name = "Mairie - Omissy (SL, INSEE 02571) - Inf&#39;Omissy blog",
-    .name_ja = "Mairie - Omissy (SL, INSEE 02571) - Inf&#39;Omissy blog",
+  { .id = "JO45_FR_43ECC74A_73F9_4597_96DF_F02007CCBCD1", .name = "Mairie - Omissy (SL, INSEE 02571) - Inf'Omissy blog",
+    .name_ja = "Mairie - Omissy (SL, INSEE 02571) - Inf'Omissy blog",
     .category = "government", .portal = "http://infomissy.blogspot.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -84393,8 +84319,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-10-15T18:36:08.922+02:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_FR_43ECC74A_73F9_4597_96DF_F02007CCBCD1_2", .name = "Mairie - Omissy (SL, INSEE 02571) - Inf&#39;Omissy blog",
-    .name_ja = "Mairie - Omissy (SL, INSEE 02571) - Inf&#39;Omissy blog",
+  { .id = "JO45_FR_43ECC74A_73F9_4597_96DF_F02007CCBCD1_2", .name = "Mairie - Omissy (SL, INSEE 02571) - Inf'Omissy blog",
+    .name_ja = "Mairie - Omissy (SL, INSEE 02571) - Inf'Omissy blog",
     .category = "government", .portal = "http://infomissy.blogspot.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -84411,8 +84337,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "16:36:08 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_43ECC74A_73F9_4597_96DF_F02007CCBCD1_3", .name = "Mairie - Omissy (SL, INSEE 02571) - Inf&#39;Omissy blog",
-    .name_ja = "Mairie - Omissy (SL, INSEE 02571) - Inf&#39;Omissy blog",
+  { .id = "JO45_FR_43ECC74A_73F9_4597_96DF_F02007CCBCD1_3", .name = "Mairie - Omissy (SL, INSEE 02571) - Inf'Omissy blog",
+    .name_ja = "Mairie - Omissy (SL, INSEE 02571) - Inf'Omissy blog",
     .category = "government", .portal = "https://www.blogger.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -84430,8 +84356,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_43EF4F65_83D8_4C57_8BD8_2ED12401B23E", .name = "Mairie - Saint-Sauveur-d'Aunis (SL, INSEE 17396) - Mairie de "
-      "Saint-Sauveur d&#039;Aunis",
-    .name_ja = "Mairie - Saint-Sauveur-d'Aunis (SL, INSEE 17396) - Mairie de Saint-Sauveur d&#039;Aunis",
+      "Saint-Sauveur d'Aunis",
+    .name_ja = "Mairie - Saint-Sauveur-d'Aunis (SL, INSEE 17396) - Mairie de Saint-Sauveur d'Aunis",
     .category = "government", .portal = "https://stsauveurdaunis.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -84526,8 +84452,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_462A446D_1E0D_461C_B707_8952DCCE090D", .name = "Communauté de communes - Rouillacais (SL, INSEE 16286) - Le "
-      "Rouillacais &#8211; Communauté de Communes",
-    .name_ja = "Communauté de communes - Rouillacais (SL, INSEE 16286) - Le Rouillacais &#8211; Communauté de Communes",
+      "Rouillacais – Communauté de Communes",
+    .name_ja = "Communauté de communes - Rouillacais (SL, INSEE 16286) - Le Rouillacais – Communauté de Communes",
     .category = "government", .portal = "https://www.lerouillacais.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -84564,8 +84490,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_468FC1DA_2A2D_4726_B49C_1202D34C0E57", .name = "Centre communal d'action sociale (CCAS) - Les Anses-d'Arlet (SL, "
-      "INSEE 97202) - Ville de Les Anses d&#039;Arlet",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Les Anses-d'Arlet (SL, INSEE 97202) - Ville de Les Anses d&#039;Arlet",
+      "INSEE 97202) - Ville de Les Anses d'Arlet",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Les Anses-d'Arlet (SL, INSEE 97202) - Ville de Les Anses d'Arlet",
     .category = "government", .portal = "https://ville-ansesdarlet.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -84807,9 +84733,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "06:00:46 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_48A3979A_D54B_49FC_95C1_A2FB98E043A7_2", .name = "Mairie - Wanquetin (SL, INSEE 62874) - Actualités &#8211; "
-      "Wanquetin",
-    .name_ja = "Mairie - Wanquetin (SL, INSEE 62874) - Actualités &#8211; Wanquetin",
+  { .id = "JO45_FR_48A3979A_D54B_49FC_95C1_A2FB98E043A7_2", .name = "Mairie - Wanquetin (SL, INSEE 62874) - Actualités – Wanquetin",
+    .name_ja = "Mairie - Wanquetin (SL, INSEE 62874) - Actualités – Wanquetin",
     .category = "government", .portal = "https://wanquetin.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -84881,9 +84806,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_49D6FBB8_B0CD_4C7D_A826_8883F0FB36F9", .name = "Centre communal d'action sociale (CCAS) - Ingré (SL, INSEE "
-      "45169) - Fête des Villes Jumelles : Célébrons l&#039;amitié "
+      "45169) - Fête des Villes Jumelles : Célébrons l'amitié "
       "internationale à Ingré",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Ingré (SL, INSEE 45169) - Fête des Villes Jumelles : Célébrons l&#039;amitié internationale à Ingré",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Ingré (SL, INSEE 45169) - Fête des Villes Jumelles : Célébrons l'amitié internationale à Ingré",
     .category = "government", .portal = "https://www.ingre.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -85144,8 +85069,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:51:49 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_4DAADB5E_10C3_417D_A38F_41B6B12033E8", .name = "Mairie - Bans (SL, INSEE 39037) - Bans Val d&#039;Amour",
-    .name_ja = "Mairie - Bans (SL, INSEE 39037) - Bans Val d&#039;Amour",
+  { .id = "JO45_FR_4DAADB5E_10C3_417D_A38F_41B6B12033E8", .name = "Mairie - Bans (SL, INSEE 39037) - Bans Val d'Amour",
+    .name_ja = "Mairie - Bans (SL, INSEE 39037) - Bans Val d'Amour",
     .category = "government", .portal = "https://bans-valdamour.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -85290,9 +85215,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:57:43 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_4ECE8765_82B1_467B_8810_1383297191CA", .name = "Mairie - Guewenheim (SL, INSEE 68115) - Guewenheim &#8211; site "
-      "de la commune",
-    .name_ja = "Mairie - Guewenheim (SL, INSEE 68115) - Guewenheim &#8211; site de la commune",
+  { .id = "JO45_FR_4ECE8765_82B1_467B_8810_1383297191CA", .name = "Mairie - Guewenheim (SL, INSEE 68115) - Guewenheim – site de la "
+      "commune",
+    .name_ja = "Mairie - Guewenheim (SL, INSEE 68115) - Guewenheim – site de la commune",
     .category = "government", .portal = "https://guewenheim.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -85659,8 +85584,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-10-18T11:17:35+00:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_FR_5477D5D5_6818_4673_8DD3_7C125082A56A", .name = "Mairie - Ambres (SL, INSEE 81011) - Mairie d&#039;Ambres",
-    .name_ja = "Mairie - Ambres (SL, INSEE 81011) - Mairie d&#039;Ambres",
+  { .id = "JO45_FR_5477D5D5_6818_4673_8DD3_7C125082A56A", .name = "Mairie - Ambres (SL, INSEE 81011) - Mairie d'Ambres",
+    .name_ja = "Mairie - Ambres (SL, INSEE 81011) - Mairie d'Ambres",
     .category = "government", .portal = "https://ambres.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -85678,8 +85603,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_54787790_8BC3_4E4E_B1DB_E26EBB61AB62", .name = "Police municipale - Salle-d'Aude (SL, INSEE 11370) - Mairie de "
-      "Salles d&#039;Aude",
-    .name_ja = "Police municipale - Salle-d'Aude (SL, INSEE 11370) - Mairie de Salles d&#039;Aude",
+      "Salles d'Aude",
+    .name_ja = "Police municipale - Salle-d'Aude (SL, INSEE 11370) - Mairie de Salles d'Aude",
     .category = "government", .portal = "https://www.sallesdaude.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -85752,8 +85677,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_555FF2AE_4411_4D69_BF42_7E1992DF6268", .name = "Mairie - Hamelet (SL, INSEE 80412) - Site Officiel de la Mairie "
-      "d&#039;Hamelet",
-    .name_ja = "Mairie - Hamelet (SL, INSEE 80412) - Site Officiel de la Mairie d&#039;Hamelet",
+      "d'Hamelet",
+    .name_ja = "Mairie - Hamelet (SL, INSEE 80412) - Site Officiel de la Mairie d'Hamelet",
     .category = "government", .portal = "https://www.mairie-hamelet.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -85771,8 +85696,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_55A4E89C_6AAF_4CAB_AE74_A14D5C3344CC", .name = "Centre communal d'action sociale (CCAS) - Éterville (SL, INSEE "
-      "14254) - Mairie d&#039;Éterville",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Éterville (SL, INSEE 14254) - Mairie d&#039;Éterville",
+      "14254) - Mairie d'Éterville",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Éterville (SL, INSEE 14254) - Mairie d'Éterville",
     .category = "government", .portal = "https://mairie-eterville.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -85898,8 +85823,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_5839DA27_6637_4EC3_B537_B2F4DDAA8A0F", .name = "Mairie - Saint-Felix (SL, INSEE 60574) - Bienvenue sur la "
-      "Gazette de Saint Félix, en Picardie (dans l&#039;Oise)",
-    .name_ja = "Mairie - Saint-Felix (SL, INSEE 60574) - Bienvenue sur la Gazette de Saint Félix, en Picardie (dans l&#039;Oise)",
+      "Gazette de Saint Félix, en Picardie (dans l'Oise)",
+    .name_ja = "Mairie - Saint-Felix (SL, INSEE 60574) - Bienvenue sur la Gazette de Saint Félix, en Picardie (dans l'Oise)",
     .category = "government", .portal = "https://www.saint-felix-notre-village.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -85917,8 +85842,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_584A7B9E_BEFD_44BC_8CAD_B6B899D7409A", .name = "Centre communal d'action sociale (CCAS) - Bœrsch (SL, INSEE "
-      "67052) - Boersch &#8211; Klingenthal &#8211; Saint-Léonard",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Bœrsch (SL, INSEE 67052) - Boersch &#8211; Klingenthal &#8211; Saint-Léonard",
+      "67052) - Boersch – Klingenthal – Saint-Léonard",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Bœrsch (SL, INSEE 67052) - Boersch – Klingenthal – Saint-Léonard",
     .category = "government", .portal = "https://www.boersch.net/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -86140,8 +86065,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_5BA86D83_7DD8_4132_95FC_53E9D020F1EA", .name = "Mairie - Le Château-d'Oléron (SL, INSEE 17093) - Mairie Le "
-      "Château d&#039;Oléron",
-    .name_ja = "Mairie - Le Château-d'Oléron (SL, INSEE 17093) - Mairie Le Château d&#039;Oléron",
+      "Château d'Oléron",
+    .name_ja = "Mairie - Le Château-d'Oléron (SL, INSEE 17093) - Mairie Le Château d'Oléron",
     .category = "government", .portal = "https://www.lechateaudoleron.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -86308,9 +86233,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:09:20 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_5DD38435_A5A3_498B_BA67_AF216190A672", .name = "Mairie - Plouescat (SL, INSEE 29185) - Mairie de Plouescat "
-      "&#8211; Commune de Plouescat &#8211; Finistère &#8211; Bret",
-    .name_ja = "Mairie - Plouescat (SL, INSEE 29185) - Mairie de Plouescat &#8211; Commune de Plouescat &#8211; Finistère &#8211; Bret",
+  { .id = "JO45_FR_5DD38435_A5A3_498B_BA67_AF216190A672", .name = "Mairie - Plouescat (SL, INSEE 29185) - Mairie de Plouescat – "
+      "Commune de Plouescat – Finistère – Bret",
+    .name_ja = "Mairie - Plouescat (SL, INSEE 29185) - Mairie de Plouescat – Commune de Plouescat – Finistère – Bret",
     .category = "government", .portal = "https://www.mairie-plouescat.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -86696,9 +86621,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:22:27 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_0B826E6D_9E37_4A20_895F_735ED9907050", .name = "Mairie - Les Molières (SL, INSEE 91411) - Les Molières &#8211; "
-      "Essonne 91470",
-    .name_ja = "Mairie - Les Molières (SL, INSEE 91411) - Les Molières &#8211; Essonne 91470",
+  { .id = "JO45_FR_0B826E6D_9E37_4A20_895F_735ED9907050", .name = "Mairie - Les Molières (SL, INSEE 91411) - Les Molières – Essonne "
+      "91470",
+    .name_ja = "Mairie - Les Molières (SL, INSEE 91411) - Les Molières – Essonne 91470",
     .category = "government", .portal = "https://www.lesmolieres.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -86735,8 +86660,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_0B8DB12D_0E53_40B9_8E25_E16A0A3B787D", .name = "Mairie - Oberschaeffolsheim (SL, INSEE 67350) - Mairie "
-      "d&#039;Oberschaeffolsheim",
-    .name_ja = "Mairie - Oberschaeffolsheim (SL, INSEE 67350) - Mairie d&#039;Oberschaeffolsheim",
+      "d'Oberschaeffolsheim",
+    .name_ja = "Mairie - Oberschaeffolsheim (SL, INSEE 67350) - Mairie d'Oberschaeffolsheim",
     .category = "government", .portal = "https://www.oberschaeffolsheim.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -86754,8 +86679,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_0BA15643_800B_4F49_8515_C3F839B5639A", .name = "Mairie - Étival-lès-le-Mans (SL, INSEE 72127) - Ville "
-      "d&#039;Étival-lès-Le Mans",
-    .name_ja = "Mairie - Étival-lès-le-Mans (SL, INSEE 72127) - Ville d&#039;Étival-lès-Le Mans",
+      "d'Étival-lès-Le Mans",
+    .name_ja = "Mairie - Étival-lès-le-Mans (SL, INSEE 72127) - Ville d'Étival-lès-Le Mans",
     .category = "government", .portal = "https://www.etival-les-le-mans.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -87071,9 +86996,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "02:11:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_10F6AF25_3DD9_46BF_B6E2_D54E8114DCE2", .name = "Mairie - Avenay-Val-d'Or (SL, INSEE 51028) - Avenay Val "
-      "d&#039;Or",
-    .name_ja = "Mairie - Avenay-Val-d'Or (SL, INSEE 51028) - Avenay Val d&#039;Or",
+  { .id = "JO45_FR_10F6AF25_3DD9_46BF_B6E2_D54E8114DCE2", .name = "Mairie - Avenay-Val-d'Or (SL, INSEE 51028) - Avenay Val d'Or",
+    .name_ja = "Mairie - Avenay-Val-d'Or (SL, INSEE 51028) - Avenay Val d'Or",
     .category = "government", .portal = "https://avenay-val-d-or.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -87274,8 +87198,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_14304F35_E33C_4289_84CF_5BCEC135374A", .name = "Mairie - Marcilly-d'Azergues (SL, INSEE 69125) - MAIRIE DE "
-      "MARCILLY D&#039;AZERGUES",
-    .name_ja = "Mairie - Marcilly-d'Azergues (SL, INSEE 69125) - MAIRIE DE MARCILLY D&#039;AZERGUES",
+      "MARCILLY D'AZERGUES",
+    .name_ja = "Mairie - Marcilly-d'Azergues (SL, INSEE 69125) - MAIRIE DE MARCILLY D'AZERGUES",
     .category = "government", .portal = "https://www.marcillydazergues.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -87347,9 +87271,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:28:23 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_16D48F86_CD5B_4F1F_BCAA_046D195631C5", .name = "Mairie - Barcelonne (SL, INSEE 26024) - Soirée Pizz&#8217; "
-      "&#038; jeux 25/09 à partir de 19h00",
-    .name_ja = "Mairie - Barcelonne (SL, INSEE 26024) - Soirée Pizz&#8217; &#038; jeux 25/09 à partir de 19h00",
+  { .id = "JO45_FR_16D48F86_CD5B_4F1F_BCAA_046D195631C5", .name = "Mairie - Barcelonne (SL, INSEE 26024) - Soirée Pizz’ & jeux "
+      "25/09 à partir de 19h00",
+    .name_ja = "Mairie - Barcelonne (SL, INSEE 26024) - Soirée Pizz’ & jeux 25/09 à partir de 19h00",
     .category = "government", .portal = "https://barcelonne.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -87385,8 +87309,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_16E2E2AC_78D2_46A9_8C9F_770EBB3BC5C8", .name = "Mairie - Greneville-en-Beauce (SL, INSEE 45160) - Greneville en "
-      "Beauce &#8211; site officiel",
-    .name_ja = "Mairie - Greneville-en-Beauce (SL, INSEE 45160) - Greneville en Beauce &#8211; site officiel",
+      "Beauce – site officiel",
+    .name_ja = "Mairie - Greneville-en-Beauce (SL, INSEE 45160) - Greneville en Beauce – site officiel",
     .category = "government", .portal = "https://greneville-en-beauce.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -88101,8 +88025,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:25:18 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_1F6D9EAE_BAA1_47D9_A222_30C4F3551913", .name = "Mairie - Ensisheim (SL, INSEE 68082) - Ville d&#039;Ensisheim",
-    .name_ja = "Mairie - Ensisheim (SL, INSEE 68082) - Ville d&#039;Ensisheim",
+  { .id = "JO45_FR_1F6D9EAE_BAA1_47D9_A222_30C4F3551913", .name = "Mairie - Ensisheim (SL, INSEE 68082) - Ville d'Ensisheim",
+    .name_ja = "Mairie - Ensisheim (SL, INSEE 68082) - Ville d'Ensisheim",
     .category = "government", .portal = "https://ensisheim.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -88177,8 +88101,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_2144409A_414B_4F1C_891C_302E099BDC18", .name = "Mairie - Peypin-d'Aigues (SL, INSEE 84090) - Mairie de Peypin "
-      "d&#039;Aigues",
-    .name_ja = "Mairie - Peypin-d'Aigues (SL, INSEE 84090) - Mairie de Peypin d&#039;Aigues",
+      "d'Aigues",
+    .name_ja = "Mairie - Peypin-d'Aigues (SL, INSEE 84090) - Mairie de Peypin d'Aigues",
     .category = "government", .portal = "https://peypindaigues.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -88305,8 +88229,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:04:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_2436848B_78FD_448F_9335_9D3C531FB364", .name = "Mairie - Archettes (SL, INSEE 88012) - Mairie d&#039;Archettes",
-    .name_ja = "Mairie - Archettes (SL, INSEE 88012) - Mairie d&#039;Archettes",
+  { .id = "JO45_FR_2436848B_78FD_448F_9335_9D3C531FB364", .name = "Mairie - Archettes (SL, INSEE 88012) - Mairie d'Archettes",
+    .name_ja = "Mairie - Archettes (SL, INSEE 88012) - Mairie d'Archettes",
     .category = "government", .portal = "https://www.mairie.archettes.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -88748,8 +88672,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_2BD0B02F_5FF8_49E8_8606_530381A30AF6", .name = "CROSS - Ajaccio (Centre régional opérationnel de surveillance et "
       "de sauvetage) - Méditerranée (SIL, INSEE 2A004) - Direction "
-      "Interr&#233;gionale de la Mer M&#233;diterran&#233;e",
-    .name_ja = "CROSS - Ajaccio (Centre régional opérationnel de surveillance et de sauvetage) - Méditerranée (SIL, INSEE 2A004) - Direction Interr&#233;gionale de la Mer M&#233;diterran&#233;e",
+      "Interrégionale de la Mer Méditerranée",
+    .name_ja = "CROSS - Ajaccio (Centre régional opérationnel de surveillance et de sauvetage) - Méditerranée (SIL, INSEE 2A004) - Direction Interrégionale de la Mer Méditerranée",
     .category = "government", .portal = "https://www.dirm.mediterranee.developpement-durable.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -88877,8 +88801,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_2D46D17B_5E0B_4C03_8522_51255DAF288F", .name = "Centre communal d'action sociale (CCAS) - Bosmie-l'Aiguille (SL, "
-      "INSEE 87021) - Ville de Bosmie-l&#039;Aiguille",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Bosmie-l'Aiguille (SL, INSEE 87021) - Ville de Bosmie-l&#039;Aiguille",
+      "INSEE 87021) - Ville de Bosmie-l'Aiguille",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Bosmie-l'Aiguille (SL, INSEE 87021) - Ville de Bosmie-l'Aiguille",
     .category = "government", .portal = "https://mairie-bosmie.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -88986,9 +88910,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:07:27 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_2EDD1C89_A4D2_44E8_8A4D_CCAD840FB310", .name = "Mairie - Doudeville (SL, INSEE 76219) - Doudeville &#8211; "
-      "Capitale du lin",
-    .name_ja = "Mairie - Doudeville (SL, INSEE 76219) - Doudeville &#8211; Capitale du lin",
+  { .id = "JO45_FR_2EDD1C89_A4D2_44E8_8A4D_CCAD840FB310", .name = "Mairie - Doudeville (SL, INSEE 76219) - Doudeville – Capitale du "
+      "lin",
+    .name_ja = "Mairie - Doudeville (SL, INSEE 76219) - Doudeville – Capitale du lin",
     .category = "government", .portal = "https://www.doudeville.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -89616,8 +89540,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:02:20 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_36594754_147B_45EF_8647_1CAFD11A999D", .name = "Mairie - Olwisheim (SL, INSEE 67361) - Commune d&#039;Olwisheim",
-    .name_ja = "Mairie - Olwisheim (SL, INSEE 67361) - Commune d&#039;Olwisheim",
+  { .id = "JO45_FR_36594754_147B_45EF_8647_1CAFD11A999D", .name = "Mairie - Olwisheim (SL, INSEE 67361) - Commune d'Olwisheim",
+    .name_ja = "Mairie - Olwisheim (SL, INSEE 67361) - Commune d'Olwisheim",
     .category = "government", .portal = "https://www.olwisheim.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -89910,9 +89834,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_3C8FDFD6_1178_4AC3_8A90_81A8FEC5C8FA", .name = "Service de renseignement en droit du travail - Guyane (SL, INSEE "
-      "97302) - Direction g&#233;n&#233;rale Coh&#233;sion et "
-      "population (DGCOPOP)",
-    .name_ja = "Service de renseignement en droit du travail - Guyane (SL, INSEE 97302) - Direction g&#233;n&#233;rale Coh&#233;sion et population (DGCOPOP)",
+      "97302) - Direction générale Cohésion et population (DGCOPOP)",
+    .name_ja = "Service de renseignement en droit du travail - Guyane (SL, INSEE 97302) - Direction générale Cohésion et population (DGCOPOP)",
     .category = "government", .portal = "https://guyane.deets.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -90134,9 +90057,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_41AC816B_9D4E_45CD_8001_E957CC36A89A", .name = "Direction interrégionale de la mer (DIRM) - Manche-Est, "
-      "Mer-du-Nord (SIL, INSEE 76351) - Direction Inter-r&#233;gionale "
-      "de la Mer - Manche Est - Mer du Nord",
-    .name_ja = "Direction interrégionale de la mer (DIRM) - Manche-Est, Mer-du-Nord (SIL, INSEE 76351) - Direction Inter-r&#233;gionale de la Mer - Manche Est - Mer du Nord",
+      "Mer-du-Nord (SIL, INSEE 76351) - Direction Inter-régionale de la "
+      "Mer - Manche Est - Mer du Nord",
+    .name_ja = "Direction interrégionale de la mer (DIRM) - Manche-Est, Mer-du-Nord (SIL, INSEE 76351) - Direction Inter-régionale de la Mer - Manche Est - Mer du Nord",
     .category = "government", .portal = "https://www.dirm.memn.developpement-durable.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -90208,8 +90131,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_6061A275_82D8_4F0F_9C13_CFF637AD4437", .name = "Communauté de communes - Pays d'Apt Luberon (SL, INSEE 84003) - "
-      "CCPAL &#8211; Communauté de Communes Pays d&#039;Apt Luberon",
-    .name_ja = "Communauté de communes - Pays d'Apt Luberon (SL, INSEE 84003) - CCPAL &#8211; Communauté de Communes Pays d&#039;Apt Luberon",
+      "CCPAL – Communauté de Communes Pays d'Apt Luberon",
+    .name_ja = "Communauté de communes - Pays d'Apt Luberon (SL, INSEE 84003) - CCPAL – Communauté de Communes Pays d'Apt Luberon",
     .category = "government", .portal = "https://www.paysapt-luberon.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -90244,8 +90167,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:19:27 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_60CDCCC1_01E3_4D92_90C0_73D5804AF54F", .name = "Mairie - Omessa (SL, INSEE 2B193) - Mairie Omessa &#8211; Corse",
-    .name_ja = "Mairie - Omessa (SL, INSEE 2B193) - Mairie Omessa &#8211; Corse",
+  { .id = "JO45_FR_60CDCCC1_01E3_4D92_90C0_73D5804AF54F", .name = "Mairie - Omessa (SL, INSEE 2B193) - Mairie Omessa – Corse",
+    .name_ja = "Mairie - Omessa (SL, INSEE 2B193) - Mairie Omessa – Corse",
     .category = "government", .portal = "https://www.omessa.corsica/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -90621,8 +90544,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:50:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_65CFBCF2_D79A_47AC_A0E4_FC863027680E", .name = "Mairie - Axat (SL, INSEE 11021) - Mairie d&#039;AXAT",
-    .name_ja = "Mairie - Axat (SL, INSEE 11021) - Mairie d&#039;AXAT",
+  { .id = "JO45_FR_65CFBCF2_D79A_47AC_A0E4_FC863027680E", .name = "Mairie - Axat (SL, INSEE 11021) - Mairie d'AXAT",
+    .name_ja = "Mairie - Axat (SL, INSEE 11021) - Mairie d'AXAT",
     .category = "government", .portal = "https://www.axat.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -90640,9 +90563,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_660E291F_634C_4613_8C8F_8342CCCBC88D", .name = "Conseil départemental de l'ordre des médecins - Aube (SIL, INSEE "
-      "10387) - Le Conseil départemental de l&#039;Aube de l&#039;Ordre "
-      "des Médecins",
-    .name_ja = "Conseil départemental de l'ordre des médecins - Aube (SIL, INSEE 10387) - Le Conseil départemental de l&#039;Aube de l&#039;Ordre des Médecins",
+      "10387) - Le Conseil départemental de l'Aube de l'Ordre des "
+      "Médecins",
+    .name_ja = "Conseil départemental de l'ordre des médecins - Aube (SIL, INSEE 10387) - Le Conseil départemental de l'Aube de l'Ordre des Médecins",
     .category = "government", .portal = "https://10-medecin.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -90732,9 +90655,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:15:19 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_66E3CA60_FAEE_4C3A_8BA9_35504708ECC6", .name = "Mairie - Mûrs-Erigné (SL, INSEE 49223) - Actualités &#8211; "
-      "Ville de Mûrs-Érigné",
-    .name_ja = "Mairie - Mûrs-Erigné (SL, INSEE 49223) - Actualités &#8211; Ville de Mûrs-Érigné",
+  { .id = "JO45_FR_66E3CA60_FAEE_4C3A_8BA9_35504708ECC6", .name = "Mairie - Mûrs-Erigné (SL, INSEE 49223) - Actualités – Ville de "
+      "Mûrs-Érigné",
+    .name_ja = "Mairie - Mûrs-Erigné (SL, INSEE 49223) - Actualités – Ville de Mûrs-Érigné",
     .category = "government", .portal = "https://www.murs-erigne.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -90883,9 +90806,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_695A140C_E03D_44F1_A5B8_6495986214CA", .name = "Point information jeunesse - L'Isle-Jourdain - Champ Libre (SL, "
-      "INSEE 86112) - MJC Champ libre &#8211; L&#039;Isle-Jourdain "
+      "INSEE 86112) - MJC Champ libre – L'Isle-Jourdain "
       "Availles-Limouzine",
-    .name_ja = "Point information jeunesse - L'Isle-Jourdain - Champ Libre (SL, INSEE 86112) - MJC Champ libre &#8211; L&#039;Isle-Jourdain Availles-Limouzine",
+    .name_ja = "Point information jeunesse - L'Isle-Jourdain - Champ Libre (SL, INSEE 86112) - MJC Champ libre – L'Isle-Jourdain Availles-Limouzine",
     .category = "government", .portal = "https://www.mjc-champlibre.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -90903,9 +90826,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_695A140C_E03D_44F1_A5B8_6495986214CA_2", .name = "Point information jeunesse - L'Isle-Jourdain - Champ Libre (SL, "
-      "INSEE 86112) - MJC Champ libre - L&#039;Isle-Jourdain "
+      "INSEE 86112) - MJC Champ libre - L'Isle-Jourdain "
       "Availles-Limouzine",
-    .name_ja = "Point information jeunesse - L'Isle-Jourdain - Champ Libre (SL, INSEE 86112) - MJC Champ libre - L&#039;Isle-Jourdain Availles-Limouzine",
+    .name_ja = "Point information jeunesse - L'Isle-Jourdain - Champ Libre (SL, INSEE 86112) - MJC Champ libre - L'Isle-Jourdain Availles-Limouzine",
     .category = "government", .portal = "https://www.mjc-champlibre.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -91016,9 +90939,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_6B57CFC4_CE98_432A_BC94_C74A0C20271C", .name = "Service départemental d'incendie et de secours (SDIS) - "
-      "Pyrénées-Orientales (SIL, INSEE 66136) - SDIS66 &#8211; Service "
-      "Départemental d&#039;Incendie et de Secours des Pyréné",
-    .name_ja = "Service départemental d'incendie et de secours (SDIS) - Pyrénées-Orientales (SIL, INSEE 66136) - SDIS66 &#8211; Service Départemental d&#039;Incendie et de Secours des Pyréné",
+      "Pyrénées-Orientales (SIL, INSEE 66136) - SDIS66 – Service "
+      "Départemental d'Incendie et de Secours des Pyréné",
+    .name_ja = "Service départemental d'incendie et de secours (SDIS) - Pyrénées-Orientales (SIL, INSEE 66136) - SDIS66 – Service Départemental d'Incendie et de Secours des Pyréné",
     .category = "government", .portal = "https://www.sdis66.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -91319,8 +91242,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_6F92E455_7D8B_4EF3_9790_35D10749C711", .name = "Mission locale pour l'insertion professionnelle et sociale des "
       "jeunes (16-25 ans) - Troyes (SL, INSEE 10387) - Mission Locale "
-      "de Troyes dans l&#039;Aube",
-    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Troyes (SL, INSEE 10387) - Mission Locale de Troyes dans l&#039;Aube",
+      "de Troyes dans l'Aube",
+    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Troyes (SL, INSEE 10387) - Mission Locale de Troyes dans l'Aube",
     .category = "government", .portal = "https://missionlocaletroyes.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -91670,9 +91593,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:28:17 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_75566AC3_2E0B_4259_8ED8_143408FB639B", .name = "Mairie - Cuinchy (SL, INSEE 62262) - Cuinchy &#8211; Site "
-      "officiel de la ville de Cuinchy",
-    .name_ja = "Mairie - Cuinchy (SL, INSEE 62262) - Cuinchy &#8211; Site officiel de la ville de Cuinchy",
+  { .id = "JO45_FR_75566AC3_2E0B_4259_8ED8_143408FB639B", .name = "Mairie - Cuinchy (SL, INSEE 62262) - Cuinchy – Site officiel de "
+      "la ville de Cuinchy",
+    .name_ja = "Mairie - Cuinchy (SL, INSEE 62262) - Cuinchy – Site officiel de la ville de Cuinchy",
     .category = "government", .portal = "https://www.cuinchy.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -91860,8 +91783,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_772A6F08_3796_4947_9BDC_C31DB3C2E4DA", .name = "Mairie - Mercurol-Veaunes (SL, INSEE 26179) - Mairie "
-      "Mercurol-Veaunes (Drôme &#8211; 26)",
-    .name_ja = "Mairie - Mercurol-Veaunes (SL, INSEE 26179) - Mairie Mercurol-Veaunes (Drôme &#8211; 26)",
+      "Mercurol-Veaunes (Drôme – 26)",
+    .name_ja = "Mairie - Mercurol-Veaunes (SL, INSEE 26179) - Mairie Mercurol-Veaunes (Drôme – 26)",
     .category = "government", .portal = "https://www.mercurol-veaunes.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -92191,8 +92114,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_7C4E31D0_215F_4F2D_B60D_54297D4C1F79", .name = "Mairie - Notre-Dame-de-Mésage (SL, INSEE 38279) - Notre Dame de "
-      "Mesage &#8211; Site officiel de la commune",
-    .name_ja = "Mairie - Notre-Dame-de-Mésage (SL, INSEE 38279) - Notre Dame de Mesage &#8211; Site officiel de la commune",
+      "Mesage – Site officiel de la commune",
+    .name_ja = "Mairie - Notre-Dame-de-Mésage (SL, INSEE 38279) - Notre Dame de Mesage – Site officiel de la commune",
     .category = "government", .portal = "https://www.notredamedemesage.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -92210,8 +92133,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_7CA0ED72_F637_4F65_9029_88F9AF27ADE0", .name = "Communauté de communes - Les Trois Provinces (SL, INSEE 18242) - "
-      "CC3P &#8211; Communauté de Communes des 3 Provinces",
-    .name_ja = "Communauté de communes - Les Trois Provinces (SL, INSEE 18242) - CC3P &#8211; Communauté de Communes des 3 Provinces",
+      "CC3P – Communauté de Communes des 3 Provinces",
+    .name_ja = "Communauté de communes - Les Trois Provinces (SL, INSEE 18242) - CC3P – Communauté de Communes des 3 Provinces",
     .category = "government", .portal = "https://www.cc3p.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -92451,8 +92374,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_802A7483_34B6_4DEF_96CF_135CCB6D6D49", .name = "Mairie - Le Freney-d'Oisans (SL, INSEE 38173) - Le Freney "
-      "d&#039;Oisans",
-    .name_ja = "Mairie - Le Freney-d'Oisans (SL, INSEE 38173) - Le Freney d&#039;Oisans",
+      "d'Oisans",
+    .name_ja = "Mairie - Le Freney-d'Oisans (SL, INSEE 38173) - Le Freney d'Oisans",
     .category = "government", .portal = "https://www.lefreneydoisans.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -92507,9 +92430,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:05:08 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_81093A78_BFB0_491A_A23F_AA227BE14FFF", .name = "Mairie - Endoufielle (SL, INSEE 32121) - Mairie "
-      "d&#039;Endoufielle",
-    .name_ja = "Mairie - Endoufielle (SL, INSEE 32121) - Mairie d&#039;Endoufielle",
+  { .id = "JO45_FR_81093A78_BFB0_491A_A23F_AA227BE14FFF", .name = "Mairie - Endoufielle (SL, INSEE 32121) - Mairie d'Endoufielle",
+    .name_ja = "Mairie - Endoufielle (SL, INSEE 32121) - Mairie d'Endoufielle",
     .category = "government", .portal = "https://endoufielle.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -92639,8 +92561,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_83322D80_DE6E_4F62_88AE_BCAE97FB70F3", .name = "Mairie - Saint-Sébastien-d'Aigrefeuille (SL, INSEE 30298) - "
-      "Saint-Sébastien-d&#039;Aigrefeuille",
-    .name_ja = "Mairie - Saint-Sébastien-d'Aigrefeuille (SL, INSEE 30298) - Saint-Sébastien-d&#039;Aigrefeuille",
+      "Saint-Sébastien-d'Aigrefeuille",
+    .name_ja = "Mairie - Saint-Sébastien-d'Aigrefeuille (SL, INSEE 30298) - Saint-Sébastien-d'Aigrefeuille",
     .category = "government", .portal = "https://mairiedesaintsebastien.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -92694,8 +92616,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_841866B4_6D6A_43BF_8DA7_8B2EBD2468E5", .name = "Centre communal d'action sociale (CCAS) - Morschwiller-le-Bas "
-      "(SL, INSEE 68218) - Mulhouse Alsace Agglomération &#8211; m2A",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Morschwiller-le-Bas (SL, INSEE 68218) - Mulhouse Alsace Agglomération &#8211; m2A",
+      "(SL, INSEE 68218) - Mulhouse Alsace Agglomération – m2A",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Morschwiller-le-Bas (SL, INSEE 68218) - Mulhouse Alsace Agglomération – m2A",
     .category = "government", .portal = "https://www.m2a.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -93138,9 +93060,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:53:16 CEST. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_8C16F1A7_D9C1_4A5A_82B5_5B75D0B8AE7E", .name = "Mairie - Saint-Bauzile (SL, INSEE 48137) - Saint-Bauzile &#8211; "
+  { .id = "JO45_FR_8C16F1A7_D9C1_4A5A_82B5_5B75D0B8AE7E", .name = "Mairie - Saint-Bauzile (SL, INSEE 48137) - Saint-Bauzile – "
       "Lozère",
-    .name_ja = "Mairie - Saint-Bauzile (SL, INSEE 48137) - Saint-Bauzile &#8211; Lozère",
+    .name_ja = "Mairie - Saint-Bauzile (SL, INSEE 48137) - Saint-Bauzile – Lozère",
     .category = "government", .portal = "https://www.saint-bauzile.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -93176,9 +93098,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:42:37 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_8C7D7CFC_29C9_4ECB_AC87_29004F3DBCD1", .name = "Mairie - Le Val-d'Ajol (SL, INSEE 88487) - Mairie du Val "
-      "d&#039;Ajol",
-    .name_ja = "Mairie - Le Val-d'Ajol (SL, INSEE 88487) - Mairie du Val d&#039;Ajol",
+  { .id = "JO45_FR_8C7D7CFC_29C9_4ECB_AC87_29004F3DBCD1", .name = "Mairie - Le Val-d'Ajol (SL, INSEE 88487) - Mairie du Val d'Ajol",
+    .name_ja = "Mairie - Le Val-d'Ajol (SL, INSEE 88487) - Mairie du Val d'Ajol",
     .category = "government", .portal = "https://www.valdajol.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -93697,8 +93618,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_93C4C1C6_B622_4EFC_AF4E_CD3A34E843A2", .name = "Mairie - Plélan-le-Grand (SL, INSEE 35223) - Mairie de "
-      "Plélan-le-Grand (35) &#8211; Site officiel",
-    .name_ja = "Mairie - Plélan-le-Grand (SL, INSEE 35223) - Mairie de Plélan-le-Grand (35) &#8211; Site officiel",
+      "Plélan-le-Grand (35) – Site officiel",
+    .name_ja = "Mairie - Plélan-le-Grand (SL, INSEE 35223) - Mairie de Plélan-le-Grand (35) – Site officiel",
     .category = "government", .portal = "https://www.plelan-le-grand.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -94069,8 +93990,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_CA84C580_035D_45B7_A853_EF14AF0F2569", .name = "Ecole des pupilles de l’air (EPA) - Montbonnot-Saint-Martin (SI, "
-      "INSEE ) - L&#039;École de l&#039;air et de l&#039;espace",
-    .name_ja = "Ecole des pupilles de l’air (EPA) - Montbonnot-Saint-Martin (SI, INSEE ) - L&#039;École de l&#039;air et de l&#039;espace",
+      "INSEE ) - L'École de l'air et de l'espace",
+    .name_ja = "Ecole des pupilles de l’air (EPA) - Montbonnot-Saint-Martin (SI, INSEE ) - L'École de l'air et de l'espace",
     .category = "government", .portal = "https://www.ecole-air-espace.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -94145,9 +94066,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_D76900B3_557F_400E_A758_E359A73AD5EE", .name = "Conservatoire botanique national de Mascarin (SI, INSEE ) - "
-      "Conservatoire Botanique National &#8211; Centre permanent "
+      "Conservatoire Botanique National – Centre permanent "
       "d’initiatives pour l",
-    .name_ja = "Conservatoire botanique national de Mascarin (SI, INSEE ) - Conservatoire Botanique National &#8211; Centre permanent d’initiatives pour l",
+    .name_ja = "Conservatoire botanique national de Mascarin (SI, INSEE ) - Conservatoire Botanique National – Centre permanent d’initiatives pour l",
     .category = "government", .portal = "https://www.cbnm.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -94573,8 +94494,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:11:37 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_03679D50_BD76_4EE5_941F_6D680B6BC044", .name = "Mairie - Abbeville (SL, INSEE 80001) - Ville d&#039;Abbeville",
-    .name_ja = "Mairie - Abbeville (SL, INSEE 80001) - Ville d&#039;Abbeville",
+  { .id = "JO45_FR_03679D50_BD76_4EE5_941F_6D680B6BC044", .name = "Mairie - Abbeville (SL, INSEE 80001) - Ville d'Abbeville",
+    .name_ja = "Mairie - Abbeville (SL, INSEE 80001) - Ville d'Abbeville",
     .category = "government", .portal = "https://www.abbeville.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -94874,8 +94795,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:25. A feed the organisation itself declares or links on its "
       "site root." },
 
-  { .id = "JO45_FR_95CD33C8_BCAB_4151_B40A_C80D2381E11F", .name = "Mairie - Agneaux (SL, INSEE 50002) - Mairie d&#039;Agneaux",
-    .name_ja = "Mairie - Agneaux (SL, INSEE 50002) - Mairie d&#039;Agneaux",
+  { .id = "JO45_FR_95CD33C8_BCAB_4151_B40A_C80D2381E11F", .name = "Mairie - Agneaux (SL, INSEE 50002) - Mairie d'Agneaux",
+    .name_ja = "Mairie - Agneaux (SL, INSEE 50002) - Mairie d'Agneaux",
     .category = "government", .portal = "https://agneaux.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -94912,9 +94833,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_961428BB_7155_4416_A14A_09A94C225F79", .name = "Service départemental d'incendie et de secours (SDIS) - "
-      "Charente-Maritime (SIL, INSEE 17274) - SDIS 17 &#8211; "
+      "Charente-Maritime (SIL, INSEE 17274) - SDIS 17 – "
       "Sapeurs-pompiers de la Charente-Maritime",
-    .name_ja = "Service départemental d'incendie et de secours (SDIS) - Charente-Maritime (SIL, INSEE 17274) - SDIS 17 &#8211; Sapeurs-pompiers de la Charente-Maritime",
+    .name_ja = "Service départemental d'incendie et de secours (SDIS) - Charente-Maritime (SIL, INSEE 17274) - SDIS 17 – Sapeurs-pompiers de la Charente-Maritime",
     .category = "government", .portal = "https://sdis17.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -95065,9 +94986,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:59:41 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_98DB4C58_79E1_457E_A778_B8D566E50E4D", .name = "Guid'Asso - Alpes-Maritimes (SL, INSEE 06088) - Guid&#039;Asso "
-      "PACA",
-    .name_ja = "Guid'Asso - Alpes-Maritimes (SL, INSEE 06088) - Guid&#039;Asso PACA",
+  { .id = "JO45_FR_98DB4C58_79E1_457E_A778_B8D566E50E4D", .name = "Guid'Asso - Alpes-Maritimes (SL, INSEE 06088) - Guid'Asso PACA",
+    .name_ja = "Guid'Asso - Alpes-Maritimes (SL, INSEE 06088) - Guid'Asso PACA",
     .category = "government", .portal = "https://guidassopaca.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -95198,8 +95118,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_99FCC588_D981_4478_80C7_78D30B379B79", .name = "Mairie - Touet-de-l'Escarène (SL, INSEE 06142) - Touet de "
-      "l&#039;Escarène",
-    .name_ja = "Mairie - Touet-de-l'Escarène (SL, INSEE 06142) - Touet de l&#039;Escarène",
+      "l'Escarène",
+    .name_ja = "Mairie - Touet-de-l'Escarène (SL, INSEE 06142) - Touet de l'Escarène",
     .category = "government", .portal = "https://www.touetdelescarene.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -95255,8 +95175,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_9B802015_4486_4029_ADA7_5B733F9163A8", .name = "Mairie - Orbec (SL, INSEE 14478) - Site officiel de la Mairie "
-      "d&#039;Orbec",
-    .name_ja = "Mairie - Orbec (SL, INSEE 14478) - Site officiel de la Mairie d&#039;Orbec",
+      "d'Orbec",
+    .name_ja = "Mairie - Orbec (SL, INSEE 14478) - Site officiel de la Mairie d'Orbec",
     .category = "government", .portal = "https://www.orbec.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -95348,9 +95268,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "17:16:18 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_9CB4E537_823F_4312_8843_90CA98DE6D30", .name = "Mairie - Plainfaing (SL, INSEE 88349) - Actualités &#8211; "
-      "Commune de Plainfaing",
-    .name_ja = "Mairie - Plainfaing (SL, INSEE 88349) - Actualités &#8211; Commune de Plainfaing",
+  { .id = "JO45_FR_9CB4E537_823F_4312_8843_90CA98DE6D30", .name = "Mairie - Plainfaing (SL, INSEE 88349) - Actualités – Commune de "
+      "Plainfaing",
+    .name_ja = "Mairie - Plainfaing (SL, INSEE 88349) - Actualités – Commune de Plainfaing",
     .category = "government", .portal = "https://www.plainfaing.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -95368,9 +95288,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_9CB9C2F1_3519_422E_BC2E_76BC8B5216CF", .name = "Communauté d'agglomération - Saint-Germain Boucles de Seine (SL, "
-      "INSEE 78481) - Communauté d&#039;Agglomération Saint Germain "
-      "Boucles de Seine",
-    .name_ja = "Communauté d'agglomération - Saint-Germain Boucles de Seine (SL, INSEE 78481) - Communauté d&#039;Agglomération Saint Germain Boucles de Seine",
+      "INSEE 78481) - Communauté d'Agglomération Saint Germain Boucles "
+      "de Seine",
+    .name_ja = "Communauté d'agglomération - Saint-Germain Boucles de Seine (SL, INSEE 78481) - Communauté d'Agglomération Saint Germain Boucles de Seine",
     .category = "government", .portal = "https://www.saintgermainbouclesdeseine.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -95540,8 +95460,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_9E825CB6_2874_4B22_98BE_A0F7D17C4C54", .name = "Mairie - Le Touquet (SL, INSEE 62826) - Ville du "
-      "Touquet-Paris-Plage &#8211; Site officiel",
-    .name_ja = "Mairie - Le Touquet (SL, INSEE 62826) - Ville du Touquet-Paris-Plage &#8211; Site officiel",
+      "Touquet-Paris-Plage – Site officiel",
+    .name_ja = "Mairie - Le Touquet (SL, INSEE 62826) - Ville du Touquet-Paris-Plage – Site officiel",
     .category = "government", .portal = "https://lestouquettois.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -95594,8 +95514,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:38:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_A008DC31_95D3_4C0C_A398_95F53393BD09", .name = "Mairie - Arçonnay (SL, INSEE 72006) - La ville d&#039;Arçonnay",
-    .name_ja = "Mairie - Arçonnay (SL, INSEE 72006) - La ville d&#039;Arçonnay",
+  { .id = "JO45_FR_A008DC31_95D3_4C0C_A398_95F53393BD09", .name = "Mairie - Arçonnay (SL, INSEE 72006) - La ville d'Arçonnay",
+    .name_ja = "Mairie - Arçonnay (SL, INSEE 72006) - La ville d'Arçonnay",
     .category = "government", .portal = "https://www.ville-arconnay.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -95861,8 +95781,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_A4B958BA_EA90_4DC1_B500_1EB2A20ACF1A", .name = "Mission locale pour l'insertion professionnelle et sociale des "
       "jeunes (16-25 ans) - Thouars (SL, INSEE 79329) - Maison de "
-      "L&#039;Emploi et de la Formation",
-    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Thouars (SL, INSEE 79329) - Maison de L&#039;Emploi et de la Formation",
+      "L'Emploi et de la Formation",
+    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Thouars (SL, INSEE 79329) - Maison de L'Emploi et de la Formation",
     .category = "government", .portal = "http://www.mefduthouarsais.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -96250,10 +96170,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:16:14 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_AA2E6576_1C1B_430B_AA8C_CF6C230242CF", .name = "Mairie - Montréverd (SL, INSEE 85197) - 1 Agent "
-      "d&#8217;accompagnement de jour f/h &#8211; résidence le Val des "
-      "Maines",
-    .name_ja = "Mairie - Montréverd (SL, INSEE 85197) - 1 Agent d&#8217;accompagnement de jour f/h &#8211; résidence le Val des Maines",
+  { .id = "JO45_FR_AA2E6576_1C1B_430B_AA8C_CF6C230242CF", .name = "Mairie - Montréverd (SL, INSEE 85197) - 1 Agent d’accompagnement "
+      "de jour f/h – résidence le Val des Maines",
+    .name_ja = "Mairie - Montréverd (SL, INSEE 85197) - 1 Agent d’accompagnement de jour f/h – résidence le Val des Maines",
     .category = "government", .portal = "https://www.montreverd.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -96513,8 +96432,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:09:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_AE44DAD9_E887_4E67_9E40_6F42468F0EFF", .name = "Mairie - Aumur (SL, INSEE 39029) - Mairie d&#039;Aumur",
-    .name_ja = "Mairie - Aumur (SL, INSEE 39029) - Mairie d&#039;Aumur",
+  { .id = "JO45_FR_AE44DAD9_E887_4E67_9E40_6F42468F0EFF", .name = "Mairie - Aumur (SL, INSEE 39029) - Mairie d'Aumur",
+    .name_ja = "Mairie - Aumur (SL, INSEE 39029) - Mairie d'Aumur",
     .category = "government", .portal = "https://aumur.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -96773,8 +96692,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_B1486764_D8DB_45B9_A3C7_B69A6AF9E0E4", .name = "Mairie - Auribeau-sur-Siagne (SL, INSEE 06007) - "
-      "Auribeau-sur-Siagne &#8211; Site officiel",
-    .name_ja = "Mairie - Auribeau-sur-Siagne (SL, INSEE 06007) - Auribeau-sur-Siagne &#8211; Site officiel",
+      "Auribeau-sur-Siagne – Site officiel",
+    .name_ja = "Mairie - Auribeau-sur-Siagne (SL, INSEE 06007) - Auribeau-sur-Siagne – Site officiel",
     .category = "government", .portal = "https://www.auribeausursiagne.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -97014,8 +96933,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_B3CFFCDD_976C_465A_9401_194D4692851C", .name = "Mairie - Église-Neuve-de-Vergt (SL, INSEE 24160) - Mairie "
-      "d&#039;Eglise Neuve de Vergt",
-    .name_ja = "Mairie - Église-Neuve-de-Vergt (SL, INSEE 24160) - Mairie d&#039;Eglise Neuve de Vergt",
+      "d'Eglise Neuve de Vergt",
+    .name_ja = "Mairie - Église-Neuve-de-Vergt (SL, INSEE 24160) - Mairie d'Eglise Neuve de Vergt",
     .category = "government", .portal = "https://www.eglise-neuve-de-vergt.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -97032,8 +96951,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "18:06:41 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_B3E01908_E76A_4C61_8243_B023654B560A", .name = "Mairie - Arthès (SL, INSEE 81018) - Commune d&#039;Arthès",
-    .name_ja = "Mairie - Arthès (SL, INSEE 81018) - Commune d&#039;Arthès",
+  { .id = "JO45_FR_B3E01908_E76A_4C61_8243_B023654B560A", .name = "Mairie - Arthès (SL, INSEE 81018) - Commune d'Arthès",
+    .name_ja = "Mairie - Arthès (SL, INSEE 81018) - Commune d'Arthès",
     .category = "government", .portal = "https://www.mairie-arthes.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -97069,9 +96988,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_B488AAB7_BE3D_422B_BBC5_0DBA849278AF", .name = "Centre communal d'action sociale (CCAS) - Luzech (SL, INSEE "
-      "46182) - CCAS LUZECH &#8211; EHPAD, Résidence autonomie, Service "
-      "infirmier &amp; Livrais",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Luzech (SL, INSEE 46182) - CCAS LUZECH &#8211; EHPAD, Résidence autonomie, Service infirmier &amp; Livrais",
+      "46182) - CCAS LUZECH – EHPAD, Résidence autonomie, Service "
+      "infirmier & Livrais",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Luzech (SL, INSEE 46182) - CCAS LUZECH – EHPAD, Résidence autonomie, Service infirmier & Livrais",
     .category = "government", .portal = "https://www.luzech-senior.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -97337,8 +97256,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:29:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_B664B165_A937_4D67_BAFE_2E4098C6FFA4", .name = "Mairie - Alzon (SL, INSEE 30009) - Mairie d&#039;Alzon",
-    .name_ja = "Mairie - Alzon (SL, INSEE 30009) - Mairie d&#039;Alzon",
+  { .id = "JO45_FR_B664B165_A937_4D67_BAFE_2E4098C6FFA4", .name = "Mairie - Alzon (SL, INSEE 30009) - Mairie d'Alzon",
+    .name_ja = "Mairie - Alzon (SL, INSEE 30009) - Mairie d'Alzon",
     .category = "government", .portal = "https://www.alzon.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -97357,8 +97276,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_B6910302_2502_4A63_A686_A57D6580F7AD", .name = "Communauté de communes - Estuaire agglomération de "
       "Saint-Ciers-sur-Gironde (SL, INSEE 33073) - Communauté de "
-      "communes de l&#039;Estuaire",
-    .name_ja = "Communauté de communes - Estuaire agglomération de Saint-Ciers-sur-Gironde (SL, INSEE 33073) - Communauté de communes de l&#039;Estuaire",
+      "communes de l'Estuaire",
+    .name_ja = "Communauté de communes - Estuaire agglomération de Saint-Ciers-sur-Gironde (SL, INSEE 33073) - Communauté de communes de l'Estuaire",
     .category = "government", .portal = "https://www.cc-estuaire.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -97636,8 +97555,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_BB3D8803_AF4D_4918_8E3B_D5C19CDF1D10", .name = "Mairie - Valence-d'Albigeois (SL, INSEE 81308) - Valence "
-      "d&#039;Albigeois",
-    .name_ja = "Mairie - Valence-d'Albigeois (SL, INSEE 81308) - Valence d&#039;Albigeois",
+      "d'Albigeois",
+    .name_ja = "Mairie - Valence-d'Albigeois (SL, INSEE 81308) - Valence d'Albigeois",
     .category = "government", .portal = "https://valence-dalbigeois.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -97715,8 +97634,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_BC1986D3_FA48_45C3_A56B_F4E8DB8E29B3", .name = "Mission locale pour l'insertion professionnelle et sociale des "
       "jeunes (16-25 ans) - Guérande (SL, INSEE 44069) - Mission Locale "
-      "de la Presqu&#039;Ile guérandaise",
-    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Guérande (SL, INSEE 44069) - Mission Locale de la Presqu&#039;Ile guérandaise",
+      "de la Presqu'Ile guérandaise",
+    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Guérande (SL, INSEE 44069) - Mission Locale de la Presqu'Ile guérandaise",
     .category = "government", .portal = "https://mlpresquileguerandaise.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -97881,9 +97800,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_C0FA3EB8_2420_4D9C_9D03_02869AF507F0", .name = "Centre communal d'action sociale (CCAS) - Capesterre-Belle-Eau "
-      "(SL, INSEE 97107) - Ville de Capesterre Belle-Eau &#8211; "
-      "Guadeloupe",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Capesterre-Belle-Eau (SL, INSEE 97107) - Ville de Capesterre Belle-Eau &#8211; Guadeloupe",
+      "(SL, INSEE 97107) - Ville de Capesterre Belle-Eau – Guadeloupe",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Capesterre-Belle-Eau (SL, INSEE 97107) - Ville de Capesterre Belle-Eau – Guadeloupe",
     .category = "government", .portal = "https://capesterrebelleeau.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -98046,8 +97964,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "18:18:23 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_C4B18EFD_8C40_4C17_9210_F87F7D105462", .name = "Mairie - Achères (SL, INSEE 78005) - Ville d&#039;Achères 78",
-    .name_ja = "Mairie - Achères (SL, INSEE 78005) - Ville d&#039;Achères 78",
+  { .id = "JO45_FR_C4B18EFD_8C40_4C17_9210_F87F7D105462", .name = "Mairie - Achères (SL, INSEE 78005) - Ville d'Achères 78",
+    .name_ja = "Mairie - Achères (SL, INSEE 78005) - Ville d'Achères 78",
     .category = "government", .portal = "https://mairie-acheres78.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -98157,8 +98075,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-10-18T11:39:33+02:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_FR_C718C4EA_ADED_4FD7_A40C_50C2EA3EBD64", .name = "Mairie - Euville (SL, INSEE 55184) - Commune d&#039;Euville",
-    .name_ja = "Mairie - Euville (SL, INSEE 55184) - Commune d&#039;Euville",
+  { .id = "JO45_FR_C718C4EA_ADED_4FD7_A40C_50C2EA3EBD64", .name = "Mairie - Euville (SL, INSEE 55184) - Commune d'Euville",
+    .name_ja = "Mairie - Euville (SL, INSEE 55184) - Commune d'Euville",
     .category = "government", .portal = "https://euville.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -98214,8 +98132,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_C9219D50_A76C_407B_8242_5F5F7ADFAFED", .name = "Greta CFA Corse-du-Sud - Ajaccio (SL, INSEE 2A004) - GRETA-CFA "
-      "de Corse-du-Sud &#8211; Centre de formation et CFA",
-    .name_ja = "Greta CFA Corse-du-Sud - Ajaccio (SL, INSEE 2A004) - GRETA-CFA de Corse-du-Sud &#8211; Centre de formation et CFA",
+      "de Corse-du-Sud – Centre de formation et CFA",
+    .name_ja = "Greta CFA Corse-du-Sud - Ajaccio (SL, INSEE 2A004) - GRETA-CFA de Corse-du-Sud – Centre de formation et CFA",
     .category = "government", .portal = "https://2a.gretacfa.corsica/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -98270,8 +98188,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_CA908323_C396_4348_8296_F55200577DE5", .name = "Point information jeunesse - Alénya (SL, INSEE 66002) - Mairie "
-      "d&#039;Alenya",
-    .name_ja = "Point information jeunesse - Alénya (SL, INSEE 66002) - Mairie d&#039;Alenya",
+      "d'Alenya",
+    .name_ja = "Point information jeunesse - Alénya (SL, INSEE 66002) - Mairie d'Alenya",
     .category = "government", .portal = "https://www.alenya.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -98402,8 +98320,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_CC732F40_9E06_4174_AE89_631B7A3DC0BD", .name = "Mairie - Recoules-de-Fumas (SL, INSEE 48124) - Commune de "
-      "Recoules-de-Fumas &#8211; Lozère",
-    .name_ja = "Mairie - Recoules-de-Fumas (SL, INSEE 48124) - Commune de Recoules-de-Fumas &#8211; Lozère",
+      "Recoules-de-Fumas – Lozère",
+    .name_ja = "Mairie - Recoules-de-Fumas (SL, INSEE 48124) - Commune de Recoules-de-Fumas – Lozère",
     .category = "government", .portal = "https://www.recoules-de-fumas.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -98512,8 +98430,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:18:55 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_CD717DA5_B972_4577_AD05_ED0380FED66B", .name = "Mairie - Apinac (SL, INSEE 42006) - Mairie d&#039;Apinac",
-    .name_ja = "Mairie - Apinac (SL, INSEE 42006) - Mairie d&#039;Apinac",
+  { .id = "JO45_FR_CD717DA5_B972_4577_AD05_ED0380FED66B", .name = "Mairie - Apinac (SL, INSEE 42006) - Mairie d'Apinac",
+    .name_ja = "Mairie - Apinac (SL, INSEE 42006) - Mairie d'Apinac",
     .category = "government", .portal = "https://apinac.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -98550,8 +98468,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_CE47D3C3_24F0_434D_9FB8_CF068F542B13", .name = "Centre communal d'action sociale (CCAS) - L'Isle-Jourdain Vienne "
-      "(SL, INSEE 86112) - Mairie de L&#039;Isle-Jourdain",
-    .name_ja = "Centre communal d'action sociale (CCAS) - L'Isle-Jourdain Vienne (SL, INSEE 86112) - Mairie de L&#039;Isle-Jourdain",
+      "(SL, INSEE 86112) - Mairie de L'Isle-Jourdain",
+    .name_ja = "Centre communal d'action sociale (CCAS) - L'Isle-Jourdain Vienne (SL, INSEE 86112) - Mairie de L'Isle-Jourdain",
     .category = "government", .portal = "https://www.mairie-islejourdain.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -98570,8 +98488,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_CF4C6ACE_8F04_47F4_8E2E_F3DB37169475", .name = "Point conseil budget - Association Départementale d'Aide "
       "Familiale à Domicile (ADAD 10) - Vendeuvre sur Barse (SL, INSEE "
-      "10401) - Association ADAD de l&#039;Aube",
-    .name_ja = "Point conseil budget - Association Départementale d'Aide Familiale à Domicile (ADAD 10) - Vendeuvre sur Barse (SL, INSEE 10401) - Association ADAD de l&#039;Aube",
+      "10401) - Association ADAD de l'Aube",
+    .name_ja = "Point conseil budget - Association Départementale d'Aide Familiale à Domicile (ADAD 10) - Vendeuvre sur Barse (SL, INSEE 10401) - Association ADAD de l'Aube",
     .category = "government", .portal = "https://asso-adad.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -98607,8 +98525,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_D03EF6E6_B865_49E8_AFCE_E03FA0ECF926", .name = "Point d'information local dédié aux personnes âgées - "
-      "Rueil-Malmaison (SL, INSEE 92063) - CCAS &#8211; Rueil Malmaison",
-    .name_ja = "Point d'information local dédié aux personnes âgées - Rueil-Malmaison (SL, INSEE 92063) - CCAS &#8211; Rueil Malmaison",
+      "Rueil-Malmaison (SL, INSEE 92063) - CCAS – Rueil Malmaison",
+    .name_ja = "Point d'information local dédié aux personnes âgées - Rueil-Malmaison (SL, INSEE 92063) - CCAS – Rueil Malmaison",
     .category = "government", .portal = "https://ccas-rueilmalmaison.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -98774,8 +98692,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_D3B7FD74_E545_4F24_BC23_C415494966DE", .name = "Mairie - Saint-Romain-d'Urfé (SL, INSEE 42282) - SAINT ROMAIN "
-      "D&#039;URFE",
-    .name_ja = "Mairie - Saint-Romain-d'Urfé (SL, INSEE 42282) - SAINT ROMAIN D&#039;URFE",
+      "D'URFE",
+    .name_ja = "Mairie - Saint-Romain-d'Urfé (SL, INSEE 42282) - SAINT ROMAIN D'URFE",
     .category = "government", .portal = "https://saintromaindurfe.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -98811,8 +98729,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_D49638B4_5A69_49D1_97F3_32C1753D6C76", .name = "Aist - La prévention active - Clermont-Ferrand (SIL, INSEE "
-      "63113) - AIST &#8211; La prévention active",
-    .name_ja = "Aist - La prévention active - Clermont-Ferrand (SIL, INSEE 63113) - AIST &#8211; La prévention active",
+      "63113) - AIST – La prévention active",
+    .name_ja = "Aist - La prévention active - Clermont-Ferrand (SIL, INSEE 63113) - AIST – La prévention active",
     .category = "government", .portal = "https://aistlapreventionactive.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -99125,9 +99043,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:34:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_D844C90D_F6C7_4F2A_9A96_677C28F4B130", .name = "Mairie - Peyrat-la-Nonière (SL, INSEE 23151) - "
-      "Peyrat-la-Noni&#232;re - Creuse",
-    .name_ja = "Mairie - Peyrat-la-Nonière (SL, INSEE 23151) - Peyrat-la-Noni&#232;re - Creuse",
+  { .id = "JO45_FR_D844C90D_F6C7_4F2A_9A96_677C28F4B130", .name = "Mairie - Peyrat-la-Nonière (SL, INSEE 23151) - Peyrat-la-Nonière "
+      "- Creuse",
+    .name_ja = "Mairie - Peyrat-la-Nonière (SL, INSEE 23151) - Peyrat-la-Nonière - Creuse",
     .category = "government", .portal = "https://www.peyrat-la-noniere.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -99222,8 +99140,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_D8B722D9_AF88_4972_9815_58D9A66B6AE3", .name = "Mairie - Evenos (SL, INSEE 83053) - Site officiel de la ville "
-      "d'&#201;venos",
-    .name_ja = "Mairie - Evenos (SL, INSEE 83053) - Site officiel de la ville d'&#201;venos",
+      "d'Évenos",
+    .name_ja = "Mairie - Evenos (SL, INSEE 83053) - Site officiel de la ville d'Évenos",
     .category = "government", .portal = "https://www.evenos.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -99242,9 +99160,9 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_D8DBF0B4_0B6C_4A85_AB77_EC6D780521EC", .name = "Centre de ressources et d'information des bénévoles (CRIB) - "
       "Association profession sport et loisirs de La Rochelle (APSL 17) "
-      "(SL, INSEE 17300) - Profession Sport &amp; Loisirs "
+      "(SL, INSEE 17300) - Profession Sport & Loisirs "
       "Nouvelle-Aquitaine Nord",
-    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Association profession sport et loisirs de La Rochelle (APSL 17) (SL, INSEE 17300) - Profession Sport &amp; Loisirs Nouvelle-Aquitaine Nord",
+    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Association profession sport et loisirs de La Rochelle (APSL 17) (SL, INSEE 17300) - Profession Sport & Loisirs Nouvelle-Aquitaine Nord",
     .category = "government", .portal = "https://poitou-charentes.profession-sport-loisirs.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -99394,8 +99312,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_DA4CC598_C380_4901_814B_D33311EDFF16", .name = "Mairie - Esparron-de-Verdon (SL, INSEE 04081) - Mairie "
-      "d&#039;Esparron-de-Verdon",
-    .name_ja = "Mairie - Esparron-de-Verdon (SL, INSEE 04081) - Mairie d&#039;Esparron-de-Verdon",
+      "d'Esparron-de-Verdon",
+    .name_ja = "Mairie - Esparron-de-Verdon (SL, INSEE 04081) - Mairie d'Esparron-de-Verdon",
     .category = "government", .portal = "https://esparrondeverdon.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -99430,9 +99348,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:43:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_DA886B6E_B136_49FB_AD1A_5C43ADEA1AA6", .name = "Mairie - Hermonville (SL, INSEE 51291) - Mairie "
-      "d&#039;Hermonville",
-    .name_ja = "Mairie - Hermonville (SL, INSEE 51291) - Mairie d&#039;Hermonville",
+  { .id = "JO45_FR_DA886B6E_B136_49FB_AD1A_5C43ADEA1AA6", .name = "Mairie - Hermonville (SL, INSEE 51291) - Mairie d'Hermonville",
+    .name_ja = "Mairie - Hermonville (SL, INSEE 51291) - Mairie d'Hermonville",
     .category = "government", .portal = "https://hermonville.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -99601,8 +99518,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_DC0A915F_247B_45A1_AFA4_F9C302286231", .name = "Centre communal d'action sociale (CCAS) - Gouesnach (SL, INSEE "
-      "29060) - GOUESNAC&#039;H",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Gouesnach (SL, INSEE 29060) - GOUESNAC&#039;H",
+      "29060) - GOUESNAC'H",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Gouesnach (SL, INSEE 29060) - GOUESNAC'H",
     .category = "government", .portal = "https://mairie-gouesnach.bzh/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -99695,9 +99612,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_DE4D33A5_5D80_4276_AA8B_E41818AA62DB", .name = "Bureau d'information et d'orientation (BIO) - Université "
       "Lorraine - Villers-lès-Nancy - Campus Aiguillettes (SL, INSEE "
-      "54578) - Factuel &#8211; l&#039;Info de l&#039;Université de "
-      "Lorraine",
-    .name_ja = "Bureau d'information et d'orientation (BIO) - Université Lorraine - Villers-lès-Nancy - Campus Aiguillettes (SL, INSEE 54578) - Factuel &#8211; l&#039;Info de l&#039;Université de Lorraine",
+      "54578) - Factuel – l'Info de l'Université de Lorraine",
+    .name_ja = "Bureau d'information et d'orientation (BIO) - Université Lorraine - Villers-lès-Nancy - Campus Aiguillettes (SL, INSEE 54578) - Factuel – l'Info de l'Université de Lorraine",
     .category = "government", .portal = "https://factuel.univ-lorraine.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -99843,9 +99759,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:37:23 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_E240FE6C_A111_4CE4_A40C_A32EE3C31FEB", .name = "Mairie - Avignon (SL, INSEE 84007) - Mairie d&#039;Avignon - "
-      "Site officiel",
-    .name_ja = "Mairie - Avignon (SL, INSEE 84007) - Mairie d&#039;Avignon - Site officiel",
+  { .id = "JO45_FR_E240FE6C_A111_4CE4_A40C_A32EE3C31FEB", .name = "Mairie - Avignon (SL, INSEE 84007) - Mairie d'Avignon - Site "
+      "officiel",
+    .name_ja = "Mairie - Avignon (SL, INSEE 84007) - Mairie d'Avignon - Site officiel",
     .category = "government", .portal = "https://www.avignon.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -99960,8 +99876,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_E3B3C2EA_7512_416B_B813_995542AA038E", .name = "Centre communal d'action sociale (CCAS) - Épernon (SL, INSEE "
-      "28140) - Ville d&#039;Épernon",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Épernon (SL, INSEE 28140) - Ville d&#039;Épernon",
+      "28140) - Ville d'Épernon",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Épernon (SL, INSEE 28140) - Ville d'Épernon",
     .category = "government", .portal = "https://ville-epernon.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -100278,9 +100194,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_E8C2F71C_3DEC_47DD_A875_9CDEF04ECE40", .name = "Centre de ressources et d'information des bénévoles (CRIB) - "
-      "Profession sport et loisirs 34 (SL, INSEE 34172) - PSL34 &#8211; "
-      "Profession Sport &amp; Loisirs Hérault",
-    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Profession sport et loisirs 34 (SL, INSEE 34172) - PSL34 &#8211; Profession Sport &amp; Loisirs Hérault",
+      "Profession sport et loisirs 34 (SL, INSEE 34172) - PSL34 – "
+      "Profession Sport & Loisirs Hérault",
+    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Profession sport et loisirs 34 (SL, INSEE 34172) - PSL34 – Profession Sport & Loisirs Hérault",
     .category = "government", .portal = "https://herault.profession-sport-loisirs.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -100764,8 +100680,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_F0A696FE_B8BD_4AB5_9A4A_16D6E4F40BFE", .name = "Espace conseil France Rénov' - Nice (SL, INSEE 06088) - "
-      "Métropole Nice Côte d&#039;Azur",
-    .name_ja = "Espace conseil France Rénov' - Nice (SL, INSEE 06088) - Métropole Nice Côte d&#039;Azur",
+      "Métropole Nice Côte d'Azur",
+    .name_ja = "Espace conseil France Rénov' - Nice (SL, INSEE 06088) - Métropole Nice Côte d'Azur",
     .category = "government", .portal = "https://www.nicecotedazur.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -101057,8 +100973,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_F58383D8_9ABD_467C_AE6B_5DAD8B10D9F4", .name = "Mairie Saint-Jean-d'Hermine (SL, INSEE 85223) - Mairie de "
-      "Saint-Jean d&#039;Hermine",
-    .name_ja = "Mairie Saint-Jean-d'Hermine (SL, INSEE 85223) - Mairie de Saint-Jean d&#039;Hermine",
+      "Saint-Jean d'Hermine",
+    .name_ja = "Mairie Saint-Jean-d'Hermine (SL, INSEE 85223) - Mairie de Saint-Jean d'Hermine",
     .category = "government", .portal = "https://saintjeandhermine.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -101463,9 +101379,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:42:55 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_FB9F56E8_F209_44AA_B51B_ED8C4F1B0E1E", .name = "Mairie - L Église-aux-Bois (SL, INSEE 19074) - "
-      "L&rsquo;Église-aux-Bois",
-    .name_ja = "Mairie - L Église-aux-Bois (SL, INSEE 19074) - L&rsquo;Église-aux-Bois",
+  { .id = "JO45_FR_FB9F56E8_F209_44AA_B51B_ED8C4F1B0E1E", .name = "Mairie - L Église-aux-Bois (SL, INSEE 19074) - L’Église-aux-Bois",
+    .name_ja = "Mairie - L Église-aux-Bois (SL, INSEE 19074) - L’Église-aux-Bois",
     .category = "government", .portal = "https://www.legliseauxbois.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -101483,8 +101398,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_FBAE560D_F1EF_42F5_8372_75C8A93F5015", .name = "Service d’aide médicale urgente (Samu) - Jura (SIL, INSEE 39198) "
-      "- Centre Hospitalier Louis Pasteur &#8211; Dole",
-    .name_ja = "Service d’aide médicale urgente (Samu) - Jura (SIL, INSEE 39198) - Centre Hospitalier Louis Pasteur &#8211; Dole",
+      "- Centre Hospitalier Louis Pasteur – Dole",
+    .name_ja = "Service d’aide médicale urgente (Samu) - Jura (SIL, INSEE 39198) - Centre Hospitalier Louis Pasteur – Dole",
     .category = "government", .portal = "https://www.ch-dole.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -101576,8 +101491,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_FCA959D6_6534_4878_885C_39E96A559447", .name = "Centre de ressources et d'information des bénévoles (CRIB) - "
       "Association Profession Sport et Loisirs Aveyron (SL, INSEE "
-      "12202) - Profession Sport &amp; Loisirs Aveyron",
-    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Association Profession Sport et Loisirs Aveyron (SL, INSEE 12202) - Profession Sport &amp; Loisirs Aveyron",
+      "12202) - Profession Sport & Loisirs Aveyron",
+    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Association Profession Sport et Loisirs Aveyron (SL, INSEE 12202) - Profession Sport & Loisirs Aveyron",
     .category = "government", .portal = "https://aveyron.profession-sport-loisirs.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -101800,8 +101715,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:18:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_07D0E55E_764B_42F4_A936_220B61DE444E", .name = "Mairie - Illzach (SL, INSEE 68154) - Ville d&#039;Illzach",
-    .name_ja = "Mairie - Illzach (SL, INSEE 68154) - Ville d&#039;Illzach",
+  { .id = "JO45_FR_07D0E55E_764B_42F4_A936_220B61DE444E", .name = "Mairie - Illzach (SL, INSEE 68154) - Ville d'Illzach",
+    .name_ja = "Mairie - Illzach (SL, INSEE 68154) - Ville d'Illzach",
     .category = "government", .portal = "https://ville-illzach.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -101838,8 +101753,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_0832BDB9_313D_4974_96B3_562B845F40F7", .name = "Mairie - La Motte-d'Aigues (SL, INSEE 84084) - Mairie de La "
-      "Motte d&#039;Aigues",
-    .name_ja = "Mairie - La Motte-d'Aigues (SL, INSEE 84084) - Mairie de La Motte d&#039;Aigues",
+      "Motte d'Aigues",
+    .name_ja = "Mairie - La Motte-d'Aigues (SL, INSEE 84084) - Mairie de La Motte d'Aigues",
     .category = "government", .portal = "https://lamottedaigues.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -101930,8 +101845,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:48:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_08F3B3B7_EE52_40F5_BA13_C1EB1450A8F8", .name = "Mairie - Montferrat (SL, INSEE 38256) - MONTFERRAT &#8211; Isère",
-    .name_ja = "Mairie - Montferrat (SL, INSEE 38256) - MONTFERRAT &#8211; Isère",
+  { .id = "JO45_FR_08F3B3B7_EE52_40F5_BA13_C1EB1450A8F8", .name = "Mairie - Montferrat (SL, INSEE 38256) - MONTFERRAT – Isère",
+    .name_ja = "Mairie - Montferrat (SL, INSEE 38256) - MONTFERRAT – Isère",
     .category = "government", .portal = "https://montferrat38.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -102022,8 +101937,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_09EF2BB5_DE2C_4DFA_8339_40438BC212DE", .name = "Communauté d'agglomération - Saintes Grandes Rives (SL, INSEE "
-      "17415) - Communauté d&#039;Agglomération de Saintes",
-    .name_ja = "Communauté d'agglomération - Saintes Grandes Rives (SL, INSEE 17415) - Communauté d&#039;Agglomération de Saintes",
+      "17415) - Communauté d'Agglomération de Saintes",
+    .name_ja = "Communauté d'agglomération - Saintes Grandes Rives (SL, INSEE 17415) - Communauté d'Agglomération de Saintes",
     .category = "government", .portal = "https://agglo-saintes.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -102709,8 +102624,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:17:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_15B1A368_3648_4AEE_8BE9_0D36A69A659D", .name = "Mairie - Étoges (SL, INSEE 51238) - Mairie d&#039;étoges",
-    .name_ja = "Mairie - Étoges (SL, INSEE 51238) - Mairie d&#039;étoges",
+  { .id = "JO45_FR_15B1A368_3648_4AEE_8BE9_0D36A69A659D", .name = "Mairie - Étoges (SL, INSEE 51238) - Mairie d'étoges",
+    .name_ja = "Mairie - Étoges (SL, INSEE 51238) - Mairie d'étoges",
     .category = "government", .portal = "https://www.commune-etoges.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -103077,8 +102992,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_1BB1E0CE_1101_49DC_B068_2873E39C4A35", .name = "Point info famille - Saint-Léonard (SL, INSEE 87161) - La Bourse "
-      "aux vêtements d&#8217;été, c&#8217;est reparti!",
-    .name_ja = "Point info famille - Saint-Léonard (SL, INSEE 87161) - La Bourse aux vêtements d&#8217;été, c&#8217;est reparti!",
+      "aux vêtements d’été, c’est reparti!",
+    .name_ja = "Point info famille - Saint-Léonard (SL, INSEE 87161) - La Bourse aux vêtements d’été, c’est reparti!",
     .category = "government", .portal = "https://foyer-rural-saint-leonard.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -103133,8 +103048,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_1E8891A8_A796_47E2_A75D_7ECB10E60006", .name = "Mairie - Montfort-sur-Meu (SL, INSEE 35188) - Ville de "
-      "Montfort-sur-Meu &#8211; Site officiel",
-    .name_ja = "Mairie - Montfort-sur-Meu (SL, INSEE 35188) - Ville de Montfort-sur-Meu &#8211; Site officiel",
+      "Montfort-sur-Meu – Site officiel",
+    .name_ja = "Mairie - Montfort-sur-Meu (SL, INSEE 35188) - Ville de Montfort-sur-Meu – Site officiel",
     .category = "government", .portal = "https://www.montfort-sur-meu.bzh/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -103190,8 +103105,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_2028A60F_1B43_45AB_B090_97E659D66E92", .name = "Mairie - Aulnay-sur-Mauldre (SL, INSEE 78033) - Site officiel de "
-      "la mairie d&#039;Aulnay sur Mauldre",
-    .name_ja = "Mairie - Aulnay-sur-Mauldre (SL, INSEE 78033) - Site officiel de la mairie d&#039;Aulnay sur Mauldre",
+      "la mairie d'Aulnay sur Mauldre",
+    .name_ja = "Mairie - Aulnay-sur-Mauldre (SL, INSEE 78033) - Site officiel de la mairie d'Aulnay sur Mauldre",
     .category = "government", .portal = "https://aulnaysurmauldre.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -103299,9 +103214,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:43:03 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_2279307A_A9D4_444F_A0EE_60256810EF24", .name = "Mairie - Béguey (SL, INSEE 33040) - Commune de B&#233;guey "
-      "(canton de Cadillac - Gironde)",
-    .name_ja = "Mairie - Béguey (SL, INSEE 33040) - Commune de B&#233;guey (canton de Cadillac - Gironde)",
+  { .id = "JO45_FR_2279307A_A9D4_444F_A0EE_60256810EF24", .name = "Mairie - Béguey (SL, INSEE 33040) - Commune de Béguey (canton de "
+      "Cadillac - Gironde)",
+    .name_ja = "Mairie - Béguey (SL, INSEE 33040) - Commune de Béguey (canton de Cadillac - Gironde)",
     .category = "government", .portal = "http://www.mairie-beguey.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -103374,8 +103289,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_41CDC480_CA70_410D_ACDD_E4E1FCD61636", .name = "Mairie - Quemper-Guézennec (SL, INSEE 22256) - Mairie de "
-      "Quemper-Gu&#233;zennec",
-    .name_ja = "Mairie - Quemper-Guézennec (SL, INSEE 22256) - Mairie de Quemper-Gu&#233;zennec",
+      "Quemper-Guézennec",
+    .name_ja = "Mairie - Quemper-Guézennec (SL, INSEE 22256) - Mairie de Quemper-Guézennec",
     .category = "government", .portal = "https://www.quemper-guezennec.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -103579,8 +103494,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_44D8E96D_3A26_4031_A3CB_75732A7B2A2A", .name = "Mairie - Rougemont-le-Château (SL, INSEE 90089) - Site de la "
-      "commune de Rougemont-le-Ch&#xEF;&#xBF;&#xBD;teau",
-    .name_ja = "Mairie - Rougemont-le-Château (SL, INSEE 90089) - Site de la commune de Rougemont-le-Ch&#xEF;&#xBF;&#xBD;teau",
+      "commune de Rougemont-le-Chï¿½teau",
+    .name_ja = "Mairie - Rougemont-le-Château (SL, INSEE 90089) - Site de la commune de Rougemont-le-Chï¿½teau",
     .category = "government", .portal = "https://www.rougemont-le-chateau.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -103598,8 +103513,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "or links on its site root." },
 
   { .id = "JO45_FR_44DFCD18_1302_4FDB_A0FE_B073319C7F5E", .name = "Mairie - Morschwiller (SL, INSEE 67304) - Commune de "
-      "Morschwiller (67350) &#8211; Site officiel de la commune",
-    .name_ja = "Mairie - Morschwiller (SL, INSEE 67304) - Commune de Morschwiller (67350) &#8211; Site officiel de la commune",
+      "Morschwiller (67350) – Site officiel de la commune",
+    .name_ja = "Mairie - Morschwiller (SL, INSEE 67304) - Commune de Morschwiller (67350) – Site officiel de la commune",
     .category = "government", .portal = "https://morschwiller.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -103763,9 +103678,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:02:08 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_49165012_C633_4251_B55E_883F6D6B51AD", .name = "Mairie - Quevauvillers (SL, INSEE 80656) - ⚠️🚫 [CIRCULATION "
-      "&#038; STATIONNEMENT INTERDITS",
-    .name_ja = "Mairie - Quevauvillers (SL, INSEE 80656) - ⚠️🚫 [CIRCULATION &#038; STATIONNEMENT INTERDITS",
+  { .id = "JO45_FR_49165012_C633_4251_B55E_883F6D6B51AD", .name = "Mairie - Quevauvillers (SL, INSEE 80656) - ⚠️🚫 [CIRCULATION & "
+      "STATIONNEMENT INTERDITS",
+    .name_ja = "Mairie - Quevauvillers (SL, INSEE 80656) - ⚠️🚫 [CIRCULATION & STATIONNEMENT INTERDITS",
     .category = "government", .portal = "https://www.quevauvillers.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -103859,8 +103774,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_4AEA945F_DDC8_4850_BE3C_9389A9620341", .name = "Centre communal d'action sociale (CCAS) - Saint-Denis-d'Anjou "
-      "(SL, INSEE 53210) - Saint Denis d&#039;Anjou",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Saint-Denis-d'Anjou (SL, INSEE 53210) - Saint Denis d&#039;Anjou",
+      "(SL, INSEE 53210) - Saint Denis d'Anjou",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Saint-Denis-d'Anjou (SL, INSEE 53210) - Saint Denis d'Anjou",
     .category = "government", .portal = "https://www.saintdenisdanjou.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -104028,8 +103943,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_4DE06F4A_CEE1_49E3_8C37_86470E854467", .name = "Centre communal d'action sociale (CCAS) - L'Union (SL, INSEE "
-      "31561) - Ville de L&#039;Union",
-    .name_ja = "Centre communal d'action sociale (CCAS) - L'Union (SL, INSEE 31561) - Ville de L&#039;Union",
+      "31561) - Ville de L'Union",
+    .name_ja = "Centre communal d'action sociale (CCAS) - L'Union (SL, INSEE 31561) - Ville de L'Union",
     .category = "government", .portal = "https://www.ville-lunion.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -104232,9 +104147,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:29:05 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_50C386E6_07E4_4256_8465_33EE45BB5758", .name = "Mairie - L'Île-Bouchard (SL, INSEE 37119) - Mairie de l&#039;Île "
+  { .id = "JO45_FR_50C386E6_07E4_4256_8465_33EE45BB5758", .name = "Mairie - L'Île-Bouchard (SL, INSEE 37119) - Mairie de l'Île "
       "Bouchard (37)",
-    .name_ja = "Mairie - L'Île-Bouchard (SL, INSEE 37119) - Mairie de l&#039;Île Bouchard (37)",
+    .name_ja = "Mairie - L'Île-Bouchard (SL, INSEE 37119) - Mairie de l'Île Bouchard (37)",
     .category = "government", .portal = "https://www.mairie-ilebouchard.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -104308,8 +104223,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_511CCDF2_629F_4E18_9E2D_ED98724435B6", .name = "Mairie - Saint-Péray (SL, INSEE 07281) - Mairie de Saint Péray, "
-      "Ville d&#039;Ardèche",
-    .name_ja = "Mairie - Saint-Péray (SL, INSEE 07281) - Mairie de Saint Péray, Ville d&#039;Ardèche",
+      "Ville d'Ardèche",
+    .name_ja = "Mairie - Saint-Péray (SL, INSEE 07281) - Mairie de Saint Péray, Ville d'Ardèche",
     .category = "government", .portal = "https://www.st-peray.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -104775,8 +104690,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_56DB118A_7619_425C_AAC7_E4ACF6630909", .name = "Centre d'information et d'orientation (CIO) - Lure (SL, INSEE "
-      "70310) - Centre d&#039;Information et d&#039;Orientation de Lure",
-    .name_ja = "Centre d'information et d'orientation (CIO) - Lure (SL, INSEE 70310) - Centre d&#039;Information et d&#039;Orientation de Lure",
+      "70310) - Centre d'Information et d'Orientation de Lure",
+    .name_ja = "Centre d'information et d'orientation (CIO) - Lure (SL, INSEE 70310) - Centre d'Information et d'Orientation de Lure",
     .category = "government", .portal = "https://cio-lure.ac-besancon.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -105259,8 +105174,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_5BF8B1D1_AD01_4CD2_8FEC_81B759C97DE0", .name = "Mairie - Salles-sur-l Hers (SL, INSEE 11371) - Mairie de "
-      "Salles-sur-l&#039;Hers",
-    .name_ja = "Mairie - Salles-sur-l Hers (SL, INSEE 11371) - Mairie de Salles-sur-l&#039;Hers",
+      "Salles-sur-l'Hers",
+    .name_ja = "Mairie - Salles-sur-l Hers (SL, INSEE 11371) - Mairie de Salles-sur-l'Hers",
     .category = "government", .portal = "https://sallessurlhers.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -105296,8 +105211,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_5C2E169A_2F82_41F8_AE47_A44C077CA58E", .name = "Mairie - Saint-Just (SL, INSEE 34272) - [Village de Saint-Just "
-      "dans l&#039;Hérault",
-    .name_ja = "Mairie - Saint-Just (SL, INSEE 34272) - [Village de Saint-Just dans l&#039;Hérault",
+      "dans l'Hérault",
+    .name_ja = "Mairie - Saint-Just (SL, INSEE 34272) - [Village de Saint-Just dans l'Hérault",
     .category = "government", .portal = "https://saintjust34.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -105501,8 +105416,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "03:33:17 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_61DBCFC4_A03B_474E_9B20_421B3A1E9903", .name = "Mairie - Azelot (SL, INSEE 54037) - Bienvenue sur l&#039;e-bouc",
-    .name_ja = "Mairie - Azelot (SL, INSEE 54037) - Bienvenue sur l&#039;e-bouc",
+  { .id = "JO45_FR_61DBCFC4_A03B_474E_9B20_421B3A1E9903", .name = "Mairie - Azelot (SL, INSEE 54037) - Bienvenue sur l'e-bouc",
+    .name_ja = "Mairie - Azelot (SL, INSEE 54037) - Bienvenue sur l'e-bouc",
     .category = "government", .portal = "https://www.azelot.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -105691,9 +105606,9 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_63746452_C004_48E9_AD28_C9127A582DA6", .name = "CROSS - Gris-Nez (Centre régional opérationnel de surveillance "
       "et de sauvetage) - Manche Est - Pas-de-Calais (SIL, INSEE 62054) "
-      "- Centre r&#233;gional op&#233;rationnel de surveillance et de "
-      "sauvetage (CROSS) G",
-    .name_ja = "CROSS - Gris-Nez (Centre régional opérationnel de surveillance et de sauvetage) - Manche Est - Pas-de-Calais (SIL, INSEE 62054) - Centre r&#233;gional op&#233;rationnel de surveillance et de sauvetage (CROSS) G",
+      "- Centre régional opérationnel de surveillance et de sauvetage "
+      "(CROSS) G",
+    .name_ja = "CROSS - Gris-Nez (Centre régional opérationnel de surveillance et de sauvetage) - Manche Est - Pas-de-Calais (SIL, INSEE 62054) - Centre régional opérationnel de surveillance et de sauvetage (CROSS) G",
     .category = "government", .portal = "https://www.cross-grisnez.mer.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -105858,8 +105773,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:50:26 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_66A96116_23F1_4928_8F32_54E2DE5E9DBE", .name = "Mairie - Aiglun (SL, INSEE 06001) - Mairie d&#039;Aiglun",
-    .name_ja = "Mairie - Aiglun (SL, INSEE 06001) - Mairie d&#039;Aiglun",
+  { .id = "JO45_FR_66A96116_23F1_4928_8F32_54E2DE5E9DBE", .name = "Mairie - Aiglun (SL, INSEE 06001) - Mairie d'Aiglun",
+    .name_ja = "Mairie - Aiglun (SL, INSEE 06001) - Mairie d'Aiglun",
     .category = "government", .portal = "https://www.aiglun06.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -105950,8 +105865,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_682D3DD4_C5CB_49B1_8F70_5D4AB510520F", .name = "Agence départementale d'information sur le logement (ADIL) - Ain "
-      "(SL, INSEE 01053) - Adil de l&#039;Ain",
-    .name_ja = "Agence départementale d'information sur le logement (ADIL) - Ain (SL, INSEE 01053) - Adil de l&#039;Ain",
+      "(SL, INSEE 01053) - Adil de l'Ain",
+    .name_ja = "Agence départementale d'information sur le logement (ADIL) - Ain (SL, INSEE 01053) - Adil de l'Ain",
     .category = "government", .portal = "https://www.adil01.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -105968,9 +105883,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:38:17 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_68EB363D_05F0_4D0F_9CF0_14E5070DA6A6", .name = "Mairie - Plancoët (SL, INSEE 22172) - Plancoët &#8211; Mairie de "
-      "Côtes d&#039;Armor(Bretagne)",
-    .name_ja = "Mairie - Plancoët (SL, INSEE 22172) - Plancoët &#8211; Mairie de Côtes d&#039;Armor(Bretagne)",
+  { .id = "JO45_FR_68EB363D_05F0_4D0F_9CF0_14E5070DA6A6", .name = "Mairie - Plancoët (SL, INSEE 22172) - Plancoët – Mairie de Côtes "
+      "d'Armor(Bretagne)",
+    .name_ja = "Mairie - Plancoët (SL, INSEE 22172) - Plancoët – Mairie de Côtes d'Armor(Bretagne)",
     .category = "government", .portal = "https://www.plancoet.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -106024,8 +105939,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_6948C32F_D87B_42BF_AADA_18FF897E3ECC", .name = "Centre communal d'action sociale (CCAS) - Hérépian (SL, INSEE "
-      "34119) - Commune d&#039;Hérépian",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Hérépian (SL, INSEE 34119) - Commune d&#039;Hérépian",
+      "34119) - Commune d'Hérépian",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Hérépian (SL, INSEE 34119) - Commune d'Hérépian",
     .category = "government", .portal = "https://mairieherepian.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -106208,8 +106123,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:34:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_6F5232CD_05AA_4841_B556_5BA78D85A7D2", .name = "Mairie - Attin (SL, INSEE 62044) - Commune d&#039;Attin",
-    .name_ja = "Mairie - Attin (SL, INSEE 62044) - Commune d&#039;Attin",
+  { .id = "JO45_FR_6F5232CD_05AA_4841_B556_5BA78D85A7D2", .name = "Mairie - Attin (SL, INSEE 62044) - Commune d'Attin",
+    .name_ja = "Mairie - Attin (SL, INSEE 62044) - Commune d'Attin",
     .category = "government", .portal = "https://www.attin-mairie.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -106228,8 +106143,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_6FC8763D_C091_48D7_9ED9_A71BE5778917", .name = "Centre de ressources et d'information des bénévoles (CRIB) - "
       "Profession sport et loisirs de la Marne (SL, INSEE 51108) - "
-      "Groupement d&#039;Employeurs Profession Sport et Loisirs Marne",
-    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Profession sport et loisirs de la Marne (SL, INSEE 51108) - Groupement d&#039;Employeurs Profession Sport et Loisirs Marne",
+      "Groupement d'Employeurs Profession Sport et Loisirs Marne",
+    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Profession sport et loisirs de la Marne (SL, INSEE 51108) - Groupement d'Employeurs Profession Sport et Loisirs Marne",
     .category = "government", .portal = "https://marne.profession-sport-loisirs.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -106416,8 +106331,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_7409BACA_90C2_4325_A326_3C35F239F900", .name = "France services - Nemours (itinérant) (SL, INSEE 77333) - Pimms "
-      "médiation 77 Melun &#8211; France services -Point conseil budget",
-    .name_ja = "France services - Nemours (itinérant) (SL, INSEE 77333) - Pimms médiation 77 Melun &#8211; France services -Point conseil budget",
+      "médiation 77 Melun – France services -Point conseil budget",
+    .name_ja = "France services - Nemours (itinérant) (SL, INSEE 77333) - Pimms médiation 77 Melun – France services -Point conseil budget",
     .category = "government", .portal = "https://pimms77.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -106528,8 +106443,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_757F6401_15C7_49B8_B3F4_A5BBAA2722E9", .name = "Mission locale pour l'insertion professionnelle et sociale des "
       "jeunes (16-25 ans) - Soissons (SL, INSEE 02722) - Mission Locale "
-      "pour l&#039;Emploi des Jeunes du Soissonnais",
-    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Soissons (SL, INSEE 02722) - Mission Locale pour l&#039;Emploi des Jeunes du Soissonnais",
+      "pour l'Emploi des Jeunes du Soissonnais",
+    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Soissons (SL, INSEE 02722) - Mission Locale pour l'Emploi des Jeunes du Soissonnais",
     .category = "government", .portal = "https://missionlocalesoissonnais.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -107160,8 +107075,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_28B50344_FF4D_428F_B9A9_AB6BD908D751", .name = "Fédération départementale pour la pêche et la protection du "
       "milieu aquatique - Allier (SL, INSEE 03254) - Fédération de "
-      "Pêche de l&#039;Allier",
-    .name_ja = "Fédération départementale pour la pêche et la protection du milieu aquatique - Allier (SL, INSEE 03254) - Fédération de Pêche de l&#039;Allier",
+      "Pêche de l'Allier",
+    .name_ja = "Fédération départementale pour la pêche et la protection du milieu aquatique - Allier (SL, INSEE 03254) - Fédération de Pêche de l'Allier",
     .category = "government", .portal = "https://www.federation-peche-allier.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -107403,9 +107318,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:29:32 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_2D645B54_8AF1_41DD_A85F_7271EFC41EA3", .name = "Mairie - Albias (SL, INSEE 82002) - Mairie Albias &#8211; "
+  { .id = "JO45_FR_2D645B54_8AF1_41DD_A85F_7271EFC41EA3", .name = "Mairie - Albias (SL, INSEE 82002) - Mairie Albias – "
       "Tarn-et-Garonne",
-    .name_ja = "Mairie - Albias (SL, INSEE 82002) - Mairie Albias &#8211; Tarn-et-Garonne",
+    .name_ja = "Mairie - Albias (SL, INSEE 82002) - Mairie Albias – Tarn-et-Garonne",
     .category = "government", .portal = "https://albias.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -107569,9 +107484,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:04:23 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_2F9F36FC_E1AA_4640_A3E8_EB92FB1BAB9D", .name = "Mairie - Thoiré-sur-Dinan (SL, INSEE 72356) - Thoiré-sur-Dinan "
-      "&#8211; Site officiel",
-    .name_ja = "Mairie - Thoiré-sur-Dinan (SL, INSEE 72356) - Thoiré-sur-Dinan &#8211; Site officiel",
+  { .id = "JO45_FR_2F9F36FC_E1AA_4640_A3E8_EB92FB1BAB9D", .name = "Mairie - Thoiré-sur-Dinan (SL, INSEE 72356) - Thoiré-sur-Dinan – "
+      "Site officiel",
+    .name_ja = "Mairie - Thoiré-sur-Dinan (SL, INSEE 72356) - Thoiré-sur-Dinan – Site officiel",
     .category = "government", .portal = "https://thoiresurdinan.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -107643,9 +107558,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:29:53 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_3327E264_5ED5_496A_81EB_844A756A1317", .name = "Mairie - Pont-de-Veyle (SL, INSEE 01306) - Pont de Veyle &#8211; "
-      "Ain",
-    .name_ja = "Mairie - Pont-de-Veyle (SL, INSEE 01306) - Pont de Veyle &#8211; Ain",
+  { .id = "JO45_FR_3327E264_5ED5_496A_81EB_844A756A1317", .name = "Mairie - Pont-de-Veyle (SL, INSEE 01306) - Pont de Veyle – Ain",
+    .name_ja = "Mairie - Pont-de-Veyle (SL, INSEE 01306) - Pont de Veyle – Ain",
     .category = "government", .portal = "https://pont-de-veyle.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -107681,9 +107595,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:46:07 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_3390884C_DA7F_49FF_85F2_8E1EE085779D", .name = "Mairie - Saint-Viâtre (SL, INSEE 41231) - Saint-Viâtre &#8211; "
-      "Site officiel",
-    .name_ja = "Mairie - Saint-Viâtre (SL, INSEE 41231) - Saint-Viâtre &#8211; Site officiel",
+  { .id = "JO45_FR_3390884C_DA7F_49FF_85F2_8E1EE085779D", .name = "Mairie - Saint-Viâtre (SL, INSEE 41231) - Saint-Viâtre – Site "
+      "officiel",
+    .name_ja = "Mairie - Saint-Viâtre (SL, INSEE 41231) - Saint-Viâtre – Site officiel",
     .category = "government", .portal = "https://www.saint-viatre.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -107981,8 +107895,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_37A12D77_2E84_46DF_AC21_0D2F84B3F1BB", .name = "Mairie - L'Aiguillon-la-Presqu'île (SL, INSEE 85001) - Mairie de "
-      "l&#039;Aiguillon-la-Presqu&#039;Île",
-    .name_ja = "Mairie - L'Aiguillon-la-Presqu'île (SL, INSEE 85001) - Mairie de l&#039;Aiguillon-la-Presqu&#039;Île",
+      "l'Aiguillon-la-Presqu'Île",
+    .name_ja = "Mairie - L'Aiguillon-la-Presqu'île (SL, INSEE 85001) - Mairie de l'Aiguillon-la-Presqu'Île",
     .category = "government", .portal = "https://www.laiguillonlapresquile.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -108299,8 +108213,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_3B7A2119_C361_4B2C_A217_6256E7D01772", .name = "Communauté de communes - Pouilly en Auxois Bligny sur Ouche (SL, "
-      "INSEE 21501) - Pouilly en Auxois &#8211; Bligny sur Ouche",
-    .name_ja = "Communauté de communes - Pouilly en Auxois Bligny sur Ouche (SL, INSEE 21501) - Pouilly en Auxois &#8211; Bligny sur Ouche",
+      "INSEE 21501) - Pouilly en Auxois – Bligny sur Ouche",
+    .name_ja = "Communauté de communes - Pouilly en Auxois Bligny sur Ouche (SL, INSEE 21501) - Pouilly en Auxois – Bligny sur Ouche",
     .category = "government", .portal = "https://ccpouillybligny.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -108355,8 +108269,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_3C794321_C0A3_49BE_BBB8_B7D111E2C01B", .name = "Espace conseil France Rénov' - Beaurainville (SL, INSEE 62100) - "
-      "7 Vallées &#8211; Communauté de Communes &#8211; Pas-de-Calais",
-    .name_ja = "Espace conseil France Rénov' - Beaurainville (SL, INSEE 62100) - 7 Vallées &#8211; Communauté de Communes &#8211; Pas-de-Calais",
+      "7 Vallées – Communauté de Communes – Pas-de-Calais",
+    .name_ja = "Espace conseil France Rénov' - Beaurainville (SL, INSEE 62100) - 7 Vallées – Communauté de Communes – Pas-de-Calais",
     .category = "government", .portal = "https://7vallees.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -108391,8 +108305,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:18:44 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_3CA1F823_6000_4D0D_A080_7AFA400749CD", .name = "Mairie - Aube (SL, INSEE 61008) - AUBE dans l&#039;Orne",
-    .name_ja = "Mairie - Aube (SL, INSEE 61008) - AUBE dans l&#039;Orne",
+  { .id = "JO45_FR_3CA1F823_6000_4D0D_A080_7AFA400749CD", .name = "Mairie - Aube (SL, INSEE 61008) - AUBE dans l'Orne",
+    .name_ja = "Mairie - Aube (SL, INSEE 61008) - AUBE dans l'Orne",
     .category = "government", .portal = "https://communedaube.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -108465,8 +108379,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_3DB3C8F3_6C18_4988_B2D8_AA4C148BBAA8", .name = "Mairie - Usclades-et-Rieutord (SL, INSEE 07326) - Commune "
-      "d&#039;USCLADES et RIEUTORD",
-    .name_ja = "Mairie - Usclades-et-Rieutord (SL, INSEE 07326) - Commune d&#039;USCLADES et RIEUTORD",
+      "d'USCLADES et RIEUTORD",
+    .name_ja = "Mairie - Usclades-et-Rieutord (SL, INSEE 07326) - Commune d'USCLADES et RIEUTORD",
     .category = "government", .portal = "https://uscladesetrieutord.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -108821,8 +108735,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-10-18T13:17:41+02:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_FR_7ED38734_A8AD_4004_B9E9_8BEF6745D700", .name = "Mairie - Athis (SL, INSEE 51018) - Mairie d&#039;Athis",
-    .name_ja = "Mairie - Athis (SL, INSEE 51018) - Mairie d&#039;Athis",
+  { .id = "JO45_FR_7ED38734_A8AD_4004_B9E9_8BEF6745D700", .name = "Mairie - Athis (SL, INSEE 51018) - Mairie d'Athis",
+    .name_ja = "Mairie - Athis (SL, INSEE 51018) - Mairie d'Athis",
     .category = "government", .portal = "https://www.athis.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -108859,9 +108773,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_7FFD30DF_C070_4492_AB4F_BFF9F42D1D0B", .name = "Communauté de communes - Chablis Villages et Terroirs (SL, INSEE "
-      "89068) - 3CVT : Chablis Villages &amp; Terroirs &#8211; "
-      "Communauté de communes",
-    .name_ja = "Communauté de communes - Chablis Villages et Terroirs (SL, INSEE 89068) - 3CVT : Chablis Villages &amp; Terroirs &#8211; Communauté de communes",
+      "89068) - 3CVT : Chablis Villages & Terroirs – Communauté de "
+      "communes",
+    .name_ja = "Communauté de communes - Chablis Villages et Terroirs (SL, INSEE 89068) - 3CVT : Chablis Villages & Terroirs – Communauté de communes",
     .category = "government", .portal = "https://www.3cvt.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -109251,9 +109165,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_84E55C77_46E1_4B7C_B6F9_C702E6109E07", .name = "Service de renseignement en droit du travail - Mayotte (SL, "
-      "INSEE 97611) - Direction de l'&#233;conomie, de l'emploi, du "
-      "travail et des solidarit&#233;s (D",
-    .name_ja = "Service de renseignement en droit du travail - Mayotte (SL, INSEE 97611) - Direction de l'&#233;conomie, de l'emploi, du travail et des solidarit&#233;s (D",
+      "INSEE 97611) - Direction de l'économie, de l'emploi, du travail "
+      "et des solidarités (D",
+    .name_ja = "Service de renseignement en droit du travail - Mayotte (SL, INSEE 97611) - Direction de l'économie, de l'emploi, du travail et des solidarités (D",
     .category = "government", .portal = "https://mayotte.deets.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -109307,8 +109221,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:21:42 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_85247B20_833E_48C7_92FD_7189E7A54589", .name = "Mairie - Orchies (SL, INSEE 59449) - Ville d&#039;Orchies",
-    .name_ja = "Mairie - Orchies (SL, INSEE 59449) - Ville d&#039;Orchies",
+  { .id = "JO45_FR_85247B20_833E_48C7_92FD_7189E7A54589", .name = "Mairie - Orchies (SL, INSEE 59449) - Ville d'Orchies",
+    .name_ja = "Mairie - Orchies (SL, INSEE 59449) - Ville d'Orchies",
     .category = "government", .portal = "https://www.ville-orchies.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -109364,8 +109278,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_857EAC86_9BAC_4B4A_AF3F_628F1A5451C4", .name = "Plateforme d'accompagnement et de répit pour les aidants de "
       "personnes âgées - L'Isle-sur-la-Sorgue (SL, INSEE 84054) - "
-      "Centre Hospitalier de l&#039;Isle sur la Sorgue",
-    .name_ja = "Plateforme d'accompagnement et de répit pour les aidants de personnes âgées - L'Isle-sur-la-Sorgue (SL, INSEE 84054) - Centre Hospitalier de l&#039;Isle sur la Sorgue",
+      "Centre Hospitalier de l'Isle sur la Sorgue",
+    .name_ja = "Plateforme d'accompagnement et de répit pour les aidants de personnes âgées - L'Isle-sur-la-Sorgue (SL, INSEE 84054) - Centre Hospitalier de l'Isle sur la Sorgue",
     .category = "government", .portal = "https://www.hopital-islesursorgue.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -109605,8 +109519,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:21:44 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_88923276_FDD2_4FF1_A8A1_5B800FEAB91F", .name = "Mairie - Izernore (SL, INSEE 01192) - Mairie d&#039;Izernore",
-    .name_ja = "Mairie - Izernore (SL, INSEE 01192) - Mairie d&#039;Izernore",
+  { .id = "JO45_FR_88923276_FDD2_4FF1_A8A1_5B800FEAB91F", .name = "Mairie - Izernore (SL, INSEE 01192) - Mairie d'Izernore",
+    .name_ja = "Mairie - Izernore (SL, INSEE 01192) - Mairie d'Izernore",
     .category = "government", .portal = "https://www.izernore.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -109680,8 +109594,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_8914639E_4A8D_4C36_AE58_49B39F109880", .name = "Point information jeunesse - Vendeuvre-sur-Barse (SL, INSEE "
-      "10401) - Maison Pour Tous &#8211; Centre Social",
-    .name_ja = "Point information jeunesse - Vendeuvre-sur-Barse (SL, INSEE 10401) - Maison Pour Tous &#8211; Centre Social",
+      "10401) - Maison Pour Tous – Centre Social",
+    .name_ja = "Point information jeunesse - Vendeuvre-sur-Barse (SL, INSEE 10401) - Maison Pour Tous – Centre Social",
     .category = "government", .portal = "https://mptcsvendeuvre.wordpress.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -109790,8 +109704,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_8AF92037_6645_430F_A630_0667B2FC93D0", .name = "Mairie - Incarville (SL, INSEE 27351) - INCARVILLE   Mairie "
-      "d&#039;Incarville &#8211; Eure",
-    .name_ja = "Mairie - Incarville (SL, INSEE 27351) - INCARVILLE   Mairie d&#039;Incarville &#8211; Eure",
+      "d'Incarville – Eure",
+    .name_ja = "Mairie - Incarville (SL, INSEE 27351) - INCARVILLE   Mairie d'Incarville – Eure",
     .category = "government", .portal = "https://incarville.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -109865,9 +109779,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "11:58:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_8BD2356E_384A_445B_A667_EF0F1605D672", .name = "Mairie - Coisy (SL, INSEE 80202) - Commune de Coisy &#8211; "
-      "Somme &#8211; 80",
-    .name_ja = "Mairie - Coisy (SL, INSEE 80202) - Commune de Coisy &#8211; Somme &#8211; 80",
+  { .id = "JO45_FR_8BD2356E_384A_445B_A667_EF0F1605D672", .name = "Mairie - Coisy (SL, INSEE 80202) - Commune de Coisy – Somme – 80",
+    .name_ja = "Mairie - Coisy (SL, INSEE 80202) - Commune de Coisy – Somme – 80",
     .category = "government", .portal = "https://www.coisymairie.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -109885,8 +109798,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_8C61CC09_B00E_43AF_B023_41198E02940B", .name = "Mairie - Monacia-d'Aullène (SL, INSEE 2A163) - Mairie de Monacia "
-      "d&#039;Aullène",
-    .name_ja = "Mairie - Monacia-d'Aullène (SL, INSEE 2A163) - Mairie de Monacia d&#039;Aullène",
+      "d'Aullène",
+    .name_ja = "Mairie - Monacia-d'Aullène (SL, INSEE 2A163) - Mairie de Monacia d'Aullène",
     .category = "government", .portal = "https://monacia-aullene.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -109959,9 +109872,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "16:28:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_8DD51C3B_1C04_4775_8DD6_2B6758DD6BF2_2", .name = "Mairie - Berneville (SL, INSEE 62115) - Actualités &#8211; "
-      "Berneville",
-    .name_ja = "Mairie - Berneville (SL, INSEE 62115) - Actualités &#8211; Berneville",
+  { .id = "JO45_FR_8DD51C3B_1C04_4775_8DD6_2B6758DD6BF2_2", .name = "Mairie - Berneville (SL, INSEE 62115) - Actualités – Berneville",
+    .name_ja = "Mairie - Berneville (SL, INSEE 62115) - Actualités – Berneville",
     .category = "government", .portal = "https://berneville.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -110236,9 +110148,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_9104CEFB_5E49_442D_B7C8_E9442D61B37C", .name = "Communauté de communes - Vallées et Plateau d'Ardenne (SL, INSEE "
-      "08367) - Communauté de Communes Vallées et Plateau "
-      "d&#039;Ardenne",
-    .name_ja = "Communauté de communes - Vallées et Plateau d'Ardenne (SL, INSEE 08367) - Communauté de Communes Vallées et Plateau d&#039;Ardenne",
+      "08367) - Communauté de Communes Vallées et Plateau d'Ardenne",
+    .name_ja = "Communauté de communes - Vallées et Plateau d'Ardenne (SL, INSEE 08367) - Communauté de Communes Vallées et Plateau d'Ardenne",
     .category = "government", .portal = "https://www.cc-valleesetplateaudardenne.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -110514,8 +110425,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "17:17:54 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_96BB531F_011E_435E_9823_FA0B4B26EC7E", .name = "Mairie - Hoste (SL, INSEE 57337) - Hoste &amp; Valette",
-    .name_ja = "Mairie - Hoste (SL, INSEE 57337) - Hoste &amp; Valette",
+  { .id = "JO45_FR_96BB531F_011E_435E_9823_FA0B4B26EC7E", .name = "Mairie - Hoste (SL, INSEE 57337) - Hoste & Valette",
+    .name_ja = "Mairie - Hoste (SL, INSEE 57337) - Hoste & Valette",
     .category = "government", .portal = "https://mairie-hoste.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -110552,8 +110463,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_96ECF210_1BD9_4593_AC6E_BACF414013F5", .name = "Mairie - Saint-Germain-d'Arcé (SL, INSEE 72283) - Mairie de "
-      "Saint Germain d&#039;Arcé",
-    .name_ja = "Mairie - Saint-Germain-d'Arcé (SL, INSEE 72283) - Mairie de Saint Germain d&#039;Arcé",
+      "Saint Germain d'Arcé",
+    .name_ja = "Mairie - Saint-Germain-d'Arcé (SL, INSEE 72283) - Mairie de Saint Germain d'Arcé",
     .category = "government", .portal = "https://saintgermaindarce.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -110740,9 +110651,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_7F2CD956_8607_4C3D_8039_EEADC0FD51A3", .name = "Haut Comité pour le logement des personnes défavorisées et le "
-      "suivi du droit au logement opposable (SI, INSEE ) - Haut "
-      "Comit&#233; pour le droit au logement",
-    .name_ja = "Haut Comité pour le logement des personnes défavorisées et le suivi du droit au logement opposable (SI, INSEE ) - Haut Comit&#233; pour le droit au logement",
+      "suivi du droit au logement opposable (SI, INSEE ) - Haut Comité "
+      "pour le droit au logement",
+    .name_ja = "Haut Comité pour le logement des personnes défavorisées et le suivi du droit au logement opposable (SI, INSEE ) - Haut Comité pour le droit au logement",
     .category = "government", .portal = "https://www.hclpd.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -110779,8 +110690,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_AEE60EAE_5E41_4E4D_9355_ACE32DF25F08", .name = "École nationale supérieure d'art et de design - Nancy (SI, INSEE "
-      ") - École nationale supérieure d&#039;art et de design de Nancy",
-    .name_ja = "École nationale supérieure d'art et de design - Nancy (SI, INSEE ) - École nationale supérieure d&#039;art et de design de Nancy",
+      ") - École nationale supérieure d'art et de design de Nancy",
+    .name_ja = "École nationale supérieure d'art et de design - Nancy (SI, INSEE ) - École nationale supérieure d'art et de design de Nancy",
     .category = "government", .portal = "https://ensad-nancy.eu/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -110816,8 +110727,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_EB898774_F2A4_4AFF_AFE4_1121694682C4", .name = "Institut français d'ÉGYPTE - Le Caire (SI, INSEE ) - Institut "
-      "français d&#039;Égypte",
-    .name_ja = "Institut français d'ÉGYPTE - Le Caire (SI, INSEE ) - Institut français d&#039;Égypte",
+      "français d'Égypte",
+    .name_ja = "Institut français d'ÉGYPTE - Le Caire (SI, INSEE ) - Institut français d'Égypte",
     .category = "government", .portal = "https://www.ifegypte.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -110929,8 +110840,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_00B13527_5824_4786_8666_D4F9E54950BF", .name = "Police municipale - Bourgbarré (SL, INSEE 35032) - Ville de "
-      "Bourgbarré &#8211; Site officiel",
-    .name_ja = "Police municipale - Bourgbarré (SL, INSEE 35032) - Ville de Bourgbarré &#8211; Site officiel",
+      "Bourgbarré – Site officiel",
+    .name_ja = "Police municipale - Bourgbarré (SL, INSEE 35032) - Ville de Bourgbarré – Site officiel",
     .category = "government", .portal = "https://www.bourgbarre.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -111429,8 +111340,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_9BA033FC_5FEB_4830_AD35_5A373FBE032A", .name = "Communauté de communes - Frontonnais (SL, INSEE 31079) - "
-      "Explorez Le Frontonnais &#8211; Communauté de Communes",
-    .name_ja = "Communauté de communes - Frontonnais (SL, INSEE 31079) - Explorez Le Frontonnais &#8211; Communauté de Communes",
+      "Explorez Le Frontonnais – Communauté de Communes",
+    .name_ja = "Communauté de communes - Frontonnais (SL, INSEE 31079) - Explorez Le Frontonnais – Communauté de Communes",
     .category = "government", .portal = "https://www.cc-dufrontonnais.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -111502,8 +111413,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_9CFA2661_BAE8_4582_998A_F5B259ED1758", .name = "Mairie - Grandfontaine (SL, INSEE 67165) - Mairie de "
-      "Grandfontaine &#8211; Alsace",
-    .name_ja = "Mairie - Grandfontaine (SL, INSEE 67165) - Mairie de Grandfontaine &#8211; Alsace",
+      "Grandfontaine – Alsace",
+    .name_ja = "Mairie - Grandfontaine (SL, INSEE 67165) - Mairie de Grandfontaine – Alsace",
     .category = "government", .portal = "https://www.grandfontaine-donon.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -112219,8 +112130,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:24:21 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_AA035684_DEDE_49D2_B8BC_1975A35809C1", .name = "Mairie - Airoux (SL, INSEE 11002) - Airoux &#8211; Occitanie",
-    .name_ja = "Mairie - Airoux (SL, INSEE 11002) - Airoux &#8211; Occitanie",
+  { .id = "JO45_FR_AA035684_DEDE_49D2_B8BC_1975A35809C1", .name = "Mairie - Airoux (SL, INSEE 11002) - Airoux – Occitanie",
+    .name_ja = "Mairie - Airoux (SL, INSEE 11002) - Airoux – Occitanie",
     .category = "government", .portal = "https://www.airoux.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -112276,8 +112187,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_AAC28888_88B1_4F65_8921_10BB45F4C7C3", .name = "Point conseil budget - Union départementale des associations "
       "familiales (UDAF 11) - Carcassonne (SL, INSEE 11069) - udaf-11 "
-      "Union Départementale des Associations Familiales de l&#039;Aude",
-    .name_ja = "Point conseil budget - Union départementale des associations familiales (UDAF 11) - Carcassonne (SL, INSEE 11069) - udaf-11 Union Départementale des Associations Familiales de l&#039;Aude",
+      "Union Départementale des Associations Familiales de l'Aude",
+    .name_ja = "Point conseil budget - Union départementale des associations familiales (UDAF 11) - Carcassonne (SL, INSEE 11069) - udaf-11 Union Départementale des Associations Familiales de l'Aude",
     .category = "government", .portal = "https://www.udaf11.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -112332,8 +112243,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:17:44 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_AB44113C_16FD_4F22_B4DF_12BC1B321E25", .name = "Mairie - Athies (SL, INSEE 80034) - Commune d&#039;Athies 80200",
-    .name_ja = "Mairie - Athies (SL, INSEE 80034) - Commune d&#039;Athies 80200",
+  { .id = "JO45_FR_AB44113C_16FD_4F22_B4DF_12BC1B321E25", .name = "Mairie - Athies (SL, INSEE 80034) - Commune d'Athies 80200",
+    .name_ja = "Mairie - Athies (SL, INSEE 80034) - Commune d'Athies 80200",
     .category = "government", .portal = "https://www.commune-athies.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -112462,8 +112373,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_ADB44EE5_4171_4E29_9FC2_871B43DEFB99", .name = "Institut national supérieur du professorat et de l'éducation "
       "(Inspé) - Académie de Caen (SIL, INSEE 14118) - INSPE · Institut "
-      "national supérieur du professorat et de l&#039;éducation Nor",
-    .name_ja = "Institut national supérieur du professorat et de l'éducation (Inspé) - Académie de Caen (SIL, INSEE 14118) - INSPE · Institut national supérieur du professorat et de l&#039;éducation Nor",
+      "national supérieur du professorat et de l'éducation Nor",
+    .name_ja = "Institut national supérieur du professorat et de l'éducation (Inspé) - Académie de Caen (SIL, INSEE 14118) - INSPE · Institut national supérieur du professorat et de l'éducation Nor",
     .category = "government", .portal = "https://inspe.unicaen.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -112558,8 +112469,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_B03E76EA_A2C1_493A_BC70_695BF83F401B", .name = "Institut national supérieur du professorat et de l'éducation "
       "(Inspé) - Académie de Guadeloupe (SIL, INSEE 97101) - INSPE de "
-      "l&#039;académie de la Guadeloupe",
-    .name_ja = "Institut national supérieur du professorat et de l'éducation (Inspé) - Académie de Guadeloupe (SIL, INSEE 97101) - INSPE de l&#039;académie de la Guadeloupe",
+      "l'académie de la Guadeloupe",
+    .name_ja = "Institut national supérieur du professorat et de l'éducation (Inspé) - Académie de Guadeloupe (SIL, INSEE 97101) - INSPE de l'académie de la Guadeloupe",
     .category = "government", .portal = "http://www.inspe-guadeloupe.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -112837,8 +112748,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_B8644122_C987_4ED7_8936_7FC4DAC41735", .name = "Centre communal d'action sociale (CCAS) - La Grand-Croix (SL, "
-      "INSEE 42103) - Ville de La Grand&#039;Croix",
-    .name_ja = "Centre communal d'action sociale (CCAS) - La Grand-Croix (SL, INSEE 42103) - Ville de La Grand&#039;Croix",
+      "INSEE 42103) - Ville de La Grand'Croix",
+    .name_ja = "Centre communal d'action sociale (CCAS) - La Grand-Croix (SL, INSEE 42103) - Ville de La Grand'Croix",
     .category = "government", .portal = "https://www.lagrandcroix.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -113208,8 +113119,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_BDCF989A_B36F_4A51_AA28_BC7C58C88526", .name = "Mairie - Fontenay-lès-Briis (SL, INSEE 91243) - Mairie de "
-      "Fontenay-lès-Briis &#8211; Essonne",
-    .name_ja = "Mairie - Fontenay-lès-Briis (SL, INSEE 91243) - Mairie de Fontenay-lès-Briis &#8211; Essonne",
+      "Fontenay-lès-Briis – Essonne",
+    .name_ja = "Mairie - Fontenay-lès-Briis (SL, INSEE 91243) - Mairie de Fontenay-lès-Briis – Essonne",
     .category = "government", .portal = "https://www.fontenay-les-briis.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -113489,8 +113400,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_C167AFC5_780E_496C_A2A2_5383C3DC34C5", .name = "Communauté de communes - Sèvre et Loire (SL, INSEE 44212) - "
-      "Sèvre &amp; Loire",
-    .name_ja = "Communauté de communes - Sèvre et Loire (SL, INSEE 44212) - Sèvre &amp; Loire",
+      "Sèvre & Loire",
+    .name_ja = "Communauté de communes - Sèvre et Loire (SL, INSEE 44212) - Sèvre & Loire",
     .category = "government", .portal = "https://www.cc-sevreloire.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -113856,9 +113767,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "01:01:35 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_C65415F5_4EC9_44AF_91D0_FD4043911DD9", .name = "Mairie - Aurel (SL, INSEE 84005) - Mairie d&#039;Aurel (84390 "
+  { .id = "JO45_FR_C65415F5_4EC9_44AF_91D0_FD4043911DD9", .name = "Mairie - Aurel (SL, INSEE 84005) - Mairie d'Aurel (84390 "
       "Vaucluse)",
-    .name_ja = "Mairie - Aurel (SL, INSEE 84005) - Mairie d&#039;Aurel (84390 Vaucluse)",
+    .name_ja = "Mairie - Aurel (SL, INSEE 84005) - Mairie d'Aurel (84390 Vaucluse)",
     .category = "government", .portal = "http://www.mairie-aurel.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -113876,8 +113787,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_C6CCE8B7_26B6_47FB_B2F4_945B84FBBC26", .name = "Centre communal d'action sociale (CCAS) - Esbly (SL, INSEE "
-      "77171) - Site officiel de la Ville d&#039;Esbly",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Esbly (SL, INSEE 77171) - Site officiel de la Ville d&#039;Esbly",
+      "77171) - Site officiel de la Ville d'Esbly",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Esbly (SL, INSEE 77171) - Site officiel de la Ville d'Esbly",
     .category = "government", .portal = "https://www.esbly.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -113989,9 +113900,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "16:14:58 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_C7876C88_208D_441E_A20A_E6718176AD75", .name = "Mairie - Aigrefeuille (SL, INSEE 31003) - Mairie "
-      "d&#039;Aigrefeuille",
-    .name_ja = "Mairie - Aigrefeuille (SL, INSEE 31003) - Mairie d&#039;Aigrefeuille",
+  { .id = "JO45_FR_C7876C88_208D_441E_A20A_E6718176AD75", .name = "Mairie - Aigrefeuille (SL, INSEE 31003) - Mairie d'Aigrefeuille",
+    .name_ja = "Mairie - Aigrefeuille (SL, INSEE 31003) - Mairie d'Aigrefeuille",
     .category = "government", .portal = "https://aigrefeuille31.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -114122,8 +114032,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_C9D4173B_6B50_4D6F_8D5F_A9A6627C4EA3", .name = "Mairie - Curis-au-Mont-d'Or (SL, INSEE 69071) - Mairie de Curis "
-      "au Mont d&#039;Or",
-    .name_ja = "Mairie - Curis-au-Mont-d'Or (SL, INSEE 69071) - Mairie de Curis au Mont d&#039;Or",
+      "au Mont d'Or",
+    .name_ja = "Mairie - Curis-au-Mont-d'Or (SL, INSEE 69071) - Mairie de Curis au Mont d'Or",
     .category = "government", .portal = "https://www.curis.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -114140,9 +114050,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:37:32 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_C9E94C13_F3F2_4F79_8EDE_2D6BCEB409A3", .name = "Mairie - Truyes (SL, INSEE 37263) - Ville de Truyes &#8211; Site "
+  { .id = "JO45_FR_C9E94C13_F3F2_4F79_8EDE_2D6BCEB409A3", .name = "Mairie - Truyes (SL, INSEE 37263) - Ville de Truyes – Site "
       "officiel de la Mairie",
-    .name_ja = "Mairie - Truyes (SL, INSEE 37263) - Ville de Truyes &#8211; Site officiel de la Mairie",
+    .name_ja = "Mairie - Truyes (SL, INSEE 37263) - Ville de Truyes – Site officiel de la Mairie",
     .category = "government", .portal = "https://www.mairie-truyes.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -114196,8 +114106,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_CA6520B8_34FD_4FBE_A70A_8A3B22CCD7C8", .name = "Mairie - Oursel-Maison (SL, INSEE 60485) - Commune "
-      "d&#039;Oursel-Maison",
-    .name_ja = "Mairie - Oursel-Maison (SL, INSEE 60485) - Commune d&#039;Oursel-Maison",
+      "d'Oursel-Maison",
+    .name_ja = "Mairie - Oursel-Maison (SL, INSEE 60485) - Commune d'Oursel-Maison",
     .category = "government", .portal = "https://www.oursel-maison.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -114270,9 +114180,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:02:08 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_CB34879D_1A1B_476F_9BB3_4911FBA0AD14", .name = "Mairie - Cheffois (SL, INSEE 85067) - Cheffois &#8211; Site "
-      "internet de la mairie",
-    .name_ja = "Mairie - Cheffois (SL, INSEE 85067) - Cheffois &#8211; Site internet de la mairie",
+  { .id = "JO45_FR_CB34879D_1A1B_476F_9BB3_4911FBA0AD14", .name = "Mairie - Cheffois (SL, INSEE 85067) - Cheffois – Site internet "
+      "de la mairie",
+    .name_ja = "Mairie - Cheffois (SL, INSEE 85067) - Cheffois – Site internet de la mairie",
     .category = "government", .portal = "https://cheffois.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -114309,8 +114219,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_CB842C86_0841_46AA_B214_825326010B35", .name = "Communauté de communes - Les Avant Monts (SL, INSEE 34147) - Les "
-      "Avant-Monts &#8211; Communauté de Communes Ouest Hérault",
-    .name_ja = "Communauté de communes - Les Avant Monts (SL, INSEE 34147) - Les Avant-Monts &#8211; Communauté de Communes Ouest Hérault",
+      "Avant-Monts – Communauté de Communes Ouest Hérault",
+    .name_ja = "Communauté de communes - Les Avant Monts (SL, INSEE 34147) - Les Avant-Monts – Communauté de Communes Ouest Hérault",
     .category = "government", .portal = "https://www.avant-monts.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -114575,8 +114485,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_D00B025F_6F16_415A_8C89_D643EE483ED2", .name = "Communauté de communes - Haut Nivernais Val d'Yonne (SL, INSEE "
-      "58079) - Communauté de Communes Haut Nivernais Val d&#039;Yonne",
-    .name_ja = "Communauté de communes - Haut Nivernais Val d'Yonne (SL, INSEE 58079) - Communauté de Communes Haut Nivernais Val d&#039;Yonne",
+      "58079) - Communauté de Communes Haut Nivernais Val d'Yonne",
+    .name_ja = "Communauté de communes - Haut Nivernais Val d'Yonne (SL, INSEE 58079) - Communauté de Communes Haut Nivernais Val d'Yonne",
     .category = "government", .portal = "https://www.cchnvy.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -114650,9 +114560,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_D0D83C0A_63B1_4590_8DA2_77AEB5F333EF", .name = "Centre de ressources et d'information des bénévoles (CRIB) - "
-      "Université pour tous du Tarn (SL, INSEE 81065) - Universit&#xE9; "
-      "Pour Tous du Tarn",
-    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Université pour tous du Tarn (SL, INSEE 81065) - Universit&#xE9; Pour Tous du Tarn",
+      "Université pour tous du Tarn (SL, INSEE 81065) - Université Pour "
+      "Tous du Tarn",
+    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Université pour tous du Tarn (SL, INSEE 81065) - Université Pour Tous du Tarn",
     .category = "government", .portal = "https://www.universitepourtous81.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -114707,8 +114617,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_D2527235_2432_4A5B_BE91_49B656187A93", .name = "Mairie - Bout-du-Pont-de-Larn (SL, INSEE 81036) - Bout du pont "
-      "de l&#039;arn",
-    .name_ja = "Mairie - Bout-du-Pont-de-Larn (SL, INSEE 81036) - Bout du pont de l&#039;arn",
+      "de l'arn",
+    .name_ja = "Mairie - Bout-du-Pont-de-Larn (SL, INSEE 81036) - Bout du pont de l'arn",
     .category = "government", .portal = "https://www.boutdupontdelarn.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -114911,8 +114821,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:14:04 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_D633E494_02DA_425A_9AD4_65BCC7A2E4A9", .name = "Mairie - Échourgnac (SL, INSEE 24159) - &Eacute;CHOURGNAC",
-    .name_ja = "Mairie - Échourgnac (SL, INSEE 24159) - &Eacute;CHOURGNAC",
+  { .id = "JO45_FR_D633E494_02DA_425A_9AD4_65BCC7A2E4A9", .name = "Mairie - Échourgnac (SL, INSEE 24159) - ÉCHOURGNAC",
+    .name_ja = "Mairie - Échourgnac (SL, INSEE 24159) - ÉCHOURGNAC",
     .category = "government", .portal = "https://www.echourgnac.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -114966,8 +114876,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_D6B5C02B_005B_4C23_917E_EBF6E3ED442D", .name = "Centre communal d'action sociale (CCAS) - Auménancourt (SL, "
-      "INSEE 51025) - Commune d&#039;Auménancourt",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Auménancourt (SL, INSEE 51025) - Commune d&#039;Auménancourt",
+      "INSEE 51025) - Commune d'Auménancourt",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Auménancourt (SL, INSEE 51025) - Commune d'Auménancourt",
     .category = "government", .portal = "https://www.aumenancourt.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -115227,8 +115137,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_DA03A262_BC3A_4581_9529_08FD6CE72076", .name = "Mairie - Trochères (SL, INSEE 21644) - BIENVENUE À TROCHÈRES. "
-      "Côte-d&#039;Or -Site officiel de la Mairie",
-    .name_ja = "Mairie - Trochères (SL, INSEE 21644) - BIENVENUE À TROCHÈRES. Côte-d&#039;Or -Site officiel de la Mairie",
+      "Côte-d'Or -Site officiel de la Mairie",
+    .name_ja = "Mairie - Trochères (SL, INSEE 21644) - BIENVENUE À TROCHÈRES. Côte-d'Or -Site officiel de la Mairie",
     .category = "government", .portal = "https://trocheres.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -115283,9 +115193,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "site root." },
 
   { .id = "JO45_FR_DC48D4BF_A867_423F_903C_6AE0693690B6", .name = "Centre d'information et d'orientation (CIO) - Montbéliard (SL, "
-      "INSEE 25388) - Centre d&#039;Information et d&#039;Orientation  "
-      "de Montbéliard",
-    .name_ja = "Centre d'information et d'orientation (CIO) - Montbéliard (SL, INSEE 25388) - Centre d&#039;Information et d&#039;Orientation  de Montbéliard",
+      "INSEE 25388) - Centre d'Information et d'Orientation  de "
+      "Montbéliard",
+    .name_ja = "Centre d'information et d'orientation (CIO) - Montbéliard (SL, INSEE 25388) - Centre d'Information et d'Orientation  de Montbéliard",
     .category = "government", .portal = "https://cio-montbeliard.ac-besancon.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -115897,9 +115807,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:51:01 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_E480CA9D_22CE_49D6_A6F0_48385061E400", .name = "Mairie - Flocques (SL, INSEE 76266) - Commune de Flocques "
-      "&#8211; Seine Maritime &#8211; 76",
-    .name_ja = "Mairie - Flocques (SL, INSEE 76266) - Commune de Flocques &#8211; Seine Maritime &#8211; 76",
+  { .id = "JO45_FR_E480CA9D_22CE_49D6_A6F0_48385061E400", .name = "Mairie - Flocques (SL, INSEE 76266) - Commune de Flocques – "
+      "Seine Maritime – 76",
+    .name_ja = "Mairie - Flocques (SL, INSEE 76266) - Commune de Flocques – Seine Maritime – 76",
     .category = "government", .portal = "https://www.flocques.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -116469,8 +116379,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-10-18T11:41:22+02:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_FR_EE2255EA_DF43_42C4_8FD0_A9F0ABDDFA5F", .name = "Mairie - Signy-l'Abbaye (SL, INSEE 08419) - Signy l&#039;abbaye",
-    .name_ja = "Mairie - Signy-l'Abbaye (SL, INSEE 08419) - Signy l&#039;abbaye",
+  { .id = "JO45_FR_EE2255EA_DF43_42C4_8FD0_A9F0ABDDFA5F", .name = "Mairie - Signy-l'Abbaye (SL, INSEE 08419) - Signy l'abbaye",
+    .name_ja = "Mairie - Signy-l'Abbaye (SL, INSEE 08419) - Signy l'abbaye",
     .category = "government", .portal = "https://www.signy-abbaye.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -116653,9 +116563,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "06:00:29 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F044FA13_923D_4247_B29A_192994CE9CCC", .name = "Mairie - La Motte (SL, INSEE 22155) - Mairie de la Motte "
-      "(C&#244;tes d'Armor en Bretagne) - Site officiel",
-    .name_ja = "Mairie - La Motte (SL, INSEE 22155) - Mairie de la Motte (C&#244;tes d'Armor en Bretagne) - Site officiel",
+  { .id = "JO45_FR_F044FA13_923D_4247_B29A_192994CE9CCC", .name = "Mairie - La Motte (SL, INSEE 22155) - Mairie de la Motte (Côtes "
+      "d'Armor en Bretagne) - Site officiel",
+    .name_ja = "Mairie - La Motte (SL, INSEE 22155) - Mairie de la Motte (Côtes d'Armor en Bretagne) - Site officiel",
     .category = "government", .portal = "https://www.lamotte22.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -116819,8 +116729,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_F262F3B1_A215_41B2_8780_17E7DC2CABA7", .name = "Mairie - Argelliers (SL, INSEE 34012) - Site officiel de la "
-      "commune d&#039;Argelliers",
-    .name_ja = "Mairie - Argelliers (SL, INSEE 34012) - Site officiel de la commune d&#039;Argelliers",
+      "commune d'Argelliers",
+    .name_ja = "Mairie - Argelliers (SL, INSEE 34012) - Site officiel de la commune d'Argelliers",
     .category = "government", .portal = "https://www.argelliers.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -116876,8 +116786,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_F565E8D3_6C04_48D0_8FF7_C009D94DCE36", .name = "Point d'information local dédié aux personnes âgées - Ay (SL, "
-      "INSEE 51030) - Entourage &#8211; Bien vieillir",
-    .name_ja = "Point d'information local dédié aux personnes âgées - Ay (SL, INSEE 51030) - Entourage &#8211; Bien vieillir",
+      "INSEE 51030) - Entourage – Bien vieillir",
+    .name_ja = "Point d'information local dédié aux personnes âgées - Ay (SL, INSEE 51030) - Entourage – Bien vieillir",
     .category = "government", .portal = "https://entourage-bien-vieillir.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -116932,8 +116842,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_F5C87C07_E505_46A9_96AA_B0F2900B6EA4", .name = "Centre Local d’Information et de Coordination (CLIC) de la Côte "
-      "d'Emeraude (SL, INSEE 35093) - Le CLIC Côte d&#039;Émeraude",
-    .name_ja = "Centre Local d’Information et de Coordination (CLIC) de la Côte d'Emeraude (SL, INSEE 35093) - Le CLIC Côte d&#039;Émeraude",
+      "d'Emeraude (SL, INSEE 35093) - Le CLIC Côte d'Émeraude",
+    .name_ja = "Centre Local d’Information et de Coordination (CLIC) de la Côte d'Emeraude (SL, INSEE 35093) - Le CLIC Côte d'Émeraude",
     .category = "government", .portal = "https://clic-cote-emeraude.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -116986,8 +116896,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026 08:41:00 +0200. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO45_FR_F725423C_6FB7_4810_8625_95844EA78D47", .name = "Mairie - Arlanc (SL, INSEE 63010) - Ville d&#039;Arlanc",
-    .name_ja = "Mairie - Arlanc (SL, INSEE 63010) - Ville d&#039;Arlanc",
+  { .id = "JO45_FR_F725423C_6FB7_4810_8625_95844EA78D47", .name = "Mairie - Arlanc (SL, INSEE 63010) - Ville d'Arlanc",
+    .name_ja = "Mairie - Arlanc (SL, INSEE 63010) - Ville d'Arlanc",
     .category = "government", .portal = "https://arlanc.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -117024,8 +116934,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_F7C08765_DE04_47A3_925B_10BA0D7FE330", .name = "Point information jeunesse - Andrézieux-Bouthéon (SL, INSEE "
-      "42005) - Ville d&#039;Andrézieux-Bouthéon",
-    .name_ja = "Point information jeunesse - Andrézieux-Bouthéon (SL, INSEE 42005) - Ville d&#039;Andrézieux-Bouthéon",
+      "42005) - Ville d'Andrézieux-Bouthéon",
+    .name_ja = "Point information jeunesse - Andrézieux-Bouthéon (SL, INSEE 42005) - Ville d'Andrézieux-Bouthéon",
     .category = "government", .portal = "https://www.andrezieux-boutheon.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -117043,8 +116953,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_F9480A57_FFB8_4358_859F_B3D5D68938A7", .name = "Centre communal d'action sociale (CCAS) - Bagneux (SL, INSEE "
-      "92007) - Ville de Ville de Bagneux : Flux RSS de l&#039;agenda",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Bagneux (SL, INSEE 92007) - Ville de Ville de Bagneux : Flux RSS de l&#039;agenda",
+      "92007) - Ville de Ville de Bagneux : Flux RSS de l'agenda",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Bagneux (SL, INSEE 92007) - Ville de Ville de Bagneux : Flux RSS de l'agenda",
     .category = "government", .portal = "https://www.bagneux92.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -117192,9 +117102,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:42:59 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_FB63C1A4_9654_4AD6_8973_D334E73AC843", .name = "Mairie - Montbron (SL, INSEE 16223) - Ville de Montbron &#8211; "
-      "Site officiel",
-    .name_ja = "Mairie - Montbron (SL, INSEE 16223) - Ville de Montbron &#8211; Site officiel",
+  { .id = "JO45_FR_FB63C1A4_9654_4AD6_8973_D334E73AC843", .name = "Mairie - Montbron (SL, INSEE 16223) - Ville de Montbron – Site "
+      "officiel",
+    .name_ja = "Mairie - Montbron (SL, INSEE 16223) - Ville de Montbron – Site officiel",
     .category = "government", .portal = "https://montbron.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -117212,8 +117122,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_FB95D5AE_36A1_484F_B9F8_E5BE35F856CA", .name = "Centre communal d'action sociale (CCAS) - Espira-de-l'Agly (SL, "
-      "INSEE 66069) - Mairie d&#039;Espira de l&#039;Agly",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Espira-de-l'Agly (SL, INSEE 66069) - Mairie d&#039;Espira de l&#039;Agly",
+      "INSEE 66069) - Mairie d'Espira de l'Agly",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Espira-de-l'Agly (SL, INSEE 66069) - Mairie d'Espira de l'Agly",
     .category = "government", .portal = "https://www.espira.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -117359,8 +117269,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:30:17 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_FDCE179C_2858_473A_A31D_4D355817B2FA", .name = "Mairie - Illats (SL, INSEE 33205) - Commune d&#039;Illats",
-    .name_ja = "Mairie - Illats (SL, INSEE 33205) - Commune d&#039;Illats",
+  { .id = "JO45_FR_FDCE179C_2858_473A_A31D_4D355817B2FA", .name = "Mairie - Illats (SL, INSEE 33205) - Commune d'Illats",
+    .name_ja = "Mairie - Illats (SL, INSEE 33205) - Commune d'Illats",
     .category = "government", .portal = "https://www.illats33.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -117968,9 +117878,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "16:08:33 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_2D096A7E_D6E1_48D9_882B_B4623CFA5CD5", .name = "Mairie - Limousis (SL, INSEE 11205) - Mairie de Limousis &#8211; "
-      "Aude",
-    .name_ja = "Mairie - Limousis (SL, INSEE 11205) - Mairie de Limousis &#8211; Aude",
+  { .id = "JO45_FR_2D096A7E_D6E1_48D9_882B_B4623CFA5CD5", .name = "Mairie - Limousis (SL, INSEE 11205) - Mairie de Limousis – Aude",
+    .name_ja = "Mairie - Limousis (SL, INSEE 11205) - Mairie de Limousis – Aude",
     .category = "government", .portal = "https://www.limousis.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -118229,8 +118138,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_30CDA702_E745_45E8_B659_D7F749854C74", .name = "Mairie - Avignonet-Lauragais (SL, INSEE 31037) - Mairie "
-      "d&#039;Avignonet-Lauragais",
-    .name_ja = "Mairie - Avignonet-Lauragais (SL, INSEE 31037) - Mairie d&#039;Avignonet-Lauragais",
+      "d'Avignonet-Lauragais",
+    .name_ja = "Mairie - Avignonet-Lauragais (SL, INSEE 31037) - Mairie d'Avignonet-Lauragais",
     .category = "government", .portal = "https://avignonet-lauragais.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -118434,8 +118343,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_335FCF92_AFB5_434F_9D97_A9D4249C28D9", .name = "Mairie - Quintal (SL, INSEE 74219) - Stages de tennis pendant "
-      "les vacances de la Toussain &#8211; Mairie de Quintal",
-    .name_ja = "Mairie - Quintal (SL, INSEE 74219) - Stages de tennis pendant les vacances de la Toussain &#8211; Mairie de Quintal",
+      "les vacances de la Toussain – Mairie de Quintal",
+    .name_ja = "Mairie - Quintal (SL, INSEE 74219) - Stages de tennis pendant les vacances de la Toussain – Mairie de Quintal",
     .category = "government", .portal = "https://www.mairie-quintal.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -118598,9 +118507,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "06:18:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_34E08CF4_5127_40E1_9398_07264E1D2B91", .name = "Mairie - Étagnac (SL, INSEE 16132) - Etagnac &#8211; Site "
-      "officiel",
-    .name_ja = "Mairie - Étagnac (SL, INSEE 16132) - Etagnac &#8211; Site officiel",
+  { .id = "JO45_FR_34E08CF4_5127_40E1_9398_07264E1D2B91", .name = "Mairie - Étagnac (SL, INSEE 16132) - Etagnac – Site officiel",
+    .name_ja = "Mairie - Étagnac (SL, INSEE 16132) - Etagnac – Site officiel",
     .category = "government", .portal = "https://www.etagnac.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -118671,9 +118579,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-09-19T16:41:33Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO45_FR_350B43FC_C54B_4FAE_9DBD_EBF560A148D4", .name = "Mairie - Chalampé (SL, INSEE 68064) - Mairie de Chalampé   "
-      "C&#039;est une chance !",
-    .name_ja = "Mairie - Chalampé (SL, INSEE 68064) - Mairie de Chalampé   C&#039;est une chance !",
+  { .id = "JO45_FR_350B43FC_C54B_4FAE_9DBD_EBF560A148D4", .name = "Mairie - Chalampé (SL, INSEE 68064) - Mairie de Chalampé   C'est "
+      "une chance !",
+    .name_ja = "Mairie - Chalampé (SL, INSEE 68064) - Mairie de Chalampé   C'est une chance !",
     .category = "government", .portal = "https://www.chalampe.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -118690,9 +118598,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:28:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_350B43FC_C54B_4FAE_9DBD_EBF560A148D4_2", .name = "Mairie - Chalampé (SL, INSEE 68064) - Mairie de Chalampé   "
-      "C&#039;est une chance !",
-    .name_ja = "Mairie - Chalampé (SL, INSEE 68064) - Mairie de Chalampé   C&#039;est une chance !",
+  { .id = "JO45_FR_350B43FC_C54B_4FAE_9DBD_EBF560A148D4_2", .name = "Mairie - Chalampé (SL, INSEE 68064) - Mairie de Chalampé   C'est "
+      "une chance !",
+    .name_ja = "Mairie - Chalampé (SL, INSEE 68064) - Mairie de Chalampé   C'est une chance !",
     .category = "government", .portal = "https://www.chalampe.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -118747,8 +118655,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_36645B5A_D12D_4109_9963_4827A3B37BFB", .name = "Mairie - Saint-André-d'Olérargues (SL, INSEE 30232) - Site "
-      "officiel de Saint André d&#039;Olérargues",
-    .name_ja = "Mairie - Saint-André-d'Olérargues (SL, INSEE 30232) - Site officiel de Saint André d&#039;Olérargues",
+      "officiel de Saint André d'Olérargues",
+    .name_ja = "Mairie - Saint-André-d'Olérargues (SL, INSEE 30232) - Site officiel de Saint André d'Olérargues",
     .category = "government", .portal = "https://saintandredolerargues.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -119005,9 +118913,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:31:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_3AB15CD5_EA8A_4831_ABD5_FB829BC46382", .name = "Mairie - L'Orée-de-Mormal (SL, INSEE 59006) - Bienvenue à "
-      "L&#039;Orée de mormal",
-    .name_ja = "Mairie - L'Orée-de-Mormal (SL, INSEE 59006) - Bienvenue à L&#039;Orée de mormal",
+  { .id = "JO45_FR_3AB15CD5_EA8A_4831_ABD5_FB829BC46382", .name = "Mairie - L'Orée-de-Mormal (SL, INSEE 59006) - Bienvenue à L'Orée "
+      "de mormal",
+    .name_ja = "Mairie - L'Orée-de-Mormal (SL, INSEE 59006) - Bienvenue à L'Orée de mormal",
     .category = "government", .portal = "https://loreedemormal.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -119266,8 +119174,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_3FE5629B_4DF6_4E5E_B82C_ED3DA294008C", .name = "Espace conseil France Rénov' - Lewarde (SL, INSEE 59345) - Cœur "
-      "d&#039;Ostrevent Agglo",
-    .name_ja = "Espace conseil France Rénov' - Lewarde (SL, INSEE 59345) - Cœur d&#039;Ostrevent Agglo",
+      "d'Ostrevent Agglo",
+    .name_ja = "Espace conseil France Rénov' - Lewarde (SL, INSEE 59345) - Cœur d'Ostrevent Agglo",
     .category = "government", .portal = "https://coeurdostrevent.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -119377,9 +119285,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "11:41:39 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_40CCAD1B_3BC4_4A87_B3FB_C28E5B17E58C", .name = "Mairie - Livry (SL, INSEE 58144) - Livry &#8211; Commune de "
-      "Livry",
-    .name_ja = "Mairie - Livry (SL, INSEE 58144) - Livry &#8211; Commune de Livry",
+  { .id = "JO45_FR_40CCAD1B_3BC4_4A87_B3FB_C28E5B17E58C", .name = "Mairie - Livry (SL, INSEE 58144) - Livry – Commune de Livry",
+    .name_ja = "Mairie - Livry (SL, INSEE 58144) - Livry – Commune de Livry",
     .category = "government", .portal = "https://livry.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -119415,9 +119322,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_41726BE3_E0F0_48E6_8559_77E91870AF5C", .name = "Service départemental d'incendie et de secours (SDIS) - Moselle "
-      "(SIL, INSEE 57616) - SDIS 57 &#8211; Sapeurs-pompiers de la "
-      "Moselle",
-    .name_ja = "Service départemental d'incendie et de secours (SDIS) - Moselle (SIL, INSEE 57616) - SDIS 57 &#8211; Sapeurs-pompiers de la Moselle",
+      "(SIL, INSEE 57616) - SDIS 57 – Sapeurs-pompiers de la Moselle",
+    .name_ja = "Service départemental d'incendie et de secours (SDIS) - Moselle (SIL, INSEE 57616) - SDIS 57 – Sapeurs-pompiers de la Moselle",
     .category = "government", .portal = "https://www.sdis57.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -119792,8 +119698,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_47FCAC5D_5895_4FBF_B5E0_F3B258405544", .name = "Mairie - Tremblay-en-France (SL, INSEE 93073) - Ville de Ville "
-      "de Tremblay-en-France : Flux RSS de l&#039;agenda",
-    .name_ja = "Mairie - Tremblay-en-France (SL, INSEE 93073) - Ville de Ville de Tremblay-en-France : Flux RSS de l&#039;agenda",
+      "de Tremblay-en-France : Flux RSS de l'agenda",
+    .name_ja = "Mairie - Tremblay-en-France (SL, INSEE 93073) - Ville de Ville de Tremblay-en-France : Flux RSS de l'agenda",
     .category = "government", .portal = "https://www.tremblay-en-france.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -120038,9 +119944,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:00:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_499BB1ED_F6E3_4A48_82A8_41CF77ABB556", .name = "Mairie - Fontaine-l'Abbé (SL, INSEE 27251) - Fontaine "
-      "l&#039;Abbé",
-    .name_ja = "Mairie - Fontaine-l'Abbé (SL, INSEE 27251) - Fontaine l&#039;Abbé",
+  { .id = "JO45_FR_499BB1ED_F6E3_4A48_82A8_41CF77ABB556", .name = "Mairie - Fontaine-l'Abbé (SL, INSEE 27251) - Fontaine l'Abbé",
+    .name_ja = "Mairie - Fontaine-l'Abbé (SL, INSEE 27251) - Fontaine l'Abbé",
     .category = "government", .portal = "https://www.fontaine-labbe.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -120297,8 +120202,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_4E588D44_D5D1_483F_9639_1F724DC612F7", .name = "Point information jeunesse - Port-Vendres (SL, INSEE 66148) - "
-      "Maison &amp; Jardin",
-    .name_ja = "Point information jeunesse - Port-Vendres (SL, INSEE 66148) - Maison &amp; Jardin",
+      "Maison & Jardin",
+    .name_ja = "Point information jeunesse - Port-Vendres (SL, INSEE 66148) - Maison & Jardin",
     .category = "government", .portal = "https://www.cc-alberes-cote-vermeille.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -120335,8 +120240,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_4F7C3F74_900C_4253_9326_E1A44B37B2E1", .name = "Info Jeunes - Bonneuil-sur-Marne (SL, INSEE 94011) - Ville de "
       "Mairie de Bonneuil sur Marne : site officiel : Flux RSS de "
-      "l&#039;agend",
-    .name_ja = "Info Jeunes - Bonneuil-sur-Marne (SL, INSEE 94011) - Ville de Mairie de Bonneuil sur Marne : site officiel : Flux RSS de l&#039;agend",
+      "l'agend",
+    .name_ja = "Info Jeunes - Bonneuil-sur-Marne (SL, INSEE 94011) - Ville de Mairie de Bonneuil sur Marne : site officiel : Flux RSS de l'agend",
     .category = "government", .portal = "https://www.ville-bonneuil.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -120576,9 +120481,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:49:03 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_51EC7238_15B0_4995_994B_5D3F1F13F25E", .name = "Mairie - Amendeuix-Oneix (SL, INSEE 64018) - Mairie "
-      "d&#039;Amendeuix Oneix",
-    .name_ja = "Mairie - Amendeuix-Oneix (SL, INSEE 64018) - Mairie d&#039;Amendeuix Oneix",
+  { .id = "JO45_FR_51EC7238_15B0_4995_994B_5D3F1F13F25E", .name = "Mairie - Amendeuix-Oneix (SL, INSEE 64018) - Mairie d'Amendeuix "
+      "Oneix",
+    .name_ja = "Mairie - Amendeuix-Oneix (SL, INSEE 64018) - Mairie d'Amendeuix Oneix",
     .category = "government", .portal = "https://amendeuix-oneix.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -120633,8 +120538,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_533FC902_6644_4A25_9E22_C2FBAF074EF4", .name = "Mairie - La Ferté-Beauharnais (SL, INSEE 41083) - Mairie de La "
-      "Ferté Beauharnais &#8211;  Site officiel de la commune",
-    .name_ja = "Mairie - La Ferté-Beauharnais (SL, INSEE 41083) - Mairie de La Ferté Beauharnais &#8211;  Site officiel de la commune",
+      "Ferté Beauharnais –  Site officiel de la commune",
+    .name_ja = "Mairie - La Ferté-Beauharnais (SL, INSEE 41083) - Mairie de La Ferté Beauharnais –  Site officiel de la commune",
     .category = "government", .portal = "https://la-ferte-beauharnais.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -121456,8 +121361,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_606EAD5F_BC64_45CA_8409_4063E6D661B8", .name = "Centre communal d'action sociale (CCAS) - Orée d'Anjou (SL, "
-      "INSEE 49069) - Commune Orée-d&#039;Anjou",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Orée d'Anjou (SL, INSEE 49069) - Commune Orée-d&#039;Anjou",
+      "INSEE 49069) - Commune Orée-d'Anjou",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Orée d'Anjou (SL, INSEE 49069) - Commune Orée-d'Anjou",
     .category = "government", .portal = "https://www.oreedanjou.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -122205,8 +122110,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_6A93EB92_10C5_4408_B04A_CDF32261CDB3", .name = "Centre communal d'action sociale (CCAS) - Saint-Martin-d'Uriage "
-      "(SL, INSEE 38422) - Mairie de Saint-Martin d&#039;Uriage",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Saint-Martin-d'Uriage (SL, INSEE 38422) - Mairie de Saint-Martin d&#039;Uriage",
+      "(SL, INSEE 38422) - Mairie de Saint-Martin d'Uriage",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Saint-Martin-d'Uriage (SL, INSEE 38422) - Mairie de Saint-Martin d'Uriage",
     .category = "government", .portal = "https://mairie.saintmartinduriage.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -122299,8 +122204,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_6BFFCC87_4C91_4D9F_B57A_E40E0282B90B", .name = "Mairie - Chemiré-le-Gaudin (SL, INSEE 72075) - Classement des 5 "
-      "meilleurs outils d&#8217;enrichissement d&#8217;email et de té",
-    .name_ja = "Mairie - Chemiré-le-Gaudin (SL, INSEE 72075) - Classement des 5 meilleurs outils d&#8217;enrichissement d&#8217;email et de té",
+      "meilleurs outils d’enrichissement d’email et de té",
+    .name_ja = "Mairie - Chemiré-le-Gaudin (SL, INSEE 72075) - Classement des 5 meilleurs outils d’enrichissement d’email et de té",
     .category = "government", .portal = "https://www.chemire-le-gaudin.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -122318,8 +122223,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_6C1B22EF_60D3_4D80_8717_2CEA8F0CC1DA", .name = "Mairie - Chapelle-d'Huin (SL, INSEE 25122) - Mairie de Chapelle "
-      "d&#039;Huin",
-    .name_ja = "Mairie - Chapelle-d'Huin (SL, INSEE 25122) - Mairie de Chapelle d&#039;Huin",
+      "d'Huin",
+    .name_ja = "Mairie - Chapelle-d'Huin (SL, INSEE 25122) - Mairie de Chapelle d'Huin",
     .category = "government", .portal = "http://chapelledhuin.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -122337,9 +122242,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_6D8DC519_403F_460F_A73E_D5CF69383C0F", .name = "Centre communal d'action sociale (CCAS) - Ghisonaccia (SL, INSEE "
-      "2B123) - Casa Cumuna di Ghisonaccia &#8211; Mairie de "
-      "Ghisonaccia",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Ghisonaccia (SL, INSEE 2B123) - Casa Cumuna di Ghisonaccia &#8211; Mairie de Ghisonaccia",
+      "2B123) - Casa Cumuna di Ghisonaccia – Mairie de Ghisonaccia",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Ghisonaccia (SL, INSEE 2B123) - Casa Cumuna di Ghisonaccia – Mairie de Ghisonaccia",
     .category = "government", .portal = "https://ghisonaccia.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -122451,8 +122355,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_6E50761D_0996_413E_AB28_794008C2B905", .name = "Mairie - Chambourcy (SL, INSEE 78133) - Ville de Ville de "
-      "Chambourcy : Flux RSS de l&#039;agenda",
-    .name_ja = "Mairie - Chambourcy (SL, INSEE 78133) - Ville de Ville de Chambourcy : Flux RSS de l&#039;agenda",
+      "Chambourcy : Flux RSS de l'agenda",
+    .name_ja = "Mairie - Chambourcy (SL, INSEE 78133) - Ville de Ville de Chambourcy : Flux RSS de l'agenda",
     .category = "government", .portal = "https://www.chambourcy.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -122544,8 +122448,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "root." },
 
   { .id = "JO45_FR_70DA4B6E_AB46_4546_AF32_D6D031994B8F", .name = "Mairie - Le Pont-Chrétien-Chabenet (SL, INSEE 36161) - Le Pont "
-      "Chr&#233;tien Chabenet",
-    .name_ja = "Mairie - Le Pont-Chrétien-Chabenet (SL, INSEE 36161) - Le Pont Chr&#233;tien Chabenet",
+      "Chrétien Chabenet",
+    .name_ja = "Mairie - Le Pont-Chrétien-Chabenet (SL, INSEE 36161) - Le Pont Chrétien Chabenet",
     .category = "government", .portal = "https://www.lepontchretienchabenet.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -122749,9 +122653,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_74D82D25_BABF_4816_97E9_97B10959C97E", .name = "Direction des territoires, de l'alimentation et de la mer (DTAM) "
       "- Saint-Pierre-et-Miquelon (SIL, INSEE 97502) - Direction des "
-      "Territoires, de l'Alimentation et de la Mer &#224; Saint-Pierre "
-      "et",
-    .name_ja = "Direction des territoires, de l'alimentation et de la mer (DTAM) - Saint-Pierre-et-Miquelon (SIL, INSEE 97502) - Direction des Territoires, de l'Alimentation et de la Mer &#224; Saint-Pierre et",
+      "Territoires, de l'Alimentation et de la Mer à Saint-Pierre et",
+    .name_ja = "Direction des territoires, de l'alimentation et de la mer (DTAM) - Saint-Pierre-et-Miquelon (SIL, INSEE 97502) - Direction des Territoires, de l'Alimentation et de la Mer à Saint-Pierre et",
     .category = "government", .portal = "https://www.saint-pierre-et-miquelon.developpement-durable.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -122825,8 +122728,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_757BD407_C4D3_4A1E_AAAD_66F40B1C418D", .name = "Centre communal d'action sociale (CCAS) - Sainte-Marie "
-      "Martinique (SL, INSEE 97228) - Carnet d&#039;Escales",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Sainte-Marie Martinique (SL, INSEE 97228) - Carnet d&#039;Escales",
+      "Martinique (SL, INSEE 97228) - Carnet d'Escales",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Sainte-Marie Martinique (SL, INSEE 97228) - Carnet d'Escales",
     .category = "government", .portal = "https://www.ville-saintemarie.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -122844,9 +122747,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_757F5404_8F98_4288_971F_2C2F4668FA85", .name = "Service départemental d'incendie et de secours (SDIS) - "
-      "Haute-Corse (SIL, INSEE 2B120) - SIS 2B Service d&#039;Incendie "
-      "et de Secours de la Haute Corse",
-    .name_ja = "Service départemental d'incendie et de secours (SDIS) - Haute-Corse (SIL, INSEE 2B120) - SIS 2B Service d&#039;Incendie et de Secours de la Haute Corse",
+      "Haute-Corse (SIL, INSEE 2B120) - SIS 2B Service d'Incendie et de "
+      "Secours de la Haute Corse",
+    .name_ja = "Service départemental d'incendie et de secours (SDIS) - Haute-Corse (SIL, INSEE 2B120) - SIS 2B Service d'Incendie et de Secours de la Haute Corse",
     .category = "government", .portal = "https://sis2b.corsica/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -122917,9 +122820,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:29:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_76B748C3_E6D3_47A5_845A_894100D2F267", .name = "Mairie - Île-d'Aix (SL, INSEE 17004) - Mairie de l'&#206;le "
-      "d'Aix",
-    .name_ja = "Mairie - Île-d'Aix (SL, INSEE 17004) - Mairie de l'&#206;le d'Aix",
+  { .id = "JO45_FR_76B748C3_E6D3_47A5_845A_894100D2F267", .name = "Mairie - Île-d'Aix (SL, INSEE 17004) - Mairie de l'Île d'Aix",
+    .name_ja = "Mairie - Île-d'Aix (SL, INSEE 17004) - Mairie de l'Île d'Aix",
     .category = "government", .portal = "https://iledaix.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -123051,8 +122953,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:37:06 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_7ACE2AAF_F239_42B9_99F4_4C2C93BB8736", .name = "Mairie - Haubourdin (SL, INSEE 59286) - Ville d&#039;Haubourdin",
-    .name_ja = "Mairie - Haubourdin (SL, INSEE 59286) - Ville d&#039;Haubourdin",
+  { .id = "JO45_FR_7ACE2AAF_F239_42B9_99F4_4C2C93BB8736", .name = "Mairie - Haubourdin (SL, INSEE 59286) - Ville d'Haubourdin",
+    .name_ja = "Mairie - Haubourdin (SL, INSEE 59286) - Ville d'Haubourdin",
     .category = "government", .portal = "https://www.haubourdin.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -123125,9 +123027,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_7B5E8A0A_DC58_48A9_AC2F_5D130B4DBB7D", .name = "Centre communal d'action sociale (CCAS) - Plourivo (SL, INSEE "
-      "22233) - Mairie de Plourivo - Commune des C&#244;tes d'Armor en "
+      "22233) - Mairie de Plourivo - Commune des Côtes d'Armor en "
       "Bretagne",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Plourivo (SL, INSEE 22233) - Mairie de Plourivo - Commune des C&#244;tes d'Armor en Bretagne",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Plourivo (SL, INSEE 22233) - Mairie de Plourivo - Commune des Côtes d'Armor en Bretagne",
     .category = "government", .portal = "https://www.plourivo.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -123145,8 +123047,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_7B6BCD37_46C8_4A04_B370_679B01DE56B3", .name = "Mairie - Seyssel (SL, INSEE 74269) - 17 oct Journée "
-      "internationale du don d&#8217;organes et de reconnaissance aux d",
-    .name_ja = "Mairie - Seyssel (SL, INSEE 74269) - 17 oct Journée internationale du don d&#8217;organes et de reconnaissance aux d",
+      "internationale du don d’organes et de reconnaissance aux d",
+    .name_ja = "Mairie - Seyssel (SL, INSEE 74269) - 17 oct Journée internationale du don d’organes et de reconnaissance aux d",
     .category = "government", .portal = "https://seyssel74.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -123165,8 +123067,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_7BC12432_0A2F_4EAE_98D3_548C59EAFCF5", .name = "CROSS - La Réunion (Centre régional opérationnel de surveillance "
       "et de sauvetage) - Sud Océan indien (SIL, INSEE 97411) - "
-      "Direction de la mer sud oc&#233;an Indien",
-    .name_ja = "CROSS - La Réunion (Centre régional opérationnel de surveillance et de sauvetage) - Sud Océan indien (SIL, INSEE 97411) - Direction de la mer sud oc&#233;an Indien",
+      "Direction de la mer sud océan Indien",
+    .name_ja = "CROSS - La Réunion (Centre régional opérationnel de surveillance et de sauvetage) - Sud Océan indien (SIL, INSEE 97411) - Direction de la mer sud océan Indien",
     .category = "government", .portal = "https://www.dm.sud-ocean-indien.developpement-durable.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -123348,8 +123250,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_06ECED13_422F_4CD5_B815_3565870EEFEC", .name = "Communauté de communes - Val d'Amboise (SL, INSEE 37163) - "
-      "Communauté de communes du Val d&#039;Amboise",
-    .name_ja = "Communauté de communes - Val d'Amboise (SL, INSEE 37163) - Communauté de communes du Val d&#039;Amboise",
+      "Communauté de communes du Val d'Amboise",
+    .name_ja = "Communauté de communes - Val d'Amboise (SL, INSEE 37163) - Communauté de communes du Val d'Amboise",
     .category = "government", .portal = "http://www.cc-valdamboise.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -124291,8 +124193,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_17E5A28C_5E2F_45E5_8788_72840F26DE2B", .name = "Mairie - Neung-sur-Beuvron (SL, INSEE 41159) - Neung-sur-Beuvron "
-      "&#8211; Site Officiel",
-    .name_ja = "Mairie - Neung-sur-Beuvron (SL, INSEE 41159) - Neung-sur-Beuvron &#8211; Site Officiel",
+      "– Site Officiel",
+    .name_ja = "Mairie - Neung-sur-Beuvron (SL, INSEE 41159) - Neung-sur-Beuvron – Site Officiel",
     .category = "government", .portal = "https://www.neung-sur-beuvron.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -124309,9 +124211,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:50:08 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_17E7F35E_991A_4136_886D_6D70BBFFE7AC", .name = "Mairie - Torsac (SL, INSEE 16382) - Commune de Torsac &#8211; "
-      "Site Officiel",
-    .name_ja = "Mairie - Torsac (SL, INSEE 16382) - Commune de Torsac &#8211; Site Officiel",
+  { .id = "JO45_FR_17E7F35E_991A_4136_886D_6D70BBFFE7AC", .name = "Mairie - Torsac (SL, INSEE 16382) - Commune de Torsac – Site "
+      "Officiel",
+    .name_ja = "Mairie - Torsac (SL, INSEE 16382) - Commune de Torsac – Site Officiel",
     .category = "government", .portal = "https://www.torsac.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -124366,9 +124268,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-10-09T08:07:40Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO45_FR_18E0C2DE_8C6E_40F9_9594_72F0D858C9C9", .name = "Mairie - Gausson (SL, INSEE 22060) - Mairie de Gausson &#8211; "
-      "22150",
-    .name_ja = "Mairie - Gausson (SL, INSEE 22060) - Mairie de Gausson &#8211; 22150",
+  { .id = "JO45_FR_18E0C2DE_8C6E_40F9_9594_72F0D858C9C9", .name = "Mairie - Gausson (SL, INSEE 22060) - Mairie de Gausson – 22150",
+    .name_ja = "Mairie - Gausson (SL, INSEE 22060) - Mairie de Gausson – 22150",
     .category = "government", .portal = "https://mairie-gausson.bzh/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -124587,9 +124488,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "16:18:53 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_1D703B2C_8592_4393_BE83_E44E67701314", .name = "Mairie - Gourbeyre (SL, INSEE 97109) - Ville de GOURBEYRE "
-      "&#8211; Site Officiel",
-    .name_ja = "Mairie - Gourbeyre (SL, INSEE 97109) - Ville de GOURBEYRE &#8211; Site Officiel",
+  { .id = "JO45_FR_1D703B2C_8592_4393_BE83_E44E67701314", .name = "Mairie - Gourbeyre (SL, INSEE 97109) - Ville de GOURBEYRE – Site "
+      "Officiel",
+    .name_ja = "Mairie - Gourbeyre (SL, INSEE 97109) - Ville de GOURBEYRE – Site Officiel",
     .category = "government", .portal = "https://ville-gourbeyre.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -124660,9 +124561,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:05:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_1F2D902A_6CF6_49ED_B4BD_C2E59CD1E26D", .name = "Mairie - Rians (SL, INSEE 18194) - Rians &#8211; Site officiel "
-      "de la commune",
-    .name_ja = "Mairie - Rians (SL, INSEE 18194) - Rians &#8211; Site officiel de la commune",
+  { .id = "JO45_FR_1F2D902A_6CF6_49ED_B4BD_C2E59CD1E26D", .name = "Mairie - Rians (SL, INSEE 18194) - Rians – Site officiel de la "
+      "commune",
+    .name_ja = "Mairie - Rians (SL, INSEE 18194) - Rians – Site officiel de la commune",
     .category = "government", .portal = "https://www.rians18.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -124680,8 +124581,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_205163D9_A41D_442D_9013_59E76236B3FD", .name = "Mairie - Verpillières (SL, INSEE 80790) - Commune de "
-      "Verpillieres &#8211; Somme &#8211; 80",
-    .name_ja = "Mairie - Verpillières (SL, INSEE 80790) - Commune de Verpillieres &#8211; Somme &#8211; 80",
+      "Verpillieres – Somme – 80",
+    .name_ja = "Mairie - Verpillières (SL, INSEE 80790) - Commune de Verpillieres – Somme – 80",
     .category = "government", .portal = "https://www.verpillieres.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -124991,8 +124892,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_7FC1CDC4_FCE6_42E9_B139_8C8745212627", .name = "Centre communal d'action sociale (CCAS) - "
       "Saint-Donat-sur-l'Herbasse (SL, INSEE 26301) - Mairie de "
-      "Saint-Donat-sur-l&#039;Herbasse",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Saint-Donat-sur-l'Herbasse (SL, INSEE 26301) - Mairie de Saint-Donat-sur-l&#039;Herbasse",
+      "Saint-Donat-sur-l'Herbasse",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Saint-Donat-sur-l'Herbasse (SL, INSEE 26301) - Mairie de Saint-Donat-sur-l'Herbasse",
     .category = "government", .portal = "https://www.ville-st-donat.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -125245,9 +125146,9 @@ static const hp_source HP3B45_FRGOV[] = {
     .description = "Fetched 2026-10-18: 1 items, RSS1 feed, newest 2025-01-16. A "
       "feed the organisation itself declares or links on its site root." },
 
-  { .id = "JO45_FR_80539194_1338_4D34_BF6A_25321E6C6A64", .name = "Mairie - La Roque-Gageac (SL, INSEE 24355) - La Roque-Gageac "
-      "&#8211; Site officiel",
-    .name_ja = "Mairie - La Roque-Gageac (SL, INSEE 24355) - La Roque-Gageac &#8211; Site officiel",
+  { .id = "JO45_FR_80539194_1338_4D34_BF6A_25321E6C6A64", .name = "Mairie - La Roque-Gageac (SL, INSEE 24355) - La Roque-Gageac – "
+      "Site officiel",
+    .name_ja = "Mairie - La Roque-Gageac (SL, INSEE 24355) - La Roque-Gageac – Site officiel",
     .category = "government", .portal = "https://laroquegageac.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -125318,9 +125219,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:07:40 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_8122ECC5_8AD3_4291_9B90_9147B277F10A", .name = "Mairie - Bassemberg (SL, INSEE 67022) - Commune de Bassemberg "
-      "&#8211; Vallée de Villé",
-    .name_ja = "Mairie - Bassemberg (SL, INSEE 67022) - Commune de Bassemberg &#8211; Vallée de Villé",
+  { .id = "JO45_FR_8122ECC5_8AD3_4291_9B90_9147B277F10A", .name = "Mairie - Bassemberg (SL, INSEE 67022) - Commune de Bassemberg – "
+      "Vallée de Villé",
+    .name_ja = "Mairie - Bassemberg (SL, INSEE 67022) - Commune de Bassemberg – Vallée de Villé",
     .category = "government", .portal = "https://bassemberg.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -125470,8 +125371,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_84E5DDAD_82A9_4D42_BC5D_FD211C088513", .name = "Centre communal d'action sociale (CCAS) - Le "
       "Chesnay-Rocquencourt (SL, INSEE 78158) - Ville de Ville du "
-      "Chesnay-Rocquencourt : Flux RSS de l&#039;agenda",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Le Chesnay-Rocquencourt (SL, INSEE 78158) - Ville de Ville du Chesnay-Rocquencourt : Flux RSS de l&#039;agenda",
+      "Chesnay-Rocquencourt : Flux RSS de l'agenda",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Le Chesnay-Rocquencourt (SL, INSEE 78158) - Ville de Ville du Chesnay-Rocquencourt : Flux RSS de l'agenda",
     .category = "government", .portal = "https://www.lechesnay-rocquencourt.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -125509,8 +125410,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_85153A32_DE7C_48F9_9212_DF742EE20B35", .name = "Mairie - Nousty (SL, INSEE 64419) - Commune de Nousty (Béarn 64) "
-      "&#8211; Mairie de Nousty",
-    .name_ja = "Mairie - Nousty (SL, INSEE 64419) - Commune de Nousty (Béarn 64) &#8211; Mairie de Nousty",
+      "– Mairie de Nousty",
+    .name_ja = "Mairie - Nousty (SL, INSEE 64419) - Commune de Nousty (Béarn 64) – Mairie de Nousty",
     .category = "government", .portal = "https://nousty.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -125637,8 +125538,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_87198724_464C_4515_A3B7_50BDE19EFCEF", .name = "Mairie - Saint-Martin-d'Estreaux (SL, INSEE 42257) - SAINT "
-      "MARTIN D&#039;ESTREAUX",
-    .name_ja = "Mairie - Saint-Martin-d'Estreaux (SL, INSEE 42257) - SAINT MARTIN D&#039;ESTREAUX",
+      "MARTIN D'ESTREAUX",
+    .name_ja = "Mairie - Saint-Martin-d'Estreaux (SL, INSEE 42257) - SAINT MARTIN D'ESTREAUX",
     .category = "government", .portal = "https://st-martin-destreaux.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -125656,8 +125557,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_8770FEE9_CE99_498D_B65D_D5F16EE31FA4", .name = "Mairie - Auvers-Saint-Georges (SL, INSEE 91038) - MAIRIE "
-      "D&#039;AUVERS SAINT GEORGES",
-    .name_ja = "Mairie - Auvers-Saint-Georges (SL, INSEE 91038) - MAIRIE D&#039;AUVERS SAINT GEORGES",
+      "D'AUVERS SAINT GEORGES",
+    .name_ja = "Mairie - Auvers-Saint-Georges (SL, INSEE 91038) - MAIRIE D'AUVERS SAINT GEORGES",
     .category = "government", .portal = "https://auvers-saint-georges.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -125974,8 +125875,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:18. A feed the organisation itself declares or links on its "
       "site root." },
 
-  { .id = "JO45_FR_8B8A2BC4_8423_4200_ADA8_43AEA565EFFA", .name = "Mairie - Anglade (SL, INSEE 33006) - Mairie d&#039;Anglade",
-    .name_ja = "Mairie - Anglade (SL, INSEE 33006) - Mairie d&#039;Anglade",
+  { .id = "JO45_FR_8B8A2BC4_8423_4200_ADA8_43AEA565EFFA", .name = "Mairie - Anglade (SL, INSEE 33006) - Mairie d'Anglade",
+    .name_ja = "Mairie - Anglade (SL, INSEE 33006) - Mairie d'Anglade",
     .category = "government", .portal = "https://www.mairie-anglade.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -125992,9 +125893,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:56:48 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_8B954EAA_50ED_48F3_90C5_3BE8FE971D8A", .name = "Mairie - Lamoura (SL, INSEE 39275) - Mairie de Lamoura &#8211; "
-      "Station Des Rousses &#8211; 4 villages",
-    .name_ja = "Mairie - Lamoura (SL, INSEE 39275) - Mairie de Lamoura &#8211; Station Des Rousses &#8211; 4 villages",
+  { .id = "JO45_FR_8B954EAA_50ED_48F3_90C5_3BE8FE971D8A", .name = "Mairie - Lamoura (SL, INSEE 39275) - Mairie de Lamoura – Station "
+      "Des Rousses – 4 villages",
+    .name_ja = "Mairie - Lamoura (SL, INSEE 39275) - Mairie de Lamoura – Station Des Rousses – 4 villages",
     .category = "government", .portal = "https://www.lamoura.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -126104,9 +126005,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "18:37:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_8DBB6271_125D_41AF_AF2C_A8AFCF874BBB", .name = "Mairie - Brillevast (SL, INSEE 50086) - Brillevast &#8211; "
-      "Mairie",
-    .name_ja = "Mairie - Brillevast (SL, INSEE 50086) - Brillevast &#8211; Mairie",
+  { .id = "JO45_FR_8DBB6271_125D_41AF_AF2C_A8AFCF874BBB", .name = "Mairie - Brillevast (SL, INSEE 50086) - Brillevast – Mairie",
+    .name_ja = "Mairie - Brillevast (SL, INSEE 50086) - Brillevast – Mairie",
     .category = "government", .portal = "https://brillevast.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -126232,9 +126132,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026 12:59:25 +0000. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO45_FR_8FB28022_6BE3_460E_925E_62C89D2C24BA", .name = "Mairie - La Bastide (SL, INSEE 66018) - LA BASTIDE  &#8211;  "
+  { .id = "JO45_FR_8FB28022_6BE3_460E_925E_62C89D2C24BA", .name = "Mairie - La Bastide (SL, INSEE 66018) - LA BASTIDE  –  "
       "Pyrénées-Orientales",
-    .name_ja = "Mairie - La Bastide (SL, INSEE 66018) - LA BASTIDE  &#8211;  Pyrénées-Orientales",
+    .name_ja = "Mairie - La Bastide (SL, INSEE 66018) - LA BASTIDE  –  Pyrénées-Orientales",
     .category = "government", .portal = "https://la-bastide.info/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -126455,8 +126355,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_93B165E9_D9AA_49C0_A670_D5276C05F8AA", .name = "Ordre des avocats - Barreau de Poitiers (SL, INSEE 86194) - "
-      "Ordre Des Avocats &#8211; Potiers",
-    .name_ja = "Ordre des avocats - Barreau de Poitiers (SL, INSEE 86194) - Ordre Des Avocats &#8211; Potiers",
+      "Ordre Des Avocats – Potiers",
+    .name_ja = "Ordre des avocats - Barreau de Poitiers (SL, INSEE 86194) - Ordre Des Avocats – Potiers",
     .category = "government", .portal = "https://www.avocats-poitiers.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -126566,8 +126466,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_946ED541_66A9_455E_8BC6_128BC9DC07DE", .name = "Mairie - Montrieux-en-Sologne (SL, INSEE 41152) - Montrieux en "
-      "Sologne &#8211; Site officiel de la commune",
-    .name_ja = "Mairie - Montrieux-en-Sologne (SL, INSEE 41152) - Montrieux en Sologne &#8211; Site officiel de la commune",
+      "Sologne – Site officiel de la commune",
+    .name_ja = "Mairie - Montrieux-en-Sologne (SL, INSEE 41152) - Montrieux en Sologne – Site officiel de la commune",
     .category = "government", .portal = "https://montrieuxensologne.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -126641,9 +126541,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_1E10F16F_2D71_4008_B07D_38A2A98935AB", .name = "Institut des Hautes études par les sciences et la technologie "
-      "(SI, INSEE ) - IHEST &#8211; Institut des Hautes Etudes pour la "
+      "(SI, INSEE ) - IHEST – Institut des Hautes Etudes pour la "
       "Science et la Technologie",
-    .name_ja = "Institut des Hautes études par les sciences et la technologie (SI, INSEE ) - IHEST &#8211; Institut des Hautes Etudes pour la Science et la Technologie",
+    .name_ja = "Institut des Hautes études par les sciences et la technologie (SI, INSEE ) - IHEST – Institut des Hautes Etudes pour la Science et la Technologie",
     .category = "government", .portal = "https://www.ihest.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -126869,8 +126769,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_FC107C43_22AB_4F15_A0D3_ACF1F750E236", .name = "Institut français de CORÉE DU SUD - Séoul (SI, INSEE ) - France "
-      "en Corée &#8211; Culture",
-    .name_ja = "Institut français de CORÉE DU SUD - Séoul (SI, INSEE ) - France en Corée &#8211; Culture",
+      "en Corée – Culture",
+    .name_ja = "Institut français de CORÉE DU SUD - Séoul (SI, INSEE ) - France en Corée – Culture",
     .category = "government", .portal = "https://kr.ambafrance-culture.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -127070,8 +126970,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_022572A6_E94D_4DBE_B53B_978629A6F5DD", .name = "Mairie - La Bernerie-en-Retz (SL, INSEE 44012) - La Bernerie en "
-      "Retz &#8211; Site officiel",
-    .name_ja = "Mairie - La Bernerie-en-Retz (SL, INSEE 44012) - La Bernerie en Retz &#8211; Site officiel",
+      "Retz – Site officiel",
+    .name_ja = "Mairie - La Bernerie-en-Retz (SL, INSEE 44012) - La Bernerie en Retz – Site officiel",
     .category = "government", .portal = "https://mairie-labernerie.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -127181,9 +127081,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:24:37 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_04377C5A_D015_49D3_A0E5_02F65062FE01", .name = "Mairie - Alpe-d'Huez (SL, INSEE 38191) - Mairie de l&#039;Alpe "
-      "d&#039;Huez",
-    .name_ja = "Mairie - Alpe-d'Huez (SL, INSEE 38191) - Mairie de l&#039;Alpe d&#039;Huez",
+  { .id = "JO45_FR_04377C5A_D015_49D3_A0E5_02F65062FE01", .name = "Mairie - Alpe-d'Huez (SL, INSEE 38191) - Mairie de l'Alpe d'Huez",
+    .name_ja = "Mairie - Alpe-d'Huez (SL, INSEE 38191) - Mairie de l'Alpe d'Huez",
     .category = "government", .portal = "https://www.alpedhuez-mairie.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -127220,8 +127119,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_0620DE02_57A9_48F3_9794_DC71F660D2A6", .name = "Communauté de communes - Arcis Mailly Ramerupt (SL, INSEE 10006) "
-      "- Communauté de Communes &#8211; Arcis Mailly Ramerupt",
-    .name_ja = "Communauté de communes - Arcis Mailly Ramerupt (SL, INSEE 10006) - Communauté de Communes &#8211; Arcis Mailly Ramerupt",
+      "- Communauté de Communes – Arcis Mailly Ramerupt",
+    .name_ja = "Communauté de communes - Arcis Mailly Ramerupt (SL, INSEE 10006) - Communauté de Communes – Arcis Mailly Ramerupt",
     .category = "government", .portal = "https://arcismaillyramerupt.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -127440,8 +127339,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_993465F2_5535_42E4_B42E_B377FDA1B8AC", .name = "Conseil départemental d'accès au droit de l'Oise (SL, INSEE "
-      "60057) - CDAD de l&#039;Oise",
-    .name_ja = "Conseil départemental d'accès au droit de l'Oise (SL, INSEE 60057) - CDAD de l&#039;Oise",
+      "60057) - CDAD de l'Oise",
+    .name_ja = "Conseil départemental d'accès au droit de l'Oise (SL, INSEE 60057) - CDAD de l'Oise",
     .category = "government", .portal = "https://cdad-oise.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -127570,8 +127469,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:41:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_9B107276_147F_47D2_892C_9E9B11CFBF72", .name = "Mairie - Ault (SL, INSEE 80039) - Commune d&#039;Ault",
-    .name_ja = "Mairie - Ault (SL, INSEE 80039) - Commune d&#039;Ault",
+  { .id = "JO45_FR_9B107276_147F_47D2_892C_9E9B11CFBF72", .name = "Mairie - Ault (SL, INSEE 80039) - Commune d'Ault",
+    .name_ja = "Mairie - Ault (SL, INSEE 80039) - Commune d'Ault",
     .category = "government", .portal = "https://www.ault.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -127626,9 +127525,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:58:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_9BC0F0F1_F440_4997_AE2B_04CD2809694C", .name = "Mairie - Ars-sur-Formans (SL, INSEE 01021) - Mairie d&#039;Ars "
-      "sur Formans",
-    .name_ja = "Mairie - Ars-sur-Formans (SL, INSEE 01021) - Mairie d&#039;Ars sur Formans",
+  { .id = "JO45_FR_9BC0F0F1_F440_4997_AE2B_04CD2809694C", .name = "Mairie - Ars-sur-Formans (SL, INSEE 01021) - Mairie d'Ars sur "
+      "Formans",
+    .name_ja = "Mairie - Ars-sur-Formans (SL, INSEE 01021) - Mairie d'Ars sur Formans",
     .category = "government", .portal = "https://ars-sur-formans.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -127795,8 +127694,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_9E3667A4_5BD4_4D2E_9DC0_E84312AEFA0B", .name = "Service d’aide médicale urgente (Samu) - Hautes-Pyrénées (SIL, "
-      "INSEE 65440) - Centre Hospitalier Tarbes &#8211; Lourdes",
-    .name_ja = "Service d’aide médicale urgente (Samu) - Hautes-Pyrénées (SIL, INSEE 65440) - Centre Hospitalier Tarbes &#8211; Lourdes",
+      "INSEE 65440) - Centre Hospitalier Tarbes – Lourdes",
+    .name_ja = "Service d’aide médicale urgente (Samu) - Hautes-Pyrénées (SIL, INSEE 65440) - Centre Hospitalier Tarbes – Lourdes",
     .category = "government", .portal = "https://www.ch-tarbes-lourdes.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -127961,8 +127860,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "16:10:37 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_A049DE0E_E87F_4745_937F_548E388011D3", .name = "Mairie - Essertaux (SL, INSEE 80285) - Commune d&#039;Essertaux",
-    .name_ja = "Mairie - Essertaux (SL, INSEE 80285) - Commune d&#039;Essertaux",
+  { .id = "JO45_FR_A049DE0E_E87F_4745_937F_548E388011D3", .name = "Mairie - Essertaux (SL, INSEE 80285) - Commune d'Essertaux",
+    .name_ja = "Mairie - Essertaux (SL, INSEE 80285) - Commune d'Essertaux",
     .category = "government", .portal = "https://www.essertaux.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -128017,8 +127916,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_A172C3DF_7A50_4A43_BD3B_F64A461F18B7", .name = "Mairie - Authevernes (SL, INSEE 27026) - Site officiel "
-      "d&#039;Authevernes",
-    .name_ja = "Mairie - Authevernes (SL, INSEE 27026) - Site officiel d&#039;Authevernes",
+      "d'Authevernes",
+    .name_ja = "Mairie - Authevernes (SL, INSEE 27026) - Site officiel d'Authevernes",
     .category = "government", .portal = "http://authevernes.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -128110,9 +128009,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:13:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_A29549A0_59B5_4291_B44D_522CC8BF854F", .name = "Mairie - Le Montellier (SL, INSEE 01260) - Mairie de "
-      "&lt;br&gt;Le Montellier",
-    .name_ja = "Mairie - Le Montellier (SL, INSEE 01260) - Mairie de &lt;br&gt;Le Montellier",
+  { .id = "JO45_FR_A29549A0_59B5_4291_B44D_522CC8BF854F", .name = "Mairie - Le Montellier (SL, INSEE 01260) - Mairie de <br>Le "
+      "Montellier",
+    .name_ja = "Mairie - Le Montellier (SL, INSEE 01260) - Mairie de <br>Le Montellier",
     .category = "government", .portal = "https://ville-lemontellier.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -128386,8 +128285,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_AB1441D0_4F6A_42D0_9A58_31850065FAF0", .name = "Mairie - Hangest-sur-Somme (SL, INSEE 80416) - Commune "
-      "d&#039;Hangest-sur-Somme",
-    .name_ja = "Mairie - Hangest-sur-Somme (SL, INSEE 80416) - Commune d&#039;Hangest-sur-Somme",
+      "d'Hangest-sur-Somme",
+    .name_ja = "Mairie - Hangest-sur-Somme (SL, INSEE 80416) - Commune d'Hangest-sur-Somme",
     .category = "government", .portal = "https://www.hangestsursomme.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -128816,9 +128715,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "19:52:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_B23DE436_2704_4C1D_9BC5_9A73F495ED11_2", .name = "Mairie - Gouy-en-Artois (SL, INSEE 62379) - Actualités &#8211; "
+  { .id = "JO45_FR_B23DE436_2704_4C1D_9BC5_9A73F495ED11_2", .name = "Mairie - Gouy-en-Artois (SL, INSEE 62379) - Actualités – "
       "Gouy-en-Artois",
-    .name_ja = "Mairie - Gouy-en-Artois (SL, INSEE 62379) - Actualités &#8211; Gouy-en-Artois",
+    .name_ja = "Mairie - Gouy-en-Artois (SL, INSEE 62379) - Actualités – Gouy-en-Artois",
     .category = "government", .portal = "https://gouyenartois.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -128871,9 +128770,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:14:15 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_B371BAF2_306A_4AE6_BCB3_8DCE6E18E3E5", .name = "Mairie - Saint-Valérien (SL, INSEE 85274) - Saint Valérien "
-      "&#8211; Vendée",
-    .name_ja = "Mairie - Saint-Valérien (SL, INSEE 85274) - Saint Valérien &#8211; Vendée",
+  { .id = "JO45_FR_B371BAF2_306A_4AE6_BCB3_8DCE6E18E3E5", .name = "Mairie - Saint-Valérien (SL, INSEE 85274) - Saint Valérien – "
+      "Vendée",
+    .name_ja = "Mairie - Saint-Valérien (SL, INSEE 85274) - Saint Valérien – Vendée",
     .category = "government", .portal = "https://saintvalerien85.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -129390,8 +129289,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:10:29 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_BB19CD7D_F404_4295_A6E8_5EF77B10E7BE", .name = "Mairie - Assac (SL, INSEE 81019) - Mairie d&#039;Assac",
-    .name_ja = "Mairie - Assac (SL, INSEE 81019) - Mairie d&#039;Assac",
+  { .id = "JO45_FR_BB19CD7D_F404_4295_A6E8_5EF77B10E7BE", .name = "Mairie - Assac (SL, INSEE 81019) - Mairie d'Assac",
+    .name_ja = "Mairie - Assac (SL, INSEE 81019) - Mairie d'Assac",
     .category = "government", .portal = "https://assac.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -129856,8 +129755,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_CA5B97FD_3D27_46BB_A22A_2B4937172058", .name = "Centre communal d'action sociale (CCAS) - Oberhergheim (SL, "
-      "INSEE 68242) - Mairie d&#039;oberhergheim",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Oberhergheim (SL, INSEE 68242) - Mairie d&#039;oberhergheim",
+      "INSEE 68242) - Mairie d'oberhergheim",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Oberhergheim (SL, INSEE 68242) - Mairie d'oberhergheim",
     .category = "government", .portal = "https://oberhergheim.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -130652,9 +130551,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:28:26 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_DB45C41D_6BC7_4A95_9C9F_721051B79A72", .name = "Mairie - Aix-Noulette (SL, INSEE 62019) - Commune "
-      "d&#039;Aix-Noulette",
-    .name_ja = "Mairie - Aix-Noulette (SL, INSEE 62019) - Commune d&#039;Aix-Noulette",
+  { .id = "JO45_FR_DB45C41D_6BC7_4A95_9C9F_721051B79A72", .name = "Mairie - Aix-Noulette (SL, INSEE 62019) - Commune d'Aix-Noulette",
+    .name_ja = "Mairie - Aix-Noulette (SL, INSEE 62019) - Commune d'Aix-Noulette",
     .category = "government", .portal = "https://www.aix-noulette.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -131078,8 +130976,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_E3EBBEE7_253B_4612_BDFE_E5077DC4CB0B", .name = "Mairie - Saint-Denis (SL, INSEE 11339) - Mairie de Saint-Denis "
-      "d&#039;Aude",
-    .name_ja = "Mairie - Saint-Denis (SL, INSEE 11339) - Mairie de Saint-Denis d&#039;Aude",
+      "d'Aude",
+    .name_ja = "Mairie - Saint-Denis (SL, INSEE 11339) - Mairie de Saint-Denis d'Aude",
     .category = "government", .portal = "https://saintdenis-aude.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -131152,8 +131050,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_E467AEFC_913F_40BA_9723_E8A851F111AF", .name = "Direction interdépartementale des routes (DIR) - Méditerranée "
-      "(SIL, INSEE 13203) - Internet DIR M&#233;diterran&#233;e",
-    .name_ja = "Direction interdépartementale des routes (DIR) - Méditerranée (SIL, INSEE 13203) - Internet DIR M&#233;diterran&#233;e",
+      "(SIL, INSEE 13203) - Internet DIR Méditerranée",
+    .name_ja = "Direction interdépartementale des routes (DIR) - Méditerranée (SIL, INSEE 13203) - Internet DIR Méditerranée",
     .category = "government", .portal = "https://www.dir.mediterranee.developpement-durable.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -131189,8 +131087,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:56:58 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_E63A6D1E_F68D_4633_B194_D1006C2A4F79", .name = "Mairie - Épiniac (SL, INSEE 35104) - Mairie d&#8217;Épiniac",
-    .name_ja = "Mairie - Épiniac (SL, INSEE 35104) - Mairie d&#8217;Épiniac",
+  { .id = "JO45_FR_E63A6D1E_F68D_4633_B194_D1006C2A4F79", .name = "Mairie - Épiniac (SL, INSEE 35104) - Mairie d’Épiniac",
+    .name_ja = "Mairie - Épiniac (SL, INSEE 35104) - Mairie d’Épiniac",
     .category = "government", .portal = "https://epiniac.bzh/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -131244,8 +131142,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "06:40:58 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_E68CC4C8_7FC5_43E1_8E4D_16EA9E863EB4", .name = "Mairie - L'Escarène (SL, INSEE 06057) - L&#039;ESCARENE",
-    .name_ja = "Mairie - L'Escarène (SL, INSEE 06057) - L&#039;ESCARENE",
+  { .id = "JO45_FR_E68CC4C8_7FC5_43E1_8E4D_16EA9E863EB4", .name = "Mairie - L'Escarène (SL, INSEE 06057) - L'ESCARENE",
+    .name_ja = "Mairie - L'Escarène (SL, INSEE 06057) - L'ESCARENE",
     .category = "government", .portal = "https://www.escarene.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -131874,9 +131772,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "11:25:26 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F3B3D071_B529_4587_8678_C0666542714D", .name = "Mairie - Luquet (SL, INSEE 65292) - Commune de Luquet &#8211; "
+  { .id = "JO45_FR_F3B3D071_B529_4587_8678_C0666542714D", .name = "Mairie - Luquet (SL, INSEE 65292) - Commune de Luquet – "
       "Hautes-Pyrénées",
-    .name_ja = "Mairie - Luquet (SL, INSEE 65292) - Commune de Luquet &#8211; Hautes-Pyrénées",
+    .name_ja = "Mairie - Luquet (SL, INSEE 65292) - Commune de Luquet – Hautes-Pyrénées",
     .category = "government", .portal = "https://luquet.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -132061,9 +131959,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:12:57 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F65CC355_743E_4DCE_8E34_AC290EE9A594", .name = "Info Jeunes - Indre (SL, INSEE 44074) - Programmes "
-      "d&#8217;activité du Tiers Lieu",
-    .name_ja = "Info Jeunes - Indre (SL, INSEE 44074) - Programmes d&#8217;activité du Tiers Lieu",
+  { .id = "JO45_FR_F65CC355_743E_4DCE_8E34_AC290EE9A594", .name = "Info Jeunes - Indre (SL, INSEE 44074) - Programmes d’activité du "
+      "Tiers Lieu",
+    .name_ja = "Info Jeunes - Indre (SL, INSEE 44074) - Programmes d’activité du Tiers Lieu",
     .category = "government", .portal = "https://www.acleea.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -132081,8 +131979,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_F6917AD8_379E_4A27_90D9_45144DF29C05", .name = "Centre communal d'action sociale (CCAS) - Louargat (SL, INSEE "
-      "22135) - Louargat - Commune des C&#244;tes d'Armor",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Louargat (SL, INSEE 22135) - Louargat - Commune des C&#244;tes d'Armor",
+      "22135) - Louargat - Commune des Côtes d'Armor",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Louargat (SL, INSEE 22135) - Louargat - Commune des Côtes d'Armor",
     .category = "government", .portal = "https://www.louargat.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -132100,8 +131998,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_F6980A3C_F869_4DDE_AA78_38003A33B26D", .name = "Mairie - Égliseneuve-près-Billom (SL, INSEE 63146) - Egliseneuve "
-      "près Billom &#8211; Mairie",
-    .name_ja = "Mairie - Égliseneuve-près-Billom (SL, INSEE 63146) - Egliseneuve près Billom &#8211; Mairie",
+      "près Billom – Mairie",
+    .name_ja = "Mairie - Égliseneuve-près-Billom (SL, INSEE 63146) - Egliseneuve près Billom – Mairie",
     .category = "government", .portal = "https://egliseneuve-pres-billom.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -132266,8 +132164,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_FABF418D_94D2_43E4_9934_A2DF2C9C6313", .name = "Mairie - Villefranche-d'Allier (SL, INSEE 03315) - VILLEFRANCHE "
-      "D&#039;allier",
-    .name_ja = "Mairie - Villefranche-d'Allier (SL, INSEE 03315) - VILLEFRANCHE D&#039;allier",
+      "D'allier",
+    .name_ja = "Mairie - Villefranche-d'Allier (SL, INSEE 03315) - VILLEFRANCHE D'allier",
     .category = "government", .portal = "https://villefranchedallier.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -132357,9 +132255,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_FBBC45D8_B4B8_454E_A258_A45AE7C2C3A3", .name = "Conseil d'architecture, d'urbanisme et de l'environnement (CAUE) "
-      "- Vaucluse (SIL, INSEE 84007) - Conseil d&#039;architecture "
-      "d&#039;urbanisme et d&#039;environnement de Vaucluse",
-    .name_ja = "Conseil d'architecture, d'urbanisme et de l'environnement (CAUE) - Vaucluse (SIL, INSEE 84007) - Conseil d&#039;architecture d&#039;urbanisme et d&#039;environnement de Vaucluse",
+      "- Vaucluse (SIL, INSEE 84007) - Conseil d'architecture "
+      "d'urbanisme et d'environnement de Vaucluse",
+    .name_ja = "Conseil d'architecture, d'urbanisme et de l'environnement (CAUE) - Vaucluse (SIL, INSEE 84007) - Conseil d'architecture d'urbanisme et d'environnement de Vaucluse",
     .category = "government", .portal = "https://www.caue84.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -132617,9 +132515,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:53:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_09988C31_65D4_4C78_AF0A_5FA9D787CC35", .name = "Mairie - Ponsonnas (SL, INSEE 38313) - Commune de Ponsonnas "
-      "&#8211; Site officiel",
-    .name_ja = "Mairie - Ponsonnas (SL, INSEE 38313) - Commune de Ponsonnas &#8211; Site officiel",
+  { .id = "JO45_FR_09988C31_65D4_4C78_AF0A_5FA9D787CC35", .name = "Mairie - Ponsonnas (SL, INSEE 38313) - Commune de Ponsonnas – "
+      "Site officiel",
+    .name_ja = "Mairie - Ponsonnas (SL, INSEE 38313) - Commune de Ponsonnas – Site officiel",
     .category = "government", .portal = "https://www.ponsonnas.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -132862,8 +132760,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_0B8631B1_E3D1_4A7E_8089_DDB0504348C5", .name = "Mairie - Guitalens-L'Albarède (SL, INSEE 81132) - Mairie de "
-      "Guitalens-L&#039;Albarède",
-    .name_ja = "Mairie - Guitalens-L'Albarède (SL, INSEE 81132) - Mairie de Guitalens-L&#039;Albarède",
+      "Guitalens-L'Albarède",
+    .name_ja = "Mairie - Guitalens-L'Albarède (SL, INSEE 81132) - Mairie de Guitalens-L'Albarède",
     .category = "government", .portal = "http://www.guitalens-lalbarede.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -132916,9 +132814,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:31:40 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_0BF33A15_1071_4BD3_B1E3_7168C8427FD7", .name = "Mairie - Lias-d'Armagnac (SL, INSEE 32211) - Lias "
-      "d&#039;Armagnac, la commune de Gascogne qui bouge",
-    .name_ja = "Mairie - Lias-d'Armagnac (SL, INSEE 32211) - Lias d&#039;Armagnac, la commune de Gascogne qui bouge",
+  { .id = "JO45_FR_0BF33A15_1071_4BD3_B1E3_7168C8427FD7", .name = "Mairie - Lias-d'Armagnac (SL, INSEE 32211) - Lias d'Armagnac, la "
+      "commune de Gascogne qui bouge",
+    .name_ja = "Mairie - Lias-d'Armagnac (SL, INSEE 32211) - Lias d'Armagnac, la commune de Gascogne qui bouge",
     .category = "government", .portal = "https://www.liasdarmagnac.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -133174,9 +133072,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:37:41 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_1188AED9_0E41_40F1_AA61_57C074829AA5", .name = "Point info famille - Le Blanc (SL, INSEE 36018) - Le "
-      "Part&#039;Ages",
-    .name_ja = "Point info famille - Le Blanc (SL, INSEE 36018) - Le Part&#039;Ages",
+  { .id = "JO45_FR_1188AED9_0E41_40F1_AA61_57C074829AA5", .name = "Point info famille - Le Blanc (SL, INSEE 36018) - Le Part'Ages",
+    .name_ja = "Point info famille - Le Blanc (SL, INSEE 36018) - Le Part'Ages",
     .category = "government", .portal = "https://lepartages.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -133652,8 +133549,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_19D4EF49_08A3_45F7_9967_44C1424C925D", .name = "Mairie - Véretz (SL, INSEE 37267) - Ville de Ville de Véretz : "
-      "Flux RSS de l&#039;agenda",
-    .name_ja = "Mairie - Véretz (SL, INSEE 37267) - Ville de Ville de Véretz : Flux RSS de l&#039;agenda",
+      "Flux RSS de l'agenda",
+    .name_ja = "Mairie - Véretz (SL, INSEE 37267) - Ville de Ville de Véretz : Flux RSS de l'agenda",
     .category = "government", .portal = "https://www.veretz.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -133744,9 +133641,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "17:51:26 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_1BC5F502_396C_4A1D_91AC_7049FFC6EB4D", .name = "Mairie - Cachy (SL, INSEE 80159) - Commune de Cachy &#8211; "
-      "Somme",
-    .name_ja = "Mairie - Cachy (SL, INSEE 80159) - Commune de Cachy &#8211; Somme",
+  { .id = "JO45_FR_1BC5F502_396C_4A1D_91AC_7049FFC6EB4D", .name = "Mairie - Cachy (SL, INSEE 80159) - Commune de Cachy – Somme",
+    .name_ja = "Mairie - Cachy (SL, INSEE 80159) - Commune de Cachy – Somme",
     .category = "government", .portal = "https://www.cachy.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -134020,8 +133916,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "11:56:37 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_2176A5CA_0FB4_4FC5_A823_5688CD2820A5", .name = "Mairie - Esperce (SL, INSEE 31173) - Mairie d&#039;Esperce",
-    .name_ja = "Mairie - Esperce (SL, INSEE 31173) - Mairie d&#039;Esperce",
+  { .id = "JO45_FR_2176A5CA_0FB4_4FC5_A823_5688CD2820A5", .name = "Mairie - Esperce (SL, INSEE 31173) - Mairie d'Esperce",
+    .name_ja = "Mairie - Esperce (SL, INSEE 31173) - Mairie d'Esperce",
     .category = "government", .portal = "https://www.mairie-esperce.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -134481,8 +134377,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_2AFCF655_4DB0_41D9_BF1B_3A9B5CAEE169", .name = "Mission locale pour l'insertion professionnelle et sociale des "
       "jeunes (16-25 ans) - Agen (SL, INSEE 47001) - Mission Locale de "
-      "l&#039;Agenais, l&#039;Albret et du Confluent",
-    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Agen (SL, INSEE 47001) - Mission Locale de l&#039;Agenais, l&#039;Albret et du Confluent",
+      "l'Agenais, l'Albret et du Confluent",
+    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Agen (SL, INSEE 47001) - Mission Locale de l'Agenais, l'Albret et du Confluent",
     .category = "government", .portal = "https://missionlocale-agen.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -134518,8 +134414,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_2C98E3BB_6377_4F44_AA41_D9FF78246EEF", .name = "Mairie - Razac-sur-l Isle (SL, INSEE 24350) - Mairie de Razac "
-      "sur l&#039;Isle",
-    .name_ja = "Mairie - Razac-sur-l Isle (SL, INSEE 24350) - Mairie de Razac sur l&#039;Isle",
+      "sur l'Isle",
+    .name_ja = "Mairie - Razac-sur-l Isle (SL, INSEE 24350) - Mairie de Razac sur l'Isle",
     .category = "government", .portal = "https://razacsurlisle.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -134741,8 +134637,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "11:28:55 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_31FA039F_2561_4FDD_8ADF_710F1258274C", .name = "Mairie - Égleny (SL, INSEE 89150) - Commune d&#039;Egleny",
-    .name_ja = "Mairie - Égleny (SL, INSEE 89150) - Commune d&#039;Egleny",
+  { .id = "JO45_FR_31FA039F_2561_4FDD_8ADF_710F1258274C", .name = "Mairie - Égleny (SL, INSEE 89150) - Commune d'Egleny",
+    .name_ja = "Mairie - Égleny (SL, INSEE 89150) - Commune d'Egleny",
     .category = "government", .portal = "https://www.egleny.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -134835,8 +134731,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_3275E90B_BA7C_4B26_B4E8_C7A155B2FA52", .name = "Communauté de communes - Plaine d'Estrées (SL, INSEE 60223) - CC "
-      "Plaine d&#039;Estrées",
-    .name_ja = "Communauté de communes - Plaine d'Estrées (SL, INSEE 60223) - CC Plaine d&#039;Estrées",
+      "Plaine d'Estrées",
+    .name_ja = "Communauté de communes - Plaine d'Estrées (SL, INSEE 60223) - CC Plaine d'Estrées",
     .category = "government", .portal = "https://www.ccplaine-estrees.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -134889,9 +134785,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:44:23 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_32C5E077_2C2A_4725_8858_5EFEE9CB33C8", .name = "Mairie - Isles-sur-Suippe (SL, INSEE 51299) - Mairie "
-      "d&#039;Isles sur Suippe",
-    .name_ja = "Mairie - Isles-sur-Suippe (SL, INSEE 51299) - Mairie d&#039;Isles sur Suippe",
+  { .id = "JO45_FR_32C5E077_2C2A_4725_8858_5EFEE9CB33C8", .name = "Mairie - Isles-sur-Suippe (SL, INSEE 51299) - Mairie d'Isles sur "
+      "Suippe",
+    .name_ja = "Mairie - Isles-sur-Suippe (SL, INSEE 51299) - Mairie d'Isles sur Suippe",
     .category = "government", .portal = "https://isles-sur-suippe.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -135002,9 +134898,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:25:22 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_33EE7706_B9CF_455A_B9DF_E6214147630A", .name = "Mairie - Cargèse (SL, INSEE 2A065) - Commune de Cargèse &#8211; "
-      "Cumuna di Carghjese &#8211; Site officiel",
-    .name_ja = "Mairie - Cargèse (SL, INSEE 2A065) - Commune de Cargèse &#8211; Cumuna di Carghjese &#8211; Site officiel",
+  { .id = "JO45_FR_33EE7706_B9CF_455A_B9DF_E6214147630A", .name = "Mairie - Cargèse (SL, INSEE 2A065) - Commune de Cargèse – Cumuna "
+      "di Carghjese – Site officiel",
+    .name_ja = "Mairie - Cargèse (SL, INSEE 2A065) - Commune de Cargèse – Cumuna di Carghjese – Site officiel",
     .category = "government", .portal = "https://www.cargese.corsica/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -135134,8 +135030,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:26:27 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_366468DC_107C_410B_8863_F5495536800D", .name = "Mairie - Uxegney (SL, INSEE 88483) - Commune d&#039;Uxegney",
-    .name_ja = "Mairie - Uxegney (SL, INSEE 88483) - Commune d&#039;Uxegney",
+  { .id = "JO45_FR_366468DC_107C_410B_8863_F5495536800D", .name = "Mairie - Uxegney (SL, INSEE 88483) - Commune d'Uxegney",
+    .name_ja = "Mairie - Uxegney (SL, INSEE 88483) - Commune d'Uxegney",
     .category = "government", .portal = "https://www.uxegney.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -135170,8 +135066,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:27:09 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_36CB4285_18EE_45F8_B781_2BFE3B352986", .name = "Mairie - Aurillac (SL, INSEE 15014) - Mairie d&#039;Aurillac",
-    .name_ja = "Mairie - Aurillac (SL, INSEE 15014) - Mairie d&#039;Aurillac",
+  { .id = "JO45_FR_36CB4285_18EE_45F8_B781_2BFE3B352986", .name = "Mairie - Aurillac (SL, INSEE 15014) - Mairie d'Aurillac",
+    .name_ja = "Mairie - Aurillac (SL, INSEE 15014) - Mairie d'Aurillac",
     .category = "government", .portal = "https://www.aurillac.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -135338,9 +135234,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:52:17 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_3829CFFF_F3AF_4836_B02C_B4129BC3D301", .name = "Mairie - Cize (SL, INSEE 39153) - Commune de CIZE &#8211; Jura "
-      "(39)",
-    .name_ja = "Mairie - Cize (SL, INSEE 39153) - Commune de CIZE &#8211; Jura (39)",
+  { .id = "JO45_FR_3829CFFF_F3AF_4836_B02C_B4129BC3D301", .name = "Mairie - Cize (SL, INSEE 39153) - Commune de CIZE – Jura (39)",
+    .name_ja = "Mairie - Cize (SL, INSEE 39153) - Commune de CIZE – Jura (39)",
     .category = "government", .portal = "https://www.cize-jura.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -135430,8 +135325,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_398A2DD6_DCA0_4954_BD33_93B0AF0F357E", .name = "Conseil économique, social et environnemental régional (Ceser) - "
-      "Grand Est (SIL, INSEE 51108) - CESER &#8211; Grand Est",
-    .name_ja = "Conseil économique, social et environnemental régional (Ceser) - Grand Est (SIL, INSEE 51108) - CESER &#8211; Grand Est",
+      "Grand Est (SIL, INSEE 51108) - CESER – Grand Est",
+    .name_ja = "Conseil économique, social et environnemental régional (Ceser) - Grand Est (SIL, INSEE 51108) - CESER – Grand Est",
     .category = "government", .portal = "https://www.ceser-grandest.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -135556,8 +135451,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:45:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_3C8ED31D_23AC_4D36_B3BA_2E19330F387A", .name = "Mairie - Ancier (SL, INSEE 70018) - Commune d&#039;Ancier",
-    .name_ja = "Mairie - Ancier (SL, INSEE 70018) - Commune d&#039;Ancier",
+  { .id = "JO45_FR_3C8ED31D_23AC_4D36_B3BA_2E19330F387A", .name = "Mairie - Ancier (SL, INSEE 70018) - Commune d'Ancier",
+    .name_ja = "Mairie - Ancier (SL, INSEE 70018) - Commune d'Ancier",
     .category = "government", .portal = "https://www.ancier.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -135929,8 +135824,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_6244B8F5_5159_4396_B7A1_9D6CE51BA527", .name = "Centre communal d'action sociale (CCAS) - Ambleteuse (SL, INSEE "
-      "62025) - COMMUNE D&#039;AMBLETEUSE",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Ambleteuse (SL, INSEE 62025) - COMMUNE D&#039;AMBLETEUSE",
+      "62025) - COMMUNE D'AMBLETEUSE",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Ambleteuse (SL, INSEE 62025) - COMMUNE D'AMBLETEUSE",
     .category = "government", .portal = "https://ambleteuse.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -136265,8 +136160,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_66EDC479_7555_4946_BE99_AFCB31DECB37", .name = "Mairie - Le Quillio (SL, INSEE 22260) - Mairie de Le Quillio en "
-      "Bretagne dans les C&#244;tes d'Armor",
-    .name_ja = "Mairie - Le Quillio (SL, INSEE 22260) - Mairie de Le Quillio en Bretagne dans les C&#244;tes d'Armor",
+      "Bretagne dans les Côtes d'Armor",
+    .name_ja = "Mairie - Le Quillio (SL, INSEE 22260) - Mairie de Le Quillio en Bretagne dans les Côtes d'Armor",
     .category = "government", .portal = "https://www.le-quillio.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -136376,8 +136271,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "06:04:31 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_687927F1_2C3D_4D8F_B18B_7F1F994FBDB9", .name = "Mairie - Yvré-l'Évêque (SL, INSEE 72386) - Yvré l&#039;évêque",
-    .name_ja = "Mairie - Yvré-l'Évêque (SL, INSEE 72386) - Yvré l&#039;évêque",
+  { .id = "JO45_FR_687927F1_2C3D_4D8F_B18B_7F1F994FBDB9", .name = "Mairie - Yvré-l'Évêque (SL, INSEE 72386) - Yvré l'évêque",
+    .name_ja = "Mairie - Yvré-l'Évêque (SL, INSEE 72386) - Yvré l'évêque",
     .category = "government", .portal = "https://www.ville-yvreleveque.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -136395,9 +136290,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_68BBF3C2_B559_440F_BED5_58F4C80C9230", .name = "Mairie - Bayonville-sur-Mad (SL, INSEE 54055) - PLANNING "
-      "PROVISOIRE &#8211; CIRCUIT CHAMBLEY GRAND EST &#8211; OCTOBRE "
-      "2026",
-    .name_ja = "Mairie - Bayonville-sur-Mad (SL, INSEE 54055) - PLANNING PROVISOIRE &#8211; CIRCUIT CHAMBLEY GRAND EST &#8211; OCTOBRE 2026",
+      "PROVISOIRE – CIRCUIT CHAMBLEY GRAND EST – OCTOBRE 2026",
+    .name_ja = "Mairie - Bayonville-sur-Mad (SL, INSEE 54055) - PLANNING PROVISOIRE – CIRCUIT CHAMBLEY GRAND EST – OCTOBRE 2026",
     .category = "government", .portal = "https://bayonville-sur-mad.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -136800,8 +136694,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:28:31 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_6F868581_644F_4AC7_80EC_E4BB58F02201", .name = "Mairie - Herbault (SL, INSEE 41101) - Ville d&#039;Herbault",
-    .name_ja = "Mairie - Herbault (SL, INSEE 41101) - Ville d&#039;Herbault",
+  { .id = "JO45_FR_6F868581_644F_4AC7_80EC_E4BB58F02201", .name = "Mairie - Herbault (SL, INSEE 41101) - Ville d'Herbault",
+    .name_ja = "Mairie - Herbault (SL, INSEE 41101) - Ville d'Herbault",
     .category = "government", .portal = "https://ville-herbault.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -136967,8 +136861,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_73BADA53_B65D_41E1_8450_681697DC9744", .name = "Mairie - La Rivière-Enverse (SL, INSEE 74223) - Mairie de La "
-      "Rivi&#232;re Enverse",
-    .name_ja = "Mairie - La Rivière-Enverse (SL, INSEE 74223) - Mairie de La Rivi&#232;re Enverse",
+      "Rivière Enverse",
+    .name_ja = "Mairie - La Rivière-Enverse (SL, INSEE 74223) - Mairie de La Rivière Enverse",
     .category = "government", .portal = "https://www.mairie-riviere-enverse.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -136985,8 +136879,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-09-15T07:18:32Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO45_FR_74F62B85_07F6_41F7_AE26_5EF3CCDBFC95", .name = "Mairie - Pauilhac (SL, INSEE 32306) - L&#039;ouvre Boites",
-    .name_ja = "Mairie - Pauilhac (SL, INSEE 32306) - L&#039;ouvre Boites",
+  { .id = "JO45_FR_74F62B85_07F6_41F7_AE26_5EF3CCDBFC95", .name = "Mairie - Pauilhac (SL, INSEE 32306) - L'ouvre Boites",
+    .name_ja = "Mairie - Pauilhac (SL, INSEE 32306) - L'ouvre Boites",
     .category = "government", .portal = "https://louvre-boites.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -137153,9 +137047,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-10-18T11:17:48+00:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_FR_7861813E_F431_4647_8CF5_F3433AAB43FF", .name = "Mairie - Cherisy (SL, INSEE 28098) - Chérisy, un cadre de vie "
-      "&#8211; Eure et Loir (28)",
-    .name_ja = "Mairie - Cherisy (SL, INSEE 28098) - Chérisy, un cadre de vie &#8211; Eure et Loir (28)",
+  { .id = "JO45_FR_7861813E_F431_4647_8CF5_F3433AAB43FF", .name = "Mairie - Cherisy (SL, INSEE 28098) - Chérisy, un cadre de vie – "
+      "Eure et Loir (28)",
+    .name_ja = "Mairie - Cherisy (SL, INSEE 28098) - Chérisy, un cadre de vie – Eure et Loir (28)",
     .category = "government", .portal = "https://www.mairie-cherisy.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -137192,8 +137086,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_7A485646_1B0B_4057_A66E_C388B9BF7617", .name = "Mission locale pour l'insertion professionnelle et sociale des "
       "jeunes (16-25 ans) - Brunoy (SL, INSEE 91114) - Communauté "
-      "d&#039;Agglomération Val d&#039;Yerres Val de Seine",
-    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Brunoy (SL, INSEE 91114) - Communauté d&#039;Agglomération Val d&#039;Yerres Val de Seine",
+      "d'Agglomération Val d'Yerres Val de Seine",
+    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Brunoy (SL, INSEE 91114) - Communauté d'Agglomération Val d'Yerres Val de Seine",
     .category = "government", .portal = "https://www.vyvs.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -137284,8 +137178,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_7C3C3CBB_1640_45BF_8A34_837554A851EC", .name = "Communauté de communes - La Matheysine (SL, INSEE 38499) - "
-      "Communauté de Communes de la Matheysine &#8211; Site officiel",
-    .name_ja = "Communauté de communes - La Matheysine (SL, INSEE 38499) - Communauté de Communes de la Matheysine &#8211; Site officiel",
+      "Communauté de Communes de la Matheysine – Site officiel",
+    .name_ja = "Communauté de communes - La Matheysine (SL, INSEE 38499) - Communauté de Communes de la Matheysine – Site officiel",
     .category = "government", .portal = "https://www.ccmatheysine.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -137489,8 +137383,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:56:01 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_4648E9C4_E510_4C5B_94A4_568A272599F4", .name = "Mairie - Azé (SL, INSEE 41010) - Village d&#039;Azé (41)",
-    .name_ja = "Mairie - Azé (SL, INSEE 41010) - Village d&#039;Azé (41)",
+  { .id = "JO45_FR_4648E9C4_E510_4C5B_94A4_568A272599F4", .name = "Mairie - Azé (SL, INSEE 41010) - Village d'Azé (41)",
+    .name_ja = "Mairie - Azé (SL, INSEE 41010) - Village d'Azé (41)",
     .category = "government", .portal = "https://www.aze-41.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -137525,8 +137419,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "03:13:09 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_46C21144_373D_4B5B_B63D_2AE217761AE8", .name = "Mairie - Escoussens (SL, INSEE 81084) - MAIRIE D&#039;ESCOUSSENS",
-    .name_ja = "Mairie - Escoussens (SL, INSEE 81084) - MAIRIE D&#039;ESCOUSSENS",
+  { .id = "JO45_FR_46C21144_373D_4B5B_B63D_2AE217761AE8", .name = "Mairie - Escoussens (SL, INSEE 81084) - MAIRIE D'ESCOUSSENS",
+    .name_ja = "Mairie - Escoussens (SL, INSEE 81084) - MAIRIE D'ESCOUSSENS",
     .category = "government", .portal = "https://www.escoussens.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -137729,8 +137623,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_4E251021_9F53_4E12_A6C4_E40E91C84CB9", .name = "Mairie - Clef-Vallée-d'Eure (SL, INSEE 27191) - Commune de "
-      "Clef-Vallée-d&#039;Eure",
-    .name_ja = "Mairie - Clef-Vallée-d'Eure (SL, INSEE 27191) - Commune de Clef-Vallée-d&#039;Eure",
+      "Clef-Vallée-d'Eure",
+    .name_ja = "Mairie - Clef-Vallée-d'Eure (SL, INSEE 27191) - Commune de Clef-Vallée-d'Eure",
     .category = "government", .portal = "https://www.clefvalleedeure.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -137896,8 +137790,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "16:09:37 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_52419AA7_A36A_4268_8CE0_DA6A755A6F64", .name = "Mairie - Andance (SL, INSEE 07009) - Mairie d&#039;Andance",
-    .name_ja = "Mairie - Andance (SL, INSEE 07009) - Mairie d&#039;Andance",
+  { .id = "JO45_FR_52419AA7_A36A_4268_8CE0_DA6A755A6F64", .name = "Mairie - Andance (SL, INSEE 07009) - Mairie d'Andance",
+    .name_ja = "Mairie - Andance (SL, INSEE 07009) - Mairie d'Andance",
     .category = "government", .portal = "https://andance.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -137951,9 +137845,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:21:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_538071D5_2268_4F31_965F_41C99027447D", .name = "Mairie - Vinzieux (SL, INSEE 07344) - Mairie de Vinzieux (07) "
-      "&#8211; Site Officiel",
-    .name_ja = "Mairie - Vinzieux (SL, INSEE 07344) - Mairie de Vinzieux (07) &#8211; Site Officiel",
+  { .id = "JO45_FR_538071D5_2268_4F31_965F_41C99027447D", .name = "Mairie - Vinzieux (SL, INSEE 07344) - Mairie de Vinzieux (07) – "
+      "Site Officiel",
+    .name_ja = "Mairie - Vinzieux (SL, INSEE 07344) - Mairie de Vinzieux (07) – Site Officiel",
     .category = "government", .portal = "https://www.vinzieux.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -138064,8 +137958,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_5662D83E_4457_406C_A960_22B9FA088795", .name = "Mairie - Seillons-Source-d'Argens (SL, INSEE 83125) - Vivre A "
-      "Seillons &#8230;",
-    .name_ja = "Mairie - Seillons-Source-d'Argens (SL, INSEE 83125) - Vivre A Seillons &#8230;",
+      "Seillons …",
+    .name_ja = "Mairie - Seillons-Source-d'Argens (SL, INSEE 83125) - Vivre A Seillons …",
     .category = "government", .portal = "http://vivreaseillons.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -138083,8 +137977,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_5662D83E_4457_406C_A960_22B9FA088795_2", .name = "Mairie - Seillons-Source-d'Argens (SL, INSEE 83125) - Vivre A "
-      "Seillons &#8230;",
-    .name_ja = "Mairie - Seillons-Source-d'Argens (SL, INSEE 83125) - Vivre A Seillons &#8230;",
+      "Seillons …",
+    .name_ja = "Mairie - Seillons-Source-d'Argens (SL, INSEE 83125) - Vivre A Seillons …",
     .category = "government", .portal = "http://feeds.feedburner.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -138417,8 +138311,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_5B469453_F428_4A6F_B290_CDE189FCC0E5", .name = "Communauté de communes - Val'Aïgo (SL, INSEE 31584) - Communauté "
-      "de communes de Val&#039;Aïgo",
-    .name_ja = "Communauté de communes - Val'Aïgo (SL, INSEE 31584) - Communauté de communes de Val&#039;Aïgo",
+      "de communes de Val'Aïgo",
+    .name_ja = "Communauté de communes - Val'Aïgo (SL, INSEE 31584) - Communauté de communes de Val'Aïgo",
     .category = "government", .portal = "https://valaigo.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -138490,8 +138384,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_5C0B7E4C_EADB_4B69_9542_02BB25758801", .name = "Mairie - Bois-d'Ennebourg (SL, INSEE 76106) - Bienvenue à Bois "
-      "d&#039;Ennebourg",
-    .name_ja = "Mairie - Bois-d'Ennebourg (SL, INSEE 76106) - Bienvenue à Bois d&#039;Ennebourg",
+      "d'Ennebourg",
+    .name_ja = "Mairie - Bois-d'Ennebourg (SL, INSEE 76106) - Bienvenue à Bois d'Ennebourg",
     .category = "government", .portal = "https://www.boisdennebourg.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -138694,8 +138588,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_7E078721_C721_41EA_A557_319096847A08", .name = "Mairie - Injoux-Génissiat (SL, INSEE 01189) - Mairie "
-      "d&#039;Injoux-Génissiat",
-    .name_ja = "Mairie - Injoux-Génissiat (SL, INSEE 01189) - Mairie d&#039;Injoux-Génissiat",
+      "d'Injoux-Génissiat",
+    .name_ja = "Mairie - Injoux-Génissiat (SL, INSEE 01189) - Mairie d'Injoux-Génissiat",
     .category = "government", .portal = "https://www.mairie-injouxgenissiat.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -138768,9 +138662,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_7F4C80F2_36DF_4345_98C3_EC0766F93EA8", .name = "Centre communal d'action sociale (CCAS) - Villé (SL, INSEE "
-      "67507) - Commune de Villé (67)   Appel à Manifestation "
-      "d&rsquo;Intérêt : DELIVRANCE D",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Villé (SL, INSEE 67507) - Commune de Villé (67)   Appel à Manifestation d&rsquo;Intérêt : DELIVRANCE D",
+      "67507) - Commune de Villé (67)   Appel à Manifestation d’Intérêt "
+      ": DELIVRANCE D",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Villé (SL, INSEE 67507) - Commune de Villé (67)   Appel à Manifestation d’Intérêt : DELIVRANCE D",
     .category = "government", .portal = "https://ville67.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -138916,9 +138810,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:24:57 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_82B8B3F4_25B3_47B0_804C_B2EDB59C3875", .name = "Mairie - Château-l'Hermitage (SL, INSEE 72072) - L&#039;Heritage "
+  { .id = "JO45_FR_82B8B3F4_25B3_47B0_804C_B2EDB59C3875", .name = "Mairie - Château-l'Hermitage (SL, INSEE 72072) - L'Heritage "
       "Hermitage",
-    .name_ja = "Mairie - Château-l'Hermitage (SL, INSEE 72072) - L&#039;Heritage Hermitage",
+    .name_ja = "Mairie - Château-l'Hermitage (SL, INSEE 72072) - L'Heritage Hermitage",
     .category = "government", .portal = "https://commune-chateau-lhermitage.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -138954,8 +138848,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "16:01:26 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_8362B294_9A99_41D8_A4A6_C158BEA81C4A", .name = "Mairie - Isserpent (SL, INSEE 03131) - Commune d&#039;Isserpent",
-    .name_ja = "Mairie - Isserpent (SL, INSEE 03131) - Commune d&#039;Isserpent",
+  { .id = "JO45_FR_8362B294_9A99_41D8_A4A6_C158BEA81C4A", .name = "Mairie - Isserpent (SL, INSEE 03131) - Commune d'Isserpent",
+    .name_ja = "Mairie - Isserpent (SL, INSEE 03131) - Commune d'Isserpent",
     .category = "government", .portal = "https://www.mairie-isserpent.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -139159,9 +139053,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_86399DE6_2317_47E7_80FC_DC72D64A8F7C", .name = "Communauté de communes - La Sologne des Rivières (SL, INSEE "
-      "41232) - CCSR &#8211; Communauté de Communes de la Sologne des "
+      "41232) - CCSR – Communauté de Communes de la Sologne des "
       "Rivières",
-    .name_ja = "Communauté de communes - La Sologne des Rivières (SL, INSEE 41232) - CCSR &#8211; Communauté de Communes de la Sologne des Rivières",
+    .name_ja = "Communauté de communes - La Sologne des Rivières (SL, INSEE 41232) - CCSR – Communauté de Communes de la Sologne des Rivières",
     .category = "government", .portal = "https://sologne-des-rivieres.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -139179,8 +139073,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_864439D3_C9D2_4115_B67E_6B2039414072", .name = "Fédération départementale des chasseurs - Aube (SL, INSEE 10321) "
-      "- Fédération des chasseurs de l&#039;Aube",
-    .name_ja = "Fédération départementale des chasseurs - Aube (SL, INSEE 10321) - Fédération des chasseurs de l&#039;Aube",
+      "- Fédération des chasseurs de l'Aube",
+    .name_ja = "Fédération départementale des chasseurs - Aube (SL, INSEE 10321) - Fédération des chasseurs de l'Aube",
     .category = "government", .portal = "https://www.fdc10.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -139365,9 +139259,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:34:06 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_89C33A19_F8A4_4B6D_9C11_FD0BFC5BE3DB", .name = "Mairie - Aigues-Vives (SL, INSEE 11001) - Mairie "
-      "d&#039;Aigues-Vives (Aude)",
-    .name_ja = "Mairie - Aigues-Vives (SL, INSEE 11001) - Mairie d&#039;Aigues-Vives (Aude)",
+  { .id = "JO45_FR_89C33A19_F8A4_4B6D_9C11_FD0BFC5BE3DB", .name = "Mairie - Aigues-Vives (SL, INSEE 11001) - Mairie d'Aigues-Vives "
+      "(Aude)",
+    .name_ja = "Mairie - Aigues-Vives (SL, INSEE 11001) - Mairie d'Aigues-Vives (Aude)",
     .category = "government", .portal = "https://aiguesvives11.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -139550,8 +139444,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_8C5DFF36_BBC7_4A83_B37E_CBE1775F39FB", .name = "Mairie - Orbey (SL, INSEE 68249) - Site officiel de la Commune "
-      "d&#039;Orbey située dans Haut-Rhin en Alsace",
-    .name_ja = "Mairie - Orbey (SL, INSEE 68249) - Site officiel de la Commune d&#039;Orbey située dans Haut-Rhin en Alsace",
+      "d'Orbey située dans Haut-Rhin en Alsace",
+    .name_ja = "Mairie - Orbey (SL, INSEE 68249) - Site officiel de la Commune d'Orbey située dans Haut-Rhin en Alsace",
     .category = "government", .portal = "https://www.orbey.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -139568,8 +139462,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:52:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_8DA0977B_BAB0_43D5_A8BF_28AE1D2CD6AA", .name = "Mairie - Ardres (SL, INSEE 62038) - Marie d&#039;Ardres",
-    .name_ja = "Mairie - Ardres (SL, INSEE 62038) - Marie d&#039;Ardres",
+  { .id = "JO45_FR_8DA0977B_BAB0_43D5_A8BF_28AE1D2CD6AA", .name = "Mairie - Ardres (SL, INSEE 62038) - Marie d'Ardres",
+    .name_ja = "Mairie - Ardres (SL, INSEE 62038) - Marie d'Ardres",
     .category = "government", .portal = "https://www.mairie-ardres.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -139623,8 +139517,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:03:43 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_8E6C7711_44EA_4069_B632_C8EEC639643E", .name = "Mairie - Éclaibes (SL, INSEE 59187) - Commune d&#039;Éclaibes",
-    .name_ja = "Mairie - Éclaibes (SL, INSEE 59187) - Commune d&#039;Éclaibes",
+  { .id = "JO45_FR_8E6C7711_44EA_4069_B632_C8EEC639643E", .name = "Mairie - Éclaibes (SL, INSEE 59187) - Commune d'Éclaibes",
+    .name_ja = "Mairie - Éclaibes (SL, INSEE 59187) - Commune d'Éclaibes",
     .category = "government", .portal = "http://www.commune-eclaibes.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -139884,8 +139778,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_93762C82_3235_45A8_AC02_80B126B16C65", .name = "Mairie - Dolus-d'Oléron (SL, INSEE 17140) - Site officiel de la "
-      "commune de Dolus d&#039;Oléron",
-    .name_ja = "Mairie - Dolus-d'Oléron (SL, INSEE 17140) - Site officiel de la commune de Dolus d&#039;Oléron",
+      "commune de Dolus d'Oléron",
+    .name_ja = "Mairie - Dolus-d'Oléron (SL, INSEE 17140) - Site officiel de la commune de Dolus d'Oléron",
     .category = "government", .portal = "https://www.ville-dolus-oleron.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -139997,9 +139891,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "01:47:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_18066671_A406_4062_AC81_5A3672AA4034", .name = "Grand port fluvio-maritime - Guadeloupe (SI, INSEE ) - GPMG "
-      "&#8211; Grand Port Maritime de Guadeloupe",
-    .name_ja = "Grand port fluvio-maritime - Guadeloupe (SI, INSEE ) - GPMG &#8211; Grand Port Maritime de Guadeloupe",
+  { .id = "JO45_FR_18066671_A406_4062_AC81_5A3672AA4034", .name = "Grand port fluvio-maritime - Guadeloupe (SI, INSEE ) - GPMG – "
+      "Grand Port Maritime de Guadeloupe",
+    .name_ja = "Grand port fluvio-maritime - Guadeloupe (SI, INSEE ) - GPMG – Grand Port Maritime de Guadeloupe",
     .category = "government", .portal = "https://guadeloupe-portcaraibes.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -140017,8 +139911,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_24882C63_DE0F_4F3A_974E_0D8289ED4A57", .name = "Institut français du CONGO - Brazzaville (SI, INSEE ) - Institut "
-      "Français du Congo &#8211; Brazzaville",
-    .name_ja = "Institut français du CONGO - Brazzaville (SI, INSEE ) - Institut Français du Congo &#8211; Brazzaville",
+      "Français du Congo – Brazzaville",
+    .name_ja = "Institut français du CONGO - Brazzaville (SI, INSEE ) - Institut Français du Congo – Brazzaville",
     .category = "government", .portal = "https://institutfrancais-congo.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -140091,8 +139985,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_542BA3DB_2F66_40A3_BAAA_68437E87D50A", .name = "Institut français de CROATIE - Zagreb (SI, INSEE ) - Institut "
-      "français &#8211; Francuski Institut",
-    .name_ja = "Institut français de CROATIE - Zagreb (SI, INSEE ) - Institut français &#8211; Francuski Institut",
+      "français – Francuski Institut",
+    .name_ja = "Institut français de CROATIE - Zagreb (SI, INSEE ) - Institut français – Francuski Institut",
     .category = "government", .portal = "https://institutfrancais.hr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -140204,8 +140098,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_978EE506_74DD_4634_A69E_ECBD7211D71E_2", .name = "Agence bibliographique de l'enseignement supérieur (SI, INSEE ) "
-      "- FIL&#039;ABES",
-    .name_ja = "Agence bibliographique de l'enseignement supérieur (SI, INSEE ) - FIL&#039;ABES",
+      "- FIL'ABES",
+    .name_ja = "Agence bibliographique de l'enseignement supérieur (SI, INSEE ) - FIL'ABES",
     .category = "government", .portal = "https://fil.abes.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -140281,8 +140175,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_BB874CF5_9548_4FAB_A6E0_D0E4C2117205", .name = "Office de développement de l'économie agricole des départements "
       "d'Outre-mer (ODEADOM) (SI, INSEE ) - ODEADOM, Office de "
-      "développement de l&#039;économie agricole d´outre-mer",
-    .name_ja = "Office de développement de l'économie agricole des départements d'Outre-mer (ODEADOM) (SI, INSEE ) - ODEADOM, Office de développement de l&#039;économie agricole d´outre-mer",
+      "développement de l'économie agricole d´outre-mer",
+    .name_ja = "Office de développement de l'économie agricole des départements d'Outre-mer (ODEADOM) (SI, INSEE ) - ODEADOM, Office de développement de l'économie agricole d´outre-mer",
     .category = "government", .portal = "https://www.odeadom.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -140337,8 +140231,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_D5EE624A_F394_4087_A81B_E341EC3AC4B4", .name = "Secrétariat du Conseil national de l'alimentation (CNA) (SI, "
-      "INSEE ) - Conseil National de l&#039;Alimentation",
-    .name_ja = "Secrétariat du Conseil national de l'alimentation (CNA) (SI, INSEE ) - Conseil National de l&#039;Alimentation",
+      "INSEE ) - Conseil National de l'Alimentation",
+    .name_ja = "Secrétariat du Conseil national de l'alimentation (CNA) (SI, INSEE ) - Conseil National de l'Alimentation",
     .category = "government", .portal = "https://cna-alimentation.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -140487,9 +140381,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_016A6348_DB94_46F9_9419_F253A03718C8", .name = "Mairie - Saint-André-de-Seignanx (SL, INSEE 40248) - SAINT ANDRE "
-      "DE SEIGNANX &#8211; Site officiel de la commune &#8211; Pays du "
-      "Seig",
-    .name_ja = "Mairie - Saint-André-de-Seignanx (SL, INSEE 40248) - SAINT ANDRE DE SEIGNANX &#8211; Site officiel de la commune &#8211; Pays du Seig",
+      "DE SEIGNANX – Site officiel de la commune – Pays du Seig",
+    .name_ja = "Mairie - Saint-André-de-Seignanx (SL, INSEE 40248) - SAINT ANDRE DE SEIGNANX – Site officiel de la commune – Pays du Seig",
     .category = "government", .portal = "https://saintandredeseignanx.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -140507,8 +140400,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_01A41C41_5723_49D3_9300_554D11A024C7", .name = "Mairie - Saint-Martin-d'Hères (SL, INSEE 38421) - Ville de "
-      "Saint-Martin-d&#039;Hères",
-    .name_ja = "Mairie - Saint-Martin-d'Hères (SL, INSEE 38421) - Ville de Saint-Martin-d&#039;Hères",
+      "Saint-Martin-d'Hères",
+    .name_ja = "Mairie - Saint-Martin-d'Hères (SL, INSEE 38421) - Ville de Saint-Martin-d'Hères",
     .category = "government", .portal = "https://www.saintmartindheres.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -140766,8 +140659,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_9577FF9D_BFFD_450F_BFC0_F07A0727DDC8", .name = "Mairie - Morainvilliers (SL, INSEE 78431) - Site officiel de la "
-      "Mairie de Morainvilliers &#8211; Bures, département des Yve",
-    .name_ja = "Mairie - Morainvilliers (SL, INSEE 78431) - Site officiel de la Mairie de Morainvilliers &#8211; Bures, département des Yve",
+      "Mairie de Morainvilliers – Bures, département des Yve",
+    .name_ja = "Mairie - Morainvilliers (SL, INSEE 78431) - Site officiel de la Mairie de Morainvilliers – Bures, département des Yve",
     .category = "government", .portal = "https://www.morainvilliers-bures.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -140877,8 +140770,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_96D8267E_D7DA_4100_BB34_51DE65838B8E", .name = "Espace conseil France Rénov' - Nevers (SL, INSEE 58194) - Agence "
-      "Locale de l&#039;Énergie et du Climat de la Nièvre",
-    .name_ja = "Espace conseil France Rénov' - Nevers (SL, INSEE 58194) - Agence Locale de l&#039;Énergie et du Climat de la Nièvre",
+      "Locale de l'Énergie et du Climat de la Nièvre",
+    .name_ja = "Espace conseil France Rénov' - Nevers (SL, INSEE 58194) - Agence Locale de l'Énergie et du Climat de la Nièvre",
     .category = "government", .portal = "https://www.ale-nievre.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -140988,8 +140881,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_9AE348CA_6EA5_42C8_87FC_61837E7EDC82", .name = "Mairie - Haut-du-Them-Château-Lambert (SL, INSEE 70283) - "
-      "Haut-du-Them &#8211; Chateau-Lambert",
-    .name_ja = "Mairie - Haut-du-Them-Château-Lambert (SL, INSEE 70283) - Haut-du-Them &#8211; Chateau-Lambert",
+      "Haut-du-Them – Chateau-Lambert",
+    .name_ja = "Mairie - Haut-du-Them-Château-Lambert (SL, INSEE 70283) - Haut-du-Them – Chateau-Lambert",
     .category = "government", .portal = "https://hautduthemchateaulambert.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -141520,9 +141413,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:23:41 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_A2E1D3F1_C42D_4AD0_90D8_9B1C3283B963", .name = "Mairie - Saint-Aubin (SL, INSEE 91538) - Saint-Aubin &#8211; "
-      "Essonne &#8211; 91",
-    .name_ja = "Mairie - Saint-Aubin (SL, INSEE 91538) - Saint-Aubin &#8211; Essonne &#8211; 91",
+  { .id = "JO45_FR_A2E1D3F1_C42D_4AD0_90D8_9B1C3283B963", .name = "Mairie - Saint-Aubin (SL, INSEE 91538) - Saint-Aubin – Essonne – "
+      "91",
+    .name_ja = "Mairie - Saint-Aubin (SL, INSEE 91538) - Saint-Aubin – Essonne – 91",
     .category = "government", .portal = "https://saint-aubin.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -141577,8 +141470,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_A52840BC_48AC_455F_BBA0_E1DD5632DCA7", .name = "Communauté de communes - Aubrac, Carladez et Viadène (SL, INSEE "
-      "12119) - CC Aubrac Carladez Viadène &#8211; CCACV",
-    .name_ja = "Communauté de communes - Aubrac, Carladez et Viadène (SL, INSEE 12119) - CC Aubrac Carladez Viadène &#8211; CCACV",
+      "12119) - CC Aubrac Carladez Viadène – CCACV",
+    .name_ja = "Communauté de communes - Aubrac, Carladez et Viadène (SL, INSEE 12119) - CC Aubrac Carladez Viadène – CCACV",
     .category = "government", .portal = "https://www.ccacv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -141686,8 +141579,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "16:16:57 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_A5A01912_A02D_4DFE_BB53_A120AB5AEFB5", .name = "Mairie - Rives-d'Autise (SL, INSEE 85162) - Rives d&#039;Autise",
-    .name_ja = "Mairie - Rives-d'Autise (SL, INSEE 85162) - Rives d&#039;Autise",
+  { .id = "JO45_FR_A5A01912_A02D_4DFE_BB53_A120AB5AEFB5", .name = "Mairie - Rives-d'Autise (SL, INSEE 85162) - Rives d'Autise",
+    .name_ja = "Mairie - Rives-d'Autise (SL, INSEE 85162) - Rives d'Autise",
     .category = "government", .portal = "https://www.rives-autise.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -141741,8 +141634,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:53:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_A6D4B1C3_25BF_4482_B5C8_BE680124AB71", .name = "Mairie - Urville (SL, INSEE 14719) - Commune d&#039;Urville",
-    .name_ja = "Mairie - Urville (SL, INSEE 14719) - Commune d&#039;Urville",
+  { .id = "JO45_FR_A6D4B1C3_25BF_4482_B5C8_BE680124AB71", .name = "Mairie - Urville (SL, INSEE 14719) - Commune d'Urville",
+    .name_ja = "Mairie - Urville (SL, INSEE 14719) - Commune d'Urville",
     .category = "government", .portal = "https://urville-cingal.suisse-normande.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -141759,8 +141652,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "20:09:51 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_A6EC2FCD_F180_42D7_8E8D_DBB8392110F0", .name = "Mairie - Aimargues (SL, INSEE 30006) - Mairie d&#039;Aimargues",
-    .name_ja = "Mairie - Aimargues (SL, INSEE 30006) - Mairie d&#039;Aimargues",
+  { .id = "JO45_FR_A6EC2FCD_F180_42D7_8E8D_DBB8392110F0", .name = "Mairie - Aimargues (SL, INSEE 30006) - Mairie d'Aimargues",
+    .name_ja = "Mairie - Aimargues (SL, INSEE 30006) - Mairie d'Aimargues",
     .category = "government", .portal = "https://aimargues.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -141777,8 +141670,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:49:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_A7CE3A0C_35D0_454F_8A41_87872CC8487D", .name = "Mairie - Innenheim (SL, INSEE 67223) - Mairie d&#039;Innenheim",
-    .name_ja = "Mairie - Innenheim (SL, INSEE 67223) - Mairie d&#039;Innenheim",
+  { .id = "JO45_FR_A7CE3A0C_35D0_454F_8A41_87872CC8487D", .name = "Mairie - Innenheim (SL, INSEE 67223) - Mairie d'Innenheim",
+    .name_ja = "Mairie - Innenheim (SL, INSEE 67223) - Mairie d'Innenheim",
     .category = "government", .portal = "http://www.innenheim.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -141965,8 +141858,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_AC4C9453_66F9_435E_9FC2_C926F02BE0EE", .name = "Conseil de la culture, de l'éducation et de l'environnement "
       "(CCEE) - La Réunion (SIL, INSEE 97411) - Conseil de la culture, "
-      "de l&#039;éducation et de l&#039;Environnement",
-    .name_ja = "Conseil de la culture, de l'éducation et de l'environnement (CCEE) - La Réunion (SIL, INSEE 97411) - Conseil de la culture, de l&#039;éducation et de l&#039;Environnement",
+      "de l'éducation et de l'Environnement",
+    .name_ja = "Conseil de la culture, de l'éducation et de l'environnement (CCEE) - La Réunion (SIL, INSEE 97411) - Conseil de la culture, de l'éducation et de l'Environnement",
     .category = "government", .portal = "https://ccee.re/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -142075,8 +141968,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_AE82C0F5_49E3_4787_A858_82F12EACB9A3", .name = "Centre communal d'action sociale (CCAS) - D'Huison-Longueville "
-      "(SL, INSEE 91198) - Commune de D&#039;Huison-Longueville",
-    .name_ja = "Centre communal d'action sociale (CCAS) - D'Huison-Longueville (SL, INSEE 91198) - Commune de D&#039;Huison-Longueville",
+      "(SL, INSEE 91198) - Commune de D'Huison-Longueville",
+    .name_ja = "Centre communal d'action sociale (CCAS) - D'Huison-Longueville (SL, INSEE 91198) - Commune de D'Huison-Longueville",
     .category = "government", .portal = "https://www.dhuison-longueville.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -142093,8 +141986,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:40:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_AF090ECB_3C21_448D_A94F_3B131A828021", .name = "Mairie - Agnac (SL, INSEE 47003) - Commune d&#8217;Agnac",
-    .name_ja = "Mairie - Agnac (SL, INSEE 47003) - Commune d&#8217;Agnac",
+  { .id = "JO45_FR_AF090ECB_3C21_448D_A94F_3B131A828021", .name = "Mairie - Agnac (SL, INSEE 47003) - Commune d’Agnac",
+    .name_ja = "Mairie - Agnac (SL, INSEE 47003) - Commune d’Agnac",
     .category = "government", .portal = "https://agnac47.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -142257,9 +142150,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "site root." },
 
   { .id = "JO45_FR_B1595B7F_D5C5_4354_8667_DDCD3282AC60", .name = "Centre communal d'action sociale (CCAS) - Yvetot (SL, INSEE "
-      "76758) - Centre Communal d&#039;Action Sociale Yvetot &#8211; "
-      "Site officiel",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Yvetot (SL, INSEE 76758) - Centre Communal d&#039;Action Sociale Yvetot &#8211; Site officiel",
+      "76758) - Centre Communal d'Action Sociale Yvetot – Site officiel",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Yvetot (SL, INSEE 76758) - Centre Communal d'Action Sociale Yvetot – Site officiel",
     .category = "government", .portal = "https://www.ccas-yvetot.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -142352,9 +142244,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_B4E71852_B6D0_43C3_9E1A_03D217C65815", .name = "Mission locale pour l'insertion professionnelle et sociale des "
       "jeunes (16-25 ans) - Voiron (SL, INSEE 38563) - Maison de "
-      "l&#039;emploi et de la Formation des Pays Voironnais et Sud "
-      "Grésivaud",
-    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Voiron (SL, INSEE 38563) - Maison de l&#039;emploi et de la Formation des Pays Voironnais et Sud Grésivaud",
+      "l'emploi et de la Formation des Pays Voironnais et Sud Grésivaud",
+    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Voiron (SL, INSEE 38563) - Maison de l'emploi et de la Formation des Pays Voironnais et Sud Grésivaud",
     .category = "government", .portal = "https://emploi-pvsg.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -142447,8 +142338,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_B6C73D7B_51AA_4F39_8C30_C9CA1AA4F733", .name = "Mairie - Montrelais (SL, INSEE 44104) - Montrelais : Commune de "
-      "Loire-Atlantique &#8211; Site officiel",
-    .name_ja = "Mairie - Montrelais (SL, INSEE 44104) - Montrelais : Commune de Loire-Atlantique &#8211; Site officiel",
+      "Loire-Atlantique – Site officiel",
+    .name_ja = "Mairie - Montrelais (SL, INSEE 44104) - Montrelais : Commune de Loire-Atlantique – Site officiel",
     .category = "government", .portal = "https://www.montrelais.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -142670,8 +142561,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_BDC1F5F0_E734_4C88_9A06_AD4CA365CD4A", .name = "Mairie - Albaret-Sainte-Marie (SL, INSEE 48002) - Commune "
-      "d&#039;Albaret-Sainte-Marie",
-    .name_ja = "Mairie - Albaret-Sainte-Marie (SL, INSEE 48002) - Commune d&#039;Albaret-Sainte-Marie",
+      "d'Albaret-Sainte-Marie",
+    .name_ja = "Mairie - Albaret-Sainte-Marie (SL, INSEE 48002) - Commune d'Albaret-Sainte-Marie",
     .category = "government", .portal = "https://www.albaret-ste-marie.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -143356,8 +143247,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_C94A6A21_3860_44EB_93A1_3D44230FD49B", .name = "Mairie - Saint-Pierre-d'Entremont (SL, INSEE 38446) - Commune de "
-      "Saint Pierre d&#039;Entremont Isère",
-    .name_ja = "Mairie - Saint-Pierre-d'Entremont (SL, INSEE 38446) - Commune de Saint Pierre d&#039;Entremont Isère",
+      "Saint Pierre d'Entremont Isère",
+    .name_ja = "Mairie - Saint-Pierre-d'Entremont (SL, INSEE 38446) - Commune de Saint Pierre d'Entremont Isère",
     .category = "government", .portal = "https://saintpierredentremontisere.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -143657,9 +143548,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "11:31:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_CEF231CD_C3A3_4946_AA8E_0A6644339FA2", .name = "Mairie - Athies (SL, INSEE 62042) - Mairie d&#039;Athies, "
-      "Commune du Pas-de-Calais 62",
-    .name_ja = "Mairie - Athies (SL, INSEE 62042) - Mairie d&#039;Athies, Commune du Pas-de-Calais 62",
+  { .id = "JO45_FR_CEF231CD_C3A3_4946_AA8E_0A6644339FA2", .name = "Mairie - Athies (SL, INSEE 62042) - Mairie d'Athies, Commune du "
+      "Pas-de-Calais 62",
+    .name_ja = "Mairie - Athies (SL, INSEE 62042) - Mairie d'Athies, Commune du Pas-de-Calais 62",
     .category = "government", .portal = "https://www.athies.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -143752,8 +143643,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_D01F8A8E_35E6_43F0_9497_B6B67F112A3C", .name = "Mairie - Belmont-d'Azergues (SL, INSEE 69020) - Belmont "
-      "d&#039;Azergues &#8211; Commune du Beaujolais des Pierres Dorées",
-    .name_ja = "Mairie - Belmont-d'Azergues (SL, INSEE 69020) - Belmont d&#039;Azergues &#8211; Commune du Beaujolais des Pierres Dorées",
+      "d'Azergues – Commune du Beaujolais des Pierres Dorées",
+    .name_ja = "Mairie - Belmont-d'Azergues (SL, INSEE 69020) - Belmont d'Azergues – Commune du Beaujolais des Pierres Dorées",
     .category = "government", .portal = "https://www.belmontdazergues.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -143825,9 +143716,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:27:57 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_D19E6D18_07D8_4691_A5C5_312BC1C01DC2", .name = "Mairie - Andillac (SL, INSEE 81012) - Mairie d&#039;Andillac "
-      "&#8211; Site Officiel",
-    .name_ja = "Mairie - Andillac (SL, INSEE 81012) - Mairie d&#039;Andillac &#8211; Site Officiel",
+  { .id = "JO45_FR_D19E6D18_07D8_4691_A5C5_312BC1C01DC2", .name = "Mairie - Andillac (SL, INSEE 81012) - Mairie d'Andillac – Site "
+      "Officiel",
+    .name_ja = "Mairie - Andillac (SL, INSEE 81012) - Mairie d'Andillac – Site Officiel",
     .category = "government", .portal = "https://www.mairie-andillac.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -144066,8 +143957,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_D6BB621E_B477_4DE8_A929_70E8A0D4E281", .name = "Espace conseil France Rénov' - Vichy (SL, INSEE 03310) - Maison "
-      "de l&#039;habitat et de l&#039;urbanisme de Vichy Communauté",
-    .name_ja = "Espace conseil France Rénov' - Vichy (SL, INSEE 03310) - Maison de l&#039;habitat et de l&#039;urbanisme de Vichy Communauté",
+      "de l'habitat et de l'urbanisme de Vichy Communauté",
+    .name_ja = "Espace conseil France Rénov' - Vichy (SL, INSEE 03310) - Maison de l'habitat et de l'urbanisme de Vichy Communauté",
     .category = "government", .portal = "https://habitat.vichy-communaute.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -144234,8 +144125,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_D9FC7EB3_2604_4906_926D_77264A8E84EA", .name = "Mairie - Froberville (SL, INSEE 76291) - Bac sucré ou bac salé, "
-      "des « P&#8217;tits Mousses » pour bien planter",
-    .name_ja = "Mairie - Froberville (SL, INSEE 76291) - Bac sucré ou bac salé, des « P&#8217;tits Mousses » pour bien planter",
+      "des « P’tits Mousses » pour bien planter",
+    .name_ja = "Mairie - Froberville (SL, INSEE 76291) - Bac sucré ou bac salé, des « P’tits Mousses » pour bien planter",
     .category = "government", .portal = "http://froberville.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -144441,9 +144332,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_DFC18B1E_C5C9_4010_A10F_F33CE0029057", .name = "Mairie - Norroy-le-Veneur (SL, INSEE 57511) - 06/11/2026 &#8211; "
+  { .id = "JO45_FR_DFC18B1E_C5C9_4010_A10F_F33CE0029057", .name = "Mairie - Norroy-le-Veneur (SL, INSEE 57511) - 06/11/2026 – "
       "MARCHÉ GOURMAND ET ARTISANAL",
-    .name_ja = "Mairie - Norroy-le-Veneur (SL, INSEE 57511) - 06/11/2026 &#8211; MARCHÉ GOURMAND ET ARTISANAL",
+    .name_ja = "Mairie - Norroy-le-Veneur (SL, INSEE 57511) - 06/11/2026 – MARCHÉ GOURMAND ET ARTISANAL",
     .category = "government", .portal = "https://norroyleveneur.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -144795,8 +144686,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_E5BBA3A4_5609_47B5_9852_8B2C4E927C79", .name = "Plateforme d'accompagnement et de répit pour les aidants de "
       "personnes âgées - Vendôme (SL, INSEE 41269) - Centre Hospitalier "
-      "de Vendôme &#8211; Montoire",
-    .name_ja = "Plateforme d'accompagnement et de répit pour les aidants de personnes âgées - Vendôme (SL, INSEE 41269) - Centre Hospitalier de Vendôme &#8211; Montoire",
+      "de Vendôme – Montoire",
+    .name_ja = "Plateforme d'accompagnement et de répit pour les aidants de personnes âgées - Vendôme (SL, INSEE 41269) - Centre Hospitalier de Vendôme – Montoire",
     .category = "government", .portal = "https://www.ch-vendome.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -144947,8 +144838,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_E6F746DA_FE86_43B7_B794_897D02213276", .name = "Mairie - Chazay-d'Azergues (SL, INSEE 69052) - Mairie de Chazay "
-      "d&#039;Azergues",
-    .name_ja = "Mairie - Chazay-d'Azergues (SL, INSEE 69052) - Mairie de Chazay d&#039;Azergues",
+      "d'Azergues",
+    .name_ja = "Mairie - Chazay-d'Azergues (SL, INSEE 69052) - Mairie de Chazay d'Azergues",
     .category = "government", .portal = "https://www.mairiechazaydazergues.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -145227,8 +145118,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_EC3177E0_370E_469C_8F6E_7ADDFC4804AA", .name = "Mairie - Blainville-sur-l'Eau (SL, INSEE 54076) - "
-      "Blainville-sur-l&#039;Eau",
-    .name_ja = "Mairie - Blainville-sur-l'Eau (SL, INSEE 54076) - Blainville-sur-l&#039;Eau",
+      "Blainville-sur-l'Eau",
+    .name_ja = "Mairie - Blainville-sur-l'Eau (SL, INSEE 54076) - Blainville-sur-l'Eau",
     .category = "government", .portal = "https://blainvillesurleau.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -145337,8 +145228,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_EE29F519_2F8B_4050_84E1_3AAF9A737D77", .name = "Mairie - Saint-Féliu-d'Amont (SL, INSEE 66173) - Mairie de "
-      "Saint-Féliu d&#039;Amont",
-    .name_ja = "Mairie - Saint-Féliu-d'Amont (SL, INSEE 66173) - Mairie de Saint-Féliu d&#039;Amont",
+      "Saint-Féliu d'Amont",
+    .name_ja = "Mairie - Saint-Féliu-d'Amont (SL, INSEE 66173) - Mairie de Saint-Féliu d'Amont",
     .category = "government", .portal = "https://saintfeliudamont.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -145448,8 +145339,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:41:07 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F0C5E8F5_4F42_421B_9ECC_6DD1138AC494", .name = "Mairie - Espoey (SL, INSEE 64216) - Commune d&#039;Espoey",
-    .name_ja = "Mairie - Espoey (SL, INSEE 64216) - Commune d&#039;Espoey",
+  { .id = "JO45_FR_F0C5E8F5_4F42_421B_9ECC_6DD1138AC494", .name = "Mairie - Espoey (SL, INSEE 64216) - Commune d'Espoey",
+    .name_ja = "Mairie - Espoey (SL, INSEE 64216) - Commune d'Espoey",
     .category = "government", .portal = "https://espoey.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -145652,8 +145543,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:27:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F491586C_98CC_4E34_A016_A3E9D492C48A", .name = "Mairie - Osmery (SL, INSEE 18173) - Commune d&#039;Osmery",
-    .name_ja = "Mairie - Osmery (SL, INSEE 18173) - Commune d&#039;Osmery",
+  { .id = "JO45_FR_F491586C_98CC_4E34_A016_A3E9D492C48A", .name = "Mairie - Osmery (SL, INSEE 18173) - Commune d'Osmery",
+    .name_ja = "Mairie - Osmery (SL, INSEE 18173) - Commune d'Osmery",
     .category = "government", .portal = "https://www.osmery.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -145707,8 +145598,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_F599A522_A15D_41E2_A340_A73A1925CF28", .name = "Mairie - Villers-Allerand (SL, INSEE 51629) - Mairie de "
-      "Villers-Allerand &#8211; Montchenot",
-    .name_ja = "Mairie - Villers-Allerand (SL, INSEE 51629) - Mairie de Villers-Allerand &#8211; Montchenot",
+      "Villers-Allerand – Montchenot",
+    .name_ja = "Mairie - Villers-Allerand (SL, INSEE 51629) - Mairie de Villers-Allerand – Montchenot",
     .category = "government", .portal = "https://www.villers-allerand.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -145726,8 +145617,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_F5A5F10F_F4F1_47EE_8150_98F5460DB5A3", .name = "Communauté de communes - Touraine Vallée de l'Indre (SL, INSEE "
-      "37250) - TOURAINE VALLÉE DE L&#039;INDRE &#8211; site officiel",
-    .name_ja = "Communauté de communes - Touraine Vallée de l'Indre (SL, INSEE 37250) - TOURAINE VALLÉE DE L&#039;INDRE &#8211; site officiel",
+      "37250) - TOURAINE VALLÉE DE L'INDRE – site officiel",
+    .name_ja = "Communauté de communes - Touraine Vallée de l'Indre (SL, INSEE 37250) - TOURAINE VALLÉE DE L'INDRE – site officiel",
     .category = "government", .portal = "https://tourainevalleedelindre.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -145764,9 +145655,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_F61B3415_CD92_4770_969A_9365C0716D14", .name = "Chambre de commerce et d'industrie (CCI) 976 - Mayotte - Siège "
-      "Mamoudzou (SL, INSEE 97611) - Chambre de Commerce et "
-      "d&#039;Industrie de Mayotte   CCI Mayotte",
-    .name_ja = "Chambre de commerce et d'industrie (CCI) 976 - Mayotte - Siège Mamoudzou (SL, INSEE 97611) - Chambre de Commerce et d&#039;Industrie de Mayotte   CCI Mayotte",
+      "Mamoudzou (SL, INSEE 97611) - Chambre de Commerce et d'Industrie "
+      "de Mayotte   CCI Mayotte",
+    .name_ja = "Chambre de commerce et d'industrie (CCI) 976 - Mayotte - Siège Mamoudzou (SL, INSEE 97611) - Chambre de Commerce et d'Industrie de Mayotte   CCI Mayotte",
     .category = "government", .portal = "https://www.mayotte.cci.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -145819,9 +145710,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:00:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F74238A8_EE39_425C_9D4F_18CD203C9288", .name = "Mairie - Contamine-Sarzin (SL, INSEE 74086) - Bienvenue &#224; "
+  { .id = "JO45_FR_F74238A8_EE39_425C_9D4F_18CD203C9288", .name = "Mairie - Contamine-Sarzin (SL, INSEE 74086) - Bienvenue à "
       "Contamine-Sarzin",
-    .name_ja = "Mairie - Contamine-Sarzin (SL, INSEE 74086) - Bienvenue &#224; Contamine-Sarzin",
+    .name_ja = "Mairie - Contamine-Sarzin (SL, INSEE 74086) - Bienvenue à Contamine-Sarzin",
     .category = "government", .portal = "https://www.contamine-sarzin.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -145874,9 +145765,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:06:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F8878D98_037A_4EEA_88A3_8D3688DCE537", .name = "Mairie - Champeaux (SL, INSEE 77082) - Le Blog d&#039;Evelise "
+  { .id = "JO45_FR_F8878D98_037A_4EEA_88A3_8D3688DCE537", .name = "Mairie - Champeaux (SL, INSEE 77082) - Le Blog d'Evelise "
       "Champeaux",
-    .name_ja = "Mairie - Champeaux (SL, INSEE 77082) - Le Blog d&#039;Evelise Champeaux",
+    .name_ja = "Mairie - Champeaux (SL, INSEE 77082) - Le Blog d'Evelise Champeaux",
     .category = "government", .portal = "https://champeaux-77.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -145949,8 +145840,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_F9026357_935E_445C_A4F0_00D88A15B116", .name = "Mairie - Saint-Julien-d'Intres (SL, INSEE 07103) - "
-      "SAINT-JULIEN-D&#039;INTRES",
-    .name_ja = "Mairie - Saint-Julien-d'Intres (SL, INSEE 07103) - SAINT-JULIEN-D&#039;INTRES",
+      "SAINT-JULIEN-D'INTRES",
+    .name_ja = "Mairie - Saint-Julien-d'Intres (SL, INSEE 07103) - SAINT-JULIEN-D'INTRES",
     .category = "government", .portal = "https://saintjuliendintres.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -146191,8 +146082,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_FEE614B4_CBD7_40AF_A8E3_7D7BCC689995", .name = "Mairie - Saint-Michel-en-l'Herm (SL, INSEE 85255) - Saint Michel "
-      "En L&#039;Herm",
-    .name_ja = "Mairie - Saint-Michel-en-l'Herm (SL, INSEE 85255) - Saint Michel En L&#039;Herm",
+      "En L'Herm",
+    .name_ja = "Mairie - Saint-Michel-en-l'Herm (SL, INSEE 85255) - Saint Michel En L'Herm",
     .category = "government", .portal = "https://saintmichelenlherm.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -146228,8 +146119,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_FF8C2983_FC0C_4229_808E_1BE157292669", .name = "Mairie - Saint-Martin-d'Arc (SL, INSEE 73256) - Saint Martin "
-      "d&#039;Arc",
-    .name_ja = "Mairie - Saint-Martin-d'Arc (SL, INSEE 73256) - Saint Martin d&#039;Arc",
+      "d'Arc",
+    .name_ja = "Mairie - Saint-Martin-d'Arc (SL, INSEE 73256) - Saint Martin d'Arc",
     .category = "government", .portal = "https://stmartindarc.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -146395,8 +146286,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:24:40 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_6182AC0A_7A9D_48AC_A1DC_1347D4A4D273", .name = "Mairie - Aiguines (SL, INSEE 83002) - Commune d&#039;Aiguines",
-    .name_ja = "Mairie - Aiguines (SL, INSEE 83002) - Commune d&#039;Aiguines",
+  { .id = "JO45_FR_6182AC0A_7A9D_48AC_A1DC_1347D4A4D273", .name = "Mairie - Aiguines (SL, INSEE 83002) - Commune d'Aiguines",
+    .name_ja = "Mairie - Aiguines (SL, INSEE 83002) - Commune d'Aiguines",
     .category = "government", .portal = "https://www.aiguines.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -146919,8 +146810,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_69BB4FA9_FBF2_4BEA_A6C3_891F9A67A327", .name = "Mairie - Saint-Julien-l Ars (SL, INSEE 86226) - "
-      "Saint-Julien-l&#039;Ars",
-    .name_ja = "Mairie - Saint-Julien-l Ars (SL, INSEE 86226) - Saint-Julien-l&#039;Ars",
+      "Saint-Julien-l'Ars",
+    .name_ja = "Mairie - Saint-Julien-l Ars (SL, INSEE 86226) - Saint-Julien-l'Ars",
     .category = "government", .portal = "https://saintjulienlars.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -147163,8 +147054,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_6D73CD01_4E06_4219_AA55_50E4CE6FE046", .name = "Centre de ressources et d'information des bénévoles (CRIB) - "
       "Ligue de l'enseignement du Loir-et-Cher (SL, INSEE 41018) - "
-      "Ligue de l&#039;enseignement 41",
-    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Ligue de l'enseignement du Loir-et-Cher (SL, INSEE 41018) - Ligue de l&#039;enseignement 41",
+      "Ligue de l'enseignement 41",
+    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Ligue de l'enseignement du Loir-et-Cher (SL, INSEE 41018) - Ligue de l'enseignement 41",
     .category = "government", .portal = "https://www.laliguedelenseignement-41.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -147255,8 +147146,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_6F2D1EF6_02A6_4B1E_B591_1341DDDA17BE", .name = "Mairie - Neurey-lès-la-Demie (SL, INSEE 70381) - Mon premier "
-      "article d&#8217;agenda",
-    .name_ja = "Mairie - Neurey-lès-la-Demie (SL, INSEE 70381) - Mon premier article d&#8217;agenda",
+      "article d’agenda",
+    .name_ja = "Mairie - Neurey-lès-la-Demie (SL, INSEE 70381) - Mon premier article d’agenda",
     .category = "government", .portal = "https://neureyleslademie.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -147608,8 +147499,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_75ACC33F_E068_4433_8A62_474922532F2E", .name = "Communauté de communes - Bresse Louhannaise Intercom (SL, INSEE "
-      "71263) - Bresse Louhannaise Intercom&#039;",
-    .name_ja = "Communauté de communes - Bresse Louhannaise Intercom (SL, INSEE 71263) - Bresse Louhannaise Intercom&#039;",
+      "71263) - Bresse Louhannaise Intercom'",
+    .name_ja = "Communauté de communes - Bresse Louhannaise Intercom (SL, INSEE 71263) - Bresse Louhannaise Intercom'",
     .category = "government", .portal = "https://www.bresselouhannaiseintercom.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -147645,9 +147536,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:51:46 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_75B6DA7B_4B15_40DA_898F_56B3DDCDB500", .name = "Mairie - Saint-Germain-de-Pasquier (SL, INSEE 27545) - Mairie "
-      "&#8211; St Germain de Pasquier",
-    .name_ja = "Mairie - Saint-Germain-de-Pasquier (SL, INSEE 27545) - Mairie &#8211; St Germain de Pasquier",
+  { .id = "JO45_FR_75B6DA7B_4B15_40DA_898F_56B3DDCDB500", .name = "Mairie - Saint-Germain-de-Pasquier (SL, INSEE 27545) - Mairie – "
+      "St Germain de Pasquier",
+    .name_ja = "Mairie - Saint-Germain-de-Pasquier (SL, INSEE 27545) - Mairie – St Germain de Pasquier",
     .category = "government", .portal = "https://saintgermaindepasquier.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -147665,8 +147556,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_75F02633_CF50_49F1_B415_B6E363EE9967", .name = "France services - Clermont de l'Oise (SL, INSEE 60157) - Ville "
-      "de Clermont (Oise) &#8211; Site Officiel",
-    .name_ja = "France services - Clermont de l'Oise (SL, INSEE 60157) - Ville de Clermont (Oise) &#8211; Site Officiel",
+      "de Clermont (Oise) – Site Officiel",
+    .name_ja = "France services - Clermont de l'Oise (SL, INSEE 60157) - Ville de Clermont (Oise) – Site Officiel",
     .category = "government", .portal = "https://www.clermont-oise.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -147871,8 +147762,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_7881B713_08F1_410A_A535_D0AF7220E2F2", .name = "Réseau santé au travail d’entreprises de vendée - La "
       "Roche-sur-Yon (SIL, INSEE 85191) - RESTEV : Réseau Santé au "
-      "Travail d&#039;Entreprises de Vendée",
-    .name_ja = "Réseau santé au travail d’entreprises de vendée - La Roche-sur-Yon (SIL, INSEE 85191) - RESTEV : Réseau Santé au Travail d&#039;Entreprises de Vendée",
+      "Travail d'Entreprises de Vendée",
+    .name_ja = "Réseau santé au travail d’entreprises de vendée - La Roche-sur-Yon (SIL, INSEE 85191) - RESTEV : Réseau Santé au Travail d'Entreprises de Vendée",
     .category = "government", .portal = "https://www.restev.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -147925,8 +147816,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:24:37 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_7A31F2EF_EFFC_4277_9419_539020E46C5D", .name = "Mairie - Hérin (SL, INSEE 59302) - Ville d&#039;Hérin",
-    .name_ja = "Mairie - Hérin (SL, INSEE 59302) - Ville d&#039;Hérin",
+  { .id = "JO45_FR_7A31F2EF_EFFC_4277_9419_539020E46C5D", .name = "Mairie - Hérin (SL, INSEE 59302) - Ville d'Hérin",
+    .name_ja = "Mairie - Hérin (SL, INSEE 59302) - Ville d'Hérin",
     .category = "government", .portal = "https://www.ville-herin.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -148001,8 +147892,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_7B16FF1E_7A1D_47D0_B6C0_8D58C8E80331", .name = "Centre de ressources et d'information des bénévoles (CRIB) - "
       "Ligue de l'enseignement de la Vienne (SL, INSEE 86194) - Ligue "
-      "de l&#039;Enseignement &#8211; Fédération de la Vienne",
-    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Ligue de l'enseignement de la Vienne (SL, INSEE 86194) - Ligue de l&#039;Enseignement &#8211; Fédération de la Vienne",
+      "de l'Enseignement – Fédération de la Vienne",
+    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Ligue de l'enseignement de la Vienne (SL, INSEE 86194) - Ligue de l'Enseignement – Fédération de la Vienne",
     .category = "government", .portal = "https://laligue86.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -148057,8 +147948,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:40:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_7BB8917E_1FB0_441F_9094_306ABE248437", .name = "Mairie - Plan-d'Orgon (SL, INSEE 13076) - Plan d&#039;Orgon",
-    .name_ja = "Mairie - Plan-d'Orgon (SL, INSEE 13076) - Plan d&#039;Orgon",
+  { .id = "JO45_FR_7BB8917E_1FB0_441F_9094_306ABE248437", .name = "Mairie - Plan-d'Orgon (SL, INSEE 13076) - Plan d'Orgon",
+    .name_ja = "Mairie - Plan-d'Orgon (SL, INSEE 13076) - Plan d'Orgon",
     .category = "government", .portal = "https://www.plandorgon.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -148280,9 +148171,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:33:16 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_43FC2AD1_DBA5_4D0F_ADEE_A9A8FA80AB5C", .name = "Mairie - Barrême (SL, INSEE 04022) - Commune de Barreme &#8211; "
-      "Site de votre Mairie",
-    .name_ja = "Mairie - Barrême (SL, INSEE 04022) - Commune de Barreme &#8211; Site de votre Mairie",
+  { .id = "JO45_FR_43FC2AD1_DBA5_4D0F_ADEE_A9A8FA80AB5C", .name = "Mairie - Barrême (SL, INSEE 04022) - Commune de Barreme – Site "
+      "de votre Mairie",
+    .name_ja = "Mairie - Barrême (SL, INSEE 04022) - Commune de Barreme – Site de votre Mairie",
     .category = "government", .portal = "https://www.barreme.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -148634,8 +148525,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_4A6BC413_FF04_4B70_97AD_DF7EFA273B00", .name = "Point-justice Maison d'Arrêt de Rodez (SL, INSEE 12202) - CDAD "
-      "de l&#039;Aveyron",
-    .name_ja = "Point-justice Maison d'Arrêt de Rodez (SL, INSEE 12202) - CDAD de l&#039;Aveyron",
+      "de l'Aveyron",
+    .name_ja = "Point-justice Maison d'Arrêt de Rodez (SL, INSEE 12202) - CDAD de l'Aveyron",
     .category = "government", .portal = "https://www.cdad-aveyron.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -148709,8 +148600,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_4CEF1506_1936_4AE3_A13A_97885E6E4911", .name = "Mairie - Saint-Symphorien-d'Ancelles (SL, INSEE 71481) - mairie "
-      "de Saint Symphorien d&#039;Ancelles",
-    .name_ja = "Mairie - Saint-Symphorien-d'Ancelles (SL, INSEE 71481) - mairie de Saint Symphorien d&#039;Ancelles",
+      "de Saint Symphorien d'Ancelles",
+    .name_ja = "Mairie - Saint-Symphorien-d'Ancelles (SL, INSEE 71481) - mairie de Saint Symphorien d'Ancelles",
     .category = "government", .portal = "https://st-symphorien-st-romain.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -148764,8 +148655,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_4D77763D_FED9_4C4A_BE1E_3316138AF9B0", .name = "Mairie - Saint-Pierre-d'Entremont (SL, INSEE 73274) - Mairie de "
-      "St Pierre d&#039;Entremont",
-    .name_ja = "Mairie - Saint-Pierre-d'Entremont (SL, INSEE 73274) - Mairie de St Pierre d&#039;Entremont",
+      "St Pierre d'Entremont",
+    .name_ja = "Mairie - Saint-Pierre-d'Entremont (SL, INSEE 73274) - Mairie de St Pierre d'Entremont",
     .category = "government", .portal = "https://saintpierredentremont.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -148801,9 +148692,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:16:07 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_4E1C6054_359B_44C3_BB64_5E2533678633", .name = "Mairie - Beaumont (SL, INSEE 19020) - Commune de Beaumont "
-      "&#8211; Corrèze",
-    .name_ja = "Mairie - Beaumont (SL, INSEE 19020) - Commune de Beaumont &#8211; Corrèze",
+  { .id = "JO45_FR_4E1C6054_359B_44C3_BB64_5E2533678633", .name = "Mairie - Beaumont (SL, INSEE 19020) - Commune de Beaumont – "
+      "Corrèze",
+    .name_ja = "Mairie - Beaumont (SL, INSEE 19020) - Commune de Beaumont – Corrèze",
     .category = "government", .portal = "https://www.beaumont-correze.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -148858,8 +148749,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_50244727_DE21_40EF_841A_B172743E2C04", .name = "Centre communal d'action sociale (CCAS) - Saint-Chély-d'Apcher "
-      "(SL, INSEE 48140) - Saint Chély d&#039;Apcher",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Saint-Chély-d'Apcher (SL, INSEE 48140) - Saint Chély d&#039;Apcher",
+      "(SL, INSEE 48140) - Saint Chély d'Apcher",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Saint-Chély-d'Apcher (SL, INSEE 48140) - Saint Chély d'Apcher",
     .category = "government", .portal = "https://www.stchelydapcher.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -148988,8 +148879,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_5226226C_55F9_45A3_A1C2_6617E9B0E710", .name = "Point information jeunesse - Sélestat (SL, INSEE 67462) - "
-      "Communauté de communes de Sélestat &amp; Territoires",
-    .name_ja = "Point information jeunesse - Sélestat (SL, INSEE 67462) - Communauté de communes de Sélestat &amp; Territoires",
+      "Communauté de communes de Sélestat & Territoires",
+    .name_ja = "Point information jeunesse - Sélestat (SL, INSEE 67462) - Communauté de communes de Sélestat & Territoires",
     .category = "government", .portal = "https://www.selestat-territoires.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -149285,8 +149176,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:22:55 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_581F7F54_08DF_4280_AA8B_28FB57EC677C", .name = "Mairie - Arcey (SL, INSEE 25022) - Commune d&#039;Arcey",
-    .name_ja = "Mairie - Arcey (SL, INSEE 25022) - Commune d&#039;Arcey",
+  { .id = "JO45_FR_581F7F54_08DF_4280_AA8B_28FB57EC677C", .name = "Mairie - Arcey (SL, INSEE 25022) - Commune d'Arcey",
+    .name_ja = "Mairie - Arcey (SL, INSEE 25022) - Commune d'Arcey",
     .category = "government", .portal = "https://arcey.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -149548,9 +149439,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "11:47:05 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_5D0ECFE3_7CC8_4458_84DB_2D138B576B09", .name = "Mairie - Belcastel (SL, INSEE 81025) - Commune de Belcastel "
-      "&#8211; Tarn",
-    .name_ja = "Mairie - Belcastel (SL, INSEE 81025) - Commune de Belcastel &#8211; Tarn",
+  { .id = "JO45_FR_5D0ECFE3_7CC8_4458_84DB_2D138B576B09", .name = "Mairie - Belcastel (SL, INSEE 81025) - Commune de Belcastel – "
+      "Tarn",
+    .name_ja = "Mairie - Belcastel (SL, INSEE 81025) - Commune de Belcastel – Tarn",
     .category = "government", .portal = "https://belcastel81.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -149677,9 +149568,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:50:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_5E72F1E6_4A4A_4F90_A2D0_EA6B36FC7169", .name = "Mairie - Siegen (SL, INSEE 67466) - Commune de Siegen &#8211; "
+  { .id = "JO45_FR_5E72F1E6_4A4A_4F90_A2D0_EA6B36FC7169", .name = "Mairie - Siegen (SL, INSEE 67466) - Commune de Siegen – "
       "Kaidenbourg",
-    .name_ja = "Mairie - Siegen (SL, INSEE 67466) - Commune de Siegen &#8211; Kaidenbourg",
+    .name_ja = "Mairie - Siegen (SL, INSEE 67466) - Commune de Siegen – Kaidenbourg",
     .category = "government", .portal = "https://siegen.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -149825,8 +149716,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_250EF19B_C1BF_43B6_95BE_1CB869ED46BF", .name = "Mairie - Gourdan-Polignan (SL, INSEE 31224) - Mairie de "
-      "Gourdan-Polignan (31210) &#8211; Site officiel",
-    .name_ja = "Mairie - Gourdan-Polignan (SL, INSEE 31224) - Mairie de Gourdan-Polignan (31210) &#8211; Site officiel",
+      "Gourdan-Polignan (31210) – Site officiel",
+    .name_ja = "Mairie - Gourdan-Polignan (SL, INSEE 31224) - Mairie de Gourdan-Polignan (31210) – Site officiel",
     .category = "government", .portal = "https://www.gourdan-polignan.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -149844,8 +149735,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_2541A6A7_3B3E_461E_BB52_9EDFC742F593", .name = "Communauté d'agglomération - Beaune Côte et Sud (SL, INSEE "
-      "21054) - Communauté d&#039;Agglomération Beaune Côte et Sud",
-    .name_ja = "Communauté d'agglomération - Beaune Côte et Sud (SL, INSEE 21054) - Communauté d&#039;Agglomération Beaune Côte et Sud",
+      "21054) - Communauté d'Agglomération Beaune Côte et Sud",
+    .name_ja = "Communauté d'agglomération - Beaune Côte et Sud (SL, INSEE 21054) - Communauté d'Agglomération Beaune Côte et Sud",
     .category = "government", .portal = "https://www.beaunecoteetsud.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -150202,8 +150093,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_2D6F6313_26F9_415E_B96C_F461C18859D7", .name = "Communauté de communes - Montagne d'Ardèche (SL, INSEE 07071) - "
-      "Communauté de Communes Montagne d&#039;Ardèche",
-    .name_ja = "Communauté de communes - Montagne d'Ardèche (SL, INSEE 07071) - Communauté de Communes Montagne d&#039;Ardèche",
+      "Communauté de Communes Montagne d'Ardèche",
+    .name_ja = "Communauté de communes - Montagne d'Ardèche (SL, INSEE 07071) - Communauté de Communes Montagne d'Ardèche",
     .category = "government", .portal = "https://cc-montagne-ardeche.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -150829,9 +150720,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:23:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_3875DAA5_6448_4B7E_A433_65B94AB4A5DE", .name = "Mairie - Marsas (SL, INSEE 33272) - Site officiel &#8211; Mairie "
-      "de  Marsas",
-    .name_ja = "Mairie - Marsas (SL, INSEE 33272) - Site officiel &#8211; Mairie de  Marsas",
+  { .id = "JO45_FR_3875DAA5_6448_4B7E_A433_65B94AB4A5DE", .name = "Mairie - Marsas (SL, INSEE 33272) - Site officiel – Mairie de  "
+      "Marsas",
+    .name_ja = "Mairie - Marsas (SL, INSEE 33272) - Site officiel – Mairie de  Marsas",
     .category = "government", .portal = "https://www.mairie-de-marsas33.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -150887,8 +150778,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_3929EC15_848F_4804_A9F4_EE2FBA700819", .name = "Fédération départementale des chasseurs - Oise (SL, INSEE 60157) "
-      "- Fédération des Chasseurs de l&#039;Oise",
-    .name_ja = "Fédération départementale des chasseurs - Oise (SL, INSEE 60157) - Fédération des Chasseurs de l&#039;Oise",
+      "- Fédération des Chasseurs de l'Oise",
+    .name_ja = "Fédération départementale des chasseurs - Oise (SL, INSEE 60157) - Fédération des Chasseurs de l'Oise",
     .category = "government", .portal = "https://www.fdc60.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -151055,9 +150946,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:56:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_3E35C727_AA40_400D_BBE5_D1B569F645B2", .name = "Mairie - Rainneville (SL, INSEE 80661) - Octobre rose &#8211; "
-      "Samedi 10 octobre",
-    .name_ja = "Mairie - Rainneville (SL, INSEE 80661) - Octobre rose &#8211; Samedi 10 octobre",
+  { .id = "JO45_FR_3E35C727_AA40_400D_BBE5_D1B569F645B2", .name = "Mairie - Rainneville (SL, INSEE 80661) - Octobre rose – Samedi "
+      "10 octobre",
+    .name_ja = "Mairie - Rainneville (SL, INSEE 80661) - Octobre rose – Samedi 10 octobre",
     .category = "government", .portal = "https://www.mairie-rainneville.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -151148,9 +151039,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:42:46 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_3F84FFE3_83C8_4059_8469_CA6E8F66044C", .name = "Mairie - Combertault (SL, INSEE 21185) - Ville Combertault "
-      "&#8211; Cote d&#039;Or &#8211; Bourgogne",
-    .name_ja = "Mairie - Combertault (SL, INSEE 21185) - Ville Combertault &#8211; Cote d&#039;Or &#8211; Bourgogne",
+  { .id = "JO45_FR_3F84FFE3_83C8_4059_8469_CA6E8F66044C", .name = "Mairie - Combertault (SL, INSEE 21185) - Ville Combertault – "
+      "Cote d'Or – Bourgogne",
+    .name_ja = "Mairie - Combertault (SL, INSEE 21185) - Ville Combertault – Cote d'Or – Bourgogne",
     .category = "government", .portal = "https://combertault.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -151243,8 +151134,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_4036FCF7_25B0_47E1_A4B7_B8AEA3C7CCB8", .name = "Fédération départementale pour la pêche et la protection du "
       "milieu aquatique - Ain (SL, INSEE 01451) - Fédération "
-      "départementale de pêche de l&#039;Ain",
-    .name_ja = "Fédération départementale pour la pêche et la protection du milieu aquatique - Ain (SL, INSEE 01451) - Fédération départementale de pêche de l&#039;Ain",
+      "départementale de pêche de l'Ain",
+    .name_ja = "Fédération départementale pour la pêche et la protection du milieu aquatique - Ain (SL, INSEE 01451) - Fédération départementale de pêche de l'Ain",
     .category = "government", .portal = "https://www.federation-peche-ain.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -151374,8 +151265,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_410E3C04_1A1F_4EDD_98D9_6A273C76A2FE", .name = "Mairie - Saint-Martin-d'Ordon (SL, INSEE 89353) - Saint Martin "
-      "d&#039;Ordon",
-    .name_ja = "Mairie - Saint-Martin-d'Ordon (SL, INSEE 89353) - Saint Martin d&#039;Ordon",
+      "d'Ordon",
+    .name_ja = "Mairie - Saint-Martin-d'Ordon (SL, INSEE 89353) - Saint Martin d'Ordon",
     .category = "government", .portal = "https://saintmartindordon.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -151560,8 +151451,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_095F7661_0C91_4389_BBA4_D45F1FA27E04", .name = "Mairie - Saint-Gély-du-Fesc (SL, INSEE 34255) - Ville de Ville "
-      "de Saint-Gély-Du-Fesc : Flux RSS de l&#039;agenda",
-    .name_ja = "Mairie - Saint-Gély-du-Fesc (SL, INSEE 34255) - Ville de Ville de Saint-Gély-Du-Fesc : Flux RSS de l&#039;agenda",
+      "de Saint-Gély-Du-Fesc : Flux RSS de l'agenda",
+    .name_ja = "Mairie - Saint-Gély-du-Fesc (SL, INSEE 34255) - Ville de Ville de Saint-Gély-Du-Fesc : Flux RSS de l'agenda",
     .category = "government", .portal = "https://www.saintgelydufesc.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -151634,8 +151525,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:25:03 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_0A2C3019_03F9_4797_9B5E_5650AC612560", .name = "Mairie - Saint-Agrève (SL, INSEE 07204) - Saint-Agr&#232;ve",
-    .name_ja = "Mairie - Saint-Agrève (SL, INSEE 07204) - Saint-Agr&#232;ve",
+  { .id = "JO45_FR_0A2C3019_03F9_4797_9B5E_5650AC612560", .name = "Mairie - Saint-Agrève (SL, INSEE 07204) - Saint-Agrève",
+    .name_ja = "Mairie - Saint-Agrève (SL, INSEE 07204) - Saint-Agrève",
     .category = "government", .portal = "https://www.ville-saintagreve.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -151857,8 +151748,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "16:55:29 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_0EB9FE2F_D72F_4E7C_9E06_FA07EE8DC521", .name = "Mairie - Astillé (SL, INSEE 53011) - Commune d&#039;Astillé",
-    .name_ja = "Mairie - Astillé (SL, INSEE 53011) - Commune d&#039;Astillé",
+  { .id = "JO45_FR_0EB9FE2F_D72F_4E7C_9E06_FA07EE8DC521", .name = "Mairie - Astillé (SL, INSEE 53011) - Commune d'Astillé",
+    .name_ja = "Mairie - Astillé (SL, INSEE 53011) - Commune d'Astillé",
     .category = "government", .portal = "https://www.astille.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -152096,8 +151987,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_15CF0651_A38E_4DF2_89F8_2BFC876BDA65", .name = "Centre de ressources et d'information des bénévoles (CRIB) - "
       "Ligue de l'enseignement des Côtes-d'Armor (SL, INSEE 22215) - "
-      "Ligue de l'enseignement des C&#244;tes d'Armor -",
-    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Ligue de l'enseignement des Côtes-d'Armor (SL, INSEE 22215) - Ligue de l'enseignement des C&#244;tes d'Armor -",
+      "Ligue de l'enseignement des Côtes d'Armor -",
+    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Ligue de l'enseignement des Côtes-d'Armor (SL, INSEE 22215) - Ligue de l'enseignement des Côtes d'Armor -",
     .category = "government", .portal = "https://www.laligue22.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -152115,8 +152006,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_164F6175_7C2F_4F48_AC0B_B51BD532A0E2", .name = "Mairie - Saint-Jeure-d'Andaure (SL, INSEE 07249) - SAINT JEURE "
-      "D&#039;ANDAURE",
-    .name_ja = "Mairie - Saint-Jeure-d'Andaure (SL, INSEE 07249) - SAINT JEURE D&#039;ANDAURE",
+      "D'ANDAURE",
+    .name_ja = "Mairie - Saint-Jeure-d'Andaure (SL, INSEE 07249) - SAINT JEURE D'ANDAURE",
     .category = "government", .portal = "https://saint-jeure-d-andaure.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -152802,8 +152693,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_7EBD3FE4_FDE4_472E_85D2_0478F2AAA09D", .name = "Communauté d'agglomération - Tulle Agglo (SL, INSEE 19272) - "
-      "Tulle agglo &#8211; Officiel",
-    .name_ja = "Communauté d'agglomération - Tulle Agglo (SL, INSEE 19272) - Tulle agglo &#8211; Officiel",
+      "Tulle agglo – Officiel",
+    .name_ja = "Communauté d'agglomération - Tulle Agglo (SL, INSEE 19272) - Tulle agglo – Officiel",
     .category = "government", .portal = "https://www.tulleagglo.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -153083,9 +152974,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_829C4F6F_F29F_4348_99A8_98FA326BDC14", .name = "Espace conseil France Rénov' - Sabres (SL, INSEE 40246) - "
-      "PrecoReno &#8211; Accompagnement à la rénovation énergétique "
-      "&#8211; Landes",
-    .name_ja = "Espace conseil France Rénov' - Sabres (SL, INSEE 40246) - PrecoReno &#8211; Accompagnement à la rénovation énergétique &#8211; Landes",
+      "PrecoReno – Accompagnement à la rénovation énergétique – Landes",
+    .name_ja = "Espace conseil France Rénov' - Sabres (SL, INSEE 40246) - PrecoReno – Accompagnement à la rénovation énergétique – Landes",
     .category = "government", .portal = "https://precoreno.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -153196,9 +153086,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:11:29 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_83C3500D_ECDA_4AB1_A513_EC9822891BA8", .name = "Mairie - Cierp-Gaud (SL, INSEE 31144) - Mise à jour du PLU "
-      "&#8211; Mairie de Cierp-Gaud",
-    .name_ja = "Mairie - Cierp-Gaud (SL, INSEE 31144) - Mise à jour du PLU &#8211; Mairie de Cierp-Gaud",
+  { .id = "JO45_FR_83C3500D_ECDA_4AB1_A513_EC9822891BA8", .name = "Mairie - Cierp-Gaud (SL, INSEE 31144) - Mise à jour du PLU – "
+      "Mairie de Cierp-Gaud",
+    .name_ja = "Mairie - Cierp-Gaud (SL, INSEE 31144) - Mise à jour du PLU – Mairie de Cierp-Gaud",
     .category = "government", .portal = "https://www.cierpgaud.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -153216,8 +153106,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_83FE7D6D_F7EC_4444_AD7E_A6755EF454A8", .name = "Mairie - Saint-Georges-d'Hurtières (SL, INSEE 73237) - SAINT "
-      "GEORGES D&#039;HURTIERES",
-    .name_ja = "Mairie - Saint-Georges-d'Hurtières (SL, INSEE 73237) - SAINT GEORGES D&#039;HURTIERES",
+      "GEORGES D'HURTIERES",
+    .name_ja = "Mairie - Saint-Georges-d'Hurtières (SL, INSEE 73237) - SAINT GEORGES D'HURTIERES",
     .category = "government", .portal = "https://saintgeorgesdhurtieres.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -153324,8 +153214,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:15:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_8567CA57_DB21_403A_9B83_01FEE53B8B0B_2", .name = "Mairie - Gouves (SL, INSEE 62378) - Actualités &#8211; Gouves",
-    .name_ja = "Mairie - Gouves (SL, INSEE 62378) - Actualités &#8211; Gouves",
+  { .id = "JO45_FR_8567CA57_DB21_403A_9B83_01FEE53B8B0B_2", .name = "Mairie - Gouves (SL, INSEE 62378) - Actualités – Gouves",
+    .name_ja = "Mairie - Gouves (SL, INSEE 62378) - Actualités – Gouves",
     .category = "government", .portal = "https://gouves.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -153474,8 +153364,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_888DA014_249D_43EF_A9D3_AF495FF25983", .name = "Fédération départementale des chasseurs - Eure (SL, INSEE 27017) "
-      "- Fédération des chasseurs de l&#039;Eure",
-    .name_ja = "Fédération départementale des chasseurs - Eure (SL, INSEE 27017) - Fédération des chasseurs de l&#039;Eure",
+      "- Fédération des chasseurs de l'Eure",
+    .name_ja = "Fédération départementale des chasseurs - Eure (SL, INSEE 27017) - Fédération des chasseurs de l'Eure",
     .category = "government", .portal = "https://www.fdc27.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -153568,8 +153458,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_88F0CD29_0B15_45FD_B698_9C58A23F2A7A", .name = "Mairie - Armentières-en-Brie (SL, INSEE 77008) - Mairie "
-      "d&#039;Armentières-en-Brie",
-    .name_ja = "Mairie - Armentières-en-Brie (SL, INSEE 77008) - Mairie d&#039;Armentières-en-Brie",
+      "d'Armentières-en-Brie",
+    .name_ja = "Mairie - Armentières-en-Brie (SL, INSEE 77008) - Mairie d'Armentières-en-Brie",
     .category = "government", .portal = "https://armentieres-en-brie.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -153643,9 +153533,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:31:17 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_8AD6BDB5_E9BD_40E7_B0F5_B02D3E4A7FFE", .name = "Mairie - Valdoule (SL, INSEE 05024) - Actus &#8211; Espace Rural "
-      "Numérique &#8211; Octobre 2026",
-    .name_ja = "Mairie - Valdoule (SL, INSEE 05024) - Actus &#8211; Espace Rural Numérique &#8211; Octobre 2026",
+  { .id = "JO45_FR_8AD6BDB5_E9BD_40E7_B0F5_B02D3E4A7FFE", .name = "Mairie - Valdoule (SL, INSEE 05024) - Actus – Espace Rural "
+      "Numérique – Octobre 2026",
+    .name_ja = "Mairie - Valdoule (SL, INSEE 05024) - Actus – Espace Rural Numérique – Octobre 2026",
     .category = "government", .portal = "https://valdoule.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -153943,8 +153833,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_8F310B45_0D7A_49D2_9658_826C25DCFE00", .name = "Centre de ressources et d'information des bénévoles (CRIB) - "
       "Profession sport et loisirs d'Auvergne (SL, INSEE 03321) - "
-      "Profession Sport &amp; Loisirs Auvergne-Rhône-Alpes",
-    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Profession sport et loisirs d'Auvergne (SL, INSEE 03321) - Profession Sport &amp; Loisirs Auvergne-Rhône-Alpes",
+      "Profession Sport & Loisirs Auvergne-Rhône-Alpes",
+    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Profession sport et loisirs d'Auvergne (SL, INSEE 03321) - Profession Sport & Loisirs Auvergne-Rhône-Alpes",
     .category = "government", .portal = "https://auvergne.profession-sport-loisirs.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -154111,8 +154001,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_92AFE72A_F8B3_45D8_8E78_480519A45D0F_2", .name = "Centre communal d'action sociale (CCAS) - Frévin-Capelle (SL, "
-      "INSEE 62363) - Actualités &#8211; Frévin-Capelle",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Frévin-Capelle (SL, INSEE 62363) - Actualités &#8211; Frévin-Capelle",
+      "INSEE 62363) - Actualités – Frévin-Capelle",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Frévin-Capelle (SL, INSEE 62363) - Actualités – Frévin-Capelle",
     .category = "government", .portal = "https://frevincapelle.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -154407,9 +154297,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:26:19 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_6EA4F4E1_2258_4DF7_981C_588D02326211_7", .name = "Institut national du cancer (SI, INSEE ) - Qu&#039;est-ce "
-      "qu&#039;un cancer",
-    .name_ja = "Institut national du cancer (SI, INSEE ) - Qu&#039;est-ce qu&#039;un cancer",
+  { .id = "JO45_FR_6EA4F4E1_2258_4DF7_981C_588D02326211_7", .name = "Institut national du cancer (SI, INSEE ) - Qu'est-ce qu'un "
+      "cancer",
+    .name_ja = "Institut national du cancer (SI, INSEE ) - Qu'est-ce qu'un cancer",
     .category = "government", .portal = "https://www.cancer.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -154540,8 +154430,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_6EA4F4E1_2258_4DF7_981C_588D02326211_14", .name = "Institut national du cancer (SI, INSEE ) - Le dispositif "
-      "d&#039;annonce",
-    .name_ja = "Institut national du cancer (SI, INSEE ) - Le dispositif d&#039;annonce",
+      "d'annonce",
+    .name_ja = "Institut national du cancer (SI, INSEE ) - Le dispositif d'annonce",
     .category = "government", .portal = "https://www.cancer.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -155008,9 +154898,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_03537C7C_4A0C_47D1_BFF0_52B488883EE3", .name = "Centre technique régional de la consommation (CTRC) - "
-      "Hauts-de-France (SIL, INSEE 59527) - UROC &#8211; Union "
-      "Regionale des Organisations de Consommateurs Nord Pas de Cala",
-    .name_ja = "Centre technique régional de la consommation (CTRC) - Hauts-de-France (SIL, INSEE 59527) - UROC &#8211; Union Regionale des Organisations de Consommateurs Nord Pas de Cala",
+      "Hauts-de-France (SIL, INSEE 59527) - UROC – Union Regionale des "
+      "Organisations de Consommateurs Nord Pas de Cala",
+    .name_ja = "Centre technique régional de la consommation (CTRC) - Hauts-de-France (SIL, INSEE 59527) - UROC – Union Regionale des Organisations de Consommateurs Nord Pas de Cala",
     .category = "government", .portal = "https://uroc-hautsdefrance.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -155046,9 +154936,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "05:59:16 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_03DA526D_9D18_45D2_904D_1A5DF430C35E", .name = "Mairie - Ardin (SL, INSEE 79012) - Mairie d&#039;Ardin &#8211; "
-      "Site officiel",
-    .name_ja = "Mairie - Ardin (SL, INSEE 79012) - Mairie d&#039;Ardin &#8211; Site officiel",
+  { .id = "JO45_FR_03DA526D_9D18_45D2_904D_1A5DF430C35E", .name = "Mairie - Ardin (SL, INSEE 79012) - Mairie d'Ardin – Site "
+      "officiel",
+    .name_ja = "Mairie - Ardin (SL, INSEE 79012) - Mairie d'Ardin – Site officiel",
     .category = "government", .portal = "https://www.mairie-ardin.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -155158,8 +155048,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_0517516D_B8EA_483A_936C_1B5E0F6917B8", .name = "Mairie - Roquemaure (SL, INSEE 81228) - Site Officiel de la "
-      "mairie de Roquemaure (81) Tarn &#8211; Midi Pyrénées &#821",
-    .name_ja = "Mairie - Roquemaure (SL, INSEE 81228) - Site Officiel de la mairie de Roquemaure (81) Tarn &#8211; Midi Pyrénées &#821",
+      "mairie de Roquemaure (81) Tarn – Midi Pyrénées ̵",
+    .name_ja = "Mairie - Roquemaure (SL, INSEE 81228) - Site Officiel de la mairie de Roquemaure (81) Tarn – Midi Pyrénées ̵",
     .category = "government", .portal = "https://www.roquemaure-tarn.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -155289,8 +155179,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_95945AC3_689C_4625_A8BE_C022F95BE7E1", .name = "Mairie - Le Plessis-l'Échelle (SL, INSEE 41178) - Commune de Le "
-      "Plessis L&#8217;Echelle",
-    .name_ja = "Mairie - Le Plessis-l'Échelle (SL, INSEE 41178) - Commune de Le Plessis L&#8217;Echelle",
+      "Plessis L’Echelle",
+    .name_ja = "Mairie - Le Plessis-l'Échelle (SL, INSEE 41178) - Commune de Le Plessis L’Echelle",
     .category = "government", .portal = "https://leplessislechelle.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -155308,8 +155198,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_95AB0F7A_DBEA_47FC_BB27_5D8BE47A7C99", .name = "Mairie - Gaillac-d'Aveyron (SL, INSEE 12107) - Mairie de Gaillac "
-      "d&#039;Aveyron",
-    .name_ja = "Mairie - Gaillac-d'Aveyron (SL, INSEE 12107) - Mairie de Gaillac d&#039;Aveyron",
+      "d'Aveyron",
+    .name_ja = "Mairie - Gaillac-d'Aveyron (SL, INSEE 12107) - Mairie de Gaillac d'Aveyron",
     .category = "government", .portal = "https://gaillacdaveyron.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -155344,8 +155234,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:15:51 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_96C4F402_C463_4312_9D1D_9C1318C9C84D", .name = "Mairie - Anglure (SL, INSEE 51009) - Ville d&#039;Anglure",
-    .name_ja = "Mairie - Anglure (SL, INSEE 51009) - Ville d&#039;Anglure",
+  { .id = "JO45_FR_96C4F402_C463_4312_9D1D_9C1318C9C84D", .name = "Mairie - Anglure (SL, INSEE 51009) - Ville d'Anglure",
+    .name_ja = "Mairie - Anglure (SL, INSEE 51009) - Ville d'Anglure",
     .category = "government", .portal = "https://anglure.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -155455,8 +155345,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_98C52DD6_3741_4A56_9835_0916D9C158B8", .name = "Mairie - Étoile-sur-Rhône (SL, INSEE 26124) - Mairie "
-      "d&#039;Étoile-sur-Rhône",
-    .name_ja = "Mairie - Étoile-sur-Rhône (SL, INSEE 26124) - Mairie d&#039;Étoile-sur-Rhône",
+      "d'Étoile-sur-Rhône",
+    .name_ja = "Mairie - Étoile-sur-Rhône (SL, INSEE 26124) - Mairie d'Étoile-sur-Rhône",
     .category = "government", .portal = "https://www.etoilesurrhone.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -155567,8 +155457,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "17:16:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_9B602059_BC5F_4ECD_86F8_05185B094F88", .name = "Mairie - Empurany (SL, INSEE 07085) - Mairie d&#039;Empurany",
-    .name_ja = "Mairie - Empurany (SL, INSEE 07085) - Mairie d&#039;Empurany",
+  { .id = "JO45_FR_9B602059_BC5F_4ECD_86F8_05185B094F88", .name = "Mairie - Empurany (SL, INSEE 07085) - Mairie d'Empurany",
+    .name_ja = "Mairie - Empurany (SL, INSEE 07085) - Mairie d'Empurany",
     .category = "government", .portal = "https://www.empurany.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -155639,9 +155529,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:37. A feed the organisation itself declares or links on its "
       "site root." },
 
-  { .id = "JO45_FR_9BB79670_216D_43A6_A95C_3E8CD6716390", .name = "Mairie - Andrest (SL, INSEE 65007) - Commune d&#039;Andrest, "
+  { .id = "JO45_FR_9BB79670_216D_43A6_A95C_3E8CD6716390", .name = "Mairie - Andrest (SL, INSEE 65007) - Commune d'Andrest, "
       "Hautes-Pyrénées",
-    .name_ja = "Mairie - Andrest (SL, INSEE 65007) - Commune d&#039;Andrest, Hautes-Pyrénées",
+    .name_ja = "Mairie - Andrest (SL, INSEE 65007) - Commune d'Andrest, Hautes-Pyrénées",
     .category = "government", .portal = "https://www.andrest.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -155825,8 +155715,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:49:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_9FFE8602_B10B_47D2_B2E1_3CC888991CAE", .name = "Mairie - Ercheu (SL, INSEE 80279) - Mairie d&#039;Ercheu",
-    .name_ja = "Mairie - Ercheu (SL, INSEE 80279) - Mairie d&#039;Ercheu",
+  { .id = "JO45_FR_9FFE8602_B10B_47D2_B2E1_3CC888991CAE", .name = "Mairie - Ercheu (SL, INSEE 80279) - Mairie d'Ercheu",
+    .name_ja = "Mairie - Ercheu (SL, INSEE 80279) - Mairie d'Ercheu",
     .category = "government", .portal = "https://www.ercheu.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -155901,9 +155791,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_A16AA60E_C04C_4CF0_85C1_C4FA7029EA76", .name = "Médecine du travail service interentreprises de Saône-et-Loire - "
-      "Châlons-sur-Saône (SIL, INSEE 71076) - MT71 &#8211; Prévention "
-      "&amp; Santé au Travail",
-    .name_ja = "Médecine du travail service interentreprises de Saône-et-Loire - Châlons-sur-Saône (SIL, INSEE 71076) - MT71 &#8211; Prévention &amp; Santé au Travail",
+      "Châlons-sur-Saône (SIL, INSEE 71076) - MT71 – Prévention & Santé "
+      "au Travail",
+    .name_ja = "Médecine du travail service interentreprises de Saône-et-Loire - Châlons-sur-Saône (SIL, INSEE 71076) - MT71 – Prévention & Santé au Travail",
     .category = "government", .portal = "https://www.mt71.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -156199,8 +156089,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:12:55 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_A6D22F6A_4C3C_45E6_8827_4E5ECF6099CD", .name = "Mairie - Ajain (SL, INSEE 23002) - Commune d&#039;Ajain",
-    .name_ja = "Mairie - Ajain (SL, INSEE 23002) - Commune d&#039;Ajain",
+  { .id = "JO45_FR_A6D22F6A_4C3C_45E6_8827_4E5ECF6099CD", .name = "Mairie - Ajain (SL, INSEE 23002) - Commune d'Ajain",
+    .name_ja = "Mairie - Ajain (SL, INSEE 23002) - Commune d'Ajain",
     .category = "government", .portal = "https://ajain.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -156255,8 +156145,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_AA3390C8_EA9C_435D_A8AB_2AD207964A7E", .name = "Mairie - Savignac-de-L Isle (SL, INSEE 33509) - Savignac de "
-      "l&#039;Isle",
-    .name_ja = "Mairie - Savignac-de-L Isle (SL, INSEE 33509) - Savignac de l&#039;Isle",
+      "l'Isle",
+    .name_ja = "Mairie - Savignac-de-L Isle (SL, INSEE 33509) - Savignac de l'Isle",
     .category = "government", .portal = "https://mairie-savignacdelisle.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -156294,9 +156184,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_AA8A93C9_657B_4D46_9100_269B6C4DC653", .name = "Centre de ressources et d'information des bénévoles (CRIB) - "
       "Ligue de l'enseignement - Fédération des oeuvres laïques "
-      "d'Indre-et-Loire (SL, INSEE 37261) - Ligue de "
-      "l&#039;enseignement 37",
-    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Ligue de l'enseignement - Fédération des oeuvres laïques d'Indre-et-Loire (SL, INSEE 37261) - Ligue de l&#039;enseignement 37",
+      "d'Indre-et-Loire (SL, INSEE 37261) - Ligue de l'enseignement 37",
+    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Ligue de l'enseignement - Fédération des oeuvres laïques d'Indre-et-Loire (SL, INSEE 37261) - Ligue de l'enseignement 37",
     .category = "government", .portal = "https://www.laliguedelenseignement-37.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -156518,8 +156407,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:38:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_AF744E7B_B23E_4727_82C3_6B94793D843E", .name = "Mairie - Éloie (SL, INSEE 90037) - Commune d&#039;Éloie",
-    .name_ja = "Mairie - Éloie (SL, INSEE 90037) - Commune d&#039;Éloie",
+  { .id = "JO45_FR_AF744E7B_B23E_4727_82C3_6B94793D843E", .name = "Mairie - Éloie (SL, INSEE 90037) - Commune d'Éloie",
+    .name_ja = "Mairie - Éloie (SL, INSEE 90037) - Commune d'Éloie",
     .category = "government", .portal = "https://www.eloie.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -156665,8 +156554,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_B3B29165_739C_4FBB_8ED2_07C8C1DBF591", .name = "Mairie - Arces-sur-Gironde (SL, INSEE 17015) - Site officiel de "
-      "la commune d&#039;Arces-sur-Gironde &#8211; Charente-Maritime (",
-    .name_ja = "Mairie - Arces-sur-Gironde (SL, INSEE 17015) - Site officiel de la commune d&#039;Arces-sur-Gironde &#8211; Charente-Maritime (",
+      "la commune d'Arces-sur-Gironde – Charente-Maritime (",
+    .name_ja = "Mairie - Arces-sur-Gironde (SL, INSEE 17015) - Site officiel de la commune d'Arces-sur-Gironde – Charente-Maritime (",
     .category = "government", .portal = "https://www.commune-arces-sur-gironde.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -156794,8 +156683,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "feed the organisation itself declares or links on its site root." },
 
   { .id = "JO45_FR_B7415B29_3EDE_490B_8745_409000823010", .name = "Maison de l'emploi (MDE) - Sainte-Clotilde (SL, INSEE 97411) - "
-      "Maison de l&#039;Emploi du Nord de La Réunion",
-    .name_ja = "Maison de l'emploi (MDE) - Sainte-Clotilde (SL, INSEE 97411) - Maison de l&#039;Emploi du Nord de La Réunion",
+      "Maison de l'Emploi du Nord de La Réunion",
+    .name_ja = "Maison de l'emploi (MDE) - Sainte-Clotilde (SL, INSEE 97411) - Maison de l'Emploi du Nord de La Réunion",
     .category = "government", .portal = "https://www.mden-reunion.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -157070,8 +156959,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_BDED9184_626B_40B4_9F66_02355F74DDC0", .name = "Mairie - La Buissière (SL, INSEE 38062) - L’Association Balade "
-      "autour du Livre   Mairie &#8211; Commune La Buissière &#",
-    .name_ja = "Mairie - La Buissière (SL, INSEE 38062) - L’Association Balade autour du Livre   Mairie &#8211; Commune La Buissière &#",
+      "autour du Livre   Mairie – Commune La Buissière &#",
+    .name_ja = "Mairie - La Buissière (SL, INSEE 38062) - L’Association Balade autour du Livre   Mairie – Commune La Buissière &#",
     .category = "government", .portal = "https://www.mairie-la-buissiere.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -157142,9 +157031,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:07:51 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_BF13E150_365A_44A1_B5F5_B39EA360C316", .name = "Mairie - Annet-sur-Marne (SL, INSEE 77005) - Commune "
-      "d&#039;Annet sur Marne, en Seine &amp; Marne (77)",
-    .name_ja = "Mairie - Annet-sur-Marne (SL, INSEE 77005) - Commune d&#039;Annet sur Marne, en Seine &amp; Marne (77)",
+  { .id = "JO45_FR_BF13E150_365A_44A1_B5F5_B39EA360C316", .name = "Mairie - Annet-sur-Marne (SL, INSEE 77005) - Commune d'Annet sur "
+      "Marne, en Seine & Marne (77)",
+    .name_ja = "Mairie - Annet-sur-Marne (SL, INSEE 77005) - Commune d'Annet sur Marne, en Seine & Marne (77)",
     .category = "government", .portal = "https://www.annetsurmarne.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -157330,8 +157219,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_C2A457CD_CFF7_440B_824C_C25AC09C349E", .name = "Mairie - Clayes (SL, INSEE 35081) - Commune de Clayes "
-      "(Ille-et-Vilaine) &#8211; site officiel",
-    .name_ja = "Mairie - Clayes (SL, INSEE 35081) - Commune de Clayes (Ille-et-Vilaine) &#8211; site officiel",
+      "(Ille-et-Vilaine) – site officiel",
+    .name_ja = "Mairie - Clayes (SL, INSEE 35081) - Commune de Clayes (Ille-et-Vilaine) – site officiel",
     .category = "government", .portal = "https://www.clayes.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -157385,8 +157274,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-09-23T05:31:02Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO45_FR_C3E553FB_778A_4487_9A79_935001A4137E", .name = "Mairie - Agris (SL, INSEE 16003) - Mairie d&#039;Agris",
-    .name_ja = "Mairie - Agris (SL, INSEE 16003) - Mairie d&#039;Agris",
+  { .id = "JO45_FR_C3E553FB_778A_4487_9A79_935001A4137E", .name = "Mairie - Agris (SL, INSEE 16003) - Mairie d'Agris",
+    .name_ja = "Mairie - Agris (SL, INSEE 16003) - Mairie d'Agris",
     .category = "government", .portal = "https://www.agris.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -157498,8 +157387,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:30:59 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_C6728DA8_A86F_4BFD_888D_BD6D7C8155F4", .name = "Mairie - Aucelon (SL, INSEE 26017) - Mairie d&#8217;Aucelon",
-    .name_ja = "Mairie - Aucelon (SL, INSEE 26017) - Mairie d&#8217;Aucelon",
+  { .id = "JO45_FR_C6728DA8_A86F_4BFD_888D_BD6D7C8155F4", .name = "Mairie - Aucelon (SL, INSEE 26017) - Mairie d’Aucelon",
+    .name_ja = "Mairie - Aucelon (SL, INSEE 26017) - Mairie d’Aucelon",
     .category = "government", .portal = "https://aucelon.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -157517,8 +157406,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_C689AD04_4034_4EE5_901B_3364B0291515", .name = "Mairie - Orsan (SL, INSEE 30191) - Site officiel de la mairie "
-      "d&#039;Orsan &#8211; 30200 Gard 30",
-    .name_ja = "Mairie - Orsan (SL, INSEE 30191) - Site officiel de la mairie d&#039;Orsan &#8211; 30200 Gard 30",
+      "d'Orsan – 30200 Gard 30",
+    .name_ja = "Mairie - Orsan (SL, INSEE 30191) - Site officiel de la mairie d'Orsan – 30200 Gard 30",
     .category = "government", .portal = "https://www.orsan.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -157777,8 +157666,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_CDB9F29F_289E_4075_BB99_2F9D03966CEA", .name = "Info Jeunes - Paris 9e - La Fayette (SL, INSEE 75109) - "
-      "Fédération de Paris de la Ligue de l&#039;Enseignement",
-    .name_ja = "Info Jeunes - Paris 9e - La Fayette (SL, INSEE 75109) - Fédération de Paris de la Ligue de l&#039;Enseignement",
+      "Fédération de Paris de la Ligue de l'Enseignement",
+    .name_ja = "Info Jeunes - Paris 9e - La Fayette (SL, INSEE 75109) - Fédération de Paris de la Ligue de l'Enseignement",
     .category = "government", .portal = "https://ligueparis.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -157868,8 +157757,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_CF2954B7_C7BD_40B7_B96C_A0E9E6536E4F", .name = "Communauté d'agglomération - Sud Sainte Baume (SL, INSEE 83035) "
-      "- Communauté d&#039;Agglomération Sud Sainte Baume",
-    .name_ja = "Communauté d'agglomération - Sud Sainte Baume (SL, INSEE 83035) - Communauté d&#039;Agglomération Sud Sainte Baume",
+      "- Communauté d'Agglomération Sud Sainte Baume",
+    .name_ja = "Communauté d'agglomération - Sud Sainte Baume (SL, INSEE 83035) - Communauté d'Agglomération Sud Sainte Baume",
     .category = "government", .portal = "https://www.agglo-sudsaintebaume.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -158073,8 +157962,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_D2A114F3_F1B4_4BDA_95B9_018CE7E1824E", .name = "Point information jeunesse - Verrières-en-Anjou (SL, INSEE "
-      "49323) - PASS&#039;ÂGE",
-    .name_ja = "Point information jeunesse - Verrières-en-Anjou (SL, INSEE 49323) - PASS&#039;ÂGE",
+      "49323) - PASS'ÂGE",
+    .name_ja = "Point information jeunesse - Verrières-en-Anjou (SL, INSEE 49323) - PASS'ÂGE",
     .category = "government", .portal = "https://pass-age-asso.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -158127,8 +158016,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:56:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_D371C277_FCFE_42E7_AB85_A6439A0C66D9", .name = "Mairie - Boëge (SL, INSEE 74037) - Commune de Bo&#235;ge",
-    .name_ja = "Mairie - Boëge (SL, INSEE 74037) - Commune de Bo&#235;ge",
+  { .id = "JO45_FR_D371C277_FCFE_42E7_AB85_A6439A0C66D9", .name = "Mairie - Boëge (SL, INSEE 74037) - Commune de Boëge",
+    .name_ja = "Mairie - Boëge (SL, INSEE 74037) - Commune de Boëge",
     .category = "government", .portal = "https://boege.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -158220,8 +158109,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "links on its site root." },
 
   { .id = "JO45_FR_D3ECD202_74FC_4AE9_BCC7_9A875C5AE7E0", .name = "Centre communal d'action sociale (CCAS) - Onnaing (SL, INSEE "
-      "59447) - Ville d&#039;Onnaing",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Onnaing (SL, INSEE 59447) - Ville d&#039;Onnaing",
+      "59447) - Ville d'Onnaing",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Onnaing (SL, INSEE 59447) - Ville d'Onnaing",
     .category = "government", .portal = "https://onnaing.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -158351,8 +158240,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_D6C0DBFB_4041_42B8_8E7A_478E5E5CD602", .name = "Fédération départementale pour la pêche et la protection du "
       "milieu aquatique - Indre-et-Loire (SL, INSEE 37261) - Fédération "
-      "de Pêche d&#039;Indre-et-Loire 37",
-    .name_ja = "Fédération départementale pour la pêche et la protection du milieu aquatique - Indre-et-Loire (SL, INSEE 37261) - Fédération de Pêche d&#039;Indre-et-Loire 37",
+      "de Pêche d'Indre-et-Loire 37",
+    .name_ja = "Fédération départementale pour la pêche et la protection du milieu aquatique - Indre-et-Loire (SL, INSEE 37261) - Fédération de Pêche d'Indre-et-Loire 37",
     .category = "government", .portal = "https://www.fedepeche37.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -159389,8 +159278,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_EA5B888B_C6AD_4BDB_AA4C_AD5389467B93", .name = "Mairie - Mont-l'Étroit (SL, INSEE 54379) - COMMUNE DE MONT "
-      "L&#039;ETROIT",
-    .name_ja = "Mairie - Mont-l'Étroit (SL, INSEE 54379) - COMMUNE DE MONT L&#039;ETROIT",
+      "L'ETROIT",
+    .name_ja = "Mairie - Mont-l'Étroit (SL, INSEE 54379) - COMMUNE DE MONT L'ETROIT",
     .category = "government", .portal = "https://montletroit.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -159820,9 +159709,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:44:49 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F271FFA2_70F8_45A9_A4D0_81FE7C283C75", .name = "Mairie - Moulismes (SL, INSEE 86170) - Aménagement de "
-      "l&#8217;aire de repos",
-    .name_ja = "Mairie - Moulismes (SL, INSEE 86170) - Aménagement de l&#8217;aire de repos",
+  { .id = "JO45_FR_F271FFA2_70F8_45A9_A4D0_81FE7C283C75", .name = "Mairie - Moulismes (SL, INSEE 86170) - Aménagement de l’aire de "
+      "repos",
+    .name_ja = "Mairie - Moulismes (SL, INSEE 86170) - Aménagement de l’aire de repos",
     .category = "government", .portal = "https://www.moulismes.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -159876,8 +159765,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:21:22 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F46F7CCD_0EF0_40B6_B286_8A071EB71670_2", .name = "Mairie - Habarcq (SL, INSEE 62399) - Actualités &#8211; Habarcq",
-    .name_ja = "Mairie - Habarcq (SL, INSEE 62399) - Actualités &#8211; Habarcq",
+  { .id = "JO45_FR_F46F7CCD_0EF0_40B6_B286_8A071EB71670_2", .name = "Mairie - Habarcq (SL, INSEE 62399) - Actualités – Habarcq",
+    .name_ja = "Mairie - Habarcq (SL, INSEE 62399) - Actualités – Habarcq",
     .category = "government", .portal = "https://habarcq.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -160081,8 +159970,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_F6F471CD_69A8_414E_BD4F_39D548DA97A8", .name = "Info Jeunes - Reims-Noël Paindavoine (SL, INSEE 51454) - FJT à "
-      "Reims &#8211; Association Noël-Paindavoine",
-    .name_ja = "Info Jeunes - Reims-Noël Paindavoine (SL, INSEE 51454) - FJT à Reims &#8211; Association Noël-Paindavoine",
+      "Reims – Association Noël-Paindavoine",
+    .name_ja = "Info Jeunes - Reims-Noël Paindavoine (SL, INSEE 51454) - FJT à Reims – Association Noël-Paindavoine",
     .category = "government", .portal = "https://assonoelpaindavoine.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -160156,8 +160045,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_F7930C92_34A7_4E94_A986_DF1F55ADEA05", .name = "Centre communal d'action sociale (CCAS) - Autreppes (SL, INSEE "
-      "02040) - Commune d&#039;Autreppes",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Autreppes (SL, INSEE 02040) - Commune d&#039;Autreppes",
+      "02040) - Commune d'Autreppes",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Autreppes (SL, INSEE 02040) - Commune d'Autreppes",
     .category = "government", .portal = "https://autreppes.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -160286,8 +160175,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_FB730B5F_D03C_4C06_B391_38AF7589DE34", .name = "Mairie - Armbouts-Cappel (SL, INSEE 59016) - TAXE DE SEJOUR "
-      "COMMUNAUTAIRE &#8211; 01/01/2027",
-    .name_ja = "Mairie - Armbouts-Cappel (SL, INSEE 59016) - TAXE DE SEJOUR COMMUNAUTAIRE &#8211; 01/01/2027",
+      "COMMUNAUTAIRE – 01/01/2027",
+    .name_ja = "Mairie - Armbouts-Cappel (SL, INSEE 59016) - TAXE DE SEJOUR COMMUNAUTAIRE – 01/01/2027",
     .category = "government", .portal = "http://www.armbouts-cappel.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -160304,9 +160193,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:00:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_FBBE9090_065D_422F_B364_C3E50B276494", .name = "Mairie - Nouvion (SL, INSEE 80598) - Commune de Nouvion &#8211; "
-      "Somme &#8211; 80",
-    .name_ja = "Mairie - Nouvion (SL, INSEE 80598) - Commune de Nouvion &#8211; Somme &#8211; 80",
+  { .id = "JO45_FR_FBBE9090_065D_422F_B364_C3E50B276494", .name = "Mairie - Nouvion (SL, INSEE 80598) - Commune de Nouvion – Somme "
+      "– 80",
+    .name_ja = "Mairie - Nouvion (SL, INSEE 80598) - Commune de Nouvion – Somme – 80",
     .category = "government", .portal = "https://www.nouvion80.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -160528,8 +160417,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_FF04FBA4_A762_4E32_93E8_E49DB45498FA", .name = "Mairie - Coyolles (SL, INSEE 02232) - Sortie Marché de Noël "
-      "d&#8217;ARRAS, 14 Décembre 2024",
-    .name_ja = "Mairie - Coyolles (SL, INSEE 02232) - Sortie Marché de Noël d&#8217;ARRAS, 14 Décembre 2024",
+      "d’ARRAS, 14 Décembre 2024",
+    .name_ja = "Mairie - Coyolles (SL, INSEE 02232) - Sortie Marché de Noël d’ARRAS, 14 Décembre 2024",
     .category = "government", .portal = "https://coyolles.site/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -160866,8 +160755,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_EC4E2EF1_2C9D_499C_BF1A_7DADAE58CB8D", .name = "Ecole française d'Extrême-Orient (SI, INSEE ) - Ecole française "
-      "d&#039;Extrême-Orient",
-    .name_ja = "Ecole française d'Extrême-Orient (SI, INSEE ) - Ecole française d&#039;Extrême-Orient",
+      "d'Extrême-Orient",
+    .name_ja = "Ecole française d'Extrême-Orient (SI, INSEE ) - Ecole française d'Extrême-Orient",
     .category = "government", .portal = "https://www.efeo.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -161145,8 +161034,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_03FEFB68_F7AF_4081_8A05_4EBA832E3AC6", .name = "Info Jeunes - Le Mans-Le Flore Habitat Jeunes (SL, INSEE 72181) "
-      "- Le Flore &#8211; Hébergement / Logement Jeunes &#8211; Le Mans",
-    .name_ja = "Info Jeunes - Le Mans-Le Flore Habitat Jeunes (SL, INSEE 72181) - Le Flore &#8211; Hébergement / Logement Jeunes &#8211; Le Mans",
+      "- Le Flore – Hébergement / Logement Jeunes – Le Mans",
+    .name_ja = "Info Jeunes - Le Mans-Le Flore Habitat Jeunes (SL, INSEE 72181) - Le Flore – Hébergement / Logement Jeunes – Le Mans",
     .category = "government", .portal = "https://www.flore-habitatjeunes.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -161312,9 +161201,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "06:48:53 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_0717EA9E_8D0B_42A5_8573_DE4E9B64C813", .name = "Mairie - Bois-d'Amont (SL, INSEE 39059) - Mairie de Bois "
-      "d&#039;Amont",
-    .name_ja = "Mairie - Bois-d'Amont (SL, INSEE 39059) - Mairie de Bois d&#039;Amont",
+  { .id = "JO45_FR_0717EA9E_8D0B_42A5_8573_DE4E9B64C813", .name = "Mairie - Bois-d'Amont (SL, INSEE 39059) - Mairie de Bois d'Amont",
+    .name_ja = "Mairie - Bois-d'Amont (SL, INSEE 39059) - Mairie de Bois d'Amont",
     .category = "government", .portal = "https://www.boisdamont.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -161516,8 +161404,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_0BCF7AB2_CFCC_4886_91B3_CF098C2D9F4D", .name = "Centre de ressources et d'information des bénévoles (CRIB) - "
       "Comité départemental olympique et sportif de Côte-d'Or (SL, "
-      "INSEE 21231) - CDOS de Côte-d&#039;Or",
-    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Comité départemental olympique et sportif de Côte-d'Or (SL, INSEE 21231) - CDOS de Côte-d&#039;Or",
+      "INSEE 21231) - CDOS de Côte-d'Or",
+    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Comité départemental olympique et sportif de Côte-d'Or (SL, INSEE 21231) - CDOS de Côte-d'Or",
     .category = "government", .portal = "https://cdos21.org/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -161684,9 +161572,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_0E22048F_62D3_42F8_A727_942FB5ECD93D", .name = "Direction interrégionale de la mer (DIRM) - Sud-Atlantique (SIL, "
-      "INSEE 33063) - Direction Interr&#233;gionale de la mer "
-      "Sud-Atlantique",
-    .name_ja = "Direction interrégionale de la mer (DIRM) - Sud-Atlantique (SIL, INSEE 33063) - Direction Interr&#233;gionale de la mer Sud-Atlantique",
+      "INSEE 33063) - Direction Interrégionale de la mer Sud-Atlantique",
+    .name_ja = "Direction interrégionale de la mer (DIRM) - Sud-Atlantique (SIL, INSEE 33063) - Direction Interrégionale de la mer Sud-Atlantique",
     .category = "government", .portal = "https://www.dirm.sud-atlantique.developpement-durable.gouv.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -161925,8 +161812,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_13D1E0A9_447F_4CB0_8CFF_04397B36052D", .name = "Espace conseil France Rénov' - Andernos-les-Bains (SL, INSEE "
-      "33005) - ÉCO&#039;BAN",
-    .name_ja = "Espace conseil France Rénov' - Andernos-les-Bains (SL, INSEE 33005) - ÉCO&#039;BAN",
+      "33005) - ÉCO'BAN",
+    .name_ja = "Espace conseil France Rénov' - Andernos-les-Bains (SL, INSEE 33005) - ÉCO'BAN",
     .category = "government", .portal = "https://www.ecoban.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -162093,8 +161980,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-06-16T07:14:13Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO45_FR_191922F2_6E44_4710_BCBE_E1E9B1ACAFA6", .name = "Mairie - Saint-Eusèbe (SL, INSEE 74231) - Saint-Eus&#232;be",
-    .name_ja = "Mairie - Saint-Eusèbe (SL, INSEE 74231) - Saint-Eus&#232;be",
+  { .id = "JO45_FR_191922F2_6E44_4710_BCBE_E1E9B1ACAFA6", .name = "Mairie - Saint-Eusèbe (SL, INSEE 74231) - Saint-Eusèbe",
+    .name_ja = "Mairie - Saint-Eusèbe (SL, INSEE 74231) - Saint-Eusèbe",
     .category = "government", .portal = "https://www.saint-eusebe74.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -162149,8 +162036,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_19CE8971_DCD3_43D3_80D2_A953ED5C3A81", .name = "Service d’aide médicale urgente (Samu) - Cantal (SIL, INSEE "
-      "15014) - Centre Hospitalier Henri Mondor &#8211; Aurillac",
-    .name_ja = "Service d’aide médicale urgente (Samu) - Cantal (SIL, INSEE 15014) - Centre Hospitalier Henri Mondor &#8211; Aurillac",
+      "15014) - Centre Hospitalier Henri Mondor – Aurillac",
+    .name_ja = "Service d’aide médicale urgente (Samu) - Cantal (SIL, INSEE 15014) - Centre Hospitalier Henri Mondor – Aurillac",
     .category = "government", .portal = "https://www.ch-aurillac.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -162186,8 +162073,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "02:59:03 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_1A965CBB_EB71_4BB3_9BD8_046F30341487", .name = "Mairie - Emmerin (SL, INSEE 59193) - Ville d&#039;Emmerin",
-    .name_ja = "Mairie - Emmerin (SL, INSEE 59193) - Ville d&#039;Emmerin",
+  { .id = "JO45_FR_1A965CBB_EB71_4BB3_9BD8_046F30341487", .name = "Mairie - Emmerin (SL, INSEE 59193) - Ville d'Emmerin",
+    .name_ja = "Mairie - Emmerin (SL, INSEE 59193) - Ville d'Emmerin",
     .category = "government", .portal = "https://www.emmerin.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -162464,9 +162351,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "20:55:26 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_1F9F4C4E_02BF_476A_A98F_61D69C754CF3", .name = "Mairie - Landogne (SL, INSEE 63186) - Commune de Landogne "
-      "&#8211; Puy-de-Dôme",
-    .name_ja = "Mairie - Landogne (SL, INSEE 63186) - Commune de Landogne &#8211; Puy-de-Dôme",
+  { .id = "JO45_FR_1F9F4C4E_02BF_476A_A98F_61D69C754CF3", .name = "Mairie - Landogne (SL, INSEE 63186) - Commune de Landogne – "
+      "Puy-de-Dôme",
+    .name_ja = "Mairie - Landogne (SL, INSEE 63186) - Commune de Landogne – Puy-de-Dôme",
     .category = "government", .portal = "https://www.landogne.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -162671,9 +162558,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_21750030_AAFB_4D50_B02A_7D5B2D0CF564", .name = "Conseil régional de l'ordre des experts-comptables (CROEC) - "
-      "Normandie (SIL, INSEE 76540) - Conseil Régional de l&#039;Ordre "
-      "des experts-comptables &#8211; Normandie",
-    .name_ja = "Conseil régional de l'ordre des experts-comptables (CROEC) - Normandie (SIL, INSEE 76540) - Conseil Régional de l&#039;Ordre des experts-comptables &#8211; Normandie",
+      "Normandie (SIL, INSEE 76540) - Conseil Régional de l'Ordre des "
+      "experts-comptables – Normandie",
+    .name_ja = "Conseil régional de l'ordre des experts-comptables (CROEC) - Normandie (SIL, INSEE 76540) - Conseil Régional de l'Ordre des experts-comptables – Normandie",
     .category = "government", .portal = "https://www.experts-comptables-normandie.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -162690,9 +162577,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026 13:24:07 +0000. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO45_FR_21B9FAC6_213C_44CE_9CFE_09FBFE155B78", .name = "Mairie - Weyer (SL, INSEE 67528) - Mairie de Weyer &#8211; "
-      "Mairie de Weyer",
-    .name_ja = "Mairie - Weyer (SL, INSEE 67528) - Mairie de Weyer &#8211; Mairie de Weyer",
+  { .id = "JO45_FR_21B9FAC6_213C_44CE_9CFE_09FBFE155B78", .name = "Mairie - Weyer (SL, INSEE 67528) - Mairie de Weyer – Mairie de "
+      "Weyer",
+    .name_ja = "Mairie - Weyer (SL, INSEE 67528) - Mairie de Weyer – Mairie de Weyer",
     .category = "government", .portal = "https://www.mairieweyer.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -162916,9 +162803,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_61C3CBD8_F724_4069_B891_5DB0B475713C", .name = "Centre de gestion de la fonction publique territoriale - Moselle "
-      "(SL, INSEE 57480) - Centre de Gestion de la Moselle &#8211; "
-      "CDG57 &#8211; Fonction Publique Territor",
-    .name_ja = "Centre de gestion de la fonction publique territoriale - Moselle (SL, INSEE 57480) - Centre de Gestion de la Moselle &#8211; CDG57 &#8211; Fonction Publique Territor",
+      "(SL, INSEE 57480) - Centre de Gestion de la Moselle – CDG57 – "
+      "Fonction Publique Territor",
+    .name_ja = "Centre de gestion de la fonction publique territoriale - Moselle (SL, INSEE 57480) - Centre de Gestion de la Moselle – CDG57 – Fonction Publique Territor",
     .category = "government", .portal = "https://www.cdg57.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -162954,8 +162841,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_638ECC86_7176_4B57_BC49_C2C2B44B0DA4", .name = "Mairie déléguée - Saint-Pol-sur-Mer (SL, INSEE 59540) - Portail "
-      "officiel &#8211; Commune de Saint Pol sur Mer",
-    .name_ja = "Mairie déléguée - Saint-Pol-sur-Mer (SL, INSEE 59540) - Portail officiel &#8211; Commune de Saint Pol sur Mer",
+      "officiel – Commune de Saint Pol sur Mer",
+    .name_ja = "Mairie déléguée - Saint-Pol-sur-Mer (SL, INSEE 59540) - Portail officiel – Commune de Saint Pol sur Mer",
     .category = "government", .portal = "https://ville-saintpolsurmer.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -163270,9 +163157,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:06:45 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_6649C484_35EB_4E63_9CBC_86E795D56CE4", .name = "Espace conseil France Rénov' - Apt (SL, INSEE 84003) - ALTE "
-      "&#8211; France Rénov&#039;",
-    .name_ja = "Espace conseil France Rénov' - Apt (SL, INSEE 84003) - ALTE &#8211; France Rénov&#039;",
+  { .id = "JO45_FR_6649C484_35EB_4E63_9CBC_86E795D56CE4", .name = "Espace conseil France Rénov' - Apt (SL, INSEE 84003) - ALTE – "
+      "France Rénov'",
+    .name_ja = "Espace conseil France Rénov' - Apt (SL, INSEE 84003) - ALTE – France Rénov'",
     .category = "government", .portal = "https://alte-francerenov.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -163344,9 +163231,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "07:14:49 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_67F5BD2E_C71B_4F8B_8577_342C538EC887", .name = "Mairie - Prémian (SL, INSEE 34219) - Les Terrasses du Jaur "
-      "&#8211; Camping Municipal de Prémian",
-    .name_ja = "Mairie - Prémian (SL, INSEE 34219) - Les Terrasses du Jaur &#8211; Camping Municipal de Prémian",
+  { .id = "JO45_FR_67F5BD2E_C71B_4F8B_8577_342C538EC887", .name = "Mairie - Prémian (SL, INSEE 34219) - Les Terrasses du Jaur – "
+      "Camping Municipal de Prémian",
+    .name_ja = "Mairie - Prémian (SL, INSEE 34219) - Les Terrasses du Jaur – Camping Municipal de Prémian",
     .category = "government", .portal = "https://camping-premian.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -163584,9 +163471,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-10-18T11:17:55Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO45_FR_6C6E1A42_73F6_4173_A82B_517BC7C4254E", .name = "Mairie - Authezat (SL, INSEE 63021) - Commune d&#039;AUTHEZAT, "
+  { .id = "JO45_FR_6C6E1A42_73F6_4173_A82B_517BC7C4254E", .name = "Mairie - Authezat (SL, INSEE 63021) - Commune d'AUTHEZAT, "
       "bienvenue sur le site officiel",
-    .name_ja = "Mairie - Authezat (SL, INSEE 63021) - Commune d&#039;AUTHEZAT, bienvenue sur le site officiel",
+    .name_ja = "Mairie - Authezat (SL, INSEE 63021) - Commune d'AUTHEZAT, bienvenue sur le site officiel",
     .category = "government", .portal = "http://www.authezat.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -163697,8 +163584,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_6D1A840B_9A12_4281_A9CA_2D4140F18102", .name = "Mairie - Saint-Barnabé (SL, INSEE 22275) - Mairie de "
-      "Saint-Barnab&#233; dans les C&#244;tes d'Armor",
-    .name_ja = "Mairie - Saint-Barnabé (SL, INSEE 22275) - Mairie de Saint-Barnab&#233; dans les C&#244;tes d'Armor",
+      "Saint-Barnabé dans les Côtes d'Armor",
+    .name_ja = "Mairie - Saint-Barnabé (SL, INSEE 22275) - Mairie de Saint-Barnabé dans les Côtes d'Armor",
     .category = "government", .portal = "https://www.saint-barnabe.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -163753,8 +163640,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_6DB62DC9_2D54_42C7_AE36_6302E147748E", .name = "Centre communal d'action sociale (CCAS) - Fontaine-Française "
-      "(SL, INSEE 21277) - Fontaine-Française &amp; Val de Saône",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Fontaine-Française (SL, INSEE 21277) - Fontaine-Française &amp; Val de Saône",
+      "(SL, INSEE 21277) - Fontaine-Française & Val de Saône",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Fontaine-Française (SL, INSEE 21277) - Fontaine-Française & Val de Saône",
     .category = "government", .portal = "https://www.commune-fontaine-francaise.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -163772,8 +163659,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_6DD52FA5_A030_4B89_9AFD_BDFD7BE26DF7", .name = "Mairie - Le Thuit-de-l'Oison (SL, INSEE 27638) - Le Thuit de "
-      "l&#039;Oison",
-    .name_ja = "Mairie - Le Thuit-de-l'Oison (SL, INSEE 27638) - Le Thuit de l&#039;Oison",
+      "l'Oison",
+    .name_ja = "Mairie - Le Thuit-de-l'Oison (SL, INSEE 27638) - Le Thuit de l'Oison",
     .category = "government", .portal = "https://thuitdeloison.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -163828,8 +163715,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:05:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_6F38938F_5B03_4E3A_B92D_BE510C7B9181", .name = "Mairie - Chagey (SL, INSEE 70116) - Chagey &amp; Genéchier",
-    .name_ja = "Mairie - Chagey (SL, INSEE 70116) - Chagey &amp; Genéchier",
+  { .id = "JO45_FR_6F38938F_5B03_4E3A_B92D_BE510C7B9181", .name = "Mairie - Chagey (SL, INSEE 70116) - Chagey & Genéchier",
+    .name_ja = "Mairie - Chagey (SL, INSEE 70116) - Chagey & Genéchier",
     .category = "government", .portal = "https://chagey.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -164216,8 +164103,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "2026-10-18T11:11:46+00:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO45_FR_73C14674_6315_4221_B10C_50E620D57EBB", .name = "Mairie - L'Étoile (SL, INSEE 80296) - Bienvenue à  l&#039;Etoile",
-    .name_ja = "Mairie - L'Étoile (SL, INSEE 80296) - Bienvenue à  l&#039;Etoile",
+  { .id = "JO45_FR_73C14674_6315_4221_B10C_50E620D57EBB", .name = "Mairie - L'Étoile (SL, INSEE 80296) - Bienvenue à  l'Etoile",
+    .name_ja = "Mairie - L'Étoile (SL, INSEE 80296) - Bienvenue à  l'Etoile",
     .category = "government", .portal = "https://www.mairie-letoile.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -164252,9 +164139,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "06:49:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_74398AE0_95DA_428F_87E6_87065A8F4CFB", .name = "Mairie - Ploumilliau (SL, INSEE 22226) - Ploumilliau &#8211; "
-      "Plouilio &#8211; Commune de Bretagne Côtes-d&#039;Armor",
-    .name_ja = "Mairie - Ploumilliau (SL, INSEE 22226) - Ploumilliau &#8211; Plouilio &#8211; Commune de Bretagne Côtes-d&#039;Armor",
+  { .id = "JO45_FR_74398AE0_95DA_428F_87E6_87065A8F4CFB", .name = "Mairie - Ploumilliau (SL, INSEE 22226) - Ploumilliau – Plouilio "
+      "– Commune de Bretagne Côtes-d'Armor",
+    .name_ja = "Mairie - Ploumilliau (SL, INSEE 22226) - Ploumilliau – Plouilio – Commune de Bretagne Côtes-d'Armor",
     .category = "government", .portal = "https://ploumilliau.bzh/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -164271,9 +164158,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "06:49:01 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_74398AE0_95DA_428F_87E6_87065A8F4CFB_2", .name = "Mairie - Ploumilliau (SL, INSEE 22226) - Ploumilliau &#8211; "
-      "Plouilio &#8211; Commune de Bretagne Côtes-d&#039;Armor",
-    .name_ja = "Mairie - Ploumilliau (SL, INSEE 22226) - Ploumilliau &#8211; Plouilio &#8211; Commune de Bretagne Côtes-d&#039;Armor",
+  { .id = "JO45_FR_74398AE0_95DA_428F_87E6_87065A8F4CFB_2", .name = "Mairie - Ploumilliau (SL, INSEE 22226) - Ploumilliau – Plouilio "
+      "– Commune de Bretagne Côtes-d'Armor",
+    .name_ja = "Mairie - Ploumilliau (SL, INSEE 22226) - Ploumilliau – Plouilio – Commune de Bretagne Côtes-d'Armor",
     .category = "government", .portal = "https://ploumilliau.bzh/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -164438,8 +164325,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_78A31AC5_1A2A_49E3_A72E_87CD6A7EE1B6", .name = "Mairie - Roche-Saint-Secret-Béconne (SL, INSEE 26276) - Le Guide "
-      "de l&#8217;apiculture",
-    .name_ja = "Mairie - Roche-Saint-Secret-Béconne (SL, INSEE 26276) - Le Guide de l&#8217;apiculture",
+      "de l’apiculture",
+    .name_ja = "Mairie - Roche-Saint-Secret-Béconne (SL, INSEE 26276) - Le Guide de l’apiculture",
     .category = "government", .portal = "https://www.roche-saint-secret.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -164587,8 +164474,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "2024-12-02T08:23:20Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO45_FR_7C57FA73_193D_4864_ADF7_2DD5C25EB620", .name = "Info Jeunes - Orne (SL, INSEE 61001) - BIJ de l&#039;Orne",
-    .name_ja = "Info Jeunes - Orne (SL, INSEE 61001) - BIJ de l&#039;Orne",
+  { .id = "JO45_FR_7C57FA73_193D_4864_ADF7_2DD5C25EB620", .name = "Info Jeunes - Orne (SL, INSEE 61001) - BIJ de l'Orne",
+    .name_ja = "Info Jeunes - Orne (SL, INSEE 61001) - BIJ de l'Orne",
     .category = "government", .portal = "https://bij-orne.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -164735,8 +164622,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_2527929C_A625_4192_8E26_D621C3E0FA83", .name = "Centre de gestion de la fonction publique territoriale - Ariège "
       "(SL, INSEE 09122) - Centre de Gestion de le Fonction Publique "
-      "Territoriale &#8211; Ariège",
-    .name_ja = "Centre de gestion de la fonction publique territoriale - Ariège (SL, INSEE 09122) - Centre de Gestion de le Fonction Publique Territoriale &#8211; Ariège",
+      "Territoriale – Ariège",
+    .name_ja = "Centre de gestion de la fonction publique territoriale - Ariège (SL, INSEE 09122) - Centre de Gestion de le Fonction Publique Territoriale – Ariège",
     .category = "government", .portal = "https://cdg09.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -164754,8 +164641,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_25292D61_63C5_4929_BA84_01EF89ADF465", .name = "Mairie - Saint-Romain-au-Mont-d'Or (SL, INSEE 69233) - Mairie de "
-      "Saint Romain au Mont d&#039;Or",
-    .name_ja = "Mairie - Saint-Romain-au-Mont-d'Or (SL, INSEE 69233) - Mairie de Saint Romain au Mont d&#039;Or",
+      "Saint Romain au Mont d'Or",
+    .name_ja = "Mairie - Saint-Romain-au-Mont-d'Or (SL, INSEE 69233) - Mairie de Saint Romain au Mont d'Or",
     .category = "government", .portal = "https://saintromainaumontdor.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -164994,9 +164881,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:14:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_2A0A599F_CF60_4DC3_842F_B3704EF129BD", .name = "Mairie - Ferrière-la-Petite (SL, INSEE 59231) - SITE OFFICIEL "
-      "&#8211; FERRIERE LA PETITE",
-    .name_ja = "Mairie - Ferrière-la-Petite (SL, INSEE 59231) - SITE OFFICIEL &#8211; FERRIERE LA PETITE",
+  { .id = "JO45_FR_2A0A599F_CF60_4DC3_842F_B3704EF129BD", .name = "Mairie - Ferrière-la-Petite (SL, INSEE 59231) - SITE OFFICIEL – "
+      "FERRIERE LA PETITE",
+    .name_ja = "Mairie - Ferrière-la-Petite (SL, INSEE 59231) - SITE OFFICIEL – FERRIERE LA PETITE",
     .category = "government", .portal = "https://www.ville-ferrierelapetite.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -165089,8 +164976,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_2ADAE003_068B_40AE_AC06_CCB17ED7EF9B", .name = "Mairie - Chézery-Forens (SL, INSEE 01104) - Commune de "
-      "Ch&#233;zery-Forens",
-    .name_ja = "Mairie - Chézery-Forens (SL, INSEE 01104) - Commune de Ch&#233;zery-Forens",
+      "Chézery-Forens",
+    .name_ja = "Mairie - Chézery-Forens (SL, INSEE 01104) - Commune de Chézery-Forens",
     .category = "government", .portal = "https://www.chezery.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -165388,9 +165275,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "15:30:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_2F187DE7_C832_4453_B0AF_E1DB88E7ACE0", .name = "Mairie - La Brigue (SL, INSEE 06162) - La Brigue &amp; Hameau de "
+  { .id = "JO45_FR_2F187DE7_C832_4453_B0AF_E1DB88E7ACE0", .name = "Mairie - La Brigue (SL, INSEE 06162) - La Brigue & Hameau de "
       "Morignole",
-    .name_ja = "Mairie - La Brigue (SL, INSEE 06162) - La Brigue &amp; Hameau de Morignole",
+    .name_ja = "Mairie - La Brigue (SL, INSEE 06162) - La Brigue & Hameau de Morignole",
     .category = "government", .portal = "https://www.labrigue.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -165615,8 +165502,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_3430D763_E7F4_462D_88D1_0FD963A6A9EF", .name = "Mairie - Le Val-d'Hazey (SL, INSEE 27022) - Commune nouvelle du "
-      "Val d&#039;Hazey &#8211; Site Officiel",
-    .name_ja = "Mairie - Le Val-d'Hazey (SL, INSEE 27022) - Commune nouvelle du Val d&#039;Hazey &#8211; Site Officiel",
+      "Val d'Hazey – Site Officiel",
+    .name_ja = "Mairie - Le Val-d'Hazey (SL, INSEE 27022) - Commune nouvelle du Val d'Hazey – Site Officiel",
     .category = "government", .portal = "https://levaldhazey.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -165725,8 +165612,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_37BAF7F1_5941_45CA_839B_15B8284F930F", .name = "Mairie - Champagne-au-Mont-d'Or (SL, INSEE 69040) - Site "
-      "officiel de la ville de Champagne au Mont d&#039;Or",
-    .name_ja = "Mairie - Champagne-au-Mont-d'Or (SL, INSEE 69040) - Site officiel de la ville de Champagne au Mont d&#039;Or",
+      "officiel de la ville de Champagne au Mont d'Or",
+    .name_ja = "Mairie - Champagne-au-Mont-d'Or (SL, INSEE 69040) - Site officiel de la ville de Champagne au Mont d'Or",
     .category = "government", .portal = "https://www.mairiedechampagne.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -165855,8 +165742,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_3B74A055_8DFD_4024_85CA_9EDD257C8C60", .name = "Mairie - Grenade-sur-l'Adour (SL, INSEE 40117) - "
-      "Grenade-sur-l&#039;Adour",
-    .name_ja = "Mairie - Grenade-sur-l'Adour (SL, INSEE 40117) - Grenade-sur-l&#039;Adour",
+      "Grenade-sur-l'Adour",
+    .name_ja = "Mairie - Grenade-sur-l'Adour (SL, INSEE 40117) - Grenade-sur-l'Adour",
     .category = "government", .portal = "https://www.grenadesuradour.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -165874,8 +165761,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_3B7BDF8F_50E7_414F_8DC3_0C89F96A4F11", .name = "Mairie - Talasani (SL, INSEE 2B319) - Site Officiel de Talasani "
-      "&#8211; Haute Corse",
-    .name_ja = "Mairie - Talasani (SL, INSEE 2B319) - Site Officiel de Talasani &#8211; Haute Corse",
+      "– Haute Corse",
+    .name_ja = "Mairie - Talasani (SL, INSEE 2B319) - Site Officiel de Talasani – Haute Corse",
     .category = "government", .portal = "https://talasani.corsica/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -165966,9 +165853,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_3C4BAA4A_DD64_47D9_9264_FB3558C1F8C0", .name = "Service départemental d'incendie et de secours (SDIS) - Landes "
-      "(SIL, INSEE 40192) - Service Départemental d&#039;Incendie et de "
+      "(SIL, INSEE 40192) - Service Départemental d'Incendie et de "
       "Secours des Landes",
-    .name_ja = "Service départemental d'incendie et de secours (SDIS) - Landes (SIL, INSEE 40192) - Service Départemental d&#039;Incendie et de Secours des Landes",
+    .name_ja = "Service départemental d'incendie et de secours (SDIS) - Landes (SIL, INSEE 40192) - Service Départemental d'Incendie et de Secours des Landes",
     .category = "government", .portal = "https://www.sdis40.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -165985,8 +165872,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:06:26 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_3C58C01E_142B_4D31_B34C_66F3117FC31F", .name = "Mairie - Avène (SL, INSEE 34019) - Commune d&#039;Avène",
-    .name_ja = "Mairie - Avène (SL, INSEE 34019) - Commune d&#039;Avène",
+  { .id = "JO45_FR_3C58C01E_142B_4D31_B34C_66F3117FC31F", .name = "Mairie - Avène (SL, INSEE 34019) - Commune d'Avène",
+    .name_ja = "Mairie - Avène (SL, INSEE 34019) - Commune d'Avène",
     .category = "government", .portal = "https://commune-avene.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -166117,8 +166004,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_3F3FF724_0C29_4CFF_9791_AC2407A6B121", .name = "Centre communal d'action sociale (CCAS) - Angoulême (SL, INSEE "
-      "16015) - Ville d&#039;Angoulême",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Angoulême (SL, INSEE 16015) - Ville d&#039;Angoulême",
+      "16015) - Ville d'Angoulême",
+    .name_ja = "Centre communal d'action sociale (CCAS) - Angoulême (SL, INSEE 16015) - Ville d'Angoulême",
     .category = "government", .portal = "https://www.angouleme.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -166211,8 +166098,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_403656BE_C820_4A85_B660_6B2DC18BE0EC", .name = "Mairie - L'Estréchure (SL, INSEE 30108) - Bienvenue à "
-      "L&#039;Estréchure",
-    .name_ja = "Mairie - L'Estréchure (SL, INSEE 30108) - Bienvenue à L&#039;Estréchure",
+      "L'Estréchure",
+    .name_ja = "Mairie - L'Estréchure (SL, INSEE 30108) - Bienvenue à L'Estréchure",
     .category = "government", .portal = "https://bienvenuealestrechure.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -166988,8 +166875,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "13:29:33 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_4E285764_1AE5_4A3B_8F05_7BA0434EFEF3", .name = "Mairie - Apach (SL, INSEE 57026) - Mairie d&#039;Apach",
-    .name_ja = "Mairie - Apach (SL, INSEE 57026) - Mairie d&#039;Apach",
+  { .id = "JO45_FR_4E285764_1AE5_4A3B_8F05_7BA0434EFEF3", .name = "Mairie - Apach (SL, INSEE 57026) - Mairie d'Apach",
+    .name_ja = "Mairie - Apach (SL, INSEE 57026) - Mairie d'Apach",
     .category = "government", .portal = "https://apach57.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -167645,9 +167532,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "11:38:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_5C9D367B_5722_453E_BED0_7346D488D636", .name = "Mairie - Bras-d'Asse (SL, INSEE 04031) - Mairie de "
-      "Bras-d&#039;Asse",
-    .name_ja = "Mairie - Bras-d'Asse (SL, INSEE 04031) - Mairie de Bras-d&#039;Asse",
+  { .id = "JO45_FR_5C9D367B_5722_453E_BED0_7346D488D636", .name = "Mairie - Bras-d'Asse (SL, INSEE 04031) - Mairie de Bras-d'Asse",
+    .name_ja = "Mairie - Bras-d'Asse (SL, INSEE 04031) - Mairie de Bras-d'Asse",
     .category = "government", .portal = "https://brasdasse.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -167777,8 +167663,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_7D684611_261C_48A2_82F2_0A441466153F", .name = "Mairie - Illeville-sur-Montfort (SL, INSEE 27349) - Commune "
-      "d&#39;Illeville Sur Montfort",
-    .name_ja = "Mairie - Illeville-sur-Montfort (SL, INSEE 27349) - Commune d&#39;Illeville Sur Montfort",
+      "d'Illeville Sur Montfort",
+    .name_ja = "Mairie - Illeville-sur-Montfort (SL, INSEE 27349) - Commune d'Illeville Sur Montfort",
     .category = "government", .portal = "http://communedillevillesurmontfort.blogspot.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -167796,8 +167682,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_7D684611_261C_48A2_82F2_0A441466153F_2", .name = "Mairie - Illeville-sur-Montfort (SL, INSEE 27349) - Commune "
-      "d&#39;Illeville Sur Montfort",
-    .name_ja = "Mairie - Illeville-sur-Montfort (SL, INSEE 27349) - Commune d&#39;Illeville Sur Montfort",
+      "d'Illeville Sur Montfort",
+    .name_ja = "Mairie - Illeville-sur-Montfort (SL, INSEE 27349) - Commune d'Illeville Sur Montfort",
     .category = "government", .portal = "http://communedillevillesurmontfort.blogspot.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -167815,8 +167701,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_7D684611_261C_48A2_82F2_0A441466153F_3", .name = "Mairie - Illeville-sur-Montfort (SL, INSEE 27349) - Commune "
-      "d&#39;Illeville Sur Montfort",
-    .name_ja = "Mairie - Illeville-sur-Montfort (SL, INSEE 27349) - Commune d&#39;Illeville Sur Montfort",
+      "d'Illeville Sur Montfort",
+    .name_ja = "Mairie - Illeville-sur-Montfort (SL, INSEE 27349) - Commune d'Illeville Sur Montfort",
     .category = "government", .portal = "https://www.blogger.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -167907,8 +167793,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:41:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_7F4C7D78_FC21_45C5_847F_87AECC142037", .name = "Mairie - Albine (SL, INSEE 81005) - MAIRIE D&#8217;ALBINE",
-    .name_ja = "Mairie - Albine (SL, INSEE 81005) - MAIRIE D&#8217;ALBINE",
+  { .id = "JO45_FR_7F4C7D78_FC21_45C5_847F_87AECC142037", .name = "Mairie - Albine (SL, INSEE 81005) - MAIRIE D’ALBINE",
+    .name_ja = "Mairie - Albine (SL, INSEE 81005) - MAIRIE D’ALBINE",
     .category = "government", .portal = "https://albine.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -168239,8 +168125,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:00:32 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_86FD4998_A80A_4946_8839_73BB3662DA84", .name = "Mairie - Écuras (SL, INSEE 16124) - Mairie d&rsquo;Écuras",
-    .name_ja = "Mairie - Écuras (SL, INSEE 16124) - Mairie d&rsquo;Écuras",
+  { .id = "JO45_FR_86FD4998_A80A_4946_8839_73BB3662DA84", .name = "Mairie - Écuras (SL, INSEE 16124) - Mairie d’Écuras",
+    .name_ja = "Mairie - Écuras (SL, INSEE 16124) - Mairie d’Écuras",
     .category = "government", .portal = "https://www.ecuras.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -168315,9 +168201,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "00:53:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_87F6E6ED_D97F_44A2_BE90_FE8D50A7696C", .name = "Mairie - Cans-et-Cévennes (SL, INSEE 48166) - Cans &#38; "
-      "Cévennes",
-    .name_ja = "Mairie - Cans-et-Cévennes (SL, INSEE 48166) - Cans &#38; Cévennes",
+  { .id = "JO45_FR_87F6E6ED_D97F_44A2_BE90_FE8D50A7696C", .name = "Mairie - Cans-et-Cévennes (SL, INSEE 48166) - Cans & Cévennes",
+    .name_ja = "Mairie - Cans-et-Cévennes (SL, INSEE 48166) - Cans & Cévennes",
     .category = "government", .portal = "https://cansetcevennes.wordpress.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -168744,8 +168629,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_92324304_07F0_4723_9031_07FEEDE1E3F7", .name = "Mairie - Saint-Martin-d'Août (SL, INSEE 26314) - Saint Martin "
-      "d&#039;Août",
-    .name_ja = "Mairie - Saint-Martin-d'Août (SL, INSEE 26314) - Saint Martin d&#039;Août",
+      "d'Août",
+    .name_ja = "Mairie - Saint-Martin-d'Août (SL, INSEE 26314) - Saint Martin d'Août",
     .category = "government", .portal = "https://saint-martin-daout.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -169146,8 +169031,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_9CA7E350_576C_439B_B951_DEE461BE086F", .name = "Mairie - Michelbach-le-Haut (SL, INSEE 68208) - Commune "
-      "deMichelbach-le-Haut &#8211; Alsace",
-    .name_ja = "Mairie - Michelbach-le-Haut (SL, INSEE 68208) - Commune deMichelbach-le-Haut &#8211; Alsace",
+      "deMichelbach-le-Haut – Alsace",
+    .name_ja = "Mairie - Michelbach-le-Haut (SL, INSEE 68208) - Commune deMichelbach-le-Haut – Alsace",
     .category = "government", .portal = "https://michelbachlehaut.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -169316,8 +169201,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_9FC99545_D55D_4798_A685_EE811D8CAC11", .name = "Mairie déléguée - Veauville-lès-Baons (SL, INSEE 76729) - Les "
-      "Hauts de Caux, communes d&#039;Autretot et Veauville-les-Baons",
-    .name_ja = "Mairie déléguée - Veauville-lès-Baons (SL, INSEE 76729) - Les Hauts de Caux, communes d&#039;Autretot et Veauville-les-Baons",
+      "Hauts de Caux, communes d'Autretot et Veauville-les-Baons",
+    .name_ja = "Mairie déléguée - Veauville-lès-Baons (SL, INSEE 76729) - Les Hauts de Caux, communes d'Autretot et Veauville-les-Baons",
     .category = "government", .portal = "https://les-hauts-de-caux.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -169335,8 +169220,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_9FFDA25C_2D66_43AA_AE6F_B2840D226823", .name = "Mairie - Condécourt (SL, INSEE 95170) - Condecourt, commune du "
-      "Val-d&#039;Oise",
-    .name_ja = "Mairie - Condécourt (SL, INSEE 95170) - Condecourt, commune du Val-d&#039;Oise",
+      "Val-d'Oise",
+    .name_ja = "Mairie - Condécourt (SL, INSEE 95170) - Condecourt, commune du Val-d'Oise",
     .category = "government", .portal = "https://condecourt.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -169446,8 +169331,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_A235555B_17F3_4DE5_811B_344DBC127401", .name = "Communauté d'agglomération - Gard Rhodanien (SL, INSEE 30028) - "
-      "Le site officiel de l&#039;Agglomération du Gard rhodanien",
-    .name_ja = "Communauté d'agglomération - Gard Rhodanien (SL, INSEE 30028) - Le site officiel de l&#039;Agglomération du Gard rhodanien",
+      "Le site officiel de l'Agglomération du Gard rhodanien",
+    .name_ja = "Communauté d'agglomération - Gard Rhodanien (SL, INSEE 30028) - Le site officiel de l'Agglomération du Gard rhodanien",
     .category = "government", .portal = "https://www.gardrhodanien.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -169501,8 +169386,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_A2E71F54_55A5_43C3_B7B2_639FD4B8692E", .name = "Mairie - Arboys-en-Bugey (SL, INSEE 01015) - Mairie "
-      "d&#039;Arboys-en-Bugey",
-    .name_ja = "Mairie - Arboys-en-Bugey (SL, INSEE 01015) - Mairie d&#039;Arboys-en-Bugey",
+      "d'Arboys-en-Bugey",
+    .name_ja = "Mairie - Arboys-en-Bugey (SL, INSEE 01015) - Mairie d'Arboys-en-Bugey",
     .category = "government", .portal = "https://www.arboysenbugey.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -170059,10 +169944,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:25:01 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_AF45167F_EF27_4152_BD5E_AA59035EC6BD", .name = "Mairie - Isle-sur-Serein (SL, INSEE 89204) - "
-      "L&#039;Isle-sur-Serein   Changement d&rsquo;adresse mail de la "
-      "Mairie",
-    .name_ja = "Mairie - Isle-sur-Serein (SL, INSEE 89204) - L&#039;Isle-sur-Serein   Changement d&rsquo;adresse mail de la Mairie",
+  { .id = "JO45_FR_AF45167F_EF27_4152_BD5E_AA59035EC6BD", .name = "Mairie - Isle-sur-Serein (SL, INSEE 89204) - L'Isle-sur-Serein   "
+      "Changement d’adresse mail de la Mairie",
+    .name_ja = "Mairie - Isle-sur-Serein (SL, INSEE 89204) - L'Isle-sur-Serein   Changement d’adresse mail de la Mairie",
     .category = "government", .portal = "https://www.isle-sur-serein.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -170170,8 +170054,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "16:03:33 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_B0D2B512_CA2B_4AB8_96D1_5872EC1BAFFF", .name = "Mairie - Eaunes (SL, INSEE 31165) - Mairie d&#039;Eaunes",
-    .name_ja = "Mairie - Eaunes (SL, INSEE 31165) - Mairie d&#039;Eaunes",
+  { .id = "JO45_FR_B0D2B512_CA2B_4AB8_96D1_5872EC1BAFFF", .name = "Mairie - Eaunes (SL, INSEE 31165) - Mairie d'Eaunes",
+    .name_ja = "Mairie - Eaunes (SL, INSEE 31165) - Mairie d'Eaunes",
     .category = "government", .portal = "https://www.mairie-eaunes.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -170409,9 +170293,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "12:17:38 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_B4D0D595_3099_4206_BEFE_1745FE2CCFB8", .name = "Mairie - Ansouis (SL, INSEE 84002) - Site de la Mairie "
-      "d&#039;Ansouis",
-    .name_ja = "Mairie - Ansouis (SL, INSEE 84002) - Site de la Mairie d&#039;Ansouis",
+  { .id = "JO45_FR_B4D0D595_3099_4206_BEFE_1745FE2CCFB8", .name = "Mairie - Ansouis (SL, INSEE 84002) - Site de la Mairie d'Ansouis",
+    .name_ja = "Mairie - Ansouis (SL, INSEE 84002) - Site de la Mairie d'Ansouis",
     .category = "government", .portal = "https://ansouis.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -170484,8 +170367,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "06:39:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_B8138DDA_08C3_475E_86C8_242A51AB4AE6", .name = "Mairie - Aiguilhe (SL, INSEE 43002) - Commune d&#039;Aiguilhe",
-    .name_ja = "Mairie - Aiguilhe (SL, INSEE 43002) - Commune d&#039;Aiguilhe",
+  { .id = "JO45_FR_B8138DDA_08C3_475E_86C8_242A51AB4AE6", .name = "Mairie - Aiguilhe (SL, INSEE 43002) - Commune d'Aiguilhe",
+    .name_ja = "Mairie - Aiguilhe (SL, INSEE 43002) - Commune d'Aiguilhe",
     .category = "government", .portal = "https://aiguilhe.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -170616,8 +170499,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_BBB23519_E274_4F54_B183_E3A5BEE438E7", .name = "Centre de ressources et d'information des bénévoles (CRIB) - "
       "Profession sport et loisirs d'Alsace (SL, INSEE 68066) - "
-      "Profession Sport &amp; Loisirs Alsace",
-    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Profession sport et loisirs d'Alsace (SL, INSEE 68066) - Profession Sport &amp; Loisirs Alsace",
+      "Profession Sport & Loisirs Alsace",
+    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Profession sport et loisirs d'Alsace (SL, INSEE 68066) - Profession Sport & Loisirs Alsace",
     .category = "government", .portal = "https://alsace.profession-sport-loisirs.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -170635,8 +170518,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_BCCB0DDE_F7A6_4247_B6EB_D7A1C471DA63", .name = "Mairie - Saint-Pierre-d'Irube (SL, INSEE 64496) - Saint Pierre "
-      "d&#039;Irube",
-    .name_ja = "Mairie - Saint-Pierre-d'Irube (SL, INSEE 64496) - Saint Pierre d&#039;Irube",
+      "d'Irube",
+    .name_ja = "Mairie - Saint-Pierre-d'Irube (SL, INSEE 64496) - Saint Pierre d'Irube",
     .category = "government", .portal = "https://www.saintpierredirube.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -171082,9 +170965,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "09:18:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_C66C6C9C_1DD4_4C98_B923_F9AC34576CCD", .name = "Mairie - Kolbsheim (SL, INSEE 67247) - Osterputz 2026 DNA "
-      "&#8211; Mairie de Kolbsheim",
-    .name_ja = "Mairie - Kolbsheim (SL, INSEE 67247) - Osterputz 2026 DNA &#8211; Mairie de Kolbsheim",
+  { .id = "JO45_FR_C66C6C9C_1DD4_4C98_B923_F9AC34576CCD", .name = "Mairie - Kolbsheim (SL, INSEE 67247) - Osterputz 2026 DNA – "
+      "Mairie de Kolbsheim",
+    .name_ja = "Mairie - Kolbsheim (SL, INSEE 67247) - Osterputz 2026 DNA – Mairie de Kolbsheim",
     .category = "government", .portal = "https://kolbsheim.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -171101,8 +170984,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "14:34:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_C66F3518_18D5_4C35_B84A_6148AA4CEF17", .name = "Mairie - Irodouër (SL, INSEE 35135) - La Mairie d&#039;Irodouër",
-    .name_ja = "Mairie - Irodouër (SL, INSEE 35135) - La Mairie d&#039;Irodouër",
+  { .id = "JO45_FR_C66F3518_18D5_4C35_B84A_6148AA4CEF17", .name = "Mairie - Irodouër (SL, INSEE 35135) - La Mairie d'Irodouër",
+    .name_ja = "Mairie - Irodouër (SL, INSEE 35135) - La Mairie d'Irodouër",
     .category = "government", .portal = "http://www.mairie-irodouer.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -171212,8 +171095,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_C888EF14_4B75_4688_9323_30BFE7983807", .name = "Mairie - Orbigny (SL, INSEE 37177) - Site officiel de la commune "
-      "d&#039;Orbigny",
-    .name_ja = "Mairie - Orbigny (SL, INSEE 37177) - Site officiel de la commune d&#039;Orbigny",
+      "d'Orbigny",
+    .name_ja = "Mairie - Orbigny (SL, INSEE 37177) - Site officiel de la commune d'Orbigny",
     .category = "government", .portal = "https://www.orbigny.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -171620,8 +171503,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "11:24:29 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_D1AB7EDE_EF95_4A5F_B203_C50DCFF5F56A", .name = "Mairie - Érondelle (SL, INSEE 80282) - Commune d&#039;Erondelle",
-    .name_ja = "Mairie - Érondelle (SL, INSEE 80282) - Commune d&#039;Erondelle",
+  { .id = "JO45_FR_D1AB7EDE_EF95_4A5F_B203_C50DCFF5F56A", .name = "Mairie - Érondelle (SL, INSEE 80282) - Commune d'Erondelle",
+    .name_ja = "Mairie - Érondelle (SL, INSEE 80282) - Commune d'Erondelle",
     .category = "government", .portal = "https://www.erondelle.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -171732,8 +171615,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "08:52:18 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_D27040D5_FA67_4A43_8B21_4BDE58043ECF", .name = "Mairie - Aurons (SL, INSEE 13008) - Mairie d&#039;Aurons",
-    .name_ja = "Mairie - Aurons (SL, INSEE 13008) - Mairie d&#039;Aurons",
+  { .id = "JO45_FR_D27040D5_FA67_4A43_8B21_4BDE58043ECF", .name = "Mairie - Aurons (SL, INSEE 13008) - Mairie d'Aurons",
+    .name_ja = "Mairie - Aurons (SL, INSEE 13008) - Mairie d'Aurons",
     .category = "government", .portal = "https://vivonsaurons.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -171806,9 +171689,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_D4DBBF54_192B_4114_B381_FECC260BFA6A", .name = "Conseil départemental de l'ordre des médecins - Ariège (SIL, "
-      "INSEE 09122) - Conseil Département de l&#039;Ariège de "
-      "l&#039;Ordre des Médecins",
-    .name_ja = "Conseil départemental de l'ordre des médecins - Ariège (SIL, INSEE 09122) - Conseil Département de l&#039;Ariège de l&#039;Ordre des Médecins",
+      "INSEE 09122) - Conseil Département de l'Ariège de l'Ordre des "
+      "Médecins",
+    .name_ja = "Conseil départemental de l'ordre des médecins - Ariège (SIL, INSEE 09122) - Conseil Département de l'Ariège de l'Ordre des Médecins",
     .category = "government", .portal = "https://cdom09.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -172140,9 +172023,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "10:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_DA6362C7_5D85_4842_A0D0_0F00BDE6137C", .name = "Mairie - Bezannes (SL, INSEE 51058) - Bezannes &#8211; Site "
-      "officiel &#8211; Accueil",
-    .name_ja = "Mairie - Bezannes (SL, INSEE 51058) - Bezannes &#8211; Site officiel &#8211; Accueil",
+  { .id = "JO45_FR_DA6362C7_5D85_4842_A0D0_0F00BDE6137C", .name = "Mairie - Bezannes (SL, INSEE 51058) - Bezannes – Site officiel – "
+      "Accueil",
+    .name_ja = "Mairie - Bezannes (SL, INSEE 51058) - Bezannes – Site officiel – Accueil",
     .category = "government", .portal = "https://bezannes.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -172806,8 +172689,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "declares or links on its site root." },
 
   { .id = "JO45_FR_E6061EAA_2606_4B82_B121_9210938F3649", .name = "Mairie - Saint-Jean-d'Avelanne (SL, INSEE 38398) - Mairie de "
-      "Saint Jean d&#039;Avelanne",
-    .name_ja = "Mairie - Saint-Jean-d'Avelanne (SL, INSEE 38398) - Mairie de Saint Jean d&#039;Avelanne",
+      "Saint Jean d'Avelanne",
+    .name_ja = "Mairie - Saint-Jean-d'Avelanne (SL, INSEE 38398) - Mairie de Saint Jean d'Avelanne",
     .category = "government", .portal = "https://www.saintjeandavelanne.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -173010,8 +172893,8 @@ static const hp_source HP3B45_FRGOV[] = {
 
   { .id = "JO45_FR_EE61A48F_D18C_4074_A446_E9E396263AC4", .name = "Mission locale pour l'insertion professionnelle et sociale des "
       "jeunes (16-25 ans) - Creil (SL, INSEE 60175) - Mission Locale de "
-      "la Vallée de l&#039;Oise",
-    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Creil (SL, INSEE 60175) - Mission Locale de la Vallée de l&#039;Oise",
+      "la Vallée de l'Oise",
+    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Creil (SL, INSEE 60175) - Mission Locale de la Vallée de l'Oise",
     .category = "government", .portal = "https://mlvo.net/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -173118,9 +173001,9 @@ static const hp_source HP3B45_FRGOV[] = {
       "20:55:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F20F10A4_CF15_497A_9EF1_B1D5A25F2AAC", .name = "Mairie - Château-l'Abbaye (SL, INSEE 59144) - chateau "
-      "l&apos;abbaye 2024.2024",
-    .name_ja = "Mairie - Château-l'Abbaye (SL, INSEE 59144) - chateau l&apos;abbaye 2024.2024",
+  { .id = "JO45_FR_F20F10A4_CF15_497A_9EF1_B1D5A25F2AAC", .name = "Mairie - Château-l'Abbaye (SL, INSEE 59144) - chateau l'abbaye "
+      "2024.2024",
+    .name_ja = "Mairie - Château-l'Abbaye (SL, INSEE 59144) - chateau l'abbaye 2024.2024",
     .category = "government", .portal = "https://www.ville-chateau-abbaye.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -173358,8 +173241,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "on its site root." },
 
   { .id = "JO45_FR_F5FFA4F6_1E04_4023_A4A6_A73021B3E79A", .name = "Centre technique régional de la consommation (CTRC) - Grand-Est "
-      "(SIL, INSEE 67482) - Chambre de Consommation d&#039;Alsace",
-    .name_ja = "Centre technique régional de la consommation (CTRC) - Grand-Est (SIL, INSEE 67482) - Chambre de Consommation d&#039;Alsace",
+      "(SIL, INSEE 67482) - Chambre de Consommation d'Alsace",
+    .name_ja = "Centre technique régional de la consommation (CTRC) - Grand-Est (SIL, INSEE 67482) - Chambre de Consommation d'Alsace",
     .category = "government", .portal = "https://cca.asso.fr/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -173376,9 +173259,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "05:35:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_F63DAE81_8D71_443A_988B_07FA6070B376", .name = "Mairie - Ille-sur-Têt (SL, INSEE 66088) - Mairie d&#039;Ille sur "
-      "Tet",
-    .name_ja = "Mairie - Ille-sur-Têt (SL, INSEE 66088) - Mairie d&#039;Ille sur Tet",
+  { .id = "JO45_FR_F63DAE81_8D71_443A_988B_07FA6070B376", .name = "Mairie - Ille-sur-Têt (SL, INSEE 66088) - Mairie d'Ille sur Tet",
+    .name_ja = "Mairie - Ille-sur-Têt (SL, INSEE 66088) - Mairie d'Ille sur Tet",
     .category = "government", .portal = "https://www.ille-sur-tet.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
@@ -173768,8 +173650,8 @@ static const hp_source HP3B45_FRGOV[] = {
       "20:27:59 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO45_FR_FDC603ED_B2C2_47A9_AF7A_A5301180942C", .name = "Mairie - Arnos (SL, INSEE 64048) - Mairie d&#039;Arnos",
-    .name_ja = "Mairie - Arnos (SL, INSEE 64048) - Mairie d&#039;Arnos",
+  { .id = "JO45_FR_FDC603ED_B2C2_47A9_AF7A_A5301180942C", .name = "Mairie - Arnos (SL, INSEE 64048) - Mairie d'Arnos",
+    .name_ja = "Mairie - Arnos (SL, INSEE 64048) - Mairie d'Arnos",
     .category = "government", .portal = "https://mairiearnos.wordpress.com/",
     .record_type = "government-notice",
     .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",

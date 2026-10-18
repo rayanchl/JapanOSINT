@@ -47,14 +47,63 @@ fetch that qualified it**.
 
 | register | hosts | root answered 200 | declared a feed | anchor hints | WordPress | candidate URLs | feed with ≥1 record |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Italy IPA | 22,455 | 17,149 | 7,342 | 2,640 | 7,366 | | |
-| France DILA | 28,885 | 24,037 | 10,886 | 1,650 | 11,145 | | |
-| Wikidata, 196 countries | | | | | | | |
+| Italy IPA | 22,455 | 17,149 | 7,342 | 2,640 | 7,366 | 11,054 | 6,321 |
+| France DILA | 28,885 | 24,037 | 10,886 | 1,650 | 11,145 | 15,168 | 11,056 |
+| Wikidata, 196 countries | 11,245 (13,939 before dropping the `association` class) | 6,748 | 1,559 | 1,164 | 1,789 | 3,690 | 1,763 |
 
 Of the Italian hosts 2,754 have no server at the root, 982 answer 403, 961
 answer 410 Gone and 278 answer 509 (a hosting quota); of the French 2,983 have
-no server, 1,167 answer 403 and 189 answer 418 (a bot wall that says so).
+no server, 1,167 answer 403 and 189 answer 418 (a bot wall that says so); of
+the Wikidata hosts 2,965 have no server and 1,016 answer 403.
 
-## Gates
+## Gates (2026-10-18, all live)
 
-(filled in from the run below)
+**16,520 rows ship — 5,640 Italian, 9,319 French, 1,561 from 157 countries via
+Wikidata — every one measured emitted-AND-stored in the real binary.**
+277,289 records emitted, 276,945 stored. `docs/verified-sources-batch45.tsv`
+carries the probe reading and the emit reading per row; the 15,761 candidates
+that did not ship are in `docs/rejected-sources-batch45.tsv` by beat and stage.
+
+| stage | IT in → out | FR in → out | WD in → out |
+| --- | --- | --- | --- |
+| builder: fetch, classify, count at the element start | 11,054 → 6,321 | 15,168 → 11,056 | 3,690 → 1,763 |
+| `batch_exclusions.py --bin` | → 6,309 (12 dup) | → 11,021 (35 dup) | → 1,592 (171 dup: the US, UK and Japanese bodies batches 43/44 already read) |
+| reachability / pagination | 0 / 0 | 0 / 216 SPIP `?page=backend` rows, which name the RSS template and carry `pagination_ok` | 0 / 0 |
+| `probe_hp_batch.py` | 5,491 PASS | 9,141 PASS | 1,529 PASS |
+| generated with EVERY row; `audit_registry_emit.py` + one re-run of each FETCH_FAILED | → 5,640 (669 failed twice) | → 9,319 (1,699 failed twice, 3 serve HTML to the engine's client) | → 1,561 (31 failed twice) |
+
+**392 rows the probe refused ship on the engine's measurement** (177 IT, 183 FR,
+32 WD) — the probe's "Bad Gateway" and 403 readings against shared municipal
+hosting at twelve concurrent requests were not what the engine saw at six — and
+the verified TSV carries both readings for each. The 40 collisions were each
+measured against the feed itself: every verifiable one is the feed's own
+byte-identical duplicate (one Russian agency feed lists every item twice;
+Italy's SVTRL repeats one item in each of its three feeds), and 20 French
+ones sit behind one ministry family's maintenance page at the time of
+checking and are recorded `UNVERIFIABLE_NOW` with their numbers rather than
+guessed at.
+
+**Three defects found by the gates, none visible to a probe:**
+
+* **An HTML-escaped `&amp;` in a feed URL changes what the server serves.**
+  534 French rows carried `&amp;` from the page's own markup. Fixing it after
+  validation meant Joomla finally RECEIVED `type=atom` and answered Atom where
+  the row declared `channel.item`: 41 rows emitted nothing. Every row whose URL
+  changed after validation was re-fetched, re-classified from the body the
+  server serves now, and re-measured (505 OK). **Any change to a URL after
+  validation invalidates the validation.**
+* **A feed title can span lines and carry entities.** One title with embedded
+  newlines split a manifest row across five lines; thousands carried
+  `&amp;` / `&#039;` / numeric Cyrillic entities into `.name`. The builder
+  normalises whitespace and unescapes now, and batches 43–45 were regenerated
+  with the names fixed (no C-side repairs existed to lose).
+* **The registry cap.** This batch took the tree to 43,453 and `MAX_SOURCES`
+  was 32,768: the build was clean and 2,392 French rows did not exist at
+  runtime. Found by comparing the beat's registration count against its table
+  before believing the audit; `make registry-floor` fails on any OVERFLOW line.
+  Raised to 131,072 (`registry.c`).
+
+Tree gates after all three tables landed: build 0 warnings; `lint-sources` OK;
+`audit-sources` 0 findings across 329 strict-set files; `hptest`,
+`pagewalktest`, `htmlparsetest`, `authtest`, `unit`, `selftest` all pass;
+`source-floor` and `registry-floor` re-recorded at 42,643.

@@ -443,8 +443,8 @@ static const hp_source HP3B43_JPRSS[] = {
       "07:47:11 +0000. The municipality's own declared site feed (new "
       "notices), found via <link rel=alternate> on its root page." },
 
-  { .id = "JO43_MUNI_024261", .name = "青森県佐井村 - 佐井村 &#8211; 青森県の下北半島西側、津軽海峡に面する小",
-    .name_ja = "青森県佐井村 佐井村 &#8211; 青森県の下北半島西側、津軽海峡に面する小",
+  { .id = "JO43_MUNI_024261", .name = "青森県佐井村 - 佐井村 – 青森県の下北半島西側、津軽海峡に面する小",
+    .name_ja = "青森県佐井村 佐井村 – 青森県の下北半島西側、津軽海峡に面する小",
     .category = "government", .portal = "https://www.vill.sai.lg.jp/",
     .record_type = "municipal-notice",
     .tags = "\"japan\",\"municipal\",\"notice\",\"rss\",\"02\"",
@@ -4441,7 +4441,7 @@ static const hp_source HP3B43_JPRSS[] = {
       "page." },
 
   { .id = "JO43_MUNI_022063", .name = "青森県十和田市 - V   \\acs",
-    .name_ja = "青森県十和田市 V   \acs",
+    .name_ja = "青森県十和田市 V   \\acs",
     .category = "government", .portal = "https://www.city.towada.lg.jp/",
     .record_type = "municipal-notice",
     .tags = "\"japan\",\"municipal\",\"notice\",\"rss\",\"02\"",
@@ -15659,9 +15659,8 @@ static const hp_source HP3B43_JPRSS[] = {
       "feed (new notices), found via <link rel=alternate> on its root "
       "page." },
 
-  { .id = "JO43_MUNI_342157_2", .name = "広島県江田島市 - "
-      "&#x65B0;&#x7740;&#x30FB;&#x66F4;&#x65B0;&#x60C5;&#x5831;&#xFF5C;&#x6C5F;&#x7530;",
-    .name_ja = "広島県江田島市 &#x65B0;&#x7740;&#x30FB;&#x66F4;&#x65B0;&#x60C5;&#x5831;&#xFF5C;&#x6C5F;&#x7530;",
+  { .id = "JO43_MUNI_342157_2", .name = "広島県江田島市 - 新着・更新情報｜江田",
+    .name_ja = "広島県江田島市 新着・更新情報｜江田",
     .category = "government", .portal = "https://www.city.etajima.hiroshima.jp/",
     .record_type = "municipal-notice",
     .tags = "\"japan\",\"municipal\",\"notice\",\"rss\",\"34\"",
@@ -15697,9 +15696,8 @@ static const hp_source HP3B43_JPRSS[] = {
       "feed (new notices), found via <link rel=alternate> on its root "
       "page." },
 
-  { .id = "JO43_MUNI_342157_4", .name = "広島県江田島市 - "
-      "&#x50AC;&#x3057;&#x30FB;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x60C5;&#x5831;&#xFF5C;",
-    .name_ja = "広島県江田島市 &#x50AC;&#x3057;&#x30FB;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x60C5;&#x5831;&#xFF5C;",
+  { .id = "JO43_MUNI_342157_4", .name = "広島県江田島市 - 催し・イベント情報｜",
+    .name_ja = "広島県江田島市 催し・イベント情報｜",
     .category = "government", .portal = "https://www.city.etajima.hiroshima.jp/",
     .record_type = "municipal-notice",
     .tags = "\"japan\",\"municipal\",\"notice\",\"rss\",\"34\"",
@@ -15735,9 +15733,8 @@ static const hp_source HP3B43_JPRSS[] = {
       "feed (new notices), found via <link rel=alternate> on its root "
       "page." },
 
-  { .id = "JO43_MUNI_342157_6", .name = "広島県江田島市 - "
-      "&#x52DF;&#x96C6;&#xFF5C;&#x6C5F;&#x7530;&#x5CF6;&#x5E02;&#x5F79;&#x6240;&#x30DB;",
-    .name_ja = "広島県江田島市 &#x52DF;&#x96C6;&#xFF5C;&#x6C5F;&#x7530;&#x5CF6;&#x5E02;&#x5F79;&#x6240;&#x30DB;",
+  { .id = "JO43_MUNI_342157_6", .name = "広島県江田島市 - 募集｜江田島市役所ホ",
+    .name_ja = "広島県江田島市 募集｜江田島市役所ホ",
     .category = "government", .portal = "https://www.city.etajima.hiroshima.jp/",
     .record_type = "municipal-notice",
     .tags = "\"japan\",\"municipal\",\"notice\",\"rss\",\"34\"",
@@ -15773,9 +15770,8 @@ static const hp_source HP3B43_JPRSS[] = {
       "feed (new notices), found via <link rel=alternate> on its root "
       "page." },
 
-  { .id = "JO43_MUNI_342157_8", .name = "広島県江田島市 - "
-      "&#x30C8;&#x30D4;&#x30C3;&#x30AF;&#x30B9;&#xFF5C;&#x6C5F;&#x7530;&#x5CF6;&#x5E02;",
-    .name_ja = "広島県江田島市 &#x30C8;&#x30D4;&#x30C3;&#x30AF;&#x30B9;&#xFF5C;&#x6C5F;&#x7530;&#x5CF6;&#x5E02;",
+  { .id = "JO43_MUNI_342157_8", .name = "広島県江田島市 - トピックス｜江田島市",
+    .name_ja = "広島県江田島市 トピックス｜江田島市",
     .category = "government", .portal = "https://www.city.etajima.hiroshima.jp/",
     .record_type = "municipal-notice",
     .tags = "\"japan\",\"municipal\",\"notice\",\"rss\",\"34\"",

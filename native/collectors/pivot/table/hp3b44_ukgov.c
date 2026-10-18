@@ -168,8 +168,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "18:19:49 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_BLABY_GOV_UK", .name = "blaby.gov.uk - News &#x2013; Blaby District Council",
-    .name_ja = "blaby.gov.uk - News &#x2013; Blaby District Council",
+  { .id = "JO44_UK_BLABY_GOV_UK", .name = "blaby.gov.uk - News – Blaby District Council",
+    .name_ja = "blaby.gov.uk - News – Blaby District Council",
     .category = "government", .portal = "https://www.blaby.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -602,8 +602,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "18:20:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_OLDBASING_GOV_UK", .name = "oldbasing.gov.uk - Old Basing &amp; Lychpit Parish Council",
-    .name_ja = "oldbasing.gov.uk - Old Basing &amp; Lychpit Parish Council",
+  { .id = "JO44_UK_OLDBASING_GOV_UK", .name = "oldbasing.gov.uk - Old Basing & Lychpit Parish Council",
+    .name_ja = "oldbasing.gov.uk - Old Basing & Lychpit Parish Council",
     .category = "government", .portal = "https://www.oldbasing.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -692,9 +692,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "14:04:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_HANTSFIRE_GOV_UK", .name = "hantsfire.gov.uk - Hampshire &amp; Isle of Wight Fire &amp; "
-      "Rescue Service",
-    .name_ja = "hantsfire.gov.uk - Hampshire &amp; Isle of Wight Fire &amp; Rescue Service",
+  { .id = "JO44_UK_HANTSFIRE_GOV_UK", .name = "hantsfire.gov.uk - Hampshire & Isle of Wight Fire & Rescue "
+      "Service",
+    .name_ja = "hantsfire.gov.uk - Hampshire & Isle of Wight Fire & Rescue Service",
     .category = "government", .portal = "https://www.hantsfire.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -785,8 +785,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "18:20:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_BUCKSFIRE_GOV_UK", .name = "bucksfire.gov.uk - Buckinghamshire Fire &amp; Rescue Service",
-    .name_ja = "bucksfire.gov.uk - Buckinghamshire Fire &amp; Rescue Service",
+  { .id = "JO44_UK_BUCKSFIRE_GOV_UK", .name = "bucksfire.gov.uk - Buckinghamshire Fire & Rescue Service",
+    .name_ja = "bucksfire.gov.uk - Buckinghamshire Fire & Rescue Service",
     .category = "government", .portal = "https://bucksfire.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -1021,8 +1021,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "18:32:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_WOOBURNPARISH_GOV_UK", .name = "wooburnparish.gov.uk - Wooburn &amp; Bourne End Parish Council",
-    .name_ja = "wooburnparish.gov.uk - Wooburn &amp; Bourne End Parish Council",
+  { .id = "JO44_UK_WOOBURNPARISH_GOV_UK", .name = "wooburnparish.gov.uk - Wooburn & Bourne End Parish Council",
+    .name_ja = "wooburnparish.gov.uk - Wooburn & Bourne End Parish Council",
     .category = "government", .portal = "https://www.wooburnparish.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -2322,9 +2322,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "2018-12-07T10:35:11+00:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO44_UK_INGATESTONE_FRYERNINGPC_GOV_UK", .name = "ingatestone-fryerningpc.gov.uk - Ingatestone &amp; Fryerning "
-      "Parish Council",
-    .name_ja = "ingatestone-fryerningpc.gov.uk - Ingatestone &amp; Fryerning Parish Council",
+  { .id = "JO44_UK_INGATESTONE_FRYERNINGPC_GOV_UK", .name = "ingatestone-fryerningpc.gov.uk - Ingatestone & Fryerning Parish "
+      "Council",
+    .name_ja = "ingatestone-fryerningpc.gov.uk - Ingatestone & Fryerning Parish Council",
     .category = "government", .portal = "https://www.ingatestone-fryerningpc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -3228,8 +3228,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "11:52:45 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_OLLERTON_TC_GOV_UK", .name = "ollerton-tc.gov.uk - Ollerton &amp; Boughton Town Council",
-    .name_ja = "ollerton-tc.gov.uk - Ollerton &amp; Boughton Town Council",
+  { .id = "JO44_UK_OLLERTON_TC_GOV_UK", .name = "ollerton-tc.gov.uk - Ollerton & Boughton Town Council",
+    .name_ja = "ollerton-tc.gov.uk - Ollerton & Boughton Town Council",
     .category = "government", .portal = "https://ollerton-tc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -3607,9 +3607,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "08:06:31 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_BROUGHTONANDMKV_PC_GOV_UK", .name = "broughtonandmkv-pc.gov.uk - Broughton &amp; Milton Keynes "
-      "Village - Parish Council - Home",
-    .name_ja = "broughtonandmkv-pc.gov.uk - Broughton &amp; Milton Keynes Village - Parish Council - Home",
+  { .id = "JO44_UK_BROUGHTONANDMKV_PC_GOV_UK", .name = "broughtonandmkv-pc.gov.uk - Broughton & Milton Keynes Village - "
+      "Parish Council - Home",
+    .name_ja = "broughtonandmkv-pc.gov.uk - Broughton & Milton Keynes Village - Parish Council - Home",
     .category = "government", .portal = "https://www.broughtonandmkv-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -3662,9 +3662,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "2026 12:12:24 +0000. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO44_UK_NORTHHINKSEY_PC_GOV_UK", .name = "northhinksey-pc.gov.uk - Botley &amp; North Hinksey Parish "
-      "Council",
-    .name_ja = "northhinksey-pc.gov.uk - Botley &amp; North Hinksey Parish Council",
+  { .id = "JO44_UK_NORTHHINKSEY_PC_GOV_UK", .name = "northhinksey-pc.gov.uk - Botley & North Hinksey Parish Council",
+    .name_ja = "northhinksey-pc.gov.uk - Botley & North Hinksey Parish Council",
     .category = "government", .portal = "https://botleynorthhinksey-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -4024,9 +4023,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "08:40:55 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_HORRABRIDGE_PC_GOV_UK", .name = "horrabridge-pc.gov.uk - Vacancy for a Handy Person &#8211; "
-      "Horrabridge Parish Council",
-    .name_ja = "horrabridge-pc.gov.uk - Vacancy for a Handy Person &#8211; Horrabridge Parish Council",
+  { .id = "JO44_UK_HORRABRIDGE_PC_GOV_UK", .name = "horrabridge-pc.gov.uk - Vacancy for a Handy Person – Horrabridge "
+      "Parish Council",
+    .name_ja = "horrabridge-pc.gov.uk - Vacancy for a Handy Person – Horrabridge Parish Council",
     .category = "government", .portal = "https://www.horrabridge-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -4242,9 +4241,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "14:50:45 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_DORMINGTONMORDIFORDGROUP_PC_GOV_UK", .name = "dormingtonmordifordgroup-pc.gov.uk - Dormington &amp; Mordiford "
+  { .id = "JO44_UK_DORMINGTONMORDIFORDGROUP_PC_GOV_UK", .name = "dormingtonmordifordgroup-pc.gov.uk - Dormington & Mordiford "
       "Parish Council",
-    .name_ja = "dormingtonmordifordgroup-pc.gov.uk - Dormington &amp; Mordiford Parish Council",
+    .name_ja = "dormingtonmordifordgroup-pc.gov.uk - Dormington & Mordiford Parish Council",
     .category = "government", .portal = "https://dormingtonmordifordgroup-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -4878,9 +4877,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "13:19 GMT. A feed the organisation itself declares or links on "
       "its site root." },
 
-  { .id = "JO44_UK_FINCHINGFIELD_PC_GOV_UK", .name = "finchingfield-pc.gov.uk - ROAD CLOSURE &#8211; Tinkers Green "
-      "Road",
-    .name_ja = "finchingfield-pc.gov.uk - ROAD CLOSURE &#8211; Tinkers Green Road",
+  { .id = "JO44_UK_FINCHINGFIELD_PC_GOV_UK", .name = "finchingfield-pc.gov.uk - ROAD CLOSURE – Tinkers Green Road",
+    .name_ja = "finchingfield-pc.gov.uk - ROAD CLOSURE – Tinkers Green Road",
     .category = "government", .portal = "https://finchingfield-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -5567,9 +5565,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "08:28:27 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_YETMINSTERPARISHES_GOV_UK", .name = "yetminsterparishes.gov.uk - Yetminster, Ryme Intrinseca &amp; "
-      "Hamlet",
-    .name_ja = "yetminsterparishes.gov.uk - Yetminster, Ryme Intrinseca &amp; Hamlet",
+  { .id = "JO44_UK_YETMINSTERPARISHES_GOV_UK", .name = "yetminsterparishes.gov.uk - Yetminster, Ryme Intrinseca & Hamlet",
+    .name_ja = "yetminsterparishes.gov.uk - Yetminster, Ryme Intrinseca & Hamlet",
     .category = "government", .portal = "https://yetminsterparishes.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -5748,8 +5745,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "07:47:38 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_CHANDLERSFORD_PC_GOV_UK", .name = "chandlersford-pc.gov.uk - Chandler&#039;s Ford Parish Council",
-    .name_ja = "chandlersford-pc.gov.uk - Chandler&#039;s Ford Parish Council",
+  { .id = "JO44_UK_CHANDLERSFORD_PC_GOV_UK", .name = "chandlersford-pc.gov.uk - Chandler's Ford Parish Council",
+    .name_ja = "chandlersford-pc.gov.uk - Chandler's Ford Parish Council",
     .category = "government", .portal = "https://chandlersford-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -5838,9 +5835,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "16:45:30 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_HALESANDHECKINGHAM_PC_GOV_UK", .name = "halesandheckingham-pc.gov.uk - Hales &amp; Heckingham Parish "
-      "Council",
-    .name_ja = "halesandheckingham-pc.gov.uk - Hales &amp; Heckingham Parish Council",
+  { .id = "JO44_UK_HALESANDHECKINGHAM_PC_GOV_UK", .name = "halesandheckingham-pc.gov.uk - Hales & Heckingham Parish Council",
+    .name_ja = "halesandheckingham-pc.gov.uk - Hales & Heckingham Parish Council",
     .category = "government", .portal = "https://halesandheckingham-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -5857,9 +5853,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "13:11:14 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_WRAXALLANDFAILAND_PC_GOV_UK", .name = "wraxallandfailand-pc.gov.uk - Wraxall &amp; Failand Parish "
-      "Council",
-    .name_ja = "wraxallandfailand-pc.gov.uk - Wraxall &amp; Failand Parish Council",
+  { .id = "JO44_UK_WRAXALLANDFAILAND_PC_GOV_UK", .name = "wraxallandfailand-pc.gov.uk - Wraxall & Failand Parish Council",
+    .name_ja = "wraxallandfailand-pc.gov.uk - Wraxall & Failand Parish Council",
     .category = "government", .portal = "https://www.wraxallandfailand-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -6092,9 +6087,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "11:39:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_LANCASHIRE_PCC_GOV_UK", .name = "lancashire-pcc.gov.uk - Lancashire Police &amp; Crime "
-      "Commissioner",
-    .name_ja = "lancashire-pcc.gov.uk - Lancashire Police &amp; Crime Commissioner",
+  { .id = "JO44_UK_LANCASHIRE_PCC_GOV_UK", .name = "lancashire-pcc.gov.uk - Lancashire Police & Crime Commissioner",
+    .name_ja = "lancashire-pcc.gov.uk - Lancashire Police & Crime Commissioner",
     .category = "government", .portal = "https://www.lancashire-pcc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -6184,9 +6178,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "10:33:57 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_WESTMIDLANDS_PCC_GOV_UK", .name = "westmidlands-pcc.gov.uk - West Midlands Police &amp; Crime "
+  { .id = "JO44_UK_WESTMIDLANDS_PCC_GOV_UK", .name = "westmidlands-pcc.gov.uk - West Midlands Police & Crime "
       "Commissioner",
-    .name_ja = "westmidlands-pcc.gov.uk - West Midlands Police &amp; Crime Commissioner",
+    .name_ja = "westmidlands-pcc.gov.uk - West Midlands Police & Crime Commissioner",
     .category = "government", .portal = "https://www.westmidlands-pcc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -6530,9 +6524,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "09:48:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_WRESTLINGWORTHANDCOCKAYNEHATLEY_PC_GOV_U", .name = "wrestlingworthandcockaynehatley-pc.gov.uk - Wrestlingworth &amp; "
+  { .id = "JO44_UK_WRESTLINGWORTHANDCOCKAYNEHATLEY_PC_GOV_U", .name = "wrestlingworthandcockaynehatley-pc.gov.uk - Wrestlingworth & "
       "Cockayne Hatley Parish Council",
-    .name_ja = "wrestlingworthandcockaynehatley-pc.gov.uk - Wrestlingworth &amp; Cockayne Hatley Parish Council",
+    .name_ja = "wrestlingworthandcockaynehatley-pc.gov.uk - Wrestlingworth & Cockayne Hatley Parish Council",
     .category = "government", .portal = "https://wrestlingworthandcockaynehatley-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -7659,8 +7653,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "2026-10-15T13:05:33+00:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO44_UK_CHETNOLEANDSTOCKWOOD_PC_GOV_UK", .name = "chetnoleandstockwood-pc.gov.uk - Chetnole &amp; Stockwood PC",
-    .name_ja = "chetnoleandstockwood-pc.gov.uk - Chetnole &amp; Stockwood PC",
+  { .id = "JO44_UK_CHETNOLEANDSTOCKWOOD_PC_GOV_UK", .name = "chetnoleandstockwood-pc.gov.uk - Chetnole & Stockwood PC",
+    .name_ja = "chetnoleandstockwood-pc.gov.uk - Chetnole & Stockwood PC",
     .category = "government", .portal = "https://chetnoleandstockwood-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -7677,9 +7671,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "11:18:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_CHOLMONDESTONANDWETTENHALL_PC_GOV_UK", .name = "cholmondestonandwettenhall-pc.gov.uk - Cholmondeston &amp; "
+  { .id = "JO44_UK_CHOLMONDESTONANDWETTENHALL_PC_GOV_UK", .name = "cholmondestonandwettenhall-pc.gov.uk - Cholmondeston & "
       "Wettenhall Parish Council",
-    .name_ja = "cholmondestonandwettenhall-pc.gov.uk - Cholmondeston &amp; Wettenhall Parish Council",
+    .name_ja = "cholmondestonandwettenhall-pc.gov.uk - Cholmondeston & Wettenhall Parish Council",
     .category = "government", .portal = "https://cholmondestonandwettenhall-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -7914,9 +7908,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "18:40:03 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_ELLESMERE_TC_GOV_UK", .name = "ellesmere-tc.gov.uk - Ellesmere Town Council &#8211; "
-      "Representing The Local Community",
-    .name_ja = "ellesmere-tc.gov.uk - Ellesmere Town Council &#8211; Representing The Local Community",
+  { .id = "JO44_UK_ELLESMERE_TC_GOV_UK", .name = "ellesmere-tc.gov.uk - Ellesmere Town Council – Representing The "
+      "Local Community",
+    .name_ja = "ellesmere-tc.gov.uk - Ellesmere Town Council – Representing The Local Community",
     .category = "government", .portal = "https://ellesmere-tc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -8115,9 +8109,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "10:03:37 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_YEOVILTONPARISHCOUNCIL_GOV_UK", .name = "yeoviltonparishcouncil.gov.uk - Yeovilton &amp; District Parish "
+  { .id = "JO44_UK_YEOVILTONPARISHCOUNCIL_GOV_UK", .name = "yeoviltonparishcouncil.gov.uk - Yeovilton & District Parish "
       "Council",
-    .name_ja = "yeoviltonparishcouncil.gov.uk - Yeovilton &amp; District Parish Council",
+    .name_ja = "yeoviltonparishcouncil.gov.uk - Yeovilton & District Parish Council",
     .category = "government", .portal = "https://yeoviltonparishcouncil.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -8244,9 +8238,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "09:26:23 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_OFFORDS_PC_GOV_UK", .name = "offords-pc.gov.uk - Offord Cluny &amp; Offord Darcy Parish "
-      "Council",
-    .name_ja = "offords-pc.gov.uk - Offord Cluny &amp; Offord Darcy Parish Council",
+  { .id = "JO44_UK_OFFORDS_PC_GOV_UK", .name = "offords-pc.gov.uk - Offord Cluny & Offord Darcy Parish Council",
+    .name_ja = "offords-pc.gov.uk - Offord Cluny & Offord Darcy Parish Council",
     .category = "government", .portal = "https://offords-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -8516,9 +8509,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "2026-07-13T09:00:09Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO44_UK_NYTHEELDENELIDEN_PC_GOV_UK", .name = "nytheeldeneliden-pc.gov.uk - Nythe, Eldene &amp; Liden Parish "
+  { .id = "JO44_UK_NYTHEELDENELIDEN_PC_GOV_UK", .name = "nytheeldeneliden-pc.gov.uk - Nythe, Eldene & Liden Parish "
       "Council",
-    .name_ja = "nytheeldeneliden-pc.gov.uk - Nythe, Eldene &amp; Liden Parish Council",
+    .name_ja = "nytheeldeneliden-pc.gov.uk - Nythe, Eldene & Liden Parish Council",
     .category = "government", .portal = "https://nytheeldeneliden-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -8716,9 +8709,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "2026-07-07T11:57:02Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO44_UK_BURNHAM_HIGHBRIDGE_TC_GOV_UK", .name = "burnham-highbridge-tc.gov.uk - Burnham-on-Sea &amp; Highbridge "
-      "Town Council",
-    .name_ja = "burnham-highbridge-tc.gov.uk - Burnham-on-Sea &amp; Highbridge Town Council",
+  { .id = "JO44_UK_BURNHAM_HIGHBRIDGE_TC_GOV_UK", .name = "burnham-highbridge-tc.gov.uk - Burnham-on-Sea & Highbridge Town "
+      "Council",
+    .name_ja = "burnham-highbridge-tc.gov.uk - Burnham-on-Sea & Highbridge Town Council",
     .category = "government", .portal = "https://burnham-highbridge-tc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -8735,8 +8728,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "11:20:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_KINGSSOMBORNE_PC_GOV_UK", .name = "kingssomborne-pc.gov.uk - King&#039;s Somborne Parish Council",
-    .name_ja = "kingssomborne-pc.gov.uk - King&#039;s Somborne Parish Council",
+  { .id = "JO44_UK_KINGSSOMBORNE_PC_GOV_UK", .name = "kingssomborne-pc.gov.uk - King's Somborne Parish Council",
+    .name_ja = "kingssomborne-pc.gov.uk - King's Somborne Parish Council",
     .category = "government", .portal = "https://kingssomborne-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -8954,8 +8947,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "09:59:14 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_BARNACK_PC_GOV_UK", .name = "barnack-pc.gov.uk - Barnack &amp; Pilsgate Parish Council",
-    .name_ja = "barnack-pc.gov.uk - Barnack &amp; Pilsgate Parish Council",
+  { .id = "JO44_UK_BARNACK_PC_GOV_UK", .name = "barnack-pc.gov.uk - Barnack & Pilsgate Parish Council",
+    .name_ja = "barnack-pc.gov.uk - Barnack & Pilsgate Parish Council",
     .category = "government", .portal = "https://barnack-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -9261,9 +9254,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "13:42:42 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_GODSHILLPARISHCOUNCIL_GOV_UK", .name = "godshillparishcouncil.gov.uk - Godshill Parish Council &amp; "
-      "Village",
-    .name_ja = "godshillparishcouncil.gov.uk - Godshill Parish Council &amp; Village",
+  { .id = "JO44_UK_GODSHILLPARISHCOUNCIL_GOV_UK", .name = "godshillparishcouncil.gov.uk - Godshill Parish Council & Village",
+    .name_ja = "godshillparishcouncil.gov.uk - Godshill Parish Council & Village",
     .category = "government", .portal = "https://godshillparishcouncil.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -9480,9 +9472,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "16:14:31 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_NETTLESTONEANDSEAVIEW_PC_GOV_UK", .name = "nettlestoneandseaview-pc.gov.uk - Nettlestone &amp; Seaview "
-      "Parish Council",
-    .name_ja = "nettlestoneandseaview-pc.gov.uk - Nettlestone &amp; Seaview Parish Council",
+  { .id = "JO44_UK_NETTLESTONEANDSEAVIEW_PC_GOV_UK", .name = "nettlestoneandseaview-pc.gov.uk - Nettlestone & Seaview Parish "
+      "Council",
+    .name_ja = "nettlestoneandseaview-pc.gov.uk - Nettlestone & Seaview Parish Council",
     .category = "government", .portal = "https://nettlestoneandseaview-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -9571,8 +9563,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "08:27:32 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_CHESHIRE_PCC_GOV_UK", .name = "cheshire-pcc.gov.uk - Cheshire Police &amp; Crime Commissioner",
-    .name_ja = "cheshire-pcc.gov.uk - Cheshire Police &amp; Crime Commissioner",
+  { .id = "JO44_UK_CHESHIRE_PCC_GOV_UK", .name = "cheshire-pcc.gov.uk - Cheshire Police & Crime Commissioner",
+    .name_ja = "cheshire-pcc.gov.uk - Cheshire Police & Crime Commissioner",
     .category = "government", .portal = "https://www.cheshire-pcc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -9752,9 +9744,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "16:01:15 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_HEANORLOSCOETOWNCOUNCIL_GOV_UK", .name = "heanorloscoetowncouncil.gov.uk - Heanor &amp; Loscoe Town "
-      "Council",
-    .name_ja = "heanorloscoetowncouncil.gov.uk - Heanor &amp; Loscoe Town Council",
+  { .id = "JO44_UK_HEANORLOSCOETOWNCOUNCIL_GOV_UK", .name = "heanorloscoetowncouncil.gov.uk - Heanor & Loscoe Town Council",
+    .name_ja = "heanorloscoetowncouncil.gov.uk - Heanor & Loscoe Town Council",
     .category = "government", .portal = "https://www.heanorloscoetowncouncil.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -10043,8 +10034,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "on its site root." },
 
   { .id = "JO44_UK_ELMLEYCASTLEPARISHCOUNCIL_GOV_UK", .name = "elmleycastleparishcouncil.gov.uk - Elmley Castle, Bricklehampton "
-      "&amp; Netherton Parish Council",
-    .name_ja = "elmleycastleparishcouncil.gov.uk - Elmley Castle, Bricklehampton &amp; Netherton Parish Council",
+      "& Netherton Parish Council",
+    .name_ja = "elmleycastleparishcouncil.gov.uk - Elmley Castle, Bricklehampton & Netherton Parish Council",
     .category = "government", .portal = "https://elmleycastleparishcouncil.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -10351,8 +10342,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "16:02:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_DEANANDSHELTON_PC_GOV_UK", .name = "deanandshelton-pc.gov.uk - Dean &amp; Shelton Parish Council",
-    .name_ja = "deanandshelton-pc.gov.uk - Dean &amp; Shelton Parish Council",
+  { .id = "JO44_UK_DEANANDSHELTON_PC_GOV_UK", .name = "deanandshelton-pc.gov.uk - Dean & Shelton Parish Council",
+    .name_ja = "deanandshelton-pc.gov.uk - Dean & Shelton Parish Council",
     .category = "government", .portal = "https://deanandshelton-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -10405,9 +10396,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "09:54:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_GLYNDEBEDDINGHAM_PC_GOV_UK", .name = "glyndebeddingham-pc.gov.uk - Glynde &amp; Beddingham Parish "
-      "Council",
-    .name_ja = "glyndebeddingham-pc.gov.uk - Glynde &amp; Beddingham Parish Council",
+  { .id = "JO44_UK_GLYNDEBEDDINGHAM_PC_GOV_UK", .name = "glyndebeddingham-pc.gov.uk - Glynde & Beddingham Parish Council",
+    .name_ja = "glyndebeddingham-pc.gov.uk - Glynde & Beddingham Parish Council",
     .category = "government", .portal = "https://glyndebeddingham-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -10696,9 +10686,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "12:10:33 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_FELMERSHAMANDRADWELLPARISHCOUNCIL_GOV_UK", .name = "felmershamandradwellparishcouncil.gov.uk - Felmersham &amp; "
-      "Radwell Parish Council",
-    .name_ja = "felmershamandradwellparishcouncil.gov.uk - Felmersham &amp; Radwell Parish Council",
+  { .id = "JO44_UK_FELMERSHAMANDRADWELLPARISHCOUNCIL_GOV_UK", .name = "felmershamandradwellparishcouncil.gov.uk - Felmersham & Radwell "
+      "Parish Council",
+    .name_ja = "felmershamandradwellparishcouncil.gov.uk - Felmersham & Radwell Parish Council",
     .category = "government", .portal = "https://felmershamandradwellparishcouncil.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -10933,9 +10923,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "14:32:31 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_CAMPTONANDCHICKSANDS_PC_GOV_UK", .name = "camptonandchicksands-pc.gov.uk - Campton &amp; Chicksands Parish "
+  { .id = "JO44_UK_CAMPTONANDCHICKSANDS_PC_GOV_UK", .name = "camptonandchicksands-pc.gov.uk - Campton & Chicksands Parish "
       "Council",
-    .name_ja = "camptonandchicksands-pc.gov.uk - Campton &amp; Chicksands Parish Council",
+    .name_ja = "camptonandchicksands-pc.gov.uk - Campton & Chicksands Parish Council",
     .category = "government", .portal = "https://camptonandchicksands-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -11096,8 +11086,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "14:13:26 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_MELCHYELD_PC_GOV_UK", .name = "melchyeld-pc.gov.uk - Melchbourne &amp; Yelden Parish Council",
-    .name_ja = "melchyeld-pc.gov.uk - Melchbourne &amp; Yelden Parish Council",
+  { .id = "JO44_UK_MELCHYELD_PC_GOV_UK", .name = "melchyeld-pc.gov.uk - Melchbourne & Yelden Parish Council",
+    .name_ja = "melchyeld-pc.gov.uk - Melchbourne & Yelden Parish Council",
     .category = "government", .portal = "https://melchyeld-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -11568,9 +11558,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "10:33:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_HARBLEDOWN_PC_GOV_UK", .name = "harbledown-pc.gov.uk - Harbledown &amp; Rough Common Parish "
-      "Council",
-    .name_ja = "harbledown-pc.gov.uk - Harbledown &amp; Rough Common Parish Council",
+  { .id = "JO44_UK_HARBLEDOWN_PC_GOV_UK", .name = "harbledown-pc.gov.uk - Harbledown & Rough Common Parish Council",
+    .name_ja = "harbledown-pc.gov.uk - Harbledown & Rough Common Parish Council",
     .category = "government", .portal = "https://harbledown-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -11858,8 +11847,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "11:30:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_WIMBLINGTON_PC_GOV_UK", .name = "wimblington-pc.gov.uk - Wimblington &amp; Stonea Parish Council",
-    .name_ja = "wimblington-pc.gov.uk - Wimblington &amp; Stonea Parish Council",
+  { .id = "JO44_UK_WIMBLINGTON_PC_GOV_UK", .name = "wimblington-pc.gov.uk - Wimblington & Stonea Parish Council",
+    .name_ja = "wimblington-pc.gov.uk - Wimblington & Stonea Parish Council",
     .category = "government", .portal = "https://wimblington-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -11930,9 +11919,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "12:27:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_BRAMHOPECARLTON_PC_GOV_UK", .name = "bramhopecarlton-pc.gov.uk - Bramhope &amp; Carlton Parish "
-      "Council",
-    .name_ja = "bramhopecarlton-pc.gov.uk - Bramhope &amp; Carlton Parish Council",
+  { .id = "JO44_UK_BRAMHOPECARLTON_PC_GOV_UK", .name = "bramhopecarlton-pc.gov.uk - Bramhope & Carlton Parish Council",
+    .name_ja = "bramhopecarlton-pc.gov.uk - Bramhope & Carlton Parish Council",
     .category = "government", .portal = "https://bramhopecarlton-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -11949,8 +11937,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "15:25:15 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_DRAYCOTT_PC_GOV_UK", .name = "draycott-pc.gov.uk - Draycott &amp; Church Wilne Parish Council",
-    .name_ja = "draycott-pc.gov.uk - Draycott &amp; Church Wilne Parish Council",
+  { .id = "JO44_UK_DRAYCOTT_PC_GOV_UK", .name = "draycott-pc.gov.uk - Draycott & Church Wilne Parish Council",
+    .name_ja = "draycott-pc.gov.uk - Draycott & Church Wilne Parish Council",
     .category = "government", .portal = "https://www.draycott-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -11985,9 +11973,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "17:33:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_GOODRICHANDWELSHBICKNOR_PC_GOV_UK", .name = "goodrichandwelshbicknor-pc.gov.uk - Goodrich &amp; Welsh Bicknor "
+  { .id = "JO44_UK_GOODRICHANDWELSHBICKNOR_PC_GOV_UK", .name = "goodrichandwelshbicknor-pc.gov.uk - Goodrich & Welsh Bicknor "
       "Group Parish Council",
-    .name_ja = "goodrichandwelshbicknor-pc.gov.uk - Goodrich &amp; Welsh Bicknor Group Parish Council",
+    .name_ja = "goodrichandwelshbicknor-pc.gov.uk - Goodrich & Welsh Bicknor Group Parish Council",
     .category = "government", .portal = "https://goodrichandwelshbicknor-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -12203,9 +12191,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "15:23:16 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_SURREY_PCC_GOV_UK", .name = "surrey-pcc.gov.uk - Office of the Police &amp; Crime "
-      "Commissioner for Surrey",
-    .name_ja = "surrey-pcc.gov.uk - Office of the Police &amp; Crime Commissioner for Surrey",
+  { .id = "JO44_UK_SURREY_PCC_GOV_UK", .name = "surrey-pcc.gov.uk - Office of the Police & Crime Commissioner "
+      "for Surrey",
+    .name_ja = "surrey-pcc.gov.uk - Office of the Police & Crime Commissioner for Surrey",
     .category = "government", .portal = "https://www.surrey-pcc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -12770,9 +12758,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "16:33:33 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_PILNINGSEVERNBEACH_PC_GOV_UK", .name = "pilningsevernbeach-pc.gov.uk - Pilning &amp; Severn Beach Parish "
+  { .id = "JO44_UK_PILNINGSEVERNBEACH_PC_GOV_UK", .name = "pilningsevernbeach-pc.gov.uk - Pilning & Severn Beach Parish "
       "Council",
-    .name_ja = "pilningsevernbeach-pc.gov.uk - Pilning &amp; Severn Beach Parish Council",
+    .name_ja = "pilningsevernbeach-pc.gov.uk - Pilning & Severn Beach Parish Council",
     .category = "government", .portal = "https://pilningsevernbeach-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -13642,9 +13630,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "05:00:31 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_WHITCHURCHTOWNCOUNCIL_GOV_UK_2", .name = "whitchurchtowncouncil.gov.uk - News &#8211; Whitchurch Town "
-      "Council",
-    .name_ja = "whitchurchtowncouncil.gov.uk - News &#8211; Whitchurch Town Council",
+  { .id = "JO44_UK_WHITCHURCHTOWNCOUNCIL_GOV_UK_2", .name = "whitchurchtowncouncil.gov.uk - News – Whitchurch Town Council",
+    .name_ja = "whitchurchtowncouncil.gov.uk - News – Whitchurch Town Council",
     .category = "government", .portal = "https://whitchurchtowncouncil.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -13733,8 +13720,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "17:48:08 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_SHALFORD_ESSEX_PC_GOV_UK", .name = "shalford-essex-pc.gov.uk - Shalford Parish Council &#8211; Essex",
-    .name_ja = "shalford-essex-pc.gov.uk - Shalford Parish Council &#8211; Essex",
+  { .id = "JO44_UK_SHALFORD_ESSEX_PC_GOV_UK", .name = "shalford-essex-pc.gov.uk - Shalford Parish Council – Essex",
+    .name_ja = "shalford-essex-pc.gov.uk - Shalford Parish Council – Essex",
     .category = "government", .portal = "https://shalford-essex-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -13895,9 +13882,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "08:12:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_TYTHERINGTON_PC_GOV_UK", .name = "tytherington-pc.gov.uk - Tytherington &amp; Itchington Parish "
+  { .id = "JO44_UK_TYTHERINGTON_PC_GOV_UK", .name = "tytherington-pc.gov.uk - Tytherington & Itchington Parish "
       "Council",
-    .name_ja = "tytherington-pc.gov.uk - Tytherington &amp; Itchington Parish Council",
+    .name_ja = "tytherington-pc.gov.uk - Tytherington & Itchington Parish Council",
     .category = "government", .portal = "https://tytherington-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -14152,8 +14139,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "00:27:17 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_HISIMP_PC_GOV_UK", .name = "hisimp-pc.gov.uk - Histon &amp; Impington Parish Council",
-    .name_ja = "hisimp-pc.gov.uk - Histon &amp; Impington Parish Council",
+  { .id = "JO44_UK_HISIMP_PC_GOV_UK", .name = "hisimp-pc.gov.uk - Histon & Impington Parish Council",
+    .name_ja = "hisimp-pc.gov.uk - Histon & Impington Parish Council",
     .category = "government", .portal = "https://hisimp-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -14170,9 +14157,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "13:06:15 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_BRINGTONMOLESWORTH_PC_GOV_UK", .name = "bringtonmolesworth-pc.gov.uk - Brington &amp; Molesworth Parish "
+  { .id = "JO44_UK_BRINGTONMOLESWORTH_PC_GOV_UK", .name = "bringtonmolesworth-pc.gov.uk - Brington & Molesworth Parish "
       "Council",
-    .name_ja = "bringtonmolesworth-pc.gov.uk - Brington &amp; Molesworth Parish Council",
+    .name_ja = "bringtonmolesworth-pc.gov.uk - Brington & Molesworth Parish Council",
     .category = "government", .portal = "https://bringtonmolesworth-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -14369,8 +14356,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "09:35:19 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_NEWBYANDSCALBY_TC_GOV_UK", .name = "newbyandscalby-tc.gov.uk - Newby &amp; Scalby Town Council",
-    .name_ja = "newbyandscalby-tc.gov.uk - Newby &amp; Scalby Town Council",
+  { .id = "JO44_UK_NEWBYANDSCALBY_TC_GOV_UK", .name = "newbyandscalby-tc.gov.uk - Newby & Scalby Town Council",
+    .name_ja = "newbyandscalby-tc.gov.uk - Newby & Scalby Town Council",
     .category = "government", .portal = "https://newbyandscalby-tc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -14531,9 +14518,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "12:32:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_STISSEYPARISHCOUNCIL_GOV_UK", .name = "stisseyparishcouncil.gov.uk - St Issey &amp; Little Petherick "
-      "Parish Council",
-    .name_ja = "stisseyparishcouncil.gov.uk - St Issey &amp; Little Petherick Parish Council",
+  { .id = "JO44_UK_STISSEYPARISHCOUNCIL_GOV_UK", .name = "stisseyparishcouncil.gov.uk - St Issey & Little Petherick Parish "
+      "Council",
+    .name_ja = "stisseyparishcouncil.gov.uk - St Issey & Little Petherick Parish Council",
     .category = "government", .portal = "https://stisseyparishcouncil.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -14660,9 +14647,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "08:35:51 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_SULHAMSTEAD_PC_GOV_UK", .name = "sulhamstead-pc.gov.uk - Sulhamstead &amp; Ufton Nervet Parish "
+  { .id = "JO44_UK_SULHAMSTEAD_PC_GOV_UK", .name = "sulhamstead-pc.gov.uk - Sulhamstead & Ufton Nervet Parish "
       "Councils",
-    .name_ja = "sulhamstead-pc.gov.uk - Sulhamstead &amp; Ufton Nervet Parish Councils",
+    .name_ja = "sulhamstead-pc.gov.uk - Sulhamstead & Ufton Nervet Parish Councils",
     .category = "government", .portal = "https://sulhamstead-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -14679,9 +14666,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "13:49:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_EVERSDENSPARISHCOUNCIL_GOV_UK", .name = "eversdensparishcouncil.gov.uk - Great &amp; Little Eversden "
-      "Parish Council",
-    .name_ja = "eversdensparishcouncil.gov.uk - Great &amp; Little Eversden Parish Council",
+  { .id = "JO44_UK_EVERSDENSPARISHCOUNCIL_GOV_UK", .name = "eversdensparishcouncil.gov.uk - Great & Little Eversden Parish "
+      "Council",
+    .name_ja = "eversdensparishcouncil.gov.uk - Great & Little Eversden Parish Council",
     .category = "government", .portal = "https://eversdensparishcouncil.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -15028,8 +15015,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "on its site root." },
 
   { .id = "JO44_UK_MIDDLETONANDLEYSTERSGROUPPARISHCOUNCIL_G", .name = "middletonandleystersgroupparishcouncil.gov.uk - Middleton on the "
-      "Hill &amp; Leysters Group Parish Council",
-    .name_ja = "middletonandleystersgroupparishcouncil.gov.uk - Middleton on the Hill &amp; Leysters Group Parish Council",
+      "Hill & Leysters Group Parish Council",
+    .name_ja = "middletonandleystersgroupparishcouncil.gov.uk - Middleton on the Hill & Leysters Group Parish Council",
     .category = "government", .portal = "https://middletonandleystersgroupparishcouncil.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -15175,9 +15162,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "09:10:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_WOODHAMFERRERSANDBICKNACRE_PC_GOV_UK", .name = "woodhamferrersandbicknacre-pc.gov.uk - Woodham Ferrers &amp; "
+  { .id = "JO44_UK_WOODHAMFERRERSANDBICKNACRE_PC_GOV_UK", .name = "woodhamferrersandbicknacre-pc.gov.uk - Woodham Ferrers & "
       "Bicknacre Parish Council",
-    .name_ja = "woodhamferrersandbicknacre-pc.gov.uk - Woodham Ferrers &amp; Bicknacre Parish Council",
+    .name_ja = "woodhamferrersandbicknacre-pc.gov.uk - Woodham Ferrers & Bicknacre Parish Council",
     .category = "government", .portal = "https://woodhamferrersandbicknacre-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -15451,9 +15438,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "11:01:03 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_BIDDESTONESLAUGHTERFORD_PC_GOV_UK", .name = "biddestoneslaughterford-pc.gov.uk - Biddestone &amp; "
-      "Slaughterford Parish Council",
-    .name_ja = "biddestoneslaughterford-pc.gov.uk - Biddestone &amp; Slaughterford Parish Council",
+  { .id = "JO44_UK_BIDDESTONESLAUGHTERFORD_PC_GOV_UK", .name = "biddestoneslaughterford-pc.gov.uk - Biddestone & Slaughterford "
+      "Parish Council",
+    .name_ja = "biddestoneslaughterford-pc.gov.uk - Biddestone & Slaughterford Parish Council",
     .category = "government", .portal = "https://biddestoneslaughterford-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -16432,9 +16419,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "09:39:44 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_EASTCARLETONANDKETTERINGHAM_PC_GOV_UK", .name = "eastcarletonandketteringham-pc.gov.uk - East Carleton &amp; "
+  { .id = "JO44_UK_EASTCARLETONANDKETTERINGHAM_PC_GOV_UK", .name = "eastcarletonandketteringham-pc.gov.uk - East Carleton & "
       "Ketteringham Parish Council",
-    .name_ja = "eastcarletonandketteringham-pc.gov.uk - East Carleton &amp; Ketteringham Parish Council",
+    .name_ja = "eastcarletonandketteringham-pc.gov.uk - East Carleton & Ketteringham Parish Council",
     .category = "government", .portal = "https://eastcarletonandketteringham-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -16758,9 +16745,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "13:00:48 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_HICKLING_PC_GOV_UK", .name = "hickling-pc.gov.uk - Hickling &amp; Hickling Pastures &#8211; "
-      "Parish Council &amp; Village",
-    .name_ja = "hickling-pc.gov.uk - Hickling &amp; Hickling Pastures &#8211; Parish Council &amp; Village",
+  { .id = "JO44_UK_HICKLING_PC_GOV_UK", .name = "hickling-pc.gov.uk - Hickling & Hickling Pastures – Parish "
+      "Council & Village",
+    .name_ja = "hickling-pc.gov.uk - Hickling & Hickling Pastures – Parish Council & Village",
     .category = "government", .portal = "https://hickling-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -17105,9 +17092,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "12:31:06 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_BURLANDANDACTONPARISHCOUNCIL_GOV_UK", .name = "burlandandactonparishcouncil.gov.uk - Burland &amp; Acton Parish "
+  { .id = "JO44_UK_BURLANDANDACTONPARISHCOUNCIL_GOV_UK", .name = "burlandandactonparishcouncil.gov.uk - Burland & Acton Parish "
       "Council",
-    .name_ja = "burlandandactonparishcouncil.gov.uk - Burland &amp; Acton Parish Council",
+    .name_ja = "burlandandactonparishcouncil.gov.uk - Burland & Acton Parish Council",
     .category = "government", .portal = "https://burlandandactonparishcouncil.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -17488,9 +17475,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "16:13:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_HHSTPARISHCOUNCIL_GOV_UK", .name = "hhstparishcouncil.gov.uk - Hutton Henry &amp; Station Town "
-      "Council",
-    .name_ja = "hhstparishcouncil.gov.uk - Hutton Henry &amp; Station Town Council",
+  { .id = "JO44_UK_HHSTPARISHCOUNCIL_GOV_UK", .name = "hhstparishcouncil.gov.uk - Hutton Henry & Station Town Council",
+    .name_ja = "hhstparishcouncil.gov.uk - Hutton Henry & Station Town Council",
     .category = "government", .portal = "https://hhstparishcouncil.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -17525,8 +17511,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "10:43:08 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_PATTINGHAM_PC_GOV_UK", .name = "pattingham-pc.gov.uk - Pattingham &amp; Patshull Parish Council",
-    .name_ja = "pattingham-pc.gov.uk - Pattingham &amp; Patshull Parish Council",
+  { .id = "JO44_UK_PATTINGHAM_PC_GOV_UK", .name = "pattingham-pc.gov.uk - Pattingham & Patshull Parish Council",
+    .name_ja = "pattingham-pc.gov.uk - Pattingham & Patshull Parish Council",
     .category = "government", .portal = "https://pattingham-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -17543,9 +17529,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "06:19:38 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_WESTRAINTONANDLEAMSIDEPC_GOV_UK", .name = "westraintonandleamsidepc.gov.uk - West Rainton &amp; Leamside "
-      "Parish Council",
-    .name_ja = "westraintonandleamsidepc.gov.uk - West Rainton &amp; Leamside Parish Council",
+  { .id = "JO44_UK_WESTRAINTONANDLEAMSIDEPC_GOV_UK", .name = "westraintonandleamsidepc.gov.uk - West Rainton & Leamside Parish "
+      "Council",
+    .name_ja = "westraintonandleamsidepc.gov.uk - West Rainton & Leamside Parish Council",
     .category = "government", .portal = "https://westraintonandleamsidepc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -17904,9 +17890,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "16:00:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_PIDDINGTONANDWHEELEREND_PC_GOV_UK", .name = "piddingtonandwheelerend-pc.gov.uk - Piddington &amp; Wheeler End "
+  { .id = "JO44_UK_PIDDINGTONANDWHEELEREND_PC_GOV_UK", .name = "piddingtonandwheelerend-pc.gov.uk - Piddington & Wheeler End "
       "Parish Council",
-    .name_ja = "piddingtonandwheelerend-pc.gov.uk - Piddington &amp; Wheeler End Parish Council",
+    .name_ja = "piddingtonandwheelerend-pc.gov.uk - Piddington & Wheeler End Parish Council",
     .category = "government", .portal = "https://piddingtonandwheelerend-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -18086,9 +18072,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "07:41:49 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_CULCHETHANDGLAZEBURY_PC_GOV_UK", .name = "culchethandglazebury-pc.gov.uk - Culcheth &amp; Glazebury Parish "
+  { .id = "JO44_UK_CULCHETHANDGLAZEBURY_PC_GOV_UK", .name = "culchethandglazebury-pc.gov.uk - Culcheth & Glazebury Parish "
       "Council",
-    .name_ja = "culchethandglazebury-pc.gov.uk - Culcheth &amp; Glazebury Parish Council",
+    .name_ja = "culchethandglazebury-pc.gov.uk - Culcheth & Glazebury Parish Council",
     .category = "government", .portal = "https://culchethandglazebury-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -18522,9 +18508,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "21:01:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_NORTHWOLDANDWHITTINGTON_PC_GOV_UK", .name = "northwoldandwhittington-pc.gov.uk - Northwold &amp; Whittington "
+  { .id = "JO44_UK_NORTHWOLDANDWHITTINGTON_PC_GOV_UK", .name = "northwoldandwhittington-pc.gov.uk - Northwold & Whittington "
       "Parish Council",
-    .name_ja = "northwoldandwhittington-pc.gov.uk - Northwold &amp; Whittington Parish Council",
+    .name_ja = "northwoldandwhittington-pc.gov.uk - Northwold & Whittington Parish Council",
     .category = "government", .portal = "https://northwoldandwhittington-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -19596,9 +19582,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "11:29:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_EBBERSTONPARISHCOUNCIL_GOV_UK", .name = "ebberstonparishcouncil.gov.uk - Ebberston, Yedingham &amp; "
-      "Bickley Parish Council",
-    .name_ja = "ebberstonparishcouncil.gov.uk - Ebberston, Yedingham &amp; Bickley Parish Council",
+  { .id = "JO44_UK_EBBERSTONPARISHCOUNCIL_GOV_UK", .name = "ebberstonparishcouncil.gov.uk - Ebberston, Yedingham & Bickley "
+      "Parish Council",
+    .name_ja = "ebberstonparishcouncil.gov.uk - Ebberston, Yedingham & Bickley Parish Council",
     .category = "government", .portal = "https://ebberstonparishcouncil.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -19723,9 +19709,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "08:26:08 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_HEWICKANDHUTTONPARISH_GOV_UK", .name = "hewickandhuttonparish.gov.uk - Hewick &amp; Hutton Parish "
-      "Council",
-    .name_ja = "hewickandhuttonparish.gov.uk - Hewick &amp; Hutton Parish Council",
+  { .id = "JO44_UK_HEWICKANDHUTTONPARISH_GOV_UK", .name = "hewickandhuttonparish.gov.uk - Hewick & Hutton Parish Council",
+    .name_ja = "hewickandhuttonparish.gov.uk - Hewick & Hutton Parish Council",
     .category = "government", .portal = "https://hewickandhuttonparish.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -19886,9 +19871,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "16:51:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_BRINDLEYANDFADDILEY_PC_GOV_UK", .name = "brindleyandfaddiley-pc.gov.uk - Brindley &amp; Faddiley Parish "
+  { .id = "JO44_UK_BRINDLEYANDFADDILEY_PC_GOV_UK", .name = "brindleyandfaddiley-pc.gov.uk - Brindley & Faddiley Parish "
       "Council",
-    .name_ja = "brindleyandfaddiley-pc.gov.uk - Brindley &amp; Faddiley Parish Council",
+    .name_ja = "brindleyandfaddiley-pc.gov.uk - Brindley & Faddiley Parish Council",
     .category = "government", .portal = "https://brindleyandfaddiley-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -21045,9 +21030,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "10:02:32 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_LINGWOOD_BURLINGHAMPARISHCOUNCIL_GOV_UK", .name = "lingwood-burlinghamparishcouncil.gov.uk - Lingwood &amp; "
-      "Burlingham Parish Council",
-    .name_ja = "lingwood-burlinghamparishcouncil.gov.uk - Lingwood &amp; Burlingham Parish Council",
+  { .id = "JO44_UK_LINGWOOD_BURLINGHAMPARISHCOUNCIL_GOV_UK", .name = "lingwood-burlinghamparishcouncil.gov.uk - Lingwood & Burlingham "
+      "Parish Council",
+    .name_ja = "lingwood-burlinghamparishcouncil.gov.uk - Lingwood & Burlingham Parish Council",
     .category = "government", .portal = "https://lingwood-burlinghamparishcouncil.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -21355,9 +21340,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "08:18:03 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_KIRKELLA_WESTELLA_PC_GOV_UK", .name = "kirkella-westella-pc.gov.uk - Kirk Ella &amp; West Ella Parish "
+  { .id = "JO44_UK_KIRKELLA_WESTELLA_PC_GOV_UK", .name = "kirkella-westella-pc.gov.uk - Kirk Ella & West Ella Parish "
       "Council",
-    .name_ja = "kirkella-westella-pc.gov.uk - Kirk Ella &amp; West Ella Parish Council",
+    .name_ja = "kirkella-westella-pc.gov.uk - Kirk Ella & West Ella Parish Council",
     .category = "government", .portal = "https://kirkella-westella-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -21464,9 +21449,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "10:49:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_ROYDON_WESTNORFOLK_PC_GOV_UK", .name = "roydon-westnorfolk-pc.gov.uk - Roydon Parish Council nr "
-      "King&#039;s Lynn",
-    .name_ja = "roydon-westnorfolk-pc.gov.uk - Roydon Parish Council nr King&#039;s Lynn",
+  { .id = "JO44_UK_ROYDON_WESTNORFOLK_PC_GOV_UK", .name = "roydon-westnorfolk-pc.gov.uk - Roydon Parish Council nr King's "
+      "Lynn",
+    .name_ja = "roydon-westnorfolk-pc.gov.uk - Roydon Parish Council nr King's Lynn",
     .category = "government", .portal = "https://roydon-westnorfolk-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -21898,9 +21883,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "09:28:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_DERRYHILLANDSTUDLEY_PC_GOV_UK", .name = "derryhillandstudley-pc.gov.uk - Derry Hill &amp; Studley Parish "
+  { .id = "JO44_UK_DERRYHILLANDSTUDLEY_PC_GOV_UK", .name = "derryhillandstudley-pc.gov.uk - Derry Hill & Studley Parish "
       "Council",
-    .name_ja = "derryhillandstudley-pc.gov.uk - Derry Hill &amp; Studley Parish Council",
+    .name_ja = "derryhillandstudley-pc.gov.uk - Derry Hill & Studley Parish Council",
     .category = "government", .portal = "https://derryhillandstudley-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -21917,9 +21902,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "09:11:43 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_TRYSULLANDSEISDON_PC_GOV_UK", .name = "trysullandseisdon-pc.gov.uk - Trysull &amp; Seisdon Parish "
-      "Council",
-    .name_ja = "trysullandseisdon-pc.gov.uk - Trysull &amp; Seisdon Parish Council",
+  { .id = "JO44_UK_TRYSULLANDSEISDON_PC_GOV_UK", .name = "trysullandseisdon-pc.gov.uk - Trysull & Seisdon Parish Council",
+    .name_ja = "trysullandseisdon-pc.gov.uk - Trysull & Seisdon Parish Council",
     .category = "government", .portal = "https://trysullandseisdon-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -21936,9 +21920,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "13:19:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_CHIPPINGWARDENPARISHCOUNCIL_GOV_UK", .name = "chippingwardenparishcouncil.gov.uk - Chipping Warden &amp; "
-      "Edgcote",
-    .name_ja = "chippingwardenparishcouncil.gov.uk - Chipping Warden &amp; Edgcote",
+  { .id = "JO44_UK_CHIPPINGWARDENPARISHCOUNCIL_GOV_UK", .name = "chippingwardenparishcouncil.gov.uk - Chipping Warden & Edgcote",
+    .name_ja = "chippingwardenparishcouncil.gov.uk - Chipping Warden & Edgcote",
     .category = "government", .portal = "https://chippingwardenparishcouncil.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -22604,9 +22587,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "11:22:22 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_ROUDHAMANDLARLINGPARISHCOUNCIL_GOV_UK", .name = "roudhamandlarlingparishcouncil.gov.uk - Roudham &amp; Larling "
-      "Parish Council",
-    .name_ja = "roudhamandlarlingparishcouncil.gov.uk - Roudham &amp; Larling Parish Council",
+  { .id = "JO44_UK_ROUDHAMANDLARLINGPARISHCOUNCIL_GOV_UK", .name = "roudhamandlarlingparishcouncil.gov.uk - Roudham & Larling Parish "
+      "Council",
+    .name_ja = "roudhamandlarlingparishcouncil.gov.uk - Roudham & Larling Parish Council",
     .category = "government", .portal = "https://roudhamandlarlingparishcouncil.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -22659,9 +22642,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "22:30:22 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_BRINTONANDSHARRINGTON_PC_GOV_UK", .name = "brintonandsharrington-pc.gov.uk - Brinton &amp; Sharrington "
-      "Parish Council",
-    .name_ja = "brintonandsharrington-pc.gov.uk - Brinton &amp; Sharrington Parish Council",
+  { .id = "JO44_UK_BRINTONANDSHARRINGTON_PC_GOV_UK", .name = "brintonandsharrington-pc.gov.uk - Brinton & Sharrington Parish "
+      "Council",
+    .name_ja = "brintonandsharrington-pc.gov.uk - Brinton & Sharrington Parish Council",
     .category = "government", .portal = "https://brintonandsharrington-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -23148,9 +23131,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "09:59:16 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_ABBASANDTEMPLECOMBE_PC_GOV_UK", .name = "abbasandtemplecombe-pc.gov.uk - Abbas &amp; Templecombe Parish "
+  { .id = "JO44_UK_ABBASANDTEMPLECOMBE_PC_GOV_UK", .name = "abbasandtemplecombe-pc.gov.uk - Abbas & Templecombe Parish "
       "Council",
-    .name_ja = "abbasandtemplecombe-pc.gov.uk - Abbas &amp; Templecombe Parish Council",
+    .name_ja = "abbasandtemplecombe-pc.gov.uk - Abbas & Templecombe Parish Council",
     .category = "government", .portal = "https://abbasandtemplecombe-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -23366,9 +23349,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "16:03:14 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_ARBORFIELDPARISH_GOV_UK", .name = "arborfieldparish.gov.uk - Arborfield &amp; Newland Parish "
-      "Council",
-    .name_ja = "arborfieldparish.gov.uk - Arborfield &amp; Newland Parish Council",
+  { .id = "JO44_UK_ARBORFIELDPARISH_GOV_UK", .name = "arborfieldparish.gov.uk - Arborfield & Newland Parish Council",
+    .name_ja = "arborfieldparish.gov.uk - Arborfield & Newland Parish Council",
     .category = "government", .portal = "https://arborfieldparish.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -23931,9 +23913,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "14:11:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_HEMPTON_PC_GOV_UK", .name = "hempton-pc.gov.uk - Hempton with Pudding Norton &amp; Testerton "
+  { .id = "JO44_UK_HEMPTON_PC_GOV_UK", .name = "hempton-pc.gov.uk - Hempton with Pudding Norton & Testerton "
       "Parish Council",
-    .name_ja = "hempton-pc.gov.uk - Hempton with Pudding Norton &amp; Testerton Parish Council",
+    .name_ja = "hempton-pc.gov.uk - Hempton with Pudding Norton & Testerton Parish Council",
     .category = "government", .portal = "https://hempton-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -24132,9 +24114,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "13:59:55 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_HEYDOUR_AISBY_OASBY_PC_GOV_UK", .name = "heydour-aisby-oasby-pc.gov.uk - Heydour, Aisby &amp; Oasby "
-      "Parish Council",
-    .name_ja = "heydour-aisby-oasby-pc.gov.uk - Heydour, Aisby &amp; Oasby Parish Council",
+  { .id = "JO44_UK_HEYDOUR_AISBY_OASBY_PC_GOV_UK", .name = "heydour-aisby-oasby-pc.gov.uk - Heydour, Aisby & Oasby Parish "
+      "Council",
+    .name_ja = "heydour-aisby-oasby-pc.gov.uk - Heydour, Aisby & Oasby Parish Council",
     .category = "government", .portal = "https://heydour-aisby-oasby-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -24314,8 +24296,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "14:05:33 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_PEIG_PC_GOV_UK", .name = "peig-pc.gov.uk - Pill &amp; Easton-in-Gordano Parish Council",
-    .name_ja = "peig-pc.gov.uk - Pill &amp; Easton-in-Gordano Parish Council",
+  { .id = "JO44_UK_PEIG_PC_GOV_UK", .name = "peig-pc.gov.uk - Pill & Easton-in-Gordano Parish Council",
+    .name_ja = "peig-pc.gov.uk - Pill & Easton-in-Gordano Parish Council",
     .category = "government", .portal = "https://peig-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -24404,9 +24386,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "14:54:30 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_ORFORDANDGEDGRAVE_PC_GOV_UK", .name = "orfordandgedgrave-pc.gov.uk - Orford &amp; Gedgrave Parish "
-      "Council",
-    .name_ja = "orfordandgedgrave-pc.gov.uk - Orford &amp; Gedgrave Parish Council",
+  { .id = "JO44_UK_ORFORDANDGEDGRAVE_PC_GOV_UK", .name = "orfordandgedgrave-pc.gov.uk - Orford & Gedgrave Parish Council",
+    .name_ja = "orfordandgedgrave-pc.gov.uk - Orford & Gedgrave Parish Council",
     .category = "government", .portal = "https://www.orfordandgedgrave-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -24917,8 +24898,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "on its site root." },
 
   { .id = "JO44_UK_STJOHNPARISHCOUNCIL_GOV_UK", .name = "stjohnparishcouncil.gov.uk - St John Parish Council and Village "
-      "&#8211; Rame, Cornwall",
-    .name_ja = "stjohnparishcouncil.gov.uk - St John Parish Council and Village &#8211; Rame, Cornwall",
+      "– Rame, Cornwall",
+    .name_ja = "stjohnparishcouncil.gov.uk - St John Parish Council and Village – Rame, Cornwall",
     .category = "government", .portal = "https://stjohnparishcouncil.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -25153,8 +25134,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "12:13:20 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_STVEEPANDSTWINNOW_PC_GOV_UK", .name = "stveepandstwinnow-pc.gov.uk - St Veep &amp; St Winnow PC",
-    .name_ja = "stveepandstwinnow-pc.gov.uk - St Veep &amp; St Winnow PC",
+  { .id = "JO44_UK_STVEEPANDSTWINNOW_PC_GOV_UK", .name = "stveepandstwinnow-pc.gov.uk - St Veep & St Winnow PC",
+    .name_ja = "stveepandstwinnow-pc.gov.uk - St Veep & St Winnow PC",
     .category = "government", .portal = "https://www.stveepandstwinnow-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -25497,9 +25478,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "06:36:23 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_SALEHURSTPARISHCOUNCIL_GOV_UK", .name = "salehurstparishcouncil.gov.uk - Salehurst &amp; Robertsbridge "
-      "Parish Council",
-    .name_ja = "salehurstparishcouncil.gov.uk - Salehurst &amp; Robertsbridge Parish Council",
+  { .id = "JO44_UK_SALEHURSTPARISHCOUNCIL_GOV_UK", .name = "salehurstparishcouncil.gov.uk - Salehurst & Robertsbridge Parish "
+      "Council",
+    .name_ja = "salehurstparishcouncil.gov.uk - Salehurst & Robertsbridge Parish Council",
     .category = "government", .portal = "https://salehurstparishcouncil.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -25806,8 +25787,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "12:57:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_BISHOPSTACHBROOK_PC_GOV_UK", .name = "bishopstachbrook-pc.gov.uk - Bishop&#039;s Tachbrook",
-    .name_ja = "bishopstachbrook-pc.gov.uk - Bishop&#039;s Tachbrook",
+  { .id = "JO44_UK_BISHOPSTACHBROOK_PC_GOV_UK", .name = "bishopstachbrook-pc.gov.uk - Bishop's Tachbrook",
+    .name_ja = "bishopstachbrook-pc.gov.uk - Bishop's Tachbrook",
     .category = "government", .portal = "https://bishopstachbrook-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -26386,9 +26367,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "09:43:26 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_MILSONANDNEENSOLLARS_PC_GOV_UK", .name = "milsonandneensollars-pc.gov.uk - Milson &amp; Neen Sollars "
-      "Parish Council",
-    .name_ja = "milsonandneensollars-pc.gov.uk - Milson &amp; Neen Sollars Parish Council",
+  { .id = "JO44_UK_MILSONANDNEENSOLLARS_PC_GOV_UK", .name = "milsonandneensollars-pc.gov.uk - Milson & Neen Sollars Parish "
+      "Council",
+    .name_ja = "milsonandneensollars-pc.gov.uk - Milson & Neen Sollars Parish Council",
     .category = "government", .portal = "https://milsonandneensollars-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -26495,8 +26476,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "10:45 GMT. A feed the organisation itself declares or links on "
       "its site root." },
 
-  { .id = "JO44_UK_TUNSTEAD_PC_GOV_UK", .name = "tunstead-pc.gov.uk - Tunstead &amp; Sco-Ruston Parish Council",
-    .name_ja = "tunstead-pc.gov.uk - Tunstead &amp; Sco-Ruston Parish Council",
+  { .id = "JO44_UK_TUNSTEAD_PC_GOV_UK", .name = "tunstead-pc.gov.uk - Tunstead & Sco-Ruston Parish Council",
+    .name_ja = "tunstead-pc.gov.uk - Tunstead & Sco-Ruston Parish Council",
     .category = "government", .portal = "https://tunstead-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -27471,9 +27452,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "20:10:03 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_BARTONANDPOOLEYBRIDGE_PC_GOV_UK", .name = "bartonandpooleybridge-pc.gov.uk - Barton &amp; Pooley Bridge "
-      "Parish Council",
-    .name_ja = "bartonandpooleybridge-pc.gov.uk - Barton &amp; Pooley Bridge Parish Council",
+  { .id = "JO44_UK_BARTONANDPOOLEYBRIDGE_PC_GOV_UK", .name = "bartonandpooleybridge-pc.gov.uk - Barton & Pooley Bridge Parish "
+      "Council",
+    .name_ja = "bartonandpooleybridge-pc.gov.uk - Barton & Pooley Bridge Parish Council",
     .category = "government", .portal = "https://bartonandpooleybridge-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -27927,8 +27908,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "19:23:18 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_ASKHAMANDHELTON_PC_GOV_UK", .name = "askhamandhelton-pc.gov.uk - Askham &amp; Helton Parish Council",
-    .name_ja = "askhamandhelton-pc.gov.uk - Askham &amp; Helton Parish Council",
+  { .id = "JO44_UK_ASKHAMANDHELTON_PC_GOV_UK", .name = "askhamandhelton-pc.gov.uk - Askham & Helton Parish Council",
+    .name_ja = "askhamandhelton-pc.gov.uk - Askham & Helton Parish Council",
     .category = "government", .portal = "https://askhamandhelton-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -28143,8 +28124,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "15:03:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_BARFORD_PC_GOV_UK", .name = "barford-pc.gov.uk - Barford &amp; Wramplingham Parish Council",
-    .name_ja = "barford-pc.gov.uk - Barford &amp; Wramplingham Parish Council",
+  { .id = "JO44_UK_BARFORD_PC_GOV_UK", .name = "barford-pc.gov.uk - Barford & Wramplingham Parish Council",
+    .name_ja = "barford-pc.gov.uk - Barford & Wramplingham Parish Council",
     .category = "government", .portal = "https://barford-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -28722,9 +28703,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "09:45:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_UPTONANDNORTHELMSALL_PC_GOV_UK", .name = "uptonandnorthelmsall-pc.gov.uk - Upton &amp; North Elmsall "
-      "Parish Council",
-    .name_ja = "uptonandnorthelmsall-pc.gov.uk - Upton &amp; North Elmsall Parish Council",
+  { .id = "JO44_UK_UPTONANDNORTHELMSALL_PC_GOV_UK", .name = "uptonandnorthelmsall-pc.gov.uk - Upton & North Elmsall Parish "
+      "Council",
+    .name_ja = "uptonandnorthelmsall-pc.gov.uk - Upton & North Elmsall Parish Council",
     .category = "government", .portal = "https://uptonandnorthelmsall-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -29031,8 +29012,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "12:25:58 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_CNMPARISH_GOV_UK", .name = "cnmparish.gov.uk - Catshill &amp; North Marlbrook Parish Council",
-    .name_ja = "cnmparish.gov.uk - Catshill &amp; North Marlbrook Parish Council",
+  { .id = "JO44_UK_CNMPARISH_GOV_UK", .name = "cnmparish.gov.uk - Catshill & North Marlbrook Parish Council",
+    .name_ja = "cnmparish.gov.uk - Catshill & North Marlbrook Parish Council",
     .category = "government", .portal = "https://cnmparish.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -29103,9 +29084,9 @@ static const hp_source HP3B44_UKGOV[] = {
       "15:58:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_EASTNORANDDONNINGTON_PC_GOV_UK", .name = "eastnoranddonnington-pc.gov.uk - Eastnor &amp; Donnington Parish "
+  { .id = "JO44_UK_EASTNORANDDONNINGTON_PC_GOV_UK", .name = "eastnoranddonnington-pc.gov.uk - Eastnor & Donnington Parish "
       "Council",
-    .name_ja = "eastnoranddonnington-pc.gov.uk - Eastnor &amp; Donnington Parish Council",
+    .name_ja = "eastnoranddonnington-pc.gov.uk - Eastnor & Donnington Parish Council",
     .category = "government", .portal = "https://eastnoranddonnington-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
@@ -29212,9 +29193,8 @@ static const hp_source HP3B44_UKGOV[] = {
       "13:32:30 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_ROCHFORD_PC_GOV_UK", .name = "rochford-pc.gov.uk - Rochford Parish Council &#8211; activ "
-      "Marketing",
-    .name_ja = "rochford-pc.gov.uk - Rochford Parish Council &#8211; activ Marketing",
+  { .id = "JO44_UK_ROCHFORD_PC_GOV_UK", .name = "rochford-pc.gov.uk - Rochford Parish Council – activ Marketing",
+    .name_ja = "rochford-pc.gov.uk - Rochford Parish Council – activ Marketing",
     .category = "government", .portal = "https://www.rochford-pc.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
