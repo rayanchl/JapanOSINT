@@ -22,9 +22,8 @@
 #include "lib/hpengine.h"
 
 static const hp_source HP3B46_IGO[] = {
-  { .id = "JO46_IGO_Q677691", .name = "ICLEI – Local Governments for Sustainability "
-      "(international-organization, XX) - ICLEI",
-    .name_ja = "ICLEI – Local Governments for Sustainability (international-organization, XX) - ICLEI",
+  { .id = "JO46_IGO_Q677691", .name = "ICLEI – Local Governments for Sustainability - ICLEI",
+    .name_ja = "ICLEI – Local Governments for Sustainability - ICLEI",
     .category = "government", .portal = "https://iclei.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -39,10 +38,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "12:35:56 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q107569", .name = "Club of Rome (international-organization, XX) - Club of Rome",
-    .name_ja = "Club of Rome (international-organization, XX) - Club of Rome",
+  { .id = "JO46_IGO_Q107569", .name = "Club of Rome - Club of Rome",
+    .name_ja = "Club of Rome - Club of Rome",
     .category = "government", .portal = "https://www.clubofrome.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -57,11 +57,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 28 Sep 2026 "
       "06:30:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1506755", .name = "World Association of Chefs Societies "
-      "(international-organization, XX) - WORLDCHEFS",
-    .name_ja = "World Association of Chefs Societies (international-organization, XX) - WORLDCHEFS",
+  { .id = "JO46_IGO_Q1506755", .name = "World Association of Chefs Societies - WORLDCHEFS",
+    .name_ja = "World Association of Chefs Societies - WORLDCHEFS",
     .category = "government", .portal = "https://worldchefs.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -76,11 +76,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "14:19:16 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q72781", .name = "Privacy International (international-organization, XX) - Privacy "
-      "International News Feed",
-    .name_ja = "Privacy International (international-organization, XX) - Privacy International News Feed",
+  { .id = "JO46_IGO_Q72781", .name = "Privacy International - Privacy International News Feed",
+    .name_ja = "Privacy International - Privacy International News Feed",
     .category = "government", .portal = "https://www.privacyinternational.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -95,10 +95,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "13:12:49 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q2844165", .name = "Amphibian Ark (international-organization, XX) - Amphibian Ark",
-    .name_ja = "Amphibian Ark (international-organization, XX) - Amphibian Ark",
+  { .id = "JO46_IGO_Q2844165", .name = "Amphibian Ark - Amphibian Ark",
+    .name_ja = "Amphibian Ark - Amphibian Ark",
     .category = "government", .portal = "https://www.amphibianark.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -113,12 +114,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 28 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "21:33:25 +0100. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q2867813", .name = "International Association of Visual Semiotics "
-      "(international-organization, XX) - International Association for "
-      "Visual Semiotics",
-    .name_ja = "International Association of Visual Semiotics (international-organization, XX) - International Association for Visual Semiotics",
+  { .id = "JO46_IGO_Q2867813", .name = "International Association of Visual Semiotics - International "
+      "Association for Visual Semiotics",
+    .name_ja = "International Association of Visual Semiotics - International Association for Visual Semiotics",
     .category = "government", .portal = "https://aisviavs.wordpress.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -133,11 +134,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
       "08:48:06 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q2867813_2", .name = "International Association of Visual Semiotics "
-      "(international-organization, XX) - Comments on: The IAVS",
-    .name_ja = "International Association of Visual Semiotics (international-organization, XX) - Comments on: The IAVS",
+  { .id = "JO46_IGO_Q2867813_2", .name = "International Association of Visual Semiotics - Comments on: The "
+      "IAVS",
+    .name_ja = "International Association of Visual Semiotics - Comments on: The IAVS",
     .category = "government", .portal = "https://aisviavs.wordpress.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -152,11 +154,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 18 Feb 2022 "
       "02:16:04 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q2974848", .name = "United Cities and Local Governments of Africa "
-      "(international-organization, XX) - UCLGA",
-    .name_ja = "United Cities and Local Governments of Africa (international-organization, XX) - UCLGA",
+  { .id = "JO46_IGO_Q2974848", .name = "United Cities and Local Governments of Africa - UCLGA",
+    .name_ja = "United Cities and Local Governments of Africa - UCLGA",
     .category = "government", .portal = "https://www.uclga.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -171,11 +173,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 20 Nov 2025 "
       "16:54:25 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q5440763", .name = "Federation of Asian Bishops' Conferences "
-      "(international-organization, XX) - FABC",
-    .name_ja = "Federation of Asian Bishops' Conferences (international-organization, XX) - FABC",
+  { .id = "JO46_IGO_Q5440763", .name = "Federation of Asian Bishops' Conferences - FABC",
+    .name_ja = "Federation of Asian Bishops' Conferences - FABC",
     .category = "government", .portal = "https://fabc.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -190,11 +192,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "11:56:47 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q5564371", .name = "Girl Geek Dinners (international-organization, XX) - Girl Geek "
-      "Dinners",
-    .name_ja = "Girl Geek Dinners (international-organization, XX) - Girl Geek Dinners",
+  { .id = "JO46_IGO_Q5564371", .name = "Girl Geek Dinners - Girl Geek Dinners",
+    .name_ja = "Girl Geek Dinners - Girl Geek Dinners",
     .category = "government", .portal = "https://girlgeekdinners.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -209,10 +211,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 07 Mar 2025 "
       "14:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q5570568", .name = "Global Citizen (international-organization, XX) - Global Citizen",
-    .name_ja = "Global Citizen (international-organization, XX) - Global Citizen",
+  { .id = "JO46_IGO_Q5570568", .name = "Global Citizen - Global Citizen",
+    .name_ja = "Global Citizen - Global Citizen",
     .category = "government", .portal = "https://www.globalcitizen.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -227,11 +230,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 50 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "08:22:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q5570628", .name = "Global Security Institute (international-organization, XX) - "
-      "Global Security Institute",
-    .name_ja = "Global Security Institute (international-organization, XX) - Global Security Institute",
+  { .id = "JO46_IGO_Q5570628", .name = "Global Security Institute - Global Security Institute",
+    .name_ja = "Global Security Institute - Global Security Institute",
     .category = "government", .portal = "https://gsinstitute.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -246,11 +249,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 05 Sep 2026 "
       "02:25:11 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q5636894", .name = "Habitat International Coalition (international-organization, XX) "
-      "- HIC GS",
-    .name_ja = "Habitat International Coalition (international-organization, XX) - HIC GS",
+  { .id = "JO46_IGO_Q5636894", .name = "Habitat International Coalition - HIC GS",
+    .name_ja = "Habitat International Coalition - HIC GS",
     .category = "government", .portal = "https://hic-net.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -265,10 +268,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 12 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "15:30:11 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1697014", .name = "Leo Club (international-organization, XX) - Leo Club Italia",
-    .name_ja = "Leo Club (international-organization, XX) - Leo Club Italia",
+  { .id = "JO46_IGO_Q1697014", .name = "Leo Club - Leo Club Italia",
+    .name_ja = "Leo Club - Leo Club Italia",
     .category = "government", .portal = "https://leoclub.it/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -283,11 +287,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Tue, 12 Apr 2022 "
       "19:12:45 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q707083", .name = "Young Christian Workers (international-organization, XX) - "
-      "JOCI-IYCW - Accueil",
-    .name_ja = "Young Christian Workers (international-organization, XX) - JOCI-IYCW - Accueil",
+  { .id = "JO46_IGO_Q707083", .name = "Young Christian Workers - JOCI-IYCW - Accueil",
+    .name_ja = "Young Christian Workers - JOCI-IYCW - Accueil",
     .category = "government", .portal = "https://joci.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -302,11 +306,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Tue, 15 Sep 2026 "
       "12:06:48 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q707083_2", .name = "Young Christian Workers (international-organization, XX) - "
-      "JOCI-IYCW - Accueil",
-    .name_ja = "Young Christian Workers (international-organization, XX) - JOCI-IYCW - Accueil",
+  { .id = "JO46_IGO_Q707083_2", .name = "Young Christian Workers - JOCI-IYCW - Accueil",
+    .name_ja = "Young Christian Workers - JOCI-IYCW - Accueil",
     .category = "government", .portal = "https://joci.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -321,11 +325,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
       "2026-10-18T17:58:24+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
+      "declares or links on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q707083_3", .name = "Young Christian Workers (international-organization, XX) - CIJOC "
-      "ICYCW",
-    .name_ja = "Young Christian Workers (international-organization, XX) - CIJOC ICYCW",
+  { .id = "JO46_IGO_Q707083_3", .name = "Young Christian Workers - CIJOC ICYCW",
+    .name_ja = "Young Christian Workers - CIJOC ICYCW",
     .category = "government", .portal = "http://www.cijoc.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -340,12 +344,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 28 Jul 2025 "
       "02:01:15 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q735279", .name = "Committee on Data for Science and Technology "
-      "(international-organization, XX) - CODATA, Committee on Data of "
-      "the ISC",
-    .name_ja = "Committee on Data for Science and Technology (international-organization, XX) - CODATA, Committee on Data of the ISC",
+  { .id = "JO46_IGO_Q735279", .name = "Committee on Data for Science and Technology - CODATA, Committee "
+      "on Data of the ISC",
+    .name_ja = "Committee on Data for Science and Technology - CODATA, Committee on Data of the ISC",
     .category = "government", .portal = "https://codata.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -360,11 +364,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 01 Oct 2026 "
       "13:52:57 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
   { .id = "JO46_IGO_Q740384", .name = "The International Committee for the Conservation of the "
-      "Industrial Heritage (international-organization, XX) - TICCIH",
-    .name_ja = "The International Committee for the Conservation of the Industrial Heritage (international-organization, XX) - TICCIH",
+      "Industrial Heritage - TICCIH",
+    .name_ja = "The International Committee for the Conservation of the Industrial Heritage - TICCIH",
     .category = "government", .portal = "https://ticcih.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -379,11 +384,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 14 Jul 2026 "
       "03:49:34 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q4783192", .name = "Arab Information and Communication Technologies Organization "
-      "(international-organization, XX) - AICTO",
-    .name_ja = "Arab Information and Communication Technologies Organization (international-organization, XX) - AICTO",
+  { .id = "JO46_IGO_Q4783192", .name = "Arab Information and Communication Technologies Organization - "
+      "AICTO",
+    .name_ja = "Arab Information and Communication Technologies Organization - AICTO",
     .category = "government", .portal = "https://www.aicto.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -398,11 +404,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "13:02:48 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q4806404", .name = "Asia Pacific Adaptation Network (international-organization, XX) "
-      "- APAN",
-    .name_ja = "Asia Pacific Adaptation Network (international-organization, XX) - APAN",
+  { .id = "JO46_IGO_Q4806404", .name = "Asia Pacific Adaptation Network - APAN",
+    .name_ja = "Asia Pacific Adaptation Network - APAN",
     .category = "government", .portal = "https://asiapacificadapt.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -417,11 +423,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "17:09:31 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q4809530", .name = "Association for Uncrewed Vehicle Systems International "
-      "(international-organization, XX) - AUVSI",
-    .name_ja = "Association for Uncrewed Vehicle Systems International (international-organization, XX) - AUVSI",
+  { .id = "JO46_IGO_Q4809530", .name = "Association for Uncrewed Vehicle Systems International - AUVSI",
+    .name_ja = "Association for Uncrewed Vehicle Systems International - AUVSI",
     .category = "government", .portal = "https://www.auvsi.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -436,11 +442,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
       "12:52:29 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q4809530_2", .name = "Association for Uncrewed Vehicle Systems International "
-      "(international-organization, XX) - AUVSI",
-    .name_ja = "Association for Uncrewed Vehicle Systems International (international-organization, XX) - AUVSI",
+  { .id = "JO46_IGO_Q4809530_2", .name = "Association for Uncrewed Vehicle Systems International - AUVSI",
+    .name_ja = "Association for Uncrewed Vehicle Systems International - AUVSI",
     .category = "government", .portal = "https://www.auvsi.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -455,11 +461,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "16:48:37 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q4844407", .name = "International Society of Political Psychology "
-      "(international-organization, XX) - ISPP",
-    .name_ja = "International Society of Political Psychology (international-organization, XX) - ISPP",
+  { .id = "JO46_IGO_Q4844407", .name = "International Society of Political Psychology - ISPP",
+    .name_ja = "International Society of Political Psychology - ISPP",
     .category = "government", .portal = "https://ispp.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -474,10 +480,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 24 Sep 2026 "
       "17:04:22 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q5011160", .name = "CHIMES Society (international-organization, XX) - Moleac.com",
-    .name_ja = "CHIMES Society (international-organization, XX) - Moleac.com",
+  { .id = "JO46_IGO_Q5011160", .name = "CHIMES Society - Moleac.com",
+    .name_ja = "CHIMES Society - Moleac.com",
     .category = "government", .portal = "https://moleac.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -492,10 +499,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 06 Oct 2026 "
       "02:51:31 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q5013378", .name = "COMSTECH (international-organization, XX) - COMSTECH",
-    .name_ja = "COMSTECH (international-organization, XX) - COMSTECH",
+  { .id = "JO46_IGO_Q5013378", .name = "COMSTECH - COMSTECH",
+    .name_ja = "COMSTECH - COMSTECH",
     .category = "government", .portal = "https://comstech.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -510,12 +518,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "08:13:41 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q5029991", .name = "Canadian Federation of University Women "
-      "(international-organization, XX) - Canadian Federation of "
+  { .id = "JO46_IGO_Q5029991", .name = "Canadian Federation of University Women - Canadian Federation of "
       "University Women",
-    .name_ja = "Canadian Federation of University Women (international-organization, XX) - Canadian Federation of University Women",
+    .name_ja = "Canadian Federation of University Women - Canadian Federation of University Women",
     .category = "government", .portal = "https://www.cfuw.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -530,11 +538,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 05 Oct 2026 "
       "18:40:56 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q909683", .name = "NATO Tiger Association (international-organization, XX) - NATO "
-      "Tigers",
-    .name_ja = "NATO Tiger Association (international-organization, XX) - NATO Tigers",
+  { .id = "JO46_IGO_Q909683", .name = "NATO Tiger Association - NATO Tigers",
+    .name_ja = "NATO Tiger Association - NATO Tigers",
     .category = "government", .portal = "https://www.natotigers.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -549,11 +557,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 02 Aug 2026 "
       "08:48:38 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q911204", .name = "Danube Commission (international-organization, XX) - Danube "
-      "Commission – Donaukommission – Commission du Danube –",
-    .name_ja = "Danube Commission (international-organization, XX) - Danube Commission – Donaukommission – Commission du Danube –",
+  { .id = "JO46_IGO_Q911204", .name = "Danube Commission - Danube Commission – Donaukommission – "
+      "Commission du Danube –",
+    .name_ja = "Danube Commission - Danube Commission – Donaukommission – Commission du Danube –",
     .category = "government", .portal = "https://www.danubecommission.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -568,11 +577,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "11:39:23 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q151991_4", .name = "European Southern Observatory (international-organization, XX) - "
-      "ESO Recruitment Portal",
-    .name_ja = "European Southern Observatory (international-organization, XX) - ESO Recruitment Portal",
+  { .id = "JO46_IGO_Q151991_4", .name = "European Southern Observatory - ESO Recruitment Portal",
+    .name_ja = "European Southern Observatory - ESO Recruitment Portal",
     .category = "government", .portal = "https://recruitment.eso.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -587,11 +596,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Tue, 06 Jan 2026 "
       "23:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q689768", .name = "Women's International League for Peace and Freedom "
-      "(international-organization, XX) - WILPF",
-    .name_ja = "Women's International League for Peace and Freedom (international-organization, XX) - WILPF",
+  { .id = "JO46_IGO_Q689768", .name = "Women's International League for Peace and Freedom - WILPF",
+    .name_ja = "Women's International League for Peace and Freedom - WILPF",
     .category = "government", .portal = "https://www.wilpf.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -606,11 +615,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 6 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "08:17:14 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q748999", .name = "World Federation of Trade Unions (international-organization, "
-      "XX) - WFTU",
-    .name_ja = "World Federation of Trade Unions (international-organization, XX) - WFTU",
+  { .id = "JO46_IGO_Q748999", .name = "World Federation of Trade Unions - WFTU",
+    .name_ja = "World Federation of Trade Unions - WFTU",
     .category = "government", .portal = "https://www.wftucentral.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -625,10 +634,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "09:01:40 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q7203726", .name = "Plazi (international-organization, XX) - Home on Plazi",
-    .name_ja = "Plazi (international-organization, XX) - Home on Plazi",
+  { .id = "JO46_IGO_Q7203726", .name = "Plazi - Home on Plazi",
+    .name_ja = "Plazi - Home on Plazi",
     .category = "government", .portal = "https://plazi.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -643,11 +653,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 129 items, RSS2 feed, newest Sat, 18 Apr "
       "2026 15:08:04 +0200. A feed the organisation itself declares or "
-      "links on its site root." },
+      "links on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q7209034", .name = "Polar Libraries Colloquy (international-organization, XX) - "
-      "Polar Libraries Colloquy",
-    .name_ja = "Polar Libraries Colloquy (international-organization, XX) - Polar Libraries Colloquy",
+  { .id = "JO46_IGO_Q7209034", .name = "Polar Libraries Colloquy - Polar Libraries Colloquy",
+    .name_ja = "Polar Libraries Colloquy - Polar Libraries Colloquy",
     .category = "government", .portal = "https://polarlibraries.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -662,10 +672,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
       "17:24:34 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q7259796", .name = "Pump Aid (international-organization, XX) - Pump Aid",
-    .name_ja = "Pump Aid (international-organization, XX) - Pump Aid",
+  { .id = "JO46_IGO_Q7259796", .name = "Pump Aid - Pump Aid",
+    .name_ja = "Pump Aid - Pump Aid",
     .category = "government", .portal = "https://pumpaid.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -680,11 +691,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 29 Jan 2026 "
       "13:22:19 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q7680168", .name = "Talloires Network (international-organization, XX) - Talloires "
-      "Network of Engaged Universities",
-    .name_ja = "Talloires Network (international-organization, XX) - Talloires Network of Engaged Universities",
+  { .id = "JO46_IGO_Q7680168", .name = "Talloires Network - Talloires Network of Engaged Universities",
+    .name_ja = "Talloires Network - Talloires Network of Engaged Universities",
     .category = "government", .portal = "https://talloiresnetwork.tufts.edu/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -699,11 +710,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "05:03:39 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q4288518", .name = "International Youth Nuclear Congress "
-      "(international-organization, XX) - IYNC",
-    .name_ja = "International Youth Nuclear Congress (international-organization, XX) - IYNC",
+  { .id = "JO46_IGO_Q4288518", .name = "International Youth Nuclear Congress - IYNC",
+    .name_ja = "International Youth Nuclear Congress - IYNC",
     .category = "government", .portal = "https://iync.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -718,11 +729,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 21 Aug 2025 "
       "12:34:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q4426267", .name = "Air Force Interoperability Council (international-organization, "
-      "XX) - Air Standards",
-    .name_ja = "Air Force Interoperability Council (international-organization, XX) - Air Standards",
+  { .id = "JO46_IGO_Q4426267", .name = "Air Force Interoperability Council - Air Standards",
+    .name_ja = "Air Force Interoperability Council - Air Standards",
     .category = "government", .portal = "https://www.airstandards.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -737,11 +748,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 30 Jan 2026 "
       "08:32:59 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q4542328", .name = "Khmers Kampuchea-Krom Federation (international-organization, "
-      "XX) - KKF   Khmers Kampuchea-Krom Federation",
-    .name_ja = "Khmers Kampuchea-Krom Federation (international-organization, XX) - KKF   Khmers Kampuchea-Krom Federation",
+  { .id = "JO46_IGO_Q4542328", .name = "Khmers Kampuchea-Krom Federation - KKF   Khmers Kampuchea-Krom "
+      "Federation",
+    .name_ja = "Khmers Kampuchea-Krom Federation - KKF   Khmers Kampuchea-Krom Federation",
     .category = "government", .portal = "https://khmerkrom.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -756,10 +768,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 01 Oct 2026 "
       "04:58:40 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q4728711", .name = "All European Academies (international-organization, XX) - ALLEA",
-    .name_ja = "All European Academies (international-organization, XX) - ALLEA",
+  { .id = "JO46_IGO_Q4728711", .name = "All European Academies - ALLEA",
+    .name_ja = "All European Academies - ALLEA",
     .category = "government", .portal = "https://allea.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -774,11 +787,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "09:12:11 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q4783148", .name = "Arab Bank for Economic Development in Africa "
-      "(international-organization, XX) - badea",
-    .name_ja = "Arab Bank for Economic Development in Africa (international-organization, XX) - badea",
+  { .id = "JO46_IGO_Q4783148", .name = "Arab Bank for Economic Development in Africa - badea",
+    .name_ja = "Arab Bank for Economic Development in Africa - badea",
     .category = "government", .portal = "https://www.badea.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -793,11 +806,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Tue, 30 Jan 2024 "
       "10:19:40 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q785701", .name = "Guidelines International Network (international-organization, "
-      "XX) - GIN",
-    .name_ja = "Guidelines International Network (international-organization, XX) - GIN",
+  { .id = "JO46_IGO_Q785701", .name = "Guidelines International Network - GIN",
+    .name_ja = "Guidelines International Network - GIN",
     .category = "government", .portal = "https://g-i-n.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -812,11 +825,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 21 Sep 2026 "
       "12:22:04 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1666544", .name = "Graduate Women International (international-organization, XX) - "
-      "Graduate Women International (GWI)",
-    .name_ja = "Graduate Women International (international-organization, XX) - Graduate Women International (GWI)",
+  { .id = "JO46_IGO_Q1666544", .name = "Graduate Women International - Graduate Women International "
+      "(GWI)",
+    .name_ja = "Graduate Women International - Graduate Women International (GWI)",
     .category = "government", .portal = "https://graduatewomen.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -831,12 +845,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 31 Mar 2025 "
       "22:30:24 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1666741", .name = "International Maritime Rescue Federation "
-      "(international-organization, XX) - International Maritime Rescue "
-      "Federation",
-    .name_ja = "International Maritime Rescue Federation (international-organization, XX) - International Maritime Rescue Federation",
+  { .id = "JO46_IGO_Q1666741", .name = "International Maritime Rescue Federation - International "
+      "Maritime Rescue Federation",
+    .name_ja = "International Maritime Rescue Federation - International Maritime Rescue Federation",
     .category = "government", .portal = "https://www.international-maritime-rescue.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -851,13 +865,13 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1162 items, RSS2 feed, newest Fri, 16 Oct "
       "2026 13:21:55 GMT. A feed the organisation itself declares or "
-      "links on its site root." },
+      "links on its site root. Wikidata classes it as "
+      "international-organization." },
 
   { .id = "JO46_IGO_Q3063229", .name = "FIEP - International Association of Gendarmeries and Police "
-      "Forces with Military Status (international-organization, XX) - "
-      "FIEP   International Association of Gendarmeries and Police "
-      "Forces with Military",
-    .name_ja = "FIEP - International Association of Gendarmeries and Police Forces with Military Status (international-organization, XX) - FIEP   International Association of Gendarmeries and Police Forces with Military",
+      "Forces with Military Status - FIEP   International Association "
+      "of Gendarmeries and Police Forces with Military",
+    .name_ja = "FIEP - International Association of Gendarmeries and Police Forces with Military Status - FIEP   International Association of Gendarmeries and Police Forces with Military",
     .category = "government", .portal = "https://www.fiep.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -872,11 +886,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
       "17:12:19 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q3075387", .name = "Asia–Europe Foundation (international-organization, XX) - "
-      "Asia-Europe Foundation (ASEF)",
-    .name_ja = "Asia–Europe Foundation (international-organization, XX) - Asia-Europe Foundation (ASEF)",
+  { .id = "JO46_IGO_Q3075387", .name = "Asia–Europe Foundation - Asia-Europe Foundation (ASEF)",
+    .name_ja = "Asia–Europe Foundation - Asia-Europe Foundation (ASEF)",
     .category = "government", .portal = "https://asef.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -891,11 +905,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 4 items, RSS2 feed, newest Tue, 02 May 2023 "
       "04:54:31 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q6048328", .name = "International Association for Official Statistics "
-      "(international-organization, XX) - IAOS",
-    .name_ja = "International Association for Official Statistics (international-organization, XX) - IAOS",
+  { .id = "JO46_IGO_Q6048328", .name = "International Association for Official Statistics - IAOS",
+    .name_ja = "International Association for Official Statistics - IAOS",
     .category = "government", .portal = "https://iaos-isi.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -910,11 +924,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 23 Apr 2026 "
       "03:49:13 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q6048336", .name = "International Association for Near-Death Studies "
-      "(international-organization, XX) - IANDS",
-    .name_ja = "International Association for Near-Death Studies (international-organization, XX) - IANDS",
+  { .id = "JO46_IGO_Q6048336", .name = "International Association for Near-Death Studies - IANDS",
+    .name_ja = "International Association for Near-Death Studies - IANDS",
     .category = "government", .portal = "https://iands.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -929,12 +943,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "16:28:26 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q6048375", .name = "International Association for the Study of the Commons "
-      "(international-organization, XX) - The International Association "
-      "for the Study of the Commons",
-    .name_ja = "International Association for the Study of the Commons (international-organization, XX) - The International Association for the Study of the Commons",
+  { .id = "JO46_IGO_Q6048375", .name = "International Association for the Study of the Commons - The "
+      "International Association for the Study of the Commons",
+    .name_ja = "International Association for the Study of the Commons - The International Association for the Study of the Commons",
     .category = "government", .portal = "https://iasc-commons.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -949,11 +963,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 22 Apr 2019 "
       "00:52:03 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q6048468", .name = "International Association of Exhibitions and Events "
-      "(international-organization, XX) - IAEE",
-    .name_ja = "International Association of Exhibitions and Events (international-organization, XX) - IAEE",
+  { .id = "JO46_IGO_Q6048468", .name = "International Association of Exhibitions and Events - IAEE",
+    .name_ja = "International Association of Exhibitions and Events - IAEE",
     .category = "government", .portal = "https://www.iaee.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -968,12 +982,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 12 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "14:00:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q6048786", .name = "International Bottled Water Association "
-      "(international-organization, XX) - Bottled Water   IBWA   "
+  { .id = "JO46_IGO_Q6048786", .name = "International Bottled Water Association - Bottled Water   IBWA   "
       "Bottled Water",
-    .name_ja = "International Bottled Water Association (international-organization, XX) - Bottled Water   IBWA   Bottled Water",
+    .name_ja = "International Bottled Water Association - Bottled Water   IBWA   Bottled Water",
     .category = "government", .portal = "https://bottledwater.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -988,11 +1002,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "15:42:23 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q6049828", .name = "International Coordination Meeting of Youth Organisations "
-      "(international-organization, XX) - ICMYO old site",
-    .name_ja = "International Coordination Meeting of Youth Organisations (international-organization, XX) - ICMYO old site",
+  { .id = "JO46_IGO_Q6049828", .name = "International Coordination Meeting of Youth Organisations - "
+      "ICMYO old site",
+    .name_ja = "International Coordination Meeting of Youth Organisations - ICMYO old site",
     .category = "government", .portal = "https://icmyo.wordpress.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1007,12 +1022,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Mon, 15 Apr 2013 "
       "22:17:13 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q6049875", .name = "International Council for Adult Education "
-      "(international-organization, XX) - Looking Back to Move Forward: "
-      "ICAE Marks 50 Years Since its First World Assembly",
-    .name_ja = "International Council for Adult Education (international-organization, XX) - Looking Back to Move Forward: ICAE Marks 50 Years Since its First World Assembly",
+  { .id = "JO46_IGO_Q6049875", .name = "International Council for Adult Education - Looking Back to Move "
+      "Forward: ICAE Marks 50 Years Since its First World Assembly",
+    .name_ja = "International Council for Adult Education - Looking Back to Move Forward: ICAE Marks 50 Years Since its First World Assembly",
     .category = "government", .portal = "http://icae.global/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1027,12 +1042,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 04 Jul 2026 "
       "21:27:23 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q6049887", .name = "International Council for Philosophy and Humanistic Studies "
-      "(international-organization, XX) - International Council for "
-      "Philosophy and Human Sciences",
-    .name_ja = "International Council for Philosophy and Humanistic Studies (international-organization, XX) - International Council for Philosophy and Human Sciences",
+  { .id = "JO46_IGO_Q6049887", .name = "International Council for Philosophy and Humanistic Studies - "
+      "International Council for Philosophy and Human Sciences",
+    .name_ja = "International Council for Philosophy and Humanistic Studies - International Council for Philosophy and Human Sciences",
     .category = "government", .portal = "https://cipsh.one/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1047,11 +1062,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 07 May 2026 "
       "12:13:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q6049906", .name = "International Council of Onomastic Sciences "
-      "(international-organization, XX) - ICOS",
-    .name_ja = "International Council of Onomastic Sciences (international-organization, XX) - ICOS",
+  { .id = "JO46_IGO_Q6049906", .name = "International Council of Onomastic Sciences - ICOS",
+    .name_ja = "International Council of Onomastic Sciences - ICOS",
     .category = "government", .portal = "https://icosweb.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1066,12 +1081,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 23 Aug 2024 "
       "17:16:17 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q6050339", .name = "International Executive Resources Group "
-      "(international-organization, XX) - International Executive "
-      "Resource Group",
-    .name_ja = "International Executive Resources Group (international-organization, XX) - International Executive Resource Group",
+  { .id = "JO46_IGO_Q6050339", .name = "International Executive Resources Group - International "
+      "Executive Resource Group",
+    .name_ja = "International Executive Resources Group - International Executive Resource Group",
     .category = "government", .portal = "https://www.iergglobal.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1086,11 +1101,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 4 items, RSS2 feed, newest Sun, 12 Oct 2025 "
       "13:20:25 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q6050406", .name = "International Federation of Agricultural Journalists "
-      "(international-organization, XX) - IFAJ",
-    .name_ja = "International Federation of Agricultural Journalists (international-organization, XX) - IFAJ",
+  { .id = "JO46_IGO_Q6050406", .name = "International Federation of Agricultural Journalists - IFAJ",
+    .name_ja = "International Federation of Agricultural Journalists - IFAJ",
     .category = "government", .portal = "https://www.ifaj.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1105,12 +1120,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Mon, 21 Sep 2026 "
       "10:29:06 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q6050420", .name = "International Federation of Business and Professional Women "
-      "(international-organization, XX) - www.bpw-international.org "
-      "Blog Feed",
-    .name_ja = "International Federation of Business and Professional Women (international-organization, XX) - www.bpw-international.org Blog Feed",
+  { .id = "JO46_IGO_Q6050420", .name = "International Federation of Business and Professional Women - "
+      "www.bpw-international.org Blog Feed",
+    .name_ja = "International Federation of Business and Professional Women - www.bpw-international.org Blog Feed",
     .category = "government", .portal = "https://www.bpw-international.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1125,12 +1140,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 18 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "11:10:16 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q6050619", .name = "International Foodservice Distributors Association "
-      "(international-organization, XX) - International Foodservice "
-      "Distributors Association",
-    .name_ja = "International Foodservice Distributors Association (international-organization, XX) - International Foodservice Distributors Association",
+  { .id = "JO46_IGO_Q6050619", .name = "International Foodservice Distributors Association - "
+      "International Foodservice Distributors Association",
+    .name_ja = "International Foodservice Distributors Association - International Foodservice Distributors Association",
     .category = "government", .portal = "https://ifdaonline.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1145,11 +1160,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 12 items, RSS2 feed, newest Thu, 01 Oct 2026 "
       "12:42:31 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1165433", .name = "Multimedia over Coax Alliance (international-organization, XX) - "
-      "MoCA – Multimedia over Coax Alliance",
-    .name_ja = "Multimedia over Coax Alliance (international-organization, XX) - MoCA – Multimedia over Coax Alliance",
+  { .id = "JO46_IGO_Q1165433", .name = "Multimedia over Coax Alliance - MoCA – Multimedia over Coax "
+      "Alliance",
+    .name_ja = "Multimedia over Coax Alliance - MoCA – Multimedia over Coax Alliance",
     .category = "government", .portal = "https://mocalliance.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1164,11 +1180,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Thu, 25 Jul 2024 "
       "16:55:26 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1210996", .name = "Atheist Alliance International (international-organization, XX) "
-      "- Atheist Alliance International",
-    .name_ja = "Atheist Alliance International (international-organization, XX) - Atheist Alliance International",
+  { .id = "JO46_IGO_Q1210996", .name = "Atheist Alliance International - Atheist Alliance International",
+    .name_ja = "Atheist Alliance International - Atheist Alliance International",
     .category = "government", .portal = "https://atheistalliance.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1183,11 +1199,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
       "05:52:28 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q7833652", .name = "Trans Atlantic Consumer Dialogue (international-organization, "
-      "XX) - TACD   Transatlantic Consumer Dialogue",
-    .name_ja = "Trans Atlantic Consumer Dialogue (international-organization, XX) - TACD   Transatlantic Consumer Dialogue",
+  { .id = "JO46_IGO_Q7833652", .name = "Trans Atlantic Consumer Dialogue - TACD   Transatlantic Consumer "
+      "Dialogue",
+    .name_ja = "Trans Atlantic Consumer Dialogue - TACD   Transatlantic Consumer Dialogue",
     .category = "government", .portal = "https://tacd.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1202,11 +1219,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 24 Sep 2026 "
       "18:56:35 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q7834704", .name = "Transnational Association of Christian Colleges and Schools "
-      "(international-organization, XX) - TRACS",
-    .name_ja = "Transnational Association of Christian Colleges and Schools (international-organization, XX) - TRACS",
+  { .id = "JO46_IGO_Q7834704", .name = "Transnational Association of Christian Colleges and Schools - "
+      "TRACS",
+    .name_ja = "Transnational Association of Christian Colleges and Schools - TRACS",
     .category = "government", .portal = "https://www.tracs.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1221,11 +1239,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Wed, 31 Aug 2022 "
       "06:00:00 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q7886609", .name = "Union of Ibero-American Capital Cities "
-      "(international-organization, XX) - UCCI",
-    .name_ja = "Union of Ibero-American Capital Cities (international-organization, XX) - UCCI",
+  { .id = "JO46_IGO_Q7886609", .name = "Union of Ibero-American Capital Cities - UCCI",
+    .name_ja = "Union of Ibero-American Capital Cities - UCCI",
     .category = "government", .portal = "https://ciudadesiberoamericanas.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1240,11 +1258,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 30 Sep 2026 "
       "10:54:41 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q8035540", .name = "World Clown Association (international-organization, XX) - World "
-      "Clown Association",
-    .name_ja = "World Clown Association (international-organization, XX) - World Clown Association",
+  { .id = "JO46_IGO_Q8035540", .name = "World Clown Association - World Clown Association",
+    .name_ja = "World Clown Association - World Clown Association",
     .category = "government", .portal = "https://worldclown.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1259,11 +1277,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 14 Aug 2025 "
       "19:18:59 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q8348482", .name = "Comisión Administradora del Río Uruguay "
-      "(international-organization, XX) - C.A.R.U.",
-    .name_ja = "Comisión Administradora del Río Uruguay (international-organization, XX) - C.A.R.U.",
+  { .id = "JO46_IGO_Q8348482", .name = "Comisión Administradora del Río Uruguay - C.A.R.U.",
+    .name_ja = "Comisión Administradora del Río Uruguay - C.A.R.U.",
     .category = "government", .portal = "https://caru.org.uy/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1278,10 +1296,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
       "17:41:29 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q9256216", .name = "Eurofish (international-organization, XX) - Eurofish",
-    .name_ja = "Eurofish (international-organization, XX) - Eurofish",
+  { .id = "JO46_IGO_Q9256216", .name = "Eurofish - Eurofish",
+    .name_ja = "Eurofish - Eurofish",
     .category = "government", .portal = "https://eurofish.dk/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1296,10 +1315,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
       "08:54:23 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q9256216_2", .name = "Eurofish (international-organization, XX) - Eurofish",
-    .name_ja = "Eurofish (international-organization, XX) - Eurofish",
+  { .id = "JO46_IGO_Q9256216_2", .name = "Eurofish - Eurofish",
+    .name_ja = "Eurofish - Eurofish",
     .category = "government", .portal = "https://eurofish.dk/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1314,11 +1334,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
       "2026-10-09T08:54:30Z. A feed the organisation itself declares or "
-      "links on its site root." },
+      "links on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q133207", .name = "Muslim Brotherhood (international-organization, XX) - إخوان "
-      "أونلاين",
-    .name_ja = "Muslim Brotherhood (international-organization, XX) - إخوان أونلاين",
+  { .id = "JO46_IGO_Q133207", .name = "Muslim Brotherhood - إخوان أونلاين",
+    .name_ja = "Muslim Brotherhood - إخوان أونلاين",
     .category = "government", .portal = "https://ikhwanonline.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1333,11 +1353,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "12:35:02 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q4288167", .name = "International Association for Suicide Prevention "
-      "(international-organization, XX) - IASP",
-    .name_ja = "International Association for Suicide Prevention (international-organization, XX) - IASP",
+  { .id = "JO46_IGO_Q4288167", .name = "International Association for Suicide Prevention - IASP",
+    .name_ja = "International Association for Suicide Prevention - IASP",
     .category = "government", .portal = "https://www.iasp.info/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1352,11 +1372,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 06 Oct 2026 "
       "14:20:23 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q3917324", .name = "World Association of Belarusians (international-organization, "
-      "XX) - ЗБС \"Бацькаўшчына\"",
-    .name_ja = "World Association of Belarusians (international-organization, XX) - ЗБС \"Бацькаўшчына\"",
+  { .id = "JO46_IGO_Q3917324", .name = "World Association of Belarusians - ЗБС \"Бацькаўшчына\"",
+    .name_ja = "World Association of Belarusians - ЗБС \"Бацькаўшчына\"",
     .category = "government", .portal = "https://zbsb.info/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1371,11 +1391,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "19:50:07 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q4130823", .name = "Hague Conference on Private International Law "
-      "(international-organization, XX) - HCCH   News",
-    .name_ja = "Hague Conference on Private International Law (international-organization, XX) - HCCH   News",
+  { .id = "JO46_IGO_Q4130823", .name = "Hague Conference on Private International Law - HCCH   News",
+    .name_ja = "Hague Conference on Private International Law - HCCH   News",
     .category = "government", .portal = "https://www.hcch.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1390,11 +1410,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1009 items, RSS2 feed, newest Sun, 18 Oct "
       "2026 15:58:28 GMT. A feed the organisation itself declares or "
-      "links on its site root." },
+      "links on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q6052211", .name = "International OCD Foundation (international-organization, XX) - "
-      "International OCD Foundation",
-    .name_ja = "International OCD Foundation (international-organization, XX) - International OCD Foundation",
+  { .id = "JO46_IGO_Q6052211", .name = "International OCD Foundation - International OCD Foundation",
+    .name_ja = "International OCD Foundation - International OCD Foundation",
     .category = "government", .portal = "https://iocdf.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1409,11 +1429,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "20:30:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q6053396", .name = "International Society for Philosophy of Music Education "
-      "(international-organization, XX) - ISPME",
-    .name_ja = "International Society for Philosophy of Music Education (international-organization, XX) - ISPME",
+  { .id = "JO46_IGO_Q6053396", .name = "International Society for Philosophy of Music Education - ISPME",
+    .name_ja = "International Society for Philosophy of Music Education - ISPME",
     .category = "government", .portal = "https://ispme.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1428,11 +1448,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 2 items, RSS2 feed, newest Wed, 08 Nov 2017 "
       "15:29:34 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q6053396_2", .name = "International Society for Philosophy of Music Education "
-      "(international-organization, XX) - ISPME",
-    .name_ja = "International Society for Philosophy of Music Education (international-organization, XX) - ISPME",
+  { .id = "JO46_IGO_Q6053396_2", .name = "International Society for Philosophy of Music Education - ISPME",
+    .name_ja = "International Society for Philosophy of Music Education - ISPME",
     .category = "government", .portal = "https://ispme.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1447,12 +1467,13 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
       "2017-11-08T15:29:34Z. A feed the organisation itself declares or "
-      "links on its site root." },
+      "links on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q6053438", .name = "International Society for the History of Philosophy of Science "
-      "(international-organization, XX) - HOPOS – The International "
-      "Society for History of Philosophy of Science",
-    .name_ja = "International Society for the History of Philosophy of Science (international-organization, XX) - HOPOS – The International Society for History of Philosophy of Science",
+  { .id = "JO46_IGO_Q6053438", .name = "International Society for the History of Philosophy of Science - "
+      "HOPOS – The International Society for History of Philosophy of "
+      "Science",
+    .name_ja = "International Society for the History of Philosophy of Science - HOPOS – The International Society for History of Philosophy of Science",
     .category = "government", .portal = "http://hopos.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1467,12 +1488,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 2 items, RSS2 feed, newest Thu, 17 May 2018 "
       "14:56:15 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q6053726", .name = "International Stuttering Association "
-      "(international-organization, XX) - International Stuttering "
+  { .id = "JO46_IGO_Q6053726", .name = "International Stuttering Association - International Stuttering "
       "Association",
-    .name_ja = "International Stuttering Association (international-organization, XX) - International Stuttering Association",
+    .name_ja = "International Stuttering Association - International Stuttering Association",
     .category = "government", .portal = "https://www.isastutter.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1487,12 +1508,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 06 Feb 2023 "
       "19:04:43 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q6054110", .name = "International Union of Muslim Scholars "
-      "(international-organization, XX) - الاتحاد العالمي للعلماء "
+  { .id = "JO46_IGO_Q6054110", .name = "International Union of Muslim Scholars - الاتحاد العالمي للعلماء "
       "المسلمين",
-    .name_ja = "International Union of Muslim Scholars (international-organization, XX) - الاتحاد العالمي للعلماء المسلمين",
+    .name_ja = "International Union of Muslim Scholars - الاتحاد العالمي للعلماء المسلمين",
     .category = "government", .portal = "https://iumsonline.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1507,12 +1528,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "11:37:26 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
   { .id = "JO46_IGO_Q6100970", .name = "Iwokrama International Centre for Rain Forest Conservation and "
-      "Development (international-organization, XX) - Iwokrama "
-      "International Centre",
-    .name_ja = "Iwokrama International Centre for Rain Forest Conservation and Development (international-organization, XX) - Iwokrama International Centre",
+      "Development - Iwokrama International Centre",
+    .name_ja = "Iwokrama International Centre for Rain Forest Conservation and Development - Iwokrama International Centre",
     .category = "government", .portal = "https://iwokrama.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1527,11 +1548,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 04 Mar 2025 "
       "00:50:39 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q129516", .name = "International Academy of Sciences San Marino "
-      "(international-organization, XX) - AIS San-Marino",
-    .name_ja = "International Academy of Sciences San Marino (international-organization, XX) - AIS San-Marino",
+  { .id = "JO46_IGO_Q129516", .name = "International Academy of Sciences San Marino - AIS San-Marino",
+    .name_ja = "International Academy of Sciences San Marino - AIS San-Marino",
     .category = "government", .portal = "http://www.ais-sanmarino.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1546,11 +1567,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 56 items, RSS2 feed, newest Wed, 26 Dec 2018 "
       "12:48:52 +0100. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1865122", .name = "Bahá'í International Community (international-organization, XX) "
-      "- Bahá’í International Community - Representative Offices",
-    .name_ja = "Bahá'í International Community (international-organization, XX) - Bahá’í International Community - Representative Offices",
+  { .id = "JO46_IGO_Q1865122", .name = "Bahá'í International Community - Bahá’í International Community "
+      "- Representative Offices",
+    .name_ja = "Bahá'í International Community - Bahá’í International Community - Representative Offices",
     .category = "government", .portal = "https://www.bic.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1565,11 +1587,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Wed, 23 Sep 2026 "
       "19:06:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1939300", .name = "Council for German Orthography (international-organization, XX) "
-      "- Rechtschreibrat",
-    .name_ja = "Council for German Orthography (international-organization, XX) - Rechtschreibrat",
+  { .id = "JO46_IGO_Q1939300", .name = "Council for German Orthography - Rechtschreibrat",
+    .name_ja = "Council for German Orthography - Rechtschreibrat",
     .category = "government", .portal = "https://www.rechtschreibrat.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1584,11 +1606,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 01 Oct 2025 "
       "10:37:35 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1666759", .name = "International Mobile Satellite Organization "
-      "(international-organization, XX) - IMSO",
-    .name_ja = "International Mobile Satellite Organization (international-organization, XX) - IMSO",
+  { .id = "JO46_IGO_Q1666759", .name = "International Mobile Satellite Organization - IMSO",
+    .name_ja = "International Mobile Satellite Organization - IMSO",
     .category = "government", .portal = "https://imso.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1603,11 +1625,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "11:02:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
   { .id = "JO46_IGO_Q1666896", .name = "International Society for Augmentative and Alternative "
-      "Communication (international-organization, XX) - ISAAC",
-    .name_ja = "International Society for Augmentative and Alternative Communication (international-organization, XX) - ISAAC",
+      "Communication - ISAAC",
+    .name_ja = "International Society for Augmentative and Alternative Communication - ISAAC",
     .category = "government", .portal = "https://isaac-online.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1622,12 +1645,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 21 Apr 2020 "
       "15:46:03 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1667263", .name = "International Society for Folk Narrative Research "
-      "(international-organization, XX) - The International Society For "
-      "Folk Narrative Research",
-    .name_ja = "International Society for Folk Narrative Research (international-organization, XX) - The International Society For Folk Narrative Research",
+  { .id = "JO46_IGO_Q1667263", .name = "International Society for Folk Narrative Research - The "
+      "International Society For Folk Narrative Research",
+    .name_ja = "International Society for Folk Narrative Research - The International Society For Folk Narrative Research",
     .category = "government", .portal = "https://isfnr.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1642,11 +1665,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 25 Sep 2026 "
       "10:17:58 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1667326", .name = "International Cocoa Organization (international-organization, "
-      "XX) - International Cocoa Organization",
-    .name_ja = "International Cocoa Organization (international-organization, XX) - International Cocoa Organization",
+  { .id = "JO46_IGO_Q1667326", .name = "International Cocoa Organization - International Cocoa "
+      "Organization",
+    .name_ja = "International Cocoa Organization - International Cocoa Organization",
     .category = "government", .portal = "https://www.icco.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1661,11 +1685,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 05 Oct 2026 "
       "09:46:41 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q5124582", .name = "Civil Society Coalition on Climate Change "
-      "(international-organization, XX) - CSCCC",
-    .name_ja = "Civil Society Coalition on Climate Change (international-organization, XX) - CSCCC",
+  { .id = "JO46_IGO_Q5124582", .name = "Civil Society Coalition on Climate Change - CSCCC",
+    .name_ja = "Civil Society Coalition on Climate Change - CSCCC",
     .category = "government", .portal = "https://www.csccc.info/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1680,11 +1704,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 25 Aug 2024 "
       "01:41:47 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q5133453", .name = "Climate Vulnerable Forum (international-organization, XX) - "
-      "CVFV20.Org",
-    .name_ja = "Climate Vulnerable Forum (international-organization, XX) - CVFV20.Org",
+  { .id = "JO46_IGO_Q5133453", .name = "Climate Vulnerable Forum - CVFV20.Org",
+    .name_ja = "Climate Vulnerable Forum - CVFV20.Org",
     .category = "government", .portal = "https://cvfv20.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1699,12 +1723,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "06:51:25 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q5153868", .name = "Commonwealth Telecommunications Organisation "
-      "(international-organization, XX) - Commonwealth "
+  { .id = "JO46_IGO_Q5153868", .name = "Commonwealth Telecommunications Organisation - Commonwealth "
       "Telecommunications Organisation",
-    .name_ja = "Commonwealth Telecommunications Organisation (international-organization, XX) - Commonwealth Telecommunications Organisation",
+    .name_ja = "Commonwealth Telecommunications Organisation - Commonwealth Telecommunications Organisation",
     .category = "government", .portal = "https://www.cto.int/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1719,11 +1743,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Mon, 25 Mar 2024 "
       "11:31:46 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q5159809", .name = "Confederation of European Paper Industries "
-      "(international-organization, XX) - www.cepi.org",
-    .name_ja = "Confederation of European Paper Industries (international-organization, XX) - www.cepi.org",
+  { .id = "JO46_IGO_Q5159809", .name = "Confederation of European Paper Industries - www.cepi.org",
+    .name_ja = "Confederation of European Paper Industries - www.cepi.org",
     .category = "government", .portal = "https://www.cepi.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1738,11 +1762,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "08:03:05 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q5327596", .name = "EastWest Institute (international-organization, XX) - John Edwin "
-      "Mroz Global Leadership Institute",
-    .name_ja = "EastWest Institute (international-organization, XX) - John Edwin Mroz Global Leadership Institute",
+  { .id = "JO46_IGO_Q5327596", .name = "EastWest Institute - John Edwin Mroz Global Leadership Institute",
+    .name_ja = "EastWest Institute - John Edwin Mroz Global Leadership Institute",
     .category = "government", .portal = "https://mrozinstitute.charleston.edu/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1757,11 +1781,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 2 items, RSS2 feed, newest Tue, 28 Nov 2023 "
       "18:25:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q5412231", .name = "European Anti Poverty Network (international-organization, XX) - "
-      "EAPN",
-    .name_ja = "European Anti Poverty Network (international-organization, XX) - EAPN",
+  { .id = "JO46_IGO_Q5412231", .name = "European Anti Poverty Network - EAPN",
+    .name_ja = "European Anti Poverty Network - EAPN",
     .category = "government", .portal = "https://www.eapn.eu/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1776,11 +1800,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "15:36:46 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1559556", .name = "Pax Christi International (international-organization, XX) - PAX "
-      "Christi International",
-    .name_ja = "Pax Christi International (international-organization, XX) - PAX Christi International",
+  { .id = "JO46_IGO_Q1559556", .name = "Pax Christi International - PAX Christi International",
+    .name_ja = "Pax Christi International - PAX Christi International",
     .category = "government", .portal = "https://paxchristi.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1795,11 +1819,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 4 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "09:39:59 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1563473", .name = "International Clarinet Association (international-organization, "
-      "XX) - International Clarinet Association",
-    .name_ja = "International Clarinet Association (international-organization, XX) - International Clarinet Association",
+  { .id = "JO46_IGO_Q1563473", .name = "International Clarinet Association - International Clarinet "
+      "Association",
+    .name_ja = "International Clarinet Association - International Clarinet Association",
     .category = "government", .portal = "https://clarinet.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1814,11 +1839,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 04 Sep 2026 "
       "19:01:40 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1571188", .name = "World Youth Alliance (international-organization, XX) - World "
-      "Youth Alliance",
-    .name_ja = "World Youth Alliance (international-organization, XX) - World Youth Alliance",
+  { .id = "JO46_IGO_Q1571188", .name = "World Youth Alliance - World Youth Alliance",
+    .name_ja = "World Youth Alliance - World Youth Alliance",
     .category = "government", .portal = "https://wya.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1833,11 +1858,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 10 Sep 2026 "
       "18:01:43 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1586624", .name = "World Forum on Shooting Activities (international-organization, "
-      "XX) - WFSA",
-    .name_ja = "World Forum on Shooting Activities (international-organization, XX) - WFSA",
+  { .id = "JO46_IGO_Q1586624", .name = "World Forum on Shooting Activities - WFSA",
+    .name_ja = "World Forum on Shooting Activities - WFSA",
     .category = "government", .portal = "https://www.wfsa.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1852,12 +1877,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Tue, 10 Mar 2026 "
       "12:55:16 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q842988", .name = "Association of East Asian Research Universities "
-      "(international-organization, XX) - Agenda Dunia & Nasional – "
-      "Peristiwa Penting Hari Ini",
-    .name_ja = "Association of East Asian Research Universities (international-organization, XX) - Agenda Dunia & Nasional – Peristiwa Penting Hari Ini",
+  { .id = "JO46_IGO_Q842988", .name = "Association of East Asian Research Universities - Agenda Dunia & "
+      "Nasional – Peristiwa Penting Hari Ini",
+    .name_ja = "Association of East Asian Research Universities - Agenda Dunia & Nasional – Peristiwa Penting Hari Ini",
     .category = "government", .portal = "https://www.aearu.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1872,11 +1897,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "12:22:55 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q844554", .name = "International Union of Tenants (international-organization, XX) "
-      "- A.P.D.L.C celebrates International Tenants’ Day",
-    .name_ja = "International Union of Tenants (international-organization, XX) - A.P.D.L.C celebrates International Tenants’ Day",
+  { .id = "JO46_IGO_Q844554", .name = "International Union of Tenants - A.P.D.L.C celebrates "
+      "International Tenants’ Day",
+    .name_ja = "International Union of Tenants - A.P.D.L.C celebrates International Tenants’ Day",
     .category = "government", .portal = "https://www.iut.nu/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1891,11 +1917,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 06 Oct 2026 "
       "07:08:17 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1114688", .name = "International Commission against Impunity in Guatemala "
-      "(international-organization, XX) - ⚖ CICIG",
-    .name_ja = "International Commission against Impunity in Guatemala (international-organization, XX) - ⚖ CICIG",
+  { .id = "JO46_IGO_Q1114688", .name = "International Commission against Impunity in Guatemala - ⚖ CICIG",
+    .name_ja = "International Commission against Impunity in Guatemala - ⚖ CICIG",
     .category = "government", .portal = "https://www.cicig.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1910,10 +1936,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Tue, 03 Sep 2019 "
       "19:22:05 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q3356047", .name = "CICOPA (international-organization, XX) - CICOPA",
-    .name_ja = "CICOPA (international-organization, XX) - CICOPA",
+  { .id = "JO46_IGO_Q3356047", .name = "CICOPA - CICOPA",
+    .name_ja = "CICOPA - CICOPA",
     .category = "government", .portal = "https://www.cicopa.coop/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1928,11 +1955,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 30 Sep 2026 "
       "07:23:48 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q3456835", .name = "International Network of Basin Organizations "
-      "(international-organization, XX) - RIOB",
-    .name_ja = "International Network of Basin Organizations (international-organization, XX) - RIOB",
+  { .id = "JO46_IGO_Q3456835", .name = "International Network of Basin Organizations - RIOB",
+    .name_ja = "International Network of Basin Organizations - RIOB",
     .category = "government", .portal = "https://www.inbo-news.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1947,11 +1974,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 06 Oct 2026 "
       "14:51:08 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1376816", .name = "European Network of Forensic Science Institutes "
-      "(international-organization, XX) - ENFSI",
-    .name_ja = "European Network of Forensic Science Institutes (international-organization, XX) - ENFSI",
+  { .id = "JO46_IGO_Q1376816", .name = "European Network of Forensic Science Institutes - ENFSI",
+    .name_ja = "European Network of Forensic Science Institutes - ENFSI",
     .category = "government", .portal = "https://enfsi.eu/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1966,11 +1993,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 21 Aug 2025 "
       "12:15:28 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q3866537", .name = "Movement Coordination Centre Europe (international-organization, "
-      "XX) - Movement Coordination Centre Europe",
-    .name_ja = "Movement Coordination Centre Europe (international-organization, XX) - Movement Coordination Centre Europe",
+  { .id = "JO46_IGO_Q3866537", .name = "Movement Coordination Centre Europe - Movement Coordination "
+      "Centre Europe",
+    .name_ja = "Movement Coordination Centre Europe - Movement Coordination Centre Europe",
     .category = "government", .portal = "https://mcce-mil.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -1985,10 +2013,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "10:15:30 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q5970551", .name = "iERA (international-organization, XX) - iERA",
-    .name_ja = "iERA (international-organization, XX) - iERA",
+  { .id = "JO46_IGO_Q5970551", .name = "iERA - iERA",
+    .name_ja = "iERA - iERA",
     .category = "government", .portal = "https://iera.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2003,11 +2032,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 14 Sep 2023 "
       "05:16:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q5972067", .name = "Independent Music Companies Association "
-      "(international-organization, XX) - IMPALA",
-    .name_ja = "Independent Music Companies Association (international-organization, XX) - IMPALA",
+  { .id = "JO46_IGO_Q5972067", .name = "Independent Music Companies Association - IMPALA",
+    .name_ja = "Independent Music Companies Association - IMPALA",
     .category = "government", .portal = "https://www.impalamusic.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2022,12 +2051,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "06:57:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q6048154", .name = "International Alliance for Women in Music "
-      "(international-organization, XX) - International Alliance for "
-      "Women in Music",
-    .name_ja = "International Alliance for Women in Music (international-organization, XX) - International Alliance for Women in Music",
+  { .id = "JO46_IGO_Q6048154", .name = "International Alliance for Women in Music - International "
+      "Alliance for Women in Music",
+    .name_ja = "International Alliance for Women in Music - International Alliance for Women in Music",
     .category = "government", .portal = "https://iawm.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2042,11 +2071,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 01 Oct 2026 "
       "00:00:51 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
   { .id = "JO46_IGO_Q6048317", .name = "International Association for Measurement and Evaluation of "
-      "Communication (international-organization, XX) - AMEC",
-    .name_ja = "International Association for Measurement and Evaluation of Communication (international-organization, XX) - AMEC",
+      "Communication - AMEC",
+    .name_ja = "International Association for Measurement and Evaluation of Communication - AMEC",
     .category = "government", .portal = "https://amecorg.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2061,10 +2091,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 12 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "13:34:41 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q6690164", .name = "Love146 (international-organization, XX) - Love146",
-    .name_ja = "Love146 (international-organization, XX) - Love146",
+  { .id = "JO46_IGO_Q6690164", .name = "Love146 - Love146",
+    .name_ja = "Love146 - Love146",
     .category = "government", .portal = "https://love146.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2079,11 +2110,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 16 items, RSS2 feed, newest Thu, 30 Jul 2026 "
       "00:49:44 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q6942609", .name = "Musicians Without Borders (international-organization, XX) - "
-      "Musicians without Borders",
-    .name_ja = "Musicians Without Borders (international-organization, XX) - Musicians without Borders",
+  { .id = "JO46_IGO_Q6942609", .name = "Musicians Without Borders - Musicians without Borders",
+    .name_ja = "Musicians Without Borders - Musicians without Borders",
     .category = "government", .portal = "https://www.musicianswithoutborders.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2098,11 +2129,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "17:38:33 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q7122288", .name = "Pacific Alliance (international-organization, XX) - Alianza del "
-      "Pacífico.",
-    .name_ja = "Pacific Alliance (international-organization, XX) - Alianza del Pacífico.",
+  { .id = "JO46_IGO_Q7122288", .name = "Pacific Alliance - Alianza del Pacífico.",
+    .name_ja = "Pacific Alliance - Alianza del Pacífico.",
     .category = "government", .portal = "https://alianzapacifico.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2117,11 +2148,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 10 Oct 2026 "
       "03:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q2303368", .name = "World Federation of Right to Die Societies "
-      "(international-organization, XX) - WFRTDS",
-    .name_ja = "World Federation of Right to Die Societies (international-organization, XX) - WFRTDS",
+  { .id = "JO46_IGO_Q2303368", .name = "World Federation of Right to Die Societies - WFRTDS",
+    .name_ja = "World Federation of Right to Die Societies - WFRTDS",
     .category = "government", .portal = "https://wfrtds.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2136,11 +2167,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
       "14:46:48 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q2328638", .name = "European Go Federation (international-organization, XX) - "
-      "European Go Federation",
-    .name_ja = "European Go Federation (international-organization, XX) - European Go Federation",
+  { .id = "JO46_IGO_Q2328638", .name = "European Go Federation - European Go Federation",
+    .name_ja = "European Go Federation - European Go Federation",
     .category = "government", .portal = "https://www.eurogofed.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2155,11 +2186,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "12:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q2328638_2", .name = "European Go Federation (international-organization, XX) - "
-      "European Go Federation",
-    .name_ja = "European Go Federation (international-organization, XX) - European Go Federation",
+  { .id = "JO46_IGO_Q2328638_2", .name = "European Go Federation - European Go Federation",
+    .name_ja = "European Go Federation - European Go Federation",
     .category = "government", .portal = "https://www.eurogofed.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2174,11 +2205,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "12:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q14816384", .name = "Football Supporters Europe (international-organization, XX) - "
-      "Football Supporters Europe",
-    .name_ja = "Football Supporters Europe (international-organization, XX) - Football Supporters Europe",
+  { .id = "JO46_IGO_Q14816384", .name = "Football Supporters Europe - Football Supporters Europe",
+    .name_ja = "Football Supporters Europe - Football Supporters Europe",
     .category = "government", .portal = "https://www.fanseurope.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2193,11 +2224,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 25 Sep 2026 "
       "11:40:16 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q15627507", .name = "International Amateur Theatre Association "
-      "(international-organization, XX) - AITA/IATA",
-    .name_ja = "International Amateur Theatre Association (international-organization, XX) - AITA/IATA",
+  { .id = "JO46_IGO_Q15627507", .name = "International Amateur Theatre Association - AITA/IATA",
+    .name_ja = "International Amateur Theatre Association - AITA/IATA",
     .category = "government", .portal = "https://www.aitaiata.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2212,11 +2243,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 04 Oct 2026 "
       "18:31:51 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q16002010", .name = "African Union of Broadcasting (international-organization, XX) - "
-      "AUB-UAR",
-    .name_ja = "African Union of Broadcasting (international-organization, XX) - AUB-UAR",
+  { .id = "JO46_IGO_Q16002010", .name = "African Union of Broadcasting - AUB-UAR",
+    .name_ja = "African Union of Broadcasting - AUB-UAR",
     .category = "government", .portal = "https://www.uar-aub.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2231,10 +2262,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "13:59:33 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q17006726", .name = "Medicines Patent Pool (international-organization, XX) - MPP",
-    .name_ja = "Medicines Patent Pool (international-organization, XX) - MPP",
+  { .id = "JO46_IGO_Q17006726", .name = "Medicines Patent Pool - MPP",
+    .name_ja = "Medicines Patent Pool - MPP",
     .category = "government", .portal = "https://medicinespatentpool.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2249,11 +2281,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "09:09:11 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1639820", .name = "International Association of Geodesy "
-      "(international-organization, XX) - geodesy.science – IAG website",
-    .name_ja = "International Association of Geodesy (international-organization, XX) - geodesy.science – IAG website",
+  { .id = "JO46_IGO_Q1639820", .name = "International Association of Geodesy - geodesy.science – IAG "
+      "website",
+    .name_ja = "International Association of Geodesy - geodesy.science – IAG website",
     .category = "government", .portal = "https://geodesy.science/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2268,11 +2301,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "07:52:46 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1643206", .name = "Pax Romana (international-organization, XX) - ICMICA – MIIC – "
-      "Pax Romana",
-    .name_ja = "Pax Romana (international-organization, XX) - ICMICA – MIIC – Pax Romana",
+  { .id = "JO46_IGO_Q1643206", .name = "Pax Romana - ICMICA – MIIC – Pax Romana",
+    .name_ja = "Pax Romana - ICMICA – MIIC – Pax Romana",
     .category = "government", .portal = "http://www.icmica-miic.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2287,12 +2320,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 01 Dec 2025 "
       "11:07:13 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1665196", .name = "World Federation for Chess Composition "
-      "(international-organization, XX) - WORLD FEDERATION FOR CHESS "
-      "COMPOSITION",
-    .name_ja = "World Federation for Chess Composition (international-organization, XX) - WORLD FEDERATION FOR CHESS COMPOSITION",
+  { .id = "JO46_IGO_Q1665196", .name = "World Federation for Chess Composition - WORLD FEDERATION FOR "
+      "CHESS COMPOSITION",
+    .name_ja = "World Federation for Chess Composition - WORLD FEDERATION FOR CHESS COMPOSITION",
     .category = "government", .portal = "https://www.wfcc.ch/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2307,11 +2340,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "11:09:52 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1665759", .name = "Inter-American Defense Board (international-organization, XX) - "
-      "Inter-American Defense Board",
-    .name_ja = "Inter-American Defense Board (international-organization, XX) - Inter-American Defense Board",
+  { .id = "JO46_IGO_Q1665759", .name = "Inter-American Defense Board - Inter-American Defense Board",
+    .name_ja = "Inter-American Defense Board - Inter-American Defense Board",
     .category = "government", .portal = "https://jid.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2326,11 +2359,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 12 items, RSS2 feed, newest Tue, 01 Sep 2026 "
       "12:56:37 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q2024454", .name = "Online Film Critics Society (international-organization, XX) - "
-      "Online Film Critics Society",
-    .name_ja = "Online Film Critics Society (international-organization, XX) - Online Film Critics Society",
+  { .id = "JO46_IGO_Q2024454", .name = "Online Film Critics Society - Online Film Critics Society",
+    .name_ja = "Online Film Critics Society - Online Film Critics Society",
     .category = "government", .portal = "https://ofcs.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2345,11 +2378,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "13:00:34 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q2072349", .name = "CIPA (international-organization, XX) - CIPA Heritage "
-      "Documentation",
-    .name_ja = "CIPA (international-organization, XX) - CIPA Heritage Documentation",
+  { .id = "JO46_IGO_Q2072349", .name = "CIPA - CIPA Heritage Documentation",
+    .name_ja = "CIPA - CIPA Heritage Documentation",
     .category = "government", .portal = "https://www.cipaheritagedocumentation.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2364,11 +2397,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "10:10:40 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q17022457", .name = "International Disability and Development Consortium "
-      "(international-organization, XX) - IDDC",
-    .name_ja = "International Disability and Development Consortium (international-organization, XX) - IDDC",
+  { .id = "JO46_IGO_Q17022457", .name = "International Disability and Development Consortium - IDDC",
+    .name_ja = "International Disability and Development Consortium - IDDC",
     .category = "government", .portal = "https://www.iddcconsortium.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2383,11 +2416,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Tue, 07 Jul "
       "2026 08:52:52 +0000. A feed the organisation itself declares or "
-      "links on its site root." },
+      "links on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q17075015", .name = "European Association of Institutions in Higher Education "
-      "(international-organization, XX) - EURASHE",
-    .name_ja = "European Association of Institutions in Higher Education (international-organization, XX) - EURASHE",
+  { .id = "JO46_IGO_Q17075015", .name = "European Association of Institutions in Higher Education - "
+      "EURASHE",
+    .name_ja = "European Association of Institutions in Higher Education - EURASHE",
     .category = "government", .portal = "https://www.eurashe.eu/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2402,12 +2436,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 23 Sep 2026 "
       "10:23:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q17081558", .name = "International Geothermal Association "
-      "(international-organization, XX) - International Geothermal "
+  { .id = "JO46_IGO_Q17081558", .name = "International Geothermal Association - International Geothermal "
       "Association",
-    .name_ja = "International Geothermal Association (international-organization, XX) - International Geothermal Association",
+    .name_ja = "International Geothermal Association - International Geothermal Association",
     .category = "government", .portal = "https://worldgeothermal.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2422,11 +2456,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 01 Sep 2025 "
       "11:34:24 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q17087845", .name = "International Playing-Card Society (international-organization, "
-      "XX) - IPCS",
-    .name_ja = "International Playing-Card Society (international-organization, XX) - IPCS",
+  { .id = "JO46_IGO_Q17087845", .name = "International Playing-Card Society - IPCS",
+    .name_ja = "International Playing-Card Society - IPCS",
     .category = "government", .portal = "https://www.i-p-c-s.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2441,11 +2475,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 2 items, RSS2 feed, newest Tue, 21 Nov 2017 "
       "20:24:38 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q18395004", .name = "United Nations Global Pulse (international-organization, XX) - "
-      "UN Global Pulse",
-    .name_ja = "United Nations Global Pulse (international-organization, XX) - UN Global Pulse",
+  { .id = "JO46_IGO_Q18395004", .name = "United Nations Global Pulse - UN Global Pulse",
+    .name_ja = "United Nations Global Pulse - UN Global Pulse",
     .category = "government", .portal = "https://www.unglobalpulse.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2460,11 +2494,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "07:45:58 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q18553830", .name = "European Council of Skeptical Organisations "
-      "(international-organization, XX) - European Skeptics",
-    .name_ja = "European Council of Skeptical Organisations (international-organization, XX) - European Skeptics",
+  { .id = "JO46_IGO_Q18553830", .name = "European Council of Skeptical Organisations - European Skeptics",
+    .name_ja = "European Council of Skeptical Organisations - European Skeptics",
     .category = "government", .portal = "https://www.ecso.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2479,12 +2513,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Wed, 11 Mar 2020 "
       "20:21:09 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q18553830_2", .name = "European Council of Skeptical Organisations "
-      "(international-organization, XX) - News Archive - European "
-      "Skeptics",
-    .name_ja = "European Council of Skeptical Organisations (international-organization, XX) - News Archive - European Skeptics",
+  { .id = "JO46_IGO_Q18553830_2", .name = "European Council of Skeptical Organisations - News Archive - "
+      "European Skeptics",
+    .name_ja = "European Council of Skeptical Organisations - News Archive - European Skeptics",
     .category = "government", .portal = "https://www.ecso.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2499,12 +2533,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Wed, 03 Jun 2026 "
       "18:16:22 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q18553830_3", .name = "European Council of Skeptical Organisations "
-      "(international-organization, XX) - News Archive - European "
-      "Skeptics",
-    .name_ja = "European Council of Skeptical Organisations (international-organization, XX) - News Archive - European Skeptics",
+  { .id = "JO46_IGO_Q18553830_3", .name = "European Council of Skeptical Organisations - News Archive - "
+      "European Skeptics",
+    .name_ja = "European Council of Skeptical Organisations - News Archive - European Skeptics",
     .category = "government", .portal = "https://www.ecso.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2519,11 +2553,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Wed, 03 Jun 2026 "
       "18:16:22 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q18553830_4", .name = "European Council of Skeptical Organisations "
-      "(international-organization, XX) - European Skeptics",
-    .name_ja = "European Council of Skeptical Organisations (international-organization, XX) - European Skeptics",
+  { .id = "JO46_IGO_Q18553830_4", .name = "European Council of Skeptical Organisations - European Skeptics",
+    .name_ja = "European Council of Skeptical Organisations - European Skeptics",
     .category = "government", .portal = "https://www.ecso.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2538,12 +2572,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Wed, 11 Mar 2020 "
       "20:21:09 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q18553830_5", .name = "European Council of Skeptical Organisations "
-      "(international-organization, XX) - Organizations Archive - "
-      "European Skeptics",
-    .name_ja = "European Council of Skeptical Organisations (international-organization, XX) - Organizations Archive - European Skeptics",
+  { .id = "JO46_IGO_Q18553830_5", .name = "European Council of Skeptical Organisations - Organizations "
+      "Archive - European Skeptics",
+    .name_ja = "European Council of Skeptical Organisations - Organizations Archive - European Skeptics",
     .category = "government", .portal = "https://www.ecso.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2558,11 +2592,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Thu, 18 Aug 2016 "
       "07:02:21 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q19859997", .name = "Asia Pacific Geoparks Network (international-organization, XX) - "
-      "Asia Pacific Geoparks Network",
-    .name_ja = "Asia Pacific Geoparks Network (international-organization, XX) - Asia Pacific Geoparks Network",
+  { .id = "JO46_IGO_Q19859997", .name = "Asia Pacific Geoparks Network - Asia Pacific Geoparks Network",
+    .name_ja = "Asia Pacific Geoparks Network - Asia Pacific Geoparks Network",
     .category = "government", .portal = "https://asiapacificgeoparks.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2577,10 +2611,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 05 Sep 2026 "
       "10:31:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q948485", .name = "TECHO (international-organization, XX) - TECHO Latam",
-    .name_ja = "TECHO (international-organization, XX) - TECHO Latam",
+  { .id = "JO46_IGO_Q948485", .name = "TECHO - TECHO Latam",
+    .name_ja = "TECHO - TECHO Latam",
     .category = "government", .portal = "https://techo.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2595,10 +2630,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "14:53:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q951292", .name = "Fimcap (international-organization, XX) - FIMCAP",
-    .name_ja = "Fimcap (international-organization, XX) - FIMCAP",
+  { .id = "JO46_IGO_Q951292", .name = "Fimcap - FIMCAP",
+    .name_ja = "Fimcap - FIMCAP",
     .category = "government", .portal = "https://fimcap.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2613,11 +2649,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 8 items, RSS2 feed, newest Tue, 09 Jun 2026 "
       "10:56:01 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
   { .id = "JO46_IGO_Q994643", .name = "Federation of Associations for Hunting and Conservation of the "
-      "EU (international-organization, XX) - FACE",
-    .name_ja = "Federation of Associations for Hunting and Conservation of the EU (international-organization, XX) - FACE",
+      "EU - FACE",
+    .name_ja = "Federation of Associations for Hunting and Conservation of the EU - FACE",
     .category = "government", .portal = "https://www.face.eu/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2632,11 +2669,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 25 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "14:11:34 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q10278302", .name = "European Logistics Association (international-organization, XX) "
-      "- European Logistics Association",
-    .name_ja = "European Logistics Association (international-organization, XX) - European Logistics Association",
+  { .id = "JO46_IGO_Q10278302", .name = "European Logistics Association - European Logistics Association",
+    .name_ja = "European Logistics Association - European Logistics Association",
     .category = "government", .portal = "https://www.elalog.eu/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2651,11 +2688,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
       "14:37:52 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q10532966", .name = "ISIA (international-organization, XX) - Internationaler "
-      "Skilehrerverband",
-    .name_ja = "ISIA (international-organization, XX) - Internationaler Skilehrerverband",
+  { .id = "JO46_IGO_Q10532966", .name = "ISIA - Internationaler Skilehrerverband",
+    .name_ja = "ISIA - Internationaler Skilehrerverband",
     .category = "government", .portal = "https://isia.ski/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2670,11 +2707,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 14 Jul 2026 "
       "11:13:58 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q10720499", .name = "Worldskills International (international-organization, XX) - "
-      "WorldSkills",
-    .name_ja = "Worldskills International (international-organization, XX) - WorldSkills",
+  { .id = "JO46_IGO_Q10720499", .name = "Worldskills International - WorldSkills",
+    .name_ja = "Worldskills International - WorldSkills",
     .category = "government", .portal = "http://feeds.feedburner.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2689,12 +2726,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "09:45:26 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q11202105", .name = "Platform of European Memory and Conscience "
-      "(international-organization, XX) - Platform of European Memory "
-      "and Conscience",
-    .name_ja = "Platform of European Memory and Conscience (international-organization, XX) - Platform of European Memory and Conscience",
+  { .id = "JO46_IGO_Q11202105", .name = "Platform of European Memory and Conscience - Platform of "
+      "European Memory and Conscience",
+    .name_ja = "Platform of European Memory and Conscience - Platform of European Memory and Conscience",
     .category = "government", .portal = "https://www.memoryandconscience.eu/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2709,11 +2746,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 7 items, RSS2 feed, newest Fri, 18 Sep 2026 "
       "14:44:15 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q11969399", .name = "Folklore Fellows (international-organization, XX) - Folklore "
-      "Fellows",
-    .name_ja = "Folklore Fellows (international-organization, XX) - Folklore Fellows",
+  { .id = "JO46_IGO_Q11969399", .name = "Folklore Fellows - Folklore Fellows",
+    .name_ja = "Folklore Fellows - Folklore Fellows",
     .category = "government", .portal = "https://www.folklorefellows.fi/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2728,11 +2765,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 29 Apr 2026 "
       "07:05:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q11985120", .name = "European Microlight Federation (international-organization, XX) "
-      "- European Microlight Federation",
-    .name_ja = "European Microlight Federation (international-organization, XX) - European Microlight Federation",
+  { .id = "JO46_IGO_Q11985120", .name = "European Microlight Federation - European Microlight Federation",
+    .name_ja = "European Microlight Federation - European Microlight Federation",
     .category = "government", .portal = "https://emf.aero/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2747,11 +2784,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 25 Jan 2026 "
       "13:58:44 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q2549011", .name = "World Draughts Federation (international-organization, XX) - "
-      "FMJD",
-    .name_ja = "World Draughts Federation (international-organization, XX) - FMJD",
+  { .id = "JO46_IGO_Q2549011", .name = "World Draughts Federation - FMJD",
+    .name_ja = "World Draughts Federation - FMJD",
     .category = "government", .portal = "http://fmjd.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2766,10 +2803,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest (no date field). "
       "A feed the organisation itself declares or links on its site "
-      "root." },
+      "root. Wikidata classes it as international-organization." },
 
-  { .id = "JO46_IGO_Q2622118", .name = "New Acropolis (international-organization, XX) - Nueva Acrópolis",
-    .name_ja = "New Acropolis (international-organization, XX) - Nueva Acrópolis",
+  { .id = "JO46_IGO_Q2622118", .name = "New Acropolis - Nueva Acrópolis",
+    .name_ja = "New Acropolis - Nueva Acrópolis",
     .category = "government", .portal = "https://www.acropolis.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2784,12 +2821,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "16:50:08 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q2629175", .name = "International Association for Analytical Psychology "
-      "(international-organization, XX) - International Association of "
-      "Analytical Psychology – IAAP",
-    .name_ja = "International Association for Analytical Psychology (international-organization, XX) - International Association of Analytical Psychology – IAAP",
+  { .id = "JO46_IGO_Q2629175", .name = "International Association for Analytical Psychology - "
+      "International Association of Analytical Psychology – IAAP",
+    .name_ja = "International Association for Analytical Psychology - International Association of Analytical Psychology – IAAP",
     .category = "government", .portal = "https://iaap.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2804,12 +2841,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "06:24:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q5413210", .name = "European Society for Translation Studies "
-      "(international-organization, XX) - European Society for "
+  { .id = "JO46_IGO_Q5413210", .name = "European Society for Translation Studies - European Society for "
       "Translation Studies",
-    .name_ja = "European Society for Translation Studies (international-organization, XX) - European Society for Translation Studies",
+    .name_ja = "European Society for Translation Studies - European Society for Translation Studies",
     .category = "government", .portal = "https://est-translationstudies.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2824,11 +2861,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 23 Sep 2026 "
       "08:46:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1354497", .name = "World Peace Council (international-organization, XX) - World "
-      "Peace Council",
-    .name_ja = "World Peace Council (international-organization, XX) - World Peace Council",
+  { .id = "JO46_IGO_Q1354497", .name = "World Peace Council - World Peace Council",
+    .name_ja = "World Peace Council - World Peace Council",
     .category = "government", .portal = "https://www.wpc-in.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2843,11 +2880,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 27 Aug 2026 "
       "16:42:37 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1376533", .name = "European Digital Rights (international-organization, XX) - "
-      "European Digital Rights (EDRi)",
-    .name_ja = "European Digital Rights (international-organization, XX) - European Digital Rights (EDRi)",
+  { .id = "JO46_IGO_Q1376533", .name = "European Digital Rights - European Digital Rights (EDRi)",
+    .name_ja = "European Digital Rights - European Digital Rights (EDRi)",
     .category = "government", .portal = "https://edri.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2862,11 +2899,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Thu, 08 Oct 2026 "
       "09:56:02 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q20747451", .name = "European Heritage Heads Forum (international-organization, XX) - "
-      "European Heritage Heads Forum",
-    .name_ja = "European Heritage Heads Forum (international-organization, XX) - European Heritage Heads Forum",
+  { .id = "JO46_IGO_Q20747451", .name = "European Heritage Heads Forum - European Heritage Heads Forum",
+    .name_ja = "European Heritage Heads Forum - European Heritage Heads Forum",
     .category = "government", .portal = "https://ehhf.eu/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2881,11 +2918,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 31 Mar 2025 "
       "07:00:53 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q20819414", .name = "Extraordinary African Chambers (international-organization, XX) "
-      "- chambresafricaines.org",
-    .name_ja = "Extraordinary African Chambers (international-organization, XX) - chambresafricaines.org",
+  { .id = "JO46_IGO_Q20819414", .name = "Extraordinary African Chambers - chambresafricaines.org",
+    .name_ja = "Extraordinary African Chambers - chambresafricaines.org",
     .category = "government", .portal = "https://chambresafricaines.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2900,11 +2937,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "09:41:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q21546325", .name = "ORU Fogar (international-organization, XX) - ORU. Régions Unies "
-      "- Regiones Unidas - Regions United - Oru Fogar",
-    .name_ja = "ORU Fogar (international-organization, XX) - ORU. Régions Unies - Regiones Unidas - Regions United - Oru Fogar",
+  { .id = "JO46_IGO_Q21546325", .name = "ORU Fogar - ORU. Régions Unies - Regiones Unidas - Regions "
+      "United - Oru Fogar",
+    .name_ja = "ORU Fogar - ORU. Régions Unies - Regiones Unidas - Regions United - Oru Fogar",
     .category = "government", .portal = "http://www.regionsunies-fogar.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2919,11 +2957,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "12:50:02 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
   { .id = "JO46_IGO_Q23038092", .name = "Global Research Collaboration for Infectious Disease "
-      "Preparedness (international-organization, XX) - GLOPID-R",
-    .name_ja = "Global Research Collaboration for Infectious Disease Preparedness (international-organization, XX) - GLOPID-R",
+      "Preparedness - GLOPID-R",
+    .name_ja = "Global Research Collaboration for Infectious Disease Preparedness - GLOPID-R",
     .category = "government", .portal = "https://www.glopid-r.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2938,11 +2977,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 16 Jun 2026 "
       "14:28:49 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q23047642", .name = "Global Virus Network (international-organization, XX) - Global "
-      "Virus Network",
-    .name_ja = "Global Virus Network (international-organization, XX) - Global Virus Network",
+  { .id = "JO46_IGO_Q23047642", .name = "Global Virus Network - Global Virus Network",
+    .name_ja = "Global Virus Network - Global Virus Network",
     .category = "government", .portal = "https://gvn.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2957,11 +2996,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "13:58:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q24190853", .name = "CANZUK International (international-organization, XX) - CANZUK "
-      "International",
-    .name_ja = "CANZUK International (international-organization, XX) - CANZUK International",
+  { .id = "JO46_IGO_Q24190853", .name = "CANZUK International - CANZUK International",
+    .name_ja = "CANZUK International - CANZUK International",
     .category = "government", .portal = "https://www.canzukinternational.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2976,11 +3015,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 08 Sep 2026 "
       "18:22:49 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q24896411", .name = "Covenant Christian Coalition (international-organization, XX) - "
-      "CCC",
-    .name_ja = "Covenant Christian Coalition (international-organization, XX) - CCC",
+  { .id = "JO46_IGO_Q24896411", .name = "Covenant Christian Coalition - CCC",
+    .name_ja = "Covenant Christian Coalition - CCC",
     .category = "government", .portal = "https://www.ccc.one/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -2995,11 +3034,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 14 items, ATOM feed, newest "
       "2026-09-06T23:52:03.757-05:00. A feed the organisation itself "
-      "declares or links on its site root." },
+      "declares or links on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q24896411_2", .name = "Covenant Christian Coalition (international-organization, XX) - "
-      "CCC",
-    .name_ja = "Covenant Christian Coalition (international-organization, XX) - CCC",
+  { .id = "JO46_IGO_Q24896411_2", .name = "Covenant Christian Coalition - CCC",
+    .name_ja = "Covenant Christian Coalition - CCC",
     .category = "government", .portal = "https://www.ccc.one/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3014,11 +3053,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 14 items, RSS2 feed, newest Wed, 13 Aug 2025 "
       "16:04:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q25452777", .name = "European Union of Science Journalists' Associations "
-      "(international-organization, XX) - EUSJA",
-    .name_ja = "European Union of Science Journalists' Associations (international-organization, XX) - EUSJA",
+  { .id = "JO46_IGO_Q25452777", .name = "European Union of Science Journalists' Associations - EUSJA",
+    .name_ja = "European Union of Science Journalists' Associations - EUSJA",
     .category = "government", .portal = "https://www.eusja.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3033,11 +3072,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 04 Oct 2026 "
       "09:00:05 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q2647520", .name = "World Council for Renewable Energy (international-organization, "
-      "XX) - EUROSOLAR   The European Association for Renewable Energy",
-    .name_ja = "World Council for Renewable Energy (international-organization, XX) - EUROSOLAR   The European Association for Renewable Energy",
+  { .id = "JO46_IGO_Q2647520", .name = "World Council for Renewable Energy - EUROSOLAR   The European "
+      "Association for Renewable Energy",
+    .name_ja = "World Council for Renewable Energy - EUROSOLAR   The European Association for Renewable Energy",
     .category = "government", .portal = "https://www.eurosolar.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3052,11 +3092,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 04 Nov 2025 "
       "15:22:46 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q2652007", .name = "Global Network of People living with HIV/AIDS "
-      "(international-organization, XX) - GNP+",
-    .name_ja = "Global Network of People living with HIV/AIDS (international-organization, XX) - GNP+",
+  { .id = "JO46_IGO_Q2652007", .name = "Global Network of People living with HIV/AIDS - GNP+",
+    .name_ja = "Global Network of People living with HIV/AIDS - GNP+",
     .category = "government", .portal = "https://gnpplus.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3071,11 +3111,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 12 May 2026 "
       "06:18:08 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1340188", .name = "Medieval Chronicle Society (international-organization, XX) - "
-      "The Medieval Chronicle",
-    .name_ja = "Medieval Chronicle Society (international-organization, XX) - The Medieval Chronicle",
+  { .id = "JO46_IGO_Q1340188", .name = "Medieval Chronicle Society - The Medieval Chronicle",
+    .name_ja = "Medieval Chronicle Society - The Medieval Chronicle",
     .category = "government", .portal = "https://medievalchronicle.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3090,11 +3130,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Wed, 21 May 2025 "
       "20:09:45 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1352600", .name = "International Amateur Radio Union (international-organization, "
-      "XX) - International Amateur Radio Union (IARU)",
-    .name_ja = "International Amateur Radio Union (international-organization, XX) - International Amateur Radio Union (IARU)",
+  { .id = "JO46_IGO_Q1352600", .name = "International Amateur Radio Union - International Amateur Radio "
+      "Union (IARU)",
+    .name_ja = "International Amateur Radio Union - International Amateur Radio Union (IARU)",
     .category = "government", .portal = "https://www.iaru.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3109,12 +3150,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 29 Apr 2026 "
       "12:34:22 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q12036534", .name = "International Federation of Language Teacher Associations "
-      "(international-organization, XX) - International Federation of "
-      "Language Teacher Associations",
-    .name_ja = "International Federation of Language Teacher Associations (international-organization, XX) - International Federation of Language Teacher Associations",
+  { .id = "JO46_IGO_Q12036534", .name = "International Federation of Language Teacher Associations - "
+      "International Federation of Language Teacher Associations",
+    .name_ja = "International Federation of Language Teacher Associations - International Federation of Language Teacher Associations",
     .category = "government", .portal = "https://fiplv.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3129,11 +3170,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 13 Jul 2026 "
       "09:16:25 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q12223977", .name = "UMAC (international-organization, XX) - International Council of "
-      "Museums Committee for University Museums and Collection",
-    .name_ja = "UMAC (international-organization, XX) - International Council of Museums Committee for University Museums and Collection",
+  { .id = "JO46_IGO_Q12223977", .name = "UMAC - International Council of Museums Committee for University "
+      "Museums and Collection",
+    .name_ja = "UMAC - International Council of Museums Committee for University Museums and Collection",
     .category = "government", .portal = "https://umac.icom.museum/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3148,11 +3190,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 01 Oct 2026 "
       "16:20:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q12369343", .name = "World Cultural Council (international-organization, XX) - World "
-      "Cultural Council",
-    .name_ja = "World Cultural Council (international-organization, XX) - World Cultural Council",
+  { .id = "JO46_IGO_Q12369343", .name = "World Cultural Council - World Cultural Council",
+    .name_ja = "World Cultural Council - World Cultural Council",
     .category = "government", .portal = "https://www.consejoculturalmundial.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3167,12 +3209,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 27 Jul 2026 "
       "10:00:58 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q50285478", .name = "International Society for Inventory Research "
-      "(international-organization, XX) - International Society for "
-      "Inventory Research",
-    .name_ja = "International Society for Inventory Research (international-organization, XX) - International Society for Inventory Research",
+  { .id = "JO46_IGO_Q50285478", .name = "International Society for Inventory Research - International "
+      "Society for Inventory Research",
+    .name_ja = "International Society for Inventory Research - International Society for Inventory Research",
     .category = "government", .portal = "https://isir.hu/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3187,12 +3229,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 03 Mar 2026 "
       "19:36:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
   { .id = "JO46_IGO_Q54556161", .name = "United Nations Latin American Institute for the Prevention of "
-      "Crime and the Treatment of Offenders "
-      "(international-organization, XX) - ILANUD",
-    .name_ja = "United Nations Latin American Institute for the Prevention of Crime and the Treatment of Offenders (international-organization, XX) - ILANUD",
+      "Crime and the Treatment of Offenders - ILANUD",
+    .name_ja = "United Nations Latin American Institute for the Prevention of Crime and the Treatment of Offenders - ILANUD",
     .category = "government", .portal = "https://www.ilanud.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3207,12 +3249,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "14:50:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
   { .id = "JO46_IGO_Q54556161_2", .name = "United Nations Latin American Institute for the Prevention of "
-      "Crime and the Treatment of Offenders "
-      "(international-organization, XX) - ILANUD",
-    .name_ja = "United Nations Latin American Institute for the Prevention of Crime and the Treatment of Offenders (international-organization, XX) - ILANUD",
+      "Crime and the Treatment of Offenders - ILANUD",
+    .name_ja = "United Nations Latin American Institute for the Prevention of Crime and the Treatment of Offenders - ILANUD",
     .category = "government", .portal = "https://www.ilanud.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3227,11 +3269,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
       "2026-10-16T14:51:13Z. A feed the organisation itself declares or "
-      "links on its site root." },
+      "links on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q55075164", .name = "European Personnel Recovery Centre (international-organization, "
-      "XX) - EPRC",
-    .name_ja = "European Personnel Recovery Centre (international-organization, XX) - EPRC",
+  { .id = "JO46_IGO_Q55075164", .name = "European Personnel Recovery Centre - EPRC",
+    .name_ja = "European Personnel Recovery Centre - EPRC",
     .category = "government", .portal = "https://www.eprc.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3246,11 +3288,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 05 Oct 2026 "
       "10:21:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q55614261", .name = "Ice Sheet Mass Balance Inter-comparison Exercise "
-      "(international-organization, XX) - IMBIE",
-    .name_ja = "Ice Sheet Mass Balance Inter-comparison Exercise (international-organization, XX) - IMBIE",
+  { .id = "JO46_IGO_Q55614261", .name = "Ice Sheet Mass Balance Inter-comparison Exercise - IMBIE",
+    .name_ja = "Ice Sheet Mass Balance Inter-comparison Exercise - IMBIE",
     .category = "government", .portal = "https://imbie.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3265,11 +3307,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Wed, 15 Jul 2026 "
       "13:24:21 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q56256781", .name = "Health for África (international-organization, XX) - Health for "
-      "Africa",
-    .name_ja = "Health for África (international-organization, XX) - Health for Africa",
+  { .id = "JO46_IGO_Q56256781", .name = "Health for África - Health for Africa",
+    .name_ja = "Health for África - Health for Africa",
     .category = "government", .portal = "http://healthforafrica.es/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3284,11 +3326,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 25 May 2023 "
       "15:24:28 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q56320911", .name = "Alliance of Independent Recognized Members of Sport "
-      "(international-organization, XX) - AIMS",
-    .name_ja = "Alliance of Independent Recognized Members of Sport (international-organization, XX) - AIMS",
+  { .id = "JO46_IGO_Q56320911", .name = "Alliance of Independent Recognized Members of Sport - AIMS",
+    .name_ja = "Alliance of Independent Recognized Members of Sport - AIMS",
     .category = "government", .portal = "https://aims.sport/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3303,12 +3345,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "09:41:51 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q56326685", .name = "World Federation of the Deaf Youth Section "
-      "(international-organization, XX) - Page not found – World "
-      "Federation of the Deaf Youth Section (WFDYS)",
-    .name_ja = "World Federation of the Deaf Youth Section (international-organization, XX) - Page not found – World Federation of the Deaf Youth Section (WFDYS)",
+  { .id = "JO46_IGO_Q56326685", .name = "World Federation of the Deaf Youth Section - Page not found – "
+      "World Federation of the Deaf Youth Section (WFDYS)",
+    .name_ja = "World Federation of the Deaf Youth Section - Page not found – World Federation of the Deaf Youth Section (WFDYS)",
     .category = "government", .portal = "https://wfdys.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3323,12 +3365,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Wed, 10 Aug "
       "2022 08:51:01 +0000. A feed the organisation itself declares or "
-      "links on its site root." },
+      "links on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q63970094", .name = "Pacific Rim Research Libraries Alliance "
-      "(international-organization, XX) - Pacific Rim Research "
+  { .id = "JO46_IGO_Q63970094", .name = "Pacific Rim Research Libraries Alliance - Pacific Rim Research "
       "Libraries Alliance",
-    .name_ja = "Pacific Rim Research Libraries Alliance (international-organization, XX) - Pacific Rim Research Libraries Alliance",
+    .name_ja = "Pacific Rim Research Libraries Alliance - Pacific Rim Research Libraries Alliance",
     .category = "government", .portal = "https://pacificrimlibraries.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3343,11 +3385,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 12 items, RSS2 feed, newest Wed, 16 Sep 2026 "
       "07:21:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q68559888", .name = "Amsterdam Time Machine (international-organization, XX) - "
-      "Amsterdam Time Machine",
-    .name_ja = "Amsterdam Time Machine (international-organization, XX) - Amsterdam Time Machine",
+  { .id = "JO46_IGO_Q68559888", .name = "Amsterdam Time Machine - Amsterdam Time Machine",
+    .name_ja = "Amsterdam Time Machine - Amsterdam Time Machine",
     .category = "government", .portal = "https://www.amsterdamtimemachine.nl/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3362,11 +3404,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Thu, 02 Jul 2026 "
       "10:12:31 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q75720752", .name = "European Union of Christian Democratic Workers "
-      "(international-organization, XX) - EUCDW",
-    .name_ja = "European Union of Christian Democratic Workers (international-organization, XX) - EUCDW",
+  { .id = "JO46_IGO_Q75720752", .name = "European Union of Christian Democratic Workers - EUCDW",
+    .name_ja = "European Union of Christian Democratic Workers - EUCDW",
     .category = "government", .portal = "https://www.eucdw.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3381,11 +3423,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 8 items, RSS2 feed, newest Tue, 29 Sep 2026 "
       "18:35:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q88402135", .name = "African Civil Aviation Commission (international-organization, "
-      "XX) - AFCAC",
-    .name_ja = "African Civil Aviation Commission (international-organization, XX) - AFCAC",
+  { .id = "JO46_IGO_Q88402135", .name = "African Civil Aviation Commission - AFCAC",
+    .name_ja = "African Civil Aviation Commission - AFCAC",
     .category = "government", .portal = "https://www.afcac.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3400,11 +3442,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 19 Apr 2026 "
       "23:55:16 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q89794347", .name = "MILMED CoE (international-organization, XX) - NATO MILMED COE "
-      "News and Events",
-    .name_ja = "MILMED CoE (international-organization, XX) - NATO MILMED COE News and Events",
+  { .id = "JO46_IGO_Q89794347", .name = "MILMED CoE - NATO MILMED COE News and Events",
+    .name_ja = "MILMED CoE - NATO MILMED COE News and Events",
     .category = "government", .portal = "https://www.coemed.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3419,12 +3461,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Mon, 05 Oct 2026 "
       "13:03:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q89913719", .name = "International Association for  Classical Archaeology "
-      "(international-organization, XX) - AIAC – Associazione "
-      "Internazionale di Archeologia Classica",
-    .name_ja = "International Association for  Classical Archaeology (international-organization, XX) - AIAC – Associazione Internazionale di Archeologia Classica",
+  { .id = "JO46_IGO_Q89913719", .name = "International Association for  Classical Archaeology - AIAC – "
+      "Associazione Internazionale di Archeologia Classica",
+    .name_ja = "International Association for  Classical Archaeology - AIAC – Associazione Internazionale di Archeologia Classica",
     .category = "government", .portal = "https://www.aiac.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3439,11 +3481,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "09:06:52 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q429283", .name = "Mediterranean Science Commission (international-organization, "
-      "XX) - CIESM",
-    .name_ja = "Mediterranean Science Commission (international-organization, XX) - CIESM",
+  { .id = "JO46_IGO_Q429283", .name = "Mediterranean Science Commission - CIESM",
+    .name_ja = "Mediterranean Science Commission - CIESM",
     .category = "government", .portal = "https://ciesm.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3458,11 +3500,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Thu, 01 Oct 2026 "
       "09:16:14 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q189966", .name = "Economic Community of Central African States "
-      "(international-organization, XX) - Site Web Officiel de la CEEAC",
-    .name_ja = "Economic Community of Central African States (international-organization, XX) - Site Web Officiel de la CEEAC",
+  { .id = "JO46_IGO_Q189966", .name = "Economic Community of Central African States - Site Web Officiel "
+      "de la CEEAC",
+    .name_ja = "Economic Community of Central African States - Site Web Officiel de la CEEAC",
     .category = "government", .portal = "https://www.ceeac-eccas.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3477,11 +3520,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 23 Sep 2026 "
       "18:32:21 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q511252", .name = "International Federation of BodyBuilding & Fitness "
-      "(international-organization, XX) - IFBB",
-    .name_ja = "International Federation of BodyBuilding & Fitness (international-organization, XX) - IFBB",
+  { .id = "JO46_IGO_Q511252", .name = "International Federation of BodyBuilding & Fitness - IFBB",
+    .name_ja = "International Federation of BodyBuilding & Fitness - IFBB",
     .category = "government", .portal = "https://ifbb.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3496,12 +3539,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 29 Sep 2026 "
       "10:33:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q541113", .name = "International Association for Religious Freedom "
-      "(international-organization, XX) - The International Association "
-      "for Religious Freedom",
-    .name_ja = "International Association for Religious Freedom (international-organization, XX) - The International Association for Religious Freedom",
+  { .id = "JO46_IGO_Q541113", .name = "International Association for Religious Freedom - The "
+      "International Association for Religious Freedom",
+    .name_ja = "International Association for Religious Freedom - The International Association for Religious Freedom",
     .category = "government", .portal = "https://iarf.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3516,11 +3559,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "13:56:47 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q252420", .name = "International Peace Bureau (international-organization, XX) - "
-      "IPB – International Peace Bureau",
-    .name_ja = "International Peace Bureau (international-organization, XX) - IPB – International Peace Bureau",
+  { .id = "JO46_IGO_Q252420", .name = "International Peace Bureau - IPB – International Peace Bureau",
+    .name_ja = "International Peace Bureau - IPB – International Peace Bureau",
     .category = "government", .portal = "https://ipb.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3535,12 +3578,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "14:17:26 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q333536", .name = "Asian–African Legal Consultative Organization "
-      "(international-organization, XX) - Asian African Legal "
-      "Consultative Organization",
-    .name_ja = "Asian–African Legal Consultative Organization (international-organization, XX) - Asian African Legal Consultative Organization",
+  { .id = "JO46_IGO_Q333536", .name = "Asian–African Legal Consultative Organization - Asian African "
+      "Legal Consultative Organization",
+    .name_ja = "Asian–African Legal Consultative Organization - Asian African Legal Consultative Organization",
     .category = "government", .portal = "https://www.aalco.int/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3555,12 +3598,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 28 Oct 2019 "
       "08:07:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q333536_2", .name = "Asian–African Legal Consultative Organization "
-      "(international-organization, XX) - Asian African Legal "
-      "Consultative Organization",
-    .name_ja = "Asian–African Legal Consultative Organization (international-organization, XX) - Asian African Legal Consultative Organization",
+  { .id = "JO46_IGO_Q333536_2", .name = "Asian–African Legal Consultative Organization - Asian African "
+      "Legal Consultative Organization",
+    .name_ja = "Asian–African Legal Consultative Organization - Asian African Legal Consultative Organization",
     .category = "government", .portal = "http://arabic.aalco.int/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3575,12 +3618,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 21 Sep 2026 "
       "09:42:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q333536_3", .name = "Asian–African Legal Consultative Organization "
-      "(international-organization, XX) - Asian African Legal "
-      "Consultative Organization",
-    .name_ja = "Asian–African Legal Consultative Organization (international-organization, XX) - Asian African Legal Consultative Organization",
+  { .id = "JO46_IGO_Q333536_3", .name = "Asian–African Legal Consultative Organization - Asian African "
+      "Legal Consultative Organization",
+    .name_ja = "Asian–African Legal Consultative Organization - Asian African Legal Consultative Organization",
     .category = "government", .portal = "http://arabic.aalco.int/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3595,12 +3638,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 21 Sep 2026 "
       "09:42:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q333536_4", .name = "Asian–African Legal Consultative Organization "
-      "(international-organization, XX) - Asian African Legal "
-      "Consultative Organization",
-    .name_ja = "Asian–African Legal Consultative Organization (international-organization, XX) - Asian African Legal Consultative Organization",
+  { .id = "JO46_IGO_Q333536_4", .name = "Asian–African Legal Consultative Organization - Asian African "
+      "Legal Consultative Organization",
+    .name_ja = "Asian–African Legal Consultative Organization - Asian African Legal Consultative Organization",
     .category = "government", .portal = "http://arabic.aalco.int/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3615,11 +3658,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 21 Sep 2026 "
       "09:42:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q333727", .name = "International Seabed Authority (international-organization, XX) "
-      "- International Seabed Authority",
-    .name_ja = "International Seabed Authority (international-organization, XX) - International Seabed Authority",
+  { .id = "JO46_IGO_Q333727", .name = "International Seabed Authority - International Seabed Authority",
+    .name_ja = "International Seabed Authority - International Seabed Authority",
     .category = "government", .portal = "https://isa.org.jm/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3634,11 +3677,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "10:17:34 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q333727_2", .name = "International Seabed Authority (international-organization, XX) "
-      "- International Seabed Authority",
-    .name_ja = "International Seabed Authority (international-organization, XX) - International Seabed Authority",
+  { .id = "JO46_IGO_Q333727_2", .name = "International Seabed Authority - International Seabed Authority",
+    .name_ja = "International Seabed Authority - International Seabed Authority",
     .category = "government", .portal = "https://isa.org.jm/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3653,11 +3696,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 50 items, RSS2 feed, newest (no date field). "
       "A feed the organisation itself declares or links on its site "
-      "root." },
+      "root. Wikidata classes it as international-organization." },
 
-  { .id = "JO46_IGO_Q2106133", .name = "Fur Free Alliance (international-organization, XX) - Fur Free "
-      "Alliance",
-    .name_ja = "Fur Free Alliance (international-organization, XX) - Fur Free Alliance",
+  { .id = "JO46_IGO_Q2106133", .name = "Fur Free Alliance - Fur Free Alliance",
+    .name_ja = "Fur Free Alliance - Fur Free Alliance",
     .category = "government", .portal = "https://www.furfreealliance.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3672,12 +3714,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "09:02:46 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q2199269", .name = "European Journalism Training Association "
-      "(international-organization, XX) - EJTA – European Journalism "
-      "Training Association",
-    .name_ja = "European Journalism Training Association (international-organization, XX) - EJTA – European Journalism Training Association",
+  { .id = "JO46_IGO_Q2199269", .name = "European Journalism Training Association - EJTA – European "
+      "Journalism Training Association",
+    .name_ja = "European Journalism Training Association - EJTA – European Journalism Training Association",
     .category = "government", .portal = "https://ejta.eu/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3692,11 +3734,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 27 Aug 2026 "
       "10:22:38 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q2296759", .name = "Socialist International Women (international-organization, XX) - "
-      "Socialist International Women",
-    .name_ja = "Socialist International Women (international-organization, XX) - Socialist International Women",
+  { .id = "JO46_IGO_Q2296759", .name = "Socialist International Women - Socialist International Women",
+    .name_ja = "Socialist International Women - Socialist International Women",
     .category = "government", .portal = "https://www.socintwomen.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3711,11 +3753,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 07 Mar 2025 "
       "14:21:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q352378", .name = "Adaptation Fund (international-organization, XX) - Adaptation "
-      "Fund",
-    .name_ja = "Adaptation Fund (international-organization, XX) - Adaptation Fund",
+  { .id = "JO46_IGO_Q352378", .name = "Adaptation Fund - Adaptation Fund",
+    .name_ja = "Adaptation Fund - Adaptation Fund",
     .category = "government", .portal = "https://www.adaptation-fund.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3730,11 +3772,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 18 Sep 2026 "
       "14:53:59 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q352378_2", .name = "Adaptation Fund (international-organization, XX) - Adaptation "
-      "Fund",
-    .name_ja = "Adaptation Fund (international-organization, XX) - Adaptation Fund",
+  { .id = "JO46_IGO_Q352378_2", .name = "Adaptation Fund - Adaptation Fund",
+    .name_ja = "Adaptation Fund - Adaptation Fund",
     .category = "government", .portal = "http://www.adaptation-fund.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3749,11 +3791,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 18 Sep 2026 "
       "14:53:59 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q369760", .name = "Nuclear Energy Agency (international-organization, XX) - OECD "
-      "Nuclear Energy Agency Archive Feed",
-    .name_ja = "Nuclear Energy Agency (international-organization, XX) - OECD Nuclear Energy Agency Archive Feed",
+  { .id = "JO46_IGO_Q369760", .name = "Nuclear Energy Agency - OECD Nuclear Energy Agency Archive Feed",
+    .name_ja = "Nuclear Energy Agency - OECD Nuclear Energy Agency Archive Feed",
     .category = "government", .portal = "https://us14.campaign-archive.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3768,12 +3810,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "15:58:40 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q25932145", .name = "International Youth Organization for Ibero-America "
-      "(international-organization, XX) - Organismo Internacional de "
-      "Juventud para Iberoamérica",
-    .name_ja = "International Youth Organization for Ibero-America (international-organization, XX) - Organismo Internacional de Juventud para Iberoamérica",
+  { .id = "JO46_IGO_Q25932145", .name = "International Youth Organization for Ibero-America - Organismo "
+      "Internacional de Juventud para Iberoamérica",
+    .name_ja = "International Youth Organization for Ibero-America - Organismo Internacional de Juventud para Iberoamérica",
     .category = "government", .portal = "https://oij.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3788,11 +3830,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "18:20:14 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q28104143", .name = "World Federation of Orthodontists (international-organization, "
-      "XX) - World Federation of Orthodontists",
-    .name_ja = "World Federation of Orthodontists (international-organization, XX) - World Federation of Orthodontists",
+  { .id = "JO46_IGO_Q28104143", .name = "World Federation of Orthodontists - World Federation of "
+      "Orthodontists",
+    .name_ja = "World Federation of Orthodontists - World Federation of Orthodontists",
     .category = "government", .portal = "https://www.wfo.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3807,11 +3850,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 03 Oct 2026 "
       "05:05:19 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q28127157", .name = "Global Fishing Watch (international-organization, XX) - Global "
-      "Fishing Watch",
-    .name_ja = "Global Fishing Watch (international-organization, XX) - Global Fishing Watch",
+  { .id = "JO46_IGO_Q28127157", .name = "Global Fishing Watch - Global Fishing Watch",
+    .name_ja = "Global Fishing Watch - Global Fishing Watch",
     .category = "government", .portal = "https://globalfishingwatch.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3826,11 +3869,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 23 Sep 2026 "
       "16:58:37 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q28134544", .name = "Am Yisrael Foundation (international-organization, XX) - "
-      "AmYisrael Foundation",
-    .name_ja = "Am Yisrael Foundation (international-organization, XX) - AmYisrael Foundation",
+  { .id = "JO46_IGO_Q28134544", .name = "Am Yisrael Foundation - AmYisrael Foundation",
+    .name_ja = "Am Yisrael Foundation - AmYisrael Foundation",
     .category = "government", .portal = "https://www.amyisraelfoundation.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3845,13 +3888,13 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 13 items, RSS2 feed, newest Wed, 08 Dec 2021 "
       "09:39:16 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
   { .id = "JO46_IGO_Q28191944", .name = "European Committee for drawing up standards in the field of "
-      "public inland navigation (international-organization, XX) - "
-      "CESNI – Comité Européen pour l’Élaboration de Standards dans le "
-      "domai",
-    .name_ja = "European Committee for drawing up standards in the field of public inland navigation (international-organization, XX) - CESNI – Comité Européen pour l’Élaboration de Standards dans le domai",
+      "public inland navigation - CESNI – Comité Européen pour "
+      "l’Élaboration de Standards dans le domai",
+    .name_ja = "European Committee for drawing up standards in the field of public inland navigation - CESNI – Comité Européen pour l’Élaboration de Standards dans le domai",
     .category = "government", .portal = "https://www.cesni.eu/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3866,12 +3909,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Thu, 10 Mar 2016 "
       "13:39:21 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q29577703", .name = "European Health Telematics Association "
-      "(international-organization, XX) - Home - European eHealth "
+  { .id = "JO46_IGO_Q29577703", .name = "European Health Telematics Association - Home - European eHealth "
       "Multidisciplinary Stakeholder Platform",
-    .name_ja = "European Health Telematics Association (international-organization, XX) - Home - European eHealth Multidisciplinary Stakeholder Platform",
+    .name_ja = "European Health Telematics Association - Home - European eHealth Multidisciplinary Stakeholder Platform",
     .category = "government", .portal = "https://www.ehtel.eu/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3886,12 +3929,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 2 items, RSS2 feed, newest Mon, 19 Apr 2021 "
       "11:11:54 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q29577703_2", .name = "European Health Telematics Association "
-      "(international-organization, XX) - Home - European eHealth "
+  { .id = "JO46_IGO_Q29577703_2", .name = "European Health Telematics Association - Home - European eHealth "
       "Multidisciplinary Stakeholder Platform",
-    .name_ja = "European Health Telematics Association (international-organization, XX) - Home - European eHealth Multidisciplinary Stakeholder Platform",
+    .name_ja = "European Health Telematics Association - Home - European eHealth Multidisciplinary Stakeholder Platform",
     .category = "government", .portal = "https://www.ehtel.eu/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3906,11 +3949,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
       "2026-10-18T17:58:39+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
+      "declares or links on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q30255602", .name = "European Centre for Executive Development "
-      "(international-organization, XX) - CEDEP",
-    .name_ja = "European Centre for Executive Development (international-organization, XX) - CEDEP",
+  { .id = "JO46_IGO_Q30255602", .name = "European Centre for Executive Development - CEDEP",
+    .name_ja = "European Centre for Executive Development - CEDEP",
     .category = "government", .portal = "https://cedep.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3925,11 +3968,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 4 items, RSS2 feed, newest Thu, 05 Feb 2026 "
       "09:21:28 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q30596094", .name = "Desert Locust Control Organization for Eastern Africa "
-      "(international-organization, XX) - DLCO-EA",
-    .name_ja = "Desert Locust Control Organization for Eastern Africa (international-organization, XX) - DLCO-EA",
+  { .id = "JO46_IGO_Q30596094", .name = "Desert Locust Control Organization for Eastern Africa - DLCO-EA",
+    .name_ja = "Desert Locust Control Organization for Eastern Africa - DLCO-EA",
     .category = "government", .portal = "https://dlco-ea.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3944,11 +3987,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 29 Jun 2026 "
       "22:22:58 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q50128129", .name = "Forum of Slavic Cultures (international-organization, XX) - FSK "
-      "– forum slovanskih kultur",
-    .name_ja = "Forum of Slavic Cultures (international-organization, XX) - FSK – forum slovanskih kultur",
+  { .id = "JO46_IGO_Q50128129", .name = "Forum of Slavic Cultures - FSK – forum slovanskih kultur",
+    .name_ja = "Forum of Slavic Cultures - FSK – forum slovanskih kultur",
     .category = "government", .portal = "https://www.fsk.si/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3963,13 +4006,13 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 02 Oct 2026 "
       "20:00:19 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
   { .id = "JO46_IGO_Q139565740", .name = "International Workers Committee Against War and Exploitation for "
-      "a Workers International (international-organization, XX) - "
-      "International Workers Committee – Comité ouvrier international – "
-      "Co",
-    .name_ja = "International Workers Committee Against War and Exploitation for a Workers International (international-organization, XX) - International Workers Committee – Comité ouvrier international – Co",
+      "a Workers International - International Workers Committee – "
+      "Comité ouvrier international – Co",
+    .name_ja = "International Workers Committee Against War and Exploitation for a Workers International - International Workers Committee – Comité ouvrier international – Co",
     .category = "government", .portal = "https://coi-iwc.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -3984,11 +4027,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 10 Aug 2026 "
       "12:29:31 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q139570587", .name = "Animal Interfaith Alliance (international-organization, XX) - "
-      "Animal Interfaith Alliance",
-    .name_ja = "Animal Interfaith Alliance (international-organization, XX) - Animal Interfaith Alliance",
+  { .id = "JO46_IGO_Q139570587", .name = "Animal Interfaith Alliance - Animal Interfaith Alliance",
+    .name_ja = "Animal Interfaith Alliance - Animal Interfaith Alliance",
     .category = "government", .portal = "https://animal-interfaith-alliance.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4003,12 +4046,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 29 Sep 2026 "
       "10:56:46 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q141395447", .name = "European Consortium for Accreditation in higher education "
-      "(international-organization, XX) - The European Consortium for "
-      "Accreditation in Higher Education",
-    .name_ja = "European Consortium for Accreditation in higher education (international-organization, XX) - The European Consortium for Accreditation in Higher Education",
+  { .id = "JO46_IGO_Q141395447", .name = "European Consortium for Accreditation in higher education - The "
+      "European Consortium for Accreditation in Higher Education",
+    .name_ja = "European Consortium for Accreditation in higher education - The European Consortium for Accreditation in Higher Education",
     .category = "government", .portal = "https://ecahe.eu/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4023,11 +4066,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 22 Jun 2026 "
       "17:52:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q141528914", .name = "Africa-EU Energy Partnership (international-organization, XX) - "
-      "Africa-EU Energy Partnership",
-    .name_ja = "Africa-EU Energy Partnership (international-organization, XX) - Africa-EU Energy Partnership",
+  { .id = "JO46_IGO_Q141528914", .name = "Africa-EU Energy Partnership - Africa-EU Energy Partnership",
+    .name_ja = "Africa-EU Energy Partnership - Africa-EU Energy Partnership",
     .category = "government", .portal = "https://africa-eu-energy-partnership.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4042,11 +4085,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 31 Aug 2026 "
       "12:58:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q2838174", .name = "St. Joan's International Alliance (international-organization, "
-      "XX) - St. Joan's International Alliance",
-    .name_ja = "St. Joan's International Alliance (international-organization, XX) - St. Joan's International Alliance",
+  { .id = "JO46_IGO_Q2838174", .name = "St. Joan's International Alliance - St. Joan's International "
+      "Alliance",
+    .name_ja = "St. Joan's International Alliance - St. Joan's International Alliance",
     .category = "government", .portal = "https://stjoansinternationalalliance.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4061,11 +4105,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 7 items, RSS2 feed, newest Tue, 28 Feb 2017 "
       "20:20:04 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q2843021", .name = "American Society of Plumbing Engineers "
-      "(international-organization, XX) - ASPE",
-    .name_ja = "American Society of Plumbing Engineers (international-organization, XX) - ASPE",
+  { .id = "JO46_IGO_Q2843021", .name = "American Society of Plumbing Engineers - ASPE",
+    .name_ja = "American Society of Plumbing Engineers - ASPE",
     .category = "government", .portal = "https://aspe.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4080,11 +4124,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 03 Sep 2026 "
       "17:13:21 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q383924", .name = "Africa Rice Center (international-organization, XX) - "
-      "africarice-French",
-    .name_ja = "Africa Rice Center (international-organization, XX) - africarice-French",
+  { .id = "JO46_IGO_Q383924", .name = "Africa Rice Center - africarice-French",
+    .name_ja = "Africa Rice Center - africarice-French",
     .category = "government", .portal = "https://www.africarice-fr.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4099,10 +4143,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Sun, 05 Jan 2020 "
       "03:51:44 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q386559", .name = "IAPTI (international-organization, XX) - IAPTI",
-    .name_ja = "IAPTI (international-organization, XX) - IAPTI",
+  { .id = "JO46_IGO_Q386559", .name = "IAPTI - IAPTI",
+    .name_ja = "IAPTI - IAPTI",
     .category = "government", .portal = "https://www.iapti.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4117,11 +4162,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Mon, 20 Jul 2020 "
       "13:28:29 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q389812", .name = "Aga Khan Development Network (international-organization, XX) - "
-      "AKDN – Latest news",
-    .name_ja = "Aga Khan Development Network (international-organization, XX) - AKDN – Latest news",
+  { .id = "JO46_IGO_Q389812", .name = "Aga Khan Development Network - AKDN – Latest news",
+    .name_ja = "Aga Khan Development Network - AKDN – Latest news",
     .category = "government", .portal = "https://the.akdn/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4136,11 +4181,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 25 items, ATOM feed, newest "
       "2026-10-12T13:29:06+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
+      "declares or links on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q389812_2", .name = "Aga Khan Development Network (international-organization, XX) - "
-      "AKDN – Press releases",
-    .name_ja = "Aga Khan Development Network (international-organization, XX) - AKDN – Press releases",
+  { .id = "JO46_IGO_Q389812_2", .name = "Aga Khan Development Network - AKDN – Press releases",
+    .name_ja = "Aga Khan Development Network - AKDN – Press releases",
     .category = "government", .portal = "https://the.akdn/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4155,12 +4200,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 25 items, ATOM feed, newest "
       "2026-10-08T08:53:38+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
+      "declares or links on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q97172111", .name = "NATO Counter Intelligence Centre of Excellence "
-      "(international-organization, XX) - NATO CI COE MARKS ITS 11TH "
-      "ANNIVERSARY",
-    .name_ja = "NATO Counter Intelligence Centre of Excellence (international-organization, XX) - NATO CI COE MARKS ITS 11TH ANNIVERSARY",
+  { .id = "JO46_IGO_Q97172111", .name = "NATO Counter Intelligence Centre of Excellence - NATO CI COE "
+      "MARKS ITS 11TH ANNIVERSARY",
+    .name_ja = "NATO Counter Intelligence Centre of Excellence - NATO CI COE MARKS ITS 11TH ANNIVERSARY",
     .category = "government", .portal = "https://cicoe.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4175,11 +4220,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 02 Oct 2026 "
       "13:05:15 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q97285650", .name = "Open & Agile Smart Cities (international-organization, XX) - "
-      "Open & Agile Smart Cities & Communities",
-    .name_ja = "Open & Agile Smart Cities (international-organization, XX) - Open & Agile Smart Cities & Communities",
+  { .id = "JO46_IGO_Q97285650", .name = "Open & Agile Smart Cities - Open & Agile Smart Cities & "
+      "Communities",
+    .name_ja = "Open & Agile Smart Cities - Open & Agile Smart Cities & Communities",
     .category = "government", .portal = "https://oascities.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4194,11 +4240,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "13:02:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q100714569", .name = "Project Encephalon (international-organization, XX) - Project "
-      "Encephalon",
-    .name_ja = "Project Encephalon (international-organization, XX) - Project Encephalon",
+  { .id = "JO46_IGO_Q100714569", .name = "Project Encephalon - Project Encephalon",
+    .name_ja = "Project Encephalon - Project Encephalon",
     .category = "government", .portal = "https://www.projectencephalon.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4213,11 +4259,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Sun, 03 Dec 2023 "
       "13:08:22 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q104693488", .name = "Hana Human Rights Organization (international-organization, XX) "
-      "- Hana Human Rights Organization",
-    .name_ja = "Hana Human Rights Organization (international-organization, XX) - Hana Human Rights Organization",
+  { .id = "JO46_IGO_Q104693488", .name = "Hana Human Rights Organization - Hana Human Rights Organization",
+    .name_ja = "Hana Human Rights Organization - Hana Human Rights Organization",
     .category = "government", .portal = "https://hanahr.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4232,11 +4278,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "13:51:41 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q105730365", .name = "Global Partnership on Artificial Intelligence "
-      "(international-organization, XX) - OECD.AI",
-    .name_ja = "Global Partnership on Artificial Intelligence (international-organization, XX) - OECD.AI",
+  { .id = "JO46_IGO_Q105730365", .name = "Global Partnership on Artificial Intelligence - OECD.AI",
+    .name_ja = "Global Partnership on Artificial Intelligence - OECD.AI",
     .category = "government", .portal = "https://wp.oecd.ai/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4251,11 +4297,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "09:54:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q106565796", .name = "Basic Internet Foundation (international-organization, XX) - "
-      "Basic Internet Foundation",
-    .name_ja = "Basic Internet Foundation (international-organization, XX) - Basic Internet Foundation",
+  { .id = "JO46_IGO_Q106565796", .name = "Basic Internet Foundation - Basic Internet Foundation",
+    .name_ja = "Basic Internet Foundation - Basic Internet Foundation",
     .category = "government", .portal = "https://basicinternet.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4270,11 +4316,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 12 Nov 2025 "
       "09:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q170", .name = "Pirate Parties International (international-organization, XX) - "
-      "Pirate Parties International",
-    .name_ja = "Pirate Parties International (international-organization, XX) - Pirate Parties International",
+  { .id = "JO46_IGO_Q170", .name = "Pirate Parties International - Pirate Parties International",
+    .name_ja = "Pirate Parties International - Pirate Parties International",
     .category = "government", .portal = "https://pp-international.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4289,11 +4335,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
       "20:34:33 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q170_2", .name = "Pirate Parties International (international-organization, XX) - "
-      "Pirate Parties International",
-    .name_ja = "Pirate Parties International (international-organization, XX) - Pirate Parties International",
+  { .id = "JO46_IGO_Q170_2", .name = "Pirate Parties International - Pirate Parties International",
+    .name_ja = "Pirate Parties International - Pirate Parties International",
     .category = "government", .portal = "https://pp-international.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4308,11 +4354,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
       "20:34:33 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q107524147", .name = "Simply Neuroscience (international-organization, XX) - Simply "
-      "Neuroscience",
-    .name_ja = "Simply Neuroscience (international-organization, XX) - Simply Neuroscience",
+  { .id = "JO46_IGO_Q107524147", .name = "Simply Neuroscience - Simply Neuroscience",
+    .name_ja = "Simply Neuroscience - Simply Neuroscience",
     .category = "government", .portal = "https://www.simplyneuroscience.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4327,11 +4373,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Wed, 30 Sep 2026 "
       "03:00:52 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q107710249", .name = "Coordination Group for Meteorological Satellites "
-      "(international-organization, XX) - CGMS – Website",
-    .name_ja = "Coordination Group for Meteorological Satellites (international-organization, XX) - CGMS – Website",
+  { .id = "JO46_IGO_Q107710249", .name = "Coordination Group for Meteorological Satellites - CGMS – "
+      "Website",
+    .name_ja = "Coordination Group for Meteorological Satellites - CGMS – Website",
     .category = "government", .portal = "https://cgms-info.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4346,11 +4393,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 6 items, RSS2 feed, newest Mon, 20 Jul 2026 "
       "09:32:53 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q108392119", .name = "World Pantheist Movement (international-organization, XX) - "
-      "World Pantheism",
-    .name_ja = "World Pantheist Movement (international-organization, XX) - World Pantheism",
+  { .id = "JO46_IGO_Q108392119", .name = "World Pantheist Movement - World Pantheism",
+    .name_ja = "World Pantheist Movement - World Pantheism",
     .category = "government", .portal = "https://pantheism.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4365,12 +4412,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Sat, 01 May 2021 "
       "01:36:48 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q28346", .name = "International Union of Pure and Applied Physics "
-      "(international-organization, XX) - IUPAP: The International "
-      "Union of Pure and Applied Physics",
-    .name_ja = "International Union of Pure and Applied Physics (international-organization, XX) - IUPAP: The International Union of Pure and Applied Physics",
+  { .id = "JO46_IGO_Q28346", .name = "International Union of Pure and Applied Physics - IUPAP: The "
+      "International Union of Pure and Applied Physics",
+    .name_ja = "International Union of Pure and Applied Physics - IUPAP: The International Union of Pure and Applied Physics",
     .category = "government", .portal = "https://iupap.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4385,11 +4432,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "10:23:50 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q607301", .name = "Latin American Integration Association "
-      "(international-organization, XX) - ALADI",
-    .name_ja = "Latin American Integration Association (international-organization, XX) - ALADI",
+  { .id = "JO46_IGO_Q607301", .name = "Latin American Integration Association - ALADI",
+    .name_ja = "Latin American Integration Association - ALADI",
     .category = "government", .portal = "https://www.aladi.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4404,11 +4451,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "20:13:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
   { .id = "JO46_IGO_Q111342754", .name = "Intergovernmental Coordination Committee of the Cuenca del Plata "
-      "countries (international-organization, XX) - CIC Plata",
-    .name_ja = "Intergovernmental Coordination Committee of the Cuenca del Plata countries (international-organization, XX) - CIC Plata",
+      "countries - CIC Plata",
+    .name_ja = "Intergovernmental Coordination Committee of the Cuenca del Plata countries - CIC Plata",
     .category = "government", .portal = "https://cicplata.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4423,11 +4471,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 14 Aug 2026 "
       "18:15:07 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q113470638", .name = "Global Anti-Scam Organization (international-organization, XX) - "
-      "Global Anti-Scam Org",
-    .name_ja = "Global Anti-Scam Organization (international-organization, XX) - Global Anti-Scam Org",
+  { .id = "JO46_IGO_Q113470638", .name = "Global Anti-Scam Organization - Global Anti-Scam Org",
+    .name_ja = "Global Anti-Scam Organization - Global Anti-Scam Org",
     .category = "government", .portal = "https://www.globalantiscam.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4442,11 +4490,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Wed, 27 May 2026 "
       "03:22:20 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q115206083", .name = "Asian Buddhist Conference for Peace (international-organization, "
-      "XX) - The Asian Buddhists Conference for Peace",
-    .name_ja = "Asian Buddhist Conference for Peace (international-organization, XX) - The Asian Buddhists Conference for Peace",
+  { .id = "JO46_IGO_Q115206083", .name = "Asian Buddhist Conference for Peace - The Asian Buddhists "
+      "Conference for Peace",
+    .name_ja = "Asian Buddhist Conference for Peace - The Asian Buddhists Conference for Peace",
     .category = "government", .portal = "https://abcp.mn/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4461,11 +4510,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Thu, 01 Oct 2026 "
       "04:44:50 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
   { .id = "JO46_IGO_Q115799917", .name = "Conference of Ministers of Justice of the Ibero-American "
-      "Countries (international-organization, XX) - COMJIB",
-    .name_ja = "Conference of Ministers of Justice of the Ibero-American Countries (international-organization, XX) - COMJIB",
+      "Countries - COMJIB",
+    .name_ja = "Conference of Ministers of Justice of the Ibero-American Countries - COMJIB",
     .category = "government", .portal = "https://comjib.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4480,12 +4530,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 29 Jul 2026 "
       "15:07:50 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
   { .id = "JO46_IGO_Q116431005", .name = "International Federation of Societies and Institutes for the "
-      "Study of the Renaissance (international-organization, XX) - "
-      "FISIER",
-    .name_ja = "International Federation of Societies and Institutes for the Study of the Renaissance (international-organization, XX) - FISIER",
+      "Study of the Renaissance - FISIER",
+    .name_ja = "International Federation of Societies and Institutes for the Study of the Renaissance - FISIER",
     .category = "government", .portal = "https://fisieronline.wordpress.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4500,11 +4550,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Mon, 18 Sep 2023 "
       "13:31:29 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q116799857", .name = "International Red Locust Control Organisation "
-      "(international-organization, XX) - RedLocust",
-    .name_ja = "International Red Locust Control Organisation (international-organization, XX) - RedLocust",
+  { .id = "JO46_IGO_Q116799857", .name = "International Red Locust Control Organisation - RedLocust",
+    .name_ja = "International Red Locust Control Organisation - RedLocust",
     .category = "government", .portal = "https://redlocust.org.zm/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4519,12 +4569,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Mon, 20 Jul 2026 "
       "09:27:24 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q116854537", .name = "International Alliance of Waste Pickers "
-      "(international-organization, XX) - Home - International Alliance "
-      "of Waste Pickers",
-    .name_ja = "International Alliance of Waste Pickers (international-organization, XX) - Home - International Alliance of Waste Pickers",
+  { .id = "JO46_IGO_Q116854537", .name = "International Alliance of Waste Pickers - Home - International "
+      "Alliance of Waste Pickers",
+    .name_ja = "International Alliance of Waste Pickers - Home - International Alliance of Waste Pickers",
     .category = "government", .portal = "https://wastepickersinternational.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4539,11 +4589,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
       "23:41:58 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q592938", .name = "Blue Shield International (international-organization, XX) - "
-      "Blue Shield International",
-    .name_ja = "Blue Shield International (international-organization, XX) - Blue Shield International",
+  { .id = "JO46_IGO_Q592938", .name = "Blue Shield International - Blue Shield International",
+    .name_ja = "Blue Shield International - Blue Shield International",
     .category = "government", .portal = "https://theblueshield.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4558,11 +4608,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "12:48:02 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q42584", .name = "Fédération Internationale Féline (international-organization, "
-      "XX) - Fédération Internationale Féline",
-    .name_ja = "Fédération Internationale Féline (international-organization, XX) - Fédération Internationale Féline",
+  { .id = "JO46_IGO_Q42584", .name = "Fédération Internationale Féline - Fédération Internationale "
+      "Féline",
+    .name_ja = "Fédération Internationale Féline - Fédération Internationale Féline",
     .category = "government", .portal = "https://fifeweb.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4577,11 +4628,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 12 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "19:12:48 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q602399", .name = "Amazon Cooperation Treaty Organization "
-      "(international-organization, XX) - OTCA",
-    .name_ja = "Amazon Cooperation Treaty Organization (international-organization, XX) - OTCA",
+  { .id = "JO46_IGO_Q602399", .name = "Amazon Cooperation Treaty Organization - OTCA",
+    .name_ja = "Amazon Cooperation Treaty Organization - OTCA",
     .category = "government", .portal = "https://otca.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4596,11 +4647,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 6 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "19:11:06 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q607269", .name = "FIAPF (international-organization, XX) - Fiapf   International "
-      "Federation of Film Producers Associations",
-    .name_ja = "FIAPF (international-organization, XX) - Fiapf   International Federation of Film Producers Associations",
+  { .id = "JO46_IGO_Q607269", .name = "FIAPF - Fiapf   International Federation of Film Producers "
+      "Associations",
+    .name_ja = "FIAPF - Fiapf   International Federation of Film Producers Associations",
     .category = "government", .portal = "https://fiapf.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4615,12 +4667,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Tue, 11 Nov 2025 "
       "04:56:46 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q579663", .name = "International Union of Geological Sciences "
-      "(international-organization, XX) - International Union of "
-      "Geological Sciences",
-    .name_ja = "International Union of Geological Sciences (international-organization, XX) - International Union of Geological Sciences",
+  { .id = "JO46_IGO_Q579663", .name = "International Union of Geological Sciences - International Union "
+      "of Geological Sciences",
+    .name_ja = "International Union of Geological Sciences - International Union of Geological Sciences",
     .category = "government", .portal = "https://www.iugs.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4635,11 +4687,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 24 Aug 2026 "
       "06:36:38 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
   { .id = "JO46_IGO_Q117499321", .name = "Center for Application and Climatological Forecasting of Central "
-      "Africa (international-organization, XX) - CAPC-AC",
-    .name_ja = "Center for Application and Climatological Forecasting of Central Africa (international-organization, XX) - CAPC-AC",
+      "Africa - CAPC-AC",
+    .name_ja = "Center for Application and Climatological Forecasting of Central Africa - CAPC-AC",
     .category = "government", .portal = "https://capc-ac.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4654,11 +4707,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "17:07:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q128794194", .name = "Global Encryption Coalition (international-organization, XX) - "
-      "Global Encryption Coalition",
-    .name_ja = "Global Encryption Coalition (international-organization, XX) - Global Encryption Coalition",
+  { .id = "JO46_IGO_Q128794194", .name = "Global Encryption Coalition - Global Encryption Coalition",
+    .name_ja = "Global Encryption Coalition - Global Encryption Coalition",
     .category = "government", .portal = "https://www.globalencryption.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4673,12 +4726,13 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "16:20:38 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
   { .id = "JO46_IGO_Q130461747", .name = "Moroccan Youth Council for Diplomatic and International "
-      "Cooperation (international-organization, XX) - Moroccan Youth "
-      "Council for Diplomatic and International Cooperation News",
-    .name_ja = "Moroccan Youth Council for Diplomatic and International Cooperation (international-organization, XX) - Moroccan Youth Council for Diplomatic and International Cooperation News",
+      "Cooperation - Moroccan Youth Council for Diplomatic and "
+      "International Cooperation News",
+    .name_ja = "Moroccan Youth Council for Diplomatic and International Cooperation - Moroccan Youth Council for Diplomatic and International Cooperation News",
     .category = "government", .portal = "https://www.mycdic.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4693,12 +4747,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Sun, 10 May 2026 "
       "00:41:00 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q466807", .name = "Association for Information Science and Technology "
-      "(international-organization, XX) - Association for Information "
-      "Science and Technology   ASIS&T",
-    .name_ja = "Association for Information Science and Technology (international-organization, XX) - Association for Information Science and Technology   ASIS&T",
+  { .id = "JO46_IGO_Q466807", .name = "Association for Information Science and Technology - Association "
+      "for Information Science and Technology   ASIS&T",
+    .name_ja = "Association for Information Science and Technology - Association for Information Science and Technology   ASIS&T",
     .category = "government", .portal = "https://www.asist.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4713,11 +4767,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "23:42:56 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q134311209", .name = "ACT for Bharat (international-organization, XX) - Lorem ipsum "
-      "dolor",
-    .name_ja = "ACT for Bharat (international-organization, XX) - Lorem ipsum dolor",
+  { .id = "JO46_IGO_Q134311209", .name = "ACT for Bharat - Lorem ipsum dolor",
+    .name_ja = "ACT for Bharat - Lorem ipsum dolor",
     .category = "government", .portal = "https://act4bharat.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4732,11 +4786,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 2 items, RSS2 feed, newest Sat, 12 Jun 2021 "
       "07:02:34 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q134955363", .name = "Re-Action Collective (international-organization, XX) - "
-      "Re-Action Collective",
-    .name_ja = "Re-Action Collective (international-organization, XX) - Re-Action Collective",
+  { .id = "JO46_IGO_Q134955363", .name = "Re-Action Collective - Re-Action Collective",
+    .name_ja = "Re-Action Collective - Re-Action Collective",
     .category = "government", .portal = "https://re-action-collective.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4751,11 +4805,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 09 Apr 2026 "
       "09:42:33 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q135456466", .name = "International Federation of Press Cutting Agencies "
-      "(international-organization, XX) - FIBEP",
-    .name_ja = "International Federation of Press Cutting Agencies (international-organization, XX) - FIBEP",
+  { .id = "JO46_IGO_Q135456466", .name = "International Federation of Press Cutting Agencies - FIBEP",
+    .name_ja = "International Federation of Press Cutting Agencies - FIBEP",
     .category = "government", .portal = "https://www.fibep.info/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4770,11 +4824,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Sun, 27 Sep 2026 "
       "22:00:00 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q138511417", .name = "International Mountain Museums Alliance "
-      "(international-organization, XX) - IALP Mountain Museums",
-    .name_ja = "International Mountain Museums Alliance (international-organization, XX) - IALP Mountain Museums",
+  { .id = "JO46_IGO_Q138511417", .name = "International Mountain Museums Alliance - IALP Mountain Museums",
+    .name_ja = "International Mountain Museums Alliance - IALP Mountain Museums",
     .category = "government", .portal = "https://www.mountainmuseums.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4789,10 +4843,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 6 items, RSS2 feed, newest Wed, 22 Apr 2020 "
       "12:09:01 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q2838374", .name = "Q2838374 (international-organization, XX) - ALT",
-    .name_ja = "Q2838374 (international-organization, XX) - ALT",
+  { .id = "JO46_IGO_Q2838374", .name = "Q2838374 - ALT",
+    .name_ja = "Q2838374 - ALT",
     .category = "government", .portal = "https://alt-perubolivia.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4807,11 +4862,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "18:24:37 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q4412419", .name = "Q4412419 (international-organization, XX) - News - The Northern "
-      "Forum",
-    .name_ja = "Q4412419 (international-organization, XX) - News - The Northern Forum",
+  { .id = "JO46_IGO_Q4412419", .name = "Q4412419 - News - The Northern Forum",
+    .name_ja = "Q4412419 - News - The Northern Forum",
     .category = "government", .portal = "https://www.northernforum.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4826,10 +4881,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 12 items, RSS2 feed, newest Mon, 21 Sep 2026 "
       "02:36:42 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q28793142", .name = "Q28793142 (international-organization, XX) - SNETP",
-    .name_ja = "Q28793142 (international-organization, XX) - SNETP",
+  { .id = "JO46_IGO_Q28793142", .name = "Q28793142 - SNETP",
+    .name_ja = "Q28793142 - SNETP",
     .category = "government", .portal = "https://snetp.eu/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4844,11 +4900,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 07 Jul 2026 "
       "07:46:59 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q79385610", .name = "Q79385610 (international-organization, XX) - The International "
-      "Legal Forum",
-    .name_ja = "Q79385610 (international-organization, XX) - The International Legal Forum",
+  { .id = "JO46_IGO_Q79385610", .name = "Q79385610 - The International Legal Forum",
+    .name_ja = "Q79385610 - The International Legal Forum",
     .category = "government", .portal = "https://www.ilfngo.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4863,11 +4919,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Mon, 30 Dec 2019 "
       "11:06:56 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q110472146", .name = "Q110472146 (international-organization, XX) - Nederlandsche "
-      "Tafelronde",
-    .name_ja = "Q110472146 (international-organization, XX) - Nederlandsche Tafelronde",
+  { .id = "JO46_IGO_Q110472146", .name = "Q110472146 - Nederlandsche Tafelronde",
+    .name_ja = "Q110472146 - Nederlandsche Tafelronde",
     .category = "government", .portal = "https://roundtable.nl/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4882,11 +4938,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Thu, 16 Apr 2026 "
       "12:16:12 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q136356060", .name = "Q136356060 (international-organization, XX) - Assembleia Geral "
-      "da LusNIC em Luanda",
-    .name_ja = "Q136356060 (international-organization, XX) - Assembleia Geral da LusNIC em Luanda",
+  { .id = "JO46_IGO_Q136356060", .name = "Q136356060 - Assembleia Geral da LusNIC em Luanda",
+    .name_ja = "Q136356060 - Assembleia Geral da LusNIC em Luanda",
     .category = "government", .portal = "https://lusnic.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4901,10 +4957,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 25 Sep 2026 "
       "10:00:46 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q140073659", .name = "Q140073659 (international-organization, XX) - МФСТ- IFST",
-    .name_ja = "Q140073659 (international-organization, XX) - МФСТ- IFST",
+  { .id = "JO46_IGO_Q140073659", .name = "Q140073659 - МФСТ- IFST",
+    .name_ja = "Q140073659 - МФСТ- IFST",
     .category = "government", .portal = "https://mfst.info/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4919,10 +4976,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 15 Sep 2026 "
       "07:29:14 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q141453400", .name = "Q141453400 (international-organization, XX) - Shield",
-    .name_ja = "Q141453400 (international-organization, XX) - Shield",
+  { .id = "JO46_IGO_Q141453400", .name = "Q141453400 - Shield",
+    .name_ja = "Q141453400 - Shield",
     .category = "government", .portal = "https://www.congress-shield.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4937,10 +4995,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "07:32:55 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q141453400_2", .name = "Q141453400 (international-organization, XX) - Shield",
-    .name_ja = "Q141453400 (international-organization, XX) - Shield",
+  { .id = "JO46_IGO_Q141453400_2", .name = "Q141453400 - Shield",
+    .name_ja = "Q141453400 - Shield",
     .category = "government", .portal = "https://www.congress-shield.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4955,11 +5014,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
       "2026-10-18T07:35:03Z. A feed the organisation itself declares or "
-      "links on its site root." },
+      "links on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q141453400_3", .name = "Q141453400 (international-organization, XX) - منظمة الدرع "
-      "الدولية",
-    .name_ja = "Q141453400 (international-organization, XX) - منظمة الدرع الدولية",
+  { .id = "JO46_IGO_Q141453400_3", .name = "Q141453400 - منظمة الدرع الدولية",
+    .name_ja = "Q141453400 - منظمة الدرع الدولية",
     .category = "government", .portal = "https://congressshield.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4974,11 +5033,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "16:51:39 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "international-organization." },
 
-  { .id = "JO46_IGO_Q1505172", .name = "Mano River Union (intergovernmental-organization, XX) - Mano "
-      "River Union Secretariat",
-    .name_ja = "Mano River Union (intergovernmental-organization, XX) - Mano River Union Secretariat",
+  { .id = "JO46_IGO_Q1505172", .name = "Mano River Union - Mano River Union Secretariat",
+    .name_ja = "Mano River Union - Mano River Union Secretariat",
     .category = "government", .portal = "https://www.mru.int/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -4993,10 +5052,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 30 Dec 2025 "
       "21:48:07 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q1563503", .name = "HELCOM (intergovernmental-organization, XX) - HELCOM",
-    .name_ja = "HELCOM (intergovernmental-organization, XX) - HELCOM",
+  { .id = "JO46_IGO_Q1563503", .name = "HELCOM - HELCOM",
+    .name_ja = "HELCOM - HELCOM",
     .category = "government", .portal = "https://helcom.fi/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5011,11 +5071,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 21 Sep 2026 "
       "08:30:25 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q1642145", .name = "West Nordic Council (intergovernmental-organization, XX) - Ny "
-      "formand for Vestnordisk Råd",
-    .name_ja = "West Nordic Council (intergovernmental-organization, XX) - Ny formand for Vestnordisk Råd",
+  { .id = "JO46_IGO_Q1642145", .name = "West Nordic Council - Ny formand for Vestnordisk Råd",
+    .name_ja = "West Nordic Council - Ny formand for Vestnordisk Råd",
     .category = "government", .portal = "https://www.vestnordisk.is/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5030,11 +5090,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 12 Sep 2026 "
       "12:02:52 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q1940250", .name = "Economic and Monetary Community of Central Africa "
-      "(intergovernmental-organization, XX) - CEMAC",
-    .name_ja = "Economic and Monetary Community of Central Africa (intergovernmental-organization, XX) - CEMAC",
+  { .id = "JO46_IGO_Q1940250", .name = "Economic and Monetary Community of Central Africa - CEMAC",
+    .name_ja = "Economic and Monetary Community of Central Africa - CEMAC",
     .category = "government", .portal = "https://cemac.int/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5049,11 +5109,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 01 Sep 2026 "
       "11:29:49 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q2029890", .name = "Senegal River Basin Development Authority "
-      "(intergovernmental-organization, XX) - Portail omvs",
-    .name_ja = "Senegal River Basin Development Authority (intergovernmental-organization, XX) - Portail omvs",
+  { .id = "JO46_IGO_Q2029890", .name = "Senegal River Basin Development Authority - Portail omvs",
+    .name_ja = "Senegal River Basin Development Authority - Portail omvs",
     .category = "government", .portal = "https://www.portail-omvs.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5068,12 +5128,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 25 Jul 2026 "
       "02:19:13 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q193272", .name = "Economic Community of West African States "
-      "(intergovernmental-organization, XX) - Economic Community of "
-      "West African States (ECOWAS)",
-    .name_ja = "Economic Community of West African States (intergovernmental-organization, XX) - Economic Community of West African States (ECOWAS)",
+  { .id = "JO46_IGO_Q193272", .name = "Economic Community of West African States - Economic Community "
+      "of West African States (ECOWAS)",
+    .name_ja = "Economic Community of West African States - Economic Community of West African States (ECOWAS)",
     .category = "government", .portal = "https://www.ecowas.int/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5088,11 +5148,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "10:39:48 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q4654167", .name = "ASEAN Centre for Biodiversity (intergovernmental-organization, "
-      "XX) - ASEAN Centre for Biodiversity",
-    .name_ja = "ASEAN Centre for Biodiversity (intergovernmental-organization, XX) - ASEAN Centre for Biodiversity",
+  { .id = "JO46_IGO_Q4654167", .name = "ASEAN Centre for Biodiversity - ASEAN Centre for Biodiversity",
+    .name_ja = "ASEAN Centre for Biodiversity - ASEAN Centre for Biodiversity",
     .category = "government", .portal = "https://www.aseanbiodiversity.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5107,11 +5167,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 4 items, RSS2 feed, newest Mon, 20 Oct 2025 "
       "06:16:07 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q4971473", .name = "British-Irish Intergovernmental Conference "
-      "(intergovernmental-organization, XX) - The British-Irish Council",
-    .name_ja = "British-Irish Intergovernmental Conference (intergovernmental-organization, XX) - The British-Irish Council",
+  { .id = "JO46_IGO_Q4971473", .name = "British-Irish Intergovernmental Conference - The British-Irish "
+      "Council",
+    .name_ja = "British-Irish Intergovernmental Conference - The British-Irish Council",
     .category = "government", .portal = "https://www.britishirishcouncil.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5126,11 +5187,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "15:20:08 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q5011840", .name = "CIRDAP (intergovernmental-organization, XX) - CIRDAP – Enabling "
-      "Rural Communities",
-    .name_ja = "CIRDAP (intergovernmental-organization, XX) - CIRDAP – Enabling Rural Communities",
+  { .id = "JO46_IGO_Q5011840", .name = "CIRDAP - CIRDAP – Enabling Rural Communities",
+    .name_ja = "CIRDAP - CIRDAP – Enabling Rural Communities",
     .category = "government", .portal = "https://cirdap.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5145,11 +5206,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "02:30:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q6052294", .name = "International Pacific Halibut Commission "
-      "(intergovernmental-organization, XX) - IPHC",
-    .name_ja = "International Pacific Halibut Commission (intergovernmental-organization, XX) - IPHC",
+  { .id = "JO46_IGO_Q6052294", .name = "International Pacific Halibut Commission - IPHC",
+    .name_ja = "International Pacific Halibut Commission - IPHC",
     .category = "government", .portal = "https://www.iphc.int/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5164,12 +5225,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 24 Sep 2026 "
       "20:07:56 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q6123232", .name = "Secretariat for Central American Economic Integration "
-      "(intergovernmental-organization, XX) - Secretaría de Integración "
-      "Económica Centroamericana (SIECA)",
-    .name_ja = "Secretariat for Central American Economic Integration (intergovernmental-organization, XX) - Secretaría de Integración Económica Centroamericana (SIECA)",
+  { .id = "JO46_IGO_Q6123232", .name = "Secretariat for Central American Economic Integration - "
+      "Secretaría de Integración Económica Centroamericana (SIECA)",
+    .name_ja = "Secretariat for Central American Economic Integration - Secretaría de Integración Económica Centroamericana (SIECA)",
     .category = "government", .portal = "https://www.sieca.int/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5184,11 +5245,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "22:22:28 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q294278", .name = "Organisation of African, Caribbean and Pacific States "
-      "(intergovernmental-organization, XX) - OACPS",
-    .name_ja = "Organisation of African, Caribbean and Pacific States (intergovernmental-organization, XX) - OACPS",
+  { .id = "JO46_IGO_Q294278", .name = "Organisation of African, Caribbean and Pacific States - OACPS",
+    .name_ja = "Organisation of African, Caribbean and Pacific States - OACPS",
     .category = "government", .portal = "https://www.oacps.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5203,11 +5264,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 2 items, RSS2 feed, newest Wed, 29 Jul 2026 "
       "12:49:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q326816", .name = "GUAM Organization for Democracy and Economic Development "
-      "(intergovernmental-organization, XX) - GUAM",
-    .name_ja = "GUAM Organization for Democracy and Economic Development (intergovernmental-organization, XX) - GUAM",
+  { .id = "JO46_IGO_Q326816", .name = "GUAM Organization for Democracy and Economic Development - GUAM",
+    .name_ja = "GUAM Organization for Democracy and Economic Development - GUAM",
     .category = "government", .portal = "https://guam-organization.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5222,11 +5283,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "14:13:01 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q2826699", .name = "ASECNA (intergovernmental-organization, XX) - ASECNA Online - "
-      "Accueil",
-    .name_ja = "ASECNA (intergovernmental-organization, XX) - ASECNA Online - Accueil",
+  { .id = "JO46_IGO_Q2826699", .name = "ASECNA - ASECNA Online - Accueil",
+    .name_ja = "ASECNA - ASECNA Online - Accueil",
     .category = "government", .portal = "https://www.asecna.aero/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5241,11 +5302,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 4 items, RSS2 feed, newest Tue, 12 May 2026 "
       "12:57:05 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q2826699_2", .name = "ASECNA (intergovernmental-organization, XX) - ASECNA Online - "
-      "Accueil",
-    .name_ja = "ASECNA (intergovernmental-organization, XX) - ASECNA Online - Accueil",
+  { .id = "JO46_IGO_Q2826699_2", .name = "ASECNA - ASECNA Online - Accueil",
+    .name_ja = "ASECNA - ASECNA Online - Accueil",
     .category = "government", .portal = "https://www.asecna.aero/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5260,10 +5321,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
       "2026-10-18T15:58:44+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
+      "declares or links on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q3046245", .name = "EUMETNET (intergovernmental-organization, XX) - Eumetnet",
-    .name_ja = "EUMETNET (intergovernmental-organization, XX) - Eumetnet",
+  { .id = "JO46_IGO_Q3046245", .name = "EUMETNET - Eumetnet",
+    .name_ja = "EUMETNET - Eumetnet",
     .category = "government", .portal = "https://www.eumetnet.eu/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5278,11 +5340,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 15 Sep 2026 "
       "09:53:31 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q333612", .name = "Partners in Population and Development "
-      "(intergovernmental-organization, XX) - PPD",
-    .name_ja = "Partners in Population and Development (intergovernmental-organization, XX) - PPD",
+  { .id = "JO46_IGO_Q333612", .name = "Partners in Population and Development - PPD",
+    .name_ja = "Partners in Population and Development - PPD",
     .category = "government", .portal = "http://www.partners-popdev.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5297,12 +5359,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "13:56:15 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q28381783", .name = "Arab Institute for Training and Research in Statistics "
-      "(intergovernmental-organization, XX) - المعهد العربي للتدريب و "
-      "البحوث الاحصائية",
-    .name_ja = "Arab Institute for Training and Research in Statistics (intergovernmental-organization, XX) - المعهد العربي للتدريب و البحوث الاحصائية",
+  { .id = "JO46_IGO_Q28381783", .name = "Arab Institute for Training and Research in Statistics - المعهد "
+      "العربي للتدريب و البحوث الاحصائية",
+    .name_ja = "Arab Institute for Training and Research in Statistics - المعهد العربي للتدريب و البحوث الاحصائية",
     .category = "government", .portal = "http://www.aitrs.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5317,12 +5379,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "06:39:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q30262804", .name = "West African Health Organisation "
-      "(intergovernmental-organization, XX) - West African Health "
+  { .id = "JO46_IGO_Q30262804", .name = "West African Health Organisation - West African Health "
       "Organisation - Promoting better health through regional inte",
-    .name_ja = "West African Health Organisation (intergovernmental-organization, XX) - West African Health Organisation - Promoting better health through regional inte",
+    .name_ja = "West African Health Organisation - West African Health Organisation - Promoting better health through regional inte",
     .category = "government", .portal = "https://www.wahooas.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5337,11 +5399,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "10:01:15 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q30626488", .name = "Asian-Pacific Postal Union (intergovernmental-organization, XX) "
-      "- Asian-Pacific Postal Union",
-    .name_ja = "Asian-Pacific Postal Union (intergovernmental-organization, XX) - Asian-Pacific Postal Union",
+  { .id = "JO46_IGO_Q30626488", .name = "Asian-Pacific Postal Union - Asian-Pacific Postal Union",
+    .name_ja = "Asian-Pacific Postal Union - Asian-Pacific Postal Union",
     .category = "government", .portal = "https://appu-bureau.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5356,12 +5418,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Sun, 12 Jan 2025 "
       "00:23:57 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q31341020", .name = "Gambia River Development Organization "
-      "(intergovernmental-organization, XX) - Site Web du Projet "
+  { .id = "JO46_IGO_Q31341020", .name = "Gambia River Development Organization - Site Web du Projet "
       "Energie OMVG",
-    .name_ja = "Gambia River Development Organization (intergovernmental-organization, XX) - Site Web du Projet Energie OMVG",
+    .name_ja = "Gambia River Development Organization - Site Web du Projet Energie OMVG",
     .category = "government", .portal = "https://www.pe-omvg.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5376,11 +5438,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 02 Nov 2023 "
       "18:41:02 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q67881509", .name = "Southeast Europe Transport Community "
-      "(intergovernmental-organization, XX) - Transport Community",
-    .name_ja = "Southeast Europe Transport Community (intergovernmental-organization, XX) - Transport Community",
+  { .id = "JO46_IGO_Q67881509", .name = "Southeast Europe Transport Community - Transport Community",
+    .name_ja = "Southeast Europe Transport Community - Transport Community",
     .category = "government", .portal = "https://www.transport-community.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5395,11 +5457,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "09:31:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q3075649", .name = "Commonwealth Foundation (intergovernmental-organization, XX) - "
-      "Commonwealth Foundation",
-    .name_ja = "Commonwealth Foundation (intergovernmental-organization, XX) - Commonwealth Foundation",
+  { .id = "JO46_IGO_Q3075649", .name = "Commonwealth Foundation - Commonwealth Foundation",
+    .name_ja = "Commonwealth Foundation - Commonwealth Foundation",
     .category = "government", .portal = "https://commonwealthfoundation.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5414,11 +5476,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 25 Sep 2026 "
       "14:45:57 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q3076178", .name = "North Atlantic Marine Mammal Commission "
-      "(intergovernmental-organization, XX) - NAMMCO",
-    .name_ja = "North Atlantic Marine Mammal Commission (intergovernmental-organization, XX) - NAMMCO",
+  { .id = "JO46_IGO_Q3076178", .name = "North Atlantic Marine Mammal Commission - NAMMCO",
+    .name_ja = "North Atlantic Marine Mammal Commission - NAMMCO",
     .category = "government", .portal = "https://nammco.no/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5433,11 +5495,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "10:46:43 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q3356053", .name = "Latin American Energy Organization "
-      "(intergovernmental-organization, XX) - OLACDE",
-    .name_ja = "Latin American Energy Organization (intergovernmental-organization, XX) - OLACDE",
+  { .id = "JO46_IGO_Q3356053", .name = "Latin American Energy Organization - OLACDE",
+    .name_ja = "Latin American Energy Organization - OLACDE",
     .category = "government", .portal = "https://www.olacde.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5452,11 +5514,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "21:48:02 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q392805", .name = "Central European Initiative (intergovernmental-organization, XX) "
-      "- Open Calls",
-    .name_ja = "Central European Initiative (intergovernmental-organization, XX) - Open Calls",
+  { .id = "JO46_IGO_Q392805", .name = "Central European Initiative - Open Calls",
+    .name_ja = "Central European Initiative - Open Calls",
     .category = "government", .portal = "https://www.cei.int/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5471,12 +5533,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 40 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "11:13:14 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q109312829", .name = "Permanent Commission for the South Pacific "
-      "(intergovernmental-organization, XX) - CPPS - Comisión "
+  { .id = "JO46_IGO_Q109312829", .name = "Permanent Commission for the South Pacific - CPPS - Comisión "
       "Permanente del Pacífico Sur",
-    .name_ja = "Permanent Commission for the South Pacific (intergovernmental-organization, XX) - CPPS - Comisión Permanente del Pacífico Sur",
+    .name_ja = "Permanent Commission for the South Pacific - CPPS - Comisión Permanente del Pacífico Sur",
     .category = "government", .portal = "https://www.cpps-int.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5491,12 +5553,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Mon, 05 Nov 2018 "
       "08:54:07 -0500. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q109312829_2", .name = "Permanent Commission for the South Pacific "
-      "(intergovernmental-organization, XX) - CPPS - Comisión "
+  { .id = "JO46_IGO_Q109312829_2", .name = "Permanent Commission for the South Pacific - CPPS - Comisión "
       "Permanente del Pacífico Sur",
-    .name_ja = "Permanent Commission for the South Pacific (intergovernmental-organization, XX) - CPPS - Comisión Permanente del Pacífico Sur",
+    .name_ja = "Permanent Commission for the South Pacific - CPPS - Comisión Permanente del Pacífico Sur",
     .category = "government", .portal = "https://www.cpps-int.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5511,11 +5573,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
       "2026-10-18T10:58:45-05:00. A feed the organisation itself "
-      "declares or links on its site root." },
+      "declares or links on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
   { .id = "JO46_IGO_Q127981543", .name = "Non-Aligned Movement Centre for South-South Technical "
-      "Cooperation (intergovernmental-organization, XX) - NAM CSSTC",
-    .name_ja = "Non-Aligned Movement Centre for South-South Technical Cooperation (intergovernmental-organization, XX) - NAM CSSTC",
+      "Cooperation - NAM CSSTC",
+    .name_ja = "Non-Aligned Movement Centre for South-South Technical Cooperation - NAM CSSTC",
     .category = "government", .portal = "https://www.csstc.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5530,11 +5593,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 16 Jul 2026 "
       "16:12:38 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q47488", .name = "International Criminal Court (intergovernmental-organization, "
-      "XX) - RSS feed for ICC news",
-    .name_ja = "International Criminal Court (intergovernmental-organization, XX) - RSS feed for ICC news",
+  { .id = "JO46_IGO_Q47488", .name = "International Criminal Court - RSS feed for ICC news",
+    .name_ja = "International Criminal Court - RSS feed for ICC news",
     .category = "government", .portal = "https://www.icc-cpi.int/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5549,11 +5612,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 30 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "12:41:09 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q47488_2", .name = "International Criminal Court (intergovernmental-organization, "
-      "XX) - RSS feed for ICC Court records",
-    .name_ja = "International Criminal Court (intergovernmental-organization, XX) - RSS feed for ICC Court records",
+  { .id = "JO46_IGO_Q47488_2", .name = "International Criminal Court - RSS feed for ICC Court records",
+    .name_ja = "International Criminal Court - RSS feed for ICC Court records",
     .category = "government", .portal = "https://www.icc-cpi.int/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5568,11 +5631,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 50 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "00:00:00 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q789769", .name = "Council of the Baltic Sea States "
-      "(intergovernmental-organization, XX) - CBSS",
-    .name_ja = "Council of the Baltic Sea States (intergovernmental-organization, XX) - CBSS",
+  { .id = "JO46_IGO_Q789769", .name = "Council of the Baltic Sea States - CBSS",
+    .name_ja = "Council of the Baltic Sea States - CBSS",
     .category = "government", .portal = "https://cbss.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5587,11 +5650,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "14:34:03 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q244323", .name = "Visegrád Group (intergovernmental-organization, XX) - The "
-      "Visegrad Group - From the Visegrad Group",
-    .name_ja = "Visegrád Group (intergovernmental-organization, XX) - The Visegrad Group - From the Visegrad Group",
+  { .id = "JO46_IGO_Q244323", .name = "Visegrád Group - The Visegrad Group - From the Visegrad Group",
+    .name_ja = "Visegrád Group - The Visegrad Group - From the Visegrad Group",
     .category = "government", .portal = "https://www.visegradgroup.eu/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5606,11 +5669,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 6 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "17:58:46 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q16831766", .name = "Heads of Medicines Agencies (intergovernmental-organization, XX) "
-      "- Recently Published About HMA",
-    .name_ja = "Heads of Medicines Agencies (intergovernmental-organization, XX) - Recently Published About HMA",
+  { .id = "JO46_IGO_Q16831766", .name = "Heads of Medicines Agencies - Recently Published About HMA",
+    .name_ja = "Heads of Medicines Agencies - Recently Published About HMA",
     .category = "government", .portal = "https://www.hma.eu/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5625,11 +5688,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "10:46:48 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q23714964", .name = "Central European Defence Cooperation "
-      "(intergovernmental-organization, XX) - Mors",
-    .name_ja = "Central European Defence Cooperation (intergovernmental-organization, XX) - Mors",
+  { .id = "JO46_IGO_Q23714964", .name = "Central European Defence Cooperation - Mors",
+    .name_ja = "Central European Defence Cooperation - Mors",
     .category = "government", .portal = "https://cedc.info/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5644,12 +5707,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 6 items, RSS2 feed, newest Tue, 24 Sep 2024 "
       "12:27:12 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q577526", .name = "D-8 Organization for Economic Cooperation "
-      "(intergovernmental-organization, XX) - D-8 Organization for "
+  { .id = "JO46_IGO_Q577526", .name = "D-8 Organization for Economic Cooperation - D-8 Organization for "
       "Economic Cooperation",
-    .name_ja = "D-8 Organization for Economic Cooperation (intergovernmental-organization, XX) - D-8 Organization for Economic Cooperation",
+    .name_ja = "D-8 Organization for Economic Cooperation - D-8 Organization for Economic Cooperation",
     .category = "government", .portal = "https://developing8.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5664,11 +5727,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Sun, 15 Apr 2018 "
       "11:36:29 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q822499", .name = "Regional African Satellite Communication Organization "
-      "(intergovernmental-organization, XX) - Connecting Africa",
-    .name_ja = "Regional African Satellite Communication Organization (intergovernmental-organization, XX) - Connecting Africa",
+  { .id = "JO46_IGO_Q822499", .name = "Regional African Satellite Communication Organization - "
+      "Connecting Africa",
+    .name_ja = "Regional African Satellite Communication Organization - Connecting Africa",
     .category = "government", .portal = "https://rascom.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5683,12 +5747,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 16 Jul 2024 "
       "23:01:09 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q605177", .name = "International Cospas-Sarsat Programme "
-      "(intergovernmental-organization, XX) - International "
+  { .id = "JO46_IGO_Q605177", .name = "International Cospas-Sarsat Programme - International "
       "Cospas-Sarsat Programme - International COSPAS-SARSAT",
-    .name_ja = "International Cospas-Sarsat Programme (intergovernmental-organization, XX) - International Cospas-Sarsat Programme - International COSPAS-SARSAT",
+    .name_ja = "International Cospas-Sarsat Programme - International Cospas-Sarsat Programme - International COSPAS-SARSAT",
     .category = "government", .portal = "http://www.cospas-sarsat.int/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5703,12 +5767,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Wed, 19 Feb 2014 "
       "20:33:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q605177_2", .name = "International Cospas-Sarsat Programme "
-      "(intergovernmental-organization, XX) - International "
+  { .id = "JO46_IGO_Q605177_2", .name = "International Cospas-Sarsat Programme - International "
       "Cospas-Sarsat Programme - International COSPAS-SARSAT",
-    .name_ja = "International Cospas-Sarsat Programme (intergovernmental-organization, XX) - International Cospas-Sarsat Programme - International COSPAS-SARSAT",
+    .name_ja = "International Cospas-Sarsat Programme - International Cospas-Sarsat Programme - International COSPAS-SARSAT",
     .category = "government", .portal = "http://www.cospas-sarsat.int/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5723,12 +5787,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
       "2026-10-18T15:58:46+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
+      "declares or links on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q605177_3", .name = "International Cospas-Sarsat Programme "
-      "(intergovernmental-organization, XX) - International "
+  { .id = "JO46_IGO_Q605177_3", .name = "International Cospas-Sarsat Programme - International "
       "Cospas-Sarsat Programme - International COSPAS-SARSAT",
-    .name_ja = "International Cospas-Sarsat Programme (intergovernmental-organization, XX) - International Cospas-Sarsat Programme - International COSPAS-SARSAT",
+    .name_ja = "International Cospas-Sarsat Programme - International Cospas-Sarsat Programme - International COSPAS-SARSAT",
     .category = "government", .portal = "http://www.cospas-sarsat.int/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5743,11 +5807,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Wed, 19 Feb 2014 "
       "20:33:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q134603560", .name = "AALCO Hong Kong Regional Arbitration Centre "
-      "(intergovernmental-organization, XX) - AALCO",
-    .name_ja = "AALCO Hong Kong Regional Arbitration Centre (intergovernmental-organization, XX) - AALCO",
+  { .id = "JO46_IGO_Q134603560", .name = "AALCO Hong Kong Regional Arbitration Centre - AALCO",
+    .name_ja = "AALCO Hong Kong Regional Arbitration Centre - AALCO",
     .category = "government", .portal = "https://aalcohkrac.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5762,10 +5826,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 07 Jul 2026 "
       "07:28:08 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q135456867", .name = "ID5 (intergovernmental-organization, XX) - ID5",
-    .name_ja = "ID5 (intergovernmental-organization, XX) - ID5",
+  { .id = "JO46_IGO_Q135456867", .name = "ID5 - ID5",
+    .name_ja = "ID5 - ID5",
     .category = "government", .portal = "https://id-five.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5780,10 +5845,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 16 items, RSS2 feed, newest Tue, 13 Jun 2023 "
       "14:09:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q135456867_2", .name = "ID5 (intergovernmental-organization, XX) - ID5",
-    .name_ja = "ID5 (intergovernmental-organization, XX) - ID5",
+  { .id = "JO46_IGO_Q135456867_2", .name = "ID5 - ID5",
+    .name_ja = "ID5 - ID5",
     .category = "government", .portal = "https://id-five.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5798,11 +5864,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "04:54:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q136680547", .name = "Mercator Ocean International (intergovernmental-organization, "
-      "XX) - Mercator Ocean International",
-    .name_ja = "Mercator Ocean International (intergovernmental-organization, XX) - Mercator Ocean International",
+  { .id = "JO46_IGO_Q136680547", .name = "Mercator Ocean International - Mercator Ocean International",
+    .name_ja = "Mercator Ocean International - Mercator Ocean International",
     .category = "government", .portal = "https://www.mercator-ocean.eu/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5817,11 +5883,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 12 items, RSS2 feed, newest Tue, 06 Oct 2026 "
       "13:12:42 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
   { .id = "JO46_IGO_Q141528931", .name = "West African Science Service Centre on Climate Change and "
-      "Adapted Land Use (intergovernmental-organization, XX) - WASCAL",
-    .name_ja = "West African Science Service Centre on Climate Change and Adapted Land Use (intergovernmental-organization, XX) - WASCAL",
+      "Adapted Land Use - WASCAL",
+    .name_ja = "West African Science Service Centre on Climate Change and Adapted Land Use - WASCAL",
     .category = "government", .portal = "https://wascal.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5836,11 +5903,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "15:51:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q141737208", .name = "CAREC Institute (intergovernmental-organization, XX) - "
-      "CARECInstitute",
-    .name_ja = "CAREC Institute (intergovernmental-organization, XX) - CARECInstitute",
+  { .id = "JO46_IGO_Q141737208", .name = "CAREC Institute - CARECInstitute",
+    .name_ja = "CAREC Institute - CARECInstitute",
     .category = "government", .portal = "https://www.carecinstitute.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5855,12 +5922,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 07 May 2026 "
       "03:01:15 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
   { .id = "JO46_IGO_Q1114955", .name = "Permanent Interstate Committee for drought control in the Sahel "
-      "(intergovernmental-organization, XX) - Bienvenue sur le Portail "
-      "Web du CILSS",
-    .name_ja = "Permanent Interstate Committee for drought control in the Sahel (intergovernmental-organization, XX) - Bienvenue sur le Portail Web du CILSS",
+      "- Bienvenue sur le Portail Web du CILSS",
+    .name_ja = "Permanent Interstate Committee for drought control in the Sahel - Bienvenue sur le Portail Web du CILSS",
     .category = "government", .portal = "https://www.cilss.int/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5875,11 +5942,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 22 Sep 2026 "
       "16:29:16 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q1115631", .name = "Indian Ocean Commission (intergovernmental-organization, XX) - "
-      "Commission de l'océan Indien",
-    .name_ja = "Indian Ocean Commission (intergovernmental-organization, XX) - Commission de l'océan Indien",
+  { .id = "JO46_IGO_Q1115631", .name = "Indian Ocean Commission - Commission de l'océan Indien",
+    .name_ja = "Indian Ocean Commission - Commission de l'océan Indien",
     .category = "government", .portal = "https://www.commissionoceanindien.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5894,11 +5961,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "07:28:49 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q1142738", .name = "International Institute of Tropical Agriculture "
-      "(intergovernmental-organization, XX) - IITA",
-    .name_ja = "International Institute of Tropical Agriculture (intergovernmental-organization, XX) - IITA",
+  { .id = "JO46_IGO_Q1142738", .name = "International Institute of Tropical Agriculture - IITA",
+    .name_ja = "International Institute of Tropical Agriculture - IITA",
     .category = "government", .portal = "https://iita.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5913,12 +5980,12 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Tue, 25 Feb 2025 "
       "15:32:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q1414657", .name = "The Global Fund to Fight AIDS, Tuberculosis and Malaria "
-      "(intergovernmental-organization, XX) - Latest from the Global "
-      "Fund",
-    .name_ja = "The Global Fund to Fight AIDS, Tuberculosis and Malaria (intergovernmental-organization, XX) - Latest from the Global Fund",
+  { .id = "JO46_IGO_Q1414657", .name = "The Global Fund to Fight AIDS, Tuberculosis and Malaria - Latest "
+      "from the Global Fund",
+    .name_ja = "The Global Fund to Fight AIDS, Tuberculosis and Malaria - Latest from the Global Fund",
     .category = "government", .portal = "https://www.theglobalfund.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5933,10 +6000,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "12:00:00 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q1192641", .name = "UNIDROIT (intergovernmental-organization, XX) - UNIDROIT",
-    .name_ja = "UNIDROIT (intergovernmental-organization, XX) - UNIDROIT",
+  { .id = "JO46_IGO_Q1192641", .name = "UNIDROIT - UNIDROIT",
+    .name_ja = "UNIDROIT - UNIDROIT",
     .category = "government", .portal = "https://www.unidroit.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5951,11 +6019,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "15:36:23 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as "
+      "intergovernmental-organization." },
 
-  { .id = "JO46_IGO_Q6841107", .name = "Midas Interactive Entertainment (think-tank, XX) - Midas "
-      "Interactive",
-    .name_ja = "Midas Interactive Entertainment (think-tank, XX) - Midas Interactive",
+  { .id = "JO46_IGO_Q6841107", .name = "Midas Interactive Entertainment - Midas Interactive",
+    .name_ja = "Midas Interactive Entertainment - Midas Interactive",
     .category = "government", .portal = "https://midasinteractive.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5970,10 +6038,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Tue, 16 Sep 2025 "
       "13:33:52 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q18001341", .name = "increpare games (think-tank, XX) - increpare games",
-    .name_ja = "increpare games (think-tank, XX) - increpare games",
+  { .id = "JO46_IGO_Q18001341", .name = "increpare games - increpare games",
+    .name_ja = "increpare games - increpare games",
     .category = "government", .portal = "https://www.increpare.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -5988,10 +6056,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 50 items, RSS2 feed, newest Thu, 12 Mar 2026 "
       "11:04:56 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q18151782", .name = "Nightdive Studios (think-tank, XX) - Nightdive Studios",
-    .name_ja = "Nightdive Studios (think-tank, XX) - Nightdive Studios",
+  { .id = "JO46_IGO_Q18151782", .name = "Nightdive Studios - Nightdive Studios",
+    .name_ja = "Nightdive Studios - Nightdive Studios",
     .category = "government", .portal = "https://nightdivestudios.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6006,10 +6074,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 07 May 2026 "
       "20:02:09 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q1474023", .name = "Funatics Software (think-tank, XX) - Funatics Software GmbH",
-    .name_ja = "Funatics Software (think-tank, XX) - Funatics Software GmbH",
+  { .id = "JO46_IGO_Q1474023", .name = "Funatics Software - Funatics Software GmbH",
+    .name_ja = "Funatics Software - Funatics Software GmbH",
     .category = "government", .portal = "https://www.funatics.de/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6024,10 +6092,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 7 items, RSS2 feed, newest Wed, 07 Jan 2026 "
       "08:53:35 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q1493042", .name = "Game Arts (think-tank, XX) - 株式会社ゲームアーツ 公式サイト",
-    .name_ja = "Game Arts (think-tank, XX) - 株式会社ゲームアーツ 公式サイト",
+  { .id = "JO46_IGO_Q1493042", .name = "Game Arts - 株式会社ゲームアーツ 公式サイト",
+    .name_ja = "Game Arts - 株式会社ゲームアーツ 公式サイト",
     .category = "government", .portal = "https://www.gamearts.co.jp/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6042,10 +6110,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Fri, 18 Apr 2025 "
       "00:00:00 +0900. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q12062864", .name = "Creoteam (think-tank, XX) - Creoteam",
-    .name_ja = "Creoteam (think-tank, XX) - Creoteam",
+  { .id = "JO46_IGO_Q12062864", .name = "Creoteam - Creoteam",
+    .name_ja = "Creoteam - Creoteam",
     .category = "government", .portal = "https://creoteam.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6060,10 +6128,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 29 Jun 2026 "
       "15:21:38 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q26720075", .name = "Wube software (think-tank, XX) - Factorio Blog",
-    .name_ja = "Wube software (think-tank, XX) - Factorio Blog",
+  { .id = "JO46_IGO_Q26720075", .name = "Wube software - Factorio Blog",
+    .name_ja = "Wube software - Factorio Blog",
     .category = "government", .portal = "https://www.factorio.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6078,10 +6146,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
       "2026-10-09T00:00:00+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
+      "declares or links on its site root. Wikidata classes it as "
+      "think-tank." },
 
-  { .id = "JO46_IGO_Q28222801", .name = "Survios (think-tank, XX) - Survios",
-    .name_ja = "Survios (think-tank, XX) - Survios",
+  { .id = "JO46_IGO_Q28222801", .name = "Survios - Survios",
+    .name_ja = "Survios - Survios",
     .category = "government", .portal = "https://survios.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6096,10 +6165,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 11 Dec 2025 "
       "18:05:57 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q28222801_2", .name = "Survios (think-tank, XX) - Comments on: Home",
-    .name_ja = "Survios (think-tank, XX) - Comments on: Home",
+  { .id = "JO46_IGO_Q28222801_2", .name = "Survios - Comments on: Home",
+    .name_ja = "Survios - Comments on: Home",
     .category = "government", .portal = "https://survios.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6114,10 +6183,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Sat, 24 Aug 2024 "
       "14:54:26 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q60161310", .name = "Undertow Games (think-tank, XX) - Undertow Games",
-    .name_ja = "Undertow Games (think-tank, XX) - Undertow Games",
+  { .id = "JO46_IGO_Q60161310", .name = "Undertow Games - Undertow Games",
+    .name_ja = "Undertow Games - Undertow Games",
     .category = "government", .portal = "https://undertowgames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6132,10 +6201,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 19 Nov 2018 "
       "14:46:15 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q60616868", .name = "The Family Collective (think-tank, XX) - the Family",
-    .name_ja = "The Family Collective (think-tank, XX) - the Family",
+  { .id = "JO46_IGO_Q60616868", .name = "The Family Collective - the Family",
+    .name_ja = "The Family Collective - the Family",
     .category = "government", .portal = "https://thefamily.tv/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6150,10 +6219,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 25 Oct 2021 "
       "17:36:21 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q60629919", .name = "Kasedo Games (think-tank, XX) - Facelift",
-    .name_ja = "Kasedo Games (think-tank, XX) - Facelift",
+  { .id = "JO46_IGO_Q60629919", .name = "Kasedo Games - Facelift",
+    .name_ja = "Kasedo Games - Facelift",
     .category = "government", .portal = "https://www.kasedogames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6168,10 +6237,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Tue, 03 Jun 2025 "
       "11:02:04 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q60634040", .name = "The Hidden Levels (think-tank, XX) - The Hidden Levels",
-    .name_ja = "The Hidden Levels (think-tank, XX) - The Hidden Levels",
+  { .id = "JO46_IGO_Q60634040", .name = "The Hidden Levels - The Hidden Levels",
+    .name_ja = "The Hidden Levels - The Hidden Levels",
     .category = "government", .portal = "http://thehiddenlevels.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6186,11 +6255,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 28 Nov 2019 "
       "21:55:41 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q48967969", .name = "AtariAge (think-tank, XX) - AtariAge - Have you played Atari "
-      "today?",
-    .name_ja = "AtariAge (think-tank, XX) - AtariAge - Have you played Atari today?",
+  { .id = "JO46_IGO_Q48967969", .name = "AtariAge - AtariAge - Have you played Atari today?",
+    .name_ja = "AtariAge - AtariAge - Have you played Atari today?",
     .category = "government", .portal = "https://www.atariage.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6205,10 +6273,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "15:58:48 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q52021004", .name = "Ysbryd Games (think-tank, XX) - ysbryd games",
-    .name_ja = "Ysbryd Games (think-tank, XX) - ysbryd games",
+  { .id = "JO46_IGO_Q52021004", .name = "Ysbryd Games - ysbryd games",
+    .name_ja = "Ysbryd Games - ysbryd games",
     .category = "government", .portal = "https://www.ysbryd.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6223,10 +6291,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Mon, 26 Jul 2021 "
       "12:13:29 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q52021004_2", .name = "Ysbryd Games (think-tank, XX) - Comments on: Frontpage",
-    .name_ja = "Ysbryd Games (think-tank, XX) - Comments on: Frontpage",
+  { .id = "JO46_IGO_Q52021004_2", .name = "Ysbryd Games - Comments on: Frontpage",
+    .name_ja = "Ysbryd Games - Comments on: Frontpage",
     .category = "government", .portal = "https://www.ysbryd.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6241,10 +6309,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Tue, 16 Jun 2026 "
       "10:30:29 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q52152915", .name = "Amused Sloth (think-tank, XX) - Amused Sloth",
-    .name_ja = "Amused Sloth (think-tank, XX) - Amused Sloth",
+  { .id = "JO46_IGO_Q52152915", .name = "Amused Sloth - Amused Sloth",
+    .name_ja = "Amused Sloth - Amused Sloth",
     .category = "government", .portal = "https://www.amusedsloth.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6259,10 +6327,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 14 Dec 2017 "
       "15:17:04 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q52153177", .name = "Osgoode Media (think-tank, XX) - Osgoode Media",
-    .name_ja = "Osgoode Media (think-tank, XX) - Osgoode Media",
+  { .id = "JO46_IGO_Q52153177", .name = "Osgoode Media - Osgoode Media",
+    .name_ja = "Osgoode Media - Osgoode Media",
     .category = "government", .portal = "https://osgoodemedia.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6277,10 +6345,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Mon, 20 Jul 2026 "
       "02:44:38 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q52164641", .name = "HexWar Games (think-tank, XX) - HexWar",
-    .name_ja = "HexWar Games (think-tank, XX) - HexWar",
+  { .id = "JO46_IGO_Q52164641", .name = "HexWar Games - HexWar",
+    .name_ja = "HexWar Games - HexWar",
     .category = "government", .portal = "https://pme.hexwar.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6295,11 +6363,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Thu, 06 Aug 2026 "
       "09:30:06 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q52730802", .name = "Imperium42 Game Studio (think-tank, XX) - Senior Backend "
-      "Engineer   Imperium42 Studios",
-    .name_ja = "Imperium42 Game Studio (think-tank, XX) - Senior Backend Engineer   Imperium42 Studios",
+  { .id = "JO46_IGO_Q52730802", .name = "Imperium42 Game Studio - Senior Backend Engineer   Imperium42 "
+      "Studios",
+    .name_ja = "Imperium42 Game Studio - Senior Backend Engineer   Imperium42 Studios",
     .category = "government", .portal = "https://imperium42.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6314,10 +6382,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 15 items, RSS2 feed, newest Sun, 19 Jan 2025 "
       "00:00:00 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q54121489", .name = "Chubby Pixel (think-tank, XX) - Chubby Pixel",
-    .name_ja = "Chubby Pixel (think-tank, XX) - Chubby Pixel",
+  { .id = "JO46_IGO_Q54121489", .name = "Chubby Pixel - Chubby Pixel",
+    .name_ja = "Chubby Pixel - Chubby Pixel",
     .category = "government", .portal = "https://chubbypixel.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6332,10 +6400,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 12 items, RSS2 feed, newest Sun, 23 Aug 2026 "
       "21:15:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q54121489_2", .name = "Chubby Pixel (think-tank, XX) - Chubby Pixel",
-    .name_ja = "Chubby Pixel (think-tank, XX) - Chubby Pixel",
+  { .id = "JO46_IGO_Q54121489_2", .name = "Chubby Pixel - Chubby Pixel",
+    .name_ja = "Chubby Pixel - Chubby Pixel",
     .category = "government", .portal = "https://chubbypixel.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6350,10 +6418,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 12 items, RSS2 feed, newest Sun, 23 Aug 2026 "
       "21:15:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q2549114", .name = "CI Games S.A. (think-tank, XX) - CI Games",
-    .name_ja = "CI Games S.A. (think-tank, XX) - CI Games",
+  { .id = "JO46_IGO_Q2549114", .name = "CI Games S.A. - CI Games",
+    .name_ja = "CI Games S.A. - CI Games",
     .category = "government", .portal = "https://cigames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6368,10 +6436,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 01 Oct 2026 "
       "08:57:53 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q2602093", .name = "Sumo Digital (think-tank, XX) - Sumo Digital",
-    .name_ja = "Sumo Digital (think-tank, XX) - Sumo Digital",
+  { .id = "JO46_IGO_Q2602093", .name = "Sumo Digital - Sumo Digital",
+    .name_ja = "Sumo Digital - Sumo Digital",
     .category = "government", .portal = "https://www.sumo-digital.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6386,11 +6454,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 24 Sep 2026 "
       "14:37:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q2617855", .name = "Arc System Works (think-tank, XX) - ARC SYSTEM WORKS OFFICIAL "
-      "WEB SITE",
-    .name_ja = "Arc System Works (think-tank, XX) - ARC SYSTEM WORKS OFFICIAL WEB SITE",
+  { .id = "JO46_IGO_Q2617855", .name = "Arc System Works - ARC SYSTEM WORKS OFFICIAL WEB SITE",
+    .name_ja = "Arc System Works - ARC SYSTEM WORKS OFFICIAL WEB SITE",
     .category = "government", .portal = "https://www.arcsystemworks.jp/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6405,10 +6472,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "06:56:01 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q2617855_2", .name = "Arc System Works (think-tank, XX) - Arc System Works",
-    .name_ja = "Arc System Works (think-tank, XX) - Arc System Works",
+  { .id = "JO46_IGO_Q2617855_2", .name = "Arc System Works - Arc System Works",
+    .name_ja = "Arc System Works - Arc System Works",
     .category = "government", .portal = "https://www.arcsystemworks.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6423,10 +6490,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 11 Sep 2026 "
       "21:43:16 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q30595072", .name = "M2H (think-tank, XX) - M2H · Writing",
-    .name_ja = "M2H (think-tank, XX) - M2H · Writing",
+  { .id = "JO46_IGO_Q30595072", .name = "M2H - M2H · Writing",
+    .name_ja = "M2H - M2H · Writing",
     .category = "government", .portal = "https://www.m2h.nl/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6441,10 +6508,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 4 items, RSS2 feed, newest Tue, 22 Sep 2026 "
       "00:00:00 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q30644872", .name = "Raw Fury (think-tank, XX) - Raw Fury",
-    .name_ja = "Raw Fury (think-tank, XX) - Raw Fury",
+  { .id = "JO46_IGO_Q30644872", .name = "Raw Fury - Raw Fury",
+    .name_ja = "Raw Fury - Raw Fury",
     .category = "government", .portal = "https://rawfury.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6459,10 +6526,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "21:37:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q1692707", .name = "Eidos Interactive (think-tank, XX) - SQUARE ENIX Official - News",
-    .name_ja = "Eidos Interactive (think-tank, XX) - SQUARE ENIX Official - News",
+  { .id = "JO46_IGO_Q1692707", .name = "Eidos Interactive - SQUARE ENIX Official - News",
+    .name_ja = "Eidos Interactive - SQUARE ENIX Official - News",
     .category = "government", .portal = "https://square-enix-games.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6477,10 +6544,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 09 Sep 2026 "
       "09:00:00 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q63430387", .name = "CuiCui Studios (think-tank, XX) - Cuicui Studios",
-    .name_ja = "CuiCui Studios (think-tank, XX) - Cuicui Studios",
+  { .id = "JO46_IGO_Q63430387", .name = "CuiCui Studios - Cuicui Studios",
+    .name_ja = "CuiCui Studios - Cuicui Studios",
     .category = "government", .portal = "https://www.cuicuistudios.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6495,10 +6562,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Wed, 20 Dec 2023 "
       "08:37:50 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q64014139", .name = "Pathea Games (think-tank, XX) - Pathea",
-    .name_ja = "Pathea Games (think-tank, XX) - Pathea",
+  { .id = "JO46_IGO_Q64014139", .name = "Pathea Games - Pathea",
+    .name_ja = "Pathea Games - Pathea",
     .category = "government", .portal = "https://pathea.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6513,10 +6580,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Tue, 28 Jul 2020 "
       "22:06:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q7050580", .name = "Nordcurrent (think-tank, XX) - Nordcurrent",
-    .name_ja = "Nordcurrent (think-tank, XX) - Nordcurrent",
+  { .id = "JO46_IGO_Q7050580", .name = "Nordcurrent - Nordcurrent",
+    .name_ja = "Nordcurrent - Nordcurrent",
     .category = "government", .portal = "https://nordcurrent.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6531,10 +6598,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 15 Sep 2026 "
       "10:09:34 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q7131061", .name = "Panic (think-tank, XX) - Panic Blog",
-    .name_ja = "Panic (think-tank, XX) - Panic Blog",
+  { .id = "JO46_IGO_Q7131061", .name = "Panic - Panic Blog",
+    .name_ja = "Panic - Panic Blog",
     .category = "government", .portal = "http://www.panic.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6549,10 +6616,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 08 Oct 2024 "
       "18:21:18 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q629821", .name = "Obsidian Entertainment (think-tank, XX) - Obsidian",
-    .name_ja = "Obsidian Entertainment (think-tank, XX) - Obsidian",
+  { .id = "JO46_IGO_Q629821", .name = "Obsidian Entertainment - Obsidian",
+    .name_ja = "Obsidian Entertainment - Obsidian",
     .category = "government", .portal = "https://www.obsidian.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6567,10 +6634,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 06 Jul 2026 "
       "10:00:00 -0700. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q655493", .name = "Petroglyph Games (think-tank, XX) - Petroglyph",
-    .name_ja = "Petroglyph Games (think-tank, XX) - Petroglyph",
+  { .id = "JO46_IGO_Q655493", .name = "Petroglyph Games - Petroglyph",
+    .name_ja = "Petroglyph Games - Petroglyph",
     .category = "government", .portal = "https://petroglyphgames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6585,10 +6652,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Mon, 12 Apr 2021 "
       "21:02:33 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q54303510", .name = "Vision Games (think-tank, XX) - Vision Games Publishing",
-    .name_ja = "Vision Games (think-tank, XX) - Vision Games Publishing",
+  { .id = "JO46_IGO_Q54303510", .name = "Vision Games - Vision Games Publishing",
+    .name_ja = "Vision Games - Vision Games Publishing",
     .category = "government", .portal = "http://visiongamespublishing.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6603,10 +6670,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 29 Apr 2019 "
       "12:35:01 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q54308709", .name = "Super Evil Megacorp (think-tank, XX) - Super Evil Megacorp",
-    .name_ja = "Super Evil Megacorp (think-tank, XX) - Super Evil Megacorp",
+  { .id = "JO46_IGO_Q54308709", .name = "Super Evil Megacorp - Super Evil Megacorp",
+    .name_ja = "Super Evil Megacorp - Super Evil Megacorp",
     .category = "government", .portal = "https://superevilmegacorp.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6621,10 +6688,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 29 Sep 2026 "
       "13:01:15 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q54309902", .name = "Tapps Games (think-tank, XX) - TappsGames",
-    .name_ja = "Tapps Games (think-tank, XX) - TappsGames",
+  { .id = "JO46_IGO_Q54309902", .name = "Tapps Games - TappsGames",
+    .name_ja = "Tapps Games - TappsGames",
     .category = "government", .portal = "https://tappsgames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6639,11 +6706,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 6 items, RSS2 feed, newest Fri, 28 Aug 2026 "
       "17:50:13 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q54897956", .name = "White Giant RPG Studios (think-tank, XX) - White Giant RPG "
-      "Studios",
-    .name_ja = "White Giant RPG Studios (think-tank, XX) - White Giant RPG Studios",
+  { .id = "JO46_IGO_Q54897956", .name = "White Giant RPG Studios - White Giant RPG Studios",
+    .name_ja = "White Giant RPG Studios - White Giant RPG Studios",
     .category = "government", .portal = "https://whitegiantrpg.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6658,10 +6724,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "04:00:04 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q55091126", .name = "LavaMind (think-tank, XX) - LavaMind",
-    .name_ja = "LavaMind (think-tank, XX) - LavaMind",
+  { .id = "JO46_IGO_Q55091126", .name = "LavaMind - LavaMind",
+    .name_ja = "LavaMind - LavaMind",
     .category = "government", .portal = "https://www.lavamind.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6676,10 +6742,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 01 Feb 2023 "
       "18:42:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q7577242", .name = "Spil Games (think-tank, XX) - azerion",
-    .name_ja = "Spil Games (think-tank, XX) - azerion",
+  { .id = "JO46_IGO_Q7577242", .name = "Spil Games - azerion",
+    .name_ja = "Spil Games - azerion",
     .category = "government", .portal = "https://www.azerion.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6694,10 +6760,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 15 items, RSS2 feed, newest Wed, 23 Sep 2026 "
       "08:54:58 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q7643396", .name = "Supergiant Games (think-tank, XX) - Supergiant Games Blog",
-    .name_ja = "Supergiant Games (think-tank, XX) - Supergiant Games Blog",
+  { .id = "JO46_IGO_Q7643396", .name = "Supergiant Games - Supergiant Games Blog",
+    .name_ja = "Supergiant Games - Supergiant Games Blog",
     .category = "government", .portal = "https://www.supergiantgames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6712,10 +6778,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 221 items, RSS2 feed, newest Fri, 25 Sep "
       "2026 16:00:00 GMT. A feed the organisation itself declares or "
-      "links on its site root." },
+      "links on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q7864546", .name = "UFO Interactive Games (think-tank, XX) - ufointeractive",
-    .name_ja = "UFO Interactive Games (think-tank, XX) - ufointeractive",
+  { .id = "JO46_IGO_Q7864546", .name = "UFO Interactive Games - ufointeractive",
+    .name_ja = "UFO Interactive Games - ufointeractive",
     .category = "government", .portal = "https://www.ufointeractivegames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6730,10 +6796,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 4 items, RSS2 feed, newest Thu, 25 Jul 2019 "
       "18:01:41 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q7959294", .name = "Wadjet Eye Games (think-tank, XX) - Wadjet Eye Games",
-    .name_ja = "Wadjet Eye Games (think-tank, XX) - Wadjet Eye Games",
+  { .id = "JO46_IGO_Q7959294", .name = "Wadjet Eye Games - Wadjet Eye Games",
+    .name_ja = "Wadjet Eye Games - Wadjet Eye Games",
     .category = "government", .portal = "https://wadjeteyegames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6748,10 +6814,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 22 Sep 2026 "
       "15:28:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q10341236", .name = "Orange Pixel (think-tank, XX) - Orangepixel",
-    .name_ja = "Orange Pixel (think-tank, XX) - Orangepixel",
+  { .id = "JO46_IGO_Q10341236", .name = "Orange Pixel - Orangepixel",
+    .name_ja = "Orange Pixel - Orangepixel",
     .category = "government", .portal = "https://orangepixel.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6766,10 +6832,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 24 Sep 2026 "
       "13:05:01 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q10852200", .name = "propeller (think-tank, XX) - propeller Official Website",
-    .name_ja = "propeller (think-tank, XX) - propeller Official Website",
+  { .id = "JO46_IGO_Q10852200", .name = "propeller - propeller Official Website",
+    .name_ja = "propeller - propeller Official Website",
     .category = "government", .portal = "https://www.propeller-game.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6784,10 +6850,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 5 items, RSS1 feed, newest "
       "2012-01-13T17:37:43+09:00. A feed the organisation itself "
-      "declares or links on its site root." },
+      "declares or links on its site root. Wikidata classes it as "
+      "think-tank." },
 
-  { .id = "JO46_IGO_Q60993169", .name = "Game Cores (think-tank, XX) - 机核",
-    .name_ja = "Game Cores (think-tank, XX) - 机核",
+  { .id = "JO46_IGO_Q60993169", .name = "Game Cores - 机核",
+    .name_ja = "Game Cores - 机核",
     .category = "government", .portal = "https://www.gcores.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6802,10 +6869,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "23:00:00 +0800. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q62501511", .name = "Goblinz Studio (think-tank, XX) - Goblinz Studio",
-    .name_ja = "Goblinz Studio (think-tank, XX) - Goblinz Studio",
+  { .id = "JO46_IGO_Q62501511", .name = "Goblinz Studio - Goblinz Studio",
+    .name_ja = "Goblinz Studio - Goblinz Studio",
     .category = "government", .portal = "https://goblinzstudio.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6820,10 +6887,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Tue, 23 Jun 2020 "
       "09:47:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q32900502", .name = "Wispfire (think-tank, XX) - Wispfire",
-    .name_ja = "Wispfire (think-tank, XX) - Wispfire",
+  { .id = "JO46_IGO_Q32900502", .name = "Wispfire - Wispfire",
+    .name_ja = "Wispfire - Wispfire",
     .category = "government", .portal = "https://wispfire.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6838,10 +6905,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 07 Jun 2026 "
       "22:23:14 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q33198526", .name = "IMGN.PRO (think-tank, XX) - IMGN.PRO",
-    .name_ja = "IMGN.PRO (think-tank, XX) - IMGN.PRO",
+  { .id = "JO46_IGO_Q33198526", .name = "IMGN.PRO - IMGN.PRO",
+    .name_ja = "IMGN.PRO - IMGN.PRO",
     .category = "government", .portal = "https://imgn.pro/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6856,10 +6923,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 21 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "12:33:08 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q33252900", .name = "Ludeon Studios (think-tank, XX) - Ludeon Studios",
-    .name_ja = "Ludeon Studios (think-tank, XX) - Ludeon Studios",
+  { .id = "JO46_IGO_Q33252900", .name = "Ludeon Studios - Ludeon Studios",
+    .name_ja = "Ludeon Studios - Ludeon Studios",
     .category = "government", .portal = "https://ludeon.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6874,10 +6941,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS1 feed, newest "
       "2026-10-14T18:09:18Z. A feed the organisation itself declares or "
-      "links on its site root." },
+      "links on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q33252900_2", .name = "Ludeon Studios (think-tank, XX) - Ludeon Studios",
-    .name_ja = "Ludeon Studios (think-tank, XX) - Ludeon Studios",
+  { .id = "JO46_IGO_Q33252900_2", .name = "Ludeon Studios - Ludeon Studios",
+    .name_ja = "Ludeon Studios - Ludeon Studios",
     .category = "government", .portal = "https://ludeon.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6892,10 +6959,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "17:18:55 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q33252900_3", .name = "Ludeon Studios (think-tank, XX) - Ludeon Studios",
-    .name_ja = "Ludeon Studios (think-tank, XX) - Ludeon Studios",
+  { .id = "JO46_IGO_Q33252900_3", .name = "Ludeon Studios - Ludeon Studios",
+    .name_ja = "Ludeon Studios - Ludeon Studios",
     .category = "government", .portal = "https://ludeon.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6910,10 +6977,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
       "2026-10-14T18:09:18Z. A feed the organisation itself declares or "
-      "links on its site root." },
+      "links on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q33465537", .name = "Young Horses (think-tank, XX) - Young Horses Games",
-    .name_ja = "Young Horses (think-tank, XX) - Young Horses Games",
+  { .id = "JO46_IGO_Q33465537", .name = "Young Horses - Young Horses Games",
+    .name_ja = "Young Horses - Young Horses Games",
     .category = "government", .portal = "https://younghorsesgames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6928,10 +6995,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 8 items, RSS2 feed, newest Mon, 06 Jun 2016 "
       "13:21:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q58886464", .name = "Kodera Software (think-tank, XX) - Koder makes Games",
-    .name_ja = "Kodera Software (think-tank, XX) - Koder makes Games",
+  { .id = "JO46_IGO_Q58886464", .name = "Kodera Software - Koder makes Games",
+    .name_ja = "Kodera Software - Koder makes Games",
     .category = "government", .portal = "https://games.kodera.pl/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6946,11 +7013,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 30 Sep 2026 "
       "11:31:09 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q18358383", .name = "Sickhead Games (think-tank, XX) - Game Porting Services   "
-      "Sickhead Games",
-    .name_ja = "Sickhead Games (think-tank, XX) - Game Porting Services   Sickhead Games",
+  { .id = "JO46_IGO_Q18358383", .name = "Sickhead Games - Game Porting Services   Sickhead Games",
+    .name_ja = "Sickhead Games - Game Porting Services   Sickhead Games",
     .category = "government", .portal = "https://www.sickhead.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6965,10 +7031,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Thu, 10 Jul 2025 "
       "18:14:39 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q18462390", .name = "Brasoft (think-tank, XX) - legendarynames.com",
-    .name_ja = "Brasoft (think-tank, XX) - legendarynames.com",
+  { .id = "JO46_IGO_Q18462390", .name = "Brasoft - legendarynames.com",
+    .name_ja = "Brasoft - legendarynames.com",
     .category = "government", .portal = "https://legendarynames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -6983,10 +7049,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Mon, 27 Oct 2025 "
       "15:40:30 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q15232085", .name = "Lexis Numérique (think-tank, XX) - Lexis Numérique",
-    .name_ja = "Lexis Numérique (think-tank, XX) - Lexis Numérique",
+  { .id = "JO46_IGO_Q15232085", .name = "Lexis Numérique - Lexis Numérique",
+    .name_ja = "Lexis Numérique - Lexis Numérique",
     .category = "government", .portal = "https://www.lexis-numerique.fr/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7001,10 +7067,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Sun, 28 Jun 2026 "
       "04:54:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q15905487", .name = "Firedog Studio (think-tank, XX) - 火狗創意有限公司",
-    .name_ja = "Firedog Studio (think-tank, XX) - 火狗創意有限公司",
+  { .id = "JO46_IGO_Q15905487", .name = "Firedog Studio - 火狗創意有限公司",
+    .name_ja = "Firedog Studio - 火狗創意有限公司",
     .category = "government", .portal = "https://www.firedogstudio.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7019,10 +7085,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Mon, 24 Aug 2026 "
       "12:36:34 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q47498862", .name = "Chorus Worldwide (think-tank, XX) - Chorus Worldwide",
-    .name_ja = "Chorus Worldwide (think-tank, XX) - Chorus Worldwide",
+  { .id = "JO46_IGO_Q47498862", .name = "Chorus Worldwide - Chorus Worldwide",
+    .name_ja = "Chorus Worldwide - Chorus Worldwide",
     .category = "government", .portal = "https://chorusworldwide.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7037,10 +7103,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 24 items, RSS2 feed, newest Fri, 20 Mar 2026 "
       "07:00:49 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q66796984", .name = "Dear Villagers (think-tank, XX) - Dear Villagers",
-    .name_ja = "Dear Villagers (think-tank, XX) - Dear Villagers",
+  { .id = "JO46_IGO_Q66796984", .name = "Dear Villagers - Dear Villagers",
+    .name_ja = "Dear Villagers - Dear Villagers",
     .category = "government", .portal = "https://dearvillagers.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7055,10 +7121,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 02 Aug 2022 "
       "08:05:46 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q67050943", .name = "AppSir (think-tank, XX) - AppSir Games",
-    .name_ja = "AppSir (think-tank, XX) - AppSir Games",
+  { .id = "JO46_IGO_Q67050943", .name = "AppSir - AppSir Games",
+    .name_ja = "AppSir - AppSir Games",
     .category = "government", .portal = "https://www.appsirgames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7073,10 +7139,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
       "2026-10-15T17:04:27.521+08:00. A feed the organisation itself "
-      "declares or links on its site root." },
+      "declares or links on its site root. Wikidata classes it as "
+      "think-tank." },
 
-  { .id = "JO46_IGO_Q67050943_2", .name = "AppSir (think-tank, XX) - AppSir Games",
-    .name_ja = "AppSir (think-tank, XX) - AppSir Games",
+  { .id = "JO46_IGO_Q67050943_2", .name = "AppSir - AppSir Games",
+    .name_ja = "AppSir - AppSir Games",
     .category = "government", .portal = "https://www.appsirgames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7091,11 +7158,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Wed, 23 Jan 2019 "
       "18:59:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q68094551", .name = "Return To Adventure Mountain, LLC (think-tank, XX) - Return To "
-      "Adventure Mountain",
-    .name_ja = "Return To Adventure Mountain, LLC (think-tank, XX) - Return To Adventure Mountain",
+  { .id = "JO46_IGO_Q68094551", .name = "Return To Adventure Mountain, LLC - Return To Adventure Mountain",
+    .name_ja = "Return To Adventure Mountain, LLC - Return To Adventure Mountain",
     .category = "government", .portal = "https://returntoadventuremountain.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7110,10 +7176,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 01 Oct 2015 "
       "15:26:51 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q85671146", .name = "Magic Design Studios (think-tank, XX) - magicdesignstudios",
-    .name_ja = "Magic Design Studios (think-tank, XX) - magicdesignstudios",
+  { .id = "JO46_IGO_Q85671146", .name = "Magic Design Studios - magicdesignstudios",
+    .name_ja = "Magic Design Studios - magicdesignstudios",
     .category = "government", .portal = "https://www.magicdesignstudios.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7128,10 +7194,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Tue, 05 Dec 2023 "
       "17:19:04 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q98599250", .name = "Draw Distance (think-tank, XX) - Drawdistance – Game Developer",
-    .name_ja = "Draw Distance (think-tank, XX) - Drawdistance – Game Developer",
+  { .id = "JO46_IGO_Q98599250", .name = "Draw Distance - Drawdistance – Game Developer",
+    .name_ja = "Draw Distance - Drawdistance – Game Developer",
     .category = "government", .portal = "https://drawdistance.dev/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7146,10 +7212,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 07 Aug 2020 "
       "13:08:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q98882067", .name = "Team Reptile (think-tank, XX) - Team Reptile",
-    .name_ja = "Team Reptile (think-tank, XX) - Team Reptile",
+  { .id = "JO46_IGO_Q98882067", .name = "Team Reptile - Team Reptile",
+    .name_ja = "Team Reptile - Team Reptile",
     .category = "government", .portal = "https://team-reptile.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7164,10 +7230,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 13 Jul 2026 "
       "15:22:18 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q2340010", .name = "Croteam (think-tank, XX) - Croteam",
-    .name_ja = "Croteam (think-tank, XX) - Croteam",
+  { .id = "JO46_IGO_Q2340010", .name = "Croteam - Croteam",
+    .name_ja = "Croteam - Croteam",
     .category = "government", .portal = "https://www.croteam.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7182,10 +7248,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 10 Apr 2025 "
       "14:36:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q912702", .name = "Tactics (think-tank, XX) - Tactics.ne.jp – オンラインカジノ",
-    .name_ja = "Tactics (think-tank, XX) - Tactics.ne.jp – オンラインカジノ",
+  { .id = "JO46_IGO_Q912702", .name = "Tactics - Tactics.ne.jp – オンラインカジノ",
+    .name_ja = "Tactics - Tactics.ne.jp – オンラインカジノ",
     .category = "government", .portal = "https://tactics.ne.jp/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7200,10 +7266,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 30 Mar 2026 "
       "09:48:40 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q918638", .name = "Funcom (think-tank, XX) - Funcom",
-    .name_ja = "Funcom (think-tank, XX) - Funcom",
+  { .id = "JO46_IGO_Q918638", .name = "Funcom - Funcom",
+    .name_ja = "Funcom - Funcom",
     .category = "government", .portal = "https://www.funcom.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7218,10 +7284,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 10 Jun 2025 "
       "14:16:40 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q11293405", .name = "Overdose (think-tank, XX) - love-juice.jp",
-    .name_ja = "Overdose (think-tank, XX) - love-juice.jp",
+  { .id = "JO46_IGO_Q11293405", .name = "Overdose - love-juice.jp",
+    .name_ja = "Overdose - love-juice.jp",
     .category = "government", .portal = "https://www.love-juice.jp/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7236,10 +7302,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "02:07:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q4047302", .name = "PQube (think-tank, XX) - PQube",
-    .name_ja = "PQube (think-tank, XX) - PQube",
+  { .id = "JO46_IGO_Q4047302", .name = "PQube - PQube",
+    .name_ja = "PQube - PQube",
     .category = "government", .portal = "https://pqube.co.uk/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7254,10 +7320,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "17:34:15 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q94658505", .name = "3goo (think-tank, XX) - 3GOO Japan",
-    .name_ja = "3goo (think-tank, XX) - 3GOO Japan",
+  { .id = "JO46_IGO_Q94658505", .name = "3goo - 3GOO Japan",
+    .name_ja = "3goo - 3GOO Japan",
     .category = "government", .portal = "https://3goo.co.jp/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7272,10 +7338,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "22:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q96278593", .name = "Toge Productions (think-tank, XX) - Toge Productions",
-    .name_ja = "Toge Productions (think-tank, XX) - Toge Productions",
+  { .id = "JO46_IGO_Q96278593", .name = "Toge Productions - Toge Productions",
+    .name_ja = "Toge Productions - Toge Productions",
     .category = "government", .portal = "https://www.togeproductions.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7290,10 +7356,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 17 Jan 2024 "
       "18:00:41 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q21405666", .name = "SkyBox Labs (think-tank, XX) - SkyBox Labs",
-    .name_ja = "SkyBox Labs (think-tank, XX) - SkyBox Labs",
+  { .id = "JO46_IGO_Q21405666", .name = "SkyBox Labs - SkyBox Labs",
+    .name_ja = "SkyBox Labs - SkyBox Labs",
     .category = "government", .portal = "https://skyboxlabs.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7308,10 +7374,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 02 Apr 2018 "
       "17:21:14 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q22127855", .name = "Digital Cute (think-tank, XX) - Digital Cute",
-    .name_ja = "Digital Cute (think-tank, XX) - Digital Cute",
+  { .id = "JO46_IGO_Q22127855", .name = "Digital Cute - Digital Cute",
+    .name_ja = "Digital Cute - Digital Cute",
     .category = "government", .portal = "https://digitalcute.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7326,10 +7392,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 22 Apr 2021 "
       "08:02:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q23795636", .name = "Northway Games (think-tank, XX) - Northway Games",
-    .name_ja = "Northway Games (think-tank, XX) - Northway Games",
+  { .id = "JO46_IGO_Q23795636", .name = "Northway Games - Northway Games",
+    .name_ja = "Northway Games - Northway Games",
     .category = "government", .portal = "https://northwaygames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7344,10 +7410,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 4 items, RSS2 feed, newest Mon, 10 Aug 2026 "
       "17:12:29 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q24080184", .name = "Brace Yourself Games (think-tank, XX) - Brace Yourself Games",
-    .name_ja = "Brace Yourself Games (think-tank, XX) - Brace Yourself Games",
+  { .id = "JO46_IGO_Q24080184", .name = "Brace Yourself Games - Brace Yourself Games",
+    .name_ja = "Brace Yourself Games - Brace Yourself Games",
     .category = "government", .portal = "https://braceyourselfgames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7362,10 +7428,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 17 Sep 2026 "
       "21:33:48 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q24256223", .name = "Transhuman Design (think-tank, XX) - Transhuman Design",
-    .name_ja = "Transhuman Design (think-tank, XX) - Transhuman Design",
+  { .id = "JO46_IGO_Q24256223", .name = "Transhuman Design - Transhuman Design",
+    .name_ja = "Transhuman Design - Transhuman Design",
     .category = "government", .portal = "https://thd.vg/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7380,10 +7446,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 04 Feb 2026 "
       "23:42:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q24707091", .name = "Finji (think-tank, XX) - Finji",
-    .name_ja = "Finji (think-tank, XX) - Finji",
+  { .id = "JO46_IGO_Q24707091", .name = "Finji - Finji",
+    .name_ja = "Finji - Finji",
     .category = "government", .portal = "https://finji.co/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7398,10 +7464,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 370 items, RSS2 feed, newest Thu, 01 Oct "
       "2026 11:55:00 -0400. A feed the organisation itself declares or "
-      "links on its site root." },
+      "links on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q104828536", .name = "Aldorlea Games (think-tank, XX) - Aldorlea Games RSS Feed",
-    .name_ja = "Aldorlea Games (think-tank, XX) - Aldorlea Games RSS Feed",
+  { .id = "JO46_IGO_Q104828536", .name = "Aldorlea Games - Aldorlea Games RSS Feed",
+    .name_ja = "Aldorlea Games - Aldorlea Games RSS Feed",
     .category = "government", .portal = "http://feeds.feedburner.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7416,10 +7482,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 4 items, RSS2 feed, newest Fri, 13 May 2011 "
       "19:22:29 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q104830657", .name = "Glitch (think-tank, XX) - GLITCH",
-    .name_ja = "Glitch (think-tank, XX) - GLITCH",
+  { .id = "JO46_IGO_Q104830657", .name = "Glitch - GLITCH",
+    .name_ja = "Glitch - GLITCH",
     .category = "government", .portal = "https://heyglitch.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7434,10 +7500,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Wed, 22 May 2024 "
       "19:36:05 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q105010204", .name = "Flamebait Games (think-tank, XX) - Flamebait Games",
-    .name_ja = "Flamebait Games (think-tank, XX) - Flamebait Games",
+  { .id = "JO46_IGO_Q105010204", .name = "Flamebait Games - Flamebait Games",
+    .name_ja = "Flamebait Games - Flamebait Games",
     .category = "government", .portal = "https://www.flamebaitgames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7452,10 +7518,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 15 Mar 2019 "
       "09:39:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q105324891", .name = "Graffiti Games (think-tank, XX) - Graffiti Games",
-    .name_ja = "Graffiti Games (think-tank, XX) - Graffiti Games",
+  { .id = "JO46_IGO_Q105324891", .name = "Graffiti Games - Graffiti Games",
+    .name_ja = "Graffiti Games - Graffiti Games",
     .category = "government", .portal = "https://www.graffitigames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7470,10 +7536,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Thu, 21 Apr 2022 "
       "21:53:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q55663530", .name = "Indie Glue (think-tank, XX) - Indie Glue",
-    .name_ja = "Indie Glue (think-tank, XX) - Indie Glue",
+  { .id = "JO46_IGO_Q55663530", .name = "Indie Glue - Indie Glue",
+    .name_ja = "Indie Glue - Indie Glue",
     .category = "government", .portal = "https://indieglue.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7488,10 +7554,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 7 items, RSS2 feed, newest Thu, 26 Jul 2018 "
       "09:33:52 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q55839772", .name = "Necrosoft Games (think-tank, XX) - Necrosoft Games",
-    .name_ja = "Necrosoft Games (think-tank, XX) - Necrosoft Games",
+  { .id = "JO46_IGO_Q55839772", .name = "Necrosoft Games - Necrosoft Games",
+    .name_ja = "Necrosoft Games - Necrosoft Games",
     .category = "government", .portal = "https://necrosoftgames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7506,10 +7572,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 15 items, RSS2 feed, newest Wed, 19 Nov 2025 "
       "15:00:50 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q55998360", .name = "Toshiba EMI Ltd. (think-tank, XX) - SHOTO Creative Studio",
-    .name_ja = "Toshiba EMI Ltd. (think-tank, XX) - SHOTO Creative Studio",
+  { .id = "JO46_IGO_Q55998360", .name = "Toshiba EMI Ltd. - SHOTO Creative Studio",
+    .name_ja = "Toshiba EMI Ltd. - SHOTO Creative Studio",
     .category = "government", .portal = "https://toshiba-emi.co.jp/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7524,10 +7590,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Sun, 07 Jun 2026 "
       "21:53:09 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q56151092", .name = "No More Robots (think-tank, XX) - No More Robots",
-    .name_ja = "No More Robots (think-tank, XX) - No More Robots",
+  { .id = "JO46_IGO_Q56151092", .name = "No More Robots - No More Robots",
+    .name_ja = "No More Robots - No More Robots",
     .category = "government", .portal = "https://nomorerobots.io/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7542,10 +7608,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Wed, 05 Feb 2025 "
       "15:37:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q56545189", .name = "Oh, a Rock! Studios (think-tank, XX) - Oh, a Rock! Studios",
-    .name_ja = "Oh, a Rock! Studios (think-tank, XX) - Oh, a Rock! Studios",
+  { .id = "JO46_IGO_Q56545189", .name = "Oh, a Rock! Studios - Oh, a Rock! Studios",
+    .name_ja = "Oh, a Rock! Studios - Oh, a Rock! Studios",
     .category = "government", .portal = "https://oharock.wordpress.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7560,10 +7626,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 28 Mar 2024 "
       "17:44:24 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q56683352", .name = "Digerati (think-tank, XX) - DIGERATI",
-    .name_ja = "Digerati (think-tank, XX) - DIGERATI",
+  { .id = "JO46_IGO_Q56683352", .name = "Digerati - DIGERATI",
+    .name_ja = "Digerati - DIGERATI",
     .category = "government", .portal = "https://www.digerati.games/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7578,10 +7644,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Fri, 26 Mar 2021 "
       "20:50:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q56849899", .name = "Crystalline Green Ltd. (think-tank, XX) - Crystalline Green",
-    .name_ja = "Crystalline Green Ltd. (think-tank, XX) - Crystalline Green",
+  { .id = "JO46_IGO_Q56849899", .name = "Crystalline Green Ltd. - Crystalline Green",
+    .name_ja = "Crystalline Green Ltd. - Crystalline Green",
     .category = "government", .portal = "https://www.crystallinegreen.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7596,10 +7662,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 23 Apr 2024 "
       "15:29:34 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q4644252", .name = "8-4 (think-tank, XX) - 8-4",
-    .name_ja = "8-4 (think-tank, XX) - 8-4",
+  { .id = "JO46_IGO_Q4644252", .name = "8-4 - 8-4",
+    .name_ja = "8-4 - 8-4",
     .category = "government", .portal = "https://8-4.jp/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7614,10 +7680,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "09:12:11 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q4904930", .name = "Big Ant Studios (think-tank, XX) - Big Ant Studios",
-    .name_ja = "Big Ant Studios (think-tank, XX) - Big Ant Studios",
+  { .id = "JO46_IGO_Q4904930", .name = "Big Ant Studios - Big Ant Studios",
+    .name_ja = "Big Ant Studios - Big Ant Studios",
     .category = "government", .portal = "https://bigant.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7632,11 +7698,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Tue, 05 May 2026 "
       "00:14:48 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q118111635", .name = "Game Seer (think-tank, XX) - Game funding and financing, we are "
-      "gaming investors – Game Seer",
-    .name_ja = "Game Seer (think-tank, XX) - Game funding and financing, we are gaming investors – Game Seer",
+  { .id = "JO46_IGO_Q118111635", .name = "Game Seer - Game funding and financing, we are gaming investors "
+      "– Game Seer",
+    .name_ja = "Game Seer - Game funding and financing, we are gaming investors – Game Seer",
     .category = "government", .portal = "https://www.game-seer.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7651,10 +7717,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 30 Jul 2024 "
       "08:46:16 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q118370061", .name = "Firesquid (think-tank, XX) - Firesquid",
-    .name_ja = "Firesquid (think-tank, XX) - Firesquid",
+  { .id = "JO46_IGO_Q118370061", .name = "Firesquid - Firesquid",
+    .name_ja = "Firesquid - Firesquid",
     .category = "government", .portal = "https://firesquid.games/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7669,10 +7735,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 8 items, RSS2 feed, newest Tue, 27 Feb 2024 "
       "17:26:38 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q121268991", .name = "Shiravune (think-tank, XX) - Shiravune",
-    .name_ja = "Shiravune (think-tank, XX) - Shiravune",
+  { .id = "JO46_IGO_Q121268991", .name = "Shiravune - Shiravune",
+    .name_ja = "Shiravune - Shiravune",
     .category = "government", .portal = "https://shiravune.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7687,10 +7753,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "01:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q122040867", .name = "Bitmap Soft (think-tank, XX) - Bitmap Soft",
-    .name_ja = "Bitmap Soft (think-tank, XX) - Bitmap Soft",
+  { .id = "JO46_IGO_Q122040867", .name = "Bitmap Soft - Bitmap Soft",
+    .name_ja = "Bitmap Soft - Bitmap Soft",
     .category = "government", .portal = "https://www.bitmapsoft.co.uk/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7705,10 +7771,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 04 May 2026 "
       "21:51:15 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q122040867_2", .name = "Bitmap Soft (think-tank, XX) - Shop - Bitmap Soft",
-    .name_ja = "Bitmap Soft (think-tank, XX) - Shop - Bitmap Soft",
+  { .id = "JO46_IGO_Q122040867_2", .name = "Bitmap Soft - Shop - Bitmap Soft",
+    .name_ja = "Bitmap Soft - Shop - Bitmap Soft",
     .category = "government", .portal = "https://www.bitmapsoft.co.uk/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7723,10 +7789,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 06 May 2026 "
       "20:13:08 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q986326", .name = "The Iconfactory (think-tank, XX) - The Breakroom",
-    .name_ja = "The Iconfactory (think-tank, XX) - The Breakroom",
+  { .id = "JO46_IGO_Q986326", .name = "The Iconfactory - The Breakroom",
+    .name_ja = "The Iconfactory - The Breakroom",
     .category = "government", .portal = "https://blog.iconfactory.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7741,10 +7807,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 21 Sep 2026 "
       "15:04:28 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q109060082", .name = "Motorsport Games (think-tank, XX) - Motorsport Games",
-    .name_ja = "Motorsport Games (think-tank, XX) - Motorsport Games",
+  { .id = "JO46_IGO_Q109060082", .name = "Motorsport Games - Motorsport Games",
+    .name_ja = "Motorsport Games - Motorsport Games",
     .category = "government", .portal = "https://motorsportgames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7759,10 +7825,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Tue, 22 Sep "
       "2026 13:00:29 +0000. A feed the organisation itself declares or "
-      "links on its site root." },
+      "links on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q109081377", .name = "Hidden Trap (think-tank, XX) - Hidden Trap",
-    .name_ja = "Hidden Trap (think-tank, XX) - Hidden Trap",
+  { .id = "JO46_IGO_Q109081377", .name = "Hidden Trap - Hidden Trap",
+    .name_ja = "Hidden Trap - Hidden Trap",
     .category = "government", .portal = "https://hiddentrap.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7777,11 +7843,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 05 Feb 2024 "
       "08:32:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q109381699", .name = "RedDeerGames (think-tank, XX) - Nintendo Switch, Xbox, "
-      "Playstation",
-    .name_ja = "RedDeerGames (think-tank, XX) - Nintendo Switch, Xbox, Playstation",
+  { .id = "JO46_IGO_Q109381699", .name = "RedDeerGames - Nintendo Switch, Xbox, Playstation",
+    .name_ja = "RedDeerGames - Nintendo Switch, Xbox, Playstation",
     .category = "government", .portal = "https://www.reddeergames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7796,10 +7861,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
       "15:05:30 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q109532700", .name = "PixelHeart (think-tank, XX) - PixelHeart",
-    .name_ja = "PixelHeart (think-tank, XX) - PixelHeart",
+  { .id = "JO46_IGO_Q109532700", .name = "PixelHeart - PixelHeart",
+    .name_ja = "PixelHeart - PixelHeart",
     .category = "government", .portal = "https://www.pixelheart.eu/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7814,10 +7879,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 05 Jun 2026 "
       "16:00:39 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q109532985", .name = "No Gravity Games (think-tank, XX) - No Gravity Games",
-    .name_ja = "No Gravity Games (think-tank, XX) - No Gravity Games",
+  { .id = "JO46_IGO_Q109532985", .name = "No Gravity Games - No Gravity Games",
+    .name_ja = "No Gravity Games - No Gravity Games",
     .category = "government", .portal = "https://nogravitygames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7832,10 +7897,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 04 Dec 2023 "
       "11:38:49 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q107492286", .name = "MSXdev (think-tank, XX) - MSXdev Contest",
-    .name_ja = "MSXdev (think-tank, XX) - MSXdev Contest",
+  { .id = "JO46_IGO_Q107492286", .name = "MSXdev - MSXdev Contest",
+    .name_ja = "MSXdev - MSXdev Contest",
     .category = "government", .portal = "https://www.msxdev.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7850,10 +7915,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "11:02:12 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q107633566", .name = "Pixmain (think-tank, XX) - Pixmain",
-    .name_ja = "Pixmain (think-tank, XX) - Pixmain",
+  { .id = "JO46_IGO_Q107633566", .name = "Pixmain - Pixmain",
+    .name_ja = "Pixmain - Pixmain",
     .category = "government", .portal = "https://www.pixmain.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7868,10 +7933,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Fri, 27 Aug 2021 "
       "11:11:31 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q108099290", .name = "2tainment (think-tank, XX) - 2tainment",
-    .name_ja = "2tainment (think-tank, XX) - 2tainment",
+  { .id = "JO46_IGO_Q108099290", .name = "2tainment - 2tainment",
+    .name_ja = "2tainment - 2tainment",
     .category = "government", .portal = "https://www.2tainment.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7886,10 +7951,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 8 items, RSS2 feed, newest Tue, 02 Feb 2021 "
       "09:45:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q108142468", .name = "Ultimate Games (think-tank, XX) - ULTIMATE GAMES S.A.",
-    .name_ja = "Ultimate Games (think-tank, XX) - ULTIMATE GAMES S.A.",
+  { .id = "JO46_IGO_Q108142468", .name = "Ultimate Games - ULTIMATE GAMES S.A.",
+    .name_ja = "Ultimate Games - ULTIMATE GAMES S.A.",
     .category = "government", .portal = "https://ultimate-games.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7904,10 +7969,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 17 Sep 2026 "
       "06:22:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q108169843", .name = "Falling Squirrel (think-tank, XX) - Falling Squirrel Inc.",
-    .name_ja = "Falling Squirrel (think-tank, XX) - Falling Squirrel Inc.",
+  { .id = "JO46_IGO_Q108169843", .name = "Falling Squirrel - Falling Squirrel Inc.",
+    .name_ja = "Falling Squirrel - Falling Squirrel Inc.",
     .category = "government", .portal = "https://www.fallingsquirrel.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7922,10 +7987,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 16 items, RSS2 feed, newest Sat, 26 Oct 2024 "
       "17:41:02 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q108304729", .name = "Onion Games (think-tank, XX) - Onion Games",
-    .name_ja = "Onion Games (think-tank, XX) - Onion Games",
+  { .id = "JO46_IGO_Q108304729", .name = "Onion Games - Onion Games",
+    .name_ja = "Onion Games - Onion Games",
     .category = "government", .portal = "https://oniongames.jp/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7940,10 +8005,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 08 Sep 2026 "
       "19:24:38 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q108304729_2", .name = "Onion Games (think-tank, XX) - Onion Games",
-    .name_ja = "Onion Games (think-tank, XX) - Onion Games",
+  { .id = "JO46_IGO_Q108304729_2", .name = "Onion Games - Onion Games",
+    .name_ja = "Onion Games - Onion Games",
     .category = "government", .portal = "https://oniongames.jp/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7958,10 +8023,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
       "2026-09-08T19:29:51Z. A feed the organisation itself declares or "
-      "links on its site root." },
+      "links on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q108325233", .name = "Blayze Games (think-tank, XX) - BlayzeGames",
-    .name_ja = "Blayze Games (think-tank, XX) - BlayzeGames",
+  { .id = "JO46_IGO_Q108325233", .name = "Blayze Games - BlayzeGames",
+    .name_ja = "Blayze Games - BlayzeGames",
     .category = "government", .portal = "https://blayzegames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7976,10 +8041,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 19 Sep 2024 "
       "02:24:33 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q123916300", .name = "Shady Corner Games (think-tank, XX) - Shady Corner Games",
-    .name_ja = "Shady Corner Games (think-tank, XX) - Shady Corner Games",
+  { .id = "JO46_IGO_Q123916300", .name = "Shady Corner Games - Shady Corner Games",
+    .name_ja = "Shady Corner Games - Shady Corner Games",
     .category = "government", .portal = "https://shadycorner.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -7994,10 +8059,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
       "02:00:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q123929950", .name = "Spiral Up Games (think-tank, XX) - Spiral Up Games",
-    .name_ja = "Spiral Up Games (think-tank, XX) - Spiral Up Games",
+  { .id = "JO46_IGO_Q123929950", .name = "Spiral Up Games - Spiral Up Games",
+    .name_ja = "Spiral Up Games - Spiral Up Games",
     .category = "government", .portal = "https://www.spiralupgames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8012,10 +8077,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 18 items, RSS2 feed, newest Thu, 20 Jun 2024 "
       "03:09:57 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q124153192", .name = "Shifty Eye Games (think-tank, XX) - Shifty Eye Games",
-    .name_ja = "Shifty Eye Games (think-tank, XX) - Shifty Eye Games",
+  { .id = "JO46_IGO_Q124153192", .name = "Shifty Eye Games - Shifty Eye Games",
+    .name_ja = "Shifty Eye Games - Shifty Eye Games",
     .category = "government", .portal = "https://shiftyeyegames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8030,10 +8095,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Fri, 25 Apr 2025 "
       "16:17:03 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q125526068", .name = "funkitron (think-tank, XX) - funkitron",
-    .name_ja = "funkitron (think-tank, XX) - funkitron",
+  { .id = "JO46_IGO_Q125526068", .name = "funkitron - funkitron",
+    .name_ja = "funkitron - funkitron",
     .category = "government", .portal = "https://www.funkitron.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8048,10 +8113,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 16 Mar 2026 "
       "15:44:05 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q125660356", .name = "Symbolic Software (think-tank, XX) - Symbolic Software",
-    .name_ja = "Symbolic Software (think-tank, XX) - Symbolic Software",
+  { .id = "JO46_IGO_Q125660356", .name = "Symbolic Software - Symbolic Software",
+    .name_ja = "Symbolic Software - Symbolic Software",
     .category = "government", .portal = "https://symbolic.software/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8066,10 +8131,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 43 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "00:00:00 &#43;0000. A feed the organisation itself declares or "
-      "links on its site root." },
+      "links on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q125714477", .name = "Cyna Games (think-tank, XX) - Kyodai Mahjongg",
-    .name_ja = "Cyna Games (think-tank, XX) - Kyodai Mahjongg",
+  { .id = "JO46_IGO_Q125714477", .name = "Cyna Games - Kyodai Mahjongg",
+    .name_ja = "Cyna Games - Kyodai Mahjongg",
     .category = "government", .portal = "https://cynagames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8084,10 +8149,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 15 Feb 2017 "
       "18:40:52 +0100. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q125769152", .name = "Visual Impact (think-tank, XX) - Visual Impact",
-    .name_ja = "Visual Impact (think-tank, XX) - Visual Impact",
+  { .id = "JO46_IGO_Q125769152", .name = "Visual Impact - Visual Impact",
+    .name_ja = "Visual Impact - Visual Impact",
     .category = "government", .portal = "https://viprod.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8102,10 +8167,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Wed, 17 Sep 2025 "
       "12:32:49 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q109829037", .name = "Snow Cannon Games (think-tank, XX) - Snow Cannon Games",
-    .name_ja = "Snow Cannon Games (think-tank, XX) - Snow Cannon Games",
+  { .id = "JO46_IGO_Q109829037", .name = "Snow Cannon Games - Snow Cannon Games",
+    .name_ja = "Snow Cannon Games - Snow Cannon Games",
     .category = "government", .portal = "https://www.snowcannongames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8120,10 +8185,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 24 Feb 2017 "
       "18:55:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q109928554", .name = "Gameplay First (think-tank, XX) - Gameplay First",
-    .name_ja = "Gameplay First (think-tank, XX) - Gameplay First",
+  { .id = "JO46_IGO_Q109928554", .name = "Gameplay First - Gameplay First",
+    .name_ja = "Gameplay First - Gameplay First",
     .category = "government", .portal = "https://www.gameplay1st.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8138,11 +8203,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 29 Aug 2023 "
       "16:02:13 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q109949399", .name = "Brave At Night (think-tank, XX) - Brave At Night   Creators of "
-      "Yes, Your Grace",
-    .name_ja = "Brave At Night (think-tank, XX) - Brave At Night   Creators of Yes, Your Grace",
+  { .id = "JO46_IGO_Q109949399", .name = "Brave At Night - Brave At Night   Creators of Yes, Your Grace",
+    .name_ja = "Brave At Night - Brave At Night   Creators of Yes, Your Grace",
     .category = "government", .portal = "https://www.braveatnight.co.uk/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8157,10 +8221,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 6 items, RSS2 feed, newest Fri, 20 Dec 2019 "
       "13:59:58 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q109996611", .name = "BUG-Studio (think-tank, XX) - BUG-Studio",
-    .name_ja = "BUG-Studio (think-tank, XX) - BUG-Studio",
+  { .id = "JO46_IGO_Q109996611", .name = "BUG-Studio - BUG-Studio",
+    .name_ja = "BUG-Studio - BUG-Studio",
     .category = "government", .portal = "https://bug-studio.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8175,10 +8239,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 40 items, RSS2 feed, newest Sat, 19 Sep 2026 "
       "07:00:57 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q110060955", .name = "Rogue Games (think-tank, XX) - Rogue Games Inc",
-    .name_ja = "Rogue Games (think-tank, XX) - Rogue Games Inc",
+  { .id = "JO46_IGO_Q110060955", .name = "Rogue Games - Rogue Games Inc",
+    .name_ja = "Rogue Games - Rogue Games Inc",
     .category = "government", .portal = "https://rogueco.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8193,10 +8257,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 05 Oct 2023 "
       "16:00:16 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q126952860", .name = "COSEN Co., Ltd. (think-tank, XX) - COSEN",
-    .name_ja = "COSEN Co., Ltd. (think-tank, XX) - COSEN",
+  { .id = "JO46_IGO_Q126952860", .name = "COSEN Co., Ltd. - COSEN",
+    .name_ja = "COSEN Co., Ltd. - COSEN",
     .category = "government", .portal = "https://cosen-net.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8211,10 +8275,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
       "01:00:15 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q129196160", .name = "Funbox Media (think-tank, XX) - Funbox Media",
-    .name_ja = "Funbox Media (think-tank, XX) - Funbox Media",
+  { .id = "JO46_IGO_Q129196160", .name = "Funbox Media - Funbox Media",
+    .name_ja = "Funbox Media - Funbox Media",
     .category = "government", .portal = "https://funboxmedia.co.uk/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8229,10 +8293,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
       "00:00:41 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q129203351", .name = "NPC Studio (think-tank, XX) - Fields of Mistria",
-    .name_ja = "NPC Studio (think-tank, XX) - Fields of Mistria",
+  { .id = "JO46_IGO_Q129203351", .name = "NPC Studio - Fields of Mistria",
+    .name_ja = "NPC Studio - Fields of Mistria",
     .category = "government", .portal = "https://www.fieldsofmistria.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8247,10 +8311,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "19:47:56 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q130453595", .name = "Reco Technology (think-tank, XX) - Recotechnology",
-    .name_ja = "Reco Technology (think-tank, XX) - Recotechnology",
+  { .id = "JO46_IGO_Q130453595", .name = "Reco Technology - Recotechnology",
+    .name_ja = "Reco Technology - Recotechnology",
     .category = "government", .portal = "https://recotech.es/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8265,11 +8329,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 11 Sep 2026 "
       "12:09:43 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q130453597", .name = "Winking Skywalker Entertainment (think-tank, XX) - Winking "
-      "Studios – Art Outsourcing 2D / 3D",
-    .name_ja = "Winking Skywalker Entertainment (think-tank, XX) - Winking Studios – Art Outsourcing 2D / 3D",
+  { .id = "JO46_IGO_Q130453597", .name = "Winking Skywalker Entertainment - Winking Studios – Art "
+      "Outsourcing 2D / 3D",
+    .name_ja = "Winking Skywalker Entertainment - Winking Studios – Art Outsourcing 2D / 3D",
     .category = "government", .portal = "https://www.winkingworks.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8284,10 +8348,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 16 Sep 2026 "
       "02:48:11 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q131386431", .name = "Playground Productions (think-tank, XX) - Playground Productions",
-    .name_ja = "Playground Productions (think-tank, XX) - Playground Productions",
+  { .id = "JO46_IGO_Q131386431", .name = "Playground Productions - Playground Productions",
+    .name_ja = "Playground Productions - Playground Productions",
     .category = "government", .portal = "https://playground-productions.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8302,10 +8366,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Tue, 17 Jun 2025 "
       "08:23:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q1372258", .name = "Tokuma Shoten (think-tank, XX) - 徳間書店｜お知らせRSS",
-    .name_ja = "Tokuma Shoten (think-tank, XX) - 徳間書店｜お知らせRSS",
+  { .id = "JO46_IGO_Q1372258", .name = "Tokuma Shoten - 徳間書店｜お知らせRSS",
+    .name_ja = "Tokuma Shoten - 徳間書店｜お知らせRSS",
     .category = "government", .portal = "https://www.tokuma.jp/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8320,10 +8384,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 15 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "16:58:06 +0900. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q1389810", .name = "Software 2000 (think-tank, XX) - maja.cloud",
-    .name_ja = "Software 2000 (think-tank, XX) - maja.cloud",
+  { .id = "JO46_IGO_Q1389810", .name = "Software 2000 - maja.cloud",
+    .name_ja = "Software 2000 - maja.cloud",
     .category = "government", .portal = "https://maja.cloud/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8338,10 +8402,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 25 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "04:34:38 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q100371924", .name = "Coatsink (think-tank, XX) - Coatsink®",
-    .name_ja = "Coatsink (think-tank, XX) - Coatsink®",
+  { .id = "JO46_IGO_Q100371924", .name = "Coatsink - Coatsink®",
+    .name_ja = "Coatsink - Coatsink®",
     .category = "government", .portal = "https://coatsink.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8356,10 +8420,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 30 Apr 2026 "
       "12:44:45 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q101214003", .name = "Enhance (think-tank, XX) - Enhance",
-    .name_ja = "Enhance (think-tank, XX) - Enhance",
+  { .id = "JO46_IGO_Q101214003", .name = "Enhance - Enhance",
+    .name_ja = "Enhance - Enhance",
     .category = "government", .portal = "https://enhance-experience.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8374,10 +8438,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 24 Sep 2026 "
       "00:14:08 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q102424219", .name = "United Label (think-tank, XX) - United Label",
-    .name_ja = "United Label (think-tank, XX) - United Label",
+  { .id = "JO46_IGO_Q102424219", .name = "United Label - United Label",
+    .name_ja = "United Label - United Label",
     .category = "government", .portal = "https://unitedlabelgames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8392,10 +8456,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 30 Apr 2025 "
       "12:57:02 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q137650268", .name = "ConcernedApe LLC (think-tank, XX) -",
-    .name_ja = "ConcernedApe LLC (think-tank, XX) -",
+  { .id = "JO46_IGO_Q137650268", .name = "ConcernedApe LLC -",
+    .name_ja = "ConcernedApe LLC -",
     .category = "government", .portal = "https://www.concernedape.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8410,10 +8474,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Sun, 24 Nov 2024 "
       "20:22:30 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q137823494", .name = "Nokta Games (think-tank, XX) - Nokta Games",
-    .name_ja = "Nokta Games (think-tank, XX) - Nokta Games",
+  { .id = "JO46_IGO_Q137823494", .name = "Nokta Games - Nokta Games",
+    .name_ja = "Nokta Games - Nokta Games",
     .category = "government", .portal = "https://supermarketsimulator.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8428,10 +8492,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Mon, 29 Jan 2024 "
       "22:55:50 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q138774078", .name = "Baltverge Games (think-tank, XX) - Baltverge Games",
-    .name_ja = "Baltverge Games (think-tank, XX) - Baltverge Games",
+  { .id = "JO46_IGO_Q138774078", .name = "Baltverge Games - Baltverge Games",
+    .name_ja = "Baltverge Games - Baltverge Games",
     .category = "government", .portal = "https://baltverge.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8446,10 +8510,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 8 items, RSS2 feed, newest Thu, 30 Jul 2026 "
       "23:21:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q139379148", .name = "The Fun Pimps (think-tank, XX) - The Fun Pimps",
-    .name_ja = "The Fun Pimps (think-tank, XX) - The Fun Pimps",
+  { .id = "JO46_IGO_Q139379148", .name = "The Fun Pimps - The Fun Pimps",
+    .name_ja = "The Fun Pimps - The Fun Pimps",
     .category = "government", .portal = "https://thefunpimps.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8464,10 +8528,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Tue, 24 Mar 2026 "
       "15:02:10 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q139379443", .name = "RubberBandGames (think-tank, XX) - RubberBandGames",
-    .name_ja = "RubberBandGames (think-tank, XX) - RubberBandGames",
+  { .id = "JO46_IGO_Q139379443", .name = "RubberBandGames - RubberBandGames",
+    .name_ja = "RubberBandGames - RubberBandGames",
     .category = "government", .portal = "https://www.rubberbandgames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8482,10 +8546,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Sat, 15 Feb 2025 "
       "23:58:19 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q1361716", .name = "D3 Publisher (think-tank, XX) - 505 Go! Inc.",
-    .name_ja = "D3 Publisher (think-tank, XX) - 505 Go! Inc.",
+  { .id = "JO46_IGO_Q1361716", .name = "D3 Publisher - 505 Go! Inc.",
+    .name_ja = "D3 Publisher - 505 Go! Inc.",
     .category = "government", .portal = "https://d3go.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8500,10 +8564,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 13 Dec 2023 "
       "16:45:52 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q140696814", .name = "Skystone Games (think-tank, XX) - (WIP - Ang) Dev",
-    .name_ja = "Skystone Games (think-tank, XX) - (WIP - Ang) Dev",
+  { .id = "JO46_IGO_Q140696814", .name = "Skystone Games - (WIP - Ang) Dev",
+    .name_ja = "Skystone Games - (WIP - Ang) Dev",
     .category = "government", .portal = "https://www.skystone.games/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8518,10 +8582,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Wed, 01 Dec 2021 "
       "18:43:02 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q141223163", .name = "Wristwork (think-tank, XX) - Wristwork News",
-    .name_ja = "Wristwork (think-tank, XX) - Wristwork News",
+  { .id = "JO46_IGO_Q141223163", .name = "Wristwork - Wristwork News",
+    .name_ja = "Wristwork - Wristwork News",
     .category = "government", .portal = "https://www.wristwork.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8536,10 +8600,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Thu, 06 Aug 2026 "
       "00:00:00 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q112988000", .name = "Big Sugar Games (think-tank, XX) - BIG SUGAR",
-    .name_ja = "Big Sugar Games (think-tank, XX) - BIG SUGAR",
+  { .id = "JO46_IGO_Q112988000", .name = "Big Sugar Games - BIG SUGAR",
+    .name_ja = "Big Sugar Games - BIG SUGAR",
     .category = "government", .portal = "https://bigsugar.games/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8554,10 +8618,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Fri, 26 Mar 2021 "
       "20:50:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q113285238", .name = "RunServer (think-tank, XX) - RunServer games",
-    .name_ja = "RunServer (think-tank, XX) - RunServer games",
+  { .id = "JO46_IGO_Q113285238", .name = "RunServer - RunServer games",
+    .name_ja = "RunServer - RunServer games",
     .category = "government", .portal = "https://runserver.net/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8572,10 +8636,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 14 Aug 2026 "
       "15:03:55 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q113400696", .name = "Halycon Media (think-tank, XX) - Halycon.de",
-    .name_ja = "Halycon Media (think-tank, XX) - Halycon.de",
+  { .id = "JO46_IGO_Q113400696", .name = "Halycon Media - Halycon.de",
+    .name_ja = "Halycon Media - Halycon.de",
     .category = "government", .portal = "https://www.halycon.de/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8590,10 +8654,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "08:38:00 +0100. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q113672867", .name = "MD Games (think-tank, XX) - MD Games",
-    .name_ja = "MD Games (think-tank, XX) - MD Games",
+  { .id = "JO46_IGO_Q113672867", .name = "MD Games - MD Games",
+    .name_ja = "MD Games - MD Games",
     .category = "government", .portal = "https://mdgamespublishing.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8608,10 +8672,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Sun, 13 Dec 2020 "
       "22:54:55 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q114664931", .name = "Awfully Nice Studios (think-tank, XX) - Awfully Nice Studios",
-    .name_ja = "Awfully Nice Studios (think-tank, XX) - Awfully Nice Studios",
+  { .id = "JO46_IGO_Q114664931", .name = "Awfully Nice Studios - Awfully Nice Studios",
+    .name_ja = "Awfully Nice Studios - Awfully Nice Studios",
     .category = "government", .portal = "https://www.awfullynicestudios.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8626,10 +8690,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 29 Jan 2015 "
       "13:54:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q110637367", .name = "Leoful (think-tank, XX) - Leoful",
-    .name_ja = "Leoful (think-tank, XX) - Leoful",
+  { .id = "JO46_IGO_Q110637367", .name = "Leoful - Leoful",
+    .name_ja = "Leoful - Leoful",
     .category = "government", .portal = "https://leoful.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8644,10 +8708,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 08 Sep 2026 "
       "01:00:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q110645087", .name = "2Awesome Studio (think-tank, XX) - 2Awesome Studio",
-    .name_ja = "2Awesome Studio (think-tank, XX) - 2Awesome Studio",
+  { .id = "JO46_IGO_Q110645087", .name = "2Awesome Studio - 2Awesome Studio",
+    .name_ja = "2Awesome Studio - 2Awesome Studio",
     .category = "government", .portal = "https://www.2awesomestudio.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8662,10 +8726,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Tue, 15 Sep 2026 "
       "22:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q111342143", .name = "34BigThings (think-tank, XX) - 34BigThings",
-    .name_ja = "34BigThings (think-tank, XX) - 34BigThings",
+  { .id = "JO46_IGO_Q111342143", .name = "34BigThings - 34BigThings",
+    .name_ja = "34BigThings - 34BigThings",
     .category = "government", .portal = "https://34bigthings.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8680,10 +8744,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 19 Jun 2026 "
       "00:44:16 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q3576010", .name = "Zoo Corporation (think-tank, XX) - ZOO GAMES",
-    .name_ja = "Zoo Corporation (think-tank, XX) - ZOO GAMES",
+  { .id = "JO46_IGO_Q3576010", .name = "Zoo Corporation - ZOO GAMES",
+    .name_ja = "Zoo Corporation - ZOO GAMES",
     .category = "government", .portal = "https://game.zoo.jp/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8698,10 +8762,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 01 Oct 2026 "
       "02:34:51 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q3579482", .name = "Editions Pix'n Love (think-tank, XX) - Smart Bolg Title",
-    .name_ja = "Editions Pix'n Love (think-tank, XX) - Smart Bolg Title",
+  { .id = "JO46_IGO_Q3579482", .name = "Editions Pix'n Love - Smart Bolg Title",
+    .name_ja = "Editions Pix'n Love - Smart Bolg Title",
     .category = "government", .portal = "http://www.editionspixnlove.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8716,10 +8780,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 112 items, RSS2 feed, newest (no date "
       "field). A feed the organisation itself declares or links on its "
-      "site root." },
+      "site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q3777372", .name = "Giochi Preziosi (think-tank, XX) - Giochi Preziosi",
-    .name_ja = "Giochi Preziosi (think-tank, XX) - Giochi Preziosi",
+  { .id = "JO46_IGO_Q3777372", .name = "Giochi Preziosi - Giochi Preziosi",
+    .name_ja = "Giochi Preziosi - Giochi Preziosi",
     .category = "government", .portal = "https://giochipreziosi.it/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8734,10 +8798,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 05 Oct 2026 "
       "13:20:11 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q116166351", .name = "DreadXP (think-tank, XX) - DreadXP",
-    .name_ja = "DreadXP (think-tank, XX) - DreadXP",
+  { .id = "JO46_IGO_Q116166351", .name = "DreadXP - DreadXP",
+    .name_ja = "DreadXP - DreadXP",
     .category = "government", .portal = "https://dreadxp.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8752,10 +8816,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 13 Aug 2025 "
       "17:26:11 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q116764888", .name = "ESDigital Games (think-tank, XX) - ESDigital Games",
-    .name_ja = "ESDigital Games (think-tank, XX) - ESDigital Games",
+  { .id = "JO46_IGO_Q116764888", .name = "ESDigital Games - ESDigital Games",
+    .name_ja = "ESDigital Games - ESDigital Games",
     .category = "government", .portal = "https://esdigital.games/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8770,10 +8834,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 17 Sep 2026 "
       "10:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q116766167", .name = "Wild River Games (think-tank, XX) - Wild River Games",
-    .name_ja = "Wild River Games (think-tank, XX) - Wild River Games",
+  { .id = "JO46_IGO_Q116766167", .name = "Wild River Games - Wild River Games",
+    .name_ja = "Wild River Games - Wild River Games",
     .category = "government", .portal = "https://wildriver.games/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8788,10 +8852,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
       "07:11:21 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q116977097", .name = "Dream-Up (think-tank, XX) - XTrem Racing – New Car",
-    .name_ja = "Dream-Up (think-tank, XX) - XTrem Racing – New Car",
+  { .id = "JO46_IGO_Q116977097", .name = "Dream-Up - XTrem Racing – New Car",
+    .name_ja = "Dream-Up - XTrem Racing – New Car",
     .category = "government", .portal = "https://www.dream-up.eu/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8806,10 +8870,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 21 Jun 2026 "
       "14:06:45 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q14428", .name = "Capcom (think-tank, XX) - 株式会社カプコン｜更新情報",
-    .name_ja = "Capcom (think-tank, XX) - 株式会社カプコン｜更新情報",
+  { .id = "JO46_IGO_Q14428", .name = "Capcom - 株式会社カプコン｜更新情報",
+    .name_ja = "Capcom - 株式会社カプコン｜更新情報",
     .category = "government", .portal = "https://www.capcom.co.jp/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8824,10 +8888,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 7290 items, RSS2 feed, newest "
       "2026-10-13T17:32:25+09:00. A feed the organisation itself "
-      "declares or links on its site root." },
+      "declares or links on its site root. Wikidata classes it as "
+      "think-tank." },
 
-  { .id = "JO46_IGO_Q26188", .name = "Kalypso Media (think-tank, XX) - Kalypso Media Group GmbH",
-    .name_ja = "Kalypso Media (think-tank, XX) - Kalypso Media Group GmbH",
+  { .id = "JO46_IGO_Q26188", .name = "Kalypso Media - Kalypso Media Group GmbH",
+    .name_ja = "Kalypso Media - Kalypso Media Group GmbH",
     .category = "government", .portal = "https://www.kalypsomedia.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8842,10 +8907,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Thu, 27 Aug 2026 "
       "12:36:06 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q105641121", .name = "Boss Team Games (think-tank, XX) - Boss Team Games",
-    .name_ja = "Boss Team Games (think-tank, XX) - Boss Team Games",
+  { .id = "JO46_IGO_Q105641121", .name = "Boss Team Games - Boss Team Games",
+    .name_ja = "Boss Team Games - Boss Team Games",
     .category = "government", .portal = "https://bossteamgames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8860,10 +8925,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 4 items, RSS2 feed, newest Mon, 09 May 2022 "
       "17:25:02 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q106256666", .name = "R74n (think-tank, XX) - R74n Newsletter",
-    .name_ja = "R74n (think-tank, XX) - R74n Newsletter",
+  { .id = "JO46_IGO_Q106256666", .name = "R74n - R74n Newsletter",
+    .name_ja = "R74n - R74n Newsletter",
     .category = "government", .portal = "https://news.r74n.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8878,10 +8943,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "19:13:06 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q106438156", .name = "Amanotes (think-tank, XX) - Amanotes Pte. Ltd,",
-    .name_ja = "Amanotes (think-tank, XX) - Amanotes Pte. Ltd,",
+  { .id = "JO46_IGO_Q106438156", .name = "Amanotes - Amanotes Pte. Ltd,",
+    .name_ja = "Amanotes - Amanotes Pte. Ltd,",
     .category = "government", .portal = "https://www.amanotes.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8896,10 +8961,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Mon, 27 Apr 2026 "
       "04:00:10 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q106918849", .name = "Klabater (think-tank, XX) - Klabater",
-    .name_ja = "Klabater (think-tank, XX) - Klabater",
+  { .id = "JO46_IGO_Q106918849", .name = "Klabater - Klabater",
+    .name_ja = "Klabater - Klabater",
     .category = "government", .portal = "https://klabater.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8914,10 +8979,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 26 Mar 2026 "
       "18:00:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q107185395", .name = "Super X Studios (think-tank, XX) - Super X Studios",
-    .name_ja = "Super X Studios (think-tank, XX) - Super X Studios",
+  { .id = "JO46_IGO_Q107185395", .name = "Super X Studios - Super X Studios",
+    .name_ja = "Super X Studios - Super X Studios",
     .category = "government", .portal = "https://www.superxstudios.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8932,10 +8997,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 09 Apr 2023 "
       "03:57:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q107337014", .name = "Redhill Games (think-tank, XX) - Redhill Games",
-    .name_ja = "Redhill Games (think-tank, XX) - Redhill Games",
+  { .id = "JO46_IGO_Q107337014", .name = "Redhill Games - Redhill Games",
+    .name_ja = "Redhill Games - Redhill Games",
     .category = "government", .portal = "https://www.redhillgames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8950,10 +9015,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 17 Nov 2025 "
       "15:41:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q615181", .name = "Q615181 (think-tank, XX) - SSG Main Site",
-    .name_ja = "Q615181 (think-tank, XX) - SSG Main Site",
+  { .id = "JO46_IGO_Q615181", .name = "Q615181 - SSG Main Site",
+    .name_ja = "Q615181 - SSG Main Site",
     .category = "government", .portal = "http://www.ssg.com.au/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8968,10 +9033,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 15 items, RSS2 feed, newest "
       "2010-04-07T16:50:48+10:00. A feed the organisation itself "
-      "declares or links on its site root." },
+      "declares or links on its site root. Wikidata classes it as "
+      "think-tank." },
 
-  { .id = "JO46_IGO_Q1142226", .name = "Q1142226 (think-tank, XX) - 日本ファルコム 公式サイト",
-    .name_ja = "Q1142226 (think-tank, XX) - 日本ファルコム 公式サイト",
+  { .id = "JO46_IGO_Q1142226", .name = "Q1142226 - 日本ファルコム 公式サイト",
+    .name_ja = "Q1142226 - 日本ファルコム 公式サイト",
     .category = "government", .portal = "https://www.falcom.co.jp/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -8986,10 +9052,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "03:06:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q4037549", .name = "Q4037549 (think-tank, XX) - Dotemu",
-    .name_ja = "Q4037549 (think-tank, XX) - Dotemu",
+  { .id = "JO46_IGO_Q4037549", .name = "Q4037549 - Dotemu",
+    .name_ja = "Q4037549 - Dotemu",
     .category = "government", .portal = "https://www.dotemu.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -9004,11 +9070,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
       "13:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q5431587", .name = "Q5431587 (think-tank, XX) - Hentai Manga, Doujin, and Games - "
-      "FAKKU (RSS)",
-    .name_ja = "Q5431587 (think-tank, XX) - Hentai Manga, Doujin, and Games - FAKKU (RSS)",
+  { .id = "JO46_IGO_Q5431587", .name = "Q5431587 - Hentai Manga, Doujin, and Games - FAKKU (RSS)",
+    .name_ja = "Q5431587 - Hentai Manga, Doujin, and Games - FAKKU (RSS)",
     .category = "government", .portal = "https://feeds.feedburner.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -9023,10 +9088,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 30 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "08:02:39 PST. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q21189808", .name = "Q21189808 (think-tank, XX) - tinyBuild",
-    .name_ja = "Q21189808 (think-tank, XX) - tinyBuild",
+  { .id = "JO46_IGO_Q21189808", .name = "Q21189808 - tinyBuild",
+    .name_ja = "Q21189808 - tinyBuild",
     .category = "government", .portal = "https://www.tinybuild.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -9041,10 +9106,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Tue, 24 Mar 2026 "
       "16:40:15 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q26715541", .name = "Q26715541 (think-tank, XX) - Dinosaur Polo Club",
-    .name_ja = "Q26715541 (think-tank, XX) - Dinosaur Polo Club",
+  { .id = "JO46_IGO_Q26715541", .name = "Q26715541 - Dinosaur Polo Club",
+    .name_ja = "Q26715541 - Dinosaur Polo Club",
     .category = "government", .portal = "https://dinopoloclub.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -9059,10 +9124,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 09 Oct 2026 "
       "02:13:40 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q28405991", .name = "Q28405991 (think-tank, XX) - Wales Interactive",
-    .name_ja = "Q28405991 (think-tank, XX) - Wales Interactive",
+  { .id = "JO46_IGO_Q28405991", .name = "Q28405991 - Wales Interactive",
+    .name_ja = "Q28405991 - Wales Interactive",
     .category = "government", .portal = "https://www.walesinteractive.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -9077,10 +9142,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "12:15:02 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q59222994", .name = "Q59222994 (think-tank, XX) - Plug In Digital",
-    .name_ja = "Q59222994 (think-tank, XX) - Plug In Digital",
+  { .id = "JO46_IGO_Q59222994", .name = "Q59222994 - Plug In Digital",
+    .name_ja = "Q59222994 - Plug In Digital",
     .category = "government", .portal = "https://plugindigital.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -9095,10 +9160,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 02 Dec 2025 "
       "10:30:06 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q112998973", .name = "Q112998973 (think-tank, XX) - Kagura Games",
-    .name_ja = "Q112998973 (think-tank, XX) - Kagura Games",
+  { .id = "JO46_IGO_Q112998973", .name = "Q112998973 - Kagura Games",
+    .name_ja = "Q112998973 - Kagura Games",
     .category = "government", .portal = "https://www.kaguragames.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -9113,10 +9178,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "14:43:13 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q112998973_2", .name = "Q112998973 (think-tank, XX) - Kagura Games",
-    .name_ja = "Q112998973 (think-tank, XX) - Kagura Games",
+  { .id = "JO46_IGO_Q112998973_2", .name = "Q112998973 - Kagura Games",
+    .name_ja = "Q112998973 - Kagura Games",
     .category = "government", .portal = "https://kaguragamesjp.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -9131,10 +9196,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 07 Dec 2024 "
       "05:01:15 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q131546232", .name = "Q131546232 (think-tank, XX) - Rablo Games – Official Website",
-    .name_ja = "Q131546232 (think-tank, XX) - Rablo Games – Official Website",
+  { .id = "JO46_IGO_Q131546232", .name = "Q131546232 - Rablo Games – Official Website",
+    .name_ja = "Q131546232 - Rablo Games – Official Website",
     .category = "government", .portal = "https://rablo.games/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -9149,10 +9214,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Tue, 12 Mar 2024 "
       "21:16:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q133128146", .name = "Q133128146 (think-tank, XX) - Reef Entertainment",
-    .name_ja = "Q133128146 (think-tank, XX) - Reef Entertainment",
+  { .id = "JO46_IGO_Q133128146", .name = "Q133128146 - Reef Entertainment",
+    .name_ja = "Q133128146 - Reef Entertainment",
     .category = "government", .portal = "https://www.reef-entertainment.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -9167,11 +9232,11 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Fri, 26 Jun 2026 "
       "14:59:42 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q135687459", .name = "Q135687459 (think-tank, XX) - 270sims – US Presidential Election "
-      "and Historical Political Game Creator",
-    .name_ja = "Q135687459 (think-tank, XX) - 270sims – US Presidential Election and Historical Political Game Creator",
+  { .id = "JO46_IGO_Q135687459", .name = "Q135687459 - 270sims – US Presidential Election and Historical "
+      "Political Game Creator",
+    .name_ja = "Q135687459 - 270sims – US Presidential Election and Historical Political Game Creator",
     .category = "government", .portal = "https://270sims.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -9186,11 +9251,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "23:25:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q136471257", .name = "Q136471257 (think-tank, XX) - Moonlight Kids - Making The Wild "
-      "at Heart",
-    .name_ja = "Q136471257 (think-tank, XX) - Moonlight Kids - Making The Wild at Heart",
+  { .id = "JO46_IGO_Q136471257", .name = "Q136471257 - Moonlight Kids - Making The Wild at Heart",
+    .name_ja = "Q136471257 - Moonlight Kids - Making The Wild at Heart",
     .category = "government", .portal = "https://www.moonlightkids.co/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -9205,10 +9269,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Mon, 03 Nov 2025 "
       "16:51:13 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q139426939", .name = "Q139426939 (think-tank, XX) - Neuroticfly",
-    .name_ja = "Q139426939 (think-tank, XX) - Neuroticfly",
+  { .id = "JO46_IGO_Q139426939", .name = "Q139426939 - Neuroticfly",
+    .name_ja = "Q139426939 - Neuroticfly",
     .category = "government", .portal = "https://neuroticfly.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -9223,10 +9287,10 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 19 Aug 2026 "
       "03:47:53 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO46_IGO_Q140954994", .name = "Q140954994 (think-tank, XX) - Slug Disco",
-    .name_ja = "Q140954994 (think-tank, XX) - Slug Disco",
+  { .id = "JO46_IGO_Q140954994", .name = "Q140954994 - Slug Disco",
+    .name_ja = "Q140954994 - Slug Disco",
     .category = "government", .portal = "https://slugdisco.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
@@ -9241,7 +9305,7 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 02 Sep 2026 "
       "11:46:42 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+      "on its site root. Wikidata classes it as think-tank." },
 };
 
 HP_REGISTER_TABLE(HP3B46_IGO)
