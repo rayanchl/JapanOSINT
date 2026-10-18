@@ -400,25 +400,6 @@ static const hp_source HP3B46_IGO[] = {
       "13:02:48 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO46_IGO_Q4806270", .name = "Asia Pacific Greens Federation (international-organization, XX) "
-      "- Asia Pacific Greens Federation (APGF)",
-    .name_ja = "Asia Pacific Greens Federation (international-organization, XX) - Asia Pacific Greens Federation (APGF)",
-    .category = "government", .portal = "https://asiapacificgreens.org/",
-    .record_type = "government-notice",
-    .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://asiapacificgreens.org/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Sat, 17 Aug 2024 "
-      "07:17:42 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO46_IGO_Q4806404", .name = "Asia Pacific Adaptation Network (international-organization, XX) "
       "- APAN",
     .name_ja = "Asia Pacific Adaptation Network (international-organization, XX) - APAN",
@@ -699,26 +680,6 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 29 Jan 2026 "
       "13:22:19 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO46_IGO_Q7552298", .name = "Society for the Preservation of Natural History Collections "
-      "(international-organization, XX) - The Society for the "
-      "Preservation of Natural History Collections",
-    .name_ja = "Society for the Preservation of Natural History Collections (international-organization, XX) - The Society for the Preservation of Natural History Collections",
-    .category = "government", .portal = "https://spnhc.org/",
-    .record_type = "government-notice",
-    .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spnhc.org/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "14:01:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO46_IGO_Q7680168", .name = "Talloires Network (international-organization, XX) - Talloires "
@@ -4521,26 +4482,6 @@ static const hp_source HP3B46_IGO[] = {
       "15:07:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO46_IGO_Q115802473", .name = "Côte d'Ivoire – Ghana Cocoa Initiative "
-      "(international-organization, XX) - Côte d'Ivoire–Ghana Cocoa "
-      "Initiative",
-    .name_ja = "Côte d'Ivoire – Ghana Cocoa Initiative (international-organization, XX) - Côte d'Ivoire–Ghana Cocoa Initiative",
-    .category = "government", .portal = "https://www.cighci.org/",
-    .record_type = "government-notice",
-    .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cighci.org/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 05 Oct 2026 "
-      "16:51:25 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO46_IGO_Q116431005", .name = "International Federation of Societies and Institutes for the "
       "Study of the Renaissance (international-organization, XX) - "
       "FISIER",
@@ -6264,24 +6205,6 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "15:58:48 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO46_IGO_Q51856931", .name = "Paleozoic (think-tank, XX) - PALEOZOIC",
-    .name_ja = "Paleozoic (think-tank, XX) - PALEOZOIC",
-    .category = "government", .portal = "https://paleozoicblog.tumblr.com/",
-    .record_type = "government-notice",
-    .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://paleozoicblog.tumblr.com/rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "07:30:55 -0400. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO46_IGO_Q52021004", .name = "Ysbryd Games (think-tank, XX) - ysbryd games",
@@ -8109,25 +8032,6 @@ static const hp_source HP3B46_IGO[] = {
       "16:17:03 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO46_IGO_Q124246335", .name = "Tiny Games (think-tank, XX) - Tiny Games   iPhone, iPad and "
-      "Android casual games",
-    .name_ja = "Tiny Games (think-tank, XX) - Tiny Games   iPhone, iPad and Android casual games",
-    .category = "government", .portal = "https://www.tinygames.it/",
-    .record_type = "government-notice",
-    .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.tinygames.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Thu, 23 Oct 2014 "
-      "09:37:06 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO46_IGO_Q125526068", .name = "funkitron (think-tank, XX) - funkitron",
     .name_ja = "funkitron (think-tank, XX) - funkitron",
     .category = "government", .portal = "https://www.funkitron.com/",
@@ -8253,24 +8157,6 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 6 items, RSS2 feed, newest Fri, 20 Dec 2019 "
       "13:59:58 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO46_IGO_Q109969389", .name = "IV Productions (think-tank, XX) - IV Productions",
-    .name_ja = "IV Productions (think-tank, XX) - IV Productions",
-    .category = "government", .portal = "https://www.ivproductions.it/",
-    .record_type = "government-notice",
-    .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ivproductions.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 05 Aug 2026 "
-      "15:15:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO46_IGO_Q109996611", .name = "BUG-Studio (think-tank, XX) - BUG-Studio",
@@ -8614,24 +8500,6 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 13 Dec 2023 "
       "16:45:52 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO46_IGO_Q1371744", .name = "Banpresto (think-tank, XX) - Banpresto",
-    .name_ja = "Banpresto (think-tank, XX) - Banpresto",
-    .category = "government", .portal = "https://www.banpresto.es/",
-    .record_type = "government-notice",
-    .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.banpresto.es/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "13:26:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO46_IGO_Q140696814", .name = "Skystone Games (think-tank, XX) - (WIP - Ang) Dev",
@@ -9227,24 +9095,6 @@ static const hp_source HP3B46_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 02 Dec 2025 "
       "10:30:06 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO46_IGO_Q107291476", .name = "Q107291476 (think-tank, XX) - PsychoFlux Ent.",
-    .name_ja = "Q107291476 (think-tank, XX) - PsychoFlux Ent.",
-    .category = "government", .portal = "https://www.psychoflux.com/",
-    .record_type = "government-notice",
-    .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.psychoflux.com/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 07 Oct 2026 "
-      "09:42:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO46_IGO_Q112998973", .name = "Q112998973 (think-tank, XX) - Kagura Games",
