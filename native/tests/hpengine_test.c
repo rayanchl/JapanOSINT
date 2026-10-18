@@ -3421,6 +3421,26 @@ int main(void) {
      "40b-ii: the run that reaches the end stores nothing, so the next starts "
      "the cycle over");
 
+  /* 40b-iii. A page that FAILS also clears the position — bookmarking a page
+   *          that answered 400 would retry that one page forever — but the
+   *          notice must not then claim the cycle completed. ENA answers 400 to
+   *          `offset=1000`, so that row reads 1,000 of millions every run; a
+   *          disclosure that reported a tidy completion for it would be false. */
+  fx_reset();
+  fx_add("offset=2", 400, NULL);
+  fx_add("/rz?all=1", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  rc = run_source_resume("T_RESUME", NULL, NULL);
+  { const cap *nt = NULL;
+    ok(rc == 0 && g_res_set && g_res_out[0] == 0,
+       "40b-iii: a failed page clears the position rather than bookmarking a "
+       "page that is refused");
+    ok(cap_count("collector-truncation-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"failed_page_status\":400") != NULL &&
+       strstr(nt->props, "NOT advanced") != NULL &&
+       strstr(nt->props, "completed the cycle") == NULL,
+       "40b-iii: and the notice says the position was not advanced, NOT that "
+       "the cycle completed"); }
+
   /* 40c. A row whose URL carries a date token must not cycle: the stored URL
    *      would pin one day forever. Refused, and nothing is stored. */
   fx_reset();

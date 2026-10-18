@@ -1058,13 +1058,28 @@ Engine subtleties worth knowing before writing a row:
   `daily`), **a declared descending sort** (8 — the fix is an ascending sort
   verified per host, which was done for the 22 above and is not extended to
   hundreds of unverified hosts), and **a `{page}` token** (1 — the engine
-  refuses it). A 24-row sample was run twice each against one database, and all
-  three expected behaviours appear in it: `TX_TCEQ_VIOLATION_CITATIONS`
-  20,000 → 40,000, `FAA_ARCGIS_OBSTACLES` 10,000 → 20,000,
-  `au-asic-financial-advisers` 1,800 → 2,122 (its whole set),
-  `MD_LOBBYIST_CAMPAIGN_CONTRIBUTIONS` 20,000 → 20,387 then the token cleared,
-  `au-asic-smsf-auditors` 2,000 → 2,400 and cleared, `WA_CRIME_NIBRS`
-  3,471 → 3,471 with no token at all.
+  refuses it). **A 24-row sample was run twice each against one database and
+  every row behaved correctly**: 15 cycling mid-collection
+  (`TX_TCEQ_VIOLATION_CITATIONS` 20,000 → 40,000, `FAA_ARCGIS_OBSTACLES`
+  10,000 → 20,000, `FMCSA_MOTUS_AUTHORITY_HISTORY` 19,997 → 39,997), 2 finishing
+  the collection and clearing (`MD_LOBBYIST_CAMPAIGN_CONTRIBUTIONS`
+  20,000 → 20,387; `au-asic-smsf-auditors` 2,000 → 2,400), and 7 no-ops that
+  complete inside their ceiling and store nothing (`WA_CRIME_NIBRS` 3,471 both
+  runs, `UK_HYDROLOGY_STATIONS` 9,537, `CA_CALGEM_FACILITY_TANKS` 15,732).
+
+  **One row in that sample was not a cycle at all, and it found a false
+  disclosure.** `ENA_PATHOGEN_SARSCOV2_RUNS` read 1,000 of millions on both
+  runs with no position stored, which reads like "completes in its ceiling" —
+  and a round 1,000 against a `limit=1000` is worth one suspicious look.
+  ebi.ac.uk answers **HTTP 400 to `offset=1000`**: page 2 is refused, so the
+  position is cleared (bookmarking a page that is refused would retry that one
+  page forever) and the cycle can never advance. The notice then said
+  `next_run_resumes_at: "the start — this run completed the cycle"`, which is
+  exactly the kind of tidy falsehood these notices exist to prevent. It now
+  distinguishes the three outcomes, and a failed page says the position was NOT
+  advanced and the row re-reads the same slice until its paging is re-pointed
+  (`hptest` 40b-iii). Any other row in this shape says so on its next run; a
+  sweep for them is the obvious next measurement.
 
   533 rows cycle in total. One shape to keep in mind: `interval = 2592000` is
   monthly, so a 500-page collection on that cadence takes about two years to

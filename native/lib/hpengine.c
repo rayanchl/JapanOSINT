@@ -4714,8 +4714,21 @@ date_step_back:
     if (resume_on) {
       cJSON_AddBoolToObject(p, "reads_over_a_cycle", 1);
       cJSON_AddBoolToObject(p, "resumed_this_run", resumed_from_token);
+      /* Three outcomes, not two. Clearing the position because a page FAILED is
+       * not the same as clearing it because the collection ended, and saying
+       * "this run completed the cycle" for the first one is a false claim in a
+       * disclosure — the thing this notice exists to prevent.
+       * ENA_PATHOGEN_SARSCOV2_RUNS found it: ebi.ac.uk answers HTTP 400 to
+       * `offset=1000`, so the row reads 1,000 of millions, page 2 is refused,
+       * and the cycle can never advance. That is a row to re-point, and the
+       * notice has to say so rather than report a tidy completion. */
       if (resume_next)
         cJSON_AddStringToObject(p, "next_run_resumes_at", resume_next);
+      else if (failed_midwalk)
+        cJSON_AddStringToObject(p, "next_run_resumes_at",
+                                "the start — the position was NOT advanced "
+                                "because a page failed, so this row re-reads "
+                                "the same slice until its paging is re-pointed");
       else
         cJSON_AddStringToObject(p, "next_run_resumes_at",
                                 "the start — this run completed the cycle");
