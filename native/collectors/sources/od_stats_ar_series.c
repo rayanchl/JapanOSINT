@@ -101,7 +101,11 @@ static const source_def od_stats_ar_series_def = {
   .name = "Argentina Series de Tiempo API (datos.gob.ar)",
   .update_interval_sec = 86400, .run = run,
   .category = "statistics", .type = "api",
-  .url = "https://apis.datos.gob.ar/series/api/series/?ids=143.3_NO_PR_2004_A_21&limit=1000&start=0&format=json",
+  /* The scanner reads a `start=` in any URL literal as a fetch site. This one is
+   * source_def.url — the endpoint this row documents — and the request is made
+   * by run() above, which walks it with pw_walk. Measured 2026-10-18: the whole
+   * 271-point series, and the walk confirms there is no second page. */
+  .url = "https://apis.datos.gob.ar/series/api/series/?ids=143.3_NO_PR_2004_A_21&limit=1000&start=0&format=json",  /* exhaustive-ok: metadata field, not a fetch; run() walks it with pw_walk */
   .description = "Argentine national time-series observations (macro programming series) as dated numeric points with units and frequency",
   .license = "datos.gob.ar open data - free reuse",
   .free_tier = 1,

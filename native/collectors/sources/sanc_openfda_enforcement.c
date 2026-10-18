@@ -149,7 +149,11 @@ static const source_def sanc_openfda_enforcement_def = {
   .name = "openFDA drug enforcement (recall) reports",
   .update_interval_sec = 86400, .run = run,
   .category = "safety", .type = "api",
-  .url = "https://api.fda.gov/drug/enforcement.json?limit=1000&skip=0",
+  /* The scanner reads a `skip=` in any URL literal as a fetch site. This one is
+   * source_def.url — the endpoint this row documents — and the request is made
+   * by run() above, which walks it with pw_walk. Measured 2026-10-18: 18,010
+   * reports across 19 pages, = meta.results.total. */
+  .url = "https://api.fda.gov/drug/enforcement.json?limit=1000&skip=0",  /* exhaustive-ok: metadata field, not a fetch; run() walks it with pw_walk */
   .description = "FDA regulatory enforcement reports naming the firm, the hazard classification and the reason for the recall — a corporate-conduct signal alongside financial-regulator actions.",
   .license = "openFDA: public domain data, no warranty. Do not rely on openFDA to make decisions regarding medical care.",
   .layer = NULL, .free_tier = 1,

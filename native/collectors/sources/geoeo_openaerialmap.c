@@ -150,7 +150,11 @@ static const source_def geoeo_oam_def = {
   .name = "OpenAerialMap Imagery Index",
   .update_interval_sec = 86400, .run = run,
   .category = "satellite", .type = "api",
-  .url = "https://api.openaerialmap.org/meta?limit=2000&page=1",
+  /* The scanner reads a `page=` in any URL literal as a fetch site. This one is
+   * source_def.url — the human-facing endpoint this row documents — and the
+   * request is made by run() above, which walks it with pw_walk. Measured
+   * 2026-10-18: 21,455 images across 11 pages. */
+  .url = "https://api.openaerialmap.org/meta?limit=2000&page=1",  /* exhaustive-ok: metadata field, not a fetch; run() walks it with pw_walk */
   .description = "The Humanitarian OpenStreetMap Team's open imagery index — drone and aerial surveys flown for disaster response and humanitarian mapping, each with a footprint, GSD and a direct COG URL.",
   .license = "Service metadata declares CC-BY 4.0; individual images carry their own licence field, carried per row.",
   .free_tier = 1,

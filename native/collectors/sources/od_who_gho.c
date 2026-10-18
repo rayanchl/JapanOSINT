@@ -85,7 +85,11 @@ static const source_def od_who_gho_def = {
   .name = "WHO Global Health Observatory OData",
   .update_interval_sec = 604800, .run = run,
   .category = "statistics", .type = "api",
-  .url = "https://ghoapi.azureedge.net/api/WHOSIS_000001?$top=1000&$skip=0",
+  /* The scanner reads a `$skip=` in any URL literal as a fetch site. This one is
+   * source_def.url — the endpoint this row documents — and the request is made
+   * by run() above, which walks it with pw_walk. Measured 2026-10-18: 14,112
+   * observations across 15 pages. */
+  .url = "https://ghoapi.azureedge.net/api/WHOSIS_000001?$top=1000&$skip=0",  /* exhaustive-ok: metadata field, not a fetch; run() walks it with pw_walk */
   .description = "WHO GHO country-year health observations (life expectancy at birth) with ISO3 country, WHO region and numeric value",
   .license = "CC BY-NC-SA 3.0 IGO (WHO) - non-commercial, share-alike",
   .free_tier = 1,

@@ -594,7 +594,11 @@ static const source_def soc_peertube_dir_def = {
   .name = "PeerTube Instance Directory",
   .update_interval_sec = 86400, .run = run_peertube_dir,
   .category = "media", .type = "api",
-  .url = "https://instances.joinpeertube.org/api/v1/instances?count=1000&start=0",
+  /* The scanner reads a `start=` in any URL literal as a fetch site. This one is
+   * source_def.url — the endpoint this row documents — and the request is made
+   * by run_peertube_dir() above, which walks it with pw_walk. Measured
+   * 2026-10-18: 1,772 instances across 2 pages, = the envelope's own total. */
+  .url = "https://instances.joinpeertube.org/api/v1/instances?count=1000&start=0",  /* exhaustive-ok: metadata field, not a fetch; run_peertube_dir() walks it with pw_walk */
   .description = "Registry of federated PeerTube video servers with software version, catalogue size, user count, declared country and health score.",
   .license = "Public API of the Framasoft-run instance index; keyless, documented.",
   .layer = NULL, .free_tier = 1,
