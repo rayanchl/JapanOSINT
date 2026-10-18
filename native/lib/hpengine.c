@@ -4849,9 +4849,16 @@ date_step_back:
   return hard_error ? -1 : 0;      /* honest empty is not an error */
 }
 
-/* "collectors/pivot/table/hp3b25_jpmedia.c" -> "hp3b25_jpmedia". Static
- * storage per table because source_def keeps a pointer, not a copy; the
- * string is written once from a constructor and never freed. */
+/* "collectors/pivot/table/hp3b25_jpmedia.c" -> "hp3b25_jpmedia". One
+ * string per table, written once from a constructor and never freed because
+ * source_def keeps a pointer, not a copy. The strings are held in a static
+ * pool so they stay reachable from a global: a table whose rows all declare
+ * their own collector never references its default, and LeakSanitizer
+ * reported each such string as a leak (125 objects in every unit binary). */
+#define HP_TABLE_NAMES_MAX 4096
+static char *g_table_names[HP_TABLE_NAMES_MAX];
+static int   g_ntable_names = 0;
+
 static const char *hp_table_collector(const char *file) {
   if (!file || !*file) return NULL;
   const char *b = strrchr(file, '/');
@@ -4861,9 +4868,14 @@ static const char *hp_table_collector(const char *file) {
   size_t n = strlen(b);
   if (n > 2 && !strcmp(b + n - 2, ".c")) n -= 2;
   if (n == 0 || n > 120) return NULL;
+  for (int i = 0; i < g_ntable_names; i++)
+    if (strlen(g_table_names[i]) == n && !memcmp(g_table_names[i], b, n))
+      return g_table_names[i];
+  if (g_ntable_names >= HP_TABLE_NAMES_MAX) return NULL;   /* falls back to "osint" */
   char *out = malloc(n + 1);
   if (!out) return NULL;
   memcpy(out, b, n); out[n] = 0;
+  g_table_names[g_ntable_names++] = out;
   return out;
 }
 

@@ -740,8 +740,11 @@ char *sourceapi_collectors(db_handle *db) {
  * A measurement of how the ids are spelled, offered as a sub-grouping hint;
  * nothing is renamed by it. */
 static cJSON *coll_groups(const char *key) {
-  facets f = {0};
-  char (*keys)[64] = NULL; int nk = 0, ck = 0;
+  /* The prefix table is a growing array and the facet list keeps POINTERS
+   * into it, so counts are kept beside the keys and the facet list is built
+   * only once the table has stopped moving: facet_add() against keys[] while
+   * realloc could still move it was a heap-use-after-free (TSan, 2026-10-18). */
+  char (*keys)[64] = NULL; long *cnt = NULL; int nk = 0, ck = 0;
   for (int i = 0; i < g_nreg; i++) {
     const source_def *d = g_reg[i].d;
     if (!d->collector || strcmp(d->collector, key)) continue;
@@ -756,18 +759,24 @@ static cJSON *coll_groups(const char *key) {
         int nc = ck ? ck * 2 : 64;
         void *nkeys = realloc(keys, (size_t)nc * sizeof *keys);
         if (!nkeys) break;
-        keys = nkeys; ck = nc;
+        keys = nkeys;
+        long *ncnt = realloc(cnt, (size_t)nc * sizeof *cnt);
+        if (!ncnt) break;
+        cnt = ncnt; ck = nc;
       }
-      snprintf(keys[nk], 64, "%s", tmp); found = nk++;
+      snprintf(keys[nk], 64, "%s", tmp); cnt[nk] = 0; found = nk++;
     }
-    facet_add(&f, keys[found]);
+    cnt[found]++;
   }
   /* keep groups of 3+ only; the rest are singletons */
-  int w = 0;
-  for (int i = 0; i < f.n; i++) if (f.v[i].n >= 3) f.v[w++] = f.v[i];
-  f.n = w;
+  facets f = {0};
+  for (int k = 0; k < nk; k++) {
+    if (cnt[k] < 3) continue;
+    facet_add(&f, keys[k]);
+    f.v[f.n - 1].n = cnt[k];
+  }
   cJSON *j = facet_json(&f, 40, 0);
-  free(keys);                       /* facet_json has copied nothing; keys only */
+  free(keys); free(cnt);            /* facet_json has copied nothing; keys only */
   return j;
 }
 
