@@ -10,6 +10,9 @@ from urllib.parse import urlparse
 disc, registered, out, prefix, beat = sys.argv[1:6]
 batch = re.sub(r'\D', '', prefix.split('_')[0]) or '?'
 jobs = int(sys.argv[6]) if len(sys.argv) > 6 else 8
+# category|record_type|tags for the rows; the default was hard-coded as government
+# until batch 46 shipped news outlets labelled government-notice
+CAT, RTYPE, TAGS = (sys.argv[7].split('|') + ['government', 'government-notice', '{beat},government,notice,rss'])[:3] if len(sys.argv) > 7 else ('government', 'government-notice', '{beat},government,notice,rss')
 reg = set(l.strip().rstrip('/').lower() for l in open(registered, encoding='utf-8'))
 def normurl(u):
     u = re.sub(r'^(https://[^/]+):443/', r'\1/', re.sub(r'^(http://[^/]+):80/', r'\1/', u))
@@ -86,7 +89,7 @@ with open(out, 'w', encoding='utf-8') as fh, open(out + '.rejects.tsv', 'w', enc
         portal = f'{urlparse(url).scheme}://{host}/'
         label = (ftitle or url.rsplit('/', 1)[-1]).replace('|', ' ')
         nm = f'{name} - {label}'.replace('|', ' ')
-        fh.write(f'{rid}|xml|any|government|government-notice|{beat},government,notice,rss|{portal}|{nm}|{nm}|{url}|{url}|{desc}|{opts}\n')
+        fh.write(f'{rid}|xml|any|{CAT}|{RTYPE}|{TAGS.format(beat=beat)}|{portal}|{nm}|{nm}|{url}|{url}|{desc}|{opts}\n')
 ok = [t for t in res if t[3] == 'OK' and t[5] > 0]
 print('OK rows', len(ok), 'rejects', len(res) - len(ok), file=sys.stderr)
 print(collections.Counter(t[3] for t in res), file=sys.stderr)
