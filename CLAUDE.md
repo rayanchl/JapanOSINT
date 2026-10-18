@@ -39,10 +39,29 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 42,643** (2026-10-18): batch 45's 16,520 measured
+**The registered count is 47,115** (2026-10-18): batch 46's 4,472 measured
+rows — 3,980 news outlets from 137 countries and 492 international
+organisations (`docs/verified-sources-batch46.tsv`,
+`native/collectors/OSINT_SOURCES_BATCH_46_WORLDNEWS.md`) — on 42,643. Both
+floors are re-recorded at 47,115 and `make source-count` agrees.
+
+**Batch 46 is the Wikidata seed on the two classes an analyst asks for first:
+the press and the international bodies.** Newspapers, daily and online
+newspapers, news websites and news agencies per country (8,482 hosts → 3,980
+rows), and international organisations, intergovernmental organisations and
+think tanks in one country-less query each (2,141 → 492): 155,994 emitted /
+155,790 stored. Two things generalise. **A generator's defaults are claims
+too**: `build_feed_manifest.py` had hard-coded `category=government` and
+`record_type=government-notice` since batch 44, so the first generation of the
+news beat labelled newspapers as government notices — it takes those as
+arguments now. And **Wikidata's class is a claim, not a fact** (it calls Capcom
+a think tank), so the class lives in the description as Wikidata's, never in
+the row name.
+
+**The count was 42,643** (2026-10-18): batch 45's 16,520 measured
 public-body feed rows (`docs/verified-sources-batch45.tsv`,
 `native/collectors/OSINT_SOURCES_BATCH_45_WORLDGOVFEEDS.md`) on 26,123. Both
-floors are re-recorded at 42,643 and `make source-count` agrees.
+floors were re-recorded at 42,643 and `make source-count` agreed.
 
 **Batch 45 is the same method on three more registers, and it hit the registry
 cap.** Italy's IPA (22,455 official sites → 5,640 rows), France's DILA annuaire

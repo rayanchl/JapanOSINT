@@ -56,7 +56,7 @@ def one(c):
     ap, tag, kind = classify(body)
     if not ap: return (key, name, url, 'NOT_FEED', '', 0, '', '')
     n = len(re.findall(tag, body))
-    m = DATE.search(body); newest = m.group(2).decode('utf-8', 'ignore').strip() if m else ''
+    m = DATE.search(body); newest = m.group(2).decode('utf-8', 'ignore').strip().replace('|', ' ') if m else ''  # a date cell with a pipe split three rows
     t = TITLE.search(body); ftitle = html.unescape(re.sub(r'\s+', ' ', t.group(1).decode('utf-8', 'ignore'))).strip() if t else ''  # a title spanning lines broke a row
     time.sleep(0.1)
     return (key, name, url, 'OK', kind, n, newest, ftitle)

@@ -5840,44 +5840,6 @@ static const hp_source HP3B46_NEWS[] = {
       "on its site root. Wikidata classes it as news-website, country "
       "BR." },
 
-  { .id = "JO46_NEWS_Q88966545", .name = "Q88966545 (BR) - Ponte Jornalismo",
-    .name_ja = "Q88966545 (BR) - Ponte Jornalismo",
-    .category = "news", .portal = "https://ponte.org/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ponte.org/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "19:08:39 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as news-website, country "
-      "BR." },
-
-  { .id = "JO46_NEWS_Q88966545_2", .name = "Q88966545 (BR) - Stories - Ponte Jornalismo",
-    .name_ja = "Q88966545 (BR) - Stories - Ponte Jornalismo",
-    .category = "news", .portal = "https://ponte.org/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ponte.org/stories/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Thu, 19 May 2022 "
-      "23:49:49 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as news-website, country "
-      "BR." },
-
   { .id = "JO46_NEWS_Q136231027", .name = "Q136231027 (BR) - Varginha Digital",
     .name_ja = "Q136231027 (BR) - Varginha Digital",
     .category = "news", .portal = "https://varginhadigital.com.br/",
@@ -6577,42 +6539,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "18:56:26 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country CA." },
-
-  { .id = "JO46_NEWS_Q3522909", .name = "The Suburban (CA) - www.thesuburban.com - RSS Results",
-    .name_ja = "The Suburban (CA) - www.thesuburban.com - RSS Results",
-    .category = "news", .portal = "http://www.thesuburban.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.thesuburban.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "08:30:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country CA." },
-
-  { .id = "JO46_NEWS_Q3987193", .name = "UWO Gazette (CA) - westerngazette.ca - RSS Results",
-    .name_ja = "UWO Gazette (CA) - westerngazette.ca - RSS Results",
-    .category = "news", .portal = "http://westerngazette.ca/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://westerngazette.ca/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "19:52:00 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country CA." },
 
   { .id = "JO46_NEWS_Q920043", .name = "Xtra! (CA) - Xtra Magazine",
@@ -9928,24 +9854,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "05:05:00 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country CO." },
-
-  { .id = "JO46_NEWS_Q130266979", .name = "La Nación (CO) - lanacion",
-    .name_ja = "La Nación (CO) - lanacion",
-    .category = "news", .portal = "https://www.lanacion.com.co/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.lanacion.com.co/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "16:07:39 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country CO." },
 
   { .id = "JO46_NEWS_Q116979883", .name = "Q116979883 (CO) - Voragine",
@@ -25869,25 +25777,6 @@ static const hp_source HP3B46_NEWS[] = {
       "17:58:00 +0530. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country IN." },
 
-  { .id = "JO46_NEWS_Q1975835", .name = "Deccan Chronicle (IN) - Deccan Chronicle - News Headlines   "
-      "Today Headlines   Hyderabad News   English N",
-    .name_ja = "Deccan Chronicle (IN) - Deccan Chronicle - News Headlines   Today Headlines   Hyderabad News   English N",
-    .category = "news", .portal = "https://www.deccanchronicle.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.deccanchronicle.com/google_feeds.xml",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 60 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "17:18:52 GMT. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country IN." },
-
   { .id = "JO46_NEWS_Q3916529", .name = "Janayugom (IN) - Janayugom Online",
     .name_ja = "Janayugom (IN) - Janayugom Online",
     .category = "news", .portal = "https://janayugomonline.com/",
@@ -26341,24 +26230,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 2 items, RSS2 feed, newest Sun, 06 Jul 2025 "
       "10:46:42 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country IN." },
-
-  { .id = "JO46_NEWS_Q31328038", .name = "Pratahkal (IN) - Pratahkal   ताज़ा हिंदी न्यूज़   ब्रेक",
-    .name_ja = "Pratahkal (IN) - Pratahkal   ताज़ा हिंदी न्यूज़   ब्रेक",
-    .category = "news", .portal = "https://www.pratahkal.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.pratahkal.com/google_feeds.xml",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 30 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "14:25:53 GMT. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country IN." },
 
   { .id = "JO46_NEWS_Q60785642", .name = "Rising Kashmir (IN) - Rising Kashmir : Latest Posts",
@@ -33367,24 +33238,6 @@ static const hp_source HP3B46_NEWS[] = {
       "13:11:00 +0900. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country KR." },
 
-  { .id = "JO46_NEWS_Q12623966", .name = "Halla Ilbo (KR) - 한라일보 > 정치",
-    .name_ja = "Halla Ilbo (KR) - 한라일보 > 정치",
-    .category = "news", .portal = "http://www.ihalla.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.ihalla.com/rss.php?section=73",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 30 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "20:00:00 GMT. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country KR." },
-
   { .id = "JO46_NEWS_Q16184321", .name = "The Sportschosun (KR) - 스포츠조선 : 전체뉴스",
     .name_ja = "The Sportschosun (KR) - 스포츠조선 : 전체뉴스",
     .category = "news", .portal = "https://www.sportschosun.com/",
@@ -33879,24 +33732,6 @@ static const hp_source HP3B46_NEWS[] = {
     .description = "Fetched 2026-10-18: 50 items, RSS2 feed, newest Mon, 19 Oct 2026 "
       "00:10:03 +0900. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country KR." },
-
-  { .id = "JO46_NEWS_Q18550812", .name = "Fire Prevention News (KR) - FPN Daily",
-    .name_ja = "Fire Prevention News (KR) - FPN Daily",
-    .category = "news", .portal = "http://fpn119.co.kr/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://fpn119.co.kr/rss/rss_news.php",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 50 items, RSS2 feed, newest 2026-10-18 "
-      "12:55:00. A feed the organisation itself declares or links on "
-      "its site root. Wikidata classes it as newspaper, country KR." },
 
   { .id = "JO46_NEWS_Q22972675", .name = "ZDNet Korea (KR) - ZDNet Korea",
     .name_ja = "ZDNet Korea (KR) - ZDNet Korea",
@@ -38235,24 +38070,6 @@ static const hp_source HP3B46_NEWS[] = {
       "2026-05-10T23:04:19.125+01:00. A feed the organisation itself "
       "declares or links on its site root. Wikidata classes it as "
       "newspaper, country NG." },
-
-  { .id = "JO46_NEWS_Q115223617", .name = "The Point (NG) - ThePointNG",
-    .name_ja = "The Point (NG) - ThePointNG",
-    .category = "news", .portal = "https://www.thepointng.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.thepointng.com/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "10:58:20 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country NG." },
 
   { .id = "JO46_NEWS_Q138504052", .name = "Idoma Voice Newspaper (NG) - Idoma Voice Newspaper",
     .name_ja = "Idoma Voice Newspaper (NG) - Idoma Voice Newspaper",
@@ -43648,25 +43465,6 @@ static const hp_source HP3B46_NEWS[] = {
       "links on its site root. Wikidata classes it as online-newspaper, "
       "country PE." },
 
-  { .id = "JO46_NEWS_Q105967298", .name = "Wayka (PE) - Wayka.pe",
-    .name_ja = "Wayka (PE) - Wayka.pe",
-    .category = "news", .portal = "https://wayka.pe/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://wayka.pe/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "17:07:19 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as online-newspaper, "
-      "country PE." },
-
   { .id = "JO46_NEWS_Q110928301", .name = "Q110928301 (PE) - La Mula",
     .name_ja = "Q110928301 (PE) - La Mula",
     .category = "news", .portal = "https://lamula.pe/",
@@ -43776,24 +43574,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "16:35:10 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country PK." },
-
-  { .id = "JO46_NEWS_Q6398798", .name = "Khabrain (PK) - The Post",
-    .name_ja = "Khabrain (PK) - The Post",
-    .category = "news", .portal = "https://www.thepost.com.pk/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.thepost.com.pk/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 16 May 2026 "
-      "13:54:08 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country PK." },
 
   { .id = "JO46_NEWS_Q6757389", .name = "Daily Islam (PK) - ! Your News Partner ! Daily Islam",
@@ -47599,24 +47379,6 @@ static const hp_source HP3B46_NEWS[] = {
       "2026 07:16:52 +0000. A feed the organisation itself declares or "
       "links on its site root. Wikidata classes it as newspaper, "
       "country RU." },
-
-  { .id = "JO46_NEWS_Q62571830", .name = "Q62571830 (RU) - Рославльская правда",
-    .name_ja = "Q62571830 (RU) - Рославльская правда",
-    .category = "news", .portal = "https://ropravda.ru/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ropravda.ru/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "07:48:25 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country RU." },
 
   { .id = "JO46_NEWS_Q105582923", .name = "Q105582923 (RU) - Тюменский Курьер",
     .name_ja = "Q105582923 (RU) - Тюменский Курьер",
@@ -53511,44 +53273,6 @@ static const hp_source HP3B46_NEWS[] = {
       "19:30:26 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country UA." },
 
-  { .id = "JO46_NEWS_Q4329488", .name = "OBOZ.UA (UA) - Останні новини України та світу. Щоденні но",
-    .name_ja = "OBOZ.UA (UA) - Останні новини України та світу. Щоденні но",
-    .category = "news", .portal = "https://www.obozrevatel.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.obozrevatel.com/ukr/api/media/out/rss/lastnews.xml",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 160 items, RSS2 feed, newest Sun, 18 Oct "
-      "2026 20:18:00 +0300. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as online-newspaper, "
-      "country UA." },
-
-  { .id = "JO46_NEWS_Q116785970", .name = "AIN (UA) - AIN.UA",
-    .name_ja = "AIN (UA) - AIN.UA",
-    .category = "news", .portal = "https://ain.ua/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ain.ua/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 50 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "18:40:00 +0300. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as online-newspaper, "
-      "country UA." },
-
   { .id = "JO46_NEWS_Q119859727", .name = "Telegraf (UA) - Telegraf",
     .name_ja = "Telegraf (UA) - Telegraf",
     .category = "news", .portal = "https://war.telegraf.com.ua/",
@@ -54077,24 +53801,6 @@ static const hp_source HP3B46_NEWS[] = {
       "17:00:00 GMT. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q5314263", .name = "Duncan Banner (US) - www.duncanbanner.com - RSS Results",
-    .name_ja = "Duncan Banner (US) - www.duncanbanner.com - RSS Results",
-    .category = "news", .portal = "http://www.duncanbanner.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.duncanbanner.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "11:00:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q5329600", .name = "East Valley Tribune (US) - www.eastvalleytribune.com - RSS "
       "Results",
     .name_ja = "East Valley Tribune (US) - www.eastvalleytribune.com - RSS Results",
@@ -54133,25 +53839,6 @@ static const hp_source HP3B46_NEWS[] = {
       "18:00:00 GMT. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q5347491", .name = "Effingham Daily News (US) - www.effinghamdailynews.com - RSS "
-      "Results",
-    .name_ja = "Effingham Daily News (US) - www.effinghamdailynews.com - RSS Results",
-    .category = "news", .portal = "http://www.effinghamdailynews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.effinghamdailynews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "06:00:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q5498461", .name = "Frederick News-Post (US) - www.fredericknewspost.com - RSS "
       "Results",
     .name_ja = "Frederick News-Post (US) - www.fredericknewspost.com - RSS Results",
@@ -54169,25 +53856,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "05:33:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q5517248", .name = "Gainesville Daily Register (US) - www.gainesvilleregister.com - "
-      "RSS Results",
-    .name_ja = "Gainesville Daily Register (US) - www.gainesvilleregister.com - RSS Results",
-    .category = "news", .portal = "http://www.gainesvilleregister.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.gainesvilleregister.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "03:10:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q5519234", .name = "Gallup Independent (US) - The Gallup Independent",
@@ -54242,63 +53910,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "11:23:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q5572043", .name = "Gloucester Daily Times (US) - www.gloucestertimes.com - RSS "
-      "Results",
-    .name_ja = "Gloucester Daily Times (US) - www.gloucestertimes.com - RSS Results",
-    .category = "news", .portal = "http://www.gloucestertimes.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.gloucestertimes.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "12:45:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q5579886", .name = "Golden Transcript (US) - www.coloradocommunitymedia.com - RSS "
-      "Results",
-    .name_ja = "Golden Transcript (US) - www.coloradocommunitymedia.com - RSS Results",
-    .category = "news", .portal = "http://www.coloradocommunitymedia.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.coloradocommunitymedia.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "15:59:00 -0600. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q5579886_2", .name = "Golden Transcript (US) - www.thegoldentranscript.com - RSS "
-      "Results",
-    .name_ja = "Golden Transcript (US) - www.thegoldentranscript.com - RSS Results",
-    .category = "news", .portal = "http://www.thegoldentranscript.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.thegoldentranscript.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "14:18:00 -0600. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q5595222", .name = "Grand Valley Lanthorn (US) - Grand Valley Lanthorn",
@@ -54374,43 +53985,6 @@ static const hp_source HP3B46_NEWS[] = {
       "01:31:13 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q5604494", .name = "Greensburg Daily News (US) - www.greensburgdailynews.com - RSS "
-      "Results",
-    .name_ja = "Greensburg Daily News (US) - www.greensburgdailynews.com - RSS Results",
-    .category = "news", .portal = "http://www.greensburgdailynews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.greensburgdailynews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "12:00:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q5641708", .name = "Half Moon Bay Review (US) - www.coastsidenews.com - RSS Results",
-    .name_ja = "Half Moon Bay Review (US) - www.coastsidenews.com - RSS Results",
-    .category = "news", .portal = "http://www.coastsidenews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.coastsidenews.com/search/?f=rss&amp;t=article&amp;c=review&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "10:00:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q5645887", .name = "Hammonton Gazette (US) - www.hammontongazette.com - RSS Results",
     .name_ja = "Hammonton Gazette (US) - www.hammontongazette.com - RSS Results",
     .category = "news", .portal = "http://www.hammontongazette.com/",
@@ -54429,25 +54003,6 @@ static const hp_source HP3B46_NEWS[] = {
       "15:01:00 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q5654587", .name = "Harbor Country News (US) - www.harborcountry-news.com - RSS "
-      "Results",
-    .name_ja = "Harbor Country News (US) - www.harborcountry-news.com - RSS Results",
-    .category = "news", .portal = "http://www.harborcountry-news.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.harborcountry-news.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "10:46:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q5684065", .name = "Havre Daily News (US) - Havre Weekly Chronicle - RSS Feed",
     .name_ja = "Havre Daily News (US) - Havre Weekly Chronicle - RSS Feed",
     .category = "news", .portal = "https://www.havredailynews.com/",
@@ -54464,25 +54019,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 11 items, RSS2 feed, newest Wed, 1 Apr 2026 "
       "08:52:00 +0100. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q5689730", .name = "Headlight-Herald (US) - www.tillamookheadlightherald.com - RSS "
-      "Results",
-    .name_ja = "Headlight-Herald (US) - www.tillamookheadlightherald.com - RSS Results",
-    .category = "news", .portal = "http://www.tillamookheadlightherald.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.tillamookheadlightherald.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "05:00:00 -0700. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q5732600", .name = "Herald & Review (US) - herald-review.com - RSS Results",
@@ -54738,43 +54274,6 @@ static const hp_source HP3B46_NEWS[] = {
       "18:25:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q4880225", .name = "Beeville Bee-Picayune (US) - www.southtexasnews.com - RSS "
-      "Results",
-    .name_ja = "Beeville Bee-Picayune (US) - www.southtexasnews.com - RSS Results",
-    .category = "news", .portal = "http://www.southtexasnews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.southtexasnews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "11:00:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q4882642", .name = "Belgrade News (US) - www.belgrade-news.com - RSS Results",
-    .name_ja = "Belgrade News (US) - www.belgrade-news.com - RSS Results",
-    .category = "news", .portal = "https://www.belgrade-news.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.belgrade-news.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "11:43:00 -0600. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q4884493", .name = "Beloit Daily News (US) - www.beloitdailynews.com - RSS Results",
     .name_ja = "Beloit Daily News (US) - www.beloitdailynews.com - RSS Results",
     .category = "news", .portal = "http://www.beloitdailynews.com/",
@@ -54791,24 +54290,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "12:15:17 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q4906426", .name = "Big Spring Herald (US) - www.bigspringherald.com - RSS Results",
-    .name_ja = "Big Spring Herald (US) - www.bigspringherald.com - RSS Results",
-    .category = "news", .portal = "http://www.bigspringherald.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.bigspringherald.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "15:45:03 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q4911948", .name = "Billings Gazette (US) - billingsgazette.com - RSS Results",
@@ -55014,24 +54495,6 @@ static const hp_source HP3B46_NEWS[] = {
       "12:12:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q5263202", .name = "Derry News (US) - www.derrynews.com - RSS Results",
-    .name_ja = "Derry News (US) - www.derrynews.com - RSS Results",
-    .category = "news", .portal = "http://www.derrynews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.derrynews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "18:52:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q5267430", .name = "Devils Lake Journal (US) - Devil's Lake Daily Journal",
     .name_ja = "Devils Lake Journal (US) - Devil's Lake Daily Journal",
     .category = "news", .portal = "https://www.devilslakejournal.com/",
@@ -55124,24 +54587,6 @@ static const hp_source HP3B46_NEWS[] = {
       "declares or links on its site root. Wikidata classes it as "
       "newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q6382196", .name = "Kearney Hub (US) - kearneyhub.com - RSS Results",
-    .name_ja = "Kearney Hub (US) - kearneyhub.com - RSS Results",
-    .category = "news", .portal = "http://kearneyhub.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://kearneyhub.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "11:30:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q6385306", .name = "Keizertimes (US) - Keizertimes",
     .name_ja = "Keizertimes (US) - Keizertimes",
     .category = "news", .portal = "https://www.keizertimes.com/",
@@ -55232,25 +54677,6 @@ static const hp_source HP3B46_NEWS[] = {
       "12:10:47 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q6395343", .name = "Ketchikan Daily News (US) - www.ketchikandailynews.com - RSS "
-      "Results",
-    .name_ja = "Ketchikan Daily News (US) - www.ketchikandailynews.com - RSS Results",
-    .category = "news", .portal = "http://www.ketchikandailynews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.ketchikandailynews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "09:00:00 -0800. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q6407403", .name = "Killeen Daily Herald (US) - kdhnews.com - RSS Results",
     .name_ja = "Killeen Daily Herald (US) - kdhnews.com - RSS Results",
     .category = "news", .portal = "http://kdhnews.com/",
@@ -55322,42 +54748,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "12:15:17 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q5173430", .name = "Corvallis Gazette-Times (US) - gazettetimes.com - RSS Results",
-    .name_ja = "Corvallis Gazette-Times (US) - gazettetimes.com - RSS Results",
-    .category = "news", .portal = "http://gazettetimes.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://gazettetimes.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "09:33:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q5175514", .name = "Cottage Grove Sentinel (US) - www.cgsentinel.com - RSS Results",
-    .name_ja = "Cottage Grove Sentinel (US) - www.cgsentinel.com - RSS Results",
-    .category = "news", .portal = "http://www.cgsentinel.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.cgsentinel.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "00:45:00 -0700. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q5193970", .name = "Cumberland Times-News (US) - www.times-news.com - RSS Results",
@@ -55524,86 +54914,6 @@ static const hp_source HP3B46_NEWS[] = {
       "00:27:00 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q5209310_2", .name = "Daily Mountain Eagle (US) - www.mountaineagle.com - RSS Results "
-      "in news,news/* of type article",
-    .name_ja = "Daily Mountain Eagle (US) - www.mountaineagle.com - RSS Results in news,news/* of type article",
-    .category = "news", .portal = "https://www.mountaineagle.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mountaineagle.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=news,news/*&f=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Sat, 17 Oct "
-      "2026 00:00:00 -0400. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country US." },
-
-  { .id = "JO46_NEWS_Q5209310_3", .name = "Daily Mountain Eagle (US) - www.mountaineagle.com - RSS Results "
-      "in news/business,news/business/* of type art",
-    .name_ja = "Daily Mountain Eagle (US) - www.mountaineagle.com - RSS Results in news/business,news/business/* of type art",
-    .category = "news", .portal = "https://www.mountaineagle.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mountaineagle.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=news/business,news/business/*&f=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Wed, 14 Oct "
-      "2026 00:00:00 -0400. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country US." },
-
-  { .id = "JO46_NEWS_Q5209310_4", .name = "Daily Mountain Eagle (US) - www.mountaineagle.com - RSS Results "
-      "in sports,sports/* of type article",
-    .name_ja = "Daily Mountain Eagle (US) - www.mountaineagle.com - RSS Results in sports,sports/* of type article",
-    .category = "news", .portal = "https://www.mountaineagle.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mountaineagle.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=sports,sports/*&f=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Fri, 16 Oct "
-      "2026 17:15:00 -0400. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country US." },
-
-  { .id = "JO46_NEWS_Q5209310_5", .name = "Daily Mountain Eagle (US) - www.mountaineagle.com - RSS Results "
-      "in obituaries,obituaries/* of type article",
-    .name_ja = "Daily Mountain Eagle (US) - www.mountaineagle.com - RSS Results in obituaries,obituaries/* of type article",
-    .category = "news", .portal = "https://www.mountaineagle.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mountaineagle.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=obituaries,obituaries/*&f=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Fri, 16 Oct "
-      "2026 18:00:00 -0400. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country US." },
-
   { .id = "JO46_NEWS_Q5209332", .name = "Daily Pilot (US) - Daily Pilot - Los Angeles Times",
     .name_ja = "Daily Pilot (US) - Daily Pilot - Los Angeles Times",
     .category = "news", .portal = "https://www.latimes.com/",
@@ -55676,24 +54986,6 @@ static const hp_source HP3B46_NEWS[] = {
       "02:00:00 -0700. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q3402472", .name = "Press-Republican (US) - www.pressrepublican.com - RSS Results",
-    .name_ja = "Press-Republican (US) - www.pressrepublican.com - RSS Results",
-    .category = "news", .portal = "http://www.pressrepublican.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.pressrepublican.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "07:30:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q3453667", .name = "Rutland Herald (US) - www.rutlandherald.com - RSS Results",
     .name_ja = "Rutland Herald (US) - www.rutlandherald.com - RSS Results",
     .category = "news", .portal = "http://www.rutlandherald.com/",
@@ -55710,24 +55002,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "13:15:17 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q3481254", .name = "SF Weekly (US) - www.sfweekly.com - RSS Results",
-    .name_ja = "SF Weekly (US) - www.sfweekly.com - RSS Results",
-    .category = "news", .portal = "http://www.sfweekly.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.sfweekly.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "04:45:00 -0700. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q3495288", .name = "St. Louis Post-Dispatch (US) - www.stltoday.com - RSS Results",
@@ -55839,25 +55113,6 @@ static const hp_source HP3B46_NEWS[] = {
       "02:39:24 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q6665763", .name = "Lockport Union-Sun & Journal (US) - www.lockportjournal.com - "
-      "RSS Results",
-    .name_ja = "Lockport Union-Sun & Journal (US) - www.lockportjournal.com - RSS Results",
-    .category = "news", .portal = "http://www.lockportjournal.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.lockportjournal.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "18:00:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q6666427", .name = "Lodi News-Sentinel (US) - www.lodinews.com - RSS Results",
     .name_ja = "Lodi News-Sentinel (US) - www.lodinews.com - RSS Results",
     .category = "news", .portal = "http://www.lodinews.com/",
@@ -55874,24 +55129,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "09:00:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q6666797", .name = "Log Cabin Democrat (US) - www.thecabin.net - RSS Results",
-    .name_ja = "Log Cabin Democrat (US) - www.thecabin.net - RSS Results",
-    .category = "news", .portal = "http://www.thecabin.net/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.thecabin.net/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "00:00:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q6666937", .name = "Logan Banner (US) - www.loganbanner.com - RSS Results",
@@ -55912,24 +55149,6 @@ static const hp_source HP3B46_NEWS[] = {
       "08:07:46 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q6669550", .name = "Lompoc Record (US) - lompocrecord.com - RSS Results",
-    .name_ja = "Lompoc Record (US) - lompocrecord.com - RSS Results",
-    .category = "news", .portal = "http://lompocrecord.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://lompocrecord.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "21:10:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q6681990", .name = "Los Angeles Business Journal (US) - Los Angeles Business Journal",
     .name_ja = "Los Angeles Business Journal (US) - Los Angeles Business Journal",
     .category = "news", .portal = "https://labusinessjournal.com/",
@@ -55946,25 +55165,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "19:00:43 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q6682126", .name = "Los Angeles Downtown News (US) - www.ladowntownnews.com - RSS "
-      "Results",
-    .name_ja = "Los Angeles Downtown News (US) - www.ladowntownnews.com - RSS Results",
-    .category = "news", .portal = "http://www.ladowntownnews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.ladowntownnews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "21:10:00 -0700. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q6689473", .name = "Louisville Eccentric Observer (US) - LEO Weekly   Louisville "
@@ -56275,24 +55475,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "00:59:20 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q6550788", .name = "Lincoln Journal Star (US) - journalstar.com - RSS Results",
-    .name_ja = "Lincoln Journal Star (US) - journalstar.com - RSS Results",
-    .category = "news", .portal = "http://journalstar.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://journalstar.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "12:00:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q6785803", .name = "Mat-Su Valley Frontiersman (US) - Mat-Su Sentinel",
@@ -56608,46 +55790,6 @@ static const hp_source HP3B46_NEWS[] = {
       "links on its site root. Wikidata classes it as newspaper, "
       "country US." },
 
-  { .id = "JO46_NEWS_Q55666742_3", .name = "Plain Dealer & Sun (US) - www.madisoncourier.com - RSS Results "
-      "in sports,sports/* of type article",
-    .name_ja = "Plain Dealer & Sun (US) - www.madisoncourier.com - RSS Results in sports,sports/* of type article",
-    .category = "news", .portal = "https://www.madisoncourier.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.madisoncourier.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=sports,sports/*&f=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Fri, 16 Oct "
-      "2026 20:35:00 -0500. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country US." },
-
-  { .id = "JO46_NEWS_Q55666742_4", .name = "Plain Dealer & Sun (US) - www.madisoncourier.com - RSS Results "
-      "in obituaries,obituaries/* of type article",
-    .name_ja = "Plain Dealer & Sun (US) - www.madisoncourier.com - RSS Results in obituaries,obituaries/* of type article",
-    .category = "news", .portal = "https://www.madisoncourier.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.madisoncourier.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=obituaries,obituaries/*&f=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Wed, 14 Oct "
-      "2026 00:00:00 -0500. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country US." },
-
   { .id = "JO46_NEWS_Q55666785", .name = "Vincennes Sun-Commercial (US) - www.suncommercial.com - RSS "
       "Results",
     .name_ja = "Vincennes Sun-Commercial (US) - www.suncommercial.com - RSS Results",
@@ -56921,24 +56063,6 @@ static const hp_source HP3B46_NEWS[] = {
       "18:22:36 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q55665608", .name = "Mammoth Times (US) - www.mammothtimes.com - RSS Results",
-    .name_ja = "Mammoth Times (US) - www.mammothtimes.com - RSS Results",
-    .category = "news", .portal = "http://www.mammothtimes.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.mammothtimes.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "13:45:03 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q55665613", .name = "Mill Valley Herald (US) - Marin Local News",
     .name_ja = "Mill Valley Herald (US) - Marin Local News",
     .category = "news", .portal = "https://marinlocalnews.com/",
@@ -56993,24 +56117,6 @@ static const hp_source HP3B46_NEWS[] = {
       "05:51:10 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q55665631", .name = "Pacifica Tribune (US) - www.coastsidenews.com - RSS Results",
-    .name_ja = "Pacifica Tribune (US) - www.coastsidenews.com - RSS Results",
-    .category = "news", .portal = "http://www.coastsidenews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.coastsidenews.com/search/?f=rss&amp;t=article&amp;c=tribune&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "10:00:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q55665639", .name = "Patterson Irrigator (US) - www.ttownmedia.com - RSS Results",
     .name_ja = "Patterson Irrigator (US) - www.ttownmedia.com - RSS Results",
     .category = "news", .portal = "http://www.ttownmedia.com/",
@@ -57018,24 +56124,6 @@ static const hp_source HP3B46_NEWS[] = {
     .tags = "\"news\",\"press\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "http://www.ttownmedia.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "04:45:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55665639_2", .name = "Patterson Irrigator (US) - www.ttownmedia.com - RSS Results",
-    .name_ja = "Patterson Irrigator (US) - www.ttownmedia.com - RSS Results",
-    .category = "news", .portal = "http://www.ttownmedia.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.ttownmedia.com/search/?f=rss&amp;t=article&amp;c=patterson_irrigator&amp;l=50&amp;s=start_time&amp;sd=desc",
     .array_path = "channel.item",
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
@@ -57174,24 +56262,6 @@ static const hp_source HP3B46_NEWS[] = {
       "07:17:00 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q55665726", .name = "Selma Enterprise (US) - hanfordsentinel.com - RSS Results",
-    .name_ja = "Selma Enterprise (US) - hanfordsentinel.com - RSS Results",
-    .category = "news", .portal = "http://hanfordsentinel.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://hanfordsentinel.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "05:00:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q55665730", .name = "Soledad Bee (US) - Soledad Bee   Soledad, CA",
     .name_ja = "Soledad Bee (US) - Soledad Bee   Soledad, CA",
     .category = "news", .portal = "https://soledadbee.com/",
@@ -57228,24 +56298,6 @@ static const hp_source HP3B46_NEWS[] = {
       "21:10:00 -0700. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q55665751", .name = "Ventura County Reporter (US) - www.vcreporter.com - RSS Results",
-    .name_ja = "Ventura County Reporter (US) - www.vcreporter.com - RSS Results",
-    .category = "news", .portal = "http://www.vcreporter.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.vcreporter.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "21:10:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q6425295", .name = "Kodiak Daily Mirror (US) - www.kodiakdailymirror.com - RSS "
       "Results",
     .name_ja = "Kodiak Daily Mirror (US) - www.kodiakdailymirror.com - RSS Results",
@@ -57263,60 +56315,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "22:42:00 -0800. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q6426766", .name = "Kokomo Tribune (US) - www.kokomotribune.com - RSS Results",
-    .name_ja = "Kokomo Tribune (US) - www.kokomotribune.com - RSS Results",
-    .category = "news", .portal = "http://www.kokomotribune.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.kokomotribune.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "12:50:22 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q6472166", .name = "Lagniappe (US) - www.lagniappemobile.com - RSS Results",
-    .name_ja = "Lagniappe (US) - www.lagniappemobile.com - RSS Results",
-    .category = "news", .portal = "http://www.lagniappemobile.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.lagniappemobile.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "07:00:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q6475499", .name = "Lake County Examiner (US) - www.lakecountyexam.com - RSS Results",
-    .name_ja = "Lake County Examiner (US) - www.lakecountyexam.com - RSS Results",
-    .category = "news", .portal = "http://www.lakecountyexam.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.lakecountyexam.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "04:00:00 -0700. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q6488799", .name = "Larchmont Chronicle (US) - Larchmont Chronicle",
@@ -57464,26 +56462,6 @@ static const hp_source HP3B46_NEWS[] = {
       "10:38:00 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q4979486_2", .name = "Brunswick Beacon (US) - www.newsargus.com - RSS Results in "
-      "news,news/* of type article",
-    .name_ja = "Brunswick Beacon (US) - www.newsargus.com - RSS Results in news,news/* of type article",
-    .category = "news", .portal = "https://www.newsargus.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.newsargus.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=news,news/*&f=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Sun, 18 Oct "
-      "2026 07:45:00 -0400. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country US." },
-
   { .id = "JO46_NEWS_Q4979486_3", .name = "Brunswick Beacon (US) - www.newsargus.com - RSS Results in "
       "sports,sports/* of type article",
     .name_ja = "Brunswick Beacon (US) - www.newsargus.com - RSS Results in sports,sports/* of type article",
@@ -57523,24 +56501,6 @@ static const hp_source HP3B46_NEWS[] = {
       "2026 13:50:00 -0400. A feed the organisation itself declares or "
       "links on its site root. Wikidata classes it as newspaper, "
       "country US." },
-
-  { .id = "JO46_NEWS_Q5034182", .name = "Canyon Courier (US) - www.canyoncourier.com - RSS Results",
-    .name_ja = "Canyon Courier (US) - www.canyoncourier.com - RSS Results",
-    .category = "news", .portal = "http://www.canyoncourier.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.canyoncourier.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "12:55:31 -0600. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q5034228", .name = "Canyon News (US) - Canyon News",
     .name_ja = "Canyon News (US) - Canyon News",
@@ -58580,24 +57540,6 @@ static const hp_source HP3B46_NEWS[] = {
       "20:26:17 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q7081586", .name = "Ojai Valley News (US) - www.ojaivalleynews.com - RSS Results",
-    .name_ja = "Ojai Valley News (US) - www.ojaivalleynews.com - RSS Results",
-    .category = "news", .portal = "http://www.ojaivalleynews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.ojaivalleynews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "16:03:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q7082232", .name = "Oklahoma Gazette (US) - Oklahoma Gazette",
     .name_ja = "Oklahoma Gazette (US) - Oklahoma Gazette",
     .category = "news", .portal = "https://www.okgazette.com/",
@@ -58708,24 +57650,6 @@ static const hp_source HP3B46_NEWS[] = {
       "21:07:58 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q5897515", .name = "Hood River News (US) - www.columbiagorgenews.com - RSS Results",
-    .name_ja = "Hood River News (US) - www.columbiagorgenews.com - RSS Results",
-    .category = "news", .portal = "http://www.columbiagorgenews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.columbiagorgenews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "04:45:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q5999809", .name = "Illinois Times (US) - Illinois Times, the capital city's source "
       "of news, politics, arts, entertai",
     .name_ja = "Illinois Times (US) - Illinois Times, the capital city's source of news, politics, arts, entertai",
@@ -58743,24 +57667,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "01:54:09 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q6006929", .name = "Imperial Valley Press (US) - www.ivpressonline.com - RSS Results",
-    .name_ja = "Imperial Valley Press (US) - www.ivpressonline.com - RSS Results",
-    .category = "news", .portal = "http://www.ivpressonline.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.ivpressonline.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "13:45:03 -0700. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q6037857", .name = "Inside Tucson Business (US) - www.insidetucsonbusiness.com - RSS "
@@ -58910,24 +57816,6 @@ static const hp_source HP3B46_NEWS[] = {
       "09:30:51 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q6146255", .name = "Jamestown News (US) - www.yesweekly.com - RSS Results",
-    .name_ja = "Jamestown News (US) - www.yesweekly.com - RSS Results",
-    .category = "news", .portal = "http://www.yesweekly.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.yesweekly.com/search/?f=rss&amp;t=article&amp;c=news/jamestown_news&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "16:13:12 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q6146264", .name = "Jamestown Sun (US) - The Jamestown Sun   Jamestown, North Dakota",
     .name_ja = "Jamestown Sun (US) - The Jamestown Sun   Jamestown, North Dakota",
     .category = "news", .portal = "https://www.jamestownsun.com/",
@@ -59019,42 +57907,6 @@ static const hp_source HP3B46_NEWS[] = {
       "09:47:00 -0700. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q55665426_2", .name = "Prescott Valley Tribune (US) - www.dcourier.com - RSS Results",
-    .name_ja = "Prescott Valley Tribune (US) - www.dcourier.com - RSS Results",
-    .category = "news", .portal = "http://www.dcourier.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.dcourier.com/search/?f=rss&amp;t=article&amp;c=news/prescott-valley-tribune&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "09:47:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55665431", .name = "Eastern Arizona Courier (US) - www.eacourier.com - RSS Results",
-    .name_ja = "Eastern Arizona Courier (US) - www.eacourier.com - RSS Results",
-    .category = "news", .portal = "http://www.eacourier.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.eacourier.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "10:00:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q55665434", .name = "White Mountain Independent (US) - www.wmicentral.com - RSS "
       "Results",
     .name_ja = "White Mountain Independent (US) - www.wmicentral.com - RSS Results",
@@ -59128,78 +57980,6 @@ static const hp_source HP3B46_NEWS[] = {
       "21:10:00 -0700. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q55665471", .name = "Inyo Register (US) - www.inyoregister.com - RSS Results",
-    .name_ja = "Inyo Register (US) - www.inyoregister.com - RSS Results",
-    .category = "news", .portal = "http://www.inyoregister.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.inyoregister.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "13:45:03 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55665474", .name = "Brentwood Press (US) - www.thepress.net - RSS Results",
-    .name_ja = "Brentwood Press (US) - www.thepress.net - RSS Results",
-    .category = "news", .portal = "http://www.thepress.net/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.thepress.net/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "08:32:26 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55665476", .name = "Weekly Calistogan (US) - napavalleyregister.com - RSS Results",
-    .name_ja = "Weekly Calistogan (US) - napavalleyregister.com - RSS Results",
-    .category = "news", .portal = "http://napavalleyregister.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://napavalleyregister.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "09:00:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55665483", .name = "Coastal View News (US) - www.coastalview.com - RSS Results",
-    .name_ja = "Coastal View News (US) - www.coastalview.com - RSS Results",
-    .category = "news", .portal = "http://www.coastalview.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.coastalview.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "12:23:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q55665484", .name = "Ceres Courier (US) - Ceres Courier",
     .name_ja = "Ceres Courier (US) - Ceres Courier",
     .category = "news", .portal = "https://www.cerescourier.com/",
@@ -59234,25 +58014,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "04:00:59 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55665498", .name = "Coronado Eagle & Journal (US) - www.coronadonewsca.com - RSS "
-      "Results",
-    .name_ja = "Coronado Eagle & Journal (US) - www.coronadonewsca.com - RSS Results",
-    .category = "news", .portal = "http://www.coronadonewsca.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.coronadonewsca.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "21:10:00 -0700. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q55665503", .name = "Culver City Observer (US) - Culver City Observer - RSS Feed",
@@ -59346,24 +58107,6 @@ static const hp_source HP3B46_NEWS[] = {
       "16:51:35 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q55665549", .name = "Ledger Dispatch (US) - www.ledger.news - RSS Results",
-    .name_ja = "Ledger Dispatch (US) - www.ledger.news - RSS Results",
-    .category = "news", .portal = "http://www.ledger.news/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.ledger.news/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "13:45:03 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q55665576", .name = "Long Beach Post (US) - Long Beach Post",
     .name_ja = "Long Beach Post (US) - Long Beach Post",
     .category = "news", .portal = "https://lbpost.com/",
@@ -59380,24 +58123,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "21:07:11 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55665581", .name = "Los Altos Town Crier (US) - www.losaltosonline.com - RSS Results",
-    .name_ja = "Los Altos Town Crier (US) - www.losaltosonline.com - RSS Results",
-    .category = "news", .portal = "http://www.losaltosonline.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.losaltosonline.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "13:45:00 -0700. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q55665586", .name = "Asian Journal (US) - Asian Journal News",
@@ -59434,24 +58159,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 21 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "14:41:09 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q4771204", .name = "Antelope Valley Press (US) - www.avpress.com - RSS Results",
-    .name_ja = "Antelope Valley Press (US) - www.avpress.com - RSS Results",
-    .category = "news", .portal = "http://www.avpress.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.avpress.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "13:45:03 -0700. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q4780957", .name = "Appeal-Democrat (US) - www.appeal-democrat.com - RSS Results",
@@ -59634,24 +58341,6 @@ static const hp_source HP3B46_NEWS[] = {
       "16:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q4813479", .name = "Athens Daily Review (US) - www.athensreview.com - RSS Results",
-    .name_ja = "Athens Daily Review (US) - www.athensreview.com - RSS Results",
-    .category = "news", .portal = "http://www.athensreview.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.athensreview.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "10:46:39 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q4815623", .name = "Athol Daily News (US) - Athol Daily News",
     .name_ja = "Athol Daily News (US) - Athol Daily News",
     .category = "news", .portal = "https://atholdailynews.com/",
@@ -59760,24 +58449,6 @@ static const hp_source HP3B46_NEWS[] = {
       "00:00:00 -0700. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q4696943", .name = "Aiken Standard (US) - www.postandcourier.com - RSS Results",
-    .name_ja = "Aiken Standard (US) - www.postandcourier.com - RSS Results",
-    .category = "news", .portal = "https://www.postandcourier.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.postandcourier.com/search/?f=rss&amp;t=article&amp;c=aikenstandard&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "13:05:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q824451", .name = "Boston Globe (US) - Boston.com",
     .name_ja = "Boston Globe (US) - Boston.com",
     .category = "news", .portal = "https://www.boston.com/",
@@ -59850,44 +58521,6 @@ static const hp_source HP3B46_NEWS[] = {
       "01:07:10 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q55667212", .name = "Community Advocate (US) - www.communityadvocate.com - RSS "
-      "Results",
-    .name_ja = "Community Advocate (US) - www.communityadvocate.com - RSS Results",
-    .category = "news", .portal = "https://www.communityadvocate.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.communityadvocate.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "08:55:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55667248", .name = "Montgomery County Sentinel (US) - www.thesentinel.com - RSS "
-      "Results",
-    .name_ja = "Montgomery County Sentinel (US) - www.thesentinel.com - RSS Results",
-    .category = "news", .portal = "http://www.thesentinel.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.thesentinel.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "23:08:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q55667463", .name = "Wright County Journal-Press (US) - The Drummer",
     .name_ja = "Wright County Journal-Press (US) - The Drummer",
     .category = "news", .portal = "http://www.thedrummer.com/",
@@ -59925,24 +58558,6 @@ static const hp_source HP3B46_NEWS[] = {
       "18:43:28 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q55667549", .name = "Northfield News (US) - www.southernminn.com - RSS Results",
-    .name_ja = "Northfield News (US) - www.southernminn.com - RSS Results",
-    .category = "news", .portal = "https://www.southernminn.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.southernminn.com/search/?f=rss&amp;t=article&amp;c=northfield_news&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "09:17:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q55667549_2", .name = "Northfield News (US) - www.southernminn.com - RSS Results",
     .name_ja = "Northfield News (US) - www.southernminn.com - RSS Results",
     .category = "news", .portal = "https://www.southernminn.com/",
@@ -59978,43 +58593,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 63 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "17:00:00 GMT. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55667596", .name = "Shoreview Press (US) - www.presspubs.com - RSS Results",
-    .name_ja = "Shoreview Press (US) - www.presspubs.com - RSS Results",
-    .category = "news", .portal = "http://www.presspubs.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.presspubs.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "13:19:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55667640", .name = "Boone County Journal (US) - www.columbiamissourian.com - RSS "
-      "Results",
-    .name_ja = "Boone County Journal (US) - www.columbiamissourian.com - RSS Results",
-    .category = "news", .portal = "http://www.columbiamissourian.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.columbiamissourian.com/search/?f=rss&amp;t=article&amp;c=boonecountyjournal&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "10:32:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q55667687", .name = "Kansas City Northeast News (US) - Northeast News",
@@ -60087,80 +58665,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "13:00:51 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55665755", .name = "Trinity Journal (US) - www.trinityjournal.com - RSS Results",
-    .name_ja = "Trinity Journal (US) - www.trinityjournal.com - RSS Results",
-    .category = "news", .portal = "http://www.trinityjournal.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.trinityjournal.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "09:49:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55665762", .name = "Winters Express (US) - www.wintersexpress.com - RSS Results",
-    .name_ja = "Winters Express (US) - www.wintersexpress.com - RSS Results",
-    .category = "news", .portal = "http://www.wintersexpress.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.wintersexpress.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "04:45:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55665765", .name = "Yucaipa/Calimesa News Mirror (US) - www.newsmirror.net - RSS "
-      "Results",
-    .name_ja = "Yucaipa/Calimesa News Mirror (US) - www.newsmirror.net - RSS Results",
-    .category = "news", .portal = "http://www.newsmirror.net/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.newsmirror.net/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "21:10:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55665778", .name = "Chaffee County Times (US) - www.chaffeecountytimes.com - RSS "
-      "Results",
-    .name_ja = "Chaffee County Times (US) - www.chaffeecountytimes.com - RSS Results",
-    .category = "news", .portal = "http://www.chaffeecountytimes.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.chaffeecountytimes.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "16:52:33 -0600. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q55665786", .name = "Craig Daily Press (US) - Craig Press",
@@ -60363,24 +58867,6 @@ static const hp_source HP3B46_NEWS[] = {
       "13:15:17 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q55665262", .name = "Enterprise Ledger (US) - dothaneagle.com - RSS Results",
-    .name_ja = "Enterprise Ledger (US) - dothaneagle.com - RSS Results",
-    .category = "news", .portal = "http://dothaneagle.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://dothaneagle.com/search/?f=rss&amp;t=article&amp;c=news/community/enterprise-ledger&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "11:53:23 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q55665267", .name = "Gadsden Messenger (US) - Gadsden Messenger",
     .name_ja = "Gadsden Messenger (US) - Gadsden Messenger",
     .category = "news", .portal = "https://gadsdenmessenger.com/",
@@ -60397,24 +58883,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "21:48:21 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55665274", .name = "Advertiser-Gleam (US) - www.advertisergleam.com - RSS Results",
-    .name_ja = "Advertiser-Gleam (US) - www.advertisergleam.com - RSS Results",
-    .category = "news", .portal = "http://www.advertisergleam.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.advertisergleam.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "00:00:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q55665283", .name = "LaFayette Sun (US) - Wilcox Newspapers",
@@ -60491,24 +58959,6 @@ static const hp_source HP3B46_NEWS[] = {
       "06:22:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q55665304", .name = "Tallassee Tribune (US) - www.tpimediagroup.org - RSS Results",
-    .name_ja = "Tallassee Tribune (US) - www.tpimediagroup.org - RSS Results",
-    .category = "news", .portal = "http://www.tpimediagroup.org/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.tpimediagroup.org/search/?f=rss&amp;t=article&amp;c=tallasseetribune&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "12:00:34 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q55665310", .name = "Wetumpka Herald (US) - www.tpimediagroup.org - RSS Results",
     .name_ja = "Wetumpka Herald (US) - www.tpimediagroup.org - RSS Results",
     .category = "news", .portal = "http://www.tpimediagroup.org/",
@@ -60527,24 +58977,6 @@ static const hp_source HP3B46_NEWS[] = {
       "12:00:34 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q55665316", .name = "Saline Courier (US) - www.bentoncourier.com - RSS Results",
-    .name_ja = "Saline Courier (US) - www.bentoncourier.com - RSS Results",
-    .category = "news", .portal = "http://www.bentoncourier.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.bentoncourier.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "15:45:03 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q55665329", .name = "Van Buren County Democrat (US) - www.thecabin.net - RSS Results",
     .name_ja = "Van Buren County Democrat (US) - www.thecabin.net - RSS Results",
     .category = "news", .portal = "http://www.thecabin.net/",
@@ -60561,24 +58993,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "00:00:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55665355", .name = "The Jonesboro Sun (US) - www.jonesborosun.com - RSS Results",
-    .name_ja = "The Jonesboro Sun (US) - www.jonesborosun.com - RSS Results",
-    .category = "news", .portal = "http://www.jonesborosun.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.jonesborosun.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "12:03:38 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q55665367", .name = "Advance Monticellonian (US) - - Latest Stories",
@@ -60615,25 +59029,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "13:12:02 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55665377", .name = "Paragould Daily Press (US) - www.paragoulddailypress.com - RSS "
-      "Results",
-    .name_ja = "Paragould Daily Press (US) - www.paragoulddailypress.com - RSS Results",
-    .category = "news", .portal = "http://www.paragoulddailypress.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.paragoulddailypress.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "12:15:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q55665391", .name = "San Pedro Valley News-Sun (US) - www.myheraldreview.com - RSS "
@@ -60692,24 +59087,6 @@ static const hp_source HP3B46_NEWS[] = {
       "09:50:25 -0700. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q55665414", .name = "Marana News (US) - www.tucsonlocalmedia.com - RSS Results",
-    .name_ja = "Marana News (US) - www.tucsonlocalmedia.com - RSS Results",
-    .category = "news", .portal = "http://www.tucsonlocalmedia.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.tucsonlocalmedia.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "00:15:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q55665413", .name = "Today's News-Herald (US) - www.havasunews.com - RSS Results",
     .name_ja = "Today's News-Herald (US) - www.havasunews.com - RSS Results",
     .category = "news", .portal = "http://www.havasunews.com/",
@@ -60726,24 +59103,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "07:45:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55665418", .name = "Payson Roundup (US) - www.paysonroundup.com - RSS Results",
-    .name_ja = "Payson Roundup (US) - www.paysonroundup.com - RSS Results",
-    .category = "news", .portal = "http://www.paysonroundup.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.paysonroundup.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "06:18:00 -0700. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q6868213", .name = "Minnesota Daily (US) - The Minnesota Daily",
@@ -60838,25 +59197,6 @@ static const hp_source HP3B46_NEWS[] = {
       "07:00:00 -0600. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q6905305", .name = "Monterey County Weekly (US) - www.montereycountynow.com - RSS "
-      "Results",
-    .name_ja = "Monterey County Weekly (US) - www.montereycountynow.com - RSS Results",
-    .category = "news", .portal = "http://www.montereycountynow.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.montereycountynow.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "08:00:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q6905305_2", .name = "Monterey County Weekly (US) - www.montereycountynow.com - RSS "
       "Results in news/recent_cover_stories,blogs/**,ne",
     .name_ja = "Monterey County Weekly (US) - www.montereycountynow.com - RSS Results in news/recent_cover_stories,blogs/**,ne",
@@ -60892,24 +59232,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "09:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q6922906", .name = "Mount Pleasant Daily Tribune (US) - tribnow.com - RSS Results",
-    .name_ja = "Mount Pleasant Daily Tribune (US) - tribnow.com - RSS Results",
-    .category = "news", .portal = "http://tribnow.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://tribnow.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 06 Aug 2026 "
-      "18:26:20 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q6940243", .name = "Muscatine Journal (US) - muscatinejournal.com - RSS Results",
@@ -60948,24 +59270,6 @@ static const hp_source HP3B46_NEWS[] = {
       "12:42:00 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q6966997", .name = "Nashville Scene (US) - www.nashvillescene.com - RSS Results",
-    .name_ja = "Nashville Scene (US) - www.nashvillescene.com - RSS Results",
-    .category = "news", .portal = "http://www.nashvillescene.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.nashvillescene.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "15:30:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q6974392", .name = "National Mortgage News (US) - The Latest",
     .name_ja = "National Mortgage News (US) - The Latest",
     .category = "news", .portal = "https://www.nationalmortgagenews.com/",
@@ -60982,24 +59286,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "21:15:00 GMT. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q6981630", .name = "Navajo Hopi Observer (US) - www.nhonews.com - RSS Results",
-    .name_ja = "Navajo Hopi Observer (US) - www.nhonews.com - RSS Results",
-    .category = "news", .portal = "http://www.nhonews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.nhonews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "21:10:00 -0700. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q6993448", .name = "Neon Tommy (US) - Neon Tommy - Political Talk",
@@ -61220,42 +59506,6 @@ static const hp_source HP3B46_NEWS[] = {
       "13:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q7180847", .name = "Pharos-Tribune (US) - www.pharostribune.com - RSS Results",
-    .name_ja = "Pharos-Tribune (US) - www.pharostribune.com - RSS Results",
-    .category = "news", .portal = "http://www.pharostribune.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.pharostribune.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "04:45:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7182836", .name = "The Philadelphia Tribune (US) - www.phillytrib.com - RSS Results",
-    .name_ja = "The Philadelphia Tribune (US) - www.phillytrib.com - RSS Results",
-    .category = "news", .portal = "http://www.phillytrib.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.phillytrib.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "12:00:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q5098976", .name = "Chilkat Valley News (US) - Chilkat Valley News",
     .name_ja = "Chilkat Valley News (US) - Chilkat Valley News",
     .category = "news", .portal = "https://www.chilkatvalleynews.com/",
@@ -61363,43 +59613,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "12:00:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q5131030", .name = "Cleburne Times-Review (US) - www.cleburnetimesreview.com - RSS "
-      "Results",
-    .name_ja = "Cleburne Times-Review (US) - www.cleburnetimesreview.com - RSS Results",
-    .category = "news", .portal = "http://www.cleburnetimesreview.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.cleburnetimesreview.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "11:36:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q5134134", .name = "Clinton Herald (US) - www.clintonherald.com - RSS Results",
-    .name_ja = "Clinton Herald (US) - www.clintonherald.com - RSS Results",
-    .category = "news", .portal = "http://www.clintonherald.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.clintonherald.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "08:00:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q5146413", .name = "College Heights Herald (US) - WKUHerald.com",
@@ -61822,24 +60035,6 @@ static const hp_source HP3B46_NEWS[] = {
       "16:19:33 GMT. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q55667976", .name = "Ashland Gazette (US) - wahoo-ashland-waverly.com - RSS Results",
-    .name_ja = "Ashland Gazette (US) - wahoo-ashland-waverly.com - RSS Results",
-    .category = "news", .portal = "http://wahoo-ashland-waverly.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://wahoo-ashland-waverly.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "11:30:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q55667990", .name = "Elgin Review (US) - The Elgin Review Online Edition",
     .name_ja = "Elgin Review (US) - The Elgin Review Online Edition",
     .category = "news", .portal = "https://elginreview.com/",
@@ -61874,24 +60069,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "16:50:18 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55668002", .name = "Cedar County News (US) - Latest articles - Cedar County News",
-    .name_ja = "Cedar County News (US) - Latest articles - Cedar County News",
-    .category = "news", .portal = "https://www.hartington.net/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.hartington.net/rss/articles",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 30 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "18:00:38 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q55668007", .name = "Western Nebraska Observer (US) - Latest articles - Western "
@@ -62003,24 +60180,6 @@ static const hp_source HP3B46_NEWS[] = {
       "12:05:10 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q55668241", .name = "Amherst Bee (US) - www.beenews.com - RSS Results",
-    .name_ja = "Amherst Bee (US) - www.beenews.com - RSS Results",
-    .category = "news", .portal = "http://www.beenews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.beenews.com/search/?f=rss&amp;t=article&amp;c=amherst_bee&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "13:00:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q55668241_2", .name = "Amherst Bee (US) - www.beenews.com - RSS Results",
     .name_ja = "Amherst Bee (US) - www.beenews.com - RSS Results",
     .category = "news", .portal = "http://www.beenews.com/",
@@ -62055,42 +60214,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "03:30:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55668303", .name = "Hamburg Sun (US) - buffalonews.com - RSS Results",
-    .name_ja = "Hamburg Sun (US) - buffalonews.com - RSS Results",
-    .category = "news", .portal = "http://buffalonews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://buffalonews.com/search/?f=rss&amp;t=article&amp;c=eedition/suns_hamburg&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "13:00:03 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55668315", .name = "Ithaca Times (US) - www.ithaca.com - RSS Results",
-    .name_ja = "Ithaca Times (US) - www.ithaca.com - RSS Results",
-    .category = "news", .portal = "http://www.ithaca.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.ithaca.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "10:09:00 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q55668343", .name = "Rockland County Times (US) - Rockland County Times Newspaper: "
@@ -62130,24 +60253,6 @@ static const hp_source HP3B46_NEWS[] = {
       "13:19:05 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q55668394", .name = "Rome Sentinel (US) - www.romesentinel.com - RSS Results",
-    .name_ja = "Rome Sentinel (US) - www.romesentinel.com - RSS Results",
-    .category = "news", .portal = "http://www.romesentinel.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.romesentinel.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "12:00:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q2076422", .name = "Chicago Reader (US) - Chicago Reader",
     .name_ja = "Chicago Reader (US) - Chicago Reader",
     .category = "news", .portal = "https://chicagoreader.com/",
@@ -62166,24 +60271,6 @@ static const hp_source HP3B46_NEWS[] = {
       "2026 18:28:59 +0000. A feed the organisation itself declares or "
       "links on its site root. Wikidata classes it as newspaper, "
       "country US." },
-
-  { .id = "JO46_NEWS_Q2164240", .name = "San Francisco Examiner (US) - www.sfexaminer.com - RSS Results",
-    .name_ja = "San Francisco Examiner (US) - www.sfexaminer.com - RSS Results",
-    .category = "news", .portal = "http://www.sfexaminer.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.sfexaminer.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "04:00:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q2164240_2", .name = "San Francisco Examiner (US) - Examiner.com",
     .name_ja = "San Francisco Examiner (US) - Examiner.com",
@@ -62331,25 +60418,6 @@ static const hp_source HP3B46_NEWS[] = {
       "00:13:27 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q7362996", .name = "Rome News-Tribune (US) - www.northwestgeorgianews.com - RSS "
-      "Results",
-    .name_ja = "Rome News-Tribune (US) - www.northwestgeorgianews.com - RSS Results",
-    .category = "news", .portal = "http://www.northwestgeorgianews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.northwestgeorgianews.com/search/?f=rss&amp;t=article&amp;c=rome&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "12:33:15 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q7413322", .name = "San Antonio Current (US) - San Antonio Current",
     .name_ja = "San Antonio Current (US) - San Antonio Current",
     .category = "news", .portal = "https://www.sacurrent.com/",
@@ -62366,24 +60434,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "14:57:53 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7413602", .name = "San Diego Business Journal (US) - San Diego Business Journal",
-    .name_ja = "San Diego Business Journal (US) - San Diego Business Journal",
-    .category = "news", .portal = "https://sdbj.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://sdbj.com/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "12:10:32 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q7413929", .name = "San Francisco Bay Area Independent Media Center (US) - Indybay "
@@ -62619,24 +60669,6 @@ static const hp_source HP3B46_NEWS[] = {
       "12:02:07 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q7195091", .name = "Pine City Pioneer (US) - www.pinecountynews.com - RSS Results",
-    .name_ja = "Pine City Pioneer (US) - www.pinecountynews.com - RSS Results",
-    .category = "news", .portal = "http://www.pinecountynews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.pinecountynews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "14:03:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q7197218", .name = "Pipe Dream (US) - Pipe Dream",
     .name_ja = "Pipe Dream (US) - Pipe Dream",
     .category = "news", .portal = "https://www.bupipedream.com/",
@@ -62653,25 +60685,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 30 items, RSS2 feed, newest Sat, 10 Oct 2026 "
       "15:03:03 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7225457", .name = "Polk County Itemizer-Observer (US) - www.polkio.com - RSS "
-      "Results",
-    .name_ja = "Polk County Itemizer-Observer (US) - www.polkio.com - RSS Results",
-    .category = "news", .portal = "http://www.polkio.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.polkio.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "09:00:00 -0700. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q7232009", .name = "Portland Press Herald (US) - The Portland Press Herald",
@@ -62798,42 +60811,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 12 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "19:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7288547", .name = "Ram Page (US) - www.asurampage.com - RSS Results",
-    .name_ja = "Ram Page (US) - www.asurampage.com - RSS Results",
-    .category = "news", .portal = "http://www.asurampage.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.asurampage.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "15:45:03 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7294142", .name = "Rapid City Journal (US) - rapidcityjournal.com - RSS Results",
-    .name_ja = "Rapid City Journal (US) - rapidcityjournal.com - RSS Results",
-    .category = "news", .portal = "http://rapidcityjournal.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://rapidcityjournal.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "09:30:00 -0600. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q7728702", .name = "The Daily Reveille (US) - Reveille",
@@ -63021,26 +60998,6 @@ static const hp_source HP3B46_NEWS[] = {
       "17:21:59 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q7730352", .name = "The Dispatch (US) - www.the-dispatch.com - RSS Results in "
-      "news,news/* of type article",
-    .name_ja = "The Dispatch (US) - www.the-dispatch.com - RSS Results in news,news/* of type article",
-    .category = "news", .portal = "https://www.the-dispatch.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.the-dispatch.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=news,news/*&f=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Sat, 17 Oct "
-      "2026 16:50:00 -0400. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country US." },
-
   { .id = "JO46_NEWS_Q7730352_2", .name = "The Dispatch (US) - www.the-dispatch.com - RSS Results in "
       "sports,sports/* of type article",
     .name_ja = "The Dispatch (US) - www.the-dispatch.com - RSS Results in sports,sports/* of type article",
@@ -63081,26 +61038,6 @@ static const hp_source HP3B46_NEWS[] = {
       "links on its site root. Wikidata classes it as newspaper, "
       "country US." },
 
-  { .id = "JO46_NEWS_Q7730352_4", .name = "The Dispatch (US) - www.the-dispatch.com - RSS Results in "
-      "news/business,news/business/* of type arti",
-    .name_ja = "The Dispatch (US) - www.the-dispatch.com - RSS Results in news/business,news/business/* of type arti",
-    .category = "news", .portal = "https://www.the-dispatch.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.the-dispatch.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=news/business,news/business/*&f=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Thu, 15 Oct "
-      "2026 05:00:00 -0400. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country US." },
-
   { .id = "JO46_NEWS_Q7731244", .name = "The Duquesne Duke (US) - theduquesneduke",
     .name_ja = "The Duquesne Duke (US) - theduquesneduke",
     .category = "news", .portal = "https://theduquesneduke.com/",
@@ -63117,60 +61054,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Fri, 09 Jan 2026 "
       "12:47:37 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7731445", .name = "The East Carolinian (US) - www.piratemedia1.com - RSS Results",
-    .name_ja = "The East Carolinian (US) - www.piratemedia1.com - RSS Results",
-    .category = "news", .portal = "http://www.piratemedia1.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.piratemedia1.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "01:07:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7731445_2", .name = "The East Carolinian (US) - www.piratemedia1.com - RSS Results",
-    .name_ja = "The East Carolinian (US) - www.piratemedia1.com - RSS Results",
-    .category = "news", .portal = "http://www.piratemedia1.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.piratemedia1.com/search/?f=rss&amp;t=article&amp;c=theeastcarolinian&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "01:07:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7731812", .name = "The Elkhart Truth (US) - www.elkharttruth.com - RSS Results",
-    .name_ja = "The Elkhart Truth (US) - www.elkharttruth.com - RSS Results",
-    .category = "news", .portal = "http://www.elkharttruth.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.elkharttruth.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "10:20:40 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q7732736", .name = "The Examiner (US) - The Examiner",
@@ -63280,24 +61163,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 12 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "15:11:07 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7716562", .name = "The Berlin Daily Sun (US) - www.conwaydailysun.com - RSS Results",
-    .name_ja = "The Berlin Daily Sun (US) - www.conwaydailysun.com - RSS Results",
-    .category = "news", .portal = "http://www.conwaydailysun.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.conwaydailysun.com/search/?f=rss&amp;t=article&amp;c=berlin_sun&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "09:19:08 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q7717414", .name = "The Beverly Hills Courier (US) - Beverly Hills Courier",
@@ -63429,44 +61294,6 @@ static const hp_source HP3B46_NEWS[] = {
       "links on its site root. Wikidata classes it as newspaper, "
       "country US." },
 
-  { .id = "JO46_NEWS_Q7655812", .name = "Sweetwater Reporter (US) - www.sweetwaterreporter.com - RSS "
-      "Results",
-    .name_ja = "Sweetwater Reporter (US) - www.sweetwaterreporter.com - RSS Results",
-    .category = "news", .portal = "http://www.sweetwaterreporter.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.sweetwaterreporter.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "15:45:03 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7675570", .name = "Tahlequah Daily Press (US) - www.tahlequahdailypress.com - RSS "
-      "Results",
-    .name_ja = "Tahlequah Daily Press (US) - www.tahlequahdailypress.com - RSS Results",
-    .category = "news", .portal = "http://www.tahlequahdailypress.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.tahlequahdailypress.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "12:15:17 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q7689939", .name = "Taylor Daily Press (US) - Taylor Daily Press",
     .name_ja = "Taylor Daily Press (US) - Taylor Daily Press",
     .category = "news", .portal = "https://www.taylordailypress.net/",
@@ -63501,43 +61328,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "23:13:19 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7694820", .name = "Tehachapi News (US) - www.tehachapinews.com - RSS Results",
-    .name_ja = "Tehachapi News (US) - www.tehachapinews.com - RSS Results",
-    .category = "news", .portal = "http://www.tehachapinews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.tehachapinews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "13:45:03 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7697665", .name = "Telluride Daily Planet (US) - www.telluridenews.com - RSS "
-      "Results",
-    .name_ja = "Telluride Daily Planet (US) - www.telluridenews.com - RSS Results",
-    .category = "news", .portal = "http://www.telluridenews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.telluridenews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "06:42:58 -0600. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q7698512", .name = "Temple Daily Telegram (US) - www.tdtnews.com - RSS Results",
@@ -63613,43 +61403,6 @@ static const hp_source HP3B46_NEWS[] = {
       "16:47:40 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q7713857", .name = "Anniston Star (US) - www.annistonstar.com - RSS Results",
-    .name_ja = "Anniston Star (US) - www.annistonstar.com - RSS Results",
-    .category = "news", .portal = "http://www.annistonstar.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.annistonstar.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "08:00:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7714826", .name = "The Atoka County Times (US) - Latest articles - Atoka County "
-      "Times",
-    .name_ja = "The Atoka County Times (US) - Latest articles - Atoka County Times",
-    .category = "news", .portal = "https://www.atokacountytimes.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.atokacountytimes.com/rss/articles",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 30 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "06:00:30 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q7715317", .name = "The Badger Herald (US) - The Badger Herald",
     .name_ja = "The Badger Herald (US) - The Badger Herald",
     .category = "news", .portal = "https://badgerherald.com/",
@@ -63704,42 +61457,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "10:15:17 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q56119170", .name = "News-Record (US) - www.gillettenewsrecord.com - RSS Results",
-    .name_ja = "News-Record (US) - www.gillettenewsrecord.com - RSS Results",
-    .category = "news", .portal = "http://www.gillettenewsrecord.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.gillettenewsrecord.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "06:00:00 -0600. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q56119168", .name = "Hampshire Review (US) - www.hampshirereview.com - RSS Results",
-    .name_ja = "Hampshire Review (US) - www.hampshirereview.com - RSS Results",
-    .category = "news", .portal = "http://www.hampshirereview.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.hampshirereview.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "12:00:00 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q56119280", .name = "Sierra Sun (US) - Sierra Sun",
@@ -63965,24 +61682,6 @@ static const hp_source HP3B46_NEWS[] = {
       "12:08:17 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q96197147", .name = "The Declaration (US) - www.pmg-va.com - RSS Results",
-    .name_ja = "The Declaration (US) - www.pmg-va.com - RSS Results",
-    .category = "news", .portal = "http://www.pmg-va.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.pmg-va.com/search/?f=rss&amp;t=article&amp;c=the_declaration&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "00:00:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q101579773", .name = "The Hudson Herald (US) - The Hudson Herald",
     .name_ja = "The Hudson Herald (US) - The Hudson Herald",
     .category = "news", .portal = "https://www.hudherald.com/",
@@ -64054,42 +61753,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "18:18:57 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7734545", .name = "The Floyd County Times (US) - www.floydct.com - RSS Results",
-    .name_ja = "The Floyd County Times (US) - www.floydct.com - RSS Results",
-    .category = "news", .portal = "http://www.floydct.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.floydct.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "12:00:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7735200", .name = "The Free Lance–Star (US) - fredericksburg.com - RSS Results",
-    .name_ja = "The Free Lance–Star (US) - fredericksburg.com - RSS Results",
-    .category = "news", .portal = "http://fredericksburg.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://fredericksburg.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "13:00:13 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q7735207", .name = "The Free Press (US) - The Free Press",
@@ -64203,43 +61866,6 @@ static const hp_source HP3B46_NEWS[] = {
       "links on its site root. Wikidata classes it as newspaper, "
       "country US." },
 
-  { .id = "JO46_NEWS_Q7736245", .name = "The Gettysburg Times (US) - www.gettysburgtimes.com - RSS "
-      "Results",
-    .name_ja = "The Gettysburg Times (US) - www.gettysburgtimes.com - RSS Results",
-    .category = "news", .portal = "http://www.gettysburgtimes.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.gettysburgtimes.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "11:03:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7737134", .name = "The Goldsboro News-Argus (US) - www.newsargus.com - RSS Results",
-    .name_ja = "The Goldsboro News-Argus (US) - www.newsargus.com - RSS Results",
-    .category = "news", .portal = "http://www.newsargus.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.newsargus.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "10:38:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q7737505", .name = "The Grand Views (US) - Viewfinder Media",
     .name_ja = "The Grand Views (US) - Viewfinder Media",
     .category = "news", .portal = "https://viewfindergv.com/",
@@ -64276,24 +61902,6 @@ static const hp_source HP3B46_NEWS[] = {
       "2026-04-23T18:39:34Z. A feed the organisation itself declares or "
       "links on its site root. Wikidata classes it as newspaper, "
       "country US." },
-
-  { .id = "JO46_NEWS_Q7738227", .name = "The Greeneville Sun (US) - www.greenevillesun.com - RSS Results",
-    .name_ja = "The Greeneville Sun (US) - www.greenevillesun.com - RSS Results",
-    .category = "news", .portal = "http://www.greenevillesun.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.greenevillesun.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "13:08:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q7739093", .name = "The Hazard Herald (US) - www.hazard-herald.com - RSS Results",
     .name_ja = "The Hazard Herald (US) - www.hazard-herald.com - RSS Results",
@@ -64350,24 +61958,6 @@ static const hp_source HP3B46_NEWS[] = {
       "links on its site root. Wikidata classes it as newspaper, "
       "country US." },
 
-  { .id = "JO46_NEWS_Q7739403", .name = "The Herald (US) - www.sharonherald.com - RSS Results",
-    .name_ja = "The Herald (US) - www.sharonherald.com - RSS Results",
-    .category = "news", .portal = "http://www.sharonherald.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.sharonherald.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "14:08:45 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q55668527", .name = "Source Weekly (US) - The Source – Bend, Oregon",
     .name_ja = "Source Weekly (US) - The Source – Bend, Oregon",
     .category = "news", .portal = "https://www.bendsource.com/",
@@ -64402,24 +61992,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 21 Jan 2019 "
       "11:00:34 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55668606", .name = "Narragansett Times (US) - www.ricentral.com - RSS Results",
-    .name_ja = "Narragansett Times (US) - www.ricentral.com - RSS Results",
-    .category = "news", .portal = "http://www.ricentral.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.ricentral.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "23:08:00 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q55668605", .name = "South County Independent (US) - www.independentri.com - RSS "
@@ -64532,24 +62104,6 @@ static const hp_source HP3B46_NEWS[] = {
       "2026-10-18T13:16:43Z. A feed the organisation itself declares or "
       "links on its site root. Wikidata classes it as newspaper, "
       "country US." },
-
-  { .id = "JO46_NEWS_Q55671308", .name = "Loudoun Times-Mirror (US) - www.loudountimes.com - RSS Results",
-    .name_ja = "Loudoun Times-Mirror (US) - www.loudountimes.com - RSS Results",
-    .category = "news", .portal = "http://www.loudountimes.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.loudountimes.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "18:45:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q55671384", .name = "Lynden Tribune (US) - www.lyndentribune.com - RSS Results",
     .name_ja = "Lynden Tribune (US) - www.lyndentribune.com - RSS Results",
@@ -64694,25 +62248,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "09:53:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7604060", .name = "Statesville Record & Landmark (US) - statesville.com - RSS "
-      "Results",
-    .name_ja = "Statesville Record & Landmark (US) - statesville.com - RSS Results",
-    .category = "news", .portal = "http://statesville.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://statesville.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "13:08:00 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q7605407", .name = "Steamboat Pilot & Today (US) - Steamboat Pilot & Today",
@@ -64950,24 +62485,6 @@ static const hp_source HP3B46_NEWS[] = {
       "11:45:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q7532240", .name = "Siuslaw News (US) - www.thesiuslawnews.com - RSS Results",
-    .name_ja = "Siuslaw News (US) - www.thesiuslawnews.com - RSS Results",
-    .category = "news", .portal = "http://www.thesiuslawnews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.thesiuslawnews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "05:00:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q7546173", .name = "Smoky Mountain News (US) - Todd Witcher’s two decades "
       "transformed Discover Life in America",
     .name_ja = "Smoky Mountain News (US) - Todd Witcher’s two decades transformed Discover Life in America",
@@ -64985,84 +62502,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "17:46:51 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7570483", .name = "Southern Standard (US) - www.herald-citizen.com - RSS Results in "
-      "news,news/* of type article",
-    .name_ja = "Southern Standard (US) - www.herald-citizen.com - RSS Results in news,news/* of type article",
-    .category = "news", .portal = "https://www.herald-citizen.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.herald-citizen.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=news,news/*&f=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Sat, 17 Oct "
-      "2026 00:00:00 -0400. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country US." },
-
-  { .id = "JO46_NEWS_Q7570483_2", .name = "Southern Standard (US) - www.herald-citizen.com - RSS Results in "
-      "sports,sports/* of type article",
-    .name_ja = "Southern Standard (US) - www.herald-citizen.com - RSS Results in sports,sports/* of type article",
-    .category = "news", .portal = "https://www.herald-citizen.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.herald-citizen.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=sports,sports/*&f=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Sat, 17 Oct "
-      "2026 21:24:00 -0400. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country US." },
-
-  { .id = "JO46_NEWS_Q7570483_3", .name = "Southern Standard (US) - www.herald-citizen.com - RSS Results in "
-      "news/business,news/business/* of type ar",
-    .name_ja = "Southern Standard (US) - www.herald-citizen.com - RSS Results in news/business,news/business/* of type ar",
-    .category = "news", .portal = "https://www.herald-citizen.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.herald-citizen.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=news/business,news/business/*&f=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Wed, 07 Oct "
-      "2026 17:30:00 -0400. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country US." },
-
-  { .id = "JO46_NEWS_Q7580075", .name = "Spotlight Newspapers (US) - www.dailygazette.com - RSS Results",
-    .name_ja = "Spotlight Newspapers (US) - www.dailygazette.com - RSS Results",
-    .category = "news", .portal = "http://www.dailygazette.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.dailygazette.com/search/?f=rss&amp;t=article&amp;c=spotlightnews&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "12:55:26 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q7581014", .name = "Springfield News-Sun (US) - www.springfieldnewssun.com - RSS "
@@ -65357,24 +62796,6 @@ static const hp_source HP3B46_NEWS[] = {
       "01:42:19 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q7728624", .name = "The Daily Californian (US) - www.dailycal.org - RSS Results",
-    .name_ja = "The Daily Californian (US) - www.dailycal.org - RSS Results",
-    .category = "news", .portal = "http://www.dailycal.org/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.dailycal.org/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "00:22:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q7728636", .name = "The Cougar (US) - The Cougar",
     .name_ja = "The Cougar (US) - The Cougar",
     .category = "news", .portal = "https://thedailycougar.com/",
@@ -65466,24 +62887,6 @@ static const hp_source HP3B46_NEWS[] = {
       "01:23:44 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q7728682", .name = "The Daily News (US) - tdn.com - RSS Results",
-    .name_ja = "The Daily News (US) - tdn.com - RSS Results",
-    .category = "news", .portal = "http://tdn.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://tdn.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "09:00:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q7728691", .name = "The Daily Northwestern (US) - The Daily Northwestern",
     .name_ja = "The Daily Northwestern (US) - The Daily Northwestern",
     .category = "news", .portal = "https://dailynorthwestern.com/",
@@ -65538,24 +62941,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "12:55:57 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q107723017", .name = "The Waxahachie Sun (US) - www.waxahachiesun.com - RSS Results",
-    .name_ja = "The Waxahachie Sun (US) - www.waxahachiesun.com - RSS Results",
-    .category = "news", .portal = "http://www.waxahachiesun.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.waxahachiesun.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "18:00:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q108063889", .name = "The Desert Review (US) - www.thedesertreview.com - RSS Results",
@@ -65686,24 +63071,6 @@ static const hp_source HP3B46_NEWS[] = {
       "11:17:17 -0600. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q55671516", .name = "Riverton Daily Ranger (US) - rivertonranger.com - RSS Results",
-    .name_ja = "Riverton Daily Ranger (US) - rivertonranger.com - RSS Results",
-    .category = "news", .portal = "http://rivertonranger.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://rivertonranger.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "00:00:00 -0600. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q55672244", .name = "Journal (US) - starlocalmedia.com - RSS Results",
     .name_ja = "Journal (US) - starlocalmedia.com - RSS Results",
     .category = "news", .portal = "http://starlocalmedia.com/",
@@ -65720,24 +63087,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "10:29:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55672254", .name = "Madison County Eagle (US) - dailyprogress.com - RSS Results",
-    .name_ja = "Madison County Eagle (US) - dailyprogress.com - RSS Results",
-    .category = "news", .portal = "http://dailyprogress.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://dailyprogress.com/search/?f=rss&amp;t=article&amp;c=news/community/madisonnews&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "11:30:00 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q55672254_2", .name = "Madison County Eagle (US) - dailyprogress.com - RSS Results",
@@ -65831,24 +63180,6 @@ static const hp_source HP3B46_NEWS[] = {
       "23:22:53 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q55876629", .name = "Record Gazette (US) - www.recordgazette.net - RSS Results",
-    .name_ja = "Record Gazette (US) - www.recordgazette.net - RSS Results",
-    .category = "news", .portal = "http://www.recordgazette.net/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.recordgazette.net/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "21:10:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q55935465", .name = "Sun-Times (US) - www.thesuntimes.com - RSS Results",
     .name_ja = "Sun-Times (US) - www.thesuntimes.com - RSS Results",
     .category = "news", .portal = "http://www.thesuntimes.com/",
@@ -65901,24 +63232,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "10:00:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q56030688", .name = "Daily Times (US) - www.suncommercial.com - RSS Results",
-    .name_ja = "Daily Times (US) - www.suncommercial.com - RSS Results",
-    .category = "news", .portal = "http://www.suncommercial.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.suncommercial.com/search/?f=rss&amp;t=article&amp;c=sullivan_times&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "10:28:00 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q56030692", .name = "The Bemidji Pioneer (US) - The Bemidji Pioneer   Bemidji, "
@@ -66012,24 +63325,6 @@ static const hp_source HP3B46_NEWS[] = {
       "10:55:26 -0600. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q56033153", .name = "New Britain Herald (US) - www.newbritainherald.com - RSS Results",
-    .name_ja = "New Britain Herald (US) - www.newbritainherald.com - RSS Results",
-    .category = "news", .portal = "http://www.newbritainherald.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.newbritainherald.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "00:27:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q56037366", .name = "Union (US) - www.theunion.com - RSS Results",
     .name_ja = "Union (US) - www.theunion.com - RSS Results",
     .category = "news", .portal = "http://www.theunion.com/",
@@ -66084,24 +63379,6 @@ static const hp_source HP3B46_NEWS[] = {
       "23:02:00 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q56119149", .name = "Daily Press (US) - www.apg-wi.com - RSS Results",
-    .name_ja = "Daily Press (US) - www.apg-wi.com - RSS Results",
-    .category = "news", .portal = "http://www.apg-wi.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.apg-wi.com/search/?f=rss&amp;t=article&amp;c=ashland_daily_press&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "12:18:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q56119163", .name = "Daily Register (US) - wiscnews.com - RSS Results",
     .name_ja = "Daily Register (US) - wiscnews.com - RSS Results",
     .category = "news", .portal = "http://wiscnews.com/",
@@ -66118,24 +63395,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "10:57:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q56119160", .name = "Oregon Observer (US) - www.oregonobserver.com - RSS Results",
-    .name_ja = "Oregon Observer (US) - www.oregonobserver.com - RSS Results",
-    .category = "news", .portal = "http://www.oregonobserver.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.oregonobserver.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "11:02:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q56119164", .name = "Journal Times (US) - journaltimes.com - RSS Results",
@@ -66190,25 +63449,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "04:27:59 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7754323", .name = "The Norman Transcript (US) - www.normantranscript.com - RSS "
-      "Results",
-    .name_ja = "The Norman Transcript (US) - www.normantranscript.com - RSS Results",
-    .category = "news", .portal = "http://www.normantranscript.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.normantranscript.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "11:01:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q7754577", .name = "The Oakland Post (US) - The Oakland Post",
@@ -66318,43 +63558,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "02:08:14 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7755856", .name = "The Pacific Northwest Inlander (US) - www.inlander.com - RSS "
-      "Results",
-    .name_ja = "The Pacific Northwest Inlander (US) - www.inlander.com - RSS Results",
-    .category = "news", .portal = "http://www.inlander.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.inlander.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "17:04:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7755879", .name = "The Paducah Sun (US) - www.paducahsun.com - RSS Results",
-    .name_ja = "The Paducah Sun (US) - www.paducahsun.com - RSS Results",
-    .category = "news", .portal = "http://www.paducahsun.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.paducahsun.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "23:59:41 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q7755921", .name = "The Paisano (US) - The Paisano",
@@ -66813,42 +64016,6 @@ static const hp_source HP3B46_NEWS[] = {
       "17:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q7759965", .name = "The Red and Black (US) - www.redandblack.com - RSS Results",
-    .name_ja = "The Red and Black (US) - www.redandblack.com - RSS Results",
-    .category = "news", .portal = "http://www.redandblack.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.redandblack.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "12:37:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7760077", .name = "The Reidsville Review (US) - greensboro.com - RSS Results",
-    .name_ja = "The Reidsville Review (US) - greensboro.com - RSS Results",
-    .category = "news", .portal = "http://greensboro.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://greensboro.com/search/?f=rss&amp;t=article&amp;c=news/community/rockingham_now&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "13:00:15 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q7760709", .name = "The Rider News (US) - The Rider News",
     .name_ja = "The Rider News (US) - The Rider News",
     .category = "news", .portal = "https://theridernews.com/",
@@ -67091,24 +64258,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "10:57:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7763985", .name = "The Shorthorn (US) - www.theshorthorn.com - RSS Results",
-    .name_ja = "The Shorthorn (US) - www.theshorthorn.com - RSS Results",
-    .category = "news", .portal = "http://www.theshorthorn.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.theshorthorn.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "22:00:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q7764591", .name = "Skagway News (US) - The Skagway News",
@@ -67438,25 +64587,6 @@ static const hp_source HP3B46_NEWS[] = {
       "13:00:33 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q7750801", .name = "The Meadville Tribune (US) - www.meadvilletribune.com - RSS "
-      "Results",
-    .name_ja = "The Meadville Tribune (US) - www.meadvilletribune.com - RSS Results",
-    .category = "news", .portal = "http://www.meadvilletribune.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.meadvilletribune.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "14:03:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q7751149", .name = "The Messenger (US) - The Daily Messenger - Home",
     .name_ja = "The Messenger (US) - The Daily Messenger - Home",
     .category = "news", .portal = "https://www.dailymessenger.net/",
@@ -67618,24 +64748,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
       "13:24:13 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7753903_2", .name = "The News & Advance (US) - newsadvance.com - RSS Results",
-    .name_ja = "The News & Advance (US) - newsadvance.com - RSS Results",
-    .category = "news", .portal = "http://newsadvance.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://newsadvance.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "13:00:31 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q7753941", .name = "Newton Kansan (US) - Newton Kansan",
@@ -68039,24 +65151,6 @@ static const hp_source HP3B46_NEWS[] = {
       "21:00:34 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q136790848", .name = "Midcoast Villager (US) - www.midcoastvillager.com - RSS Results",
-    .name_ja = "Midcoast Villager (US) - www.midcoastvillager.com - RSS Results",
-    .category = "news", .portal = "http://www.midcoastvillager.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.midcoastvillager.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "09:37:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q137855682", .name = "La Conner Community News (US) - La Conner's Only Newspaper",
     .name_ja = "La Conner Community News (US) - La Conner's Only Newspaper",
     .category = "news", .portal = "https://laconnercommunitynews.org/",
@@ -68389,24 +65483,6 @@ static const hp_source HP3B46_NEWS[] = {
       "00:04:19 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q7771552", .name = "The Union Democrat (US) - www.uniondemocrat.com - RSS Results",
-    .name_ja = "The Union Democrat (US) - www.uniondemocrat.com - RSS Results",
-    .category = "news", .portal = "http://www.uniondemocrat.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.uniondemocrat.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "13:45:03 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q7771599", .name = "The Universe (US) - Home",
     .name_ja = "The Universe (US) - Home",
     .category = "news", .portal = "https://universe.byu.edu/",
@@ -68517,42 +65593,6 @@ static const hp_source HP3B46_NEWS[] = {
       "10:00:00 -0700. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q7795628", .name = "Thomasville Times (US) - www.hpenews.com - RSS Results",
-    .name_ja = "Thomasville Times (US) - www.hpenews.com - RSS Results",
-    .category = "news", .portal = "http://www.hpenews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.hpenews.com/search/?f=rss&amp;t=article&amp;c=thomasville_times&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "07:45:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7806571", .name = "Times West Virginian (US) - www.timeswv.com - RSS Results",
-    .name_ja = "Times West Virginian (US) - www.timeswv.com - RSS Results",
-    .category = "news", .portal = "http://www.timeswv.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.timeswv.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "00:15:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q7830023", .name = "Town Topics (US) - Town Topics",
     .name_ja = "Town Topics (US) - Town Topics",
     .category = "news", .portal = "https://www.towntopics.com/",
@@ -68569,24 +65609,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "19:40:25 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7831822", .name = "Tracy Press (US) - www.ttownmedia.com - RSS Results",
-    .name_ja = "Tracy Press (US) - www.ttownmedia.com - RSS Results",
-    .category = "news", .portal = "http://www.ttownmedia.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.ttownmedia.com/search/?f=rss&amp;t=article&amp;c=tracy_press&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "04:45:00 -0700. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q7836155", .name = "Traverse City Record-Eagle (US) - www.record-eagle.com - RSS "
@@ -68606,42 +65628,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "13:09:09 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7839704", .name = "Tri-County News (US) - www.iwantthenews.com - RSS Results",
-    .name_ja = "Tri-County News (US) - www.iwantthenews.com - RSS Results",
-    .category = "news", .portal = "http://www.iwantthenews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.iwantthenews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "10:34:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7840486", .name = "Tribune-Star (US) - www.tribstar.com - RSS Results",
-    .name_ja = "Tribune-Star (US) - www.tribstar.com - RSS Results",
-    .category = "news", .portal = "http://www.tribstar.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.tribstar.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "23:46:00 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q7847735", .name = "Truman State University Index (US) - TMN",
@@ -68717,24 +65703,6 @@ static const hp_source HP3B46_NEWS[] = {
       "17:00:00 GMT. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q7986770", .name = "West Valley View (US) - www.westvalleyview.com - RSS Results",
-    .name_ja = "West Valley View (US) - www.westvalleyview.com - RSS Results",
-    .category = "news", .portal = "http://www.westvalleyview.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.westvalleyview.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "00:00:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q7987901", .name = "Western Herald (US) - www.westernherald.com - RSS Results",
     .name_ja = "Western Herald (US) - www.westernherald.com - RSS Results",
     .category = "news", .portal = "http://www.westernherald.com/",
@@ -68751,43 +65719,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "21:38:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7990847", .name = "What's Up weekly (US) - www.elpasoinc.com - RSS Results",
-    .name_ja = "What's Up weekly (US) - www.elpasoinc.com - RSS Results",
-    .category = "news", .portal = "http://www.elpasoinc.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.elpasoinc.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "11:13:17 -0600. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q8002467", .name = "Wilkes Journal-Patriot (US) - www.journalpatriot.com - RSS "
-      "Results",
-    .name_ja = "Wilkes Journal-Patriot (US) - www.journalpatriot.com - RSS Results",
-    .category = "news", .portal = "http://www.journalpatriot.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.journalpatriot.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "14:43:00 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q8003285", .name = "Willamette Collegian (US) - The Collegian - Willamette "
@@ -68825,24 +65756,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "13:13:17 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q8027325", .name = "Wisconsin State Journal (US) - madison.com - RSS Results",
-    .name_ja = "Wisconsin State Journal (US) - madison.com - RSS Results",
-    .category = "news", .portal = "http://madison.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://madison.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "12:00:25 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q8033576", .name = "Woodward News (US) - www.woodwardnews.net - RSS Results",
@@ -68916,43 +65829,6 @@ static const hp_source HP3B46_NEWS[] = {
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 15 Dec 2025 "
       "21:58:02 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q10381699", .name = "The Pitt News (US) - The Pitt News",
-    .name_ja = "The Pitt News (US) - The Pitt News",
-    .category = "news", .portal = "https://pittnews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://pittnews.com/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "11:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q10381699_2", .name = "The Pitt News (US) - The Pitt News",
-    .name_ja = "The Pitt News (US) - The Pitt News",
-    .category = "news", .portal = "https://pittnews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://pittnews.com/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-16T03:12:25Z. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country US." },
 
   { .id = "JO46_NEWS_Q11123578", .name = "Irates (US) - www.irates.am",
     .name_ja = "Irates (US) - www.irates.am",
@@ -69099,24 +65975,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "00:21:26 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7894674", .name = "University Daily Kansan (US) - www.kansan.com - RSS Results",
-    .name_ja = "University Daily Kansan (US) - www.kansan.com - RSS Results",
-    .category = "news", .portal = "http://www.kansan.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.kansan.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "09:00:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q7894943", .name = "University Star (US) - The University Star",
@@ -69373,24 +66231,6 @@ static const hp_source HP3B46_NEWS[] = {
       "14:25:41 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q7972060", .name = "Washington Missourian (US) - www.missourian.com - RSS Results",
-    .name_ja = "Washington Missourian (US) - www.missourian.com - RSS Results",
-    .category = "news", .portal = "http://www.missourian.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.missourian.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "12:00:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q7974489", .name = "Watertown Daily Times (US) - www.nny360.com - RSS Results",
     .name_ja = "Watertown Daily Times (US) - www.nny360.com - RSS Results",
     .category = "news", .portal = "http://www.nny360.com/",
@@ -69407,25 +66247,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "13:15:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q7978280", .name = "Weatherford Democrat (US) - www.weatherforddemocrat.com - RSS "
-      "Results",
-    .name_ja = "Weatherford Democrat (US) - www.weatherforddemocrat.com - RSS Results",
-    .category = "news", .portal = "http://www.weatherforddemocrat.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.weatherforddemocrat.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "11:50:22 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q7979492", .name = "Weekly Alibi (US) - Weekly Alibi",
@@ -69501,24 +66322,6 @@ static const hp_source HP3B46_NEWS[] = {
       "04:19:59 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q13447061", .name = "Arizona Range News (US) - www.myheraldreview.com - RSS Results",
-    .name_ja = "Arizona Range News (US) - www.myheraldreview.com - RSS Results",
-    .category = "news", .portal = "http://www.myheraldreview.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.myheraldreview.com/search/?f=rss&amp;t=article&amp;c=news/willcox&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "10:00:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q13447086", .name = "The Arkansas Traveler (US) - www.uatrav.com - RSS Results",
     .name_ja = "The Arkansas Traveler (US) - www.uatrav.com - RSS Results",
     .category = "news", .portal = "http://www.uatrav.com/",
@@ -69553,24 +66356,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 4 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "20:45:45 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q13447561", .name = "Ka Leo O Hawaii (US) - www.kaleo.org - RSS Results",
-    .name_ja = "Ka Leo O Hawaii (US) - www.kaleo.org - RSS Results",
-    .category = "news", .portal = "http://www.kaleo.org/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.kaleo.org/search/?f=rss&amp;t=article&amp;c=kaleo&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "09:00:00 -1000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q14686749", .name = "Newnan Times-Herald (US) - www.times-herald.com - RSS Results",
@@ -69646,24 +66431,6 @@ static const hp_source HP3B46_NEWS[] = {
       "05:23:20 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q17067906", .name = "Ludington Daily News (US) - www.shorelinemedia.net - RSS Results",
-    .name_ja = "Ludington Daily News (US) - www.shorelinemedia.net - RSS Results",
-    .category = "news", .portal = "http://www.shorelinemedia.net/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.shorelinemedia.net/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "13:05:12 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q17067906_2", .name = "Ludington Daily News (US) - www.shorelinemedia.net - RSS Results",
     .name_ja = "Ludington Daily News (US) - www.shorelinemedia.net - RSS Results",
     .category = "news", .portal = "http://www.shorelinemedia.net/",
@@ -69680,25 +66447,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "13:05:12 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q17071662", .name = "News Democrat & Leader (US) - www.franklinfavorite.com - RSS "
-      "Results",
-    .name_ja = "News Democrat & Leader (US) - www.franklinfavorite.com - RSS Results",
-    .category = "news", .portal = "http://www.franklinfavorite.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.franklinfavorite.com/search/?f=rss&amp;t=article&amp;c=russellville&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "10:47:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q17071875", .name = "NJToday.net (US) - NJTODAY.NEWS",
@@ -69737,25 +66485,6 @@ static const hp_source HP3B46_NEWS[] = {
       "10:30:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q17073638", .name = "Owatonna People's Press (US) - www.southernminn.com - RSS "
-      "Results",
-    .name_ja = "Owatonna People's Press (US) - www.southernminn.com - RSS Results",
-    .category = "news", .portal = "https://www.southernminn.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.southernminn.com/search/?f=rss&amp;t=article&amp;c=owatonna_peoples_press&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "09:17:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q17078642", .name = "Riverside & Brookfield Suburban Life (US) - Shaw Media Local",
     .name_ja = "Riverside & Brookfield Suburban Life (US) - Shaw Media Local",
     .category = "news", .portal = "https://www.shawlocal.com/",
@@ -69772,24 +66501,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 4 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "19:22:45 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q17078888", .name = "Ruston Daily Leader (US) - Ruston Daily Leader",
-    .name_ja = "Ruston Daily Leader (US) - Ruston Daily Leader",
-    .category = "news", .portal = "https://www.rustonleader.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.rustonleader.com/rss.xml",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "15:46:37 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q17078888_2", .name = "Ruston Daily Leader (US) - FROST ILLUSTRATED",
@@ -69918,24 +66629,6 @@ static const hp_source HP3B46_NEWS[] = {
       "11:30:00 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q17513048", .name = "Danville Register & Bee (US) - godanriver.com - RSS Results",
-    .name_ja = "Danville Register & Bee (US) - godanriver.com - RSS Results",
-    .category = "news", .portal = "http://godanriver.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://godanriver.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "11:30:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q18149059", .name = "CU Independent (US) - CU Independent",
     .name_ja = "CU Independent (US) - CU Independent",
     .category = "news", .portal = "https://cuindependent.org/",
@@ -69972,79 +66665,6 @@ static const hp_source HP3B46_NEWS[] = {
       "2026-10-18T15:32:09Z. A feed the organisation itself declares or "
       "links on its site root. Wikidata classes it as newspaper, "
       "country US." },
-
-  { .id = "JO46_NEWS_Q18150648", .name = "Hi-Desert Star (US) - www.hidesertstar.com - RSS Results",
-    .name_ja = "Hi-Desert Star (US) - www.hidesertstar.com - RSS Results",
-    .category = "news", .portal = "http://www.hidesertstar.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.hidesertstar.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "21:10:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q18152760", .name = "Mojave Desert News (US) - www.desertnews.com - RSS Results",
-    .name_ja = "Mojave Desert News (US) - www.desertnews.com - RSS Results",
-    .category = "news", .portal = "http://www.desertnews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.desertnews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "08:51:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q16975655", .name = "Falls City Journal (US) - Latest articles - Falls City Journal",
-    .name_ja = "Falls City Journal (US) - Latest articles - Falls City Journal",
-    .category = "news", .portal = "https://www.fcjournal.net/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.fcjournal.net/rss/articles",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 30 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "12:03:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q16977076", .name = "The Omak-Okanogan County Chronicle (US) - www.omakchronicle.com "
-      "- RSS Results",
-    .name_ja = "The Omak-Okanogan County Chronicle (US) - www.omakchronicle.com - RSS Results",
-    .category = "news", .portal = "http://www.omakchronicle.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.omakchronicle.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "04:45:00 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q16985571", .name = "Idaho State Journal (US) - www.idahostatejournal.com - RSS "
       "Results",
@@ -70120,24 +66740,6 @@ static const hp_source HP3B46_NEWS[] = {
       "21:10:13 GMT. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q16992375", .name = "Elgin Courier (US) - Latest articles - The Elgin Courier",
-    .name_ja = "Elgin Courier (US) - Latest articles - The Elgin Courier",
-    .category = "news", .portal = "https://www.elgincourier.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.elgincourier.com/rss/articles",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 30 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "15:43:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q16992775", .name = "Eugene Weekly (US) - Eugene Weekly",
     .name_ja = "Eugene Weekly (US) - Eugene Weekly",
     .category = "news", .portal = "https://eugeneweekly.com/",
@@ -70174,24 +66776,6 @@ static const hp_source HP3B46_NEWS[] = {
       "08:00:37 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q16993678", .name = "Fort Bend Star (US) - www.fortbendstar.com - RSS Results",
-    .name_ja = "Fort Bend Star (US) - www.fortbendstar.com - RSS Results",
-    .category = "news", .portal = "http://www.fortbendstar.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.fortbendstar.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 01 Apr 2026 "
-      "05:38:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q16994129", .name = "Gilroy Dispatch (US) - Gilroy Dispatch   Gilroy, California",
     .name_ja = "Gilroy Dispatch (US) - Gilroy Dispatch   Gilroy, California",
     .category = "news", .portal = "https://gilroydispatch.com/",
@@ -70208,25 +66792,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 4 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "19:50:40 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q16994647", .name = "Gwinnett Daily Post (US) - www.gwinnettdailypost.com - RSS "
-      "Results",
-    .name_ja = "Gwinnett Daily Post (US) - www.gwinnettdailypost.com - RSS Results",
-    .category = "news", .portal = "http://www.gwinnettdailypost.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.gwinnettdailypost.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "12:55:43 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q16994920", .name = "Hastings Tribune (US) - www.hastingstribune.com - RSS Results",
@@ -70247,24 +66812,6 @@ static const hp_source HP3B46_NEWS[] = {
       "11:53:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q16995214", .name = "The Herald-Dispatch (US) - www.herald-dispatch.com - RSS Results",
-    .name_ja = "The Herald-Dispatch (US) - www.herald-dispatch.com - RSS Results",
-    .category = "news", .portal = "https://www.herald-dispatch.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.herald-dispatch.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "13:10:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q16995374", .name = "High Plains Reader (US) - High Plains Reader Fargo, ND",
     .name_ja = "High Plains Reader (US) - High Plains Reader Fargo, ND",
     .category = "news", .portal = "https://hpr1.com/",
@@ -70281,24 +66828,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "14:38:03 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q16995375", .name = "The High Point Enterprise (US) - www.hpenews.com - RSS Results",
-    .name_ja = "The High Point Enterprise (US) - www.hpenews.com - RSS Results",
-    .category = "news", .portal = "http://www.hpenews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.hpenews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "07:45:00 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q16995375_2", .name = "The High Point Enterprise (US) - www.hpenews.com - RSS Results "
@@ -70361,24 +66890,6 @@ static const hp_source HP3B46_NEWS[] = {
       "links on its site root. Wikidata classes it as newspaper, "
       "country US." },
 
-  { .id = "JO46_NEWS_Q16995983", .name = "Houston Forward Times (US) - www.forwardtimes.com - RSS Results",
-    .name_ja = "Houston Forward Times (US) - www.forwardtimes.com - RSS Results",
-    .category = "news", .portal = "http://www.forwardtimes.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.forwardtimes.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "23:10:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q16996869", .name = "Indiana Gazette (US) - www.indianagazette.com - RSS Results",
     .name_ja = "Indiana Gazette (US) - www.indianagazette.com - RSS Results",
     .category = "news", .portal = "http://www.indianagazette.com/",
@@ -70395,24 +66906,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "13:01:47 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q16999307", .name = "Newton Daily News (US) - Latest articles - Newton Daily News",
-    .name_ja = "Newton Daily News (US) - Latest articles - Newton Daily News",
-    .category = "news", .portal = "https://www.newtondailynews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.newtondailynews.com/rss/articles",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "13:59:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q17057278", .name = "Muskogee Phoenix (US) - www.muskogeephoenix.com - RSS Results",
@@ -70543,43 +67036,6 @@ static const hp_source HP3B46_NEWS[] = {
       "15:45:03 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q16466590_2", .name = "Ouachita Citizen (US) - www.hannapub.com - RSS Results",
-    .name_ja = "Ouachita Citizen (US) - www.hannapub.com - RSS Results",
-    .category = "news", .portal = "http://www.hannapub.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.hannapub.com/search/?f=rss&amp;t=article&amp;c=ouachitacitizen&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "15:45:03 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q16824499", .name = "The Abilene Reflector-Chronicle (US) - www.abilene-rc.com - RSS "
-      "Results",
-    .name_ja = "The Abilene Reflector-Chronicle (US) - www.abilene-rc.com - RSS Results",
-    .category = "news", .portal = "http://www.abilene-rc.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.abilene-rc.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "15:14:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q16828892", .name = "The Anthony Republican (US) - The Anthony Republican Newspaper",
     .name_ja = "The Anthony Republican (US) - The Anthony Republican Newspaper",
     .category = "news", .portal = "https://www.anthonyrepublicannews.com/",
@@ -70616,24 +67072,6 @@ static const hp_source HP3B46_NEWS[] = {
       "11:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q16839239", .name = "Bay City Tribune (US) - baycitytribune.com - RSS Results",
-    .name_ja = "Bay City Tribune (US) - baycitytribune.com - RSS Results",
-    .category = "news", .portal = "http://baycitytribune.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://baycitytribune.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "23:10:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q16850226", .name = "Cadillac News (US) - www.cadillacnews.com - RSS Results",
     .name_ja = "Cadillac News (US) - www.cadillacnews.com - RSS Results",
     .category = "news", .portal = "http://www.cadillacnews.com/",
@@ -70650,25 +67088,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "13:07:00 -0400. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q16895790", .name = "New Braunfels Herald-Zeitung (US) - herald-zeitung.com - RSS "
-      "Results",
-    .name_ja = "New Braunfels Herald-Zeitung (US) - herald-zeitung.com - RSS Results",
-    .category = "news", .portal = "http://herald-zeitung.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://herald-zeitung.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "00:00:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q16908590", .name = "Northern Virginia Daily (US) - www.nvdaily.com - RSS Results",
@@ -70708,24 +67127,6 @@ static const hp_source HP3B46_NEWS[] = {
       "10:15:17 -0700. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q16939014", .name = "The Chetek Alert (US) - www.chetekalert.com - RSS Results",
-    .name_ja = "The Chetek Alert (US) - www.chetekalert.com - RSS Results",
-    .category = "news", .portal = "http://www.chetekalert.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.chetekalert.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "11:30:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q16947445", .name = "Toledo City Paper (US) - Toledo City Paper",
     .name_ja = "Toledo City Paper (US) - Toledo City Paper",
     .category = "news", .portal = "https://toledocitypaper.com/",
@@ -70761,24 +67162,6 @@ static const hp_source HP3B46_NEWS[] = {
     .description = "Fetched 2026-10-18: 15 items, ATOM feed, newest 09 Oct 2026. A "
       "feed the organisation itself declares or links on its site root. "
       "Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q16966127", .name = "Mount Vernon News (US) - Mount Vernon News",
-    .name_ja = "Mount Vernon News (US) - Mount Vernon News",
-    .category = "news", .portal = "https://mountvernonnews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mountvernonnews.com/stories.rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "11:39:01 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q19572967", .name = "McLean County News (US) - www.messenger-inquirer.com - RSS "
       "Results",
@@ -70817,24 +67200,6 @@ static const hp_source HP3B46_NEWS[] = {
       "07:45:00 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO46_NEWS_Q19866020", .name = "Owasso Reporter (US) - www.owassoreporter.com - RSS Results",
-    .name_ja = "Owasso Reporter (US) - www.owassoreporter.com - RSS Results",
-    .category = "news", .portal = "http://www.owassoreporter.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.owassoreporter.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "21:37:52 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q19866976", .name = "Rock River Times (US) - Rock River Times",
     .name_ja = "Rock River Times (US) - Rock River Times",
     .category = "news", .portal = "https://rockrivertimes.com/",
@@ -70851,24 +67216,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "14:29:39 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q19867767", .name = "Skiatook Journal (US) - tulsaworld.com - RSS Results",
-    .name_ja = "Skiatook Journal (US) - tulsaworld.com - RSS Results",
-    .category = "news", .portal = "http://tulsaworld.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://tulsaworld.com/search/?f=rss&amp;t=article&amp;c=news/community/skiatook&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "12:00:57 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q19878034", .name = "Leader-Telegram (US) - www.leadertelegram.com - RSS Results",
@@ -71014,24 +67361,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "12:03:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q23074316", .name = "The Marlin Democrat (US) - www.cameronherald.com - RSS Results",
-    .name_ja = "The Marlin Democrat (US) - www.cameronherald.com - RSS Results",
-    .category = "news", .portal = "http://www.cameronherald.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.cameronherald.com/search/?f=rss&amp;t=article&amp;c=marlin&amp;l=50&amp;s=start_time&amp;sd=desc",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "14:00:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q24589959", .name = "The 74 (US) - The 74",
@@ -71215,24 +67544,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "10:15:17 -0700. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q30589902", .name = "York News-Times (US) - yorknewstimes.com - RSS Results",
-    .name_ja = "York News-Times (US) - yorknewstimes.com - RSS Results",
-    .category = "news", .portal = "http://yorknewstimes.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://yorknewstimes.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "11:30:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q30638993", .name = "City Book Review (US) - City Book Review",
@@ -71563,64 +67874,6 @@ static const hp_source HP3B46_NEWS[] = {
       "links on its site root. Wikidata classes it as newspaper, "
       "country US." },
 
-  { .id = "JO46_NEWS_Q55623263_3", .name = "Times-Georgian (US) - www.times-georgian.com - RSS Results in "
-      "obituaries,obituaries/* of type article",
-    .name_ja = "Times-Georgian (US) - www.times-georgian.com - RSS Results in obituaries,obituaries/* of type article",
-    .category = "news", .portal = "https://www.times-georgian.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.times-georgian.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=obituaries,obituaries/*&f=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Fri, 16 Oct "
-      "2026 15:53:00 -0400. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country US." },
-
-  { .id = "JO46_NEWS_Q55623263_4", .name = "Times-Georgian (US) - www.times-georgian.com - RSS Results in "
-      "business,business/* of type article",
-    .name_ja = "Times-Georgian (US) - www.times-georgian.com - RSS Results in business,business/* of type article",
-    .category = "news", .portal = "https://www.times-georgian.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.times-georgian.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=business,business/*&f=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Fri, 16 Oct "
-      "2026 12:15:00 -0400. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country US." },
-
-  { .id = "JO46_NEWS_Q55623273", .name = "Times-Citizen (US) - www.timescitizen.com - RSS Results",
-    .name_ja = "Times-Citizen (US) - www.timescitizen.com - RSS Results",
-    .category = "news", .portal = "http://www.timescitizen.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.timescitizen.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "07:00:00 -0500. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO46_NEWS_Q55623286", .name = "Northwest News (US) - www.kpcnews.com - RSS Results",
     .name_ja = "Northwest News (US) - www.kpcnews.com - RSS Results",
     .category = "news", .portal = "http://www.kpcnews.com/",
@@ -71692,25 +67945,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
       "18:05:12 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO46_NEWS_Q55642329", .name = "The Sand Mountain Reporter (US) - www.sandmountainreporter.com - "
-      "RSS Results",
-    .name_ja = "The Sand Mountain Reporter (US) - www.sandmountainreporter.com - RSS Results",
-    .category = "news", .portal = "http://www.sandmountainreporter.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.sandmountainreporter.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "01:00:00 -0500. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO46_NEWS_Q55665232", .name = "Wrangell Sentinel (US) - - Latest Stories",
@@ -72333,25 +68567,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "15:30:11 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as online-newspaper, "
-      "country US." },
-
-  { .id = "JO46_NEWS_Q129800569", .name = "Cache Valley Daily (US) - www.cachevalleydaily.com - RSS Results",
-    .name_ja = "Cache Valley Daily (US) - www.cachevalleydaily.com - RSS Results",
-    .category = "news", .portal = "http://www.cachevalleydaily.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.cachevalleydaily.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "03:00:00 -0600. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
@@ -74613,26 +70828,6 @@ static const hp_source HP3B46_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "14:08:21 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as online-newspaper, "
-      "country US." },
-
-  { .id = "JO46_NEWS_Q48004150", .name = "Newswire Network (US) - Block Trade: The Institutional Guide to "
-      "Large-Scale Market Execution",
-    .name_ja = "Newswire Network (US) - Block Trade: The Institutional Guide to Large-Scale Market Execution",
-    .category = "news", .portal = "https://newswire.net/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://newswire.net/feed",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "17:13:51 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
@@ -77358,25 +73553,6 @@ static const hp_source HP3B46_NEWS[] = {
       "on its site root. Wikidata classes it as daily-newspaper, "
       "country US." },
 
-  { .id = "JO46_NEWS_Q5392199", .name = "Marianas Variety (US) - www.mvariety.com - RSS Results",
-    .name_ja = "Marianas Variety (US) - www.mvariety.com - RSS Results",
-    .category = "news", .portal = "http://www.mvariety.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.mvariety.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 19 Oct 2026 "
-      "02:00:00 +1100. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as daily-newspaper, "
-      "country US." },
-
   { .id = "JO46_NEWS_Q5352232", .name = "El Telégrafo (UY) - Diario El Telégrafo",
     .name_ja = "El Telégrafo (UY) - Diario El Telégrafo",
     .category = "news", .portal = "https://www.eltelegrafo.com/",
@@ -78048,25 +74224,6 @@ static const hp_source HP3B46_NEWS[] = {
       "00:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as daily-newspaper, "
       "country ZW." },
-
-  { .id = "JO46_NEWS_Q1324287", .name = "El Khabar (DZ) - prefix_key RSS suffix_key El Khabar "
-      "(daily-newspaper, DZ) - prefix_key RSS suffix_key",
-    .name_ja = "El Khabar (DZ) - prefix_key RSS suffix_key El Khabar (daily-newspaper, DZ) - prefix_key RSS suffix_key",
-    .category = "news", .portal = "https://www.elkhabar.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.elkhabar.com/feed",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "18-10-2026. A feed the organisation itself declares or links on "
-      "its site root. Wikidata classes it as daily-newspaper, country "
-      "DZ." },
 
   { .id = "JO46_NEWS_Q3049742", .name = "El Bilad (DZ) - prefix_key RSS suffix_key El Bilad "
       "(daily-newspaper, DZ) - prefix_key RSS suffix_key",
