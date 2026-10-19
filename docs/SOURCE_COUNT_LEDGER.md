@@ -5,14 +5,43 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 47,724** (2026-10-19): the 47,178 below merged with
-main's 21,789 (its own `jp_feeds_batch41..44.c` beats of Japanese RSS sources,
+**The registered count is 48,343** (2026-10-19): the 47,178 below merged with
+main's 22,408 (21,789 plus PR #50's batch 45) (its own `jp_feeds_batch41..44.c` beats of Japanese RSS sources,
 PR #48's paging cycle of 533 rows, PR #49's collector labels), less six news
 feeds both sessions had added — `make lint-sources` named them at merge time
 and main's rows stay. Batch numbers 43 and 44 are shared between main's
 `jp_feeds_batch4N.c` beats and this branch's `hp3b4N_*` tables; nothing
 collides, read the beat. Batches 47 and 48 below were authored as 45 and 46 and
 renumbered at merge time when main merged its own batch 45 (PR #50) first.
+
+**On main, merged into this branch at 48,343** — the numbering collision this
+branch's batches 47/48 (authored as 45/46) came from:
+
+**main's count was 22,408** (2026-10-19), measured — batch 45's 619
+measured rows (`docs/verified-sources-batch45.tsv`,
+`native/collectors/OSINT_SOURCES_BATCH_45_JPWPREGISTRY.md`) on 21,789, which
+was 21,237 plus batches 43/44's 400 Japanese RSS feeds and the rows that came
+with them.
+
+**Batch 45 is batch 42's question asked of the registry itself.** Every `.jp`
+host a registered row already fetches (an RSS feed, an HTML register, a CSV) was
+asked whether it also runs WordPress REST — the homepage's
+`Link: rel="https://api.w.org/"` names the root, which found 232 of the 245
+hosts that have one; a bare `/wp-json` found 13. 691 collections on 148 hosts
+answered with records; 619 survived machinery filtering, probe and the emit
+sweep (580 OK, 38 SLOW with thousands of rows stored at the 200 s line). The
+tables are split by HOST type (media, company, association, culture, cyber,
+science, hazard, government), not by collection type, so each beat files
+under one collector group. The same sweep over **5,123 federation-member hosts**
+(chambers of commerce, JA, medical associations, fire chiefs, welfare councils,
+co-ops, professional bodies) found **5,678 live collections on 1,372 hosts** —
+NOT registered, because ~5,700 scheduled rows on a 6-hour cadence is a
+scheduler-load decision; kept with counts in
+`docs/staging-sources-batch45.federations.tsv`.
+
+**main's count was 21,237** (2026-10-12), measured — batch 42's 1,916
+measured rows (`docs/verified-sources-batch42.tsv`,
+`native/collectors/OSINT_SOURCES_BATCH_42_JPWPROUTES.md`) on 19,321.
 
 **The count was 47,178** (2026-10-19): 47,115 plus the 63 rows a
 retry pass recovered. Every row batches 44–46 had dropped as dead on two

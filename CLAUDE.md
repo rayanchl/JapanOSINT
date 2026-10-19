@@ -39,10 +39,10 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 47,724** (2026-10-19, after merging main's 21,789 —
-its own `jp_feeds_batch41..44.c` beats and PR #48's paging cycle — into this
-branch's 47,178, less six news feeds both sessions had added; main merged first,
-so its rows stay). **Batch numbers 43 and 44 now name two things**: main's
+**The registered count is 48,343** (2026-10-19): main's 22,408 — its own
+`jp_feeds_batch41..44.c` beats, PR #48's paging cycle and PR #50's batch 45 of
+619 WordPress collections — merged into this branch's 47,178, less six news
+feeds both sessions had added (main merged first, so its rows stay). **Batch numbers 43 and 44 now name two things**: main's
 `collectors/sources/jp_feeds_batch4N.c` beats and this branch's `hp3b4N_*`
 tables with `JO4N_` ids — no file or id collides, but read the BEAT, as with
 34 and 35. **And this branch's batches 45 and 46 are 47 and 48**: main merged
@@ -52,10 +52,10 @@ this branch waited on CI, a direct file collision, so the public-body beats
 (`hp3b48_{igo,news}`, `JO48_`) were renumbered at merge time — ids, tables,
 manifests, TSVs, docs and collector keys — exactly as the batch-41 note below
 predicts. The count ledger — every
-batch from 37 to 46, what seeded it, what it measured and what it taught — is
+batch from 37 to 48, main's 45 included, what seeded it, what it measured and what it taught — is
 `docs/SOURCE_COUNT_LEDGER.md`; this file keeps the rules and the current number.
-Both floors are re-recorded at 47,724 and `make source-count` agrees. The
-lessons from batches 43–46 that a new batch must not relearn:
+Both floors are re-recorded at 48,343 and `make source-count` agrees. The
+lessons from batches 43–48 that a new batch must not relearn:
 
 * **A registration count is not a website, and a build is not a registry.**
   A quarter of any official-domain register has no server at the root; and
@@ -686,8 +686,10 @@ underneath them that older notes in this file predate:
   / pending (never ran). Until then nothing wrote it after the seed, so every
   row read `pending` forever and `/api/status`'s online count was the seed.
 * **An hpengine row's default collector is its table file's basename**
-  (`hp3b25_jpmedia`), not `osint`. Every source has a collector; 545 keys
-  (2026-10-18, round 3); `core/collectors.def` labels and groups them (below).
+  (`hp3b25_jpmedia`), not `osint`. Every source has a collector; 554 keys
+  (2026-10-19, round 4); `core/collectors.def` labels and groups them (below).
+  Round 4 also moved batches 43/44's 400 Japanese web-media RSS feeds off
+  `social` (their macro's label) onto `jp_webmedia` under News & media.
   **`osint` is the collector of hand-written entity PIVOTS only** since round 3:
   968 scheduled feeds had been authored under that label (Google News
   editions and keyword monitors, world outlets, arXiv, think tanks, threat
