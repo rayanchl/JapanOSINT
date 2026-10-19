@@ -58,7 +58,7 @@ static const hp_source HP2_NORTHAM_STATES[] = {
     .url = "https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResults?"
       "inquiryType=EntityName&searchNameOrder={qn}&searchTerm={q}",
     .base = "https://search.sunbiz.org", .href_must = "/Inquiry/",
-    .detail_url = "https://search.sunbiz.org{v}", .detail_key = "link",
+    .detail_url = "{v}", .detail_key = "url",  /* html records carry the resolved anchor in url */
     .description = "Florida entity records with the officer/director list and "
       "annual-report history behind each hit. Florida names every officer in "
       "the public filing, which makes it one of the most useful US registers "

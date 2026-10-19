@@ -14,6 +14,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/pagewalk.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,16 +35,34 @@ static const char *sec_to_iso(double s, char *out, size_t n) {
   return out;
 }
 
+/* PAGED 2026-10-12. The hour window is right and `limit=200` was the bound on
+ * it: a quiet hour holds ~16 alerts (measured), so this never truncated on an
+ * ordinary day and would truncate silently on exactly the day it matters — a
+ * large outage event, where a 48-hour window measured 200+ per page. The API
+ * takes a 0-BASED `page` (measured: pages 0, 1 and 2 open on different alerts),
+ * so `page=0` is in the URL and lib/pagewalk.c advances it only when a page
+ * comes back full. A normal run is still one request. */
+static int ioda_page(const source_ctx *ctx, intel_sink *sink, const char *sid,
+                     cJSON *doc, void *ud, int *seen);
+
 static int run(const source_ctx *ctx, intel_sink *sink) {
   long now = (long)time(NULL);
   char url[320];
   snprintf(url, sizeof url,
            "https://api.ioda.inetintel.cc.gatech.edu/v2/outages/alerts"
-           "?from=%ld&until=%ld&limit=200", now - 3600, now);
+           "?from=%ld&until=%ld&limit=200&page=0", now - 3600, now);
+  if (pw_walk(ctx, sink, "ioda-outage-alerts", url, pw_fetch_json, ioda_page,
+              NULL) < 0) {
+    fprintf(stderr, "[ioda-outage-alerts] fetch/parse failed\n");
+    return -1;
+  }
+  return 0;
+}
 
-  cJSON *doc = feed_get_json(ctx->http, url, 25000);
-  if (!doc) { fprintf(stderr, "[ioda-outage-alerts] fetch/parse failed\n"); return -1; }
-
+static int ioda_page(const source_ctx *ctx, intel_sink *sink, const char *sid,
+                     cJSON *doc, void *ud, int *seen) {
+  (void)ctx; (void)sid; (void)ud;
+  *seen = 0;
   /* Payload is an envelope ("outages.alerts"); the rows live under data/alerts
    * depending on the wrapper version — take whichever array is present. */
   const cJSON *rows = cJSON_GetObjectItem(doc, "data");
@@ -51,10 +70,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!cJSON_IsArray(rows) && cJSON_IsObject(cJSON_GetObjectItem(doc, "data")))
     rows = cJSON_GetObjectItem(cJSON_GetObjectItem(doc, "data"), "alerts");
   if (!cJSON_IsArray(rows)) {
-    cJSON_Delete(doc);
     fprintf(stderr, "[ioda-outage-alerts] no alert array in payload\n");
     return 0;                             /* fetched fine, nothing to read */
   }
+  *seen = cJSON_GetArraySize(rows);
 
   int n = 0;
   const cJSON *a;
@@ -113,9 +132,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
   }
 
-  cJSON_Delete(doc);
-  fprintf(stderr, "[ioda-outage-alerts] emitted %d\n", n);
-  return 0;                                /* a quiet hour is not an error */
+  return n;                                /* a quiet hour is not an error */
 }
 
 static const source_def cyi_ioda_outage_alerts_def = {

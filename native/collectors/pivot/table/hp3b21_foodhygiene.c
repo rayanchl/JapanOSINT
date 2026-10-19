@@ -143,6 +143,7 @@ static const hp_source HP3B21_FOODHYGIENE[] = {
     .lat_key = "geocode.latitude",
     .lon_key = "geocode.longitude",
     .page_param = "pageNumber",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "BusinessName",
     .description = "Every food business in England Wales and Northern Ireland "
       "currently holding a hygiene rating of zero - urgent improvement "

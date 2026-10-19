@@ -92,7 +92,7 @@ static int run_itownpage(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def prtimes_def = {
-  .id = "PRTIMES", .collector = "osint",
+  .id = "PRTIMES", .collector = "commercial",
   .name = "PR TIMES Press Releases", .name_ja = "PR TIMES プレスリリース",
   .update_interval_sec = 1800, .run = run_prtimes,
   .category = "commercial", .type = "api", .url = "https://prtimes.jp/",

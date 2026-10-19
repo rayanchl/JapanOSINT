@@ -580,6 +580,7 @@ static const hp_source HP3B19_OSM[] = {
     .interval = 3600,
     .page_param = "page",
     .page_start = 1,
+    .page_max = 63,   /* 878 records at 14 a page, measured 2026-10-12; the 20-page default reached 280 */
     .title_keys = "name",
     .description = "Every humanitarian mapping project HOT has opened, with the area "
       "of interest geometry, the country, the sponsoring organisation, "
@@ -644,6 +645,7 @@ static const hp_source HP3B19_OSM[] = {
     .id_keys = "_id",
     .interval = 86400,
     .page_param = "page",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .page_start = 1,
     .title_keys = "title",
@@ -669,6 +671,7 @@ static const hp_source HP3B19_OSM[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "page",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     /* page-offset-ok: MapRoulette's `page` is a RECORD offset despite its name: page=1 is the list shifted by one challenge, page=100 starts at the 101st (measured 2026-10-05), so page_size stays */
     .page_size = 100,
     .page_start = 0,

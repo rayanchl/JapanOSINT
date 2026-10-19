@@ -32,7 +32,7 @@ static const hp_source HP3B38_CHINA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
+    .page_resume = 1,   /* 107,239 records, measured 2026-10-12: read over a cycle, 200 pages a run */
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in CN, from the GLEIF Level-1 register — legal name, LEI, "
@@ -52,7 +52,15 @@ static const hp_source HP3B38_CHINA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
+    /* 13,419 entities at 200 a page. Measured 2026-10-12: this row stored 200
+     * — ONE page — because it declared page_size on a page-NUMBER parameter
+     * and the engine walked it as an offset, asking GLEIF for page 201 and
+     * getting HTTP 400. Without page_size it reads 10,000, and page 51 is
+     * refused 400: GLEIF caps deep paging at 50 pages. The last 3,419 need a
+     * narrower filter per request, which is the remedy the truncation notice
+     * prints. 68 is kept rather than 50 so the notice names GLEIF's refusal
+     * rather than our own ceiling, at the cost of one 400 per run. */
+    .page_max = 68,
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in HK, from the GLEIF Level-1 register — legal name, LEI, "
@@ -74,6 +82,7 @@ static const hp_source HP3B38_CHINA[] = {
     .lat_key = "decimalLatitude",
     .lon_key = "decimalLongitude",
     .page_param = "offset",
+    .page_resume = 1,   /* 12,540,046 records, measured 2026-10-12: read over a cycle, 300 pages a run */
     .page_size = 300,
     .page_zero_based = 1,
     .title_keys = "scientificName",
@@ -103,6 +112,7 @@ static const hp_source HP3B38_CHINA[] = {
     .lat_key = "decimalLatitude",
     .lon_key = "decimalLongitude",
     .page_param = "offset",
+    .page_resume = 1,   /* 2,326,821 records, measured 2026-10-12: read over a cycle, 300 pages a run */
     .page_size = 300,
     .page_zero_based = 1,
     .title_keys = "scientificName",

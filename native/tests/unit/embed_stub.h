@@ -21,7 +21,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/prctl.h>
+#ifdef __linux__
+#include <sys/prctl.h>   /* PR_SET_PDEATHSIG: Linux only (the macOS job has none) */
+#endif
 #include <sys/wait.h>
 #include <unistd.h>
 #include "../../core/llm.h"
@@ -136,7 +138,9 @@ static int estub_start(int port, int dim, const char *model) {
     /* Die with the test, and never hold its stdout: a test that aborts on an
      * assert would otherwise leave the stub alive, owning the port and the
      * pipe a `| tail` is waiting on. */
+#ifdef __linux__
     prctl(PR_SET_PDEATHSIG, SIGKILL);
+#endif
     if (!freopen("/dev/null", "w", stdout)) { /* stub noise is harmless */ }
     if (!freopen("/dev/null", "w", stderr)) { /* stub noise is harmless */ }
     execlp("python3", "python3", path, (char *)NULL);

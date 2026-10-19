@@ -301,6 +301,7 @@ static const hp_source HP3B19_CYBER[] = {
     .detail_url = "https://api.msrc.microsoft.com/sug/v2.0/en-US/vulnerability/{v}",
     .interval = 43200,
     .page_param = "$skip",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 100,
     .description = "Microsoft's Security Update Guide as structured JSON rather than "
       "the HTML console: each CVE with its release date, severity, "
@@ -545,6 +546,7 @@ static const hp_source HP3B19_CYBER[] = {
     .array_path = "data",
     .interval = 86400,
     .page_param = "offset",
+    .page_resume = 1,   /* 385,738 records, measured 2026-10-12: read over a cycle, 100 pages a run */
     .page_size = 100,
     .description = "The Exploit Prediction Scoring System over the whole CVE corpus, "
       "paged: each CVE with its probability of exploitation in the next "
@@ -585,6 +587,7 @@ static const hp_source HP3B19_CYBER[] = {
     .id_keys = "slug",
     .interval = 86400,
     .page_param = "request[page]",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_start = 1,
     .description = "Every plugin in the WordPress directory with its slug, author, "
       "version, active install count, last-updated date, tested-up-to "
@@ -605,6 +608,7 @@ static const hp_source HP3B19_CYBER[] = {
     .detail_url = "https://api.wordpress.org/themes/info/1.2/?action=theme_information&request[slug]={v}",
     .interval = 86400,
     .page_param = "request[page]",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_start = 1,
     .description = "The WordPress theme directory with slug, author, version, "
       "download count, last update and rating for each theme. Themes "
@@ -644,6 +648,7 @@ static const hp_source HP3B19_CYBER[] = {
     .interval = 86400,
     .page_param = "page",
     .page_start = 1,
+    .page_max = 43,   /* 2,121 records at 50 a page, measured 2026-10-12; the 20-page default reached 1,000 */
     .description = "Each Jenkins plugin with its maintainer list, dependency set, "
       "required core version, installation count and release history. "
       "The dependency graph across plugins is what makes a single "
@@ -977,6 +982,7 @@ static const hp_source HP3B19_CYBER[] = {
     .url = "https://artifacthub.io/api/v1/repositories/search?limit=60",
     .interval = 86400,
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 60,
     .description = "Every repository registered with Artifact Hub, with its owning "
       "organisation, kind, source URL, verified-publisher flag and "
@@ -1066,6 +1072,7 @@ static const hp_source HP3B19_CYBER[] = {
     .detail_url = "https://registry.terraform.io/v1/modules/{v}",
     .interval = 86400,
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 50,
     .description = "Published Terraform modules with namespace, provider, version, "
       "source repository, download count and verification flag. "
@@ -1086,6 +1093,7 @@ static const hp_source HP3B19_CYBER[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 50,
     .title_keys = "name",
     .description = "Every Terraform provider with its namespace, source repository, "
@@ -1537,6 +1545,7 @@ static const hp_source HP3B19_CYBER[] = {
     .array_path = "data",
     .interval = 86400,
     .page_param = "page",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_start = 0,
     .description = "The autonomous systems IODA tracks connectivity signals for, "
       "each with the AS number, name, the country it is attributed to "
@@ -1860,6 +1869,7 @@ static const hp_source HP3B19_CYBER[] = {
     .detail_url = "https://www.ncert.gov.ph/wp-json/wp/v2/posts/{v}",
     .interval = 86400,
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 50,
     .title_keys = "title.rendered",
     .description = "The Philippine national computer emergency response team's "
@@ -1881,6 +1891,7 @@ static const hp_source HP3B19_CYBER[] = {
     .detail_url = "https://www.camcert.gov.kh/wp-json/wp/v2/posts/{v}",
     .interval = 86400,
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 50,
     .title_keys = "title.rendered",
     .description = "Cambodia's national CERT advisories with publication timestamps, "
@@ -1901,6 +1912,7 @@ static const hp_source HP3B19_CYBER[] = {
     .detail_url = "https://ttcsirt.gov.tt/wp-json/wp/v2/posts/{v}",
     .interval = 86400,
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 50,
     .title_keys = "title.rendered",
     .description = "The Trinidad and Tobago national CSIRT's advisories and alerts "

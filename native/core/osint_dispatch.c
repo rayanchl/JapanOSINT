@@ -14,6 +14,7 @@
 #include <time.h>
 #include "../third_party/cJSON.h"
 #include <stdio.h>
+#include <strings.h>      /* strcasecmp — POSIX; see osint_lookup on id case */
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -45,9 +46,41 @@ int osint_canon(const char *name, char *out, size_t n) {
 }
 
 /* Unified: ANY registered source is OSINT-dispatchable (a JapanOSINT
- * collector and an OSINTsaas service are indistinguishable here). */
+ * collector and an OSINTsaas service are indistinguishable here).
+ *
+ * CASE. `canon` has been UPPERCASED by osint_canon(), and registry_get() is a
+ * strcmp hash — so a source whose id contains a lower-case letter could never
+ * be found here at all. That held for 9,941 of 18,884 ids, and it was
+ * invisible because every hand-written service in the osint collector happens
+ * to be spelled in capitals, so the two conventions never met. They met when
+ * 16 generated entity pivots were admitted to this path (registry.c's
+ * NEVER-RUNS note): `cve-program-record-api` canonicalises to
+ * `CVE-PROGRAM-RECORD-API`, missed, and osint_resolve_near() could not rescue
+ * it either — a pure case difference has an edit distance of one per letter,
+ * 22 for that id, against a ceiling of 2.
+ *
+ * A case difference is not a near miss to be guessed at; it is the same id. So
+ * it is resolved HERE rather than in the near resolver, and the caller is not
+ * told its name was corrected. Exact match still wins, and the fallback
+ * resolves only a UNIQUE case-fold match — `RELIEFWEB` (an osint pivot) and
+ * `reliefweb` (a scheduled government feed) are two different sources that
+ * differ only in case, and guessing between them is exactly what this repo
+ * refuses to do elsewhere. The pivot gate in the caller still applies, so a
+ * case-resolved scheduled feed is refused as `not_a_pivot` — which is the
+ * accurate answer, where `not_implemented` was not. */
 static const source_def *osint_lookup(const char *canon) {
-  return registry_get(canon);
+  const source_def *exact = registry_get(canon);
+  if (exact) return exact;
+  if (!canon || !*canon) return NULL;
+  const source_def **all = registry_all();
+  int cnt = registry_count();
+  const source_def *fold = NULL;
+  for (int i = 0; i < cnt; i++) {
+    if (!all[i] || !all[i]->id || strcasecmp(all[i]->id, canon) != 0) continue;
+    if (fold) return NULL;                 /* ambiguous: refuse, never guess */
+    fold = all[i];
+  }
+  return fold;
 }
 
 /* ---- resolving a name the registry does not have -------------------------
@@ -280,8 +313,7 @@ static void sl_append(char **buf, size_t *len, size_t *cap, const char *s) {
  * an interval. update_interval_sec == 0 is the registry's own word for
  * "on-demand pivot", which is exactly the set this catalogue is for. */
 static int is_entity_pivot(const source_def *d) {
-  return d->collector && strcmp(d->collector, "osint") == 0
-         && d->update_interval_sec == 0;
+  return registry_is_entity_pivot(d);     /* the ONE rule — source.h */
 }
 
 /* THE PROMPT IS A CONSUMER THAT PHYSICALLY CANNOT TAKE EVERYTHING.

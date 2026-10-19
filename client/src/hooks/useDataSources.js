@@ -1,100 +1,44 @@
 import { useState, useEffect, useCallback } from 'react';
 import useWebSocket from './useWebSocket.js';
 import apiUrl from '../utils/apiUrl.js';
-import { normalizeSource, normalizeSources } from '../utils/normalizeSource.js';
 
+/**
+ * The shell's fleet figure: /api/sources/stats polled every 60 s, plus the
+ * WebSocket's stats_update. It used to ALSO fetch the full /api/sources dump
+ * (18,883 rows, every 60 s, on every page) for a dashboard that has since
+ * moved to the server-searched /console/sources page; nothing in the shell
+ * read those rows. `error` names a failed poll so the nav figure is never a
+ * stale number presented as fresh.
+ */
 export default function useDataSources() {
-  const [sources, setSources] = useState([]);
   const [stats, setStats] = useState(null);
   const [lastUpdate, setLastUpdate] = useState(null);
-  // What actually happened on the last poll. Everything downstream (the nav
-  // bar's "active sources" figure, the Source Monitor's health dot) reads a
-  // number that is only meaningful if the request behind it succeeded, and a
-  // silent console.warn left those numbers looking freshly obtained.
   const [error, setError] = useState(null);
 
-  const fetchSources = useCallback(async () => {
+  const fetchStats = useCallback(async () => {
     try {
-      const [sourcesRes, statsRes] = await Promise.all([
-        fetch(apiUrl('/api/sources')),
-        fetch(apiUrl('/api/sources/stats')),
-      ]);
-
-      const failures = [];
-
-      if (sourcesRes.ok) {
-        const data = await sourcesRes.json();
-        // /api/sources emits raw sqlite column names — normalise on entry.
-        setSources(normalizeSources(Array.isArray(data) ? data : data.sources || []));
-      } else {
-        failures.push(`/api/sources HTTP ${sourcesRes.status}`);
-      }
-
-      if (statsRes.ok) {
-        const data = await statsRes.json();
-        setStats(data);
-      } else {
-        failures.push(`/api/sources/stats HTTP ${statsRes.status}`);
-      }
-
-      setError(failures.length ? failures.join(', ') : null);
-      // lastUpdate is the timestamp of data we actually hold. Stamping it on a
-      // failed poll dated stale rows to "now".
-      if (failures.length < 2) setLastUpdate(new Date().toISOString());
+      const res = await fetch(apiUrl('/api/sources/stats'));
+      if (!res.ok) { setError(`/api/sources/stats HTTP ${res.status}`); return; }
+      setStats(await res.json());
+      setError(null);
+      setLastUpdate(new Date().toISOString());
     } catch (err) {
-      console.warn('[useDataSources] Failed to fetch sources:', err.message);
+      console.warn('[useDataSources] Failed to fetch source stats:', err.message);
       setError(err.message || 'request failed');
     }
   }, []);
 
   const onMessage = useCallback((message) => {
-    switch (message.type) {
-      case 'source_update':
-        setSources((prev) => {
-          const idx = prev.findIndex((s) => s.id === message.data?.id);
-          if (idx >= 0) {
-            const updated = [...prev];
-            updated[idx] = { ...updated[idx], ...normalizeSource(message.data) };
-            return updated;
-          }
-          return prev;
-        });
-        setLastUpdate(new Date().toISOString());
-        break;
-
-      case 'stats_update':
-        setStats(message.data);
-        break;
-
-      case 'sources_refresh':
-        if (Array.isArray(message.data)) {
-          setSources(normalizeSources(message.data));
-        }
-        setLastUpdate(new Date().toISOString());
-        break;
-
-      default:
-        break;
-    }
+    if (message.type === 'stats_update') { setStats(message.data); setLastUpdate(new Date().toISOString()); }
   }, []);
 
-  // 10 reconnect attempts at base/max -> map onto useWebSocket's 30s cap.
-  // Long-lived dashboard hook benefits from online/visibility wake-ups.
-  const { connected, available } = useWebSocket('/ws', {
-    onMessage,
-    respondToOnline: true,
-  });
+  const { connected } = useWebSocket('/ws', { onMessage, respondToOnline: true });
 
   useEffect(() => {
-    fetchSources();
-    const pollInterval = setInterval(fetchSources, 60000);
+    fetchStats();
+    const pollInterval = setInterval(fetchStats, 60000);
     return () => clearInterval(pollInterval);
-  }, [fetchSources]);
+  }, [fetchStats]);
 
-  // Without /ws (the default: the native server has none) the 60 s poll IS
-  // the connection, so "connected" means the last poll reached the server.
-  // Reading the never-dialled socket instead put DISCONNECTED in the nav bar
-  // permanently, against a server that was answering every request.
-  const isConnected = available ? connected : (lastUpdate != null && !error);
-  return { sources, stats, isConnected, lastUpdate, error };
+  return { stats, isConnected: connected, lastUpdate, error };
 }

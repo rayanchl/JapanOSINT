@@ -1376,14 +1376,11 @@ static long jl_declared_size(const char *url) {
   return -1;
 }
 
+/* One ceiling for the whole tree (jo_page_max, lib/pagewalk.c). $JO_PAGE_MAX is
+ * the knob; $JO_JSONLIST_PAGE_MAX still works, so an operator who set the older
+ * name is honoured rather than silently ignored. */
 int jsonlist_page_max(void) {
-  int page_max = 20;   /* exhaustive-ok: page-walk ceiling; an early stop is disclosed as a collector-truncation-notice and $JO_JSONLIST_PAGE_MAX raises it */
-  const char *env = getenv("JO_JSONLIST_PAGE_MAX");
-  if (env && *env) {
-    int v = atoi(env);
-    if (v > 0) page_max = v;
-  }
-  return page_max;
+  return jo_page_max("JO_JSONLIST_PAGE_MAX");   /* exhaustive-ok: page-walk ceiling, disclosed as a collector-truncation-notice */
 }
 
 /* The continuation decision this walk makes after every page, exported so

@@ -20,7 +20,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/prctl.h>
+#ifdef __linux__
+#include <sys/prctl.h>   /* PR_SET_PDEATHSIG: Linux only (the macOS job has none) */
+#endif
 #include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
@@ -76,7 +78,9 @@ static int vstub_start(int port, int dim) {
     snprintf(ds, sizeof ds, "%d", dim);
     snprintf(ps, sizeof ps, "%d", port);
     setenv("VISION_STUB_DIM", ds, 1);
+#ifdef __linux__
     prctl(PR_SET_PDEATHSIG, SIGKILL);
+#endif
     if (!freopen("/dev/null", "w", stdout)) { /* harmless */ }
     if (!freopen(vstub_log, "a", stderr)) { /* then nothing is counted */ }
     execlp("python3", "python3", "../scripts/vision_embed_server.py", "--stub",

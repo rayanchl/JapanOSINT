@@ -73,6 +73,37 @@ typedef struct source_ctx {
   const char  *tenant_id;
   volatile int *cancel;
   void (*progress)(const char *json);
+  /* ── WHERE THE LAST RUN STOPPED, so a collection larger than one run's page
+   * budget is read over a CYCLE instead of re-reading its first pages forever.
+   *
+   * Measured 2026-10-12 (docs/measured-page-ceilings-2026-10-12.tsv): 89
+   * scheduled rows declare an upstream total needing more than 200 pages — up
+   * to 55,971 pages for one 5.6-million-item STAC catalogue, 1.93 billion
+   * records between them — and 534 more page past their ceiling with no total
+   * published at all. Raising a page ceiling does not serve those: 55,971
+   * requests a run against one host is not exhaustiveness. Reading the next
+   * slice each run is, and it is what collectors/sources/wayback_jp.c already
+   * does by hand (mhlw's index, 2,064 pages, over ~207 daily runs).
+   *
+   * `resume_in` is the token this source stored on its previous run, or NULL;
+   * `resume_out` stores one for the next (NULL clears it, which is how a
+   * collector says the cycle completed and the next run starts over). The
+   * token is OPAQUE to the caller — a page number, a cursor, a next-page URL —
+   * and a collector must treat a token it does not recognise as absent.
+   *
+   * WHY THIS IS ON THE CONTEXT and not in the engine: lib/ holds no database
+   * code (hptest links lib/hpengine.c with no sqlite3 at all), and putting
+   * persistence behind the ABI keeps that true while making the mechanism
+   * available to every collector rather than to one engine.
+   *
+   * Both are NULL on an ENTITY PIVOT, deliberately: "what do we have on X"
+   * must answer from the start of X's result set, not from page 37 of the last
+   * entity someone asked about. core/scheduler.c sets them, core/osint_dispatch.c
+   * does not. Appended last so every existing initializer keeps compiling. */
+  const char  *resume_in;
+  /* `struct source_ctx` spelled out: the typedef is not complete yet inside
+   * its own definition, and `source_ctx` here compiles as an unknown type. */
+  void (*resume_out)(const struct source_ctx *ctx, const char *token);
 } source_ctx;
 
 typedef struct source_def {
@@ -111,6 +142,13 @@ typedef struct source_def {
   const char *license;
   const char *layer;          /* map layer id; NULL for services             */
   int  free_tier;             /* 1 = free; 0 (default) = paid                */
+  /* Which machinery runs this row — "hpengine" (lib/hpengine.c, set by
+   * hp_register), "vjson" / "vrss" / "vgeo" / "vcsv" (the generated feed
+   * macros in _verified_macros.inc), "socrata", "rss", or NULL for a
+   * hand-written run(), which the API serialises as "native". It exists so a
+   * client can show HOW a source is fetched and parsed without guessing from
+   * the run pointer; nothing dispatches on it. */
+  const char *engine;
 } source_def;
 
 /* The `category` vocabulary — ONE list, for both registries.
@@ -143,8 +181,23 @@ int                registry_count(void);
 /* >0 means some source id is defined twice and the second copy is
  * unreachable via registry_get/--run/the OSINT dispatcher. */
 int                registry_duplicate_count(void);
+/* >0 means some source can never execute: interval 0 (so the scheduler skips
+ * it) under a collector that is neither "osint" nor an internal "_" lane (so
+ * core/osint_dispatch.c's is_entity_pivot() rejects it too). House rule 3. */
+int                registry_never_runs_count(void);
 const source_def **registry_all(void);
 const source_def  *registry_get(const char *id);
+/* THE one definition of "entity pivot" — the set the OSINT dispatcher offers
+ * the analysis LLM and service_vec indexes. House rule 3's distinction: a row
+ * is a pivot because it takes an entity, and scheduled because it declares an
+ * interval. So: update_interval_sec == 0, not an internal pod (collector
+ * starting with '_'), and — for an hpengine row — a URL or POST body that
+ * carries an entity token (a fixed-endpoint row with interval 0 is rule 3's
+ * unreachable row, not a pivot). It used to be `collector == "osint" &&
+ * interval == 0` in two places; that stopped describing the registry when
+ * hpengine rows took their table's name as collector, and it had always left
+ * out the 15 interval-0 {q} rows that named another collector. */
+int                registry_is_entity_pivot(const source_def *d);
 /* Index of `id` in registry_all(), or -1. O(1): a hash built once after the
  * constructors (registry.c). */
 int                registry_index(const char *id);

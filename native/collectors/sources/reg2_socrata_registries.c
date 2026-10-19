@@ -433,7 +433,7 @@ static int soc_run(const soc_src *s, const source_ctx *ctx, intel_sink *sink) {
     return soc_run(&sym##_cfg, ctx, sink);                                    \
   }                                                                           \
   static const source_def sym##_def = {                                       \
-    .id = ID, .collector = COLL, .name = NAME,                                \
+    .id = ID, .collector = COLL, .name = NAME, .engine = "socrata",           \
     .update_interval_sec = IVAL, .run = sym##_run,                            \
     .category = CAT, .type = "dataset", .url = URL,                           \
     .description = DESC, .license = LIC, .layer = NULL, .free_tier = 1,       \

@@ -33,6 +33,7 @@ static const hp_source T[] = {
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=d98a113d-6b50-40e6-b65f-2612efc877f4&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
     .page_walk = 1,
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "au-asic-credit-licensees",
@@ -44,6 +45,7 @@ static const hp_source T[] = {
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=35953a01-a9a8-4609-8566-c9fa7de465d3&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
     .page_walk = 1,
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "au-asic-credit-representatives",
@@ -55,6 +57,7 @@ static const hp_source T[] = {
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=999d9e92-df2c-4d6d-b580-321dcd205292&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
     .page_walk = 1,
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "au-asic-financial-advisers",
@@ -66,6 +69,7 @@ static const hp_source T[] = {
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=91d80440-5787-46fc-99de-0c1d93e6cc9f&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
     .page_walk = 1,
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "au-asic-smsf-auditors",
@@ -77,6 +81,7 @@ static const hp_source T[] = {
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=13b12e77-8fda-42ca-aa43-23715036836b&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
     .page_walk = 1,
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .interval = 86400, .free_tier = 1 },
 
 };

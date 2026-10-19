@@ -46,6 +46,10 @@ char *statusapi_one(db_handle *db, const char *id);
  * 1 if `id` should be hidden from /api/layers and /api/status; 0 for NULL.
  * Shared so /api/layers filters identically (Node imported the same set). */
 int statusapi_strip_has(const char *id);
+/* The credential block one status row carries ({requiresKey, configured,
+ * credentialStatus, envVars[], missingVars[]}), as a fresh cJSON object for
+ * another route to embed. Caller owns it. */
+struct cJSON *statusapi_cred_json(const char *id);
 
 /* POST /api/status/:id/probe — one GET of the source's OWN registered endpoint,
  * recording request + response into the sources row's probe_* columns. The URL

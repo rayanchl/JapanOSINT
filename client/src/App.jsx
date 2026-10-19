@@ -7,7 +7,6 @@ import ConsoleHubPage from './components/shell/ConsoleHubPage.jsx';
 import OnboardingFlow from './components/auth/OnboardingFlow.jsx';
 import AuthCallback from './components/auth/AuthCallback.jsx';
 import MapPage from './components/map/MapPage';
-import SourceDashboard from './components/dashboard/SourceDashboard';
 import SearchPage from './components/search/SearchPage';
 import EntitiesPage from './components/entities/EntitiesPage';
 import EntityProfile from './components/entities/EntityProfile';
@@ -20,6 +19,10 @@ import { ServerSettings } from './components/auth/OnboardingFlow.jsx';
 
 const lazy = (loader) => React.lazy(loader);
 const IntelPage = lazy(() => import('./components/intel/IntelPage.jsx'));
+const SourcesListPage = lazy(() => import('./components/sources/SourcesListPage.jsx'));
+const SourceDetailPage = lazy(() => import('./components/sources/SourceDetailPage.jsx'));
+const CollectorsPage = lazy(() => import('./components/collectors/CollectorsPage.jsx'));
+const CollectorDetailPage = lazy(() => import('./components/collectors/CollectorDetailPage.jsx'));
 const IntelSourceItemsPage = lazy(() => import('./components/intel/IntelSourceItemsPage.jsx'));
 const IntelItemPage = lazy(() => import('./components/intel/IntelItemPage.jsx'));
 const CasesPage = lazy(() => import('./components/cases/CasesPage.jsx'));
@@ -112,7 +115,7 @@ function OperatorOnly({ children }) {
 function Fallback() { return <LoadingState />; }
 
 function Shell() {
-  const { sources, stats, isConnected, lastUpdate, error: sourcesError } = useDataSources();
+  const { stats, isConnected, lastUpdate, error: sourcesError } = useDataSources();
   const { theme, toggle } = useTheme();
   const status = { isConnected, activeSources: stats?.online, sourcesError, lastUpdate };
 
@@ -133,7 +136,10 @@ function Shell() {
           <Route path="/timeline" element={<TimelinePage />} />
 
           <Route path="/console" element={<ConsoleHubPage />} />
-          <Route path="/console/sources" element={<SourceDashboard sources={sources} stats={stats} pollError={sourcesError} lastUpdate={lastUpdate} />} />
+          <Route path="/console/sources" element={<SourcesListPage />} />
+          <Route path="/console/sources/:id" element={<SourceDetailPage />} />
+          <Route path="/console/collectors" element={<CollectorsPage />} />
+          <Route path="/console/collectors/:key" element={<CollectorDetailPage />} />
           <Route path="/console/cameras" element={<div className="h-full overflow-hidden"><CameraDiscoveryThread /></div>} />
           <Route path="/console/inbox" element={<AlertInboxPage />} />
           <Route path="/console/alerts" element={<AlertsPage />} />

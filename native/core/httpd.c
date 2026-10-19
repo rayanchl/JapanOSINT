@@ -3,6 +3,7 @@
 #include "intelapi.h"
 #include "respcache.h"
 #include "statusapi.h"
+#include "sourceapi.h"
 #include "miscapi.h"
 #include "entityapi.h"
 #include "tenantapi.h"
@@ -221,6 +222,119 @@ static int export_mg_write(void *ctx, const char *buf, size_t len) {
 static const char *jget_str(const cJSON *o, const char *k) {
   const cJSON *v = o ? cJSON_GetObjectItem(o, k) : NULL;
   return (v && cJSON_IsString(v)) ? v->valuestring : NULL;
+}
+
+/* ── the source pages' routes (core/sourceapi.c) ─────────────────────────
+ *
+ * /api/sources/search, /api/sources/:id/detail, /api/sources/:id/summary,
+ * /api/collectors and /api/collectors/:key are DB reads over the whole
+ * registry (or an LLM call, for the summary), so like the fleet routes they
+ * build on a worker thread, reply through MG_EV_WAKEUP, and cache the body
+ * for a few seconds under a key that is a hash of the request — RC_KEY_MAX is
+ * 64 bytes and a source id alone can be 57. */
+static void reply_busy(struct mg_connection *c);
+static int  fleet_ttl(void);
+static void fleet_reply_cached(struct mg_connection *c, const char *body, long age_ms);
+static void wakeup_reply_big(struct mg_mgr *mgr, unsigned long cid, int status, char *owned);
+static int  worker_admit(void);
+static void worker_release(void);
+typedef enum { SA_DETAIL, SA_SEARCH, SA_COLLECTORS, SA_COLLECTOR, SA_SUMMARY } sa_kind;
+typedef struct {
+  struct mg_mgr *mgr; unsigned long cid;
+  sa_kind kind;
+  char id[256];                       /* source id, or collector key          */
+  char q[256], collector[128], group[64], category[64], engine[32], skind[32],
+       status[16], grade[8], sort[16];
+  int has_items, desc, limit, offset, refresh;
+  char key[64];                       /* respcache key                        */
+} sa_arg;
+
+static unsigned long long sa_fnv(unsigned long long h, const char *s) {
+  for (const unsigned char *p = (const unsigned char *)(s ? s : ""); *p; p++)
+    h = (h ^ *p) * 1099511628211ULL;
+  return (h ^ 0x1f) * 1099511628211ULL;
+}
+static void sa_parse(struct mg_http_message *hm, sa_arg *a) {
+  char v[16];
+  mg_http_get_var(&hm->query, "q", a->q, sizeof a->q);
+  mg_http_get_var(&hm->query, "collector", a->collector, sizeof a->collector);
+  mg_http_get_var(&hm->query, "group", a->group, sizeof a->group);
+  mg_http_get_var(&hm->query, "category", a->category, sizeof a->category);
+  mg_http_get_var(&hm->query, "engine", a->engine, sizeof a->engine);
+  mg_http_get_var(&hm->query, "kind", a->skind, sizeof a->skind);
+  mg_http_get_var(&hm->query, "status", a->status, sizeof a->status);
+  mg_http_get_var(&hm->query, "grade", a->grade, sizeof a->grade);
+  mg_http_get_var(&hm->query, "sort", a->sort, sizeof a->sort);
+  if (mg_http_get_var(&hm->query, "has_items", v, sizeof v) > 0) a->has_items = v[0] == '1';
+  if (mg_http_get_var(&hm->query, "desc", v, sizeof v) > 0) a->desc = v[0] == '1';
+  if (mg_http_get_var(&hm->query, "limit", v, sizeof v) > 0) a->limit = atoi(v);
+  if (mg_http_get_var(&hm->query, "offset", v, sizeof v) > 0) a->offset = atoi(v);
+  if (mg_http_get_var(&hm->query, "refresh", v, sizeof v) > 0) a->refresh = v[0] == '1';
+  if (a->limit < 0) a->limit = 0;
+  if (a->offset < 0) a->offset = 0;
+  unsigned long long h = 1469598103934665603ULL;
+  h = sa_fnv(h, a->id); h = sa_fnv(h, a->q); h = sa_fnv(h, a->collector); h = sa_fnv(h, a->group);
+  h = sa_fnv(h, a->category); h = sa_fnv(h, a->engine); h = sa_fnv(h, a->skind);
+  h = sa_fnv(h, a->status); h = sa_fnv(h, a->grade); h = sa_fnv(h, a->sort);
+  snprintf(a->key, sizeof a->key, "sa:%d:%016llx:%d%d:%d:%d", (int)a->kind, h,
+           a->has_items, a->desc, a->limit, a->offset);
+}
+static char *sa_build(db_handle *db, const sa_arg *a, int *st) {
+  sourceapi_query q = {
+    .q = a->q, .collector = a->collector, .group = a->group, .category = a->category,
+    .engine = a->engine, .kind = a->skind, .status = a->status, .grade = a->grade,
+    .has_items = a->has_items, .sort = a->sort, .desc = a->desc,
+    .limit = a->limit, .offset = a->offset };
+  char *b = NULL;
+  *st = 200;
+  switch (a->kind) {
+    case SA_DETAIL:     b = sourceapi_detail(db, a->id); break;
+    case SA_SEARCH:     b = sourceapi_search(db, &q); break;
+    case SA_COLLECTORS: b = sourceapi_collectors(db); break;
+    case SA_COLLECTOR:  b = sourceapi_collector(db, a->id, &q); break;
+    case SA_SUMMARY:    b = sourceapi_summary(db, a->id, a->refresh); break;
+  }
+  if (!b) { *st = 404; return strdup("{\"error\":\"not_found\"}"); }
+  return b;
+}
+/* The summary is cached by its own table in sourceapi.c (per data
+ * fingerprint and model), and a refresh must not be served from here. */
+static int sa_cacheable(const sa_arg *a) { return a->kind != SA_SUMMARY; }
+static void *sa_thread(void *vp) {
+  sa_arg *a = vp;
+  db_handle own;
+  db_handle *db = db_worker_open(&own, g_db);
+  int st = 200;
+  char *body = sa_build(db, a, &st);
+  db_worker_close(&own);
+  if (st == 200 && sa_cacheable(a)) respcache_put(a->key, body);
+  wakeup_reply_big(a->mgr, a->cid, st, body);      /* consumes body */
+  free(a);
+  worker_release();
+  return NULL;
+}
+static void sa_serve(struct mg_connection *c, struct mg_http_message *hm, sa_kind kind,
+                     const char *id) {
+  sa_arg *a = calloc(1, sizeof *a);
+  if (!a) { reply_json(c, 500, "{\"error\":\"out_of_memory\"}"); return; }
+  a->mgr = c->mgr; a->cid = c->id; a->kind = kind;
+  if (id) snprintf(a->id, sizeof a->id, "%s", id);
+  sa_parse(hm, a);
+  if (sa_cacheable(a)) {
+    long age = 0;
+    char *hit = respcache_get(a->key, fleet_ttl(), &age);
+    if (hit) { fleet_reply_cached(c, hit, age); free(hit); free(a); return; }
+  }
+  if (!worker_admit()) { free(a); reply_busy(c); return; }
+  pthread_t th;
+  if (pthread_create(&th, NULL, sa_thread, a) == 0) { pthread_detach(th); return; }
+  worker_release();
+  /* thread spawn failed (rare): answer inline on the loop's own handle */
+  int st = 200;
+  char *body = sa_build(g_db, a, &st);
+  free(a);
+  reply_json(c, st, body ? body : "{\"error\":\"out_of_memory\"}");
+  free(body);
 }
 
 /* GET /api/sources/stats — aggregate counts from the sources table. */
@@ -2304,6 +2418,19 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       reply_json(c, body ? 200 : 500, body ? body : "{\"error\":\"server_error\"}");
       free(body);
       return;
+    }
+
+    /* ---- the source pages (core/sourceapi.c): searched and paged on the
+     * server, one source in full, the registry grouped by collector. These
+     * precede the bare /api/sources/:id matcher below, which would otherwise
+     * take "search" for an id. */
+    if (eq(u, "/api/sources/search"))  { sa_serve(c, hm, SA_SEARCH, NULL); return; }
+    if (eq(u, "/api/collectors"))      { sa_serve(c, hm, SA_COLLECTORS, NULL); return; }
+    { char ck[128];
+      if (seg(u, "/api/collectors/", "", ck, sizeof ck)) { sa_serve(c, hm, SA_COLLECTOR, ck); return; }
+      char sid[256];
+      if (seg(u, "/api/sources/", "/detail", sid, sizeof sid))  { sa_serve(c, hm, SA_DETAIL, sid); return; }
+      if (seg(u, "/api/sources/", "/summary", sid, sizeof sid)) { sa_serve(c, hm, SA_SUMMARY, sid); return; }
     }
 
     /* GET /api/sources — full source registry/probe rows. */

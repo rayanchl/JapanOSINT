@@ -3667,6 +3667,14 @@ void vec0_free(vec0_vtab *p) {
     p->vector_columns[i].name = NULL;
   }
 
+  /* JapanOSINT local patch: v0.1.9 allocates one shadow name per metadata
+   * column in vec0_init and never freed them, leaking per table open (found
+   * by the ASan job once intel_vec_v2 gained metadata columns). */
+  for (int i = 0; i < p->numMetadataColumns; i++) {
+    sqlite3_free(p->shadowMetadataChunksNames[i]);
+    p->shadowMetadataChunksNames[i] = NULL;
+  }
+
   for (int i = 0; i < p->numPartitionColumns; i++) {
     sqlite3_free(p->paritition_columns[i].name);
     p->paritition_columns[i].name = NULL;

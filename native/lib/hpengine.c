@@ -6,6 +6,7 @@
  * that cannot fetch emits zero items and logs why. */
 #include "hpengine.h"
 #include "jsonlist.h"      /* jsonlist_next_page: page_walk rows page as VJSON did */
+#include "pagewalk.h"      /* jo_page_max: the tree's one page ceiling */
 #include "../core/url_override.h"
 #include "csv.h"
 #include "xlsx.h"
@@ -24,6 +25,7 @@
 #include <strings.h>
 #include <time.h>       /* {date…} and {ago:N} tokens: time() */
 #include <unistd.h>     /* usleep: page_delay_ms */
+#include <pthread.h>    /* the lazily-sorted spec table (hp_lookup) */
 
 /* Bounds exist only to keep one pathological response from exhausting memory —
  * they are NOT an editorial filter. Per the exhaustive-use rule
@@ -35,7 +37,13 @@
 #define HP_MAX_ARR        256   /* exhaustive-ok: memory guard, stamped     */
 #define HP_MAX_DEPTH        8   /* exhaustive-ok: memory guard, stamped     */
 #define HP_HTTP_TIMEOUT 20000
-#define HP_PAGE_MAX_DEF    10   /* exhaustive-ok: runaway guard, stamped    */
+/* The page ceiling for a row that declares its own paging is jo_page_max()
+ * (lib/pagewalk.c) — the SAME bound and the same $JO_PAGE_MAX knob as the
+ * generated fleet and as this engine's own page_walk rows. It was a private
+ * `10` here with no environment override, so these rows stopped at half the
+ * tree's documented depth and no setting could move them: 1,919 scheduled rows
+ * declare page_param/next_path/{page} with no per-row page_max. A row that
+ * genuinely wants a different depth still says so in `page_max`. */
 /* The detail budget is a COUNT and a CLOCK, and the clock is the one that
  * normally binds. It used to be a count of 25, applied to all ~633 rows that
  * declare a second hop: a CQC provider list is 1,000 records a page, so 975 of
@@ -3538,12 +3546,35 @@ static int hp_run_html(hp_run_state *st, const char *html) {
 
 /* ── the one run() every row shares ──────────────────────────────────────── */
 
-static const hp_source *hp_lookup(const char *id) {
-  if (!id) return NULL;
-  for (int i = 0; i < g_nspecs; i++)
-    if (!strcmp(g_specs[i]->id, id)) return g_specs[i];
-  return NULL;
+/* The spec table is appended by constructors and read by every run and by
+ * registry_is_entity_pivot(), which the OSINT dispatcher asks about all
+ * 18,883 registered sources per catalogue build. A linear scan there is
+ * 18,883 x 17,000 strcmp per search; so the table is sorted once, lazily, on
+ * the first lookup after the last registration, and searched by bsearch. */
+static int g_specs_sorted = 0;
+static pthread_mutex_t g_specs_mu = PTHREAD_MUTEX_INITIALIZER;
+static int hp_spec_cmp(const void *a, const void *b) {
+  const hp_source *const *x = a, *const *y = b;
+  return strcmp((*x)->id, (*y)->id);
 }
+static int hp_spec_key_cmp(const void *k, const void *e) {
+  const hp_source *const *y = e;
+  return strcmp((const char *)k, (*y)->id);
+}
+static const hp_source *hp_lookup(const char *id) {
+  if (!id || g_nspecs == 0) return NULL;
+  pthread_mutex_lock(&g_specs_mu);
+  if (!g_specs_sorted) {
+    qsort((void *)g_specs, (size_t)g_nspecs, sizeof *g_specs, hp_spec_cmp);
+    g_specs_sorted = 1;
+  }
+  pthread_mutex_unlock(&g_specs_mu);
+  const hp_source **hit = bsearch(id, g_specs, (size_t)g_nspecs, sizeof *g_specs,
+                                  hp_spec_key_cmp);
+  return hit ? *hit : NULL;
+}
+
+const hp_source *hp_source_get(const char *id) { return hp_lookup(id); }
 
 const hp_source *hp_spec_get(const char *id) { return hp_lookup(id); }
 
@@ -4062,7 +4093,7 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     if (!has_accept && s->mode != HP_JSON) detail_hdrs[nd++] = "Accept: application/json";
     detail_hdrs[nd] = NULL;
   }
-  int page_max = s->page_max > 0 ? s->page_max : HP_PAGE_MAX_DEF;
+  int page_max = s->page_max > 0 ? s->page_max : jo_page_max(NULL);
   /* A `{page}` token left in the URL after entity expansion is path-segment
    * paging: the upstream numbers its pages in the path (kanpou.ai's
    * /tosan/p/N), which no query parameter can express. hp_expand leaves an
@@ -4136,6 +4167,33 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
    * URL can only be advanced from it. Applying it twice is a no-op. */
   long tmpl_step = s->page_size > 0 ? s->page_size : 0;  /* {offset} stride */
   char *page_body = NULL;             /* the body for THIS page, when paged */
+  /* Does this row read its collection over a CYCLE (hpengine.h's page_resume)?
+   * Decided once, here, so the reasons are in one place and each refusal says
+   * which one applied rather than silently doing nothing. */
+  int resume_on = 0;
+  if (s->page_resume) {
+    if (!paged && !page_walk)
+      fprintf(stderr, "[hp:%s] page_resume on a row that declares no paging — "
+                      "one request has nowhere to resume from; ignored\n", s->id);
+    else if (ctx->entity && ctx->entity[0])
+      fprintf(stderr, "[hp:%s] page_resume ignored for the entity run \"%s\": a "
+                      "pivot answers from the start of that entity's results\n",
+              s->id, ctx->entity);
+    else if (hp_has_date_token(s->url) || hp_has_date_token(s->post_body))
+      fprintf(stderr, "[hp:%s] page_resume with a {date…}/{ago…} token — a "
+                      "stored URL would pin one day forever; ignored\n", s->id);
+    else if (path_paged)
+      /* A {page}/{offset} token lives in the PATH or the body, so the position
+       * cannot be read back out of a stored URL the way a query parameter can,
+       * and without the number the walk would restart its arithmetic from
+       * page_start and re-read what it just read. One registered row is this
+       * shape; it keeps its ceiling until the token position is stored too. */
+      fprintf(stderr, "[hp:%s] page_resume with a {page}/{offset} token is not "
+                      "supported — the position is not readable from the URL; "
+                      "ignored\n", s->id);
+    else
+      resume_on = 1;
+  }
 dated_restart:;
   char *page_url = strdup(page_walk ? url_override_apply(url) : url);
   if (path_paged) {
@@ -4146,6 +4204,41 @@ dated_restart:;
     free(page_url);
     page_url = hp_expand(url, &vars, NULL, NULL);
     if (hp_has_page_token(body)) page_body = hp_expand(body, &vars, NULL, NULL);
+  }
+  /* Start where the previous run stopped. The token is a URL — the same URL
+   * this engine would have requested next — so one stored string serves
+   * page_param, {page}, next_path and page_walk alike, and no mechanism needs
+   * its own arithmetic to be resumable.
+   *
+   * The host check is not paranoia about our own database: it is the rule that
+   * a reading position can move us THROUGH a collection and never to a
+   * different server. A token that fails it is dropped and the run starts from
+   * the row's own URL, which is always safe. */
+  int resumed_from_token = 0;
+  if (resume_on && ctx->resume_in && ctx->resume_in[0] && !vars.day_shift) {
+    char *want = hp_host_of(url), *got = hp_host_of(ctx->resume_in);
+    if (want && got && strcmp(want, got) == 0) {
+      free(page_url);
+      page_url = strdup(ctx->resume_in);
+      resumed_from_token = 1;
+      /* THE URL IS NOT ENOUGH ON ITS OWN for a page_param walk. The next page
+       * is computed as page_start + (page+1)*step from the ROW's url, not from
+       * the page just fetched — so a run resumed at `offset=4` with page_start
+       * still 0 would ask for offset=2 next and walk BACKWARDS over ground it
+       * had already covered, forever, with every page full and the run green.
+       * The stored position carries the number; read it back. */
+      long at = 0;
+      if (s->page_param && hp_url_num_param(page_url, s->page_param, &at) &&
+          at >= 0 && at < 1000000000L)
+        page_start = (int)at;
+      fprintf(stderr, "[hp:%s] resuming the walk at %s\n", s->id, page_url);
+    } else {
+      fprintf(stderr, "[hp:%s] stored resume position is on host %s, not %s — "
+                      "dropped; this run starts from the row's own URL\n",
+              s->id, got ? got : "(none)", want ? want : "(none)");
+    }
+    free(want);
+    free(got);
   }
   /* The first page's outcome, kept for the fetch-failure notice: 0 = never
    * asked, 200 = served, -1 = transport failure, otherwise the status. */
@@ -4502,6 +4595,30 @@ dated_restart:;
     if (page + 1 >= page_max && page_url) st.truncated = 1;   /* ceiling bit */
   }
   free(prev_url);
+  /* Store where this run stopped — but ONLY when the ceiling stopped it, which
+   * is the one exit where `page_url` holds a page that exists and was never
+   * fetched (line "ceiling bit" above sets st.truncated with page_url still in
+   * hand). Every other exit means the walk ENDED: a short page, no next link,
+   * a repeated page, a cancel. Those clear the position so the next run starts
+   * the cycle again — which is the point, not a loss.
+   *
+   * A later page that FAILED also clears it. Bookmarking a page that answered
+   * 500 would make the row retry that one page every run forever; starting over
+   * re-reads what we already have, which is cheap and self-healing, and the
+   * fetch-failure notice names the status either way. */
+  char *resume_next = NULL;        /* kept for the notice, which runs later */
+  if (resume_on && ctx->resume_out) {
+    const char *keep = (st.truncated && !failed_midwalk && page_url)
+                         ? page_url : NULL;
+    ctx->resume_out(ctx, keep);
+    if (keep) {
+      resume_next = strdup(keep);
+      fprintf(stderr, "[hp:%s] the next run resumes at %s\n", s->id, keep);
+    } else if (resumed_from_token) {
+      fprintf(stderr, "[hp:%s] the cycle completed; the next run starts over\n",
+              s->id);
+    }
+  }
   free(page_url);
   free(page_body);
   free(st.next_url);
@@ -4616,6 +4733,32 @@ date_step_back:
     cJSON_AddBoolToObject(p, "more_pages_pending",
                           failed_midwalk || pw_stuck || avail <= (long)out);
     cJSON_AddNumberToObject(p, "declared_max_items", s->max_items);
+    /* A cycling row's notice says WHICH SLICE this run read, so "used 2,000 of
+     * 5,597,082" is not read as a permanent ceiling. Without this the
+     * disclosure is true and still misleading: the records not used this run
+     * are not records nobody will ever fetch. */
+    if (resume_on) {
+      cJSON_AddBoolToObject(p, "reads_over_a_cycle", 1);
+      cJSON_AddBoolToObject(p, "resumed_this_run", resumed_from_token);
+      /* Three outcomes, not two. Clearing the position because a page FAILED is
+       * not the same as clearing it because the collection ended, and saying
+       * "this run completed the cycle" for the first one is a false claim in a
+       * disclosure — the thing this notice exists to prevent.
+       * ENA_PATHOGEN_SARSCOV2_RUNS found it: ebi.ac.uk answers HTTP 400 to
+       * `offset=1000`, so the row reads 1,000 of millions, page 2 is refused,
+       * and the cycle can never advance. That is a row to re-point, and the
+       * notice has to say so rather than report a tidy completion. */
+      if (resume_next)
+        cJSON_AddStringToObject(p, "next_run_resumes_at", resume_next);
+      else if (failed_midwalk)
+        cJSON_AddStringToObject(p, "next_run_resumes_at",
+                                "the start — the position was NOT advanced "
+                                "because a page failed, so this row re-reads "
+                                "the same slice until its paging is re-pointed");
+      else
+        cJSON_AddStringToObject(p, "next_run_resumes_at",
+                                "the start — this run completed the cycle");
+    }
     char cutwhy[400] = "";
     if (failed_midwalk) {
       cJSON_AddNumberToObject(p, "failed_page", failed_page);
@@ -4659,6 +4802,9 @@ date_step_back:
       : failed_midwalk
         ? "re-run; a rate-limited host needs a per-host minimum gap "
           "(core/hostgate.c) — see docs/SOURCE_EXHAUSTIVENESS.md"
+      : resume_on
+        ? "none needed: this row reads its collection over a cycle, and "
+          "next_run_resumes_at says where the next run continues"
         : "raise max_items/page_max on this row (lib/hpengine.h) — see "
           "docs/SOURCE_EXHAUSTIVENESS.md");
     char *pj = cJSON_PrintUnformatted(p);
@@ -4669,6 +4815,12 @@ date_step_back:
     if (failed_midwalk)
       snprintf(title, sizeof title, "%s used %d of %ld available records — "
                "page %d answered %ld", s->id, out, avail, failed_page, failed_status);
+    else if (resume_on && resume_next)
+      /* The title is what a human scans, so a cycling row says so here and not
+       * only in the properties: "used 2,000 of 5,597,082" read alone is a
+       * ceiling nobody will ever pass, which is the opposite of the truth. */
+      snprintf(title, sizeof title, "%s read %d of %ld records this run; the "
+               "next run continues the cycle", s->id, out, avail);
     else
       snprintf(title, sizeof title, "%s used %d of %ld available records",
                s->id, out, avail);
@@ -4682,6 +4834,7 @@ date_step_back:
     sink->emit(sink, &note);
     free(pj);
   }
+  free(resume_next);
 
   /* RULE 1's SECOND HALF. "Real fetch or honest empty" has always held here —
    * the engine cannot invent a record — but the rule also says a failure
@@ -4820,7 +4973,40 @@ date_step_back:
   return hard_error ? -1 : 0;      /* honest empty is not an error */
 }
 
-void hp_register(const hp_source *specs, int n, source_def *defs) {
+/* "collectors/pivot/table/hp3b25_jpmedia.c" -> "hp3b25_jpmedia". One
+ * string per table, written once from a constructor and never freed because
+ * source_def keeps a pointer, not a copy. The strings are held in a static
+ * pool so they stay reachable from a global: a table whose rows all declare
+ * their own collector never references its default, and LeakSanitizer
+ * reported each such string as a leak (125 objects in every unit binary). */
+#define HP_TABLE_NAMES_MAX 4096
+static char *g_table_names[HP_TABLE_NAMES_MAX];
+static int   g_ntable_names = 0;
+
+static const char *hp_table_collector(const char *file) {
+  if (!file || !*file) return NULL;
+  const char *b = strrchr(file, '/');
+  b = b ? b + 1 : file;
+  const char *bs = strrchr(b, '\\');
+  if (bs) b = bs + 1;
+  size_t n = strlen(b);
+  if (n > 2 && !strcmp(b + n - 2, ".c")) n -= 2;
+  if (n == 0 || n > 120) return NULL;
+  for (int i = 0; i < g_ntable_names; i++)
+    if (strlen(g_table_names[i]) == n && !memcmp(g_table_names[i], b, n))
+      return g_table_names[i];
+  if (g_ntable_names >= HP_TABLE_NAMES_MAX) return NULL;   /* falls back to "osint" */
+  char *out = malloc(n + 1);
+  if (!out) return NULL;
+  memcpy(out, b, n); out[n] = 0;
+  g_table_names[g_ntable_names++] = out;
+  return out;
+}
+
+void hp_register(const hp_source *specs, int n, source_def *defs,
+                 const char *table) {
+  const char *dflt = hp_table_collector(table);
+  if (!dflt) dflt = "osint";
   for (int i = 0; i < n; i++) {
     const hp_source *s = &specs[i];
     if (!s->id || !s->url) continue;
@@ -4838,9 +5024,10 @@ void hp_register(const hp_source *specs, int n, source_def *defs) {
       g_cspecs = nc;
     }
     g_specs[g_nspecs++] = s;
+    g_specs_sorted = 0;
     defs[i] = (source_def){
       .id                  = s->id,
-      .collector           = s->collector ? s->collector : "osint",
+      .collector           = s->collector ? s->collector : dflt,
       .name                = s->name,
       .name_ja             = s->name_ja,
       .update_interval_sec = s->interval,
@@ -4856,7 +5043,202 @@ void hp_register(const hp_source *specs, int n, source_def *defs) {
        * passed through untouched, never invented. */
       .layer               = s->layer,
       .free_tier           = s->free_tier,
+      .engine              = "hpengine",
     };
     registry_add(&defs[i]);
   }
+}
+
+/* ── describing a row as declared (source detail API) ───────────────────── */
+
+static const char *hp_mode_name(hp_mode m) {
+  switch (m) {
+    case HP_JSON:   return "json";
+    case HP_HTML:   return "html";
+    case HP_CSV:    return "csv";
+    case HP_XML:    return "xml";
+    case HP_XLSX:   return "xlsx";
+    case HP_RECJAR: return "recjar";
+    case HP_NDJSON: return "ndjson";
+  }
+  return "unknown";
+}
+static const char *hp_want_name(hp_want w) {
+  switch (w) {
+    case HP_ANY:     return "any";
+    case HP_DOMAIN:  return "domain";
+    case HP_IP:      return "ip";
+    case HP_EMAIL:   return "email";
+    case HP_NUMERIC: return "numeric";
+    case HP_HASH:    return "hash";
+    case HP_ICAO24:  return "icao24";
+    case HP_ETH:     return "eth";
+    case HP_BTC:     return "btc";
+    case HP_ASN:     return "asn";
+  }
+  return "unknown";
+}
+static void hp_desc_str(cJSON *o, const char *k, const char *v) {
+  if (v && *v) cJSON_AddStringToObject(o, k, v);
+}
+static void hp_desc_int(cJSON *o, const char *k, int v) {
+  if (v) cJSON_AddNumberToObject(o, k, v);
+}
+/* Every entity token the engine expands, in one place. {Q} is the raw
+ * POST-body form; the rest are the {q…} family hp_vars renders. */
+static void hp_desc_tokens(cJSON *arr, const char *tmpl) {
+  static const char *toks[] = { "{q}", "{qd}", "{qc}", "{qh}", "{qu}", "{ql}",
+                                "{qU}", "{qn}", "{Q}", NULL };
+  if (!tmpl) return;
+  for (int i = 0; toks[i]; i++) {
+    if (!strstr(tmpl, toks[i])) continue;
+    int dup = 0; cJSON *e;
+    cJSON_ArrayForEach(e, arr)
+      if (cJSON_IsString(e) && !strcmp(e->valuestring, toks[i])) { dup = 1; break; }
+    if (!dup) cJSON_AddItemToArray(arr, cJSON_CreateString(toks[i]));
+  }
+}
+
+/* A row takes an entity when its URL or body carries a token — or when it
+ * declares filter_query: a bulk file (OFAC's sdn.csv, the IRS exempt-orgs
+ * zip, OurAirports) fetched whole and filtered by the entity locally is an
+ * entity pivot too, and 18 such rows read as rule-3 "never runs" until this
+ * counted them (2026-10-18). */
+int hp_source_uses_entity(const char *id) {
+  const hp_source *s = hp_lookup(id);
+  if (!s) return 0;
+  return hp_uses_entity(s->url) || hp_uses_entity(s->post_body) || s->filter_query;
+}
+
+char *hp_describe_json(const char *id) {
+  const hp_source *s = hp_lookup(id);
+  if (!s) return NULL;
+  cJSON *o = cJSON_CreateObject();
+  cJSON_AddStringToObject(o, "engine", "hpengine");
+  cJSON_AddStringToObject(o, "id", s->id);
+  cJSON_AddStringToObject(o, "mode", hp_mode_name(s->mode));
+  cJSON_AddStringToObject(o, "want", hp_want_name(s->want));
+
+  int uses = hp_uses_entity(s->url) || hp_uses_entity(s->post_body) || s->filter_query;
+  const char *kind = uses ? (s->interval > 0 ? "scheduled-pivot" : "pivot")
+                          : (s->interval > 0 ? "scheduled" : "unreachable");
+  cJSON_AddStringToObject(o, "kind", kind);
+  cJSON_AddBoolToObject(o, "uses_entity", uses);
+  cJSON *toks = cJSON_CreateArray();
+  hp_desc_tokens(toks, s->url);
+  hp_desc_tokens(toks, s->post_body);
+  cJSON_AddItemToObject(o, "entity_tokens", toks);
+  {
+    int dt = (s->url && (strstr(s->url, "{date") || strstr(s->url, "{ago:")))
+          || (s->post_body && (strstr(s->post_body, "{date") || strstr(s->post_body, "{ago:")));
+    cJSON_AddBoolToObject(o, "uses_date_tokens", dt);
+  }
+
+  /* request */
+  cJSON *req = cJSON_CreateObject();
+  cJSON_AddStringToObject(req, "method", s->post_body ? "POST" : "GET");
+  hp_desc_str(req, "url", s->url);
+  hp_desc_str(req, "post_body", s->post_body);
+  hp_desc_str(req, "content_type", s->content_type);
+  {
+    cJSON *h = cJSON_CreateArray();
+    for (int i = 0; i < 5 && s->headers[i]; i++)
+      cJSON_AddItemToArray(h, cJSON_CreateString(s->headers[i]));
+    cJSON_AddItemToObject(req, "headers", h);
+  }
+  hp_desc_str(req, "key_env", s->key_env);
+  hp_desc_str(req, "index_url", s->index_url);
+  hp_desc_str(req, "index_href_must", s->index_href_must);
+  hp_desc_str(req, "charset", s->charset);
+  hp_desc_int(req, "timeout_ms", s->timeout_ms);
+  hp_desc_int(req, "tz_minutes", s->tz_minutes);
+  hp_desc_int(req, "date_back", s->date_back);
+  hp_desc_str(req, "date_step", s->date_step);
+  hp_desc_str(req, "date_field", s->date_field);
+  hp_desc_int(req, "page_delay_ms", s->page_delay_ms);
+  hp_desc_int(req, "filter_query", s->filter_query);
+  cJSON_AddItemToObject(o, "request", req);
+
+  /* parsing */
+  cJSON *pa = cJSON_CreateObject();
+  hp_desc_str(pa, "array_path", s->array_path);
+  hp_desc_str(pa, "title_keys", s->title_keys);
+  hp_desc_str(pa, "id_keys", s->id_keys);
+  hp_desc_str(pa, "link_keys", s->link_keys);
+  hp_desc_str(pa, "link_tmpl", s->link_tmpl);
+  hp_desc_str(pa, "date_keys", s->date_keys);
+  hp_desc_str(pa, "body_keys", s->body_keys);
+  hp_desc_str(pa, "lat_key", s->lat_key);
+  hp_desc_str(pa, "lon_key", s->lon_key);
+  hp_desc_str(pa, "latlon_key", s->latlon_key);
+  hp_desc_str(pa, "lonlat_key", s->lonlat_key);
+  hp_desc_int(pa, "csv_no_header", s->csv_no_header);
+  hp_desc_str(pa, "csv_delim", s->csv_delim);
+  hp_desc_str(pa, "csv_comment", s->csv_comment);
+  hp_desc_int(pa, "csv_skip_lines", s->csv_skip_lines);
+  hp_desc_str(pa, "xlsx_sheet", s->xlsx_sheet);
+  hp_desc_int(pa, "xlsx_sheet_index", s->xlsx_sheet_index);
+  hp_desc_str(pa, "href_must", s->href_must);
+  hp_desc_str(pa, "base", s->base);
+  hp_desc_str(pa, "table_must", s->table_must);
+  hp_desc_int(pa, "table_index", s->table_index);
+  hp_desc_int(pa, "table_skip_rows", s->table_skip_rows);
+  hp_desc_int(pa, "max_items", s->max_items);
+  hp_desc_str(pa, "record_type", s->record_type);
+  hp_desc_str(pa, "lang", s->lang);
+  hp_desc_str(pa, "tags", s->tags);
+  cJSON_AddItemToObject(o, "parsing", pa);
+
+  /* detail hop */
+  cJSON *dh = cJSON_CreateObject();
+  cJSON_AddBoolToObject(dh, "declared", s->detail_url != NULL);
+  hp_desc_str(dh, "detail_url", s->detail_url);
+  hp_desc_str(dh, "detail_key", s->detail_key);
+  hp_desc_str(dh, "detail_path", s->detail_path);
+  hp_desc_int(dh, "detail_max", s->detail_max);
+  cJSON_AddItemToObject(o, "detail_hop", dh);
+
+  /* paging */
+  cJSON *pg = cJSON_CreateObject();
+  const char *strategy =
+      s->next_path ? "next_path"
+    : s->page_param ? "page_param"
+    : ((s->url && (strstr(s->url, "{page}") || strstr(s->url, "{offset}")))
+       || (s->post_body && (strstr(s->post_body, "{page}") || strstr(s->post_body, "{offset}"))))
+        ? "url_token"
+    : s->page_walk ? "page_walk" : "single_request";
+  cJSON_AddStringToObject(pg, "strategy", strategy);
+  hp_desc_str(pg, "next_path", s->next_path);
+  hp_desc_str(pg, "next_tmpl", s->next_tmpl);
+  hp_desc_str(pg, "page_param", s->page_param);
+  hp_desc_int(pg, "page_start", s->page_start);
+  hp_desc_int(pg, "page_zero_based", s->page_zero_based);
+  hp_desc_int(pg, "page_size", s->page_size);
+  hp_desc_int(pg, "page_max", s->page_max);
+  hp_desc_int(pg, "page_walk", s->page_walk);
+  /* A cycling row's page_max is NOT the size of what it reads — it is the size
+   * of one slice, and the collection arrives over however many runs the cycle
+   * takes. A client shown `page_max: 20` and nothing else would describe the
+   * row as reading 20 pages, full stop, which is the misreading the truncation
+   * notice's own title had to be rewritten to avoid. */
+  hp_desc_int(pg, "page_resume", s->page_resume);
+  if (s->page_resume)
+    cJSON_AddStringToObject(pg, "page_resume_note",
+      "reads the collection over a cycle: one ceiling's worth per run, "
+      "resuming where the previous run stopped");
+  cJSON_AddItemToObject(o, "paging", pg);
+
+  /* registration-level facts the def also carries, repeated so the engine
+   * object is self-contained */
+  hp_desc_str(o, "collector", s->collector);
+  hp_desc_str(o, "category", s->category);
+  hp_desc_str(o, "type", s->type);
+  hp_desc_str(o, "portal", s->portal);
+  hp_desc_str(o, "layer", s->layer);
+  cJSON_AddNumberToObject(o, "interval", s->interval);
+  cJSON_AddBoolToObject(o, "free_tier", s->free_tier != 0);
+
+  char *js = cJSON_PrintUnformatted(o);
+  cJSON_Delete(o);
+  return js;
 }

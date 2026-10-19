@@ -196,6 +196,7 @@ static const hp_source HP3B23_JPREGISTRY[] = {
     .page_param = "offset",
     .page_size = 100,
     .page_zero_based = 1,
+    .page_max = 22,   /* 2,165 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "law_info.law_title,revision_info.law_title",
     .description = "Every Act currently in force in Japan, from the e-Gov API that "
       "is the government's own authoritative text. Each entry carries "

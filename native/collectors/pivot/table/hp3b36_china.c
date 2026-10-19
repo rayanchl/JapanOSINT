@@ -32,6 +32,7 @@ static const hp_source HP3B36_CHINA[] = {
     .id_keys = "id",
     .interval = 86400,
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 100,
     .page_zero_based = 1,
     .title_keys = "author",

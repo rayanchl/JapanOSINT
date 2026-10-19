@@ -40,10 +40,10 @@ static size_t sc_app(char *buf, size_t cap, size_t len, const char *fmt, ...) {
 source_kind source_kind_of(const source_def *d) {
   if (!d) return SC_KIND_MANUAL;
   if (d->collector && d->collector[0] == '_') return SC_KIND_POD;
-  /* The same rule as osint_dispatch.c's is_entity_pivot and service_vec.c's
-   * old svec_is_pivot: if it moves, all of them move together. */
-  if (d->collector && !strcmp(d->collector, "osint") && d->update_interval_sec == 0)
-    return SC_KIND_PIVOT;
+  /* The ONE pivot rule (source.h), the same one dispatch and the catalogue
+   * apply — an index that disagreed with them about what a pivot is would
+   * route to services the prompt never lists. */
+  if (registry_is_entity_pivot(d)) return SC_KIND_PIVOT;
   if (d->update_interval_sec > 0) return SC_KIND_SCHEDULED;
   return SC_KIND_MANUAL;
 }

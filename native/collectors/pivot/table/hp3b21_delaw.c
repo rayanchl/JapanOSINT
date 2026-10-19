@@ -81,6 +81,7 @@ static const hp_source HP3B21_DELAW[] = {
     .link_keys = "item.@id",
     .link_tmpl = "https://testphase.rechtsinformationen.bund.de{v}",
     .page_param = "pageIndex",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_zero_based = 1,
     .title_keys = "item.name,item.alternateName,item.abbreviation",
     .description = "The federal legislation collection walked page by page with "

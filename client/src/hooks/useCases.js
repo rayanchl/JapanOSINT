@@ -47,7 +47,7 @@ export const CASE_ROLES = ['lead', 'contributor', 'viewer'];
  * Who may change a case — exactly casesapi.c's three gates, which combine the
  * caller's WORKSPACE role with their role on this case's roster
  * (`my_case_role`, null when they are not on it; GET /api/cases/:id carries
- * it, the list does not). Nothing here depends on who created the case: the
+ * it, and so does every row of the GET /api/cases list). Nothing here depends on who created the case: the
  * creator is put on the roster as lead when the case is made, and that lead
  * role — which the roster can later change — is what counts.
  */

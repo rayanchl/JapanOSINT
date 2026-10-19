@@ -356,8 +356,11 @@ source-count:
 # binary.
 #
 # It also asserts that registration was CLEAN. A DUPLICATE id means the second
-# definition is unreachable; an OVERFLOW means a row was discarded outright.
-# Neither should ever be non-zero, so neither is merely reported.
+# definition is unreachable; an OVERFLOW means a row was discarded outright; a
+# NEVER-RUNS row is registered under a collector that neither the scheduler nor
+# is_entity_pivot() will pick (registry.c explains the shape, and it was hiding
+# 16 live entity pivots). None should ever be non-zero, so none is merely
+# reported.
 #
 # --list-sources boots the binary, which opens, migrates and seeds a database.
 # It runs against a throwaway JO_DB: the default is $(REPO_ROOT)/data/japanmap.db
@@ -381,6 +384,7 @@ registry-floor: $(BIN)
 	@now=$$(cat tools/.reg.count); floor=$$(cat tools/registry-floor.txt); \
 	 dup=$$(grep -c DUPLICATE tools/.reg.log || true); \
 	 ovf=$$(grep -c OVERFLOW tools/.reg.log || true); \
+	 dead=$$(grep -c NEVER-RUNS tools/.reg.log || true); \
 	 rm -f tools/.reg.log tools/.reg.count; \
 	 if [ "$$now" -lt "$$floor" ]; then \
 	   echo "REGISTRY REGRESSED: $$now < $$floor (floor in tools/registry-floor.txt)"; \
@@ -392,7 +396,12 @@ registry-floor: $(BIN)
 	 if [ "$$ovf" -ne 0 ]; then \
 	   echo "$$ovf row(s) DROPPED at registration — a table cap is eating sources"; exit 1; \
 	 fi; \
-	 echo "registry ok: $$now >= $$floor, 0 duplicates, 0 dropped"
+	 if [ "$$dead" -ne 0 ]; then \
+	   echo "$$dead row(s) NEVER RUN — interval 0 under a collector that is not"; \
+	   echo "  \"osint\" and not an internal \"_\" lane, so neither the scheduler"; \
+	   echo "  nor is_entity_pivot() reaches them (house rule 3)"; exit 1; \
+	 fi; \
+	 echo "registry ok: $$now >= $$floor, 0 duplicates, 0 dropped, 0 never-runs"
 
 # The floor is committed (tools/source-floor.txt) so CI and a reviewer see the
 # same number the author did.

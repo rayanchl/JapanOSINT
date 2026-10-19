@@ -11,14 +11,48 @@
 
 /* The ONLY cap in this file that stops a walk. Every stop it causes emits a
  * collector-truncation-notice naming JO_PAGE_MAX as the remedy, so the bound is
- * stated in-band rather than hidden. */
-#define PW_PAGE_MAX_DEFAULT 20   /* exhaustive-ok: runaway ceiling, disclosed as a truncation notice */
+ * stated in-band rather than hidden.
+ *
+ * ONE CEILING FOR THE WHOLE TREE, because there were three and an operator
+ * could not have known. This file's header calls pw_walk "the only page walk in
+ * the tree", and of the continuation DECISION that is true — but the BOUND was
+ * copied three times with two different numbers and two different knobs:
+ *
+ *   lib/pagewalk.c   20   $JO_PAGE_MAX            the generated V* fleet
+ *   lib/jsonlist.c   20   $JO_JSONLIST_PAGE_MAX   hpengine rows with page_walk=1
+ *   lib/hpengine.c   10   (no knob at all)        rows declaring their own paging
+ *
+ * So `JO_PAGE_MAX=50` raised one population, silently did nothing for the
+ * second, and could not reach the third at any value — and the third is the
+ * largest: 1,919 scheduled rows declare page_param/next_path/{page} without a
+ * per-row page_max, and stopped at 10 pages because of a number none of them
+ * mentions. A ceiling nobody can see is the same shape as the discard this
+ * module exists to disclose.
+ *
+ * `legacy_env` keeps an older spelling working rather than ignoring it: an
+ * operator who set $JO_JSONLIST_PAGE_MAX gets what they asked for, and
+ * $JO_PAGE_MAX wins when both are set. */
+#define JO_PAGE_MAX_DEFAULT 20   /* exhaustive-ok: runaway ceiling, disclosed as a truncation notice */
 
-static int pw_page_max(void) {
+int jo_page_max(const char *legacy_env) {
   const char *e = getenv("JO_PAGE_MAX");
-  int v = e ? atoi(e) : 0;
+  if ((!e || !*e) && legacy_env) e = getenv(legacy_env);
+  int v = (e && *e) ? atoi(e) : 0;
   if (v > 0) return v;
-  return PW_PAGE_MAX_DEFAULT;
+  return JO_PAGE_MAX_DEFAULT;
+}
+
+/* `declared` is a source's own MEASURED ceiling (pw_walk_max), 0 for "use the
+ * tree's one default above". JO_PAGE_MAX always wins, because it is the
+ * operator's brake and a source is not allowed to talk past it — including
+ * downwards: an operator who sets JO_PAGE_MAX=1 to make a run cheap must get
+ * one page from every source, not 160 from the ones that asked for more. */
+static int pw_page_max(int declared) {
+  const char *e = getenv("JO_PAGE_MAX");
+  int v = (e && *e) ? atoi(e) : 0;
+  if (v > 0) return v;
+  if (declared > 0) return declared;
+  return jo_page_max(NULL);
 }
 static int pw_walk_enabled(void) {
   const char *e = getenv("JO_PAGE_WALK");
@@ -323,6 +357,12 @@ static void pw_notice(intel_sink *s, const char *id, const char *url,
 
 int pw_walk(const source_ctx *c, intel_sink *s, const char *id,
             const char *url, pw_fetch_fn fetch, pw_emit_fn emit_page, void *ud) {
+  return pw_walk_max(c, s, id, url, fetch, emit_page, ud, 0);
+}
+
+int pw_walk_max(const source_ctx *c, intel_sink *s, const char *id,
+                const char *url, pw_fetch_fn fetch, pw_emit_fn emit_page,
+                void *ud, int page_max_declared) {
   if (!c || !s || !url || !fetch || !emit_page) return -1;
 
   /* Plan against the URL that will ACTUALLY be fetched. http_request applies
@@ -364,10 +404,14 @@ int pw_walk(const source_ctx *c, intel_sink *s, const char *id,
   const int has_page_param =
     pw_find_any(url, PW_PAGE_PARAMS, NULL, &pn, &pds, &pde);
   /* The walk this module could not do before: page numbers, no declared size,
-   * yardstick taken from the server's own first page. */
+   * yardstick taken from the server's own first page. (void)-ed rather than
+   * deleted because it names the case the fullness test below branches on, and
+   * the same-body guard that used to be gated on it now runs on every walk —
+   * see the London Datastore note inside the loop. */
   const int infer_size_from_server = (page_size <= 0 && has_page_param);
+  (void)infer_size_from_server;
 
-  const int page_max = pw_page_max();
+  const int page_max = pw_page_max(page_max_declared);
   const int may_walk = pw_walk_enabled();
 
   char *cur = strdup(url);
@@ -408,18 +452,22 @@ int pw_walk(const source_ctx *c, intel_sink *s, const char *id,
      * — every re-emit added to `total`, which the notice then publishes as
      * fact, so the disclosure becomes the fabrication.
      *
-     * Checked ONLY on the inferred-size walk, which is the one case where the
-     * collector's URL never stated a page size and the yardstick came from the
-     * server instead. A URL that declares its own size documents that its
-     * author knew the endpoint's paging contract; a bare `?page=1` documents
-     * nothing, so it earns the extra evidence before we keep asking. Narrow on
-     * purpose: this compares response BODIES, and the rest of the module
-     * deliberately reasons about paging without reading content.
+     * Checked on EVERY walk since 2026-10-12. It used to be the inferred-size
+     * walk only, on the reasoning that a URL declaring its own page size
+     * documents an author who knew the endpoint's paging contract. The London
+     * Datastore disproves that: `?rows=200&start=0` is a declared size and a
+     * declared offset, and that server honours NEITHER — it answers every
+     * request with its whole catalogue of 1,306 datasets. 1,306 >= 200 reads
+     * as a full page, so the walk would have advanced `start` twenty times,
+     * emitted the same 1,306 records on each, and published 26,120 in the
+     * notice as fact. The guard costs one FNV pass over a page already held
+     * and can only ever stop a walk EARLY: two pages of genuinely different
+     * records cannot be byte-identical.
      *
      * Compared BEFORE emitting, so a repeat costs one wasted fetch and changes
      * nothing else: no duplicate rows, no inflated count, and `pages` stays
      * the number of DISTINCT pages collected. */
-    if (infer_size_from_server) {
+    {
       unsigned long fp = pw_fingerprint(doc);
       if (pages > 0 && fp == prev_fp) {
         cJSON_Delete(doc);
@@ -485,6 +533,16 @@ int pw_walk(const source_ctx *c, intel_sink *s, const char *id,
    *     the URL let us ask for the rest, which is the 2,592-source case. */
   int more_known    = (available >= 0 && available > total);
   char failwhy[320] = "";
+  /* Name the ceiling that actually bit. It used to read "JO_PAGE_MAX" always,
+   * which is wrong for a source carrying its own measured ceiling: the reader
+   * would go looking for an environment variable nobody set. */
+  char ceilwhy[200];
+  snprintf(ceilwhy, sizeof ceilwhy,
+           "the page ceiling (%d page%s, %s) stopped the walk", page_max,
+           page_max == 1 ? "" : "s",
+           getenv("JO_PAGE_MAX")   ? "JO_PAGE_MAX"
+           : page_max_declared > 0 ? "this source's own measured ceiling"
+                                   : "the pagewalk default");
   if (failed_page > 0) {
     char fdesc[64];
     feed_status_describe(failed_status, fdesc, sizeof fdesc);
@@ -502,7 +560,7 @@ int pw_walk(const source_ctx *c, intel_sink *s, const char *id,
       : stopped_on_repeat  ? "the upstream's next-page link pointed back at the page "
                            "just fetched, so the walk stopped rather than "
                            "re-collecting the same records"
-      : stopped_at_ceiling ? "the page ceiling (JO_PAGE_MAX) stopped the walk"
+      : stopped_at_ceiling ? ceilwhy
       : more_known       ? "the upstream reports more records than were collected"
       : full_last        ? "the last page came back full and the upstream offered "
                            "no next link, nor does this source's URL carry an "

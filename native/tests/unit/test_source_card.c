@@ -69,8 +69,7 @@ static void test_cards(void) {
     assert(c[i].hash == vecindex_hash(c[i].text));
     kinds[c[i].kind]++;
     const source_def *d = c[i].def;
-    int pivot = d->collector && !strcmp(d->collector, "osint") &&
-                d->update_interval_sec == 0;
+    int pivot = registry_is_entity_pivot(d);   /* the ONE rule (source.h) */
     assert((c[i].kind == SC_KIND_PIVOT) == pivot);
     if (c[i].kind == SC_KIND_POD) assert(d->collector[0] == '_');
     if (noise_at(c[i].text, strlen(c[i].text)) >= 0) noisy++;
