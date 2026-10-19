@@ -29788,6 +29788,24 @@ static const hp_source HP3B44_UKGOV[] = {
     .description = "Fetched 2026-10-17: 1 items, RSS2 feed, newest Tue, 31 Mar 2026 "
       "05:45:04 +0000. A feed the organisation itself declares or links "
       "on its site root." },
+
+  { .id = "JO44_UK_RHUDDLANTOWNCOUNCIL_GOV_UK", .name = "rhuddlantowncouncil.gov.uk - Rhuddlan Town Council",
+    .name_ja = "rhuddlantowncouncil.gov.uk - Rhuddlan Town Council",
+    .category = "government", .portal = "https://rhuddlantowncouncil.gov.uk/",
+    .record_type = "government-notice",
+    .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://rhuddlantowncouncil.gov.uk/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 21600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-17: 50 items, RSS2 feed, newest Mon, 21 Sep 2026 "
+      "10:49:41 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
 };
 
 HP_REGISTER_TABLE(HP3B44_UKGOV)

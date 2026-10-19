@@ -109616,6 +109616,500 @@ static const hp_source HP3B45_ITGOV[] = {
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
       "05:16:20 +0000. A feed the organisation itself declares or links "
       "on its site root." },
+
+  { .id = "JO45_IT_C_H356", .name = "Comune di Rivoli Veronese (Pubbliche Amministrazioni, Rivoli "
+      "Veronese, VR) - Comune di Rivoli Veronese",
+    .name_ja = "Comune di Rivoli Veronese (Pubbliche Amministrazioni, Rivoli Veronese, VR) - Comune di Rivoli Veronese",
+    .category = "government", .portal = "https://www.comune.rivoli.vr.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.comune.rivoli.vr.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 604800,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Wed, 01 Feb 2023 "
+      "09:03:39 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_C_H951", .name = "Comune di San Leonardo (Pubbliche Amministrazioni, San Leonardo, "
+      "UD) - Comune di San Leonardo",
+    .name_ja = "Comune di San Leonardo (Pubbliche Amministrazioni, San Leonardo, UD) - Comune di San Leonardo",
+    .category = "government", .portal = "https://www.comune.sanleonardo.ud.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.comune.sanleonardo.ud.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 604800,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Wed, 01 Feb 2023 "
+      "09:03:39 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_F4GOX8IR", .name = "I.C. CASTELNUOVO LUNI ORTONOVO (Pubbliche Amministrazioni, "
+      "Castelnuovo Magra, SP) - IC Castenuovo Luni Ortonovo",
+    .name_ja = "I.C. CASTELNUOVO LUNI ORTONOVO (Pubbliche Amministrazioni, Castelnuovo Magra, SP) - IC Castenuovo Luni Ortonovo",
+    .category = "government", .portal = "https://www.iccastelnuovoluniortonovo.edu.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.iccastelnuovoluniortonovo.edu.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 21600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 25 Sep 2026 "
+      "08:17:48 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_ICGM", .name = "Istituto Comprensivo Grazzanise (Pubbliche Amministrazioni, "
+      "Grazzanise, CE) - Istituto Comprensivo Statale  "
+      "&quot;Grazzanise&quot;",
+    .name_ja = "Istituto Comprensivo Grazzanise (Pubbliche Amministrazioni, Grazzanise, CE) - Istituto Comprensivo Statale  &quot;Grazzanise&quot;",
+    .category = "government", .portal = "https://www.istitutocomprensivograzzanise.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.istitutocomprensivograzzanise.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 21600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
+      "14:16:52 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_ICPV", .name = "I.C. Parri - Vian (Pubbliche Amministrazioni, Torino, TO) - "
+      "ISTITUTO COMPRENSIVO STATALE &quot;PARRI-VIAN&quot;",
+    .name_ja = "I.C. Parri - Vian (Pubbliche Amministrazioni, Torino, TO) - ISTITUTO COMPRENSIVO STATALE &quot;PARRI-VIAN&quot;",
+    .category = "government", .portal = "https://www.icparri-vian.edu.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.icparri-vian.edu.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 21600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
+      "12:58:56 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_ICSI_028", .name = "Istituto Comprensivo Statale II (Pubbliche Amministrazioni, "
+      "Piove di Sacco, PD) - IC Piove di Sacco 2",
+    .name_ja = "Istituto Comprensivo Statale II (Pubbliche Amministrazioni, Piove di Sacco, PD) - IC Piove di Sacco 2",
+    .category = "government", .portal = "https://www.ics2davila.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.ics2davila.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 21600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
+      "10:42:26 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_ISTSC_AGIC82200R", .name = "Istituto Comprensivo Esseneto (Pubbliche Amministrazioni, "
+      "Agrigento, AG) - ISTITUTO COMPRENSIVO STATALE "
+      "&quot;Esseneto&quot;",
+    .name_ja = "Istituto Comprensivo Esseneto (Pubbliche Amministrazioni, Agrigento, AG) - ISTITUTO COMPRENSIVO STATALE &quot;Esseneto&quot;",
+    .category = "government", .portal = "https://www.scuolaicesseneto.edu.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.scuolaicesseneto.edu.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 86400,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 05 Sep 2026 "
+      "08:37:12 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_ISTSC_ATIC80100B", .name = "Istituto Comprensivo di Castelnuovo Don Bosco Cocconato "
+      "Montiglio Monferrato At (Pubbliche Amministrazioni, Castelnuovo "
+      "Don Bosco, AT) - ISTITUTO COMPRENSIVO DI CASTELNUOVO DON BOSCO "
+      "COCCONATO, MONTIGLIO MONFERRATO",
+    .name_ja = "Istituto Comprensivo di Castelnuovo Don Bosco Cocconato Montiglio Monferrato At (Pubbliche Amministrazioni, Castelnuovo Don Bosco, AT) - ISTITUTO COMPRENSIVO DI CASTELNUOVO DON BOSCO COCCONATO, MONTIGLIO MONFERRATO",
+    .category = "government", .portal = "https://www.iccastelnuovodonbosco.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.iccastelnuovodonbosco.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 3600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
+      "07:39:24 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_ISTSC_AVIC869008", .name = "ISTITUTO COMPRENSIVO - 'REGINA MARGHERITA'-'DA VINCI' (Pubbliche "
+      "Amministrazioni, Avellino, AV) - IC &quot;REGINA MARGHERITA "
+      "&#8211; L. DA VINCI&quot;  AVELLINO",
+    .name_ja = "ISTITUTO COMPRENSIVO - 'REGINA MARGHERITA'-'DA VINCI' (Pubbliche Amministrazioni, Avellino, AV) - IC &quot;REGINA MARGHERITA &#8211; L. DA VINCI&quot;  AVELLINO",
+    .category = "government", .portal = "https://www.icreginamargheritaldavinci.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.icreginamargheritaldavinci.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 21600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
+      "20:40:40 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_ISTSC_BAIC88100C", .name = "ISTITUTO COMPRENSIVO SGBOSCO-BENEDETTO13-POGGIORSINI (Pubbliche "
+      "Amministrazioni, Gravina in Puglia, BA) - IC &quot;SG Bosco "
+      "&#8211; Benedetto XIII &#8211; Poggiorsini&quot;",
+    .name_ja = "ISTITUTO COMPRENSIVO SGBOSCO-BENEDETTO13-POGGIORSINI (Pubbliche Amministrazioni, Gravina in Puglia, BA) - IC &quot;SG Bosco &#8211; Benedetto XIII &#8211; Poggiorsini&quot;",
+    .category = "government", .portal = "https://www.icsgboscogravina.edu.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.icsgboscogravina.edu.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 21600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
+      "17:37:06 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_ISTSC_CARI02000L", .name = "ISTITUTO PROFESSIONALE INDUSTRIA E ARTIGIANATO - I.P.I.A. "
+      "'FERRARIS' IGLESIAS (Pubbliche Amministrazioni, Iglesias, CI) - "
+      "I.P.I.A. &quot;G. FERRARIS&quot;",
+    .name_ja = "ISTITUTO PROFESSIONALE INDUSTRIA E ARTIGIANATO - I.P.I.A. 'FERRARIS' IGLESIAS (Pubbliche Amministrazioni, Iglesias, CI) - I.P.I.A. &quot;G. FERRARIS&quot;",
+    .category = "government", .portal = "https://www.ipsiaiglesias.edu.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.ipsiaiglesias.edu.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 86400,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 08 Sep 2026 "
+      "10:03:19 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_ISTSC_CTIC852002", .name = "ISTITUTO COMPRENSIVO - IC D. SAVIO - S. GREGORIO (Pubbliche "
+      "Amministrazioni, San Gregorio di Catania, CT) - ISTITUTO "
+      "COMPRENSIVO STATALE &quot;SAN DOMENICO SAVIO&quot;",
+    .name_ja = "ISTITUTO COMPRENSIVO - IC D. SAVIO - S. GREGORIO (Pubbliche Amministrazioni, San Gregorio di Catania, CT) - ISTITUTO COMPRENSIVO STATALE &quot;SAN DOMENICO SAVIO&quot;",
+    .category = "government", .portal = "https://www.icsaviosangregorio.edu.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.icsaviosangregorio.edu.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 21600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
+      "14:12:39 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_ISTSC_CTIC8AN003", .name = "ISTITUTO COMPRENSIVO - I.C. ' G. VERGA' SCORDIA (Pubbliche "
+      "Amministrazioni, Scordia, CT) - III ISTITUTO COMPRENSIVO STATALE "
+      "&quot;Giovanni Verga&quot;",
+    .name_ja = "ISTITUTO COMPRENSIVO - I.C. ' G. VERGA' SCORDIA (Pubbliche Amministrazioni, Scordia, CT) - III ISTITUTO COMPRENSIVO STATALE &quot;Giovanni Verga&quot;",
+    .category = "government", .portal = "https://www.icsvergascordia.edu.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.icsvergascordia.edu.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 21600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 11 Oct 2026 "
+      "10:41:42 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_ISTSC_MEIC848005", .name = "ISTITUTO COMPRENSIVO - N.2 PATTI (Pubbliche Amministrazioni, "
+      "Patti, ME) - Istituto Comprensivo N.2 &quot;Luigi "
+      "Pirandello&quot;",
+    .name_ja = "ISTITUTO COMPRENSIVO - N.2 PATTI (Pubbliche Amministrazioni, Patti, ME) - Istituto Comprensivo N.2 &quot;Luigi Pirandello&quot;",
+    .category = "government", .portal = "https://www.istitutopirandellopatti.edu.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.istitutopirandellopatti.edu.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 86400,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Tue, 28 Jul 2026 "
+      "10:16:48 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_ISTSC_NAIC8AR00E", .name = "ISTITUTO COMPRENSIVO - CASAMICCIOLA - I.C. IBSEN (Pubbliche "
+      "Amministrazioni, Casamicciola Terme, NA) - Istituto Comprensivo "
+      "Statale “IBSEN”",
+    .name_ja = "ISTITUTO COMPRENSIVO - CASAMICCIOLA - I.C. IBSEN (Pubbliche Amministrazioni, Casamicciola Terme, NA) - Istituto Comprensivo Statale “IBSEN”",
+    .category = "government", .portal = "https://www.icibsencasamicciola.edu.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.icibsencasamicciola.edu.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 21600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
+      "12:06:46 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_ISTSC_NAIC8BF005", .name = "Istituto Comprensivo San Gennarello (Pubbliche Amministrazioni, "
+      "Ottaviano, NA) - Istituto Comprensivo San Gennarello Ottaviano",
+    .name_ja = "Istituto Comprensivo San Gennarello (Pubbliche Amministrazioni, Ottaviano, NA) - Istituto Comprensivo San Gennarello Ottaviano",
+    .category = "government", .portal = "https://www.icsangennarellodiottaviano.edu.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.icsangennarellodiottaviano.edu.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 21600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
+      "06:55:23 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_ISTSC_PAIC83600L", .name = "ISTITUTO COMPRENSIVO - I.C. BAGHERIA 'T. AIELLO' (Pubbliche "
+      "Amministrazioni, Bagheria, PA) - Istituto Comprensivo Statale "
+      "&quot;Tommaso Aiello&quot; &#8211; Bagheria (Pa)",
+    .name_ja = "ISTITUTO COMPRENSIVO - I.C. BAGHERIA 'T. AIELLO' (Pubbliche Amministrazioni, Bagheria, PA) - Istituto Comprensivo Statale &quot;Tommaso Aiello&quot; &#8211; Bagheria (Pa)",
+    .category = "government", .portal = "https://www.icstaiello.edu.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.icstaiello.edu.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 21600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 06 Oct 2026 "
+      "20:37:19 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_ISTSC_PAIS00900C", .name = "ISTRUZIONE SECONDARIA SUPERIORE - IS DON G. COLLETTO (Pubbliche "
+      "Amministrazioni, Corleone, PA) - IISS DON GIOVANNI COLLETTO",
+    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - IS DON G. COLLETTO (Pubbliche Amministrazioni, Corleone, PA) - IISS DON GIOVANNI COLLETTO",
+    .category = "government", .portal = "https://www.doncolletto.edu.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.doncolletto.edu.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 3600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
+      "18:25:11 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_ISTSC_PAIS01100C", .name = "ISTRUZIONE SECONDARIA SUPERIORE - I.I.S.S. LERCARA FRIDDI "
+      "(Pubbliche Amministrazioni, Lercara Friddi, PA) - I.I.S.S. "
+      "Lercara Friddi",
+    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - I.I.S.S. LERCARA FRIDDI (Pubbliche Amministrazioni, Lercara Friddi, PA) - I.I.S.S. Lercara Friddi",
+    .category = "government", .portal = "https://www.iislercarafriddi.edu.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.iislercarafriddi.edu.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 21600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
+      "05:38:23 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_ISTSC_RMIC8E300C", .name = "ISTITUTO COMPRENSIVO - LARGO COCCONI (Pubbliche Amministrazioni, "
+      "Roma, RM) - IC Largo Cocconi",
+    .name_ja = "ISTITUTO COMPRENSIVO - LARGO COCCONI (Pubbliche Amministrazioni, Roma, RM) - IC Largo Cocconi",
+    .category = "government", .portal = "https://www.largococconi.edu.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.largococconi.edu.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 86400,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 17 Sep 2026 "
+      "06:26:35 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_ISTSC_RNRH030001", .name = "ISTITUTO PROFESSIONALE PER I SERVIZI ALBERGHIERI E RISTORAZIONE "
+      "- 'S.P. MALATESTA' (Pubbliche Amministrazioni, Rimini, RN) - "
+      "ISTITUTO PROFESSIONALE PER I SERVIZI DELL&#039;ENOGASTRONOMIA E "
+      "DELL&#039;OSPITA",
+    .name_ja = "ISTITUTO PROFESSIONALE PER I SERVIZI ALBERGHIERI E RISTORAZIONE - 'S.P. MALATESTA' (Pubbliche Amministrazioni, Rimini, RN) - ISTITUTO PROFESSIONALE PER I SERVIZI DELL&#039;ENOGASTRONOMIA E DELL&#039;OSPITA",
+    .category = "government", .portal = "https://www.alberghieromalatestarimini.edu.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.alberghieromalatestarimini.edu.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 3600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
+      "21:01:25 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_ISTSC_SIIS00300R", .name = "ISTRUZIONE SECONDARIA SUPERIORE - S. GIOVANNI BOSCO (Pubbliche "
+      "Amministrazioni, Colle di Val d'Elsa, SI) - Istituto San "
+      "Giovanni Bosco e Cennino Cennini",
+    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - S. GIOVANNI BOSCO (Pubbliche Amministrazioni, Colle di Val d'Elsa, SI) - Istituto San Giovanni Bosco e Cennino Cennini",
+    .category = "government", .portal = "https://www.sangiovanniboscocennini.edu.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.sangiovanniboscocennini.edu.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 3600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
+      "06:49:27 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_ISTSC_SSIC84000B", .name = "ISTITUTO COMPRENSIVO - I.C. PIAZZA DELLA LIBERTA'-TEMP "
+      "(Pubbliche Amministrazioni, Tempio Pausania, OT) - ISTITUTO "
+      "COMPRENSIVO STATALE TEMPIO PAUSANIA",
+    .name_ja = "ISTITUTO COMPRENSIVO - I.C. PIAZZA DELLA LIBERTA'-TEMP (Pubbliche Amministrazioni, Tempio Pausania, OT) - ISTITUTO COMPRENSIVO STATALE TEMPIO PAUSANIA",
+    .category = "government", .portal = "https://www.comprensivotempio.edu.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.comprensivotempio.edu.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 21600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 30 Sep 2026 "
+      "12:54:50 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_ISTSC_TAPS03000T", .name = "LICEO SCIENTIFICO - LS G. BATTAGLINI (Pubbliche Amministrazioni, "
+      "Taranto, TA) - Liceo Scientifico di Stato &quot;G. "
+      "Battaglini&quot;",
+    .name_ja = "LICEO SCIENTIFICO - LS G. BATTAGLINI (Pubbliche Amministrazioni, Taranto, TA) - Liceo Scientifico di Stato &quot;G. Battaglini&quot;",
+    .category = "government", .portal = "https://www.battaglini.edu.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.battaglini.edu.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 3600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
+      "13:31:50 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_IT_ISTTSA", .name = "Istituto Comprensivo T. Tasso (Pubbliche Amministrazioni, "
+      "Salerno, SA) - Istituto Comprensivo Statale &quot;Torquato "
+      "Tasso&quot; &#8211; Salerno",
+    .name_ja = "Istituto Comprensivo T. Tasso (Pubbliche Amministrazioni, Salerno, SA) - Istituto Comprensivo Statale &quot;Torquato Tasso&quot; &#8211; Salerno",
+    .category = "government", .portal = "https://www.ictassosalerno.edu.it/",
+    .record_type = "government-notice",
+    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.ictassosalerno.edu.it/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 86400,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 17 Sep 2026 "
+      "19:19:26 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
 };
 
 HP_REGISTER_TABLE(HP3B45_ITGOV)

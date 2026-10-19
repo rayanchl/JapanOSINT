@@ -16519,3 +16519,33 @@ JO45_WD_Q30261811	wdgov	government-notice	https://forestry.co.zw/feed/	PASS	3	OK
 JO45_WD_Q123951954	wdgov	government-notice	https://sirdc.ac.zw/feed/	PASS	10	OK	10	10	10
 JO45_WD_Q136437039	wdgov	government-notice	https://ema.co.zw/feed/	PASS	5	OK	5	5	5
 JO45_WD_Q139771540	wdgov	government-notice	https://arczw.ac.zw/feed/	PASS	1	OK	1	1	1
+JO45_IT_ISTSC_NAIC8AR00E	itgov	government-notice	https://www.icibsencasamicciola.edu.it/feed/	PASS		OK	10	10	10
+JO45_IT_ICPV	itgov	government-notice	https://www.icparri-vian.edu.it/feed/	PASS		OK	10	10	10
+JO45_IT_F4GOX8IR	itgov	government-notice	https://www.iccastelnuovoluniortonovo.edu.it/feed/	PASS		OK	10	10	10
+JO45_IT_ISTSC_PAIC83600L	itgov	government-notice	https://www.icstaiello.edu.it/feed/	PASS		OK	10	10	10
+JO45_IT_ISTSC_SSIC84000B	itgov	government-notice	https://www.comprensivotempio.edu.it/feed/	PASS		OK	10	10	10
+JO45_IT_ISTSC_RMIC8E300C	itgov	government-notice	https://www.largococconi.edu.it/feed/	PASS		OK	10	10	10
+JO45_FR_5C89A273_1FDD_4248_9D1B_9E18544C4F7F	frgov	government-notice	https://www.dir.ouest.developpement-durable.gouv.fr/spip.php?page=backend-actu	PASS		OK	23	23	23
+JO45_IT_C_H356	itgov	government-notice	https://www.comune.rivoli.vr.it/feed/	PASS		OK	1	1	1
+JO45_IT_ISTSC_AGIC82200R	itgov	government-notice	https://www.scuolaicesseneto.edu.it/feed/	PASS		OK	10	10	10
+JO45_WD_Q60740327	wdgov	government-notice	https://nesrea.gov.ng/feed/	PASS		OK	10	10	10
+JO45_IT_ISTSC_MEIC848005	itgov	government-notice	https://www.istitutopirandellopatti.edu.it/feed/	PASS		OK	5	5	5
+JO45_IT_ISTSC_SIIS00300R	itgov	government-notice	https://www.sangiovanniboscocennini.edu.it/feed/	PASS		OK	10	10	10
+JO45_IT_ISTTSA	itgov	government-notice	https://www.ictassosalerno.edu.it/feed/	PASS		OK	10	10	10
+JO45_IT_ISTSC_CTIC8AN003	itgov	government-notice	https://www.icsvergascordia.edu.it/feed/	PASS		OK	10	10	10
+JO45_IT_ISTSC_PAIS00900C	itgov	government-notice	https://www.doncolletto.edu.it/feed/	PASS		OK	10	10	10
+JO45_IT_ISTSC_CARI02000L	itgov	government-notice	https://www.ipsiaiglesias.edu.it/feed/	PASS		OK	10	10	10
+JO45_IT_ISTSC_TAPS03000T	itgov	government-notice	https://www.battaglini.edu.it/feed/	PASS		OK	10	10	10
+JO45_IT_C_H951	itgov	government-notice	https://www.comune.sanleonardo.ud.it/feed/	PASS		OK	1	1	1
+JO45_IT_ISTSC_ATIC80100B	itgov	government-notice	https://www.iccastelnuovodonbosco.it/feed/	PASS		OK	10	10	10
+JO45_IT_ICSI_028	itgov	government-notice	https://www.ics2davila.it/feed/	PASS		OK	10	10	10
+JO45_IT_ISTSC_RNRH030001	itgov	government-notice	https://www.alberghieromalatestarimini.edu.it/feed/	PASS		OK	10	10	10
+JO45_FR_309E38DD_891F_487F_9BB1_D6502AC96549	frgov	government-notice	https://ceauce-mairie.fr/feed/	PASS		OK	9	9	9
+JO45_FR_866F4FAD_3636_4CEC_87CB_9E5250C734C3	frgov	government-notice	https://www.corse.developpement-durable.gouv.fr/spip.php?page=backend-actu	PASS		OK	128	128	128
+JO45_IT_ISTSC_PAIS01100C	itgov	government-notice	https://www.iislercarafriddi.edu.it/feed/	PASS		OK	10	10	10
+JO45_FR_373872F2_E957_483B_B40D_F6438E599A46	frgov	government-notice	https://www.oise.gouv.fr/syndication/flux/actualites	PASS		OK	20	20	20
+JO45_IT_ISTSC_NAIC8BF005	itgov	government-notice	https://www.icsangennarellodiottaviano.edu.it/feed/	PASS		OK	10	10	10
+JO45_IT_ISTSC_AVIC869008	itgov	government-notice	https://www.icreginamargheritaldavinci.it/feed/	PASS		OK	10	10	10
+JO45_IT_ISTSC_CTIC852002	itgov	government-notice	https://www.icsaviosangregorio.edu.it/feed/	PASS		OK	10	10	10
+JO45_IT_ISTSC_BAIC88100C	itgov	government-notice	https://www.icsgboscogravina.edu.it/feed/	PASS		OK	10	10	10
+JO45_IT_ICGM	itgov	government-notice	https://www.istitutocomprensivograzzanise.it/feed/	PASS		OK	10	10	10

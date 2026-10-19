@@ -9306,6 +9306,44 @@ static const hp_source HP3B46_IGO[] = {
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 02 Sep 2026 "
       "11:46:42 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as think-tank." },
+
+  { .id = "JO46_IGO_Q51856931", .name = "Paleozoic (think-tank, XX) - PALEOZOIC",
+    .name_ja = "Paleozoic (think-tank, XX) - PALEOZOIC",
+    .category = "government", .portal = "https://paleozoicblog.tumblr.com/",
+    .record_type = "government-notice",
+    .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://paleozoicblog.tumblr.com/rss",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 3600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Tue, 13 Oct 2026 "
+      "07:30:55 -0400. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO46_IGO_Q7552298", .name = "Society for the Preservation of Natural History Collections "
+      "(international-organization, XX) - The Society for the "
+      "Preservation of Natural History Collections",
+    .name_ja = "Society for the Preservation of Natural History Collections (international-organization, XX) - The Society for the Preservation of Natural History Collections",
+    .category = "government", .portal = "https://spnhc.org/",
+    .record_type = "government-notice",
+    .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://spnhc.org/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 3600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
+      "14:01:50 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
 };
 
 HP_REGISTER_TABLE(HP3B46_IGO)

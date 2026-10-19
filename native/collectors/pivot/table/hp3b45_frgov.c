@@ -173724,6 +173724,81 @@ static const hp_source HP3B45_FRGOV[] = {
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "09:02:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
+
+  { .id = "JO45_FR_309E38DD_891F_487F_9BB1_D6502AC96549", .name = "Mairie - Ceaucé (SL, INSEE 61075) - Ceaucé",
+    .name_ja = "Mairie - Ceaucé (SL, INSEE 61075) - Ceaucé",
+    .category = "government", .portal = "https://ceauce-mairie.fr/",
+    .record_type = "government-notice",
+    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://ceauce-mairie.fr/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 86400,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Thu, 17 Sep 2026 "
+      "07:39:57 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_FR_373872F2_E957_483B_B40D_F6438E599A46", .name = "Direction du cabinet - Oise (SIL, INSEE 60057) - Actualités",
+    .name_ja = "Direction du cabinet - Oise (SIL, INSEE 60057) - Actualités",
+    .category = "government", .portal = "https://www.oise.gouv.fr/",
+    .record_type = "government-notice",
+    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.oise.gouv.fr/syndication/flux/actualites",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 3600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Sun, 18 Oct 2026 "
+      "09:29:56 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO45_FR_5C89A273_1FDD_4248_9D1B_9E18544C4F7F", .name = "Direction interdépartementale des routes (DIR) - Ouest (SIL, "
+      "INSEE 35238) - Direction interd&#233;partementale des routes "
+      "Ouest",
+    .name_ja = "Direction interdépartementale des routes (DIR) - Ouest (SIL, INSEE 35238) - Direction interd&#233;partementale des routes Ouest",
+    .category = "government", .portal = "https://www.dir.ouest.developpement-durable.gouv.fr/",
+    .record_type = "government-notice",
+    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.dir.ouest.developpement-durable.gouv.fr/spip.php?page=backend-actu",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 21600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 23 items, RSS2 feed, newest "
+      "2026-10-12T07:56:58Z. A feed the organisation itself declares or "
+      "links on its site root." },
+
+  { .id = "JO45_FR_866F4FAD_3636_4CEC_87CB_9E5250C734C3", .name = "Direction régionale de l'environnement, de l'aménagement et du "
+      "logement (Dréal) - Corse (SIL, INSEE 2A004) - DREAL Corse",
+    .name_ja = "Direction régionale de l'environnement, de l'aménagement et du logement (Dréal) - Corse (SIL, INSEE 2A004) - DREAL Corse",
+    .category = "government", .portal = "https://www.corse.developpement-durable.gouv.fr/",
+    .record_type = "government-notice",
+    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.corse.developpement-durable.gouv.fr/spip.php?page=backend-actu",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 21600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 128 items, RSS2 feed, newest "
+      "2026-10-12T13:35:04Z. A feed the organisation itself declares or "
+      "links on its site root." },
 };
 
 HP_REGISTER_TABLE(HP3B45_FRGOV)

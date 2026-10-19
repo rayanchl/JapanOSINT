@@ -38787,6 +38787,80 @@ static const hp_source HP3B44_USGOV[] = {
     .description = "Fetched 2026-10-17: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
       "14:45:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
+
+  { .id = "JO44_US_BAYCITYWI_GOV", .name = "Village of Bay City, Wisconsin (City, Bay City, WI) - Village of "
+      "Bay City",
+    .name_ja = "Village of Bay City, Wisconsin (City, Bay City, WI) - Village of Bay City",
+    .category = "government", .portal = "https://baycitywi.gov/",
+    .record_type = "government-notice",
+    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://baycitywi.gov/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 86400,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-17: 10 items, RSS2 feed, newest Wed, 12 Aug 2026 "
+      "08:45:32 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO44_US_GREENWOODTWPCRAWFORDPA_GOV", .name = "Greenwood Township (City, Atlantic, PA) - Greenwood Township",
+    .name_ja = "Greenwood Township (City, Atlantic, PA) - Greenwood Township",
+    .category = "government", .portal = "https://greenwoodtwpcrawfordpa.gov/",
+    .record_type = "government-notice",
+    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://greenwoodtwpcrawfordpa.gov/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 604800,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-17: 4 items, RSS2 feed, newest Thu, 07 Aug 2025 "
+      "17:46:08 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO44_US_HUNTINGDONSMITHFIELDPA_GOV", .name = "Smithfield Township (City, Huntingdon, PA) - Smithfield Township",
+    .name_ja = "Smithfield Township (City, Huntingdon, PA) - Smithfield Township",
+    .category = "government", .portal = "https://huntingdonsmithfieldpa.gov/",
+    .record_type = "government-notice",
+    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://huntingdonsmithfieldpa.gov/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 21600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-17: 7 items, RSS2 feed, newest Fri, 09 Oct 2026 "
+      "17:16:58 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
+
+  { .id = "JO44_US_WASHINGTONTWPACPA_GOV", .name = "Washington Township Armstrong County PA (City, Adrian, PA) - "
+      "Washington Township Armstrong County PA",
+    .name_ja = "Washington Township Armstrong County PA (City, Adrian, PA) - Washington Township Armstrong County PA",
+    .category = "government", .portal = "https://washingtontwpacpa.gov/",
+    .record_type = "government-notice",
+    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://washingtontwpacpa.gov/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 21600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-17: 10 items, RSS2 feed, newest Thu, 24 Sep 2026 "
+      "17:08:24 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
 };
 
 HP_REGISTER_TABLE(HP3B44_USGOV)

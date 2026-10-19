@@ -29620,6 +29620,25 @@ static const hp_source HP3B45_WDGOV[] = {
     .description = "Fetched 2026-10-18: 1 items, RSS2 feed, newest Fri, 28 Jan 2022 "
       "09:35:43 +0000. A feed the organisation itself declares or links "
       "on its site root." },
+
+  { .id = "JO45_WD_Q60740327", .name = "National Environmental Standards and Regulations Enforcement "
+      "Agency (government-agency, NG) - NESREA",
+    .name_ja = "National Environmental Standards and Regulations Enforcement Agency (government-agency, NG) - NESREA",
+    .category = "government", .portal = "https://nesrea.gov.ng/",
+    .record_type = "government-notice",
+    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://nesrea.gov.ng/feed/",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 21600,
+    .link_keys = "link",
+    .timeout_ms = 30000,
+    .title_keys = "title",
+    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
+      "12:42:06 +0000. A feed the organisation itself declares or links "
+      "on its site root." },
 };
 
 HP_REGISTER_TABLE(HP3B45_WDGOV)

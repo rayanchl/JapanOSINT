@@ -3714,3 +3714,8 @@ JO44_UK_THORPEAUDLIN_PC_GOV_UK	ukgov	government-notice	https://thorpeaudlin-pc.g
 JO44_UK_BANHAMPARISHCOUNCIL_GOV_UK	ukgov	government-notice	https://banhamparishcouncil.gov.uk/feed/	PASS	10	OK	10	10	10
 JO44_UK_SWANTONNOVERSPARISHCOUNCIL_GOV_UK	ukgov	government-notice	https://swantonnoversparishcouncil.gov.uk/feed/	PASS	10	OK	10	10	10
 JO44_UK_EVERLEIGH_PC_GOV_UK	ukgov	government-notice	https://everleigh-pc.gov.uk/feed/	PASS	1	OK	1	1	1
+JO44_US_WASHINGTONTWPACPA_GOV	usgov	government-notice	https://washingtontwpacpa.gov/feed/	PASS		OK	10	10	10
+JO44_US_GREENWOODTWPCRAWFORDPA_GOV	usgov	government-notice	https://greenwoodtwpcrawfordpa.gov/feed/	PASS		OK	4	4	4
+JO44_UK_RHUDDLANTOWNCOUNCIL_GOV_UK	ukgov	government-notice	https://rhuddlantowncouncil.gov.uk/feed/	PASS		OK	50	50	50
+JO44_US_HUNTINGDONSMITHFIELDPA_GOV	usgov	government-notice	https://huntingdonsmithfieldpa.gov/feed/	PASS		OK	7	7	7
+JO44_US_BAYCITYWI_GOV	usgov	government-notice	https://baycitywi.gov/feed/	PASS		OK	10	10	10

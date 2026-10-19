@@ -2214,10 +2214,6 @@ usgov	probe_hp_batch	JO44_US_MARYLANDHEALTHCONNECTION_GOV		https://www.marylandh
 usgov	probe_hp_batch	JO44_US_OHIOCOURTOFCLAIMS_GOV		https://ohiocourtofclaims.gov/feed/	HTTP_ERR	Forbidden
 usgov	probe_hp_batch	JO44_US_WVPEBD_GOV		http://ncees.org/feed/rss	HTTP_ERR	<none>
 usgov	probe_hp_batch	JO44_US_CHICKALOON_NSN_GOV		https://www.chickaloon-nsn.gov/feed/	HTTP_ERR	Forbidden
-usgov	engine	JO44_US_BAYCITYWI_GOV			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-usgov	engine	JO44_US_GREENWOODTWPCRAWFORDPA_GOV			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-usgov	engine	JO44_US_HUNTINGDONSMITHFIELDPA_GOV			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-usgov	engine	JO44_US_WASHINGTONTWPACPA_GOV			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 ukgov	builder	highpeak.gov.uk	highpeak.gov.uk	https://www.highpeak.gov.uk/article/647/Feedback	NOT_FEED	kind= items=0
 ukgov	builder	maldon.gov.uk	maldon.gov.uk	https://www.maldon.gov.uk/info/20065/feedback/9198/have_your_say	NOT_FEED	kind= items=0
 ukgov	builder	maldon.gov.uk	maldon.gov.uk	https://www.maldon.gov.uk/feedback	NOT_FEED	kind= items=0
@@ -3335,7 +3331,6 @@ ukgov	engine	JO44_UK_PEASEMORE_PC_GOV_UK			FETCH_FAILED	stored nothing in the en
 ukgov	engine	JO44_UK_PEMBRIDGEPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 ukgov	engine	JO44_UK_RAMSEYPARKESTON_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 ukgov	engine	JO44_UK_RANSKILLPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_RHUDDLANTOWNCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 ukgov	engine	JO44_UK_RIXTONWITHGLAZEBROOK_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 ukgov	engine	JO44_UK_RUCKINGE_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 ukgov	engine	JO44_UK_SEDGEHILLSEMLEY_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)

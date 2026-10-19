@@ -39,10 +39,10 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 47,115** (2026-10-19). The count ledger — every
+**The registered count is 47,178** (2026-10-19). The count ledger — every
 batch from 37 to 46, what seeded it, what it measured and what it taught — is
 `docs/SOURCE_COUNT_LEDGER.md`; this file keeps the rules and the current number.
-Both floors are re-recorded at 47,115 and `make source-count` agrees. The
+Both floors are re-recorded at 47,178 and `make source-count` agrees. The
 lessons from batches 43–46 that a new batch must not relearn:
 
 * **A registration count is not a website, and a build is not a registry.**
@@ -55,7 +55,9 @@ lessons from batches 43–46 that a new batch must not relearn:
   shared hosting that answers 502/403 to twelve concurrent probes stores its
   feed at six, and a 403 that refuses the engine too is a bot wall. Both
   readings go in the verified TSV. Re-run each FETCH_FAILED once; a row that
-  fails twice leaves. Never rebuild the binary while an audit runs.
+  fails twice leaves — and a retry pass a day later recovers a few: 63 of the
+  2,724 rows batches 44–46 dropped were alive on 2026-10-19 and are back in
+  their beats. Never rebuild the binary while an audit runs.
 * **A URL changed after validation is unvalidated** (an unescaped `&amp;`
   made Joomla serve Atom where rows declared RSS), **a well-formed feed with
   zero items is `EMPTY_RESULTSET`**, **a substring count of `<item` counts the

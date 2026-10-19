@@ -5,6 +5,21 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
+**The registered count is 47,178** (2026-10-19): 47,115 plus the 63 rows a
+retry pass recovered. Every row batches 44–46 had dropped as dead on two
+readings minutes apart — 2,724 of them — was rebuilt from git history and
+re-probed a day later: 74 passed the probe, 63 of those stored their feed in
+the engine and are back in their beats (4 US, 1 UK, 25 Italian, 4 French, 1
+Wikidata public body, 2 international organisations, 26 news outlets), with
+their readings appended to the batch's verified TSV and their `engine` lines
+removed from its rejects. The other 2,650 are still dead: the UK and Italian
+403 bot walls, and hosts that were down and stayed down. The same day the
+interval of every public-body feed row was set from the newest-item date its
+description records (hourly within 3 days, 6-hourly within 30, daily within a
+year, else weekly), the World Bank sanctions row moved to hpengine so its
+apikey could leave the source file, and the 20 French collisions that had been
+unverifiable were re-measured: every one the feed's own byte-identical copies.
+
 **Batch 46 is the Wikidata seed on the two classes an analyst asks for first:
 the press and the international bodies.** Newspapers, daily and online
 newspapers, news websites and news agencies per country (8,482 hosts → 3,980
