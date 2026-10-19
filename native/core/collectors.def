@@ -581,6 +581,10 @@ COLLECTOR("np_people", "Nepal — people", NULL, NULL, "grp_social")  /* 1 src; 
 /* Geospatial & mapping: 16 collector(s), 275 sources */
 COLLECTOR("hp3b25_jpgeospatial", "jpgeospatial (batch 25)", NULL, NULL, "grp_geo")  /* 88 src; government 88 */
 COLLECTOR("hp3b32_jparcgis", "jparcgis (batch 32)", NULL, NULL, "grp_geo")  /* 53 src; infrastructure 18, public-safety 12, environment 8 */
+/* Batch 45 spans transport, infrastructure, government and environment and
+ * sits under grp_geo all the same: what the 164 rows have in common is the
+ * ArcGIS feature layer, which is how they were found and how they are read. */
+COLLECTOR("hp3b45_arcgislayers", "ArcGIS feature layers, from each service root's own directory (batch 45)", "ArcGIS フィーチャレイヤー（サービス一覧由来）", NULL, "grp_geo")  /* 164 src; transport 35, infrastructure 34, government 28 */
 COLLECTOR("hp3b19_osm", "osm (batch 19)", NULL, NULL, "grp_geo")  /* 33 src; reference 13, transport 8, osint 6 */
 COLLECTOR("hp3b40_jpgeo3", "jpgeo3 (batch 40)", NULL, NULL, "grp_geo")  /* 29 src; environment 7, registry 4, economy 3 */
 COLLECTOR("geospatial", "Geospatial data", "地理空間データ", NULL, "grp_geo")  /* 24 src; geospatial 16, opendata 6, commercial 2 */

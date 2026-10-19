@@ -39,9 +39,45 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 21,237** (2026-10-12), measured — batch 42's 1,916
-measured rows (`docs/verified-sources-batch42.tsv`,
-`native/collectors/OSINT_SOURCES_BATCH_42_JPWPROUTES.md`) on 19,321.
+**The registered count is 21,953** (2026-10-19), measured — batch 45's 164
+measured rows (`docs/verified-sources-batch45.tsv`,
+`native/collectors/OSINT_SOURCES_BATCH_45_ARCGISLAYERS.md`) on main's 21,789.
+
+**Batch 45 is batch 42's method on a different family, and it worked the same
+way.** The tree already reached 195 ArcGIS service roots, each by ONE row naming
+ONE layer of ONE service — the path somebody happened to know. Asking each root
+for its own directory (`?f=json` → folders and services; then each service's
+layers and tables) found thousands: one root alone published 899 services. 899
+candidate layers were taken under a self-imposed 5-per-root cap, 819 probed PASS,
+and 164 were selected at 2 per root after a 50-record floor, a dedupe of the
+`arcgis`/`ArcGIS` and MapServer/FeatureServer spellings, and dropping
+cartography. **The method generalises; the family does not matter.**
+
+Four things in each row were measured rather than assumed, and three of them
+would have failed silently: `id_keys` names the layer's OWN `objectIdField`
+(several use `FID`), `page_size` is its OWN `maxRecordCount`, and the walk sorts
+ASCENDING on the object id because 34 of these rows cycle and ArcGIS promises no
+stable ordering without one. The fourth was measured both ways: a polygon's ring
+coordinates cost **64×** (125 KB → 8.0 MB per 200 records) for geometry HP_JSON
+cannot index, so polygon rows ask for `returnCentroid` at 1.7% of that — and
+**`returnCentroid` works only on POLYGON layers**, which ArcGIS states with HTTP
+*200* and a 216-byte error body, so all 18 polyline rows first came back
+`PATH_UNRESOLVED`. Polylines cost 1.3–9.3×, not 64×, so they keep full geometry.
+
+Two defects in the batch's own generator are worth remembering, because both are
+the shape every record-counting gate passes. It attributed publishers by HOST —
+and `services1.arcgis.com` is ArcGIS Online's multi-tenant front, so a Wyoming
+EMS layer was named for "Wakayama City traffic accident record points": live
+endpoint, real records, agreeing counts, false name. And it inferred `category`
+from COLUMN names, filing a bridge layer carrying `FLOODPRONE` under `safety`
+and a power-outage layer under `health`. **Classify on what the publisher named
+the collection; a guess read off a column is not a measurement.**
+
+**The registered count was 21,789** on main when batch 45 branched, and
+**21,237** when batch 42 landed (2026-10-12) — main gained ~550 rows between the
+two from other beats. `make lint-sources` prints the figure and
+`./bin/japanosint --list-sources` agrees; do not read a count out of prose that
+is older than the last merge.
 
 **Batch 42 is batch 41 asked properly.** Batch 41 requested ONE collection per
 Japanese WordPress host, `wp/v2/posts`, because that is the path everyone knows.
@@ -680,13 +716,14 @@ says why.
 | `tools/audit_batch_pagination.py` | a paged endpoint declares `page_param` or `next_path` — read from the parsed opts, not as a substring of the whole field |
 | `tools/audit_batch_reachable.py` | rule 3 above. A row whose opts are ambiguous is reported UNVERIFIABLE, never "never runs" |
 | `tools/audit_url_limits.py` | the seventh discard shape — a record limit asked of the UPSTREAM in a URL, with no paging to follow it. Read, not gated: 103 narrow candidates, unmeasured, and a limit on a ranked pivot is legitimate |
+| `tools/audit_cycle_health.py` | whether a `page_resume` row can actually ADVANCE its cycle. Three outcomes, one healthy: `CYCLING` (a position was stored), `COMPLETE` (the walk ended and cleared it — the measured no-op that makes page_resume safe to apply broadly), `STUCK` (a page failed, so no position was stored and the next run re-reads the same slice; the collection past that point is unreachable). Found as the generalisation of the ENA shape. It reports the failing page's STATUS and URL rather than a bare verdict, because a 400 naming a parameter is a property of the endpoint while a 429 is one reading. Walks to the real ceiling rather than probing shallow — the failure can be at any page — so it costs ~20 requests a row. Reads the `page_resume` rows out of the C, which is the maintained copy |
 | `tools/audit_page_ceiling.py` | which scheduled rows stop at the PAGE CEILING, and how many pages their own upstream says they need. Probes SHALLOW (`--probe-pages`, default 3) and then does arithmetic, because the engine's truncation notice already carries the only number that settles it: a `records_available` whose basis is "upstream declared this total". `CEILING_DECLARED` is measured (pages_needed = total / page_size, the page size derived from the probe when the row declares none); `CEILING_UNKNOWN` means the upstream publishes no total and only a full walk can size it, which is a decision to take deliberately, not a finding. Reads `collector-fetch-failure` too, so a 429 is `FETCH_FAILED` and not "this source returns nothing" |
 | `tools/audit_page_param.py` | rows whose URL already binds their own `page_param`. The engine used to APPEND (`…&pagina=1&pagina=2`) and a server binding the first occurrence then served page 1 for the whole walk — N pages emitted, one stored, `rc=0`. Fixed in `hp_url_set_param` and pinned by `hptest` "9f-bis"; the lint stays because 103 of 1,431 paged rows are that shape and their paging depends on the replacement being right |
 | `tools/audit_batch_emit.py` | rule 4 below: runs each MANIFEST row through the real binary and reads back `emitted N of M`. `--timeout S` moves the kill line; a run that hits it is **`SLOW`**, carrying its partial counts — unmeasured, not failed. Each run gets a scratch DB from a warm template (it used to write the developer's live DB), and it exits non-zero on UNREGISTERED, UNPARSEABLE, NO_RUN_LINE or when nothing was measured |
 | `tools/audit_registry_emit.py` | rule 4 **and** 4b for the whole REGISTRY, manifest or not — `--list-sources` is the source list, so nothing registered can hide. Measures emitted *and* stored, per run, against a fresh copy of a warm template DB. `--scheduled`/`--match`/`--only`/`--ids-file`, `--jobs`, `--timeout`, TSV out, `--resume` |
 | `tools/diagnose_emit_keys.py` | why a row emitted nothing, and which `title_keys`/`id_keys` fix it |
 | `tools/cleanup_stale_uids.py` | the rows identity fixes left in an OLD database: a plain-key row whose qualified siblings now hold the same record (the keyqual collectors and FRA), and wayback_jp's captures from before digest+timestamp+URL. Reports by default. `--delete` removes, in one transaction, only rows whose replacement is proven to exist and that nothing references. `--self-test` runs it on a scratch DB (also from `make unit`) |
-| `tools/gen_hp_batch.py` | manifest → C, one table per beat, `--prefix`/`--batch` so batches never collide — but the batch NUMBER is yours to keep unique: main shipped a batch 32 while a branch was open with its own, both created `docs/verified-sources-batch32.tsv`, and renumbering the branch to 33 after the fact meant touching the manifest, both TSVs, the table, its array name and two batch citations that had landed in `lib/hpengine.h` and `core/hostgate.c`. Rejects duplicate opts, non-integer int opts, and an opt whose value **swallowed the next one** through a stray `\;` |
+| `tools/gen_hp_batch.py` | manifest → C, one table per beat, `--prefix`/`--batch` so batches never collide — but the batch NUMBER is yours to keep unique: main shipped a batch 32 while a branch was open with its own, both created `docs/verified-sources-batch32.tsv`, and renumbering the branch to 33 after the fact meant touching the manifest, both TSVs, the table, its array name and two batch citations that had landed in `lib/hpengine.h` and `core/hostgate.c`. Rejects duplicate opts, non-integer int opts, and an opt whose value **swallowed the next one** through a stray `\;`. **Its opt table is a THIRD place a new engine field has to be added**, and it is the one that gets forgotten: `page_resume` reached the engine and 533 rows of C without reaching here, so batch 45 — the first batch to need it — had every such row rejected as an unknown opt. `page_walk` had been missed the same way before it. When you add an `hp_source` field, add it to `STR_OPTS`/`INT_OPTS` in the same change |
 
 ## 4. Fetching is not emitting — prove the second one
 
@@ -1135,12 +1172,85 @@ Engine subtleties worth knowing before writing a row:
   exactly the kind of tidy falsehood these notices exist to prevent. It now
   distinguishes the three outcomes, and a failed page says the position was NOT
   advanced and the row re-reads the same slice until its paging is re-pointed
-  (`hptest` 40b-iii). Any other row in this shape says so on its next run; a
-  sweep for them is the obvious next measurement.
+  (`hptest` 40b-iii).
 
-  533 rows cycle in total. One shape to keep in mind: `interval = 2592000` is
-  monthly, so a 500-page collection on that cadence takes about two years to
-  come round — better than never, and the notice says where it is.
+  **All 530 cycling rows have now been asked that question** (2026-10-19,
+  `docs/cycle-health-2026-10-19.tsv`, `tools/audit_cycle_health.py`): **318
+  CYCLING, 190 COMPLETE, 12 STUCK, 6 FETCH_FAILED, 4 SLOW**. The 190 are the
+  measured no-op that makes `page_resume` safe to apply broadly, now counted
+  rather than sampled.
+
+  **Read the STATUS, not the verdict.** Of the 12 STUCK, exactly ONE is stuck
+  for a reason that is a property of its endpoint: `BC_MINERAL_TENURE`
+  answering 400 with *"Cannot do natural order without a primary key, please
+  add it or specify a manual sort over existing attributes"*. GeoServer refuses
+  `startIndex` on a feature type with no primary key, so that row read **50 of
+  42,234** for ever — the ascending-sort rule above, enforced by the server
+  rather than by us. `sortBy=TENURE_NUMBER_ID` fixes it: 1,000 records a run
+  over 20 pages, position advancing 1000 → 2000. **It was NOT applied to the
+  16 other sortBy-less WFS `startIndex` rows in the tree** — they were measured
+  too, and 12 of the 13 reachable ones serve page 2 fine, because GeoServer
+  objects only where the type has no primary key. A blanket fix would have been
+  a change made on reasoning.
+
+  The other 11 are 429/403/500, one reading each, **and several are load the
+  sweep itself created**: 12 jobs in parallel while a 6-job batch-45 emit audit
+  hit `services6.arcgis.com`, where both failing FAA rows live.
+  `us-sf-311-open311-requests` is already paced at 1,200 ms in
+  `core/hostgate.c` and still 429'd at page 20 under that load, which says the
+  same thing. The five `au-asic` 403s were re-tested by hand and are **not
+  reproducible** — data.gov.au served 8 rapid serial requests and then 12
+  concurrent ones, all 200 — so no pacing entry was added. A tool that adds a
+  gap on an unreproducible reading is guessing.
+
+  A by-catch of the same pass: `CR_SANCARLOS_PREDIOS` had been documented dead
+  since round 8 (2026-09-21) because GetCapabilities listed no `predio*` layer,
+  "so the parcels were withdrawn, not renamed". That followed from **searching
+  for the name we expected**. The server's 40 types include
+  `geonode:Catastro_sc` — the same cadastre under its other Spanish name,
+  99,222 features carrying `Propietario`. Re-pointed (plus WFS 2.0.0 for
+  `count`/`startIndex`, plus `sortBy=id` for the same GeoServer refusal):
+  measured **20,000 records a run** over two runs with no overlap, position
+  advancing 20000 → 40000.
+
+  **That row's real problem was not its paging flag: ENA honours NO offset at
+  all**, and `{"message":"Unsupported param offset"}` is what the 400 says
+  (measured 2026-10-19). There is no second page to ask for, so nothing in the
+  paging section above could ever have reached the other 7,555,500 records.
+  What that endpoint does honour is a DATE predicate, which is the next bullet.
+
+* **`window_days = N` reads a collection whose only slicing axis is a DATE.**
+  `page_resume` needs the upstream to page; some do not. With `window_days` the
+  row carries `{wstart}` / `{wend}` tokens instead (rendering like `{date}`,
+  `{wstart:%Y%m%d}` through strftime) and reads one window per run, the
+  position stored through the same `resume_in`/`resume_out` as `w=<ISO date>`.
+  ENA's `first_public>=A AND first_public<=B` with `limit=0` returns a window
+  COMPLETE: 15,710 and 20,232 records stored on two consecutive runs, matching
+  the endpoint's own `/count` for those two weeks exactly.
+
+  **The walk goes FORWARD, from `window_from` toward today**, and that is the
+  design rather than a preference — a backward walk would not see a record
+  published this morning until it had finished the history, the same mistake as
+  cycling a newest-first collection. Walking forward the cycle CATCHES UP and
+  then pins to the trailing window, so one row is both the backfill and the live
+  feed. A window that was NOT SERVED does not advance (skipping it drops its
+  records permanently; re-reading one we have is cheap), which is the opposite
+  of a failed PAGE clearing its position — a page can be reached again from the
+  start of the same collection, a skipped window cannot.
+
+  **A date predicate is only exhaustive where every record is dated, and that is
+  the author's measurement, not something the engine can check.** ENA's
+  influenza SAMPLE collection holds 61,537 records of which only 60,213 answer
+  `first_public>=1990-01-01` and 0 answer `first_public<1990-01-01` — 1,324 carry
+  no publication date, and no `window_days` would ever find them. That row reads
+  its collection whole instead (`limit=0`, one request, 61,537 stored). **Ask the
+  upstream for its own count both with and without the predicate before
+  windowing a row.** `hptest` 41–41g pin the rest.
+
+  533 rows cycle on pages, 3 on a date window. One shape to keep in mind:
+  `interval = 2592000` is monthly, so a 500-page collection on that cadence
+  takes about two years to come round — better than never, and the notice says
+  where it is.
 * **A deep-paging cap is the upstream's, and it is disclosed by name.** GLEIF
   refuses `page[number]=51` with HTTP 400 — 50 pages × 200 = 10,000 records —
   so `GLEIF_LEI_HK` reaches 10,000 of 13,419 and the rest needs a narrower

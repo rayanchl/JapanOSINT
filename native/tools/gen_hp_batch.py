@@ -120,7 +120,10 @@ STR_OPTS = {"array_path", "title_keys", "id_keys", "link_keys", "link_tmpl",
             # the field each record gets the rendered {date…} in, for keying
             "date_field",
             # html table mode: the <table> whose HTML contains this text
-            "table_must"}
+            "table_must",
+            # the earliest date a window_days cycle asks for; unset makes the
+            # row a live tail with no backfill
+            "window_from"}
 # page_walk (an INT opt below): CLAUDE.md tells authors to use it ("page_walk=1
 # (HP_JSON only) walks it the way a VJSON collector is walked"), and this set
 # used to reject it as an unknown opt, so the documented way to page a row could
@@ -136,7 +139,19 @@ INT_OPTS = {"detail_max", "page_start", "page_size", "page_max", "max_items",
             "page_delay_ms",
             # html table mode: which matching table; banner rows above the header
             "table_index", "table_skip_rows",
-            "page_walk"}
+            "page_walk",
+            # A collection larger than one run's page budget, read over a
+            # CYCLE: the walk starts where the last run stopped. 533 rows carry
+            # it in the C and none of them could have been written in a
+            # manifest — it landed in the engine without landing here, so the
+            # first batch to need it had every such row rejected as an unknown
+            # opt. The same gap, found the same way, as page_walk above.
+            "page_resume",
+            # The other cycle axis: a collection whose only slice is a date
+            # window (window_days wide, walked forward from window_from). Its
+            # {wstart}/{wend} tokens go in the url, so a manifest must be able
+            # to declare the width that makes them mean anything.
+            "window_days"}
 # hp_source.headers is `const char *headers[5]`, so it cannot be set by the
 # generic scalar path above. A row declares them as header1/header2/header3 and
 # they are emitted as an initialiser list. tools/probe_hp_batch.py sends the
