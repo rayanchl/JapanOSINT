@@ -39,7 +39,29 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 21,237** (2026-10-12), measured — batch 42's 1,916
+**The registered count is 22,408** (2026-10-19), measured — batch 45's 619
+measured rows (`docs/verified-sources-batch45.tsv`,
+`native/collectors/OSINT_SOURCES_BATCH_45_JPWPREGISTRY.md`) on 21,789, which
+was 21,237 plus batches 43/44's 400 Japanese RSS feeds and the rows that came
+with them.
+
+**Batch 45 is batch 42's question asked of the registry itself.** Every `.jp`
+host a registered row already fetches (an RSS feed, an HTML register, a CSV) was
+asked whether it also runs WordPress REST — the homepage's
+`Link: rel="https://api.w.org/"` names the root, which found 232 of the 245
+hosts that have one; a bare `/wp-json` found 13. 691 collections on 148 hosts
+answered with records; 619 survived machinery filtering, probe and the emit
+sweep (580 OK, 38 SLOW with thousands of rows stored at the 200 s line). The
+tables are split by HOST type (media, company, association, culture, cyber,
+science, hazard, government), not by collection type, so each beat files
+under one collector group. The same sweep over **5,123 federation-member hosts**
+(chambers of commerce, JA, medical associations, fire chiefs, welfare councils,
+co-ops, professional bodies) found **5,678 live collections on 1,372 hosts** —
+NOT registered, because ~5,700 scheduled rows on a 6-hour cadence is a
+scheduler-load decision; kept with counts in
+`docs/staging-sources-batch45.federations.tsv`.
+
+**The registered count was 21,237** (2026-10-12), measured — batch 42's 1,916
 measured rows (`docs/verified-sources-batch42.tsv`,
 `native/collectors/OSINT_SOURCES_BATCH_42_JPWPROUTES.md`) on 19,321.
 
@@ -531,8 +553,10 @@ underneath them that older notes in this file predate:
   / pending (never ran). Until then nothing wrote it after the seed, so every
   row read `pending` forever and `/api/status`'s online count was the seed.
 * **An hpengine row's default collector is its table file's basename**
-  (`hp3b25_jpmedia`), not `osint`. Every source has a collector; 545 keys
-  (2026-10-18, round 3); `core/collectors.def` labels and groups them (below).
+  (`hp3b25_jpmedia`), not `osint`. Every source has a collector; 554 keys
+  (2026-10-19, round 4); `core/collectors.def` labels and groups them (below).
+  Round 4 also moved batches 43/44's 400 Japanese web-media RSS feeds off
+  `social` (their macro's label) onto `jp_webmedia` under News & media.
   **`osint` is the collector of hand-written entity PIVOTS only** since round 3:
   968 scheduled feeds had been authored under that label (Google News
   editions and keyword monitors, world outlets, arXiv, think tanks, threat
