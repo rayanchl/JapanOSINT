@@ -1,9 +1,9 @@
-# Batch 45 — ArcGIS feature layers, found by asking each service root for its own directory
+# Batch 46 — ArcGIS feature layers, found by asking each service root for its own directory
 
 **164 rows, every one measured live** (2026-10-19).
-Manifest: `docs/candidate-sources-batch45.arcgislayers.txt`.
-Table: `native/collectors/pivot/table/hp3b45_arcgislayers.c`.
-Probe: `docs/verified-sources-batch45.tsv`. Rejects: `docs/rejected-sources-batch45.tsv`.
+Manifest: `docs/candidate-sources-batch46.arcgislayers.txt`.
+Table: `native/collectors/pivot/table/hp3b46_arcgislayers.c`.
+Probe: `docs/verified-sources-batch46.tsv`. Rejects: `docs/rejected-sources-batch46.tsv`.
 
 ## The method, which is the point
 
@@ -116,7 +116,7 @@ same gap, found the same way, as `page_walk` before it — and `window_days` /
 the same reason. All three are in the table now.
 
 **`batch_exclusions.py` matched a `record_type` literal as a dataset name.** It
-reported `JO45_AGS_SERVICES6_AIRSPACE` as a DUP-ENDPOINT-COMPOSED collision with
+reported `JO46_AGS_SERVICES6_AIRSPACE` as a DUP-ENDPOINT-COMPOSED collision with
 `collectors/sources/av_faa_arcgis.c`, "`'airspace'` is one of its layer/dataset
 names". It is not: `"airspace"` appears in that file as the `record_type` stamped
 on three of its decoders. The 14 services that collector actually reads are
@@ -180,10 +180,10 @@ batch_exclusions.py --check --bin   1 collision, 1 near-miss — both read by ha
 audit_batch_pagination.py           0 of 164 declare no pagination but look paged
 audit_batch_reachable.py            0 of 164 can never run
 probe_hp_batch.py                   164/164 PASS
-audit_page_param.py                 0 batch-45 rows bind their own page_param in the URL
+audit_page_param.py                 0 batch-46 rows bind their own page_param in the URL
 audit_batch_emit.py                 OK=161, SLOW=3, 1,790,908 records emitted; no DROPS_EVERYTHING
-audit_registry_emit.py --match ^JO45_  all 164: OK=163, SLOW=1, 1,832,156 emitted, 0 rows storing less
-                                    than they emit — docs/emit-sources-batch45.tsv
+audit_registry_emit.py --match ^JO46_  all 164: OK=163, SLOW=1, 1,832,156 emitted, 0 rows storing less
+                                    than they emit — docs/emit-sources-batch46.tsv
 make audit-sources                  strict set 319 files, 0 findings
 make lint-sources                   OK
 make source-floor / registry-floor  21,953; 0 duplicates, 0 dropped, 0 never-runs
@@ -199,13 +199,13 @@ layers), **1,790,908 records emitted** across the batch and not one
 emitting, and here it does.
 
 Rule 4b is the one that fails silently, so it was measured **per row** rather
-than sampled: `audit_registry_emit.py --match ^JO45_` ran all 164 and reads
+than sampled: `audit_registry_emit.py --match ^JO46_` ran all 164 and reads
 `emitted` and `stored` off each run line AND the stored count back out of the
 database — two independent readings. **163 OK, 1 SLOW, 1,832,156 records
 emitted, and not one row stores fewer than it emits.** Where `stored` is
 `emitted + 1` the extra uid is the row's own truncation notice, which is why the
 run line judges UID-COLLISION against stored minus notice uids.
-`docs/emit-sources-batch45.tsv` is the raw sweep; `docs/verified-sources-batch45.tsv`
+`docs/emit-sources-batch46.tsv` is the raw sweep; `docs/verified-sources-batch46.tsv`
 joins it to the probe and the upstream counts.
 `attributes.<objectIdField>` is unique per record by ArcGIS's own definition,
 which is why `id_keys` names it and not the first field that looked like an id —

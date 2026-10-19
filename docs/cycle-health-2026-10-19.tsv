@@ -24,7 +24,7 @@
 # key. A blanket fix would have been a change made on reasoning.
 #
 # The other 11 are 429, 403 and 500 — one reading each, and several are load THIS SWEEP created: 12 jobs in
-# parallel, while a 6-job batch-45 emit audit was hitting services6.arcgis.com at the same time (both FAA rows
+# parallel, while a 6-job batch-46 emit audit was hitting services6.arcgis.com at the same time (both FAA rows
 # are on that host, failing at pages 18 and 20). us-sf-311-open311-requests is already paced at 1200 ms in
 # core/hostgate.c and still 429'd at page 20 under that load, which is the clearest sign of the same thing.
 # The five au-asic 403s were re-tested BY HAND afterwards and are not reproducible: data.gov.au served 8 rapid

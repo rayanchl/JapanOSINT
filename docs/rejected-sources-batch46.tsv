@@ -1,4 +1,4 @@
-# Batch 45 rejects, kept as data rather than dropped (2026-10-19).
+# Batch 46 rejects, kept as data rather than dropped (2026-10-19).
 # 899 candidate layers were discovered by asking 195 ArcGIS service roots for their own
 # directory; 819 answered /query with real records. These 80 did not, and each says why.
 #   NO_QUERY        the layer exists in the directory but its /query endpoint refuses

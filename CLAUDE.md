@@ -39,11 +39,11 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 21,953** (2026-10-19), measured — batch 45's 164
-measured rows (`docs/verified-sources-batch45.tsv`,
-`native/collectors/OSINT_SOURCES_BATCH_45_ARCGISLAYERS.md`) on main's 21,789.
+**The registered count is 21,953** (2026-10-19), measured — batch 46's 164
+measured rows (`docs/verified-sources-batch46.tsv`,
+`native/collectors/OSINT_SOURCES_BATCH_46_ARCGISLAYERS.md`) on main's 21,789.
 
-**Batch 45 is batch 42's method on a different family, and it worked the same
+**Batch 46 is batch 42's method on a different family, and it worked the same
 way.** The tree already reached 195 ArcGIS service roots, each by ONE row naming
 ONE layer of ONE service — the path somebody happened to know. Asking each root
 for its own directory (`?f=json` → folders and services; then each service's
@@ -73,7 +73,7 @@ from COLUMN names, filing a bridge layer carrying `FLOODPRONE` under `safety`
 and a power-outage layer under `health`. **Classify on what the publisher named
 the collection; a guess read off a column is not a measurement.**
 
-**The registered count was 21,789** on main when batch 45 branched, and
+**The registered count was 21,789** on main when batch 46 branched, and
 **21,237** when batch 42 landed (2026-10-12) — main gained ~550 rows between the
 two from other beats. `make lint-sources` prints the figure and
 `./bin/japanosint --list-sources` agrees; do not read a count out of prose that
@@ -723,7 +723,7 @@ says why.
 | `tools/audit_registry_emit.py` | rule 4 **and** 4b for the whole REGISTRY, manifest or not — `--list-sources` is the source list, so nothing registered can hide. Measures emitted *and* stored, per run, against a fresh copy of a warm template DB. `--scheduled`/`--match`/`--only`/`--ids-file`, `--jobs`, `--timeout`, TSV out, `--resume` |
 | `tools/diagnose_emit_keys.py` | why a row emitted nothing, and which `title_keys`/`id_keys` fix it |
 | `tools/cleanup_stale_uids.py` | the rows identity fixes left in an OLD database: a plain-key row whose qualified siblings now hold the same record (the keyqual collectors and FRA), and wayback_jp's captures from before digest+timestamp+URL. Reports by default. `--delete` removes, in one transaction, only rows whose replacement is proven to exist and that nothing references. `--self-test` runs it on a scratch DB (also from `make unit`) |
-| `tools/gen_hp_batch.py` | manifest → C, one table per beat, `--prefix`/`--batch` so batches never collide — but the batch NUMBER is yours to keep unique: main shipped a batch 32 while a branch was open with its own, both created `docs/verified-sources-batch32.tsv`, and renumbering the branch to 33 after the fact meant touching the manifest, both TSVs, the table, its array name and two batch citations that had landed in `lib/hpengine.h` and `core/hostgate.c`. Rejects duplicate opts, non-integer int opts, and an opt whose value **swallowed the next one** through a stray `\;`. **Its opt table is a THIRD place a new engine field has to be added**, and it is the one that gets forgotten: `page_resume` reached the engine and 533 rows of C without reaching here, so batch 45 — the first batch to need it — had every such row rejected as an unknown opt. `page_walk` had been missed the same way before it. When you add an `hp_source` field, add it to `STR_OPTS`/`INT_OPTS` in the same change |
+| `tools/gen_hp_batch.py` | manifest → C, one table per beat, `--prefix`/`--batch` so batches never collide — but the batch NUMBER is yours to keep unique: main shipped a batch 32 while a branch was open with its own, both created `docs/verified-sources-batch32.tsv`, and renumbering the branch to 33 after the fact meant touching the manifest, both TSVs, the table, its array name and two batch citations that had landed in `lib/hpengine.h` and `core/hostgate.c`. Rejects duplicate opts, non-integer int opts, and an opt whose value **swallowed the next one** through a stray `\;`. **Its opt table is a THIRD place a new engine field has to be added**, and it is the one that gets forgotten: `page_resume` reached the engine and 533 rows of C without reaching here, so batch 46 — the first batch to need it — had every such row rejected as an unknown opt. `page_walk` had been missed the same way before it. When you add an `hp_source` field, add it to `STR_OPTS`/`INT_OPTS` in the same change |
 
 ## 4. Fetching is not emitting — prove the second one
 
@@ -1194,7 +1194,7 @@ Engine subtleties worth knowing before writing a row:
   a change made on reasoning.
 
   The other 11 are 429/403/500, one reading each, **and several are load the
-  sweep itself created**: 12 jobs in parallel while a 6-job batch-45 emit audit
+  sweep itself created**: 12 jobs in parallel while a 6-job batch-46 emit audit
   hit `services6.arcgis.com`, where both failing FAA rows live.
   `us-sf-311-open311-requests` is already paced at 1,200 ms in
   `core/hostgate.c` and still 429'd at page 20 under that load, which says the
