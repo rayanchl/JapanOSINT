@@ -51,7 +51,7 @@ static int gw_emit_events_map(const source_ctx *c, intel_sink *s,
     if (n < 0) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }     \
     return 0; }                                                               \
   static const source_def SYM = {                                            \
-    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,             \
+    .id = ID, .collector = COLL, .engine = "vjson", .name = NAME, .name_ja = NAMEJA, \
     .update_interval_sec = IVAL, .run = run_##SYM,                            \
     .category = CAT, .type = "api", .url = URL,                               \
     .description = DESC, .layer = NULL, .free_tier = 1 };                     \

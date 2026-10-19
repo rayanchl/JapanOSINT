@@ -27,8 +27,15 @@
  * verified-source batch. Raising the cap is deliberately cheap and is done
  * BEFORE the sources land, because the failure mode when it is not is silent
  * in the only place that matters: the build succeeds, the fleet looks healthy,
- * and the sources past the cap simply do not exist at runtime. */
-#define MAX_SOURCES 32768
+ * and the sources past the cap simply do not exist at runtime.
+ *
+ * 2026-10-18: hit in exactly that way. Batch 45's French beat took the tree to
+ * 43,453 and the build was clean, lint was clean, and 2,392 of its 11,021 rows
+ * were OVERFLOW-dropped — found only because the beat's own registration count
+ * (8,629) was compared against its table (11,021) before the emit audit was
+ * believed. 32768 -> 131072 (1 MB in .bss): room to triple again, and raised
+ * BEFORE the next batch rather than after it. */
+#define MAX_SOURCES 131072
 static const source_def *g_srcs[MAX_SOURCES];
 static int g_n = 0;
 
@@ -81,11 +88,17 @@ static int g_n = 0;
  * core/scheduler.c already routes on that prefix. PORT_SCANNER is deliberately
  * "_probe": it opens raw sockets, so keeping it out of the LLM's schema enum is
  * a security decision, not an oversight. */
+/* The complement of registry_is_entity_pivot() under ONE definition: a row
+ * with no interval that is not an internal lane and that no entity can reach
+ * — for an hpengine row, a URL/body without an entity token (house rule 3's
+ * static-URL-no-interval row). The collector NAME is no longer part of either
+ * rule: hpengine rows take their table's name as collector (2026-10-12), so
+ * `collector != "osint"` would call 1,864 live pivots dead. */
 static int source_never_runs(const source_def *d) {
   if (!d || d->update_interval_sec > 0) return 0;
   if (!d->collector || !d->collector[0]) return 1;
   if (d->collector[0] == '_') return 0;
-  return strcmp(d->collector, "osint") != 0;
+  return !registry_is_entity_pivot(d);
 }
 
 static int g_dupes;
@@ -180,4 +193,13 @@ int registry_index(const char *id) {
 const source_def *registry_get(const char *id) {
   int i = registry_index(id);
   return i >= 0 ? g_srcs[i] : NULL;
+}
+
+#include "lib/hpengine.h"
+int registry_is_entity_pivot(const source_def *d) {
+  if (!d || d->update_interval_sec != 0) return 0;
+  if (!d->collector || d->collector[0] == '_') return 0;
+  if (d->engine && !strcmp(d->engine, "hpengine"))
+    return hp_source_uses_entity(d->id);
+  return 1;
 }

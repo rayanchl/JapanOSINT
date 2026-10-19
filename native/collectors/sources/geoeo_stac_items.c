@@ -2,10 +2,10 @@
  * collection document — a catalog is metadata about the service, not a record).
  *
  * Endpoints (all keyless):
- *   CDSE  https://stac.dataspace.copernicus.eu/v1/search?collections=sentinel-1-grd&limit=20
- *   BDC   https://data.inpe.br/bdc/stac/v1/search?limit=20
- *   DEA   https://explorer.digitalearth.africa/stac/collections/s2_l2a/items?limit=20
- *   SWISS https://data.geo.admin.ch/api/stac/v0.9/collections/ch.swisstopo.swissimage-dop10/items?limit=50
+ *   CDSE  https://stac.dataspace.copernicus.eu/v1/search?collections=sentinel-1-grd&limit=100&sortby=-datetime
+ *   BDC   https://data.inpe.br/bdc/stac/v1/search?limit=100
+ *   DEA   https://explorer.digitalearth.africa/stac/search?collections=s2_l2a&limit=100&sortby=-datetime
+ *   SWISS https://data.geo.admin.ch/api/stac/v0.9/collections/ch.swisstopo.swissimage-dop10/items?limit=100
  * Emits per item: id, collection, properties.datetime, platform/constellation,
  *   instruments, gsd, the bbox and the item's own footprint geometry.
  * Licences:
@@ -39,29 +39,40 @@
  *  - Geometry is a Polygon FOOTPRINT, so it is stored whole as
  *    geometry_geojson and the pin is derived from its own vertices; a
  *    geo_precision is recorded so nobody mistakes the pin for a target.
- *  - Items are large (70 KB each with assets); limits are kept low and the
- *    asset blobs are not copied into the row.
+ *  - Items are large (70 KB each with assets); page sizes are kept modest and
+ *    the asset blobs are not copied into the row.
+ *
+ * ORDER, AND PAGING (2026-10-12). Every one of these was a single request for
+ * a `limit` of items with nothing following it — the seventh discard shape
+ * (tools/audit_url_limits.py; docs/measured-url-limits-2026-10-11.tsv). The
+ * truncation was the smaller half of the problem. DEA's default order is
+ * OLDEST FIRST, so `?limit=20` stored the twenty oldest Sentinel-2 scenes over
+ * Africa — acquired 2015-10-22 — and re-stored those same twenty every six
+ * hours while 6,594,309 items accumulated behind them, including every scene
+ * anyone would want. A record count said nothing about that; neither did the
+ * emit audit, because 20 of 20 emitted and 20 of 20 stored.
+ *
+ * So all four now ASK for newest-first where the service supports it
+ * (`sortby=-datetime`, measured working on CDSE and DEA; swisstopo 0.9 has no
+ * sortby and publishes a cursor `next` link instead, which is its own order),
+ * and all four are walked by lib/pagewalk.c, which follows the `links` array's
+ * `rel=next` — STAC's own hypermedia, nothing invented. Each walk stops at the
+ * pagewalk ceiling and files a collector-truncation-notice naming what it did
+ * not reach, which is the honest statement for a catalogue of millions.
  */
 #include "source.h"
 #include "lib/feedlib.h"
 #include "lib/pagewalk.h"
 #include "geoeo_common.inc"
 
-/* These four all answered `limit` with exactly `limit` items and published a
- * STAC `links:[{"rel":"next","href":…}]` alongside, so the limit was a discard
- * and the continuation was sitting in the response. Measured 2026-10-18:
- * CDSE/BDC/DEA 20 -> 200 and swisstopo 50 -> 100 when asked for ten times as
- * many, which is the shortfall ONE page was dropping. pw_walk follows the
- * server's own next link (lib/pagewalk.c selects it by `rel`, never by
- * position) and discloses whatever the page ceiling leaves behind, so the
- * `limit` in each URL is now a page size rather than a cap. */
+/* What one STAC row needs that pw_walk's `ud` must carry across pages. */
 typedef struct {
   const char *record_type, *tags, *geo_precision;
   int exclude_ccm;
-} stac_page_ud;
+} stac_spec;
 
-/* STAC search can be slow to answer; keep the 60 s this collector always used
- * rather than inherit pw_fetch_json's 25 s. */
+/* STAC items are ~70 KB each with their assets, so the page SIZE stays modest
+ * and it is the page COUNT that was wrong. 60 s for a 100-item page. */
 static cJSON *stac_fetch(const source_ctx *c, const char *url, void *ud) {
   (void)ud;
   return feed_get_json(c->http, url, 60000);
@@ -69,25 +80,18 @@ static cJSON *stac_fetch(const source_ctx *c, const char *url, void *ud) {
 
 static int stac_emit_page(const source_ctx *ctx, intel_sink *sink,
                           const char *sid, cJSON *doc, void *ud, int *seen) {
-  const stac_page_ud *u = (const stac_page_ud *)ud;
-  const char *record_type = u->record_type, *tags = u->tags,
-             *geo_precision = u->geo_precision;
-  const int exclude_ccm = u->exclude_ccm;
   (void)ctx;
+  const stac_spec *sp = (const stac_spec *)ud;
+  const char *record_type = sp->record_type, *tags = sp->tags;
+  const char *geo_precision = sp->geo_precision;
+  const int exclude_ccm = sp->exclude_ccm;
+
   cJSON *feats = cJSON_GetObjectItem(doc, "features");
+  *seen = cJSON_IsArray(feats) ? cJSON_GetArraySize(feats) : 0;
   if (!cJSON_IsArray(feats)) {
     fprintf(stderr, "[%s] no features array (not a STAC ItemCollection)\n", sid);
     return 0;
   }
-  /* What the page CONTAINED, not what we emitted: the ccm filter below refuses
-   * records, and driving "was this page full" off the emitted count would make
-   * a full page of excluded scenes look short — stopping the walk AND
-   * suppressing its own truncation notice (lib/pagewalk.h). */
-  *seen = cJSON_GetArraySize(feats);
-  cJSON *context = cJSON_GetObjectItem(doc, "context");
-  double matched = 0;
-  if (context && geoeo_num(context, "matched", &matched))
-    fprintf(stderr, "[%s] catalogue reports %.0f matching items\n", sid, matched);
 
   static const char *PKEYS[] = { "datetime", "start_datetime", "end_datetime",
                                  "platform", "constellation", "instruments",
@@ -166,24 +170,32 @@ static int stac_emit_page(const source_ctx *ctx, intel_sink *sink,
   return n;
 }
 
+/* Walk one STAC item search to its ceiling, disclosing the rest.
+ *
+ * The ceiling is the pagewalk default (20 pages) on purpose, and it is not a
+ * fudge: these catalogues hold 6.6 MILLION items (DEA s2_l2a, measured
+ * 2026-10-12) and nothing in this tree wants all of them. What was wrong was
+ * not the bound but WHICH items it kept and that nobody was told — see the
+ * ORDER note in the header. Newest-first plus a stated bound is a window; 20
+ * arbitrary items is not. */
 static int stac_collect(const source_ctx *ctx, intel_sink *sink,
                         const char *sid, const char *url,
                         const char *record_type, const char *tags,
                         const char *geo_precision, int exclude_ccm) {
-  stac_page_ud u = { record_type, tags, geo_precision, exclude_ccm };
-  int n = pw_walk(ctx, sink, sid, url, stac_fetch, stac_emit_page, &u);
-  if (n < 0) {                        /* only the FIRST fetch failing is an error */
+  stac_spec sp = { record_type, tags, geo_precision, exclude_ccm };
+  int n = pw_walk(ctx, sink, sid, url, stac_fetch, stac_emit_page, &sp);
+  if (n < 0) {
     fprintf(stderr, "[%s] fetch/parse failed\n", sid);
     return -1;
   }
-  fprintf(stderr, "[%s] emitted %d STAC items\n", sid, n);
   return 0;
 }
 
 static int cdse_run(const source_ctx *ctx, intel_sink *sink) {
   return stac_collect(
       ctx, sink, "cdse-stac",
-      "https://stac.dataspace.copernicus.eu/v1/search?collections=sentinel-1-grd&limit=20",
+      "https://stac.dataspace.copernicus.eu/v1/search"
+      "?collections=sentinel-1-grd&limit=100&sortby=-datetime",
       "satellite-scene",
       "[\"satellite\",\"sar\",\"sentinel\",\"copernicus\",\"stac\"]",
       "scene-footprint", 1);
@@ -191,7 +203,7 @@ static int cdse_run(const source_ctx *ctx, intel_sink *sink) {
 
 static int bdc_run(const source_ctx *ctx, intel_sink *sink) {
   return stac_collect(ctx, sink, "bdc-stac",
-                      "https://data.inpe.br/bdc/stac/v1/search?limit=20",
+                      "https://data.inpe.br/bdc/stac/v1/search?limit=100",
                       "satellite-scene",
                       "[\"satellite\",\"brazil\",\"inpe\",\"stac\"]",
                       "item-extent", 0);
@@ -200,7 +212,10 @@ static int bdc_run(const source_ctx *ctx, intel_sink *sink) {
 static int dea_run(const source_ctx *ctx, intel_sink *sink) {
   return stac_collect(
       ctx, sink, "dea-stac",
-      "https://explorer.digitalearth.africa/stac/collections/s2_l2a/items?limit=20",
+      /* /collections/<id>/items 302s to /stac/search?collection=<id> and loses
+       * sortby in the redirect, so the search path is requested directly. */
+      "https://explorer.digitalearth.africa/stac/search"
+      "?collections=s2_l2a&limit=100&sortby=-datetime",
       "satellite-scene",
       "[\"satellite\",\"africa\",\"sentinel-2\",\"stac\"]",
       "scene-footprint", 0);
@@ -209,8 +224,10 @@ static int dea_run(const source_ctx *ctx, intel_sink *sink) {
 static int swiss_run(const source_ctx *ctx, intel_sink *sink) {
   return stac_collect(
       ctx, sink, "swisstopo-stac",
+      /* No sortby on this 0.9 service, and none is needed: it publishes a
+       * cursor `next` link, so the walk follows the server's own order. */
       "https://data.geo.admin.ch/api/stac/v0.9/collections/"
-      "ch.swisstopo.swissimage-dop10/items?limit=50",
+      "ch.swisstopo.swissimage-dop10/items?limit=100",
       "aerial-imagery-tile",
       "[\"aerial\",\"orthophoto\",\"switzerland\",\"swisstopo\",\"stac\"]",
       "tile-footprint", 0);
@@ -221,7 +238,7 @@ static const source_def geoeo_cdse_def = {
   .name = "Copernicus Data Space Ecosystem STAC API",
   .update_interval_sec = 3600, .run = cdse_run,
   .category = "satellite", .type = "api",
-  .url = "https://stac.dataspace.copernicus.eu/v1/search?collections=sentinel-1-grd&limit=20",
+  .url = "https://stac.dataspace.copernicus.eu/v1/search?collections=sentinel-1-grd&limit=100&sortby=-datetime",
   .description = "ESA's official Copernicus Data Space STAC API returning real Sentinel-1 SAR scene records within minutes of acquisition — keyless discovery of the largest open EO archive.",
   .license = "Copernicus open and free data policy (Regulation EU 1159/2013) — free, full and open access including redistribution; ccm-* collections excluded.",
   .free_tier = 1,
@@ -233,7 +250,7 @@ static const source_def geoeo_bdc_def = {
   .name = "Brazil Data Cube STAC (INPE)",
   .update_interval_sec = 21600, .run = bdc_run,
   .category = "satellite", .type = "api",
-  .url = "https://data.inpe.br/bdc/stac/v1/search?limit=20",
+  .url = "https://data.inpe.br/bdc/stac/v1/search?limit=100",
   .description = "Brazil's National Institute for Space Research STAC catalogue — CBERS, Amazonia-1, Landsat and Sentinel data cubes plus downscaled climate projections over South America.",
   .license = "INPE open data (Brazilian government); CBERS/Amazonia products explicitly free for any use.",
   .free_tier = 1,
@@ -245,7 +262,7 @@ static const source_def geoeo_dea_def = {
   .name = "Digital Earth Africa STAC",
   .update_interval_sec = 21600, .run = dea_run,
   .category = "satellite", .type = "api",
-  .url = "https://explorer.digitalearth.africa/stac/collections/s2_l2a/items?limit=20",
+  .url = "https://explorer.digitalearth.africa/stac/search?collections=s2_l2a&limit=100&sortby=-datetime",
   .description = "Digital Earth Africa's analysis-ready data catalogue — continental-scale Sentinel-2 L2A and related products over Africa, free and keyless.",
   .license = "Digital Earth Africa open data programme — CC BY 4.0, free for any use including commercial.",
   .free_tier = 1,
@@ -257,7 +274,7 @@ static const source_def geoeo_swisstopo_def = {
   .name = "swisstopo STAC Aerial Imagery Index",
   .update_interval_sec = 86400, .run = swiss_run,
   .category = "satellite", .type = "api",
-  .url = "https://data.geo.admin.ch/api/stac/v0.9/collections/ch.swisstopo.swissimage-dop10/items?limit=50",
+  .url = "https://data.geo.admin.ch/api/stac/v0.9/collections/ch.swisstopo.swissimage-dop10/items?limit=100",
   .description = "The Swiss federal geodata STAC — 10 cm orthophoto tiles as discoverable STAC items with footprints and direct download assets.",
   .license = "swisstopo open government data (OGD): free use, reuse and redistribution with source attribution.",
   .free_tier = 1,

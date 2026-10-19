@@ -76,6 +76,7 @@ static const hp_source T[] = {
     .array_path = "fields",
     .detail_url = "https://maps.austintexas.gov/arcgis/rest/services/CrimeViewer_new/APD_Reported_Crimes_new/FeatureServer/0/query?objectIds={v}&outFields=*&f=json", .detail_key = "OBJECTID",
     .page_walk = 1,
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .interval = 21600, .free_tier = 1 },
 
   { .id = "us-brookline-311-open311-request-detail",
@@ -117,6 +118,7 @@ static const hp_source T[] = {
     .id_keys = "service_request_id",
     .detail_url = "https://mobile311.sfgov.org/open311/v2/requests/{v}.json", .detail_key = "service_request_id",
     .page_walk = 1,
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .interval = 21600, .free_tier = 1 },
 
   { .id = "us-sf-311-open311-services",

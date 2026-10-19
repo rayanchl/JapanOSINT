@@ -402,6 +402,40 @@ typedef struct hp_source {
    * existing initializer moves. */
   const char *xlsx_sheet;
   int         xlsx_sheet_index;
+  /* ── READ THE WHOLE COLLECTION OVER A CYCLE, one run's pages at a time.
+   *
+   * A page ceiling answers "how many requests may one run make". It does not
+   * answer "how is a collection bigger than that ever read", and for 89
+   * scheduled rows the honest answer was "it is not": measured 2026-10-12
+   * (docs/measured-page-ceilings-2026-10-12.tsv), they declare totals needing
+   * 201 to 55,971 pages — 1.93 billion records between them — so every run
+   * re-read the same first 20 pages and the rest was disclosed and never
+   * fetched. 534 more page past the ceiling without publishing a total at all.
+   * Raising page_max does not serve those rows; 55,971 requests a run against
+   * one host is not exhaustiveness, it is an outage.
+   *
+   * With `page_resume = 1` the walk starts where the previous run stopped and
+   * stores where this one stopped (source_ctx's resume_in / resume_out, which
+   * core/scheduler.c persists). When the walk reaches the end the position is
+   * CLEARED, so the next run starts over and the cycle repeats: the whole
+   * collection is read over ceiling-sized slices, and each notice says which
+   * slice this run read. collectors/sources/wayback_jp.c has done exactly this
+   * by hand since before the field existed — mhlw's 2,064-page index over ~207
+   * daily runs — and that row is the worked example.
+   *
+   * It is ignored, with a line on stderr, when:
+   *   - the run carries an ENTITY. "What do we have on X" must answer from the
+   *     start of X's results, not from page 37 of the last entity asked about.
+   *     The scheduler passes no resume on a pivot run for the same reason.
+   *   - the URL or body carries a {date…} or {ago:…} token. The stored
+   *     position is a URL, so resuming would re-fetch a stale day forever;
+   *     those rows are a live tail and already walk forward by date.
+   *   - the stored URL's host is not the row's own host. The token comes from
+   *     the database, and a reading position is not a licence to fetch
+   *     somewhere else.
+   * Appended last, like every field above it, so no existing initializer
+   * moves. */
+  int         page_resume;
   /* Date tokens. `{date}` in the url, post_body or a header is today's date
    * (YYYY-MM-DD); `{date-1d}`, `{date+2w}`, `{date-3m}`, `{date-1y}` shift it;
    * `{date-1d:%Y%m%d}` formats it (strftime); `{date:@s}` / `{date:@ms}` is
@@ -445,7 +479,36 @@ typedef struct hp_source {
 
 /* Register `n` rows. `defs` must be static storage of at least n entries owned
  * by the caller (source_def pointers live for the process lifetime). */
-void hp_register(const hp_source *specs, int n, source_def *defs);
+/* `table` is the registering file's basename without `.c` (HP_REGISTER_TABLE
+ * passes __FILE__): it becomes the default `collector` of every row in the
+ * table that declares none. It used to be the literal "osint" for all of
+ * them, which put 8,445 rows from 183 unrelated tables into one collector —
+ * a Japanese media beat, a SCADA beat and a Brazilian registry beat
+ * indistinguishable in every client. The beat a row was authored and probed
+ * in IS its natural group, and the file name is the one spelling of that
+ * beat every gate already uses. A row that names its own collector keeps it.
+ * NULL/"" falls back to "osint" (the offline test harness, nothing live). */
+void hp_register(const hp_source *specs, int n, source_def *defs,
+                 const char *table);
+
+/* Serialise one registered row AS DECLARED, for the source detail API:
+ * every non-default field by name, enums as words, plus the derived facts a
+ * client would otherwise have to re-derive from the C — `kind`
+ * (pivot | scheduled | scheduled-pivot | unreachable), the entity tokens the
+ * URL and body use, the paging strategy as one word, whether a detail hop is
+ * declared and whether {date…}/{ago:} tokens are rendered. Header templates
+ * are shown verbatim: they carry `{env}` tokens, never values. malloc'd JSON,
+ * caller frees; NULL for an id this engine does not run. */
+char *hp_describe_json(const char *id);
+/* The declared row itself (read-only, lives for the process), or NULL when
+ * `id` is not an hpengine source. For callers that want one field, not JSON. */
+const hp_source *hp_source_get(const char *id);
+/* 1 when `id` is an hpengine row whose URL or POST body carries an entity
+ * token, or that declares filter_query (a bulk fetch filtered by the entity
+ * locally), i.e. it is dispatchable as an entity pivot. 0 for a fixed-endpoint
+ * row AND for an id this engine does not run — callers that need to tell
+ * those apart ask hp_describe_json(). */
+int hp_source_uses_entity(const char *id);
 
 /* XML text → the characters it denotes, in place: unwraps every CDATA section
  * (payload verbatim), decodes the five predefined entities and numeric
@@ -459,7 +522,8 @@ void hp_xml_decode(char *s);
 #define HP_REGISTER_TABLE(TBL)                                                \
   static source_def TBL##_defs[sizeof(TBL) / sizeof((TBL)[0])];               \
   __attribute__((constructor)) static void hp_reg_##TBL(void) {               \
-    hp_register((TBL), (int)(sizeof(TBL) / sizeof((TBL)[0])), TBL##_defs);    \
+    hp_register((TBL), (int)(sizeof(TBL) / sizeof((TBL)[0])), TBL##_defs,    \
+                __FILE__);                                                    \
   }
 
 #endif

@@ -387,6 +387,19 @@ def count_xml(text):
     return "xml:%s" % bestname, best
 
 
+_FEED_ROOT = re.compile(r"<(rss|rdf:RDF|feed)[\s>]", re.I)
+
+
+def _is_empty_feed(text):
+    """True for a feed document (RSS 2.0, RSS 1.0 rdf:RDF, Atom) whose root
+    is present but which carries no <item>/<entry>. Regex, like count_feed,
+    for the same reason: real government feeds are often not strict XML."""
+    head = text.lstrip()[:2000]
+    if not _FEED_ROOT.search(head):
+        return False
+    return not re.search(r"<(item|entry)[\s>]", text, re.I)
+
+
 def _looks_like_html(text):
     """True when a body is a rendered page rather than data.
 
@@ -1124,6 +1137,18 @@ def _judge(r, url, shift=0, entity=None):
 
     if not kind:
         kind, items = VF.count_feed(text)
+    if not kind and _is_empty_feed(text):
+        # A well-formed RSS 2.0 / RSS 1.0 (rdf:RDF) / Atom document holding no
+        # <item> or <entry> at all. count_feed scores it 0 and count_xml needs
+        # two same-tag children, so it used to fall through every branch and
+        # be reported UNPARSEABLE -- the wrong verdict for a body that parsed
+        # perfectly and simply held nothing. Batch 43 met 25 of them in one
+        # pass: Japanese municipal 緊急 (emergency) feeds, which are empty on
+        # every day there is no emergency. The verdict is the same one a JSON
+        # `{"results":[]}` gets, and the reason is the same: a feed verified
+        # live that emits nothing is not verified at all (CLAUDE.md rule 1).
+        return (sid, url, "EMPTY_RESULTSET", "feed", 0, status, nbytes,
+                "well-formed feed document with 0 items/entries")
     if not kind:
         kind, items = VF.count_json(text)
     if not kind and ("csv" in ctype.lower() or url.lower().endswith(".csv")):

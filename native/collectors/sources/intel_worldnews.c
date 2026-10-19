@@ -6,7 +6,7 @@
 #include "source.h"
 #include "lib/rss_atom.h"
 
-#define COLL     "osint"
+#define COLL     "world_outlets"
 #define INTERVAL 3600
 
 #include "_source_macros.inc"

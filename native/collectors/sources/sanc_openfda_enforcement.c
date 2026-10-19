@@ -14,47 +14,46 @@
  *            rely on openFDA to make decisions regarding medical care". This is used as a
  *            corporate-conduct signal alongside financial-regulator actions, nothing more.
  *
- * Notes    : meta.results.total supports skip/limit paging — which this collector now DOES,
- *            see the comment on OPENFDA_URL (skip caps at 25,000; past that the walk needs
- *            date-range filters, and the row would say so in its truncation notice) — and
+ * Notes    : meta.results.total supports skip/limit paging, and
  *            device/enforcement.json and food/enforcement.json share this schema if the fleet
  *            wants them later.
+ *
+ * PAGED 2026-10-12. The note above used to end "the URL is used EXACTLY as
+ * verified" and say that total "supports skip/limit paging" — a capability
+ * named and not used. One request for `limit=100` stored 100 of the 18,002
+ * reports meta.results.total declares, daily, forever: the seventh discard
+ * shape (tools/audit_url_limits.py), with the shortfall carried on every row
+ * as `upstream_total` where anyone could have compared it. Measured
+ * 2026-10-12: `limit=1000` is honoured and `skip` works to the API's documented
+ * ceiling of 25,000 (26,000 is a 400 naming it), so 18,002 records are 19
+ * pages of 1,000 and the whole set fits inside that ceiling with room. If this
+ * corpus grows past 25,000, the walk will stop at the ceiling and disclose it;
+ * the remedy is then a date-range filter, as the note always said.
  */
 #include "sanc_common.inc"
 #include "lib/pagewalk.h"
 
-/* PAGED, and the Notes above are what made it obvious: this row already KNEW
- * meta.results.total was 17,832 and that skip/limit paging existed, and still
- * stored the first 100. Measured 2026-10-18: the total is now 18,010, `skip` is
- * honoured (skip=100 shares no record with skip=0) and `limit=1000` is
- * openFDA's documented maximum and is served (1.6 MB a page). 18,010 / 1,000 =
- * 19 pages, inside the 20-page ceiling, so one daily run now takes the whole
- * table instead of 0.55% of it. `skip=0` is written into the URL deliberately:
- * pw_walk advances a parameter the author wrote and never invents one. If the
- * table grows past 20,000 the ceiling bites and the walk files a truncation
- * notice naming it, which is the honest outcome rather than a silent 20,000. */
-#define OPENFDA_URL "https://api.fda.gov/drug/enforcement.json?limit=1000&skip=0"
+#define FDA_URL "https://api.fda.gov/drug/enforcement.json?limit=1000&skip=0"  /* exhaustive-ok: walked by pw_walk/pw_walk_max below, which advances the offset or page this URL carries */
+/* 18,002 reports at 1,000 a page = 19; 26 is both headroom and the API's own
+ * skip ceiling of 25,000, past which a page is a 400 rather than data. */
+#define FDA_PAGE_MAX 26  /* exhaustive-ok: page ceiling handed to pw_walk_max(); a stop at it files a collector-truncation-notice */
 
-static cJSON *fda_fetch(const source_ctx *c, const char *url, void *ud) {
+/* pw_fetch_fn: this family fetches through sanc_http_json for its UA and
+ * error logging. */
+static cJSON *fda_fetch(const source_ctx *ctx, const char *url, void *ud) {
   (void)ud;
-  return sanc_http_json(c, url, NULL, 40000, "openfda-enforcement");
+  return sanc_http_json(ctx, url, NULL, 40000, "openfda-enforcement");
 }
 
-/* pw_emit_fn. `seen` is the page's record count, not the emitted count: a
- * record with neither firm nor product description is skipped below, and
- * reporting the emitted count would make a full page look short — stopping the
- * walk and suppressing its own truncation notice (lib/pagewalk.h). */
-static int fda_emit_page(const source_ctx *ctx, intel_sink *sink,
-                         const char *sid, cJSON *doc, void *ud, int *seen) {
+static int fda_page(const source_ctx *ctx, intel_sink *sink, const char *sid,
+                    cJSON *doc, void *ud, int *seen) {
   (void)ctx; (void)sid; (void)ud;
   const cJSON *meta = cJSON_GetObjectItem(
       cJSON_GetObjectItem(doc, "meta"), "results");
   const cJSON *total = cJSON_GetObjectItem(meta, "total");
 
   cJSON *results = cJSON_GetObjectItem(doc, "results");
-  if (!cJSON_IsArray(results)) { *seen = 0; return 0; }
-  *seen = cJSON_GetArraySize(results);
-
+  *seen = cJSON_IsArray(results) ? cJSON_GetArraySize(results) : 0;
   int n = 0;
   const cJSON *r;
   cJSON_ArrayForEach(r, results) {
@@ -139,9 +138,10 @@ static int fda_emit_page(const source_ctx *ctx, intel_sink *sink,
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int n = pw_walk(ctx, sink, "openfda-enforcement", OPENFDA_URL,
-                  fda_fetch, fda_emit_page, NULL);
-  return n < 0 ? -1 : 0;
+  if (pw_walk_max(ctx, sink, "openfda-enforcement-reports", FDA_URL, fda_fetch,
+                  fda_page, NULL, FDA_PAGE_MAX) < 0)
+    return -1;
+  return 0;
 }
 
 static const source_def sanc_openfda_enforcement_def = {
@@ -149,11 +149,7 @@ static const source_def sanc_openfda_enforcement_def = {
   .name = "openFDA drug enforcement (recall) reports",
   .update_interval_sec = 86400, .run = run,
   .category = "safety", .type = "api",
-  /* The scanner reads a `skip=` in any URL literal as a fetch site. This one is
-   * source_def.url — the endpoint this row documents — and the request is made
-   * by run() above, which walks it with pw_walk. Measured 2026-10-18: 18,010
-   * reports across 19 pages, = meta.results.total. */
-  .url = "https://api.fda.gov/drug/enforcement.json?limit=1000&skip=0",  /* exhaustive-ok: metadata field, not a fetch; run() walks it with pw_walk */
+  .url = FDA_URL,
   .description = "FDA regulatory enforcement reports naming the firm, the hazard classification and the reason for the recall — a corporate-conduct signal alongside financial-regulator actions.",
   .license = "openFDA: public domain data, no warranty. Do not rely on openFDA to make decisions regarding medical care.",
   .layer = NULL, .free_tier = 1,

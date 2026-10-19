@@ -1,5 +1,5 @@
 /* WHO Global Health Observatory OData.
- * Endpoint: https://ghoapi.azureedge.net/api/WHOSIS_000001?$top=1000&$skip=0
+ * Endpoint: https://ghoapi.azureedge.net/api/WHOSIS_000001?$top=1000&$skip=0&$count=true
  *           (WHOSIS_000001 = life expectancy at birth; the indicator list is
  *           at https://ghoapi.azureedge.net/api/Indicator and $filter=
  *           SpatialDim eq 'JPN' narrows it.)
@@ -10,33 +10,33 @@
  * is carried in the properties). Keyless.
  * LICENCE FLAG: WHO GHO data is published under CC BY-NC-SA 3.0 IGO -
  * NON-COMMERCIAL, share-alike. That is stricter than the other sources in
- * this batch and should be checked against the intended platform use. */
+ * this batch and should be checked against the intended platform use.
+ *
+ * PAGED 2026-10-12. `?$top=100` stored 100 of the 14,112 country-year
+ * observations this one indicator holds, weekly, forever — the seventh discard
+ * shape (tools/audit_url_limits.py). OData's own paging is `$top`/`$skip`, and
+ * `$count=true` makes the service publish `@odata.count`, which
+ * lib/pagewalk.c already reads as the total it discloses against. Measured
+ * 2026-10-12: $top=1000 is honoured, $skip advances, @odata.count = 14,112, so
+ * the whole indicator is 15 pages.
+ *
+ * NOTE for whoever widens this to more indicators: the count is PER INDICATOR
+ * (the path segment), not per service, so the ceiling below is sized for this
+ * one. A larger indicator needs its own measurement, not a bigger guess. */
 #include "od_shared.inc"
+#include "lib/pagewalk.h"
 
 #define SID "who-gho-indicator"
-/* PAGED. `$top=100` was a discard: measured 2026-10-18, this indicator holds
- * 14,112 country-year observations ($count=true says so) and the collector
- * kept the first 100 of them, forever, with nothing on the run line to say so.
- * GHO publishes no `@odata.nextLink`, so the earlier audit filed it as "no
- * continuation" — but OData's `$skip` IS the continuation, and this service
- * honours it (page 2 shares zero records with page 1). pw_walk only advances a
- * parameter the author wrote, so `$skip=0` is written here deliberately and
- * `$top` is raised to the measured 1,000-row page: 14,112 / 1,000 = 15 pages,
- * inside the 20-page ceiling, so the walk COMPLETES rather than disclosing a
- * sample. 0.6 MB a page, once a week. */
-static const char *URL =
-  "https://ghoapi.azureedge.net/api/WHOSIS_000001?$top=1000&$skip=0";
+static const char *URL = "https://ghoapi.azureedge.net/api/WHOSIS_000001?$top=1000&$skip=0&$count=true";  /* exhaustive-ok: walked by pw_walk/pw_walk_max below, which advances the offset or page this URL carries */
+/* 14,112 observations at 1,000 a page = 15; 30 is that with headroom. */
+#define WHO_PAGE_MAX 30  /* exhaustive-ok: page ceiling handed to pw_walk_max(); a stop at it files a collector-truncation-notice */
 
-/* pw_emit_fn. `seen` is what the page CONTAINED, not what was emitted: a null
- * NumericValue is skipped below, and reporting the emitted count would make a
- * full page look short — stopping the walk and suppressing its own truncation
- * notice at the same time (lib/pagewalk.h). */
-static int gho_emit_page(const source_ctx *ctx, intel_sink *sink,
-                         const char *sid, cJSON *doc, void *ud, int *seen) {
+static int who_page(const source_ctx *ctx, intel_sink *sink, const char *sid,
+                    cJSON *doc, void *ud, int *seen) {
   (void)ctx; (void)sid; (void)ud;
   const cJSON *arr = cJSON_GetObjectItem(doc, "value");
-  if (!cJSON_IsArray(arr)) { *seen = 0; return 0; }
-  *seen = cJSON_GetArraySize(arr);
+  *seen = cJSON_IsArray(arr) ? cJSON_GetArraySize(arr) : 0;
+  if (!cJSON_IsArray(arr)) return 0;
 
   int n = 0;
   const cJSON *r;
@@ -76,8 +76,8 @@ static int gho_emit_page(const source_ctx *ctx, intel_sink *sink,
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  return od_wrc(SID, pw_walk(ctx, sink, SID, URL, pw_fetch_json,
-                             gho_emit_page, NULL));
+  return od_rc(SID, pw_walk_max(ctx, sink, SID, URL, pw_fetch_json, who_page,
+                                NULL, WHO_PAGE_MAX));
 }
 
 static const source_def od_who_gho_def = {
@@ -85,11 +85,7 @@ static const source_def od_who_gho_def = {
   .name = "WHO Global Health Observatory OData",
   .update_interval_sec = 604800, .run = run,
   .category = "statistics", .type = "api",
-  /* The scanner reads a `$skip=` in any URL literal as a fetch site. This one is
-   * source_def.url — the endpoint this row documents — and the request is made
-   * by run() above, which walks it with pw_walk. Measured 2026-10-18: 14,112
-   * observations across 15 pages. */
-  .url = "https://ghoapi.azureedge.net/api/WHOSIS_000001?$top=1000&$skip=0",  /* exhaustive-ok: metadata field, not a fetch; run() walks it with pw_walk */
+  .url = "https://ghoapi.azureedge.net/api/WHOSIS_000001?$top=1000&$skip=0&$count=true",  /* exhaustive-ok: metadata field, not a fetch; the row is walked by pw_walk below, which advances the offset this URL carries */
   .description = "WHO GHO country-year health observations (life expectancy at birth) with ISO3 country, WHO region and numeric value",
   .license = "CC BY-NC-SA 3.0 IGO (WHO) - non-commercial, share-alike",
   .free_tier = 1,

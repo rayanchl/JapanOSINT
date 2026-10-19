@@ -117,15 +117,30 @@ REGISTER_SOURCE(soc_mastodon_servers_def)
 
 /* ---- 2. FediDB server census ------------------------------------------- */
 
-static int run_fedidb_servers(const source_ctx *ctx, intel_sink *sink) {
-  cJSON *doc = feed_get_json_h(ctx->http,
-                               "https://api.fedidb.org/v1/servers?limit=40",
-                               SOC_UA, 25000);
-  if (!doc) { fprintf(stderr, "[fedidb-servers] fetch failed\n"); return -1; }
+/* PAGED 2026-10-12. `?limit=40` stored 40 servers of the 4,320 the census
+ * holds, daily, while `links.next` sat in the same envelope carrying the
+ * cursor — the seventh discard shape (tools/audit_url_limits.py). Measured by
+ * walking that cursor by hand: 4,320 servers across 109 pages, and `limit`
+ * above 40 is refused (the API answers an HTML error page, so 40 is the page
+ * size, not a choice). lib/pagewalk.c follows `links.next`; 150 pages covers
+ * 6,000 against the measured 4,320. */
+#define FEDIDB_SERVERS_URL "https://api.fedidb.org/v1/servers?limit=40"
+#define FEDIDB_PAGE_MAX 150  /* exhaustive-ok: page ceiling handed to pw_walk_max(); a stop at it files a collector-truncation-notice */
+
+/* pw_fetch_fn: this census wants the shared user-agent. */
+static cJSON *fedidb_fetch(const source_ctx *c, const char *url, void *ud) {
+  (void)ud;
+  return feed_get_json_h(c->http, url, SOC_UA, 25000);
+}
+
+static int fedidb_page(const source_ctx *ctx, intel_sink *sink,
+                       const char *sid, cJSON *doc, void *ud, int *seen) {
+  (void)ctx; (void)ud;
   const cJSON *arr = cJSON_IsArray(doc) ? doc : cJSON_GetObjectItem(doc, "data");
+  *seen = cJSON_IsArray(arr) ? cJSON_GetArraySize(arr) : 0;
   if (!cJSON_IsArray(arr)) {
-    fprintf(stderr, "[fedidb-servers] unexpected shape\n");
-    cJSON_Delete(doc); return -1;
+    fprintf(stderr, "[%s] unexpected shape\n", sid);
+    return 0;
   }
   int n = 0;
   const cJSON *it;
@@ -167,8 +182,15 @@ static int run_fedidb_servers(const source_ctx *ctx, intel_sink *sink) {
                   "[\"fediverse\",\"instance\",\"census\"]",
                   domain, domain, summary, link, NULL, NULL);
   }
-  cJSON_Delete(doc);
-  fprintf(stderr, "[fedidb-servers] emitted %d\n", n);
+  return n;
+}
+
+static int run_fedidb_servers(const source_ctx *ctx, intel_sink *sink) {
+  if (pw_walk_max(ctx, sink, "fedidb-servers", FEDIDB_SERVERS_URL,
+                  fedidb_fetch, fedidb_page, NULL, FEDIDB_PAGE_MAX) < 0) {
+    fprintf(stderr, "[fedidb-servers] fetch failed\n");
+    return -1;
+  }
   return 0;
 }
 
@@ -177,7 +199,7 @@ static const source_def soc_fedidb_servers_def = {
   .name = "FediDB Fediverse Server Census",
   .update_interval_sec = 86400, .run = run_fedidb_servers,
   .category = "social", .type = "api",
-  .url = "https://api.fedidb.org/v1/servers",
+  .url = FEDIDB_SERVERS_URL,
   .description = "Cross-software fediverse census: per-instance software fingerprint, version, hosting city/country and post/user/MAU statistics.",
   .license = "Keyless public API documented at fedidb.org/docs; free tier, rate limited.",
   .layer = NULL, .free_tier = 1,
@@ -513,35 +535,33 @@ REGISTER_SOURCE(soc_misskey_dir_def)
 
 /* ---- 8. PeerTube instance directory ------------------------------------- */
 
-/* PAGED. The envelope's own `total` is 1,772 instances and `count=100` kept the
- * first 100 of them. Measured 2026-10-18: `start` is a 0-based record offset and
- * it is honoured (start=100 shares no instance with start=0), and `count=1000`
- * is served at 1.1 MB, so the whole directory arrives in 2 pages. `start=0` is
- * in the URL deliberately — pw_walk advances a parameter the author wrote and
- * never invents one, so without it a directory that grows past 1,000 would
- * silently truncate again. */
-#define PEERTUBE_URL \
-  "https://instances.joinpeertube.org/api/v1/instances?count=1000&start=0"
+/* `?count=100` alone stored 100 of the 1,785 servers the index's own `total`
+ * declares, daily, with the rest dropped in silence — the seventh discard
+ * shape (tools/audit_url_limits.py;
+ * docs/measured-url-limits-2026-10-11.tsv). The API takes `start` as a record
+ * offset (measured 2026-10-12: start=5 opens on the 6th host), so the URL
+ * carries `start=0` and lib/pagewalk.c advances it against the `count` stride.
+ * 25 pages of 100 covers 2,500 against the measured 1,785. */
+#define PEERTUBE_DIR_URL \
+  "https://instances.joinpeertube.org/api/v1/instances?count=100&start=0"  /* exhaustive-ok: walked by lib/pagewalk.c, which advances the offset/page this URL carries */
+#define PEERTUBE_PAGE_MAX 25  /* exhaustive-ok: page ceiling handed to pw_walk_max(); a stop at it files a collector-truncation-notice */
 
+/* pw_fetch_fn: this index wants the shared user-agent. */
 static cJSON *peertube_fetch(const source_ctx *c, const char *url, void *ud) {
   (void)ud;
-  return feed_get_json_h(c->http, url, SOC_UA, 45000);
+  return feed_get_json_h(c->http, url, SOC_UA, 30000);
 }
 
-/* pw_emit_fn. `seen` is the page's instance count, not the emitted count: an
- * entry with no host is skipped below, and reporting the emitted count would
- * make a full page look short — stopping the walk and suppressing its own
- * truncation notice (lib/pagewalk.h). */
 static int peertube_emit_page(const source_ctx *ctx, intel_sink *sink,
-                              const char *sid, cJSON *doc, void *ud, int *seen) {
+                              const char *sid, cJSON *doc, void *ud,
+                              int *seen) {
   (void)ctx; (void)ud;
   const cJSON *arr = cJSON_GetObjectItem(doc, "data");
+  *seen = cJSON_IsArray(arr) ? cJSON_GetArraySize(arr) : 0;
   if (!cJSON_IsArray(arr)) {
     fprintf(stderr, "[%s] unexpected shape\n", sid);
-    *seen = 0;
     return 0;
   }
-  *seen = cJSON_GetArraySize(arr);
   int n = 0;
   const cJSON *it;
   cJSON_ArrayForEach(it, arr) {
@@ -580,8 +600,9 @@ static int peertube_emit_page(const source_ctx *ctx, intel_sink *sink,
 }
 
 static int run_peertube_dir(const source_ctx *ctx, intel_sink *sink) {
-  int n = pw_walk(ctx, sink, "peertube-instance-directory", PEERTUBE_URL,
-                  peertube_fetch, peertube_emit_page, NULL);
+  int n = pw_walk_max(ctx, sink, "peertube-instance-directory",
+                      PEERTUBE_DIR_URL, peertube_fetch, peertube_emit_page,
+                      NULL, PEERTUBE_PAGE_MAX);
   if (n < 0) {
     fprintf(stderr, "[peertube-instance-directory] fetch failed\n");
     return -1;
@@ -594,11 +615,7 @@ static const source_def soc_peertube_dir_def = {
   .name = "PeerTube Instance Directory",
   .update_interval_sec = 86400, .run = run_peertube_dir,
   .category = "media", .type = "api",
-  /* The scanner reads a `start=` in any URL literal as a fetch site. This one is
-   * source_def.url — the endpoint this row documents — and the request is made
-   * by run_peertube_dir() above, which walks it with pw_walk. Measured
-   * 2026-10-18: 1,772 instances across 2 pages, = the envelope's own total. */
-  .url = "https://instances.joinpeertube.org/api/v1/instances?count=1000&start=0",  /* exhaustive-ok: metadata field, not a fetch; run_peertube_dir() walks it with pw_walk */
+  .url = "https://instances.joinpeertube.org/api/v1/instances?count=100&start=0",  /* exhaustive-ok: documentation of the row, never fetched; the walk is pw_walk_max() above */
   .description = "Registry of federated PeerTube video servers with software version, catalogue size, user count, declared country and health score.",
   .license = "Public API of the Framasoft-run instance index; keyless, documented.",
   .layer = NULL, .free_tier = 1,

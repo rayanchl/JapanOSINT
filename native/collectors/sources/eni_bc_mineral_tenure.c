@@ -1,8 +1,7 @@
 /* British Columbia mineral and placer tenure register (BC Data Catalogue WFS).
  * Endpoint: https://openmaps.gov.bc.ca/geo/pub/wfs?service=WFS&version=2.0.0
  *   &request=GetFeature&typeName=WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW
- *   &count=2500&outputFormat=application/json&srsName=EPSG:4326
- *   &sortBy=TENURE_NUMBER_ID&startIndex=0                           (keyless)
+ *   &count=500&outputFormat=application/json&srsName=EPSG:4326      (keyless)
  * Emits one row per active claim: tenure number, claim name, tenure type/
  * sub-type, title type, issue and expiry dates, area, and the claim POLYGON as
  * geometry_geojson plus a representative point from the polygon's own vertices.
@@ -66,49 +65,38 @@ static int poly_point(const cJSON *geom, double *olat, double *olon) {
   return 1;
 }
 
-/* PAGED, and it took a sort order to get there. Measured 2026-10-18: this
- * layer's own `numberMatched` is 42,277 and the collector stored the first 500
- * — 41,777 active claims dropped on every weekly run, at rc=0.
+/* PAGED 2026-10-12. `count=500` with nothing to follow stored 500 of the
+ * 42,234 acquired tenures the layer holds (numberMatched, measured) — the
+ * seventh discard shape (tools/audit_url_limits.py). WFS 2.0 pages with
+ * `startIndex` against `count`, and `numberMatched` is a total lib/pagewalk.c
+ * already reads.
  *
- * WFS 2.0's continuation is `startIndex`, and GeoServer refuses it on its own:
- * `startIndex=500` answers HTTP 400 "Cannot do natural order without a primary
- * key, please add it or specify a manual sort over existing attributes",
- * because an unsorted paged walk has no stable record order to offset into.
- * Adding `sortBy=TENURE_NUMBER_ID` makes it 200, and the pages are DISJOINT
- * (measured at startIndex 0 / 500 / 1000: zero features shared between
- * consecutive pages). That refusal is worth reading as a feature — the server
- * would rather fail than hand back an arbitrary slice.
- *
- * `count` is raised 500 -> 2500 (3.6 MB a page, served) so the walk completes
- * inside the 20-page ceiling: 42,277 / 2,500 = 17 pages. At 500 it would have
- * needed 85 and stopped at 10,000, which is a disclosed sample rather than the
- * register. `startIndex=0` is in the URL deliberately: pw_walk only ever
- * advances a parameter the author wrote. */
-#define BC_URL \
+ * `sortBy` IS REQUIRED, and this server says so rather than drifting quietly:
+ * startIndex without it answers an OWS ExceptionReport, "Cannot do natural
+ * order without a primary key, please add it or specify a manual sort over
+ * existing attributes". That is the same hazard the ODS and OpenAerialMap rows
+ * hit as a silent skip — here it is a hard 400, which is the better failure. */
+#define BC_MT_URL \
   "https://openmaps.gov.bc.ca/geo/pub/wfs?service=WFS&version=2.0.0" \
   "&request=GetFeature&typeName=WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW" \
-  "&count=2500&outputFormat=application/json&srsName=EPSG:4326" \
-  "&sortBy=TENURE_NUMBER_ID&startIndex=0"
+  "&count=1000&startIndex=0&sortBy=TENURE_NUMBER_ID"  /* exhaustive-ok: walked by pw_walk/pw_walk_max below, which advances the offset or page this URL carries */ \
+  "&outputFormat=application/json&srsName=EPSG:4326"
+/* 42,234 tenures at 1,000 a page = 43 (1.4 MB each); 60 is that with
+ * headroom, on a weekly schedule. */
+#define BC_MT_PAGE_MAX 60  /* exhaustive-ok: page ceiling handed to pw_walk_max(); a stop at it files a collector-truncation-notice */
 
-static cJSON *bc_fetch(const source_ctx *c, const char *url, void *ud) {
+/* pw_fetch_fn: these polygon pages are 1.4 MB, so the 60 s timeout stays. */
+static cJSON *bc_fetch(const source_ctx *ctx, const char *url, void *ud) {
   (void)ud;
-  return feed_get_json(c->http, url, 120000);   /* 3.6 MB a page */
+  return feed_get_json(ctx->http, url, 60000);
 }
 
-/* pw_emit_fn. `seen` is the page's feature count, not the emitted count: a
- * feature with no TENURE_NUMBER_ID is skipped below, and reporting the emitted
- * count would make a full page look short — which stops the walk AND suppresses
- * its own truncation notice (lib/pagewalk.h). */
-static int bc_emit_page(const source_ctx *ctx, intel_sink *sink,
-                        const char *sid, cJSON *doc, void *ud, int *seen) {
+static int bc_page(const source_ctx *ctx, intel_sink *sink, const char *sid,
+                   cJSON *doc, void *ud, int *seen) {
   (void)ctx; (void)ud;
   cJSON *feats = cJSON_GetObjectItem(doc, "features");
-  if (!cJSON_IsArray(feats)) {
-    fprintf(stderr, "[%s] no features[]\n", sid);
-    *seen = 0;
-    return 0;
-  }
-  *seen = cJSON_GetArraySize(feats);
+  *seen = cJSON_IsArray(feats) ? cJSON_GetArraySize(feats) : 0;
+  if (!cJSON_IsArray(feats)) { fprintf(stderr, "[%s] no features[]\n", sid); return 0; }
 
   int n = 0;
   cJSON *f;
@@ -173,8 +161,11 @@ static int bc_emit_page(const source_ctx *ctx, intel_sink *sink,
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int n = pw_walk(ctx, sink, SRC, BC_URL, bc_fetch, bc_emit_page, NULL);
-  if (n < 0) { fprintf(stderr, "[" SRC "] fetch failed\n"); return -1; }
+  if (pw_walk_max(ctx, sink, SRC, BC_MT_URL, bc_fetch, bc_page, NULL,
+                  BC_MT_PAGE_MAX) < 0) {
+    fprintf(stderr, "[" SRC "] fetch failed\n");
+    return -1;
+  }
   return 0;
 }
 
@@ -183,7 +174,7 @@ static const source_def eni_bc_mineral_tenure_def = {
   .name = "British Columbia mineral and placer tenure register",
   .update_interval_sec = 604800, .run = run,
   .category = "industry", .type = "api",
-  .url = "https://openmaps.gov.bc.ca/geo/pub/wfs?typeName=WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW&srsName=EPSG:4326",
+  .url = BC_MT_URL,
   .description = "Every active mineral and placer claim in British Columbia with claim polygon, tenure type, issue and expiry dates.",
   .license = "Open Government Licence - British Columbia (BC Data Catalogue WFS), keyless.",
   .free_tier = 1,

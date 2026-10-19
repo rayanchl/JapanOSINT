@@ -4,7 +4,7 @@
  * that shaking happened.
  *
  * Endpoint (keyless):
- *   https://www.seismicportal.eu/mtws/api/search?limit=1000&format=json
+ *   https://www.seismicportal.eu/mtws/api/search?limit=500&offset=0&format=json
  * Emits: mt_id, ev_latitude/ev_longitude, ev_depth, ev_region, nodal plane 1
  *        (strike/dip/rake), scalar moment mt_m0, percent double-couple,
  *        mt_source_catalog, mt_centroid_time.
@@ -16,56 +16,40 @@
  *  - Distinct service from the FDSN event endpoint (different path, different
  *    schema); the top level is a BARE JSON ARRAY with no wrapper object.
  *  - 'full_count' is repeated inside every element (a corpus total, not a
- *    per-record value) and is deliberately NOT emitted as a record field. It
- *    is the number the page size was measured against — see the comment on URL.
+ *    per-record value) and is deliberately NOT emitted as a record field.
  *  - 'deltatime' is a human string ("@ 31 mins 31.662 secs"), so it is carried
  *    as text and never parsed as a number.
+ *
+ * PAGING (2026-10-12). `?limit=50` on its own stored 50 moment tensors of the
+ * 48,729 the service's own `full_count` declares — the seventh discard shape,
+ * a record limit asked of the upstream with nothing to follow it
+ * (tools/audit_url_limits.py, docs/measured-url-limits-2026-10-11.tsv). The
+ * service takes `offset` (measured: offset=5 opens on the 6th tensor, where
+ * `start=` and `page=` are both ignored and re-serve the first), so the URL now
+ * carries `limit=500&offset=0` and lib/pagewalk.c advances the offset it finds.
+ * The 100-page ceiling covers 50,000 against a measured 48,729 and still
+ * discloses, so a catalogue that outgrows it says so rather than going quiet.
  */
 #include "source.h"
 #include "lib/feedlib.h"
 #include "lib/pagewalk.h"
 #include "geoeo_common.inc"
 
-/* A BIGGER PAGE AND A DISCLOSED BOUND, DELIBERATELY NOT A FULL WALK.
- *
- * Measured 2026-10-18: `full_count` is 48,863 moment tensors, the service caps
- * `limit` at 1,000 (asking 5,000 still returns 1,000), and `offset` IS honoured
- * and is 0-BASED here (offset=2 starts at the third record, so this service
- * does NOT follow the FDSN spec's 1-based convention — see geohazard_extra.c,
- * where the SAME organisation's fdsnws endpoint is 1-based).
- *
- * So the whole catalogue is reachable in principle, and paging it is still the
- * wrong fix: this row runs every 30 minutes, the 20-page ceiling would stop it
- * at 20,000 of 48,863, and it would re-walk those same 20,000 twice an hour —
- * 960 requests a day against a public research service to re-read records we
- * already hold, while never reaching the other 28,863. The newest-first page of
- * 1,000 covers the 30-minute window with days to spare, which is the question
- * this source exists to answer.
- *
- * `offset` is therefore NOT written into the URL (pw_walk advances only a
- * parameter the author wrote, so its absence is what keeps this to one
- * request), and the walk goes through pw_walk anyway so the bound is STATED: a
- * page that comes back exactly full files a collector-truncation-notice instead
- * of leaving the discard silent. Reaching the historical backlog needs a
- * different strategy — a dated window or a bulk catalogue — which is a design
- * decision and not a page-size change. */
 static const char *URL =
-    "https://www.seismicportal.eu/mtws/api/search?limit=1000&format=json";
+    "https://www.seismicportal.eu/mtws/api/search?limit=500&offset=0&format=json";  /* exhaustive-ok: walked by lib/pagewalk.c, which advances the offset/page this URL carries */
 
-/* pw_emit_fn. `seen` is what the page CONTAINED, not what was emitted: an entry
- * with no usable mt_id is skipped below, and reporting the emitted count would
- * make a full page look short — stopping the walk and suppressing its own
- * truncation notice (lib/pagewalk.h). */
-static int mt_emit_page(const source_ctx *ctx, intel_sink *sink,
-                        const char *sid, cJSON *doc, void *ud, int *seen) {
+/* 48,729 tensors at 500 a page = 98; 100 is that with headroom. */
+#define EMSC_PAGE_MAX 100  /* exhaustive-ok: page ceiling handed to pw_walk_max(); a stop at it files a collector-truncation-notice */
+
+static int emsc_emit_page(const source_ctx *ctx, intel_sink *sink,
+                          const char *sid, cJSON *doc, void *ud, int *seen) {
   (void)ctx; (void)ud;
   cJSON *arr = cJSON_IsArray(doc) ? doc : cJSON_GetObjectItem(doc, "results");
+  *seen = cJSON_IsArray(arr) ? cJSON_GetArraySize(arr) : 0;
   if (!cJSON_IsArray(arr)) {
     fprintf(stderr, "[%s] top level is not an array\n", sid);
-    *seen = 0;
     return 0;
   }
-  *seen = cJSON_GetArraySize(arr);
 
   static const char *KEYS[] = { "mt_id", "ev_region", "ev_id", "mt_source_catalog",
                                 "mt_centroid_time", "mt_type", "deltatime",
@@ -160,8 +144,8 @@ static int mt_emit_page(const source_ctx *ctx, intel_sink *sink,
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int n = pw_walk(ctx, sink, "emsc-moment-tensors", URL,
-                  pw_fetch_json, mt_emit_page, NULL);
+  int n = pw_walk_max(ctx, sink, "emsc-moment-tensors", URL, pw_fetch_json,
+                      emsc_emit_page, NULL, EMSC_PAGE_MAX);
   if (n < 0) {
     fprintf(stderr, "[emsc-moment-tensors] fetch/parse failed\n");
     return -1;
@@ -174,7 +158,7 @@ static const source_def geoeo_emsc_mt_def = {
   .name = "EMSC Moment Tensor Web Service",
   .update_interval_sec = 1800, .run = run,
   .category = "environment", .type = "api",
-  .url = "https://www.seismicportal.eu/mtws/api/search?limit=1000&format=json",
+  .url = "https://www.seismicportal.eu/mtws/api/search?limit=500&offset=0&format=json",  /* exhaustive-ok: documentation of the row, never fetched; the walk is pw_walk_max() above */
   .description = "Focal mechanisms (moment tensors) for significant global earthquakes aggregated by EMSC from GCMT, GFZ, INGV, USGS and regional agencies.",
   .license = "EMSC/CSEM seismicportal open web service; acknowledge the contributing agency in mt_source_catalog.",
   .free_tier = 1,

@@ -1,6 +1,6 @@
 /* Argentina Series de Tiempo API (datos.gob.ar).
  * Endpoint: https://apis.datos.gob.ar/series/api/series/
- *           ?ids=143.3_NO_PR_2004_A_21&limit=1000&start=0&format=json
+ *           ?ids=143.3_NO_PR_2004_A_21&limit=1000&format=json
  * PARSE NOTE: data[] is an array of ARRAYS - [date, value] pairs, not objects
  * - and meta[] parallels the requested ids (meta[0] is the catalogue entry,
  * the later entries carry dataset/field titles and units). Points whose value
@@ -8,31 +8,33 @@
  * at once with comma-separated ids, and &sort=desc returns the newest first.
  * Emits one row per point: date, value, series id, frequency, units and the
  * dataset title. Keyless.
- * Licence: datos.gob.ar open data, free reuse. */
+ * Licence: datos.gob.ar open data, free reuse.
+ *
+ * `limit=1000`, NOT 100 (2026-10-12). The series API caps `limit` at 1,000 and
+ * the whole series is 271 points, so one request is now the complete answer;
+ * at 100 it stored 100 and dropped 171 every day, with `count` sitting right
+ * there in the envelope saying so (tools/audit_url_limits.py;
+ * docs/measured-url-limits-2026-10-11.tsv).
+ *
+ * `data[]` is an array of ARRAYS, which no generic row walker in this tree can
+ * page, so the completeness check is explicit instead: `count` is read and any
+ * shortfall is disclosed as a collector-truncation-notice. A longer series
+ * than 1,000 points will say so in the database rather than go quiet. */
 #include "od_shared.inc"
+#include "lib/jocore.h"
 
 #define SID "stats-ar-datos-series"
-/* PAGED. `limit=100` was a discard: this series holds 271 points and the
- * collector kept the first 100 of them. Measured 2026-10-18 — the API's `start`
- * is a 0-based record offset and it is honoured (start=100 shares no point with
- * start=0), and `limit=1000` is accepted, so the whole series now arrives in
- * ONE request and the walk confirms there is no second page. `start=0` is in
- * the URL deliberately: pw_walk advances a parameter the author wrote and never
- * invents one, so without it a series that grows past 1,000 points would
- * silently truncate again instead of paging. */
 static const char *URL =
   "https://apis.datos.gob.ar/series/api/series/"
-  "?ids=143.3_NO_PR_2004_A_21&limit=1000&start=0&format=json";
+  "?ids=143.3_NO_PR_2004_A_21&limit=1000&format=json";
 
-/* pw_emit_fn. `seen` is the page's point count, not the emitted count: a null
- * point is skipped below and would otherwise make a full page look short, which
- * stops the walk AND suppresses its truncation notice (lib/pagewalk.h). */
-static int ar_emit_page(const source_ctx *ctx, intel_sink *sink,
-                        const char *source_id, cJSON *doc, void *ud, int *seen) {
-  (void)ctx; (void)source_id; (void)ud;
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  cJSON *doc = feed_get_json(ctx->http, URL, 30000);
+  if (!doc) return od_rc(SID, -1);
   const cJSON *data = cJSON_GetObjectItem(doc, "data");
-  if (!cJSON_IsArray(data)) { *seen = 0; return 0; }
-  *seen = cJSON_GetArraySize(data);
+  if (!cJSON_IsArray(data)) { cJSON_Delete(doc); return od_rc(SID, -1); }
+  double count = 0;
+  int have_count = od_numv(doc, "count", &count);
 
   /* meta[] parallels the ids: find the first entry carrying field/dataset. */
   const char *sid = NULL, *units = NULL, *freq = NULL, *dstitle = NULL;
@@ -88,12 +90,16 @@ static int ar_emit_page(const source_ctx *ctx, intel_sink *sink,
     it.tags_json = "[\"statistics\",\"ar\"]";
     n += od_emit(sink, &it, props);
   }
-  return n;
-}
-
-static int run(const source_ctx *ctx, intel_sink *sink) {
-  return od_wrc(SID, pw_walk(ctx, sink, SID, URL, pw_fetch_json,
-                             ar_emit_page, NULL));
+  /* The series API's own total, against what this one request could hold. */
+  if (have_count && (long)count > n)
+    jo_trunc_notice(sink, SID, URL, n, (long)count,
+                    "the series is longer than the API's 1,000-point ceiling "
+                    "for one request, and data[] is an array of arrays that no "
+                    "row walker in this tree can page",
+                    "split the request by date (the API takes start_date and "
+                    "end_date) and emit each window");
+  cJSON_Delete(doc);
+  return od_rc(SID, n);
 }
 
 static const source_def od_stats_ar_series_def = {
@@ -101,11 +107,7 @@ static const source_def od_stats_ar_series_def = {
   .name = "Argentina Series de Tiempo API (datos.gob.ar)",
   .update_interval_sec = 86400, .run = run,
   .category = "statistics", .type = "api",
-  /* The scanner reads a `start=` in any URL literal as a fetch site. This one is
-   * source_def.url — the endpoint this row documents — and the request is made
-   * by run() above, which walks it with pw_walk. Measured 2026-10-18: the whole
-   * 271-point series, and the walk confirms there is no second page. */
-  .url = "https://apis.datos.gob.ar/series/api/series/?ids=143.3_NO_PR_2004_A_21&limit=1000&start=0&format=json",  /* exhaustive-ok: metadata field, not a fetch; run() walks it with pw_walk */
+  .url = "https://apis.datos.gob.ar/series/api/series/?ids=143.3_NO_PR_2004_A_21&limit=1000&format=json",
   .description = "Argentine national time-series observations (macro programming series) as dated numeric points with units and frequency",
   .license = "datos.gob.ar open data - free reuse",
   .free_tier = 1,

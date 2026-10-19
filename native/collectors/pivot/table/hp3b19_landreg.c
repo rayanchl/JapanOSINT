@@ -32,6 +32,7 @@ static const hp_source HP3B19_LANDREG[] = {
     .id_keys = "propertyAddress._about",
     .interval = 86400,
     .page_param = "_page",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_start = 0,
     .page_zero_based = 1,
     .title_keys = "propertyType.prefLabel.0._value",

@@ -54,6 +54,7 @@ static const hp_source HP3B24_JPBULK[] = {
     .interval = 86400,
     .max_items = 20000,
     .page_param = "start",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 100,
     .page_start = 1,
     .title_keys = "article_title,title",
