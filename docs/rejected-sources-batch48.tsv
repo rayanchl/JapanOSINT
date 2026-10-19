@@ -1,4 +1,4 @@
-# Batch 46 candidates REJECTED, by beat and by the stage that refused them, 2026-10-18.
+# batch 48 candidates REJECTED, by beat and by the stage that refused them, 2026-10-18.
 # builder: the discovery fetch (DUP_URL = already registered, NOT_FEED = no RSS/RDF/Atom root, EMPTY_RESULTSET = a feed
 #   with zero records, HTTP_000 = no connection). batch_exclusions: endpoint already read by a registered row.
 # probe_hp_batch: the official gate, after one retry. engine: FETCH_FAILED on the emit sweep AND on a re-run.
@@ -268,33 +268,33 @@ igo	builder	Q107329000	Q107329000 (think-tank, XX)	https://chuhailabs.com/feed/	
 igo	builder	Q107377476	Q107377476 (think-tank, XX)	https://www.madmind-studio.com/	NOT_FEED	kind= items=0
 igo	builder	Q107377476	Q107377476 (think-tank, XX)	https://www.madmind-studio.com/news-feed-read-more	NOT_FEED	kind= items=0
 igo	builder	Q139882577	Q139882577 (think-tank, XX)	https://tamalaki.com/feed/	EMPTY_RESULTSET	kind=rss2 items=0
-igo	batch_exclusions	JO46_IGO_Q5570239			DUP_ENDPOINT	in collectors/sources/hazard_world.c
-igo	batch_exclusions	JO46_IGO_Q5570239_2			DUP_ENDPOINT	in collectors/sources/geoeo_gdacs_cap.c
-igo	batch_exclusions	JO46_IGO_Q151991			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_space_1.c
-igo	batch_exclusions	JO46_IGO_Q151991_2			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_space_1.c
-igo	batch_exclusions	JO46_IGO_Q151991_3			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_space_1.c
-igo	batch_exclusions	JO46_IGO_Q151991_5			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_space_1.c
-igo	batch_exclusions	JO46_IGO_Q1856835			DUP_ENDPOINT	in collectors/feed/generated/vsrc_health_1.c
-igo	batch_exclusions	JO46_IGO_Q695267			DUP_ENDPOINT	in collectors/pivot/table/hp3b45_wdgov.c
-igo	batch_exclusions	JO46_IGO_Q3456784			DUP_ENDPOINT	in collectors/pivot/table/hp3b45_wdgov.c
-igo	batch_exclusions	JO46_IGO_Q2029901			DUP_ENDPOINT	in collectors/feed/generated/vsrc17_int_legal_1.c
-igo	batch_exclusions	JO46_IGO_Q42944			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_science_1.c
-igo	batch_exclusions	JO46_IGO_Q7768			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_seasia_gov_1.c
-igo	batch_exclusions	JO46_IGO_Q499039			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_africa_gov_3.c
-igo	batch_exclusions	JO46_IGO_Q10341236_2			DUP_ENDPOINT	in (this
-igo	batch_exclusions	JO46_IGO_Q24256223_2			DUP_ENDPOINT	in (this
-igo	probe_hp_batch	JO46_IGO_Q4806270		https://asiapacificgreens.org/feed/	HTTP_ERR	Forbidden
-igo	probe_hp_batch	JO46_IGO_Q115802473		https://www.cighci.org/feed/	HTTP_ERR	Forbidden
-igo	probe_hp_batch	JO46_IGO_Q124246335		https://www.tinygames.it/feed/	ERR	RemoteDisconnected: Remote end closed connection without res
-igo	probe_hp_batch	JO46_IGO_Q109969389		https://www.ivproductions.it/feed/	ERR	RemoteDisconnected: Remote end closed connection without res
-igo	probe_hp_batch	JO46_IGO_Q1371744		https://www.banpresto.es/feed/	HTTP_ERR	Forbidden
-igo	probe_hp_batch	JO46_IGO_Q107291476		https://www.psychoflux.com/feed/	HTTP_ERR	Forbidden
-igo	engine	JO46_IGO_Q107291476			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-igo	engine	JO46_IGO_Q109969389			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-igo	engine	JO46_IGO_Q115802473			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-igo	engine	JO46_IGO_Q124246335			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-igo	engine	JO46_IGO_Q1371744			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-igo	engine	JO46_IGO_Q4806270			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+igo	batch_exclusions	JO48_IGO_Q5570239			DUP_ENDPOINT	in collectors/sources/hazard_world.c
+igo	batch_exclusions	JO48_IGO_Q5570239_2			DUP_ENDPOINT	in collectors/sources/geoeo_gdacs_cap.c
+igo	batch_exclusions	JO48_IGO_Q151991			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_space_1.c
+igo	batch_exclusions	JO48_IGO_Q151991_2			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_space_1.c
+igo	batch_exclusions	JO48_IGO_Q151991_3			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_space_1.c
+igo	batch_exclusions	JO48_IGO_Q151991_5			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_space_1.c
+igo	batch_exclusions	JO48_IGO_Q1856835			DUP_ENDPOINT	in collectors/feed/generated/vsrc_health_1.c
+igo	batch_exclusions	JO48_IGO_Q695267			DUP_ENDPOINT	in collectors/pivot/table/hp3b47_wdgov.c
+igo	batch_exclusions	JO48_IGO_Q3456784			DUP_ENDPOINT	in collectors/pivot/table/hp3b47_wdgov.c
+igo	batch_exclusions	JO48_IGO_Q2029901			DUP_ENDPOINT	in collectors/feed/generated/vsrc17_int_legal_1.c
+igo	batch_exclusions	JO48_IGO_Q42944			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_science_1.c
+igo	batch_exclusions	JO48_IGO_Q7768			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_seasia_gov_1.c
+igo	batch_exclusions	JO48_IGO_Q499039			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_africa_gov_3.c
+igo	batch_exclusions	JO48_IGO_Q10341236_2			DUP_ENDPOINT	in (this
+igo	batch_exclusions	JO48_IGO_Q24256223_2			DUP_ENDPOINT	in (this
+igo	probe_hp_batch	JO48_IGO_Q4806270		https://asiapacificgreens.org/feed/	HTTP_ERR	Forbidden
+igo	probe_hp_batch	JO48_IGO_Q115802473		https://www.cighci.org/feed/	HTTP_ERR	Forbidden
+igo	probe_hp_batch	JO48_IGO_Q124246335		https://www.tinygames.it/feed/	ERR	RemoteDisconnected: Remote end closed connection without res
+igo	probe_hp_batch	JO48_IGO_Q109969389		https://www.ivproductions.it/feed/	ERR	RemoteDisconnected: Remote end closed connection without res
+igo	probe_hp_batch	JO48_IGO_Q1371744		https://www.banpresto.es/feed/	HTTP_ERR	Forbidden
+igo	probe_hp_batch	JO48_IGO_Q107291476		https://www.psychoflux.com/feed/	HTTP_ERR	Forbidden
+igo	engine	JO48_IGO_Q107291476			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+igo	engine	JO48_IGO_Q109969389			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+igo	engine	JO48_IGO_Q115802473			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+igo	engine	JO48_IGO_Q124246335			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+igo	engine	JO48_IGO_Q1371744			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+igo	engine	JO48_IGO_Q4806270			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	builder	Q2544289	The National (newspaper, AE)	https://www.thenationalnews.com/opinion/feedback/	NOT_FEED	kind= items=0
 news	builder	Q5372553	Emirates 24/7 (online-newspaper, AE)	https://www.emirates247.com/rss	NOT_FEED	kind= items=0
 news	builder	Q19690087	Arabic IT News Portal (online-newspaper, AE)	https://aitnews.com/قصص-إخبارية/feed/	HTTP_410	kind= items=0
@@ -1882,471 +1882,471 @@ news	builder	Q657155	The Sunday Times (newspaper, ZA)	https://www.sundaytimes.ti
 news	builder	Q1955204	The Mercury (newspaper, ZA)	https://themercury.co.za/rss/	EMPTY_RESULTSET	kind=rss2 items=0
 news	builder	Q113674619	EBNewsDaily (online-newspaper, ZA)	https://www.ebnewsdaily.co.za/sitemap.xml	NOT_FEED	kind= items=0
 news	builder	Q623811	NewsDay (newspaper, ZW)	https://news-days.com/about/feed/	EMPTY_RESULTSET	kind=rss2 items=0
-news	batch_exclusions	JO46_NEWS_Q1001864			DUP_ENDPOINT	in collectors/feed/generated/world_outlets_2.c
-news	batch_exclusions	JO46_NEWS_Q22284861			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_2.c
-news	batch_exclusions	JO46_NEWS_Q390216			DUP_ENDPOINT	in collectors/feed/generated/world_outlets_2.c
-news	batch_exclusions	JO46_NEWS_Q390216_5			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_oceania_data_2.c
-news	batch_exclusions	JO46_NEWS_Q631893			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_oceania_data_2.c
-news	batch_exclusions	JO46_NEWS_Q7946950			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_oceania_data_3.c
-news	batch_exclusions	JO46_NEWS_Q3307775			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_oceania_data_2.c
-news	batch_exclusions	JO46_NEWS_Q5185137			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_oceania_data_2.c
-news	batch_exclusions	JO46_NEWS_Q21129743			DUP_ENDPOINT	in collectors/feed/generated/vsrc_news_1.c
-news	batch_exclusions	JO46_NEWS_Q3211145			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_africa_news_1.c
-news	batch_exclusions	JO46_NEWS_Q1324064			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_latam_news_1.c
-news	batch_exclusions	JO46_NEWS_Q7894217			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_space_2.c
-news	batch_exclusions	JO46_NEWS_Q16525418			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_africa_news_1.c
-news	batch_exclusions	JO46_NEWS_Q133043703			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_latam_news_1.c
-news	batch_exclusions	JO46_NEWS_Q20720631			DUP_ENDPOINT	in collectors/sources/regional_outlets_extra.c
-news	batch_exclusions	JO46_NEWS_Q6465288			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_latam_news_1.c
-news	batch_exclusions	JO46_NEWS_Q18343421			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_latam_news_1.c
-news	batch_exclusions	JO46_NEWS_Q56663058			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
-news	batch_exclusions	JO46_NEWS_Q3593801			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
-news	batch_exclusions	JO46_NEWS_Q1409067_2			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_3.c
-news	batch_exclusions	JO46_NEWS_Q27902651_2			DUP_ENDPOINT	in (this
-news	batch_exclusions	JO46_NEWS_Q141490878_2			DUP_ENDPOINT	in (this
-news	batch_exclusions	JO46_NEWS_Q1978935_3			DUP_ENDPOINT	in (this
-news	batch_exclusions	JO46_NEWS_Q10184			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
-news	batch_exclusions	JO46_NEWS_Q926303			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_latam_news_1.c
-news	batch_exclusions	JO46_NEWS_Q5209324			DUP_ENDPOINT	in collectors/feed/generated/vsrc_news_1.c
-news	batch_exclusions	JO46_NEWS_Q8774265			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
-news	batch_exclusions	JO46_NEWS_Q61060081_2			DUP_ENDPOINT	in (this
-news	batch_exclusions	JO46_NEWS_Q287076			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
-news	batch_exclusions	JO46_NEWS_Q3224676			DUP_ENDPOINT	in collectors/sources/news_world.c
-news	batch_exclusions	JO46_NEWS_Q65159061_3			DUP_ENDPOINT	in (this
-news	batch_exclusions	JO46_NEWS_Q142348			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_2.c
-news	batch_exclusions	JO46_NEWS_Q7245532			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
-news	batch_exclusions	JO46_NEWS_Q5124483			DUP_ENDPOINT	in collectors/feed/generated/vsrc_news_1.c
-news	batch_exclusions	JO46_NEWS_Q5616624			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_africa_news_1.c
-news	batch_exclusions	JO46_NEWS_Q598237			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_2.c
-news	batch_exclusions	JO46_NEWS_Q16737679_2			DUP_ENDPOINT	in (this
-news	batch_exclusions	JO46_NEWS_Q1384387			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_latam_news_1.c
-news	batch_exclusions	JO46_NEWS_Q3402308			DUP_ENDPOINT	in collectors/feed/generated/vsrc_news_1.c
-news	batch_exclusions	JO46_NEWS_Q25502975			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_3.c
-news	batch_exclusions	JO46_NEWS_Q1162034_4			DUP_ENDPOINT	in (this
-news	batch_exclusions	JO46_NEWS_Q20439614			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
-news	batch_exclusions	JO46_NEWS_Q21590068			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
-news	batch_exclusions	JO46_NEWS_Q56117634			DUP_ENDPOINT	in collectors/feed/generated/vsrc_news_1.c
-news	batch_exclusions	JO46_NEWS_Q61599729			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
-news	batch_exclusions	JO46_NEWS_Q102423859_2			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_2.c
-news	batch_exclusions	JO46_NEWS_Q131632577_2			DUP_ENDPOINT	in (this
-news	batch_exclusions	JO46_NEWS_Q7711643			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_3.c
-news	batch_exclusions	JO46_NEWS_Q136366085_3			DUP_ENDPOINT	in (this
-news	batch_exclusions	JO46_NEWS_Q1051087			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
-news	batch_exclusions	JO46_NEWS_Q115219728_2			DUP_ENDPOINT	in (this
-news	batch_exclusions	JO46_NEWS_Q5110206_2			DUP_ENDPOINT	in (this
-news	batch_exclusions	JO46_NEWS_Q6452210			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_news_1.c
-news	batch_exclusions	JO46_NEWS_Q6672394			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_news_1.c
-news	batch_exclusions	JO46_NEWS_Q7420810			DUP_ENDPOINT	in collectors/pivot/table/hp3b25_jpmedia2.c
-news	batch_exclusions	JO46_NEWS_Q11361390			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_news_1.c
-news	batch_exclusions	JO46_NEWS_Q11401312			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_news_1.c
-news	batch_exclusions	JO46_NEWS_Q11419744			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_news_1.c
-news	batch_exclusions	JO46_NEWS_Q11608206			DUP_ENDPOINT	in collectors/pivot/table/hp3b25_jpmedia.c
-news	batch_exclusions	JO46_NEWS_Q618875			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_news_1.c
-news	batch_exclusions	JO46_NEWS_Q11224728			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_jp_local_2.c
-news	batch_exclusions	JO46_NEWS_Q116206869_3			DUP_ENDPOINT	in (this
-news	batch_exclusions	JO46_NEWS_Q11595779			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_news_1.c
-news	batch_exclusions	JO46_NEWS_Q562824			DUP_ENDPOINT	in collectors/sources/intel_worldnews.c
-news	batch_exclusions	JO46_NEWS_Q114457330			DUP_ENDPOINT	in collectors/feed/generated/vsrc_news_2.c
-news	batch_exclusions	JO46_NEWS_Q111654428			DUP_ENDPOINT	in collectors/sources/regional_outlets_extra.c
-news	batch_exclusions	JO46_NEWS_Q137116168			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_africa_news_1.c
-news	batch_exclusions	JO46_NEWS_Q12194937			DUP_ENDPOINT	in collectors/pivot/table/hp3b45_wdgov.c
-news	batch_exclusions	JO46_NEWS_Q87119433			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_latam_news_2.c
-news	batch_exclusions	JO46_NEWS_Q87119329_2			DUP_ENDPOINT	in (this
-news	batch_exclusions	JO46_NEWS_Q4918709			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_seasia_gov_1.c
-news	batch_exclusions	JO46_NEWS_Q113653257			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_seasia_gov_1.c
-news	batch_exclusions	JO46_NEWS_Q822202			DUP_ENDPOINT	in collectors/pivot/table/hp3b45_wdgov.c
-news	batch_exclusions	JO46_NEWS_Q16943304			DUP_ENDPOINT	in collectors/feed/generated/world_outlets_1.c
-news	batch_exclusions	JO46_NEWS_Q113223259			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_sasia_gov_1.c
-news	batch_exclusions	JO46_NEWS_Q104870007			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_latam_news_2.c
-news	batch_exclusions	JO46_NEWS_Q97657682			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_seasia_gov_1.c
-news	batch_exclusions	JO46_NEWS_Q4727585			DUP_ENDPOINT	in collectors/feed/generated/world_outlets_1.c
-news	batch_exclusions	JO46_NEWS_Q4727585_2			DUP_ENDPOINT	in collectors/sources/intel_worldnews.c
-news	batch_exclusions	JO46_NEWS_Q88562142			DUP_ENDPOINT	in collectors/feed/generated/vsrc_news_2.c
-news	batch_exclusions	JO46_NEWS_Q17443568_2			DUP_ENDPOINT	in (this
-news	batch_exclusions	JO46_NEWS_Q72103783_2			DUP_ENDPOINT	in (this
-news	batch_exclusions	JO46_NEWS_Q671543			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
-news	batch_exclusions	JO46_NEWS_Q1202611			DUP_ENDPOINT	in collectors/feed/generated/world_outlets_1.c
-news	batch_exclusions	JO46_NEWS_Q18572033			DUP_ENDPOINT	in collectors/sources/news_world.c
-news	batch_exclusions	JO46_NEWS_Q135034929			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_africa_news_1.c
-news	batch_exclusions	JO46_NEWS_Q1126918			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
-news	batch_exclusions	JO46_NEWS_Q10575229_2			DUP_ENDPOINT	in (this
-news	batch_exclusions	JO46_NEWS_Q3487776			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
-news	batch_exclusions	JO46_NEWS_Q52162279			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
-news	batch_exclusions	JO46_NEWS_Q18708932			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_africa_news_1.c
-news	batch_exclusions	JO46_NEWS_Q3227255			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_africa_news_1.c
-news	batch_exclusions	JO46_NEWS_Q4413480			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_latam_news_2.c
-news	batch_exclusions	JO46_NEWS_Q141594963			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_africa_news_1.c
-news	batch_exclusions	JO46_NEWS_Q7188296			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_seasia_gov_1.c
-news	batch_exclusions	JO46_NEWS_Q714427			DUP_ENDPOINT	in collectors/feed/generated/world_outlets_1.c
-news	batch_exclusions	JO46_NEWS_Q111028947			DUP_ENDPOINT	in collectors/sources/regional_outlets_extra.c
-news	batch_exclusions	JO46_NEWS_Q2095222			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_3.c
-news	batch_exclusions	JO46_NEWS_Q17070912			DUP_ENDPOINT	in collectors/feed/generated/vsrc_news_3.c
-news	batch_exclusions	JO46_NEWS_Q17070912_2			DUP_ENDPOINT	in collectors/feed/generated/vsrc_news_3.c
-news	batch_exclusions	JO46_NEWS_Q5999809_2			DUP_ENDPOINT	in (this
-news	batch_exclusions	JO46_NEWS_Q7622911_2			DUP_ENDPOINT	in (this
-news	batch_exclusions	JO46_NEWS_Q7652765_2			DUP_ENDPOINT	in (this
-news	batch_exclusions	JO46_NEWS_Q55623308_2			DUP_ENDPOINT	in (this
-news	batch_exclusions	JO46_NEWS_Q228389_2			DUP_ENDPOINT	in collectors/pivot/table/hp3b44_usgov.c
-news	batch_exclusions	JO46_NEWS_Q520154			DUP_ENDPOINT	in collectors/sources/science_space_tech.c
-news	batch_exclusions	JO46_NEWS_Q116864814_2			DUP_ENDPOINT	in (this
-news	batch_exclusions	JO46_NEWS_Q123137716_2			DUP_ENDPOINT	in (this
-news	batch_exclusions	JO46_NEWS_Q3431351			DUP_ENDPOINT	in collectors/feed/generated/world_outlets_2.c
-news	batch_exclusions	JO46_NEWS_Q17073013_3			DUP_ENDPOINT	in (this
-news	batch_exclusions	JO46_NEWS_Q3514406			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_latam_news_2.c
-news	batch_exclusions	JO46_NEWS_Q7801032			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_seasia_gov_1.c
-news	batch_exclusions	JO46_NEWS_Q20025269			DUP_ENDPOINT	in collectors/pivot/table/hp3b45_wdgov.c
-news	batch_exclusions	JO46_NEWS_Q7395787			DUP_ENDPOINT	in collectors/pivot/table/hp3b45_wdgov.c
-news	batch_exclusions	JO46_NEWS_Q1324287			DUP_ENDPOINT	in the tree already (www.elkhabar.com/feed, found by batch_exclusions after the row was recovered)
-news	probe_hp_batch	JO46_NEWS_Q88966545		https://ponte.org/feed/	HTTP_ERR	<none>
-news	probe_hp_batch	JO46_NEWS_Q88966545_2		https://ponte.org/stories/feed/	HTTP_ERR	<none>
-news	probe_hp_batch	JO46_NEWS_Q3522909		http://www.thesuburban.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q3987193		http://westerngazette.ca/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q130266979		https://www.lanacion.com.co/feed/	ERR	RemoteDisconnected: Remote end closed connection without res
-news	probe_hp_batch	JO46_NEWS_Q1975835		https://www.deccanchronicle.com/google_feeds.xml	HTTP_ERR	Forbidden
-news	probe_hp_batch	JO46_NEWS_Q31328038		https://www.pratahkal.com/google_feeds.xml	HTTP_ERR	Forbidden
-news	probe_hp_batch	JO46_NEWS_Q12623966		http://www.ihalla.com/rss.php?section=73	HTTP_ERR	Forbidden
-news	probe_hp_batch	JO46_NEWS_Q18550812		http://fpn119.co.kr/rss/rss_news.php	HTTP_ERR	Forbidden
-news	probe_hp_batch	JO46_NEWS_Q105967298		https://wayka.pe/feed/	HTTP_ERR	Forbidden
-news	probe_hp_batch	JO46_NEWS_Q6398798		https://www.thepost.com.pk/feed/	HTTP_ERR	Forbidden
-news	probe_hp_batch	JO46_NEWS_Q62571830		https://ropravda.ru/feed/	HTTP_ERR	Unsupported Media Type
-news	probe_hp_batch	JO46_NEWS_Q4329488		https://www.obozrevatel.com/ukr/api/media/out/rss/lastnews.xml	HTTP_ERR	Forbidden
-news	probe_hp_batch	JO46_NEWS_Q116785970		https://ain.ua/feed/	HTTP_ERR	Forbidden
-news	probe_hp_batch	JO46_NEWS_Q5314263		http://www.duncanbanner.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q5347491		http://www.effinghamdailynews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q5517248		http://www.gainesvilleregister.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q5572043		http://www.gloucestertimes.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q5579886		http://www.coloradocommunitymedia.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q5579886_2		http://www.thegoldentranscript.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q5604494		http://www.greensburgdailynews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q5641708		http://www.coastsidenews.com/search/?f=rss&amp;t=article&amp;c=review&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q5654587		http://www.harborcountry-news.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q4880225		http://www.southtexasnews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q4882642		https://www.belgrade-news.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q4906426		http://www.bigspringherald.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q5263202		http://www.derrynews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q6382196		http://kearneyhub.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q6395343		http://www.ketchikandailynews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q5173430		http://gazettetimes.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q5209310_3		https://www.mountaineagle.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=news/business,news/business/*&f=rss	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q5209310_4		https://www.mountaineagle.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=sports,sports/*&f=rss	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q3402472		http://www.pressrepublican.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q3481254		http://www.sfweekly.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q6666797		http://www.thecabin.net/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q6669550		http://lompocrecord.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q6682126		http://www.ladowntownnews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55666742_3		https://www.madisoncourier.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=sports,sports/*&f=rss	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55665608		http://www.mammothtimes.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55665631		http://www.coastsidenews.com/search/?f=rss&amp;t=article&amp;c=tribune&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55665639_2		http://www.ttownmedia.com/search/?f=rss&amp;t=article&amp;c=patterson_irrigator&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55665726		http://hanfordsentinel.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55665751		http://www.vcreporter.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q6426766		http://www.kokomotribune.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q6475499		http://www.lakecountyexam.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q4979486_2		https://www.newsargus.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=news,news/*&f=rss	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7081586		http://www.ojaivalleynews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q5897515		http://www.columbiagorgenews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q6006929		http://www.ivpressonline.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q6146255		http://www.yesweekly.com/search/?f=rss&amp;t=article&amp;c=news/jamestown_news&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55665431		http://www.eacourier.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55665471		http://www.inyoregister.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55665474		http://www.thepress.net/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55665476		http://napavalleyregister.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55665483		http://www.coastalview.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55665498		http://www.coronadonewsca.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55665549		http://www.ledger.news/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55665581		http://www.losaltosonline.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q4771204		http://www.avpress.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q4696943		https://www.postandcourier.com/search/?f=rss&amp;t=article&amp;c=aikenstandard&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55667212		https://www.communityadvocate.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55667549		https://www.southernminn.com/search/?f=rss&amp;t=article&amp;c=northfield_news&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55667596		http://www.presspubs.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55667640		http://www.columbiamissourian.com/search/?f=rss&amp;t=article&amp;c=boonecountyjournal&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55665755		http://www.trinityjournal.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55665762		http://www.wintersexpress.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55665765		http://www.newsmirror.net/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55665262		http://dothaneagle.com/search/?f=rss&amp;t=article&amp;c=news/community/enterprise-ledger&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55665274		http://www.advertisergleam.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55665316		http://www.bentoncourier.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55665355		http://www.jonesborosun.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55665377		http://www.paragoulddailypress.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55665414		http://www.tucsonlocalmedia.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55665418		http://www.paysonroundup.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q6905305		http://www.montereycountynow.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q6922906		http://tribnow.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q6966997		http://www.nashvillescene.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q6981630		http://www.nhonews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7182836		http://www.phillytrib.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q5131030		http://www.cleburnetimesreview.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q5134134		http://www.clintonherald.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55667976		http://wahoo-ashland-waverly.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55668002		https://www.hartington.net/rss/articles	HTTP_ERR	Forbidden
-news	probe_hp_batch	JO46_NEWS_Q55668241		http://www.beenews.com/search/?f=rss&amp;t=article&amp;c=amherst_bee&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55668315		http://www.ithaca.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55668394		http://www.romesentinel.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7195091		http://www.pinecountynews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7225457		http://www.polkio.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7294142		http://rapidcityjournal.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7730352		https://www.the-dispatch.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=news,news/*&f=rss	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7730352_4		https://www.the-dispatch.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=news/business,news/business/*&f=rss	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7731445		http://www.piratemedia1.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7731445_2		http://www.piratemedia1.com/search/?f=rss&amp;t=article&amp;c=theeastcarolinian&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7716562		http://www.conwaydailysun.com/search/?f=rss&amp;t=article&amp;c=berlin_sun&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7675570		http://www.tahlequahdailypress.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7694820		http://www.tehachapinews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7697665		http://www.telluridenews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7713857		http://www.annistonstar.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7714826		https://www.atokacountytimes.com/rss/articles	HTTP_ERR	Forbidden
-news	probe_hp_batch	JO46_NEWS_Q56119170		http://www.gillettenewsrecord.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q56119168		http://www.hampshirereview.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q96197147		http://www.pmg-va.com/search/?f=rss&amp;t=article&amp;c=the_declaration&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7734545		http://www.floydct.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7735200		http://fredericksburg.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7736245		http://www.gettysburgtimes.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7738227		http://www.greenevillesun.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7739403		http://www.sharonherald.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55668606		http://www.ricentral.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55671308		http://www.loudountimes.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7604060		http://statesville.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7532240		http://www.thesiuslawnews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7570483		https://www.herald-citizen.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=news,news/*&f=rss	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7580075		http://www.dailygazette.com/search/?f=rss&amp;t=article&amp;c=spotlightnews&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7728624		http://www.dailycal.org/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7728682		http://tdn.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55671516		http://rivertonranger.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55672254		http://dailyprogress.com/search/?f=rss&amp;t=article&amp;c=news/community/madisonnews&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55876629		http://www.recordgazette.net/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q56030688		http://www.suncommercial.com/search/?f=rss&amp;t=article&amp;c=sullivan_times&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q56033153		http://www.newbritainherald.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q56119149		http://www.apg-wi.com/search/?f=rss&amp;t=article&amp;c=ashland_daily_press&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q56119160		http://www.oregonobserver.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7754323		http://www.normantranscript.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7755856		http://www.inlander.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7759965		http://www.redandblack.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7760077		http://greensboro.com/search/?f=rss&amp;t=article&amp;c=news/community/rockingham_now&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7763985		http://www.theshorthorn.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7750801		http://www.meadvilletribune.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7771552		http://www.uniondemocrat.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7795628		http://www.hpenews.com/search/?f=rss&amp;t=article&amp;c=thomasville_times&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7831822		http://www.ttownmedia.com/search/?f=rss&amp;t=article&amp;c=tracy_press&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7840486		http://www.tribstar.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7990847		http://www.elpasoinc.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q8002467		http://www.journalpatriot.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7894674		http://www.kansan.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q7972060		http://www.missourian.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q13447061		http://www.myheraldreview.com/search/?f=rss&amp;t=article&amp;c=news/willcox&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q13447561		http://www.kaleo.org/search/?f=rss&amp;t=article&amp;c=kaleo&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q17071662		http://www.franklinfavorite.com/search/?f=rss&amp;t=article&amp;c=russellville&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q17073638		https://www.southernminn.com/search/?f=rss&amp;t=article&amp;c=owatonna_peoples_press&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q17078888		https://www.rustonleader.com/rss.xml	ERR	RemoteDisconnected: Remote end closed connection without res
-news	probe_hp_batch	JO46_NEWS_Q17513048		http://godanriver.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q18150648		http://www.hidesertstar.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q18152760		http://www.desertnews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q16975655		https://www.fcjournal.net/rss/articles	HTTP_ERR	Forbidden
-news	probe_hp_batch	JO46_NEWS_Q16977076		http://www.omakchronicle.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q16992375		https://www.elgincourier.com/rss/articles	HTTP_ERR	Forbidden
-news	probe_hp_batch	JO46_NEWS_Q16994647		http://www.gwinnettdailypost.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q16995214		https://www.herald-dispatch.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q16995983		http://www.forwardtimes.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q16999307		https://www.newtondailynews.com/rss/articles	HTTP_ERR	Forbidden
-news	probe_hp_batch	JO46_NEWS_Q16466590_2		http://www.hannapub.com/search/?f=rss&amp;t=article&amp;c=ouachitacitizen&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q16824499		http://www.abilene-rc.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q16895790		http://herald-zeitung.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q16939014		http://www.chetekalert.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q16966127		https://mountvernonnews.com/stories.rss	HTTP_ERR	Forbidden
-news	probe_hp_batch	JO46_NEWS_Q19866020		http://www.owassoreporter.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q19867767		http://tulsaworld.com/search/?f=rss&amp;t=article&amp;c=news/community/skiatook&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q23074316		http://www.cameronherald.com/search/?f=rss&amp;t=article&amp;c=marlin&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55623263_3		https://www.times-georgian.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=obituaries,obituaries/*&f=rss	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55623273		http://www.timescitizen.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q55642329		http://www.sandmountainreporter.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q129800569		http://www.cachevalleydaily.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO46_NEWS_Q5392199		http://www.mvariety.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	engine	JO46_NEWS_Q105967298			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q107723017			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q116785970			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q12623966			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q129800569			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q130266979			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q1324287			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q13447061			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q13447561			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q136790848			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q16466590_2			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q16824499			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q16839239			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q16895790			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q16939014			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q16966127			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q16975655			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q16992375			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q16993678			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q16994647			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q16995214			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q16995375			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q16995983			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q16999307			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q17071662			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q17073638			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q17078888			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q17513048			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q18150648			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q18152760			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q18550812			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q1975835			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q19866020			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q19867767			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q2164240			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q23074316			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q31328038			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q3402472			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q3481254			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q3987193			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q4329488			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q4696943			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q4771204			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q48004150			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q4813479			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q4880225			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q4882642			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q4979486_2			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q5134134			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q5173430			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q5175514			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q5209310_2			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q5209310_3			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q5209310_4			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q5209310_5			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q5263202			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q5314263			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q5347491			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q5392199			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q5517248			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55623263_3			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55623273			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55642329			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55665262			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55665274			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55665304			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55665316			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55665355			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55665377			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55665414			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55665418			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55665426_2			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55665431			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55665471			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55665476			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55665483			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55665549			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55665608			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55665631			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55665639_2			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55665751			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55665755			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55665762			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55665765			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55665778			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55666742_3			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55666742_4			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55667212			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55667248			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55667549			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55667596			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55667640			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55668002			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55668241			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55668303			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55668315			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55668394			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55668606			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55671308			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55671516			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55672254			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q5579886			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q5579886_2			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q55876629			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q56030688			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q56033153			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q5604494			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q56119149			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q56119160			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q56119168			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q5641708			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q5654587			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q5689730			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q5897515			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q6006929			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q6146255			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q62571830			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q6382196			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q6395343			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q6398798			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q6426766			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q6472166			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q6475499			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q6665763			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q6666797			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q6669550			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q6682126			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q6905305			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q6922906			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q6966997			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q6981630			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7081586			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7180847			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7182836			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7225457			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7294142			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7362996			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7413602			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7532240			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7570483			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7570483_2			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7570483_3			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7604060			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7675570			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7694820			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7714826			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7716562			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7728624			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7728682			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7730352			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7730352_4			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7731445			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7731445_2			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7731812			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7734545			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7735200			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7736245			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7737134			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7738227			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7739403			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7750801			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7753903_2			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7754323			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7755856			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7755879			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7759965			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7760077			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7763985			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7771552			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7795628			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7806571			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7831822			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7839704			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7894674			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7972060			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7978280			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7986770			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q7990847			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q8002467			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q8027325			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q88966545			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q88966545_2			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO46_NEWS_Q96197147			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	batch_exclusions	JO46_NEWS_Q124857448			DUP_ENDPOINT	main's jp_feeds_batch4x.c added the same feed and merged first (found at merge time, 2026-10-19)
-news	batch_exclusions	JO46_NEWS_Q130271804			DUP_ENDPOINT	main's jp_feeds_batch4x.c added the same feed and merged first (found at merge time, 2026-10-19)
-news	batch_exclusions	JO46_NEWS_Q131703147			DUP_ENDPOINT	main's jp_feeds_batch4x.c added the same feed and merged first (found at merge time, 2026-10-19)
-news	batch_exclusions	JO46_NEWS_Q18712763_3			DUP_ENDPOINT	main's jp_feeds_batch4x.c added the same feed and merged first (found at merge time, 2026-10-19)
-news	batch_exclusions	JO46_NEWS_Q727162			DUP_ENDPOINT	main's jp_feeds_batch4x.c added the same feed and merged first (found at merge time, 2026-10-19)
-news	batch_exclusions	JO46_NEWS_Q7487459			DUP_ENDPOINT	main's jp_feeds_batch4x.c added the same feed and merged first (found at merge time, 2026-10-19)
+news	batch_exclusions	JO48_NEWS_Q1001864			DUP_ENDPOINT	in collectors/feed/generated/world_outlets_2.c
+news	batch_exclusions	JO48_NEWS_Q22284861			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_2.c
+news	batch_exclusions	JO48_NEWS_Q390216			DUP_ENDPOINT	in collectors/feed/generated/world_outlets_2.c
+news	batch_exclusions	JO48_NEWS_Q390216_5			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_oceania_data_2.c
+news	batch_exclusions	JO48_NEWS_Q631893			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_oceania_data_2.c
+news	batch_exclusions	JO48_NEWS_Q7946950			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_oceania_data_3.c
+news	batch_exclusions	JO48_NEWS_Q3307775			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_oceania_data_2.c
+news	batch_exclusions	JO48_NEWS_Q5185137			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_oceania_data_2.c
+news	batch_exclusions	JO48_NEWS_Q21129743			DUP_ENDPOINT	in collectors/feed/generated/vsrc_news_1.c
+news	batch_exclusions	JO48_NEWS_Q3211145			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_africa_news_1.c
+news	batch_exclusions	JO48_NEWS_Q1324064			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_latam_news_1.c
+news	batch_exclusions	JO48_NEWS_Q7894217			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_space_2.c
+news	batch_exclusions	JO48_NEWS_Q16525418			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_africa_news_1.c
+news	batch_exclusions	JO48_NEWS_Q133043703			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_latam_news_1.c
+news	batch_exclusions	JO48_NEWS_Q20720631			DUP_ENDPOINT	in collectors/sources/regional_outlets_extra.c
+news	batch_exclusions	JO48_NEWS_Q6465288			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_latam_news_1.c
+news	batch_exclusions	JO48_NEWS_Q18343421			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_latam_news_1.c
+news	batch_exclusions	JO48_NEWS_Q56663058			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
+news	batch_exclusions	JO48_NEWS_Q3593801			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
+news	batch_exclusions	JO48_NEWS_Q1409067_2			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_3.c
+news	batch_exclusions	JO48_NEWS_Q27902651_2			DUP_ENDPOINT	in (this
+news	batch_exclusions	JO48_NEWS_Q141490878_2			DUP_ENDPOINT	in (this
+news	batch_exclusions	JO48_NEWS_Q1978935_3			DUP_ENDPOINT	in (this
+news	batch_exclusions	JO48_NEWS_Q10184			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
+news	batch_exclusions	JO48_NEWS_Q926303			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_latam_news_1.c
+news	batch_exclusions	JO48_NEWS_Q5209324			DUP_ENDPOINT	in collectors/feed/generated/vsrc_news_1.c
+news	batch_exclusions	JO48_NEWS_Q8774265			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
+news	batch_exclusions	JO48_NEWS_Q61060081_2			DUP_ENDPOINT	in (this
+news	batch_exclusions	JO48_NEWS_Q287076			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
+news	batch_exclusions	JO48_NEWS_Q3224676			DUP_ENDPOINT	in collectors/sources/news_world.c
+news	batch_exclusions	JO48_NEWS_Q65159061_3			DUP_ENDPOINT	in (this
+news	batch_exclusions	JO48_NEWS_Q142348			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_2.c
+news	batch_exclusions	JO48_NEWS_Q7245532			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
+news	batch_exclusions	JO48_NEWS_Q5124483			DUP_ENDPOINT	in collectors/feed/generated/vsrc_news_1.c
+news	batch_exclusions	JO48_NEWS_Q5616624			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_africa_news_1.c
+news	batch_exclusions	JO48_NEWS_Q598237			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_2.c
+news	batch_exclusions	JO48_NEWS_Q16737679_2			DUP_ENDPOINT	in (this
+news	batch_exclusions	JO48_NEWS_Q1384387			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_latam_news_1.c
+news	batch_exclusions	JO48_NEWS_Q3402308			DUP_ENDPOINT	in collectors/feed/generated/vsrc_news_1.c
+news	batch_exclusions	JO48_NEWS_Q25502975			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_3.c
+news	batch_exclusions	JO48_NEWS_Q1162034_4			DUP_ENDPOINT	in (this
+news	batch_exclusions	JO48_NEWS_Q20439614			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
+news	batch_exclusions	JO48_NEWS_Q21590068			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
+news	batch_exclusions	JO48_NEWS_Q56117634			DUP_ENDPOINT	in collectors/feed/generated/vsrc_news_1.c
+news	batch_exclusions	JO48_NEWS_Q61599729			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
+news	batch_exclusions	JO48_NEWS_Q102423859_2			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_2.c
+news	batch_exclusions	JO48_NEWS_Q131632577_2			DUP_ENDPOINT	in (this
+news	batch_exclusions	JO48_NEWS_Q7711643			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_3.c
+news	batch_exclusions	JO48_NEWS_Q136366085_3			DUP_ENDPOINT	in (this
+news	batch_exclusions	JO48_NEWS_Q1051087			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
+news	batch_exclusions	JO48_NEWS_Q115219728_2			DUP_ENDPOINT	in (this
+news	batch_exclusions	JO48_NEWS_Q5110206_2			DUP_ENDPOINT	in (this
+news	batch_exclusions	JO48_NEWS_Q6452210			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_news_1.c
+news	batch_exclusions	JO48_NEWS_Q6672394			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_news_1.c
+news	batch_exclusions	JO48_NEWS_Q7420810			DUP_ENDPOINT	in collectors/pivot/table/hp3b25_jpmedia2.c
+news	batch_exclusions	JO48_NEWS_Q11361390			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_news_1.c
+news	batch_exclusions	JO48_NEWS_Q11401312			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_news_1.c
+news	batch_exclusions	JO48_NEWS_Q11419744			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_news_1.c
+news	batch_exclusions	JO48_NEWS_Q11608206			DUP_ENDPOINT	in collectors/pivot/table/hp3b25_jpmedia.c
+news	batch_exclusions	JO48_NEWS_Q618875			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_news_1.c
+news	batch_exclusions	JO48_NEWS_Q11224728			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_jp_local_2.c
+news	batch_exclusions	JO48_NEWS_Q116206869_3			DUP_ENDPOINT	in (this
+news	batch_exclusions	JO48_NEWS_Q11595779			DUP_ENDPOINT	in collectors/feed/generated/vsrc2_news_1.c
+news	batch_exclusions	JO48_NEWS_Q562824			DUP_ENDPOINT	in collectors/sources/intel_worldnews.c
+news	batch_exclusions	JO48_NEWS_Q114457330			DUP_ENDPOINT	in collectors/feed/generated/vsrc_news_2.c
+news	batch_exclusions	JO48_NEWS_Q111654428			DUP_ENDPOINT	in collectors/sources/regional_outlets_extra.c
+news	batch_exclusions	JO48_NEWS_Q137116168			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_africa_news_1.c
+news	batch_exclusions	JO48_NEWS_Q12194937			DUP_ENDPOINT	in collectors/pivot/table/hp3b47_wdgov.c
+news	batch_exclusions	JO48_NEWS_Q87119433			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_latam_news_2.c
+news	batch_exclusions	JO48_NEWS_Q87119329_2			DUP_ENDPOINT	in (this
+news	batch_exclusions	JO48_NEWS_Q4918709			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_seasia_gov_1.c
+news	batch_exclusions	JO48_NEWS_Q113653257			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_seasia_gov_1.c
+news	batch_exclusions	JO48_NEWS_Q822202			DUP_ENDPOINT	in collectors/pivot/table/hp3b47_wdgov.c
+news	batch_exclusions	JO48_NEWS_Q16943304			DUP_ENDPOINT	in collectors/feed/generated/world_outlets_1.c
+news	batch_exclusions	JO48_NEWS_Q113223259			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_sasia_gov_1.c
+news	batch_exclusions	JO48_NEWS_Q104870007			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_latam_news_2.c
+news	batch_exclusions	JO48_NEWS_Q97657682			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_seasia_gov_1.c
+news	batch_exclusions	JO48_NEWS_Q4727585			DUP_ENDPOINT	in collectors/feed/generated/world_outlets_1.c
+news	batch_exclusions	JO48_NEWS_Q4727585_2			DUP_ENDPOINT	in collectors/sources/intel_worldnews.c
+news	batch_exclusions	JO48_NEWS_Q88562142			DUP_ENDPOINT	in collectors/feed/generated/vsrc_news_2.c
+news	batch_exclusions	JO48_NEWS_Q17443568_2			DUP_ENDPOINT	in (this
+news	batch_exclusions	JO48_NEWS_Q72103783_2			DUP_ENDPOINT	in (this
+news	batch_exclusions	JO48_NEWS_Q671543			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
+news	batch_exclusions	JO48_NEWS_Q1202611			DUP_ENDPOINT	in collectors/feed/generated/world_outlets_1.c
+news	batch_exclusions	JO48_NEWS_Q18572033			DUP_ENDPOINT	in collectors/sources/news_world.c
+news	batch_exclusions	JO48_NEWS_Q135034929			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_africa_news_1.c
+news	batch_exclusions	JO48_NEWS_Q1126918			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
+news	batch_exclusions	JO48_NEWS_Q10575229_2			DUP_ENDPOINT	in (this
+news	batch_exclusions	JO48_NEWS_Q3487776			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
+news	batch_exclusions	JO48_NEWS_Q52162279			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_1.c
+news	batch_exclusions	JO48_NEWS_Q18708932			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_africa_news_1.c
+news	batch_exclusions	JO48_NEWS_Q3227255			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_africa_news_1.c
+news	batch_exclusions	JO48_NEWS_Q4413480			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_latam_news_2.c
+news	batch_exclusions	JO48_NEWS_Q141594963			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_africa_news_1.c
+news	batch_exclusions	JO48_NEWS_Q7188296			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_seasia_gov_1.c
+news	batch_exclusions	JO48_NEWS_Q714427			DUP_ENDPOINT	in collectors/feed/generated/world_outlets_1.c
+news	batch_exclusions	JO48_NEWS_Q111028947			DUP_ENDPOINT	in collectors/sources/regional_outlets_extra.c
+news	batch_exclusions	JO48_NEWS_Q2095222			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_europe_news_3.c
+news	batch_exclusions	JO48_NEWS_Q17070912			DUP_ENDPOINT	in collectors/feed/generated/vsrc_news_3.c
+news	batch_exclusions	JO48_NEWS_Q17070912_2			DUP_ENDPOINT	in collectors/feed/generated/vsrc_news_3.c
+news	batch_exclusions	JO48_NEWS_Q5999809_2			DUP_ENDPOINT	in (this
+news	batch_exclusions	JO48_NEWS_Q7622911_2			DUP_ENDPOINT	in (this
+news	batch_exclusions	JO48_NEWS_Q7652765_2			DUP_ENDPOINT	in (this
+news	batch_exclusions	JO48_NEWS_Q55623308_2			DUP_ENDPOINT	in (this
+news	batch_exclusions	JO48_NEWS_Q228389_2			DUP_ENDPOINT	in collectors/pivot/table/hp3b44_usgov.c
+news	batch_exclusions	JO48_NEWS_Q520154			DUP_ENDPOINT	in collectors/sources/science_space_tech.c
+news	batch_exclusions	JO48_NEWS_Q116864814_2			DUP_ENDPOINT	in (this
+news	batch_exclusions	JO48_NEWS_Q123137716_2			DUP_ENDPOINT	in (this
+news	batch_exclusions	JO48_NEWS_Q3431351			DUP_ENDPOINT	in collectors/feed/generated/world_outlets_2.c
+news	batch_exclusions	JO48_NEWS_Q17073013_3			DUP_ENDPOINT	in (this
+news	batch_exclusions	JO48_NEWS_Q3514406			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_latam_news_2.c
+news	batch_exclusions	JO48_NEWS_Q7801032			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_seasia_gov_1.c
+news	batch_exclusions	JO48_NEWS_Q20025269			DUP_ENDPOINT	in collectors/pivot/table/hp3b47_wdgov.c
+news	batch_exclusions	JO48_NEWS_Q7395787			DUP_ENDPOINT	in collectors/pivot/table/hp3b47_wdgov.c
+news	batch_exclusions	JO48_NEWS_Q1324287			DUP_ENDPOINT	in the tree already (www.elkhabar.com/feed, found by batch_exclusions after the row was recovered)
+news	probe_hp_batch	JO48_NEWS_Q88966545		https://ponte.org/feed/	HTTP_ERR	<none>
+news	probe_hp_batch	JO48_NEWS_Q88966545_2		https://ponte.org/stories/feed/	HTTP_ERR	<none>
+news	probe_hp_batch	JO48_NEWS_Q3522909		http://www.thesuburban.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q3987193		http://westerngazette.ca/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q130266979		https://www.lanacion.com.co/feed/	ERR	RemoteDisconnected: Remote end closed connection without res
+news	probe_hp_batch	JO48_NEWS_Q1975835		https://www.deccanchronicle.com/google_feeds.xml	HTTP_ERR	Forbidden
+news	probe_hp_batch	JO48_NEWS_Q31328038		https://www.pratahkal.com/google_feeds.xml	HTTP_ERR	Forbidden
+news	probe_hp_batch	JO48_NEWS_Q12623966		http://www.ihalla.com/rss.php?section=73	HTTP_ERR	Forbidden
+news	probe_hp_batch	JO48_NEWS_Q18550812		http://fpn119.co.kr/rss/rss_news.php	HTTP_ERR	Forbidden
+news	probe_hp_batch	JO48_NEWS_Q105967298		https://wayka.pe/feed/	HTTP_ERR	Forbidden
+news	probe_hp_batch	JO48_NEWS_Q6398798		https://www.thepost.com.pk/feed/	HTTP_ERR	Forbidden
+news	probe_hp_batch	JO48_NEWS_Q62571830		https://ropravda.ru/feed/	HTTP_ERR	Unsupported Media Type
+news	probe_hp_batch	JO48_NEWS_Q4329488		https://www.obozrevatel.com/ukr/api/media/out/rss/lastnews.xml	HTTP_ERR	Forbidden
+news	probe_hp_batch	JO48_NEWS_Q116785970		https://ain.ua/feed/	HTTP_ERR	Forbidden
+news	probe_hp_batch	JO48_NEWS_Q5314263		http://www.duncanbanner.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q5347491		http://www.effinghamdailynews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q5517248		http://www.gainesvilleregister.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q5572043		http://www.gloucestertimes.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q5579886		http://www.coloradocommunitymedia.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q5579886_2		http://www.thegoldentranscript.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q5604494		http://www.greensburgdailynews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q5641708		http://www.coastsidenews.com/search/?f=rss&amp;t=article&amp;c=review&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q5654587		http://www.harborcountry-news.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q4880225		http://www.southtexasnews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q4882642		https://www.belgrade-news.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q4906426		http://www.bigspringherald.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q5263202		http://www.derrynews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q6382196		http://kearneyhub.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q6395343		http://www.ketchikandailynews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q5173430		http://gazettetimes.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q5209310_3		https://www.mountaineagle.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=news/business,news/business/*&f=rss	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q5209310_4		https://www.mountaineagle.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=sports,sports/*&f=rss	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q3402472		http://www.pressrepublican.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q3481254		http://www.sfweekly.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q6666797		http://www.thecabin.net/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q6669550		http://lompocrecord.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q6682126		http://www.ladowntownnews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55666742_3		https://www.madisoncourier.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=sports,sports/*&f=rss	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55665608		http://www.mammothtimes.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55665631		http://www.coastsidenews.com/search/?f=rss&amp;t=article&amp;c=tribune&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55665639_2		http://www.ttownmedia.com/search/?f=rss&amp;t=article&amp;c=patterson_irrigator&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55665726		http://hanfordsentinel.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55665751		http://www.vcreporter.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q6426766		http://www.kokomotribune.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q6475499		http://www.lakecountyexam.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q4979486_2		https://www.newsargus.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=news,news/*&f=rss	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7081586		http://www.ojaivalleynews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q5897515		http://www.columbiagorgenews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q6006929		http://www.ivpressonline.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q6146255		http://www.yesweekly.com/search/?f=rss&amp;t=article&amp;c=news/jamestown_news&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55665431		http://www.eacourier.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55665471		http://www.inyoregister.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55665474		http://www.thepress.net/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55665476		http://napavalleyregister.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55665483		http://www.coastalview.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55665498		http://www.coronadonewsca.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55665549		http://www.ledger.news/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55665581		http://www.losaltosonline.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q4771204		http://www.avpress.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q4696943		https://www.postandcourier.com/search/?f=rss&amp;t=article&amp;c=aikenstandard&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55667212		https://www.communityadvocate.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55667549		https://www.southernminn.com/search/?f=rss&amp;t=article&amp;c=northfield_news&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55667596		http://www.presspubs.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55667640		http://www.columbiamissourian.com/search/?f=rss&amp;t=article&amp;c=boonecountyjournal&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55665755		http://www.trinityjournal.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55665762		http://www.wintersexpress.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55665765		http://www.newsmirror.net/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55665262		http://dothaneagle.com/search/?f=rss&amp;t=article&amp;c=news/community/enterprise-ledger&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55665274		http://www.advertisergleam.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55665316		http://www.bentoncourier.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55665355		http://www.jonesborosun.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55665377		http://www.paragoulddailypress.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55665414		http://www.tucsonlocalmedia.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55665418		http://www.paysonroundup.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q6905305		http://www.montereycountynow.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q6922906		http://tribnow.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q6966997		http://www.nashvillescene.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q6981630		http://www.nhonews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7182836		http://www.phillytrib.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q5131030		http://www.cleburnetimesreview.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q5134134		http://www.clintonherald.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55667976		http://wahoo-ashland-waverly.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55668002		https://www.hartington.net/rss/articles	HTTP_ERR	Forbidden
+news	probe_hp_batch	JO48_NEWS_Q55668241		http://www.beenews.com/search/?f=rss&amp;t=article&amp;c=amherst_bee&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55668315		http://www.ithaca.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55668394		http://www.romesentinel.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7195091		http://www.pinecountynews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7225457		http://www.polkio.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7294142		http://rapidcityjournal.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7730352		https://www.the-dispatch.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=news,news/*&f=rss	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7730352_4		https://www.the-dispatch.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=news/business,news/business/*&f=rss	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7731445		http://www.piratemedia1.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7731445_2		http://www.piratemedia1.com/search/?f=rss&amp;t=article&amp;c=theeastcarolinian&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7716562		http://www.conwaydailysun.com/search/?f=rss&amp;t=article&amp;c=berlin_sun&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7675570		http://www.tahlequahdailypress.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7694820		http://www.tehachapinews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7697665		http://www.telluridenews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7713857		http://www.annistonstar.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7714826		https://www.atokacountytimes.com/rss/articles	HTTP_ERR	Forbidden
+news	probe_hp_batch	JO48_NEWS_Q56119170		http://www.gillettenewsrecord.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q56119168		http://www.hampshirereview.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q96197147		http://www.pmg-va.com/search/?f=rss&amp;t=article&amp;c=the_declaration&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7734545		http://www.floydct.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7735200		http://fredericksburg.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7736245		http://www.gettysburgtimes.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7738227		http://www.greenevillesun.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7739403		http://www.sharonherald.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55668606		http://www.ricentral.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55671308		http://www.loudountimes.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7604060		http://statesville.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7532240		http://www.thesiuslawnews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7570483		https://www.herald-citizen.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=news,news/*&f=rss	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7580075		http://www.dailygazette.com/search/?f=rss&amp;t=article&amp;c=spotlightnews&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7728624		http://www.dailycal.org/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7728682		http://tdn.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55671516		http://rivertonranger.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55672254		http://dailyprogress.com/search/?f=rss&amp;t=article&amp;c=news/community/madisonnews&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55876629		http://www.recordgazette.net/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q56030688		http://www.suncommercial.com/search/?f=rss&amp;t=article&amp;c=sullivan_times&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q56033153		http://www.newbritainherald.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q56119149		http://www.apg-wi.com/search/?f=rss&amp;t=article&amp;c=ashland_daily_press&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q56119160		http://www.oregonobserver.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7754323		http://www.normantranscript.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7755856		http://www.inlander.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7759965		http://www.redandblack.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7760077		http://greensboro.com/search/?f=rss&amp;t=article&amp;c=news/community/rockingham_now&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7763985		http://www.theshorthorn.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7750801		http://www.meadvilletribune.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7771552		http://www.uniondemocrat.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7795628		http://www.hpenews.com/search/?f=rss&amp;t=article&amp;c=thomasville_times&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7831822		http://www.ttownmedia.com/search/?f=rss&amp;t=article&amp;c=tracy_press&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7840486		http://www.tribstar.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7990847		http://www.elpasoinc.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q8002467		http://www.journalpatriot.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7894674		http://www.kansan.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q7972060		http://www.missourian.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q13447061		http://www.myheraldreview.com/search/?f=rss&amp;t=article&amp;c=news/willcox&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q13447561		http://www.kaleo.org/search/?f=rss&amp;t=article&amp;c=kaleo&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q17071662		http://www.franklinfavorite.com/search/?f=rss&amp;t=article&amp;c=russellville&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q17073638		https://www.southernminn.com/search/?f=rss&amp;t=article&amp;c=owatonna_peoples_press&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q17078888		https://www.rustonleader.com/rss.xml	ERR	RemoteDisconnected: Remote end closed connection without res
+news	probe_hp_batch	JO48_NEWS_Q17513048		http://godanriver.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q18150648		http://www.hidesertstar.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q18152760		http://www.desertnews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q16975655		https://www.fcjournal.net/rss/articles	HTTP_ERR	Forbidden
+news	probe_hp_batch	JO48_NEWS_Q16977076		http://www.omakchronicle.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q16992375		https://www.elgincourier.com/rss/articles	HTTP_ERR	Forbidden
+news	probe_hp_batch	JO48_NEWS_Q16994647		http://www.gwinnettdailypost.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q16995214		https://www.herald-dispatch.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q16995983		http://www.forwardtimes.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q16999307		https://www.newtondailynews.com/rss/articles	HTTP_ERR	Forbidden
+news	probe_hp_batch	JO48_NEWS_Q16466590_2		http://www.hannapub.com/search/?f=rss&amp;t=article&amp;c=ouachitacitizen&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q16824499		http://www.abilene-rc.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q16895790		http://herald-zeitung.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q16939014		http://www.chetekalert.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q16966127		https://mountvernonnews.com/stories.rss	HTTP_ERR	Forbidden
+news	probe_hp_batch	JO48_NEWS_Q19866020		http://www.owassoreporter.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q19867767		http://tulsaworld.com/search/?f=rss&amp;t=article&amp;c=news/community/skiatook&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q23074316		http://www.cameronherald.com/search/?f=rss&amp;t=article&amp;c=marlin&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55623263_3		https://www.times-georgian.com/search/?q=&t=article&l=100&d=&d1=&d2=&s=start_time&sd=desc&c[]=obituaries,obituaries/*&f=rss	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55623273		http://www.timescitizen.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q55642329		http://www.sandmountainreporter.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q129800569		http://www.cachevalleydaily.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	probe_hp_batch	JO48_NEWS_Q5392199		http://www.mvariety.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
+news	engine	JO48_NEWS_Q105967298			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q107723017			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q116785970			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q12623966			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q129800569			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q130266979			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q1324287			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q13447061			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q13447561			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q136790848			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q16466590_2			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q16824499			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q16839239			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q16895790			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q16939014			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q16966127			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q16975655			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q16992375			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q16993678			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q16994647			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q16995214			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q16995375			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q16995983			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q16999307			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q17071662			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q17073638			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q17078888			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q17513048			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q18150648			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q18152760			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q18550812			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q1975835			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q19866020			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q19867767			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q2164240			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q23074316			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q31328038			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q3402472			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q3481254			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q3987193			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q4329488			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q4696943			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q4771204			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q48004150			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q4813479			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q4880225			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q4882642			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q4979486_2			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q5134134			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q5173430			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q5175514			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q5209310_2			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q5209310_3			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q5209310_4			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q5209310_5			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q5263202			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q5314263			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q5347491			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q5392199			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q5517248			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55623263_3			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55623273			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55642329			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55665262			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55665274			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55665304			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55665316			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55665355			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55665377			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55665414			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55665418			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55665426_2			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55665431			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55665471			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55665476			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55665483			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55665549			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55665608			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55665631			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55665639_2			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55665751			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55665755			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55665762			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55665765			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55665778			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55666742_3			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55666742_4			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55667212			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55667248			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55667549			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55667596			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55667640			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55668002			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55668241			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55668303			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55668315			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55668394			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55668606			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55671308			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55671516			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55672254			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q5579886			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q5579886_2			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q55876629			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q56030688			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q56033153			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q5604494			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q56119149			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q56119160			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q56119168			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q5641708			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q5654587			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q5689730			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q5897515			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q6006929			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q6146255			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q62571830			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q6382196			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q6395343			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q6398798			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q6426766			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q6472166			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q6475499			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q6665763			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q6666797			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q6669550			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q6682126			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q6905305			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q6922906			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q6966997			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q6981630			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7081586			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7180847			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7182836			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7225457			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7294142			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7362996			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7413602			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7532240			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7570483			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7570483_2			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7570483_3			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7604060			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7675570			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7694820			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7714826			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7716562			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7728624			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7728682			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7730352			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7730352_4			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7731445			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7731445_2			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7731812			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7734545			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7735200			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7736245			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7737134			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7738227			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7739403			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7750801			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7753903_2			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7754323			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7755856			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7755879			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7759965			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7760077			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7763985			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7771552			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7795628			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7806571			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7831822			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7839704			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7894674			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7972060			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7978280			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7986770			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q7990847			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q8002467			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q8027325			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q88966545			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q88966545_2			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	engine	JO48_NEWS_Q96197147			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+news	batch_exclusions	JO48_NEWS_Q124857448			DUP_ENDPOINT	main's jp_feeds_batch4x.c added the same feed and merged first (found at merge time, 2026-10-19)
+news	batch_exclusions	JO48_NEWS_Q130271804			DUP_ENDPOINT	main's jp_feeds_batch4x.c added the same feed and merged first (found at merge time, 2026-10-19)
+news	batch_exclusions	JO48_NEWS_Q131703147			DUP_ENDPOINT	main's jp_feeds_batch4x.c added the same feed and merged first (found at merge time, 2026-10-19)
+news	batch_exclusions	JO48_NEWS_Q18712763_3			DUP_ENDPOINT	main's jp_feeds_batch4x.c added the same feed and merged first (found at merge time, 2026-10-19)
+news	batch_exclusions	JO48_NEWS_Q727162			DUP_ENDPOINT	main's jp_feeds_batch4x.c added the same feed and merged first (found at merge time, 2026-10-19)
+news	batch_exclusions	JO48_NEWS_Q7487459			DUP_ENDPOINT	main's jp_feeds_batch4x.c added the same feed and merged first (found at merge time, 2026-10-19)

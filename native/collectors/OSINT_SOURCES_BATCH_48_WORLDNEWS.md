@@ -1,7 +1,7 @@
-# Batch 46 — news outlets and international organisations, worldwide
+# batch 48 — news outlets and international organisations, worldwide
 
-`collectors/pivot/table/hp3b46_{igo,news}.c` · manifests
-`docs/candidate-sources-batch46.{igo,news}.txt`
+`collectors/pivot/table/hp3b48_{igo,news}.c` · manifests
+`docs/candidate-sources-batch48.{igo,news}.txt`
 
 ## Method
 
@@ -49,9 +49,9 @@ server; 28 feeds answered 429 to a single request.
 (4,494 after the retry pass of 2026-10-19 put 2 and 26 rows back and the merge
 with main removed six news feeds its own Japan beats had added first: 494 /
 4,000, 156,288 emitted / 156,084 stored).
-155,994 records emitted, 155,790 stored. `docs/verified-sources-batch46.tsv`
+155,994 records emitted, 155,790 stored. `docs/verified-sources-batch48.tsv`
 carries the probe reading and the emit reading per row; the 2,369 candidates
-that did not ship are in `docs/rejected-sources-batch46.tsv` by beat and stage.
+that did not ship are in `docs/rejected-sources-batch48.tsv` by beat and stage.
 The news beat's weight: US 2,152, Norway 520, Spain 398, Italy 354, Russia 316,
 India 286, Korea 252, Germany 220, Mexico 206, France 206.
 

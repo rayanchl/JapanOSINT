@@ -11,7 +11,8 @@ PR #48's paging cycle of 533 rows, PR #49's collector labels), less six news
 feeds both sessions had added — `make lint-sources` named them at merge time
 and main's rows stay. Batch numbers 43 and 44 are shared between main's
 `jp_feeds_batch4N.c` beats and this branch's `hp3b4N_*` tables; nothing
-collides, read the beat.
+collides, read the beat. Batches 47 and 48 below were authored as 45 and 46 and
+renumbered at merge time when main merged its own batch 45 (PR #50) first.
 
 **The count was 47,178** (2026-10-19): 47,115 plus the 63 rows a
 retry pass recovered. Every row batches 44–46 had dropped as dead on two
@@ -42,8 +43,8 @@ a think tank), so the class lives in the description as Wikidata's, never in
 the row name.
 
 **The count was 42,643** (2026-10-18): batch 45's 16,520 measured
-public-body feed rows (`docs/verified-sources-batch45.tsv`,
-`native/collectors/OSINT_SOURCES_BATCH_45_WORLDGOVFEEDS.md`) on 26,123. Both
+public-body feed rows (`docs/verified-sources-batch47.tsv`,
+`native/collectors/OSINT_SOURCES_BATCH_47_WORLDGOVFEEDS.md`) on 26,123. Both
 floors were re-recorded at 42,643 and `make source-count` agreed.
 
 **Batch 45 is the same method on three more registers, and it hit the registry

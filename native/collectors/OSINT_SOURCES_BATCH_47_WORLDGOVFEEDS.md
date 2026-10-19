@@ -1,7 +1,7 @@
-# Batch 45 — the feeds public bodies declare on their own sites, worldwide
+# batch 47 — the feeds public bodies declare on their own sites, worldwide
 
-`collectors/pivot/table/hp3b45_{itgov,frgov,wdgov}.c` · manifests
-`docs/candidate-sources-batch45.{itgov,frgov,wdgov}.txt`
+`collectors/pivot/table/hp3b47_{itgov,frgov,wdgov}.c` · manifests
+`docs/candidate-sources-batch47.{itgov,frgov,wdgov}.txt`
 
 ## Method
 
@@ -62,9 +62,9 @@ the Wikidata hosts 2,965 have no server and 1,016 answer 403.
 Wikidata — every one measured emitted-AND-stored in the real binary** (16,550
 after the retry pass of 2026-10-19: 5,665 / 9,323 / 1,562, 277,706 emitted /
 277,362 stored).
-277,289 records emitted, 276,945 stored. `docs/verified-sources-batch45.tsv`
+277,289 records emitted, 276,945 stored. `docs/verified-sources-batch47.tsv`
 carries the probe reading and the emit reading per row; the 15,761 candidates
-that did not ship are in `docs/rejected-sources-batch45.tsv` by beat and stage.
+that did not ship are in `docs/rejected-sources-batch47.tsv` by beat and stage.
 
 | stage | IT in → out | FR in → out | WD in → out |
 | --- | --- | --- | --- |

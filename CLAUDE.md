@@ -45,7 +45,13 @@ branch's 47,178, less six news feeds both sessions had added; main merged first,
 so its rows stay). **Batch numbers 43 and 44 now name two things**: main's
 `collectors/sources/jp_feeds_batch4N.c` beats and this branch's `hp3b4N_*`
 tables with `JO4N_` ids — no file or id collides, but read the BEAT, as with
-34 and 35. The count ledger — every
+34 and 35. **And this branch's batches 45 and 46 are 47 and 48**: main merged
+its own batch 45 (PR #50, `hp3b45_jpwp*`, `verified-sources-batch45.tsv`) while
+this branch waited on CI, a direct file collision, so the public-body beats
+(`hp3b47_{itgov,frgov,wdgov}`, `JO47_`) and the press beats
+(`hp3b48_{igo,news}`, `JO48_`) were renumbered at merge time — ids, tables,
+manifests, TSVs, docs and collector keys — exactly as the batch-41 note below
+predicts. The count ledger — every
 batch from 37 to 46, what seeded it, what it measured and what it taught — is
 `docs/SOURCE_COUNT_LEDGER.md`; this file keeps the rules and the current number.
 Both floors are re-recorded at 47,724 and `make source-count` agrees. The
