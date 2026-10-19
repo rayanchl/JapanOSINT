@@ -128,6 +128,8 @@ typedef struct {
   int    pg_set;     /* {page}/{offset…} are expanded only once this is set  */
   char   date_stamp[64]; /* the first {date…} as rendered: date_field's value */
   long   pg_page, pg_offset, pg_size;
+  int    win_set;    /* {wstart}/{wend} render only once this is set         */
+  time_t win_start, win_end;   /* this run's date window (hpengine.h)        */
 } hp_vars;
 
 /* ── date tokens: lib/datetok.c is the one implementation ────────────── *
@@ -146,6 +148,39 @@ static int hp_render_date(const char *spec, size_t n, const hp_vars *v,
                         out, cap);
 }
 static int hp_has_date_token(const char *s) { return datetok_present(s); }
+
+/* ── {wstart} / {wend}: the ends of THIS run's date window (window_days).
+ *
+ * Rendered in the row's own timezone, like every other date here, and through
+ * strftime so an upstream that wants `20260101` gets it: `{wstart:%Y%m%d}`.
+ * Deliberately NOT routed through datetok — a datetok spec is relative to
+ * `now`, and these two are absolute instants the cycle chose. */
+static int hp_render_window(const char *spec, size_t n, const hp_vars *v,
+                            char *out, size_t cap) {
+  time_t when;
+  size_t name;
+  if (n >= 6 && !strncmp(spec, "wstart", 6))    { when = v->win_start; name = 6; }
+  else if (n >= 4 && !strncmp(spec, "wend", 4)) { when = v->win_end;   name = 4; }
+  else return 0;
+  const char *fmt = "%Y-%m-%d";
+  char fbuf[64];
+  if (n > name) {
+    if (spec[name] != ':' || n - name - 1 >= sizeof fbuf) return 0;
+    memcpy(fbuf, spec + name + 1, n - name - 1);
+    fbuf[n - name - 1] = 0;
+    fmt = fbuf;
+  }
+  time_t shifted = when + (time_t)v->tz_min * 60;
+  struct tm tmv;
+  if (!gmtime_r(&shifted, &tmv)) return 0;
+  return strftime(out, cap, fmt, &tmv) > 0;
+}
+/* Does `s` ask for a window at all? Without this a window_days row with no
+ * token would read one window's worth and look exactly like a row that read
+ * the whole collection. */
+static int hp_has_window_token(const char *s) {
+  return s && (strstr(s, "{wstart") || strstr(s, "{wend"));
+}
 
 /* The first {date…} token of `tmpl` as this run renders it (date_field). */
 static void hp_first_date(const char *tmpl, const hp_vars *v, char *out, size_t cap) {
@@ -358,6 +393,14 @@ static char *hp_expand(const char *tmpl, const hp_vars *v,
       const char *close = strchr(p, '}');
       if (close && close - p < 112 &&
           hp_render_date(p + 1, (size_t)(close - p - 1), v, dbuf, sizeof dbuf)) {
+        sub = dbuf;
+        skip = (size_t)(close - p) + 1;
+      }
+    } else if (*p == '{' && v->win_set &&
+               (!strncmp(p + 1, "wstart", 6) || !strncmp(p + 1, "wend", 4))) {
+      const char *close = strchr(p, '}');
+      if (close && close - p < 112 &&
+          hp_render_window(p + 1, (size_t)(close - p - 1), v, dbuf, sizeof dbuf)) {
         sub = dbuf;
         skip = (size_t)(close - p) + 1;
       }
@@ -3951,11 +3994,79 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     return 0;
   }
 
+  /* ── THIS RUN'S DATE WINDOW (hpengine.h's window_days) ──────────────────
+   * Decided before the URL is expanded, because {wstart}/{wend} are in it.
+   * All arithmetic is in whole days in the row's own timezone: a window is a
+   * range of calendar dates the upstream will compare against, not an instant.
+   *
+   * `win_floor` is the earliest day worth asking for, `win_tail` the start of
+   * the trailing window — the one that covers today. The walk runs forward
+   * from the floor and is CLAMPED at the tail, which is what makes a caught-up
+   * row a live feed rather than a row that has run off the end of its
+   * collection. */
+  long win_floor = 0, win_tail = 0, win_at = 0, win_today = 0;
+  int window_on = 0;
+  if (s->window_days > 0) {
+    if (ctx->entity && ctx->entity[0])
+      fprintf(stderr, "[hp:%s] window_days ignored for the entity run \"%s\": a "
+                      "pivot answers from the start of that entity's results\n",
+              s->id, ctx->entity);
+    else if (!hp_has_window_token(s->url) && !hp_has_window_token(s->post_body))
+      fprintf(stderr, "[hp:%s] window_days with no {wstart}/{wend} token in the "
+                      "url or body — there is nothing to slice; ignored\n", s->id);
+    else
+      window_on = 1;
+  }
+  if (window_on) {
+    win_today = datetok_day_of(vars.now, s->tz_minutes);
+    win_tail = win_today - s->window_days + 1;   /* the window covering today */
+    win_floor = win_tail;
+    if (s->window_from && s->window_from[0]) {
+      long d = datetok_day_from_iso(s->window_from);
+      if (d == DATETOK_BAD_DAY)
+        fprintf(stderr, "[hp:%s] window_from \"%s\" is not YYYY-MM-DD — this "
+                        "row starts at its trailing window\n",
+                s->id, s->window_from);
+      /* A floor AHEAD of the tail would have the row reading the future, so
+       * the tail is also the latest a floor can put us. */
+      else if (d < win_floor) win_floor = d;
+    }
+    win_at = win_floor;
+    /* The stored position, when it is one of OURS. A token the engine does not
+     * recognise is treated as absent — the contract source.h documents — so a
+     * row switched from page_resume to window_days reads its old URL token as
+     * "no position" and starts the cycle at the floor rather than somewhere
+     * arbitrary. */
+    if (ctx->resume_in && !strncmp(ctx->resume_in, "w=", 2)) {
+      long d = datetok_day_from_iso(ctx->resume_in + 2);
+      if (d != DATETOK_BAD_DAY) win_at = d;
+    }
+    if (win_at < win_floor) win_at = win_floor;
+    if (win_at > win_tail) win_at = win_tail;  /* never read past the tail */
+    long wend = win_at + s->window_days - 1;
+    if (wend > win_today) wend = win_today;
+    vars.win_set = 1;
+    vars.win_start = datetok_day_start(win_at, s->tz_minutes);
+    vars.win_end = datetok_day_start(wend, s->tz_minutes);
+  }
+
   char *url  = hp_expand(s->url, &vars, NULL, NULL);
   char *body = s->post_body ? hp_expand(s->post_body, &vars, NULL, NULL) : NULL;
   if (!url) { free(body); hp_vars_free(&vars); return 0; }
   hp_first_date(hp_has_date_token(s->url) ? s->url : s->post_body, &vars,
                 vars.date_stamp, sizeof vars.date_stamp);
+  /* The dates, not a window index: `win_at` is clamped to the tail rather than
+   * stepped, so an index would be an arithmetic guess where the dates are the
+   * thing that was actually asked for. */
+  char win_lo[16] = "", win_hi[16] = "";
+  if (window_on) {
+    datetok_iso_from_day(win_at, win_lo, sizeof win_lo);
+    datetok_iso_from_day(win_at + s->window_days - 1 > win_today
+                           ? win_today : win_at + s->window_days - 1,
+                         win_hi, sizeof win_hi);
+    fprintf(stderr, "[hp:%s] window %s..%s%s\n", s->id, win_lo, win_hi,
+            win_at >= win_tail ? " (the live tail)" : "");
+  }
 
   /* Headers: the row's own templates plus a JSON Accept and, when posting, a
    * content type. Bounded, NULL-terminated for http_request. */
@@ -4170,7 +4281,17 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
    * which one applied rather than silently doing nothing. */
   int resume_on = 0;
   if (s->page_resume) {
-    if (!paged && !page_walk)
+    if (window_on)
+      /* One row, one reading position. The window is the OUTER axis — it
+       * decides which slice of the collection exists at all — so it owns the
+       * token, and a page position inside a window the next run will not read
+       * again is meaningless. A window too wide to read in one ceiling still
+       * discloses what it did not reach; the remedy there is a narrower
+       * window_days, and the notice names the window so that is actionable. */
+      fprintf(stderr, "[hp:%s] page_resume ignored: window_days owns this row's "
+                      "reading position (narrow window_days if a window does "
+                      "not fit in one walk)\n", s->id);
+    else if (!paged && !page_walk)
       fprintf(stderr, "[hp:%s] page_resume on a row that declares no paging — "
                       "one request has nowhere to resume from; ignored\n", s->id);
     else if (ctx->entity && ctx->entity[0])
@@ -4605,6 +4726,36 @@ dated_restart:;
    * re-reads what we already have, which is cheap and self-healing, and the
    * fetch-failure notice names the status either way. */
   char *resume_next = NULL;        /* kept for the notice, which runs later */
+  /* ── WHERE THE WINDOW CYCLE GOES NEXT.
+   *
+   * Forward one window, clamped at the trailing window. Unlike a page cycle
+   * this position is never CLEARED: a window walk does not finish a collection
+   * and start over, it catches up and then stays on the live tail, which is
+   * the reason the walk goes forward at all (hpengine.h).
+   *
+   * It does not advance when the FETCH failed. Advancing past a window we were
+   * refused would drop that window's records silently, and permanently —
+   * nothing ever comes back for them. Re-reading a window we already have is
+   * cheap and self-healing, and the fetch-failure notice names the status, so a
+   * window that is permanently unreadable is visible rather than skipped. */
+  char win_next_iso[16] = "";
+  if (window_on && ctx->resume_out) {
+    int served = (first_status == 200) && !hard_error;
+    long next = served ? win_at + s->window_days : win_at;
+    if (next > win_tail) next = win_tail;
+    datetok_iso_from_day(next, win_next_iso, sizeof win_next_iso);
+    char tok[32];
+    snprintf(tok, sizeof tok, "w=%s", win_next_iso);
+    ctx->resume_out(ctx, tok);
+    if (!served)
+      fprintf(stderr, "[hp:%s] the window %s..%s was not served; the next run "
+                      "re-reads it rather than skipping it\n",
+              s->id, win_lo, win_hi);
+    else
+      fprintf(stderr, "[hp:%s] the next run reads the window beginning %s%s\n",
+              s->id, win_next_iso,
+              next >= win_tail ? " (caught up: the live tail from here)" : "");
+  }
   if (resume_on && ctx->resume_out) {
     const char *keep = (st.truncated && !failed_midwalk && page_url)
                          ? page_url : NULL;
@@ -4710,8 +4861,17 @@ date_step_back:
    * is a record the upstream handed over and we did not use, which is
    * exactly what this notice exists to state. Without it the shortfall
    * would show only in the run line. */
+  /* A WINDOW ROW THAT HAS NOT CAUGHT UP has a shortfall none of the six
+   * triggers above can see: the walk ended cleanly, every page it asked for
+   * was served, and the records it did not read are the ones OUTSIDE the
+   * window — the rest of the collection, which this run never asked about.
+   * ENA_PATHOGEN_SARSCOV2_RUNS reads a complete 7-day window of a 7,556,500
+   * record collection and would otherwise file nothing at all, which is the
+   * invisible nothing rule 1 names wearing a different hat: a row reading
+   * 0.08% of its collection, reporting rc=0 and looking finished. */
+  int win_behind = window_on && win_at < win_tail;
   if (st.truncated || failed_midwalk || pw_stuck || pw_repeat || pw_more ||
-      st.malformed) {
+      st.malformed || win_behind) {
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "source_id", s->id);
     cJSON_AddStringToObject(p, "query", vars.raw ? vars.raw : "");
@@ -4720,6 +4880,8 @@ date_step_back:
     cJSON_AddStringToObject(p, "records_available_basis",
       st.declared_total > (long)real_available
         ? "upstream declared this total"
+      : win_behind
+        ? "records in THIS WINDOW — the collection outside it is not counted"
         : "records counted so far — pages not read are not included");
     if (st.empty > 0)
       cJSON_AddNumberToObject(p, "empty_slots_skipped", st.empty);
@@ -4735,8 +4897,22 @@ date_step_back:
      * 5,597,082" is not read as a permanent ceiling. Without this the
      * disclosure is true and still misleading: the records not used this run
      * are not records nobody will ever fetch. */
-    if (resume_on) {
+    if (window_on) {
       cJSON_AddBoolToObject(p, "reads_over_a_cycle", 1);
+      cJSON_AddStringToObject(p, "cycle_axis", "date window");
+      cJSON_AddStringToObject(p, "window_start", win_lo);
+      cJSON_AddStringToObject(p, "window_end", win_hi);
+      cJSON_AddNumberToObject(p, "window_days", s->window_days);
+      cJSON_AddBoolToObject(p, "window_caught_up", !win_behind);
+      /* The next window, which is the only number that says whether the cycle
+       * is MOVING. Equal to window_start means it is not — either the row is
+       * caught up and re-reading the live tail (correct, and
+       * window_caught_up says so) or the fetch failed and the window was
+       * deliberately not advanced (the fetch-failure notice names the status). */
+      cJSON_AddStringToObject(p, "next_run_window_start", win_next_iso);
+    } else if (resume_on) {
+      cJSON_AddBoolToObject(p, "reads_over_a_cycle", 1);
+      cJSON_AddStringToObject(p, "cycle_axis", "pages");
       cJSON_AddBoolToObject(p, "resumed_this_run", resumed_from_token);
       /* Three outcomes, not two. Clearing the position because a page FAILED is
        * not the same as clearing it because the collection ended, and saying
@@ -4766,7 +4942,11 @@ date_step_back:
       hp_cut_reason(failed_status, failed_unreadable, cutwhy, sizeof cutwhy);
     }
     cJSON_AddStringToObject(p, "reason",
-      st.malformed && !st.truncated && !failed_midwalk
+      win_behind && !st.truncated && !failed_midwalk && !st.malformed
+        ? "this row reads its collection one date window at a time; this run "
+          "read its window in full and the rest of the collection lies "
+          "outside it"
+      : st.malformed && !st.truncated && !failed_midwalk
         ? "some lines of this NDJSON feed were not valid JSON; the records "
           "around them were used and these were not"
       : failed_midwalk
@@ -4800,6 +4980,10 @@ date_step_back:
       : failed_midwalk
         ? "re-run; a rate-limited host needs a per-host minimum gap "
           "(core/hostgate.c) — see docs/SOURCE_EXHAUSTIVENESS.md"
+      : window_on
+        ? "none needed: this row reads its collection one date window at a "
+          "time, and next_run_window_start says which window comes next. "
+          "Narrow window_days if a window is too wide to read in one walk"
       : resume_on
         ? "none needed: this row reads its collection over a cycle, and "
           "next_run_resumes_at says where the next run continues"
@@ -4813,6 +4997,13 @@ date_step_back:
     if (failed_midwalk)
       snprintf(title, sizeof title, "%s used %d of %ld available records — "
                "page %d answered %ld", s->id, out, avail, failed_page, failed_status);
+    else if (window_on)
+      /* The window, in the title, because "used 5,910 of 5,910" on a row whose
+       * collection holds 7.5 million is true of this request and misleading
+       * about the row. */
+      snprintf(title, sizeof title, "%s read %d records in the window %s..%s; "
+               "the next run reads the window beginning %s",
+               s->id, out, win_lo, win_hi, win_next_iso);
     else if (resume_on && resume_next)
       /* The title is what a human scans, so a cycling row says so here and not
        * only in the properties: "used 2,000 of 5,597,082" read alone is a
@@ -5224,6 +5415,15 @@ char *hp_describe_json(const char *id) {
     cJSON_AddStringToObject(pg, "page_resume_note",
       "reads the collection over a cycle: one ceiling's worth per run, "
       "resuming where the previous run stopped");
+  /* The OTHER cycle axis. A source page that showed only page_resume would
+   * describe a window row as having no cycle at all, which is the opposite of
+   * the truth, and the two are mutually exclusive on one row by design. */
+  hp_desc_int(pg, "window_days", s->window_days);
+  hp_desc_str(pg, "window_from", s->window_from);
+  if (s->window_days > 0)
+    cJSON_AddStringToObject(pg, "window_resume_note",
+      "reads the collection one date window at a time, walking forward from "
+      "window_from and then staying on the trailing window as a live tail");
   cJSON_AddItemToObject(o, "paging", pg);
 
   /* registration-level facts the def also carries, repeated so the engine

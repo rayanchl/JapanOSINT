@@ -475,6 +475,80 @@ typedef struct hp_source {
   const char *table_must;
   int         table_index;
   int         table_skip_rows;
+  /* ── A COLLECTION WHOSE ONLY SLICING AXIS IS A DATE, read over a cycle.
+   *
+   * `page_resume` above reads a big collection a ceiling of PAGES at a time.
+   * That needs the upstream to page at all, and some do not: EBI's ENA portal
+   * API answers `{"message":"Unsupported param offset"}` with HTTP 400 to any
+   * offset, so `ENA_PATHOGEN_SARSCOV2_RUNS` read 1,000 records of 7,556,500
+   * and — because a failed page deliberately stores no position — read the
+   * same 1,000 on every run for ever, at rc=0, records=1000, stored=1000.
+   * Measured 2026-10-19. No paging flag can reach the other 7.5 million,
+   * because the endpoint has no second page to ask for. What it does have is a
+   * date predicate: `first_public>=A AND first_public<=B` with `limit=0`
+   * returns that window COMPLETE (5,910 records for a 7-day window, equal to
+   * the endpoint's own /count for the same query).
+   *
+   * So the slice is a date window, and `window_days = N` reads one per run:
+   *
+   *   url = "…&query=tax_tree(2697049) AND first_public>={wstart} AND "
+   *         "first_public<={wend}&limit=0"
+   *   window_days = 7, window_from = "2020-01-01"
+   *
+   * `{wstart}` and `{wend}` render like `{date}` (`{wstart:%Y%m%d}` formats
+   * with strftime) in the url, post_body, headers and detail_url.
+   *
+   * THE WALK GOES FORWARD, from `window_from` toward today, and that direction
+   * is the whole design rather than a preference. A backward walk from today
+   * would not see a record published this morning until it had finished the
+   * history — a year of daily runs for ENA — which is the same mistake as
+   * cycling a newest-first collection (see the ascending-sort note under
+   * page_resume). Walking forward, the cycle CATCHES UP: once a window reaches
+   * today the row pins itself to the trailing window and every later run reads
+   * the live tail. One row is therefore both the backfill and the live feed,
+   * and nothing is ever read a second time except that trailing window, which
+   * must be re-read because records land in it continuously.
+   *
+   * The position is the next window's start, stored through the same
+   * source_ctx resume_in / resume_out that page_resume uses, as `w=<ISO date>`
+   * — a form no stored URL can collide with, and one a collector that does not
+   * recognise it treats as absent, which is the contract source.h documents.
+   *
+   * window_from is the earliest date worth asking for; a row that leaves it
+   * unset starts at the trailing window, i.e. it is a live tail with no
+   * backfill. A window that is wider than its own upstream can answer in one
+   * response still pages normally inside the window and still discloses what
+   * it did not reach — the remedy there is a narrower window, and the notice
+   * says so by naming the window it read.
+   *
+   * ONE WINDOW A RUN, including an empty one, and that is deliberate. Walking
+   * several empty windows inside a run was written and then dropped: an empty
+   * window costs ~5 bytes, so skipping through sparse history looks free, and
+   * it would have shortened ENA's backfill by about a dozen runs out of 354.
+   * But an HTTP 200 carrying an empty result set is indistinguishable from a
+   * real empty one — the trap `EMPTY_RESULTSET` exists for — so a transient
+   * empty answer would have advanced the cycle past up to 24 windows of real
+   * records instead of one, in silence. A 3% faster backfill is not worth
+   * multiplying a silent loss by 24. A long backfill is a stated trade with
+   * precedent here (a monthly `interval` takes a 500-page collection about two
+   * years to come round) and the notice says which window it is on.
+   *
+   * A DATE PREDICATE IS ONLY EXHAUSTIVE WHERE EVERY RECORD IS DATED, and that
+   * is the row author's measurement to make, not something the engine can
+   * check. ENA's influenza SAMPLE collection holds 61,537 records of which
+   * 1,324 carry no first_public at all, so a first_public window reaches
+   * 60,213 of them and no setting of window_days would ever find the rest —
+   * that row reads its collection whole instead. Ask the upstream for its own
+   * count both with and without the predicate before windowing a row.
+   *
+   * Ignored, with a line on stderr, when the run carries an ENTITY (a pivot
+   * answers from the start of that entity's results, exactly as for
+   * page_resume) or when no `{wstart}`/`{wend}` token appears in the url or
+   * body — there is nothing to slice, and silently reading one window would be
+   * indistinguishable from reading the whole collection. Appended last so no
+   * existing initializer moves. */
+  int         window_days;
+  const char *window_from;
 } hp_source;
 
 /* Register `n` rows. `defs` must be static storage of at least n entries owned

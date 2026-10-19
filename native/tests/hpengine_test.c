@@ -14,6 +14,7 @@
 #include "../lib/hpengine.h"
 #include "../lib/jsonlist.h"
 #include "../lib/pagewalk.h"   /* jo_page_max — 18d derives the ceiling, not a literal */
+#include "../lib/datetok.h"    /* the window tests name their dates, not literals */
 #include "../lib/feedlib.h"
 #include "../lib/csv.h"
 #include "../core/httpclient.h"
@@ -333,6 +334,32 @@ static const hp_source T[] = {
     .array_path = "items", .title_keys = "name", .id_keys = "id",
     .page_param = "offset", .page_size = 2, .page_max = 2, .page_resume = 1,
     .interval = 3600,
+    .record_type = "t-page", .free_tier = 1, .description = "d" },
+  /* A collection whose only slicing axis is a DATE: the upstream honours no
+   * offset at all, so the cycle walks date windows forward instead of pages
+   * (test 41). window_from is far enough back that the walk starts there and
+   * is nowhere near caught up, whatever day the suite runs on. */
+  { .id = "T_WINDOW", .name = "date-window cycle",
+    .url = "https://x.test/wz?from={wstart}&to={wend}",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .interval = 86400, .window_days = 7, .window_from = "2020-01-01",
+    .record_type = "t-page", .free_tier = 1, .description = "d" },
+  /* A window row with a strftime format on the tokens, and no window_from, so
+   * it is a live tail with no backfill (tests 41c, 41d). */
+  { .id = "T_WINDOW_TAIL", .name = "date-window live tail",
+    .url = "https://x.test/wt?d={wstart:%Y%m%d}-{wend:%Y%m%d}",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .interval = 86400, .window_days = 3,
+    .record_type = "t-page", .free_tier = 1, .description = "d" },
+  /* window_days with no {wstart}/{wend} token anywhere: nothing to slice, so
+   * the engine must refuse rather than read one window and look complete
+   * (test 41e). It declares page_resume too, which window_days would own if
+   * the window were active — here it must not be. */
+  { .id = "T_WINDOW_NOTOK", .name = "window_days with no window token",
+    .url = "https://x.test/rz?all=1",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .page_param = "offset", .page_size = 2, .page_max = 2, .page_resume = 1,
+    .interval = 86400, .window_days = 7, .window_from = "2020-01-01",
     .record_type = "t-page", .free_tier = 1, .description = "d" },
   /* The same walk with a row-declared conditional header: it belongs to the
    * first request only (test 9f-sexies). */
@@ -3504,6 +3531,156 @@ int main(void) {
   rc = run_source_resume("T_RESUME", "somebody", saved);
   ok(rc == 0 && g_cap_ids_has("1") && !g_res_set,
      "40e: an entity run neither resumes nor stores a position");
+
+  /* ── 41. A COLLECTION SLICED BY DATE, not by pages (window_days).
+   *
+   * page_resume needs the upstream to page. EBI's ENA portal API does not: it
+   * answers {"message":"Unsupported param offset"} with HTTP 400 to any
+   * offset, so ENA_PATHOGEN_SARSCOV2_RUNS read 1,000 records of 7,556,500 and
+   * then — a failed page storing no position, correctly — read the same 1,000
+   * on every run for ever at rc=0. What that endpoint does honour is a date
+   * predicate, so the slice is a date window and the cycle walks it forward. */
+  fx_reset();
+  fx_add("/wz?from=", 200,
+         "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  rc = run_source_resume("T_WINDOW", NULL, NULL);
+  ok(rc == 0 && strstr(g_last_url, "from=2020-01-01") != NULL &&
+     strstr(g_last_url, "to=2020-01-07") != NULL,
+     "41: a window row with no stored position starts at window_from, one "
+     "window_days wide");
+  ok(g_res_set && strcmp(g_res_out, "w=2020-01-08") == 0,
+     "41: and stores the NEXT window's start, not a URL");
+  /* The shortfall none of the six truncation triggers can see: the walk ended
+   * cleanly, every page was served, and what was not read is the rest of the
+   * collection OUTSIDE the window. Without this a row reading 0.08% of its
+   * upstream files nothing at all and looks finished. */
+  { const cap *nt = NULL;
+    ok(cap_count("collector-truncation-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"cycle_axis\":\"date window\"") != NULL &&
+       strstr(nt->props, "\"window_start\":\"2020-01-01\"") != NULL &&
+       strstr(nt->props, "\"window_end\":\"2020-01-07\"") != NULL &&
+       strstr(nt->props, "\"next_run_window_start\":\"2020-01-08\"") != NULL &&
+       strstr(nt->props, "\"window_caught_up\":false") != NULL,
+       "41: and discloses the window it read and the one coming next"); }
+
+  /* 41b. The walk goes FORWARD. A backward walk from today would not see a
+   *      record published this morning until it had finished the history — a
+   *      year of daily runs for ENA — which is the same mistake as cycling a
+   *      newest-first collection. */
+  snprintf(saved, sizeof saved, "%s", g_res_out);
+  rc = run_source_resume("T_WINDOW", NULL, saved);
+  ok(rc == 0 && strstr(g_last_url, "from=2020-01-08") != NULL &&
+     strstr(g_last_url, "to=2020-01-14") != NULL &&
+     g_res_set && strcmp(g_res_out, "w=2020-01-15") == 0,
+     "41b: the next run reads the window AFTER the one stored, moving forward");
+
+  /* 41b-ii. An EMPTY window still advances. A window that holds no records is
+   *         a fact about those dates, not a failure, and re-reading it would
+   *         stall the cycle on the first quiet week of the history. */
+  fx_reset();
+  fx_add("/wz?from=", 200, "{\"items\":[]}");
+  rc = run_source_resume("T_WINDOW", NULL, "w=2020-02-05");
+  ok(rc == 0 && g_res_set && strcmp(g_res_out, "w=2020-02-12") == 0,
+     "41b-ii: an empty window advances the cycle rather than stalling it");
+
+  /* 41b-iv. A window that was NOT SERVED does not advance. Advancing past a
+   *          window we were refused would drop its records permanently —
+   *          nothing ever comes back for them — whereas re-reading a window we
+   *          already have is cheap and self-healing. This is the opposite
+   *          choice from a failed PAGE, which clears its position, and the
+   *          difference is that a page can be reached again from the start of
+   *          the same collection while a skipped window cannot. */
+  fx_reset();
+  fx_add("/wz?from=", 500, NULL);
+  rc = run_source_resume("T_WINDOW", NULL, "w=2020-03-04");
+  ok(g_res_set && strcmp(g_res_out, "w=2020-03-04") == 0,
+     "41b-iv: a window that was not served is re-read, not skipped");
+
+  /* 41c. The tokens render through strftime, so an upstream wanting 20200101
+   *      gets it; and with no window_from the row is a live tail that starts
+   *      at the trailing window. */
+  fx_reset();
+  fx_add("/wt?d=", 200,
+         "{\"items\":[{\"name\":\"a\",\"id\":\"1\"}]}");
+  rc = run_source_resume("T_WINDOW_TAIL", NULL, NULL);
+  {
+    char lo[16], hi[16], want[64];
+    long today = datetok_day_of(0, 0);
+    datetok_iso_from_day(today - 2, lo, sizeof lo);   /* window_days = 3 */
+    datetok_iso_from_day(today, hi, sizeof hi);
+    snprintf(want, sizeof want, "d=%.4s%.2s%.2s-%.4s%.2s%.2s",
+             lo, lo + 5, lo + 8, hi, hi + 5, hi + 8);
+    ok(rc == 0 && strstr(g_last_url, want) != NULL,
+       "41c: {wstart:%Y%m%d}/{wend:%Y%m%d} render through strftime, and a row "
+       "with no window_from starts at the trailing window");
+  }
+
+  /* 41d. A CAUGHT-UP row pins itself to the trailing window: the stored
+   *      position stops advancing and every later run reads the live tail.
+   *      That is what makes one row both the backfill and the live feed, and
+   *      it is why the walk goes forward. A stored position in the FUTURE is
+   *      clamped to the tail rather than followed. */
+  {
+    char tok[32], lo[16];
+    long today = datetok_day_of(0, 0);
+    datetok_iso_from_day(today + 400, lo, sizeof lo);
+    snprintf(tok, sizeof tok, "w=%s", lo);
+    fx_reset();
+    fx_add("/wt?d=", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"}]}");
+    rc = run_source_resume("T_WINDOW_TAIL", NULL, tok);
+    char tail[16], want[32];
+    datetok_iso_from_day(today - 2, tail, sizeof tail);
+    snprintf(want, sizeof want, "w=%s", tail);
+    ok(rc == 0 && g_res_set && strcmp(g_res_out, want) == 0,
+       "41d: a caught-up row pins to the trailing window and stays there");
+  }
+
+  /* 41d-ii. A token the engine does not recognise is treated as ABSENT — the
+   *         contract source.h documents — so a row moved from page_resume to
+   *         window_days reads its old stored URL as "no position" and starts
+   *         the window cycle at window_from rather than somewhere arbitrary. */
+  fx_reset();
+  fx_add("/wz?from=", 200,
+         "{\"items\":[{\"name\":\"a\",\"id\":\"1\"}]}");
+  rc = run_source_resume("T_WINDOW", NULL, "https://x.test/rz?all=1&offset=4");
+  ok(rc == 0 && strstr(g_last_url, "from=2020-01-01") != NULL,
+     "41d-ii: a page-resume URL left over on a window row is ignored, not "
+     "parsed as a date");
+
+  /* 41e. window_days with no {wstart}/{wend} token is REFUSED. Reading one
+   *      window of a collection and looking complete is the invisible nothing
+   *      this engine's disclosures exist to prevent — and the row must fall
+   *      back to the paging it declares, not to nothing. */
+  fx_reset();
+  fx_add("offset=2", 200,
+         "{\"items\":[{\"name\":\"c\",\"id\":\"3\"},{\"name\":\"d\",\"id\":\"4\"}]}");
+  fx_add("/rz?all=1", 200,
+         "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  rc = run_source_resume("T_WINDOW_NOTOK", NULL, NULL);
+  ok(rc == 0 && g_cap_ids_has("1") && g_cap_ids_has("3") &&
+     g_res_set && strstr(g_res_out, "offset=4") != NULL,
+     "41e: window_days with no window token is ignored and page_resume still "
+     "owns the position");
+
+  /* 41f. An ENTITY run ignores the window, for the same reason it ignores a
+   *      page position: "what do we have on X" must answer from the start of
+   *      X's results. */
+  fx_reset();
+  fx_add("/wz?from=", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"}]}");
+  rc = run_source_resume("T_WINDOW", "somebody", "w=2020-05-06");
+  ok(rc == 0 && !g_res_set,
+     "41f: an entity run neither reads nor stores a window position");
+
+  /* 41g. The row DESCRIBES its window, so a source page does not report a
+   *      cycling row as having no cycle at all. */
+  {
+    char *dw = hp_describe_json("T_WINDOW");
+    ok(dw && strstr(dw, "\"window_days\":7") != NULL &&
+       strstr(dw, "\"window_from\":\"2020-01-01\"") != NULL &&
+       strstr(dw, "window_resume_note") != NULL,
+       "41g: hp_describe_json reports the window cycle");
+    free(dw);
+  }
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

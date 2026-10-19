@@ -1930,14 +1930,26 @@ static const hp_source HP3B19_HEALTH[] = {
     .record_type = "sequence-metadata-record",
     .tags = "\"ena\",\"ebi\",\"genomics\",\"sars-cov-2\",\"sequencing\",\"provenance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ebi.ac.uk/ena/portal/api/search?result=read_run&query=tax_tree(2697049)&fields=run_accession,sample_accession,study_accession,country,location,collection_date,center_name,instrument_platform,library_strategy,first_public&format=json&limit=1000",
+    /* NO PAGING, BY THE UPSTREAM'S CHOICE: ebi.ac.uk answers
+     * {"message":"Unsupported param offset"} with HTTP 400 to any offset, so
+     * the `page_param = "offset"` this row carried never worked. It read 1,000
+     * of 7,556,500 records (the endpoint's own /count, 2026-10-19), page 2 was
+     * refused, and because a failed page deliberately stores no resume
+     * position the same 1,000 came back on every run for ever at rc=0.
+     *
+     * What the endpoint does honour is a date predicate plus `limit=0`, which
+     * returns the whole matching set: measured 5,910 records for
+     * first_public 2026-10-01..07, exactly equal to /count for the same query.
+     * So the slice is a week of publication dates and window_days reads one
+     * per run, forward from the start of the pandemic deposits and then
+     * staying on the trailing week. ~350 daily runs to walk the history, which
+     * is the same shape as wayback_jp's 2,064-page index over ~207 runs. */
+    .url = "https://www.ebi.ac.uk/ena/portal/api/search?result=read_run&query=tax_tree(2697049)%20AND%20first_public%3E%3D{wstart}%20AND%20first_public%3C%3D{wend}&fields=run_accession,sample_accession,study_accession,country,location,collection_date,center_name,instrument_platform,library_strategy,first_public&format=json&limit=0",
     .date_keys = "first_public",
     .id_keys = "run_accession",
     .interval = 86400,
-    .page_param = "offset",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
-    .page_size = 1000,
-    .page_start = 0,
+    .window_days = 7,
+    .window_from = "2020-01-01",
     .title_keys = "run_accession",
     .description = "Every SARS-CoV-2 sequencing run deposited in the European "
       "Nucleotide Archive with the fields that carry the OSINT rather "
@@ -1952,13 +1964,21 @@ static const hp_source HP3B19_HEALTH[] = {
     .record_type = "sequence-metadata-record",
     .tags = "\"ena\",\"ebi\",\"genomics\",\"influenza\",\"sample\",\"provenance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ebi.ac.uk/ena/portal/api/search?result=sample&query=tax_tree(11320)&fields=sample_accession,description,country,location,collection_date,center_name,host,isolate,strain,serotype&format=json&limit=1000",
+    /* NEITHER paged NOR windowed, and the second half of that is the measured
+     * part. ENA honours no offset (see the SARS-CoV-2 row above), and the
+     * obvious repair — the same first_public window — would silently DROP
+     * records here: this collection holds 61,537 samples and only 60,213 of
+     * them answer `first_public>=1990-01-01`, with 0 answering
+     * `first_public<1990-01-01`, so 1,324 samples carry no publication date at
+     * all and no date window could ever reach them (measured 2026-10-19).
+     * A date predicate is only exhaustive where every record is dated.
+     *
+     * It does not need one: at `limit=0` the whole collection comes back in
+     * one request — 61,537 records, 2.3 MB, 4.9 s, equal to the endpoint's own
+     * /count. One request a day, complete, nothing to resume. */
+    .url = "https://www.ebi.ac.uk/ena/portal/api/search?result=sample&query=tax_tree(11320)&fields=sample_accession,description,country,location,collection_date,center_name,host,isolate,strain,serotype&format=json&limit=0",
     .id_keys = "sample_accession",
     .interval = 86400,
-    .page_param = "offset",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
-    .page_size = 1000,
-    .page_start = 0,
     .title_keys = "sample_accession",
     .description = "Influenza A virus samples registered in the European Nucleotide "
       "Archive with host species, isolate and strain names, serotype, "
@@ -1973,14 +1993,18 @@ static const hp_source HP3B19_HEALTH[] = {
     .record_type = "sequence-metadata-record",
     .tags = "\"ena\",\"ebi\",\"genomics\",\"tuberculosis\",\"amr\",\"provenance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ebi.ac.uk/ena/portal/api/search?result=read_run&query=tax_tree(1773)&fields=run_accession,sample_accession,study_accession,country,location,collection_date,center_name,instrument_platform,first_public&format=json&limit=1000",
+    /* The same upstream constraint as the SARS-CoV-2 row above — ENA honours
+     * no offset at all — so the same date window. 360,690 records (2026-10-19),
+     * every one of them carrying a first_public: `AND first_public>=1990-01-01`
+     * counts the same 360,690, so no record is outside the walk. A 90-day
+     * window holds ~9,200-11,400 (2019, 2022-Q1 and 2024-Q1 measured) and the
+     * earliest deposit is after 2010, so the backfill is ~65 daily runs. */
+    .url = "https://www.ebi.ac.uk/ena/portal/api/search?result=read_run&query=tax_tree(1773)%20AND%20first_public%3E%3D{wstart}%20AND%20first_public%3C%3D{wend}&fields=run_accession,sample_accession,study_accession,country,location,collection_date,center_name,instrument_platform,first_public&format=json&limit=0",
     .date_keys = "first_public",
     .id_keys = "run_accession",
     .interval = 86400,
-    .page_param = "offset",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
-    .page_size = 1000,
-    .page_start = 0,
+    .window_days = 90,
+    .window_from = "2010-01-01",
     .title_keys = "run_accession",
     .description = "Mycobacterium tuberculosis sequencing runs in the European "
       "Nucleotide Archive with submitting centre, collection country "
