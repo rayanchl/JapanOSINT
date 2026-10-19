@@ -79,9 +79,14 @@ the verified TSV carries both readings for each. The 40 collisions were each
 measured against the feed itself: every verifiable one is the feed's own
 byte-identical duplicate (one Russian agency feed lists every item twice;
 Italy's SVTRL repeats one item in each of its three feeds), and 20 French
-ones sit behind one ministry family's maintenance page at the time of
-checking and are recorded `UNVERIFIABLE_NOW` with their numbers rather than
-guessed at.
+ones sat behind one ministry family's maintenance page at the time of
+checking and were recorded `UNVERIFIABLE_NOW` with their numbers rather than
+guessed at. **Re-measured 2026-10-19 with the hosts back: 33 of the 35 French
+collisions are the feed's own byte-identical duplicates, the loss equal to the
+surplus in every case** — a SPIP `backend` feed lists one article under every
+rubrique it belongs to, so 521 items hold 474 distinct articles and 47 copies —
+and the two still answering 503 lose 5 and 10 on the same shape. No key is
+wrong; nothing is lost that was not a copy.
 
 **Three defects found by the gates, none visible to a probe:**
 
