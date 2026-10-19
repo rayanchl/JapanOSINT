@@ -1,8 +1,8 @@
 /* Two FDSN-ws `event` services that only speak the pipe-separated TEXT format.
  *
- * Endpoints (both keyless):
- *   https://geofon.gfz.de/fdsnws/event/1/query?format=text&limit=50&orderby=time
- *   https://earthquakescanada.nrcan.gc.ca/api/fdsnws/event/1/query?format=text&limit=50
+ * Endpoints (both keyless), where <since> is today minus FDSN_WINDOW_DAYS:
+ *   https://geofon.gfz.de/fdsnws/event/1/query?format=text&orderby=time&starttime=<since>
+ *   https://www.earthquakescanada.nrcan.gc.ca/api/fdsnws/event/1/query?format=text&starttime=<since>
  * Emits: EventID, origin time, latitude, longitude, depth (km), magnitude +
  *        magnitude type, event location name, event type — every value taken
  *        from the response row.
@@ -22,13 +22,34 @@
  *  - NRCan's EventLocationName is bilingual with an embedded '/'
  *    ("181 km SW of Port Hardy, BC/181 km SO de Port Hardy, BC"). Splitting on
  *    '/' would corrupt place names, so it is kept whole.
+ *
+ * A WINDOW, NOT A COUNT (2026-10-12). Both URLs carried `limit=50`, and FDSN
+ * honours it: 50 events, no paging parameter in the spec's `event` service to
+ * follow, and the rest of the bulletin dropped in silence on every 5-minute
+ * run (tools/audit_url_limits.py; docs/measured-url-limits-2026-10-11.tsv —
+ * both answered more when asked for more). The service HAS no offset, so the
+ * fix is not paging but asking a question with a complete answer: `starttime`
+ * bounds the request by TIME instead of by count, and the whole window comes
+ * back in one request. Measured 2026-10-12 over seven days: GEOFON 162 events
+ * (18 KB), NRCan 42 (5.5 KB). Seven days against a 5-minute (GEOFON) and
+ * 15-minute (NRCan) schedule is ~2,000 runs of overlap, so nothing falls
+ * between two runs, and the sink's upsert makes the overlap free.
+ *
+ * NRCan also needed its HOST corrected: the no-`www` form 301s to the `www`
+ * one, which is a redirect every run paid for and a parse failure for any
+ * fetcher that does not follow it.
  */
 #include "source.h"
 #include "lib/feedlib.h"
 #include "geoeo_common.inc"
+#include "_timefmt.inc"
 #include <strings.h>
+#include <time.h>
 
 #define FDSN_MAXCOL 32
+
+/* How far back to ask. See the window note in the header for why seven. */
+#define FDSN_WINDOW_DAYS 7
 
 /* Split one line on '|' in place; each field trimmed. */
 static int fdsn_split(char *line, char **out, int max) {
@@ -175,17 +196,36 @@ static int fdsn_collect(const source_ctx *ctx, intel_sink *sink,
   return 0;
 }
 
+/* Complete `fmt` (which must hold exactly one %s) with the window start, and
+ * hand the result to fdsn_collect. Returns fdsn_collect's rc, or -1 when the
+ * date could not be rendered — a URL with a literal "%s" in it would be a
+ * fabricated request, so it is never sent. */
+static int fdsn_window_run(const source_ctx *ctx, intel_sink *sink,
+                           const char *sid, const char *fmt, const char *tags) {
+  char since[16];
+  if (!jo_time_fmt(time(NULL) - (time_t)FDSN_WINDOW_DAYS * 86400, "%Y-%m-%d",
+                   since, sizeof since)) {
+    fprintf(stderr, "[%s] cannot render the window start\n", sid);
+    return -1;
+  }
+  char url[320];
+  snprintf(url, sizeof url, fmt, since);
+  return fdsn_collect(ctx, sink, sid, url, tags);
+}
+
 static int geofon_run(const source_ctx *ctx, intel_sink *sink) {
-  return fdsn_collect(
+  return fdsn_window_run(
       ctx, sink, "geofon-quakes",
-      "https://geofon.gfz.de/fdsnws/event/1/query?format=text&limit=50&orderby=time",
+      "https://geofon.gfz.de/fdsnws/event/1/query?format=text&orderby=time"
+      "&starttime=%s",
       "[\"earthquake\",\"seismic\",\"global\",\"gfz\"]");
 }
 
 static int nrcan_run(const source_ctx *ctx, intel_sink *sink) {
-  return fdsn_collect(
+  return fdsn_window_run(
       ctx, sink, "nrcan-quakes",
-      "https://earthquakescanada.nrcan.gc.ca/api/fdsnws/event/1/query?format=text&limit=50",
+      "https://www.earthquakescanada.nrcan.gc.ca/api/fdsnws/event/1/query"
+      "?format=text&starttime=%s",
       "[\"earthquake\",\"seismic\",\"canada\",\"nrcan\"]");
 }
 
@@ -194,7 +234,7 @@ static const source_def geoeo_geofon_def = {
   .name = "GEOFON Global Earthquake Bulletin (GFZ)",
   .update_interval_sec = 300, .run = geofon_run,
   .category = "environment", .type = "api",
-  .url = "https://geofon.gfz.de/fdsnws/event/1/query?format=text&limit=50&orderby=time",
+  .url = "https://geofon.gfz.de/fdsnws/event/1/query?format=text&orderby=time&starttime={date-7d}",
   .description = "GFZ Potsdam GEOFON global seismic network solutions — an independent global earthquake catalogue with different station coverage from USGS and EMSC.",
   .license = "GEOFON/GFZ data policy: free use for research and operational purposes with citation of GFZ.",
   .free_tier = 1,
@@ -206,7 +246,7 @@ static const source_def geoeo_nrcan_def = {
   .name = "Earthquakes Canada (NRCan) FDSN Event Service",
   .update_interval_sec = 900, .run = nrcan_run,
   .category = "environment", .type = "api",
-  .url = "https://earthquakescanada.nrcan.gc.ca/api/fdsnws/event/1/query?format=text&limit=50",
+  .url = "https://www.earthquakescanada.nrcan.gc.ca/api/fdsnws/event/1/query?format=text&starttime={date-7d}",
   .description = "Natural Resources Canada national earthquake catalogue — Canadian and Arctic events, including quarry blasts flagged as such, well below the USGS global threshold.",
   .license = "Open Government Licence — Canada 2.0; copy, modify and redistribute with attribution.",
   .free_tier = 1,

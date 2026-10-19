@@ -119,12 +119,29 @@ static struct { char host[HG_HOSTLEN]; int gap_ms; } g_over[HG_MAX_OVERRIDES] = 
    * "TRUNCATED: a later page failed", and 5 of 20 records collapsed — the
    * engine's own truncation notice pointed here for the remedy. */
   { "mobile311.sfgov.org", 1200 },
+  /* data.qld.gov.au publishes 188,879 datasets through CKAN package_search
+   * (result.count, measured 2026-10-12 — Queensland registers individual
+   * borehole and core records as datasets), so ckan-au-qld's complete read is
+   * ~945 pages of 200.
+   *
+   * 250 ms was the first guess and the portal refused it: measured 2026-10-12,
+   * the walk got 76 pages in 47 s and page 77 answered HTTP 429, which
+   * lib/pagewalk.c disclosed as a truncation notice naming the status and
+   * pointing here. The budget is not a simple per-second rate — twelve
+   * requests at 250 ms all answered 200 — so it is a longer window, and the
+   * run that got furthest (427 pages, no 429) was pacing at about 3.5 s a
+   * page. 1,500 ms is inside that and puts the complete daily read at roughly
+   * 24 minutes. If it still 429s, the walk stops and SAYS SO; it does not
+   * pretend to be complete. */
+  { "data.qld.gov.au", 1500 },
+  /* data.nsw.gov.au is the same shape at 17,192 datasets / ~86 pages. */
+  { "data.nsw.gov.au", 250 },
 };
 /* The number of LIVE entries above. This was `1` while the table held two, so
  * gap_for_host() — which scans only the first g_nover entries — never saw the
  * news.google.com gap its comment describes: the 615 gnews-* rows kept firing
  * together (found 2026-09-15). Keep it equal to the initialiser count. */
-static int g_nover = 5;
+static int g_nover = 7;
 
 static void override_set(const char *host, int gap_ms) {
   for (int i = 0; i < g_nover; i++)

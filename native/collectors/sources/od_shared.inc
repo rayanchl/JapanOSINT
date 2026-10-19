@@ -394,25 +394,67 @@ static inline int od_walk_rows(const source_ctx *ctx, intel_sink *sink,
                  od_walk_emit_page, &w);
 }
 
+/* As od_walk_rows, with an explicit page ceiling for a table whose row count
+ * has been MEASURED and needs more than the 20-page default — see pw_walk_max
+ * in lib/pagewalk.h for why that is a per-source number and not a global one. */
+static inline int od_walk_rows_max(const source_ctx *ctx, intel_sink *sink,
+                                   const char *source_id, const char *url,
+                                   const char *path, const od_rowspec *sp,
+                                   int page_max) {
+  od_walk_ctx w = { path, sp };
+  return pw_walk_max(ctx, sink, source_id, url, pw_fetch_json,
+                     od_walk_emit_page, &w, page_max);
+}
+
 /* ---------------------------------------------------------- CKAN / udata  */
 
 /* CKAN package_search → one row per dataset. The array is result.results[]
  * everywhere except the London Datastore, whose envelope is result.result[].
  * `dataset_base` builds the public dataset link from the upstream slug (NULL
  * to omit the link). `extra` copies portal-specific fields verbatim.
- * Returns #emitted, or -1 on a fetch/parse failure. */
+ * Returns #emitted, or -1 on a fetch/parse failure.
+ *
+ * PAGED since 2026-10-12, through od_ckan_walk() below. This helper took ONE
+ * page, and every caller asked for `rows=20&sort=id asc` — so eleven national
+ * and municipal catalogues stored the first twenty datasets by id, forever,
+ * while `result.count` sat in the same envelope saying how many there were.
+ * Measured 2026-10-12: NSW 17,192, Queensland 188,879, South Australia 1,929,
+ * Western Australia 2,916, Ontario 2,964, Zurich 942, Berlin 2,627,
+ * energydata.info 1,191, the London Datastore 1,306. Twenty each.
+ *
+ * `count` is read and carried on every row as `catalogue_total`, which is what
+ * made the shortfall measurable all along and is why the number above is a
+ * measurement rather than an estimate. */
+static inline int od_ckan_page(const source_ctx *ctx, intel_sink *sink,
+                               const char *url, const char *dataset_base,
+                               const char *const *extra, const char *tags,
+                               cJSON *doc, int *seen);
+
 static inline int od_ckan_collect(const source_ctx *ctx, intel_sink *sink,
                                   const char *url, const char *dataset_base,
                                   const char *const *extra,
                                   const char *tags) {
   cJSON *doc = feed_get_json(ctx->http, url, 30000);
   if (!doc) return -1;
+  int seen = 0;
+  int n = od_ckan_page(ctx, sink, url, dataset_base, extra, tags, doc, &seen);
+  cJSON_Delete(doc);
+  return n;
+}
+
+static inline int od_ckan_page(const source_ctx *ctx, intel_sink *sink,
+                               const char *url, const char *dataset_base,
+                               const char *const *extra, const char *tags,
+                               cJSON *doc, int *seen) {
+  (void)ctx; (void)url;
+  *seen = 0;
   const cJSON *ok  = cJSON_GetObjectItem(doc, "success");
   const cJSON *res = cJSON_GetObjectItem(doc, "result");
-  if ((ok && !cJSON_IsTrue(ok)) || !res) { cJSON_Delete(doc); return -1; }
+  if ((ok && !cJSON_IsTrue(ok)) || !res) return -1;
   const cJSON *arr = cJSON_GetObjectItem(res, "results");
   if (!cJSON_IsArray(arr)) arr = cJSON_GetObjectItem(res, "result");
-  if (!cJSON_IsArray(arr)) { cJSON_Delete(doc); return -1; }
+  if (!cJSON_IsArray(arr)) return -1;
+  *seen = cJSON_GetArraySize(arr);
 
   double total = 0;
   int have_total = od_numv(res, "count", &total);
@@ -463,8 +505,37 @@ static inline int od_ckan_collect(const source_ctx *ctx, intel_sink *sink,
     it.tags_json = tags;
     n += od_emit(sink, &it, props);
   }
-  cJSON_Delete(doc);
   return n;
+}
+
+/* pw_emit_fn + pw_walk wiring for the above. CKAN pages with `start=` against
+ * `rows=`, both of which lib/pagewalk.c advances once the caller's URL carries
+ * them — it never invents a parameter, so a caller that forgets `start=0` gets
+ * one page and a truncation notice rather than a silent single read. */
+typedef struct {
+  const char *dataset_base; const char *const *extra; const char *tags;
+} od_ckan_ctx;
+
+static inline int od_ckan_walk_page(const source_ctx *ctx, intel_sink *sink,
+                                    const char *id, cJSON *doc, void *ud,
+                                    int *seen) {
+  (void)id;
+  const od_ckan_ctx *c = (const od_ckan_ctx *)ud;
+  int n = od_ckan_page(ctx, sink, NULL, c->dataset_base, c->extra, c->tags,
+                       doc, seen);
+  return n < 0 ? 0 : n;
+}
+
+/* Walk a CKAN package_search to its end. `page_max` is 0 for the pagewalk
+ * default, or a measured ceiling — see pw_walk_max in lib/pagewalk.h. */
+static inline int od_ckan_walk(const source_ctx *ctx, intel_sink *sink,
+                               const char *source_id, const char *url,
+                               const char *dataset_base,
+                               const char *const *extra, const char *tags,
+                               int page_max) {
+  od_ckan_ctx c = { dataset_base, extra, tags };
+  return pw_walk_max(ctx, sink, source_id, url, pw_fetch_json,
+                     od_ckan_walk_page, &c, page_max);
 }
 
 /* udata portal API (data.public.lu, dados.gov.pt, data.gov.rs). The envelope
@@ -578,15 +649,44 @@ static inline int od_udata_collect(const source_ctx *ctx, intel_sink *sink,
 
 /* ODS Explore v2.1 catalogue: results[] with dataset_id + metas.default.*.
  * `explore_base` builds the public dataset page from the upstream id.
- * Returns #emitted or -1. */
+ * Returns #emitted or -1.
+ *
+ * PAGED since 2026-10-12, through od_ods_catalog_walk() below. This took ONE
+ * page, and every caller asked for `limit=20&order_by=dataset_id` — so seven
+ * municipal and cantonal catalogues stored the first twenty datasets by id,
+ * forever, while `total_count` sat in the same envelope. Measured 2026-10-12:
+ * Vancouver 200, Brussels 207, Namur 295, Basel-Stadt 364, Thurgau 458,
+ * Rennes 672, Toulouse 845. Twenty each.
+ *
+ * ODS caps `limit` at 100, so the walk is `limit=100&offset=0` and the
+ * pagewalk default ceiling (20 pages = 2,000) covers every one of the seven
+ * with room. The upstream's `total_count` is a key lib/pagewalk.c already
+ * reads, so a catalogue that outgrows the ceiling discloses the shortfall
+ * against its own number. */
+static inline int od_ods_catalog_page(const source_ctx *ctx, intel_sink *sink,
+                                      cJSON *doc, const char *explore_base,
+                                      const char *tags, int *seen);
+
 static inline int od_ods_catalog_collect(const source_ctx *ctx,
                                          intel_sink *sink, const char *url,
                                          const char *explore_base,
                                          const char *tags) {
   cJSON *doc = feed_get_json(ctx->http, url, 30000);
   if (!doc) return -1;
+  int seen = 0;
+  int n = od_ods_catalog_page(ctx, sink, doc, explore_base, tags, &seen);
+  cJSON_Delete(doc);
+  return n;
+}
+
+static inline int od_ods_catalog_page(const source_ctx *ctx, intel_sink *sink,
+                                      cJSON *doc, const char *explore_base,
+                                      const char *tags, int *seen) {
+  (void)ctx;
+  *seen = 0;
   const cJSON *arr = cJSON_GetObjectItem(doc, "results");
-  if (!cJSON_IsArray(arr)) { cJSON_Delete(doc); return -1; }
+  if (!cJSON_IsArray(arr)) return -1;
+  *seen = cJSON_GetArraySize(arr);
 
   int n = 0;
   const cJSON *d;
@@ -636,8 +736,30 @@ static inline int od_ods_catalog_collect(const source_ctx *ctx,
     it.tags_json = tags;
     n += od_emit(sink, &it, props);
   }
-  cJSON_Delete(doc);
   return n;
+}
+
+typedef struct { const char *explore_base; const char *tags; } od_ods_ctx;
+
+static inline int od_ods_walk_page(const source_ctx *ctx, intel_sink *sink,
+                                   const char *id, cJSON *doc, void *ud,
+                                   int *seen) {
+  (void)id;
+  const od_ods_ctx *c = (const od_ods_ctx *)ud;
+  int n = od_ods_catalog_page(ctx, sink, doc, c->explore_base, c->tags, seen);
+  return n < 0 ? 0 : n;
+}
+
+/* Walk an ODS Explore v2.1 catalogue to its end. The caller's URL must carry
+ * `offset=0` — lib/pagewalk.c advances a parameter the author wrote and never
+ * invents one, so a caller that omits it gets one page and a notice. */
+static inline int od_ods_catalog_walk(const source_ctx *ctx, intel_sink *sink,
+                                      const char *source_id, const char *url,
+                                      const char *explore_base,
+                                      const char *tags) {
+  od_ods_ctx c = { explore_base, tags };
+  return pw_walk(ctx, sink, source_id, url, pw_fetch_json, od_ods_walk_page,
+                 &c);
 }
 
 /* -------------------------------------------------------------- JSON-stat */

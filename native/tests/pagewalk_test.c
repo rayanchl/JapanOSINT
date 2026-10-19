@@ -77,9 +77,21 @@ typedef struct {
   long status[8];              /* what a failing call answered (0 = not set) */
   int  n_body;
   int  calls;
+  int  repeat_body;            /* 1 = answer every call byte-identically */
   char seen[8][512];           /* the URL of each call, so paging is checkable */
 } script_t;
 
+/* Pages are made DISTINCT by default, with a `_page` serial stamped into the
+ * envelope — because that is what a real paging server does, and because
+ * pw_walk stops a walk whose next page comes back byte for byte identical (see
+ * the London Datastore note in lib/pagewalk.c). The fixtures spell their pages
+ * as arrays of empty objects, so without the serial every full page WAS
+ * byte-identical and the guard ended every multi-page test at page 1.
+ *
+ * `repeat_body` turns the serial off, for the tests that are specifically
+ * about a server ignoring the paging parameter. It is not the default: a test
+ * that silently models a broken server while meaning to model a working one
+ * reads as a passing test of the wrong thing. */
 static cJSON *script_fetch(const source_ctx *c, const char *url, void *ud) {
   (void)c;
   script_t *sc = (script_t *)ud;
@@ -90,7 +102,9 @@ static cJSON *script_fetch(const source_ctx *c, const char *url, void *ud) {
     if (i < 8 && sc->status[i]) g_fake_status = sc->status[i];
     return NULL;
   }
-  return cJSON_Parse(sc->body[i]);
+  cJSON *doc = cJSON_Parse(sc->body[i]);
+  if (doc && !sc->repeat_body) cJSON_AddNumberToObject(doc, "_page", i + 1);
+  return doc;
 }
 
 /* Emit one row per element of the top-level "items" array.
@@ -460,7 +474,8 @@ int main(void) {
      * parameter WE wrote means the URL differs every time, so the next-link
      * guard cannot see it — this is F-5 by another route, and unguarded it
      * would publish records_used = 5 x 3. */
-    script_t sc = { .body = { Q3_a, Q3_a, Q3_a, Q3_a, Q3_a }, .n_body = 5 };
+    script_t sc = { .body = { Q3_a, Q3_a, Q3_a, Q3_a, Q3_a }, .n_body = 5,
+                    .repeat_body = 1 };
     cap_t cap; int n = run("https://x/api?page=1", &sc, &cap);
     ok(sc.calls == 2, "the repeated body stopped the walk after one wasted fetch");
     ok(n == 3, "records_used is what was seen once, not a multiple of it");
@@ -468,6 +483,27 @@ int main(void) {
     ok(prop_num(cap.last_notice_props, "records_used") == 3, "the notice states 3, not 6");
     ok(prop_str_eq(cap.last_notice_props, "reason", "ignoring the paging parameter"),
        "and names the cause as an ignored parameter, not a ceiling");
+  }
+  printf("a DECLARED size and offset the server ignores stops the walk too\n");
+  {
+    /* The London Datastore, measured 2026-10-12: ?rows=200&start=0 is a
+     * declared page size AND a declared offset, and that server honours
+     * neither — every request answers with the whole catalogue of 1,306
+     * datasets. The same-body guard used to be gated on the INFERRED-size walk
+     * on the reasoning that a URL declaring its own size documents an author
+     * who knew the paging contract. It does not: 1,306 >= 200 reads as a full
+     * page, so the walk advanced `start` to the ceiling, re-emitted the same
+     * records on every page, and published the multiple in the notice as
+     * fact. Byte-identical means no progress whatever the URL declares. */
+    script_t sc = { .body = { Q3_a, Q3_a, Q3_a, Q3_a, Q3_a }, .n_body = 5,
+                    .repeat_body = 1 };
+    cap_t cap; int n = run("https://x/api?rows=3&start=0", &sc, &cap);
+    ok(sc.calls == 2, "one wasted fetch, then stop — not five");
+    ok(n == 3, "records_used is one page, not five times one page");
+    ok(cap.notices == 1, "and the ignored parameter is disclosed");
+    ok(prop_num(cap.last_notice_props, "records_used") == 3, "the notice states 3");
+    ok(prop_str_eq(cap.last_notice_props, "reason", "ignoring the paging parameter"),
+       "named as an ignored parameter, not as a ceiling");
   }
   {
     /* The regression this must not cause. A URL with no page parameter at all

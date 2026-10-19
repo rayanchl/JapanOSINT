@@ -2,7 +2,7 @@
  * of Red Cross and Red Crescent Societies. The humanitarian-RESPONSE view that
  * GDACS's hazard view does not give you.
  *
- * Endpoint (keyless): https://goadmin.ifrc.org/api/v2/event/?limit=50
+ * Endpoint (keyless): https://goadmin.ifrc.org/api/v2/event/?limit=200
  * Emits per emergency: name, disaster type (dtype.name), the affected
  *   countries' iso3 / name / national society, ifrc_severity_level_display,
  *   disaster_start_date, glide number and num_affected.
@@ -11,7 +11,13 @@
  *
  * parse_notes honoured:
  *  - Paginated DRF API: {count, next, previous, results[]} — records live under
- *    'results' and 'count' is the corpus total, logged not emitted.
+ *    'results' and 'count' is the corpus total, never emitted as a per-record
+ *    value. It USED TO BE only logged, from a single `?limit=50` request: 50 of
+ *    the 6,088 the register holds, dropped silently on every hourly run
+ *    (tools/audit_url_limits.py; docs/measured-url-limits-2026-10-11.tsv). The
+ *    `next` link was right there in the envelope and nothing followed it.
+ *    lib/pagewalk.c does now, and reads `count` as the yardstick it discloses
+ *    against; 40 pages of 200 covers 8,000 against the measured 6,088.
  *  - NO COORDINATES on the event object: countries[] carries iso3/name/
  *    society_name but no lat/lon. Every row is therefore emitted with
  *    has_geo=0. Falling back to a capital city is exactly what R2 forbids;
@@ -26,25 +32,23 @@
  */
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/pagewalk.h"
 #include "geoeo_common.inc"
 
-static const char *URL = "https://goadmin.ifrc.org/api/v2/event/?limit=50";
+static const char *URL = "https://goadmin.ifrc.org/api/v2/event/?limit=200";
 
-static int run(const source_ctx *ctx, intel_sink *sink) {
-  cJSON *doc = feed_get_json(ctx->http, URL, 45000);
-  if (!doc) {
-    fprintf(stderr, "[ifrc-go-emergencies] fetch/parse failed\n");
-    return -1;
-  }
+/* 6,088 emergencies at 200 a page = 31; 40 is that with headroom. */
+#define IFRC_PAGE_MAX 40  /* exhaustive-ok: page ceiling handed to pw_walk_max(); a stop at it files a collector-truncation-notice */
+
+static int ifrc_emit_page(const source_ctx *ctx, intel_sink *sink,
+                          const char *sid, cJSON *doc, void *ud, int *seen) {
+  (void)ctx; (void)ud;
   cJSON *results = cJSON_GetObjectItem(doc, "results");
+  *seen = cJSON_IsArray(results) ? cJSON_GetArraySize(results) : 0;
   if (!cJSON_IsArray(results)) {
-    fprintf(stderr, "[ifrc-go-emergencies] no results array\n");
-    cJSON_Delete(doc);
-    return -1;
+    fprintf(stderr, "[%s] no results array\n", sid);
+    return 0;
   }
-  double count = 0;
-  if (geoeo_num(doc, "count", &count))
-    fprintf(stderr, "[ifrc-go-emergencies] register holds %.0f events\n", count);
 
   static const char *KEYS[] = { "name", "summary", "disaster_start_date",
                                 "ifrc_severity_level_display", "num_affected",
@@ -131,8 +135,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (sink->emit(sink, &it) >= 0) n++;
     free(pj);
   }
-  cJSON_Delete(doc);
-  fprintf(stderr, "[ifrc-go-emergencies] emitted %d emergencies\n", n);
+  return n;
+}
+
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  int n = pw_walk_max(ctx, sink, "ifrc-go-emergencies", URL, pw_fetch_json,
+                      ifrc_emit_page, NULL, IFRC_PAGE_MAX);
+  if (n < 0) {
+    fprintf(stderr, "[ifrc-go-emergencies] fetch/parse failed\n");
+    return -1;
+  }
   return 0;
 }
 
@@ -141,7 +153,7 @@ static const source_def geoeo_ifrc_def = {
   .name = "IFRC GO Emergency Operations",
   .update_interval_sec = 3600, .run = run,
   .category = "environment", .type = "api",
-  .url = "https://goadmin.ifrc.org/api/v2/event/?limit=50",
+  .url = "https://goadmin.ifrc.org/api/v2/event/?limit=200",
   .description = "The IFRC GO platform's emergency register — disaster operations worldwide with type, GLIDE number, severity, affected-population figures and the responding national Red Cross/Red Crescent society.",
   .license = "IFRC GO open humanitarian data platform; public keyless v2 API, attribution requested.",
   .free_tier = 1,

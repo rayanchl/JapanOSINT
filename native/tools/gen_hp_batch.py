@@ -335,7 +335,9 @@ def emit_row(r):
     hdrs = [o.pop(h) for h in HDR_OPTS if h in o]
     L = ['  { .id = "%s", .name = %s,' % (r["id"], cstr(r["name"]))]
     if r["name_ja"]:
-        L.append('    .name_ja = "%s",' % r["name_ja"])
+        # escaped like .name: a feed title carrying a double quote (Medina NY's
+        # alerts feed is titled "Village of Medina") broke the build of batch 44
+        L.append('    .name_ja = "%s",' % r["name_ja"].replace("\\", "\\\\").replace('"', '\\"'))
     L.append('    .category = "%s", .portal = "%s",'
              % (r["category"], r["portal"]))
     L.append('    .record_type = "%s",' % r["record_type"])
