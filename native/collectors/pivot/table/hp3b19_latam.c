@@ -1355,23 +1355,44 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "cadastral-parcel",
     .tags = "\"costarica\",\"sancarlos\",\"cadastre\",\"parcel\",\"municipal\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    /* DEAD LAYER, round 8 (2026-09-21): the GeoServer answers 200 with a WFS
+    /* RECOVERED 2026-10-19, and the reason it read as dead is worth keeping.
+     * Round 8 (2026-09-21) found `geonode:predios_sc` answering 200 with a WFS
      * ServiceExceptionReport — `InvalidParameterValue locator="typeName":
-     * Feature type geonode:predios_sc unknown`. GetCapabilities (47 KB,
-     * aerodromos_sc, albergues_sc, bomberos_sc, …) lists no predio* layer at
-     * all, so the parcels were withdrawn, not renamed. Left failing honestly
-     * (rc=-1, EMITS_NOTHING); the URL stays so the next probe re-tests the
-     * same thing. Evidence in docs/source-repair-round8-A.tsv. */
-    .url = "https://idesca.munisc.go.cr/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=geonode:predios_sc&maxFeatures=1000&outputFormat=application%2Fjson",
+     * Feature type geonode:predios_sc unknown` — searched GetCapabilities for
+     * a `predio*` layer, found none, and concluded the parcels had been
+     * withdrawn rather than renamed. That conclusion followed from searching
+     * for THE NAME WE EXPECTED. The server's 40 feature types include
+     * `geonode:Catastro_sc`, which no `predio*` search can match and which is
+     * this same cadastre under its other Spanish name: 99,222 features
+     * carrying `id`, `Distrito`, `Finca`, `Plano` and `Propietario` — the
+     * owner name, which is the field this row exists for.
+     *
+     * Two further changes the measurement forced. WFS 2.0.0, because `count`
+     * and `startIndex` are 2.0.0 paging and 1.0.0's `maxFeatures` is not; and
+     * `sortBy=id`, because GeoServer refuses `startIndex` on a type with no
+     * primary key ("Cannot do natural order without a primary key"), which is
+     * the same 400 BC_MINERAL_TENURE was stuck on. Measured startIndex
+     * 0/1000/2000 → 1,000 features each, first id 0 / 1291 / 2591, ascending
+     * and non-overlapping, against a declared total of 99,222.
+     *
+     * 99,222 records at 1,000 a page is 100 pages, past the 20-page ceiling,
+     * so it reads over a cycle. */
+    .url = "https://idesca.munisc.go.cr/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=geonode:Catastro_sc&count=1000&outputFormat=application%2Fjson&sortBy=id",
     .array_path = "features",
+    .id_keys = "properties.id",
+    .title_keys = "properties.Finca,properties.Propietario,properties.id",
     .interval = 86400,
     .page_param = "startIndex",
+    .page_resume = 1,
     .page_size = 1000,
     .page_start = 0,
-    .description = "Ninety-eight thousand cadastral parcels of the canton of San "
-      "Carlos as polygons with their finca and parcel attributes. A "
-      "municipal cadastre served openly as GeoJSON is the join between "
-      "the licence registers on the same server and the land itself" },
+    .description = "Ninety-nine thousand cadastral parcels of the canton of San "
+      "Carlos, Costa Rica, each carrying its district, finca (title) "
+      "number, survey plan number and the name of the registered "
+      "PROPRIETOR. A municipal cadastre served openly is the join "
+      "between the licence registers on the same server and the land "
+      "itself, and the owner name is what makes that join an answer "
+      "about a person or a company rather than about a polygon" },
 
   { .id = "PA_PANAMACOMPRA_RUBROS", .name = "PanamaCompra — procurement classification segments",
     .name_ja = "パナマ公共調達 品目分類",

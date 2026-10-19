@@ -943,7 +943,21 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "mineral-tenure",
     .tags = "\"mining\",\"canada\",\"tenure\",\"cadastre\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://openmaps.gov.bc.ca/geo/pub/WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=pub:WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW&outputFormat=application/json&count=50",
+    /* `sortBy` is what makes the WALK possible, not a refinement of it.
+     * GeoServer refuses `startIndex` on a feature type with no primary key:
+     * "Cannot do natural order without a primary key, please add it or specify
+     * a manual sort over existing attributes" — HTTP 400 on page 2, every run,
+     * so this row read 50 of 42,234 and its cycle could never advance
+     * (tools/audit_cycle_health.py, 2026-10-19). With `sortBy=TENURE_NUMBER_ID`
+     * the walk is both possible and STABLE, which a resumed walk needs anyway:
+     * measured startIndex 0/50/100 → 50 features each, first tenure
+     * 201320 / 201448 / 201618, ascending and non-overlapping.
+     *
+     * NOT applied to the tree's other WFS startIndex rows: 17 declare no
+     * sortBy and only this one is refused — GeoServer objects only where the
+     * type has no primary key, and the other 12 reachable ones served page 2
+     * fine. A blanket fix would have been a change made on reasoning. */
+    .url = "https://openmaps.gov.bc.ca/geo/pub/WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=pub:WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW&outputFormat=application/json&count=50&sortBy=TENURE_NUMBER_ID",
     .array_path = "features",
     .interval = 86400,
     .page_param = "startIndex",

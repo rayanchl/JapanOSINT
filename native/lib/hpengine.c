@@ -4739,14 +4739,20 @@ dated_restart:;
    * cheap and self-healing, and the fetch-failure notice names the status, so a
    * window that is permanently unreadable is visible rather than skipped. */
   char win_next_iso[16] = "";
-  if (window_on && ctx->resume_out) {
+  if (window_on) {
     int served = (first_status == 200) && !hard_error;
     long next = served ? win_at + s->window_days : win_at;
     if (next > win_tail) next = win_tail;
+    /* Computed whether or not there is anywhere to store it, so the notice can
+     * name the next window even on a caller that keeps no position (a bare
+     * --run outside the scheduler). A disclosure that says `""` would be worse
+     * than one that says where the cycle would go. */
     datetok_iso_from_day(next, win_next_iso, sizeof win_next_iso);
-    char tok[32];
-    snprintf(tok, sizeof tok, "w=%s", win_next_iso);
-    ctx->resume_out(ctx, tok);
+    if (ctx->resume_out) {
+      char tok[32];
+      snprintf(tok, sizeof tok, "w=%s", win_next_iso);
+      ctx->resume_out(ctx, tok);
+    }
     if (!served)
       fprintf(stderr, "[hp:%s] the window %s..%s was not served; the next run "
                       "re-reads it rather than skipping it\n",

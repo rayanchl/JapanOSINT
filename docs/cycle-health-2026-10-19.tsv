@@ -1,0 +1,565 @@
+# Can each page_resume row actually ADVANCE its cycle? (2026-10-19)
+# tools/audit_cycle_health.py --bin ./bin/japanosint --jobs 12 --timeout 200
+#
+# WHY THIS SWEEP EXISTS. ENA_PATHOGEN_SARSCOV2_RUNS read 1,000 records of 7,556,500 on every run for ever and
+# looked exactly like a healthy no-op: the walk stored no position, which is also what a row that COMPLETES
+# inside its ceiling does. It was not that — ebi.ac.uk refuses its second page, so the cycle could never move.
+# This asks all 530 cycling rows the same question from data rather than from reasoning.
+#
+#   CYCLING       318   a position was stored: the next run reads the next slice
+#   COMPLETE      190   the walk ended on its own and cleared it — the genuine no-op
+#   STUCK          12   a page FAILED, so no position was stored and the next run re-reads this slice
+#   FETCH_FAILED    6   the FIRST page failed; there is no walk to cut short, and the row says so in its own
+#                       collector-fetch-failure record
+#   SLOW            4   hit --timeout; unmeasured, not failed
+#
+# THE RESULT, read on the STATUS and not on the verdict: of the 12 STUCK rows, exactly ONE is stuck for a
+# reason that is a property of its endpoint, and it is BC_MINERAL_TENURE answering 400 —
+#   "Cannot do natural order without a primary key, please add it or specify a manual sort over existing
+#    attributes"
+# GeoServer refuses startIndex on a feature type with no primary key, so that row read 50 of 42,234 for ever.
+# Fixed with sortBy=TENURE_NUMBER_ID; measured after, 1,000 records a run over 20 pages, position advancing
+# 1000 -> 2000. NOT applied to the tree's 16 other sortBy-less WFS startIndex rows: they were measured too and
+# 12 of the 13 reachable ones serve page 2 fine, because GeoServer objects only where the type has no primary
+# key. A blanket fix would have been a change made on reasoning.
+#
+# The other 11 are 429, 403 and 500 — one reading each, and several are load THIS SWEEP created: 12 jobs in
+# parallel, while a 6-job batch-45 emit audit was hitting services6.arcgis.com at the same time (both FAA rows
+# are on that host, failing at pages 18 and 20). us-sf-311-open311-requests is already paced at 1200 ms in
+# core/hostgate.c and still 429'd at page 20 under that load, which is the clearest sign of the same thing.
+# The five au-asic 403s were re-tested BY HAND afterwards and are not reproducible: data.gov.au served 8 rapid
+# serial requests and then 12 CONCURRENT ones, all 200. No pacing entry was added on an unreproducible reading.
+#
+# A STUCK row is not retired on this: it discloses its own failing page, status and URL in a
+# collector-truncation-notice on every run, so re-running this sweep is how a transient is told from a property.
+id	verdict	records	pages_read	resume_stored	failed_page	failed_page_status	secs	failed_page_url	note
+AK_DNR_LAND_PERMITS_LEASES	COMPLETE	4246		no			20.2		walk ended on its own and cleared the position
+AK_DNR_MINERAL_PERMITS_LEASES	COMPLETE	2056		no			16.2		walk ended on its own and cleared the position
+AK_DNR_OIL_GAS_LEASE_SALE_TRACTS	COMPLETE	6299		no			37.8		walk ended on its own and cleared the position
+AM_OPENDATA_BULK	COMPLETE	823		no			21.6		walk ended on its own and cleared the position
+AP19_AU_AODN_CATALOGUE	COMPLETE	1841		no			17.7		walk ended on its own and cleared the position
+AP19_AU_MELB_ODS_CAT	COMPLETE	238		no			4.2		walk ended on its own and cleared the position
+AR_DATOS_BAHIA_BLANCA	COMPLETE	222		no			54.4		walk ended on its own and cleared the position
+BGS_HISTORICAL_EARTHQUAKES	COMPLETE	471		no			8.5		walk ended on its own and cleared the position
+BR_BCB_TAXAS_JUROS	COMPLETE	5953		no			17.1		walk ended on its own and cleared the position
+BR_DADOS_PERNAMBUCO	COMPLETE	47		no			27.5		walk ended on its own and cleared the position
+BR_PNCP_CONTRATACOES	COMPLETE	135		no			6.1		walk ended on its own and cleared the position
+CA_CALGEM_FACILITY_TANKS	COMPLETE	15732		no			46.2		walk ended on its own and cleared the position
+CA_CALGEM_NOTICES	COMPLETE	8524		no			31.0		walk ended on its own and cleared the position
+CERT_PH_WP_POSTS	COMPLETE	156		no			57.6		walk ended on its own and cleared the position
+CFS_EXPORT_FLOWS	COMPLETE	11182		no			62.5		walk ended on its own and cleared the position
+CH_BAKOM_BROADCAST_TX	COMPLETE	441		no			75.3		walk ended on its own and cleared the position
+CMR_STAC_ASF_COLLECTIONS	COMPLETE	166		no			18.1		walk ended on its own and cleared the position
+CMR_STAC_GHRC_DAAC_COLLECTIONS	COMPLETE	696		no			40.9		walk ended on its own and cleared the position
+CMR_STAC_OB_DAAC_COLLECTIONS	COMPLETE	455		no			26.0		walk ended on its own and cleared the position
+CN_HK_CKAN_CURRENT_PACKAGE_LIST_WITH_RESOURCES	COMPLETE	80		no			4.3		walk ended on its own and cleared the position
+CO_CHILD_CARE_FACILITIES	COMPLETE	4531		no			38.1		walk ended on its own and cleared the position
+CO_CONTRALORIA_FUNCIONARIOS	COMPLETE	6636		no			20.9		walk ended on its own and cleared the position
+CO_LOBBYIST_EXPENDITURES	COMPLETE	7421		no			23.1		walk ended on its own and cleared the position
+CO_PETROLEUM_RELEASES	COMPLETE	17285		no			66.3		walk ended on its own and cleared the position
+CO_REGALIAS_EJECUCION	COMPLETE	5334		no			16.4		walk ended on its own and cleared the position
+CO_TOBACCO_LICENSES	COMPLETE	4910		no			13.4		walk ended on its own and cleared the position
+CSIRT_TT_WP_POSTS	COMPLETE	637		no			135.0		walk ended on its own and cleared the position
+CT_SPILL_INCIDENTS	COMPLETE	16925		no			65.1		walk ended on its own and cleared the position
+EC_GOBEC_REGULACIONES	COMPLETE	2996		no			11.2		walk ended on its own and cleared the position
+ENTSOG_CONNECTION_POINTS	COMPLETE	789		no			6.1		walk ended on its own and cleared the position
+FAA_AMD_BUILDING	COMPLETE	6068		no			31.4		walk ended on its own and cleared the position
+FAA_AMD_PENDING_APRON	COMPLETE	4731		no			26.9		walk ended on its own and cleared the position
+FAA_AMD_PENDING_BUILDING	COMPLETE	7250		no			37.5		walk ended on its own and cleared the position
+FAA_ARCGIS_MILITARY_TRAINING_ROUTES	COMPLETE	3654		no			20.1		walk ended on its own and cleared the position
+FAA_ARCGIS_NAVAIDS	COMPLETE	1375		no			7.9		walk ended on its own and cleared the position
+FAA_ARCGIS_SPECIAL_USE_AIRSPACE	COMPLETE	1542		no			20.7		walk ended on its own and cleared the position
+FAA_NASR_CLEARANCE	COMPLETE	10076		no			62.5		walk ended on its own and cleared the position
+FAA_NASR_FIX	COMPLETE	17256		no			107.7		walk ended on its own and cleared the position
+FAA_NASR_PENDING_ATS_ROUTE	COMPLETE	18445		no			122.6		walk ended on its own and cleared the position
+FAA_NASR_PENDING_CLASS_AIRSPACE	COMPLETE	6041		no			40.7		walk ended on its own and cleared the position
+FAA_NASR_PENDING_ENROUTE_INFO	COMPLETE	4651		no			31.9		walk ended on its own and cleared the position
+FAA_NASR_PENDING_FIX	COMPLETE	17228		no			108.3		walk ended on its own and cleared the position
+FAA_NASR_PENDING_FREQUENCY	COMPLETE	4688		no			32.7		walk ended on its own and cleared the position
+FAA_NASR_PENDING_MTR	COMPLETE	4194		no			25.8		walk ended on its own and cleared the position
+FAA_NASR_PENDING_NAVAID_COMPONENT	COMPLETE	2404		no			16.7		walk ended on its own and cleared the position
+FAA_NASR_PENDING_RADIAL_BEARING	COMPLETE	11650		no			75.1		walk ended on its own and cleared the position
+FAA_NASR_PENDING_ROUTE_AIRSPACE	COMPLETE	5263		no			34.4		walk ended on its own and cleared the position
+FAA_NASR_PENDING_ROUTE_PORTION	COMPLETE	5423		no			33.6		walk ended on its own and cleared the position
+FRA_GRADE_CROSSING_INCIDENTS	COMPLETE	12345		no			105.8		walk ended on its own and cleared the position
+FRA_RAILROAD_REFERENCE	COMPLETE	2981		no			15.4		walk ended on its own and cleared the position
+FRA_RAIL_EQUIPMENT_ACCIDENTS	COMPLETE	14018		no			119.3		walk ended on its own and cleared the position
+FR_ODS2_OPENDATA_CLERM	COMPLETE	126		no			3.5		walk ended on its own and cleared the position
+FR_ODS_ROUEN	COMPLETE	108		no			3.7		walk ended on its own and cleared the position
+GR_EOF_NOTICES	COMPLETE	1193		no			29.4		walk ended on its own and cleared the position
+HN_ONCAE_CIRCULARES	COMPLETE	235		no			40.0		walk ended on its own and cleared the position
+IETF_IPR_GENERIC_DISCLOSURES	COMPLETE	409		no			63.8		walk ended on its own and cleared the position
+IETF_IPR_THIRDPARTY_DISCLOSURES	COMPLETE	226		no			35.2		walk ended on its own and cleared the position
+IE_HPSC_HEALTH_PROFILE	COMPLETE	1354		no			10.3		walk ended on its own and cleared the position
+IMF_PORTWATCH_AIRPORTS	COMPLETE	7033		no			32.7		walk ended on its own and cleared the position
+IMF_PORTWATCH_FR24_AIRPORTS	COMPLETE	9332		no			52.3		walk ended on its own and cleared the position
+ISTANBUL_OPENDATA_BULK	COMPLETE	561		no			10.9		walk ended on its own and cleared the position
+IT_FVG_MOBILE_SITES	COMPLETE	6162		no			49.1		walk ended on its own and cleared the position
+IZMIR_BUILDINGS_BY_NEIGHBOURHOOD	COMPLETE	1295		no			6.3		walk ended on its own and cleared the position
+IZMIR_OPENDATA_BULK	COMPLETE	250		no			14.8		walk ended on its own and cleared the position
+JO28_MIYAZAKI_NENKAN_CKAN	COMPLETE	319		no			9.3		walk ended on its own and cleared the position
+JO29A_CAM_CALOES_CALIFORNIA_WEBCAMS	COMPLETE	4345		no			23.2		walk ended on its own and cleared the position
+JO29A_CAM_CA_BC_VANCOUVER	COMPLETE	219		no			2.2		walk ended on its own and cleared the position
+JO29A_CAM_GEMA_GDOT_511_CAMERAS	COMPLETE	7083		no			33.3		walk ended on its own and cleared the position
+JO29A_CAM_IDOT_TRAFFIC_CAMERAS	COMPLETE	3735		no			19.8		walk ended on its own and cleared the position
+JO29A_CAM_PEMA_HIVIS_CAMERAS	COMPLETE	1373		no			8.6		walk ended on its own and cleared the position
+JO29A_FGT_ACT_GOV_SOCRATA	COMPLETE	785		no			3.8		walk ended on its own and cleared the position
+JO29A_FGT_BATONROUGE_SOCRATA	COMPLETE	499		no			2.6		walk ended on its own and cleared the position
+JO29A_FGT_BLOOMINGTON_SOCRATA	COMPLETE	365		no			1.9		walk ended on its own and cleared the position
+JO29A_FGT_BRUXELLES_VILLE_ODS	COMPLETE	207		no			3.4		walk ended on its own and cleared the position
+JO29A_FGT_EVERETT_SOCRATA	COMPLETE	332		no			1.7		walk ended on its own and cleared the position
+JO29A_FGT_GAINESVILLE_SOCRATA	COMPLETE	201		no			1.7		walk ended on its own and cleared the position
+JO29A_FGT_HAUTS_DE_SEINE_ODS	COMPLETE	254		no			3.9		walk ended on its own and cleared the position
+JO29A_FGT_HONOLULU_SOCRATA	COMPLETE	453		no			2.1		walk ended on its own and cleared the position
+JO29A_FGT_NEW_ORLEANS_SOCRATA	COMPLETE	298		no			2.3		walk ended on its own and cleared the position
+JO29A_FGT_NORFOLK_SOCRATA	COMPLETE	227		no			1.5		walk ended on its own and cleared the position
+JO29A_FGT_ORLEANS_METROPOLE_ODS	COMPLETE	216		no			3.2		walk ended on its own and cleared the position
+JO29A_FGT_PRINCE_GEORGES_SOCRATA	COMPLETE	257		no			1.8		walk ended on its own and cleared the position
+JO29A_FGT_PROVIDENCE_SOCRATA	COMPLETE	297		no			2.0		walk ended on its own and cleared the position
+JO29A_FGT_ROSEVILLE_SOCRATA	COMPLETE	206		no			1.4		walk ended on its own and cleared the position
+JO29A_FGT_VERMONT_SOCRATA	COMPLETE	270		no			1.5		walk ended on its own and cleared the position
+JO29A_FGT_WINNIPEG_SOCRATA	COMPLETE	522		no			2.8		walk ended on its own and cleared the position
+JO30_TOKYO_FMT_ZIP	COMPLETE	210		no			2.3		walk ended on its own and cleared the position
+JO30_TOKYO_GRP_KANKO	COMPLETE	208		no			2.8		walk ended on its own and cleared the position
+JO30_TOKYO_GRP_SUIDO	COMPLETE	210		no			2.0		walk ended on its own and cleared the position
+JO30_TOKYO_TAG_STANDARD	COMPLETE	259		no			2.1		walk ended on its own and cleared the position
+JO30_TOKYO_WARD_T131032	COMPLETE	268		no			4.3		walk ended on its own and cleared the position
+JO30_TOKYO_WARD_T131113	COMPLETE	280		no			2.7		walk ended on its own and cleared the position
+JO30_TOKYO_WARD_T131199	COMPLETE	211		no			1.8		walk ended on its own and cleared the position
+JO30_TOKYO_WARD_T131237	COMPLETE	266		no			3.4		walk ended on its own and cleared the position
+JP25_JPFIN_HOWABANK_WPJSON	COMPLETE	536		no			11.7		walk ended on its own and cleared the position
+JP25_JPFIN_ROKIN_KINKI_WPJSON	COMPLETE	410		no			5.9		walk ended on its own and cleared the position
+JP25_JPFIN_SSE_WPJSON	COMPLETE	1684		no			17.2		walk ended on its own and cleared the position
+JP25_JPINFRA_HERP_POSTS	COMPLETE	1758		no			22.4		walk ended on its own and cleared the position
+JP25_JPINFRA_YOKOHAMAPORT_POSTS	COMPLETE	360		no			7.4		walk ended on its own and cleared the position
+JP25_JPMEDIA_ISHIKAWA_TV_WP	COMPLETE	235		no			10.0		walk ended on its own and cleared the position
+JP25_JPMUNI2_TSUYAMA_DATAEYE	COMPLETE	379		no			16.0		walk ended on its own and cleared the position
+JP25_JPMUNI2_UTSUNOMIYA_CKAN	COMPLETE	295		no			3.9		walk ended on its own and cleared the position
+JP25_JPNATGOV_JISHIN_HQ_POSTS	COMPLETE	1758		no			52.7		walk ended on its own and cleared the position
+JP25_JPNATGOV_NISE_POSTS	COMPLETE	293		no			10.3		walk ended on its own and cleared the position
+JPN_EGOV_DATA_ORG_ORG_0600	COMPLETE	273		no			9.5		walk ended on its own and cleared the position
+JPN_EGOV_DATA_ORG_ORG_0800	COMPLETE	218		no			5.4		walk ended on its own and cleared the position
+JPN_EGOV_DATA_ORG_ORG_1300	COMPLETE	259		no			8.9		walk ended on its own and cleared the position
+JPN_EGOV_DATA_ORG_ORG_2100	COMPLETE	280		no			5.8		walk ended on its own and cleared the position
+LC_STATISTICS_RELEASES	COMPLETE	232		no			75.2		walk ended on its own and cleared the position
+LEMMY_COMMUNITIES_ANI_SOCIAL	COMPLETE	110		no			1.4		walk ended on its own and cleared the position
+LEMMY_COMMUNITIES_DISCUSS_TCHNCS_DE	COMPLETE	303		no			2.6		walk ended on its own and cleared the position
+LEMMY_COMMUNITIES_FEDDIT_NL	COMPLETE	137		no			1.6		walk ended on its own and cleared the position
+LEMMY_COMMUNITIES_JLAI_LU	COMPLETE	136		no			1.5		walk ended on its own and cleared the position
+LEMMY_COMMUNITIES_LEMMY_BLAHAJ_ZONE	COMPLETE	333		no			3.3		walk ended on its own and cleared the position
+LEMMY_COMMUNITIES_LEMMY_CA	COMPLETE	925		no			4.0		walk ended on its own and cleared the position
+LEMMY_COMMUNITIES_LEMMY_DBZER0_COM	COMPLETE	323		no			2.7		walk ended on its own and cleared the position
+LEMMY_COMMUNITIES_LEMMY_SDF_ORG	COMPLETE	275		no			1.9		walk ended on its own and cleared the position
+LEMMY_COMMUNITIES_LEMMY_ZIP	COMPLETE	294		no			2.5		walk ended on its own and cleared the position
+LEMMY_COMMUNITIES_PROGRAMMING_DEV	COMPLETE	440		no			3.0		walk ended on its own and cleared the position
+LEMMY_COMMUNITIES_REDDTHAT_COM	COMPLETE	238		no			1.2		walk ended on its own and cleared the position
+LEMMY_COMMUNITIES_SH_ITJUST_WORKS	COMPLETE	927		no			3.9		walk ended on its own and cleared the position
+LEMMY_COMMUNITIES_SLRPNK_NET	COMPLETE	147		no			7.7		walk ended on its own and cleared the position
+LEMMY_COMMUNITIES_SOPULI_XYZ	COMPLETE	460		no			2.9		walk ended on its own and cleared the position
+LEMMY_COMMUNITIES_SZMER_INFO	COMPLETE	217		no			3.0		walk ended on its own and cleared the position
+LEMMY_COMMUNITIES_THELEMMY_CLUB	COMPLETE	139		no			0.9		walk ended on its own and cleared the position
+LV_WATER_PERMITS	COMPLETE	790		no			10.5		walk ended on its own and cleared the position
+MD_MDE_WATER_VIOLATIONS	COMPLETE	2866		no			10.3		walk ended on its own and cleared the position
+ME_REGAGEN_NOTICES	COMPLETE	1149		no			32.6		walk ended on its own and cleared the position
+ME_TRADE_UNIONS	COMPLETE	523		no			7.4		walk ended on its own and cleared the position
+MO_OIL_GAS_PERMITS	COMPLETE	10490		no			40.9		walk ended on its own and cleared the position
+NAVCAN_UAS_FACILITY_MAP	COMPLETE	2266		no			13.8		walk ended on its own and cleared the position
+NESO_EMBEDDED_REGISTER	COMPLETE	562		no			5.2		walk ended on its own and cleared the position
+NI_TELCOR_PUBLICACIONES	COMPLETE	205		no			76.2		walk ended on its own and cleared the position
+NJ_LICENSED_CHILD_CARE_CENTERS	COMPLETE	4163		no			17.2		walk ended on its own and cleared the position
+NS_LICENSED_FOOD_ESTABLISHMENTS	COMPLETE	7142		no			25.0		walk ended on its own and cleared the position
+NS_PERMANENT_LIQUOR_LICENSES	COMPLETE	2474		no			11.5		walk ended on its own and cleared the position
+NY_CANNABIS_LICENSES	COMPLETE	3033		no			11.3		walk ended on its own and cleared the position
+NY_REAL_ESTATE_APPRAISERS	COMPLETE	3601		no			12.9		walk ended on its own and cleared the position
+NY_STATE_TITLE_SALARY	COMPLETE	4729		no			12.8		walk ended on its own and cleared the position
+OR_OLCC_CANNABIS_LICENSES	COMPLETE	3795		no			16.6		walk ended on its own and cleared the position
+OSF_SUBJECTS	COMPLETE	1239		no			19.4		walk ended on its own and cleared the position
+PA_NEW_WELL_INSPECTIONS	COMPLETE	13920		no			59.8		walk ended on its own and cleared the position
+PA_OPIOID_SEIZURES_ARRESTS	COMPLETE	4414		no			17.6		walk ended on its own and cleared the position
+PE_SERNANP_ZONIFICACION	COMPLETE	5547		no			13.7		walk ended on its own and cleared the position
+PNCP_BR_ARMY_CONTRACTS	COMPLETE	1319		no			13.7		walk ended on its own and cleared the position
+QATAR_DISTRICT_COOLING	COMPLETE	216		no			2.5		walk ended on its own and cleared the position
+QATAR_HOMICIDE_SDG	COMPLETE	256		no			2.4		walk ended on its own and cleared the position
+QATAR_MME_IZBAH	COMPLETE	5001		no			14.0		walk ended on its own and cleared the position
+QATAR_PSA_MAJOR_ROADS	COMPLETE	16659		no			32.9		walk ended on its own and cleared the position
+SCIELO_JOURNALS_MX	COMPLETE	281		no			47.7		walk ended on its own and cleared the position
+SI_GURS_CADASTRAL_MUN	COMPLETE	2698		no			50.4		walk ended on its own and cleared the position
+SI_HEALER_LICENCES	COMPLETE	340		no			4.3		walk ended on its own and cleared the position
+STAC_EODATAHUB_UK_COLLECTIONS	COMPLETE	62		no			2.5		walk ended on its own and cleared the position
+TELAVIV_BUILDING_PERMITS	COMPLETE	10629		no			59.7		walk ended on its own and cleared the position
+TERRAFORM_PROVIDERS	COMPLETE	150		no			23.5		walk ended on its own and cleared the position
+TRAFICOM_AMATEUR_CALLSIGN	COMPLETE	7644		no			10.8		walk ended on its own and cleared the position
+TRAFICOM_FREQ_TABLE	COMPLETE	5917		no			12.4		walk ended on its own and cleared the position
+TRAFICOM_RADIO_TX	COMPLETE	2342		no			10.1		walk ended on its own and cleared the position
+UKPARL_LDA_BILLS	COMPLETE	2122		no			12.3		walk ended on its own and cleared the position
+UKPARL_LDA_COMMONS_DIVISIONS	COMPLETE	5553		no			37.0		walk ended on its own and cleared the position
+UKPARL_LDA_CONSTITUENCIES	COMPLETE	3877		no			22.3		walk ended on its own and cleared the position
+UKPARL_LDA_ELECTION_RESULTS	COMPLETE	2659		no			14.5		walk ended on its own and cleared the position
+UKPARL_LDA_LORDS_DIVISIONS	COMPLETE	2089		no			12.3		walk ended on its own and cleared the position
+UKPARL_LDA_MEMBERS	COMPLETE	4798		no			28.1		walk ended on its own and cleared the position
+UKPARL_LDA_ORAL_Q_TIMES	COMPLETE	4052		no			22.6		walk ended on its own and cleared the position
+UKTRADEINFO_COMMODITY	COMPLETE	16243		no			48.9		walk ended on its own and cleared the position
+UKTRADEINFO_SITC	COMPLETE	3592		no			9.9		walk ended on its own and cleared the position
+UK_FLOOD_AREAS	COMPLETE	4208		no			20.7		walk ended on its own and cleared the position
+UK_FLOOD_MEASURES	COMPLETE	7432		no			31.6		walk ended on its own and cleared the position
+UK_FLOOD_READINGS	COMPLETE	5402		no			26.2		walk ended on its own and cleared the position
+UNHCR_ASYLUM_APPLICATIONS	COMPLETE	676		no			19.9		walk ended on its own and cleared the position
+UNHCR_POPULATION_FOOTNOTES	COMPLETE	658		no			3.9		walk ended on its own and cleared the position
+USASPEND_DOD_PROGRAM_ACTIVITY	COMPLETE	209		no			1.5		walk ended on its own and cleared the position
+VT_STATE_POLICE_DUI_ARRESTS	COMPLETE	3697		no			14.4		walk ended on its own and cleared the position
+WA_CRIME_NIBRS	COMPLETE	3471		no			13.4		walk ended on its own and cleared the position
+WA_PDC_ENFORCEMENT_CASES	COMPLETE	8137		no			37.1		walk ended on its own and cleared the position
+WHO_XMART_NCD_ALCOHOL	COMPLETE	2358		no			9.5		walk ended on its own and cleared the position
+WHO_XMART_WIISE_AEFI	COMPLETE	12480		no			53.0		walk ended on its own and cleared the position
+WHO_XMART_WIISE_SIA_CONDUCTED	COMPLETE	2075		no			11.0		walk ended on its own and cleared the position
+ZA_MUNIMONEY_MUNICIPALITIES	COMPLETE	292		no			3.6		walk ended on its own and cleared the position
+np-bipad-municipality	COMPLETE	774		no			126.8		walk ended on its own and cleared the position
+np-bipad-organization	COMPLETE	106		no			39.3		walk ended on its own and cleared the position
+openaire-products-by-project	COMPLETE	25		no			8.1		walk ended on its own and cleared the position
+uk-govuk-search-cma-cases	COMPLETE	3	1	no			1.1		walk ended on its own and cleared the position
+uk-govuk-search-drug-safety-update	COMPLETE	3	1	no			1.0		walk ended on its own and cleared the position
+uk-govuk-search-employment-tribunal	COMPLETE	3	1	no			1.1		walk ended on its own and cleared the position
+uk-govuk-search-medical-safety-alerts	COMPLETE	3	1	no			1.0		walk ended on its own and cleared the position
+uk-govuk-search-tax-tribunal	COMPLETE	3	1	no			1.0		walk ended on its own and cleared the position
+uk-govuk-search-utaac-decisions	COMPLETE	3	1	no			1.4		walk ended on its own and cleared the position
+us-austin-apd-crime-arcgis	COMPLETE	26	1	no			1.1		walk ended on its own and cleared the position
+ACMA_RRL_DEVICE_REGISTER	CYCLING	40000	20	yes			98.6		stored a position; next run reads the next slice
+AK_DNR_WATER_WELL_LOGS	CYCLING	20000	20	yes			72.9		stored a position; next run reads the next slice
+ANFR_EMF_PROBE_MEASUREMENTS	CYCLING	20000	20	yes			100.5		stored a position; next run reads the next slice
+ANFR_MARITIME_STATIONS	CYCLING	20000	20	yes			76.1		stored a position; next run reads the next slice
+AP19_AU_ACT_SOCRATA	CYCLING	2000	20	yes			8.2		stored a position; next run reads the next slice
+AP19_AU_MELB_CAFES	CYCLING	2000	20	yes			12.4		stored a position; next run reads the next slice
+AP19_AU_MELB_PEDESTRIAN	CYCLING	2000	20	yes			10.1		stored a position; next run reads the next slice
+ARTIFACTHUB_REPOSITORY_SEARCH	CYCLING	1200	20	yes			6.7		stored a position; next run reads the next slice
+ASF_STAC_HAND_ITEMS	CYCLING	10000	20	yes			102.5		stored a position; next run reads the next slice
+BGS_AEROMAGNETIC_SURVEY	CYCLING	2000	20	yes			24.2		stored a position; next run reads the next slice
+BGS_AGS_BOREHOLE_INDEX	CYCLING	2000	20	yes			7.8		stored a position; next run reads the next slice
+BGS_GENERIC_SAMPLES_REGISTER	CYCLING	2000	20	yes			20.1		stored a position; next run reads the next slice
+BGS_MINE_PLANS	CYCLING	2000	20	yes			23.5		stored a position; next run reads the next slice
+BGS_OFFSHORE_GEOPHYSICAL_LINES	CYCLING	2000	20	yes			76.5		stored a position; next run reads the next slice
+BGS_ONSHORE_BOREHOLE_INDEX	CYCLING	2000	20	yes			33.2		stored a position; next run reads the next slice
+BGS_WORLD_MINERAL_STATISTICS	CYCLING	2000	20	yes			18.8		stored a position; next run reads the next slice
+BR_BCB_IFDATA_CADASTRO	CYCLING	2000	20	yes			66.6		stored a position; next run reads the next slice
+BR_CNES_ESTABELECIMENTOS	CYCLING	400	20	yes			112.9		stored a position; next run reads the next slice
+BTS_T100_SEGMENT_CARRIER	CYCLING	20000	20	yes			147.4		stored a position; next run reads the next slice
+CDC_DEATHS_BY_COUNTY_WEEK	CYCLING	20000	20	yes			89.7		stored a position; next run reads the next slice
+CDC_EXCESS_DEATHS_BY_WEEK	CYCLING	20000	20	yes			88.8		stored a position; next run reads the next slice
+CDC_NNDSS_WEEKLY_TABLES	CYCLING	20000	20	yes			54.1		stored a position; next run reads the next slice
+CDC_NWSS_WASTEWATER_CONCENTRATION	CYCLING	20000	20	yes			52.8		stored a position; next run reads the next slice
+CFS_HAZMAT_FLOWS	CYCLING	20000	20	yes			110.2		stored a position; next run reads the next slice
+CFTC_COT_DISAGGREGATED	CYCLING	10000	20	yes			40.1		stored a position; next run reads the next slice
+CFTC_COT_FINANCIAL	CYCLING	10000	20	yes			32.7		stored a position; next run reads the next slice
+CH_BAKOM_MOBILE_SITES	CYCLING	1000	20	yes			123.9		stored a position; next run reads the next slice
+CMR_STAC_GESDISC_COLLECTIONS	CYCLING	1000	20	yes			75.4		stored a position; next run reads the next slice
+CMS_HOSPITAL_HAI_MEASURES	CYCLING	10000	20	yes			73.5		stored a position; next run reads the next slice
+CO_ANM_REGALIAS_VOLUMEN	CYCLING	19999	20	yes			52.4		stored a position; next run reads the next slice
+CO_ANM_TITULOS_ANOTACIONES	CYCLING	20000	20	yes			128.5		stored a position; next run reads the next slice
+CO_CHARITY_REGISTRATIONS	CYCLING	20000	20	yes			114.3		stored a position; next run reads the next slice
+CO_LIQUOR_LICENSES	CYCLING	20000	20	yes			66.4		stored a position; next run reads the next slice
+CO_LOBBYIST_CLIENTS	CYCLING	20000	20	yes			67.0		stored a position; next run reads the next slice
+CO_LOBBYIST_INCOME	CYCLING	20000	20	yes			64.7		stored a position; next run reads the next slice
+CO_MEDICINA_LEGAL_DESAPARECIDOS	CYCLING	20000	20	yes			58.6		stored a position; next run reads the next slice
+CO_REAL_ESTATE_LICENSEES	CYCLING	20000	20	yes			67.2		stored a position; next run reads the next slice
+CO_REGISTRADURIA_RESULTADOS_2018	CYCLING	20000	20	yes			42.9		stored a position; next run reads the next slice
+CO_REGULATED_STORAGE_TANKS	CYCLING	19789	20	yes			94.0		stored a position; next run reads the next slice
+CO_RETHUS_TALENTO_SALUD	CYCLING	20000	20	yes			51.8		stored a position; next run reads the next slice
+CO_SECOP_DEFENCE_CONTRACTS	CYCLING	2000	20	yes			52.2		stored a position; next run reads the next slice
+CO_SECOP_II_OFERTAS	CYCLING	20000	20	yes			76.7		stored a position; next run reads the next slice
+CO_SECOP_I_PROPONENTES	CYCLING	20000	20	yes			72.4		stored a position; next run reads the next slice
+CT_BUSINESS_FILING_HISTORY	CYCLING	20000	20	yes			85.1		stored a position; next run reads the next slice
+CT_INSURANCE_COMPLAINTS	CYCLING	20000	20	yes			104.9		stored a position; next run reads the next slice
+CZ_CRO_PUBLIC_OFFICIALS	CYCLING	200	20	yes			11.6		stored a position; next run reads the next slice
+DERIB_LEGISLATION_ALL	CYCLING	2000	20	yes			8.6		stored a position; next run reads the next slice
+DE_CENTRAL_CONTRACT_SPEND	CYCLING	20000	20	yes			74.0		stored a position; next run reads the next slice
+DE_FOOD_INSPECTION_VIOLATIONS	CYCLING	20000	20	yes			101.5		stored a position; next run reads the next slice
+DE_PROFESSIONAL_LICENSING	CYCLING	20000	20	yes			76.7		stored a position; next run reads the next slice
+DE_PUBLIC_CRASH_DATA	CYCLING	19990	20	yes			94.6		stored a position; next run reads the next slice
+DE_WELL_PERMITS	CYCLING	20000	20	yes			104.6		stored a position; next run reads the next slice
+EE_AVAANDMED_DATASETS	CYCLING	500	20	yes			11.9		stored a position; next run reads the next slice
+ELIA_GENERATION_BY_FUEL_HIST	CYCLING	992	20	yes			20.3		stored a position; next run reads the next slice
+EPSS_SCORE_PAGE	CYCLING	2000	20	yes			3.8		stored a position; next run reads the next slice
+EUROPEPMC_BOOKS	CYCLING	2000	20	yes			14.3		stored a position; next run reads the next slice
+FAA_AMD_PENDING_TAXIWAY	CYCLING	19993	20	yes			98.4		stored a position; next run reads the next slice
+FAA_ARCGIS_RUNWAYS	CYCLING	10000	20	yes			54.2		stored a position; next run reads the next slice
+FAA_NASR_ATS_ROUTE_AIXM	CYCLING	20000	20	yes			129.1		stored a position; next run reads the next slice
+FAA_NASR_PENDING_AIRPORT	CYCLING	19558	20	yes			116.1		stored a position; next run reads the next slice
+FAA_NASR_PENDING_RUNWAY	CYCLING	20000	20	yes			119.1		stored a position; next run reads the next slice
+FCC_EAS_GRANTEE_REG	CYCLING	20000	20	yes			27.8		stored a position; next run reads the next slice
+FDIC_BRANCH_DEPOSITS	CYCLING	2000	20	yes			13.0		stored a position; next run reads the next slice
+FDIC_FINANCIALS	CYCLING	2000	20	yes			13.7		stored a position; next run reads the next slice
+FDIC_STRUCTURE_HISTORY	CYCLING	2000	20	yes			11.4		stored a position; next run reads the next slice
+FINRA_ATS_WEEKLY	CYCLING	4000	20	yes			10.6		stored a position; next run reads the next slice
+FINRA_OTC_BLOCKS	CYCLING	4000	20	yes			12.2		stored a position; next run reads the next slice
+FMCSA_CARRIER_CENSUS	CYCLING	20000	20	yes			103.2		stored a position; next run reads the next slice
+FMCSA_MOTUS_AUTHORITY_HISTORY	CYCLING	19997	20	yes			107.2		stored a position; next run reads the next slice
+FOI_FRAGDENSTAAT_AT	CYCLING	999	20	yes			13.2		stored a position; next run reads the next slice
+FOI_FRAGDENSTAAT_DE	CYCLING	999	20	yes			18.2		stored a position; next run reads the next slice
+FPDS_AWARD_AIRFORCE	CYCLING	198	20	yes			3.6		stored a position; next run reads the next slice
+FPDS_AWARD_ARMY	CYCLING	200	20	yes			3.9		stored a position; next run reads the next slice
+FPDS_AWARD_DLA	CYCLING	200	20	yes			7.7		stored a position; next run reads the next slice
+FPDS_AWARD_NAVY	CYCLING	200	20	yes			3.9		stored a position; next run reads the next slice
+FPDS_AWARD_OSD	CYCLING	200	20	yes			3.4		stored a position; next run reads the next slice
+FPDS_PSC_AIRCRAFT_FIXED	CYCLING	196	20	yes			3.6		stored a position; next run reads the next slice
+FPDS_PSC_AIRCRAFT_ROTARY	CYCLING	199	20	yes			3.6		stored a position; next run reads the next slice
+FPDS_PSC_CBRN_DETECT	CYCLING	200	20	yes			3.6		stored a position; next run reads the next slice
+FPDS_PSC_COMBAT_SHIPS	CYCLING	200	20	yes			3.5		stored a position; next run reads the next slice
+FPDS_PSC_ECM	CYCLING	200	20	yes			3.7		stored a position; next run reads the next slice
+FPDS_PSC_GUIDED_MISSILES	CYCLING	200	20	yes			3.8		stored a position; next run reads the next slice
+FPDS_PSC_GUNS_SMALL	CYCLING	200	20	yes			3.7		stored a position; next run reads the next slice
+FPDS_PSC_MISSILE_COMPONENTS	CYCLING	197	20	yes			3.5		stored a position; next run reads the next slice
+FPDS_PSC_RADAR	CYCLING	200	20	yes			3.7		stored a position; next run reads the next slice
+FPDS_PSC_SPACE_VEHICLES	CYCLING	200	20	yes			3.4		stored a position; next run reads the next slice
+FPDS_PSC_UAV	CYCLING	200	20	yes			4.4		stored a position; next run reads the next slice
+FRA_CROSSING_INVENTORY	CYCLING	20000	20	yes			134.9		stored a position; next run reads the next slice
+FR_BODACC_COLLECTIVE	CYCLING	2000	20	yes			16.6		stored a position; next run reads the next slice
+FR_BODACC_CREATION	CYCLING	2000	20	yes			15.1		stored a position; next run reads the next slice
+FR_BODACC_RADIATION	CYCLING	2000	20	yes			16.1		stored a position; next run reads the next slice
+FR_BODACC_VENTE	CYCLING	2000	20	yes			16.4		stored a position; next run reads the next slice
+FSA_ESTABLISHMENT_ZERO_RATED	CYCLING	2000	20	yes			8.2		stored a position; next run reads the next slice
+GBIF_OCC_CM	CYCLING	6000	20	yes			34.3		stored a position; next run reads the next slice
+GBIF_OCC_CN	CYCLING	6000	20	yes			58.9		stored a position; next run reads the next slice
+GBIF_OCC_ET	CYCLING	6000	20	yes			44.3		stored a position; next run reads the next slice
+GBIF_OCC_FR	CYCLING	6000	20	yes			85.1		stored a position; next run reads the next slice
+GBIF_OCC_GB	CYCLING	6000	20	yes			63.8		stored a position; next run reads the next slice
+GBIF_OCC_HK	CYCLING	6000	20	yes			51.2		stored a position; next run reads the next slice
+GBIF_OCC_TZ	CYCLING	6000	20	yes			33.1		stored a position; next run reads the next slice
+GBIF_OCC_UG	CYCLING	6000	20	yes			31.6		stored a position; next run reads the next slice
+GBIF_OCC_US	CYCLING	6000	20	yes			47.1		stored a position; next run reads the next slice
+GBIF_OCC_ZA	CYCLING	6000	20	yes			47.6		stored a position; next run reads the next slice
+GLEIF_LEI_CN	CYCLING	4000	20	yes			47.3		stored a position; next run reads the next slice
+GLEIF_LEI_FR	CYCLING	4000	20	yes			48.8		stored a position; next run reads the next slice
+GLEIF_LEI_GB	CYCLING	4000	20	yes			44.6		stored a position; next run reads the next slice
+HHS_HOSPITAL_CAPACITY_FACILITY	CYCLING	20000	20	yes			120.9		stored a position; next run reads the next slice
+HHS_HOSPITAL_CAPACITY_STATE	CYCLING	20000	20	yes			155.2		stored a position; next run reads the next slice
+HR_ZAGREB_STREETS	CYCLING	2000	20	yes			14.6		stored a position; next run reads the next slice
+HU_INSPIRE_LAND_COVER	CYCLING	1997	20	yes			21.5		stored a position; next run reads the next slice
+HU_INSPIRE_PLACE_NAMES	CYCLING	2000	20	yes			14.8		stored a position; next run reads the next slice
+IA_COLLECTION_ARCHIVETEAM	CYCLING	10000	20	yes			42.6		stored a position; next run reads the next slice
+IA_COLLECTION_DOCUMENTCLOUD	CYCLING	10000	20	yes			39.2		stored a position; next run reads the next slice
+IA_COLLECTION_FEDLINK	CYCLING	10000	20	yes			42.7		stored a position; next run reads the next slice
+IA_COLLECTION_INLIBRARY	CYCLING	10000	20	yes			37.8		stored a position; next run reads the next slice
+IA_COLLECTION_JSTOR_EARLY_JOURNALS	CYCLING	10000	20	yes			36.9		stored a position; next run reads the next slice
+IA_COLLECTION_MAGAZINE_RACK	CYCLING	10000	20	yes			40.1		stored a position; next run reads the next slice
+IA_COLLECTION_NASA	CYCLING	10000	20	yes			40.6		stored a position; next run reads the next slice
+IA_COLLECTION_PODCASTS	CYCLING	10000	20	yes			46.0		stored a position; next run reads the next slice
+IA_COLLECTION_SOFTWARE_LIBRARY	CYCLING	10000	20	yes			41.7		stored a position; next run reads the next slice
+IA_COLLECTION_TVNEWS	CYCLING	9999	20	yes			44.8		stored a position; next run reads the next slice
+IA_COLLECTION_UNIVERSAL_LIBRARY	CYCLING	10000	20	yes			34.8		stored a position; next run reads the next slice
+IA_COLLECTION_WEBWIDECRAWL	CYCLING	10000	20	yes			48.3		stored a position; next run reads the next slice
+IA_COLLECTION_WEB_COLLECTION	CYCLING	10000	20	yes			47.8		stored a position; next run reads the next slice
+IA_COLLECTION_WIKITEAM	CYCLING	10000	20	yes			35.3		stored a position; next run reads the next slice
+IA_TEXTS_AR	CYCLING	10000	20	yes			35.4		stored a position; next run reads the next slice
+IA_TEXTS_RU	CYCLING	10000	20	yes			36.2		stored a position; next run reads the next slice
+IA_TEXTS_ZH	CYCLING	9999	20	yes			34.4		stored a position; next run reads the next slice
+IETF_DOCUMENT_RELATIONS	CYCLING	2000	20	yes			8.4		stored a position; next run reads the next slice
+IETF_DRAFT_SUBMISSIONS	CYCLING	2000	20	yes			9.4		stored a position; next run reads the next slice
+IETF_DT_DOCEVENT	CYCLING	2000	20	yes			14.5		stored a position; next run reads the next slice
+IETF_DT_PERSON	CYCLING	2000	20	yes			12.9		stored a position; next run reads the next slice
+IETF_DT_REVIEWREQUEST	CYCLING	2000	20	yes			14.2		stored a position; next run reads the next slice
+IETF_GROUP_ROLES	CYCLING	2000	20	yes			7.3		stored a position; next run reads the next slice
+IETF_IESG_BALLOT_POSITIONS	CYCLING	2000	20	yes			11.5		stored a position; next run reads the next slice
+IETF_IPR_DOCUMENT_LINKS	CYCLING	2000	20	yes			7.9		stored a position; next run reads the next slice
+IETF_IPR_EVENTS	CYCLING	2000	20	yes			9.2		stored a position; next run reads the next slice
+IETF_IPR_HOLDER_DISCLOSURES	CYCLING	2000	20	yes			127.4		stored a position; next run reads the next slice
+IETF_LIAISON_STATEMENTS	CYCLING	1996	20	yes			13.0		stored a position; next run reads the next slice
+IETF_MEETING_SESSIONS	CYCLING	2000	20	yes			22.8		stored a position; next run reads the next slice
+IE_FINGAL_PLANNING	CYCLING	1999	20	yes			23.2		stored a position; next run reads the next slice
+IE_NATIONAL_MONUMENTS	CYCLING	2000	20	yes			18.6		stored a position; next run reads the next slice
+IL_COMPANIES_REGISTER	CYCLING	2000	20	yes			16.0		stored a position; next run reads the next slice
+IMF_PORTWATCH_PORT_SPILLOVERS	CYCLING	20000	20	yes			117.9		stored a position; next run reads the next slice
+IODA_ENTITIES_ASN	CYCLING	1000	20	yes			3.8		stored a position; next run reads the next slice
+IT_FVG_EMF_MONITORING	CYCLING	20000	20	yes			44.8		stored a position; next run reads the next slice
+IZMIR_ARTERIAL_SPEEDS	CYCLING	2000	20	yes			8.6		stored a position; next run reads the next slice
+IZMIR_ROADS_BY_DISTRICT	CYCLING	2000	20	yes			8.2		stored a position; next run reads the next slice
+IZMIR_VEHICLE_COUNTS	CYCLING	2000	20	yes			9.4		stored a position; next run reads the next slice
+JO28_NPMH_KOMONJO_CATALOG	CYCLING	170	20	yes			7.1		stored a position; next run reads the next slice
+JP25_JPINFRA_SORABATAKE_POSTS	CYCLING	1000	20	yes			28.1		stored a position; next run reads the next slice
+JP25_JPMEDIA_DECN_WP	CYCLING	2000	20	yes			19.4		stored a position; next run reads the next slice
+JP25_JPMEDIA_DEMPA_WP	CYCLING	2000	20	yes			38.7		stored a position; next run reads the next slice
+JP25_JPMEDIA_JAPANMETAL_WP	CYCLING	2000	20	yes			37.0		stored a position; next run reads the next slice
+JP25_JPMEDIA_KENSETSUNEWS_WP	CYCLING	2000	20	yes			21.9		stored a position; next run reads the next slice
+JP25_JPMEDIA_KYOIKU_PRESS_WP	CYCLING	2000	20	yes			43.4		stored a position; next run reads the next slice
+JP25_JPMEDIA_LNEWS_WP	CYCLING	2000	20	yes			87.2		stored a position; next run reads the next slice
+JP25_JPMEDIA_YAKUJI_WP	CYCLING	2000	20	yes			9.1		stored a position; next run reads the next slice
+JP25_JPMUNI2_HIROSHIMA_DATAEYE	CYCLING	400	20	yes			64.9		stored a position; next run reads the next slice
+JSTAGE_CORPUS_BULK	CYCLING	2000	20	yes			37.9		stored a position; next run reads the next slice
+KAPSARC_JODI_CHINA_OIL	CYCLING	2000	20	yes			9.2		stored a position; next run reads the next slice
+KAPSARC_SAUDI_IO_TABLE	CYCLING	2000	20	yes			9.4		stored a position; next run reads the next slice
+KAPSARC_SAUDI_LABOUR_ADMIN	CYCLING	2000	20	yes			9.3		stored a position; next run reads the next slice
+LEMMY_COMMUNITIES_LEMMY_ML	CYCLING	1000	20	yes			4.8		stored a position; next run reads the next slice
+LEMMY_COMMUNITIES_LEMMY_WORLD	CYCLING	1000	20	yes			5.9		stored a position; next run reads the next slice
+LV_BENEFICIAL_OWNERS	CYCLING	2000	20	yes			25.4		stored a position; next run reads the next slice
+LV_IPPC_PERMITS	CYCLING	2000	20	yes			27.9		stored a position; next run reads the next slice
+LV_WASTE_OPERATORS	CYCLING	1965	20	yes			26.5		stored a position; next run reads the next slice
+MAPROULETTE_CHALLENGES	CYCLING	2000	20	yes			128.7		stored a position; next run reads the next slice
+MASTR_UNIT_REGISTER_EXTENDED	CYCLING	1000	20	yes			52.3		stored a position; next run reads the next slice
+MD_LOBBYIST_ACTIVITY_REPORTS	CYCLING	20000	20	yes			85.9		stored a position; next run reads the next slice
+MD_LOBBYIST_CAMPAIGN_CONTRIBUTIONS	CYCLING	20000	20	yes			75.1		stored a position; next run reads the next slice
+MD_STATE_PAYMENTS	CYCLING	20000	20	yes			78.1		stored a position; next run reads the next slice
+ME_MEDICINES	CYCLING	2000	20	yes			30.6		stored a position; next run reads the next slice
+MISSKEY_IO_FEDERATION	CYCLING	600	20	yes			11.6		stored a position; next run reads the next slice
+MK_AEK_PUBLICATIONS	CYCLING	2000	20	yes			30.2		stored a position; next run reads the next slice
+MO_ALCOHOL_LICENSES	CYCLING	20000	20	yes			74.7		stored a position; next run reads the next slice
+MSRC_SUG_VULNERABILITY	CYCLING	2000	20	yes			130.2		stored a position; next run reads the next slice
+MSTDNJP_DIRECTORY	CYCLING	800	20	yes			41.3		stored a position; next run reads the next slice
+NESO_CAPACITY_MARKET_CMU	CYCLING	1000	20	yes			10.7		stored a position; next run reads the next slice
+NESO_CAPACITY_MARKET_COMPONENTS	CYCLING	1000	20	yes			9.4		stored a position; next run reads the next slice
+NESO_CONSTRAINT_FLOWS_LIMITS	CYCLING	1000	20	yes			10.3		stored a position; next run reads the next slice
+NESO_INTERCONNECTOR_AUCTION	CYCLING	1000	20	yes			11.2		stored a position; next run reads the next slice
+NESO_TEC_REGISTER	CYCLING	1000	20	yes			8.6		stored a position; next run reads the next slice
+NL_OVERHEID_SRU_LOKAAL	CYCLING	2000	20	yes			18.5		stored a position; next run reads the next slice
+NL_OVERHEID_SRU_OFFICIAL	CYCLING	2000	20	yes			28.1		stored a position; next run reads the next slice
+NL_OVERHEID_SRU_SGD	CYCLING	2000	20	yes			26.7		stored a position; next run reads the next slice
+NL_OVERHEID_SRU_TUCHTRECHT	CYCLING	2000	20	yes			19.1		stored a position; next run reads the next slice
+NOAA_FOSS_AFSC_GROUNDFISH	CYCLING	500	20	yes			5.7		stored a position; next run reads the next slice
+NOAA_FOSS_LANDINGS	CYCLING	1000	20	yes			6.6		stored a position; next run reads the next slice
+NOAA_FOSS_TRADE	CYCLING	1000	20	yes			6.6		stored a position; next run reads the next slice
+NY_AUTHORITY_PROCUREMENT	CYCLING	20000	20	yes			73.5		stored a position; next run reads the next slice
+NY_DOS_CONSTITUENT_ENTITIES	CYCLING	20000	20	yes			45.6		stored a position; next run reads the next slice
+NY_DOS_FILING_STOCK	CYCLING	19999	20	yes			39.4		stored a position; next run reads the next slice
+NY_FOOD_SAFETY_RATINGS	CYCLING	20000	20	yes			93.5		stored a position; next run reads the next slice
+NY_LIQUOR_ACTIVE_LICENSES	CYCLING	20000	20	yes			67.2		stored a position; next run reads the next slice
+NY_LOBBYING_CLIENT_DISCLOSURES	CYCLING	19985	20	yes			73.0		stored a position; next run reads the next slice
+NY_LOBBYIST_DISCLOSURES	CYCLING	20000	20	yes			65.5		stored a position; next run reads the next slice
+NY_LOBBYIST_REGISTRATIONS	CYCLING	20000	20	yes			61.5		stored a position; next run reads the next slice
+NY_OIL_GAS_PRODUCTION	CYCLING	20000	20	yes			70.5		stored a position; next run reads the next slice
+NY_OIL_GAS_WELLS	CYCLING	20000	20	yes			76.4		stored a position; next run reads the next slice
+NY_PROPERTY_ASSESSMENT_ROLLS	CYCLING	20000	20	yes			69.1		stored a position; next run reads the next slice
+OPENAERIALMAP_IMAGERY	CYCLING	2000	20	yes			123.8		stored a position; next run reads the next slice
+OR_ACTIVE_NONPROFIT_CORPORATIONS	CYCLING	20000	20	yes			103.2		stored a position; next run reads the next slice
+OR_BCD_TRADE_LICENSES	CYCLING	20000	20	yes			73.8		stored a position; next run reads the next slice
+OR_CCB_CONTRACTOR_LICENSES	CYCLING	20000	20	yes			106.2		stored a position; next run reads the next slice
+OR_OLCC_LIQUOR_LICENSES	CYCLING	20000	20	yes			83.4		stored a position; next run reads the next slice
+OR_PROCUREMENT_ORDERS	CYCLING	20000	20	yes			88.0		stored a position; next run reads the next slice
+OR_STATE_SALARIES	CYCLING	20000	20	yes			103.0		stored a position; next run reads the next slice
+PAWOO_DIRECTORY	CYCLING	800	20	yes			46.5		stored a position; next run reads the next slice
+PA_FOOD_INSPECTIONS	CYCLING	20000	20	yes			81.5		stored a position; next run reads the next slice
+PA_NON_DEPOSITORY_LICENSEES	CYCLING	20000	20	yes			89.9		stored a position; next run reads the next slice
+PORTWATCH_MARITIME_LINKS	CYCLING	20000	20	yes			37.5		stored a position; next run reads the next slice
+PY_VUE_MIPYMES	CYCLING	2000	20	yes			19.0		stored a position; next run reads the next slice
+PY_VUE_REGISTRO_EMPRESAS	CYCLING	2000	20	yes			28.1		stored a position; next run reads the next slice
+QIITA_TAGS	CYCLING	2000	20	yes			20.2		stored a position; next run reads the next slice
+RO_ANCOM_DECISIONS	CYCLING	2000	20	yes			60.1		stored a position; next run reads the next slice
+RO_ANM_MEDICINES	CYCLING	2000	20	yes			34.1		stored a position; next run reads the next slice
+SCIELO_ISSUES_BR	CYCLING	2000	20	yes			126.7		stored a position; next run reads the next slice
+SI_BUSINESS_REGISTER	CYCLING	2000	20	yes			21.6		stored a position; next run reads the next slice
+SI_GURS_HOUSE_NUMBERS	CYCLING	20000	20	yes			111.2		stored a position; next run reads the next slice
+SK_RPVS_AUTHORISED	CYCLING	400	20	yes			65.5		stored a position; next run reads the next slice
+SK_RPVS_OFFICIALS	CYCLING	400	20	yes			4.2		stored a position; next run reads the next slice
+STAC_EODC_GFM_ITEMS	CYCLING	2000	20	yes			39.5		stored a position; next run reads the next slice
+STAC_SWISSTOPO_SWISSALTI3D_ITEMS	CYCLING	2000	20	yes			22.1		stored a position; next run reads the next slice
+STAC_TERRABYTE_LANDSAT_ITEMS	CYCLING	2000	20	yes			33.6		stored a position; next run reads the next slice
+STAC_TERRABYTE_SENTINEL1_GRD_ITEMS	CYCLING	2000	20	yes			35.8		stored a position; next run reads the next slice
+STAC_TERRABYTE_SENTINEL2_ITEMS	CYCLING	2000	20	yes			46.1		stored a position; next run reads the next slice
+SYKE_HYDRO_SITES	CYCLING	1000	20	yes			124.1		stored a position; next run reads the next slice
+TELAVIV_BUSINESSES	CYCLING	20000	20	yes			47.5		stored a position; next run reads the next slice
+TERRAFORM_MODULES	CYCLING	1000	20	yes			121.5		stored a position; next run reads the next slice
+TX_HOTEL_TAX_PERMITS	CYCLING	20000	20	yes			83.5		stored a position; next run reads the next slice
+TX_INSURANCE_COMPLAINTS	CYCLING	20000	20	yes			78.3		stored a position; next run reads the next slice
+TX_MIXED_BEVERAGE_PERMITS	CYCLING	20000	20	yes			99.9		stored a position; next run reads the next slice
+TX_PUC_INFORMAL_COMPLAINTS	CYCLING	20000	20	yes			96.4		stored a position; next run reads the next slice
+TX_REAL_ESTATE_LICENSEES	CYCLING	20000	20	yes			77.5		stored a position; next run reads the next slice
+TX_RRC_PIPELINES	CYCLING	20000	20	yes			59.0		stored a position; next run reads the next slice
+TX_RRC_WELL_BOTTOM_LOCATIONS	CYCLING	20000	20	yes			117.4		stored a position; next run reads the next slice
+TX_RRC_WELL_LOCATIONS	CYCLING	20000	20	yes			52.4		stored a position; next run reads the next slice
+TX_TABC_LICENSES	CYCLING	20000	20	yes			87.6		stored a position; next run reads the next slice
+TX_TCEQ_COMPLAINTS	CYCLING	20000	20	yes			99.1		stored a position; next run reads the next slice
+TX_TCEQ_NOTICES_OF_ENFORCEMENT	CYCLING	19628	20	yes			88.2		stored a position; next run reads the next slice
+TX_TCEQ_VIOLATION_CITATIONS	CYCLING	20000	20	yes			93.5		stored a position; next run reads the next slice
+UKPARL_LDA_COMMONS_ORAL_Q	CYCLING	8982	20	yes			116.0		stored a position; next run reads the next slice
+UKPARL_LDA_EDMS	CYCLING	2000	20	yes			41.4		stored a position; next run reads the next slice
+UKPARL_LDA_LORDS_WRITTEN_Q	CYCLING	10000	20	yes			165.1		stored a position; next run reads the next slice
+UKPARL_LDA_RESEARCH_BRIEFINGS	CYCLING	10000	20	yes			76.5		stored a position; next run reads the next slice
+UKPARL_LDA_TERMS	CYCLING	10000	20	yes			96.6		stored a position; next run reads the next slice
+UKTRADEINFO_OTS	CYCLING	20000	20	yes			50.7		stored a position; next run reads the next slice
+UKTRADEINFO_TRADER	CYCLING	20000	20	yes			36.3		stored a position; next run reads the next slice
+UK_ASSET_MGMT	CYCLING	2000	20	yes			15.7		stored a position; next run reads the next slice
+UK_EA_ECOLOGY	CYCLING	5000	20	yes			31.1		stored a position; next run reads the next slice
+UK_EC_DONATIONS	CYCLING	1000	20	yes			8.8		stored a position; next run reads the next slice
+UK_FLOOD_STATIONS	CYCLING	2946	20	yes			34.7		stored a position; next run reads the next slice
+UK_GAZETTE_ALL_NOTICES	CYCLING	2000	20	yes			68.4		stored a position; next run reads the next slice
+UK_GAZETTE_BELFAST	CYCLING	2000	20	yes			50.1		stored a position; next run reads the next slice
+UK_GAZETTE_CORPORATE_INSOLVENCY	CYCLING	2000	20	yes			50.8		stored a position; next run reads the next slice
+UK_GAZETTE_EDINBURGH	CYCLING	2000	20	yes			51.5		stored a position; next run reads the next slice
+UK_GAZETTE_WILLS_PROBATE	CYCLING	2000	20	yes			47.6		stored a position; next run reads the next slice
+UK_GOVUK_MOD_PUBS	CYCLING	1000	20	yes			4.8		stored a position; next run reads the next slice
+UK_HYDROLOGY_MEASURES	CYCLING	10000	20	yes			23.1		stored a position; next run reads the next slice
+UK_HYDROLOGY_STATIONS	CYCLING	9537	20	yes			30.4		stored a position; next run reads the next slice
+UK_LANDREG_PPI_ADDRESS	CYCLING	2000	20	yes			7.8		stored a position; next run reads the next slice
+UK_LAND_REGISTRY_PPI	CYCLING	2000	20	yes			8.5		stored a position; next run reads the next slice
+UK_NHSBSA_PRESCRIBING_EPD	CYCLING	2000	20	yes			25.8		stored a position; next run reads the next slice
+US_FISCAL_CASH_BALANCE	CYCLING	2000	20	yes			10.4		stored a position; next run reads the next slice
+US_FISCAL_MTS	CYCLING	2000	20	yes			6.7		stored a position; next run reads the next slice
+WA_AGENCY_CONTRACTS	CYCLING	20000	20	yes			85.7		stored a position; next run reads the next slice
+WA_CONTRACTOR_BONDS	CYCLING	19999	20	yes			78.5		stored a position; next run reads the next slice
+WA_CONTRACTOR_INSURANCE	CYCLING	19995	20	yes			78.8		stored a position; next run reads the next slice
+WA_CONTRACTOR_PRINCIPALS	CYCLING	20000	20	yes			78.7		stored a position; next run reads the next slice
+WA_LOBBYIST_AGENT_EMPLOYERS	CYCLING	20000	20	yes			86.3		stored a position; next run reads the next slice
+WA_LOBBYIST_COMPENSATION	CYCLING	20000	20	yes			93.2		stored a position; next run reads the next slice
+WA_PDC_INDEPENDENT_EXPENDITURES	CYCLING	20000	20	yes			90.8		stored a position; next run reads the next slice
+WA_STATEWIDE_CONTRACT_SALES	CYCLING	20000	20	yes			100.6		stored a position; next run reads the next slice
+WA_WEBS_VENDORS	CYCLING	20000	20	yes			76.0		stored a position; next run reads the next slice
+WHO_XMART_FOODBORNE_BURDEN	CYCLING	20000	20	yes			138.3		stored a position; next run reads the next slice
+WHO_XMART_GHE_FULL	CYCLING	20000	20	yes			115.4		stored a position; next run reads the next slice
+WHO_XMART_NCD_CANCER	CYCLING	20000	20	yes			92.2		stored a position; next run reads the next slice
+WHO_XMART_NCD_HYPERTENSION	CYCLING	20000	20	yes			127.8		stored a position; next run reads the next slice
+WHO_XMART_NCD_MORTALITY	CYCLING	20000	20	yes			100.3		stored a position; next run reads the next slice
+WHO_XMART_NUTRITION_GTT_SURVEY	CYCLING	20000	20	yes			94.7		stored a position; next run reads the next slice
+WHO_XMART_NUTRITION_VMNIS	CYCLING	20000	20	yes			84.4		stored a position; next run reads the next slice
+WHO_XMART_POPULATION_COUNT	CYCLING	20000	20	yes			121.1		stored a position; next run reads the next slice
+WHO_XMART_TOBACCO_FACT	CYCLING	20000	20	yes			102.8		stored a position; next run reads the next slice
+WHO_XMART_TOBACCO_PREVALENCE	CYCLING	20000	20	yes			111.8		stored a position; next run reads the next slice
+WHO_XMART_WHSA_FACT	CYCLING	20000	20	yes			91.7		stored a position; next run reads the next slice
+WHO_XMART_WIISE_COVERAGES	CYCLING	20000	20	yes			118.6		stored a position; next run reads the next slice
+WHO_XMART_WIISE_HPV_ADMIN	CYCLING	20000	20	yes			131.7		stored a position; next run reads the next slice
+WHO_XMART_WIISE_INCIDENCES	CYCLING	20000	20	yes			154.7		stored a position; next run reads the next slice
+WHO_XMART_WIISE_MNTE	CYCLING	20000	20	yes			123.6		stored a position; next run reads the next slice
+WHO_XMART_WIISE_OUTBREAKS	CYCLING	20000	20	yes			64.0		stored a position; next run reads the next slice
+WHO_XMART_WIISE_SCHEDULES	CYCLING	20000	20	yes			149.9		stored a position; next run reads the next slice
+WHO_XMART_WIISE_SURVEY_RESULTS	CYCLING	20000	20	yes			128.3		stored a position; next run reads the next slice
+WHO_XMART_WIISE_VACCINE_INTRO	CYCLING	20000	20	yes			113.1		stored a position; next run reads the next slice
+WORDPRESS_PLUGIN_REGISTRY	CYCLING	2000	20	yes			125.3		stored a position; next run reads the next slice
+WORDPRESS_THEME_REGISTRY	CYCLING	2000	20	yes			126.0		stored a position; next run reads the next slice
+WORLDBANK_INDICATOR_CATALOGUE	CYCLING	10000	20	yes			20.3		stored a position; next run reads the next slice
+ZA_MUNIMONEY_AGED_DEBTORS	CYCLING	2000	20	yes			19.2		stored a position; next run reads the next slice
+ZA_MUNIMONEY_AUDIT_OPINIONS	CYCLING	2000	20	yes			9.8		stored a position; next run reads the next slice
+ZA_MUNIMONEY_CAPITAL	CYCLING	2000	20	yes			27.8		stored a position; next run reads the next slice
+ZA_MUNIMONEY_CASHFLOW	CYCLING	2000	20	yes			12.8		stored a position; next run reads the next slice
+ZA_MUNIMONEY_INCOME_EXPENDITURE	CYCLING	2000	20	yes			50.8		stored a position; next run reads the next slice
+ZA_MUNIMONEY_OFFICIALS	CYCLING	2000	20	yes			10.6		stored a position; next run reads the next slice
+datacite-dois-by-client	CYCLING	100	20	yes			23.0		stored a position; next run reads the next slice
+datacite-dois-title-query	CYCLING	98	20	yes			22.2		stored a position; next run reads the next slice
+esma-solr-upreg	CYCLING	60	20	yes			12.9		stored a position; next run reads the next slice
+gleif-lei-filter-lapsed	CYCLING	200	20	yes			64.7		stored a position; next run reads the next slice
+gleif-lei-filter-nonconforming	CYCLING	200	20	yes			56.6		stored a position; next run reads the next slice
+np-bipad-earthquake	CYCLING	1000	20	yes			128.0		stored a position; next run reads the next slice
+np-bipad-resource	CYCLING	1000	20	yes			128.7		stored a position; next run reads the next slice
+openaire-organizations-search	CYCLING	100	20	yes			44.9		stored a position; next run reads the next slice
+openaire-projects-search	CYCLING	200	20	yes			38.0		stored a position; next run reads the next slice
+openaire-research-products	CYCLING	200	20	yes			41.8		stored a position; next run reads the next slice
+us-federalregister-by-cfr	CYCLING	100	20	yes			19.0		stored a position; next run reads the next slice
+us-legistar-seattle-events	CYCLING	20	20	yes			13.3		stored a position; next run reads the next slice
+us-oyez-advocates	CYCLING	60	20	yes			21.3		stored a position; next run reads the next slice
+us-oyez-cases-by-term	CYCLING	60	20	yes			28.6		stored a position; next run reads the next slice
+CERT_KH_WP_POSTS	FETCH_FAILED	0		no			6.2		CERT_KH_WP_POSTS stored nothing: the request failed at the transport level
+GBIF_OCC_KE	FETCH_FAILED	0		no			19.6		GBIF_OCC_KE stored nothing: the request failed at the transport level
+JP25_JPMUNI2_BODIK_ODCS_NEWS	FETCH_FAILED	0		no			2.1		JP25_JPMUNI2_BODIK_ODCS_NEWS stored nothing: the request failed at the transport level
+UKPARL_LDA_COMMONS_WRITTEN_Q	FETCH_FAILED	0		no			40.7		UKPARL_LDA_COMMONS_WRITTEN_Q stored nothing: the request failed at the transport level
+au-government-organisations-register	FETCH_FAILED	0		no			0.6		au-government-organisations-register stored nothing: upstream answered 403
+us-courtlistener-search-recap-dockets	FETCH_FAILED	0		no			0.5		us-courtlistener-search-recap-dockets stored nothing: upstream answered 429
+CR_HEREDIA_PATENTES	SLOW	6000		no			200.0		hit --timeout at 200.0s; unmeasured, not failed
+SV_COMPRASAL_ADJUDICACIONES	SLOW	1700		no			200.1		hit --timeout at 200.1s; unmeasured, not failed
+UKPARL_LDA_COMMONS_ANSWERS	SLOW	9500		no			200.1		hit --timeout at 200.1s; unmeasured, not failed
+WHO_XMART_FLUNET_SENTINEL	SLOW	5000		no			200.0		hit --timeout at 200.0s; unmeasured, not failed
+BC_MINERAL_TENURE	STUCK	50	1	no	2	400	1.3	https://openmaps.gov.bc.ca/geo/pub/WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=pub:WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW&outputFormat=ap	page 2 answered 400; no position stored, so the next run re-reads this slice
+ENERGINET_CAPACITY_MUNICIPALITY	STUCK	50	1	no	2	429	1.4	https://api.energidataservice.dk/dataset/CapacityPerMunicipality?limit=50&offset=50	page 2 answered 429; no position stored, so the next run re-reads this slice
+FAA_ARCGIS_OBSTACLES	STUCK	9500	19	no	20	429	49.7	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Digital_Obstacle_File/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=500&resultOffset=9500	page 20 answered 429; no position stored, so the next run re-reads this slice
+FAA_ARCGIS_US_AIRPORTS	STUCK	8500	17	no	18	429	46.8	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/US_Airport/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=500&resultOffset=8500	page 18 answered 429; no position stored, so the next run re-reads this slice
+TRONSCAN_TOP_ACCOUNTS	STUCK	25	1	no	2	429	12.6	https://apilist.tronscanapi.com/api/account/list?limit=25&start=25	page 2 answered 429; no position stored, so the next run re-reads this slice
+TZ_PPRA_NEST_OCDS_RELEASES	STUCK	148	3	no	4	500	27.2	https://nest.go.tz/gateway/nest-data-portal-api/api/releases?since=2023-06-15T00:00:00.000&cursor=3867192	page 4 answered 500; no position stored, so the next run re-reads this slice
+au-asic-afs-licensees	STUCK	200	2	no	3	403	86.4	https://data.gov.au/data/api/3/action/datastore_search?resource_id=d98a113d-6b50-40e6-b65f-2612efc877f4&limit=100&offset=200	page 3 answered 403; no position stored, so the next run re-reads this slice
+au-asic-credit-licensees	STUCK	300	3	no	4	403	88.6	https://data.gov.au/data/api/3/action/datastore_search?resource_id=35953a01-a9a8-4609-8566-c9fa7de465d3&limit=100&offset=300	page 4 answered 403; no position stored, so the next run re-reads this slice
+au-asic-credit-representatives	STUCK	300	3	no	4	403	87.3	https://data.gov.au/data/api/3/action/datastore_search?resource_id=999d9e92-df2c-4d6d-b580-321dcd205292&limit=100&offset=300	page 4 answered 403; no position stored, so the next run re-reads this slice
+au-asic-financial-advisers	STUCK	200	2	no	3	403	67.6	https://data.gov.au/data/api/3/action/datastore_search?resource_id=91d80440-5787-46fc-99de-0c1d93e6cc9f&limit=100&offset=200	page 3 answered 403; no position stored, so the next run re-reads this slice
+au-asic-smsf-auditors	STUCK	100	1	no	2	403	50.4	https://data.gov.au/data/api/3/action/datastore_search?resource_id=13b12e77-8fda-42ca-aa43-23715036836b&limit=100&offset=100	page 2 answered 403; no position stored, so the next run re-reads this slice
+us-sf-311-open311-requests	STUCK	84	19	no	20	429	135.0	https://mobile311.sfgov.org/open311/v2/requests.json?page_size=5&page=20	page 20 answered 429; no position stored, so the next run re-reads this slice
