@@ -60,7 +60,45 @@
 > `batch36.*.txt` glob would have fed 80 unprobed staging rows into every gate
 > run against that verified batch.
 
-**Status: UNVERIFIED candidates. Nothing here is registered or generated into C yet.**
+> ## PROBED 2026-10-12 — 15 of 80 passed, and the prediction below was wrong
+>
+> The set is no longer staging. Every row was probed live with
+> `--check-filter`; the result is **15 PASS, 38 HTTP_ERR, 12 NET_ERR, 8
+> PATH_UNRESOLVED, 7 UNPARSEABLE**. The 15 are generated into
+> `collectors/pivot/table/hp3b37_{jp,fr,us,eu,row}.c` and measured through the
+> binary (`docs/verified-sources-batch37.tsv`); the 65 are kept as data in
+> `docs/rejected-sources-batch37.<beat>.tsv` with the status each one answered.
+>
+> **"The expected probe PASS rate is high" was the wrong prediction, and this
+> is the measurement of what authoring without egress is worth.** The strategy
+> note below reasoned that catalogue endpoints are uniform, so "each needs only
+> the host to be correct" — which is true, and is exactly why the rate is 19%:
+> the host AND path were inferred from the family's convention for all 80, and
+> convention is not a measurement. What the failures actually are:
+>
+> * **the whole `cam` beat, 10 of 10, is gone.** Every ArcGIS service path was
+>   guessed and none exists; the server answers HTTP **200** carrying
+>   `{"error":{"code":400,"message":"Invalid URL"}}`, so only a probe that
+>   judges the body — not the status — can see it.
+> * **8 Socrata domains 404 on `/api/catalog/v1`** while 5 others pass. Those
+>   cities have left Socrata; `api.us.socrata.com/api/catalog/v1?domains=…`
+>   404s for them too, so there is no path that recovers them.
+> * **CKAN portals that are not CKAN.** data.norge.no and dataportal.se serve
+>   Next.js applications, data.gov.be serves HTML, and catalog.data.gov answers
+>   `{"message":"Not Found"}` — four national portals whose API shape was
+>   assumed from the others.
+> * 12 NET_ERR are this environment refusing the host, not evidence about the
+>   source; they are recorded as unreachable-from-here rather than dead.
+>
+> Three defects were found in the 15 that DID pass, none of which a probe can
+> see — see `docs/verified-sources-batch37.tsv` for the measurements:
+> every one of the 75 paged rows lacked a stable sort (a silent skip, measured
+> twice elsewhere on 2026-10-12); `EU_ECB_FXREF` keyed 29 daily rates on a
+> field that is not on the record; and `JP_CKAN_DATAGOJP` was pointed at a host
+> that 301s to another and drops the query string on the way, so it stored ten
+> datasets of 18,096 at rc=0.
+
+**Status: PROBED 2026-10-12. 15 rows promoted into C; 65 rejected with their measured verdicts.**
 Authored 2026-10-02. Rule 1 (never fabricate) is respected: every `description`
 field says "PENDING LIVE PROBE" — no observation counts were invented, because
 the authoring session had **no network egress** to the source hosts (the cloud
