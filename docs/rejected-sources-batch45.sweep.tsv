@@ -1,0 +1,281 @@
+host	rest_root	rest_base	type_name	status	count	x_wp_total	shape
+current.ndl.go.jp	https://current.ndl.go.jp/wp-json	posts	post	200	0	0	empty
+current.ndl.go.jp	https://current.ndl.go.jp/wp-json	pages	page	-1	0		
+current.ndl.go.jp	https://current.ndl.go.jp/wp-json	other	other	200	22	22	machinery
+www.finmac.or.jp	https://www.finmac.or.jp/wp-json	posts	post	200	0	0	empty
+current.ndl.go.jp	https://current.ndl.go.jp/wp-json	lazyblocks	lazyblocks	200	2	2	machinery
+current.ndl.go.jp	https://current.ndl.go.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+current.ndl.go.jp	https://current.ndl.go.jp/wp-json	users	user	403	0		
+www.finmac.or.jp	https://www.finmac.or.jp/wp-json	osirase	osirase	-1	0		
+www.jfnet.or.jp	https://www.jfnet.or.jp/wp-json	information	information	200	98	98	machinery
+www.jfnet.or.jp	https://www.jfnet.or.jp/wp-json	information_member	information_member	200	2	2	machinery
+www.jfnet.or.jp	https://www.jfnet.or.jp/wp-json	p_information	p_information	200	27	27	machinery
+www.jfnet.or.jp	https://www.jfnet.or.jp/wp-json	report	report	200	0	0	empty
+www.adr.go.jp	https://www.adr.go.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.adr.go.jp	https://www.adr.go.jp/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+www.adr.go.jp	https://www.adr.go.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+www.adr.go.jp	https://www.adr.go.jp/wp-json	users	user	404	0		
+portal.data.metro.tokyo.lg.jp	https://portal.data.metro.tokyo.lg.jp/wp-json	users	user	403	0		
+corp.itmedia.co.jp	https://corp.itmedia.co.jp/wp-json	posts	post	200	0	0	empty
+corp.itmedia.co.jp	https://corp.itmedia.co.jp/wp-json	users	user	200	0	0	empty
+front.geospatial.jp	https://front.geospatial.jp/wp-json	users	user	403	0		
+www.ybs.jp	https://www.ybs.jp/wp-json	posts	post	200	0	0	empty
+www.yts.co.jp	https://www.yts.co.jp/wp-json	posts	post	200	0	0	empty
+www.ybs.jp	https://www.ybs.jp/wp-json	header_banner	header_banner	200	0	0	empty
+www.ybs.jp	https://www.ybs.jp/wp-json	main_banner	main_banner	200	8	8	machinery
+www.zennichi.or.jp	https://www.zennichi.or.jp/wp-json	measurement	measurement	200	43	43	machinery
+www.ybs.jp	https://www.ybs.jp/wp-json	sub_banner	sub_banner	200	3	3	machinery
+www.shueisha.co.jp	https://www.shueisha.co.jp/wp-json	posts	post	200	0	0	empty
+www.tokuben.or.jp	https://tokuben.or.jp/wp-json	users	user	403	0		
+www.ybs.jp	https://www.ybs.jp/wp-json	bottom_banner	bottom_banner	200	14	14	machinery
+www.ybc.co.jp	https://www.ybc.co.jp/wp-json	coblocks_pattern	coblocks_pattern	200	0	0	empty
+www.ybs.jp	https://www.ybs.jp/wp-json	bottom_ybs	bottom_ybs	200	0	0	empty
+www.ybs.jp	https://www.ybs.jp/wp-json	bottom_ad	bottom_ad	200	0	0	empty
+www.shinbunka.co.jp	https://www.shinbunka.co.jp/wp-json	users	user	401	0		
+www.ybs.jp	https://www.ybs.jp/wp-json	side_banner	side_banner	200	0	0	empty
+www.ybc.co.jp	https://www.ybc.co.jp/wp-json	topslide	topslide	200	7	7	machinery
+www.sagaben.or.jp	https://www.sagaben.or.jp/wp-json	users	user	403	0		
+www.saitamacci.or.jp	https://www.saitamacci.or.jp/wp-json	search	search	200	6	6	machinery
+www.lanscope.jp	https://www.lanscope.jp/wp-json	pages	page	200	0	0	empty
+www.lanscope.jp	https://www.lanscope.jp/wp-json	request	request	200	0	0	empty
+www.lanscope.jp	https://www.lanscope.jp/wp-json	mv	mv	200	4	4	machinery
+www.saitamacci.or.jp	https://www.saitamacci.or.jp/wp-json	link	link	200	19	19	machinery
+www.lanscope.jp	https://www.lanscope.jp/wp-json	users	user	404	0		
+www.yts.co.jp	https://www.yts.co.jp/wp-json	information	information	200	26	26	machinery
+www.qab.co.jp	https://www.qab.co.jp/wp-json	nxt_builder	nxt_builder	200	0	0	empty
+www.qab.co.jp	https://www.qab.co.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.sun-tv.co.jp	https://www.sun-tv.co.jp/wp-json	manage	manage	200	3	3	machinery
+www.qab.co.jp	https://www.qab.co.jp/wp-json	feedzy_imports	feedzy_imports	200	0	0	empty
+www.jmf.or.jp	https://www.jmf.or.jp/wp-json	slider	slider	200	1	1	machinery
+www.qab.co.jp	https://www.qab.co.jp/wp-json	feedzy_categories	feedzy_categories	200	0	0	empty
+www.yts.co.jp	https://www.yts.co.jp/wp-json	topslide	topslide	200	5	5	machinery
+www.naben.or.jp	https://www.naben.or.jp/wp-json	pages	page	200	0	80	not-a-list
+www.qab.co.jp	https://www.qab.co.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+www.nben.or.jp	https://www.nben.or.jp/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+www.qab.co.jp	https://www.qab.co.jp/wp-json	templately_library	templately_library	200	0	0	empty
+www.jmf.or.jp	https://www.jmf.or.jp/wp-json	linkimage	linkimage	200	2	2	machinery
+www.jb-honshi.co.jp	https://www.jb-honshi.co.jp/wp-json	banner	banner	200	28	28	machinery
+www.itv6.jp	https://www.itv6.jp/wp-json	filter-search	filter-search	200	0	0	empty
+www.hyogoben.or.jp	https://www.hyogoben.or.jp/wp-json	widgetopts_snippet	widgetopts_snippet	200	1	1	machinery
+www.hyogoben.or.jp	https://www.hyogoben.or.jp/wp-json	users	user	403	0		
+www.fukuben.or.jp	https://fukuben.or.jp/wp-json	link_list	link_list	200	69	69	machinery
+www.fmyamato.co.jp	https://www.fmyamato.co.jp/wp-json	users	user	401	0		
+www.kutv.co.jp	https://www.kutv.co.jp/wp-json	kutv_pg	kutv_pg	-1	0		
+www.kutv.co.jp	https://www.kutv.co.jp/wp-json	evening_kochi	evening_kochi	200	0	0	empty
+www.fukuben.or.jp	https://fukuben.or.jp/wp-json	top_bnrslide	top_bnrslide	200	1	1	machinery
+www.itv6.jp	https://www.itv6.jp/wp-json	presentselecter	presentselecter	200	1	1	machinery
+www.gunben.or.jp	https://www.gunben.or.jp/wp-json	users	user	-1	0		
+www.yts.co.jp	https://www.yts.co.jp/wp-json	sugawaratomoka	sugawaratomoka	200	0	0	empty
+www.itv6.jp	https://www.itv6.jp/wp-json	sp_post_carousel	sp_post_carousel	200	18	18	machinery
+www.itv6.jp	https://www.itv6.jp/wp-json	sp_smart_builder	sp_smart_builder	200	0	0	empty
+www.itv6.jp	https://www.itv6.jp/wp-json	sp_smart_post_font	sp_smart_post_font	200	0	0	empty
+www.yts.co.jp	https://www.yts.co.jp/wp-json	emergency	emergency	200	0	0	empty
+www.itv6.jp	https://www.itv6.jp/wp-json	sp_post_template	sp_post_template	200	0	0	empty
+www.itv6.jp	https://www.itv6.jp/wp-json	visibility_preset	visibility_preset	200	0	0	empty
+www.itv6.jp	https://www.itv6.jp/wp-json	ghostkit_template	ghostkit_template	200	0	0	empty
+www.itv6.jp	https://www.itv6.jp/wp-json	loos-cbp	loos-cbp	200	100	163	machinery
+www.ybc.co.jp	https://www.ybc.co.jp/wp-json	smile-photo_work	smile-photo_work	200	0	0	empty
+www.kutv.co.jp	https://www.kutv.co.jp/wp-json	12468cp	12468cp	200	0	0	empty
+www.kutv.co.jp	https://www.kutv.co.jp/wp-json	keion	keion	200	0	0	empty
+www.yts.co.jp	https://www.yts.co.jp/wp-json	yamagataouentopics	yamagataouentopics	200	0	0	empty
+wired.jp	https://wired.jp/wp-json	users	user	401	0		
+www.cbc.co.jp	https://www.cbc.co.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	3	3	machinery
+www.cbc.co.jp	https://www.cbc.co.jp/wp-json	users	user	401	0		
+www.yts.co.jp	https://www.yts.co.jp/wp-json	moriyamamoeka	moriyamamoeka	200	0	0	empty
+radiocafe.jp	https://radiocafe.jp/wp-json	secondline_psb_post	secondline_psb_post	200	0	0	empty
+library.pref.yamaguchi.lg.jp	https://library.pref.yamaguchi.lg.jp/wp-json	cta	cta	200	0	0	empty
+library.pref.yamaguchi.lg.jp	https://library.pref.yamaguchi.lg.jp/wp-json	lp	lp	200	1	1	machinery
+library.pref.yamaguchi.lg.jp	https://library.pref.yamaguchi.lg.jp/wp-json	common	common	200	0	0	empty
+www.sumitomo-rd.co.jp	https://www.sumitomo-rd.co.jp/wp-json	posts	post	200	0	0	empty
+library.pref.yamaguchi.lg.jp	https://library.pref.yamaguchi.lg.jp/wp-json	cat-page	cat-page	200	0	0	empty
+www.webcartop.jp	https://www.webcartop.jp/wp-json	users	user	404	0		
+www.sumitomo-rd.co.jp	https://www.sumitomo-rd.co.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	6	6	machinery
+www.seikatsu110.jp	https://www.seikatsu110.jp/wp-json	review	review	200	0	0	empty
+www.the-miyanichi.co.jp	https://www.the-miyanichi.co.jp/wp-json	pages	page	404	0		
+www.the-miyanichi.co.jp	https://www.the-miyanichi.co.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+www.sumitomo-rd.co.jp	https://www.sumitomo-rd.co.jp/wp-json	users	user	404	0		
+www.the-miyanichi.co.jp	https://www.the-miyanichi.co.jp/wp-json	users	user	404	0		
+www.qetic.jp	https://qetic.jp/wp-json	posts	post	200	0	42230	not-a-list
+www.shinetsu.co.jp	https://www.shinetsu.co.jp/wp-json	users	user	404	0		
+www.seikatsu110.jp	https://www.seikatsu110.jp/wp-json	library	library	200	0	5230	not-a-list
+www.kutv.co.jp	https://www.kutv.co.jp/wp-json	ditty	ditty	200	0	0	empty
+www.kutv.co.jp	https://www.kutv.co.jp/wp-json	ditty_layout	ditty_layout	200	3	3	machinery
+www.neweconomy.jp	https://www.neweconomy.jp/wp-json	users	user	401	0		
+www.lisani.jp	https://www.lisani.jp/wp-json	users	user	404	0		
+www.mens-ex.jp	https://www.mens-ex.jp/wp-json	test	test	200	0	0	empty
+www.mens-ex.jp	https://www.mens-ex.jp/wp-json	slider	slider	200	6	6	machinery
+www.mens-ex.jp	https://www.mens-ex.jp/wp-json	smartnews	smartnews	200	1	1	machinery
+www.mens-ex.jp	https://www.mens-ex.jp/wp-json	tieup	tieup	200	1	1	machinery
+www.mens-ex.jp	https://www.mens-ex.jp/wp-json	sidebnr	sidebnr	200	2	2	machinery
+www.kabuki-bito.jp	https://www.kabuki-bito.jp/wp-json	posts	post	200	0	764	not-a-list
+www.mens-ex.jp	https://www.mens-ex.jp/wp-json	users	user	401	0		
+www.japanpolicyforum.jp	https://www.japanpolicyforum.jp/wp-json	mailpoet_email	mailpoet_email	200	0	0	empty
+www.nistep.go.jp	https://www.nistep.go.jp/wp-json	users	user	401	0		
+www.hazardlab.jp	https://www.hazardlab.jp/wp-json	posts	post	200	0	198	not-a-list
+www.cyclesports.jp	https://www.cyclesports.jp/wp-json	posts	post	200	0	0	empty
+www.kabuki-bito.jp	https://www.kabuki-bito.jp/wp-json	bnrs	bnrs	200	1	1	machinery
+www.cyclesports.jp	https://www.cyclesports.jp/wp-json	users	user	404	0		
+www.eri.u-tokyo.ac.jp	https://www.eri.u-tokyo.ac.jp/wp-json	visiting-researcher	visiting-researcher	200	0	0	empty
+www.jcer.or.jp	https://www.jcer.or.jp/wp-json	users	user	404	0		
+www.hazardlab.jp	https://www.hazardlab.jp/wp-json	aboutsite	aboutsite	200	0	0	empty
+www.hazardlab.jp	https://www.hazardlab.jp/wp-json	racehorse	racehorse	200	0	0	empty
+www.hazardlab.jp	https://www.hazardlab.jp/wp-json	field	field	200	0	0	empty
+www.hazardlab.jp	https://www.hazardlab.jp/wp-json	race	race	200	0	0	empty
+www.hazardlab.jp	https://www.hazardlab.jp/wp-json	news	news	200	0	0	empty
+www.hazardlab.jp	https://www.hazardlab.jp/wp-json	users	user	404	0		
+whiskymag.jp	https://whiskymag.jp/wp-json	posts	post	200	0	1993	not-a-list
+thebridge.jp	https://thebridge.jp/wp-json	feedback	feedback	401	0		
+videosalon.jp	https://videosalon.jp/wp-json	lazyblocks	lazyblocks	200	8	8	machinery
+thebridge.jp	https://thebridge.jp/wp-json	jetpack-forms	jetpack_form	401	0		
+www.axismag.jp	https://www.axismag.jp/wp-json	posts	post	200	0	0	empty
+videosalon.jp	https://videosalon.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+thebridge.jp	https://thebridge.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+thebridge.jp	https://thebridge.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+thebridge.jp	https://thebridge.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+volleyballking.jp	https://volleyballking.jp/wp-json	users	user	200	0	0	empty
+www.bicycleclub.jp	https://www.funq.jp/wp-json	posts	post	200	0	28728	not-a-list
+whiskymag.jp	https://whiskymag.jp/wp-json	users	user	401	0		
+tsurinews.jp	https://tsurinews.jp/wp-json	posts	post	200	0	26309	not-a-list
+serai.jp	https://serai.jp/wp-json	lazyblocks	lazyblocks	200	3	3	machinery
+otocoto.jp	https://otocoto.jp/wp-json	posts	post	200	0	0	empty
+touchlab.jp	https://touchlab.jp/wp-json	snippets	ata_snippets	404	0		
+serai.jp	https://serai.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+sogyotecho.jp	https://sogyotecho.jp/wp-json	posts	post	200	0	4293	not-a-list
+serai.jp	https://serai.jp/wp-json	users	user	401	0		
+www.animate.co.jp	https://www.animate.co.jp/api	ikebukuro_schedule	ikebukuro_schedule	200	0	0	empty
+touchlab.jp	https://touchlab.jp/wp-json	pochipps	pochipps	200	100	609	machinery
+surfnews.jp	https://www.surfnews.jp/wp-json	post_grid	post_grid	200	1	1	machinery
+surfnews.jp	https://www.surfnews.jp/wp-json	post_grid_template	post_grid_template	200	0	0	empty
+www.as-web.jp	https://www.as-web.jp/wp-json	visibility_preset	visibility_preset	200	0	0	empty
+surfnews.jp	https://www.surfnews.jp/wp-json	awl_filter_gallery	awl_filter_gallery	200	0	0	empty
+www.kek.jp	https://www.kek.jp/wp-json	bid-informations	bid_information	200	30	30	machinery
+surfnews.jp	https://www.surfnews.jp/wp-json	post_grid_layout	post_grid_layout	200	3	3	machinery
+oggi.jp	https://oggi.jp/wp-json	users	user	401	0		
+newsphere.jp	https://newsphere.jp/wp-json	posts	post	200	0	20971	not-a-list
+nikkan-spa.jp	https://nikkan-spa.jp/wp-json	spa_blog_tamo	spa_blog_tamo	200	0	0	empty
+motor-fan.jp	https://motor-fan.jp/wp-json	posts	post	200	0	0	empty
+www.as-web.jp	https://www.as-web.jp/wp-json	writer	writer	200	0	0	empty
+otapol.jp	https://otapol.jp/wp-json	posts	post	200	0	89	not-a-list
+nikkan-spa.jp	https://nikkan-spa.jp/wp-json	spa_blog_gomesu	spa_blog_gomesu	200	0	0	empty
+www.as-web.jp	https://www.as-web.jp/wp-json	brand	brand	200	0	0	empty
+steep.jp	https://steep.jp/wp-json	pochipps	pochipps	200	100	240	machinery
+steep.jp	https://steep.jp/wp-json	lp	lp	200	0	0	empty
+sotokoto-online.jp	https://sotokoto-online.jp/wp-json	lp	lp	200	0	0	empty
+news.denfaminicogamer.jp	https://news.denfaminicogamer.jp/wp-json	posts	post	200	0	54409	not-a-list
+omocoro.jp	https://omocoro.jp/wp-json	protected_areas	protected_areas	200	0	0	empty
+sotokoto-online.jp	https://sotokoto-online.jp/wp-json	blog_parts	blog_parts	200	3	3	machinery
+omocoro.jp	https://omocoro.jp/wp-json	users	user	404	0		
+news.nissyoku.co.jp	https://news.nissyoku.co.jp/wp-json	pages	page	200	0	78	not-a-list
+mag.tecture.jp	https://mag.tecture.jp/wp-json	posts	post	200	0	0	empty
+motor-fan.jp	https://motor-fan.jp/wp-json	lazyblocks	lazyblocks	200	7	7	machinery
+marketeer.jp	https://marketeer.jp/wp-json	posts	post	200	0	147	not-a-list
+sogyotecho.jp	https://sogyotecho.jp/wp-json	pages	page	-1	0		
+www.animate.co.jp	https://www.animate.co.jp/api	users	user	403	0		
+otocoto.jp	https://otocoto.jp/wp-json	column	column	-1	0		
+motor-fan.jp	https://motor-fan.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+steep.jp	https://steep.jp/wp-json	blog_parts	blog_parts	200	22	22	machinery
+motor-fan.jp	https://motor-fan.jp/wp-json	visibility_preset	visibility_preset	200	0	0	empty
+nomunication.jp	https://www.nomunication.jp/wp-json	posts	post	-1	0		
+www.as-web.jp	https://www.as-web.jp/wp-json	users	user	200	0	0	empty
+sogyotecho.jp	https://sogyotecho.jp/wp-json	ctas	pum_cta	404	0		
+mi-journey.jp	https://mi-journey.jp/foodie/wp-json	posts	post	200	0	3251	not-a-list
+kokocara.pal-system.co.jp	https://kokocara.pal-system.co.jp/wp-json	pages	page	200	0	0	empty
+sogyotecho.jp	https://sogyotecho.jp/wp-json	users	user	401	0		
+money-lab.jp	https://www.money-lab.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+kokocara.pal-system.co.jp	https://kokocara.pal-system.co.jp/wp-json	users	user	404	0		
+kougeihin.jp	https://kougeihin.jp/wp-json	posts	post	200	0	0	empty
+news.nissyoku.co.jp	https://news.nissyoku.co.jp/wp-json	banner	banner	200	57	57	machinery
+money-lab.jp	https://www.money-lab.jp/wp-json	cta	cta	200	0	0	empty
+kenchiku.co.jp	https://kenchiku.co.jp/wp-json	posts	post	200	0	0	empty
+mag.tecture.jp	https://mag.tecture.jp/wp-json	mvtop	mvtop	200	8	8	machinery
+news.careerconnection.jp	https://news.careerconnection.jp/wp-json	dx	dx	200	0	307	not-a-list
+liginc.co.jp	https://liginc.co.jp/wp-json	posts	post	200	0	5656	not-a-list
+jisin.jp	https://jisin.jp/wp-json	users	user	403	0		
+kinmaweb.jp	https://kinmaweb.jp/wp-json	users	user	403	0		
+solarjournal.jp	https://solarjournal.jp/wp-json	feedback	feedback	401	0		
+jbja.jp	https://www.jbja.jp/wp-json	posts	post	200	0	7687	not-a-list
+locari.jp	https://locari.jp/wp-json	posts	post	200	0	110542	not-a-list
+iphone-mania.jp	https://iphone-mania.jp/wp-json	lp	lp	200	0	0	empty
+solarjournal.jp	https://solarjournal.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+iotnews.jp	https://iotnews.jp/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+locari.jp	https://locari.jp/wp-json	pages	page	200	0	0	empty
+iotnews.jp	https://iotnews.jp/wp-json	ai-catalog	ai-catalog	200	0	0	empty
+labs.gree.jp	https://labs.gree.jp/blog/wp-json	posts	post	200	0	445	not-a-list
+iphone-mania.jp	https://iphone-mania.jp/wp-json	blog_parts	blog_parts	200	22	22	machinery
+solarjournal.jp	https://solarjournal.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+iotnews.jp	https://iotnews.jp/wp-json	gblocks_styles	gblocks_styles	200	0	0	empty
+motor-fan.jp	https://motor-fan.jp/wp-json	taxonomy-page	taxonomy-page	200	70	70	machinery
+ideasforgood.jp	https://ideasforgood.jp/wp-json	posts	post	200	0	5033	not-a-list
+iemone.jp	https://iemone.jp/wp-json	posts	post	500	0		
+iotnews.jp	https://iotnews.jp/wp-json	gblocks-conditions	gblocks_condition	200	0	0	empty
+motor-fan.jp	https://motor-fan.jp/wp-json	location	location	200	0	0	empty
+nomunication.jp	https://www.nomunication.jp/wp-json	feedback	feedback	401	0		
+iotnews.jp	https://iotnews.jp/wp-json	gblocks_overlay	gblocks_overlay	200	0	0	empty
+getnews.jp	https://getnews.jp/wp-json	pages	page	200	0	127	not-a-list
+nomunication.jp	https://www.nomunication.jp/wp-json	jetpack-forms	jetpack_form	401	0		
+labs.gree.jp	https://labs.gree.jp/blog/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+kougeihin.jp	https://kougeihin.jp/wp-json	curation	curation	200	0	0	empty
+labs.gree.jp	https://labs.gree.jp/blog/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+getnavi.jp	https://getnavi.jp/wp-json	pochipps	pochipps	200	89	89	machinery
+gaiax-socialmedialab.jp	https://gaiax-socialmedialab.jp/wp-json	posts	post	200	0	1447	not-a-list
+funq.jp	https://www.funq.jp/wp-json	posts	post	200	0	28728	not-a-list
+ideasforgood.jp	https://ideasforgood.jp/wp-json	pages	page	200	0	1300	not-a-list
+iemone.jp	https://iemone.jp/wp-json	pr	pr	200	100	221	machinery
+ideasforgood.jp	https://ideasforgood.jp/wp-json	project	project	200	0	0	empty
+greenz.jp	https://greenz.jp/wp-json	posts	post	200	0	7686	not-a-list
+nomunication.jp	https://www.nomunication.jp/wp-json	activity-log-events	jp_act_log_event	-1	0		
+nomunication.jp	https://www.nomunication.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+nomunication.jp	https://www.nomunication.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+gaiax-socialmedialab.jp	https://gaiax-socialmedialab.jp/wp-json	document	document	502	0		
+otocoto.jp	https://otocoto.jp/wp-json	interview	interview	-1	0		
+greenz.jp	https://greenz.jp/wp-json	feedback	feedback	401	0		
+businessnetwork.jp	https://businessnetwork.jp/wp-json	posts	post	200	0	0	empty
+motor-fan.jp	https://motor-fan.jp/wp-json	article	article	200	0	50451	not-a-list
+digiday.jp	https://digiday.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+greenz.jp	https://greenz.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+chiik.jp	https://chiik.jp/wp-json	posts	post	200	0	5151	not-a-list
+digiday.jp	https://digiday.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+greenz.jp	https://greenz.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+chiik.jp	https://chiik.jp/wp-json	users	user	404	0		
+baseballking.jp	https://baseballking.jp/wp-json	taxonomy-page	taxonomy-page	200	0	0	empty
+buzzmag.jp	https://buzzmag.jp/wp-json	feedback	feedback	401	0		
+getnavi.jp	https://getnavi.jp/wp-json	users	user	-1	0		
+buzzmag.jp	https://buzzmag.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+buzzmag.jp	https://buzzmag.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+agora-web.jp	https://agora-web.jp/wp-json	posts	post	200	0	79072	not-a-list
+baseballking.jp	https://baseballking.jp/wp-json	series	series	200	0	0	empty
+agora-web.jp	https://agora-web.jp/wp-json	pages	page	200	0	21	not-a-list
+baseballking.jp	https://baseballking.jp/wp-json	users	user	200	0	0	empty
+brutus.jp	https://brutus.jp/wp-json	let_me_know	let_me_know	200	9	9	machinery
+turns.jp	http://turns.jp/wp-json	xo_liteslider	xo_liteslider	200	28	28	machinery
+brutus.jp	https://brutus.jp/wp-json	popup	popup	200	0	0	empty
+motor-fan.jp	https://motor-fan.jp/wp-json	headline	headline	200	0	742	not-a-list
+brutus.jp	https://brutus.jp/wp-json	popup-movie	popup-movie	200	0	0	empty
+cancam.jp	https://cancam.jp/wp-json	lazyblocks	lazyblocks	200	1	1	machinery
+cancam.jp	https://cancam.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+brutus.jp	https://brutus.jp/wp-json	brutus_withbrutus	brutus_withbrutus	200	0	0	empty
+cancam.jp	https://cancam.jp/wp-json	users	user	401	0		
+colocal.jp	https://colocal.jp/wp-json	top-carousel	top-carousel	200	6	6	machinery
+brutus.jp	https://brutus.jp/wp-json	banner	banner	200	3	3	machinery
+colocal.jp	https://colocal.jp/wp-json	marquee_links	marquee_links	200	1	1	machinery
+colocal.jp	https://colocal.jp/wp-json	recommend	recommend	200	10	10	machinery
+basketballking.jp	https://basketballking.jp/wp-json	taxonomy-page	taxonomy-page	200	0	0	empty
+colocal.jp	https://colocal.jp/wp-json	special_banner	special_banner	200	4	4	machinery
+colocal.jp	https://colocal.jp/wp-json	related_articles	related_articles	200	0	0	empty
+brutus.jp	https://brutus.jp/wp-json	marquee_links	marquee_links	200	2	2	machinery
+motor-fan.jp	https://motor-fan.jp/wp-json	users	user	200	0	0	empty
+brutus.jp	https://brutus.jp/wp-json	top-visual	top-visual	200	66	66	machinery
+brutus.jp	https://brutus.jp/wp-json	top-section	top-section	200	1	1	machinery
+news.nissyoku.co.jp	https://news.nissyoku.co.jp/wp-json	movie	movie	200	0	0	empty
+brutus.jp	https://brutus.jp/wp-json	users	user	404	0		
+news.nissyoku.co.jp	https://news.nissyoku.co.jp/wp-json	paper	paper	200	0	0	empty
+news.nissyoku.co.jp	https://news.nissyoku.co.jp/wp-json	schedule-mail-queue	schedule-mail-queue	200	100	1500	machinery
+news.nissyoku.co.jp	https://news.nissyoku.co.jp/wp-json	tie-up-free-page	tie-up-free-page	200	100	253	machinery
+news.nissyoku.co.jp	https://news.nissyoku.co.jp/wp-json	tie-up-free	tie-up-free	200	4	4	machinery
+news.nissyoku.co.jp	https://news.nissyoku.co.jp/wp-json	tie-up	tie-up	200	2	2	machinery
+news.nissyoku.co.jp	https://news.nissyoku.co.jp/wp-json	top-fixed	top-fixed	200	87	87	machinery
+news.nissyoku.co.jp	https://news.nissyoku.co.jp/wp-json	toppickup-kojocho	toppickup-kojocho	200	0	0	empty
+news.nissyoku.co.jp	https://news.nissyoku.co.jp/wp-json	yahoo	yahoo	200	100	1723	machinery
+funq.jp	https://www.funq.jp/wp-json	pages	page	200	100	138	duplicate-endpoint
+funq.jp	https://www.funq.jp/wp-json	magazines	magazines	200	100	1136	duplicate-endpoint
+funq.jp	https://www.funq.jp/wp-json	users	user	200	100	170	duplicate-endpoint

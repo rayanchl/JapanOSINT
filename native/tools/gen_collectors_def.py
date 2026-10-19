@@ -85,6 +85,11 @@ OVERRIDES = {
     "thinktanks": "grp_media", "trade_press": "grp_media", "ngo_rights": "grp_safety", "conflict_press": "grp_safety",
     "arxiv": "grp_science", "science_press": "grp_science", "finance_press": "grp_corporate",
     "osm": "grp_geo", "hp3b28_jpdb": "grp_science", "reddit": "grp_social",
+    "jp_webmedia": "grp_media",   # batches 43/44: 400 Japanese web-media/blog RSS feeds, authored under "social"
+    # batch 45: WordPress collections of hosts the registry already held, split by host type
+    "hp3b45_jpwpmedia": "grp_media", "hp3b45_jpwpcorp": "grp_corporate", "hp3b45_jpwporg": "grp_legal",
+    "hp3b45_jpwpculture": "grp_culture", "hp3b45_jpwpcyber": "grp_cyber", "hp3b45_jpwpscience": "grp_science",
+    "hp3b45_jpwpenv": "grp_environment", "hp3b45_jpwpgov": "grp_government",
     "_maint": "grp_internal", "_enrich": "grp_internal", "_test": "grp_internal", "_probe": "grp_internal",
     "_breach": "grp_cyber",
     "camera-discovery": "grp_surveillance", "us_cameras": "grp_surveillance",
@@ -339,6 +344,16 @@ LABELS = {
     "hp3b42_jpcptuni": ("Japan — university sites, WordPress custom post types (batch 42)", "日本 大学サイト カスタム投稿", None),
     "hp3b42_jpcptmuni": ("Japan — municipal sites, WordPress custom post types (batch 42)", "日本 自治体サイト カスタム投稿", None),
     "hp3b42_jpcptbank": ("Japan — bank sites, WordPress custom post types (batch 42)", "日本 銀行サイト カスタム投稿", None),
+    "jp_webmedia": ("Japan — web media & blogs, RSS (batches 43/44)", "日本 ウェブメディア・ブログ RSS", "400 Japanese online magazines, tech and lifestyle blogs, tourism and business sites (jp-b43-*, jp-b44-*)."),
+    # batch 45: hosts already live in the registry under another endpoint, asked for their WordPress REST root
+    "hp3b45_jpwpmedia": ("Japan — online media & magazines, WordPress collections (batch 45)", "日本 ウェブメディア WordPress", None),
+    "hp3b45_jpwpcorp": ("Japan — company sites, WordPress collections (batch 45)", "日本 企業サイト WordPress（45）", None),
+    "hp3b45_jpwporg": ("Japan — associations & professional bodies, WordPress collections (batch 45)", "日本 団体・士業 WordPress", None),
+    "hp3b45_jpwpculture": ("Japan — libraries & culture, WordPress collections (batch 45)", "日本 図書館・文化 WordPress", None),
+    "hp3b45_jpwpcyber": ("Japan — security organisations, WordPress collections (batch 45)", "日本 セキュリティ団体 WordPress", None),
+    "hp3b45_jpwpscience": ("Japan — research institutions, WordPress collections (batch 45)", "日本 研究機関 WordPress", None),
+    "hp3b45_jpwpenv": ("Japan — hazard & geospatial sites, WordPress collections (batch 45)", "日本 防災・地理空間 WordPress", None),
+    "hp3b45_jpwpgov": ("Japan — government sites, WordPress collections (batch 45)", "日本 政府サイト WordPress", None),
 }
 
 COUNTRY = {
