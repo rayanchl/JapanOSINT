@@ -203,9 +203,15 @@ jobs:
   # ThreadSanitizer, which is the offline half (tsan-sched drives real
   # collectors and would need network). Separate job because the TSan object
   # tree is a second full build.
+  # 90, not 60: the suite is 74 tests (48 on 2026-10-19 main, whose job took
+  # 37 min). Measured from the run that hit 60: build 2.5 min, ~28 s a test,
+  # test_alert_tenancy 17.5 min on its own (as on main: racer threads each
+  # seed the 48k-row registry), and test_service_vec reached at minute 42 —
+  # then cancelled inside it with 14 tests queued, a timeout and never a
+  # result. vecindex_items_state() halved that test; this is the headroom.
   thread-sanitizer:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
