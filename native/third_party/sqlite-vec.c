@@ -8292,6 +8292,7 @@ int vec0_write_metadata_value(vec0_vtab *p, int metadata_column_idx, i64 rowid, 
         }
         sqlite3_stmt * stmt;
         rc = sqlite3_prepare_v2(p->db, zSql, -1, &stmt, NULL);
+        sqlite3_free((void *) zSql);  /* JapanOSINT local patch: v0.1.9 leaked it */
         if(rc != SQLITE_OK) {
           goto done;
         }
@@ -8313,6 +8314,7 @@ int vec0_write_metadata_value(vec0_vtab *p, int metadata_column_idx, i64 rowid, 
         }
         sqlite3_stmt * stmt;
         rc = sqlite3_prepare_v2(p->db, zSql, -1, &stmt, NULL);
+        sqlite3_free((void *) zSql);  /* JapanOSINT local patch: v0.1.9 leaked it */
         if(rc != SQLITE_OK) {
           goto done;
         }
@@ -8947,6 +8949,7 @@ int vec0Update_Delete_ClearMetadata(vec0_vtab *p, int metadata_idx, i64 rowid, i
         }
         sqlite3_stmt * stmt;
         rc = sqlite3_prepare_v2(p->db, zSql, -1, &stmt, NULL);
+        sqlite3_free((void *) zSql);  /* JapanOSINT local patch: v0.1.9 leaked it */
         if(rc != SQLITE_OK) {
           goto done;
         }
@@ -9064,6 +9067,7 @@ int vec0Update_UpdateAuxColumn(vec0_vtab *p, int auxiliary_column_idx, sqlite3_v
     return SQLITE_NOMEM;
   }
   rc = sqlite3_prepare_v2(p->db, zSql, -1, &stmt, NULL);
+  sqlite3_free((void *) zSql);  /* JapanOSINT local patch: v0.1.9 leaked it */
   if(rc != SQLITE_OK) {
     return rc;
   }

@@ -156,14 +156,13 @@ jobs:
         working-directory: native
         run: python3 tools/audit_batch_reachable.py --quiet ../docs/candidate-sources-batch*.txt
 
-      # Duplicate ids/endpoints against the binary's registry. Only meaningful
+      # Duplicate ids/endpoints against the binary's registry is only meaningful
       # for a set NOT YET GENERATED into C — on a shipped manifest every row is
-      # its own DUP-ID — so it checks the staging set, which is batch 37
-      # (docs/batch37/STAGING_README.md). Measured 2026-10-06: 0 collisions,
-      # 0 near-misses against the 18,643 ids the binary registers. Move the glob when the staging set moves.
-      - name: Staging manifest exclusions (no duplicate id or endpoint)
-        working-directory: native
-        run: python3 tools/batch_exclusions.py --bin ./bin/japanosint --check ../docs/candidate-sources-batch37.*.txt
+      # its own DUP-ID. The step checked batch 37's staging set until main
+      # generated it (5d5e1f99, hp3b37_*.c), after which it failed 28 rows on
+      # their own C. No staging set is pending; run
+      #   python3 tools/batch_exclusions.py --bin ./bin/japanosint --check <new manifest>
+      # on the next one, and restore a step pointing at it while it stages.
 
       # NOT GATING, deliberately and visibly. On 2026-10-06 this reports 104 of
       # 7,685 rows "declare no pagination but look paged" — all of them in the

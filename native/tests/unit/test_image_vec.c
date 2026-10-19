@@ -207,7 +207,9 @@ static int web_start(const char *dir, int port) {
   if (p == 0) {
     char ps[16];
     snprintf(ps, sizeof ps, "%d", port);
-    prctl(PR_SET_PDEATHSIG, SIGKILL);
+#ifdef __linux__
+    prctl(PR_SET_PDEATHSIG, SIGKILL);   /* sys/prctl.h via vision_stub.h */
+#endif
     if (!freopen("/dev/null", "w", stdout)) { /* harmless */ }
     if (!freopen("/dev/null", "w", stderr)) { /* harmless */ }
     execlp("python3", "python3", "-m", "http.server", ps, "--bind", "127.0.0.1",
