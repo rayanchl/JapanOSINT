@@ -59,7 +59,9 @@ the Wikidata hosts 2,965 have no server and 1,016 answer 403.
 ## Gates (2026-10-18, all live)
 
 **16,520 rows ship — 5,640 Italian, 9,319 French, 1,561 from 157 countries via
-Wikidata — every one measured emitted-AND-stored in the real binary.**
+Wikidata — every one measured emitted-AND-stored in the real binary** (16,550
+after the retry pass of 2026-10-19: 5,665 / 9,323 / 1,562, 277,706 emitted /
+277,362 stored).
 277,289 records emitted, 276,945 stored. `docs/verified-sources-batch45.tsv`
 carries the probe reading and the emit reading per row; the 15,761 candidates
 that did not ship are in `docs/rejected-sources-batch45.tsv` by beat and stage.

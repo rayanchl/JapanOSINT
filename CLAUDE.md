@@ -39,10 +39,16 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 47,178** (2026-10-19). The count ledger — every
+**The registered count is 47,724** (2026-10-19, after merging main's 21,789 —
+its own `jp_feeds_batch41..44.c` beats and PR #48's paging cycle — into this
+branch's 47,178, less six news feeds both sessions had added; main merged first,
+so its rows stay). **Batch numbers 43 and 44 now name two things**: main's
+`collectors/sources/jp_feeds_batch4N.c` beats and this branch's `hp3b4N_*`
+tables with `JO4N_` ids — no file or id collides, but read the BEAT, as with
+34 and 35. The count ledger — every
 batch from 37 to 46, what seeded it, what it measured and what it taught — is
 `docs/SOURCE_COUNT_LEDGER.md`; this file keeps the rules and the current number.
-Both floors are re-recorded at 47,178 and `make source-count` agrees. The
+Both floors are re-recorded at 47,724 and `make source-count` agrees. The
 lessons from batches 43–46 that a new batch must not relearn:
 
 * **A registration count is not a website, and a build is not a registry.**
@@ -658,6 +664,63 @@ enough that batches 31 and 32 could both stop registering with CI green.
 Re-record them when a batch lands (`make source-floor-record
 registry-floor-record`).
 
+## Source pages API (2026-10-12)
+
+`core/sourceapi.c` serves the Sources, source detail and Collectors pages:
+`GET /api/sources/search` (server-searched, paged, `meta.facets`),
+`GET /api/sources/:id/detail` (the row as declared via `hp_describe_json`,
+schedule, status, data shape, notices, runs, credentials, pacing, provenance),
+`GET /api/sources/:id/summary` (small-model summary from measured facts only —
+on any LLM failure it returns the status code AND the facts, never prose),
+`GET /api/collectors`, `GET /api/collectors/:key`. Three things changed
+underneath them that older notes in this file predate:
+
+* **`sources.status` is now written** by `scheduler_run_source()` after every
+  run (`sources_row_record`): online / degraded (ok, stored nothing) / offline
+  / pending (never ran). Until then nothing wrote it after the seed, so every
+  row read `pending` forever and `/api/status`'s online count was the seed.
+* **An hpengine row's default collector is its table file's basename**
+  (`hp3b25_jpmedia`), not `osint`. Every source has a collector; 545 keys
+  (2026-10-18, round 3); `core/collectors.def` labels and groups them (below).
+  **`osint` is the collector of hand-written entity PIVOTS only** since round 3:
+  968 scheduled feeds had been authored under that label (Google News
+  editions and keyword monitors, world outlets, arXiv, think tanks, threat
+  feeds, Reddit multireddits) and sat under "Investigation pivots" as one
+  1,443-row collector. They now carry `gnews`, `gnews_monitors`,
+  `world_outlets`, `conflict_press`, `trade_press`, `thinktanks`,
+  `ngo_rights`, `arxiv`, `science_press`, `finance_press`, `reddit`, `cyber`
+  — the collector of what they are — and `osint` holds its 492 pivots and
+  nothing scheduled. Safe because the pivot rule below never read the label;
+  check that a scheduled row's `collector` names its beat, not the macro's
+  default.
+* **"Entity pivot" is `registry_is_entity_pivot()`** in `registry.c`, the one
+  rule both the dispatcher and `service_vec` use: interval 0, not a `_` pod,
+  and (hpengine) an entity token in the URL/body OR `filter_query=1` (a bulk
+  file filtered by the entity locally — 18 such rows, OFAC's sdn.csv among
+  them, read as "never runs" until that counted). `collector=="osint"` is no
+  longer part of the definition, and `registry.c`'s NEVER-RUNS check (the
+  `make registry-floor` gate) is the complement of this same rule.
+
+* **`fetch_log.bytes_fetched`** (2026-10-12) is the run's transfer size —
+  every response body `http_client` received, retries included — and the run
+  line ends ` bytes=N requests=M`. NULL = a row from before the column.
+* `/api/status` rows carry `collector`, `collectorLabel`, `collectorGroup`,
+  `collectorGroupLabel`, `engine`, `kind`; the iOS dashboard groups on
+  `collector` under group headings (it grouped on `layer`, which ~1% of
+  sources declare).
+* **Collectors are grouped** (2026-10-17): `core/collectors.def` is GENERATED
+  by `tools/gen_collectors_def.py` from the collector census and gives every
+  collector key a `parent` among 22 `grp_*` groups (government, legal,
+  corporate, procurement, open data, science, health, environment, space,
+  cyber, telecom, infrastructure, transport, media, social, geo, safety,
+  sanctions, culture, surveillance, OSINT pivots, internal). **A new beat
+  needs a line there**: a collector the def does not list shows under
+  `grp_unassigned` on every page and `test_sourceapi.c` fails. Re-run the
+  generator on a fresh census (`GET /api/collectors` → TSV) or add the line
+  by hand; the rules live in the script (OVERRIDES, KEYWORDS, CATEGORY_GROUP).
+
+Plan, audit and as-built notes: `docs/source-pages-revamp/`.
+
 ## Where things live
 
 ```
@@ -1117,10 +1180,116 @@ Engine subtleties worth knowing before writing a row:
   * **89 rows need more than 200**, up to 55,971 pages for a 5.6-million-item
     STAC catalogue, and 1.93 BILLION declared records between them. Raising
     `page_max` there is not exhaustiveness, it is tens of thousands of requests
-    per run against one host. Those rows are a DISCLOSED sample and need a
-    different strategy per row (a date window, a filter that slices the
-    collection, or a bulk dump), which is a design decision and not a number.
-    Listed in that file so the next pass starts from the measurement.
+    per run against one host. **81 of them now read their collection over a
+    CYCLE** — see `page_resume` below; the other eight are named there.
+* **`page_resume = 1` reads a collection over a CYCLE**, one ceiling's worth a
+  run, instead of re-reading its first pages forever. The walk starts where the
+  last run stopped and stores where this one stopped; when it reaches the end
+  the position is CLEARED and the next run starts over. This is what
+  `collectors/sources/wayback_jp.c` has always done by hand (mhlw's 2,064-page
+  index over ~207 daily runs); it is now a field, so 81 rows got it without 81
+  hand-written collectors.
+
+  The position is a URL — the one the engine would have requested next — so
+  `page_param`, `next_path` and `page_walk` all resume from one stored string.
+  A URL is NOT enough on its own for `page_param`: the next page is computed as
+  `page_start + (page+1)*step` from the ROW's url, so a run resumed at
+  `offset=4` with `page_start` still 0 asks for `offset=2` next and walks
+  BACKWARDS over ground it covered, every page full and the run green. The
+  engine reads the number back out of the stored URL for that reason.
+
+  Persistence is NOT in the engine: `lib/` holds no database code (hptest links
+  `lib/hpengine.c` with no sqlite3 at all), so the position crosses the ABI as
+  `source_ctx`'s `resume_in` / `resume_out`, and `core/scheduler.c` keeps it in
+  `source_sched_state.resume_token`. That also makes the mechanism available to
+  every collector rather than to one engine.
+
+  Measured live, three mechanisms, two runs each against one database:
+  `BGS_ONSHORE_BOREHOLE_INDEX` (next_path) 300 → 600 distinct rows,
+  `IA_COLLECTION_ARCHIVETEAM` (page_param) 1,000 → 2,000,
+  `gleif-lei-filter-lapsed` (page_walk) 20 → 40. `hptest` 40–40e pins the
+  cycle, the clearing, the backwards-walk trap, and all three refusals.
+
+  **It is refused, with a line on stderr, for an ENTITY run** ("what do we have
+  on X" must answer from the start of X's results, not page 37 of the last
+  entity asked about — the scheduler also passes no position on a pivot run),
+  for a `{date…}`/`{ago…}` row (a stored URL would pin one day forever; those
+  rows already walk forward by date), for a `{page}`/`{offset}` token in the
+  path or body (the position is not readable back out of the URL), and for a
+  stored position whose HOST is not the row's own — a reading position moves us
+  through a collection, never to another server.
+
+  **Two things a cycle does not fix, so they were left alone.** Five ELIA grid
+  rows run every 900–3,600 s over millions of quarter-hourly points: a cycle
+  would blind them to the current grid for days, and a date window is the right
+  shape. Two GOV.UK report searches are the same cadence and fell under the
+  same rule. And `PLOS_RECENT` — 417,719 records against a 20-page ceiling —
+  deliberately does NOT cycle: its name, tags and `publication_date desc` sort
+  all say recency is the point, and a cycle would cost it exactly that. The
+  whole PLOS corpus wants a second row with an ascending sort.
+
+  **A descending sort and a cycle do not compose, and the fix is the sort.**
+  New items land at the HEAD of a newest-first collection, so every page
+  boundary shifts under a walk that is halfway down and a seam can re-read or
+  skip records — the drift `wayback_jp.c` documents. Ascending puts new items at
+  the TAIL, where a forward walk has not been yet, so a resumed run asks for the
+  pages it meant to. **22 rows were re-sorted on 2026-10-18**, each verified
+  against its own upstream first: 17 Internet Archive collections
+  (`sort[]=publicdate+asc` — same 5,430,347 total, oldest first), four FR BODACC
+  gazettes (`order_by=dateparution asc` — same 6,641,689 total, from
+  2008-01-02), and `CZ_CRO_PUBLIC_OFFICIALS`, which already sorted on `id`, the
+  most stable key there is, and only needed `order=ASC`. Measured after: 2,000 /
+  400 / 40 distinct rows over two runs each, no overlap.
+
+  `UK_EC_DONATIONS` kept `order=desc`: ascending leads with records whose
+  `AcceptedDate` is null, so that sort is not a stable ordering, and a drifting
+  head is the documented trade rather than a silent one. A row that does NOT
+  cycle keeps `desc` deliberately — reading the newest pages is then the
+  question being asked.
+
+  **The 534 `CEILING_UNKNOWN` rows: 452 of them now cycle too** (2026-10-18).
+  No arithmetic can size them, which is exactly why a cycle fits — the walk does
+  not need to know how big the collection is, only where it stopped. Three
+  measured properties make it safe to apply without probing each one:
+  * a row that COMPLETES inside its ceiling stores no position, so cycling is a
+    genuine no-op for it. `JPN_EGOV_DATA_ORG_ORG_0100`: 13 records on both runs,
+    token `(none)`. `hptest` 40b-ii pins the same thing offline;
+  * a row that does not complete reads a further slice instead of the same first
+    pages — strictly more of the collection;
+  * every stop is still disclosed, now naming the slice.
+
+  Four exclusions, each a case where a cycle costs something: **cadence under
+  six hours** (44 rows — the row exists to be fresh), **recency in its own
+  identity** (29 — its id or record_type says `recent`/`latest`/`newest`/
+  `daily`), **a declared descending sort** (8 — the fix is an ascending sort
+  verified per host, which was done for the 22 above and is not extended to
+  hundreds of unverified hosts), and **a `{page}` token** (1 — the engine
+  refuses it). **A 24-row sample was run twice each against one database and
+  every row behaved correctly**: 15 cycling mid-collection
+  (`TX_TCEQ_VIOLATION_CITATIONS` 20,000 → 40,000, `FAA_ARCGIS_OBSTACLES`
+  10,000 → 20,000, `FMCSA_MOTUS_AUTHORITY_HISTORY` 19,997 → 39,997), 2 finishing
+  the collection and clearing (`MD_LOBBYIST_CAMPAIGN_CONTRIBUTIONS`
+  20,000 → 20,387; `au-asic-smsf-auditors` 2,000 → 2,400), and 7 no-ops that
+  complete inside their ceiling and store nothing (`WA_CRIME_NIBRS` 3,471 both
+  runs, `UK_HYDROLOGY_STATIONS` 9,537, `CA_CALGEM_FACILITY_TANKS` 15,732).
+
+  **One row in that sample was not a cycle at all, and it found a false
+  disclosure.** `ENA_PATHOGEN_SARSCOV2_RUNS` read 1,000 of millions on both
+  runs with no position stored, which reads like "completes in its ceiling" —
+  and a round 1,000 against a `limit=1000` is worth one suspicious look.
+  ebi.ac.uk answers **HTTP 400 to `offset=1000`**: page 2 is refused, so the
+  position is cleared (bookmarking a page that is refused would retry that one
+  page forever) and the cycle can never advance. The notice then said
+  `next_run_resumes_at: "the start — this run completed the cycle"`, which is
+  exactly the kind of tidy falsehood these notices exist to prevent. It now
+  distinguishes the three outcomes, and a failed page says the position was NOT
+  advanced and the row re-reads the same slice until its paging is re-pointed
+  (`hptest` 40b-iii). Any other row in this shape says so on its next run; a
+  sweep for them is the obvious next measurement.
+
+  533 rows cycle in total. One shape to keep in mind: `interval = 2592000` is
+  monthly, so a 500-page collection on that cadence takes about two years to
+  come round — better than never, and the notice says where it is.
 * **A deep-paging cap is the upstream's, and it is disclosed by name.** GLEIF
   refuses `page[number]=51` with HTTP 400 — 50 pages × 200 = 10,000 records —
   so `GLEIF_LEI_HK` reaches 10,000 of 13,419 and the rest needs a narrower

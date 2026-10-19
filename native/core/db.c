@@ -410,6 +410,13 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
     "TEXT NOT NULL DEFAULT 'map_cron' "
     "CHECK(schedule_mode IN ('map_cron','search_only'))");
 
+  /* Where a collector stopped reading, so a collection larger than one run's
+   * page budget is read over a cycle rather than from page 1 forever
+   * (source.h's resume_in / resume_out, core/scheduler.c's resume load/store).
+   * One row per scheduled source already exists here; this is one more column
+   * on it, not a table of its own. */
+  ensure_column(db, "source_sched_state", "resume_token", "TEXT");
+
   /* Notification inbox (roadmap item 11): read/unread state per event. */
   ensure_column(db, "alert_events", "read_at", "TEXT");
   /* The rule's name, stamped when the rule is deleted: events outlive their
@@ -446,6 +453,9 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
    * A NEGATIVE value is a floor, not a count — see fetch_log_set_stored() in
    * core/scheduler.c. */
   ensure_column(db, "fetch_log", "stored", "INTEGER");
+  /* transfer size of the run (every response body, retries included); NULL
+   * on rows written before the column existed = not measured */
+  ensure_column(db, "fetch_log", "bytes_fetched", "INTEGER");
 
   /* Evidence capture (roadmap 17) is per-source OPT-IN and defaults OFF. 415
    * sources on schedules down to 60s would fill a disk in days otherwise, and

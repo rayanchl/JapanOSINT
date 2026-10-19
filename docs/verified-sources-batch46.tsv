@@ -844,7 +844,6 @@ JO46_NEWS_Q3322928	news	news-article	https://www.montrealmirror.com/feed	PASS	10
 JO46_NEWS_Q3522371	news	news-article	https://www.qctonline.com/feed/	PASS	10	OK	10	10	10
 JO46_NEWS_Q920043	news	news-article	https://xtramagazine.com/feed	PASS	18	OK	18	18	18
 JO46_NEWS_Q7337008	news	news-article	http://rivesudexpress.ca/feed/	PASS	10	OK	10	10	10
-JO46_NEWS_Q7487459	news	news-article	https://www.lionsroar.com/feed/	PASS	10	OK	10	10	10
 JO46_NEWS_Q7572759	news	news-article	https://spacing.ca/feed/	PASS	10	OK	10	10	10
 JO46_NEWS_Q7721736	news	news-article	https://www.catholicregister.org/rss	PASS	30	OK	30	30	30
 JO46_NEWS_Q7726535	news	news-article	https://www.thecoast.ca/feed/	PASS	10	OK	10	10	10
@@ -999,7 +998,6 @@ JO46_NEWS_Q92076508	news	news-article	https://lavozdemaipu.cl/rss.xml	PASS	20	OK
 JO46_NEWS_Q137439607	news	news-article	https://www.meteored.cl/feed/	PASS	25	OK	25	25	25
 JO46_NEWS_Q18712763	news	news-article	https://www.archdaily.com/cl/feed	PASS	24	OK	24	24	24
 JO46_NEWS_Q18712763_2	news	news-article	https://www.archdaily.cl/cl.xml	PASS	24	OK	24	24	24
-JO46_NEWS_Q18712763_3	news	news-article	https://www.archdaily.com/feed	PASS	24	OK	24	24	24
 JO46_NEWS_Q18712763_4	news	news-article	https://www.archdaily.com/.xml	PASS	18	OK	18	18	18
 JO46_NEWS_Q18712763_5	news	news-article	https://www.archdaily.com/br/feed	PASS	24	OK	24	24	24
 JO46_NEWS_Q18712763_6	news	news-article	https://www.archdaily.com.br/br.xml	PASS	24	OK	24	24	24
@@ -1020,7 +1018,6 @@ JO46_NEWS_Q10852616_5	news	news-article	https://stor-age.zhiding.cn/stor-age/sto
 JO46_NEWS_Q10852616_6	news	news-article	https://cio.zhiding.cn/cio/ciorss.xml	PASS	30	OK	30	30	30
 JO46_NEWS_Q16926790	news	news-article	https://aamacau.com/feed/	PASS	10	OK	10	10	10
 JO46_NEWS_Q16926790_2	news	news-article	https://aamacau.com/feed/atom/	PASS	10	OK	10	10	10
-JO46_NEWS_Q727162	news	news-article	https://asiatimes.com/feed/	PASS	20	OK	20	20	20
 JO46_NEWS_Q1324151	news	news-article	https://www.elespectador.com/arc/outboundfeeds/discover/	PASS	20	OK	20	20	20
 JO46_NEWS_Q116979883	news	news-article	https://voragine.co/feed/	PASS	10	OK	10	10	10
 JO46_NEWS_Q140398679	news	news-article	https://www.boyacadigital.com/rss.xml	PASS	20	OK	20	20	20
@@ -2169,7 +2166,6 @@ JO46_NEWS_Q11524941	news	news-article	http://www.tokyominpo.com/feed/	PASS	10	OK
 JO46_NEWS_Q11524941_2	news	news-article	http://www.tokyominpo.com/feed/atom/	PASS	10	OK	10	10	10
 JO46_NEWS_Q11517751	news	news-article	https://www.asagumo-news.com/blog-feed.xml	PASS	20	OK	20	20	20
 JO46_NEWS_Q11598591	news	news-article	https://keiba-ace.jp/rss2.xml	PASS	10	OK	10	10	10
-JO46_NEWS_Q131703147	news	news-article	https://unseen-japan.com/feed/	PASS	10	OK	10	10	10
 JO46_NEWS_Q139145897	news	news-article	https://jinacoin.ne.jp/feed/	PASS	10	OK	10	10	10
 JO46_NEWS_Q139165116	news	news-article	https://bucchake-housing.co.jp/feed/	PASS	10	OK	10	10	10
 JO46_NEWS_Q86741222	news	news-article	https://access-journal.jp/feed	PASS	10	OK	10	10	10
@@ -2184,9 +2180,7 @@ JO46_NEWS_Q113772386	news	news-article	http://feeds.cnn.co.jp/cnn/rss	PASS	30	OK
 JO46_NEWS_Q114299469	news	news-article	https://yurinavi.com/feed/	PASS	13	OK	13	13	13
 JO46_NEWS_Q116206869	news	news-article	https://www.cinemacafe.net/rss20/index.rdf	PASS	50	OK	50	50	50
 JO46_NEWS_Q116206869_2	news	news-article	http://www.cinemacafe.net/rss/index.rdf	PASS	50	OK	50	50	50
-JO46_NEWS_Q124857448	news	news-article	https://www.moguravr.com/feed/	PASS	10	OK	10	10	10
 JO46_NEWS_Q124857448_2	news	news-article	https://www.moguravr.com/feed/atom/	PASS	10	OK	10	10	10
-JO46_NEWS_Q130271804	news	news-article	https://panora.tokyo/feed	PASS	12	OK	12	12	12
 JO46_NEWS_Q141246292	news	news-article	https://hiphopnewscs.jp/feed/	PASS	10	OK	10	10	10
 JO46_NEWS_Q102138942	news	news-article	https://www.pulse.co.ke/rss-articles.xml	PASS	19	OK	19	19	19
 JO46_NEWS_Q139913876	news	news-article	https://www.todaysw.com/feed/	PASS	10	OK	10	10	10

@@ -57,7 +57,8 @@ server and 992 answer 403. A domain registration is not a website.
 ## Gates (2026-10-17, all live)
 
 **3,715 rows ship — 2,075 US, 1,640 UK — every one measured emitted-AND-stored
-in the real binary.** `docs/verified-sources-batch44.tsv` carries the probe
+in the real binary** (3,720 after the retry pass of 2026-10-19 put 4 US and 1 UK
+row back: 45,786 emitted / 45,785 stored). `docs/verified-sources-batch44.tsv` carries the probe
 reading and the emit reading per row; the 3,369 candidates that did not ship are
 in `docs/rejected-sources-batch44.tsv` by beat and by the stage that refused
 them.

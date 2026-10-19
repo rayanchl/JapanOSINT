@@ -45,7 +45,10 @@ server; 28 feeds answered 429 to a single request.
 ## Gates (2026-10-18, all live)
 
 **4,472 rows ship — 492 international organisations, 3,980 news outlets from
-137 countries — every one measured emitted-AND-stored in the real binary.**
+137 countries — every one measured emitted-AND-stored in the real binary**
+(4,494 after the retry pass of 2026-10-19 put 2 and 26 rows back and the merge
+with main removed six news feeds its own Japan beats had added first: 494 /
+4,000, 156,288 emitted / 156,084 stored).
 155,994 records emitted, 155,790 stored. `docs/verified-sources-batch46.tsv`
 carries the probe reading and the emit reading per row; the 2,369 candidates
 that did not ship are in `docs/rejected-sources-batch46.tsv` by beat and stage.

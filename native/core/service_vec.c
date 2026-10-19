@@ -92,8 +92,7 @@ static const char *svec_doc_prefix(void) {
  * duplicated loosely: collector=="osint" AND update_interval_sec==0. If that
  * definition ever moves, both copies must move together. */
 static int svec_is_pivot(const source_def *d) {
-  return d && d->collector && strcmp(d->collector, "osint") == 0
-         && d->update_interval_sec == 0;
+  return registry_is_entity_pivot(d);     /* the ONE rule — source.h */
 }
 
 /* A cheap signature of the registered pivot set: count plus an FNV-1a of the

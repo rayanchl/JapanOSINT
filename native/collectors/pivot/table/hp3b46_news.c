@@ -6577,24 +6577,6 @@ static const hp_source HP3B46_NEWS[] = {
       "20:05:45 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country CA." },
 
-  { .id = "JO46_NEWS_Q7487459", .name = "Lion's Roar (CA) - Lion’s Roar",
-    .name_ja = "Lion's Roar (CA) - Lion’s Roar",
-    .category = "news", .portal = "https://www.lionsroar.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.lionsroar.com/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "19:29:45 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country CA." },
-
   { .id = "JO46_NEWS_Q7572759", .name = "Spacing (CA) - Spacing",
     .name_ja = "Spacing (CA) - Spacing",
     .category = "news", .portal = "https://spacing.ca/",
@@ -9427,25 +9409,6 @@ static const hp_source HP3B46_NEWS[] = {
       "on its site root. Wikidata classes it as news-website, country "
       "CL." },
 
-  { .id = "JO46_NEWS_Q18712763_3", .name = "ArchDaily (CL) - ArchDaily Global",
-    .name_ja = "ArchDaily (CL) - ArchDaily Global",
-    .category = "news", .portal = "https://www.archdaily.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.archdaily.com/feed",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 24 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "11:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as news-website, country "
-      "CL." },
-
   { .id = "JO46_NEWS_Q18712763_4", .name = "ArchDaily (CL) - ArchDaily   ArchDaily",
     .name_ja = "ArchDaily (CL) - ArchDaily   ArchDaily",
     .category = "news", .portal = "https://www.archdaily.com/",
@@ -9818,25 +9781,6 @@ static const hp_source HP3B46_NEWS[] = {
       "2026-03-26T02:04:21Z. A feed the organisation itself declares or "
       "links on its site root. Wikidata classes it as online-newspaper, "
       "country CN." },
-
-  { .id = "JO46_NEWS_Q727162", .name = "Asia Times Online (CN) - Asia Times",
-    .name_ja = "Asia Times Online (CN) - Asia Times",
-    .category = "news", .portal = "https://asiatimes.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://asiatimes.com/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "06:53:13 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as news-website, country "
-      "CN." },
 
   { .id = "JO46_NEWS_Q1324151", .name = "El Espectador (CO) - El Espectador - Google Discover -",
     .name_ja = "El Espectador (CO) - El Espectador - Google Discover -",
@@ -31424,25 +31368,6 @@ static const hp_source HP3B46_NEWS[] = {
       "18:50:21 +0900. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country JP." },
 
-  { .id = "JO46_NEWS_Q131703147", .name = "Unseen Japan (JP) - Unseen Japan",
-    .name_ja = "Unseen Japan (JP) - Unseen Japan",
-    .category = "news", .portal = "https://unseen-japan.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://unseen-japan.com/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 06 Oct 2026 "
-      "23:30:44 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as online-newspaper, "
-      "country JP." },
-
   { .id = "JO46_NEWS_Q139145897", .name = "JinaCoin (JP) - JinaCoin",
     .name_ja = "JinaCoin (JP) - JinaCoin",
     .category = "news", .portal = "https://jinacoin.ne.jp/",
@@ -31709,25 +31634,6 @@ static const hp_source HP3B46_NEWS[] = {
       "links on its site root. Wikidata classes it as news-website, "
       "country JP." },
 
-  { .id = "JO46_NEWS_Q124857448", .name = "Mogura VR News (JP) - Mogura VR",
-    .name_ja = "Mogura VR News (JP) - Mogura VR",
-    .category = "news", .portal = "https://www.moguravr.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.moguravr.com/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "08:30:00 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as news-website, country "
-      "JP." },
-
   { .id = "JO46_NEWS_Q124857448_2", .name = "Mogura VR News (JP) - Mogura VR",
     .name_ja = "Mogura VR News (JP) - Mogura VR",
     .category = "news", .portal = "https://www.moguravr.com/",
@@ -31746,25 +31652,6 @@ static const hp_source HP3B46_NEWS[] = {
       "2026-10-16T08:49:44Z. A feed the organisation itself declares or "
       "links on its site root. Wikidata classes it as news-website, "
       "country JP." },
-
-  { .id = "JO46_NEWS_Q130271804", .name = "PANORA (JP) - PANORA",
-    .name_ja = "PANORA (JP) - PANORA",
-    .category = "news", .portal = "https://panora.tokyo/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://panora.tokyo/feed",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 12 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "12:34:35 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as news-website, country "
-      "JP." },
 
   { .id = "JO46_NEWS_Q141246292", .name = "HIPHOPCs (JP) - HIPHOPCs",
     .name_ja = "HIPHOPCs (JP) - HIPHOPCs",

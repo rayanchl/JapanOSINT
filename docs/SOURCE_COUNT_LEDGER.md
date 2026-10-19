@@ -5,7 +5,15 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 47,178** (2026-10-19): 47,115 plus the 63 rows a
+**The registered count is 47,724** (2026-10-19): the 47,178 below merged with
+main's 21,789 (its own `jp_feeds_batch41..44.c` beats of Japanese RSS sources,
+PR #48's paging cycle of 533 rows, PR #49's collector labels), less six news
+feeds both sessions had added — `make lint-sources` named them at merge time
+and main's rows stay. Batch numbers 43 and 44 are shared between main's
+`jp_feeds_batch4N.c` beats and this branch's `hp3b4N_*` tables; nothing
+collides, read the beat.
+
+**The count was 47,178** (2026-10-19): 47,115 plus the 63 rows a
 retry pass recovered. Every row batches 44–46 had dropped as dead on two
 readings minutes apart — 2,724 of them — was rebuilt from git history and
 re-probed a day later: 74 passed the probe, 63 of those stored their feed in

@@ -664,6 +664,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .array_path = "result.records",
     .interval = 86400,
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 100,
     .page_start = 0,
     .description = "The Israeli companies register published as open data: company "
@@ -689,16 +690,23 @@ static const hp_source HP3B19_FINANCE[] = {
       "director appointments and dissolutions for every Spanish "
       "company, and the daily sumario is the machine-readable way in" },
 
+  /* The four BODACC rows sort dateparution ASCENDING for the reason the Internet
+   * Archive rows in hp3b22_deeparchive.c explain at length: they read a gazette
+   * of millions of notices over a cycle (`page_resume`), and a cycle plus a
+   * newest-first sort means every page boundary shifts under a walk that is
+   * halfway down. Measured 2026-10-18 before the change: `order_by=dateparution
+   * asc` answers with the same 6,641,689 total and starts at 2008-01-02. */
   { .id = "FR_BODACC_COLLECTIVE", .name = "BODACC — French insolvency and collective-proceedings notices",
     .name_ja = "フランス官報 BODACC 倒産手続公告",
     .category = "legal", .portal = "https://bodacc-datadila.opendatasoft.com",
     .record_type = "insolvency-notice",
     .tags = "\"france\",\"insolvency\",\"bankruptcy\",\"gazette\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://bodacc-datadila.opendatasoft.com/api/explore/v2.1/catalog/datasets/annonces-commerciales/records?where=familleavis%3D%22collective%22&limit=100&order_by=dateparution%20desc",
+    .url = "https://bodacc-datadila.opendatasoft.com/api/explore/v2.1/catalog/datasets/annonces-commerciales/records?where=familleavis%3D%22collective%22&limit=100&order_by=dateparution%20asc",
     .array_path = "results",
     .interval = 21600,
     .page_param = "offset",
+    .page_resume = 1,   /* 3,351,049 records, measured 2026-10-12: read over a cycle, 100 pages a run */
     .page_size = 100,
     .page_start = 0,
     .description = "Over three million French collective-proceedings notices, each "
@@ -714,10 +722,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .record_type = "incorporation-notice",
     .tags = "\"france\",\"registry\",\"incorporation\",\"gazette\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://bodacc-datadila.opendatasoft.com/api/explore/v2.1/catalog/datasets/annonces-commerciales/records?where=familleavis%3D%22creation%22&limit=100&order_by=dateparution%20desc",
+    .url = "https://bodacc-datadila.opendatasoft.com/api/explore/v2.1/catalog/datasets/annonces-commerciales/records?where=familleavis%3D%22creation%22&limit=100&order_by=dateparution%20asc",
     .array_path = "results",
     .interval = 86400,
     .page_param = "offset",
+    .page_resume = 1,   /* 6,628,582 records, measured 2026-10-12: read over a cycle, 100 pages a run */
     .page_size = 100,
     .page_start = 0,
     .description = "Six and a half million French incorporation notices with the new "
@@ -732,10 +741,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .record_type = "dissolution-notice",
     .tags = "\"france\",\"registry\",\"dissolution\",\"gazette\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://bodacc-datadila.opendatasoft.com/api/explore/v2.1/catalog/datasets/annonces-commerciales/records?where=familleavis%3D%22radiation%22&limit=100&order_by=dateparution%20desc",
+    .url = "https://bodacc-datadila.opendatasoft.com/api/explore/v2.1/catalog/datasets/annonces-commerciales/records?where=familleavis%3D%22radiation%22&limit=100&order_by=dateparution%20asc",
     .array_path = "results",
     .interval = 86400,
     .page_param = "offset",
+    .page_resume = 1,   /* 4,277,618 records, measured 2026-10-12: read over a cycle, 100 pages a run */
     .page_size = 100,
     .page_start = 0,
     .description = "Four million strike-off notices, each naming the company removed "
@@ -750,10 +760,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .record_type = "business-transfer",
     .tags = "\"france\",\"registry\",\"transfer\",\"gazette\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://bodacc-datadila.opendatasoft.com/api/explore/v2.1/catalog/datasets/annonces-commerciales/records?where=familleavis%3D%22vente%22&limit=100&order_by=dateparution%20desc",
+    .url = "https://bodacc-datadila.opendatasoft.com/api/explore/v2.1/catalog/datasets/annonces-commerciales/records?where=familleavis%3D%22vente%22&limit=100&order_by=dateparution%20asc",
     .array_path = "results",
     .interval = 86400,
     .page_param = "offset",
+    .page_resume = 1,   /* 894,205 records, measured 2026-10-12: read over a cycle, 100 pages a run */
     .page_size = 100,
     .page_start = 0,
     .description = "Notices of the sale or transfer of a going concern in France, "
@@ -773,6 +784,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .array_path = "value",
     .interval = 86400,
     .page_param = "$skip",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .description = "Beneficial owners of public-sector contractors who are "
       "themselves Slovak public officials, named with their titles and "
       "the validity period of the declaration. A state contractor owned "
@@ -792,6 +804,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .detail_url = "https://rpvs.gov.sk/opendatav2/OpravneneOsoby({v})?$expand=Partner,Adresa",
     .interval = 86400,
     .page_param = "$skip",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .description = "The lawyer, notary, bank or auditor who signed off the "
       "beneficial-ownership declaration for each partner, with their "
       "name or trade name, ICO and the period they were responsible. "
@@ -946,6 +959,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .array_path = "data",
     .interval = 604800,
     .page_param = "offset",
+    .page_resume = 1,   /* 1,682,616 records, measured 2026-10-12: read over a cycle, 100 pages a run */
     .page_size = 100,
     .page_start = 0,
     .description = "Quarterly call-report aggregates for every insured institution, "
@@ -964,6 +978,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .array_path = "data",
     .interval = 604800,
     .page_param = "offset",
+    .page_resume = 1,   /* 2,898,836 records, measured 2026-10-12: read over a cycle, 100 pages a run */
     .page_size = 100,
     .page_start = 0,
     .description = "The annual branch-level deposit survey, 2.8 million "
@@ -983,6 +998,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .array_path = "data",
     .interval = 86400,
     .page_param = "offset",
+    .page_resume = 1,   /* 585,069 records, measured 2026-10-12: read over a cycle, 100 pages a run */
     .page_size = 100,
     .page_start = 0,
     .description = "Five hundred and eighty thousand structural events in US "
@@ -1014,6 +1030,7 @@ static const hp_source HP3B19_FINANCE[] = {
      * that reason. The mode switch alone is the whole fix. */
     .interval = 604800,
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 200,
     .page_start = 0,
     /* One row per security x week x venue x tier; the TUPLE is unique over a
@@ -1051,6 +1068,7 @@ static const hp_source HP3B19_FINANCE[] = {
      * plus a declared one is two Accept headers, and FINRA 400s that. */
     .interval = 604800,
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 200,
     .page_start = 0,
     /* One row per firm x period x size-tier x market; the TUPLE is unique
@@ -1093,6 +1111,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .url = "https://publicreporting.cftc.gov/resource/kh3c-gbw2.json?$limit=500&$order=:id",
     .interval = 21600,
     .page_param = "$offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 500,
     .page_start = 0,
     .description = "The disaggregated commitments-of-traders series, which splits "
@@ -1112,6 +1131,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .url = "https://publicreporting.cftc.gov/resource/gpe5-46if.json?$limit=500&$order=:id",
     .interval = 21600,
     .page_param = "$offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 500,
     .page_start = 0,
     .description = "Positions in Treasury, equity-index and currency futures broken "
@@ -1147,6 +1167,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .array_path = "data",
     .interval = 86400,
     .page_param = "page[number]",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_start = 1,
     .description = "Monthly federal receipts, outlays and the resulting deficit or "
       "surplus by classification line, with fiscal-year, quarter and "
@@ -1166,6 +1187,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .array_path = "data",
     .interval = 21600,
     .page_param = "page[number]",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_start = 1,
     .description = "The daily opening and closing balance of the Treasury General "
       "Account at the Federal Reserve and of tax-and-loan accounts, "
@@ -1468,6 +1490,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .detail_url = "https://apilist.tronscanapi.com/api/account?address={v}",
     .interval = 86400,
     .page_param = "start",
+    .page_resume = 1,   /* 10,000 records, measured 2026-10-12: read over a cycle, 25 pages a run */
     .page_size = 25,
     .page_start = 0,
     .page_zero_based = 1,
@@ -1493,6 +1516,7 @@ static const hp_source HP3B19_FINANCE[] = {
     .array_path = "Result",
     .interval = 86400,
     .page_param = "start",
+    .page_resume = 1,   /* 82,195 records, measured 2026-10-12: read over a cycle, 100 pages a run */
     .page_size = 100,
     .page_start = 0,
     .page_zero_based = 1,
