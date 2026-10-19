@@ -689,39 +689,65 @@ void vecindex_fire_hooks(db_handle *db, const vecindex_batch *b) {
 
 /* ---- incremental embedding ---------------------------------------------- */
 
-void vecindex_item_state(db_handle *db, const vecindex_spec *s, vecindex_item *it) {
-  it->hash = vecindex_hash(it->text);
-  it->meta_hash = vecindex_vals_hash(s, it->vals);
-  it->in_done = it->in_failed = it->has_done_meta = 0;
-  it->done_hash = it->done_meta_hash = it->failed_hash = 0;
+/* ONE read transaction and one prepared statement per side table for the
+ * whole set. Per item, the old form checked both tables' existence and ran
+ * both lookups as separate autocommit reads — four WAL read transactions an
+ * item, twice per card per service-index tick (svec_sync_kind, then
+ * vecindex_sync): ~390,000 at 48,346 cards, which is what put the TSan job
+ * past its 60-minute limit once the registry grew. Answers are unchanged. */
+void vecindex_items_state(db_handle *db, const vecindex_spec *s,
+                          vecindex_item *items, int n) {
+  for (int i = 0; i < n; i++) {
+    vecindex_item *it = &items[i];
+    it->hash = vecindex_hash(it->text);
+    it->meta_hash = vecindex_vals_hash(s, it->vals);
+    it->in_done = it->in_failed = it->has_done_meta = 0;
+    it->done_hash = it->done_meta_hash = it->failed_hash = 0;
+  }
+  if (n <= 0 || !db || !db->h) return;
+  /* Only open a transaction we own: a caller already inside one keeps it. */
+  int own = sqlite3_get_autocommit(db->h) &&
+            sqlite3_exec(db->h, "BEGIN", NULL, NULL, NULL) == SQLITE_OK;
   char sql[256];
-  sqlite3_stmt *st;
+  sqlite3_stmt *done = NULL, *fail = NULL;
   if (s->done_table && vecindex_table_exists(db, s->done_table)) {
     snprintf(sql, sizeof sql, "SELECT text_hash, meta_hash FROM \"%s\" WHERE \"%s\"=?1",
              s->done_table, s->key_col);
-    if (sqlite3_prepare_v2(db->h, sql, -1, &st, NULL) == SQLITE_OK) {
-      sqlite3_bind_text(st, 1, it->key, -1, SQLITE_STATIC);
-      if (sqlite3_step(st) == SQLITE_ROW) {
-        it->in_done = 1;
-        it->done_hash = (unsigned long long)sqlite3_column_int64(st, 0);
-        it->has_done_meta = sqlite3_column_type(st, 1) != SQLITE_NULL;
-        it->done_meta_hash = (unsigned long long)sqlite3_column_int64(st, 1);
-      }
-      sqlite3_finalize(st);
-    }
+    if (sqlite3_prepare_v2(db->h, sql, -1, &done, NULL) != SQLITE_OK) done = NULL;
   }
   if (s->fail_table && vecindex_table_exists(db, s->fail_table)) {
     snprintf(sql, sizeof sql, "SELECT text_hash FROM \"%s\" WHERE \"%s\"=?1",
              s->fail_table, s->key_col);
-    if (sqlite3_prepare_v2(db->h, sql, -1, &st, NULL) == SQLITE_OK) {
-      sqlite3_bind_text(st, 1, it->key, -1, SQLITE_STATIC);
-      if (sqlite3_step(st) == SQLITE_ROW) {
-        it->in_failed = 1;
-        it->failed_hash = (unsigned long long)sqlite3_column_int64(st, 0);
+    if (sqlite3_prepare_v2(db->h, sql, -1, &fail, NULL) != SQLITE_OK) fail = NULL;
+  }
+  for (int i = 0; i < n; i++) {
+    vecindex_item *it = &items[i];
+    if (done) {
+      sqlite3_bind_text(done, 1, it->key, -1, SQLITE_STATIC);
+      if (sqlite3_step(done) == SQLITE_ROW) {
+        it->in_done = 1;
+        it->done_hash = (unsigned long long)sqlite3_column_int64(done, 0);
+        it->has_done_meta = sqlite3_column_type(done, 1) != SQLITE_NULL;
+        it->done_meta_hash = (unsigned long long)sqlite3_column_int64(done, 1);
       }
-      sqlite3_finalize(st);
+      sqlite3_reset(done);
+    }
+    if (fail) {
+      sqlite3_bind_text(fail, 1, it->key, -1, SQLITE_STATIC);
+      if (sqlite3_step(fail) == SQLITE_ROW) {
+        it->in_failed = 1;
+        it->failed_hash = (unsigned long long)sqlite3_column_int64(fail, 0);
+      }
+      sqlite3_reset(fail);
     }
   }
+  sqlite3_finalize(done);
+  sqlite3_finalize(fail);
+  if (own) sqlite3_exec(db->h, "COMMIT", NULL, NULL, NULL);
+}
+
+void vecindex_item_state(db_handle *db, const vecindex_spec *s, vecindex_item *it) {
+  vecindex_items_state(db, s, it, 1);
 }
 
 int vecindex_item_unchanged(const vecindex_item *it) {
@@ -1055,8 +1081,8 @@ int vecindex_sync(db_handle *db, const vecindex_spec *s, llm_client *llm,
   vecindex_item **need = malloc((size_t)(n > 0 ? n : 1) * sizeof *need);
   if (!seen || !need) { free(seen); free(need); return -1; }
   int ns = 0, nn = 0;
+  vecindex_items_state(db, s, items, n);
   for (int i = 0; i < n; i++) {
-    vecindex_item_state(db, s, &items[i]);
     if (vecindex_item_unchanged(&items[i])) {
       seen[ns++] = &items[i];
       if (items[i].in_done) st->unchanged++; else st->failed_seen++;

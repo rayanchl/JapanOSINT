@@ -376,15 +376,28 @@ static int svec_sync_kind(db_handle *db, llm_client *llm, const char *model,
     vals[k] = VI_S(source_kind_name(c[i].kind));
     items[k].key = c[i].def->id;
     items[k].text = texts[k];
-    items[k].vals = &vals[k];
-    vecindex_item_state(db, &svec_spec, &items[k]);
-    int unchanged = vecindex_item_unchanged(&items[k]);
-    if (!unchanged) {
-      if (*budget == 0) { held++; free(texts[k]); texts[k] = NULL; continue; }
-      if (*budget > 0) (*budget)--;
-    }
     k++;
   }
+  /* vals is fully written before any item points into it (no realloc). */
+  for (int i = 0; i < k; i++) items[i].vals = &vals[i];
+  /* One read transaction for the kind's whole state, then the budget: the
+   * cards it holds back are dropped from the set, in registry order as
+   * before. */
+  if (built) vecindex_items_state(db, &svec_spec, items, k);
+  int kept = 0;
+  for (int i = 0; built && i < k; i++) {
+    if (!vecindex_item_unchanged(&items[i])) {
+      if (*budget == 0) { held++; free(texts[i]); texts[i] = NULL; continue; }
+      if (*budget > 0) (*budget)--;
+    }
+    if (kept != i) {
+      items[kept] = items[i]; texts[kept] = texts[i]; vals[kept] = vals[i];
+      texts[i] = NULL;
+      items[kept].vals = &vals[kept];
+    }
+    kept++;
+  }
+  if (built) k = kept;
   int rc = -1;
   if (built) {
     rc = vecindex_sync(db, &svec_spec, llm, model, items, k, SVEC_BATCH, now, now, st);

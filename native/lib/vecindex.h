@@ -246,6 +246,9 @@ typedef struct {
 /* Fill in_done/in_failed and the stored hashes from the side tables. Also
  * sets item->hash (from text) and item->meta_hash (from vals). */
 void vecindex_item_state(db_handle *db, const vecindex_spec *s, vecindex_item *it);
+/* The same for n items in one read transaction (statements prepared once). */
+void vecindex_items_state(db_handle *db, const vecindex_spec *s,
+                          vecindex_item *items, int n);
 
 /* Settled with this exact text already (embedded, or failed on it)? */
 int vecindex_item_unchanged(const vecindex_item *it);
