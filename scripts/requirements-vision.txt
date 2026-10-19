@@ -1,0 +1,19 @@
+# scripts/vision_embed_server.py — only for the real-model mode.
+# The --stub mode needs nothing beyond the Python standard library.
+#
+#   python3 -m venv .venv-vision && .venv-vision/bin/pip install -r scripts/requirements-vision.txt
+#
+# Then fetch the model ONCE (the server and launch.sh never download on their
+# own when HF_HUB_OFFLINE=1, and launch.sh's --check never does):
+#   .venv-vision/bin/python -c "from huggingface_hub import snapshot_download as s; s('google/siglip2-base-patch16-224')"
+#
+# SigLIP 2 needs transformers >= 4.49. sentencepiece/protobuf: the Gemma
+# tokenizer SigLIP 2 uses.
+torch>=2.2
+transformers>=4.49
+huggingface_hub>=0.23
+Pillow>=10.0
+sentencepiece>=0.2
+protobuf>=4.25
+# Optional: only for "hf-hub:" open_clip model ids (VISION_EMBED_BACKEND=open_clip).
+# open_clip_torch>=2.29

@@ -4,6 +4,9 @@
 #include "progress.h"
 #include "osint_dispatch.h"
 #include "service_vec.h"
+#include "prompt_rank.h"
+#include "fewshot.h"
+#include "llmcache.h"
 #include "intel.h"
 #include "entitystore.h"
 #include "../source.h"
@@ -315,6 +318,10 @@ static void dispatch_one(disp_pool *p, disp_job *job, db_handle *db,
   cJSON_AddStringToObject(sr, "name", r.resolved_from ? r.service : t->service);
   if (r.resolved_from)
     cJSON_AddStringToObject(sr, "resolved_from", r.resolved_from);
+  /* Only when the match was by meaning rather than spelling: a weaker kind
+   * of evidence, so it is named (core/osint_dispatch.h). */
+  if (r.resolved_from && r.resolver)
+    cJSON_AddStringToObject(sr, "resolver", r.resolver);
   cJSON_AddStringToObject(sr, "entity", t->entity);
   cJSON_AddBoolToObject(sr, "success", r.success);
   cJSON_AddNumberToObject(sr, "confidence", r.confidence);
@@ -325,6 +332,13 @@ static void dispatch_one(disp_pool *p, disp_job *job, db_handle *db,
   /* Every record the service emitted is inside data.records; carry the count
    * up here too so a client can see at a glance that nothing was dropped. */
   cJSON_AddNumberToObject(sr, "record_count", r.records);
+  /* Rule 4d, in-band: the records are kept, and the reader (model or human)
+   * is told they look like an unfiltered collection. Absent in the ordinary
+   * case and always without an embedding server (core/relevance.h). */
+  if (r.relevance) {
+    cJSON *rv = cJSON_Parse(r.relevance);
+    if (rv) cJSON_AddItemToObject(sr, "relevance", rv);
+  }
   cJSON_AddItemToObject(sr, "error",
     r.error ? cJSON_CreateString(r.error) : cJSON_CreateNull());
   /* underlying sources the service hit (provider/endpoint/corpus-source) */
@@ -379,7 +393,11 @@ static int prompt_records_per_service(void) {
   return v > 0 ? v : 8;
 }
 
-static char *results_view_for_prompt(const cJSON *results) {
+/* WHICH records fill the bound: the first ones (positional, the upstream's
+ * order) unless `pr` is a live ranker (core/prompt_rank.h), in which case the
+ * ones most similar to the query — and the view says which rule chose them.
+ * `pr` NULL is the positional path byte for byte. */
+static char *results_view_for_prompt(const cJSON *results, prompt_rank *pr) {
   cJSON *wrap = cJSON_CreateObject();
   cJSON *svcs = cJSON_Duplicate(results, 1);
   int keep = prompt_records_per_service();
@@ -391,11 +409,26 @@ static char *results_view_for_prompt(const cJSON *results) {
     int total = cJSON_GetArraySize(recs);
     cJSON_AddNumberToObject(data, "records_shown", total > keep ? keep : total);
     if (total > keep) {
-      for (int i = total - 1; i >= keep; i--) cJSON_DeleteItemFromArray(recs, i);
+      int ranked = 0;
+      int by_sim = prompt_rank_select(pr, recs, keep, &ranked);
+      for (int i = cJSON_GetArraySize(recs) - 1; i >= keep; i--)
+        cJSON_DeleteItemFromArray(recs, i);
       cJSON_AddBoolToObject(data, "prompt_truncated", 1);
-      cJSON_AddStringToObject(data, "prompt_truncated_note",
-        "only the first records are shown here; ALL record_count records were "
-        "fetched, stored and are served by /api/search/results");
+      if (by_sim) {
+        cJSON_AddStringToObject(data, "records_selected_by", "similarity_to_query");
+        cJSON_AddNumberToObject(data, "records_ranked", ranked);
+        cJSON_AddStringToObject(data, "prompt_truncated_note",
+          ranked < total
+            ? "the records shown are the most similar to the query among the "
+              "first records_ranked, best first; ALL record_count records were "
+              "fetched, stored and are served by /api/search/results"
+            : "the records shown are the most similar to the query, best "
+              "first; ALL record_count records were fetched, stored and are "
+              "served by /api/search/results");
+      } else
+        cJSON_AddStringToObject(data, "prompt_truncated_note",
+          "only the first records are shown here; ALL record_count records were "
+          "fetched, stored and are served by /api/search/results");
     }
   }
   cJSON_AddItemToObject(wrap, "services", svcs);
@@ -613,6 +646,10 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
   if (max_rounds <= 0) max_rounds = 5;
 
   progress_set_phase(rp, "queued", 5);
+  /* One ranker per run: phase-2 rounds and the synthesis reuse the vectors
+   * the first view embedded. NULL (no embedding server) = positional views,
+   * exactly as before. See core/prompt_rank.h. */
+  prompt_rank *prank = prompt_rank_new(query);
 
   /* ── Phase 1: analysis ─────────────────────────────────────────────── */
   progress_set_phase(rp, "gpt_analyzing", 15);
@@ -634,11 +671,27 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
    * costs today, then hand the catalogue whatever the server's real context
    * leaves over. The measurement is done on every call, so the preamble can
    * grow again without anyone having to remember this comment exists. */
+  /* The routing examples nearest this query (plus the spine) when an
+   * embedding server is up, else NULL = all of them, as before. Chosen first
+   * so the preamble measured below is the preamble actually sent: whatever
+   * the retrieval saves goes to the service catalogue. See core/fewshot.h. */
+  fewshot_note fsn;
+  char *fsblock = fewshot_select(db, query, &fsn);
+  if (fsblock) {
+    char d[300];
+    snprintf(d, sizeof d,
+      "the analysis model was shown %d of %d routing examples: the %d whose "
+      "query is nearest this one by embedding similarity, plus %d always "
+      "included (multi-entity, typos)", fsn.chosen, fsn.total,
+      fsn.by_similarity, fsn.spine);
+    progress_stage_note(rp, "analysis", "fewshot_examples_selected", d);
+    fprintf(stderr, "[pipeline] %s %s\n", request_id, d);
+  }
   long allow = 0;
   size_t ctx_chars = llm_ctx_chars(llm, 2048);     /* 2048 reserved for the answer */
   size_t preamble = 0;
   if (ctx_chars > 0) {
-    char *probe = prompt_analysis(query, "");
+    char *probe = prompt_analysis_with(query, "", fsblock);
     preamble = probe ? strlen(probe) : 0;
     free(probe);
     /* 90% of what is left, so a tokenizer that does slightly worse than the
@@ -675,7 +728,8 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
     }
     svcs = osint_services_list_bounded(&cat);
   }
-  char *p1 = prompt_analysis(query, svcs ? svcs : "");
+  char *p1 = prompt_analysis_with(query, svcs ? svcs : "", fsblock);
+  free(fsblock);
   /* The size of the request we are about to make, on the record. The analysis
    * call failed for months with "request (207353 tokens) exceeds the available
    * context size (16384 tokens)" and the only place that number existed was
@@ -826,7 +880,7 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
     int pct = 60 + round * 6; if (pct > 85) pct = 85;
     progress_set_phase(rp, "followup_analyzing", pct);
 
-    char *rj = results_view_for_prompt(results);   /* labelled, bounded view */
+    char *rj = results_view_for_prompt(results, prank);   /* labelled, bounded view */
     round_menu rm;
     round_menu_build(&rm, db, llm, request_id, round, query, rj, qents,
                      discovered);
@@ -941,7 +995,7 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
    * schema. Any failure falls back to the counts template. */
   char *synth_llm = NULL;
   {
-    char *rj = results_view_for_prompt(results);   /* labelled, bounded view */
+    char *rj = results_view_for_prompt(results, prank);   /* labelled, bounded view */
     char *ps = rj ? prompt_synthesis(query, rj) : NULL;
     free(rj);
     char *ms = ps ? prompt_to_messages(ps) : NULL;
@@ -1097,6 +1151,13 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
   if (analysis) cJSON_Delete(analysis);
   strset_free(&executed);
   intel_sink_free(&sink);          /* make() heap-allocates; nothing freed it */
+  if (prank)
+    fprintf(stderr, "[pipeline] %s prompt record selection: %s, %ld text(s) "
+                    "embedded\n", request_id,
+            prompt_rank_active(prank) ? "similarity to query"
+                                      : "positional (embedding failed)",
+            prompt_rank_sent(prank));
+  prompt_rank_free(prank);
   db_worker_close(&own);           /* no-op if we fell back to shared_db */
   fprintf(stderr, "[pipeline] %s done: %d svc, %d ok, %d round(s)%s\n",
           request_id, total, ok, round + 1,
@@ -1104,6 +1165,10 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
 }
 
 char *osint_suggest(llm_client *llm, const char *query) {
+  return osint_suggest_db(NULL, llm, query);
+}
+
+char *osint_suggest_db(db_handle *db, llm_client *llm, const char *query) {
   /* Native /completion path (raw few-shot prompt + GBNF), NOT llm_chat:
      prompt_suggestions() is a completion-style few-shot prompt. Routed
      through the chat template, gpt-oss's harmony scaffolding primes channel
@@ -1111,10 +1176,32 @@ char *osint_suggest(llm_client *llm, const char *query) {
      into dot-spam. Raw /completion has no harmony wrapper, so the grammar
      agrees with the model's natural continuation. */
   char *p = prompt_suggestions(query);
-  char *out = llm_complete(llm, p, grammar_load("suggestions"), 1024, 0.3, 20000);
+  const char *grammar = grammar_load("suggestions");
+  /* The exact-response cache (core/llmcache.h): off unless
+   * JO_LLM_CACHE_TTL_SEC is set, and then keyed on the model the server says
+   * it serves plus every byte of the request that shapes the answer. */
+  char model[256], key[65] = "";
+  int cacheable = db && p && llmcache_ttl() > 0 &&
+                  llmcache_model(llm, model, sizeof model) == 0;
+  char *out = NULL;
+  if (cacheable) {
+    char params[160];
+    snprintf(params, sizeof params,
+             "completion|max_tokens=1024|temperature=0.3|grammar=%016llx",
+             vecindex_hash(grammar ? grammar : ""));
+    llmcache_key_prompt(p, params, key);
+    cacheable = key[0] != 0;
+    if (cacheable) out = llmcache_get(db, model, key);
+  }
+  int hit = out != NULL;
+  if (!out) out = llm_complete(llm, p, grammar, 1024, 0.3, 20000);
   free(p);
   cJSON *arr = extract_json(out);            /* tolerant; may be [...] too */
   if (!arr && out) arr = cJSON_Parse(out);
+  /* Only an answer that parsed into suggestions is worth reusing; a broken
+   * one cached would be served broken for the whole TTL. */
+  if (cacheable && !hit && arr && cJSON_IsArray(arr) && cJSON_GetArraySize(arr) > 0)
+    llmcache_put(db, model, key, out);
   free(out);
   cJSON *result = cJSON_CreateArray();
   if (arr && cJSON_IsArray(arr)) {

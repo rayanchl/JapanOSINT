@@ -119,7 +119,7 @@ export function joinList(a) { return Array.isArray(a) ? a.join(', ') : ''; }
 export function predicateSummary(p) {
   if (!p || typeof p !== 'object') return 'matches everything';
   const parts = [];
-  if (p.mode === 'llm' && p.nl_query) parts.push(`LLM “${p.nl_query}”`);
+  if (p.mode === 'llm' && p.nl_query) parts.push(`described “${p.nl_query}” (similarity ≥ ${p.threshold ?? 0.82})`);
   if (p.q) parts.push(`q=${p.q}`);
   if (p.source_ids?.length) parts.push(`${p.source_ids.length} source${p.source_ids.length === 1 ? '' : 's'}`);
   if (p.tags_any?.length) parts.push(`tags any [${p.tags_any.join(', ')}]`);

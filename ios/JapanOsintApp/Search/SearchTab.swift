@@ -12,6 +12,9 @@ struct SearchTab: View {
     @State private var query = ""
     @State private var suggestions: [String] = []
     @State private var suggestTask: Task<Void, Never>?
+    /// Set from the last answer: true once the server shows it answers by
+    /// retrieval. Until then every suggestion may be an LLM completion.
+    @State private var suggestCheap = false
     /// True from the instant a query is submitted until the run is registered
     /// in `store.active` — see `auraIntensity`.
     @State private var launching = false
@@ -83,17 +86,21 @@ struct SearchTab: View {
             .onSubmit(of: .search) { Task { await run(query) } }
         }
         .onChange(of: query) { _, q in
-            // Debounce: only ask the LLM to suggest once the entry has settled
-            // for 3s. Cancel any in-flight wait on each keystroke so a new one
-            // restarts the clock; short/empty queries clear immediately.
+            // Debounce: 300 ms once the server has shown it answers by
+            // retrieval (history, saved searches, service index — meta.retrieval
+            // in the reply), 3 s otherwise, because without an embedding server
+            // every suggestion is still a full LLM completion. Cancel any
+            // in-flight wait on each keystroke so a new one restarts the clock;
+            // short/empty queries clear immediately.
             suggestTask?.cancel()
             guard q.trimmingCharacters(in: .whitespaces).count >= 3 else { suggestions = []; return }
             suggestTask = Task {
-                try? await Task.sleep(nanoseconds: 3_000_000_000)
+                try? await Task.sleep(nanoseconds: suggestCheap ? 300_000_000 : 3_000_000_000)
                 if Task.isCancelled { return }
-                let result = (try? await apiClient.api.searchSuggest(q)) ?? []
+                guard let result = try? await apiClient.api.searchSuggest(q) else { return }
                 if Task.isCancelled { return }
-                suggestions = result
+                suggestCheap = result.cheap
+                suggestions = result.suggestions
             }
         }
         // Query handed in by an App Intent / Siri / Shortcuts / the share-queue

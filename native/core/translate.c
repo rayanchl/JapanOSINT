@@ -8,6 +8,8 @@
 #include "progress.h"
 #include "prompts.h"
 #include "../lib/utf8.h"
+#include "../lib/vecindex.h"
+#include "embed_pod.h"
 #include "../source.h"
 #include "../third_party/sqlite3.h"
 #include "../third_party/cJSON.h"
@@ -16,6 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 /* ── small shared helpers (same idioms as core/alertsapi.c) ─────────────── */
 
@@ -191,7 +194,13 @@ void translate_migrate(db_handle *db) {
     "  ON intel_items(fetched_at DESC)"
     "  WHERE " TR_PENDING_WHERE ";"
     "CREATE INDEX IF NOT EXISTS idx_intel_items_fts_uid_map_rowid"
-    "  ON intel_items_fts_uid_map(rowid);";
+    "  ON intel_items_fts_uid_map(rowid);"
+    /* M3: which items users opened, for the narrowed background pod. */
+    "CREATE TABLE IF NOT EXISTS item_views ("
+    "  uid TEXT PRIMARY KEY,"
+    "  viewed_at TEXT NOT NULL"
+    ");"
+    "CREATE INDEX IF NOT EXISTS idx_item_views_at ON item_views(viewed_at);";
   char *e = NULL;
   if (sqlite3_exec(db->h, DDL, NULL, NULL, &e) != SQLITE_OK) {
     fprintf(stderr, "[translate] migrate: %s\n", e ? e : "?");
@@ -474,8 +483,84 @@ static void bind_txt_or_null(sqlite3_stmt *s, int i, const char *v) {
 
 typedef struct { char *uid, *title, *body, *summary, *lang; } trow;
 
+/* ── M3: the narrowed background pod (translate.h) ──────────────────────── */
+
+void translate_note_view(db_handle *db, const char *uid) {
+  if (!db || !db->h || !uid || !*uid) return;
+  translate_migrate(db);
+  sqlite3_stmt *s;
+  if (sqlite3_prepare_v2(db->h, "INSERT INTO item_views(uid,viewed_at)"
+      " VALUES(?1,datetime('now')) ON CONFLICT(uid) DO UPDATE SET"
+      " viewed_at=excluded.viewed_at", -1, &s, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(s, 1, uid, -1, SQLITE_TRANSIENT);
+    sqlite3_step(s);
+    sqlite3_finalize(s);
+  }
+}
+
+/* A q an English-speaking analyst wrote: Latin letters, nothing Japanese.
+ * Those are the rules that need English in intel_items_fts to ever fire. */
+static int q_is_english(const char *q) {
+  int latin = 0;
+  for (const unsigned char *p = (const unsigned char *)q; p && *p; p++) {
+    if (*p >= 0x80) return 0;
+    if ((*p >= 'a' && *p <= 'z') || (*p >= 'A' && *p <= 'Z')) latin = 1;
+  }
+  return latin;
+}
+
+/* Decide this tick's scope. 1 = narrow (sources_json filled, caller frees),
+ * 0 = translate everything pending (`why` says why). Network-free. */
+static int narrow_plan(db_handle *db, char **sources_json, char *why, size_t cap) {
+  *sources_json = NULL;
+  const char *e = getenv("JO_TRANSLATE_NARROW");
+  if (e && e[0] == '0' && e[1] == 0) {
+    snprintf(why, cap, "JO_TRANSLATE_NARROW=0");
+    return 0;
+  }
+  if (!vecindex_base_url() || !vecindex_exists(db, &embed_intel_spec) ||
+      vecindex_refused(db, &embed_intel_spec, NULL, 0)) {
+    snprintf(why, cap, "the embedding index is not active");
+    return 0;
+  }
+  cJSON *src = cJSON_CreateArray();
+  int everything = 0;
+  sqlite3_stmt *s;
+  if (sqlite3_prepare_v2(db->h, "SELECT predicate_json FROM alert_rules"
+                         " WHERE enabled=1", -1, &s, NULL) == SQLITE_OK) {
+    while (!everything && sqlite3_step(s) == SQLITE_ROW) {
+      cJSON *p = cJSON_Parse((const char *)sqlite3_column_text(s, 0));
+      cJSON *q = p ? cJSON_GetObjectItem(p, "q") : NULL;
+      if (q && cJSON_IsString(q) && q_is_english(q->valuestring)) {
+        cJSON *ids = cJSON_GetObjectItem(p, "source_ids");
+        if (!ids || !cJSON_IsArray(ids) || cJSON_GetArraySize(ids) == 0) everything = 1;
+        else {
+          cJSON *x;
+          cJSON_ArrayForEach(x, ids)
+            if (cJSON_IsString(x)) cJSON_AddItemToArray(src, cJSON_CreateString(x->valuestring));
+        }
+      }
+      if (p) cJSON_Delete(p);
+    }
+    sqlite3_finalize(s);
+  }
+  if (everything) {
+    cJSON_Delete(src);
+    snprintf(why, cap, "an enabled English keyword alert rule watches every source");
+    return 0;
+  }
+  *sources_json = cJSON_PrintUnformatted(src);
+  cJSON_Delete(src);
+  return *sources_json != NULL;
+}
+
 int translate_run(db_handle *db, llm_client *llm, int limit,
                   volatile int *cancel) {
+  return translate_run_ex(db, llm, limit, cancel, 0);
+}
+
+int translate_run_ex(db_handle *db, llm_client *llm, int limit,
+                     volatile int *cancel, int narrow) {
   if (!db || !db->h) return 0;
   translate_migrate(db);
   sqlite3 *h = db->h;
@@ -496,16 +581,64 @@ int translate_run(db_handle *db, llm_client *llm, int limit,
 
   /* Read the batch and finalize BEFORE any generation — a read cursor held
    * across a two-minute LLM call is a two-minute read lock. */
+  char *nsrc = NULL, why[160] = "";
+  int narrowed = narrow && narrow_plan(db, &nsrc, why, sizeof why);
+  int view_days = env_int("JO_TRANSLATE_VIEW_DAYS", 7);
+  if (narrow) {
+    /* What this tick translated is DATA (translate_backfill_status). */
+    cJSON *nl = cJSON_CreateObject();
+    cJSON_AddBoolToObject(nl, "narrowed", narrowed);
+    if (narrowed) {
+      cJSON_AddNumberToObject(nl, "view_days", view_days);
+      cJSON *a = cJSON_Parse(nsrc);
+      cJSON_AddItemToObject(nl, "alert_rule_sources", a ? a : cJSON_CreateArray());
+      cJSON_AddStringToObject(nl, "scope", "items opened in the last view_days "
+          "days, plus items of sources an English keyword alert rule watches; "
+          "everything else waits for the explicit backfill");
+    } else {
+      cJSON_AddStringToObject(nl, "reason", why);
+    }
+    char at[32];
+    time_t t = time(NULL);
+    struct tm tm;
+    gmtime_r(&t, &tm);
+    strftime(at, sizeof at, "%Y-%m-%dT%H:%M:%SZ", &tm);
+    cJSON_AddStringToObject(nl, "at", at);
+    char *js = cJSON_PrintUnformatted(nl);
+    cJSON_Delete(nl);
+    sqlite3_stmt *u;
+    if (js && sqlite3_prepare_v2(h, "INSERT INTO translate_state(k,v) VALUES"
+        "('narrow_last',?1) ON CONFLICT(k) DO UPDATE SET v=excluded.v",
+        -1, &u, NULL) == SQLITE_OK) {
+      sqlite3_bind_text(u, 1, js, -1, SQLITE_TRANSIENT);
+      sqlite3_step(u);
+      sqlite3_finalize(u);
+    }
+    free(js);
+  }
+
   trow *rows = calloc((size_t)limit, sizeof *rows);
-  if (!rows) return 0;
+  if (!rows) { free(nsrc); return 0; }
   int nr = 0;
   sqlite3_stmt *s;
-  if (sqlite3_prepare_v2(h,
-      "SELECT uid,title,body,summary,language FROM intel_items"
-      " WHERE " TR_PENDING_WHERE " AND " TR_ELIGIBLE_TYPE
-      "   AND (title IS NOT NULL OR body IS NOT NULL OR summary IS NOT NULL)"
-      " ORDER BY fetched_at DESC LIMIT ?1", -1, &s, NULL) == SQLITE_OK) {
+  if (sqlite3_prepare_v2(h, narrowed
+      ? "SELECT uid,title,body,summary,language FROM intel_items"
+        " WHERE " TR_PENDING_WHERE " AND " TR_ELIGIBLE_TYPE
+        "   AND (title IS NOT NULL OR body IS NOT NULL OR summary IS NOT NULL)"
+        "   AND (uid IN (SELECT uid FROM item_views WHERE viewed_at >= datetime('now',?2))"
+        "        OR lower(source_id) IN (SELECT lower(value) FROM json_each(?3)))"
+        " ORDER BY fetched_at DESC LIMIT ?1"
+      : "SELECT uid,title,body,summary,language FROM intel_items"
+        " WHERE " TR_PENDING_WHERE " AND " TR_ELIGIBLE_TYPE
+        "   AND (title IS NOT NULL OR body IS NOT NULL OR summary IS NOT NULL)"
+        " ORDER BY fetched_at DESC LIMIT ?1", -1, &s, NULL) == SQLITE_OK) {
     sqlite3_bind_int(s, 1, limit);
+    if (narrowed) {
+      char ago[32];
+      snprintf(ago, sizeof ago, "-%d days", view_days);
+      sqlite3_bind_text(s, 2, ago, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(s, 3, nsrc, -1, SQLITE_TRANSIENT);
+    }
     while (nr < limit && sqlite3_step(s) == SQLITE_ROW) {
       rows[nr].uid     = dupcol(s, 0);
       rows[nr].title   = dupcol(s, 1);
@@ -516,6 +649,7 @@ int translate_run(db_handle *db, llm_client *llm, int limit,
     }
     sqlite3_finalize(s);
   }
+  free(nsrc);
 
   /* Optional response_format json_schema (grammars/translation.schema.json).
    * schema_load() returns "" when the file is absent; llm_chat treats NULL as
@@ -782,6 +916,17 @@ char *translate_backfill_status(db_handle *db) {
   if (db && db->h) {
     translate_migrate(db);
     cJSON_AddNumberToObject(d, "pending", (double)pending_count(db->h));
+    /* What the scheduled pod's last tick translated (narrowed or not). */
+    sqlite3_stmt *ns;
+    cJSON *scope = NULL;
+    if (sqlite3_prepare_v2(db->h, "SELECT v FROM translate_state WHERE"
+                           " k='narrow_last'", -1, &ns, NULL) == SQLITE_OK) {
+      if (sqlite3_step(ns) == SQLITE_ROW)
+        scope = cJSON_Parse((const char *)sqlite3_column_text(ns, 0));
+      sqlite3_finalize(ns);
+    }
+    if (scope) cJSON_AddItemToObject(d, "background_scope", scope);
+    else cJSON_AddNullToObject(d, "background_scope");
   }
   /* Lock-held lookup+serialise; see progress.h. A progress_get() pointer used
    * after the unlock can have been freed by the >200 eviction. */
@@ -931,7 +1076,8 @@ static int pod_run(const source_ctx *ctx, intel_sink *sink) {
     return 0;
   }
   if (ctx->cancel && *ctx->cancel) return 0;
-  translate_run(ctx->db, ctx->llm, 0, ctx->cancel);
+  /* Narrowed once the embedding index is active (translate.h, M3). */
+  translate_run_ex(ctx->db, ctx->llm, 0, ctx->cancel, 1);
   return 0;
 }
 

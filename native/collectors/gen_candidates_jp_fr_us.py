@@ -25,7 +25,7 @@ Endpoints here are not invented hostnames. Each generator below is one of:
       Caltrans CWWP district feeds).
 
 That keeps the dead-endpoint rate low, but it does not make them verified.
-Run `make verify-candidates` once egress is available to promote the
+Run tools/promote_candidates.py once egress is available to promote the
 survivors into the verified manifest.
 
 Usage:
