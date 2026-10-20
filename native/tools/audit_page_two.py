@@ -186,6 +186,14 @@ def set_param(url, key, val):
 # reported as LOCAL_EGRESS so that nobody can read one as a finding about a
 # source. A row that only ever comes back LOCAL_EGRESS is UNMEASURED from
 # here, which is a thing to write down rather than a verdict to act on.
+# How much of a body to read. It was 400 KB, which truncated an ArcGIS page of
+# 300 features and a CKAN page of 48 packages — and a truncated body cannot be
+# counted, so both became "records unknown" and neither the short-page rule nor
+# the empty-page test could run on them. 8 MB holds every page this sweep has
+# met; a body past it is genuinely too large to count and says so (-1) instead
+# of guessing, which is what the old `s.count("},")` fallback did.
+MAXREAD = 8 * 1024 * 1024
+
 _LOCAL_EGRESS = re.compile(
     r"Connection refused|Connection reset by peer|Temporary failure in name "
     r"resolution|Cannot assign requested address|Too many open files", re.I)
@@ -198,7 +206,7 @@ def get(url, timeout=60, tries=3):
     for attempt in range(tries):
         try:
             with urllib.request.urlopen(req, timeout=timeout, context=_ctx) as r:
-                return r.status, r.read()[:400000]
+                return r.status, r.read()[:MAXREAD]
         except urllib.error.HTTPError as e:
             try:
                 return e.code, e.read()[:4000]
@@ -215,11 +223,46 @@ def get(url, timeout=60, tries=3):
     return -2, last
 
 
-def count_records(blob):
-    """A floor on how many records a body holds, mode-agnostic.
+# The envelope names a record set is published under, in the order the engine's
+# own array_path resolution would try them. Checked BEFORE any search, because
+# a search cannot be trusted — see count_records().
+_ENVELOPES = (
+    ("features",), ("results",), ("result", "results"), ("result",),
+    ("data",), ("items",), ("records",), ("value",), ("rows",),
+    ("response", "docs"), ("hits", "hits"), ("packages",),
+)
 
-    Only ever compared with ITSELF (page 1 against page 2), so a floor is
-    enough — the question is "same, fewer, or none", never an exact total."""
+
+def _at(d, path):
+    cur = d
+    for k in path:
+        if not isinstance(cur, dict) or k not in cur:
+            return None
+        cur = cur[k]
+    return cur if isinstance(cur, list) else None
+
+
+def count_records(blob):
+    """How many records a body holds.
+
+    This used to take the longest list ANYWHERE in the document, described as
+    "a floor, only ever compared with ITSELF". Both halves were wrong.
+
+    It is not only compared with itself: the short-page rule compares it with
+    the page SIZE the URL asked for, and that comparison is what separates a
+    benign PAGE1_IS_ALL from a REFUSED or a SAME_AS_PAGE1 finding. And the
+    longest list in an ArcGIS response is a polygon's coordinate RING, not its
+    records — `EAD_PROTECTED_AREAS` holds 21 features and was counted as 3,748,
+    `AR_DATOS_TRANSPORTE` holds 48 packages (its own `result.count` says so)
+    and was counted as 1,232. Over-counting makes a short page look full, so a
+    complete collection reads as a finding.
+
+    This is the same array hijack CLAUDE.md records for the ENGINE — "with no
+    array_path the engine picks the densest array of OBJECTS, which is not the
+    root as soon as a root record carries a longer nested array of its own" —
+    in a tool that never got the engine's fix. So: the declared envelope first,
+    then the longest array of OBJECTS (a ring is an array of arrays of
+    numbers), and never a bare list of scalars found by searching."""
     s = blob.decode("utf-8", "replace").strip()
     if not s:
         return 0
@@ -227,13 +270,26 @@ def count_records(blob):
         try:
             d = json.loads(s)
         except ValueError:
-            return s.count("},") + 1
-        best = 0
-        stack = [d]
+            # A body this tool truncated at MAXREAD cannot be counted, and the
+            # old fallback — `s.count("},") + 1` — did not decline, it guessed:
+            # 1,232 for a CKAN page holding 48 packages, whose own
+            # `result.count` says 48. A fabricated count then feeds the
+            # short-page rule and turns a complete collection into a finding.
+            # -1 means UNKNOWN and every comparison below guards on it.
+            return -1
+        if isinstance(d, list):
+            return len(d)
+        for path in _ENVELOPES:
+            got = _at(d, path)
+            if got is not None:
+                return len(got)
+        # No envelope we know: the longest array whose elements are OBJECTS.
+        best, stack = 0, [d]
         while stack:
             cur = stack.pop()
             if isinstance(cur, list):
-                best = max(best, len(cur))
+                if cur and all(isinstance(x, dict) for x in cur):
+                    best = max(best, len(cur))
                 stack.extend(x for x in cur if isinstance(x, (list, dict)))
             elif isinstance(cur, dict):
                 stack.extend(cur.values())
@@ -365,6 +421,16 @@ def _probe(a, r):
     if n1 == 0:
         out["verdict"] = "PAGE1_EMPTY"
         return out
+    if n1 < 0:
+        # Page 1 arrived larger than this tool reads, so it cannot be counted
+        # and neither the short-page rule nor an empty-page test means
+        # anything. The byte comparison below still does, so say what is known.
+        out["verdict"] = ("SAME_AS_PAGE1" if get(u2, a.timeout)[1] == b1
+                          else "RECS_UNKNOWN")
+        out["message"] = ("page 1 is larger than this tool reads (%d bytes), "
+                          "so its records cannot be counted; only the "
+                          "byte-identity test applies" % len(b1))
+        return out
 
     s2, b2 = get(u2, a.timeout)
     out["http2"] = s2
@@ -392,7 +458,7 @@ def _probe(a, r):
         # municipal site returned 7 posts against `per_page=100` and then 400
         # on page 2 — the collection is 7 records.
         want = declared_size(r["url"]) or r["page_size"]
-        if want and n1 < want:
+        if want and n1 >= 0 and n1 < want:
             out["verdict"] = "PAGE1_IS_ALL"
             out["message"] = ("page 1 held %d of the %d it asked for, so the "
                               "collection ends inside it" % (n1, want))
@@ -406,6 +472,8 @@ def _probe(a, r):
         out["message"] = ("%s | %s" % (remedy_of(msg), msg)).strip(" |")[:220]
         return out
     want = declared_size(r["url"]) or r["page_size"]
+    if n2 < 0:
+        want = 0          # an uncountable page 2 cannot be judged by size
     # An upstream that says in a 200 body that there is no further page.
     if BENIGN_CODE.search(code_of(b2)) or BENIGN_MSG.search(msg):
         out["verdict"] = "PAGE1_IS_ALL"
@@ -430,7 +498,7 @@ def _probe(a, r):
     if n2 == 0:
         # The engine's short-page rule again: an empty page 2 after a page 1
         # that did not fill is the end of the collection, not a shortfall.
-        if want and n1 < want:
+        if want and n1 >= 0 and n1 < want:
             out["verdict"] = "PAGE1_IS_ALL"
             out["message"] = ("page 1 held %d of the %d it asked for and page "
                               "2 is empty" % (n1, want))
