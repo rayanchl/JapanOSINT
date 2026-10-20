@@ -1,0 +1,755 @@
+# Batch 43 (jprss) candidates REJECTED, by the stage that refused them, 2026-10-17.
+# pass1-builder / pass2-builder: the discovery fetch (DUP_URL = already registered, NOT_FEED = no RSS/RDF/Atom root,
+#   EMPTY_RESULTSET = a feed with zero items). re-measure: the element-start recount of every merged row.
+# batch_exclusions: endpoint already read by a registered row. probe_hp_batch: the official gate.
+# audit_registry_emit: fetched but stored nothing in the real binary.
+stage	code_or_id	name	url	verdict	note
+pass1-builder	060003	山形県	https://www.pref.yamagata.jp/chumoku/chuumoku.xml	DUP_URL	kind= items=0
+pass1-builder	060003	山形県	https://www.pref.yamagata.jp/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	060003	山形県	https://www.pref.yamagata.jp/houdou/press.xml	DUP_URL	kind= items=0
+pass1-builder	120006	千葉県	https://www.pref.chiba.lg.jp/homepage/kinkyu/kinkyu.xml	HTTP_404	kind= items=0
+pass1-builder	120006	千葉県	https://www.pref.chiba.lg.jp/homepage/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	190004	山梨県	https://www.pref.yamanashi.jp/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	190004	山梨県	https://www.pref.yamanashi.jp/release/release.xml	DUP_URL	kind= items=0
+pass1-builder	280003	兵庫県	https://web.pref.hyogo.lg.jp/topics.xml	DUP_URL	kind= items=0
+pass1-builder	011002	北海道札幌市	https://www.city.sapporo.jp/new/shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	011002	北海道札幌市	https://www.city.sapporo.jp/boshu/boshuu.xml	DUP_URL	kind= items=0
+pass1-builder	011002	北海道札幌市	https://www.city.sapporo.jp/somu/koho/hodo/houdou.xml	DUP_URL	kind= items=0
+pass1-builder	012246	北海道千歳市	https://www.city.chitose.lg.jp/news.rss	DUP_URL	kind= items=0
+pass1-builder	012289	北海道深川市	https://www.city.fukagawa.lg.jp/cms/rss.xml	DUP_URL	kind= items=0
+pass1-builder	012297	北海道富良野市	https://www.city.furano.hokkaido.jp/life/docs/rss.xml	DUP_URL	kind= items=0
+pass1-builder	014567	北海道愛別町	https://www.town.aibetsu.hokkaido.jp/rss.xml	EMPTY_RESULTSET	kind=rss2 items=0
+pass1-builder	014729	北海道幌加内町	https://www.town.horokanai.hokkaido.jp/comments/feed	EMPTY_RESULTSET	kind=rss2 items=0
+pass1-builder	022071	青森県三沢市	https://www.city.misawa.lg.jp/rss.xml	DUP_URL	kind= items=0
+pass1-builder	024252	青森県風間浦村	https://www.kazamaura.jp/comments/feed/	EMPTY_RESULTSET	kind=rss2 items=0
+pass1-builder	024261	青森県佐井村	https://www.vill.sai.lg.jp/comments/feed/	EMPTY_RESULTSET	kind=rss2 items=0
+pass1-builder	032115	岩手県釜石市	https://www.city.kamaishi.iwate.jp/category/kubun/news/index.rss	DUP_URL	kind= items=0
+pass1-builder	041009	宮城県仙台市	https://www.city.sendai.jp/hinan.xml	HTTP_000	kind= items=0
+pass1-builder	041009	宮城県仙台市	https://www.city.sendai.jp/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	042129	宮城県登米市	https://www.city.tome.miyagi.jp/kinkyu/hazard.xml	HTTP_000	kind= items=0
+pass1-builder	062031	山形県鶴岡市	https://www.city.tsuruoka.lg.jp/rss_news.xml	DUP_URL	kind= items=0
+pass1-builder	062049	山形県酒田市	https://www.city.sakata.lg.jp/rss_news.xml	DUP_URL	kind= items=0
+pass1-builder	062111	山形県東根市	https://www.city.higashine.yamagata.jp/feed/rss	DUP_URL	kind= items=0
+pass1-builder	082082	茨城県龍ケ崎市	https://www.city.ryugasaki.ibaraki.jp/rss_news.xml	DUP_URL	kind= items=0
+pass1-builder	082171	茨城県取手市	https://www.city.toride.ibaraki.jp/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	082171	茨城県取手市	https://www.city.toride.ibaraki.jp/getsumokusay/getsumokusay.xml	DUP_URL	kind= items=0
+pass1-builder	082368	茨城県小美玉市	https://www.city.omitama.lg.jp/rss/rss10.xml	DUP_URL	kind= items=0
+pass1-builder	083020	茨城県茨城町	https://www.town.ibaraki.lg.jp/rss/rss10-1.xml	HTTP_000	kind= items=0
+pass1-builder	092029	栃木県足利市	https://www.city.ashikaga.tochigi.jp/rss/rss10.xml	DUP_URL	kind= items=0
+pass1-builder	092053	栃木県鹿沼市	https://www.city.kanuma.tochigi.jp/rss/rss10.xml	DUP_URL	kind= items=0
+pass1-builder	092142	栃木県さくら市	https://www.city.tochigi-sakura.lg.jp/rss/rss10.xml	DUP_URL	kind= items=0
+pass1-builder	102083	群馬県渋川市	https://www.city.shibukawa.lg.jp/rss/rss10.xml	DUP_URL	kind= items=0
+pass1-builder	103837	群馬県南牧村	https://nanmoku.ne.jp/sample-page/feed/	EMPTY_RESULTSET	kind=rss2 items=0
+pass1-builder	112071	埼玉県秩父市	https://www.city.chichibu.lg.jp/services/rdf/rss10/1070.xml	DUP_URL	kind= items=0
+pass1-builder	112071	埼玉県秩父市	https://www.city.chichibu.lg.jp/services/rdf/rss10/1141.xml	DUP_URL	kind= items=0
+pass1-builder	112381	埼玉県蓮田市	https://www.city.hasuda.saitama.jp/chumoku/chumoku.xml	DUP_URL	kind= items=0
+pass1-builder	112381	埼玉県蓮田市	https://www.city.hasuda.saitama.jp/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	112437	埼玉県吉川市	https://www.city.yoshikawa.saitama.jp/rss.xml	DUP_URL	kind= items=0
+pass1-builder	113611	埼玉県横瀬町	https://www.town.yokoze.saitama.jp/comments/feed	EMPTY_RESULTSET	kind=rss2 items=0
+pass1-builder	122106	千葉県茂原市	https://www.city.mobara.chiba.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	122131	千葉県東金市	https://www.city.togane.chiba.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	122262	千葉県富津市	https://www.city.futtsu.lg.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	122319	千葉県印西市	https://www.city.inzai.lg.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	122335	千葉県富里市	https://www.city.tomisato.lg.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	122343	千葉県南房総市	https://www.city.minamiboso.chiba.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	122394	千葉県大網白里市	https://www.city.oamishirasato.lg.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	131016	東京都千代田区	https://www.city.chiyoda.lg.jp/oshirase/oshirase.xml	HTTP_000	kind= items=0
+pass1-builder	131016	東京都千代田区	https://www.city.chiyoda.lg.jp/chumoku/chumoku.xml	DUP_URL	kind= items=0
+pass1-builder	131016	東京都千代田区	https://www.city.chiyoda.lg.jp/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	131083	東京都江東区	https://www.city.koto.lg.jp/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	131181	東京都荒川区	https://www.city.arakawa.tokyo.jp/news/ippan_all.xml	DUP_URL	kind= items=0
+pass1-builder	132195	東京都狛江市	https://www.city.komae.tokyo.jp/rss.xml	DUP_URL	kind= items=0
+pass1-builder	132276	東京都羽村市	https://www.city.hamura.tokyo.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	132284	東京都あきる野市	https://www.city.akiruno.tokyo.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	143821	神奈川県箱根町	https://www.town.hakone.kanagawa.jp/rss.xml	HTTP_404	kind= items=0
+pass1-builder	172022	石川県七尾市	https://www.city.nanao.lg.jp/bosai/kurashi/bosai/kinkyu/emergency.xml	DUP_URL	kind= items=0
+pass1-builder	173240	石川県川北町	http://www.town.kawakita.ishikawa.jp/rss2.xml	HTTP_404	kind= items=0
+pass1-builder	182052	福井県大野市	https://www.city.ono.fukui.jp/rss_news.xml	DUP_URL	kind= items=0
+pass1-builder	182109	福井県坂井市	https://www.city.fukui-sakai.lg.jp/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	182109	福井県坂井市	https://www.city.fukui-sakai.lg.jp/press/press.xml	DUP_URL	kind= items=0
+pass1-builder	183822	福井県池田町	http://www.town.ikeda.fukui.jp/topics.xml	HTTP_404	kind= items=0
+pass1-builder	184047	福井県南越前町	http://www.town.minamiechizen.lg.jp/toplink/901/news.xml	EMPTY_RESULTSET	kind=rss2 items=0
+pass1-builder	184047	福井県南越前町	http://www.town.minamiechizen.lg.jp/event/news.xml	HTTP_404	kind= items=0
+pass1-builder	192015	山梨県甲府市	https://www.city.kofu.yamanashi.jp/bosai/kinkyu.xml	HTTP_000	kind= items=0
+pass1-builder	192015	山梨県甲府市	https://www.city.kofu.yamanashi.jp/topics/topics.xml	DUP_URL	kind= items=0
+pass1-builder	192015	山梨県甲府市	https://www.city.kofu.yamanashi.jp/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	204129	長野県売木村	https://www.urugi.jp/comments/feed/	EMPTY_RESULTSET	kind=rss2 items=0
+pass1-builder	204480	長野県生坂村	http://www.village.ikusaka.nagano.jp/rss/rss.xml&quot;	HTTP_404	kind= items=0
+pass1-builder	212024	岐阜県大垣市	https://www.city.ogaki.lg.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	212059	岐阜県関市	https://www.city.seki.lg.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	212091	岐阜県羽島市	https://www.city.hashima.lg.jp/services/rdf/rss10/1035.xml	DUP_URL	kind= items=0
+pass1-builder	212148	岐阜県可児市	https://www.city.kani.lg.jp/services/rdf/rss10/30569.xml	DUP_URL	kind= items=0
+pass1-builder	212148	岐阜県可児市	https://www.city.kani.lg.jp/services/rdf/rss10/30570.xml	DUP_URL	kind= items=0
+pass1-builder	212148	岐阜県可児市	https://www.city.kani.lg.jp/services/rdf/rss10/30571.xml	DUP_URL	kind= items=0
+pass1-builder	212164	岐阜県瑞穂市	https://www.city.mizuho.lg.jp/services/rdf/rss10/1034.xml	DUP_URL	kind= items=0
+pass1-builder	212164	岐阜県瑞穂市	https://www.city.mizuho.lg.jp/services/rdf/rss10/2647.xml	DUP_URL	kind= items=0
+pass1-builder	212181	岐阜県本巣市	https://www.city.motosu.lg.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	212211	岐阜県海津市	https://www.city.kaizu.lg.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	221309	静岡県浜松市	https://www.city.hamamatsu.shizuoka.jp/oshirase/oshirase.xml	DUP_URL	kind= items=0
+pass1-builder	222241	静岡県菊川市	https://www.city.kikugawa.shizuoka.jp/chuumoku.xml	DUP_URL	kind= items=0
+pass1-builder	222241	静岡県菊川市	https://www.city.kikugawa.shizuoka.jp/shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	222241	静岡県菊川市	https://www.city.kikugawa.shizuoka.jp/sousou.xml	HTTP_000	kind= items=0
+pass1-builder	222241	静岡県菊川市	https://www.city.kikugawa.shizuoka.jp/bosyuu.xml	DUP_URL	kind= items=0
+pass1-builder	222241	静岡県菊川市	https://www.city.kikugawa.shizuoka.jp/moyooshi.xml	DUP_URL	kind= items=0
+pass1-builder	222241	静岡県菊川市	https://www.city.kikugawa.shizuoka.jp/sonota.xml	DUP_URL	kind= items=0
+pass1-builder	222259	静岡県伊豆の国市	https://www.city.izunokuni.shizuoka.jp/oshirase/oshirase.xml	DUP_URL	kind= items=0
+pass1-builder	222259	静岡県伊豆の国市	https://www.city.izunokuni.shizuoka.jp/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	232017	愛知県豊橋市	https://www.city.toyohashi.lg.jp/services/rdf/rss10/11280.xml	DUP_URL	kind= items=0
+pass1-builder	232122	愛知県安城市	https://www.city.anjo.aichi.jp/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	232122	愛知県安城市	https://www.city.anjo.aichi.jp/event.xml	DUP_URL	kind= items=0
+pass1-builder	232203	愛知県稲沢市	https://www.city.inazawa.aichi.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	232289	愛知県岩倉市	https://www.city.iwakura.aichi.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	232297	愛知県豊明市	https://www.city.toyoake.lg.jp/services/rdf/rss10/1035.xml	DUP_URL	kind= items=0
+pass1-builder	232297	愛知県豊明市	https://www.city.toyoake.lg.jp/services/rdf/rss10/1036.xml	DUP_URL	kind= items=0
+pass1-builder	232297	愛知県豊明市	https://www.city.toyoake.lg.jp/services/rdf/rss10/1037.xml	DUP_URL	kind= items=0
+pass1-builder	242098	三重県尾鷲市	https://www.city.owase.lg.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	242161	三重県伊賀市	https://www.city.iga.lg.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	245437	三重県紀北町	https://www.town.mie-kihoku.lg.jp/comments/feed/	EMPTY_RESULTSET	kind=rss2 items=0
+pass1-builder	252034	滋賀県長浜市	https://www.city.nagahama.lg.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	252093	滋賀県甲賀市	https://www.city.koka.lg.jp/services/rdf/rss10/1021.xml	DUP_URL	kind= items=0
+pass1-builder	252093	滋賀県甲賀市	https://www.city.koka.lg.jp/services/rdf/rss10/24916.xml	DUP_URL	kind= items=0
+pass1-builder	252093	滋賀県甲賀市	https://www.city.koka.lg.jp/services/rdf/rss10/24917.xml	DUP_URL	kind= items=0
+pass1-builder	252093	滋賀県甲賀市	https://www.city.koka.lg.jp/services/rdf/rss10/24918.xml	DUP_URL	kind= items=0
+pass1-builder	262021	京都府舞鶴市	https://www.city.maizuru.kyoto.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	262030	京都府綾部市	https://www.city.ayabe.lg.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	262072	京都府城陽市	https://www.city.joyo.kyoto.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	262099	京都府長岡京市	https://www.city.nagaokakyo.lg.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	262102	京都府八幡市	https://www.city.yawata.kyoto.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	262111	京都府京田辺市	https://www.city.kyotanabe.lg.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	262145	京都府木津川市	https://www.city.kizugawa.lg.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	264652	京都府与謝野町	https://www.town-yosano.jp/comments/feed/	EMPTY_RESULTSET	kind=rss2 items=0
+pass1-builder	272205	大阪府箕面市	https://www.city.minoh.lg.jp/topics/topics.xml	DUP_URL	kind= items=0
+pass1-builder	272205	大阪府箕面市	https://www.city.minoh.lg.jp/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	272205	大阪府箕面市	https://www.city.minoh.lg.jp/shisei/kouhou/houdou/houdou.xml	DUP_URL	kind= items=0
+pass1-builder	272272	大阪府東大阪市	https://www.city.higashiosaka.lg.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	282065	兵庫県芦屋市	https://www.city.ashiya.lg.jp/oshirase/oshirase.xml	DUP_URL	kind= items=0
+pass1-builder	282065	兵庫県芦屋市	https://www.city.ashiya.lg.jp/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	282120	兵庫県赤穂市	https://www.city.ako.lg.jp/chumoku/chumoku.xml	DUP_URL	kind= items=0
+pass1-builder	282120	兵庫県赤穂市	https://www.city.ako.lg.jp/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	282120	兵庫県赤穂市	https://www.city.ako.lg.jp/boshu/boshu.xml	DUP_URL	kind= items=0
+pass1-builder	294268	奈良県広陵町	https://www.town.koryo.nara.jp/rss/rss.xml	HTTP_408	kind= items=0
+pass1-builder	294438	奈良県下市町	https://www.town.shimoichi.lg.jp/rss/rss.xml	HTTP_408	kind= items=0
+pass1-builder	294535	奈良県東吉野村	https://vill.higashiyoshino.nara.jp/feed/	EMPTY_RESULTSET	kind=rss2 items=0
+pass1-builder	294535	奈良県東吉野村	https://vill.higashiyoshino.nara.jp/comments/feed/	EMPTY_RESULTSET	kind=rss2 items=0
+pass1-builder	325279	島根県知夫村	http://www.vill.chibu.lg.jp/feed.xml	HTTP_404	kind= items=0
+pass1-builder	331007	岡山県岡山市	https://www.city.okayama.jp/rss/rss.xml	DUP_URL	kind= items=0
+pass1-builder	332101	岡山県新見市	https://www.city.niimi.okayama.jp/rss/rss_search	DUP_URL	kind= items=0
+pass1-builder	352071	山口県下松市	https://www.city.kudamatsu.lg.jp/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	352071	山口県下松市	https://www.city.kudamatsu.lg.jp/chuumoku/chumoku.xml	DUP_URL	kind= items=0
+pass1-builder	353418	山口県上関町	https://www.town.kaminoseki.lg.jp/comments/feed	EMPTY_RESULTSET	kind=rss2 items=0
+pass1-builder	362018	徳島県徳島市	https://www.city.tokushima.tokushima.jp/rss_news.xml	DUP_URL	kind= items=0
+pass1-builder	382108	愛媛県伊予市	https://www.city.iyo.lg.jp/new/shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	393061	高知県馬路村	https://vill.umaji.lg.jp/comments/feed/	EMPTY_RESULTSET	kind=rss2 items=0
+pass1-builder	422053	長崎県大村市	https://www.city.omura.nagasaki.jp/chumoku/chumoku.xml	DUP_URL	kind= items=0
+pass1-builder	422053	長崎県大村市	https://www.city.omura.nagasaki.jp/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	423211	長崎県東彼杵町	https://sonogi.jp/comments/feed/	EMPTY_RESULTSET	kind=rss2 items=0
+pass1-builder	434442	熊本県甲佐町	https://www.town.kosa.lg.jp/rss/rc/999.xml	HTTP_403	kind= items=0
+pass1-builder	442011	大分県大分市	https://www.city.oita.oita.jp/kinkyuji/emergency_s.xml	DUP_URL	kind= items=0
+pass1-builder	442011	大分県大分市	https://www.city.oita.oita.jp/shinchakuichiran/shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	442011	大分県大分市	https://www.city.oita.oita.jp/oshiraseichiran/oshirase.xml	DUP_URL	kind= items=0
+pass1-builder	442011	大分県大分市	https://www.city.oita.oita.jp/event.xml	DUP_URL	kind= items=0
+pass1-builder	443221	大分県姫島村	https://www.himeshima.jp/comments/feed/	EMPTY_RESULTSET	kind=rss2 items=0
+pass1-builder	462012	鹿児島県鹿児島市	https://www.city.kagoshima.lg.jp/kinkyu/kinkyu.xml	DUP_URL	kind= items=0
+pass1-builder	462012	鹿児島県鹿児島市	https://www.city.kagoshima.lg.jp/chumoku/chumoku.xml	DUP_URL	kind= items=0
+pass1-builder	462012	鹿児島県鹿児島市	https://www.city.kagoshima.lg.jp/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	462012	鹿児島県鹿児島市	https://www.city.kagoshima.lg.jp/boshu/boshu.xml	DUP_URL	kind= items=0
+pass1-builder	462012	鹿児島県鹿児島市	https://www.city.kagoshima.lg.jp/jigyo/jigyo_shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	462012	鹿児島県鹿児島市	https://www.city.kagoshima.lg.jp/jigyo/jigyo_chumoku.xml	HTTP_404	kind= items=0
+pass1-builder	462012	鹿児島県鹿児島市	https://www.city.kagoshima.lg.jp/shinchaku/kanko_shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	462012	鹿児島県鹿児島市	https://www.city.kagoshima.lg.jp/chumoku/kanko_chumoku.xml	DUP_URL	kind= items=0
+pass1-builder	462039	鹿児島県鹿屋市	https://www.city.kanoya.lg.jp/oshirase.xml	DUP_URL	kind= items=0
+pass1-builder	462209	鹿児島県南さつま市	https://www.city.minamisatsuma.lg.jp/atom.xml	EMPTY_RESULTSET	kind=atom items=0
+pass1-builder	462225	鹿児島県奄美市	https://www.city.amami.lg.jp/topics/topics.xml	DUP_URL	kind= items=0
+pass1-builder	462225	鹿児島県奄美市	https://www.city.amami.lg.jp/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass1-builder	462250	鹿児島県姶良市	https://www.city.aira.lg.jp/kinkyu/kinkyu.xml	HTTP_404	kind= items=0
+pass1-builder	465011	鹿児島県中種子町	http://town.nakatane.kagoshima.jp/kouhou/home/news.xml	HTTP_404	kind= items=0
+pass1-builder	465011	鹿児島県中種子町	http://town.nakatane.kagoshima.jp/kouhou/home/chumoku.xml	HTTP_404	kind= items=0
+pass1-builder	465011	鹿児島県中種子町	http://town.nakatane.kagoshima.jp/kouhou/home/boshu.xml	HTTP_404	kind= items=0
+pass1-builder	473014	沖縄県国頭村	https://www.vill.kunigami.okinawa.jp/comments/feed/	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	010006	北海道	https://www.pref.hokkaido.lg.jp/news/rss.xml	DUP_URL	kind= items=0
+pass2-builder	010006	北海道	https://www.pref.hokkaido.lg.jp/news/oshirase/rss.xml	DUP_URL	kind= items=0
+pass2-builder	010006	北海道	https://www.pref.hokkaido.lg.jp/news/joseiseido/rss.xml	DUP_URL	kind= items=0
+pass2-builder	010006	北海道	https://www.pref.hokkaido.lg.jp/news/nyusatsu/rss.xml	DUP_URL	kind= items=0
+pass2-builder	020001	青森県	https://opendata.pref.aomori.lg.jp/rss-guide.html	NOT_FEED	kind= items=0
+pass2-builder	030007	岩手県	https://www.pref.iwate.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	040002	宮城県	https://www.pref.miyagi.jp/juyo/juyo.xml	DUP_URL	kind= items=0
+pass2-builder	040002	宮城県	https://www.pref.miyagi.jp/chumoku/chumoku.xml	DUP_URL	kind= items=0
+pass2-builder	040002	宮城県	https://www.pref.miyagi.jp/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass2-builder	040002	宮城県	https://www.pref.miyagi.jp/release/release.xml	DUP_URL	kind= items=0
+pass2-builder	040002	宮城県	https://www.pref.miyagi.jp/site/newsclip/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass2-builder	050008	秋田県	https://www.pref.akita.lg.jp/pages/archive/1417	NOT_FEED	kind= items=0
+pass2-builder	070009	福島県	https://www.pref.fukushima.lg.jp/rss/10/list6.xml	DUP_URL	kind= items=0
+pass2-builder	070009	福島県	https://www.pref.fukushima.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	070009	福島県	https://www.pref.fukushima.lg.jp/rss/10/list10.xml	DUP_URL	kind= items=0
+pass2-builder	070009	福島県	https://www.pref.fukushima.lg.jp/rss/10/list13.xml	DUP_URL	kind= items=0
+pass2-builder	070009	福島県	https://www.pref.fukushima.lg.jp/site/userguide/rss.html	NOT_FEED	kind= items=0
+pass2-builder	100005	群馬県	https://www.pref.gunma.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	150002	新潟県	https://www.pref.niigata.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	150002	新潟県	https://www.pref.niigata.lg.jp/rss/10/list2.xml	DUP_URL	kind= items=0
+pass2-builder	150002	新潟県	https://www.pref.niigata.lg.jp/rss/10/list7.xml	DUP_URL	kind= items=0
+pass2-builder	150002	新潟県	https://www.pref.niigata.lg.jp/site/kyotsu/rss.html	NOT_FEED	kind= items=0
+pass2-builder	170003	石川県	https://www.pref.ishikawa.lg.jp/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass2-builder	220001	静岡県	https://opendata.pref.shizuoka.jp/event/rss.xml	HTTP_404	kind= items=0
+pass2-builder	230006	愛知県	https://www.pref.aichi.jp/site/userguide/rss.html	NOT_FEED	kind= items=0
+pass2-builder	240001	三重県	http://www.pref.mie.lg.jp/info/rss.htm	NOT_FEED	kind= items=0
+pass2-builder	270008	大阪府	https://www.pref.osaka.lg.jp/kinkyu/kinkyu.xml	HTTP_408	kind= items=0
+pass2-builder	270008	大阪府	https://www.pref.osaka.lg.jp/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass2-builder	340006	広島県	https://satomachiplus.pref.hiroshima.lg.jp/	NOT_FEED	kind= items=0
+pass2-builder	340006	広島県	https://www.pref.hiroshima.lg.jp/soshiki/19/1173052170405.html	NOT_FEED	kind= items=0
+pass2-builder	380008	愛媛県	https://www.pref.ehime.jp/rss/20/list6.xml	DUP_URL	kind= items=0
+pass2-builder	380008	愛媛県	https://www.pref.ehime.jp/rss/20/list1.xml	DUP_URL	kind= items=0
+pass2-builder	380008	愛媛県	https://www.pref.ehime.jp/rss/20/list5.xml	DUP_URL	kind= items=0
+pass2-builder	380008	愛媛県	https://www.pref.ehime.jp/rss/20/list7.xml	DUP_URL	kind= items=0
+pass2-builder	440001	大分県	https://www.pref.oita.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	440001	大分県	https://www.pref.oita.jp/rss/10/list6.xml	DUP_URL	kind= items=0
+pass2-builder	440001	大分県	https://www.pref.oita.jp/rss/10/list11.xml	DUP_URL	kind= items=0
+pass2-builder	440001	大分県	https://www.pref.oita.jp/rss/10/list13.xml	DUP_URL	kind= items=0
+pass2-builder	440001	大分県	https://www.pref.oita.jp/rss/10/list10.xml	DUP_URL	kind= items=0
+pass2-builder	440001	大分県	https://www.pref.oita.jp/soshiki/10400/rss.html	NOT_FEED	kind= items=0
+pass2-builder	470007	沖縄県	https://www.pref.okinawa.lg.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	012033	北海道小樽市	https://www.city.otaru.lg.jp/categories/kubun/chumoku/index.rss	DUP_URL	kind= items=0
+pass2-builder	012033	北海道小樽市	https://www.city.otaru.lg.jp/docs/index.rss	DUP_URL	kind= items=0
+pass2-builder	012033	北海道小樽市	https://www.city.otaru.lg.jp/event_list/index.rss	HTTP_406	kind= items=0
+pass2-builder	012033	北海道小樽市	https://www.city.otaru.lg.jp/event_list/index.atom	HTTP_406	kind= items=0
+pass2-builder	012033	北海道小樽市	https://www.city.otaru.lg.jp/categories/kubun/boshu/index.rss	DUP_URL	kind= items=0
+pass2-builder	012033	北海道小樽市	https://www.city.otaru.lg.jp/docs/2021022600106/	NOT_FEED	kind= items=0
+pass2-builder	012068	北海道釧路市	https://www.city.kushiro.lg.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	012092	北海道夕張市	https://www.city.yubari.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	012114	北海道網走市	https://www.city.abashiri.hokkaido.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	012131	北海道苫小牧市	https://www.city.tomakomai.hokkaido.jp/rss/whatsnew.rdf	DUP_URL	kind= items=0
+pass2-builder	012157	北海道美唄市	https://www.city.bibai.hokkaido.jp/soshiki/2/rss.html	NOT_FEED	kind= items=0
+pass2-builder	012165	北海道芦別市	https://www.city.ashibetsu.hokkaido.jp/use/	NOT_FEED	kind= items=0
+pass2-builder	012190	北海道紋別市	https://mombetsu.jp/content/?content=1001	NOT_FEED	kind= items=0
+pass2-builder	012301	北海道登別市	https://www.city.noboribetsu.lg.jp/docs/2019013000028/	NOT_FEED	kind= items=0
+pass2-builder	014036	北海道泊村	https://www.vill.tomari.hokkaido.jp/new_info/kanko//rss.xml	NOT_FEED	kind= items=0
+pass2-builder	014869	北海道遠別町	https://www.town.embetsu.hokkaido.jp/c90/c9090/rss.xml	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	015130	北海道中頓別町	https://www.town.nakatombetsu.hokkaido.jp/contact	NOT_FEED	kind= items=0
+pass2-builder	015130	北海道中頓別町	https://www.town.nakatombetsu.hokkaido.jp/bunya/11081/	NOT_FEED	kind= items=0
+pass2-builder	015130	北海道中頓別町	https://www.town.nakatombetsu.hokkaido.jp/bunya/7706/	NOT_FEED	kind= items=0
+pass2-builder	015130	北海道中頓別町	https://www.town.nakatombetsu.hokkaido.jp/bunya/7710/	NOT_FEED	kind= items=0
+pass2-builder	015130	北海道中頓別町	https://www.town.nakatombetsu.hokkaido.jp/bunya/7713/	NOT_FEED	kind= items=0
+pass2-builder	015130	北海道中頓別町	https://www.town.nakatombetsu.hokkaido.jp/bunya/7884/	NOT_FEED	kind= items=0
+pass2-builder	015130	北海道中頓別町	https://www.town.nakatombetsu.hokkaido.jp/bunya/5274/	NOT_FEED	kind= items=0
+pass2-builder	015130	北海道中頓別町	https://www.town.nakatombetsu.hokkaido.jp/bunya/50874/	NOT_FEED	kind= items=0
+pass2-builder	015130	北海道中頓別町	https://www.town.nakatombetsu.hokkaido.jp/bunya/64954/	NOT_FEED	kind= items=0
+pass2-builder	015130	北海道中頓別町	https://www.facebook.com/nakatombetsu/	NOT_FEED	kind= items=0
+pass2-builder	015130	北海道中頓別町	https://www.town.nakatombetsu.hokkaido.jp/bunya/5838/	NOT_FEED	kind= items=0
+pass2-builder	015130	北海道中頓別町	https://www.town.nakatombetsu.hokkaido.jp/bunya/5837/	NOT_FEED	kind= items=0
+pass2-builder	015130	北海道中頓別町	https://www.town.nakatombetsu.hokkaido.jp/bunya/5819/	NOT_FEED	kind= items=0
+pass2-builder	015130	北海道中頓別町	https://www.town.nakatombetsu.hokkaido.jp/bunya/7621	NOT_FEED	kind= items=0
+pass2-builder	015130	北海道中頓別町	https://www.town.nakatombetsu.hokkaido.jp/bunya/5819	NOT_FEED	kind= items=0
+pass2-builder	015130	北海道中頓別町	https://www.town.nakatombetsu.hokkaido.jp/sitemap	NOT_FEED	kind= items=0
+pass2-builder	015431	北海道美幌町	https://www.town.bihoro.hokkaido.jp/site/userguide/1371.html	NOT_FEED	kind= items=0
+pass2-builder	015458	北海道斜里町	https://www.town.shari.hokkaido.jp/homepage/rss.html	NOT_FEED	kind= items=0
+pass2-builder	015717	北海道豊浦町	https://www.town.toyoura.hokkaido.jp/banner2cnt.php?url=https%3A%2F%2Ftoyoura-rss.amebaownd.com%2F&id=27	NOT_FEED	kind= items=0
+pass2-builder	016934	北海道標津町	https://www.shibetsutown.jp/content/?content=763	NOT_FEED	kind= items=0
+pass2-builder	022021	青森県弘前市	https://www.city.hirosaki.aomori.jp/rss/feed.rss	DUP_URL	kind= items=0
+pass2-builder	022039	青森県八戸市	https://www.city.hachinohe.aomori.jp/cgi-bin/feed.php?siteNew=1	DUP_URL	kind= items=0
+pass2-builder	023043	青森県蓬田村	https://www.vill.yomogita.lg.jp/sonsei/keikaku/public_comment_matome.html	NOT_FEED	kind= items=0
+pass2-builder	023671	青森県田舎館村	http://www.vill.inakadate.lg.jp/docs/2012022700101/	NOT_FEED	kind= items=0
+pass2-builder	024058	青森県六戸町	https://www.town.rokunohe.aomori.jp/category/bunya/chousei/saiyou/index.rss	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	024058	青森県六戸町	https://www.town.rokunohe.aomori.jp/category/bunya/chousei/saiyou/index.atom	EMPTY_RESULTSET	kind=atom items=0
+pass2-builder	024244	青森県東通村	http://www.vill.higashidoori.lg.jp/news.rdf	NOT_FEED	kind= items=0
+pass2-builder	024244	青森県東通村	http://www.atom-higashidoori.jp/	NOT_FEED	kind= items=0
+pass2-builder	032018	岩手県盛岡市	https://www.city.morioka.iwate.jp/site/1000040.html	NOT_FEED	kind= items=0
+pass2-builder	032158	岩手県奥州市	https://www.city.oshu.iwate.jp/gyosei/koho_kocho/1/8874.html	NOT_FEED	kind= items=0
+pass2-builder	042021	宮城県石巻市	https://www.city.ishinomaki.lg.jp/news01.rss	DUP_URL	kind= items=0
+pass2-builder	042021	宮城県石巻市	https://www.city.ishinomaki.lg.jp/news02.rss	DUP_URL	kind= items=0
+pass2-builder	042072	宮城県名取市	https://www.city.natori.miyagi.jp/site/userguide/2710.html	NOT_FEED	kind= items=0
+pass2-builder	042137	宮城県栗原市	https://www.kuriharacity.jp/li/010/news.rss	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	042137	宮城県栗原市	https://www.kuriharacity.jp/li/030/news.rss	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	043613	宮城県亘理町	https://www.town.watari.miyagi.jp/detail.php?content=1141	NOT_FEED	kind= items=0
+pass2-builder	052019	秋田県秋田市	https://www.city.akita.lg.jp/rss.rss	DUP_URL	kind= items=0
+pass2-builder	052035	秋田県横手市	https://www.city.yokote.lg.jp/shisei/1001181/1010072.html	NOT_FEED	kind= items=0
+pass2-builder	052108	秋田県由利本荘市	https://www.city.yurihonjo.lg.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	053660	秋田県井川町	https://www.town.ikawa.akita.jp/site/userguide/2913.html	NOT_FEED	kind= items=0
+pass2-builder	054631	秋田県羽後町	https://www.town.ugo.lg.jp/rss_event.php	NOT_FEED	kind= items=0
+pass2-builder	062073	山形県上山市	https://www.city.kaminoyama.yamagata.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	063223	山形県西川町	https://www.town.nishikawa.yamagata.jp/site/hajimete/rss.html	NOT_FEED	kind= items=0
+pass2-builder	072036	福島県郡山市	https://www.city.koriyama.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	072044	福島県いわき市	https://www.city.iwaki.lg.jp/www/rss/topics.rdf	DUP_URL	kind= items=0
+pass2-builder	072044	福島県いわき市	https://www.city.iwaki.lg.jp/www/rss/news.rdf	DUP_URL	kind= items=0
+pass2-builder	072087	福島県喜多方市	https://www.city.kitakata.fukushima.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	072109	福島県二本松市	https://www.city.nihonmatsu.lg.jp/rss.php?mode=news&amp;type=0	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	072109	福島県二本松市	https://www.city.nihonmatsu.lg.jp/rss.php?mode=news&amp;type=1	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	072109	福島県二本松市	https://www.city.nihonmatsu.lg.jp/rss.php?mode=news&amp;type=2	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	072133	福島県伊達市	https://www.city.fukushima-date.lg.jp/site/hajimete/rss.html	NOT_FEED	kind= items=0
+pass2-builder	073016	福島県桑折町	https://www.town.koori.fukushima.jp/site/hajimete/1175.html	NOT_FEED	kind= items=0
+pass2-builder	073440	福島県天栄村	https://www.vill.tenei.fukushima.jp/site/hajimete/rss.html	NOT_FEED	kind= items=0
+pass2-builder	074217	福島県会津坂下町	https://www.town.aizubange.fukushima.jp/site/hajimete/rss-haishin.html	NOT_FEED	kind= items=0
+pass2-builder	074446	福島県三島町	https://www.town.mishima.fukushima.jp/site/hajimete/rss.html	NOT_FEED	kind= items=0
+pass2-builder	074641	福島県泉崎村	https://www.vill.izumizaki.fukushima.jp/rss.php?mode=news&amp;type=0	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	074641	福島県泉崎村	https://www.vill.izumizaki.fukushima.jp/rss.php?mode=news	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	074641	福島県泉崎村	https://www.vill.izumizaki.fukushima.jp/rss.php?mode=news&amp;type=1	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	074641	福島県泉崎村	https://www.vill.izumizaki.fukushima.jp/rss.php?mode=news&amp;type=2	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	074641	福島県泉崎村	https://www.vill.izumizaki.fukushima.jp/rss.php?mode=news&amp;type=3	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	074641	福島県泉崎村	https://www.vill.izumizaki.fukushima.jp/rss.php?mode=news&amp;type=4	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	074659	福島県中島村	https://www.vill-nakajima.jp/rss.php?mode=news&amp;type=0	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	074811	福島県棚倉町	https://www.town.tanagura.fukushima.jp/rss.php?mode=news&amp;type=0	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	074811	福島県棚倉町	https://www.town.tanagura.fukushima.jp/rss.php?mode=news&amp;type=1	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	074811	福島県棚倉町	https://www.town.tanagura.fukushima.jp/rss.php?mode=news&amp;type=2	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	075442	福島県川内村	https://www.kawauchimura.jp/rss.php?mode=news&amp;type=0	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	075612	福島県新地町	https://www.shinchi-town.jp/site/hajimete/about-rss.html	NOT_FEED	kind= items=0
+pass2-builder	082015	茨城県水戸市	https://www.city.mito.lg.jp/rss/10/list3.xml	DUP_URL	kind= items=0
+pass2-builder	082121	茨城県常陸太田市	https://www.city.hitachiota.ibaraki.jp/rss.php?mode=news&amp;type=0	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	082121	茨城県常陸太田市	https://www.city.hitachiota.ibaraki.jp/rss.php?mode=news&amp;type=2	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	082121	茨城県常陸太田市	https://www.city.hitachiota.ibaraki.jp/rss.php?mode=news&amp;type=3	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	082210	茨城県ひたちなか市	https://www.city.hitachinaka.lg.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	082236	茨城県潮来市	https://www.city.itako.lg.jp/rss.php?mode=news&amp;type=0	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	082236	茨城県潮来市	https://www.city.itako.lg.jp/rss.php?mode=news&amp;type=1	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	082236	茨城県潮来市	https://www.city.itako.lg.jp/rss.php?mode=news&amp;type=2	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	082325	茨城県神栖市	https://www.city.kamisu.ibaraki.jp/shisei/koho/1003041/1003042/rss.html	NOT_FEED	kind= items=0
+pass2-builder	082333	茨城県行方市	https://www.city.namegata.ibaraki.jp/rss.php?mode=news&amp;type=0	NOT_FEED	kind= items=0
+pass2-builder	082333	茨城県行方市	https://www.city.namegata.ibaraki.jp/rss.php?mode=news&amp;type=3	NOT_FEED	kind= items=0
+pass2-builder	082350	茨城県つくばみらい市	https://www.city.tsukubamirai.lg.jp/rss.php?mode=news&amp;type=0	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	082350	茨城県つくばみらい市	https://www.city.tsukubamirai.lg.jp/rss.php?mode=news&amp;type=1	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	082350	茨城県つくばみらい市	https://www.city.tsukubamirai.lg.jp/rss.php?mode=news&amp;type=2	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	083411	茨城県東海村	https://www.vill.tokai.ibaraki.jp/cgi-bin/feed.php?siteNew=1	HTTP_000	kind= items=0
+pass2-builder	084476	茨城県河内町	https://www.town.ibaraki-kawachi.lg.jp/rss.php?mode=news&amp;type=0	HTTP_202	kind= items=0
+pass2-builder	084476	茨城県河内町	https://www.town.ibaraki-kawachi.lg.jp/rss.php?mode=news&amp;type=1	HTTP_202	kind= items=0
+pass2-builder	084476	茨城県河内町	https://www.town.ibaraki-kawachi.lg.jp/rss.php?mode=news&amp;type=2	HTTP_202	kind= items=0
+pass2-builder	085464	茨城県境町	https://www.town.ibaraki-sakai.lg.jp/rss.php?mode=news&amp;type=2	HTTP_000	kind= items=0
+pass2-builder	092037	栃木県栃木市	https://www.city.tochigi.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	092037	栃木県栃木市	https://www.city.tochigi.lg.jp/rss/10/list5.xml	DUP_URL	kind= items=0
+pass2-builder	092037	栃木県栃木市	https://www.city.tochigi.lg.jp/rss/10/list7.xml	DUP_URL	kind= items=0
+pass2-builder	092037	栃木県栃木市	https://www.city.tochigi.lg.jp/site/userguide/12525.html	NOT_FEED	kind= items=0
+pass2-builder	092088	栃木県小山市	https://www.city.oyama.tochigi.jp/rss.php?mode=news&amp;type=0	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	092088	栃木県小山市	https://www.city.oyama.tochigi.jp/rss.php?mode=news&amp;type=1	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	092088	栃木県小山市	https://www.city.oyama.tochigi.jp/rss.php?mode=news&amp;type=2	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	092100	栃木県大田原市	https://www.city.ohtawara.tochigi.jp/rss.html	NOT_FEED	kind= items=0
+pass2-builder	092118	栃木県矢板市	https://www.city.yaita.tochigi.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	092118	栃木県矢板市	https://www.city.yaita.tochigi.jp/site/userguide/rss.html	NOT_FEED	kind= items=0
+pass2-builder	092151	栃木県那須烏山市	https://www.city.nasukarasuyama.lg.jp/rss.php?mode=news&amp;type=0	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	092151	栃木県那須烏山市	https://www.city.nasukarasuyama.lg.jp/rss.php?mode=news&amp;type=1	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	092151	栃木県那須烏山市	https://www.city.nasukarasuyama.lg.jp/rss.php?mode=news&amp;type=2	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	093432	栃木県茂木町	https://www.town.motegi.tochigi.jp/motegi/nextpage.php?cd=7342&amp;syurui=2	NOT_FEED	kind= items=0
+pass2-builder	093645	栃木県野木町	https://www.town.nogi.lg.jp/rss.php?mode=news&amp;type=0	NOT_FEED	kind= items=0
+pass2-builder	093645	栃木県野木町	https://www.town.nogi.lg.jp/rss.php?mode=news&amp;type=1	NOT_FEED	kind= items=0
+pass2-builder	093645	栃木県野木町	https://www.town.nogi.lg.jp/rss.php?mode=news&amp;type=2	NOT_FEED	kind= items=0
+pass2-builder	093840	栃木県塩谷町	https://www.town.shioya.tochigi.jp/RSSFeed/menu/0	HTTP_500	kind= items=0
+pass2-builder	102024	群馬県高崎市	https://www.city.takasaki.gunma.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	102024	群馬県高崎市	https://www.city.takasaki.gunma.jp/rss/10/list5.xml	DUP_URL	kind= items=0
+pass2-builder	102032	群馬県桐生市	https://www.city.kiryu.lg.jp/site/rss.html	NOT_FEED	kind= items=0
+pass2-builder	102113	群馬県安中市	https://www.city.annaka.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	102121	群馬県みどり市	https://www.city.midori.gunma.jp/shisei/1001664/1001886/1000117/rss.html	NOT_FEED	kind= items=0
+pass2-builder	104248	群馬県長野原町	https://www.town.naganohara.gunma.jp/content/?content=415	NOT_FEED	kind= items=0
+pass2-builder	112011	埼玉県川越市	https://www.city.kawagoe.saitama.jp/news.rss	DUP_URL	kind= items=0
+pass2-builder	112127	埼玉県東松山市	https://www.city.higashimatsuyama.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	112151	埼玉県狭山市	https://www.city.sayama.saitama.jp/rss_news.xml	DUP_URL	kind= items=0
+pass2-builder	112151	埼玉県狭山市	https://www.city.sayama.saitama.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	112194	埼玉県上尾市	https://www.city.ageo.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	112194	埼玉県上尾市	https://www.city.ageo.lg.jp/site/userguide/rss.html	NOT_FEED	kind= items=0
+pass2-builder	112232	埼玉県蕨市	https://www.city.warabi.saitama.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	112241	埼玉県戸田市	https://www.city.toda.saitama.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	112275	埼玉県朝霞市	https://www.city.asaka.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	112275	埼玉県朝霞市	https://www.city.asaka.lg.jp/rss/10/list5.xml	DUP_URL	kind= items=0
+pass2-builder	112275	埼玉県朝霞市	https://www.city.asaka.lg.jp/rss/10/list13.xml	DUP_URL	kind= items=0
+pass2-builder	112275	埼玉県朝霞市	https://www.city.asaka.lg.jp/site/userguide/rss.html	NOT_FEED	kind= items=0
+pass2-builder	112283	埼玉県志木市	https://www.city.shiki.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	112305	埼玉県新座市	https://www.city.niiza.lg.jp/rss/10/list5.xml	DUP_URL	kind= items=0
+pass2-builder	112305	埼玉県新座市	https://www.city.niiza.lg.jp/rss/10/list6.xml	HTTP_000	kind= items=0
+pass2-builder	112305	埼玉県新座市	https://www.city.niiza.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	112321	埼玉県久喜市	https://www.city.kuki.lg.jp/news.rss	DUP_URL	kind= items=0
+pass2-builder	112356	埼玉県富士見市	https://www.city.fujimi.saitama.jp/rss_news.xml	DUP_URL	kind= items=0
+pass2-builder	112399	埼玉県坂戸市	https://www.city.sakado.lg.jp/soshiki/6/17537.html	NOT_FEED	kind= items=0
+pass2-builder	112399	埼玉県坂戸市	https://www.city.sakado.lg.jp/site/userguide/4794.html	NOT_FEED	kind= items=0
+pass2-builder	112453	埼玉県ふじみ野市	https://www.city.fujimino.saitama.jp/cgi-bin/feed.php?siteNew=1	DUP_URL	kind= items=0
+pass2-builder	113484	埼玉県鳩山町	https://www.town.hatoyama.saitama.jp/rss.php?mode=news&amp;type=0	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	113484	埼玉県鳩山町	https://www.town.hatoyama.saitama.jp/rss.php?mode=news&amp;type=1	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	113484	埼玉県鳩山町	https://www.town.hatoyama.saitama.jp/rss.php?mode=news&amp;type=2	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	113484	埼玉県鳩山町	https://www.town.hatoyama.saitama.jp/kurashi/kenkou_fukushi_kaigo/senior_citizen/hatomaru_map.html	NOT_FEED	kind= items=0
+pass2-builder	113654	埼玉県小鹿野町	https://www.town.ogano.lg.jp/r8hurusatomaturi/	NOT_FEED	kind= items=0
+pass2-builder	122033	千葉県市川市	https://www.city.ichikawa.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	122033	千葉県市川市	https://www.city.ichikawa.lg.jp/rss/10/list5.xml	DUP_URL	kind= items=0
+pass2-builder	122076	千葉県松戸市	https://www.city.matsudo.chiba.jp/rss_news.xml	DUP_URL	kind= items=0
+pass2-builder	122157	千葉県旭市	https://www.city.asahi.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	122165	千葉県習志野市	https://www.city.narashino.lg.jp/cgi-bin/feed.php?siteNew=1	DUP_URL	kind= items=0
+pass2-builder	122181	千葉県勝浦市	https://www.city.katsuura.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	122181	千葉県勝浦市	https://www.city.katsuura.lg.jp/site/userguide/4196.html	NOT_FEED	kind= items=0
+pass2-builder	122203	千葉県流山市	https://www.city.nagareyama.chiba.jp/site/rss.html	NOT_FEED	kind= items=0
+pass2-builder	122211	千葉県八千代市	https://www.city.yachiyo.lg.jp/soshiki/6/61216.html	NOT_FEED	kind= items=0
+pass2-builder	122246	千葉県鎌ケ谷市	https://www.city.kamagaya.chiba.jp/rss_news.xml	DUP_URL	kind= items=0
+pass2-builder	122271	千葉県浦安市	https://www.city.urayasu.lg.jp/news.rss	DUP_URL	kind= items=0
+pass2-builder	123293	千葉県栄町	https://www.town.sakae.chiba.jp/rss.php?mode=news&amp;type=0	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	123293	千葉県栄町	https://www.town.sakae.chiba.jp/rss.php?mode=news&amp;type=1	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	123293	千葉県栄町	https://www.town.sakae.chiba.jp/rss.php?mode=news&amp;type=2	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	131024	東京都中央区	https://www.city.chuo.lg.jp/shinchaku/shinchaku.xml	DUP_URL	kind= items=0
+pass2-builder	131067	東京都台東区	https://www.city.taito.lg.jp/rss_news.xml	DUP_URL	kind= items=0
+pass2-builder	131105	東京都目黒区	https://www.city.meguro.tokyo.jp/kinkyu/rss_news.xml	HTTP_000	kind= items=0
+pass2-builder	131105	東京都目黒区	https://www.city.meguro.tokyo.jp/oshirase/rss_news.xml	DUP_URL	kind= items=0
+pass2-builder	131164	東京都豊島区	https://www.city.toshima.lg.jp/oshirase/oshirase.xml	DUP_URL	kind= items=0
+pass2-builder	131172	東京都北区	https://www.city.kita.lg.jp/city-information/feedback/index.html	NOT_FEED	kind= items=0
+pass2-builder	131172	東京都北区	https://www.city.kita.lg.jp/city-information/feedback/1014173.html	NOT_FEED	kind= items=0
+pass2-builder	131199	東京都板橋区	https://www.city.itabashi.tokyo.jp/rss/index.html	NOT_FEED	kind= items=0
+pass2-builder	131202	東京都練馬区	https://www.city.nerima.tokyo.jp/rss_news.xml	DUP_URL	kind= items=0
+pass2-builder	131202	東京都練馬区	https://www.city.nerima.tokyo.jp/rss/event/rss_news.xml	DUP_URL	kind= items=0
+pass2-builder	131202	東京都練馬区	https://www.city.nerima.tokyo.jp/aboutweb/rss.html	NOT_FEED	kind= items=0
+pass2-builder	131229	東京都葛飾区	https://www.city.katsushika.lg.jp/news.rss	DUP_URL	kind= items=0
+pass2-builder	131237	東京都江戸川区	https://www.city.edogawa.tokyo.jp/news/shinchaku.xml	DUP_URL	kind= items=0
+pass2-builder	132012	東京都八王子市	https://www.city.hachioji.tokyo.jp/987/p021090.html	NOT_FEED	kind= items=0
+pass2-builder	132012	東京都八王子市	https://www.city.hachioji.tokyo.jp/topnewsrss.xml	DUP_URL	kind= items=0
+pass2-builder	132021	東京都立川市	https://www.city.tachikawa.lg.jp/shisei/koho/1005487/rss.html	NOT_FEED	kind= items=0
+pass2-builder	132039	東京都武蔵野市	https://www.city.musashino.lg.jp/about/1000040.html	NOT_FEED	kind= items=0
+pass2-builder	132055	東京都青梅市	https://www.city.ome.tokyo.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	132055	東京都青梅市	https://www.city.ome.tokyo.jp/site/userguide/14944.html	NOT_FEED	kind= items=0
+pass2-builder	132098	東京都町田市	https://www.city.machida.tokyo.jp/rss_news.xml	DUP_URL	kind= items=0
+pass2-builder	132101	東京都小金井市	https://www.city.koganei.lg.jp/rss_news.xml	DUP_URL	kind= items=0
+pass2-builder	132128	東京都日野市	https://www.city.hino.lg.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	132136	東京都東村山市	https://www.city.higashimurayama.tokyo.jp/rss_news.xml	HTTP_403	kind= items=0
+pass2-builder	132144	東京都国分寺市	https://www.city.kokubunji.tokyo.jp/about/1005069.html	NOT_FEED	kind= items=0
+pass2-builder	132152	東京都国立市	https://www.city.kunitachi.tokyo.jp/machi/sakura_toboku_matome/index.html	NOT_FEED	kind= items=0
+pass2-builder	132187	東京都福生市	http://www.city.fussa.tokyo.jp/about/1004552.html	NOT_FEED	kind= items=0
+pass2-builder	132217	東京都清瀬市	https://www.city.kiyose.lg.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	132225	東京都東久留米市	https://www.city.higashikurume.lg.jp/about/1003510.html	NOT_FEED	kind= items=0
+pass2-builder	132250	東京都稲城市	https://www.city.inagi.tokyo.jp/this_hp/site/1010131.html	NOT_FEED	kind= items=0
+pass2-builder	141500	神奈川県相模原市	https://www.city.sagamihara.kanagawa.jp/rss.rss	DUP_URL	kind= items=0
+pass2-builder	141500	神奈川県相模原市	https://www.city.sagamihara.kanagawa.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	142018	神奈川県横須賀市	https://www.city.yokosuka.kanagawa.jp/shisei/koho/goiken/feedback.html	NOT_FEED	kind= items=0
+pass2-builder	142077	神奈川県茅ヶ崎市	https://www.city.chigasaki.kanagawa.jp/about/1001983.html	NOT_FEED	kind= items=0
+pass2-builder	142115	神奈川県秦野市	https://www.city.hadano.kanagawa.jp/cgi-bin/feed.php?siteNew=1&displayRange=90	DUP_URL	kind= items=0
+pass2-builder	142158	神奈川県海老名市	https://www.city.ebina.kanagawa.jp/about/rss.html	HTTP_000	kind= items=0
+pass2-builder	142174	神奈川県南足柄市	https://www.city.minamiashigara.kanagawa.jp/rss.php?&amp;d=&amp;s=1123&amp;o=4	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	142174	神奈川県南足柄市	https://www.city.minamiashigara.kanagawa.jp/rss.php?&amp;d=&amp;s=1001&amp;o=2	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	143669	神奈川県開成町	https://www.town.kaisei.kanagawa.jp/RSSFeed/menu/0	HTTP_500	kind= items=0
+pass2-builder	152056	新潟県柏崎市	https://www.city.kashiwazaki.lg.jp/soshikiichiran/sogokikakubu/genkihasshinka/1/4/3535.html	NOT_FEED	kind= items=0
+pass2-builder	152081	新潟県小千谷市	https://www.city.ojiya.niigata.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	152111	新潟県見附市	https://www.city.mitsuke.niigata.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	152129	新潟県村上市	https://www.city.murakami.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	152161	新潟県糸魚川市	https://www.city.itoigawa.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	152226	新潟県上越市	https://www.city.joetsu.niigata.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	153427	新潟県弥彦村	https://www.vill.yahiko.niigata.jp/content/?content=585	NOT_FEED	kind= items=0
+pass2-builder	162094	富山県小矢部市	https://www.city.oyabe.toyama.jp/about/site/rss.html	NOT_FEED	kind= items=0
+pass2-builder	172049	石川県輪島市	https://www.city.wajima.ishikawa.jp/article/index.rss	DUP_URL	kind= items=0
+pass2-builder	172057	石川県珠洲市	https://www.city.suzu.lg.jp/rss/10/list3.xml	DUP_URL	kind= items=0
+pass2-builder	172057	石川県珠洲市	https://www.city.suzu.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	172090	石川県かほく市	https://www.city.kahoku.lg.jp/topics.xml	DUP_URL	kind= items=0
+pass2-builder	172103	石川県白山市	https://www.city.hakusan.lg.jp/about/site/rss.html	NOT_FEED	kind= items=0
+pass2-builder	172120	石川県野々市市	https://www.city.nonoichi.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	182028	福井県敦賀市	https://www.city.tsuruga.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	182061	福井県勝山市	https://www.city.katsuyama.fukui.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	182095	福井県越前市	http://speechpanel.readspeaker.com/cgi-bin/rssp?customerid=8647&lang=jp&url=http%3A%2F%2Fwww.city.echizen.lg.jp%2findex.html	NOT_FEED	kind= items=0
+pass2-builder	192104	山梨県甲斐市	https://www.city.kai.yamanashi.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	192121	山梨県上野原市	https://www.city.uenohara.yamanashi.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	193682	山梨県富士川町	https://www.town.fujikawa.yamanashi.jp/category/cat_emergency/cat_emergency/index.rss	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	193844	山梨県昭和町	https://www.town.showa.yamanashi.jp/site/userguide/4287.html	NOT_FEED	kind= items=0
+pass2-builder	194255	山梨県山中湖村	https://www.vill.yamanakako.lg.jp/RSSFeed/menu/0	HTTP_500	kind= items=0
+pass2-builder	202029	長野県松本市	https://www.city.matsumoto.nagano.jp/rss/10/list3.xml	DUP_URL	kind= items=0
+pass2-builder	202029	長野県松本市	https://www.city.matsumoto.nagano.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	202037	長野県上田市	https://www.city.ueda.nagano.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	202053	長野県飯田市	https://www.city.iida.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	202053	長野県飯田市	https://www.city.iida.lg.jp/soshiki/1/syokuinbosyuzyouhoumatomesiritubyouin.html	NOT_FEED	kind= items=0
+pass2-builder	202061	長野県諏訪市	https://www.city.suwa.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	202126	長野県大町市	https://www.city.omachi.nagano.jp/emergency/rss	NOT_FEED	kind= items=0
+pass2-builder	202151	長野県塩尻市	https://www.city.shiojiri.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	203076	長野県北相木村	http://www.vill.kitaaiki.nagano.jp/urgency/rss.xml	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	203629	長野県富士見町	https://www.town.fujimi.lg.jp/page/rss.html	NOT_FEED	kind= items=0
+pass2-builder	203840	長野県飯島町	https://www.town.iijima.lg.jp/content/?content=827	NOT_FEED	kind= items=0
+pass2-builder	204021	長野県松川町	https://www.vill.matsukawa.nagano.jp/content/?content=363	NOT_FEED	kind= items=0
+pass2-builder	205907	長野県飯綱町	https://www.town.iizuna.nagano.jp/use/	HTTP_404	kind= items=0
+pass2-builder	212016	岐阜県岐阜市	https://www.city.gifu.lg.jp/info/kouhou/1008373/site/1008378.html	NOT_FEED	kind= items=0
+pass2-builder	212032	岐阜県高山市	https://www.city.takayama.lg.jp/site/1005124.html	NOT_FEED	kind= items=0
+pass2-builder	212041	岐阜県多治見市	https://www.city.tajimi.lg.jp/about/site/rss.html	NOT_FEED	kind= items=0
+pass2-builder	212083	岐阜県瑞浪市	https://www.city.mizunami.lg.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	212113	岐阜県美濃加茂市	https://www.city.minokamo.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	212172	岐阜県飛騨市	https://www.city.hida.gifu.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	212202	岐阜県下呂市	https://www.city.gero.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	215066	岐阜県白川町	https://www.town.shirakawa.lg.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	222038	静岡県沼津市	https://www.city.numazu.shizuoka.jp/kurashi/topics/2026/minatomachizukuri/index.htm	NOT_FEED	kind= items=0
+pass2-builder	222038	静岡県沼津市	https://www.city.numazu.shizuoka.jp/rss/index.htm	NOT_FEED	kind= items=0
+pass2-builder	222097	静岡県島田市	https://www.city.shimada.shizuoka.jp/kurashi-docs/soudanmatome.html	NOT_FEED	kind= items=0
+pass2-builder	222119	静岡県磐田市	https://www.city.iwata.shizuoka.jp/news.rss	DUP_URL	kind= items=0
+pass2-builder	222135	静岡県掛川市	https://www.city.kakegawa.shizuoka.jp/rss-urgency/urgency.part.json	NOT_FEED	kind= items=0
+pass2-builder	222135	静岡県掛川市	https://www.city.kakegawa.shizuoka.jp/rss-list/	NOT_FEED	kind= items=0
+pass2-builder	222135	静岡県掛川市	https://www.city.kakegawa.shizuoka.jp/rss-list/rss.xml	DUP_URL	kind= items=0
+pass2-builder	222135	静岡県掛川市	https://www.city.kakegawa.shizuoka.jp/rss-gyosei/	NOT_FEED	kind= items=0
+pass2-builder	222135	静岡県掛川市	https://www.city.kakegawa.shizuoka.jp/rss-kanko/	NOT_FEED	kind= items=0
+pass2-builder	222135	静岡県掛川市	https://www.city.kakegawa.shizuoka.jp/rss-kosodate/	NOT_FEED	kind= items=0
+pass2-builder	222135	静岡県掛川市	https://www.city.kakegawa.shizuoka.jp/rss-iju/	NOT_FEED	kind= items=0
+pass2-builder	222135	静岡県掛川市	https://www.city.kakegawa.shizuoka.jp/gyosei/docs/7008.html	NOT_FEED	kind= items=0
+pass2-builder	222143	静岡県藤枝市	https://www.city.fujieda.shizuoka.jp/cgi-bin/feed.php?siteNew=1	DUP_URL	kind= items=0
+pass2-builder	231002	愛知県名古屋市	https://www.city.nagoya.jp/about/1017972.html	NOT_FEED	kind= items=0
+pass2-builder	232025	愛知県岡崎市	https://www.city.okazaki.lg.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	232033	愛知県一宮市	https://www.city.ichinomiya.aichi.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	232041	愛知県瀬戸市	https://www.city.seto.aichi.jp/index_atom.xml	DUP_URL	kind= items=0
+pass2-builder	232050	愛知県半田市	https://www.city.handa.lg.jp/about/site/1004054.html	NOT_FEED	kind= items=0
+pass2-builder	232106	愛知県刈谷市	https://www.city.kariya.lg.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	232114	愛知県豊田市	https://www.city.toyota.aichi.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	232220	愛知県東海市	https://www.city.tokai.aichi.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	232238	愛知県大府市	https://www.city.obu.aichi.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	232254	愛知県知立市	https://www.city.chiryu.aichi.jp/1453784986928.html	NOT_FEED	kind= items=0
+pass2-builder	232301	愛知県日進市	https://www.city.nisshin.lg.jp/gaiyo/rss.html	NOT_FEED	kind= items=0
+pass2-builder	232319	愛知県田原市	https://www.city.tahara.aichi.jp/site/1002356.html	NOT_FEED	kind= items=0
+pass2-builder	233421	愛知県豊山町	https://www.town.toyoyama.lg.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	234257	愛知県蟹江町	https://www.town.kanie.aichi.jp/site/userguide/rss.html	NOT_FEED	kind= items=0
+pass2-builder	234273	愛知県飛島村	https://www.vill.tobishima.aichi.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	234451	愛知県南知多町	https://www.town.minamichita.lg.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	235016	愛知県幸田町	https://www.town.kota.lg.jp/soshiki/2/3.html	NOT_FEED	kind= items=0
+pass2-builder	235610	愛知県設楽町	https://www.town.shitara.lg.jp/soshiki/5/2925.html	NOT_FEED	kind= items=0
+pass2-builder	242021	三重県四日市市	https://www.city.yokkaichi.lg.jp/www/rss/topics.rdf	DUP_URL	kind= items=0
+pass2-builder	242021	三重県四日市市	https://www.city.yokkaichi.lg.jp/www/rss/news.rdf	DUP_URL	kind= items=0
+pass2-builder	242039	三重県伊勢市	https://www.city.ise.mie.jp/about/rss.html	HTTP_000	kind= items=0
+pass2-builder	242047	三重県松阪市	https://www.city.matsusaka.mie.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	242055	三重県桑名市	https://www.city.kuwana.lg.jp/oshirase/oshirase.xml	HTTP_000	kind= items=0
+pass2-builder	242055	三重県桑名市	https://www.city.kuwana.lg.jp/shinchaku/shinchaku.xml	HTTP_000	kind= items=0
+pass2-builder	242071	三重県鈴鹿市	https://www.city.suzuka.lg.jp/about/site/rss.html	NOT_FEED	kind= items=0
+pass2-builder	242144	三重県いなべ市	https://www.city.inabe.mie.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	243442	三重県川越町	https://www.town.kawagoe.mie.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	244619	三重県玉城町	https://www.pref.mie.lg.jp/app/rss/new_rss	DUP_URL	kind= items=0
+pass2-builder	244619	三重県玉城町	https://www.pref.mie.lg.jp/info/rss.htm	NOT_FEED	kind= items=0
+pass2-builder	244619	三重県玉城町	https://www.pref.mie.lg.jp/app/rss/hodo_rss	DUP_URL	kind= items=0
+pass2-builder	262048	京都府宇治市	https://www.city.uji.kyoto.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	262048	京都府宇治市	https://www.city.uji.kyoto.jp/site/userguide/17907.html	NOT_FEED	kind= items=0
+pass2-builder	262081	京都府向日市	https://www.city.muko.kyoto.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	262081	京都府向日市	https://www.city.muko.kyoto.jp/soshiki/1/1323.html	NOT_FEED	kind= items=0
+pass2-builder	272302	大阪府交野市	https://www.city.katano.osaka.jp/docs/index.rss	HTTP_408	kind= items=0
+pass2-builder	272302	大阪府交野市	https://www.city.katano.osaka.jp/docs/index.atom	HTTP_408	kind= items=0
+pass2-builder	272302	大阪府交野市	https://www.city.katano.osaka.jp/categories/kubun/event/index.rss	HTTP_408	kind= items=0
+pass2-builder	272302	大阪府交野市	https://www.city.katano.osaka.jp/categories/bunya/nyusatsu/index.rss	HTTP_408	kind= items=0
+pass2-builder	282022	兵庫県尼崎市	https://www.city.amagasaki.hyogo.jp/siteinfo/site/rss.html	NOT_FEED	kind= items=0
+pass2-builder	282057	兵庫県洲本市	https://www.city.sumoto.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	282154	兵庫県三木市	https://www.city.miki.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	282154	兵庫県三木市	https://www.city.miki.lg.jp/site/userguide/8515.html 	HTTP_000	kind= items=0
+pass2-builder	282171	兵庫県川西市	https://www.city.kawanishi.hyogo.jp/policy/rss.html	NOT_FEED	kind= items=0
+pass2-builder	282197	兵庫県三田市	https://www.city.sanda.lg.jp/cgi-bin/feed.php?siteNew=1	DUP_URL	kind= items=0
+pass2-builder	282201	兵庫県加西市	https://www.city.kasai.hyogo.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	282286	兵庫県加東市	https://www.city.kato.lg.jp/kakukanogoannai/sangyoushinkoubu/noseika/tokusanbutsushinko/hanatomidori/18027.html	NOT_FEED	kind= items=0
+pass2-builder	284424	兵庫県市川町	https://www.town.ichikawa.lg.jp/rsslist	NOT_FEED	kind= items=0
+pass2-builder	294241	奈良県上牧町	https://www.town.kanmaki.nara.jp/cgi-bin/feed.php?siteNew=1&amp;displayCount=10&amp;displayRange=90	HTTP_408	kind= items=0
+pass2-builder	302015	和歌山県和歌山市	https://www.city.wakayama.wakayama.jp/site/rss.html	NOT_FEED	kind= items=0
+pass2-builder	302040	和歌山県有田市	https://www.city.arida.lg.jp/aboutshite/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	302074	和歌山県新宮市	https://www.city.shingu.lg.jp/RSSFeed/menu/0	HTTP_500	kind= items=0
+pass2-builder	312011	鳥取県鳥取市	https://www.city.tottori.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	313297	鳥取県八頭町	https://www.town.yazu.tottori.jp/rss/10/list1.xml	HTTP_000	kind= items=0
+pass2-builder	313297	鳥取県八頭町	https://www.town.yazu.tottori.jp/rss/10/list5.xml	HTTP_000	kind= items=0
+pass2-builder	322032	島根県出雲市	https://www.city.izumo.shimane.jp/www/rss/topics.rdf	DUP_URL	kind= items=0
+pass2-builder	322041	島根県益田市	https://www.city.masuda.lg.jp/shiseijoho/koho_kocho/homepage/rss.html	NOT_FEED	kind= items=0
+pass2-builder	332054	岡山県笠岡市	https://www.city.kasaoka.okayama.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	332054	岡山県笠岡市	https://www.city.kasaoka.okayama.jp/site/userguide/rss.html	NOT_FEED	kind= items=0
+pass2-builder	332097	岡山県高梁市	https://www.city.takahashi.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	332143	岡山県真庭市	https://www.city.maniwa.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	332143	岡山県真庭市	https://www.city.maniwa.lg.jp/site/guide/24588.html	NOT_FEED	kind= items=0
+pass2-builder	341002	広島県広島市	https://www.city.hiroshima.lg.jp/atomicbomb-peace/index.html	NOT_FEED	kind= items=0
+pass2-builder	341002	広島県広島市	https://www.city.hiroshima.lg.jp/atomicbomb-peace/1036662/index.html	NOT_FEED	kind= items=0
+pass2-builder	341002	広島県広島市	https://www.city.hiroshima.lg.jp/atomicbomb-peace/1036664/index.html	NOT_FEED	kind= items=0
+pass2-builder	341002	広島県広島市	https://www.city.hiroshima.lg.jp/atomicbomb-peace/fukko/index.html	NOT_FEED	kind= items=0
+pass2-builder	341002	広島県広島市	https://www.city.hiroshima.lg.jp/atomicbomb-peace/peace-ceremony/index.html	NOT_FEED	kind= items=0
+pass2-builder	341002	広島県広島市	https://www.city.hiroshima.lg.jp/atomicbomb-peace/1037854/index.html	NOT_FEED	kind= items=0
+pass2-builder	341002	広島県広島市	https://www.city.hiroshima.lg.jp/atomicbomb-peace/1036658/index.html	NOT_FEED	kind= items=0
+pass2-builder	341002	広島県広島市	https://www.city.hiroshima.lg.jp/atomicbomb-peace/peace-efforts/index.html	NOT_FEED	kind= items=0
+pass2-builder	341002	広島県広島市	https://www.city.hiroshima.lg.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	342025	広島県呉市	https://www.city.kure.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	342041	広島県三原市	https://www.city.mihara.hiroshima.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	342076	広島県福山市	https://www.city.fukuyama.hiroshima.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	342076	広島県福山市	https://www.city.fukuyama.hiroshima.jp/rss/10/list5.xml	DUP_URL	kind= items=0
+pass2-builder	342157	広島県江田島市	https://www.city.etajima.hiroshima.jp/cms/articles/show/908	NOT_FEED	kind= items=0
+pass2-builder	342157	広島県江田島市	https://satomachiplus.pref.hiroshima.lg.jp/	NOT_FEED	kind= items=0
+pass2-builder	352012	山口県下関市	https://www.city.shimonoseki.lg.jp/site/userguide/51556.html	NOT_FEED	kind= items=0
+pass2-builder	352021	山口県宇部市	https://www.city.ube.yamaguchi.jp/webguide/rss.html	NOT_FEED	kind= items=0
+pass2-builder	352047	山口県萩市	https://www.city.hagi.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	352063	山口県防府市	https://www.city.hofu.yamaguchi.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	352063	山口県防府市	https://www.city.hofu.yamaguchi.jp/soshiki/24/furusatomonodukuri.html	NOT_FEED	kind= items=0
+pass2-builder	352063	山口県防府市	https://www.city.hofu.yamaguchi.jp/rss/10/list10.xml	DUP_URL	kind= items=0
+pass2-builder	352080	山口県岩国市	https://www.city.iwakuni.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	352110	山口県長門市	https://www.city.nagato.yamaguchi.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	352128	山口県柳井市	https://www.city-yanai.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	352152	山口県周南市	https://www.city.shunan.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	352161	山口県山陽小野田市	https://www.city.sanyo-onoda.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	353213	山口県和木町	https://www.town.waki.lg.jp/site/userguide/1803.html	NOT_FEED	kind= items=0
+pass2-builder	353434	山口県田布施町	https://www.town.tabuse.lg.jp/site/userguide/6.html	NOT_FEED	kind= items=0
+pass2-builder	362026	徳島県鳴門市	https://www.city.naruto.lg.jp/rss.html	NOT_FEED	kind= items=0
+pass2-builder	362034	徳島県小松島市	https://www.city.komatsushima.lg.jp/attention/rss.xml	HTTP_000	kind= items=0
+pass2-builder	362034	徳島県小松島市	https://www.city.komatsushima.lg.jp/sangyo/nyusatsu/rss.xml	HTTP_404	kind= items=0
+pass2-builder	362034	徳島県小松島市	https://www.city.komatsushima.lg.jp/use/	NOT_FEED	kind= items=0
+pass2-builder	362077	徳島県美馬市	https://www.city.mima.lg.jp/rss-list/	NOT_FEED	kind= items=0
+pass2-builder	362077	徳島県美馬市	https://www.city.mima.lg.jp/rss-announce/	NOT_FEED	kind= items=0
+pass2-builder	362077	徳島県美馬市	https://www.city.mima.lg.jp/rss-announce/rss.xml	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	362077	徳島県美馬市	https://www.city.mima.lg.jp/rss-gyosei/	NOT_FEED	kind= items=0
+pass2-builder	362077	徳島県美馬市	https://www.city.mima.lg.jp/rss-kanko/	NOT_FEED	kind= items=0
+pass2-builder	362077	徳島県美馬市	https://www.city.mima.lg.jp/rss-kosodate/	NOT_FEED	kind= items=0
+pass2-builder	362077	徳島県美馬市	https://www.city.mima.lg.jp/rss-iju/	NOT_FEED	kind= items=0
+pass2-builder	362077	徳島県美馬市	https://www.city.mima.lg.jp/rss-kigyou/	NOT_FEED	kind= items=0
+pass2-builder	362077	徳島県美馬市	https://www.city.mima.lg.jp/about/about-rss.html	NOT_FEED	kind= items=0
+pass2-builder	362085	徳島県三好市	https://www.miyoshi.i-tokushima.jp/use/	NOT_FEED	kind= items=0
+pass2-builder	363022	徳島県上勝町	https://www.kamikatsu.jp/docs/2011020100104/	NOT_FEED	kind= items=0
+pass2-builder	363219	徳島県佐那河内村	https://www.vill.sanagochi.lg.jp/rss.html	NOT_FEED	kind= items=0
+pass2-builder	363219	徳島県佐那河内村	https://www.vill.sanagochi.lg.jp/category/shiru/index.rss	HTTP_404	kind= items=0
+pass2-builder	363219	徳島県佐那河内村	https://www.vill.sanagochi.lg.jp/category/shiru/index.atom	HTTP_404	kind= items=0
+pass2-builder	363219	徳島県佐那河内村	https://www.vill.sanagochi.lg.jp/category/kurashi/index.rss	HTTP_404	kind= items=0
+pass2-builder	363219	徳島県佐那河内村	https://www.vill.sanagochi.lg.jp/category/kurashi/index.atom	HTTP_404	kind= items=0
+pass2-builder	363219	徳島県佐那河内村	https://www.vill.sanagochi.lg.jp/category/gyosei/index.rss	HTTP_404	kind= items=0
+pass2-builder	363219	徳島県佐那河内村	https://www.vill.sanagochi.lg.jp/category/gyosei/index.atom	HTTP_404	kind= items=0
+pass2-builder	363880	徳島県海陽町	https://www.town.kaiyo.lg.jp/zokusei/event/index.rss	HTTP_404	kind= items=0
+pass2-builder	363880	徳島県海陽町	https://www.town.kaiyo.lg.jp/zokusei/event/index.atom	HTTP_404	kind= items=0
+pass2-builder	363880	徳島県海陽町	https://www.town.kaiyo.lg.jp/zokusei/saiyo/index.rss	HTTP_404	kind= items=0
+pass2-builder	363880	徳島県海陽町	https://www.town.kaiyo.lg.jp/zokusei/saiyo/index.atom	HTTP_000	kind= items=0
+pass2-builder	363880	徳島県海陽町	https://www.town.kaiyo.lg.jp/zokusei/nyusatsu/index.rss	HTTP_404	kind= items=0
+pass2-builder	363880	徳島県海陽町	https://www.town.kaiyo.lg.jp/zokusei/nyusatsu/index.atom	HTTP_404	kind= items=0
+pass2-builder	363880	徳島県海陽町	https://www.town.kaiyo.lg.jp/bunya/bosai/index.rss	HTTP_404	kind= items=0
+pass2-builder	363880	徳島県海陽町	https://www.town.kaiyo.lg.jp/bunya/bosai/index.atom	HTTP_404	kind= items=0
+pass2-builder	363880	徳島県海陽町	https://www.town.kaiyo.lg.jp/docs/2011020700090/	NOT_FEED	kind= items=0
+pass2-builder	364011	徳島県松茂町	https://www.town.matsushige.tokushima.jp/docs/index.rss	HTTP_000	kind= items=0
+pass2-builder	364037	徳島県藍住町	https://www.town.aizumi.lg.jp/rss.html	NOT_FEED	kind= items=0
+pass2-builder	364681	徳島県つるぎ町	https://www.town.tokushima-tsurugi.lg.jp/sangyo/nyusatsu/rss.xml	HTTP_000	kind= items=0
+pass2-builder	364681	徳島県つるぎ町	https://www.town.tokushima-tsurugi.lg.jp/use/	NOT_FEED	kind= items=0
+pass2-builder	364894	徳島県東みよし町	https://www.town.higashimiyoshi.lg.jp/sangyo/nyusatsu/rss.xml	HTTP_000	kind= items=0
+pass2-builder	372021	香川県丸亀市	https://www.city.marugame.lg.jp/site/furusatomarugame/	NOT_FEED	kind= items=0
+pass2-builder	372021	香川県丸亀市	https://www.city.marugame.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	372030	香川県坂出市	https://www.city.sakaide.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	372030	香川県坂出市	https://www.city.sakaide.lg.jp/site/userguide/rss.html	NOT_FEED	kind= items=0
+pass2-builder	372048	香川県善通寺市	https://www.city.zentsuji.kagawa.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	382019	愛媛県松山市	https://www.city.matsuyama.ehime.jp/rss_news.xml	DUP_URL	kind= items=0
+pass2-builder	382051	愛媛県新居浜市	https://www.city.niihama.lg.jp/soshiki/douro/minatomachi.html	NOT_FEED	kind= items=0
+pass2-builder	382159	愛媛県東温市	https://www.city.toon.ehime.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	383864	愛媛県久万高原町	https://www.kumakogen.jp/rss/10/list1.xml	HTTP_000	kind= items=0
+pass2-builder	383864	愛媛県久万高原町	https://www.kumakogen.jp/rss/10/list7.xml	HTTP_000	kind= items=0
+pass2-builder	384011	愛媛県松前町	https://www.town.masaki.ehime.jp/soshiki/3/rss.html	NOT_FEED	kind= items=0
+pass2-builder	392014	高知県高知市	https://www.city.kochi.kochi.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	392014	高知県高知市	https://www.city.kochi.kochi.jp/rss/10/list8.xml	DUP_URL	kind= items=0
+pass2-builder	392014	高知県高知市	https://www.city.kochi.kochi.jp/rss/10/list7.xml	DUP_URL	kind= items=0
+pass2-builder	392014	高知県高知市	https://www.city.kochi.kochi.jp/soshiki/80/rss.html	NOT_FEED	kind= items=0
+pass2-builder	392031	高知県安芸市	https://www.city.aki.kochi.jp/life/dtl.php?hdnKey=5	NOT_FEED	kind= items=0
+pass2-builder	392120	高知県香美市	https://www.city.kami.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	393410	高知県本山町	https://www.town.motoyama.kochi.jp/rsshaishin.html	NOT_FEED	kind= items=0
+pass2-builder	393649	高知県大川村	https://www.vill.okawa.kochi.jp/life/dtl.php?hdnKey=1278&hdnSKBN=A#a005	NOT_FEED	kind= items=0
+pass2-builder	393878	高知県仁淀川町	https://www.town.niyodogawa.lg.jp/rss/	NOT_FEED	kind= items=0
+pass2-builder	394017	高知県中土佐町	https://www.town.nakatosa.lg.jp/life/detail.php?hdnKey=5&routekbn=A	NOT_FEED	kind= items=0
+pass2-builder	394025	高知県佐川町	https://www.town.sakawa.lg.jp/rss/	NOT_FEED	kind= items=0
+pass2-builder	401005	福岡県北九州市	https://www.city.kitakyushu.lg.jp/category/file_0005.html	NOT_FEED	kind= items=0
+pass2-builder	402052	福岡県飯塚市	https://www.city.iizuka.lg.jp/rss/10/list3.xml	DUP_URL	kind= items=0
+pass2-builder	402052	福岡県飯塚市	https://www.city.iizuka.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	402150	福岡県中間市	https://www.city.nakama.lg.jp/site/userguide/3351.html	NOT_FEED	kind= items=0
+pass2-builder	402176	福岡県筑紫野市	https://www.city.chikushino.fukuoka.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	402184	福岡県春日市	https://www.city.kasuga.fukuoka.jp/rss/rssnews.rss	DUP_URL	kind= items=0
+pass2-builder	402281	福岡県朝倉市	https://www.city.asakura.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	402311	福岡県那珂川市	https://www.city.nakagawa.lg.jp/site/userguide/rss.html	NOT_FEED	kind= items=0
+pass2-builder	403431	福岡県志免町	https://www.town.shime.lg.jp/site/userguide/rss.html	NOT_FEED	kind= items=0
+pass2-builder	403440	福岡県須恵町	https://www.town.sue.fukuoka.jp/hajimete/rss.html	NOT_FEED	kind= items=0
+pass2-builder	403814	福岡県芦屋町	https://www.town.ashiya.lg.jp/site/userguide/8711.html	NOT_FEED	kind= items=0
+pass2-builder	406210	福岡県苅田町	https://www.town.kanda.lg.jp/site/userguide/2293.html	NOT_FEED	kind= items=0
+pass2-builder	406473	福岡県築上町	https://www.town.chikujo.fukuoka.jp/news.rss	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	406473	福岡県築上町	https://www.town.chikujo.fukuoka.jp/event.rss	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	406473	福岡県築上町	https://www.town.chikujo.fukuoka.jp/boshu.rss	EMPTY_RESULTSET	kind=rss2 items=0
+pass2-builder	412031	佐賀県鳥栖市	https://www.city.tosu.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	412040	佐賀県多久市	https://www.city.taku.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	413879	佐賀県玄海町	https://www.town.genkai.lg.jp/site/userguide/2953.html	NOT_FEED	kind= items=0
+pass2-builder	422011	長崎県長崎市	https://www.city.nagasaki.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	432121	熊本県上天草市	https://www.city.kamiamakusa.kumamoto.jp/rss/rc/999.xml	HTTP_403	kind= items=0
+pass2-builder	432121	熊本県上天草市	https://www.city.kamiamakusa.kumamoto.jp/rss/rc/400.xml	HTTP_403	kind= items=0
+pass2-builder	434043	熊本県菊陽町	https://www.town.kikuyo.lg.jp/kiji0031659/index.html	NOT_FEED	kind= items=0
+pass2-builder	434434	熊本県益城町	https://www.town.mashiki.lg.jp/dynamic/rss10forevent.ashx	HTTP_000	kind= items=0
+pass2-builder	442020	大分県別府市	https://www.city.beppu.oita.jp/seikatu/kenkou_iryou/kansensyou_nanbyoutou/corona_matome.html	HTTP_404	kind= items=0
+pass2-builder	442020	大分県別府市	https://twitter.com/BeppuCity_RSS	NOT_FEED	kind= items=0
+pass2-builder	442020	大分県別府市	https://www.city.beppu.oita.jp/rss/beppu.xml	DUP_URL	kind= items=0
+pass2-builder	442071	大分県津久見市	https://www.city.tsukumi.oita.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	442143	大分県国東市	https://www.city.kunisaki.oita.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	452017	宮崎県宮崎市	https://www.city.miyazaki.miyazaki.jp/news/rss.xml	DUP_URL	kind= items=0
+pass2-builder	452017	宮崎県宮崎市	https://www.city.miyazaki.miyazaki.jp/bid_information/rss.xml	DUP_URL	kind= items=0
+pass2-builder	452017	宮崎県宮崎市	https://www.city.miyazaki.miyazaki.jp/city/public_relations/press_material/rss.xml	DUP_URL	kind= items=0
+pass2-builder	452025	宮崎県都城市	https://www.city.miyakonojo.miyazaki.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	462217	鹿児島県志布志市	https://www.city.shibushi.lg.jp/rss/10/list1.xml	DUP_URL	kind= items=0
+pass2-builder	464821	鹿児島県東串良町	https://www.higashikushira.com/event_list/index.rss	HTTP_404	kind= items=0
+pass2-builder	464821	鹿児島県東串良町	https://www.higashikushira.com/event_list/index.atom	HTTP_404	kind= items=0
+pass2-builder	472018	沖縄県那覇市	https://www.city.naha.okinawa.jp/about/rss.html	NOT_FEED	kind= items=0
+pass2-builder	472085	沖縄県浦添市	https://www.city.urasoe.lg.jp/category/kubun/news/index.rss	DUP_URL	kind= items=0
+pass2-builder	472085	沖縄県浦添市	https://www.city.urasoe.lg.jp/category/bunya/nyusatsu/index.rss	DUP_URL	kind= items=0
+pass2-builder	472085	沖縄県浦添市	https://www.city.urasoe.lg.jp/category/bbs/index.rss	HTTP_404	kind= items=0
+pass2-builder	472085	沖縄県浦添市	https://www.city.urasoe.lg.jp/category/bbs/index.atom	HTTP_404	kind= items=0
+pass2-builder	472085	沖縄県浦添市	https://www.city.urasoe.lg.jp/rss.html	NOT_FEED	kind= items=0
+pass2-builder	472140	沖縄県宮古島市	https://www.city.miyakojima.lg.jp/rss/feed.rss	DUP_URL	kind= items=0
+pass2-builder	472140	沖縄県宮古島市	https://www.city.miyakojima.lg.jp/rss/../kurashi/kodomo/kosodate/20261104joureichuukanhoukoku.html	NOT_FEED	kind= items=0
+pass2-builder	472140	沖縄県宮古島市	https://www.city.miyakojima.lg.jp/rss/../soshiki/kyouiku/kyouikubu/gakkokyouiku/2022-1018-1700-175.html	NOT_FEED	kind= items=0
+pass2-builder	472140	沖縄県宮古島市	https://www.city.miyakojima.lg.jp/rss/../soshiki/shityo/soumubu/zeimu/oshirase/zeimuka_kouzisoutatu.html	NOT_FEED	kind= items=0
+pass2-builder	472140	沖縄県宮古島市	https://www.city.miyakojima.lg.jp/rss/../jigyousya/nyusatsu/2026-0929-1343-42.html	NOT_FEED	kind= items=0
+pass2-builder	472140	沖縄県宮古島市	https://www.city.miyakojima.lg.jp/rss/../soshiki/shityo/kikaku/hisyokouhou/oshirase/2026-1002-1737-21.html	NOT_FEED	kind= items=0
+pass2-builder	473596	沖縄県伊平屋村	https://www.vill.iheya.okinawa.jp/rss/10/list1.xml	HTTP_000	kind= items=0
+pass2-builder	473821	沖縄県与那国町	https://www.town.yonaguni.okinawa.jp/category/kubun/index.rss	HTTP_404	kind= items=0
+pass2-builder	473821	沖縄県与那国町	https://www.town.yonaguni.okinawa.jp/category/kubun/index.atom	HTTP_404	kind= items=0
+re-measure	JO43_MUNI_190004	山梨県 - 山梨県 山梨県 ホームページ（緊急時簡易版）	https://www.pref.yamanashi.jp/kinkyu.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_280003	兵庫県 - 兵庫県 ホーム	https://web.pref.hyogo.lg.jp/kinkyu2.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_041009	宮城県仙台市 - 仙台市 ホーム	https://www.city.sendai.jp/kisho.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_043214	宮城県大河原町 - ホーム/大河原町	https://www.town.ogawara.miyagi.jp/services/rdf/rss10/1039.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_045012	宮城県涌谷町 - 涌谷町 緊急情報	https://www.town.wakuya.miyagi.jp/kinkyu/kinkyu.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_045012_4	宮城県涌谷町 - 涌谷町 イベント情報	https://www.town.wakuya.miyagi.jp/event/event.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_075469	福島県双葉町 - ホーム  双葉町公式ホームページ	https://www.town.fukushima-futaba.lg.jp/services/rdf/rss10/11460.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_082171	茨城県取手市 - 取手市 緊急情報一覧	https://www.city.toride.ibaraki.jp/kinkyu/kinkyu.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_092169	栃木県下野市 - 下野市(下野市 公式ホームページ)	http://www.city.shimotsuke.lg.jp/rss/rss10.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_094072	栃木県那須町 - 那須町(那須町トップページ)	https://www.town.nasu.lg.jp/rss/rss10-1204020.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_112381	埼玉県蓮田市 - 蓮田市 緊急・災害情報	https://www.city.hasuda.saitama.jp/kinkyu/kinkyu.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_131016	東京都千代田区 - 千代田区ホームページ 緊急情報	https://www.city.chiyoda.lg.jp/kinkyu/kinkyu.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_131181	東京都荒川区 - 荒川区公式サイト 防災・緊急情報一覧	https://www.city.arakawa.tokyo.jp/kinkyuji/emergency.xml	HTTP_000	items=0
+re-measure	JO43_MUNI_182109	福井県坂井市 - 福井県坂井市 緊急情報一覧	https://www.city.fukui-sakai.lg.jp/kinkyu/kinkyu.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_212148	岐阜県可児市 - 岐阜県可児市ホーム/可児市	https://www.city.kani.lg.jp/services/rdf/rss10/31008.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_212164	岐阜県瑞穂市 - ホーム/瑞穂市	https://www.city.mizuho.lg.jp/services/rdf/rss10/1057.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_213624	岐阜県関ケ原町 - ホーム/関ケ原町	https://www.town.sekigahara.gifu.jp/services/rdf/rss10/1021.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_215058	岐阜県八百津町 - ホーム/八百津町	https://www.town.yaotsu.lg.jp/services/rdf/rss10/1039.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_222259	静岡県伊豆の国市 - 伊豆の国市 緊急・災害関連情報	https://www.city.izunokuni.shizuoka.jp/kinkyu/kinkyu.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_232017	愛知県豊橋市 - ホーム/豊橋市	https://www.city.toyohashi.lg.jp/services/rdf/rss10/1021.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_233617	愛知県大口町 - ホーム/大口町	https://www.town.oguchi.lg.jp/services/rdf/rss10/1021.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_233617_2	愛知県大口町 - ホーム/大口町	https://www.town.oguchi.lg.jp/services/rdf/rss10/6943.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_282065	兵庫県芦屋市 - 芦屋市 緊急情報	https://www.city.ashiya.lg.jp/kinkyu/kinkyu.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_282120	兵庫県赤穂市 - 赤穂市 緊急情報	https://www.city.ako.lg.jp/kinkyu/kinkyu.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_293440	奈良県斑鳩町 - 斑鳩町	https://www.town.ikaruga.nara.jp/rss/rss.xml	HTTP_408	items=0
+re-measure	JO43_MUNI_382108_2	愛媛県伊予市 - 伊予市 緊急・災害関連の情報	https://www.city.iyo.lg.jp/kinkyu/kinkyu.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_412058	佐賀県伊万里市 - トップページ/伊万里市	https://www.city.imari.lg.jp/services/rdf/rss10/1021.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_422053	長崎県大村市 - 大村市 緊急情報	https://www.city.omura.nagasaki.jp/bousai/kurashi/anzen/kinkyu.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_462039	鹿児島県鹿屋市 - 鹿屋市 ホーム	https://www.city.kanoya.lg.jp/kinkyu.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_462144	鹿児島県垂水市 - 鹿児島県垂水市 緊急情報一覧	http://www.city.tarumizu.lg.jp/kinkyu/kinkyu.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_462187_3	鹿児島県霧島市 - 鹿児島県霧島市 ホーム	http://www.city-kirishima.jp/kinkyuu.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_462225	鹿児島県奄美市 - 鹿児島県奄美市 緊急情報一覧	https://www.city.amami.lg.jp/bosai/kinkyu/kinkyu.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_464686	鹿児島県大崎町 - 鹿児島県大崎町 ホーム	https://www.town.kagoshima-osaki.lg.jp/kinkyu.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_464902	鹿児島県錦江町 - 錦江町 総合トップ	https://www.town.kinko.lg.jp/kinkyu.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_464911	鹿児島県南大隅町 - 鹿児島県南大隅町 ホーム	https://www.town.minamiosumi.lg.jp/kinkyu.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_465011	鹿児島県中種子町 - 鹿児島県中種子町 ホーム	http://town.nakatane.kagoshima.jp/kinkyu.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_140007	神奈川県 - 神奈川県ホームページ 防災・緊急情報	http://www.pref.kanagawa.jp/emergency/emergency.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_112062	埼玉県行田市 - 行田市	https://www.city.gyoda.lg.jp/cgi-bin/feed.php?type=rss_2.0	HTTP_000	items=0
+re-measure	JO43_MUNI_121002	千葉県千葉市 - 千葉市 ホーム	https://www.city.chiba.jp/kinkyu.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_122157_3	千葉県旭市 - 旭市役所RSS（トピックス）	https://www.city.asahi.lg.jp/rss/10/list6.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_131164	東京都豊島区 - 豊島区公式ホームページ 緊急情報一覧	https://www.city.toshima.lg.jp/kinkyu/kinkyu.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_132080	東京都調布市 - 調布市 緊急情報一覧	https://www.city.chofu.lg.jp/kinkyu/kinkyu.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_143626	神奈川県大井町 - 大井町役場RSS（新着更新情報）	https://www.town.oi.kanagawa.jp/rss/10/list1.xml	HTTP_000	items=0
+re-measure	JO43_MUNI_202011_2	長野県長野市 - 長野市公式ホームページ 緊急情報一覧	https://www.city.nagano.nagano.jp/kinkyu/suido.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_203246	長野県立科町 - 立科町	https://www.town.tateshina.nagano.jp/cgi-bin/feed.php?displayCount=0&amp;displayRange=90&amp;siteNew=1	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_232271_3	愛知県高浜市 - 高浜市役所RSS（トピックス）	https://www.city.takahama.lg.jp/rss/10/list6.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_234460	愛知県美浜町 - 愛知県美浜町	https://www.town.aichi-mihama.lg.jp/cgi-bin/feed.php?siteNew=1&displayRange=90	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_243248	三重県東員町 - 東員町ホームページ	https://www.town.toin.lg.jp/cgi-bin/feed.php?siteNew=1&amp;displayRange=90	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_252018	滋賀県大津市 - 大津市	https://www.city.otsu.lg.jp/cgi-bin/feed.php?categoryNo=19&amp;includeShortcut=1	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_254436	滋賀県多賀町 - 多賀町役場	https://www.town.taga.lg.jp/cgi-bin/feed.php?siteNew=1&amp;displayCount=10&amp;displayRange=90	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_272132	大阪府泉佐野市 - 泉佐野市	https://www.city.izumisano.lg.jp/cgi-bin/feed.php?siteNew=1&amp;displayRange=90	HTTP_408	items=0
+re-measure	JO43_MUNI_272302	大阪府交野市 - イベント   交野市	https://www.city.katano.osaka.jp/categories/kubun/event/index.atom	HTTP_408	items=0
+re-measure	JO43_MUNI_272302_3	大阪府交野市 - パブリックコメント   交野市	https://www.city.katano.osaka.jp/categories/bunya/joho/public_comment/index.rss	HTTP_000	items=0
+re-measure	JO43_MUNI_272302_4	大阪府交野市 - パブリックコメント   交野市	https://www.city.katano.osaka.jp/categories/bunya/joho/public_comment/index.atom	HTTP_408	items=0
+re-measure	JO43_MUNI_282031	兵庫県明石市 - 明石市 緊急・災害情報一覧	https://www.city.akashi.lg.jp/emergency/kinkyu.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_282189_2	兵庫県小野市 - 兵庫県小野市行政サイト	https://www.city.ono.hyogo.jp/cgi-bin/feed.php?categoryNo=18&amp;includeShortcut=1	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_302031_2	和歌山県橋本市 - 橋本市	https://www.city.hashimoto.lg.jp/cgi-bin/feed.php?categoryNo=9&amp;includeShortcut=1	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_302031_3	和歌山県橋本市 - 橋本市	https://www.city.hashimoto.lg.jp/cgi-bin/feed.php?categoryNo=12&amp;includeShortcut=1	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_312045_2	鳥取県境港市 - さかなと鬼太郎のまち境港市 Sakaiminato City Official Web Site - 催	https://www.city.sakaiminato.lg.jp/rss/events.xml	HTTP_000	items=0
+re-measure	JO43_MUNI_322024	島根県浜田市 - 浜田市ホームページ緊急情報	https://www.city.hamada.shimane.jp/www/rss/kinkyu.rdf	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_334235	岡山県早島町 - 早島町ホームページ	https://www.town.hayashima.lg.jp/cgi-bin/feed.php?siteNew=1&displayCount=15&displayRange=90	HTTP_000	items=0
+re-measure	JO43_MUNI_336068	岡山県鏡野町 - 鏡野町役場RSS（緊急情報）	https://www.town.kagamino.lg.jp/rss/10/list5.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_362026	徳島県鳴門市 - 新着情報   鳴門市	https://www.city.naruto.lg.jp/category/kubun/shinchaku/index.rss	HTTP_000	items=0
+re-measure	JO43_MUNI_362026_4	徳島県鳴門市 - 募集情報   鳴門市	https://www.city.naruto.lg.jp/category/kubun/boshu/index.atom	HTTP_000	items=0
+re-measure	JO43_MUNI_382159_2	愛媛県東温市 - 東温市役所RSS（イベント・募集）	https://www.city.toon.ehime.jp/rss/10/list7.xml	HTTP_000	items=0
+re-measure	JO43_MUNI_383562_2	愛媛県上島町 - 上島町公式ホームページRSS（トピックス）	https://www.town.kamijima.lg.jp/rss/10/list6.xml	HTTP_000	items=0
+re-measure	JO43_MUNI_422011	長崎県長崎市 - 長崎市RSS（ピックアップ情報）	https://www.city.nagasaki.lg.jp/rss/10/list5.xml	HTTP_000	items=0
+re-measure	JO43_MUNI_442097	大分県豊後高田市 - 豊後高田市役所RSS（トピックス）	https://www.city.bungotakada.oita.jp/rss/10/list6.xml	HTTP_000	items=0
+re-measure	JO43_MUNI_442101_2	大分県杵築市 - 杵築市	https://www.city.kitsuki.lg.jp/cgi-bin/feed.php?categoryNo=924	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_442101_3	大分県杵築市 - 杵築市	https://www.city.kitsuki.lg.jp/cgi-bin/feed.php?categoryNo=925	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_442143	大分県国東市 - 国東市役所RSS（緊急情報）	https://www.city.kunisaki.oita.jp/rss/10/list7.xml	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_464929_2	鹿児島県肝付町 - 肝付町	https://kimotsuki-town.jp/cgi-bin/feed.php?categoryNo=755	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_464929_3	鹿児島県肝付町 - 肝付町	https://kimotsuki-town.jp/cgi-bin/feed.php?categoryNo=756	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_472051_2	沖縄県宜野湾市 - 宜野湾市	https://www.city.ginowan.lg.jp/cgi-bin/feed.php?categoryNo=5170	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_472051_3	沖縄県宜野湾市 - 宜野湾市	https://www.city.ginowan.lg.jp/cgi-bin/feed.php?categoryNo=5176	EMPTY_RESULTSET	items=0
+re-measure	JO43_MUNI_472131	沖縄県うるま市 - うるま市公式ホームページ 緊急情報一覧	https://www.city.uruma.lg.jp/kinkyu/kinkyu.xml	EMPTY_RESULTSET	items=0
+batch_exclusions	JO43_MUNI_240001	三重県 - 三重県ホームページ「新着情報」	http://www.pref.mie.lg.jp/app/rss/new_rss	DUP_ENDPOINT	endpoint already read by a registered row
+batch_exclusions	JO43_MUNI_240001_2	三重県 - 三重県ホームページ「報道発表資料」	http://www.pref.mie.lg.jp/app/rss/hodo_rss	DUP_ENDPOINT	endpoint already read by a registered row
+batch_exclusions	JO43_MUNI_112178_2	埼玉県鴻巣市 - 鴻巣市役所	http://www.city.kounosu.saitama.jp/rss/10/list1.xml	DUP_ENDPOINT	endpoint already read by a registered row
+batch_exclusions	JO43_MUNI_131113	東京都大田区 - 大田区からのお知らせ一覧	http://www.city.ota.tokyo.jp/oshirase/rss_news.xml	DUP_ENDPOINT	endpoint already read by a registered row
+batch_exclusions	JO43_MUNI_131113_2	東京都大田区 - 募集情報一覧	http://www.city.ota.tokyo.jp/boshu/rss_news.xml	DUP_ENDPOINT	endpoint already read by a registered row
+batch_exclusions	JO43_MUNI_322075_2	島根県江津市 - 江津市役所RSS（新着更新情報）	http://www.city.gotsu.lg.jp/rss/10/list1.xml	DUP_ENDPOINT	endpoint already read by a registered row
+probe_hp_batch	JO43_MUNI_294420		https://www.town.oyodo.lg.jp/rss/rss.xml	NET_ERR	[Errno 104] Connection reset by peer
+probe_hp_batch	JO43_MUNI_434442		https://www.town.kosa.lg.jp/rss/rc/101.xml	HTTP_ERR	Forbidden
+probe_hp_batch	JO43_MUNI_102105		https://www.city.tomioka.lg.jp/www/rss/news.rdf	NET_ERR	[SSL: TLSV1_ALERT_INSUFFICIENT_SECURITY] tlsv1 alert insuffi
+probe_hp_batch	JO43_MUNI_102105_2		https://www.city.tomioka.lg.jp/www/rss/bosyu.rdf	NET_ERR	[SSL: TLSV1_ALERT_INSUFFICIENT_SECURITY] tlsv1 alert insuffi
+probe_hp_batch	JO43_MUNI_102105_3		https://www.city.tomioka.lg.jp/www/rss/event.rdf	NET_ERR	[SSL: TLSV1_ALERT_INSUFFICIENT_SECURITY] tlsv1 alert insuffi
+probe_hp_batch	JO43_MUNI_182044		https://www1.city.obama.fukui.jp/news.xml	NET_ERR	[Errno 104] Connection reset by peer
+probe_hp_batch	JO43_MUNI_272302_2		https://www.city.katano.osaka.jp/categories/bunya/nyusatsu/index.atom	HTTP_ERR	

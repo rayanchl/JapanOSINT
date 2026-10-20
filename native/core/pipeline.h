@@ -28,4 +28,8 @@ void osint_pipeline_run(db_handle *db, llm_client *llm,
  * string of ≤9 strings (or "[]"). Caller frees. */
 char *osint_suggest(llm_client *llm, const char *query);
 
+/* osint_suggest() with the exact-response cache (core/llmcache.h) on `db`
+ * when JO_LLM_CACHE_TTL_SEC is set; `db` NULL = osint_suggest(). */
+char *osint_suggest_db(db_handle *db, llm_client *llm, const char *query);
+
 #endif

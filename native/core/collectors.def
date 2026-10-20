@@ -662,3 +662,21 @@ COLLECTOR("_maint", "Maintenance pods", "保守ポッド", "Internal pipeline po
 COLLECTOR("_enrich", "Enrichment pods", "エンリッチメントポッド", "Internal enrichment pods — not data sources.", "grp_internal")  /* 3 src; enrichment 3 */
 COLLECTOR("_probe", "Probe tools", "プローブ", "Operator probe tools — not data sources.", "grp_internal")  /* 1 src; cyber 1 */
 COLLECTOR("_test", "Test fixtures", "テスト用", "Fixtures for the test suite — not data sources.", "grp_internal")  /* 1 src; test 1 */
+
+/* ── batches 37 and 43–46 (claude/osint-value-sources-u1u4wb, 2026-10-19) ──
+ * Each key is the table's file name, the hpengine default. Counts are rows at
+ * merge time. */
+COLLECTOR("hp3b37_jp", "Japan — national open-data catalogues (batch 37)", "日本 国のオープンデータカタログ", NULL, "grp_opendata")  /* 3 src */
+COLLECTOR("hp3b37_fr", "France — open-data catalogue (batch 37)", "フランス オープンデータカタログ", NULL, "grp_opendata")  /* 1 src */
+COLLECTOR("hp3b37_us", "United States — city open-data catalogues (batch 37)", "米国 都市オープンデータカタログ", NULL, "grp_opendata")  /* 5 src */
+COLLECTOR("hp3b37_eu", "Europe — national open-data catalogues and ECB rates (batch 37)", "欧州 オープンデータカタログ・ECB為替", NULL, "grp_opendata")  /* 4 src */
+COLLECTOR("hp3b37_row", "Rest of world — national open-data catalogues (batch 37)", "その他地域 オープンデータカタログ", NULL, "grp_opendata")  /* 3 src */
+COLLECTOR("hp3b43_jprss", "Japan — municipal notice feeds (batch 43)", "日本 自治体の新着・お知らせフィード", "The RSS/Atom feed each Japanese municipality declares on its own site: new notices, press releases, recruitment, events.", "grp_government")  /* 1,156 src */
+COLLECTOR("hp3b44_usgov", "United States — .gov feeds, federal to city (batch 44)", "米国 .gov 公的機関フィード", "The feed each .gov domain in CISA's register declares on its site root: cities, counties, states, federal agencies, tribes.", "grp_government")  /* 2,079 src */
+COLLECTOR("hp3b44_ukgov", "United Kingdom — gov.uk feeds, councils to departments (batch 44)", "英国 gov.uk 公的機関フィード", "The feed each gov.uk domain declares on its site root: parish, town and district councils, departments, agencies.", "grp_government")  /* 1,641 src */
+COLLECTOR("hp3b47_itgov", "Italy — public-administration feeds, IPA register (batch 45)", "イタリア 公的機関フィード（IPA登録）", "The feed each body in the Indice delle Pubbliche Amministrazioni declares on its site: comuni, regioni, agencies, schools.", "grp_government")  /* 5,665 src */
+COLLECTOR("hp3b47_frgov", "France — administration feeds, DILA annuaire (batch 45)", "フランス 行政機関フィード（DILA年鑑）", "The feed each body in DILA's Annuaire de l'administration declares on its site: mairies, intercommunalités, préfectures, ministries.", "grp_government")  /* 9,323 src */
+COLLECTOR("hp3b47_wdgov", "World — public-body feeds via Wikidata, 157 countries (batch 45)", "世界 公的機関フィード（Wikidata, 157か国）", "Government agencies, ministries, courts, police, central banks, legislatures and regulators with an official website on Wikidata, their declared feeds.", "grp_government")  /* 1,562 src */
+COLLECTOR("hp3b48_igo", "International organisations & think tanks (batch 46)", "国際機関・シンクタンク", "International and intergovernmental organisations and think tanks with an official website on Wikidata, their declared feeds.", "grp_government")  /* 494 src */
+COLLECTOR("hp3b48_news", "World — news outlets via Wikidata, 137 countries (batch 46)", "世界の報道機関（Wikidata, 137か国）", "Newspapers, daily and online newspapers, news websites and news agencies with an official website on Wikidata, their declared feeds.", "grp_media")  /* 4,000 src */
+COLLECTOR("hp3_worldbank_sanctions", "World Bank sanctions list", "世界銀行 制裁リスト", NULL, "grp_sanctions")  /* 1 src */

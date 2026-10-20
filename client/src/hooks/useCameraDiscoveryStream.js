@@ -5,7 +5,9 @@ import apiUrl from '../utils/apiUrl.js';
 /**
  * Subscribe to the camera discovery stream on the server's /ws endpoint,
  * seeded with historical events from /api/data/cameras/discovery-feed so
- * the thread is never empty on cold load.
+ * the thread is never empty on cold load. When /ws is not available (the
+ * default — the native server has none; see WS_ENABLED in utils/wsUrl.js)
+ * it polls /api/data/cameras/run-status and re-reads the feed head instead.
  *
  * Each event carries:
  *   - ts          ISO timestamp (last_seen_at or fetched_at)
@@ -148,7 +150,90 @@ export default function useCameraDiscoveryStream() {
     }
   }, []);
 
-  const { connected } = useWebSocket('/ws', { onMessage });
+  const { connected, available: wsAvailable } = useWebSocket('/ws', { onMessage });
+
+  // ── No /ws: poll what the server does publish ─────────────────────────
+  // The native server has no push channel; /api/data/cameras/run-status
+  // exists for exactly this (httpd.c). It is read every 4 s while a run is
+  // active and every 20 s otherwise, and whenever a run is seen to finish the
+  // head of the discovery feed is re-read and merged by camera_uid, so what
+  // the run ingested reaches the thread. run-status reports ONE ingested
+  // count, not a new/updated split, so the run objects carry `ingested` and
+  // leave new_count/updated_count null rather than inventing the split.
+  useEffect(() => {
+    if (wsAvailable) return undefined;
+    let cancelled = false;
+    let timer = null;
+    let lastKey = null;
+
+    const refreshHead = async () => {
+      try {
+        const res = await fetch(apiUrl(`/api/data/cameras/discovery-feed?limit=${SEED_LIMIT}`));
+        if (!res.ok || cancelled) return;
+        const data = await res.json();
+        const head = data.events || [];
+        setEvents((prev) => {
+          const byUid = new Map(prev.map((e) => [camUid(e), e]));
+          const moved = new Set();
+          const fresh = [];
+          for (const ev of head) {
+            const uid = camUid(ev);
+            if (!uid) continue;
+            const old = byUid.get(uid);
+            if (old && (ev.ts || '') <= (old.ts || '')) continue;
+            fresh.push({ ...ev, isLive: true });
+            if (old) moved.add(uid);
+          }
+          if (!fresh.length) return prev;
+          const next = [...fresh, ...prev.filter((e) => !moved.has(camUid(e)))];
+          return next.length > MAX_EVENTS ? next.slice(0, MAX_EVENTS) : next;
+        });
+      } catch { /* the next tick tries again */ }
+    };
+
+    const poll = async () => {
+      let running = false;
+      try {
+        const res = await fetch(apiUrl('/api/data/cameras/run-status'));
+        if (res.ok && !cancelled) {
+          const st = await res.json();
+          running = !!st.running;
+          if (running) {
+            const started = Date.parse(st.started_at || '') || Date.now();
+            setActiveRun((r) => ({
+              ...(r && r.run_id === st.run_id ? r : { run_counts: {}, channels_done: [] }),
+              run_id: st.run_id || '',
+              started_ms: started,
+              elapsed_ms: Date.now() - started,
+              new_count: null,
+              updated_count: null,
+              ingested: st.cameras_ingested ?? null,
+              channels_done_n: st.channels_done ?? 0,
+              channels_total: st.channels_total ?? null,
+            }));
+          } else {
+            setActiveRun(null);
+            if (st.last_duration_ms != null) {
+              setLastRun({
+                new_count: null,
+                updated_count: null,
+                ingested: st.last_ingested ?? null,
+                elapsed_ms: st.last_duration_ms,
+              });
+            }
+          }
+          // A finished run (or one that started and ended between two idle
+          // polls) changes this key; the first poll only records it.
+          const key = `${st.run_id || ''}|${st.last_duration_ms ?? ''}|${st.last_ingested ?? ''}`;
+          if (lastKey !== null && key !== lastKey && !running) refreshHead();
+          lastKey = key;
+        }
+      } catch { /* unreachable server: keep the last state, try again */ }
+      if (!cancelled) timer = setTimeout(poll, running ? 4000 : 20000);
+    };
+    poll();
+    return () => { cancelled = true; if (timer) clearTimeout(timer); };
+  }, [wsAvailable]);
 
   const loadMore = useCallback(async () => {
     if (!cursor || loadingMore) return;
@@ -189,7 +274,7 @@ export default function useCameraDiscoveryStream() {
 
   const clearEvents = () => setEvents([]);
   return {
-    events, activeRun, lastRun, connected, clearEvents, loadMore,
+    events, activeRun, lastRun, connected, wsAvailable, clearEvents, loadMore,
     hasMore: !!cursor, loadingMore, seedError, loadMoreError,
   };
 }

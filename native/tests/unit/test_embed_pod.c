@@ -23,7 +23,13 @@
  *  13. tenants were told how many OTHER tenants' rows matched;
  *  14. a response repeating an `index` left a zero vector stored as embedded;
  *   2. a request-path embed queued behind a background batch for its whole
- *      duration, whatever its own timeout said.
+ *      duration, whatever its own timeout said;
+ *  F4. the tenant filter ran AFTER the KNN, so a tenant's row below k other
+ *      tenants' rows was never returned; a re-fetch that moved a row's date
+ *      must move its `ts` column without a re-embed; an index built before
+ *      the metadata columns must be migrated by copy, never re-embedded and
+ *      never renamed;
+ *  F7. the post-batch hook sees exactly the committed rows, with metadata.
  *
  * Includes embed_pod.c directly to reach run() and its statics, so run.sh
  * links every object EXCEPT obj/core/embed_pod.o and obj/main.o. */
@@ -201,6 +207,7 @@ static void insert_row(const char *uid, const char *title, const char *pub,
 static void reset_all(void) {
   sql("DELETE FROM intel_items");
   sql("DROP TABLE IF EXISTS intel_vec");
+  sql("DROP TABLE IF EXISTS intel_vec_v2");
   sql("DROP TABLE IF EXISTS intel_vec_done");
   sql("DROP TABLE IF EXISTS intel_vec_failed");
   sql("DROP TABLE IF EXISTS intel_vec_meta");
@@ -605,6 +612,188 @@ static void test_query_side(void) {
          "tenant_withheld only for operators: ok\n");
 }
 
+/* ---- F4: metadata inside the KNN ----------------------------------------- */
+
+/* A tenant whose row sits below k OTHER tenants' identical rows used to get
+ * nothing: the KNN ran across every tenant and the tenant filter ran after
+ * it. With tenant_id as the partition key the KNN only reads what the caller
+ * may see. */
+static void test_partitioned_recall(void) {
+  reset_all();
+  url_env();
+  ctl_write("");
+  setenv("JO_EMBED_MODEL_CHECK_TTL_MS", "0", 1);
+  char now[40]; ago(now, sizeof now, 30000);
+  /* identical text = identical vector = equal distance, and the uids of the
+   * other tenant's rows sort first, so a global top-3 is all theirs */
+  insert_row("a-other-1", "vessel tracking notice", NULL, now, "t-other");
+  insert_row("a-other-2", "vessel tracking notice", NULL, now, "t-other");
+  insert_row("a-other-3", "vessel tracking notice", NULL, now, "t-other");
+  insert_row("z-mine",    "vessel tracking notice", NULL, now, "t-mine");
+  assert(tick() == 0 && done_count() == 4);
+  assert(sql_long("SELECT count(*) FROM intel_vec_v2 WHERE tenant_id='t-other'") == 3);
+  assert(sql_long("SELECT count(*) FROM intel_vec_v2 WHERE tenant_id='t-mine' "
+                  "AND source_id='test-src' AND record_type='news' AND ts > 0") == 1);
+  int st = 0;
+  char *b = semsearchapi_query(&g_db, "t-mine", "vessel tracking notice",
+                               "vector", 10, 3, 0, &st);
+  assert(st == 200 && strstr(b, "z-mine") && !strstr(b, "a-other"));
+  assert(strstr(b, "\"knn_partitioned\":true"));
+  free(b);
+  /* the operator is still told what the partition kept out */
+  b = semsearchapi_query(&g_db, "t-mine", "vessel tracking notice", "vector",
+                         10, 3, 1, &st);
+  assert(st == 200 && strstr(b, "z-mine"));
+  /* the unfiltered top 3 holds at least two of the other tenant's three
+   * (four rows tie at distance 0; which three vec0 returns is its choice) */
+  cJSON *j = cJSON_Parse(b);
+  cJSON *w = cJSON_GetObjectItem(cJSON_GetObjectItem(j, "meta"), "tenant_withheld");
+  assert(w && w->valuedouble >= 2);
+  cJSON_Delete(j);
+  free(b);
+  unsetenv("JO_EMBED_MODEL_CHECK_TTL_MS");
+  printf("  partitioned KNN: a tenant's row below k other-tenant rows is "
+         "found; operator still told what was withheld: ok\n");
+}
+
+/* Same text, moved date: the ts column follows without a re-embed. */
+static void test_metadata_rewrite(void) {
+  reset_all();
+  url_env();
+  ctl_write("");
+  char now[40], pub1[40], pub2[40];
+  ago(now, sizeof now, 30000);
+  ago(pub1, sizeof pub1, 5LL * 86400 * 1000);
+  ago(pub2, sizeof pub2, 2LL * 86400 * 1000);
+  insert_row("md1", "date moves under me", pub1, now, NULL);
+  sweep_to_delta(4);
+  long ts1 = sql_long("SELECT ts FROM intel_vec_v2 WHERE uid='md1'");
+  assert(ts1 == parse_iso_ms(pub1) / 1000);
+  char q[256];
+  ago(now, sizeof now, 0);
+  snprintf(q, sizeof q, "UPDATE intel_items SET published_at='%s', fetched_at='%s' "
+           "WHERE uid='md1'", pub2, now);
+  sql(q);
+  log_reset();
+  assert(tick() == 0);
+  assert(log_count(NULL) == 0);                       /* nothing re-embedded */
+  assert(sql_long("SELECT ts FROM intel_vec_v2 WHERE uid='md1'") == parse_iso_ms(pub2) / 1000);
+  char lt[440];
+  meta_str("last_tick", lt, sizeof lt);
+  assert(strstr(lt, "\"rewritten\":1"));
+  printf("  metadata-only change rewritten from the stored vector, no embed: ok\n");
+}
+
+/* An index built before metadata columns is copied, not re-embedded. */
+static void test_legacy_migration(void) {
+  reset_all();
+  url_env();
+  ctl_write("");
+  char now[40]; ago(now, sizeof now, 30000);
+  insert_row("L1", "legacy row one", NULL, now, NULL);
+  insert_row("L2", "legacy row two", NULL, now, "t-x");
+  insert_row("L3", "legacy row three, vector lost", NULL, now, NULL);
+  /* the old layout, as an older build left it */
+  sql("CREATE VIRTUAL TABLE intel_vec USING vec0(uid TEXT PRIMARY KEY, embedding float[8])");
+  sql("INSERT INTO intel_vec(uid, embedding) VALUES "
+      "('L1','[1,0,0,0,0,0,0,0]'),('L2','[0,1,0,0,0,0,0,0]'),"
+      "('GONE','[0,0,1,0,0,0,0,0]')");
+  ensure_meta(&g_db);
+  vecindex_ensure_side_tables(&g_db, SPEC);
+  sql("ALTER TABLE intel_vec_done DROP COLUMN meta_hash");   /* the old shape */
+  /* the hashes the pod itself would have stored, so the copied rows read as
+   * unchanged afterwards and a send of them would be a real regression */
+  char *t1 = compose_text("legacy row one", "summary of L1", NULL);
+  char *t2 = compose_text("legacy row two", "summary of L2", NULL);
+  char ins[700];
+  snprintf(ins, sizeof ins, "INSERT INTO intel_vec_done(uid,text_hash,embedded_at) VALUES "
+           "('L1',%lld,'%s'),('L2',%lld,'%s'),('L3',3,'%s'),('GONE',4,'%s')",
+           (long long)vecindex_hash(t1), now, (long long)vecindex_hash(t2), now, now, now);
+  free(t1); free(t2);
+  sql(ins);
+  meta_set(&g_db, "model", "stub-a.gguf");
+  meta_set(&g_db, "dim", "8");
+  meta_set(&g_db, "full_done_at", now);
+  /* before the tick, queries read the legacy table, unfiltered */
+  assert(embed_query_spec(&g_db) == &legacy_spec);
+
+  log_reset();
+  assert(tick() == 0);
+  assert(!table_exists(&g_db, "intel_vec"));                  /* dropped */
+  assert(embed_query_spec(&g_db) == SPEC);
+  assert(sql_long("SELECT count(*) FROM intel_vec_v2 WHERE uid IN ('L1','L2')") == 2);
+  assert(sql_long("SELECT count(*) FROM intel_vec_v2 WHERE uid='L2' AND tenant_id='t-x'") == 1);
+  assert(sql_long("SELECT count(*) FROM intel_vec_done WHERE uid='GONE'") == 0);
+  float *v = NULL; int d = 0;
+  assert(vecindex_load(&g_db, SPEC, "L1", &v, &d) == 0 && d == 8 && v[0] == 1.0f);
+  free(v);
+  /* the copied vectors were NOT sent; the one whose vector was lost was */
+  assert(log_count("legacy row one") == 0 && log_count("legacy row two") == 0);
+  assert(meta_long(&g_db, "migrate_copied") == 2);
+  assert(meta_long(&g_db, "migrate_orphans") == 1);
+  assert(meta_long(&g_db, "migrate_missing") == 1);
+  /* L3 was eligible and fetched after the delta watermark: re-embedded in the
+   * walk that followed, or by the next tick */
+  if (sql_long("SELECT count(*) FROM intel_vec_done WHERE uid='L3'") != 1) assert(tick() == 0);
+  assert(sql_long("SELECT count(*) FROM intel_vec_done WHERE uid='L3'") == 1);
+  cJSON *cov = embed_coverage_json(&g_db);
+  cJSON *m = cJSON_GetObjectItem(cov, "migration");
+  assert(m && !strcmp(cJSON_GetObjectItem(m, "state")->valuestring, "done"));
+  assert(cJSON_IsTrue(cJSON_GetObjectItem(cov, "knn_filters")));
+  cJSON_Delete(cov);
+  printf("  legacy intel_vec migrated by copy (2 copied, 1 orphan dropped, 1 "
+         "lost vector re-embedded), old table dropped, never renamed: ok\n");
+}
+
+/* ---- F7: the post-batch hook ---------------------------------------------- */
+
+static int  g_hk_rows = 0, g_hk_dim = 0, g_hk_calls = 0;
+static char g_hk_tenant[32], g_hk_uid[32];
+static long long g_hk_ts = 0;
+static void test_hook_fn(db_handle *db, int n, const char *const *uids,
+                         const float *vectors, int dim, const embed_row_meta *meta,
+                         void *user) {
+  assert(user == &g_hk_calls && db && vectors);
+  g_hk_calls++;
+  g_hk_rows += n;
+  g_hk_dim = dim;
+  for (int i = 0; i < n; i++) {
+    assert(!strcmp(meta[i].uid, uids[i]));
+    if (!strcmp(uids[i], "hk-2")) {
+      snprintf(g_hk_tenant, sizeof g_hk_tenant, "%s", meta[i].tenant_id);
+      snprintf(g_hk_uid, sizeof g_hk_uid, "%s", meta[i].record_type);
+      g_hk_ts = meta[i].ts;
+    }
+  }
+  /* it may write in its own small transaction */
+  assert(sqlite3_exec(db->h, "BEGIN IMMEDIATE; CREATE TABLE IF NOT EXISTS hook_seen(n INT);"
+                             "INSERT INTO hook_seen VALUES(1); COMMIT;", NULL, NULL, NULL) == SQLITE_OK);
+}
+
+static void test_post_batch_hook(void) {
+  reset_all();
+  url_env();
+  ctl_write("");
+  sql("DROP TABLE IF EXISTS hook_seen");
+  assert(embed_hook_register(test_hook_fn, &g_hk_calls) == 0);
+  char now[40]; ago(now, sizeof now, 30000);
+  insert_row("hk-1", "hook row one", NULL, now, NULL);
+  insert_row("hk-2", "hook row two", NULL, now, "t-hook");
+  insert_row("hk-3", "hook row three", NULL, now, NULL);
+  log_reset();
+  assert(tick() == 0);
+  assert(g_hk_rows == 3 && g_hk_dim == 8 && g_hk_calls >= 1);
+  assert(!strcmp(g_hk_tenant, "t-hook") && !strcmp(g_hk_uid, "news"));
+  assert(g_hk_ts == parse_iso_ms(now) / 1000);
+  assert(sql_long("SELECT count(*) FROM hook_seen") == g_hk_calls);
+  /* the hook never called the server: only the three rows were sent */
+  assert(log_count(NULL) == 3);
+  /* an unchanged tick delivers nothing */
+  assert(tick() == 0 && g_hk_rows == 3);
+  printf("  post-batch hook: 3 rows with tenant/source/ts/record_type after "
+         "commit, own transaction allowed, unchanged rows not redelivered: ok\n");
+}
+
 /* ---- 2: a bounded caller does not wait out somebody else's batch --------- */
 
 typedef struct { int rc; } bg_res;
@@ -769,6 +958,10 @@ int main(void) {
   test_bad_rows();
   test_orphan_vec_row();
   test_query_side();
+  test_partitioned_recall();
+  test_metadata_rewrite();
+  test_legacy_migration();
+  test_post_batch_hook();
   test_bounded_queue_wait();
   test_query_slot();
 

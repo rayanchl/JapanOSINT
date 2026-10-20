@@ -7,6 +7,8 @@
 #include "lib/rss_atom.h"
 #include "lib/feedlib.h"
 #include "third_party/cJSON.h"
+#include "_timefmt.inc"
+#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,8 +28,23 @@ static int pnum(cJSON *o, const char *k, double *out) {
  * is an honest 0, not an error). */
 static int fdsn_quakes(const source_ctx *ctx, intel_sink *sink,
                        const char *url, const char *tags) {
+  feed_last_json_status_reset();
   cJSON *doc = feed_get_json(ctx->http, url, 15000);
-  if (!doc) { fprintf(stderr, "[%s] fetch failed\n", ctx->source_id); return -1; }
+  if (!doc) {
+    /* FDSN answers an empty result set with HTTP 204 and NO BODY, which has
+     * nothing to parse and therefore arrives here as a NULL doc. That is an
+     * honest empty, not a failure (rule 1), and it is the normal case for a
+     * small AOI over a short window: the Iceland box held zero events for the
+     * last day when this was written. Reporting it as rc=-1 would mark a
+     * working source dead every quiet day. */
+    if (feed_last_json_status() == 204) {
+      fprintf(stderr, "[%s] HTTP 204 — the window holds no events\n",
+              ctx->source_id);
+      return 0;
+    }
+    fprintf(stderr, "[%s] fetch failed\n", ctx->source_id);
+    return -1;
+  }
   cJSON *feats = cJSON_GetObjectItem(doc, "features");
   if (!cJSON_IsArray(feats)) { cJSON_Delete(doc); return -1; }
 
@@ -108,30 +125,67 @@ static int fdsn_quakes(const source_ctx *ctx, intel_sink *sink,
   return n;
 }
 
-#define FDSN_GLOBAL "https://www.seismicportal.eu/fdsnws/event/1/query" \
-                    "?format=json&orderby=time&limit=300"
+/* A WINDOW, NOT A COUNT (2026-10-12). Both of these asked for `limit=300` and
+ * the FDSN event service has no offset to follow, so each run kept the 300
+ * most recent events and nothing else — the seventh discard shape
+ * (tools/audit_url_limits.py; a 300-event cap on a service that answered 2,819
+ * for the same seven days). `orderby=time` made those 300 the newest, which is
+ * why it read as healthy, but a count is the wrong bound for a feed: in a
+ * swarm the 301st event of a quarter-hour is lost in silence.
+ *
+ * `starttime` bounds the request by TIME instead and the whole window comes
+ * back in one request. One day measured ~400 events / 200 KB global at a
+ * 15-minute schedule, which is 96 runs of overlap — nothing falls between two
+ * runs, and the sink's upsert on the event id makes the overlap free.
+ * {date-1d} is rendered by lib/datetok.c through fdsn_quakes_window() below. */
+#define FDSN_GLOBAL_FMT "https://www.seismicportal.eu/fdsnws/event/1/query" \
+                        "?format=json&orderby=time&starttime=%s"
 /* Iceland AOI — events here are contributed by IMO (Icelandic Met Office),
  * whose own RSS endpoint (en.vedur.is/.../earthquakes/rss/) now 404s. */
-#define FDSN_ICELAND "https://www.seismicportal.eu/fdsnws/event/1/query" \
-                     "?format=json&orderby=time&limit=300" \
-                     "&minlat=62.5&maxlat=67.5&minlon=-25.5&maxlon=-12.5"
+#define FDSN_ICELAND_FMT "https://www.seismicportal.eu/fdsnws/event/1/query" \
+                         "?format=json&orderby=time&starttime=%s" \
+                         "&minlat=62.5&maxlat=67.5&minlon=-25.5&maxlon=-12.5"
+/* The globe produces events every minute; a single AOI box does not, so they
+ * get different windows. Both stay far wider than the 15-minute schedule. */
+#define FDSN_WINDOW_DAYS 1
+#define FDSN_AOI_WINDOW_DAYS 14
+
+/* Complete `fmt` (one %s) with the window start and collect it. Returns -1
+ * when the date cannot be rendered: a URL carrying a literal "%s" would be a
+ * fabricated request, so it is never sent. */
+static int fdsn_quakes_window(const source_ctx *c, intel_sink *s,
+                              const char *fmt, int days, const char *tags) {
+  char since[16];
+  if (!jo_time_fmt(time(NULL) - (time_t)days * 86400, "%Y-%m-%d",
+                   since, sizeof since)) {
+    fprintf(stderr, "[%s] cannot render the window start\n",
+            c->source_id ? c->source_id : "fdsn");
+    return -1;
+  }
+  char url[320];
+  snprintf(url, sizeof url, fmt, since);
+  return fdsn_quakes(c, s, url, tags);
+}
 
 static int run_geo_emsc_quakes(const source_ctx *c, intel_sink *s) {
-  int n = fdsn_quakes(c, s, FDSN_GLOBAL, "[\"hazard\",\"seismic\",\"alert\"]");
+  int n = fdsn_quakes_window(c, s, FDSN_GLOBAL_FMT, FDSN_WINDOW_DAYS,
+                             "[\"hazard\",\"seismic\",\"alert\"]");
   return n < 0 ? -1 : 0;
 }
 static const source_def geo_emsc_quakes = {
   .id = "emsc-quakes", .collector = "environment",
   .name = "EMSC Latest Earthquakes", .name_ja = "EMSC 最新地震",
   .update_interval_sec = 900, .run = run_geo_emsc_quakes,
-  .category = "environment", .type = "api", .url = FDSN_GLOBAL,
+  .category = "environment", .type = "api",
+  .url = "https://www.seismicportal.eu/fdsnws/event/1/query?format=json&orderby=time&starttime={date-1d}",
   .description = "EMSC/ORFEUS seismicportal FDSN event service — global "
                  "real-time earthquakes with hypocentre coordinates.",
   .layer = NULL, .free_tier = 1 };
 REGISTER_SOURCE(geo_emsc_quakes)
 
 static int run_geo_iceland_quakes(const source_ctx *c, intel_sink *s) {
-  int n = fdsn_quakes(c, s, FDSN_ICELAND, "[\"hazard\",\"seismic\",\"alert\"]");
+  int n = fdsn_quakes_window(c, s, FDSN_ICELAND_FMT, FDSN_AOI_WINDOW_DAYS,
+                             "[\"hazard\",\"seismic\",\"alert\"]");
   return n < 0 ? -1 : 0;
 }
 static const source_def geo_iceland_quakes = {
@@ -139,7 +193,8 @@ static const source_def geo_iceland_quakes = {
   .name = "Iceland Region Earthquakes (IMO via EMSC)",
   .name_ja = "アイスランド周辺の地震",
   .update_interval_sec = 900, .run = run_geo_iceland_quakes,
-  .category = "environment", .type = "api", .url = FDSN_ICELAND,
+  .category = "environment", .type = "api",
+  .url = "https://www.seismicportal.eu/fdsnws/event/1/query?format=json&orderby=time&starttime={date-14d}&minlat=62.5&maxlat=67.5&minlon=-25.5&maxlon=-12.5",
   .description = "Earthquakes inside the Iceland AOI from the EMSC "
                  "seismicportal FDSN service (IMO-contributed solutions).",
   .layer = NULL, .free_tier = 1 };

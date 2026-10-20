@@ -16,6 +16,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/pagewalk.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -64,16 +65,38 @@ static int poly_point(const cJSON *geom, double *olat, double *olon) {
   return 1;
 }
 
-static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *url =
-    "https://openmaps.gov.bc.ca/geo/pub/wfs?service=WFS&version=2.0.0"
-    "&request=GetFeature&typeName=WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW"
-    "&count=500&outputFormat=application/json&srsName=EPSG:4326";
-  cJSON *doc = feed_get_json(ctx->http, url, 60000);
-  if (!doc) { fprintf(stderr, "[" SRC "] fetch failed\n"); return -1; }
+/* PAGED 2026-10-12. `count=500` with nothing to follow stored 500 of the
+ * 42,234 acquired tenures the layer holds (numberMatched, measured) — the
+ * seventh discard shape (tools/audit_url_limits.py). WFS 2.0 pages with
+ * `startIndex` against `count`, and `numberMatched` is a total lib/pagewalk.c
+ * already reads.
+ *
+ * `sortBy` IS REQUIRED, and this server says so rather than drifting quietly:
+ * startIndex without it answers an OWS ExceptionReport, "Cannot do natural
+ * order without a primary key, please add it or specify a manual sort over
+ * existing attributes". That is the same hazard the ODS and OpenAerialMap rows
+ * hit as a silent skip — here it is a hard 400, which is the better failure. */
+#define BC_MT_URL \
+  "https://openmaps.gov.bc.ca/geo/pub/wfs?service=WFS&version=2.0.0" \
+  "&request=GetFeature&typeName=WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW" \
+  "&count=1000&startIndex=0&sortBy=TENURE_NUMBER_ID" \
+  "&outputFormat=application/json&srsName=EPSG:4326"
+/* 42,234 tenures at 1,000 a page = 43 (1.4 MB each); 60 is that with
+ * headroom, on a weekly schedule. */
+#define BC_MT_PAGE_MAX 60  /* exhaustive-ok: page ceiling handed to pw_walk_max(); a stop at it files a collector-truncation-notice */
 
+/* pw_fetch_fn: these polygon pages are 1.4 MB, so the 60 s timeout stays. */
+static cJSON *bc_fetch(const source_ctx *ctx, const char *url, void *ud) {
+  (void)ud;
+  return feed_get_json(ctx->http, url, 60000);
+}
+
+static int bc_page(const source_ctx *ctx, intel_sink *sink, const char *sid,
+                   cJSON *doc, void *ud, int *seen) {
+  (void)ctx; (void)ud;
   cJSON *feats = cJSON_GetObjectItem(doc, "features");
-  if (!cJSON_IsArray(feats)) { cJSON_Delete(doc); fprintf(stderr, "[" SRC "] no features[]\n"); return -1; }
+  *seen = cJSON_IsArray(feats) ? cJSON_GetArraySize(feats) : 0;
+  if (!cJSON_IsArray(feats)) { fprintf(stderr, "[%s] no features[]\n", sid); return 0; }
 
   int n = 0;
   cJSON *f;
@@ -134,8 +157,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
     free(gj);
   }
-  cJSON_Delete(doc);
-  fprintf(stderr, "[" SRC "] emitted %d\n", n);
+  return n;
+}
+
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  if (pw_walk_max(ctx, sink, SRC, BC_MT_URL, bc_fetch, bc_page, NULL,
+                  BC_MT_PAGE_MAX) < 0) {
+    fprintf(stderr, "[" SRC "] fetch failed\n");
+    return -1;
+  }
   return 0;
 }
 
@@ -144,7 +174,7 @@ static const source_def eni_bc_mineral_tenure_def = {
   .name = "British Columbia mineral and placer tenure register",
   .update_interval_sec = 604800, .run = run,
   .category = "industry", .type = "api",
-  .url = "https://openmaps.gov.bc.ca/geo/pub/wfs?typeName=WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW&srsName=EPSG:4326",
+  .url = BC_MT_URL,
   .description = "Every active mineral and placer claim in British Columbia with claim polygon, tenure type, issue and expiry dates.",
   .license = "Open Government Licence - British Columbia (BC Data Catalogue WFS), keyless.",
   .free_tier = 1,

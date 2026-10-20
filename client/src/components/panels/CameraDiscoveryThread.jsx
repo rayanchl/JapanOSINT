@@ -12,6 +12,7 @@ import {
   MdClose,
 } from 'react-icons/md';
 import useCameraDiscoveryStream from '../../hooks/useCameraDiscoveryStream';
+import CameraVisualSearch from './CameraVisualSearch.jsx';
 import { isSafeUrl } from '../../utils/safeUrl.js';
 import { CAMERA_FAVORITES_KEY } from '../../auth/localData.js';
 
@@ -432,7 +433,7 @@ function EventRow({ ev, isFavorite, onToggleFavorite, onCardClick }) {
 
 function RunBanner({ activeRun, lastRun }) {
   if (activeRun) {
-    const channelsDone = activeRun.channels_done?.length ?? 0;
+    const channelsDone = activeRun.channels_done_n ?? activeRun.channels_done?.length ?? 0;
     return (
       <div className="px-3 py-2 border-b border-osint-border/40 bg-neon-cyan/5">
         <div className="flex items-center justify-between text-[10px]">
@@ -444,13 +445,22 @@ function RunBanner({ activeRun, lastRun }) {
           <span className="font-mono text-gray-300">{fmtElapsed(activeRun.elapsed_ms)}</span>
         </div>
         <div className="mt-1 text-[10px] text-gray-400 font-mono flex flex-wrap gap-x-3 gap-y-0.5">
-          <span>
-            <span className="text-status-online">{activeRun.new_count}</span> new
-          </span>
-          <span>
-            <span className="text-neon-cyan">{activeRun.updated_count}</span> updated
-          </span>
-          <span>{channelsDone}/15 channels done</span>
+          {activeRun.new_count == null ? (
+            /* Polled run-status: one ingested count, no new/updated split. */
+            <span>
+              <span className="text-status-online">{activeRun.ingested ?? '?'}</span> ingested
+            </span>
+          ) : (
+            <>
+              <span>
+                <span className="text-status-online">{activeRun.new_count}</span> new
+              </span>
+              <span>
+                <span className="text-neon-cyan">{activeRun.updated_count}</span> updated
+              </span>
+            </>
+          )}
+          <span>{channelsDone}/{activeRun.channels_total ?? 15} channels done</span>
         </div>
       </div>
     );
@@ -460,12 +470,20 @@ function RunBanner({ activeRun, lastRun }) {
       <div className="px-3 py-2 border-b border-osint-border/40">
         <div className="text-[10px] text-gray-400 font-mono flex flex-wrap gap-x-3">
           <span className="text-gray-500">Last run</span>
-          <span>
-            <span className="text-status-online">+{lastRun.new_count}</span> new,{' '}
-            <span className="text-neon-cyan">{lastRun.updated_count}</span> updated
-          </span>
+          {lastRun.new_count == null ? (
+            <span>
+              <span className="text-status-online">{lastRun.ingested ?? '?'}</span> ingested
+            </span>
+          ) : (
+            <span>
+              <span className="text-status-online">+{lastRun.new_count}</span> new,{' '}
+              <span className="text-neon-cyan">{lastRun.updated_count}</span> updated
+            </span>
+          )}
           <span>in {fmtElapsed(lastRun.elapsed_ms)}</span>
-          <span className="text-gray-500">DB total {lastRun.db_total}</span>
+          {lastRun.db_total != null && (
+            <span className="text-gray-500">DB total {lastRun.db_total}</span>
+          )}
         </div>
       </div>
     );
@@ -710,7 +728,7 @@ function DiscoveryFilterBar({
 // ── Main ───────────────────────────────────────────────────────────────────
 export default function CameraDiscoveryThread() {
   const {
-    events, activeRun, lastRun, connected, clearEvents, loadMore, hasMore, loadingMore,
+    events, activeRun, lastRun, connected, wsAvailable, clearEvents, loadMore, hasMore, loadingMore,
     seedError, loadMoreError,
   } = useCameraDiscoveryStream();
   const { favs, toggle: toggleFavorite } = useCameraFavorites();
@@ -825,6 +843,7 @@ export default function CameraDiscoveryThread() {
           Camera Discovery — live stream of cameras being found by the discovery collector. Each row is a single camera either newly added to the DB (NEW) or re-confirmed (UPDATED). Runs are triggered hourly by the scheduler; toggle the Cameras layer on the map to force a run on demand.
         </div>
       </div>
+      <CameraVisualSearch />
       <RunBanner activeRun={activeRun} lastRun={lastRun} />
 
       {header && header.length > 0 && (
@@ -860,7 +879,9 @@ export default function CameraDiscoveryThread() {
           {anyFilterActive
             ? <>Showing <span className="text-gray-200">{filteredEvents.length}</span> of {events.length}</>
             : <>{events.length} camera{events.length === 1 ? '' : 's'}</>}
-          {!connected && <span className="ml-2 text-status-offline">· WS offline</span>}
+          {wsAvailable
+            ? (!connected && <span className="ml-2 text-status-offline">· WS offline</span>)
+            : <span className="ml-2 text-gray-500">· polling</span>}
         </span>
         <div className="flex items-center gap-1.5">
           <button

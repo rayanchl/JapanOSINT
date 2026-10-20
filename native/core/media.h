@@ -579,6 +579,21 @@ int media_ocr_file(const char *path, char **out_text, double *out_conf);
  * without an SSH session. */
 char *media_capabilities(void);
 
+/* The individual decoders on PATH, for a capability report that has to say
+ * WHICH package is missing, not just that a feature is off. Probed once per
+ * process (tesseract's language list is one deadlined subprocess) and cached.
+ * Paths are "" when absent. `tesseract_jpn` is 1/0 from `tesseract
+ * --list-langs`, or -1 when there is no tesseract or the list could not be
+ * read. `disabled` mirrors MEDIA_NO_TOOLS: the tools may be present and the
+ * module still will not run them. */
+typedef struct {
+  char magick[512], convert[512], gm[512], tesseract[512];
+  int  tesseract_jpn;
+  char tesseract_langs[256];     /* "eng,jpn,osd" — "" when unknown           */
+  int  disabled;
+} media_decoders;
+void media_probe_decoders(media_decoders *out);
+
 /* ── pipeline ────────────────────────────────────────────────────────────── */
 
 /* Every table, column and index this module needs, in dependency order.
@@ -658,5 +673,32 @@ int media_fts_sync(db_handle *db, int limit, volatile int *cancel);
  * would silently corrupt the low bits in every JavaScript client. NULL →
  * caller replies 500. limit defaults to 50, clamped 1..200. Caller frees. */
 char *media_list_for_item(db_handle *db, const char *item_uid, int limit);
+
+/* ── client uploads ──────────────────────────────────────────────────────────
+ *
+ * An image a client UPLOADS (core/uploadapi.c commit) enters this pipeline as
+ * a media_assets row under the upload's own uid ("upload:<id>") with
+ * url "jo:upload/<id>", its sha256, and media_assets.tenant_id = the uploading
+ * tenant. The row is PENDING: the next analysis batch reads the bytes back out
+ * of the evidence store (where commit already preserved them — no fetch, no
+ * second capture), proves they still hash to sha256, and derives EXIF / dims /
+ * pHash / OCR exactly as for a fetched image. No geo back-write and no FTS
+ * write (there is no intel row). Bytes that were never stored (over
+ * JO_EVIDENCE_MAX_BLOB_BYTES) or were reaped fail terminally.
+ *
+ * TENANCY. tenant_id IS NULL is the shared corpus. A tenant row is never
+ * returned by media_list_for_item() (the plain-auth item route), never walked
+ * by the camera image index (core/image_vec.c), and is read only through
+ * media_list_for_upload() for that tenant — the upload's own routes.
+ *
+ * media_record_upload: 1 recorded, 0 already recorded (UNIQUE(item_uid,url)),
+ * -1 bad arguments or a DB failure. No I/O beyond the insert, so it is safe on
+ * the event loop. media_list_for_upload: media_list_for_item's envelope over
+ * that tenant's rows of `item_uid`; NULL for a NULL/empty tenant. */
+int   media_record_upload(db_handle *db, const char *tenant_id, const char *item_uid,
+                          const char *url, const char *sha, size_t bytes,
+                          const char *content_type);
+char *media_list_for_upload(db_handle *db, const char *tenant_id,
+                            const char *item_uid, int limit);
 
 #endif /* JO_MEDIA_H */

@@ -339,6 +339,29 @@ struct API: Sendable {
         }
         return try await get("/api/intel/items", query: qs)
     }
+    // ── Vector search (core/semsearchapi.c) ───────────────────────────────
+    /// GET /api/intel/semantic — hybrid (RRF of vector + full-text) or
+    /// vector-only ranking over the embedding index. A 503 means the server
+    /// has no usable index — not an empty result; `SemanticErrorBody.message`
+    /// turns the body into the reason to show.
+    func intelSemantic(q: String, mode: String = "hybrid", limit: Int = 50) async throws -> SemanticEnvelope {
+        try await get("/api/intel/semantic", query: [
+            URLQueryItem(name: "q", value: q),
+            URLQueryItem(name: "mode", value: mode),
+            URLQueryItem(name: "limit", value: String(limit)),
+        ])
+    }
+    /// GET /api/intel/items/:uid/similar — the rows nearest this item's stored
+    /// vector (no embedding call on the server). 409 `not_embedded` when the
+    /// item has no vector yet. The uid is percent-encoded: uids carry `|` and
+    /// `:`, which a URL string cannot hold raw.
+    func similarItems(uid: String, k: Int = 20) async throws -> SemanticEnvelope {
+        let enc = uid.addingPercentEncoding(
+            withAllowedCharacters: .alphanumerics.union(CharacterSet(charactersIn: "-._~"))) ?? uid
+        return try await get("/api/intel/items/\(enc)/similar",
+                             query: [URLQueryItem(name: "k", value: String(k))])
+    }
+
     func intelItem(uid: String) async throws -> IntelItem {
         let env: IntelItemEnvelope = try await get("/api/intel/items/\(uid)")
         return env.data
@@ -683,10 +706,12 @@ struct API: Sendable {
         let body = try JSONSerialization.data(withJSONObject: ["query": query])
         return try await post("/api/search/analyze", body: body, timeout: 20)
     }
-    func searchSuggest(_ q: String) async throws -> [String] {
+    /// `cheap` is true when the server answered by retrieval, so the caller
+    /// may ask again sooner; an LLM-generated answer is not cheap.
+    func searchSuggest(_ q: String) async throws -> (suggestions: [String], cheap: Bool) {
         let env: SuggestEnvelope = try await get(
             "/api/search/suggest", query: [URLQueryItem(name: "q", value: q)])
-        return env.suggestions
+        return (env.suggestions, env.meta?.retrieval != nil)
     }
     func searchResults(_ id: String) async throws -> SearchSnapshot {
         try await get("/api/search/results/\(id)")

@@ -8,6 +8,7 @@
  *   --dispatch <id> <entity>  run one source through the OSINT dispatcher and
  *                         print the captured {record_count,records} JSON
  *   --list-sources        list the registered sources and exit
+ *   --dump-source-cards   print every source's index card (core/source_card.h)
  *   --ingest <id> <file> [--type email|username|phone|password|auto]
  *                         offline breach-dump ingest (no DB, no network)
  *   --help                print the usage text and exit
@@ -29,6 +30,7 @@
 #include "core/alert_eval.h"
 #include "core/uploadapi.h"
 #include "core/evidence.h"
+#include "core/source_card.h"
 #include "source.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -85,6 +87,9 @@ static void usage(FILE *out) {
     "                             print the captured {record_count,records} JSON\n"
     "  --list-sources             list the registered sources and exit\n"
     "  --collector-census         TSV of collector key, source count, top categories (for tools/gen_collectors_def.py)\n"
+    "  --dump-source-cards        print id<TAB>kind<TAB>category<TAB>card for every\n"
+    "                             source: the exact text the service index embeds\n"
+    "                             (\\n \\t \\\\ escaped), for tools/batch_exclusions.py\n"
     "  --ingest <id> <file> [--type email|username|phone|password|auto]\n"
     "           [--materialize] [--dry-run]\n"
     "                             offline breach-dump ingest (no DB, no network)\n"
@@ -147,7 +152,8 @@ int main(int argc, char **argv) {
    * into a hard failure of the CI step that runs it, so the flag is now real:
    * an explicit request for the run that used to happen by accident. */
   static const char *KNOWN[] = {
-    "--serve", "--sched", "--list-sources", "--collector-census", "--run", "--dispatch",
+    "--serve", "--sched", "--list-sources", "--collector-census", "--dump-source-cards",
+    "--run", "--dispatch",
     "--ingest", "--type", "--materialize", "--dry-run",
     "--selftest", "--help", "-h", NULL
   };
@@ -179,6 +185,30 @@ int main(int argc, char **argv) {
         return 2;
       }
     }
+  }
+
+  /* --dump-source-cards: no database, no network — the registry and the one
+   * card builder only, so tools/batch_exclusions.py --semantic embeds exactly
+   * the text the service index embeds (core/source_card.h). One line per
+   * source; the card's own newline/tab/backslash are escaped so a line is a
+   * row. */
+  for (int i = 1; i < argc; i++) {
+    if (strcmp(argv[i], "--dump-source-cards")) continue;
+    const source_card *cards = NULL;
+    int n = source_cards_all(&cards);
+    for (int k = 0; cards && k < n; k++) {
+      if (!cards[k].text) continue;
+      printf("%s\t%s\t%s\t", cards[k].def->id, source_kind_name(cards[k].kind),
+             cards[k].category ? cards[k].category : "");
+      for (const char *p = cards[k].text; *p; p++) {
+        if (*p == '\n') fputs("\\n", stdout);
+        else if (*p == '\t') fputs("\\t", stdout);
+        else if (*p == '\\') fputs("\\\\", stdout);
+        else putchar(*p);
+      }
+      putchar('\n');
+    }
+    return 0;
   }
 
   int selftest = 1; /* P1 default */
@@ -282,6 +312,7 @@ int main(int argc, char **argv) {
       if (r.resolved_from) printf("resolved_from=%s\n", r.resolved_from);
       if (r.error) printf("error=%s\n", r.error);
       osint_result_free(&r);
+      intel_sink_free(&sink);
       http_client_free(hc);
       db_close(&db);
       return 0;

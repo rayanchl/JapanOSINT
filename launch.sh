@@ -88,6 +88,18 @@ JO_DB_FROM_CALLER="${JO_DB:-}"
 : "${LLAMA_EMBED_PARALLEL:=2}"
 : "${JO_EMBED_URL:=}"                               # set by cmd_llama_embed when the pod is up
 : "${JO_EMBED_QUERY_URL:=}"                         # ditto, when LLAMA_EMBED_PARALLEL >= 2
+# optional vision embed sidecar (scripts/vision_embed_server.py — camera stills
+# and text queries in one CLIP-type space). Same contract as the embed pod:
+# started ONLY when configured and the model is already on disk, and
+# JO_VISION_EMBED_URL is exported only when it actually answers /health.
+# VISION_EMBED_MODEL empty → component off (skipped silently). VISION_EMBED_STUB=1
+# runs the no-ML hash-vector stub (tests only; its vectors mean nothing).
+: "${VISION_EMBED_MODEL:=}"                         # e.g. google/siglip2-base-patch16-224
+: "${VISION_EMBED_STUB:=}"
+: "${VISION_EMBED_PORT:=8083}"
+: "${VISION_PYTHON:=python3}"                       # a venv's python with scripts/requirements-vision.txt
+: "${VISION_WAIT:=180}"                             # s to wait for the model to load
+: "${JO_VISION_EMBED_URL:=}"                        # set by cmd_vision when the sidecar is up
 # Web pod — client/ Vite dev server; its /api proxy targets the server pod
 : "${WEB_PORT:=5173}"
 : "${WEB_HOST:=127.0.0.1}"                          # 0.0.0.0 to expose the site on the LAN
@@ -103,7 +115,7 @@ JO_DB_FROM_CALLER="${JO_DB:-}"
 : "${LLAMA_WAIT:=600}"                              # s to wait for model load (27G Qwen over /mnt/c)
 : "${SERVER_WAIT:=30}"                              # s to wait for httpd listen
 
-DO_BUILD=1 DO_SERVER=1 DO_WEB=1 DO_LLAMA=1 DO_SUGGEST_LLAMA=1 DO_EMBED_LLAMA=1 DO_MAINT=0 REBUILD=0 FORCE=0
+DO_BUILD=1 DO_SERVER=1 DO_WEB=1 DO_LLAMA=1 DO_SUGGEST_LLAMA=1 DO_EMBED_LLAMA=1 DO_VISION=1 DO_MAINT=0 REBUILD=0 FORCE=0
 
 # ---- ui helpers ------------------------------------------------------------
 c(){ printf '\033[%sm' "$1"; }; NC=$(c 0); B=$(c '1;36'); G=$(c '1;32'); Y=$(c '1;33'); R=$(c '1;31')
@@ -120,6 +132,7 @@ while [ $# -gt 0 ]; do case "$1" in
   --no-llama)  DO_LLAMA=0 ;;
   --no-suggest-llama) DO_SUGGEST_LLAMA=0 ;;
   --no-embed-llama) DO_EMBED_LLAMA=0 ;;
+  --no-vision) DO_VISION=0 ;;
   --no-web)    DO_WEB=0 ;;
   --web-port)  WEB_PORT="$2"; shift ;;
   --maint)     DO_MAINT=1 ;;
@@ -192,7 +205,8 @@ binenv(){ BINENV=( "PORT=$PORT" "JO_DB=$JO_DB" "JO_SCHEMA=$JO_SCHEMA"
   [ -n "${SUPABASE_AUD:-}" ]       && BINENV+=( "SUPABASE_AUD=$SUPABASE_AUD" )
   [ -n "${LLM_MODEL:-}" ]          && BINENV+=( "LLM_MODEL=$LLM_MODEL" );
   [ -n "${JO_EMBED_URL:-}" ]       && BINENV+=( "JO_EMBED_URL=$JO_EMBED_URL" )
-  [ -n "${JO_EMBED_QUERY_URL:-}" ] && BINENV+=( "JO_EMBED_QUERY_URL=$JO_EMBED_QUERY_URL" ); }
+  [ -n "${JO_EMBED_QUERY_URL:-}" ] && BINENV+=( "JO_EMBED_QUERY_URL=$JO_EMBED_QUERY_URL" )
+  [ -n "${JO_VISION_EMBED_URL:-}" ] && BINENV+=( "JO_VISION_EMBED_URL=$JO_VISION_EMBED_URL" ); }
 
 # wait until $1 (a log file) contains regex $2, up to $3 seconds
 wait_log(){ local f="$1" re="$2" t="$3" e=$((SECONDS+$3))
@@ -273,7 +287,7 @@ EOF
 # ---- freeze: stop OUR stale procs; guard a concurrent make ----------------
 cmd_freeze(){
   say "freeze: stopping anything we previously launched"
-  for p in server llama llama-suggest llama-embed; do
+  for p in server llama llama-suggest llama-embed vision; do
     if alive "$p"; then kill "$(cat "$(pidfile "$p")")" 2>/dev/null && ok "stopped $p pod"; fi
     rm -f "$(pidfile "$p")"
   done
@@ -355,12 +369,61 @@ cmd_build_verify(){
   fi
 }
 
+# ---- vision embed sidecar (optional) ----------------------------------------
+cmd_vision(){
+  local url="http://127.0.0.1:$VISION_EMBED_PORT"
+  alive vision && { warn "vision pod already running (pid $(cat "$(pidfile vision)"))"; JO_VISION_EMBED_URL="$url"; return; }
+  local args=( --host 127.0.0.1 --port "$VISION_EMBED_PORT" )
+  if [ "$VISION_EMBED_STUB" = 1 ]; then
+    args+=( --stub )
+  else
+    # Not configured → off, quietly: this is an optional component.
+    [ -n "$VISION_EMBED_MODEL" ] || { say "vision skipped (VISION_EMBED_MODEL unset)"; return; }
+    command -v "$VISION_PYTHON" >/dev/null 2>&1 || { say "vision skipped ($VISION_PYTHON not found)"; return; }
+    local why
+    why="$(VISION_EMBED_MODEL="$VISION_EMBED_MODEL" "$VISION_PYTHON" "$REPO/scripts/vision_embed_server.py" --check 2>&1)" \
+      || { say "vision skipped: $why"; return; }
+    args+=( --model "$VISION_EMBED_MODEL" )
+  fi
+  local lg; lg="$(logfile vision)"; : >"$lg"
+  say "vision: scripts/vision_embed_server.py ${VISION_EMBED_STUB:+--stub }:$VISION_EMBED_PORT"
+  nohup env HF_HUB_OFFLINE=1 "$VISION_PYTHON" "$REPO/scripts/vision_embed_server.py" "${args[@]}" >>"$lg" 2>&1 &
+  echo $! >"$(pidfile vision)"
+  if wait_http "$url/health" "$VISION_WAIT"; then
+    JO_VISION_EMBED_URL="$url"
+    ok "vision /health → 200 (JO_VISION_EMBED_URL=$url passed to the server pod)"
+  else tail -10 "$lg"; warn "vision /health not ready in ${VISION_WAIT}s (see $lg); JO_VISION_EMBED_URL left unset"; fi
+}
+
+# ---- media decoder preflight ------------------------------------------------
+# The binary runs without any of these — each missing one turns a feature OFF
+# (and /api/camera-stills/capabilities says which). Warn here so "every phash
+# is NULL" is answered at launch, not after a week of unhashed frames.
+# Package names: docs/BUILD.md §1b. Never fatal.
+media_preflight(){
+  local miss=0
+  if command -v ffmpeg >/dev/null 2>&1; then ok "media: ffmpeg → RTSP/HLS stills + pHash"
+  else warn "media: ffmpeg missing → no RTSP/HLS camera stills (apt: ffmpeg | brew: ffmpeg)"; miss=1; fi
+  if command -v magick >/dev/null 2>&1 || command -v convert >/dev/null 2>&1 || command -v gm >/dev/null 2>&1; then
+    ok "media: ImageMagick/GraphicsMagick present (pHash fallback)"
+  elif ! command -v ffmpeg >/dev/null 2>&1; then
+    warn "media: no ffmpeg and no ImageMagick → no pHash, scene change is sha256-only (apt: imagemagick | brew: imagemagick)"
+  fi
+  if command -v tesseract >/dev/null 2>&1; then
+    if tesseract --list-langs 2>&1 | grep -qx jpn; then ok "media: tesseract with jpn → OCR (Japanese)"
+    else warn "media: tesseract has no jpn traineddata → Japanese OCR is noise (apt: tesseract-ocr-jpn | brew: tesseract-lang)"; miss=1; fi
+  else warn "media: tesseract missing → no OCR on stills/images (apt: tesseract-ocr tesseract-ocr-jpn | brew: tesseract tesseract-lang)"; miss=1; fi
+  [ "$miss" = 0 ] || say "media: optional features above are off; see docs/BUILD.md §1b"
+  return 0
+}
+
 # ---- server pod ------------------------------------------------------------
 cmd_serve(){
   [ -x "$BIN" ] || die "no bin/japanosint — run: ./launch.sh build"
   alive server && { warn "server pod already running (pid $(cat "$(pidfile server)"))"; return; }
   if [ -n "$(envget SUPABASE_URL)" ]; then ok "auth: SUPABASE_URL present (via ${SUPABASE_URL:+env}${SUPABASE_URL:-$JO_ENV_FILE})"
   else warn "SUPABASE_URL not in env or $JO_ENV_FILE — prod RS256/JWKS off (HS256/dev only)"; fi
+  media_preflight
   # A port still held after freeze means a stray nothing above could identify.
   # Say so NOW, naming the holder, instead of waiting 30s to report a symptom.
   if command -v ss >/dev/null 2>&1 && ss -ltn 2>/dev/null | grep -q ":$PORT "; then
@@ -821,7 +884,7 @@ cmd_maint(){
 # ---- status / down / logs --------------------------------------------------
 cmd_status(){
   say "status"
-  for p in server llama llama-suggest llama-embed; do
+  for p in server llama llama-suggest llama-embed vision; do
     if alive "$p"; then ok "$p pod  RUNNING  pid=$(cat "$(pidfile "$p")")  log=$(logfile "$p")"
     else warn "$p pod  stopped"; fi
   done
@@ -842,6 +905,8 @@ cmd_up(){
   [ "$DO_BUILD"  = 1 ] && cmd_build  || say "build skipped (--no-build)"
   # embed pod BEFORE the server: cmd_serve snapshots JO_EMBED_URL into BINENV.
   [ "$DO_EMBED_LLAMA" = 1 ] && cmd_llama_embed || say "embed-llama skipped (--no-embed-llama)"
+  # likewise for JO_VISION_EMBED_URL.
+  [ "$DO_VISION" = 1 ] && cmd_vision || say "vision skipped (--no-vision)"
   [ "$DO_SERVER" = 1 ] && cmd_serve  || say "server skipped (--no-server)"
   [ "$DO_WEB"    = 1 ] && cmd_web    || say "web skipped (--no-web)"
   [ "$DO_LLAMA"  = 1 ] && cmd_llama  || say "llama skipped (--no-llama)"
@@ -861,11 +926,13 @@ case "$CMD" in
   llama)        cmd_llama ;;
   llama-suggest) cmd_llama_suggest ;;
   llama-embed)  cmd_llama_embed ;;
+  vision)       cmd_vision ;;
   maint)        cmd_maint ;;
   status)       cmd_status ;;
   down|stop)    cmd_down ;;
   logs)         cmd_logs "${1:-server}" ;;
   freeze)       cmd_freeze ;;
+  preflight)    media_preflight ;;
   tags|help)    cmd_tags ;;
   *) die "unknown command '$CMD' (up|build|serve|web|web-stop|llama|maint|status|down|logs|tags)";;
 esac

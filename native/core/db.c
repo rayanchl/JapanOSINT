@@ -11,6 +11,8 @@ int sqlite3_vec_init(sqlite3 *db, char **pzErrMsg, const sqlite3_api_routines *p
 #include "content_change.h"    /* content_change_ensure_schema (same reason) */
 #include "media.h"             /* media_migrate (same reason) */
 #include "camera_stills.h"     /* camera_stills_migrate (same reason) */
+#include "story.h"             /* story_migrate (story_id, novelty columns) */
+#include "alert_sem.h"         /* alert_sem_migrate (alert_rule_vec)        */
 #include "fts_schema.h"        /* fts_schema_migrate (widens intel_items_fts) */
 #include "entitystore.h"       /* es_norm_migrate */
 #include "source_registry.h"   /* src_meta_get (merged metadata)        */
@@ -277,8 +279,12 @@ static void db_apply_pragmas(sqlite3 *h) {
    * instead of leaving it at its high-water mark. It changes no durability
    * guarantee: the limit applies after the checkpoint has already committed
    * those frames into the database. 256 MB is generous for the biggest single
-   * transaction this tree runs (the FTS rebuild's per-batch commits) while
-   * keeping the steady-state footprint bounded. */
+   * transaction this tree runs while keeping the steady-state footprint
+   * bounded. That is the FTS rebuild's FTS_REBUILD_BATCH-row commit
+   * (core/fts_schema.c) — and has been only since 2026-10-06: before that the
+   * rebuild was ONE transaction over the whole corpus, so this comment
+   * promised per-batch commits that did not exist, and a WAL that is still
+   * being appended to cannot be truncated at all. */
   sqlite3_exec(h, "PRAGMA journal_size_limit=268435456;", NULL, NULL, NULL);
 }
 
@@ -491,6 +497,17 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
    * created inside content_change_ensure_schema() for the same reason as
    * above — the column does not exist when schema.sql runs. */
   ensure_column(db, "sources", "watch_content", "INTEGER");
+  /* DERIVED labels, never renames (core/source_category.h): `category` stays
+   * what the source declared; these say which of source.h's 31 categories it
+   * belongs to and how that was decided ('declared' | 'derived'). */
+  ensure_column(db, "sources", "category_canonical", "TEXT");
+  ensure_column(db, "sources", "category_provenance", "TEXT");
+  ensure_column(db, "sources", "category_confidence", "REAL");
+  /* What a pivot can be asked about (core/source_card.h: a SC_ET_* mask
+   * derived from its declaration) and the facts it was derived from. NULL on
+   * a non-pivot; 0 with NULL provenance on an unlabelled pivot. */
+  ensure_column(db, "sources", "entity_types", "INTEGER");
+  ensure_column(db, "sources", "entity_types_provenance", "TEXT");
   /* The workspace run list names each run's query (searchapi_runs). */
   ensure_column(db, "search_run_owners", "query", "TEXT");
   content_change_ensure_schema(db);
@@ -506,6 +523,22 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
    * over it, for the usual schema.sql-ordering reason. */
   ensure_column(db, "intel_items", "capture_stills", "INTEGER NOT NULL DEFAULT 0");
   camera_stills_migrate(db);
+
+  /* The sink's unchanged-re-fetch path (core/intel.c, UNCHANGED RE-FETCH):
+   * content_hash is the 128-bit digest of what the upsert writes, compared on
+   * the next fetch of the same uid; last_seen_at is the one column a re-fetch
+   * of unchanged content still moves. Unindexed on purpose — that is what
+   * makes the write cheap. NULL on every row written before the column existed,
+   * which just means its first re-fetch is a full write, as before. */
+  ensure_column(db, "intel_items", "content_hash", "BLOB");
+  ensure_column(db, "intel_items", "last_seen_at", "TEXT");
+
+  /* Stories and novelty from the embedding pod's post-batch hook (core/
+   * story.h): intel_items.story_id (separate from simhash's cluster_id) and
+   * .novelty, plus the story index and the hook's pending queue. */
+  story_migrate(db);
+  /* Semantic alert rules' stored vectors (core/alert_sem.h). */
+  alert_sem_migrate(db);
 
   /* Widen intel_items_fts to also index link/author/tags/properties. No-op
    * unless the live index is still the old column set. Deliberately LAST of
@@ -535,7 +568,10 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
 }
 
 void db_close(db_handle *db) {
-  if (db && db->h) { sqlite3_close(db->h); db->h = NULL; }
+  /* close_v2: a statement some caller forgot to finalize (an intel sink
+   * never freed) turns the connection into a zombie that closes with its last
+   * statement, instead of sqlite3_close()'s SQLITE_BUSY and a leaked handle. */
+  if (db && db->h) { sqlite3_close_v2(db->h); db->h = NULL; }
 }
 
 int db_integrity_ok(db_handle *db, char *out, int out_sz) {

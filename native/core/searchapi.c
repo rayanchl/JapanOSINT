@@ -3,6 +3,7 @@
 #include "searchapi.h"
 #include "savedsearchapi.h"
 #include "pipeline.h"
+#include "suggest.h"          /* the retrieval arm of /api/search/suggest */
 #include "progress.h"
 #include "llm.h"
 #include "httpclient.h"
@@ -220,13 +221,27 @@ char *searchapi_analyze(db_handle *db, const char *tenant_id,
 }
 
 char *searchapi_suggest(const char *q) {
+  return searchapi_suggest_ex(NULL, NULL, q, 0);
+}
+
+char *searchapi_suggest_ex(db_handle *db, const char *tenant, const char *q,
+                           int expand) {
+  /* The retrieval arm first (core/suggest.h); NULL whenever it cannot answer
+   * — no embedding server above all — and then exactly the old path. */
+  if (db && q && *q) {
+    http_client *http = http_client_new();
+    llm_client llm; llm_init_suggest(&llm, http);
+    char *body = suggest_build(db, &llm, tenant, q, expand);
+    http_client_free(http);
+    if (body) return body;
+  }
   cJSON *o = cJSON_CreateObject();
   if (!q || !*q) {
     cJSON_AddItemToObject(o, "suggestions", cJSON_CreateArray());
   } else {
     http_client *http = http_client_new();
     llm_client llm; llm_init_suggest(&llm, http);  /* dedicated suggest LLM */
-    char *arr = osint_suggest(&llm, q);          /* JSON array string */
+    char *arr = osint_suggest_db(db, &llm, q);   /* JSON array string */
     http_client_free(http);
     cJSON *a = arr ? cJSON_Parse(arr) : NULL;
     free(arr);

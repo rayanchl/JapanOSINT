@@ -192,7 +192,7 @@ def main():
                        f' * see docs/candidate-sources-batch14.tsv for provenance.\n'
                        f' * A dead endpoint here degrades to an explicit fetch error at\n'
                        f' * runtime and never to invented content. Promote to verified with\n'
-                       f' * `make verify-candidates` (tools/promote_candidates.py).\n'
+                       f' * tools/promote_candidates.py (the make target is gone).\n'
                        f' * SCAFFOLDED once by collectors/gen_verified_sources.py from that\n'
                        f' * manifest, and HAND-MAINTAINED since: repairs carry the live\n'
                        f' * counts that justify them in comments the manifest cannot hold,\n'
