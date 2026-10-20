@@ -14,6 +14,10 @@ Ordered by how much it costs to leave alone.
 > reports 0 findings across the whole tree again, strict set 0/342. Fixtures 5
 > and 6 pin both, and were checked against the old behaviour. The rest of A2
 > and sections B–E stand.
+>
+> **A2 is FIXED too**: every drifted number corrected, including the batch-37
+> line, which had claimed for a fortnight that a probed-and-generated set was
+> "still not generated into C, still unprobed".
 
 ### A1. `make audit-sources` reports 50 findings where CLAUDE.md claims 0
 

@@ -223,8 +223,12 @@ got manifests of their own, a `batch31.*.txt` glob would have fed both sets to
 every gate, so the staging set moved — to 36, which a live-measured batch then
 merged under first, and so to **batch 37** (`docs/batch37/STAGING_README.md`,
 80 rows kept, 64 rejected as duplicates of the tree into
-`docs/rejected-sources-batch37.<beat>.tsv`; still not generated into C, still
-unprobed). Before picking `<N>`:
+`docs/rejected-sources-batch37.<beat>.tsv`). **It has since been probed and
+generated** — this file said "still not generated into C, still unprobed" for
+a fortnight after it was, which would have cost a session a re-probe of a
+settled set. Commit `5d5e1f99`: **15 of the 80 pass**, 16 rows measured into
+`collectors/pivot/table/hp3b37_{eu,fr,jp,row,us}.c`, 70 rejected into the
+per-beat TSVs. Before picking `<N>`:
 `git ls-tree -r --name-only origin/main | grep -oE '(batch|hp3b)[0-9]+' | sort -u`.
 
 **Batches 34 and 35 are unverified, for the same reason as batch 31:**
@@ -809,8 +813,8 @@ underneath them that older notes in this file predate:
   / pending (never ran). Until then nothing wrote it after the seed, so every
   row read `pending` forever and `/api/status`'s online count was the seed.
 * **An hpengine row's default collector is its table file's basename**
-  (`hp3b25_jpmedia`), not `osint`. Every source has a collector; 554 keys
-  (2026-10-19, round 4); `core/collectors.def` labels and groups them (below).
+  (`hp3b25_jpmedia`), not `osint`. Every source has a collector; 593 keys
+  (2026-10-20; 554 at round 4 on 2026-10-19); `core/collectors.def` labels and groups them (below).
   Round 4 also moved batches 43/44's 400 Japanese web-media RSS feeds off
   `social` (their macro's label) onto `jp_webmedia` under News & media.
   **`osint` is the collector of hand-written entity PIVOTS only** since round 3:
@@ -959,7 +963,7 @@ says why.
 | `tools/batch_exclusions.py` | no duplicate id or endpoint against the existing tree or within the batch (normalising `{q}` and `%s` to one form; `.portal` is documentation and is excluded). Sees **runtime-composed** endpoints too — it resolves string macros, joins adjacent literals, follows `#include "*.inc"`, and matches a `%s` URL family on its layer/dataset NAME. Pass **`--bin ./bin/japanosint`**: without it the id set is a regex approximation (4,754 of 13,193) and it says so |
 | `tools/audit_batch_pagination.py` | a paged endpoint declares `page_param` or `next_path` — read from the parsed opts, not as a substring of the whole field |
 | `tools/audit_batch_reachable.py` | rule 3 above. A row whose opts are ambiguous is reported UNVERIFIABLE, never "never runs" |
-| `tools/audit_url_limits.py` | the seventh discard shape — a record limit asked of the UPSTREAM in a URL, with no paging to follow it. Read, not gated: 103 narrow candidates, unmeasured, and a limit on a ranked pivot is legitimate |
+| `tools/audit_url_limits.py` | the seventh discard shape — a record limit asked of the UPSTREAM in a URL, with no paging to follow it. Read, not gated: 70 narrow candidates as of 2026-10-20 (103 when written, 89 after the 2026-10-11 pass), and a limit on a ranked pivot is legitimate |
 | `tools/audit_cycle_health.py` | whether a `page_resume` row can actually ADVANCE its cycle. Three outcomes, one healthy: `CYCLING` (a position was stored), `COMPLETE` (the walk ended and cleared it — the measured no-op that makes page_resume safe to apply broadly), `STUCK` (a page failed, so no position was stored and the next run re-reads the same slice; the collection past that point is unreachable). Found as the generalisation of the ENA shape. It reports the failing page's STATUS and URL rather than a bare verdict, because a 400 naming a parameter is a property of the endpoint while a 429 is one reading. Walks to the real ceiling rather than probing shallow — the failure can be at any page — so it costs ~20 requests a row. Reads the `page_resume` rows out of the C, which is the maintained copy |
 | `tools/audit_page_ceiling.py` | which scheduled rows stop at the PAGE CEILING, and how many pages their own upstream says they need. Probes SHALLOW (`--probe-pages`, default 3) and then does arithmetic, because the engine's truncation notice already carries the only number that settles it: a `records_available` whose basis is "upstream declared this total". `CEILING_DECLARED` is measured (pages_needed = total / page_size, the page size derived from the probe when the row declares none); `CEILING_UNKNOWN` means the upstream publishes no total and only a full walk can size it, which is a decision to take deliberately, not a finding. Reads `collector-fetch-failure` too, so a 429 is `FETCH_FAILED` and not "this source returns nothing" |
 | `tools/audit_page_param.py` | rows whose URL already binds their own `page_param`. The engine used to APPEND (`…&pagina=1&pagina=2`) and a server binding the first occurrence then served page 1 for the whole walk — N pages emitted, one stored, `rc=0`. Fixed in `hp_url_set_param` and pinned by `hptest` "9f-bis"; the lint stays because 103 of 1,431 paged rows are that shape and their paging depends on the replacement being right |
