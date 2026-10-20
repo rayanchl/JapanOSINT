@@ -71,6 +71,16 @@ lessons from batches 43–48 that a new batch must not relearn:
   fails twice leaves — and a retry pass a day later recovers a few: 63 of the
   2,724 rows batches 44–46 dropped were alive on 2026-10-19 and are back in
   their beats. Never rebuild the binary while an audit runs.
+  **And a 403 is usually a wall against the default User-Agent, not against
+  us** (2026-10-20): of the 523 dropped rows that had answered 403 to the
+  engine's client, 495 answered the probe and **491 store their feed in the
+  engine** — 11,159 emitted, 11,159 stored — under a declared
+  `header1=User-Agent: Mozilla/5.0 (compatible\; JapanOSINT/1.0\; +https://github.com/rayanchl/JapanOSINT)`:
+  the same identified client with the browser-compatible prefix the walls
+  key on, nothing hidden. They are back in their beats (86 UK, 328 FR, 58 IT,
+  8 Wikidata, 4 IGO, 7 press) WITH the header on the row, so the condition a
+  row was proven under is the one it runs under; the four that refused twice
+  stay out. Try the header before calling a 403 dead.
 * **A URL changed after validation is unvalidated** (an unescaped `&amp;`
   made Joomla serve Atom where rows declared RSS), **a well-formed feed with
   zero items is `EMPTY_RESULTSET`**, **a substring count of `<item` counts the
@@ -85,7 +95,22 @@ lessons from batches 43–48 that a new batch must not relearn:
   whitespace-normalised and pipe-free; a URL carrying a credential is dropped.
 * **The interval follows the measured freshness** of each feed (newest item
   within 3 days → hourly, 30 days → 6 h, a year → daily, else weekly); the
-  press stays hourly.
+  press stays hourly. **And the scheduler re-measures it** (2026-10-20): the
+  four feed batches carry `adaptive_interval=1` (`hpengine.h`, through
+  `source_def`), and after every run that WORKED `core/scheduler.c` re-reads
+  the newest ISO `published_at` the row has stored and re-buckets it by the
+  same rule (`sched_freshness_measure`, persisted as
+  `source_sched_state.freshness_interval`, and what the row's
+  `effective_interval` then shows). Both directions, bounded by the buckets:
+  a parish council that goes quiet drifts to weekly, one that wakes before an
+  election is hourly on its next run. An undated feed keeps its declared
+  weekly (no evidence, no change) and a refused fetch changes nothing (a 403
+  says nothing about how often the upstream publishes). It is opt-in because
+  a row's author may have set a cadence the item dates cannot see — a
+  forecast feed, a window the row exists to be fresh for.
+  `tools/tune_intervals.py` is the authoring-time half of the same rule and
+  marks the rows it tunes; `test_sched_backoff.c` pins the bucket, the base
+  and the measurement.
 
 **Batch 33 is the one batch measured end to end against live upstreams** —
 43 supply-chain and package-registry rows
@@ -833,7 +858,13 @@ says why.
 | tool | what it enforces |
 | --- | --- |
 | `tools/manifest.py` | THE manifest parser — line split, field count, and `opts` resolution — imported by every tool below. It is one file because it used to be seven, and they disagreed: see rule 4c |
-| `tools/probe_hp_batch.py` | proof of life: 2xx, parses in its declared mode, ≥1 real record. Honours each row's own headers, handles JSON/CSV/XML/HTML, rejects empty result sets, HTTP-200 refusals, one-element error arrays and bot-wall challenge pages. A **declared `array_path` is resolved and judged** — it used to hunt for the densest array and once counted a response's own 252-key *schema block* as records, passing a row whose result set was empty. **`--check-filter`** additionally asks each pivot row about an IMPOSSIBLE entity and fails it `FILTER_IGNORED` when the answer is the same size — see rule 4d. Both answers are judged by the same counter (XML/CSV/HTML/xlsx/`array_path` aware); a comparison that could not be made is `FILTER_UNCHECKED`, never PASS. It waits each row's own `timeout_ms`, renders `{date:}` tokens and matches keys case-insensitively, as the engine does |
+| `tools/probe_hp_batch.py` | proof of life: 2xx, parses in its declared mode, ≥1 real record. Honours each row's own headers, handles JSON/CSV/XML/HTML, rejects empty result sets, HTTP-200 refusals, one-element error arrays and bot-wall challenge pages. A **declared `array_path` is resolved and judged** — it used to hunt for the densest array and once counted a response's own 252-key *schema block* as records, passing a row whose result set was empty. **`--check-filter`** additionally asks each pivot row about an IMPOSSIBLE entity and fails it `FILTER_IGNORED` when the answer is the same size — see rule 4d. Both answers are judged by the same counter (XML/CSV/HTML/xlsx/`array_path` aware); a comparison that could not be made is `FILTER_UNCHECKED`, never PASS. It waits each row's own `timeout_ms`, renders `{date:}` tokens and matches keys case-insensitively, as the engine does. **Paced per host** (2026-10-20, `--host-gap-ms`, default 1000): one request per host per gap across all workers, a 429 or `Retry-After` widening that host's gap for the rest of the run — the probe used to put every worker on one shared host at once and then report ITS OWN burst (502s, 403s) as the row's verdict. Rows on distinct hosts are not slowed |
+| `tools/tune_intervals.py` | the authoring-time interval rule (newest item ≤3 d → hourly, ≤30 d → 6 h, ≤1 y → daily, else weekly), applied from the `newest <date>` each feed row's description records, and `adaptive_interval=1` so the scheduler keeps re-measuring it |
+| `tools/feed_batch_tsv.py` | assembles `docs/verified-sources-batch<N>.tsv` (the probe's AND the engine's reading per shipped row) and `docs/rejected-sources-batch<N>.tsv` (every candidate that did not ship, by stage) from a feed batch's per-beat artefacts |
+| `tools/feed_collision_check.py` | measures a feed row's COLLISION verdict against the feed itself — distinct keys, repeated keys, byte-identical surplus — so a collision is read as the upstream's own duplicate or as a wrong key, never guessed (rule 4b) |
+| `tools/feed_reclassify.py` | re-fetches rows whose URL changed after validation and rewrites kind/opts/description from what the server serves NOW (the `&amp;` lesson) |
+| `tools/manifest_repair_rows.py` | re-joins manifest rows a multi-line field split, and names the ones still malformed |
+| `tools/discover_feeds.py`, `tools/build_feed_manifest.py`, `tools/wd_harvest.py` | the discovery half of batches 43–48: a register of official domains (or a Wikidata class per country) → each root fetched once → declared/linked feeds validated live and written as manifest rows |
 | `tools/batch_exclusions.py` | no duplicate id or endpoint against the existing tree or within the batch (normalising `{q}` and `%s` to one form; `.portal` is documentation and is excluded). Sees **runtime-composed** endpoints too — it resolves string macros, joins adjacent literals, follows `#include "*.inc"`, and matches a `%s` URL family on its layer/dataset NAME. Pass **`--bin ./bin/japanosint`**: without it the id set is a regex approximation (4,754 of 13,193) and it says so |
 | `tools/audit_batch_pagination.py` | a paged endpoint declares `page_param` or `next_path` — read from the parsed opts, not as a substring of the whole field |
 | `tools/audit_batch_reachable.py` | rule 3 above. A row whose opts are ambiguous is reported UNVERIFIABLE, never "never runs" |
@@ -1160,6 +1191,18 @@ Engine subtleties worth knowing before writing a row:
   the one copy of that decision. The 322 batch-16/17 rows moved onto hpengine for
   their detail hops (`collectors/gen_detail_hop_upgrade.py`) carry it so they
   did not trade their later pages for the second hop.
+* **`page_walk` moves only a cursor whose page-size sibling it KNOWS**
+  (`PAGERS` in `lib/jsonlist.c`: `rows`/`start`, `limit`/`offset`,
+  `per_page`/`page` …). `count`/`start` — the GOV.UK Search API's pair, also
+  J-STAGE's and CiNii's, with WFS 2.0's `startIndex` as the alternate — was
+  not in it until 2026-10-20, so six GOV.UK rows declaring `page_walk=1` AND
+  `page_resume=1` read ONE page of three records a run, and cycled nothing,
+  because a one-page walk "completes". The ceiling audit had said so
+  (`pages_read 1` against `pages_needed 44,885` for the employment-tribunal
+  row) and it read as a row waiting for its cycle. Measured after:
+  `uk-govuk-search-cma-cases` resumes at `start=60`, then `start=120`; the
+  six are at `count=100` with an ascending sort now. **A walk that reads
+  exactly one page of a declared size deserves one look at that table.**
 * **The page ceiling is one number with one knob: `jo_page_max()`, 20, under
   `$JO_PAGE_MAX`** (`lib/pagewalk.c`). It was three, with two numbers and two
   knobs, one of which did not exist — `pagewalk.c` 20/`$JO_PAGE_MAX`,

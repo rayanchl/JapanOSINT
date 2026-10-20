@@ -73,67 +73,7 @@ static const hp_source HP3B34_FDSNEVENT[] = {
       "by the FDSN specification. Walked by the specification's own "
       "limit/offset, whose offset is 1-based." },
 
-  { .id = "JO34_FDSNEVT_EIDA_GEIN_NOA_GR", .name = "National Observatory of Athens — FDSN event catalogue",
-    .name_ja = "アテネ国立天文台 地震カタログ（FDSN）",
-    .category = "surveillance", .portal = "https://eida.gein.noa.gr",
-    .record_type = "seismic-event",
-    .tags = "\"sensor\",\"seismic\",\"hazard\",\"fdsn\",\"event-catalogue\"",
-    .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
-    .url = "https://eida.gein.noa.gr/fdsnws/event/1/query?format=text&nodata=404&orderby=time&limit=1000",
-    .csv_comment = "#",
-    .csv_delim = "pipe",
-    .csv_no_header = 1,
-    .date_keys = "col1",
-    .id_keys = "col0",
-    .interval = 86400,
-    .lat_key = "col2",
-    .lon_key = "col3",
-    .page_max = 20,
-    .page_param = "offset",
-    .page_size = 1000,
-    .page_start = 1,
-    .timeout_ms = 120000,
-    .title_keys = "col12,col10",
-    .description = "UNPROBED. FDSN event/1: one pipe-delimited row per located event "
-      "with event id, origin time, latitude, longitude, depth, the "
-      "contributing agency and catalogue, magnitude and magnitude type, "
-      "and the region name. Each data centre authoritative for its own "
-      "region, so the national catalogues carry events the global feeds "
-      "never list. Host and /fdsnws/ base are proven live by an "
-      "existing wired row on this host; the path and schema are fixed "
-      "by the FDSN specification. Walked by the specification's own "
-      "limit/offset, whose offset is 1-based." },
 
-  { .id = "JO34_FDSNEVT_EIDA_KOERI_BOUN_EDU_TR", .name = "KOERI, Bogazici University, Turkey — FDSN event catalogue",
-    .name_ja = "トルコ KOERI 地震カタログ（FDSN）",
-    .category = "surveillance", .portal = "https://eida.koeri.boun.edu.tr",
-    .record_type = "seismic-event",
-    .tags = "\"sensor\",\"seismic\",\"hazard\",\"fdsn\",\"event-catalogue\"",
-    .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
-    .url = "https://eida.koeri.boun.edu.tr/fdsnws/event/1/query?format=text&nodata=404&orderby=time&limit=1000",
-    .csv_comment = "#",
-    .csv_delim = "pipe",
-    .csv_no_header = 1,
-    .date_keys = "col1",
-    .id_keys = "col0",
-    .interval = 86400,
-    .lat_key = "col2",
-    .lon_key = "col3",
-    .page_max = 20,
-    .page_param = "offset",
-    .page_size = 1000,
-    .page_start = 1,
-    .timeout_ms = 120000,
-    .title_keys = "col12,col10",
-    .description = "UNPROBED. FDSN event/1: one pipe-delimited row per located event "
-      "with event id, origin time, latitude, longitude, depth, the "
-      "contributing agency and catalogue, magnitude and magnitude type, "
-      "and the region name. Each data centre authoritative for its own "
-      "region, so the national catalogues carry events the global feeds "
-      "never list. Host and /fdsnws/ base are proven live by an "
-      "existing wired row on this host; the path and schema are fixed "
-      "by the FDSN specification. Walked by the specification's own "
-      "limit/offset, whose offset is 1-based." },
 
   { .id = "JO34_FDSNEVT_SERVICE_SCEDC_CALTECH_EDU", .name = "SCEDC, Caltech (Southern California) — FDSN event catalogue",
     .name_ja = "南カリフォルニア地震データセンター 地震カタログ（FDSN）",
@@ -166,36 +106,6 @@ static const hp_source HP3B34_FDSNEVENT[] = {
       "by the FDSN specification. Walked by the specification's own "
       "limit/offset, whose offset is 1-based." },
 
-  { .id = "JO34_FDSNEVT_WS_ICGC_CAT", .name = "ICGC, Catalonia — FDSN event catalogue",
-    .name_ja = "カタルーニャ ICGC 地震カタログ（FDSN）",
-    .category = "surveillance", .portal = "https://ws.icgc.cat",
-    .record_type = "seismic-event",
-    .tags = "\"sensor\",\"seismic\",\"hazard\",\"fdsn\",\"event-catalogue\"",
-    .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ws.icgc.cat/fdsnws/event/1/query?format=text&nodata=404&orderby=time&limit=1000",
-    .csv_comment = "#",
-    .csv_delim = "pipe",
-    .csv_no_header = 1,
-    .date_keys = "col1",
-    .id_keys = "col0",
-    .interval = 86400,
-    .lat_key = "col2",
-    .lon_key = "col3",
-    .page_max = 20,
-    .page_param = "offset",
-    .page_size = 1000,
-    .page_start = 1,
-    .timeout_ms = 120000,
-    .title_keys = "col12,col10",
-    .description = "UNPROBED. FDSN event/1: one pipe-delimited row per located event "
-      "with event id, origin time, latitude, longitude, depth, the "
-      "contributing agency and catalogue, magnitude and magnitude type, "
-      "and the region name. Each data centre authoritative for its own "
-      "region, so the national catalogues carry events the global feeds "
-      "never list. Host and /fdsnws/ base are proven live by an "
-      "existing wired row on this host; the path and schema are fixed "
-      "by the FDSN specification. Walked by the specification's own "
-      "limit/offset, whose offset is 1-based." },
 };
 
 HP_REGISTER_TABLE(HP3B34_FDSNEVENT)

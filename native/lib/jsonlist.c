@@ -1333,6 +1333,14 @@ static const struct pager PAGERS[] = {
   { "num",       "p",      NULL,     1 },   /* CORDIS search API               */
   { "rows",      "start",  NULL,     0 },   /* Solr / CKAN package_search      */
   { "length",    "start",  NULL,     0 },   /* DataTables — HUDOC (ECHR)       */
+  /* GOV.UK Search API (`count` + `start`), J-STAGE and CiNii (the same two
+   * names); WFS 2.0 spells the cursor `startIndex`, used when the URL already
+   * carries it. Missing until 2026-10-20: 48 `www.gov.uk/api/search.json?
+   * ...&count=3` rows declared page_walk and read ONE page of three records
+   * a run — the ceiling audit's `pages_read 1` against `pages_needed 44,885`
+   * for the employment-tribunal row was that, and page_resume on them cycled
+   * nothing because a one-page walk "completes". */
+  { "count",     "start",  "startIndex", 0 },
   { "limit",     "offset", "skip",   0 },   /* Socrata, ODS, most REST; openFDA*/
   /* Socrata SODA's OWN spelling. `$limit` sat in the EXTRA list below for
    * "recognise a full page, but we cannot ask for the next one", and that cost

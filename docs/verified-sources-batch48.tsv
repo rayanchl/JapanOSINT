@@ -4493,3 +4493,14 @@ JO48_NEWS_Q4906426	news	news-article	http://www.bigspringherald.com/search/?f=rs
 JO48_NEWS_Q55665726	news	news-article	http://hanfordsentinel.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	PASS		OK	10	10	10
 JO48_NEWS_Q17067906	news	news-article	http://www.shorelinemedia.net/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	PASS		OK	10	10	10
 JO48_NEWS_Q7580075	news	news-article	http://www.dailygazette.com/search/?f=rss&amp;t=article&amp;c=spotlightnews&amp;l=50&amp;s=start_time&amp;sd=desc	PASS		OK	10	10	10
+JO48_IGO_Q107291476	igo	government-notice	https://www.psychoflux.com/feed/	PASS (User-Agent header)	10	OK	10	10	10
+JO48_IGO_Q115802473	igo	government-notice	https://www.cighci.org/feed/	PASS (User-Agent header)	10	OK	10	10	10
+JO48_IGO_Q1371744	igo	government-notice	https://www.banpresto.es/feed/	PASS (User-Agent header)	10	OK	10	10	10
+JO48_IGO_Q4806270	igo	government-notice	https://asiapacificgreens.org/feed/	PASS (User-Agent header)	3	OK	3	3	3
+JO48_NEWS_Q105967298	news	news-article	https://wayka.pe/feed/	PASS (User-Agent header)	5	OK	5	5	5
+JO48_NEWS_Q116785970	news	news-article	https://ain.ua/feed/	PASS (User-Agent header)	50	OK	50	50	50
+JO48_NEWS_Q12623966	news	news-article	http://www.ihalla.com/rss.php?section=73	PASS (User-Agent header)	30	OK	30	30	30
+JO48_NEWS_Q16966127	news	news-article	https://mountvernonnews.com/stories.rss	PASS (User-Agent header)	20	OK	20	20	20
+JO48_NEWS_Q1975835	news	news-article	https://www.deccanchronicle.com/google_feeds.xml	PASS (User-Agent header)	60	OK	60	60	60
+JO48_NEWS_Q31328038	news	news-article	https://www.pratahkal.com/google_feeds.xml	PASS (User-Agent header)	30	OK	30	30	30
+JO48_NEWS_Q6398798	news	news-article	https://www.thepost.com.pk/feed/	PASS (User-Agent header)	10	OK	10	10	10

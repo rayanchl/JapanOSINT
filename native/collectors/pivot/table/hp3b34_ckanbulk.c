@@ -43,21 +43,29 @@
 
 static const hp_source HP3B34_CKANBULK[] = {
   { .id = "JO34_CKANRES_ADMIN_OPENDATA_AZ", .name = "admin.opendata.az — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "admin.opendata.az データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://admin.opendata.az",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"azerbaijan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://admin.opendata.az/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -74,21 +82,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_ADMIN_OPENDATA_DK", .name = "admin.opendata.dk — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "admin.opendata.dk データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://admin.opendata.dk",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"denmark\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.dk/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://admin.opendata.dk/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -105,21 +121,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_API_NESO_ENERGY", .name = "api.neso.energy — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "api.neso.energy データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://api.neso.energy",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.neso.energy/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://api.neso.energy/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -142,15 +166,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://catalog-data.city.kanazawa.ishikawa.jp/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://catalog-data.city.kanazawa.ishikawa.jp/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -173,15 +205,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://catalog.city.kobe.lg.jp/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://catalog.city.kobe.lg.jp/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -204,15 +244,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://catalog.city.utsunomiya.tochigi.jp/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://catalog.city.utsunomiya.tochigi.jp/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -229,21 +277,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_CATALOG_DATA_GOV", .name = "catalog.data.gov — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "catalog.data.gov データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://catalog.data.gov",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://catalog.data.gov/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://catalog.data.gov/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -266,15 +322,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://catalog.data.metro.tokyo.lg.jp/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://catalog.data.metro.tokyo.lg.jp/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -297,15 +361,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://catalog.opendata.pref.kanagawa.jp/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://catalog.opendata.pref.kanagawa.jp/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -328,15 +400,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"new-zealand\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://catalogue.data.govt.nz/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://catalogue.data.govt.nz/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -353,21 +433,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_CKAN_GOVDATA_DE", .name = "ckan.govdata.de — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "ckan.govdata.de データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://ckan.govdata.de",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"germany\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.govdata.de/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://ckan.govdata.de/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -384,21 +472,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_CKAN_HODA_JP", .name = "ckan.hoda.jp — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "ckan.hoda.jp データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://ckan.hoda.jp",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.hoda.jp/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://ckan.hoda.jp/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -421,15 +517,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"uruguay\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.montevideo.gub.uy/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://ckan.montevideo.gub.uy/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -452,15 +556,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.opendata.swiss/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://ckan.opendata.swiss/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -477,21 +589,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_CKAN_PF_SAPPORO_JP", .name = "ckan.pf-sapporo.jp — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "ckan.pf-sapporo.jp データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://ckan.pf-sapporo.jp",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.pf-sapporo.jp/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://ckan.pf-sapporo.jp/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -514,15 +634,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.pref.akita.lg.jp/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://ckan.pref.akita.lg.jp/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -545,15 +673,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.pref.miyazaki.lg.jp/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://ckan.pref.miyazaki.lg.jp/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -576,15 +712,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"uk\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://ckan.publishing.service.gov.uk/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -607,15 +751,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"spain\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://dadesobertes.gva.es/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://dadesobertes.gva.es/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -632,21 +784,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DADOS_PBH_GOV_BR", .name = "dados.pbh.gov.br — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "dados.pbh.gov.br データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://dados.pbh.gov.br",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"brazil\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://dados.pbh.gov.br/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://dados.pbh.gov.br/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -663,21 +823,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DADOS_PE_GOV_BR", .name = "dados.pe.gov.br — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "dados.pe.gov.br データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://dados.pe.gov.br",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"brazil\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://dados.pe.gov.br/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://dados.pe.gov.br/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -700,15 +868,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"brazil\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://dadosabertos.bndes.gov.br/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://dadosabertos.bndes.gov.br/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -731,15 +907,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"brazil\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://dadosabertos.poa.br/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://dadosabertos.poa.br/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -756,21 +940,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_BODIK_JP", .name = "data.bodik.jp — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "data.bodik.jp データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.bodik.jp",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.bodik.jp/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -787,21 +979,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_BOSTON_GOV", .name = "data.boston.gov — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "data.boston.gov データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.boston.gov",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.boston.gov/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.boston.gov/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -818,21 +1018,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_CA_GOV", .name = "data.ca.gov — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "data.ca.gov データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.ca.gov",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.ca.gov/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.ca.gov/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -855,15 +1063,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.city.fukuyama.hiroshima.jp/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.city.fukuyama.hiroshima.jp/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -886,15 +1102,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.city.sendai.jp/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.city.sendai.jp/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -917,15 +1141,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.city.tendo.yamagata.jp/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.city.tendo.yamagata.jp/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -948,15 +1180,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.city.yokohama.lg.jp/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.city.yokohama.lg.jp/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -973,21 +1213,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_CORKCITY_IE", .name = "data.corkcity.ie — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "data.corkcity.ie データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.corkcity.ie",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"ireland\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.corkcity.ie/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.corkcity.ie/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1010,15 +1258,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.data4citizen.jp/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.data4citizen.jp/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1035,21 +1291,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_GO_TH", .name = "data.go.th — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "data.go.th データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.go.th",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"thailand\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.go.th/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.go.th/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1066,21 +1330,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_GOV_IE", .name = "data.gov.ie — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "data.gov.ie データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.gov.ie",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"ireland\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.ie/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.gov.ie/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1097,21 +1369,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_GOV_IL", .name = "data.gov.il — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "data.gov.il データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.gov.il",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"israel\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.il/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.gov.il/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1128,21 +1408,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_GOV_KG", .name = "data.gov.kg — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "data.gov.kg データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.gov.kg",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"kyrgyzstan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.kg/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.gov.kg/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1159,21 +1447,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_GOV_LV", .name = "data.gov.lv — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "data.gov.lv データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.gov.lv",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"latvia\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.lv/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.gov.lv/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1190,21 +1486,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_GOV_ME", .name = "data.gov.me — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "data.gov.me データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.gov.me",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"montenegro\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.me/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.gov.me/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1221,21 +1525,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_GOV_RO", .name = "data.gov.ro — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "data.gov.ro データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.gov.ro",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"romania\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.ro/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.gov.ro/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1252,21 +1564,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_GOV_UK", .name = "data.gov.uk — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "data.gov.uk データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.gov.uk",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"uk\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.uk/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.gov.uk/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1283,21 +1603,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_GOVMU_ORG", .name = "data.govmu.org — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "data.govmu.org データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.govmu.org",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"ngo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.govmu.org/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.govmu.org/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1314,21 +1642,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_HOUSTONTX_GOV", .name = "data.houstontx.gov — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "data.houstontx.gov データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.houstontx.gov",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.houstontx.gov/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.houstontx.gov/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1351,15 +1687,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"ua\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.kyivcity.gov.ua/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.kyivcity.gov.ua/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1376,21 +1720,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_MILWAUKEE_GOV", .name = "data.milwaukee.gov — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "data.milwaukee.gov データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.milwaukee.gov",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.milwaukee.gov/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.milwaukee.gov/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1407,21 +1759,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_NT_GOV_AU", .name = "data.nt.gov.au — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "data.nt.gov.au データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.nt.gov.au",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"australia\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.nt.gov.au/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.nt.gov.au/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1438,21 +1798,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_OK_GOV", .name = "data.ok.gov — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "data.ok.gov データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.ok.gov",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.ok.gov/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.ok.gov/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1475,15 +1843,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"ngo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.opendevelopmentcambodia.net/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.opendevelopmentcambodia.net/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1506,15 +1882,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"ngo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.opendevelopmentmekong.net/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.opendevelopmentmekong.net/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1537,15 +1921,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"ngo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.opendevelopmentmyanmar.net/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.opendevelopmentmyanmar.net/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1562,21 +1954,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_RENFE_COM", .name = "data.renfe.com — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "data.renfe.com データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.renfe.com",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"com\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.renfe.com/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.renfe.com/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1599,15 +1999,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.sanantonio.gov/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.sanantonio.gov/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1624,21 +2032,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_SANJOSECA_GOV", .name = "data.sanjoseca.gov — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "data.sanjoseca.gov データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.sanjoseca.gov",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.sanjoseca.gov/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.sanjoseca.gov/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1661,15 +2077,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"ireland\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.smartdublin.ie/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.smartdublin.ie/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1692,15 +2116,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"switzerland\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.stadt-zuerich.ch/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.stadt-zuerich.ch/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1717,21 +2149,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_VIRGINIA_GOV", .name = "data.virginia.gov — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "data.virginia.gov データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.virginia.gov",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.virginia.gov/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.virginia.gov/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1748,21 +2188,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_ZAGREB_HR", .name = "data.zagreb.hr — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "data.zagreb.hr データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.zagreb.hr",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"croatia\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.zagreb.hr/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.zagreb.hr/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1779,21 +2227,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATASET_GOV_MD", .name = "dataset.gov.md — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "dataset.gov.md データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://dataset.gov.md",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"moldova\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://dataset.gov.md/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://dataset.gov.md/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1816,15 +2272,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"germany\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datenregister.berlin.de/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://datenregister.berlin.de/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1847,15 +2311,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"italy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://dati.comune.matera.it/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://dati.comune.matera.it/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1878,15 +2350,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"italy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://dati.comune.milano.it/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://dati.comune.milano.it/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1903,21 +2383,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATI_TOSCANA_IT", .name = "dati.toscana.it — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "dati.toscana.it データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://dati.toscana.it",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"italy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://dati.toscana.it/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://dati.toscana.it/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1934,21 +2422,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATI_TRENTINO_IT", .name = "dati.trentino.it — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "dati.trentino.it データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://dati.trentino.it",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"italy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://dati.trentino.it/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://dati.trentino.it/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1965,21 +2461,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATOS_BAHIA_GOB_AR", .name = "datos.bahia.gob.ar — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "datos.bahia.gob.ar データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://datos.bahia.gob.ar",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"argentina\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datos.bahia.gob.ar/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://datos.bahia.gob.ar/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -1996,21 +2500,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATOS_JUS_GOB_AR", .name = "datos.jus.gob.ar — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "datos.jus.gob.ar データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://datos.jus.gob.ar",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"argentina\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datos.jus.gob.ar/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://datos.jus.gob.ar/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2027,21 +2539,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATOS_MADRID_ES", .name = "datos.madrid.es — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "datos.madrid.es データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://datos.madrid.es",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"spain\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datos.madrid.es/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://datos.madrid.es/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2058,21 +2578,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATOS_MAGYP_GOB_AR", .name = "datos.magyp.gob.ar — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "datos.magyp.gob.ar データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://datos.magyp.gob.ar",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"argentina\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datos.magyp.gob.ar/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://datos.magyp.gob.ar/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2095,15 +2623,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"argentina\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datos.mininterior.gob.ar/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://datos.mininterior.gob.ar/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2120,21 +2656,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATOS_OSE_COM_UY", .name = "datos.ose.com.uy — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "datos.ose.com.uy データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://datos.ose.com.uy",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"uruguay\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datos.ose.com.uy/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://datos.ose.com.uy/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2157,15 +2701,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"argentina\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datos.transporte.gob.ar/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://datos.transporte.gob.ar/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2188,15 +2740,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"europe\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datosabiertos.malaga.eu/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://datosabiertos.malaga.eu/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2219,15 +2779,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"argentina\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datosabiertos.mendoza.gov.ar/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://datosabiertos.mendoza.gov.ar/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2250,15 +2818,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"australia\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://geoscience.data.qld.gov.au/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://geoscience.data.qld.gov.au/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2281,15 +2857,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://gifu-opendata.pref.gifu.lg.jp/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://gifu-opendata.pref.gifu.lg.jp/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2312,15 +2896,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opdt.city.toyama.lg.jp/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://opdt.city.toyama.lg.jp/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2337,21 +2929,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_OPENDATA_ARAGON_ES", .name = "opendata.aragon.es — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "opendata.aragon.es データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://opendata.aragon.es",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"spain\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.aragon.es/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://opendata.aragon.es/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2374,15 +2974,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.city.imizu.toyama.jp/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://opendata.city.imizu.toyama.jp/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2405,15 +3013,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.city.machida.tokyo.jp/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://opendata.city.machida.tokyo.jp/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2436,15 +3052,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.city.minato.tokyo.jp/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://opendata.city.minato.tokyo.jp/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2467,15 +3091,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.city.niigata.lg.jp/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://opendata.city.niigata.lg.jp/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2498,15 +3130,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.city.sagamihara.kanagawa.jp/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://opendata.city.sagamihara.kanagawa.jp/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2529,15 +3169,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"italy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.comune.bari.it/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://opendata.comune.bari.it/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2560,15 +3208,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.hawaii.gov/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://opendata.hawaii.gov/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2591,15 +3247,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"germany\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.muenchen.de/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://opendata.muenchen.de/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2622,15 +3286,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"ngo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.nhsbsa.net/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://opendata.nhsbsa.net/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2653,15 +3325,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"germany\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.schleswig-holstein.de/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://opendata.schleswig-holstein.de/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2678,21 +3358,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_OPENDATA_UGR_ES", .name = "opendata.ugr.es — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "opendata.ugr.es データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://opendata.ugr.es",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"spain\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.ugr.es/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://opendata.ugr.es/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2709,21 +3397,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_PODATKI_GOV_SI", .name = "podatki.gov.si — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "podatki.gov.si データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://podatki.gov.si",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"slovenia\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://podatki.gov.si/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://podatki.gov.si/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2740,21 +3436,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_PORTAL_OPENDATA_DK", .name = "portal.opendata.dk — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "portal.opendata.dk データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://portal.opendata.dk",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"denmark\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://portal.opendata.dk/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://portal.opendata.dk/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2777,15 +3481,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"germany\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://suche.transparenz.hamburg.de/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://suche.transparenz.hamburg.de/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2808,15 +3520,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"germany\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://transparenz.karlsruhe.de/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://transparenz.karlsruhe.de/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2839,15 +3559,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"peru\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datosabiertos.gob.pe/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://www.datosabiertos.gob.pe/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2870,15 +3598,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"germany\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.offenesdatenportal.de/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://www.offenesdatenportal.de/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2901,15 +3637,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"germany\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.opendata-hro.de/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://www.opendata-hro.de/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2926,21 +3670,29 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_WWW_OPENDATA_HU", .name = "www.opendata.hu — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
+      "package_search, id-sorted)",
     .name_ja = "www.opendata.hu データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://www.opendata.hu",
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"hungary\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.opendata.hu/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://www.opendata.hu/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
@@ -2963,15 +3715,23 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.opendata.nhs.scot/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://www.opendata.nhs.scot/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    /* package_search with sort=id asc, not current_package_list_with_resources:
+     * that action has no sort parameter and orders by metadata_modified desc,
+     * so a dataset edited during the walk shifts every later page — measured
+     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
+     * the sink, which on an unstable order means the same number SKIPPED.
+     * The id sort is stable, and page_resume reads a catalogue larger than
+     * the ceiling over a cycle instead of its first 2,000 forever. */
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",

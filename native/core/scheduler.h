@@ -50,6 +50,12 @@ typedef struct {
   int    quarantined;            /* health quarantine (not the repair pod's)   */
   time_t quarantined_at;
   time_t last_probe;             /* last run attempted while quarantined       */
+  /* The cadence re-measured from the newest item this source stored, for a
+   * source_def with adaptive_interval set (sched_freshness_measure); 0 =
+   * not measured, or the rows carry no ISO date, and the declared interval
+   * stands. Persisted so a restart does not drop a quiet feed back to its
+   * authoring-time cadence. */
+  long   freshness_interval;
 } sched_state;
 
 typedef struct {
@@ -69,6 +75,20 @@ void sched_state_apply(sched_state *st, const sched_policy *p, long declared,
  * probe cadence while quarantined. */
 long sched_state_interval(const sched_state *st, const sched_policy *p,
                           long declared);
+/* ── freshness-adaptive cadence (source_def.adaptive_interval) ─────────────
+ * The bucket a newest-item age falls in, in seconds: ≤3 days → 3600,
+ * ≤30 → 21600, ≤365 → 86400, else 604800. The same rule that set the
+ * declared intervals of batches 43–48 at authoring time (tools/tune_intervals.py).
+ * A negative age (no date) is 0 = unmeasured. Pure, for tests. */
+long sched_freshness_bucket(double age_days);
+/* The interval the arithmetic above should treat as "declared": the measured
+ * freshness interval when the source is adaptive and one has been measured,
+ * else the declared one. Pure, for tests. */
+long sched_state_base(const sched_state *st, long declared, int adaptive);
+/* Newest ISO `published_at` among the source's stored intel_items, aged
+ * against `now` and bucketed; 0 when the source stored nothing dated. One
+ * index seek (idx_intel_items_source). */
+long sched_freshness_measure(db_handle *db, const char *id, time_t now);
 /* Ordering key for the run queue; lower runs first. `score` is the trust
  * score in 0..1 or <0 for unrated; `overdue_ratio` = seconds past due /
  * declared interval. */
