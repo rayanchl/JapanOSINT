@@ -53,10 +53,14 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 48,801** (2026-10-20): main's 48,346 — 48,343 plus
+**The registered count is 48,794** (2026-10-20): main's 48,346 — 48,343 plus
 the three embedding maintenance pods of the infrastructure audit — plus batch
-46's 164 measured ArcGIS layers, batch 49's 290, which are the rest of batch
-46's own probed pool, and one KKJ prefecture row that had been missing. Main's 22,408 was its own
+46's 164 measured ArcGIS layers and batch 49's 290, which are the rest of batch
+46's own probed pool, then a net −3 from a day spent measuring rows rather than
+adding them: +1 KKJ prefecture that had been missing, +5 Setagaya layers
+recovered from a rename, −2 IDESCA San Carlos layers measured as withdrawn,
+−10 behind a closed WordPress REST API with nothing behind it. The ledger has
+the table. Main's 22,408 was its own
 `jp_feeds_batch41..44.c` beats, PR #48's paging cycle and PR #50's batch 45 of
 619 WordPress collections — merged with PR #47's 47,178, less six news
 feeds both sessions had added (main merged first, so its rows stay). **Batch numbers 43 and 44 now name two things**: main's
@@ -71,7 +75,7 @@ manifests, TSVs, docs and collector keys — exactly as the batch-41 note below
 predicts. The count ledger — every
 batch from 37 to 48, main's 45 and batch 46 included, what seeded it, what it measured and what it taught — is
 `docs/SOURCE_COUNT_LEDGER.md`; this file keeps the rules and the current number.
-Both floors are re-recorded at 48,801 and `make source-count` agrees.
+Both floors are re-recorded at 48,794 and `make source-count` agrees.
 
 **And a THIRD branch hit the same renumbering, which is why batch 46 is the
 ArcGIS beat.** PR #51 generated it as batch 45 when 44 was the highest

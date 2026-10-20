@@ -5,6 +5,33 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
+**The registered count is 48,794** (2026-10-20): the 48,507 below, plus batch
+49's **290 ArcGIS feature layers** — the remainder of batch 46's own probed
+pool, through the same filters and the same live probe
+(`native/collectors/OSINT_SOURCES_BATCH_49_ARCGISLAYERS.md`,
+`docs/verified-sources-batch49.tsv`) — and then a net −3 from a day of
+measuring rows rather than adding them:
+
+| change | rows | why |
+| --- | --- | --- |
+| batch 49 | +290 | batch 46's pool finished; its 164 were a batch-size cap, not a quality one |
+| KKJ 三重県 | +1 | the set covered 46 of Japan's 47 prefectures and nobody had counted them |
+| Setagaya street fire extinguishers | +5 | one dead row, looking for the name we expected, became five ward layers (4,951 records) plus the ward's earthquake-well register (1,148) |
+| IDESCA San Carlos | −2 | `patentes` and `licores` withdrawn — 38 feature types and 0 catalogue hits for `patente`, `licores` AND `comercial`, so absent rather than renamed |
+| jic-bestork.co.jp | −10 | the whole WordPress REST API behind `rest_login_required`, and its `/feed/` holds one default "Hello world!" item, so there is nothing to re-point at |
+
+The day's larger result is not in the count at all: **654,412 KKJ procurement
+notices became reachable** where 46,000 were being re-read forever, 47 rows
+moved onto a measured date-window cycle after twelve probes established that
+the portal honours no offset parameter under any name. Plus CV INE 50 → 2,425,
+MET Malaysia 100 → 3,080 and 100 → 902, and EU Parliament 3,717 → 3,972.
+
+Three tools were also found measuring their own limits and reporting them as
+findings — the page-2 sweep's saturated egress tunnel (569 false dead
+endpoints), Python's default TLS context (20 live rows called dead), and a
+rebuild during an emit audit (229 of 290 rows as `NO_RUN_LINE`). All three are
+now impossible rather than remembered; see CLAUDE.md.
+
 **The registered count is 48,507** (2026-10-19): the 48,343 below plus **batch
 46's 164 measured ArcGIS feature layers**
 (`docs/verified-sources-batch46.tsv`, `docs/emit-sources-batch46.tsv`,
