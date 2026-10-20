@@ -19,7 +19,7 @@
 #
 # HOW ALL 290 ROWS ACCOUNT FOR THEMSELVES, which is the point of the file:
 #
-#   258  store EXACTLY their upstream count — complete in one pass
+#   259  store EXACTLY their upstream count — complete in one pass
 #    25  cycle (page_resume=1): their layer exceeds one cycle's 40,000, so a
 #        stored count below the upstream count is the design, and the engine's
 #        notice names where the walk stopped. The largest are 13,900,056 /
@@ -29,8 +29,10 @@
 #        taken in the discovery pass a day earlier and these are live layers.
 #        Re-asked 2026-10-20, `returnCountOnly` now answers 713 and 418 for the
 #        two checked — exactly what the engine stored.
-#     1  SLOW: a 35,204-record layer that had stored 22,000 when the tool's
-#        200s kill line hit. The timeout was the TOOL's, not the row's.
+#        One of those 259 needed a 600s kill line to be seen at all: it had
+#        stored 22,000 of 35,204 when the tool's 200s default hit, reported
+#        SLOW — "unmeasured, not failed". Re-measured, it stores 35,204 of
+#        35,204 in 298.8s. The timeout was the TOOL's, not the row's.
 #     1  EMITS_NOTHING: gis.charttools.noaa.gov FLAPS. It served 371 of 371
 #        twice and answered `HTTP 200` carrying `code=500 "Could not find
 #        service. Service may be stopped"` twice, in the same ten minutes. The
@@ -38,7 +40,7 @@
 #        is not the defect.
 #
 # Upstream totals declared across the batch: 25,132,703 records.
-# Stored in this one pass: 1,670,966.
+# Stored in this one pass: 1,706,171.
 #
 # The audit was run at --jobs 4. These 290 rows sit on 37 hosts, so a parallel
 # audit concentrates requests exactly where ArcGIS answers 429; see the
@@ -46,9 +48,8 @@
 # writes down about live sources.
 #
 # EMIT VERDICTS
-#   OK               288
+#   OK               289
 #   EMITS_NOTHING    1
-#   SLOW             1
 #
 id	probe	upstream_count	emit_verdict	emitted	stored	db_rows	engine_available	page_size	cycles	geom	category	record_type	layer_name	url
 JO49_AGS_ARCGISSERVER_AQUIFERS	PASS	2523	OK	2523	2523	2523	2523	2000		esriGeometryPolygon	government	gis-feature	arcgisserver.digital.mass.gov — Aquifers (ArcGIS AGOL/Aquifers layer 0	https://arcgisserver.digital.mass.gov/arcgisserver/rest/services/AGOL/Aquifers/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&returnCentroid=true&outSR=4326&orderByFields=OBJECTID%20ASC&resultRecordCount=2000&f=json
@@ -124,7 +125,7 @@ JO49_AGS_SERVICES1_CENSUS2020_URBANAR	PASS	57	OK	57	57	57	57	2000		esriGeometryP
 JO49_AGS_SERVICES1_CITIES_SUMMARY	PASS	289	OK	289	289	289	289	2000		esriGeometryPolygon	infrastructure	gis-feature	Georgia Emergency Management and Homeland Security Agency — Cities Sum	https://services1.arcgis.com/2iUE8l8JKrP2tygQ/arcgis/rest/services/Blue_Sky_All_Categories_Summary/FeatureServer/2/query?where=1%3D1&outFields=*&returnGeometry=false&returnCentroid=true&outSR=4326&orderByFields=OBJECTID%20ASC&resultRecordCount=2000&f=json
 JO49_AGS_SERVICES1_COUNTIES_SUMMARY	PASS	159	OK	159	159	159	159	2000		esriGeometryPolygon	infrastructure	gis-feature	Georgia Emergency Management and Homeland Security Agency — Counties S	https://services1.arcgis.com/2iUE8l8JKrP2tygQ/arcgis/rest/services/Blue_Sky_All_Categories_Summary/FeatureServer/1/query?where=1%3D1&outFields=*&returnGeometry=false&returnCentroid=true&outSR=4326&orderByFields=OBJECTID%20ASC&resultRecordCount=2000&f=json
 JO49_AGS_SERVICES1_COUNTRIES_2020_ADM	PASS	1174	OK	1174	1174	1174	1174	1000		esriGeometryPolygon	government	gis-feature	Health Protection Surveillance Centre Ireland — Countries, 2020 - Admi	https://services1.arcgis.com/eNO7HHeQ3rUcBllm/arcgis/rest/services/Countries2020AdministrativeUnits/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&returnCentroid=true&outSR=4326&orderByFields=OBJECTID%20ASC&resultRecordCount=1000&f=json
-JO49_AGS_SERVICES1_COVIDCOUNTYSTATIST	PASS	35204	SLOW	-1	-1	22000	-1	2000		esriGeometryPolygon	health	gis-feature	Health Protection Surveillance Centre Ireland — CovidCountyStatisticsH	https://services1.arcgis.com/eNO7HHeQ3rUcBllm/arcgis/rest/services/Covid19CountyStatisticsHPSCIreland/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&returnCentroid=true&outSR=4326&orderByFields=OBJECTID%20ASC&resultRecordCount=2000&f=json
+JO49_AGS_SERVICES1_COVIDCOUNTYSTATIST	PASS	35204	OK	35204	35204	35204	35204	2000		esriGeometryPolygon	health	gis-feature	Health Protection Surveillance Centre Ireland — CovidCountyStatisticsH	https://services1.arcgis.com/eNO7HHeQ3rUcBllm/arcgis/rest/services/Covid19CountyStatisticsHPSCIreland/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&returnCentroid=true&outSR=4326&orderByFields=OBJECTID%20ASC&resultRecordCount=2000&f=json
 JO49_AGS_SERVICES1_COVIDCOUNTYSTATIST_B3D3	PASS	35230	OK	35230	35230	35230	35230	2000		esriGeometryPoint	health	gis-feature	Health Protection Surveillance Centre Ireland — CovidCountyStatisticsH	https://services1.arcgis.com/eNO7HHeQ3rUcBllm/arcgis/rest/services/Covid19CountyStatisticsHPSCIrelandPointData/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&orderByFields=FID%20ASC&resultRecordCount=2000&f=json
 JO49_AGS_SERVICES1_EXPLOITATION_PERMI	PASS	712	OK	713	713	713	713	1000		esriGeometryPolygon	government	permit-record	DRC Cadastre Minier — Exploitation Permit (ArcGIS DRCPortal_ActiveExpl	https://services1.arcgis.com/AYIukXzftCPbklHN/ArcGIS/rest/services/DRCPortal_ActiveExploitationLayer_1/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&returnCentroid=true&outSR=4326&orderByFields=ESRI_OID%20ASC&resultRecordCount=1000&f=json
 JO49_AGS_SERVICES1_FIRST_NATIONS	PASS	1652	OK	1652	1652	1652	1652	2000			government	gis-feature	services1.arcgis.com — First Nations (ArcGIS Administrative_Locations_	https://services1.arcgis.com/xeMpV7tU1t4KD3Ei/arcgis/rest/services/Administrative_Locations_First_Nations/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&orderByFields=FID%20ASC&resultRecordCount=2000&f=json

@@ -155,12 +155,16 @@ The lessons from batches 43–48 that a new batch must not relearn:
   row, and a single verdict is still not a diagnosis.
 
   The other 289 of that batch account for themselves in
-  `docs/verified-sources-batch49.tsv`: 258 store exactly their upstream count,
-  25 cycle because their layer exceeds one cycle's 40,000, 5 store slightly
+  `docs/verified-sources-batch49.tsv`: 259 store exactly their upstream count,
+  25 cycle because their layer exceeds one cycle's 40,000, and 5 store slightly
   MORE because the discovery-pass count is a day stale and the layers grew
-  (`returnCountOnly` re-asked agrees with the engine exactly), and 1 is the
-  tool's own kill line on a 35,204-record layer. **1,670,966 records stored in
-  one pass** against 25,132,703 the layers declare.
+  (`returnCountOnly` re-asked agrees with the engine exactly). **1,706,171
+  records stored in one pass** against 25,132,703 the layers declare.
+
+  One of those 259 is a reminder that **`SLOW` means unmeasured, not failed**:
+  it had stored 22,000 of 35,204 when the tool's 200s default kill line hit,
+  and at 600s it stores 35,204 of 35,204 in 298.8s. A kill line is a property
+  of the tool.
 * **A URL changed after validation is unvalidated** (an unescaped `&amp;`
   made Joomla serve Atom where rows declared RSS), **a well-formed feed with
   zero items is `EMPTY_RESULTSET`**, **a substring count of `<item` counts the

@@ -25,8 +25,8 @@ per root, so the per-root selection cap was buying almost nothing.
 | rows | 290 |
 | distinct hosts | 37 |
 | probe | **290/290 PASS** (289 in the batch run, 1 on a clean retry) |
-| emit | **288 OK, 1 SLOW, 1 EMITS_NOTHING** — `docs/verified-sources-batch49.tsv` |
-| stored in one pass | **1,670,966** records, against 25,132,703 the layers declare |
+| emit | **289 OK, 1 EMITS_NOTHING** (a flapping upstream) — `docs/verified-sources-batch49.tsv` |
+| stored in one pass | **1,706,171** records, against 25,132,703 the layers declare |
 | registry | 48,507 → 48,797, exactly +290 |
 
 Hosts are concentrated by design — these are ArcGIS Online's shared fronts
@@ -109,10 +109,9 @@ exactly its upstream count was chased:
 
 | | |
 | --- | --- |
-| 258 | store EXACTLY their upstream count — complete in one pass |
+| 259 | store EXACTLY their upstream count — complete in one pass. One of them needed a 600s kill line to be seen at all: it had stored 22,000 of 35,204 when the tool's 200s default hit and reported SLOW, which this tree defines as *unmeasured, not failed*. Re-measured: 35,204 of 35,204 in 298.8s |
 | 25 | cycle (`page_resume=1`): the layer exceeds one cycle's 40,000, so a stored count below the upstream count is the design and the notice names where the walk stopped. Largest: 13,900,056 / 6,314,674 / 596,655 |
 | 5 | store slightly MORE than the upstream count — the COUNT is stale, not the engine over-counting. Taken in the discovery pass a day earlier; `returnCountOnly` re-asked on 2026-10-20 answers 713 and 418 for the two checked, exactly what the engine stored |
-| 1 | SLOW — a 35,204-record layer that had stored 22,000 when the tool's 200s kill line hit. The timeout was the TOOL's, not the row's |
 | 1 | EMITS_NOTHING — `gis.charttools.noaa.gov` FLAPS: it served 371 of 371 twice and answered HTTP 200 carrying `code=500 "Could not find service. Service may be stopped or it may not be configured."` twice, within ten minutes. The engine reports `rc=-1` and the error document, which is correct; the row is not the defect |
 
 That last one is why a single verdict is not a diagnosis. A direct `--run`
