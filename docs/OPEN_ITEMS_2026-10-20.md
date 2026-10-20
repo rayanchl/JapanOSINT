@@ -128,12 +128,39 @@ own host checked.
 recency is its purpose — so the whole corpus needs a second row with an
 ascending sort.
 
-### C6. `JO32_MUNI_YAMAGUCHI_CKAN` became reachable today
+### C6. ~~`JO32_MUNI_YAMAGUCHI_CKAN` became reachable today~~ — REFUTED, and it found a bigger gap
 
 It was rejected as a TLS failure. With the shared context it now reaches the
 host and answers **HTTP 409**, not a TLS alert — a CKAN `datastore_search`
-missing its `resource_id`. A URL defect, which is fixable, on a host proven to
-serve 102 records to the engine. One recoverable source.
+missing its `resource_id`. That read as "a URL defect, which is fixable: one
+recoverable source". **Measured, it is not a source at all**, and the thing it
+pointed at is already read exhaustively:
+
+* the candidate was a HOST-level placeholder from batch 32's generation, with no
+  `resource_id` because no particular resource was ever chosen. There is nothing
+  to re-point;
+* `yamaguchi-opendata.jp` publishes **20 organisations and 788 datasets**
+  (`organization_list` and `package_search?rows=0` agree), and the tree holds
+  **all 20** organisation rows plus the org list and the search pivot — an exact
+  set match, measured id by id;
+* run serially through the emit audit, every one of those 20 rows stores
+  **exactly** the `package_count` the portal declares for it (102/102 for the
+  prefecture, 76/76 Ube, 47/47 Shimonoseki …): **808 emitted, 808 stored, 0 lost
+  to collision**. Dataset-level coverage of that host is complete.
+
+**What the 409 did surface is a layer the tree does not read anywhere**: the
+portal's datastore holds **799 tabular resources**
+(`datastore_search?resource_id=_table_metadata` → `total: 799`), i.e. the ROWS
+inside the datasets, where every CKAN row in this tree reads only the dataset
+METADATA. That is batch-shaped work rather than a repair — one row per resource,
+each named from `package_search`, with counts measured per row — and it
+generalises to every CKAN with the datastore extension enabled, which is most of
+the ones already registered. `_table_metadata` itself is NOT a source: its
+records carry a UUID and an oid and no title.
+
+Filed as an opportunity, not a defect. The item as written was a false positive
+of my own: it inferred a repairable row from an error code without asking what
+the row was meant to be.
 
 ---
 
