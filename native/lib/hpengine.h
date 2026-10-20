@@ -584,6 +584,13 @@ const hp_source *hp_source_get(const char *id);
  * those apart ask hp_describe_json(). */
 int hp_source_uses_entity(const char *id);
 
+/* The registered row behind source id `id`, or NULL when `id` is not an
+ * hpengine row (a hand-written collector). Read-only: for code that
+ * describes a row from its declaration (core/source_card.c reads `want` and
+ * the entity tokens of `url`/`post_body`). A linear scan; callers that need
+ * every row cache the answer. */
+const hp_source *hp_spec_get(const char *id);
+
 /* XML text → the characters it denotes, in place: unwraps every CDATA section
  * (payload verbatim), decodes the five predefined entities and numeric
  * character references to UTF-8, leaves anything undecodable literal, never

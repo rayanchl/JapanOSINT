@@ -262,6 +262,32 @@ int translate_is_japanese(const char *language, const char *title,
 int translate_run(db_handle *db, llm_client *llm, int limit,
                   volatile int *cancel);
 
+/* ── narrowing the background pod (M3) ─────────────────────────────────────
+ *
+ * The scheduled pod used to translate EVERY Japanese item it could reach —
+ * an LLM call per row, for rows nobody reads in English. Once the embedding
+ * index is active, cross-language SEARCH no longer depends on the English in
+ * intel_items_fts (a semantic query finds the Japanese row by meaning), so
+ * the pod's work is narrowed to the two places English is still needed:
+ *   - items a user opened recently (item_views, written by GET
+ *     /api/intel/items/:uid; JO_TRANSLATE_VIEW_DAYS, default 7) — the English
+ *     view of what someone is actually reading;
+ *   - items of the sources an English KEYWORD alert rule watches (a q with
+ *     Latin letters and no Japanese) — those rules match intel_items_fts, so
+ *     they still need the English there. A rule with such a q and no
+ *     source_ids watches everything, and then nothing is narrowed this tick.
+ * The explicit backfill route is unchanged (translate_run). JO_TRANSLATE_
+ * NARROW=0 restores the old behaviour. What the last tick did is recorded in
+ * translate_state 'narrow_last' and reported by translate_backfill_status()
+ * as `background_scope`. */
+
+/* Record that a user opened `uid` (one upsert). Never fails loudly. */
+void translate_note_view(db_handle *db, const char *uid);
+
+/* translate_run() restricted as above when `narrow` is non-zero. */
+int translate_run_ex(db_handle *db, llm_client *llm, int limit,
+                     volatile int *cancel, int narrow);
+
 /* Re-push English into intel_items_fts for items whose FTS row was recreated
  * by a re-ingest since the last pass (see the watermark discussion above).
  * No LLM involved, so this runs even when llama-server is down. Examines at

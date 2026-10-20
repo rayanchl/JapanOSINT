@@ -39,8 +39,10 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 48,507** (2026-10-19): main's 48,343 plus batch 46's
-164 measured ArcGIS layers. Main's 48,343 was its own 22,408 — its own
+**The registered count is 48,800** (2026-10-20): main's 48,346 — 48,343 plus
+the three embedding maintenance pods of the infrastructure audit — plus batch
+46's 164 measured ArcGIS layers and batch 49's 290, which are the rest of batch
+46's own probed pool. Main's 22,408 was its own
 `jp_feeds_batch41..44.c` beats, PR #48's paging cycle and PR #50's batch 45 of
 619 WordPress collections — merged with PR #47's 47,178, less six news
 feeds both sessions had added (main merged first, so its rows stay). **Batch numbers 43 and 44 now name two things**: main's
@@ -1500,7 +1502,7 @@ healthy source.
 ## Embedding pipeline and tenancy (audit of 2026-10-02)
 
 `embedding-backfill` (core/embed_pod.c) embeds new and changed rows into
-`intel_vec`; `/api/intel/semantic` queries it on a worker thread, never the
+`intel_vec_v2`; `/api/intel/semantic` queries it on a worker thread, never the
 event loop. What it guarantees now, each pinned by `tests/unit/test_embed_pod.c`:
 
 * Re-fetched rows whose text did not change are marked seen, and the delta walk
@@ -1518,6 +1520,30 @@ event loop. What it guarantees now, each pinned by `tests/unit/test_embed_pod.c`
   and dd/mm/yyyy dates used to make rows ineligible and uncounted.
 * Distance is L2. llama-server returns unit vectors, so the ranking equals
   cosine (d² = 2 − 2cos).
+
+**One vector library, several indexes (2026-10-12).** `lib/vecindex.{c,h}` is
+the only implementation of model identity, dimension probe, incremental upsert
+by (key, text hash), KNN with metadata filters, coverage and RRF fusion; every
+index below is built on it and listed under `vectorIndexes` in `/api/status`.
+**Never `ALTER … RENAME` a vec0 table** (its shadow tables do not follow), and
+never put two models' vectors in one index — image vectors have their own.
+
+| index | holds | read by |
+| --- | --- | --- |
+| `intel_vec_v2` | items; `tenant_id` partition, `source_id`/`ts`/`record_type` filter INSIDE the search (the old `intel_vec` is migrated by copy, not re-embedded) | `/api/intel/semantic` (+filters), `sort=hybrid`, `/items/:uid/similar`, `/cases/:id/related`, Nearby `q`, `/timeline?q=`, the corpus lookup, prompt record ranking, stories/novelty, semantic alerts |
+| `service_vec` | every registered source's card (kind pivot/scheduled/pod, aliases from `core/service_aliases.c`), incremental | phase-1 and per-round routing (pivots only), `/api/sources/search`, `service_vec_route_sources`, canonical category votes, layer review, `batch_exclusions.py --semantic` |
+| `entity_vec` | entity name + romaji, partitioned by type | merge candidates for the LLM judge (nothing auto-merges), `/api/entities/search?mode=hybrid` |
+| `fewshot_vec`, `anomaly_vec` | the analysis examples (`grammars/fewshot_analysis.jsonl`), past anomalies | per-query few-shot selection, triage memory |
+
+`embed_hook_register()` (core/embed_pod.h) runs after each committed batch
+with the vectors in hand — stories (`story_id`, separate from simhash's
+`cluster_id`), `novelty`, and natural-language alert rules are evaluated
+there, never by an embed call on the ingest path. Every threshold (entity
+0.80, story 0.85, alert 0.82, relevance, resolver margin) is a named constant
+with an env override, and **none has been measured on the production model**:
+they were chosen from typical multilingual-e5 scores and tested against a stub.
+Without `JO_EMBED_URL` every feature falls back to its pre-embedding
+behaviour byte for byte; that is pinned per feature in `tests/unit/`.
 
 Tenancy: OSINT records are one shared corpus (tenant `legacy`, uid
 `source|key`). A search run is not: its summary row is written under the tenant

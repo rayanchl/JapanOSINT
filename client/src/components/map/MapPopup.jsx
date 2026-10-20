@@ -8,6 +8,9 @@ import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers';
 import StationPopup from './popups/StationPopup.jsx';
 import VehiclePopup from './popups/VehiclePopup.jsx';
 import { isSafeUrl } from '../../utils/safeUrl.js';
+import fetchImageObjectUrl from '../../utils/authedImage.js';
+import CameraStills from './CameraStills.jsx';
+import { cameraIdForProperties } from '../../utils/cameraStills.js';
 
 /**
  * Fetch a reverse-geocoded address label for a feature, using the server's
@@ -336,8 +339,14 @@ export function iframeableCamUrl(url, channel) {
 
 /**
  * Discovery channels whose URLs we know are embed-blocked (X-Frame-Options
- * DENY / CSP frame-ancestors). The popup renders a server-captured snapshot
- * via /api/data/cameras/snapshot for these.
+ * DENY / CSP frame-ancestors). The popup asks the server's camera proxy
+ * (/api/data/cameras/proxy?camera_uid=…, core/cameraproxy.c) for these. It
+ * used to request /api/data/cameras/snapshot?url=…, a route the native server
+ * does not have — the Node server's headless-browser capture was not ported —
+ * so every one of these popups showed "Snapshot unavailable" after a failed
+ * request. The proxy serves the record's own image URL (thumbnail_url,
+ * snapshot_url, image, then url) when that URL answers with an image; an
+ * aggregator page that is HTML comes back as a 502 and is reported as such.
  */
 const SNAPSHOT_CHANNELS = new Set([
   'skylinewebcams',
@@ -349,30 +358,42 @@ const SNAPSHOT_CHANNELS = new Set([
   'camstreamer',
 ]);
 
-function CameraSnapshot({ url, name }) {
-  const [state, setState] = useState('loading'); // loading | ok | failed
-  const src = `/api/data/cameras/snapshot?url=${encodeURIComponent(url)}`;
+function CameraSnapshot({ cameraUid, name }) {
+  // { status: loading | ok | failed, src, why }
+  const [img, setImg] = useState({ status: 'loading', src: null, why: null });
+  useEffect(() => {
+    let cancelled = false;
+    let objectUrl = null;
+    setImg({ status: 'loading', src: null, why: null });
+    fetchImageObjectUrl(
+      apiUrl(`/api/data/cameras/proxy?camera_uid=${encodeURIComponent(cameraUid)}`),
+    )
+      .then((u) => {
+        if (cancelled) { URL.revokeObjectURL(u); return; }
+        objectUrl = u;
+        setImg({ status: 'ok', src: u, why: null });
+      })
+      .catch((e) => {
+        if (!cancelled) setImg({ status: 'failed', src: null, why: e?.message || 'failed' });
+      });
+    return () => {
+      cancelled = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [cameraUid]);
   return (
     <div className="relative w-full aspect-video rounded border border-osint-border overflow-hidden bg-osint-panel">
-      {state !== 'failed' && (
-        <img
-          src={src}
-          alt={name}
-          loading="lazy"
-          className="w-full h-full object-cover"
-          onLoad={() => setState('ok')}
-          onError={() => setState('failed')}
-          style={state === 'loading' ? { opacity: 0 } : undefined}
-        />
+      {img.status === 'ok' && (
+        <img src={img.src} alt={name} className="w-full h-full object-cover" />
       )}
-      {state === 'loading' && (
+      {img.status === 'loading' && (
         <div className="absolute inset-0 flex items-center justify-center text-[11px] text-gray-400">
-          Capturing snapshot…
+          Fetching image…
         </div>
       )}
-      {state === 'failed' && (
-        <div className="absolute inset-0 flex items-center justify-center text-[11px] text-gray-500">
-          Snapshot unavailable
+      {img.status === 'failed' && (
+        <div className="absolute inset-0 flex items-center justify-center text-[11px] text-gray-500 px-2 text-center">
+          Image unavailable ({img.why})
         </div>
       )}
     </div>
@@ -402,9 +423,11 @@ function CameraDetail({ properties }) {
   const iframeSrc = iframeableCamUrl(streamUrl, channel);
   // Prefer thumbnail, then fall back to stream_url if it looks like an image
   const imgSrc = thumb || (isImageUrl(streamUrl) ? streamUrl : null);
-  // Embed-blocked sources: fetch a server-captured JPEG snapshot.
+  // Embed-blocked sources: ask the server's camera proxy, which takes the
+  // camera's uid (never a URL) — see SNAPSHOT_CHANNELS.
+  const cameraUid = properties.camera_uid;
   const useSnapshot = !ytId && !iframeSrc && !imgSrc
-    && streamUrl && SNAPSHOT_CHANNELS.has(channel);
+    && cameraUid && SNAPSHOT_CHANNELS.has(channel);
 
   return (
     <div className="space-y-2">
@@ -449,11 +472,15 @@ function CameraDetail({ properties }) {
           loading="lazy"
         />
       ) : useSnapshot ? (
-        <CameraSnapshot url={streamUrl} name={name} />
+        <CameraSnapshot cameraUid={cameraUid} name={name} />
       ) : null}
 
       {properties.location && (
         <p className="text-xs text-gray-400">{properties.location}</p>
+      )}
+      {/* Captured stills (operator opt-in, core/camera_stills.c). */}
+      {cameraIdForProperties(properties) && (
+        <CameraStills cameraId={cameraIdForProperties(properties)} />
       )}
       {/* streamUrl comes from scraped camera-discovery data (dorks, webcam
         * directories, insecam) — not a value we generated. Handing it to
@@ -657,21 +684,12 @@ function FlightDetail({ properties }) {
   const onGround = properties.on_ground;
   const posSrc = properties.position_source;
 
-  const [enriched, setEnriched] = useState(null);
-  const [enriching, setEnriching] = useState(false);
-
-  useEffect(() => {
-    const needsEnrich = (!origin || !destination) && properties.icao24;
-    if (!needsEnrich) return;
-    let cancelled = false;
-    setEnriching(true);
-    fetch(apiUrl(`/api/data/flight-adsb/enrich?icao24=${encodeURIComponent(properties.icao24)}`))
-      .then((r) => (r.ok ? r.json() : {}))
-      .then((data) => { if (!cancelled) setEnriched(data || {}); })
-      .catch(() => { if (!cancelled) setEnriched({}); })
-      .finally(() => { if (!cancelled) setEnriching(false); });
-    return () => { cancelled = true; };
-  }, [properties.icao24, origin, destination]);
+  // There is no route-enrichment endpoint. This popup used to call
+  // /api/data/flight-adsb/enrich for any flight missing an origin or
+  // destination — a route the native server never had (nor did the Node one
+  // after the ADS-B rewrite), so every such popup spent a request on an error
+  // and drew "???". Origin and destination are shown when the feature itself
+  // carries them, and the line is omitted when it carries neither.
 
   const coords = properties._coords; // injected below if available
 
@@ -720,24 +738,11 @@ function FlightDetail({ properties }) {
       )}
 
       {/* Route */}
-      {(() => {
-        const eOrig = enriched?.origin_icao;
-        const eDest = enriched?.destination_icao;
-        const showOrig = origin || eOrig;
-        const showDest = destination || eDest;
-        if (!showOrig && !showDest && !enriching) return null;
-        return (
-          <p className="text-sm text-gray-300 font-mono">
-            {enriching && !showOrig && !showDest ? (
-              <span className="text-gray-500">…</span>
-            ) : (
-              <>
-                {showOrig || '???'} &rarr; {showDest || '???'}
-              </>
-            )}
-          </p>
-        );
-      })()}
+      {(origin || destination) && (
+        <p className="text-sm text-gray-300 font-mono">
+          {origin || '???'} &rarr; {destination || '???'}
+        </p>
+      )}
       {originCountry && !origin && (
         <p className="text-xs text-gray-400">Origin: {originCountry}</p>
       )}
@@ -897,6 +902,11 @@ function GenericDetail({ properties }) {
   return (
     <div className="space-y-1">
       {title && <p className="text-sm font-medium text-gray-200">{title}</p>}
+      {/* Camera records from the hp tables / trn_* station indexes render
+        * here, not in CameraDetail; their stills are under their own uid. */}
+      {/camera/i.test(String(properties.record_type || '')) && cameraIdForProperties(properties) && (
+        <CameraStills cameraId={cameraIdForProperties(properties)} />
+      )}
       <PropertyTable properties={properties} exclude={highlighted} />
     </div>
   );

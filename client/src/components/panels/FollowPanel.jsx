@@ -361,7 +361,7 @@ function FilterStrip({
 
 export default function FollowPanel({ onClose, embedded = false }) {
   const {
-    hits, runs, activeRuns, connected, paused, setPaused, seeded, historyError, clear,
+    hits, runs, activeRuns, connected, liveAvailable, paused, setPaused, seeded, historyError, clear,
   } = useCollectorFollowStream();
 
   const [statusFilter, setStatusFilter] = useState('all');
@@ -540,10 +540,12 @@ export default function FollowPanel({ onClose, embedded = false }) {
                  * old copy ("the first cron tick will populate this stream")
                  * promised something that will never happen: history is not
                  * implemented, so only live traffic can ever appear here. */
-                ? `History unavailable: ${historyError.detail || 'not implemented by this server'}. Only live traffic from now on will appear here.`
+                ? `History unavailable: ${historyError.detail || 'not implemented by this server'}. ${liveAvailable ? 'Only live traffic from now on will appear here.' : 'This server has no live collector stream either, so nothing will appear here.'}`
                 : historyError
-                  ? `Could not load history (${historyError.status ? `HTTP ${historyError.status}` : historyError.detail}). Live traffic will still stream in.`
-                  : 'No collector traffic yet. Any collector run or /api/data/* call will appear here live.'}
+                  ? `Could not load history (${historyError.status ? `HTTP ${historyError.status}` : historyError.detail}).${liveAvailable ? ' Live traffic will still stream in.' : ''}`
+                  : liveAvailable
+                    ? 'No collector traffic yet. Any collector run or /api/data/* call will appear here live.'
+                    : 'No collector traffic recorded, and this server has no live collector stream.'}
           </div>
         ) : (
           filtered.map((h) => (
@@ -561,7 +563,7 @@ export default function FollowPanel({ onClose, embedded = false }) {
       {/* Footer */}
       <div className="px-3 py-1 border-t border-osint-border/40 text-[10px] font-mono text-osint-muted flex items-center justify-between flex-shrink-0">
         <span>
-          {connected ? 'streaming' : 'reconnecting…'}
+          {!liveAvailable ? 'live stream not available' : connected ? 'streaming' : 'reconnecting…'}
           {!atTop && (
             <button
               type="button"

@@ -4,6 +4,20 @@
 #ifndef JO_INTELAPI_H
 #define JO_INTELAPI_H
 #include "db.h"
+#include "../third_party/cJSON.h"
+
+/* THE item row: the column list every item endpoint selects, and the one
+ * builder that turns a stepped row into item JSON (rowToItem; list shape
+ * when full == 0, detail shape when full == 1). Exported so a second surface
+ * that ranks intel_items — /api/intel/semantic, sort=hybrid, /similar,
+ * /related (semsearchapi.c) — renders the SAME object rather than a copy that
+ * drifts (that copy existed and had already lost cluster_id). A caller may
+ * append its own columns after these 20; the builder reads 0..19 only. */
+#define INTELAPI_ITEM_COLS \
+  "uid,source_id,title,body,summary,link,author,language," \
+  "published_at,fetched_at,tags,properties,keywords,lat,lon,geom_source," \
+  "geom_at,record_type,sub_source_id,cluster_id"
+cJSON *intelapi_row_to_item(sqlite3_stmt *s, int full);
 
 /* GET /api/intel/items/:uid body. Returns malloc'd `{"data":{...}}` (200) or
  * NULL if the uid doesn't exist (caller → 404 {"error":"not_found"}).
@@ -89,6 +103,19 @@ char *intelapi_list_items(db_handle *db, const intel_items_query *q);
  * and the ?near= proximity mode (nearapi.c) build the same expression, so the
  * same words find the same rows in both. */
 char *intelapi_fts_match(const char *q, const char *q_alt);
+
+/* The structured filters of `Q` (tenant, source, since, until, lang, tag,
+ * record_type, sub_source_id, has_geom) as " AND …" fragments over
+ * table-qualified intel_items columns, written into wbuf, with their text
+ * binds in bnd[0..ret) in SQL order. q/q_alt/cursor/sort are not included. */
+int intelapi_where(const intel_items_query *Q, char *wbuf, size_t cap,
+                   const char **bnd, int maxb);
+
+/* The first k uids sort=relevance would list for Q (bm25 order, all of Q's
+ * filters). Returns the count (*out malloc'd, each uid malloc'd), or -1 when
+ * q yields no searchable token or the query fails. */
+int intelapi_relevance_uids(db_handle *db, const intel_items_query *Q, int k,
+                            char ***out);
 
 /* GET /api/sources — malloc'd JSON array of all `sources` rows. */
 char *api_sources_list(db_handle *db);

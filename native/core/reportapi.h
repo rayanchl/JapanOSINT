@@ -78,6 +78,11 @@
  *   "entities"   entities referenced by pinned items (entityapi_item_entities)
  *   "citations"  source_id / link / capture timestamp [+ content SHA-256]
  *   "audit"      audit_events whose target is this case
+ *   "suggestions" OPT-IN, never in the default six: the rows nearest the
+ *                pinned items by vector similarity — the same list as
+ *                GET /api/cases/:id/related (semsearchapi_case_related),
+ *                rendered as a table of what the index returned, with no
+ *                generated text, and a note of how many pins had a vector
  *
  * `sections` absent or empty → all six, in the order above (the request's
  * ordering is IGNORED: a report with the citations before the findings is not

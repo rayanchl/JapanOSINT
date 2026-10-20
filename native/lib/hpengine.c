@@ -3619,6 +3619,8 @@ static const hp_source *hp_lookup(const char *id) {
 
 const hp_source *hp_source_get(const char *id) { return hp_lookup(id); }
 
+const hp_source *hp_spec_get(const char *id) { return hp_lookup(id); }
+
 /* FNV-1a 64 over a whole response body. Only ever compared for equality
  * between consecutive pages of one walk (shape notice (d)); nothing is keyed
  * on it. */
