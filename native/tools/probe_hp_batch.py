@@ -53,6 +53,7 @@ NATIVE = os.path.dirname(HERE)
 sys.path.insert(0, os.path.join(NATIVE, "collectors"))
 sys.path.insert(0, HERE)
 
+import jo_tls                     # noqa: E402  (THE TLS context)
 import verify_feeds as VF          # noqa: E402  (verdict logic, reused verbatim)
 from gen_hp_batch import load               # noqa: E402  (adds the mode/want check)
 from manifest import parse_opts, opt        # noqa: E402  (THE opts parser)
@@ -343,7 +344,10 @@ def fetch(url, extra, timeout=None, body=None):
     data = body.encode("utf-8") if body is not None else None
     req = urllib.request.Request(VF.encode_url(url), headers=headers, data=data,
                                  method="POST" if data is not None else "GET")
-    with urllib.request.urlopen(req, timeout=timeout or VF.TIMEOUT) as resp:
+    # The shared TLS context, because the default one refuses handshakes the
+    # engine completes and THIS is the gate that decides whether a row ships.
+    with urllib.request.urlopen(req, timeout=timeout or VF.TIMEOUT,
+                                context=jo_tls.context()) as resp:
         raw = resp.read(MAXBYTES + 1)
         if resp.headers.get("Content-Encoding") == "gzip":
             import gzip

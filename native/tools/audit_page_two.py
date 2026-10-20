@@ -58,11 +58,16 @@ from concurrent.futures import ThreadPoolExecutor
 
 UA = ("Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/"
       "japanosint)")
+# Run under `python3 -I`, which strips this script's own directory from
+# sys.path, so a sibling module has to be found explicitly.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import jo_tls                                                     # noqa: E402
+
 _lock = threading.Lock()
-_ctx = ssl.create_default_context()
-for _ca in ("/root/.ccr/ca-bundle.crt",):
-    if os.path.exists(_ca):
-        _ctx.load_verify_locations(_ca)
+# tools/jo_tls.py, not a context of its own: Python's default refuses
+# handshakes the ENGINE completes, which made this sweep report 27 live rows as
+# dead. See that file for the measurement.
+_ctx = jo_tls.context()
 
 ROW = re.compile(r'\{\s*\.id\s*=\s*"([^"]+)"')
 # An entity token makes the row a pivot; page 2 of no entity means nothing.
