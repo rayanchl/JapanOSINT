@@ -1945,7 +1945,7 @@ static const hp_source HP3B45_JPWPCORP[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://wired.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://wired.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -1953,6 +1953,10 @@ static const hp_source HP3B45_JPWPCORP[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 39803 declared, 399 pages: read over a CYCLE (1.7 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -2282,7 +2286,7 @@ static const hp_source HP3B45_JPWPCORP[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://tvfan.kyodo.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://tvfan.kyodo.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -2290,6 +2294,10 @@ static const hp_source HP3B45_JPWPCORP[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 44421 declared, 445 pages: read over a CYCLE (1.9 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -2530,7 +2538,7 @@ static const hp_source HP3B45_JPWPCORP[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ovo.kyodo.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://ovo.kyodo.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -2538,6 +2546,10 @@ static const hp_source HP3B45_JPWPCORP[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 33093 declared, 331 pages: read over a CYCLE (1.4 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,

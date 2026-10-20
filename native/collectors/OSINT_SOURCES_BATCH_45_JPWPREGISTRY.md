@@ -64,6 +64,34 @@ hazard, government — read off the category the registry already gives that hos
 `cpt-<type>`). That is what lets `core/collectors.def` file each beat under one
 group without a per-row override.
 
+## 53 rows read their archive over a CYCLE (2026-10-20)
+
+57 of the 619 rows declare an `X-WP-Total` beyond the 60-page ceiling (33 of the
+38 SLOW rows, plus 24 that finished inside the 200 s line but still truncate).
+All 38 SLOW rows and those 24 — 62 in all — were asked for the same collection
+with `order=asc`: **59 answered the same total**; three did not (one 4xx on the
+ascending request, one timeout, one host whose total reads 0 either way).
+Following the rule the page-ceiling notes set — flip a sort only when the host
+has been asked — 53 rows now walk oldest-first with `page_resume = 1`, so a run
+reads the next 60 pages rather than the newest 60 again, and new posts land at
+the tail the walk has not reached yet. Measured, two runs against one database:
+
+| Row | Run 1 | Run 2 | Position after run 2 |
+|---|---:|---:|---|
+| `JO45_WP_OGGI_POSTS` (701 pages) | 6,001 | 12,001 distinct | `page=121` |
+| `JO45_WP_THEMIYANICHI_POSTS` (1,090 pages) | 6,001 | 12,001 distinct | `page=121` |
+
+**Four over-ceiling rows deliberately keep newest-first.** Two because a cycle
+would take longer than a week at 4 runs/day — `JO45_WP_NEWSNISSYOKU_NEWS`
+(3,963 pages, 16.5 days) and `JO45_WP_BARKS_POSTS` (2,490 pages, 10.4 days) — a
+week without seeing a new post is the wrong trade for a daily newsroom, and the
+truncation notice already names what is left unread; two
+(`JO45_WP_NEWSNISSYOKU_ELPAPER`, `JO45_WP_GETNEWS_POSTS`) because the ascending
+request could not be verified. The five other SLOW rows are inside the ceiling
+on slow hosts and complete each run. The per-host readings are in each cycled
+row's comment and in `docs/candidate-sources-batch45.*.txt`
+(`order=asc;…;page_resume=1`).
+
 ## What is NOT in this batch, and where it is
 
 The same sweep was run over a second pool: **5,123 member-organisation hosts

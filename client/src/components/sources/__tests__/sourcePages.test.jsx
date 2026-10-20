@@ -196,7 +196,13 @@ describe('CollectorsPage', () => {
     render(<MemoryRouter><CollectorsPage /></MemoryRouter>);
     await waitFor(() => expect(screen.getByText('Prefectural police')).toBeTruthy());
     expect(screen.getByText('Crime, policing, defense & conflict')).toBeTruthy();
+    // a one-source collector is folded, with its count stated, and opens in place — never dropped
+    expect(screen.queryByText('solo_beat')).toBeNull();
+    const fold = screen.getByTestId('singletons-grp_osint');
+    expect(fold.textContent).toMatch(/1 single-source collector/);
+    fireEvent.click(fold);
     expect(screen.getAllByText('solo_beat').length).toBeGreaterThan(0);
+    expect(screen.getByText('pending')).toBeTruthy();
     expect(screen.getByText(/48 sources · 2 collectors · 2 groups/)).toBeTruthy();
     expect(screen.getAllByText('1,200 items').length).toBeGreaterThan(0);
   });

@@ -51,7 +51,7 @@ asked whether it also runs WordPress REST — the homepage's
 `Link: rel="https://api.w.org/"` names the root, which found 232 of the 245
 hosts that have one; a bare `/wp-json` found 13. 691 collections on 148 hosts
 answered with records; 619 survived machinery filtering, probe and the emit
-sweep (580 OK, 38 SLOW with thousands of rows stored at the 200 s line). The
+sweep (581 OK, 38 SLOW with thousands of rows stored at the 200 s line). The
 tables are split by HOST type (media, company, association, culture, cyber,
 science, hazard, government), not by collection type, so each beat files
 under one collector group. The same sweep over **5,123 federation-member hosts**
@@ -590,9 +590,14 @@ underneath them that older notes in this file predate:
   cyber, telecom, infrastructure, transport, media, social, geo, safety,
   sanctions, culture, surveillance, OSINT pivots, internal). **A new beat
   needs a line there**: a collector the def does not list shows under
-  `grp_unassigned` on every page and `test_sourceapi.c` fails. Re-run the
-  generator on a fresh census (`GET /api/collectors` → TSV) or add the line
-  by hand; the rules live in the script (OVERRIDES, KEYWORDS, CATEGORY_GROUP).
+  `grp_unassigned` on every page and `test_sourceapi.c` fails. **`make
+  collectors-def`** (2026-10-20) takes the census from the binary itself
+  (`./bin/japanosint --collector-census`, which agrees key-for-key and
+  count-for-count with `GET /api/collectors`), writes it under
+  `docs/source-pages-revamp/` and regenerates the def — rebuild afterwards,
+  the def is compiled in; **`make collectors-def-check`** fails while any
+  registered key has no line. The rules live in the script (OVERRIDES,
+  KEYWORDS, CATEGORY_GROUP).
 
 Plan, audit and as-built notes: `docs/source-pages-revamp/`.
 
@@ -710,6 +715,7 @@ says why.
 | `tools/audit_registry_emit.py` | rule 4 **and** 4b for the whole REGISTRY, manifest or not — `--list-sources` is the source list, so nothing registered can hide. Measures emitted *and* stored, per run, against a fresh copy of a warm template DB. `--scheduled`/`--match`/`--only`/`--ids-file`, `--jobs`, `--timeout`, TSV out, `--resume` |
 | `tools/diagnose_emit_keys.py` | why a row emitted nothing, and which `title_keys`/`id_keys` fix it |
 | `tools/cleanup_stale_uids.py` | the rows identity fixes left in an OLD database: a plain-key row whose qualified siblings now hold the same record (the keyqual collectors and FRA), and wayback_jp's captures from before digest+timestamp+URL. Reports by default. `--delete` removes, in one transaction, only rows whose replacement is proven to exist and that nothing references. `--self-test` runs it on a scratch DB (also from `make unit`) |
+| `tools/wp_routes_sweep.py` | the WordPress method as a tool: `sweep` asks each host for its REST root (the homepage's `Link rel="https://api.w.org/"`, else `/wp-json`), its post types and one page of each collection, writing routes.tsv/probe.tsv; `manifest` turns probe.tsv into host-type beats and a rejected TSV. Hosts are normalised (`www.` dropped, one row per REST root) because `funq.jp` and `www.funq.jp` reached the same site and only `batch_exclusions.py` noticed |
 | `tools/gen_hp_batch.py` | manifest → C, one table per beat, `--prefix`/`--batch` so batches never collide — but the batch NUMBER is yours to keep unique: main shipped a batch 32 while a branch was open with its own, both created `docs/verified-sources-batch32.tsv`, and renumbering the branch to 33 after the fact meant touching the manifest, both TSVs, the table, its array name and two batch citations that had landed in `lib/hpengine.h` and `core/hostgate.c`. Rejects duplicate opts, non-integer int opts, and an opt whose value **swallowed the next one** through a stray `\;` |
 
 ## 4. Fetching is not emitting — prove the second one
@@ -723,8 +729,8 @@ real records and stored none** — `DATAPLANE_TELNET` fetched 36,166 and emitted
 an `EMPTY_RESULTSET` source.
 
 ```sh
-python3 native/tools/audit_batch_emit.py docs/candidate-sources-batch<N>.*.txt \
-        --bin ./bin/japanosint --jobs 6
+cd native && make batch-gates MANIFEST='../docs/candidate-sources-batch<N>.*.txt'   # exclusions, pagination, reachability, probe → .run/batch-gates/pass-ids.txt
+python3 tools/audit_batch_emit.py ../docs/candidate-sources-batch<N>.*.txt --bin ./bin/japanosint --jobs 6
 ```
 
 Run it before believing a batch. `DROPS_EVERYTHING` is the verdict that matters;
