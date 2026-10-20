@@ -499,22 +499,37 @@ static const hp_source HP3B19_APAC[] = {
     .record_type = "weather-forecast",
     .tags = "\"malaysia\",\"weather\",\"met\",\"forecast\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.data.gov.my/weather/forecast?limit=100",
+    /* The trailing slash is the endpoint: without it the API answers 301 to
+     * the same path WITH one, which cost a redirect on every request and made
+     * the path read as dead to any tool that does not follow redirects. */
+    .url = "https://api.data.gov.my/weather/forecast/?limit=20000",
+    .date_keys = "date",
+    .id_keys = "location.location_id+date",
     .interval = 10800,
-    .page_param = "page",
     .title_keys = "location.location_name",
     .description = "District-level Malaysian weather forecasts from the Malaysian "
       "Meteorological Department with location code, district, state, "
-      "morning, afternoon, night and general forecast text per date" },
+      "morning, afternoon, night and general forecast text per date. "
+      "Measured 2026-10-20: the collection is 3,080 records — 440 "
+      "locations x 7 dates — and limit=20000 and limit=50000 both return "
+      "exactly that, so one request takes all of it. It used to ask for "
+      "limit=100 and declare page_param=\"page\", which this API ignores "
+      "along with offset and skip (all three return record 1 again), so "
+      "it stored the first 100 forever. The key is the TUPLE: 3,080 "
+      "distinct location_id+date against 440 distinct location_id, so "
+      "keying on the location alone would store one date in seven." },
 
   { .id = "AP19_MY_MET_WARNING", .name = "MET Malaysia warning API (data.gov.my)",
     .category = "disaster", .portal = "https://www.data.gov.my",
     .record_type = "weather-warning",
     .tags = "\"malaysia\",\"weather\",\"warning\",\"disaster\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.data.gov.my/weather/warning?limit=100",
+    .url = "https://api.data.gov.my/weather/warning/?limit=20000",
+    /* Two records can share an issuance AND a title and differ in their
+     * validity window — measured, not byte-identical — so the window is part
+     * of the identity rather than a field beside it. */
+    .id_keys = "warning_issue.issued+warning_issue.title_en+valid_from+valid_to",
     .interval = 900,
-    .page_param = "page",
     .title_keys = "warning_issue.title_en",
     .description = "Malaysian Meteorological Department severe weather warnings with "
       "issue and valid times, heading and full English and Malay "
@@ -525,14 +540,22 @@ static const hp_source HP3B19_APAC[] = {
     .record_type = "earthquake-event",
     .tags = "\"malaysia\",\"earthquake\",\"met\",\"disaster\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.data.gov.my/weather/warning/earthquake?limit=100",
+    .url = "https://api.data.gov.my/weather/warning/earthquake/?limit=20000",
+    .date_keys = "utcdatetime",
+    .id_keys = "utcdatetime",
     .interval = 900,
-    .page_param = "page",
-    .title_keys = "utcdatetime",
+    .lat_key = "lat",
+    .lon_key = "lon",
+    .title_keys = "location",
     .description = "Earthquake and tsunami bulletins issued by the Malaysian "
       "Meteorological Department with UTC and local origin time, "
       "magnitude, depth, epicentre coordinates, location description "
-      "and the status of any tsunami warning for Malaysian waters" },
+      "and the status of any tsunami warning for Malaysian waters. "
+      "Measured 2026-10-20: the catalogue is 902 events back to 2023, "
+      "and limit=1000, 20000 and 100000 all return exactly 902. It used "
+      "to ask for limit=100 behind a page_param this API ignores, so it "
+      "stored the newest 100 and nothing else. utcdatetime is unique "
+      "across all 902, checked, so it is the key." },
 
   { .id = "AP19_SG_ONEMAP_SEARCH", .name = "OneMap Singapore address search",
     .category = "reference", .portal = "https://www.onemap.gov.sg",

@@ -155,11 +155,19 @@ static const hp_source HP3B31_EUTRANS[] = {
       "?format=application%2Fld%2Bjson&limit=200",
     .array_path = "data", .filter_query = 1,
     .title_keys = "label,classification", .id_keys = "identifier",
-    .page_param = "offset", .page_size = 200, .page_start = 0, .page_max = 20,
+    /* Walked to the end 2026-10-20: the collection is 3,972 records and the
+       20-page default stopped at 3,717. Note this API's `limit` is a CEILING
+       and not a promise — eleven pages mid-collection came back short (184,
+       193, 150, 189, 161, 170, 175, 192, 157, 146) with full pages after them
+       — so a walk that treated the first short page as the end would have
+       stored 1,384. 30 pages leaves room to grow and the walk stops at the
+       real end. The 2 colliding identifiers are the upstream's own: 3,972
+       records carry 3,970 distinct identifiers, counted. */
+    .page_param = "offset", .page_size = 200, .page_start = 0, .page_max = 30,
     .interval = 21600,
     .description = "Every Parliament committee, subcommittee, political group "
       "and interparliamentary delegation, with the identifiers that join a body "
-      "to its members and its documents" },
+      "to its members and its documents. 3,972 bodies, measured 2026-10-20" },
 
   { .id = "EU_EP_MEETINGS", .name = "European Parliament — meetings & agendas",
     .name_ja = "欧州議会 会議日程", .category = "government",

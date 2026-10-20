@@ -1246,6 +1246,11 @@ static long declared_total(cJSON *doc) {
     "number_of_results", "numFound", "response.numFound", "nhits",
     "totalHits", "payload.totalHits", "totalResultCount", "total_results",
     "resultCount", "hits.total", "meta.pagination.total", "pagination.total",
+    /* Cabo Verde's statistics office answers `totalItems: 2425` beside 50
+     * items, with a `currentPage` it echoes back as 0 whatever you send, so
+     * the row read 50 of 2,425 and nothing could say so. Added because a live
+     * row needed it, not on the chance that something might. */
+    "totalItems",
     NULL };
   for (int i = 0; KEYS[i]; i++) {
     cJSON *v = dotted(doc, KEYS[i]);
