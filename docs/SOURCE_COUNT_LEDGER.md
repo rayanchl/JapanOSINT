@@ -5,7 +5,38 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 48,343** (2026-10-19): the 47,178 below merged with
+**The registered count is 48,819** (2026-10-20): 48,346 (the 48,343 below plus
+the infrastructure audit's three embedding maintenance pods, PR #42) **plus 491
+rows recovered from bot walls, plus `PLOS_CORPUS`, less 19 rows batches 34 and
+35 lost to their first measurement.** No new batch: a day of measuring what
+was already registered.
+
+* **491 of the rows batches 44–48 had dropped as 403s are back** — 86 UK, 328
+  French, 58 Italian, 8 Wikidata, 4 IGO, 7 press. The 523 rows that had
+  answered 403 to the engine's client were re-probed with a declared
+  `header1=User-Agent: Mozilla/5.0 (compatible\; JapanOSINT/1.0\; +repo)`:
+  495 answered the probe and 491 store their feed in the engine (11,159
+  emitted, 11,159 stored); four Italian school sites refused twice. The walls
+  key on the default User-Agent, not on the reader; the header is on each
+  row, so the condition a row was proven under is the one it runs under.
+* **Batches 34 and 35, authored unfetched on 2026-10-04, measured**: 139 → 122
+  and 100 → 98. Zero `FILTER_IGNORED` across their 122 pivots; three FDSN event
+  rows on nodes without that service and 14 CKAN portals refusing twice left;
+  two WEKO repositories answering 5xx twice left. The 81 CKAN bulk rows moved
+  from `current_package_list_with_resources` (no sort — three collisions that
+  were skips) to `package_search?sort=id+asc` with a cycle, re-measured.
+* **`PLOS_CORPUS`**: the ascending twin `PLOS_RECENT`'s own note asked for,
+  418,125 articles read over a daily cycle (2,000 a run, resumes at
+  `start=2000`, `start=4000` — measured).
+* Not a count change, but the day's other measurements: the four feed batches
+  (25,920 rows) re-measure their own cadence after every run
+  (`adaptive_interval`); `count`/`start` joined `lib/jsonlist.c`'s page-size
+  pairs, so six GOV.UK search rows that read one page of three a run page and
+  cycle (2,000 a run) and MAIB/RAIB read their whole registers (1,106 / 604);
+  the probe paces per host; ELIA's grid rows are windowed on their measured
+  publication lag (`ods031`: 41 hours).
+
+**The count was 48,343** (2026-10-19): the 47,178 below merged with
 main's 22,408 (21,789 plus PR #50's batch 45) (its own `jp_feeds_batch41..44.c` beats of Japanese RSS sources,
 PR #48's paging cycle of 533 rows, PR #49's collector labels), less six news
 feeds both sessions had added — `make lint-sources` named them at merge time

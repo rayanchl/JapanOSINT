@@ -1,9 +1,22 @@
-# Batch 34 — ndjson: what the new mode still does not reach, kept as data.
-#
-# candidate	stage	what happened
-CRATESIO_SPARSE_INDEX	engine	https://index.crates.io/<shard>/<shard>/<name> — probed live and PASS as ndjson (316 version lines for serde, 164874 bytes), and strictly richer than the crates.io web API's version list: each line carries the version's COMPLETE deps list with semver reqs, feature lists, optional/default_features flags, target cfg and kind, plus the features map, links, yanked flag, rust_version, the sha-256 cksum and pubtime. One request replaces the hundreds the web API needs for the same dependency history. It still cannot ship as a row, because the path is SHARDED BY CRATE NAME and in four different layouts: a 1-character name lives at /1/<name>, 2 characters at /2/<name>, 3 at /3/<first>/<name>, and 4 or more at /<chars 1-2>/<chars 3-4>/<name>. An entity pivot would have to compute that, and a declarative row cannot hold code — the same reason CLAUDE.md gives for not converting VJSON_PREP. Hardcoding one shard (as the probe URL does) yields a row that answers only about crates whose names begin with those two characters and 404s for every other, which is an honest empty but a useless source. Fixing it properly means either substring tokens in hp_expand plus a way to express the length branching, or a hand-written run() like geo_tidesandcurrents_currents.
-mcr.microsoft.com/v2/_catalog	CORRECTED	This entry was WRONG and the row shipped in batch 35. It claimed an array of bare STRINGS was unregisterable because lib/hpengine.c counts a bare scalar in a JSON array as an `empty` slot. That is true of a NULL, a number or an empty string — a trailing newline — and NOT of a string with content: hp_json_flat() already maps one to {"value": "<the string>"}, so title_keys=value;id_keys=value is all such a row needs. Measured 2026-10-05: MCR_IMAGE_CATALOG emitted 3851 of 3851 and stored 3851. The same correction applies to the three endpoints this entry dragged down with it — api.nuget.org/v3-flatcontainer (86 of 86 stored), pub.dev/api/package-names (91388 of 91388) and packagist.org/packages/list.json — all four are in docs/candidate-sources-batch35.strings.txt. The lesson is the one this repo keeps relearning: a capability claim read off a comment is not a measurement.
-public.ecr.aws/v2/_catalog	credential	HTTP 401 DENIED. AWS public ECR is anonymously readable but only after a token exchange against its auth endpoint, and hpengine has no token-dance step.
-plugins.gradle.org	probed	The host is reachable (/m2/ and /search both answer 200) but it publishes no JSON API — /api/v1/plugins and /api/v1/search are both 404. What is there is a Maven-layout repository under /m2/, which is the same shape as the MAVENCENTRAL_PATH_LISTING row already shipped in batch 33 and would need its own directory-walk rather than one endpoint.
-test.pypi.org	judgment	Reachable and live, but it is PyPI's staging instance: its contents are test uploads, not the real namespace. Registering it would add records that look like package intelligence and are not.
-index.golang.org (as a bulk history)	judgment	The row that shipped walks 20 pages of 2,000 per hourly run, which is the recent window. The index goes back to 2019-04-10 and a full walk is millions of versions; that is a backfill job, not a scheduled feed, and page_max is the honest bound with its ceiling stamped on every record when it bites.
+# Batch 34 rows REMOVED on the 2026-10-20 measurement: FETCH_FAILED on the sweep AND on a re-run (the rule CLAUDE.md gives).
+# Three FDSN event rows ask a node for a service it does not run (NOA 400, KOERI 404, ICGC 404): the batch's own review
+# warned of exactly this shape. CKAN rows that failed on current_package_list_with_resources were re-measured on package_search
+# (the endpoint the beat moved to the same day) before any was removed.
+id	beat	stage	verdict	note
+JO34_FDSNEVT_EIDA_GEIN_NOA_GR	fdsnevent	engine	FETCH_FAILED	probe HTTP_ERR 400; engine FETCH_FAILED twice
+JO34_FDSNEVT_EIDA_KOERI_BOUN_EDU_TR	fdsnevent	engine	FETCH_FAILED	probe HTTP_ERR 404; engine FETCH_FAILED twice
+JO34_FDSNEVT_WS_ICGC_CAT	fdsnevent	engine	FETCH_FAILED	probe HTTP_ERR 404; engine FETCH_FAILED twice
+JO34_CKANRES_CATALOGUE_DATA_GOVT_NZ	ckanbulk	engine	FETCH_FAILED	probe (old endpoint) UNPARSEABLE 200; package_search FETCH_FAILED twice
+JO34_CKANRES_CATALOG_DATA_GOV	ckanbulk	engine	FETCH_FAILED	probe (old endpoint) HTTP_ERR 404; package_search FETCH_FAILED twice
+JO34_CKANRES_DATA_CITY_TENDO_YAMAGATA_JP	ckanbulk	engine	FETCH_FAILED	probe (old endpoint) NET_ERR 0; package_search FETCH_FAILED twice
+JO34_CKANRES_DATA_GOV_RO	ckanbulk	engine	FETCH_FAILED	probe (old endpoint) NET_ERR 0; package_search FETCH_FAILED twice
+JO34_CKANRES_DATA_GO_TH	ckanbulk	engine	FETCH_FAILED	probe (old endpoint) HTTP_ERR 403; package_search FETCH_FAILED twice
+JO34_CKANRES_DATA_HOUSTONTX_GOV	ckanbulk	engine	FETCH_FAILED	probe (old endpoint) HTTP_ERR 502; package_search FETCH_FAILED twice
+JO34_CKANRES_DATA_MILWAUKEE_GOV	ckanbulk	engine	FETCH_FAILED	probe (old endpoint) HTTP_ERR 502; package_search FETCH_FAILED twice
+JO34_CKANRES_DATA_OK_GOV	ckanbulk	engine	FETCH_FAILED	probe (old endpoint) HTTP_ERR 502; package_search FETCH_FAILED twice
+JO34_CKANRES_DATA_SANANTONIO_GOV	ckanbulk	engine	FETCH_FAILED	probe (old endpoint) HTTP_ERR 502; package_search FETCH_FAILED twice
+JO34_CKANRES_DATA_VIRGINIA_GOV	ckanbulk	engine	FETCH_FAILED	probe (old endpoint) HTTP_ERR 502; package_search FETCH_FAILED twice
+JO34_CKANRES_DATI_COMUNE_MATERA_IT	ckanbulk	engine	FETCH_FAILED	probe (old endpoint) HTTP_ERR 502; package_search FETCH_FAILED twice
+JO34_CKANRES_OPENDATA_CITY_NIIGATA_LG_JP	ckanbulk	engine	FETCH_FAILED	probe (old endpoint) NET_ERR 0; package_search FETCH_FAILED twice
+JO34_CKANRES_OPENDATA_HAWAII_GOV	ckanbulk	engine	FETCH_FAILED	probe (old endpoint) HTTP_ERR 502; package_search FETCH_FAILED twice
+JO34_CKANRES_WWW_DATOSABIERTOS_GOB_PE	ckanbulk	engine	FETCH_FAILED	probe (old endpoint) HTTP_ERR 418; package_search FETCH_FAILED twice

@@ -39,8 +39,11 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 48,346** (2026-10-19; 48,343 plus the three
-embedding maintenance pods of the infrastructure audit): main's 22,408 — its own
+**The registered count is 48,819** (2026-10-20: 48,346 plus the 491 rows the
+User-Agent header recovered from bot walls, plus `PLOS_CORPUS`, less the 19
+rows batches 34 and 35 lost to their first measurement — the ledger has the
+day). 48,346 (2026-10-19) was 48,343 plus the three
+embedding maintenance pods of the infrastructure audit: main's 22,408 — its own
 `jp_feeds_batch41..44.c` beats, PR #48's paging cycle and PR #50's batch 45 of
 619 WordPress collections — merged into this branch's 47,178, less six news
 feeds both sessions had added (main merged first, so its rows stay). **Batch numbers 43 and 44 now name two things**: main's
@@ -131,8 +134,10 @@ from it, so it stays unprobed.
 **Batch numbers 34 and 35 each hold beats from TWO sessions, and the
 `verified-sources-batch3{4,5}.tsv` files describe only one of them.** Batch 34
 is `ndjson` (1 row, measured) plus `ckanbulk`/`fdsnstation`/`fdsnevent`/
-`socratacat` (139 rows, unverified); batch 35 is `strings` (4 rows, measured)
-plus `jpweko` (100 rows, unverified). Nothing collides — the beat names keep
+`socratacat` (122 rows, measured 2026-10-20 — see below); batch 35 is `strings`
+(4 rows, measured) plus `jpweko` (98 rows, measured 2026-10-20). Since that
+day the per-batch TSVs cover every beat of the number, each row saying which
+measurement it carries. Nothing collides — the beat names keep
 every file, id and table symbol distinct — but a per-batch TSV or note is no
 longer a statement about the whole number, so read the BEAT, not the batch.
 This is the same hazard the paragraph below is about, hit a second time by the
@@ -158,29 +163,31 @@ merged under first, and so to **batch 37** (`docs/batch37/STAGING_README.md`,
 unprobed). Before picking `<N>`:
 `git ls-tree -r --name-only origin/main | grep -oE '(batch|hp3b)[0-9]+' | sort -u`.
 
-**Batches 34 and 35 are unverified, for the same reason as batch 31:**
-authored 2026-10-04 in a session whose network policy allowed only Anthropic
-APIs, package registries and GitHub, so nothing was fetched and there is no
-`verified-sources-batch3{4,5}.tsv`. Both are built to be as close to provable as
-an unprobed batch can be — **every host is proven live by a different row
-already in the tree**, and every path, parameter set, paging rule and envelope
-is fixed by a specification or copied from a row that passed the emit audit —
-and **both have manifests**, so the probe and emit tools point straight at them.
+**Batches 34 and 35 were authored unfetched (2026-10-04, a session whose
+network policy allowed only Anthropic APIs, package registries and GitHub) and
+MEASURED on 2026-10-20** — probe with `--check-filter`, the registry sweep for
+the scheduled rows, `audit_batch_emit.py` with the manifest for the pivots, one
+re-run of each `FETCH_FAILED`. `docs/verified-sources-batch3{4,5}.tsv` now
+carry every beat of both numbers, one reading per row;
+`docs/rejected-sources-batch3{4,5}.tsv` the rows that left.
 
-* **Batch 34, 139 rows** (`hp3b34_{ckanbulk,fdsnstation,fdsnevent,socratacat}.c`):
-  95 CKAN `current_package_list_with_resources`, 15 FDSN `station/1`
-  inventories, 5 FDSN `event/1` catalogues, 24 Socrata Discovery pivots.
-  `native/collectors/OSINT_SOURCES_BATCH_34_SPEC_FAMILIES.md`.
-* **Batch 35, 100 rows** (`hp3b35_jpweko.c`): WEKO3 `/api/records/?q=` entity
-  pivots on the 100 largest JAIRO Cloud repositories that were wired for OAI
-  harvesting but could not be ASKED about an entity — endpoint and keys copied
-  from batch 25, which ran them through the emit audit and `--check-filter`.
-
-```sh
-python3 native/tools/audit_registry_emit.py --bin ./bin/japanosint --match JO34_ --jobs 6 --timeout 220
-python3 native/tools/audit_registry_emit.py --bin ./bin/japanosint --match JO35_ --jobs 6 --timeout 220
-python3 native/tools/probe_hp_batch.py docs/candidate-sources-batch3{4,5}.*.txt --check-filter
-```
+* **Batch 34: 139 → 122 rows** (`hp3b34_{ckanbulk,fdsnstation,fdsnevent,socratacat}.c`,
+  `native/collectors/OSINT_SOURCES_BATCH_34_SPEC_FAMILIES.md`). Rule 4d
+  held: 0 `FILTER_IGNORED` across the 24 Socrata pivots. Removed: the three
+  FDSN `event/1` rows whose node does not run that service (the batch's own
+  review warned of the shape), and 14 CKAN portals that refused twice. **The
+  three COLLISION verdicts were skips**: `current_package_list_with_resources`
+  orders by `metadata_modified desc` with no sort parameter, so an edit during
+  the walk shifts every later page. All 81 surviving CKAN rows read
+  `package_search?sort=id+asc&rows=100` with `page_resume=1` now, re-measured
+  the same day: Zürich 942 / 942 (was 942 / 926), govdata's 169,254 datasets
+  over a cycle instead of its first 2,000 forever.
+* **Batch 35: 100 → 98 rows** (`hp3b35_jpweko.c`,
+  `native/collectors/OSINT_SOURCES_BATCH_35_JPWEKO.md`): 0 `FILTER_IGNORED`;
+  59 store records for the probe entity, 39 answer an honest empty for it,
+  two repositories answered 5xx twice and left. JAIRO Cloud's shared hosting
+  answers a burst with 5xx — the probe at twelve saw twelve, the engine at six
+  saw five — the reason the probe now paces per host.
 
 Two review findings from batch 34 that generalise:
 

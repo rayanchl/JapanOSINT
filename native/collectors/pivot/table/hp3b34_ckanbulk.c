@@ -1924,44 +1924,6 @@ static const hp_source HP3B34_CKANBULK[] = {
       "disable or deprecate this action, in which case the row is an "
       "honest empty." },
 
-  { .id = "JO34_CKANRES_DATI_COMUNE_MATERA_IT", .name = "dati.comune.matera.it — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
-    .name_ja = "dati.comune.matera.it データセット・リソース全件（CKAN）",
-    .category = "government", .portal = "https://dati.comune.matera.it",
-    .record_type = "dataset-inventory",
-    .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"italy\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://dati.comune.matera.it/api/3/action/package_search?sort=id+asc&rows=100",
-    .array_path = "result.results",
-    .body_keys = "notes",
-    .date_keys = "metadata_modified",
-    .id_keys = "id",
-    .interval = 86400,
-    .link_keys = "url",
-    .page_max = 20,
-    .page_param = "start",
-    /* package_search with sort=id asc, not current_package_list_with_resources:
-     * that action has no sort parameter and orders by metadata_modified desc,
-     * so a dataset edited during the walk shifts every later page — measured
-     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
-     * the sink, which on an unstable order means the same number SKIPPED.
-     * The id sort is stable, and page_resume reads a catalogue larger than
-     * the ceiling over a cycle instead of its first 2,000 forever. */
-    .page_resume = 1,
-    .page_size = 100,
-    .timeout_ms = 90000,
-    .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
 
   { .id = "JO34_CKANRES_DATI_COMUNE_MILANO_IT", .name = "dati.comune.milano.it — every dataset with its resource files "
       "(CKAN current_package_list_with_resources)",
