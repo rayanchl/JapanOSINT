@@ -1359,7 +1359,29 @@ Engine subtleties worth knowing before writing a row:
   objects only where the type has no primary key. A blanket fix would have been
   a change made on reasoning.
 
-  The other 11 are 429/403/500, one reading each, **and several are load the
+  **Those 12 findings were RE-MEASURED on 2026-10-20 with the sweep paced one
+  row at a time per host, and SEVENTEEN of the 22 non-healthy verdicts changed**
+  (`docs/cycle-health-recheck-2026-10-20.tsv`). Six of the twelve STUCK rows
+  were the sweep's own load and now read CYCLING — both FAA rows,
+  `us-sf-311-open311-requests`, and two of the five `au-asic`. `audit_cycle_health.py`
+  serialises per host now: `core/hostgate.c` paces requests inside ONE process
+  and cannot pace twelve that each think they are alone, and a cycling row
+  makes ~20 requests to one host. **A verdict that changes with `--jobs` is not
+  a measurement** — the same reasoning as `audit_page_ceiling.py`'s scratch-database
+  slot pool, one layer up. Only the findings needed re-reading, because load
+  makes a page FAIL and so can only manufacture a false STUCK or FETCH_FAILED,
+  never a false CYCLING or COMPLETE.
+
+  **The `au-asic` family is the honest remainder.** Five rows share
+  data.gov.au; host-paced, two cycle, two read FETCH_FAILED (403 on page 1) and
+  one is still STUCK (403 on page 2). So those 403s are NOT purely concurrency
+  — which is what the by-hand test suggested when data.gov.au served 8 rapid
+  serial and then 12 concurrent requests, all 200. The difference between that
+  test and these runs is the CLIENT, since the engine sends its own headers.
+  That is the next thing to measure on that host, and it is written down rather
+  than papered over with a hostgate entry.
+
+  The other 11 were 429/403/500, one reading each, **and several were load the
   sweep itself created**: 12 jobs in parallel while a 6-job batch-46 emit audit
   hit `services6.arcgis.com`, where both failing FAA rows live.
   `us-sf-311-open311-requests` is already paced at 1,200 ms in
