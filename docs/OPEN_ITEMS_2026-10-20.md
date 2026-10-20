@@ -102,7 +102,38 @@ python3 native/tools/audit_registry_emit.py --bin ./bin/japanosint --match '^JO3
 python3 native/tools/audit_registry_emit.py --bin ./bin/japanosint --match '^JO35_' --jobs 4 --timeout 220
 ```
 
-### B2. Batch 31's 90 refused rows have never been re-run
+### B2. ~~Batch 31's 90 refused rows have never been re-run~~ — RE-RUN, and the rule would have been wrong 44 times
+
+Second reading taken: **46 HTTP_404, 42 HTTP_403, 2 transport**, against
+2026-10-11's 48/42. Essentially identical nine days apart, so "a row that fails
+twice leaves" applies to 88 rows by the letter.
+
+**It would have discarded 44 live publishers.** Each row was then asked three
+questions instead — its probe URL with the engine's agent, the same URL with the
+agent that clears the known word filter, and the HOST ROOT — and the root is
+what separates "the publisher is gone" from "our path is stale"
+(`docs/batch31-refused-triage-2026-10-20.tsv`):
+
+| rows | reading | what it means |
+| --- | --- | --- |
+| **44** | path 404, root **200** | host alive and serving; our path is stale. A re-point each, not a removal |
+| **36** | path 403, root **403** | the host refuses this client everywhere; no agent in UA_OVERRIDE changes it. A wall |
+| 5 | path 403, root 200 | refused at the endpoint while the site serves — a key, a session, or an endpoint wall |
+| 1 | path 403, **alt agent 200** | `OFFSHORE_AIRCRAFT_REGISTRIES`. The word filter again — planelogger.com added to UA_OVERRIDE, row recovered, verified twice each way |
+| 1 | path **200** | `JP_EGOV_LAW_SEARCH` answers today, so its two 404s were about the entity asked or the day |
+| 1 | path 404, root 404 | `KE_OPEN_DATA` — the host itself is gone. The one row the rule fits exactly |
+| 1 | path 404, root 403 | `TZ_BRELA_ENTITY` |
+| 1 | timeout, root 200 | `CA_VESSEL_REGISTRY` — unmeasured, not dead |
+
+So the removal list is **one row long**, not 88. What remains is a re-pointing
+job (44) and a decision already taken once in this tree for the walls (36): the
+`registry.faa.gov` precedent is that a source "stays honestly failing rather
+than quietly evading", and they do disclose, one `collector-fetch-failure` row
+each.
+
+The original item read:
+
+### B2 (as written). Batch 31's 90 refused rows have never been re-run
 
 `docs/emit-sources-batch31.tsv` records 48 answering 404 and 42 answering 403.
 They were deliberately kept, correctly, because "one probe is one reading" —

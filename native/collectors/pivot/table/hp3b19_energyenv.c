@@ -343,15 +343,68 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "generation-mix",
     .tags = "\"energy\",\"grid\",\"denmark\",\"settlement\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    /* A record here is one (hour, price area), and the row declared NO id_keys,
+     * so the engine keyed on the first scalar it found — `HourUTC`. DK1 and DK2
+     * for the same hour therefore collided, and only the in-page content-hash
+     * guard kept both: their uids became content hashes, so a settlement
+     * REVISION of an hour (this dataset is the audited series, which is exactly
+     * what gets revised) landed as a NEW row instead of updating the old one.
+     * That is batch 36's openFDA lesson — `stored` matched `emitted` the whole
+     * time and nothing looked wrong. Keyed on the tuple now. */
     .url = "https://api.energidataservice.dk/dataset/ProductionConsumptionSettlement?limit=50&sort=HourUTC%20desc",
     .array_path = "records",
+    .date_keys = "HourUTC",
+    .id_keys = "HourUTC+PriceArea",
     .interval = 21600,
     .page_param = "offset",
     .page_size = 50,
+    /* Deliberately NOT cycling, and deliberately still `desc`: this row is the
+     * live tail of an audited series that lags about ten days, and its 1,000
+     * newest records are two price areas x ~500 hours, so ~20 days of coverage
+     * every six hours. A cycle would trade that for the history, which the
+     * sibling below reads instead. Measured 2026-10-20: newest HourUTC
+     * 2026-10-10T23:00. */
     .description = "Settled hourly Danish generation by technology and consumption "
       "by category for each price area, including central power, local "
       "power, offshore and onshore wind and solar. The settled series "
       "is the audited version rather than the live estimate" },
+
+  /* The history the row above cannot reach, on the PLOS_CORPUS pattern: one
+   * collection, a live head sorted newest-first and a backfill sorted
+   * oldest-first that keeps its place. The series starts 2004-12-31T23:00 and
+   * the head only ever sees the last ~20 days of it.
+   *
+   * Measured against the API on 2026-10-20:
+   *     limit=1000&sort=HourUTC asc              1,000 records, 2004-12-31..2005-01-21T18
+   *     limit=5000&sort=HourUTC asc              5,000 records, ..2005-04-15
+   *     limit=1000&offset=1000&sort=HourUTC asc  1,000 records starting 2005-01-21T19
+   * so the ceiling is at least 5,000 a page and `offset` is a true record
+   * offset with no overlap at the seam. 5,000 x page_max 4 is 20,000 records a
+   * run against roughly 382,000 in the series (two price areas x ~21.8 years of
+   * hours), so the cycle completes in about three weeks and then idles on the
+   * tail, where the ascending sort puts each newly settled hour. */
+  { .id = "ENERGINET_PRODCONSUM_SETTLEMENT_HISTORY",
+    .name = "Energinet — settled production and consumption, the whole series",
+    .name_ja = "Energinet 確定生産消費データ（全期間）",
+    .category = "energy", .portal = "https://www.energidataservice.dk",
+    .record_type = "generation-mix",
+    .tags = "\"energy\",\"grid\",\"denmark\",\"settlement\",\"backfill\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://api.energidataservice.dk/dataset/ProductionConsumptionSettlement?limit=5000&sort=HourUTC%20asc",
+    .array_path = "records",
+    .date_keys = "HourUTC",
+    .id_keys = "HourUTC+PriceArea",
+    .interval = 86400,
+    .page_param = "offset",
+    .page_max = 4,
+    .page_resume = 1,
+    .page_size = 5000,
+    .description = "Every settled hour Energinet has published, from 2004-12-31 "
+      "forward, read over a cycle: Danish generation by technology and "
+      "consumption by category for each price area. Same records as the live "
+      "settlement row, which reads the newest ~20 days every six hours; this "
+      "one reaches the roughly 382,000 behind them, which no page ceiling over "
+      "a newest-first sort can" },
 
   { .id = "ENERGINET_CAPACITY_MUNICIPALITY", .name = "Energinet — installed capacity by municipality",
     .name_ja = "Energinet 自治体別設備容量",

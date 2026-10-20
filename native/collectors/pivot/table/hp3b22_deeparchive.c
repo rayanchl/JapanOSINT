@@ -1169,26 +1169,42 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
       "specific codebook, script or table inside a deposit rather than "
       "the deposit as a whole." },
 
-  { .id = "DATAVERSE_HARVARD_DATAVERSES", .name = "Harvard Dataverse - newest sub-dataverses (collections)",
+  { .id = "DATAVERSE_HARVARD_DATAVERSES", .name = "Harvard Dataverse - every sub-dataverse (collections register)",
     .category = "investigation", .portal = "https://dataverse.harvard.edu",
     .record_type = "repository-collection",
     .tags = "\"dataverse\",\"harvard\",\"collection\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://dataverse.harvard.edu/api/search?q=*&type=dataverse&per_page=100&sort=date&order=desc",
+    /* Was `order=desc`, reading the newest 2,000 of 9,750 for ever — so 7,750
+     * collections were unreachable while the row's own description called it
+     * "a register of who is publishing research data through Harvard". A
+     * register that can only see its newest fifth is not one, and the fix is
+     * the sort rather than a second row: 9,750 is small enough that a cycle
+     * covers it in five runs and then keeps up, because new collections land at
+     * the TAIL of an ascending sort where a forward walk has not been yet.
+     *
+     * Measured 2026-10-20: `order=asc` answers 200, `start=9000` answers 200
+     * with 100 items and `total_count` 9,750, so the deep end is reachable.
+     * The trade is stated rather than hidden — a brand-new collection can now
+     * take up to five days to appear, which for a register of organisations is
+     * worth the other 7,750. */
+    .url = "https://dataverse.harvard.edu/api/search?q=*&type=dataverse&per_page=100&sort=date&order=asc",
     .array_path = "data.items",
     .date_keys = "published_at",
     .id_keys = "identifier,url",
     .interval = 86400,
     .link_keys = "url",
     .page_param = "start",
+    .page_resume = 1,
     .page_size = 100,
     .page_zero_based = 1,
     .title_keys = "name",
-    .description = "The newest collections (sub-dataverses) created in the Harvard "
-      "Dataverse: identifier, name, description, affiliation and "
-      "publication date. Each collection is an organisation, lab or "
-      "project that has started depositing data, so the stream is a "
-      "register of who is publishing research data through Harvard." },
+    .description = "Every collection (sub-dataverse) in the Harvard Dataverse, read "
+      "over a cycle from the oldest forward: identifier, name, description, "
+      "affiliation and publication date. Each collection is an organisation, "
+      "lab or project that has started depositing data, so the set is a "
+      "register of who is publishing research data through Harvard — 9,750 of "
+      "them by the repository's own count, where this row used to see the "
+      "newest 2,000." },
 
   { .id = "DATAVERSE_HARVARD_LATEST_DATASETS", .name = "Harvard Dataverse - newest datasets",
     .category = "investigation", .portal = "https://dataverse.harvard.edu",

@@ -464,6 +464,23 @@ static const struct { const char *host, *ua; } UA_OVERRIDE[] = {
     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
     "contact via repo issues)" },
 
+  /* planelogger.com, found by re-asking batch 31's twice-refused rows what they
+   * actually answer rather than removing them under "fails twice leaves".
+   * Measured 2026-10-20 on /Aircraft/Search?searchterm=Toyota, twice each:
+   *     engine UA        403, 403
+   *     the agent below  200, 200  (19,742 bytes, the aircraft table)
+   *     "JapanOSINT/1.0" 200, 200
+   * so it is the word filter again, and OFFSHORE_AIRCRAFT_REGISTRIES was one
+   * table entry away from working rather than dead. Worth noting what the
+   * triage that found it ALSO found: of the other 89 rows, 36 answer 403 at the
+   * host ROOT as well as on the path, which no agent in this table clears — a
+   * wall, not a word filter. This entry is the one row where the bisection
+   * changed the answer, which is the measurement being worth making and not a
+   * reason to expect it often. */
+  { "www.planelogger.com",
+    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
+    "contact via repo issues)" },
+
   /* NOT LISTED, deliberately: registry.faa.gov.
    *
    * It was reported alongside the two above as "answers 200 with no UA", which

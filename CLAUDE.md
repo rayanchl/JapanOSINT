@@ -505,6 +505,30 @@ Where the tree actually stands, as `make audit-sources` reports it:
   retired in favour of `GO_MODULE_INDEX`, which pages on
   `next_path=$last.Timestamp`.
 
+  **And the worst instances of it are a PROBE's limit that shipped** (2026-10-20,
+  `docs/probe-sized-pages-2026-10-20.md`). Found while measuring something else:
+  `us-legistar-seattle-matters` carried `$top=2` and read **40 records over 60
+  requests**. Asking how many rows share the shape found **39** — `$top=1`,
+  `$top=2` (17 rows), `limit=3`, `count=3`, `per_page=5`, `size=2`, `rows=3` —
+  and **every one is an `hp16_*` detail-hop row**, where a tiny limit is right
+  in the authoring PROBE and was carried into the row verbatim. None of them is
+  in the 2026-10-11 file, which covered only the 42 candidates whose URL is a
+  complete literal, so this was unexamined rather than triaged.
+
+  Two things generalise. **A generated row inherits its probe's assumptions**,
+  and a probe is written to be cheap — the same mistake as a date frozen into a
+  URL at authoring time (43 rows) and batch 36's generator keying every row on
+  the record's first field. **And the right page size is set by the DETAIL
+  BUDGET, not by the API's ceiling**: `hp_detail_admit()` spends 1,000 hops a
+  run, so a page size raised to the maximum with `page_max` left at 20 stores
+  20,000 records of which 1,000 are deepened and 19,000 are stamped
+  `_detail_pending` — and never deepened again, because the budget is spent in
+  page order so the same first thousand get the hops every run. Each row is set
+  to page size x `page_max` ~ 1,000 instead, every record stored complete.
+  Nominatim's `limit=5` on a single structured address stays (a ranked geocode:
+  the limit IS the question) and so does `us-sf-311`'s `page_size=5`, whose host
+  429s at page 20 even under a 1,200 ms gap.
+
   **42 of those candidates are now MEASURED** (2026-10-11,
   `docs/measured-url-limits-2026-10-11.tsv`): each upstream was asked the same
   question with a tenfold limit. **18 are truncating**, 5 are complete, 19 are
