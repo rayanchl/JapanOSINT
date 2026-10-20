@@ -1,0 +1,13 @@
+id	verdict	shell_rc	sched_rc	emitted	stored	db_rows	available	secs	note
+esma-solr-upreg	OK	0	0	200	201	200	200	31.3	
+openaire-datasources-search	OK	0	0	14	14	14	14	6.0	
+openaire-organizations-search	OK	0	0	118	118	118	118	41.2	
+openaire-products-by-project	OK	0	0	25	25	25	25	6.0	
+global-osm-changesets-by-user	OK	0	0	100	100	100	100	33.9	
+jp-safecast-bgeigie-imports	OK	0	0	200	201	200	200	33.5	
+jp-safecast-measurements	OK	0	0	200	201	200	200	34.6	
+jp-peeringdb-fac-country-depth1	FETCH_FAILED	0	0	1	1	0	-1	0.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+pl-bzp-board-search	COLLISION	0	0	192	147	146	192	43.8	46 of 192 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+sk-rpo-search	OK	0	0	500	501	500	500	149.6	
+ua-prozorro-contracts	OK	0	0	200	201	200	200	43.2	
+ua-prozorro-tenders	OK	0	0	200	201	200	200	38.6	

@@ -28,10 +28,12 @@ static const hp_source T[] = {
     .collector = "us_transport", .category = "transport",
     .description = "MAIB reports naming the vessel and its registration (e.g. fishing vessel Silver Cloud II WK 80), date_of_occurrence and vessel type. Content API detail hop returns the full investigation report with owner/operator, causal analysis and recommendations. NOTE: country should read GB.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "transport-record", .tags = "\"us\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.gov.uk/api/search.json?filter_format=maib_report&count=3&fields=title,link,description,date_of_occurrence,vessel_type",
+    .url = "https://www.gov.uk/api/search.json?filter_format=maib_report&count=100&fields=title,link,description,date_of_occurrence,vessel_type",
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
-    .page_walk = 1,
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
+    .page_param = "start",
+    .page_size = 100,
     .interval = 3600, .free_tier = 1 },
 
   { .id = "uk-govuk-search-raib-reports",
@@ -39,10 +41,12 @@ static const hp_source T[] = {
     .collector = "us_transport", .category = "transport",
     .description = "RAIB investigation reports: report number, incident description, date_of_occurrence, railway type. Content API detail hop returns the full report page with the PDF, findings, causal factors and safety recommendations addressed to named operators and infrastructure managers. NOTE: country should read GB.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "transport-record", .tags = "\"us\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.gov.uk/api/search.json?filter_format=raib_report&count=3&fields=title,link,description,date_of_occurrence,railway_type",
+    .url = "https://www.gov.uk/api/search.json?filter_format=raib_report&count=100&fields=title,link,description,date_of_occurrence,railway_type",
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
-    .page_walk = 1,
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
+    .page_param = "start",
+    .page_size = 100,
     .interval = 3600, .free_tier = 1 },
 
   { .id = "us-fmcsa-carrier-census",
@@ -50,9 +54,10 @@ static const hp_source T[] = {
     .collector = "us_transport", .category = "transport",
     .description = "Keyless substitute for the 403-blocked QCMobile/SAFER APIs. Per carrier: dot_number, status_code, add_date, mcs150_date, mcs150_mileage and year, dun_bradstreet_no, carrier_operation (interstate/intrastate), business_org_id, phy_omc_region, safety_inv_terr, legal and DBA name, physical and mailing address, phone, power units, driver count, hazmat flags, cargo-carried flags, and the safety rating with its rating date. Verified server-side filter ?dot_number=162845.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "transport-record", .tags = "\"us\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://data.transportation.gov/resource/az4n-8mr2.json?$limit=2&$order=:id",
+    .url = "https://data.transportation.gov/resource/az4n-8mr2.json?$limit=100&$order=:id",
     .detail_url = "https://data.transportation.gov/resource/az4n-8mr2.json?$limit=50&dot_number={v}", .detail_key = "dot_number",
     .page_walk = 1,
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
     .interval = 3600, .free_tier = 1 },
 
   { .id = "us-fmcsa-crash-file",
@@ -60,9 +65,10 @@ static const hp_source T[] = {
     .collector = "us_transport", .category = "transport",
     .description = "CARRIER → ITS CRASHES, the exact detail hop required. Per crash: crash_id, dot_number, report_state, report_number, report_date and time, report_seq_no, ci_status_code, final_status_date, location, state, county, fatalities, injuries, tow_away flag, vehicle configuration, hazmat released flag, weather and light conditions, road access control, trafficway description, and citation issued. Verified filter ?dot_number=728630.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "transport-record", .tags = "\"us\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://data.transportation.gov/resource/aayw-vxb3.json?$limit=2&$order=:id",
+    .url = "https://data.transportation.gov/resource/aayw-vxb3.json?$limit=100&$order=:id",
     .detail_url = "https://data.transportation.gov/resource/aayw-vxb3.json?$limit=500&dot_number={v}", .detail_key = "dot_number",
     .page_walk = 1,
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
     .interval = 3600, .free_tier = 1 },
 
   { .id = "us-fmcsa-vehicle-inspection-file",
@@ -70,9 +76,10 @@ static const hp_source T[] = {
     .collector = "us_transport", .category = "transport",
     .description = "CARRIER → ITS ROADSIDE INSPECTIONS. Per inspection: inspection_id, dot_number, report_state, report_number, insp_date, insp_start_time/insp_end_time, region, ci_status_code, location_desc, inspection level, driver and vehicle out-of-service counts and OOS totals, hazmat inspection flag, unsafe-driving and fatigued-driving violation counts, and the vehicle/licence-plate identifiers. Verified filter ?dot_number=728630.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "transport-record", .tags = "\"us\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://data.transportation.gov/resource/fx4q-ay7w.json?$limit=2&$order=:id",
+    .url = "https://data.transportation.gov/resource/fx4q-ay7w.json?$limit=100&$order=:id",
     .detail_url = "https://data.transportation.gov/resource/fx4q-ay7w.json?$limit=500&dot_number={v}", .detail_key = "dot_number",
     .page_walk = 1,
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
     .interval = 3600, .free_tier = 1 },
 
   { .id = "us-nhtsa-vpic-manufacturers",

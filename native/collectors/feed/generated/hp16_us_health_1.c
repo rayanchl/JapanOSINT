@@ -18,11 +18,13 @@ static const hp_source T[] = {
     .collector = "us_health", .category = "health",
     .description = "MHRA monthly drug safety bulletins - product-level warnings, restrictions and label changes (e.g. botulinum toxin type A iatrogenic botulism warning). Title, link, summary, first_published_at; Content API detail hop returns the full article with the affected products and the regulatory action taken. NOTE: country should read GB.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "health-record", .tags = "\"us\",\"health\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.gov.uk/api/search.json?filter_format=drug_safety_update&count=3&fields=title,link,description,first_published_at",
+    .url = "https://www.gov.uk/api/search.json?filter_format=drug_safety_update&count=100&fields=title,link,description,first_published_at",
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
-    .page_walk = 1,
-    .page_resume = 1,   /* 867 records, measured 2026-10-12: read over a cycle, 3~ pages a run */
+    .page_resume = 1,   /* 867 records, measured 2026-10-12: read over a cycle (its pages-a-run figure is superseded: the page SIZE changed on 2026-10-20, see the page_max note) */
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
+    .page_param = "start",
+    .page_size = 100,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "uk-govuk-search-medical-safety-alerts",
@@ -30,11 +32,13 @@ static const hp_source T[] = {
     .collector = "us_health", .category = "health",
     .description = "MHRA device safety information and national patient safety alerts, e.g. devices supplied without valid UKCA/CE conformity marking ordered removed from use. Per row: title with alert reference (DSI/2026/007), alert_type, issued_date, medical specialism. Content API detail hop returns the full alert naming the manufacturer, affected models and required action. NOTE: country should read GB.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "health-record", .tags = "\"us\",\"health\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.gov.uk/api/search.json?filter_format=medical_safety_alert&count=3&fields=title,link,description,alert_type,issued_date,medical_specialism",
+    .url = "https://www.gov.uk/api/search.json?filter_format=medical_safety_alert&count=100&fields=title,link,description,alert_type,issued_date,medical_specialism",
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
-    .page_walk = 1,
-    .page_resume = 1,   /* 1,453 records, measured 2026-10-12: read over a cycle, 3~ pages a run */
+    .page_resume = 1,   /* 1,453 records, measured 2026-10-12: read over a cycle (its pages-a-run figure is superseded: the page SIZE changed on 2026-10-20, see the page_max note) */
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
+    .page_param = "start",
+    .page_size = 100,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-cms-data-catalog",
@@ -73,9 +77,11 @@ static const hp_source T[] = {
     .collector = "us_health", .category = "health",
     .description = "2,978,925 rows (confirmed via the /data/stats endpoint). Per provider: NPI, MULTIPLE_NPI_FLAG, PECOS_ASCT_CNTL_ID (the PECOS associate id that links individuals to organisations), ENRLMT_ID, PROVIDER_TYPE_CD and PROVIDER_TYPE_DESC, STATE_CD, FIRST_NAME/MDL_NAME/LAST_NAME, ORG_NAME. Server-side filtering works: ?filter[NPI]=... returns the single record.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "health-record", .tags = "\"us\",\"health\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://data.cms.gov/data-api/v1/dataset/2457ea29-fc82-48b0-86ec-3b0755de7515/data?size=2",
+    .url = "https://data.cms.gov/data-api/v1/dataset/2457ea29-fc82-48b0-86ec-3b0755de7515/data?size=100",
     .detail_url = "https://data.cms.gov/data-api/v1/dataset/2457ea29-fc82-48b0-86ec-3b0755de7515/data?size=100&filter[NPI]={v}", .detail_key = "NPI",
-    .page_walk = 1,
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
+    .page_param = "offset",
+    .page_size = 100,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-cpsc-recall-by-date-range",
