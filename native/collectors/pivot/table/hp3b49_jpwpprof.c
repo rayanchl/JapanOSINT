@@ -2756,29 +2756,6 @@ static const hp_source HP3B49_JPWPPROF[] = {
       "root (/wp/v2/types), not guessed. Post-shaped: title.rendered, "
       "date, link and content.rendered are kept." },
 
-  { .id = "JO49_WP_KUMACHO_USERS", .name = "【公式】熊本県土地家屋調査士会 — author/staff register (WordPress REST)",
-    .name_ja = "【公式】熊本県土地家屋調査士会 利用者一覧（WordPress REST）",
-    .category = "legal", .portal = "https://kuma-cho.com/",
-    .record_type = "site-user",
-    .tags = "\"japan\",\"wordpress\",\"users\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://kuma-cho.com/wp-json/wp/v2/users?per_page=100",
-    .array_path = ".",
-    .body_keys = "description",
-    .id_keys = "id",
-    .interval = 86400,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "name",
-    .description = "WordPress REST author/staff register of 【公式】熊本県土地家屋調査士会 "
-      "(kuma-cho.com). Fetched 2026-10-20: the collection answered with "
-      "1 record(s) and declares 1 in X-WP-Total. Discovered from this "
-      "host's own REST root (/wp/v2/types), not guessed. Keyed on the "
-      "user id with name as the title: a user record carries no date "
-      "field." },
 
   { .id = "JO49_WP_KUSIROSJPN_POSTS", .name = "釧路司法書士会  /  釧路・根室・十勝・オホーツク — posts (WordPress REST)",
     .name_ja = "釧路司法書士会  /  釧路・根室・十勝・オホーツク 投稿（WordPress REST）",
@@ -6387,29 +6364,6 @@ static const hp_source HP3B49_JPWPPROF[] = {
       "guessed. Keyed on the user id with name as the title: a user "
       "record carries no date field." },
 
-  { .id = "JO49_WP_HTK_PAGES", .name = "www.htk.or.jp — pages (WordPress REST)",
-    .name_ja = "www.htk.or.jp 固定ページ（WordPress REST）",
-    .category = "legal", .portal = "https://www.htk.or.jp/",
-    .record_type = "site-page",
-    .tags = "\"japan\",\"wordpress\",\"pages\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.htk.or.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST pages of www.htk.or.jp (www.htk.or.jp). Fetched "
-      "2026-10-20: the collection answered with 55 record(s) and "
-      "declares 55 in X-WP-Total. Discovered from this host's own REST "
-      "root (/wp/v2/types), not guessed. Post-shaped: title.rendered, "
-      "date, link and content.rendered are kept." },
 
   { .id = "JO49_WP_HTK_MEMBERLIST", .name = "www.htk.or.jp — custom post type `memberlist` (会員リスト) (WordPress "
       "REST)",

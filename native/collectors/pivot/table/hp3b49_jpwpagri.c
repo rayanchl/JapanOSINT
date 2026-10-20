@@ -13968,29 +13968,6 @@ static const hp_source HP3B49_JPWPAGRI[] = {
       "root (/wp/v2/types), not guessed. Post-shaped: title.rendered, "
       "date, link and content.rendered are kept." },
 
-  { .id = "JO49_WP_JAHS_PAGES", .name = "JAハウスサービス — pages (WordPress REST)",
-    .name_ja = "JAハウスサービス 固定ページ（WordPress REST）",
-    .category = "agriculture", .portal = "https://www.jahs.co.jp/",
-    .record_type = "site-page",
-    .tags = "\"japan\",\"wordpress\",\"pages\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.jahs.co.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST pages of JAハウスサービス (www.jahs.co.jp). Fetched "
-      "2026-10-20: the collection answered with 15 record(s) and "
-      "declares 15 in X-WP-Total. Discovered from this host's own REST "
-      "root (/wp/v2/types), not guessed. Post-shaped: title.rendered, "
-      "date, link and content.rendered are kept." },
 
   { .id = "JO49_WP_JASAPPORO_CAMPAIGNJABANK", .name = "JAさっぽろ — custom post type `campaign-jabank` (JAバンクキャンペーン) "
       "(WordPress REST)",
@@ -17270,30 +17247,6 @@ static const hp_source HP3B49_JPWPAGRI[] = {
       "REST root (/wp/v2/types), not guessed. Post-shaped: "
       "title.rendered, date, link and content.rendered are kept." },
 
-  { .id = "JO49_WP_MIDORINETFUKUSHIMA_PAGES", .name = "www.midorinet-fukushima.jp — pages (WordPress REST)",
-    .name_ja = "www.midorinet-fukushima.jp 固定ページ（WordPress REST）",
-    .category = "agriculture", .portal = "https://www.midorinet-fukushima.jp/",
-    .record_type = "site-page",
-    .tags = "\"japan\",\"wordpress\",\"pages\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.midorinet-fukushima.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST pages of www.midorinet-fukushima.jp "
-      "(www.midorinet-fukushima.jp). Fetched 2026-10-20: the collection "
-      "answered with 67 record(s) and declares 67 in X-WP-Total. "
-      "Discovered from this host's own REST root (/wp/v2/types), not "
-      "guessed. Post-shaped: title.rendered, date, link and "
-      "content.rendered are kept." },
 
   { .id = "JO49_WP_MIDORINETMIYAZAKI_PAGES", .name = "宮崎県土地改良事業団体連合会【水土里ネット宮崎】 — pages (WordPress REST)",
     .name_ja = "宮崎県土地改良事業団体連合会【水土里ネット宮崎】 固定ページ（WordPress REST）",

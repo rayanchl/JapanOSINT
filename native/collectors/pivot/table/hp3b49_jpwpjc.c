@@ -1875,31 +1875,6 @@ static const hp_source HP3B49_JPWPJC[] = {
       "guessed. Post-shaped: title.rendered, date, link and "
       "content.rendered are kept." },
 
-  { .id = "JO49_WP_HACHIOJIJC_KUBIOPREVIEWCHANGESE", .name = "(一社)八王子青年会議所 — custom post type `kubio/preview-changeset` (Kubio "
-      "Preview) (WordPress REST)",
-    .name_ja = "(一社)八王子青年会議所 Kubio Preview（WordPress REST）",
-    .category = "social", .portal = "https://hachioji-jc.com/",
-    .record_type = "cpt-kubio-preview-changeset",
-    .tags = "\"japan\",\"wordpress\",\"cpt\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://hachioji-jc.com/wp-json/wp/v2/kubio/preview-changeset?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST custom post type `kubio/preview-changeset` (Kubio "
-      "Preview) of (一社)八王子青年会議所 (hachioji-jc.com). Fetched 2026-10-20: "
-      "the collection answered with 4 record(s) and declares 4 in "
-      "X-WP-Total. Discovered from this host's own REST root "
-      "(/wp/v2/types), not guessed. Post-shaped: title.rendered, date, "
-      "link and content.rendered are kept." },
 
   { .id = "JO49_WP_IBARAKIJC_USERS", .name = "一般社団法人茨木青年会議所 — author/staff register (WordPress REST)",
     .name_ja = "一般社団法人茨木青年会議所 利用者一覧（WordPress REST）",

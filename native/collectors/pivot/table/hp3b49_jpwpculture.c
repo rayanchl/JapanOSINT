@@ -5428,29 +5428,6 @@ static const hp_source HP3B49_JPWPCULTURE[] = {
       "the user id with name as the title: a user record carries no "
       "date field." },
 
-  { .id = "JO49_WP_NEWSPROMOTION_POSTS", .name = "newspromotion.jp — posts (WordPress REST)",
-    .name_ja = "newspromotion.jp 投稿（WordPress REST）",
-    .category = "culture", .portal = "https://www.newspromotion.jp/",
-    .record_type = "site-post",
-    .tags = "\"japan\",\"wordpress\",\"posts\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.newspromotion.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST posts of newspromotion.jp (www.newspromotion.jp). "
-      "Fetched 2026-10-20: the collection answered with 5 record(s) and "
-      "declares 5 in X-WP-Total. Discovered from this host's own REST "
-      "root (/wp/v2/types), not guessed. Post-shaped: title.rendered, "
-      "date, link and content.rendered are kept." },
 
   { .id = "JO49_WP_NEOPARK_POSTS", .name = "名護市 ネオパークオキナワ — posts (WordPress REST)",
     .name_ja = "名護市 ネオパークオキナワ 投稿（WordPress REST）",
@@ -5476,29 +5453,6 @@ static const hp_source HP3B49_JPWPCULTURE[] = {
       "REST root (/wp/v2/types), not guessed. Post-shaped: "
       "title.rendered, date, link and content.rendered are kept." },
 
-  { .id = "JO49_WP_NEWSPROMOTION_PAGES", .name = "newspromotion.jp — pages (WordPress REST)",
-    .name_ja = "newspromotion.jp 固定ページ（WordPress REST）",
-    .category = "culture", .portal = "https://www.newspromotion.jp/",
-    .record_type = "site-page",
-    .tags = "\"japan\",\"wordpress\",\"pages\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.newspromotion.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST pages of newspromotion.jp (www.newspromotion.jp). "
-      "Fetched 2026-10-20: the collection answered with 10 record(s) "
-      "and declares 10 in X-WP-Total. Discovered from this host's own "
-      "REST root (/wp/v2/types), not guessed. Post-shaped: "
-      "title.rendered, date, link and content.rendered are kept." },
 
   { .id = "JO49_WP_NEOPARK_PAGES", .name = "名護市 ネオパークオキナワ — pages (WordPress REST)",
     .name_ja = "名護市 ネオパークオキナワ 固定ページ（WordPress REST）",

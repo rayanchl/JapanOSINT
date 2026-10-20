@@ -20758,30 +20758,6 @@ static const hp_source HP3B49_JPWPMEDICAL[] = {
       "the user id with name as the title: a user record carries no "
       "date field." },
 
-  { .id = "JO49_WP_RAKUNO_RECRUITINFO", .name = "酪農学園大学 — custom post type `recruit_info` (採用情報) (WordPress REST)",
-    .name_ja = "酪農学園大学 採用情報（WordPress REST）",
-    .category = "health", .portal = "https://www.rakuno.ac.jp/",
-    .record_type = "cpt-recruit-info",
-    .tags = "\"japan\",\"wordpress\",\"cpt\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.rakuno.ac.jp/wp-json/wp/v2/recruit_info?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST custom post type `recruit_info` (採用情報) of 酪農学園大学 "
-      "(www.rakuno.ac.jp). Fetched 2026-10-20: the collection answered "
-      "with 5 record(s) and declares 5 in X-WP-Total. Discovered from "
-      "this host's own REST root (/wp/v2/types), not guessed. "
-      "Post-shaped: title.rendered, date, link and content.rendered are "
-      "kept." },
 
   { .id = "JO49_WP_SATSUMAMAH_USERS", .name = "薩摩郡医師会 — author/staff register (WordPress REST)",
     .name_ja = "薩摩郡医師会 利用者一覧（WordPress REST）",
