@@ -141,11 +141,20 @@ ascending sort **verified per host**. 22 rows were done that way on 2026-10-18;
 these 8 were deliberately left rather than changed on reasoning. Each needs its
 own host checked.
 
-### C5. `PLOS_RECENT` wants a sibling
+### C5. ~~`PLOS_RECENT` wants a sibling~~ — DONE
 
 417,719 records against a 20-page ceiling. It deliberately does not cycle —
 recency is its purpose — so the whole corpus needs a second row with an
 ascending sort.
+
+**`PLOS_CORPUS` ships.** `publication_date asc,id asc`, `page_resume = 1`, and
+`page_max = 50` because a 50-page burst was MEASURED on api.plos.org (50× 200 in
+16.0 s, no rate-limit headers) rather than extrapolated from the default 20.
+Deep paging reaches `start=400000` in 1.1 s, so there is no cap to work around
+and no hostgate gap was invented. Verified over two runs against one database:
+5,000 records a run, 10,001 distinct after the second, no overlap, dates
+2003-08-18 → 2008-11-10 — the oldest end of the corpus, walking forward. Full
+cycle ≈ 21 days. 418,142 by PLOS's own `numFound` today.
 
 ### C6. ~~`JO32_MUNI_YAMAGUCHI_CKAN` became reachable today~~ — REFUTED, and it found a bigger gap
 
