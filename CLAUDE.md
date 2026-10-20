@@ -58,7 +58,7 @@ manifests, TSVs, docs and collector keys — exactly as the batch-41 note below
 predicts. The count ledger — every
 batch from 37 to 48, main's 45 included, what seeded it, what it measured and what it taught — is
 `docs/SOURCE_COUNT_LEDGER.md`; this file keeps the rules and the current number.
-Both floors are re-recorded at 48,343 and `make source-count` agrees. The
+Both floors are re-recorded at 48,819 and `make source-count` agrees. The
 lessons from batches 43–48 that a new batch must not relearn:
 
 * **A registration count is not a website, and a build is not a registry.**
@@ -1286,7 +1286,13 @@ Engine subtleties worth knowing before writing a row:
   old when read; 48 hours for asset loading, published ~14 hours behind in
   ~6,000-record days; three days for recent generation and for the system
   imbalance) with `order_by=datetime desc`, 100 a page and a `page_max` that
-  holds the window. One of the five was not truncated at all: **`ods045` ENDED
+  holds the window. Engine readings the same day: asset loading 7,003 / 7,003
+  in its 48 hours, recent generation 2,115 / 2,115 in its three days; the wind
+  and imbalance windows were validated by direct reads (2,068,300 total and
+  212 in-window records respectively) because opendata.elia.be refused the
+  engine's two attempts from the measuring environment, as it refused nine
+  requests in ten all day — a reading of that path, not of the rows. One of
+  the five was not truncated at all: **`ods045` ENDED
   in May 2024** (newest record 2024-05-21, total unchanged between audits) and
   the row had re-read its first 150 points of 2019 every 15 minutes for 17
   months — it reads the successor `ods134` now, 212 records in its three-day
