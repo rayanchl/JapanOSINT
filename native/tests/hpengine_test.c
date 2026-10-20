@@ -794,6 +794,22 @@ static const hp_source T[] = {
   { .id = "T_XML_STR", .name = "xml text-only records", .url = "https://x.test/str.xml",
     .mode = HP_XML, .array_path = "string", .interval = 3600,
     .record_type = "t-xmlstr", .free_tier = 1, .description = "d" },
+  /* A page-NUMBER row whose page size lives in its URL, because `page_size`
+   * on a page number would make the parameter an offset (test 43). The engine
+   * could not see that size at all, so "was the previous page short?" was
+   * unanswerable on the second request — the one where it matters. */
+  { .id = "T_URLSIZE", .name = "page size declared in the URL",
+    .url = "https://x.test/us?per_page=100",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .page_param = "page", .interval = 3600,
+    .record_type = "t-urlsize", .free_tier = 1, .description = "d" },
+  /* The same shape with a size page 1 FILLS, so a repeat really is an ignored
+   * parameter — the loud case the quiet one must not have cost (test 43c). */
+  { .id = "T_URLSIZE_FULL", .name = "page size in the URL, page 1 full",
+    .url = "https://x.test/uf?per_page=2",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .page_param = "page", .interval = 3600,
+    .record_type = "t-urlsizef", .free_tier = 1, .description = "d" },
   /* An XML row that declares NO paging, against an upstream that states its
    * own total in the envelope wrapping the records (test 42). Japan's KKJ
    * procurement API is the live case: `<SearchHits>50530</SearchHits>` beside
@@ -3771,6 +3787,48 @@ int main(void) {
      g_cap_ids_has("k1") && g_cap_ids_has("k2"),
      "42c: a count-shaped field inside a record is not read as the "
      "collection's total");
+
+  /* 43. A REPEAT AFTER A SHORT PAGE IS NOT EVIDENCE OF AN IGNORED PARAMETER.
+   *     Two identical bodies fit two readings — the parameter was ignored, or
+   *     the collection ended where the short page said it did — and nothing in
+   *     the bodies tells them apart. The notice asserted the first and gave a
+   *     count of pages "skipped" that was only what the ceiling would have
+   *     allowed. Measured on corp.casy.co.jp: 30 pages against `per_page=100`,
+   *     the same 30 again for `page=2` instead of the 400 the WordPress REST
+   *     API normally gives, and the site's own `x-wp-totalpages` header says 1.
+   *
+   *     It could not be told apart before this because the page size was in
+   *     the URL, which the engine did not read, so `prev_short` was 0 on the
+   *     second request of every such row. */
+  fx_reset();
+  fx_add("/us?per_page=100", 200,
+         "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(rc == 0 && cap_count("collector-shape-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"previous_page_was_short\":true") != NULL &&
+       strstr(nt->props, "probably nothing") != NULL,
+       "43: a byte-identical page after a SHORT page is reported as the end of "
+       "the feed, not as an ignored page parameter");
+    ok(nt && strstr(nt->props, "re-point page_param") == NULL,
+       "43b: and it does not tell anyone to re-point a working parameter"); }
+
+  /* 43c. A FULL page 1 that repeats is still the real finding — the fix must
+   *      not have bought the quiet case by losing the loud one. Two full pages
+   *      of genuinely different records cannot be byte-identical. */
+  fx_reset();
+  fx_add("/us?per_page=100", 200,
+         "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  fx_reset();
+  fx_add("/uf?per_page=2", 200,
+         "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  rc = run_source("T_URLSIZE_FULL", NULL);
+  { const cap *nt = NULL;
+    ok(rc == 0 && cap_count("collector-shape-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"previous_page_was_short\":false") != NULL &&
+       strstr(nt->props, "re-point page_param") != NULL,
+       "43c: a full page that repeats is still reported as an ignored page "
+       "parameter"); }
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

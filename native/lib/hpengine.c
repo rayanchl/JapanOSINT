@@ -360,6 +360,37 @@ static int hp_url_num_param(const char *url, const char *key, long *out) {
   return 0;
 }
 
+/* THE PAGE SIZE A ROW'S OWN URL ASKS FOR, when the row does not declare one in
+ * `page_size`. That is the usual case rather than the exception: on a
+ * page-NUMBER API `page_size` would make the parameter an offset, so CLAUDE.md
+ * says to put the size in the URL — and then the engine could not see it.
+ *
+ * The cost of not seeing it is that `yard` below is 0 on the SECOND request of
+ * such a row, so "was the previous page short?" is unanswerable exactly when
+ * it is first asked. Two rules that depend on it then could not apply:
+ * hp_later_page_cut()'s (a failure after a short page is the end of the data,
+ * not a truncation) and the byte-identical-repeat diagnosis (a repeat after a
+ * short page is most likely the end of the feed, not an ignored parameter).
+ * WordPress is the measured case: a site with 30 pages answers
+ * `per_page=100&page=2` with the same 30 instead of the 400 the REST API
+ * normally gives, so the row was told its page parameter was being ignored and
+ * that pages had been skipped, while the site's own `x-wp-totalpages` said 1.
+ *
+ * The list is deliberately short and explicit. A parameter wrongly read as a
+ * page size makes a cut walk look like a complete one, which is the direction
+ * that loses data, so nothing is guessed from shape. */
+static int hp_url_declared_size(const char *url) {
+  static const char *SZ[] = { "per_page", "pageSize", "page_size", "limit",
+                              "Count", "count", "rows", "size", "take",
+                              "maxRecords", "resultRecordCount", "$top",
+                              "num", "perPage", "pagesize", NULL };
+  for (int i = 0; SZ[i]; i++) {
+    long v = 0;
+    if (hp_url_num_param(url, SZ[i], &v) && v > 0 && v < 1000000) return (int)v;
+  }
+  return 0;
+}
+
 /* {token} expansion. An unknown token is left verbatim so a typo shows up in
  * the logged URL instead of silently vanishing. `extra_name`/`extra_val`
  * inject the second-hop {v}. Returns malloc'd.
@@ -1184,6 +1215,14 @@ typedef struct {
   /* sh_repeat_page was set by the RECORDS guard below rather than by the
    * byte-identical body test, so the notice says which it was. */
   int   sh_repeat_records;
+  /* The page BEFORE the repeat came back short of what the URL asked for, so
+   * the collection had already said where it ends. The notice must not then
+   * assert that the page parameter is ignored and that N pages were skipped —
+   * both readings fit the same two bodies, and a short page is evidence for
+   * the harmless one. WordPress is the measured case: a site with 30 pages
+   * answers `per_page=100&page=2` with the same 30 instead of the 400 the REST
+   * API normally gives, and its own `x-wp-totalpages` header says 1. */
+  int   sh_repeat_after_short;
 
   /* Repeat guard on the RECORDS of a paged JSON walk (see hp_run_json).
    * Hashing the whole body could not see an ignored cursor when the envelope
@@ -3815,13 +3854,33 @@ static void hp_shape_notices(hp_run_state *st, intel_sink *sink,
     cJSON_AddStringToObject(p, "repeat_detected_by",
       st->sh_repeat_records ? "the page's records (the envelope differed)"
                             : "the page's bytes");
+    /* A repeat after a SHORT page fits two readings — an ignored parameter, or
+     * a collection that simply ended where the short page said it did — and
+     * nothing in two identical bodies tells them apart. Asserting the first
+     * one, and a count of pages "skipped" that is only what the ceiling would
+     * have allowed, made the disclosure itself the fabrication. */
+    cJSON_AddBoolToObject(p, "previous_page_was_short",
+                          st->sh_repeat_after_short ? 1 : 0);
     cJSON_AddStringToObject(p, "remedy",
-      "the upstream ignores this page parameter: re-point page_param/next_path "
-      "at one it honours (known-issue #54), or drop paging from the row");
+      st->sh_repeat_after_short
+        ? "probably nothing: the page before the repeat came back SHORT of "
+          "what the URL asked for, which already said the collection ends "
+          "there, and an upstream that answers a past-the-end page with the "
+          "last page instead of an error looks exactly like this. Check the "
+          "upstream's own total before re-pointing anything — pages_skipped "
+          "below is what the ceiling would have allowed, not pages known to "
+          "exist"
+        : "the upstream ignores this page parameter: re-point "
+          "page_param/next_path at one it honours (known-issue #54), or drop "
+          "paging from the row");
     snprintf(title, sizeof title,
-             "%s: page %d %s page %d — page parameter "
-             "ignored; stopped and skipped %d further page(s) of a %d-page "
-             "ceiling; %d record(s) emitted",
+             st->sh_repeat_after_short
+               ? "%s: page %d %s page %d after a short page — most likely the "
+                 "end of the feed; stopped with %d page(s) of a %d-page "
+                 "ceiling unused; %d record(s) emitted"
+               : "%s: page %d %s page %d — page parameter "
+                 "ignored; stopped and skipped %d further page(s) of a %d-page "
+                 "ceiling; %d record(s) emitted",
              s->id, st->sh_repeat_page,
              st->sh_repeat_records ? "repeated the records of"
                                    : "was byte-identical to",
@@ -4434,12 +4493,15 @@ dated_restart:;
     st.unreadable = 0;
 
     /* Was the page before this one short or full? The yardstick is the
-     * row's declared page size, else page 1's own count — which can only
-     * judge pages after the second request; before that both stay 0
-     * ("unknown"). See hp_later_page_cut(). */
+     * row's declared page size, else the size the row's own URL asks for,
+     * else page 1's own count — which can only judge pages after the second
+     * request, and was the only fallback until hp_url_declared_size() was
+     * added, so both stayed 0 ("unknown") on the one request where the answer
+     * matters most. See hp_later_page_cut(). */
     int prev_short = 0, prev_full = 0;
     if (page > 0) {
       int yard = s->page_size > 0 ? s->page_size
+               : hp_url_declared_size(url) > 0 ? hp_url_declared_size(url)
                : page >= 2 ? first_page_records : 0;
       if (yard > 0) {
         prev_short = prev_page_records < yard;
@@ -4549,8 +4611,12 @@ dated_restart:;
       if (client_paged || prev_was_full) {
         st.sh_repeat_page    = page + 1;
         st.sh_repeat_skipped = page_max - (page + 1);
-        fprintf(stderr, "[hp:%s] page %d is byte-identical to page %d — the page "
-                "parameter is being ignored, stopping the walk\n", s->id, page + 1, page);
+        st.sh_repeat_after_short = prev_short;
+        fprintf(stderr, "[hp:%s] page %d is byte-identical to page %d — %s, "
+                "stopping the walk\n", s->id, page + 1, page,
+                prev_short ? "and page 1 came back short, so this is most "
+                             "likely the end of the feed"
+                           : "the page parameter is being ignored");
       } else {
         fprintf(stderr, "[hp:%s] page %d repeats page %d after a short page — "
                 "end of feed, stopping the walk\n", s->id, page + 1, page);
@@ -4646,6 +4712,7 @@ dated_restart:;
       st.sh_repeat_page    = page + 1;
       st.sh_repeat_skipped = page_max - (page + 1);
       st.sh_repeat_records = 1;
+      st.sh_repeat_after_short = prev_short;
       fprintf(stderr, "[hp:%s] page %d repeats the records of page %d — the "
               "cursor is being ignored, stopping the walk\n", s->id, page + 1, page);
     }
