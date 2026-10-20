@@ -1465,6 +1465,28 @@ Engine subtleties worth knowing before writing a row:
   finding; a row that only ever comes back `LOCAL_EGRESS` is **unmeasured from
   here**, which is a thing to write down rather than a verdict to act on.
 
+  **And that sweep's RECORD COUNTER was the array hijack this file already
+  records for the engine, in a tool that never got the engine's fix.** It took
+  the longest list ANYWHERE in the body, so an ArcGIS polygon's coordinate RING
+  was counted as records: `EAD_PROTECTED_AREAS` holds 21 features — its own
+  `returnCountOnly` says 21, with no `exceededTransferLimit` — and was counted
+  as **3,748**. Its docstring excused this as "a floor, only ever compared with
+  ITSELF", and both halves were false: the short-page rule compares the count
+  with the page SIZE the URL asked for, and THAT comparison is what separates a
+  benign `PAGE1_IS_ALL` from a `REFUSED` or `SAME_AS_PAGE1` finding, so
+  over-counting turns a complete collection into a finding. It resolves the
+  declared envelope first now, then the longest array of OBJECTS, like
+  `hp_path`.
+
+  The other half of the same bug FABRICATED. A body truncated at the tool's
+  400 KB read cap will not parse, and the fallback `s.count("},") + 1` did not
+  decline — it answered **1,232** for a CKAN page holding 48 packages whose own
+  `result.count` says 48. The cap is 8 MB now and an uncountable body returns
+  **-1 for UNKNOWN**, which every comparison guards on, rather than a number
+  nobody can tell from a measurement. Verified after: 21, 48 and 300 where the
+  tool had said 3,748, 1,232 and 1,232. **A count a tool cannot make is not a
+  count it may estimate** — that is rule 1 applied to the gates themselves.
+
   A by-catch of the same pass: `CR_SANCARLOS_PREDIOS` had been documented dead
   since round 8 (2026-09-21) because GetCapabilities listed no `predio*` layer,
   "so the parcels were withdrawn, not renamed". That followed from **searching
