@@ -2,7 +2,9 @@
  *
  * Service names are written down in two places that are NOT generated from the
  * registry: the static analysis schema (`grammars/osint_analysis.schema.json`,
- * two enums) and the few-shot examples baked into `core/prompts.c`. Both are
+ * two enums) and the few-shot examples — phase 1's routing examples in
+ * `grammars/fewshot_analysis.jsonl` (moved out of `core/prompts.c` 2026-10-12,
+ * core/fewshot.h), phase 2's chaining examples still in prompts.c. Both are
  * hand-maintained, and nothing checked them until this test.
  *
  * The schema's enums are normally overwritten per request from the live
@@ -185,8 +187,63 @@ static void test_fewshot_names(void) {
   }
   printf("  %-28s %d names checked (%d placeholders skipped), %d not "
          "registered\n", "prompts.c few-shot", total, placeholders, bad);
-  assert(total > 50 && "the few-shot scanner found almost nothing — the prompt "
+  /* The phase-1 routing examples moved to grammars/fewshot_analysis.jsonl
+   * (test_fewshot_jsonl below); what is left here is phase 2's chaining
+   * examples, still well above this floor. */
+  assert(total > 10 && "the few-shot scanner found almost nothing — the prompt "
                        "format changed and this test is no longer reading it");
+  assert(bad == 0 && "a few-shot example names a service that no longer exists");
+  free(src);
+}
+
+/* ---- 2b. the phase-1 routing examples in grammars/fewshot_analysis.jsonl --
+ *
+ * Every line is {query, response, services[]}. `response` is the exact JSON
+ * the model is taught to answer; `services` must list exactly the names that
+ * response uses (entities[].services then recommended_services, first
+ * occurrence order), so the file cannot teach a name its index does not
+ * declare — and every one of them must be registered. */
+static void add_unique(cJSON *arr, const char *s) {
+  cJSON *it;
+  cJSON_ArrayForEach(it, arr) if (!strcmp(it->valuestring, s)) return;
+  cJSON_AddItemToArray(arr, cJSON_CreateString(s));
+}
+
+static void test_fewshot_jsonl(void) {
+  char *src = slurp("grammars/fewshot_analysis.jsonl");
+  assert(src && "grammars/fewshot_analysis.jsonl unreadable");
+  int lines = 0, total = 0, bad = 0;
+  for (char *line = strtok(src, "\n"); line; line = strtok(NULL, "\n")) {
+    cJSON *o = cJSON_Parse(line);
+    assert(o && "a fewshot_analysis.jsonl line is not JSON");
+    cJSON *q = cJSON_GetObjectItem(o, "query");
+    cJSON *r = cJSON_GetObjectItem(o, "response");
+    cJSON *sv = cJSON_GetObjectItem(o, "services");
+    assert(cJSON_IsString(q) && cJSON_IsString(r) && cJSON_IsArray(sv));
+    cJSON *resp = cJSON_Parse(r->valuestring);
+    assert(resp && "an example's response is not the JSON it teaches");
+    cJSON *want = cJSON_CreateArray(), *e, *s;
+    cJSON_ArrayForEach(e, cJSON_GetObjectItem(resp, "entities"))
+      cJSON_ArrayForEach(s, cJSON_GetObjectItem(e, "services"))
+        add_unique(want, s->valuestring);
+    cJSON_ArrayForEach(s, cJSON_GetObjectItem(resp, "recommended_services"))
+      add_unique(want, s->valuestring);
+    assert(cJSON_Compare(want, sv, 1) &&
+           "services[] does not list exactly the names its response uses");
+    cJSON_ArrayForEach(s, sv) {
+      total++;
+      if (!resolves(s->valuestring)) {
+        printf("  MISSING few-shot: %s (\"%s\") is taught to the model but is "
+               "not registered\n", s->valuestring, q->valuestring);
+        bad++;
+      }
+    }
+    cJSON_Delete(want); cJSON_Delete(resp); cJSON_Delete(o);
+    lines++;
+  }
+  printf("  %-28s %d examples, %d names checked, %d not registered\n",
+         "fewshot_analysis.jsonl", lines, total, bad);
+  assert(lines > 50 && total > 200 && "the few-shot file is nearly empty");
   assert(bad == 0 && "a few-shot example names a service that no longer exists");
   free(src);
 }
@@ -221,6 +278,7 @@ int main(void) {
   assert(registry_count() > 0 && "no sources registered — link line is wrong");
   test_schema_enums();
   test_fewshot_names();
+  test_fewshot_jsonl();
   test_loaded_grammars_exist();
   printf("test_service_names: ok\n");
   return 0;

@@ -1141,6 +1141,54 @@ int media_ocr_file(const char *path, char **out_text, double *out_conf) {
   return 1;
 }
 
+void media_probe_decoders(media_decoders *out) {
+  static pthread_mutex_t lk = PTHREAD_MUTEX_INITIALIZER;
+  static int probed = 0;
+  static media_decoders c;
+  if (!out) return;
+  pthread_mutex_lock(&lk);
+  if (!probed) {
+    probed = 1;
+    memset(&c, 0, sizeof c);
+    c.tesseract_jpn = -1;
+    c.disabled = tools_disabled();
+    /* Presence is reported even when MEDIA_NO_TOOLS is set — "installed but
+     * switched off" and "not installed" want different fixes. */
+    find_tool("magick", c.magick, sizeof c.magick);
+    find_tool("convert", c.convert, sizeof c.convert);
+    find_tool("gm", c.gm, sizeof c.gm);
+    if (find_tool("tesseract", c.tesseract, sizeof c.tesseract)) {
+      /* `--list-langs` prints a header line then one code per line; older
+       * builds print it on stderr, hence 2>&1. The path came from find_tool()
+       * (path_ok() already refused shell metacharacters). */
+      char cmd[MEDIA_TOOLPATH_MAX + 32];
+      snprintf(cmd, sizeof cmd, "%s --list-langs 2>&1", c.tesseract);
+      size_t n = 0;
+      char *o = run_capture(cmd, 64 * 1024, &n);
+      if (o) {
+        c.tesseract_jpn = 0;
+        size_t w = 0;
+        for (char *line = o, *nx; line && *line; line = nx) {
+          nx = line + strcspn(line, "\r\n");
+          if (*nx) *nx++ = '\0'; else nx = NULL;
+          if (!*line || strchr(line, ' ') || strchr(line, ':')) continue;   /* header */
+          if (strcmp(line, "jpn") == 0) c.tesseract_jpn = 1;
+          size_t ll = strlen(line);
+          if (w + ll + 2 < sizeof c.tesseract_langs) {
+            if (w) c.tesseract_langs[w++] = ',';
+            memcpy(c.tesseract_langs + w, line, ll);
+            w += ll;
+            c.tesseract_langs[w] = '\0';
+          }
+        }
+        free(o);
+      }
+    }
+  }
+  *out = c;
+  pthread_mutex_unlock(&lk);
+}
+
 char *media_capabilities(void) {
   pthread_mutex_lock(&g_tool_lock);
   probe_phash();
@@ -1229,6 +1277,10 @@ void media_migrate(db_handle *db) {
     fprintf(stderr, "[media] migrate: %s\n", e ? e : "?");
     sqlite3_free(e);
   }
+  /* After the table exists. NULL = corpus (an intel item's image); set = a
+   * client upload of that tenant (media_record_upload), which the plain-auth
+   * item route never lists and the camera image index never walks. */
+  ensure_column(db, "media_assets", "tenant_id", "TEXT");
   g_migrated = 1;
   pthread_mutex_unlock(&g_mig_lock);
 }
@@ -1853,7 +1905,61 @@ static void mark_fail(sqlite3 *h, const char *id, int terminal) {
   }
 }
 
-typedef struct { char *id, *uid, *url; } arow;
+typedef struct { char *id, *uid, *url, *sha; } arow;
+
+/* A client upload's row (media_record_upload) carries no fetchable URL: its
+ * bytes are already in the evidence store under the upload's uid. */
+#define MEDIA_UPLOAD_URL_PREFIX "jo:upload/"
+
+/* Read an upload's preserved bytes into an http_response-shaped buffer so the
+ * rest of the analysis path is the same one a fetch takes. 0 ok; -1 no bytes
+ * (capture skipped it as too big, or reaped) or they no longer hash to `sha`
+ * — terminal either way, a retry would read the same store. */
+static int upload_bytes(sqlite3 *h, const char *uid, const char *sha, long maxb,
+                        http_response *r) {
+  char p[1400];
+  if (!sha || !evidence_blob_path(h, sha, uid, p, sizeof p)) return -1;
+  FILE *f = fopen(p, "rb");
+  if (!f) return -1;
+  struct stat st;
+  if (fstat(fileno(f), &st) != 0 || st.st_size <= 0 || st.st_size > maxb) {
+    fclose(f); return -1; }
+  char *b = malloc((size_t)st.st_size + 1);
+  size_t got = b ? fread(b, 1, (size_t)st.st_size, f) : 0;
+  fclose(f);
+  char hex[65];
+  if (b) sha256_hex(b, got, hex);
+  if (!b || got != (size_t)st.st_size || strcmp(hex, sha)) { free(b); return -1; }
+  b[got] = 0;
+  r->status = 200; r->body = b; r->body_len = got;
+  return 0;
+}
+
+int media_record_upload(db_handle *db, const char *tenant_id, const char *item_uid,
+                        const char *url, const char *sha, size_t bytes,
+                        const char *content_type) {
+  if (!db || !db->h || !tenant_id || !*tenant_id || !item_uid || !url || !sha)
+    return -1;
+  media_migrate(db);
+  char id[37];
+  uuid4(id);
+  sqlite3_stmt *s;
+  if (sqlite3_prepare_v2(db->h,
+      "INSERT OR IGNORE INTO media_assets(id,item_uid,url,sha256,bytes,"
+      " content_type,tenant_id) VALUES(?1,?2,?3,?4,?5,?6,?7)",
+      -1, &s, NULL) != SQLITE_OK) return -1;
+  sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
+  sqlite3_bind_text(s, 2, item_uid, -1, SQLITE_TRANSIENT);
+  sqlite3_bind_text(s, 3, url, -1, SQLITE_TRANSIENT);
+  sqlite3_bind_text(s, 4, sha, -1, SQLITE_TRANSIENT);
+  sqlite3_bind_int64(s, 5, (sqlite3_int64)bytes);
+  if (content_type) sqlite3_bind_text(s, 6, content_type, -1, SQLITE_TRANSIENT);
+  else              sqlite3_bind_null(s, 6);
+  sqlite3_bind_text(s, 7, tenant_id, -1, SQLITE_TRANSIENT);
+  int rc = sqlite3_step(s) == SQLITE_DONE ? (sqlite3_changes(db->h) > 0) : -1;
+  sqlite3_finalize(s);
+  return rc;
+}
 
 int media_analyze_batch(db_handle *db, http_client *http, int limit,
                         volatile int *cancel) {
@@ -1882,7 +1988,7 @@ int media_analyze_batch(db_handle *db, http_client *http, int limit,
   /* Read the batch and FINALIZE before the first fetch: a read cursor held
    * across a 15-second network call is a 15-second read lock. */
   if (sqlite3_prepare_v2(h,
-      "SELECT id,item_uid,url FROM media_assets"
+      "SELECT id,item_uid,url,sha256 FROM media_assets"
       " WHERE " MEDIA_PENDING_WHERE
       " ORDER BY analyze_failed LIMIT ?1", -1, &s, NULL) == SQLITE_OK) {
     sqlite3_bind_int(s, 1, limit);
@@ -1890,6 +1996,7 @@ int media_analyze_batch(db_handle *db, http_client *http, int limit,
       rows[n].id  = dupcol(s, 0);
       rows[n].uid = dupcol(s, 1);
       rows[n].url = dupcol(s, 2);
+      rows[n].sha = dupcol(s, 3);
       if (rows[n].id && rows[n].uid && rows[n].url) n++;
     }
     sqlite3_finalize(s);
@@ -1902,6 +2009,8 @@ int media_analyze_batch(db_handle *db, http_client *http, int limit,
   for (int i = 0; i < n && http; i++) {
     if (cancel && *cancel) break;
     arow *a = &rows[i];
+    int upload = !strncmp(a->url, MEDIA_UPLOAD_URL_PREFIX,
+                          sizeof MEDIA_UPLOAD_URL_PREFIX - 1);
 
     char *sid = NULL;
     if (sqlite3_prepare_v2(h, "SELECT source_id FROM intel_items WHERE uid=?1",
@@ -1919,7 +2028,13 @@ int media_analyze_batch(db_handle *db, http_client *http, int limit,
     const char *hdrs[] = { rangeh, "Accept: image/*,*/*;q=0.8", NULL };
 
     http_response r = { 0 };
-    int rc = http_request(http, "GET", a->url, hdrs, NULL, 0, tmo, 1, &r);
+    if (upload && upload_bytes(h, a->uid, a->sha, maxb, &r) != 0) {
+      mark_fail(h, a->id, 1);
+      failed++;
+      free(sid);
+      continue;
+    }
+    int rc = upload ? 0 : http_request(http, "GET", a->url, hdrs, NULL, 0, tmo, 1, &r);
     if (rc != 0 || (r.status != 200 && r.status != 206) ||
         !r.body || r.body_len < 16) {
       http_response_free(&r);
@@ -1961,9 +2076,10 @@ int media_analyze_batch(db_handle *db, http_client *http, int limit,
      * says which source delivered the image with which item. Deduped by
      * content hash inside evidence.c: twenty re-hosts of the same wire photo
      * are one file on disk. */
-    evidence_capture(db, a->uid, sid ? sid : "media", a->url, "GET", NULL,
-                     r.status, NULL, r.body, r.body_len,
-                     ct ? ct : "application/octet-stream");
+    if (!upload)       /* an upload was preserved at commit, under its uid */
+      evidence_capture(db, a->uid, sid ? sid : "media", a->url, "GET", NULL,
+                       r.status, NULL, r.body, r.body_len,
+                       ct ? ct : "application/octet-stream");
 
     uint64_t ph = 0;
     int have_ph = 0;
@@ -2026,9 +2142,9 @@ int media_analyze_batch(db_handle *db, http_client *http, int limit,
     /* After the commit, never inside it — same discipline as intel.c's
      * post-commit hooks. A geo write or an FTS write must not be able to roll
      * back the analysis that produced it, and both must see the committed row. */
-    if (ok && ex.have_gps)
+    if (ok && ex.have_gps && !upload)    /* an upload has no intel row */
       geo += media_geo_backfill(db, a->uid, ex.lat, ex.lon);
-    if (ok && ocr) media_fts_put(h, a->uid);
+    if (ok && ocr && !upload) media_fts_put(h, a->uid);
 
     free(exj); free(ocr); free(sid);
     http_response_free(&r);
@@ -2036,7 +2152,9 @@ int media_analyze_batch(db_handle *db, http_client *http, int limit,
   }
 
   if (own) http_client_free(own);
-  for (int i = 0; i < n; i++) { free(rows[i].id); free(rows[i].uid); free(rows[i].url); }
+  for (int i = 0; i < n; i++) {
+    free(rows[i].id); free(rows[i].uid); free(rows[i].url); free(rows[i].sha);
+  }
   free(rows);
   if (n)
     fprintf(stderr, "[media] analyze: attempted=%d ok=%d failed=%d geo=%d "
@@ -2054,7 +2172,10 @@ static void put_hex64(cJSON *o, const char *k, sqlite3_int64 v) {
   cJSON_AddStringToObject(o, k, b);
 }
 
-char *media_list_for_item(db_handle *db, const char *item_uid, int limit) {
+/* `tenant` NULL = the corpus rows only (tenant_id IS NULL); set = that
+ * tenant's upload rows only. Never both. */
+static char *list_rows(db_handle *db, const char *item_uid, const char *tenant,
+                       int limit) {
   if (!db || !db->h || !item_uid || !*item_uid) return NULL;
   media_migrate(db);
   if (limit <= 0) limit = 50;
@@ -2069,6 +2190,7 @@ char *media_list_for_item(db_handle *db, const char *item_uid, int limit) {
       "SELECT id,url,sha256,bytes,content_type,phash,exif_json,ocr_text,"
       "       ocr_conf,width,height,analyzed_at,analyze_failed"
       "  FROM media_assets WHERE item_uid=?1"
+      "   AND (CASE WHEN ?3 IS NULL THEN tenant_id IS NULL ELSE tenant_id=?3 END)"
       " ORDER BY analyzed_at DESC, rowid DESC LIMIT ?2",
       -1, &s, NULL) != SQLITE_OK) {
     cJSON_Delete(arr);
@@ -2076,6 +2198,8 @@ char *media_list_for_item(db_handle *db, const char *item_uid, int limit) {
   }
   sqlite3_bind_text(s, 1, item_uid, -1, SQLITE_TRANSIENT);
   sqlite3_bind_int(s, 2, limit);
+  if (tenant) sqlite3_bind_text(s, 3, tenant, -1, SQLITE_TRANSIENT);
+  else        sqlite3_bind_null(s, 3);
   while (sqlite3_step(s) == SQLITE_ROW) {
     cJSON *o = cJSON_CreateObject();
     if (!o) break;
@@ -2158,6 +2282,16 @@ char *media_list_for_item(db_handle *db, const char *item_uid, int limit) {
   char *j = cJSON_PrintUnformatted(env);
   cJSON_Delete(env);
   return j;
+}
+
+char *media_list_for_item(db_handle *db, const char *item_uid, int limit) {
+  return list_rows(db, item_uid, NULL, limit);
+}
+
+char *media_list_for_upload(db_handle *db, const char *tenant_id,
+                            const char *item_uid, int limit) {
+  if (!tenant_id || !*tenant_id) return NULL;
+  return list_rows(db, item_uid, tenant_id, limit);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════

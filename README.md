@@ -5,7 +5,7 @@ on their own schedules into one searchable, geo-aware intel store, plus an
 LLM-driven OSINT search that dispatches those same sources against an entity
 you care about.
 
-It is **one C binary and one iOS app**.
+It is **one C binary**, with two clients: a web site and a SwiftUI app.
 
 ```
 native/     the engine — a single C binary, bin/japanosint
@@ -16,11 +16,12 @@ native/     the engine — a single C binary, bin/japanosint
               lib/                     shared parsers/clients (RSS, CSV, geo, ws…)
               third_party/             vendored SQLite, cJSON, mongoose
               tools/lint_sources.py    mechanical checks over the collector tree
-ios/        the live client — SwiftUI app (map, intel, dashboard, cases, breach)
+client/     the web site — React/Vite app, served by its own Vite pod (:5173)
+ios/        the SwiftUI app (map, intel, dashboard, cases, breach)
 grammars/   GBNF grammars constraining the LLM's structured output
 docs/       see docs/BUILD.md and docs/pipeline.md first
 scripts/    llama-server launcher, breach-corpus generator
-launch.sh   the orchestrator: build → server → llama → status
+launch.sh   the orchestrator: build → server → web → llama → status
 ```
 
 Measured 2026-08-10: ~276,000 lines of C outside `third_party/` (~208,000 of it
@@ -90,25 +91,45 @@ Writing a new source: [`native/collectors/SOURCE_AUTHORING_CONTRACT.md`](native/
 
 ## Clients
 
-* **`ios/` — the live client.** SwiftUI: map with per-layer feature caching,
-  intel feed, source dashboard, cases, entity graph, camera viewer, breach
-  check, plus a share extension and widgets.
-  There is no web client. A React/Vite/MapLibre app from the Node era lived at
-  `client/` and was **removed on 2026-08-10**: nothing built, served or started
-  it, the C server has no static handler and 404s every non-`/api` path, it
-  sent no `Authorization` header so every call would have 401'd anyway, and 17
-  of its endpoints no longer existed. It is in git history if it is ever
-  wanted back.
+* **`client/` — the web site.** React + Vite + MapLibre GL/deck.gl: map with
+  the layer catalogue, intel feed and search, source dashboard, cases, camera
+  discovery thread. `./launch.sh up` starts it as the **web pod**: the Vite
+  dev server on `:5173` (`WEB_PORT`), whose `/api` proxy forwards to the
+  server pod (`JO_API_TARGET`, read by `client/vite.config.js`). The C server
+  itself serves only `/api` — it has no static-file handler — so the site is
+  the Vite server, not a bundle the binary hands out.
+  Requests carry the session: `client/src/auth/session.js` wraps
+  `window.fetch` so every `/api` call sends `Authorization: Bearer <token>`
+  and `X-Tenant-Id`, refreshing once on a 401. Two things cannot go through
+  that wrapper and are handled separately: `EventSource` (the search progress
+  stream opens with the per-run `?key=` the server hands the starter) and
+  `<img>` (camera images are fetched and shown from a blob URL —
+  `client/src/utils/authedImage.js`).
+  There is no WebSocket: the server has no `/ws`, so the client's socket path
+  is off unless built with `VITE_JO_WEBSOCKET=1`, and its hooks poll instead
+  (sources every 60 s, camera run status every 4–20 s). `client/README.md`
+  has the details.
+* **`ios/` — the SwiftUI app.** Map with per-layer feature caching, intel
+  feed, source dashboard, cases, entity graph, camera viewer, breach check.
+  The Xcode project has exactly **one** target, the app (iOS and macOS). The
+  share extension (`ios/JapanOsintShare/`) and the WidgetKit widgets and Live
+  Activity (`ios/JapanOsintWidgets/`) are source files that **no target
+  compiles**, so they do not ship, and the App Group they would share data
+  through is not configured (the app gates that code off at runtime).
+  `ios/EXTENSION_TARGETS_TODO.md` is the procedure for adding the two
+  targets.
 
 ## History, so the tree makes sense
 
 There used to be a Node backend at `server/` (Express + SQLite + node-cron +
 WebSocket). It was **deleted on 2026-05-17** and fully replaced by the C
-engine. Nothing in this repo runs `npm run dev` any more. Two artefacts of that
-era survive on purpose: the contract-parity fixtures in
-`native/tests/contract/` (byte-level Node baselines that can never be
-re-captured — treat them as read-only). The web client that also survived it
-was removed on 2026-08-10; see Clients above.
+engine. Two artefacts of that era survive on purpose: the contract-parity
+fixtures in `native/tests/contract/` (byte-level Node baselines that can never
+be re-captured — treat them as read-only), and the web client in `client/`,
+which now runs against the C server (see Clients above). This README used to
+say that `client/` had been removed on 2026-08-10 and sent no `Authorization`
+header; neither was true of this tree — the directory is here, `launch.sh`
+starts it as the site, and `client/src/auth/session.js` sends the bearer.
 
 ## License
 
