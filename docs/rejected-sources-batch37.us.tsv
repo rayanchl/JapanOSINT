@@ -1,25 +1,17 @@
-# id	url	reason  (rejected 2026-10-05 before any probe, on dedupe against the 18,457-id tree)
-US_SOC_NYC	https://data.cityofnewyork.us/api/catalog/v1?limit=100&offset=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc15_us_opendata_1.c :: https://data.cityofnewyork.us/api/catalog/v1?limit=100
-US_SOC_CHICAGO	https://data.cityofchicago.org/api/catalog/v1?limit=100&offset=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc15_us_opendata_1.c :: https://data.cityofchicago.org/api/catalog/v1?limit=100
-US_SOC_SEATTLE	https://data.seattle.gov/api/catalog/v1?limit=100&offset=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc15_us_opendata_2.c :: https://data.seattle.gov/api/catalog/v1?limit=100
-US_SOC_LACITY	https://data.lacity.org/api/catalog/v1?limit=100&offset=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc15_us_opendata_2.c :: https://data.lacity.org/api/catalog/v1?limit=100
-US_SOC_AUSTIN	https://data.austintexas.gov/api/catalog/v1?limit=100&offset=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc15_us_opendata_1.c :: https://data.austintexas.gov/api/catalog/v1?limit=100
-US_SOC_WA	https://data.wa.gov/api/catalog/v1?limit=100&offset=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc15_us_opendata_2.c :: https://data.wa.gov/api/catalog/v1?limit=100
-US_SOC_NYSTATE	https://data.ny.gov/api/catalog/v1?limit=100&offset=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc15_us_opendata_2.c :: https://data.ny.gov/api/catalog/v1?limit=100
-US_SOC_CT	https://data.ct.gov/api/catalog/v1?limit=100&offset=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc15_us_opendata_1.c :: https://data.ct.gov/api/catalog/v1?limit=100
-US_SOC_COLORADO	https://data.colorado.gov/api/catalog/v1?limit=100&offset=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc15_us_opendata_1.c :: https://data.colorado.gov/api/catalog/v1?limit=100
-US_SOC_MARYLAND	https://opendata.maryland.gov/api/catalog/v1?limit=100&offset=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc15_us_opendata_3.c :: https://opendata.maryland.gov/api/catalog/v1?limit=100
-US_SOC_TEXAS	https://data.texas.gov/api/catalog/v1?limit=100&offset=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc15_us_opendata_2.c :: https://data.texas.gov/api/catalog/v1?limit=100
-US_SOC_DALLAS	https://www.dallasopendata.com/api/catalog/v1?limit=100&offset=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc15_us_opendata_3.c :: https://www.dallasopendata.com/api/catalog/v1?limit=100
-US_SOC_CDC	https://data.cdc.gov/api/catalog/v1?limit=100&offset=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc15_us_opendata_1.c :: https://data.cdc.gov/api/catalog/v1?limit=100
-US_SOC_HEALTHDATA	https://healthdata.gov/api/catalog/v1?limit=100&offset=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc15_us_opendata_3.c :: https://healthdata.gov/api/catalog/v1?limit=100
-US_SOC_KCMO	https://data.kcmo.org/api/catalog/v1?limit=100&offset=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc15_us_opendata_2.c :: https://data.kcmo.org/api/catalog/v1?limit=100
-US_SOC_MONTGOMERY	https://data.montgomerycountymd.gov/api/catalog/v1?limit=100&offset=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc15_us_opendata_2.c :: https://data.montgomerycountymd.gov/api/catalog/v1?limit=100
-US_SOC_PA	https://data.pa.gov/api/catalog/v1?limit=100&offset=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc15_us_opendata_2.c :: https://data.pa.gov/api/catalog/v1?limit=100
-US_SOC_PROVIDENCE	https://data.providenceri.gov/api/catalog/v1?limit=100&offset=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc15_us_opendata_2.c :: https://data.providenceri.gov/api/catalog/v1?limit=100
-US_SOC_CAMBRIDGE	https://data.cambridgema.gov/api/catalog/v1?limit=100&offset=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc15_us_opendata_1.c :: https://data.cambridgema.gov/api/catalog/v1?limit=100
-US_NWS_ALERTS	https://api.weather.gov/alerts/active?limit=500	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — intel_gov_disaster.c :: https://api.weather.gov/alerts/active
-US_SOC_OREGON	https://data.oregon.gov/api/catalog/v1?limit=100&offset=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc15_us_opendata_2.c :: https://data.oregon.gov/api/catalog/v1?limit=100
-US_SOC_SONOMA	https://data.sonomacounty.ca.gov/api/catalog/v1?limit=100&offset=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc15_us_opendata_2.c :: https://data.sonomacounty.ca.gov/api/catalog/v1?limit=100
-US_SOC_BLOOMINGTON	https://data.bloomington.in.gov/api/catalog/v1?limit=100&offset=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc15_us_opendata_1.c :: https://data.bloomington.in.gov/api/catalog/v1?limit=100
-US_SOC_NOLA	https://data.nola.gov/api/catalog/v1?limit=100&offset=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc15_us_opendata_2.c :: https://data.nola.gov/api/catalog/v1?limit=100
+# Batch 37 candidates REJECTED by the live probe, 2026-10-12.
+# These were authored 2026-10-02 in a session with no egress to any of
+# these hosts, so every host and path was inferred from the family's
+# convention. This file is the measurement that inference needed.
+# id	verdict	http	url	note
+US_DATAGOV_CKAN	HTTP_ERR	404	https://catalog.data.gov/api/3/action/package_search?rows=100&start=0	Not Found
+US_FEC_CANDIDATES	HTTP_ERR	429	https://api.open.fec.gov/v1/candidates/?per_page=100&page=1&api_key=DEMO_KEY	Too Many Requests
+US_SOC_ARLINGTON	UNPARSEABLE	200	https://data.arlingtonva.us/api/catalog/v1?limit=100&offset=0&domains=data.arlingtonva.us&search_context=data.arlingtonva.us	declared array_path but body is not JSON
+US_SOC_BALTIMORE	HTTP_ERR	404	https://data.baltimorecity.gov/api/catalog/v1?limit=100&offset=0&domains=data.baltimorecity.gov&search_context=data.baltimorecity.gov	Not Found
+US_SOC_DETROIT	HTTP_ERR	404	https://data.detroitmi.gov/api/catalog/v1?limit=100&offset=0&domains=data.detroitmi.gov&search_context=data.detroitmi.gov	Not Found
+US_SOC_FORTWORTH	HTTP_ERR	404	https://data.fortworthtexas.gov/api/catalog/v1?limit=100&offset=0&domains=data.fortworthtexas.gov&search_context=data.fortworthtexas.gov	Not Found
+US_SOC_HAWAII	HTTP_ERR	404	https://data.hawaii.gov/api/catalog/v1?limit=100&offset=0&domains=data.hawaii.gov&search_context=data.hawaii.gov	Not Found
+US_SOC_LOUISVILLE	HTTP_ERR	404	https://data.louisvilleky.gov/api/catalog/v1?limit=100&offset=0&domains=data.louisvilleky.gov&search_context=data.louisvilleky.gov	Not Found
+US_SOC_NASHVILLE	HTTP_ERR	404	https://data.nashville.gov/api/catalog/v1?limit=100&offset=0&domains=data.nashville.gov&search_context=data.nashville.gov	Not Found
+US_SOC_PERFORMANCE_NM	NET_ERR	0	https://data.newmexico.gov/api/catalog/v1?limit=100&offset=0&domains=data.newmexico.gov&search_context=data.newmexico.gov	Tunnel connection failed: 502 Bad Gateway
+US_SOC_SANDIEGO	HTTP_ERR	404	https://data.sandiego.gov/api/catalog/v1?limit=100&offset=0&domains=data.sandiego.gov&search_context=data.sandiego.gov	Not Found
+US_SOC_UTAH	HTTP_ERR	404	https://opendata.utah.gov/api/catalog/v1?limit=100&offset=0&domains=opendata.utah.gov&search_context=opendata.utah.gov	Not Found

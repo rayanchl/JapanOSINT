@@ -7,9 +7,7 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
-VJSON(worldbank_debarred_firms, "worldbank-debarred-firms", "World Bank — debarred and cross-debarred firms and individuals", "World Bank — debarred and cross-debarred firms and individuals",
-  "int_sanctions", "sanctions",
-  "https://apigwext.worldbank.org/dvsvc/v1.0/json/APPLICATION/ADOBE_EXPRNCE_MGR/FIRM/SANCTIONED_FIRM?apikey=z9duUaFUiEUYSHs97CU38fcZO7ipOPvm",
-  "response.zprocsupp",
-  "en", "[\"int\",\"sanctions\",\"batch17\",\"high-penetrancy\"]", 86400,
-  "THE World Bank sanctions list, 1,530 entries: SUPP_NAME (firm or named individual), SUPP_ID, entity type (I=individual/F=firm), full street address, city, country, ineligibility from/to dates, the grounds for debarment and cross-debarment status under the MDB agreement. The label lands on COUNTRY_NAME because country_name outranks the _NAME suffix fallback in the parser; SUPP_NAME is still in every record's props. Key is published in clear in the public debarred-firms page source, not private.");
+/* worldbank-debarred-firms moved to collectors/pivot/table/hp3_worldbank_sanctions.c on
+ * 2026-10-19: the endpoint needs the apikey the World Bank's own sanctions page sends, and
+ * this fleet has no key_env, so the key had been written into the URL. hpengine reads it
+ * from WORLDBANK_SANCTIONS_APIKEY and files a "needs credential" notice when it is unset. */

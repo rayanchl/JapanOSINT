@@ -402,8 +402,34 @@ static int ht_span(const char *tag_open, const char *gt, const char *attr) {
 #define HT_MAX_WIDTH 65536
 /* Ceiling on a table's row count, for the same reason. */
 #define HT_MAX_ROWS  1000000   /* exhaustive-ok: memory guard on untrusted HTML; biting sets html_table.capped_rows, filed by hp_run_table as shape notice (g) */
+/* Cells a row may run past the table's widest row before it is cut and
+ * flagged. Rowspan carries from above land in columns this row never declared,
+ * so a row can legitimately be wider than the colspan sum pass 1 measured. */
+#define HT_WIDTH_SLACK 1000
 
 typedef struct { const char *s, *e; int colspan, rowspan; } ht_raw;
+
+/* Grow one row's cell array to at least `need` slots, never past `hardcap`,
+ * and zero whatever it adds. Returns the capacity now available: pass 2 writes
+ * only at indices below it, so a refused grow truncates the row (and sets
+ * capped_width through the k < colspan test) rather than overrunning it. */
+static int ht_row_grow(html_row *row, int *cap, int need, int hardcap) {
+  if (need <= *cap) return *cap;
+  if (need > hardcap) return *cap;
+  int nc = *cap ? *cap : 16;
+  while (nc < need) {
+    if (nc > hardcap / 2) { nc = hardcap; break; }
+    nc *= 2;
+  }
+  if (nc > hardcap) nc = hardcap;
+  if (nc <= *cap) return *cap;
+  html_cell *t = realloc(row->cells, (size_t)nc * sizeof *t);
+  if (!t) return *cap;
+  memset(t + *cap, 0, (size_t)(nc - *cap) * sizeof *t);
+  row->cells = t;
+  *cap = nc;
+  return nc;
+}
 
 int html_table_parse(const char *html, const char *must, int table_index,
                      html_table *out) {
@@ -493,18 +519,31 @@ int html_table_parse(const char *html, const char *must, int table_index,
   if (width_ll < 0) width_ll = 0;
   int width = (int)width_ll;
   typedef struct { int left; char *text; char *href; } carry;
-  carry *pend = width ? calloc((size_t)width + 1000, sizeof *pend) : NULL;
+  carry *pend = width ? calloc((size_t)width + HT_WIDTH_SLACK, sizeof *pend) : NULL;
   size_t nrow_sz = (nrow > 0 && nrow <= HT_MAX_ROWS) ? (size_t)nrow : 0;
   out->rows = nrow_sz ? calloc(nrow_sz, sizeof *out->rows) : NULL;
+  /* The width a row may NOT pass. `hardcap` is the flagging bound and part of
+   * this parser's contract (htmlparse.h); each row is grown TOWARDS it as its
+   * cells arrive rather than allocated at it, because `width` is the widest
+   * row in the table and most rows are not that row.
+   *
+   * It used to be allocated outright, per row: `calloc(width + 1000)` for
+   * every one of up to HT_MAX_ROWS rows. On the one-cell-per-row table the
+   * unit test feeds it — 1,000,000 rows, width 1 — that is 1,001 cells x 16
+   * bytes x 1,000,000 = 16 GB, and htmlparsetest died to the OOM killer with
+   * `make: *** Killed`, which reads like a flaky runner rather than an
+   * allocation bug. The two bounds were added to stop a WRAPPED size from
+   * becoming a small allocation plus an overrun; multiplying the slack by the
+   * row ceiling traded that for an honest, enormous one. */
+  const int hardcap = width + HT_WIDTH_SLACK;
   for (int r = 0; r < nrow && out->rows; r++) {
     int a = row_start[r], b = r + 1 < nrow ? row_start[r + 1] : ncell;
     html_row *row = &out->rows[out->nrows];
-    int cap = width + 1000;
-    row->cells = calloc((size_t)cap, sizeof *row->cells);
-    if (!row->cells) break;
+    int cap = 0;
     int col = 0;
     for (int i = a; i <= b; i++) {
-      while (col < cap && pend && pend[col].left > 0) {       /* rowspan from above */
+      while (col < hardcap && pend && pend[col].left > 0) {   /* rowspan from above */
+        if (ht_row_grow(row, &cap, col + 1, hardcap) <= col) break;
         row->cells[col].text = strdup(pend[col].text ? pend[col].text : "");
         row->cells[col].href = pend[col].href ? strdup(pend[col].href) : NULL;
         if (--pend[col].left == 0) { free(pend[col].text); free(pend[col].href); pend[col].text = pend[col].href = NULL; }
@@ -514,7 +553,8 @@ int html_table_parse(const char *html, const char *must, int table_index,
       char *txt = ht_text(cells[i].s, (size_t)(cells[i].e - cells[i].s));
       char *href = ht_href(cells[i].s, (size_t)(cells[i].e - cells[i].s));
       int k = 0;
-      for (; k < cells[i].colspan && col < cap; k++, col++) {
+      for (; k < cells[i].colspan && col < hardcap &&
+             ht_row_grow(row, &cap, col + 1, hardcap) > col; k++, col++) {
         row->cells[col].text = k == 0 ? txt : strdup("");
         row->cells[col].href = k == 0 ? href : NULL;
         if (k == 0 && cells[i].rowspan > 1 && pend) {
@@ -536,10 +576,19 @@ int html_table_parse(const char *html, const char *must, int table_index,
     row->ncells = col;
     out->nrows++;
   }
-  if (pend) { for (int i = 0; i < width + 1000; i++) { free(pend[i].text); free(pend[i].href); } free(pend); }
-  /* Rectangular: pad every row to the table's width. */
+  if (pend) { for (int i = 0; i < width + HT_WIDTH_SLACK; i++) { free(pend[i].text); free(pend[i].href); } free(pend); }
+  /* Rectangular: pad every row to the table's width. Each row now holds only
+   * the cells it actually produced, so the padding has to grow it first — and
+   * a row that cannot be grown keeps its own width rather than being padded
+   * into memory it does not own. */
   for (int r = 0; r < out->nrows; r++) {
     html_row *row = &out->rows[r];
+    if (row->ncells >= out->width) continue;
+    html_cell *t = realloc(row->cells, (size_t)out->width * sizeof *t);
+    if (!t) continue;
+    memset(t + row->ncells, 0,
+           (size_t)(out->width - row->ncells) * sizeof *t);
+    row->cells = t;
     for (int k = row->ncells; k < out->width; k++) row->cells[k].text = strdup("");
     row->ncells = out->width;
   }

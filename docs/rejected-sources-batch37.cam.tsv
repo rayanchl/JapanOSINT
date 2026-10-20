@@ -1,0 +1,15 @@
+# Batch 37 candidates REJECTED by the live probe, 2026-10-12.
+# These were authored 2026-10-02 in a session with no egress to any of
+# these hosts, so every host and path was inferred from the family's
+# convention. This file is the measurement that inference needed.
+# id	verdict	http	url	note
+CAM_COLORADO_COTRIP	PATH_UNRESOLVED	200	https://services1.arcgis.com/pLo2R8Hh6JjW1xD0/arcgis/rest/services/CDOT_Cameras/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	array_path 'features' not present in the response
+CAM_FDOT_FLORIDA	PATH_UNRESOLVED	200	https://gis.fdot.gov/arcgis/rest/services/Traffic/CCTV/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	array_path 'features' not present in the response
+CAM_IRELAND_TII	PATH_UNRESOLVED	200	https://services-eu1.arcgis.com/Hg0qgM1zLnI9OkVz/arcgis/rest/services/TII_CCTV/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	array_path 'features' not present in the response
+CAM_NDOT_NEVADA	PATH_UNRESOLVED	200	https://gis.dot.nv.gov/arcgis/rest/services/Public/Cameras/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	array_path 'features' not present in the response
+CAM_ODOT_OREGON	HTTP_ERR	500	https://gis.odot.state.or.us/arcgis/rest/services/transgis/CCTV/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	Internal Server Error
+CAM_QLD_TMR	PATH_UNRESOLVED	200	https://services1.arcgis.com/vkTwD8kHw2woKBqV/arcgis/rest/services/Traffic_Cameras/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	array_path 'features' not present in the response
+CAM_SCOTLAND	PATH_UNRESOLVED	200	https://services-eu1.arcgis.com/0QHgN4qBAhn1wCSJ/arcgis/rest/services/Traffic_Scotland_Cameras/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	array_path 'features' not present in the response
+CAM_TXDOT	PATH_UNRESOLVED	200	https://services.arcgis.com/KTcxiTD9dsQw4r7Z/arcgis/rest/services/TxDOT_Cameras/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	array_path 'features' not present in the response
+CAM_UDOT_UTAH	HTTP_ERR	404	https://maps.udot.utah.gov/arcgis/rest/services/Public/Cameras/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	Not Found
+CAM_WSDOT	PATH_UNRESOLVED	200	https://data.wsdot.wa.gov/arcgis/rest/services/Traffic/CCTVCameras/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0	array_path 'features' not present in the response

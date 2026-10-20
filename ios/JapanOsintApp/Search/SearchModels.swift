@@ -9,7 +9,13 @@ struct SearchStartResponse: Codable, Sendable {
     let query: String?
 }
 
-struct SuggestEnvelope: Codable, Sendable { let suggestions: [String] }
+struct SuggestEnvelope: Codable, Sendable {
+    let suggestions: [String]
+    /// Present when the server answered from its retrieval arm (history,
+    /// saved searches, service index) rather than an LLM completion.
+    let meta: SuggestMeta?
+}
+struct SuggestMeta: Codable, Sendable { let retrieval: String? }
 
 struct EntityRef: Codable, Hashable, Sendable, Identifiable {
     let value: String

@@ -17,6 +17,7 @@ import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import SourcesListPage, { readFilters, writeFilters } from '../SourcesListPage.jsx';
 import SourceDetailPage, { SummaryCard } from '../SourceDetailPage.jsx';
 import CollectorsPage, { groupCollectors } from '../../collectors/CollectorsPage.jsx';
+import CadenceCard, { describePolicy } from '../CadenceCard.jsx';
 import { fmtInterval, fmtBytes, measured, kindLabel, splitTemplate, searchPath, NOT_MEASURED } from '../../../utils/sourceFormat.js';
 
 vi.mock('../../panels/SourcesPanel.jsx', () => ({ default: () => null }));
@@ -205,5 +206,25 @@ describe('CollectorsPage', () => {
     expect(screen.getByText('pending')).toBeTruthy();
     expect(screen.getByText(/48 sources · 2 collectors · 2 groups/)).toBeTruthy();
     expect(screen.getAllByText('1,200 items').length).toBeGreaterThan(0);
+  });
+});
+
+describe('CadenceCard', () => {
+  it('states the policy and what it costs, and only an operator can change it', async () => {
+    expect(describePolicy({ global_interval_sec: 21600 })).toMatch(/every 6h|every 6 h|21600/);
+    expect(describePolicy({ global_interval_sec: 0, min_interval_sec: 900, max_interval_sec: 0 })).toMatch(/never more often/);
+    expect(describePolicy({ global_interval_sec: 0, min_interval_sec: 0, max_interval_sec: 0 })).toMatch(/own declared interval/);
+    mockFetch(() => ({ policy: { global_interval_sec: 0, min_interval_sec: 900, max_interval_sec: 86400, mode: 'clamped' }, source: 'db', updated_at: '2026-10-20T10:00:00Z', updated_by: 'ops@example.test',
+      estimate: { scheduled_rows: 19954, runs_per_day_declared: 240318, runs_per_day_effective: 120000, fastest_effective_sec: 900, slowest_effective_sec: 86400, basis: 'measured' } }));
+    render(<MemoryRouter><CadenceCard canEdit={false} /></MemoryRouter>);
+    await waitFor(() => expect(screen.getByText(/never more often than every/)).toBeTruthy());
+    expect(screen.getByText('clamped')).toBeTruthy();
+    expect(screen.getByText(/120,000 runs\/day under this policy \(240,318 as declared\)/)).toBeTruthy();
+    expect(screen.queryByText('Change')).toBeNull();
+    cleanup();
+    render(<MemoryRouter><CadenceCard canEdit /></MemoryRouter>);
+    await waitFor(() => expect(screen.getByText('Change')).toBeTruthy());
+    fireEvent.click(screen.getByText('Change'));
+    expect(screen.getByText('Save')).toBeTruthy();
   });
 });

@@ -42,6 +42,15 @@
  *                inside the box (so alert events with no resolvable item drop
  *                out, by construction).
  *   case_id      restrict to uids pinned in `case_items` (roadmap 17).
+ *   q, k         SEMANTIC: restrict to the k (default 200, max 1000) intel
+ *                items nearest q in the vector index (tenant partitions,
+ *                source and the window inside the KNN), the same way case_id
+ *                restricts to pins; buckets are bucketed as always.
+ *                meta.semantic = {q, k, vector_hits, filters_in_knn,
+ *                embed_ms, note, coverage}. Embeds q, so httpd.c runs a q
+ *                request off the event loop (timelineapi_route); an index
+ *                that cannot answer is the 503/502 (with coverage) that
+ *                /api/intel/semantic answers.
  *   limit        default 100, clamped 1..500.
  *   cursor       base64url {"p":<normalised ts>,"u":<event key>} — the SAME
  *                encoding intelapi.c emits, so clients keep one cursor parser.
@@ -150,5 +159,10 @@
  * replies {"error":"server_error"}. */
 char *timelineapi_query(db_handle *db, const tenant_ctx *t,
                         const char *query_string, int *status);
+
+/* The same as a semsearch_route_fn (semsearchapi.h), for the off-loop job
+ * httpd.c uses when ?q= is present. `id` is unused. */
+char *timelineapi_route(db_handle *db, const char *tenant, const char *id,
+                        const char *qs, int is_operator, int *status);
 
 #endif
