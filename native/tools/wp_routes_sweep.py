@@ -256,12 +256,18 @@ def cmd_manifest(a):
         if k in seen_ep:
             r["shape"] = "duplicate-endpoint"; rej.append(r); continue
         seen_ep.add(k); ok.append(r)
+    # one REST-root read per site for its name; concurrent, because a thousand
+    # federation hosts read one at a time with a 20 s timeout is an afternoon
     names = {}
-    for root in sorted({r["rest_root"] for r in ok}):
-        j = get(root)[2]
+    roots = sorted({r["rest_root"] for r in ok})
+    def _name(root):
+        j = get(root, timeout=12)[2]
         nm = j.get("name") if isinstance(j, dict) else None
-        names[root] = re.sub(r"\s+", " ", unicodedata.normalize("NFKC", nm)).strip().replace("|", " / ") if nm else None
-        time.sleep(0.2)
+        return root, (re.sub(r"\s+", " ", unicodedata.normalize("NFKC", nm)).strip().replace("|", " / ") if nm else None)
+    from concurrent.futures import ThreadPoolExecutor
+    with ThreadPoolExecutor(max_workers=16) as ex:
+        for root, nm in ex.map(_name, roots):
+            names[root] = nm
 
     def slug(host):
         h = normalise_host(host)
