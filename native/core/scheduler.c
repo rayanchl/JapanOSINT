@@ -253,6 +253,10 @@ long sched_freshness_bucket(double age_days) {
 }
 
 long sched_state_base(const sched_state *st, long declared, int adaptive) {
+  /* An entity pivot (interval 0) is never scheduled, whatever its rows'
+   * dates say — the composition test caught the measurement giving one a
+   * cadence. The adaptive flag refines a schedule; it cannot create one. */
+  if (declared <= 0) return declared;
   if (adaptive && st && st->freshness_interval > 0) return st->freshness_interval;
   return declared;
 }
