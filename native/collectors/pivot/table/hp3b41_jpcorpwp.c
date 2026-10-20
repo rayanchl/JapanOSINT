@@ -4449,32 +4449,26 @@ static const hp_source HP3B41_JPCORPWP[] = {
       "is kept as the body, so this is the organisation's own notice "
       "text rather than a headline." },
 
-  { .id = "JO41_WP_CORP_5368", .name = "日本インシュレーション — notices (WordPress REST)",
-    .name_ja = "日本インシュレーション 新着情報（WordPress REST）",
-    .category = "corporate", .portal = "https://www.jic-bestork.co.jp/",
-    .record_type = "corporate-notice",
-    .tags = "\"japan\",\"company\",\"listed\",\"notice\",\"wordpress\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.jic-bestork.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST posts feed of 日本インシュレーション (www.jic-bestork.co.jp, "
-      "証券コード 5368). Fetched 2026-10-06: 1 posts on the first page, each "
-      "record carrying "
-      "acf,aioseo_notices,author,categories,class_list,comment_status,content,date,date_gmt,excerpt,featured_media,format. "
-      "First post: Hello world!. content.rendered is kept as the body, "
-      "so this is the organisation's own notice text rather than a "
-      "headline." },
-
+  /* jic-bestork.co.jp (日本インシュレーション) CLOSED ITS REST API, and the
+   * recovery route was checked before these rows were removed rather than
+   * after. Measured 2026-10-20: the site root answers 200, so the publisher is
+   * alive, and `/wp-json/` ITSELF answers
+   * `{"code":"rest_login_required","message":"REST API restricted to
+   * authenticated users."}` — a site-wide, deliberate setting, not one route
+   * and not a transient. The engine gets the same 401 and files a
+   * collector-fetch-failure naming it.
+   *
+   * The reason this is worth a comment is the part that did NOT work. The site
+   * still serves `/feed/` with HTTP 200, which is normally how a locked-down
+   * WordPress publisher is recovered — but that feed holds exactly ONE item,
+   * WordPress's default "Hello world!", and every per-post-type feed
+   * (`?post_type=news&feed=rss2` and the six others these rows covered) holds
+   * ZERO. So there is nothing behind the lock to re-point at, and the next
+   * person does not need to re-check it.
+   *
+   * Ten rows removed: JO41_WP_CORP_5368 and JO42_WP_CORP_5368_{NEWS, PAGES,
+   * USERS, COMPLETEDPROJE, CONSTPRODUCTS, DIGITALCATALOG, LOOSCBP,
+   * MULTIUSEPRODS, PLANTPRODS}. */
   { .id = "JO41_WP_CORP_5461", .name = "中部鋼鈑 — notices (WordPress REST)",
     .name_ja = "中部鋼鈑 新着情報（WordPress REST）",
     .category = "corporate", .portal = "https://www.chubukohan.co.jp/",
