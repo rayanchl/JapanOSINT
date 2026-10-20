@@ -9,6 +9,12 @@ Ordered by how much it costs to leave alone.
 
 ## A. The gates can no longer be read, which blocks everything else
 
+> **A1 and the audit-sources half of A2 are FIXED** (same day). The scanner now
+> knows the four walkers and the `source_def.url` rule, and `make audit-sources`
+> reports 0 findings across the whole tree again, strict set 0/342. Fixtures 5
+> and 6 pin both, and were checked against the old behaviour. The rest of A2
+> and sections B–E stand.
+
 ### A1. `make audit-sources` reports 50 findings where CLAUDE.md claims 0
 
 ```

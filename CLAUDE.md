@@ -386,15 +386,18 @@ hpengine pages exactly as it did. Without that (or an explicit `next_path` /
 
 Where the tree actually stands, as `make audit-sources` reports it:
 
-* **strict set — 0 findings across 308 files** (2026-10-07; 256 on 2026-09-27):
+* **strict set — 0 findings across 342 files** (2026-10-20; 308 on 2026-10-07,
+  256 on 2026-09-27):
   `collectors/pivot/table/hp*_*.c` plus the generated deep-record tables
   `collectors/feed/generated/hp1[0-9]_*.c`. This is the part the Makefile
   gates on, and it is held clean. Run `make audit-sources`
   after adding a table: batch 18 introduced two `single-page` findings here (a
   paged endpoint declared without `page_param`) and they had to be fixed before
   the gate would pass again.
-* **the rest of the tree — 0 findings** (1,678 files scanned, 2026-10-07; it
-  first reached zero on 2026-08-24, from ~127 across ~74 files). Every first-only, single-page, record-cap, loop-break,
+* **the rest of the tree — 0 findings** (2026-10-20; 1,678 files on 2026-10-07;
+  it first reached zero on 2026-08-24, from ~127 across ~74 files). **It had
+  drifted to 50 findings across 27 files and nobody noticed**, which is the
+  exact property this entry exists to protect — see the note below. Every first-only, single-page, record-cap, loop-break,
   limit-one and dedupe-ring finding has been read and closed one of three ways:
   the discard was real and was fixed, the line carries an `exhaustive-ok`
   marker with a reason, or it was a scanner false positive and is marked as
@@ -405,6 +408,30 @@ Where the tree actually stands, as `make audit-sources` reports it:
   So "zero audit findings" is now true of the whole tree, not just the strict
   set — which makes any NEW finding a regression rather than a number in a
   backlog. Keep it that way: `make audit-sources` is cheap and takes seconds.
+
+  **And it DID drift, for thirteen days, because the scanner stopped seeing
+  what the tree had learned.** On 2026-10-20 it reported 50 findings across 27
+  files, every one a false positive, in two shapes:
+
+  * `pw_walk_max` and `od_walk_rows_max` — the explicit-page-ceiling variants
+    added on **2026-10-12**, in the same pass that fixed those very portals —
+    never reached `_WALKER_CALL`, whose `\bpw_walk\s*\(` cannot match
+    `pw_walk_max(`. Nor did `od_ckan_walk` / `od_ods_catalog_walk`, whose
+    bodies hand the caller's URL straight to the walker. 29 findings. This is
+    the same shape as `gen_hp_batch.py`'s forgotten opt table: **a new piece
+    reached the engine and the collectors without reaching the tool that
+    checks them.** When you add a walker, add it there in the same change.
+  * a `source_def`'s **`.url` is the human-facing portal**, as `source.h` says
+    and as rule 3 above repeats — not the request, which a bespoke collector
+    names in its own `#define`. Flagging it was a category error worth 20
+    findings, several in files whose request line is handed to a walker a dozen
+    lines below.
+
+  Both are fixtures now (5 and 6 in `SELFTEST`), and the fixtures were checked
+  against the OLD behaviour rather than only the new: restoring it fails
+  exactly the five shapes they cover. The 50th finding was `int cap = 0` in
+  `lib/htmlparse.c` — a row's GROWING allocated capacity, the opposite of a
+  record cap — which now carries an `exhaustive-ok` marker on its own line.
 
 * **A bound in a loop's own CONDITION was invisible until `loop-cap`.**
   `while (cJSON_GetArraySize(akas) < 24 && …)` is neither a `#define …MAX`
@@ -620,8 +647,9 @@ above and a one-line `/* exhaustive-ok: … */` on the line.
 Two amendments from the deep-record batch:
 
 * **The gated set is now two globs**, `collectors/pivot/table/hp*_*.c` plus the
-  generated deep-record tables `collectors/feed/generated/hp1[0-9]_*.c` — 290
-  files as of 2026-10-05 (262 when this was written), 0 findings. `--strict` had to be made repeatable to say that honestly:
+  generated deep-record tables `collectors/feed/generated/hp1[0-9]_*.c` — 342
+  files as of 2026-10-20 (290 on 2026-10-05, 262 when this was written),
+  0 findings. `--strict` had to be made repeatable to say that honestly:
   it took a single glob, so passing two kept only the LAST one and the gate
   printed "0 findings" for a set it had never opened.
 * **`loop-cap` is a sixth check, and it was not redundant.** A bound written in
