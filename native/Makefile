@@ -331,12 +331,12 @@ source-count:
 # it exits non-zero while any registered collector key has no def line.
 CENSUS_DIR := ../docs/source-pages-revamp
 collectors-def: $(BIN)
-	@d=$$(date +%F); f=$(CENSUS_DIR)/collector-census-$$d.tsv; \
-	./$(BIN) --collector-census > $$f && \
+	@mkdir -p .run; d=$$(date +%F); f=$(CENSUS_DIR)/collector-census-$$d.tsv; \
+	JO_DB=.run/census.db ./$(BIN) --collector-census > $$f && \
 	python3 tools/gen_collectors_def.py $$f > core/collectors.def && \
 	echo "core/collectors.def regenerated from $$f -- run make again to compile it in"
 collectors-def-check: $(BIN)
-	@mkdir -p .run && ./$(BIN) --collector-census > .run/census-check.tsv && \
+	@mkdir -p .run && JO_DB=.run/census.db ./$(BIN) --collector-census > .run/census-check.tsv && \
 	python3 tools/gen_collectors_def.py .run/census-check.tsv > /dev/null && \
 	echo "collectors-def-check: every registered collector has a def line"
 

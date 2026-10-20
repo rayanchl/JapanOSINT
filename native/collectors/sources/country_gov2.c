@@ -68,7 +68,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def uk_parliament_def = {
-  .id = "UK_PARLIAMENT", .collector = "osint",
+  .id = "UK_PARLIAMENT", .collector = "osint_" "government",
   .name = "UK Parliament Members", .name_ja = "UK Parliament Members",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

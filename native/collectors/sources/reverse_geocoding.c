@@ -154,7 +154,7 @@ static int run_revgeo(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def reverse_geocoding_def = {
-  .id = "REVERSE_GEOCODING", .collector = "osint",
+  .id = "REVERSE_GEOCODING", .collector = "osint_" "geospatial",
   .name = "Reverse Geocoding", .name_ja = "逆ジオコーディング",
   .update_interval_sec = 0, .run = run_revgeo,
   .category = "geospatial", .type = "api",

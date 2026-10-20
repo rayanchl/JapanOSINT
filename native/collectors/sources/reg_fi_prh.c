@@ -203,7 +203,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def reg_fi_prh_def = {
-  .id = "FI_PRH", .collector = "osint",
+  .id = "FI_PRH", .collector = "osint_" "government",
   .name = "Finland PRH Company Lookup", .name_ja = "フィンランド PRH 企業情報",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

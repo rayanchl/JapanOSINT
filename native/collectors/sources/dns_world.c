@@ -313,7 +313,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def dns_doh_def = {
-  .id = "DOH_RESOLVE", .collector = "osint",
+  .id = "DOH_RESOLVE", .collector = "osint_" "cyber",
   .name = "DNS-over-HTTPS Resolver", .name_ja = "DNS-over-HTTPS 名前解決",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",
@@ -324,7 +324,7 @@ static const source_def dns_doh_def = {
 REGISTER_SOURCE(dns_doh_def)
 
 static const source_def dns_rdap_def = {
-  .id = "RDAP_IP", .collector = "osint",
+  .id = "RDAP_IP", .collector = "osint_" "cyber",
   .name = "RDAP IP Whois", .name_ja = "RDAP IP Whois",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

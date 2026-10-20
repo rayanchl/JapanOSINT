@@ -98,7 +98,7 @@ static int run_criminal(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def legal_def = {
-  .id = "LEGAL_SEARCH", .collector = "osint", .name = "Legal Search", .run = run_legal,
+  .id = "LEGAL_SEARCH", .collector = "osint_" "investigation", .name = "Legal Search", .run = run_legal,
   .category = "investigation", .type = "api", .url = "https://www.courtlistener.com/",
   .description = "Court opinions / case law mentioning the entity (CourtListener, free).",
   .free_tier = 1,
@@ -106,7 +106,7 @@ static const source_def legal_def = {
 REGISTER_SOURCE(legal_def)
 
 static const source_def bankruptcy_def = {
-  .id = "BANKRUPTCY_SEARCH", .collector = "osint", .name = "Bankruptcy Search", .run = run_bankruptcy,
+  .id = "BANKRUPTCY_SEARCH", .collector = "osint_" "investigation", .name = "Bankruptcy Search", .run = run_bankruptcy,
   .category = "investigation", .type = "api", .url = "https://www.courtlistener.com/",
   .description = "Court records narrowed to bankruptcy proceedings (CourtListener, free).",
   .free_tier = 1,
@@ -114,7 +114,7 @@ static const source_def bankruptcy_def = {
 REGISTER_SOURCE(bankruptcy_def)
 
 static const source_def criminal_def = {
-  .id = "CRIMINAL_RECORDS", .collector = "osint", .name = "Criminal/Court Records", .run = run_criminal,
+  .id = "CRIMINAL_RECORDS", .collector = "osint_" "investigation", .name = "Criminal/Court Records", .run = run_criminal,
   .category = "investigation", .type = "api", .url = "https://www.courtlistener.com/",
   .description = "US court cases / opinions referencing a name (CourtListener, free).",
   .free_tier = 1,

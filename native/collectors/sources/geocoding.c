@@ -154,7 +154,7 @@ static int run_geocode(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def geocoding_def = {
-  .id = "GEOCODING", .collector = "osint",
+  .id = "GEOCODING", .collector = "osint_" "geospatial",
   .name = "Geocoding", .name_ja = "ジオコーディング",
   .update_interval_sec = 0, .run = run_geocode,
   .category = "geospatial", .type = "api",

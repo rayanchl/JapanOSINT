@@ -165,7 +165,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cyi_rpki_validity_def = {
-  .id = "RPKI_VALIDITY", .collector = "osint",
+  .id = "RPKI_VALIDITY", .collector = "osint_" "cyber",
   .name = "RPKI route-origin validation (RIPE validator)",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

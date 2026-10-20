@@ -61,7 +61,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def dk_address_def = {
-  .id = "DK_ADDRESS", .collector = "osint",
+  .id = "DK_ADDRESS", .collector = "osint_" "geospatial",
   .name = "Denmark Address (DAWA)", .name_ja = "Denmark Address (DAWA)",
   .update_interval_sec = 0, .run = run,
   .category = "geospatial", .type = "api",

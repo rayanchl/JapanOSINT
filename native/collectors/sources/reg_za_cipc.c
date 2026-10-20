@@ -95,7 +95,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def za_cipc_def = {
-  .id = "ZA_CIPC", .collector = "osint",
+  .id = "ZA_CIPC", .collector = "osint_" "government",
   .name = "South Africa CIPC & SAFLII",
   .name_ja = "南アフリカ CIPC・SAFLII 検索",
   .update_interval_sec = 0, .run = run,

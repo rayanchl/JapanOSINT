@@ -284,7 +284,7 @@ static const source_def reg2_usaspending_def = {
 REGISTER_SOURCE(reg2_usaspending_def)
 
 static const source_def reg2_fpds_def = {
-  .id = "us-fpds-contracts", .collector = "osint",
+  .id = "us-fpds-contracts", .collector = "osint_" "government",
   .name = "FPDS-NG federal contract award feed",
   .update_interval_sec = 0, .run = fpds_run,
   .category = "government", .type = "api",

@@ -141,7 +141,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cyi_ip_guide_def = {
-  .id = "IP_GUIDE", .collector = "osint",
+  .id = "IP_GUIDE", .collector = "osint_" "cyber",
   .name = "ip.guide network and routing lookup",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api", .url = "https://ip.guide/",

@@ -100,7 +100,7 @@ static int pdf_run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def pdf_def = {
-  .id = "PDF_ANALYZER", .collector = "osint", .name = "PDF Analyzer", .run = pdf_run,
+  .id = "PDF_ANALYZER", .collector = "osint_" "investigation", .name = "PDF Analyzer", .run = pdf_run,
   .category = "investigation", .type = "api", .url = "internal://pdf",
   .description = "PDF URL → document metadata (author/title/producer/dates, version, pages).",
   .free_tier = 1,

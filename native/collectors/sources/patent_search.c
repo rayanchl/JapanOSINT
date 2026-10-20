@@ -85,7 +85,7 @@ static int patent_run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def patent_def = {
-  .id = "PATENT_SEARCH", .collector = "osint", .name = "Patent Search", .run = patent_run,
+  .id = "PATENT_SEARCH", .collector = "osint_" "investigation", .name = "Patent Search", .run = patent_run,
   .category = "investigation", .type = "api", .url = "https://search.patentsview.org/",
   .description = "Granted-patent search by title via PatentsView (requires PATENTSVIEW_API_KEY).",
   .free_tier = 0,

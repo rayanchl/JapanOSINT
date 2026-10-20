@@ -366,7 +366,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def censys_search_def = {
-  .id = "CENSYS_SEARCH", .collector = "osint",
+  .id = "CENSYS_SEARCH", .collector = "osint_" "cyber",
   .name = "Censys Search", .name_ja = "Censys検索",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

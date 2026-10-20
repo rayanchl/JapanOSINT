@@ -365,7 +365,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def password_checker_def = {
-  .id = "PASSWORD_CHECKER", .collector = "osint",
+  .id = "PASSWORD_CHECKER", .collector = "osint_" "cyber",
   .name = "Password Checker", .name_ja = "パスワードチェッカー",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

@@ -130,7 +130,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def mar_digitraffic_ais_vessel_def = {
-  .id = "DIGITRAFFIC_AIS_VESSEL", .collector = "osint",
+  .id = "DIGITRAFFIC_AIS_VESSEL", .collector = "osint_" "transport",
   .name = "Digitraffic AIS vessel lookup by MMSI",
   .update_interval_sec = 0, .run = run,
   .category = "transport", .type = "api",

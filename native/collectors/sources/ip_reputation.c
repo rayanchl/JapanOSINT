@@ -253,7 +253,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def ip_reputation_def = {
-  .id = "IP_REPUTATION", .collector = "osint",
+  .id = "IP_REPUTATION", .collector = "osint_" "cyber",
   .name = "IP Reputation", .name_ja = "IP評価",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

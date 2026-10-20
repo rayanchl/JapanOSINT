@@ -120,7 +120,7 @@ static int run_guardian(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_guardian_def = {
-  .id = "GUARDIAN_CONTENT_SEARCH", .collector = "osint",
+  .id = "GUARDIAN_CONTENT_SEARCH", .collector = "osint_" "media",
   .name = "Guardian Open Platform Content Search",
   .update_interval_sec = 0, .run = run_guardian,
   .category = "media", .type = "api",
@@ -255,7 +255,7 @@ static int run_feedly(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_feedly_def = {
-  .id = "FEEDLY_FEED_SEARCH", .collector = "osint",
+  .id = "FEEDLY_FEED_SEARCH", .collector = "osint_" "media",
   .name = "Feedly Feed Discovery Search",
   .update_interval_sec = 0, .run = run_feedly,
   .category = "media", .type = "api",
@@ -327,7 +327,7 @@ static int run_itunes(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_itunes_def = {
-  .id = "ITUNES_PODCAST_SEARCH", .collector = "osint",
+  .id = "ITUNES_PODCAST_SEARCH", .collector = "osint_" "media",
   .name = "Apple Podcasts (iTunes Search API)",
   .update_interval_sec = 0, .run = run_itunes,
   .category = "media", .type = "api",
@@ -396,7 +396,7 @@ static int run_gpodder(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_gpodder_def = {
-  .id = "GPODDER_SEARCH", .collector = "osint",
+  .id = "GPODDER_SEARCH", .collector = "osint_" "media",
   .name = "gPodder.net Podcast Directory Search",
   .update_interval_sec = 0, .run = run_gpodder,
   .category = "media", .type = "api",

@@ -130,7 +130,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def mar_emodnet_depth_sample_def = {
-  .id = "EMODNET_DEPTH_SAMPLE", .collector = "osint",
+  .id = "EMODNET_DEPTH_SAMPLE", .collector = "osint_" "transport",
   .name = "EMODnet Bathymetry — depth at a coordinate",
   .update_interval_sec = 0, .run = run,
   .category = "transport", .type = "api",

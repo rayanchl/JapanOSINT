@@ -176,7 +176,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def sk_rpo_def = {
-  .id = "SK_RPO", .collector = "osint",
+  .id = "SK_RPO", .collector = "osint_" "government",
   .name = "Slovakia RPO Legal Entity Lookup",
   .name_ja = "スロバキア法人登記(RPO)検索",
   .update_interval_sec = 0, .run = run,

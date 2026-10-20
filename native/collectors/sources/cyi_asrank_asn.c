@@ -118,7 +118,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cyi_asrank_asn_def = {
-  .id = "ASRANK_ASN", .collector = "osint",
+  .id = "ASRANK_ASN", .collector = "osint_" "cyber",
   .name = "CAIDA AS Rank — single AS lookup",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

@@ -54,7 +54,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def es_borme_def = {
-  .id = "ES_BORME", .collector = "osint",
+  .id = "ES_BORME", .collector = "osint_" "government",
   .name = "Spain BORME (Commercial Registry Gazette)",
   .name_ja = "スペイン BORME 商業登記官報",
   .update_interval_sec = 0, .run = run,
