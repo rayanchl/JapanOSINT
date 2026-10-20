@@ -71,6 +71,23 @@ COLS = ["verdict", "id", "page_param", "page_size", "http1", "http2",
 
 # The upstream's own words, grouped by the remedy they imply. Matched against
 # the page-2 body so the verdict carries a remedy and not just a status.
+#; A page-2 failure that means "there is no page 2 because the collection
+# ended" — NOT a refusal to page. Matched on the error CODE first, because a
+# code is language-independent and the message is not: WordPress answers
+# `rest_post_invalid_page_number` with the text in the site's own language, and
+# the first run of this sweep reported 18 REFUSED of which 17 were Japanese
+# municipal sites saying "リクエストされたページ数は存在するページ数を上回って
+# います。" — "the requested page exceeds the number of existing pages". A gate
+# whose findings are mostly benign is a gate nobody reads.
+BENIGN_CODE = re.compile(
+    r"invalid_page_number|rest_post_invalid_page|page_out_of_range|"
+    r"invalid_offset|no_more_(results|pages)|out_of_bounds", re.I)
+BENIGN_MSG = re.compile(
+    r"exceeds the (number of )?(existing |available )?pages?|"
+    r"page number .* (exceeds|greater than|out of)|beyond the (last|end)|"
+    r"no (more|further) (results|records|pages)|"
+    r"存在するページ数を上回|ページが存在しません", re.I)
+
 REMEDY = [
     ("no-such-parameter",
      r"unsupported param|unknown param|invalid param|not a (valid |recognized )?"
@@ -209,6 +226,46 @@ def message_of(blob):
     return s2[:220] if len(s2) < 400 else ""
 
 
+def code_of(blob):
+    """The upstream's machine-readable error code, if it gave one."""
+    try:
+        d = json.loads(blob.decode("utf-8", "replace"))
+    except Exception:
+        return ""
+    if not isinstance(d, dict):
+        return ""
+    for k in ("code", "errorCode", "error_code"):
+        v = d.get(k)
+        if isinstance(v, str):
+            return v
+    e = d.get("error")
+    if isinstance(e, dict):
+        for k in ("code", "errorCode"):
+            v = e.get(k)
+            if isinstance(v, (str, int)):
+                return str(v)
+    return ""
+
+
+# How many records the URL ITSELF asked for. Needed because the engine's
+# short-page rule compares what came back with what was requested, and most of
+# these rows carry the size in the URL rather than in page_size (which is only
+# set for an OFFSET parameter).
+_SIZE_KEYS = ("per_page", "pageSize", "page_size", "resultRecordCount",
+              "limit", "count", "rows", "maxFeatures", "$top", "num",
+              "page%5Bsize%5D", "page[size]", "n")
+
+
+def declared_size(url):
+    for k in _SIZE_KEYS:
+        m = re.search(r"[?&]%s=(\d+)" % re.escape(k), url)
+        if m:
+            v = int(m.group(1))
+            if v > 0:
+                return v
+    return 0
+
+
 def remedy_of(msg):
     for name, pat in REMEDY:
         if re.search(pat, msg, re.I):
@@ -266,8 +323,32 @@ def _probe(a, r):
         out["message"] = msg[:200]
         return out
     if s2 != 200:
+        # THE ENGINE'S OWN RULE FIRST, and it is the general one: "A failure on
+        # the page AFTER a short page (fewer than page_size records) is the
+        # upstream's end of data, not a truncation" (CLAUDE.md). A page 1 that
+        # came back short of what the URL asked for IS the whole collection, so
+        # whatever page 2 answers is not a finding. Measured: a Japanese
+        # municipal site returned 7 posts against `per_page=100` and then 400
+        # on page 2 — the collection is 7 records.
+        want = declared_size(r["url"]) or r["page_size"]
+        if want and n1 < want:
+            out["verdict"] = "PAGE1_IS_ALL"
+            out["message"] = ("page 1 held %d of the %d it asked for, so the "
+                              "collection ends inside it" % (n1, want))
+            return out
+        if BENIGN_CODE.search(code_of(b2)) or BENIGN_MSG.search(msg):
+            out["verdict"] = "PAGE1_IS_ALL"
+            out["message"] = ("upstream says there is no page 2: %s"
+                              % msg)[:220]
+            return out
         out["verdict"] = "REFUSED"
         out["message"] = ("%s | %s" % (remedy_of(msg), msg)).strip(" |")[:220]
+        return out
+    want = declared_size(r["url"]) or r["page_size"]
+    # An upstream that says in a 200 body that there is no further page.
+    if BENIGN_CODE.search(code_of(b2)) or BENIGN_MSG.search(msg):
+        out["verdict"] = "PAGE1_IS_ALL"
+        out["message"] = ("upstream says there is no page 2: %s" % msg)[:220]
         return out
     # An HTTP-200 refusal: the status says yes and the body says no. The same
     # shape probe_hp_batch.py rejects, and the shape ArcGIS uses to say
@@ -279,13 +360,23 @@ def _probe(a, r):
         return out
     if b2 == b1:
         # Byte-identical: the parameter was accepted and ignored. Two pages of
-        # genuinely different records cannot be byte-identical.
+        # genuinely different records cannot be byte-identical — so this is a
+        # real finding EVEN when page 1 was short, because a short page that
+        # repeats is still a walk that re-emits the same records.
         out["verdict"] = "SAME_AS_PAGE1"
         out["message"] = "page 2 is byte-identical to page 1"
         return out
     if n2 == 0:
-        out["verdict"] = "PAGE2_EMPTY"
-        out["message"] = "collection may simply end inside page 1"
+        # The engine's short-page rule again: an empty page 2 after a page 1
+        # that did not fill is the end of the collection, not a shortfall.
+        if want and n1 < want:
+            out["verdict"] = "PAGE1_IS_ALL"
+            out["message"] = ("page 1 held %d of the %d it asked for and page "
+                              "2 is empty" % (n1, want))
+        else:
+            out["verdict"] = "PAGE2_EMPTY"
+            out["message"] = ("page 1 filled (%d) but page 2 is empty — worth "
+                              "one look" % n1)
         return out
     out["verdict"] = "OK"
     return out
