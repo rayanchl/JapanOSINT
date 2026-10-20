@@ -33,6 +33,12 @@ void feed_status_describe(long st, char *out, size_t cap);
 /* GET url, return raw body (malloc'd, caller frees) or NULL. */
 char *feed_get_text(http_client *http, const char *url, int timeout_ms);
 
+/* feed_get_text with a response-body ceiling for this one fetch (0 = the
+ * default). For a row whose complete answer is one file larger than the 64 MB
+ * security default — see http_request_max() in core/httpclient.h. */
+char *feed_get_text_max(http_client *http, const char *url, int timeout_ms,
+                        size_t max_body);
+
 /* POST `body` to url with extra headers (NULL-terminated "K: v" array, set
  * Content-Type there), parse JSON reply. cJSON* (caller cJSON_Delete) or
  * NULL. Backs the POST+JSON-body collectors (osv-dev, quake360-jp, …). */

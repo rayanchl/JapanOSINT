@@ -104,6 +104,21 @@ typedef struct source_ctx {
   /* `struct source_ctx` spelled out: the typedef is not complete yet inside
    * its own definition, and `source_ctx` here compiles as an unknown type. */
   void (*resume_out)(const struct source_ctx *ctx, const char *token);
+  /* ── THE RESPONSE-BODY CEILING THIS SOURCE MAY USE, in bytes, or 0 for the
+   * process default in core/httpclient.c (64 MB, $JO_HTTP_MAX_BODY).
+   *
+   * An operator sets it per source in the Sources settings tab; the scheduler
+   * resolves it through core/source_settings.c and puts the number here. It
+   * reaches the context for the same reason resume_in/out do: `lib/` holds no
+   * database code, so a collector that needs a stored decision is handed it
+   * rather than going to look.
+   *
+   * A collector passes it to feed_get_text_max()/http_request_max(), which
+   * treat 0 as "the default" — so a collector that reads this field
+   * unconditionally behaves identically on a deployment that set nothing.
+   * `ods-public-geonames` is the measured case: 171,176 records in a ~111 MB
+   * export it cannot page, against a 64 MB default that fails CLOSED. */
+  size_t body_ceiling;
 } source_ctx;
 
 typedef struct source_def {

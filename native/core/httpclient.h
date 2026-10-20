@@ -63,6 +63,19 @@ int http_request(http_client *c, const char *method, const char *url,
                   const char *const *headers, const char *body, size_t body_len,
                   int timeout_ms, int retries, http_response *out);
 
+/* The same, with a response-body ceiling for THIS CALL ONLY (0 = the default
+ * 64 MB / $JO_HTTP_MAX_BODY). For the few rows whose complete answer is one
+ * large file and whose records cannot go through lib/jsonstream.c — that
+ * streamer fixes the row shape (no id key, no date key, no geometry), so a row
+ * needing those buffers the body instead and says so. The ceiling is
+ * thread-local and restored when this returns, so it never widens another
+ * worker's fetch, and it is still enforced on the DECOMPRESSED stream: asking
+ * for 192 MB does not make a gzip bomb reachable. */
+int http_request_max(http_client *c, const char *method, const char *url,
+                     const char *const *headers, const char *body,
+                     size_t body_len, int timeout_ms, int retries,
+                     size_t max_body, http_response *out);
+
 void http_response_free(http_response *r);
 
 /* Why the most recent attempt made by http_request() ON THE CALLING THREAD

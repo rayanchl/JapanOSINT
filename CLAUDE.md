@@ -728,6 +728,48 @@ underneath them that older notes in this file predate:
   generator on a fresh census (`GET /api/collectors` → TSV) or add the line
   by hand; the rules live in the script (OVERRIDES, KEYWORDS, CATEGORY_GROUP).
 
+* **Per-source operator settings** (2026-10-20): `core/source_settings.c`,
+  `GET`/`PUT /api/sources/:id/settings`, and a Settings section on the source
+  page. The key set is **CLOSED** — a table in the .c file declares each key's
+  type, bounds, default and help text, a `PUT` of anything else is refused by
+  name, and the bound is re-checked on every READ because a row can arrive
+  from an older build or a hand-edited database. A free key/value store hung
+  off every source would be a configuration surface nobody can audit: a typo
+  would read as a setting that is silently ignored.
+
+  **`enabled` is separate from the value on purpose**: switching a knob off
+  keeps the number an operator tuned, so a re-enable does not start from a
+  guess, and a disabled row resolves exactly as an absent one. The payload
+  carries `effective` — what the code will actually use — because the toggle
+  and the number do not say that between them, and `can_write` from the route
+  that enforces the gate, so the page states who may change a thing instead of
+  offering a form and then refusing it with 403. Reads are plain-auth; writes
+  are operator-gated and audited (`source.setting.put`).
+
+  The one key it ships with is **`http_body_ceiling_bytes`**, which raises
+  `core/httpclient.c`'s 64 MB response ceiling for ONE source. That ceiling is
+  a security bound — `CURLOPT_ACCEPT_ENCODING ""` means libcurl inflates
+  before we see a byte, so a small gzip bomb expands without limit — and it
+  fails CLOSED (the transfer aborts, body NULL), which is why
+  `ods-public-geonames` needed it: 171,176 records in a ~111 MB
+  `exports/jsonl` the ODS records API refuses to page past 10,000. Measured
+  2026-10-20: 10,000 → **171,176 stored**, `stored == emitted`, 111,298,693
+  bytes. How much memory one run may hold is a decision about the machine it
+  runs on, so it belongs to the operator and not to a `#define` in a
+  collector. `http_request_max()` carries it per call, thread-local and
+  restored on return so it never widens another worker's fetch, it is still
+  enforced on the decompressed stream, and **an explicit `$JO_HTTP_MAX_BODY`
+  clamps it** — an operator who lowers the ceiling to bound a small deployment
+  is not overruled by a collector. It reaches the collector on
+  `source_ctx.body_ceiling` (0 = the default), for the reason `resume_in`/
+  `resume_out` do: `lib/` and the collectors hold no database code.
+
+  `tests/unit/test_source_settings.c` pins the unknown key, the out-of-range
+  write AND read, disabled-is-not-unset, and a setting for a source nobody
+  registers; the client's `sourcePages.test.jsx` pins that the page states the
+  server's bounds rather than its own, reads a disabled knob as the default,
+  and disables the controls for a non-operator.
+
 Plan, audit and as-built notes: `docs/source-pages-revamp/`.
 
 ## Where things live

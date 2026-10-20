@@ -82,9 +82,14 @@ const char *http_client_host_at(http_client *c, int i,
  * idiom as curl_boot() below; the probe is one getenv, so the once costs
  * nothing after the first call. */
 static size_t g_max_body;
+/* Whether JO_HTTP_MAX_BODY was SET, as opposed to defaulted. An operator who
+ * names a ceiling has stated a policy, and a per-call override must not walk
+ * through it — see body_ceiling(). */
+static int g_max_body_explicit;
 static void max_body_probe(void) {
   const char *e = getenv("JO_HTTP_MAX_BODY");
   long long v = (e && *e) ? atoll(e) : -1;
+  g_max_body_explicit = (v >= 0);
   g_max_body = (v >= 0) ? (size_t)v : (size_t)HTTP_MAX_BODY_DEFAULT;
 }
 
@@ -92,6 +97,42 @@ static size_t max_body_bytes(void) {
   static pthread_once_t once = PTHREAD_ONCE_INIT;
   pthread_once(&once, max_body_probe);
   return g_max_body;
+}
+
+/* A ceiling for ONE request on THIS thread, set by http_request_max() and
+ * cleared when that call returns. 0 means "use the default above".
+ *
+ * Why a per-call ceiling exists at all: the 64 MB default is a security bound
+ * on an upstream we do not control, and a handful of rows legitimately need
+ * more. `ods-public-geonames` is the measured case — GeoNames cities with
+ * population >= 1,000 is 171,176 records, the ODS records API refuses
+ * offset+limit past 10,000, and the only complete answer is the ~111 MB
+ * /exports/jsonl file. Raising the DEFAULT to reach it would lift the bomb
+ * guard for all 48,343 sources to serve one; this raises it for that one row,
+ * for that one fetch.
+ *
+ * It is thread-local for the same reason g_last_te is: eight scheduler workers
+ * are inside http_request() at once, and a process-wide variable would let one
+ * row's generous ceiling apply to another row's fetch — exactly the bound this
+ * cap exists to hold. The ceiling still applies on the DECOMPRESSED stream in
+ * on_data(), so a row that asks for 192 MB still cannot be fed tens of GB. */
+static __thread size_t g_body_ceiling_once;
+
+/* An operator's EXPLICIT $JO_HTTP_MAX_BODY is a hard cap, and a per-call
+ * override is clamped to it rather than silently exceeding it. Without this,
+ * an operator who lowers the ceiling to 16 MB to bound a small deployment's
+ * memory would still have one collector pull 192 MB, with nothing anywhere
+ * saying so — the setting would read as honoured and not be. The override
+ * raises the DEFAULT, which is what it is for; it does not overrule a policy
+ * somebody set on purpose. */
+static size_t body_ceiling(void) {
+  size_t base = max_body_bytes();
+  if (!g_body_ceiling_once) return base;
+  if (g_max_body_explicit) {
+    if (base == 0) return g_body_ceiling_once;  /* 0 = the operator disabled it */
+    return g_body_ceiling_once < base ? g_body_ceiling_once : base;
+  }
+  return g_body_ceiling_once;
 }
 
 typedef struct { char *buf; size_t len, cap; int over; } sbuf;
@@ -559,7 +600,7 @@ static int do_once(http_client *c, const char *method, const char *url,
   CURL *e = curl_easy_init();
   if (!e) return 1;
   sbuf b = {0};
-  b.cap = max_body_bytes();
+  b.cap = body_ceiling();
   struct curl_slist *hl = NULL;
   for (const char *const *h = headers; h && *h; ++h) hl = curl_slist_append(hl, *h);
 
@@ -749,6 +790,27 @@ int http_request(http_client *c, const char *method, const char *url,
     sleep_ms(ms);
     attempt++;
   }
+}
+
+/* http_request() with a body ceiling for this one call. See
+ * g_body_ceiling_once above for why this is per-call and thread-local rather
+ * than a bigger default. max_body of 0 means "the default", so a caller that
+ * does not care is identical to calling http_request() directly.
+ *
+ * The ceiling is restored on EVERY exit path, including the retry loop's and
+ * every early refusal, because it is restored here rather than inside
+ * http_request() — a leaked ceiling would silently widen the next fetch this
+ * worker makes, which is the failure mode the thread-local exists to avoid. */
+int http_request_max(http_client *c, const char *method, const char *url,
+                     const char *const *headers, const char *body,
+                     size_t body_len, int timeout_ms, int retries,
+                     size_t max_body, http_response *out) {
+  size_t prev = g_body_ceiling_once;
+  g_body_ceiling_once = max_body;
+  int rc = http_request(c, method, url, headers, body, body_len,
+                        timeout_ms, retries, out);
+  g_body_ceiling_once = prev;
+  return rc;
 }
 
 void http_response_free(http_response *r) {

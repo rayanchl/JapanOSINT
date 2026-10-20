@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { LuPlay, LuRefreshCw, LuExternalLink } from 'react-icons/lu';
 import { api, errorMessage } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
-import { Page, Card, Section, Pill, Button, KV, ErrorNotice, EmptyState, LoadingState, BoundNote, Mono, cx, toast } from '../ui/kit.jsx';
+import { Page, Card, Section, Pill, Button, KV, ErrorNotice, EmptyState, LoadingState, BoundNote, Mono, Toggle, Input, Field, cx, toast } from '../ui/kit.jsx';
 import { isSafeUrl } from '../../utils/safeUrl.js';
 import { relativeTime, fmtAbs } from '../../utils/time.js';
 import {
@@ -20,6 +20,120 @@ import {
 function when(iso) {
   if (!iso) return NOT_MEASURED;
   return `${fmtAbs(iso)} (${relativeTime(iso)})`;
+}
+
+/* ── Settings: the per-source operator knobs (GET/PUT /api/sources/:id/settings,
+ * core/source_settings.c).
+ *
+ * Every bound, default and explanation shown here comes from the server with
+ * the values, so this component holds no second opinion about what a knob
+ * accepts — a range duplicated in the client is a range that drifts, and the
+ * one in C is the one enforced.
+ *
+ * Writing is operator-only. A non-operator gets 403 on the PUT, so the reason
+ * is stated up front and the controls are disabled rather than offered and
+ * then refused. */
+export function SettingsSection({ sourceId }) {
+  const { data, error, loading, reload } = useApi(`/api/sources/${encodeURIComponent(sourceId)}/settings`);
+  const [draft, setDraft] = useState({});      /* key -> {value, enabled} */
+  const [busy, setBusy] = useState(null);
+
+  const rows = data?.settings || [];
+  /* The route that enforces the gate is the one that reports it. */
+  const canWrite = !!data?.can_write;
+  const stateOf = (s) => draft[s.key] ?? { value: s.value, enabled: s.enabled };
+  const dirty = (s) => {
+    const d = draft[s.key];
+    return d && (Number(d.value) !== Number(s.value) || !!d.enabled !== !!s.enabled);
+  };
+
+  async function save(s) {
+    const d = stateOf(s);
+    setBusy(s.key);
+    try {
+      await api.put(`/api/sources/${encodeURIComponent(sourceId)}/settings`,
+                    { key: s.key, value: Number(d.value), enabled: !!d.enabled });
+      setDraft((p) => { const n = { ...p }; delete n[s.key]; return n; });
+      await reload();
+      toast(`${s.label} saved`, { tone: 'ok' });
+    } catch (e) {
+      /* The server's own refusal, verbatim — value_out_of_range and
+       * operator_required both mean something specific and neither is
+       * improved by being restated as "could not save". */
+      toast(errorMessage(e), { tone: 'danger' });
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  if (loading) return <Section label="Settings"><Card><LoadingState label="Loading settings…" /></Card></Section>;
+  if (error) return <Section label="Settings"><ErrorNotice error={error} title="Could not read this source's settings" onRetry={reload} /></Section>;
+  if (!rows.length) return null;
+
+  return (
+    <Section label="Settings">
+      <Card>
+        {!canWrite && (
+          <p className="text-[11px] text-osint-muted mb-2">
+            Read-only: changing a source setting is an operator action, and it is audited.
+          </p>
+        )}
+        <ul className="space-y-3">
+          {rows.map((s) => {
+            const d = stateOf(s);
+            const changed = dirty(s);
+            return (
+              <li key={s.key} className="border-t border-osint-border/40 pt-3 first:border-0 first:pt-0">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="text-xs font-medium">{s.label}</div>
+                    <Mono className="text-[10px] text-osint-muted">{s.key}</Mono>
+                  </div>
+                  <Toggle
+                    on={!!d.enabled}
+                    disabled={!canWrite}
+                    label={d.enabled ? 'active' : 'off'}
+                    onChange={(on) => setDraft((p) => ({ ...p, [s.key]: { ...d, enabled: on } }))}
+                  />
+                </div>
+                <p className="text-[11px] text-osint-muted mt-1">{s.help}</p>
+                <div className="flex items-end gap-2 mt-2">
+                  <Field label={`value (${s.unit})`} hint={`${fmtBytes(s.min)} – ${fmtBytes(s.max)}, default ${fmtBytes(s.default)}`}>
+                    <Input
+                      mono
+                      type="number"
+                      min={s.min}
+                      max={s.max}
+                      value={d.value}
+                      disabled={!canWrite}
+                      onChange={(e) => setDraft((p) => ({ ...p, [s.key]: { ...d, value: e.target.value } }))}
+                    />
+                  </Field>
+                  <Button
+                    size="sm"
+                    variant={changed ? 'primary' : 'secondary'}
+                    disabled={!canWrite || !changed}
+                    busy={busy === s.key}
+                    onClick={() => save(s)}
+                  >Save</Button>
+                </div>
+                <KV pairs={[
+                  /* What the collector will actually use. The toggle and the
+                   * number do not say this between them: a disabled knob with
+                   * a tuned value in the box resolves to the default, and that
+                   * is the thing an operator needs to read off the page. */
+                  ['in effect', <span className={cx(s.enabled && s.effective !== s.default && 'text-accent')}>
+                    {fmtBytes(s.effective)}{!s.enabled && ' — the default, because this setting is off'}
+                  </span>],
+                  s.configured && ['last changed', `${when(s.updated_at)}${s.updated_by ? ` by ${s.updated_by}` : ''}`],
+                ].filter(Boolean)} className="mt-2" />
+              </li>
+            );
+          })}
+        </ul>
+      </Card>
+    </Section>
+  );
 }
 
 /** A URL/body template with its {tokens} highlighted. */
@@ -361,6 +475,8 @@ export default function SourceDetailPage() {
           ]} />
         </Card>
       </Section>
+      <SettingsSection sourceId={id} />
+
       <div className="text-[10px] font-mono text-osint-muted">detail fetched {relativeTime(d.meta?.fetched_at)}</div>
     </Page>
   );

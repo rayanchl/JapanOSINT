@@ -4,6 +4,7 @@
 #include "respcache.h"
 #include "statusapi.h"
 #include "sourceapi.h"
+#include "source_settings.h"
 #include "miscapi.h"
 #include "entityapi.h"
 #include "tenantapi.h"
@@ -2431,6 +2432,79 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       char sid[256];
       if (seg(u, "/api/sources/", "/detail", sid, sizeof sid))  { sa_serve(c, hm, SA_DETAIL, sid); return; }
       if (seg(u, "/api/sources/", "/summary", sid, sizeof sid)) { sa_serve(c, hm, SA_SUMMARY, sid); return; }
+
+      /* ---- per-source operator settings (core/source_settings.c).
+       * GET is plain-auth: the page shows what is configured, and the key set,
+       * bounds and defaults are not secrets. WRITING is operator-gated and
+       * audited, because these knobs decide how much memory and how large a
+       * transfer one collector run may spend on this deployment's machine. */
+      if (seg(u, "/api/sources/", "/settings", sid, sizeof sid)) {
+        if (hm->method.len == 3 && memcmp(hm->method.buf, "GET", 3) == 0) {
+          char *body = source_settings_json(g_db, sid,
+                                            opgate_check(&usr) == 0);
+          reply_json(c, body ? 200 : 500,
+                     body ? body : "{\"error\":\"server_error\"}");
+          free(body);
+          return;
+        }
+        if (hm->method.len == 3 && memcmp(hm->method.buf, "PUT", 3) == 0) {
+          if (opgate_check(&usr) != 0) {
+            reply_json(c, 403, "{\"error\":\"operator_required\"}");
+            return;
+          }
+          char *bdy = NULL;
+          if (hm->body.len) { bdy = malloc(hm->body.len + 1);
+            if (bdy) { memcpy(bdy, hm->body.buf, hm->body.len);
+                       bdy[hm->body.len] = 0; } }
+          cJSON *jb = bdy ? cJSON_Parse(bdy) : NULL;
+          free(bdy);
+          const cJSON *kj = jb ? cJSON_GetObjectItem(jb, "key") : NULL;
+          const cJSON *vj = jb ? cJSON_GetObjectItem(jb, "value") : NULL;
+          const cJSON *ej = jb ? cJSON_GetObjectItem(jb, "enabled") : NULL;
+          /* The value arrives as a JSON number or a string; both are rendered
+           * to decimal text so source_settings_put() does one validation of
+           * one representation rather than two of two. A double is used for
+           * the number form because that is what cJSON stores, and a ceiling
+           * in bytes is exact well past 512 MB in a double. */
+          char vbuf[64] = {0};
+          if (cJSON_IsNumber(vj))
+            snprintf(vbuf, sizeof vbuf, "%lld", (long long)vj->valuedouble);
+          else if (cJSON_IsString(vj) && vj->valuestring)
+            snprintf(vbuf, sizeof vbuf, "%s", vj->valuestring);
+          int enabled = cJSON_IsTrue(ej) ? 1 : 0;
+          int rc = source_settings_put(
+              g_db, sid,
+              cJSON_IsString(kj) ? kj->valuestring : NULL,
+              vbuf[0] ? vbuf : NULL, enabled,
+              usr.id[0] ? usr.id : NULL);
+          cJSON_Delete(jb);
+          if (rc != 0) {
+            const char *msg = rc == -1 ? "{\"error\":\"unknown_key\"}"
+                            : rc == -2 ? "{\"error\":\"value_out_of_range\"}"
+                            : rc == -3 ? "{\"error\":\"no_such_source\"}"
+                                       : "{\"error\":\"server_error\"}";
+            reply_json(c, rc == -3 ? 404 : rc == -4 ? 500 : 400, msg);
+            return;
+          }
+          { char payload[256];
+            snprintf(payload, sizeof payload,
+                     "{\"key\":\"%s\",\"value\":\"%s\",\"enabled\":%s}",
+                     cJSON_IsString(kj) ? kj->valuestring : "",
+                     vbuf, enabled ? "true" : "false");
+            /* "platform", usr.id — the convention every other
+             * operator-gated write in this file uses: these knobs are a
+             * deployment decision, not a tenant's data. */
+            audit_write(g_db, "platform", usr.id,
+                        "source.setting.put", sid, payload); }
+          char *body = source_settings_json(g_db, sid, 1);  /* just passed the gate */
+          reply_json(c, body ? 200 : 500,
+                     body ? body : "{\"error\":\"server_error\"}");
+          free(body);
+          return;
+        }
+        reply_json(c, 405, "{\"error\":\"method_not_allowed\"}");
+        return;
+      }
     }
 
     /* GET /api/sources — full source registry/probe rows. */
