@@ -532,14 +532,6 @@ RSSX(jp_b44_brutus_jp, "jp-b44-brutus-jp",
      3600,
      "BRUTUS — culture")
 
-RSSX(jp_b44_buddhanet_net, "jp-b44-buddhanet-net",
-     "BuddhaNet", "BuddhaNet",
-     "social", "media",
-     "https://www.buddhanet.net/feed/",
-     "en", "[\"news\",\"publisher:BuddhaNet\",\"culture\",\"buddhism\"]",
-     3600,
-     "BuddhaNet — buddhism")
-
 RSSX(jp_b44_bushoo_japan_com, "jp-b44-bushoo-japan-com",
      "Bushoojapan", "武将JAPAN",
      "social", "media",
@@ -703,7 +695,7 @@ RSSX(jp_b44_sotokoto_online_jp, "jp-b44-sotokoto-online-jp",
 RSSX(jp_b44_suigenkyo_com, "jp-b44-suigenkyo-com",
      "Suigenkyo", "粋玄京",
      "social", "media",
-     "https://suigenkyo.com/en/blog/feed",
+     "https://suigenkyo.com/feed",
      "en", "[\"news\",\"publisher:Suigenkyo\",\"culture\",\"craft\"]",
      3600,
      "Suigenkyo (粋玄京) — craft")
@@ -806,22 +798,6 @@ RSSX(jp_b44_kaiyodo_co_jp, "jp-b44-kaiyodo-co-jp",
      3600,
      "Kaiyodo (海洋堂) — figure")
 
-RSSX(jp_b44_kinmaweb_jp, "jp-b44-kinmaweb-jp",
-     "Kinma Web", "近代麻雀Web",
-     "social", "media",
-     "https://kinmaweb.jp/feed/",
-     "ja", "[\"news\",\"publisher:Kinma Web\",\"gaming\",\"mahjong\"]",
-     3600,
-     "Kinma Web (近代麻雀Web) — mahjong")
-
-RSSX(jp_b44_kotaku_com, "jp-b44-kotaku-com",
-     "Kotaku", "Kotaku",
-     "social", "media",
-     "https://kotaku.com/rss",
-     "en", "[\"news\",\"publisher:Kotaku\",\"gaming\"]",
-     3600,
-     "Kotaku — gaming")
-
 RSSX(jp_b44_otocoto_jp, "jp-b44-otocoto-jp",
      "Otocoto", "Otocoto",
      "social", "media",
@@ -919,14 +895,6 @@ RSSX(jp_b44_reco_photo_com, "jp-b44-reco-photo-com",
      "ja", "[\"news\",\"publisher:Reco Photo\",\"photography\"]",
      3600,
      "Reco Photo (おすすめフォト) — photo")
-
-RSSX(jp_b44_tecture_jp, "jp-b44-tecture-jp",
-     "TECTURE MAG", "TECTURE MAG",
-     "social", "media",
-     "https://mag.tecture.jp/feed/",
-     "ja", "[\"news\",\"publisher:TECTURE MAG\",\"architecture\"]",
-     3600,
-     "TECTURE MAG — architecture")
 
 /* ── Sports / Martial Arts ─────────────────────────────────────── */
 

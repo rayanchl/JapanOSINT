@@ -63,7 +63,6 @@ jp-b44-tsunagu-local-com	jp_feeds_batch44	rss-feed	https://tsunagu-local.com/fee
 jp-b44-yatteiki-fm	jp_feeds_batch44	rss-feed	https://yatteiki.fm/feed	PASS					
 jp-b44-bonsaitonight-com	jp_feeds_batch44	rss-feed	https://bonsaitonight.com/feed/	PASS					
 jp-b44-brutus-jp	jp_feeds_batch44	rss-feed	https://brutus.jp/feed/	PASS					
-jp-b44-buddhanet-net	jp_feeds_batch44	rss-feed	https://www.buddhanet.net/feed/	PASS					
 jp-b44-bushoo-japan-com	jp_feeds_batch44	rss-feed	https://bushoojapan.com/feed/	PASS					
 jp-b44-goshuin-meguri-com	jp_feeds_batch44	rss-feed	https://goshuin-meguri.com/feed/	PASS					
 jp-b44-hellotokyo-jp	jp_feeds_batch44	rss-feed	https://hellotokyo.jp/feed/	PASS					
@@ -84,7 +83,7 @@ jp-b44-rensai-jp	jp_feeds_batch44	rss-feed	https://rensai.jp/feed	PASS
 jp-b44-retrogamegoods-com	jp_feeds_batch44	rss-feed	https://retrogamegoods.com/feed/	PASS					
 jp-b44-shochiku-co-jp	jp_feeds_batch44	rss-feed	https://www.shochiku.co.jp/feed/	PASS					
 jp-b44-sotokoto-online-jp	jp_feeds_batch44	rss-feed	https://sotokoto-online.jp/feed/	PASS					
-jp-b44-suigenkyo-com	jp_feeds_batch44	rss-feed	https://suigenkyo.com/en/blog/feed	PASS					
+jp-b44-suigenkyo-com	jp_feeds_batch44	rss-feed	https://suigenkyo.com/feed	PASS					
 jp-b44-thisjapaneselife-org	jp_feeds_batch44	rss-feed	https://thisjapaneselife.org/feed/	PASS					
 jp-b44-tokyonightowl-com	jp_feeds_batch44	rss-feed	https://tokyonightowl.com/feed/	PASS					
 jp-b44-tricycle-org	jp_feeds_batch44	rss-feed	https://tricycle.org/feed/	PASS					
@@ -97,8 +96,6 @@ jp-b44-easternkicks-com	jp_feeds_batch44	rss-feed	https://www.easternkicks.com/f
 jp-b44-gematsu-com	jp_feeds_batch44	rss-feed	https://www.gematsu.com/feed	PASS					
 jp-b44-honeysanime-com	jp_feeds_batch44	rss-feed	https://honeysanime.com/feed/	PASS					
 jp-b44-kaiyodo-co-jp	jp_feeds_batch44	rss-feed	https://www.kaiyodo.co.jp/feed/	PASS					
-jp-b44-kinmaweb-jp	jp_feeds_batch44	rss-feed	https://kinmaweb.jp/feed/	PASS					
-jp-b44-kotaku-com	jp_feeds_batch44	rss-feed	https://kotaku.com/rss	PASS					
 jp-b44-otocoto-jp	jp_feeds_batch44	rss-feed	https://otocoto.jp/feed/	PASS					
 jp-b44-qetic-jp	jp_feeds_batch44	rss-feed	https://www.qetic.jp/feed/	PASS					
 jp-b44-siliconera-com	jp_feeds_batch44	rss-feed	https://www.siliconera.com/feed/	PASS					
@@ -111,7 +108,6 @@ jp-b44-daiki55-com	jp_feeds_batch44	rss-feed	https://daiki55.com/feed/	PASS
 jp-b44-dezeen-com	jp_feeds_batch44	rss-feed	https://www.dezeen.com/feed/	PASS					
 jp-b44-kenchiku-co-jp	jp_feeds_batch44	rss-feed	https://kenchiku.co.jp/feed/	PASS					
 jp-b44-reco-photo-com	jp_feeds_batch44	rss-feed	https://reco-photo.com/feed/	PASS					
-jp-b44-tecture-jp	jp_feeds_batch44	rss-feed	https://mag.tecture.jp/feed/	PASS					
 jp-b44-aikidojournal-com	jp_feeds_batch44	rss-feed	https://aikidojournal.com/feed/	PASS					
 jp-b44-bicycleclub-jp	jp_feeds_batch44	rss-feed	https://www.bicycleclub.jp/feed/	PASS					
 jp-b44-cyclesports-jp	jp_feeds_batch44	rss-feed	https://www.cyclesports.jp/feed/	PASS					
