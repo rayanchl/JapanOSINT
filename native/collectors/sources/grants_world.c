@@ -315,7 +315,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def nih_reporter_def = {
-  .id = "NIH_REPORTER", .collector = "osint",
+  .id = "NIH_REPORTER", .collector = "osint_" "government",
   .name = "NIH RePORTER Grants", .name_ja = "NIH RePORTER 研究助成",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",
@@ -326,7 +326,7 @@ static const source_def nih_reporter_def = {
 REGISTER_SOURCE(nih_reporter_def)
 
 static const source_def nsf_awards_def = {
-  .id = "NSF_AWARDS", .collector = "osint",
+  .id = "NSF_AWARDS", .collector = "osint_" "government",
   .name = "NSF Awards", .name_ja = "NSF 研究助成",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",
@@ -337,7 +337,7 @@ static const source_def nsf_awards_def = {
 REGISTER_SOURCE(nsf_awards_def)
 
 static const source_def ukri_grants_def = {
-  .id = "UKRI_GRANTS", .collector = "osint",
+  .id = "UKRI_GRANTS", .collector = "osint_" "government",
   .name = "UKRI Gateway to Research", .name_ja = "UKRI 研究助成",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

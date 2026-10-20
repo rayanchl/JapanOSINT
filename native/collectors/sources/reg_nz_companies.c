@@ -131,7 +131,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def nz_companies_def = {
-  .id = "NZ_COMPANIES", .collector = "osint",
+  .id = "NZ_COMPANIES", .collector = "osint_" "government",
   .name = "NZ Companies Office", .name_ja = "ニュージーランド会社登記",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "scraped",

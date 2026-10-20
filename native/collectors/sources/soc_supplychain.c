@@ -134,7 +134,7 @@ static int run_swh(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_swh_def = {
-  .id = "SOFTWARE_HERITAGE_ORIGIN", .collector = "osint",
+  .id = "SOFTWARE_HERITAGE_ORIGIN", .collector = "osint_" "social",
   .name = "Software Heritage Origin Search",
   .update_interval_sec = 0, .run = run_swh,
   .category = "social", .type = "api",
@@ -218,7 +218,7 @@ static int run_ecosystems_pkg(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_ecosystems_pkg_def = {
-  .id = "ECOSYSTEMS_PACKAGE", .collector = "osint",
+  .id = "ECOSYSTEMS_PACKAGE", .collector = "osint_" "social",
   .name = "ecosyste.ms Package Lookup",
   .update_interval_sec = 0, .run = run_ecosystems_pkg,
   .category = "social", .type = "api",
@@ -300,7 +300,7 @@ static int run_ecosystems_repo(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_ecosystems_repo_def = {
-  .id = "ECOSYSTEMS_REPO", .collector = "osint",
+  .id = "ECOSYSTEMS_REPO", .collector = "osint_" "social",
   .name = "ecosyste.ms Repository Lookup",
   .update_interval_sec = 0, .run = run_ecosystems_repo,
   .category = "social", .type = "api",
@@ -393,7 +393,7 @@ static int run_dnstwister(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_dnstwister_def = {
-  .id = "DNSTWISTER_TYPOSQUAT", .collector = "osint",
+  .id = "DNSTWISTER_TYPOSQUAT", .collector = "osint_" "cyber",
   .name = "dnstwister Typosquat Permutation Check",
   .update_interval_sec = 0, .run = run_dnstwister,
   .category = "cyber", .type = "api",

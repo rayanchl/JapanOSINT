@@ -224,7 +224,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def subdomain_osint_def = {
-  .id = "SUBDOMAIN_FINDER", .collector = "osint",
+  .id = "SUBDOMAIN_FINDER", .collector = "osint_" "cyber",
   .name = "Subdomain Finder", .name_ja = "サブドメイン検索",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

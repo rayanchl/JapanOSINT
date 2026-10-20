@@ -701,17 +701,22 @@ underneath them that older notes in this file predate:
   (2026-10-19, round 4); `core/collectors.def` labels and groups them (below).
   Round 4 also moved batches 43/44's 400 Japanese web-media RSS feeds off
   `social` (their macro's label) onto `jp_webmedia` under News & media.
-  **`osint` is the collector of hand-written entity PIVOTS only** since round 3:
-  968 scheduled feeds had been authored under that label (Google News
-  editions and keyword monitors, world outlets, arXiv, think tanks, threat
-  feeds, Reddit multireddits) and sat under "Investigation pivots" as one
-  1,443-row collector. They now carry `gnews`, `gnews_monitors`,
+  **There is no `osint` collector any more** (round 5, 2026-10-20). Round 3
+  moved 968 scheduled feeds that had been authored under that label (Google
+  News editions and keyword monitors, world outlets, arXiv, think tanks,
+  threat feeds, Reddit multireddits) onto `gnews`, `gnews_monitors`,
   `world_outlets`, `conflict_press`, `trade_press`, `thinktanks`,
-  `ngo_rights`, `arxiv`, `science_press`, `finance_press`, `reddit`, `cyber`
-  — the collector of what they are — and `osint` holds its 492 pivots and
-  nothing scheduled. Safe because the pivot rule below never read the label;
-  check that a scheduled row's `collector` names its beat, not the macro's
-  default.
+  `ngo_rights`, `arxiv`, `science_press`, `finance_press`, `reddit`, `cyber`;
+  round 5 split the 492 hand-written entity pivots that remained by their
+  CATEGORY: `DEFR`/`DEF` in `_source_macros.inc` label a pivot
+  `"osint_" CAT` (string concatenation, so a file-level `#define CAT` works
+  too) and every explicit `.collector = "osint"` row became
+  `"osint_" <its category>` — `osint_government` 143, `osint_cyber` 120,
+  `osint_investigation` 62, … The generator files `osint_<cat>` under the
+  category's topical group (`CATEGORY_GROUP`), else under Investigation
+  pivots, and labels it "OSINT pivots — <cat>". Safe because the pivot rule
+  below never read the label; a scheduled row's `collector` must name its
+  beat, not a macro's default.
 * **"Entity pivot" is `registry_is_entity_pivot()`** in `registry.c`, the one
   rule both the dispatcher and `service_vec` use: interval 0, not a `_` pod,
   and (hpengine) an entity token in the URL/body OR `filter_query=1` (a bulk

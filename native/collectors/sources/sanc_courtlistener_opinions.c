@@ -132,7 +132,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def sanc_courtlistener_opinions_def = {
-  .id = "COURTLISTENER_OPINIONS", .collector = "osint",
+  .id = "COURTLISTENER_OPINIONS", .collector = "osint_" "government",
   .name = "CourtListener opinion search",
   .update_interval_sec = 0, .run = run,      /* on-demand entity pivot only */
   .category = "government", .type = "api",

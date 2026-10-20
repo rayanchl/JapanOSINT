@@ -108,7 +108,7 @@ static int run_npo(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def invoice_def = {
-  .id = "INVOICE_REGISTRY", .collector = "osint",
+  .id = "INVOICE_REGISTRY", .collector = "osint_" "government",
   .name = "NTA Invoice Issuer Registry", .name_ja = "適格請求書発行事業者公表",
   .update_interval_sec = 0, .run = run_invoice,
   .category = "government", .type = "api", .url = "https://www.invoice-kohyo.nta.go.jp/",
@@ -118,7 +118,7 @@ static const source_def invoice_def = {
 REGISTER_SOURCE(invoice_def)
 
 static const source_def kensetsu_def = {
-  .id = "CONSTRUCTION_LICENSE", .collector = "osint",
+  .id = "CONSTRUCTION_LICENSE", .collector = "osint_" "industry",
   .name = "Construction Business License", .name_ja = "建設業許可業者検索",
   .update_interval_sec = 0, .run = run_kensetsu,
   .category = "industry", .type = "scraped", .url = "https://www.mlit.go.jp/",
@@ -128,7 +128,7 @@ static const source_def kensetsu_def = {
 REGISTER_SOURCE(kensetsu_def)
 
 static const source_def minpaku_def = {
-  .id = "MINPAKU_REGISTRY", .collector = "osint",
+  .id = "MINPAKU_REGISTRY", .collector = "osint_" "economy",
   .name = "Minpaku Registry", .name_ja = "民泊 届出住宅検索",
   .update_interval_sec = 0, .run = run_minpaku,
   .category = "economy", .type = "scraped", .url = "https://www.minpaku.mlit.go.jp/",
@@ -138,7 +138,7 @@ static const source_def minpaku_def = {
 REGISTER_SOURCE(minpaku_def)
 
 static const source_def npo_def = {
-  .id = "NPO_PORTAL", .collector = "osint",
+  .id = "NPO_PORTAL", .collector = "osint_" "government",
   .name = "NPO Corporation Portal", .name_ja = "NPO法人ポータル",
   .update_interval_sec = 0, .run = run_npo,
   .category = "government", .type = "scraped", .url = "https://www.npo-homepage.go.jp/",

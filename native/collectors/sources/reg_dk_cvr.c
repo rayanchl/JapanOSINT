@@ -130,7 +130,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def dk_cvr_def = {
-  .id = "DK_CVR", .collector = "osint",
+  .id = "DK_CVR", .collector = "osint_" "government",
   .name = "Denmark CVR Company Lookup", .name_ja = "デンマーク企業登記 (CVR)",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

@@ -196,7 +196,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def reg_kr_dart_def = {
-  .id = "KR_DART", .collector = "osint",
+  .id = "KR_DART", .collector = "osint_" "government",
   .name = "KR DART Corporate Disclosures", .name_ja = "韓国DART 企業開示",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

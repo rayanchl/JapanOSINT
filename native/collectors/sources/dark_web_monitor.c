@@ -251,7 +251,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def dark_web_monitor_def = {
-  .id = "DARK_WEB_MONITOR", .collector = "osint",
+  .id = "DARK_WEB_MONITOR", .collector = "osint_" "cyber",
   .name = "Dark Web Monitor", .name_ja = "ダークウェブ監視",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

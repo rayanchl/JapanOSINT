@@ -66,7 +66,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def jp_postal_def = {
-  .id = "JP_POSTAL", .collector = "osint",
+  .id = "JP_POSTAL", .collector = "osint_" "geospatial",
   .name = "Japan Postal Code", .name_ja = "郵便番号検索",
   .update_interval_sec = 0, .run = run,
   .category = "geospatial", .type = "api",

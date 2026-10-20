@@ -127,7 +127,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def radio_browser_def = {
-  .id = "RADIO_BROWSER", .collector = "osint",
+  .id = "RADIO_BROWSER", .collector = "osint_" "investigation",
   .name = "Radio Browser Station Search", .name_ja = "ラジオブラウザ 局検索",
   .update_interval_sec = 0, .run = run,
   .category = "investigation", .type = "api",

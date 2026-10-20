@@ -378,7 +378,7 @@ static int run_age(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def domain_age_def = {
-  .id = "DOMAIN_AGE", .collector = "osint",
+  .id = "DOMAIN_AGE", .collector = "osint_" "cyber",
   .name = "Domain Age", .name_ja = "ドメイン経過年数",
   .update_interval_sec = 0, .run = run_age,
   .category = "cyber", .type = "api",

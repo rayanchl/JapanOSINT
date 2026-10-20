@@ -347,7 +347,7 @@ static int run_gazette(const source_ctx *ctx, intel_sink *sink) {
 /* ------------------------------------------------------------- definitions */
 
 static const source_def vendor_viability_def = {
-  .id = "VENDOR_VIABILITY", .collector = "osint",
+  .id = "VENDOR_VIABILITY", .collector = "osint_" "commercial",
   .name = "Vendor Viability Signals", .name_ja = "ベンダー存続シグナル",
   .update_interval_sec = 0, .run = run_viability,
   .category = "commercial", .type = "api",
@@ -361,7 +361,7 @@ static const source_def vendor_viability_def = {
 REGISTER_SOURCE(vendor_viability_def)
 
 static const source_def gazette_insolvency_def = {
-  .id = "GAZETTE_INSOLVENCY", .collector = "osint",
+  .id = "GAZETTE_INSOLVENCY", .collector = "osint_" "government",
   .name = "The Gazette Insolvency Notices", .name_ja = "英国官報 破産・清算公告",
   .update_interval_sec = 0, .run = run_gazette,
   .category = "government", .type = "web_request",

@@ -246,7 +246,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def vehicle_lookup_def = {
-  .id = "VEHICLE_LOOKUP", .collector = "osint",
+  .id = "VEHICLE_LOOKUP", .collector = "osint_" "transport",
   .name = "Vehicle Lookup", .name_ja = "車両照会",
   .update_interval_sec = 0, .run = run,
   .category = "transport", .type = "api",

@@ -117,7 +117,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def global_mediacloud_def = {
-  .id = "MEDIACLOUD", .collector = "osint",
+  .id = "MEDIACLOUD", .collector = "osint_" "news",
   .name = "Media Cloud News Search", .name_ja = "Media Cloud ニュース検索",
   .update_interval_sec = 0, .run = run,
   .category = "news", .type = "api",

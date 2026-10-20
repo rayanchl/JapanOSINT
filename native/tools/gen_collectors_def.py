@@ -389,6 +389,11 @@ def beat_of(key):
 def assign(key, cats):
     if key in OVERRIDES:
         return OVERRIDES[key]
+    # osint_<category>: the hand-written entity pivots, split by their category
+    # (round 5, 2026-10-20). The category decides the topical group; a category
+    # the map does not know stays under the pivots group rather than unassigned.
+    if key.startswith("osint_"):
+        return CATEGORY_GROUP.get(key[len("osint_"):], "grp_osint")
     beat = beat_of(key)
     for kw, grp in sorted(KEYWORDS, key=lambda kv: -len(kv[0])):
         if kw == beat or beat.endswith("_" + kw) or beat.endswith("-" + kw) or beat.startswith(kw + "_"):
@@ -402,6 +407,8 @@ def assign(key, cats):
 def humanise(key):
     if key in LABELS:
         return LABELS[key][0]
+    if key.startswith("osint_"):
+        return f"OSINT pivots — {key[len('osint_'):].replace('-', ' ').replace('_', ' ')}"
     if key.startswith("hp") and "_" in key:
         pfx, beat = key.split("_", 1)
         batch = pfx.replace("hp3b", "").replace("hp3", "").replace("hp2", "").replace("hp", "")
@@ -477,6 +484,9 @@ def main():
         out.append(f"/* {label}: {len(members)} collector(s), {sum(m[1] for m in members)} sources */")
         for key, n, cats in members:
             lab, lj, desc = LABELS.get(key, (humanise(key), None, None))
+            if key.startswith("osint_") and key not in LABELS:
+                lj = f"OSINTピボット — {key[len('osint_'):]}"
+                desc = f"Hand-written entity pivots whose category is {key[len('osint_'):]} (collectors/sources/, DEFR/DEF rows)."
             top = ", ".join(f"{c} {cnt}" for c, cnt in cats[:3])
             comment = f"  /* {n} src; {top} */" if top else f"  /* {n} src */"
             out.append(f"COLLECTOR({cstr(key)}, {cstr(lab)}, {cstr(lj)}, {cstr(desc)}, {cstr(grp)}){comment}")

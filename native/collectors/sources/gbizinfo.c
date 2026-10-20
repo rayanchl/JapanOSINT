@@ -126,7 +126,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def gbizinfo_def = {
-  .id = "GBIZINFO", .collector = "osint",
+  .id = "GBIZINFO", .collector = "osint_" "government",
   .name = "gBizINFO Company Lookup", .name_ja = "gBizINFO 企業情報",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

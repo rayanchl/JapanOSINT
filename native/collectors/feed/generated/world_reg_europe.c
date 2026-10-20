@@ -202,7 +202,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def europe_registry_def = {
-  .id = "EUROPE_REGISTRY", .collector = "osint",
+  .id = "EUROPE_REGISTRY", .collector = "osint_" "government",
   .name = "Europe Company & Court Registries",
   .name_ja = "欧州 企業・裁判所登記検索",
   .update_interval_sec = 0, .run = run,

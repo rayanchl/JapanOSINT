@@ -103,7 +103,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def mar_gebco_bathymetry_def = {
-  .id = "GEBCO_BATHYMETRY", .collector = "osint",
+  .id = "GEBCO_BATHYMETRY", .collector = "osint_" "transport",
   .name = "GEBCO 2020 global bathymetry at a coordinate (OpenTopoData)",
   .update_interval_sec = 0, .run = run,
   .category = "transport", .type = "api",

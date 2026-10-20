@@ -158,7 +158,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def china_registry_def = {
-  .id = "CHINA_REGISTRY", .collector = "osint",
+  .id = "CHINA_REGISTRY", .collector = "osint_" "government",
   .name = "Greater China Business & Court Registries",
   .name_ja = "中国・香港・台湾 企業/裁判所レジストリ",
   .update_interval_sec = 0, .run = run,
