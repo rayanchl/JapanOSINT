@@ -472,7 +472,14 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "generation-mix",
     .tags = "\"energy\",\"grid\",\"belgium\",\"nuclear\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods177/records?limit=50",
+    /* A DATE WINDOW (753,624 records on 2026-10-12, 15,073 pages at 50; the
+     * row read the first 150 forever). Three days newest-first on a stable
+     * sort: the host answered one request in ten from the measuring
+     * environment on 2026-10-20, so this dataset's own lag was not read by
+     * hand — the window is sized from its sibling ods031's 41-hour lag with a
+     * day of slack, and the engine's run line is the measurement that
+     * validates it (records > 0 at this window, or widen it). */
+    .url = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods177/records?limit=100&order_by=datetime%20desc&where=datetime%3E%3Dnow(days%3D-3)",
     .array_path = "results",
     /* The records carry no id, so the engine keyed on the first scalar (the
      * quarter-hour) and every fuel of a quarter-hour upserted onto one row.
@@ -481,7 +488,8 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .id_keys = "datetime+resolutioncode+fueltypepublication",
     .interval = 3600,
     .page_param = "offset",
-    .page_size = 50,
+    .page_size = 100,
+    .page_max = 40,
     .title_keys = "generatedpower",
     .description = "Recent quarter-hourly Belgian generation per publication fuel "
       "type including nuclear, gas and biofuels. The near-real-time "
@@ -1226,11 +1234,21 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "transmission-line",
     .tags = "\"energy\",\"grid\",\"belgium\",\"transmission\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods124/records?limit=50",
+    /* A DATE WINDOW on a measured lag. 2026-10-20: 3,311,377 records (65,275
+     * pages at 50), growing ~5,950 a day, newest 2026-10-20T00:30 when read
+     * at 14:00 — published in daily chunks, ~14 hours behind. The 900 s
+     * cadence bought nothing against that lag and the row read the first 150
+     * of three million forever. 48 hours newest-first on a stable sort is
+     * ~12,000 records at 100 a page, so page_max 130 covers it; 6-hourly,
+     * which is the cadence the lag supports and ~520 requests a day on one
+     * host rather than 12,000. The notice names the ceiling if a day is
+     * larger than this. */
+    .url = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods124/records?limit=100&order_by=datetime%20desc&where=datetime%3E%3Dnow(hours%3D-48)",
     .array_path = "results",
-    .interval = 900,
+    .interval = 21600,
     .page_param = "offset",
-    .page_size = 50,
+    .page_size = 100,
+    .page_max = 130,
     /* A quarter-hourly series: the record is one asset at one instant, so the
      * identity is the timestamp AND the asset, not the asset name the row was
      * falling back to. Verified live 2026-09-07: 50 records carry 50 distinct
