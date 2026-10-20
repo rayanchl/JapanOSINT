@@ -39,10 +39,10 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 48,800** (2026-10-20): main's 48,346 — 48,343 plus
+**The registered count is 48,801** (2026-10-20): main's 48,346 — 48,343 plus
 the three embedding maintenance pods of the infrastructure audit — plus batch
-46's 164 measured ArcGIS layers and batch 49's 290, which are the rest of batch
-46's own probed pool. Main's 22,408 was its own
+46's 164 measured ArcGIS layers, batch 49's 290, which are the rest of batch
+46's own probed pool, and one KKJ prefecture row that had been missing. Main's 22,408 was its own
 `jp_feeds_batch41..44.c` beats, PR #48's paging cycle and PR #50's batch 45 of
 619 WordPress collections — merged with PR #47's 47,178, less six news
 feeds both sessions had added (main merged first, so its rows stay). **Batch numbers 43 and 44 now name two things**: main's
@@ -57,7 +57,7 @@ manifests, TSVs, docs and collector keys — exactly as the batch-41 note below
 predicts. The count ledger — every
 batch from 37 to 48, main's 45 and batch 46 included, what seeded it, what it measured and what it taught — is
 `docs/SOURCE_COUNT_LEDGER.md`; this file keeps the rules and the current number.
-Both floors are re-recorded at 48,507 and `make source-count` agrees.
+Both floors are re-recorded at 48,801 and `make source-count` agrees.
 
 **And a THIRD branch hit the same renumbering, which is why batch 46 is the
 ArcGIS beat.** PR #51 generated it as batch 45 when 44 was the highest
@@ -1435,10 +1435,42 @@ Engine subtleties worth knowing before writing a row:
   upstream for its own count both with and without the predicate before
   windowing a row.** `hptest` 41–41g pin the rest.
 
-  533 rows cycle on pages, 3 on a date window. One shape to keep in mind:
+  533 rows cycle on pages, 50 on a date window. One shape to keep in mind:
   `interval = 2592000` is monthly, so a 500-page collection on that cadence
   takes about two years to come round — better than never, and the notice says
   where it is.
+
+  **Sizing a window is a DAILY measurement, and a weekly one says the wrong
+  thing in both directions.** The 47 KKJ prefecture rows are the case
+  (2026-10-20). Weekly counts across eight whole prefecture-years put the peak
+  week at 2.48x to 4.24x the average week, which suggested sizing every row so
+  a 4.3x week fits. Measuring the three worst weeks day by day refuted it
+  twice:
+  * **Tokyo's peak is a SEASON, not a spike** — 978, 1,055 and 979 in three
+    consecutive weeks, about 143 a weekday and nothing at weekends. So its
+    rolling maxima are max3d 643, **max4d 806**, max5d 1,055: four days fit a
+    1,000-record read and five do not, and the weekly ratio had been
+    conservative by a third. Calibrating the burst factor on that one measured
+    number (3.26) rather than on the weekly ratio took the whole set from 5,509
+    windows to 4,142. Verified live at the measured peak: 806 of 806, complete.
+  * **Toyama publishes in BULK** — single days of 1,449 and 1,161 notices,
+    which is why its max3d and max7d are the SAME number. A record cap is per
+    READ, so no window width can take such a day whole, and a narrow window
+    there loses the same records at seven times the requests. **Check whether
+    an overflow is a day before narrowing a window**; the notice's own
+    arithmetic assumes an even spread and says so.
+
+  A window size does not have to be perfect, and that is what makes this
+  shippable on an estimate: **a window whose own count exceeds one read
+  discloses itself.** The reason used to say "read its window in full" from one
+  condition only — that the row was behind — so an under-sized window's
+  overflow read as a tidy deferral. A deferred record comes back on a later
+  run and an overflowed one never does.
+
+  And **on a window row the upstream's count is the size of the SLICE**, not of
+  the collection: `records_available_basis` said "upstream declared this total"
+  there, inviting Toyama's 1,458 to be read as its 30,512. `hptest` 41h pins
+  both halves.
 * **A deep-paging cap is the upstream's, and it is disclosed by name.** GLEIF
   refuses `page[number]=51` with HTTP 400 — 50 pages × 200 = 10,000 records —
   so `GLEIF_LEI_HK` reaches 10,000 of 13,419 and the rest needs a narrower
@@ -1465,6 +1497,39 @@ Engine subtleties worth knowing before writing a row:
   a declared 325 with `more_pages_pending: false`, so a checker keyed on the
   flag calls it complete while 25 declared records are dropped every run.
   `tools/audit_page_ceiling.py` keys on the totals for that reason.
+
+  **And until 2026-10-20 that authoritative signal could not fire for two
+  whole classes of row.** The trigger was `page_walk && declared_total >
+  available`, so a row making ONE request against an upstream that said it
+  held fifty times more disclosed NOTHING; and `hp_run_json` was the only
+  place a declared total was ever read, so no XML row in the tree could state
+  a remainder whatever its upstream published — 27,258 scheduled XML rows with
+  no paging mechanism at all. Both are fixed; `hp_xml_declared_total()` reads
+  only the text BEFORE the first record, because a name like `TotalCount` can
+  occur as a field OF a record and reading one record's field as the
+  collection's size makes the disclosure itself a fabrication.
+
+  Finding that first record needs the record loop's own rule that **a tag name
+  is only that name when the next character ends it**: KKJ wraps
+  `<SearchResult>` records in a `<SearchResults>` envelope and puts the count
+  inside it, so a plain `strstr` for `"<SearchResult"` stops at the WRAPPER and
+  the searchable span is the four lines above it. `hptest` 42, 42b and 42c.
+
+* **Probe every offset spelling before concluding a row can page — or that it
+  cannot.** 48 KKJ rows declared `page_param = "Start"` and walked 20 pages
+  that each re-emitted page 1. `Start`, `Offset`, `Skip`, `From`, `Page`,
+  `PageNo`, `Index`, `StartIndex`, `Start_Index`, `First`, `Begin` and
+  `Position` were each sent with a real value and each returned the same first
+  page, so the row's shape was decided by twelve requests rather than by a
+  guess in either direction. **A remedy that names a knob which cannot move is
+  worse than none**: "raise max_items/page_max" is right for a walk stopped at
+  a ceiling and useless for a row that never walked, and a row with no paging
+  is now told to ask the endpoint what it honours and to slice the QUERY where
+  no offset works.
+
+  A corollary worth the one request it costs: **count the members of a set
+  that looks complete.** These rows covered 46 of Japan's 47 prefectures —
+  三重県 was simply absent, and LG_Code=24 answers 5,468 notices.
 * `next_path` accepts a `key=value` segment: write **`links.rel=next.href`**,
   not `links.1.href`. Indexing a hypermedia link array positionally breaks when
   a server reorders it, and the failure mode is the engine refetching page 1
