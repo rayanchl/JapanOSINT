@@ -63,7 +63,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def court_bailii_def = {
-  .id = "COURT_BAILII", .collector = "osint",
+  .id = "COURT_BAILII", .collector = "osint_" "investigation",
   .name = "BAILII Case Law Search", .name_ja = "BAILII 判例検索",
   .update_interval_sec = 0, .run = run,
   .category = "investigation", .type = "scraped",
@@ -74,7 +74,7 @@ static const source_def court_bailii_def = {
 REGISTER_SOURCE(court_bailii_def)
 
 static const source_def court_canlii_def = {
-  .id = "COURT_CANLII", .collector = "osint",
+  .id = "COURT_CANLII", .collector = "osint_" "investigation",
   .name = "CanLII Case Law Search", .name_ja = "CanLII 判例検索",
   .update_interval_sec = 0, .run = run,
   .category = "investigation", .type = "scraped",
@@ -85,7 +85,7 @@ static const source_def court_canlii_def = {
 REGISTER_SOURCE(court_canlii_def)
 
 static const source_def court_austlii_def = {
-  .id = "COURT_AUSTLII", .collector = "osint",
+  .id = "COURT_AUSTLII", .collector = "osint_" "investigation",
   .name = "AustLII Case Law Search", .name_ja = "AustLII 判例検索",
   .update_interval_sec = 0, .run = run,
   .category = "investigation", .type = "scraped",
@@ -96,7 +96,7 @@ static const source_def court_austlii_def = {
 REGISTER_SOURCE(court_austlii_def)
 
 static const source_def court_cjeu_def = {
-  .id = "COURT_CJEU", .collector = "osint",
+  .id = "COURT_CJEU", .collector = "osint_" "investigation",
   .name = "CJEU Curia Case Law Search", .name_ja = "EU司法裁判所 判例検索",
   .update_interval_sec = 0, .run = run,
   .category = "investigation", .type = "scraped",

@@ -18,8 +18,8 @@
  *   - The record's best-ranked target (camera_feed.h's first): one view, not
  *     every view.
  *   - Through camera_stills_fetch_frame(): the SAME fetch path stills use —
- *     hostgate's camera destination policy (LAN/metadata/link-local refused
- *     unless JO_CAMERA_ALLOW_LAN=1), its per-host politeness, the size cap and
+ *     hostgate's camera destination policy (LAN/metadata/link-local always
+ *     refused), its per-host politeness, the size cap and
  *     the one-complete-frame trim. Whole frames; no face or person feature.
  *   - Preserved as an evidence blob filed under the camera's uid and the
  *     pseudo-source "camera-refframe" (created with capture_evidence=1 on

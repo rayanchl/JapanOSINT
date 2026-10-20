@@ -120,7 +120,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def global_geonames_def = {
-  .id = "GEONAMES", .collector = "osint",
+  .id = "GEONAMES", .collector = "osint_" "geospatial",
   .name = "GeoNames Place Search", .name_ja = "GeoNames 地名検索",
   .update_interval_sec = 0, .run = run,
   .category = "geospatial", .type = "api",

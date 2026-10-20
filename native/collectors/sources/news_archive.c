@@ -247,7 +247,7 @@ static int run_archive(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def news_archive_def = {
-  .id = "NEWS_ARCHIVE", .collector = "osint",
+  .id = "NEWS_ARCHIVE", .collector = "osint_" "news",
   .name = "News Archive", .name_ja = "ニュースアーカイブ",
   .update_interval_sec = 0, .run = run_archive,
   .category = "news", .type = "api",

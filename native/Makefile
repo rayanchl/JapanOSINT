@@ -93,6 +93,7 @@ OBJS     := $(patsubst %.c,$(OBJ)/%.o,$(SRCS)) \
             $(OBJ)/third_party/mongoose.o $(OBJ)/third_party/sqlite-vec.o
 
 .PHONY: all clean selftest unit authtest pagewalktest htmlparsetest tsan tsan-test tsan-sched asan asan-test \
+        collectors-def collectors-def-check batch-gates \
         lint-sources lint-baseline source-count
 all: $(BIN)
 
@@ -335,6 +336,46 @@ lint-baseline:
 # is how you get the current one (macro-expanded, so it is not a grep count).
 source-count:
 	@python3 tools/lint_sources.py --count
+
+# Regenerate core/collectors.def from the binary's OWN registry. The census
+# used to mean: start a server on a scratch DB, GET /api/collectors, convert
+# it to TSV, run the generator by hand, rebuild — a manual loop that let a
+# stale OVERRIDES entry through once (round 4). Now:
+#
+#   make && make collectors-def && make      # the def is compiled in, so rebuild
+#
+# The census TSV is kept under docs/source-pages-revamp/ as the record the
+# generator ran from. collectors-def-check runs the generator WITHOUT writing:
+# it exits non-zero while any registered collector key has no def line.
+CENSUS_DIR := ../docs/source-pages-revamp
+collectors-def: $(BIN)
+	@mkdir -p .run; d=$$(date +%F); f=$(CENSUS_DIR)/collector-census-$$d.tsv; \
+	JO_DB=.run/census.db ./$(BIN) --collector-census > $$f && \
+	python3 tools/gen_collectors_def.py $$f > core/collectors.def && \
+	echo "core/collectors.def regenerated from $$f -- run make again to compile it in"
+collectors-def-check: $(BIN)
+	@mkdir -p .run && JO_DB=.run/census.db ./$(BIN) --collector-census > .run/census-check.tsv && \
+	python3 tools/gen_collectors_def.py .run/census-check.tsv > /dev/null && \
+	echo "collectors-def-check: every registered collector has a def line"
+
+# Every manifest gate in one command, in the order they are meant to run:
+# duplicate ids/endpoints against the tree, paging declared where the endpoint
+# pages, reachability (rule 3), then the live probe. The probe's pass list is
+# what gen_hp_batch.py --pass-ids takes.
+#
+#   make batch-gates MANIFEST='../docs/candidate-sources-batch46.*.txt'
+#   python3 tools/gen_hp_batch.py ../docs/candidate-sources-batch46.*.txt \
+#           --pass-ids .run/batch-gates/pass-ids.txt --prefix hp3b46 --batch 46 --outdir collectors/pivot/table
+OUT        ?= .run/batch-gates
+PROBE_JOBS ?= 8
+batch-gates: $(BIN)
+	@test -n "$(MANIFEST)" || { echo "usage: make batch-gates MANIFEST='../docs/candidate-sources-batchNN.*.txt' [OUT=dir] [PROBE_JOBS=8]"; exit 2; }
+	@mkdir -p $(OUT)
+	python3 tools/batch_exclusions.py --bin ./$(BIN) --check $(MANIFEST)
+	python3 tools/audit_batch_pagination.py $(MANIFEST)
+	python3 tools/audit_batch_reachable.py $(MANIFEST)
+	python3 tools/probe_hp_batch.py $(MANIFEST) --jobs $(PROBE_JOBS) --report-only --out $(OUT)/probe.tsv --pass-ids $(OUT)/pass-ids.txt
+	@echo "batch-gates: pass list at $(OUT)/pass-ids.txt ($$(wc -l < $(OUT)/pass-ids.txt) ids)"
 
 # Assert the fleet did not shrink. `make source-count` is a number nobody
 # diffs, which is exactly how a silently-dropped collector survives a refactor:

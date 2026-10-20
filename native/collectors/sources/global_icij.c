@@ -37,7 +37,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def icij_offshore_def = {
-  .id = "ICIJ_OFFSHORE", .collector = "osint",
+  .id = "ICIJ_OFFSHORE", .collector = "osint_" "investigation",
   .name = "ICIJ Offshore Leaks", .name_ja = "ICIJ オフショア・リークス",
   .update_interval_sec = 0, .run = run,
   .category = "investigation", .type = "scraped",

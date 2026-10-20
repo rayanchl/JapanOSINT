@@ -66,7 +66,7 @@ static int run_phone(const source_ctx *c, intel_sink *s)    { return emit_lookup
 static int run_password(const source_ctx *c, intel_sink *s) { return emit_lookup(c, s, BT_PASSWORD, "BREACH_INDEX_PASSWORD"); }
 
 static const source_def breach_index_email = {
-  .id = "BREACH_INDEX_EMAIL", .collector = "osint",
+  .id = "BREACH_INDEX_EMAIL", .collector = "osint_" "cyber",
   .name = "Breach Index (email)", .name_ja = "漏洩インデックス（メール）",
   .update_interval_sec = 0, .run = run_email,
   .category = "cyber", .type = "dataset", .url = "internal://osint/breach-index/email",
@@ -76,7 +76,7 @@ static const source_def breach_index_email = {
 REGISTER_SOURCE(breach_index_email)
 
 static const source_def breach_index_username = {
-  .id = "BREACH_INDEX_USERNAME", .collector = "osint",
+  .id = "BREACH_INDEX_USERNAME", .collector = "osint_" "cyber",
   .name = "Breach Index (username)", .name_ja = "漏洩インデックス（ユーザー名）",
   .update_interval_sec = 0, .run = run_username,
   .category = "cyber", .type = "dataset", .url = "internal://osint/breach-index/username",
@@ -86,7 +86,7 @@ static const source_def breach_index_username = {
 REGISTER_SOURCE(breach_index_username)
 
 static const source_def breach_index_phone = {
-  .id = "BREACH_INDEX_PHONE", .collector = "osint",
+  .id = "BREACH_INDEX_PHONE", .collector = "osint_" "cyber",
   .name = "Breach Index (phone)", .name_ja = "漏洩インデックス（電話）",
   .update_interval_sec = 0, .run = run_phone,
   .category = "cyber", .type = "dataset", .url = "internal://osint/breach-index/phone",
@@ -96,7 +96,7 @@ static const source_def breach_index_phone = {
 REGISTER_SOURCE(breach_index_phone)
 
 static const source_def breach_index_password = {
-  .id = "BREACH_INDEX_PASSWORD", .collector = "osint",
+  .id = "BREACH_INDEX_PASSWORD", .collector = "osint_" "cyber",
   .name = "Breach Index (password)", .name_ja = "漏洩インデックス（パスワード）",
   .update_interval_sec = 0, .run = run_password,
   .category = "cyber", .type = "dataset", .url = "internal://osint/breach-index/password",

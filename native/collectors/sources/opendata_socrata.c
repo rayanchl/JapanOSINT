@@ -147,7 +147,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def opendata_socrata_def = {
-  .id = "OPENDATA_SOCRATA", .collector = "osint",
+  .id = "OPENDATA_SOCRATA", .collector = "osint_" "government",
   .name = "Socrata Open Data Search", .name_ja = "Socrata オープンデータ検索",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "dataset",

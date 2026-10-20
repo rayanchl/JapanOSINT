@@ -336,7 +336,7 @@ static int cr_run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def reg2_pe_ruc_def = {
-  .id = "PE_RUC_LOOKUP", .collector = "osint",
+  .id = "PE_RUC_LOOKUP", .collector = "osint_" "economy",
   .name = "Peru RUC taxpayer lookup",
   .update_interval_sec = 0, .run = pe_run,
   .category = "economy", .type = "api",
@@ -350,7 +350,7 @@ static const source_def reg2_pe_ruc_def = {
 REGISTER_SOURCE(reg2_pe_ruc_def)
 
 static const source_def reg2_ec_sri_def = {
-  .id = "EC_SRI_RUC", .collector = "osint",
+  .id = "EC_SRI_RUC", .collector = "osint_" "economy",
   .name = "Ecuador SRI taxpayer register (RUC)",
   .update_interval_sec = 0, .run = ec_run,
   .category = "economy", .type = "api",
@@ -365,7 +365,7 @@ static const source_def reg2_ec_sri_def = {
 REGISTER_SOURCE(reg2_ec_sri_def)
 
 static const source_def reg2_cr_hacienda_def = {
-  .id = "CR_HACIENDA_TAXPAYER", .collector = "osint",
+  .id = "CR_HACIENDA_TAXPAYER", .collector = "osint_" "economy",
   .name = "Costa Rica Hacienda taxpayer situation lookup",
   .update_interval_sec = 0, .run = cr_run,
   .category = "economy", .type = "api",

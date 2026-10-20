@@ -193,7 +193,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def gdelt_doc_def = {
-  .id = "GDELT_DOC", .collector = "osint",
+  .id = "GDELT_DOC", .collector = "osint_" "news",
   .name = "GDELT Global News Search", .name_ja = "GDELT グローバルニュース検索",
   .update_interval_sec = 0, .run = run,
   .category = "news", .type = "api",
@@ -204,7 +204,7 @@ static const source_def gdelt_doc_def = {
 REGISTER_SOURCE(gdelt_doc_def)
 
 static const source_def gdelt_geo_def = {
-  .id = "GDELT_GEO", .collector = "osint",
+  .id = "GDELT_GEO", .collector = "osint_" "news",
   .name = "GDELT News Geography", .name_ja = "GDELT ニュース地理",
   .update_interval_sec = 0, .run = run,
   .category = "news", .type = "api",

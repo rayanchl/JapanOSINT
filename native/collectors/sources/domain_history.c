@@ -378,7 +378,7 @@ static int run_hist(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def domain_history_def = {
-  .id = "DOMAIN_HISTORY", .collector = "osint",
+  .id = "DOMAIN_HISTORY", .collector = "osint_" "cyber",
   .name = "Domain History", .name_ja = "ドメイン履歴",
   .update_interval_sec = 0, .run = run_hist,
   .category = "cyber", .type = "api",

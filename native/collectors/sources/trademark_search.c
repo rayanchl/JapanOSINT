@@ -145,7 +145,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def trademark_search_def = {
-  .id = "TRADEMARK_SEARCH", .collector = "osint",
+  .id = "TRADEMARK_SEARCH", .collector = "osint_" "government",
   .name = "Trademark Search", .name_ja = "商標検索",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

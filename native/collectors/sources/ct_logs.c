@@ -201,7 +201,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def ct_logs_def = {
-  .id = "CERTIFICATE_TRANSPARENCY", .collector = "osint",
+  .id = "CERTIFICATE_TRANSPARENCY", .collector = "osint_" "cyber",
   .name = "Certificate Transparency", .name_ja = "証明書透過ログ",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

@@ -319,7 +319,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def shodan_search_def = {
-  .id = "SHODAN_SEARCH", .collector = "osint",
+  .id = "SHODAN_SEARCH", .collector = "osint_" "cyber",
   .name = "Shodan Search", .name_ja = "Shodan検索",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

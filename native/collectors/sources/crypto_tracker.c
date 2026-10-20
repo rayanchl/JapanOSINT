@@ -275,7 +275,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def crypto_tracker_def = {
-  .id = "CRYPTO_TRACKER", .collector = "osint",
+  .id = "CRYPTO_TRACKER", .collector = "osint_" "economy",
   .name = "Crypto Tracker", .name_ja = "暗号資産追跡",
   .update_interval_sec = 0, .run = run,
   .category = "economy", .type = "api",

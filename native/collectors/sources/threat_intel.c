@@ -200,7 +200,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def threat_intel_def = {
-  .id = "THREAT_INTEL", .collector = "osint",
+  .id = "THREAT_INTEL", .collector = "osint_" "cyber",
   .name = "Threat Intel", .name_ja = "脅威インテリジェンス",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

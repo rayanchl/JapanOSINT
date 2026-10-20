@@ -300,7 +300,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def reverse_whois_def = {
-  .id = "HISTORICAL_WHOIS", .collector = "osint",
+  .id = "HISTORICAL_WHOIS", .collector = "osint_" "cyber",
   .name = "Historical WHOIS", .name_ja = "過去のWHOIS",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

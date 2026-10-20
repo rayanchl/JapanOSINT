@@ -176,7 +176,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def reg_ro_def = {
-  .id = "RO_COMPANIES", .collector = "osint",
+  .id = "RO_COMPANIES", .collector = "osint_" "government",
   .name = "Romania Company Registry",
   .name_ja = "ルーマニア 企業登記検索",
   .update_interval_sec = 0, .run = run,

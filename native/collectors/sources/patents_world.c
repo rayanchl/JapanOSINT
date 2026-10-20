@@ -266,7 +266,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def patentsview_def = {
-  .id = "PATENTSVIEW", .collector = "osint",
+  .id = "PATENTSVIEW", .collector = "osint_" "government",
   .name = "PatentsView Patent Search", .name_ja = "PatentsView 特許検索",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",
@@ -277,7 +277,7 @@ static const source_def patentsview_def = {
 REGISTER_SOURCE(patentsview_def)
 
 static const source_def epo_ops_def = {
-  .id = "EPO_OPS", .collector = "osint",
+  .id = "EPO_OPS", .collector = "osint_" "government",
   .name = "EPO Open Patent Services", .name_ja = "EPO OPS 特許検索",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",
@@ -288,7 +288,7 @@ static const source_def epo_ops_def = {
 REGISTER_SOURCE(epo_ops_def)
 
 static const source_def lens_patents_def = {
-  .id = "LENS_PATENTS", .collector = "osint",
+  .id = "LENS_PATENTS", .collector = "osint_" "government",
   .name = "Lens.org Patent Search", .name_ja = "Lens.org 特許検索",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

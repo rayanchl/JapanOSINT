@@ -184,7 +184,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def mar_noaa_coops_water_level_def = {
-  .id = "NOAA_COOPS_WATER_LEVEL", .collector = "osint",
+  .id = "NOAA_COOPS_WATER_LEVEL", .collector = "osint_" "transport",
   .name = "NOAA CO-OPS observed water level by station",
   .update_interval_sec = 0, .run = run,
   .category = "transport", .type = "api",

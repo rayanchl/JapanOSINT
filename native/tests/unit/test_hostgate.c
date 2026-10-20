@@ -13,7 +13,8 @@
  *      open — and shows up in hostgate_counters()' over_budget.
  *   4. release() of a host with no slot does not claim one.
  *   5. hostgate_penalize() delays the next start, capped at 60 s.
- *   6. The camera policy: strict unless JO_CAMERA_ALLOW_LAN=1; metadata and
+ *   6. The camera policy: always strict (the JO_CAMERA_ALLOW_LAN opt-in is
+ *      gone and setting it changes nothing); the test seam admits LAN; metadata and
  *      link-local refused regardless; JO_HTTP_BLOCK_PRIVATE=1 wins.
  *
  * Includes hostgate.c to reach the table and the test clock. */
@@ -174,8 +175,6 @@ static void test_penalize(void) {
 /* 6. Camera destination policy. */
 static void test_camera_policy(void) {
   unsetenv("JO_HTTP_BLOCK_PRIVATE");
-  unsetenv("JO_CAMERA_ALLOW_LAN");
-  assert(!hostgate_camera_lan_allowed());
   assert(hostgate_camera_url_check("rtsp://127.0.0.1:554/live", 0) == HG_URL_PRIVATE);
   assert(hostgate_camera_url_check("http://192.168.1.10/snap.jpg", 0) == HG_URL_PRIVATE);
   assert(hostgate_camera_url_check("http://10.0.0.5:8080/", 0) == HG_URL_PRIVATE);
@@ -197,27 +196,30 @@ static void test_camera_policy(void) {
   /* The general floor is unchanged: llama-server on loopback still works. */
   assert(hostgate_url_check("http://127.0.0.1:8080/v1") == HG_URL_OK);
 
+  /* The removed operator opt-in opens nothing. */
   setenv("JO_CAMERA_ALLOW_LAN", "1", 1);
-  assert(hostgate_camera_lan_allowed());
+  assert(hostgate_camera_url_check("http://192.168.1.10/snap.jpg", 0) == HG_URL_PRIVATE);
+  assert(hostgate_camera_url_check("rtsp://127.0.0.1:554/live", 0) == HG_URL_PRIVATE);
+  assert(hostgate_camera_addr_check("10.1.2.3") == HG_URL_PRIVATE);
+  unsetenv("JO_CAMERA_ALLOW_LAN");
+
+  hostgate_camera_test_allow_lan(1);
   assert(hostgate_camera_url_check("http://192.168.1.10/snap.jpg", 0) == HG_URL_OK);
   assert(hostgate_camera_url_check("rtsp://127.0.0.1:554/live", 0) == HG_URL_OK);
   assert(hostgate_camera_addr_check("10.1.2.3") == HG_URL_OK);
-  /* opt-in is LAN, never metadata / link-local */
+  /* the seam is LAN, never metadata / link-local */
   assert(hostgate_camera_url_check("http://169.254.169.254/", 0) == HG_URL_PRIVATE);
   assert(hostgate_camera_url_check("http://metadata.google.internal/", 0) == HG_URL_PRIVATE);
   assert(hostgate_camera_addr_check("169.254.169.254") == HG_URL_PRIVATE);
   assert(hostgate_camera_addr_check("fe80::1") == HG_URL_PRIVATE);
 
-  setenv("JO_CAMERA_ALLOW_LAN", "0", 1);
-  assert(!hostgate_camera_lan_allowed());
-
-  /* JO_HTTP_BLOCK_PRIVATE=1 beats the camera opt-in. */
-  setenv("JO_CAMERA_ALLOW_LAN", "1", 1);
+  /* JO_HTTP_BLOCK_PRIVATE=1 beats even the seam. */
   setenv("JO_HTTP_BLOCK_PRIVATE", "1", 1);
   assert(hostgate_camera_url_check("http://192.168.1.10/", 0) == HG_URL_PRIVATE);
   assert(hostgate_camera_addr_check("192.168.1.10") == HG_URL_PRIVATE);
   unsetenv("JO_HTTP_BLOCK_PRIVATE");
-  unsetenv("JO_CAMERA_ALLOW_LAN");
+  hostgate_camera_test_allow_lan(0);
+  assert(hostgate_camera_url_check("http://192.168.1.10/", 0) == HG_URL_PRIVATE);
 }
 
 int main(void) {

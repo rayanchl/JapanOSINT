@@ -141,7 +141,7 @@ static int run_earthquake(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def earthquake_monitor_def = {
-  .id = "EARTHQUAKE_MONITOR", .collector = "osint",
+  .id = "EARTHQUAKE_MONITOR", .collector = "osint_" "environment",
   .name = "Earthquake Monitor", .name_ja = "地震モニター",
   .update_interval_sec = 0, .run = run_earthquake,
   .category = "environment", .type = "api",

@@ -132,7 +132,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cyi_stopforumspam_ip_def = {
-  .id = "STOPFORUMSPAM_IP", .collector = "osint",
+  .id = "STOPFORUMSPAM_IP", .collector = "osint_" "cyber",
   .name = "StopForumSpam IP reputation",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",
