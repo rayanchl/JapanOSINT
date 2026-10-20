@@ -1229,6 +1229,16 @@ typedef struct {
    * for a move that never happened; the remedy is a per-host gap. Reproducible
    * an hour apart, which is why this is named rather than guessed at. */
   int   unreadable_ratelimit;
+  /* A non-parsing 200 body that is a BOT WALL. The same shape as the rate-limit
+   * page above and a different remedy, which is why it is a different flag:
+   * `catalogue.data.govt.nz` answers its CKAN bulk endpoint with HTTP 200 and
+   * Imperva's `<title>Pardon Our Interruption</title>` (measured 2026-10-20,
+   * 6,183 bytes), so the note again said "the endpoint may have moved". It has
+   * not moved and it is not pacing: a per-host gap in core/hostgate.c would
+   * change nothing, because the wall is refusing an automated client at any
+   * rate. Naming it keeps a reader from spending the afternoon on the wrong
+   * two remedies. */
+  int   unreadable_botwall;
 
   /* Repeat guard on the RECORDS of a paged JSON walk (see hp_run_json).
    * Hashing the whole body could not see an ignored cursor when the envelope
@@ -1939,8 +1949,20 @@ static int hp_run_json(hp_run_state *st, const char *body) {
     if (jo_strcasestr(body, "rate limit") || jo_strcasestr(body, "rate-limit") ||
         jo_strcasestr(body, "too many requests"))
       st->unreadable_ratelimit = 1;
+    /* And a 200 that is really a BOT WALL. Same rule as above: only the words
+     * the wall puts in the page it serves INSTEAD of the data, and each of
+     * these is a vendor's own interstitial title rather than anything a data
+     * body would carry. Not "access denied", which is a phrase real records
+     * (permit decisions, FOI logs) do carry. */
+    else if (jo_strcasestr(body, "Pardon Our Interruption") ||
+             jo_strcasestr(body, "Checking your browser") ||
+             jo_strcasestr(body, "Attention Required") ||
+             jo_strcasestr(body, "cf-browser-verification") ||
+             jo_strcasestr(body, "captcha"))
+      st->unreadable_botwall = 1;
     fprintf(stderr, "[hp:%s] non-JSON body%s\n", s->id,
             st->unreadable_ratelimit ? " — it is a RATE-LIMIT page served as 200"
+          : st->unreadable_botwall   ? " — it is a BOT-WALL page served as 200"
                                      : "");
     st->unreadable = 1;
     return st->emitted;
@@ -3973,6 +3995,37 @@ static int hp_header_is_conditional(const char *h) {
   return 0;
 }
 
+/* The upstream's OWN way of saying "the query matched nothing", which is an
+ * honest empty and not a refusal, measured rather than assumed.
+ *
+ * FDSN's `nodata` parameter exists for exactly this: it names the status the
+ * service must use for an empty result, and every row in this tree's FDSN
+ * beats passes `nodata=404`. So those rows ASK to be told "nothing" with a
+ * 404, and then the fetch-failure notice read that 404 back as "the upstream
+ * refused the request", remedy "re-run; if the status persists the endpoint
+ * has moved or retired" — pointing a reader at a move that never happened, the
+ * same defect as the rate-limit 200 above.
+ *
+ * `ws.icgc.cat` is the measured case (2026-10-20). Its event service is live —
+ * `/fdsnws/event/1/version` answers `1.2.4` — and holds no events for any
+ * window asked of it, including a whole year. The proof that this is empty and
+ * not broken comes from the SAME endpoint: drop `nodata` and the identical
+ * query answers **HTTP 204 with no body**, which is FDSN's documented empty.
+ *
+ * The discriminator is the body's own words, never the status and never the
+ * row's URL. Both halves matter, and `eida.koeri.boun.edu.tr` is why: it
+ * answers the same 404 to the same `nodata=404` row with "The requested
+ * resource does not exist on this server" — a node that does not run the event
+ * service at all (CLAUDE.md's own lesson). Keying on the status, or on the row
+ * having asked for `nodata=404`, would file that dead service as a healthy
+ * empty, which is the dangerous direction. */
+static int hp_status_is_declared_empty(long status, const char *body) {
+  if (status == 204) return 1;                  /* no content, by definition */
+  if (status != 404 || !body) return 0;
+  return jo_strcasestr(body, "no matching") != NULL ||
+         jo_strcasestr(body, "no data available") != NULL;
+}
+
 /* A page AFTER the first did not deliver records: it answered a status other
  * than 200, failed in transport (`status` -1), or came back 200 with a body
  * that could not be read (`status` 200). Does that mean the upstream ran out
@@ -4488,6 +4541,7 @@ dated_restart:;
   /* The first page's outcome, kept for the fetch-failure notice: 0 = never
    * asked, 200 = served, -1 = transport failure, otherwise the status. */
   long first_status = 0;
+  int  first_nodata = 0;   /* page 1 was served and declared itself EMPTY */
   unsigned long long prev_hash = 0;   /* previous page's body, for notice (d) */
   char *prev_url = NULL;              /* the page read before this one         */
   /* Page 1's record count, the yardstick for "was the previous page full?" in
@@ -4568,7 +4622,15 @@ dated_restart:;
       /* Page 1's outcome, for the fetch-failure notice: main's machinery
        * below is about a LATER page cutting a walk short, which is a different
        * finding from a run that brought back nothing at all. */
-      if (page == 0) first_status = fst;
+      if (page == 0) {
+        first_status = fst;
+        /* hp_status_is_declared_empty(): the upstream said "nothing matched"
+         * in its own words. The request WAS served; it held no records. */
+        first_nodata = hp_status_is_declared_empty(fst, hr.body);
+        if (first_nodata)
+          fprintf(stderr, "[hp:%s] the upstream answered HTTP %ld with its own "
+                  "no-data wording: an EMPTY result, not a refusal\n", s->id, fst);
+      }
       if (page == 0 && (fst < 0 || fst >= 500 || (fst == 304 && !first_conditional)))
         hard_error = 1;
       /* A later page: hp_later_page_cut() rules end-of-data vs cut short.
@@ -4874,7 +4936,12 @@ dated_restart:;
    * window that is permanently unreadable is visible rather than skipped. */
   char win_next_iso[16] = "";
   if (window_on) {
-    int served = (first_status == 200) && !hard_error;
+    /* `first_nodata` counts as SERVED, and must: the window was read and held
+     * no records. Without it a window whose upstream answers its own "nothing
+     * matched" status never advances, so the row re-reads that empty window
+     * for ever and never reaches the records on the other side of it — the
+     * exact opposite of the refusal case this clause exists for. */
+    int served = (first_status == 200 || first_nodata) && !hard_error;
     long next = served ? win_at + s->window_days : win_at;
     if (next > win_tail) next = win_tail;
     /* Computed whether or not there is anywhere to store it, so the notice can
@@ -5245,8 +5312,16 @@ date_step_back:
    * Keyed on (source, entity) so a permanently refused source carries ONE row
    * that updates, not a new row per run. Only when the walk kept nothing: a
    * run that got records and then hit a bad page is already the truncation
-   * notice's business, and saying it twice would make both easier to ignore. */
-  if (out == 0 && (first_status != 200 || st.unreadable)) {
+   * notice's business, and saying it twice would make both easier to ignore.
+   *
+   * And NOT when the upstream declared the result empty in its own words
+   * (`first_nodata`, hp_status_is_declared_empty): this record's whole purpose
+   * is to separate a refusal from a source that ran and found nothing, so
+   * filing an upstream's own "nothing matched" as a fetch FAILURE is this
+   * notice making exactly the confusion it exists to prevent. Such a run is
+   * the honest empty rule 1 asks for — rc=0, no records, and the bytes and
+   * request count on the run line showing it went and looked. */
+  if (out == 0 && (first_status != 200 || st.unreadable) && !first_nodata) {
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "source_id", s->id);
     cJSON_AddStringToObject(p, "query", vars.raw ? vars.raw : "");
@@ -5262,6 +5337,10 @@ date_step_back:
         ? "the upstream answered 200 with a RATE-LIMIT page instead of the "
           "data — a refusal wearing a success status, which no status check "
           "can see"
+      : first_status == 200 && st.unreadable_botwall
+        ? "the upstream answered 200 with a BOT-WALL interstitial instead of "
+          "the data — a refusal wearing a success status, and one that pacing "
+          "does not reach"
       : first_status == 200
         ? "the upstream answered 200 and the body did not parse in this row's "
           "declared mode — a redirect to an HTML notice does this"
@@ -5281,6 +5360,13 @@ date_step_back:
         ? "rate limited behind a 200: give the host a per-host minimum gap in "
           "core/hostgate.c. Measure the budget before choosing one — a gap "
           "set on one reading is a guess"
+      : first_status == 200 && st.unreadable_botwall
+        ? "a bot wall, so do NOT reach for a hostgate gap or a moved endpoint: "
+          "the wall refuses an automated client at any rate. Bisect the "
+          "User-Agent as core/httpclient.c's UA_OVERRIDE table does — a word "
+          "in the agent is the measured cause on every host in it so far — and "
+          "if no agent clears it, record the row as unmeasurable from here "
+          "rather than guessing at a gap"
       : first_status == 200
         ? "re-read the body by hand: the endpoint may have moved, started "
           "redirecting to an HTML page, or changed shape"
@@ -5290,7 +5376,11 @@ date_step_back:
     char key[320], title[256];
     snprintf(key, sizeof key, "%.150s|fetch-failure:%.120s", s->id,
              vars.raw ? vars.raw : "");
-    if (first_status == 200)
+    if (first_status == 200 && st.unreadable_botwall)
+      snprintf(title, sizeof title,
+               "%s stored nothing: a bot wall answered 200 instead of the data",
+               s->id);
+    else if (first_status == 200)
       snprintf(title, sizeof title,
                "%s stored nothing: the body did not parse in its declared mode",
                s->id);

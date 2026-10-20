@@ -38,6 +38,42 @@ shape and 44b pins that an ordinary unparseable 200 is NOT reported as one —
 "limit" is a legitimate parameter name and appears in half the URLs in this
 tree, so only the refusal's own words count.
 
+**A BOT WALL does the same thing and wants the opposite remedy**, which is why
+it is named separately (2026-10-20). `catalogue.data.govt.nz` answers its CKAN
+bulk endpoint with HTTP **200** and Imperva's `<title>Pardon Our
+Interruption</title>`, so the note again said "the endpoint may have moved" —
+the third reader sent hunting a move that never happened. Pacing cannot reach a
+wall that refuses an automated client at any rate, so the remedy must not be a
+hostgate gap either: it points at `core/httpclient.c`'s UA_OVERRIDE table, where
+one WORD in the agent is the measured cause on every host so far. `hptest` 45,
+and 45b pins that a body merely saying "access denied" is not reported as a wall
+— permit decisions and FOI logs are full of the phrase.
+
+**And the inverse mistake: AN UPSTREAM'S OWN "NOTHING MATCHED" IS NOT A
+REFUSAL.** FDSN's `nodata` parameter names the status a service must use for an
+empty result and every FDSN row here passes `nodata=404`, so those rows ASK to
+be told "nothing" with a 404 — and the fetch-failure note read it back as "the
+upstream refused the request", remedy "the endpoint has moved or retired". That
+is this notice making the very confusion it exists to prevent, since its whole
+job is to separate a refusal from a source that ran and found nothing.
+`hp_status_is_declared_empty()` now reads a 204, or a 404 whose BODY carries the
+service's own no-data wording, as the honest empty rule 1 asks for: rc=0, no
+records, no notice, and the bytes and request count on the run line showing it
+went and looked. A window row counts such a read as SERVED and advances, or it
+would re-read one empty window for ever and never reach the records beyond it.
+
+The discriminator is the body's words, never the status and never the row's own
+URL, and both halves were measured on one beat. `ws.icgc.cat` is live
+(`/fdsnws/event/1/version` → `1.2.4`), holds no events for any window including
+a whole year, and answers the identical query with **204** when `nodata` is not
+forced — empty, not broken. `eida.koeri.boun.edu.tr` answers the SAME 404 to the
+same row with "The requested resource does not exist on this server", and its
+`/fdsnws/event/1/version` is 404 while `dataselect/1/version` is 200: a node
+that does not run the service at all. Keying on the status, or on the row having
+asked for `nodata=404`, would have filed that dead service as a healthy empty —
+the dangerous direction. `hptest` 46–46d, each checked against the old
+behaviour.
+
 It changes two things that read the run line. A dead source now reports
 `records=1 stored=1`, so `audit_registry_emit.py` counts engine notices
 separately from records and has a `FETCH_FAILED` verdict; and `hptest`'s
@@ -53,14 +89,17 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 48,794** (2026-10-20): main's 48,346 — 48,343 plus
+**The registered count is 48,792** (2026-10-20): main's 48,346 — 48,343 plus
 the three embedding maintenance pods of the infrastructure audit — plus batch
 46's 164 measured ArcGIS layers and batch 49's 290, which are the rest of batch
-46's own probed pool, then a net −3 from a day spent measuring rows rather than
+46's own probed pool, then a net −5 from a day spent measuring rows rather than
 adding them: +1 KKJ prefecture that had been missing, +5 Setagaya layers
 recovered from a rename, −2 IDESCA San Carlos layers measured as withdrawn,
-−10 behind a closed WordPress REST API with nothing behind it. The ledger has
-the table. Main's 22,408 was its own
+−10 behind a closed WordPress REST API with nothing behind it, and −2 from the
+batch-34/35 emit audit: a `data.gov.uk` row that is a PROXY in front of the
+`ckan.publishing.service.gov.uk` row beside it (same 59,370, same `help` URL),
+and an FDSN event row on a node that serves dataselect and not event. The
+ledger has the table. Main's 22,408 was its own
 `jp_feeds_batch41..44.c` beats, PR #48's paging cycle and PR #50's batch 45 of
 619 WordPress collections — merged with PR #47's 47,178, less six news
 feeds both sessions had added (main merged first, so its rows stay). **Batch numbers 43 and 44 now name two things**: main's

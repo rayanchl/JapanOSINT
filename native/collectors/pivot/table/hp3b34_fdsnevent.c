@@ -79,7 +79,17 @@ static const hp_source HP3B34_FDSNEVENT[] = {
     .record_type = "seismic-event",
     .tags = "\"sensor\",\"seismic\",\"hazard\",\"fdsn\",\"event-catalogue\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
-    .url = "https://eida.gein.noa.gr/fdsnws/event/1/query?format=text&nodata=404&orderby=time&limit=1000",
+    /* MEASURED 2026-10-20: this node REQUIRES a time range. Without one it
+     * answers HTTP 400 and the row stored nothing on every run since it
+     * shipped; with `starttime` two days back it answers 200 with 249 events
+     * in 39 KB, one request, comfortably inside limit=1000. The other nodes in
+     * this beat do not need it (SCEDC serves 20,000 with no window), so this
+     * is a property of this endpoint rather than of the FDSN spec — which is
+     * why it is a per-row window and not a beat-wide change. A quiet two days
+     * answers 404 with FDSN's own "no matching events found", which the engine
+     * now reads as the honest empty it is (hp_status_is_declared_empty). */
+    .url = "https://eida.gein.noa.gr/fdsnws/event/1/query?format=text&nodata=404"
+           "&orderby=time&limit=1000&starttime={date:%Y-%m-%d:-2}",
     .csv_comment = "#",
     .csv_delim = "pipe",
     .csv_no_header = 1,
@@ -104,37 +114,21 @@ static const hp_source HP3B34_FDSNEVENT[] = {
       "by the FDSN specification. Walked by the specification's own "
       "limit/offset, whose offset is 1-based." },
 
-  { .id = "JO34_FDSNEVT_EIDA_KOERI_BOUN_EDU_TR", .name = "KOERI, Bogazici University, Turkey — FDSN event catalogue",
-    .name_ja = "トルコ KOERI 地震カタログ（FDSN）",
-    .category = "surveillance", .portal = "https://eida.koeri.boun.edu.tr",
-    .record_type = "seismic-event",
-    .tags = "\"sensor\",\"seismic\",\"hazard\",\"fdsn\",\"event-catalogue\"",
-    .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
-    .url = "https://eida.koeri.boun.edu.tr/fdsnws/event/1/query?format=text&nodata=404&orderby=time&limit=1000",
-    .csv_comment = "#",
-    .csv_delim = "pipe",
-    .csv_no_header = 1,
-    .date_keys = "col1",
-    .id_keys = "col0",
-    .interval = 86400,
-    .lat_key = "col2",
-    .lon_key = "col3",
-    .page_max = 20,
-    .page_param = "offset",
-    .page_size = 1000,
-    .page_start = 1,
-    .timeout_ms = 120000,
-    .title_keys = "col12,col10",
-    .description = "UNPROBED. FDSN event/1: one pipe-delimited row per located event "
-      "with event id, origin time, latitude, longitude, depth, the "
-      "contributing agency and catalogue, magnitude and magnitude type, "
-      "and the region name. Each data centre authoritative for its own "
-      "region, so the national catalogues carry events the global feeds "
-      "never list. Host and /fdsnws/ base are proven live by an "
-      "existing wired row on this host; the path and schema are fixed "
-      "by the FDSN specification. Walked by the specification's own "
-      "limit/offset, whose offset is 1-based." },
-
+  /* REMOVED 2026-10-20: JO34_FDSNEVT_EIDA_KOERI_BOUN_EDU_TR, which asked
+   * eida.koeri.boun.edu.tr for an event service that node does not run.
+   * Measured directly rather than inferred from the query's failure:
+   *     /fdsnws/event/1/version        404
+   *     /fdsnws/event/1/application.wadl   404
+   *     /fdsnws/dataselect/1/version   200 "1.1.1"
+   * so the node is alive and serves dataselect, and event/1 is simply not
+   * there. That is CLAUDE.md's own batch-34 lesson — "the FDSN spec defines
+   * services; a node runs only some of them", which dropped 11 rows before any
+   * probe — hit a twelfth time by a row that survived it. Note what the row
+   * looked like until it was asked the right question: HTTP 404 to the query,
+   * identical in the fetch-failure record to ws.icgc.cat's 404, which IS a live
+   * service with an empty catalogue. The status could not tell them apart; the
+   * bodies could ("The requested resource does not exist on this server" vs
+   * "no matching events found"), and /version settles it outright. */
   { .id = "JO34_FDSNEVT_SERVICE_SCEDC_CALTECH_EDU", .name = "SCEDC, Caltech (Southern California) — FDSN event catalogue",
     .name_ja = "南カリフォルニア地震データセンター 地震カタログ（FDSN）",
     .category = "surveillance", .portal = "https://service.scedc.caltech.edu",

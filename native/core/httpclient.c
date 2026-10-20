@@ -409,6 +409,61 @@ static const struct { const char *host, *ua; } UA_OVERRIDE[] = {
     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
     "contact via repo issues)" },
 
+  /* SIX MORE, and the "collector" filter now looks like a FAMILY rather than a
+   * run of coincidences. Bisected 2026-10-20 against each host's own
+   * /api/3/action/package_search?rows=1:
+   *
+   *     host                   engine UA   without "collector"   bare
+   *     data.ok.gov              502            200               200
+   *     data.virginia.gov        502            200               200
+   *     opendata.hawaii.gov      502            200               200
+   *     data.houstontx.gov       502            200               200
+   *     data.milwaukee.gov       502            200               200
+   *     data.sanantonio.gov      502            200               200
+   *
+   * Six for six, the same status and the same single word as data.boston.gov
+   * and data.sanjoseca.gov above — two OpenGov-hosted CKAN portals, which these
+   * six also are. So a 502 from a US municipal CKAN is worth bisecting the
+   * agent on BEFORE it is read as a dead endpoint or as load.
+   *
+   * How they were found is the part worth keeping. The batch-34 emit audit
+   * reported all six FETCH_FAILED at three parallel jobs, and this tree's own
+   * rule ("a verdict that changes with --jobs is not a measurement") said to
+   * re-run them serially. They failed again, serially — which ruled concurrency
+   * OUT and left the client as the only difference, since the same URLs answer
+   * 200 in half a second to a hand request. That is the `au-asic` question in
+   * CLAUDE.md, answered for this family.
+   *
+   * AND THE TREE ALREADY KNEW, one row at a time. Each of these six hosts
+   * carries a second registered row from an earlier batch — five JO29A_FGT_*
+   * and SOCRATA_HAWAII — and every one of them carries a per-ROW
+   * `User-Agent: JapanOSINT/1.0` header, which outranks CURLOPT_USERAGENT and
+   * is why those six store records today (data.ok.gov: 397, its whole
+   * package_search count; San Antonio 166, Milwaukee 186, Houston 96). So an
+   * earlier session met this same filter on these same hosts and solved it in
+   * the row rather than in this table, and batch 34 could not inherit what was
+   * written there. A host-level entry fixes every row on the host, including
+   * the next one somebody adds; the per-row headers stay and stay correct,
+   * since an identical agent wins either way. */
+  { "data.ok.gov",
+    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
+    "contact via repo issues)" },
+  { "data.virginia.gov",
+    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
+    "contact via repo issues)" },
+  { "opendata.hawaii.gov",
+    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
+    "contact via repo issues)" },
+  { "data.houstontx.gov",
+    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
+    "contact via repo issues)" },
+  { "data.milwaukee.gov",
+    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
+    "contact via repo issues)" },
+  { "data.sanantonio.gov",
+    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
+    "contact via repo issues)" },
+
   /* NOT LISTED, deliberately: registry.faa.gov.
    *
    * It was reported alongside the two above as "answers 200 with no UA", which

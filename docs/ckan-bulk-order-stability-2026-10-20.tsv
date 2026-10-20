@@ -1,0 +1,33 @@
+# Does the CKAN bulk endpoint's offset walk return a STABLE order? Measured 2026-10-20.
+#
+# current_package_list_with_resources takes limit and offset and NO sort
+# parameter, so an offset walk over it has no ordering guarantee. That matters
+# because an unstable offset walk serves one record twice and another NOT AT
+# ALL, and the only visible symptom is the duplicate.
+#
+# 10 pages of 100 each way, per host: the bulk endpoint as the rows walk it,
+# and package_search with sort=id asc. `total` is the portal's own
+# package_search count. -1 means the reading could not be made.
+#
+# Result: the bulk walk is stable on 9 of the 10 reachable hosts here
+# (Kanazawa: 1 duplicate of 319), so this is NOT a beat-wide defect and the 95
+# rows were NOT re-pointed wholesale. data.virginia.gov, measured separately,
+# IS unstable: 200 duplicates in 2,000 and 1,884 sorted ids the bulk walk never
+# returned. That one row is re-pointed and cycles.
+#
+# The other finding here is the collection SIZES against 2,000 records a run:
+# ckan.govdata.de 169,255, ckan.opendata.swiss 16,117, Tokyo Metro 9,709.
+host	total	bulk_fetched	bulk_distinct	bulk_dups	search_fetched	search_distinct	search_dups	note
+api.neso.energy	131	131	131	0	131	131	0	
+catalog-data.city.kanazawa.ishikawa.jp	-1	319	318	1	-1	-1	-1	package_search:URLError search:URLError
+catalog.city.kobe.lg.jp	99	99	99	0	99	99	0	
+catalog.city.utsunomiya.tochigi.jp	295	295	295	0	295	295	0	
+catalog.data.gov	-1	-1	-1	-1	-1	-1	-1	package_search:HTTPError bulk:HTTPError search:HTTPError
+catalog.data.metro.tokyo.lg.jp	9709	1000	1000	0	1000	1000	0	
+catalog.opendata.pref.kanagawa.jp	814	814	814	0	814	814	0	
+catalogue.data.govt.nz	-1	-1	-1	-1	-1	-1	-1	package_search:JSONDecodeError bulk:JSONDecodeError search:JSONDecodeError
+ckan.govdata.de	169255	1000	1000	0	1000	1000	0	
+ckan.hoda.jp	458	458	458	0	458	458	0	
+ckan.montevideo.gub.uy	159	159	159	0	159	159	0	
+ckan.opendata.swiss	16117	1000	1000	0	1000	1000	0	
+

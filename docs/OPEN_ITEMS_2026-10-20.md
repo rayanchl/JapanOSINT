@@ -66,7 +66,26 @@ would re-probe a set that has already been probed and rejected.
 
 ## B. Rule-4 debt — registered rows with no emit reading
 
-### B1. Batches 34 and 35: 239 rows never measured
+### B1. ~~Batches 34 and 35: 239 rows never measured~~ — DONE
+
+**Measured, same day: `docs/BATCH_34_35_EMIT_AUDIT_2026-10-20.md`.** 115
+scheduled rows through the registry sweep (92 OK, 20 refused, 3 collisions) and
+124 pivots through the manifest audit (73 OK, 40 EMPTY_UPSTREAM, 11 upstream
+errors) — the two tools the two halves need, since the sweep's own
+`NEEDS_ENTITY` covers all 124 pivots by design. 33,108 emitted, 33,108 stored,
+**0 lost to uid collision**.
+
+Eleven rows repaired or removed, each on a measurement: six hosts whose filter
+rejects one WORD of the engine's User-Agent (0 → 96/186/397/166/963/1,823
+records, and the tree already knew host by host in per-ROW headers), four rows
+re-pointed from a refused bulk action to `package_search` on the same CKAN, and
+two removed — a `data.gov.uk` row that is a proxy in front of the row beside it,
+and an FDSN event row on a node that does not run the event service. Registry
+48,794 → 48,792.
+
+The original item read:
+
+### B1 (as written). Batches 34 and 35: 239 rows never measured
 
 139 `JO34_*` and 100 `JO35_*` rows. `docs/verified-sources-batch3{4,5}.tsv`
 exist but describe only the small measured beats (`ndjson`, `strings`) — the
@@ -191,6 +210,20 @@ elsewhere would settle them. The final page-2 sweep is quantifying how many.
 **200**, an hour apart, to single requests. The engine now names that shape and
 points at `core/hostgate.c` — but deliberately no gap was added, because a gap
 chosen without measuring the budget is a guess.
+
+### D4-bis. The "it's the client" question is ANSWERED for one family
+
+D4 below says the remaining difference between a host that serves a hand request
+and refuses the engine is **the client, since the engine sends its own headers**,
+and that nobody had measured it. Measured now, on a different family: six US
+municipal CKAN portals answer **502 to the engine's User-Agent and 200 to the
+same agent with the word "collector" removed**, six for six, reproducibly, and
+serially — so concurrency was ruled out first. Entries added to
+`core/httpclient.c`'s UA_OVERRIDE table; 0 → 3,631 records.
+
+That does not settle `data.gov.au` below, which is a different host and may be a
+different filter. It does say the bisection is cheap, it works, and it belongs
+before any 4xx/5xx row is written off.
 
 ### D4. The `au-asic` 403s are not concurrency, and the next step is named
 

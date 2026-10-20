@@ -3866,6 +3866,101 @@ int main(void) {
        "as one");
     (void)rc; }
 
+  /* 45. A BOT WALL SERVED AS HTTP 200 — the same shape as 44 and a DIFFERENT
+   *     remedy, which is the whole reason it is a separate flag.
+   *     catalogue.data.govt.nz answers its CKAN bulk endpoint with 200 and
+   *     Imperva's "Pardon Our Interruption" (measured 2026-10-20, 6,183
+   *     bytes), so the notice said "the endpoint may have moved" — the third
+   *     reader sent hunting a move that never happened. Pacing cannot reach a
+   *     wall that refuses an automated client at any rate, so the remedy must
+   *     NOT be a hostgate gap either. */
+  fx_reset();
+  fx_add("/us?per_page=100", 200,
+         "<!DOCTYPE html><html><head><noscript><title>Pardon Our Interruption"
+         "</title></noscript></head><body>As you were browsing something about "
+         "your browser made us think you were a bot.</body></html>");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "BOT-WALL interstitial") != NULL &&
+       strstr(nt->props, "UA_OVERRIDE") != NULL &&
+       strstr(nt->props, "the endpoint may have moved") == NULL &&
+       strstr(nt->props, "RATE-LIMIT") == NULL,
+       "45: a bot wall served as 200 is named as one, and the remedy is the "
+       "User-Agent rather than pacing or a moved endpoint");
+    (void)rc; }
+
+  /* 45b. And the detector does not fire on a DATA body that happens to carry
+   *      refusal-shaped words. "access denied" is deliberately not in the word
+   *      list: permit decisions and FOI logs are full of it. */
+  fx_reset();
+  fx_add("/us?per_page=100", 200,
+         "<html><body>Request 2024-117: ACCESS DENIED in part; see schedule 2."
+         "</body></html>");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "BOT-WALL") == NULL &&
+       strstr(nt->props, "the endpoint may have moved") != NULL,
+       "45b: an unparseable 200 whose text merely says 'access denied' is not "
+       "reported as a bot wall");
+    (void)rc; }
+
+  /* 46. THE UPSTREAM'S OWN NO-DATA ANSWER IS AN HONEST EMPTY, not a refusal.
+   *     FDSN's `nodata` parameter names the status a service must use for an
+   *     empty result and every FDSN row here passes `nodata=404`, so those rows
+   *     ASK to be told "nothing" with a 404 — and the fetch-failure notice then
+   *     read it back as "the upstream refused the request", remedy "the
+   *     endpoint has moved or retired". ws.icgc.cat is the measured case: its
+   *     event service answers `1.2.4` at /version, holds no events for any
+   *     window, and answers the identical query with HTTP 204 when `nodata` is
+   *     not forced. Filing that as a FAILURE is this notice making exactly the
+   *     confusion it exists to prevent. */
+  fx_reset();
+  fx_add("/us?per_page=100", 404,
+         "Error 404: Not Found\n\nno matching events found\n\nUsage details "
+         "are available from /fdsnws/event/1/\n");
+  rc = run_source("T_URLSIZE", NULL);
+  ok(rc == 0 && cap_count("collector-fetch-failure", NULL) == 0,
+     "46: a 404 carrying the upstream's own no-data wording files NO "
+     "fetch-failure record — it is the honest empty rule 1 asks for");
+
+  /* 46b. And the loud half, which matters more: a 404 that means the service
+   *      is NOT THERE must still be a failure. eida.koeri.boun.edu.tr answers
+   *      the same 404 to the same nodata=404 row with "The requested resource
+   *      does not exist on this server" — a node that does not run the event
+   *      service at all. Keying on the status, or on the row having asked for
+   *      nodata=404, would file that dead service as a healthy empty, which is
+   *      the dangerous direction. */
+  fx_reset();
+  fx_add("/us?per_page=100", 404,
+         "Error 404: Not Found\n\nThe requested resource does not exist on "
+         "this server.\n");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "the upstream refused the request") != NULL,
+       "46b: a 404 that says the resource does not exist is still a refusal");
+    (void)rc; }
+
+  /* 46c. HTTP 204 needs no wording at all — no content is what it means. */
+  fx_reset();
+  fx_add("/us?per_page=100", 204, "");
+  rc = run_source("T_URLSIZE", NULL);
+  ok(rc == 0 && cap_count("collector-fetch-failure", NULL) == 0,
+     "46c: a 204 with no body is an honest empty, not a refused fetch");
+
+  /* 46d. A WINDOW ROW MUST ADVANCE over a declared empty. The window was read
+   *      and held nothing; not advancing would re-read that one empty window
+   *      for ever and never reach the records beyond it — the exact opposite of
+   *      the refusal case the no-advance rule exists for. */
+  fx_reset();
+  fx_add("/wz?from=", 404, "Error 404: Not Found\n\nno matching events found\n");
+  rc = run_source_resume("T_WINDOW", NULL, "w=2020-02-05");
+  ok(rc == 0 && g_res_set && strcmp(g_res_out, "w=2020-02-12") == 0,
+     "46d: a window whose upstream declares it EMPTY advances to the next "
+     "window rather than stalling on it");
+
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;
 }

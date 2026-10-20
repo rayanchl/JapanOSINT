@@ -49,19 +49,26 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"azerbaijan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://admin.opendata.az/api/3/action/package_search"
+           "?rows=100&start=0&sort=id%20asc",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
+    .description = "MEASURED 2026-10-20, and re-pointed. The bulk action is "
+      "refused here (HTTP 403 to the engine, serially as well as in parallel), "
+      "while package_search on the same CKAN answers 200 and its results are "
+      "whole package dicts carrying `resources` — exactly what this row exists "
+      "for. 1,970 datasets by its own count; 1,000 read over 10 pages with 0 "
+      "duplicate ids, sorted on `id asc`. Original note: The CKAN Action API "
+      "endpoint that returns whole "
       "package dicts WITH their resources inline, so each record "
       "carries the dataset plus the URL, format and size of every "
       "downloadable file under it. package_search (already wired for "
@@ -576,29 +583,35 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"uk\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://ckan.publishing.service.gov.uk/api/3/action/package_search"
+           "?rows=100&start=0&sort=id%20asc",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
+    .description = "MEASURED 2026-10-20, re-pointed, and it absorbed a "
+      "duplicate. The bulk action is refused here (HTTP 403 to the engine, "
+      "serially as well as in parallel); package_search on the same CKAN "
+      "answers 200 and its results are whole package dicts carrying "
+      "`resources`. 59,370 datasets by its own count, so it CYCLES: 2,000 a "
+      "run over an ascending `id asc` sort, which is the precondition a cycle "
+      "needs. The duplicate: a JO34_CKANRES_DATA_GOV_UK row asked data.gov.uk "
+      "for the same action, and data.gov.uk/api is a PROXY in front of this "
+      "host — its own response names ckan.publishing.service.gov.uk in the "
+      "`help` URL, and both report the identical 59,370. Two ids, one "
+      "collection, one upstream; the proxy row was removed and this canonical "
+      "one kept. Original note: The CKAN Action API endpoint that returns whole "
       "package dicts WITH their resources inline, so each record "
       "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
+      "downloadable file under it." },
 
   { .id = "JO34_CKANRES_DADESOBERTES_GVA_ES", .name = "dadesobertes.gva.es — every dataset with its resource files "
       "(CKAN current_package_list_with_resources)",
@@ -1103,19 +1116,29 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"israel\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.il/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.gov.il/api/3/action/package_search"
+           "?rows=100&start=0&sort=id%20asc",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
+    .description = "MEASURED 2026-10-20, and re-pointed. This host's CKAN has "
+      "current_package_list_with_resources DISABLED — it answers HTTP 404 with "
+      "an HTML page, which the row below correctly predicted ('some CKAN builds "
+      "disable or deprecate this action'). The remedy is not an honest empty: "
+      "package_search on the same CKAN answers 200 and its results are whole "
+      "package dicts carrying `resources`, so it serves exactly what this row "
+      "exists for. 1,203 datasets by its own count; 1,000 read over 10 pages "
+      "with 0 duplicate ids, sorted on `id asc` because an offset walk over an "
+      "unsorted collection skips records (see the Virginia row). Original note: "
+      "The CKAN Action API endpoint that returns whole "
       "package dicts WITH their resources inline, so each record "
       "carries the dataset plus the URL, format and size of every "
       "downloadable file under it. package_search (already wired for "
@@ -1228,37 +1251,6 @@ static const hp_source HP3B34_CKANBULK[] = {
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"romania\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.gov.ro/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
-    .body_keys = "notes",
-    .date_keys = "metadata_modified",
-    .id_keys = "id",
-    .interval = 86400,
-    .link_keys = "url",
-    .page_max = 20,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 90000,
-    .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
-
-  { .id = "JO34_CKANRES_DATA_GOV_UK", .name = "data.gov.uk — every dataset with its resource files (CKAN "
-      "current_package_list_with_resources)",
-    .name_ja = "data.gov.uk データセット・リソース全件（CKAN）",
-    .category = "government", .portal = "https://data.gov.uk",
-    .record_type = "dataset-inventory",
-    .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"uk\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.uk/api/3/action/current_package_list_with_resources?limit=100",
     .array_path = "result",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
@@ -1723,19 +1715,34 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.virginia.gov/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    .url = "https://data.virginia.gov/api/3/action/package_search"
+           "?rows=100&start=0&sort=id%20asc",
+    .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
     .page_max = 20,
-    .page_param = "offset",
+    .page_param = "start",
+    .page_resume = 1,
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
+    .description = "MEASURED 2026-10-20, and THE reason this beat's offset walk "
+      "is not safe to trust on an unsorted collection. The bulk action answers "
+      "here, and its offset walk is UNSTABLE: 20 pages of 100 returned 2,000 "
+      "records holding 1,800 distinct ids — 200 duplicates, which the sink "
+      "collapsed, reported as a COLLISION. The duplicates are the visible half. "
+      "The same 20 pages of package_search sorted on `id asc` returned 2,000 "
+      "records with 0 duplicates, and 1,884 of those ids NEVER APPEARED in the "
+      "bulk walk: the invisible half is records skipped, permanently, with no "
+      "symptom but the collision. (CLAUDE.md: 'a collision that is really a "
+      "skip is the worst shape in this file'.) So this row is sorted and keyed "
+      "the same way, and it CYCLES — its own count is 32,089 datasets, which no "
+      "20-page ceiling reaches, and an ascending sort is the precondition a "
+      "cycle needs. Original note: The CKAN Action API endpoint that returns "
+      "whole "
       "package dicts WITH their resources inline, so each record "
       "carries the dataset plus the URL, format and size of every "
       "downloadable file under it. package_search (already wired for "
