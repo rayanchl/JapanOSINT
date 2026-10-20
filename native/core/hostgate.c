@@ -119,12 +119,29 @@ static struct { char host[HG_HOSTLEN]; int gap_ms; } g_over[HG_MAX_OVERRIDES] = 
    * "TRUNCATED: a later page failed", and 5 of 20 records collapsed — the
    * engine's own truncation notice pointed here for the remedy. */
   { "mobile311.sfgov.org", 1200 },
+  /* data.qld.gov.au publishes 188,879 datasets through CKAN package_search
+   * (result.count, measured 2026-10-12 — Queensland registers individual
+   * borehole and core records as datasets), so ckan-au-qld's complete read is
+   * ~945 pages of 200.
+   *
+   * 250 ms was the first guess and the portal refused it: measured 2026-10-12,
+   * the walk got 76 pages in 47 s and page 77 answered HTTP 429, which
+   * lib/pagewalk.c disclosed as a truncation notice naming the status and
+   * pointing here. The budget is not a simple per-second rate — twelve
+   * requests at 250 ms all answered 200 — so it is a longer window, and the
+   * run that got furthest (427 pages, no 429) was pacing at about 3.5 s a
+   * page. 1,500 ms is inside that and puts the complete daily read at roughly
+   * 24 minutes. If it still 429s, the walk stops and SAYS SO; it does not
+   * pretend to be complete. */
+  { "data.qld.gov.au", 1500 },
+  /* data.nsw.gov.au is the same shape at 17,192 datasets / ~86 pages. */
+  { "data.nsw.gov.au", 250 },
 };
 /* The number of LIVE entries above. This was `1` while the table held two, so
  * gap_for_host() — which scans only the first g_nover entries — never saw the
  * news.google.com gap its comment describes: the 615 gnews-* rows kept firing
  * together (found 2026-09-15). Keep it equal to the initialiser count. */
-static int g_nover = 5;
+static int g_nover = 7;
 
 static void override_set(const char *host, int gap_ms) {
   for (int i = 0; i < g_nover; i++)
@@ -576,15 +593,17 @@ int hostgate_url_check_strict(const char *url) {
 
 /* ── camera / media destination policy (see header) ───────────────────────── */
 
-int hostgate_camera_lan_allowed(void) {
-  const char *e = getenv("JO_CAMERA_ALLOW_LAN");
-  return (e && *e && strcmp(e, "0") != 0) ? 1 : 0;
-}
+/* Unit tests serve fixture frames from 127.0.0.1; nothing else sets this.
+ * There is deliberately no environment variable, config key or route for it
+ * (JO_CAMERA_ALLOW_LAN was one, and was removed 2026-10-20). */
+static int g_camera_test_lan;
 
-/* Strict unless the operator opted in to LAN cameras — and strict regardless
- * when JO_HTTP_BLOCK_PRIVATE raised the floor for everything. */
+void hostgate_camera_test_allow_lan(int on) { g_camera_test_lan = on ? 1 : 0; }
+
+/* Always strict for camera destinations, except under a unit test's fixture
+ * server — and strict even then when JO_HTTP_BLOCK_PRIVATE raised the floor. */
 static int camera_strict(void) {
-  return floor_is_strict() || !hostgate_camera_lan_allowed();
+  return floor_is_strict() || !g_camera_test_lan;
 }
 
 int hostgate_camera_addr_check(const char *ip_text) {

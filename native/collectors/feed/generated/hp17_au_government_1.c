@@ -22,6 +22,7 @@ static const hp_source T[] = {
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=90b13a5b-fd2e-440c-b253-9cbf314d3da3&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
     .page_walk = 1,
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .interval = 86400, .free_tier = 1 },
 
 };

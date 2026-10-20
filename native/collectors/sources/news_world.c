@@ -221,7 +221,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def news_world_def = {
-  .id = "WORLD_NEWS_RSS", .collector = "osint",
+  .id = "WORLD_NEWS_RSS", .collector = "world_outlets",
   .name = "World News RSS", .name_ja = "世界ニュース RSS",
   .update_interval_sec = 1800, .run = run,
   .category = "news", .type = "scraped",

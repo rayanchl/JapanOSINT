@@ -78,6 +78,18 @@ GROUP_KEYS = {g[0] for g in GROUPS}
 # Explicit key -> group.
 OVERRIDES = {
     "osint": "grp_osint", "intelligence": "grp_osint",
+    # Round 3 (2026-10-18): the 951 SCHEDULED feeds that were labelled "osint"
+    # — Google News editions, outlets, arXiv, think tanks, threat feeds — now
+    # carry the collector of what they are. Pivots keep "osint".
+    "gnews": "grp_media", "gnews_monitors": "grp_media", "world_outlets": "grp_media",
+    "thinktanks": "grp_media", "trade_press": "grp_media", "ngo_rights": "grp_safety", "conflict_press": "grp_safety",
+    "arxiv": "grp_science", "science_press": "grp_science", "finance_press": "grp_corporate",
+    "osm": "grp_geo", "hp3b28_jpdb": "grp_science", "reddit": "grp_social",
+    "jp_webmedia": "grp_media",   # batches 43/44: 400 Japanese web-media/blog RSS feeds, authored under "social"
+    # batch 45: WordPress collections of hosts the registry already held, split by host type
+    "hp3b45_jpwpmedia": "grp_media", "hp3b45_jpwpcorp": "grp_corporate", "hp3b45_jpwporg": "grp_legal",
+    "hp3b45_jpwpculture": "grp_culture", "hp3b45_jpwpcyber": "grp_cyber", "hp3b45_jpwpscience": "grp_science",
+    "hp3b45_jpwpenv": "grp_environment", "hp3b45_jpwpgov": "grp_government",
     "_maint": "grp_internal", "_enrich": "grp_internal", "_test": "grp_internal", "_probe": "grp_internal",
     "_breach": "grp_cyber",
     "camera-discovery": "grp_surveillance", "us_cameras": "grp_surveillance",
@@ -93,7 +105,7 @@ OVERRIDES = {
     "finreg": "grp_corporate", "hp3b19_crypto": "grp_corporate", "hp_chain_finance": "grp_corporate",
     "hp3b19_landreg": "grp_corporate", "hp3b19_idbridge": "grp_osint",
     "hp3b22_deeparchive": "grp_osint", "hp3b20_standards": "grp_osint", "hp3b19_reference": "grp_osint",
-    "hp3b28_jpdb": "grp_osint", "hp3b24_jpbulk": "grp_osint", "hp_people_ident": "grp_social",
+    "hp3b24_jpbulk": "grp_osint", "hp_people_ident": "grp_social",
     "hp3b22_pastechat": "grp_cyber", "hp3b22_extortion": "grp_cyber", "hp3b22_onion": "grp_cyber",
     "hp3b22_breachcat": "grp_cyber", "hp3b23_jpcyber": "grp_cyber", "hp3b19_cyber": "grp_cyber",
     "hp3b25_jpdeep": "grp_cyber", "hp3b28_jpdeepweb": "grp_cyber", "hp3b33_supplychain": "grp_cyber",
@@ -231,7 +243,43 @@ CATEGORY_GROUP = {
 
 LABELS = {
     "osint": ("Hand-written OSINT pivots", "手書きOSINTピボット",
-              "Entity-pivot collectors written by hand in collectors/sources/, plus the gnews-* news feeds."),
+              "Entity-pivot collectors written by hand in collectors/sources/ — asked about an entity, not scheduled."),
+    "gnews": ("Google News editions", "Google ニュース 国別・トピック別",
+              "Google News RSS by country and topic (gnews-top-*, gnews-<cc>-<topic>)."),
+    "gnews_monitors": ("Google News keyword monitors", "Google ニュース キーワード監視",
+                       "Google News searches for OSINT keywords (gnews-mon-*)."),
+    "world_outlets": ("News outlets worldwide", "世界の報道機関", "National and regional newspapers, broadcasters and wires."),
+    "thinktanks": ("Think tanks & policy analysis", "シンクタンク・政策分析", None),
+    "trade_press": ("Specialist & trade press", "専門誌", "Maritime, aviation, space, energy, health and conflict-analysis publications."),
+    "ngo_rights": ("NGOs, rights & press freedom", "NGO・人権・報道の自由", None),
+    "conflict_press": ("Conflict, defence & investigative press", "紛争・防衛・調査報道", None),
+    "arxiv": ("arXiv preprint feeds", "arXiv プレプリント", "One feed per arXiv category."),
+    "science_press": ("Science & technology press", "科学・技術メディア", None),
+    "finance_press": ("Markets & crypto press", "金融・暗号資産メディア", None),
+    "osm": ("OpenStreetMap — taginfo & changesets", "OpenStreetMap タグ・変更セット", None),
+    "reddit": ("Reddit regional & thematic multireddits", "Reddit 地域・テーマ別", "One feed per multireddit (reddit-group-*)."),
+    "hp3b28_jpdb": ("Japan — CiNii Research (batch 28)", "日本 CiNii Research", None),
+    # hand-written family labels that had no human name
+    "geopolitics": ("Geopolitics, defence & conflict", "地政学・防衛・紛争", None),
+    "aviation": ("Aviation & airspace", "航空・空域", None),
+    "energy": ("Energy & commodities", "エネルギー・資源", None),
+    "economy": ("Economy & economic statistics", "経済・経済統計", None),
+    "transparency": ("Transparency & political finance", "透明性・政治資金", None),
+    "finance": ("Financial regulators & registers", "金融規制・登録", None),
+    "finreg": ("Financial regulation", "金融規制", None),
+    "industry": ("Industry & manufacturing", "産業・製造", None),
+    "commercial": ("Commercial & press releases", "商業・プレスリリース", None),
+    "geospatial": ("Geospatial data", "地理空間データ", None),
+    "culture": ("Culture & heritage", "文化・遺産", None),
+    "tourism": ("Tourism", "観光", None),
+    "agriculture": ("Agriculture & wildlife", "農業・野生生物", None),
+    "food": ("Food safety", "食品安全", None),
+    "safety": ("Public safety", "公共安全", None),
+    "crime": ("Crime", "犯罪", None),
+    "defense": ("Defense", "防衛", None),
+    "marketplace": ("Marketplaces", "マーケットプレイス", None),
+    "classifieds": ("Classifieds", "クラシファイド広告", None),
+    "intelligence": ("Intelligence & event data", "インテリジェンス・イベントデータ", None),
     "government": ("Government feeds", "政府・自治体フィード", "Scheduled feeds from national and municipal government sites."),
     "academic": ("Academic and research feeds", "学術・研究フィード", None),
     "science": ("Science feeds", "科学フィード", None),
@@ -296,6 +344,16 @@ LABELS = {
     "hp3b42_jpcptuni": ("Japan — university sites, WordPress custom post types (batch 42)", "日本 大学サイト カスタム投稿", None),
     "hp3b42_jpcptmuni": ("Japan — municipal sites, WordPress custom post types (batch 42)", "日本 自治体サイト カスタム投稿", None),
     "hp3b42_jpcptbank": ("Japan — bank sites, WordPress custom post types (batch 42)", "日本 銀行サイト カスタム投稿", None),
+    "jp_webmedia": ("Japan — web media & blogs, RSS (batches 43/44)", "日本 ウェブメディア・ブログ RSS", "400 Japanese online magazines, tech and lifestyle blogs, tourism and business sites (jp-b43-*, jp-b44-*)."),
+    # batch 45: hosts already live in the registry under another endpoint, asked for their WordPress REST root
+    "hp3b45_jpwpmedia": ("Japan — online media & magazines, WordPress collections (batch 45)", "日本 ウェブメディア WordPress", None),
+    "hp3b45_jpwpcorp": ("Japan — company sites, WordPress collections (batch 45)", "日本 企業サイト WordPress（45）", None),
+    "hp3b45_jpwporg": ("Japan — associations & professional bodies, WordPress collections (batch 45)", "日本 団体・士業 WordPress", None),
+    "hp3b45_jpwpculture": ("Japan — libraries & culture, WordPress collections (batch 45)", "日本 図書館・文化 WordPress", None),
+    "hp3b45_jpwpcyber": ("Japan — security organisations, WordPress collections (batch 45)", "日本 セキュリティ団体 WordPress", None),
+    "hp3b45_jpwpscience": ("Japan — research institutions, WordPress collections (batch 45)", "日本 研究機関 WordPress", None),
+    "hp3b45_jpwpenv": ("Japan — hazard & geospatial sites, WordPress collections (batch 45)", "日本 防災・地理空間 WordPress", None),
+    "hp3b45_jpwpgov": ("Japan — government sites, WordPress collections (batch 45)", "日本 政府サイト WordPress", None),
 }
 
 COUNTRY = {

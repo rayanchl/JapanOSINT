@@ -34,6 +34,7 @@ static const hp_source HP3B38_USA[] = {
     .lat_key = "decimalLatitude",
     .lon_key = "decimalLongitude",
     .page_param = "offset",
+    .page_resume = 1,   /* 1,280,558,022 records, measured 2026-10-12: read over a cycle, 300 pages a run */
     .page_size = 300,
     .page_zero_based = 1,
     .title_keys = "scientificName",

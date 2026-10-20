@@ -36,6 +36,9 @@ struct CameraPopup: View {
                     }
                     .buttonStyle(.borderedProminent)
                 }
+                if let stillsId {
+                    CameraStillsSection(cameraId: stillsId)
+                }
                 if !metadataKeys.isEmpty {
                     PopupSectionHeader("Properties", icon: "list.bullet.rectangle")
                     metadataGrid
@@ -114,6 +117,15 @@ struct CameraPopup: View {
     /// Shared with `IntelDetail` — see `CameraFeedFields`.
     private var fields: CameraFeedFields {
         CameraFeedFields(properties: feature.properties)
+    }
+
+    /// What to ask the stills API about: the full intel uid when the feature
+    /// carries one (covers hp tables and trn_* station indexes, whose stills
+    /// are filed under it), else the bare camera_uid, which the server
+    /// resolves to "camera-discovery|<uid>".
+    private var stillsId: String? {
+        if let uid = feature.properties["uid"]?.value as? String, uid.contains("|") { return uid }
+        return fields.cameraUID
     }
 
     private var pageURL: URL? {

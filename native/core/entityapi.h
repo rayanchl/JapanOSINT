@@ -64,6 +64,18 @@ char *entityapi_search_scoped(db_handle *db, const char *q, const char *type,
                               int limit, int offset, const char *tenant,
                               int is_operator);
 
+/* GET /api/entities/search?mode=hybrid — the FTS search fused (RRF) with a
+ * KNN over entity_vec (core/entity_vec.h), arms disclosed in meta.arms and
+ * per result. Embeds the query, so it runs off the event loop (httpd.c
+ * sem_spawn → entityapi_search_route). Without a usable index it answers the
+ * plain FTS search with meta.arms.vector.used=false and the reason. */
+char *entityapi_search_hybrid(db_handle *db, const char *q, const char *type,
+                              int limit, int offset, const char *tenant,
+                              int is_operator);
+/* semsearch_route_fn shape: parses q/type/limit/offset from `qs`. */
+char *entityapi_search_route(db_handle *db, const char *tenant, const char *id,
+                             const char *qs, int is_operator, int *status);
+
 /* GET /api/entities/:type/:id — profile. NULL if missing, type mismatch, or
  * not visible to `tenant` (caller → 404 {"error":"not_found"}). */
 char *entityapi_get(db_handle *db, const char *type, const char *id,

@@ -213,8 +213,8 @@ char *camera_proxy_fetch(db_handle *db, const char *camera_uid,
    *      dialling,
    *   2. the protocol set pinned on the initial request AND the redirect chain,
    *   3. proxy_prereq() re-checking the peer address on every hop.
-   * CAMERA strength: loopback and RFC1918 are refused unless the operator set
-   * JO_CAMERA_ALLOW_LAN=1. The floor used to apply here, and since any
+   * CAMERA strength: loopback and RFC1918 are always refused (no opt-in).
+   * The floor used to apply here, and since any
    * signed-in user picks the uid, one poisoned record made this route an
    * internal-network fetcher.
    *

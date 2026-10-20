@@ -1,199 +1,1157 @@
 id	beat	record_type	url	probe_verdict	probe_items	emit_verdict	emitted	stored	db_stored
-jp-b43-aizine-ai	jp_feeds_batch43	rss-feed	https://aizine.ai/feed/	PASS					
-jp-b43-applech2-com	jp_feeds_batch43	rss-feed	https://applech2.com/feed	PASS					
-jp-b43-bitwave-showcase-tv-com	jp_feeds_batch43	rss-feed	https://bitwave.showcase-tv.com/feed/	PASS					
-jp-b43-builderscon-io	jp_feeds_batch43	rss-feed	https://blog.builderscon.io/feed	PASS					
-jp-b43-businessnetwork-jp	jp_feeds_batch43	rss-feed	https://businessnetwork.jp/feed	PASS					
-jp-b43-buzzap-jp	jp_feeds_batch43	rss-feed	https://buzzap.jp/feed/	PASS					
-jp-b43-eetimes-itmedia-co-jp	jp_feeds_batch43	rss-feed	https://rss.itmedia.co.jp/rss/2.0/eetimes.xml	PASS					
-jp-b43-enterprisezine-jp	jp_feeds_batch43	rss-feed	https://enterprisezine.jp/rss/new/20/index.xml	PASS					
-jp-b43-fav-itmedia-co-jp	jp_feeds_batch43	rss-feed	https://rss.itmedia.co.jp/rss/2.0/fav.xml	PASS					
-jp-b43-gadget-shot-com	jp_feeds_batch43	rss-feed	https://gadget-shot.com/feed	PASS					
-jp-b43-gori-me	jp_feeds_batch43	rss-feed	https://gori.me/feed	PASS					
-jp-b43-hackaday-com	jp_feeds_batch43	rss-feed	https://hackaday.com/feed/	PASS					
-jp-b43-io-cyberdefense-jp	jp_feeds_batch43	rss-feed	https://io.cyberdefense.jp/feed	PASS					
-jp-b43-iotnews-jp	jp_feeds_batch43	rss-feed	https://iotnews.jp/feed/	PASS					
-jp-b43-iphone-mania-jp	jp_feeds_batch43	rss-feed	https://iphone-mania.jp/feed/	PASS					
-jp-b43-jidounten-lab-com	jp_feeds_batch43	rss-feed	https://jidounten-lab.com/feed	PASS					
-jp-b43-lifestyle-itmedia-co-jp	jp_feeds_batch43	rss-feed	https://rss.itmedia.co.jp/rss/2.0/lifestyle.xml	PASS					
-jp-b43-mobile-itmedia-co-jp	jp_feeds_batch43	rss-feed	https://rss.itmedia.co.jp/rss/2.0/mobile.xml	PASS					
-jp-b43-mugendai-web-jp	jp_feeds_batch43	rss-feed	https://mugendai-web.jp/feed	PASS					
-jp-b43-netafull-net	jp_feeds_batch43	rss-feed	https://netafull.net/feed	PASS					
-jp-b43-panora-tokyo	jp_feeds_batch43	rss-feed	https://panora.tokyo/feed	PASS					
-jp-b43-piyolog-hatenadiary-jp	jp_feeds_batch43	rss-feed	https://piyolog.hatenadiary.jp/feed	PASS					
-jp-b43-productzine-jp	jp_feeds_batch43	rss-feed	https://productzine.jp/rss/new/20/index.xml	PASS					
-jp-b43-s-max-jp	jp_feeds_batch43	rss-feed	https://s-max.jp/feed	PASS					
-jp-b43-smartjapan-itmedia-co-jp	jp_feeds_batch43	rss-feed	https://rss.itmedia.co.jp/rss/2.0/smartjapan.xml	PASS					
-jp-b43-smatu-net	jp_feeds_batch43	rss-feed	https://smatu.net/feed/	PASS					
-jp-b43-sumahosupportline-com	jp_feeds_batch43	rss-feed	https://sumahosupportline.com/feed/	PASS					
-jp-b43-taisy0-com	jp_feeds_batch43	rss-feed	https://taisy0.com/feed	PASS					
-jp-b43-techtarget-itmedia-co-jp	jp_feeds_batch43	rss-feed	https://rss.itmedia.co.jp/rss/2.0/techtarget.xml	PASS					
-jp-b43-teradas-net	jp_feeds_batch43	rss-feed	https://teradas.net/feed/	PASS					
-jp-b43-touchlab-jp	jp_feeds_batch43	rss-feed	https://touchlab.jp/feed/	PASS					
-jp-b43-usedoor-jp	jp_feeds_batch43	rss-feed	https://usedoor.jp/feed/	PASS					
-jp-b43-videosalon-jp	jp_feeds_batch43	rss-feed	https://videosalon.jp/feed/	PASS					
-jp-b43-web-camp-io	jp_feeds_batch43	rss-feed	https://web-camp.io/magazine/feed	PASS					
-jp-b43-weblog-life-net	jp_feeds_batch43	rss-feed	https://weblog-life.net/feed/	PASS					
-jp-b43-caddi-tech	jp_feeds_batch43	rss-feed	https://caddi.tech/feed	PASS					
-jp-b43-dev-classmethod-jp	jp_feeds_batch43	rss-feed	https://dev.classmethod.jp/feed/	PASS					
-jp-b43-devblog-thebase-in	jp_feeds_batch43	rss-feed	https://devblog.thebase.in/feed	PASS					
-jp-b43-developers-freee-co-jp	jp_feeds_batch43	rss-feed	https://developers.freee.co.jp/feed	PASS					
-jp-b43-eng-blog-iij-ad-jp	jp_feeds_batch43	rss-feed	https://eng-blog.iij.ad.jp/feed	PASS					
-jp-b43-engineer-retty-me	jp_feeds_batch43	rss-feed	https://engineer.retty.me/feed	PASS					
-jp-b43-labs-gree-jp	jp_feeds_batch43	rss-feed	https://labs.gree.jp/blog/feed/	PASS					
-jp-b43-made-livesense-co-jp	jp_feeds_batch43	rss-feed	https://made.livesense.co.jp/feed	PASS					
-jp-b43-moneyforward-dev-jp	jp_feeds_batch43	rss-feed	https://moneyforward-dev.jp/feed	PASS					
-jp-b43-paiza-hatenablog-com	jp_feeds_batch43	rss-feed	https://paiza.hatenablog.com/feed	PASS					
-jp-b43-product-st-inc	jp_feeds_batch43	rss-feed	https://product.st.inc/feed	PASS					
-jp-b43-tech-blog-optim-co-jp	jp_feeds_batch43	rss-feed	https://tech-blog.optim.co.jp/feed	PASS					
-jp-b43-tech-andpad-co-jp	jp_feeds_batch43	rss-feed	https://tech.andpad.co.jp/feed	PASS					
-jp-b43-tech-drecom-co-jp	jp_feeds_batch43	rss-feed	https://tech.drecom.co.jp/feed/	PASS					
-jp-b43-tech-every-tv	jp_feeds_batch43	rss-feed	https://tech.every.tv/feed	PASS					
-jp-b43-tech-gunosy-io	jp_feeds_batch43	rss-feed	https://tech.gunosy.io/feed	PASS					
-jp-b43-tech-layerx-co-jp	jp_feeds_batch43	rss-feed	https://tech.layerx.co.jp/feed	PASS					
-jp-b43-tech-medpeer-co-jp	jp_feeds_batch43	rss-feed	https://tech.medpeer.co.jp/feed	PASS					
-jp-b43-tech-pepabo-com	jp_feeds_batch43	rss-feed	https://tech.pepabo.com/feed.xml	PASS					
-jp-b43-tech-timee-co-jp	jp_feeds_batch43	rss-feed	https://tech.timee.co.jp/feed	PASS					
-jp-b43-tech-willgate-co-jp	jp_feeds_batch43	rss-feed	https://tech.willgate.co.jp/feed	PASS					
-jp-b43-techblog-lycorp-co-jp	jp_feeds_batch43	rss-feed	https://techblog.lycorp.co.jp/ja/feed/index.xml	PASS					
-jp-b43-techblog-zozo-com	jp_feeds_batch43	rss-feed	https://techblog.zozo.com/feed	PASS					
-jp-b43-baigie-me	jp_feeds_batch43	rss-feed	https://baigie.me/officialblog/feed/	PASS					
-jp-b43-coliss-com	jp_feeds_batch43	rss-feed	https://coliss.com/feed/	PASS					
-jp-b43-commte-net	jp_feeds_batch43	rss-feed	https://commte.net/feed	PASS					
-jp-b43-findy-code-io	jp_feeds_batch43	rss-feed	https://findy-code.io/engineer-lab/feed	PASS					
-jp-b43-jser-info	jp_feeds_batch43	rss-feed	https://jser.info/rss	PASS					
-jp-b43-liginc-co-jp	jp_feeds_batch43	rss-feed	https://liginc.co.jp/feed	PASS					
-jp-b43-photoshopvip-net	jp_feeds_batch43	rss-feed	https://photoshopvip.net/feed	PASS					
-jp-b43-webdesignfacts-net	jp_feeds_batch43	rss-feed	https://webdesignfacts.net/feed/	PASS					
-jp-b43-webdesignmagazine-net	jp_feeds_batch43	rss-feed	https://webdesignmagazine.net/feed/	PASS					
-jp-b43-asiatimes-com	jp_feeds_batch43	rss-feed	https://asiatimes.com/feed/	PASS					
-jp-b43-nikkan-spa-jp	jp_feeds_batch43	rss-feed	https://nikkan-spa.jp/feed	PASS					
-jp-b43-turns-jp	jp_feeds_batch43	rss-feed	https://turns.jp/feed	PASS					
-jp-b43-buzzmag-jp	jp_feeds_batch43	rss-feed	https://buzzmag.jp/feed	PASS					
-jp-b43-casabrutus-com	jp_feeds_batch43	rss-feed	https://casabrutus.com/feed	PASS					
-jp-b43-coconutsjapan-com	jp_feeds_batch43	rss-feed	https://coconutsjapan.com/feed	PASS					
-jp-b43-fundo-jp	jp_feeds_batch43	rss-feed	https://fundo.jp/feed	PASS					
-jp-b43-gaijinass-com	jp_feeds_batch43	rss-feed	https://gaijinass.com/feed/	PASS					
-jp-b43-japaaan-com	jp_feeds_batch43	rss-feed	https://mag.japaaan.com/feed	PASS					
-jp-b43-kokoro-jp-com	jp_feeds_batch43	rss-feed	https://kokoro-jp.com/feed/	PASS					
-jp-b43-ninjareports-com	jp_feeds_batch43	rss-feed	https://ninjareports.com/feed/	PASS					
-jp-b43-omocoro-jp	jp_feeds_batch43	rss-feed	https://omocoro.jp/feed	PASS					
-jp-b43-thejapanguy-com	jp_feeds_batch43	rss-feed	https://thejapanguy.com/feed/	PASS					
-jp-b43-tokyogirlsupdate-com	jp_feeds_batch43	rss-feed	https://tokyogirlsupdate.com/feed	PASS					
-jp-b43-unseen-japan-com	jp_feeds_batch43	rss-feed	https://unseen-japan.com/feed/	PASS					
-jp-b43-wa-gokoro-jp	jp_feeds_batch43	rss-feed	https://wa-gokoro.jp/feed	PASS					
-jp-b43-wotopi-jp	jp_feeds_batch43	rss-feed	https://wotopi.jp/feed	PASS					
-jp-b43-animate-co-jp	jp_feeds_batch43	rss-feed	https://www.animate.co.jp/feed/	PASS					
-jp-b43-architecturephoto-net	jp_feeds_batch43	rss-feed	https://architecturephoto.net/feed/	PASS					
-jp-b43-artscape-jp	jp_feeds_batch43	rss-feed	https://artscape.jp/feed	PASS					
-jp-b43-booklive-jp	jp_feeds_batch43	rss-feed	https://booklive.jp/bkmr/feed	PASS					
-jp-b43-comicbook-com	jp_feeds_batch43	rss-feed	https://comicbook.com/anime/feed/	PASS					
-jp-b43-doope-jp	jp_feeds_batch43	rss-feed	https://doope.jp/feed/	PASS					
-jp-b43-esports-world-jp	jp_feeds_batch43	rss-feed	https://esports-world.jp/feed	PASS					
-jp-b43-figsoku-net	jp_feeds_batch43	rss-feed	https://figsoku.net/feed/	PASS					
-jp-b43-filmaga-filmarks-com	jp_feeds_batch43	rss-feed	https://filmaga.filmarks.com/feed	PASS					
-jp-b43-hon-hikidashi-jp	jp_feeds_batch43	rss-feed	https://hon-hikidashi.jp/feed/	PASS					
-jp-b43-indienative-com	jp_feeds_batch43	rss-feed	https://indienative.com/feed/	PASS					
-jp-b43-jp-ign-com	jp_feeds_batch43	rss-feed	https://jp.ign.com/feed.xml	PASS					
-jp-b43-ln-news-com	jp_feeds_batch43	rss-feed	https://ln-news.com/feed/	PASS					
-jp-b43-moeyo-com	jp_feeds_batch43	rss-feed	https://moeyo.com/feed	PASS					
-jp-b43-nijimen-net	jp_feeds_batch43	rss-feed	https://nijimen.net/feed	PASS					
-jp-b43-otakuusamagazine-com	jp_feeds_batch43	rss-feed	https://otakuusamagazine.com/feed/	PASS					
-jp-b43-otapol-jp	jp_feeds_batch43	rss-feed	https://otapol.jp/feed/	PASS					
-jp-b43-seigura-com	jp_feeds_batch43	rss-feed	https://seigura.com/feed/	PASS					
-jp-b43-shuffle-genkosha-com	jp_feeds_batch43	rss-feed	https://shuffle.genkosha.com/feed	PASS					
-jp-b43-spincoaster-com	jp_feeds_batch43	rss-feed	https://spincoaster.com/feed	PASS					
-jp-b43-tvfan-kyodo-co-jp	jp_feeds_batch43	rss-feed	https://tvfan.kyodo.co.jp/feed/	PASS					
-jp-b43-basketballking-jp	jp_feeds_batch43	rss-feed	https://basketballking.jp/feed/	PASS					
-jp-b43-funq-jp	jp_feeds_batch43	rss-feed	https://funq.jp/feed/	PASS					
-jp-b43-funride-jp	jp_feeds_batch43	rss-feed	https://funride.jp/feed/	PASS					
-jp-b43-gonkaku-jp	jp_feeds_batch43	rss-feed	https://gonkaku.jp/feed/	PASS					
-jp-b43-melos-media	jp_feeds_batch43	rss-feed	https://melos.media/feed/	PASS					
-jp-b43-mmaplanet-jp	jp_feeds_batch43	rss-feed	https://mmaplanet.jp/feed/	PASS					
-jp-b43-rallys-online	jp_feeds_batch43	rss-feed	https://rallys.online/feed/	PASS					
-jp-b43-real-sports-jp	jp_feeds_batch43	rss-feed	https://real-sports.jp/feed/	PASS					
-jp-b43-rugbyrepublic-jp	jp_feeds_batch43	rss-feed	https://rugby-rp.com/feed/	PASS					
-jp-b43-vitup-jp	jp_feeds_batch43	rss-feed	https://vitup.jp/feed/	PASS					
-jp-b43-volleyballking-jp	jp_feeds_batch43	rss-feed	https://volleyballking.jp/feed/	PASS					
-jp-b43-bestcarweb-jp	jp_feeds_batch43	rss-feed	https://bestcarweb.jp/feed/	PASS					
-jp-b43-camp-hack-com	jp_feeds_batch43	rss-feed	https://camp-hack.com/feed	PASS					
-jp-b43-camphack-nap-camp-com	jp_feeds_batch43	rss-feed	https://camphack.nap-camp.com/feed	PASS					
-jp-b43-co-trip-jp	jp_feeds_batch43	rss-feed	https://co-trip.jp/feed/	PASS					
-jp-b43-ev-times-com	jp_feeds_batch43	rss-feed	https://ev-times.com/feed	PASS					
-jp-b43-hokkaido-labo-com	jp_feeds_batch43	rss-feed	https://hokkaido-labo.com/feed	PASS					
-jp-b43-ishikawa19-com	jp_feeds_batch43	rss-feed	https://ishikawa19.com/feed/	PASS					
-jp-b43-kurumanews-jp	jp_feeds_batch43	rss-feed	https://kuruma-news.jp/feed	PASS					
-jp-b43-motor-fan-jp	jp_feeds_batch43	rss-feed	https://motor-fan.jp/feed	PASS					
-jp-b43-okinawatravelinfo-com	jp_feeds_batch43	rss-feed	https://okinawatravelinfo.com/feed/	PASS					
-jp-b43-sky-budget-com	jp_feeds_batch43	rss-feed	https://sky-budget.com/feed/	PASS					
-jp-b43-tabippo-net	jp_feeds_batch43	rss-feed	https://tabippo.net/feed/	PASS					
-jp-b43-tabiris-com	jp_feeds_batch43	rss-feed	https://tabiris.com/feed/	PASS					
-jp-b43-travelersnavi-com	jp_feeds_batch43	rss-feed	https://travelersnavi.com/feed/	PASS					
-jp-b43-tripeditor-com	jp_feeds_batch43	rss-feed	https://tripeditor.com/feed/	PASS					
-jp-b43-cookpad-diet-jp	jp_feeds_batch43	rss-feed	https://cookpad-diet.jp/feed	PASS					
-jp-b43-food-stadium-com	jp_feeds_batch43	rss-feed	https://food-stadium.com/feed/	PASS					
-jp-b43-foodie-jp	jp_feeds_batch43	rss-feed	https://mi-journey.jp/foodie/feed/	PASS					
-jp-b43-ippin-gourmet-com	jp_feeds_batch43	rss-feed	https://ippin-gourmet.com/feed	PASS					
-jp-b43-irodori-co-jp	jp_feeds_batch43	rss-feed	https://irodori.co.jp/feed	PASS					
-jp-b43-kurand-jp	jp_feeds_batch43	rss-feed	https://kurand.jp/blogs/magazine.atom	PASS					
-jp-b43-mogumogunews-com	jp_feeds_batch43	rss-feed	https://mogumogunews.com/feed/	PASS					
-jp-b43-nomunication-jp	jp_feeds_batch43	rss-feed	https://nomunication.jp/feed/	PASS					
-jp-b43-retty-news	jp_feeds_batch43	rss-feed	https://retty.news/feed/	PASS					
-jp-b43-saketimes-jp	jp_feeds_batch43	rss-feed	https://jp.sake-times.com/feed	PASS					
-jp-b43-cancam-jp	jp_feeds_batch43	rss-feed	https://cancam.jp/feed	PASS					
-jp-b43-hobby-watch-impress-co-jp	jp_feeds_batch43	rss-feed	https://hobby.watch.impress.co.jp/data/rss/1.0/hbw/feed.rdf	PASS					
-jp-b43-iecolle-com	jp_feeds_batch43	rss-feed	https://iecolle.com/feed	PASS					
-jp-b43-josei-bigaku-jp	jp_feeds_batch43	rss-feed	https://josei-bigaku.jp/feed/	PASS					
-jp-b43-kokocara-pal-system-co-jp	jp_feeds_batch43	rss-feed	https://kokocara.pal-system.co.jp/feed/	PASS					
-jp-b43-locari-jp	jp_feeds_batch43	rss-feed	https://locari.jp/feed	PASS					
-jp-b43-lovegreen-net	jp_feeds_batch43	rss-feed	https://lovegreen.net/feed/	PASS					
-jp-b43-mendy-jp	jp_feeds_batch43	rss-feed	https://mendy.jp/feed	PASS					
-jp-b43-mery-jp	jp_feeds_batch43	rss-feed	https://mery.jp/feed	PASS					
-jp-b43-moov-ooo	jp_feeds_batch43	rss-feed	https://moov.ooo/feed/	PASS					
-jp-b43-oggi-jp	jp_feeds_batch43	rss-feed	https://oggi.jp/feed	PASS					
-jp-b43-psnews-jp	jp_feeds_batch43	rss-feed	https://psnews.jp/dog/feed/	PASS					
-jp-b43-roomclip-jp	jp_feeds_batch43	rss-feed	https://roomclip.jp/mag/feed	PASS					
-jp-b43-serai-jp	jp_feeds_batch43	rss-feed	https://serai.jp/feed	PASS					
-jp-b43-smartlog-jp	jp_feeds_batch43	rss-feed	https://smartlog.jp/feed	PASS					
-jp-b43-soen-tokyo	jp_feeds_batch43	rss-feed	https://soen.tokyo/feed/	PASS					
-jp-b43-sumikawa-net	jp_feeds_batch43	rss-feed	https://sumikawa.net/feed/	PASS					
-jp-b43-tokila-jp	jp_feeds_batch43	rss-feed	https://tokila.jp/feed/	PASS					
-jp-b43-woman-mynavi-jp	jp_feeds_batch43	rss-feed	https://woman.mynavi.jp/feed/	PASS					
-jp-b43-chiik-jp	jp_feeds_batch43	rss-feed	https://chiik.jp/feed/	PASS					
-jp-b43-kodomo-manabi-labo-net	jp_feeds_batch43	rss-feed	https://kodomo-manabi-labo.net/feed	PASS					
-jp-b43-kosodate-march-jp	jp_feeds_batch43	rss-feed	https://kosodate-march.jp/feed/	PASS					
-jp-b43-laxic-me	jp_feeds_batch43	rss-feed	https://laxic.me/feed/	PASS					
-jp-b43-mamapress-jp	jp_feeds_batch43	rss-feed	https://mamapress.jp/feed	PASS					
-jp-b43-ninaru-baby-net	jp_feeds_batch43	rss-feed	https://ninaru-baby.net/feed	PASS					
-jp-b43-resemom-jp	jp_feeds_batch43	rss-feed	https://resemom.jp/rss/index.rdf	PASS					
-jp-b43-up-to-you-me	jp_feeds_batch43	rss-feed	https://up-to-you.me/feed/	PASS					
-jp-b43-answers-news-com	jp_feeds_batch43	rss-feed	https://answers.ten-navi.com/pharmanews/feed/	PASS					
-jp-b43-fytte-jp	jp_feeds_batch43	rss-feed	https://fytte.jp/feed	PASS					
-jp-b43-athome-inc-jp	jp_feeds_batch43	rss-feed	https://athome-inc.jp/feed/	PASS					
-jp-b43-bizid-itmedia-co-jp	jp_feeds_batch43	rss-feed	https://rss.itmedia.co.jp/rss/2.0/bizid.xml	PASS					
-jp-b43-crypto-times-jp	jp_feeds_batch43	rss-feed	https://crypto-times.jp/feed/	PASS					
-jp-b43-gaiax-socialmedialab-jp	jp_feeds_batch43	rss-feed	https://gaiax-socialmedialab.jp/feed/	PASS					
-jp-b43-hedge-guide	jp_feeds_batch43	rss-feed	https://hedge.guide/feed	PASS					
-jp-b43-iemone-jp	jp_feeds_batch43	rss-feed	https://iemone.jp/feed/	PASS					
-jp-b43-liskul-com	jp_feeds_batch43	rss-feed	https://liskul.com/feed	PASS					
-jp-b43-marketeer-jp	jp_feeds_batch43	rss-feed	https://marketeer.jp/feed/	PASS					
-jp-b43-marketing-itmedia-co-jp	jp_feeds_batch43	rss-feed	https://rss.itmedia.co.jp/rss/2.0/marketing.xml	PASS					
-jp-b43-money-bu-jpx-com	jp_feeds_batch43	rss-feed	https://money-bu-jpx.com/feed/	PASS					
-jp-b43-money-lab-jp	jp_feeds_batch43	rss-feed	https://money-lab.jp/feed/	PASS					
-jp-b43-news-careerconnection-jp	jp_feeds_batch43	rss-feed	https://news.careerconnection.jp/feed/	PASS					
-jp-b43-o-uccino-jp	jp_feeds_batch43	rss-feed	https://o-uccino.jp/article/feed/	PASS					
-jp-b43-realestate-co-jp	jp_feeds_batch43	rss-feed	https://resources.realestate.co.jp/feed/	PASS					
-jp-b43-seleqt-net	jp_feeds_batch43	rss-feed	https://seleqt.net/feed/	PASS					
-jp-b43-sogyotecho-jp	jp_feeds_batch43	rss-feed	https://sogyotecho.jp/feed/	PASS					
-jp-b43-venturetimes-jp	jp_feeds_batch43	rss-feed	https://venturetimes.jp/feed	PASS					
-jp-b43-alternas-jp	jp_feeds_batch43	rss-feed	https://www.alterna.co.jp/feed/	PASS					
-jp-b43-energyshift-com	jp_feeds_batch43	rss-feed	https://energyshift.com/feed	PASS					
-jp-b43-greenz-jp	jp_feeds_batch43	rss-feed	https://greenz.jp/feed/	PASS					
-jp-b43-ideasforgood-jp	jp_feeds_batch43	rss-feed	https://ideasforgood.jp/feed/	PASS					
-jp-b43-karapaia-com	jp_feeds_batch43	rss-feed	https://karapaia.com/feed	PASS					
-jp-b43-spacemedia-jp	jp_feeds_batch43	rss-feed	https://spacemedia.jp/feed	PASS					
-jp-b43-thinktank-php-co-jp	jp_feeds_batch43	rss-feed	https://thinktank.php.co.jp/feed/	PASS					
-jp-b43-deepjapan-org	jp_feeds_batch43	rss-feed	https://deepjapan.org/feed/	PASS					
-jp-b43-neojaponisme-com	jp_feeds_batch43	rss-feed	https://neojaponisme.com/feed/	PASS					
-jp-b43-teamjapanese-com	jp_feeds_batch43	rss-feed	https://teamjapanese.com/feed/	PASS					
-jp-b43-thetokyotourist-com	jp_feeds_batch43	rss-feed	https://thetokyotourist.com/feed/	PASS					
+JO43_MUNI_190004_2	jprss	municipal-notice	https://www.pref.yamanashi.jp/top_saiyo.xml	PASS	10	OK	10	10	10
+JO43_BODIK_FEED_ATOM	jprss	municipal-notice	https://odcs.bodik.jp/feed/atom/	PASS	10	OK	10	10	10
+JO43_BODIK_FEED	jprss	municipal-notice	https://odcs.bodik.jp/feed/	PASS	10	OK	10	10	10
+JO43_MUNI_013641	jprss	municipal-notice	https://www.town.otobe.lg.jp/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_013935	jprss	municipal-notice	http://kuromatsunai-news.sblo.jp/index.rdf	PASS	15	OK	15	15	15
+JO43_MUNI_014052	jprss	municipal-notice	https://www.town.shakotan.lg.jp/feed.xml	PASS	15	OK	15	15	15
+JO43_MUNI_014079	jprss	municipal-notice	https://www.town.niki.hokkaido.jp/rss.xml	PASS	6	OK	6	6	6
+JO43_MUNI_014095	jprss	municipal-notice	https://www.akaigawa.com/feed/	PASS	8	OK	8	8	8
+JO43_MUNI_014389	jprss	municipal-notice	https://www.town.numata.hokkaido.jp/rss.xml	PASS	8	OK	8	8	8
+JO43_MUNI_014559	jprss	municipal-notice	https://www.town.pippu.hokkaido.jp/cms/rss.xml	PASS	56	OK	56	56	56
+JO43_MUNI_014575	jprss	municipal-notice	https://www.town.hokkaido-kamikawa.lg.jp/rss.xml	PASS	9	OK	9	9	9
+JO43_MUNI_014699	jprss	municipal-notice	https://www.town.bifuka.hokkaido.jp/cms/rss.xml	PASS	105	OK	105	105	105
+JO43_MUNI_014711	jprss	municipal-notice	https://www.town.nakagawa.hokkaido.jp/rss.xml	PASS	10	OK	10	10	10
+JO43_MUNI_014729	jprss	municipal-notice	https://www.town.horokanai.hokkaido.jp/feed	PASS	10	OK	10	10	10
+JO43_MUNI_015164	jprss	municipal-notice	https://www.town.toyotomi.hokkaido.jp/rss.xml	PASS	24	OK	24	24	24
+JO43_MUNI_015628	jprss	municipal-notice	https://www.vill.nishiokoppe.lg.jp/kankou/rss.xml	PASS	5	OK	5	5	5
+JO43_MUNI_015865	jprss	municipal-notice	https://www.town.mukawa.lg.jp/services/rdf/rss10/5131.xml	PASS	15	OK	15	15	15
+JO43_MUNI_015865_2	jprss	municipal-notice	https://www.town.mukawa.lg.jp/services/rdf/rss10/5130.xml	PASS	1	OK	1	1	1
+JO43_MUNI_015865_3	jprss	municipal-notice	https://www.town.mukawa.lg.jp/services/rdf/rss10/5132.xml	PASS	3	OK	3	3	3
+JO43_MUNI_016098	jprss	municipal-notice	https://www.town.erimo.lg.jp/rss.xml	PASS	10	OK	10	10	10
+JO43_MUNI_016683	jprss	municipal-notice	https://www.town.shiranuka.lg.jp/rss.xml	PASS	10	OK	10	10	10
+JO43_MUNI_023213	jprss	municipal-notice	http://www.town.ajigasawa.lg.jp/rss_news.xml	PASS	12	OK	12	12	12
+JO43_MUNI_024252	jprss	municipal-notice	https://www.kazamaura.jp/feed/	PASS	10	OK	10	10	10
+JO43_MUNI_024261	jprss	municipal-notice	https://www.vill.sai.lg.jp/feed/	PASS	10	OK	10	10	10
+JO43_MUNI_024465	jprss	municipal-notice	https://www.town.hashikami.lg.jp/rss.xml	PASS	15	OK	15	15	15
+JO43_MUNI_043214_2	jprss	municipal-notice	https://www.town.ogawara.miyagi.jp/services/rdf/rss10/1036.xml	PASS	15	OK	15	15	15
+JO43_MUNI_043214_3	jprss	municipal-notice	https://www.town.ogawara.miyagi.jp/services/rdf/rss10/1037.xml	PASS	15	OK	15	15	15
+JO43_MUNI_043231	jprss	municipal-notice	https://www.town.shibata.miyagi.jp/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_045012_2	jprss	municipal-notice	https://www.town.wakuya.miyagi.jp/topics/topics.xml	PASS	50	OK	50	50	50
+JO43_MUNI_045012_3	jprss	municipal-notice	https://www.town.wakuya.miyagi.jp/shinchaku/shinchaku.xml	PASS	50	OK	50	50	50
+JO43_MUNI_045012_5	jprss	municipal-notice	https://www.town.wakuya.miyagi.jp/boshu/boshu.xml	PASS	23	OK	23	23	23
+JO43_MUNI_064262	jprss	municipal-notice	https://www.town.mikawa.yamagata.jp/rss_news.xml	PASS	13	OK	13	13	13
+JO43_MUNI_064289	jprss	municipal-notice	https://www.town.shonai.lg.jp/rss_news.xml	PASS	100	OK	100	100	100
+JO43_MUNI_075469_2	jprss	municipal-notice	https://www.town.fukushima-futaba.lg.jp/services/rdf/rss10/4938.xml	PASS	15	OK	15	15	15
+JO43_MUNI_084433	jprss	municipal-notice	https://www.town.ami.lg.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_093459	jprss	municipal-notice	https://www.town.tochigi-haga.lg.jp/shinchaku/shinchaku.xml	PASS	10	OK	10	10	10
+JO43_MUNI_094111	jprss	municipal-notice	http://www.town.tochigi-nakagawa.lg.jp/rss/rss10.xml	PASS	11	OK	11	11	11
+JO43_MUNI_103446	jprss	municipal-notice	https://www.vill.shinto.gunma.jp/rss/rss10.xml	PASS	2	OK	2	2	2
+JO43_MUNI_112020	jprss	municipal-notice	https://www.city.kumagaya.lg.jp/rss_news.xml	PASS	100	OK	100	100	100
+JO43_MUNI_113018	jprss	municipal-notice	https://www.town.saitama-ina.lg.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_113247	jprss	municipal-notice	https://www.town.saitama-miyoshi.lg.jp/rss/feed.xml	PASS	15	OK	15	15	15
+JO43_MUNI_113425	jprss	municipal-notice	https://www.town.ranzan.saitama.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_113468	jprss	municipal-notice	https://www.town.kawajima.saitama.jp/services/rdf/rss10/1076.xml	PASS	15	OK	15	15	15
+JO43_MUNI_113468_2	jprss	municipal-notice	https://www.town.kawajima.saitama.jp/services/rdf/rss10/1079.xml	PASS	15	OK	15	15	15
+JO43_MUNI_113468_3	jprss	municipal-notice	https://www.town.kawajima.saitama.jp/services/rdf/rss10/1080.xml	PASS	15	OK	15	15	15
+JO43_MUNI_113611	jprss	municipal-notice	https://www.town.yokoze.saitama.jp/feed	PASS	5	OK	5	5	5
+JO43_MUNI_113638	jprss	municipal-notice	https://www.town.nagatoro.saitama.jp/feed/	PASS	10	OK	10	10	10
+JO43_MUNI_113816	jprss	municipal-notice	https://www.town.saitama-misato.lg.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_114421	jprss	municipal-notice	https://www.town.miyashiro.lg.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_114651	jprss	municipal-notice	https://www.town.matsubushi.lg.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_124036	jprss	municipal-notice	https://www.town.kujukuri.chiba.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_124095	jprss	municipal-notice	https://www.town.shibayama.lg.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_124231	jprss	municipal-notice	https://www.vill.chosei.chiba.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_124249	jprss	municipal-notice	https://www.town.shirako.lg.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_143421	jprss	municipal-notice	https://www.town.ninomiya.kanagawa.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_143642	jprss	municipal-notice	https://www.town.yamakita.kanagawa.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_183822	jprss	municipal-notice	http://www.town.ikeda.fukui.jp/news.xml	PASS	20	OK	20	20	20
+JO43_MUNI_184047	jprss	municipal-notice	http://www.town.minamiechizen.lg.jp/topics.xml	PASS	20	OK	20	20	20
+JO43_MUNI_184047_2	jprss	municipal-notice	http://www.town.minamiechizen.lg.jp/news.xml	PASS	10	OK	10	10	10
+JO43_MUNI_193461	jprss	municipal-notice	https://www.town.ichikawamisato.yamanashi.jp/rss/feed.rss	PASS	15	OK	15	15	15
+JO43_MUNI_203033	jprss	municipal-notice	https://www.koumi-town.jp/atom.xml	PASS	15	OK	15	15	15
+JO43_MUNI_203491	jprss	municipal-notice	https://www.vill.aoki.nagano.jp/asset/00032/gyousei/soumuka/data/oshirase_rss.xml	PASS	5	OK	5	5	5
+JO43_MUNI_204129	jprss	municipal-notice	https://www.urugi.jp/feed/	PASS	10	OK	10	10	10
+JO43_MUNI_204234	jprss	municipal-notice	https://www.town.nagiso.nagano.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_204811	jprss	municipal-notice	https://www.ikedamachi.net/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_213021	jprss	municipal-notice	https://www.town.ginan.lg.jp/services/rdf/rss10/1036.xml	PASS	15	OK	15	15	15
+JO43_MUNI_213021_2	jprss	municipal-notice	https://www.town.ginan.lg.jp/services/rdf/rss10/1037.xml	PASS	10	OK	10	10	10
+JO43_MUNI_213021_3	jprss	municipal-notice	https://www.town.ginan.lg.jp/services/rdf/rss10/1035.xml	PASS	15	OK	15	15	15
+JO43_MUNI_213624_2	jprss	municipal-notice	https://www.town.sekigahara.gifu.jp/services/rdf/rss10/1023.xml	PASS	6	OK	6	6	6
+JO43_MUNI_213624_3	jprss	municipal-notice	https://www.town.sekigahara.gifu.jp/services/rdf/rss10/1052.xml	PASS	15	OK	15	15	15
+JO43_MUNI_213624_4	jprss	municipal-notice	https://www.town.sekigahara.gifu.jp/services/rdf/rss10/1054.xml	PASS	2	OK	2	2	2
+JO43_MUNI_213837	jprss	municipal-notice	https://www.town.anpachi.lg.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_214035	jprss	municipal-notice	https://www.town-ono.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_214043	jprss	municipal-notice	https://www.town.gifu-ikeda.lg.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_215058_2	jprss	municipal-notice	https://www.town.yaotsu.lg.jp/services/rdf/rss10/3551.xml	PASS	15	OK	15	15	15
+JO43_MUNI_215058_3	jprss	municipal-notice	https://www.town.yaotsu.lg.jp/services/rdf/rss10/1035.xml	PASS	15	OK	15	15	15
+JO43_MUNI_215058_4	jprss	municipal-notice	https://www.town.yaotsu.lg.jp/services/rdf/rss10/1036.xml	PASS	14	OK	14	14	14
+JO43_MUNI_215058_5	jprss	municipal-notice	https://www.town.yaotsu.lg.jp/services/rdf/rss10/1037.xml	PASS	15	OK	15	15	15
+JO43_MUNI_221309	jprss	municipal-notice	https://www.city.hamamatsu.shizuoka.jp/kinkyu/kinkyu.xml	PASS	1	OK	1	1	1
+JO43_MUNI_233617_3	jprss	municipal-notice	https://www.town.oguchi.lg.jp/services/rdf/rss10/1023.xml	PASS	9	OK	9	9	9
+JO43_MUNI_233617_4	jprss	municipal-notice	https://www.town.oguchi.lg.jp/services/rdf/rss10/3521.xml	PASS	10	OK	10	10	10
+JO43_MUNI_234419	jprss	municipal-notice	https://www.town.agui.lg.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_243035	jprss	municipal-notice	https://www.town.kisosaki.lg.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_244708	jprss	municipal-notice	http://www.town.watarai.lg.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_245437	jprss	municipal-notice	https://www.town.mie-kihoku.lg.jp/feed/	PASS	10	OK	10	10	10
+JO43_MUNI_253839	jprss	municipal-notice	https://www.town.shiga-hino.lg.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_254410	jprss	municipal-notice	https://www.town.toyosato.shiga.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_263222	jprss	municipal-notice	http://www.town.kumiyama.lg.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_263648	jprss	municipal-notice	http://www.town.kasagi.lg.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_263672	jprss	municipal-notice	https://www.vill.minamiyamashiro.lg.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_264652	jprss	municipal-notice	https://www.town-yosano.jp/feed/	PASS	1	OK	1	1	1
+JO43_MUNI_283819	jprss	municipal-notice	https://www.town.hyogo-inami.lg.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_284432	jprss	municipal-notice	https://www.town.fukusaki.hyogo.jp/rss/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_313645	jprss	municipal-notice	https://www.town.misasa.tottori.jp/cgi-bin/rss.cgi	PASS	10	OK	10	10	10
+JO43_MUNI_324418	jprss	municipal-notice	https://www.town.shimane-kawamoto.lg.jp/feed/	PASS	457	OK	457	457	457
+JO43_MUNI_353418	jprss	municipal-notice	https://www.town.kaminoseki.lg.jp/feed	PASS	10	OK	10	10	10
+JO43_MUNI_382108	jprss	municipal-notice	https://www.city.iyo.lg.jp/topics/topics.xml	PASS	50	OK	50	50	50
+JO43_MUNI_393061	jprss	municipal-notice	https://vill.umaji.lg.jp/feed/	PASS	10	OK	10	10	10
+JO43_MUNI_393070	jprss	municipal-notice	https://www.vill.geisei.kochi.jp/rss.xml	PASS	12	OK	12	12	12
+JO43_MUNI_412058_2	jprss	municipal-notice	https://www.city.imari.lg.jp/services/rdf/rss10/1052.xml	PASS	15	OK	15	15	15
+JO43_MUNI_423211	jprss	municipal-notice	https://sonogi.jp/feed/	PASS	10	OK	10	10	10
+JO43_MUNI_443221	jprss	municipal-notice	https://www.himeshima.jp/feed/	PASS	10	OK	10	10	10
+JO43_MUNI_464686_2	jprss	municipal-notice	https://www.town.kagoshima-osaki.lg.jp/shinchaku.xml	PASS	10	OK	10	10	10
+JO43_MUNI_464911_2	jprss	municipal-notice	https://www.town.minamiosumi.lg.jp/shinchaku.xml	PASS	10	OK	10	10	10
+JO43_MUNI_464911_3	jprss	municipal-notice	https://www.town.minamiosumi.lg.jp/topics.xml	PASS	10	OK	10	10	10
+JO43_MUNI_465020	jprss	municipal-notice	http://www.town.minamitane.kagoshima.jp/rss.xml	PASS	10	OK	10	10	10
+JO43_MUNI_473014	jprss	municipal-notice	https://www.vill.kunigami.okinawa.jp/feed/	PASS	10	OK	10	10	10
+JO43_MUNI_473260	jprss	municipal-notice	https://www.chatan.jp/rss_news.xml	PASS	40	OK	40	40	40
+JO43_MUNI_473561	jprss	municipal-notice	http://www.vill.tonaki.okinawa.jp/rss/RssFeed.jsp	PASS	10	OK	10	10	10
+JO43_MUNI_020001	jprss	municipal-notice	https://opendata.pref.aomori.lg.jp/docs/rss.xml	PASS	2	OK	2	2	2
+JO43_MUNI_220001	jprss	municipal-notice	https://opendata.pref.shizuoka.jp/dataset/rss.xml	PASS	100	OK	100	100	100
+JO43_MUNI_220001_2	jprss	municipal-notice	https://opendata.pref.shizuoka.jp/docs/rss.xml	PASS	4	OK	4	4	4
+JO43_MUNI_230006	jprss	municipal-notice	https://www.pref.aichi.jp/rss/10/list6.xml	PASS	5	OK	5	5	5
+JO43_MUNI_230006_2	jprss	municipal-notice	https://www.pref.aichi.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_310000	jprss	municipal-notice	https://odp-pref-tottori.tori-info.co.jp/dataset/rss.xml	PASS	100	OK	100	100	100
+JO43_MUNI_310000_2	jprss	municipal-notice	https://odp-pref-tottori.tori-info.co.jp/app/rss.xml	PASS	4	OK	4	4	4
+JO43_MUNI_310000_3	jprss	municipal-notice	https://odp-pref-tottori.tori-info.co.jp/idea/rss.xml	PASS	4	OK	4	4	4
+JO43_MUNI_310000_4	jprss	municipal-notice	https://odp-pref-tottori.tori-info.co.jp/news/rss.xml	PASS	1	OK	1	1	1
+JO43_MUNI_370002	jprss	municipal-notice	https://opendata.pref.kagawa.lg.jp/docs/rss.xml	PASS	8	OK	8	8	8
+JO43_MUNI_370002_2	jprss	municipal-notice	https://opendata.pref.kagawa.lg.jp/dataset/search/rss.xml?sort=released	PASS	100	OK	100	100	100
+JO43_MUNI_370002_3	jprss	municipal-notice	https://opendata.pref.kagawa.lg.jp/app/search/rss.xml?sort=released	PASS	11	OK	11	11	11
+JO43_MUNI_370002_4	jprss	municipal-notice	https://opendata.pref.kagawa.lg.jp/idea/search/rss.xml?sort=released	PASS	1	OK	1	1	1
+JO43_MUNI_440001	jprss	municipal-notice	https://www.pref.oita.jp/rss/10/list3.xml	PASS	1	OK	1	1	1
+JO43_MUNI_470007	jprss	municipal-notice	https://www.pref.okinawa.lg.jp/press_news.rss	PASS	1	OK	1	1	1
+JO43_MUNI_012033	jprss	municipal-notice	https://www.city.otaru.lg.jp/categories/kubun/chumoku/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_012033_2	jprss	municipal-notice	https://www.city.otaru.lg.jp/docs/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_012033_3	jprss	municipal-notice	https://www.city.otaru.lg.jp/categories/kubun/boshu/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_012092	jprss	municipal-notice	https://www.city.yubari.lg.jp/rss/10/list3.xml	PASS	1	OK	1	1	1
+JO43_MUNI_012092_2	jprss	municipal-notice	https://www.city.yubari.lg.jp/rss/10/list5.xml	PASS	21	OK	21	21	21
+JO43_MUNI_012092_3	jprss	municipal-notice	https://www.city.yubari.lg.jp/rss/10/list6.xml	PASS	1	OK	1	1	1
+JO43_MUNI_012114	jprss	municipal-notice	https://www.city.abashiri.hokkaido.jp/rss/10/list3.xml	PASS	1	OK	1	1	1
+JO43_MUNI_012114_2	jprss	municipal-notice	https://www.city.abashiri.hokkaido.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_012131	jprss	municipal-notice	https://www.city.tomakomai.hokkaido.jp/rss/boshuichiran.rdf	PASS	8	OK	9	9	9
+JO43_MUNI_012149	jprss	municipal-notice	https://www.city.wakkanai.hokkaido.jp/rss/whatsnew.rdf	PASS	50	OK	50	50	50
+JO43_MUNI_012149_2	jprss	municipal-notice	https://www.city.wakkanai.hokkaido.jp/rss/topics.rdf	PASS	9	OK	9	9	9
+JO43_MUNI_012157	jprss	municipal-notice	https://www.city.bibai.hokkaido.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_012157_2	jprss	municipal-notice	https://www.city.bibai.hokkaido.jp/rss/10/list5.xml	PASS	2	OK	2	2	2
+JO43_MUNI_012157_3	jprss	municipal-notice	https://www.city.bibai.hokkaido.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_012181	jprss	municipal-notice	https://www.city.akabira.hokkaido.jp/docs/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_012181_2	jprss	municipal-notice	https://www.city.akabira.hokkaido.jp/attention/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_012181_3	jprss	municipal-notice	https://www.city.akabira.hokkaido.jp/event/rss.xml	PASS	6	OK	6	6	6
+JO43_MUNI_012181_4	jprss	municipal-notice	https://www.city.akabira.hokkaido.jp/nyusatsu/rss.xml	PASS	17	OK	17	17	17
+JO43_MUNI_012220	jprss	municipal-notice	https://www.city.mikasa.hokkaido.jp/hotnews/rss.rdf	PASS	10	OK	10	10	10
+JO43_MUNI_012262	jprss	municipal-notice	http://www.city.sunagawa.hokkaido.jp/rss/feed.rss	PASS	15	OK	15	15	15
+JO43_MUNI_012271	jprss	municipal-notice	https://www.city.utashinai.hokkaido.jp/hotnews/rss.rdf	PASS	10	OK	10	10	10
+JO43_MUNI_012301	jprss	municipal-notice	https://www.city.noboribetsu.lg.jp/categories/kubun/messages/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_012301_2	jprss	municipal-notice	https://www.city.noboribetsu.lg.jp/categories/kubun/messages/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_012301_3	jprss	municipal-notice	https://www.city.noboribetsu.lg.jp/categories/kubun/event/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_012301_4	jprss	municipal-notice	https://www.city.noboribetsu.lg.jp/categories/kubun/event/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_012301_5	jprss	municipal-notice	https://www.city.noboribetsu.lg.jp/categories/kubun/recruit/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_012301_6	jprss	municipal-notice	https://www.city.noboribetsu.lg.jp/categories/kubun/recruit/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_012301_7	jprss	municipal-notice	https://www.city.noboribetsu.lg.jp/categories/kubun/life/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_012301_8	jprss	municipal-notice	https://www.city.noboribetsu.lg.jp/categories/kubun/life/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_012335	jprss	municipal-notice	https://www.city.date.hokkaido.jp/hotnews/rss.rdf	PASS	20	OK	20	20	20
+JO43_MUNI_012343	jprss	municipal-notice	https://www.city.kitahiroshima.hokkaido.jp/hotnews/rss.rdf	PASS	10	OK	10	10	10
+JO43_MUNI_012343_2	jprss	municipal-notice	https://www.city.kitahiroshima.hokkaido.jp/eventcal/rss.rdf	PASS	2	OK	2	2	2
+JO43_MUNI_012351	jprss	municipal-notice	https://www.city.ishikari.hokkaido.jp/news.rss	PASS	27	OK	27	27	27
+JO43_MUNI_012360	jprss	municipal-notice	https://www.city.hokuto.hokkaido.jp/topics/rss.xml	PASS	100	OK	100	100	100
+JO43_MUNI_012360_2	jprss	municipal-notice	https://www.city.hokuto.hokkaido.jp/whatsnew/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_013048	jprss	municipal-notice	https://www.vill.shinshinotsu.hokkaido.jp/hotnews/rss.rdf	PASS	10	OK	10	10	10
+JO43_MUNI_013315	jprss	municipal-notice	https://www.town.matsumae.hokkaido.jp/hotnews/rss.rdf	PASS	10	OK	10	10	10
+JO43_MUNI_013331	jprss	municipal-notice	https://www.town.shiriuchi.hokkaido.jp/rss/whatsnew.rdf	PASS	759	OK	759	759	759
+JO43_MUNI_013374	jprss	municipal-notice	https://www.town.nanae.hokkaido.jp/hotnews/rss.rdf	PASS	30	OK	30	30	30
+JO43_MUNI_013455	jprss	municipal-notice	https://www.town.hokkaido-mori.lg.jp//cgi-bin/feed.php?siteNew=1&displayRange=90	PASS	20	OK	20	20	20
+JO43_MUNI_013463	jprss	municipal-notice	https://www.town.yakumo.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_013463_2	jprss	municipal-notice	https://www.town.yakumo.lg.jp/rss/10/list5.xml	PASS	96	OK	96	96	96
+JO43_MUNI_013463_3	jprss	municipal-notice	https://www.town.yakumo.lg.jp/rss/10/list10.xml	PASS	46	OK	46	46	46
+JO43_MUNI_013463_4	jprss	municipal-notice	https://www.town.yakumo.lg.jp/rss/10/list14.xml	PASS	100	OK	100	100	100
+JO43_MUNI_013463_5	jprss	municipal-notice	https://www.town.yakumo.lg.jp/rss/10/list6.xml	PASS	63	OK	63	63	63
+JO43_MUNI_013471	jprss	municipal-notice	https://www.town.oshamambe.lg.jp/rss/10/list3.xml	PASS	36	OK	36	36	36
+JO43_MUNI_013471_2	jprss	municipal-notice	https://www.town.oshamambe.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_013471_3	jprss	municipal-notice	https://www.town.oshamambe.lg.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_013471_4	jprss	municipal-notice	https://www.town.oshamambe.lg.jp/rss/10/list6.xml	PASS	24	OK	24	24	24
+JO43_MUNI_013625	jprss	municipal-notice	https://www.town.kaminokuni.lg.jp/hotnews/rss.rdf	PASS	10	OK	10	10	10
+JO43_MUNI_013633	jprss	municipal-notice	https://www.town.assabu.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_013633_2	jprss	municipal-notice	https://www.town.assabu.lg.jp/rss/10/list6.xml	PASS	28	OK	28	28	28
+JO43_MUNI_013633_3	jprss	municipal-notice	https://www.town.assabu.lg.jp/rss/10/list5.xml	PASS	7	OK	7	7	7
+JO43_MUNI_013676	jprss	municipal-notice	https://www.town.okushiri.lg.jp/hotnews/rss.rdf	PASS	20	OK	20	20	20
+JO43_MUNI_013951	jprss	municipal-notice	https://www.town.niseko.lg.jp/resources/output/rss/rss.xml	PASS	100	OK	100	100	100
+JO43_MUNI_013951_2	jprss	municipal-notice	https://www.town.niseko.lg.jp/resources/output/rss/boshu.xml	PASS	100	OK	100	100	100
+JO43_MUNI_013978	jprss	municipal-notice	https://www.vill.rusutsu.lg.jp/hotnews/rss.rdf	PASS	10	OK	10	10	10
+JO43_MUNI_013994	jprss	municipal-notice	https://www.town-kyogoku.jp/rss/10/list3.xml	PASS	1	OK	1	1	1
+JO43_MUNI_013994_2	jprss	municipal-notice	https://www.town-kyogoku.jp/rss/10/list6.xml	PASS	68	OK	68	68	68
+JO43_MUNI_013994_3	jprss	municipal-notice	https://www.town-kyogoku.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_013994_4	jprss	municipal-notice	https://www.town-kyogoku.jp/rss/10/list5.xml	PASS	30	OK	30	30	30
+JO43_MUNI_013994_5	jprss	municipal-notice	https://www.town-kyogoku.jp/rss/10/list7.xml	PASS	26	OK	26	26	26
+JO43_MUNI_014001	jprss	municipal-notice	https://www.town.kutchan.hokkaido.jp/rss.xml	PASS	5	OK	5	5	5
+JO43_MUNI_014036	jprss	municipal-notice	https://www.vill.tomari.hokkaido.jp/new_info/rss.xml	PASS	100	OK	100	100	100
+JO43_MUNI_014036_2	jprss	municipal-notice	https://www.vill.tomari.hokkaido.jp/new_info/oshirase//rss.xml	PASS	43	OK	43	43	43
+JO43_MUNI_014036_3	jprss	municipal-notice	https://www.vill.tomari.hokkaido.jp/new_info/nyusatsu//rss.xml	PASS	4	OK	4	4	4
+JO43_MUNI_014036_4	jprss	municipal-notice	https://www.vill.tomari.hokkaido.jp/new_info/boshu//rss.xml	PASS	5	OK	5	5	5
+JO43_MUNI_014036_5	jprss	municipal-notice	https://www.vill.tomari.hokkaido.jp/event//rss.xml	PASS	6	OK	6	6	6
+JO43_MUNI_014281	jprss	municipal-notice	https://www.maoi-net.jp/rss/whatsnew.rdf	PASS	50	OK	50	50	50
+JO43_MUNI_014290	jprss	municipal-notice	https://www.town.kuriyama.hokkaido.jp/rss/10/list3.xml	PASS	2	OK	2	2	2
+JO43_MUNI_014290_2	jprss	municipal-notice	https://www.town.kuriyama.hokkaido.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_014290_3	jprss	municipal-notice	https://www.town.kuriyama.hokkaido.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_014290_4	jprss	municipal-notice	https://www.town.kuriyama.hokkaido.jp/rss/10/list7.xml	PASS	69	OK	69	69	69
+JO43_MUNI_014290_5	jprss	municipal-notice	https://www.town.kuriyama.hokkaido.jp/rss/10/list8.xml	PASS	12	OK	12	12	12
+JO43_MUNI_014290_6	jprss	municipal-notice	https://www.town.kuriyama.hokkaido.jp/rss/10/list10.xml	PASS	7	OK	7	7	7
+JO43_MUNI_014303	jprss	municipal-notice	https://www.town.tsukigata.hokkaido.jp/rss/10/list6.xml	PASS	3	OK	3	3	3
+JO43_MUNI_014303_2	jprss	municipal-notice	https://www.town.tsukigata.hokkaido.jp/rss/10/list1.xml	PASS	88	OK	88	88	88
+JO43_MUNI_014303_3	jprss	municipal-notice	https://www.town.tsukigata.hokkaido.jp/rss/10/list5.xml	PASS	3	OK	3	3	3
+JO43_MUNI_014338	jprss	municipal-notice	http://www.town.moseushi.hokkaido.jp/rss/feed.rss	PASS	15	OK	15	15	15
+JO43_MUNI_014362	jprss	municipal-notice	https://www.town.uryu.hokkaido.jp/docs/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_014362_2	jprss	municipal-notice	https://www.town.uryu.hokkaido.jp/news/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_014362_3	jprss	municipal-notice	https://www.town.uryu.hokkaido.jp/boshu/rss.xml	PASS	6	OK	6	6	6
+JO43_MUNI_014362_4	jprss	municipal-notice	https://www.town.uryu.hokkaido.jp/vis/24/rss.xml	PASS	5	OK	5	5	5
+JO43_MUNI_014362_5	jprss	municipal-notice	https://www.town.uryu.hokkaido.jp/vis/27/205/rss.xml	PASS	4	OK	4	4	4
+JO43_MUNI_014524	jprss	municipal-notice	https://www.town.takasu.hokkaido.jp/rss/10/list1.xml	PASS	51	OK	51	51	51
+JO43_MUNI_014524_2	jprss	municipal-notice	https://www.town.takasu.hokkaido.jp/rss/10/list5.xml	PASS	9	OK	9	9	9
+JO43_MUNI_014591	jprss	municipal-notice	https://town.biei.hokkaido.jp/rss/whatsnew.rdf	PASS	50	OK	50	50	50
+JO43_MUNI_014613	jprss	municipal-notice	https://www.town.nakafurano.lg.jp/hotnews/rss.rdf	PASS	10	OK	10	10	10
+JO43_MUNI_014648	jprss	municipal-notice	https://www.town.wassamu.hokkaido.jp/feed/	PASS	10	OK	10	10	10
+JO43_MUNI_014702	jprss	municipal-notice	https://www.vill.otoineppu.hokkaido.jp/rss/feed.rss	PASS	15	OK	15	15	15
+JO43_MUNI_014826	jprss	municipal-notice	https://www.town.obira.hokkaido.jp/hotnews/rss.rdf	PASS	10	OK	10	10	10
+JO43_MUNI_014842	jprss	municipal-notice	https://www.town.haboro.lg.jp/rss/feed.rss	PASS	15	OK	15	15	15
+JO43_MUNI_014869	jprss	municipal-notice	https://www.town.embetsu.hokkaido.jp/c90/rss.xml	PASS	38	OK	38	38	38
+JO43_MUNI_014869_2	jprss	municipal-notice	https://www.town.embetsu.hokkaido.jp/c90/c9080/rss.xml	PASS	18	OK	18	18	18
+JO43_MUNI_014869_3	jprss	municipal-notice	https://www.town.embetsu.hokkaido.jp/c90/c9030/rss.xml	PASS	7	OK	7	7	7
+JO43_MUNI_014869_4	jprss	municipal-notice	https://www.town.embetsu.hokkaido.jp/c90/c9020/rss.xml	PASS	7	OK	7	7	7
+JO43_MUNI_015113	jprss	municipal-notice	https://www.vill.sarufutsu.hokkaido.jp/hotnews/rss.rdf	PASS	20	OK	20	20	20
+JO43_MUNI_015172	jprss	municipal-notice	https://www.town.rebun.hokkaido.jp/hotnews/rss.rdf	PASS	10	OK	10	10	10
+JO43_MUNI_015431	jprss	municipal-notice	https://www.town.bihoro.hokkaido.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_015431_2	jprss	municipal-notice	https://www.town.bihoro.hokkaido.jp/rss/10/list5.xml	PASS	24	OK	24	24	24
+JO43_MUNI_015431_3	jprss	municipal-notice	https://www.town.bihoro.hokkaido.jp/rss/10/list7.xml	PASS	13	OK	13	13	13
+JO43_MUNI_015521	jprss	municipal-notice	https://www.town.saroma.hokkaido.jp/rss/feed.rss	PASS	15	OK	15	15	15
+JO43_MUNI_015636	jprss	municipal-notice	https://www.town.oumu.hokkaido.jp/cgi-bin/feed.php?siteNew=1&amp;displayCount=10&amp;displayRange=90	PASS	20	OK	20	20	20
+JO43_MUNI_015717	jprss	municipal-notice	https://www.town.toyoura.hokkaido.jp/hotnews/rss.rdf	PASS	10	OK	10	10	10
+JO43_MUNI_015784	jprss	municipal-notice	https://www.town.shiraoi.hokkaido.jp/docs/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_015784_2	jprss	municipal-notice	https://www.town.shiraoi.hokkaido.jp/saiyo/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_015784_3	jprss	municipal-notice	https://www.town.shiraoi.hokkaido.jp/nyusatsu/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_015814	jprss	municipal-notice	https://www.town.atsuma.lg.jp/rss/10/list1.xml	PASS	65	OK	65	65	65
+JO43_MUNI_015814_2	jprss	municipal-notice	https://www.town.atsuma.lg.jp/rss/10/list5.xml	PASS	11	OK	11	11	11
+JO43_MUNI_015814_3	jprss	municipal-notice	https://www.town.atsuma.lg.jp/rss/10/list7.xml	PASS	18	OK	18	18	18
+JO43_MUNI_015814_4	jprss	municipal-notice	https://www.town.atsuma.lg.jp/rss/10/list8.xml	PASS	4	OK	4	4	4
+JO43_MUNI_016021	jprss	municipal-notice	https://www.town.biratori.hokkaido.jp/cgi-bin/feed.php?siteNew=10&amp;displayCount=15&amp;displayRange=90	PASS	20	OK	20	20	20
+JO43_MUNI_016101	jprss	municipal-notice	https://www.shinhidaka-hokkaido.jp/hotnews/rss.rdf	PASS	10	OK	10	10	10
+JO43_MUNI_016349	jprss	municipal-notice	https://www.town.shikaoi.lg.jp/rss.xml	PASS	30	OK	30	30	30
+JO43_MUNI_016438	jprss	municipal-notice	https://www.town.makubetsu.lg.jp/rss/feed.rss	PASS	6	OK	6	6	6
+JO43_MUNI_016632	jprss	municipal-notice	https://www.townhamanaka.jp/rss/feed.rss	PASS	15	OK	15	15	15
+JO43_MUNI_016675	jprss	municipal-notice	https://www.vill.tsurui.lg.jp/cgi-bin/feed.php?siteNew=1&displayCount=15&displayRange=90	PASS	9	OK	9	9	9
+JO43_MUNI_022063	jprss	municipal-notice	https://www.city.towada.lg.jp/feed.rss	PASS	30	OK	30	30	30
+JO43_MUNI_022080	jprss	municipal-notice	https://www.city.mutsu.lg.jp/feed.rss	PASS	30	OK	30	30	30
+JO43_MUNI_022101	jprss	municipal-notice	https://www.city.hirakawa.lg.jp/rss/feed.rss	PASS	15	OK	15	15	15
+JO43_MUNI_023019	jprss	municipal-notice	https://www.town.hiranai.aomori.jp/cgi-bin/feed.php?displayCount=10&amp;displayRange=90&amp;siteNew=1	PASS	3	OK	3	3	3
+JO43_MUNI_023230	jprss	municipal-notice	https://www.town.fukaura.lg.jp/doc/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_023230_2	jprss	municipal-notice	https://www.town.fukaura.lg.jp/doc/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_023230_3	jprss	municipal-notice	https://www.town.fukaura.lg.jp/category/bunya/sangyou/nyuusatu/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_023230_4	jprss	municipal-notice	https://www.town.fukaura.lg.jp/category/bunya/sangyou/nyuusatu/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_023230_5	jprss	municipal-notice	https://www.town.fukaura.lg.jp/category/bunya/koseki/hojokinjoseikin/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_023230_6	jprss	municipal-notice	https://www.town.fukaura.lg.jp/category/bunya/koseki/hojokinjoseikin/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_023671	jprss	municipal-notice	http://www.vill.inakadate.lg.jp/shinchaku-portal/index.rss	PASS	50	OK	50	50	50
+JO43_MUNI_023671_2	jprss	municipal-notice	http://www.vill.inakadate.lg.jp/shinchaku-portal/index.atom	PASS	50	OK	50	50	50
+JO43_MUNI_024058	jprss	municipal-notice	https://www.town.rokunohe.aomori.jp/docs/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_024058_2	jprss	municipal-notice	https://www.town.rokunohe.aomori.jp/docs/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_024058_3	jprss	municipal-notice	https://www.town.rokunohe.aomori.jp/category/information/event/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_024058_4	jprss	municipal-notice	https://www.town.rokunohe.aomori.jp/category/information/event/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_024058_5	jprss	municipal-notice	https://www.town.rokunohe.aomori.jp/category/bunya/shigoto/nyusatsu/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_024058_6	jprss	municipal-notice	https://www.town.rokunohe.aomori.jp/category/bunya/shigoto/nyusatsu/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_024121	jprss	municipal-notice	https://www.town.oirase.aomori.jp/rss/10/list3.xml	PASS	96	OK	96	96	96
+JO43_MUNI_032131	jprss	municipal-notice	https://www.city.ninohe.lg.jp/RSSFeed/topic	PASS	1	OK	1	1	1
+JO43_MUNI_032131_2	jprss	municipal-notice	https://www.city.ninohe.lg.jp/RSSFeed/whatsnew	PASS	10	OK	10	10	10
+JO43_MUNI_032131_3	jprss	municipal-notice	https://www.city.ninohe.lg.jp/RSSFeed/pickup	PASS	3	OK	3	3	3
+JO43_MUNI_032158	jprss	municipal-notice	https://www.city.oshu.iwate.jp/cgi-bin/feed.php?siteNew=1&amp;displayCount=5&amp;displayRange=90&amp;includeShortcut=1	PASS	20	OK	20	20	20
+JO43_MUNI_033812	jprss	municipal-notice	https://www.town.kanegasaki.iwate.jp/articles/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_033812_2	jprss	municipal-notice	https://www.town.kanegasaki.iwate.jp/articles/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_033812_3	jprss	municipal-notice	https://www.town.kanegasaki.iwate.jp/categories/event/event/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_033812_4	jprss	municipal-notice	https://www.town.kanegasaki.iwate.jp/categories/event/event/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_033812_5	jprss	municipal-notice	https://www.town.kanegasaki.iwate.jp/categories/kubun/boshu/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_033812_6	jprss	municipal-notice	https://www.town.kanegasaki.iwate.jp/categories/kubun/boshu/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_033812_7	jprss	municipal-notice	https://www.town.kanegasaki.iwate.jp/categories/bunya/gyousei/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_033812_8	jprss	municipal-notice	https://www.town.kanegasaki.iwate.jp/categories/bunya/gyousei/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_034827	jprss	municipal-notice	https://www.town.yamada.iwate.jp/oshirase/rss.xml	PASS	100	OK	100	100	100
+JO43_MUNI_042021	jprss	municipal-notice	https://www.city.ishinomaki.lg.jp/news03.rss	PASS	20	OK	20	20	20
+JO43_MUNI_042056	jprss	municipal-notice	https://www.kesennuma.miyagi.jp/notice.rss	PASS	20	OK	20	20	20
+JO43_MUNI_042056_2	jprss	municipal-notice	https://www.kesennuma.miyagi.jp/news.rss	PASS	20	OK	20	20	20
+JO43_MUNI_042137	jprss	municipal-notice	https://www.kuriharacity.jp/news.rss	PASS	20	OK	20	20	20
+JO43_MUNI_044016	jprss	municipal-notice	https://www.town.miyagi-matsushima.lg.jp/rss/10/list3.xml	PASS	18	OK	18	18	18
+JO43_MUNI_044016_2	jprss	municipal-notice	https://www.town.miyagi-matsushima.lg.jp/rss/10/list1.xml	PASS	27	OK	27	27	27
+JO43_MUNI_044016_3	jprss	municipal-notice	https://www.town.miyagi-matsushima.lg.jp/rss/10/list6.xml	PASS	4	OK	4	4	4
+JO43_MUNI_044229	jprss	municipal-notice	https://www.town.miyagi-osato.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_044245	jprss	municipal-notice	https://www.village.ohira.miyagi.jp/cgi-bin/feed.php?siteNew=1&amp;displayRange=90	PASS	2	OK	2	2	2
+JO43_MUNI_052027	jprss	municipal-notice	https://www.city.noshiro.lg.jp/rss	PASS	20	OK	20	20	20
+JO43_MUNI_052094	jprss	municipal-notice	https://www.city.kazuno.lg.jp/cgi-bin/feed.php?new1=1	PASS	20	OK	20	20	20
+JO43_MUNI_053481	jprss	municipal-notice	https://www.town.mitane.akita.jp/cgi-bin/feed.php?displayCount=10&amp;displayRange=90&amp;siteNew=1	PASS	5	OK	5	5	5
+JO43_MUNI_053660	jprss	municipal-notice	https://www.town.ikawa.akita.jp/rss/10/list1.xml	PASS	46	OK	46	46	46
+JO43_MUNI_053660_2	jprss	municipal-notice	https://www.town.ikawa.akita.jp/rss/10/list6.xml	PASS	12	OK	12	12	12
+JO43_MUNI_054631	jprss	municipal-notice	https://www.town.ugo.lg.jp/rss_news.php	PASS	173	OK	173	173	173
+JO43_MUNI_062073	jprss	municipal-notice	https://www.city.kaminoyama.yamagata.jp/rss/10/list7.xml	PASS	60	OK	60	60	60
+JO43_MUNI_062073_2	jprss	municipal-notice	https://www.city.kaminoyama.yamagata.jp/rss/10/list8.xml	PASS	30	OK	30	30	30
+JO43_MUNI_063223	jprss	municipal-notice	https://www.town.nishikawa.yamagata.jp/rss/10/list3.xml	PASS	1	OK	1	1	1
+JO43_MUNI_063223_2	jprss	municipal-notice	https://www.town.nishikawa.yamagata.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_063223_3	jprss	municipal-notice	https://www.town.nishikawa.yamagata.jp/rss/10/list6.xml	PASS	21	OK	21	21	21
+JO43_MUNI_063614	jprss	municipal-notice	https://www.town.kaneyama.yamagata.jp/cgi-bin/feed.php?siteNew=1&displayRange=90	PASS	20	OK	20	20	20
+JO43_MUNI_072010	jprss	municipal-notice	https://www.city.fukushima.fukushima.jp/cgi-bin/feed.php?siteNew=1&amp;displayRange=90	PASS	20	OK	20	20	20
+JO43_MUNI_072028	jprss	municipal-notice	https://www.city.aizuwakamatsu.fukushima.jp/shinchaku/index.rss	PASS	50	OK	50	50	50
+JO43_MUNI_072036	jprss	municipal-notice	https://www.city.koriyama.lg.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_072036_2	jprss	municipal-notice	https://www.city.koriyama.lg.jp/rss/10/list7.xml	PASS	19	OK	19	19	19
+JO43_MUNI_072044	jprss	municipal-notice	https://www.city.iwaki.lg.jp/www/rss/bosyu.rdf	PASS	151	OK	151	151	151
+JO43_MUNI_072052	jprss	municipal-notice	https://www.city.shirakawa.fukushima.jp/rss.php?mode=news&amp;type=1	PASS	71	OK	71	71	71
+JO43_MUNI_072052_2	jprss	municipal-notice	https://www.city.shirakawa.fukushima.jp/rss.php?mode=news&amp;type=2	PASS	71	OK	71	71	71
+JO43_MUNI_072052_3	jprss	municipal-notice	https://www.city.shirakawa.fukushima.jp/rss.php?mode=news&amp;type=3	PASS	71	OK	71	71	71
+JO43_MUNI_072079	jprss	municipal-notice	https://www.city.sukagawa.fukushima.jp/cgi-bin/feed.php?siteNew=1&amp;displayRange=90	PASS	20	OK	20	20	20
+JO43_MUNI_072087	jprss	municipal-notice	https://www.city.kitakata.fukushima.jp/rss/10/list7.xml	PASS	100	OK	100	100	100
+JO43_MUNI_072087_2	jprss	municipal-notice	https://www.city.kitakata.fukushima.jp/rss/10/list6.xml	PASS	96	OK	96	96	96
+JO43_MUNI_072095	jprss	municipal-notice	https://www.city.soma.fukushima.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_072133	jprss	municipal-notice	https://www.city.fukushima-date.lg.jp/rss/10/list3.xml	PASS	71	OK	71	71	71
+JO43_MUNI_072133_2	jprss	municipal-notice	https://www.city.fukushima-date.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_073016	jprss	municipal-notice	https://www.town.koori.fukushima.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_073016_2	jprss	municipal-notice	https://www.town.koori.fukushima.jp/rss/10/list7.xml	PASS	27	OK	27	27	27
+JO43_MUNI_073016_3	jprss	municipal-notice	https://www.town.koori.fukushima.jp/rss/10/list8.xml	PASS	19	OK	19	19	19
+JO43_MUNI_073032	jprss	municipal-notice	https://www.town.kunimi.fukushima.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_073032_2	jprss	municipal-notice	https://www.town.kunimi.fukushima.jp/rss/10/list5.xml	PASS	85	OK	85	85	85
+JO43_MUNI_073083	jprss	municipal-notice	https://www.town.kawamata.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_073083_2	jprss	municipal-notice	https://www.town.kawamata.lg.jp/rss/10/list6.xml	PASS	9	OK	9	9	9
+JO43_MUNI_073229	jprss	municipal-notice	https://www.vill.otama.fukushima.jp/rss/2/rss.xml	PASS	9	OK	9	9	9
+JO43_MUNI_073229_2	jprss	municipal-notice	https://www.vill.otama.fukushima.jp/rss/731/rss.xml	PASS	1	OK	1	1	1
+JO43_MUNI_073229_3	jprss	municipal-notice	https://www.vill.otama.fukushima.jp/rss/3/rss.xml	PASS	5	OK	5	5	5
+JO43_MUNI_073423	jprss	municipal-notice	https://www.town.kagamiishi.fukushima.jp/atom.xml	PASS	15	OK	15	15	15
+JO43_MUNI_073440	jprss	municipal-notice	https://www.vill.tenei.fukushima.jp/rss/10/list5.xml	PASS	28	OK	28	28	28
+JO43_MUNI_073440_2	jprss	municipal-notice	https://www.vill.tenei.fukushima.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_073628	jprss	municipal-notice	https://www.town.shimogo.fukushima.jp/cgi-bin/feed.php?new1=1	PASS	20	OK	20	20	20
+JO43_MUNI_074217	jprss	municipal-notice	https://www.town.aizubange.fukushima.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_074217_2	jprss	municipal-notice	https://www.town.aizubange.fukushima.jp/rss/10/list3.xml	PASS	1	OK	1	1	1
+JO43_MUNI_074225	jprss	municipal-notice	https://www.vill.yugawa.fukushima.jp/rss/10/list1.xml	PASS	42	OK	42	42	42
+JO43_MUNI_074225_2	jprss	municipal-notice	https://www.vill.yugawa.fukushima.jp/rss/10/list7.xml	PASS	37	OK	37	37	37
+JO43_MUNI_074225_3	jprss	municipal-notice	https://www.vill.yugawa.fukushima.jp/rss/10/list8.xml	PASS	9	OK	9	9	9
+JO43_MUNI_074233	jprss	municipal-notice	https://www.town.yanaizu.fukushima.jp/docs/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_074233_2	jprss	municipal-notice	https://www.town.yanaizu.fukushima.jp/docs/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_074446	jprss	municipal-notice	https://www.town.mishima.fukushima.jp/rss/10/list3.xml	PASS	100	OK	100	100	100
+JO43_MUNI_074446_2	jprss	municipal-notice	https://www.town.mishima.fukushima.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_074446_3	jprss	municipal-notice	https://www.town.mishima.fukushima.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_074454	jprss	municipal-notice	https://www.town.kaneyama.fukushima.jp/rss/10/list3.xml	PASS	1	OK	1	1	1
+JO43_MUNI_074616	jprss	municipal-notice	https://www.vill.nishigo.fukushima.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_074659	jprss	municipal-notice	https://www.vill-nakajima.jp/rss.php?mode=emergency	PASS	113	OK	113	113	113
+JO43_MUNI_074659_2	jprss	municipal-notice	https://www.vill-nakajima.jp/rss.php?mode=calendar	PASS	113	OK	113	113	113
+JO43_MUNI_074667	jprss	municipal-notice	https://www.town.yabuki.fukushima.jp/rss.php?mode=news&amp;type=0	PASS	52	OK	52	52	52
+JO43_MUNI_074667_2	jprss	municipal-notice	https://www.town.yabuki.fukushima.jp/rss.php?mode=news&amp;type=3	PASS	52	OK	52	52	52
+JO43_MUNI_074667_3	jprss	municipal-notice	https://www.town.yabuki.fukushima.jp/rss.php?mode=news&amp;type=1	PASS	52	OK	52	52	52
+JO43_MUNI_074829	jprss	municipal-notice	https://www.town.yamatsuri.fukushima.jp/rss.php?mode=news&amp;type=0	PASS	15	OK	15	15	15
+JO43_MUNI_074837	jprss	municipal-notice	https://www.town.hanawa.fukushima.jp/rss.php?mode=news	PASS	121	OK	121	121	121
+JO43_MUNI_075035	jprss	municipal-notice	https://www.vill.hirata.fukushima.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_075035_2	jprss	municipal-notice	https://www.vill.hirata.fukushima.jp/rss/10/list3.xml	PASS	6	OK	6	6	6
+JO43_MUNI_075051	jprss	municipal-notice	https://www.town.furudono.fukushima.jp/rss.xml	PASS	240	OK	240	240	240
+JO43_MUNI_075434	jprss	municipal-notice	https://www.tomioka-town.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_075434_2	jprss	municipal-notice	https://www.tomioka-town.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_075434_3	jprss	municipal-notice	https://www.tomioka-town.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_075451	jprss	municipal-notice	https://www.town.okuma.fukushima.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_075451_2	jprss	municipal-notice	https://www.town.okuma.fukushima.jp/rss/10/list10.xml	PASS	16	OK	16	16	16
+JO43_MUNI_075451_3	jprss	municipal-notice	https://www.town.okuma.fukushima.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_075451_4	jprss	municipal-notice	https://www.town.okuma.fukushima.jp/rss/10/list11.xml	PASS	34	OK	34	34	34
+JO43_MUNI_075477	jprss	municipal-notice	https://www.town.namie.fukushima.jp/rss/10/list3.xml	PASS	4	OK	4	4	4
+JO43_MUNI_075477_2	jprss	municipal-notice	https://www.town.namie.fukushima.jp/rss/10/list1.xml	PASS	62	OK	62	62	62
+JO43_MUNI_075612	jprss	municipal-notice	https://www.shinchi-town.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_075612_2	jprss	municipal-notice	https://www.shinchi-town.jp/rss/10/list3.xml	PASS	21	OK	21	21	21
+JO43_MUNI_075612_3	jprss	municipal-notice	https://www.shinchi-town.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_075647	jprss	municipal-notice	https://www.vill.iitate.fukushima.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_075647_2	jprss	municipal-notice	https://www.vill.iitate.fukushima.jp/rss/10/list7.xml	PASS	56	OK	56	56	56
+JO43_MUNI_075647_3	jprss	municipal-notice	https://www.vill.iitate.fukushima.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_082155	jprss	municipal-notice	https://www.city.kitaibaraki.lg.jp/docs/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_082155_2	jprss	municipal-notice	https://www.city.kitaibaraki.lg.jp/docs/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_082155_3	jprss	municipal-notice	https://www.city.kitaibaraki.lg.jp/category/bunya/shimin/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_082155_4	jprss	municipal-notice	https://www.city.kitaibaraki.lg.jp/category/bunya/shimin/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_082155_5	jprss	municipal-notice	https://www.city.kitaibaraki.lg.jp/category/bunya/jigyo/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_082155_6	jprss	municipal-notice	https://www.city.kitaibaraki.lg.jp/category/bunya/jigyo/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_082155_7	jprss	municipal-notice	https://www.city.kitaibaraki.lg.jp/category/bunya/shisei/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_082155_8	jprss	municipal-notice	https://www.city.kitaibaraki.lg.jp/category/bunya/shisei/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_082163	jprss	municipal-notice	https://www.city.kasama.lg.jp/rss.php?mode=news	PASS	246	OK	246	246	246
+JO43_MUNI_082163_2	jprss	municipal-notice	https://www.city.kasama.lg.jp/rss.php?mode=news&amp;type=0	PASS	246	OK	246	246	246
+JO43_MUNI_082163_3	jprss	municipal-notice	https://www.city.kasama.lg.jp/rss.php?mode=news&amp;type=2	PASS	246	OK	246	246	246
+JO43_MUNI_082163_4	jprss	municipal-notice	https://www.city.kasama.lg.jp/rss.php?mode=news&amp;type=1	PASS	246	OK	246	246	246
+JO43_MUNI_082244	jprss	municipal-notice	https://www.city.moriya.ibaraki.jp/news.rss	PASS	53	OK	53	53	53
+JO43_MUNI_082333	jprss	municipal-notice	https://www.city.namegata.ibaraki.jp/rss.php?mode=news&type=1	PASS	1	OK	1	1	1
+JO43_MUNI_082333_2	jprss	municipal-notice	https://www.city.namegata.ibaraki.jp/rss.php?mode=news&type=2	PASS	9	OK	9	9	9
+JO43_MUNI_082341	jprss	municipal-notice	https://www.city.hokota.lg.jp/rss.php?mode=news&amp;type=0	PASS	53	OK	53	53	53
+JO43_MUNI_082341_2	jprss	municipal-notice	https://www.city.hokota.lg.jp/rss.php?mode=news&amp;type=1	PASS	53	OK	53	53	53
+JO43_MUNI_082341_3	jprss	municipal-notice	https://www.city.hokota.lg.jp/rss.php?mode=news&amp;type=2	PASS	53	OK	53	53	53
+JO43_MUNI_085464	jprss	municipal-notice	https://www.town.ibaraki-sakai.lg.jp/rss.php?mode=news&amp;type=0	PASS	67	OK	67	67	67
+JO43_MUNI_085464_2	jprss	municipal-notice	https://www.town.ibaraki-sakai.lg.jp/rss.php?mode=news&amp;type=1	PASS	67	OK	67	67	67
+JO43_MUNI_092037	jprss	municipal-notice	https://www.city.tochigi.lg.jp/rss/10/list6.xml	PASS	89	OK	89	89	89
+JO43_MUNI_092037_2	jprss	municipal-notice	https://www.city.tochigi.lg.jp/rss/10/list8.xml	PASS	73	OK	73	73	73
+JO43_MUNI_092061	jprss	municipal-notice	https://www.city.nikko.lg.jp/cgi-bin/feed.php?siteNew=1&displayRange=90	PASS	11	OK	11	11	11
+JO43_MUNI_092118	jprss	municipal-notice	https://www.city.yaita.tochigi.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_092118_2	jprss	municipal-notice	https://www.city.yaita.tochigi.jp/rss/10/list7.xml	PASS	100	OK	100	100	100
+JO43_MUNI_093424	jprss	municipal-notice	http://www.shimotsuke.co.jp/rss/town/mashiko.rss	PASS	5	OK	5	5	5
+JO43_MUNI_093432	jprss	municipal-notice	https://www.town.motegi.tochigi.jp/motegi/rss/rss2.xml	PASS	5	OK	5	5	5
+JO43_MUNI_093441	jprss	municipal-notice	https://www.town.ichikai.tochigi.jp/RSSFeed/pickup	PASS	3	OK	3	3	3
+JO43_MUNI_093441_2	jprss	municipal-notice	https://www.town.ichikai.tochigi.jp/RSSFeed/topic	PASS	10	OK	10	10	10
+JO43_MUNI_093441_3	jprss	municipal-notice	https://www.town.ichikai.tochigi.jp/RSSFeed/whatsnew	PASS	10	OK	10	10	10
+JO43_MUNI_093611	jprss	municipal-notice	https://www.town.mibu.tochigi.jp/docs/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_093611_2	jprss	municipal-notice	https://www.town.mibu.tochigi.jp/docs/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_093611_3	jprss	municipal-notice	https://www.town.mibu.tochigi.jp/category/zokusei/news/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_093611_4	jprss	municipal-notice	https://www.town.mibu.tochigi.jp/category/zokusei/news/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_093840	jprss	municipal-notice	https://www.town.shioya.tochigi.jp/RSSFeed/topic	PASS	10	OK	10	10	10
+JO43_MUNI_093840_2	jprss	municipal-notice	https://www.town.shioya.tochigi.jp/RSSFeed/whatsnew	PASS	10	OK	10	10	10
+JO43_MUNI_102041	jprss	municipal-notice	https://www.city.isesaki.lg.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_102059	jprss	municipal-notice	https://www.city.ota.gunma.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_102091	jprss	municipal-notice	https://www.city.fujioka.gunma.jp/cgi-bin/feed.php?displayCount=15&amp;displayRange=90	PASS	15	OK	15	15	15
+JO43_MUNI_102113	jprss	municipal-notice	https://www.city.annaka.lg.jp/rss/10/list3.xml	PASS	2	OK	2	2	2
+JO43_MUNI_102113_2	jprss	municipal-notice	https://www.city.annaka.lg.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_102113_3	jprss	municipal-notice	https://www.city.annaka.lg.jp/rss/10/list7.xml	PASS	33	OK	33	33	33
+JO43_MUNI_103845	jprss	municipal-notice	https://www.town.kanra.lg.jp/topics.rss	PASS	2	OK	2	2	2
+JO43_MUNI_103845_2	jprss	municipal-notice	https://www.town.kanra.lg.jp/new.rss	PASS	15	OK	15	15	15
+JO43_MUNI_104213	jprss	municipal-notice	https://www.town.nakanojo.gunma.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_104213_2	jprss	municipal-notice	https://www.town.nakanojo.gunma.jp/rss/10/list5.xml	PASS	23	OK	23	23	23
+JO43_MUNI_104213_3	jprss	municipal-notice	https://www.town.nakanojo.gunma.jp/rss/10/list7.xml	PASS	35	OK	35	35	35
+JO43_MUNI_104434	jprss	municipal-notice	https://www.vill.katashina.gunma.jp/rss/feed.rss	PASS	15	OK	15	15	15
+JO43_MUNI_112089	jprss	municipal-notice	https://www.city.tokorozawa.saitama.jp/rss_news.xml	PASS	71	OK	71	71	71
+JO43_MUNI_112097	jprss	municipal-notice	https://www.city.hanno.lg.jp/cgi-bin/feed.php?siteNew=1&amp;displayCount=5&amp;displayRange=90&amp;includeShortcut=1	PASS	20	OK	20	20	20
+JO43_MUNI_112127	jprss	municipal-notice	https://www.city.higashimatsuyama.lg.jp/rss/10/list3.xml	PASS	18	OK	18	18	18
+JO43_MUNI_112127_2	jprss	municipal-notice	https://www.city.higashimatsuyama.lg.jp/rss/10/list2.xml	PASS	11	OK	11	11	11
+JO43_MUNI_112127_3	jprss	municipal-notice	https://www.city.higashimatsuyama.lg.jp/rss/10/list5.xml	PASS	49	COLLISION	49	48	48
+JO43_MUNI_112160	jprss	municipal-notice	https://www.city.hanyu.lg.jp/docs/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_112160_2	jprss	municipal-notice	https://www.city.hanyu.lg.jp/docs/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_112160_3	jprss	municipal-notice	https://www.city.hanyu.lg.jp/categories/bunya/jigyosha/nyusatsu/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_112160_4	jprss	municipal-notice	https://www.city.hanyu.lg.jp/categories/bunya/jigyosha/nyusatsu/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_112160_5	jprss	municipal-notice	https://www.city.hanyu.lg.jp/categories/kubun/boshu/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_112160_6	jprss	municipal-notice	https://www.city.hanyu.lg.jp/categories/kubun/boshu/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_112160_7	jprss	municipal-notice	https://www.city.hanyu.lg.jp/categories/kubun/sonota/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_112160_8	jprss	municipal-notice	https://www.city.hanyu.lg.jp/categories/kubun/sonota/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_112178	jprss	municipal-notice	http://www.city.kounosu.saitama.jp/rss/10/list6.xml	PASS	1	OK	1	1	1
+JO43_MUNI_112178_3	jprss	municipal-notice	http://www.city.kounosu.saitama.jp/rss/10/list5.xml	PASS	46	OK	46	46	46
+JO43_MUNI_112194	jprss	municipal-notice	https://www.city.ageo.lg.jp/rss/10/list3.xml	PASS	4	OK	4	4	4
+JO43_MUNI_112194_2	jprss	municipal-notice	https://www.city.ageo.lg.jp/rss/10/list5.xml	PASS	3	OK	3	3	3
+JO43_MUNI_112194_3	jprss	municipal-notice	https://www.city.ageo.lg.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_112216	jprss	municipal-notice	https://www.city.soka.saitama.jp/li/news/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_112216_2	jprss	municipal-notice	https://www.city.soka.saitama.jp/li/event/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_112216_3	jprss	municipal-notice	https://www.city.soka.saitama.jp/li/boshu/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_112275	jprss	municipal-notice	https://www.city.asaka.lg.jp/rss/10/list10.xml	PASS	20	OK	20	20	20
+JO43_MUNI_112275_2	jprss	municipal-notice	https://www.city.asaka.lg.jp/rss/10/list14.xml	PASS	13	OK	13	13	13
+JO43_MUNI_112283	jprss	municipal-notice	https://www.city.shiki.lg.jp/rss/10/list3.xml	PASS	100	OK	100	100	100
+JO43_MUNI_112283_2	jprss	municipal-notice	https://www.city.shiki.lg.jp/rss/10/list8.xml	PASS	100	OK	100	100	100
+JO43_MUNI_112283_3	jprss	municipal-notice	https://www.city.shiki.lg.jp/rss/10/list6.xml	PASS	47	OK	47	47	47
+JO43_MUNI_112283_4	jprss	municipal-notice	https://www.city.shiki.lg.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_112283_5	jprss	municipal-notice	https://www.city.shiki.lg.jp/rss/10/list7.xml	PASS	88	OK	88	88	88
+JO43_MUNI_112283_6	jprss	municipal-notice	https://www.city.shiki.lg.jp/rss/10/list10.xml	PASS	83	OK	83	83	83
+JO43_MUNI_112305	jprss	municipal-notice	https://www.city.niiza.lg.jp/rss/10/list3.xml	PASS	1	OK	1	1	1
+JO43_MUNI_112313	jprss	municipal-notice	https://www.city.okegawa.lg.jp/cgi-bin/feed.php?type=rss_2.0&amp;dirId=1027&amp;includeShortcut=1&amp;ignore=1	PASS	20	OK	20	20	20
+JO43_MUNI_112313_2	jprss	municipal-notice	https://www.city.okegawa.lg.jp/cgi-bin/feed.php?type=rss_2.0&amp;new1=1	PASS	20	OK	20	20	20
+JO43_MUNI_112429	jprss	municipal-notice	https://www.city.hidaka.lg.jp/cgi-bin/feed.php?type=rss_2.0&amp;new1=1	PASS	20	OK	20	20	20
+JO43_MUNI_112429_2	jprss	municipal-notice	https://www.city.hidaka.lg.jp/cgi-bin/feed.php?type=rss_2.0&amp;dirId=1025&amp;includeShortcut=1&amp;ignore=1	PASS	20	OK	20	20	20
+JO43_MUNI_112429_3	jprss	municipal-notice	https://www.city.hidaka.lg.jp/cgi-bin/feed.php?type=rss_2.0&amp;dirId=710&amp;includeShortcut=1&amp;ignore=1	PASS	20	OK	20	20	20
+JO43_MUNI_112429_4	jprss	municipal-notice	https://www.city.hidaka.lg.jp/cgi-bin/feed.php?type=rss_2.0&amp;dirId=711&amp;includeShortcut=1&amp;ignore=1	PASS	20	OK	20	20	20
+JO43_MUNI_113492	jprss	municipal-notice	https://www.town.tokigawa.lg.jp/RSSFeed/menu/8	PASS	10	OK	10	10	10
+JO43_MUNI_113492_2	jprss	municipal-notice	https://www.town.tokigawa.lg.jp/RSSFeed/menu/2	PASS	10	OK	10	10	10
+JO43_MUNI_113492_3	jprss	municipal-notice	https://www.town.tokigawa.lg.jp/RSSFeed/menu/13	PASS	10	OK	10	10	10
+JO43_MUNI_113492_4	jprss	municipal-notice	https://www.town.tokigawa.lg.jp/RSSFeed/topic	PASS	10	OK	10	10	10
+JO43_MUNI_113492_5	jprss	municipal-notice	https://www.town.tokigawa.lg.jp/RSSFeed/menu/11	PASS	9	OK	9	9	9
+JO43_MUNI_113492_6	jprss	municipal-notice	https://www.town.tokigawa.lg.jp/RSSFeed/menu/4	PASS	8	OK	8	8	8
+JO43_MUNI_113492_7	jprss	municipal-notice	https://www.town.tokigawa.lg.jp/RSSFeed/menu/7	PASS	8	OK	8	8	8
+JO43_MUNI_113492_8	jprss	municipal-notice	https://www.town.tokigawa.lg.jp/RSSFeed/menu/6	PASS	10	OK	10	10	10
+JO43_MUNI_113492_9	jprss	municipal-notice	https://www.town.tokigawa.lg.jp/RSSFeed/menu/3	PASS	6	OK	6	6	6
+JO43_MUNI_113492_10	jprss	municipal-notice	https://www.town.tokigawa.lg.jp/RSSFeed/menu/12	PASS	10	OK	10	10	10
+JO43_MUNI_113492_11	jprss	municipal-notice	https://www.town.tokigawa.lg.jp/RSSFeed/menu/9	PASS	10	OK	10	10	10
+JO43_MUNI_113492_12	jprss	municipal-notice	https://www.town.tokigawa.lg.jp/RSSFeed/pickup	PASS	5	OK	5	5	5
+JO43_MUNI_113697	jprss	municipal-notice	https://www.vill.higashichichibu.saitama.jp/rss/10/list6.xml	PASS	22	OK	22	22	22
+JO43_MUNI_113697_2	jprss	municipal-notice	https://www.vill.higashichichibu.saitama.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_113697_3	jprss	municipal-notice	https://www.vill.higashichichibu.saitama.jp/rss/10/list5.xml	PASS	12	OK	12	12	12
+JO43_MUNI_113697_4	jprss	municipal-notice	https://www.vill.higashichichibu.saitama.jp/rss/10/list7.xml	PASS	19	OK	19	19	19
+JO43_MUNI_114081	jprss	municipal-notice	https://www.town.yorii.saitama.jp/rss/10/list3.xml	PASS	28	OK	28	28	28
+JO43_MUNI_114081_2	jprss	municipal-notice	https://www.town.yorii.saitama.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_114642	jprss	municipal-notice	https://www.town.sugito.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_122025	jprss	municipal-notice	https://www.city.choshi.chiba.jp/news.rss	PASS	302	OK	302	302	302
+JO43_MUNI_122025_2	jprss	municipal-notice	https://www.city.choshi.chiba.jp/event.rss	PASS	79	OK	79	79	79
+JO43_MUNI_122025_3	jprss	municipal-notice	https://www.city.choshi.chiba.jp/boshu.rss	PASS	50	OK	50	50	50
+JO43_MUNI_122025_4	jprss	municipal-notice	https://www.city.choshi.chiba.jp/jigyosha.rss	PASS	35	OK	35	35	35
+JO43_MUNI_122025_5	jprss	municipal-notice	https://www.city.choshi.chiba.jp/hojo_josei.rss	PASS	25	OK	25	25	25
+JO43_MUNI_122033	jprss	municipal-notice	https://www.city.ichikawa.lg.jp/rss/10/list3.xml	PASS	4	OK	4	4	4
+JO43_MUNI_122033_2	jprss	municipal-notice	https://www.city.ichikawa.lg.jp/rss/10/list6.xml	PASS	35	OK	35	35	35
+JO43_MUNI_122041	jprss	municipal-notice	https://www.city.funabashi.lg.jp/information.xml	PASS	20	OK	20	20	20
+JO43_MUNI_122041_2	jprss	municipal-notice	https://www.city.funabashi.lg.jp/recruitment.xml	PASS	20	OK	20	20	20
+JO43_MUNI_122157	jprss	municipal-notice	https://www.city.asahi.lg.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_122157_2	jprss	municipal-notice	https://www.city.asahi.lg.jp/rss/10/list7.xml	PASS	71	OK	71	71	71
+JO43_MUNI_122181	jprss	municipal-notice	https://www.city.katsuura.lg.jp/rss/10/list3.xml	PASS	4	OK	4	4	4
+JO43_MUNI_122181_2	jprss	municipal-notice	https://www.city.katsuura.lg.jp/rss/10/list7.xml	PASS	36	OK	36	36	36
+JO43_MUNI_122181_3	jprss	municipal-notice	https://www.city.katsuura.lg.jp/rss/10/list8.xml	PASS	26	OK	26	26	26
+JO43_MUNI_122238	jprss	municipal-notice	https://www.city.kamogawa.lg.jp/rss/10/list3.xml	PASS	25	OK	25	25	25
+JO43_MUNI_122238_2	jprss	municipal-notice	https://www.city.kamogawa.lg.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_122238_3	jprss	municipal-notice	https://www.city.kamogawa.lg.jp/rss/10/list5.xml	PASS	56	OK	56	56	56
+JO43_MUNI_122238_4	jprss	municipal-notice	https://www.city.kamogawa.lg.jp/rss/10/list7.xml	PASS	36	OK	36	36	36
+JO43_MUNI_122238_5	jprss	municipal-notice	https://www.city.kamogawa.lg.jp/rss/10/list8.xml	PASS	100	OK	100	100	100
+JO43_MUNI_122238_6	jprss	municipal-notice	https://www.city.kamogawa.lg.jp/rss/10/list11.xml	PASS	100	OK	100	100	100
+JO43_MUNI_122238_7	jprss	municipal-notice	https://www.city.kamogawa.lg.jp/rss/10/list13.xml	PASS	54	OK	54	54	54
+JO43_MUNI_122254	jprss	municipal-notice	https://www.city.kimitsu.lg.jp/rss/10/list3.xml	PASS	8	OK	8	8	8
+JO43_MUNI_122254_2	jprss	municipal-notice	https://www.city.kimitsu.lg.jp/rss/10/list2.xml	PASS	100	OK	100	100	100
+JO43_MUNI_122254_3	jprss	municipal-notice	https://www.city.kimitsu.lg.jp/rss/10/list5.xml	PASS	47	OK	47	47	47
+JO43_MUNI_122254_4	jprss	municipal-notice	https://www.city.kimitsu.lg.jp/rss/10/list7.xml	PASS	56	OK	56	56	56
+JO43_MUNI_122289	jprss	municipal-notice	https://www.city.yotsukaido.chiba.jp/rss_news.xml	PASS	577	OK	577	577	577
+JO43_MUNI_122297	jprss	municipal-notice	https://www.city.sodegaura.lg.jp/rss/10/list3.xml	PASS	3	OK	3	3	3
+JO43_MUNI_122297_2	jprss	municipal-notice	https://www.city.sodegaura.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_122301	jprss	municipal-notice	https://www.city.yachimata.lg.jp/rss/10/list6.xml	PASS	31	OK	31	31	31
+JO43_MUNI_122301_2	jprss	municipal-notice	https://www.city.yachimata.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_122301_3	jprss	municipal-notice	https://www.city.yachimata.lg.jp/rss/10/list5.xml	PASS	70	OK	70	70	70
+JO43_MUNI_122301_4	jprss	municipal-notice	https://www.city.yachimata.lg.jp/rss/10/list7.xml	PASS	81	OK	81	81	81
+JO43_MUNI_122301_5	jprss	municipal-notice	https://www.city.yachimata.lg.jp/rss/10/list8.xml	PASS	100	OK	100	100	100
+JO43_MUNI_122327	jprss	municipal-notice	https://www.city.shiroi.chiba.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_122351	jprss	municipal-notice	https://www.city.sosa.lg.jp/rss.php?mode=news&amp;type=0	PASS	167	OK	167	167	167
+JO43_MUNI_122351_2	jprss	municipal-notice	https://www.city.sosa.lg.jp/rss.php?mode=news	PASS	167	OK	167	167	167
+JO43_MUNI_122351_3	jprss	municipal-notice	https://www.city.sosa.lg.jp/rss.php?mode=news&amp;type=1	PASS	167	OK	167	167	167
+JO43_MUNI_122351_4	jprss	municipal-notice	https://www.city.sosa.lg.jp/rss.php?mode=news&amp;type=2	PASS	167	OK	167	167	167
+JO43_MUNI_123226	jprss	municipal-notice	https://www.town.shisui.chiba.jp/shinchaku/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_123226_2	jprss	municipal-notice	https://www.town.shisui.chiba.jp/shinchaku/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_123421	jprss	municipal-notice	https://www.town.kozaki.chiba.jp/rss/feed.rss	PASS	10	OK	10	10	10
+JO43_MUNI_123471	jprss	municipal-notice	https://www.town.tako.chiba.jp/category/kubun/news/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_123471_2	jprss	municipal-notice	https://www.town.tako.chiba.jp/category/kubun/news/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_123471_3	jprss	municipal-notice	https://www.town.tako.chiba.jp/category/kubun/event/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_123471_4	jprss	municipal-notice	https://www.town.tako.chiba.jp/category/kubun/event/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_123471_5	jprss	municipal-notice	https://www.town.tako.chiba.jp/category/kubun/tender/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_123471_6	jprss	municipal-notice	https://www.town.tako.chiba.jp/category/kubun/tender/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_124214	jprss	municipal-notice	https://www.town.ichinomiya.chiba.jp/rss.xml	PASS	1	OK	1	1	1
+JO43_MUNI_124265	jprss	municipal-notice	https://www.town.nagara.chiba.jp/rss/10/list3.xml	PASS	20	OK	20	20	20
+JO43_MUNI_124265_2	jprss	municipal-notice	https://www.town.nagara.chiba.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_124419	jprss	municipal-notice	https://www.town.otaki.chiba.jp/cgi-bin/feed.php?siteNew=1&amp;displayRange=90	PASS	20	OK	20	20	20
+JO43_MUNI_132012	jprss	municipal-notice	https://www.city.hachioji.tokyo.jp/topeventrss.xml	PASS	100	OK	100	100	100
+JO43_MUNI_132012_2	jprss	municipal-notice	https://www.city.hachioji.tokyo.jp/toprecruitrss.xml	PASS	10	OK	10	10	10
+JO43_MUNI_132055	jprss	municipal-notice	https://www.city.ome.tokyo.jp/rss/10/list6.xml	PASS	3	OK	3	3	3
+JO43_MUNI_132152	jprss	municipal-notice	https://www.city.kunitachi.tokyo.jp/cgi-bin/feed.php?siteNew=1&amp;displayCount=10&amp;displayRange=90&amp;includeShortcut=1	PASS	20	OK	20	20	20
+JO43_MUNI_142085	jprss	municipal-notice	https://www.city.zushi.kanagawa.jp/news.rss	PASS	38	OK	38	38	38
+JO43_MUNI_143618	jprss	municipal-notice	https://www.town.nakai.kanagawa.jp/cgi-bin/feed.php?siteNew=1&includeIndex=0&includeShortcut=0	PASS	20	OK	20	20	20
+JO43_MUNI_143626_2	jprss	municipal-notice	https://www.town.oi.kanagawa.jp/rss/10/list5.xml	PASS	25	OK	25	25	25
+JO43_MUNI_143626_3	jprss	municipal-notice	https://www.town.oi.kanagawa.jp/rss/10/list7.xml	PASS	40	OK	40	40	40
+JO43_MUNI_143634	jprss	municipal-notice	https://town.matsuda.kanagawa.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_143634_2	jprss	municipal-notice	https://town.matsuda.kanagawa.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_143634_3	jprss	municipal-notice	https://town.matsuda.kanagawa.jp/rss/10/list10.xml	PASS	100	OK	100	100	100
+JO43_MUNI_143669	jprss	municipal-notice	https://www.town.kaisei.kanagawa.jp/RSSFeed/topic	PASS	10	OK	10	10	10
+JO43_MUNI_143669_2	jprss	municipal-notice	https://www.town.kaisei.kanagawa.jp/RSSFeed/whatsnew	PASS	10	OK	10	10	10
+JO43_MUNI_143847	jprss	municipal-notice	https://www.town.yugawara.kanagawa.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_143847_2	jprss	municipal-notice	https://www.town.yugawara.kanagawa.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_143847_3	jprss	municipal-notice	https://www.town.yugawara.kanagawa.jp/rss/10/list7.xml	PASS	62	OK	62	62	62
+JO43_MUNI_143847_4	jprss	municipal-notice	https://www.town.yugawara.kanagawa.jp/rss/10/list6.xml	PASS	19	OK	19	19	19
+JO43_MUNI_144011	jprss	municipal-notice	https://www.town.aikawa.kanagawa.jp/cgi-bin/feed.php?siteNew=1&amp;displayCount=10&amp;displayRange=90&amp;includeShortcut=1	PASS	20	OK	20	20	20
+JO43_MUNI_152056	jprss	municipal-notice	https://www.city.kashiwazaki.lg.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_152081	jprss	municipal-notice	https://www.city.ojiya.niigata.jp/rss/10/list5.xml	PASS	57	OK	57	57	57
+JO43_MUNI_152081_2	jprss	municipal-notice	https://www.city.ojiya.niigata.jp/rss/10/list6.xml	PASS	12	OK	12	12	12
+JO43_MUNI_152099	jprss	municipal-notice	https://www.city.kamo.niigata.jp/whats_new/rss.xml	PASS	100	OK	100	100	100
+JO43_MUNI_152099_2	jprss	municipal-notice	https://www.city.kamo.niigata.jp/kosodate-info/rss.xml	PASS	50	OK	50	50	50
+JO43_MUNI_152099_3	jprss	municipal-notice	https://www.city.kamo.niigata.jp/shisei/jinji/saiyou/rss.xml	PASS	7	OK	7	7	7
+JO43_MUNI_152111	jprss	municipal-notice	https://www.city.mitsuke.niigata.jp/rss/10/list3.xml	PASS	2	OK	2	2	2
+JO43_MUNI_152111_2	jprss	municipal-notice	https://www.city.mitsuke.niigata.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_152111_3	jprss	municipal-notice	https://www.city.mitsuke.niigata.jp/rss/10/list7.xml	PASS	99	OK	99	99	99
+JO43_MUNI_152111_4	jprss	municipal-notice	https://www.city.mitsuke.niigata.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_152129	jprss	municipal-notice	https://www.city.murakami.lg.jp/rss/10/list3.xml	PASS	2	OK	2	2	2
+JO43_MUNI_152129_2	jprss	municipal-notice	https://www.city.murakami.lg.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_152161	jprss	municipal-notice	https://www.city.itoigawa.lg.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_152161_2	jprss	municipal-notice	https://www.city.itoigawa.lg.jp/rss/10/list7.xml	PASS	40	OK	40	40	40
+JO43_MUNI_152161_3	jprss	municipal-notice	https://www.city.itoigawa.lg.jp/rss/10/list6.xml	PASS	86	OK	86	86	86
+JO43_MUNI_152226	jprss	municipal-notice	https://www.city.joetsu.niigata.jp/rss/10/list3.xml	PASS	3	OK	3	3	3
+JO43_MUNI_152226_2	jprss	municipal-notice	https://www.city.joetsu.niigata.jp/rss/10/list14.xml	PASS	12	OK	12	12	12
+JO43_MUNI_152226_3	jprss	municipal-notice	https://www.city.joetsu.niigata.jp/rss/10/list13.xml	PASS	2	OK	2	2	2
+JO43_MUNI_152226_4	jprss	municipal-notice	https://www.city.joetsu.niigata.jp/rss/10/list6.xml	PASS	1	OK	1	1	1
+JO43_MUNI_152234	jprss	municipal-notice	https://www.city.agano.niigata.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_152269	jprss	municipal-notice	https://www.city.minamiuonuma.niigata.jp/news/news/rss.xml	PASS	100	OK	100	100	100
+JO43_MUNI_152269_2	jprss	municipal-notice	https://www.city.minamiuonuma.niigata.jp/news/press/rss.xml	PASS	39	OK	39	39	39
+JO43_MUNI_152269_3	jprss	municipal-notice	https://www.city.minamiuonuma.niigata.jp/news/event/rss.xml	PASS	53	OK	53	53	53
+JO43_MUNI_153851	jprss	municipal-notice	https://www.town.aga.niigata.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_154610	jprss	municipal-notice	https://www.town.yuzawa.lg.jp/cgi-bin/feed.php?siteNew=1&amp;displayCount=10&amp;displayRange=90	PASS	20	OK	20	20	20
+JO43_MUNI_162060	jprss	municipal-notice	https://www.city.namerikawa.toyama.jp/cgi-bin/feed.php?siteNew=1&amp;displayRange=90	PASS	20	OK	20	20	20
+JO43_MUNI_163228	jprss	municipal-notice	https://www.town.kamiichi.toyama.jp/rss/10/list3.xml	PASS	6	OK	6	6	6
+JO43_MUNI_163228_2	jprss	municipal-notice	https://www.town.kamiichi.toyama.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_163228_3	jprss	municipal-notice	https://www.town.kamiichi.toyama.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_172031	jprss	municipal-notice	https://www.city.komatsu.lg.jp/cgi-bin/feed.php?siteNew=1&amp;displayRange=90	PASS	20	OK	20	20	20
+JO43_MUNI_172049	jprss	municipal-notice	https://www.city.wajima.ishikawa.jp/article/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_172057	jprss	municipal-notice	https://www.city.suzu.lg.jp/rss/10/list7.xml	PASS	1	OK	1	1	1
+JO43_MUNI_172057_2	jprss	municipal-notice	https://www.city.suzu.lg.jp/rss/10/list5.xml	PASS	88	OK	88	88	88
+JO43_MUNI_172057_3	jprss	municipal-notice	https://www.city.suzu.lg.jp/rss/10/list6.xml	PASS	16	OK	16	16	16
+JO43_MUNI_172090	jprss	municipal-notice	https://www.city.kahoku.lg.jp/news.xml	PASS	50	OK	50	50	50
+JO43_MUNI_172090_2	jprss	municipal-notice	https://www.city.kahoku.lg.jp/event.xml	PASS	17	OK	17	17	17
+JO43_MUNI_172111	jprss	municipal-notice	https://www.city.nomi.lg.jp/saigai/saigai/rss.xml	PASS	8	OK	8	8	8
+JO43_MUNI_172111_2	jprss	municipal-notice	https://www.city.nomi.lg.jp/news/rss.xml	PASS	100	OK	100	100	100
+JO43_MUNI_172111_3	jprss	municipal-notice	https://www.city.nomi.lg.jp/topics/rss.xml	PASS	5	OK	5	5	5
+JO43_MUNI_172120	jprss	municipal-notice	https://www.city.nonoichi.lg.jp/rss/10/list6.xml	PASS	7	OK	7	7	7
+JO43_MUNI_172120_2	jprss	municipal-notice	https://www.city.nonoichi.lg.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_173614	jprss	municipal-notice	https://www.town.tsubata.lg.jp/rss/10/list3.xml	PASS	2	OK	2	2	2
+JO43_MUNI_173614_2	jprss	municipal-notice	https://www.town.tsubata.lg.jp/rss/10/list6.xml	PASS	6	OK	6	6	6
+JO43_MUNI_173614_3	jprss	municipal-notice	https://www.town.tsubata.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_173614_4	jprss	municipal-notice	https://www.town.tsubata.lg.jp/rss/10/list5.xml	PASS	72	OK	72	72	72
+JO43_MUNI_173843	jprss	municipal-notice	https://www.town.shika.lg.jp/rss/10/list3.xml	PASS	1	OK	1	1	1
+JO43_MUNI_173843_2	jprss	municipal-notice	https://www.town.shika.lg.jp/rss/10/list1.xml	PASS	49	OK	49	49	49
+JO43_MUNI_173843_3	jprss	municipal-notice	https://www.town.shika.lg.jp/rss/10/list5.xml	PASS	9	OK	9	9	9
+JO43_MUNI_173843_4	jprss	municipal-notice	https://www.town.shika.lg.jp/rss/10/list6.xml	PASS	6	OK	6	6	6
+JO43_MUNI_174076	jprss	municipal-notice	https://www.town.nakanoto.ishikawa.jp/cgi-bin/feed.php?type=rss_2.0&dirId=801&includeShortcut=1&ignore=1	PASS	20	OK	20	20	20
+JO43_MUNI_174076_2	jprss	municipal-notice	https://www.town.nakanoto.ishikawa.jp/cgi-bin/feed.php?new1=1	PASS	20	OK	20	20	20
+JO43_MUNI_174076_3	jprss	municipal-notice	https://www.town.nakanoto.ishikawa.jp/cgi-bin/feed.php?type=rss_2.0&amp;dirId=803&amp;includeShortcut=1&amp;ignore=1	PASS	20	OK	20	20	20
+JO43_MUNI_174611	jprss	municipal-notice	https://www.town.anamizu.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_174611_2	jprss	municipal-notice	https://www.town.anamizu.lg.jp/rss/10/list6.xml	PASS	18	OK	18	18	18
+JO43_MUNI_174637	jprss	municipal-notice	https://www.town.noto.lg.jp/cgi-bin/feed.php?siteNew=1&amp;displayCount=15	PASS	10	OK	10	10	10
+JO43_MUNI_182028	jprss	municipal-notice	https://www.city.tsuruga.lg.jp/rss/10/list3.xml	PASS	1	OK	1	1	1
+JO43_MUNI_182028_2	jprss	municipal-notice	https://www.city.tsuruga.lg.jp/rss/10/list5.xml	PASS	41	OK	41	41	41
+JO43_MUNI_182061	jprss	municipal-notice	https://www.city.katsuyama.fukui.jp/rss/10/list6.xml	PASS	7	OK	7	7	7
+JO43_MUNI_182061_2	jprss	municipal-notice	https://www.city.katsuyama.fukui.jp/rss/10/list8.xml	PASS	47	OK	47	47	47
+JO43_MUNI_182061_3	jprss	municipal-notice	https://www.city.katsuyama.fukui.jp/rss/10/list5.xml	PASS	87	OK	87	87	87
+JO43_MUNI_182061_4	jprss	municipal-notice	https://www.city.katsuyama.fukui.jp/rss/10/list7.xml	PASS	100	OK	100	100	100
+JO43_MUNI_182087	jprss	municipal-notice	https://www.city.awara.lg.jp/topics.xml	PASS	15	OK	15	15	15
+JO43_MUNI_182087_2	jprss	municipal-notice	https://www.city.awara.lg.jp/news.xml	PASS	20	OK	20	20	20
+JO43_MUNI_182087_3	jprss	municipal-notice	https://www.city.awara.lg.jp/event-into/news.xml	PASS	20	OK	20	20	20
+JO43_MUNI_182087_4	jprss	municipal-notice	https://www.city.awara.lg.jp/bosyuu/news.xml	PASS	20	OK	20	20	20
+JO43_MUNI_182087_5	jprss	municipal-notice	https://www.city.awara.lg.jp/mokuteki/industry/industry01/news.xml	PASS	15	OK	15	15	15
+JO43_MUNI_182095	jprss	municipal-notice	https://www.city.echizen.lg.jp/topics.xml	PASS	2	OK	2	2	2
+JO43_MUNI_182095_2	jprss	municipal-notice	https://www.city.echizen.lg.jp/news.xml	PASS	25	OK	25	25	25
+JO43_MUNI_183229	jprss	municipal-notice	https://www.town.eiheiji.lg.jp/news.xml	PASS	10	OK	10	10	10
+JO43_MUNI_184233	jprss	municipal-notice	https://www.town.echizen.fukui.jp/news.xml	PASS	10	OK	10	10	10
+JO43_MUNI_184420	jprss	municipal-notice	http://www.town.fukui-mihama.lg.jp/rss/10/list3.xml	PASS	2	OK	2	2	2
+JO43_MUNI_184420_2	jprss	municipal-notice	http://www.town.fukui-mihama.lg.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_184420_3	jprss	municipal-notice	http://www.town.fukui-mihama.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_184420_4	jprss	municipal-notice	http://www.town.fukui-mihama.lg.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_184420_5	jprss	municipal-notice	http://www.town.fukui-mihama.lg.jp/rss/10/list7.xml	PASS	100	OK	100	100	100
+JO43_MUNI_184420_6	jprss	municipal-notice	http://www.town.fukui-mihama.lg.jp/rss/10/list8.xml	PASS	100	OK	100	100	100
+JO43_MUNI_184811	jprss	municipal-notice	http://www.town.takahama.fukui.jp/news.xml	PASS	10	OK	10	10	10
+JO43_MUNI_184837	jprss	municipal-notice	http://www.town.ohi.fukui.jp/news.xml	PASS	20	OK	20	20	20
+JO43_MUNI_192040	jprss	municipal-notice	https://www.city.tsuru.yamanashi.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_192104	jprss	municipal-notice	https://www.city.kai.yamanashi.jp/rss/10/list5.xml	PASS	40	OK	40	40	40
+JO43_MUNI_192104_2	jprss	municipal-notice	https://www.city.kai.yamanashi.jp/rss/10/list7.xml	PASS	16	OK	16	16	16
+JO43_MUNI_192121	jprss	municipal-notice	https://www.city.uenohara.yamanashi.jp/rss/10/list7.xml	PASS	100	OK	100	100	100
+JO43_MUNI_192121_2	jprss	municipal-notice	https://www.city.uenohara.yamanashi.jp/rss/10/list8.xml	PASS	71	OK	71	71	71
+JO43_MUNI_192121_3	jprss	municipal-notice	https://www.city.uenohara.yamanashi.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_193844	jprss	municipal-notice	https://www.town.showa.yamanashi.jp/rss/10/list3.xml	PASS	13	OK	13	13	13
+JO43_MUNI_193844_2	jprss	municipal-notice	https://www.town.showa.yamanashi.jp/rss/10/list6.xml	PASS	30	OK	30	30	30
+JO43_MUNI_193844_3	jprss	municipal-notice	https://www.town.showa.yamanashi.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_193844_4	jprss	municipal-notice	https://www.town.showa.yamanashi.jp/rss/10/list5.xml	PASS	6	OK	6	6	6
+JO43_MUNI_193844_5	jprss	municipal-notice	https://www.town.showa.yamanashi.jp/rss/10/list8.xml	PASS	10	OK	10	10	10
+JO43_MUNI_193844_6	jprss	municipal-notice	https://www.town.showa.yamanashi.jp/rss/10/list7.xml	PASS	5	OK	5	5	5
+JO43_MUNI_194255	jprss	municipal-notice	https://www.vill.yamanakako.lg.jp/RSSFeed/whatsnew	PASS	10	OK	10	10	10
+JO43_MUNI_194255_2	jprss	municipal-notice	https://www.vill.yamanakako.lg.jp/RSSFeed/topic	PASS	2	OK	2	2	2
+JO43_MUNI_202011	jprss	municipal-notice	https://www.city.nagano.nagano.jp/kinkyu/kinkyu.xml	PASS	1	OK	1	1	1
+JO43_MUNI_202037	jprss	municipal-notice	https://www.city.ueda.nagano.jp/rss/10/list8.xml	PASS	100	OK	100	100	100
+JO43_MUNI_202037_2	jprss	municipal-notice	https://www.city.ueda.nagano.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_202037_3	jprss	municipal-notice	https://www.city.ueda.nagano.jp/rss/10/list10.xml	PASS	100	OK	100	100	100
+JO43_MUNI_202053	jprss	municipal-notice	https://www.city.iida.lg.jp/rss/10/list6.xml	PASS	9	OK	9	9	9
+JO43_MUNI_202061	jprss	municipal-notice	https://www.city.suwa.lg.jp/rss/10/list8.xml	PASS	3	OK	3	3	3
+JO43_MUNI_202061_2	jprss	municipal-notice	https://www.city.suwa.lg.jp/rss/10/list3.xml	PASS	7	OK	7	7	7
+JO43_MUNI_202061_3	jprss	municipal-notice	https://www.city.suwa.lg.jp/rss/10/list6.xml	PASS	2	OK	2	2	2
+JO43_MUNI_202061_4	jprss	municipal-notice	https://www.city.suwa.lg.jp/rss/10/list5.xml	PASS	64	OK	64	64	64
+JO43_MUNI_202061_5	jprss	municipal-notice	https://www.city.suwa.lg.jp/rss/10/list7.xml	PASS	13	OK	13	13	13
+JO43_MUNI_202070	jprss	municipal-notice	https://www.city.suzaka.nagano.jp/cgi-bin/feed.php?siteNew=1&amp;displayRange=90	PASS	20	OK	20	20	20
+JO43_MUNI_202118	jprss	municipal-notice	https://www.city.nakano.nagano.jp/docs/index.rss	PASS	4	OK	4	4	4
+JO43_MUNI_202118_2	jprss	municipal-notice	https://www.city.nakano.nagano.jp/docs/index.atom	PASS	4	OK	4	4	4
+JO43_MUNI_202118_3	jprss	municipal-notice	https://www.city.nakano.nagano.jp/categories/kubun/messages/index.rss	PASS	3	OK	3	3	3
+JO43_MUNI_202118_4	jprss	municipal-notice	https://www.city.nakano.nagano.jp/categories/kubun/messages/index.atom	PASS	3	OK	3	3	3
+JO43_MUNI_202118_5	jprss	municipal-notice	https://www.city.nakano.nagano.jp/categories/kubun/boshuu/index.rss	PASS	1	OK	1	1	1
+JO43_MUNI_202118_6	jprss	municipal-notice	https://www.city.nakano.nagano.jp/categories/kubun/boshuu/index.atom	PASS	1	OK	1	1	1
+JO43_MUNI_202134	jprss	municipal-notice	https://www.city.iiyama.nagano.jp/rss2	PASS	15	OK	15	15	15
+JO43_MUNI_202151	jprss	municipal-notice	https://www.city.shiojiri.lg.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_202151_2	jprss	municipal-notice	https://www.city.shiojiri.lg.jp/rss/10/list7.xml	PASS	100	OK	100	100	100
+JO43_MUNI_202151_3	jprss	municipal-notice	https://www.city.shiojiri.lg.jp/rss/10/list8.xml	PASS	100	OK	100	100	100
+JO43_MUNI_202185	jprss	municipal-notice	https://www.city.chikuma.lg.jp/cgi-bin/feed.php?displayCount=15&amp;displayRange=90	PASS	15	OK	15	15	15
+JO43_MUNI_202185_2	jprss	municipal-notice	https://chikuma-kanko.com/feed/	PASS	10	OK	10	10	10
+JO43_MUNI_202207	jprss	municipal-notice	https://www.city.azumino.nagano.jp/rss/10/list3.xml	PASS	2	OK	2	2	2
+JO43_MUNI_203076	jprss	municipal-notice	http://www.vill.kitaaiki.nagano.jp/oshirase/rss.xml	PASS	100	OK	100	100	100
+JO43_MUNI_203076_2	jprss	municipal-notice	http://www.vill.kitaaiki.nagano.jp/kurashi/bosai/rss.xml	PASS	2	OK	2	2	2
+JO43_MUNI_203211	jprss	municipal-notice	https://www.town.karuizawa.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_203211_2	jprss	municipal-notice	https://www.town.karuizawa.lg.jp/rss/10/list6.xml	PASS	4	OK	4	4	4
+JO43_MUNI_203505	jprss	municipal-notice	https://www.town.nagawa.nagano.jp/cgi-bin/feed.php?siteNew=1&amp;displayRange=90	PASS	20	OK	20	20	20
+JO43_MUNI_203611	jprss	municipal-notice	https://www.town.shimosuwa.lg.jp/www/rss/news.rdf	PASS	41	OK	41	41	41
+JO43_MUNI_203611_2	jprss	municipal-notice	https://www.town.shimosuwa.lg.jp/www/rss/bosyu.rdf	PASS	35	OK	35	35	35
+JO43_MUNI_203611_3	jprss	municipal-notice	https://www.town.shimosuwa.lg.jp/www/rss/topics.rdf	PASS	2	OK	2	2	2
+JO43_MUNI_203629	jprss	municipal-notice	https://www.town.fujimi.lg.jp/rss/10/list3.xml	PASS	10	OK	10	10	10
+JO43_MUNI_203629_2	jprss	municipal-notice	https://www.town.fujimi.lg.jp/rss/10/list2.xml	PASS	100	OK	100	100	100
+JO43_MUNI_203629_3	jprss	municipal-notice	https://www.town.fujimi.lg.jp/rss/10/list10.xml	PASS	46	OK	46	46	46
+JO43_MUNI_203629_4	jprss	municipal-notice	https://www.town.fujimi.lg.jp/rss/10/list11.xml	PASS	33	OK	33	33	33
+JO43_MUNI_203629_5	jprss	municipal-notice	https://www.town.fujimi.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_203823	jprss	municipal-notice	https://www.town.tatsuno.lg.jp/cgi-bin/feed.php?displayCount=10&displayRange=90	PASS	10	OK	10	10	10
+JO43_MUNI_203831	jprss	municipal-notice	https://www.town.minowa.lg.jp/cgi-bin/feed.php?siteNew=1&amp;displayCount=15&amp;displayRange=90	PASS	20	OK	20	20	20
+JO43_MUNI_203858	jprss	municipal-notice	https://www.vill.minamiminowa.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_203858_2	jprss	municipal-notice	https://www.vill.minamiminowa.lg.jp/rss/10/list6.xml	PASS	7	OK	7	7	7
+JO43_MUNI_203866	jprss	municipal-notice	https://www.vill.nakagawa.nagano.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_203866_2	jprss	municipal-notice	https://www.vill.nakagawa.nagano.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_204030	jprss	municipal-notice	https://www.town.nagano-takamori.lg.jp/oshirase/oshirase/rss.xml	PASS	100	OK	100	100	100
+JO43_MUNI_204030_2	jprss	municipal-notice	https://www.town.nagano-takamori.lg.jp/oshirase/event/rss.xml	PASS	45	OK	45	45	45
+JO43_MUNI_204030_3	jprss	municipal-notice	https://www.town.nagano-takamori.lg.jp/oshirase/boshu/rss.xml	PASS	46	OK	46	46	46
+JO43_MUNI_204072	jprss	municipal-notice	https://www.vill.achi.lg.jp/rss/10/list3.xml	PASS	3	OK	3	3	3
+JO43_MUNI_204072_2	jprss	municipal-notice	https://www.vill.achi.lg.jp/rss/10/list1.xml	PASS	33	OK	33	33	33
+JO43_MUNI_204072_3	jprss	municipal-notice	https://www.vill.achi.lg.jp/rss/10/list6.xml	PASS	1	OK	1	1	1
+JO43_MUNI_204099	jprss	municipal-notice	https://www.hirayamura.jp/files/rss/block1346.xml	PASS	47	OK	47	47	47
+JO43_MUNI_204099_2	jprss	municipal-notice	https://www.hirayamura.jp/files/rss/block1347.xml	PASS	6	OK	6	6	6
+JO43_MUNI_204111	jprss	municipal-notice	http://www.vill-shimojo.jp/gyousei/rss/feed.rss	PASS	1	OK	1	1	1
+JO43_MUNI_204145	jprss	municipal-notice	https://www.vill.yasuoka.nagano.jp/news/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_204501	jprss	municipal-notice	https://www.vill.yamagata.nagano.jp/news/news/rss.xml	PASS	100	OK	100	100	100
+JO43_MUNI_204501_2	jprss	municipal-notice	https://www.vill.yamagata.nagano.jp/news/event/rss.xml	PASS	34	OK	34	34	34
+JO43_MUNI_204501_3	jprss	municipal-notice	https://www.vill.yamagata.nagano.jp/news/recruitment/rss.xml	PASS	32	OK	32	32	32
+JO43_MUNI_204510	jprss	municipal-notice	https://www.vill.asahi.nagano.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_204528	jprss	municipal-notice	https://www.vill.chikuhoku.lg.jp/news-top/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_204528_2	jprss	municipal-notice	https://www.vill.chikuhoku.lg.jp/news/oshirase/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_204528_3	jprss	municipal-notice	https://www.vill.chikuhoku.lg.jp/news/event/rss.xml	PASS	2	OK	2	2	2
+JO43_MUNI_204528_4	jprss	municipal-notice	https://www.vill.chikuhoku.lg.jp/news/boshu/rss.xml	PASS	5	OK	5	5	5
+JO43_MUNI_205214	jprss	municipal-notice	https://www.town.sakaki.nagano.jp/rss/10/list3.xml	PASS	33	OK	33	33	33
+JO43_MUNI_205214_2	jprss	municipal-notice	https://www.town.sakaki.nagano.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_205214_3	jprss	municipal-notice	https://www.town.sakaki.nagano.jp/rss/10/list5.xml	PASS	26	OK	26	26	26
+JO43_MUNI_205214_4	jprss	municipal-notice	https://www.town.sakaki.nagano.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_205419	jprss	municipal-notice	https://www.town.obuse.nagano.jp/news_list/information/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_205419_2	jprss	municipal-notice	https://www.town.obuse.nagano.jp/news_list/event/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_205419_3	jprss	municipal-notice	https://www.town.obuse.nagano.jp/news_list/business/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_205419_4	jprss	municipal-notice	https://www.town.obuse.nagano.jp/news_list/recruit/rss.xml	PASS	3	OK	3	3	3
+JO43_MUNI_205435	jprss	municipal-notice	https://www.vill.takayama.nagano.jp/urgency/rss.xml	PASS	2	OK	2	2	2
+JO43_MUNI_205435_2	jprss	municipal-notice	https://www.vill.takayama.nagano.jp/oshirase/rss.xml	PASS	100	OK	100	100	100
+JO43_MUNI_205435_3	jprss	municipal-notice	https://www.vill.takayama.nagano.jp/sangyo/jinzai/rss.xml	PASS	3	OK	3	3	3
+JO43_MUNI_205435_4	jprss	municipal-notice	https://www.vill.takayama.nagano.jp/kurashi/bosai/rss.xml	PASS	10	OK	10	10	10
+JO43_MUNI_205613	jprss	municipal-notice	https://www.town.yamanouchi.nagano.jp/cgi-bin/feed.php?displayCount=10&amp;displayRange=90&amp;siteNew=1	PASS	10	OK	10	10	10
+JO43_MUNI_205834	jprss	municipal-notice	https://www.town.shinano.lg.jp/oshirase/rss.xml	PASS	100	OK	100	100	100
+JO43_MUNI_205834_2	jprss	municipal-notice	https://www.town.shinano.lg.jp/chosei/jinji/rss.xml	PASS	6	OK	6	6	6
+JO43_MUNI_205885	jprss	municipal-notice	https://www.vill.ogawa.nagano.jp/information/news/rss.xml	PASS	100	OK	100	100	100
+JO43_MUNI_205907	jprss	municipal-notice	https://www.town.iizuna.nagano.jp/oshirase/rss.xml	PASS	100	OK	100	100	100
+JO43_MUNI_205907_2	jprss	municipal-notice	https://www.town.iizuna.nagano.jp/sangyo/nyusatsu/rss.xml	PASS	17	OK	17	17	17
+JO43_MUNI_205907_3	jprss	municipal-notice	https://www.town.iizuna.nagano.jp/pressrelease/rss.xml	PASS	100	OK	100	100	100
+JO43_MUNI_206024	jprss	municipal-notice	http://www.vill.sakae.nagano.jp/oshirase/rss.xml	PASS	100	OK	100	100	100
+JO43_MUNI_212105	jprss	municipal-notice	https://www.city.ena.lg.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_212113	jprss	municipal-notice	https://www.city.minokamo.lg.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_212172	jprss	municipal-notice	https://www.city.hida.gifu.jp/rss/10/list3.xml	PASS	1	OK	1	1	1
+JO43_MUNI_212172_2	jprss	municipal-notice	https://www.city.hida.gifu.jp/rss/10/list6.xml	PASS	35	OK	35	35	35
+JO43_MUNI_212172_3	jprss	municipal-notice	https://www.city.hida.gifu.jp/rss/10/list5.xml	PASS	76	OK	76	76	76
+JO43_MUNI_212172_4	jprss	municipal-notice	https://www.city.hida.gifu.jp/rss/10/list7.xml	PASS	75	OK	75	75	75
+JO43_MUNI_212172_5	jprss	municipal-notice	https://www.city.hida.gifu.jp/rss/10/list8.xml	PASS	100	OK	100	100	100
+JO43_MUNI_212202	jprss	municipal-notice	https://www.city.gero.lg.jp/rss/10/list3.xml	PASS	5	OK	5	5	5
+JO43_MUNI_212202_2	jprss	municipal-notice	https://www.city.gero.lg.jp/rss/10/list5.xml	PASS	62	OK	62	62	62
+JO43_MUNI_212202_3	jprss	municipal-notice	https://www.city.gero.lg.jp/rss/10/list7.xml	PASS	47	OK	47	47	47
+JO43_MUNI_213039	jprss	municipal-notice	https://www.town.kasamatsu.gifu.jp/docs/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_213039_2	jprss	municipal-notice	https://www.town.kasamatsu.gifu.jp/docs/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_213616	jprss	municipal-notice	https://www.town.tarui.lg.jp/rss/10/list3.xml	PASS	2	OK	2	2	2
+JO43_MUNI_213616_2	jprss	municipal-notice	https://www.town.tarui.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_213616_3	jprss	municipal-notice	https://www.town.tarui.lg.jp/rss/10/list7.xml	PASS	100	OK	100	100	100
+JO43_MUNI_213616_4	jprss	municipal-notice	https://www.town.tarui.lg.jp/rss/10/list8.xml	PASS	41	OK	41	41	41
+JO43_MUNI_213616_5	jprss	municipal-notice	https://www.town.tarui.lg.jp/rss/10/list10.xml	PASS	43	OK	43	43	43
+JO43_MUNI_214019	jprss	municipal-notice	https://www.town.ibigawa.lg.jp/rss/10/list1.xml	PASS	53	OK	53	53	53
+JO43_MUNI_215023	jprss	municipal-notice	https://www.town.tomika.gifu.jp/oshirase/rss.xml	PASS	100	OK	100	100	100
+JO43_MUNI_215023_2	jprss	municipal-notice	https://www.town.tomika.gifu.jp/sangyo/nyusatsu/rss.xml	PASS	26	OK	26	26	26
+JO43_MUNI_222071	jprss	municipal-notice	https://www.city.fujinomiya.lg.jp/info/shinchaku.xml	PASS	50	OK	50	50	50
+JO43_MUNI_222101	jprss	municipal-notice	https://www.city.fuji.shizuoka.jp/chumoku/chumoku.xml	PASS	50	OK	50	50	50
+JO43_MUNI_222101_2	jprss	municipal-notice	https://www.city.fuji.shizuoka.jp/shinchaku/shinchaku.xml	PASS	50	OK	50	50	50
+JO43_MUNI_222101_3	jprss	municipal-notice	https://www.city.fuji.shizuoka.jp/chumoku/kosodate/chumoku.xml	PASS	20	OK	20	20	20
+JO43_MUNI_222101_4	jprss	municipal-notice	https://www.city.fuji.shizuoka.jp/shinchaku/kosodate/shinchaku.xml	PASS	50	OK	50	50	50
+JO43_MUNI_222101_5	jprss	municipal-notice	https://www.city.fuji.shizuoka.jp/chumoku/senior/chumoku.xml	PASS	20	OK	20	20	20
+JO43_MUNI_222101_6	jprss	municipal-notice	https://www.city.fuji.shizuoka.jp/shinchaku/senior/shinchaku.xml	PASS	45	OK	45	45	45
+JO43_MUNI_222101_7	jprss	municipal-notice	https://www.city.fuji.shizuoka.jp/chumoku/business/chumoku.xml	PASS	35	OK	35	35	35
+JO43_MUNI_222101_8	jprss	municipal-notice	https://www.city.fuji.shizuoka.jp/shinchaku/business/shinchaku.xml	PASS	50	OK	50	50	50
+JO43_MUNI_222135	jprss	municipal-notice	https://www.city.kakegawa.shizuoka.jp/rss-gyosei/rss.xml	PASS	50	OK	50	50	50
+JO43_MUNI_222135_2	jprss	municipal-notice	https://www.city.kakegawa.shizuoka.jp/rss-kanko/rss.xml	PASS	50	OK	50	50	50
+JO43_MUNI_222135_3	jprss	municipal-notice	https://www.city.kakegawa.shizuoka.jp/rss-kosodate/rss.xml	PASS	50	OK	50	50	50
+JO43_MUNI_222135_4	jprss	municipal-notice	https://www.city.kakegawa.shizuoka.jp/rss-iju/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_222160	jprss	municipal-notice	https://www.city.fukuroi.shizuoka.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_223051	jprss	municipal-notice	https://www.town.matsuzaki.shizuoka.jp/categories/kubun/news/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_223051_2	jprss	municipal-notice	https://www.town.matsuzaki.shizuoka.jp/categories/kubun/news/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_223051_3	jprss	municipal-notice	https://www.town.matsuzaki.shizuoka.jp/categories/kubun/attention/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_223051_4	jprss	municipal-notice	https://www.town.matsuzaki.shizuoka.jp/categories/kubun/attention/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_223051_5	jprss	municipal-notice	https://www.town.matsuzaki.shizuoka.jp/categories/kubun/event/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_223051_6	jprss	municipal-notice	https://www.town.matsuzaki.shizuoka.jp/categories/kubun/event/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_223417	jprss	municipal-notice	https://www.town.shimizu.shizuoka.jp/update.xml	PASS	10	OK	10	10	10
+JO43_MUNI_232041	jprss	municipal-notice	https://www.city.seto.aichi.jp/index.xml	PASS	784	OK	784	784	784
+JO43_MUNI_232068	jprss	municipal-notice	https://www.city.kasugai.lg.jp/rss.rss	PASS	86	OK	86	86	86
+JO43_MUNI_232076	jprss	municipal-notice	https://www.city.toyokawa.lg.jp/cgi-bin/feed.php?siteNew=1&amp;displayRange=90	PASS	20	OK	20	20	20
+JO43_MUNI_232084	jprss	municipal-notice	https://www.city.tsushima.lg.jp/rss_news.xml	PASS	29	OK	29	29	29
+JO43_MUNI_232157	jprss	municipal-notice	https://www.city.inuyama.aichi.jp/news.rss	PASS	114	OK	114	114	114
+JO43_MUNI_232173	jprss	municipal-notice	https://www.city.konan.lg.jp/news.rss	PASS	64	OK	64	64	64
+JO43_MUNI_232271	jprss	municipal-notice	https://www.city.takahama.lg.jp/rss/10/list3.xml	PASS	1	OK	1	1	1
+JO43_MUNI_232271_2	jprss	municipal-notice	https://www.city.takahama.lg.jp/rss/10/list1.xml	PASS	11	OK	11	11	11
+JO43_MUNI_234257	jprss	municipal-notice	https://www.town.kanie.aichi.jp/rss/10/list3.xml	PASS	1	OK	1	1	1
+JO43_MUNI_234257_2	jprss	municipal-notice	https://www.town.kanie.aichi.jp/rss/10/list6.xml	PASS	55	OK	55	55	55
+JO43_MUNI_234257_3	jprss	municipal-notice	https://www.town.kanie.aichi.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_234257_4	jprss	municipal-notice	https://www.town.kanie.aichi.jp/rss/10/list5.xml	PASS	70	OK	70	70	70
+JO43_MUNI_235016	jprss	municipal-notice	https://www.town.kota.lg.jp/rss/10/list1.xml	PASS	17	OK	17	17	17
+JO43_MUNI_235016_2	jprss	municipal-notice	https://www.town.kota.lg.jp/rss/10/list5.xml	PASS	2	OK	2	2	2
+JO43_MUNI_235016_3	jprss	municipal-notice	https://www.town.kota.lg.jp/rss/10/list7.xml	PASS	9	OK	9	9	9
+JO43_MUNI_235016_4	jprss	municipal-notice	https://www.town.kota.lg.jp/rss/10/list8.xml	PASS	9	OK	9	9	9
+JO43_MUNI_235016_5	jprss	municipal-notice	https://www.town.kota.lg.jp/rss/10/list6.xml	PASS	9	OK	9	9	9
+JO43_MUNI_235610	jprss	municipal-notice	https://www.town.shitara.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_235610_2	jprss	municipal-notice	https://www.town.shitara.lg.jp/rss/10/list6.xml	PASS	11	OK	11	11	11
+JO43_MUNI_242021	jprss	municipal-notice	https://www.city.yokkaichi.lg.jp/www/rss/bosyu.rdf	PASS	143	OK	143	143	143
+JO43_MUNI_242047	jprss	municipal-notice	https://www.city.matsusaka.mie.jp/rss/10/list6.xml	PASS	5	OK	5	5	5
+JO43_MUNI_242101	jprss	municipal-notice	https://www.city.kameyama.mie.jp/categories/toplist/news/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_242101_2	jprss	municipal-notice	https://www.city.kameyama.mie.jp/categories/toplist/news/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_242101_3	jprss	municipal-notice	https://www.city.kameyama.mie.jp/categories/toplist/event/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_242101_4	jprss	municipal-notice	https://www.city.kameyama.mie.jp/categories/toplist/event/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_242101_5	jprss	municipal-notice	https://www.city.kameyama.mie.jp/categories/toplist/boshu/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_242101_6	jprss	municipal-notice	https://www.city.kameyama.mie.jp/categories/toplist/boshu/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_242110	jprss	municipal-notice	https://www.city.toba.mie.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_242152	jprss	municipal-notice	https://www.city.shima.mie.jp/cgi-bin/feed.php?displayCount=10&amp;displayRange=90	PASS	10	OK	10	10	10
+JO43_MUNI_243418	jprss	municipal-notice	https://www2.town.komono.mie.jp/rss/10/list1.xml	PASS	61	OK	61	61	61
+JO43_MUNI_243418_2	jprss	municipal-notice	https://www2.town.komono.mie.jp/rss/10/list6.xml	PASS	36	OK	36	36	36
+JO43_MUNI_243434	jprss	municipal-notice	https://www2.town.asahi.mie.jp/www/rss/news.rdf	PASS	8	OK	8	8	8
+JO43_MUNI_245615	jprss	municipal-notice	https://www.town.mihama.mie.jp/cgi-bin/feed.php?siteNew=1&amp;displayRange=90	PASS	20	OK	20	20	20
+JO43_MUNI_252077	jprss	municipal-notice	https://www.city.moriyama.lg.jp/news.rss	PASS	121	OK	121	121	121
+JO43_MUNI_262048	jprss	municipal-notice	https://www.city.uji.kyoto.jp/rss/10/list6.xml	PASS	7	OK	7	7	7
+JO43_MUNI_262048_2	jprss	municipal-notice	https://www.city.uji.kyoto.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_262048_3	jprss	municipal-notice	https://www.city.uji.kyoto.jp/rss/10/list7.xml	PASS	79	OK	79	79	79
+JO43_MUNI_262081	jprss	municipal-notice	https://www.city.muko.kyoto.jp/rss/10/list5.xml	PASS	9	OK	9	9	9
+JO43_MUNI_262081_2	jprss	municipal-notice	https://www.city.muko.kyoto.jp/rss/10/list6.xml	PASS	24	OK	24	24	24
+JO43_MUNI_263443	jprss	municipal-notice	https://www.town.ujitawara.kyoto.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_282031_2	jprss	municipal-notice	https://www.city.akashi.lg.jp/shise/koho/oshirase/oshirase.xml	PASS	100	OK	100	100	100
+JO43_MUNI_282057	jprss	municipal-notice	https://www.city.sumoto.lg.jp/rss/10/list6.xml	PASS	94	OK	94	94	94
+JO43_MUNI_282057_2	jprss	municipal-notice	https://www.city.sumoto.lg.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_282057_3	jprss	municipal-notice	https://www.city.sumoto.lg.jp/rss/10/list7.xml	PASS	100	OK	100	100	100
+JO43_MUNI_282057_4	jprss	municipal-notice	https://www.city.sumoto.lg.jp/rss/10/list8.xml	PASS	33	OK	33	33	33
+JO43_MUNI_282154	jprss	municipal-notice	https://www.city.miki.lg.jp/rss/10/list6.xml	PASS	94	OK	94	94	94
+JO43_MUNI_282154_2	jprss	municipal-notice	https://www.city.miki.lg.jp/rss/10/list7.xml	PASS	100	OK	100	100	100
+JO43_MUNI_282189	jprss	municipal-notice	https://www.city.ono.hyogo.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_282201	jprss	municipal-notice	https://www.city.kasai.hyogo.jp/rss/10/list6.xml	PASS	39	OK	39	39	39
+JO43_MUNI_282201_2	jprss	municipal-notice	https://www.city.kasai.hyogo.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_282201_3	jprss	municipal-notice	https://www.city.kasai.hyogo.jp/rss/10/list7.xml	PASS	48	OK	48	48	48
+JO43_MUNI_282235	jprss	municipal-notice	https://www.city.tamba.lg.jp/cgi-bin/feed.php?siteNew=1&amp;displayRange=90	PASS	20	OK	20	20	20
+JO43_MUNI_282251	jprss	municipal-notice	https://www.city.asago.hyogo.jp/rss/10/list6.xml	PASS	4	OK	4	4	4
+JO43_MUNI_282251_2	jprss	municipal-notice	https://www.city.asago.hyogo.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_282294	jprss	municipal-notice	https://www.city.tatsuno.lg.jp/cgi-bin/feed.php?siteNew=1&displayRange=90	PASS	20	OK	20	20	20
+JO43_MUNI_284424	jprss	municipal-notice	https://www.town.ichikawa.lg.jp/RSSFeed/topic	PASS	20	OK	20	20	20
+JO43_MUNI_284424_2	jprss	municipal-notice	https://www.town.ichikawa.lg.jp/RSSFeed/whatsnew	PASS	20	OK	20	20	20
+JO43_MUNI_285862	jprss	municipal-notice	https://www.town.shinonsen.hyogo.jp/page/rss/news.php	PASS	50	OK	50	50	50
+JO43_MUNI_285862_2	jprss	municipal-notice	https://www.town.shinonsen.hyogo.jp/page/rss/kankou.php	PASS	19	OK	19	19	19
+JO43_MUNI_285862_3	jprss	municipal-notice	https://www.town.shinonsen.hyogo.jp/page/rss/index.php	PASS	50	OK	50	50	50
+JO43_MUNI_302023	jprss	municipal-notice	https://www.city.kainan.lg.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_302031	jprss	municipal-notice	https://www.city.hashimoto.lg.jp/cgi-bin/feed.php?siteNew=1&amp;displayRange=90	PASS	20	OK	20	20	20
+JO43_MUNI_302058	jprss	municipal-notice	https://www.city.gobo.lg.jp/cgi-bin/feed.php?categoryNo=6&displayCount=15&displayRange=0&includeShortcut=1	PASS	15	OK	15	15	15
+JO43_MUNI_302058_2	jprss	municipal-notice	https://www.city.gobo.lg.jp/cgi-bin/feed.php?siteNew=1&displayCount=10&displayRange=30&includeShortcut=1	PASS	10	OK	10	10	10
+JO43_MUNI_302074	jprss	municipal-notice	https://www.city.shingu.lg.jp/RSSFeed/whatsnew	PASS	20	OK	20	20	20
+JO43_MUNI_302074_2	jprss	municipal-notice	https://www.city.shingu.lg.jp/RSSFeed/topic	PASS	6	OK	6	6	6
+JO43_MUNI_303836	jprss	municipal-notice	http://www.town.yura.wakayama.jp/shinchaku/index.rss	PASS	50	OK	50	50	50
+JO43_MUNI_303836_2	jprss	municipal-notice	http://www.town.yura.wakayama.jp/shinchaku/index.atom	PASS	50	OK	50	50	50
+JO43_MUNI_303836_3	jprss	municipal-notice	http://www.town.yura.wakayama.jp/zokusei/topics/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_303836_4	jprss	municipal-notice	http://www.town.yura.wakayama.jp/zokusei/topics/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_304212	jprss	municipal-notice	https://www.town.nachikatsuura.wakayama.jp/RSSFeed/pickup	PASS	5	OK	5	5	5
+JO43_MUNI_304212_2	jprss	municipal-notice	https://www.town.nachikatsuura.wakayama.jp/RSSFeed/topic	PASS	7	OK	7	7	7
+JO43_MUNI_304212_3	jprss	municipal-notice	https://www.town.nachikatsuura.wakayama.jp/RSSFeed/whatsnew	PASS	10	OK	10	10	10
+JO43_MUNI_312011	jprss	municipal-notice	https://www.city.tottori.lg.jp/rss/10/list3.xml	PASS	3	OK	3	3	3
+JO43_MUNI_312011_2	jprss	municipal-notice	https://www.city.tottori.lg.jp/rss/10/list5.xml	PASS	67	OK	67	67	67
+JO43_MUNI_312011_3	jprss	municipal-notice	https://www.city.tottori.lg.jp/rss/10/list7.xml	PASS	51	OK	51	51	51
+JO43_MUNI_312011_4	jprss	municipal-notice	https://www.city.tottori.lg.jp/rss/10/list6.xml	PASS	4	OK	4	4	4
+JO43_MUNI_312045	jprss	municipal-notice	https://www.city.sakaiminato.lg.jp/rss/whatsnew.xml	PASS	117	OK	117	117	117
+JO43_MUNI_312045_3	jprss	municipal-notice	https://www.city.sakaiminato.lg.jp/rss/collect.xml	PASS	24	OK	24	24	24
+JO43_MUNI_313297	jprss	municipal-notice	https://www.town.yazu.tottori.jp/rss/10/list3.xml	PASS	3	OK	3	3	3
+JO43_MUNI_313297_2	jprss	municipal-notice	https://www.town.yazu.tottori.jp/rss/10/list6.xml	PASS	16	OK	16	16	16
+JO43_MUNI_313726	jprss	municipal-notice	https://www.e-hokuei.net/rss/10/list1.xml	PASS	17	OK	17	17	17
+JO43_MUNI_313726_2	jprss	municipal-notice	https://www.e-hokuei.net/rss/10/list5.xml	PASS	33	OK	33	33	33
+JO43_MUNI_313726_3	jprss	municipal-notice	https://www.e-hokuei.net/rss/10/list7.xml	PASS	9	OK	9	9	9
+JO43_MUNI_322024_2	jprss	municipal-notice	https://www.city.hamada.shimane.jp/www/rss/news.rdf	PASS	79	OK	79	79	79
+JO43_MUNI_322041	jprss	municipal-notice	https://www.city.masuda.lg.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_322067	jprss	municipal-notice	https://www.city.yasugi.shimane.jp/news/index.rdf	PASS	10	OK	10	10	10
+JO43_MUNI_322067_2	jprss	municipal-notice	https://www.city.yasugi.shimane.jp/event/index.rdf	PASS	10	OK	10	10	10
+JO43_MUNI_322075	jprss	municipal-notice	http://www.city.gotsu.lg.jp/rss/10/list3.xml	PASS	4	OK	4	4	4
+JO43_MUNI_322075_3	jprss	municipal-notice	http://www.city.gotsu.lg.jp/rss/10/list6.xml	PASS	46	OK	46	46	46
+JO43_MUNI_323861	jprss	municipal-notice	https://www.iinan.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_324493	jprss	municipal-notice	https://www.town.ohnan.lg.jp/rss/10/list1.xml	PASS	59	OK	59	59	59
+JO43_MUNI_324493_2	jprss	municipal-notice	https://www.town.ohnan.lg.jp/rss/10/list8.xml	PASS	11	OK	11	11	11
+JO43_MUNI_324493_3	jprss	municipal-notice	https://www.town.ohnan.lg.jp/rss/10/list5.xml	PASS	7	OK	7	7	7
+JO43_MUNI_324493_4	jprss	municipal-notice	https://www.town.ohnan.lg.jp/rss/10/list7.xml	PASS	7	OK	7	7	7
+JO43_MUNI_325287	jprss	municipal-notice	https://www.town.okinoshima.shimane.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_332054	jprss	municipal-notice	https://www.city.kasaoka.okayama.jp/rss/10/list6.xml	PASS	3	OK	3	3	3
+JO43_MUNI_332054_2	jprss	municipal-notice	https://www.city.kasaoka.okayama.jp/rss/10/list5.xml	PASS	27	OK	27	27	27
+JO43_MUNI_332097	jprss	municipal-notice	https://www.city.takahashi.lg.jp/rss/10/list3.xml	PASS	4	OK	4	4	4
+JO43_MUNI_332143	jprss	municipal-notice	https://www.city.maniwa.lg.jp/rss/10/list5.xml	PASS	1	OK	1	1	1
+JO43_MUNI_332143_2	jprss	municipal-notice	https://www.city.maniwa.lg.jp/rss/10/list6.xml	PASS	36	OK	36	36	36
+JO43_MUNI_332143_3	jprss	municipal-notice	https://www.city.maniwa.lg.jp/rss/10/list7.xml	PASS	91	OK	91	91	91
+JO43_MUNI_332143_4	jprss	municipal-notice	https://www.city.maniwa.lg.jp/rss/10/list8.xml	PASS	89	OK	89	89	89
+JO43_MUNI_336068_2	jprss	municipal-notice	https://www.town.kagamino.lg.jp/rss/10/list6.xml	PASS	61	OK	61	61	61
+JO43_MUNI_336068_3	jprss	municipal-notice	https://www.town.kagamino.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_336220	jprss	municipal-notice	https://www.town.shoo.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_336220_2	jprss	municipal-notice	https://www.town.shoo.lg.jp/rss/10/list5.xml	PASS	46	OK	46	46	46
+JO43_MUNI_336220_3	jprss	municipal-notice	https://www.town.shoo.lg.jp/rss/10/list7.xml	PASS	14	OK	14	14	14
+JO43_MUNI_336661	jprss	municipal-notice	https://www.town.okayama-misaki.lg.jp/cgi-bin/feed.php?siteNew&amp;displayCount=10&amp;displayRange=90	PASS	14	OK	14	14	14
+JO43_MUNI_342041	jprss	municipal-notice	https://www.city.mihara.hiroshima.jp/rss/10/list5.xml	PASS	18	OK	18	18	18
+JO43_MUNI_342084	jprss	municipal-notice	https://www.city.fuchu.hiroshima.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_342157	jprss	municipal-notice	https://www.city.etajima.hiroshima.jp/cms/atom/news	PASS	6	OK	6	6	6
+JO43_MUNI_342157_2	jprss	municipal-notice	https://www.city.etajima.hiroshima.jp/cms/rss/news	PASS	30	OK	30	30	30
+JO43_MUNI_342157_3	jprss	municipal-notice	https://www.city.etajima.hiroshima.jp/cms/atom/events	PASS	6	OK	6	6	6
+JO43_MUNI_342157_4	jprss	municipal-notice	https://www.city.etajima.hiroshima.jp/cms/rss/events	PASS	6	OK	6	6	6
+JO43_MUNI_342157_5	jprss	municipal-notice	https://www.city.etajima.hiroshima.jp/cms/atom/recruitments	PASS	6	OK	6	6	6
+JO43_MUNI_342157_6	jprss	municipal-notice	https://www.city.etajima.hiroshima.jp/cms/rss/recruitments	PASS	6	OK	6	6	6
+JO43_MUNI_342157_7	jprss	municipal-notice	https://www.city.etajima.hiroshima.jp/cms/atom/topics	PASS	6	OK	6	6	6
+JO43_MUNI_342157_8	jprss	municipal-notice	https://www.city.etajima.hiroshima.jp/cms/rss/topics	PASS	6	OK	6	6	6
+JO43_MUNI_343021	jprss	municipal-notice	https://www.town.fuchu.hiroshima.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_343021_2	jprss	municipal-notice	https://www.town.fuchu.hiroshima.jp/rss/10/list6.xml	PASS	20	OK	20	20	20
+JO43_MUNI_343684	jprss	municipal-notice	https://www.akiota.jp/rss/10/list3.xml	PASS	1	OK	1	1	1
+JO43_MUNI_343684_2	jprss	municipal-notice	https://www.akiota.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_343684_3	jprss	municipal-notice	https://www.akiota.jp/rss/10/list5.xml	PASS	32	OK	32	32	32
+JO43_MUNI_343684_4	jprss	municipal-notice	https://www.akiota.jp/rss/10/list7.xml	PASS	7	OK	7	7	7
+JO43_MUNI_343684_5	jprss	municipal-notice	https://www.akiota.jp/rss/10/list8.xml	PASS	42	OK	42	42	42
+JO43_MUNI_343684_6	jprss	municipal-notice	https://www.akiota.jp/rss/10/list6.xml	PASS	20	OK	20	20	20
+JO43_MUNI_352047	jprss	municipal-notice	https://www.city.hagi.lg.jp/rss/10/list6.xml	PASS	4	OK	4	4	4
+JO43_MUNI_352047_2	jprss	municipal-notice	https://www.city.hagi.lg.jp/rss/10/list2.xml	PASS	100	OK	100	100	100
+JO43_MUNI_352047_3	jprss	municipal-notice	https://www.city.hagi.lg.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_352047_4	jprss	municipal-notice	https://www.city.hagi.lg.jp/rss/10/list7.xml	PASS	8	OK	8	8	8
+JO43_MUNI_352047_5	jprss	municipal-notice	https://www.city.hagi.lg.jp/rss/10/list8.xml	PASS	7	OK	7	7	7
+JO43_MUNI_352063	jprss	municipal-notice	https://www.city.hofu.yamaguchi.jp/rss/10/list3.xml	PASS	1	OK	1	1	1
+JO43_MUNI_352063_2	jprss	municipal-notice	https://www.city.hofu.yamaguchi.jp/rss/10/list5.xml	PASS	34	OK	34	34	34
+JO43_MUNI_352080	jprss	municipal-notice	https://www.city.iwakuni.lg.jp/rss/10/list3.xml	PASS	2	OK	2	2	2
+JO43_MUNI_352101	jprss	municipal-notice	https://www.city.hikari.lg.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_352110	jprss	municipal-notice	https://www.city.nagato.yamaguchi.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_352110_2	jprss	municipal-notice	https://www.city.nagato.yamaguchi.jp/rss/10/list2.xml	PASS	12	OK	12	12	12
+JO43_MUNI_352128	jprss	municipal-notice	https://www.city-yanai.jp/rss/10/list6.xml	PASS	4	OK	4	4	4
+JO43_MUNI_352136	jprss	municipal-notice	https://www2.city.mine.lg.jp/cgi-bin/feed.php?type=rss_2.0&siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_352152	jprss	municipal-notice	https://www.city.shunan.lg.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_352152_2	jprss	municipal-notice	https://www.city.shunan.lg.jp/rss/10/list5.xml	PASS	90	OK	90	90	90
+JO43_MUNI_352152_3	jprss	municipal-notice	https://www.city.shunan.lg.jp/rss/10/list8.xml	PASS	85	OK	85	85	85
+JO43_MUNI_353051	jprss	municipal-notice	https://www.town.suo-oshima.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_353213	jprss	municipal-notice	https://www.town.waki.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_353213_2	jprss	municipal-notice	https://www.town.waki.lg.jp/rss/10/list5.xml	PASS	10	OK	10	10	10
+JO43_MUNI_353213_3	jprss	municipal-notice	https://www.town.waki.lg.jp/rss/10/list7.xml	PASS	12	OK	12	12	12
+JO43_MUNI_353434	jprss	municipal-notice	https://www.town.tabuse.lg.jp/rss/10/list1.xml	PASS	74	OK	74	74	74
+JO43_MUNI_353434_2	jprss	municipal-notice	https://www.town.tabuse.lg.jp/rss/10/list5.xml	PASS	7	OK	7	7	7
+JO43_MUNI_353434_3	jprss	municipal-notice	https://www.town.tabuse.lg.jp/rss/10/list7.xml	PASS	13	OK	13	13	13
+JO43_MUNI_353442	jprss	municipal-notice	https://www.town.hirao.lg.jp/cgi-bin/feed.php?siteNew=1&amp;displayRange=90	PASS	20	OK	20	20	20
+JO43_MUNI_362026_2	jprss	municipal-notice	https://www.city.naruto.lg.jp/category/kubun/shinchaku/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_362026_3	jprss	municipal-notice	https://www.city.naruto.lg.jp/category/kubun/boshu/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_362026_5	jprss	municipal-notice	https://www.city.naruto.lg.jp/category/kubun/event/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_362026_6	jprss	municipal-notice	https://www.city.naruto.lg.jp/category/kubun/event/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_362034	jprss	municipal-notice	https://www.city.komatsushima.lg.jp/oshirase/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_362034_2	jprss	municipal-notice	https://www.city.komatsushima.lg.jp/komatsushima-navi/event-adm/rss.xml	PASS	100	OK	100	100	100
+JO43_MUNI_362034_3	jprss	municipal-notice	https://www.city.komatsushima.lg.jp/oshirase/kosodate/rss.xml	PASS	100	OK	100	100	100
+JO43_MUNI_362077	jprss	municipal-notice	https://www.city.mima.lg.jp/rss-list/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_362077_2	jprss	municipal-notice	https://www.city.mima.lg.jp/rss-gyosei/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_362077_3	jprss	municipal-notice	https://www.city.mima.lg.jp/rss-kanko/rss.xml	PASS	8	OK	8	8	8
+JO43_MUNI_362077_4	jprss	municipal-notice	https://www.city.mima.lg.jp/rss-kosodate/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_362077_5	jprss	municipal-notice	https://www.city.mima.lg.jp/rss-iju/rss.xml	PASS	2	OK	2	2	2
+JO43_MUNI_362077_6	jprss	municipal-notice	https://www.city.mima.lg.jp/rss-kigyou/rss.xml	PASS	9	OK	9	9	9
+JO43_MUNI_363022	jprss	municipal-notice	https://www.kamikatsu.jp/docs/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_363022_2	jprss	municipal-notice	https://www.kamikatsu.jp/docs/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_363219	jprss	municipal-notice	https://www.vill.sanagochi.lg.jp/docs/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_363219_2	jprss	municipal-notice	https://www.vill.sanagochi.lg.jp/docs/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_363871	jprss	municipal-notice	https://www.town.minami.lg.jp/oshirase/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_363871_2	jprss	municipal-notice	https://www.town.minami.lg.jp/oshirase/kanko/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_363871_3	jprss	municipal-notice	https://www.town.minami.lg.jp/sangyo/nyusatsu/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_363871_4	jprss	municipal-notice	https://www.town.minami.lg.jp/sangyo/koyou/rss.xml	PASS	16	OK	16	16	16
+JO43_MUNI_363880	jprss	municipal-notice	https://www.town.kaiyo.lg.jp/docs/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_363880_2	jprss	municipal-notice	https://www.town.kaiyo.lg.jp/docs/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_364011	jprss	municipal-notice	https://www.town.matsushige.tokushima.jp/docs/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_364037	jprss	municipal-notice	https://www.town.aizumi.lg.jp/docs/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_364037_2	jprss	municipal-notice	https://www.town.aizumi.lg.jp/docs/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_364681	jprss	municipal-notice	https://www.town.tokushima-tsurugi.lg.jp/attention/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_364681_2	jprss	municipal-notice	https://www.town.tokushima-tsurugi.lg.jp/topics/rss.xml	PASS	19	OK	19	19	19
+JO43_MUNI_364681_3	jprss	municipal-notice	https://www.town.tokushima-tsurugi.lg.jp/oshirase/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_364681_4	jprss	municipal-notice	https://www.town.tokushima-tsurugi.lg.jp/kanko/kanko/club/seasonal/rss.xml	PASS	13	OK	13	13	13
+JO43_MUNI_364681_5	jprss	municipal-notice	https://www.town.tokushima-tsurugi.lg.jp/chosei/koho/rss.xml	PASS	2	OK	2	2	2
+JO43_MUNI_364894	jprss	municipal-notice	https://www.town.higashimiyoshi.lg.jp/oshirase/rss.xml	PASS	100	OK	100	100	100
+JO43_MUNI_372021	jprss	municipal-notice	https://www.city.marugame.lg.jp/rss/10/list7.xml	PASS	79	OK	79	79	79
+JO43_MUNI_372021_2	jprss	municipal-notice	https://www.city.marugame.lg.jp/rss/10/list8.xml	PASS	92	OK	92	92	92
+JO43_MUNI_372021_3	jprss	municipal-notice	https://www.city.marugame.lg.jp/rss/10/list10.xml	PASS	40	OK	40	40	40
+JO43_MUNI_372030	jprss	municipal-notice	https://www.city.sakaide.lg.jp/rss/10/list5.xml	PASS	82	OK	82	82	82
+JO43_MUNI_372048	jprss	municipal-notice	https://www.city.zentsuji.kagawa.jp/rss/10/list5.xml	PASS	44	OK	44	44	44
+JO43_MUNI_372048_2	jprss	municipal-notice	https://www.city.zentsuji.kagawa.jp/rss/10/list7.xml	PASS	68	OK	68	68	68
+JO43_MUNI_372056	jprss	municipal-notice	https://www.city.kanonji.kagawa.jp/rss/10/list3.xml	PASS	1	OK	1	1	1
+JO43_MUNI_372056_2	jprss	municipal-notice	https://www.city.kanonji.kagawa.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_372056_3	jprss	municipal-notice	https://www.city.kanonji.kagawa.jp/rss/10/list7.xml	PASS	71	OK	71	71	71
+JO43_MUNI_372056_4	jprss	municipal-notice	https://www.city.kanonji.kagawa.jp/rss/10/list8.xml	PASS	27	OK	27	27	27
+JO43_MUNI_372056_5	jprss	municipal-notice	https://www.city.kanonji.kagawa.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_372072	jprss	municipal-notice	https://www.higashikagawa.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_372081	jprss	municipal-notice	https://www.city.mitoyo.lg.jp/cgi-bin/feed.php?type=rss_2.0	PASS	20	OK	20	20	20
+JO43_MUNI_373869	jprss	municipal-notice	https://www.town.utazu.lg.jp/rss/10/list3.xml	PASS	4	OK	4	4	4
+JO43_MUNI_373869_2	jprss	municipal-notice	https://www.town.utazu.lg.jp/rss/10/list6.xml	PASS	22	OK	22	22	22
+JO43_MUNI_373869_3	jprss	municipal-notice	https://www.town.utazu.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_373869_4	jprss	municipal-notice	https://www.town.utazu.lg.jp/rss/10/list5.xml	PASS	25	OK	25	25	25
+JO43_MUNI_374032	jprss	municipal-notice	https://www.town.kotohira.kagawa.jp/rss/10/list6.xml	PASS	7	OK	7	7	7
+JO43_MUNI_374032_2	jprss	municipal-notice	https://www.town.kotohira.kagawa.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_374032_3	jprss	municipal-notice	https://www.town.kotohira.kagawa.jp/rss/10/list5.xml	PASS	18	OK	18	18	18
+JO43_MUNI_374067	jprss	municipal-notice	https://www.town.manno.lg.jp/rss/10/list3.xml	PASS	1	OK	1	1	1
+JO43_MUNI_374067_2	jprss	municipal-notice	https://www.town.manno.lg.jp/rss/10/list6.xml	PASS	23	OK	23	23	23
+JO43_MUNI_374067_3	jprss	municipal-notice	https://www.town.manno.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_374067_4	jprss	municipal-notice	https://www.town.manno.lg.jp/rss/10/list5.xml	PASS	34	OK	34	34	34
+JO43_MUNI_382051	jprss	municipal-notice	https://www.city.niihama.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_382060	jprss	municipal-notice	https://www.city.saijo.ehime.jp/rss/10/list3.xml	PASS	1	OK	1	1	1
+JO43_MUNI_382060_2	jprss	municipal-notice	https://www.city.saijo.ehime.jp/rss/10/list6.xml	PASS	4	OK	4	4	4
+JO43_MUNI_382060_3	jprss	municipal-notice	https://www.city.saijo.ehime.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_382060_4	jprss	municipal-notice	https://www.city.saijo.ehime.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_382060_5	jprss	municipal-notice	https://www.city.saijo.ehime.jp/rss/10/list7.xml	PASS	100	OK	100	100	100
+JO43_MUNI_382078	jprss	municipal-notice	https://www.city.ozu.ehime.jp/rss/10/list3.xml	PASS	2	OK	2	2	2
+JO43_MUNI_382078_2	jprss	municipal-notice	https://www.city.ozu.ehime.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_382078_3	jprss	municipal-notice	https://www.city.ozu.ehime.jp/rss/10/list6.xml	PASS	21	OK	21	21	21
+JO43_MUNI_382159	jprss	municipal-notice	https://www.city.toon.ehime.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_382159_3	jprss	municipal-notice	https://www.city.toon.ehime.jp/rss/10/list6.xml	PASS	2	OK	2	2	2
+JO43_MUNI_383562	jprss	municipal-notice	https://www.town.kamijima.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_383562_3	jprss	municipal-notice	https://www.town.kamijima.lg.jp/rss/10/list7.xml	PASS	23	OK	23	23	23
+JO43_MUNI_383864	jprss	municipal-notice	https://www.kumakogen.jp/rss/10/list5.xml	PASS	36	OK	36	36	36
+JO43_MUNI_384011	jprss	municipal-notice	https://www.town.masaki.ehime.jp/rss/10/list8.xml	PASS	100	OK	100	100	100
+JO43_MUNI_384011_2	jprss	municipal-notice	https://www.town.masaki.ehime.jp/rss/10/list7.xml	PASS	100	OK	100	100	100
+JO43_MUNI_392014	jprss	municipal-notice	https://www.city.kochi.kochi.jp/rss/10/list3.xml	PASS	1	OK	1	1	1
+JO43_MUNI_392014_2	jprss	municipal-notice	https://www.city.kochi.kochi.jp/rss/10/list6.xml	PASS	3	OK	3	3	3
+JO43_MUNI_392014_3	jprss	municipal-notice	https://www.city.kochi.kochi.jp/rss/10/list2.xml	PASS	30	OK	30	30	30
+JO43_MUNI_392031	jprss	municipal-notice	https://www.city.aki.kochi.jp/aki.atom	PASS	31	OK	31	31	31
+JO43_MUNI_392111	jprss	municipal-notice	https://www.city.kochi-konan.lg.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_392120	jprss	municipal-notice	https://www.city.kami.lg.jp/rss/10/list7.xml	PASS	50	OK	50	50	50
+JO43_MUNI_392120_2	jprss	municipal-notice	https://www.city.kami.lg.jp/rss/10/list8.xml	PASS	33	OK	33	33	33
+JO43_MUNI_393410	jprss	municipal-notice	https://www.town.motoyama.kochi.jp/cgi-bin/feed.php?displayCount=15&displayRange=90	PASS	15	OK	15	15	15
+JO43_MUNI_393631	jprss	municipal-notice	https://www.town.tosa.kochi.jp/tosa-town.atom	PASS	15	OK	15	15	15
+JO43_MUNI_393649	jprss	municipal-notice	https://www.vill.okawa.kochi.jp/rss.php?type=1	PASS	30	OK	30	30	30
+JO43_MUNI_393878	jprss	municipal-notice	https://www.town.niyodogawa.lg.jp/niyodogawa.atom	PASS	30	OK	30	30	30
+JO43_MUNI_394017	jprss	municipal-notice	https://www.town.nakatosa.lg.jp/rss.php?type=1	PASS	30	OK	30	30	30
+JO43_MUNI_394025	jprss	municipal-notice	https://www.town.sakawa.lg.jp/sakawa.atom	PASS	30	OK	30	30	30
+JO43_MUNI_402028	jprss	municipal-notice	https://www.city.omuta.lg.jp/new_list.xml	PASS	189	OK	189	189	189
+JO43_MUNI_402052	jprss	municipal-notice	https://www.city.iizuka.lg.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_402125	jprss	municipal-notice	https://www.city.okawa.lg.jp/news.rss	PASS	20	OK	20	20	20
+JO43_MUNI_402125_2	jprss	municipal-notice	https://www.city.okawa.lg.jp/topics.rss	PASS	20	OK	20	20	20
+JO43_MUNI_402176	jprss	municipal-notice	https://www.city.chikushino.fukuoka.jp/rss/10/list5.xml	PASS	48	OK	48	48	48
+JO43_MUNI_402176_2	jprss	municipal-notice	https://www.city.chikushino.fukuoka.jp/rss/10/list7.xml	PASS	18	OK	18	18	18
+JO43_MUNI_402176_3	jprss	municipal-notice	https://www.city.chikushino.fukuoka.jp/rss/10/list6.xml	PASS	60	OK	60	60	60
+JO43_MUNI_402214	jprss	municipal-notice	https://www.city.dazaifu.lg.jp/rss/10/list3.xml	PASS	3	OK	3	3	3
+JO43_MUNI_402257	jprss	municipal-notice	https://www.city.ukiha.fukuoka.jp/new_list.xml	PASS	40	OK	40	40	40
+JO43_MUNI_402257_2	jprss	municipal-notice	https://www.city.ukiha.fukuoka.jp/dynamic/rss10forevent.ashx	PASS	2	OK	2	2	2
+JO43_MUNI_402265	jprss	municipal-notice	https://www.city.miyawaka.lg.jp/new_list.xml	PASS	23	OK	23	23	23
+JO43_MUNI_402273	jprss	municipal-notice	https://www.city.kama.lg.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_402273_2	jprss	municipal-notice	https://www.city.kama.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_402273_3	jprss	municipal-notice	https://www.city.kama.lg.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_402281	jprss	municipal-notice	https://www.city.asakura.lg.jp/rss/10/list5.xml	PASS	64	OK	64	64	64
+JO43_MUNI_402281_2	jprss	municipal-notice	https://www.city.asakura.lg.jp/rss/10/list7.xml	PASS	34	OK	34	34	34
+JO43_MUNI_402281_3	jprss	municipal-notice	https://www.city.asakura.lg.jp/rss/10/list6.xml	PASS	4	OK	4	4	4
+JO43_MUNI_402303	jprss	municipal-notice	https://www.city.itoshima.lg.jp/news.rss	PASS	20	OK	20	20	20
+JO43_MUNI_402303_2	jprss	municipal-notice	https://www.city.itoshima.lg.jp/topics.rss	PASS	20	OK	20	20	20
+JO43_MUNI_403431	jprss	municipal-notice	https://www.town.shime.lg.jp/rss/10/list3.xml	PASS	3	OK	3	3	3
+JO43_MUNI_403431_2	jprss	municipal-notice	https://www.town.shime.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_403431_3	jprss	municipal-notice	https://www.town.shime.lg.jp/rss/10/list6.xml	PASS	7	OK	7	7	7
+JO43_MUNI_403440	jprss	municipal-notice	https://www.town.sue.fukuoka.jp/cgi-bin/feed.php?type=rss_2.0	PASS	20	OK	20	20	20
+JO43_MUNI_403491	jprss	municipal-notice	https://www.town.kasuya.fukuoka.jp/news.rss	PASS	20	OK	20	20	20
+JO43_MUNI_403491_2	jprss	municipal-notice	https://www.town.kasuya.fukuoka.jp/recruitment.rss	PASS	10	OK	10	10	10
+JO43_MUNI_403814	jprss	municipal-notice	https://www.town.ashiya.lg.jp/rss/10/list6.xml	PASS	14	OK	14	14	14
+JO43_MUNI_403814_2	jprss	municipal-notice	https://www.town.ashiya.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_403831	jprss	municipal-notice	https://www.town.okagaki.lg.jp/news.rss	PASS	20	OK	20	20	20
+JO43_MUNI_403831_2	jprss	municipal-notice	https://www.town.okagaki.lg.jp/boshu.rss	PASS	20	OK	20	20	20
+JO43_MUNI_403831_3	jprss	municipal-notice	https://www.town.okagaki.lg.jp/topics.rss	PASS	7	OK	7	7	7
+JO43_MUNI_403849	jprss	municipal-notice	https://www.town.onga.lg.jp/rss/10/list3.xml	PASS	2	OK	2	2	2
+JO43_MUNI_403849_2	jprss	municipal-notice	https://www.town.onga.lg.jp/rss/10/list1.xml	PASS	98	OK	98	98	98
+JO43_MUNI_404471	jprss	municipal-notice	https://www.town.chikuzen.fukuoka.jp/news.rss	PASS	20	OK	20	20	20
+JO43_MUNI_405442	jprss	municipal-notice	https://www.town.hirokawa.fukuoka.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_406210	jprss	municipal-notice	https://www.town.kanda.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_406210_2	jprss	municipal-notice	https://www.town.kanda.lg.jp/rss/10/list5.xml	PASS	47	OK	47	47	47
+JO43_MUNI_406210_3	jprss	municipal-notice	https://www.town.kanda.lg.jp/rss/10/list6.xml	PASS	8	OK	8	8	8
+JO43_MUNI_412031	jprss	municipal-notice	https://www.city.tosu.lg.jp/rss/10/list3.xml	PASS	3	OK	3	3	3
+JO43_MUNI_412031_2	jprss	municipal-notice	https://www.city.tosu.lg.jp/rss/10/list6.xml	PASS	2	OK	2	2	2
+JO43_MUNI_412031_3	jprss	municipal-notice	https://www.city.tosu.lg.jp/rss/10/list5.xml	PASS	79	OK	79	79	79
+JO43_MUNI_412040	jprss	municipal-notice	https://www.city.taku.lg.jp/rss/10/list3.xml	PASS	1	OK	1	1	1
+JO43_MUNI_412040_2	jprss	municipal-notice	https://www.city.taku.lg.jp/rss/10/list13.xml	PASS	18	OK	18	18	18
+JO43_MUNI_412040_3	jprss	municipal-notice	https://www.city.taku.lg.jp/rss/10/list14.xml	PASS	22	OK	22	22	22
+JO43_MUNI_412040_4	jprss	municipal-notice	https://www.city.taku.lg.jp/rss/10/list17.xml	PASS	88	OK	88	88	88
+JO43_MUNI_412040_5	jprss	municipal-notice	https://www.city.taku.lg.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_412082	jprss	municipal-notice	https://www.city.ogi.lg.jp/rss/rss_output.php	PASS	10	OK	10	10	10
+JO43_MUNI_413411	jprss	municipal-notice	https://www.town.kiyama.lg.jp/new_list.xml	PASS	86	OK	86	86	86
+JO43_MUNI_413879	jprss	municipal-notice	https://www.town.genkai.lg.jp/rss/10/list3.xml	PASS	1	OK	1	1	1
+JO43_MUNI_413879_2	jprss	municipal-notice	https://www.town.genkai.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_413879_3	jprss	municipal-notice	https://www.town.genkai.lg.jp/rss/10/list5.xml	PASS	15	OK	15	15	15
+JO43_MUNI_413879_4	jprss	municipal-notice	https://www.town.genkai.lg.jp/rss/10/list7.xml	PASS	13	OK	13	13	13
+JO43_MUNI_413879_5	jprss	municipal-notice	https://www.town.genkai.lg.jp/rss/10/list10.xml	PASS	10	OK	10	10	10
+JO43_MUNI_413879_6	jprss	municipal-notice	https://www.town.genkai.lg.jp/rss/10/list8.xml	PASS	100	OK	100	100	100
+JO43_MUNI_413879_7	jprss	municipal-notice	https://www.town.genkai.lg.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_422037	jprss	municipal-notice	https://www.city.shimabara.lg.jp/new_list/pub/Rss.aspx	PASS	82	OK	82	82	82
+JO43_MUNI_422118	jprss	municipal-notice	https://www.city.goto.nagasaki.jp/news.rss	PASS	20	OK	20	20	20
+JO43_MUNI_422118_2	jprss	municipal-notice	https://www.city.goto.nagasaki.jp/bosyu.rss	PASS	20	OK	20	20	20
+JO43_MUNI_422118_3	jprss	municipal-notice	https://www.city.goto.nagasaki.jp/press.rss	PASS	2	OK	2	2	2
+JO43_MUNI_422118_4	jprss	municipal-notice	https://www.city.goto.nagasaki.jp/media.rss	PASS	2	OK	2	2	2
+JO43_MUNI_422134	jprss	municipal-notice	https://www.city.unzen.nagasaki.jp/new_list.xml	PASS	65	OK	65	65	65
+JO43_MUNI_422134_2	jprss	municipal-notice	https://www.city.unzen.nagasaki.jp/dynamic/rss10forevent.ashx	PASS	11	OK	11	11	11
+JO43_MUNI_423076	jprss	municipal-notice	https://webtown.nagayo.jp/new_list.xml	PASS	32	OK	32	32	32
+JO43_MUNI_423076_2	jprss	municipal-notice	https://webtown.nagayo.jp/dynamic/rss10forevent.ashx	PASS	4	OK	4	4	4
+JO43_MUNI_423912	jprss	municipal-notice	https://www.sazacho-nagasaki.jp/new_list.xml	PASS	24	OK	24	24	24
+JO43_MUNI_432113	jprss	municipal-notice	https://www.city.uto.lg.jp/rss/nrss.xml	PASS	10	OK	10	10	10
+JO43_MUNI_432113_2	jprss	municipal-notice	https://www.city.uto.lg.jp/rss/crss/1243.xml	PASS	10	OK	10	10	10
+JO43_MUNI_432113_3	jprss	municipal-notice	https://www.city.uto.lg.jp/rss/crss/1290.xml	PASS	10	OK	10	10	10
+JO43_MUNI_432164	jprss	municipal-notice	https://www.city.koshi.lg.jp/new_list.xml	PASS	101	OK	101	101	101
+JO43_MUNI_432164_2	jprss	municipal-notice	https://www.city.koshi.lg.jp/dynamic/rss10forevent.ashx	PASS	10	OK	10	10	10
+JO43_MUNI_433675	jprss	municipal-notice	https://www.town.nankan.lg.jp/oshirase/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_433675_2	jprss	municipal-notice	https://www.town.nankan.lg.jp/oshirase/boshu/rss.xml	PASS	3	OK	3	3	3
+JO43_MUNI_434043	jprss	municipal-notice	https://www.town.kikuyo.lg.jp/new_list.xml	PASS	36	OK	36	36	36
+JO43_MUNI_434418	jprss	municipal-notice	https://www.town.mifune.kumamoto.jp/new_list/pub/rss.aspx	PASS	24	OK	24	24	24
+JO43_MUNI_434434	jprss	municipal-notice	https://www.town.mashiki.lg.jp/new_list.xml	PASS	41	OK	41	41	41
+JO43_MUNI_435066	jprss	municipal-notice	https://www.town.yunomae.lg.jp/new_list.xml	PASS	24	OK	24	24	24
+JO43_MUNI_435066_2	jprss	municipal-notice	https://www.town.yunomae.lg.jp/dynamic/rss10forevent.ashx	PASS	2	OK	2	2	2
+JO43_MUNI_435147	jprss	municipal-notice	https://www.town.asagiri.lg.jp/new_list.xml	PASS	26	OK	26	26	26
+JO43_MUNI_442038	jprss	municipal-notice	https://www.city-nakatsu.jp/categories/infokubun/shiseijoho/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_442038_2	jprss	municipal-notice	https://www.city-nakatsu.jp/categories/infokubun/shiseijoho/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_442038_3	jprss	municipal-notice	https://www.city-nakatsu.jp/categories/infokubun/kankojoho/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_442038_4	jprss	municipal-notice	https://www.city-nakatsu.jp/categories/infokubun/kankojoho/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_442038_5	jprss	municipal-notice	https://www.city-nakatsu.jp/categories/infokubun/topics/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_442038_6	jprss	municipal-notice	https://www.city-nakatsu.jp/categories/infokubun/topics/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_442054	jprss	municipal-notice	https://www.city.saiki.oita.jp/new_list.xml	PASS	109	OK	109	109	109
+JO43_MUNI_442054_2	jprss	municipal-notice	https://www.city.saiki.oita.jp/dynamic/rss10forevent.ashx	PASS	35	OK	35	35	35
+JO43_MUNI_442071	jprss	municipal-notice	https://www.city.tsukumi.oita.jp/rss/10/list3.xml	PASS	22	OK	22	22	22
+JO43_MUNI_442071_2	jprss	municipal-notice	https://www.city.tsukumi.oita.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_442097_2	jprss	municipal-notice	https://www.city.bungotakada.oita.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_442097_3	jprss	municipal-notice	https://www.city.bungotakada.oita.jp/rss/10/list5.xml	PASS	45	OK	45	45	45
+JO43_MUNI_442101	jprss	municipal-notice	https://www.city.kitsuki.lg.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_442127	jprss	municipal-notice	https://www.bungo-ohno.jp/categories/toplist/article/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_442127_2	jprss	municipal-notice	https://www.bungo-ohno.jp/categories/toplist/article/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_442127_3	jprss	municipal-notice	https://www.bungo-ohno.jp/categories/toplist/jigyousya/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_442127_4	jprss	municipal-notice	https://www.bungo-ohno.jp/categories/toplist/jigyousya/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_442127_5	jprss	municipal-notice	https://www.bungo-ohno.jp/categories/toplist/event/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_442127_6	jprss	municipal-notice	https://www.bungo-ohno.jp/categories/toplist/event/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_442127_7	jprss	municipal-notice	https://www.bungo-ohno.jp/categories/toplist/boshu/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_442127_8	jprss	municipal-notice	https://www.bungo-ohno.jp/categories/toplist/boshu/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_442127_9	jprss	municipal-notice	https://www.bungo-ohno.jp/categories/toplist/shishodayori/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_442127_10	jprss	municipal-notice	https://www.bungo-ohno.jp/categories/toplist/shishodayori/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_442143_2	jprss	municipal-notice	https://www.city.kunisaki.oita.jp/rss/10/list3.xml	PASS	2	OK	2	2	2
+JO43_MUNI_442143_3	jprss	municipal-notice	https://www.city.kunisaki.oita.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_442143_4	jprss	municipal-notice	https://www.city.kunisaki.oita.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_442143_5	jprss	municipal-notice	https://www.city.kunisaki.oita.jp/rss/10/list8.xml	PASS	100	OK	100	100	100
+JO43_MUNI_443417	jprss	municipal-notice	https://www.town.hiji.lg.jp/cgi-bin/feed.php?siteNew=1&amp;displayRange=90	PASS	20	OK	20	20	20
+JO43_MUNI_444618	jprss	municipal-notice	https://www.town.kokonoe.oita.jp/categories/kubun/article/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_444618_2	jprss	municipal-notice	https://www.town.kokonoe.oita.jp/categories/kubun/article/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_452017	jprss	municipal-notice	https://www.city.miyazaki.miyazaki.jp/recruitment/rss.xml	PASS	20	OK	20	20	20
+JO43_MUNI_452017_2	jprss	municipal-notice	https://www.city.miyazaki.miyazaki.jp/event_list/rss.xml	PASS	13	OK	13	13	13
+JO43_MUNI_452025	jprss	municipal-notice	https://www.city.miyakonojo.miyazaki.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_452025_2	jprss	municipal-notice	https://www.city.miyakonojo.miyazaki.jp/rss/10/list6.xml	PASS	100	OK	100	100	100
+JO43_MUNI_452092	jprss	municipal-notice	https://www.city.ebino.lg.jp/cgi-bin/feed.php?type=rss_2.0	PASS	20	OK	20	20	20
+JO43_MUNI_454052	jprss	municipal-notice	https://www.town.kawaminami.miyazaki.jp/rss/10/list6.xml	PASS	4	OK	4	4	4
+JO43_MUNI_454052_2	jprss	municipal-notice	https://www.town.kawaminami.miyazaki.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_454052_3	jprss	municipal-notice	https://www.town.kawaminami.miyazaki.jp/rss/10/list5.xml	PASS	48	OK	48	48	48
+JO43_MUNI_454052_4	jprss	municipal-notice	https://www.town.kawaminami.miyazaki.jp/rss/10/list7.xml	PASS	100	OK	100	100	100
+JO43_MUNI_462179	jprss	municipal-notice	https://www.city.soo.kagoshima.jp/rss/feed.rss	PASS	15	OK	15	15	15
+JO43_MUNI_462217	jprss	municipal-notice	https://www.city.shibushi.lg.jp/rss/10/list3.xml	PASS	3	OK	3	3	3
+JO43_MUNI_462217_2	jprss	municipal-notice	https://www.city.shibushi.lg.jp/rss/10/list5.xml	PASS	74	OK	74	74	74
+JO43_MUNI_462217_3	jprss	municipal-notice	https://www.city.shibushi.lg.jp/rss/10/list7.xml	PASS	21	OK	21	21	21
+JO43_MUNI_462217_4	jprss	municipal-notice	https://www.city.shibushi.lg.jp/rss/10/list6.xml	PASS	44	OK	44	44	44
+JO43_MUNI_464821	jprss	municipal-notice	https://www.higashikushira.com/docs/index.rss	PASS	5	OK	5	5	5
+JO43_MUNI_464821_2	jprss	municipal-notice	https://www.higashikushira.com/docs/index.atom	PASS	5	OK	5	5	5
+JO43_MUNI_464821_3	jprss	municipal-notice	https://www.higashikushira.com/categories/bunya/gyoushanokatae/nyusatsu/index.rss	PASS	8	OK	8	8	8
+JO43_MUNI_464821_4	jprss	municipal-notice	https://www.higashikushira.com/categories/bunya/gyoushanokatae/nyusatsu/index.atom	PASS	8	OK	8	8	8
+JO43_MUNI_464821_5	jprss	municipal-notice	https://www.higashikushira.com/categories/kubun/boshu/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_464821_6	jprss	municipal-notice	https://www.higashikushira.com/categories/kubun/boshu/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_464929	jprss	municipal-notice	https://kimotsuki-town.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_472051	jprss	municipal-notice	https://www.city.ginowan.lg.jp/cgi-bin/feed.php?siteNew=1	PASS	20	OK	20	20	20
+JO43_MUNI_472085	jprss	municipal-notice	https://www.city.urasoe.lg.jp/category/kubun/news/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_472085_2	jprss	municipal-notice	https://www.city.urasoe.lg.jp/category/bunya/nyusatsu/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_472085_3	jprss	municipal-notice	https://www.city.urasoe.lg.jp/category/mokuteki/boshu/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_472085_4	jprss	municipal-notice	https://www.city.urasoe.lg.jp/category/mokuteki/boshu/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_472085_5	jprss	municipal-notice	https://www.city.urasoe.lg.jp/category/kubun/kikan/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_472085_6	jprss	municipal-notice	https://www.city.urasoe.lg.jp/category/kubun/kikan/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_472093	jprss	municipal-notice	https://www.city.nago.okinawa.jp/articles/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_472093_2	jprss	municipal-notice	https://www.city.nago.okinawa.jp/articles/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_472093_3	jprss	municipal-notice	https://www.city.nago.okinawa.jp/news/newslist/boshu/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_472093_4	jprss	municipal-notice	https://www.city.nago.okinawa.jp/news/newslist/boshu/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_472107	jprss	municipal-notice	https://www.city.itoman.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_472107_2	jprss	municipal-notice	https://www.city.itoman.lg.jp/rss/10/list5.xml	PASS	100	OK	100	100	100
+JO43_MUNI_472107_3	jprss	municipal-notice	https://www.city.itoman.lg.jp/rss/10/list7.xml	PASS	100	OK	100	100	100
+JO43_MUNI_472107_4	jprss	municipal-notice	https://www.city.itoman.lg.jp/rss/10/list8.xml	PASS	100	OK	100	100	100
+JO43_MUNI_472131_2	jprss	municipal-notice	https://www.city.uruma.lg.jp/shinchaku/shinchaku.xml	PASS	10	OK	10	10	10
+JO43_MUNI_472131_3	jprss	municipal-notice	https://www.city.uruma.lg.jp/news/photonews.xml	PASS	10	OK	10	10	10
+JO43_MUNI_472131_4	jprss	municipal-notice	https://www.city.uruma.lg.jp/boshuu/boshuu.xml	PASS	10	OK	10	10	10
+JO43_MUNI_472131_5	jprss	municipal-notice	https://www.city.uruma.lg.jp/jigyosha/jigyousya.xml	PASS	10	OK	10	10	10
+JO43_MUNI_473081	jprss	municipal-notice	https://www.town.motobu.okinawa.jp/category/news/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_473081_2	jprss	municipal-notice	https://www.town.motobu.okinawa.jp/category/news/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_473278	jprss	municipal-notice	https://www.vill.kitanakagusuku.lg.jp/cgi-bin/feed.php?type=rss_2.0&new1=1	PASS	20	OK	20	20	20
+JO43_MUNI_473286	jprss	municipal-notice	https://www.vill.nakagusuku.okinawa.jp/topics/rss/	PASS	86	OK	86	86	86
+JO43_MUNI_473286_2	jprss	municipal-notice	https://www.vill.nakagusuku.okinawa.jp/topics/rss/cat:イベント	PASS	3	OK	3	3	3
+JO43_MUNI_473286_3	jprss	municipal-notice	https://www.vill.nakagusuku.okinawa.jp/topics/rss/cat:公募・募集	PASS	12	OK	12	12	12
+JO43_MUNI_473294	jprss	municipal-notice	https://www.town.nishihara.okinawa.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_473481	jprss	municipal-notice	https://www.town.yonabaru.okinawa.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_473481_2	jprss	municipal-notice	https://www.town.yonabaru.okinawa.jp/rss/10/list5.xml	PASS	20	OK	20	20	20
+JO43_MUNI_473481_3	jprss	municipal-notice	https://www.town.yonabaru.okinawa.jp/rss/10/list7.xml	PASS	33	OK	33	33	33
+JO43_MUNI_473481_4	jprss	municipal-notice	https://www.town.yonabaru.okinawa.jp/rss/10/list8.xml	PASS	45	OK	45	45	45
+JO43_MUNI_473502	jprss	municipal-notice	https://www.town.haebaru.lg.jp/rss/10/list3.xml	PASS	6	OK	6	6	6
+JO43_MUNI_473502_2	jprss	municipal-notice	https://www.town.haebaru.lg.jp/rss/10/list1.xml	PASS	100	OK	100	100	100
+JO43_MUNI_473502_3	jprss	municipal-notice	https://www.town.haebaru.lg.jp/rss/10/list6.xml	PASS	95	OK	95	95	95
+JO43_MUNI_473545	jprss	municipal-notice	https://www.vill.zamami.okinawa.jp/topics/rss/	PASS	100	OK	100	100	100
+JO43_MUNI_473545_2	jprss	municipal-notice	https://www.vill.zamami.okinawa.jp/topics/rss/cat:採用・求人	PASS	2	OK	2	2	2
+JO43_MUNI_473545_3	jprss	municipal-notice	https://www.vill.zamami.okinawa.jp/topics/rss/cat:イベント・募集	PASS	30	OK	30	30	30
+JO43_MUNI_473545_4	jprss	municipal-notice	https://www.vill.zamami.okinawa.jp/topics/rss/cat:公募・入札	PASS	6	OK	6	6	6
+JO43_MUNI_473553	jprss	municipal-notice	https://www.vill.aguni.okinawa.jp/cgi-bin/feed.php?siteNew=1&displayRange=90	PASS	11	OK	11	11	11
+JO43_MUNI_473600	jprss	municipal-notice	https://vill.izena.okinawa.jp/topics/rss/	PASS	100	OK	100	100	100
+JO43_MUNI_473626	jprss	municipal-notice	https://www.town.yaese.lg.jp/docs/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_473626_2	jprss	municipal-notice	https://www.town.yaese.lg.jp/docs/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_473821	jprss	municipal-notice	https://www.town.yonaguni.okinawa.jp/category/kubun/info/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_473821_2	jprss	municipal-notice	https://www.town.yonaguni.okinawa.jp/category/kubun/info/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_473821_3	jprss	municipal-notice	https://www.town.yonaguni.okinawa.jp/category/kubun/boshu/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_473821_4	jprss	municipal-notice	https://www.town.yonaguni.okinawa.jp/category/kubun/boshu/index.atom	PASS	10	OK	10	10	10
+JO43_MUNI_473821_5	jprss	municipal-notice	https://www.town.yonaguni.okinawa.jp/category/kubun/event/index.rss	PASS	10	OK	10	10	10
+JO43_MUNI_473821_6	jprss	municipal-notice	https://www.town.yonaguni.okinawa.jp/category/kubun/event/index.atom	PASS	10	OK	10	10	10

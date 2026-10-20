@@ -163,6 +163,9 @@ struct IntelDetail: View {
                     }
                     EvidenceSection(itemUid: uid)
                     AnnotationsSection(refType: "intel_item", refId: uid)
+                    if !isBreach {
+                        SimilarItemsSection(uid: uid) { openDuplicateUID = $0 }
+                    }
                 }
             }
             .padding()
@@ -510,6 +513,69 @@ struct IntelDetail: View {
             revealed = try await apiClient.api.revealItem(uid: uid, reason: revealReason)
         } catch {
             revealError = "Reveal failed — operator access required."
+        }
+    }
+}
+
+/// "Similar items" — the rows nearest this item's stored vector
+/// (`GET /api/intel/items/:uid/similar`, core/semsearchapi.c; no embedding
+/// call). States the server's "N of M"; a 409 (no vector yet) or 503 (no
+/// index) is shown as the reason, never as an empty list.
+private struct SimilarItemsSection: View {
+    let uid: String
+    let onOpen: (String) -> Void
+
+    @EnvironmentObject private var apiClient: APIClient
+    @Environment(\.theme) private var theme
+
+    @State private var rows: [IntelItem] = []
+    @State private var meta: SemanticMeta?
+    @State private var loading = true
+    @State private var error: String?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack {
+                Text("Similar items").font(.headline).foregroundStyle(theme.text)
+                Spacer()
+                if let shown = meta?.shown, let total = meta?.total {
+                    Text(shown < total ? "\(shown) of \(total)" : "\(total)")
+                        .font(.caption.monospacedDigit())
+                        .foregroundStyle(theme.textMuted)
+                }
+            }
+            if loading {
+                ProgressView()
+            } else if let error {
+                Text(error).font(.caption).foregroundStyle(theme.textMuted)
+            } else if rows.isEmpty {
+                Text("The index returned no other row.")
+                    .font(.caption).foregroundStyle(theme.textMuted)
+            } else {
+                ForEach(rows) { row in
+                    Button { onOpen(row.uid) } label: {
+                        IntelItemRow(item: row)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+        .task(id: uid) { await load() }
+    }
+
+    private func load() async {
+        loading = true
+        defer { loading = false }
+        do {
+            let env = try await apiClient.api.similarItems(uid: uid)
+            rows = env.data
+            meta = env.meta
+            error = nil
+        } catch let err {
+            rows = []
+            meta = nil
+            error = SemanticErrorBody.message(err)
         }
     }
 }

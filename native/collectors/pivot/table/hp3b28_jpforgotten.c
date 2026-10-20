@@ -67,6 +67,7 @@ static const hp_source HP3B28_JPFORGOTTEN[] = {
     .href_must = "/dataset/nenkan-",
     .interval = 604800,
     .page_param = "page",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_start = 1,
     .description = "A CKAN catalogue group (\"統計年鑑\") on Miyazaki Prefecture's "
       "little-known standalone open-data instance, holding 319 "
@@ -455,6 +456,7 @@ static const hp_source HP3B28_JPFORGOTTEN[] = {
     .href_must = "/books/komonjo/",
     .interval = 604800,
     .page_param = "p",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_start = 1,
     .description = "Nagano Prefectural Museum of History's donor-organized "
       "old-document catalog (e.g. the 米山一政収集文書 collection) shows a "

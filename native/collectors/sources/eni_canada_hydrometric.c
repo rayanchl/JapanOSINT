@@ -1,6 +1,6 @@
 /* Environment Canada realtime hydrometric stations (GeoMet OGC API - Features).
  * Endpoint: https://api.weather.gc.ca/collections/hydrometric-realtime/items
- *           ?limit=500&sortby=-DATETIME&f=json                       (keyless)
+ *           ?limit=500&sortby=-DATETIME&f=json&datetime=<1h ago>/..  (keyless)
  * Emits one row per station observation actually returned: LEVEL (UNIT: metres,
  * station datum) and/or DISCHARGE (UNIT: m3/s) — whichever is present. Either
  * can be null on a level-only or flow-only station and a null is never
@@ -8,6 +8,24 @@
  *
  * ORDERING TRAP: without sortby=-DATETIME the default page is arbitrary/old,
  * so the sort is baked into the URL.
+ *
+ * A WINDOW AND A WALK (2026-10-12). The sort was baked in; the bound was not
+ * bounded by anything. `?limit=500` over the whole collection stored 500 of
+ * the 19,108,759 observations it holds (numberMatched, measured) on every
+ * 15-minute run — the seventh discard shape (tools/audit_url_limits.py). The
+ * sort made those 500 the NEWEST, which is why it looked healthy, but a feed
+ * whose purpose is "every observation" cannot answer that with a count.
+ *
+ * So the question is bounded by TIME instead: one hour, which measured 3,366
+ * observations on 2026-10-12 and is read to the end through lib/pagewalk.c
+ * following the service's own links[rel=next]. The window is four runs wide at
+ * a 15-minute interval, so nothing falls between two runs, and the rows key on
+ * station|DATETIME so the overlap costs nothing at the sink.
+ *
+ * This reads the same collection as `gc-hydrometric` in geoeo_gc_ogcapi.c, and
+ * the two are a deliberate pair rather than a duplicate: that row collapses to
+ * the NEWEST observation per station for the map, this one keeps EVERY
+ * observation in the window as the time series. Fix them together.
  * DATUM NOTE: LEVEL is metres above the STATION datum and is therefore NOT
  * comparable between stations; the row says so.
  * GEO (R2): geometry.coordinates = [lon, lat] straight from the GeoJSON.
@@ -15,21 +33,27 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/pagewalk.h"
 #include "third_party/cJSON.h"
+#include "_timefmt.inc"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define SRC "canada-hydrometric-realtime"
+/* One hour, four runs wide at the 15-minute interval. See the window note. */
+#define CAHY_WINDOW_HOURS 1
+/* 3,366 observations an hour at 500 a page = 7; 20 is that with headroom, and
+ * a stop at it files a collector-truncation-notice naming numberMatched. */
+#define CAHY_PAGE_MAX 20  /* exhaustive-ok: page ceiling handed to pw_walk_max(); a stop at it files a collector-truncation-notice */
 
-static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *url = "https://api.weather.gc.ca/collections/hydrometric-realtime/"
-                    "items?limit=500&sortby=-DATETIME&f=json";
-  cJSON *doc = feed_get_json(ctx->http, url, 45000);
-  if (!doc) { fprintf(stderr, "[" SRC "] fetch failed\n"); return -1; }
-
+static int cahy_page(const source_ctx *ctx, intel_sink *sink, const char *sid,
+                     cJSON *doc, void *ud, int *seen) {
+  (void)ctx; (void)ud;
   cJSON *feats = cJSON_GetObjectItem(doc, "features");
-  if (!cJSON_IsArray(feats)) { cJSON_Delete(doc); fprintf(stderr, "[" SRC "] no features[]\n"); return -1; }
+  *seen = cJSON_IsArray(feats) ? cJSON_GetArraySize(feats) : 0;
+  if (!cJSON_IsArray(feats)) { fprintf(stderr, "[%s] no features[]\n", sid); return 0; }
 
   int n = 0;
   cJSON *f;
@@ -102,8 +126,25 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (sink->emit(sink, &row) >= 0) n++;
     free(pj);
   }
-  cJSON_Delete(doc);
-  fprintf(stderr, "[" SRC "] emitted %d\n", n);
+  return n;
+}
+
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  char since[40];
+  if (!jo_time_fmt(time(NULL) - (time_t)CAHY_WINDOW_HOURS * 3600,
+                   "%Y-%m-%dT%H:%M:%SZ", since, sizeof since)) {
+    fprintf(stderr, "[" SRC "] cannot render the window start\n");
+    return -1;
+  }
+  char url[384];
+  snprintf(url, sizeof url,
+           "https://api.weather.gc.ca/collections/hydrometric-realtime/items"
+           "?limit=500&sortby=-DATETIME&f=json&datetime=%s/..", since);
+  if (pw_walk_max(ctx, sink, SRC, url, pw_fetch_json, cahy_page, NULL,
+                  CAHY_PAGE_MAX) < 0) {
+    fprintf(stderr, "[" SRC "] fetch failed\n");
+    return -1;
+  }
   return 0;
 }
 
@@ -112,7 +153,7 @@ static const source_def eni_canada_hydrometric_def = {
   .name = "Environment Canada realtime hydrometric stations",
   .update_interval_sec = 900, .run = run,
   .category = "environment", .type = "api",
-  .url = "https://api.weather.gc.ca/collections/hydrometric-realtime/items",
+  .url = "https://api.weather.gc.ca/collections/hydrometric-realtime/items?limit=500&sortby=-DATETIME&f=json&datetime=<now-1h, ISO, from CAHY_WINDOW_HOURS>/..",
   .description = "Canadian national water-level (m) and discharge (m3/s) network, 5-minute telemetry with station geometry.",
   .license = "Open Government Licence - Canada (api.weather.gc.ca GeoMet-OGC-API), keyless.",
   .free_tier = 1,

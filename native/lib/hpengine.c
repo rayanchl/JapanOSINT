@@ -3576,6 +3576,8 @@ static const hp_source *hp_lookup(const char *id) {
 
 const hp_source *hp_source_get(const char *id) { return hp_lookup(id); }
 
+const hp_source *hp_spec_get(const char *id) { return hp_lookup(id); }
+
 /* FNV-1a 64 over a whole response body. Only ever compared for equality
  * between consecutive pages of one walk (shape notice (d)); nothing is keyed
  * on it. */
@@ -4165,6 +4167,33 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
    * URL can only be advanced from it. Applying it twice is a no-op. */
   long tmpl_step = s->page_size > 0 ? s->page_size : 0;  /* {offset} stride */
   char *page_body = NULL;             /* the body for THIS page, when paged */
+  /* Does this row read its collection over a CYCLE (hpengine.h's page_resume)?
+   * Decided once, here, so the reasons are in one place and each refusal says
+   * which one applied rather than silently doing nothing. */
+  int resume_on = 0;
+  if (s->page_resume) {
+    if (!paged && !page_walk)
+      fprintf(stderr, "[hp:%s] page_resume on a row that declares no paging — "
+                      "one request has nowhere to resume from; ignored\n", s->id);
+    else if (ctx->entity && ctx->entity[0])
+      fprintf(stderr, "[hp:%s] page_resume ignored for the entity run \"%s\": a "
+                      "pivot answers from the start of that entity's results\n",
+              s->id, ctx->entity);
+    else if (hp_has_date_token(s->url) || hp_has_date_token(s->post_body))
+      fprintf(stderr, "[hp:%s] page_resume with a {date…}/{ago…} token — a "
+                      "stored URL would pin one day forever; ignored\n", s->id);
+    else if (path_paged)
+      /* A {page}/{offset} token lives in the PATH or the body, so the position
+       * cannot be read back out of a stored URL the way a query parameter can,
+       * and without the number the walk would restart its arithmetic from
+       * page_start and re-read what it just read. One registered row is this
+       * shape; it keeps its ceiling until the token position is stored too. */
+      fprintf(stderr, "[hp:%s] page_resume with a {page}/{offset} token is not "
+                      "supported — the position is not readable from the URL; "
+                      "ignored\n", s->id);
+    else
+      resume_on = 1;
+  }
 dated_restart:;
   char *page_url = strdup(page_walk ? url_override_apply(url) : url);
   if (path_paged) {
@@ -4175,6 +4204,41 @@ dated_restart:;
     free(page_url);
     page_url = hp_expand(url, &vars, NULL, NULL);
     if (hp_has_page_token(body)) page_body = hp_expand(body, &vars, NULL, NULL);
+  }
+  /* Start where the previous run stopped. The token is a URL — the same URL
+   * this engine would have requested next — so one stored string serves
+   * page_param, {page}, next_path and page_walk alike, and no mechanism needs
+   * its own arithmetic to be resumable.
+   *
+   * The host check is not paranoia about our own database: it is the rule that
+   * a reading position can move us THROUGH a collection and never to a
+   * different server. A token that fails it is dropped and the run starts from
+   * the row's own URL, which is always safe. */
+  int resumed_from_token = 0;
+  if (resume_on && ctx->resume_in && ctx->resume_in[0] && !vars.day_shift) {
+    char *want = hp_host_of(url), *got = hp_host_of(ctx->resume_in);
+    if (want && got && strcmp(want, got) == 0) {
+      free(page_url);
+      page_url = strdup(ctx->resume_in);
+      resumed_from_token = 1;
+      /* THE URL IS NOT ENOUGH ON ITS OWN for a page_param walk. The next page
+       * is computed as page_start + (page+1)*step from the ROW's url, not from
+       * the page just fetched — so a run resumed at `offset=4` with page_start
+       * still 0 would ask for offset=2 next and walk BACKWARDS over ground it
+       * had already covered, forever, with every page full and the run green.
+       * The stored position carries the number; read it back. */
+      long at = 0;
+      if (s->page_param && hp_url_num_param(page_url, s->page_param, &at) &&
+          at >= 0 && at < 1000000000L)
+        page_start = (int)at;
+      fprintf(stderr, "[hp:%s] resuming the walk at %s\n", s->id, page_url);
+    } else {
+      fprintf(stderr, "[hp:%s] stored resume position is on host %s, not %s — "
+                      "dropped; this run starts from the row's own URL\n",
+              s->id, got ? got : "(none)", want ? want : "(none)");
+    }
+    free(want);
+    free(got);
   }
   /* The first page's outcome, kept for the fetch-failure notice: 0 = never
    * asked, 200 = served, -1 = transport failure, otherwise the status. */
@@ -4531,6 +4595,30 @@ dated_restart:;
     if (page + 1 >= page_max && page_url) st.truncated = 1;   /* ceiling bit */
   }
   free(prev_url);
+  /* Store where this run stopped — but ONLY when the ceiling stopped it, which
+   * is the one exit where `page_url` holds a page that exists and was never
+   * fetched (line "ceiling bit" above sets st.truncated with page_url still in
+   * hand). Every other exit means the walk ENDED: a short page, no next link,
+   * a repeated page, a cancel. Those clear the position so the next run starts
+   * the cycle again — which is the point, not a loss.
+   *
+   * A later page that FAILED also clears it. Bookmarking a page that answered
+   * 500 would make the row retry that one page every run forever; starting over
+   * re-reads what we already have, which is cheap and self-healing, and the
+   * fetch-failure notice names the status either way. */
+  char *resume_next = NULL;        /* kept for the notice, which runs later */
+  if (resume_on && ctx->resume_out) {
+    const char *keep = (st.truncated && !failed_midwalk && page_url)
+                         ? page_url : NULL;
+    ctx->resume_out(ctx, keep);
+    if (keep) {
+      resume_next = strdup(keep);
+      fprintf(stderr, "[hp:%s] the next run resumes at %s\n", s->id, keep);
+    } else if (resumed_from_token) {
+      fprintf(stderr, "[hp:%s] the cycle completed; the next run starts over\n",
+              s->id);
+    }
+  }
   free(page_url);
   free(page_body);
   free(st.next_url);
@@ -4645,6 +4733,32 @@ date_step_back:
     cJSON_AddBoolToObject(p, "more_pages_pending",
                           failed_midwalk || pw_stuck || avail <= (long)out);
     cJSON_AddNumberToObject(p, "declared_max_items", s->max_items);
+    /* A cycling row's notice says WHICH SLICE this run read, so "used 2,000 of
+     * 5,597,082" is not read as a permanent ceiling. Without this the
+     * disclosure is true and still misleading: the records not used this run
+     * are not records nobody will ever fetch. */
+    if (resume_on) {
+      cJSON_AddBoolToObject(p, "reads_over_a_cycle", 1);
+      cJSON_AddBoolToObject(p, "resumed_this_run", resumed_from_token);
+      /* Three outcomes, not two. Clearing the position because a page FAILED is
+       * not the same as clearing it because the collection ended, and saying
+       * "this run completed the cycle" for the first one is a false claim in a
+       * disclosure — the thing this notice exists to prevent.
+       * ENA_PATHOGEN_SARSCOV2_RUNS found it: ebi.ac.uk answers HTTP 400 to
+       * `offset=1000`, so the row reads 1,000 of millions, page 2 is refused,
+       * and the cycle can never advance. That is a row to re-point, and the
+       * notice has to say so rather than report a tidy completion. */
+      if (resume_next)
+        cJSON_AddStringToObject(p, "next_run_resumes_at", resume_next);
+      else if (failed_midwalk)
+        cJSON_AddStringToObject(p, "next_run_resumes_at",
+                                "the start — the position was NOT advanced "
+                                "because a page failed, so this row re-reads "
+                                "the same slice until its paging is re-pointed");
+      else
+        cJSON_AddStringToObject(p, "next_run_resumes_at",
+                                "the start — this run completed the cycle");
+    }
     char cutwhy[400] = "";
     if (failed_midwalk) {
       cJSON_AddNumberToObject(p, "failed_page", failed_page);
@@ -4688,6 +4802,9 @@ date_step_back:
       : failed_midwalk
         ? "re-run; a rate-limited host needs a per-host minimum gap "
           "(core/hostgate.c) — see docs/SOURCE_EXHAUSTIVENESS.md"
+      : resume_on
+        ? "none needed: this row reads its collection over a cycle, and "
+          "next_run_resumes_at says where the next run continues"
         : "raise max_items/page_max on this row (lib/hpengine.h) — see "
           "docs/SOURCE_EXHAUSTIVENESS.md");
     char *pj = cJSON_PrintUnformatted(p);
@@ -4698,6 +4815,12 @@ date_step_back:
     if (failed_midwalk)
       snprintf(title, sizeof title, "%s used %d of %ld available records — "
                "page %d answered %ld", s->id, out, avail, failed_page, failed_status);
+    else if (resume_on && resume_next)
+      /* The title is what a human scans, so a cycling row says so here and not
+       * only in the properties: "used 2,000 of 5,597,082" read alone is a
+       * ceiling nobody will ever pass, which is the opposite of the truth. */
+      snprintf(title, sizeof title, "%s read %d of %ld records this run; the "
+               "next run continues the cycle", s->id, out, avail);
     else
       snprintf(title, sizeof title, "%s used %d of %ld available records",
                s->id, out, avail);
@@ -4711,6 +4834,7 @@ date_step_back:
     sink->emit(sink, &note);
     free(pj);
   }
+  free(resume_next);
 
   /* RULE 1's SECOND HALF. "Real fetch or honest empty" has always held here —
    * the engine cannot invent a record — but the rule also says a failure
@@ -5092,6 +5216,16 @@ char *hp_describe_json(const char *id) {
   hp_desc_int(pg, "page_size", s->page_size);
   hp_desc_int(pg, "page_max", s->page_max);
   hp_desc_int(pg, "page_walk", s->page_walk);
+  /* A cycling row's page_max is NOT the size of what it reads — it is the size
+   * of one slice, and the collection arrives over however many runs the cycle
+   * takes. A client shown `page_max: 20` and nothing else would describe the
+   * row as reading 20 pages, full stop, which is the misreading the truncation
+   * notice's own title had to be rewritten to avoid. */
+  hp_desc_int(pg, "page_resume", s->page_resume);
+  if (s->page_resume)
+    cJSON_AddStringToObject(pg, "page_resume_note",
+      "reads the collection over a cycle: one ceiling's worth per run, "
+      "resuming where the previous run stopped");
   cJSON_AddItemToObject(o, "paging", pg);
 
   /* registration-level facts the def also carries, repeated so the engine

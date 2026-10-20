@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import wsUrl from '../utils/wsUrl.js';
+import wsUrl, { WS_ENABLED } from '../utils/wsUrl.js';
 
 /**
  * Shared WebSocket lifecycle hook.
@@ -27,7 +27,12 @@ import wsUrl from '../utils/wsUrl.js';
  * @param {Array} [opts.deps=[]]              extra dependency array — when
  *        any value changes, the socket is closed and re-established
  *
- * @returns {{ connected: boolean }}
+ * Does nothing — never dials, `connected` stays false — unless the build
+ * sets VITE_JO_WEBSOCKET=1 (see WS_ENABLED in utils/wsUrl.js): the native
+ * server has no /ws. `available` tells a caller which case it is in, so it
+ * can say "not available" and use its HTTP path instead of "reconnecting…".
+ *
+ * @returns {{ connected: boolean, available: boolean }}
  */
 export default function useWebSocket(path, {
   onMessage,
@@ -53,8 +58,9 @@ export default function useWebSocket(path, {
   useEffect(() => { onOpenRef.current = onOpen; }, [onOpen]);
   useEffect(() => { onCloseRef.current = onClose; }, [onClose]);
 
+  const active = enabled && WS_ENABLED;
   useEffect(() => {
-    if (!enabled) return undefined;
+    if (!active) return undefined;
     let cancelled = false;
 
     const connect = () => {
@@ -137,7 +143,7 @@ export default function useWebSocket(path, {
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [path, enabled, backoffBaseMs, backoffMaxMs, respondToOnline, ...deps]);
+  }, [path, active, backoffBaseMs, backoffMaxMs, respondToOnline, ...deps]);
 
-  return { connected };
+  return { connected, available: WS_ENABLED };
 }

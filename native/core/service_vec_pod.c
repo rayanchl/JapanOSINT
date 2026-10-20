@@ -27,6 +27,7 @@
  * time that the intel backfill pod also wants.
  */
 #include "service_vec.h"
+#include "source_category.h"
 #include "embed_pod.h"
 #include "db.h"
 #include "../source.h"
@@ -37,17 +38,24 @@
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   (void)sink;                      /* the index is the output, not intel rows */
-  if (!embed_base_url() || !*embed_base_url()) return 0;   /* inert, announced
-                                                              by service_vec */
-  const char *sem = getenv("JO_ROUTE_SEMANTIC");
-  if (sem && sem[0] == '0' && sem[1] == 0) return 0;
-
   if (!ctx || !ctx->db) return -1;
   /* Own connection, like every other pod that writes: a transaction belongs to
    * a connection, not a thread (core/db.h, "THE RULE"). */
   db_handle own;
   db_handle *db = db_worker_open(&own, ctx->db);
+  /* Declared category labels need no embedding server: written every tick,
+   * inert or not (core/source_category.h). Writes only what differs. */
+  source_category_declare(db);
+  source_entity_types_write(db);
+  const char *sem = getenv("JO_ROUTE_SEMANTIC");
+  if (!embed_base_url() || !*embed_base_url() ||          /* inert, announced */
+      (sem && sem[0] == '0' && sem[1] == 0)) {            /* by service_vec */
+    db_worker_close(&own);
+    return 0;
+  }
   int n = service_vec_build(db);
+  /* Derived labels read the finished index; a no-op unless it changed. */
+  if (n >= 0) source_category_derive(db);
   db_worker_close(&own);
   if (n < 0) return -1;            /* reason already recorded in meta + stderr */
   return 0;
@@ -58,8 +66,9 @@ static const source_def svec_pod_def = {
   .name = "Semantic Service Index",
   .name_ja = "サービス意味検索インデックス",
   .description = "Builds the sqlite-vec + fts5 index behind semantic service "
-                 "routing, off the search request path. Inert unless "
-                 "JO_EMBED_URL is set.",
+                 "routing, off the search request path, and the canonical "
+                 "category labels derived from it. Inert unless JO_EMBED_URL "
+                 "is set (declared category labels are written regardless).",
   .url = "internal://service-index",
   .update_interval_sec = 900, .run = run,
   .category = "maintenance" };

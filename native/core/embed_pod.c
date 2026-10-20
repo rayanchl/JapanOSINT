@@ -4,7 +4,10 @@
  * collectors/pod/simhash_pod.c: `_maint` because it emits no intel_items (a
  * real collector id would trip records_drop against a permanent records=0),
  * and the scheduler's skip-if-running rule serialises ticks so two sweeps
- * never interleave.
+ * never interleave. The index itself — vec0 table, done/fail side tables,
+ * identity, the split-batch retry, coverage, KNN — is lib/vecindex; what is
+ * left here is what is particular to intel_items: which rows, in what order,
+ * with which metadata.
  *
  * WHICH ROWS ARE ELIGIBLE. A row is in scope when its DATE is within
  * JO_EMBED_SINCE_DAYS, and its date is published_at only when published_at
@@ -13,8 +16,27 @@
  * ISO cutoff, and collectors store published_at in whatever shape the upstream
  * used: an epoch ("1727000000") or a dd/mm/yyyy date sorts below "2026-…"
  * and never qualified, an RFC 822 date ("Mon, 02 Oct …") sorts above it and
- * always did. ROW_DATE below is the one definition; the walk, the delta and
- * the eligible_count coverage reports all use it.
+ * always did. ROW_DATE below is the one definition; the walk, the delta, the
+ * eligible_count coverage reports and the `ts` metadata column all use it.
+ *
+ * METADATA INSIDE THE KNN. intel_vec_v2 carries tenant_id (the PARTITION KEY),
+ * source_id, ts (epoch seconds of ROW_DATE) and record_type, so a query
+ * filters INSIDE the nearest-neighbour search instead of after it. Filtering
+ * after it was a recall bug, not a style point: /api/intel/semantic asked for
+ * the k nearest across EVERY tenant and then dropped the ones the caller may
+ * not see, so a tenant whose rows sat below k other-tenant rows got nothing.
+ * A partition per tenant also means a tenant's query never reads another
+ * tenant's chunks.
+ *
+ * WHY intel_vec_v2 AND NOT intel_vec. vec0 columns cannot be added to an
+ * existing table, and a vec0 table must never be renamed (lib/vecindex.h). So
+ * the metadata index is a NEW table, and an index built before it existed
+ * (intel_vec: uid + embedding only) is MIGRATED: vectors are copied into
+ * intel_vec_v2 in batches with their metadata joined from intel_items — no
+ * row is re-embedded — and the old table is dropped in the same transaction
+ * that marks the migration done. Until then the query side reads the old
+ * table (without in-KNN filters) and the pod embeds nothing new, so the two
+ * tables never disagree about what is embedded.
  *
  * RESUMABILITY. Two phases, both keyed in intel_vec_meta:
  *   1. the FULL sweep walks eligible rows newest-first behind a keyset
@@ -37,7 +59,9 @@
  *      (intel_vec_done.embedded_at <= fetched_at). A row re-fetched with
  *      identical text is MARKED (embedded_at := this tick's mark) so it
  *      drops out of the walk; one whose text changed is re-embedded (DELETE +
- *      INSERT on the vec0 table).
+ *      INSERT on the vec0 table); one whose text is the same but whose
+ *      metadata moved (published_at rewritten on re-fetch) is rewritten from
+ *      its stored vector, not re-embedded.
  *
  * WHY THE DELTA LOOKS LIKE THAT. It used to restart at uid "" every tick,
  * select re-fetched-but-unchanged rows forever (their embedded_at never
@@ -69,7 +93,7 @@
  * with its hash and reason and skipped. It is retried when its text changes.
  * The count and a bounded sample are in the coverage block — skipped rows are
  * data, not a log line. A transient refusal (unreachable, timeout, 503, 429)
- * marks nothing and is retried next tick.
+ * marks nothing and is retried next tick. (vecindex_embed_items.)
  *
  * MODEL IDENTITY. The model is JO_EMBED_MODEL, else what GET /v1/models says.
  * If neither answers, the tick is skipped with last_error set — "unknown" is
@@ -78,20 +102,14 @@
  * forever. The model is persisted together with the dimension, in the same
  * transaction as the first rows written.
  *
- * WHY A SIDE TABLE NEXT TO THE vec0 TABLE. vec0 owns its own shadow tables
- * and a text primary key lookup through the virtual table is not a plain
- * B-tree probe. intel_vec_done(uid PRIMARY KEY, text_hash, embedded_at) is
- * an ordinary table: NOT EXISTS against it is an index seek, count(*) on it
- * is the embedded_count the coverage block reports, and the hash is what
- * makes "re-fetched but unchanged" free. The two are written in one
- * transaction (BEGIN IMMEDIATE, checked) so they cannot disagree.
- *
  * THE THREAD IT RUNS ON. llm_embed() routes through core/llm_worker.c, which
  * keys its worker threads on base_url; JO_EMBED_URL is a different host:port
  * from LLM_BASE_URL, so the embedding pod owns its own worker and never sits
  * in the generation queue. A user's semantic QUERY shares this worker (same
  * base_url) on the interactive lane, and bounds its wait in the queue
- * (llm_client.bound_queue_wait) so it cannot be held for a whole batch. */
+ * (llm_client.bound_queue_wait) so it cannot be held for a whole batch. The
+ * post-batch hooks (embed_hook_register) run here too, on the maintenance
+ * lane, after each batch commits. */
 #include "embed_pod.h"
 #include "../source.h"
 #include "llm.h"
@@ -110,8 +128,42 @@
 /* Rows read per selection. A delta page is mostly unchanged rows that cost a
  * hash compare each, so it is read in larger pages than it is embedded. */
 #define SEL_CHUNK 256
-/* Failed rows listed in the coverage block. The count is always complete. */
-#define FAIL_SAMPLE 5
+/* Vectors copied per migration transaction (legacy intel_vec → v2). Each row
+ * is a point read from the old vec0 table plus a write to the new one; a few
+ * thousand keeps one transaction's journal small while a 100k-row index still
+ * migrates in well under a minute. */
+#define MIGRATE_BATCH 2000
+
+#define EMBED_REBUILD_HINT \
+  " (rebuild: DROP TABLE " EMBED_VEC_TABLE ", " EMBED_LEGACY_VEC_TABLE ", " \
+  EMBED_DONE_TABLE ", " EMBED_FAIL_TABLE "; DELETE FROM " EMBED_META_TABLE ")"
+
+/* tenant_id first: it is the partition key. */
+static const vecindex_col INTEL_COLS[] = {
+  { "tenant_id",   VI_TEXT, 1 },
+  { "source_id",   VI_TEXT, 0 },
+  { "ts",          VI_INT,  0 },
+  { "record_type", VI_TEXT, 0 },
+};
+enum { COL_TENANT, COL_SOURCE, COL_TS, COL_RTYPE, NCOLS };
+
+const vecindex_spec embed_intel_spec = {
+  .name = "intel", .table = EMBED_VEC_TABLE, .key_col = "uid",
+  .meta_table = EMBED_META_TABLE, .done_table = EMBED_DONE_TABLE,
+  .fail_table = EMBED_FAIL_TABLE, .cols = INTEL_COLS, .ncols = NCOLS,
+  .rebuild_hint = EMBED_REBUILD_HINT };
+VECINDEX_REGISTER(embed_intel_spec)
+
+/* The index as it was before metadata columns: same meta/done/fail tables,
+ * a vec0 table with only uid + embedding. Read during a migration, never
+ * written. */
+static const vecindex_spec legacy_spec = {
+  .name = "intel_legacy", .table = EMBED_LEGACY_VEC_TABLE, .key_col = "uid",
+  .meta_table = EMBED_META_TABLE, .done_table = EMBED_DONE_TABLE,
+  .fail_table = EMBED_FAIL_TABLE, .cols = NULL, .ncols = 0,
+  .rebuild_hint = EMBED_REBUILD_HINT };
+
+#define SPEC (&embed_intel_spec)
 
 /* ---- env knobs ----------------------------------------------------------- */
 
@@ -123,17 +175,8 @@ static long env_long(const char *k, long dflt) {
   return (end && end != v) ? n : dflt;
 }
 
-const char *embed_base_url(void) {
-  const char *u = getenv("JO_EMBED_URL");
-  return (u && *u) ? u : NULL;
-}
-
-const char *embed_query_url(void) {
-  const char *b = embed_base_url();
-  if (!b) return NULL;                 /* no index server, no query server */
-  const char *u = getenv("JO_EMBED_QUERY_URL");
-  return (u && *u) ? u : b;
-}
+const char *embed_base_url(void)  { return vecindex_base_url(); }
+const char *embed_query_url(void) { return vecindex_query_url(); }
 
 static long since_days(void)  { long d = env_long("JO_EMBED_SINCE_DAYS", 180); return d > 0 ? d : 180; }
 static int  batch_size(void)  { long b = env_long("JO_EMBED_BATCH", 32); return (b > 0 && b <= 256) ? (int)b : 32; }
@@ -177,57 +220,12 @@ static char *record_types_json(void) {
 
 /* ---- text ---------------------------------------------------------------- */
 
-/* Length of the valid UTF-8 sequence at `s` (RFC 3629: no overlongs, no
- * surrogates, nothing past U+10FFFF), or 0 when the bytes there are not one.
- * That is exactly what llama-server's JSON parser accepts. */
-static size_t utf8_seq(const unsigned char *s) {
-  unsigned char c = s[0];
-  if (c < 0x80) return 1;
-#define CONT(x) (((x) & 0xC0) == 0x80)
-  if (c >= 0xC2 && c <= 0xDF) return CONT(s[1]) ? 2 : 0;
-  if (c == 0xE0) return (s[1] >= 0xA0 && s[1] <= 0xBF && CONT(s[2])) ? 3 : 0;
-  if ((c >= 0xE1 && c <= 0xEC) || c == 0xEE || c == 0xEF)
-    return (CONT(s[1]) && CONT(s[2])) ? 3 : 0;
-  if (c == 0xED) return (s[1] >= 0x80 && s[1] <= 0x9F && CONT(s[2])) ? 3 : 0;
-  if (c == 0xF0) return (s[1] >= 0x90 && s[1] <= 0xBF && CONT(s[2]) && CONT(s[3])) ? 4 : 0;
-  if (c >= 0xF1 && c <= 0xF3) return (CONT(s[1]) && CONT(s[2]) && CONT(s[3])) ? 4 : 0;
-  if (c == 0xF4) return (s[1] >= 0x80 && s[1] <= 0x8F && CONT(s[2]) && CONT(s[3])) ? 4 : 0;
-#undef CONT
-  return 0;
-}
-
 char *embed_utf8_sanitize(const char *text, size_t *replaced) {
-  if (replaced) *replaced = 0;
-  if (!text) return strdup("");
-  size_t n = strlen(text);
-  char *o = malloc(n * 3 + 1);            /* worst case: every byte → U+FFFD */
-  if (!o) return NULL;
-  const unsigned char *p = (const unsigned char *)text;
-  size_t j = 0;
-  while (*p) {
-    size_t k = utf8_seq(p);
-    if (k) { memcpy(o + j, p, k); j += k; p += k; continue; }
-    /* One invalid byte → one U+FFFD, then resync on the next byte. The
-     * character is replaced, not dropped, so the text keeps its shape. */
-    o[j++] = (char)0xEF; o[j++] = (char)0xBF; o[j++] = (char)0xBD;
-    p++;
-    if (replaced) (*replaced)++;
-  }
-  o[j] = 0;
-  return o;
+  return vecindex_utf8_sanitize(text, replaced);
 }
 
 char *embed_bound_text(const char *text) {
-  char *clean = embed_utf8_sanitize(text, NULL);
-  if (!clean) return NULL;
-  size_t cap = (size_t)max_chars();
-  size_t n = strlen(clean);
-  if (n <= cap) return clean;
-  /* Back up to a UTF-8 lead byte so a multibyte character is never split —
-   * a half character is a different token to the model, not a shorter one. */
-  while (cap > 0 && ((unsigned char)clean[cap] & 0xC0) == 0x80) cap--;
-  clean[cap] = 0;
-  return clean;
+  return vecindex_bound_text(text, (size_t)max_chars());
 }
 
 /* ---- time ---------------------------------------------------------------- */
@@ -262,93 +260,25 @@ static long long parse_iso_ms(const char *s) {
   return (long long)timegm(&tm) * 1000LL + ms;
 }
 
-/* ---- meta table ---------------------------------------------------------- */
+/* ---- meta table (thin names over vecindex; the tests reach these) -------- */
 
-static int meta_get(db_handle *db, const char *k, char *out, size_t cap) {
-  out[0] = 0;
-  sqlite3_stmt *s;
-  if (sqlite3_prepare_v2(db->h, "SELECT v FROM " EMBED_META_TABLE " WHERE k=?1",
-                         -1, &s, NULL) != SQLITE_OK) return 0;
-  sqlite3_bind_text(s, 1, k, -1, SQLITE_STATIC);
-  int found = 0;
-  if (sqlite3_step(s) == SQLITE_ROW) {
-    const char *v = (const char *)sqlite3_column_text(s, 0);
-    snprintf(out, cap, "%s", v ? v : "");
-    found = 1;
-  }
-  sqlite3_finalize(s);
-  return found;
-}
+static int  meta_get(db_handle *db, const char *k, char *out, size_t cap) { return vecindex_meta_get(db, SPEC, k, out, cap); }
+static int  meta_set(db_handle *db, const char *k, const char *v) { return vecindex_meta_set(db, SPEC, k, v); }
+static int  meta_set_long(db_handle *db, const char *k, long v) { return vecindex_meta_set_long(db, SPEC, k, v); }
+static long meta_long(db_handle *db, const char *k) { return vecindex_meta_long(db, SPEC, k); }
+static int  table_exists(db_handle *db, const char *name) { return vecindex_table_exists(db, name); }
+static long count_rows(db_handle *db, const char *table) { return vecindex_count(db, table); }
+static void ensure_meta(db_handle *db) { vecindex_ensure_meta(db, SPEC); }
 
-static int meta_set(db_handle *db, const char *k, const char *v) {
-  sqlite3_stmt *s;
-  if (sqlite3_prepare_v2(db->h,
-        "INSERT INTO " EMBED_META_TABLE "(k,v) VALUES(?1,?2) "
-        "ON CONFLICT(k) DO UPDATE SET v=excluded.v", -1, &s, NULL) != SQLITE_OK)
-    return -1;
-  sqlite3_bind_text(s, 1, k, -1, SQLITE_STATIC);
-  if (v) sqlite3_bind_text(s, 2, v, -1, SQLITE_TRANSIENT);
-  else   sqlite3_bind_null(s, 2);
-  int rc = sqlite3_step(s) == SQLITE_DONE ? 0 : -1;
-  sqlite3_finalize(s);
-  return rc;
-}
-
-static int meta_set_long(db_handle *db, const char *k, long v) {
-  char b[32];
-  snprintf(b, sizeof b, "%ld", v);
-  return meta_set(db, k, b);
-}
-
-static long meta_long(db_handle *db, const char *k) {
-  char b[32];
-  return meta_get(db, k, b, sizeof b) ? strtol(b, NULL, 10) : 0;
-}
-
-static int table_exists(db_handle *db, const char *name) {
-  sqlite3_stmt *s;
-  if (sqlite3_prepare_v2(db->h,
-        "SELECT 1 FROM sqlite_master WHERE type='table' AND name=?1",
-        -1, &s, NULL) != SQLITE_OK) return 0;
-  sqlite3_bind_text(s, 1, name, -1, SQLITE_STATIC);
-  int ok = sqlite3_step(s) == SQLITE_ROW;
-  sqlite3_finalize(s);
-  return ok;
-}
-
-static long count_rows(db_handle *db, const char *table) {
-  if (!table_exists(db, table)) return 0;
-  char sql[128];
-  snprintf(sql, sizeof sql, "SELECT count(*) FROM %s", table);
-  sqlite3_stmt *s;
-  long n = 0;
-  if (sqlite3_prepare_v2(db->h, sql, -1, &s, NULL) == SQLITE_OK) {
-    if (sqlite3_step(s) == SQLITE_ROW) n = (long)sqlite3_column_int64(s, 0);
-    sqlite3_finalize(s);
-  }
-  return n;
+/* Which vec0 table answers queries right now: the legacy one while a
+ * migration is pending (it still holds every vector), else intel_vec_v2. */
+const vecindex_spec *embed_query_spec(db_handle *db) {
+  if (db && db->h && table_exists(db, EMBED_LEGACY_VEC_TABLE)) return &legacy_spec;
+  return SPEC;
 }
 
 int embed_table_exists(db_handle *db) {
-  return db && db->h && table_exists(db, EMBED_VEC_TABLE);
-}
-
-/* The meta table is created on every path that might read it, so the
- * coverage block can be built on a database the pod has never touched. */
-static void ensure_meta(db_handle *db) {
-  sqlite3_exec(db->h,
-    "CREATE TABLE IF NOT EXISTS " EMBED_META_TABLE "(k TEXT PRIMARY KEY, v TEXT)",
-    NULL, NULL, NULL);
-}
-
-static void ensure_side_tables(db_handle *db) {
-  sqlite3_exec(db->h,
-    "CREATE TABLE IF NOT EXISTS " EMBED_DONE_TABLE
-    "(uid TEXT PRIMARY KEY, text_hash INTEGER NOT NULL, embedded_at TEXT NOT NULL);"
-    "CREATE TABLE IF NOT EXISTS " EMBED_FAIL_TABLE
-    "(uid TEXT PRIMARY KEY, text_hash INTEGER NOT NULL, failed_at TEXT NOT NULL,"
-    " reason TEXT NOT NULL)",
-    NULL, NULL, NULL);
+  return db && db->h && vecindex_exists(db, embed_query_spec(db));
 }
 
 int embed_index_dim(db_handle *db, char *model, size_t cap) {
@@ -359,16 +289,12 @@ int embed_index_dim(db_handle *db, char *model, size_t cap) {
 }
 
 int embed_index_refused(db_handle *db, char *why, size_t cap) {
-  if (why && cap) why[0] = 0;
-  if (!db || !db->h || !table_exists(db, EMBED_META_TABLE)) return 0;
-  char buf[600];
-  if (!meta_get(db, "refused", buf, sizeof buf) || !buf[0]) return 0;
-  if (why && cap) snprintf(why, cap, "%s", buf);
-  return 1;
+  return vecindex_refused(db, SPEC, why, cap);
 }
 
 cJSON *embed_coverage_json(db_handle *db) {
-  cJSON *o = cJSON_CreateObject();
+  /* The common shape first (lib/vecindex), then what only this index has. */
+  cJSON *o = vecindex_coverage_json(db, embed_query_spec(db));
   const char *url = embed_base_url();
   cJSON_AddBoolToObject(o, "enabled", url != NULL);
   /* Where a user's query is embedded, when it is not the backfill's server:
@@ -377,52 +303,10 @@ cJSON *embed_coverage_json(db_handle *db) {
   { const char *q = embed_query_url();
     if (url && q && strcmp(q, url)) cJSON_AddStringToObject(o, "query_url", q);
     else cJSON_AddNullToObject(o, "query_url"); }
-  cJSON_AddBoolToObject(o, "index_present", embed_table_exists(db));
+  /* Which filters run INSIDE the KNN: none while a migration is pending. */
+  cJSON_AddBoolToObject(o, "knn_filters", embed_query_spec(db) == SPEC);
   char buf[600];
   int have_meta = db && db->h && table_exists(db, EMBED_META_TABLE);
-  if (have_meta && meta_get(db, "model", buf, sizeof buf) && buf[0])
-    cJSON_AddStringToObject(o, "model", buf);
-  else cJSON_AddNullToObject(o, "model");
-  cJSON_AddNumberToObject(o, "dim", have_meta ? (double)meta_long(db, "dim") : 0);
-  cJSON_AddNumberToObject(o, "embedded_count",
-                          have_meta ? (double)meta_long(db, "embedded_count") : 0);
-  /* eligible_count is a measured number with a timestamp, or null: an
-   * estimate would let a caller compute a coverage ratio that was never
-   * observed. */
-  if (have_meta && meta_get(db, "eligible_count", buf, sizeof buf) && buf[0]) {
-    cJSON_AddNumberToObject(o, "eligible_count", (double)strtol(buf, NULL, 10));
-    meta_get(db, "eligible_counted_at", buf, sizeof buf);
-    cJSON_AddStringToObject(o, "eligible_counted_at", buf);
-  } else {
-    cJSON_AddNullToObject(o, "eligible_count");
-    cJSON_AddNullToObject(o, "eligible_counted_at");
-  }
-  /* Rows the server would not embed, as data: the count is exact, the list
-   * is a bounded sample (newest first) with each row's reason. */
-  int have_fail = db && db->h && table_exists(db, EMBED_FAIL_TABLE);
-  cJSON_AddNumberToObject(o, "failed_count",
-                          have_fail ? (double)count_rows(db, EMBED_FAIL_TABLE) : 0);
-  cJSON *fs = cJSON_CreateArray();
-  if (have_fail) {
-    sqlite3_stmt *s;
-    if (sqlite3_prepare_v2(db->h,
-          "SELECT uid, reason, failed_at FROM " EMBED_FAIL_TABLE
-          " ORDER BY failed_at DESC, uid LIMIT ?1", -1, &s, NULL) == SQLITE_OK) {
-      sqlite3_bind_int(s, 1, FAIL_SAMPLE);
-      while (sqlite3_step(s) == SQLITE_ROW) {
-        cJSON *f = cJSON_CreateObject();
-        const char *u = (const char *)sqlite3_column_text(s, 0);
-        const char *r = (const char *)sqlite3_column_text(s, 1);
-        const char *a = (const char *)sqlite3_column_text(s, 2);
-        cJSON_AddStringToObject(f, "uid", u ? u : "");
-        cJSON_AddStringToObject(f, "reason", r ? r : "");
-        cJSON_AddStringToObject(f, "checked_at", a ? a : "");
-        cJSON_AddItemToArray(fs, f);
-      }
-      sqlite3_finalize(s);
-    }
-  }
-  cJSON_AddItemToObject(o, "failed_sample", fs);
   cJSON_AddNumberToObject(o, "since_days", (double)since_days());
   char *rt = record_types_json();
   if (rt) { cJSON *a = cJSON_Parse(rt); cJSON_AddItemToObject(o, "record_types", a ? a : cJSON_CreateNull()); free(rt); }
@@ -432,6 +316,16 @@ cJSON *embed_coverage_json(db_handle *db) {
   cJSON_AddStringToObject(o, "date_rule",
          "published_at when it is ISO-8601 text, else fetched_at");
   cJSON_AddNumberToObject(o, "max_chars", (double)max_chars());
+  if (have_meta && meta_get(db, "migrate_wm", buf, sizeof buf)) {
+    /* A migration in progress (or finished, with its counts kept). */
+    cJSON *m = cJSON_CreateObject();
+    cJSON_AddStringToObject(m, "state", table_exists(db, EMBED_LEGACY_VEC_TABLE)
+                                        ? "in_progress" : "done");
+    cJSON_AddNumberToObject(m, "copied", (double)meta_long(db, "migrate_copied"));
+    cJSON_AddNumberToObject(m, "orphans_dropped", (double)meta_long(db, "migrate_orphans"));
+    cJSON_AddNumberToObject(m, "missing_vectors", (double)meta_long(db, "migrate_missing"));
+    cJSON_AddItemToObject(o, "migration", m);
+  }
   if (have_meta && meta_get(db, "full_done_at", buf, sizeof buf) && buf[0]) {
     cJSON_AddStringToObject(o, "sweep", "delta");
     cJSON_AddStringToObject(o, "full_sweep_done_at", buf);
@@ -455,187 +349,62 @@ cJSON *embed_coverage_json(db_handle *db) {
   } else {
     cJSON_AddStringToObject(o, "sweep", url ? "not_started" : "disabled");
   }
-  if (have_meta && meta_get(db, "last_tick", buf, sizeof buf) && buf[0]) {
-    cJSON *lt = cJSON_Parse(buf);
-    cJSON_AddItemToObject(o, "last_tick", lt ? lt : cJSON_CreateNull());
-  } else cJSON_AddNullToObject(o, "last_tick");
-  if (have_meta && meta_get(db, "last_error", buf, sizeof buf) && buf[0])
-    cJSON_AddStringToObject(o, "last_error", buf);
-  else cJSON_AddNullToObject(o, "last_error");
-  if (have_meta && meta_get(db, "refused", buf, sizeof buf) && buf[0])
-    cJSON_AddStringToObject(o, "refused", buf);
-  else cJSON_AddNullToObject(o, "refused");
-  if (have_meta && meta_get(db, "last_run_at", buf, sizeof buf) && buf[0])
-    cJSON_AddStringToObject(o, "last_run_at", buf);
-  else cJSON_AddNullToObject(o, "last_run_at");
   return o;
-}
-
-/* ---- schema -------------------------------------------------------------- */
-
-static int ensure_index(db_handle *db, int dim) {
-  char sql[256];
-  snprintf(sql, sizeof sql,
-    "CREATE VIRTUAL TABLE IF NOT EXISTS " EMBED_VEC_TABLE
-    " USING vec0(uid TEXT PRIMARY KEY, embedding float[%d])", dim);
-  char *err = NULL;
-  if (sqlite3_exec(db->h, sql, NULL, NULL, &err) != SQLITE_OK) {
-    fprintf(stderr, "[embed] cannot create %s: %s\n", EMBED_VEC_TABLE, err ? err : "?");
-    sqlite3_free(err);
-    return -1;
-  }
-  return 0;
 }
 
 /* ---- model identity ------------------------------------------------------ */
 
-/* What GET <base>/v1/models says, ignoring JO_EMBED_MODEL — the query-slot
- * cross-check below compares what two SERVERS serve, and the env pin would
- * make every comparison agree with itself. */
-static int detect_served_model(http_client *http, const char *base, char *out,
-                               size_t cap);
-
 int embed_detect_model(http_client *http, const char *base, char *out,
                        size_t cap) {
-  const char *m = getenv("JO_EMBED_MODEL");
-  if (m && *m) { snprintf(out, cap, "%s", m); return 0; }
-  return detect_served_model(http, base, out, cap);
+  return vecindex_detect_model(http, base, out, cap);
+}
+int embed_live_model(char *out, size_t cap) { return vecindex_live_model(out, cap); }
+int embed_live_query_model(char *out, size_t cap) { return vecindex_live_query_model(out, cap); }
+
+/* ---- post-batch hooks ---------------------------------------------------- */
+
+typedef struct { embed_hook_fn fn; void *user; } hook_box;
+
+/* Adapt the generic batch (vecindex_val[n * 4]) to the typed row view. */
+static void hook_trampoline(db_handle *db, const vecindex_batch *b, void *user) {
+  const hook_box *hb = user;
+  embed_row_meta *rm = calloc((size_t)b->n, sizeof *rm);
+  if (!rm) return;
+  for (int i = 0; i < b->n; i++) {
+    const vecindex_val *v = b->vals ? b->vals + (size_t)i * NCOLS : NULL;
+    rm[i].uid         = b->keys[i];
+    rm[i].tenant_id   = v ? v[COL_TENANT].s : NULL;
+    rm[i].source_id   = v ? v[COL_SOURCE].s : NULL;
+    rm[i].ts          = v ? v[COL_TS].i : 0;
+    rm[i].record_type = v ? v[COL_RTYPE].s : NULL;
+  }
+  hb->fn(db, b->n, b->keys, b->vecs, b->dim, rm, hb->user);
+  free(rm);
 }
 
-static int detect_served_model(http_client *http, const char *base, char *out,
-                               size_t cap) {
-  if (!base || !*base) { snprintf(out, cap, "no embedding server configured"); return -1; }
-  http_client *own = NULL;
-  if (!http) http = own = http_client_new();
-  char url[1024];
-  size_t bl = strlen(base);
-  snprintf(url, sizeof url, "%.*s/v1/models",
-           (int)(bl && base[bl - 1] == '/' ? bl - 1 : bl), base);
-  http_response r = {0};
-  int rc = -1;
-  if (!http) snprintf(out, cap, "no http client");
-  else if (http_request(http, "GET", url, NULL, NULL, 0, 5000, 0, &r) != 0 ||
-           r.status == 0)
-    snprintf(out, cap, "GET /v1/models: no answer");
-  else if (r.status < 200 || r.status >= 300 || !r.body)
-    snprintf(out, cap, "GET /v1/models: HTTP %ld", (long)r.status);
-  else {
-    cJSON *j = cJSON_Parse(r.body);
-    cJSON *data = j ? cJSON_GetObjectItem(j, "data") : NULL;
-    cJSON *d0 = data ? cJSON_GetArrayItem(data, 0) : NULL;
-    cJSON *id = d0 ? cJSON_GetObjectItem(d0, "id") : NULL;
-    if (cJSON_IsString(id) && id->valuestring[0]) {
-      /* Basename only: the path is the deployment's, the model is the name. */
-      const char *b = strrchr(id->valuestring, '/');
-      snprintf(out, cap, "%s", b ? b + 1 : id->valuestring);
-      rc = 0;
-    } else snprintf(out, cap, "GET /v1/models: no data[0].id in the answer");
-    cJSON_Delete(j);
-  }
-  http_response_free(&r);
-  if (own) http_client_free(own);
-  return rc;
-}
-
-/* A request path asks on every query; a model swap is an operator action, so
- * a few seconds of staleness is the right trade for not adding a round trip
- * to each search. Only SUCCESSFUL answers are cached.
- * JO_EMBED_MODEL_CHECK_TTL_MS overrides the 10 s (0 = ask every time). */
-int embed_live_model(char *out, size_t cap) {
-  static pthread_mutex_t mu = PTHREAD_MUTEX_INITIALIZER;
-  static char cached[256], cached_base[512];
-  static long long cached_at = 0;
-  const char *base = embed_base_url();
-  long long now = wall_ms();
-  long ttl = env_long("JO_EMBED_MODEL_CHECK_TTL_MS", 10000);
-  pthread_mutex_lock(&mu);
-  if (base && cached_at && now - cached_at < ttl &&
-      !strcmp(cached_base, base) && !getenv("JO_EMBED_MODEL")) {
-    snprintf(out, cap, "%s", cached);
-    pthread_mutex_unlock(&mu);
-    return 0;
-  }
-  pthread_mutex_unlock(&mu);
-  char got[256];
-  int rc = embed_detect_model(NULL, base, got, sizeof got);
-  snprintf(out, cap, "%s", got);
-  if (rc == 0 && base) {
-    pthread_mutex_lock(&mu);
-    snprintf(cached, sizeof cached, "%s", got);
-    snprintf(cached_base, sizeof cached_base, "%s", base);
-    cached_at = now;
-    pthread_mutex_unlock(&mu);
-  }
-  return rc;
-}
-
-/* THE QUERY SLOT MUST SERVE THE INDEX'S MODEL. JO_EMBED_QUERY_URL exists so a
- * user's query does not wait behind a 120 s backfill batch on the one worker
- * JO_EMBED_URL owns; it is a second instance, or a second --parallel slot of
- * the same one. A second INSTANCE can be started with a different GGUF, and a
- * query embedded by model B ranked against vectors from model A answers 200
- * with rankings that mean nothing — the same-width-swap failure the refused
- * index exists to stop. So when the two URLs differ, both servers are asked
- * what they serve and the query side is refused unless they agree. Cached on
- * success only, as embed_live_model() is. */
-int embed_live_query_model(char *out, size_t cap) {
-  int rc = embed_live_model(out, cap);
-  if (rc != 0) return rc;
-  const char *b = embed_base_url(), *q = embed_query_url();
-  if (!b || !q || !strcmp(b, q)) return 0;
-  static pthread_mutex_t mu = PTHREAD_MUTEX_INITIALIZER;
-  static char ok_b[512], ok_q[512];
-  static long long ok_at = 0;
-  long long now = wall_ms();
-  long ttl = env_long("JO_EMBED_MODEL_CHECK_TTL_MS", 10000);
-  pthread_mutex_lock(&mu);
-  int hit = ok_at && now - ok_at < ttl && !strcmp(ok_b, b) && !strcmp(ok_q, q);
-  pthread_mutex_unlock(&mu);
-  if (hit) return 0;
-  char mb[256], mq[256];
-  if (detect_served_model(NULL, b, mb, sizeof mb) != 0) {
-    snprintf(out, cap, "cannot verify the query slot: JO_EMBED_URL %.200s", mb);
-    return -1;
-  }
-  if (detect_served_model(NULL, q, mq, sizeof mq) != 0) {
-    snprintf(out, cap, "cannot verify the query slot: JO_EMBED_QUERY_URL %.200s",
-             mq);
-    return -1;
-  }
-  if (strcmp(mb, mq) != 0) {
-    snprintf(out, cap, "JO_EMBED_QUERY_URL serves '%.100s' but JO_EMBED_URL "
-             "serves '%.100s'; a query embedded by one model cannot be ranked "
-             "against vectors from the other, so queries are refused until "
-             "both serve the same model", mq, mb);
-    return -1;
-  }
-  pthread_mutex_lock(&mu);
-  snprintf(ok_b, sizeof ok_b, "%s", b);
-  snprintf(ok_q, sizeof ok_q, "%s", q);
-  ok_at = now;
-  pthread_mutex_unlock(&mu);
+int embed_hook_register(embed_hook_fn fn, void *user) {
+  if (!fn) return -1;
+  hook_box *hb = malloc(sizeof *hb);           /* lives as long as the hook */
+  if (!hb) return -1;
+  hb->fn = fn; hb->user = user;
+  if (vecindex_hook_register(SPEC, hook_trampoline, hb) != 0) { free(hb); return -1; }
   return 0;
 }
 
 /* ---- the sweep ----------------------------------------------------------- */
 
-static unsigned long long fnv1a(const char *s) {
-  unsigned long long h = 1469598103934665603ULL;
-  for (; *s; s++) { h ^= (unsigned char)*s; h *= 1099511628211ULL; }
-  return h;
-}
-
-/* One row picked up by a selection query. */
+/* One row picked up by a selection query. `it` borrows the strings below. */
 typedef struct {
+  vecindex_item it;
   char *uid, *text, *key;           /* key = the keyset column of its walk */
-  unsigned long long hash;
-  int in_done, in_failed;
-  unsigned long long done_hash, failed_hash;
+  char *tenant, *source, *rtype;
+  vecindex_val vals[NCOLS];
 } pick;
 
 static void pick_free(pick *p) {
   free(p->uid); free(p->text); free(p->key);
-  p->uid = p->text = p->key = NULL;
+  free(p->tenant); free(p->source); free(p->rtype);
+  p->uid = p->text = p->key = p->tenant = p->source = p->rtype = NULL;
 }
 
 /* title + ' ' + summary, falling back to the first 512 bytes of body;
@@ -656,15 +425,18 @@ static char *compose_text(const char *title, const char *summary,
 /* Selection SQL. The record-type predicate is bound as a JSON array through
  * json_each so the allowlist never touches SQL text. ?1 = since cutoff,
  * ?2 = record types (NULL = default), ?3/?4 = keyset, ?5 = page size. */
-#define ISO_PUB  "intel_items.published_at GLOB '[0-9][0-9][0-9][0-9]-*'"
+#define ISO_PUB  EMBED_ISO_PUB
 #define EFF_DATE "COALESCE(intel_items.published_at,intel_items.fetched_at)"
-/* THE date of a row — see WHICH ROWS ARE ELIGIBLE. */
-#define ROW_DATE "(CASE WHEN " ISO_PUB " THEN intel_items.published_at " \
-                 "ELSE intel_items.fetched_at END)"
+/* THE date of a row — see WHICH ROWS ARE ELIGIBLE. Defined in embed_pod.h so
+ * a query side that checks a row against a `ts` filter reads the same rule. */
+#define ROW_DATE EMBED_ROW_DATE
+#define ROW_TS   EMBED_ROW_TS
 #define SEL_COLS(KEY) \
   "intel_items.uid, intel_items.title, intel_items.summary, " \
   "substr(intel_items.body,1,512), " KEY ", " \
-  "d.text_hash, (d.uid IS NOT NULL), f.text_hash, (f.uid IS NOT NULL)"
+  "d.text_hash, (d.uid IS NOT NULL), f.text_hash, (f.uid IS NOT NULL), " \
+  "intel_items.tenant_id, intel_items.source_id, " ROW_TS ", " \
+  "intel_items.record_type, d.meta_hash"
 #define SEL_FROM \
   " FROM intel_items " \
   "LEFT JOIN " EMBED_DONE_TABLE " d ON d.uid = intel_items.uid " \
@@ -729,6 +501,23 @@ static const char *SQL_ELIGIBLE =
 /* Which walk a tick is on. */
 typedef enum { WALK_FULL_A, WALK_FULL_B, WALK_DELTA } walk_kind;
 
+static char *col_dup(sqlite3_stmt *s, int i) {
+  const char *v = (const char *)sqlite3_column_text(s, i);
+  return strdup(v ? v : "");
+}
+
+/* Point a pick's item at its own strings and metadata. */
+static void pick_bind(pick *p) {
+  p->vals[COL_TENANT] = VI_S(p->tenant);
+  p->vals[COL_SOURCE] = VI_S(p->source);
+  p->vals[COL_RTYPE]  = VI_S(p->rtype);
+  p->it.key  = p->uid;
+  p->it.text = p->text;
+  p->it.vals = p->vals;
+  p->it.hash = vecindex_hash(p->text);
+  p->it.meta_hash = vecindex_vals_hash(SPEC, p->vals);
+}
+
 /* Fill `out[0..cap)` from one selection query; returns the number picked, or
  * -1 on a SQL failure. */
 static int select_batch(db_handle *db, walk_kind w, const char *since,
@@ -767,308 +556,30 @@ static int select_batch(db_handle *db, walk_kind w, const char *since,
     p->text = compose_text((const char *)sqlite3_column_text(s, 1),
                            (const char *)sqlite3_column_text(s, 2),
                            (const char *)sqlite3_column_text(s, 3));
-    const char *kk = (const char *)sqlite3_column_text(s, 4);
-    p->key = strdup(kk ? kk : "");
-    if (!p->uid || !p->text || !p->key) { pick_free(p); break; }
-    p->hash = fnv1a(p->text);
-    p->done_hash   = (unsigned long long)sqlite3_column_int64(s, 5);
-    p->in_done     = sqlite3_column_int(s, 6);
-    p->failed_hash = (unsigned long long)sqlite3_column_int64(s, 7);
-    p->in_failed   = sqlite3_column_int(s, 8);
+    p->key    = col_dup(s, 4);
+    p->tenant = col_dup(s, 9);
+    p->source = col_dup(s, 10);
+    p->rtype  = col_dup(s, 12);
+    if (!p->uid || !p->text || !p->key || !p->tenant || !p->source || !p->rtype) {
+      pick_free(p); break;
+    }
+    p->vals[COL_TS] = VI_I(sqlite3_column_int64(s, 11));
+    pick_bind(p);
+    p->it.done_hash     = (unsigned long long)sqlite3_column_int64(s, 5);
+    p->it.in_done       = sqlite3_column_int(s, 6);
+    p->it.failed_hash   = (unsigned long long)sqlite3_column_int64(s, 7);
+    p->it.in_failed     = sqlite3_column_int(s, 8);
+    p->it.has_done_meta = sqlite3_column_type(s, 13) != SQLITE_NULL;
+    p->it.done_meta_hash = (unsigned long long)sqlite3_column_int64(s, 13);
     n++;
   }
   sqlite3_finalize(s);
   return n;
 }
 
-/* Per-tick tallies, recorded in meta as `last_tick` so the coverage block can
- * show what the most recent tick actually did. */
-typedef struct {
-  long walked;       /* rows looked at                                     */
-  long sent;         /* rows sent to /v1/embeddings (counted once each)    */
-  long embedded;     /* rows stored (new or re-embedded)                   */
-  long unchanged;    /* re-fetched, same text: marked, not sent            */
-  long failed;       /* newly recorded as failed this tick                 */
-  long failed_seen;  /* already failed with this same text: skipped        */
-} tick_stats;
-
 /* Record an SQL failure as data and on stderr. */
 static void sql_error(db_handle *db, const char *now, const char *what) {
-  char msg[400];
-  snprintf(msg, sizeof msg, "%s: %s failed: %.300s", now, what, sqlite3_errmsg(db->h));
-  fprintf(stderr, "[embed] %s\n", msg);
-  meta_set(db, "last_error", msg);
-}
-
-/* BEGIN IMMEDIATE, CHECKED. Unchecked, a BUSY here left every statement that
- * followed in autocommit, so a vec row could land without its done row and
- * every later tick hit "UNIQUE constraint failed" with last_error NULL. */
-static int begin(db_handle *db, const char *now) {
-  if (sqlite3_exec(db->h, "BEGIN IMMEDIATE", NULL, NULL, NULL) != SQLITE_OK) {
-    sql_error(db, now, "BEGIN IMMEDIATE");
-    return -1;
-  }
-  return 0;
-}
-
-static int finish(db_handle *db, int ok, const char *now) {
-  if (ok) {
-    if (sqlite3_exec(db->h, "COMMIT", NULL, NULL, NULL) == SQLITE_OK) return 0;
-    sql_error(db, now, "COMMIT");
-  }
-  sqlite3_exec(db->h, "ROLLBACK", NULL, NULL, NULL);
-  return -1;
-}
-
-static int exec_uid(db_handle *db, const char *sql, const char *uid) {
-  sqlite3_stmt *s;
-  if (sqlite3_prepare_v2(db->h, sql, -1, &s, NULL) != SQLITE_OK) return -1;
-  sqlite3_bind_text(s, 1, uid, -1, SQLITE_STATIC);
-  int rc = sqlite3_step(s) == SQLITE_DONE ? 0 : -1;
-  sqlite3_finalize(s);
-  return rc;
-}
-
-/* Mark rows looked at and found unchanged: done rows get embedded_at := mark,
- * failed rows failed_at := mark. One transaction. */
-static int mark_seen(db_handle *db, pick **rows, int n, const char *mark,
-                     const char *now) {
-  if (n <= 0) return 0;
-  if (begin(db, now) != 0) return -1;
-  sqlite3_stmt *ud = NULL, *uf = NULL;
-  int ok = sqlite3_prepare_v2(db->h, "UPDATE " EMBED_DONE_TABLE
-                              " SET embedded_at=?2 WHERE uid=?1", -1, &ud, NULL) == SQLITE_OK &&
-           sqlite3_prepare_v2(db->h, "UPDATE " EMBED_FAIL_TABLE
-                              " SET failed_at=?2 WHERE uid=?1", -1, &uf, NULL) == SQLITE_OK;
-  for (int i = 0; ok && i < n; i++) {
-    sqlite3_stmt *s = rows[i]->in_done && rows[i]->done_hash == rows[i]->hash ? ud : uf;
-    sqlite3_reset(s);
-    sqlite3_bind_text(s, 1, rows[i]->uid, -1, SQLITE_STATIC);
-    sqlite3_bind_text(s, 2, mark, -1, SQLITE_STATIC);
-    if (sqlite3_step(s) != SQLITE_DONE) ok = 0;
-  }
-  if (!ok) sql_error(db, now, "marking unchanged rows");
-  sqlite3_finalize(ud); sqlite3_finalize(uf);
-  return finish(db, ok, now);
-}
-
-/* Store vectors for rows[0..m). On the very first write (*dim_io == 0) the
- * vec0 table is created and model + dim are recorded INSIDE the same
- * transaction, so the meta never names a model nothing was embedded with.
- * Returns 0, -1 (SQL failure, recorded), or -2 (dimension refused). */
-static int write_rows(db_handle *db, pick **rows, int m, const float *vecs,
-                      int dim, int *dim_io, const char *model,
-                      const char *mark, const char *now) {
-  if (*dim_io && dim != *dim_io) {
-    char msg[300];
-    snprintf(msg, sizeof msg, "server returned dim %d but the index is %d-d; "
-             "refusing to mix (rebuild: DROP TABLE intel_vec, intel_vec_done, "
-             "intel_vec_failed; DELETE FROM intel_vec_meta)", dim, *dim_io);
-    meta_set(db, "refused", msg);
-    fprintf(stderr, "[embed] %s\n", msg);
-    return -2;
-  }
-  if (begin(db, now) != 0) return -1;
-  int ok = 1, first = (*dim_io == 0);
-  if (first) {
-    ok = ensure_index(db, dim) == 0 &&
-         meta_set_long(db, "dim", dim) == 0 &&
-         meta_set(db, "model", model) == 0;
-    if (!ok) sql_error(db, now, "creating the vector index");
-  }
-  sqlite3_stmt *del = NULL, *ins = NULL, *done = NULL, *unfail = NULL;
-  if (ok &&
-      (sqlite3_prepare_v2(db->h, "DELETE FROM " EMBED_VEC_TABLE " WHERE uid=?1", -1, &del, NULL) != SQLITE_OK ||
-       sqlite3_prepare_v2(db->h, "INSERT INTO " EMBED_VEC_TABLE "(uid,embedding) VALUES(?1,?2)", -1, &ins, NULL) != SQLITE_OK ||
-       sqlite3_prepare_v2(db->h, "INSERT INTO " EMBED_DONE_TABLE "(uid,text_hash,embedded_at) VALUES(?1,?2,?3) "
-                                 "ON CONFLICT(uid) DO UPDATE SET text_hash=excluded.text_hash, embedded_at=excluded.embedded_at",
-                          -1, &done, NULL) != SQLITE_OK ||
-       sqlite3_prepare_v2(db->h, "DELETE FROM " EMBED_FAIL_TABLE " WHERE uid=?1", -1, &unfail, NULL) != SQLITE_OK)) {
-    ok = 0;
-    sql_error(db, now, "prepare");
-  }
-  for (int j = 0; ok && j < m; j++) {
-    pick *p = rows[j];
-    /* DELETE first, ALWAYS — not only when the row is known to have changed.
-     * vec0 has no upsert, and a vec row without its done row (left by any
-     * earlier partial write) would otherwise fail this INSERT forever. */
-    sqlite3_reset(del); sqlite3_bind_text(del, 1, p->uid, -1, SQLITE_STATIC);
-    if (sqlite3_step(del) != SQLITE_DONE) { ok = 0; sql_error(db, now, "delete from intel_vec"); break; }
-    sqlite3_reset(ins);
-    sqlite3_bind_text(ins, 1, p->uid, -1, SQLITE_STATIC);
-    sqlite3_bind_blob(ins, 2, vecs + (size_t)j * dim, (int)(dim * sizeof(float)), SQLITE_STATIC);
-    if (sqlite3_step(ins) != SQLITE_DONE) { ok = 0; sql_error(db, now, "insert into intel_vec"); break; }
-    sqlite3_reset(done);
-    sqlite3_bind_text(done, 1, p->uid, -1, SQLITE_STATIC);
-    sqlite3_bind_int64(done, 2, (sqlite3_int64)p->hash);
-    sqlite3_bind_text(done, 3, mark, -1, SQLITE_STATIC);
-    if (sqlite3_step(done) != SQLITE_DONE) { ok = 0; sql_error(db, now, "insert into intel_vec_done"); break; }
-    if (p->in_failed) {
-      sqlite3_reset(unfail); sqlite3_bind_text(unfail, 1, p->uid, -1, SQLITE_STATIC);
-      if (sqlite3_step(unfail) != SQLITE_DONE) { ok = 0; sql_error(db, now, "delete from intel_vec_failed"); break; }
-    }
-  }
-  sqlite3_finalize(del); sqlite3_finalize(ins); sqlite3_finalize(done); sqlite3_finalize(unfail);
-  if (finish(db, ok, now) != 0) return -1;
-  if (first) *dim_io = dim;
-  return 0;
-}
-
-/* Record one row the server will not embed. If an OLDER text of the row was
- * embedded, that vector is removed with it: the index must not keep claiming
- * a row by text the row no longer has. */
-static int record_failure(db_handle *db, pick *p, const char *reason,
-                          const char *mark, const char *now) {
-  if (begin(db, now) != 0) return -1;
-  int ok = 1;
-  if (p->in_done) {
-    ok = (!table_exists(db, EMBED_VEC_TABLE) ||
-          exec_uid(db, "DELETE FROM " EMBED_VEC_TABLE " WHERE uid=?1", p->uid) == 0) &&
-         exec_uid(db, "DELETE FROM " EMBED_DONE_TABLE " WHERE uid=?1", p->uid) == 0;
-  }
-  sqlite3_stmt *s = NULL;
-  if (ok && sqlite3_prepare_v2(db->h,
-        "INSERT INTO " EMBED_FAIL_TABLE "(uid,text_hash,failed_at,reason) VALUES(?1,?2,?3,?4) "
-        "ON CONFLICT(uid) DO UPDATE SET text_hash=excluded.text_hash, "
-        "failed_at=excluded.failed_at, reason=excluded.reason", -1, &s, NULL) == SQLITE_OK) {
-    sqlite3_bind_text(s, 1, p->uid, -1, SQLITE_STATIC);
-    sqlite3_bind_int64(s, 2, (sqlite3_int64)p->hash);
-    sqlite3_bind_text(s, 3, mark, -1, SQLITE_STATIC);
-    sqlite3_bind_text(s, 4, reason, -1, SQLITE_STATIC);
-    ok = sqlite3_step(s) == SQLITE_DONE;
-  } else ok = 0;
-  sqlite3_finalize(s);
-  if (!ok) sql_error(db, now, "recording a failed row");
-  return finish(db, ok, now);
-}
-
-/* A failure that says nothing about the INPUT: nothing answered, it ran out
- * of time, or the server said "not now". Such a row is retried, never
- * recorded as failed. */
-static int transient(llm_status st, long http) {
-  if (st == LLM_ERR_UNREACHABLE || st == LLM_ERR_TIMEOUT) return 1;
-  /* never sent at all: the worker's queue was busy, not the input bad */
-  if (st == LLM_ERR_QUEUE_TIMEOUT || st == LLM_ERR_QUEUE_FULL) return 1;
-  if (st == LLM_ERR_HTTP && (http == 0 || http == 503 || http == 429)) return 1;
-  return st == LLM_ERR_BAD_REQUEST;           /* our side: OOM building JSON */
-}
-
-static void fail_reason(char *buf, size_t cap, llm_status st, long http) {
-  if (st == LLM_ERR_HTTP) snprintf(buf, cap, "%s %ld", llm_status_code(st), http);
-  else snprintf(buf, cap, "%s", llm_status_code(st));
-}
-
-/* The server works, in general, right now? One known-good input. Used only
- * when EVERY row of a split batch failed on its own — then either all of
- * those rows are bad, or the server is, and recording them as failed must
- * wait until it is clear which. */
-static int server_answers(llm_client *llm, int dim) {
-  const char *probe[1] = { "dimension probe" };
-  float *pv = NULL; int pdim = 0; llm_status pst;
-  int ok = llm_embed(llm, probe, 1, &pv, &pdim, 30000, &pst) == 0 &&
-           (dim == 0 || pdim == dim);
-  free(pv);
-  return ok;
-}
-
-/* Embed and store rows[0..m). On return *n_done is how many LEADING rows are
- * settled (stored, or recorded as failed): the caller advances its keyset to
- * exactly there. Returns 0 (all m settled), -1 (stop the tick: the server or
- * the database failed, rows from *n_done on are untouched and will be
- * retried), -2 (refused: dimension mismatch). */
-static int embed_rows(db_handle *db, llm_client *llm, pick **rows, int m,
-                      int *dim_io, const char *model, const char *mark,
-                      const char *now, tick_stats *ts, int *n_done) {
-  *n_done = 0;
-  if (m <= 0) return 0;
-  const char *texts[256];
-  for (int i = 0; i < m; i++) texts[i] = rows[i]->text;
-  float *vecs = NULL; int dim = 0; llm_status st; long http = 0;
-  ts->sent += m;
-  if (llm_embed_ex(llm, texts, m, &vecs, &dim, 120000, &st, &http) == 0) {
-    int w = write_rows(db, rows, m, vecs, dim, dim_io, model, mark, now);
-    free(vecs);
-    if (w != 0) return w;
-    ts->embedded += m;
-    *n_done = m;
-    return 0;
-  }
-  char why[96];
-  fail_reason(why, sizeof why, st, http);
-  if (transient(st, http)) {
-    /* 240, not 200: `now` is char[40] and `why` is char[96], and with the
-     * 56-byte literal that is 203 worst case — so the trailing "); retried
-     * next tick" was what got cut, turning a transient-retry message into one
-     * that reads like a permanent failure. The message is written to
-     * meta_set(db, "last_error"), i.e. it is STORED, so a truncated tail is
-     * wrong data and not merely an ugly log line. */
-    char msg[240];
-    snprintf(msg, sizeof msg, "%s: /v1/embeddings failed for a batch of %d (%s); "
-             "retried next tick", now, m, why);
-    meta_set(db, "last_error", msg);
-    fprintf(stderr, "[embed] %s\n", msg);
-    return -1;
-  }
-
-  /* The server ANSWERED and refused this batch. One bad input fails the whole
-   * request, so find out which: one row at a time, in order. Failures are
-   * held until the server is shown to work — by any row succeeding, or by
-   * the probe — so a server that refuses everything never gets the corpus
-   * recorded as "failed". */
-  fprintf(stderr, "[embed] batch of %d refused (%s); retrying row by row\n", m, why);
-  int pend[256], np = 0, any_ok = 0, rc = 0, stop = m;
-  char preason[256][48];
-  for (int i = 0; i < m; i++) {
-    float *v1 = NULL; int d1 = 0; llm_status s1; long h1 = 0;
-    const char *t1[1] = { rows[i]->text };
-    if (llm_embed_ex(llm, t1, 1, &v1, &d1, 120000, &s1, &h1) == 0) {
-      int w = write_rows(db, &rows[i], 1, v1, d1, dim_io, model, mark, now);
-      free(v1);
-      if (w != 0) { rc = w; stop = i; break; }
-      ts->embedded++;
-      any_ok = 1;
-      continue;
-    }
-    if (transient(s1, h1)) {
-      char msg[200], w1[96];
-      fail_reason(w1, sizeof w1, s1, h1);
-      snprintf(msg, sizeof msg, "%s: /v1/embeddings failed mid-split (%s); retried next tick",
-               now, w1);
-      meta_set(db, "last_error", msg);
-      rc = -1; stop = i;
-      break;
-    }
-    fail_reason(preason[np], sizeof preason[np], s1, h1);
-    pend[np++] = i;
-  }
-  if (np > 0) {
-    if (!any_ok && !server_answers(llm, *dim_io)) {
-      char msg[200];
-      snprintf(msg, sizeof msg, "%s: every row of a batch of %d was refused and the "
-               "dimension probe failed too — treating it as a server fault; nothing "
-               "recorded, retried next tick", now, m);
-      meta_set(db, "last_error", msg);
-      fprintf(stderr, "[embed] %s\n", msg);
-      /* Nothing at or after the first refused row is settled. */
-      if (pend[0] < stop) stop = pend[0];
-      rc = -1;
-    } else {
-      for (int k = 0; k < np; k++) {
-        if (pend[k] >= stop) break;
-        char reason[160];
-        snprintf(reason, sizeof reason, "embedding server refused this input (%s)",
-                 preason[k]);
-        if (record_failure(db, rows[pend[k]], reason, mark, now) != 0) {
-          rc = -1; stop = pend[k];
-          break;
-        }
-        ts->failed++;
-        fprintf(stderr, "[embed] row %s recorded as failed: %s\n", rows[pend[k]]->uid, reason);
-      }
-    }
-  }
-  *n_done = stop;
-  return rc;
+  vecindex_sql_error(db, SPEC, now, what);
 }
 
 static void refresh_counts(db_handle *db, const char *since, const char *types,
@@ -1109,6 +620,132 @@ static void save_keyset(db_handle *db, walk_kind w, const char *k, const char *u
   }
 }
 
+/* ---- migration: intel_vec (no metadata) → intel_vec_v2 ------------------- */
+
+/* Walk intel_vec_done in uid order (an ordinary B-tree — a keyset over the
+ * vec0 table itself would be a full scan per page), read each vector from the
+ * old table by primary key, and write it with its metadata into the new one.
+ *
+ *   - a done row whose intel_items row is gone is an ORPHAN: no query could
+ *     ever show it (materialisation joins intel_items), it has no tenant to
+ *     partition on, and the query side used to report it as index_orphans.
+ *     Its done row is deleted and it is counted, not copied.
+ *   - a done row whose vector is missing from the old table (a partial write
+ *     from before BEGIN was checked) loses its done row, so the walk embeds
+ *     it again — the only rows a migration ever sends to the server, later,
+ *     through the ordinary walk.
+ *
+ * Every batch is one transaction with the watermark in it, so a cancelled or
+ * crashed migration resumes exactly where it stopped. The last transaction
+ * DROPs the old table — the switch and the drop cannot be seen apart.
+ * Returns 0 when no migration is pending (anymore), 1 when it stopped early
+ * (cancelled), -1 on an SQL failure (recorded). */
+static int migrate_legacy(db_handle *db, const source_ctx *ctx, const char *now) {
+  if (!table_exists(db, EMBED_LEGACY_VEC_TABLE)) return 0;
+  int dim = (int)meta_long(db, "dim");
+  if (dim <= 0) {
+    /* No dimension recorded: nothing the index claims lives in that table. */
+    sqlite3_exec(db->h, "DROP TABLE IF EXISTS " EMBED_LEGACY_VEC_TABLE, NULL, NULL, NULL);
+    return 0;
+  }
+  if (vecindex_create(db, SPEC, dim) != 0) { sql_error(db, now, "creating " EMBED_VEC_TABLE); return -1; }
+  char wm[600];
+  meta_get(db, "migrate_wm", wm, sizeof wm);
+  if (!wm[0]) {
+    fprintf(stderr, "[embed] migrating %s (%ld vectors) into %s with metadata "
+            "columns; nothing is re-embedded\n", EMBED_LEGACY_VEC_TABLE,
+            count_rows(db, EMBED_DONE_TABLE), EMBED_VEC_TABLE);
+  }
+  const char *sel =
+    "SELECT d.uid, d.text_hash, d.embedded_at, (intel_items.uid IS NOT NULL), "
+    "intel_items.tenant_id, intel_items.source_id, " ROW_TS ", "
+    "intel_items.record_type "
+    "FROM " EMBED_DONE_TABLE " d LEFT JOIN intel_items ON intel_items.uid = d.uid "
+    "WHERE d.uid > ?1 ORDER BY d.uid LIMIT ?2";
+  for (;;) {
+    if (ctx && ctx->cancel && *ctx->cancel) return 1;
+    if (vecindex_begin(db) != 0) { sql_error(db, now, "BEGIN IMMEDIATE"); return -1; }
+    sqlite3_stmt *s = NULL, *undone = NULL;
+    vecindex_writer w;
+    int ok = sqlite3_prepare_v2(db->h, sel, -1, &s, NULL) == SQLITE_OK &&
+             sqlite3_prepare_v2(db->h, "DELETE FROM " EMBED_DONE_TABLE " WHERE uid=?1",
+                                -1, &undone, NULL) == SQLITE_OK;
+    int have_w = ok && vecindex_writer_open(&w, db, SPEC) == 0;
+    ok = ok && have_w;
+    long copied = 0, orphans = 0, missing = 0, seen = 0;
+    char last[600] = "";
+    if (ok) {
+      sqlite3_bind_text(s, 1, wm, -1, SQLITE_STATIC);
+      sqlite3_bind_int(s, 2, MIGRATE_BATCH);
+      while (ok && sqlite3_step(s) == SQLITE_ROW) {
+        const char *uid = (const char *)sqlite3_column_text(s, 0);
+        if (!uid) continue;
+        snprintf(last, sizeof last, "%s", uid);
+        seen++;
+        int gone = !sqlite3_column_int(s, 3);
+        float *v = NULL; int d = 0;
+        int lr = gone ? 1 : vecindex_load(db, &legacy_spec, uid, &v, &d);
+        if (gone || lr != 0 || d != dim) {
+          sqlite3_reset(undone);
+          sqlite3_bind_text(undone, 1, uid, -1, SQLITE_STATIC);
+          ok = sqlite3_step(undone) == SQLITE_DONE;
+          if (gone) orphans++; else missing++;
+          free(v);
+          continue;
+        }
+        const char *ten = (const char *)sqlite3_column_text(s, 4);
+        const char *src = (const char *)sqlite3_column_text(s, 5);
+        const char *rty = (const char *)sqlite3_column_text(s, 7);
+        vecindex_val vals[NCOLS];
+        vals[COL_TENANT] = VI_S(ten ? ten : "");
+        vals[COL_SOURCE] = VI_S(src ? src : "");
+        vals[COL_TS]     = VI_I(sqlite3_column_int64(s, 6));
+        vals[COL_RTYPE]  = VI_S(rty ? rty : "");
+        /* The done row keeps its text hash and embedded_at: the migration
+         * changes where the vector lives, not when it was last looked at. */
+        const char *at = (const char *)sqlite3_column_text(s, 2);
+        char atb[64];
+        snprintf(atb, sizeof atb, "%s", at ? at : now);
+        ok = vecindex_writer_put(&w, uid, v, d, vals,
+                                 (unsigned long long)sqlite3_column_int64(s, 1),
+                                 vecindex_vals_hash(SPEC, vals), atb) == 0;
+        free(v);
+        if (ok) copied++;
+      }
+    }
+    if (have_w) vecindex_writer_close(&w);
+    sqlite3_finalize(s); sqlite3_finalize(undone);
+    int done = ok && seen == 0;
+    if (ok && seen) {
+      ok = meta_set(db, "migrate_wm", last) == 0 &&
+           meta_set_long(db, "migrate_copied", meta_long(db, "migrate_copied") + copied) == 0 &&
+           meta_set_long(db, "migrate_orphans", meta_long(db, "migrate_orphans") + orphans) == 0 &&
+           meta_set_long(db, "migrate_missing", meta_long(db, "migrate_missing") + missing) == 0;
+      snprintf(wm, sizeof wm, "%s", last);
+    }
+    if (done) {
+      /* The switch: the old table goes in the same transaction that makes
+       * the new one the only one. Never a RENAME (lib/vecindex.h). The
+       * watermark key stays (non-empty) so coverage can report the counts. */
+      ok = sqlite3_exec(db->h, "DROP TABLE " EMBED_LEGACY_VEC_TABLE, NULL, NULL, NULL) == SQLITE_OK &&
+           meta_set(db, "migrate_wm", wm[0] ? wm : "(empty)") == 0 &&
+           meta_set(db, "migrated_at", now) == 0;
+    }
+    if (!ok) sql_error(db, now, "migrating " EMBED_LEGACY_VEC_TABLE);
+    if (vecindex_end(db, ok) != 0) {
+      if (ok) sql_error(db, now, "COMMIT (migration)");
+      return -1;
+    }
+    if (done) {
+      fprintf(stderr, "[embed] migration complete: %ld copied, %ld orphans dropped, "
+              "%ld missing vectors left to re-embed; %s dropped\n",
+              meta_long(db, "migrate_copied"), meta_long(db, "migrate_orphans"),
+              meta_long(db, "migrate_missing"), EMBED_LEGACY_VEC_TABLE);
+      return 0;
+    }
+  }
+}
+
 static int run(const source_ctx *ctx, intel_sink *sink) {
   (void)sink;                               /* writes intel_vec, not intel */
   const char *base = embed_base_url();
@@ -1122,12 +759,30 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   db_handle own;
   db_handle *db = db_worker_open(&own, ctx->db);
   ensure_meta(db);
-  ensure_side_tables(db);
+  vecindex_ensure_side_tables(db, SPEC);
   long long tick_ms = wall_ms();
   char now[40], mark[40];
   iso_ms(now, sizeof now, tick_ms);
   iso_ms(mark, sizeof mark, tick_ms - EMBED_OVERLAP_SEC * 1000LL);
   meta_set(db, "last_run_at", now);
+
+  /* ---- an index from before metadata columns? ------------------------- */
+  /* Needs no server: it copies vectors that already exist. While it is not
+   * finished nothing new is embedded (the two tables must agree on what the
+   * done table claims), and the query side keeps reading the old table. */
+  {
+    int m = migrate_legacy(db, ctx, now);
+    if (m != 0) {
+      char lt[200];
+      snprintf(lt, sizeof lt, "{\"at\":\"%s\",\"walk\":\"migration\",\"stopped\":\"%s\"}",
+               now, m > 0 ? "cancelled" : "error");
+      meta_set(db, "last_tick", lt);
+      db_worker_close(&own);
+      /* cancelled mid-migration is not a failure; an SQL error is */
+      if (m < 0) return -1;
+      return 0;
+    }
+  }
 
   /* ---- who is the server? --------------------------------------------- */
   char model[256], stored_model[256];
@@ -1156,22 +811,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       meta_set(db, "dim", NULL);
       /* No done rows means the vec table (if any) holds nothing the index
        * claims; dropped so the first write creates it at the server's width. */
-      sqlite3_exec(db->h, "DROP TABLE IF EXISTS " EMBED_VEC_TABLE, NULL, NULL, NULL);
+      vecindex_drop(db, SPEC);
       stored_model[0] = 0;
       dim = 0;
     } else {
       char msg[600];
-      snprintf(msg, sizeof msg, "index was built with model '%.200s' but the server "
-               "is '%.200s'; refusing to mix (rebuild: DROP TABLE intel_vec, "
-               "intel_vec_done, intel_vec_failed; DELETE FROM intel_vec_meta)",
-               stored_model, model);
-      meta_set(db, "refused", msg);
-      fprintf(stderr, "[embed] %s\n", msg);
+      vecindex_check_identity(db, SPEC, model, 0, msg, sizeof msg);
+      vecindex_refuse(db, SPEC, msg);
       db_worker_close(&own);
       return -1;
     }
   }
-  if (dim && ensure_index(db, dim) != 0) {
+  if (dim && vecindex_create(db, SPEC, dim) != 0) {
     sql_error(db, now, "opening the vector index");
     db_worker_close(&own);
     return -1;
@@ -1184,9 +835,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
    * days with every query embedded into the wrong space. One tiny request
    * per tick buys the refusal at the moment the mismatch appears. */
   if (dim) {
-    const char *probe[1] = { "dimension probe" };
-    float *pv = NULL; int pdim = 0; llm_status pst;
-    if (llm_embed(&llm, probe, 1, &pv, &pdim, 30000, &pst) != 0) {
+    llm_status pst;
+    int pdim = vecindex_probe_dim(&llm, 30000, &pst);
+    if (pdim <= 0) {
       char msg[160];
       snprintf(msg, sizeof msg, "%s: /v1/embeddings unreachable for the dimension probe (%s)",
                now, llm_status_code(pst));
@@ -1195,14 +846,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       db_worker_close(&own);
       return -1;
     }
-    free(pv);
-    if (pdim != dim) {
-      char msg[240];
-      snprintf(msg, sizeof msg, "server returns %d-d vectors but the index is %d-d; "
-               "refusing to mix (rebuild: DROP TABLE intel_vec, intel_vec_done, "
-               "intel_vec_failed; DELETE FROM intel_vec_meta)", pdim, dim);
-      meta_set(db, "refused", msg);
-      fprintf(stderr, "[embed] %s\n", msg);
+    char msg[600];
+    if (vecindex_check_identity(db, SPEC, model, pdim, msg, sizeof msg) == VI_ID_DIM_MISMATCH) {
+      vecindex_refuse(db, SPEC, msg);
       db_worker_close(&own);
       return -1;
     }
@@ -1243,7 +889,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   /* ---- the walk ------------------------------------------------------- */
   int bs = batch_size(), budget = max_per_run(), rc = 0;
   long walk_cap = max_walk();
-  tick_stats ts = {0};
+  vecindex_stats ts = {0};
   const char *stopped = "drained";
   pick rows[SEL_CHUNK];
   for (;;) {
@@ -1285,18 +931,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
     /* Split the page: rows already settled with this exact text are marked
      * (cheap); everything else is sent, in page order. */
-    pick *seen[SEL_CHUNK], *need[SEL_CHUNK];
+    vecindex_item *seen[SEL_CHUNK], *need[SEL_CHUNK];
     int idx_need[SEL_CHUNK], ns = 0, nn = 0;
     for (int i = 0; i < n; i++) {
-      pick *p = &rows[i];
-      if ((p->in_done && p->done_hash == p->hash) ||
-          (!p->in_done && p->in_failed && p->failed_hash == p->hash)) {
+      vecindex_item *p = &rows[i].it;
+      if (vecindex_item_unchanged(p)) {
         seen[ns++] = p;
         if (p->in_done) ts.unchanged++; else ts.failed_seen++;
       } else { idx_need[nn] = i; need[nn++] = p; }
     }
     int settled = n;              /* leading rows of the page that are done */
-    if (mark_seen(db, seen, ns, mark, now) != 0) { rc = -1; settled = 0; stopped = "error"; }
+    if (vecindex_mark_seen(db, SPEC, seen, ns, mark, now, &ts) != 0) {
+      rc = -1; settled = 0; stopped = "error";
+    }
     for (int off = 0; rc == 0 && off < nn; ) {
       if (ts.sent >= budget || (ctx->cancel && *ctx->cancel)) {
         /* Everything before the first unsent row is settled; the rest of
@@ -1308,7 +955,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       int cnt = nn - off < bs ? nn - off : bs;
       if (cnt > budget - ts.sent) cnt = (int)(budget - ts.sent);
       int done_n = 0;
-      int e = embed_rows(db, &llm, &need[off], cnt, &dim, model, mark, now, &ts, &done_n);
+      int e = vecindex_embed_items(db, SPEC, &llm, &need[off], cnt, &dim, model,
+                                   mark, now, &ts, &done_n);
       if (e != 0) {
         settled = off + done_n < nn ? idx_need[off + done_n] : n;
         rc = -1;
@@ -1339,14 +987,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
   }
 
-  char lt[400];
+  char lt[440];
   snprintf(lt, sizeof lt,
            "{\"at\":\"%s\",\"walk\":\"%s\",\"walked\":%ld,\"sent\":%ld,"
-           "\"embedded\":%ld,\"unchanged\":%ld,\"failed\":%ld,"
+           "\"embedded\":%ld,\"unchanged\":%ld,\"rewritten\":%ld,\"failed\":%ld,"
            "\"failed_skipped\":%ld,\"stopped\":\"%s\",\"send_budget\":%d,"
            "\"walk_budget\":%ld}",
            now, walk == WALK_DELTA ? "delta" : walk == WALK_FULL_A ? "full_a" : "full_b",
-           ts.walked, ts.sent, ts.embedded, ts.unchanged, ts.failed,
+           ts.walked, ts.sent, ts.embedded, ts.unchanged, ts.rewritten, ts.failed,
            ts.failed_seen, stopped, budget, walk_cap);
   meta_set(db, "last_tick", lt);
   refresh_counts(db, since, types, now, 0);
@@ -1355,9 +1003,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
    * must not keep showing in coverage. */
   if (rc == 0) meta_set(db, "last_error", NULL);
   fprintf(stderr, "[embed] %s tick: walked %ld, sent %ld, embedded %ld, unchanged %ld, "
-          "failed %ld (+%ld skipped), stopped=%s; index now %ld row(s) at %d-d (%s)\n",
+          "rewritten %ld, failed %ld (+%ld skipped), stopped=%s; index now %ld row(s) "
+          "at %d-d (%s)\n",
           walk == WALK_DELTA ? "delta" : "full", ts.walked, ts.sent, ts.embedded,
-          ts.unchanged, ts.failed, ts.failed_seen, stopped,
+          ts.unchanged, ts.rewritten, ts.failed, ts.failed_seen, stopped,
           meta_long(db, "embedded_count"), dim, model);
   free(types);
   db_worker_close(&own);

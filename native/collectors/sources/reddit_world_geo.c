@@ -49,70 +49,70 @@
 #include "_source_macros.inc"
 
 /* High-traffic global news subs: small group, short interval. */
-RSSX(reddit_grp_worldnews, "reddit-group-worldnews", "Reddit world news (r/worldnews+news+anime_titties+neutralnews+qualitynews)", "Reddit world news (r/worldnews+news+anime_titties+neutralnews+qualitynews)", "osint", "social",
+RSSX(reddit_grp_worldnews, "reddit-group-worldnews", "Reddit world news (r/worldnews+news+anime_titties+neutralnews+qualitynews)", "Reddit world news (r/worldnews+news+anime_titties+neutralnews+qualitynews)", "reddit", "social",
   "https://www.reddit.com/r/worldnews+news+anime_titties+neutralnews+qualitynews/.rss?limit=100", "en", "[\"reddit\",\"social\",\"world\",\"community\"]", 1800,
   "Multireddit feed: worldnews, news, anime_titties, neutralnews, qualitynews — community world-news signal (one request covers the group; entries carry their subreddit in <category>)");
 
-RSSX(reddit_grp_conflict, "reddit-group-conflict", "Reddit conflict monitoring (r/CombatFootage+UkraineWarVideoReport+…)", "Reddit conflict monitoring (r/CombatFootage+UkraineWarVideoReport+…)", "osint", "social",
+RSSX(reddit_grp_conflict, "reddit-group-conflict", "Reddit conflict monitoring (r/CombatFootage+UkraineWarVideoReport+…)", "Reddit conflict monitoring (r/CombatFootage+UkraineWarVideoReport+…)", "reddit", "social",
   "https://www.reddit.com/r/CombatFootage+UkraineWarVideoReport+syriancivilwar+YemeniCrisis+IsraelPalestine+MiddleEastNews/.rss?limit=100", "en", "[\"reddit\",\"social\",\"conflict\",\"community\"]", 1800,
   "Multireddit feed: CombatFootage, UkraineWarVideoReport, syriancivilwar, YemeniCrisis, IsraelPalestine, MiddleEastNews — conflict footage and reporting");
 
-RSSX(reddit_grp_defense, "reddit-group-defense", "Reddit defense analysis (r/CredibleDefense+WarCollege+…)", "Reddit defense analysis (r/CredibleDefense+WarCollege+…)", "osint", "social",
+RSSX(reddit_grp_defense, "reddit-group-defense", "Reddit defense analysis (r/CredibleDefense+WarCollege+…)", "Reddit defense analysis (r/CredibleDefense+WarCollege+…)", "reddit", "social",
   "https://www.reddit.com/r/CredibleDefense+LessCredibleDefence+WarCollege+aviation+navy+Military+TankPorn/.rss?limit=100", "en", "[\"reddit\",\"social\",\"defense\",\"community\"]", 3600,
   "Multireddit feed: CredibleDefense, LessCredibleDefence, WarCollege, aviation, navy, Military, TankPorn — defense and military analysis");
 
-RSSX(reddit_grp_intel, "reddit-group-intel", "Reddit intelligence/geopolitics (r/OSINT+Intelligence+geopolitics+…)", "Reddit intelligence/geopolitics (r/OSINT+Intelligence+geopolitics+…)", "osint", "social",
+RSSX(reddit_grp_intel, "reddit-group-intel", "Reddit intelligence/geopolitics (r/OSINT+Intelligence+geopolitics+…)", "Reddit intelligence/geopolitics (r/OSINT+Intelligence+geopolitics+…)", "reddit", "social",
   "https://www.reddit.com/r/OSINT+Intelligence+NatSecPol+geopolitics+geopolitics2+China_Debate/.rss?limit=100", "en", "[\"reddit\",\"social\",\"geopolitics\",\"community\"]", 3600,
   "Multireddit feed: OSINT, Intelligence, NatSecPol, geopolitics, geopolitics2, China_Debate — intelligence tradecraft and geopolitical analysis");
 
-RSSX(reddit_grp_cyber, "reddit-group-cyber", "Reddit cybersecurity (r/cybersecurity+netsec+Malware+…)", "Reddit cybersecurity (r/cybersecurity+netsec+Malware+…)", "osint", "social",
+RSSX(reddit_grp_cyber, "reddit-group-cyber", "Reddit cybersecurity (r/cybersecurity+netsec+Malware+…)", "Reddit cybersecurity (r/cybersecurity+netsec+Malware+…)", "reddit", "social",
   "https://www.reddit.com/r/hackernews+cybersecurity+netsec+Malware+blackhat/.rss?limit=100", "en", "[\"reddit\",\"social\",\"cyber\",\"community\"]", 3600,
   "Multireddit feed: hackernews, cybersecurity, netsec, Malware, blackhat — security community signal");
 
-RSSX(reddit_grp_eur_west, "reddit-group-europe-west", "Reddit western Europe (r/europe+unitedkingdom+france+germany+…)", "Reddit western Europe (r/europe+unitedkingdom+france+germany+…)", "osint", "social",
+RSSX(reddit_grp_eur_west, "reddit-group-europe-west", "Reddit western Europe (r/europe+unitedkingdom+france+germany+…)", "Reddit western Europe (r/europe+unitedkingdom+france+germany+…)", "reddit", "social",
   "https://www.reddit.com/r/europe+unitedkingdom+ukpolitics+france+germany+italy+spain+portugal+netherlands+belgium+ireland/.rss?limit=100", "en", "[\"reddit\",\"social\",\"europe\",\"community\"]", 3600,
   "Multireddit feed: europe, unitedkingdom, ukpolitics, france, germany, italy, spain, portugal, netherlands, belgium, ireland — western-Europe country subs");
 
-RSSX(reddit_grp_eur_north, "reddit-group-europe-north", "Reddit northern Europe/Baltics (r/sweden+norway+denmark+…)", "Reddit northern Europe/Baltics (r/sweden+norway+denmark+…)", "osint", "social",
+RSSX(reddit_grp_eur_north, "reddit-group-europe-north", "Reddit northern Europe/Baltics (r/sweden+norway+denmark+…)", "Reddit northern Europe/Baltics (r/sweden+norway+denmark+…)", "reddit", "social",
   "https://www.reddit.com/r/sweden+norway+denmark+Finland+iceland+lithuania+latvia+Eesti/.rss?limit=100", "en", "[\"reddit\",\"social\",\"europe\",\"nordics\",\"community\"]", 3600,
   "Multireddit feed: sweden, norway, denmark, Finland, iceland, lithuania, latvia, Eesti — Nordic and Baltic country subs");
 
-RSSX(reddit_grp_eur_central, "reddit-group-europe-central", "Reddit central/southeast Europe (r/poland+czech+hungary+greece+…)", "Reddit central/southeast Europe (r/poland+czech+hungary+greece+…)", "osint", "social",
+RSSX(reddit_grp_eur_central, "reddit-group-europe-central", "Reddit central/southeast Europe (r/poland+czech+hungary+greece+…)", "Reddit central/southeast Europe (r/poland+czech+hungary+greece+…)", "reddit", "social",
   "https://www.reddit.com/r/poland+czech+Slovakia+hungary+Romania+bulgaria+greece+croatia+serbia+Austria+switzerland/.rss?limit=100", "en", "[\"reddit\",\"social\",\"europe\",\"community\"]", 3600,
   "Multireddit feed: poland, czech, Slovakia, hungary, Romania, bulgaria, greece, croatia, serbia, Austria, switzerland — central and southeast Europe country subs");
 
-RSSX(reddit_grp_eurasia, "reddit-group-eurasia", "Reddit Russia/Caucasus/Central Asia (r/russia+ukraina+Kazakhstan+…)", "Reddit Russia/Caucasus/Central Asia (r/russia+ukraina+Kazakhstan+…)", "osint", "social",
+RSSX(reddit_grp_eurasia, "reddit-group-eurasia", "Reddit Russia/Caucasus/Central Asia (r/russia+ukraina+Kazakhstan+…)", "Reddit Russia/Caucasus/Central Asia (r/russia+ukraina+Kazakhstan+…)", "reddit", "social",
   "https://www.reddit.com/r/russia+ukraina+belarus+turkey+Kazakhstan+uzbekistan+azerbaijan+armenia+Sakartvelo+mongolia/.rss?limit=100", "en", "[\"reddit\",\"social\",\"eurasia\",\"community\"]", 3600,
   "Multireddit feed: russia, ukraina, belarus, turkey, Kazakhstan, uzbekistan, azerbaijan, armenia, Sakartvelo, mongolia — Russia, Caucasus and Central Asia country subs");
 
-RSSX(reddit_grp_southasia, "reddit-group-southasia", "Reddit South Asia (r/india+pakistan+bangladesh+afghanistan+…)", "Reddit South Asia (r/india+pakistan+bangladesh+afghanistan+…)", "osint", "social",
+RSSX(reddit_grp_southasia, "reddit-group-southasia", "Reddit South Asia (r/india+pakistan+bangladesh+afghanistan+…)", "Reddit South Asia (r/india+pakistan+bangladesh+afghanistan+…)", "reddit", "social",
   "https://www.reddit.com/r/india+IndiaSpeaks+southasia+pakistan+bangladesh+Nepal+srilanka+myanmar+afghanistan/.rss?limit=100", "en", "[\"reddit\",\"social\",\"south-asia\",\"community\"]", 3600,
   "Multireddit feed: india, IndiaSpeaks, southasia, pakistan, bangladesh, Nepal, srilanka, myanmar, afghanistan — South-Asia country subs");
 
-RSSX(reddit_grp_eastasia, "reddit-group-eastasia", "Reddit East Asia (r/china+japan+korea+taiwan+…)", "Reddit East Asia (r/china+japan+korea+taiwan+…)", "osint", "social",
+RSSX(reddit_grp_eastasia, "reddit-group-eastasia", "Reddit East Asia (r/china+japan+korea+taiwan+…)", "Reddit East Asia (r/china+japan+korea+taiwan+…)", "reddit", "social",
   "https://www.reddit.com/r/china+China_irl+japan+korea+taiwan+HongKong+asia/.rss?limit=100", "en", "[\"reddit\",\"social\",\"east-asia\",\"community\"]", 3600,
   "Multireddit feed: china, China_irl, japan, korea, taiwan, HongKong, asia — East-Asia country subs");
 
-RSSX(reddit_grp_seasia_oceania, "reddit-group-seasia-oceania", "Reddit Southeast Asia/Oceania (r/indonesia+Thailand+australia+…)", "Reddit Southeast Asia/Oceania (r/indonesia+Thailand+australia+…)", "osint", "social",
+RSSX(reddit_grp_seasia_oceania, "reddit-group-seasia-oceania", "Reddit Southeast Asia/Oceania (r/indonesia+Thailand+australia+…)", "Reddit Southeast Asia/Oceania (r/indonesia+Thailand+australia+…)", "reddit", "social",
   "https://www.reddit.com/r/indonesia+Thailand+VietNam+Philippines+malaysia+singapore+australia+newzealand/.rss?limit=100", "en", "[\"reddit\",\"social\",\"southeast-asia\",\"oceania\",\"community\"]", 3600,
   "Multireddit feed: indonesia, Thailand, VietNam, Philippines, malaysia, singapore, australia, newzealand — Southeast-Asia and Oceania country subs");
 
-RSSX(reddit_grp_americas, "reddit-group-americas", "Reddit Americas (r/canada+mexico+brasil+argentina+…)", "Reddit Americas (r/canada+mexico+brasil+argentina+…)", "osint", "social",
+RSSX(reddit_grp_americas, "reddit-group-americas", "Reddit Americas (r/canada+mexico+brasil+argentina+…)", "Reddit Americas (r/canada+mexico+brasil+argentina+…)", "reddit", "social",
   "https://www.reddit.com/r/canada+mexico+brasil+argentina+chile+Colombia+PERU+vzla+ecuador+bolivia+uruguay+latinamerica/.rss?limit=100", "en", "[\"reddit\",\"social\",\"americas\",\"community\"]", 3600,
   "Multireddit feed: canada, mexico, brasil, argentina, chile, Colombia, PERU, vzla, ecuador, bolivia, uruguay, latinamerica — Americas country subs");
 
-RSSX(reddit_grp_africa, "reddit-group-africa", "Reddit Africa (r/africa+southafrica+Nigeria+Kenya+…)", "Reddit Africa (r/africa+southafrica+Nigeria+Kenya+…)", "osint", "social",
+RSSX(reddit_grp_africa, "reddit-group-africa", "Reddit Africa (r/africa+southafrica+Nigeria+Kenya+…)", "Reddit Africa (r/africa+southafrica+Nigeria+Kenya+…)", "reddit", "social",
   "https://www.reddit.com/r/africa+southafrica+Nigeria+Kenya+egypt+Morocco+ethiopia+ghana/.rss?limit=100", "en", "[\"reddit\",\"social\",\"africa\",\"community\"]", 3600,
   "Multireddit feed: africa, southafrica, Nigeria, Kenya, egypt, Morocco, ethiopia, ghana — Africa country subs");
 
-RSSX(reddit_grp_mideast, "reddit-group-mideast", "Reddit Middle East (r/iran+Israel+saudiarabia+iraq+…)", "Reddit Middle East (r/iran+Israel+saudiarabia+iraq+…)", "osint", "social",
+RSSX(reddit_grp_mideast, "reddit-group-mideast", "Reddit Middle East (r/iran+Israel+saudiarabia+iraq+…)", "Reddit Middle East (r/iran+Israel+saudiarabia+iraq+…)", "reddit", "social",
   "https://www.reddit.com/r/iran+Israel+saudiarabia+dubai+qatar+lebanon+iraq+jordan+Syria/.rss?limit=100", "en", "[\"reddit\",\"social\",\"middle-east\",\"community\"]", 3600,
   "Multireddit feed: iran, Israel, saudiarabia, dubai, qatar, lebanon, iraq, jordan, Syria — Middle-East country subs");
 
-RSSX(reddit_grp_cities_west, "reddit-group-cities-west", "Reddit western cities (r/london+paris+berlin+nyc+…)", "Reddit western cities (r/london+paris+berlin+nyc+…)", "osint", "social",
+RSSX(reddit_grp_cities_west, "reddit-group-cities-west", "Reddit western cities (r/london+paris+berlin+nyc+…)", "Reddit western cities (r/london+paris+berlin+nyc+…)", "reddit", "social",
   "https://www.reddit.com/r/london+paris+berlin+moscow+nyc+LosAngeles+toronto+sydney+melbourne/.rss?limit=100", "en", "[\"reddit\",\"social\",\"cities\",\"community\"]", 3600,
   "Multireddit feed: london, paris, berlin, moscow, nyc, LosAngeles, toronto, sydney, melbourne — western/global city subs");
 
-RSSX(reddit_grp_cities_asia, "reddit-group-cities-asia", "Reddit Asian cities (r/Tokyo+delhi+shanghai+Seoul+…)", "Reddit Asian cities (r/Tokyo+delhi+shanghai+Seoul+…)", "osint", "social",
+RSSX(reddit_grp_cities_asia, "reddit-group-cities-asia", "Reddit Asian cities (r/Tokyo+delhi+shanghai+Seoul+…)", "Reddit Asian cities (r/Tokyo+delhi+shanghai+Seoul+…)", "reddit", "social",
   "https://www.reddit.com/r/Tokyo+delhi+mumbai+shanghai+beijing+istanbul+bangkok+jakarta+Seoul+hongkong+kyiv/.rss?limit=100", "en", "[\"reddit\",\"social\",\"cities\",\"community\"]", 3600,
   "Multireddit feed: Tokyo, delhi, mumbai, shanghai, beijing, istanbul, bangkok, jakarta, Seoul, hongkong, kyiv — Asian/Eurasian city subs");

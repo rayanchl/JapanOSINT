@@ -2,6 +2,9 @@
  * Contract, index rationale and the row-shape argument are in nearapi.h. */
 #include "nearapi.h"
 #include "intelapi.h"
+#include "embed_pod.h"
+#include "semsearchapi.h"
+#include "translate.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
 #include <math.h>
@@ -21,6 +24,11 @@
  * full-index walk; when this trips the response says so instead of silently
  * returning the nearest of an arbitrary prefix. */
 #define NEAR_SCAN_MAX     200000
+/* Ceiling on in-radius rows whose stored vector is read to rank them by
+ * similarity to q (one primary-key read each). The nearest NEAR_SEM_MAX by
+ * distance are ranked; the rest follow by distance and meta.semantic says how
+ * many that was — a bounded view stated in-band, never a silent one. */
+#define NEAR_SEM_MAX      5000
 
 /* Append to a bounded buffer, clamping the cursor. snprintf returns what it
  * WOULD have written, so an unclamped cursor can walk past the end and make
@@ -111,14 +119,23 @@ static double hav_m(double la1, double lo1, double la2, double lo2) {
  * can mint. At 512 a longer uid was truncated here, intelapi_item_by_uid() then
  * found nothing, and the row was dropped from `data` while still being counted
  * in `page.total`: a proximity hit that exists, is in range, and is invisible. */
-typedef struct { char uid[600]; double d; } near_hit;
+typedef struct { char uid[600]; double d; double sim; int has_sim; } near_hit;
 static int cmp_hit(const void *a, const void *b) {
   double da = ((const near_hit *) a)->d, db = ((const near_hit *) b)->d;
   return da < db ? -1 : (da > db ? 1 : 0);
 }
+/* Semantic order: rows with a similarity first, most similar first; then the
+ * rest by distance (they were already distance-sorted, ties keep it). */
+static int cmp_sim(const void *a, const void *b) {
+  const near_hit *x = a, *y = b;
+  if (x->has_sim != y->has_sim) return x->has_sim ? -1 : 1;
+  if (x->has_sim && x->sim != y->sim) return x->sim > y->sim ? -1 : 1;
+  return x->d < y->d ? -1 : (x->d > y->d ? 1 : 0);
+}
 
-char *nearapi_items(db_handle *db, const char *tenant, const char *near,
-                    const char *qs, int *status) {
+/* `semantic` = may embed q and rank by similarity (a worker thread only). */
+static char *near_run(db_handle *db, const char *tenant, const char *near,
+                      const char *qs, int semantic, int *status) {
   *status = 200;
 
   double lat = 0, lon = 0;
@@ -173,6 +190,23 @@ char *nearapi_items(db_handle *db, const char *tenant, const char *near,
    * meta.q_applied=false says so. */
   char *matchq = intelapi_fts_match(f_q, f_qalt);
 
+  /* SEMANTIC MODE. With q and a usable index, q RANKS the radius instead of
+   * filtering it: every in-radius row is listed, ordered by the cosine of its
+   * stored vector with q's embedding. Without an embedding server (or with no
+   * index, a refused one, a failed embed) this falls back to the FTS filter
+   * above, and meta.q_mode / meta.semantic_unavailable say which ran. */
+  float *qv = NULL;
+  int qdim = 0;
+  long embed_ms = 0;
+  cJSON *sem_err = NULL;
+  if (semantic && f_q[0]) {
+    int est = 0;
+    char *eb = semsearch_embed(db, f_q, &qv, &qdim, &embed_ms, &est);
+    if (eb) { sem_err = cJSON_Parse(eb); free(eb); qv = NULL; }
+  }
+  int sem_on = qv != NULL;
+  if (sem_on) { free(matchq); matchq = NULL; }
+
   /* bbox prefilter. The longitudinal half-width uses the cosine at the query
    * latitude; near the poles that blows up, so it is clamped and the refine
    * pass does the real work. */
@@ -218,7 +252,7 @@ char *nearapi_items(db_handle *db, const char *tenant, const char *near,
   if (b_since)  sqlite3_bind_text(st, b_since,  f_since,  -1, SQLITE_TRANSIENT);
   if (b_until)  sqlite3_bind_text(st, b_until,  f_until,  -1, SQLITE_TRANSIENT);
   if (b_q)      sqlite3_bind_text(st, b_q,      matchq,   -1, SQLITE_TRANSIENT);
-  int q_asked = f_q[0] != 0, q_applied = matchq != NULL;
+  int q_asked = f_q[0] != 0, q_applied = matchq != NULL || qv != NULL;
   free(matchq);
 
   int cap = 1024, n = 0, scanned = 0;
@@ -243,6 +277,23 @@ char *nearapi_items(db_handle *db, const char *tenant, const char *near,
   }
   sqlite3_finalize(st);
   qsort(hits, (size_t) n, sizeof *hits, cmp_hit);
+  int sem_ranked = 0, sem_unembedded = 0, sem_beyond = 0;
+  if (qv) {
+    const vecindex_spec *vs = embed_query_spec(db);
+    for (int i = 0; i < n; i++) {
+      hits[i].has_sim = 0;
+      if (i >= NEAR_SEM_MAX) { sem_beyond++; continue; }
+      float *v = NULL; int vd = 0;
+      if (vecindex_load(db, vs, hits[i].uid, &v, &vd) == 0 && vd == qdim) {
+        hits[i].sim = vec_cosine(qv, v, qdim);
+        hits[i].has_sim = 1;
+        sem_ranked++;
+      } else sem_unembedded++;
+      free(v);
+    }
+    qsort(hits, (size_t) n, sizeof *hits, cmp_sim);
+    free(qv);
+  }
 
   cJSON *data = cJSON_CreateArray();
   int emitted = n < limit ? n : limit;
@@ -257,6 +308,11 @@ char *nearapi_items(db_handle *db, const char *tenant, const char *near,
     cJSON_Delete(env);
     if (!row) continue;
     cJSON_AddNumberToObject(row, "distance_m", floor(hits[i].d + 0.5));
+    if (sem_on) {
+      if (hits[i].has_sim)
+        cJSON_AddNumberToObject(row, "similarity", floor(hits[i].sim * 10000 + 0.5) / 10000);
+      else cJSON_AddNullToObject(row, "similarity");
+    }
     cJSON_AddItemToArray(data, row);
   }
   free(hits);
@@ -286,8 +342,36 @@ char *nearapi_items(db_handle *db, const char *tenant, const char *near,
              g.tm_year + 1900, g.tm_mon + 1, g.tm_mday, g.tm_hour, g.tm_min, g.tm_sec); }
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON_AddItemToObject(meta, "filters", filters);
-  cJSON_AddStringToObject(meta, "order", "distance_m ASC");
+  int sem_mode = sem_on;
+  cJSON_AddStringToObject(meta, "order", sem_mode
+    ? "similarity DESC (cosine of the row's stored vector with q), then "
+      "distance_m ASC for rows without one"
+    : "distance_m ASC");
   cJSON_AddNumberToObject(meta, "bbox_scanned", scanned);
+  if (q_asked) {
+    cJSON_AddStringToObject(meta, "q_mode", sem_mode ? "semantic" : "fts");
+    if (sem_mode) {
+      cJSON *sm = cJSON_CreateObject();
+      cJSON_AddNumberToObject(sm, "ranked", sem_ranked);
+      cJSON_AddNumberToObject(sm, "unembedded", sem_unembedded);
+      cJSON_AddNumberToObject(sm, "beyond_cap", sem_beyond);
+      cJSON_AddNumberToObject(sm, "cap", NEAR_SEM_MAX);
+      cJSON_AddNumberToObject(sm, "embed_ms", (double)embed_ms);
+      cJSON_AddStringToObject(sm, "note",
+        "q ranks the radius, it does not filter it: every in-radius row is "
+        "counted in page.total; rows without a vector (not embedded yet, or "
+        "past the cap) follow by distance with similarity null");
+      cJSON_AddItemToObject(sm, "coverage", embed_coverage_json(db));
+      cJSON_AddItemToObject(meta, "semantic", sm);
+    } else if (sem_err) {
+      cJSON_AddItemToObject(meta, "semantic_unavailable", sem_err);
+      sem_err = NULL;
+    } else if (!semantic) {
+      cJSON_AddStringToObject(meta, "semantic_unavailable_reason",
+                              "served inline: the FTS filter only");
+    }
+  }
+  cJSON_Delete(sem_err);
   /* Same disclosure as the feed (intelapi.c): present whenever a q was sent,
    * false when it sanitised to nothing and the rows are therefore unfiltered
    * by text. Omitted when no q was sent, which keeps the plain proximity
@@ -312,5 +396,24 @@ char *nearapi_items(db_handle *db, const char *tenant, const char *near,
   char *out = cJSON_PrintUnformatted(env);
   cJSON_Delete(env);
   if (!out) return errj(status, 500, "oom");
+  return out;
+}
+
+char *nearapi_items(db_handle *db, const char *tenant, const char *near,
+                    const char *qs, int *status) {
+  return near_run(db, tenant, near, qs, 0, status);
+}
+
+char *nearapi_items_route(db_handle *db, const char *tenant, const char *near,
+                          const char *qs, int is_operator, int *status) {
+  char *out = near_run(db, tenant, near, qs, 1, status);
+  if (!out || *status != 200) return out;
+  /* ?lang_view= — the same shaping httpd.c's intel_lang_view applies to the
+   * inline path, done here because this runs on a worker. */
+  char lv[16];
+  if (qget(qs, "lang_view", lv, sizeof lv, NULL) && lv[0]) {
+    char *sh = translate_shape_items(db, out, translate_view_parse(lv));
+    if (sh) { free(out); out = sh; }
+  }
   return out;
 }

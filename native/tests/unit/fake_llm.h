@@ -116,7 +116,7 @@ static int fake_llm_start(void) {
 }
 
 /* LLM_BASE_URL back at the fake server (after fake_llm_point_at_nothing). */
-static void fake_llm_point_back(void) {
+__attribute__((unused)) static void fake_llm_point_back(void) {
   struct sockaddr_in a; socklen_t len = sizeof a;
   getsockname(fake_llm_fd, (struct sockaddr *)&a, &len);
   char url[64];
@@ -125,7 +125,7 @@ static void fake_llm_point_back(void) {
 }
 
 /* A port nothing listens on: bind one, read its number, close it. */
-static void fake_llm_point_at_nothing(void) {
+__attribute__((unused)) static void fake_llm_point_at_nothing(void) {
   int s = socket(AF_INET, SOCK_STREAM, 0);
   struct sockaddr_in a; memset(&a, 0, sizeof a);
   a.sin_family = AF_INET;

@@ -26,28 +26,82 @@ int fts_has_japanese(const char *s) {
   return 0;
 }
 
-static pthread_mutex_t g_lock = PTHREAD_MUTEX_INITIALIZER;
-static mecab_t *g_mecab = NULL;
-static int g_init_failed = 0;
+/* ── MeCab: one shared model, one tagger + lattice per THREAD ────────────
+ *
+ * This used to be one global mecab_t behind one global mutex, so every
+ * segmentation in the process — 8 scheduler workers emitting, dispatch
+ * workers, the HTTP thread building a query — queued on a single lock, and
+ * MeCab is the dominant CPU cost of an emit. MeCab's own threading model is
+ * the fix: a mecab_model_t (the dictionary) is immutable and shareable, and a
+ * tagger parsing into a caller-owned lattice is thread-safe. So the model is
+ * loaded once per output format, and each thread lazily gets its own
+ * tagger + lattice, destroyed by the pthread key destructor at thread exit.
+ * The dictionary is not duplicated per thread; a tagger and a lattice are a
+ * few KB.
+ *
+ * Unavailable MeCab degrades exactly as before: the model load fails once,
+ * that failure is remembered, and segmentation passes text through. */
+typedef struct {
+  mecab_t *tag;
+  mecab_lattice_t *lat;
+} mecab_tls;
 
-static mecab_t *get_mecab(void) {
-  if (g_mecab) return g_mecab;
-  if (g_init_failed) return NULL;
-  /* -O wakati = space-separated surface forms == kuromoji's join. dicdir/rc
-   * resolved from env (MECABRC) or homebrew default; -d override if set. */
+typedef struct {
+  const char *what;            /* for the init-failure message */
+  const char *fmt;             /* "-O wakati " or "" */
+  pthread_once_t once;
+  mecab_model_t *model;        /* NULL after once => unavailable */
+  pthread_key_t key;
+  int key_ok;
+} mecab_kind;
+
+static mecab_kind g_wakati = { "", "-O wakati ", PTHREAD_ONCE_INIT, NULL, 0, 0 };
+static mecab_kind g_feat   = { " (feature)", "", PTHREAD_ONCE_INIT, NULL, 0, 0 };
+
+static void tls_free(void *p) {
+  mecab_tls *t = p;
+  if (!t) return;
+  if (t->lat) mecab_lattice_destroy(t->lat);
+  if (t->tag) mecab_destroy(t->tag);
+  free(t);
+}
+
+/* dicdir/rc resolved from env (MECABRC) or the system default; MECAB_IPADIC
+ * overrides with -d; the homebrew ipadic path is the retry. Same resolution
+ * as before the split. */
+static void model_load(mecab_kind *k) {
   const char *dic = getenv("MECAB_IPADIC");
   char args[512];
-  if (dic && *dic)
-    snprintf(args, sizeof args, "-O wakati -d %s", dic);
-  else
-    snprintf(args, sizeof args, "-O wakati");
-  g_mecab = mecab_new2(args);
-  if (!g_mecab) {
-    /* retry with explicit homebrew ipadic path */
-    g_mecab = mecab_new2("-O wakati -d /opt/homebrew/lib/mecab/dic/ipadic");
+  if (dic && *dic) snprintf(args, sizeof args, "%s-d %s", k->fmt, dic);
+  else             snprintf(args, sizeof args, "%s", k->fmt);
+  k->model = mecab_model_new2(args);
+  if (!k->model) {
+    snprintf(args, sizeof args, "%s-d /opt/homebrew/lib/mecab/dic/ipadic", k->fmt);
+    k->model = mecab_model_new2(args);
   }
-  if (!g_mecab) { g_init_failed = 1; fprintf(stderr, "[fts] MeCab init failed\n"); }
-  return g_mecab;
+  if (k->model && pthread_key_create(&k->key, tls_free) == 0) k->key_ok = 1;
+  if (!k->model || !k->key_ok)
+    fprintf(stderr, "[fts] MeCab%s init failed\n", k->what);
+}
+static void load_wakati(void) { model_load(&g_wakati); }
+static void load_feat(void)   { model_load(&g_feat); }
+
+/* This thread's tagger+lattice for `k`, created on first use. NULL when MeCab
+ * is unavailable (or this thread could not get one) — callers fail open. */
+static mecab_tls *mecab_for_thread(mecab_kind *k, void (*load)(void)) {
+  pthread_once(&k->once, load);
+  if (!k->model || !k->key_ok) return NULL;
+  mecab_tls *t = pthread_getspecific(k->key);
+  if (t) return t;
+  t = calloc(1, sizeof *t);
+  if (!t) return NULL;
+  t->tag = mecab_model_new_tagger(k->model);
+  t->lat = mecab_model_new_lattice(k->model);
+  if (!t->tag || !t->lat || pthread_setspecific(k->key, t) != 0) {
+    tls_free(t);
+    return NULL;
+  }
+  return t;
 }
 
 char *fts_segment(const char *raw) {
@@ -68,12 +122,12 @@ char *fts_segment(const char *raw) {
   if (!text) return strdup("");
   if (!fts_has_japanese(text)) return text;          /* Latin passthrough */
 
-  pthread_mutex_lock(&g_lock);
-  mecab_t *m = get_mecab();
-  if (!m) { pthread_mutex_unlock(&g_lock); return text; } /* fail-open */
-  const char *out = mecab_sparse_tostr(m, text);
+  mecab_tls *m = mecab_for_thread(&g_wakati, load_wakati);
+  if (!m) return text;                               /* fail-open */
+  mecab_lattice_set_sentence(m->lat, text);
+  const char *out = mecab_parse_lattice(m->tag, m->lat)
+                  ? mecab_lattice_tostr(m->lat) : NULL;
   char *res = out ? strdup(out) : NULL;
-  pthread_mutex_unlock(&g_lock);
   if (!res) return text;
   free(text);
 
@@ -87,28 +141,8 @@ char *fts_segment(const char *raw) {
 
 /* --- readings ------------------------------------------------------------ */
 
-/* A second tagger, with the DEFAULT output format so node features are
- * available; the wakati one above discards them. Same dictionary resolution
- * as get_mecab(). Guarded by the same mutex (mecab_t is not thread-safe). */
-static mecab_t *g_mecab_feat = NULL;
-static int g_feat_failed = 0;
-
-static mecab_t *get_mecab_feat(void) {
-  if (g_mecab_feat) return g_mecab_feat;
-  if (g_feat_failed) return NULL;
-  const char *dic = getenv("MECAB_IPADIC");
-  char args[512];
-  if (dic && *dic) snprintf(args, sizeof args, "-d %s", dic);
-  else             args[0] = 0;
-  g_mecab_feat = mecab_new2(args);
-  if (!g_mecab_feat)
-    g_mecab_feat = mecab_new2("-d /opt/homebrew/lib/mecab/dic/ipadic");
-  if (!g_mecab_feat) {
-    g_feat_failed = 1;
-    fprintf(stderr, "[fts] MeCab (feature) init failed\n");
-  }
-  return g_mecab_feat;
-}
+/* The feature-format model (g_feat above): DEFAULT output, so node features
+ * are available; the wakati one discards them. */
 
 /* IPADIC feature CSV: 品詞,細分類1,細分類2,細分類3,活用型,活用形,原形,読み,発音.
  * Field 7 (0-based) is the reading, katakana. Unknown words carry only the
@@ -135,14 +169,19 @@ char *fts_reading(const char *raw) {
   if (!text) return strdup("");
   if (!fts_has_japanese(text)) return text;
 
-  pthread_mutex_lock(&g_lock);
-  mecab_t *m = get_mecab_feat();
-  const mecab_node_t *node = m ? mecab_sparse_tonode(m, text) : NULL;
-  if (!node) { pthread_mutex_unlock(&g_lock); return text; }   /* fail-open */
+  mecab_tls *m = mecab_for_thread(&g_feat, load_feat);
+  const mecab_node_t *node = NULL;
+  if (m) {
+    mecab_lattice_set_sentence(m->lat, text);
+    if (mecab_parse_lattice(m->tag, m->lat))
+      node = mecab_lattice_get_bos_node(m->lat);
+  }
+  if (!node) return text;                                       /* fail-open */
 
+  /* `node` points into this thread's lattice, valid until its next parse. */
   size_t cap = strlen(text) * 3 + 16, n = 0;
   char *out = malloc(cap);
-  if (!out) { pthread_mutex_unlock(&g_lock); return text; }
+  if (!out) return text;
   for (; node; node = node->next) {
     if (node->stat == MECAB_BOS_NODE || node->stat == MECAB_EOS_NODE) continue;
     size_t rl = 0;
@@ -160,7 +199,6 @@ char *fts_reading(const char *raw) {
     if (n) out[n++] = ' ';
     memcpy(out + n, r, rl); n += rl;
   }
-  pthread_mutex_unlock(&g_lock);
   out[n] = 0;
   free(text);
   return out;
