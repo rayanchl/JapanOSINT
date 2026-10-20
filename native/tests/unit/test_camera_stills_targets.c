@@ -2,7 +2,7 @@
  * TARGETS resolved by core/camera_feed.c, across every camera keyspace.
  *
  * No network: every feed URL is on 127.0.0.x, which the camera destination
- * policy refuses (JO_CAMERA_ALLOW_LAN unset), so each capture fails CLOSED with
+ * policy always refuses, so each capture fails CLOSED with
  * "blocked_destination" before a socket is opened — which is exactly the state
  * write this test reads back.
  *
@@ -54,7 +54,6 @@ int main(void) {
   char evdir[] = "/tmp/jo-cs-targets-XXXXXX";
   assert(mkdtemp(evdir));
   setenv("JO_EVIDENCE_DIR", evdir, 1);
-  unsetenv("JO_CAMERA_ALLOW_LAN");
   unsetenv("CAM_STILLS_BATCH");
   unsetenv("CAM_STILLS_HOST_PER_TICK");
   setenv("MEDIA_NO_TOOLS", "1", 1);

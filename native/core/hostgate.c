@@ -593,15 +593,17 @@ int hostgate_url_check_strict(const char *url) {
 
 /* ── camera / media destination policy (see header) ───────────────────────── */
 
-int hostgate_camera_lan_allowed(void) {
-  const char *e = getenv("JO_CAMERA_ALLOW_LAN");
-  return (e && *e && strcmp(e, "0") != 0) ? 1 : 0;
-}
+/* Unit tests serve fixture frames from 127.0.0.1; nothing else sets this.
+ * There is deliberately no environment variable, config key or route for it
+ * (JO_CAMERA_ALLOW_LAN was one, and was removed 2026-10-20). */
+static int g_camera_test_lan;
 
-/* Strict unless the operator opted in to LAN cameras — and strict regardless
- * when JO_HTTP_BLOCK_PRIVATE raised the floor for everything. */
+void hostgate_camera_test_allow_lan(int on) { g_camera_test_lan = on ? 1 : 0; }
+
+/* Always strict for camera destinations, except under a unit test's fixture
+ * server — and strict even then when JO_HTTP_BLOCK_PRIVATE raised the floor. */
 static int camera_strict(void) {
-  return floor_is_strict() || !hostgate_camera_lan_allowed();
+  return floor_is_strict() || !g_camera_test_lan;
 }
 
 int hostgate_camera_addr_check(const char *ip_text) {

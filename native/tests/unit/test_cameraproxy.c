@@ -1,6 +1,6 @@
 /* tests/unit/test_cameraproxy.c — /api/camera-proxy may not be turned into an
  * internal-network fetcher or an oracle (core/cameraproxy.c). No network: the
- * only dials are to 127.0.0.1:9, and only with the LAN opt-in set.
+ * only dials are to 127.0.0.1:9, and only under the test-only LAN seam.
  *
  * WHAT IS BEING PROTECTED. Camera URLs are written by discovery collectors from
  * whatever their upstream reported, and any signed-in user picks the uid. The
@@ -11,8 +11,8 @@
  *   2. every upstream-side failure answers with ONE generic body (502), with
  *      nothing about the upstream in it — refused, unreachable, or not an
  *      image all read the same;
- *   3. JO_CAMERA_ALLOW_LAN=1 lets a LAN camera be dialled (and its failure
- *      still reads generic).
+ *   3. the removed JO_CAMERA_ALLOW_LAN=1 opens nothing; under the test-only
+ *      seam a loopback camera is dialled and its failure still reads generic.
  *
  * Includes cameraproxy.c to share its statics (none needed; it keeps run.sh
  * from linking a duplicate object). */
@@ -53,7 +53,6 @@ int main(void) {
   assert(dbp && "run.sh sets JO_DB to a scratch database");
   assert(db_open(&g_db, dbp, NULL) == 0);
   unsetenv("JO_HTTP_BLOCK_PRIVATE");
-  unsetenv("JO_CAMERA_ALLOW_LAN");
 
   put_camera("loop", "http://127.0.0.1:9/snap.jpg");
   put_camera("lan", "http://192.168.1.20/snap.jpg");
@@ -72,12 +71,18 @@ int main(void) {
     char *ej = camera_proxy_fetch(&g_db, "nope", &img, &n, ct, sizeof ct, &st);
     assert(ej && st == 404); free(ej); }
 
-  /* Opt-in: the loopback camera is now DIALLED (port 9 is closed, so the
-   * connect fails) — and the failure is still the generic body. */
+  /* The removed env opt-in is ignored: still refused, still generic. */
   setenv("JO_CAMERA_ALLOW_LAN", "1", 1);
   expect_generic("loop");
-  expect_generic("meta");                 /* metadata stays refused */
+  expect_generic("lan");
   unsetenv("JO_CAMERA_ALLOW_LAN");
+
+  /* Test seam: the loopback camera is now DIALLED (port 9 is closed, so the
+   * connect fails) — and the failure is still the generic body. */
+  hostgate_camera_test_allow_lan(1);
+  expect_generic("loop");
+  expect_generic("meta");                 /* metadata stays refused */
+  hostgate_camera_test_allow_lan(0);
 
   db_close(&g_db);
   printf("test_cameraproxy: OK\n");

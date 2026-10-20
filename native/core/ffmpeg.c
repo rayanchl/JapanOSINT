@@ -341,7 +341,7 @@ static const char *whitelist_for(const char *scheme) {
  * ffmpeg dials its own sockets, so no connect callback of ours ever sees the
  * address it reaches; this is the only place a URL pointing at 127.0.0.1, the
  * LAN or the metadata service can be refused. The policy is the camera one
- * (hostgate.h: strict unless JO_CAMERA_ALLOW_LAN=1) because every network
+ * (hostgate.h: always strict) because every network
  * input this module is handed today is a camera feed URL some third-party
  * registry wrote, and the name is resolved and EVERY answer judged.
  *
