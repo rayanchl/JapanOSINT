@@ -65,8 +65,15 @@ COLLECTOR("grp_unassigned", "Unassigned — add to core/collectors.def", "未分
           "Collectors the registry carries that collectors.def does not list yet. Should be empty.", NULL)
 
 /* ── collectors (parent = group) ─────────────────────────────────────── */
-/* Government & public administration: 115 collector(s), 5489 sources */
+/* Government & public administration: 123 collector(s), 27412 sources */
+COLLECTOR("hp3b47_frgov", "frgov (batch 47)", NULL, NULL, "grp_government")  /* 9323 src; government 9323 */
+COLLECTOR("hp3b47_itgov", "itgov (batch 47)", NULL, NULL, "grp_government")  /* 5665 src; government 5665 */
+COLLECTOR("hp3b44_usgov", "usgov (batch 44)", NULL, NULL, "grp_government")  /* 2079 src; government 2079 */
+COLLECTOR("hp3b44_ukgov", "ukgov (batch 44)", NULL, NULL, "grp_government")  /* 1641 src; government 1641 */
+COLLECTOR("hp3b47_wdgov", "wdgov (batch 47)", NULL, NULL, "grp_government")  /* 1562 src; government 1562 */
+COLLECTOR("hp3b43_jprss", "jprss (batch 43)", NULL, NULL, "grp_government")  /* 1156 src; government 1156 */
 COLLECTOR("government", "Government feeds", "政府・自治体フィード", "Scheduled feeds from national and municipal government sites.", "grp_government")  /* 535 src; local-gov 180, government 105, transparency 61 */
+COLLECTOR("hp3b48_igo", "igo (batch 48)", NULL, NULL, "grp_government")  /* 494 src; international 492, government 2 */
 COLLECTOR("us_state", "United States — states", "米国 州", NULL, "grp_government")  /* 192 src; opendata 57, registry 33, transport 19 */
 COLLECTOR("hp3b23_jpmuni", "Japan — municipalities (batch 23)", "日本 市区町村", NULL, "grp_government")  /* 190 src; government 190 */
 COLLECTOR("hp3b19_eurasia", "eurasia (batch 19)", NULL, NULL, "grp_government")  /* 184 src; economy 44, reference 33, government 25 */
@@ -158,6 +165,7 @@ COLLECTOR("id_permits", "Indonesia — permits", NULL, NULL, "grp_government")  
 COLLECTOR("eg_government", "Egypt — government", NULL, NULL, "grp_government")  /* 5 src; government 5 */
 COLLECTOR("hp3b38_china", "china (batch 38)", NULL, NULL, "grp_government")  /* 5 src; economy 2, environment 2, research 1 */
 COLLECTOR("hp3b38_uk", "uk (batch 38)", NULL, NULL, "grp_government")  /* 4 src; economy 1, environment 1, health 1 */
+COLLECTOR("hp3b37_jp", "jp (batch 37)", NULL, NULL, "grp_government")  /* 3 src; government 2, opendata 1 */
 COLLECTOR("hp3b38_france", "france (batch 38)", NULL, NULL, "grp_government")  /* 3 src; economy 1, environment 1, research 1 */
 COLLECTOR("hp3b45_jpwpgov", "Japan — government sites, WordPress collections (batch 45)", "日本 政府サイト WordPress", NULL, "grp_government")  /* 3 src; government 3 */
 COLLECTOR("il_government", "Israel — government", NULL, NULL, "grp_government")  /* 3 src; government 3 */
@@ -336,7 +344,7 @@ COLLECTOR("pa_public-finance", "Panama — public finance", NULL, NULL, "grp_pro
 COLLECTOR("pk_anti-corruption", "Pakistan — anti corruption", NULL, NULL, "grp_procurement")  /* 1 src; anti-corruption 1 */
 COLLECTOR("pl_procurement", "Poland — procurement", NULL, NULL, "grp_procurement")  /* 1 src; procurement 1 */
 
-/* Open data portals & statistics: 60 collector(s), 1916 sources */
+/* Open data portals & statistics: 64 collector(s), 1929 sources */
 COLLECTOR("europe_data", "European open data", "欧州オープンデータ", NULL, "grp_opendata")  /* 346 src; opendata 346 */
 COLLECTOR("fr_opendata", "France — open data", "フランス オープンデータ", NULL, "grp_opendata")  /* 287 src; opendata 261, government 11, registry 6 */
 COLLECTOR("ch_opendata", "Switzerland — open data", "スイス オープンデータ", NULL, "grp_opendata")  /* 208 src; opendata 208 */
@@ -358,11 +366,14 @@ COLLECTOR("uk_opendata", "UK — opendata", NULL, NULL, "grp_opendata")  /* 20 s
 COLLECTOR("hu_opendata", "Hungary — opendata", NULL, NULL, "grp_opendata")  /* 11 src; opendata 11 */
 COLLECTOR("eg_statistics", "Egypt — statistics", NULL, NULL, "grp_opendata")  /* 6 src; statistics 6 */
 COLLECTOR("hr_opendata", "Croatia — opendata", NULL, NULL, "grp_opendata")  /* 6 src; opendata 6 */
+COLLECTOR("hp3b37_us", "us (batch 37)", NULL, NULL, "grp_opendata")  /* 5 src; opendata 5 */
+COLLECTOR("hp3b37_eu", "eu (batch 37)", NULL, NULL, "grp_opendata")  /* 4 src; opendata 3, finance 1 */
 COLLECTOR("ke_statistics", "Kenya — statistics", NULL, NULL, "grp_opendata")  /* 4 src; statistics 4 */
 COLLECTOR("tz_statistics", "Tanzania — statistics", NULL, NULL, "grp_opendata")  /* 4 src; statistics 4 */
 COLLECTOR("bw_statistics", "Botswana — statistics", NULL, NULL, "grp_opendata")  /* 3 src; statistics 3 */
 COLLECTOR("et_statistics", "Ethiopia — statistics", NULL, NULL, "grp_opendata")  /* 3 src; statistics 3 */
 COLLECTOR("gh_statistics", "Ghana — statistics", NULL, NULL, "grp_opendata")  /* 3 src; statistics 3 */
+COLLECTOR("hp3b37_row", "row (batch 37)", NULL, NULL, "grp_opendata")  /* 3 src; opendata 3 */
 COLLECTOR("ng_statistics", "Nigeria — statistics", NULL, NULL, "grp_opendata")  /* 3 src; statistics 3 */
 COLLECTOR("rw_statistics", "Rwanda — statistics", NULL, NULL, "grp_opendata")  /* 3 src; statistics 3 */
 COLLECTOR("si_opendata", "Slovenia — opendata", NULL, NULL, "grp_opendata")  /* 3 src; opendata 3 */
@@ -385,6 +396,7 @@ COLLECTOR("cm_statistics", "Cameroon — statistics", NULL, NULL, "grp_opendata"
 COLLECTOR("co_microdata", "Colombia — microdata", NULL, NULL, "grp_opendata")  /* 1 src; microdata 1 */
 COLLECTOR("dz_microdata", "Algeria — microdata", NULL, NULL, "grp_opendata")  /* 1 src; microdata 1 */
 COLLECTOR("eg_microdata", "Egypt — microdata", NULL, NULL, "grp_opendata")  /* 1 src; microdata 1 */
+COLLECTOR("hp3b37_fr", "fr (batch 37)", NULL, NULL, "grp_opendata")  /* 1 src; opendata 1 */
 COLLECTOR("int_statistics", "International — statistics", NULL, NULL, "grp_opendata")  /* 1 src; statistics 1 */
 COLLECTOR("ma_microdata", "Morocco — microdata", NULL, NULL, "grp_opendata")  /* 1 src; microdata 1 */
 COLLECTOR("ma_statistics", "Morocco — statistics", NULL, NULL, "grp_opendata")  /* 1 src; statistics 1 */
@@ -398,9 +410,9 @@ COLLECTOR("qa_statistics", "Qatar — statistics", NULL, NULL, "grp_opendata")  
 COLLECTOR("sl_statistics", "Sierra Leone — statistics", NULL, NULL, "grp_opendata")  /* 1 src; statistics 1 */
 COLLECTOR("tn_microdata", "Tunisia — microdata", NULL, NULL, "grp_opendata")  /* 1 src; microdata 1 */
 
-/* Science, research & academia: 22 collector(s), 1587 sources */
+/* Science, research & academia: 22 collector(s), 1586 sources */
 COLLECTOR("academic", "Academic and research feeds", "学術・研究フィード", NULL, "grp_science")  /* 371 src; literature 134, clinical 61, genomics 41 */
-COLLECTOR("science", "Science feeds", "科学フィード", NULL, "grp_science")  /* 341 src; earthobs 61, spaceweather 51, genomics 42 */
+COLLECTOR("science", "Science feeds", "科学フィード", NULL, "grp_science")  /* 340 src; earthobs 60, spaceweather 51, genomics 42 */
 COLLECTOR("hp3b42_jpcptuni", "Japan — university sites, WordPress custom post types (batch 42)", "日本 大学サイト カスタム投稿", NULL, "grp_science")  /* 205 src; research 205 */
 COLLECTOR("hp3b38_africa", "africa (batch 38)", NULL, NULL, "grp_science")  /* 102 src; research 54, economy 42, environment 6 */
 COLLECTOR("hp3b35_jpweko", "Japan — JAIRO Cloud repositories (batch 35)", "日本 機関リポジトリ", NULL, "grp_science")  /* 100 src; research 100 */
@@ -569,7 +581,8 @@ COLLECTOR("eu_transport", "EU — transport", NULL, NULL, "grp_transport")  /* 2
 COLLECTOR("ae_transport", "UAE — transport", NULL, NULL, "grp_transport")  /* 1 src; transport 1 */
 COLLECTOR("np_logistics", "Nepal — logistics", NULL, NULL, "grp_transport")  /* 1 src; logistics 1 */
 
-/* News & media: 19 collector(s), 2533 sources */
+/* News & media: 20 collector(s), 6533 sources */
+COLLECTOR("hp3b48_news", "news (batch 48)", NULL, NULL, "grp_media")  /* 4000 src; news 4000 */
 COLLECTOR("gnews", "Google News editions", "Google ニュース 国別・トピック別", "Google News RSS by country and topic (gnews-top-*, gnews-<cc>-<topic>).", "grp_media")  /* 545 src; news 545 */
 COLLECTOR("hp3b45_jpwpmedia", "Japan — online media & magazines, WordPress collections (batch 45)", "日本 ウェブメディア WordPress", NULL, "grp_media")  /* 426 src; media 394, wire 32 */
 COLLECTOR("jp_webmedia", "Japan — web media & blogs, RSS (batches 43/44)", "日本 ウェブメディア・ブログ RSS", "400 Japanese online magazines, tech and lifestyle blogs, tourism and business sites (jp-b43-*, jp-b44-*).", "grp_media")  /* 400 src; media 134, technology 117, lifestyle 60 */
@@ -641,7 +654,7 @@ COLLECTOR("osint_safety", "OSINT pivots — safety", "OSINTピボット — safe
 COLLECTOR("sanctions", "Sanctions lists", "制裁リスト", NULL, "grp_sanctions")  /* 39 src; government 33, safety 6 */
 COLLECTOR("hp_sanctions_deep", "sanctions_deep (hp table)", NULL, NULL, "grp_sanctions")  /* 20 src; investigation 9, government 6, safety 3 */
 COLLECTOR("br_sanctions", "Brazil — sanctions", NULL, NULL, "grp_sanctions")  /* 2 src; sanctions 2 */
-COLLECTOR("int_sanctions", "International — sanctions", NULL, NULL, "grp_sanctions")  /* 1 src; sanctions 1 */
+COLLECTOR("hp3_worldbank_sanctions", "worldbank_sanctions (hp3 table)", NULL, NULL, "grp_sanctions")  /* 1 src; sanctions 1 */
 
 /* Culture, heritage, libraries & archives: 8 collector(s), 449 sources */
 COLLECTOR("hp3b30_jplibrary", "Japan — libraries (batch 30)", "日本 図書館", NULL, "grp_culture")  /* 189 src; library 189 */
@@ -674,26 +687,8 @@ COLLECTOR("np_reference", "Nepal — reference", NULL, NULL, "grp_osint")  /* 2 
 COLLECTOR("intelligence", "Intelligence & event data", "インテリジェンス・イベントデータ", NULL, "grp_osint")  /* 1 src;  1 */
 COLLECTOR("lk_reference", "Sri Lanka — reference", NULL, NULL, "grp_osint")  /* 1 src; reference 1 */
 
-/* Internal pods & tools: 4 collector(s), 17 sources */
-COLLECTOR("_maint", "Maintenance pods", "保守ポッド", "Internal pipeline pods — not data sources.", "grp_internal")  /* 12 src; maintenance 12 */
+/* Internal pods & tools: 4 collector(s), 20 sources */
+COLLECTOR("_maint", "Maintenance pods", "保守ポッド", "Internal pipeline pods — not data sources.", "grp_internal")  /* 15 src; maintenance 15 */
 COLLECTOR("_enrich", "Enrichment pods", "エンリッチメントポッド", "Internal enrichment pods — not data sources.", "grp_internal")  /* 3 src; enrichment 3 */
 COLLECTOR("_probe", "Probe tools", "プローブ", "Operator probe tools — not data sources.", "grp_internal")  /* 1 src; cyber 1 */
 COLLECTOR("_test", "Test fixtures", "テスト用", "Fixtures for the test suite — not data sources.", "grp_internal")  /* 1 src; test 1 */
-
-/* ── batches 37 and 43–46 (claude/osint-value-sources-u1u4wb, 2026-10-19) ──
- * Each key is the table's file name, the hpengine default. Counts are rows at
- * merge time. */
-COLLECTOR("hp3b37_jp", "Japan — national open-data catalogues (batch 37)", "日本 国のオープンデータカタログ", NULL, "grp_opendata")  /* 3 src */
-COLLECTOR("hp3b37_fr", "France — open-data catalogue (batch 37)", "フランス オープンデータカタログ", NULL, "grp_opendata")  /* 1 src */
-COLLECTOR("hp3b37_us", "United States — city open-data catalogues (batch 37)", "米国 都市オープンデータカタログ", NULL, "grp_opendata")  /* 5 src */
-COLLECTOR("hp3b37_eu", "Europe — national open-data catalogues and ECB rates (batch 37)", "欧州 オープンデータカタログ・ECB為替", NULL, "grp_opendata")  /* 4 src */
-COLLECTOR("hp3b37_row", "Rest of world — national open-data catalogues (batch 37)", "その他地域 オープンデータカタログ", NULL, "grp_opendata")  /* 3 src */
-COLLECTOR("hp3b43_jprss", "Japan — municipal notice feeds (batch 43)", "日本 自治体の新着・お知らせフィード", "The RSS/Atom feed each Japanese municipality declares on its own site: new notices, press releases, recruitment, events.", "grp_government")  /* 1,156 src */
-COLLECTOR("hp3b44_usgov", "United States — .gov feeds, federal to city (batch 44)", "米国 .gov 公的機関フィード", "The feed each .gov domain in CISA's register declares on its site root: cities, counties, states, federal agencies, tribes.", "grp_government")  /* 2,079 src */
-COLLECTOR("hp3b44_ukgov", "United Kingdom — gov.uk feeds, councils to departments (batch 44)", "英国 gov.uk 公的機関フィード", "The feed each gov.uk domain declares on its site root: parish, town and district councils, departments, agencies.", "grp_government")  /* 1,641 src */
-COLLECTOR("hp3b47_itgov", "Italy — public-administration feeds, IPA register (batch 45)", "イタリア 公的機関フィード（IPA登録）", "The feed each body in the Indice delle Pubbliche Amministrazioni declares on its site: comuni, regioni, agencies, schools.", "grp_government")  /* 5,665 src */
-COLLECTOR("hp3b47_frgov", "France — administration feeds, DILA annuaire (batch 45)", "フランス 行政機関フィード（DILA年鑑）", "The feed each body in DILA's Annuaire de l'administration declares on its site: mairies, intercommunalités, préfectures, ministries.", "grp_government")  /* 9,323 src */
-COLLECTOR("hp3b47_wdgov", "World — public-body feeds via Wikidata, 157 countries (batch 45)", "世界 公的機関フィード（Wikidata, 157か国）", "Government agencies, ministries, courts, police, central banks, legislatures and regulators with an official website on Wikidata, their declared feeds.", "grp_government")  /* 1,562 src */
-COLLECTOR("hp3b48_igo", "International organisations & think tanks (batch 46)", "国際機関・シンクタンク", "International and intergovernmental organisations and think tanks with an official website on Wikidata, their declared feeds.", "grp_government")  /* 494 src */
-COLLECTOR("hp3b48_news", "World — news outlets via Wikidata, 137 countries (batch 46)", "世界の報道機関（Wikidata, 137か国）", "Newspapers, daily and online newspapers, news websites and news agencies with an official website on Wikidata, their declared feeds.", "grp_media")  /* 4,000 src */
-COLLECTOR("hp3_worldbank_sanctions", "World Bank sanctions list", "世界銀行 制裁リスト", NULL, "grp_sanctions")  /* 1 src */

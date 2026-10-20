@@ -1,8 +1,8 @@
-# collector census - ./bin/japanosint --collector-census (registry 22408 sources)
+# collector census - ./bin/japanosint --collector-census (registry 48346 sources)
 key	sources	categories
 _breach	1	breach:1
 _enrich	3	enrichment:3
-_maint	12	maintenance:12
+_maint	15	maintenance:15
 _probe	1	cyber:1
 _test	1	test:1
 academic	371	literature:134;clinical:61;genomics:41
@@ -179,6 +179,7 @@ hp3_research	16	research:10;reference:3;health:2
 hp3_sigint	14	space:5;telecom:5;aviation:2
 hp3_society	18	government:7;health:7;infrastructure:2
 hp3_threat	17	threat:17
+hp3_worldbank_sanctions	1	sanctions:1
 hp3b19_africa	52	research:23;government:10;reference:7
 hp3b19_apac	79	environment:22;corporate:18;government:12
 hp3b19_crypto	7	economy:5;government:2
@@ -305,6 +306,11 @@ hp3b36_china	7	government:6;transport:1
 hp3b36_france	31	government:28;economy:2;research:1
 hp3b36_uk	28	government:9;environment:8;crime:3
 hp3b36_usa	46	government:25;health:19;environment:2
+hp3b37_eu	4	opendata:3;finance:1
+hp3b37_fr	1	opendata:1
+hp3b37_jp	3	government:2;opendata:1
+hp3b37_row	3	opendata:3
+hp3b37_us	5	opendata:5
 hp3b38_africa	102	research:54;economy:42;environment:6
 hp3b38_china	5	economy:2;environment:2;research:1
 hp3b38_france	3	economy:1;environment:1;research:1
@@ -328,6 +334,9 @@ hp3b42_jpcptmuni	22	government:22
 hp3b42_jpcptuni	205	research:205
 hp3b42_jppages	409	corporate:356;research:24;finance:15
 hp3b42_jpusers	347	corporate:306;research:18;government:14
+hp3b43_jprss	1156	government:1156
+hp3b44_ukgov	1641	government:1641
+hp3b44_usgov	2079	government:2079
 hp3b45_jpwpcorp	116	business:63;corporate:33;commerce:9
 hp3b45_jpwpculture	22	library:22
 hp3b45_jpwpcyber	9	security:9
@@ -336,6 +345,11 @@ hp3b45_jpwpgov	3	government:3
 hp3b45_jpwpmedia	426	media:394;wire:32
 hp3b45_jpwporg	24	organization:11;disciplinary:6;directory:3
 hp3b45_jpwpscience	11	physics:11
+hp3b47_frgov	9323	government:9323
+hp3b47_itgov	5665	government:5665
+hp3b47_wdgov	1562	government:1562
+hp3b48_igo	494	international:492;government:2
+hp3b48_news	4000	news:4000
 hp_americas_deep	22	government:15;economy:3;health:2
 hp_apac_deep	21	government:16;economy:3;cyber:1
 hp_chain_finance	20	cyber:12;economy:8
@@ -377,7 +391,6 @@ int_environment	1	environment:1
 int_government	15	government:15
 int_health	19	health:19
 int_legal	1	legal:1
-int_sanctions	1	sanctions:1
 int_statistics	1	statistics:1
 intelligence	1	:1
 it_opendata	22	opendata:22
@@ -508,7 +521,7 @@ sanctions	39	government:33;safety:6
 sasia_gov	25	news:18;economy:7
 sasia_hazard	10	hazard:10
 satellite	34	satellite:25;:9
-science	341	earthobs:61;spaceweather:51;genomics:42
+science	340	earthobs:60;spaceweather:51;genomics:42
 science_press	15	news:15
 seasia_gov	64	news:31;environment:9;opendata:8
 seasia_hazard	27	hazard:26;environment:1
