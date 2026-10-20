@@ -22,7 +22,6 @@ static int frame(const char *in) {
 int main(void) {
   setenv("JO_NO_FFMPEG", "1", 1);
   unsetenv("JO_HTTP_BLOCK_PRIVATE");
-  unsetenv("JO_CAMERA_ALLOW_LAN");
 
   assert(frame("rtsp://127.0.0.1:554/live") == FFMPEG_ERR_BLOCKED);
   assert(frame("rtsp://192.168.0.20/ch1") == FFMPEG_ERR_BLOCKED);
@@ -39,9 +38,9 @@ int main(void) {
   assert(frame("rtsp://93.184.216.34/live") == FFMPEG_ERR_DISABLED);
   assert(frame("/tmp/some-upload.mp4") == FFMPEG_ERR_DISABLED);
 
-  /* The operator opt-in admits LAN cameras — and never the metadata range. */
+  /* The removed operator opt-in admits nothing any more. */
   setenv("JO_CAMERA_ALLOW_LAN", "1", 1);
-  assert(frame("rtsp://192.168.0.20/ch1") == FFMPEG_ERR_DISABLED);
+  assert(frame("rtsp://192.168.0.20/ch1") == FFMPEG_ERR_BLOCKED);
   assert(frame("http://169.254.169.254/latest/x.m3u8") == FFMPEG_ERR_BLOCKED);
   unsetenv("JO_CAMERA_ALLOW_LAN");
 

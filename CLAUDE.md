@@ -1472,7 +1472,8 @@ failing tests repaired. What it guarantees, and the knobs it adds:
   a per-user budget.
 * **Outbound politeness / SSRF** (`core/hostgate.c`): per-host capacity and
   `Retry-After`; the camera proxy refuses LAN, metadata and link-local
-  targets (`JO_CAMERA_ALLOW_LAN=1` reopens LAN only).
+  targets, always — there is no LAN opt-in (`JO_CAMERA_ALLOW_LAN` was removed
+  2026-10-20; tests use `hostgate_camera_test_allow_lan()`).
 * **LLM queue**: bounded lanes (`JO_LLM_QUEUE_MAX`, default 64 waiting; a job
   waits at most `JO_LLM_QUEUE_WAIT_FACTOR` × its timeout, default 4), no retry
   after a timeout, queue time reported apart from model time;

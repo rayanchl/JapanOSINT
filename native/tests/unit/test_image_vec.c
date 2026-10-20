@@ -39,6 +39,7 @@
 #include "core/media.h"
 #include "core/uploadapi.h"
 #include "core/camera_refframe.h"
+#include "core/hostgate.h"
 #include "vision_stub.h"
 
 #include <assert.h>
@@ -623,7 +624,7 @@ int main(void) {
          "rows, 403/404/409s: ok\n");
 
   /* 12. reference frames: one per indexable camera record, fetched through
-   * the stills fetch path from a local server (JO_CAMERA_ALLOW_LAN=1) */
+   * the stills fetch path from a local server (the test-only LAN seam) */
   {
     char webdir[300], path[400];
     snprintf(webdir, sizeof webdir, "%s.web", getenv("JO_DB"));
@@ -647,7 +648,7 @@ int main(void) {
     if (port < 0) {
       printf("  SKIP refframes: no local web server (python3 -m http.server)\n");
     } else {
-      setenv("JO_CAMERA_ALLOW_LAN", "1", 1);
+      hostgate_camera_test_allow_lan(1);
       char sql[1200];
       snprintf(sql, sizeof sql,
         "INSERT INTO intel_items(uid,source_id,title,fetched_at,properties,"
@@ -743,7 +744,7 @@ int main(void) {
         snprintf(q, sizeof q, "SELECT count(*) FROM image_vec_done WHERE sha256='%s'", rfsha);
         assert(count(q) == 0);
       }
-      unsetenv("JO_CAMERA_ALLOW_LAN");
+      hostgate_camera_test_allow_lan(0);
       web_stop();
       printf("  refframes: one frame per indexable record via the stills fetch "
              "path, insecam never fetched, failures recorded, weekly, embedded as "
