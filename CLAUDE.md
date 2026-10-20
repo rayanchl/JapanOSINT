@@ -1083,6 +1083,29 @@ probe is the tool that decides whether a row ships:
   neither `.` (the root) nor a path that crosses an array, and four live rows
   came back `PATH_UNRESOLVED`. `_resolve_array_path()` now mirrors `hp_path`
   and `hp_path_multi`.
+* **and a THIRD of the same family, at the transport layer**: Python's
+  `ssl.create_default_context()` refuses handshakes the ENGINE completes.
+  `yamaguchi-opendata.jp`, which carries 24 registered CKAN rows, answers
+  `TLSV1_ALERT_INSUFFICIENT_SECURITY` to the default context and **HTTP 200 at
+  `DEFAULT@SECLEVEL=1` with verification still on**, while the engine stores
+  102 records from it across 3 requests. So the host is alive and only the tool
+  could not see it. **`tools/jo_tls.py` is now THE context** for this
+  directory, for rule 4c's reason — two copies of a thing diverge — and it
+  ASSERTS that verification and hostname checking stay on, because lowering a
+  cipher security level is a different act from skipping verification and must
+  not become it.
+
+  The historical cost of that strictness was then measured rather than assumed:
+  eight batch-reject files name a TLS refusal, 51 candidates between them, and
+  all 51 were re-asked (`docs/tls-rejects-revisited-2026-10-20.tsv`). **21
+  alive, 30 still failing — and the cost to the registry is ZERO**: 20 of the
+  21 are the `kkj.go.jp` corpus this session re-registered properly anyway, the
+  21st serves five posts titled "Sample post5" from a demo WordPress install,
+  and the 30 fail certificate verification for the engine too (measured on
+  six: IODA x3, Dataverse UCLA, NADA Nepal, NI MARENA, each `rc=-1` with a
+  fetch-failure record). Worth both numbers: the defect was real and was
+  mislabelling 20 live registered rows as dead, and it had cost no source its
+  place.
 
 Unifying the parser immediately found three live defects of the same family, where a
 stray `\;` escaped the separator and the following opt was swallowed into the
