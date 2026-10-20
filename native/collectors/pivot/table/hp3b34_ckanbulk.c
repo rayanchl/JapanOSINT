@@ -1823,7 +1823,11 @@ static const hp_source HP3B34_CKANBULK[] = {
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 20,
+    /* 2,628 packages, from the portal's own `package_list` (measured
+     * 2026-10-20). At the 20-page default this row stored 2,000 and filed a
+     * truncation notice every run; 35 pages covers the register with room to
+     * grow. Found by the page-2 gate, which read it as REFUSED. */
+    .page_max = 35,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 90000,

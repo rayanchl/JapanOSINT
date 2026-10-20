@@ -194,9 +194,18 @@ are the 3 unreachable. Four rows with no recorded verdict.
 
 ---
 
-## Still running when this was written
+## The re-run finished — `docs/page-two-final-2026-10-20.tsv`
 
-The page-2 sweep's remaining **818 rows** (the ones the first run left
-unmeasured when its egress saturated), re-run with the three tool fixes. Early
-returns are ~45% `LOCAL_EGRESS`, which D2 explains. Result will land in
-`docs/page-two-final-2026-10-20.tsv`.
+**654 of the 818 (80%) are healthy** — 350 OK, 304 PAGE1_IS_ALL — where the
+first run had written every one of them off. That is the measure of what the
+saturated egress and the strict TLS context were doing.
+
+Findings acted on: `LUCHTMEETNET_LKI` 100 -> **604** (its bare path 302s and the
+redirect drops the page parameter; its `id_keys` was wrong too, and invisible
+while it read one page) and `JO34_CKANRES_DATENREGISTER_BERLIN_DE` 2,000 ->
+**2,627**. `UKPARL_LDA_SESSIONS` was benign but running it surfaced a DEAD
+`id_keys` matching 0 of 12 records, now keyed on `_about`. Three more were
+complete as they stood.
+
+**73 rows remain LOCAL_EGRESS** — unmeasured from here, which is item D2, not a
+defect in those rows.

@@ -288,7 +288,16 @@ static const hp_source HP3B20_PARLIAMENT[] = {
     .url = "https://lda.data.parliament.uk/sessions.json?_pageSize=500",
     .array_path = "result.items",
     .date_keys = "startDate",
-    .id_keys = "sessionNumber",
+    /* `sessionNumber` matched NOTHING — the engine's own id-keys-unmatched
+     * notice says `records_matched: 0` of 12 — because the LDA API wraps every
+     * scalar, so the flattened field is `sessionNumber._value`. And fixing only
+     * the suffix would have traded one silent fault for another: session
+     * numbers RESTART each parliament, so `sessionNumber._value` holds just 5
+     * distinct values across the 12 sessions (measured 2026-10-20) and would
+     * store 5 of 12. `_about` is the resource URI, 12 distinct of 12; the
+     * tuple `parliament.parliamentNumber._value+sessionNumber._value` is also
+     * 12 and is the alternative if the URI ever moves. */
+    .id_keys = "_about",
     .interval = 2592000,
     .page_param = "_page",
     .page_zero_based = 1,

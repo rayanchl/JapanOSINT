@@ -866,16 +866,42 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "air-quality-index",
     .tags = "\"air\",\"netherlands\",\"index\",\"station\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.luchtmeetnet.nl/open_api/lki",
+    /* THE BARE PATH 302s, AND THE REDIRECT DROPS THE PAGE PARAMETER. Measured
+     * 2026-10-20: `/open_api/lki` answers 302 to
+     * `?order_by=&station_number=&order_direction=&start=…&end=…` with a
+     * default 7-day window, so every page the engine asked for came back as
+     * page 1 — 100 records of the 17,100 that window holds, with the engine
+     * correctly reporting "the page parameter is being ignored". `start=`
+     * alone still redirects; the server wants the whole default parameter set
+     * before it will serve the URL as given.
+     *
+     * With the set present, paging works and the envelope says how far:
+     * `pagination.last_page` is 7 for a six-hour window, page 7 is short (4
+     * records) and page 8 is empty. Six hours is chosen against the HOURLY
+     * cadence — 604 records over 7 pages, inside the 20-page default ceiling,
+     * so this row cannot truncate, and a run missed for up to five hours is
+     * still covered. `end` must be a real instant: `end=2099-01-01` returns
+     * ZERO rather than everything. */
+    .url = "https://api.luchtmeetnet.nl/open_api/lki?order_by=&station_number="
+           "&order_direction=&start={ago:21600}&end={ago:0}",
     .array_path = "data",
+    .date_keys = "timestamp_measured",
+    /* 100 records across 17 distinct station_numbers on one page, measured —
+     * so the station is a DIMENSION and the identity is the pair. This defect
+     * was invisible while the row read one page: it could not collide with
+     * itself across pages it never fetched. */
+    .id_keys = "station_number+timestamp_measured",
     .interval = 3600,
     .page_param = "page",
     .page_start = 1,
+    .title_keys = "station_number",
     .description = "The Dutch composite air quality index value for each monitoring "
-      "station with the station number and the measurement timestamp, "
-      "paged across the whole network history. The index is what "
-      "triggers public advisories, so it is the number with regulatory "
-      "consequences" },
+      "station with the station number and the measurement timestamp. The "
+      "index is what triggers public advisories, so it is the number with "
+      "regulatory consequences. Read as a rolling six-hour window: 604 "
+      "records across 7 pages, measured 2026-10-20, where the row previously "
+      "stored 100 of a 7-day window's 17,100 because the endpoint's redirect "
+      "discarded the page parameter" },
 
   { .id = "NOAA_FOSS_LANDINGS", .name = "NOAA Fisheries — commercial landings by species and state",
     .name_ja = "NOAA 漁業水揚統計",
