@@ -5,7 +5,46 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 48,343** (2026-10-19): the 47,178 below merged with
+**The registered count is 51,562** (2026-10-20): main's 48,346 − 6 − 25 + 3,247.
+
+* **−6**: `jp_feeds_batch43/44` feeds measured dead on the 2026-10-20 emit
+  sweep (game-i.daa.jp serves XHTML, peco-japan.com an S3 AccessDenied,
+  buddhanet.net HTML, tecture.jp an empty body, kotaku.com 403, kinmaweb.jp an
+  HTTP/2 framing error on every attempt); suigenkyo moved from its comments
+  feed to its blog feed. The merge with main had reintroduced all six.
+* **−25**: batch 44/47/48 rows whose feeds now carry gambling spam under an
+  official or press name — lapsed domains re-registered by betting sites, and
+  official WordPress sites with injected casino posts.
+  `docs/removed-sources-2026-10-20-takeovers.tsv` keeps the item titles that
+  convicted each one; manifests are trimmed to match.
+* **+3,247 — batch 49**, government and institutional RSS/Atom: Japan 883,
+  US 915, UK 1,111, France 261, China/HK 39, international 38. Two seeds.
+  Research agents proposed 1,744 feeds, 1,371 of them live (gov.uk's
+  per-organisation `.atom` is most of the UK). Then **autodiscovery**: ~20,000
+  official homepages — Wikidata `P856` for Japanese municipalities and
+  agencies, US states/cities/agencies/universities, UK public bodies, French
+  regions/départements/communes over 15,000 people and Chinese government
+  bodies, plus every gov/academic host already in the tree — were fetched and
+  their own `<link rel="alternate">` declarations read: 3,641 declared feeds,
+  2,729 live. 802 were already registered after merging main (its batch 44 and
+  47 seed from the same kind of list) and are not duplicated. Rejected rows,
+  each with a reason, are `docs/rejected-sources-batch49.tsv`: 25 domain
+  takeovers (27 found; the other two were already main's rows and are in the
+  removal file), 16 hosts that refuse every honest agent, 5 comment feeds, 4
+  misattributions, 1 ccTLD contradiction. Emit sweep: 3,237 OK, 2 collisions
+  that are byte-identical upstream repeats, 8 transient or currently empty.
+  Closed gov.uk bodies (`govuk_status=closed` in gov.uk's organisations API)
+  poll weekly, not hourly.
+* Two engine fixes came out of it: `lib/rss_atom.c` waits 25 s instead of 8
+  (ipu-japan.ac.jp's 4.6 MB feed went from 0 to 500 records), and 48 more hosts
+  get the no-"collector" agent in `core/httpclient.c` (86 rows recovered).
+* Batch number 49, not 45: main merged its own 45, 47 and 48 while this one was
+  open. 46 is absent from main and was left alone in case an open branch holds
+  it. Batches 43 and 44 now also name main's `JO43_` municipal and `JO44_` US
+  government tables; the `jp_feeds` measurements are
+  `verified-sources-batch4{3,4}.jp_feeds.tsv`.
+
+**The registered count was 48,343** (2026-10-19): the 47,178 below merged with
 main's 22,408 (21,789 plus PR #50's batch 45) (its own `jp_feeds_batch41..44.c` beats of Japanese RSS sources,
 PR #48's paging cycle of 533 rows, PR #49's collector labels), less six news
 feeds both sessions had added — `make lint-sources` named them at merge time
