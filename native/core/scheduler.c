@@ -1,6 +1,7 @@
 /* core/scheduler.c — timer-wheel cron (scheduleGuardedRun parity: per-source
  * interval, skip-if-running). P4: minimal single-thread loop; the bulk waves
  * (P5) reuse it unchanged. */
+#include "cadence.h"
 #include "scheduler.h"
 #include "../source.h"
 #include "intel.h"
@@ -256,6 +257,24 @@ long sched_state_base(const sched_state *st, long declared, int adaptive) {
   return declared;
 }
 
+/* The ONE composition of the two mechanisms that can move a row's cadence
+ * (2026-10-20, when they met in a merge): the row's own measurement inside,
+ * the operator's system-wide policy outside.
+ *
+ *   sched_row_interval = cadence_apply( sched_state_base(st, declared, adaptive) )
+ *
+ * So a feed whose items say "hourly" runs hourly under no policy, six-hourly
+ * under an operator floor of six hours, and at the global cadence when one is
+ * set — a person's floor outranks a measurement, a global outranks both, and
+ * the measurement is still taken and stored, so a page can say "measured
+ * hourly, held at 6 h by policy" rather than hiding one behind the other.
+ * The health backoff (sched_state_apply / sched_state_interval) then works
+ * from this figure. An entity pivot (interval 0) passes through untouched. */
+long sched_row_interval(const sched_state *st, const source_def *d) {
+  if (!d) return 0;
+  return cadence_apply(sched_state_base(st, d->update_interval_sec, d->adaptive_interval));
+}
+
 long sched_freshness_measure(db_handle *db, const char *id, time_t now) {
   if (!db || !db->h || !id) return 0;
   sqlite3_stmt *s;
@@ -448,8 +467,7 @@ static void sched_state_record(db_handle *db, const source_def *d,
   /* An adaptive row re-measures its cadence from what it has stored — after
    * a run that WORKED, because a refused fetch says nothing about how often
    * the upstream publishes. The bucket replaces the declared interval as the
-   * base of the backoff arithmetic; the declared one is still persisted as
-   * declared_interval, so the drift is visible in the table. */
+   * base of the backoff arithmetic; the authored interval stays on the def. */
   if (d->adaptive_interval && status && strcmp(status, "ok") == 0) {
     long fr = sched_freshness_measure(db, d->id, now);
     if (fr != st.freshness_interval)
@@ -460,9 +478,13 @@ static void sched_state_record(db_handle *db, const source_def *d,
               fr > 0 ? fr : (long)d->update_interval_sec, d->update_interval_sec);
     st.freshness_interval = fr;
   }
-  long base = sched_state_base(&st, d->update_interval_sec, d->adaptive_interval);
+  /* ONE composition, used here and in the due-time loop (sched_row_interval):
+   * the row's measured base inside, the operator's cadence policy outside.
+   * A person's floor outranks a measurement, a global cadence outranks both,
+   * and the health backoff then stretches from the result. */
+  long base = sched_row_interval(&st, d);
   sched_state_apply(&st, &pol, base, status, records, now);
-  if (sched_state_save(db, d->id, &st, d->update_interval_sec, now) != 0)
+  if (sched_state_save(db, d->id, &st, base, now) != 0)
     fprintf(stderr, "[sched] %s: could not persist sched state\n", d->id);
   if (st.consecutive_failures > 0)
     fprintf(stderr, "[sched] %s backoff: %d consecutive failure(s), next in %lds%s\n",
@@ -1024,7 +1046,7 @@ void scheduler_stop_background(int wait_ms) {
  * own interval is different — skip-if-running is already costing it whole
  * cycles — so that is when the flag is set: max(deadline, interval). */
 static long cancel_after(int i) {
-  long iv = g_all[i]->update_interval_sec;
+  long iv = cadence_apply(g_all[i]->update_interval_sec);   /* the policy's interval, not the declared one */
   return iv > g_deadline_sec ? iv : g_deadline_sec;
 }
 
@@ -1192,7 +1214,7 @@ void scheduler_loop(db_handle *db) {
     if (hold && hold[i] > now0) continue;
     int ln = lane_of(d);
     long off = sched_boot_offset(k[ln]++, m[ln], g_q.lane[ln].workers, stag,
-                                 ramp, d->update_interval_sec);
+                                 ramp, cadence_apply(d->update_interval_sec));
     if (off > last[ln]) last[ln] = off;
     next[i] = now0 + (time_t)off;
   }
@@ -1215,9 +1237,26 @@ void scheduler_loop(db_handle *db) {
                   "worker(s)\n", n, workers, mworkers);
 
   unsigned long tick = 0;
+  unsigned cad_gen = cadence_generation();
   for (;;) {
     if (atomic_load(&g_shutdown)) { sleep(1); continue; }
     time_t now = time(NULL);
+    /* The cadence policy changed (PUT /api/sources/cadence): a row whose next
+     * due time is further away than its NEW interval is pulled in to
+     * now + interval, so a faster policy takes effect within one interval and
+     * a slower one lets the already-planned run happen and then stretches. */
+    if (cadence_generation() != cad_gen) {
+      cad_gen = cadence_generation();
+      long pulled = 0;
+      for (int i = 0; i < n; i++) {
+        pthread_mutex_lock(&g_q.mu);
+        long e = sched_row_interval(&g_state[i], g_all[i]);
+        pthread_mutex_unlock(&g_q.mu);
+        if (e <= 0) continue;
+        if (next[i] > now + (time_t)e) { next[i] = now + (time_t)e; pulled++; }
+      }
+      fprintf(stderr, "[sched] cadence policy changed: %ld row(s) re-planned\n", pulled);
+    }
     for (int i = 0; i < n; i++) {
       const source_def *d = g_all[i];
       /* Unified: schedule any source with an interval; on-demand sources
@@ -1227,10 +1266,10 @@ void scheduler_loop(db_handle *db) {
       if (now < next[i]) continue;
       /* User-set per-source mode: search_only sources don't cron for the
        * map (the search tab triggers them on demand). */
-      if (is_search_only(db, d->id)) { next[i] = now + d->update_interval_sec; continue; }
+      if (is_search_only(db, d->id)) { next[i] = now + cadence_apply(d->update_interval_sec); continue; }
       /* Circuit breaker: a quarantined source is benched until the cooldown
        * lapses (a later probe past quarantined_until runs and may clear it). */
-      if (is_quarantined_impl(db, d->id)) { next[i] = now + d->update_interval_sec; continue; }
+      if (is_quarantined_impl(db, d->id)) { next[i] = now + cadence_apply(d->update_interval_sec); continue; }
       /* Cadence is measured from the DUE time, not from completion: a source
        * that takes 90 s on a 60 s interval stays due immediately rather than
        * silently drifting to 150 s. q_push's skip-if-running is what stops
@@ -1240,9 +1279,12 @@ void scheduler_loop(db_handle *db) {
       pthread_mutex_lock(&g_q.mu);
       sched_state st = g_state[i];
       pthread_mutex_unlock(&g_q.mu);
-      /* An adaptive row's cadence is the one its own stored items measured
-       * (sched_state_base), which the worker refreshed into g_state[i]. */
-      long declared = sched_state_base(&st, d->update_interval_sec, d->adaptive_interval);
+      /* "declared" here is this row's interval under BOTH mechanisms
+       * (sched_row_interval): the cadence its own stored items measured when
+       * the row is adaptive — the worker refreshed that into g_state[i] —
+       * with the operator's cadence policy (cadence.h) applied on top.
+       * Backoff doubles from it and the overdue ratio is measured against it. */
+      long declared = sched_row_interval(&st, d);
       double overdue = (double)(now - next[i]) / (double)(declared > 0 ? declared : 1);
       q_push(i, sched_priority(&st, source_trust_score(db, d->id), overdue));
       next[i] = now + sched_state_interval(&st, &g_pol, declared);

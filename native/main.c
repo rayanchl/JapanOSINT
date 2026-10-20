@@ -16,6 +16,7 @@
  * An unrecognised flag or a missing operand is an error (exit 2), never a
  * silent fall-through to the self-test — see the validation block in main(). */
 #include "core/db.h"
+#include "core/cadence.h"
 #include "core/url_override.h"
 #include "core/httpclient.h"
 #include "core/llm.h"
@@ -86,6 +87,7 @@ static void usage(FILE *out) {
     "  --dispatch <id> <entity>   run one source through the OSINT dispatcher and\n"
     "                             print the captured {record_count,records} JSON\n"
     "  --list-sources             list the registered sources and exit\n"
+    "  --collector-census         TSV of collector key, source count, top categories (for tools/gen_collectors_def.py)\n"
     "  --dump-source-cards        print id<TAB>kind<TAB>category<TAB>card for every\n"
     "                             source: the exact text the service index embeds\n"
     "                             (\\n \\t \\\\ escaped), for tools/batch_exclusions.py\n"
@@ -99,6 +101,14 @@ static void usage(FILE *out) {
  * entities (domains, IPs, emails, corporate numbers) never begin with "--", so
  * this separates "the operand is missing" from "the operand is unusual". */
 static int is_flag(const char *a) { return a && a[0] == '-' && a[1] == '-'; }
+
+/* --collector-census: sort by collector, then category, so one pass counts both. */
+static int census_cmp(const void *x, const void *y) {
+  const source_def *a = *(const source_def *const *)x, *b = *(const source_def *const *)y;
+  int r = strcmp(a->collector ? a->collector : "", b->collector ? b->collector : "");
+  if (r) return r;
+  return strcmp(a->category ? a->category : "", b->category ? b->category : "");
+}
 
 int main(int argc, char **argv) {
   /* The registry is complete once the constructors have run; index it (and
@@ -143,8 +153,8 @@ int main(int argc, char **argv) {
    * into a hard failure of the CI step that runs it, so the flag is now real:
    * an explicit request for the run that used to happen by accident. */
   static const char *KNOWN[] = {
-    "--serve", "--sched", "--list-sources", "--dump-source-cards", "--run",
-    "--dispatch",
+    "--serve", "--sched", "--list-sources", "--collector-census", "--dump-source-cards",
+    "--run", "--dispatch",
     "--ingest", "--type", "--materialize", "--dry-run",
     "--selftest", "--help", "-h", NULL
   };
@@ -275,6 +285,7 @@ int main(int argc, char **argv) {
 
   db_handle db = {0};
   if (db_open(&db, NULL, NULL) != 0) return 1;
+  cadence_init(&db);          /* the system-wide cadence policy (core/cadence.h) */
   url_override_reload(&db);   /* apply any verified collector URL-swap repairs */
 
   /* P4: --run <source_id> [entity]  → run one source through the real sink. */
@@ -313,6 +324,46 @@ int main(int argc, char **argv) {
       for (int k = 0; k < registry_count(); k++)
         printf("%-22s collector=%-12s interval=%d\n",
                a[k]->id, a[k]->collector, a[k]->update_interval_sec);
+      db_close(&db);
+      return 0;
+    }
+    if (!strcmp(argv[i], "--collector-census")) {
+      /* The census tools/gen_collectors_def.py reads: one row per collector
+       * key with its source count and its top categories. It used to need a
+       * running server and GET /api/collectors; the registry alone knows it. */
+      const source_def **a = registry_all();
+      int n = registry_count();
+      const source_def **v = malloc((size_t)(n > 0 ? n : 1) * sizeof *v);
+      if (!v) { db_close(&db); return 1; }
+      memcpy(v, a, (size_t)n * sizeof *v);
+      qsort(v, (size_t)n, sizeof *v, census_cmp);
+      printf("# collector census - ./bin/japanosint --collector-census (registry %d sources)\n", n);
+      printf("key\tsources\tcategories\n");
+      for (int k = 0; k < n;) {
+        const char *col = v[k]->collector ? v[k]->collector : "";
+        int j = k;
+        while (j < n && !strcmp(v[j]->collector ? v[j]->collector : "", col)) j++;
+        /* [k, j) is one collector, sorted by category: count runs, keep top 3 */
+        struct { const char *cat; int n; } top[3] = {{0, 0}, {0, 0}, {0, 0}};
+        for (int c = k; c < j;) {
+          const char *cat = v[c]->category ? v[c]->category : "";
+          int d = c;
+          while (d < j && !strcmp(v[d]->category ? v[d]->category : "", cat)) d++;
+          int cnt = d - c;
+          for (int t = 0; t < 3; t++)
+            if (cnt > top[t].n) {
+              for (int u = 2; u > t; u--) top[u] = top[u - 1];
+              top[t].cat = cat; top[t].n = cnt; break;
+            }
+          c = d;
+        }
+        printf("%s\t%d\t", col, j - k);
+        for (int t = 0; t < 3 && top[t].n; t++)
+          printf("%s%s:%d", t ? ";" : "", top[t].cat, top[t].n);
+        printf("\n");
+        k = j;
+      }
+      free(v);
       db_close(&db);
       return 0;
     }

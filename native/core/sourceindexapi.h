@@ -1,7 +1,7 @@
 /* core/sourceindexapi.h — HTTP routes over the widened service index
  * (core/service_vec.h): searching the registry by meaning.
  *
- * GET /api/sources/search?q=&kind=&k=&entity=
+ * GET /api/sources/semantic?q=&kind=&k=&entity=  (was /api/sources/search, which the Sources page owns)
  *   The k registered sources closest to q — reciprocal-rank fusion of the
  *   vector arm and the keyword arm over every source's card
  *   (core/source_card.h). `kind` narrows to pivot|scheduled|pod|manual;

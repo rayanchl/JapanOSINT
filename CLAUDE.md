@@ -113,7 +113,19 @@ lessons from batches 43–48 that a new batch must not relearn:
   forecast feed, a window the row exists to be fresh for.
   `tools/tune_intervals.py` is the authoring-time half of the same rule and
   marks the rows it tunes; `test_sched_backoff.c` pins the bucket, the base
-  and the measurement.
+  and the measurement. The operator's system-wide cadence policy (the
+  "Cadence policy" section) applies ON TOP of this measurement, never under
+  it: `sched_row_interval()` is the one composition.
+
+**Batch 45's method is worth more than its 619 rows.** Every `.jp` host a
+registered row already fetched was asked whether it also runs WordPress REST —
+the homepage's `Link: rel="https://api.w.org/"` names the root (232 of 245),
+a bare `/wp-json` only 13 — then for its post types and one page of each
+collection; the tool is `tools/wp_routes_sweep.py`. The same sweep over 5,123
+federation-member hosts (chambers of commerce, JA, medical associations, fire
+chiefs, welfare councils, co-ops, professional bodies) found 5,678 live
+collections on 1,372 hosts, kept in `docs/staging-sources-batch45.federations.tsv`
+until they are registered as their own batch.
 
 **Batch 33 is the one batch measured end to end against live upstreams** —
 43 supply-chain and package-registry rows
@@ -756,11 +768,62 @@ underneath them that older notes in this file predate:
   cyber, telecom, infrastructure, transport, media, social, geo, safety,
   sanctions, culture, surveillance, OSINT pivots, internal). **A new beat
   needs a line there**: a collector the def does not list shows under
-  `grp_unassigned` on every page and `test_sourceapi.c` fails. Re-run the
-  generator on a fresh census (`GET /api/collectors` → TSV) or add the line
-  by hand; the rules live in the script (OVERRIDES, KEYWORDS, CATEGORY_GROUP).
+  `grp_unassigned` on every page and `test_sourceapi.c` fails. **`make
+  collectors-def`** (2026-10-20) takes the census from the binary itself
+  (`./bin/japanosint --collector-census`, which agrees key-for-key and
+  count-for-count with `GET /api/collectors`), writes it under
+  `docs/source-pages-revamp/` and regenerates the def — rebuild afterwards,
+  the def is compiled in; **`make collectors-def-check`** fails while any
+  registered key has no line. The rules live in the script (OVERRIDES,
+  KEYWORDS, CATEGORY_GROUP).
 
 Plan, audit and as-built notes: `docs/source-pages-revamp/`.
+
+## Cadence policy (2026-10-20)
+
+Every source still declares its own `update_interval_sec` — that is the
+measured value it was authored with — but ONE policy sits above all of them:
+`core/cadence.{c,h}`. It is the operator's, system-wide, and lives in the
+database (`app_settings`, keys `sched.global_interval_sec`,
+`sched.min_interval_sec`, `sched.max_interval_sec`), so it survives restarts
+and is edited from the Sources page (`GET`/`PUT /api/sources/cadence`, PUT
+gated like `/api/sources/:id/schedule`: platform operator). Three shapes:
+
+* **global** — every scheduled row runs at one interval;
+* **clamped** — a floor and/or a ceiling the declared values are held inside;
+* **declared** — nothing set, each row as authored (the default).
+
+`JO_SCHED_INTERVAL_SEC` / `JO_SCHED_MIN_INTERVAL_SEC` /
+`JO_SCHED_MAX_INTERVAL_SEC` bootstrap an EMPTY database only; a stored policy
+always wins. The scheduler reads `cadence_apply(declared)` at every site that
+used the declared value (due time, boot ramp, backoff base, cancellation
+window, search-only and quarantine holds), and re-plans on a change without a
+restart: a row whose next due time is further away than its new interval is
+pulled in to now + interval. Entity pivots (interval 0) are never touched.
+
+**It composes with the adaptive interval in ONE order** (the two met in a
+merge on 2026-10-20, each written without knowing the other existed):
+`sched_row_interval()` in `core/scheduler.c` is
+`cadence_apply(sched_state_base(...))` — the row's own measurement inside,
+the operator's policy outside. A feed whose items say "hourly" runs hourly
+under no policy, six-hourly under an operator floor of six hours, and at the
+global cadence when one is set; a person's floor outranks a measurement, a
+global outranks both, and the measurement is still taken and stored so the
+page can say "measured hourly, held at 6 h by policy". Every site the
+scheduler reads a row's interval goes through that one function; the source
+pages show `declaredInterval`, `measuredInterval`, `policyInterval` and
+`effectiveInterval` side by side; `test_sched_backoff.c` pins the order.
+
+What a choice costs is in the response, measured over the registry, not
+guessed: `estimate.runs_per_day_declared` against
+`estimate.runs_per_day_effective`. Measured 2026-10-20 on 19,954 scheduled
+rows: 240,318 runs/day as declared; a global 1 h would be 479,000, 6 h 80,000,
+daily 20,000. The 25 rows under 5 min (webcams, grid telemetry, Tor exits)
+alone make 42,000 of today's runs, which is what a global cadence trades away.
+Every source's pages show `declaredInterval`, `policyInterval` and `policy`
+(`/api/sources/:id/detail` → `sched`, `/api/status` rows → `policyInterval`).
+`tests/unit/test_cadence.c` pins the rules, the persistence and the refusals.
+
 
 ## Where things live
 
@@ -882,6 +945,7 @@ says why.
 | `tools/audit_registry_emit.py` | rule 4 **and** 4b for the whole REGISTRY, manifest or not — `--list-sources` is the source list, so nothing registered can hide. Measures emitted *and* stored, per run, against a fresh copy of a warm template DB. `--scheduled`/`--match`/`--only`/`--ids-file`, `--jobs`, `--timeout`, TSV out, `--resume` |
 | `tools/diagnose_emit_keys.py` | why a row emitted nothing, and which `title_keys`/`id_keys` fix it |
 | `tools/cleanup_stale_uids.py` | the rows identity fixes left in an OLD database: a plain-key row whose qualified siblings now hold the same record (the keyqual collectors and FRA), and wayback_jp's captures from before digest+timestamp+URL. Reports by default. `--delete` removes, in one transaction, only rows whose replacement is proven to exist and that nothing references. `--self-test` runs it on a scratch DB (also from `make unit`) |
+| `tools/wp_routes_sweep.py` | the WordPress method as a tool: `sweep` asks each host for its REST root (the homepage's `Link rel="https://api.w.org/"`, else `/wp-json`), its post types and one page of each collection, writing routes.tsv/probe.tsv; `manifest` turns probe.tsv into host-type beats and a rejected TSV. Hosts are normalised (`www.` dropped, one row per REST root) because `funq.jp` and `www.funq.jp` reached the same site and only `batch_exclusions.py` noticed |
 | `tools/gen_hp_batch.py` | manifest → C, one table per beat, `--prefix`/`--batch` so batches never collide — but the batch NUMBER is yours to keep unique: main shipped a batch 32 while a branch was open with its own, both created `docs/verified-sources-batch32.tsv`, and renumbering the branch to 33 after the fact meant touching the manifest, both TSVs, the table, its array name and two batch citations that had landed in `lib/hpengine.h` and `core/hostgate.c`. Rejects duplicate opts, non-integer int opts, and an opt whose value **swallowed the next one** through a stray `\;` |
 
 ## 4. Fetching is not emitting — prove the second one
@@ -895,8 +959,8 @@ real records and stored none** — `DATAPLANE_TELNET` fetched 36,166 and emitted
 an `EMPTY_RESULTSET` source.
 
 ```sh
-python3 native/tools/audit_batch_emit.py docs/candidate-sources-batch<N>.*.txt \
-        --bin ./bin/japanosint --jobs 6
+cd native && make batch-gates MANIFEST='../docs/candidate-sources-batch<N>.*.txt'   # exclusions, pagination, reachability, probe → .run/batch-gates/pass-ids.txt
+python3 tools/audit_batch_emit.py ../docs/candidate-sources-batch<N>.*.txt --bin ./bin/japanosint --jobs 6
 ```
 
 Run it before believing a batch. `DROPS_EVERYTHING` is the verdict that matters;
@@ -1487,7 +1551,7 @@ never put two models' vectors in one index — image vectors have their own.
 | index | holds | read by |
 | --- | --- | --- |
 | `intel_vec_v2` | items; `tenant_id` partition, `source_id`/`ts`/`record_type` filter INSIDE the search (the old `intel_vec` is migrated by copy, not re-embedded) | `/api/intel/semantic` (+filters), `sort=hybrid`, `/items/:uid/similar`, `/cases/:id/related`, Nearby `q`, `/timeline?q=`, the corpus lookup, prompt record ranking, stories/novelty, semantic alerts |
-| `service_vec` | every registered source's card (kind pivot/scheduled/pod, aliases from `core/service_aliases.c`), incremental | phase-1 and per-round routing (pivots only), `/api/sources/search`, `service_vec_route_sources`, canonical category votes, layer review, `batch_exclusions.py --semantic` |
+| `service_vec` | every registered source's card (kind pivot/scheduled/pod, aliases from `core/service_aliases.c`), incremental | phase-1 and per-round routing (pivots only), `/api/sources/semantic`, `service_vec_route_sources`, canonical category votes, layer review, `batch_exclusions.py --semantic` |
 | `entity_vec` | entity name + romaji, partitioned by type | merge candidates for the LLM judge (nothing auto-merges), `/api/entities/search?mode=hybrid` |
 | `fewshot_vec`, `anomaly_vec` | the analysis examples (`grammars/fewshot_analysis.jsonl`), past anomalies | per-query few-shot selection, triage memory |
 

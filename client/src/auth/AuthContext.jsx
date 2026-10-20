@@ -225,3 +225,10 @@ export function useAuth() {
   if (!ctx) throw new Error('useAuth must be used inside <AuthProvider>');
   return ctx;
 }
+
+/* For a page that only ASKS whether the viewer may do something (show a
+ * Change button or not): null outside the provider, never a throw, so the
+ * page renders the same in a test harness and for an anonymous viewer. */
+export function useAuthOptional() {
+  return useContext(AuthContext);
+}

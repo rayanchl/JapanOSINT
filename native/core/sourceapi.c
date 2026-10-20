@@ -14,6 +14,7 @@
 #include "statusapi.h"
 #include "collectortab.h"
 #include "hostgate.h"
+#include "cadence.h"
 #include "../lib/hpengine.h"
 #include "../lib/jocore.h"
 #include "../third_party/cJSON.h"
@@ -141,6 +142,7 @@ typedef struct {
 typedef struct {
   char id[256];
   int failures, empties, quarantined; long effective; long long backoff_until;
+  long freshness;   /* the adaptive measurement (source_sched_state.freshness_interval), 0 = none */
 } sched_t;
 
 typedef struct {
@@ -226,7 +228,7 @@ static void snap_load(db_handle *db, snapshot *s) {
   }
   if (sqlite3_prepare_v2(db->h,
         "SELECT source_id,consecutive_failures,consecutive_empties,quarantined,"
-        "effective_interval,backoff_until FROM source_sched_state", -1, &st, NULL) == SQLITE_OK) {
+        "effective_interval,backoff_until,freshness_interval FROM source_sched_state", -1, &st, NULL) == SQLITE_OK) {
     int cap = 0;
     while (sqlite3_step(st) == SQLITE_ROW) {
       GROW(s->sched, s->nsched, cap, sched_t);
@@ -239,6 +241,7 @@ static void snap_load(db_handle *db, snapshot *s) {
       r->quarantined = sqlite3_column_int(st, 3);
       r->effective = (long)sqlite3_column_int64(st, 4);
       r->backoff_until = sqlite3_column_type(st, 5) == SQLITE_NULL ? 0 : sqlite3_column_int64(st, 5);
+      r->freshness = (long)sqlite3_column_int64(st, 6);   /* NULL -> 0 */
     }
     sqlite3_finalize(st);
     qsort(s->sched, (size_t)s->nsched, sizeof *s->sched, id_cmp_sched);
@@ -285,10 +288,24 @@ static const source_trust *snap_trust(const snapshot *s, const char *id) {
 
 /* ── the compact row every list shares ──────────────────────────────────── */
 
-static cJSON *sched_json(const sched_t *r, long declared, long long now) {
+static cJSON *sched_json(const sched_t *r, long declared, int adaptive, long long now) {
   cJSON *o = cJSON_CreateObject();
   cJSON_AddBoolToObject(o, "tracked", r != NULL);
   cJSON_AddNumberToObject(o, "declaredInterval", (double)declared);
+  /* The three figures a cadence can come from, in the order they compose
+   * (core/scheduler.c sched_row_interval): the authored `declaredInterval`;
+   * `measuredInterval`, what an adaptive row's own newest item re-bucketed
+   * it to (null: not adaptive, or no dated item yet); and `policyInterval`,
+   * the operator's system-wide policy (core/cadence.h) applied to the
+   * measured figure when there is one, else to the declared — so a page can
+   * say "measured hourly, held at 6 h by policy". `effectiveInterval` is what
+   * the health backoff made of that after the last run. */
+  long base = (adaptive && r && r->freshness > 0) ? r->freshness : declared;
+  cJSON_AddBoolToObject(o, "adaptive", adaptive != 0);
+  if (adaptive && r && r->freshness > 0) cJSON_AddNumberToObject(o, "measuredInterval", (double)r->freshness);
+  else cJSON_AddNullToObject(o, "measuredInterval");
+  cJSON_AddNumberToObject(o, "policyInterval", (double)cadence_apply(base));
+  cJSON_AddStringToObject(o, "policy", cadence_mode_for(base));
   if (r && r->effective > 0) cJSON_AddNumberToObject(o, "effectiveInterval", (double)r->effective);
   else cJSON_AddNullToObject(o, "effectiveInterval");
   cJSON_AddNumberToObject(o, "consecutiveFailures", r ? r->failures : 0);
@@ -349,7 +366,7 @@ static cJSON *row_json(const reg_ent *e, const snapshot *s, long long now) {
     cJSON_AddStringToObject(tr, "grade", t->grade);
   } else { cJSON_AddNullToObject(tr, "reliability"); cJSON_AddNullToObject(tr, "grade"); }
   cJSON_AddItemToObject(o, "trust", tr);
-  cJSON_AddItemToObject(o, "sched", sched_json(sc, d->update_interval_sec, now));
+  cJSON_AddItemToObject(o, "sched", sched_json(sc, d->update_interval_sec, d->adaptive_interval, now));
   return o;
 }
 
@@ -1232,7 +1249,7 @@ char *sourceapi_detail(db_handle *db, const char *id) {
   const source_trust *t = snap_trust(s, id);
   const agg_t *a = snap_agg(s, id);
 
-  cJSON *schedule = sched_json(sc, d->update_interval_sec, now);
+  cJSON *schedule = sched_json(sc, d->update_interval_sec, d->adaptive_interval, now);
   add_str_or_null(schedule, "schedule_mode", r && r->schedule_mode[0] ? r->schedule_mode : NULL);
   cJSON_AddStringToObject(schedule, "kind", e ? e->kind : derive_kind(d));
   cJSON_AddItemToObject(o, "schedule", schedule);

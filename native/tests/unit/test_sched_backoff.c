@@ -249,6 +249,34 @@ static void test_freshness_measure(db_handle *db) {
   sqlite3_exec(db->h, "DELETE FROM intel_items WHERE uid LIKE 'fr|%'", 0, 0, 0);
 }
 
+/* 9. the two cadence mechanisms compose in ONE order: the row's measurement
+ *    inside, the operator's system-wide policy (core/cadence.h) outside. A
+ *    floor outranks a measurement, a global outranks both, and a row that is
+ *    not adaptive gets the policy applied to its declared interval. */
+static void test_row_interval_composition(db_handle *db) {
+  const char *err = NULL;
+  cadence_init(db);
+  cadence_policy none = {0, 0, 0};
+  assert(cadence_set(db, &none, "test", &err) == 0);
+  source_def d = { .id = "UNIT_COMPOSE", .update_interval_sec = 604800, .adaptive_interval = 1 };
+  sched_state st = { .freshness_interval = 3600 };
+  assert(sched_row_interval(&st, &d) == 3600);              /* no policy: the measurement */
+  d.adaptive_interval = 0;
+  assert(sched_row_interval(&st, &d) == 604800);            /* not adaptive: declared */
+  d.adaptive_interval = 1;
+  cadence_policy floor6h = {0, 21600, 0};
+  assert(cadence_set(db, &floor6h, "test", &err) == 0);
+  assert(sched_row_interval(&st, &d) == 21600);             /* a person's floor outranks hourly */
+  st.freshness_interval = 86400;
+  assert(sched_row_interval(&st, &d) == 86400);             /* ...and lets a slower measurement stand */
+  cadence_policy global = {900, 0, 0};
+  assert(cadence_set(db, &global, "test", &err) == 0);
+  assert(sched_row_interval(&st, &d) == 900);               /* a global outranks both */
+  source_def pivot = { .id = "UNIT_PIVOT", .update_interval_sec = 0, .adaptive_interval = 1 };
+  assert(sched_row_interval(&st, &pivot) == 0);             /* an entity pivot passes through */
+  assert(cadence_set(db, &none, "test", &err) == 0);        /* leave no policy behind */
+}
+
 int main(void) {
   db_handle db = {0};
   const char *path = getenv("JO_DB");
@@ -265,6 +293,7 @@ int main(void) {
   test_freshness_bucket();
   test_freshness_base();
   test_freshness_measure(&db);
+  test_row_interval_composition(&db);
 
   db_close(&db);
   printf("test_sched_backoff: ok\n");
